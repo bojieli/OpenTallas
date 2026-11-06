@@ -1,0 +1,9 @@
+WINDOW_PHASE reservation=0 raw=219 native=221 delta=2
+WINDOW_PHASE reservation=1 raw=289 native=291 delta=2
+WINDOW_PHASE reservation=2 raw=300 native=302 delta=2
+WINDOW_PHASE reservation=3 raw=351 native=353 delta=2
+WBQ sectors 25 writes ref 25 new 25 dup 0 0 badpc 0 0 mism 3 only 0 stream_bad 0 wv_bad 0 ready_bad 0 done 4 4 lag max 45 mean 28 fault 0 0
+WBQ FAIL
+[4710000000] %Fatal: tb_native_family.sv:121: Assertion failed in tb_wbq.unnamedblk1: FAIL
+%Error: results/native_wbk_safe_1106/tb_native_family.sv:121: Verilog $stop
+Aborting...

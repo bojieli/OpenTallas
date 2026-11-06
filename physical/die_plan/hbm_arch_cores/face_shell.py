@@ -395,6 +395,34 @@ def rename_module(files, module, new, defines=None):
     return f
 
 
+def preexisting_manifest(module, tports, native_context):
+    """Record source-owned registers without inserting a second blind shell.
+
+    This does not qualify the source: mixed_guard still checks every native
+    seam and every other external face. Zero here means ADDED wrapper cycles;
+    existing source pipeline/reset/edge contracts remain independently priced.
+    """
+    widths = {n: int(w) for n, d, w in tports}
+    dirs = {n: d for n, d, w in tports}
+    scope = set((native_context or {}).get('scope_buses', ()))
+    if (not scope or native_context.get('schema') != 'opentallas.native_hard_child_seam.v1'
+            or native_context.get('module') != module or not native_context.get('parent_contexts')
+            or scope - set(widths)
+            or native_context.get('bus_widths') != {n: widths[n] for n in scope}):
+        raise RuntimeError('preexisting faces require validated exact same-parent hard-child context')
+    return dict(schema=SHELL_SCHEMA, module=module, core=module,
+                preexisting_registered_faces=True, files=[], face_flops=0,
+                dropped=[], unread_kept=[], const_out_bits=0, dup_out_bits=0,
+                latency=dict(in_cycles=0, out_cycles=0, in_to_out_extra_cycles=0,
+                             note='no additional wrapper registers; source-owned stages/phase/reset remain priced'),
+                native_registered_passthrough=sorted(scope),
+                face_cycle_overrides={n: 0 for n in sorted(scope)},
+                native_endpoint_contract=dict(kind='INTERNAL_CORE',
+                    partition_rule='R2_INTERNAL_TIMED_IN_PARTITION', scope_buses=sorted(scope),
+                    port_roles={n: dirs[n] for n in sorted(scope)}, hard_child_context=native_context,
+                    parent_timing='all native data/valid/ready paths remain timed in the parent'))
+
+
 def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, drop=True, mutant=None, scalars=None,
           stages=None, lockup=None, reset_relay=0, in_stages=None, pass_buses=None, native_context=None):
     """turn kit `kd` (generated, top = `module` with exactly the plan pins) into a shelled kit.

@@ -1,0 +1,20 @@
+EXTERNAL_FACES old PASS 4608 4608 {}
+EXTERNAL_FACES new PASS 4608 4608 {}
+{
+ "external_only": {
+  "old": {
+   "verdict": "PASS",
+   "checked": 4608,
+   "ok": 4608,
+   "registered_hold_bits": 0
+  },
+  "new": {
+   "verdict": "PASS",
+   "checked": 4608,
+   "ok": 4608,
+   "registered_hold_bits": 4576
+  }
+ },
+ "native_seam_context": "NOT_QUALIFIED_IN_THIS_COMPONENT_CHECK",
+ "physical_STA": "NOT_RUN"
+}

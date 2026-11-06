@@ -1,0 +1,9 @@
+OUT_PROTOCOL_MISMATCH variant=1 cycle=31 expected=0 addr=1 data=1
+OUT_PROTOCOL_MISMATCH variant=1 cycle=44 expected=6 addr=7 data=7
+OUT_PROTOCOL_MISMATCH variant=1 cycle=57 expected=12 addr=13 data=13
+OUT_PROTOCOL_MISMATCH variant=1 cycle=70 expected=18 addr=19 data=19
+OUT_PROTOCOL_MISMATCH variant=1 cycle=83 expected=24 addr=25 data=25
+OUT_PROTOCOL_RESULT raw sent=32 got=32 bad=0 real sent=32 got=32 bad=6
+[2740000] %Fatal: test_out_elastic.sv:39: Assertion failed in test_out_protocol: REAL_OUT_PROTOCOL_FAIL
+%Error: results/native_wbk_safe_1106/test_out_elastic.sv:39: Verilog $stop
+Aborting...

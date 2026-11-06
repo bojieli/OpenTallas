@@ -171,7 +171,7 @@ def mixed_guard(text,top,kd,fz,skip):
     strict_skip='(?:'+skip+')|^(?:'+'|'.join(re.escape(n) for n in scope)+')$'
     pins=[p for p in json.loads((kd/'pins.json').read_text()) if p.get('bit') is not None and not re.match(strict_skip,p['bus'])] if (kd/'pins.json').is_file() else None
     result=FG.guard(text,top,skip_re=strict_skip,pins=pins,
-                    straps=FG.kit_strap_list(kd),dead=FG.kit_dead_list(kd))
+                    straps=FG.kit_strap_list(kd),dead=FG.kit_dead_list(kd),hold_outputs=FG.kit_hold_outputs(kd))
     if native['fails']:
         result['fails']['native_endpoint']=[dict(bit=b,reasons=why) for b,why in native['fails'].items()]
     result['checked']+=native['checked'];result['ok']+=native['ok']

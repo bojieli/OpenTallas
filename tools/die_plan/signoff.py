@@ -290,7 +290,7 @@ def macro_libs(kit, corner):
 
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
                   "kit_modes.py", "data_droop.py", "core_io_reference.py")
-OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py", "hard_landing.py")
+OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py", "hard_landing.py", "owned_feedback.py")
 
 
 def _common_flow(source, name):
@@ -1830,6 +1830,7 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
         types = synth_types(disc["synth"], synth_text)
         r = face_guard.guard(synth_text, pins=pins, skip_re=skip_re, ft1=ft1,
                              straps=sl, dead=dl, land=land, exports=exports, spare=spl, timed=tml,
+                             hold_outputs=face_guard.kit_hold_outputs(disc["kit"]) if disc.get("kit") else [],
                              pad_clocks=pad_clocks, native_clock_pins=native_clock_pins,
                              clocks=sorted({p['name'] for p in pad_clocks if p['dir'] == 'in'} | set(sdc_clocks)), types=types)
     except Exception as e:

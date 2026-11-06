@@ -1,0 +1,10 @@
+OUT_PROTOCOL_MISMATCH variant=1 cycle=33 expected=2 addr=4 data=4
+OUT_PROTOCOL_MISMATCH variant=1 cycle=34 expected=3 addr=4 data=4
+OUT_PROTOCOL_MISMATCH variant=1 cycle=46 expected=8 addr=10 data=10
+OUT_PROTOCOL_MISMATCH variant=1 cycle=47 expected=9 addr=10 data=10
+OUT_PROTOCOL_MISMATCH variant=1 cycle=59 expected=14 addr=16 data=16
+NATIVE_LINK_TAKES raw=32 physical_partner=32
+KSHARE_FACE_PROTOCOL_RESULT raw sent=32 got=32 bad=0 real sent=32 got=32 bad=10
+[2740000] %Fatal: test_actual_kshare_faces.sv:50: Assertion failed in test_out_protocol: REAL_OUT_PROTOCOL_FAIL
+%Error: results/native_wbk_safe_1106/test_actual_kshare_faces.sv:50: Verilog $stop
+Aborting...

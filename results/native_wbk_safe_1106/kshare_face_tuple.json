@@ -1,0 +1,12 @@
+{
+ "source_file": "/home/ubuntu/wbk-native-src/captured/kshare/ot_hbm_svc_vm_kshare_splitstrap__v8e478a__fshell.sv",
+ "source_sha256": "af140a75ad14e23ca279c11865e772be943975833f988da8dd8e259fae4ed5b5",
+ "exact_selected_statements": [
+  "    (* keep *) ot_hbm_face_reg #(.W(120)) u_bin_w_k_addr (.clk(hbm_clk), .d(w_k_addr), .q(w_k_addr__fq));",
+  "    (* keep *) ot_hbm_face_reg #(.W(4)) u_bout_w_k_rdy (.clk(hbm_clk), .d(w_k_rdy__fc), .q(w_k_rdy));",
+  "    (* keep *) ot_hbm_face_reg #(.W(4)) u_bin_w_k_v (.clk(hbm_clk), .d(w_k_v), .q(w_k_v__fq));",
+  "    (* keep *) ot_hbm_face_reg #(.W(1024)) u_bin_w_k_wdata (.clk(hbm_clk), .d(w_k_wdata), .q(w_k_wdata__fq));"
+ ],
+ "scope": "actual four WB boundary FFs + native u_e only, not full Kshare controller",
+ "signed": false
+}

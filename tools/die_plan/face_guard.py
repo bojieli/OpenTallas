@@ -757,8 +757,19 @@ def _spare_tie(F, drv, r, limit=16):
     return None
 
 
+def kit_hold_outputs(kitdir):
+    """Opt-in source-profile output registers whose Q may feed ONLY their own D."""
+    path = Path(kitdir) / 'freeze.json'
+    rows = ((json.loads(path.read_text()).get('source_profile') or {}).get('registered_hold_outputs', [])
+            if path.is_file() else [])
+    if (not isinstance(rows, list) or len(set(rows)) != len(rows)
+            or any(not isinstance(x, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', x) for x in rows)):
+        raise ValueError('registered_hold_outputs requires distinct exact output bus names')
+    return rows
+
+
 def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=(),
-          exports=(), types=None, pad_clocks=(), native_clock_pins=(), spare=(), timed=()):
+          exports=(), types=None, pad_clocks=(), native_clock_pins=(), spare=(), timed=(), hold_outputs=()):
     """types: (top, {path: module}) from hier_module_types of the hierarchical netlist this flat netlist was written
     from (kit ODB write_verilog pass); fills only paths the netlist itself does not type; its top must match.
     straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
@@ -892,6 +903,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     spare = set(spare or ())
     if spare:
         res["spare_declared"] = []
+    hold_outputs = set(hold_outputs or ())
+    if hold_outputs:
+        res['registered_hold_outputs'] = sorted(hold_outputs)
     claimed = defaultdict(list)
 
     timed = set(timed or ())
@@ -904,6 +918,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             return
         res["fails"][cls].append(f"{b}: {why}")
 
+    for name in hold_outputs:
+        if T.dirs.get(name) != 'output' or re.match(skip_re, name):
+            fail('held_output', name, 'declared hold register must be a checked output bus')
     res["bumps_exempt"] = sorted(bump_names)
     for name, d, w in (bumps or ()):             # a declared bump: port of that dir/width, wired only to one macro pin
         if T.dirs.get(name) != d:
@@ -1772,6 +1789,17 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 res.setdefault("reset_spine", []).append(b)
                 res["ok"] += 1
                 continue
+            if d == 'output' and p in hold_outputs:
+                from owned_feedback import check as check_owned_feedback
+                why, owner = check_owned_feedback(F, r, b, drv, loads, roots_ports, is_ff, is_buf, _std_cell)
+                if why:
+                    fail('held_output', b, why)
+                    continue
+                claimed[owner].append(b)
+                res['flops'][b] = F.cells[owner][1]
+                res['registered_hold_bits'] = res.get('registered_hold_bits', 0) + 1
+                res['ok'] += 1
+                continue
             if d == "output":
                 cur, chain, ff = r, [], None
                 ok = True
@@ -2009,7 +2037,7 @@ def main(argv=None):
     spl = kit_spare_list(Path(a.pins).parent) if a.pins else []
     tml = kit_timed_list(Path(a.pins).parent) if a.pins else []
     pad_clocks, native_clock_pins = kit_pad_clocks(bd) if bd else ([], set())
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex, pad_clocks=pad_clocks, native_clock_pins=native_clock_pins, spare=spl, timed=tml,
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex, pad_clocks=pad_clocks, native_clock_pins=native_clock_pins, spare=spl, timed=tml, hold_outputs=kit_hold_outputs(bd) if bd else [],
               types=hier_module_types(Path(a.types_from).read_text(), a.top) if a.types_from else None)
     r["netlist"] = a.netlist
     if a.types_from:

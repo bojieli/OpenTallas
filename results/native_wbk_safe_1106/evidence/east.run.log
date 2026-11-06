@@ -1,0 +1,10 @@
+WINDOW_PHASE reservation=0 raw=219 native=221 delta=2
+WINDOW_PHASE reservation=1 raw=289 native=291 delta=2
+WINDOW_PHASE reservation=2 raw=300 native=302 delta=2
+WINDOW_PHASE reservation=3 raw=351 native=353 delta=2
+WBQ sectors 37772 writes ref 37772 new 37772 dup 0 0 badpc 0 0 mism 0 only 0 stream_bad 0 wv_bad 0 ready_bad 0 done 48 48 lag max 118 mean 9 fault 0 0
+WBQ PASS
+- results/native_wbk_safe_1106/tb_native_family.sv:120: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 132us; walltime 0.285 s; speed 463.514 us/s
+- Verilator: cpu 0.285 s on 1 threads; allocated 14 MB

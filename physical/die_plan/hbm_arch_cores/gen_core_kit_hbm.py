@@ -1520,8 +1520,11 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     MS = _ms()
     MS.add_args(ap)   # 12.7c: --master-slice DIR (opt-in), --trial
     a = ap.parse_args()
-    if a.face_pass and a.face_shell == "off":
-        raise SystemExit("--face-pass requires --face-shell on")
+    preexisting_faces = (source_profile or {}).get("preexisting_registered_faces") is True
+    if a.face_pass and a.face_shell == "off" and not preexisting_faces:
+        raise SystemExit("--face-pass requires --face-shell on or an explicit preexisting-register source profile")
+    if preexisting_faces and (a.face_shell != "off" or a.face_reset_relay or a.face_stage or a.face_in_stage or a.face_lockup):
+        raise SystemExit("preexisting-register source profiles require shell off and no additional face stages/relays")
     if bool(a.face_pass) != bool(a.face_pass_contract):
         raise SystemExit("--face-pass and --face-pass-contract are required together")
     if a.final_ff_hold and a.single_mode_grt:
@@ -1784,6 +1787,16 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         if source_profile.get("reset_ports"):
             reset_re = "(?:" + RST_RE + "|^(?:" + "|".join(
                 re.escape(p) for p in source_profile["reset_ports"]) + ")$)"
+    native_context = None
+    if a.face_pass:
+        from native_seams import validate as validate_native_seams
+        native_scope = [n_ for n_ in pb if any(re.search(rx_, n_) for rx_ in a.face_pass)
+                        and not re.match(clock_re, n_) and not re.match(reset_re, n_)]
+        try:
+            native_context = validate_native_seams(plan, pdir, v, native_scope,
+                                                   json.load(open(a.face_pass_contract)), sha(plan_path))
+        except (ValueError, KeyError, OSError) as exc:
+            raise SystemExit(f"NATIVE_SEAM {a.view}: {exc}")
     shell = None
     if a.face_shell == "on":
         import face_shell as FS
@@ -1798,16 +1811,6 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             md_ = REPO / (rec.get("macro_dirs", {}).get(m_) or f"physical/asap7_memory_macros_v2/{m_}")
             if (md_ / f"{m_}_tt.lib").is_file():
                 mlibs.append(str(md_ / f"{m_}_tt.lib"))
-        native_context = None
-        if a.face_pass:
-            from native_seams import validate as validate_native_seams
-            native_scope = [n_ for n_ in pb if any(re.search(rx_, n_) for rx_ in a.face_pass)
-                            and not re.match(clock_re, n_) and not re.match(reset_re, n_)]
-            try:
-                native_context = validate_native_seams(plan, pdir, v, native_scope,
-                                                       json.load(open(a.face_pass_contract)), sha(plan_path))
-            except (ValueError, KeyError, OSError) as exc:
-                raise SystemExit(f"NATIVE_SEAM {a.view}: {exc}")
         try:
             shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, clock_re, reset_re,
                              drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_},
@@ -1837,6 +1840,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if not clks:
         raise SystemExit(f"{a.view}: no clock pin")
     centry, centry_rec = None, None
+    if preexisting_faces and native_context is not None:
+        import face_shell as FS
+        shell = FS.preexisting_manifest(module, tports, native_context)
+        (kd / 'face_shell.json').write_text(json.dumps(shell, indent=1) + '\n')
     declared_native = (source_profile or {}).get("pin_placement_policy") == "DECLARED_CLOCK_RESET_POINTS"
     if a.clock_pin_entry == "on":
         sys.path.insert(0, str(TOOL))
@@ -2365,7 +2372,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
               plan_common_latency_ps=common, core_clock_contract=contract, orfs_var_overrides=a.orfs_var,
               sdc_lint="PASS (gen)", macros=rec.get("macros", []),
               **({"io_hold": dict(mode="sender_min", ports=in_min_ports, parent_obligation=True)} if in_min_ports else {}),
-              face_shell=(dict(core=shell["core"], in_cycles=1, out_cycles=1, face_flops=shell["face_flops"],
+              face_shell=(dict(core=shell["core"], in_cycles=shell.get("latency", {}).get("in_cycles", 1),
+                               out_cycles=shell.get("latency", {}).get("out_cycles", 1), face_flops=shell["face_flops"],
+                               **({"preexisting_registered_faces": True} if shell.get("preexisting_registered_faces") else {}),
                                dropped=len(shell["dropped"]), unread_kept=len(shell["unread_kept"]),
                                const_out_bits=shell["const_out_bits"], dup_out_bits=shell["dup_out_bits"],
                                plan_pins=len(names) + len(shell["dropped"]),
