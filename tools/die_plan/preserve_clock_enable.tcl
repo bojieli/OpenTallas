@@ -9,6 +9,21 @@ proc ot_preserve_clock_enable {ff_name icg_name {prefix ot_ce_hold}} {
   set ce_icg [$ce_blk findInst $icg_name]
   if {$ce_ff eq "NULL" || $ce_icg eq "NULL"} {error "MID_CE: expected idle flop and root ICG"}
   if {![string match DFFASRHQN* [[$ce_ff getMaster] getName]]} {error "MID_CE: expected QN async-reset flop"}
+  # This class is qualified with the ICG test port physically tied low. Never drop a dynamic test enable.
+  set ce_se [$ce_icg findITerm SE]
+  if {$ce_se ne "NULL"} {
+    set ce_sen [$ce_se getNet]
+    set ce_zero 0
+    if {$ce_sen eq "NULL"} {error "MID_CE: unconnected ICG test enable"}
+    foreach ce_it [$ce_sen getITerms] {
+      if {![$ce_it isOutputSignal]} continue
+      if {![string match TIELO* [[[$ce_it getInst] getMaster] getName]]} {
+        error "MID_CE: dynamic or unproved ICG test enable; preserve its effective latched/test enable explicitly"
+      }
+      set ce_zero 1
+    }
+    if {!$ce_zero || [llength [$ce_sen getBTerms]]} {error "MID_CE: ICG test enable is not a proved TIELO"}
+  }
   set ce_dit [$ce_ff findITerm D]
   set ce_dold [$ce_dit getNet]
   if {[$ce_dold getName] eq "${prefix}_d"} {puts "MID_CE: already present"; return}
