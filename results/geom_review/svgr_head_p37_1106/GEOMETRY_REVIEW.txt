@@ -51,3 +51,17 @@ was generated on the verified dedicated hub filesystem (device 66307,
 root device 66306), using normal 4-GB / 2-thread admission without overrides.
 GEN exited 0 in 36.13s, peak RSS 563,232 KB. The complete kit remains at:
 intel2:/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits/ot_svgr_own_2054dcac0c09-headtail_p37
+
+Required clock-site audit addendum: FAIL — physical hold.
+The prior match to old RF1 edge clock sites was insufficient. The canonical
+referenced p37 raw pin table places all six clock pins inside the core at
+x=64.632,64.728,64.824,64.920,65.016,65.112 and y=216. Actual generated
+plan_pins.json and literal io.tcl place them at only two edge centres,
+x=.24 and129.36. All six ports fail the raw-table coordinate comparison.
+clock_site_audit.json retains exact per-port deltas and all eight coarse
+OWN entries, including merged base-port to indexed-port expansion.
+The GEN command omitted --clock-pin-entry; its default off projects pins
+onto faces. Enabling it blindly would require auditing the coarse common
+centre64.8 against individual raw offsets. No kit, source, constraint or
+job was changed by this metadata-only audit. P&R remains held. GEN and
+mapped sizing still describe the retained kit; neither clears geometry.
