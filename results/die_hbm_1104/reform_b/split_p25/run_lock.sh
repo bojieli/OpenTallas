@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# run_lock.sh REPO OUT: cycle-exact lockstep of the part 25 composition, sw tile HREG=0 (u_ref) against sw tile HREG=1 (u_new), same
+# run_lock.sh REPO OUT: cycle-exact lockstep of the part 25 composition, sw tile HREG=0 (u_ref) against sw tile HREG=${LOCK_HREG:-1} (u_new), same
 # stimulus as tb_wbq.sv; every output pin of the two compositions compared on every edge (===). HBM-GAPS-3 11-05.
 # PASS: m0, slow K, E quadrant. Must FAIL (negative controls, mutant on the HREG=1 side only): seam MUT 2 (one g_d bit), root RMUT 2.
 set -u; cd "${1:?}"; OUT=$(realpath -m "${2:?}"); mkdir -p "$OUT"; rc=0
@@ -10,10 +10,10 @@ L="rtl/lib/ot_reset_sync.sv rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv $S/ot
 FW="python3 physical/die_plan/hbm/over_cap_split/reform_1103/facewrap.py --no-hier --clk-re clk --rst-re rst"
 $FW --top ot_wbq_root --pass-param MUT --out $OUT/root.fs.sv -- $D/ot_wbq_split.sv > /dev/null || exit 3
 $FW --top ot_wbq_sw --out $OUT/sw.fs.sv -- $D/ot_wbq_split.sv > /dev/null || exit 3
-$FW --top ot_wbq_sw --param HREG=1 --out $OUT/sw1.fs.tmp -- $D/ot_wbq_split.sv > /dev/null || exit 3
+$FW --top ot_wbq_sw --param HREG=${LOCK_HREG:-1} --out $OUT/sw1.fs.tmp -- $D/ot_wbq_split.sv > /dev/null || exit 3
 sed 's/^module ot_wbq_sw__fs\b/module ot_wbq_sw__fs1/' $OUT/sw1.fs.tmp > $OUT/sw1.fs.sv
 sed -e 's/^module ot_hbm_svc_wb_kport_q__p25fs\b/module ot_hbm_svc_wb_kport_q__p25fs1/' -e 's/ot_wbq_sw__fs u_sw/ot_wbq_sw__fs1 u_sw/' $P/ot_hbm_svc_wb_kport_q__p25fs.sv > $OUT/p25fs1.sv
-grep -q 'ot_wbq_sw__fs1 u_sw' $OUT/p25fs1.sv && grep -q '#(.HREG(1)) u_fcore' $OUT/sw1.fs.sv && ! grep -q 'HREG' $OUT/sw.fs.sv || { echo "LOCK setup FAIL"; exit 3; }
+grep -q 'ot_wbq_sw__fs1 u_sw' $OUT/p25fs1.sv && grep -q "#(.HREG(${LOCK_HREG:-1})) u_fcore" $OUT/sw1.fs.sv && ! grep -q 'HREG' $OUT/sw.fs.sv || { echo "LOCK setup FAIL"; exit 3; }
 cat > $OUT/face_reg.sv <<'V'
 module ot_hbm_face_reg #(parameter integer W=1)(input wire clk, input wire [W-1:0] d, output reg [W-1:0] q); always @(posedge clk) q<=d; endmodule
 V
@@ -45,7 +45,7 @@ PY
 one() { local n=$1 e=$2; shift 2; local d=$OUT/obj_$n
   "$VL" --binary --timing -O1 -j ${J:-6} -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN --top-module tb_lock "$@" -Mdir $d -o sim $OUT/tb_lock.sv $P/ot_hbm_svc_wb_kport_q__p25fs.sv $OUT/p25fs1.sv $D/ot_wbq_split.sv \
    $OUT/root.fs.sv $OUT/sw.fs.sv $OUT/sw1.fs.sv $OUT/face_reg.sv $MAC $L > $d.build.log 2>&1 || { echo "$n BUILD FAIL"; grep -m8 %Error $d.build.log | cut -c1-220; return 1; }
-  timeout ${SIMT:-900} $d/sim > $d.run.log 2>&1; local r=$?; local g=PASS; [ $r != 0 ] && g=FAIL
+  timeout ${SIMT:-900} $d/sim > $d.run.log 2>&1; local r=$?; local g=PASS; [ $r != 0 ] && g=FAIL; grep -q HREG2_COPY_MISMATCH $d.run.log && { echo "$n HREG2 copy mismatch"; g=FAIL; }
   local v=BAD; [ $g = $e ] && v=OK
   echo "$n expect=$e got=$g $v | $(grep -E '^LOCK edges' $d.run.log | tail -1) | $(grep -E '^WBQ s' $d.run.log | tail -1 | cut -c1-200)"; [ $v = OK ]
 }
