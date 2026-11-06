@@ -17,7 +17,8 @@ stations repointed to __rest.  Both plan types that hold the ctl (q_b113, q_b113
 import json, re, sys
 from pathlib import Path
 d = Path(sys.argv[1])
-P = json.loads((d / "die_plan.json").read_text()); CC = json.loads((d / "core_conns.json").read_text())
+SRC = {n: (d / n).read_text() for n in ("die_plan.json", "core_conns.json", "clock_entries.json", "core_macros.json")}
+P = json.loads(SRC["die_plan.json"]); CC = json.loads((d / "core_conns.json").read_text())
 CE = json.loads((d / "clock_entries.json").read_text()); CM = json.loads((d / "core_macros.json").read_text())
 I, OLDM = "u_sfucore_Q_ctl", "ot_hgi_sfu_core_split3__ctl"
 RI, PI = I + "__rest", I + "__pipe"
@@ -119,6 +120,7 @@ mc = CM["cores"][OLDM]
 CM["cores"][RM] = dict(mc, note=(mc.get("note") or "") + " | " + NOTE)
 CM["cores"][PM] = dict(status="NONE", outline_um=list(PWH), basis="no macros (flops only)", macros=[], note=NOTE)
 for f, o in (("die_plan.json", P), ("core_conns.json", CC), ("clock_entries.json", CE), ("core_macros.json", CM)):
-    (d / f).write_text(json.dumps(o, indent=1) + "\n")
+    t = SRC[f]   # keep the layout of each file (die_plan / clock_entries compact, the others indent 1): the git diff is the event only
+    (d / f).write_text(json.dumps(o, indent=1 if t.startswith("{\n") else None) + ("\n" if t.endswith("\n") else ""))
 (d / "part37_event.json").write_text(json.dumps(ev, indent=1) + "\n")
 print("part37", [(t["type"], t["stations_repointed"], t["core_conn_refs_repointed"]) for t in ev["types"]], "seam y", sel[0], sel[-1], "rest pins", len(rest_pins), "pipe pins", len(pipe_pins))
