@@ -1,0 +1,68 @@
+{
+  "qualification": "MAPPED_SIZING_ONLY_NO_PHYSICAL_RUN",
+  "host": "intel2",
+  "dedicated_storage": {
+    "root_device": 66306,
+    "scratch_device": 66307,
+    "free_at_admission_GB": 204
+  },
+  "job": {
+    "unit": "oth-ubuntu-818343-1793973397",
+    "mem_GB": 32,
+    "threads": 8,
+    "disk_GB": 12,
+    "goal": "synth",
+    "kit": "/srv/opentallas-scratch2/claude/svgr-top-rw-sizing-1106/kit",
+    "log": "/srv/opentallas-scratch2/claude/svgr-top-rw-sizing-1106/sizing.otrun.log"
+  },
+  "source_kit_hash": "4bd72c160cc846a2",
+  "mapped_standard_cells": 120233,
+  "mapped_standard_area_um2": 15333.348600000005,
+  "macro_count": 9,
+  "macro_area_um2": 45079.7996,
+  "core_area_um2": 185280.3072,
+  "mapped_stdutil": 0.10936728306110644,
+  "cell_gate": 150000,
+  "stdutil_gate": 0.45,
+  "mapped_cell_gate": "PASS",
+  "mapped_stdutil_gate": "PASS",
+  "face_guard": {
+    "checked": 7427,
+    "ok": 7427,
+    "fails": {}
+  },
+  "port_bind": {
+    "verdict": "PASS",
+    "plan_bits": 7430,
+    "netlist_bits": 7430,
+    "missing": 0,
+    "extra": 0,
+    "missing_examples": [],
+    "extra_examples": []
+  },
+  "rtl_lint": "PASS",
+  "sdc_lint": null,
+  "selrange_rc": 0,
+  "compiler_lec": {
+    "verdict": "RUNNING"
+  },
+  "baseline_comparison": {
+    "prior_synth_cells": 111660,
+    "prior_synth_area_um2": 14801.5,
+    "prior_placed_functional_cells": 136637,
+    "prior_placed_functional_area_um2": 17548.00686,
+    "stdcell_change": 8573,
+    "stdcell_change_pct": 7.677771807272071,
+    "stdarea_change_pct": 3.5932074451914042
+  },
+  "conservative_projection": {
+    "method": "apply retained baseline placed/synth ratios; estimate only, not a physical pass",
+    "functional_cells": 147127.67706430235,
+    "standard_area_um2": 18178.54314897622,
+    "stdutil": 0.12966103661222564,
+    "headroom_cells": 2872.3229356976517
+  },
+  "P_and_R": "NOT_RUN; source/geometry/PG adoption pending",
+  "TT_FF_signoff": "NOT_RUN",
+  "physical_B": "PROPOSED_NOT_GENERATED_OR_ROUTED"
+}
