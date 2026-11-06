@@ -1,0 +1,34 @@
+intel2	A	/srv/opentallas-scratch2/claude/qc-kits-aa/gen	0.50	PARTIAL 
+intel2	B	/srv/opentallas-scratch2/claude/flow-canary/retired/s81_79ffd79fd_1030_1445_staletool	3.03	PARTIAL MOVED epyc5:/srv/opentallas-scratch2/claude/moved-from-intel2-1105/flow-canary/retired/s81_79ffd79fd_1030_1445_staletool
+intel2	B	/srv/opentallas-scratch2/claude/die-qc-58b/kits	1.58	REMOVED MOVED epyc5:/srv/opentallas-scratch2/claude/moved-from-intel2-1105/die-qc-58b/kits
+intel2	B	/srv/opentallas-scratch2/claude/die-hbm-57/g2s	1.57	REMOVED MOVED epyc5:/srv/opentallas-scratch2/claude/moved-from-intel2-1105/die-hbm-57/g2s
+intel2	B	/srv/opentallas-scratch2/claude/die-qc-58b/probe_nl	0.90	REMOVED 
+intel2	B	/srv/opentallas-scratch2/claude/die-qc-58b/probe_nk	0.85	REMOVED 
+intel2	B	/srv/opentallas-scratch2/claude/die-s81-56/macb	0.68	REMOVED 
+intel2	B	/srv/opentallas-scratch2/claude/die-hbm-57/g2r	0.63	REMOVED 
+intel2	B	/srv/opentallas-scratch2/claude/wt/ds53-bkq-out	0.56	REMOVED 
+intel2	B	/srv/opentallas-scratch2/claude/dq68-qcevent/bind	0.40	REMOVED 
+intel2	B	/srv/opentallas-scratch2/claude/s81ck12/xrt1_P3M70_h-s81	0.38	PARTIAL 
+intel2	B	/srv/opentallas-scratch2/claude/die-hbm-57/genprobe	0.19	REMOVED 
+intel2	B	/srv/opentallas-scratch2/claude/s81ck12/gate_xrt1_T	0.15	REMOVED 
+intel2	B	/srv/opentallas-scratch2/claude/s81ck12/xrt1_P3M110_h-s81/lec	0.08	PARTIAL 
+intel2	B	/srv/opentallas-scratch2/claude/s81ck12/bfr_A_h-s81	0.05	PARTIAL 
+intel2	B	/srv/opentallas-scratch2/claude/dh55-cland/head_src_v2	0.05	REMOVED 
+intel2	B	/srv/opentallas-scratch2/claude/dh55-cland/head_src_v3	0.05	REMOVED 
+intel2	B	/srv/opentallas-scratch2/claude/die-hbm-66/fhp12m_lec	0.03	REMOVED 
+intel2	B	/srv/opentallas-scratch2/claude/s81/entry_fc31	0.03	REMOVED 
+intel2	B	/srv/opentallas-scratch2/claude/die-head-5/r2/sta	0.02	REMOVED 
+intel2	G	/srv/opentallas-scratch2/claude/wt/dh62-mesh	4.5	SKIP-keep:/srv/opentallas-scratch2/claude/wt/dh62-mesh/results/rtl/dsrom_recovery_20261004/levers/.keep
+intel2	G	/srv/opentallas-scratch2/claude/hbm60-lec/wt	48.9	SKIP-keep:/srv/opentallas-scratch2/claude/hbm60-lec/wt/results/rtl/dsrom_recovery_20261004/levers/.keep
+intel2	G	/srv/opentallas-scratch2/claude/flow-23/wt	48.8	SKIP-keep:/srv/opentallas-scratch2/claude/flow-23/wt/results/rtl/dsrom_recovery_20261004/levers/.keep
+intel2	G	/srv/opentallas-scratch2/claude/die-qc18-1028/pinilv/wt	1.9	SKIP-live/docker:die-qc18-1028
+intel2	G	/srv/opentallas-scratch2/claude/die-ci/wt	48.5	SKIP-keep:/srv/opentallas-scratch2/claude/die-ci/wt/results/rtl/dsrom_recovery_20261004/levers/.keep
+intel2	G	/srv/opentallas-scratch2/claude/die-s81-51/plan/wt	2.9	SKIP-live/docker:die-s81-51/plan
+intel2	G	/srv/opentallas-scratch2/claude/dq68-qcevent/q70/wp	1.5	SKIP-live/docker:dq68-qcevent
+intel2	G	/srv/opentallas-scratch2/claude/wt/dh62-mesh	4.5	REMOVED MOVED epyc5:/srv/opentallas-scratch2/claude/moved-from-intel2-1105/wt/dh62-mesh
+intel2	G	/srv/opentallas-scratch2/claude/hbm60-lec/wt	48.9	SKIP-live/docker:hbm60-lec/wt/physical/die_plan/qwen_kvsys/cores/harden/results/kv3_head_eighth_e1.signoff.json
+intel2	G	/srv/opentallas-scratch2/claude/flow-23/wt	48.8	SKIP-live/docker:flow-23/wt/physical/die_plan/qwen_kvsys/cores/harden/results/kv3_head_eighth_e1.signoff.json
+intel2	G	/srv/opentallas-scratch2/claude/die-qc18-1028/pinilv/wt	1.9	SKIP-live/docker:die-qc18-1028/pinilv/wt/physical/die_plan/qwen_kvsys/cores/harden/results/kv3_head_eighth_e1.signoff.json
+intel2	G	/srv/opentallas-scratch2/claude/die-ci/wt	48.5	SKIP-live/docker:die-ci/wt/physical/die_plan/qwen_kvsys/cores/harden/results/kv3_head_eighth_e1.signoff.json
+intel2	G	/srv/opentallas-scratch2/claude/die-s81-51/plan/wt	2.9	SKIP-live/docker:die-s81-51/plan
+intel2	G	/srv/opentallas-scratch2/claude/dq68-qcevent/q70/wp	1.5	SKIP-live/docker:dq68-qcevent/q70
