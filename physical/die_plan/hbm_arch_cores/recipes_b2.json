@@ -3749,5 +3749,31 @@
     "source_commit": "d727c1122244e484d0d2d0a0fb72f6fc9ae51e42",
     "read_at_commit": true,
     "util": 0.4
+  },
+  "ot_hgi_sfu_split3_ctl_rest_1c": {
+    "defines": [],
+    "params": {},
+    "util": 0.45,
+    "macros": [],
+    "functional_type": "sfu_ctl",
+    "source": "HBM-FORM-TIMING-11 d44v part 37: sub-core of ot_hgi_sfu_core_split3__ctl (I205 delay-line cut of HBM-FORM-TIMING-10, 0 cycles; lock-step bench + mutants results/die_hbm_1106/ctlsplit_p37/BENCH.txt); rest = ctl oneclk wrapper around ot_hgi_sfu_split3_ctl_rest_core + seam_d/seam_q",
+    "top": "ot_hgi_sfu_split3_ctl_rest_1c",
+    "files": [
+      "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_rest_core.sv",
+      "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_rest_1c.sv"
+    ]
+  },
+  "ot_hgi_sfu_split3_ctl_pipe_1c": {
+    "defines": [],
+    "params": {},
+    "util": 0.45,
+    "macros": [],
+    "functional_type": "sfu_ctl",
+    "source": "HBM-FORM-TIMING-11 d44v part 37: sub-core of ot_hgi_sfu_core_split3__ctl (I205 delay-line cut of HBM-FORM-TIMING-10, 0 cycles; lock-step bench + mutants results/die_hbm_1106/ctlsplit_p37/BENCH.txt); pipe = 21,816 delay-line flops + a local copy of the ctl reset sync (rst_n -> 2 flops -> relay)",
+    "top": "ot_hgi_sfu_split3_ctl_pipe_1c",
+    "files": [
+      "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_pipe_core.sv",
+      "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_pipe_1c.sv"
+    ]
   }
 }

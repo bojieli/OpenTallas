@@ -1,0 +1,86 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "part38",
+ "lane": "HBM-FORM-TIMING-11",
+ "note": "HBM-FORM-TIMING-11 d44v part 38 (COORD 11-06 10:2x/11:21): split3__ctl rest+pipe (I205 delay-line cut, 0 cycles; glue results/die_hbm_1106/ctlsplit_p37/ot_hgi_sfu_core_split3__ctl__p37glue.sv)",
+ "types": [
+  {
+   "type": "q_b113",
+   "stations_repointed": 48,
+   "core_conn_refs_repointed": 24,
+   "rest_box_um": [
+    509.664,
+    1010.88,
+    937.44,
+    1464.48
+   ],
+   "pipe_box_um": [
+    328.32,
+    1019.52,
+    501.12,
+    1170.72
+   ],
+   "rst_rows": {
+    "rst_n": null,
+    "rst_lg_n": null
+   }
+  },
+  {
+   "type": "q_b113__physical_v1",
+   "stations_repointed": 48,
+   "core_conn_refs_repointed": 24,
+   "rest_box_um": [
+    509.664,
+    1010.88,
+    937.44,
+    1464.48
+   ],
+   "pipe_box_um": [
+    328.32,
+    1019.52,
+    501.12,
+    1170.72
+   ],
+   "rst_rows": {
+    "rst_n": null,
+    "rst_lg_n": null
+   }
+  }
+ ],
+ "designs_removed": [
+  "ot_hgi_sfu_core_split3__ctl"
+ ],
+ "designs_added": [
+  "ot_hgi_sfu_split3_ctl_rest_1c",
+  "ot_hgi_sfu_split3_ctl_pipe_1c"
+ ],
+ "added_cycles": "0 (seam = FF->FF registers of the uncut core; pipe keeps a local copy of the 2-flop reset sync + relay)",
+ "rest": {
+  "inst": "u_sfucore_Q_ctl__rest",
+  "module": "ot_hgi_sfu_split3_ctl_rest_1c",
+  "pins_file": "cores/ot_hgi_sfu_split3_ctl_rest_1c__427.68x453.6__d44v_split.json",
+  "pins": 12373,
+  "seam_y_um": [
+   14.04,
+   128.472
+  ]
+ },
+ "pipe": {
+  "inst": "u_sfucore_Q_ctl__pipe",
+  "module": "ot_hgi_sfu_split3_ctl_pipe_1c",
+  "origin_um": [
+   328.32,
+   1019.52
+  ],
+  "outline_um": [
+   172.8,
+   151.2
+  ],
+  "pins_file": "cores/ot_hgi_sfu_split3_ctl_pipe_1c__172.8x151.2__d44v_split.json",
+  "pins": 566,
+  "clock_entry_um": [
+   86.4,
+   73.44
+  ]
+ }
+}
