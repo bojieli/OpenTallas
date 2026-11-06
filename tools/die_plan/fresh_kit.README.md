@@ -1,0 +1,39 @@
+# Fresh kit preparation
+
+`fresh_kit.py` sequences existing factories into a new output directory. It never
+routes, overwrites a kit, or copies arbitrary legacy Python/runners. Run preparation
+through `ot-run` with the same honest memory/CPU budget passed to this driver.
+The selected source must contain the factory's normal source/data dependencies;
+for a sparse source, include its reset-contract receipts and helper scripts too.
+
+```
+python3 tools/die_plan/fresh_kit.py --source REPO --profile partition \
+  --plan PLAN.json --type q_spb2 --overrides partition.json --out FRESH --mem 32 --cpus 2
+python3 tools/die_plan/fresh_kit.py --source REPO --profile s81-coll \
+  --plan PLAN.json --core-spec core.json --overrides compact.json --out FRESH --mem 16 --cpus 2
+```
+
+A partition override names `bind_out`, optional `asbuilt` and selected `instance`,
+`assembly_contracts`, `util`, and explicit `reset_mode`. Use `canonical` for ordinary
+kit reset conversion. A native relayed binding must supply its original full
+`reset_context_plan`, not an isolated extraction which invents a new reset root.
+`reset_expected` can state the selected entry/depth/release contract. The order is
+bound extraction, sealed signed-child assembly, canonical reset/cell preparation,
+mandatory internal stations, then physical generation. Inconsistent station depths
+or widths fail preparation; physical pins are never silently narrowed.
+
+For compact COLL, `core.json` names `module` and `recipes`; `compact.json` names
+`clock_pin`. The supported modules are the explicit E/W compact forms. Their source
+profile is the already proved three-file `336bbc9add43` RBL1 form, distinct from the
+selected current generator/tool cohort. The existing common keep-attribute patches
+in the recipe remain intact. The exact physical replay changes only its declared
+halos, KM32 clock configuration, private clock landing, and actual M6 PG form.
+
+`--history-pack` installs an explicit immutable historical-input pack through the
+existing source-history helper. Missing history is never replaced with today's RTL.
+The existing RTL lint/frontend runs once inside the standard ORFS image so `/work`
+macro paths resolve; the same frontend supplies the assembly/native inventory.
+`fresh_kit.json` points to each stage log, inventory and review image. `PREPARED`
+means preparation completed, not physical signoff. Review the image before route;
+only the existing signoff flow qualifies a built block. Unknown overrides are
+rejected instead of being translated into guessed patches.
