@@ -290,7 +290,7 @@ def macro_libs(kit, corner):
 
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
                   "kit_modes.py", "data_droop.py", "core_io_reference.py")
-OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py")
+OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py", "hard_landing.py")
 
 
 def _common_flow(source, name):
@@ -534,6 +534,8 @@ def signed_child_etm(model, flow_tag):
     if not names or files[names[0]] != model['liberty_sha256']:
         raise ValueError(f'{lib.name}: sha256 differs from the signed view export {pf}')
     so = ex.get('signoff')
+    if so and not Path(so).is_absolute():
+        so = str((pf.parent / so).resolve())
     if not so or not Path(so).is_file():
         raise ValueError(f'{pf}: child signoff.json {so} unavailable')
     if ex.get('signoff_sha256') and _sha_file(so) != ex['signoff_sha256']:

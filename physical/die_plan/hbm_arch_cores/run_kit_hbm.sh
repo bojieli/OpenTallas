@@ -25,6 +25,12 @@ set -uo pipefail
 K=$(cd "$1" && pwd -P); GOAL=${2:-finish}; MEM=${3:-32}; CPUS=${4:-16}
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
+# Optional existing XOR SAT backend; async LEC uses docker exec in this same container.
+LECSOLVER=()
+if [ -n "${OT_LEC_SOLVER:-}" ] && [ -d "$OT_LEC_SOLVER" ]; then
+  SOLVERDIR=$(cd "$OT_LEC_SOLVER" && pwd -P)
+  LECSOLVER=(-v "$SOLVERDIR:/lecsolver:ro" -e LEC_SOLVER_PATH=/lecsolver)
+fi
 # HBM-CORES-KITS-13 10-29: the sign-off bundle (tools/die_plan/signoff.py SIGNOFF_BUNDLE, copied by the generator) must be
 # in the kit BEFORE any flow step: a hand kit copy with --exclude 'signoff*' dropped signoff.py, the ring V1/V2 flows ran
 # ~1 h to 6_final and the post sign-off then died on "can't open signoff.py" (no verdict).  Fail closed up front (rc 10,
@@ -42,7 +48,7 @@ LECA=
 if { [ "${OT_LEC_ASYNC:-1}" != 0 ] || [ -f "$K/lec_async.on" ] || [ -f "$K/lec_async.identity" ]; } && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then
   LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS" "$DK" "$GOAL" || exit $?
 fi
-$DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
+$DK run "${LECSOLVER[@]}" --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
   if [ '${OT_GRT183_RESUME:-1}' != 0 ] && [ -f /work/grt183_make.sh ]; then M=\"bash /work/grt183_make.sh \$M\"; fi; \

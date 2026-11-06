@@ -1,0 +1,221 @@
+{
+ "basis": "Signed child pin-flop means and exact generated library clock paths; apply the existing parent early-tap budget convention, not the obsolete 250/202.5 estimates",
+ "children": [
+  {
+   "module": "sle_cland_w2104_s",
+   "clock_pin": "clk",
+   "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w2104_s",
+   "signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/signoff/signoff.json",
+   "pinflop_mean_ps": {
+    "tt": 166.22,
+    "ff": 134.73
+   },
+   "lib_clock_paths": {
+    "tt": {
+     "rise": 190.3445,
+     "fall": 202.42674,
+     "min_rise": 148.75604,
+     "min_fall": 160.21284
+    },
+    "ff": {
+     "rise": 155.16014,
+     "fall": 161.08321,
+     "min_rise": 116.21279,
+     "min_fall": 120.91634
+    }
+   }
+  },
+  {
+   "module": "sle_cland_w457_e",
+   "clock_pin": "clk",
+   "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w457_e",
+   "signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/out_mem8g/sle_cland_w457_e_h09dd6b_fwdtag/signoff/signoff.json",
+   "pinflop_mean_ps": {
+    "tt": 82.01,
+    "ff": 65.28
+   },
+   "lib_clock_paths": {
+    "tt": {
+     "rise": 87.41702,
+     "fall": 91.70481,
+     "min_rise": 72.07265,
+     "min_fall": 76.55293
+    },
+    "ff": {
+     "rise": 70.89859,
+     "fall": 72.85511,
+     "min_rise": 56.49117,
+     "min_fall": 58.29321
+    }
+   }
+  },
+  {
+   "module": "sle_cland_w457_s",
+   "clock_pin": "clk",
+   "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w457_s",
+   "signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/out_mem8g/sle_cland_w457_s_hb98758_fwdtag/signoff/signoff.json",
+   "pinflop_mean_ps": {
+    "tt": 87.18,
+    "ff": 68.71
+   },
+   "lib_clock_paths": {
+    "tt": {
+     "rise": 92.82924,
+     "fall": 96.66962,
+     "min_rise": 75.18137,
+     "min_fall": 79.27586
+    },
+    "ff": {
+     "rise": 74.16301,
+     "fall": 76.3497,
+     "min_rise": 58.64964,
+     "min_fall": 60.36344
+    }
+   }
+  },
+  {
+   "module": "sle_cland_w517_n",
+   "clock_pin": "clk",
+   "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w517_n",
+   "signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/out_mem8g/sle_cland_w517_n_h7d5c03_fwdtag/signoff/signoff.json",
+   "pinflop_mean_ps": {
+    "tt": 89.78,
+    "ff": 71.47
+   },
+   "lib_clock_paths": {
+    "tt": {
+     "rise": 96.37068,
+     "fall": 100.63495,
+     "min_rise": 76.08425,
+     "min_fall": 80.18969
+    },
+    "ff": {
+     "rise": 78.23183,
+     "fall": 80.71116,
+     "min_rise": 59.45735,
+     "min_fall": 61.24057
+    }
+   }
+  },
+  {
+   "module": "sle_cland_w517_n_1",
+   "clock_pin": "clk",
+   "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w517_n_1",
+   "signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/out_mem8g/sle_cland_w517_n_1_h586329_fwdtag/signoff/signoff.json",
+   "pinflop_mean_ps": {
+    "tt": 89.73,
+    "ff": 71.8
+   },
+   "lib_clock_paths": {
+    "tt": {
+     "rise": 97.9576,
+     "fall": 103.10136,
+     "min_rise": 75.51524,
+     "min_fall": 79.519
+    },
+    "ff": {
+     "rise": 80.69971,
+     "fall": 83.88162,
+     "min_rise": 58.51466,
+     "min_fall": 60.27656
+    }
+   }
+  },
+  {
+   "module": "sle_cland_w537_e",
+   "clock_pin": "clk",
+   "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w537_e",
+   "signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/out_mem8g/sle_cland_w537_e_h0bbea7_fwdtag/signoff/signoff.json",
+   "pinflop_mean_ps": {
+    "tt": 85.85,
+    "ff": 68.49
+   },
+   "lib_clock_paths": {
+    "tt": {
+     "rise": 95.04823,
+     "fall": 99.42963,
+     "min_rise": 74.11589,
+     "min_fall": 78.58813
+    },
+    "ff": {
+     "rise": 78.40694,
+     "fall": 80.67963,
+     "min_rise": 57.95919,
+     "min_fall": 59.74582
+    }
+   }
+  },
+  {
+   "module": "sle_cland_w537_s",
+   "clock_pin": "clk",
+   "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w537_s",
+   "signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/out_mem8g/sle_cland_w537_s_h5bfe42_fwdtag/signoff/signoff.json",
+   "pinflop_mean_ps": {
+    "tt": 85.31,
+    "ff": 67.81
+   },
+   "lib_clock_paths": {
+    "tt": {
+     "rise": 91.67316,
+     "fall": 95.91861,
+     "min_rise": 74.04424,
+     "min_fall": 78.34905
+    },
+    "ff": {
+     "rise": 74.10809,
+     "fall": 76.30879,
+     "min_rise": 57.38549,
+     "min_fall": 59.04949
+    }
+   }
+  },
+  {
+   "module": "sle_cland_w537_w",
+   "clock_pin": "clk",
+   "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w537_w",
+   "signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/out_mem8g/sle_cland_w537_w_h83ba01_fwdtag/signoff/signoff.json",
+   "pinflop_mean_ps": {
+    "tt": 83.32,
+    "ff": 66.36
+   },
+   "lib_clock_paths": {
+    "tt": {
+     "rise": 89.62522,
+     "fall": 93.89539,
+     "min_rise": 72.28561,
+     "min_fall": 76.78952
+    },
+    "ff": {
+     "rise": 72.84764,
+     "fall": 74.89825,
+     "min_rise": 56.74342,
+     "min_fall": 58.53917
+    }
+   }
+  },
+  {
+   "module": "sle_cland_w653_w",
+   "clock_pin": "clk",
+   "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w653_w",
+   "signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/out_mem8g/sle_cland_w653_w_h70dbd8_fwdtag/signoff/signoff.json",
+   "pinflop_mean_ps": {
+    "tt": 88.75,
+    "ff": 70.53
+   },
+   "lib_clock_paths": {
+    "tt": {
+     "rise": 95.54108,
+     "fall": 99.57169,
+     "min_rise": 75.51991,
+     "min_fall": 79.45106
+    },
+    "ff": {
+     "rise": 77.42206,
+     "fall": 79.67993,
+     "min_rise": 58.5142,
+     "min_fall": 60.12019
+    }
+   }
+  }
+ ]
+}

@@ -43,7 +43,7 @@ def top_ports(path):
         m = re.match(r'^\s*(input|output)\s+wire\s*(?:\[(\d+):(\d+)\])?\s*(\w+)\s*[,;]?', line)
         if m:
             result[m[4]] = dict(direction=m[1], width=int(m[2])-int(m[3])+1 if m[2] else 1)
-        if re.match(r'^\s*wire\b', line):
+        if re.match(r'^\s*endmodule\b', line):
             break
     return result
 

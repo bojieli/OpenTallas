@@ -1,0 +1,421 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/out/fixtures/lock_equiv.ys' --
+
+1. Executing Verilog-2005 frontend: /out/fixtures/pll.sv
+Parsing SystemVerilog input from `/out/fixtures/pll.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_pll_analog_model'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /out/fixtures/status.sv
+Parsing SystemVerilog input from `/out/fixtures/status.sv' to AST representation.
+Generating RTLIL representation for module `\status'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \status
+Used module:     \qkd_pll_analog_model
+
+3.2. Analyzing design hierarchy..
+Top module:  \status
+Used module:     \qkd_pll_analog_model
+Removed 0 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$/out/fixtures/pll.sv:15$1 in module qkd_pll_analog_model.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 12 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:14$27'.
+  Set init value: \locked = 1'0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$26'.
+  Set init value: \refs = 0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$25'.
+  Set init value: \phy = 1'0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$24'.
+  Set init value: \ingest = 1'0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$23'.
+  Set init value: \host = 1'0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$22'.
+  Set init value: \hbm = 1'0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$21'.
+  Set init value: \core = 1'0
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \por_n in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$1'.
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~2 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:14$27'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$26'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$25'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$24'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$23'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$22'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$21'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:22$18'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:21$15'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:20$12'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:19$9'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:18$6'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$1'.
+     1/2: $0\refs[31:0]
+     2/2: $0\locked[0:0]
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\qkd_pll_analog_model.\phy' from process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:22$18'.
+Removing init bit 1'0 for non-memory siginal `\qkd_pll_analog_model.\phy` in process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:22$18`.
+No latch inferred for signal `\qkd_pll_analog_model.\ingest' from process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:21$15'.
+Removing init bit 1'0 for non-memory siginal `\qkd_pll_analog_model.\ingest` in process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:21$15`.
+No latch inferred for signal `\qkd_pll_analog_model.\host' from process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:20$12'.
+Removing init bit 1'0 for non-memory siginal `\qkd_pll_analog_model.\host` in process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:20$12`.
+No latch inferred for signal `\qkd_pll_analog_model.\hbm' from process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:19$9'.
+Removing init bit 1'0 for non-memory siginal `\qkd_pll_analog_model.\hbm` in process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:19$9`.
+No latch inferred for signal `\qkd_pll_analog_model.\core' from process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:18$6'.
+Removing init bit 1'0 for non-memory siginal `\qkd_pll_analog_model.\core` in process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:18$6`.
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\qkd_pll_analog_model.\locked' using process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$1'.
+  created $adff cell `$procdff$42' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pll_analog_model.\refs' using process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$1'.
+  created $adff cell `$procdff$47' with positive edge clock and positive level reset.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:14$27'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$26'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$25'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$24'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$23'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$22'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$21'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:22$18'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:21$15'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:20$12'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:19$9'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:18$6'.
+Found and cleaned up 2 empty switches in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$1'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$1'.
+Cleaned up 2 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module status.
+Optimizing module qkd_pll_analog_model.
+Couldn't topologically sort cells, optimizing module qkd_pll_analog_model may take a longer time.
+Couldn't topologically sort cells, optimizing module qkd_pll_analog_model may take a longer time.
+<suppressed ~6 debug messages>
+
+5. Executing FLATTEN pass (flatten design).
+Deleting now unused module qkd_pll_analog_model.
+<suppressed ~1 debug messages>
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \status..
+Removed 14 unused cells and 52 unused wires.
+<suppressed ~33 debug messages>
+Renaming module \status to \gold.
+
+7. Executing Verilog-2005 frontend: /out/fixtures/pll.sv
+Parsing SystemVerilog input from `/out/fixtures/pll.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_pll_analog_model'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: /out/fixtures/status.sv
+Parsing SystemVerilog input from `/out/fixtures/status.sv' to AST representation.
+Generating RTLIL representation for module `\status'.
+Successfully finished Verilog frontend.
+
+9. Executing HIERARCHY pass (managing design hierarchy).
+
+9.1. Analyzing design hierarchy..
+Top module:  \status
+Used module:     \qkd_pll_analog_model
+
+9.2. Analyzing design hierarchy..
+Top module:  \status
+Used module:     \qkd_pll_analog_model
+Removed 0 unused modules.
+
+10. Executing PROC pass (convert processes to netlists).
+
+10.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+10.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$/out/fixtures/pll.sv:15$49 in module qkd_pll_analog_model.
+Removed a total of 0 dead cases.
+
+10.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 12 assignments to connections.
+
+10.4. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:14$75'.
+  Set init value: \locked = 1'0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$74'.
+  Set init value: \refs = 0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$73'.
+  Set init value: \phy = 1'0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$72'.
+  Set init value: \ingest = 1'0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$71'.
+  Set init value: \host = 1'0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$70'.
+  Set init value: \hbm = 1'0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$69'.
+  Set init value: \core = 1'0
+
+10.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \por_n in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$49'.
+
+10.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~2 debug messages>
+
+10.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:14$75'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$74'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$73'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$72'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$71'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$70'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$69'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:22$66'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:21$63'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:20$60'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:19$57'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:18$54'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$49'.
+     1/2: $0\refs[31:0]
+     2/2: $0\locked[0:0]
+
+10.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\qkd_pll_analog_model.\phy' from process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:22$66'.
+Removing init bit 1'0 for non-memory siginal `\qkd_pll_analog_model.\phy` in process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:22$66`.
+No latch inferred for signal `\qkd_pll_analog_model.\ingest' from process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:21$63'.
+Removing init bit 1'0 for non-memory siginal `\qkd_pll_analog_model.\ingest` in process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:21$63`.
+No latch inferred for signal `\qkd_pll_analog_model.\host' from process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:20$60'.
+Removing init bit 1'0 for non-memory siginal `\qkd_pll_analog_model.\host` in process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:20$60`.
+No latch inferred for signal `\qkd_pll_analog_model.\hbm' from process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:19$57'.
+Removing init bit 1'0 for non-memory siginal `\qkd_pll_analog_model.\hbm` in process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:19$57`.
+No latch inferred for signal `\qkd_pll_analog_model.\core' from process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:18$54'.
+Removing init bit 1'0 for non-memory siginal `\qkd_pll_analog_model.\core` in process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:18$54`.
+
+10.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\qkd_pll_analog_model.\locked' using process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$49'.
+  created $adff cell `$procdff$90' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pll_analog_model.\refs' using process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$49'.
+  created $adff cell `$procdff$95' with positive edge clock and positive level reset.
+
+10.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+10.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:14$75'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$74'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$73'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$72'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$71'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$70'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$69'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:22$66'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:21$63'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:20$60'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:19$57'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:18$54'.
+Found and cleaned up 2 empty switches in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$49'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$49'.
+Cleaned up 2 empty switches.
+
+10.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module status.
+Optimizing module qkd_pll_analog_model.
+Couldn't topologically sort cells, optimizing module qkd_pll_analog_model may take a longer time.
+Couldn't topologically sort cells, optimizing module qkd_pll_analog_model may take a longer time.
+<suppressed ~6 debug messages>
+
+11. Executing OPT_HIER pass.
+Disconnected unused output terminal '\pll_WS' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_WN' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_ES' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_EN' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_c' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_fwd' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_hbm_WS' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_hbm_WN' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_hbm_ES' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_hbm_EN' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_host' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_ingest' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_phy' in module 'qkd_pll_analog_model'
+<suppressed ~5 debug messages>
+
+12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \status..
+Finding unused cells or wires in module \qkd_pll_analog_model..
+Removed 14 unused cells and 52 unused wires.
+<suppressed ~20 debug messages>
+
+13. Executing FLATTEN pass (flatten design).
+Deleting now unused module qkd_pll_analog_model.
+<suppressed ~1 debug messages>
+
+14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \status..
+Renaming module \status to \gate.
+
+15. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: u_pll.locked_gold (\u_pll.locked_gold), u_pll.locked_gate (\u_pll.locked_gate) -> u_pll.locked
+Presumably equivalent wires: u_pll.refs_gold (\u_pll.refs_gold), u_pll.refs_gate (\u_pll.refs_gate) -> u_pll.refs
+Presumably equivalent wires: u_pll.por_n_gold (\por_n_gold), u_pll.por_n_gate (\por_n_gate) -> u_pll.por_n
+Presumably equivalent wires: u_pll.refclk_gold (\refclk_gold), u_pll.refclk_gate (\refclk_gate) -> u_pll.refclk
+Presumably equivalent wires: locked_gold (\u_pll.locked_gold), locked_gate (\u_pll.locked_gate) -> locked
+Presumably equivalent wires: por_n_gold (\por_n_gold), por_n_gate (\por_n_gate) -> por_n
+Presumably equivalent wires: refclk_gold (\refclk_gold), refclk_gate (\refclk_gate) -> refclk
+Changing input S of cell $flatten\u_pll.$procmux$79_gate ($mux): \u_pll.locked_gate -> \locked
+Changing input B of cell $flatten\u_pll.$procmux$79_gate ($mux): \u_pll.refs_gate -> \u_pll.refs
+Changing input A of cell $flatten\u_pll.$eq$/out/fixtures/pll.sv:17$52_gate ($eq): \u_pll.refs_gate -> \u_pll.refs
+Changing input A of cell $flatten\u_pll.$add$/out/fixtures/pll.sv:17$53_gate ($add): \u_pll.refs_gate -> \u_pll.refs
+Changing input A of cell $flatten\u_pll.$procmux$82_gate ($mux): \u_pll.locked_gate -> \locked
+Changing input S of cell $flatten\u_pll.$procmux$84_gate ($mux): \u_pll.locked_gate -> \locked
+Changing input B of cell $flatten\u_pll.$procmux$84_gate ($mux): \u_pll.locked_gate -> \locked
+Changing input B of cell $flatten\u_pll.$procmux$77_gate ($mux): \u_pll.refs_gate -> \u_pll.refs
+Changing input S of cell $flatten\u_pll.$procmux$31_gold ($mux): \u_pll.locked_gold -> \locked
+Changing input B of cell $flatten\u_pll.$procmux$31_gold ($mux): \u_pll.refs_gold -> \u_pll.refs
+Changing input A of cell $flatten\u_pll.$procmux$34_gold ($mux): \u_pll.locked_gold -> \locked
+Changing input S of cell $flatten\u_pll.$procmux$36_gold ($mux): \u_pll.locked_gold -> \locked
+Changing input B of cell $flatten\u_pll.$procmux$36_gold ($mux): \u_pll.locked_gold -> \locked
+Changing input A of cell $flatten\u_pll.$add$/out/fixtures/pll.sv:17$5_gold ($add): \u_pll.refs_gold -> \u_pll.refs
+Changing input A of cell $flatten\u_pll.$eq$/out/fixtures/pll.sv:17$4_gold ($eq): \u_pll.refs_gold -> \u_pll.refs
+Changing input B of cell $flatten\u_pll.$procmux$29_gold ($mux): \u_pll.refs_gold -> \u_pll.refs
+Presumably equivalent cells: u_pll_gold u_pll_gate ($scopeinfo) -> u_pll
+
+16. Executing HIERARCHY pass (managing design hierarchy).
+
+16.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+16.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gold'.
+Removing unused module `\gate'.
+Removed 2 unused modules.
+
+17. Executing ASYNC2SYNC pass.
+Replacing equiv.$flatten\u_pll.$procdff$90_gate ($adff): ARST=\por_n_gate, D=$flatten\u_pll.$0\locked[0:0]_gate, Q=\u_pll.locked_gate
+Replacing equiv.$flatten\u_pll.$procdff$95_gate ($adff): ARST=\por_n_gate, D=$flatten\u_pll.$0\refs[31:0]_gate, Q=\u_pll.refs_gate
+Replacing equiv.$flatten\u_pll.$procdff$47_gold ($adff): ARST=\por_n_gold, D=$flatten\u_pll.$0\refs[31:0]_gold, Q=\u_pll.refs_gold
+Replacing equiv.$flatten\u_pll.$procdff$42_gold ($adff): ARST=\por_n_gold, D=$flatten\u_pll.$0\locked[0:0]_gold, Q=\u_pll.locked_gold
+
+18. Executing EQUIV_SIMPLE pass.
+Found 36 unproven $equiv cells (5 groups) in equiv:
+  Trying to prove $equiv for \locked:ezsat
+ezsat
+ success!
+ Grouping SAT models for \u_pll.refs:
+  Trying to prove $equiv for \u_pll.refs [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [1]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [2]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [3]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [4]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [5]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [6]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [7]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [8]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [9]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [10]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [11]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [12]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [13]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [14]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [15]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [16]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [17]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [18]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [19]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [20]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [21]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [22]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [23]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [24]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [25]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [26]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [27]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [28]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [29]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [30]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refs [31]:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.locked:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \u_pll.por_n:ezsat
+ success!
+  Trying to prove $equiv for \u_pll.refclk:ezsat
+ success!
+Proved 36 previously unproven $equiv cells.
+
+19. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+20. Executing EQUIV_STATUS pass.
+Found 36 $equiv cells in equiv:
+  Of those cells 36 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 50494359bb, time: 0.07s, user: 0.07s, system: 0.01s, MEM: 24.31 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 75% 1x equiv_simple (0 sec), 9% 6x read_verilog (0 sec), ...

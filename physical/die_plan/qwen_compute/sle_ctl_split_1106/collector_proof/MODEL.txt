@@ -1,0 +1,6 @@
+Actual four old/new registered collector graphs; each source identity retained. Upstream unchanged ring/child monitors are symbolic ready/fault inputs.
+Raw reset at each real node is represented by its exact reset-pipeline depth from the common reset root. All source depths and registered collector depths are preserved (8 collector edges); data cycles0, boot cycles0.
+All collector/reset cones are acyclic and have at most15 edges of input history (8 collector +7 reset). Exhaustive SAT for24 steps from the reset state therefore covers the complete finite-history output behavior.
+Yosys0.67 SAT PASS (all inputs/reset arbitrary, 24steps, assert old==new),2.38s,188.68MB. Initial tool-preparation attempt needed chformal -lower for new $check cells; failed log retained in scratch.
+IVerilog500edge all4graphs lockstep bad0; one-cycle source mutant caught4 mismatches.
+Actual source ready+fault endpoints all within243.542um of selected registered reset nodes, below405um. Same-depth selection never substitutes a combinational or deeper shortcut.

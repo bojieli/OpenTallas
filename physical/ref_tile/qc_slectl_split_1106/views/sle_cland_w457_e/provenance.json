@@ -1,0 +1,97 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "sle_cland_w457_e_h09dd6b",
+  "module": "sle_cland_w457_e",
+  "plan_type": "sle_ctl__cl67434795",
+  "outline_um": [
+   43.2,
+   94.608
+  ],
+  "ref_tile": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds2/kits/_spec/sle_cland_w457_e",
+  "spec": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds2/kits/_spec/sle_cland_w457_e/spec.json",
+  "spec_sha256": "80f2a980be6d10a693d7788294b2461468c2f68ff67a6f6600855696bab41dad",
+  "pins_file": "cores/sle_ctl/sle_cland_w457_e_pins.json",
+  "pins_sha256": "09dd6bf644befa2c686b491666683b2f1430d5c3e12d7106da4bfe493deb4ecc",
+  "pins": 926,
+  "plan_lef": "plan pin table (plan_pins_contract)",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n",
+   "t_rst_n"
+  ],
+  "recipe_sha256": "e0bbfea4081a112777b5b01852eaa172927b4e93d88402acf21561db6d521f24",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan early core tap 250 TT / 202.5 FF (QC-SLECTL-B/SPLIT-1105: target 250/202.5 ESTIMATE, re-measure from the child's own kit)",
+   "ff": "plan early core tap 250 TT / 202.5 FF (QC-SLECTL-B/SPLIT-1105: target 250/202.5 ESTIMATE, re-measure from the child's own kit)"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "abd257a000",
+  "sdc_lint_sha256": "1009707936b623e070d7637a3336af8ca8ea79bfb1ad981e6d8f095d123634a3",
+  "face_guard_sha256": "89d14d085ae0292e3c1d0765d6c946765386a94aefcb28510d0b3d675552d5bf",
+  "signoff_sha256": "3e97ef41823cac5d5dbff8d672eeb6839ef32278c58ca44cbd22865476eebfc5",
+  "macros": {},
+  "sram_pincol_halo": [],
+  "rtl_patches": [],
+  "kit_hash": "8af488d254ffa2af",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5,
+   "default": true
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_canon_sha256": "94b046170086e13b26a2f755dc2530a29611d7fcba42a239a447ad951c3ffe05",
+  "pins_placed_canon_sha256": "22b5ba96fb64f482950f1b5fd320e824e424293afec18e40bc1e06a0b99f2d47",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w457_e_h09dd6b_fwdtag",
+ "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+ "flow_tag": "flow-20261106-z-qc",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-06T09:08:01+00:00",
+  "kit": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w457_e_h09dd6b_fwdtag",
+  "base": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w457_e_h09dd6b_fwdtag/run/results/asap7/kq_sle_cland_w457_e_h09dd6b/base",
+  "signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/out_mem8g/sle_cland_w457_e_h09dd6b_fwdtag/signoff/signoff.json",
+  "signoff_sha256": "3009deeb9a8d4cbc60dd7e3d2c6ad93db45830fddd7629253eb39f856abeeaf9",
+  "signoff_generated": "2026-11-06T09:01:43+00:00",
+  "odb": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w457_e_h09dd6b_fwdtag/run/results/asap7/kq_sle_cland_w457_e_h09dd6b/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/out_mem8g/sle_cland_w457_e_h09dd6b_fwdtag/lec/lec.json",
+  "note": null,
+  "lib_basis": null,
+  "files_sha256": {
+   "pins.json": "29a876d08fa19fb3775aef6b684331fe46f97f2c478c15e7571cbdde45972df9",
+   "sle_cland_w457_e.lef": "d94e3f7d0579e896ede6edfcfd906c93fd0d1cdd72afe856e70dca2bcaeb0473",
+   "sle_cland_w457_e_ff.lib": "d1f15453399cff64abcc7d2b18d127f9bea081e49658f6ab2015e6805d518dc8",
+   "sle_cland_w457_e_tt.lib": "480cded4a9921abc6097748eabdf7c0d872531c968ad401cd389673e9b7705e0"
+  }
+ }
+}

@@ -123,7 +123,7 @@ module tb_kvslice;
     // request, so its CONTEXT producer is empty when D2D_FIRST_TOKEN's calendar slot fires (d2d fault 0x80, DIE-KV-48-FN).
     // Sent once, after the die's ready STATUS (KV-FN-3, below) and after every boot frame, through the same credited
     // board port.  Default on in the token phase (+START_AFTER_SETUP +FAR=1); +HOST_TOKEN_OFF = control.
-    // +HOST_TOKEN_TOK (1) +HOST_TOKEN_POS (CTX-1) +HOST_TOKEN_GEN (1) +HOST_TOKEN_EPOCH (4) +HOST_TOKEN_SEPOCH (0).
+    // +HOST_TOKEN_TOK (1) +HOST_TOKEN_POS (CTX-1) +HOST_TOKEN_GEN (1) +HOST_TOKEN_EPOCH (4) +HOST_TOKEN_SEPOCH (programme +EPOCH).
     // KV-FN-3 10-31 START only after the die reports ready (replaces the fixed +64 delay, which raced the die: the peer
     // token service is fail-closed, a START whose peer_service_fresh is false -- local_service_ready = guard ready &&
     // program_ready, and program_ready needs the program commit -- sets a sticky fault and never latches token_epoch).
@@ -132,8 +132,19 @@ module tb_kvslice;
     // every die->host word and queues START once a STATUS with ready 1 and service epoch == +HOST_TOKEN_SEPOCH arrived,
     // + HOST_TOKEN_READY_MARGIN (32) core cycles, and not before HOST_TOKEN_DELAY (default 0 here) after mission START.
     // +HOST_TOKEN_NOWAIT = the old fixed-delay form (control; default delay 64 then).
+    // TOKEN_IDENTITY_POLICY_BEGIN
+    function automatic integer kvh_service_epoch(input integer programme, requested, input bit explicit_value);
+        kvh_service_epoch = explicit_value ? requested : programme;
+    endfunction
+    function automatic bit kvh_token_identity_valid(input integer tok, pos, gen, epoch, service);
+        kvh_token_identity_valid = tok >= 0 && tok < 151936 && pos >= 0 && pos <= 262143 &&
+            gen >= 0 && gen < 4 && epoch >= 0 && epoch <= 65535 && service >= 0 && service <= 65535 &&
+            ((pos >> 13) & 7) == 0 && (epoch & 3) == ((pos >> 16) & 3);
+    endfunction
+    // TOKEN_IDENTITY_POLICY_END
+
     integer host_tok_delay = -1, host_tok_frame = -1, host_tok_tok = 1, host_tok_pos = -1, host_tok_gen = 1,
-            host_tok_epoch = 4, host_tok_sepoch = 0, host_tok_margin = 32, die_ready_cyc = -1, n_d2h = 0;
+            host_tok_epoch = 4, host_tok_sepoch = -1, host_tok_margin = 32, die_ready_cyc = -1, n_d2h = 0;
     reg host_tok_on = 0, host_tok_sent_seen = 0, host_tok_wait = 1;
     always @(posedge ck_host) if (hc_rx_v) begin
         if (n_d2h < 200)
@@ -304,7 +315,7 @@ module tb_kvslice;
         $fflush;
     end
     initial begin
-        integer fd, t; reg [63:0] d;
+        integer fd, t; bit service_epoch_override; reg [63:0] d;
         if (!$value$plusargs("PHASE=%s", phase)) phase = "boot";
         if (!$value$plusargs("FRAMES=%s", fpath)) $fatal(1, "+FRAMES required");
         if (!$value$plusargs("MUT_FRAME=%d", mut_frame)) mut_frame = -1;
@@ -330,10 +341,16 @@ module tb_kvslice;
         void'($value$plusargs("HOST_TOKEN_TOK=%d", host_tok_tok));
         void'($value$plusargs("HOST_TOKEN_GEN=%d", host_tok_gen));
         void'($value$plusargs("HOST_TOKEN_EPOCH=%d", host_tok_epoch));
-        void'($value$plusargs("HOST_TOKEN_SEPOCH=%d", host_tok_sepoch));
+        // Service identity follows the installed programme, while token epoch/gen
+        // remain independent job identities (token epoch low bits encode position).
+        service_epoch_override = $value$plusargs("HOST_TOKEN_SEPOCH=%d", host_tok_sepoch);
+        host_tok_sepoch = kvh_service_epoch(epoch_exp, host_tok_sepoch, service_epoch_override);
+        if (host_tok_on && (host_tok_sepoch < 0 || host_tok_sepoch > 65535))
+            $fatal(1, "HOST_TOKEN service epoch requires the actual programme +EPOCH or explicit +HOST_TOKEN_SEPOCH");
+        if (!host_tok_on && host_tok_sepoch < 0) host_tok_sepoch = 0;
         if (!$value$plusargs("HOST_TOKEN_POS=%d", host_tok_pos)) host_tok_pos = int'(far_pos);
-        if (host_tok_on && (host_tok_epoch % 4 != (host_tok_pos >> 16) % 4 || ((host_tok_pos >> 13) & 7) != 0 || host_tok_tok >= 151936))
-            $fatal(1, "HOST_TOKEN fields violate the peer token frame rules (epoch[1:0] = pos[17:16], pos[15:13] = 0, token < 151936)");
+        if (host_tok_on && !kvh_token_identity_valid(host_tok_tok, host_tok_pos, host_tok_gen, host_tok_epoch, host_tok_sepoch))
+            $fatal(1, "HOST_TOKEN fields violate the peer token frame rules (epoch[1:0] = pos[17:16], pos[15:13] = 0, token < 151936, gen fits2bits and epochs fit16bits)");
         $display("HOSTTOK_WAIT ready_wait %0d margin %0d (die CTRL STATUS 0x21 ready=1)", host_tok_wait, host_tok_margin);
         $display("HOSTTOK_CFG on %0d delay %0d tok %0d pos %0d gen %0d epoch %0d sepoch %0d", host_tok_on, host_tok_delay,
                  host_tok_tok, host_tok_pos, host_tok_gen, host_tok_epoch, host_tok_sepoch);

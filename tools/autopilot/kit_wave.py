@@ -773,6 +773,10 @@ RULES = [
     ("PLAN", None, r"is blocked|fails? closed|no legal site|DPL-0033|DPL-0036|not in plan|unknown (?:partition )?type|"
                    r"outline|utili[sz]ation .* exceeds|PDN-0\d+", "plan geometry / site"),
     ("PLAN", r"^geom$", r"FAIL", "AUTO-GEOM rule FAIL (geometry)"),
+    ("PLAN", r"^kit_topology$", r"KIT_TOPOLOGY_(?:BIND_STALE|CONTEXT|REGENERATE|SOURCE)",
+     "native source stage/reset realization differs: regenerate the canonical bind/kit"),
+    ("FLOW", r"^kit_topology$", r"No such file|can.t open file|ImportError|ModuleNotFoundError",
+     "captured source cohort lacks canonical topology preparation capability/input"),
     ("FLOW", r"^bind$", r"FileNotFoundError|No such file", "die-prep bind recipe input missing"),
     ("PLAN", r"^bind$", r".", "plan of record not cleanly bound (strict bind)"),
     ("PLAN", r"^cells$", r".", "cell count above the kit run cap"),
@@ -1133,6 +1137,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "gen_host": pick_gen_host(cfg, die, take=int(opt(cfg, die, "place_mem_gb"))),
             "src": d["src"], "src_sha": d.get("src_sha", ""), "queue_src": d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": d.get("kit_rtl") or {},
+            "canonical_topology_prepare": True,  # next captured cohort; old worker specs stay unchanged
             # AUTOBUILD-PIPE-2: per-die hard-core generator (HBM gen_core_kit_hbm.py); kind=core items use it instead
             # of kit-rtl + gen.py phys.  {views_cmd, gen_cmd, runner, item_args{module: [...]}} (see core_kit_cmds)
             "core_kit": dict(d.get("core_kit") or {}, args=list((d.get("core_kit") or {}).get("args") or [])
@@ -2048,6 +2053,16 @@ def run_item(spec_path):
         plan, prc = prov_stage(sp, run, remote, fail, res, rtl=f"{W}/rtl" if kit_rtl_arg else "")
         if plan is None:
             return prc
+    if not core and kit_rtl_arg and sp.get("canonical_topology_prepare"):
+        # One canonical implementation for both bind and script callers, after
+        # the actual typed overlay and before any physical generation.
+        helper = f"{src}/tools/die_plan/kit_topology.py"
+        context_args = f" --asbuilt {q(kr['asbuilt'])}" if kr.get("asbuilt") else ""
+        prep = (f"cd {q(src)} && python3 -I {q(helper)} prepare-stations {q(plan)} {q(T)} {q(W)}/rtl "
+                f"--native-plan {q(plan0)}{context_args}")
+        rc, txt = run("kit_topology", otrun(8, 2, W, prep, gh))
+        if rc:
+            return fail("kit_topology", txt)
     if not core:
         ps = sp.get("cland_pinslot") or ""
         # a wave source checkout older than gen phys --cland-pinslot keeps the plan-only pinslot (noted in the gen log)

@@ -7,6 +7,25 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 
+
+def test_signed_hardcore_view_does_not_emit_soft_cell_guide(tmp_path):
+    """Actual q_spb2 shape: contents lacks LEF; two explicit hard-core views own the cells."""
+    sys.path.insert(0, str(HERE))
+    import kit_istations
+    t = dict(contents=[
+        dict(inst='u_xc_Q2', module='xcal', origin_um=[682.56, 1244.16], outline_um=[138.24, 224.64]),
+        dict(inst='u_xc_Q3', module='xcal', origin_um=[1321.92, 1244.16], outline_um=[138.24, 224.64]),
+        dict(inst='fault_or', module='qkd_hp_or2', origin_um=[10, 20], outline_um=[4, 4])],
+        hard_cores=[dict(inst=name, module='xcal', physical_inst='u_bound.u_'+name,
+                         physical_master='xcal', lef=str(tmp_path/'xcal.lef'),
+                         origin_um=at, outline_um=[241.92, 224.64])
+                    for name, at in [('u_xc_Q2', [717.12, 1244.16]), ('u_xc_Q3', [1321.92, 1244.16])]])
+    (tmp_path/'xcal.lef').write_text('MACRO xcal\nSIZE 241.92 BY 224.64 ;\nEND xcal\n')
+    assert [c['inst'] for c in kit_istations.soft_plan_cells('q_spb2', t)] == ['fault_or']
+    # Without the explicit view the logical cell remains soft; do not skip by module name.
+    t['hard_cores'] = []
+    assert len(kit_istations.soft_plan_cells('q_spb2', t)) == 3
+
 BOUND = """module t_part_bound (input wire clk, input wire rst_n, input wire [1:0] i_a, output wire q);
     wire [0:0] i_a_q;
     wire i_a_eq;
@@ -19,6 +38,38 @@ BOUND = """module t_part_bound (input wire clk, input wire rst_n, input wire [1:
     );
 endmodule
 """
+
+
+def test_narrow_input_stations_preserve_payload_and_require_proof(tmp_path):
+    plan = dict(partition_types=dict(t=dict(
+        buses=[dict(name="i_a", dir="in", width=3, kind="data")],
+        internal_stations=[dict(conn="bus:i_a", regs_um=[[3, 0]])])))
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(plan))
+    for case in ("proved", "no_proof", "missing_bit"):
+        kd = tmp_path / case
+        kd.mkdir()
+        bound = kd / "t_part_bound.sv"
+        bound.write_text(BOUND)
+        proof = dict(verdict="PASS") if case != "no_proof" else {}
+        bits = ["i_a[1]", "i_a[2]"] if case != "missing_bit" else ["i_a[1]"]
+        (kd / "kit_rtl.json").write_text(json.dumps(dict(
+            bound_module="t_part_bound", files=[str(bound)],
+            narrow_buses=[dict(port="i_a", plan=3, bound=1)],
+            dead_inputs=dict(bits=bits, proof=proof))))
+        r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd)],
+                           capture_output=True, text=True)
+        if case == "proved":
+            assert r.returncode == 0, r.stderr
+            assert "ot_dp_st #(.W(1)) u_ist_i_a_0" in bound.read_text()
+            assert "ot_dp_st #(.W(3))" not in bound.read_text()
+            report = json.loads((kd / "kit_rtl.json").read_text())["kit_istations"][0]
+            assert (report["plan_width"], report["bound_width"]) == (3, 1)
+            assert json.loads(pf.read_text()) == plan
+        else:
+            assert r.returncode != 0
+            assert "complete dead-input proof required" in r.stderr
+            assert bound.read_text() == BOUND
 
 
 def test_inserts_and_sites(tmp_path):

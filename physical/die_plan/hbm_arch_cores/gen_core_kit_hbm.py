@@ -88,6 +88,25 @@ add_pdn_connect -grid {macro} -layers {M4 M5}
 """
 
 
+# Default remains byte-identical M5. M6 is a physical PDN option: real stripes
+# and VIA56 connections are generated before GRT, never invented at export.
+PG6_STRIPE = dict(layer="M6", width_um=0.288, spacing_um=0.096,
+                  pitch_um=4.32, offset_um=1.968)
+
+def pdn_text(top_layer="M5", macros=False):
+    if top_layer not in ("M5", "M6"):
+        raise ValueError("HBM PDN top layer must be M5 or M6")
+    text = PDN
+    if top_layer == "M6":
+        text = text.replace("follow-pins + M5 stripes = core PG pins on the partition M5 grid",
+                            "follow-pins + M5/M6 stripes = core PG pins on M6")
+        text = text.replace("-pins {M5}", "-pins {M6}")
+        text += ("# Opt-in real M6 PG; parent must reserve M6 and land from M7.\n"
+                 "add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {4.32} -offset {1.968}\n"
+                 "add_pdn_connect -grid {top} -layers {M5 M6}\n")
+    return text + (PDN_MACRO if macros else "")
+
+
 def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
@@ -1357,6 +1376,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--corner", default="TC", choices=["WC", "TC", "BC"])
     ap.add_argument("--util", type=float, default=None)
     ap.add_argument("--sigmax", default="auto", help="auto = M5 or the highest plan pin layer (B2r2 pins use M6/M7 on 64 tables)")
+    ap.add_argument("--pg-top-layer", choices=["M5", "M6"], default="M5",
+                    help="opt-in real M6 PDN stripes/vias; requires parent M6 reservation and M7 PG landing")
     ap.add_argument("--recipe-key", default=None)
     ap.add_argument("--wrapper", default=None, help="hand-checked wrapper SV defining the plan module")
     # HBM-CORES 10-24: default 30 -> 0.  The gate (TT setup / FF hold, 60/25 ps uncertainty in the SDC) is unchanged;
@@ -2024,7 +2045,16 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         lefs.append(f"/work/macros/{m}.lef")
         cl = {"WC": "_ss.lib", "TC": "_tt.lib", "BC": "_ff.lib"}[a.corner]
         libs.append(f"/work/macros/{m}{cl if (md / f'{m}{cl}').is_file() else '_tt.lib'}")
-    (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if lefs else ""))
+    (kd / "pdn.tcl").write_text(pdn_text(a.pg_top_layer, bool(lefs)))
+    if a.pg_top_layer == "M6":
+        (kd / "pg_contract.json").write_text(json.dumps(dict(
+            schema="opentallas.core_pg_contract.v1", top_layer="M6",
+            construction="PDN_BEFORE_GRT_REAL_STRIPES_AND_VIAS", stripe=PG6_STRIPE,
+            connection_layers=["M5", "M6"], parent_grid_layer="M7",
+            parent_reservation_layers=["M6"], parent_reservation_pending=True,
+            nominal_m6_stripe_width_fraction=2 * PG6_STRIPE["width_um"] / PG6_STRIPE["pitch_um"],
+            qualification="ACTUAL_FINAL_ODB_LEF_AND_PARENT_ACCESS_PENDING",
+            added_signal_cycles=0), indent=1) + "\n")
     (kd / "make_tracks.tcl").write_text(make_tracks(plan_path))
     ff = face_flops_text((TOOL / "face_flops.tcl").read_text(), clks, rsts, kit_straps,
                          home_resets=not a.no_reset_face_home)
@@ -2347,6 +2377,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                   if shell.get("native_registered_passthrough") else {}))
                           if shell else None),
               kit_hash=kit_hash(kd))
+    if a.pg_top_layer == "M6":
+        fz["pg_contract"] = json.loads((kd / "pg_contract.json").read_text())
     if runtime_files:
         fz["runtime_files"] = runtime_files
     if not source_profile:

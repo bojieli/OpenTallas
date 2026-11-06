@@ -1,0 +1,160 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/out/fixtures/positive.ys' --
+
+1. Executing Verilog-2005 frontend: /out/fixtures/pll.sv
+Parsing SystemVerilog input from `/out/fixtures/pll.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_pll_analog_model'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /out/fixtures/status.sv
+Parsing SystemVerilog input from `/out/fixtures/status.sv' to AST representation.
+Generating RTLIL representation for module `\status'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \status
+Used module:     \qkd_pll_analog_model
+
+3.2. Analyzing design hierarchy..
+Top module:  \status
+Used module:     \qkd_pll_analog_model
+Removed 0 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$/out/fixtures/pll.sv:15$1 in module qkd_pll_analog_model.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 12 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:14$27'.
+  Set init value: \locked = 1'0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$26'.
+  Set init value: \refs = 0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$25'.
+  Set init value: \phy = 1'0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$24'.
+  Set init value: \ingest = 1'0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$23'.
+  Set init value: \host = 1'0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$22'.
+  Set init value: \hbm = 1'0
+Found init rule in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$21'.
+  Set init value: \core = 1'0
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \por_n in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$1'.
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~2 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:14$27'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$26'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$25'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$24'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$23'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$22'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$21'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:22$18'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:21$15'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:20$12'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:19$9'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:18$6'.
+Creating decoders for process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$1'.
+     1/2: $0\refs[31:0]
+     2/2: $0\locked[0:0]
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\qkd_pll_analog_model.\phy' from process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:22$18'.
+Removing init bit 1'0 for non-memory siginal `\qkd_pll_analog_model.\phy` in process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:22$18`.
+No latch inferred for signal `\qkd_pll_analog_model.\ingest' from process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:21$15'.
+Removing init bit 1'0 for non-memory siginal `\qkd_pll_analog_model.\ingest` in process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:21$15`.
+No latch inferred for signal `\qkd_pll_analog_model.\host' from process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:20$12'.
+Removing init bit 1'0 for non-memory siginal `\qkd_pll_analog_model.\host` in process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:20$12`.
+No latch inferred for signal `\qkd_pll_analog_model.\hbm' from process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:19$9'.
+Removing init bit 1'0 for non-memory siginal `\qkd_pll_analog_model.\hbm` in process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:19$9`.
+No latch inferred for signal `\qkd_pll_analog_model.\core' from process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:18$6'.
+Removing init bit 1'0 for non-memory siginal `\qkd_pll_analog_model.\core` in process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:18$6`.
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\qkd_pll_analog_model.\locked' using process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$1'.
+  created $adff cell `$procdff$42' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_pll_analog_model.\refs' using process `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$1'.
+  created $adff cell `$procdff$47' with positive edge clock and positive level reset.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:14$27'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$26'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$25'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$24'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$23'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$22'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:13$21'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:22$18'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:21$15'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:20$12'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:19$9'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:18$6'.
+Found and cleaned up 2 empty switches in `\qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$1'.
+Removing empty process `qkd_pll_analog_model.$proc$/out/fixtures/pll.sv:15$1'.
+Cleaned up 2 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module status.
+Optimizing module qkd_pll_analog_model.
+Couldn't topologically sort cells, optimizing module qkd_pll_analog_model may take a longer time.
+Couldn't topologically sort cells, optimizing module qkd_pll_analog_model may take a longer time.
+<suppressed ~6 debug messages>
+
+5. Executing OPT_HIER pass.
+Disconnected unused output terminal '\pll_WS' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_WN' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_ES' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_EN' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_c' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_fwd' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_hbm_WS' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_hbm_WN' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_hbm_ES' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_hbm_EN' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_host' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_ingest' in module 'qkd_pll_analog_model'
+Disconnected unused output terminal '\pll_phy' in module 'qkd_pll_analog_model'
+<suppressed ~5 debug messages>
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \status..
+Finding unused cells or wires in module \qkd_pll_analog_model..
+Removed 14 unused cells and 52 unused wires.
+<suppressed ~20 debug messages>
+
+7. Executing CHECK pass (checking for obvious problems).
+Checking module status...
+Checking module qkd_pll_analog_model...
+Found and reported 0 problems.
+
+8. Executing JSON backend.
+
+End of script. Logfile hash: df64a0f210, time: 0.01s, user: 0.01s, system: 0.01s, MEM: 21.80 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 42% 3x read_verilog (0 sec), 14% 1x opt_clean (0 sec), ...

@@ -1,0 +1,17 @@
+PROGRESS cyc=0 mismatches=0 done=0 writes=0 entries=0
+PROGRESS cyc=5000 mismatches=0 done=4 writes=8 entries=151
+PROGRESS cyc=10000 mismatches=0 done=8 writes=13 entries=353
+PROGRESS cyc=15000 mismatches=0 done=13 writes=20 entries=494
+PROGRESS cyc=20000 mismatches=0 done=16 writes=26 entries=727
+PROGRESS cyc=25000 mismatches=0 done=18 writes=29 entries=913
+PROGRESS cyc=30000 mismatches=0 done=23 writes=37 entries=1098
+PROGRESS cyc=35000 mismatches=0 done=28 writes=44 entries=1194
+PROGRESS cyc=40000 mismatches=0 done=32 writes=50 entries=1441
+PROGRESS cyc=45000 mismatches=0 done=35 writes=55 entries=1673
+PROGRESS cyc=50000 mismatches=0 done=40 writes=64 entries=1809
+SUMMARY mode=1 trailing=0 clean_completions=40 cycles=50000 mismatches=0 done=40 writes=64 entries=1809 starts=61 resets=20 early=0 rejected=0 missing=0
+PASS
+- tb_native_modes.sv:2231: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 100us; walltime 0.966 s; speed 103.471 us/s
+- Verilator: cpu 0.966 s on 1 threads; allocated 8 MB

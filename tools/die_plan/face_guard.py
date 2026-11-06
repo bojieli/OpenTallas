@@ -27,6 +27,9 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+# Isolated python (-I) omits the script directory; staged helpers are local.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 OUT_PINS = {"Y", "Q", "QN", "H", "L", "CON", "SN", "Z", "ZN", "O"}
 # Clocks and the reset/START *inputs* (arst_n / rst_n / start_i: root synchroniser or typed control) are not face
 # registers.  The registered wavefront OUTS rst_o_<k> / start_o_<k> ARE partition pins and are checked like data: one
@@ -434,7 +437,15 @@ def kit_strap_list(kitdir):
 def kit_land(path):
     """declared landing-ring buses of a kit land_slots.json {"schema": ..., "buses": {bus: D}} (S81-CORE-LAT-R21)."""
     d = json.loads(Path(path).read_text())
-    return {str(k): (dict(v) if isinstance(v, dict) else int(v)) for k, v in (d.get("buses") or {}).items()}
+    buses = {str(k): (dict(v) if isinstance(v, dict) else int(v)) for k, v in (d.get("buses") or {}).items()}
+    for v in buses.values():
+        if isinstance(v, dict) and v.get('form') == 'hard_child':
+            p = Path(v['evidence'])
+            if (p.is_absolute() or '..' in p.parts or len(p.parts) != 3
+                    or p.parts[:2] != ('macros', 'landing')):
+                raise ValueError('hard landing evidence must be inside the kit')
+            v['evidence'] = str(Path(path).parent / p)
+    return buses
 
 
 LAND_FORMS = ("icg", "hold_mux")
@@ -445,6 +456,14 @@ def land_spec(v):
     {"D": n, "form": "hold_mux"} = the enable-mux slot form (COORD 10-28 06:30, DIE-HEAD-8 witness); a dict
     {"form": "ring_start", "ring": R} (DIE-HEAD-21, no D) = the count-aligned ring START input -> (0, "ring_start")
     (ring_spec gives R).  ValueError else."""
+    if isinstance(v, dict) and v.get('form') == 'hard_child':
+        keys = {'form', 'D', 'instance', 'master', 'port', 'width', 'clock_pin', 'clock_port', 'evidence'}
+        if (set(v) != keys or v['port'] not in ('d', 't_rst_n') or v['clock_pin'] != 'fclk'
+                or int(v['width']) < 1 or int(v['D']) < 2
+                or any(not isinstance(v[k], str) or not v[k] for k in
+                       ('instance', 'master', 'clock_port', 'evidence'))):
+            raise ValueError('invalid typed hard-child landing declaration')
+        return int(v['D']), 'hard_child'
     if isinstance(v, dict) and v.get("form") == "origin_start":
         origin_spec(v)
         return 0, "origin_start"
@@ -920,6 +939,54 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     # the ring START is a write-enable leaf of its own ring's slots (if (t_rst_n) s_d <= t_d): not a landing data bit
     land_roots = {port_root[b] for x in land if x in T.ports and land_form[x] not in ("ring_start", "origin_start") for b in _bits_of(T, x)}
     out_port_roots = {port_root[b] for x in T.ports if T.dirs.get(x) == "output" for b in _bits_of(T, x)}
+    hard_proofs = {}
+    hard_buses = {}
+
+    def prove_hard_bus(bus):
+        import hard_landing
+        spec = land_raw[bus]
+        try:
+            evidence = spec['evidence']
+            if evidence not in hard_proofs:
+                hard_proofs[evidence] = hard_landing.prove(evidence)
+            receipt, proof = hard_proofs[evidence]
+            if receipt['master'] != spec['master'] or receipt['D'] != spec['D']:
+                return 'selected hard child master/depth differs from proved evidence'
+            width = receipt['width'] if spec['port'] == 'd' else 1
+            bits = _bits_of(T, bus)
+            if width != spec['width'] or len(bits) != width:
+                return 'parent bus/child port width differs from proved evidence'
+            matches = [(i, pp) for i, (master, path, pp) in enumerate(F.cells)
+                       if master == spec['master'] and path.replace('/', '.') == spec['instance'].replace('/', '.')]
+            if len(matches) != 1:
+                return 'selected hard child instance/master not uniquely present'
+            ci, pp = matches[0]
+            port = pp.get(spec['port'])
+            if port is None or len(port[1]) != width:
+                return 'actual hard child port width differs from proved evidence'
+            if [F.find(x) for x in port[1]] != [port_root[x] for x in bits]:
+                return 'parent bus is not wired in order to the exact child port'
+            if any(drv[port_root[b]] or loads[port_root[b]] != [(ci, spec['port'])] for b in bits):
+                return 'hard landing input must exclusively load its exact child pin'
+            clock = spec['clock_port']
+            cp = pp.get(spec['clock_pin'])
+            if (T.dirs.get(clock) != 'input' or len(_bits_of(T, clock)) != 1 or cp is None
+                    or len(cp[1]) != 1 or F.find(cp[1][0]) != port_root[_bits_of(T, clock)[0]]):
+                return 'actual child forwarded clock does not match declared parent clock input'
+            if not re.fullmatch(skip_re, clock):
+                return 'forwarded clock is not an actual SDC clock input'
+            res.setdefault('hard_landings', {})[bus] = dict(instance=spec['instance'], master=spec['master'],
+                port=spec['port'], width=width, clock_port=clock,
+                child_landing_bits=proof['land_mux_bits'], child_start=proof['ring_start']['t_rst_n'])
+        except (KeyError, ValueError, OSError) as e:
+            return f'hard landing evidence rejected: {e}'
+        return None
+
+    def hard_child(bus, bit, root):
+        if bus not in hard_buses:
+            hard_buses[bus] = prove_hard_bus(bus)
+        return hard_buses[bus]
+
     lmemo = {}
 
     def _single_drv(net):
@@ -1764,6 +1831,14 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                         break
                 if not ok:
                     continue
+            elif p in land and land_form[p] == 'hard_child':
+                why = hard_child(p, b, r)
+                if why:
+                    fail('land_slot', b, why)
+                    continue
+                res['ok'] += 1
+                res['hard_landing_bits'] = res.get('hard_landing_bits', 0) + 1
+                continue
             elif p in land and land_form[p] in ("ring_start", "origin_start"):
                 origin = origin_spec(land_raw[p]) if land_form[p] == "origin_start" else None
                 copies = land_raw[p].get("copies", ()) if origin is not None else ()

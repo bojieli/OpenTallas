@@ -279,7 +279,7 @@ def assemble_fixed_children(rtl_dir, children, contracts, receipt=None, parent_p
     return result
 
 
-def hierarchy_inventory(design, top, children, parent_profile=None):
+def hierarchy_inventory(design, top, children, parent_profile=None, required_instances=None):
     """Inspect actual Yosys write_json hierarchy; no synthesis or invented cells.
 
     Return explicit discrepancies rather than treating a missing planned child
@@ -312,11 +312,37 @@ def hierarchy_inventory(design, top, children, parent_profile=None):
             problems.append(f"{name}: elaborated {hits[0]['master']}, expected fixed {child['master']}")
         else:
             selected.add(hits[0]["instance"])
+    required_found=[]
+    for required in required_instances or []:
+        name=required['inst']
+        hits=[c for c in cells if c['instance']==name or c['instance'].endswith('.'+name)]
+        if len(hits)!=1:
+            problems.append(f'{name}: expected one factory instance, found {len(hits)}')
+            continue
+        kind=hits[0]['master']
+        original=modules.get(kind,{}).get('attributes',{}).get('hdlname',kind).split()[0].lstrip('\\')
+        if kind!=required['master'] and original!=required['master']:
+            problems.append(f"{name}: factory instance {kind}, expected {required['master']}")
+        else:
+            definition=modules.get(kind,{})
+            for parameter,expected in required.get('parameters',{}).items():
+                value=definition.get('parameter_default_values',{}).get(parameter)
+                actual=int(value,2) if isinstance(value,str) and re.fullmatch('[01]+',value) else value
+                if actual!=expected:
+                    problems.append(f'{name}: actual {parameter}={actual}, expected {expected}')
+            if 'register_bits' in required:
+                bits=sum(len(c.get('connections',{}).get('Q',[])) for c in definition.get('cells',{}).values()
+                         if c['type']=='$dff')
+                if bits!=required['register_bits']:
+                    problems.append(f"{name}: actual registered bits {bits}, expected {required['register_bits']}")
+            required_found.append(hits[0])
     unplanned = [c for c in cells if c["master"] in masters and c["instance"] not in selected]
     problems += [f"unplanned hard instance {c['instance']} ({c['master']})" for c in unplanned]
     return dict(schema="opentallas.kit_hierarchy.v1", top=top,
                 expected=len(children), matched=len(selected), problems=problems,
-                hard_instances=[c for c in cells if c["master"] in masters])
+                hard_instances=[c for c in cells if c["master"] in masters],
+                required_expected=len(required_instances or []),required_matched=len(required_found),
+                required_instances=required_found)
 
 
 def main():
@@ -338,7 +364,7 @@ def main():
     else:
         result = hierarchy_inventory(
             json.loads(Path(args.yosys_json).read_text()), args.top, contracts["children"],
-            contracts.get('parent_profile'))
+            contracts.get('parent_profile'),contracts.get('required_instances'))
     Path(args.receipt).write_text(json.dumps(result, indent=2) + "\n")
     return 2 if result.get('problems') else 0
 

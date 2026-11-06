@@ -1,0 +1,35 @@
+{
+  "source": "S81 owner current ROMQ half proposal; geometry-only, not a qualified parent",
+  "partition_types": {
+    "romq_two_halves": {
+      "outline_um": [
+        536.76,
+        221.4
+      ],
+      "hard_cores": [
+        {
+          "inst": "u_w",
+          "origin_um": [
+            0,
+            0
+          ],
+          "outline_um": [
+            268.38,
+            221.4
+          ]
+        },
+        {
+          "inst": "u_e",
+          "origin_um": [
+            268.38,
+            0
+          ],
+          "outline_um": [
+            268.38,
+            221.4
+          ]
+        }
+      ]
+    }
+  }
+}

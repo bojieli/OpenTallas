@@ -36,6 +36,14 @@ import taps as T
 from schema import DIE_PART
 
 
+
+def _rtl_lint_dead_output_vars():
+    modules = os.environ.get("OT_RTL_LINT_DEAD_OUTPUT_MODULES", "").split()
+    if any(not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_$]*", m) for m in modules):
+        raise ValueError("OT_RTL_LINT_DEAD_OUTPUT_MODULES requires module identifiers")
+    return ["export OT_RTL_LINT_DEAD_OUTPUT_MODULES = " + " ".join(modules)] if modules else []
+
+
 def _common_flow_file(name, repo):
     """physical/common_flow/<name> of checkout `repo`, from git HEAD in a sparse checkout without it
     (common_flow_src.py, DIE-KV-62 11-02); a copy of this module without the helper: the plain path."""
@@ -316,7 +324,15 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
 def audit_pin_records(face_rows, planned_rows):
     """Keep boundary-flop rows separate from the full planned physical pin audit."""
     from pin_audit import INTERIOR, pin_key
-    rows = list(face_rows)
+    rows = [dict(p) for p in face_rows]
+    declared = {p["name"]: p for p in planned_rows}
+    for row in rows:
+        for key in ("native_rects", "native_rects_review", "declared_native_shape"):
+            if key in declared.get(pin_key(row), {}):
+                value = declared[pin_key(row)][key]
+                if key in row and row[key] != value:
+                    raise ValueError("conflicting native pin contract: " + pin_key(row))
+                row[key] = value
     seen = {pin_key(p) for p in rows}
     if len(seen) != len(rows):
         raise ValueError("duplicate face pin in audit metadata")
@@ -329,6 +345,8 @@ def audit_pin_records(face_rows, planned_rows):
             continue
         bus, bit = _pin_bus_bit(name)
         rows.append(dict(bus=bus, bit=bit, layer=p["layer"], x=p["x"], y=p["y"], face="island"))
+        for key in ("native_rects", "native_rects_review", "declared_native_shape"):
+            if key in p: rows[-1][key] = p[key]
     return rows
 
 
@@ -3565,6 +3583,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
              if os.environ.get("OT_CTS_NO_NDR") == "1" else []),
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
+           *_rtl_lint_dead_output_vars(),
            "export SYNTH_REPEATABLE_BUILD = 1",
            # HEAD-KITS-3 10-28: OWNER D-ROM-2 declared-logic math tables (tools/mem_compiler/rom_declared_logic.json,
            # e.g. the KP4 GF(1024) inverse 1024x10 in every serdes FEC lane) are synthesised logic by decision; the ORFS
@@ -3869,9 +3888,20 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if forest:
         shutil.copyfile(Path(__file__).with_name("forest_recluster.tcl"), kd / "forest_recluster.tcl")
     # KV-G3 10-24: FIRM plan internal stations / plan-cell sites of a bound kit (kit_istations.py next to its RTL)
-    ist = [Path(f).parent / "istations.tcl" for f in rtl_files[:1] if (Path(f).parent / "istations.tcl").is_file()]
+    ist = []
+    if t.get('realize_internal_stations'):
+        ist = [Path(f).parent / (t['module'] + '.istations.tcl') for f in rtl_files[:1]
+               if (Path(f).parent / (t['module'] + '.istations.tcl')).is_file()]
+        if not ist:
+            raise ValueError(f'{tn}: realized source lacks its exact station placement sidecar')
+    if not ist:
+        ist = [Path(f).parent / "istations.tcl" for f in rtl_files[:1] if (Path(f).parent / "istations.tcl").is_file()]
     if ist:
         shutil.copyfile(ist[0], kd / "istations.tcl")
+        if t.get('realize_internal_stations'):
+            # The exported exact kit RTL is later rebound from rtl/. Preserve
+            # its per-module placement sidecar across that export boundary.
+            shutil.copyfile(ist[0], kd / 'rtl' / (t['module'] + '.istations.tcl'))
     elif t.get("relay_sites"):
         # DIE-KV-60 11-01: plan relay_sites on a bound kit without a native station sidecar (KV hard PHY wrappers)
         import kit_istations
@@ -3962,8 +3992,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         bud["bump_ports"] = [dict(b) for b in bump_ports]
     (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     shutil.copyfile(Path(__file__).with_name("pin_audit.py"), kd / "pin_audit.py")
+    shutil.copyfile(Path(__file__).with_name("native_pin_contract.py"), kd / "native_pin_contract.py")
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
     shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
+    shutil.copyfile(Path(__file__).with_name("hard_landing.py"), kd / "hard_landing.py")
     shutil.copyfile(Path(__file__).with_name("selrange_gate.py"), kd / "selrange_gate.py")
     shutil.copyfile(Path(__file__).with_name("native_bb.py"), kd / "native_bb.py")
     shutil.copyfile(Path(__file__).resolve().parents[1] / "orfs_hold_mm.py", kd / "orfs_hold_mm.py")
@@ -3975,6 +4007,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("lec.py"), kd / "lec.py")
     # FLOW-21 / COORD 11-01: the pre-route LEC runs beside place/CTS/route (lec_async.sh, OT_LEC_ASYNC=0 = inline)
     shutil.copyfile(Path(__file__).with_name("lec_async.sh"), kd / "lec_async.sh")
+    shutil.copyfile(Path(__file__).with_name("lec_completed_transfer.py"), kd / "lec_completed_transfer.py")
     import core_flow; core_flow.stage_grt183(kd)   # FLOW-28 11-04: GRT-0183 fresh-process re-run (run_kit.sh)
     shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
@@ -4005,6 +4038,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             raise gen_rtl.GenError(f"type {tn}: buses declared by both the landing sidecar and a plain ring: {clash[:5]}")
         land_slots["buses"] = {**land_slots.get("buses", {}), **plain}
     land_slots = export_land_slots(P.types[tn], land_slots)
+    if land_slots is not None:
+        import hard_landing
+        land_slots = hard_landing.emit(t, land_slots, kd,
+                                      Path(root) if root else Path(__file__).resolve().parents[2])
     if land_slots is not None:                  # face_guard reads it beside pins.json (count-aligned landing rings)
         (kd / "land_slots.json").write_text(json.dumps(land_slots, indent=1) + "\n")
     port_pins = port_bind_pin_records(P, tn, pins, bump_ports)
@@ -4223,7 +4260,9 @@ def fit_text(t, pins):
     have = present(t)
     miss = {n: d for n, d in pins.items() if n not in have}
     buses, added = {}, sorted(miss)
-    for n, d in miss.items():
+    # Textual timed members can already exist outside the declared bus range.
+    # Visit every physical LEF bit, while adding pin bodies only when missing.
+    for n, d in pins.items():
         m = BUS.match(n)
         if m:
             buses.setdefault(m.group(1), {})[int(m.group(2))] = d
@@ -4233,8 +4272,11 @@ def fit_text(t, pins):
             t = t[:e] + pin_text(n, d) + t[e:]
     for name, bits in sorted(buses.items()):
         g = group(t, "bus", name)
-        body = "".join(pin_text(f"{name}[{i}]", bits[i]) for i in sorted(bits, reverse=True))
+        body = "".join(pin_text(f"{name}[{i}]", bits[i]) for i in sorted(bits, reverse=True)
+                       if f"{name}[{i}]" in miss)
         if not g:
+            if not body:
+                continue
             f, o = max(bits), min(bits)
             e = close_of(t, c.end() - 1)
             ty = f"{name}_busfit"
@@ -4247,6 +4289,8 @@ def fit_text(t, pins):
             raise ValueError(f"bus {name}: no bit range")
         lo, hi = min(f, o, *bits), max(f, o, *bits)
         nf, no = (hi, lo) if f >= o else (lo, hi)
+        if not body and (nf, no) == (f, o):
+            continue
         t = t[:e] + body + t[e:]
         new = f"{name}_busfit"
         t = t[:s] + re.sub(r"\bbus_type\s*:\s*\"?\w+\"?\s*;", f"bus_type : {new};", t[s:], count=1)
@@ -4276,7 +4320,7 @@ def fit(k, out=None):
         if not c or c.group(1) not in macros:
             continue
         ft, added = fit_text(t, macros[c.group(1)])
-        if not added:
+        if ft == t:
             continue
         os.makedirs(out, exist_ok=True)
         fd, tmp = tempfile.mkstemp(dir=out)
@@ -4866,6 +4910,9 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                    spare_out=kit_spare_out_bits(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else (),
                                    dead_inputs=kit_dead_inputs(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else None,
                                    private_clock_mesh=(private_clock_mesh or {}).get(tn)))
+        if kit_rtl and tn in kit_rtl and (Path(kit_rtl[tn]).parent/'kit_topology.json').is_file():
+            import kit_topology
+            kit_topology.stage_inventory(Path(kit_rtl[tn]).parent,kits[-1])
         if tn in macro_paths:
             (Path(kits[-1]) / BMP.RECEIPT).write_text(json.dumps(macro_paths[tn], indent=1) + "\n")
     (out / "run_kit.sh").write_text(RUN_KIT)

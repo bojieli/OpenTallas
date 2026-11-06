@@ -12,7 +12,28 @@ import os
 
 import odb  # noqa: E402  (OpenROAD python)
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from native_pin_contract import native_rects_match
+except ModuleNotFoundError:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[5] / "tools/die_plan"))
+    from native_pin_contract import native_rects_match
+
 TOL = 0.001
+
+
+def declared_clock_ports(pins_path):
+    """Only explicit core clock roles exempt otherwise unplanned interior ports."""
+    try:
+        with open(os.path.join(os.path.dirname(pins_path), "core.json")) as stream:
+            roles = json.load(stream).get("boundary_role", {})
+    except (OSError, ValueError, AttributeError):
+        return set()
+    if not isinstance(roles, dict):
+        return set()
+    return {name for name, role in roles.items() if role == "clk"}
 
 
 def main():
@@ -24,13 +45,14 @@ def main():
     W, H = die.xMax() / dbu, die.yMax() / dbu
     # CORE-HBM copy: scalar ports (bit None) are the bare name (tools/die_plan pins always carry a bit)
     want = {(p['bus'] if p.get('bit') is None else f"{p['bus']}[{p['bit']}]"): p for p in json.load(open(os.environ["PINS"]))}
+    clock_ports = declared_clock_ports(os.environ["PINS"])
     res = dict(pins=len(want), ok=0, missing=[], wrong_layer=[], wrong_place=[], extra=[])
     seen = set()
     for bt in block.getBTerms():
         n = bt.getName()
         if n not in want:
             # clock taps (R4: clk, clk_t<i>) and the reset tap are interior die-spine pins, not face pins
-            if not re.match(r"^(clk(_t[0-9]+)?|arst_n)$", n) and not bt.getSigType() in ("POWER", "GROUND"):
+            if n not in clock_ports and not re.match(r"^(clk(_t[0-9]+)?|arst_n)$", n) and not bt.getSigType() in ("POWER", "GROUND"):
                 res["extra"].append(n)
             continue
         seen.add(n)
@@ -42,12 +64,7 @@ def main():
             res["wrong_layer"].append([n, p["layer"], sorted({b[0] for b in boxes})])
             continue
         if "native_rects" in p:
-            # A multiPORT contract includes all original rectangles, not a
-            # bounding box or an implicitly projected access point.
-            expected = p["native_rects"]
-            matches = (len(boxes) == len(expected) and all(
-                any(a[0] == b[0] and all(abs(x-y) <= TOL for x,y in zip(a[1:], b[1:]))
-                    for b in boxes) for a in expected))
+            matches = native_rects_match(p, boxes, dbu)
             if matches:
                 res["ok"] += 1
             else:
@@ -79,4 +96,5 @@ def main():
           f"{res['wrong_layer_n']} wrong_place {res['wrong_place_n']} extra {res['extra_n']}")
 
 
-main()
+if __name__ == "__main__":
+    main()

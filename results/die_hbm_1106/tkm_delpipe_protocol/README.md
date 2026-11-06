@@ -1,0 +1,28 @@
+# TKM internal DEL stage: affected-root protocol qualification
+
+**PASS** for exact optional source `840d5e9b406`, SHA256 `101a04825316ac0e65b53059f74a282a82abf572ac692dc48c033a3a64c91fc0`, under `OT_TKM_DEL_PIPE1`. Production source ownership remains the HBM gaps lane. This result changes no canonical source, clock, uncertainty, physical view or signed count.
+
+The actual approved ctlrst root (`2214efc605dac6ac80efbb29fe03a38486a272fde801af7e27ad1f48d27c62ff`) and actual optional root are instantiated, including the same synchronous private-SRAM model used by the existing root-control vehicle. The test uses the actual old-root delivery calendar and the exact compressed/master flit mapping. Configuration changes continuously; accepted starts, rejected busy starts, malformed early and missing delivery, and resets are exercised.
+
+| Test | Cycles | Differences | Completion coverage |
+|---|---:|---:|---|
+| Mode0, malformed delivery / rejected starts | 50,000 | 0 | 40done,64writes,1809entries;18early,422rejected,15missing;20resets |
+| Mode1, legal receipt window | 50,000 | 0 | 40fault0 completions,64writes,1809entries;20resets |
+| Mode2, malformed delivery specifically on added final busy edge | 50,000 | 0 | 40injections,40fault0 completions;20resets |
+| Directed reset before precompute and with pending internal cohort | 50,000 | 0 | 2before-precompute +2pending-cohort resets;46fault0 completions,69writes,1807entries |
+
+The directed reset probe changes only compiled testbench stimulus, with both compiled DUTs unchanged; `directed_reset_scope.json` and `reset_probe.py` identify the exact patch. Its injected resets occurred at cycles9,11,23,36. Random reset alone would not ensure coverage of these short windows.
+
+Each DUT has its own return model, driven by that DUT's actual emitted entry, clear and conversion commands. Return payloads are deterministic arbitrary functions of its entry history and conversion ordinal. Native extraction parameters PTILE32/NT64/PIPE1/HOP2/FRT4/CB21/CLRB0 give XL151 and CPW155. A conv command launched after E0 produces raw up capture at E154; the actual root consumes up0_q under conv_pipe[154] at E155. The 154-slot negative-edge-sampled model and per-DUT response-valid assertions enforce that contract. No global feedback delay or source RTL feedback register was added. Child arithmetic is unchanged and outside this root test; the model does not requalify the child numeric implementation or a routed parent binding.
+
+The miter compares entry and conversion control and qualified entry payload +1edge, write control/address/mask/data +1edge, done +1edge, unchanged busy assertion with one extra completion edge, stat_cycles +1 at completion, and completion fault. Initial clear remains unchanged; subsequent clear shifts with the post-ingress calendar. Payload is compared under its actual valid, without an X mask.
+
+The initial prototype `7f3e86295ee` / SHA `b7df1a8abce7867a0b5885313fb0ed4a93ac3b573ccb7fc0eb98f1410d5fc51b` exposed a genuine receipt-window delta: all40 deliberate trailing deliveries changed fault after the old root became idle. `unfixed_trailing_regression.log` preserves that result. The corrected source gates only the two delivery-valid/slot mismatch comparisons at the added final edge. The actual flattened-source calendar miter proves that both comparisons are zero there and equal the old comparisons on every other edge. Reverting those feature-on comparator equations to the ungated old RTL is caught by SAT. Full logs are retained at the execution path; committed calendar excerpts omit routine frontend output only.
+
+The exact corrected source also passes an unbounded one-step invariant on its actual `ot_del_gbpf_q` register: every external capture and pending internal cohort has ready metadata and `gbpf_q == latched_gb * latched_pf mod256`. While busy, any not-ready state is restricted to the actual product-configuration event at tick0. Reset, starts and configuration inputs remain arbitrary binary values at each edge. The source-specific RTL mutant `ot_del_gbpf_q <= (gb*pf) ^ 8'd1` is caught. This directly links the new register and enables to the arithmetic proof, rather than relying only on an abstract precompute shadow.
+
+Additional prerequisites are adjacent in `../tkm_phase`: unbounded actual-source metadata readiness invariant, exhaustive16,777,216-case modular arithmetic checks and mutants, exact decoder symbolic EQ and negative-zero mutant, and exact CSA RTL EQ. Default-off preprocessing of this corrected optional source remains identical to the approved root (non-whitespace SHA256 `293366d8080b81a03a85ce790fa693ac1243bacd3382ef70bb45979320c14649`). A separate compiled-model lane3 product-register-load mutant was also caught334times in the initial full-root vehicle; it is explicitly a compiled-model control, not a fresh RTL-compiler mutant.
+
+The paid contract is exactly **+1 core edge per operation**, with unchanged external DEL receipt/capture timing and issue throughput. All post-ingress calendars shift together; this is not an extra edge per packet or per tile. Next start must respect the new busy/done boundary. Pricing/model update and geometry review remain the source/physical owner's gates before a physical trial; routed TT/FF, DRC and routed equivalence remain required for signoff.
+
+Execution: `epyc2:/srv/opentallas-scratch2/claude/codex-tkm-delpipe-native-proof-1106/v2`. Fresh actual-source compilation used Verilator5.050 through ot-run32GB/4threads,8m15.92s,17.54GiB peak RSS. The full v2 directory occupied about193MiB, not18GB of disk. Original failed/unfixed/PCH-attempt evidence remains in the parent execution directory. No physical job was launched by this proof lane.

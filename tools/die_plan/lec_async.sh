@@ -17,7 +17,7 @@ set -u
 # Identity covers proof inputs, never physical goal/clock-report state. A later stage
 # may reuse this proof only while the exact RTL, proof driver and synth netlist agree.
 identity() {
-  python3 - "$1" "${2:-all}" <<'PYID'
+  python3 - "$1" "${2:-all}" "${3:-$1/lec_async.ready}" <<'PYID'
 import hashlib,glob,re,shlex,sys,os,json
 from pathlib import Path
 k=Path(sys.argv[1]);h=hashlib.sha256();cfg=(k/'config.mk').read_text() if (k/'config.mk').exists() else ''
@@ -30,13 +30,14 @@ for key in sorted(os.environ):
  if key.startswith('OT_LEC_') and key not in ('OT_LEC_ASYNC','OT_LEC_ASYNC_POLL','OT_LEC_MEM_GB'):
   h.update((key+'='+os.environ[key]).encode())
 for line in cfg.splitlines():
- if re.match(r'^(?:override )?export (?:DESIGN_NAME|VERILOG_FILES|VERILOG_DEFINES|SYNTH_HDL_FRONTEND|ADDITIONAL_LIBS)\s*=',line):
+ if (re.match(r'^(?:override )?export (?:DESIGN_NAME|VERILOG_FILES|VERILOG_DEFINES|SYNTH_HDL_FRONTEND|ADDITIONAL_LIBS)\s*=',line) or
+     re.match(r'^\s*(?:override\s+)?(?:export\s+)?OT_LEC_SLANG_UNROLL_LIMIT\s*[:?+]?=',line)):
   h.update(line.encode())
   if 'VERILOG_FILES' in line or 'ADDITIONAL_LIBS' in line:
    for x in shlex.split(line.split('=',1)[1]):
     if '$' not in x:paths.append(k/x[6:] if x.startswith('/work/') else Path(x))
 paths += sorted((k/'rtl').rglob('*')) if (k/'rtl').exists() else []
-ready=k/'lec_async.ready';net=None
+ready=Path(sys.argv[3]);net=None
 if ready.exists() and sys.argv[2]!='source':
  h.update(ready.read_bytes())
  try:
@@ -183,6 +184,7 @@ PYPHASE
 }
 cmd=$1; shift
 case $cmd in
+identity) identity "$@"; exit 0 ;;
 import-completed)
   ORIGINAL=$1; K=$2
   exec 9> "$K/lec_async.lock"; flock 9

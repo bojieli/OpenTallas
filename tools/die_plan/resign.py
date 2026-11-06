@@ -274,6 +274,14 @@ def mark_keep(rec, *dirs):
             f.write(line)
 
 
+def default_container_suffix(out):
+    """Keep parallel output directories distinct without permitting same-output writers."""
+    canonical = os.path.realpath(os.path.abspath(out))
+    stem = re.sub(r'[^A-Za-z0-9_.-]', '_', os.path.basename(canonical)) or 'out'
+    digest = hashlib.sha256(os.fsencode(canonical)).hexdigest()[:16]
+    return '%s-%s' % (stem, digest)
+
+
 def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g', cpus=8, superset=False):
     """the two commands of one re-sign (same as the lane scripts resign3.sh / tag_signoff_lec.sh)."""
     kit, run_dir, tools, out = map(os.path.abspath, (kit, run_dir, tools, out))
@@ -290,9 +298,15 @@ def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g',
         if not vs[0].startswith(kit + os.sep):
             raise ResignError('6_final.v %s is outside the kit %s (LEC mounts the kit)' % (vs[0], kit))
         mounts, net_in = [], '/work/' + os.path.relpath(vs[0], kit)
+    # Existing optional XOR backend; keep the wheel and bundled libraries together.
+    solver = os.environ.get('OT_LEC_SOLVER', '')
+    solver_mount = []
+    if solver and os.path.isdir(solver):
+        solver_mount = ['-v', os.path.abspath(solver) + ':/lecsolver:ro',
+                        '-e', 'LEC_SOLVER_PATH=/lecsolver']
     lec = ['docker', 'run', '--rm', '--name', 'resign-%s-lec' % name, '--memory=%s' % mem, '--cpus=%d' % cpus] + (
            ['-e', 'OT_LEC_SUPERSET_VEC=1'] if superset else []) + [
-           '-v', '%s:/work:ro' % kit, '-v', '%s:/eco' % out, '-v', '%s:/m:ro' % tools] + mounts + [
+           '-v', '%s:/work:ro' % kit, '-v', '%s:/eco' % out, '-v', '%s:/m:ro' % tools] + mounts + solver_mount + [
            image, 'bash', '-lc', 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; '
            'python3 -I /m/lec.py /work --netlist %s --out /eco/lec' % net_in]
     return so, lec
@@ -334,7 +348,7 @@ def main(argv=None):
             tag_commit(a.repo, a.tag)
             check_tools(a.repo, a.tag, a.tools)  # fail before spending an RCX run on the wrong tools
             print('clock_family.tcl from %s: %s' % (a.tag, export_clock_family(a.repo, a.tag, a.tools)), file=sys.stderr)
-            name = a.name or re.sub(r'[^A-Za-z0-9_.-]', '_', os.path.basename(os.path.abspath(a.out)))
+            name = a.name or default_container_suffix(a.out)
             so, lec = run_cmds(a.kit, a.run_dir or os.path.join(a.kit, 'run'), a.tools, a.out, a.image, name,
                                a.lec_netlist, mem=a.lec_mem, superset=a.auto)
             if a.dry_run:

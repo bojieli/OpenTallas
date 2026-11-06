@@ -4255,6 +4255,9 @@ def cmd_bind(a):
     raw = load_plan(a.plan)
     _write_provenance(a, "bind")
     out = Path(a.out)
+    (out / "native_topology.json").unlink(missing_ok=True)
+    import kit_topology
+    input_topology = kit_topology.native_contract(raw,getattr(a, "asbuilt",None),a.plan)
     yjs = json.loads((out / "asbuilt.json").read_text())
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
     B.src_key = E.stage_src_key(B.base, out, B.ab.get("stage_hash_roots"))
@@ -4386,6 +4389,9 @@ def cmd_bind(a):
     rep["bus_groups"] = bg["summary"]
     (out / "bus_groups.json").write_text(json.dumps(bg, indent=0))
     (out / "bind_report.json").write_text(json.dumps(rep, indent=1))
+    if not B.errors:
+        import kit_topology
+        kit_topology.write_bind_receipt(raw,out,getattr(a, "asbuilt",None),input_topology)
     (out / "bind_latency.json").write_text(json.dumps(dict(schema=SCHEMA, die=raw["die"]["name"],
                                                            note="per crossing bus: as-built stages (relays / landings "
                                                                 "removed) vs bound stages (2 boundary flops)",
@@ -5199,6 +5205,7 @@ def cmd_kit_rtl(a):
     bbs = {str(Path(m["bb"])): m["model"] for m in macros.values() if m.get("bb") and m.get("model")}
     (kd / "kit_rtl_sim.f").write_text("\n".join(bbs.get(str(x), str(x)) for x in fl) + "\n")
     man = dict(schema="opentallas.die_plan.kit_rtl.v1", plan_type=tn, plan_module=mod, bound_type=key, bound_module=bmod,
+               asbuilt_manifest=str(Path(a.asbuilt).resolve()) if a.asbuilt else None,
                variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, spare_ft_landed=spare_landed, narrow_buses=narrow,
                **({"dead_inputs": dead_doc} if dead_doc else {}),
                plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl],

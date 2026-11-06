@@ -1,0 +1,58 @@
+{
+ "hd_spn": {
+  "max_ideal_data_hop_um": 351.54,
+  "max_nearest_clock_entry_um": 197.232,
+  "actual_plan_stages": 24,
+  "far_clock": {
+   "bus": "b_i",
+   "stage": 5,
+   "bit": 180,
+   "xy": [
+    210.168,
+    1868.6
+   ],
+   "tap": {
+    "name": "clk_t34",
+    "xy_um": [
+     85.92,
+     1795.616
+    ]
+   }
+  },
+  "clock_by_bus": {
+   "xw_o": 105.86599999999989,
+   "xe_o": 137.74900000000014,
+   "bw_i": 122.314,
+   "be_i": 135.36199999999997,
+   "x_o": 197.08599999999984,
+   "b_i": 197.2319999999999
+  }
+ },
+ "hd_spn_end": {
+  "max_ideal_data_hop_um": 336.87,
+  "max_nearest_clock_entry_um": 148.133,
+  "actual_plan_stages": 12,
+  "far_clock": {
+   "bus": "xe_o",
+   "stage": 1,
+   "bit": 130,
+   "xy": [
+    344.323,
+    1975.848
+   ],
+   "tap": {
+    "name": "clk_t27",
+    "xy_um": [
+     400.224,
+     1883.616
+    ]
+   }
+  },
+  "clock_by_bus": {
+   "xw_o": 93.26599999999998,
+   "xe_o": 148.13299999999998,
+   "bw_i": 113.8412000000001,
+   "be_i": 113.82200000000009
+  }
+ }
+}

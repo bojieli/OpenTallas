@@ -1,0 +1,7 @@
+read_verilog -sv /out/fixtures/pll.sv /out/fixtures/status.sv
+hierarchy -check -top status
+proc
+opt_hier qkd_pll_analog_model
+opt_clean
+check -assert
+write_json /out/fixtures/positive.json

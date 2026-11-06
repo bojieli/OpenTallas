@@ -578,14 +578,14 @@ def native_pin_rects(path):
 
 
 def native_multiport(q, rects, w, h):
-    """Accept only the original connected same-layer metal from logical centre to edge."""
+    """Accept only original connected same-layer metal containing the logical anchor."""
     if len(rects) < 2 or any(a[0] != q["layer"] for a in rects):
         return None
     f = face_of(q["x"], q["y"], w, h)
     for a in rects:
         if not (0 <= a[1] < a[3] <= w and 0 <= a[2] < a[4] <= h):
             return None
-    center = [i for i,a in enumerate(rects) if abs((a[1]+a[3])/2-q["x"]) < 1e-4 and abs((a[2]+a[4])/2-q["y"]) < 1e-4]
+    center = [i for i,a in enumerate(rects) if a[1] <= q["x"] <= a[3] and a[2] <= q["y"] <= a[4]]
     if not center:
         return None
     reached = set(center)
@@ -1393,6 +1393,9 @@ def main():
             if not (md / f"{master}{ext}").is_file():
                 raise SystemExit(f"{master}: no {ext} in {m['view']} (native TT/FF models required)")
             shutil.copyfile(md / f"{master}{ext}", kd / "macros" / f"{master}{ext}")
+        if master in hard_masters:
+            from signed_child_evidence import stage_signed_child_evidence
+            stage_signed_child_evidence(md, master, kd / "macros")
         if f"/work/macros/{master}.lef" not in lefs:
             lefs.append(f"/work/macros/{master}.lef")
             libs.append(f"/work/macros/{master}_tt.lib")
@@ -1719,6 +1722,7 @@ def main():
                         '    if {!$placed} { incr ff_miss; continue }', 1)
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(S81 / "cores/svc/pin_audit_core.py", kd / "pin_audit.py")
+    shutil.copyfile(TOOL / "native_pin_contract.py", kd / "native_pin_contract.py")
     shutil.copyfile(S81 / "cores/svc/dump_placed.py", kd / "dump_placed.py")
     pdn_text, pg_interface = macro_pdn(mplace, kd / "macros", hc.get("obs_max"))
     pdn_text, pg_interface = pg_top_pdn(pdn_text, pg_interface, rec.get("pg_top"), hc.get("obs_max"))
@@ -1865,6 +1869,10 @@ def main():
             f.write(hard_children_tcl(hcb))
     tm = (timing_modes_stage(kd, rec.get("two_mode"))
           if rec.get("two_mode") or (rec.get("two_mode") is None and modern) else None)   # FLOW-20: default-on (modern kits)
+    clock_overpass = None
+    if rec.get("clock_top") is not None:
+        from core_clock_overpass import stage_clock_overpass
+        clock_overpass = stage_clock_overpass(kd, rec["clock_top"], hc.get("obs_max"), rec.get("pg_top"), hcb)
     reset_contract = stage_reset_contract(kd, mod)
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True).stdout.strip() or "?"
@@ -1884,6 +1892,7 @@ def main():
               **({"flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)", "insertion_ff_ps": ib["ff"],
                   "insertion_basis": ib["basis"], "rc": core_flow.RC_CAL_FILE} if modern else {}),
               **({"regional_taps": rt} if rt else {}),
+              **({"clock_overpass": clock_overpass} if clock_overpass else {}),
               gates=(["rtl_lint (pre-synth)"] if modern else []) + ["sdc_lint (pre-synth)", "face_guard (post-synth)"]
               + (["LEC EQUIVALENT (post-synth)", "reg_fanout (post-synth)", "TT/FF insertion (GRT, before route)"] if modern else []) + ["pin_audit", "signoff.py tt,ff"], repo_rev=rev,
               sdc_lint_sha256=sha(TOOL / "sdc_lint.py"), face_guard_sha256=sha(TOOL / "face_guard.py"),
