@@ -1624,7 +1624,10 @@
     "slice_station__t6__cl54a9ceeb@9",
     "slice_station__t30__cl1653104c@9",
     "slice_station__t30__cl6a190133@12",
-    "slice_station__t7__cl362204c4@14"
+    "slice_station__t7__cl362204c4@14",
+    "slice_station__t21@10",
+    "slice_station__t30__clcedefe91@11",
+    "slice_station__t7__cl503f4913@12"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -2348,7 +2351,10 @@
     "slice_station__t6__cl54a9ceeb@9": "CODEX S81 class recovery: existing I39 ft_ring_max_ps166.6 is in currentplan; old failed falllanding SDC used699.72ps beforefix. No newconstraintchange/cycles. Older alternativeblock qRUNNING cache stale: actualAP jobs83490/4e2e CANCELLED Nov4.",
     "slice_station__t30__cl1653104c@9": "CODEX current qRUNNING-cache recovery: exactAPDONE-CRASH source730 unique-rise insertion Tcl; current2c includesI184psroot. No physicaljobrunning, no designstrike; finalTT/FFgatesunchanged.",
     "slice_station__t30__cl6a190133@12": "CODEX current qRUNNING-cache recovery: exactAPDONE-CRASH source730 unique-rise insertion Tcl; current2c includesI184psroot. No physicaljobrunning, no designstrike; finalTT/FFgatesunchanged.",
-    "slice_station__t7__cl362204c4@14": "CODEX current qRUNNING-cache recovery: exactAPDONE-CRASH source730 unique-rise insertion Tcl; current2c includesI184psroot. No physicaljobrunning, no designstrike; finalTT/FFgatesunchanged."
+    "slice_station__t7__cl362204c4@14": "CODEX current qRUNNING-cache recovery: exactAPDONE-CRASH source730 unique-rise insertion Tcl; current2c includesI184psroot. No physicaljobrunning, no designstrike; finalTT/FFgatesunchanged.",
+    "slice_station__t21@10": "CODEX existing I184 psroot class: exact current AP DONE-CRASH unique rise-source Tcl on old730 source; current2c contains fix. No live alternative; fresh immutable attempt, no design strike or timing relaxation.",
+    "slice_station__t30__clcedefe91@11": "CODEX existing I184 psroot class: exact current AP DONE-CRASH unique rise-source Tcl on old730 source; current2c contains fix. No live alternative; fresh immutable attempt, no design strike or timing relaxation.",
+    "slice_station__t7__cl503f4913@12": "CODEX existing I184 psroot class: exact current AP DONE-CRASH unique rise-source Tcl on old730 source; current2c contains fix. No live alternative; fresh immutable attempt, no design strike or timing relaxation."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
