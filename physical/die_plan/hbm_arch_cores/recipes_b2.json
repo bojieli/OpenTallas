@@ -3523,5 +3523,25 @@
   "read_at_commit": true,
   "util": 0.4,
   "source": "Opt-in WBQ conservative main/output split; exact write-set bench and two new stage mutants results/die_hbm_1105/wbq_safe_split; +1 K edge; internal face stages MUST follow that README before physical build. No plan adoption or sign-off yet."
+ },
+ "ot_wbq_sw__safe_split": {
+  "top": "ot_wbq_sw",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv"
+  ],
+  "macros": [],
+  "defines": [],
+  "params": {
+   "HREG": 2,
+   "GIN": 1
+  },
+  "source_commit": "2c0d88e791a9b0a4460b661c2a9c1662a362def2",
+  "read_at_commit": true,
+  "replaces_canonical_file": "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_split.sv",
+  "util": 0.4,
+  "source": "Dormant parent selection for the proved WBQ elastic MAIN/OUT split; preserves ot_wbq_root byte-for-byte. Exact transaction evidence results/die_hbm_1105/wbq_safe_split; GIN input+1 and K output+1. Parent must select this profile to expose u_main/u_out, not just select child views."
  }
 }

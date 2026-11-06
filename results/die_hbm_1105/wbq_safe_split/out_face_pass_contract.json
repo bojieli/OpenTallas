@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.native_hard_child_seam.v1",
+ "module": "ot_wbq_sw_split_out",
+ "peers": {
+  "in_v": {
+   "module": "ot_wbq_sw_split_main",
+   "port": "w_k_v"
+  },
+  "in_addr": {
+   "module": "ot_wbq_sw_split_main",
+   "port": "w_k_addr"
+  },
+  "in_data": {
+   "module": "ot_wbq_sw_split_main",
+   "port": "w_k_wdata"
+  },
+  "in_ready": {
+   "module": "ot_wbq_sw_split_main",
+   "port": "w_k_rdy"
+  }
+ }
+}

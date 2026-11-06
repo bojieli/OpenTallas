@@ -90,28 +90,29 @@
   -25.92,
   0
  ],
- "physical_stage_overrides": {
-  "u_main": {
-   "face_in_stage": [
-    "w_k_rdy=0"
-   ],
-   "face_stage": [
-    "w_k_v=0",
-    "w_k_addr=0",
-    "w_k_wdata=0"
-   ]
-  },
-  "u_out": {
-   "face_in_stage": [
-    "in_v=0",
-    "in_addr=0",
-    "in_data=0"
-   ],
-   "face_stage": [
-    "in_ready=0"
-   ]
-  }
- },
  "status": "SOURCE_PROOF_PASS; plan candidate; no P&R/sign-off yet",
- "pin_order": "Per PC: valid1 + address30 + data256 + ready1,16x288 bits,0.096um pitch"
+ "pin_order": "Per PC: valid1 + address30 + data256 + ready1,16x288 bits,0.096um pitch",
+ "physical_face_pass": {
+  "u_main": [
+   "^(w_k_v|w_k_addr|w_k_wdata|w_k_rdy)$"
+  ],
+  "u_out": [
+   "^in_(v|addr|data|ready)$"
+  ]
+ },
+ "face_pass_tool_candidate": "codex/wbq-face-pass-1106@1df47d346e6, pending root R2 scope ruling",
+ "expected_wrapper_flops": {
+  "u_main": 2740,
+  "u_out": 4608,
+  "whole_total": 7348
+ },
+ "reg_guide_boxes": {
+  "u_main": "main_reg_boxes.json",
+  "u_out": "out_reg_boxes.json"
+ },
+ "face_pass_contracts": {
+  "u_main": "main_face_pass_contract.json",
+  "u_out": "out_face_pass_contract.json"
+ },
+ "native_contract_rule": "Every selected view replica must have exclusive reciprocal hard-child peers in the SAME parent partition; external or mixed bus targets are rejected."
 }

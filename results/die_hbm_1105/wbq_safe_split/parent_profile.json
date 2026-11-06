@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.native_parent_profile.v1",
+ "recipe_key": "ot_wbq_sw__safe_split",
+ "top": "ot_wbq_sw",
+ "source_file": "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv",
+ "source_commit": "2c0d88e791a9b0a4460b661c2a9c1662a362def2",
+ "replaces_canonical_file": "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_split.sv",
+ "params": {
+  "HREG": 2,
+  "GIN": 1
+ },
+ "children": {
+  "u_main": "ot_wbq_sw_split_main",
+  "u_out": "ot_wbq_sw_split_out"
+ },
+ "unchanged_neighbor_modules": {
+  "ot_wbq_root": "5dd50bb0ad91ca38cb9783d08c8728c8816c77944ee9c5e49f05810978e5067f"
+ },
+ "pin_cycle_map": {
+  "g_v": 1,
+  "g_d": 1,
+  "w_k_v": 1,
+  "w_k_addr": 1,
+  "w_k_wdata": 1
+ },
+ "note": "Input GIN and output elastic stages are distinct. Credit return follows elastic acceptance and remains finite-credit flow; the proof is exact write-set/sequence, not edge identity under backpressure. Default whole-core recipe remains unchanged."
+}
