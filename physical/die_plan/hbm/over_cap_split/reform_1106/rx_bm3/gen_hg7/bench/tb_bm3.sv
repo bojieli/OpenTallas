@@ -7,7 +7,7 @@
 //   The face model here clocks the recovered-domain pins on rck (fsp shells), which is NOT what the one-clock kit shell
 //   builds.  Checked: pma_tx exact; st[1] exact; non-IDLE rx beats equal in order; st[0] rises within 6 edges after gold.
 module tb_bm3;
-    parameter integer SMUT = 0, NCYC = 9000, FT = 1, FE = 7600, MODE = 0, SEAM = 6, BMUT = 0, RXD = 6, FD = 6;
+    parameter integer SMUT = 0, NCYC = 9000, FT = 1, FE = 7600, MODE = 0, SEAM = 6, BMUT = 0, RXD = 6, FD = 6, BMIN = 1;
     reg c = 0, rc2 = 0, rst = 0;
     always #0.41667 c = ~c;
     always #((MODE == 2) ? 0.41655 : 0.41679) rc2 = ~rc2;
@@ -19,7 +19,7 @@ module tb_bm3;
     wire [543:0] line = p_tx ^ err;
     ot_pdie_serdes u_p (.clk(rc), .rst(rst), .tx(txp), .rx(p_rx), .st(p_st), .pma_tx(p_tx), .pma_tck(p_ck), .pma_rx(544'd0), .pma_rck(rc));
     ot_pdie_serdes__fs u_g (.clk(c), .rst(rst), .tx(txa), .rx(g_rx), .st(g_st), .pma_tx(g_tx), .pma_tck(g_ck), .pma_rx(line), .pma_rck(rc));
-    ot_pdie_serdes__p20fs #(.SMUT(SMUT), .SEAM(SEAM), .BMUT(BMUT)) u_s (.clk(c), .rst(rst), .tx(txa), .rx(s_rx), .st(s_st), .pma_tx(s_tx), .pma_tck(s_ck), .pma_rx(line), .pma_rck(rc));
+    ot_pdie_serdes__p20fs #(.SMUT(SMUT), .SEAM(SEAM), .BMUT(BMUT), .BMIN(BMIN)) u_s (.clk(c), .rst(rst), .tx(txa), .rx(s_rx), .st(s_st), .pma_tx(s_tx), .pma_tck(s_ck), .pma_rx(line), .pma_rck(rc));
     function automatic [511:0] beat(input integer n, input integer salt);
         beat = {32'(n), 32'(n * 7 + salt), 32'(n ^ 32'h5A5A), 384'h0, 30'(n + salt), 2'b00} ^ ({64'h0, {448{n[0]}}} & ~512'h3);
     endfunction
@@ -55,8 +55,8 @@ module tb_bm3;
         end
         g2 = g1; g1 = g_rx; for (hk = 15; hk > 1; hk = hk - 1) gh[hk] = gh[hk-1]; gh[1] = g_rx;
         if (cyc == NCYC) begin
-            $display("P20_STATS seam=%0d bmut=%0d rxd=%0d fd=%0d smut=%0d ft=%0d mode=%0d cycles=%0d mm_tx=%0d mm_rx=%0d mm_lock=%0d first=%0d beats gold=%0d split=%0d fault gold=%0d split=%0d live=%b/%b",
-                SEAM, BMUT, RXD, FD, SMUT, FT, MODE, cyc, mm_tx, mm_rx, mm_lk, first, gn, sn, gf, sf, g_st[1], s_st[1]);
+            $display("P20_STATS bmin=%0d seam=%0d bmut=%0d rxd=%0d fd=%0d smut=%0d ft=%0d mode=%0d cycles=%0d mm_tx=%0d mm_rx=%0d mm_lock=%0d first=%0d beats gold=%0d split=%0d fault gold=%0d split=%0d live=%b/%b",
+                BMIN, SEAM, BMUT, RXD, FD, SMUT, FT, MODE, cyc, mm_tx, mm_rx, mm_lk, first, gn, sn, gf, sf, g_st[1], s_st[1]);
             if (mm_tx + mm_rx + mm_lk != 0) $display("P20_EQ FAIL lockstep mismatch, first at %0d", first);
             else if (gn < 4000) $display("P20_EQ FAIL vacuous: %0d beats", gn);
             else if (gn - sn > 8 || sn > gn) $display("P20_EQ FAIL beat count gold %0d split %0d", gn, sn);

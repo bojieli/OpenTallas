@@ -16,8 +16,8 @@ files = list(base["files"]) + ["rtl/hbm_accel/cores_split/reform_1106/ot_pdie_se
 note = "HBM-GAPS-7 11-06 private RX BM3 safe form from Codex d727c112224 (58e1b7b1825); face shell registered seams; not plan-adopted"
 R = {"ot_pdie_serdes_rx_bm_native": dict(top="ot_pdie_serdes_rx_bm_native", files=files, defines=[], params={"BMTHC": 1},
           macros=[], source=note + "; BM child", source_commit=SRC, read_at_commit=True, util=0.4),
-     "ot_pdie_serdes_rx_bm3_rest": dict(top="ot_pdie_serdes_rx_bm3_rest", files=files, defines=[], params={"BMTHC": 1, "SEAM": 6},
-          macros=list(base["macros"]), source=note + "; residual SEAM 6 (BM round trip +4)", source_commit=SRC, read_at_commit=True, util=0.4)}
+     "ot_pdie_serdes_rx_bm3_rest": dict(top="ot_pdie_serdes_rx_bm3_rest", files=files, defines=[], params={"BMTHC": 1, "SEAM": int(__import__("os").environ.get("HG7_SEAM", "6"))},
+          macros=list(base["macros"]), source=note + "; residual SEAM from HG7_SEAM (default 6: BM round trip +4)", source_commit=SRC, read_at_commit=True, util=0.4)}
 V = {"bm": ("ot_pdie_serdes_rx_bm_native", [95.904, 106.56], "bm_pins.json"),
      "res": ("ot_pdie_serdes_rx_bm3_rest", [197.856, 345.6], "residual_pins.json")}
 mod, ol, pf = V[WHICH]
