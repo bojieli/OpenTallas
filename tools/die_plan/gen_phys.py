@@ -4923,7 +4923,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                    private_clock_mesh=(private_clock_mesh or {}).get(tn)))
         if kit_rtl and tn in kit_rtl and (Path(kit_rtl[tn]).parent/'kit_topology.json').is_file():
             import kit_topology
-            kit_topology.stage_inventory(Path(kit_rtl[tn]).parent,kits[-1])
+            kit_topology.stage_inventory(Path(kit_rtl[tn]).parent,kits[-1],top=t['module'])
         if tn in macro_paths:
             (Path(kits[-1]) / BMP.RECEIPT).write_text(json.dumps(macro_paths[tn], indent=1) + "\n")
     (out / "run_kit.sh").write_text(RUN_KIT)
