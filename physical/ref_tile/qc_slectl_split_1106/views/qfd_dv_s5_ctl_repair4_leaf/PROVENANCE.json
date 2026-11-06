@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+ "flow_tag": "flow-20261106-z-qc",
+ "routed_db": "/srv/opentallas-scratch2/claude/codex-ctl-repeater-form-1106/kit/run/results/asap7/kq_qfd_dv_s5_ctl_repair4_leaf_h6eac26/base/6_final.odb",
+ "build_commit": "6d07ac65bdbc7fa12a2e14f5dd1bd0d6909f6156",
+ "lec": "/srv/opentallas-scratch2/claude/codex-ctl-repeater-form-1106/qualified/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/codex-ctl-repeater-form-1106/qualified/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/codex-ctl-repeater-form-1106/kit",
+ "original_signoff": "/srv/opentallas-scratch2/claude/codex-ctl-repeater-form-1106/kit/signoff/signoff.json",
+ "name": "kq_qfd_dv_s5_ctl_repair4_leaf_h6eac26",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "dear-crayfish",
+ "created": "2026-11-06 08:26 PST",
+ "routed_db_sha256": "353bc1bbb9c805831a0d2dc5a91e0c5f6b5ea1db3fc9e6232c4253aba725fe97",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch2/claude/codex-ctl-repeater-form-1106/kit",
+  "sha256": {
+   "signoff.py": "3e97ef41823cac5d5dbff8d672eeb6839ef32278c58ca44cbd22865476eebfc5",
+   "lec.py": "313d77f094144205893055f199eff7274f8ecc2aea2c0caae3d2eb05958542e6"
+  },
+  "checked": "byte-identical to flow-20261106-z-qc"
+ },
+ "lane": "QC-SLECTL",
+ "as_run_note": "Exact single BUF repeater pose; only two data nets rerouted,389clock nets unchanged. Actual SO and all-shown routed LEC on resulting DB."
+}

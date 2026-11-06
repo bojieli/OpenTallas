@@ -1,0 +1,359 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-11-06T16:16:19+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": null,
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "top": "qfd_dv_s5_ctl_repair4_leaf",
+ "netlist": "/work/run/results/asap7/kq_qfd_dv_s5_ctl_repair4_leaf_h6eac26/base/6_final.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {},
+ "ports": {
+  "inputs": 2808,
+  "outputs": 2090
+ },
+ "t_aig_s": 29.2,
+ "async_reset_regs": {
+  "gold": 2676,
+  "gate": 2676
+ },
+ "kit_reset_ports": [
+  "rst_n"
+ ],
+ "auto_loaded": {
+  "proposed": 0
+ },
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:rst_n[0]"
+   ],
+   "gate": [
+    "pi:rst_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:rst_n[0]": 0
+   },
+   "gate": {
+    "pi:rst_n[0]": 0
+   }
+  },
+  "reset_cycles": 4,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 4,
+  "raw_prefix_wall_s": 900.0,
+  "raw_prefix_ands_cap": 500000,
+  "n_raw_prefix_sim_refuted": 0,
+  "n_raw_prefix_bounded": 0,
+  "raw_prefix_bounded": [],
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_self_hold": 0,
+  "self_hold": [],
+  "n_kept": 114,
+  "n_reloaded": 1,
+  "n_dropped": 0,
+  "reloaded": [
+   {
+    "register": "ff:u_dut.g_safe4.u_ctl.u_6262.Q",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   }
+  ],
+  "dropped": [],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants, or (self_hold, COORD 11-04) the register has no load path and one net forces the constant, listed per register with that net, which must be asserted before use; equality/FSM assumptions never establish a constant's base case",
+  "listing": {
+   "file": "/proof/noreset_constants.tsv",
+   "sha256": "e4f9ae04431611067db787e445c30e75691547686d95ea2113020d8183c6c926",
+   "n_kept": 114,
+   "n_dropped": 0
+  }
+ },
+ "constraint_bases": {
+  "checks": [],
+  "refused": []
+ },
+ "t_corr_s": 465.0,
+ "keypoints": {
+  "gold": {
+   "inputs": 2809,
+   "flops": 9281,
+   "outputs": 0,
+   "ands": 43846
+  },
+  "gate": {
+   "inputs": 10873,
+   "flops": 16928,
+   "outputs": 0,
+   "ands": 79001
+  },
+  "matched": 9999,
+  "gold_constant_flops": {
+   "n": 114,
+   "first": [
+    "ff:u_dut.g_safe4.u_ctl.u_6262.Q",
+    "ff:u_dut.ot_fconst_00000_ff",
+    "ff:u_dut.ot_fconst_00001_ff",
+    "ff:u_dut.ot_fconst_00002_ff",
+    "ff:u_dut.ot_fconst_00003_ff",
+    "ff:u_dut.ot_fconst_00004_ff",
+    "ff:u_dut.ot_fconst_00005_ff",
+    "ff:u_dut.ot_fconst_00006_ff",
+    "ff:u_dut.ot_fconst_00007_ff",
+    "ff:u_dut.ot_fconst_00008_ff",
+    "ff:u_dut.ot_fconst_00009_ff",
+    "ff:u_dut.ot_fconst_00010_ff",
+    "ff:u_dut.ot_fconst_00011_ff",
+    "ff:u_dut.ot_fconst_00012_ff",
+    "ff:u_dut.ot_fconst_00013_ff",
+    "ff:u_dut.ot_fconst_00014_ff",
+    "ff:u_dut.ot_fconst_00015_ff",
+    "ff:u_dut.ot_fconst_00016_ff",
+    "ff:u_dut.ot_fconst_00017_ff",
+    "ff:u_dut.ot_fconst_00018_ff",
+    "ff:u_dut.ot_fconst_00019_ff",
+    "ff:u_dut.ot_fconst_00020_ff",
+    "ff:u_dut.ot_fconst_00021_ff",
+    "ff:u_dut.ot_fconst_00022_ff",
+    "ff:u_dut.ot_fconst_00023_ff",
+    "ff:u_dut.ot_fconst_00024_ff",
+    "ff:u_dut.ot_fconst_00025_ff",
+    "ff:u_dut.ot_fconst_00026_ff",
+    "ff:u_dut.ot_fconst_00027_ff",
+    "ff:u_dut.ot_fconst_00028_ff",
+    "ff:u_dut.ot_fconst_00029_ff",
+    "ff:u_dut.ot_fconst_00030_ff",
+    "ff:u_dut.ot_fconst_00031_ff",
+    "ff:u_dut.ot_fconst_00032_ff",
+    "ff:u_dut.ot_fconst_00033_ff",
+    "ff:u_dut.ot_fconst_00034_ff",
+    "ff:u_dut.ot_fconst_00035_ff",
+    "ff:u_dut.ot_fconst_00036_ff",
+    "ff:u_dut.ot_fconst_00037_ff",
+    "ff:u_dut.ot_fconst_00038_ff"
+   ]
+  },
+  "paired_flops": {
+   "n": 351,
+   "first": [
+    "both:ff:u_dut.g_safe4.u_ctl.u_20616.Q=ff:u_dut.g_safe4.u_ctl.u_20615.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20619.Q=ff:u_dut.g_safe4.u_ctl.u_20618.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20625.Q=ff:u_dut.g_safe4.u_ctl.u_20624.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20628.Q=ff:u_dut.g_safe4.u_ctl.u_20627.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20634.Q=ff:u_dut.g_safe4.u_ctl.u_20633.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20637.Q=ff:u_dut.g_safe4.u_ctl.u_20636.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20643.Q=ff:u_dut.g_safe4.u_ctl.u_20642.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20646.Q=ff:u_dut.g_safe4.u_ctl.u_20645.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20652.Q=ff:u_dut.g_safe4.u_ctl.u_20651.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20655.Q=ff:u_dut.g_safe4.u_ctl.u_20654.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20661.Q=ff:u_dut.g_safe4.u_ctl.u_20660.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20664.Q=ff:u_dut.g_safe4.u_ctl.u_20663.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20670.Q=ff:u_dut.g_safe4.u_ctl.u_20669.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20673.Q=ff:u_dut.g_safe4.u_ctl.u_20672.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20679.Q=ff:u_dut.g_safe4.u_ctl.u_20678.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20682.Q=ff:u_dut.g_safe4.u_ctl.u_20681.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20688.Q=ff:u_dut.g_safe4.u_ctl.u_20687.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20691.Q=ff:u_dut.g_safe4.u_ctl.u_20690.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20697.Q=ff:u_dut.g_safe4.u_ctl.u_20696.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20700.Q=ff:u_dut.g_safe4.u_ctl.u_20699.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20706.Q=ff:u_dut.g_safe4.u_ctl.u_20705.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20709.Q=ff:u_dut.g_safe4.u_ctl.u_20708.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20715.Q=ff:u_dut.g_safe4.u_ctl.u_20714.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20718.Q=ff:u_dut.g_safe4.u_ctl.u_20717.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20724.Q=ff:u_dut.g_safe4.u_ctl.u_20723.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20727.Q=ff:u_dut.g_safe4.u_ctl.u_20726.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20733.Q=ff:u_dut.g_safe4.u_ctl.u_20732.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20736.Q=ff:u_dut.g_safe4.u_ctl.u_20735.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20742.Q=ff:u_dut.g_safe4.u_ctl.u_20741.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20745.Q=ff:u_dut.g_safe4.u_ctl.u_20744.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20751.Q=ff:u_dut.g_safe4.u_ctl.u_20750.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20963.Q=ff:u_dut.g_safe4.u_ctl.u_20962.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20969.Q=ff:u_dut.g_safe4.u_ctl.u_20968.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20980.Q=ff:u_dut.g_safe4.u_ctl.u_20979.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20986.Q=ff:u_dut.g_safe4.u_ctl.u_20985.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_20992.Q=ff:u_dut.g_safe4.u_ctl.u_20991.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_21025.Q=ff:u_dut.g_safe4.u_ctl.u_21023.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_21033.Q=ff:u_dut.g_safe4.u_ctl.u_21032.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_21034.Q=ff:u_dut.g_safe4.u_ctl.u_21032.Q",
+    "both:ff:u_dut.g_safe4.u_ctl.u_21035.Q=ff:u_dut.g_safe4.u_ctl.u_21032.Q"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 36,
+   "first": [
+    "ff:u_dut.ot_fcap_00000_ff",
+    "ff:u_dut.ot_fcap_00001_ff",
+    "ff:u_dut.ot_fcap_00002_ff",
+    "ff:u_dut.ot_fcap_00003_ff",
+    "ff:u_dut.ot_fcap_00004_ff",
+    "ff:u_dut.ot_fcap_00005_ff",
+    "ff:u_dut.ot_fcap_00006_ff",
+    "ff:u_dut.ot_fcap_00007_ff",
+    "ff:u_dut.ot_fcap_00008_ff",
+    "ff:u_dut.ot_fcap_00009_ff",
+    "ff:u_dut.ot_fcap_00010_ff",
+    "ff:u_dut.ot_fcap_00011_ff",
+    "ff:u_dut.ot_fcap_00012_ff",
+    "ff:u_dut.ot_fcap_00013_ff",
+    "ff:u_dut.ot_fcap_00014_ff",
+    "ff:u_dut.ot_fcap_00015_ff",
+    "ff:u_dut.ot_fcap_00016_ff",
+    "ff:u_dut.ot_fcap_00017_ff",
+    "ff:u_dut.ot_fcap_00018_ff",
+    "ff:u_dut.ot_fcap_00019_ff",
+    "ff:u_dut.ot_fcap_00020_ff",
+    "ff:u_dut.ot_fcap_00021_ff",
+    "ff:u_dut.ot_fcap_00022_ff",
+    "ff:u_dut.ot_fcap_00023_ff",
+    "ff:u_dut.ot_fcap_00024_ff",
+    "ff:u_dut.ot_fcap_00025_ff",
+    "ff:u_dut.ot_fcap_00026_ff",
+    "ff:u_dut.ot_fcap_00027_ff",
+    "ff:u_dut.ot_fcap_00028_ff",
+    "ff:u_dut.ot_fcap_00029_ff",
+    "ff:u_dut.ot_fcap_00030_ff",
+    "ff:u_dut.ot_fcap_00031_ff",
+    "ff:u_dut.ot_fcap_00032_ff",
+    "ff:u_dut.ot_fcap_00033_ff",
+    "ff:u_dut.ot_fcap_00034_ff",
+    "ff:u_dut.ot_fcap_00035_ff"
+   ]
+  },
+  "gold_x_sources": 1,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 8065,
+  "gold_only_compare": {
+   "n": 0,
+   "first": []
+  },
+  "gate_only_compare": {
+   "n": 228,
+   "first": [
+    "ff:u_dut.ot_fcap_00000_ff",
+    "ff:u_dut.ot_fcap_00001_ff",
+    "ff:u_dut.ot_fcap_00002_ff",
+    "ff:u_dut.ot_fcap_00003_ff",
+    "ff:u_dut.ot_fcap_00004_ff",
+    "ff:u_dut.ot_fcap_00005_ff",
+    "ff:u_dut.ot_fcap_00006_ff",
+    "ff:u_dut.ot_fcap_00007_ff",
+    "ff:u_dut.ot_fcap_00008_ff",
+    "ff:u_dut.ot_fcap_00009_ff",
+    "ff:u_dut.ot_fcap_00010_ff",
+    "ff:u_dut.ot_fcap_00011_ff",
+    "ff:u_dut.ot_fcap_00012_ff",
+    "ff:u_dut.ot_fcap_00013_ff",
+    "ff:u_dut.ot_fcap_00014_ff",
+    "ff:u_dut.ot_fcap_00015_ff",
+    "ff:u_dut.ot_fcap_00016_ff",
+    "ff:u_dut.ot_fcap_00017_ff",
+    "ff:u_dut.ot_fcap_00018_ff",
+    "ff:u_dut.ot_fcap_00019_ff",
+    "ff:u_dut.ot_fcap_00020_ff",
+    "ff:u_dut.ot_fcap_00021_ff",
+    "ff:u_dut.ot_fcap_00022_ff",
+    "ff:u_dut.ot_fcap_00023_ff",
+    "ff:u_dut.ot_fcap_00024_ff",
+    "ff:u_dut.ot_fcap_00025_ff",
+    "ff:u_dut.ot_fcap_00026_ff",
+    "ff:u_dut.ot_fcap_00027_ff",
+    "ff:u_dut.ot_fcap_00028_ff",
+    "ff:u_dut.ot_fcap_00029_ff",
+    "ff:u_dut.ot_fcap_00030_ff",
+    "ff:u_dut.ot_fcap_00031_ff",
+    "ff:u_dut.ot_fcap_00032_ff",
+    "ff:u_dut.ot_fcap_00033_ff",
+    "ff:u_dut.ot_fcap_00034_ff",
+    "ff:u_dut.ot_fcap_00035_ff",
+    "ff:u_dut.ot_fconst_00000_ff",
+    "ff:u_dut.ot_fconst_00001_ff",
+    "ff:u_dut.ot_fconst_00002_ff",
+    "ff:u_dut.ot_fconst_00003_ff"
+   ]
+  }
+ },
+ "t_prove_s": 2.7,
+ "x_dont_care_points": {
+  "n": 0,
+  "first": []
+ },
+ "kept_registers": {
+  "declared": 7191,
+  "in_netlist": 7191,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null,
+  "functionally_unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "functionally_unobservable_reason": null,
+  "dead_twin_classes_removed": {
+   "n": 0,
+   "first": []
+  },
+  "dead_twin_classes_reason": null,
+  "merged_twins_proved": {
+   "n": 0,
+   "first": []
+  },
+  "merged_twins_reason": null
+ },
+ "counts": {
+  "compare_points": 10019,
+  "proved": 10019,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "10019 compare points proved; 9999 key points matched by name, 351 register pairs / merges and 114 constant registers proved inductively; 0 RTL and 36 gate registers unmatched and unobservable (proved as free inputs)",
+ "superset_vec": {
+  "enabled": true,
+  "n_extra": 0,
+  "all_shown": true,
+  "extra_bits": [],
+  "basis": "free bits: free inputs of the proved miter (unobservable); const/eq/cube bits: bound by inductively proved correspondence hypotheses; shown only when the verdict is EQUIVALENT"
+ },
+ "t_total_s": 510.5,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "kit provenance invalid: FileNotFoundError: [Errno 2] No such file or directory: '/work/PROVENANCE.json'",
+  "tool_update": null
+ }
+}

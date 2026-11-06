@@ -1,0 +1,105 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "qfd_dv_s5_ctl_repair4_leaf_h6eac26",
+  "module": "qfd_dv_s5_ctl_repair4_leaf",
+  "plan_type": "sle_ctl__cl67434795",
+  "outline_um": [
+   345.6,
+   259.2
+  ],
+  "ref_tile": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds_ctl4/kits/_spec/qfd_dv_s5_ctl_repair4_leaf",
+  "spec": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds_ctl4/kits/_spec/qfd_dv_s5_ctl_repair4_leaf/spec.json",
+  "spec_sha256": "b1b9b09cce0abc8921c3004fc8d5c5265a7d98c43339c4bf3cb63a17d86c74d6",
+  "pins_file": "cores/sle_ctl/qfd_dv_s5_ctl_repair4_leaf_pins.json",
+  "pins_sha256": "6eac26574883d63340d28b12c99496e26a19d452cb3734b4b20a71d22dbbed8c",
+  "pins": 4898,
+  "plan_lef": "plan pin table (plan_pins_contract)",
+  "clocks": [
+   "ck"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "beb51ded4c4484be4908afff5aab4df15efa2988c2d62e139ccde02d5ed67744",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan early core tap 250 TT / 202.5 FF (QC-SLECTL-B/SPLIT-1105: target 250/202.5 ESTIMATE, re-measure from the child's own kit)",
+   "ff": "plan early core tap 250 TT / 202.5 FF (QC-SLECTL-B/SPLIT-1105: target 250/202.5 ESTIMATE, re-measure from the child's own kit)"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "6d07ac65bd",
+  "sdc_lint_sha256": "1009707936b623e070d7637a3336af8ca8ea79bfb1ad981e6d8f095d123634a3",
+  "face_guard_sha256": "89d14d085ae0292e3c1d0765d6c946765386a94aefcb28510d0b3d675552d5bf",
+  "signoff_sha256": "3e97ef41823cac5d5dbff8d672eeb6839ef32278c58ca44cbd22865476eebfc5",
+  "macros": {},
+  "sram_pincol_halo": [],
+  "rtl_patches": [
+   {
+    "file": "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv",
+    "why": "QC ctl child: one pin capture per data input; identical no-reset C/D copies coalesced, 0 cycles",
+    "sha256": "2ff269657fa631ed1c0cbb3520e8987a46fb6b4cfc553c1aedd33a3bd700969a"
+   }
+  ],
+  "kit_hash": "70dac4eb8a4903ad",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5,
+   "default": true
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_canon_sha256": "61d2e8d9e0f8165f15755ee84eb9b1ec384d6292c26228ab796eb6ebbdb07443",
+  "pins_placed_canon_sha256": "b2b27da7349545201884b7ab86788bd492f366245461560c31bb824e8c818bd7",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/codex-ctl-repeater-form-1106/kit",
+ "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+ "flow_tag": "flow-20261106-z-qc",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-06T08:26:08-08:00",
+  "kit": "/srv/opentallas-scratch2/claude/codex-ctl-repeater-form-1106/kit",
+  "base": "/srv/opentallas-scratch2/claude/codex-ctl-repeater-form-1106/kit/run/results/asap7/kq_qfd_dv_s5_ctl_repair4_leaf_h6eac26/base",
+  "signoff": "/srv/opentallas-scratch2/claude/codex-ctl-repeater-form-1106/kit/signoff_repeater/signoff.json",
+  "signoff_sha256": "39b5db9c4844dbe708a98f1d944bff136be310d8e6d683f2f3d3aeafa6a455a3",
+  "signoff_generated": "2026-11-06T08:15:02-08:00",
+  "odb": "/srv/opentallas-scratch2/claude/codex-ctl-repeater-form-1106/kit/run/results/asap7/kq_qfd_dv_s5_ctl_repair4_leaf_h6eac26/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/codex-ctl-repeater-form-1106/kit/lec_repeater/lec.json",
+  "note": "Physical repeater pose, data/boot cycles0; fresh extracted SO and routedEQ.",
+  "lib_basis": {
+   "qfd_dv_s5_ctl_repair4_leaf_tt.lib": "base qfd_dv_s5_ctl_repair4_leaf_tc.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)",
+   "qfd_dv_s5_ctl_repair4_leaf_ff.lib": "base qfd_dv_s5_ctl_repair4_leaf_BC.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
+  },
+  "files_sha256": {
+   "pins.json": "57faeaf7d0a57c3d3b9f7b5c232322048b0de9d3895a5eb996126e5febaf5c71",
+   "qfd_dv_s5_ctl_repair4_leaf.lef": "7fc955e361af57c4b8adbbdaf67ff5fb8c15771d0c2f684fabe280cf5b8433a8",
+   "qfd_dv_s5_ctl_repair4_leaf_ff.lib": "b7fbd37cb22e56f40fa255e0e8bc87838135b9478f4c121532fe633e197a3c19",
+   "qfd_dv_s5_ctl_repair4_leaf_tt.lib": "14ecfdc83e9d8f52b24faeeccbcbf70864d5b96e4a0b73ea070cd7356cfe0143"
+  }
+ }
+}
