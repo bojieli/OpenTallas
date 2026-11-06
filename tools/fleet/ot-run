@@ -325,6 +325,15 @@ LOAD_SPILL_RATIO = float(os.environ.get("OT_RUN_LOAD_SPILL_RATIO", "1.25"))   # 
 LOAD_SPILL_DST, LOAD_SPILL_GAP, LOAD_SPILL_MIN_THREADS = 0.85, 0.5, 4
 LOAD_SPILL_NEG_S = 3600
 LOAD_SPILL_NEG = os.path.expanduser("~/.local/state/ot-run/loadspill_no")
+# QUEUE-BAL-1 2026-11-05 (COORD 19:2x: 122 waiters / 5.9 TB on intel1 for up to 9.6 h while other hosts had room): 96 of
+# them were kit PLACE jobs SPILLED epyc4 -> intel1 that never moved again.  (1) choose() called intel1 "admits 171 GB now"
+# although its ot-heavy holds every non-crit job while load1 >= LOAD_CAP_FACTOR x nproc (LOADCAP_1101, 1.5 x 112 = 168;
+# intel1 sat at 190-240), so SPILL picked a host that could not start the job.  A host at its load cap now does not
+# "admit now" for a job the cap holds (non-crit, not a short <= 10 GB / <= 2-thread stage); it can still be the memory
+# queue.  Nothing new is held: ot-heavy already holds these jobs there, placement only stops sending them to that wait.
+# (2) spill_run waited on the spill host with no bound; the spilled waiter is now re-placed after REQUEUE_S like any other.
+LOAD_CAP_FACTOR = float(os.environ.get("OT_RUN_LOAD_CAP_FACTOR", "1.5"))   # = ot-heavy LOAD_CAP_FACTOR (default 1.5; 0 = off)
+SHORT_MAX_GB, SHORT_MAX_THREADS = 10, 2                                     # = ot-heavy short pool (bypasses the cap)
 SPILL_MAX_DIE_GB = int(os.environ.get("OT_RUN_SPILL_MAX_DIE_GB", "400"))   # v10: die lanes spill too (incremental copy)
 DIE_RE = re.compile(r"(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b|mu-die|die[_-]case|kvs14r-|dv2f\d)")  # COORD 10-19: MU die cases (mu-die-*, die-case, kvs14r-*, dv2f*) are die jobs (FLEET-DISK gap)
 
@@ -600,6 +609,15 @@ def reserved(h, r):
     return r
 
 
+def load_capped(r, mem, threads):
+    """QUEUE-BAL-1: ot-heavy on this host would hold this job on its load cap now (LOADCAP_1101): load1 >=
+    LOAD_CAP_FACTOR x nproc (nproc = the row's cores before HOST_RESERVE), for a non-crit job outside the short pool"""
+    if LOAD_CAP_FACTOR <= 0 or crit_job() or (mem <= SHORT_MAX_GB and threads <= SHORT_MAX_THREADS):
+        return False
+    n = (r.get("ncpu") or 0) + (r.get("reserve_threads") or 0)
+    return n > 0 and int(load1(r)) >= int(LOAD_CAP_FACTOR * n)
+
+
 def choose(res, mem, threads=THREADS, die=False):
     """res: host -> --free row (hosts that qualify by disk/dir only).  Returns (host, will_queue).
     die: prefer normal hosts among those admitting now, otherwise keep every admitting host eligible; any other job gets
@@ -616,7 +634,7 @@ def choose(res, mem, threads=THREADS, die=False):
     coord = lambda h: HOST_ROLE.get(h) == "coord"
     if any(not coord(h) for h in ok) and any(not coord(h) and ok[h].get("admit_gb", ok[h]["free_gb"]) >= mem for h in ok):
         ok = {h: r for h, r in ok.items() if not coord(h)}   # FLEET-NEW3: the shared coordinator host only as a last resort
-    fits = [h for h in ok if ok[h].get("admit_gb", ok[h]["free_gb"]) >= mem]
+    fits = [h for h in ok if ok[h].get("admit_gb", ok[h]["free_gb"]) >= mem and not load_capped(ok[h], mem, threads)]
     if not fits:                                   # nobody admits it now: queue where the most memory is free
         if any(not coord(h) for h in ok):
             ok = {h: r for h, r in ok.items() if not coord(h)}
@@ -2008,7 +2026,7 @@ SPILL_REFUSED_REAL = False   # the last forward copy was refused with OT_SPILL_R
 
 def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
     """copy the roots src->dst, run there, copy the files the run wrote back to src.  Returns the exit status, or None
-    when the copy failed (nothing ran).  v10: the forward copy is marked first, serialised per lane and retried; a
+    when the copy failed or (QUEUE-BAL-1) dst did not admit it within REQUEUE_S (nothing ran; the caller places again).  v10: the forward copy is marked first, serialised per lane and retried; a
     pending record (~/.local/state/ot-run/spill_pending) survives a killed client, and `ot-run --spill-sweep` copies the
     outputs back once the unit has ended; a back-copy that keeps failing is retried and logged to spill_stuck.log."""
     tag = "%d-%d" % (os.getpid(), int(time.time()))
@@ -2044,7 +2062,10 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
         watch = threading.Thread(target=handoff_watch, args=(src, dst, roots, os.path.normpath(d), goal, stamp, rec, stop_watch, say),
                                  daemon=True)
         watch.start()
-    rc, ran = run(dst, mem, cmd, d, max_wait, on_start=on_start, disk=disk)
+    # QUEUE-BAL-1: the spilled waiter is bounded by REQUEUE_S like any other (it waited unbounded: 96 waiters stuck on
+    # intel1 up to 9.6 h); not admitted in time -> None, and the caller places the job again (a re-spill is incremental)
+    wait = REQUEUE_S if max_wait is None else min(REQUEUE_S, max_wait)
+    rc, ran = run(dst, mem, cmd, d, wait, on_start=on_start, disk=disk, quiet_notrun=(wait != max_wait))
     if watch:                                    # a hand-off in progress finishes before any back-copy
         stop_watch.set()
         watch.join()
@@ -2054,6 +2075,9 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
             os.unlink(os.path.join(SPILL_PENDING, tag + ".json"))
         except OSError:
             pass
+        if rc == 75 and wait != max_wait:
+            say(f"ot-run: REBALANCE: spilled job not admitted on {dst} within {wait} s; placing again")
+            return None
         return rc or 255
     if not ran:                                  # started, connection lost: it may still run; the sweep copies back later
         say(f"ot-run: SPILL: outputs stay on {dst} until the unit ends; `ot-run --spill-sweep` copies them back to {src}")
