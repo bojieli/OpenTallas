@@ -168,6 +168,32 @@ def test_core_unequal_counts_fail(tmp_path):
     assert r.returncode != 0 and "unequal" in r.stderr
 
 
+def test_core_h_classes_on_different_lane_subsets_pass(tmp_path):
+    """DIE-S81-69 11-06 (kv_leaf t1/t3/t4/t5): hi sited on lanes {0,5,7,9}, ho on {0,5,7,8,9}; one depth per class
+    on all lanes, sited lanes FIRM, the rest GPL; reported in h_lanes, no fail."""
+    p = _core_plan(hi=1, ho=1)
+    hi_l, ho_l = {0, 5, 7, 9}, {0, 5, 7, 8, 9}
+    keep = []
+    for e in p["partition_types"]["t"]["internal_stations"]:
+        if "g_ln[" not in e["conn"]:
+            keep.append(e)
+            continue
+        lane = int(e["conn"].split("g_ln[")[1].split("]")[0])
+        if (".hq_d|" in e["conn"] and lane in hi_l) or (".hw_d|" in e["conn"] and lane in ho_l):
+            keep.append(e)
+    p["partition_types"]["t"]["internal_stations"] = keep
+    r, kd = _run_core(tmp_path, p, "--apply", "--h-tree", "4,1,0")
+    assert r.returncode == 0, r.stderr
+    sv = (kd / "t_leaf_bound.sv").read_text()
+    assert ".CS_HI_D(1)" in sv and ".CS_HO_D(1)" in sv
+    tcl = (kd / "istations.tcl").read_text()
+    assert "g_ln\\[8\\]?u_cst_ho" in tcl and "g_ln\\[8\\]?u_cst_hi" not in tcl
+    # shared hi stage (GS_IN 1): groups 0 (0..3), 1 (4..7), 2 (8..11) sited; group 3 (12..15) has no lane -> GPL
+    assert "g_hig\\[1\\]" in tcl and "g_hig\\[3\\]" not in tcl
+    r, _ = _run_core(tmp_path, p)
+    assert r.returncode == 0, r.stderr
+
+
 def test_core_unmapped_and_cs_fail(tmp_path):
     bad = dict(conn="core:u_lf.u_vq.xf|core:u_lf.u_vsw", launch="core:u_lf.u_vq.xf", capture="u_lf.u_vsw", bits=1,
                regs_um=[[1.0, 1.0]])
