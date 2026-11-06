@@ -2834,6 +2834,10 @@ def classify_cmd(args):
 
 
 def main(argv=None):
+    operator_args = sys.argv[1:] if argv is None else argv
+    if operator_args[:1] == ["reconcile-wave"]:
+        import wave_reconcile
+        return wave_reconcile.main(operator_args[1:])
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)
     t = sp.add_parser("tick")
@@ -2844,6 +2848,7 @@ def main(argv=None):
     c.add_argument("--since", type=float, default=0)
     c.add_argument("--goal", default="route")
     c.add_argument("--exit", type=int, default=None)
+    sp.add_parser("reconcile-wave", help="read-only current-row/terminal-job report and approved recovery suggestions")
     a = ap.parse_args(argv)
     return {"tick": tick, "status": status, "classify": classify_cmd}[a.cmd](a)
 
