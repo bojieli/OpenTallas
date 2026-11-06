@@ -1,0 +1,5 @@
+seam6 bmut0 smut9 ft1 rxd6 fd6 expect=FAIL got=FAIL OK | P20_STATS seam=6 bmut=0 rxd=6 fd=6 smut=9 ft=1 mode=0 cycles=9000 mm_tx=0 mm_rx=11775 mm_lock=0 first=109 beats gold=8845 split=8832 fault gold=7663 split=109 live=1/1 P20_EQ FAIL lockstep mismatch, first at 109 
+seam6 bmut0 smut0 ft1 rxd2 fd2 expect=FAIL got=FAIL OK | P20_STATS seam=6 bmut=0 rxd=2 fd=2 smut=0 ft=1 mode=0 cycles=9000 mm_tx=0 mm_rx=8877 mm_lock=0 first=124 beats gold=8845 split=8839 fault gold=7663 split=7669 live=1/1 P20_EQ FAIL lockstep mismatch, first at 124 
+seam6 bmut0 smut0 ft1 rxd5 fd6 expect=FAIL got=FAIL OK | P20_STATS seam=6 bmut=0 rxd=5 fd=6 smut=0 ft=1 mode=0 cycles=9000 mm_tx=0 mm_rx=8874 mm_lock=0 first=127 beats gold=8845 split=8839 fault gold=7663 split=7669 live=1/1 P20_EQ FAIL lockstep mismatch, first at 127 
+seam6 bmut0 smut0 ft1 rxd7 fd6 expect=FAIL got=FAIL OK | P20_STATS seam=6 bmut=0 rxd=7 fd=6 smut=0 ft=1 mode=0 cycles=9000 mm_tx=0 mm_rx=8873 mm_lock=0 first=128 beats gold=8845 split=8839 fault gold=7663 split=7669 live=1/1 P20_EQ FAIL lockstep mismatch, first at 128 
+EQ_EXIT 0
