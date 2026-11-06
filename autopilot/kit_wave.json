@@ -20,10 +20,10 @@
     "clock": "PASS",
     "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "plan": "/srv/opentallas-scratch2/claude/codex-wave-1105/src_7da_ad/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "epyc5",
-   "src": "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705",
-   "src_sha": "2c7054fd3cda3f76c35bb1e4b04f8d9ddd06711e",
+   "src": "/srv/opentallas-scratch2/claude/codex-wave-1105/src_7da_ad",
+   "src_sha": "faecd095101b0b673d0cc87586e7f33ac8da7d6b",
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch2/claude/kw11/asbuilt_kv_o.json",
@@ -194,7 +194,8 @@
     "kv3_hub_C@3",
     "kv3_hroot@4",
     "kv3_hg_v1@3",
-    "kv3_hg_v1@5"
+    "kv3_hg_v1@5",
+    "kv3_sys_c@4"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -242,7 +243,6 @@
    "hold_items": {
     "kv3_hub_Wi": "DIE-KV-69 09:08: no retry, class A symptom, waits for 21 HR core views + view plan event",
     "kv3_phy_v1": "KW-FIX-8 10:1x DIE-KV-69 09:17: follows the kv3_phy G2 read on phymid; release on that read",
-    "kv3_sys_c": "KW-FIX-8 11-04 20:1x: OT_CLAND band on u_cland_raw_fs_ft1_o same error a2-a3, INFRA label masked it. Waits KV CLAND class form (DIE-KV-70), no blind retry",
     "kv3_hub_C": "CODEX TEMP HOLD: actual2SIGNEDoverlaypassed but finalkitRTL hard_macros listsCTLonly; AHUBboundleafidentity stillrequirescheck toavoidflat16GBOOM. KV-PChelperowns diagnosis, no newrouteuntilactualtyped2childclosure."
    },
    "work_root": "/srv/opentallas-scratch2/claude/codex-wave-1105/runs/qwen_kvsys/kit-wave",
@@ -421,7 +421,8 @@
     "kv3_hub_C@3": "CODEX KV ownership recovery: hubC actual2SIGNEDviewoverlay+routedchildlibs PASS, kitRTL36files unbound0, noflatten; old16GBflatOOMobsolete. hrootcurrentplanpictureVIEWEDPASSCOND nativebusmaxhop358.01 nohardmacros (codex_hroot_1106review). Onecurrenttyped/boundedvehicle; parenttimingstillowed.",
     "kv3_hroot@4": "CODEX KV ownership recovery: hubC actual2SIGNEDviewoverlay+routedchildlibs PASS, kitRTL36files unbound0, noflatten; old16GBflatOOMobsolete. hrootcurrentplanpictureVIEWEDPASSCOND nativebusmaxhop358.01 nohardmacros (codex_hroot_1106review). Onecurrenttyped/boundedvehicle; parenttimingstillowed.",
     "kv3_hg_v1@3": "CODEX currentHG recovery: source2cGENrc0/PREFLIGHT0 actual20macro_instances, correctedECTL u_bound.u_ectl.u_cols.u_columns.u_q[0:3]; memory16384budgetfixpresent. CurrentimageVIEWEDPASSCOND broad104um/min76umchannels,16heads+4ECTL,4EXsoftexplicit. Onecurrenttrial, oldFAILsretained; actualparentSTAstillrequired.",
-    "kv3_hg_v1@5": "CODEX currentHG recovery: source2cGENrc0/PREFLIGHT0 actual20macro_instances, correctedECTL u_bound.u_ectl.u_cols.u_columns.u_q[0:3]; memory16384budgetfixpresent. CurrentimageVIEWEDPASSCOND broad104um/min76umchannels,16heads+4ECTL,4EXsoftexplicit. Onecurrenttrial, oldFAILsretained; actualparentSTAstillrequired."
+    "kv3_hg_v1@5": "CODEX currentHG recovery: source2cGENrc0/PREFLIGHT0 actual20macro_instances, correctedECTL u_bound.u_ectl.u_cols.u_columns.u_q[0:3]; memory16384budgetfixpresent. CurrentimageVIEWEDPASSCOND broad104um/min76umchannels,16heads+4ECTL,4EXsoftexplicit. Onecurrenttrial, oldFAILsretained; actualparentSTAstillrequired.",
+    "kv3_sys_c@4": "CODEX KV owner-approved82533/396 sysC exact reset placement reform: reviewed13longbranches around SRAM/UCIe wall,maxhop396.155um,5same-depth copies,0cycles,literal101flop proof+mutant. Newfaecd plan/source emitsfresh23branches101flops; do not reuse oldfailedbound kit."
    },
    "only_items": [
     "kv3_astk",
@@ -507,7 +508,7 @@
    ],
    "plan_items_from_allowlist": true,
    "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-   "queue_src": "main@2c7054fd3cda3f76c35bb1e4b04f8d9ddd06711e",
+   "queue_src": "main@faecd095101b0b673d0cc87586e7f33ac8da7d6b",
    "hold_items_released": {
     "kv3_pc": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
     "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -724,7 +725,7 @@
     "qkd_kvs_ctl"
    ],
    "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
-   "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained.",
+   "note_codex_source": "CODEX scoped KV cadence faecd/flow-y-kv: immutable current source staged ep4/5/6;33historicalpins417objects available. Active old2c kits untouched. Current SYS_C reviewed82533 geometry uses101 literal flops/23branches, samephase, emitted fresh fromcurrentplan. Wi/PHYv1 retainholds pending typedviews/ownerevent; hubC soleprivate trial stillheld.",
    "prov_view_sources": {
     "qkd_ahub": [
      {
@@ -1624,7 +1625,10 @@
     "slice_station__t6__cl54a9ceeb@9",
     "slice_station__t30__cl1653104c@9",
     "slice_station__t30__cl6a190133@12",
-    "slice_station__t7__cl362204c4@14"
+    "slice_station__t7__cl362204c4@14",
+    "slice_station__t21@10",
+    "slice_station__t30__clcedefe91@11",
+    "slice_station__t7__cl503f4913@12"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -2348,7 +2352,10 @@
     "slice_station__t6__cl54a9ceeb@9": "CODEX S81 class recovery: existing I39 ft_ring_max_ps166.6 is in currentplan; old failed falllanding SDC used699.72ps beforefix. No newconstraintchange/cycles. Older alternativeblock qRUNNING cache stale: actualAP jobs83490/4e2e CANCELLED Nov4.",
     "slice_station__t30__cl1653104c@9": "CODEX current qRUNNING-cache recovery: exactAPDONE-CRASH source730 unique-rise insertion Tcl; current2c includesI184psroot. No physicaljobrunning, no designstrike; finalTT/FFgatesunchanged.",
     "slice_station__t30__cl6a190133@12": "CODEX current qRUNNING-cache recovery: exactAPDONE-CRASH source730 unique-rise insertion Tcl; current2c includesI184psroot. No physicaljobrunning, no designstrike; finalTT/FFgatesunchanged.",
-    "slice_station__t7__cl362204c4@14": "CODEX current qRUNNING-cache recovery: exactAPDONE-CRASH source730 unique-rise insertion Tcl; current2c includesI184psroot. No physicaljobrunning, no designstrike; finalTT/FFgatesunchanged."
+    "slice_station__t7__cl362204c4@14": "CODEX current qRUNNING-cache recovery: exactAPDONE-CRASH source730 unique-rise insertion Tcl; current2c includesI184psroot. No physicaljobrunning, no designstrike; finalTT/FFgatesunchanged.",
+    "slice_station__t21@10": "CODEX existing I184 psroot class: exact current AP DONE-CRASH unique rise-source Tcl on old730 source; current2c contains fix. No live alternative; fresh immutable attempt, no design strike or timing relaxation.",
+    "slice_station__t30__clcedefe91@11": "CODEX existing I184 psroot class: exact current AP DONE-CRASH unique rise-source Tcl on old730 source; current2c contains fix. No live alternative; fresh immutable attempt, no design strike or timing relaxation.",
+    "slice_station__t7__cl503f4913@12": "CODEX existing I184 psroot class: exact current AP DONE-CRASH unique rise-source Tcl on old730 source; current2c contains fix. No live alternative; fresh immutable attempt, no design strike or timing relaxation."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
