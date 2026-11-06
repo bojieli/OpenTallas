@@ -99,9 +99,106 @@ def nudge_explicit(regs, boxes, w, h, A, B, max_slide=None, step=8.0):
     return out, fin[0][0], max(cand[j][i][0] for j, i in enumerate(idx))
 
 
+GRID_INSET, GRID_ROW, GRID_SITE = C.CORE_INSET_UM, C.CORE_ROW_UM, C.CORE_SITE_UM
+SNAP_STEPS_X, SNAP_STEPS_Y = 80, 8          # block snap search: <= 4.32 um in x, <= 2.16 um in y
+
+
+def _on_grid(v, org, pitch, tol=1e-4):
+    k = (v - org) / pitch
+    return abs(k - round(k)) * pitch < tol
+
+
+def snap_offgrid(raw, types=None):
+    """DIE-KV-80/PLAN 11-05 (KV kv3_hgi_v8 a5, place: 'explicit FT site is not on a row/site: ft27,4,0 629.609
+    1080.7037'): face_flops.tcl places an explicit FT bit cell only on a kit row/site (CORE_AREA inset 4.32, rows
+    0.27, sites 0.054) and stops on the first that is not.  An earlier station re-site wrote centre - half-cell
+    sites (523 bits of kv3_hgi_v8 ft27 station 4; 2682 bits in 6 stations of kv3_hub_Wi).  Off-grid bits of a station
+    that share one sub-grid offset move TOGETHER by the least snap (<= 0.054 x, <= 0.27 y: one of the 4 floor/ceil
+    pairs, nearest first) that keeps every cell clear of the type's macros, clock-buffer halos and every other bit
+    site; the bits stay in their order and spacing.  A group with no clear snap falls back to RowAllocator per bit
+    (nearest free legal site, <= MAX_SLIDE).  On-grid bits, regs_um, counts, pins and windows never change.
+    Returns the ledger rows."""
+    led = []
+    for tn, t in raw["partition_types"].items():
+        if types is not None and tn not in types:
+            continue
+        slots = t.get("ft_slots") or []
+        bad = [(s, j) for s in slots for j, st in enumerate(s.get("bit_sites_um") or []) if st and any(
+            not (_on_grid(x, GRID_INSET, GRID_SITE) and _on_grid(y, GRID_INSET, GRID_ROW)) for x, y in st)]
+        if not bad:
+            continue
+        w, h = t["outline_um"]
+        macro = list(placement_boxes(t).values()); cpts = clock_points(t)
+        def cells_of(s, st):
+            cw_, ch_ = s.get("bit_site_cell_um", CELL_DEFAULT)
+            return [(x, y, x + cw_, y + ch_) for x, y in st]
+        for s, j in bad:
+            st = s["bit_sites_um"][j]; cw_, ch_ = s.get("bit_site_cell_um", CELL_DEFAULT)
+            occ = np.array([c for s2 in slots for j2, st2 in enumerate(s2.get("bit_sites_um") or [])
+                            if st2 and not (s2 is s and j2 == j) for c in cells_of(s2, st2)] or [(0, 0, 0, 0)], float)
+            groups = {}
+            for bi, (x, y) in enumerate(st):
+                if _on_grid(x, GRID_INSET, GRID_SITE) and _on_grid(y, GRID_INSET, GRID_ROW):
+                    continue
+                fx = 0.0 if _on_grid(x, GRID_INSET, GRID_SITE) else round(((x - GRID_INSET) / GRID_SITE) % 1.0, 4)
+                fy = 0.0 if _on_grid(y, GRID_INSET, GRID_ROW) else round(((y - GRID_INSET) / GRID_ROW) % 1.0, 4)
+                groups.setdefault((fx, fy), []).append(bi)
+            rec = dict(type=tn, slot=s["name"], station=j + 1, mode="grid_snap", bits_off_grid=sum(map(len, groups.values())),
+                       groups=len(groups), shifts=[], fallback_bits=0)
+            for (fx, fy), bis in sorted(groups.items()):
+                # the least snap first; if that cell set hits something, the same group steps whole sites / rows
+                # outward (<= SNAP_STEPS_X sites, <= SNAP_STEPS_Y rows), still as one block
+                dxs = {round(-fx * GRID_SITE + m * GRID_SITE, 6) for m in range(-SNAP_STEPS_X, SNAP_STEPS_X + 1)}
+                dys = {round(-fy * GRID_ROW + m * GRID_ROW, 6) for m in range(-SNAP_STEPS_Y, SNAP_STEPS_Y + 1)}
+                done = False
+                for dx, dy in sorted(((a, b) for a in dxs for b in dys), key=lambda p: (abs(p[0]) + abs(p[1]), p)):
+                    new = np.array([(st[bi][0] + dx, st[bi][1] + dy) for bi in bis])
+                    R = np.c_[new, new + (cw_, ch_)]
+                    if (R[:, 0] < GRID_INSET - 1e-6).any() or (R[:, 1] < GRID_INSET - 1e-6).any() or \
+                            (R[:, 2] > w - GRID_INSET + 1e-6).any() or (R[:, 3] > h - GRID_INSET + 1e-6).any():
+                        continue
+                    if any(rect_hits(r, macro) or near_clock(r[0], r[1], (cw_, ch_), cpts) for r in R.tolist()):
+                        continue
+                    lo, hi = R[:, :2].min(0) - 2, R[:, 2:].max(0) + 2
+                    O = occ[(occ[:, 2] > lo[0]) & (occ[:, 0] < hi[0]) & (occ[:, 3] > lo[1]) & (occ[:, 1] < hi[1])]
+                    if len(O) and ((np.minimum(R[:, None, 2], O[None, :, 2]) - np.maximum(R[:, None, 0], O[None, :, 0]) > 1e-6)
+                                   & (np.minimum(R[:, None, 3], O[None, :, 3]) - np.maximum(R[:, None, 1], O[None, :, 1]) > 1e-6)).any():
+                        continue
+                    for bi, (x, y) in zip(bis, new.tolist()):
+                        st[bi] = [round(x, 6), round(y, 6)]
+                    rec["shifts"].append([dx, dy, len(bis)]); done = True
+                    rec["max_move_um"] = max(rec.get("max_move_um", 0.0), round(abs(dx) + abs(dy), 4))
+                    break
+                if not done:
+                    boxes = [(a - KEEPOFF, b - KEEPOFF, c + KEEPOFF, d + KEEPOFF) for a, b, c, d in macro]
+                    alloc = RowAllocator((GRID_INSET, GRID_INSET, w - GRID_INSET, h - GRID_INSET), blocked=boxes,
+                                         cell_size=(cw_, ch_), column_pitch=2.16, row_pitch=GRID_ROW,
+                                         origin=(GRID_INSET, GRID_INSET))
+                    for c in occ.tolist():
+                        alloc.reserve_rectangle(c)
+                    for bi in bis:
+                        x, y = st[bi]; c = np.array([x + cw_ / 2, y + ch_ / 2])
+                        p, _ = alloc.allocate(c, 1, max_radius_um=MAX_SLIDE)
+                        st[bi] = [round(float(p[0][0] - cw_ / 2), 6), round(float(p[0][1] - ch_ / 2), 6)]
+                        rec["fallback_bits"] += 1
+                        rec["max_move_um"] = max(rec.get("max_move_um", 0.0), round(abs(st[bi][0] - x) + abs(st[bi][1] - y), 4))
+            led.append(rec)
+    return led
+
+
 def main():
-    plan, out, ledger_f = sys.argv[1:4]
-    raw = json.loads(Path(plan).read_text()); P = S.Plan(raw)
+    argv = [a for a in sys.argv[1:] if not a.startswith("--")]
+    snap_only, no_snap = "--snap-only" in sys.argv, "--no-snap" in sys.argv
+    plan, out, ledger_f = argv[:3]
+    text = Path(plan).read_text(); raw = json.loads(text); P = S.Plan(raw)
+    indent = 1 if text.startswith("{\n") else None       # keep the input plan's layout (KV plans are indent=1)
+    snap = [] if no_snap else snap_offgrid(raw)           # DIE-KV-80/PLAN 11-05: default-on row/site snap
+    if snap_only:
+        Path(out).write_text(json.dumps(raw, indent=indent) + "\n")
+        Path(ledger_f).write_text(json.dumps(snap, indent=1) + "\n")
+        print(f"grid snap: {len(snap)} stations, {sum(r['bits_off_grid'] for r in snap)} bits, "
+              f"fallback {sum(r['fallback_bits'] for r in snap)}")
+        return
     R = C.Report(True); C.check_ft_macro_sites(P, R)
     hit = {}
     for x in R.items:
@@ -114,7 +211,7 @@ def main():
             wh = s.get("bit_site_cell_um", CELL_DEFAULT)
             if any(near_clock(x, y, wh, pts) for st in s.get("bit_sites_um") or [] for x, y in st):
                 hit.setdefault(tn, set()).add(s["name"])
-    ledger = []
+    ledger = list(snap)
     for tn, slots in sorted(hit.items()):
         t = raw["partition_types"][tn]; w, h = t["outline_um"]
         # DIE-HBM-59: the same obstacle union as check.py geometry (placed macros + G2 probe blockages of reuse leaves)
@@ -207,7 +304,7 @@ def main():
                 rec.update(mode="regs", len_um=round(L, 1), max_slide_um=round(smax, 1))
             ledger.append(rec)
     raw["note"] = "CLOCK-KV-R12 ft_nudge <- " + raw.get("note", "")[:200]
-    Path(out).write_text(json.dumps(raw) + "\n")
+    Path(out).write_text(json.dumps(raw, indent=indent) + "\n")
     Path(ledger_f).write_text(json.dumps(ledger, indent=1) + "\n")
     print(f"slots {len(ledger)}; max slide {max([r.get('max_slide_um', 0) for r in ledger] or [0])} um; "
           f"max bit move {max([r.get('max_move_um', 0) for r in ledger] or [0])} um")
