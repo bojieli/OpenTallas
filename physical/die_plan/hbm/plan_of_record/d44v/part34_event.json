@@ -1,0 +1,112 @@
+{
+ "schema": "opentallas.hbm_split_event.v1",
+ "cores": [
+  {
+   "core": "ot_hfd_coll_q3_edge_core",
+   "sha": "p34",
+   "status": "SPLIT -> PLAN DESIGNS",
+   "glue": "ot_hfd_coll_q3_edge_core__p34glue.sv",
+   "slot_um": [
+    276.48,
+    1054.08
+   ],
+   "instances": 1,
+   "types": [
+    "q_hub_nw"
+   ],
+   "tiles": {
+    "u_fcore.u_core.u_arg": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      276.48,
+      43.2
+     ]
+    ],
+    "u_fcore.u_core.u_link0": [
+     [
+      0.0,
+      43.2
+     ],
+     [
+      276.48,
+      336.96
+     ]
+    ],
+    "u_fcore.u_core.u_link1": [
+     [
+      0.0,
+      380.16
+     ],
+     [
+      276.48,
+      336.96
+     ]
+    ],
+    "u_fcore.u_core.u_link2": [
+     [
+      0.0,
+      717.12
+     ],
+     [
+      276.48,
+      336.96
+     ]
+    ]
+   },
+   "tables": {
+    "ot_hfd_coll_q3_edge_arg": {
+     "pins_file": "cores/ot_hfd_coll_q3_edge_arg__276.48x43.2__d44v_split.json",
+     "outline_um": [
+      276.48,
+      43.2
+     ],
+     "pins": 973,
+     "clock_pins": 1,
+     "clock_entry": [
+      138.24,
+      21.6
+     ],
+     "faces": {
+      "E": 425,
+      "I": 1,
+      "S": 547
+     }
+    },
+    "ot_hfd_coll_q3_edge_link": {
+     "pins_file": "cores/ot_hfd_coll_q3_edge_link__276.48x336.96__d44v_split.json",
+     "outline_um": [
+      276.48,
+      336.96
+     ],
+     "pins": 2391,
+     "clock_pins": 1,
+     "clock_entry": [
+      138.24,
+      168.48
+     ],
+     "faces": {
+      "E": 1163,
+      "I": 1,
+      "W": 1227
+     }
+    }
+   },
+   "added_cycles": "0 on every port (no member-to-member wire; each sub pin keeps the one kit face flop in and out of the uncut core); parent fans out arg_rst_n to the 4 rst_n and link0_epoch_new to the 3 link epoch_new",
+   "pin_displacement_um": 0.0,
+   "stations_repointed": {
+    "stations": 0
+   },
+   "designs_removed": [
+    "ot_hfd_coll_q3_edge_core"
+   ],
+   "designs_added": [
+    "ot_hfd_coll_q3_edge_arg",
+    "ot_hfd_coll_q3_edge_link"
+   ]
+  }
+ ],
+ "core_faces_moves": []
+}

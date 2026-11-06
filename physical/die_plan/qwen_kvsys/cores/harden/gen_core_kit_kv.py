@@ -1219,8 +1219,8 @@ def main():
                          "by induction and drops failing ones; never a waiver)")
     ap.add_argument("--stock-flow", action="store_true",
                     help="old core basis: stock setRC, TC-only repair, no leaf affinity (default = FLOW 10-25 basis, below)")
-    ap.add_argument("--util", type=float, default=0.6)
-    ap.add_argument("--sigmax", default="M5")
+    ap.add_argument("--util", type=float, default=None, help="explicit density overrides recipe (fallback 0.6)")
+    ap.add_argument("--sigmax", default=None, help="explicit signal ceiling overrides recipe (fallback M5)")
     # FLOW-FIX 2026-10-25 (flow canary F1/F2 + COORD per-corner insertion): main's kit-flow defaults via
     # tools/die_plan/core_flow.py -- RTL lint before synth, RCX-calibrated RC for place/CTS/GRT, per-corner IO vclk
     # binding (TT in constraint.sdc, FF in the FF-only GRT hold repair step of run_kit_kv.sh)
@@ -1889,8 +1889,8 @@ def main():
            "export PDN_TCL = /work/pdn.tcl",
            "override export MAKE_TRACKS = /work/make_tracks.tcl",
            "export MIN_ROUTING_LAYER = M2",
-           f"export MAX_ROUTING_LAYER = {rec.get('sigmax', a.sigmax)}",
-           f"export PLACE_DENSITY = {rec.get('util', a.util):g}",
+           f"export MAX_ROUTING_LAYER = {a.sigmax if a.sigmax is not None else rec.get('sigmax', 'M5')}",
+           f"export PLACE_DENSITY = {a.util if a.util is not None else rec.get('util', 0.6):g}",
            # Standard ORFS floorplan path: discard ABC buffers before placement;
            # speculative wire-load setup repair stalled on PC recovery endpoints.
            "export REMOVE_ABC_BUFFERS = 1",
@@ -2008,7 +2008,7 @@ def main():
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),
               core_json_sha256=sha(a.core_json), pins=len(allp), plan_pins=len(pins), added_pins=len(added),
               clocks=clks, clock_nets=cj["report"].get("clock_nets"), clock_rebind=clock_rebind, resets=rsts, recipe=rec, sdc_lint="PASS (gen)", period_ps=per, insertion_budget_ps=ins, macros=macros,
-              signal_max=rec.get("sigmax", a.sigmax),
+              signal_max=a.sigmax if a.sigmax is not None else rec.get("sigmax", "M5"),
               flow_basis=("stock" if a.stock_flow else "FLOW-1025: rcx-rc + leaf-affinity + fanout24/slew-cap-margin20" + (" + mcmm tc/bc" if mcmm else " (no FF macro lib: TC only)")),
               head_lane_taps=bool(a.head_lane_taps), head_strap_master=bool(a.head_strap_master),
               head_lane_s3copy=bool(a.head_lane_s3copy),

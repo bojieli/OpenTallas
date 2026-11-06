@@ -133,7 +133,7 @@ def test_gen_repoints_sources_and_builds_recipe_cmd(tmp_path, monkeypatch):
     c = seen["cmd"]
     assert c[c.index("--hr-face-ports") + 1] == str(tmp_path / "fp/qkd_hr_a")
     assert c[c.index("--plan-inst") + 1] == "host__qkd_hr_a" and c[-1] == "--two-mode-grt"
-    assert c[c.index("--util") + 1] == "0.6" and c[c.index("--sigmax") + 1] == "M5"
+    assert "--util" not in c and "--sigmax" not in c
     cj = json.load(open(c[c.index("--core-json") + 1]))
     assert cj["files"] == [str(tmp_path / "rtl/qkd_hr_a/qkd_hr_a.sv"), str(repo / "physical/m/x_bb.v")]
     assert c[c.index("--kit-rtl") + 1] == "/k"
@@ -199,3 +199,17 @@ def test_repoint_recovers_explicit_generated_host_inputs_only(tmp_path):
 def test_pv_join_uses_native_two_mode_grt_recipe():
     assert kcw.module_recipe('ot_qwen_tp8_pv_join_t') == [
         '--cts-setup-only', '--two-mode-grt', '--hold-ff-margin', '10']
+
+
+def test_gen_only_forwards_requested_physical_overrides(tmp_path, monkeypatch):
+    views, view, repo = gen_setup(tmp_path)
+    seen = {}
+    monkeypatch.setattr(kcw.subprocess, "run", lambda cmd: seen.setdefault("cmd", cmd) and type("R", (), {"returncode": 0}))
+    rc = kcw.main(["gen", "--views", str(views), "--view", view, "--out", str(tmp_path / "gen"),
+                   "--kit-rtl", "/k", "--fp-root", str(tmp_path / "fp"), "--repo", str(repo),
+                   "--util", "0.45", "--sigmax", "M7"])
+    assert rc == 0
+    cmd = seen["cmd"]
+    assert cmd.count("--util") == cmd.count("--sigmax") == 1
+    assert cmd[cmd.index("--util") + 1] == "0.45"
+    assert cmd[cmd.index("--sigmax") + 1] == "M7"

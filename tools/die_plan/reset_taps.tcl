@@ -30,10 +30,16 @@ if {[info exists rt_consumer_taps_um]} {
     lappend rt_taps [list $i [expr {round($x * $rt_dbu)}] [expr {round($y * $rt_dbu)}]]
   }
 }
-proc rt_is_inv {inst} { return [string match "INV*" [[$inst getMaster] getName]] }
+# Resizer may use clock-family cells on a reset/data net (iq_C uses
+# CKINVDCx14). They retain buffer/inverter polarity and must be traversed
+# when resolving the real launch flop; this does not waive the reach check.
+proc rt_is_inv {inst} {
+  set m [[$inst getMaster] getName]
+  return [expr {[string match "INV*" $m] || [string match "CKINV*" $m]}]
+}
 proc rt_is_buf {inst} {
   set m [[$inst getMaster] getName]
-  return [expr {[string match "BUF*" $m] || [string match "HB*" $m]}]
+  return [expr {[string match "BUF*" $m] || [string match "HB*" $m] || [string match "CKBUF*" $m]}]
 }
 # Terminal relays can move away from clock pins to clear a hard macro. Use
 # the real reset launch flop, not the clock BTerm, for the final-hop reach.
