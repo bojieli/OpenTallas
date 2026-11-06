@@ -1,0 +1,126 @@
+{
+ "sle_cland_w515_n_300": {
+  "ref_tile": "/srv/opentallas-scratch3/claude/qc-cbn-rf1/kits/_spec/sle_cland_w515_n_300",
+  "plan_pins_contract": true,
+  "suffix": "hcbn1106",
+  "util": 0.45,
+  "max_layer": "M5",
+  "insertion_balance": false,
+  "related_clocks": {
+   "fclk": [
+    "d",
+    "t_rst_n"
+   ]
+  },
+  "strap_ports": [
+   "strap_k"
+  ],
+  "land_slots": {
+   "d": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "t_rst_n": {
+    "form": "ring_start",
+    "ring": "d"
+   }
+  },
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": "plan core tap target 250 TT / 202.5 FF (QC-CBN-RF1, SU_l1 ring basis)",
+  "_why": "QC-CBN-RF1 cbn_ring_split_1106: CBN landing ring hard child, plan pin table cores/cbn_ring/sle_cland_w515_n_300_pins.json"
+ },
+ "sle_cland_w515_n_301": {
+  "ref_tile": "/srv/opentallas-scratch3/claude/qc-cbn-rf1/kits/_spec/sle_cland_w515_n_301",
+  "plan_pins_contract": true,
+  "suffix": "hcbn1106",
+  "util": 0.45,
+  "max_layer": "M5",
+  "insertion_balance": false,
+  "related_clocks": {
+   "fclk": [
+    "d",
+    "t_rst_n"
+   ]
+  },
+  "strap_ports": [
+   "strap_k"
+  ],
+  "land_slots": {
+   "d": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "t_rst_n": {
+    "form": "ring_start",
+    "ring": "d"
+   }
+  },
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": "plan core tap target 250 TT / 202.5 FF (QC-CBN-RF1, SU_l1 ring basis)",
+  "_why": "QC-CBN-RF1 cbn_ring_split_1106: CBN landing ring hard child, plan pin table cores/cbn_ring/sle_cland_w515_n_301_pins.json"
+ },
+ "sle_cland_w517_s_300": {
+  "ref_tile": "/srv/opentallas-scratch3/claude/qc-cbn-rf1/kits/_spec/sle_cland_w517_s_300",
+  "plan_pins_contract": true,
+  "suffix": "hcbn1106",
+  "util": 0.45,
+  "max_layer": "M5",
+  "insertion_balance": false,
+  "related_clocks": {
+   "fclk": [
+    "d",
+    "t_rst_n"
+   ]
+  },
+  "strap_ports": [
+   "strap_k"
+  ],
+  "land_slots": {
+   "d": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "t_rst_n": {
+    "form": "ring_start",
+    "ring": "d"
+   }
+  },
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": "plan core tap target 250 TT / 202.5 FF (QC-CBN-RF1, SU_l1 ring basis)",
+  "_why": "QC-CBN-RF1 cbn_ring_split_1106: CBN landing ring hard child, plan pin table cores/cbn_ring/sle_cland_w517_s_300_pins.json"
+ },
+ "sle_cland_w517_s_301": {
+  "ref_tile": "/srv/opentallas-scratch3/claude/qc-cbn-rf1/kits/_spec/sle_cland_w517_s_301",
+  "plan_pins_contract": true,
+  "suffix": "hcbn1106",
+  "util": 0.45,
+  "max_layer": "M5",
+  "insertion_balance": false,
+  "related_clocks": {
+   "fclk": [
+    "d",
+    "t_rst_n"
+   ]
+  },
+  "strap_ports": [
+   "strap_k"
+  ],
+  "land_slots": {
+   "d": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "t_rst_n": {
+    "form": "ring_start",
+    "ring": "d"
+   }
+  },
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": "plan core tap target 250 TT / 202.5 FF (QC-CBN-RF1, SU_l1 ring basis)",
+  "_why": "QC-CBN-RF1 cbn_ring_split_1106: CBN landing ring hard child, plan pin table cores/cbn_ring/sle_cland_w517_s_301_pins.json"
+ }
+}
