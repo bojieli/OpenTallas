@@ -25,11 +25,11 @@ for idx,(key,ch) in enumerate(children.items()):
   group[slot].append(row)
  for slot,rows in sorted(group.items()):
   cy=(249.384,327.24,415.896,493.752)[slot] if slot>=0 else y+20
-  start=round((cy-(len(rows)-1)*.048/2-.024)/.048)*.048+.024
-  assert y+4.32<start and start+len(rows)*.048<y+h-4.32
-  for j,row in enumerate(rows):pins.append(dict(child=key,raw_bit=row['raw_bit'],net=row['net'],direction=row['direction'],xy_um=[face,round(start+j*.048,6)],layer='M4',original_parent_domains=row['consumer_domains'] if row['direction']=='input' else row['producer_domains']))
-  fields.append(dict(child=key,bank=slot,bits=len(rows),face='E'if idx==0 else'W',x_um=face,y_um=[start,start+(len(rows)-1)*.048],pitch_um=.048))
-  ax.plot([face,face],[start,start+(len(rows)-1)*.048],lw=6,color='#c3493a')
+  start=round((cy-(len(rows)-1)*.192/2-.024)/.048)*.048+.024
+  assert y+4.32<start and start+len(rows)*.192<y+h-4.32
+  for j,row in enumerate(rows):pins.append(dict(child=key,raw_bit=row['raw_bit'],net=row['net'],direction=row['direction'],xy_um=[face,round(start+j*.192,6)],layer='M4',original_parent_domains=row['consumer_domains'] if row['direction']=='input' else row['producer_domains']))
+  fields.append(dict(child=key,bank=slot,bits=len(rows),face='E'if idx==0 else'W',x_um=face,y_um=[start,start+(len(rows)-1)*.192],pitch_um=.192))
+  ax.plot([face,face],[start,start+(len(rows)-1)*.192],lw=6,color='#c3493a')
   ax.text(face+(8 if idx==0 else -8),cy,f'{len(rows)}b',ha='left'if idx==0 else'right',fontsize=8,color='#a42823')
 for row in old['macros']:
  x,y,X,Y=row['rect_um'];ax.add_patch(Rectangle((x,y),X-x,Y-y,fc='#8995a5',ec='white',lw=.5))
