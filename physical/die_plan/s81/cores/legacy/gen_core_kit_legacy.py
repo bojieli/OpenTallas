@@ -703,7 +703,10 @@ def planned_pin_geometry(q, shapes, w, h, modern=True, interior_clock=None):
 # S81-T51-RECUT 11-06: odb has no placement status FIXED (setPlacementStatus FIXED -> "ValueError Unknown placement
 # status" at global_place); LOCKED is odb's DEF FIXED (gpl/DPL/rsz never move it, face_flops_release.tcl only releases
 # FIRM), as tools/die_plan/clk_freeze.tcl.  A pose still saying FIXED is refused here instead of at place.
-NATIVE_FF_POSE_GUARDS = ("NATIVE_POSE undeclared source FF", "NATIVE_POSE missing source FFs", "setPlacementStatus LOCKED")
+# ... and it must list its FFs in RESULTS_DIR/ot_native_pose.txt: face_flops_release.tcl (PRE_DETAIL_PLACE) releases
+# them to PLACED so DPL legalises a resizer-grown FF (LOCKED x2 on x1 sites -> DPL-0033)
+NATIVE_FF_POSE_GUARDS = ("NATIVE_POSE undeclared source FF", "NATIVE_POSE missing source FFs", "setPlacementStatus LOCKED",
+                         "ot_native_pose.txt")
 NATIVE_FF_POSE_REFUSED = ("setPlacementStatus FIXED",)
 
 
@@ -1999,7 +2002,8 @@ def main():
         pre_place.append("source /work/macro_if_flops.tcl")
     # DIE-S81-69 11-06 (opt-in recipe native_ff_pose): reviewed exact whole-group source FF pose (t51 native split),
     # sourced LAST at PRE_GLOBAL_PLACE so it overrides the FIRM face/station placement; LOCKED (DEF FIXED) survives
-    # face_flops_release.tcl (which only releases FIRM) and DPL.  No recipe key = kit unchanged.
+    # face_flops_release.tcl's FIRM release; the pose lists its FFs in ot_native_pose.txt and the same PRE_DETAIL_PLACE
+    # hook releases them to PLACED for DPL (S81-T51-RECUT).  No recipe key = kit unchanged.
     ff_pose = stage_native_ff_pose(kd, rec, Path(a.recipes).resolve().parent)
     if ff_pose:
         pre_place.append("source /work/native_ff_pose.tcl")

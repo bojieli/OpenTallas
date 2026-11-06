@@ -49,7 +49,8 @@ def _pose(p, names):
     p.write_text("# Uses FIXED status so ordinary face-flop release cannot collapse the source stages.\n"
                  "set ot_np_ffs [dict create \\\n" + body + "\n]\nset ot_np_blk 1\n"
                  "if {[string match *DFF* [[$ot_np_i getMaster] getName]]} {error \"NATIVE_POSE undeclared source FF $ot_np_nm\"}\n"
-                 " $ot_np_i setOrient $o\n $ot_np_i setPlacementStatus FIXED\n")
+                 "set ot_np_ff 0\n $ot_np_i setOrient $o\n $ot_np_i setPlacementStatus FIXED\n dict set ot_np_seen $ot_np_nm 1\n"
+                 "puts \"NATIVE_POSE source FFs $ot_np_ff exact placements applied\"\n")
 
 
 def test_apply_check(tmp_path):
@@ -75,7 +76,7 @@ def test_apply_check(tmp_path):
     assert cp in pw and "setPlacementStatus LOCKED" in pw and "FIXED" not in pw.replace("DEF FIXED", "")
     assert "![string match ot_fcap_* $ot_np_nm]" in pw
     assert " $ot_np_i setPlacementStatus PLACED\n $ot_np_i setOrient $o\n" in pw
-    assert " $ot_np_i setPlacementStatus LOCKED\n $ot_np_i setDoNotTouch 1\n" in pw
+    assert "setDoNotTouch" not in pw and "ot_native_pose.txt" in pw and "lappend ot_np_raw [$ot_np_i getName]" in pw
     # u_rrl_2 drives nothing, and the original u_rrl_1 now only feeds u_rrl_2: both dead -> not posed, recorded
     assert rec["children"]["T_w"]["dead_ffs_not_posed"] == ["u_bound.u_rrl_1/q$_DFF_P_", "u_bound.u_rrl_2/q$_DFF_P_"]
     assert "u_bound.u_rrl_2/" not in pw

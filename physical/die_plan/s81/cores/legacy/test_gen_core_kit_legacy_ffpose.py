@@ -17,6 +17,7 @@ POSE = """set ot_np_sites [dict create \\
 if {0} {error "NATIVE_POSE undeclared source FF x"}
 $i setPlacementStatus LOCKED
 if {0} {error "NATIVE_POSE missing source FFs 0/0"}
+set fh [open $::env(RESULTS_DIR)/ot_native_pose.txt w]
 """
 
 
@@ -60,4 +61,11 @@ def test_fixed_status_refused(tmp_path):
     # odb has no status FIXED (global_place: "ValueError Unknown placement status"); LOCKED = DEF FIXED
     text = POSE.replace("setPlacementStatus LOCKED", "setPlacementStatus LOCKED\n$i setPlacementStatus FIXED")
     with pytest.raises(SystemExit, match="LOCKED"):
+        G.stage_native_ff_pose(tmp_path, _rec(tmp_path, text), tmp_path)
+
+
+def test_missing_release_list_refused(tmp_path):
+    # without ot_native_pose.txt the PRE_DETAIL_PLACE hook cannot release the LOCKED FFs: DPL-0033 on resized FFs
+    text = POSE.replace("ot_native_pose.txt", "other.txt")
+    with pytest.raises(SystemExit, match="guard"):
         G.stage_native_ff_pose(tmp_path, _rec(tmp_path, text), tmp_path)
