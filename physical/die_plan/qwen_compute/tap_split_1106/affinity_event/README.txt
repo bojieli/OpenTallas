@@ -43,3 +43,11 @@ clock-provider event. New hardened-ring CBN geometry needs its own current soft
 sink inventory and macro obstacles: do not overlay this old soft-ring profile.
 Remaining cross-tap boundaries and any source-window skew still need actual CTS
 and ordinary hold repair. All hard timing/PG/LEC gates remain unchanged.
+
+Actual adjacent-edge residual census on these same A/B snapshots:
+27,776 adjacent delay-register pairs; cross-tap pairs13,496 ->3,375.
+10,443 old boundaries disappear; bounded segmentation introduces322 new
+boundaries. This intentionally does not assert complete-chain affinity or
+hold closure: remaining and moved boundaries need actual CTS/hold screening.
+Explicit examples and reproducible snapshot analysis in edge_diagnosis.json
+and edges.py. This shared source remains default off.
