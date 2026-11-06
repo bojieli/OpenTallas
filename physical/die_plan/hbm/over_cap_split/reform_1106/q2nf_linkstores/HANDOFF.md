@@ -1,0 +1,15 @@
+# WIP handoff — Q2NF native family, 2026-11-06
+
+NOT CONSUMABLE. fb304b9a66e remains dormant/default-off. Its final emitted parent referenced three old module types after module renaming. This corrective WIP changes those three references and the generation script to use explicit chtype, final hierarchy checking, final named-parent graph comparison, and emitted-SV reread. The corrected emitted hierarchy has NOT yet been confirmed. Original A source, recipes, jobs and proof artifacts are preserved.
+
+Measured original whole-link native mapping: controller 85,672 standard cells / 13,490.71362 um2 / 11 SRAMs; link0 21,211 / 3443.12532 / 4 SRAMs; link1 21,216 / 3445.89552 / 4 SRAMs. These are mapped counts, not placed counts. Earlier graph equality covered 9,928 hardware cells before final renaming and therefore missed this emitted-source defect.
+
+Bank-focused refinement is source-only: each bank-store has 72 word cells, 2344 register bits and four SRAM64x512; remaining controller has 9785 word cells, 38943 register bits and eleven SRAMs. Mapped results remain pending. Corrected generation/mapping waiter: epyc5 /srv/opentallas-scratch2/claude/codex-q2nf-native-banks-1106/gen_fixed_and_map.sh, launched through ot-run mem16 threads4 disk2; client log intel2 /tmp/codex_q2nf_banks_fixed_gen_map.log. Do not duplicate. Previous rename-failure artifacts retained under failed_module_rename/.
+
+Preferred physical direction is two hard bank-store children with the real controller soft inside the original full-footprint R2 parent. Keep all nineteen SRAM sites and 21.6 um channels. The initial three opaque sibling boxes are NOT safe for native reach: moving only the 612-bit right RX capture does not resolve valid/status and far-north paths. No route or real GEN was launched. q2nf_native_prep.py is diagnostic DRAFT and --gen is explicitly disabled.
+
+Actual A external R2 wrapper/context is retained here and in reform_1106/ot_q2nf_parent_{r2,face_reg}.sv: original clk_control input/output captures and indexed clk_link ownership remain, no new edges. Required before GEN: exact per-bit endpoint clock alias census, raw INTERNAL_CORE/R2 binding with no face stages, actual parent-shell context and inventory; actual signed child BB/lib/LEF and parameter seals before hard assembly. Do not use blanket face-pass or first-clock ownership.
+
+PG/routing remains unresolved. Actual SRAM64x512 signal pins are split W/E (793/792), M4 only; MY swaps sides rather than eliminating bridge cost. M6 child signal/clock resources and real PG6 may be needed; parent landing/stitch and export OBS must use actual metal. No M5-only or straight-wire qualification is claimed. The retained macro phases need actual pin access, not pin-center checks.
+
+Owner gaps retained A LEC result: UNPROVEN352, 64430/64782 proved, including 346 X/dont-care/synthesis-only and six solver points, not NOT_EQ. A has 183055 non-TAP cells after removing 26614 physical-only TAP/endcap cells from 209669 raw standard cells; structural split remains necessary.

@@ -141754,7 +141754,7 @@ module ot_q2nf_linkstore_parent(u_body_u_upipe_SL_0_u_d2, u_body_u_upipe_SL_6_u_
   wire \vm_rr__full[999] ;
   wire \vm_rr__full[99] ;
   wire \vm_rr__full[9] ;
-  ot_q2nf_rest_g_linkstore0 ot_q2nf_rest_g_linkstore0 (
+  ot_q2nf_linkstore0 ot_q2nf_rest_g_linkstore0 (
     .clk_link(clk_link[4:0]),
     .phy_up(phy_up[0]),
     .retry_requested_(retry_requested_),
@@ -142442,7 +142442,7 @@ module ot_q2nf_linkstore_parent(u_body_u_upipe_SL_0_u_d2, u_body_u_upipe_SL_6_u_
     .\u_x.u_body.u_upipe.SL[4].u.d3[39] (\u_x.u_body.u_upipe.SL[4].u.d3[39] ),
     .\u_x.u_body.u_upipe.SL[4].u.d3[8] (\u_x.u_body.u_upipe.SL[4].u.d3[8] )
   );
-  ot_q2nf_rest_g_linkstore1 ot_q2nf_rest_g_linkstore1 (
+  ot_q2nf_linkstore1 ot_q2nf_rest_g_linkstore1 (
     .clk_link(clk_link[9:5]),
     .phy_up(phy_up[1]),
     .retry_requested(retry_requested),
@@ -143130,7 +143130,7 @@ module ot_q2nf_linkstore_parent(u_body_u_upipe_SL_0_u_d2, u_body_u_upipe_SL_6_u_
     .\u_x.u_body.u_upipe.SL[4].u.d3[39] (\u_x.u_body.u_upipe.SL[4].u.d3[39] ),
     .\u_x.u_body.u_upipe.SL[4].u.d3[9] (\u_x.u_body.u_upipe.SL[4].u.d3[9] )
   );
-  ot_q2nf_rest_rest_control ot_q2nf_rest_rest_control (
+  ot_q2nf_control ot_q2nf_rest_rest_control (
     .cfg_addr(cfg_addr),
     .cfg_data(cfg_data),
     .cfg_target(cfg_target),
