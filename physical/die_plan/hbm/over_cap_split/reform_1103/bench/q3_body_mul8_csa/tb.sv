@@ -1,0 +1,1 @@
+module tb;reg[7:0]a,b;wire[15:0]g,c,m;baseline u0(a,b,g);candidate u1(a,b,c);mutant u2(a,b,m);integer i,j,bad=0,caught=0;initial begin for(i=0;i<256;i=i+1)for(j=0;j<256;j=j+1)begin a=i;b=j;#1;if(g!==c)bad=bad+1;if(g!==m)caught=caught+1;end $display("MUL8 pairs65536 mismatch%0d carry_drop_mutant_caught%0d",bad,caught);if(bad||!caught)$fatal; $finish;end endmodule

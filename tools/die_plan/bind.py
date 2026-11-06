@@ -4257,7 +4257,7 @@ def cmd_bind(a):
     out = Path(a.out)
     (out / "native_topology.json").unlink(missing_ok=True)
     import kit_topology
-    input_topology = kit_topology.contract(raw)
+    input_topology = kit_topology.native_contract(raw,getattr(a, "asbuilt",None),a.plan)
     yjs = json.loads((out / "asbuilt.json").read_text())
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
     B.src_key = E.stage_src_key(B.base, out, B.ab.get("stage_hash_roots"))
