@@ -530,3 +530,7 @@ intel2	/srv/opentallas-scratch2/claude/kv-peer-2/eco5	qwen_kvsys/qkd_hr_core_pee
 epyc5	/srv/opentallas-scratch3/claude/kv-peer-2/lec_h2	qwen_kvsys/qkd_hr_core_peer kit LEC with hints (COORD 11-06 13:1x)
 intel1	/srv/opentallas-scratch2/claude/hbm-form-split-13/gq/eco_vB2/i1	hbm/ot_hgi_gq_aq_tile vB ECO routed DB NEEDS_PARENT (COORD 11-06 13:2x)
 epyc4	/srv/opentallas-scratch2/claude/die-hbm-82/resign/q2r_cr	hbm/ot_hfd_coll_q2_hard_v8g__reduce re-sign cr-hbm (COORD 11-06 14:2x)
+epyc4	/srv/opentallas-scratch2/claude/hbm-gaps-9/q3/ot_hfd_coll_q3_edge_arg_vE/ot_hfd_coll_q3_edge_arg_9ae65807400d/eco_hg9/i2	hbm/q3_edge_arg routed DB + resign_da (COORD 11-06 15:0x)
+epyc4	/srv/opentallas-scratch2/claude/dh76/wsC	head/hd_spn_wshim_tx resign_cd2 + eco_hold/i1 (COORD 11-06 15:0x)
+epyc4	/srv/opentallas-scratch2/claude/hbm-form-timing-12/pipe_vA_eco	hbm/split3_ctl_pipe_1c vA ECO i1 SIGNED (COORD 11-06 15:0x)
+epyc5	/srv/opentallas-scratch2/claude/hbm-form-timing-12/pipe_vA_resign_cz	hbm/split3_ctl_pipe_1c vA re-sign (COORD 11-06 15:0x)
