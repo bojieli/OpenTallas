@@ -242,3 +242,24 @@ def test_auto_run_superset_env_set_and_raw_base_not(env):
     cmds = resign.run_cmds(env['kit'], env['kit'] + '/run', env['tools'], env['d'], 'img', 'hc_x', superset=True)
     text = ' '.join(' '.join(c) for c in cmds)
     assert 'OT_LEC_SUPERSET_VEC=1' in text and 'OT_LEC_RAW_BASE_STEPS' not in text
+
+
+def test_build_commit_from_freeze_repo_rev(env):
+    """S81-COLLE-4 11-06: a kit whose only commit record is freeze.json repo_rev (abbreviated) still gets its record."""
+    kit = Path(env['kit'])
+    (kit / 'PROVENANCE.json').unlink()
+    (kit / 'freeze.json').write_text(json.dumps({'schema': 'partition_freeze', 'repo_rev': env['commit'][:11]}))
+    assert resign.kit_build_commit(env['kit']) is None                      # no repo: cannot resolve a short rev
+    assert resign.kit_build_commit(env['kit'], env['repo']) == env['commit']
+    assert resign.main(args(env)) == 0
+    rec = json.loads((Path(env['d']) / 'PROVENANCE.json').read_text())
+    assert rec['build_commit'] == env['commit']
+
+
+def test_freeze_repo_rev_unknown_commit_still_refused(env):
+    kit = Path(env['kit'])
+    (kit / 'PROVENANCE.json').unlink()
+    (kit / 'freeze.json').write_text(json.dumps({'repo_rev': 'deadbeef123'}))
+    assert resign.kit_build_commit(env['kit'], env['repo']) is None
+    assert resign.main(args(env)) != 0
+    assert not (Path(env['d']) / 'PROVENANCE.json').exists()
