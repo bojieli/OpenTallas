@@ -2,7 +2,7 @@
 # Captures only genuine register clock pins on the original direct input clock.
 # It never follows gates/muxes/inverters, changes data/reset, or moves hard clocks.
 namespace eval ::ot_tap_chain {
- variable original {};variable load {};variable radius 0;variable cap 0
+ variable maxima {};variable original {};variable load {};variable radius 0;variable cap 0
  variable moved 0;variable joined 0;variable segments 0;variable already 0;variable trace {};variable dbu 1
  proc identity {name} {
   set name [string map {\\ {}} $name]
@@ -26,11 +26,17 @@ namespace eval ::ot_tap_chain {
   }
  }
  proc capture {root} {
-  variable original;set original {};direct $root
+  variable original;variable maxima;set original {};set maxima {};direct $root
   foreach p [all_registers -clock_pins] {
    set it [sta::sta_to_db_pin $p]
-   if {$it eq "NULL" || $it eq "" || [$it getNet] ne $root} {continue}
+   if {$it eq "NULL" || $it eq ""} {continue}
    set inst [$it getInst];set master [$inst getMaster]
+   lassign [identity [$inst getName]] prefix stage bit
+   if {$prefix ne {} && $stage ne "terminal"} {
+    set key "$prefix:$bit"
+    if {![dict exists $maxima $key] || $stage>[dict get $maxima $key]} {dict set maxima $key $stage}
+   }
+   if {[$it getNet] ne $root} {continue}
    if {[$master isBlock] || [identity [$inst getName]] eq {}} {continue}
    dict set original $it [list [$root getName] [$master getName] [$inst getName]]
   }
@@ -78,7 +84,7 @@ namespace eval ::ot_tap_chain {
  }
  proc apply {} {
   global ct_taps
-  variable original;variable load;variable radius;variable cap
+  variable original;variable maxima;variable load;variable radius;variable cap
   variable moved;variable joined;variable segments;variable already;variable trace;variable dbu
   set radius_um [expr {[info exists ::env(OT_TAP_CHAIN_RADIUS_UM)] ? $::env(OT_TAP_CHAIN_RADIUS_UM) : 200.0}]
   set limit [expr {[info exists ::env(OT_TAP_CHAIN_MAX_GROUP)] ? $::env(OT_TAP_CHAIN_MAX_GROUP) : 24}]
@@ -104,18 +110,16 @@ namespace eval ::ot_tap_chain {
    if {![dict exists $taps [$net getName]]} {error "OT_TAP_CHAIN eligible pin left its declared source family"}
    lassign [identity [$inst getName]] prefix stage bit
    if {$prefix eq {}} {error "OT_TAP_CHAIN eligible register identity changed"}
+   if {$stage eq "terminal"} {
+    set terminal_key "$prefix:$bit"
+    if {![dict exists $maxima $terminal_key]} {continue}
+    set stage [expr {[dict get $maxima $terminal_key]+1}]
+   }
    lassign [$inst getLocation] x y
    dict lappend groups "[lindex $source 0]:$prefix:$bit" [list $stage $it $x $y]
   }
   foreach key [lsort [dict keys $groups]] {
-   set rows {};set terminals {};set top -1
-   foreach row [dict get $groups $key] {
-    if {[lindex $row 0] eq "terminal"} {lappend terminals $row;continue}
-    set top [expr {max($top,[lindex $row 0])}];lappend rows $row
-   }
-   # A terminal is included only beside its actually captured preceding stages.
-   if {$top>=0 && [llength $terminals]==1} {lappend rows [lreplace [lindex $terminals 0] 0 0 [expr {$top+1}]]}
-   set rows [lsort -integer -index 0 $rows];set segment {};set prev -2
+   set rows [lsort -integer -index 0 [dict get $groups $key]];set segment {};set prev -2
    foreach row $rows {
     set stage [lindex $row 0];set trial [concat $segment [list $row]]
     if {[llength $segment] && ($stage!=$prev+1 || [llength $trial]>$limit || [target $trial] eq {})} {join $segment;set segment {}}

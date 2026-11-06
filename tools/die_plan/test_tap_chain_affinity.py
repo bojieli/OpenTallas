@@ -102,6 +102,15 @@ def test_terminal_identity_matches_exact_bit_or_scalar_prefix():
 def test_terminal_register_is_joined_with_its_real_preceding_chain(scalar):
     t,state,insts=fixture(scalar=scalar)
     insts['inst1']['name']=('u_bound.u_pd23_owner_data_225.q$_DFF_P_' if scalar else 'u_bound.u_d3_test.q\\[7\\]$_DFF_P_')
+    insts['inst2']['name']='unrelated_gate';insts['inst3']['name']='unrelated_hard'
     state['it1']='tap0';t.call('::ot_tap_chain::capture','tap0');state['it1']='tap1'
     t.call('::ot_tap_chain::apply')
     assert state['it0']==state['it1'] and state['it2']=='gated'
+
+
+def test_terminal_cannot_skip_preceding_stage_behind_gated_source():
+    t,state,insts=fixture()
+    insts['inst1']['name']='u_bound.u_d3_test.q[7]$_DFF_P_'
+    insts['inst3']['name']='unrelated_hard'
+    state['it1']='tap0';t.call('::ot_tap_chain::capture','tap0');state['it1']='tap1'
+    before=dict(state);t.call('::ot_tap_chain::apply');assert state==before
