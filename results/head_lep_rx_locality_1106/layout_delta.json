@@ -1,0 +1,290 @@
+{
+  "schema": "head_lep_rx_locality_delta.v1",
+  "base_sha256": "268f5579145c2bdd8c872398751aecb75a004971c6422ac7db8a04f260812388",
+  "candidate_sha256": "e610592583f4cc10611c975850f1ca8369db401eef0513fb05ae9374ef8afdb2",
+  "partition_type": "hd_lep0N",
+  "macro_origin_changes": [
+    {
+      "instance": "u_core.u.g_pp[1].u_pair",
+      "before": [
+        69.12,
+        665.28
+      ],
+      "after": [
+        69.12,
+        708.48
+      ]
+    },
+    {
+      "instance": "u_core.u.g_pp[3].u_pair",
+      "before": [
+        881.28,
+        665.28
+      ],
+      "after": [
+        881.28,
+        708.48
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+      "before": [
+        69.12,
+        1166.4
+      ],
+      "after": [
+        879.12,
+        653.4
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+      "before": [
+        129.6,
+        1166.4
+      ],
+      "after": [
+        939.6,
+        653.4
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+      "before": [
+        190.08,
+        1166.4
+      ],
+      "after": [
+        1099.44,
+        653.4
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+      "before": [
+        250.56,
+        1166.4
+      ],
+      "after": [
+        1175.04,
+        653.4
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+      "before": [
+        311.04,
+        1166.4
+      ],
+      "after": [
+        1235.52,
+        653.4
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+      "before": [
+        371.52,
+        1166.4
+      ],
+      "after": [
+        91.8,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+      "before": [
+        691.2,
+        1166.4
+      ],
+      "after": [
+        182.52,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+      "before": [
+        751.68,
+        1166.4
+      ],
+      "after": [
+        272.16,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+      "before": [
+        812.16,
+        1166.4
+      ],
+      "after": [
+        362.88,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+      "before": [
+        872.64,
+        1166.4
+      ],
+      "after": [
+        423.36,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+      "before": [
+        933.12,
+        1166.4
+      ],
+      "after": [
+        91.8,
+        643.68
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+      "before": [
+        993.6,
+        1166.4
+      ],
+      "after": [
+        182.52,
+        643.68
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+      "before": [
+        1054.08,
+        1166.4
+      ],
+      "after": [
+        272.16,
+        643.68
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+      "before": [
+        1114.56,
+        1166.4
+      ],
+      "after": [
+        362.88,
+        643.68
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+      "before": [
+        1175.04,
+        1166.4
+      ],
+      "after": [
+        423.36,
+        643.68
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+      "before": [
+        1235.52,
+        1166.4
+      ],
+      "after": [
+        1555.2,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+      "before": [
+        1296.0,
+        1166.4
+      ],
+      "after": [
+        1494.72,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+      "before": [
+        1356.48,
+        1166.4
+      ],
+      "after": [
+        1434.24,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+      "before": [
+        1416.96,
+        1166.4
+      ],
+      "after": [
+        1373.76,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+      "before": [
+        1477.44,
+        1166.4
+      ],
+      "after": [
+        1313.28,
+        673.92
+      ]
+    }
+  ],
+  "reset_site_changes": [
+    {
+      "index": 9,
+      "before": [
+        1533.6,
+        1162.08
+      ],
+      "after": [
+        1533.6,
+        1205.55
+      ]
+    },
+    {
+      "index": 10,
+      "before": [
+        613.44,
+        1162.08
+      ],
+      "after": [
+        613.44,
+        1205.55
+      ]
+    },
+    {
+      "index": 23,
+      "before": [
+        1200.96,
+        652.32
+      ],
+      "after": [
+        1200.96,
+        648.81
+      ]
+    }
+  ],
+  "added_data_cycles": 0,
+  "added_K_cycles": 0,
+  "clock_provider": "UNBOUND",
+  "physical_approval": "GEN_ONLY",
+  "fit_errors": []
+}
