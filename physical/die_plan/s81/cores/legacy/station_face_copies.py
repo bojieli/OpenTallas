@@ -271,6 +271,51 @@ def dead_ffs(m):
     return sorted(set(reach) - live)
 
 
+def read_blockages(path):
+    """lines 'name x0 y0 x1 y1' (um): the floorplan's fixed non-FF cells (tapcells, row-end cells) of the kit."""
+    out = []
+    for ln in Path(path).read_text().split("\n"):
+        if ln.strip():
+            n, a, b, c, d = ln.rsplit(None, 4)
+            out.append((n, float(a), float(b), float(c), float(d)))
+    return out
+
+
+def legalize(sites, blockages):
+    """move every posed FF that overlaps a blockage or an earlier posed FF of its row to the nearest free site of the
+    SAME row (orientation kept), inside the row's [first, last] blockage span (row-end cells); returns moves."""
+    rows = collections.defaultdict(list)
+    for _, x0, y0, x1, y1 in blockages:
+        rows[round(y0, 4)].append((x0, x1))
+    moves = []
+    occ = collections.defaultdict(list)
+    for name in sorted(sites, key=lambda n: (sites[n][1], sites[n][0], n)):
+        x, y, w, h, o, m = sites[name]
+        ry = round(y, 4)
+        blk = rows.get(ry, [])
+        lo = min((a for a, _ in blk), default=None)
+        hi = max((b for _, b in blk), default=None)
+
+        def free(nx):
+            if lo is not None and (nx < lo - 1e-6 or nx + w > hi + 1e-6):
+                return False
+            return all(nx + w <= a + 1e-6 or nx >= b - 1e-6 for a, b in blk) and \
+                all(nx + w <= a + 1e-6 or nx >= b - 1e-6 for a, b in occ[ry])
+        nx = x
+        if not free(x):
+            for k in range(1, 20000):
+                hit = [c for c in (round(x + k * SITE_W, 6), round(x - k * SITE_W, 6)) if free(c)]
+                if hit:
+                    nx = hit[0]
+                    break
+            else:
+                raise ValueError(f"no legal site for {name} near {x} {y}")
+            moves.append((name, round(nx - x, 4)))
+            sites[name] = (nx, y, w, h, o, m)
+        occ[ry].append((nx, nx + w))
+    return moves
+
+
 def read_pose(path):
     t = Path(path).read_text()
     ent = re.findall(r"^ \{(.+?)\} \{([0-9.]+) ([0-9.]+) ([0-9.]+) ([0-9.]+) (\S+) (\S+)\} \\$", t, re.M)
@@ -290,7 +335,7 @@ def free_site(sites, x, y, w, h):
     raise ValueError(f"no free site near {x} {y}")
 
 
-def apply(split, top, child_modules, abi, poses):
+def apply(split, top, child_modules, abi, poses, blockages=None):
     cls = classify(split, top, child_modules, abi)
     bad = {cm: r["refused"] for cm, r in cls.items() if r["refused"]}
     if bad:
@@ -372,6 +417,25 @@ def apply(split, top, child_modules, abi, poses):
             raise ValueError("pose dict anchor changed")
         pose_out[cm] = text.replace(anchor, "\n" + lines.rstrip("\n").rstrip() + "\n]\nset ot_np_blk", 1) if lines else text
         pose_out[cm] = pose_out[cm].replace(" \\\n\n", " \\\n")
+        # legal sites: the reviewed pose was made without the kit's tapcell / row-end cells (LOCKED at floorplan), so
+        # LOCKED-on-LOCKED overlaps would stop DPL; each overlapping FF moves to the nearest free site of its own row
+        legal_moves = []
+        if blockages and blockages.get(cm):
+            dead_now = set(dead_ffs(mod))
+            live_sites = {n: v for n, v in sites.items() if n not in dead_now}
+            legal_moves = legalize(live_sites, read_blockages(blockages[cm]))
+            mv = dict(legal_moves)
+            out_lines = []
+            for ln in pose_out[cm].split("\n"):
+                mm = re.match(r"^ \{(.+?)\} \{([0-9.]+) ", ln)
+                if mm and mm.group(1) in mv:
+                    x, y, w, h, o, m = live_sites[mm.group(1)]
+                    ln = f" {{{mm.group(1)}}} {{{x:.6f} {y:.6f} {w:.6f} {h:.6f} {o} {m}}} \\"
+                out_lines.append(ln)
+            pose_out[cm] = "\n".join(out_lines)
+            for r in recs:
+                r["site"] = [live_sites[r["copy"]][0], r["site"][1]]
+                r["dx_um"] = round(r["site"][0] - r["original_site"][0], 4)
         # dead FFs leave the pose (synth removes them; the pose's missing-FF guard stays exact for every live FF);
         # the kit's own face capture flops ot_fcap_* (unused-input pin registers, core_face_post_synth.tcl, FIRM at the
         # pin by face_flops.tcl) are not source FFs: the undeclared-FF guard skips that one name class only
@@ -393,6 +457,12 @@ def apply(split, top, child_modules, abi, poses):
             raise ValueError("pose undeclared-FF guard changed")
         pose_out[cm] = pose_out[cm].replace(g_old, g_new)
         record_dead[cm] = dead
+        # the pose runs after face_flops.tcl, which made face-register FFs FIRM: odb refuses moving a FIRM instance
+        # (ODB-0359/0360), so release to PLACED, move, then lock
+        m_old = " $ot_np_i setOrient $o\n"
+        if pose_out[cm].count(m_old) != 1:
+            raise ValueError("pose move line changed")
+        pose_out[cm] = pose_out[cm].replace(m_old, " $ot_np_i setPlacementStatus PLACED\n" + m_old)
         # odb has no status FIXED ("ValueError Unknown placement status" at global_place); LOCKED = DEF FIXED
         pose_out[cm] = pose_out[cm].replace("setPlacementStatus FIXED", "setPlacementStatus LOCKED").replace(
             "# Uses FIXED status", "# Uses LOCKED (= DEF FIXED) status")
@@ -404,7 +474,12 @@ def apply(split, top, child_modules, abi, poses):
             nn = mod["netnames"].get(pn)
             if len(pv["bits"]) == 1 and nn and nn.get("attributes", {}).pop("single_bit_vector", None) is not None:
                 scalar.append(pn)
-        record[cm] = dict(copies=recs, scalar_ports=sorted(scalar), dead_ffs_not_posed=record_dead[cm])
+        record[cm] = dict(copies=recs, scalar_ports=sorted(scalar), dead_ffs_not_posed=record_dead[cm],
+                          legalized=dict(blockages=str(blockages.get(cm)) if blockages else None,
+                                         blockages_sha256=sha(blockages[cm]) if blockages and blockages.get(cm) else None,
+                                         moved=len(legal_moves),
+                                         max_abs_dx_um=max((abs(d) for _, d in legal_moves), default=0.0),
+                                         moves=legal_moves))
     # second pass on the transformed netlist: every output is now dedicated; inputs are declared from what the kit sees
     # (a copied relay that is also an input face register makes its capture input fan out: it is a reset input)
     cls2 = classify(new, top, child_modules, abi)
@@ -485,6 +560,8 @@ def main(argv=None):
     a = sub.add_parser("apply")
     a.add_argument("split"); a.add_argument("--top", required=True); a.add_argument("--abi", required=True)
     a.add_argument("--pose", action="append", default=[], help="CHILD_MODULE=pose.tcl")
+    a.add_argument("--blockages", action="append", default=[],
+                   help="CHILD_MODULE=fixed.txt (floorplan LOCKED non-FF cells, 'name x0 y0 x1 y1' um): legalize the pose")
     a.add_argument("--out", required=True)
     c = sub.add_parser("check")
     c.add_argument("orig"); c.add_argument("new"); c.add_argument("record")
@@ -495,7 +572,8 @@ def main(argv=None):
         poses = dict(x.split("=", 1) for x in args.pose)
         child_modules = sorted(poses)
         abi = {f"{args.top}_{k}": v for k, v in abi_doc.items()}
-        new, pose_out, record = apply(split, args.top, child_modules, abi, poses)
+        blk = dict(x.split("=", 1) for x in args.blockages)
+        new, pose_out, record = apply(split, args.top, child_modules, abi, poses, blk)
         out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
         (out / "split_fc.json").write_text(json.dumps(new) + "\n")
         summary = {}

@@ -49,7 +49,7 @@ def _pose(p, names):
     p.write_text("# Uses FIXED status so ordinary face-flop release cannot collapse the source stages.\n"
                  "set ot_np_ffs [dict create \\\n" + body + "\n]\nset ot_np_blk 1\n"
                  "if {[string match *DFF* [[$ot_np_i getMaster] getName]]} {error \"NATIVE_POSE undeclared source FF $ot_np_nm\"}\n"
-                 " $ot_np_i setPlacementStatus FIXED\n")
+                 " $ot_np_i setOrient $o\n $ot_np_i setPlacementStatus FIXED\n")
 
 
 def test_apply_check(tmp_path):
@@ -74,6 +74,7 @@ def test_apply_check(tmp_path):
     pw = (out / "pw.tcl").read_text()
     assert cp in pw and "setPlacementStatus LOCKED" in pw and "FIXED" not in pw.replace("DEF FIXED", "")
     assert "![string match ot_fcap_* $ot_np_nm]" in pw
+    assert " $ot_np_i setPlacementStatus PLACED\n $ot_np_i setOrient $o\n" in pw
     # u_rrl_2 drives nothing, and the original u_rrl_1 now only feeds u_rrl_2: both dead -> not posed, recorded
     assert rec["children"]["T_w"]["dead_ffs_not_posed"] == ["u_bound.u_rrl_1/q$_DFF_P_", "u_bound.u_rrl_2/q$_DFF_P_"]
     assert "u_bound.u_rrl_2/" not in pw
@@ -86,3 +87,14 @@ def test_apply_check(tmp_path):
     r = subprocess.run([sys.executable, "-I", str(TOOL), "check", str(sp), str(out / "bad.json"),
                         str(out / "face_copies.json")], capture_output=True, text=True)
     assert r.returncode != 0
+
+
+def test_legalize_moves_off_taps_same_row():
+    sites = {"a": (1.0, 1.08, 1.08, 0.27, "R0", "DFF"), "b": (5.0, 1.35, 1.08, 0.27, "MX", "DFF")}
+    blk = [("TAP_1", 0.0, 1.08, 0.108, 1.35), ("TAP_2", 1.5, 1.08, 1.608, 1.35), ("EDGE_R", 20.0, 1.08, 20.108, 1.35),
+           ("EDGE_L2", 0.0, 1.35, 0.108, 1.62), ("EDGE_R2", 20.0, 1.35, 20.108, 1.62)]
+    moves = S.legalize(sites, blk)
+    assert [m[0] for m in moves] == ["a"]                       # b overlaps nothing
+    x, y, w, h, o, m = sites["a"]
+    assert y == 1.08 and o == "R0" and (x + w <= 1.5 + 1e-6 or x >= 1.608 - 1e-6) and x >= 0.108 - 1e-6
+    assert abs(moves[0][1]) <= 0.7
