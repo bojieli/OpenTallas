@@ -46,9 +46,19 @@ def macro_models(kd,masters):
     return result
 
 
-def guard(text,top,kd,fz,skip):
-    contract=fz['source_profile']['endpoint_contract']
-    if contract.get('kind')!='INTERNAL_CORE' or fz.get('face_shell') is not None:raise ValueError('INTERNAL_CORE requires explicit no-shell native cut')
+def guard(text,top,kd,fz,skip,scope=None):
+    # Full no-shell native cuts retain their existing contract.  A selected native seam is explicitly scoped;
+    # the caller must also run the ordinary exclusive-face checker on every other signal port.
+    if scope is None:
+        contract=fz['source_profile']['endpoint_contract']
+        if contract.get('kind')!='INTERNAL_CORE' or fz.get('face_shell') is not None:raise ValueError('INTERNAL_CORE requires explicit no-shell native cut')
+    else:
+        sh=fz.get('face_shell') or {};contract=sh.get('native_endpoint_contract') or {}
+        declared=set(sh.get('native_registered_passthrough',()))
+        if (not scope or set(scope)!=declared or set(contract.get('scope_buses',()))!=declared
+            or sh.get('face_cycle_overrides')!={n:0 for n in sorted(declared)}):
+            raise ValueError('native seam scope/cycle metadata disagree')
+        if contract.get('kind')!='INTERNAL_CORE':raise ValueError('native seam needs the explicit INTERNAL_CORE contract')
     if contract.get('partition_rule')!='R2_INTERNAL_TIMED_IN_PARTITION':raise ValueError('missing partition timing contract')
     models=macro_models(kd,fz['macros']);mods=FG.parse(text)
     for master in models:mods.pop(master,None) # retain opaque timed memory leaves
@@ -105,8 +115,12 @@ def guard(text,top,kd,fz,skip):
             a,b=walk(nxt,sense);found.update(a);fail.update(b)
         visiting[sense].remove(root);ans=frozenset(found),frozenset(fail);cache[sense][root]=ans;return ans
     ports={};fails={}
+    if scope is not None:
+        for port in scope:
+            if port not in T.ports or re.match(skip,port) or T.dirs[port]!=contract.get('port_roles',{}).get(port):
+                raise ValueError('native seam port role missing/mismatched: '+port)
     for port in T.ports:
-        if re.match(skip,port):continue
+        if re.match(skip,port) or (scope is not None and port not in scope):continue
         direction=T.dirs[port]
         if direction not in ('input','output'):raise ValueError('inout '+port)
         for bit in FG._bits_of(T,port):
@@ -116,6 +130,28 @@ def guard(text,top,kd,fz,skip):
             ports[bit]=dict(direction=direction,endpoints=sorted(found),direct_loads=len(loads[root]),direct_drivers=len(drivers[root]))
             if fail or not found:fails[bit]=sorted(fail or {'NO_ENDPOINT'})
     return dict(top=top,contract=contract,verdict='PASS' if not fails else 'FAIL',checked=len(ports),ok=len(ports)-len(fails),fails=fails,ports=ports,endpoints=endpoints,unused_internal_outputs=unused_internal_outputs,macro_models=models,netlist_sha256=hashlib.sha256(text.encode()).hexdigest(),required_next=['ALL_PLACED_ENDPOINT_REACH','TT_SETUP_833PS_U60','FF_HOLD_U25','RELATED_PAIR_CPPR_LE80PS','PARTITION_COMPOSED_SIGNOFF'])
+
+
+def mixed_guard(text,top,kd,fz,skip):
+    """Existing R2 endpoint census on declared native core seams; ordinary strict faces everywhere else.
+
+    No finding is waived: native ports must reach qualified same-domain sequential endpoints, and all other
+    ports keep FG.guard's exclusive registered-face rules. Parent timing and placed endpoint reach remain required.
+    """
+    sh=fz.get('face_shell') or {};scope=tuple(sh.get('native_registered_passthrough',()))
+    if not scope:raise ValueError('mixed guard requires explicit native seam ports')
+    native=guard(text,top,kd,fz,skip,scope=scope)
+    strict_skip='(?:'+skip+')|^(?:'+'|'.join(re.escape(n) for n in scope)+')$'
+    pins=[p for p in json.loads((kd/'pins.json').read_text()) if p.get('bit') is not None and not re.match(strict_skip,p['bus'])] if (kd/'pins.json').is_file() else None
+    result=FG.guard(text,top,skip_re=strict_skip,pins=pins,
+                    straps=FG.kit_strap_list(kd),dead=FG.kit_dead_list(kd))
+    if native['fails']:
+        result['fails']['native_endpoint']=[dict(bit=b,reasons=why) for b,why in native['fails'].items()]
+    result['checked']+=native['checked'];result['ok']+=native['ok']
+    result['native_endpoint_census']=native
+    result['fail_counts']={k:len(v) for k,v in result['fails'].items() if v}
+    result['verdict']='FAIL' if result['fail_counts'] else 'PASS'
+    return result
 
 
 if __name__ == '__main__':

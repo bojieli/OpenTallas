@@ -396,7 +396,7 @@ def rename_module(files, module, new, defines=None):
 
 
 def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, drop=True, mutant=None, scalars=None,
-          stages=None, lockup=None, reset_relay=0, in_stages=None):
+          stages=None, lockup=None, reset_relay=0, in_stages=None, pass_buses=None):
     """turn kit `kd` (generated, top = `module` with exactly the plan pins) into a shelled kit.
     local: kit RTL paths (host), srcs: /work paths (config.mk), params: top params of `module` (moved onto the core
     instance).  reset_relay (opt-in, DIE-HBM-61/RTL): N >= 2 -> every active-low reset input (rst_re, name ending
@@ -412,6 +412,15 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
     from static_id_contracts import static_inputs
     straps = static_inputs(module, widths, dirs)
     passthru = {n for n in widths if re.match(clk_re, n) or (dirs[n] == "input" and re.match(rst_re, n))} | set(straps)
+    # Explicit native-register seams keep their existing source/capture flops.  This changes wrapper structure,
+    # not timing constraints or sign-off: callers must use the native registered boundary and price its cycles.
+    native_pass = set()
+    for rx_ in (pass_buses or ()):
+        hit_ = [n for n in widths if n not in passthru and re.search(rx_, n)]
+        if not hit_:
+            raise RuntimeError(f"face_shell: pass {rx_!r} matches no signal bus")
+        native_pass.update(hit_)
+    passthru.update(native_pass)
     clks = sorted(n for n in passthru if re.match(clk_re, n) and dirs[n] == "input")
     if not clks:
         raise RuntimeError(f"face_shell: {module}: no input clock port")
@@ -461,6 +470,9 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
             raise RuntimeError(f"face_shell: reset_relay: {module} has no reset input")
     txt = emit_shell(module, core, params, widths, dirs, keep, passthru, clk, mutant, set(scalars), st_, lk_, rr_,
                      ist_ or None)
+    if native_pass:
+        txt = "// Native registered passthrough (zero wrapper cycles): " + ", ".join(sorted(native_pass)) + "\n" + txt
+        txt = txt.replace("Every signal pin bit has its own", "Every non-passthrough signal pin bit has its own", 1)
     (kd / "rtl" / f"{module}__fshell.sv").write_text(txt)
     (kd / "rtl" / f"{CELL}.sv").write_text(CELL_SV)
     if lk_:
@@ -488,6 +500,14 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
                widths=widths, dirs=dirs, keep=keep,
                top_fanout_in=sorted(((v, k) for k, v in rep["in_fanout"].items() if base(k) in sig_in), reverse=True)[:16],
                files=[f"{module}__fshell.sv", f"{CELL}.sv"] + ([f"{NCELL}.sv"] if lk_ else []) + ([f"{RCELL}.sv"] if rr_ else []))
+    if native_pass:
+        out["native_registered_passthrough"] = sorted(native_pass)
+        out["face_cycle_overrides"] = {n: 0 for n in sorted(native_pass)}
+        out["native_endpoint_contract"] = dict(kind="INTERNAL_CORE",
+            partition_rule="R2_INTERNAL_TIMED_IN_PARTITION", scope_buses=sorted(native_pass),
+            port_roles={n: dirs[n] for n in sorted(native_pass)},
+            parent_timing="all native data/valid/ready paths remain timed in the parent")
+        out["latency"]["note"] += "; native registered buses in face_cycle_overrides retain zero wrapper cycles"
     if ist_:
         out["in_extra_stages"] = {n: k for n, k in sorted(ist_.items())}
         out["in_extra_stage_flops"] = sum(keep[n] * k for n, k in ist_.items())
@@ -516,6 +536,8 @@ def latency_table(out, reports):
                    in_bits=J["in_bits"], out_bits=J["out_bits"], face_flops=J["face_flops"],
                    dropped_in_bits=J["dropped"], unread_kept_bits=J["unread_kept"],
                    const_out_bits=J["const_out_bits"], dup_out_bits=J["dup_out_bits"])
+        if J.get("face_cycle_overrides"):
+            row["face_cycle_overrides"] = J["face_cycle_overrides"]
         if J.get("out_extra_stages"):
             row["out_extra_cycles"] = J["out_extra_stages"]     # {output bus: +k} on top of out_cycles
         if J.get("in_extra_stages"):
