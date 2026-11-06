@@ -1,0 +1,648 @@
+{
+  "schema": "opentallas.hbm.wbq_root_store_family.v1",
+  "status": "SOURCE_PROTOTYPE_PARENT_BINDING_REQUIRED",
+  "canonical_default": "unchanged ot_wbq_split.sv",
+  "outer_outline_um": [
+    432,
+    129.6
+  ],
+  "store_outline_um": [
+    103.68,
+    60.48
+  ],
+  "source": "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_root_stores.sv",
+  "composition_top": "ot_wbq_root_store_family",
+  "composition_outer_source": "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_root_store_family.sv",
+  "composition_defines": [
+    "OT_WBQ_ROOT_STORE_FACES"
+  ],
+  "helper_top": "ot_wbq_root_store_face",
+  "helper_raw_top": "ot_wbq_root_store",
+  "added_cycles": 0,
+  "relocated_registers": "eight original256bitWDface banks: identical fifo_clk edge; outer family shell bypasses WD faces, store_face owns them",
+  "physical_policy": "Pending explicit legitimate native R2 peer/parent glue binding. No helper P&R authorization implied; no global exemption. Never add an ordinary blanket face shell to this already partitioned composition. Controls and FIFO head are native internal seams; WD is one existing capture stage.",
+  "pins": [
+    {
+      "name": "fifo_clk",
+      "width": 1,
+      "direction": "input",
+      "role": "clock",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "hbm_clk",
+      "width": 1,
+      "direction": "input",
+      "role": "clock",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "srst",
+      "width": 1,
+      "direction": "input",
+      "role": "reset",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "hrst",
+      "width": 1,
+      "direction": "input",
+      "role": "reset",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "root_id",
+      "width": 2,
+      "direction": "input",
+      "role": "data",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "base",
+      "width": 32,
+      "direction": "input",
+      "role": "data",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "total",
+      "width": 12,
+      "direction": "input",
+      "role": "data",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "committed",
+      "width": 12,
+      "direction": "input",
+      "role": "data",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "ordinal",
+      "width": 12,
+      "direction": "input",
+      "role": "data",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "filling",
+      "width": 1,
+      "direction": "input",
+      "role": "data",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "fill_bank",
+      "width": 1,
+      "direction": "input",
+      "role": "data",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "copy_q",
+      "width": 1,
+      "direction": "input",
+      "role": "data",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "copy_bank",
+      "width": 1,
+      "direction": "input",
+      "role": "data",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "copy_start",
+      "width": 1,
+      "direction": "input",
+      "role": "data",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "s_stop",
+      "width": 1,
+      "direction": "input",
+      "role": "data",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "wd",
+      "width": 256,
+      "direction": "input",
+      "role": "data",
+      "face_cycles": 1,
+      "contract": "relocated existing outer WD face"
+    },
+    {
+      "name": "wd_v",
+      "width": 1,
+      "direction": "input",
+      "role": "data",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "fifo_re",
+      "width": 1,
+      "direction": "input",
+      "role": "data",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "fifo_head",
+      "width": 288,
+      "direction": "output",
+      "role": "data",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    },
+    {
+      "name": "fifo_empty",
+      "width": 1,
+      "direction": "output",
+      "role": "data",
+      "face_cycles": 0,
+      "contract": "native internal R2 binding required"
+    }
+  ],
+  "children": [
+    {
+      "index": 0,
+      "instance": "u_fcore.g_lane[0].u_store",
+      "logical_top": "ot_wbq_root_store_face",
+      "parameters": {
+        "LANE": 0
+      },
+      "rect_um": [
+        0.0,
+        0.0,
+        103.68,
+        60.48
+      ],
+      "macro": {
+        "relative_instance": "u_native.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "local_origin_um": [
+          4.32,
+          9.708
+        ],
+        "size_um": [
+          94.824,
+          41.064
+        ]
+      },
+      "connections": {
+        "fifo_clk": "fifo_clk",
+        "hbm_clk": "hbm_clk",
+        "srst": "srst",
+        "hrst": "hrst",
+        "root_id": "root_id",
+        "base": "base[copy_bank]",
+        "total": "total[fill_bank]",
+        "committed": "committed[copy_bank]",
+        "ordinal": "ordinal",
+        "filling": "filling",
+        "fill_bank": "fill_bank",
+        "copy_q": "copy_q",
+        "copy_bank": "copy_bank",
+        "copy_start": "copy_on&&!copy_q",
+        "s_stop": "s_stop",
+        "wd": "wd[0]",
+        "wd_v": "wd_v[0]",
+        "fifo_re": "fifo_re[0]",
+        "fifo_head": "fifo_head[0]",
+        "fifo_empty": "fifo_empty[0]"
+      }
+    },
+    {
+      "index": 1,
+      "instance": "u_fcore.g_lane[1].u_store",
+      "logical_top": "ot_wbq_root_store_face",
+      "parameters": {
+        "LANE": 1
+      },
+      "rect_um": [
+        103.68,
+        0.0,
+        207.36,
+        60.48
+      ],
+      "macro": {
+        "relative_instance": "u_native.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "local_origin_um": [
+          4.32,
+          9.708
+        ],
+        "size_um": [
+          94.824,
+          41.064
+        ]
+      },
+      "connections": {
+        "fifo_clk": "fifo_clk",
+        "hbm_clk": "hbm_clk",
+        "srst": "srst",
+        "hrst": "hrst",
+        "root_id": "root_id",
+        "base": "base[copy_bank]",
+        "total": "total[fill_bank]",
+        "committed": "committed[copy_bank]",
+        "ordinal": "ordinal",
+        "filling": "filling",
+        "fill_bank": "fill_bank",
+        "copy_q": "copy_q",
+        "copy_bank": "copy_bank",
+        "copy_start": "copy_on&&!copy_q",
+        "s_stop": "s_stop",
+        "wd": "wd[1]",
+        "wd_v": "wd_v[1]",
+        "fifo_re": "fifo_re[1]",
+        "fifo_head": "fifo_head[1]",
+        "fifo_empty": "fifo_empty[1]"
+      }
+    },
+    {
+      "index": 2,
+      "instance": "u_fcore.g_lane[2].u_store",
+      "logical_top": "ot_wbq_root_store_face",
+      "parameters": {
+        "LANE": 2
+      },
+      "rect_um": [
+        207.36,
+        0.0,
+        311.04,
+        60.48
+      ],
+      "macro": {
+        "relative_instance": "u_native.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "local_origin_um": [
+          4.32,
+          9.708
+        ],
+        "size_um": [
+          94.824,
+          41.064
+        ]
+      },
+      "connections": {
+        "fifo_clk": "fifo_clk",
+        "hbm_clk": "hbm_clk",
+        "srst": "srst",
+        "hrst": "hrst",
+        "root_id": "root_id",
+        "base": "base[copy_bank]",
+        "total": "total[fill_bank]",
+        "committed": "committed[copy_bank]",
+        "ordinal": "ordinal",
+        "filling": "filling",
+        "fill_bank": "fill_bank",
+        "copy_q": "copy_q",
+        "copy_bank": "copy_bank",
+        "copy_start": "copy_on&&!copy_q",
+        "s_stop": "s_stop",
+        "wd": "wd[2]",
+        "wd_v": "wd_v[2]",
+        "fifo_re": "fifo_re[2]",
+        "fifo_head": "fifo_head[2]",
+        "fifo_empty": "fifo_empty[2]"
+      }
+    },
+    {
+      "index": 3,
+      "instance": "u_fcore.g_lane[3].u_store",
+      "logical_top": "ot_wbq_root_store_face",
+      "parameters": {
+        "LANE": 3
+      },
+      "rect_um": [
+        311.04,
+        0.0,
+        414.72,
+        60.48
+      ],
+      "macro": {
+        "relative_instance": "u_native.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "local_origin_um": [
+          4.32,
+          9.708
+        ],
+        "size_um": [
+          94.824,
+          41.064
+        ]
+      },
+      "connections": {
+        "fifo_clk": "fifo_clk",
+        "hbm_clk": "hbm_clk",
+        "srst": "srst",
+        "hrst": "hrst",
+        "root_id": "root_id",
+        "base": "base[copy_bank]",
+        "total": "total[fill_bank]",
+        "committed": "committed[copy_bank]",
+        "ordinal": "ordinal",
+        "filling": "filling",
+        "fill_bank": "fill_bank",
+        "copy_q": "copy_q",
+        "copy_bank": "copy_bank",
+        "copy_start": "copy_on&&!copy_q",
+        "s_stop": "s_stop",
+        "wd": "wd[3]",
+        "wd_v": "wd_v[3]",
+        "fifo_re": "fifo_re[3]",
+        "fifo_head": "fifo_head[3]",
+        "fifo_empty": "fifo_empty[3]"
+      }
+    },
+    {
+      "index": 4,
+      "instance": "u_fcore.g_lane[4].u_store",
+      "logical_top": "ot_wbq_root_store_face",
+      "parameters": {
+        "LANE": 4
+      },
+      "rect_um": [
+        0.0,
+        60.48,
+        103.68,
+        120.96
+      ],
+      "macro": {
+        "relative_instance": "u_native.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "local_origin_um": [
+          4.32,
+          9.708
+        ],
+        "size_um": [
+          94.824,
+          41.064
+        ]
+      },
+      "connections": {
+        "fifo_clk": "fifo_clk",
+        "hbm_clk": "hbm_clk",
+        "srst": "srst",
+        "hrst": "hrst",
+        "root_id": "root_id",
+        "base": "base[copy_bank]",
+        "total": "total[fill_bank]",
+        "committed": "committed[copy_bank]",
+        "ordinal": "ordinal",
+        "filling": "filling",
+        "fill_bank": "fill_bank",
+        "copy_q": "copy_q",
+        "copy_bank": "copy_bank",
+        "copy_start": "copy_on&&!copy_q",
+        "s_stop": "s_stop",
+        "wd": "wd[4]",
+        "wd_v": "wd_v[4]",
+        "fifo_re": "fifo_re[4]",
+        "fifo_head": "fifo_head[4]",
+        "fifo_empty": "fifo_empty[4]"
+      }
+    },
+    {
+      "index": 5,
+      "instance": "u_fcore.g_lane[5].u_store",
+      "logical_top": "ot_wbq_root_store_face",
+      "parameters": {
+        "LANE": 5
+      },
+      "rect_um": [
+        103.68,
+        60.48,
+        207.36,
+        120.96
+      ],
+      "macro": {
+        "relative_instance": "u_native.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "local_origin_um": [
+          4.32,
+          9.708
+        ],
+        "size_um": [
+          94.824,
+          41.064
+        ]
+      },
+      "connections": {
+        "fifo_clk": "fifo_clk",
+        "hbm_clk": "hbm_clk",
+        "srst": "srst",
+        "hrst": "hrst",
+        "root_id": "root_id",
+        "base": "base[copy_bank]",
+        "total": "total[fill_bank]",
+        "committed": "committed[copy_bank]",
+        "ordinal": "ordinal",
+        "filling": "filling",
+        "fill_bank": "fill_bank",
+        "copy_q": "copy_q",
+        "copy_bank": "copy_bank",
+        "copy_start": "copy_on&&!copy_q",
+        "s_stop": "s_stop",
+        "wd": "wd[5]",
+        "wd_v": "wd_v[5]",
+        "fifo_re": "fifo_re[5]",
+        "fifo_head": "fifo_head[5]",
+        "fifo_empty": "fifo_empty[5]"
+      }
+    },
+    {
+      "index": 6,
+      "instance": "u_fcore.g_lane[6].u_store",
+      "logical_top": "ot_wbq_root_store_face",
+      "parameters": {
+        "LANE": 6
+      },
+      "rect_um": [
+        207.36,
+        60.48,
+        311.04,
+        120.96
+      ],
+      "macro": {
+        "relative_instance": "u_native.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "local_origin_um": [
+          4.32,
+          9.708
+        ],
+        "size_um": [
+          94.824,
+          41.064
+        ]
+      },
+      "connections": {
+        "fifo_clk": "fifo_clk",
+        "hbm_clk": "hbm_clk",
+        "srst": "srst",
+        "hrst": "hrst",
+        "root_id": "root_id",
+        "base": "base[copy_bank]",
+        "total": "total[fill_bank]",
+        "committed": "committed[copy_bank]",
+        "ordinal": "ordinal",
+        "filling": "filling",
+        "fill_bank": "fill_bank",
+        "copy_q": "copy_q",
+        "copy_bank": "copy_bank",
+        "copy_start": "copy_on&&!copy_q",
+        "s_stop": "s_stop",
+        "wd": "wd[6]",
+        "wd_v": "wd_v[6]",
+        "fifo_re": "fifo_re[6]",
+        "fifo_head": "fifo_head[6]",
+        "fifo_empty": "fifo_empty[6]"
+      }
+    },
+    {
+      "index": 7,
+      "instance": "u_fcore.g_lane[7].u_store",
+      "logical_top": "ot_wbq_root_store_face",
+      "parameters": {
+        "LANE": 7
+      },
+      "rect_um": [
+        311.04,
+        60.48,
+        414.72,
+        120.96
+      ],
+      "macro": {
+        "relative_instance": "u_native.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "local_origin_um": [
+          4.32,
+          9.708
+        ],
+        "size_um": [
+          94.824,
+          41.064
+        ]
+      },
+      "connections": {
+        "fifo_clk": "fifo_clk",
+        "hbm_clk": "hbm_clk",
+        "srst": "srst",
+        "hrst": "hrst",
+        "root_id": "root_id",
+        "base": "base[copy_bank]",
+        "total": "total[fill_bank]",
+        "committed": "committed[copy_bank]",
+        "ordinal": "ordinal",
+        "filling": "filling",
+        "fill_bank": "fill_bank",
+        "copy_q": "copy_q",
+        "copy_bank": "copy_bank",
+        "copy_start": "copy_on&&!copy_q",
+        "s_stop": "s_stop",
+        "wd": "wd[7]",
+        "wd_v": "wd_v[7]",
+        "fifo_re": "fifo_re[7]",
+        "fifo_head": "fifo_head[7]",
+        "fifo_empty": "fifo_empty[7]"
+      }
+    }
+  ],
+  "area": {
+    "helper_std_um2": 850.29102,
+    "helper_std_cells": 6565,
+    "helper_ff": 1444,
+    "controller_std_um2": 571.41936,
+    "controller_std_cells": 4584,
+    "controller_ff": 770,
+    "helper_util_in_nonmacro_area": 0.35775913307493823,
+    "controller_util_in_remaining_area": 0.09813701923076924,
+    "basis": "actual ASAP7 TT abc_speed/dont_use/dfflibmap standalone sizing, no P&R/CTS buffers; controller retains all outerface registers except movedWD. Blackbox macros/children excluded from stdarea."
+  },
+  "clock_basis": "Original released outer shell clocks all face registers with fifo_clk; released hardcore basis ties native hbm_clk/fifo_clk to its common core clock. Raw-body proof also uses independent10ns/14ns clocks. Preserve declared parent clock mapping; no new clock waiver.",
+  "proof": {
+    "raw": {
+      "checks": 6883,
+      "writes": 768,
+      "mismatch": 0,
+      "clock_period_ns": [
+        10,
+        14
+      ]
+    },
+    "full_family": {
+      "checks": 9636,
+      "writes": 768,
+      "mismatch": 0,
+      "clock_period_ns": [
+        10,
+        10
+      ]
+    },
+    "payload_mutant": {
+      "raw_mismatches": 768,
+      "full_family_mismatches": 768
+    },
+    "wrong_capture_edge_mutant": {
+      "checks": 9636,
+      "writes": 768,
+      "mismatch": 768,
+      "caught": true
+    }
+  },
+  "raw_helper_source": "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_root_store_leaf.sv",
+  "future_physical_recipe_template": {
+    "top": "ot_wbq_root_store",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_root_store_leaf.sv",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+      "rtl/lib/ot_reset_sync.sv"
+    ],
+    "params": {
+      "LANE": "instance index0..7"
+    },
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "face_shell": "on with exact typed native R2 controls/FIFO output pass; WD input retains one capture",
+    "required_native_pass_buses": [
+      "root_id",
+      "base",
+      "total",
+      "committed",
+      "ordinal",
+      "filling",
+      "fill_bank",
+      "copy_q",
+      "copy_bank",
+      "copy_start",
+      "s_stop",
+      "wd_v",
+      "fifo_re",
+      "fifo_head",
+      "fifo_empty"
+    ],
+    "status": "NOT executable canonical recipe until explicit binding policy released"
+  }
+}

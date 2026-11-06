@@ -1,0 +1,2633 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `ctl_area.ys' --
+
+1. Executing Verilog-2005 frontend: controller.sv
+Parsing SystemVerilog input from `controller.sv' to AST representation.
+Generating RTLIL representation for module `\ot_wbq_root'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: controller_root.sv
+Parsing SystemVerilog input from `controller_root.sv' to AST representation.
+Generating RTLIL representation for module `\ot_wbq_root__fcore'.
+Warning: Replacing memory \credit with list of registers. See controller_root.sv:77
+Warning: Replacing memory \committed with list of registers. See controller_root.sv:55
+Warning: Replacing memory \total with list of registers. See controller_root.sv:55
+Warning: Replacing memory \base with list of registers. See controller_root.sv:55
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: store_bb.sv
+Parsing SystemVerilog input from `store_bb.sv' to AST representation.
+Generating RTLIL representation for module `\ot_wbq_root_store'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: ot_hbm_face_reg.sv
+Parsing SystemVerilog input from `ot_hbm_face_reg.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_face_reg'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: ot_reset_sync.sv
+Parsing SystemVerilog input from `ot_reset_sync.sv' to AST representation.
+Generating RTLIL representation for module `\ot_reset_sync'.
+Successfully finished Verilog frontend.
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1. Analyzing design hierarchy..
+Top module:  \ot_wbq_root
+Used module:     \ot_wbq_root__fcore
+Used module:         \ot_reset_sync
+Used module:     \ot_hbm_face_reg
+Parameter \W = 572
+
+6.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+Parameter \W = 572
+Generating RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Parameter \W = 2
+
+6.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+Parameter \W = 2
+Generating RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Parameter \W = 1
+
+6.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+Parameter \W = 1
+Generating RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Parameter \W = 2
+Found cached RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Parameter \W = 8
+
+6.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Parameter \W = 30
+
+6.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+Parameter \W = 30
+Generating RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Parameter \W = 12
+
+6.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_face_reg'.
+Parameter \W = 12
+Generating RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Parameter \W = 2
+Found cached RTLIL representation for module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Reprocessing module ot_wbq_root__fcore because instantiated module ot_wbq_root_store has become available.
+Generating RTLIL representation for module `\ot_wbq_root__fcore'.
+Warning: Replacing memory \credit with list of registers. See controller_root.sv:77
+Warning: Replacing memory \committed with list of registers. See controller_root.sv:55
+Warning: Replacing memory \total with list of registers. See controller_root.sv:55
+Warning: Replacing memory \base with list of registers. See controller_root.sv:55
+
+6.8. Analyzing design hierarchy..
+Top module:  \ot_wbq_root
+Used module:     \ot_wbq_root__fcore
+Used module:         \ot_reset_sync
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100
+
+6.9. Analyzing design hierarchy..
+Top module:  \ot_wbq_root
+Used module:     \ot_wbq_root__fcore
+Used module:         \ot_reset_sync
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100
+Removing unused module `\ot_hbm_face_reg'.
+Removed 1 unused modules.
+
+7. Executing SYNTH pass.
+
+7.1. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1.1. Analyzing design hierarchy..
+Top module:  \ot_wbq_root
+Used module:     \ot_wbq_root__fcore
+Used module:         \ot_reset_sync
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100
+
+7.1.2. Analyzing design hierarchy..
+Top module:  \ot_wbq_root
+Used module:     \ot_wbq_root__fcore
+Used module:         \ot_reset_sync
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100
+Removed 0 unused modules.
+
+7.2. Executing PROC pass (convert processes to netlists).
+
+7.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+7.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$ot_reset_sync.sv:18$244 in module ot_reset_sync.
+Removed 1 dead cases from process $proc$controller_root.sv:74$489 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:74$489 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:74$485 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:74$485 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$482 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$482 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$479 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$479 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$476 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$476 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$473 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$473 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$470 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$470 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$467 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$467 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$464 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$464 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$461 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$461 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$458 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$458 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$455 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$455 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$452 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$452 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$449 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$449 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$446 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$446 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$443 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$443 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$440 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$440 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$437 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$437 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$434 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$434 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$431 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$431 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$428 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$428 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$425 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$425 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$422 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$422 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$419 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$419 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$416 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$416 in module ot_wbq_root__fcore.
+Removed 1 dead cases from process $proc$controller_root.sv:46$413 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:46$413 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:76$397 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:76$377 in module ot_wbq_root__fcore.
+Marked 1 switch rules as full_case in process $proc$controller_root.sv:81$346 in module ot_wbq_root__fcore.
+Removed 2 dead cases from process $proc$controller_root.sv:52$286 in module ot_wbq_root__fcore.
+Marked 11 switch rules as full_case in process $proc$controller_root.sv:52$286 in module ot_wbq_root__fcore.
+Removed a total of 28 dead cases.
+
+7.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 4 redundant assignments.
+Promoted 55 assignments to connections.
+
+7.2.4. Executing PROC_INIT pass (extract init attributes).
+
+7.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \async_rst_n in `\ot_reset_sync.$proc$ot_reset_sync.sv:18$244'.
+Found async reset \hrst in `\ot_wbq_root__fcore.$proc$controller_root.sv:76$397'.
+Found async reset \hrst in `\ot_wbq_root__fcore.$proc$controller_root.sv:76$377'.
+Found async reset \hrst in `\ot_wbq_root__fcore.$proc$controller_root.sv:81$346'.
+Found async reset \srst in `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+
+7.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~38 debug messages>
+
+7.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.$proc$ot_hbm_face_reg.sv:10$250'.
+Creating decoders for process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.$proc$ot_hbm_face_reg.sv:10$249'.
+Creating decoders for process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.$proc$ot_hbm_face_reg.sv:10$248'.
+Creating decoders for process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.$proc$ot_hbm_face_reg.sv:10$247'.
+Creating decoders for process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.$proc$ot_hbm_face_reg.sv:10$246'.
+Creating decoders for process `\ot_reset_sync.$proc$ot_reset_sync.sv:18$244'.
+     1/1: $0\reset_pipe[1:0]
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:74$489'.
+     1/1: $1$mem2reg_rd$\fifo_head$controller_root.sv:74$284_DATA[287:0]$491
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:74$485'.
+     1/1: $1$mem2reg_rd$\fifo_head$controller_root.sv:74$283_DATA[287:0]$487
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$482'.
+     1/1: $1$mem2reg_rd$\committed$controller_root.sv:46$282_DATA[11:0]$484
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$479'.
+     1/1: $1$mem2reg_rd$\total$controller_root.sv:46$281_DATA[11:0]$481
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$476'.
+     1/1: $1$mem2reg_rd$\base$controller_root.sv:46$280_DATA[31:0]$478
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$473'.
+     1/1: $1$mem2reg_rd$\committed$controller_root.sv:46$279_DATA[11:0]$475
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$470'.
+     1/1: $1$mem2reg_rd$\total$controller_root.sv:46$278_DATA[11:0]$472
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$467'.
+     1/1: $1$mem2reg_rd$\base$controller_root.sv:46$277_DATA[31:0]$469
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$464'.
+     1/1: $1$mem2reg_rd$\committed$controller_root.sv:46$276_DATA[11:0]$466
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$461'.
+     1/1: $1$mem2reg_rd$\total$controller_root.sv:46$275_DATA[11:0]$463
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$458'.
+     1/1: $1$mem2reg_rd$\base$controller_root.sv:46$274_DATA[31:0]$460
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$455'.
+     1/1: $1$mem2reg_rd$\committed$controller_root.sv:46$273_DATA[11:0]$457
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$452'.
+     1/1: $1$mem2reg_rd$\total$controller_root.sv:46$272_DATA[11:0]$454
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$449'.
+     1/1: $1$mem2reg_rd$\base$controller_root.sv:46$271_DATA[31:0]$451
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$446'.
+     1/1: $1$mem2reg_rd$\committed$controller_root.sv:46$270_DATA[11:0]$448
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$443'.
+     1/1: $1$mem2reg_rd$\total$controller_root.sv:46$269_DATA[11:0]$445
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$440'.
+     1/1: $1$mem2reg_rd$\base$controller_root.sv:46$268_DATA[31:0]$442
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$437'.
+     1/1: $1$mem2reg_rd$\committed$controller_root.sv:46$267_DATA[11:0]$439
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$434'.
+     1/1: $1$mem2reg_rd$\total$controller_root.sv:46$266_DATA[11:0]$436
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$431'.
+     1/1: $1$mem2reg_rd$\base$controller_root.sv:46$265_DATA[31:0]$433
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$428'.
+     1/1: $1$mem2reg_rd$\committed$controller_root.sv:46$264_DATA[11:0]$430
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$425'.
+     1/1: $1$mem2reg_rd$\total$controller_root.sv:46$263_DATA[11:0]$427
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$422'.
+     1/1: $1$mem2reg_rd$\base$controller_root.sv:46$262_DATA[31:0]$424
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$419'.
+     1/1: $1$mem2reg_rd$\committed$controller_root.sv:46$261_DATA[11:0]$421
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$416'.
+     1/1: $1$mem2reg_rd$\total$controller_root.sv:46$260_DATA[11:0]$418
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$413'.
+     1/1: $1$mem2reg_rd$\base$controller_root.sv:46$259_DATA[31:0]$415
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$412'.
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$411'.
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$410'.
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$409'.
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$408'.
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$407'.
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$406'.
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$405'.
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:76$397'.
+     1/1: $0\credit[1][2:0]
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:76$377'.
+     1/1: $0\credit[0][2:0]
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:81$346'.
+     1/1: $0\mc[31:0]
+Creating decoders for process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+     1/47: $4$mem2reg_rd$\total$controller_root.sv:60$257_DATA[11:0]$341
+     2/47: $3$mem2reg_wr$\committed$controller_root.sv:60$256_ADDR[0:0]$335
+     3/47: $3$mem2reg_wr$\committed$controller_root.sv:60$256_DATA[11:0]$336
+     4/47: $3$mem2reg_rd$\total$controller_root.sv:60$257_DATA[11:0]$338
+     5/47: $3$mem2reg_rd$\total$controller_root.sv:60$257_ADDR[0:0]$337
+     6/47: $3$mem2reg_wr$\committed$controller_root.sv:61$258_DATA[11:0]$340
+     7/47: $3$mem2reg_wr$\committed$controller_root.sv:61$258_ADDR[0:0]$339
+     8/47: $3$mem2reg_rd$\total$controller_root.sv:60$255_DATA[11:0]$332
+     9/47: $2$mem2reg_wr$\committed$controller_root.sv:61$258_DATA[11:0]$331
+    10/47: $2$mem2reg_wr$\committed$controller_root.sv:61$258_ADDR[0:0]$330
+    11/47: $2$mem2reg_rd$\total$controller_root.sv:60$257_DATA[11:0]$329
+    12/47: $2$mem2reg_rd$\total$controller_root.sv:60$257_ADDR[0:0]$328
+    13/47: $2$mem2reg_wr$\committed$controller_root.sv:60$256_DATA[11:0]$327
+    14/47: $2$mem2reg_wr$\committed$controller_root.sv:60$256_ADDR[0:0]$326
+    15/47: $2$mem2reg_rd$\total$controller_root.sv:60$255_DATA[11:0]$325
+    16/47: $2$mem2reg_rd$\total$controller_root.sv:60$255_ADDR[0:0]$324
+    17/47: $2$mem2reg_wr$\committed$controller_root.sv:57$254_ADDR[0:0]$320
+    18/47: $2$mem2reg_wr$\committed$controller_root.sv:57$254_DATA[11:0]$321
+    19/47: $2$mem2reg_wr$\total$controller_root.sv:57$253_ADDR[0:0]$318
+    20/47: $2$mem2reg_wr$\total$controller_root.sv:57$253_DATA[11:0]$319
+    21/47: $2$mem2reg_wr$\base$controller_root.sv:57$252_ADDR[0:0]$316
+    22/47: $2$mem2reg_wr$\base$controller_root.sv:57$252_DATA[31:0]$317
+    23/47: $0\copy_q[0:0]
+    24/47: $1$mem2reg_wr$\committed$controller_root.sv:61$258_DATA[11:0]$315
+    25/47: $1$mem2reg_wr$\committed$controller_root.sv:61$258_ADDR[0:0]$314
+    26/47: $1$mem2reg_rd$\total$controller_root.sv:60$257_DATA[11:0]$313
+    27/47: $1$mem2reg_rd$\total$controller_root.sv:60$257_ADDR[0:0]$312
+    28/47: $1$mem2reg_wr$\committed$controller_root.sv:60$256_DATA[11:0]$311
+    29/47: $1$mem2reg_wr$\committed$controller_root.sv:60$256_ADDR[0:0]$310
+    30/47: $1$mem2reg_rd$\total$controller_root.sv:60$255_DATA[11:0]$309
+    31/47: $1$mem2reg_rd$\total$controller_root.sv:60$255_ADDR[0:0]$308
+    32/47: $1$mem2reg_wr$\committed$controller_root.sv:57$254_DATA[11:0]$307
+    33/47: $1$mem2reg_wr$\committed$controller_root.sv:57$254_ADDR[0:0]$306
+    34/47: $1$mem2reg_wr$\total$controller_root.sv:57$253_DATA[11:0]$305
+    35/47: $1$mem2reg_wr$\total$controller_root.sv:57$253_ADDR[0:0]$304
+    36/47: $1$mem2reg_wr$\base$controller_root.sv:57$252_DATA[31:0]$303
+    37/47: $1$mem2reg_wr$\base$controller_root.sv:57$252_ADDR[0:0]$302
+    38/47: $1\s[31:0]
+    39/47: $0\committed[1][11:0]
+    40/47: $0\committed[0][11:0]
+    41/47: $0\total[1][11:0]
+    42/47: $0\total[0][11:0]
+    43/47: $0\base[1][31:0]
+    44/47: $0\base[0][31:0]
+    45/47: $0\ordinal[11:0]
+    46/47: $0\fill_bank[0:0]
+    47/47: $0\filling[0:0]
+Creating decoders for process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.$proc$ot_hbm_face_reg.sv:10$251'.
+
+7.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\fifo_head$controller_root.sv:74$284_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:74$489'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\fifo_head$controller_root.sv:74$283_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:74$485'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\committed$controller_root.sv:46$282_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$482'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\total$controller_root.sv:46$281_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$479'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\base$controller_root.sv:46$280_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$476'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\committed$controller_root.sv:46$279_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$473'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\total$controller_root.sv:46$278_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$470'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\base$controller_root.sv:46$277_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$467'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\committed$controller_root.sv:46$276_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$464'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\total$controller_root.sv:46$275_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$461'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\base$controller_root.sv:46$274_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$458'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\committed$controller_root.sv:46$273_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$455'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\total$controller_root.sv:46$272_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$452'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\base$controller_root.sv:46$271_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$449'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\committed$controller_root.sv:46$270_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$446'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\total$controller_root.sv:46$269_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$443'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\base$controller_root.sv:46$268_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$440'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\committed$controller_root.sv:46$267_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$437'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\total$controller_root.sv:46$266_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$434'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\base$controller_root.sv:46$265_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$431'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\committed$controller_root.sv:46$264_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$428'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\total$controller_root.sv:46$263_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$425'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\base$controller_root.sv:46$262_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$422'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\committed$controller_root.sv:46$261_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$419'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\total$controller_root.sv:46$260_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$416'.
+No latch inferred for signal `\ot_wbq_root__fcore.$mem2reg_rd$\base$controller_root.sv:46$259_DATA' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:46$413'.
+No latch inferred for signal `\ot_wbq_root__fcore.\wd[7]' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$412'.
+No latch inferred for signal `\ot_wbq_root__fcore.\wd[6]' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$411'.
+No latch inferred for signal `\ot_wbq_root__fcore.\wd[5]' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$410'.
+No latch inferred for signal `\ot_wbq_root__fcore.\wd[4]' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$409'.
+No latch inferred for signal `\ot_wbq_root__fcore.\wd[3]' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$408'.
+No latch inferred for signal `\ot_wbq_root__fcore.\wd[2]' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$407'.
+No latch inferred for signal `\ot_wbq_root__fcore.\wd[1]' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$406'.
+No latch inferred for signal `\ot_wbq_root__fcore.\wd[0]' from process `\ot_wbq_root__fcore.$proc$controller_root.sv:36$405'.
+
+7.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.\q' using process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.$proc$ot_hbm_face_reg.sv:10$250'.
+  created $dff cell `$procdff$751' with positive edge clock.
+Creating register for signal `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.\q' using process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.$proc$ot_hbm_face_reg.sv:10$249'.
+  created $dff cell `$procdff$752' with positive edge clock.
+Creating register for signal `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.\q' using process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.$proc$ot_hbm_face_reg.sv:10$248'.
+  created $dff cell `$procdff$753' with positive edge clock.
+Creating register for signal `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.\q' using process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.$proc$ot_hbm_face_reg.sv:10$247'.
+  created $dff cell `$procdff$754' with positive edge clock.
+Creating register for signal `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.\q' using process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.$proc$ot_hbm_face_reg.sv:10$246'.
+  created $dff cell `$procdff$755' with positive edge clock.
+Creating register for signal `\ot_reset_sync.\reset_pipe' using process `\ot_reset_sync.$proc$ot_reset_sync.sv:18$244'.
+  created $adff cell `$procdff$760' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.\credit[1]' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:76$397'.
+  created $adff cell `$procdff$765' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.\credit[0]' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:76$377'.
+  created $adff cell `$procdff$770' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.\mc' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:81$346'.
+  created $adff cell `$procdff$775' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.\filling' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$780' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.\fill_bank' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$785' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.\ordinal' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$790' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.\copy_q' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$795' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.\s' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$800' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.\base[0]' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$805' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.\base[1]' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$810' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.\total[0]' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$815' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.\total[1]' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$820' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.\committed[0]' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$825' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.\committed[1]' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$830' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.$mem2reg_wr$\base$controller_root.sv:57$252_ADDR' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$835' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.$mem2reg_wr$\base$controller_root.sv:57$252_DATA' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$840' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.$mem2reg_wr$\total$controller_root.sv:57$253_ADDR' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$845' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.$mem2reg_wr$\total$controller_root.sv:57$253_DATA' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$850' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.$mem2reg_wr$\committed$controller_root.sv:57$254_ADDR' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$855' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.$mem2reg_wr$\committed$controller_root.sv:57$254_DATA' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$860' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.$mem2reg_rd$\total$controller_root.sv:60$255_ADDR' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$865' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.$mem2reg_rd$\total$controller_root.sv:60$255_DATA' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$870' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.$mem2reg_wr$\committed$controller_root.sv:60$256_ADDR' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$875' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.$mem2reg_wr$\committed$controller_root.sv:60$256_DATA' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$880' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.$mem2reg_rd$\total$controller_root.sv:60$257_ADDR' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$885' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.$mem2reg_rd$\total$controller_root.sv:60$257_DATA' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$890' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.$mem2reg_wr$\committed$controller_root.sv:61$258_ADDR' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$895' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root__fcore.$mem2reg_wr$\committed$controller_root.sv:61$258_DATA' using process `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+  created $adff cell `$procdff$900' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.\q' using process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.$proc$ot_hbm_face_reg.sv:10$251'.
+  created $dff cell `$procdff$901' with positive edge clock.
+
+7.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+7.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.$proc$ot_hbm_face_reg.sv:10$250'.
+Removing empty process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.$proc$ot_hbm_face_reg.sv:10$249'.
+Removing empty process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.$proc$ot_hbm_face_reg.sv:10$248'.
+Removing empty process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.$proc$ot_hbm_face_reg.sv:10$247'.
+Removing empty process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.$proc$ot_hbm_face_reg.sv:10$246'.
+Removing empty process `ot_reset_sync.$proc$ot_reset_sync.sv:18$244'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:74$489'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:74$489'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:74$485'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:74$485'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$482'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$482'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$479'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$479'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$476'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$476'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$473'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$473'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$470'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$470'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$467'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$467'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$464'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$464'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$461'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$461'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$458'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$458'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$455'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$455'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$452'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$452'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$449'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$449'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$446'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$446'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$443'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$443'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$440'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$440'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$437'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$437'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$434'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$434'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$431'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$431'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$428'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$428'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$425'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$425'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$422'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$422'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$419'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$419'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$416'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$416'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:46$413'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:46$413'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:36$412'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:36$411'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:36$410'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:36$409'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:36$408'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:36$407'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:36$406'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:36$405'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:76$397'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:76$377'.
+Found and cleaned up 1 empty switch in `\ot_wbq_root__fcore.$proc$controller_root.sv:81$346'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:81$346'.
+Found and cleaned up 11 empty switches in `\ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+Removing empty process `ot_wbq_root__fcore.$proc$controller_root.sv:52$286'.
+Removing empty process `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.$proc$ot_hbm_face_reg.sv:10$251'.
+Cleaned up 38 empty switches.
+
+7.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module ot_reset_sync.
+<suppressed ~2 debug messages>
+Optimizing module ot_wbq_root__fcore.
+<suppressed ~104 debug messages>
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+
+7.3. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110...
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000...
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001...
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010...
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100...
+Checking module ot_reset_sync...
+Checking module ot_wbq_root__fcore...
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100...
+Checking module ot_wbq_root...
+Found and reported 0 problems.
+
+7.4. Executing FLATTEN pass (flatten design).
+Keeping ot_wbq_root.u_bin_root_id (found keep_hierarchy attribute).
+Keeping ot_wbq_root.u_bin_reserve_v (found keep_hierarchy attribute).
+Keeping ot_wbq_root.u_bin_reserve_bank (found keep_hierarchy attribute).
+Keeping ot_wbq_root.u_bin_reserve_total (found keep_hierarchy attribute).
+Keeping ot_wbq_root.u_bin_reserve_base (found keep_hierarchy attribute).
+Keeping ot_wbq_root.u_bin_fill_start (found keep_hierarchy attribute).
+Keeping ot_wbq_root.u_bin_fill_start_bank (found keep_hierarchy attribute).
+Keeping ot_wbq_root.u_bin_wd_v (found keep_hierarchy attribute).
+Keeping ot_wbq_root.u_bin_copy_on (found keep_hierarchy attribute).
+Keeping ot_wbq_root.u_bin_copy_bank (found keep_hierarchy attribute).
+Keeping ot_wbq_root.u_bin_s_stop (found keep_hierarchy attribute).
+Keeping ot_wbq_root.u_bin_h_stop (found keep_hierarchy attribute).
+Keeping ot_wbq_root.u_bin_g_credit (found keep_hierarchy attribute).
+Keeping ot_wbq_root.u_bout_root_ready (found keep_hierarchy attribute).
+Keeping ot_wbq_root.u_bout_g_v (found keep_hierarchy attribute).
+Keeping ot_wbq_root.u_bout_g_d (found keep_hierarchy attribute).
+Deleting now unused module ot_reset_sync.
+Deleting now unused module ot_wbq_root__fcore.
+<suppressed ~3 debug messages>
+
+7.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+<suppressed ~1 debug messages>
+
+7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+Removed 87 unused cells and 398 unused wires.
+<suppressed ~97 debug messages>
+
+7.7. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001...
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010...
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100...
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110...
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000...
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100...
+Checking module ot_wbq_root...
+Found and reported 0 problems.
+
+7.8. Executing OPT pass (performing simple optimizations).
+
+7.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+<suppressed ~4 debug messages>
+
+7.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 189 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Computing hashes of 156 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Computing hashes of 149 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+<suppressed ~120 debug messages>
+Removed a total of 40 cells.
+
+7.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_wbq_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $flatten\u_fcore.$procmux$590.
+    dead port 2/2 on $mux $flatten\u_fcore.$procmux$592.
+    dead port 1/9 on $pmux $flatten\u_fcore.$procmux$502.
+    dead port 2/9 on $pmux $flatten\u_fcore.$procmux$502.
+    dead port 3/9 on $pmux $flatten\u_fcore.$procmux$502.
+    dead port 4/9 on $pmux $flatten\u_fcore.$procmux$502.
+Removed 6 multiplexer ports.
+<suppressed ~133 debug messages>
+
+7.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+  Optimizing cells in module \ot_wbq_root.
+Performed a total of 0 changes.
+
+7.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 147 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Computing hashes of 124 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+<suppressed ~69 debug messages>
+Removed a total of 23 cells.
+
+7.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+Removed 0 unused cells and 69 unused wires.
+<suppressed ~1 debug messages>
+
+7.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+
+7.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_wbq_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~80 debug messages>
+
+7.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+  Optimizing cells in module \ot_wbq_root.
+Performed a total of 0 changes.
+
+7.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 124 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Removed a total of 0 cells.
+
+7.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+
+7.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+
+7.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+7.9. Executing FSM pass (extract and optimize FSM).
+
+7.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+7.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+7.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+7.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+
+7.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+7.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+7.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+7.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+7.10. Executing OPT pass (performing simple optimizations).
+
+7.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+
+7.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 124 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Removed a total of 0 cells.
+
+7.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_wbq_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~80 debug messages>
+
+7.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+  Optimizing cells in module \ot_wbq_root.
+Performed a total of 0 changes.
+
+7.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 124 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Removed a total of 0 cells.
+
+7.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $flatten\u_fcore.$procdff$820 ($adff) from module ot_wbq_root (D = \reserve_total__fq, Q = \u_fcore.total[1]).
+Adding EN signal on $flatten\u_fcore.$procdff$815 ($adff) from module ot_wbq_root (D = \reserve_total__fq, Q = \u_fcore.total[0]).
+Adding EN signal on $flatten\u_fcore.$procdff$810 ($adff) from module ot_wbq_root (D = { 2'00 \reserve_base__fq }, Q = \u_fcore.base[1]).
+Adding EN signal on $flatten\u_fcore.$procdff$805 ($adff) from module ot_wbq_root (D = { 2'00 \reserve_base__fq }, Q = \u_fcore.base[0]).
+Adding EN signal on $flatten\u_fcore.$procdff$785 ($adff) from module ot_wbq_root (D = \fill_start_bank__fq, Q = \u_fcore.fill_bank).
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$916 ($adffe) from module ot_wbq_root.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$916 ($adffe) from module ot_wbq_root.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$913 ($adffe) from module ot_wbq_root.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$913 ($adffe) from module ot_wbq_root.
+
+7.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+Removed 9 unused cells and 9 unused wires.
+<suppressed ~10 debug messages>
+
+7.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+
+7.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_wbq_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~66 debug messages>
+
+7.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+  Optimizing cells in module \ot_wbq_root.
+Performed a total of 0 changes.
+
+7.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 121 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Computing hashes of 119 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Computing hashes of 118 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+<suppressed ~9 debug messages>
+Removed a total of 3 cells.
+
+7.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+Removed 0 unused cells and 3 unused wires.
+<suppressed ~1 debug messages>
+
+7.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+
+7.10.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.10.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_wbq_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~66 debug messages>
+
+7.10.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+  Optimizing cells in module \ot_wbq_root.
+Performed a total of 0 changes.
+
+7.10.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 118 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Removed a total of 0 cells.
+
+7.10.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.10.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+
+7.10.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+
+7.10.23. Finished fast OPT passes. (There is nothing left to do.)
+
+7.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 1 bits (of 2) from port B of cell ot_wbq_root.$flatten\u_fcore.$procmux$509_CMP0 ($eq).
+Removed top 2 bits (of 288) from mux cell ot_wbq_root.$flatten\u_fcore.$procmux$502 ($pmux).
+Removed top 2 bits (of 3) from port B of cell ot_wbq_root.$flatten\u_fcore.$procmux$500_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell ot_wbq_root.$flatten\u_fcore.$procmux$499_CMP0 ($eq).
+Removed top 1 bits (of 3) from port B of cell ot_wbq_root.$flatten\u_fcore.$procmux$498_CMP0 ($eq).
+Removed top 2 bits (of 288) from mux cell ot_wbq_root.$flatten\u_fcore.$procmux$493 ($pmux).
+Removed top 29 bits (of 32) from port A of cell ot_wbq_root.$flatten\u_fcore.$add$controller_root.sv:74$492 ($add).
+Removed top 29 bits (of 32) from port Y of cell ot_wbq_root.$flatten\u_fcore.$add$controller_root.sv:74$492 ($add).
+Removed top 2 bits (of 3) from port B of cell ot_wbq_root.$flatten\u_fcore.$add$controller_root.sv:78$404 ($add).
+Removed top 2 bits (of 3) from port B of cell ot_wbq_root.$flatten\u_fcore.$sub$controller_root.sv:78$399 ($sub).
+Removed top 3 bits (of 4) from port A of cell ot_wbq_root.$flatten\u_fcore.$shl$controller_root.sv:75$395 ($shl).
+Removed top 1 bits (of 2) from mux cell ot_wbq_root.$flatten\u_fcore.$ternary$controller_root.sv:71$386 ($mux).
+Removed top 2 bits (of 3) from port B of cell ot_wbq_root.$flatten\u_fcore.$add$controller_root.sv:78$384 ($add).
+Removed top 2 bits (of 3) from port B of cell ot_wbq_root.$flatten\u_fcore.$sub$controller_root.sv:78$379 ($sub).
+Removed top 3 bits (of 4) from port A of cell ot_wbq_root.$flatten\u_fcore.$shl$controller_root.sv:75$375 ($shl).
+Removed top 1 bits (of 2) from mux cell ot_wbq_root.$flatten\u_fcore.$ternary$controller_root.sv:71$366 ($mux).
+Removed top 8 bits (of 12) from port B of cell ot_wbq_root.$flatten\u_fcore.$add$controller_root.sv:61$343 ($add).
+Removed top 28 bits (of 32) from port B of cell ot_wbq_root.$flatten\u_fcore.$add$controller_root.sv:61$342 ($add).
+Removed top 19 bits (of 32) from port Y of cell ot_wbq_root.$flatten\u_fcore.$add$controller_root.sv:61$342 ($add).
+Removed top 19 bits (of 32) from port A of cell ot_wbq_root.$flatten\u_fcore.$ge$controller_root.sv:60$334 ($ge).
+Removed top 2 bits (of 288) from wire ot_wbq_root.$flatten\u_fcore.$0$mem2reg_rd$\fifo_head$controller_root.sv:74$284_DATA[287:0]$490.
+Removed top 29 bits (of 32) from wire ot_wbq_root.$flatten\u_fcore.$add$controller_root.sv:74$492_Y.
+Removed top 19 bits (of 32) from wire ot_wbq_root.$flatten\u_fcore.$add$controller_root.sv:60$333_Y.
+Removed top 1 bits (of 2) from wire ot_wbq_root.$flatten\u_fcore.$ternary$controller_root.sv:71$366_Y.
+Removed top 2 bits (of 288) from wire ot_wbq_root.$flatten\u_fcore.$0$mem2reg_rd$\fifo_head$controller_root.sv:74$283_DATA[287:0]$486.
+Removed top 1 bits (of 2) from wire ot_wbq_root.$flatten\u_fcore.$ternary$controller_root.sv:71$386_Y.
+
+7.12. Executing PEEPOPT pass (run peephole optimizers).
+
+7.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+Removed 0 unused cells and 8 unused wires.
+<suppressed ~1 debug messages>
+
+7.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001:
+  created 0 $alu and 0 $macc cells.
+Extracting $alu and $macc cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010:
+  created 0 $alu and 0 $macc cells.
+Extracting $alu and $macc cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100:
+  created 0 $alu and 0 $macc cells.
+Extracting $alu and $macc cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110:
+  created 0 $alu and 0 $macc cells.
+Extracting $alu and $macc cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000:
+  created 0 $alu and 0 $macc cells.
+Extracting $alu and $macc cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100:
+  created 0 $alu and 0 $macc cells.
+Extracting $alu and $macc cells in module ot_wbq_root:
+  creating $macc model for $flatten\u_fcore.$add$controller_root.sv:78$384 ($add).
+  creating $macc model for $flatten\u_fcore.$add$controller_root.sv:74$492 ($add).
+  creating $macc model for $flatten\u_fcore.$sub$controller_root.sv:78$379 ($sub).
+  creating $macc model for $flatten\u_fcore.$sub$controller_root.sv:78$399 ($sub).
+  creating $macc model for $flatten\u_fcore.$add$controller_root.sv:78$404 ($add).
+  creating $macc model for $flatten\u_fcore.$add$controller_root.sv:61$343 ($add).
+  creating $macc model for $flatten\u_fcore.$add$controller_root.sv:61$342 ($add).
+  merging $macc model for $flatten\u_fcore.$sub$controller_root.sv:78$399 into $flatten\u_fcore.$add$controller_root.sv:78$404.
+  merging $macc model for $flatten\u_fcore.$sub$controller_root.sv:78$379 into $flatten\u_fcore.$add$controller_root.sv:78$384.
+  creating $alu model for $macc $flatten\u_fcore.$add$controller_root.sv:61$343.
+  creating $alu model for $macc $flatten\u_fcore.$add$controller_root.sv:61$342.
+  creating $alu model for $macc $flatten\u_fcore.$add$controller_root.sv:74$492.
+  creating $macc cell for $flatten\u_fcore.$add$controller_root.sv:78$404: $auto$alumacc.cc:399:replace_macc$930
+  creating $macc cell for $flatten\u_fcore.$add$controller_root.sv:78$384: $auto$alumacc.cc:399:replace_macc$931
+  creating $alu model for $flatten\u_fcore.$ge$controller_root.sv:60$334 ($ge): new $alu
+  creating $alu cell for $flatten\u_fcore.$ge$controller_root.sv:60$334: $auto$alumacc.cc:548:replace_alu$933
+  creating $alu cell for $flatten\u_fcore.$add$controller_root.sv:74$492: $auto$alumacc.cc:548:replace_alu$946
+  creating $alu cell for $flatten\u_fcore.$add$controller_root.sv:61$342: $auto$alumacc.cc:548:replace_alu$949
+  creating $alu cell for $flatten\u_fcore.$add$controller_root.sv:61$343: $auto$alumacc.cc:548:replace_alu$952
+  created 4 $alu and 2 $macc cells.
+
+7.15. Executing SHARE pass (SAT-based resource sharing).
+
+7.16. Executing OPT pass (performing simple optimizations).
+
+7.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+
+7.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 123 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Removed a total of 0 cells.
+
+7.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_wbq_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~66 debug messages>
+
+7.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+  Optimizing cells in module \ot_wbq_root.
+Performed a total of 0 changes.
+
+7.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 123 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Removed a total of 0 cells.
+
+7.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+Removed 2 unused cells and 3 unused wires.
+<suppressed ~3 debug messages>
+
+7.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+
+7.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_wbq_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~66 debug messages>
+
+7.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+  Optimizing cells in module \ot_wbq_root.
+Performed a total of 0 changes.
+
+7.16.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 121 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Removed a total of 0 cells.
+
+7.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+
+7.16.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+
+7.16.16. Finished fast OPT passes. (There is nothing left to do.)
+
+7.17. Executing MEMORY pass.
+
+7.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+7.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+7.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+7.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+7.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+7.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+
+7.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+7.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+7.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+
+7.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+7.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+
+7.19. Executing OPT pass (performing simple optimizations).
+
+7.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+<suppressed ~20 debug messages>
+
+7.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 115 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Removed a total of 0 cells.
+
+7.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $flatten\u_fcore.$procdff$790 ($adff) from module ot_wbq_root (D = $flatten\u_fcore.$0\ordinal[11:0] [2:0], Q = \u_fcore.ordinal [2:0]).
+
+7.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+Removed 3 unused cells and 11 unused wires.
+<suppressed ~4 debug messages>
+
+7.19.5. Rerunning OPT passes. (Removed registers in this run.)
+
+7.19.6. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+<suppressed ~1 debug messages>
+
+7.19.7. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 114 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Removed a total of 0 cells.
+
+7.19.8. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.19.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+
+7.19.10. Finished fast OPT passes.
+
+7.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+7.21. Executing OPT pass (performing simple optimizations).
+
+7.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+
+7.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 114 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Removed a total of 0 cells.
+
+7.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_wbq_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 5/8 on $pmux $flatten\u_fcore.$procmux$493.
+    dead port 6/8 on $pmux $flatten\u_fcore.$procmux$493.
+    dead port 7/8 on $pmux $flatten\u_fcore.$procmux$493.
+Removed 3 multiplexer ports.
+<suppressed ~58 debug messages>
+
+7.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+  Optimizing cells in module \ot_wbq_root.
+    Consolidated identical input bits for $mux cell $flatten\u_fcore.$procmux$571:
+      Old ports: A={ 2'00 \u_fcore.base[0] [29:0] }, B={ 2'00 \u_fcore.base[1] [29:0] }, Y=$flatten\u_fcore.$0$mem2reg_rd$\base$controller_root.sv:46$259_DATA[31:0]$414
+      New ports: A=\u_fcore.base[0] [29:0], B=\u_fcore.base[1] [29:0], Y=$flatten\u_fcore.$0$mem2reg_rd$\base$controller_root.sv:46$259_DATA[31:0]$414 [29:0]
+      New connections: $flatten\u_fcore.$0$mem2reg_rd$\base$controller_root.sv:46$259_DATA[31:0]$414 [31:30] = 2'00
+  Optimizing cells in module \ot_wbq_root.
+Performed a total of 1 changes.
+
+7.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 114 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Removed a total of 0 cells.
+
+7.21.6. Executing OPT_SHARE pass.
+
+7.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+
+7.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+
+7.21.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.21.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ot_wbq_root..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~58 debug messages>
+
+7.21.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+  Optimizing cells in module \ot_wbq_root.
+Performed a total of 0 changes.
+
+7.21.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 114 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Removed a total of 0 cells.
+
+7.21.14. Executing OPT_SHARE pass.
+
+7.21.15. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.21.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+
+7.21.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+
+7.21.18. Finished fast OPT passes. (There is nothing left to do.)
+
+7.22. Executing TECHMAP pass (map to technology primitives).
+
+7.22.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+7.22.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $adffe.
+Using template $paramod$53700bbee849b2010ad0b60a61ccd204a10e24ca\_90_alu for cells of type $alu.
+Using template $paramod$b2626aff51a34e60b9c57dceb41667aaf5650a38\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod$8441c334d863ed42b55f25e60c0d690241b4051f\_90_alu for cells of type $alu.
+Using extmapper maccmap for cells of type $macc_v2.
+  add \u_fcore.credit[0] (3 bits, unsigned)
+  add \g_credit__fq [0] (1 bits, unsigned)
+  sub \u_fcore.g_group[0].send (1 bits, unsigned)
+  packed 1 (1) bits / 1 words into adder tree
+  add \u_fcore.credit[1] (3 bits, unsigned)
+  add \g_credit__fq [1] (1 bits, unsigned)
+  sub \u_fcore.g_group[1].send (1 bits, unsigned)
+  packed 1 (1) bits / 1 words into adder tree
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $pmux.
+Using extmapper simplemap for cells of type $logic_not.
+Using template $paramod$constmap:574a95964644c704a7e64c257267b27c2c48aa52$paramod$77562a466236eb4a6d905351a0995599b75075cb\_90_shift_ops_shr_shl_sshl_sshr for cells of type $shl.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000011 for cells of type $fa.
+Using template $paramod$78e969f2586efcf3a5b0b0440bcca0db83d5cca2\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001101 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001101 for cells of type $lcu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001010 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001010 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001001 for cells of type $lcu.
+Using extmapper simplemap for cells of type $and.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000011 for cells of type $lcu.
+Using extmapper simplemap for cells of type $dff.
+No more expansions possible.
+<suppressed ~1080 debug messages>
+
+7.23. Executing OPT pass (performing simple optimizations).
+
+7.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100.
+Optimizing module ot_wbq_root.
+<suppressed ~307 debug messages>
+
+7.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 2 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Computing hashes of 572 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Computing hashes of 30 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Computing hashes of 8 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Computing hashes of 12 cells of `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding duplicate cells in `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100'.
+Finding identical cells in module `\ot_wbq_root'.
+Computing hashes of 4701 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Computing hashes of 4672 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Computing hashes of 4666 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Computing hashes of 4661 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Computing hashes of 4656 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+Computing hashes of 4655 cells of `\ot_wbq_root'.
+Finding duplicate cells in `\ot_wbq_root'.
+<suppressed ~138 debug messages>
+Removed a total of 46 cells.
+
+7.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100..
+Finding unused cells or wires in module \ot_wbq_root..
+Removed 45 unused cells and 333 unused wires.
+<suppressed ~46 debug messages>
+
+7.23.5. Finished fast OPT passes.
+
+7.24. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_wbq_root'. Setting top module to ot_wbq_root.
+
+7.24.1. Analyzing design hierarchy..
+Top module:  \ot_wbq_root
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100
+
+7.24.2. Analyzing design hierarchy..
+Top module:  \ot_wbq_root
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110
+Used module:     $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100
+Removed 0 unused modules.
+
+7.25. Printing statistics.
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+        3 wire bits
+        3 public wires
+        3 public wire bits
+        3 ports
+        3 port bits
+        1 cells
+        1   $_DFF_P_
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+        5 wire bits
+        3 public wires
+        5 public wire bits
+        3 ports
+        5 port bits
+        2 cells
+        2   $_DFF_P_
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+     1145 wire bits
+        3 public wires
+     1145 public wire bits
+        3 ports
+     1145 port bits
+      572 cells
+      572   $_DFF_P_
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+       61 wire bits
+        3 public wires
+       61 public wire bits
+        3 ports
+       61 port bits
+       30 cells
+       30   $_DFF_P_
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+       17 wire bits
+        3 public wires
+       17 public wire bits
+        3 ports
+       17 port bits
+        8 cells
+        8   $_DFF_P_
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+       25 wire bits
+        3 public wires
+       25 public wire bits
+        3 ports
+       25 port bits
+       12 cells
+       12   $_DFF_P_
+
+=== ot_wbq_root ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     3397 wires
+    16485 wire bits
+      127 public wires
+    12591 public wire bits
+       28 ports
+     2689 port bits
+     4594 cells
+     2069   $_AND_
+       88   $_DFFE_PN0P_
+       43   $_DFF_PN0_
+        2   $_DFF_PN1_
+      830   $_MUX_
+       46   $_NOT_
+     1473   $_OR_
+       32   $_XOR_
+        3   $scopeinfo
+        8   ot_wbq_root_store
+       16 submodules
+        9   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+        3   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+        1   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+        1   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100
+        1   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110
+        1   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+     5231 ot_wbq_root
+        1 $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+        2 $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+        8 $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+       12 $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100
+       30 $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110
+      572 $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100
+
+        +----------Count including submodules.
+        | 
+     3445 wires
+    17775 wire bits
+      175 public wires
+    13881 public wire bits
+       76 ports
+     3979 port bits
+        - memories
+        - memory bits
+        - processes
+     5231 cells
+     2069   $_AND_
+       88   $_DFFE_PN0P_
+       43   $_DFF_PN0_
+        2   $_DFF_PN1_
+      637   $_DFF_P_
+      830   $_MUX_
+       46   $_NOT_
+     1473   $_OR_
+       32   $_XOR_
+        3   $scopeinfo
+        8   ot_wbq_root_store
+       16 submodules
+        9   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+        3   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+        1   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+        1   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100
+        1   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110
+        1   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100
+
+7.26. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001...
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010...
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100...
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110...
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000...
+Checking module $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100...
+Checking module ot_wbq_root...
+Found and reported 0 problems.
+
+8. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+8.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001':
+  mapped 1 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010':
+  mapped 2 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100':
+  mapped 572 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110':
+  mapped 30 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000':
+  mapped 8 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100':
+  mapped 12 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `\ot_wbq_root':
+  mapped 133 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+
+9. Executing ABC pass (technology mapping using ABC).
+
+9.1. Extracting gate netlist of module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001' to `<abc-temp-dir>/input.blif'..
+
+9.1.1. Executed ABC.
+Extracted 1 gates and 2 wires to a netlist network with 1 inputs and 1 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_558ac198.scl 
+ABC: Warning: Detected 1 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + source /OpenROAD-flow-scripts/flow/scripts/abc_speed.script 
+ABC: WireLoad = "none"  Gates =      1 (100.0 %)   Cap =  0.3 ff (  0.0 %)   Area =        0.04 (100.0 %)   Delay =     2.16 ps  (100.0 %)               
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+9.1.2. Re-integrating ABC results.
+ABC RESULTS:   INVx2_ASAP7_75t_R cells:        1
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:        1
+ABC RESULTS:          output signals:        1
+Removing temp directory.
+
+9.2. Extracting gate netlist of module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_558ac198.scl (5 files)
+
+9.2.1. Executed ABC.
+Extracted 2 gates and 4 wires to a netlist network with 2 inputs and 2 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_558ac198.scl 
+ABC: Warning: Detected 1 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + source /OpenROAD-flow-scripts/flow/scripts/abc_speed.script 
+ABC: WireLoad = "none"  Gates =      2 (100.0 %)   Cap =  0.3 ff (  0.0 %)   Area =        0.09 (100.0 %)   Delay =     2.16 ps  (100.0 %)               
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+9.2.2. Re-integrating ABC results.
+ABC RESULTS:   INVx2_ASAP7_75t_R cells:        2
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:        2
+ABC RESULTS:          output signals:        2
+Removing temp directory.
+
+9.3. Extracting gate netlist of module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_558ac198.scl (5 files)
+
+9.3.1. Executed ABC.
+Extracted 572 gates and 1144 wires to a netlist network with 572 inputs and 572 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_558ac198.scl 
+ABC: Warning: Detected 1 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + source /OpenROAD-flow-scripts/flow/scripts/abc_speed.script 
+ABC: WireLoad = "none"  Gates =    572 (100.0 %)   Cap =  0.3 ff (  0.0 %)   Area =       25.02 (100.0 %)   Delay =     2.16 ps  (100.0 %)               
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+9.3.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:      572
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:      572
+ABC RESULTS:          output signals:      572
+Removing temp directory.
+
+9.4. Extracting gate netlist of module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_558ac198.scl (5 files)
+
+9.4.1. Executed ABC.
+Extracted 30 gates and 60 wires to a netlist network with 30 inputs and 30 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_558ac198.scl 
+ABC: Warning: Detected 1 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + source /OpenROAD-flow-scripts/flow/scripts/abc_speed.script 
+ABC: WireLoad = "none"  Gates =     30 (100.0 %)   Cap =  0.3 ff (  0.0 %)   Area =        1.31 (100.0 %)   Delay =     2.16 ps  (100.0 %)               
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+9.4.2. Re-integrating ABC results.
+ABC RESULTS:   INVx6_ASAP7_75t_R cells:       30
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:       30
+ABC RESULTS:          output signals:       30
+Removing temp directory.
+
+9.5. Extracting gate netlist of module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_558ac198.scl (5 files)
+
+9.5.1. Executed ABC.
+Extracted 8 gates and 16 wires to a netlist network with 8 inputs and 8 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_558ac198.scl 
+ABC: Warning: Detected 1 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + source /OpenROAD-flow-scripts/flow/scripts/abc_speed.script 
+ABC: WireLoad = "none"  Gates =      8 (100.0 %)   Cap =  0.3 ff (  0.0 %)   Area =        0.35 (100.0 %)   Delay =     2.16 ps  (100.0 %)               
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+9.5.2. Re-integrating ABC results.
+ABC RESULTS:   INVx6_ASAP7_75t_R cells:        8
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:        8
+ABC RESULTS:          output signals:        8
+Removing temp directory.
+
+9.6. Extracting gate netlist of module `$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_558ac198.scl (5 files)
+
+9.6.1. Executed ABC.
+Extracted 12 gates and 24 wires to a netlist network with 12 inputs and 12 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_558ac198.scl 
+ABC: Warning: Detected 1 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + source /OpenROAD-flow-scripts/flow/scripts/abc_speed.script 
+ABC: WireLoad = "none"  Gates =     12 (100.0 %)   Cap =  0.3 ff (  0.0 %)   Area =        0.52 (100.0 %)   Delay =     2.16 ps  (100.0 %)               
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+9.6.2. Re-integrating ABC results.
+ABC RESULTS:   INVx6_ASAP7_75t_R cells:       12
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:       12
+ABC RESULTS:          output signals:       12
+Removing temp directory.
+
+9.7. Extracting gate netlist of module `\ot_wbq_root' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_558ac198.scl (5 files)
+Replacing 3 occurrences of constant undef bits with constant zero bits
+
+9.7.1. Executed ABC.
+Extracted 4671 gates and 7157 wires to a netlist network with 2483 inputs and 785 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_558ac198.scl 
+ABC: Warning: Detected 1 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + source /OpenROAD-flow-scripts/flow/scripts/abc_speed.script 
+ABC: WireLoad = "none"  Gates =   3177 ( 10.5 %)   Cap =  0.9 ff (  1.3 %)   Area =      325.05 ( 93.9 %)   Delay =   329.27 ps  (  1.5 %)               
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+9.7.2. Re-integrating ABC results.
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:      348
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:       29
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:        7
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:      993
+ABC RESULTS:   AO221x1_ASAP7_75t_R cells:      257
+ABC RESULTS:   AO22x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   AO31x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   AO32x1_ASAP7_75t_R cells:       10
+ABC RESULTS:   AOI211x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI21x1_ASAP7_75t_R cells:        5
+ABC RESULTS:   AOI221x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI22x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   BUFx2_ASAP7_75t_R cells:      233
+ABC RESULTS:   BUFx4f_ASAP7_75t_R cells:        1
+ABC RESULTS:   BUFx6f_ASAP7_75t_R cells:        3
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:       95
+ABC RESULTS:   MAJx2_ASAP7_75t_R cells:        6
+ABC RESULTS:   NAND2x1_ASAP7_75t_R cells:       75
+ABC RESULTS:   NOR2x1_ASAP7_75t_R cells:       97
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:      330
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:      309
+ABC RESULTS:   OA222x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OA31x2_ASAP7_75t_R cells:        3
+ABC RESULTS:   OAI21x1_ASAP7_75t_R cells:        4
+ABC RESULTS:   OAI22x1_ASAP7_75t_R cells:       10
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:      328
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:        4
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:        5
+ABC RESULTS:   OR5x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   XNOR2x2_ASAP7_75t_R cells:       14
+ABC RESULTS:   XOR2x2_ASAP7_75t_R cells:        3
+ABC RESULTS:        internal signals:     3889
+ABC RESULTS:           input signals:     2483
+ABC RESULTS:          output signals:      785
+Removing temp directory.
+Removing global temp directory.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+10. Printing statistics.
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+        6        - wires
+        6        - wire bits
+        3        - public wires
+        3        - public wire bits
+        3        - ports
+        3        - port bits
+        2     0.35 cells
+        1    0.292   DFFHQNx1_ASAP7_75t_R
+        1    0.058   INVx2_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001': 0.349920
+     of which used for sequential elements: 0.291600 (83.33%)
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+        9        - wires
+       11        - wire bits
+        3        - public wires
+        5        - public wire bits
+        3        - ports
+        5        - port bits
+        4      0.7 cells
+        2    0.583   DFFHQNx1_ASAP7_75t_R
+        2    0.117   INVx2_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010': 0.699840
+     of which used for sequential elements: 0.583200 (83.33%)
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     1719        - wires
+     2861        - wire bits
+        3        - public wires
+     1145        - public wire bits
+        3        - ports
+     1145        - port bits
+     1144  191.814 cells
+      572  166.795   DFFHQNx1_ASAP7_75t_R
+      572   25.019   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100': 191.814480
+     of which used for sequential elements: 166.795200 (86.96%)
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       93        - wires
+      151        - wire bits
+        3        - public wires
+       61        - public wire bits
+        3        - ports
+       61        - port bits
+       60   12.247 cells
+       30    8.748   DFFHQNx1_ASAP7_75t_R
+       30    3.499   INVx6_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110': 12.247200
+     of which used for sequential elements: 8.748000 (71.43%)
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       27        - wires
+       41        - wire bits
+        3        - public wires
+       17        - public wire bits
+        3        - ports
+       17        - port bits
+       16    3.266 cells
+        8    2.333   DFFHQNx1_ASAP7_75t_R
+        8    0.933   INVx6_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000': 3.265920
+     of which used for sequential elements: 2.332800 (71.43%)
+
+=== $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       39        - wires
+       61        - wire bits
+        3        - public wires
+       25        - public wire bits
+        3        - ports
+       25        - port bits
+       24    4.899 cells
+       12    3.499   DFFHQNx1_ASAP7_75t_R
+       12      1.4   INVx6_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100': 4.898880
+     of which used for sequential elements: 3.499200 (71.43%)
+
+=== ot_wbq_root ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     9278        - wires
+    22366        - wire bits
+      127        - public wires
+    12591        - public wire bits
+       28        - ports
+     2689        - port bits
+     3321  353.944 cells
+        3        -   $scopeinfo
+      348   30.443   AND2x2_ASAP7_75t_R
+       29    2.537   AND3x1_ASAP7_75t_R
+        7    0.714   AND4x1_ASAP7_75t_R
+      993   86.868   AO21x1_ASAP7_75t_R
+      257   37.471   AO221x1_ASAP7_75t_R
+        1    0.131   AO22x1_ASAP7_75t_R
+        1    0.233   AO31x2_ASAP7_75t_R
+       10    1.166   AO32x1_ASAP7_75t_R
+        1    0.175   AOI211x1_ASAP7_75t_R
+        5    0.583   AOI21x1_ASAP7_75t_R
+        1    0.204   AOI221x1_ASAP7_75t_R
+        2    0.292   AOI22x1_ASAP7_75t_R
+      233   16.986   BUFx2_ASAP7_75t_R
+        1    0.117   BUFx4f_ASAP7_75t_R
+        3    0.437   BUFx6f_ASAP7_75t_R
+      133   50.418   DFFASRHQNx1_ASAP7_75t_R
+       95    4.155   INVx1_ASAP7_75t_R
+        6    0.787   MAJx2_ASAP7_75t_R
+       75    6.561   NAND2x1_ASAP7_75t_R
+       97    8.486   NOR2x1_ASAP7_75t_R
+      330   38.491   OA211x2_ASAP7_75t_R
+      309   31.537   OA21x2_ASAP7_75t_R
+        1    0.175   OA222x2_ASAP7_75t_R
+        3    0.656   OA31x2_ASAP7_75t_R
+        4    0.467   OAI21x1_ASAP7_75t_R
+       10    1.458   OAI22x1_ASAP7_75t_R
+      328   28.693   OR2x2_ASAP7_75t_R
+        4     0.35   OR3x1_ASAP7_75t_R
+        5     0.51   OR4x1_ASAP7_75t_R
+        1    0.117   OR5x1_ASAP7_75t_R
+       14    2.245   XNOR2x2_ASAP7_75t_R
+        3    0.481   XOR2x2_ASAP7_75t_R
+        8        -   ot_wbq_root_store
+       16        - submodules
+        9        -   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+        3        -   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+        1        -   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+        1        -   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100
+        1        -   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110
+        1        -   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_wbq_root_store is unknown!
+
+   Chip area for module '\ot_wbq_root': 353.944080
+     of which used for sequential elements: 50.417640 (14.24%)
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+     4595  571.419 ot_wbq_root
+        2     0.35 $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+        4      0.7 $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+       16    3.266 $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+       24    4.899 $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100
+       60   12.247 $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110
+     1144  191.814 $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+    11237        - wires
+    25567        - wire bits
+      175        - public wires
+    13881        - public wire bits
+       76        - ports
+     3979        - port bits
+        -        - memories
+        -        - memory bits
+        -        - processes
+     4595  571.419 cells
+        3        -   $scopeinfo
+      348   30.443   AND2x2_ASAP7_75t_R
+       29    2.537   AND3x1_ASAP7_75t_R
+        7    0.714   AND4x1_ASAP7_75t_R
+      993   86.868   AO21x1_ASAP7_75t_R
+      257   37.471   AO221x1_ASAP7_75t_R
+        1    0.131   AO22x1_ASAP7_75t_R
+        1    0.233   AO31x2_ASAP7_75t_R
+       10    1.166   AO32x1_ASAP7_75t_R
+        1    0.175   AOI211x1_ASAP7_75t_R
+        5    0.583   AOI21x1_ASAP7_75t_R
+        1    0.204   AOI221x1_ASAP7_75t_R
+        2    0.292   AOI22x1_ASAP7_75t_R
+      233   16.986   BUFx2_ASAP7_75t_R
+        1    0.117   BUFx4f_ASAP7_75t_R
+        3    0.437   BUFx6f_ASAP7_75t_R
+      133   50.418   DFFASRHQNx1_ASAP7_75t_R
+      637  185.749   DFFHQNx1_ASAP7_75t_R
+      667   29.175   INVx1_ASAP7_75t_R
+       15    0.875   INVx2_ASAP7_75t_R
+       50    5.832   INVx6_ASAP7_75t_R
+        6    0.787   MAJx2_ASAP7_75t_R
+       75    6.561   NAND2x1_ASAP7_75t_R
+       97    8.486   NOR2x1_ASAP7_75t_R
+      330   38.491   OA211x2_ASAP7_75t_R
+      309   31.537   OA21x2_ASAP7_75t_R
+        1    0.175   OA222x2_ASAP7_75t_R
+        3    0.656   OA31x2_ASAP7_75t_R
+        4    0.467   OAI21x1_ASAP7_75t_R
+       10    1.458   OAI22x1_ASAP7_75t_R
+      328   28.693   OR2x2_ASAP7_75t_R
+        4     0.35   OR3x1_ASAP7_75t_R
+        5     0.51   OR4x1_ASAP7_75t_R
+        1    0.117   OR5x1_ASAP7_75t_R
+       14    2.245   XNOR2x2_ASAP7_75t_R
+        3    0.481   XOR2x2_ASAP7_75t_R
+        8        -   ot_wbq_root_store
+       16  217.475 submodules
+        9    3.149   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000001
+        3      2.1   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000000010
+        1    3.266   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001000
+        1    4.899   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000001100
+        1   12.247   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000000000011110
+        1  191.814   $paramod\ot_hbm_face_reg\W=s32'00000000000000000000001000111100
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_wbq_root_store is unknown!
+
+   Chip area for top module '\ot_wbq_root': 571.419360
+     of which used for sequential elements: 236.166840 (41.33%)
+
+11. Executing JSON backend.
+
+Warnings: 4 unique messages, 8 total
+End of script. Logfile hash: 1339bea7dc, time: 5.20s, user: 1.52s, system: 0.14s, MEM: 91.58 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 70% 1x abc (3 sec), 11% 2x stat (0 sec), ...
