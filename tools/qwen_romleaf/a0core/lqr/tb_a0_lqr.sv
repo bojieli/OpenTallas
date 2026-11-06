@@ -43,6 +43,16 @@ qfd_tile_nk_a0c #(.G4_ROOTS(1), .REGROOT_MODE(3), .ICG(1), .ICG_EREG(1), .ICG_IR
   (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(dhi), .tie_lo(dlo), .tap(tap), .t_out(dt), .n_a(na), .n_b(nb), .n_y(dn));
 localparam TILE = "nk";
 `endif
+// vB2 (lqr2_patch.py): the t_out fault bit [513] is a status, compared as its own stream shifted by TB_FSHIFT
+// (LQR bit3: +1); `OT_LQR_FINJ injects one fault pulse in both sides so the fault path is exercised.
+`ifndef TB_FSHIFT
+`define TB_FSHIFT 0
+`endif
+`ifdef OT_LQR_FINJ
+localparam integer FINJ = 1;
+`else
+localparam integer FINJ = 0;
+`endif
 `ifdef OT_LQR_MUT
 localparam integer MUT = `OT_LQR_MUT;
 `else
@@ -62,6 +72,7 @@ reg [512:0] rq [0:65535]; integer rc [0:65535]; integer nr = 0;
 reg [512:0] dq [0:65535]; integer dc [0:65535]; integer nd = 0;
 integer cyc, cmds = 0, nerr = 0, nfirst = -1, tnz = 0, rfault = 0, dfault = 0, k, derr = 0, dfirst = -1, dmin = 1 << 30, dmax = -(1 << 30);
 integer hist [0:15];
+integer rfc [0:65535]; integer dfc [0:65535]; integer nrf = 0, ndf = 0, ferr = 0;
 integer nstrict = 0, nval = 0;
 initial begin
   for (k = 0; k < 16; k = k + 1) hist[k] = 0;
@@ -80,10 +91,10 @@ initial begin
     if (cyc == 7000) rs = 0;                              // reset pulse while idle (no busy reset: a run cut by
     if (cyc == 7005) rs = 1;                              // reset legitimately ends at a different word with LQR)
     @(negedge ck);
-    if (rt[512]) begin rq[nr] = {rt[513], rt[511:0]}; rc[nr] = cyc; nr = nr + 1; if (|rt[511:0]) tnz = tnz + 1; end
-    if (dt[512]) begin dq[nd] = {dt[513], dt[511:0]}; dc[nd] = cyc; nd = nd + 1; end
-    if (rt[513]) rfault = rfault + 1;
-    if (dt[513]) dfault = dfault + 1;
+    if (rt[512]) begin rq[nr] = {1'b0, rt[511:0]}; rc[nr] = cyc; nr = nr + 1; if (|rt[511:0]) tnz = tnz + 1; end
+    if (dt[512]) begin dq[nd] = {1'b0, dt[511:0]}; dc[nd] = cyc; nd = nd + 1; end
+    if (rt[513]) begin rfault = rfault + 1; rfc[nrf] = cyc; nrf = nrf + 1; end
+    if (dt[513]) begin dfault = dfault + 1; dfc[ndf] = cyc; ndf = ndf + 1; end
     // n_y: valid / fault bits every edge, data under valid (the tile contract, as tb_a0_icg: invalid words carry
     // free-running node data, which the root ICG holds for different idle stretches once LQR lengthens a run)
     if (rn[513:512] !== dn[513:512] || (rn[512] && rn[511:0] !== dn[511:0]) || rhi !== dhi || rlo !== dlo) begin
@@ -98,11 +109,14 @@ initial begin
     if (dc[k] - rc[k] > dmax) dmax = dc[k] - rc[k];
     if (dc[k] - rc[k] >= 0 && dc[k] - rc[k] < 16) hist[dc[k] - rc[k]] = hist[dc[k] - rc[k]] + 1;
   end
+  for (k = 0; k < nrf && k < ndf; k = k + 1) if (dfc[k] - rfc[k] != `TB_FSHIFT) ferr = ferr + 1;
+  $display("A0LQR_FAULT fault edges ref=%0d dut=%0d first ref=%0d dut=%0d shift_mismatch=%0d declared_shift=%0d inject=%0d",
+    nrf, ndf, (nrf > 0) ? rfc[0] : -1, (ndf > 0) ? dfc[0] : -1, ferr, `TB_FSHIFT, FINJ);
   $display("A0LQR_COUNTS tile=%s LQR=%0d MUT=%0d cmds=%0d ref_words=%0d dut_words=%0d nonzero=%0d fault_cycles ref=%0d dut=%0d",
     TILE, `TB_LQR, MUT, cmds, nr, nd, tnz, rfault, dfault);
   $display("A0LQR_NODE n_y valid words=%0d qualified_mismatch_edges=%0d strict_mismatch_edges=%0d (info)", nval, nerr, nstrict);
   $display("A0LQR_SHIFT t_out delta min=%0d max=%0d hist d0=%0d d1=%0d d2=%0d d3=%0d d4=%0d", dmin, dmax, hist[0], hist[1], hist[2], hist[3], hist[4]);
-  if (nr == 0 || tnz == 0 || (TILE == "nk" && nval == 0) || nr != nd || derr != 0 || nerr != 0 || rfault != dfault || dmin != dmax)
+  if (nr == 0 || tnz == 0 || (TILE == "nk" && nval == 0) || nr != nd || derr != 0 || nerr != 0 || rfault != dfault || ferr != 0 || (FINJ != 0 && nrf == 0) || dmin != dmax)
     $display("A0LQR_FAIL tile=%s LQR=%0d MUT=%0d word_mismatch=%0d (first word %0d) count ref=%0d dut=%0d n_y/tie_mismatch_edges=%0d (first %0d) delta %0d..%0d",
       TILE, `TB_LQR, MUT, derr, dfirst, nr, nd, nerr, nfirst, dmin, dmax);
   else
