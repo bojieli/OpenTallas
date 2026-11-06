@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "4ce13fbc4bbc92d98b86c2768b39e95b01a3d906",
+ "flow_tag": "flow-20261030-f-qc",
+ "routed_db": "/srv/opentallas-scratch2/claude/qc-rp1-1/kit_f4g/run/results/asap7/kq_qfd_dv_s8_crh_rp1_f4a_m0/base/6_final.odb",
+ "build_commit": "5ed4500430570dc400c72ab31824a13d4235ee5b",
+ "lec": "/srv/opentallas-scratch2/claude/qc-rp1-1/rp1_fqc/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/qc-rp1-1/rp1_fqc/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/qc-rp1-1/kit_f4g",
+ "original_signoff": "/srv/opentallas-scratch2/claude/qc-rp1-1/kit_f4g/signoff/signoff.json",
+ "name": "kq_qfd_dv_s8_crh_rp1_f4a_m0",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "tolerant-swine",
+ "created": "2026-10-30 17:55 PDT",
+ "routed_db_sha256": "94142708f76f54d0fc0358774b99d075ce5fe46444093b81431239e25517de34",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch2/claude/signoff-sprint-5/t_ffa6bde25fb/tools/die_plan",
+  "sha256": {
+   "signoff.py": "482df6a261d5c21d3026693cc34f8a210d603eeaa05881b930417d11811d3550",
+   "lec.py": "59e2bd5885951b37e0ca8e6bf653e53a8f3c0b3373e1ed705e3ced15d4276ced"
+  },
+  "checked": "byte-identical to flow-20261030-f-qc"
+ },
+ "lane": "QC-RP1-1",
+ "as_run_note": "routed DB = autopilot/closed qfd_dv_s8_crh_rp1__f4g__5ed4500430 base/ (MD5SUMS OK) copied byte-exact; kit = closed kit/ overlaid on intel1 qc-plan-f4a-1026 F4A kit (rtl/macros/scripts; 1_2_yosys.v md5 c3aae66b identical); kit rtl = main + OWNER-13 reset relay patch + QC-PLAN-F4A column SRAM m1b2_ns (plan form)",
+ "pincmp": "signal pins MATCH 998/998 (0 moved >0.25 um, 0 layer) vs plan_qc49 cores/su/signed/qfd_dv_s8_crh_rp1_pins.json md5 0196a8c5, outline 250.56x216 OK; +4 die-owned 12.2a1 ft pins (ft_ck_i/o, ft_rst_i/o, kit ft_interface.json) not in the plan signal pin table, plan binds this f4g LEF"
+}

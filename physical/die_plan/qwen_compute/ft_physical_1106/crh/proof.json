@@ -1,0 +1,84 @@
+{
+ "schema": "opentallas.core_ft_physical.v1",
+ "module": "qfd_dv_s8_crh_rp1",
+ "files": {
+  "lef": {
+   "path": "qfd_dv_s8_crh_rp1.lef",
+   "sha256": "6c9e07fc3651866aa34e07a0df65a696d35561f9e807d714689848b672c5762f"
+  },
+  "tt": {
+   "path": "qfd_dv_s8_crh_rp1_tt.lib",
+   "sha256": "8aaa59c75054b0036220936ce771ce58fe746ce6b6b84579b4adf03b2ab8c750"
+  },
+  "ff": {
+   "path": "qfd_dv_s8_crh_rp1_ff.lib",
+   "sha256": "d9390e633799377f74873bb5b2b87a09f00f41a89b274968c694aabb32d46968"
+  },
+  "declaration": {
+   "path": "ft_ports.json",
+   "sha256": "5bdd370bad671295a7421edc994584b03989a19a94ca0ef33633f9c663d1e99a"
+  },
+  "interface": {
+   "path": "interface.json",
+   "sha256": "d80d7e9f78def97a06c3b51b45e449fd464dee0aeb8b9b3bb9e001cc38f0bb8d"
+  },
+  "signoff": {
+   "path": "signoff.json",
+   "sha256": "d31f69ad7728d285b6258761f68d0cd2d3faa1c67d04753f4d52938e5017d2c7"
+  },
+  "provenance": {
+   "path": "PROVENANCE.json",
+   "sha256": "96778c0b83cb57dca03c8c758cbfab6a4add242ea2dd3cbab42114f97b2eb72f"
+  },
+  "primitive_lib": {
+   "path": "primitive.lib.gz",
+   "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+  },
+  "netlist": {
+   "path": "route.v.gz",
+   "sha256": "9f2c11d467e97b9a77117fd6fdb6f2b403deb083fb341c2e7862f3a5fd40a059"
+  },
+  "core_pins": {
+   "path": "pins.json",
+   "sha256": "99a80b2aa31c66e5f5e62522e613bbf69c135f183923c66552fb6f815a72ae20"
+  },
+  "lec": {
+   "path": "lec.json",
+   "sha256": "2389ec5b34df1a6eab13cbcc6010a7da84892a0cd9508cfe5896997e48b26ff4"
+  }
+ },
+ "routed_netlist_sha256": "fe43fd71a7857fcd0035a7ac4fd65c97923bddfe961169717bbcec37b767bffd",
+ "core_header_sha256": "38e71a01f07773e87ec0e449abb206a09898803b664dc81965e52cf92388d0fa",
+ "isolation": [
+  {
+   "source": "ft_ck_i",
+   "sink": "ft_ck_o",
+   "kind": "clock",
+   "cells": [
+    "ot_isl_ckft"
+   ],
+   "nets": [
+    "ft_ck_i",
+    "ft_ck_o"
+   ]
+  },
+  {
+   "source": "ft_rst_i",
+   "sink": "ft_rst_o",
+   "kind": "reset",
+   "cells": [
+    "ot_isl_rstft"
+   ],
+   "nets": [
+    "ft_rst_i",
+    "ft_rst_o"
+   ]
+  }
+ ],
+ "outline_um": [
+  250.56,
+  216.0
+ ],
+ "source_core_header": "/srv/opentallas-scratch2/claude/kw21/src_c926f/rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv",
+ "scope": "Only declared independently routed unary FT cones; functional core IO/clocks/data unchanged"
+}

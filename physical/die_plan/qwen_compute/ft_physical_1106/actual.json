@@ -1,0 +1,239 @@
+{
+ "schema": "opentallas.actual_physical_ft_header_evidence.v1",
+ "scope": "actual approved SU2/SUc five native instances; static source/header integration only, no GEN/P&R",
+ "instances": 5,
+ "existing_port_connections_unchanged": true,
+ "input_ties_added": 10,
+ "outputs_explicitly_unconsumed": 10,
+ "cycles_changed": 0,
+ "headers": [
+  "/srv/opentallas-scratch2/claude/codex-qc-tapsplit-1106/ft_actual_headers/rtl/qfd_dv_s8_crh_rp1_bb.v",
+  "/srv/opentallas-scratch2/claude/codex-qc-tapsplit-1106/ft_actual_headers/rtl/qfd_dv_s8x_vmr_bb.v"
+ ],
+ "header_compile": "PASS iverilog",
+ "tie_mutant_caught": true,
+ "consumed_output_mutant_caught": true,
+ "receipts": [
+  {
+   "inst": "u_suvm_u_vm8q_u_va",
+   "module": "qfd_dv_s8x_vmr",
+   "ports": [
+    "ft_ck_i",
+    "ft_rst_i"
+   ],
+   "cycles_changed": 0
+  },
+  {
+   "inst": "u_suvm_u_vm8q_u_vb",
+   "module": "qfd_dv_s8x_vmr",
+   "ports": [
+    "ft_ck_i",
+    "ft_rst_i"
+   ],
+   "cycles_changed": 0
+  },
+  {
+   "inst": "u_suvm_u_vm8q_u_vc",
+   "module": "qfd_dv_s8x_vmr",
+   "ports": [
+    "ft_ck_i",
+    "ft_rst_i"
+   ],
+   "cycles_changed": 0
+  },
+  {
+   "inst": "u_suvm_u_vm8q_u_cl",
+   "module": "qfd_dv_s8_crh_rp1",
+   "ports": [
+    "ft_ck_i",
+    "ft_rst_i"
+   ],
+   "cycles_changed": 0
+  },
+  {
+   "inst": "u_suvm_u_vm8q_u_ch",
+   "module": "qfd_dv_s8_crh_rp1",
+   "ports": [
+    "ft_ck_i",
+    "ft_rst_i"
+   ],
+   "cycles_changed": 0
+  }
+ ],
+ "contracts": {
+  "qfd_dv_s8x_vmr": {
+   "ports": [
+    {
+     "name": "ft_ck_i",
+     "direction": "INPUT"
+    },
+    {
+     "name": "ft_ck_o",
+     "direction": "OUTPUT"
+    },
+    {
+     "name": "ft_rst_i",
+     "direction": "INPUT"
+    },
+    {
+     "name": "ft_rst_o",
+     "direction": "OUTPUT"
+    }
+   ],
+   "core_header_sha256": "5917ab3cf77cb7bcdfe18fbf52ba8469dee4ba04d183a70f5eb1b0f23c2341cf",
+   "proof": "/srv/opentallas-scratch2/claude/codex-qc-tapsplit-1106/ft_src/physical/die_plan/qwen_compute/ft_physical_1106/vmr/proof.json",
+   "proof_sha256": "79471e0c7b906a4017099218ec73fcd4d406baea6923b62ef03b0752477dea0c",
+   "module": "qfd_dv_s8x_vmr",
+   "isolation": [
+    {
+     "source": "ft_ck_i",
+     "sink": "ft_ck_o",
+     "kind": "clock",
+     "cells": [
+      "ot_isl_ckft"
+     ],
+     "nets": [
+      "ft_ck_i",
+      "ft_ck_o"
+     ]
+    },
+    {
+     "source": "ft_rst_i",
+     "sink": "ft_rst_o",
+     "kind": "reset",
+     "cells": [
+      "ot_isl_rstft"
+     ],
+     "nets": [
+      "ft_rst_i",
+      "ft_rst_o"
+     ]
+    }
+   ],
+   "instances": [
+    {
+     "instance": "u_suvm_u_vm8q_u_va",
+     "physical_instance": null,
+     "input_ties": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    {
+     "instance": "u_suvm_u_vm8q_u_vb",
+     "physical_instance": null,
+     "input_ties": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    {
+     "instance": "u_suvm_u_vm8q_u_vc",
+     "physical_instance": null,
+     "input_ties": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    }
+   ]
+  },
+  "qfd_dv_s8_crh_rp1": {
+   "ports": [
+    {
+     "name": "ft_ck_i",
+     "direction": "INPUT"
+    },
+    {
+     "name": "ft_ck_o",
+     "direction": "OUTPUT"
+    },
+    {
+     "name": "ft_rst_i",
+     "direction": "INPUT"
+    },
+    {
+     "name": "ft_rst_o",
+     "direction": "OUTPUT"
+    }
+   ],
+   "core_header_sha256": "38e71a01f07773e87ec0e449abb206a09898803b664dc81965e52cf92388d0fa",
+   "proof": "/srv/opentallas-scratch2/claude/codex-qc-tapsplit-1106/ft_src/physical/die_plan/qwen_compute/ft_physical_1106/crh/proof.json",
+   "proof_sha256": "263c3ff947adcc2ab5a03bc31d89f25b2a6be51dfaba43163e53bd0a384b9e72",
+   "module": "qfd_dv_s8_crh_rp1",
+   "isolation": [
+    {
+     "source": "ft_ck_i",
+     "sink": "ft_ck_o",
+     "kind": "clock",
+     "cells": [
+      "ot_isl_ckft"
+     ],
+     "nets": [
+      "ft_ck_i",
+      "ft_ck_o"
+     ]
+    },
+    {
+     "source": "ft_rst_i",
+     "sink": "ft_rst_o",
+     "kind": "reset",
+     "cells": [
+      "ot_isl_rstft"
+     ],
+     "nets": [
+      "ft_rst_i",
+      "ft_rst_o"
+     ]
+    }
+   ],
+   "instances": [
+    {
+     "instance": "u_suvm_u_vm8q_u_cl",
+     "physical_instance": null,
+     "input_ties": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    {
+     "instance": "u_suvm_u_vm8q_u_ch",
+     "physical_instance": null,
+     "input_ties": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    }
+   ]
+  }
+ },
+ "canonical_full_physical_view_checks": {
+  "qfd_dv_s8x_vmr": [
+   true,
+   "ok"
+  ],
+  "qfd_dv_s8_crh_rp1": [
+   true,
+   "ok"
+  ]
+ }
+}

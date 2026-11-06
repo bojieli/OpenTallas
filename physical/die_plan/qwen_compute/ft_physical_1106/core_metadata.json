@@ -1,0 +1,177 @@
+[
+ {
+  "inst": "u_suvm_u_vm8q_u_va",
+  "module": "qfd_dv_s8x_vmr",
+  "origin_um": [
+   25.92,
+   51.84
+  ],
+  "outline_um": [
+   250.56,
+   216.0
+  ],
+  "orient": "R0",
+  "track_offset_um": [
+   0.012,
+   0.012
+  ],
+  "pins_file": "/srv/opentallas-scratch2/claude/codex-qc-tapsplit-1106/pilot_src/physical/die_plan/qwen_compute/plan_of_record/cores/su/signed/qfd_dv_s8x_vmr_pins.json",
+  "note": "DIE-QC-7 K2b: SIGNED view bound (LEF SIZE 250.56 BY 216 (autopilot closed f4kfinal 77013e5059 base/qfd_dv_s8x_vmr.lef)); pins = signed pins.json byte copy",
+  "physical_ft": {
+   "proof": "/srv/opentallas-scratch2/claude/codex-qc-tapsplit-1106/ft_src/physical/die_plan/qwen_compute/ft_physical_1106/vmr/proof.json",
+   "proof_sha256": "79471e0c7b906a4017099218ec73fcd4d406baea6923b62ef03b0752477dea0c",
+   "unconsumed_outputs": [
+    "ft_ck_o",
+    "ft_rst_o"
+   ]
+  },
+  "native_port_adapter": {
+   "merge": {},
+   "cycles": 0,
+   "tie": {
+    "ft_ck_i": "1'b0",
+    "ft_rst_i": "1'b0"
+   }
+  }
+ },
+ {
+  "inst": "u_suvm_u_vm8q_u_vb",
+  "module": "qfd_dv_s8x_vmr",
+  "origin_um": [
+   302.4,
+   51.84
+  ],
+  "outline_um": [
+   250.56,
+   216.0
+  ],
+  "orient": "R0",
+  "track_offset_um": [
+   0.012,
+   0.012
+  ],
+  "pins_file": "/srv/opentallas-scratch2/claude/codex-qc-tapsplit-1106/pilot_src/physical/die_plan/qwen_compute/plan_of_record/cores/su/signed/qfd_dv_s8x_vmr_pins.json",
+  "note": "DIE-QC-7 K2b: SIGNED view bound (LEF SIZE 250.56 BY 216 (autopilot closed f4kfinal 77013e5059 base/qfd_dv_s8x_vmr.lef)); pins = signed pins.json byte copy",
+  "physical_ft": {
+   "proof": "/srv/opentallas-scratch2/claude/codex-qc-tapsplit-1106/ft_src/physical/die_plan/qwen_compute/ft_physical_1106/vmr/proof.json",
+   "proof_sha256": "79471e0c7b906a4017099218ec73fcd4d406baea6923b62ef03b0752477dea0c",
+   "unconsumed_outputs": [
+    "ft_ck_o",
+    "ft_rst_o"
+   ]
+  },
+  "native_port_adapter": {
+   "merge": {},
+   "cycles": 0,
+   "tie": {
+    "ft_ck_i": "1'b0",
+    "ft_rst_i": "1'b0"
+   }
+  }
+ },
+ {
+  "inst": "u_suvm_u_vm8q_u_vc",
+  "module": "qfd_dv_s8x_vmr",
+  "origin_um": [
+   665.28,
+   51.84
+  ],
+  "outline_um": [
+   250.56,
+   216.0
+  ],
+  "orient": "R0",
+  "track_offset_um": [
+   0.012,
+   0.012
+  ],
+  "pins_file": "/srv/opentallas-scratch2/claude/codex-qc-tapsplit-1106/pilot_src/physical/die_plan/qwen_compute/plan_of_record/cores/su/signed/qfd_dv_s8x_vmr_pins.json",
+  "note": "DIE-QC-7 K2b: SIGNED view bound (LEF SIZE 250.56 BY 216 (autopilot closed f4kfinal 77013e5059 base/qfd_dv_s8x_vmr.lef)); pins = signed pins.json byte copy",
+  "physical_ft": {
+   "proof": "/srv/opentallas-scratch2/claude/codex-qc-tapsplit-1106/ft_src/physical/die_plan/qwen_compute/ft_physical_1106/vmr/proof.json",
+   "proof_sha256": "79471e0c7b906a4017099218ec73fcd4d406baea6923b62ef03b0752477dea0c",
+   "unconsumed_outputs": [
+    "ft_ck_o",
+    "ft_rst_o"
+   ]
+  },
+  "native_port_adapter": {
+   "merge": {},
+   "cycles": 0,
+   "tie": {
+    "ft_ck_i": "1'b0",
+    "ft_rst_i": "1'b0"
+   }
+  }
+ },
+ {
+  "inst": "u_suvm_u_vm8q_u_cl",
+  "module": "qfd_dv_s8_crh_rp1",
+  "origin_um": [
+   941.76,
+   51.84
+  ],
+  "outline_um": [
+   250.56,
+   216.0
+  ],
+  "orient": "R0",
+  "track_offset_um": [
+   0.012,
+   0.012
+  ],
+  "pins_file": "/srv/opentallas-scratch2/claude/codex-qc-tapsplit-1106/pilot_src/physical/die_plan/qwen_compute/plan_of_record/cores/su/signed/qfd_dv_s8_crh_rp1_pins.json",
+  "note": "DIE-QC-7 K2b: SIGNED view bound (LEF SIZE 250.56 BY 216 (autopilot closed f4g 5ed4500430 base/qfd_dv_s8_crh_rp1.lef)); pins = signed pins.json byte copy",
+  "physical_ft": {
+   "proof": "/srv/opentallas-scratch2/claude/codex-qc-tapsplit-1106/ft_src/physical/die_plan/qwen_compute/ft_physical_1106/crh/proof.json",
+   "proof_sha256": "263c3ff947adcc2ab5a03bc31d89f25b2a6be51dfaba43163e53bd0a384b9e72",
+   "unconsumed_outputs": [
+    "ft_ck_o",
+    "ft_rst_o"
+   ]
+  },
+  "native_port_adapter": {
+   "merge": {},
+   "cycles": 0,
+   "tie": {
+    "ft_ck_i": "1'b0",
+    "ft_rst_i": "1'b0"
+   }
+  }
+ },
+ {
+  "inst": "u_suvm_u_vm8q_u_ch",
+  "module": "qfd_dv_s8_crh_rp1",
+  "origin_um": [
+   388.8,
+   380.16
+  ],
+  "outline_um": [
+   250.56,
+   216.0
+  ],
+  "orient": "R0",
+  "track_offset_um": [
+   0.012,
+   0.012
+  ],
+  "pins_file": "/srv/opentallas-scratch2/claude/codex-qc-tapsplit-1106/pilot_src/physical/die_plan/qwen_compute/plan_of_record/cores/su/signed/qfd_dv_s8_crh_rp1_pins.json",
+  "note": "DIE-QC-7 K2b: SIGNED view bound (LEF SIZE 250.56 BY 216 (autopilot closed f4g 5ed4500430 base/qfd_dv_s8_crh_rp1.lef)); pins = signed pins.json byte copy",
+  "physical_ft": {
+   "proof": "/srv/opentallas-scratch2/claude/codex-qc-tapsplit-1106/ft_src/physical/die_plan/qwen_compute/ft_physical_1106/crh/proof.json",
+   "proof_sha256": "263c3ff947adcc2ab5a03bc31d89f25b2a6be51dfaba43163e53bd0a384b9e72",
+   "unconsumed_outputs": [
+    "ft_ck_o",
+    "ft_rst_o"
+   ]
+  },
+  "native_port_adapter": {
+   "merge": {},
+   "cycles": 0,
+   "tie": {
+    "ft_ck_i": "1'b0",
+    "ft_rst_i": "1'b0"
+   }
+  }
+ }
+]
