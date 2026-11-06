@@ -60,5 +60,6 @@ foreach rg_nm $rg_order {
   incr rg_n; incr rg_cells [llength $rg_insts]
 }
 puts "OT_REGION_GUIDE $rg_n guides $rg_cells cells (missing $rg_miss, fixed/grouped skipped $rg_skip; GPL guide, released before DPL)"
-if {$rg_cells == 0 && ![info exists rg_small]} { error "OT_REGION_GUIDE: no spec instance matched the design (stale guide)" }
+# KW-FIX-23: instances found but all FIRM/grouped (e.g. OT_CLAND band cells) = no-op guide, not stale.
+if {$rg_cells == 0 && $rg_skip == 0 && ![info exists rg_small]} { error "OT_REGION_GUIDE: no spec instance matched the design (stale guide)" }
 }
