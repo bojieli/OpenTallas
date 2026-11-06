@@ -1,6 +1,6 @@
 # CODEX HBM bounded parent trial
 
-Updated 2026-11-06 00:27 PST. Owner: Codex hbm_parent, in coordination with HBM die owner.
+Updated 2026-11-06; latest resumed PLACE and station diagnosis. Owner: Codex hbm_parent, in coordination with HBM die owner.
 
 Current concrete vehicle: q_spb2/NW_spb2, two actual signed ot_hbm_svc_sm_xcal_rel_t macros, current d44v36 type and retained native m79f body. No whole-die or parent closure claim.
 
@@ -25,3 +25,23 @@ Actual `xcal_review/die_cores.png` viewed. Two241.92x224.64 macros have34.56um n
 ## Next
 
 Collect PLACE admission/result, diagnose any source/placement failure; inspect actual placement, then continue bounded clock/GRT and real-child timing joins. Preserve all originals and failed diagnostics. No blocking owner question.
+
+## Current milestone (supersedes original submitted-job paragraph)
+
+First actual SYNTH completed: 69,585 standard cells + two real xcal macros; macro area108690um2, standard area11657um2. Initial PORT_BIND failed solely because isolated extraction omitted actual native rst_o_0. Original failed run preserved. Added exact original reset.in_sites and keep_outs[1]; retained-netlist checks PASS:12505/12505 pins, FACE_GUARD12482bits/fails{}, REG_FANOUT33627regs/over64=0. All6RTL files unchanged, so resumed from synthesis.
+
+Current PLACE-only job: intel2 client222381, log ~/codex-hbm-parent-1106/place_rstport2.otrun.log; epyc6 unit oth-ubuntu-1429122-1793955200; kit xcal_gen_rstport/q_spb2. Detailed placement reached, zero overlap/site/row/region violations. Resizer585buffers, area130357um2/5%. Never route current source: native lacks planned core/face stations.
+
+Fresh inactive kit_istations probe FAIL L83_i bound3>planned2. Tool processes duplicate bus rows and faults against its own earlier insertion; metadata also stale: L83 native28desc/control bits versus plan99 and cfg_data256 row; L87 native68bits versus cfg_data256 row. HBM owner owns exact native field map and coherent bus/depth/geometry repair; shared prep driver will stop on mandatory station failure. Whole-bus candidates L75 173bits/8stages, L83 28bits/3, L87 68bits/2 still need endpoint geometry and cycle alignment before use. Probe/log xcal_kit_rtl_ist_probe and xcal_ist_probe.log on epyc2.
+
+Fresh inactive kit_rsync probe on isolated plan changes original relayed reset entry/release9 into root sync/release10. Therefore preserve original native reset tree/contract or rebuild only with original full-plan parent context; never blindly regenerate isolated reset. Probe xcal_kit_rtl_reset_probe retained. Original rst_o_0 source remains native registered output.
+
+TOK booked conditional HBM-40: signed child face shell adds+1 rising input/+1 rising output versus raw native child (+2 command/response), negative lockup0, boot reset+2. Native does not yet consume shell; no functional/token closure claim. Shared kit assembly helper verified exact source-byte-sealed two-child parameter contract, replacing private adaptation for future kits.
+
+## Final PLACE result and assigned next closure
+
+Resumed diagnostic PLACE PASS exit0; async LEC exit0 (epyc6 oth-ubuntu-1429122-1793955200). Final DB xcal_gen_rstport/q_spb2/run/results/asap7/dp_q_spb2/base/3_place.odb. Actual final placement rendered/viewed; zero standard-cell centers inside either hard macro. Image epyc6 artifact root/xcal_actual_placement.png and local coord/tmp/codex-hbm-parent-1106/xcal_actual_placement.png. No route launched.
+
+Fresh diagnostic normalized plan (one row/bus, max depth, native widths) makes kit_istations PASS: L75+8,L76+5,L40+2,L49+3,L83+3,L87+2; original had zero pads. Geometry remains explicitly unresolved; never use diagnostic candidate for route. HBM owner owns exact native field-map/geometry, including actual W-side hardchild pins and measured soft cp placement. Shared kit_assembly owner owns false soft-cell classification of real signed children. Fleet prep driver preserves native reset and stops mandatory station errors.
+
+Additional latency debt sent TOK: current fullplan fixed0/pad0 on all six cohorts. L75/L76 latency is2 boundary cycles/0stations despite internal8/5; L40/L87 latency8, L49/L83 latency12 include route stations but no internal fixed cycles. Exact ports/lanes/latency in intel2 artifact root/station_lane_contracts.json. Token owner reconciling existing route model before adopting stages. Exact native field map intel2 codex-hbm-parent-fieldmap/q_spb2_native_fieldmap.json. Current trial proves source/BB/lib/pin/reset placement join only; next route requires repaired field geometry and explicit coherent cycle contract.
