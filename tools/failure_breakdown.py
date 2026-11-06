@@ -113,11 +113,15 @@ def main():
             cn[lab].append(short(base))
         ntypes = plan['types'] if isinstance(plan['types'], int) else len(plan['types'])
         stypes = len(plan.get('signed_types') or {})
+        stset = set(plan.get('signed_types') or {})
         tc, tn = collections.Counter(), collections.defaultdict(list)
         for (d, item), r in last.items():
             if d != die or item.split('#')[0] in core_mods:
                 continue
             lab = label(r)
+            # COORD 11-06: a SIGNED row already in the official count is not "count pending".
+            if lab == 'signed (count pending)' and (item.split('#')[0] in stset or short(item) in stset):
+                continue
             tc[lab] += 1
             tn[lab].append(short(item))
         out.append('- [ ] FAIL.%s.CORES %d/%d signed · open: %s' % (tag, len(designs) - len(unsigned), len(designs), fmt(cc, cn, limit=3)))
