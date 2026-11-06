@@ -483,3 +483,24 @@ def test_trim_skips_signed_unfinished_and_switch(tmp_path, monkeypatch):
     gone = E.trim_superseded(root, root / "i4")
     assert sorted(Path(g).parent.parent.parent.parent.parent.parent.name for g in gone) == ["i3"] * 3
     assert all((root / d / "run/results/asap7/n/base" / n).exists() for d in ("i1", "i2", "i4") for n in names)
+
+
+def test_relative_output_is_absolute_for_abstract_docker_mount(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    k = kit(tmp_path)
+    b = base_rec(k, rec(-4, -2, slew=1))
+    f = Fake([rec(1, 2)])
+    def stage(_kit, root, tools):
+        (root / "so").mkdir()
+        return root / "so"
+    monkeypatch.setattr(E, "stage_so", stage)
+    result = E.run_loop("kit", b.relative_to(tmp_path), root="kit/eco_relative", run=f, mem=8, cpus=2)
+    assert result["verdict"] == "PASS"
+    assert Path(result["root"]) == tmp_path / "kit/eco_relative"
+    assert Path(result["base_signoff"]).is_absolute()
+    abstract = [cmd for cmd, _ in f.calls if "do-generate_abstract" in " ".join(cmd)]
+    assert abstract
+    for cmd in abstract:
+        for index, arg in enumerate(cmd[:-1]):
+            if arg == "-v":
+                assert Path(cmd[index + 1].split(":")[0]).is_absolute(), cmd
