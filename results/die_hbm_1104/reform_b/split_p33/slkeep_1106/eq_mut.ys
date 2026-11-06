@@ -1,0 +1,20 @@
+read_verilog -sv /p/old.sv
+hierarchy -top ot_q2nf_qout
+proc; flatten; opt_clean
+rename ot_q2nf_qout gold
+design -stash gold
+read_verilog -sv -DOT_Q2NF_SLKEEP /p/new.sv
+hierarchy -top ot_q2nf_qout -chparam MUT 1
+proc; flatten; opt_clean
+rename ot_q2nf_qout gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate eq
+hierarchy -top eq
+async2sync
+equiv_struct
+equiv_simple
+equiv_induct -seq 2
+equiv_status
+equiv_status -assert
