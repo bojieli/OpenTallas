@@ -1,0 +1,116 @@
+{
+ "schema": "opentallas.wbq_safe_split_candidate.v1",
+ "wrapper_module": "ot_wbq_sw",
+ "wrapper_params": {
+  "HREG": 2,
+  "GIN": 1
+ },
+ "parent_interface_unchanged": true,
+ "physical_inst_suffixes": [
+  ".u_main",
+  ".u_out"
+ ],
+ "source": "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv",
+ "children": [
+  {
+   "inst": "u_main",
+   "module": "ot_wbq_sw_split_main",
+   "origin_delta_um": [
+    0,
+    0
+   ],
+   "outline_um": [
+    86.4,
+    544.32
+   ],
+   "pins_file": "pins/ot_wbq_sw_split_main__86.4x544.32.json",
+   "recipe_key": "ot_wbq_sw_split_main",
+   "params": {
+    "HREG": 2,
+    "GIN": 1
+   }
+  },
+  {
+   "inst": "u_out",
+   "module": "ot_wbq_sw_split_out",
+   "origin_delta_um": [
+    -34.56,
+    0
+   ],
+   "outline_um": [
+    34.56,
+    544.32
+   ],
+   "pins_file": "pins/ot_wbq_sw_split_out__34.56x544.32.json",
+   "recipe_key": "ot_wbq_sw_split_out",
+   "clock_entry": {
+    "name": "hbm_clk",
+    "layer": "M5",
+    "x": 17.304,
+    "y": 272.16,
+    "w": 0.048,
+    "h": 0.48
+   }
+  }
+ ],
+ "seams": [
+  {
+   "src": "u_main.w_k_v",
+   "dst": "u_out.in_v",
+   "bits": 16
+  },
+  {
+   "src": "u_main.w_k_addr",
+   "dst": "u_out.in_addr",
+   "bits": 480
+  },
+  {
+   "src": "u_main.w_k_wdata",
+   "dst": "u_out.in_data",
+   "bits": 4096
+  },
+  {
+   "src": "u_out.in_ready",
+   "dst": "u_main.w_k_rdy",
+   "bits": 16
+  }
+ ],
+ "external_pins_to_out": [
+  "w_k_v",
+  "w_k_addr",
+  "w_k_wdata",
+  "w_k_rdy"
+ ],
+ "external_pins_to_main": "all others INCLUDING w_k_wr_done; hbm_clk and hbm_rst_n connect both",
+ "pin_cycles": {
+  "g_v/g_d": 1,
+  "group_selection_to_K_output": 1
+ },
+ "parent_q1_aqhi_move_um": [
+  -17.28,
+  0
+ ],
+ "physical_stage_overrides": {
+  "u_main": {
+   "face_in_stage": [
+    "w_k_rdy=0"
+   ],
+   "face_stage": [
+    "w_k_v=0",
+    "w_k_addr=0",
+    "w_k_wdata=0"
+   ]
+  },
+  "u_out": {
+   "face_in_stage": [
+    "in_v=0",
+    "in_addr=0",
+    "in_data=0"
+   ],
+   "face_stage": [
+    "in_ready=0"
+   ]
+  }
+ },
+ "status": "SOURCE_PROOF_PASS; plan candidate; no P&R/sign-off yet"
+}

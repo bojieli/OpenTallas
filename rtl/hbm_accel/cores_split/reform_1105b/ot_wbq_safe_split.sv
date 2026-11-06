@@ -517,7 +517,7 @@ module ot_wbq_sw_split_out #(parameter integer MUT=0)(
  end endgenerate
 endmodule
 
-module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, parameter [29:0] STACK_SECTORS=30'd703125000, parameter integer HREG=0, parameter integer GIN=0)(
+module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, parameter [29:0] STACK_SECTORS=30'd703125000, parameter integer HREG=2, parameter integer GIN=1)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire [1:0] stk,input wire quad,
  input wire wb_reserve_v,wb_reserve_bank,wb_fill_bank,
