@@ -1,0 +1,39 @@
+{
+  "candidate": "ot_svgr_own RF1 SKID_HEAD=1",
+  "default_SKID_HEAD": 0,
+  "canonical_recipe_changed": false,
+  "non_RF1_preprocessed_source": "byte-identical prefix/suffix around RF1 branch",
+  "extra_edges": 0,
+  "extra_clock_or_reset": false,
+  "W": 285,
+  "entries": 2,
+  "payload_register_bits_per_PC_before_after": [
+    570,
+    570
+  ],
+  "control_register_bits_per_PC_before_after": [
+    6,
+    4
+  ],
+  "PC_count": 4,
+  "expected_FF_delta": -8,
+  "throughput_contract": "same pre-edge full test; full rejects push even if pop accepted on same edge",
+  "refused_head": "head_ok false suppresses response_ok; payload and verdict retained until legal pop or reset",
+  "standalone": {
+    "checks": 1592864,
+    "exhaustive_six_command_sequences": 262144,
+    "random_cycles": 20000,
+    "full_push_blocked_on_pop": 20586,
+    "refused_head_checks": 676462,
+    "push_pop": 58809,
+    "accepted_push": 575806,
+    "accepted_pop": 158788,
+    "targeted_mutants_caught": [
+      1,
+      2,
+      3
+    ]
+  },
+  "physical_status": "NOT RUN",
+  "whole_RF1_status": "PREPARING native accepted-stream miter on existing SMB fixture"
+}
