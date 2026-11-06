@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.station_split_conservation.v1",
+  "verdict": "PASS",
+  "checked_cells": 405,
+  "selected_whole_cells": 96,
+  "state_bits_before": 56757,
+  "state_bits_after": 56757,
+  "cycles_added": 0,
+  "children": {
+    "ot_s81_station_t51_w": {
+      "instances": 41,
+      "state_bits": 30903,
+      "ports": 65
+    },
+    "ot_s81_station_t51_e": {
+      "instances": 55,
+      "state_bits": 25117,
+      "ports": 39
+    }
+  },
+  "physical_qualified": false,
+  "mutants": [
+    {
+      "mutant": "payload_bit_swap",
+      "caught": true,
+      "reason": "cell connection changed: u_ft_ft0_o_3.d"
+    },
+    {
+      "mutant": "clock_rebind",
+      "caught": true,
+      "reason": "cell connection changed: u_ft_ft0_o_3.clk"
+    },
+    {
+      "mutant": "boundary_bit_swap",
+      "caught": true,
+      "reason": "child boundary connection changed: ot_s81_station_t51_w.cland_ft5_i"
+    },
+    {
+      "mutant": "drop_whole_stage",
+      "caught": true,
+      "reason": "whole child instance inventory changed: ot_s81_station_t51_w"
+    },
+    {
+      "mutant": "cell_parameter",
+      "caught": true,
+      "reason": "cell parameters changed: u_ft_ft0_o_3"
+    },
+    {
+      "mutant": "child_direction",
+      "caught": true,
+      "reason": "child boundary direction changed: ot_s81_station_t51_w.clk"
+    }
+  ]
+}

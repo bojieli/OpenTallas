@@ -1,0 +1,148 @@
+{
+ "schema": "opentallas.station_native_pose_cones.v1",
+ "basis": "native mapped cells, every combinational gate traversed; sequential input pin/output cell bbox corners; primary-input and clock reach separate",
+ "FF_count": 53074,
+ "limit_um": 402.84,
+ "baseline": {
+  "pairs": 103986,
+  "overreach": 19,
+  "roles": {
+   "D": 19
+  },
+  "worst": [
+   [
+    414.018,
+    "u_bound.u_ft_ft6_o_1/q[502]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[502]$_DFF_P_",
+    "D"
+   ],
+   [
+    413.478,
+    "u_bound.u_ft_ft6_o_1/q[498]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[498]$_DFF_P_",
+    "D"
+   ],
+   [
+    410.508,
+    "u_bound.u_ft_ft6_o_1/q[446]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[446]$_DFF_P_",
+    "D"
+   ],
+   [
+    410.022,
+    "u_bound.u_ft_ft6_o_1/q[471]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[471]$_DFF_P_",
+    "D"
+   ],
+   [
+    408.24,
+    "u_bound.u_ft_ft6_o_1/q[447]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[447]$_DFF_P_",
+    "D"
+   ],
+   [
+    407.214,
+    "u_bound.u_ft_ft6_o_1/q[506]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[506]$_DFF_P_",
+    "D"
+   ],
+   [
+    406.998,
+    "u_bound.u_ft_ft6_o_1/q[474]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[474]$_DFF_P_",
+    "D"
+   ],
+   [
+    405.864,
+    "u_bound.u_ft_ft6_o_1/q[501]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[501]$_DFF_P_",
+    "D"
+   ],
+   [
+    405.756,
+    "u_bound.u_ft_ft6_o_1/q[473]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[473]$_DFF_P_",
+    "D"
+   ],
+   [
+    405.54,
+    "u_bound.u_ft_ft6_o_1/q[503]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[503]$_DFF_P_",
+    "D"
+   ],
+   [
+    405.216,
+    "u_bound.u_ft_ft6_o_1/q[487]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[487]$_DFF_P_",
+    "D"
+   ],
+   [
+    405.054,
+    "u_bound.u_ft_ft6_o_1/q[468]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[468]$_DFF_P_",
+    "D"
+   ],
+   [
+    404.838,
+    "u_bound.u_ft_ft6_o_1/q[475]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[475]$_DFF_P_",
+    "D"
+   ],
+   [
+    404.676,
+    "u_bound.u_ft_ft6_o_1/q[422]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[422]$_DFF_P_",
+    "D"
+   ],
+   [
+    404.19,
+    "u_bound.u_ft_ft6_o_1/q[448]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[448]$_DFF_P_",
+    "D"
+   ],
+   [
+    403.974,
+    "u_bound.u_ft_ft5_o_0/q[509]$_DFF_P_",
+    "u_bound.u_ft_ft5_o_1/q[509]$_DFF_P_",
+    "D"
+   ],
+   [
+    402.948,
+    "u_bound.u_ft_ft5_o_0/q[510]$_DFF_P_",
+    "u_bound.u_ft_ft5_o_1/q[510]$_DFF_P_",
+    "D"
+   ],
+   [
+    402.894,
+    "u_bound.u_ft_ft6_o_1/q[494]$_DFF_P_",
+    "u_bound.u_ft_ft6_o_2/q[494]$_DFF_P_",
+    "D"
+   ],
+   [
+    402.894,
+    "u_bound.u_ft_ft5_o_0/q[505]$_DFF_P_",
+    "u_bound.u_ft_ft5_o_1/q[505]$_DFF_P_",
+    "D"
+   ]
+  ],
+  "group_violations": [
+   [
+    "u_bound.u_ft_ft6_o_1",
+    "u_bound.u_ft_ft6_o_2",
+    16
+   ],
+   [
+    "u_bound.u_ft_ft5_o_0",
+    "u_bound.u_ft_ft5_o_1",
+    3
+   ]
+  ]
+ },
+ "candidate": {
+  "pairs": 103986,
+  "overreach": 0,
+  "roles": {},
+  "worst": [],
+  "group_violations": []
+ }
+}
