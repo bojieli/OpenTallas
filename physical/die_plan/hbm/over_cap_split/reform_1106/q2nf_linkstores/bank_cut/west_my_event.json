@@ -1,0 +1,18 @@
+{
+  "schema": "q2nf.private_live_face_orientation.v1",
+  "adopted": false,
+  "source": "Canonical synthesized SRAM pin-net constants/loads joined to actual LEF geometry",
+  "change": "Only four west helper SRAM R0 to MY at unchanged lower-left bboxes; east R0 unchanged",
+  "reason": "ALL live WD141/RD141 or138, addr6+6, WE andCLK pins areW in SRAMR0. The otherLEFEhalf isunused/constant; totalpinfacecounts were misleading.",
+  "source_rtl_changes": false,
+  "extra_cycles": 0,
+  "signals_max_intent": "M5",
+  "clock_max_intent": "M5",
+  "pg_top_intent": "M5",
+  "parent_bridge_intent": "M6",
+  "remaining": [
+    "actual MY PG continuity and AP",
+    "real placement/first-endpoint reach",
+    "actual TT/FF source and parent qualification"
+  ]
+}

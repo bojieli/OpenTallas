@@ -46,7 +46,7 @@ def prepare(repo,out):
  for row in old_layout['macros']:
   owner={'link0':'ot_q2nf_linkstore0','link1':'ot_q2nf_linkstore1','rest_control':'ot_q2nf_control'}[row['owner']]
   name=placement_name(row['name'].removeprefix('u_fcore.'),alpha);x,y,X,Y=row['rect_um']
-  all_macros.append(dict(owner=owner,inst=name,macro=row['module'],xy_um=[x,y],orient=row['orientation']))
+  all_macros.append(dict(owner=owner,inst=name,macro=row['module'],xy_um=[x,y],orient='MY' if owner=='ot_q2nf_linkstore0' else row['orientation']))
  for i,(m,(origin,size)) in enumerate(BOXES.items()):
   key='link'+str(i);group='g_linkstore'+str(i);W,H=size;rows=[]
   declared={n:(d,w)for n,d,w in inv[m]}
@@ -65,7 +65,7 @@ def prepare(repo,out):
   macros=[dict(inst=r['inst'],macro=r['macro'],xy_um=[round(r['xy_um'][0]-origin[0],6),round(r['xy_um'][1]-origin[1],6)],orient=r['orient'])for r in all_macros if r['owner']==m]
   assert len(macros)==4
   views.append(dict(view=m+'@'+sha(pf)[:12],module=m,outline_um=size,pins_file=pf.name,pins_sha256=sha(pf),pins=len(rows),recipe_keys=[m],family='Q2NF_BANK_NATIVE_PREP',instances=['q2nf_native_parent_prep.u_fcore.'+child_inst[m]],placed=1,blockers=['UNROUTED; native mapped endpoint census/PA and actual PG/OBS pending']))
-  recipes[m]=dict(top=m,files=[source_file],params={},defines=[],macros=sorted({r['macro']for r in macros}),macro_placement=macros,source_commit=commit,read_at_commit=False,source='Exact bank-only zero-edge extraction; original SRAM sites/orientations; reversible alpha identifiers')
+  recipes[m]=dict(top=m,files=[source_file],params={},defines=[],macros=sorted({r['macro']for r in macros}),macro_placement=macros,source_commit=commit,read_at_commit=False,source='Exact bank-only zero-edge extraction; original SRAM sites, measured live-face MY west/R0 east; reversible alpha identifiers')
   profiles[m]=dict(source_commit=commit,family='Q2NF_BANK_NATIVE_PREP',release_eligible=False,qualification='NATIVE_SOURCE_AND_GEN_PREPARATION_ONLY',added_face_cycles=0,endpoint_contract=dict(kind='INTERNAL_CORE',partition_rule='R2_INTERNAL_TIMED_IN_PARTITION',parent_partition='q2nf_native_parent_prep'),clock_ports=['clk_link'],reset_ports=[],pin_placement_policy='DECLARED_CLOCK_RESET_POINTS',diagnostic_inputs=True,port_inventory=dict(top=m,source_file=source_file,source_sha256=sha(native),ports=native_inv[m]),indexed_clock_parent_bindings=clockmap,original_parent_clock_items=cl[group]['clocked_items_by_actual_parent_clock'],actual_parent_shell='retained A external clk_control captures +1in/+1out; controller remains real soft RTL',physical_reset_phase='Bank source has NO reset input; preserve actual unreset datapath, external controller reset qualification remains in parent',source_manifest={SOURCE:sha(src)},alpha_instance_report=alpha,port_aliases={n:v for n,v in aliases.items()if n in declared})
   write(out/(m+'_density.json'),dict(schema='opentallas.hbm_multi_density.v1',module=m,clock_ports=list(clockmap),layout='density',common_alignment=True,merge_roots=False,review=dict(verdict='PASS',basis='Reviewed actual four-bank source ownership, explicit clock-index masks and retained macro centers; source GEN only, actual endpoint/PA/placed timing remains required')))
   geometry[m]=dict(origin_um=origin,outline_um=size,macro_placement=macros,signal_max='M5',clock_max='M5',obs_intent='M5',pg_top='M5',native_roots=clockmap,pins=rows,qualification='M5 candidate only; actual SRAM OBS M1-M4 leaves M5 transit; physical closure not measured')
