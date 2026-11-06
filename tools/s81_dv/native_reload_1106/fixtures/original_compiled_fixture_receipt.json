@@ -1,0 +1,46 @@
+{
+  "scope": "actual compiled L0 jobs1+2, sequencer/transport only",
+  "calendar_sha256": "e4e65a86d095f5cc6f4b7a3e1b71f2152fa1592eda96e2463be958760c4fd515",
+  "templates_sha256": "d6a58972a57985e07551e9a450add4401943cd494196d0cbeb097d408dd41f1d",
+  "pages": [
+    {
+      "page": 0,
+      "compiled_job": 1,
+      "host_words": 513,
+      "calendar_rows": 128,
+      "V_commands": 126,
+      "kit_issue": 118,
+      "END_issue": 138,
+      "first_row": {
+        "i": 0,
+        "issue": 0,
+        "done": 5,
+        "engine": 1,
+        "arg": 0,
+        "row76": "0000050000001000000",
+        "what": "L0.attn.out_allreduce: u_s_0S rdout1"
+      },
+      "word_sha256": "2b1d5d231c8426ad9388e5893d3739db89daa107d6e9031c1535f33cafba0877"
+    },
+    {
+      "page": 1,
+      "compiled_job": 2,
+      "host_words": 513,
+      "calendar_rows": 128,
+      "V_commands": 126,
+      "kit_issue": 797,
+      "END_issue": 817,
+      "first_row": {
+        "i": 0,
+        "issue": 0,
+        "done": 5,
+        "engine": 1,
+        "arg": 0,
+        "row76": "0000050000001000000",
+        "what": "L0.attn.out_allreduce: u_s_0S cfg20"
+      },
+      "word_sha256": "d0354441341825d1adb7f8a83e3b973edfe9d345ec8a2d25a4c99162c2573545"
+    }
+  ],
+  "layer_retirement_qualified": false
+}

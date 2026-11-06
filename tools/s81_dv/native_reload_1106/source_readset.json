@@ -1,0 +1,358 @@
+[
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/native_host_peer.sv",
+    "sha256": "f9f9b2634ede055ba153c6a1c0dc16d258c7677f53101aaa0490c342ee9e96aa"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+    "sha256": "f994752aea85f9f78c5ab88f84aefb245b04313e8f48aeb7ed134c44d670e1bf"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_split.sv",
+    "sha256": "c621a57ea99a809fbe7f4341516ece1886bc684f82c9815b64711903e9f251b7"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.v",
+    "sha256": "81f49b14882474c38ffc2a67b0e19d509c68b48aa80af4b6cb0acdb3c45bf4ec"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/codex-ds-native-origin-1106/rtl/common/landed_parent/ot_pl_land.sv",
+    "sha256": "b933901d092e438edd18795440d62cf27426910420b707bbabab321dd6693c79"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/codex-ds-native-origin-1106/rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+    "sha256": "17eb061c1ad0b08315ce629c2df8c8bcf960567a1cb80be79dd80b661413f236"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/common/landed_parent/ot_pl_land_kept_enable.sv",
+    "sha256": "025a6b50e3241d1fce3dbc1cebe210fea0d262c06ce3add491d7b7f1dd6194aa"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lep.sv",
+    "sha256": "429141a0ee0f3d1f5c021b395e284e6b345c78e57b1edd80cbbbb026a83f6bd8"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/codex-ds-native-origin-1106/physical/die_plan/s81/bind/source_modules/portfix178/ot_s81_mu72_lnland.sv",
+    "sha256": "29a1a109fc56de982b68d1d950853753373a6b8dc706d6c84a3a9b8dbda0b81c"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/codex-ds-native-origin-1106/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
+    "sha256": "b2d697933c2362f1882dab0c3ee68cdd1e7e8e6cd82911c3526dd7b4fdfa17bc"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+    "sha256": "058960ccd28c3f635d1dcf5abb6b022eee111a1cd86071ade0d21d65b20625b5"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
+    "sha256": "bdd5fd48fe22e22e3206bcdc0bb1c41c2645fd29386fd587669c250b6bc9a089"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv",
+    "sha256": "a112268f8e98d8f90b0c6b235807f3c9f777dad3130a0e8635d667a9725221df"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+    "sha256": "f9606abe8f228ffbdf8ad3be5380abab6dbb9bac9bdc31af6b76abf99e502e2e"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192.v",
+    "sha256": "c94fa8466936789e38ec2e15b7c1f048685aa976715113986ff3a48bf196e064"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v",
+    "sha256": "f1b736ff2a12823300b4b079c8e8eaf21a2d4a2d2a0c5dbcecb47169d39a4d73"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+    "sha256": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v",
+    "sha256": "6319cdaa8f0801336233fa6f9f35c05be298be5fb4620fa9d85791603366f477"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.v",
+    "sha256": "677905209f60681d770b887b4295d72a518d2ea1f9ed8f717792be3ac457fe70"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+    "sha256": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v",
+    "sha256": "ede8a6df34ed12b5ae0ae79592bb415c601562b07f38e6c11551506ff7f04e61"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+    "sha256": "9e83cdca202aa4e54e8024d91b35f5309ff9fca0961d23b36cd01a4e41c13e3f"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v",
+    "sha256": "aa82c75dd7c1368386cb4ed2bc4e2f7852c4a7d0a8b36a8d363d68afbc3526ba"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v",
+    "sha256": "03a15da7f7691bfcf973a4d4e833fc4853c3d56bd8146092c8390705f0108083"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v",
+    "sha256": "bb2980d8fcc7e0dd69829bcb0292dbf9b938b8326f996364ac282677aeca8b11"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r0c0_pc/ot_sram_1r1w_128x256_m1_r0c0_pc.v",
+    "sha256": "840d7735d6725a98f0f83f4fd0fa8f7e45beeab6ec38b155102e49883091a605"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "sha256": "dc4463c055342e209c7cb8b9506db79133d9f1d416d3c05f20feafb49cb8461c"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v",
+    "sha256": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0_pc/ot_sram_1r1w_512x128_m4_r0c0_pc.v",
+    "sha256": "2edd2a59288f13b45405a7143da8e8c479804adbf8ded58faa9fff5c55cbe77f"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r0c0_pc/ot_sram_1r1w_64x512_m1_r0c0_pc.v",
+    "sha256": "5cf89dab7119135efddaec4cc2a94e5ac4597a701bb7a3eda5fb8cb91d1513a5"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+    "sha256": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+    "sha256": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/common/ot_link_credit.sv",
+    "sha256": "6e5e8c9aea879aff955f58a93b3e8dc4346ee462fb2feece12ed29c8545a18e7"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/common/ot_link_credit_rx_b64.sv",
+    "sha256": "52076e97161fe616ea5f892f5bf9859a329b3ef753e7801a574e63e44e7e7b2d"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/common/ot_link_credit_tx_rc.sv",
+    "sha256": "41108469675c237202611513fdc868ce4c026b556b8400e0a15bc2ccc8dbb25a"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_link/lp/ot_s81_kp4_dec_native_flat_lp.sv",
+    "sha256": "e3cdb1ece2ba8d5b385896b1466e234bb98ebf9f3c892363dbfd29742af9507f"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+    "sha256": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+    "sha256": "b2b76fcd25e601a1d9e02625e3f3524305df3ffd84c6a763b9b6dff322e54a98"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+    "sha256": "261a00d6db06bab0c3add28489c8f3e1bc6ddf3a0a6b8af1b4158068c05a1afb"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+    "sha256": "f3fc520eec927e2fb57418417a41ee12f87d66658e31df0dfe700c9ec4bec91c"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+    "sha256": "fb1160f86a33901a1ba0328dc296329fa53812145930817b633695fcb2e63b93"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+    "sha256": "198059532724f05fc47dafbfc122e5c6aaf42e14bec1866bc59c36251c4fc1bf"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+    "sha256": "904afcf6c24331f77dbf55381ba3e574a4d1263eb5bc055068a62d7494e6fa76"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+    "sha256": "0caaa3a8048bce76f6dbe902824e570e563e9c39a006ca34d07d4f648419c1fd"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+    "sha256": "767d0fb750db539d0c7076709cb7d39b0fd8df8ad1d058e9c8aa0d1c41881a7b"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv",
+    "sha256": "0801316e64a4ff11cb09707031fc1e3b68eac9aa5ac909ba70c2ebda6c0f8f1a"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv",
+    "sha256": "346499f96e8800381d7c19fb8e1a816480643e3fd93518208e66fd415b1610f0"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+    "sha256": "f7fe6c1c242eb7d96cf856bc2492fa5a090e825672ddffb73fb8ed9d73ca6536"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv",
+    "sha256": "1826102edf211742df583b4aa6a229c6ce410b30508a76e4f061fc2efcdadb9c"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+    "sha256": "87089dff259f7300acfec4969e6c0a1d0db83e31d2f5082dc54342676a8c5625"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/lib/ot_rst_relay_tree3.sv",
+    "sha256": "9e1c702bdfaa519b5057e00b495ff6479fe6dea27662946df2fd001d4a7027e7"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/lib/ot_sram_oldread_b64.sv",
+    "sha256": "161f89764da3f079cb91164b269cb6f725348396b4644336318663d20e8e7a14"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/lib/ot_sram_oldread_wreg.sv",
+    "sha256": "67df3246d6cb5648945ca87ef2fd2f46f6e631df622bc19f39432286f97a46f0"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/lib/ot_sram_showahead_1r1w.sv",
+    "sha256": "2a540b43978ffe98f7d67bb9d3da3b03db4763caad4ecd3bd75e716b299effdc"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/lib/ot_sram_showahead_b64.sv",
+    "sha256": "cc40f94107dc230bec6fffbb5af17c781bf908ba3f243c4ead50a1aac6e47b9a"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/files/srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/link/ot_link_crc32.sv",
+    "sha256": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+    "sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x257_m1_p192/ot_sram_1r1w2c_16x257_m1_p192.v",
+    "sha256": "009010fd17e05ffdd2ae7881ab02848d88e7519742ec6cfe575b0020846feaf5"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x289_m1_p192/ot_sram_1r1w2c_16x289_m1_p192.v",
+    "sha256": "97fbea5a98db13faafd67a29d7f4d3feda57564a40108314ec3e1ccf51d6039a"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
+    "sha256": "2a2a1aa8e015910789e25f178352fb4af6c0255fbbe472708c3a4bd5922bce9e"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+    "sha256": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+    "sha256": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_hostb_seqhost_mux.sv",
+    "sha256": "a7c2353f0e23a595bc79b4179fe0089cbe9033c4c42be6c0b25dcf7669e62479"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/physical/rom_host_ingest/rtl/dsfd_host.sv",
+    "sha256": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+    "sha256": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_landing.sv",
+    "sha256": "ab2345cfab6981548fc6fdd6b70ff21bd7d6c91005beb04f90fe2e024e1c1140"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_source.sv",
+    "sha256": "792f588ad90d481cd70edbc91a0a18b486194d5e4e63e4d08f6d2840bc50d200"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_sel.sv",
+    "sha256": "02bb3e0c2c505330a500241693338adc06f6faa5bc867e07f451b98157b1aa09"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bkcol_leaves.sv",
+    "sha256": "ab17704da6b2787c5e4ebf01957b46dcc9c3805bcc2459f3565662514f76bafd"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv",
+    "sha256": "9fa7ee0971842e66d799cd1b0582ac35fa8fde1b1610ea28716779a58506999e"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv",
+    "sha256": "fe83722aed98be5c319ebc7c2b63514b75016add0dfa7522e878c907f6bfee49"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv",
+    "sha256": "6bdcd4970e2b7c2ee8e28ea4e10edc6a74d096ed80f6aa0a663751a6f96b23c4"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv",
+    "sha256": "30c0f16a6c90807cc99b6e0e3eb11b5b722844ddbccc89bd6dea659cb7e95f11"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_dv/unit/dsdv_static_ks6.sv",
+    "sha256": "758c0d32743231c626a0d8c774ca21d533757cbaf65cef84c003bf1c0001ef5c"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_host_afifo_sram.sv",
+    "sha256": "2cd64e07158be2fec85a0743a1c2ccbf76ed3ae5979bb5135ad3b3269daf4e8c"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
+    "sha256": "5ef19b8bf58472be345bce5e2a6edda0f3bb2514acf1c39defbc9cd0d5524e11"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv",
+    "sha256": "6c77b4c5d7f2e84da15089bc5e0f94abedc5b7a4f772cc911a8193aee80d0a3f"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
+    "sha256": "7a1ec9b22780ab7df4ad6144c2604ae9cf933f8ecdce75d1c7ac6d3ee7876a1e"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
+    "sha256": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+    "sha256": "151ce45020da1396af30fb17f275fcddb3257c4e216ff8b7ae92e5bd9e85a915"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
+    "sha256": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+    "sha256": "cc507efd4ca7ab486f9b9e34307551aee3d8b938a6819cfcf9950f0ff8b1bafa"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/hdc/ingest/ot_rom_host_ingest.sv",
+    "sha256": "62690ce62ff6db01c9fd353b3dca4945c4460ce542602c47c43ffffd47ec7549"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/lib/ot_reset_sync.sv",
+    "sha256": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/lib/ot_rst_relay.sv",
+    "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/seq_source/rtl/link/ot_link_afifo.sv",
+    "sha256": "4f9c395577c94e477ef77a4cda39a752daa2e644f4a670b0b535bfbc1c51ea89"
+  },
+  {
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/tb_native_reload.sv",
+    "sha256": "8f2b9870dad88eca1503e66d12c028c6ec89741b4b297fc75047fbaf0c1e5401"
+  }
+]

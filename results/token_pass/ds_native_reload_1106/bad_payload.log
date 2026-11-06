@@ -1,0 +1,10 @@
+NATIVE_RELOAD_PERIOD_FS 833000
+NATIVE_HOST_PEER_RX frame=1 kind=3 parity=0 header=0006
+NATIVE_RELOAD_ALIVE edge=331
+NATIVE_RELOAD_CONFIG_IMAGE_OK slots2 RL804 gaps4096 events8 prefix35 original_native_boot_encoder
+NATIVE_RELOAD_SEALED job=0 edge=3203 queue=7152
+NATIVE_RELOAD_KS_QUEUE job=0 edge=7152
+NATIVE_RELOAD_KS_RX job=0 edge=7272 phase=0 word=1094007d001388
+[6068000000] %Fatal: tb_native_reload.sv:65: Assertion failed in tb.command: NATIVE_RELOAD_COMMAND_PAYLOAD job=0 south=1 index=0 edge=7284 got=000000000000000000000000000000000000000000000000002000a43000000200801 expected=000000000000000000000000000000000000000000000000002000a43400000200801
+%Error: /srv/opentallas-scratch2/claude/codex-ds-native-reload-return-1106/tb_native_reload.sv:65: Verilog $stop
+Aborting...
