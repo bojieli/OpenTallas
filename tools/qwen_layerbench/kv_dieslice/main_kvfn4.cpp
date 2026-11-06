@@ -66,6 +66,20 @@ template <class W> static void put(W& w, int lo, int width, unsigned long long v
         else w.at(bit / 32) &= ~(1u << (bit % 32));
     }
 }
+// TOKEN_IDENTITY_POLICY_BEGIN
+// Service epoch identifies the installed programme. Token epoch/generation are
+// independent job fields; token epoch[1:0] encodes position[17:16].
+static unsigned long long kvh_service_epoch(long long programme, long long requested, bool explicit_value) {
+    return static_cast<unsigned long long>(explicit_value ? requested : programme);
+}
+static bool kvh_token_identity_valid(unsigned long long tok, unsigned long long pos,
+                                    unsigned long long gen, unsigned long long epoch,
+                                    unsigned long long service) {
+    return tok < 151936 && pos <= 262143 && gen < 4 && epoch <= 65535 && service <= 65535
+        && ((pos >> 13) & 7) == 0 && (epoch & 3) == ((pos >> 16) & 3);
+}
+// TOKEN_IDENTITY_POLICY_END
+
 extern "C" int kvfn3_main(int argc, char** argv, char**) {
     Verilated::debug(0);
     const std::unique_ptr<VerilatedContext> contextp{new VerilatedContext};
@@ -82,7 +96,13 @@ extern "C" int kvfn3_main(int argc, char** argv, char**) {
     long st_since = -1; bool ovq = false; unsigned nd2h = 0; unsigned od0 = 0, od1 = 0;
     const unsigned long long tok = plus(contextp.get(), "HOST_TOKEN_TOK=", 1), pos = plus(contextp.get(), "HOST_TOKEN_POS=", ctx - 1),
                              gen = plus(contextp.get(), "HOST_TOKEN_GEN=", 1), ep = plus(contextp.get(), "HOST_TOKEN_EPOCH=", 4),
-                             sep = plus(contextp.get(), "HOST_TOKEN_SEPOCH=", 0);
+                             sep = kvh_service_epoch(plus(contextp.get(), "EPOCH=", -1),
+                                 plus(contextp.get(), "HOST_TOKEN_SEPOCH=", -1),
+                                 contextp->commandArgsPlusMatch("HOST_TOKEN_SEPOCH=")[0]);
+    if (tok_on && !kvh_token_identity_valid(tok, pos, gen, ep, sep)) {
+        std::fprintf(stderr, "HOST_TOKEN invalid identity: programme EPOCH/service epoch required; token epoch low bits must match position, generation is two bits\n");
+        return 2;
+    }
     int inj = -1; bool sent_seen = false;
     unsigned long long old = ~0ull, kab = 0, fab = 0, kfc = 0, ffc = 0; unsigned lines = 0, last = 0, lastc = ~0u, obs = 0;
     bool setup_seen = false; unsigned long long otep = ~0ull, otst = 0, ohi = 0, otv = 0;

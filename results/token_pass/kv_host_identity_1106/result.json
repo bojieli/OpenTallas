@@ -1,0 +1,23 @@
+{
+  "scope": "actual source identity-policy functions only; driver mismatch closure, not hardware witness/whole-native qualification",
+  "observed_programme_service_epoch": "0b0b",
+  "observed_legacy_expected_service_epoch": "0000",
+  "token_epoch_generation": "independent job fields; default token epoch4 remains allowed for pos8191",
+  "results": [
+    {
+      "source": "main_kvfn3.cpp",
+      "checks": 15,
+      "status": "PASS"
+    },
+    {
+      "source": "main_kvfn4.cpp",
+      "checks": 15,
+      "status": "PASS"
+    },
+    {
+      "source": "tb_kvslice_native.sv",
+      "checks": 15,
+      "status": "PASS"
+    }
+  ]
+}
