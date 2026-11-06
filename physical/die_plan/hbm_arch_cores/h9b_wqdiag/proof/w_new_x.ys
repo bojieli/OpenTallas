@@ -1,0 +1,12 @@
+read_verilog -sv -DSYNTHESIS /w/sram_stub.v /w/new/ot_rst_relay.sv /w/new/ot_hbm_svc_ring_h9b.sv /w/new/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv /w/new/ot_hbm_svc_pc_ctrl_leaf.sv /w/new/ot_hbm_r14_stream_pc_strap_h9.sv /w/new/ot_hbm_svc_pin_skid2_h9.sv /w/new/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__fshell.sv /w/new/ot_hbm_face_reg.sv /w/new/ot_hbm_face_nreg.sv
+hierarchy -top ot_hbm_svc_pc_ctrl_leaf_cfg_h9b
+proc
+setattr -mod -unset keep_hierarchy
+flatten
+hierarchy -top ot_hbm_svc_pc_ctrl_leaf_cfg_h9b
+memory
+memory_map
+expose -evert t:ot_sram_1r1w_128x256_m1_r2c2
+opt_clean
+rename ot_hbm_svc_pc_ctrl_leaf_cfg_h9b new_x
+write_json /w/new_x.json
