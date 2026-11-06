@@ -278,6 +278,20 @@ def _writer_start_groups(t):
             x, y = stage['xy_um']
             groups.append((f'u_cland_writer_start_{safe(bus)}_{i}',
                            [x-2.16, y-2.16, x+2.16, y+2.16], 'writer-start:'+bus))
+        # The last face relay contains a synchronous-reset AND as well as Q.
+        # Keeping only Q at the pin let GPL drag its AND to the distant origin
+        # reset: HEAD spn_end bu_o travelled 1.6 mm down and back (-181.51 ps).
+        # Treat the complete final relay exactly like each transport relay.
+        pins = [p for p in (t or {}).get('clock', {}).get('landing_contract', {}).get('pins', [])
+                if p.get('name') == 'cland_fstart_out_' + bus and p.get('dir') == 'out']
+        if len(pins) != 1:
+            continue  # parameter-form/older plans without a final face site stay unchanged
+        width, height = t['outline_um']
+        x, y = pins[0]['xy_um']
+        x = min(max(x, 4.32), width - 4.32)
+        y = min(max(y, 4.32), height - 4.32)
+        groups.append((f'u_cland_fstart_{safe(bus)}',
+                       [x-4.32, y-4.32, x+4.32, y+4.32], 'writer-face:'+bus))
     return groups
 
 
