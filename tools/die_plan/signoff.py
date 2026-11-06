@@ -865,6 +865,32 @@ so_timing STD
 puts "SO_PATH_BEGIN STD_MIN"
 report_checks -path_delay min -format full_clock_expanded -digits 2
 puts "SO_PATH_END"
+# ---- KW-FIX-24 11-06: STD hold violators by startpoint kind (OWNER: a hold miss only on io ports is NEEDS_PARENT).
+# port = violating endpoints whose worst min path starts at a non-clock top input port; other = any other start;
+# reg = violating min paths launched from any register clock pin (a reg path hidden behind a worse port path counts).
+# Read-only (no constraint change); runs only when there are min violators. ----
+if {[sta::endpoint_violation_count min] > 0} {
+  set so_hs_port 0; set so_hs_other 0; set so_hs_reg 0; set so_hs_trunc 0; set so_hs_err 0; set so_hs_ports {}
+  if {[catch {
+    set so_hs_pe [find_timing_paths -path_delay min -group_path_count 100000 -endpoint_path_count 1 -slack_max 0]
+    if {[llength $so_hs_pe] >= 100000} { set so_hs_trunc 1 }
+    foreach so_pe $so_hs_pe {
+      if {[get_property $so_pe slack] >= 0} continue
+      set so_sp [get_property $so_pe startpoint]
+      if {[$so_sp is_top_level_port] && [get_full_name $so_sp] ni $so_ck_ports} {
+        incr so_hs_port; lappend so_hs_ports [regsub {\[[0-9]+\]$} [get_full_name $so_sp] {}]
+      } else { incr so_hs_other }
+    }
+    set so_hs_regs [all_registers -clock_pins]
+    if {[llength $so_hs_regs]} {
+      foreach so_pe [find_timing_paths -path_delay min -from $so_hs_regs -group_path_count 1 -endpoint_path_count 1 -slack_max 0] {
+        if {[get_property $so_pe slack] < 0} { incr so_hs_reg }
+      }
+    }
+  } so_hs_msg]} { set so_hs_err 1 }
+  so STD_MIN_START port $so_hs_port other $so_hs_other reg $so_hs_reg trunc $so_hs_trunc err $so_hs_err
+  so STD_MIN_START_PORTS {*}[lsort -unique $so_hs_ports]
+}
 # ---- DRV ----
 so SLEW_VIOL [sta::max_slew_violation_count]
 so CAP_VIOL [sta::max_capacitance_violation_count]
@@ -1453,6 +1479,10 @@ def corner_result(parsed):
     for tag in ("SDC", "STD"):
         for k in ("WNS_MAX", "WNS_MIN", "TNS_MAX", "TNS_MIN", "NVIOL_MAX", "NVIOL_MIN"):
             out[f"{tag.lower()}_{k.lower()}"] = _f(kv.get(f"{tag}_{k}"))
+    if "STD_MIN_START" in kv:                       # KW-FIX-24: only printed when STD min violators exist
+        d = _kvlist(kv["STD_MIN_START"])
+        out["std_min_start"] = dict({k: _f(d.get(k)) for k in ("port", "other", "reg", "trunc", "err")},
+                                    ports=(kv.get("STD_MIN_START_PORTS") or "").split())
     out["slew_viol"] = _f(kv.get("SLEW_VIOL"))
     out["cap_viol"] = _f(kv.get("CAP_VIOL"))
     fo = (kv.get("FANOUT_MAX") or "").split()
@@ -2067,8 +2097,15 @@ def evaluate(rec, insertion_target=None):
         ffr = ff_reference_problem(rec, C["ff"], requested)
         if ffr:
             v, why = "FAIL", ffr
+        extra = {}
+        if v == "FAIL" and not ffr and port_only_hold(C["ff"]):
+            # OWNER rule (COORD 11-06 13:2x item 4): every FF hold violator starts at an input port -> the local
+            # check passes and the miss moves to the io_hold_parent obligation (verdict LOCAL_PASS_NEEDS_PARENT)
+            v = "PASS"
+            extra = dict(local_raw_verdict="FAIL", port_only_needs_parent=True,
+                         port_start_ports=sorted(set(C["ff"]["std_min_start"]["ports"])))
         put("hold_ff", v, wns_ps=w, tns_ps=C["ff"].get("std_tns_min"), violators=C["ff"].get("std_nviol_min"),
-            sdc_wns_ps=C["ff"].get("sdc_wns_min"), overlay=ov, ff_vclk_reference=reference, reason=why)
+            sdc_wns_ps=C["ff"].get("sdc_wns_min"), overlay=ov, ff_vclk_reference=reference, reason=why, **extra)
     else:
         put("hold_ff", "NOT RUN")
     # OWNER 12.24b/c: a nominal-policy record must show the in-session uncertainty override applied without error in the
@@ -2221,10 +2258,28 @@ def evaluate(rec, insertion_target=None):
     ctx_file = (rec.get('inputs') or {}).get('sdc_lint_ctx')
     a_context = bool(ctx_file and Path(ctx_file).is_file() and
                      json.loads(Path(ctx_file).read_text()).get('hold_in_min_ports_ps'))
+    port_only = ch.get("hold_ff", {}).get("port_only_needs_parent")
+    if port_only:
+        from io_hold_qualification import port_hold_policy
+        rec['io_hold'] = port_hold_policy(rec, ch["hold_ff"]["port_start_ports"])
     if rec.get('io_hold') or a_context:
         from io_hold_qualification import apply_obligation
         apply_obligation(rec)
     return rec
+
+
+def port_only_hold(ff):
+    """KW-FIX-24: True when the FF STD session's hold violators all start at input ports: STD_MIN_START present with
+    no read error, not truncated, no violator from a register clock pin or any other startpoint, and the port count
+    covers every violating endpoint.  Records without the census (older sessions) -> False (verdict unchanged)."""
+    s = ff.get("std_min_start")
+    n = ff.get("std_nviol_min")
+    if not s or n is None or n <= 0:
+        return False
+    if any(s.get(k) is None for k in ("port", "other", "reg", "trunc", "err")):
+        return False
+    return (s["err"] == 0 and s["trunc"] == 0 and s["other"] == 0 and s["reg"] == 0 and s["port"] >= n
+            and bool(s.get("ports")))
 
 
 def _detail(k, c):
