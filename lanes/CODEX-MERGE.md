@@ -15,3 +15,5 @@ CODEX took over ROOT-MERGE-41 on codex/root-merge-1105. Own sparse tree intel2:/
 2026-11-05 23:52: main a9afc0fdd8b == origin, tags x-head/v-qc/s-kv/x-s81/ae-hbm. Merged SVGR1db3eb88fa7, HEAD snapshot d701126d22c, dormant bank128b00af20a6ab, exact FIFO f6 declaration a9afc0fdd8b. No canonical WFACE adoption; parent compiler/read-go guard open. HEAD parent bind NOT RUN; current source plan must select l48ui explicitly. TKM61589 mutant pending.
 
 2026-11-05 23:58: main7eff5fd60d2==origin. KVPHYresetc63e950d550 scoped t-kv; model-onlyXFINlatest7eff5fd60d2 no new physicaltag. No tracked dirty files or half-merges. Existing TKMnegativecontrol remains helper-owned. TOKEN preparing separate measurednormpartial117vs115 metadata follow-up, root approval pending.
+
+2026-11-06 00:02: main86036fe580e==origin.90c34487ca5 metadata117,86036fe580e dormant signedchild+IDX SPLIT2/FL1 support.13files0deletions; tagsy-head/w-qc/u-kv/y-s81/af-hbm. No parent activation/qualification, no activejobs modified. All approved READYs handled; TKMnegativecontrol remains helper-owned.
