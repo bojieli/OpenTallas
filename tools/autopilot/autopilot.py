@@ -578,6 +578,19 @@ txt = "\n".join(rd(p, 200000) for p in logs if os.path.getmtime(p) >= since)
 runlog = rd(os.path.join(K, "run_%s.log" % goal), 400000)
 alltxt = txt + "\n" + runlog
 out["runlog_tail"] = runlog[-600:]
+# A legacy gate can write a PASS receipt, then throw in its clock-source census.
+# This is a tool failure, not a timing verdict. Require all three current-run
+# witnesses; PASS/exit 1 alone must never override a real setup/hold failure.
+marker = out.get("FAIL_POSTCTS", "")
+p = os.path.join(K, "postcts_gate_tt.json")
+q = os.path.join(K, "postcts_gate_TT.log")
+if ("TT global-routing insertion gate failed: PASS exit 1" in marker
+        and os.path.isfile(p) and os.path.getmtime(p) >= since
+        and os.path.isfile(q) and os.path.getmtime(q) >= since
+        and (jl(p) or {}).get("verdict") == "PASS"):
+    m = re.search(r"(?m)^Error: grt_policy_tt\.tcl, \d+ clock [^\n]+ has no unique rise source insertion arrival\s*$", rd(q))
+    if m:
+        out["clock_source_error"] = m.group(0).strip()[:300]
 pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[^\n]*|[Rr]outing congestion too high[^\n]*",
        "segfault": r"Segmentation fault[^\n]*|Signal 11 received[^\n]*|SIGSEGV[^\n]*|core dumped[^\n]*",
        "oom": r"Error 137[^\n]*|\] Error 247[^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
@@ -934,6 +947,11 @@ def classify(c, client):
         return "STRUCTURAL", "routed-not-signed", reasons
     if c.get("FAIL_PREFLOOR"):
         return "STRUCTURAL", "preflight", "FAIL_PREFLOOR " + c["FAIL_PREFLOOR"]
+    if (c.get("clock_source_error") and
+            "TT global-routing insertion gate failed: PASS exit 1" in c.get("FAIL_POSTCTS", "")):
+        # Not in INFRA_KINDS: keep the physical checkpoint and await the fixed
+        # flow/source refresh; retrying the same broken gate cannot help.
+        return "CRASH", "infra-clock-source", c["clock_source_error"]
     if c.get("FAIL_POSTCTS"):
         return "STRUCTURAL", "post-cts-hold", "FAIL_POSTCTS " + c["FAIL_POSTCTS"]
     if c.get("hold_structural"):
