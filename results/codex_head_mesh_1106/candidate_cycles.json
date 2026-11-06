@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.head_private_latency_candidate.v1",
+ "type": "hd_mesh",
+ "mechanism": "RBL=1 existing whole replay-subsystem landing",
+ "added_cycles": {
+  "m_tx_i_to_coll_oa": 1,
+  "m_tx_i_to_coll_ob": 1,
+  "coll_i_to_m_rx_o": 0
+ },
+ "external_link_tx_cycles": 1,
+ "core_clock_period_ps": 833,
+ "parent_abi_changed": false,
+ "mission_schedule_adoption": "PENDING; private candidate only",
+ "source": "336bbc9add435d96aae4a6d9422b60aa6cb1d6b5 EP+GBX+COLL wrapper, HEAD param pass-through",
+ "copy_fifo_records": {
+  "old": 7,
+  "new": 10,
+  "actual_arrival_trace_bound": 10,
+  "reason": "exact11000edge bounded queue model matches0mismatches; unbounded records+landing peak10/9, BQ8drops2/0"
+ },
+ "additional_copy_fifo_data_bits": 582,
+ "total_copy_fifo_data_bits": 1940
+}

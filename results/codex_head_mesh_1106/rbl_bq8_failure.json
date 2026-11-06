@@ -1,0 +1,13 @@
+{
+ "verdict": "FAIL",
+ "core_RBL": 1,
+ "BQ": 8,
+ "reported_peak_copyB_occupancy": 9,
+ "data_errors": 130,
+ "source_faults": [
+  "0x500",
+  "0x000"
+ ],
+ "cause": "bounded FIFO clipped actual replay backlog; exact arrival model derives10record conservative bound",
+ "next": "BQ10 candidate derived by exact trace model; physical unlaunched"
+}

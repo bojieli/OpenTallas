@@ -29,7 +29,11 @@ module tb_coll_reach7;
     .lo_v(lv[v][1]),.lo_r(cr[v][1]),.lo_d(ld[v][1]),.li_v(ov[v][1]),.li_r(ret[v][1]),.li_d(od[v][1]),.flt(flt[v][1]));
   end else begin:dut7
 `ifdef OT_COLL_REACH8N
+`ifdef OT_COLL_RBL_DUT
+   dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(CORE_CRED), .RBL(1)) w(
+`else
    dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(CORE_CRED)) w(
+`endif
 `elsif OT_COLL_REACH8
    dsfd_coll_lane_w_safe8 w(
 `else
@@ -38,7 +42,11 @@ module tb_coll_reach7;
     .ck(clk),.rs(rst_n),.chb(1'b1),.rx({1'b0,1'b1,tx[v][1]^imp[1],rxv[1]}),.tx(tx[v][0]),
     .lo_v(lv[v][0]),.lo_r(cr[v][0]),.lo_d(ld[v][0]),.li_v(ov[v][0]),.li_r(ret[v][0]),.li_d(od[v][0]),.flt(flt[v][0]));
 `ifdef OT_COLL_REACH8N
+`ifdef OT_COLL_RBL_DUT
+   dsfd_coll_lane_e_safe8_ntf #(.CORE_CRED(CORE_CRED), .RBL(1)) e(
+`else
    dsfd_coll_lane_e_safe8_ntf #(.CORE_CRED(CORE_CRED)) e(
+`endif
 `elsif OT_COLL_REACH8
    dsfd_coll_lane_e_safe8 e(
 `else
@@ -48,6 +56,37 @@ module tb_coll_reach7;
     .lo_v(lv[v][1]),.lo_r(cr[v][1]),.lo_d(ld[v][1]),.li_v(ov[v][1]),.li_r(ret[v][1]),.li_d(od[v][1]),.flt(flt[v][1]));
   end
  end endgenerate
+`ifdef OT_COLL_RBL_MITER
+ // FORM-COLL 11-05 RBL shadow miter: an RBL = 1 lane beside each RBL = 0 lane of the DUT pair, on the same rx / lo / li_r /
+ // reset inputs.  It checks, every cycle: central send state, in_ready, li, flt, reverse frames identical; forward frame
+ // (valid + all bits) exactly the RBL = 0 frame one edge late.  The shadow tx never reaches the channel (open loop on TX);
+ // the closed loop is the OT_COLL_RBL_DUT transactional run.  Its rx comes from the RBL = 0 peer.
+ wire [511:0] stx[0:1]; wire scr[0:1],sov[0:1]; wire [552:0] sod[0:1]; wire [2:0] sflt[0:1];
+ dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(CORE_CRED), .RBL(1)) sw(
+    .ck(clk),.rs(rst_n),.chb(1'b1),.rx({1'b0,1'b1,tx[1][1]^imp[1],rxv[1]}),.tx(stx[0]),
+    .lo_v(lv[1][0]),.lo_r(scr[0]),.lo_d(ld[1][0]),.li_v(sov[0]),.li_r(ret[1][0]),.li_d(sod[0]),.flt(sflt[0]));
+ dsfd_coll_lane_e_safe8_ntf #(.CORE_CRED(CORE_CRED), .RBL(1)) se(
+    .ck(clk),.rs(rst_n),.chb(1'b1),.rx({1'b0,1'b1,tx[1][0]^imp[0],rxv[0]}),.tx(stx[1]),
+    .lo_v(lv[1][1]),.lo_r(scr[1]),.lo_d(ld[1][1]),.li_v(sov[1]),.li_r(ret[1][1]),.li_d(sod[1]),.flt(sflt[1]));
+ integer m_err=0, m_txw=0, m_rep=0;
+ `define OT_RBL_CMP(RL,SL,N) \
+ reg RL``_pv; reg [$bits(variant[1].dut7.RL.u.u_ep.f_tx)-1:0] RL``_pf; \
+ always @(posedge clk) begin RL``_pv <= variant[1].dut7.RL.u.u_ep.f_tx_v; RL``_pf <= variant[1].dut7.RL.u.u_ep.f_tx; end \
+ always @(negedge clk) if (rst_n) begin \
+  if (SL.u.u_ep.snd !== variant[1].dut7.RL.u.u_ep.snd || SL.u.u_ep.nxt !== variant[1].dut7.RL.u.u_ep.nxt || \
+      SL.u.u_ep.una !== variant[1].dut7.RL.u.u_ep.una || SL.u.u_ep.credits !== variant[1].dut7.RL.u.u_ep.credits || \
+      SL.u.u_ep.rdy_k !== variant[1].dut7.RL.u.u_ep.rdy_k || SL.u.u_ep.rep_ra !== variant[1].dut7.RL.u.u_ep.rep_ra || \
+      sov[N] !== ov[1][N] || (ov[1][N] && sod[N] !== od[1][N]) || sflt[N] !== flt[1][N] || scr[N] !== cr[1][N] || \
+      SL.u.u_ep.r_tx_v !== variant[1].dut7.RL.u.u_ep.r_tx_v) begin \
+    m_err=m_err+1; if(m_err<8) $display("COLL_RBL_STATE_ERR side=%0d cycle=%0d",N,c); end \
+  if (SL.u.u_ep.f_tx_v !== RL``_pv || (RL``_pv && SL.u.u_ep.f_tx !== RL``_pf)) begin \
+    m_err=m_err+1; if(m_err<8) $display("COLL_RBL_TX_ERR side=%0d cycle=%0d v=%b/%b",N,c,SL.u.u_ep.f_tx_v,RL``_pv); end \
+  if (RL``_pv) m_txw=m_txw+1; \
+  if (variant[1].dut7.RL.u.u_ep.rep_ra[0]) m_rep=m_rep+1; \
+ end
+ `OT_RBL_CMP(w,sw,0)
+ `OT_RBL_CMP(e,se,1)
+`endif
  function automatic [552:0] word(input integer side, input integer ep, input integer k);
   reg [31:0] h; integer b; begin
    h=32'h9e3779b9*(k+1) ^ (side*32'h85ebca6b) ^ (ep*32'hc2b2ae35);
@@ -90,6 +129,10 @@ module tb_coll_reach7;
    ld[i][j]=word(j,ep,sk[i][j]);
   end
   if(c==NCYC)begin
+`ifdef OT_COLL_RBL_MITER
+   $display("COLL_RBL_MITER errors=%0d tx_frames=%0d replay_cycles=%0d", m_err, m_txw, m_rep);
+   if (m_err!=0 || m_txw<1000 || m_rep<20) err=err+1+m_err;
+`endif
    $display("COLL_REACH7_STATS ref4 sent=%0d received=%0d mean_latency=%0d.%02d | safe7 sent=%0d received=%0d mean_latency=%0d.%02d | faults ref4=%b/%b safe7=%b/%b | naks=%0d/%0d replays=%0d/%0d timeouts=%0d/%0d",
     sent[0],got[0],lat[0]/(got[0]>0?got[0]:1),(lat[0]*100/(got[0]>0?got[0]:1))%100,
     sent[1],got[1],lat[1]/(got[1]>0?got[1]:1),(lat[1]*100/(got[1]>0?got[1]:1))%100,

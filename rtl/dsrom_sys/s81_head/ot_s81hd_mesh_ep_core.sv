@@ -41,7 +41,7 @@
 // The stacked MAIN head lane block (byte-equivalent composition of the archived ot_s81hd_lane_sc6 MAIN parent, renamed
 // so that no archived parent enters the canonical readset): one dsfd_coll_lane_w_safe8_ntf + the closed static-adapter
 // sub-children ot_s81hd_lsc_t9 x3 / t8 / r0m / r1m (rtl/dsrom_sys/s81_head/ot_s81hd_lsc_parts.sv).
-module ot_s81hd_mesh_lane (
+module ot_s81hd_mesh_lane #(parameter integer RBL = 0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire          chb,
@@ -58,7 +58,7 @@ module ot_s81hd_mesh_lane (
     always @(posedge ck or negedge r_misc) if (!r_misc) rxen <= 1'b0; else rxen <= 1'b1;
     wire [514:0] lrx = {rx[512], rx[513], rx[511:0], rxen};
     wire lo_v, lo_r, li_v, li_r; wire [552:0] lo_d, li_d; wire [2:0] lf;
-    dsfd_coll_lane_w_safe8_ntf u_ln (.ck(ck), .rs(r_lane), .chb(chb), .rx(lrx), .tx(tx), .lo_v(lo_v), .lo_r(lo_r),
+    dsfd_coll_lane_w_safe8_ntf #(.RBL(RBL)) u_ln (.ck(ck), .rs(r_lane), .chb(chb), .rx(lrx), .tx(tx), .lo_v(lo_v), .lo_r(lo_r),
         .lo_d(lo_d), .li_v(li_v), .li_r(li_r), .li_d(li_d), .flt(lf));
     wire [3:0] tvk, crk; wire ovf_t;
     ot_s81hd_lsc_t9 u_t0 (.ck(ck), .rst_n(rst_n), .td(tx_d[143:0]),   .tvk(tvk[0]), .crk(crk[0]), .lod(lo_d[143:0]));
@@ -75,6 +75,7 @@ endmodule
 module ot_s81hd_mesh_ep_core #(
     parameter [1:0]   CH_B = 2'b11,          // board-lane straps of lanes a / b (as ot_s81hd_lep0N_core CH_B)
     parameter integer BQ   = 7,              // per-copy burst FIFO depth (HEAD-RTL-4 bound, see the RX section)
+    parameter integer RBL  = 0,              // opt-in shared replay landing: +1 TX edge
     parameter integer MUT  = 0
 ) (
     input  wire          ck,
@@ -99,9 +100,9 @@ module ot_s81hd_mesh_ep_core #(
     wire        rv_a, rv_b;
     wire [552:0] rd_a, rd_b;
     wire [3:0]  fl_a, fl_b;
-    ot_s81hd_mesh_lane u_la (.ck(ck), .rst_n(rst_n), .chb(CH_B[0]), .rx(coll_ia), .tx(coll_oa),
+    ot_s81hd_mesh_lane #(.RBL(RBL)) u_la (.ck(ck), .rst_n(rst_n), .chb(CH_B[0]), .rx(coll_ia), .tx(coll_oa),
         .tx_v(own_v), .tx_d(own_frame), .rx_v(rv_a), .rx_d(rd_a), .flt(fl_a));
-    ot_s81hd_mesh_lane u_lb (.ck(ck), .rst_n(rst_n), .chb(CH_B[1]), .rx(coll_ib), .tx(coll_ob),
+    ot_s81hd_mesh_lane #(.RBL(RBL)) u_lb (.ck(ck), .rst_n(rst_n), .chb(CH_B[1]), .rx(coll_ib), .tx(coll_ob),
         .tx_v(tv_b), .tx_d(own_frame), .rx_v(rv_b), .rx_d(rd_b), .flt(fl_b));
     // ------------------------------------------------------------------ RX: canonical BEST -> copy slots
     // DIE-HEAD-65: the canonical test crossed the whole lane register (455-bit zero test, 6 wire buffers, l48ub GRT -100).

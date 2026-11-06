@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.mesh_copy_queue_bound.v1",
+ "actual_RBL": 1,
+ "observed_BQ": 8,
+ "edges": 11000,
+ "bounded_model_mismatches": 0,
+ "first_mismatches": [],
+ "observed_bounded_peaks": [
+  9,
+  9
+ ],
+ "bounded_drops": [
+  2,
+  0
+ ],
+ "unbounded_peak": [
+  10,
+  9
+ ],
+ "arrivals": [
+  [
+   401,
+   401
+  ],
+  [
+   400,
+   400
+  ]
+ ],
+ "required_BQ": 10,
+ "scope": "actual native bench input/CRC replay trace; unbounded copyqueue with identical registered landing/A-priority/2edge issue recurrence, not arbitrary-fault-duration guarantee"
+}

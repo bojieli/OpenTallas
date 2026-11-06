@@ -1,0 +1,13 @@
+{
+ "verdict": "FAIL",
+ "core_RBL": 1,
+ "BQ": 7,
+ "peak_copyB_occupancy": 8,
+ "data_errors": 387,
+ "source_faults": [
+  "0x500",
+  "0x400"
+ ],
+ "cause": "copy-B replay burst FIFO capacity exceeded after +1 TX landing edge",
+ "next": "BQ8 candidate from measured8record peak; not physical launched"
+}
