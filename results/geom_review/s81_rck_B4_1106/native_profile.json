@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.s81_rck_native_profile.v1",
+ "source_plan": "/srv/opentallas-scratch2/claude/codex-s81-rck-1106/native_src28_plan.json",
+ "source_sha256": "7c19e222cfa142c5bfa83db84be12d505e20f04726a4ff75787b99c8f1ea5374",
+ "prepared_plan": "/srv/opentallas-scratch2/claude/codex-s81-rck-1106/B4_native_plan.json",
+ "prepared_sha256": "c3b01220f16ae603de0f017adae6eaffbcbf3e47403c50a036e7884c283b28a4",
+ "type": "serdes__t4",
+ "defines": [
+  "OT_KP4_DEC_HARD",
+  "OT_S81_KP4_AM_FACE3",
+  "OT_S81_RCK_RELAY4"
+ ],
+ "physical_view": "/srv/opentallas-scratch2/claude/codex-s81-rck-1106/profile_B4_v2/rx_centered/ot_s81_pma_rxm.lef",
+ "physical_view_sha256": "3d7721aea03376cace185e423e54cab1bffdbfc20041d314991a743d17bc4ac4",
+ "RCK_anchor_um": [
+  1444.512,
+  1090.8
+ ],
+ "model": {
+  "added_recovered_PIN_cycles": 4,
+  "period_ps": 833,
+  "added_latency_ps": 3332,
+  "words_per_recovered_edge": 1,
+  "transport_reset_FF_upper_bound": 2220,
+  "AM_FF": 9,
+  "total_FF_upper_bound": 2229,
+  "required_LOCKSAFE": 1,
+  "minimum_HOLD_EDGES": 64
+ },
+ "native_topology": "preserved full native plan; no reset/landing indices or edges changed",
+ "geometry_review": "results/geom_review/s81_rck_B4_1106/review.json",
+ "state": "PREPARED; fresh mapped connectivity and real clock construction required before route"
+}

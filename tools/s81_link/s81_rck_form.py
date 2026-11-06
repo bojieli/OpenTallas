@@ -154,12 +154,56 @@ def relay_pose(capture,sinks,macros,placement):
                 model=dict(added_recovered_PIN_cycles=4,period_ps=833,added_latency_ps=3332,words_per_recovered_edge=1,transport_reset_FF_upper_bound=2220,AM_FF=9,total_FF_upper_bound=2229,required_LOCKSAFE=1,minimum_HOLD_EDGES=64))
 
 
+
+def native_plan(native,profile,out):
+    """Compose one physical/source option into the full captured native context."""
+    import sys
+    sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'die_plan'))
+    import schema as S
+    import landing_contract as LC
+    native=Path(native).resolve();profile=Path(profile).resolve();out=Path(out)
+    if out.exists():raise ValueError('do not overwrite an existing prepared plan')
+    d=json.loads(native.read_text());t=d['partition_types']['serdes__t4']
+    pose=json.loads((profile/'relay_pose.json').read_text())
+    view=json.loads((profile/'rx_centered/rck_view.json').read_text())
+    if t['outline_um']!=[2885.76,1226.88] or pose['field_width']!=554 or pose['stages']!=4:
+        raise ValueError('this actual profile is qualified only for retained t4 geometry')
+    candidates=[q for c in t['contents'] for q in c.get('physical_parts',[]) if q['physical_master']=='ot_s81_pma_rxm']
+    if len(candidates)!=1:raise ValueError('one exact retained RX physical part required')
+    rx=candidates[0]
+    if rx['origin_um']!=[319.272,952.56] or rx.get('orient')!='MX':raise ValueError('retained native RX pose differs')
+    lef=profile/'rx_centered/ot_s81_pma_rxm.lef'
+    if sha(lef)!=view['outputs'][lef.name]:raise ValueError('prepared RX view differs')
+    rx['lef']=str(lef);rx['lib']=str(profile/'rx_centered/ot_s81_pma_rxm_tt.lib')
+    flags=t.setdefault('verilog_defines',[])
+    for flag in ('OT_S81_KP4_AM_FACE3','OT_S81_RCK_RELAY4'):
+        if flag not in flags:flags.append(flag)
+    pins=t['clock']['pad_clock']['pins']
+    if len(pins)!=1 or pins[0]['name']!='io_pma_rck' or pins[0]['period_ps']!=833:
+        raise ValueError('exact native recovered-clock contract required')
+    rect=view['new_clock_rect'];raw_x=rx['origin_um'][0]+(rect[0]+rect[2])/2
+    P=S.Plan(d,str(native));xy=LC.on_track(P,pins[0]['layer'],raw_x,pins[0]['xy_um'][1])
+    pins[0]['xy_um']=list(xy)
+    out.write_text(json.dumps(d,separators=(',',':'))+'\n')
+    receipt=dict(schema='opentallas.s81_rck_native_profile.v1',source_plan=str(native),source_sha256=sha(native),
+                 prepared_plan=str(out.resolve()),prepared_sha256=sha(out),type='serdes__t4',defines=flags,
+                 physical_view=str(lef),physical_view_sha256=sha(lef),RCK_anchor_um=list(xy),
+                 model=pose['model'],native_topology='preserved full native plan; no reset/landing indices or edges changed',
+                 geometry_review='results/geom_review/s81_rck_B4_1106/review.json',
+                 state='PREPARED; fresh mapped connectivity and real clock construction required before route')
+    out.with_suffix('.profile.json').write_text(json.dumps(receipt,indent=1)+'\n')
+    return receipt
+
+
 def main():
-    a=argparse.ArgumentParser();a.add_argument('--capture',required=True);a.add_argument('--sinks',required=True);a.add_argument('--macros',required=True);a.add_argument('--placement',required=True);a.add_argument('--bb',required=True);a.add_argument('--out',required=True)
+    a=argparse.ArgumentParser();a.add_argument('--capture',required=True);a.add_argument('--sinks',required=True);a.add_argument('--macros',required=True);a.add_argument('--placement',required=True);a.add_argument('--bb',required=True);a.add_argument('--out',required=True);a.add_argument('--native-plan');a.add_argument('--plan-out')
     q=a.parse_args();out=Path(q.out)
     if out.exists():raise ValueError('use a fresh profile output directory')
     pose=relay_pose(q.capture,q.sinks,q.macros,q.placement)
     out.mkdir(parents=True);(out/'relay_pose.json').write_text(json.dumps(pose,indent=1)+'\n')
     m=Path(q.macros);centered_view(m/'ot_s81_pma_rxm.lef',m/'ot_s81_pma_rxm_tt.lib',m/'ot_s81_pma_rxm_ff.lib',q.bb,out/'rx_centered')
+    if q.native_plan:
+        if not q.plan_out:raise ValueError('--native-plan requires --plan-out')
+        native_plan(q.native_plan,out,q.plan_out)
     print(json.dumps(dict(fields=554,stages=4,max_hop_um=pose['max_hop_um'],min_hop_um=pose['min_hop_um'],model=pose['model']),indent=1))
 if __name__=='__main__':main()
