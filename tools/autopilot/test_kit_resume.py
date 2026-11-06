@@ -415,6 +415,26 @@ class RunKitBlock(unittest.TestCase):
         finally:
             shutil.rmtree(d)
 
+    def test_resume_floorplan_goal_route_runs_floorplan_place(self):
+        """KW-FIX-22 11-06 (S81-RCK-2 serdes__t4): start=floorplan, goal route: the runner's first stage call is '$M cts';
+        it must run do-floorplan do-place do-cts (the old filter ran do-cts alone: ORD-0007 3_place.odb missing)."""
+        d = tempfile.mkdtemp()
+        try:
+            rc, out = self.outer(d, "floorplan", "route")
+            self.assertEqual(rc, 0)
+            r = self.make(d, 1, "synth", "cts SKIP_CTS_REPAIR_TIMING=1", "grt CORNER=BC", "route", "cts")
+            self.assertEqual([x[1] for x in r], [[], ["DESIGN_CONFIG=/x SKIP_CTS_REPAIR_TIMING=1 do-floorplan do-place do-cts"],
+                                                 ["DESIGN_CONFIG=/x CORNER=BC do-grt"],
+                                                 ["DESIGN_CONFIG=/x do-5_2_route do-5_3_fillcell do-5_route do-5_route.sdc"], []])
+            os.unlink(os.path.join(d, "done"))
+            r = self.make(d, 2, "grt")                       # start place, first call grt: place + cts + grt
+            self.assertEqual(r[0][1], ["DESIGN_CONFIG=/x do-place do-cts do-grt"])
+            os.unlink(os.path.join(d, "done"))
+            r = self.make(d, 1, "route")                     # route alone from floorplan: steps up to cts, never grt
+            self.assertEqual(r[0][1], ["DESIGN_CONFIG=/x do-floorplan do-place do-cts do-5_2_route do-5_3_fillcell do-5_route do-5_route.sdc"])
+        finally:
+            shutil.rmtree(d)
+
     def test_fail_closed(self):
         for start, goal in (("route", "finish"), ("bogus", "route")):
             d = tempfile.mkdtemp()
