@@ -770,13 +770,13 @@
    },
    "plan": "/srv/opentallas-scratch3/claude/die-s81-70/wave_cg/physical/die_plan/s81/plan_h2_2249.json",
    "gen_host": "epyc5",
-   "src": "/srv/opentallas-scratch2/claude/kw23/src_e9eda",
-   "src_sha": "e9eda32d41c6ab5b3d01405552b84f26dc1c0bca",
+   "src": "/srv/opentallas-scratch2/claude/kw24/src_c2bec",
+   "src_sha": "c2becaa959eeffde87cbaa1a29a1f50d5b5965de",
    "kit_rtl": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch3/claude/codex-wave-bind-1106/kit_rtl_s81_ready_v3.sh",
+    "script": "/srv/opentallas-scratch3/claude/die-s81-70/kit_rtl_s81_ds70_kvov.sh",
     "asbuilt": "/srv/opentallas-scratch3/claude/codex-wave-bind-1106/src_28fc7/physical/die_plan/s81/bind/asbuilt_b178_coll_h2_2249.json",
-    "note": "ROOT approved canonical context recovery: actual strict current emission PASS, 204 exact JSON-normalized captured trees retain RTL/Tcl identities, current C export/topology+GEN finite32912 PASS. Native plan/asbuilt SRC28 unchanged; tools9f role-aware, no legacy receipt stamp."
+    "note": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched | ROOT approved canonical context recovery: actual strict current emission PASS, 204 exact JSON-normalized captured trees retain RTL/Tcl identities, current C export/topology+GEN finite32912 PASS. Native plan/asbuilt SRC28 unchanged; tools9f role-aware, no legacy receipt stamp."
    },
    "gen_args": [
     "--hold-ff-margin",
@@ -1702,7 +1702,15 @@
     "slice_station__t47@16",
     "dsdv_slice_lepw_mu_C__t1@5",
     "dsdv_slice_c1x_C__t6@10",
-    "dsdv_slice_c1x_C__t7@7"
+    "dsdv_slice_c1x_C__t7@7",
+    "ot_s81sl_kv_leaf__t1@4",
+    "ot_s81sl_kv_leaf__t3@4",
+    "ot_s81sl_kv_leaf__t4@4",
+    "slice_station__t52@14",
+    "slice_station__t17@10",
+    "slice_station__t18@9",
+    "slice_station__t24__cl66b71008@4",
+    "slice_station__t28@7"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -1781,14 +1789,10 @@
     "dsdv_bk_g": "KW-FIX-8 23:2x I64: signed dsdv_bk_g, ruled not a stop, no rebuild (RM-31 22:03)",
     "ot_v41_bf16_half": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)",
     "ot_v41_bf_col3_c": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)",
-    "ot_s81sl_kv_leaf__t1": "DIE-S81-70 12:4x: plan hcov stations need the native LF_CS bind overlay (kvnative2 e39248210f); ready_v3 bind has depth 0 -> kit_istations fail-closed; release on overlay",
-    "ot_s81sl_kv_leaf__t3": "DIE-S81-70 12:4x: plan hcov stations need the native LF_CS bind overlay (kvnative2 e39248210f); ready_v3 bind has depth 0 -> kit_istations fail-closed; release on overlay",
-    "ot_s81sl_kv_leaf__t4": "DIE-S81-70 12:4x: plan hcov stations need the native LF_CS bind overlay (kvnative2 e39248210f); ready_v3 bind has depth 0 -> kit_istations fail-closed; release on overlay",
-    "ot_s81sl_kv_leaf__t5": "DIE-S81-70 12:4x: plan hcov stations need the native LF_CS bind overlay (kvnative2 e39248210f); ready_v3 bind has depth 0 -> kit_istations fail-closed; release on overlay",
     "ot_s81sl_leaf__t50": "KW-FIX-22 11:0x: PLAN loop stop. Stale retry entries ot_s81sl_leaf__t50@2..@5 (KW-FIX-4/6 11-03/04) matched today's new attempts, so the wave relaunched it every tick (10:28 a4, 10:37 a5, 10:57 a6) into the same kit_topology fail-closed 'kit_istations: leafup_o0 stations already inserted'. Same kit_istations class as kv_leaf__t1/t3/t4/t5 (DIE-S81-69 owns, COORD 10:2x (3)); release with that plan fix"
    },
-   "queue_src": "main@e9eda32d41c6ab5b3d01405552b84f26dc1c0bca",
-   "work_root": "/srv/opentallas-scratch3/claude/kw21-wave-1106/runs/s81/kit-wave",
+   "queue_src": "main@c2becaa959eeffde87cbaa1a29a1f50d5b5965de",
+   "work_root": "/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/s81/kit-wave",
    "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
    "retry_fix": {
     "__batch_kwfix3_0450": "101 rows appended 04:5x = KW-FIX-3 S81 KIT_PREFLIGHT class fix, merged main 3fe3f58473f (b15ddb969a4 bound macro paths, 19e83948214, b213d81bfd7 clock_entry_clear/macro_channels), in wave src 84291033b77; tools gen_phys/kit_contract change every macro-bearing kit; the CANCELLED-VOLUME leaf rows are the same leaf class with the same macro inputs; the KW-RESUME nochange guard refuses any kit whose inputs did not change",
@@ -2140,7 +2144,7 @@
     "ot_s81sl_kv_leaf__t1@10": "I4 PDN-0006 class pgobs 37a8f8653ad + corepg2 6f751ea4e5b (main b07b52ff0c7, src kw-fix-4-s81i4); KW-FIX-4 19:0x one batch",
     "ot_s81sl_kv_leaf__t3@6": "I4 PDN-0006 class pgobs 37a8f8653ad + corepg2 6f751ea4e5b (main b07b52ff0c7, src kw-fix-4-s81i4); KW-FIX-4 19:0x one batch",
     "ot_s81sl_kv_leaf__t4@12": "I4 PDN-0006 class pgobs 37a8f8653ad + corepg2 6f751ea4e5b (main b07b52ff0c7, src kw-fix-4-s81i4); KW-FIX-4 19:0x one batch",
-    "ot_s81sl_kv_leaf__t5@5": "I4 PDN-0006 class pgobs 37a8f8653ad + corepg2 6f751ea4e5b (main b07b52ff0c7, src kw-fix-4-s81i4); KW-FIX-4 19:0x one batch",
+    "ot_s81sl_kv_leaf__t5@5": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
     "serdes__t3@3": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
     "serdes__t4@3": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
     "serdes__t13@2": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
@@ -2470,19 +2474,29 @@
     "dsdv_slice_c1x_C__t8@7": "9f316/e0 relative-asbuilt/current emitted native authority +strict JSON recovery; actual canonical export/topology+GEN finite32912 PASS.",
     "dsdv_slice_lepw_mus_C__t1@7": "9f316/e0 relative-asbuilt/current emitted native authority +strict JSON recovery; actual canonical export/topology+GEN finite32912 PASS.",
     "slice_station__t47@13": "9f316/e0 relative-asbuilt/current emitted native authority +strict JSON recovery; actual canonical export/topology+GEN finite32912 PASS.",
-    "slice_station__t8@8": "9f316/e0 relative-asbuilt/current emitted native authority +strict JSON recovery; actual canonical export/topology+GEN finite32912 PASS."
+    "slice_station__t8@8": "9f316/e0 relative-asbuilt/current emitted native authority +strict JSON recovery; actual canonical export/topology+GEN finite32912 PASS.",
+    "ot_s81sl_kv_leaf__t1@4": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
+    "ot_s81sl_kv_leaf__t3@4": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
+    "ot_s81sl_kv_leaf__t4@4": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
+    "slice_station__t52@14": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
+    "slice_station__t17@10": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
+    "slice_station__t18@9": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
+    "slice_station__t24__cl66b71008@4": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
+    "slice_station__t28@7": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
    "gen_hosts": [
-    "epyc5"
+    "epyc5",
+    "epyc2"
    ],
    "gen_hosts_note": "KW-FIX-4 20:4x: intel1 scratch2 2 GB free (restage epyc4->intel1 + INFRA churn: mkdir ENOSPC) -> S81 gen/restage epyc4 only until intel1 >300 GB | KW-FIX-4 11:1x (COORD 11:00 + FLEET-BAL-1): S81 gen inputs on epyc4 + intel2 at the same paths (wt/kw-fix-4-s81g17 d7a13f9fef6, wt/kit-wave-15-s81b, die-s81-47/bind_ev2/out, kit-wave/s81/{bind_kw15d,asbuilt_kw15d.json,kit_rtl_kw15d.sh}); intel1 added 11:4x (FLEET-BAL-1 STAGED intel1 11:46, worktree verified); epyc2 skipped (scratch2 96 GB free, root under the 500 GB floor). place_spill true; restage_waiters moves unstarted epyc4 waiters.",
    "note_gen_hosts_1103": "2026-11-03 16:36 KW-FIX-4 (COORD 16:3x: epyc4 0 waiters at load 78/256, localhost 19/858 GB, intel1 12): s81 gen_hosts [epyc4,intel1,intel2] -> [epyc4] (interim, new + restaged s81 attempts gen/stage/queue on epyc4) until epyc4 holds >=10 waiters; restore [epyc4,intel1,intel2] then (code fix host fill targets follows). | 16:46 place_spill false (interim): spillable PLACE waiters of epyc4-gen kits queued on intel2 (ot-run queues on the most planned-free host), so s81 PLACE is pinned to its gen host epyc4 until epyc4 holds >=10 waiters; restore place_spill true with gen_hosts. | 17:03 COORD 17:0x (epyc2 admits 154 GB, intel1 103 GB, 0 waiters): gen_hosts [intel1, epyc4, intel2] + place_spill true restored (PLACE spills to epyc2/intel1 when they admit). | 17:58 COORD 17:5x intel2 scratch2 95% (191 GB free): gen_hosts [epyc4, intel1] (no new intel2 gen/run dirs) until intel2 > 300 GB free.",
    "hosts": [
     "epyc5",
     "epyc6",
-    "intel1"
+    "intel1",
+    "epyc2"
    ],
    "note_gen_hosts_kwf5": "KW-FIX-5 23:1x (COORD 23:0x: epyc4 36 waiters / admits <0, intel1 admits 352 with 0 waiters; PRUNE + worktree removal freed intel1 to 264 GB): s81 gen_hosts [epyc4, intel1]; src s81i8, plan, kit_rtl_h10.sh present on intel1; pick_gen_host sends new attempts to the host with most admits. Back to [epyc4] if intel1 scratch2 <100 GB.",
    "note_hosts_1104": "KW-FIX-6 04:2x COORD 04:20: intel1 scratch 160 GB falling; S81/HEAD/QC stop PLACE spill and gen sync to intel1. epyc2 stays off for S81: scratch2 127 GB, below the 147 floor. KV gen stays on intel1 until its plan event.",
@@ -2608,7 +2622,11 @@
     "dsdv_slice_c1x_C__t9": "KW-FIX-14 10:5x COORD 09:42: 16 C rows released; src_l main 6f3b07f7cbc (tag flow-20261106-d-s81: I106 csite + cem drop of 6 u_em in iq_C, kv512_C). Was held: KW-FIX-10 05:5x: new key at main 99b3ee3b181 (I76/I77, eng_finish + norm_finish); moves after its children are signed off, COORD 05:2x; needs fresh strict bind ",
     "dsdv_slice_lepe_nh_mus_C__t1": "KW-FIX-14 10:5x COORD 09:42: 16 C rows released; src_l main 6f3b07f7cbc (tag flow-20261106-d-s81: I106 csite + cem drop of 6 u_em in iq_C, kv512_C). Was held: KW-FIX-10 05:5x: new key at main 99b3ee3b181 (I76/I77, eng_finish + norm_finish); moves after its children are signed off, COORD 05:2x; needs fresh strict bind ",
     "dsdv_slice_lepe_mu_C__t1": "KW-FIX-14 10:5x COORD 09:42: 16 C rows released; src_l main 6f3b07f7cbc (tag flow-20261106-d-s81: I106 csite + cem drop of 6 u_em in iq_C, kv512_C). Was held: KW-FIX-10 05:5x: new key at main 99b3ee3b181 (I76/I77, eng_finish + norm_finish); moves after its children are signed off, COORD 05:2x; needs fresh strict bind ",
-    "ot_s81sl_kv_leaf__t2": "KW-FIX-14 11:1x COORD 09:33/11:00: launches with item_env OT_SYNTH_ARGS=-noshare (I119 fa0256587d3). Was held: KW-FIX-8 21:4x COORD: yosys SHARE stall, 13 h CPU; stopped; DIE-S81-56 names the form (share pass off in synth, or bank macro carve)"
+    "ot_s81sl_kv_leaf__t2": "KW-FIX-14 11:1x COORD 09:33/11:00: launches with item_env OT_SYNTH_ARGS=-noshare (I119 fa0256587d3). Was held: KW-FIX-8 21:4x COORD: yosys SHARE stall, 13 h CPU; stopped; DIE-S81-56 names the form (share pass off in synth, or bank macro carve)",
+    "ot_s81sl_kv_leaf__t1": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched | was: DIE-S81-70 12:4x: plan hcov stations need the native LF_CS bind overlay (kvnative2 e39248210f); ready_v3 bind has depth 0 -> kit_istations fail-closed; release on overlay",
+    "ot_s81sl_kv_leaf__t3": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched | was: DIE-S81-70 12:4x: plan hcov stations need the native LF_CS bind overlay (kvnative2 e39248210f); ready_v3 bind has depth 0 -> kit_istations fail-closed; release on overlay",
+    "ot_s81sl_kv_leaf__t4": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched | was: DIE-S81-70 12:4x: plan hcov stations need the native LF_CS bind overlay (kvnative2 e39248210f); ready_v3 bind has depth 0 -> kit_istations fail-closed; release on overlay",
+    "ot_s81sl_kv_leaf__t5": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched | was: DIE-S81-70 12:4x: plan hcov stations need the native LF_CS bind overlay (kvnative2 e39248210f); ready_v3 bind has depth 0 -> kit_istations fail-closed; release on overlay"
    },
    "hosts_base": [
     "epyc5",
@@ -2626,7 +2644,8 @@
     "epyc4"
    ],
    "gen_hosts_base": [
-    "epyc5"
+    "epyc5",
+    "epyc2"
    ],
    "gen_host_base": "epyc5",
    "leafslew_items": {
@@ -2640,7 +2659,9 @@
    "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained.",
    "kw22_src_note": "KW-FIX-22 10:0x DIE-S81-69 09:49 CLASS (PORT_BIND extra rst_o_k[0]): src_9f316 reset_tree.out_pins() returned [] for native types; fixed on main by 7ceea6ad772 (tag bn-s81). Wave tools now main 8eeea8e066 (contains 9f316 + I202 pin audit). src_8eeea on epyc5 scratch3 = hardlink copy of Codex src_9f316 + git-archive of all 688 9f..8eeea changed files (0 deletions); reset_tree/gen_phys/kit_topology hashes equal 8eeea [CHECKED]. Native plan/asbuilt SRC28 + kit_rtl s81_ready_v3 unchanged (Codex recovery context kept).",
    "note_kw23_src": "KW-FIX-23 2026-11-06 12:0x: src /srv/opentallas-scratch3/claude/kw22/src_8eeea (8eeea8e0661) -> /srv/opentallas-scratch2/claude/kw23/src_e9c49 = main e9c4952edf0 I212 (KW-FIX-22 classfix + libwire + KIT_RE scratch3; tags cf-s81/cf-qc/ca-head); hardlink of kw21/src_c926f + git-archive of the 1805 changed files, blob sha verified 0 mismatches, on epyc5+epyc6 scratch2 | ONE batch 12:1x: slice_station__t47@15, bk_sel__t2@14, slice_station__t52@13, slice_station__t8@10 = class 'enqueue REFUSED: kit must be HOST:/srv/opentallas-scratch{,2}' (scratch3 work_root), fixed by KIT_RE 404b423268 on main I212. | KW-FIX-23 12:1x (COORD 12:1x): src -> /srv/opentallas-scratch2/claude/kw23/src_e9eda = main e9eda32d41c I213 (tags cg-s81/cg-qc/cb-head): hardlink of src_e9c49 + git-archive of the 13 changed files, blob sha 0 mismatches, epyc5+epyc6. | same batch: PORT_BIND extra rst_o_k[0] rows launched 09:18-09:28 on the pre-fix src_9f316 (class fixed by out_pins 7ceea6ad772, in this src): dsdv_slice_c1x_C__t5@4, dsdv_slice_c1x_C__t7@6, dsdv_slice_c1x_C__t8@8, dsdv_slice_lepe_mu_C__t1@6, dsdv_slice_lepw_mus_C__t1@8. | 12:2x same rst_o class, pre-fix src launches 09:18-09:28: dsdv_slice_c1x_C__t6@9, dsdv_slice_c1x_C__t1@4, dsdv_slice_c1x_C__t3@6, dsdv_slice_lepw_mu_C__t1@4 (the 3 still in PLACE relaunch on src_e9eda only if they FAIL). | 13:52 KW-FIX-23 stopped these 8 waiting PLACE clients (epyc5 funnel, COORD 13:5x) -> KW_PLACE_RC=143 read as FLOW; not a design result, released once: bk_sel__t2@15, dsdv_slice_c1x_C__t3@7, dsdv_slice_c1x_C__t8@9, dsdv_slice_lepe_mu_C__t1@7, slice_station__t47@16, dsdv_slice_lepw_mu_C__t1@5, dsdv_slice_c1x_C__t6@10, dsdv_slice_c1x_C__t7@7",
-   "note_hosts_kw23": "KW-FIX-23 12:5x COORD 12:4x (epyc6 admits 167 GB load 40/128, epyc2 476 GB 68/128; epyc4+epyc5 REFUSED): S81 gen stays epyc5 (plan/kit_rtl inputs + 62 GB Codex bind only there); PLACE prefers epyc6 then epyc2 (spill via the intel2 relay, KW-FIX-22). Revert: place_prefer [epyc5, epyc6]."
+   "note_hosts_kw23": "KW-FIX-23 12:5x COORD 12:4x (epyc6 admits 167 GB load 40/128, epyc2 476 GB 68/128; epyc4+epyc5 REFUSED): S81 gen stays epyc5 (plan/kit_rtl inputs + 62 GB Codex bind only there); PLACE prefers epyc6 then epyc2 (spill via the intel2 relay, KW-FIX-22). Revert: place_prefer [epyc5, epyc6].",
+   "note_gen_epyc2_kw24": "KW-FIX-24 14:5x COORD 14:0x(2)/14:2x (epyc6 24-33 pinned gen-stage waiters, admits -2; epyc2 admits 415 GB): gen-host stages (plan/gen/kit_rtl/bind/geom) are pinned to the attempt's gen host because they read the 47-GB src + plan + bind at the same paths (too big to --stage). Class fix: those inputs now exist on epyc2 at the same paths (hardlink rsync off the local src_28fc7 base, +7 GB: kw21/src_c926f, kw23/src_e9eda, kw22/src_3761, kw22/bind_qc_g, kw23/prep_l48ui, kw11/prep_uh, die-s81-70/wave_cg, codex-wave-bind-1106 s81_ready_v3/s81_emitted_v2) and epyc2 joins gen_hosts + hosts, so pick_gen_host/restage_waiters move unstarted waiters off epyc6. work_root -> fresh lane kw24-wave-1106 (epyc2's kw21-wave-1106 lane root carries the ot-run SPILL marker from PLACE spills, so gen_hosts() dropped epyc2). Revert: work_root kw21-wave-1106, drop epyc2.",
+   "note_kw24_src": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched"
   },
   "s81_head": {
    "enabled": true,
