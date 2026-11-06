@@ -1222,6 +1222,7 @@ def main():
     ap.add_argument("--util", type=float, default=None, help="explicit density overrides recipe (fallback 0.6)")
     ap.add_argument("--sigmax", default=None, help="explicit signal ceiling overrides recipe (fallback M5)")
     ap.add_argument("--prompt-rx-spread", action="store_true", help="opt-in prompt C: reserve density headroom in the north RX pin band")
+    ap.add_argument("--prompt-reset-local-sites", help="Opt-in same-cycle qualified host reset replicas near prior placed sinks TSV")
     # FLOW-FIX 2026-10-25 (flow canary F1/F2 + COORD per-corner insertion): main's kit-flow defaults via
     # tools/die_plan/core_flow.py -- RTL lint before synth, RCX-calibrated RC for place/CTS/GRT, per-corner IO vclk
     # binding (TT in constraint.sdc, FF in the FF-only GRT hold repair step of run_kit_kv.sh)
@@ -2020,6 +2021,14 @@ def main():
         shutil.copyfile(Path(__file__).with_name("prompt_rx_spread_release.tcl"), kd / "prompt_rx_spread_release.tcl")
         f = kd / "face_flops_release.tcl"
         f.write_text(f.read_text() + "\nsource /work/prompt_rx_spread_release.tcl\n")
+    if a.prompt_reset_local_sites:
+        if mod != "qkd_hr_core_prompt" or not rec.get("face_flops", True):
+            raise SystemExit("--prompt-reset-local-sites requires the prompt registered-face form")
+        shutil.copyfile(REPO / "tools/die_plan/prompt_reset_local.tcl", kd / "prompt_reset_local.tcl")
+        shutil.copyfile(a.prompt_reset_local_sites, kd / "prompt_reset_sites.tsv")
+        f = kd / "face_flops.tcl"
+        f.write_text(f.read_text() + "\nsource /work/prompt_reset_local.tcl\n")
+        (kd / "prompt_reset_local_delta.json").write_text(json.dumps(dict(added_cycles=0, root="registered host_rst_n", max_group_loads=64, grouping="prior placement32um bins", qualifier_sideinputs="exact original nets"), indent=1) + "\n")
     MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     tm = timing_modes_stage(kd) if a.two_mode_grt else None   # after config.mk, before kit_hash

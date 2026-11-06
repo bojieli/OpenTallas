@@ -21,8 +21,8 @@ module qkd_host_program_rx_target_cp #(parameter integer MUT=0)(
  wire is_program=rd[527:524]==8;wire pop=rv&&is_program;
  wire[7:0]op=rd[7:0];
  wire emit=returns!=0;wire[7:0]next_returns={1'b0,returns}+8'(ncq)+8'(pop)-8'(emit);
- // DIE-KV-70 prompt form: program decode one edge after the frame register (rd -> p1 -> outputs), all ops alike, so the
- // order is kept; the credit return and the normal path keep their timing.
+ // Opt-in program decode takes two edges after rd (rd -> p1 -> p2 -> outputs).
+ // All opcode/data/valid fields stay aligned; credits and normal frames retain timing.
  // Opt-in clean-decode pipeline: complete program op/data/valid bundle gains one edge.
  // Normal frames and credit return retain their existing latency. Invalid-program
  // fault observation gains the same edge as the program command bundle.
