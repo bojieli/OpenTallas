@@ -1,0 +1,34 @@
+Fresh clock-on kit with staged die reset contract, 2026-11-06
+
+Kit7ef91ae3ca9bc49a was generated into a new directory after explicitly
+including BOTH physical/die_plan/hbm/reset_contract.json and its relative
+reset_contract/receipt.txt in the sparse source checkout. The original
+F3kit had the receipt directory but lacked the root contract file;
+kit_reset_contract.stage returnsNone for an absent source. No component
+source-proof option/profile was requested. F3 remains preserved without
+physical reset qualification; it was not retrofitted or patched.
+
+The new freeze.reset_contract records edges64, moduleot_svgr_own,
+contractSHAd95b0c5bc593188ff8a5c827bfbff6b4d95929fe7c70787ca712a403c963acc7,
+receiptSHAafe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a.
+The new kit's own lec.reset_contract_gate({}) uses64 without an environment
+override (asserted66edges, no refusal). Actual image was viewed; all six
+clock centres and literal io.tcl placements still match raw p37 and all
+8coarse entries expanded onto M5 tracks exactly. clock_site_audit.json
+records every scalar comparison; the other pin centres are unchanged.
+
+All generated RTL, fullconfig.mk, SDC, plan_pins.json andio.tcl are
+byte-identical to F3. lec.py is also byte-identical. The actual mapped
+91,866cells /12,991.1um² /25.3685% utilization result is reused without
+new synthesis or source proof. Only reset proof metadata was added.
+The staged contract/receipt are byte-identical to the readonly external
+contract approved for the separately submitted isolated compiler LEC.
+
+Compiler LEC is a separate pending gate. Its source kit remainsF3 readonly,
+with identical mapped33cc netlist readonly, external declared64-edge
+contract readonly, fresh outputlec_clockon/results and default32GB
+ordinary admission. This preflight does not claim its eventual verdict.
+No placement, CTS, GRT or route was launched.
+
+Fresh complete kit:
+intel2:/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits_clockon_reset64/ot_svgr_own_2054dcac0c09-headtail_p37_clockon_reset64

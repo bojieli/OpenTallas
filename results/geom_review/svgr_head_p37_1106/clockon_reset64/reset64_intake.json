@@ -1,0 +1,49 @@
+{
+  "verdict": "PASS",
+  "new_kit_hash": "7ef91ae3ca9bc49a",
+  "old_clockon_kit_hash": "f3b51fdee8898467",
+  "reset_contract": {
+    "default": 4,
+    "requested": null,
+    "contract": {
+      "file": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits_clockon_reset64/ot_svgr_own_2054dcac0c09-headtail_p37_clockon_reset64/reset_contract.json",
+      "die": "hbm",
+      "edges": 64,
+      "assert_edges": 66,
+      "receipt": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits_clockon_reset64/ot_svgr_own_2054dcac0c09-headtail_p37_clockon_reset64/reset_contract/receipt.txt"
+    },
+    "used": 64,
+    "debug_overrides": {}
+  },
+  "freeze_reset_contract": {
+    "edges": 64,
+    "module": "ot_svgr_own",
+    "die": "hbm",
+    "contract": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/wt/physical/die_plan/hbm/reset_contract.json",
+    "contract_sha256": "d95b0c5bc593188ff8a5c827bfbff6b4d95929fe7c70787ca712a403c963acc7",
+    "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a"
+  },
+  "reset_contract_sha256": "d95b0c5bc593188ff8a5c827bfbff6b4d95929fe7c70787ca712a403c963acc7",
+  "reset_receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a",
+  "matches_isolated_lec_readonly_contract": true,
+  "all_rtl_files_identical": true,
+  "configuration_identity": {
+    "config.mk": true,
+    "constraint.sdc": true,
+    "plan_pins.json": true,
+    "io.tcl": true
+  },
+  "mapped_size_reuse": {
+    "standard_cells": 91866,
+    "standard_area_um2": 12991.1,
+    "standard_utilization": 0.25368472914592055,
+    "reason": "Entire RTL/config/SDC byte-identical to mapped kit; only reset proof metadata added."
+  },
+  "new_synthesis_run": false,
+  "new_source_proof_run": false,
+  "physical_route_run": false,
+  "compiler_lec_tool_identity": {
+    "equal": true,
+    "sha256": "8aff8b09a3f44ba6fdb230ad01c7c98f7d56e0fc58d6b4c455a03f1be369994b"
+  }
+}

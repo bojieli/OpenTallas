@@ -1,0 +1,127 @@
+ot-run: localhost      admits   122 GB (avail 312, reserve 0, fresh 81.2, peak 44.3, headroom 0, waiters 1/32 GB) load 176/112 running 56 disk 139 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2389877-1793976865 after 1 s
+SIGNOFF_BUNDLE signoff.py sdc_lint.py face_guard.py io_hold_qualification.py pair_skew.tcl clock_family.tcl kit_modes.py data_droop.py core_io_reference.py child_clock_witness.py parent_boundary.py hard_landing.py
+{"kit": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits_clockon_reset64/ot_svgr_own_2054dcac0c09-headtail_p37_clockon_reset64", "pins": 4897, "clocks": ["hbm_clk", "hbm_pc_clk[0]", "hbm_pc_clk[1]", "hbm_pc_clk[2]", "hbm_pc_clk[3]", "stream_clk"], "resets": 2, "design": "ot_svgr_own", "top": "ot_svgr_own", "wrapper": false, "face_shell": {"core": "ot_svgr_own__fcore", "in_cycles": 1, "out_cycles": 1, "face_flops": 4889, "dropped": 0, "unread_kept": 0, "const_out_bits": 1156, "dup_out_bits": 0, "plan_pins": 4897}, "kit_hash": "7ef91ae3ca9bc49a"}
+{
+  "kit": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits_clockon_reset64/ot_svgr_own_2054dcac0c09-headtail_p37_clockon_reset64",
+  "kit_hash": "7ef91ae3ca9bc49a",
+  "view": "ot_svgr_own@2054dcac0c09",
+  "outline_um": [
+    129.6,
+    432.0
+  ],
+  "clocks": [
+    {
+      "name": "hbm_clk",
+      "layer": "M5",
+      "x": 64.632,
+      "y": 216.0
+    },
+    {
+      "name": "hbm_pc_clk[0]",
+      "layer": "M5",
+      "x": 64.728,
+      "y": 216.0
+    },
+    {
+      "name": "hbm_pc_clk[1]",
+      "layer": "M5",
+      "x": 64.824,
+      "y": 216.0
+    },
+    {
+      "name": "hbm_pc_clk[2]",
+      "layer": "M5",
+      "x": 64.92,
+      "y": 216.0
+    },
+    {
+      "name": "hbm_pc_clk[3]",
+      "layer": "M5",
+      "x": 65.016,
+      "y": 216.0
+    },
+    {
+      "name": "stream_clk",
+      "layer": "M5",
+      "x": 65.112,
+      "y": 216.0
+    }
+  ],
+  "clock_pin_entry": "on",
+  "m5_offset_um": 0.024,
+  "m5_pitch_um": 0.048,
+  "all_clock_x_on_grid": true,
+  "physical_route_run": false
+}
+
+{
+  "verdict": "PASS",
+  "new_kit_hash": "7ef91ae3ca9bc49a",
+  "old_clockon_kit_hash": "f3b51fdee8898467",
+  "reset_contract": {
+    "default": 4,
+    "requested": null,
+    "contract": {
+      "file": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits_clockon_reset64/ot_svgr_own_2054dcac0c09-headtail_p37_clockon_reset64/reset_contract.json",
+      "die": "hbm",
+      "edges": 64,
+      "assert_edges": 66,
+      "receipt": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits_clockon_reset64/ot_svgr_own_2054dcac0c09-headtail_p37_clockon_reset64/reset_contract/receipt.txt"
+    },
+    "used": 64,
+    "debug_overrides": {}
+  },
+  "freeze_reset_contract": {
+    "edges": 64,
+    "module": "ot_svgr_own",
+    "die": "hbm",
+    "contract": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/wt/physical/die_plan/hbm/reset_contract.json",
+    "contract_sha256": "d95b0c5bc593188ff8a5c827bfbff6b4d95929fe7c70787ca712a403c963acc7",
+    "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a"
+  },
+  "reset_contract_sha256": "d95b0c5bc593188ff8a5c827bfbff6b4d95929fe7c70787ca712a403c963acc7",
+  "reset_receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a",
+  "matches_isolated_lec_readonly_contract": true,
+  "all_rtl_files_identical": true,
+  "configuration_identity": {
+    "config.mk": true,
+    "constraint.sdc": true,
+    "plan_pins.json": true,
+    "io.tcl": true
+  },
+  "mapped_size_reuse": {
+    "standard_cells": 91866,
+    "standard_area_um2": 12991.1,
+    "standard_utilization": 0.25368472914592055,
+    "reason": "Entire RTL/config/SDC byte-identical to mapped kit; only reset proof metadata added."
+  },
+  "new_synthesis_run": false,
+  "new_source_proof_run": false,
+  "physical_route_run": false
+}
+	Command being timed: "bash ./run_gen_clockon_reset64.sh"
+	User time (seconds): 8.86
+	System time (seconds): 1.24
+	Percent of CPU this job got: 98%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:10.31
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 556252
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 288413
+	Voluntary context switches: 195
+	Involuntary context switches: 509
+	Swaps: 0
+	File system inputs: 96
+	File system outputs: 96256
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on localhost (unit oth-ubuntu-2389877-1793976865): exit 0

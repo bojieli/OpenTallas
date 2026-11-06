@@ -1,0 +1,114 @@
+{
+ "schema": "opentallas.hbm_arch.core_freeze.v1",
+ "view": "ot_svgr_own@2054dcac0c09",
+ "module": "ot_svgr_own",
+ "design": "ot_svgr_own",
+ "rtl_top": "ot_svgr_own",
+ "recipe_key": "ot_svgr_own__headtail",
+ "recipe_sha256": "870750d8a9f8eb2780d6e000a0cef81cb3c844e5ab657e2eff72da20d44999a5",
+ "canonical_type": null,
+ "wrapper": null,
+ "outline_um": [
+  129.6,
+  432.0
+ ],
+ "plan": "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v37/die_plan.json",
+ "plan_sha256": "80ed6e571900f1f5dc0eab590445c10c90d80d2cec43306e252edf57870eab35",
+ "pins_file": "plan_pins.json",
+ "pins_sha256": "1b21f3b9771f432a8d8985c3f987b02a19c6300d94f2625ca60e6344da5afab7",
+ "pins_canon_sha256": "3c452f13eb8b179741e5f91a94555dcf796be72ee0bac16b66895c1f8d7d95f8",
+ "pins": 4897,
+ "clocks": [
+  "hbm_clk",
+  "hbm_pc_clk[0]",
+  "hbm_pc_clk[1]",
+  "hbm_pc_clk[2]",
+  "hbm_pc_clk[3]",
+  "stream_clk"
+ ],
+ "resets": [
+  "stream_rst_n",
+  "hbm_rst_n"
+ ],
+ "period_ps": 833.0,
+ "common_latency_ps": 250.0,
+ "corner": "TC",
+ "plan_common_latency_ps": 250.0,
+ "core_clock_contract": null,
+ "orfs_var_overrides": [],
+ "sdc_lint": "PASS (gen)",
+ "macros": [],
+ "face_shell": {
+  "core": "ot_svgr_own__fcore",
+  "in_cycles": 1,
+  "out_cycles": 1,
+  "face_flops": 4889,
+  "dropped": 0,
+  "unread_kept": 0,
+  "const_out_bits": 1156,
+  "dup_out_bits": 0,
+  "plan_pins": 4897
+ },
+ "kit_hash": "7ef91ae3ca9bc49a",
+ "plan_pins_source": "cores/ot_svgr_own__129.6x432__d44v_split.json",
+ "plan_pins_source_sha256": "2054dcac0c09a03028aaf396af0a04c08bbfb274dd2170b72f1383b2f16b0dac",
+ "plan_pins_source_canon_sha256": "efeb1a4d37dc6074bc18da98f4148c9804b0e55f4b30087b88400631a85130ea",
+ "flow_defaults": {
+  "rc_cal": true,
+  "f1": {
+   "io_tt_ps": 250.0,
+   "io_ff_ps": 202.5,
+   "mechanism": "two-mode GRT (scene BC vclk_ff.sdc FF hold, scene tc TT setup) + gates",
+   "basis": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "f4": true,
+  "cts_setup_tt": {
+   "previous_post_cts": "/work/f4_chain_leaf.tcl",
+   "repair": "setup only (scene tc / vclk OT_VCLK_TT)",
+   "hold": "GRT step only"
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold",
+   "tt": 250.0,
+   "ff": 202.5,
+   "measured_hold_dropped": true
+  },
+  "rule": "FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)"
+ },
+ "clock_density_contract": {
+  "schema": "opentallas.hbm_multi_density.v1",
+  "module": "ot_svgr_own",
+  "clock_ports": [
+   "hbm_clk",
+   "hbm_pc_clk[0]",
+   "hbm_pc_clk[1]",
+   "hbm_pc_clk[2]",
+   "hbm_pc_clk[3]",
+   "stream_clk"
+  ],
+  "layout": "density",
+  "common_alignment": true,
+  "merge_roots": false,
+  "review": {
+   "verdict": "AUTO",
+   "by": "gen_core_kit_hbm --multiport-density auto",
+   "note": "DIE-HBM-61/HOLD 11-03 class MULTIPORT-HOLD (OWNER 11-03 safe forms; targets, not gates): a native multi-port core (face clocks clk_n/e/s/w + clk_macro* + clk) without a reviewed density contract got one independent TritonCTS tree per port; tap_balance pads short trees to the fixed 250-ps target only, so face trees stayed 50-95 ps early vs the macro-fan core tree (130-167 um leaf fans) -> face->body zero-logic reg2reg FF hold -158..-212 ps.  Auto form = the reviewed vec6293 form: per-port density trees (no pin merged or dropped) + common tap alignment.  Probe vms vb64bbf321780 CTS: FF reg2reg -212.47 -> -34.32 (screen PASS), tap spread 20.6 ps, TT setup -82.9 -> -9.3; insertion ~482 ps TT -> hard_core_latency contract (band INFO)"
+  },
+  "delay_cell": "BUFx12_ASAP7_75t_R",
+  "file": "clock_density_contract.json"
+ },
+ "clock_taps": {
+  "mode": "density",
+  "sinks": 1250,
+  "dmax_um": 80.0
+ },
+ "reset_contract": {
+  "edges": 64,
+  "module": "ot_svgr_own",
+  "die": "hbm",
+  "contract": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/wt/physical/die_plan/hbm/reset_contract.json",
+  "contract_sha256": "d95b0c5bc593188ff8a5c827bfbff6b4d95929fe7c70787ca712a403c963acc7",
+  "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a"
+ },
+ "source_commit": "208e62e01793943def43e2ff0eaec8ef86ec23c5"
+}
