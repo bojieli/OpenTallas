@@ -4351,10 +4351,10 @@
  ],
  "note_hosts_kw17": "KW-FIX-17 15:4x COORD 15:3x: per-host disk exclusion; epyc4 (scratch2 93) and epyc2 (scratch2 96) out of place hosts, global stop lifted; *_base = full lists, watcher kw17/disk_hosts.sh restores a host at scratch2 >=100",
  "_kw17_ok": [
-  "epyc5",
-  "epyc6",
   "intel1",
-  "intel2"
+  "intel2",
+  "epyc5",
+  "epyc6"
  ],
  "note_onboard_epyc56": "KW-FIX-18 2026-11-05 19:5x (COORD: epyc5/epyc6 LIVE in ot-run, ~677 GB admit, load 0/128; scratch2 1.7/0.8 TB): PLACE hosts += epyc5, epyc6 FIRST in place_prefer for every die (preferred over intel1). gen_hosts follow when the src_16b rsync from epyc4 lands there."
 }
