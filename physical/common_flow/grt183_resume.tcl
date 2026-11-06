@@ -13,13 +13,44 @@
 # This hook only SAVES the resized design ($RESULTS_DIR/5_1_grt.grt183_resume.odb) and re-raises the error, so the stage
 # still fails; tools/run_abi3_physical.py then re-runs the whole 5_1_grt stage ONCE, in a fresh process, from that
 # design (every repair re-runs: no mutation discarded, no repair skipped, no guard or limit changed).  A second GRT-0183
-# (marker 5_1_grt.grt183_recovered.json present) is not saved again: the route fails as before (fail-closed).
+# (marker 5_1_grt.grt183_recovered.json present) saves a distinct diagnostic-only terminal DB with all current
+# hook shapes intact, then fails with the original Tcl error/options. It is never used for another resume.
 #
 # Sourced BEFORE the block's own PRE_GLOBAL_ROUTE hook: it records the routing obstructions and placement blockages the
 # stage started with; the saved design drops the ones the block's hook added (keepouts / macro edge guards, which the
 # re-run's PRE hook re-creates from unchanged pins and macros -- macro_edge_via_guard.tcl refuses a second add), so the
 # re-run starts from exactly the stage's input state plus the repair mutations.
 namespace eval ot_g183 {
+  variable hook_source [info script]
+  proc json_string {value} {
+    set out "\""
+    foreach char [split $value ""] {
+      scan $char %c code
+      switch -- $char {
+        "\\" { append out "\\\\" }
+        "\"" { append out "\\\"" }
+        default {
+          if {$code < 32} { append out [format {\u%04x} $code] } else { append out $char }
+        }
+      }
+    }
+    return "${out}\""
+  }
+  proc save_terminal {helper message options} {
+    variable hook_source
+    set stem [file join $::env(RESULTS_DIR) "5_1_grt.grt183_terminal.${helper}.[pid].[clock clicks]"]
+    # This is diagnostic evidence, never a resume input: keep every actual shape.
+    set failed [catch {write_db ${stem}.odb} detail]
+    set fields [dict create stage 5_1_grt helper $helper source $hook_source \
+      error $message error_options $options odb ${stem}.odb \
+      db_status [expr {$failed ? "WRITE_FAILED" : "SAVED"}] db_detail $detail \
+      scope DIAGNOSTIC_ONLY_NO_RETRY captured_at [clock format [clock seconds] -gmt 1 -format {%Y-%m-%dT%H:%M:%SZ}]]
+    set pairs {}
+    dict for {key value} $fields { lappend pairs "[json_string $key]: [json_string $value]" }
+    set channel [open ${stem}.json {WRONLY CREAT EXCL}]
+    try { puts $channel "\{[join $pairs ,]\}" } finally { close $channel }
+    puts "OT_GRT183_TERMINAL_SAVED helper=$helper metadata=${stem}.json db_status=[dict get $fields db_status]; diagnostic only, no retry"
+  }
   proc keys {} {
     set b [ord::get_db_block]; set out {}
     foreach o [$b getObstructions] {
@@ -58,6 +89,9 @@ foreach ot_g183_helper {repair_design_helper repair_timing_helper} {
         write_db $dir/5_1_grt.grt183_resume.odb
         puts "OT_GRT183_RESUME_SAVED helper=@H@ odb=$dir/5_1_grt.grt183_resume.odb hook_shapes_dropped=$ot_n: incremental GRT-0183 inside @H@; the runner re-runs 5_1_grt once in a fresh process from this resized design"
       } elseif {[string match "*GRT-0183*" $msg]} {
+        if {[catch {ot_g183::save_terminal @H@ $msg $opts} ot_save_error]} {
+          puts "OT_GRT183_TERMINAL_SAVE_FAILED helper=@H@: $ot_save_error"
+        }
         puts "OT_GRT183_RESUME_REFUSED helper=@H@: GRT-0183 again after one fresh-process resume; not retried"
       }
       return -options $opts $msg
