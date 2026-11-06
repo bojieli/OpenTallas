@@ -1773,6 +1773,11 @@ def start_relays(T):
         return "run_root" if n == "rst_root_n" else "rn_" + raw(n)
     used = {raw(r["d"]) for r in T["relays"]} | {f"rr_t{i}" for i in outs}
     roles = T.get("tap_roles", {})
+    def role(i):
+        # Actual emission trees use integer indices; JSON receipts carry string keys.
+        if i in roles and str(i) in roles and roles[i] != roles[str(i)]:
+            raise ResetError(f"conflicting integer/string reset tap role at {i}")
+        return roles.get(i, roles.get(str(i), "mission"))
     out = []
     for r in T["relays"]:
         m = _TAPQ.match(r["q"])
@@ -1780,7 +1785,7 @@ def start_relays(T):
         srl = r["name"].replace("u_rrl", "u_srl", 1)
         if m and int(m.group(1)) not in outs:
             i = int(m.group(1))
-            if roles.get(i, "mission") == "bootstrap":
+            if role(i) == "bootstrap":
                 # BOOTSTRAP consumer: the registered raw delivered reset (same flop count => same release offset)
                 out.append(dict(base, name=r["name"], d=raw(r["d"]), q=r["q"], role="boot"))
             else:
@@ -1932,7 +1937,7 @@ def _rtl_lines_start(T, ind, src, start_src, lock_src=LOCK_SRC):
             f": consumer taps = registered RAW wavefront reset (boot before START); start_t{T['start_tap']} = the "
             "local registered START tap (reset AND run) for the declared mission-admission input"
             if T["start_role"] == "bootstrap" else ": consumer taps = registered (reset AND run)") +
-            ("; core overrides " + ", ".join(f"t{k}:{v}" for k, v in sorted(T["tap_roles"].items())
+            ("; core overrides " + ", ".join(f"t{k}:{v}" for k, v in sorted(T["tap_roles"].items(), key=lambda item: int(item[0]))
                                              if v != T["start_role"]) if any(v != T["start_role"] for v in
                                                                               T["tap_roles"].values()) else ""))
     declared = {f"rst_n_t{i}" for i in taps} | {"rst_root_n", "run_root"}
