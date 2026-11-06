@@ -187,6 +187,7 @@ set ff_n 0; set ff_miss 0
 set ff_interior_dbu [expr {round(([info exists ::env(OT_FF_INTERIOR_UM)] ? $::env(OT_FF_INTERIOR_UM) : 10.0) * $ff_dbu)}]
 set ff_interior {}
 set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]
+set ff_chain_f [open $::env(RESULTS_DIR)/ot_face_chain.txt w]; set ff_nchain 0
 # inputs first: a 1-station ft slot's only flop registers its input face
 foreach pass {INPUT OUTPUT} {
   foreach bt [$ff_blk getBTerms] {
@@ -254,6 +255,26 @@ foreach pass {INPUT OUTPUT} {
     $f setPlacementStatus FIRM
     puts $ff_out "[$f getName]\t$face\t[expr {$cx / double($ff_dbu)}]\t[expr {$cy / double($ff_dbu)}]\t$nm"
     incr ff_n
+    # HBM-GAPS-8 11-06 (opt-in OT_FF_CHAIN_PIN=1, default off = unchanged): the pure BUF/INV cells between an OUT face
+    # flop and its port (the QN inverter of the face register) go FIRM right next to the flop, on the same row; GPL had
+    # dragged them up to ~600 um away (SVGR_TOP lt0[134]: flop at its pin, INV at x 191 y 7 -> ~700 ps of wire, 249
+    # out-face endpoints at TT -406 ps).  face_flops_release.tcl releases them with the flops before DPL.
+    if {$pass eq "OUTPUT" && [info exists ::env(OT_FF_CHAIN_PIN)] && $::env(OT_FF_CHAIN_PIN) eq "1"} {
+      set ff_ch [lrange [ff_chain_out [$bt getNet] 0] 0 end-1]
+      set ff_xx [expr {$face eq "E" ? $cx : $cx + $w}]
+      foreach ci [lreverse $ff_ch] {
+        if {[ff_is_ff $ci] || [$ci getPlacementStatus] eq "FIRM"} continue
+        set iw [[$ci getMaster] getWidth]
+        if {$face eq "E"} { set ff_xx [expr {$ff_xx - $iw}] }
+        set ff_xx [expr {$ff_x0 + (($ff_xx - $ff_x0) / $ff_sw) * $ff_sw}]
+        if {[dict exists $ff_orient $cy]} { $ci setOrient [dict get $ff_orient $cy] }
+        $ci setLocation $ff_xx $cy
+        $ci setPlacementStatus FIRM
+        puts $ff_chain_f [$ci getName]
+        incr ff_nchain
+        if {$face ne "E"} { set ff_xx [expr {$ff_xx + $iw}] }
+      }
+    }
   }
 }
 # ---- ft stations j >= 1 (R3)
@@ -549,6 +570,7 @@ foreach bt [$ff_blk getBTerms] {
   }
 }
 close $ff_out
+close $ff_chain_f; if {$ff_nchain} { puts "OT_FACE_CHAIN pinned $ff_nchain face-chain cells" }
 puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers; $ff_ndup cells duplicated for output ports sharing a merged flop); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
 if {$ff_lst} { puts "OT_FACE_FLOPS landed ft slots: $ff_lst stations s0..s<k-1> FIRM after their landing rings at L*(j+1)/k" }
 # KV-G3 10-24: FIRM plan internal stations + plan-cell sites of a bound kit (tools/die_plan/kit_istations.py)

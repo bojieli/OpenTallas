@@ -8,7 +8,10 @@ module ot_svgr_top_cachecut #(parameter integer LBANKS=4,parameter integer LB=(L
  // the static programme; issuer + feed headers).  0 (default) = unchanged.
  parameter integer XSLOT=0,parameter integer CTXW=(XSLOT!=0)?53:46,
  parameter integer OPEN_IL=0,    // HBM-SMXL: open interlock of the producer (feed / cdc OPEN_IL)
- parameter integer CACHE_RW_SRAM=0, parameter integer ATT_MARK=0)(  // HBM-PV-ATTMARK: feed programme word [119] attention mark (default 0 = unchanged)
+ parameter integer CACHE_RW_SRAM=0, parameter integer ATT_MARK=0,  // HBM-PV-ATTMARK: feed programme word [119] attention mark (default 0 = unchanged)
+ // HBM-GAPS-8 SVGR_TOP P1 (default 0 = unchanged): issuer MPIPE, producer OREG (sector word registered after the rotate,
+ // cache open delayed one more edge to match), cache WPIPE (registered row commit).  Internal edges only; no pin moves.
+ parameter integer P1=0)(
  // strap identity: id_stack = HBM stack / quadrant (SW0 SE1 NW2 NE3), id_sm = SM index k (PCs 4k..4k+3)
  input wire[1:0]id_stack,input wire[2:0]id_sm,
  input wire stream_clk,stream_rst_n,hbm_rst_n,
@@ -29,7 +32,7 @@ module ot_svgr_top_cachecut #(parameter integer LBANKS=4,parameter integer LB=(L
  wire[15:0]reserve_epoch,start_epoch,program_start_loops;wire[6:0]reserve_rows;wire[9:0]reserve_tag_base;
  wire[PAW-1:0]program_start_base;wire[PAW:0]program_start_limit;wire[CTXW-1:0]program_start_ctx;wire[LBANKS-1:0]block_ready;wire[1:0]cache_ready,cache_owned;
  assign fault=feed_fault||issuer_fault;
- ot_hbm_svc_sm_issuer_rel #(.LBANKS(LBANKS),.NID(NID),.IDW(IDW),.PAW(PAW),.DD(DD),.MUT(IMUT),.ID_COHORT(ID_COHORT),.XSLOT(XSLOT)) issuer(
+ ot_hbm_svc_sm_issuer_rel #(.LBANKS(LBANKS),.NID(NID),.IDW(IDW),.PAW(PAW),.DD(DD),.MUT(IMUT),.ID_COHORT(ID_COHORT),.XSLOT(XSLOT),.MPIPE(P1)) issuer(
   .clk(stream_clk),.rst_n(stream_rst_n),.desc_we(desc_we),.desc_addr(desc_addr),.desc_data(desc_data),
   .run_v(run_v),.run_base(run_base),.run_count(run_count),.run_layer(run_layer),
   .ids_v(ids_v),.ids_layer(ids_layer),.ids(ids),.ids_cohort(ids_cohort),.running(running),.run_done(run_done),.fault(issuer_fault),
@@ -39,7 +42,7 @@ module ot_svgr_top_cachecut #(parameter integer LBANKS=4,parameter integer LB=(L
   .start_v(start_v),.start_bank(start_bank),.start_epoch(start_epoch),.program_start_v(program_start_v),
   .program_start_base(program_start_base),.program_start_limit(program_start_limit),.program_start_loops(program_start_loops),
   .program_start_ctx(program_start_ctx),.program_done(program_done));
- ot_svgr_feed_cachecut #(.LBANKS(LBANKS),.PAW(PAW),.PREL(PREL),.XSLOT(XSLOT),.OPEN_IL(OPEN_IL),.ATT_MARK(ATT_MARK),.CACHE_RW_SRAM(CACHE_RW_SRAM)) feed(
+ ot_svgr_feed_cachecut #(.LBANKS(LBANKS),.PAW(PAW),.PREL(PREL),.XSLOT(XSLOT),.OPEN_IL(OPEN_IL),.ATT_MARK(ATT_MARK),.CACHE_RW_SRAM(CACHE_RW_SRAM),.P1(P1)) feed(
   .id_stack(id_stack),.id_sm(id_sm),
   .stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_rst_n(hbm_rst_n),
   .seam_res_v(seam_res_v),.seam_res_word(seam_res_word),.seam_s_fault(seam_s_fault),.seam_h_fault(seam_h_fault),
@@ -61,7 +64,8 @@ module ot_svgr_feed_cachecut #(
  parameter integer LB=(LBANKS>2)?2:1,
  parameter integer XSLOT=0,parameter integer CTXW=(XSLOT!=0)?53:46,
  parameter integer OPEN_IL=0,  // HBM-SMXL: producer open interlock (ot_hbm_svc_sm4pc_cdc_rel_id OPEN_IL)
- parameter integer CACHE_RW_SRAM=0, parameter integer ATT_MARK=0  // HBM-PV-ATTMARK: programme word [119] = attention word (S1 copy issue rule exempt)
+ parameter integer CACHE_RW_SRAM=0, parameter integer ATT_MARK=0,  // HBM-PV-ATTMARK: programme word [119] = attention word (S1 copy issue rule exempt)
+ parameter integer P1=0
 )(
  input wire [1:0] id_stack,input wire [2:0] id_sm,
  input wire stream_clk,stream_rst_n,hbm_rst_n,
@@ -94,7 +98,7 @@ module ot_svgr_feed_cachecut #(
  wire reserve_fire=reserve_v&&reserve_ready;
  reg[6:0]rows_q[0:LBANKS-1];reg[9:0]tag_q[0:LBANKS-1];reg open_q;reg[LB-1:0]open_land_q;reg[15:0]open_epoch_q;integer qb;
  wire open_bank_q=open_land_q[0];
- localparam integer OPEN_DLY=4;
+ localparam integer OPEN_DLY=(P1!=0)?5:4;
  reg[OPEN_DLY-1:0]od_v,od_bank;reg[15:0]od_epoch[0:OPEN_DLY-1];reg[6:0]od_count[0:OPEN_DLY-1];reg[9:0]od_tag[0:OPEN_DLY-1];integer od;
  always @(posedge stream_clk)begin
   od_bank<={od_bank[OPEN_DLY-2:0],open_bank_q};od_epoch[0]<=open_epoch_q;od_count[0]<=rows_q[open_land_q];od_tag[0]<=tag_q[open_land_q];
@@ -102,7 +106,9 @@ module ot_svgr_feed_cachecut #(
  end
  always @(posedge stream_clk or negedge stream_rst_n)if(!stream_rst_n)od_v<=0;else od_v<={od_v[OPEN_DLY-2:0],open_q};
  wire[1:0]cache_owned_c;
- assign cache_owned=cache_owned_c|((open_q?(2'b01<<open_bank_q):2'b00)|(od_v[0]?(2'b01<<od_bank[0]):2'b00)|(od_v[1]?(2'b01<<od_bank[1]):2'b00)|(od_v[2]?(2'b01<<od_bank[2]):2'b00)|(od_v[3]?(2'b01<<od_bank[3]):2'b00));
+ reg[1:0]od_own;integer oo;
+ always @*begin od_own=open_q?(2'b01<<open_bank_q):2'b00;for(oo=0;oo<OPEN_DLY;oo=oo+1)if(od_v[oo])od_own=od_own|(2'b01<<od_bank[oo]);end
+ assign cache_owned=cache_owned_c|od_own;
  always @(posedge stream_clk or negedge stream_rst_n)begin
   if(!stream_rst_n)begin descriptor_fault<=0;open_q<=0;open_land_q<=0;open_epoch_q<=0;for(qb=0;qb<LBANKS;qb=qb+1)begin rows_q[qb]<=0;tag_q[qb]<=0;end end
   else begin
@@ -113,7 +119,7 @@ module ot_svgr_feed_cachecut #(
  end
  wire[LBANKS-1:0]producer_ready;
  wire out_v,out_bank,out_last;wire[3:0]out_mask;wire[1023:0]out_data;wire[10:0]out_ordinal;wire[15:0]out_epoch;
- ot_svgr_prod_s_cachecut #(.LBANKS(LBANKS),.OPEN_IL(OPEN_IL)) producer(.id_stack(id_stack),.id_sm(id_sm),.stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_rst_n(hbm_rst_n),
+ ot_svgr_prod_s_cachecut #(.LBANKS(LBANKS),.OPEN_IL(OPEN_IL),.OREG(P1)) producer(.id_stack(id_stack),.id_sm(id_sm),.stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_rst_n(hbm_rst_n),
   .seam_res_v(seam_res_v),.seam_res_word(seam_res_word),.seam_s_fault(seam_s_fault),.seam_h_fault(seam_h_fault),
   .seam_stop(seam_stop),.seam_read_v(seam_read_v),.seam_read_bank(seam_read_bank),.seam_read_row(seam_read_row),
   .seam_complete(seam_complete),.seam_complete_bank(seam_complete_bank),.seam_bfault(seam_bfault),.seam_read_data(seam_read_data),
@@ -204,7 +210,7 @@ module ot_svgr_feed_cachecut #(
  assign programme_v=programme_v_q;
  assign programme_observe=programme;
  assign sm_command=programme[82:0];
- ot_svgr_cache136_native #(.PACKED136(1),.RW_SRAM(CACHE_RW_SRAM)) rows(
+ ot_svgr_cache136_native #(.PACKED136(1),.RW_SRAM(CACHE_RW_SRAM),.WPIPE(P1)) rows(
   .clk(stream_clk),.rst_n(stream_rst_n),.open_v(od_v[OPEN_DLY-1]),.open_bank(od_bank[OPEN_DLY-1]),.open_epoch(od_epoch[OPEN_DLY-1]),.open_count(od_count[OPEN_DLY-1]),.open_tag_base(od_tag[OPEN_DLY-1]),
   .sector_v(out_v?out_mask:4'b0),.sector_index(indices),.sector_epoch(epochs),.sector_data(out_data),
   .read_v(programme_v&&programme[83]),.read_bank(programme[84]),.read_epoch(programme[100:85]),.read_row(programme[106:101]),.read_tag(programme[116:107]),
@@ -222,7 +228,8 @@ endmodule
 // Stream half of ot_hbm_svc_sm4pc_cdc_rel_id: reserve, block bookkeeping, drain. Reads and data cross to the bank tiles, 2 edges each way, so the out_* word
 // is delayed DLY = 4 edges and meets its data. reserve_ready no longer reads the descriptor FIFO: at most LBANKS blocks are allocated and the FIFO holds 4.
 // MUT (bench): 1 = DLY 3 (data off by one word), 2 = read row of bank 5 not offset by drain, 3 = complete dropped on bank 2 at the 3rd event.
-module ot_svgr_prod_s_cachecut #(parameter integer LBANKS=4,parameter integer LB=(LBANKS>2)?2:1,parameter integer OPEN_IL=0,parameter integer MUT=0)(
+// HBM-GAPS-8 P1: OREG 1 = out_* registered after the 8:1 rotate (+1 edge; the feed delays the cache open one more edge).
+module ot_svgr_prod_s_cachecut #(parameter integer LBANKS=4,parameter integer LB=(LBANKS>2)?2:1,parameter integer OPEN_IL=0,parameter integer MUT=0,parameter integer OREG=0)(
  input wire [1:0] id_stack,input wire [2:0] id_sm,input wire stream_clk,stream_rst_n,hbm_rst_n,
  output wire seam_res_v,output wire[96:0]seam_res_word,output wire seam_s_fault,input wire seam_h_fault,
  output wire seam_stop,output wire[7:0]seam_read_v,output wire[1:0]seam_read_bank,output wire[47:0]seam_read_row,
@@ -272,7 +279,8 @@ module ot_svgr_prod_s_cachecut #(parameter integer LBANKS=4,parameter integer LB
  always @(posedge stream_clk)if(seam_complete[2])mc<=mc+1;
  reg o_v;reg [3:0] o_mask;reg [10:0] o_ord,o_rq;reg [LB-1:0] o_bank;reg [15:0] o_epoch;reg o_last;
  reg [DLY-1:0] p_v,p_last;reg [3:0] p_mask[0:DLY-1];reg [10:0] p_ord[0:DLY-1];reg [LB-1:0] p_bank[0:DLY-1];reg [15:0] p_ep[0:DLY-1];reg [10:0] p_rq[0:DLY-1];
- assign block_ready=(OPEN_IL!=0)?(ready_q&{LBANKS{~draining&&!o_v&&p_v==0}}):ready_q;
+ reg r_v;
+ assign block_ready=(OPEN_IL!=0)?(ready_q&{LBANKS{~draining&&!o_v&&p_v==0&&!((OREG!=0)&&r_v)}}):ready_q;
  integer d;
  always @(posedge stream_clk or negedge srst)begin
   if(!srst)begin p_v<=0;p_last<=0;for(d=0;d<DLY;d=d+1)begin p_mask[d]<=0;p_ord[d]<=0;p_bank[d]<=0;p_ep[d]<=0;p_rq[d]<=0;end end
@@ -282,10 +290,17 @@ module ot_svgr_prod_s_cachecut #(parameter integer LBANKS=4,parameter integer LB
    for(d=1;d<DLY;d=d+1)begin p_mask[d]<=p_mask[d-1];p_ord[d]<=p_ord[d-1];p_bank[d]<=p_bank[d-1];p_ep[d]<=p_ep[d-1];p_rq[d]<=p_rq[d-1];end
   end
  end
- assign out_v=p_v[DLY-1];assign out_mask=p_mask[DLY-1];assign out_ordinal=p_ord[DLY-1];assign out_bank=p_bank[DLY-1];assign out_epoch=p_ep[DLY-1];assign out_last=p_last[DLY-1];
+ wire[1023:0]rot_data;
  generate for(g=0;g<4;g=g+1)begin:out_lane
-  assign out_data[256*g+:256]=seam_read_data[256*((p_rq[DLY-1][2:0]+g)%8)+:256];
+  assign rot_data[256*g+:256]=seam_read_data[256*((p_rq[DLY-1][2:0]+g)%8)+:256];
  end endgenerate
+ reg r_last;reg[3:0]r_mask;reg[1023:0]r_data;reg[10:0]r_ord;reg[LB-1:0]r_bank;reg[15:0]r_ep;
+ always @(posedge stream_clk)if(OREG!=0)begin r_data<=rot_data;r_ord<=p_ord[DLY-1];r_bank<=p_bank[DLY-1];r_ep<=p_ep[DLY-1];end
+ always @(posedge stream_clk or negedge srst)if(!srst)begin r_v<=0;r_last<=0;r_mask<=0;end
+  else if(OREG!=0)begin r_v<=p_v[DLY-1];r_last<=p_last[DLY-1];r_mask<=p_mask[DLY-1];end
+ assign out_v=(OREG!=0)?r_v:p_v[DLY-1];assign out_mask=(OREG!=0)?r_mask:p_mask[DLY-1];assign out_ordinal=(OREG!=0)?r_ord:p_ord[DLY-1];
+ assign out_bank=(OREG!=0)?r_bank:p_bank[DLY-1];assign out_epoch=(OREG!=0)?r_ep:p_ep[DLY-1];assign out_last=(OREG!=0)?r_last:p_last[DLY-1];
+ assign out_data=(OREG!=0)?r_data:rot_data;
  integer si,sb;
  always @(posedge stream_clk or negedge srst)begin
   if(!srst)begin
