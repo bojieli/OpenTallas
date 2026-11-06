@@ -47,7 +47,7 @@ ev = {"schema": "opentallas.hbm_plan_event.part37", "by": "DIE-HBM-81 11-06 (COO
       "core": "ot_pdie_serdes_rx", "instances": ["NW_io u_lk_N0__rx", "q_spb0 u_lk_S0__rx", "q_spb0__physical_v1 u_lk_S0__rx",
                                                   "vsN0 u_lk_S1__rx", "NE_io u_lk_N2__rx"],
       "slot_um": [302.4, 345.6], "slot_kept": True,
-      "tiles_rx_frame": {"u_rest": [[104.544, 0.0], [197.856, 345.6]], "u_bm0": [[0.0, 4.32], [95.904, 106.56]],
+      "tiles_rx_frame": {"u_rest": [[104.544, 0.0], [197.856, 345.6]], "u_bm0": [[0.0, 2.112], [95.904, 106.56]],
                          "u_bm1": [[0.0, 119.52], [95.904, 106.56]], "u_bm2": [[0.0, 234.72], [95.904, 106.56]]},
       "tables": {REST: {"pins_file": TR, "sha256": sha((D / TR).read_bytes()), "view": f"{REST}@7826e3baf53d"},
                  BM: {"pins_file": TB, "sha256": sha((D / TB).read_bytes()), "view": f"{BM}@cefde5fe417d",
