@@ -5367,10 +5367,10 @@
   "ot_hgi_dma_back_static_vp4_banks_cp": {
    "status": "KNOWN",
    "outline_um": [
-    300.456,
+    372.6,
     275.4
    ],
-   "basis": "DIE-HBM-66 part 13: +60.48 um on local E, second column +30.24, same 10 macros; PLAN-TRIAL R-SRAM-ENTRY rows promoted (names = flattened RTL instances, DIE-HBM-59 11-02)",
+   "basis": "DIE-HBM-66 part 13: +60.48 um on local E, second column +30.24, same 10 macros; PLAN-TRIAL R-SRAM-ENTRY rows promoted (names = flattened RTL instances, DIE-HBM-59 11-02) | ev76 (DIE-HBM-75, COORD 11-05 17:20 (4)): conservative form +72.144 um local E (util <= 0.45), same macros",
    "macros": [
     {
      "name": "u_fcore.u_cp.g_tab[1].u_tab",
