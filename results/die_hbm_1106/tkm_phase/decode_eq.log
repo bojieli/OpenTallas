@@ -1,0 +1,179 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+
+-- Running command `read_verilog -sv decode_miter.sv; hierarchy -top decode_miter; proc; opt; sat -prove bad 0 -verify' --
+
+1. Executing Verilog-2005 frontend: decode_miter.sv
+Parsing SystemVerilog input from `decode_miter.sv' to AST representation.
+Generating RTLIL representation for module `\decode_miter'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \decode_miter
+
+2.2. Analyzing design hierarchy..
+Top module:  \decode_miter
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$decode_miter.sv:25$34 in module decode_miter.
+Marked 1 switch rules as full_case in process $proc$decode_miter.sv:25$8 in module decode_miter.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 23 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~2 debug messages>
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\decode_miter.$proc$decode_miter.sv:25$34'.
+     1/1: $1\ot_del_decode$func$decode_miter.sv:25$5.$result[85:0]$58
+Creating decoders for process `\decode_miter.$proc$decode_miter.sv:25$8'.
+     1/1: $1\native_dec$func$decode_miter.sv:25$3.$result[85:0]$33
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\decode_miter.\ot_del_decode$func$decode_miter.sv:25$2.$result' from process `\decode_miter.$proc$decode_miter.sv:25$34'.
+No latch inferred for signal `\decode_miter.\native_dec$func$decode_miter.sv:25$1.$result' from process `\decode_miter.$proc$decode_miter.sv:25$8'.
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\decode_miter.$proc$decode_miter.sv:25$34'.
+Removing empty process `decode_miter.$proc$decode_miter.sv:25$34'.
+Found and cleaned up 1 empty switch in `\decode_miter.$proc$decode_miter.sv:25$8'.
+Removing empty process `decode_miter.$proc$decode_miter.sv:25$8'.
+Cleaned up 2 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module decode_miter.
+<suppressed ~2 debug messages>
+
+4. Executing OPT pass (performing simple optimizations).
+
+4.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module decode_miter.
+
+4.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\decode_miter'.
+Computing hashes of 26 cells of `\decode_miter'.
+Finding duplicate cells in `\decode_miter'.
+Computing hashes of 18 cells of `\decode_miter'.
+Finding duplicate cells in `\decode_miter'.
+Computing hashes of 17 cells of `\decode_miter'.
+Finding duplicate cells in `\decode_miter'.
+<suppressed ~27 debug messages>
+Removed a total of 9 cells.
+
+4.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \decode_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~10 debug messages>
+
+4.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \decode_miter.
+Performed a total of 0 changes.
+
+4.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\decode_miter'.
+Computing hashes of 17 cells of `\decode_miter'.
+Finding duplicate cells in `\decode_miter'.
+Computing hashes of 16 cells of `\decode_miter'.
+Finding duplicate cells in `\decode_miter'.
+Computing hashes of 15 cells of `\decode_miter'.
+Finding duplicate cells in `\decode_miter'.
+Computing hashes of 14 cells of `\decode_miter'.
+Finding duplicate cells in `\decode_miter'.
+Computing hashes of 13 cells of `\decode_miter'.
+Finding duplicate cells in `\decode_miter'.
+<suppressed ~12 debug messages>
+Removed a total of 4 cells.
+
+4.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \decode_miter..
+Removed 0 unused cells and 48 unused wires.
+<suppressed ~1 debug messages>
+
+4.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module decode_miter.
+
+4.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \decode_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~5 debug messages>
+
+4.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \decode_miter.
+Performed a total of 0 changes.
+
+4.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\decode_miter'.
+Computing hashes of 13 cells of `\decode_miter'.
+Finding duplicate cells in `\decode_miter'.
+Removed a total of 0 cells.
+
+4.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \decode_miter..
+
+4.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module decode_miter.
+
+4.16. Finished fast OPT passes. (There is nothing left to do.)
+
+5. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 13 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Solving problem with 1760 variables and 4522 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 29a65345d5, time: 0.03s, user: 0.03s, system: 0.01s, MEM: 22.52 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+Time spent: 35% 1x sat (0 sec), 18% 2x read_verilog (0 sec), ...
