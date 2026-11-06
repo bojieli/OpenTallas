@@ -75,6 +75,7 @@ def test_apply_check(tmp_path):
     assert cp in pw and "setPlacementStatus LOCKED" in pw and "FIXED" not in pw.replace("DEF FIXED", "")
     assert "![string match ot_fcap_* $ot_np_nm]" in pw
     assert " $ot_np_i setPlacementStatus PLACED\n $ot_np_i setOrient $o\n" in pw
+    assert " $ot_np_i setPlacementStatus LOCKED\n $ot_np_i setDoNotTouch 1\n" in pw
     # u_rrl_2 drives nothing, and the original u_rrl_1 now only feeds u_rrl_2: both dead -> not posed, recorded
     assert rec["children"]["T_w"]["dead_ffs_not_posed"] == ["u_bound.u_rrl_1/q$_DFF_P_", "u_bound.u_rrl_2/q$_DFF_P_"]
     assert "u_bound.u_rrl_2/" not in pw

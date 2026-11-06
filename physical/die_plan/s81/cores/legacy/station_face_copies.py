@@ -466,6 +466,12 @@ def apply(split, top, child_modules, abi, poses, blockages=None):
         # odb has no status FIXED ("ValueError Unknown placement status" at global_place); LOCKED = DEF FIXED
         pose_out[cm] = pose_out[cm].replace("setPlacementStatus FIXED", "setPlacementStatus LOCKED").replace(
             "# Uses FIXED status", "# Uses LOCKED (= DEF FIXED) status")
+        # LOCKED stops moves, not resizing: repair_design upsized posed DFFHQNx1 to x2 -> 217 DPL overlaps (E place4).
+        # dont_touch keeps the reviewed master (and so the posed footprint); nets stay bufferable
+        l_old = " $ot_np_i setPlacementStatus LOCKED\n"
+        if pose_out[cm].count(l_old) != 1:
+            raise ValueError("pose lock line changed")
+        pose_out[cm] = pose_out[cm].replace(l_old, l_old + " $ot_np_i setDoNotTouch 1\n")
         # pin contract names every child port as a scalar (pins.json / io.tcl findBTerm {fclk_in_ft13_i}); a 1-bit port
         # tagged single_bit_vector is written "[0:0]" and becomes BTerm "fclk_in_ft13_i[0]" (floorplan: native multiPORT
         # BTerm missing).  Drop the tag on 1-bit port nets: same bit, same connections, scalar declaration.
