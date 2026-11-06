@@ -644,5 +644,36 @@
       "fifo_empty"
     ],
     "status": "NOT executable canonical recipe until explicit binding policy released"
+  },
+  "clock_ownership": {
+    "raw_fifo_clk_inputs": [
+      "root_id",
+      "reserve_v",
+      "reserve_bank",
+      "reserve_total",
+      "reserve_base",
+      "fill_start",
+      "fill_start_bank",
+      "wd0..wd7",
+      "wd_v",
+      "copy_on",
+      "copy_bank",
+      "s_stop"
+    ],
+    "raw_hbm_clk_inputs": [
+      "g_credit",
+      "h_stop"
+    ],
+    "raw_fifo_clk_outputs": [
+      "root_ready"
+    ],
+    "raw_hbm_clk_outputs": [
+      "g_v",
+      "g_d"
+    ],
+    "historical_outer_faces": "All factory face registers use fifo_clk; this compatibility profile retains them except moving WD into store_face.",
+    "actual_verified_parent": "Parent HBM owner verified t11_top.wbk_NW stream_clk,hbm_clk,stream_fifo_clk[0..3] all bind hb_ckgen__pll_stream[0], resets PLLpor_stream. Thus common-clock compatibility proof applies to that retained context.",
+    "future_distinct_clock_context": "Requires separately clocked outer faces on native domains and full async accepted-stream proof; not qualified by this profile.",
+    "physical_requirement": "Preserve every native clock pin/CTS-root timing and actual PG/seam context; common PLL is not a skew/clock relaxation."
   }
 }
