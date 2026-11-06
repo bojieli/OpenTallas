@@ -1,0 +1,20 @@
+c45 ra 1 rc 1 fa 0 fc 0 qa==qc 0
+c100 ra 1 rc 1 fa 0 fc 0 qa==qc 0
+case 0 k 4 phase 426 rs 0 firstA 24 firstC 22
+case 1 k 2 phase 561 rs 1 firstA 31 firstC 29
+case 2 k 3 phase 491 rs 0 firstA 31 firstC 29
+case 3 k 3 phase 188 rs 1 firstA 39 firstC 37
+case 4 k 2 phase 557 rs 1 firstA 22 firstC 20
+case 5 k 4 phase 322 rs 1 firstA -1 firstC -1
+case 6 k 3 phase 706 rs 0 firstA 22 firstC 20
+case 7 k 3 phase 344 rs 1 firstA 33 firstC 31
+case 8 k 4 phase 711 rs 0 firstA 31 firstC 29
+case 9 k 2 phase 335 rs 1 firstA 34 firstC 32
+case 10 k 4 phase 576 rs 0 firstA 38 firstC 36
+case 11 k 4 phase 686 rs 0 firstA 24 firstC 22
+ready_A=15632 ready_C=15912 fault_A=1465 fault_C=1485
+WREG_EQUIV cases=160 ready_cycles_AC=15632 match_AC=15632 errors=0 PASS
+- tb.sv:110: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.086 s; speed 235.460 us/s
+- Verilator: cpu 0.086 s on 1 threads; allocated 7 MB
