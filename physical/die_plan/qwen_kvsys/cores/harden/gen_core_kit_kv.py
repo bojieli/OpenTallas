@@ -2017,6 +2017,9 @@ def main():
         shutil.copyfile(Path(__file__).with_name("prompt_rx_spread.tcl"), kd / "prompt_rx_spread.tcl")
         f = kd / "face_flops.tcl"
         f.write_text(f.read_text() + "\nsource /work/prompt_rx_spread.tcl\n")
+        shutil.copyfile(Path(__file__).with_name("prompt_rx_spread_release.tcl"), kd / "prompt_rx_spread_release.tcl")
+        f = kd / "face_flops_release.tcl"
+        f.write_text(f.read_text() + "\nsource /work/prompt_rx_spread_release.tcl\n")
     MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     tm = timing_modes_stage(kd) if a.two_mode_grt else None   # after config.mk, before kit_hash
