@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.clock_pin_publish.v1",
+  "input_db": "/out/h9b_source.odb",
+  "output_db": "/out/h9b_clock_margin64.odb",
+  "pin": "clk",
+  "net": "clk",
+  "layer": "M6",
+  "original_pin_shapes": [
+    [
+      "M5",
+      [
+        90720,
+        90480,
+        90768,
+        90960
+      ]
+    ]
+  ],
+  "access_margin_um": 0.064,
+  "preserves_port_grouping": true,
+  "added_pin_rectangles": [
+    [
+      90656,
+      90640,
+      90760,
+      90672
+    ]
+  ],
+  "connected_loads": 1,
+  "actual_clock_geometry_sha256": "812057cca752f1b9100f71831d5f511c04eb2b107dc2e6cc4f900d1d58240d88",
+  "existing_wires_unchanged": true,
+  "added_signal_cycles": 0,
+  "parent_access_qualified": false,
+  "qualification": "requires actual abstract export, parent PA/DRC and clock timing"
+}

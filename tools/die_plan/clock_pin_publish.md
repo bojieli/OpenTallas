@@ -18,3 +18,10 @@ It never upgrades a signoff result or assumes an old view has been qualified.
 
 Actual h9b/bank canaries and the viewed image are in
 results/geom_review/clock_pin_publish_1106. No production hook calls this helper.
+
+If native upper-layer via enclosure cannot fit the default footprint, a reviewed
+explicit --access-margin-um window can expose more already-connected clock metal.
+It never extends a wire or clears an obstruction. The window is anchored to
+unchanged lower-layer PIN geometry, so reimport cannot grow it repeatedly.
+Added shapes stay in the original physical PORT. Fresh parent PA and timing
+remain mandatory; a legal-width rectangle is not automatically a legal via site.

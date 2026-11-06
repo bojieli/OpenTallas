@@ -13,6 +13,12 @@ class ClockPinPublishTest(unittest.TestCase):
         loads = [[("M5", (16, 2, 20, 6))]]
         result = candidates(nodes, [(0, 1), (3, 4)], [2], original, loads, "M6", 4)
         self.assertEqual(result, [(0, 2, 4, 6)])
+        expanded = candidates(nodes, [(0, 1), (3, 4)], [2], original, loads, "M6", 4, 4, original)
+        self.assertEqual(expanded, [(0, 2, 8, 6)])
+        # Reimport must keep the unchanged lower-layer anchor, not grow the new PIN.
+        reimported = candidates(nodes, [(0, 1), (3, 4)], [2],
+                                original + [("M6", expanded[0])], loads, "M6", 4, 4, original)
+        self.assertEqual(reimported, expanded)
         with self.assertRaisesRegex(ValueError, "not physically connected"):
             candidates(nodes, [(3, 4)], [2], original, loads, "M6", 4)
         with self.assertRaisesRegex(ValueError, "not physically connected"):
