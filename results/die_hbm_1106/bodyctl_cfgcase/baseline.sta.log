@@ -1,0 +1,55 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+Startpoint: step[2] (input port clocked by vclk)
+Endpoint: y[14] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock vclk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 v input external delay
+   0.00    0.00 v step[2] (in)
+  24.34   24.34 v _2471_/Y (OR2x6_ASAP7_75t_R)
+  19.17   43.52 v _2472_/Y (BUFx12f_ASAP7_75t_R)
+  16.89   60.40 v _2501_/Y (AND4x1_ASAP7_75t_R)
+  36.06   96.46 v _2503_/Y (OR4x1_ASAP7_75t_R)
+  24.73  121.19 v _2504_/Y (BUFx3_ASAP7_75t_R)
+  36.64  157.83 v _2664_/Y (AO32x1_ASAP7_75t_R)
+  23.82  181.64 v _2870_/Y (BUFx6f_ASAP7_75t_R)
+  25.91  207.56 v _3973_/Y (OR3x1_ASAP7_75t_R)
+  34.15  241.70 v _3974_/Y (OA211x2_ASAP7_75t_R)
+  31.15  272.85 v _3975_/Y (OA211x2_ASAP7_75t_R)
+  34.75  307.60 v _3999_/Y (OR4x1_ASAP7_75t_R)
+  44.10  351.70 v _4021_/Y (AO222x2_ASAP7_75t_R)
+   0.00  351.70 v y[14] (out)
+         351.70   data arrival time
+
+ 833.00  833.00   clock vclk (rise edge)
+   0.00  833.00   clock network delay (ideal)
+   0.00  833.00   clock reconvergence pessimism
+   0.00  833.00   output external delay
+         833.00   data required time
+---------------------------------------------------------
+         833.00   data required time
+        -351.70   data arrival time
+---------------------------------------------------------
+         481.30   slack (MET)
+
+
+worst slack max 481.30
