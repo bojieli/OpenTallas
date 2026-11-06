@@ -37,7 +37,7 @@ def install(kit,regions,members,held):
  outline=json.loads((kit/'freeze.json').read_text())['outline_um']
  rec=region_guide.install(kit,spec,outline=outline,src={'file':str(regions),'sha256':digest(regions)})
  # Generic soft guides permit missing/fixed skips. This exact opt-in refuses them.
- with (kit/'face_flops.tcl').open('a') as f:f.write(f'if {{$rg_cells != {len(names)} || $rg_n != {len(spec["regions"])}}} {{error "NATIVE_TILES incomplete actual region membership"}}\n')
+ with (kit/'face_flops.tcl').open('a') as f:f.write(f'if {{$::rg_cells != {len(names)} || $::rg_n != {len(spec["regions"])}}} {{error "NATIVE_TILES incomplete actual region membership"}}\n')
  receipt=dict(schema='opentallas.native_dataflow_tiles.v1',provisional_physical_only=True,zero_added_cycles=True,members=len(names),held=len(fixed),regions=rec,inputs={str(p):digest(p) for p in (regions,members,held)})
  (kit/'native_tiles_install.json').write_text(json.dumps(receipt,indent=1)+'\n');return receipt
 
