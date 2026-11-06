@@ -1,0 +1,244 @@
+{
+ "slw_su_l1__clcc9d0155": {
+  "root": "rst_root_n",
+  "added_cycles": 0,
+  "sources": [
+   {
+    "name": "cws0_i",
+    "node": "rst_n_t16",
+    "hop_um": 122.60399999999993,
+    "collector_stages": 7,
+    "reset_mask_delays": [
+     1,
+     3,
+     5,
+     7,
+     9,
+     11,
+     13
+    ]
+   },
+   {
+    "name": "flt_su_c_i",
+    "node": "rst_n_t3",
+    "hop_um": 50.2539999999999,
+    "collector_stages": 7,
+    "reset_mask_delays": [
+     1,
+     3,
+     5,
+     7,
+     9,
+     11,
+     13
+    ]
+   },
+   {
+    "name": "rsf_i",
+    "node": "rst_n_t3",
+    "hop_um": 57.48400000000001,
+    "collector_stages": 7,
+    "reset_mask_delays": [
+     1,
+     3,
+     5,
+     7,
+     9,
+     11,
+     13
+    ]
+   },
+   {
+    "name": "rsn_i",
+    "node": "rst_n_t1",
+    "hop_um": 254.53199999999995,
+    "collector_stages": 7,
+    "reset_mask_delays": [
+     1,
+     3,
+     5,
+     7,
+     9,
+     11,
+     13
+    ]
+   },
+   {
+    "name": "x_su_c_i",
+    "node": "rst_n_t4",
+    "hop_um": 132.08200000000002,
+    "collector_stages": 7,
+    "reset_mask_delays": [
+     1,
+     3,
+     5,
+     7,
+     9,
+     11,
+     13
+    ]
+   },
+   {
+    "name": "x_su_c_p1_i",
+    "node": "rst_n_t9",
+    "hop_um": 87.63400000000013,
+    "collector_stages": 7,
+    "reset_mask_delays": [
+     1,
+     3,
+     5,
+     7,
+     9,
+     11,
+     13
+    ]
+   },
+   {
+    "name": "child6",
+    "node": "rst_n_t19",
+    "hop_um": 0.0,
+    "collector_stages": 7,
+    "reset_mask_delays": [
+     1,
+     3,
+     5,
+     7,
+     9,
+     11,
+     13
+    ]
+   },
+   {
+    "name": "child7",
+    "node": "rst_n_t18",
+    "hop_um": 0.0,
+    "collector_stages": 7,
+    "reset_mask_delays": [
+     1,
+     3,
+     5,
+     7,
+     9,
+     11,
+     13
+    ]
+   }
+  ]
+ },
+ "slw_su_l1__cla2a78701": {
+  "root": "rst_n_t0",
+  "added_cycles": 0,
+  "sources": [
+   {
+    "name": "cws0_i",
+    "node": "rst_n_t16",
+    "hop_um": 122.60399999999993,
+    "collector_stages": 5,
+    "reset_mask_delays": [
+     7,
+     9,
+     11
+    ]
+   },
+   {
+    "name": "flt_su_c_i",
+    "node": "rst_n_t3",
+    "hop_um": 50.2539999999999,
+    "collector_stages": 13,
+    "reset_mask_delays": [
+     7,
+     9,
+     11,
+     13,
+     15,
+     17,
+     19
+    ]
+   },
+   {
+    "name": "rsf_i",
+    "node": "rst_n_t3",
+    "hop_um": 57.48400000000001,
+    "collector_stages": 13,
+    "reset_mask_delays": [
+     7,
+     9,
+     11,
+     13,
+     15,
+     17,
+     19
+    ]
+   },
+   {
+    "name": "rsn_i",
+    "node": "rst_n_t1",
+    "hop_um": 254.53199999999995,
+    "collector_stages": 13,
+    "reset_mask_delays": [
+     7,
+     9,
+     11,
+     13,
+     15,
+     17,
+     19
+    ]
+   },
+   {
+    "name": "x_su_c_i",
+    "node": "rst_n_t4",
+    "hop_um": 132.08200000000002,
+    "collector_stages": 13,
+    "reset_mask_delays": [
+     7,
+     9,
+     11,
+     13,
+     15,
+     17,
+     19
+    ]
+   },
+   {
+    "name": "x_su_c_p1_i",
+    "node": "rst_n_t9",
+    "hop_um": 87.63400000000013,
+    "collector_stages": 13,
+    "reset_mask_delays": [
+     7,
+     9,
+     11,
+     13,
+     15,
+     17,
+     19
+    ]
+   },
+   {
+    "name": "child6",
+    "node": "rst_n_t18",
+    "hop_um": 0.0,
+    "collector_stages": 13,
+    "reset_mask_delays": [
+     7,
+     9,
+     11,
+     13,
+     15,
+     17,
+     19
+    ]
+   },
+   {
+    "name": "child7",
+    "node": "rst_root_n",
+    "hop_um": 0.0,
+    "collector_stages": 7,
+    "reset_mask_delays": [
+     7
+    ]
+   }
+  ]
+ }
+}
