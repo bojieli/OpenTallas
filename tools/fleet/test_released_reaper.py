@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import re
 import stat
+import subprocess
 
 SPEC=importlib.util.spec_from_file_location('released_reaper',Path(__file__).with_name('ot-reaper.py'))
 M=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(M)
@@ -14,7 +15,7 @@ M=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(M)
 def worker(tmp_path):
     tree=ast.parse(M.RELEASED_HOST_PY)
     definitions=[n for n in tree.body if isinstance(n,(ast.Import,ast.ImportFrom,ast.FunctionDef,ast.Assign)) and not (isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='headroom' for t in n.targets))]
-    ns=dict(os=os,json=json,re=re,stat=stat,hashlib=hashlib,A={'refs':[]},BLOB='',DRY=False,procs=lambda:'',rm=lambda p,d:os.unlink(p))
+    ns=dict(os=os,json=json,re=re,stat=stat,subprocess=subprocess,hashlib=hashlib,A={'refs':[]},BLOB='',DRY=False,procs=lambda:'',rm=lambda p,d:os.unlink(p))
     exec(compile(ast.Module(body=definitions,type_ignores=[]),'<released-host>','exec'),ns)
     ns['SAFE_RELEASE_ROOTS']=(str(tmp_path)+'/',)
     return ns
@@ -59,3 +60,36 @@ def test_unique_source_and_changed_cache_are_refused(tmp_path):
     unique=source.parent/'manual.cpp';unique.write_text('unique hand code')
     s=unique.stat();row['files']=[dict(path=str(unique),bytes=s.st_size,inode=s.st_ino,mtime_ns=s.st_mtime_ns)]
     assert ns['apply_release'](row)['status']=='SKIP' and unique.exists()
+
+
+def test_duplicate_requires_actual_retained_hash(tmp_path):
+    ns=worker(tmp_path);source,_,row=release(tmp_path)
+    payload=source.with_suffix('.odb');source.rename(payload)
+    data=payload.read_bytes();row.update(host='localtest',kind='duplicate-bulk',destination='localtest:'+str(tmp_path/'retained'))
+    row['files']=[dict(path=str(payload),bytes=len(data),sha256=hashlib.sha256(data).hexdigest())]
+    assert ns['apply_release'](row)['status']=='SKIP' and payload.exists()
+    retained=tmp_path/'retained';retained.mkdir();(retained/payload.name).write_bytes(b'wrong')
+    assert ns['apply_release'](row)['status']=='SKIP' and payload.exists()
+    (retained/payload.name).write_bytes(data)
+    assert ns['apply_release'](row)['status']=='APPLIED' and not payload.exists()
+
+
+def test_dpi_header_and_nested_symlink_escape_are_refused(tmp_path):
+    ns=worker(tmp_path);source,_,row=release(tmp_path)
+    dpi=source.with_name('Vtop__Dpi.h');dpi.write_text('required DPI interface')
+    st=dpi.stat();row.update(released_suffixes=['.h'],files=[dict(path=str(dpi),bytes=st.st_size,inode=st.st_ino,mtime_ns=st.st_mtime_ns)])
+    assert ns['apply_release'](row)['status']=='SKIP' and dpi.exists()
+    outside=tmp_path/'outside';outside.mkdir();unique=outside/'Vunique.cpp';unique.write_text('unique')
+    (source.parent/'escape').symlink_to(outside,target_is_directory=True)
+    path=source.parent/'escape/Vunique.cpp';st=path.stat()
+    row.update(released_suffixes=['.cpp'],files=[dict(path=str(path),bytes=st.st_size,inode=st.st_ino,mtime_ns=st.st_mtime_ns)])
+    assert ns['apply_release'](row)['status']=='SKIP' and unique.exists()
+
+
+def test_tracked_git_cpp_inside_obj_is_source_not_cache(tmp_path):
+    ns=worker(tmp_path);source,_,row=release(tmp_path)
+    repo=source.parent.parent
+    subprocess.run(['git','init','-q',str(repo)],check=True)
+    subprocess.run(['git','-C',str(repo),'add','obj/'+source.name],check=True)
+    result=ns['apply_release'](row)
+    assert result['status']=='SKIP' and 'tracked Git source' in result['reason'] and source.exists()

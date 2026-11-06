@@ -260,8 +260,9 @@ print(f"TOTAL {tot/1e9:.1f}")
 '''
 
 RELEASED_HOST_PY = r'''
+
 # Exact creator releases only; the legacy broad strip path is not called.
-import hashlib
+import hashlib, shlex
 SAFE_RELEASE_ROOTS = ('/srv/opentallas-scratch/claude/', '/srv/opentallas-scratch2/claude/', '/srv/opentallas-scratch3/claude/', '/home/ubuntu/scratch-root/claude/')
 CACHE_EXT = {'.cpp', '.h', '.d', '.dat', '.mk', '.f'}
 BULK_EXT = {'.odb', '.def', '.gds', '.spef', '.rtlil'}
@@ -316,6 +317,51 @@ def release_guard(row):
         if not all(os.path.isfile(p) and os.path.getsize(p) > 0 for p in row['preserve']): return 'missing preserved checkpoint'
     return ''
 
+def retained_destination(row):
+    """Verify the retained copy on its actual host in one bounded batch."""
+    destination=row.get('destination','')
+    host, sep, root=destination.partition(':')
+    if not sep or not re.fullmatch(r'[A-Za-z0-9_.-]+',host) or not root.startswith('/'):
+        return 'invalid preserved destination'
+    payload=dict(root=root,files=[dict(relative=os.path.relpath(item['path'],row['path']),bytes=item['bytes'],sha256=item.get('sha256')) for item in row['files']])
+    script="""import os,sys,json,hashlib
+request=json.load(sys.stdin);root=os.path.realpath(request['root'])
+if not os.path.isdir(root):raise ValueError('retained root missing')
+for item in request['files']:
+ path=os.path.join(root,item['relative']);real=os.path.realpath(path)
+ if os.path.commonpath([root,real])!=root or os.path.islink(path):raise ValueError('retained path escapes root')
+ if not os.path.isfile(path) or os.path.getsize(path)!=item['bytes']:raise ValueError('retained file missing or changed')
+ digest=hashlib.sha256()
+ with open(path,'rb') as stream:
+  for block in iter(lambda:stream.read(4<<20),b''):digest.update(block)
+ if digest.hexdigest()!=item['sha256']:raise ValueError('retained hash differs')
+print('RETAINED_COPY_VERIFIED')
+"""
+    same=host==row.get('host') or {host,row.get('host')}<={'localhost','intel2'}
+    command=['python3','-c',script]
+    if not same:
+        if host in ('localhost','intel2'):host='hub'
+        remote='python3 -c '+shlex.quote(script)
+        command=['ssh','-o','ConnectTimeout=10','-o','BatchMode=yes',host,remote]
+        if os.geteuid()==0:command=['sudo','-n','-u','ubuntu']+command
+    try:
+        result=subprocess.run(command,input=json.dumps(payload),capture_output=True,text=True,timeout=180)
+        if result.returncode or result.stdout.strip()!='RETAINED_COPY_VERIFIED':return 'retained destination not verified: '+result.stderr[-160:]
+    except (OSError,subprocess.SubprocessError) as error:return 'retained destination unavailable: '+repr(error)
+    return ''
+
+
+def tracked_files(d):
+    command=['git','-C',d,'ls-files','-z','--']
+    if os.geteuid()==0:command=['sudo','-n','-u','ubuntu']+command
+    try:
+        result=subprocess.run(command,capture_output=True,timeout=30,env=dict(os.environ,GIT_OPTIONAL_LOCKS='0'))
+    except (OSError,subprocess.SubprocessError):return None
+    if result.returncode:
+        if b'not a git repository' in result.stderr:return set()
+        return None
+    return {os.path.normpath(os.path.join(d,os.fsdecode(p))) for p in result.stdout.split(b'\0') if p}
+
 def apply_release(row):
     result = dict(id=row['id'], path=row['path'], files=0, bytes=0)
     if not os.path.lexists(row['path']) and all(not os.path.lexists(item['path']) for item in row['files']):
@@ -323,13 +369,20 @@ def apply_release(row):
     reason = release_guard(row)
     if reason:
         result.update(status='SKIP', reason=reason); return result
-    d = os.path.normpath(row['path']); kind = row['kind']; selected=[]
+    d = os.path.normpath(row['path']); real_root=os.path.realpath(d); kind = row['kind']; selected=[]
+    tracked=tracked_files(d)
+    if tracked is None:
+        result.update(status='SKIP',reason='Git source guard unavailable');return result
     # Validate the entire exact manifest before the first mutation.
     for item in row['files']:
         p = os.path.normpath(item['path']); ext = os.path.splitext(p)[1]
-        if not p.startswith(d + '/') or os.path.islink(p):
+        if not p.startswith(d + '/') or os.path.islink(p) or os.path.commonpath([real_root,os.path.realpath(p)])!=real_root:
             result.update(status='SKIP', reason='unsafe file: ' + p); return result
+        if p in tracked:
+            result.update(status='SKIP',reason='tracked Git source: '+p);return result
         if kind == 'generated-cache':
+            if ext == '.h' and 'dpi' in os.path.basename(p).lower():
+                result.update(status='SKIP',reason='DPI header required for reuse: '+p);return result
             if not all(key in item for key in ('mtime_ns', 'inode')):
                 result.update(status='SKIP', reason='cache identity missing: ' + p); return result
             good = ext in CACHE_EXT and ext in row.get('released_suffixes', []) and os.path.basename(p).startswith('V')
@@ -351,6 +404,10 @@ def apply_release(row):
             if h.hexdigest()!=item['sha256']:
                 result.update(status='SKIP', reason='duplicate identity changed: ' + p); return result
         selected.append((p, st))
+    if kind == 'duplicate-bulk' and selected:
+        reason=retained_destination(row)
+        if reason:
+            result.update(status='SKIP',reason=reason);return result
     # Resample process/mount references immediately before unlinking the batch.
     global BLOB
     BLOB = procs()
@@ -359,6 +416,8 @@ def apply_release(row):
         result.update(status='SKIP',reason=reason);return result
     before=os.statvfs(d)
     for p, st in selected:
+        if os.path.commonpath([real_root,os.path.realpath(p)])!=real_root:
+            result.update(status='SKIP',reason='path escaped at apply: '+p);return result
         now=os.lstat(p)
         if (now.st_ino,now.st_mtime_ns,now.st_size)!=(st.st_ino,st.st_mtime_ns,st.st_size):
             result.update(status='SKIP',reason='file changed at apply: '+p);return result
@@ -412,7 +471,7 @@ def released_main():
     try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
     except OSError:return
     # Reuse the existing process/mount scanner and exact unlink helper, never strip().
-    prefix=HOST_PY.split('tot = 0\n',1)[0].replace('BLOB = procs()', 'BLOB = procs() if A.get("released") else ""')
+    prefix=HOST_PY.split('tot = 0\n',1)[0].replace('BLOB = procs()', 'BLOB = procs() if A.get("released") else ""').replace('docker ps -q |', 'docker ps -aq |')
     code=prefix+RELEASED_HOST_PY
     encoded=base64.b64encode(code.encode()).decode()
     command='sudo -n python3 -c '+shlex.quote('import base64;exec(base64.b64decode('+repr(encoded)+'))')
