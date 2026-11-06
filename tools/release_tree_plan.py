@@ -301,7 +301,7 @@ def revoked_module(m, rows):
 # apply; the ref carries 'COUNT-CREDIT <ruling>' so the credit stays visible.  One row = one view; remove it once a tool
 # path versions the view.
 COUNT_CREDIT = pathlib.Path(__file__).resolve().parent.parent / 'lanes' / 'COUNT-CREDIT.tsv'
-FLOW_TAG_RE = re.compile(r'^flow-\d{8}-[a-z](?:-(qc|s81|head|kv|hbm))?$')
+FLOW_TAG_RE = re.compile(r'^flow-\d{8}-[a-z]+(?:-(qc|s81|head|kv|hbm))?$')
 
 
 def credit_rows(path=None):
@@ -494,7 +494,7 @@ def check_resign_tag(r, tag_commit=tag_commit):
     """a RE-SIGN record counts only when its flow_tag is a flow release tag on origin whose commit is its src_commit
     (the re-sign tools ran at the released flow); otherwise it is unversioned with the reason."""
     if not r.get('resign'): return r
-    full = tag_commit(r['flow_tag']) if re.match(r'^flow-\d{8}-[a-z](?:-(qc|s81|head|kv|hbm))?$', r['flow_tag'] or '') else ''
+    full = tag_commit(r['flow_tag']) if FLOW_TAG_RE.match(r['flow_tag'] or '') else ''
     sc = str(r.get('src_commit') or '')
     if not full or len(sc) < 7 or not full.startswith(sc):
         r['resign_error'] = 're-sign flow_tag %s %s src_commit %s' % (r['flow_tag'], 'is at ' + full[:12] if full else 'not a flow tag on origin', sc[:12])
