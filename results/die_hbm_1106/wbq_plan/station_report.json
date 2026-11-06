@@ -1,0 +1,2840 @@
+{
+ "q_hub_nw": {
+  "rows": [
+   {
+    "index": 216,
+    "conn": "u_wbk_Q.w_k_wdata|u_vmks_Q3",
+    "bits": 2056,
+    "old": 5,
+    "new": 5,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 389,
+    "conn": "u_xl_Q_ctl.l_d_o|u_xl_Q_aqhi",
+    "bits": 1024,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 393,
+    "conn": "u_xl_Q_ctl.qf_hi|u_xl_Q_aqhi",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 395,
+    "conn": "u_xl_Q_ctl.qo_hi|u_xl_Q_aqhi",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 397,
+    "conn": "u_xl_Q_ctl.qv_hi|u_xl_Q_aqhi",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 571,
+    "conn": "u_xq_Q_p1_bd.qe_hi|u_xl_Q_aqhi",
+    "bits": 4,
+    "old": 16,
+    "new": 16,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 572,
+    "conn": "u_xq_Q_p1_bd.qe_lo|u_xl_Q_aqlo",
+    "bits": 4,
+    "old": 17,
+    "new": 17,
+    "added": 0,
+    "max_hop": 402.7366000000003
+   },
+   {
+    "index": 573,
+    "conn": "u_xq_Q_p1_bd.qq_hi|u_xl_Q_aqhi",
+    "bits": 86,
+    "old": 16,
+    "new": 16,
+    "added": 0,
+    "max_hop": 403.9305999999999
+   },
+   {
+    "index": 578,
+    "conn": "u_xq_Q_p0_bfq1.wce|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 579,
+    "conn": "u_xq_Q_p0_bfq1.mhi0|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 580,
+    "conn": "u_xq_Q_p0_bfq1.mhi1|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 581,
+    "conn": "u_xq_Q_p0_bfq1.mhi2|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 582,
+    "conn": "u_xq_Q_p0_bfq1.mhi3|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 583,
+    "conn": "u_xq_Q_p0_bfq1.mhi4|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 584,
+    "conn": "u_xq_Q_p0_bfq1.mhi5|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 585,
+    "conn": "u_xq_Q_p0_bfq1.mhi6|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 586,
+    "conn": "u_xq_Q_p0_bfq1.mhi7|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 587,
+    "conn": "u_xq_Q_p0_bfq1.mlo0|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 588,
+    "conn": "u_xq_Q_p0_bfq1.mlo1|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 589,
+    "conn": "u_xq_Q_p0_bfq1.mlo2|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 590,
+    "conn": "u_xq_Q_p0_bfq1.mlo3|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 591,
+    "conn": "u_xq_Q_p0_bfq1.mlo4|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 592,
+    "conn": "u_xq_Q_p0_bfq1.mlo5|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 593,
+    "conn": "u_xq_Q_p0_bfq1.mlo6|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 594,
+    "conn": "u_xq_Q_p0_bfq1.mlo7|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 595,
+    "conn": "u_xq_Q_p0_bfq1.wa|u_xl_Q_ctl",
+    "bits": 4,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 596,
+    "conn": "u_xq_Q_p0_bfq1.r_ce|u_xl_Q_ctl",
+    "bits": 4,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 597,
+    "conn": "u_xq_Q_p0_bfq1.r_a|u_xl_Q_ctl",
+    "bits": 4,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 1207,
+    "conn": "u_vmks_Q0.w_k_rdy|u_wbk_Q",
+    "bits": 3,
+    "old": 4,
+    "new": 4,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1208,
+    "conn": "u_vmks_Q0.w_k_wr_done|u_wbk_Q",
+    "bits": 3,
+    "old": 4,
+    "new": 4,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1235,
+    "conn": "u_vmks_Q0.w_k_addr|u_wbk_Q",
+    "bits": 61,
+    "old": 4,
+    "new": 4,
+    "added": 0,
+    "max_hop": 402.0240000000001
+   },
+   {
+    "index": 1236,
+    "conn": "u_vmks_Q0.w_k_v|u_wbk_Q",
+    "bits": 3,
+    "old": 4,
+    "new": 4,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1372,
+    "conn": "u_vmks_Q2.w_k_wr_done|u_wbk_Q",
+    "bits": 5,
+    "old": 7,
+    "new": 7,
+    "added": 0,
+    "max_hop": 69.12000000000012
+   },
+   {
+    "index": 1391,
+    "conn": "u_vmks_Q2.w_k_wdata|u_wbk_Q",
+    "bits": 1028,
+    "old": 6,
+    "new": 6,
+    "added": 0,
+    "max_hop": 146.87999999999988
+   },
+   {
+    "index": 1401,
+    "conn": "u_vmks_Q2.fill_bank|u_vmdel_Q3",
+    "bits": 3,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1405,
+    "conn": "u_vmks_Q2.fill_data|u_vmdel_Q3",
+    "bits": 514,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1409,
+    "conn": "u_vmks_Q2.fill_epoch|u_vmdel_Q3",
+    "bits": 33,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1413,
+    "conn": "u_vmks_Q2.fill_v|u_vmdel_Q3",
+    "bits": 3,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1417,
+    "conn": "u_vmks_Q2.fill_slot|u_vmdel_Q3",
+    "bits": 13,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1418,
+    "conn": "u_vmks_Q2.w_k_addr|u_wbk_Q",
+    "bits": 121,
+    "old": 6,
+    "new": 6,
+    "added": 0,
+    "max_hop": 95.03999999999996
+   },
+   {
+    "index": 1419,
+    "conn": "u_vmks_Q2.w_k_v|u_wbk_Q",
+    "bits": 5,
+    "old": 7,
+    "new": 7,
+    "added": 0,
+    "max_hop": 73.44000000000028
+   },
+   {
+    "index": 1425,
+    "conn": "u_vmks_Q2.c_kr_data|u_ctl_Q_p10",
+    "bits": 514,
+    "old": 4,
+    "new": 4,
+    "added": 0,
+    "max_hop": 401.7600000000001
+   },
+   {
+    "index": 1450,
+    "conn": "u_vmks_Q3.c_k_rdy|u_ctl_Q_p14",
+    "bits": 3,
+    "old": 5,
+    "new": 5,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 1454,
+    "conn": "u_vmks_Q3.c_k_wr_done|u_ctl_Q_p14",
+    "bits": 3,
+    "old": 5,
+    "new": 5,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 1458,
+    "conn": "u_vmks_Q3.c_kr_beat|u_ctl_Q_p14",
+    "bits": 9,
+    "old": 5,
+    "new": 5,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 1462,
+    "conn": "u_vmks_Q3.c_kr_v|u_ctl_Q_p14",
+    "bits": 3,
+    "old": 5,
+    "new": 5,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 1466,
+    "conn": "u_vmks_Q3.c_k_len|u_ctl_Q_p14",
+    "bits": 9,
+    "old": 5,
+    "new": 5,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 1470,
+    "conn": "u_vmks_Q3.c_k_v|u_ctl_Q_p14",
+    "bits": 3,
+    "old": 5,
+    "new": 5,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 1474,
+    "conn": "u_vmks_Q3.c_k_we|u_ctl_Q_p14",
+    "bits": 3,
+    "old": 5,
+    "new": 5,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 1478,
+    "conn": "u_vmks_Q3.c_kr_rdy|u_ctl_Q_p14",
+    "bits": 3,
+    "old": 5,
+    "new": 5,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 1480,
+    "conn": "u_vmks_Q3.fill_bank|u_vmdel_Q4",
+    "bits": 3,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 404.1650000000004
+   },
+   {
+    "index": 1481,
+    "conn": "u_vmks_Q3.fill_bank|u_vmdel_Q5",
+    "bits": 3,
+    "old": 9,
+    "new": 9,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1482,
+    "conn": "u_vmks_Q3.fill_bank|u_vmdel_Q6",
+    "bits": 3,
+    "old": 7,
+    "new": 7,
+    "added": 0,
+    "max_hop": 404.1650000000004
+   },
+   {
+    "index": 1485,
+    "conn": "u_vmks_Q3.fill_data|u_vmdel_Q5",
+    "bits": 514,
+    "old": 9,
+    "new": 9,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1486,
+    "conn": "u_vmks_Q3.fill_data|u_vmdel_Q6",
+    "bits": 514,
+    "old": 7,
+    "new": 7,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1487,
+    "conn": "u_vmks_Q3.fill_data|u_vmdel_Q7",
+    "bits": 514,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1488,
+    "conn": "u_vmks_Q3.fill_epoch|u_vmdel_Q4",
+    "bits": 33,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 402.80499999999984
+   },
+   {
+    "index": 1489,
+    "conn": "u_vmks_Q3.fill_epoch|u_vmdel_Q5",
+    "bits": 33,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 402.80499999999984
+   },
+   {
+    "index": 1490,
+    "conn": "u_vmks_Q3.fill_epoch|u_vmdel_Q6",
+    "bits": 33,
+    "old": 7,
+    "new": 7,
+    "added": 0,
+    "max_hop": 402.80499999999984
+   },
+   {
+    "index": 1492,
+    "conn": "u_vmks_Q3.fill_v|u_vmdel_Q4",
+    "bits": 3,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 403.0369999999998
+   },
+   {
+    "index": 1493,
+    "conn": "u_vmks_Q3.fill_v|u_vmdel_Q5",
+    "bits": 3,
+    "old": 9,
+    "new": 9,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1494,
+    "conn": "u_vmks_Q3.fill_v|u_vmdel_Q6",
+    "bits": 3,
+    "old": 7,
+    "new": 7,
+    "added": 0,
+    "max_hop": 403.0369999999998
+   },
+   {
+    "index": 1496,
+    "conn": "u_vmks_Q3.fill_slot|u_vmdel_Q4",
+    "bits": 13,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 404.2390000000005
+   },
+   {
+    "index": 1498,
+    "conn": "u_vmks_Q3.fill_slot|u_vmdel_Q6",
+    "bits": 13,
+    "old": 7,
+    "new": 7,
+    "added": 0,
+    "max_hop": 404.2390000000005
+   },
+   {
+    "index": 1596,
+    "conn": "u_vmdel_Q0.fill_data_i|u_vmks_Q2",
+    "bits": 257,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1628,
+    "conn": "u_vmdel_Q1.fill_v_i|u_vmks_Q2",
+    "bits": 2,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1629,
+    "conn": "u_vmdel_Q1.fill_bank_i|u_vmks_Q2",
+    "bits": 2,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1630,
+    "conn": "u_vmdel_Q1.fill_slot_i|u_vmks_Q2",
+    "bits": 7,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1631,
+    "conn": "u_vmdel_Q1.fill_epoch_i|u_vmks_Q2",
+    "bits": 17,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1644,
+    "conn": "u_vmdel_Q1.full1_all|u_vmdel_Q7",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 1650,
+    "conn": "u_vmdel_Q1.pcbad_all|u_vmdel_Q7",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1679,
+    "conn": "u_vmdel_Q2.full0_all|u_vmdel_Q7",
+    "bits": 3,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1684,
+    "conn": "u_vmdel_Q2.full1_all|u_vmdel_Q7",
+    "bits": 3,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1690,
+    "conn": "u_vmdel_Q2.pcbad_all|u_vmdel_Q7",
+    "bits": 3,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1695,
+    "conn": "u_vmdel_Q2.full0|u_vmdel_Q7",
+    "bits": 1,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1700,
+    "conn": "u_vmdel_Q2.full1|u_vmdel_Q7",
+    "bits": 1,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1705,
+    "conn": "u_vmdel_Q2.pcbad|u_vmdel_Q7",
+    "bits": 1,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1707,
+    "conn": "u_vmdel_Q3.fill_v_i|u_vmks_Q2",
+    "bits": 2,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1708,
+    "conn": "u_vmdel_Q3.fill_bank_i|u_vmks_Q2",
+    "bits": 2,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1709,
+    "conn": "u_vmdel_Q3.fill_slot_i|u_vmks_Q2",
+    "bits": 7,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1710,
+    "conn": "u_vmdel_Q3.fill_epoch_i|u_vmks_Q2",
+    "bits": 17,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1712,
+    "conn": "u_vmdel_Q3.fill_data_i|u_vmks_Q2",
+    "bits": 257,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1717,
+    "conn": "u_vmdel_Q3.full0_all|u_vmdel_Q7",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1722,
+    "conn": "u_vmdel_Q3.full1_all|u_vmdel_Q7",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1727,
+    "conn": "u_vmdel_Q3.pcbad_all|u_vmdel_Q7",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1732,
+    "conn": "u_vmdel_Q3.full0|u_vmdel_Q7",
+    "bits": 1,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1737,
+    "conn": "u_vmdel_Q3.full1|u_vmdel_Q7",
+    "bits": 1,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1742,
+    "conn": "u_vmdel_Q3.pcbad|u_vmdel_Q7",
+    "bits": 1,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1762,
+    "conn": "u_vmdel_Q4.full1_all|u_vmdel_Q3",
+    "bits": 3,
+    "old": 12,
+    "new": 12,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1767,
+    "conn": "u_vmdel_Q4.pcbad_all|u_vmdel_Q2",
+    "bits": 3,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1792,
+    "conn": "u_vmdel_Q5.fill_v_i|u_vmks_Q3",
+    "bits": 2,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1794,
+    "conn": "u_vmdel_Q5.fill_bank_i|u_vmks_Q3",
+    "bits": 2,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1796,
+    "conn": "u_vmdel_Q5.fill_slot_i|u_vmks_Q3",
+    "bits": 7,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1798,
+    "conn": "u_vmdel_Q5.fill_epoch_i|u_vmks_Q3",
+    "bits": 17,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1800,
+    "conn": "u_vmdel_Q5.fill_data_i|u_vmks_Q3",
+    "bits": 257,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1869,
+    "conn": "u_vmdel_Q6.pcbad_all|u_vmdel_Q1",
+    "bits": 3,
+    "old": 11,
+    "new": 11,
+    "added": 0,
+    "max_hop": 403.75300000000016
+   },
+   {
+    "index": 1878,
+    "conn": "u_vmdel_Q6.full0|u_vmdel_Q3",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1885,
+    "conn": "u_vmdel_Q6.full1|u_vmdel_Q3",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1892,
+    "conn": "u_vmdel_Q6.pcbad|u_vmdel_Q3",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1898,
+    "conn": "u_vmdel_Q7.fill_v_i|u_vmks_Q3",
+    "bits": 2,
+    "old": 9,
+    "new": 9,
+    "added": 0,
+    "max_hop": 402.60000000000036
+   },
+   {
+    "index": 1900,
+    "conn": "u_vmdel_Q7.fill_bank_i|u_vmks_Q3",
+    "bits": 2,
+    "old": 9,
+    "new": 9,
+    "added": 0,
+    "max_hop": 403.15000000000055
+   },
+   {
+    "index": 1902,
+    "conn": "u_vmdel_Q7.fill_slot_i|u_vmks_Q3",
+    "bits": 7,
+    "old": 9,
+    "new": 9,
+    "added": 0,
+    "max_hop": 404.16100000000006
+   },
+   {
+    "index": 1904,
+    "conn": "u_vmdel_Q7.fill_epoch_i|u_vmks_Q3",
+    "bits": 17,
+    "old": 9,
+    "new": 9,
+    "added": 0,
+    "max_hop": 404.00800000000027
+   },
+   {
+    "index": 1909,
+    "conn": "u_vmdel_Q7.full0_all|u_vmdel_Q2",
+    "bits": 3,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1910,
+    "conn": "u_vmdel_Q7.full0_all|u_vmdel_Q3",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1916,
+    "conn": "u_vmdel_Q7.full1_all|u_vmdel_Q2",
+    "bits": 3,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1917,
+    "conn": "u_vmdel_Q7.full1_all|u_vmdel_Q3",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1921,
+    "conn": "u_vmdel_Q7.pcbad_all|u_vmdel_Q0",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1923,
+    "conn": "u_vmdel_Q7.pcbad_all|u_vmdel_Q2",
+    "bits": 3,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1924,
+    "conn": "u_vmdel_Q7.pcbad_all|u_vmdel_Q3",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1930,
+    "conn": "u_vmdel_Q7.full0|u_vmdel_Q2",
+    "bits": 1,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1931,
+    "conn": "u_vmdel_Q7.full0|u_vmdel_Q3",
+    "bits": 1,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1937,
+    "conn": "u_vmdel_Q7.full1|u_vmdel_Q2",
+    "bits": 1,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1938,
+    "conn": "u_vmdel_Q7.full1|u_vmdel_Q3",
+    "bits": 1,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1944,
+    "conn": "u_vmdel_Q7.pcbad|u_vmdel_Q2",
+    "bits": 1,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1945,
+    "conn": "u_vmdel_Q7.pcbad|u_vmdel_Q3",
+    "bits": 1,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1954,
+    "conn": "u_xl_Q_aqhi.q|u_xq_Q_p1_bd",
+    "bits": 86,
+    "old": 16,
+    "new": 16,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1956,
+    "conn": "u_xl_Q_aqhi.e|u_xq_Q_p1_bd",
+    "bits": 4,
+    "old": 16,
+    "new": 16,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1962,
+    "conn": "u_xl_Q_aqlo.q|u_xq_Q_p1_bd",
+    "bits": 86,
+    "old": 17,
+    "new": 17,
+    "added": 0,
+    "max_hop": 402.49000000000024
+   },
+   {
+    "index": 1964,
+    "conn": "u_xl_Q_aqlo.e|u_xq_Q_p1_bd",
+    "bits": 4,
+    "old": 17,
+    "new": 17,
+    "added": 0,
+    "max_hop": 402.87800000000016
+   },
+   {
+    "index": 1992,
+    "conn": "bus:L120_i",
+    "bits": 10,
+    "old": 20,
+    "new": 20,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 2089,
+    "conn": "bus:L22_i",
+    "bits": 86,
+    "old": 31,
+    "new": 31,
+    "added": 0,
+    "max_hop": 362.88000000000056
+   },
+   {
+    "index": 2193,
+    "conn": "bus:L24_i",
+    "bits": 18,
+    "old": 28,
+    "new": 28,
+    "added": 0,
+    "max_hop": 401.75999999999976
+   },
+   {
+    "index": 2194,
+    "conn": "bus:L24_i",
+    "bits": 283,
+    "old": 28,
+    "new": 28,
+    "added": 0,
+    "max_hop": 401.75999999999976
+   },
+   {
+    "index": 2259,
+    "conn": "bus:L41_i",
+    "bits": 256,
+    "old": 29,
+    "new": 29,
+    "added": 0,
+    "max_hop": 181.44000000000005
+   },
+   {
+    "index": 2260,
+    "conn": "bus:L41_i",
+    "bits": 11,
+    "old": 16,
+    "new": 16,
+    "added": 0,
+    "max_hop": 254.88
+   },
+   {
+    "index": 2313,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2314,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2315,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2316,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2375,
+    "conn": "bus:L66_o",
+    "bits": 1,
+    "old": 32,
+    "new": 32,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2376,
+    "conn": "bus:L66_o",
+    "bits": 1,
+    "old": 25,
+    "new": 25,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2381,
+    "conn": "bus:L67_i",
+    "bits": 254,
+    "old": 20,
+    "new": 20,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2382,
+    "conn": "bus:L67_i",
+    "bits": 13,
+    "old": 20,
+    "new": 20,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 2383,
+    "conn": "bus:L67_i",
+    "bits": 2,
+    "old": 20,
+    "new": 20,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2384,
+    "conn": "bus:L67_i",
+    "bits": 2,
+    "old": 20,
+    "new": 20,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2385,
+    "conn": "bus:L67_i",
+    "bits": 2,
+    "old": 20,
+    "new": 20,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2475,
+    "conn": "bus:L79_o",
+    "bits": 1,
+    "old": 28,
+    "new": 28,
+    "added": 0,
+    "max_hop": 401.7599999999993
+   },
+   {
+    "index": 2476,
+    "conn": "bus:L79_o",
+    "bits": 1,
+    "old": 32,
+    "new": 32,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2477,
+    "conn": "bus:L79_o",
+    "bits": 1,
+    "old": 25,
+    "new": 25,
+    "added": 0,
+    "max_hop": 401.7599999999993
+   },
+   {
+    "index": 2585,
+    "conn": "bus:L63_o",
+    "bits": 5,
+    "old": 22,
+    "new": 22,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 2586,
+    "conn": "bus:L63_o",
+    "bits": 5,
+    "old": 22,
+    "new": 22,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 2588,
+    "conn": "bus:L9_o",
+    "bits": 32,
+    "old": 23,
+    "new": 23,
+    "added": 0,
+    "max_hop": 404.8393999999996
+   },
+   {
+    "index": 2589,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 22,
+    "new": 22,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2590,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 22,
+    "new": 22,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2591,
+    "conn": "bus:L63_o",
+    "bits": 5,
+    "old": 22,
+    "new": 22,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 2592,
+    "conn": "bus:L63_o",
+    "bits": 3,
+    "old": 22,
+    "new": 22,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2593,
+    "conn": "bus:L9_o",
+    "bits": 19,
+    "old": 23,
+    "new": 23,
+    "added": 0,
+    "max_hop": 401.76000000000045
+   },
+   {
+    "index": 2594,
+    "conn": "bus:L63_o",
+    "bits": 5,
+    "old": 22,
+    "new": 22,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 2595,
+    "conn": "bus:L63_o",
+    "bits": 5,
+    "old": 22,
+    "new": 22,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 2598,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 22,
+    "new": 22,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 2599,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 22,
+    "new": 22,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 2600,
+    "conn": "bus:L63_o",
+    "bits": 5,
+    "old": 22,
+    "new": 22,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 2601,
+    "conn": "bus:L63_o",
+    "bits": 3,
+    "old": 22,
+    "new": 22,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 2604,
+    "conn": "bus:L63_o",
+    "bits": 2,
+    "old": 16,
+    "new": 16,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2607,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 16,
+    "new": 16,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2608,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 16,
+    "new": 16,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2609,
+    "conn": "bus:L63_o",
+    "bits": 2,
+    "old": 16,
+    "new": 16,
+    "added": 0,
+    "max_hop": 401.75999999999976
+   },
+   {
+    "index": 2672,
+    "conn": "bus:L63_o",
+    "bits": 2,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2683,
+    "conn": "bus:L63_o",
+    "bits": 2,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2684,
+    "conn": "bus:L63_o",
+    "bits": 2,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2687,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2688,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2689,
+    "conn": "bus:L63_o",
+    "bits": 2,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2690,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2692,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2800,
+    "conn": "bus:L4_o",
+    "bits": 94,
+    "old": 19,
+    "new": 19,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   }
+  ],
+  "failed": [],
+  "added_cycles": 0
+ },
+ "q_hub_ne": {
+  "rows": [
+   {
+    "index": 335,
+    "conn": "u_xl_Q_ctl.l_d_o|u_xl_Q_aqhi",
+    "bits": 1024,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 506,
+    "conn": "u_xq_Q_p0_bd.bsel|u_xl_Q_ctl",
+    "bits": 13,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 512,
+    "conn": "u_xq_Q_p0_bd.r_wsel|u_xl_Q_ctl",
+    "bits": 8,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 513,
+    "conn": "u_xq_Q_p0_bd.zhi|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 514,
+    "conn": "u_xq_Q_p0_bd.zlo|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 517,
+    "conn": "u_xq_Q_p1_bd.qe_hi|u_xl_Q_aqhi",
+    "bits": 4,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 518,
+    "conn": "u_xq_Q_p1_bd.qe_lo|u_xl_Q_aqlo",
+    "bits": 4,
+    "old": 17,
+    "new": 17,
+    "added": 0,
+    "max_hop": 402.7366000000003
+   },
+   {
+    "index": 524,
+    "conn": "u_xq_Q_p0_bfq1.wce|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 525,
+    "conn": "u_xq_Q_p0_bfq1.mhi0|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 526,
+    "conn": "u_xq_Q_p0_bfq1.mhi1|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 527,
+    "conn": "u_xq_Q_p0_bfq1.mhi2|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 528,
+    "conn": "u_xq_Q_p0_bfq1.mhi3|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 529,
+    "conn": "u_xq_Q_p0_bfq1.mhi4|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 530,
+    "conn": "u_xq_Q_p0_bfq1.mhi5|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 531,
+    "conn": "u_xq_Q_p0_bfq1.mhi6|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 532,
+    "conn": "u_xq_Q_p0_bfq1.mhi7|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 533,
+    "conn": "u_xq_Q_p0_bfq1.mlo0|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 534,
+    "conn": "u_xq_Q_p0_bfq1.mlo1|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 535,
+    "conn": "u_xq_Q_p0_bfq1.mlo2|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 536,
+    "conn": "u_xq_Q_p0_bfq1.mlo3|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 537,
+    "conn": "u_xq_Q_p0_bfq1.mlo4|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 538,
+    "conn": "u_xq_Q_p0_bfq1.mlo5|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 539,
+    "conn": "u_xq_Q_p0_bfq1.mlo6|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 540,
+    "conn": "u_xq_Q_p0_bfq1.mlo7|u_xl_Q_ctl",
+    "bits": 1,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 541,
+    "conn": "u_xq_Q_p0_bfq1.wa|u_xl_Q_ctl",
+    "bits": 4,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 542,
+    "conn": "u_xq_Q_p0_bfq1.r_ce|u_xl_Q_ctl",
+    "bits": 4,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 543,
+    "conn": "u_xq_Q_p0_bfq1.r_a|u_xl_Q_ctl",
+    "bits": 4,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 1153,
+    "conn": "u_vmks_Q0.w_k_rdy|u_wbk_Q",
+    "bits": 3,
+    "old": 5,
+    "new": 5,
+    "added": 0,
+    "max_hop": 311.03999999999996
+   },
+   {
+    "index": 1154,
+    "conn": "u_vmks_Q0.w_k_wr_done|u_wbk_Q",
+    "bits": 3,
+    "old": 5,
+    "new": 5,
+    "added": 0,
+    "max_hop": 311.03999999999996
+   },
+   {
+    "index": 1181,
+    "conn": "u_vmks_Q0.w_k_addr|u_wbk_Q",
+    "bits": 61,
+    "old": 5,
+    "new": 5,
+    "added": 0,
+    "max_hop": 315.3599999999997
+   },
+   {
+    "index": 1182,
+    "conn": "u_vmks_Q0.w_k_v|u_wbk_Q",
+    "bits": 3,
+    "old": 5,
+    "new": 5,
+    "added": 0,
+    "max_hop": 306.72000000000025
+   },
+   {
+    "index": 1318,
+    "conn": "u_vmks_Q2.w_k_wr_done|u_wbk_Q",
+    "bits": 5,
+    "old": 7,
+    "new": 7,
+    "added": 0,
+    "max_hop": 69.12000000000012
+   },
+   {
+    "index": 1337,
+    "conn": "u_vmks_Q2.w_k_wdata|u_wbk_Q",
+    "bits": 1028,
+    "old": 6,
+    "new": 6,
+    "added": 0,
+    "max_hop": 146.87999999999988
+   },
+   {
+    "index": 1347,
+    "conn": "u_vmks_Q2.fill_bank|u_vmdel_Q3",
+    "bits": 3,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1351,
+    "conn": "u_vmks_Q2.fill_data|u_vmdel_Q3",
+    "bits": 514,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1355,
+    "conn": "u_vmks_Q2.fill_epoch|u_vmdel_Q3",
+    "bits": 33,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1359,
+    "conn": "u_vmks_Q2.fill_v|u_vmdel_Q3",
+    "bits": 3,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1363,
+    "conn": "u_vmks_Q2.fill_slot|u_vmdel_Q3",
+    "bits": 13,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1364,
+    "conn": "u_vmks_Q2.w_k_addr|u_wbk_Q",
+    "bits": 121,
+    "old": 6,
+    "new": 6,
+    "added": 0,
+    "max_hop": 95.03999999999996
+   },
+   {
+    "index": 1365,
+    "conn": "u_vmks_Q2.w_k_v|u_wbk_Q",
+    "bits": 5,
+    "old": 7,
+    "new": 7,
+    "added": 0,
+    "max_hop": 73.44000000000028
+   },
+   {
+    "index": 1370,
+    "conn": "u_vmks_Q2.c_kr_data|u_ctl_Q_p09",
+    "bits": 514,
+    "old": 6,
+    "new": 6,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1371,
+    "conn": "u_vmks_Q2.c_kr_data|u_ctl_Q_p10",
+    "bits": 514,
+    "old": 4,
+    "new": 4,
+    "added": 0,
+    "max_hop": 401.7600000000001
+   },
+   {
+    "index": 1426,
+    "conn": "u_vmks_Q3.fill_bank|u_vmdel_Q4",
+    "bits": 3,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 404.1650000000004
+   },
+   {
+    "index": 1427,
+    "conn": "u_vmks_Q3.fill_bank|u_vmdel_Q5",
+    "bits": 3,
+    "old": 9,
+    "new": 9,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1428,
+    "conn": "u_vmks_Q3.fill_bank|u_vmdel_Q6",
+    "bits": 3,
+    "old": 7,
+    "new": 7,
+    "added": 0,
+    "max_hop": 404.1650000000004
+   },
+   {
+    "index": 1431,
+    "conn": "u_vmks_Q3.fill_data|u_vmdel_Q5",
+    "bits": 514,
+    "old": 9,
+    "new": 9,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1432,
+    "conn": "u_vmks_Q3.fill_data|u_vmdel_Q6",
+    "bits": 514,
+    "old": 7,
+    "new": 7,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1433,
+    "conn": "u_vmks_Q3.fill_data|u_vmdel_Q7",
+    "bits": 514,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1434,
+    "conn": "u_vmks_Q3.fill_epoch|u_vmdel_Q4",
+    "bits": 33,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 402.80499999999984
+   },
+   {
+    "index": 1435,
+    "conn": "u_vmks_Q3.fill_epoch|u_vmdel_Q5",
+    "bits": 33,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 402.80499999999984
+   },
+   {
+    "index": 1436,
+    "conn": "u_vmks_Q3.fill_epoch|u_vmdel_Q6",
+    "bits": 33,
+    "old": 7,
+    "new": 7,
+    "added": 0,
+    "max_hop": 402.80499999999984
+   },
+   {
+    "index": 1438,
+    "conn": "u_vmks_Q3.fill_v|u_vmdel_Q4",
+    "bits": 3,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 403.0369999999998
+   },
+   {
+    "index": 1439,
+    "conn": "u_vmks_Q3.fill_v|u_vmdel_Q5",
+    "bits": 3,
+    "old": 9,
+    "new": 9,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1440,
+    "conn": "u_vmks_Q3.fill_v|u_vmdel_Q6",
+    "bits": 3,
+    "old": 7,
+    "new": 7,
+    "added": 0,
+    "max_hop": 403.0369999999998
+   },
+   {
+    "index": 1442,
+    "conn": "u_vmks_Q3.fill_slot|u_vmdel_Q4",
+    "bits": 13,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 404.2390000000005
+   },
+   {
+    "index": 1444,
+    "conn": "u_vmks_Q3.fill_slot|u_vmdel_Q6",
+    "bits": 13,
+    "old": 7,
+    "new": 7,
+    "added": 0,
+    "max_hop": 404.2390000000005
+   },
+   {
+    "index": 1542,
+    "conn": "u_vmdel_Q0.fill_data_i|u_vmks_Q2",
+    "bits": 257,
+    "old": 9,
+    "new": 9,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1574,
+    "conn": "u_vmdel_Q1.fill_v_i|u_vmks_Q2",
+    "bits": 2,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1575,
+    "conn": "u_vmdel_Q1.fill_bank_i|u_vmks_Q2",
+    "bits": 2,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1576,
+    "conn": "u_vmdel_Q1.fill_slot_i|u_vmks_Q2",
+    "bits": 7,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1577,
+    "conn": "u_vmdel_Q1.fill_epoch_i|u_vmks_Q2",
+    "bits": 17,
+    "old": 10,
+    "new": 10,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1578,
+    "conn": "u_vmdel_Q1.fill_data_i|u_vmks_Q2",
+    "bits": 257,
+    "old": 11,
+    "new": 11,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 1590,
+    "conn": "u_vmdel_Q1.full1_all|u_vmdel_Q7",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 1596,
+    "conn": "u_vmdel_Q1.pcbad_all|u_vmdel_Q7",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1641,
+    "conn": "u_vmdel_Q2.full0|u_vmdel_Q7",
+    "bits": 1,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1646,
+    "conn": "u_vmdel_Q2.full1|u_vmdel_Q7",
+    "bits": 1,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1653,
+    "conn": "u_vmdel_Q3.fill_v_i|u_vmks_Q2",
+    "bits": 2,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1654,
+    "conn": "u_vmdel_Q3.fill_bank_i|u_vmks_Q2",
+    "bits": 2,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1655,
+    "conn": "u_vmdel_Q3.fill_slot_i|u_vmks_Q2",
+    "bits": 7,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1656,
+    "conn": "u_vmdel_Q3.fill_epoch_i|u_vmks_Q2",
+    "bits": 17,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1658,
+    "conn": "u_vmdel_Q3.fill_data_i|u_vmks_Q2",
+    "bits": 257,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1663,
+    "conn": "u_vmdel_Q3.full0_all|u_vmdel_Q7",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1668,
+    "conn": "u_vmdel_Q3.full1_all|u_vmdel_Q7",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1673,
+    "conn": "u_vmdel_Q3.pcbad_all|u_vmdel_Q7",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1678,
+    "conn": "u_vmdel_Q3.full0|u_vmdel_Q7",
+    "bits": 1,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1683,
+    "conn": "u_vmdel_Q3.full1|u_vmdel_Q7",
+    "bits": 1,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1688,
+    "conn": "u_vmdel_Q3.pcbad|u_vmdel_Q7",
+    "bits": 1,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1707,
+    "conn": "u_vmdel_Q4.full1_all|u_vmdel_Q2",
+    "bits": 3,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1708,
+    "conn": "u_vmdel_Q4.full1_all|u_vmdel_Q3",
+    "bits": 3,
+    "old": 12,
+    "new": 12,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1719,
+    "conn": "u_vmdel_Q4.full0|u_vmdel_Q2",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1725,
+    "conn": "u_vmdel_Q4.full1|u_vmdel_Q2",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1738,
+    "conn": "u_vmdel_Q5.fill_v_i|u_vmks_Q3",
+    "bits": 2,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1740,
+    "conn": "u_vmdel_Q5.fill_bank_i|u_vmks_Q3",
+    "bits": 2,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1742,
+    "conn": "u_vmdel_Q5.fill_slot_i|u_vmks_Q3",
+    "bits": 7,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1744,
+    "conn": "u_vmdel_Q5.fill_epoch_i|u_vmks_Q3",
+    "bits": 17,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1746,
+    "conn": "u_vmdel_Q5.fill_data_i|u_vmks_Q3",
+    "bits": 257,
+    "old": 8,
+    "new": 8,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1803,
+    "conn": "u_vmdel_Q6.full0_all|u_vmdel_Q3",
+    "bits": 3,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1810,
+    "conn": "u_vmdel_Q6.full1_all|u_vmdel_Q3",
+    "bits": 3,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1817,
+    "conn": "u_vmdel_Q6.pcbad_all|u_vmdel_Q3",
+    "bits": 3,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 403.75300000000016
+   },
+   {
+    "index": 1824,
+    "conn": "u_vmdel_Q6.full0|u_vmdel_Q3",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1831,
+    "conn": "u_vmdel_Q6.full1|u_vmdel_Q3",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1838,
+    "conn": "u_vmdel_Q6.pcbad|u_vmdel_Q3",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1844,
+    "conn": "u_vmdel_Q7.fill_v_i|u_vmks_Q3",
+    "bits": 2,
+    "old": 9,
+    "new": 9,
+    "added": 0,
+    "max_hop": 402.60000000000036
+   },
+   {
+    "index": 1846,
+    "conn": "u_vmdel_Q7.fill_bank_i|u_vmks_Q3",
+    "bits": 2,
+    "old": 9,
+    "new": 9,
+    "added": 0,
+    "max_hop": 403.15000000000055
+   },
+   {
+    "index": 1848,
+    "conn": "u_vmdel_Q7.fill_slot_i|u_vmks_Q3",
+    "bits": 7,
+    "old": 9,
+    "new": 9,
+    "added": 0,
+    "max_hop": 404.16100000000006
+   },
+   {
+    "index": 1850,
+    "conn": "u_vmdel_Q7.fill_epoch_i|u_vmks_Q3",
+    "bits": 17,
+    "old": 9,
+    "new": 9,
+    "added": 0,
+    "max_hop": 404.00800000000027
+   },
+   {
+    "index": 1856,
+    "conn": "u_vmdel_Q7.full0_all|u_vmdel_Q3",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1860,
+    "conn": "u_vmdel_Q7.full1_all|u_vmdel_Q0",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1862,
+    "conn": "u_vmdel_Q7.full1_all|u_vmdel_Q2",
+    "bits": 3,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1863,
+    "conn": "u_vmdel_Q7.full1_all|u_vmdel_Q3",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1869,
+    "conn": "u_vmdel_Q7.pcbad_all|u_vmdel_Q2",
+    "bits": 3,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1870,
+    "conn": "u_vmdel_Q7.pcbad_all|u_vmdel_Q3",
+    "bits": 3,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1890,
+    "conn": "u_vmdel_Q7.pcbad|u_vmdel_Q2",
+    "bits": 1,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1900,
+    "conn": "u_xl_Q_aqhi.q|u_xq_Q_p1_bd",
+    "bits": 86,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 1908,
+    "conn": "u_xl_Q_aqlo.q|u_xq_Q_p1_bd",
+    "bits": 86,
+    "old": 17,
+    "new": 17,
+    "added": 0,
+    "max_hop": 402.49000000000024
+   },
+   {
+    "index": 1910,
+    "conn": "u_xl_Q_aqlo.e|u_xq_Q_p1_bd",
+    "bits": 4,
+    "old": 17,
+    "new": 17,
+    "added": 0,
+    "max_hop": 402.87800000000016
+   },
+   {
+    "index": 1929,
+    "conn": "bus:L120_i",
+    "bits": 10,
+    "old": 22,
+    "new": 22,
+    "added": 0,
+    "max_hop": 401.75999999999976
+   },
+   {
+    "index": 2007,
+    "conn": "bus:L22_i",
+    "bits": 80,
+    "old": 25,
+    "new": 25,
+    "added": 0,
+    "max_hop": 401.7599999999993
+   },
+   {
+    "index": 2023,
+    "conn": "bus:L22_i",
+    "bits": 86,
+    "old": 22,
+    "new": 22,
+    "added": 0,
+    "max_hop": 401.75999999999976
+   },
+   {
+    "index": 2124,
+    "conn": "bus:L24_i",
+    "bits": 283,
+    "old": 30,
+    "new": 30,
+    "added": 0,
+    "max_hop": 401.75999999999976
+   },
+   {
+    "index": 2195,
+    "conn": "bus:L41_i",
+    "bits": 256,
+    "old": 31,
+    "new": 31,
+    "added": 0,
+    "max_hop": 177.1199999999999
+   },
+   {
+    "index": 2196,
+    "conn": "bus:L41_i",
+    "bits": 11,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 276.4799999999998
+   },
+   {
+    "index": 2312,
+    "conn": "bus:L66_o",
+    "bits": 1,
+    "old": 29,
+    "new": 29,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2314,
+    "conn": "bus:L66_o",
+    "bits": 1,
+    "old": 32,
+    "new": 32,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 2320,
+    "conn": "bus:L67_i",
+    "bits": 254,
+    "old": 21,
+    "new": 21,
+    "added": 0,
+    "max_hop": 401.76
+   },
+   {
+    "index": 2321,
+    "conn": "bus:L67_i",
+    "bits": 13,
+    "old": 21,
+    "new": 21,
+    "added": 0,
+    "max_hop": 401.75999999999976
+   },
+   {
+    "index": 2322,
+    "conn": "bus:L67_i",
+    "bits": 2,
+    "old": 21,
+    "new": 21,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2323,
+    "conn": "bus:L67_i",
+    "bits": 2,
+    "old": 21,
+    "new": 21,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2324,
+    "conn": "bus:L67_i",
+    "bits": 2,
+    "old": 21,
+    "new": 21,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2325,
+    "conn": "bus:L68_i",
+    "bits": 254,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 2326,
+    "conn": "bus:L68_i",
+    "bits": 13,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2327,
+    "conn": "bus:L68_i",
+    "bits": 2,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2328,
+    "conn": "bus:L68_i",
+    "bits": 2,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2329,
+    "conn": "bus:L68_i",
+    "bits": 2,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2432,
+    "conn": "bus:L79_o",
+    "bits": 1,
+    "old": 29,
+    "new": 29,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2434,
+    "conn": "bus:L79_o",
+    "bits": 1,
+    "old": 32,
+    "new": 32,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 2495,
+    "conn": "bus:L88_i",
+    "bits": 5,
+    "old": 16,
+    "new": 16,
+    "added": 0,
+    "max_hop": 259.20000000000005
+   },
+   {
+    "index": 2518,
+    "conn": "bus:L63_o",
+    "bits": 2,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2519,
+    "conn": "bus:L9_o",
+    "bits": 86,
+    "old": 16,
+    "new": 16,
+    "added": 0,
+    "max_hop": 401.99799999999914
+   },
+   {
+    "index": 2521,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2522,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2523,
+    "conn": "bus:L63_o",
+    "bits": 2,
+    "old": 15,
+    "new": 15,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2527,
+    "conn": "bus:L63_o",
+    "bits": 2,
+    "old": 27,
+    "new": 27,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2530,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 27,
+    "new": 27,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2531,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 27,
+    "new": 27,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2532,
+    "conn": "bus:L63_o",
+    "bits": 2,
+    "old": 27,
+    "new": 27,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 2533,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 27,
+    "new": 27,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2574,
+    "conn": "bus:L9_o",
+    "bits": 30,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000007
+   },
+   {
+    "index": 2575,
+    "conn": "bus:L9_o",
+    "bits": 11,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2580,
+    "conn": "bus:L9_o",
+    "bits": 7,
+    "old": 14,
+    "new": 14,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2582,
+    "conn": "bus:L63_o",
+    "bits": 2,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2585,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2586,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2587,
+    "conn": "bus:L63_o",
+    "bits": 2,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2588,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2590,
+    "conn": "bus:L63_o",
+    "bits": 1,
+    "old": 13,
+    "new": 13,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   },
+   {
+    "index": 2789,
+    "conn": "bus:L12s_i",
+    "bits": 1,
+    "old": 27,
+    "new": 27,
+    "added": 0,
+    "max_hop": 401.7600000000002
+   }
+  ],
+  "failed": [],
+  "added_cycles": 0
+ }
+}

@@ -1,0 +1,13 @@
+# CODEX review: HBM p36 WBQ split and metadata repair
+
+PASS-COND for generation and fresh physical trials. I inspected p36_geometry.png after the exact-count station re-site. MAIN86.4x544.32 and OUT43.2x544.32 share the original WBQ vertical extent. OUT is immediately west of MAIN; AQHI moves25.92um west. The nearest AQHI/OUT gap is15.12um. Core bounds and neighbor overlaps pass. All314 newly-covered station chains (NW167, NE147) have free new register homes with unchanged station counts; added station latency0. Inherited gray station markers in pre-existing core rectangles are unchanged and are not claimed repaired by this event.
+
+MAIN mapped118502cells/16502.69um2; OUT54313cells/7336.83um2, each~39.6%synthesis area. Rejected34.56um OUT and failed monolithic variants are retained in the source records. This is geometry approval, not physical signoff.
+
+Native source selection is explicit: ot_wbq_sw__safe_split, HREG2/GIN1, replacing the old ot_wbq_split.sv file with ot_wbq_safe_split.sv. The native parent must instantiate .u_main/.u_out; signed-child binding must reject a missing hierarchy. The existing whole-core recipe remains an alternative. MAIN/OUT pins and per-PC local register guides come from the reviewed helper source event. The internal seam is legal only with the separately reviewed exact reciprocal same-parent face-pass contract. External pins retain ordinary face guarding and all parent timing paths remain timed.
+
+Functional evidence:40234/40563 accepted sectors with bitflip and overwrite-under-stall mutants caught. HBM36 ingress GIN1 adds1edge; HBM39 elastic K output adds1edge, with one sector/PC/edge throughput. Finite-credit acceptance may change idle edges. TOKEN owns the explicit selected-profile compiler adoption; this event does not silently add latency to every port.
+
+The same transaction clears existing schema blockers:20 intentional disjoint-window FT turnarounds are annotated explicitly;6 absent root buses are restored from immutable r5_NE geometry. Four orphan ports,30 stale FT slots,33 unused buses and1obsolete latency group are removed, with every old record retained in metadata_cleanup_ledger.json.23 endpoint order fields are repaired while retaining shared hard-type pin ordering. L12m_word's existing1980bit leg is named L5037;1016bit L12ms remains. All422active lane records compare byte-for-byte unchanged. Full schema validation passes with0errors.
+
+RX/TX actual M6 blockage extent is reserved through obs_max=M6. TKM's existing319.68x389.664 outline and exact snapped2-SRAM homes are recorded for reproducibility. No source or interface changes accompany those metadata corrections. Current-main q3 rightwidth and RX source/macro entries are preserved.

@@ -1,0 +1,54 @@
+[
+ {
+  "core": "ot_wbq_sw",
+  "sha": "p36wbq",
+  "part": "p36wbq",
+  "glue": "ot_wbq_safe_split.sv",
+  "conn": "ot_wbq_sw.conn.json",
+  "subs": [
+   {
+    "module": "ot_wbq_sw_split_main",
+    "cells": 118502
+   },
+   {
+    "module": "ot_wbq_sw_split_out",
+    "cells": 50000
+   }
+  ],
+  "added_cycles": "GIN1 group ingress+1(HBM36); elastic K output+1(HBM39),1sector/PC/edge sustained",
+  "keep_face": true,
+  "boundary_sub": "u_main",
+  "layout": {
+   "u_main": {
+    "xy": [
+     43.2,
+     0
+    ],
+    "wh": [
+     86.4,
+     544.32
+    ]
+   },
+   "u_out": {
+    "xy": [
+     0,
+     0
+    ],
+    "wh": [
+     43.2,
+     544.32
+    ]
+   }
+  },
+  "entry": {
+   "ot_wbq_sw_split_main": [
+    43.2,
+    272.16
+   ],
+   "ot_wbq_sw_split_out": [
+    21.6,
+    272.16
+   ]
+  }
+ }
+]
