@@ -338,7 +338,15 @@ def apply(split, top, child_modules, abi, poses):
             raise ValueError("pose dict anchor changed")
         pose_out[cm] = text.replace(anchor, "\n" + lines.rstrip("\n").rstrip() + "\n]\nset ot_np_blk", 1) if lines else text
         pose_out[cm] = pose_out[cm].replace(" \\\n\n", " \\\n")
-        record[cm] = dict(copies=recs)
+        # pin contract names every child port as a scalar (pins.json / io.tcl findBTerm {fclk_in_ft13_i}); a 1-bit port
+        # tagged single_bit_vector is written "[0:0]" and becomes BTerm "fclk_in_ft13_i[0]" (floorplan: native multiPORT
+        # BTerm missing).  Drop the tag on 1-bit port nets: same bit, same connections, scalar declaration.
+        scalar = []
+        for pn, pv in mod["ports"].items():
+            nn = mod["netnames"].get(pn)
+            if len(pv["bits"]) == 1 and nn and nn.get("attributes", {}).pop("single_bit_vector", None) is not None:
+                scalar.append(pn)
+        record[cm] = dict(copies=recs, scalar_ports=sorted(scalar))
     # second pass on the transformed netlist: every output is now dedicated; inputs are declared from what the kit sees
     # (a copied relay that is also an input face register makes its capture input fan out: it is a reset input)
     cls2 = classify(new, top, child_modules, abi)
