@@ -197,7 +197,11 @@ endmodule
 
 module ot_pl_land_local_r #(
     parameter integer W = 24, D = 4, K = 2,
-    parameter integer AW = (D <= 2) ? 1 : $clog2(D)
+    parameter integer AW = (D <= 2) ? 1 : $clog2(D),
+    // Writer counter age at reader origin, modulo 2*D:
+    // (reader_reset_release_edge - writer_reset_release_edge) mod (2*D).
+    // The bind derives both release ages; this changes no data latency.
+    parameter integer EPOCH_BIAS = 0
 ) (
     input wire ck, rsi,
     input wire [D*W-1:0] bank,
@@ -205,10 +209,14 @@ module ot_pl_land_local_r #(
     input wire [D-1:0] vld,
     output reg [W-1:0] o
 );
+    generate if (D < 2 || (D & (D-1)) != 0 || D != (1 << AW) ||
+                 K < 1 || K >= D || EPOCH_BIAS < 0 || EPOCH_BIAS >= 2*D) begin:g_invalid_epoch_contract
+        OT_PL_LAND_READER_REQUIRES_POWER_OF_TWO_DEPTH_AND_STATIC_EPOCH_BIAS u_bad();
+    end endgenerate
     reg rq, warm;
     reg [AW:0] rc;
     (* keep *) reg [D-1:0] read_oh;
-    wire [AW:0] expected_epoch = rc - (AW+1)'(K);
+    wire [AW:0] expected_epoch = rc + (AW+1)'(EPOCH_BIAS) - (AW+1)'(K);
     reg [W-1:0] selected;
     reg selected_valid;
     integer s;
@@ -224,7 +232,7 @@ module ot_pl_land_local_r #(
     always @(posedge ck)
         if (!rq) begin
             rc <= 0; warm <= 0;
-            for (s=0;s<D;s=s+1) read_oh[s] <= (s == ((D-K) % D));
+            for (s=0;s<D;s=s+1) read_oh[s] <= (s == ((D-K+(EPOCH_BIAS % D)) % D));
         end else begin
             rc <= rc + 1'b1;
             if (32'(rc) == K-1) warm <= 1;
