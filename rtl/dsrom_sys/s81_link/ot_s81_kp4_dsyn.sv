@@ -22,6 +22,9 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
     output reg           k_any,
     output reg           lock,
     output reg  [31:0]   n_relock
+`ifdef OT_S81_KP4_AM_FACE3
+    , input wire [8:0] am_face3   // three counts captured with p_d's existing face register
+`endif
 );
 `include "ot_s81_gf1024.svh"
     localparam integer NT = 30;
@@ -34,7 +37,12 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
     wire [11:0] amx = p_d[543:532] ^ 12'hA5C;
     function automatic [3:0] pop12(input [11:0] x); integer b; begin pop12 = 0; for (b = 0; b < 12; b = b + 1) pop12 = pop12 + x[b]; end endfunction
     reg        am_ok, pv;
+`ifdef OT_S81_KP4_AM_FACE3
+    wire [3:0] am_distance = {1'b0, am_face3[2:0]} + {1'b0, am_face3[5:3]} + {1'b0, am_face3[8:6]};
+    always @(posedge clk) begin am_ok <= p_v && (am_distance <= 4'd2); pv <= p_v; end
+`else
     always @(posedge clk) begin am_ok <= p_v && (pop12(amx) <= 2); pv <= p_v; end
+`endif
     reg  [3:0] wc;
     reg        cand;
     reg  [1:0] miss;
@@ -143,3 +151,24 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
     end
     assign x_q = x1;
 endmodule
+
+`ifdef OT_S81_KP4_AM_FACE3
+// S81-RCK-1: literal metadata half of the existing 544-bit input face.
+// Datapath is deliberately unreset, matching ot_pl_pad's existing data face.
+// Existing face_p_v and regional resets retain all qualification/calendar rules.
+module ot_s81_kp4_am_face3 (
+    input wire clk,
+    input wire [543:0] p_d,
+    output reg [8:0] parts
+);
+    wire [11:0] amx = p_d[543:532] ^ 12'hA5C;
+    function automatic [2:0] pop4(input [3:0] x);
+        begin pop4 = {2'b0,x[0]} + {2'b0,x[1]} + {2'b0,x[2]} + {2'b0,x[3]}; end
+    endfunction
+    always @(posedge clk) begin
+        parts[2:0] <= pop4(amx[3:0]);
+        parts[5:3] <= pop4(amx[7:4]);
+        parts[8:6] <= pop4(amx[11:8]);
+    end
+endmodule
+`endif

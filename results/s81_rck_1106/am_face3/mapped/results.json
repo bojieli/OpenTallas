@@ -1,0 +1,110 @@
+{
+ "old_am/TT": [
+  {
+   "scope": "native_PMA_to_face",
+   "check": "max",
+   "slack_ps": 701.5786868403443
+  },
+  {
+   "scope": "native_PMA_to_face",
+   "check": "min",
+   "slack_ps": 82.5836069498227
+  },
+  {
+   "scope": "face_to_pop12_am_ok",
+   "check": "max",
+   "slack_ps": 313.907512350147
+  },
+  {
+   "scope": "face_to_pop12_am_ok",
+   "check": "min",
+   "slack_ps": 60.34905932450735
+  }
+ ],
+ "old_am/FF": [
+  {
+   "scope": "native_PMA_to_face",
+   "check": "max",
+   "slack_ps": 729.9220146384641
+  },
+  {
+   "scope": "native_PMA_to_face",
+   "check": "min",
+   "slack_ps": 56.33227240536324
+  },
+  {
+   "scope": "face_to_pop12_am_ok",
+   "check": "max",
+   "slack_ps": 457.60312389004804
+  },
+  {
+   "scope": "face_to_pop12_am_ok",
+   "check": "min",
+   "slack_ps": 32.48365478482273
+  }
+ ],
+ "new_am/TT": [
+  {
+   "scope": "native_PMA_to_face",
+   "check": "max",
+   "slack_ps": 699.9770790986204
+  },
+  {
+   "scope": "native_PMA_to_face",
+   "check": "min",
+   "slack_ps": 82.78391893984109
+  },
+  {
+   "scope": "native_PMA_to_pop4",
+   "check": "max",
+   "slack_ps": 590.4988743813001
+  },
+  {
+   "scope": "native_PMA_to_pop4",
+   "check": "min",
+   "slack_ps": 99.04396786771693
+  },
+  {
+   "scope": "partial_counts_to_am_ok",
+   "check": "max",
+   "slack_ps": 568.9044258433901
+  },
+  {
+   "scope": "partial_counts_to_am_ok",
+   "check": "min",
+   "slack_ps": 58.0192285424463
+  }
+ ],
+ "new_am/FF": [
+  {
+   "scope": "native_PMA_to_face",
+   "check": "max",
+   "slack_ps": 729.2030897159954
+  },
+  {
+   "scope": "native_PMA_to_face",
+   "check": "min",
+   "slack_ps": 56.52467405629958
+  },
+  {
+   "scope": "native_PMA_to_pop4",
+   "check": "max",
+   "slack_ps": 653.7046485818852
+  },
+  {
+   "scope": "native_PMA_to_pop4",
+   "check": "min",
+   "slack_ps": 67.96840895065276
+  },
+  {
+   "scope": "partial_counts_to_am_ok",
+   "check": "max",
+   "slack_ps": 644.0484837866238
+  },
+  {
+   "scope": "partial_counts_to_am_ok",
+   "check": "min",
+   "slack_ps": 31.8848837496742
+  }
+ ]
+}

@@ -33,6 +33,11 @@ module ot_s81_kp4_dec_native_flat_lp #(
     wire [7:0]   apply;
 wire  face_p_v;
 wire [543:0] face_p_d;
+`ifdef OT_S81_KP4_AM_FACE3
+// Partial counts share the existing data-face edge: no extra word/calendar edge.
+wire [8:0] face_am_parts;
+ot_s81_kp4_am_face3 u_face_am3 (.clk(ck_syn), .p_d(p_d), .parts(face_am_parts));
+`endif
 wire  face_q_v;
 wire [511:0] face_q_d;
 wire  face_q_first;
@@ -109,7 +114,11 @@ wire [31:0] face_n_relock;
     wire lpr_c_u_chn;  ot_pl_pad #(.W(1), .N(3)) u_lprc_u_chn (.ck(ck_chn), .d(lpr_chn), .q(lpr_c_u_chn));   // t(u_chn) = 3
     wire lpr_c_u_out;  ot_pl_pad #(.W(1), .N(6)) u_lprc_u_out (.ck(ck_out), .d(lpr_out), .q(lpr_c_u_out));   // t(u_out) = 6
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
-    ot_s81_kp4_dsyn u_syn (.clk(ck_syn), .rst_n(lpr_c_u_syn), .p_v(face_p_v), .p_d(face_p_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any), .lock(face_lock), .n_relock(face_n_relock));   // region syn, t = 0
+    ot_s81_kp4_dsyn u_syn (.clk(ck_syn), .rst_n(lpr_c_u_syn), .p_v(face_p_v), .p_d(face_p_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any), .lock(face_lock), .n_relock(face_n_relock)
+`ifdef OT_S81_KP4_AM_FACE3
+        , .am_face3(face_am_parts)
+`endif
+    );   // region syn, t = 0
     ot_s81_kp4_ddly u_dly (.clk(ck_dly), .rst_n(lpr_c_u_dly), .w_d(x_q__l_dly), .r_d(d_q));   // region dly, t = 3
     ot_s81_kp4_dchn u_chn (.clk(ck_chn), .rst_n(lpr_c_u_chn), .k_v(k_v__l_chn), .k_lo(k_lo__l_chn), .k_L(k_L__l_chn), .k_any(k_any__l_chn), .cw_q(cw), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs), .n_corr(face_n_corr), .n_unc(face_n_unc));   // region chn, t = 3
     ot_s81_kp4_dout u_out (.clk(ck_out), .rst_n(lpr_c_u_out), .d_q(d_q__l_out), .cw(cw__l_out), .apply(apply__l_out), .o_unc(o_unc__l_out), .o_ne(o_ne__l_out), .fs(fs__l_out), .q_v(face_q_v), .q_d(face_q_d), .q_first(face_q_first), .q_unc(face_q_unc), .q_nerr(face_q_nerr), .q_seq(face_q_seq));   // region out, t = 6
