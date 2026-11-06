@@ -333,7 +333,7 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
 
 def audit_pin_records(face_rows, planned_rows):
     """Keep boundary-flop rows separate from the full planned physical pin audit."""
-    from pin_audit import INTERIOR, pin_key
+    from pin_audit import AUDIT_EXCLUDED, pin_key
     rows = [dict(p) for p in face_rows]
     declared = {p["name"]: p for p in planned_rows}
     for row in rows:
@@ -351,7 +351,7 @@ def audit_pin_records(face_rows, planned_rows):
         raise ValueError("face pins disagree with canonical physical pin declarations")
     for p in planned_rows:
         name = p["name"]
-        if name in seen or INTERIOR.fullmatch(name):
+        if name in seen or AUDIT_EXCLUDED.fullmatch(name):
             continue
         bus, bit = _pin_bus_bit(name)
         rows.append(dict(bus=bus, bit=bit, layer=p["layer"], x=p["x"], y=p["y"], face="island"))

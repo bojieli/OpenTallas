@@ -22,6 +22,11 @@ from native_pin_contract import native_rects_match
 TOL = 0.001
 FACES = "NESW"
 INTERIOR = re.compile(r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_o_[0-9]+|start_i|start_o_[0-9]+|ft_(ck|rst)_[io](_[0-9]+)?|mp_isl\w*)$")
+# Planned interior ports that the physical pin audit does NOT carry as strict rows (clock taps, the reset tap, the
+# pushdown feed-throughs: checked by the clock / ft_ports gates).  Planned reset/START wavefront outs (rst_o_<k>,
+# start_i, start_o_<k>) ARE audited at their exact island centre, so a native ABI that packs them as 1-bit vectors
+# (rst_o_0[0]) resolves through scalar_aliases instead of counting as extra (DIE-QC-84 11-06, SU2 pin readback).
+AUDIT_EXCLUDED = re.compile(r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|ft_(ck|rst)_[io](_[0-9]+)?|mp_isl\w*)$")
 
 
 def pin_key(p):
