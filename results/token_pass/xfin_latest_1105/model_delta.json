@@ -15,5 +15,10 @@
     "tools/s81_dv/dv_layer_compile.py lower_norm plan_only XQ event",
     "tools/s81_dv/layer_prog/lower_head.py plan_only XB egress events"
   ],
-  "scope": "plan publication/model only; native snake/all-gather and QDELAYS schedule not qualified"
+  "scope": "plan publication/model only; native snake/all-gather and QDELAYS schedule not qualified",
+  "beat_normr_prior": 115,
+  "beat_normr_current": 117,
+  "beat_normr_basis": "SS34-TOK 2026-11-05 09:37 measured 80/80 beats + mutant caught; other SLBEAT fields unchanged",
+  "combined_plan_publication_added_cycles": 15,
+  "combined_plan_publication_added_ps_at_833": 12495
 }

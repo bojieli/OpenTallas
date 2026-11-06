@@ -68,9 +68,10 @@ RSTOP_HOP = 2
 BKSEL_TRANSIT = 5                   # S81-RF1 11-03 (DIE-S81-51/RF-D, S81-062): +1, dsdv_bk_g RF 1 (vstop FPIPE); +1 RF 4 posedge out-face (form 5)
 # tb_s81sl_beat on the current vp (S81-SLICE NORMR, Verilator 5.050): results/rtl/s81_slice_1017/beat/g_b37 (op 7 NORMR,
 # hc_pre = G-unit leaf row R: SLBEAT go_to_partial=115 rstd_to_y0=18 rstd_to_xq=59 post_cmd_to_last_hw=63, PASS) and g_b37i
-# (op 5 NORM imm: go_to_partial=112); mutants g_mni (NORMR ignores the row) / g_mpl (old POST row order) FAIL.  (Was the
+# (op 5 NORM imm: go_to_partial=112). SS34-TOK 11-05 current-source beat replay measured NORMR 117 on all 80 beats;
+# other beat fields stayed fixed. These partial-publication dates are plan-only, not issue words. Mutants g_mni (NORMR ignores the row) / g_mpl (old POST row order) FAIL.  (Was the
 # pre-NORMR bt_base: 111 / 18 / 47.)  The bench's proven command spacing HLOAD -> GAIN 40, GAIN -> NORM 20 is kept.
-BEAT = dict(go_to_partial=112, go_to_partial_normr=115, rstd_to_y0=18, rstd_to_xq=59, post_cmd_to_last_hw=63,
+BEAT = dict(go_to_partial=112, go_to_partial_normr=117, rstd_to_y0=18, rstd_to_xq=59, post_cmd_to_last_hw=63,
             hload_slot=40, gain_slot=20)
 # dv_price.py (S81-DV measured): beat partial -> xfin DL 4 + collector 5; xfin last partial -> rstd 234 (tb_s81dv_xfin16);
 # rstd -> XQ complete at the ring stop 59 + 4 * 4 (last leaf) + DL 4.
