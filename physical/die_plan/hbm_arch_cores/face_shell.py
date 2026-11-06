@@ -421,7 +421,7 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
             raise RuntimeError(f"face_shell: pass {rx_!r} matches no signal bus")
         native_pass.update(hit_)
     if native_pass:
-        if (not native_context or native_context.get("schema") != "opentallas.native_hard_child_seam.v1"
+        if (not native_context or native_context.get("schema") not in ("opentallas.native_hard_child_seam.v1", "opentallas.native_hard_child_seam.v2")
             or native_context.get("module") != module or set(native_context.get("scope_buses", ())) != native_pass
             or native_context.get("bus_widths") != {n: widths[n] for n in native_pass}
             or not native_context.get("parent_contexts")):
