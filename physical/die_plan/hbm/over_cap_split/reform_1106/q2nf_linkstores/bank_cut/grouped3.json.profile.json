@@ -1,0 +1,24 @@
+{
+  "g_linkstore0": {
+    "word_cells": 72,
+    "register_bits": 2344,
+    "macros": {
+      "ot_sram_1r1w_64x512_m1_r2c2": 4
+    }
+  },
+  "g_linkstore1": {
+    "word_cells": 72,
+    "register_bits": 2344,
+    "macros": {
+      "ot_sram_1r1w_64x512_m1_r2c2": 4
+    }
+  },
+  "rest": {
+    "word_cells": 9785,
+    "register_bits": 38943,
+    "macros": {
+      "ot_sram_1r1w_256x256_m2_r2c2": 6,
+      "ot_sram_1rw_256x64_m4_r2c2": 5
+    }
+  }
+}
