@@ -3,7 +3,8 @@
 // Full-sequence HBM native rail. Every published pin is a controller register Q;
 // all sequence, epoch, ownership and CRC checks occur before valid capture.
 // Registered controller/store faces, native SRAM/CRC, TX5/RX1.
-module ot_hgi_coll_static_pinreg_ctl #(parameter integer MUT=0)(
+// RXPRE (HBM-GAPS-3 11-05, default 0 = unchanged): passed to u_codec (ot_hgi_coll_static_seq_ctl RXPRE, 0 added cycles).
+module ot_hgi_coll_static_pinreg_ctl #(parameter integer MUT=0, RXPRE=0)(
  input wire clk,
  input wire rst_n,epoch_begin,
  input wire [7:0] epoch,
@@ -71,7 +72,7 @@ module ot_hgi_coll_static_pinreg_ctl #(parameter integer MUT=0)(
    wv<={wv[0],wr_v};wo<={wo[0],wr_observed_v};rv<={rv[0],rd_v};
   end
  end
- ot_hgi_coll_static_seq_ctl u_codec(
+ ot_hgi_coll_static_seq_ctl #(.RXPRE(RXPRE)) u_codec(
   .clk(clk),.q_data(stored[560:0]),.rst_n(rst_n),.epoch_begin(epoch_begin),.epoch(epoch),
   .abort_in(abort_in),.abort_cause({epoch_bad,seq_bad}),.rd_seq(readseq[1]),.rx_expect_seq(rx_expect_seq),
   .wr_v(wv[1]),.wr_observed_v(wo[1]),.wr_slot(writeslot[1]),

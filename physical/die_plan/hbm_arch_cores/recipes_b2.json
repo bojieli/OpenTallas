@@ -1704,7 +1704,8 @@
    "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
   ],
   "defines": [
-   "OT_COLL_ISSUER256_NATIVE32"
+   "OT_COLL_ISSUER256_NATIVE32",
+   "OT_COLL_LINK_RXPRE"
   ],
   "params": {},
   "macros": [
