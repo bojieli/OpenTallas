@@ -2704,7 +2704,7 @@
    },
    "gen_args": [
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw11/prep_uh/source_sidecar.json",
+    "/srv/opentallas-scratch3/claude/kw23/prep_l48ui/source_sidecar.json",
     "--hold-ff-margin",
     "0"
    ],
@@ -3161,7 +3161,8 @@
    "note_kw23": "KW-FIX-23 2026-11-06 12:0x: COORD 11:2x (3) + DIE-HEAD-76 11:19: canonical_topology_prepare false (kit_wave opt-out b5726154290 on main I211; HEAD kit RTL = head_wave_kit_rtl export, no bind manifest, so kit_topology BIND_STALE cannot apply; pre-03:42 path that built the 13 counted HEAD types). Event l48ui (DIE-HEAD-75 195d87ac2d4 merged I208): plan prep_l48ui a2c18c19e08c = prep_ctlrq 8a47a824b3c4 + hd_serdes same_edge only (checked: only partition_types.hd_serdes differs), staged epyc4/5/6 scratch3 kw23/prep_l48ui (SHA256SUMS OK). ONE batch: hd_serdes (new block), hd_spn_wshim_rx@9 (BIND_STALE), hd_ctl@2 (fresh, l48uf cancelled), hd_host@2 (+ only_items), hd_tile@5.",
    "place_spill": true,
    "note_hosts_kw23": "KW-FIX-23 12:5x COORD 12:4x (epyc6 admits 167 GB load 40/128, epyc2 476 GB 68/128; epyc4+epyc5 REFUSED): gen epyc6 (src/plan/bind present at the same paths); PLACE prefers epyc6 then epyc2 (spill via the intel2 relay, KW-FIX-22). Revert: place_prefer [epyc5, epyc6], gen_hosts [epyc5, epyc6]. | 14:1x epyc6 full (29 waiters), epyc5 13 GB admits: gen_hosts back to [epyc5, epyc6] so pick_gen_host/restage spread.",
-   "note_gen_epyc2_kw24": "KW-FIX-24 14:5x COORD 14:0x(2)/14:2x (epyc6 24-33 pinned gen-stage waiters, admits -2; epyc2 admits 415 GB): gen-host stages (plan/gen/kit_rtl/bind/geom) are pinned to the attempt's gen host because they read the 47-GB src + plan + bind at the same paths (too big to --stage). Class fix: those inputs now exist on epyc2 at the same paths (hardlink rsync off the local src_28fc7 base, +7 GB: kw21/src_c926f, kw23/src_e9eda, kw22/src_3761, kw22/bind_qc_g, kw23/prep_l48ui, kw11/prep_uh, die-s81-70/wave_cg, codex-wave-bind-1106 s81_ready_v3/s81_emitted_v2) and epyc2 joins gen_hosts + hosts, so pick_gen_host/restage_waiters move unstarted waiters off epyc6. work_root -> fresh lane kw24-wave-1106 (epyc2's kw21-wave-1106 lane root carries the ot-run SPILL marker from PLACE spills, so gen_hosts() dropped epyc2). Revert: work_root kw21-wave-1106, drop epyc2."
+   "note_gen_epyc2_kw24": "KW-FIX-24 14:5x COORD 14:0x(2)/14:2x (epyc6 24-33 pinned gen-stage waiters, admits -2; epyc2 admits 415 GB): gen-host stages (plan/gen/kit_rtl/bind/geom) are pinned to the attempt's gen host because they read the 47-GB src + plan + bind at the same paths (too big to --stage). Class fix: those inputs now exist on epyc2 at the same paths (hardlink rsync off the local src_28fc7 base, +7 GB: kw21/src_c926f, kw23/src_e9eda, kw22/src_3761, kw22/bind_qc_g, kw23/prep_l48ui, kw11/prep_uh, die-s81-70/wave_cg, codex-wave-bind-1106 s81_ready_v3/s81_emitted_v2) and epyc2 joins gen_hosts + hosts, so pick_gen_host/restage_waiters move unstarted waiters off epyc6. work_root -> fresh lane kw24-wave-1106 (epyc2's kw21-wave-1106 lane root carries the ot-run SPILL marker from PLACE spills, so gen_hosts() dropped epyc2). Revert: work_root kw21-wave-1106, drop epyc2.",
+   "note_kw24_item10": "KW-FIX-24 COORD 14:3x item 10: gen_args --clock-landing kw11/prep_uh/source_sidecar.json -> kw23/prep_l48ui/source_sidecar.json (sha256 bbdd2f7b5ad1 byte-same, present on epyc5/epyc6/epyc2) so kw11 can retire. Revert: /srv/opentallas-scratch2/claude/kw11/prep_uh/source_sidecar.json"
   },
   "qwen_compute": {
    "enabled": true,
