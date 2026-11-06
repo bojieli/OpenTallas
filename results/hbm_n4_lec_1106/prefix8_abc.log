@@ -1,0 +1,11 @@
+==== prefix8
+======== ABC command line "&r /srv/opentallas-scratch2/claude/codex-n4-logic-1106/prefix_proof/prefix8.aig; &ps; &fraig -C 10000; &ps; &sat -a -z -v -C 100000; &ps; &w /srv/opentallas-scratch2/claude/codex-n4-logic-1106/prefix_proof/prefix8_swept.aig"
+[1;37m/srv/opentallas-scratch2/claude/codex-n4-logic-1106/prefix_proof/prefix8[0m : i/o =   1218/     97  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.02 MB
+[1;37m/srv/opentallas-scratch2/claude/codex-n4-logic-1106/prefix_proof/prefix8[0m : i/o =   1218/     97  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.02 MB
+SAT solver statistics:
+CO =       97  AND =        0  Conf = 100000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37m/srv/opentallas-scratch2/claude/codex-n4-logic-1106/prefix_proof/prefix8[0m : i/o =   1218/     97  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 0.02 MB
