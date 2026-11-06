@@ -433,8 +433,7 @@ def clock_pin_geometry(kd):
             if name not in native or _base(name) in seen or not _is_clock(name, ports):
                 continue
             boxes = [b for b in native[name]["native_rects"] if len(b) == 5 and b[0] == p["layer"]
-                     and abs((b[1] + b[3]) / 2 - p["x"]) < 1e-4
-                     and abs((b[2] + b[4]) / 2 - p["y"]) < 1e-4]
+                     and b[1] <= p["x"] <= b[3] and b[2] <= p["y"] <= b[4]]
             box = max(boxes, key=lambda b: (b[3] - b[1]) * (b[4] - b[2]))
             judge("io.tcl native multiPORT", name, p["layer"], p["x"], p["y"],
                   box[3] - box[1], box[4] - box[2])
@@ -618,7 +617,7 @@ def placed_pins(kd):
     # Native multiPORT pins have one logical plan centre and several exact
     # original LEF rectangles. They are emitted through OpenDB, not place_pin.
     # Read the actual emitted boxes and accept metadata only when ALL boxes
-    # match and the claimed logical point is an original rectangle centre.
+    # match and the unchanged logical anchor lies inside its declared layer metal.
     meta_file = kd / "pins.json"
     meta = {}
     declared_shapes = set()
@@ -651,11 +650,8 @@ def placed_pins(kd):
             continue
         row = meta[name]
         expected = [tuple(box) for box in row["native_rects"]]
-        same = sorted(boxes) == sorted(expected)
-        centered = any(len(box) == 5 and box[0] == row["layer"]
-                       and abs((box[1]+box[3])/2-row["x"]) < 1e-4
-                       and abs((box[2]+box[4])/2-row["y"]) < 1e-4 for box in boxes)
-        if same and centered:
+        from native_pin_contract import native_rects_match
+        if native_rects_match(row, boxes):
             pins[name] = dict(name=name, layer=row["layer"], x=row["x"], y=row["y"])
     for line in lines:
         m = re.match(r"\s*place_pin\s+-pin_name\s+(\{[^}]*\}|\S+)\s+-layer\s+(\S+)\s+-location\s+\{\s*" + _NUM +

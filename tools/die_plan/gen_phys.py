@@ -324,7 +324,15 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
 def audit_pin_records(face_rows, planned_rows):
     """Keep boundary-flop rows separate from the full planned physical pin audit."""
     from pin_audit import INTERIOR, pin_key
-    rows = list(face_rows)
+    rows = [dict(p) for p in face_rows]
+    declared = {p["name"]: p for p in planned_rows}
+    for row in rows:
+        for key in ("native_rects", "native_rects_review", "declared_native_shape"):
+            if key in declared.get(pin_key(row), {}):
+                value = declared[pin_key(row)][key]
+                if key in row and row[key] != value:
+                    raise ValueError("conflicting native pin contract: " + pin_key(row))
+                row[key] = value
     seen = {pin_key(p) for p in rows}
     if len(seen) != len(rows):
         raise ValueError("duplicate face pin in audit metadata")
@@ -337,6 +345,8 @@ def audit_pin_records(face_rows, planned_rows):
             continue
         bus, bit = _pin_bus_bit(name)
         rows.append(dict(bus=bus, bit=bit, layer=p["layer"], x=p["x"], y=p["y"], face="island"))
+        for key in ("native_rects", "native_rects_review", "declared_native_shape"):
+            if key in p: rows[-1][key] = p[key]
     return rows
 
 
@@ -3982,6 +3992,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         bud["bump_ports"] = [dict(b) for b in bump_ports]
     (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     shutil.copyfile(Path(__file__).with_name("pin_audit.py"), kd / "pin_audit.py")
+    shutil.copyfile(Path(__file__).with_name("native_pin_contract.py"), kd / "native_pin_contract.py")
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
     shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
     shutil.copyfile(Path(__file__).with_name("hard_landing.py"), kd / "hard_landing.py")

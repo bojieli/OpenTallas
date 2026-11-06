@@ -14,6 +14,11 @@ import math
 import re
 import os
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from native_pin_contract import native_rects_match
+
 TOL = 0.001
 FACES = "NESW"
 INTERIOR = re.compile(r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_o_[0-9]+|start_i|start_o_[0-9]+|ft_(ck|rst)_[io](_[0-9]+)?|mp_isl\w*)$")
@@ -109,6 +114,12 @@ def main():
         lay = [b for b in boxes if b[0] == p["layer"]]
         if not lay:
             res["wrong_layer"].append([n, p["layer"], sorted({b[0] for b in boxes})])
+            continue
+        if "native_rects" in p:
+            if native_rects_match(p, boxes, dbu):
+                res["ok"] += 1
+            else:
+                res["wrong_place"].append([n, p, boxes])
             continue
         if any(box_ok(p, b[1:], W, H) for b in lay):
             res["ok"] += 1
