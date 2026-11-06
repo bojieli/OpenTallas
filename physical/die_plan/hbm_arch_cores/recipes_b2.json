@@ -3464,6 +3464,7 @@
     "macros": [
       "ot_sram_1r1w_64x141_m1_r0c0_g141"
     ],
+    "core_macros": "auto",
     "util": 0.45,
     "source": "HBM-GAPS-4-Q3SPLIT d44v part 34 (vB, safe form): tile of ot_hfd_coll_q3_edge_core (member boundary, 0 added cycles); lock-step bench physical/die_plan/hbm/over_cap_split/reform_1103/bench/q3_edge/run.sh (XDEFS=OT_COLL_LINK_RXPRE RXSTIM=1); member RTL files and defines as the uncut core recipe; CODEX 11-05: adopt existing right-width 141b replay macro, same read-before-write and forwarding ages, 0 pin cycles; store miter 11991 checks + mutant caught"
   },

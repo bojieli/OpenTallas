@@ -348,6 +348,14 @@ def declared_source_io_tcl(pins, w, h, tag, clocks, resets):
     return "\n".join(out) + "\n", rows
 
 
+def recipe_core_macros_mode(requested, recipe, key):
+    """Explicit CLI mode wins; otherwise use the recipe policy, defaulting to off."""
+    mode = recipe.get("core_macros", "off") if requested is None else requested
+    if mode not in ("off", "auto"):
+        raise SystemExit(f"RECIPE_CORE_MACROS {key}: expected off or auto, got {mode!r}")
+    return mode
+
+
 def core_macros_placement(cm_path, module, macros):
     """AUTOBUILD-PIPE-2 --core-macros auto: the plan core_macros.json KNOWN rects of MODULE -> (rec macro_placement
     rows {inst, xy_um, orient, macro}, macro_placement_src), the HBM-CORES-KITS-12 cm2mp form (inst = the entry name
@@ -1421,8 +1429,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                     help="AUTOBUILD-PIPE-2 10-31 (opt-in; kit wave core_kit default on): clock-class M5 plan pins keep "
                          "their plan point (interior entry allowed, METHODOLOGY 12.8a) at 0.048 x 0.48 on the M5 track "
                          "(clock_entry_pin) instead of the nearest-face projection; off = io.tcl unchanged")
-    ap.add_argument("--core-macros", default="off", choices=["off", "auto"],
-                    help="AUTOBUILD-PIPE-2 10-31 (opt-in; kit wave core_kit default auto): no --macro-placement -> the "
+    ap.add_argument("--core-macros", default=None, choices=["off", "auto"],
+                    help="CLI overrides recipe core_macros (otherwise off): auto with no --macro-placement uses the "
                          "plan's core_macros.json KNOWN rects of this module are the static macro placement (the "
                          "HBM-CORES-KITS cm2mp form, inst fmt {k}); a macro core the plan has no KNOWN rects for fails "
                          "PLAN_CORE_MACROS (die owner); off = RTL-MP as before")
@@ -1571,6 +1579,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         raise SystemExit(f"NO_RECIPE {a.view}" + (f" (recipes with top {module} differ in build content: {rk_cands})"
                                                    if rk_cands else ""))
     rec = dict(R[rk])
+    a.core_macros = recipe_core_macros_mode(a.core_macros, rec, rk)
     # A native cut can have both legacy multi-port and planned common-root pin
     # tables. Select a reviewed wiring wrapper only for its exact pin-table SHA.
     if a.wrapper is None:
