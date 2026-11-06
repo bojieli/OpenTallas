@@ -51,6 +51,7 @@ Per tick (autopilot.py tick calls step() after admit_new; off unless the config 
 """
 import argparse
 import hashlib
+import fnmatch
 import json
 import os
 import random
@@ -2670,7 +2671,8 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
             if rgg:
                 sp["region_guide_geom"] = rgg
     # KW-FIX-17: an attempt released by the LEAFSLEW signature (or following a hooked one) builds with clk_leaf_repeat
-    ls_key, ls_form = leafslew_launch(cfg, st, die, r["item"], prev, attempt) if attempt > 1 else (None, None)
+    ls_key, ls_form = leafslew_launch(cfg, st, die, r["item"], prev, attempt) \
+        if attempt > 1 or leafslew_item_env(cfg, die, r["item"]) is not None else (None, None)
     if ls_form:
         sp["leafslew_form"] = ls_form
     unit = f"kw-{re.sub(r'[^A-Za-z0-9]', '', die)[:6]}-{re.sub(r'[^A-Za-z0-9]', '', r['item'])[:28]}-{attempt}-{int(time.time()) % 100000}"
@@ -3908,13 +3910,33 @@ def leafslew_launch(cfg, st, die, item, prev, attempt):
     an item built with the hook keeps it on every later attempt (the class is proven for it)."""
     if opt(cfg, die, "leafslew_auto") is False:
         return None, None
+    env = leafslew_item_env(cfg, die, item)
+    def with_env(form):
+        # COORD 11-05 17:4x: a die's leafslew_items rule (e.g. S81 slice_station: branch rule) rides on every form
+        return dict(form, env=env) if env else form
     for k, e in (st.get("leafslew") or {}).items():
         if e.get("die") == die and e.get("item") == item and not e.get("hooked_attempt") \
                 and int(e.get("attempt") or 0) < attempt:
-            return k, {x: e.get(x) for x in ("attempt", "pins", "worst_ps", "worst_pin", "log", "q_id", "src_sha")}
-    if prev.get("leafslew_form"):
-        return None, dict(prev["leafslew_form"], carried_from=prev.get("attempt"))
+            return k, with_env({x: e.get(x) for x in ("attempt", "pins", "worst_ps", "worst_pin", "log", "q_id", "src_sha")})
+    if (prev or {}).get("leafslew_form"):
+        return None, with_env({x: v for x, v in prev["leafslew_form"].items() if x != "env"} | {"carried_from": prev.get("attempt")})
+    if env is not None:
+        return None, {"by": "leafslew_items", "env": env}
     return None, None
+
+
+def leafslew_item_env(cfg, die, item):
+    """KW-FIX-17 11-05 (COORD 17:4x, S81 slice_station cross-tap hold): die option leafslew_items {glob: {OT_CLK_LEAF_*:
+    value}} builds every matching item with the clk_leaf_repeat hook and those settings (no signature needed); the first
+    matching glob wins.  -> env dict ({} = hook with the tool defaults) or None (no match).  Values validated as item_env."""
+    for g, env in (opt(cfg, die, "leafslew_items") or {}).items():
+        if fnmatch.fnmatchcase(item, g):
+            env = dict(env or {})
+            for k, v in env.items():
+                if not re.fullmatch(r"OT_CLK_LEAF_[A-Z0-9_]+", str(k)) or not ENV_VAL_RE.fullmatch(str(v)):
+                    raise ValueError(f"leafslew_items {g}: {k}={v!r} (OT_CLK_LEAF_* names, [A-Za-z0-9_.,:=+-] values)")
+            return {str(k): str(v) for k, v in sorted(env.items())}
+    return None
 
 
 def leafslew_patch_cmd(K, form):
@@ -3923,7 +3945,9 @@ def leafslew_patch_cmd(K, form):
     q = shlex.quote
     block = ("\n# KW-FIX-17 LEAFSLEW (COORD 11-05 16:4x): clk_leaf_repeat post-CTS hook; the kit's own POST_CTS_TCL runs "
              "after it\nexport OT_CLR_NEXT_TCL := $(POST_CTS_TCL)\noverride export POST_CTS_TCL = /work/"
-             + LEAFSLEW_TCL + "\n")
+             + LEAFSLEW_TCL + "\n"
+             + "".join(f"export {k} = {v}\n" for k, v in sorted((form.get("env") or {}).items())
+                       if re.fullmatch(r"OT_CLK_LEAF_[A-Z0-9_]+", k) and ENV_VAL_RE.fullmatch(str(v))))
     meta = json.dumps(dict(schema="opentallas.kw_leafslew_form.v1", lane="KW-FIX-17", note=LEAFSLEW_NOTE,
                            trigger=form), sort_keys=True)
     return (f"cd {q(K)} && test -f config.mk && test -s {LEAFSLEW_TCL} && "

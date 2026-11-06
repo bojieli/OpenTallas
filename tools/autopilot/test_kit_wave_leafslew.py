@@ -228,5 +228,53 @@ class Hook(unittest.TestCase):
         self.assertIn('ne "clk_leaf_repeat.tcl"', t)                 # no self-recursion through OT_CLR_NEXT_TCL
 
 
+class Items(unittest.TestCase):
+    """COORD 11-05 17:4x: die option leafslew_items {glob: {OT_CLK_LEAF_*: v}} builds matching items with the hook (branch rule)"""
+    BR = {"OT_CLK_LEAF_SLEW_PS": 60, "OT_CLK_LEAF_MAX_FANOUT": 12}
+
+    def cfg(self, items=None):
+        return {"dies": {"s81": {"event": "e", "leafslew_items": items if items is not None else {"slice_station__*": self.BR}}}}
+
+    def test_match_without_signature_any_attempt(self):
+        for att in (1, 2, 7):
+            k, f = KW.leafslew_launch(self.cfg(), {}, "s81", "slice_station__t47", {}, att)
+            self.assertIsNone(k)
+            self.assertEqual(f, {"by": "leafslew_items", "env": {"OT_CLK_LEAF_MAX_FANOUT": "12", "OT_CLK_LEAF_SLEW_PS": "60"}})
+        self.assertEqual(KW.leafslew_launch(self.cfg(), {}, "s81", "col_h9_r0", {}, 2), (None, None))
+        self.assertIsNone(KW.leafslew_item_env(self.cfg(), "s81", "col_h9_r0"))
+
+    def test_env_rides_on_signature_and_carried_forms(self):
+        st = {"leafslew": {"x": {"die": "s81", "item": "slice_station__t48", "attempt": 3, "pins": 2}}}
+        k, f = KW.leafslew_launch(self.cfg(), st, "s81", "slice_station__t48", {}, 4)
+        self.assertEqual((k, f["pins"], f["env"]["OT_CLK_LEAF_SLEW_PS"]), ("x", 2, "60"))
+        k, f = KW.leafslew_launch(self.cfg({}), {}, "s81", "slice_station__t48", {"attempt": 4, "leafslew_form": dict(f)}, 5)
+        self.assertEqual(f["carried_from"], 4)
+        self.assertNotIn("env", f)                                   # rule removed: the carried hook keeps tool defaults
+
+    def test_empty_env_is_hook_with_defaults_and_opt_out_wins(self):
+        self.assertEqual(KW.leafslew_launch(self.cfg({"slice_*": {}}), {}, "s81", "slice_station__t1", {}, 1)[1],
+                         {"by": "leafslew_items", "env": {}})
+        c = self.cfg(); c["dies"]["s81"]["leafslew_auto"] = False
+        self.assertEqual(KW.leafslew_launch(c, {}, "s81", "slice_station__t1", {}, 2), (None, None))
+
+    def test_bad_env_raises(self):
+        with self.assertRaises(ValueError):
+            KW.leafslew_item_env(self.cfg({"*": {"OT_HOLD_STOP_PS": "-300"}}), "s81", "a")
+        with self.assertRaises(ValueError):
+            KW.leafslew_item_env(self.cfg({"*": {"OT_CLK_LEAF_SLEW_PS": "60; rm"}}), "s81", "a")
+
+    def test_patch_writes_env(self):
+        td = tempfile.TemporaryDirectory(); self.addCleanup(td.cleanup)
+        k = Path(td.name)
+        (k / "config.mk").write_text("export POST_CTS_TCL = /work/post_cts_setup.tcl\n")
+        (k / KW.LEAFSLEW_TCL).write_text("# hook\n")
+        (k / "Makefile").write_text("include config.mk\nshow:\n\t@echo \"P=$$POST_CTS_TCL S=$$OT_CLK_LEAF_SLEW_PS F=$$OT_CLK_LEAF_MAX_FANOUT\"\n")
+        form = {"by": "leafslew_items", "env": {"OT_CLK_LEAF_SLEW_PS": "60", "OT_CLK_LEAF_MAX_FANOUT": "12"}}
+        p = subprocess.run(["bash", "-c", KW.leafslew_patch_cmd(str(k), form)], capture_output=True, text=True)
+        self.assertEqual(p.returncode, 0, p.stderr)
+        out = subprocess.run(["make", "-s", "-C", str(k), "show"], capture_output=True, text=True).stdout.strip()
+        self.assertEqual(out, "P=/work/clk_leaf_repeat.tcl S=60 F=12")
+
+
 if __name__ == "__main__":
     unittest.main()
