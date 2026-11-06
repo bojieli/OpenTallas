@@ -10073,3 +10073,5 @@ OWNER? 2026-11-05 23:30 PST — intel2 scratch2 is approaching its floor; 131 su
 
 ## OWNER?
 2026-11-06 00:18 PST HEAD production boot contract: which released stage/rank, clock/reset identity and static HEADER/COMMIT dates bind the HOST authority? Current l48ui source leaves LOCAL_STAGE=255, LOCAL_RANK=4, PHASE_BOUND=0, CLOCK_RESET_ID=0 and dates all-ones (deliberately unadmitted defaults). Recommendation: derive the values from the released package/rack and current reset/clock model, then carry explicit bindings in one HEAD plan event; never substitute the TEST stage1/rank0 dates501/511. Default: retain fail-closed defaults while the HEAD owner locates the existing contract; continue physical closure and other token work.
+
+OWNER? HEAD native production HOST has no selected admission profile: current l48ui hd_host contents params are empty (defaults stage255/rank4, phase0, clockID0, all-ones dates). Need selected deployment rank and actual clock/reset identity/phase authority. I am continuing by preparing existing exact boot-transport reset delta and measuring current transport with TOK; no test-profile constants adopted.
