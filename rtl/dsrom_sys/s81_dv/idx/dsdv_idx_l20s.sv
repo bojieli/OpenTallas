@@ -133,7 +133,9 @@ module dsdv_idx_txm_n32 #(
     // (dsdv_idx_txm_grp: banks [0, WCB) = column A, a hardened child with its own clock root; banks [WCB, NB) = column B
     // in the parent).  Each group lands its read/write ports (RIL/WDL), captures rd_out (RDL) and ORs its banks under its
     // own bank-select copies; the parent ORs the two partial words into rd.  Same function, same edges (0 cycles).
-    parameter integer SPLIT = 0
+    parameter integer SPLIT = 0,
+    // S81-IDX-B 11-05: MLK = 1 negative-edge lockup flop on every macro input (SPLIT = 0 only), 0 cycles; 2 = bench mutant
+    parameter integer MLK = 0
 ) (
     input  wire                 ck,
     input  wire                 re,
@@ -151,6 +153,7 @@ module dsdv_idx_txm_n32 #(
     localparam integer AW = $clog2(D);
     generate if (SRAM_MACRO && SPLIT != 0) begin : g_s
         localparam integer NB = D / 1024;
+        initial if (MLK != 0) $fatal(1, "dsdv_idx_txm_n32: MLK needs SPLIT = 0");
         initial if (D % 1024 != 0 || NB <= WCB) $fatal(1, "dsdv_idx_txm_n32 SPLIT: D must be a multiple of 1024 with NB > WCB");
         wire [255:0] pa, pb;
         // column A (banks 0..WCB-1): the hardened child (own clock root)
@@ -201,9 +204,21 @@ module dsdv_idx_txm_n32 #(
             end else begin : g_ri0
                 assign re_m = re && (NB == 1 || ra[AW-1:10] == b); assign ra_m = ra[9:0];
             end
+            wire mk_re, mk_we; wire [9:0] mk_ra, mk_wa; wire [255:0] mk_wd, mk_wm;
+            if (MLK == 1) begin : g_mlk
+                reg l_re, l_we; reg [9:0] l_ra, l_wa; reg [255:0] l_wd, l_wm;
+                always @(negedge ck) begin l_re <= re_m; l_ra <= ra_m; l_we <= we_m; l_wa <= wa_m; l_wd <= wd_m; l_wm <= wm_bank; end
+                assign mk_re = l_re; assign mk_ra = l_ra; assign mk_we = l_we; assign mk_wa = l_wa; assign mk_wd = l_wd; assign mk_wm = l_wm;
+            end else if (MLK == 2) begin : g_mlkm  // bench mutant: rising-edge stage (+1 edge on the macro inputs)
+                reg l_re, l_we; reg [9:0] l_ra, l_wa; reg [255:0] l_wd, l_wm;
+                always @(posedge ck) begin l_re <= re_m; l_ra <= ra_m; l_we <= we_m; l_wa <= wa_m; l_wd <= wd_m; l_wm <= wm_bank; end
+                assign mk_re = l_re; assign mk_ra = l_ra; assign mk_we = l_we; assign mk_wa = l_wa; assign mk_wd = l_wd; assign mk_wm = l_wm;
+            end else begin : g_mlk0
+                assign mk_re = re_m; assign mk_ra = ra_m; assign mk_we = we_m; assign mk_wa = wa_m; assign mk_wd = wd_m; assign mk_wm = wm_bank;
+            end
             ot_sram_1r1w_1024x256_m2_r2c2 u_mem (
-                .clk(ck), .r_ce_in(re_m), .r_addr_in(ra_m), .rd_out(q_raw),
-                .w_ce_in(we_m), .w_addr_in(wa_m), .wd_in(wd_m), .w_mask_in(wm_bank),
+                .clk(ck), .r_ce_in(mk_re), .r_addr_in(mk_ra), .rd_out(q_raw),
+                .w_ce_in(mk_we), .w_addr_in(mk_wa), .wd_in(mk_wd), .w_mask_in(mk_wm),
                 .rr_en(2'b0), .rr_addr(18'b0), .cr_en(2'b0), .cr_sel(16'b0));
             if (RDL != 0) begin : g_rl
                 (* keep = "true" *) reg [255:0] q_l;      // capture at the macro pins
@@ -400,6 +415,15 @@ module dsdv_idx_tx_n32 #(
     // edge later: lo / st = the FACE 0 core's lo / st delayed by exactly +1 ck edge (bench_idx_tx_face.sh, bit-exact,
     // shifted).  FACE = 0 is the old form, unchanged.
     parameter integer FACE = 0,
+    // S81-IDX-B 11-05 (OWNER 19:3x version B, safe by construction): FACE = 2 keeps the FACE 1 face flops at the pins and
+    // re-times both face rows to the core through a negative-edge lockup flop and a positive-edge flop (+1 edge in:
+    // vi_f -> vi_n (negedge) -> vi_g -> core; +1 edge out: lo_q / st_q -> lo_n (negedge) -> lo_o (posedge, at the pin) ->
+    // port).  Every face <-> core crossing then has half a cycle of hold and setup margin against clock skew between the
+    // far face rows and the core: lo / st = the FACE 1 core lo / st delayed by exactly +2 ck edges (tb_dsdv_idx_tx_vb).
+    // MLK = 1: every SRAM macro input (ce / addr / wd / mask of the score store and the IDX buffer) passes a
+    // negative-edge lockup flop at the macro pins: the macro still samples at the same rising edge the value launched one
+    // edge earlier (0 cycles, bit-exact), and the register -> macro hold check gets half a cycle of margin.
+    parameter integer MLK = 0,
     // LKL = 1 (DIE-S81-51/CLK crossing table row 1, core->parent face): a NEGATIVE-level lockup latch (transparent while
     // ck is low) after each registered output flop drives the port, so the output changes half a cycle after the launch
     // edge (parent FF hold >= +179 ps est.).  0 cycles: the parent's capture edge sees the same value.
@@ -431,7 +455,15 @@ module dsdv_idx_tx_n32 #(
             if (!rl[0]) begin vi_f[0] <= 1'b0; vo_f[0] <= 1'b0; end
             else begin vi_f[0] <= vi[0]; vo_f[0] <= vo[0]; end
         always @(posedge ck) begin vi_f[V-1:1] <= vi[V-1:1]; vo_f[V-1:1] <= vo[V-1:1]; end
-        assign vi_p = vi_f; assign vo_p = vo_f;
+        if (FACE >= 2) begin : g_fl
+            // FACE 2: no reset on the re-time stages (rst is held >= 64 ck: vi_f[0] / vo_f[0] = 0 flushes through)
+            reg [V-1:0] vi_n, vo_n, vi_g, vo_g;
+            always @(negedge ck) begin vi_n <= vi_f; vo_n <= vo_f; end
+            always @(posedge ck) begin vi_g <= vi_n; vo_g <= vo_n; end
+            assign vi_p = vi_g; assign vo_p = vo_g;
+        end else begin : g_fl0
+            assign vi_p = vi_f; assign vo_p = vo_f;
+        end
     end else begin : g_face0
         assign vi_p = vi; assign vo_p = vo;
     end endgenerate
@@ -551,9 +583,9 @@ module dsdv_idx_tx_n32 #(
     wire         ib_push = armed && e_cpl && e_mine && e_w[511:508] == 4'd3;
     wire         ib_re;
     wire [511:0] ib_q;
-    dsdv_idx_txm #(.D(IBD), .SRAM_MACRO(SRAM_MACRO)) u_ib0 (.ck(ck), .re(ib_re), .ra(IBA'(ib_r[IW-1:0])),
+    dsdv_idx_txm #(.D(IBD), .SRAM_MACRO(SRAM_MACRO), .MLK(MLK)) u_ib0 (.ck(ck), .re(ib_re), .ra(IBA'(ib_r[IW-1:0])),
         .rd(ib_q[255:0]), .we(ib_push), .wa(IBA'(ib_w[IW-1:0])), .wd(e_w[255:0]), .wm({256{1'b1}}));
-    dsdv_idx_txm #(.D(IBD), .SRAM_MACRO(SRAM_MACRO)) u_ib1 (.ck(ck), .re(ib_re), .ra(IBA'(ib_r[IW-1:0])),
+    dsdv_idx_txm #(.D(IBD), .SRAM_MACRO(SRAM_MACRO), .MLK(MLK)) u_ib1 (.ck(ck), .re(ib_re), .ra(IBA'(ib_r[IW-1:0])),
         .rd(ib_q[511:256]), .we(ib_push), .wa(IBA'(ib_w[IW-1:0])), .wd(e_w[511:256]), .wm({256{1'b1}}));
 
     // ------------------------------------------------------------------ lookup
@@ -587,7 +619,7 @@ module dsdv_idx_tx_n32 #(
         if(lk_go)lvl_next[ne]=1'b0;
     end
     wire [255:0] m_rd;
-    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL), .WDC(WDC), .RIL(RIL), .RIL_MUT(MUT == 5), .SPLIT(SPLIT)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
+    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL), .WDC(WDC), .RIL(RIL), .RIL_MUT(MUT == 5), .SPLIT(SPLIT), .MLK(MLK)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
         .we(m_we), .wa(m_wa), .wd(m_wd), .wm(m_wm),.wm_next((MUT==4)?16'hffff:vi_r[35:20]),
         .we_b(m_we_b), .wa_b(m_wa_b), .wd_b(m_wd_b));
     localparam integer LP = 2 + ((RDL != 0) ? 1 : 0) + ((RIL != 0) ? 1 : 0);   // lookup pipe: issue -> rd valid
@@ -877,13 +909,23 @@ module dsdv_idx_tx_n32 #(
     always @(posedge ck or negedge rl[4])
         if (!rl[4]) st_q <= 16'd0;
         else st_q <= {fc, 4'b0, done, armed, busy, fc != 8'd0};
+    // FACE 2: lo_q / st_q -> negedge lockup -> posedge face flop at the pin (+1 edge, no reset: see g_fl)
+    wire [V-1:0] lo_x; wire [15:0] st_x;
+    generate if (FACE >= 2) begin : g_fo
+        reg [V-1:0] lo_n, lo_o; reg [15:0] st_n, st_o;
+        always @(negedge ck) begin lo_n <= lo_q; st_n <= st_q; end
+        always @(posedge ck) begin lo_o <= lo_n; st_o <= st_n; end
+        assign lo_x = lo_o; assign st_x = st_o;
+    end else begin : g_fo0
+        assign lo_x = lo_q; assign st_x = st_q;
+    end endgenerate
     // output face: flop -> port (LKL: flop -> negative-level lockup latch -> port; no other logic)
     generate if (LKL != 0) begin : g_lkl
         reg [V-1:0] lo_l; reg [15:0] st_l;
-        always @* if (!ck) begin lo_l = lo_q; st_l = st_q; end
+        always @* if (!ck) begin lo_l = lo_x; st_l = st_x; end
         assign lo = lo_l; assign st = st_l;
     end else begin : g_lkl0
-        assign lo = lo_q; assign st = st_q;
+        assign lo = lo_x; assign st = st_x;
     end endgenerate
 endmodule
 
