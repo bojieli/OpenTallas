@@ -3215,3 +3215,5 @@ CODEX: 2026-11-06 00:06 PST MERGE: HEAD bounded seam diagnostic022b0f7748a (not 
 CODEX: 2026-11-06 00:12 PST HBM-FORMS: brmw READY-COUNT (TT+1.53 FF+.90 routedEQ); private qout814 internalholds fixed42s with exactTT/FFrestore and5049parentIOholds retained; generic opt-in branch0a9a575be83 READY to COORD.
 
 CODEX: 2026-11-06 00:17 PST MERGE: default-off FF repair scope, selected hard-child correctness and explicit registered-turnaround schema landed1698b4de6f8; tagsz/x/v/z/ah verified; qout pilot remains local opt-in only.
+
+CODEX: 2026-11-06 00:23 PST MERGE: phase-preservingKVsysC +dormantFREG captureband landed396c545e5d8,tagsaa/y/w/aa/ai. IDXactivationa735held beforemerge afterRTLlint parameter mismatch; helperfix pending.
