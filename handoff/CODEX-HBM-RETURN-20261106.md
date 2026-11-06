@@ -54,3 +54,11 @@ Canonical actual P1/P6 arithmetic PASS24/144 mixes, RAW0169,QDRLY1/QCHX0/XRU0; P
 - OWN EP5 inactive EXP/N4H intermediate ODB/runobjects1,200,129,456bytes freed; receipt codex-hbm-prune-summary-1793966083.json. Allsource/failures/views/1synth/3place/4cts/5grt/6final/current detached recoveries retained. EP6oldrsq links removed0guaranteedbytes. Own total2,826,262,049.
 - GAPS cumulative26,312,126,464 applied (includes TX/SVGR/WBQ/BODYchildren), exact receipts sentfleet. Newly root-backed RX/QCOL10,900,996,096 safely rehomed EP5; guarded do-5_2_route continuation now scopes1019181/1019720, no SYNTH/PLACE replay. OldGQI exact exhausted7DRC stopped; healthy24nmpilot retained. Bank7,380,600,000-ish exact receipt separatelyfleet, not inown/gapstotals. Forms/projection report separately.
 - KEEP ACTIVE references EP2 hbm-bind-9/g_t11m79f, m79fp+symlinktargets, hbm-bind-6/tip2/asbuilt_t11/declaredsourceclosure. GlobalFAIL label does not authorize removal; local proof/prep references them. Fleet confirmed protection.
+
+## Last descendant arrivals after initial handoff write
+
+- Full gaps handoff `handoff/codex_hbm_gaps_to_claude_20261106_0432.md`; WBQ/body `handoff/codex_wbq_body_to_claude_20261106.md`.
+- BODY vC routed/synth proof is **UNPROVEN346 issuer control/metadata points**,39761proved/failing[]/0mul4mentions; oldA345unproven, so one extra issuer point needs classification. No EQ claim. Healthy BODY GRT EP5 scope1237899-1793968169, CTS TT-39.72/FFinternal-68.81. MAIN GPL overflow39884@380/LECrc0.
+- TKM CTS exact scope1282900-1793968278 EP5, reuses pending PLACE-owned proof scope956185. TX privateGEN **NOT launched** before stop (source9629/HBM48 ready).
+- SVGR head native scope655016-1793966471 EP5: buildPASS1643s/59MBbinary, ordinary runtime still healthy stall/reset, no whole proof verdict. Source9a0d2386bea (impl401390) standalone1.592Mchecks+3mutants/0extraedges.
+- Actual captured Kshare WB-face tuple test **FAIL**: source32/link32/receiver32,bad10 vs bareRAW32/32/0. E6 codex-native-wbk-ksharefaces-1106/actual_kshare.run.log. It contains exact four physical WB-face FF statements plus actual nativeu_e, not entire controller. Strengthens need for explicit same-parent K seam/elastic profile; typed proposed exact ranged peers, implementation NOT started at handback.
