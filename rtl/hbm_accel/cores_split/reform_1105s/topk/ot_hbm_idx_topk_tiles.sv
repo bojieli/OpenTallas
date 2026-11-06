@@ -70,10 +70,17 @@ module ot_hbm_idx_topk_ingest #(parameter integer MUT=0, FILL_GROUPS=0)(
                               (MUT==8&&g==2)?fill:n[2:0];
     end
    end
-   wire[4607:0]shifted=({512'd0,compacted} << {fill_local,6'b0});
-   // The selected bits are disjoint; dead shift columns are removed normally.
+   // Shift only this record-column plane.  Projecting an integer-record
+   // shift commutes exactly with this 8-bit column projection.  Keeping the
+   // plane explicit also avoids eight full-width gold-frontend intermediates.
+   wire[575:0]column_words;
+   for(genvar r=0;r<64;r=r+1)begin:input_column
+    assign column_words[r*8+:8]=compacted[r*64+g*8+:8];
+   end
+   assign column_words[575:512]=64'd0;
+   wire[575:0]shifted=column_words << {fill_local,3'b0};
    for(genvar r=0;r<72;r=r+1)begin:record_column
-    assign packed_next[r*64+g*8+:8]=shifted[r*64+g*8+:8] |
+    assign packed_next[r*64+g*8+:8]=shifted[r*8+:8] |
                                       live_carry_padded[r*64+g*8+:8];
    end
   end
