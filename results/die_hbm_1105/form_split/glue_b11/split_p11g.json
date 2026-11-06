@@ -1,0 +1,17 @@
+[
+ {
+  "core": "hfd_hgi_vms_glue_nw_t",
+  "sha": "p11g",
+  "part": "p11g",
+  "glue": "hfd_hgi_vms_glue_nw_t__p11glue.sv",
+  "conn": "glue.conn.json",
+  "subs": [
+   {"module": "hfd_hgi_vms_gnw_cw", "cells": 41000},
+   {"module": "hfd_hgi_vms_gnw_ccw", "cells": 41000},
+   {"module": "hfd_hgi_vms_gnw_hub", "cells": 50000}
+  ],
+  "added_cycles": "0 on every die pin and every crossing: the 2 kit face flops of a crossing replace the producer out reg + consumer in reg (port-cut RTL ot_vms_glue_pc.sv); ring-stop faults enter vmstat at flags1. Lock-step results/die_hbm_1105/form_split/glue_b11/",
+  "boundary_sub": "u_fcore.u_core.u_h",
+  "hub_sub": "u_fcore.u_core.u_h"
+ }
+]
