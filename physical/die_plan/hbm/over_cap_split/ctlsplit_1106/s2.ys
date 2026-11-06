@@ -1,0 +1,15 @@
+read_json /w/pre.json
+hierarchy -top ot_hgi_sfu_split3_ctl_core
+select -read /w/pipe.sel
+select -count %
+submod -name ot_hgi_sfu_split3_ctl_pipe %
+select -clear
+cd ot_hgi_sfu_split3_ctl_core
+select -list t:ot_hgi_sfu_split3_ctl_pipe
+submod -name ot_hgi_sfu_split3_ctl_rest c:* t:ot_hgi_sfu_split3_ctl_pipe %d
+cd ..
+select -clear
+hierarchy -top ot_hgi_sfu_split3_ctl_core
+stat
+write_verilog -noattr /w/split.v
+write_json /w/split.json
