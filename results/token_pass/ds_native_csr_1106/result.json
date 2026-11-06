@@ -1,0 +1,259 @@
+{
+  "verdict": "PASS",
+  "cases": [
+    {
+      "case": "actual_job0_byte_exact",
+      "passed": true,
+      "rows": 128,
+      "templates": 125,
+      "CF": 63,
+      "HOST_words": 575
+    },
+    {
+      "case": "actual_job1_byte_exact",
+      "passed": true,
+      "rows": 128,
+      "templates": 126,
+      "CF": 0,
+      "HOST_words": 513
+    },
+    {
+      "case": "actual_job2_byte_exact",
+      "passed": true,
+      "rows": 128,
+      "templates": 126,
+      "CF": 0,
+      "HOST_words": 513
+    },
+    {
+      "case": "actual_job3_byte_exact",
+      "passed": true,
+      "rows": 128,
+      "templates": 126,
+      "CF": 0,
+      "HOST_words": 513
+    },
+    {
+      "case": "actual_job4_byte_exact",
+      "passed": true,
+      "rows": 128,
+      "templates": 126,
+      "CF": 0,
+      "HOST_words": 513
+    },
+    {
+      "case": "actual_job5_byte_exact",
+      "passed": true,
+      "rows": 128,
+      "templates": 126,
+      "CF": 0,
+      "HOST_words": 513
+    },
+    {
+      "case": "actual_job6_byte_exact",
+      "passed": true,
+      "rows": 128,
+      "templates": 126,
+      "CF": 0,
+      "HOST_words": 513
+    },
+    {
+      "case": "actual_job7_byte_exact",
+      "passed": true,
+      "rows": 75,
+      "templates": 73,
+      "CF": 0,
+      "HOST_words": 301
+    },
+    {
+      "case": "inconsistent_declared_rows",
+      "passed": true,
+      "rejection": "declared and actual row dimensions differ"
+    },
+    {
+      "case": "missing_row_part",
+      "passed": true,
+      "rejection": "incomplete or extra calendar dimensions"
+    },
+    {
+      "case": "header_length_changed",
+      "passed": true,
+      "rejection": "BEGIN/SEAL dimensions differ from LEN"
+    },
+    {
+      "case": "duplicate_actual_CF",
+      "passed": true,
+      "rejection": "duplicate CF address"
+    },
+    {
+      "case": "missing_decoded_CF",
+      "passed": true,
+      "rejection": "CF record outside decoded dimensions"
+    },
+    {
+      "case": "missing_template_or_CF_order_record",
+      "passed": true,
+      "rejection": "image order omits or adds decoded dimensions"
+    },
+    {
+      "case": "template_field_controls_new_encoding",
+      "passed": true
+    },
+    {
+      "case": "initializer_cannot_be_defaulted",
+      "passed": true,
+      "rejection": "explicit complete MU initializer and existing decoder required"
+    },
+    {
+      "case": "actual35_explicit_initializer_no_body_changes",
+      "passed": true,
+      "slots": 2
+    },
+    {
+      "case": "incomplete_actual_MU_initializer",
+      "passed": true,
+      "rejection": "actual MU slot attributes incomplete"
+    }
+  ],
+  "compatibility": {
+    "jobs": [
+      {
+        "job": 0,
+        "rows": 128,
+        "templates": 125,
+        "CF": 63,
+        "HOST_words": 575,
+        "KIT": [
+          7146
+        ],
+        "row_done_only_KIT_lower_bound": 7163,
+        "normal_rows_after_KIT": 4,
+        "marker_reordering_would_shift_row_tags": true,
+        "existing_KIT_before_row_done_bound": true
+      },
+      {
+        "job": 1,
+        "rows": 128,
+        "templates": 126,
+        "CF": 0,
+        "HOST_words": 513,
+        "KIT": [
+          118
+        ],
+        "row_done_only_KIT_lower_bound": 135,
+        "normal_rows_after_KIT": 10,
+        "marker_reordering_would_shift_row_tags": true,
+        "existing_KIT_before_row_done_bound": true
+      },
+      {
+        "job": 2,
+        "rows": 128,
+        "templates": 126,
+        "CF": 0,
+        "HOST_words": 513,
+        "KIT": [
+          797
+        ],
+        "row_done_only_KIT_lower_bound": 814,
+        "normal_rows_after_KIT": 4,
+        "marker_reordering_would_shift_row_tags": true,
+        "existing_KIT_before_row_done_bound": true
+      },
+      {
+        "job": 3,
+        "rows": 128,
+        "templates": 126,
+        "CF": 0,
+        "HOST_words": 513,
+        "KIT": [
+          364
+        ],
+        "row_done_only_KIT_lower_bound": 381,
+        "normal_rows_after_KIT": 4,
+        "marker_reordering_would_shift_row_tags": true,
+        "existing_KIT_before_row_done_bound": true
+      },
+      {
+        "job": 4,
+        "rows": 128,
+        "templates": 126,
+        "CF": 0,
+        "HOST_words": 513,
+        "KIT": [
+          259
+        ],
+        "row_done_only_KIT_lower_bound": 276,
+        "normal_rows_after_KIT": 15,
+        "marker_reordering_would_shift_row_tags": true,
+        "existing_KIT_before_row_done_bound": true
+      },
+      {
+        "job": 5,
+        "rows": 128,
+        "templates": 126,
+        "CF": 0,
+        "HOST_words": 513,
+        "KIT": [
+          85
+        ],
+        "row_done_only_KIT_lower_bound": 101,
+        "normal_rows_after_KIT": 13,
+        "marker_reordering_would_shift_row_tags": true,
+        "existing_KIT_before_row_done_bound": true
+      },
+      {
+        "job": 6,
+        "rows": 128,
+        "templates": 126,
+        "CF": 0,
+        "HOST_words": 513,
+        "KIT": [
+          83
+        ],
+        "row_done_only_KIT_lower_bound": 100,
+        "normal_rows_after_KIT": 15,
+        "marker_reordering_would_shift_row_tags": true,
+        "existing_KIT_before_row_done_bound": true
+      },
+      {
+        "job": 7,
+        "rows": 75,
+        "templates": 73,
+        "CF": 0,
+        "HOST_words": 301,
+        "KIT": [
+          3794
+        ],
+        "row_done_only_KIT_lower_bound": 3811,
+        "normal_rows_after_KIT": 5,
+        "marker_reordering_would_shift_row_tags": true,
+        "existing_KIT_before_row_done_bound": true
+      }
+    ],
+    "shared_KIT_row_done_only_lower_bound": 7163,
+    "existing_KIT_values": [
+      83,
+      85,
+      118,
+      259,
+      364,
+      797,
+      3794,
+      7146
+    ],
+    "single_armed_RL_compatible": false,
+    "retiming_performed": false,
+    "V_row_indices_preserved": true,
+    "lifecycle_qualified": false,
+    "required_contracts": [
+      "complete selected resource slot/event initialization",
+      "source/reset/global HOST/KS booking",
+      "actual store/consumer retirement and row-tag preservation for any marker changes"
+    ]
+  },
+  "legacy104_entry_encoder_changed": false,
+  "actual_production_bootstrap_emitted": false,
+  "retiming_or_row_reindexing_performed": false,
+  "source_scope": "generic byte serializer; existing104 entry encoder remains untouched",
+  "full_token": false
+}
