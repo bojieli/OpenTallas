@@ -2864,7 +2864,8 @@
     "sle_sc_v1__cl115da35f@3",
     "sle_sc_v1__cl7479a5ec@4",
     "sle_sc_v3@2",
-    "coll_core@1"
+    "coll_core@1",
+    "slw_su_c__cl92142dac@13"
    ],
    "queue_src": "",
    "type_args": {
@@ -3213,7 +3214,8 @@
     "cbx_q10__cl89936551@7": "DRT-0073 class I74+ prov view: a7 launched 04:33 on pre-fix source (qc-wave-1105e4 LEF with blanket OBS), same class as cbx_q10__cl94a12200",
     "sle_su_l0__cl7a55c676@6": "DRT-0073 on pre-fix kit cbb7cfda1; fix 0cd43c91712",
     "sle_hc2__clcc5e3e61@5": "infra-notrun on scratch floor, not a strike",
-    "coll_core@1": "PDN-0006 on contract prov view ot_coll_fold_slice (OBS M6/M7 over M5 PG); fix I168 17dcf533a38 dq81-provobs (COORD 17:2x (3)), DIE-QC-81"
+    "coll_core@1": "PDN-0006 on contract prov view ot_coll_fold_slice (OBS M6/M7 over M5 PG); fix I168 17dcf533a38 dq81-provobs (COORD 17:2x (3)), DIE-QC-81",
+    "slw_su_c__cl92142dac@13": "PROV-PINS-BUS: contract views of 5 su_c children were pinless (bus/bit pin tables); fix I 97f4f3d6a77 dq81-provpins (COORD 18:01 (1)), DIE-QC-81"
    },
    "gen_hosts": [
     "epyc4"
