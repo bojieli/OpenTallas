@@ -103,11 +103,11 @@ def emit(fp, module, kit, candidates):
         return []
     rc = (fp / 'eq_rc.txt').read_text().split()
     state = proof_state(fp, module)
-    if state == 'pending' and stopped_post_only(rc):
+    if state == 'pending':
         # COORD 11-04: a stopped leg is no proof. Recorded as pending, nothing is declared dead.
         (kit / 'hr_dead_inputs_proof.json').write_text(json.dumps(dict(
             verdict='PENDING', module=module, candidates=candidates, eq_rc=rc,
-            reason='post-JSON leg stopped with no result; no dead input declared until it returns'), indent=1) + '\n')
+            reason='face proof is pending; no dead input declared until it returns'), indent=1) + '\n')
         return []
     if state not in ('pass', 'named'):
         raise ValueError('HR dead-input contract needs complete post/mutant/emitted proof')
