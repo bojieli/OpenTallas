@@ -1,96 +1,70 @@
-# Codex handoff document (generated 2026-11-06 02:41 PST)
+# Codex handoff document (generated 2026-11-06 04:38 PST)
 
 Read ~/coord/CODEX-ROLE.md first: your role, the binding rules, and how to cover every task.
 
-# OpenTallas — current Codex handoff
+# OpenTallas — current handback to Claude
 
-Updated 2026-11-06 02:41 PST. Current work only; historical evidence stays in lane files and the queue.
+Updated 2026-11-06 04:38 PST. **Claude is back. Codex is parked and handing control back**, overriding the historical weekly-reset estimate. Healthy fleet jobs and the installed cleanup cron remain running.
 
-Claude stopped on the weekly limit; reported reset **2026-11-12 04:00 America/Los_Angeles**. Codex continues all lanes until explicitly told to hand back. Read `CODEX-ROLE.md`. Owner questions go as plain text under OWNER? in `CODEX-LOG.md`; keep working, never open a blocking dialog.
+Read the final coordinator section in `CODEX-LOG.md` / `handoff/codex_to_claude_20261106_0433.md`, especially FINAL HANDOFF OVERRIDES. Detailed per-lane handbacks below are authoritative; do not use older running-stage notes.
 
 ## Progress
 
-Latest cached census: **2026-11-05 23:05 PST, 167 signed items**. No new census was run for this summary. Counts are physical core implementation views (module + outline + pin table), not merely module names.
+Latest published census **2026-11-06 04:05 PST**, errors[]. Physical core designs mean module + outline + pin arrangement.
 
 | Die | Signed core views | Signed partition types |
 |---|---:|---:|
-| S81 | 52/58 | 5/205 |
+| S81 | 52/58 | 6/205 |
 | HEAD | 4/4 | 12/25 |
 | Qwen compute | 18/20 | 0/119 |
-| Qwen KV/system | 28/32 | 0/56 |
-| HBM | 48/102 | 0/81 |
+| Qwen KV/system | 29/32 | 0/56 |
+| HBM | 46/102 | 0/81 |
 
-Totals: **150/216 core views; 17/486 types**. HBM's module-only count is46/94; its old101-view denominator predates the q3 split. There was no two-core regression. Subsequent plan events can add or replace required views.
+**149/216 core views +18/486 types =167 counted items.** OutsideHBM103/114 cores;11 remain. HBM separately48/94 signedMODULES; older48/102 mixedmetrics was wrong. Brmw/injmodulecredits alreadycounted but currentPORpinmatching unresolved; N4rsq componentoutsidewholePOR. No complete die/G5 released.
 
-**No complete die release exists.** Remaining release work includes current partition views, real-view parent composition, die routing/clock/STA and token qualification. Component or bounded-region passes are not whole-die passes.
+## Release and execution
 
-New results outside that cached census: KV ORDER qualified/count credit submitted; S81 t46 local signed; HBM brmw, injmw2 (TT+171.23/FF+.07, EQ18691) and N4rsq (TT+21.75/FF+.01, EQ13427) qualified. Do not recompute totals by adding these without checking existing census membership. IDX's signed child is not its unsigned parent. No die is released.
+- Main confirmed clean **d3c2675c51f720f54820b091e9e10bde2398ddfd == origin/main**; tags `flow-20261106-ar-head/aq-qc/an-kv/at-s81/bg-hbm`.
+- 833ps; setupTT0 uncertainty/holdFF25, old60setup INFO. No SS closure or clock relaxation. Review actual image before route; preserve failures; source/protocol/model and physical qualification are separate.
+- User accepts extra latency/stages; all changes must be exact and priced. No blind independent ready/valid FF insertion: WBK actual partner tests found corruption.
+- Hub=intel2; local `/home/ubuntu/OpenTallas` protected. Own narrow worktrees `--no-checkout` then sparse paths BEFORE checkout. Fullsourcecheckout artifacts caused50GBincident.
+- ActualFS device matters: intel1 andepyc2 scratch3 are ROOT-backed. No directOWNERheavy-root exception located; no newheavyROOTfallback. VerifiedE5/E6scratch2 distinctfromroot. Preservehealthyprogressingjobs, no age/patternkills.
 
-## Execution rules
+## Cleanup completed and routine
 
-- Follow `AGENTS.md`, `BRIEFING.md` and latest owner decisions. The intel2 coordination queue carries newer rulings than some historical methodology copies.
-- Clock **833ps**, setup **TT**, hold **FF**, never SS for closure. Released owner12.24b/c uses **0ps setup uncertainty /25ps hold**, old60ps setup margin INFO. Do not change constraints during takeover.
-- **Review before route:** render, actually inspect, record image/findings/verdict in `results/geom_review`. Check dataflow, faces, reach, density, macro channels, clocks and PG; fix bad geometry before routing.
-- Failing cores get parallel targetedA and genuinely conservativeB (registered faces, <=150k functional cells, util<=.45, short reach/reset locality). Inspect actual generated config: explicit CLI settings previously lost to recipe defaults. Two structural strikes require a new form; few-endpoint residual ECO is permitted.
-- RTL stays exact: smallest meaningful lockstep/formal plus mutant, kit LEC for adoption. Declare every added cycle to TOK/model. Preserve failed evidence. Only released sign-off qualifies; later owner policy accepts LOCAL_PASS_NEEDS_PARENT for local counting, not die release.
-- **Hub=intel2. Localhost `/home/ubuntu/OpenTallas` is protected owner's checkout: no git there.** Own `codex/*` worktrees only. Heavy work via intel2 `ot-run`, measured RAM/disk admission. Preserve live jobs; do not duplicate them or kill another lane's jobs.
-- New worktrees: use `--no-checkout` then narrow sparse paths before checkout. Tracked physical artifacts make a full checkout tens of GB; abandoned partial checkouts caused a fleet ENOSPC incident.
-- Never edit scripts a live job reads. Fresh recovery copies and matched tool cohorts. No stash, force push, add-A, ours/theirs merges or deletion of others' unique work. Merge under intel2 lock, resolve in own branch, push and confirm HEAD==origin/main.
-- Cleanup only approved exact scopes/manifests; preserve actual SIGNED/.keep/live/bind/unique state. Root floors: epyc2/4=500GB, intel=150GB, epyc5/6=100GB. Follow admission guards.
+- Final **365.21GB accounted artifacts**,67unique receipts/26exactcleanup-rehome stops, baseslabelled notnetDFclaim. `tmp/codex-reclaim-1106/user-order-cleanup-rollup.json`.
+- Installed immutable `~/.local/lib/fleet/released-reaper-1106/ot-reaper.py` @4be4871f1c0/main489bcf: **15-minute explicitmanifestqueue cron**, no legacybroadstrip/noagekills. Alllive/qualified/source/neededcheckpoint guards; verifieddestinations/DPIheaders/Git/symlink protections. FirstrealRingA17ODB andSPNa4 receipts applied.
+- Latestuser authorized cleanup including selectivecreator-releasedgeneratedcache underemptyancestor.keep; unique source/views/runtime stillpreserved. Do not reask that resolved question.
+- Newadmissionmountguard0c742 deployedall6 atomically; oldcapturedwaiters unchanged. Futurecopyback230 stagedall6 at `~/.local/lib/fleet/230e562aa5c/ot-run`. TwoHEADjobs capturedoldbaseebd, do not edit them.
 
-## Remaining 12 non-HBM cores (ledger basis)
+## Critical pending integration
 
-| Core | Current action |
-|---|---|
-| S81 BKSEL Q | LEC66785EQ; retained GRT TT+146.25/FF-.8, private route continuation with actual PG6 pending. |
-| S81 ENG RR E | Internal repair closes with ~1.4k buffers vs failed25k baseline; full parent IO still -148.38. Corrected continuation active. |
-| S81 IDX TX | Child SIGNED TT+4.48/FF+.13/EQ5385; parent K10 rebuild with fixed hard-child generation/PG6 active. |
-| S81 COLL E/W | Tall form rejected for parent fit. Original-footprint PG6/M6 canary GRT0, actual rails/vias; compact E/W builds active on epyc2. |
-| S81 ROM Q | East TT+24.69/FF-22.28; west TT-22.79/FF-57.58, both DRC0. Late ECOs active; parent needs glue rows around exact-fit halves. |
-| QC NK | Routed proof closed36818EQ. Long-leg repeater repair hit epyc4 ENOSPC during DRT; retained GRT recovered to epyc6 for resume. |
-| QC NL | CE-preserving correction proved41990EQ; physical ECO active, three M6 PG shorts remain. |
-| KV ORDER | Qualified TT+8.66/FF+4.48/DRC0; all proof complete; count credit submitted. |
-| KV PEER | Actual .40/M7 reset/locality A/B active; measured29.8GiB peak,32GB admission. |
-| KV PROMPT | Old B TT-72.86/FF-50.49; C2 physical completion hit ep4 ENOSPC, checkpoints salvaged for postwork resume elsewhere. |
-| KV INGEST | r3 DRC0/EQ37991, TT-35.97/FF-3.40. C2 duplicates high-fanout phase control (34copies/528loads), no extra cycle; active. |
+1. **8dc1f257cb** NEWcapture cfg.ot_run override and **e6ce70c648f** gen_env finiteSlang32912 persistence are READY UNMERGED. Needed before sourcecadence/4C retries. D3source/historyclosedE5/E6 `codex-wave-1106/src_d3c267`; globalordinarywaves still2c705/p35, KVownfaecd. Holdresetidentity/unadoptedfamilies; no plan/POR changes inferred.
+2. **3b2dda053b4 +9e0ca4bb878** LOCALq_spb2 verifier/consumer READY UNMERGED; actualoriginalbody/27ports/UID/reset23d9/narrowproof/2signedBBassemblyPASS. GlobalFAIL1 remainsvisible. Fleet exactoverride E2 `codex-hbm-parent-1106/q_spb2_component_overrides_v1.json`; no prep/P&R active. Release→onefreshprep/census/render/LEC/PLACE; no route yet.
+3. Other READY refs are in per-lane handbacks: h9b9ad,SUa83,inj764,brmwf862,q3snap2d26,TX9629,HBCfcfb,PMAoutputs ea9,ROMQadapter945,loadbank243,START94f,DS95b550. Review exact dependencies; never merge broad candidate ancestry.
 
-## Active lanes and next work
+## Lane state and handbacks
 
-- **S81 (`s81`, `s81_core_results`, `s81_types`):** cores above; t13 macro resites and t51 conservative leaf forms active. t51 actual functional-cell growth exceeds150k: structural whole-payload split if current alternative cannot fix it. Legacy whole-payload FREG source/event merged; reset/control stages remain explicit.
-- **HEAD/QC (`qc_head`, `head`, `residual`):** QC HC0 four real signed children and SLECTL split ready for coherent native adoption; union their independent sidecars. SU_l1 six station pilots launched after exact geometry/lockstep. HEAD actual clock association exposes severe real clock/FF hold problems (about-820ps), not a budget issue; real-view native transport/boot integration continues.
-- **KV (`kv`, `order_peer`):** cores above; ring pilots active. Fresh SYS_C and PHY generation caught stale wrappers (101planned vs96emitted stages;3reset stations vs0): own prephysical workers stopped, canonical full bind regenerating. Fix shared fresh-kit preparation before releasing them. No physical-design strike for that tooling mismatch.
-- **HBM (`hbm`, `gaps`, `wbq_safe`, `hbm_forms`, `vms_safe`, `bank128`):** q3 corrected SRAM width GRT0; qout repair-only hold pilot active; VMS remaining clock slew needs clock corridor fix. Bank128 A DRT0/ANT0, final timing pending; B and write-face trials active. Actual PG6 default-off capability ready (real rails/vias), parent M6 reservation/M7 landing still owed. WBQ p36 native split/profile/source guards ready; eight store helpers and body arithmetic repair active. q2nf_rest actual209669placed cells fails150k rule; geometry_forms owns two4-SRAM helper split with hbm/gaps.
-- **HBM parent (`hbm_parent`, `kit_assembly`):** q_spb2 uses two real signed children, full reset context and mandatory internal stations; native field/control/face fixes before route. q_su21 measured fixed-face phase mismatch: preserve internal VI index2, separately retime external operand path4 under default-off variant, prove before new child qualification. Old signed views untouched.
-- **HBM projection (`hbm_projection`):** actual arithmetic build progressing; do not restart. Owned-row option/compiler boundary proof passes, but arithmetic qualification pending. One shared owned-root type will latch global row from existing launch metadata rather than require24 rank-specific views; explicit23 remote inputs/calendar still required.
-- **TOK (`token`, `ds_native`):** DS exact14station epoch biases merged dormant; scoped rebuilt candidate passes old epoch fault. Current KS diagnostic still has external HOST programming cut; do not call native boot. Default-off actual HOST frame queue/removal of force authorized. QW controlled build active; HBM top recovery reused86 interfaces and reduced frontend277GB to2.8GB, current top archive compiling. Historical cohort is not current G5.
-- **Wave/shared (`wave_flow`, `kit_assembly`):** staged pinned cohorts, preserve live jobs. Shared source realization, sealed hard-child generation, full reset context/internal stations, actual PG publication, typed clocks, argv cache/parser and exact proof transfer merged. Mandatory canonical bind emission is the next construction fix.
-- **Fleet (`fleet`):** disk incident on intel2/epyc4 interrupted jobs; preserve checkpoints, resume after measured headroom. Typed helper reclaimed its own abandoned50GB checkout; n4 reduced its own46GB source tree to120MB. Creator-released duplicate outputs only, no foreign/SIGNED/live cleanup. **Compare requested filesystem device against `/`, not just its pathname:** intel1 scratch3 and epyc2 scratch3 are ROOT-backed, contrary to earlier summaries. Direct OWNER root-heavy exception not located; only own unsupported root-backed jobs are being parked/re-homed. Verified epyc5/6 scratch2 are distinct from root. Scheduler status/admission misreports some root-backed capacity; fleet fixing it. No floor overrides.
+- **S81 cores:** `lanes/CODEX-S81-CORES-HANDBACK-1106.md` supersedesallolderactiveclaims. BKSEL/ENGRR/IDX ALL EXITED1/1/2. BKSELTT-82.93/FF-69.55/DRC37secondaryclocktakeoffinsideOBS; ENGTT-95.15/FF-234.83DRC0/NEEDS_PARENT; IDXDRT0155M6guidevsM2-M5ceiling. No newrepair launched. COLL E/W firstlateECOTT35.66/FF-8.12,DRVremaining, healthyi2. ROMQHEAT ECO E5unit960081 preFF+.04; HWTT5.34/FF-11.28 plus3clock-slew nets needsclockrepair event. DirecttransparentROMQparentprep preserveshalves; no usablewrapperrows/currentgrowthcollides104instances.
+- **S81 types:** `lanes/CODEX-S81-TYPES.md`. n4WIP44bf69caa67 boundreset exact306source/current308reject, finalhardeningNOTtested; historicalT30authoritymissing. T25/T30actualplacementreaches714/792um, no route. t13poseunqualified, stage595inbandresetshared9cores. Station splitnotimplemented: x575balancedwholebundlecut, unsplit~266kafterrepairbuffers. B41E6unit2796654usefulFREGdiagnostic only.
+- **QC/HEAD:** `handoff/codex_qc_head_to_claude_20261106.md`, `handoff/codex_head_to_claude_20261106.md`. HC0fourAPchildrenSIGNED+EQ, freshAPGENPASS, parentrouterecipeREADY NOTLAUNCHED. NLredohealthyE4unit1115143RCX42%; NKTT-246.87/FF-17.89/50M6PGshorts,276INVlegtargetstaged. SCcontrollersecondtargetE4scope1852141DRThealthy;9ringsqualified. Seven-typefullnativePASS, no newtypecredit. HEAD4corescomplete;clockisland/PHYbudget/nativeclockaccess unresolved. Actualca0840+457.747psA/Y providerrecovered; noKchange. Twoexactstationvehicles failedSPNband/END7longpaths; noCTS. HBC/PMAoutsourceREADY, no HOST/G5authority.
+- **KV/TOK:** `handoff/codex_kv_to_claude_20261106_back.md`, `handoff/codex_kv_order_peer_20261106_0432.md`, `handoff/codex_ds_native_20261106_0432.md`. PEERA TT-4.35/1FF1.10/DRV; PROMPTC2EQbutTT-55.13FF-10.46; INGC2routed/PINPASS/existingTC-91.81 decodedbroadcast. PAD2strict160part/56typebindPASS actualPADW2/PAD2+8K/21902straps, newtopologyreceiptE5. Wi21childprivate; fourCDC16aprofilejoinWIPe95c, no raw-nativeequivalence. DSfullHOST E2unit3890763healthy440/575queued/391SEQexactfault0, KS/VO pending. QC/KVfunctionalpairconstruction stillBBmodels/namespace/phaseopen; noG5.
+- **HBM:** `handoff/CODEX-HBM-RETURN-20261106.md`, `handoff/codex_hbm_gaps_to_claude_20261106_0432.md`, `handoff/codex_wbq_body_to_claude_20261106.md`. BankPG6TT8.79FF-19.53/DRV, standardE6ECOunit953001live; h9bdiagnosticall25567PROVED/guardmutantcaught butofficialcertificationowed. P1/P6canonicalactualarith24/144PASS, currentdie/ownednotadopted. WBKliteralOUToldFAIL andsealedKshare4FFtuplebad10; reciprocal4peerKseams/elasticlinksNOTimplemented. SUdirect48/indirect54proofPASS/newphysical4152260. InjPLACE+LEC0scope897484inspectbeforeCTS. EXPF4GRT0183. TKMCTS1282900,+1pricedHBM45. BODYissuer346UNPROVEN, healthyGRT. VMS805471DRC35; q3A/B finishwaiters; pcol908921; q3a105836. Q2NFfb304NOTCONSUMABLE finalrenamebug, WIPb5dfixunconfirmed; best2hardstores+softcontrollerparent/mapqueued. Keeporiginalproofs.
 
+## Handback
 
-## Integration / where to look
-
-Latest confirmed main **7e11225c69a1582c2cef2d842ff7627a6b4d3dbf**; published tags ag-head/af-qc/ac-kv/ah-s81/as-hbm (prefix `flow-20261106-`). Merged source does not imply deployment or physical qualification. Merge worker owns central intel2 lock and source merges.
-
-Merged since prior update: dormant real PG6, native source hash guard, dependency collector, optional LDCS2, HBM metadata-only cleanup, ninth QC ring export, selected hard-BB staging and geometry parse cache. All9 QC SLECTL rings qualified; controller remains ECO. HC0/SC five-type native union running; strict typed registered-hard-child face contract helper is active (no soft-D4 exemption). Pending source successors: hub-status must append default0 parameter; owned-root must preserve old12 positional parameters and exclude broad draft ancestry. Bank A coupled report looked positive but actual FF is-11.33/213 and DRV95/1; NOT SIGNED, M5 PG buried by M6 OBS also prevents parent use. RealPG6 A variant being prepared. WBQ p36 still requires actual native/profile/calendar/reset/PG qualification.
-
-
-Concrete jobs, branches and latest evidence: active `lanes/CODEX-*.md`, `CODEX-LOG.md`, and `lanes/COORD-REVIEW-QUEUE.md` on intel2 `coord/state`. Historical lane index stays in `lanes/CODEX.md`; do not copy historical journals here.
-
-## OWNER? / handback
-
-Two nonblocking questions are logged in CODEX-LOG: permission to migrate predecessor's exact unstarted192GB svc_lo proof waiter; permission for manifest moves of inactive superseded attempts protected only by terminal metadata. Defaults retain waiter and existing cleanup guards. Keep other work moving.
-
-On explicit Claude-reset notice: park safely, append per-lane branches/SHAs/jobs/results/open failures/questions to CODEX-LOG, reply exactly `HANDOFF DONE`, stop.
+Root coordinator full section and FINAL OVERRIDES are in `CODEX-LOG.md` and `handoff/codex_to_claude_20261106_0433.md`. All owners were told to park/no new launches; healthyfleet/cleanupcroncontinue. Sourcecentralclean; no halfmerge. Current retainedsource/provider/clock artifacts listedinlanehandbacks mustnotbe treatedasunused.
 
 ## Latest handoff milestones
 
-CODEX: 2026-11-06 02:29 PST: HBMmetadata bff publishedmain51f4c117ca5de1338d6500b682a143b991468264==origin/flow-aq-hbm.422active lanes/allhardcores/stations exactidentity, geometry0diff, sixactualnative rootbuses restored, sourceawareschema0. ExistingWBQ/CECCCM/LDCS retained, no sourceprofileactivat
+CODEX: 2026-11-06 03:57 PST: cleanup4be+afpublished489bcf23969b555b75183490a8a23d4d25159c62; guardfixesretaineddesthash/DPI/Git/realpath/allDocker reviewed. Fleetimmutable+15minmanifest-onlycroninstalled; firstE4RingA17ODB ID26c4bb4785efb5b3f7f97fb5edef21d560f03da3b752b9330c8914a5ccd2b1a7 APPLIED7.1
 
-CODEX: 2026-11-06 02:32 PST: VMSclockCresults7a0 landed03122667e23 (no tag/qualification); authoritativeBBstaging607 nowpublishedmain83f59787a6f8f966ea965bf647ddcc9fa5ef936f==origin. Tagsaf-head/ae-qc/ab-kv/ag-s81/ar-hbm. Freshfactory resolvesdeclaredactualfixedBB beforesealedassembly, basenameconfl
+CODEX: 2026-11-06 04:16 PST: PRIORITY81published57c4d5d0f5ea3164ad0bfe04f53e4f839c5bd7ca/QCflow-ap, isolatedpython-IbootstrapOWNstageddir+optionalcohorthelper; QCHC0pin57/APforfreshGEN/reSIGNwithoutfuturetagchurn. FINALapprovedbatchmain d3c2675c51f720f54820b091e9e10bde2398ddfd==origin/tagsar-head/aq
+CODEX: 2026-11-06 04:32 PST HBM FORMS parked for Claude return; exact live jobs/results/sourceREADY and cleanup7.318GB in lanes/CODEX-HBM-FORMS.md handoff. No new launches, healthy jobs continue. Child vms_safe ENDTURN sent; brmwf862/q3snap2d26/VMSphase8400+abstractbcf READY, h9b9ad officialcert pen
 
-CODEX: 2026-11-06 02:39 PST: main7e11225c69a1582c2cef2d842ff7627a6b4d3dbf==origin; ninthQCviewbe83 isolatedcherry86531693dbf/plainmerge excludes42f8candidate; E5geometryparsecache5f directfetch/plainmerge. Tagsag-head/af-qc/ac-kv/ah-s81/as-hbm. NineQCexports complete, noPORactivation. Existing spars
+CODEX: 2026-11-06 04:33 PST Handoff to Claude: TX9629 fulltopFF/privateGEN prepared+HBM48ACK(no GEN launched); SVGRhead9a0d source+standalonePASS, healthy EP5 native unit655016 buildPASS/runtimepending preserved. Full job/path/census handoff in CODEX-LOG; no main/P&R.
 
-CODEX: 2026-11-06 02:41 PST: TKMphase623results-onlypublishedmaincf615a8ccd5219a8828af6799a209daa29797dc4==origin;16filesrawlogsretained,nosource/flowtag/new+1qualification. Hubstatusdefault0successorb9f reviewPASS (DMUTABIappend, defaultdirectframe/warmup2; enabledoldmechanism/warmup3),272default/e
+CODEX: 2026-11-06 04:32 PST TOKEN parked; full handoff CODEX-LOG. Healthy E2DSnative realHOST diagnostic unit3890763 continues, no newlaunches. HEADa4 held onactualCAclockprovider; QC/KVsource/model joins and HBMcadence obligations explicitly recorded.
 
 For live jobs and new results, read the active lane files and lanes/COORD-REVIEW-QUEUE.md on intel2. Historical lane contents are intentionally omitted from this handoff.
 
