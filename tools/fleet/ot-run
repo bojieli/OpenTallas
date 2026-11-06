@@ -1820,7 +1820,7 @@ def stage_pre(src, r):
 # Seed-input metadata must return even when cp -a retains an old timestamp.
 SPILL_REQUIRED_METADATA = ("freeze.json", "config.mk", "core.json", "pins.json",
                            "kit_rtl.f", "rtl_manifest.json", "source_overlay.json", "kit_assembly.json")
-SPILL_SELECT_PY = r'''import os, sys
+SPILL_SELECT_PY = r'''import json, os, sys
 stamp = sys.argv[1]
 try:
     with open(stamp + ".inputs", "rb") as stream:
@@ -1829,6 +1829,12 @@ except FileNotFoundError:
     before = None  # Existing pending records retain their original timestamp contract.
 threshold = os.stat(stamp).st_mtime_ns
 required = {os.fsencode(x) for x in sys.argv[2:]}
+try:
+    with open(stamp + ".scope") as stream:
+        scopes = [os.fsencode(p.lstrip("/")) for p in json.load(stream)]
+except FileNotFoundError:
+    scopes = []  # Legacy pending records do not force-copy old seed inputs.
+
 for path in sys.stdin.buffer.read().split(b"\0"):
     if not path:
         continue
@@ -1836,7 +1842,7 @@ for path in sys.stdin.buffer.read().split(b"\0"):
         modified = os.lstat(path).st_mtime_ns > threshold
     except FileNotFoundError:
         continue
-    if modified or (before is not None and path not in before) or path.rsplit(b"/", 1)[-1] in required:
+    if modified or (before is not None and path not in before) or (path.rsplit(b"/", 1)[-1] in required and any(path == p or path.startswith(p + b"/") for p in scopes)):
         sys.stdout.buffer.write(path + b"\0")
 '''
 
@@ -1849,7 +1855,7 @@ def spill_written_listing(roots, stamp, held=""):
     return finder + " | python3 -c " + shlex.quote(SPILL_SELECT_PY) + " " + args
 
 
-def spill_fwd_cmd(src, dst, roots, stamp, listed=False):
+def spill_fwd_cmd(src, dst, roots, stamp, listed=False, metadata_scope=None):
     """src -> dst copy.  v10: on dst the marker is written BEFORE extraction, so a failed or partial copy is never a
     'real' data host for normal placement (v8 wrote it after a successful tar: a failed copy left an UNMARKED tree, the next
     re-place ran the job there as a normal job and nothing copied its outputs back); a lane root that exists unmarked on
@@ -1859,9 +1865,11 @@ def spill_fwd_cmd(src, dst, roots, stamp, listed=False):
                    f"{shlex.quote(r)} >&2; exit 3; fi; mkdir -p {shlex.quote(r)} && echo {src} > {shlex.quote(r + '/' + SPILL_MARK)} || exit 4;"
                    if spill_root(r) == os.path.normpath(r) else stage_pre(src, r)
                    for r in sorted(roots, key=lambda x: os.path.normpath(x) not in STAGE_FILES))   # files first: a staged dir's mkdir -p must not create a file's parent
+    scopes = [os.path.normpath(metadata_scope)] if metadata_scope else roots
+    scope_json = shlex.quote(json.dumps(scopes))
     dcmd = (f"{pre} {tar_x(roots)} && cd / && "
             f"find {rels} ! -name {SPILL_MARK} \\( -type f -o -type l \\) -print0 > {shlex.quote(stamp + '.inputs')} "
-            f"&& touch {stamp}")
+            f"&& printf %s {scope_json} > {shlex.quote(stamp + '.scope')} && touch {stamp}")
     stc = "cd / && tar --null --no-recursion -T - -cf - | zstd -q -1 -T8" if listed else f"tar -C / -cf - {rels} | zstd -q -1 -T8"
     return (f"ssh -o ControlPath=none -o BatchMode=yes {src} {shlex.quote(stc)}" + (f" < {shlex.quote(listed)}" if listed else "") + " | "
             f"ssh -o ControlPath=none -o BatchMode=yes {dst} {shlex.quote(dcmd)}")
@@ -1898,7 +1906,7 @@ def spill_delta(srcm, dstm):
     return sorted(send)
 
 
-def spill_copy_fwd(src, dst, roots, stamp):
+def spill_copy_fwd(src, dst, roots, stamp, metadata_scope=None):
     """-> subprocess.CompletedProcess-like (returncode, stderr, sent).  v10: only the delta travels (a die lane re-spilled
     to a host that holds its copy sends what changed), through the same marked/locked dst extraction as spill_fwd_cmd."""
     import tempfile
@@ -1909,7 +1917,7 @@ def spill_copy_fwd(src, dst, roots, stamp):
     with tempfile.NamedTemporaryFile("wb", prefix="ot-run-spill-list.", delete=False) as f:
         f.write(b"".join(p + b"\0" for p in delta))
     try:
-        cmd = spill_fwd_cmd(src, dst, roots, stamp, listed=f.name)
+        cmd = spill_fwd_cmd(src, dst, roots, stamp, listed=f.name, metadata_scope=metadata_scope)
         r = subprocess.run(["bash", "-o", "pipefail", "-c", cmd], capture_output=True, text=True)
     finally:
         os.unlink(f.name)
@@ -1947,7 +1955,7 @@ def spill_copy_back(src, dst, roots, stamp, say=lambda m: None, only=None):
     for k in range(SPILL_BACK_TRIES):
         b = subprocess.run(["bash", "-o", "pipefail", "-c", spill_back_cmd(src, dst, roots, stamp, only)], capture_output=True, text=True)
         if not b.returncode:
-            ssh_sh(dst, f"rm -f {stamp} {stamp}.next {stamp}.inputs", timeout=60)
+            ssh_sh(dst, f"rm -f {stamp} {stamp}.next {stamp}.inputs {stamp}.scope", timeout=60)
             return True, ""
         err = b.stderr.strip()[-300:]
         if "OT_SPILL_NOSTAMP" in err:
@@ -2149,7 +2157,7 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
     say(f"ot-run: SPILL: copying {', '.join(roots)} ({size_gb:.1f} GB) {src} -> {dst} (no host with --dir admits {mem} GB now)")
     t0 = time.time()
     for k in range(SPILL_COPY_TRIES):
-        r = spill_copy_fwd(src, dst, roots, stamp)
+        r = spill_copy_fwd(src, dst, roots, stamp, metadata_scope=d)
         if not r.returncode or "OT_SPILL_REAL" in r.stderr:
             break
         if k + 1 < SPILL_COPY_TRIES:
