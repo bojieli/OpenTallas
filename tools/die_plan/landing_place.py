@@ -249,7 +249,29 @@ def _band_groups(tn, name, band, typ):
     cfg = _native_role_banks(tn, name, band, typ or {})
     rects = [b['rect_um'] for b in cfg['banks']] if cfg else band_rects(tn, name, band, typ)
     tag = 'ring:' + name + _spread(band, _bus_order(typ or {}, name))
-    return [(band.get('instance', 'u_cland_' + name), rect, tag) for rect in rects]
+    prefix = band.get('instance', 'u_cland_' + name)
+    groups = []
+    face = band.get('freg_rect_um')
+    if face is not None:
+        # Optional first capture at the physical pin face. FREG otherwise shares
+        # the storage band; adding the register alone does not shorten pin reach.
+        wreg = (typ or {}).get('clock', {}).get('landing_ring_wreg') or {}
+        if not wreg.get('freg') or name not in wreg.get('buses', []):
+            raise ValueError(f'{tn}.{name}: freg_rect_um requires this bus FREG')
+        if cfg or len(rects) != 1:
+            raise ValueError(f'{tn}.{name}: separate FREG bank requires one ordinary storage band')
+        w, h = typ['outline_um']
+        if (not isinstance(face, (list, tuple)) or len(face) != 4
+                or any(type(v) not in (int, float) or not isfinite(v) for v in face)
+                or not (0 <= face[0] < face[2] <= w and 0 <= face[1] < face[3] <= h)):
+            raise ValueError(f'{tn}.{name}: invalid freg_rect_um')
+        main = rects[0]
+        if min(face[2], main[2]) > max(face[0], main[0]) and min(face[3], main[3]) > max(face[1], main[1]):
+            raise ValueError(f'{tn}.{name}: FREG and storage banks overlap')
+        groups.append((prefix + '.g_freg.u_face', list(face),
+                       'ring:' + name + '@freg' + _spread(band, _bus_order(typ, name))))
+    groups.extend((prefix, rect, tag) for rect in rects)
+    return groups
 
 def _reader_start_groups(t):
     """Actual kept relay instances at declared sites, through existing FIRM packing."""
