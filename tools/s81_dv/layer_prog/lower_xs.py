@@ -620,6 +620,13 @@ def lower(die, op, ctx):
     if not ok:
         return dict(rec, status='GAP', gap=dict(module='tools/s81_dv/frame_return_plan.py', port='legalise',
                                                 missing='return plan faults on ' + ', '.join(f['frame'] for f in frames if f['phase'] and f['faults'])))
+    if native and shared_phase is None:
+        from layer_prog.aproj_native import idle_programme
+        rec['files'].update(idle_programme(die, op, ctx, frames))
+        rec['frame_image_files'] = {}
+        rec['unit'] = 'actual idle slice: zero-action XS images, no frame weights or issuer commands'
+        return dict(rec, status='PARTIAL', gap=dict(module='selected XS4/frame/cap5r native programme',
+            port='whole layer admission', missing='This actual slice owns zero rows; layer retirement and adoption remain unqualified.'))
     if native and shared_phase is not None:
         # Image content does not depend on whether the issuer path is admitted.
         # Keep actual weights/config aliases even when command lowering is blocked.
