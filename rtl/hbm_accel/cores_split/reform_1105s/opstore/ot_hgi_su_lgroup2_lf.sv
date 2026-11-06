@@ -7,6 +7,10 @@
 // every bank input (re/ra/we/wa/wd) is registered before the macro. All bank ops move one edge together, so their order
 // is kept; the response network follows the 2-edge bank (same selects as the LAT = 1 path): rd / sr_d / sr_rv +1 edge.
 // flt is unchanged (its checks read the selects, not the banks).
+// HBM-REFORM-B11 (opsb_output ev74 RE-FORM, CTS setup -895 ps lw -> 16-deep lane-write chain -> SRAM wd_in across the 760 um
+// tile): the sector-lane read select and the lane-write select are per-bank one-hot priority selects too (same function:
+// sector reads, the HIGHEST lane wins a bank, two lanes on one bank with different rows = src; lane writes, the HIGHEST
+// lane wins, two lanes on one bank with different rows or a lane off its candidates = wcoll).
 // FREG = 1 (HBM-REFORM-B10, COORD 15:16 pre-approved form after BREG CTS -392/-432/-700): the fault check is split per bank
 // and registered (br_q -> flt crossed the tile on opsa_group0, -392 ps); flt +1 edge. Inputs get one more register stage in
 // the tiles (IREG), so the select logic no longer shares a cycle with the face-to-logic wire: rd +2 edges, flt +2 edges total.
@@ -87,21 +91,36 @@ module ot_hgi_su_lgroup2_lf #(
         end
         assign lr_re[gbr] = |h; assign lr_ra[gbr] = row;
     end
+    // sector-lane reads (B11 log form): bank b takes word off = b - addr[LN-1:0] (mod N, off < 8) of each lane; the HIGHEST
+    // lane that hits wins (the old loop ran lanes 0..NS-1, words 0..7, last assignment wins); hits with different rows = src.
+    wire [N-1:0] sr_re_b, sr_cb; wire [RB-1:0] sr_ra_b [0:N-1];
+    for (genvar gbs = 0; gbs < N; gbs = gbs + 1) begin : g_srs
+        wire [NS-1:0] h, oh; wire [RB-1:0] rw [0:NS-1];
+        for (genvar gss = 0; gss < NS; gss = gss + 1) begin : g_h
+            wire [LWB-1:0] a = sr_addr[gss*LWB +: LWB];
+            wire [LN-1:0] off = LN'(gbs) - a[LN-1:0];
+            assign h[gss] = sr_v[gss] && off < LN'(8);
+            assign rw[gss] = a[LWB-1:LN] + RB'(LN'(gbs) < a[LN-1:0]);
+            if (gss == NS - 1) begin : g_ot assign oh[gss] = h[gss]; end
+            else begin : g_on assign oh[gss] = h[gss] && !(|h[NS-1:gss+1]); end
+        end
+        reg [RB-1:0] row; reg two;
+        always @* begin : ao
+            integer i_;
+            row = {RB{1'b0}};
+            for (i_ = 0; i_ < NS; i_ = i_ + 1) row = row | ({RB{oh[i_]}} & rw[i_]);
+            two = 1'b0;
+            for (i_ = 0; i_ < NS; i_ = i_ + 1) if (h[i_] && rw[i_] != row) two = 1'b1;
+        end
+        assign sr_re_b[gbs] = |h; assign sr_ra_b[gbs] = row; assign sr_cb[gbs] = two;
+    end
     always @* begin : rsel
-        integer rj_, sl_, br_; reg [LWB-1:0] sa;
-        sa = {LWB{1'b0}};
-        for (br_ = 0; br_ < N; br_ = br_ + 1) begin b_re[br_] = 1'b0; b_ra[br_] = {RB{1'b0}}; end
+        integer br_;
         src = 1'b0;
+        for (br_ = 0; br_ < N; br_ = br_ + 1) begin b_re[br_] = lr_re[br_]; b_ra[br_] = lr_ra[br_]; end
         if (|sr_v) begin
-            // sector lanes: 8 words each; two words on one bank must be one row (else a sector-lane conflict, fail closed)
-            for (sl_ = 0; sl_ < NS; sl_ = sl_ + 1) if (sr_v[sl_])
-                for (rj_ = 0; rj_ < 8; rj_ = rj_ + 1) begin
-                    sa = sr_addr[sl_*LWB +: LWB] + rj_;
-                    if (b_re[sa[LN-1:0]] && b_ra[sa[LN-1:0]] != sa[LWB-1:LN]) src = 1'b1;
-                    b_re[sa[LN-1:0]] = 1'b1; b_ra[sa[LN-1:0]] = sa[LWB-1:LN];
-                end
-        end else begin
-            for (br_ = 0; br_ < N; br_ = br_ + 1) begin b_re[br_] = lr_re[br_]; b_ra[br_] = lr_ra[br_]; end
+            src = |sr_cb;
+            for (br_ = 0; br_ < N; br_ = br_ + 1) begin b_re[br_] = sr_re_b[br_]; b_ra[br_] = sr_ra_b[br_]; end
         end
     end
     reg [LN-1:0] lb_q [0:N-1]; reg [LN-1:0] sr_lo [0:NS-1];
@@ -175,22 +194,46 @@ module ot_hgi_su_lgroup2_lf #(
         end
         assign sw_we[gbw] = |h; assign sw_wa[gbw] = row; assign sw_wd[gbw] = dat; assign sw_cb[gbw] = two;
     end
+    // lane writes (B11 log form): bank b takes the HIGHEST lane whose bank is b; hits with different rows, or a lane whose
+    // bank is not one of its NROT candidates (lane 0: any), = wcoll.  Same function as the former last-assignment loop.
+    wire [N-1:0] lw_we_b, lw_cb; wire [RB-1:0] lw_wa_b [0:N-1]; wire [31:0] lw_wd_b [0:N-1]; wire [NL-1:0] lw_bad;
+    for (genvar glo = 0; glo < NL; glo = glo + 1) begin : g_lwok
+        reg ok;
+        always @* begin : okc
+            integer k_;
+            ok = (glo == 0);
+            for (k_ = 0; k_ < NROT; k_ = k_ + 1) if (cbank(glo, k_) == lwa[glo*AW +: LN]) ok = 1'b1;
+        end
+        assign lw_bad[glo] = (NLW > 0) && lw[glo] && !ok;
+    end
+    for (genvar gbl = 0; gbl < N; gbl = gbl + 1) begin : g_lws
+        wire [NL-1:0] h, oh;
+        for (genvar gll = 0; gll < NL; gll = gll + 1) begin : g_h
+            assign h[gll] = (NLW > 0) && lw[gll] && lwa[gll*AW +: LN] == LN'(gbl);
+            if (gll == NL - 1) begin : g_ot assign oh[gll] = h[gll]; end
+            else begin : g_on assign oh[gll] = h[gll] && !(|h[NL-1:gll+1]); end
+        end
+        reg [RB-1:0] row; reg [31:0] dat; reg two;
+        always @* begin : ao
+            integer i_;
+            row = {RB{1'b0}}; dat = 32'd0;
+            for (i_ = 0; i_ < NL; i_ = i_ + 1) begin row = row | ({RB{oh[i_]}} & lwa[i_*AW + LN +: RB]); dat = dat | ({32{oh[i_]}} & lwd[32*i_ +: 32]); end
+            two = 1'b0;
+            for (i_ = 0; i_ < NL; i_ = i_ + 1) if (h[i_] && lwa[i_*AW + LN +: RB] != row) two = 1'b1;
+        end
+        assign lw_we_b[gbl] = |h; assign lw_wa_b[gbl] = row; assign lw_wd_b[gbl] = dat; assign lw_cb[gbl] = two;
+    end
     always @* begin : wsel
-        integer wl_, wk_, bw_; reg [LN-1:0] wb_; reg ok_;
-        wb_ = {LN{1'b0}}; ok_ = 1'b0;
+        integer bw_;
         for (bw_ = 0; bw_ < N; bw_ = bw_ + 1) begin b_we[bw_] = sw_we[bw_]; b_wa[bw_] = sw_wa[bw_]; b_wd[bw_] = sw_wd[bw_]; end
         wcoll = |sw_cb;
         if (NLW > 0) begin
             if (|sw_v && |lw) wcoll = 1'b1;
-            for (wl_ = 0; wl_ < NL; wl_ = wl_ + 1)
-                if (lw[wl_]) begin
-                    wb_ = lwa[wl_*AW +: LN]; ok_ = (wl_ == 0);
-                    for (wk_ = 0; wk_ < NROT; wk_ = wk_ + 1) if (cbank(wl_, wk_) == wb_) ok_ = 1'b1;
-                    if (!ok_) wcoll = 1'b1;
-                    // two lanes on one bank must write the same row (the later lane wins, as a behavioural memory)
-                    if (b_we[wb_] && b_wa[wb_] != lwa[wl_*AW + LN +: RB]) wcoll = 1'b1;
-                    if (!(|sw_v)) begin b_we[wb_] = 1'b1; b_wa[wb_] = lwa[wl_*AW + LN +: RB]; b_wd[wb_] = lwd[32*wl_ +: 32]; end
-                end
+            if (|lw_bad) wcoll = 1'b1;
+            if (|lw_cb) wcoll = 1'b1;
+            if (!(|sw_v))
+                for (bw_ = 0; bw_ < N; bw_ = bw_ + 1)
+                    if (lw_we_b[bw_]) begin b_we[bw_] = 1'b1; b_wa[bw_] = lw_wa_b[bw_]; b_wd[bw_] = lw_wd_b[bw_]; end
         end
         if (s1_v) begin
             if (b_we[s1_a[LN-1:0]]) wcoll = 1'b1;

@@ -35,10 +35,16 @@ module ot_hgi_sfu_opsb_output (
     input  wire [511:0]  lwd,
     output wire          flt
 );
-    ot_hgi_su_lgroup2 #(.N(16),.M(16),.LWB(15),.AW(24),.NLW(16),.MACRO(1),.MUT_XBAR(0),.NS(2)) u_g (
+    // HBM-REFORM-B11 (ev74 opsb_output RE-FORM; CTS setup -895 ps / 9042 endpoints: lw face reg -> 16-deep lane-write
+    // chain -> SRAM wd_in across the 760 um tile): the group tiles' form. IREG: every input registered once more (no reset,
+    // all ops move one edge together, so their order is kept); the log-depth lgroup2_lf (lane-write and sector-read selects
+    // one-hot); BREG: bank inputs registered; FREG: fault terms registered. sr_d / sr_rv +2 edges, flt +2 edges.
+    reg [1:0] q_sv; reg [29:0] q_sa; reg [15:0] q_lw; reg [383:0] q_la; reg [511:0] q_ld;
+    always @(posedge clk) begin q_sv <= sr_v; q_sa <= sr_addr; q_lw <= lw; q_la <= lwa; q_ld <= lwd; end
+    ot_hgi_su_lgroup2_lf #(.N(16),.M(16),.LWB(15),.AW(24),.NLW(16),.MACRO(1),.MUT_XBAR(0),.NS(2),.BREG(1),.FREG(1)) u_g (
         .clk(clk), .rst_n(rst_n), .rq(16'd0), .rr(16'd0), .ra(384'd0), .rd(),
-        .sr_v(sr_v), .sr_addr(sr_addr), .sr_d(sr_d), .sr_rv(sr_rv),
+        .sr_v(q_sv), .sr_addr(q_sa), .sr_d(sr_d), .sr_rv(sr_rv),
         .sw_v(2'd0), .sw_addr(30'd0), .sw_mask(16'd0), .sw_d(512'd0),
-        .lw(lw), .lwa(lwa), .lwd(lwd), .s1_v(1'b0), .s1_a(15'd0), .s1_d(32'd0), .flt(flt));
+        .lw(q_lw), .lwa(q_la), .lwd(q_ld), .s1_v(1'b0), .s1_a(15'd0), .s1_d(32'd0), .flt(flt));
 endmodule
 `default_nettype wire
