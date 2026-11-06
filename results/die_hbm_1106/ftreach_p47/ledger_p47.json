@@ -1,8 +1,8 @@
 {
  "summary": {
-  "slots_resited": 431,
-  "slots_with_added_stations": 130,
-  "added_station_cycles": 167,
+  "slots_resited": 429,
+  "slots_with_added_stations": 129,
+  "added_station_cycles": 166,
   "lanes_latency_changed": 99,
   "kept": [
    "q_b000/L5042x1",
@@ -187,7 +187,11 @@
    "root/L8101x2",
    "root/L9x1",
    "root/L9mx1"
-  ]
+  ],
+  "excluded": {
+   "q_b102__physical_v1/L5091x6": "2 new stations inside the NE_b102 N-edge clock keep-out (street_die_leg)",
+   "root/L22mx4": "bit sites within the 2 um halo of root tkm clock leg repeaters u_tkmclk_L150_c3_r24_1__ha/hb (clock)"
+  }
  },
  "slots": [
   {
@@ -3207,19 +3211,6 @@
    ]
   },
   {
-   "type": "q_b102__physical_v1",
-   "slot": "L5091x6",
-   "stations": [
-    2,
-    3
-   ],
-   "added_cycles": 1,
-   "hop_um": [
-    706.0,
-    244.9
-   ]
-  },
-  {
    "type": "q_b103",
    "slot": "L1278x6",
    "stations": [
@@ -5639,19 +5630,6 @@
   },
   {
    "type": "root",
-   "slot": "L22mx4",
-   "stations": [
-    17,
-    17
-   ],
-   "added_cycles": 0,
-   "hop_um": [
-    393.9,
-    360.7
-   ]
-  },
-  {
-   "type": "root",
    "slot": "L63x1",
    "stations": [
     15,
@@ -6568,11 +6546,11 @@
    "param": "LAT_L5091",
    "cycles": [
     39,
-    45
+    44
    ],
    "stations": [
     37,
-    43
+    42
    ]
   },
   {

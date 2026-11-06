@@ -21,11 +21,15 @@ por, D, run, ledger_f = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3]), sys.a
 raw = json.loads(gzip.decompress((D / "die_plan.json.gz").read_bytes()))
 porraw = S.load(por)
 tab0 = latency_table(S.Plan(copy.deepcopy(porraw), Path(por)))   # base lane latency (unmodified POR)
+# the class tool's obstacles do not hold the type clock keep-outs / die clock leg repeaters: two re-sites the G0 diff
+# showed landing on them are left out (base kept), so the event adds 0 errors in the other classes
+EXCLUDE = {("q_b102__physical_v1", "L5091x6"): "2 new stations inside the NE_b102 N-edge clock keep-out (street_die_leg)",
+           ("root", "L22mx4"): "bit sites within the 2 um halo of root tkm clock leg repeaters u_tkmclk_L150_c3_r24_1__ha/hb (clock)"}
 slots_led, kept, nslot = [], [], 0
 for lf in sorted(run.glob("*.ledger.json")):
     tn = lf.name[:-len(".ledger.json")]
     L = json.loads(lf.read_text())
-    res = [r for r in L["slots"] if "stations_after" in r]
+    res = [r for r in L["slots"] if "stations_after" in r and (tn, r["slot"]) not in EXCLUDE]
     kept += [f"{tn}/{r['slot']}" for r in L["slots"] if "kept" in r]
     if not res:
         continue
@@ -63,6 +67,6 @@ b = (json.dumps(raw) + "\n").encode()
 with open(D / "die_plan.json.gz", "wb") as f, gzip.GzipFile(fileobj=f, mode="wb", mtime=0, filename="") as g:
     g.write(b)
 summ = dict(slots_resited=nslot, slots_with_added_stations=sum(1 for r in slots_led if r["added_cycles"]),
-            added_station_cycles=sum(r["added_cycles"] for r in slots_led), lanes_latency_changed=len(lat_led), kept=kept)
+            added_station_cycles=sum(r["added_cycles"] for r in slots_led), lanes_latency_changed=len(lat_led), kept=kept, excluded={f"{t}/{n}": why for (t, n), why in EXCLUDE.items()})
 Path(ledger_f).write_text(json.dumps(dict(summary=summ, slots=slots_led, pin_cycles_lanes=lat_led), indent=1) + "\n")
 print("P47", json.dumps({k: v for k, v in summ.items() if k != "kept"}), "kept", len(kept))

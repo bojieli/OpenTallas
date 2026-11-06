@@ -475,4 +475,4 @@ Event part 39 (DIE-HBM-81 11-06, G0C class C): q_hub_nw/q_hub_ne u_svg_Q0/Q1 spl
 
 Event part 43 (DIE-HBM-82-G0C 11-06, G0C class F street_die_leg): lane stations off the hard cores with the least move: bit-site slots get a real bit site of the stage (smallest worst hop) as regs_um (no cell moves), q_b102 N-edge keep-out stations nudged (ft_nudge.nudge_explicit); station counts unchanged, 0 pin cycles; normal-slot S0 under an abutting core left for a window re-pin; part43_event.json.
 
-Event part 47 (DIE-HBM-82-G0C 11-06, G0C class A ft reach): one ft_s0_resite.py pass over the 57 types with a 'stations' row: 431 slots re-sited, 130 with added stations (+167 station cycles), 99 lanes' latency.lanes changed (PIN CYCLES, ledger_p47.json), 182 slots kept (no chain fits); part47_event.json.
+Event part 47 (DIE-HBM-82-G0C 11-06, G0C class A ft reach): one ft_s0_resite.py pass over the 57 types with a 'stations' row: 429 slots re-sited, 129 with added stations (+166 station cycles), 99 lanes' latency.lanes changed (PIN CYCLES, ledger_p47.json), 182 slots kept (no chain fits); part47_event.json.

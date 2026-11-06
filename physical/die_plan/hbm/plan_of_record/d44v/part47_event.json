@@ -3,9 +3,9 @@
  "by": "DIE-HBM-82-G0C 11-06 (G0C class A: ft reach, stations/hops/reach)",
  "change": "ft_s0_resite.py per type (normal FT slots whose real per-bit chain has a hop > 364.5 um): internal stations re-sited on free legal sites; +1..+3 stations where no count fits (PIN CYCLES); slots no count fits are kept and listed",
  "summary": {
-  "slots_resited": 431,
-  "slots_with_added_stations": 130,
-  "added_station_cycles": 167,
+  "slots_resited": 429,
+  "slots_with_added_stations": 129,
+  "added_station_cycles": 166,
   "lanes_latency_changed": 99,
   "kept": [
    "q_b000/L5042x1",
@@ -190,7 +190,11 @@
    "root/L8101x2",
    "root/L9x1",
    "root/L9mx1"
-  ]
+  ],
+  "excluded": {
+   "q_b102__physical_v1/L5091x6": "2 new stations inside the NE_b102 N-edge clock keep-out (street_die_leg)",
+   "root/L22mx4": "bit sites within the 2 um halo of root tkm clock leg repeaters u_tkmclk_L150_c3_r24_1__ha/hb (clock)"
+  }
  },
  "pin_cycles": "see ledger pin_cycles_lanes (latency.lanes += delta of schema.Plan.lane_latency (gen.py latency) event - base)",
  "compiler": "the added lane cycles are not folded into ext/crossing_latency / compiler_core_delta here (TOK lane, as part 37)",
