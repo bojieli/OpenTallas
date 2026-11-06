@@ -73,7 +73,7 @@ def test_generator_stages_contract_before_kit_hash(die):
     """Fails on main (no generator outside S81 legacy staged the contract): the call must precede kit_hash(kd), so the
     kit hash covers the staged files, and its record must land in freeze.json."""
     txt = GENERATORS[die].read_text()
-    m = re.search(r"kit_reset_contract\.stage\(kd, (\w+), kit_reset_contract\.DIE_CONTRACT\[\"" + die + r"\"\]\)", txt)
+    m = re.search(r"kit_reset_contract\.stage\(kd, (\w+), kit_reset_contract\.DIE_CONTRACT\[\"" + die + r"\"\](?:, required_source=True)?\)", txt)
     assert m, f"{GENERATORS[die].name} does not stage the {die} reset contract"
     assert txt.index(m.group(0)) < txt.index("kit_hash=kit_hash(kd)")
     assert 'fz["reset_contract"]' in txt

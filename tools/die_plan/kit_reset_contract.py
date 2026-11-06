@@ -6,8 +6,9 @@ exist (physical/die_plan/{hbm,s81,qwen_kvsys}/reset_contract.json, COORD 10-27 /
 legacy generator staged them: in the 36 h to 2026-10-29 18:5x, 42 of 49 kit LEC FAILs ran at 4 edges, including HBM
 tops listed in the HBM contract (hnx r12 NOT EQUIVALENT 34 at 4 edges -> r13 EQUIVALENT under the 64-edge contract).
 
-stage(kd, module, source):
-  * no contract file, or `module` not listed in it -> None, the kit is untouched (4-edge LEC as before);
+stage(kd, module, source, required_source=False):
+  * required_source=True refuses a missing canonical file; it grants no module/reset authority;
+  * otherwise no contract file, or `module` not listed in it -> None, the kit is untouched (4-edge LEC as before);
   * listed -> the contract must pass the SAME consumer kit LEC runs (lec.reset_contract_gate: schema, PASS proof with a
     CAUGHT mutant, receipt sha256, module listed); a refusal is a generation error (fail closed, nothing staged);
   * then reset_contract.json + its relative receipt are byte-copied into the kit -> {edges, module, sha256s} for
@@ -28,9 +29,12 @@ def _sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
-def stage(kd, module, source):
+def stage(kd, module, source, *, required_source=False):
     source = Path(source)
     if not source.is_file():
+        if required_source:
+            raise SystemExit(f"{module}: required canonical die reset contract is missing: {source}; "
+                             "stage the contract metadata and receipt, or select an explicit nonrelease component proof")
         return None
     try:
         c = json.loads(source.read_text())
