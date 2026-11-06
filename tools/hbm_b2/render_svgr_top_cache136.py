@@ -45,6 +45,7 @@ for row in rows:
  row=dict(row)
  if '.rows.' in row['instance']:
   row['master']=masters[1];row['instance']=row['instance'].replace('.u_payload','.g_rw.u_payload');row['y']=round(round(row['y']/.048)*.048,6)
+ row['instance']=row['instance'].replace('u_fcore.','u_fcore.u_core.',1)
  proposal.append(row)
 (out/'whole_top_macro_placement.json').write_text(json.dumps(proposal,indent=2)+'\n')
 (out/'retained_external_pin_identity.json').write_text(json.dumps(dict(source='epyc6:ot_svgr_top_vB/pins.json',sha256=hashlib.sha256((old/'pins.json').read_bytes()).hexdigest(),pin_bits=len(external),clock=next(p for p in external if p['bus']=='stream_clk')),indent=2)+'\n')
