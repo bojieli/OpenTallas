@@ -6878,7 +6878,7 @@ def run_yosys(script, path, log):
     if r.returncode:
         err = [l for l in (Path(str(path) + ".log").read_text(errors="replace").splitlines()
                            if Path(str(path) + ".log").is_file() else []) if "ERROR" in l]
-        raise Unproven(f"yosys {Path(path).name} failed: " + ("; ".join(err[-3:]) or r.stderr[-400:]))
+        raise Unproven(f"yosys {Path(path).name} failed: returncode={r.returncode}; " + ("; ".join(err[-3:]) or r.stderr[-400:]))
     return r
 
 
