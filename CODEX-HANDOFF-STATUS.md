@@ -1,169 +1,77 @@
-# OpenTallas: project status for Codex (maintained by the Claude coordinator)
+# OpenTallas — current Codex handoff
 
-Last full update: 2026-10-24 08:30 PDT. A live per-lane snapshot is appended below whenever the handoff document is
-generated. Lane files (~/coord/lanes/<LANE>.md) are the source of truth for each lane.
+Updated 2026-11-05 23:23 PST. This file is a current working summary; historical detail belongs in lane files and the coordination queue.
 
-## CURRENT STATE 2026-10-26 01:55 PDT (read this first; it overrides the older sections below)
+Claude stopped on the weekly usage limit. Reported reset: **2026-11-12 04:00 America/Los_Angeles**. Codex continues all lanes until explicitly told to hand back. Read `CODEX-ROLE.md`; record owner questions as plain text under OWNER? in `CODEX-LOG.md` and continue other work. Never open a blocking question dialog.
 
-**Owner decisions 10-26 (binding):**
-1. **Freeze gate:** die GRT0 incl. clock AND die-clock related-pair skew <=80 ps at TT and FF (CPPR, routed RC). Routability alone never freezes a die.
-2. **INFRA-FIRST die method (01:37, "go ahead immediately"):** PG grid sized from IR → clock (equal-length H-tree feeding one mesh per clock region, landed seams, driver islands in tiles) → reset tree → freeze 1-3 as pre-routes with a skew gate → signal GRT (>=50 iterations) on the leftover → freeze on rule 1. The die absorbs residuals (mesh stub trim / core-latency offset); tiles are rebuilt only for their own failures; every tile type gets a trial placement before freeze.
-3. **QC (54a1aeb5) and S81-HEAD (d7b8d1eb) are UNFROZEN.** PENDING-DELTA D-INFRA-FIRST-QC / -HEAD in lanes/PLAN-DELTA.md hold all their type routes. Hard cores continue.
-4. **S81 PHY:** use published figures, recorded as assumptions (docs/ASSUMPTIONS.md 7a, branch claude/s81-phy-assume-1026).
+## Goal and current state
 
-**COORD calls in force (owner may veto):**
-- HBM hard cores get an M5 route ceiling (owner 10-12 M5 rule). Measured: die GRT 1.73M → 0 at 50 iterations.
-- Die GRT plan judgments need >=50 iterations; 5-iteration numbers are diagnostic only.
-- QC seams across the root/L1/L2 clock split lines use landed crossings; TOK prices the cycles.
-- KV clock islands in all 40 types are accepted.
-- QC 40 ps two-sided IO-hold budget.
-- D-QC-FE-REACH stations (all FE variants) and the CB ID straps are approved.
-- ASTK face clock gets a structural sub-root (no relaxation).
-- A one-cycle hop beyond 600-750 um is GEOM FAIL STRUCTURAL even with positive slack; every placement review runs a full r2r reach census.
-- Feedthroughs stay <=M7 (owner 10-24) until FT-M89-PROBE measures otherwise. Then bring the owner numbers, not a rule change.
+Complete DeepSeek ROM (S81 + HEAD), Qwen ROM (QC + KV), and the HBM accelerator. Each needs current physical views, whole-die routing/clock/STA, and token qualification. **No complete die release is established.** Component passes do not imply die closure.
 
-**Per die now** (details: ~/coord/RELEASE_TREE.md):
-- **QC:** prototype of infra-first (lane INFRA-FIRST). Skew FAIL 146/132 with a single mesh. CLOCK-MESH-2 is building the regional mesh + landed seams. All queued QC deltas fold into ONE QC plan event.
-- **S81-HEAD:** next after QC. Old tree skew 268/254. Channel-only mesh is impossible, so it uses in-tile islands.
-- **KV:** batch claude/path-kv-batch-0115@650841e1ef. Open items:
-  - sys_c 8 vs 5 stations: finish the SYS3 RTL;
-  - mesh skew re-run on the reserved sites (main it5 mesh PASS 73 ps);
-  - then PG from IR.
-- **S81:** die GRT 1.80M; hot spots sit on L1/L3 hard cores walled to M7. D-S81-B2 is one plan event. SerDes shoreline is short: 43.3 mm available vs 44.9-48.2 mm needed. This may need the owner.
-- **HBM:** D-HBM-B1 + M5 ceilings + 4 cut fixes + infra-first.
-- **Sign-off:** flat since 10-25 16:23 because routes are held on the flow canary. FLOW-TAG submitted the full canary set at 01:19 on e0d486853 (cap64 merged). The holds lift when it passes.
+Last recorded census: **167 signed cores/types, 2026-11-05 23:05 PST**. No new census was run for this rewrite.
 
-**Live Claude lanes at handoff:** each lane file has its PARKED/last lines.
-- Die paths: INFRA-FIRST, CLOCK-MESH-2, CLOCK-MESH-B, PATH-QC, PATH-QC-FEREACH, PATH-KV, PATH-S81 (+ B2 compose, eng SRAM), PATH-HBM.
-- Kits and probes: KITS-WAVE-3, CORES-KITS, FT-M89-PROBE.
-- Token, flow and merge: TOK-DS, TOK, FLOW-TAG, ROOT-MERGE-16.
-- Review: GEOM-REVIEW-12, GEOM-REVIEW-13.
-If they stop on the limit, restart them as fresh short agents from lanes/_FRESH_LANE_BRIEF.md + the lane file. Critical path first: INFRA-FIRST/QC, FLOW-TAG, PATH-KV, PATH-S81, PATH-HBM.
+| Die | Signed cores | Signed partition types | Main remaining work |
+|---|---:|---:|---|
+| S81 | 52/58 | 5/205 | Remaining cores; station/leaf and plan-source failures; parent routing/STA |
+| HEAD | 4/4 | 12/25 | ctl RTL integration; clock-source tool recovery; remaining types and parent STA |
+| QC | 18/20 | 0/119 | NK/NL closure, child ETMs/LEC, partition kits and die clock/routing |
+| KV | 28/32 | 0/56 | HR ingest/prompt/order/peer; partition closure; token fault and parent STA |
+| HBM | 48/101 | 0/81 | Core safe forms/splits, current plan/pin fixes, views and parent integration |
 
-**Waiting on the owner:** none.
+Counts above are the last census denominators; subsequent plan events can change the required core/type list.
 
-## What the project is
-OpenTallas is mask-ROM LLM inference silicon research on ASAP7 at an 833 ps clock (1.2 GHz).
+## Rules and working locations
 
-There are three design targets. Each needs the die gates and a token pass:
+- Follow repository `AGENTS.md`, `BRIEFING.md`, the latest owner decisions in the coordination queue, and the binding methodology. Latest owner decisions supersede historical summaries.
+- Clock stays **833 ps**. Setup at **TT**, hold at **FF**; never use SS for sign-off. Released owner policy 12.24b/c (queue 2026-10-31 00:56, 01:08, 01:19) uses **0 ps setup uncertainty / 25 ps hold uncertainty**, with the old 60 ps setup margin reported as information. Do not change constraints on takeover.
+- Only the released sign-off result qualifies a block. Retain failures. Pre-build checks are advisory under later owner rulings; they do not turn a failed sign-off into a pass.
+- **Review before route:** render and actually inspect each proposed plan/kit/core; record image path, findings and verdict in `results/geom_review`. Address bad geometry before route. Review placement/dataflow, pin faces, reach, density, macro channels, clock and PDN.
+- Failing cores get parallel **vA targeted fix + vB safe form**: registered faces, <=150k cells, util <=0.45, short reach and controlled reset fanout. Two structural failures require a new form. Added cycles are allowed and must reach the token/model ledger. RTL changes need exact proof plus mutant control; adoption still requires kit LEC.
+- Use own `codex/*` worktrees; never edit another agent's tree or scripts a live job reads. Heavy jobs go through **ot-run on intel2**. Preserve progressing jobs and collect their results before launching replacements. Never kill another lane's jobs.
+- **Hub is intel2.** Localhost `/home/ubuntu/OpenTallas` is the owner's protected checkout; do not run git there. Integration uses the intel2 merge lock and plain merges, then push and confirm HEAD == origin/main. No `git add -A`, stash, force-push or ours/theirs merge shortcuts.
+- Scratch/admission follows current ot-run policy. Root floors: epyc2/epyc4 500 GB; intel roots 150 GB; epyc5/6 100 GB. Follow the guard; do not bypass it. Preserve SIGNED, .keep, live jobs and unique work during cleanup.
 
-| Design | Dies |
-|---|---|
-| DeepSeek-V4.1 ROM | S81 layer die array (v4.8 plan, ~400 partitions) + a head die (LM head / argmax / MTP; 326 partitions) |
-| Qwen3-8B ROM | Qwen compute die (plan P6) + KV/system die (plan v3.8v) |
-| HBM accelerator | the B2 die: 4 clusters, H-tree clock, 5 SerDes, 436 hard cores; plan B2r2 on claude/hbm-arch-1024. Serves both DeepSeek and Qwen |
+## Active continuation and next steps
 
-## Gates (top-down, plan-first flow)
-- **G0** plan check: `tools/die_plan/check.py`. **G0C** is `--completeness`: types over 400k cells need hard cores.
-- **G1** visual plan review (GEOM-REVIEW).
-- **G2** routing probes: `g2.py`.
-- **G3** partitions and hard cores. Kits are made by `gen.py phys`, run by `run_kit.sh`, and gated by `sdc_lint` +
-  `face_guard`. Each run ends with `signoff.py`; only SIGNED counts.
-- **G4** abutted die / seam timing: `die_sta.py` with ILM abstracts. DIE-CI runs a whole-die prototype check
-  (`die_ci.py`).
-- **G5** token pass: layer runs and cross-die co-sims per design (TOK-DS, TOK-QW/QC-TOK/KV-TOK, TOK-HBM).
-- **Rules R2-R8** are in `tools/die_plan/README.md`:
-  - R3: relay stations at most every 750 um.
-  - R4: clock grid taps at 400 um, 250 ps common latency, seam skew <= 80 ps.
-  - R7: no tie-offs.
-  - R8: bus-coherent delay.
+Codex workers are active for every scope below. Their concrete job paths/results are in the corresponding lane notes and reports; do not duplicate live runs.
 
-## Owner rulings (binding, 2026-10-24)
-- **Sign-off:** setup at TT, hold at FF, 60/25 ps uncertainty, spread <= 80 ps. NEVER SS (AGENTS.md c7ce2ed69a).
-- **Review before route:** render and look at every die and tile, judged by industry floorplan-review standards;
-  revise before P&R / STA. Reviews are recorded in `results/geom_review`.
-- **Disks:** scratch disks only (intel1/intel2/epyc2 `/srv/opentallas-scratch2`); `ot-run` places jobs there.
-- **Head dies:** 4 head dies, no HBM on head dies.
-- **Copy-A/B link:** the copy-A/B reserve SerDes pair is on every layer die.
-- **MTP draft:** rides the copy-B dies; there are no draft fan-out SerDes. S81-HEAD confirmed the composition uses
-  none.
-- **Elastic seams:** experiment REJECTED (8e69517bf2). Padding is fixed plan-side.
-- **The 10-21 element list is obsolete.** Open work = current plans' G0C failures, types/cores without a SIGNED view,
-  GEOM-REVIEW findings, and lanes' next steps.
-- **Merge recipe:**
-  - `git checkout main`, then a plain `git merge` (never `-X ours`), push, and check HEAD == origin/main.
-  - On conflict: abort, merge main into your branch, resolve, re-gate.
+| Scope / Codex worker | Collected result or failure | Next action |
+|---|---|---|
+| S81 / `s81` | ROMQ vA ECO exhausted; hw_vB GRT TT +138.54 / FF -1.62 ps. COLLE tall/wide probes still overflow (1041/2210). | hw_vB reviewed and resumed DRT on own copy; continue conservative COLLE forms and remaining core fixes. |
+| S81 helper cores / `s81` | IDX vB TT -99.23 / FF -104.24; IDX vA child ECO TT +4.47 / FF +0.13 with one slew miss. BKSEL vBl LEC 66785/66785 EQ; GRT ongoing. ENGRR IO reference disagrees with measured insertion. | Target final IDX slew, collect BKSEL, correct ENGRR measured IO frame on private kit. |
+| S81 plan / `s81` | gunit/seqhost sites merged. svc_lo t7 fit proof first OOM at 64 GB; 192 GB rerun is an existing epyc5 waiter, not a design strike. | Collect proof, then integrate fit/path event and release t7. Never duplicate the waiter blindly. |
+| HEAD / `qc_head` | Several PASS-exit1 stops are a clock-source lookup exception already fixed by I184 psroot, not failed timing. ctlrq private LEC 59371/59371 EQ. | Recover/relaunch affected kits on current tools; integrate ctlrq, book ingress +1 cycle, collect serdes/type runs. |
+| QC / `qc_head` | Shared LEC crashed on literal capture D (`KeyError '1'`); fix has 6 focused tests passing. NK vB4 GRT blocked by dont_touch ENA repeaters. NL vB routed TT -89.13 / FF -24.61, 3 DRC. | Integrate LEC fix; recover proofs; release only obstructive combinational ENA flags in private recovery kit; collect NK/NL and current child ETMs. |
+| KV / `kv` | Ingest vA final ECO TT -33.21 / FF +2.09, DRC0. vB proof PASS with mutant caught. Prompt vB LEC 32050 EQ, DRT active. Peer A/B active. | Build proved ingest vB; collect prompt/order/peer and partition geometry trials; diagnose KV-08 witness RX path. |
+| HBM die/GAPS / `hbm` | Wave plan was stale part11; current part34 extracted for operator. Rootctl A/B hold/DRV failures; bank128 canon ECO GRT overflow10; N4 FF -7.61 plus reset-role mismatch. | Apply p35 clock-pin separations and legal taller SerDes TX slot, review and build; continue safe forms/targeted repairs. |
+| HBM forms / `hbm_forms` | h9b_vB ECO TT +0.83 / FF +0.35 DRC/DRV0, routed LEC/re-sign still required. brmw ECO SIGNED TT +1.53 / FF +0.90, routed LEC EQ; current-tag re-sign running. rb routed FF -9.11, otherwise clean. | Collect h9b/brmw current-tag qualification, finish rb hold ECO; collect all timing/congestion/split builds. |
+| Token/model / `token` | HBM vh1 build3 terminal INFRA ENOSPC; successor build4 must be collected. KV ready-wait control also fails, so NOWAIT race alone is not the cause. | Diagnose KV mission/witness source; collect DS/QW/HBM benches; book every new pin cycle. HEAD ingress +1 edge is being recorded. |
+| Kit-wave/flow / `wave_flow` | All 5 dies still used src_730 despite I188–I197 merges. Missing-source class fixed: ~80/121 rows had progressed. Stale spill markers obstructed roots. | Fresh roots configured; distribute current pinned source/tags to epyc5/6, current HBM part34, release pending batches, keep queues fed. |
+| Fleet / `fleet` | PRUNE-1115 completed but was unreported: intel2 148.1 GB reclaimed, epyc4 ~456.5 GB removed/moved, intel1 ~35.3 GB moved. Some space consumed again. | Finish only already-approved remaining manifest rows; preserve evidence/live jobs; address epyc2/epyc4 root deficits through approved policy. |
+| Integration / `merge` | I195 test suite has same 41 failures as prior baseline, no new IDs. ctlrq and shared LEC constant fix in integration batch. | Batch pushed, tags confirmed, operator notified. Integrate next approved class fix; no broad validation repeat without a new concern. |
+| Shared residuals / `residual` | Autopilot labels explicit clock-source tool exceptions STRUCTURAL, suppressing proper infra recovery. | Fix narrowly by class, preserving actual timing FAIL classification; collect other unanswered READY/ASK and orphan work. |
 
-## State per design (08:30 PDT)
+## Immediate integration queue
 
-### DeepSeek ROM (S81 + head)
-- **S81 v4.8 on main.**
-  - G0 PASS, G2 PASS (31 probes).
-  - G0C: 91 types lack hard cores. TYPE-DEDUP takes it to 84.
-  - S81 picked "one leaf hard core + flop-only wrappers" to collapse the 74 leaf types (S81-CORES builds them).
-- **S81-XDIE** (claude/s81-xdie-1024): adds the reserve SerDes pair + in-band host. xdie_io 130 -> 0.
-  - GEOM-REVIEW reproduces G0C at 108 failing types, not 91. Reconcile this before merging.
-  - 72 feedthrough stations sit on ROM macros; declare `regs_um`.
-- **G3 runs:**
-  - S81: 7 frame kits.
-  - ELEM-S81: 34 slice_station + 8 head ft-station kits, plus 33 old closed hard cores re-running.
-  - S81-CORES: the 84-91 G0C hard cores.
-- **Head die:** G0/G0C/G1/G2 PASS.
-  - hd_tile r2 failed review (slivers) and was redesigned as r3, which is routing on intel2.
-- **Token pass:**
-  - Entry replay FAILS: fc30/fc31 calendar fault, and layer programs carry no host boot, so u_seqhost never starts.
-    TOK-DS layer verdicts are BLOCKED on this.
-  - Composed rate: single-user AR 802.6 tok/s, MTP 2,564; ~30% measured-current.
-  - Component benches PASS.
+- `claude/dh71-ctlrq-1105@4c71aa4289b`: root approved after scoped source/default review and token-cycle bookkeeping. Private proof covers held ctlx changes. Only hd_ctl behavior should change; raw plan keys stay unchanged.
+- `codex/qc-lec-constant-1105@1fd5f3b4e3`: root approved, tiny shared tool fix with focused tests. No RTL or cycles.
+- **Merged and pushed:** `875d41f5423` (ctlrq) and `eedc0185670` (LEC fix); HEAD == origin/main confirmed at `eedc0185670`. New tags on that commit: `flow-20261106-s-head`, `q-qc`, `n-kv`, `s-s81`, `x-hbm` (each with the same `flow-20261106-` prefix). Operator is refreshing sources. Focused integration tests: 12/12 PASS.
+- HBM WBQ `claude/hbm-gaps-5-wbq-1105@12b6f8761b`: collect remaining exactness controls before adoption; vA/vB builds already live. GIN version adds +1 hbm_clk edge to g_v/g_d.
+- HBM SerDes TX: root approved recommended taller 285.12 x 207.36 slot subject legal neighbor fit and image review, in p35 with clock-pin fixes. No new owner question needed.
+- `codex/grt-tool-error-1105@067d834145e`: shared classifier fix READY, 15 targeted tests PASS. Recognizes the exact clock-source exception only with a PASS timing receipt; actual timing failures remain structural. Root review/merge next.
+- KV ORDER completed: routed TT +8.66 / FF +4.48, DRC0; remaining 16 proof cones discharged by BDD. COUNT-CREDIT addition pending; do not add it to 167 before the counter consumes the credit.
+- S81 svc_lo t7 fit/path additions are not ready until their existing proof completes.
 
-### Qwen ROM (compute + KV)
-- **QC P6:**
-  - G0 PASS, G0C 52/56: sle/slw_st_a/b ft_budget.
-  - QC-A0's branch plan does not match its generator (a0v6 tap hook gives 404 clock errors). It must fix that before
-    merging.
-  - A0 v7 NK/NL routes are PASS-COND in review.
-  - 252 ft stations sit on macros.
-- **R8 padding:** 248k on P6.
-- **QC-TOK, xt1 on bound_r8:** 0/64. Root causes found: x-fill lead +6, and CB16 leg skew padding of 814k. Retests
-  are running. tp8/xdie/ovl4u PASS.
-- **KV v3.8v on main:**
-  - G0/G0C PASS.
-  - The hub_Ei 2.2 mm fault leg now has stations.
-  - hub_Ei vC FAILED review; the vG kit must pass review before routing.
-  - 1,394 of 4,359 ft stations sit on macros.
-  - Seam e5e6: TT +93.7 / FF +231 PASS.
-  - kv42 boot image (PV pads) committed; hierarchical bench building.
+## Live job anchors worth retaining
 
-### HBM B2
-- **B2r2:** G0 PASS, G0C 49/49.
-- **GEOM-REVIEW:** die PASS-COND, but q_sm*/q_hub/root are BLOCKED.
-  - q_hub FAILS: 81% of core-core bits run > 1 mm.
-  - bankq0 lanes0_2, gq_land and gq_issue FAIL: pins face away from partners, and s_i is tied 0 (an R7 tie-off).
-  - HBM-ARCH must re-floorplan. ELEM-HBM holds hub cores and is placing 133 PASS-COND kits.
-- **TRIAL-HBM:** full-die GRT + STA running on epyc2. It checks the "cut 0.55" claim; the old die was 1.70.
-- **TOK-HBM:** XDIE main_rows256 10/10 PASS. Diagnostics running on epyc2.
+- S81 ROMQ hw_vB private DRT: epyc2 `/home/ubuntu/scratch-root/claude/codex-s81-1105/romq_hw_vB`; intel2 client PID 1879444, ot-run unit suffix1553856. Check the lane note for exact physical path.
+- S81 svc_lo t7 proof: epyc5 `/srv/opentallas-scratch2/claude/die-s81-66-plan/locknq`; existing intel2 client4094614, 192 GB waiter, hosts pinned epyc5/6.
+- HBM current extracted wave plan: intel2 `/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v34`.
+- HBM brmw current-tag re-sign: own `codex-hbm-forms-1105/resign/brmw`, intel2 client1895956. h9b corrected re-sign client1870751; rb hold ECO client1856903.
+- QC NL routed LEC recovery: epyc6 `codex-qc-1105-ev/nl-vB-lec`, PID2694678.
 
-## Toolchain lanes
-| Lane | State |
-|---|---|
-| SIGNOFF | done: `signoff.py` merged (TT/FF). 138 old closed modules NEED RE-RUN (DBs lost); on paper 124 pass, 7 fail spread |
-| DIE-STA | ILM == flat |
-| DIE-CI | margins: OCV +/-5%, IR 5%, xtalk MCF 2. KV seam margined TT -20 ps |
-| PART-CAP | OpenROAD scaling 1-27 copies |
-| TYPE-DEDUP | done |
-| FLEET-DISK | done |
-| GEOM-REVIEW | independent reviews |
-| TRIAL-S81 / TRIAL-QK / TRIAL-HBM | trial die runs |
-| CP1-R10 | seam method on the S81 col_h10 r0/r1 pair; r10c/r10d routing on epyc3. Found and fixed (0ce45ab03c) ORFS deleting face registers after Yosys: ALL kits must be regenerated |
+## Where to find detail / owner questions
 
-## Known failures nobody may drop
-- S81 entry replay (fc30/fc31): this blocks the DeepSeek token pass.
-- Qwen xt1 0/64: fixes found, retest pending.
-- HBM q_hub floorplan and 3 cores: redesign.
-- QC-A0's plan/generator mismatch.
-- S81-XDIE G0C count mismatch.
-- Feedthrough stations on macros (KV, QC, S81).
-- 7 old closed blocks with spread > 80 ps.
-- 6 S81 cores and 20 modules overall with no kit in the repo.
+Latest evidence and handback state: `CODEX-LOG.md`, per-lane `## CODEX notes`, `lanes/CODEX-FLEET.md`, `lanes/CODEX-HBM-FORMS.md`, and `lanes/COORD-REVIEW-QUEUE.md` on **intel2 coord/state**. `lanes/CODEX.md` indexes historical lane files; a historical filename is not a new active task.
 
-## Hosts
-| Host | Threads | RAM | Disks |
-|---|---|---|---|
-| localhost | 256 | 755 GB | coordinator, central checkout ~/OpenTallas, only GitHub pusher. ot-run keeps 32 threads / 64 GB back |
-| epyc2 | 128 | 1 TB | 880 GB scratch2 |
-| epyc3 | 96 | 1 TB | md0 |
-| intel1 | 112 | 1 TB | 3.4 TB scratch2 |
-| intel2 | 112 | 1 TB | 3.4 TB scratch2 |
-
-Servers fetch from hub = localhost. Toolchain is `~/.local/opentallas-tools/bin`, plus the docker image
-`openroad/orfs:latest`.
+New OWNER? items: none at this update. Earlier questions remain in their logs; never invent approval or wait for an answer. On explicit Claude-reset notice, park safely, write per-lane handback (branches, SHAs, jobs, results, failures, questions), reply exactly `HANDOFF DONE`, and stop.

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Build ~/coord/CODEX-HANDOFF.md: the coordinator's status narrative + a live snapshot of every lane, the open
-release-tree items, fleet load and recent milestones. Used by claude-autocontinue.py at each Claude->Codex handoff;
-can also be run by hand."""
+"""Build a concise handoff from the maintained current status and recent milestones.
+Historical lane journals remain in coord/lanes rather than being copied here.
+Used by claude-autocontinue.py at each Claude->Codex handoff; also runnable by hand.
+"""
 import os, re, subprocess, sys, datetime as dt
 from zoneinfo import ZoneInfo
 
@@ -47,21 +48,14 @@ def main(reason=""):
     parts += ["Read ~/coord/CODEX-ROLE.md first: your role, the binding rules, and how to cover every task.", ""]
     parts += [open(STATUS).read().rstrip(), ""] if os.path.exists(STATUS) else ["(status narrative missing)", ""]
 
-    parts += ["## Live snapshot", "",
-              "### main", "```", sh("git -C ~/OpenTallas fetch -q origin 2>/dev/null; git -C ~/OpenTallas log --format='%h %ci %s' -12 origin/main | cut -c1-160"), "```", "",
-              "### Fleet", "```", sh("ssh -o ConnectTimeout=10 epyc1 ~/.local/bin/ot-run --status 2>&1 | head -5"), "```", "",
-              "### Open release-tree items (~/coord/RELEASE_TREE.md)", "```",
-              sh("grep -E '^\\s*- \\[ \\]' ~/coord/RELEASE_TREE.md | cut -c1-220"), "```", ""]
+    # Keep the handoff actionable. Historical lane journals are linked rather
+    # than copied: hundreds of old lanes previously expanded this to megabytes.
+    parts += ["## Latest handoff milestones", "",
+              sh("tail -n 8 ~/coord/HANDOFF.md | cut -c1-300"), "",
+              "For live jobs and new results, read the active lane files and "
+              "lanes/COORD-REVIEW-QUEUE.md on intel2. Historical lane contents "
+              "are intentionally omitted from this handoff.", ""]
 
-    parts += ["### Lanes (current step / status / next / OWNER? / review findings from each lane file)", ""]
-    lanes = sorted(f for f in os.listdir(os.path.join(COORD, "lanes")) if f.endswith(".md") and f not in SKIP_LANES)
-    for f in lanes:
-        p = os.path.join(COORD, "lanes", f)
-        mt = dt.datetime.fromtimestamp(os.path.getmtime(p), ZoneInfo("America/Los_Angeles"))
-        head, body = lane_snapshot(p)
-        parts += [f"#### {f[:-3]} (lane file updated {mt:%m-%d %H:%M})"] + head + [""] + body + [""]
-
-    parts += ["### Last 60 milestones (~/coord/HANDOFF.md)", "```", sh("tail -n 60 ~/coord/HANDOFF.md | cut -c1-300"), "```", ""]
     with open(OUT, "w") as fh:
         fh.write("\n".join(parts) + "\n")
     return OUT
