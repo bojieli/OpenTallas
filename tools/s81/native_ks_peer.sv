@@ -26,9 +26,9 @@ module ot_tb_s81_native_ks_peer (
    if(pending&&!sent1&&r1)sent1<=1;
   end
  end
- dsfd_coll_lane_e l0(.ck(clk),.rs(rst_n),.chb(1'b0),.rx({st0[0],st0[1],rx0,rst_n}),.tx(tx0),.tf(),
+ dsfd_coll_lane_e #(.GFMT(1),.EPPIPE(2),.LCR(0),.CH_BOARD(700)) l0(.ck(clk),.rs(rst_n),.chb(1'b1),.rx({st0[0],st0[1],rx0,rst_n}),.tx(tx0),.tf(),
   .lo_v(pending&&!sent0),.lo_r(r0),.lo_d({1'b0,frame[551:0]}),.li_v(iv0),.li_r(1'b1),.li_d(id0),.flt(f0));
- dsfd_coll_lane_e l1(.ck(clk),.rs(rst_n),.chb(1'b0),.rx({st1[0],st1[1],rx1,rst_n}),.tx(tx1),.tf(),
+ dsfd_coll_lane_e #(.GFMT(1),.EPPIPE(2),.LCR(0),.CH_BOARD(700)) l1(.ck(clk),.rs(rst_n),.chb(1'b1),.rx({st1[0],st1[1],rx1,rst_n}),.tx(tx1),.tf(),
   .lo_v(pending&&!sent1),.lo_r(r1),.lo_d({1'b0,frame[1103:552]}),.li_v(iv1),.li_r(1'b1),.li_d(id1),.flt(f1));
  ot_pdie_serdes_col #(.PMA_LAT(4),.TXL(2)) p0(.clk(clk),.rst(rst_n),.tx(tx0),.rx(rx0),.st(st0),
   .pma_tx(pma_to_die0),.pma_tck(tck0),.pma_rx(pma_from_die0),.pma_rck(pma_die_tck0));
