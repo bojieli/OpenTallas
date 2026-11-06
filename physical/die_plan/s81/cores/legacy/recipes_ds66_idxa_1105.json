@@ -50,7 +50,38 @@
   "hard_children": {
    "views": {
     "dsdv_idx_txm_grp": "physical/die_plan/s81/cores/legacy/specs/dsdv_idx_txm_grp_vA/views/dsdv_idx_txm_grp"
-   }
+   },
+   "parameter_contracts": [
+    {
+     "master": "dsdv_idx_txm_grp",
+     "instance": "u_sm.g_s.u_ga",
+     "child_spec": "physical/die_plan/s81/cores/legacy/specs/dsdv_idx_txm_grp_vA/spec.json",
+     "child_params": {
+      "D": 8192,
+      "B0": 0,
+      "NG": 5,
+      "RDL": 1,
+      "WDL": 1,
+      "RIL": 1,
+      "RIL_MUT": 0,
+      "POUT": 1,
+      "FL": 1
+     },
+     "parent_params": {
+      "D": 8192,
+      "SRAM_MACRO": 1,
+      "RDL": 1,
+      "WDL": 1,
+      "RIL": 1,
+      "MUT": 0,
+      "SPLIT": 2,
+      "WDC": 1
+     },
+     "binding_source": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv",
+     "binding_sha256": "babb26dd4635ba5738d245f235224b4fa5f8a3e45d0f52b7f2bcd4923efbe529",
+     "binding": "u_sm forwards D/RDL/WDL/RIL; RIL_MUT=(MUT==5); native WCB default5; u_ga B0=0 NG=WCB POUT=1 FL=(SPLIT==2); source byte-identical to the SIGNED child kit"
+    }
+   ]
   }
  },
  "dsdv_idx_txm_grp": {

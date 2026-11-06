@@ -1,5 +1,6 @@
 """SIGNED hard-child view/geometry and exact named placement, shared with the established QC flow."""
 import copy
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -104,7 +105,35 @@ def hard_children_tcl(children):
 
 
 
+def verify_parameter_contracts(spec, hcr, repo):
+    """Assert an explicitly selected parent's binding matches its sealed signed child."""
+    repo = Path(repo)
+    contracts = hcr.get("parameter_contracts", [])
+    if contracts:
+        selected = {(c["master"], c["inst"]) for c in hard_children_list(hcr, spec, repo)}
+        sealed = {(c["master"], c["instance"]) for c in contracts}
+        if selected != sealed:
+            raise ValueError("selected hard-child instances differ from sealed parameter bindings")
+    for contract in contracts:
+        for key, value in contract["parent_params"].items():
+            if spec.get("params", {}).get(key) != value:
+                raise ValueError(f"hard child parent parameter {key} does not match sealed binding")
+        source = repo / contract["binding_source"]
+        if hashlib.sha256(source.read_bytes()).hexdigest() != contract["binding_sha256"]:
+            raise ValueError("hard child parameter-binding source changed: " + str(source))
+        child = json.loads((repo / contract["child_spec"]).read_text())
+        if child.get("params") != contract["child_params"]:
+            raise ValueError("hard child parameters do not match sealed view")
+        view = Path(hcr["views"][contract["master"]])
+        if not view.is_absolute():
+            view = repo / view
+        seal = json.loads((view / "provenance.json").read_text()).get("kit", {}).get("spec_sha256")
+        if seal != hashlib.sha256(json.dumps(child, sort_keys=True).encode()).hexdigest():
+            raise ValueError("hard child spec is not the spec of the SIGNED view")
+
+
 def prepare_hard_children(spec, hcr, repo, outline, margin=0.0):
+    verify_parameter_contracts(spec, hcr, repo)
     children = hard_children_list(hcr, spec, repo)
     views = {m: (Path(v) if Path(v).is_absolute() else Path(repo) / v)
              for m, v in hcr["views"].items()}
