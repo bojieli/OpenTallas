@@ -1,0 +1,10 @@
+host	path	gb	head	branch	state	checks
+epyc5	/srv/opentallas-scratch2/claude/hbm-gaps-5/repo	54	6d4bed7abfe	main	clone dirty0 untr0 unpushed0 idle14h	0 refs 6 hosts; no lock/live/untracked SIGNED-PROV-keep
+epyc5	/srv/opentallas-scratch2/claude/hbm-gaps-5-cong/wt	54	6d4bed7abfe	claude/hbm-gaps-5-cong-1105	clone dirty0 untr0 unpushed0 idle14h	same
+epyc5	/srv/opentallas-scratch2/claude/die-hbm-78-pins/repo	54	82490341e05	main	clone dirty0 untr0 unpushed0 idle14h	same
+epyc5	/srv/opentallas-scratch2/claude/die-s81-66-cls/wt	38	850f4f56186	claude/ds66-clandspread-1105	clone dirty0 untr0 unpushed0 idle14h	same
+epyc5	/srv/opentallas-scratch3/claude/moved-from-epyc4-1106/srv/opentallas-scratch3/claude/relocated-1106/die-s81-51/leccoll-wt	46	(branch tip, on origin)	claude/lec-coll-1-1103	worktree copy moved by me 11:2x; dirty0 untr0 unpushed0 idle60h	same (checked on epyc4 before move)
+epyc5	/srv/opentallas-scratch3/claude/moved-from-epyc4-1106/srv/opentallas-scratch3/claude/relocated-1106/die-s81-51/lecxfin-wt	46	(branch tip, on origin)	claude/lec-xfin-1-1103	worktree copy moved by me 11:2x; dirty0 untr0 unpushed0 idle60h	same (checked on epyc4 before move)
+epyc5	/srv/opentallas-scratch3/claude/moved-from-epyc4-1106/srv/opentallas-scratch3/claude/relocated-1106/die-s81-52/bkc	46	(branch tip, on origin)	claude/die-s81-52-bkc-1103	worktree copy moved by me 11:2x; dirty0 untr0 unpushed0 idle60h	same (checked on epyc4 before move)
+epyc4	/srv/opentallas-scratch3/claude/s81-idx-b/repo	54	6b7e2358064	claude/s81-idx-b-1105	clone dirty0 untr0 unpushed0 idle15h	same
+epyc4	/srv/opentallas-scratch3/claude/hbm-gaps-4-q3split/repo	52	d6744acd258	claude/hbm-gaps-5-q3split-1105	clone dirty0 untr0 UNPUSHED2 idle14h	same; bundle of the 2 commits saved first
