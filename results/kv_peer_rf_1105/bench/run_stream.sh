@@ -19,10 +19,8 @@ bld mm2 tb_mux -DUSE_R3 $O/mux_m2.sv $B/tb_mux.sv
 for s in 1 2 3; do row "mux src  seed $s" mref +SEED=$s; row "mux r3   seed $s" mr3 +SEED=$s; done
 for b in 1 2; do row "mux src  bad $b" mref +BAD=$b; row "mux r3   bad $b" mr3 +BAD=$b; done
 row "mux m_data (must FAIL)" mmut +SEED=1; row "mux m_txload (must FAIL)" mm2 +SEED=1
-# DIE-KV-80: r4k rows, the r3 mux at KCONST=1 (fixed fields of tq_d/lq_d/physical_tx_data read as literals)
-mut $B/tb_mux.sv $O/tb_mux_k.sv " qkd_host_peer_root_mux_r3
-" " qkd_host_peer_root_mux_r3 #(.KCONST(1))
-"
+# DIE-KV-80: r4k rows, the r3 mux at KCONST=1, stimulus under the in-core field contract (kctx.py) (fixed fields of tq_d/lq_d/physical_tx_data read as literals)
+python3 -I $B/kctx.py mux $B/tb_mux.sv $O/tb_mux_k.sv
 bld mk tb_mux -DUSE_R3 $R3/qkd_host_peer_root_mux_r3.sv $O/tb_mux_k.sv
 bld mkm2 tb_mux -DUSE_R3 $O/mux_m2.sv $O/tb_mux_k.sv
 for s in 1 2 3; do row "mux r4k  seed $s" mk +SEED=$s; done
@@ -44,8 +42,8 @@ for s in 1 2 3; do row "link src seed $s" lref +SEED=$s; row "link r3  seed $s" 
 for b in 1 2 3 4; do row "link src bad $b" lref +BAD=$b; row "link r3  bad $b" lr3 +BAD=$b; done
 row "link m_peerword (must FAIL)" lm1 +SEED=1; row "link m_phd_overwrite (must FAIL)" lm2 +SEED=1
 row "link m_txcredit_early (must FAIL)" lm3 +SEED=1; row "link m_nobadcheck (BAD=1, must FAIL)" lm4 +BAD=1; row "link m_peer_credit_lost (must FAIL)" lm5 +SEED=1
-# DIE-KV-80: r4k rows, the r3 link at KCONST=1 (peer_word fixed fields read as literals)
-mut $B/tb_link.sv $O/tb_link_k.sv " #(.MUT(MUTP)) dut(" " #(.MUT(MUTP),.KCONST(1)) dut("
+# DIE-KV-80: r4k rows, the r3 link at KCONST=1, stimulus under the in-core field contract (kctx.py) (peer_word fixed fields read as literals)
+python3 -I $B/kctx.py link $B/tb_link.sv $O/tb_link_k.sv
 bld lk tb_link -DUSE_R3 $L $O/tb_link_k.sv
 bld lkm1 tb_link -DUSE_R3 -GMUTP=1 $L $O/tb_link_k.sv
 bld lkm2 tb_link -DUSE_R3 $O/l_m2.sv $O/tb_link_k.sv
