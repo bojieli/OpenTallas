@@ -1583,7 +1583,13 @@
     "svc_hi_dsdv_svc_rs__t3@5",
     "svc_hi_dsdv_svc_rs__t4@4",
     "svc_hi_dsdv_svc_rs__t6@4",
-    "svc_lo_dsdv_svc_rs__t3@3"
+    "svc_lo_dsdv_svc_rs__t3@3",
+    "col_h10_r1__t1__cld01bb4ae@11",
+    "ot_s81sl_leaf__t40__cl86ea32b3@4",
+    "ot_s81sl_leaf__t40__clf8bbdae1@4",
+    "slice_station__t24__cl64811a5d@5",
+    "svc_hi_dsdv_svc_rs__t1@4",
+    "svc_lo_dsdv_svc_rs__t1@3"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -2296,7 +2302,13 @@
     "svc_hi_dsdv_svc_rs__t3@5": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
     "svc_hi_dsdv_svc_rs__t4@4": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
     "svc_hi_dsdv_svc_rs__t6@4": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
-    "svc_lo_dsdv_svc_rs__t3@3": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6"
+    "svc_lo_dsdv_svc_rs__t3@3": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
+    "col_h10_r1__t1__cld01bb4ae@11": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6",
+    "ot_s81sl_leaf__t40__cl86ea32b3@4": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6",
+    "ot_s81sl_leaf__t40__clf8bbdae1@4": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6",
+    "slice_station__t24__cl64811a5d@5": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6",
+    "svc_hi_dsdv_svc_rs__t1@4": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6",
+    "svc_lo_dsdv_svc_rs__t1@3": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
