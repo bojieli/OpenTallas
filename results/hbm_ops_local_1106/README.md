@@ -7,3 +7,5 @@ Proof actual16banks/LWB15/AW24/NS8/BREG1/FREG1, behavioral bank with same read-f
 ConservativeB variants combine both local stages. OpsA B also delays scalar data and its selection tag together, so every read response gains exactly one edge. OpsB B keeps the same read+1 and also delays stage-write visibility+1. Full captured OpsA G0/G1 integration (including scalar selection)1144cycles/73216wordcompares PASS; wrong sampled-output edge877diff. Original programme/profile activation remains off.
 
 The first component log reported217296 datawords conservatively; the literal two512+2048-bit comparisons contain24144032-bit word comparisons. The full-G0/G1 log73216 counts its four512-bit comparisons exactly. No result is inferred from an unexecuted physical variant.
+
+ConservativeB also uses existing empty ADDER_MAP_FILE mapping, as in measured rb_vB/s3_q_vC: the original OPS setup paths include slow FA/HA carry cells. A keeps the original mapping. No arithmetic/clock/gate change or sweep.

@@ -66,6 +66,7 @@ for fn,hook in [('face_flops.tcl','macro_reg_guide.tcl'),('face_flops_release.tc
 config+='\n# Fresh typed OPS candidate: ROOT-approved parent-owned IO scope; final full constraints unchanged.\n'
 config+='override export OT_HOLD_REPAIR_SCOPE = '+a.scope+'\n'
 config+='override export PLACE_DENSITY = 0.45\n'
+if a.variant=='B':config+='override export ADDER_MAP_FILE =\n'
 (out/'config.mk').write_text(config)
 event={'source_commit':a.source_sha,'cohort':'flow-20261106-bp-hbm','kind':a.kind,'variant':a.variant,'module':new,'basis':str(base),'basis_source_commit':basis_freeze.get('source_commit'),'pin_cycles':{'write_visibility':1 if a.kind.startswith('opsa') or a.variant=='B' else 0,'read_response':1 if a.kind=='opsb' or a.variant=='B' else 0,'scalar_read':1 if a.kind.startswith('opsa') and a.variant=='B' else 0},'scope':a.scope,'final_constraints':'original full TT/FF restored; NEEDS_PARENT debt visible, no gate waiver','original_sram_count':16,'macro_placement_unchanged':True,'pins_unchanged':True,'guides':gfile+'.json','source_files':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (src/'rtl').glob('*.sv')},'activation':'private candidate; no profile/recipe/POR activation'}
 (out/'SOURCE_EVENT.json').write_text(json.dumps(event,indent=1)+'\n')
