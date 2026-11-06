@@ -21,7 +21,8 @@ def test_ports_filter(monkeypatch):
              dict(port="clk_lat", tap_um=[4, 1], period_mult=1, source_latency_ps=[1, 2])]
     monkeypatch.setattr(G, "edge_clock_pins", lambda P, tn: [(e["port"], 0, 0, e["period_mult"]) for e in edges])
     assert G.edge_split_ports(plan(edges), "t") == ["clk_coll"]
-    assert G.edge_split_ports(plan(edges, die="qwen_kvsys"), "t") == []  # opt-in per die
+    assert G.edge_split_ports(plan(edges, die="qwen_kvsys"), "t") == ["clk_coll"]  # KV opted in (KV-SYSSD-2 11-06)
+    assert G.edge_split_ports(plan(edges, die="s81"), "t") == []  # opt-in per die: a die not in EDGE_SPLIT_DIES
 
 
 def run_split(tmp_path, n_sinks, env):
