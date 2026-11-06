@@ -103,7 +103,44 @@ if {[info exists ::env(OT_HOLD_STOP_PS)] && $::env(OT_HOLD_STOP_PS) ne ""} { set
 set hg_stop_lim [expr {$OT_HOLD_STOP_PS + min(0.0, $hg_cin + 40.0, -1.0 * $hg_win)}]
 set hg_stop [expr {[info exists ::env(OT_HOLD_PREROUTE_STOP)] && $::env(OT_HOLD_PREROUTE_STOP) eq "1"}]
 set hg_screen [expr {$w < $hg_lim || ($hg_legacy && $n > 2000)}]
-if {$w < $hg_stop_lim} {
+# KW-FIX-17 11-05 (COORD 16:2x class, same scope as tools/orfs_hold_mm.tcl ot_hold_rr_stats and
+# physical/die_plan/hbm_arch_cores/hold_gate.tcl): the structural stop counts register-to-register FF hold only.  In/out-
+# port hold paths (timed against the kit's boundary vclk/seam contract) are an ADVISORY line + report; die STA checks
+# them against the parent's measured arrivals.  Trigger: HEAD hd_ctl_n stopped post-CTS at FF -281.50 / 1175 with 1090
+# forwarded ring inputs on the -250 stop.  The split fails closed (all-path stop) when unavailable.
+# OT_HOLD_STOP_SCOPE=all restores the all-path stop.
+proc ot_hg_rr_stats {} {
+  set w 1e6; set n 0; set ps {}
+  if {[catch {
+    set ck [all_registers -clock_pins]; set d [all_registers -data_pins]
+    if {[llength $ck] && [llength $d]} {
+      set ps [find_timing_paths -path_delay min -from $ck -to $d -group_path_count 1000000 -endpoint_path_count 1 -slack_max 0]
+    }
+  } err]} {
+    puts "OT_HOLD_PORT: register-to-register split unavailable ($err); the stop counts all paths"
+    return {}
+  }
+  foreach p $ps { set s [get_property $p slack]; if {$s ne "INF" && $s < 0} { incr n; if {$s < $w} { set w $s } } }
+  return [list $w $n]
+}
+set hg_port_only 0
+set hg_scope_all [expr {[info exists ::env(OT_HOLD_STOP_SCOPE)] && $::env(OT_HOLD_STOP_SCOPE) eq "all"}]
+if {$w < $hg_stop_lim && !$hg_scope_all} {
+  set hg_rr [ot_hg_rr_stats]
+  if {[llength $hg_rr] == 2} {
+    lassign $hg_rr hg_wrr hg_nrr
+    if {$hg_wrr >= $hg_stop_lim} {
+      if {$hg_nrr > 0} { set hg_srr [format %.2f $hg_wrr] } else { set hg_srr "-" }
+      set hg_adv [format "OT_HOLD_PORT ADVISORY stage=post_cts: FF hold ws %.2f ps over %d endpoints includes in/out-port paths; register-to-register ws %s over %d endpoints; the structural stop %.1f counts register-to-register only (port hold -> die STA against parent arrivals)" $w $n $hg_srr $hg_nrr $hg_stop_lim]
+      puts $hg_adv
+      if {[info exists ::env(REPORTS_DIR)] && $::env(REPORTS_DIR) ne "" && [file isdirectory $::env(REPORTS_DIR)]} {
+        catch {set f [open [file join $::env(REPORTS_DIR) ot_hold_port_advisory_post_cts.rpt] w]; puts $f $hg_adv; close $f}
+      }
+      set hg_port_only 1
+    }
+  }
+}
+if {$w < $hg_stop_lim && !$hg_port_only} {
   puts [format "OT_HOLD_GATE FAIL FF wns_ps %.2f endpoints %d (true negative slack): beyond the structural stop %.1f ps (OT_HOLD_STOP_PS %.0f from contract)" $w $n $hg_stop_lim $OT_HOLD_STOP_PS]
   error "structural FF hold failure: revise plan/RTL/boundary before repair"
 }
