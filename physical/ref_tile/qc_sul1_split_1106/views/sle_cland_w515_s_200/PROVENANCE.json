@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "57c4d5d0f5ea3164ad0bfe04f53e4f839c5bd7ca",
+ "flow_tag": "flow-20261106-ap-qc",
+ "routed_db": "/srv/opentallas-scratch3/claude/codex-qc-sul1-qualified-1106/qual/sle_cland_w515_s_200/kit/run/results/asap7/kq_sle_cland_w515_s_200_h1cf837/base/6_final.odb",
+ "build_commit": "b52f1ee772794d8f5dd513d347f03735c763ba49",
+ "lec": "/srv/opentallas-scratch3/claude/codex-qc-sul1-qualified-1106/qual/sle_cland_w515_s_200/result/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch3/claude/codex-qc-sul1-qualified-1106/qual/sle_cland_w515_s_200/result/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch3/claude/codex-qc-sul1-qualified-1106/qual/sle_cland_w515_s_200/kit",
+ "original_signoff": "/srv/opentallas-scratch3/claude/codex-qc-sul1-qualified-1106/qual/sle_cland_w515_s_200/kit/signoff/signoff.json",
+ "name": "kq_sle_cland_w515_s_200_h1cf837",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "key-cardinal",
+ "created": "2026-11-06 06:05 PST",
+ "routed_db_sha256": "c2ab3f6d9990ed2b3e3c422feb7d26ba78c67c722ad6f420a22ac8ed5afeeafe",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch3/claude/codex-qc-sul1-qualified-1106/qual/sle_cland_w515_s_200/cohort/tools/die_plan",
+  "sha256": {
+   "signoff.py": "4daba41401f99b26b2fd2f8a6b5d7572006dfb0b889455c8d6e595c7702f3942",
+   "lec.py": "313d77f094144205893055f199eff7274f8ecc2aea2c0caae3d2eb05958542e6"
+  },
+  "checked": "byte-identical to flow-20261106-ap-qc"
+ },
+ "lane": "QC-SUL1-CODEX",
+ "as_run_note": "Exact retained SIGNED SU ring DB; current AP qualification and actual routed LEC, no reroute"
+}
