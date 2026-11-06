@@ -78,6 +78,7 @@ COLL_FOLD_PATCHES = [
 
 SLE_CTL = "qfd_dv_s5_ctl_repair4_leaf"   # QC-SLECTL-B 11-05 sle_ctl split: u_ctl hard child (ctl family)
 SLE_CTL_SOURCES = ["rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_leaf.sv", "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv",
+                   "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv",
                    "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv", "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv"]
 SLE_CLAND_RE = r"sle_cland_w\d+_[nsew](?:_\d+)?"   # QC-SLECTL-B: landing-ring wrapper masters (cland family)
 SLE_CLAND_SOURCES = ["rtl/common/ot_dp_clk_landing_ca.sv", "rtl/common/ot_dp_clk_landing.sv",
