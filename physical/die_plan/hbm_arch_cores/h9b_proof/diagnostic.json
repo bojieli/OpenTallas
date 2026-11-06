@@ -1,0 +1,25 @@
+{
+  "scope": "captured final nowiden AIG; isolated diagnostic, official released certification pending",
+  "physical_source": "902085405d850f69719551dfaa1ce6f674bacb03",
+  "kit_hash": "135f355f34443d11",
+  "controller_sha256": "484262ce751ab81b19eebec0fb11809be02ac07f5576045fbebb39cb46f5b531",
+  "proof_runtime_sha256": "24685a4c72afe8f723396446ae567d6e6d9b8cf1e48fcade8071a5963d4554b4",
+  "reset_used": 64,
+  "correct": {
+    "guards_proposed": 32,
+    "guards_proved": 32,
+    "counts": {
+      "proved": 25567
+    }
+  },
+  "adjacent_entry_mutant": {
+    "guards_proposed": 32,
+    "guards_proved": 0,
+    "counts": {
+      "proved": 25498,
+      "differs": 37
+    }
+  },
+  "proof_root": "epyc5:/srv/opentallas-scratch2/claude/codex-bank128-h9b-diag",
+  "no_rtl_or_reset_change": true
+}
