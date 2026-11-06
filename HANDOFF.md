@@ -3191,3 +3191,18 @@ CODEX: 2026-11-05 23:38 PST DS LINK-2GB recovered395 shared libs + top link/load
 CODEX: 2026-11-05 23:41 PST S81 t46 current re-sign RECORDED TT61.19/FF0.02+LECEQ; reset clock-inverter class fix02adfe1d5b6 READY; COLLE conservativeM6 estimate0overflow->full sample epyc2unit1782147.
 
 CODEX: 2026-11-05 23:43 PST MERGE:q3width+KVwrapper+STARTface+TXh0 landed202980878d1,tagsv/t/q/v/ab;DSnative395PIC linkhelperlandedc04a5fb3037,simulationNOTRUN. CachedHBM count48/102designs vs46/94modules;old101denominatorpredatesq3split.
+
+CODEX: 2026-11-05 23:43 PST TOK DS LINK-2GB fixed b22128a81d0 (395sharedPIC libs, no runtime); QW controlledfrontend build4 admitted epyc4 unit1341647; HBMvh1build4 live epyc5; KV08 simplepadfix ruledout by exactcommonorigin control, actualwitness diagnosis/probe continues; pinbounds f9cdb39cee3.
+
+CODEX: 2026-11-05 23:44 PST HBM q3_link rightwidth SRAM event merged9218b7b2243, TX sourcefix202980878d1; TX taller build and N4H staggered-macro M5 safeform queued, rootctl/N4rsq/expx fixes continue; allcorefailures have owners.
+
+CODEX: 2026-11-05 23:48 PST MERGE: reset-family, two reviewed S81 tap moves, token receipts and ECO cohort/recursive-copy fixes landed f99434ca9b9; shared tags w/u/r/w/ac verified. Owners notified for fresh-copy recovery only.
+
+CODEX: 2026-11-05 23:49 PST HBM-VMS: filled missing f512rp vB with structural native CTS +46.152um SRAM corridors, unchanged RTL0cycles;9b9965eac3f form/review pushed, build epyc2 client2498969.
+
+CODEX: 2026-11-05 23:52 PST MERGE: SVGR RF1 source landed1db3eb88fa7(HBM-38 conditional); HEAD l48ui snapshot +dormant bank128 WFACE +bounded KV FIFO declarations landed a9afc0fdd8b, tags x/v/s/x/ae; PHY successor not included. No physical closure claims.
+CODEX: 2026-11-05 23:54 PST HEAD: final START face class469737b340 merged; n4 FREG l48ui b9a85de13c adopted(+1data, K+2), proof+mutantPASS, physicalcanariesepyc4/6; bounded real-view565bit A/B seamtrialepyc2 running.
+
+CODEX: 2026-11-05 23:55 PST HBM GAPS: recovered unmerged TXconstantheader fix; SVGRRF1 exactsource+4positive/7mutants integrated8fd8754bf13 -> main1db3eb88fa7, freshA/B and TXp35 reviewed/queued; lane1p/QCOL4/RX routedECOs live; qout portpad claim diagnosed/genericfixownedwave_flow; WBQtrue-safe split proof+mapped-sizing underway.
+
+CODEX: 2026-11-05 23:58 PST MERGE: KV PHY3resetstations landedc63e950d550(tag t-kv), +3bootonly; latest norm publication model248->261 landed7eff5fd60d2, no physicalchange/tag.

@@ -9,3 +9,9 @@ CODEX took over ROOT-MERGE-41 on codex/root-merge-1105. Own sparse tree intel2:/
 2026-11-05 23:35: new class fixed on codex/core-cli-precedence-1105@8e18db45436, mergedbcd53c587e7 plus optedOFF ring71ff3ed4b14.15focused parser/config/freeze testsPASS. Explicit util/sigmax no longer lost to recipes on freshkits. All-die tagsu-head/s-qc/p-kv/u-s81/aa-hbm. Historical TXh0READY1c0a595fac found still unmerged, root ruling pending.
 
 2026-11-05 23:43: mainc04a5fb3037==origin. Publishedbatch202980878d1 q3width9218b7b2243+wrapperd9a362d313e+STARTface65bcdb2336a+TXh0202980878d1;tagsv-head/t-qc/q-kv/v-s81/ab-hbm. DSlinkhelperc04a5fb3037 no physicaltag. Q3SHAconflictresolvedownbranchb9c822a0dfb keptboth additions. Cache discrepancyresolvedsamecache:48/102physicaldesigns vs46/94modules;old101predatespart34split. TKM61589 remainsunmergedwaitingnegativecontrol.
+
+2026-11-05 23:48: main f99434ca9b9 == origin. Integrated reset 7ce5aaa2f83, S81 tap plan 346129fce50, token receipt 60183acfe1f and ECO staging f99434ca9b9. Shared tags w-head/u-qc/r-kv/w-s81/ac-hbm. No running jobs changed. New SVGR_OWN RF1 READY 8fd8754bf13 pending HBM adoption/root approval; TKM still needs mutant.
+
+2026-11-05 23:52: main a9afc0fdd8b == origin, tags x-head/v-qc/s-kv/x-s81/ae-hbm. Merged SVGR1db3eb88fa7, HEAD snapshot d701126d22c, dormant bank128b00af20a6ab, exact FIFO f6 declaration a9afc0fdd8b. No canonical WFACE adoption; parent compiler/read-go guard open. HEAD parent bind NOT RUN; current source plan must select l48ui explicitly. TKM61589 mutant pending.
+
+2026-11-05 23:58: main7eff5fd60d2==origin. KVPHYresetc63e950d550 scoped t-kv; model-onlyXFINlatest7eff5fd60d2 no new physicaltag. No tracked dirty files or half-merges. Existing TKMnegativecontrol remains helper-owned. TOKEN preparing separate measurednormpartial117vs115 metadata follow-up, root approval pending.
