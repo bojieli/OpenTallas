@@ -74,7 +74,7 @@
  ],
  "added_data_cycles": 0,
  "parent_signed": false,
- "reset_collector": "NOT REATTACHED/NOT PROVED/NOT NATIVE BOUND",
+ "reset_collector": "Exact frozen-seam local event SAT32 PASS; native pending",
  "remaining": "Output bc_o01 congestion and FF tap affinity remain independent; no timing closure claim",
  "hard_cores": [
   {
@@ -291,5 +291,8 @@
   2531.52
  ],
  "landing_children_qualified": true,
- "native_compute_children_qualified": false
+ "native_compute_children_qualified": false,
+ "reset_depth_before": 10,
+ "reset_depth_after": 10,
+ "max_status_hop_um": 131.63490000000036
 }
