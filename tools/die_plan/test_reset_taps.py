@@ -315,3 +315,29 @@ proc si {m args} {global current; switch $m {getMTerm {return inp} getNet {retur
         if with_identity:
             assert 'relay identity rst_n_t0 -> u_bound.u_core.rst_n[0] (tap 0)' in p.stdout
             assert '1 re-pointed' in p.stdout
+
+
+def test_child_gated_rst_n_is_not_the_partition_alias(tmp_path):
+    """DIE-KV-83 11-06 (kv3_sys_c): Yosys dropped the partition alias; a child's gated .rst_n must not become it."""
+    p = run_hook(tmp_path, ['u_bound.rst_n_t0', 'u_bound.rst_n_t20', 'u_bound.u_d2d_kv.u_core.u_kvn.rst_n'])
+    assert not p.stderr, p.stderr
+    assert 'RES n0 n1' in p.stdout
+    assert 'RT_ALIASES 0' in run_alias_count(tmp_path, ['u_bound.rst_n_t0', 'u_bound.u_c.u_k.rst_n'])
+    assert 'RT_ALIASES 1' in run_alias_count(tmp_path, ['u_bound.rst_n_t0', 'u_bound.rst_n', 'u_bound.u_c.u_k.rst_n'])
+    # no rst_n_t<i> name at all: the old shallowest rule still applies
+    assert 'RT_ALIASES 1' in run_alias_count(tmp_path, ['u_bound.u_c.rst_n', 'u_bound.u_c.u_k.rst_n'])
+
+
+def run_alias_count(tmp_path, names):
+    if not shutil.which('tclsh'):
+        pytest.skip('tclsh unavailable')
+    nets = ' '.join(f'n{i}' for i in range(len(names)))
+    mock = ['namespace eval ord {}', 'proc ord::get_db_block {} {return blk}',
+            'proc ord::get_db_tech {} {return tech}',
+            'proc tech {method} {return 1000}',
+            f'proc blk {{method args}} {{switch $method {{getNets {{return {{{nets}}}}} getBTerms {{return {{}}}} findNet {{return NULL}}}}}}']
+    for i, name in enumerate(names):
+        mock.append(f'proc n{i} {{method}} {{return {{{name}}}}}')
+    script = '\n'.join(mock) + f'\nsource {{{HOOK}}}\nputs "RT_ALIASES [llength $rt_zero_aliases]"\n'
+    p = subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
+    return p.stdout + p.stderr
