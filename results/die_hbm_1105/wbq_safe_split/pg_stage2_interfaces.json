@@ -1,0 +1,669 @@
+{
+ "status": "STAGE2_PG_ONLY; FINAL_ROUTE_OBS_NOT_YET_MEASURED",
+ "parent_landing": "M6 conditional on final childOBS<=M5",
+ "route_budget": "MAX_ROUTING_LAYER=M5; pinnedASAP7fastroute usesclockM4-M5 andsignalM2-M5",
+ "children": {
+  "main": {
+   "odb": "/main/run/results/asap7/hbc_ot_wbq_sw_split_main/base/2_4_floorplan_pdn.odb",
+   "odb_sha256": "5f09fba2e36ce512ec81f5257ca4709d24fc35601a7ac5903210666a61fcb1ff",
+   "metal_shape_counts": {
+    "M1": 1985,
+    "M2": 1985,
+    "M3": 35730,
+    "M5": 36
+   },
+   "max_pg_routing_level": 5,
+   "via_counts": {
+    "VIA45_1_2_58_58": 35730,
+    "VIA34_1_2_58_52": 35730,
+    "VIA23_1_3_36_36": 35730,
+    "via1_2_77760_18_1_2160_36_36": 1985
+   },
+   "pg_term_boxes": [
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      79.956,
+      4.311,
+      80.076,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      75.636,
+      4.311,
+      75.756,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      71.316,
+      4.311,
+      71.436,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      66.996,
+      4.311,
+      67.116,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      62.676,
+      4.311,
+      62.796,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      58.356,
+      4.311,
+      58.476,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      54.036,
+      4.311,
+      54.156,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      49.716,
+      4.311,
+      49.836,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      45.396,
+      4.311,
+      45.516,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      41.076,
+      4.311,
+      41.196,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      36.756,
+      4.311,
+      36.876,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      32.436,
+      4.311,
+      32.556,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      28.116,
+      4.311,
+      28.236,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      23.796,
+      4.311,
+      23.916,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      19.476,
+      4.311,
+      19.596,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      15.156,
+      4.311,
+      15.276,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      10.836,
+      4.311,
+      10.956,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      6.516,
+      4.311,
+      6.636,
+      540.009
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      79.764,
+      4.297,
+      79.884,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      75.444,
+      4.297,
+      75.564,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      71.124,
+      4.297,
+      71.244,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      66.804,
+      4.297,
+      66.924,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      62.484,
+      4.297,
+      62.604,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      58.164,
+      4.297,
+      58.284,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      53.844,
+      4.297,
+      53.964,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      49.524,
+      4.297,
+      49.644,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      45.204,
+      4.297,
+      45.324,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      40.884,
+      4.297,
+      41.004,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      36.564,
+      4.297,
+      36.684,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      32.244,
+      4.297,
+      32.364,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      27.924,
+      4.297,
+      28.044,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      23.604,
+      4.297,
+      23.724,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      19.284,
+      4.297,
+      19.404,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      14.964,
+      4.297,
+      15.084,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      10.644,
+      4.297,
+      10.764,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      6.324,
+      4.297,
+      6.444,
+      540.023
+     ]
+    }
+   ]
+  },
+  "out": {
+   "odb": "/outkit/run/results/asap7/hbc_ot_wbq_sw_split_out/base/2_4_floorplan_pdn.odb",
+   "odb_sha256": "4d17c7a5ba7d1b8c71581d7019c010c4270675d7269c1cdd963c87bbad8aacc2",
+   "metal_shape_counts": {
+    "M1": 1985,
+    "M2": 1985,
+    "M3": 15880,
+    "M5": 16
+   },
+   "max_pg_routing_level": 5,
+   "via_counts": {
+    "VIA45_1_2_58_58": 15880,
+    "VIA34_1_2_58_52": 15880,
+    "VIA23_1_3_36_36": 15880,
+    "via1_2_34560_18_1_960_36_36": 1985
+   },
+   "pg_term_boxes": [
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      36.756,
+      4.311,
+      36.876,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      32.436,
+      4.311,
+      32.556,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      28.116,
+      4.311,
+      28.236,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      23.796,
+      4.311,
+      23.916,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      19.476,
+      4.311,
+      19.596,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      15.156,
+      4.311,
+      15.276,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      10.836,
+      4.311,
+      10.956,
+      540.009
+     ]
+    },
+    {
+     "net": "VDD",
+     "term": "VDD",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      6.516,
+      4.311,
+      6.636,
+      540.009
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      36.564,
+      4.297,
+      36.684,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      32.244,
+      4.297,
+      32.364,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      27.924,
+      4.297,
+      28.044,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      23.604,
+      4.297,
+      23.724,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      19.284,
+      4.297,
+      19.404,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      14.964,
+      4.297,
+      15.084,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      10.644,
+      4.297,
+      10.764,
+      540.023
+     ]
+    },
+    {
+     "net": "VSS",
+     "term": "VSS",
+     "layer": "M5",
+     "routing_level": 5,
+     "box_um": [
+      6.324,
+      4.297,
+      6.444,
+      540.023
+     ]
+    }
+   ]
+  }
+ }
+}

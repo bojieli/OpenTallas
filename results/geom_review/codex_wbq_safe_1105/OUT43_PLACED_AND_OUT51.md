@@ -1,0 +1,9 @@
+# OUT43 actual placement and OUT51 geometry candidate
+
+Actual OUT43 east-half-band candidate4 PLACE completed rc0. actual_out_placed_review.png was visually inspected: native first captures stay in E packet bands, external registered outputs at W match the same16 y packets, common logic/buffers occupy the middle and end caps. All native port-to-first-capture/source endpoints mapped after normalizing literal OpenROAD bracket escapes (first failed name-encoding census retained in coordinator archive). Native maxima: valid49.008um,addr47.628,data50.652,ready7.566; missing0.
+
+Verdict FAIL conservative capacity:68002standard cells8744.96736um2=47.2366% free-area fill,48.02% withTAP, above45% target. Main cause is mandatory/repair port buffers: BUFx2+7423,BUFx6f+4824,BUFx3+1286, while FFarea stays4026.06288um2. HoldCTS/route. Old failure and bestSYNTH/3_placeODB/CSV/source retained at stable candidate4 path despite authorized terminal-data compaction.
+
+OUT51 geometry-only candidate:51.84x544.32, W.096,E51.744,clk25.944/272.16,Nreset2.424/544.224 unchanged because W-anchored. Native E bands shift+8.64 to x30.24..47.52, Y packets unchanged. out51_candidate.png visually reviewed PASS-COND geometry: larger common-cell corridor, matchedYpackets, no macro wall, centralclock. PinSHA75e227cf835160b6c594dd147362f3aea8b7224777731fc3dbd869ae97360c08;9218rawpins. Current placedarea predicts~38.4% withTAP in the new freearea, before any protocol repair/cellchanges. Parent owns exactAQHI fit and entry/stationresites.
+
+Functional qualification HOLD: actual old OUT fixed shell failed literal external ready/valid abrupt-stall proof (typed_landing owns repair). Existing3mode write-set proof used delayed-ready face MODEL, not this literal predicate. Geometry changes add0cycles and do not repair that protocol issue. No new51P&R until protocol is qualified. Actual final route/abstract OBS and real parentcalendar/reset/interface proof also remain required.

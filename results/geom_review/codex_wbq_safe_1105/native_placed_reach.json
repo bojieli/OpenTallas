@@ -1,0 +1,257 @@
+{
+ "meaning": "All qualified native endpoints, Manhattan to cell origin; geometry census only, parent TT/FF STA required.",
+ "missing": [],
+ "by_bus": {
+  "in_v": {
+   "count": 9184,
+   "p50": 28.056,
+   "p90": 40.854,
+   "max": 49.008
+  },
+  "in_ready": {
+   "count": 16,
+   "p50": 7.08,
+   "p90": 7.458,
+   "max": 7.566
+  },
+  "in_addr": {
+   "count": 960,
+   "p50": 21.324,
+   "p90": 35.694,
+   "max": 47.628
+  },
+  "in_data": {
+   "count": 8192,
+   "p50": 20.952,
+   "p90": 32.382,
+   "max": 50.652
+  }
+ },
+ "worst": [
+  {
+   "port": "in_data[2556]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[9].u_k.tail_data[252]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 50.652
+  },
+  {
+   "port": "in_data[2555]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[9].u_k.tail_data[251]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 49.962
+  },
+  {
+   "port": "in_data[3069]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[11].u_k.out_data[253]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 49.344
+  },
+  {
+   "port": "in_v[2]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[2].u_k.tail_data[278]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 49.008
+  },
+  {
+   "port": "in_v[3]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[3].u_k.out_data[116]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 48.846
+  },
+  {
+   "port": "in_v[3]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[3].u_k.tail_data[228]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 48.792
+  },
+  {
+   "port": "in_v[11]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[11].u_k.tail_data[266]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 48.684
+  },
+  {
+   "port": "in_v[2]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[2].u_k.out_data[204]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 48.63
+  },
+  {
+   "port": "in_v[1]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[1].u_k.out_data[250]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 48.63
+  },
+  {
+   "port": "in_v[9]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[9].u_k.tail_data[219]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 48.522
+  },
+  {
+   "port": "in_v[1]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[1].u_k.out_v$_DFFE_PN0P_",
+   "endpoint_pin": "D",
+   "distance_um": 48.522
+  },
+  {
+   "port": "in_data[3056]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[11].u_k.out_data[240]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 48.474
+  },
+  {
+   "port": "in_v[11]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[11].u_k.tail_data[215]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 48.414
+  },
+  {
+   "port": "in_v[10]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[10].u_k.tail_data[186]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 48.414
+  },
+  {
+   "port": "in_v[4]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[4].u_k.tail_data[26]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 48.414
+  },
+  {
+   "port": "in_v[12]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[12].u_k.tail_data[238]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 48.306
+  },
+  {
+   "port": "in_v[12]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[12].u_k.tail_data[182]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 48.09
+  },
+  {
+   "port": "in_v[10]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[10].u_k.tail_data[175]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 48.036
+  },
+  {
+   "port": "in_v[6]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[6].u_k.out_data[242]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 48.036
+  },
+  {
+   "port": "in_v[0]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[0].u_k.out_data[69]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 48.036
+  },
+  {
+   "port": "in_v[8]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[8].u_k.out_data[251]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 47.982
+  },
+  {
+   "port": "in_v[4]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[4].u_k.out_data[254]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 47.982
+  },
+  {
+   "port": "in_data[2550]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[9].u_k.tail_data[246]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 47.97
+  },
+  {
+   "port": "in_v[11]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[11].u_k.tail_data[153]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 47.928
+  },
+  {
+   "port": "in_v[6]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[6].u_k.out_data[244]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 47.874
+  },
+  {
+   "port": "in_data[1259]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[4].u_k.out_data[235]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 47.832
+  },
+  {
+   "port": "in_data[3056]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[11].u_k.tail_data[240]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 47.826
+  },
+  {
+   "port": "in_v[14]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[14].u_k.out_data[226]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 47.82
+  },
+  {
+   "port": "in_v[7]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[7].u_k.out_data[222]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 47.82
+  },
+  {
+   "port": "in_v[10]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[10].u_k.tail_data[197]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 47.766
+  },
+  {
+   "port": "in_v[1]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[1].u_k.out_data[214]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 47.766
+  },
+  {
+   "port": "in_data[3069]",
+   "direction": "input",
+   "instance": "u_fcore.pc_pin[11].u_k.tail_data[253]$_DFFE_PP_",
+   "endpoint_pin": "D",
+   "distance_um": 47.724
+  }
+ ],
+ "endpoint_connections": 18352
+}

@@ -1,0 +1,127 @@
+{
+ "schema": "opentallas.wbq_safe_split_candidate.v1",
+ "wrapper_module": "ot_wbq_sw",
+ "wrapper_params": {
+  "HREG": 2,
+  "GIN": 1
+ },
+ "parent_interface_unchanged": true,
+ "physical_inst_suffixes": [
+  ".u_main",
+  ".u_out"
+ ],
+ "source": "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_safe_split.sv",
+ "children": [
+  {
+   "inst": "u_main",
+   "module": "ot_wbq_sw_split_main",
+   "origin_delta_um": [
+    0,
+    0
+   ],
+   "outline_um": [
+    86.4,
+    544.32
+   ],
+   "pins_file": "pins/ot_wbq_sw_split_main__86.4x544.32.json",
+   "recipe_key": "ot_wbq_sw_split_main",
+   "params": {
+    "HREG": 2,
+    "GIN": 1
+   }
+  },
+  {
+   "inst": "u_out",
+   "module": "ot_wbq_sw_split_out",
+   "origin_delta_um": [
+    -51.84,
+    0
+   ],
+   "outline_um": [
+    51.84,
+    544.32
+   ],
+   "pins_file": "pins/ot_wbq_sw_split_out__51.84x544.32.json",
+   "recipe_key": "ot_wbq_sw_split_out",
+   "clock_entry": {
+    "name": "hbm_clk",
+    "layer": "M5",
+    "x": 25.944,
+    "y": 272.16,
+    "w": 0.048,
+    "h": 0.48
+   }
+  }
+ ],
+ "seams": [
+  {
+   "src": "u_main.w_k_v",
+   "dst": "u_out.in_v",
+   "bits": 16
+  },
+  {
+   "src": "u_main.w_k_addr",
+   "dst": "u_out.in_addr",
+   "bits": 480
+  },
+  {
+   "src": "u_main.w_k_wdata",
+   "dst": "u_out.in_data",
+   "bits": 4096
+  },
+  {
+   "src": "u_out.in_ready",
+   "dst": "u_main.w_k_rdy",
+   "bits": 16
+  }
+ ],
+ "external_pins_to_out": [
+  "w_k_v",
+  "w_k_addr",
+  "w_k_wdata",
+  "w_k_rdy"
+ ],
+ "external_pins_to_main": "all others INCLUDING w_k_wr_done; hbm_clk and hbm_rst_n connect both",
+ "pin_cycles": {
+  "g_v/g_d": 1,
+  "group_selection_to_K_output": 1
+ },
+ "status": "GEOMETRY51 PREP ONLY; actual ordinary OUT pin ready/valid shell failed literal stalls; typed_landing owns protocol repair; no new P&R before qualified",
+ "pin_order": "Per PC: valid1 + address30 + data256 + ready1,16x288 bits,0.096um pitch",
+ "physical_face_pass": {
+  "u_main": [
+   "^(w_k_v|w_k_addr|w_k_wdata|w_k_rdy)$"
+  ],
+  "u_out": [
+   "^in_(v|addr|data|ready)$"
+  ]
+ },
+ "face_pass_tool_candidate": "canonical661e57+27d8, released ao and later, strict external faces",
+ "expected_wrapper_flops": {
+  "u_main": 2740,
+  "u_out": 4608,
+  "whole_total": 7348
+ },
+ "reg_guide_boxes": {
+  "u_main": "main_reg_boxes.json",
+  "u_out": "out51_reg_boxes.json"
+ },
+ "face_pass_contracts": {
+  "u_main": "main_face_pass_contract.json",
+  "u_out": "out_face_pass_contract.json"
+ },
+ "native_contract_rule": "Every selected view replica must have exclusive reciprocal hard-child peers in the SAME parent partition; external or mixed bus targets are rejected.",
+ "parent_aqhi_allocation": {
+  "owner": "HBM plan owner",
+  "old_move_um": [
+   -25.92,
+   0
+  ],
+  "candidate_additional_left_um": [
+   4.32,
+   8.64
+  ],
+  "status": "pending exact parent fit check"
+ },
+ "pins_sha256": "75e227cf835160b6c594dd147362f3aea8b7224777731fc3dbd869ae97360c08"
+}
