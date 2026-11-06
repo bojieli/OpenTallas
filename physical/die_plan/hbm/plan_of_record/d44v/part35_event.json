@@ -1,0 +1,170 @@
+{
+ "schema": "opentallas.hbm_p35_clockpin_tx.v1",
+ "clock_pin_changes": [
+  {
+   "file": "ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1__c20g_445.824x506.304__c20i__codex_g21__centry.json.gz",
+   "pin": "hbm_clk",
+   "old": [
+    177.096,
+    224.64
+   ],
+   "new": [
+    177.576,
+    224.64
+   ]
+  },
+  {
+   "file": "ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__canon__codex_g21__centry.json.gz",
+   "pin": "stream_clk",
+   "old": [
+    177.192,
+    224.64
+   ],
+   "new": [
+    177.48,
+    224.64
+   ]
+  },
+  {
+   "file": "ot_hgi_coll_inj_idx_join_rg__211.68x207.36__content_trial__d16f__codex_g21__centry.json.gz",
+   "pin": "clk_r1",
+   "old": [
+    103.8,
+    103.68
+   ],
+   "new": [
+    104.088,
+    103.68
+   ]
+  },
+  {
+   "file": "ot_hgi_coll_tkm_m_tp192__root__chain__c20g_319.68x389.664__c20i__po__codex_g21__centry.json.gz",
+   "pin": "buffer_clk",
+   "old": [
+    159.864,
+    172.8
+   ],
+   "new": [
+    160.344,
+    172.8
+   ]
+  },
+  {
+   "file": "ot_hgi_sfu_split3_lane_core__idpin__master__codex_g21__centry.json",
+   "pin": "map_clk",
+   "old": [
+    194.424,
+    172.8
+   ],
+   "new": [
+    194.904,
+    172.8
+   ]
+  },
+  {
+   "file": "ot_hgi_sfu_split3_lane_core_fr__120.96x345.6__d44v_split.json",
+   "pin": "sfu_clk",
+   "old": [
+    60.6,
+    172.8
+   ],
+   "new": [
+    60.888,
+    172.8
+   ]
+  },
+  {
+   "file": "ot_hgi_sfu_split3_lane_core_fr__120.96x345.6__d44v_split__vi24.json",
+   "pin": "sfu_clk",
+   "old": [
+    60.6,
+    172.8
+   ],
+   "new": [
+    60.888,
+    172.8
+   ]
+  },
+  {
+   "file": "ot_hgi_sm_xload_cl2_ctlx__388.8x388.8__canon__c20g_391.392x416.448__centry.json.gz",
+   "pin": "clk_cal",
+   "old": [
+    194.52,
+    194.4
+   ],
+   "new": [
+    194.808,
+    194.4
+   ]
+  },
+  {
+   "file": "ot_pdie_serdes_rx__302.4x345.6__d44v_split.json",
+   "pin": "rck_clk",
+   "old": [
+    147.0,
+    263.52
+   ],
+   "new": [
+    147.48,
+    263.52
+   ]
+  },
+  {
+   "file": "ot_svgr_bk__259.2x207.36__d44v_split.json",
+   "pin": "stream_clk",
+   "old": [
+    21.72,
+    103.68
+   ],
+   "new": [
+    22.008,
+    103.68
+   ]
+  },
+  {
+   "file": "ot_wbq_root__432x129.6__d44v_split.json",
+   "pin": "hbm_clk",
+   "old": [
+    216.12,
+    64.8
+   ],
+   "new": [
+    216.216,
+    64.8
+   ]
+  },
+  {
+   "file": "ot_wbq_sw__86.4x544.32__d44v_split.json.gz",
+   "pin": "stream_clk",
+   "old": [
+    43.32,
+    272.16
+   ],
+   "new": [
+    43.608,
+    272.16
+   ]
+  }
+ ],
+ "tx": {
+  "old_outline": [
+   285.12,
+   155.52
+  ],
+  "new_outline": [
+   285.12,
+   207.36
+  ],
+  "parents": [
+   "NW_io",
+   "q_spb0",
+   "vsN0",
+   "NE_io",
+   "q_spb0__physical_v1"
+  ],
+  "pin_cycles": 0,
+  "reason": "measured horizontal track shortage, 2200 tracks in txh0",
+  "neighbor_overlap_checks": "PASS"
+ },
+ "pin_cycles": 0
+}
