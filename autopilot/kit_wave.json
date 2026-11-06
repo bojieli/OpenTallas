@@ -1597,7 +1597,9 @@
     "ot_s81sl_leaf__t40__clf8bbdae1@4",
     "slice_station__t24__cl64811a5d@5",
     "svc_hi_dsdv_svc_rs__t1@4",
-    "svc_lo_dsdv_svc_rs__t1@3"
+    "svc_lo_dsdv_svc_rs__t1@3",
+    "iqf__t1@5",
+    "slice_station__t6__cl54a9ceeb@9"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -2316,7 +2318,9 @@
     "ot_s81sl_leaf__t40__clf8bbdae1@4": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6",
     "slice_station__t24__cl64811a5d@5": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6",
     "svc_hi_dsdv_svc_rs__t1@4": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6",
-    "svc_lo_dsdv_svc_rs__t1@3": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6"
+    "svc_lo_dsdv_svc_rs__t1@3": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6",
+    "iqf__t1@5": "CODEX S81 class recovery: existing I39 ft_ring_max_ps166.6 is in currentplan; old failed falllanding SDC used699.72ps beforefix. No newconstraintchange/cycles. Older alternativeblock qRUNNING cache stale: actualAP jobs83490/4e2e CANCELLED Nov4.",
+    "slice_station__t6__cl54a9ceeb@9": "CODEX S81 class recovery: existing I39 ft_ring_max_ps166.6 is in currentplan; old failed falllanding SDC used699.72ps beforefix. No newconstraintchange/cycles. Older alternativeblock qRUNNING cache stale: actualAP jobs83490/4e2e CANCELLED Nov4."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
