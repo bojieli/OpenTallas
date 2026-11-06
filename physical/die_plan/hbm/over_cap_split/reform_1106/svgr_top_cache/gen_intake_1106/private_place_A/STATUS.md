@@ -23,3 +23,14 @@ Nearest generated M5 PG shape/via envelope to the stream_clk pin edge is 1.956 u
 Actual global-placement checkpoint (3_3_place_gp.odb): 144222 FUNCTIONAL,16788 TAP,9 SRAM; all functional cells placed. Functional area18069.78132um², nonmacro-core util.12888528, post-halo-row util.14170550. Global placer reported divergence and reverted to iter2052/overflow.194; routability target not reached (best weighted congestion1.4267). No closure claim. Opened global_place_actual.png: dense lower-half controller/port network around programme_lo and cache2/desc_hi, particularly x130..295,y60..310; upper programme region mostly sparse apart from cache4 path and face rows. This is intermediate global placement, not final legalization.
 
 Global checkpoint has65270 null PG ITerms on32635 newly created stdcells; macro PG is bound, and actual clock PG clearance remains1.956um. Final-place binding/census remain pending. The full runtime witness retains all open term names; committed summary records count and sample. Do not interpret the earlier floorplan connectivity pass as post-resize PG continuity.
+
+
+## Final PLACE and Claude handback
+
+A unit `oth-ubuntu-98574-1793981206` completed exit 0. Final `3_place.odb` measured: 144610 FUNCTIONAL, 16788 TAP, 9 SRAM, 0 unplaced functional. Functional area 18162.72882 um². Nonmacro-core utilization .12954824; post-4.32um-halo row utilization .14243440. Both <=150000 / <=.45 size gates PASS. Actual `final_place_actual.png` opened and reviewed: lower-half concentration and over-programme M5 clock point remain as in global snapshot. DPL reports no placement violations; average displacement .2um, max1.6um. No CTS executed.
+
+Material remaining PG gap: final ODB has 66046 null PG ITerms on 33023 standard-cell instances; no macro PG gap. This is the actual saved final PLACE state, not merely the earlier intermediate snapshot. Do not equate the earlier floorplan all-shapes-connected pass with final resized-cell PG binding. Resolve and capture supply binding before further qualification; active fixture was not edited. M5 clock zero PG overlap and conservative nearest PG/via-envelope distance1.956um persist.
+
+Global placement reported divergence/revert and could not meet routability target (best weighted congestion1.4267). No timing/routing closure claim. Original compiler container03fdcaeb8d08 remains healthy active, admitted64GiB after sole-owner wave resize, no verdict at handback, no restart/pause. Original unit oth-ubuntu-818343-1793973397 and source/proof inputs retained. B actual kit remains frozen/unlaunched on cross-kit proof-transfer capability gap. No new jobs or CTS on Claude handback.
+
+Source-only optional factory c723ac4ead99e17a91e603a4369dc4aa663a546c is published via main22271e4968e2f3416b33902a1430ca9fce2ff17f; no canonical recipe/POR activation. Evidence branch codex/hbm-svgr-top-1106 retains actual A/B kits and reviews.
