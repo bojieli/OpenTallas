@@ -1275786,7 +1275786,38 @@
      528.786,
      634.491
     ]
-   }
+   },
+   "internal_stations": [
+    {
+     "conn": "bus:i_host_hbm_rst_n",
+     "from_um": [
+      431.976,
+      1520.64
+     ],
+     "to_um": [
+      306.72,
+      515.064
+     ],
+     "regs_um": [
+      [
+       432.0,
+       1200.15
+      ],
+      [
+       432.0,
+       880.2
+      ],
+      [
+       432.0,
+       560.25
+      ]
+     ],
+     "bits": 1,
+     "launch": "face flop",
+     "capture": "PHY rst_n pin",
+     "note": "CODEX KV PHY reset reach: 3 synchronous stations, +3 boot cycles, max320.49um hop, no clock/SDC change"
+    }
+   ]
   },
   "kv3_phy_v1": {
    "module": "kv3_phy_v1_part",
@@ -2463231,8 +2463262,8 @@
     "L668_6",
     "L668_7"
    ],
-   "note": "tap_tree host.hbm_rst_n | v3.9f fwd_reach +4 internal forward stations at <= 405 um",
-   "fixed_cycles": 4
+   "note": "tap_tree host.hbm_rst_n | v3.9f fwd_reach +4 internal forward stations at <= 405 um | KV PHY reset internal reach stations +3 boot cycles (CODEX 11-05)",
+   "fixed_cycles": 7
   },
   {
    "id": "L669",
@@ -2463318,8 +2463349,8 @@
     "L678_6",
     "L678_7"
    ],
-   "note": "tap_tree host.hbm_rst_n | v3.9f fwd_reach +4 internal forward stations at <= 405 um",
-   "fixed_cycles": 4
+   "note": "tap_tree host.hbm_rst_n | v3.9f fwd_reach +4 internal forward stations at <= 405 um | KV PHY reset internal reach stations +3 boot cycles (CODEX 11-05)",
+   "fixed_cycles": 7
   },
   {
    "id": "L679",
@@ -2463414,8 +2463445,8 @@
     "L689_6",
     "L689_7"
    ],
-   "note": "tap_tree host.hbm_rst_n | v3.9f fwd_reach +4 internal forward stations at <= 405 um",
-   "fixed_cycles": 4
+   "note": "tap_tree host.hbm_rst_n | v3.9f fwd_reach +4 internal forward stations at <= 405 um | KV PHY reset internal reach stations +3 boot cycles (CODEX 11-05)",
+   "fixed_cycles": 7
   },
   {
    "id": "L690",
@@ -2463501,8 +2463532,8 @@
     "L699_6",
     "L699_7"
    ],
-   "note": "tap_tree host.hbm_rst_n | v3.9f fwd_reach +4 internal forward stations at <= 405 um",
-   "fixed_cycles": 4
+   "note": "tap_tree host.hbm_rst_n | v3.9f fwd_reach +4 internal forward stations at <= 405 um | KV PHY reset internal reach stations +3 boot cycles (CODEX 11-05)",
+   "fixed_cycles": 7
   },
   {
    "id": "L700",
@@ -2620533,13 +2620564,13 @@
     "param": "LAT_L667"
    },
    "L668": {
-    "cycles": 50,
+    "cycles": 53,
     "stations": 28,
     "boundary": 2,
     "faces": 8,
-    "fixed": 4,
+    "fixed": 7,
     "clock_landing": 16,
-    "natural": 50,
+    "natural": 53,
     "pad": 0,
     "param": "LAT_L668"
    },
@@ -2620643,13 +2620674,13 @@
     "param": "LAT_L677"
    },
    "L678": {
-    "cycles": 50,
+    "cycles": 53,
     "stations": 28,
     "boundary": 2,
     "faces": 8,
-    "fixed": 4,
+    "fixed": 7,
     "clock_landing": 16,
-    "natural": 50,
+    "natural": 53,
     "pad": 0,
     "param": "LAT_L678"
    },
@@ -2620764,13 +2620795,13 @@
     "param": "LAT_L688"
    },
    "L689": {
-    "cycles": 50,
+    "cycles": 53,
     "stations": 28,
     "boundary": 2,
     "faces": 8,
-    "fixed": 4,
+    "fixed": 7,
     "clock_landing": 16,
-    "natural": 50,
+    "natural": 53,
     "pad": 0,
     "param": "LAT_L689"
    },
@@ -2620874,13 +2620905,13 @@
     "param": "LAT_L698"
    },
    "L699": {
-    "cycles": 50,
+    "cycles": 53,
     "stations": 28,
     "boundary": 2,
     "faces": 8,
-    "fixed": 4,
+    "fixed": 7,
     "clock_landing": 16,
-    "natural": 50,
+    "natural": 53,
     "pad": 0,
     "param": "LAT_L699"
    },
