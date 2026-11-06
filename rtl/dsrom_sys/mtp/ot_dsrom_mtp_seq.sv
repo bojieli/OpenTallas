@@ -440,8 +440,8 @@ module ot_dsrom_mtp_seq_fan #(
     parameter integer G      = 5,       // gamma (DSpark block 5)
     parameter integer SRC_ID = 0,       // header SRC of the DRAFT flit
     parameter integer TOK_DEST = 0,    // header DEST of the DRAFT flit (S0)
-    // DIE-HEAD-71 11-05 (hd_ctl LEC, 0 cycles): opt-in, default 0 = unchanged.  1: the event flit ef, the event position
-    // ep_ and the token queue tq are cleared by the control reset (rst_c) like st / tq_n.  Each is read only after the
+    // DIE-HEAD-71 11-05 (hd_ctl LEC, 0 cycles): opt-in, default 0 = unchanged.  1: the event flit ef (the event
+    // position is read as its HDR_POS slice) and the token queue tq are cleared by the control reset (rst_c) like st / tq_n.  Each is read only after the
     // event / push that loads it (ef / ep_ from S_SEL of a result event, tq[i] while tq_n counts it), so flits, faults
     // and timing are identical; bits that only ever load a structural constant hold it from reset instead of X.
     parameter integer DATA_RST = 0
@@ -555,6 +555,11 @@ module ot_dsrom_mtp_seq_fan #(
     reg [UB-1:0] ei;
     reg [FLIT-1:0] ef;                                // the RESULT flit of a result event
     reg [NW-1:0] ep_, et_;                            // event position / token (or dh token)
+    // DATA_RST != 0: the event position read everywhere (ep_e) is the ef slice ep_ was loaded from (ep_ takes
+    // r_data[HDR_POS +: NW] in the same S_SEL step that loads ef <= r_data, and both clear in reset): the same value
+    // every cycle, and ep_ is left unread, so synthesis has no ef / ep_ twin to merge (a gold-only RTL twin for the
+    // register-mapped LEC).  0: ep_e = ep_ as before.
+    wire [NW-1:0] ep_e = (DATA_RST != 0) ? ef[HDR_POS +: NW] : ep_;
     reg [2:0]  ej;
     // the selected user's record (RD)
     reg [1:0]  r_ph; reg r_pf, r_fin, r_rw, r_dr; reg [NW-1:0] r_b, r_lc, r_y; reg [2:0] r_g, r_j, r_sqn, r_sqs;
@@ -644,7 +649,7 @@ module ot_dsrom_mtp_seq_fan #(
             if (x_i[2:0] == s2[2:0]) dsel = r_d[s2 * NW +: NW];
 `endif
     end
-    wire [HW-1:0] e_h   = {ep_, et_, ef[HDR_VAL +: 32]};
+    wire [HW-1:0] e_h   = {ep_e, et_, ef[HDR_VAL +: 32]};
     wire e_run   = ek == E_RES && r_ph == P_RUN;
     wire e_sq    = ek == E_RES && r_ph != P_RUN;                       // squashed (held)
     wire e_fwd0  = e_run && (r_fin || (x_lo && r_pf));                 // prompt result / finished user
@@ -735,7 +740,7 @@ module ot_dsrom_mtp_seq_fan #(
         if (!rst_c) begin
             st <= S_SEL; tq_r <= 0; tq_w <= 0; tq_n <= 0; sq_v <= 1'b0; hq_v <= 1'b0; fault <= 1'b0;
             hdr_ds_v <= 1'b0; hdr_ds <= 16'd0;
-            if (DATA_RST != 0) begin ef <= {FLIT{1'b0}}; ep_ <= {NW{1'b0}}; end
+            if (DATA_RST != 0) ef <= {FLIT{1'b0}};
         end else begin
             if (e_pop) tq_r <= tq_r + 1'b1;
             if (e_push) tq_w <= tq_w + 1'b1;
@@ -751,7 +756,8 @@ module ot_dsrom_mtp_seq_fan #(
                     ek <= E_ROW; eu <= w_user; st <= S_RD0;
                 end else if (sel_r) begin
                     ek <= (r_user < MAXU) ? E_RES : E_PASS; eu <= r_user; ef <= r_data;
-                    ep_ <= r_data[HDR_POS +: NW]; et_ <= r_data[HDR_IDX +: NW]; st <= S_RD0;
+                    if (DATA_RST == 0) ep_ <= r_data[HDR_POS +: NW];
+                    et_ <= r_data[HDR_IDX +: NW]; st <= S_RD0;
                     if (r_data[HDR_TYPE +: 4] != MT_RESULT) fault <= 1'b1;
                 end else if (sel_l) begin
                     ek <= E_REL; eu <= USER_W'(rel_i); st <= S_RD0;
@@ -771,12 +777,12 @@ module ot_dsrom_mtp_seq_fan #(
                 st <= S_PRE;
             end
             S_PRE: begin
-                x_i    <= ep_ - r_b;
-                x_lo   <= ep_ < r_b;
-                x_b1   <= ep_ + 1'b1;
-                x_rem  <= steps_q - 1'b1 - (ep_ + 1'b1);                  // steps - 1 - b'
-                x_fin1 <= (ep_ + 1'b1) >= steps_q;
-                x_nrow <= ep_ + 1'b1 - r_lc;
+                x_i    <= ep_e - r_b;
+                x_lo   <= ep_e < r_b;
+                x_b1   <= ep_e + 1'b1;
+                x_rem  <= steps_q - 1'b1 - (ep_e + 1'b1);                  // steps - 1 - b'
+                x_fin1 <= (ep_e + 1'b1) >= steps_q;
+                x_nrow <= ep_e + 1'b1 - r_lc;
                 x_hwa  <= HQA'(ei * HD + ((r_hr + r_hn[HB-1:0]) % HD));
                 for (i = 0; i < MAXU * HD; i = i + 1) x_hrs[i] <= x_u[i / HD] && r_hr == HB'(i % HD);
                 st <= S_EX;
@@ -796,12 +802,12 @@ module ot_dsrom_mtp_seq_fan #(
                     if (a_dsne || a_cmp) fault <= 1'b1;
                 end
                 if (a_close) begin
-                    acc_v <= 1'b1; acc_u <= eu; acc_a <= x_i[2:0]; acc_c <= ep_; acc_y <= et_;
+                    acc_v <= 1'b1; acc_u <= eu; acc_a <= x_i[2:0]; acc_c <= ep_e; acc_y <= et_;
                     if (!hdr_ds_v) begin hdr_ds <= ef[HDR_DEST +: 16]; hdr_ds_v <= 1'b1; end
                     else if (a_dsne) fault <= 1'b1;
                     if (a_cmp) fault <= 1'b1;
                     if (a_gn != 0) begin
-                        sq_v <= 1'b1; sq_d <= {eu, ep_, x_nrow, et_, a_nep};
+                        sq_v <= 1'b1; sq_d <= {eu, ep_e, x_nrow, et_, a_nep};
                     end
                 end
                 if (a_isrow) begin

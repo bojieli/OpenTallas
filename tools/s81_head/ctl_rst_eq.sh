@@ -1,7 +1,7 @@
 #!/bin/bash
 # DIE-HEAD-71 11-05 ctlrq: new RTL at the default params (opt-in reset forms off) == old (branch HEAD) RTL,
 # register-matched sequential equivalence (equiv_make / equiv_simple -seq 2 / equiv_induct / equiv_status -assert).
-# usage (repo root): tools/s81_head/ctl_rst_eq.sh OLD_REF OUTDIR   e.g. OLD_REF = the commit before the ctlrq change.
+# usage (repo root): [ON_REF=<ref>] tools/s81_head/ctl_rst_eq.sh OLD_REF OUTDIR   OLD_REF = the commit before the ctlrq change.
 # Scope: each changed module with its opt-in at 0 (beat_tx HOLD_RST at 7 W/N/P/IDLE_ZERO/MUT/HOLD_REAL points,
 # host276_tx, lrx_qr Q_RST=0 vs lrx, ot_dsrom_mtp_seq_fan, dsfd_mtp_seq_fan, whole ot_s81hd_ctl_core DATA_RST=0).
 # The SRAM macro is a port-only blackbox on both sides.  The opt-in = 1 forms are covered by the benches + kit LEC.
@@ -43,4 +43,12 @@ eq lrx ot_dsrom_mtp_lrx ot_dsrom_mtp_lrx_qr "chparam -set W 512 ot_dsrom_mtp_lrx
 eq seqcore ot_dsrom_mtp_seq_fan ot_dsrom_mtp_seq_fan "" "chparam -set DATA_RST 0 ot_dsrom_mtp_seq_fan"
 eq seqtop dsfd_mtp_seq_fan dsfd_mtp_seq_fan "" "chparam -set DATA_RST 0 dsfd_mtp_seq_fan"
 TO=${TO_BIG:-5400} eq ctl_core ot_s81hd_ctl_core ot_s81hd_ctl_core "" "chparam -set DATA_RST 0 ot_s81hd_ctl_core"
+# ON_REF (optional): ot_dsrom_mtp_seq_fan with DATA_RST = 1 here == at ON_REF (the opt-in form itself across a change;
+# 11-05 step 2: the event position read as the ef slice instead of its ep_ twin, vs 384d2dbed72)
+if [ -n "${ON_REF:-}" ]; then
+  git -C $S show $ON_REF:rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv > $OL/seq_on_ref.sv || exit 2
+  SAVE="$OLDF"; OLDF="$OL/seq_on_ref.sv"; NEWF0="$NEWF"; NEWF="$M/ot_dsrom_mtp_seq.sv"
+  eq seqcore_on ot_dsrom_mtp_seq_fan ot_dsrom_mtp_seq_fan "chparam -set DATA_RST 1 ot_dsrom_mtp_seq_fan" "chparam -set DATA_RST 1 ot_dsrom_mtp_seq_fan"
+  OLDF="$SAVE"; NEWF="$NEWF0"
+fi
 echo "EQRST rc=$rc $(date)"; exit $rc
