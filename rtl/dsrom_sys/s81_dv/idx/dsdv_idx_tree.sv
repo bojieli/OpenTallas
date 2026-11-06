@@ -85,7 +85,9 @@ endmodule
 // ===================================================================================================================
 module dsdv_idx_txm #(
     parameter integer D = 8192,
-    parameter bit SRAM_MACRO = 0
+    parameter bit SRAM_MACRO = 0,
+    // S81-IDX-B 11-05: MLK = 1 negative-edge lockup flop on every macro input (0 cycles), as dsdv_idx_txm_n32; 2 = mutant
+    parameter integer MLK = 0
 ) (
     input  wire                 ck,
     input  wire                 re,
@@ -104,9 +106,23 @@ module dsdv_idx_txm #(
         reg  [(AW > 10 ? AW-11 : 0):0] bs;
         genvar b;
         for (b = 0; b < NB; b = b + 1) begin : g_b
+            wire mi_re = re && (NB == 1 || (ra >> 10) == b); // selrange-ok: ra[AW-1:10] is unnecessary at NB=1/D=1024 because constant true NB==1 masks the comparison; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
+            wire mi_we = we && (NB == 1 || (wa >> 10) == b); // selrange-ok: wa[AW-1:10] is unnecessary at NB=1/D=1024 because constant true NB==1 masks the comparison; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
+            wire mk_re, mk_we; wire [9:0] mk_ra, mk_wa; wire [255:0] mk_wd, mk_wm;
+            if (MLK == 1) begin : g_mlk
+                reg l_re, l_we; reg [9:0] l_ra, l_wa; reg [255:0] l_wd, l_wm;
+                always @(negedge ck) begin l_re <= mi_re; l_ra <= ra[9:0]; l_we <= mi_we; l_wa <= wa[9:0]; l_wd <= wd; l_wm <= wm; end
+                assign mk_re = l_re; assign mk_ra = l_ra; assign mk_we = l_we; assign mk_wa = l_wa; assign mk_wd = l_wd; assign mk_wm = l_wm;
+            end else if (MLK == 2) begin : g_mlkm  // bench mutant: rising-edge stage (+1 edge on the macro inputs)
+                reg l_re, l_we; reg [9:0] l_ra, l_wa; reg [255:0] l_wd, l_wm;
+                always @(posedge ck) begin l_re <= mi_re; l_ra <= ra[9:0]; l_we <= mi_we; l_wa <= wa[9:0]; l_wd <= wd; l_wm <= wm; end
+                assign mk_re = l_re; assign mk_ra = l_ra; assign mk_we = l_we; assign mk_wa = l_wa; assign mk_wd = l_wd; assign mk_wm = l_wm;
+            end else begin : g_mlk0
+                assign mk_re = mi_re; assign mk_ra = ra[9:0]; assign mk_we = mi_we; assign mk_wa = wa[9:0]; assign mk_wd = wd; assign mk_wm = wm;
+            end
             ot_sram_1r1w_1024x256_m2_r2c2 u_mem (
-                .clk(ck), .r_ce_in(re && (NB == 1 || (ra >> 10) == b)), .r_addr_in(ra[9:0]), .rd_out(q[b]), // selrange-ok: ra[AW-1:10] is unnecessary at NB=1/D=1024 because constant true NB==1 masks the comparison; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
-                .w_ce_in(we && (NB == 1 || (wa >> 10) == b)), .w_addr_in(wa[9:0]), .wd_in(wd), .w_mask_in(wm), // selrange-ok: wa[AW-1:10] is unnecessary at NB=1/D=1024 because constant true NB==1 masks the comparison; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
+                .clk(ck), .r_ce_in(mk_re), .r_addr_in(mk_ra), .rd_out(q[b]),
+                .w_ce_in(mk_we), .w_addr_in(mk_wa), .wd_in(mk_wd), .w_mask_in(mk_wm),
                 .rr_en(2'b0), .rr_addr(18'b0), .cr_en(2'b0), .cr_sel(16'b0));
         end
         // bank select: one-hot AND-OR (no runtime-indexed part-select)
