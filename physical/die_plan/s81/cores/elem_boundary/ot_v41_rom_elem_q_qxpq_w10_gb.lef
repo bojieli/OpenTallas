@@ -8,7 +8,7 @@ END UNITS
 MACRO ot_v41_rom_elem_q_qxpq_w10_gb
   FOREIGN ot_v41_rom_elem_q_qxpq_w10 0 0 ;
   CLASS BLOCK ;
-  SIZE 510.84 BY 221.4 ;
+  SIZE 536.76 BY 221.4 ;
   PIN bank_free
     DIRECTION OUTPUT ;
     USE SIGNAL ;
@@ -9462,6 +9462,21 @@ MACRO ot_v41_rom_elem_q_qxpq_w10_gb
     END
   END VDD
   OBS
+    # ROMQ-SLOT-1105: new east strip blocked M1-M7 until the rebuilt abstract lands
+    LAYER M1 ;
+     RECT  510.84 0 536.76 221.4 ;
+    LAYER M2 ;
+     RECT  510.84 0 536.76 221.4 ;
+    LAYER M3 ;
+     RECT  510.84 0 536.76 221.4 ;
+    LAYER M4 ;
+     RECT  510.84 0 536.76 221.4 ;
+    LAYER M5 ;
+     RECT  510.84 0 536.76 221.4 ;
+    LAYER M6 ;
+     RECT  510.84 0 536.76 221.4 ;
+    LAYER M7 ;
+     RECT  510.84 0 536.76 221.4 ;
     LAYER RVTN ;
      RECT  0 0.27 510.84 0.405 ;
      RECT  0 0.675 510.84 0.945 ;
