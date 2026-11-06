@@ -6,3 +6,4 @@ eq.sh TAG MUT_FP (orfs container, /fv = this dir, /wt = repo): gold = original +
  compared with later lanes): 1 unproven = caught.
 tb_fp.sv: iverilog -g2012 lock-step bench, random stimulus with dense duplicate sources, reset every ~48 cycles,
  200k cycles: tb0.out 0 mismatches (4092 fault rises); tb1.out (mutant) 8 mismatches = caught.
+eq_default_unchanged.sh: no define, ot_hfd_coll_q3_edge_arg at 6edc0ba242 (gold) vs this branch (gate, generate prefix g_base. stripped): 10969/10969 proven.
