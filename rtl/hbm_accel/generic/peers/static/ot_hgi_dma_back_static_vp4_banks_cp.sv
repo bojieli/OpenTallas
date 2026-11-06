@@ -32,8 +32,8 @@
 module ot_hgi_dma_back_static_vp4_banks_rs #(
     parameter [35:0] STACK_BYTES=36'd22500000000,
     parameter integer MUT=0,
-    parameter integer LOCAL_CTRL=0, // same-edge local predicate cohorts (soft controller only)
-    parameter integer RR_RT=7
+    parameter integer RR_RT=7,
+    parameter integer LOCAL_CTRL=0 // same-edge local predicate cohorts (soft controller only)
 )(
     input wire clk,
     input wire rst_ctl_n,
@@ -95,8 +95,8 @@ module ot_hgi_dma_back_static_vp4_banks_cp #(
     // HBM-BANKLAT-DMA 10-19: VM read round trip at the controller pins (rq launch -> rr launch, edges, all 8 banks;
     // the die pads the short rq lanes). Default 7 = closed behaviour; d4g budget 80. Under OT_DBK_HARD the controller
     // is the hard view kitted with this value (its PARAMS), so the parent takes no override there.
-    parameter integer LOCAL_CTRL=0, // same-edge local predicate cohorts (soft controller only)
-    parameter integer RR_RT=7
+    parameter integer RR_RT=7,
+    parameter integer LOCAL_CTRL=0 // same-edge local predicate cohorts (soft controller only)
 )(
     input wire clk,rst_n,
     input wire clk_cp,              // collar leaf clock pin (related, same die clock as clk)

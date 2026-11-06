@@ -8,8 +8,8 @@
 module ot_hgi_dma_back_static_vp4_banks #(
     parameter [35:0] STACK_BYTES=36'd22500000000,
     parameter integer MUT=0, // 1 wrong destination sector; 2 premature source retire; 3 strap ignored (bench only)
-    parameter integer LOCAL_CTRL=0, // opt-in same-edge command predicate copies; no added cycle
-    parameter integer RR_RT=7 // VM read round trip at the controller pins (see the controller header)
+    parameter integer RR_RT=7, // VM read round trip at the controller pins (see the controller header)
+    parameter integer LOCAL_CTRL=0 // opt-in same-edge command predicate copies; no added cycle
 )(
     input wire clk,rst_n,
     // stack identity strap (H-HARDEN 2026-10-15, DEDUPE: ONE controller/cluster master for all four stacks; replaces
@@ -99,8 +99,8 @@ module ot_hgi_dma_back_static_vp4_controller #(
     // far after issue_rel: tools/hbm_die_v16/d4g_bank_latency.py dma_min_drain_lag). Default 7 = today's closed
     // behaviour (ot_vms_bank_static wired directly: samples rq one edge after launch, registered answer n+6).
     // d4g budget: 80 (GEN2c lanes 33..58, worst-case landing E 72; GEN2d headroom), see lanes/HBM-BANKLAT-DMA.md.
-    parameter integer LOCAL_CTRL=0, // opt-in same-edge command predicate copies; no added cycle
-    parameter integer RR_RT=7
+    parameter integer RR_RT=7,
+    parameter integer LOCAL_CTRL=0 // opt-in same-edge command predicate copies; no added cycle
 )(
     input wire clk,rst_n,
     input wire [1:0] stk,   // stack identity strap: die constant per instance (stack = HBM queue id)
