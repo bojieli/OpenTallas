@@ -12,7 +12,8 @@ if a.output.exists():raise SystemExit('Output must be new; preserve previous pro
 receipt=json.loads(a.receipt.read_text());assert receipt['D']==4 and receipt['K']==2
 shared=['rtl/common/landed_parent/ot_pl_land.sv','rtl/common/landed_parent/ot_pl_land_reset_forest.sv','rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv','physical/die_plan/s81/bind/source_modules/portfix178/ot_s81_mu72_lnland.sv']
 sha=lambda b:hashlib.sha256(b).hexdigest()
-prepared=[];readset=[];count=0
+top_path=a.source_root/'s81_bound_top.sv';top_bytes=top_path.read_bytes();top=top_bytes.decode()
+prepared=[];readset=[dict(source=str(top_path),sha256=sha(top_bytes),role='actual station-to-type binding')];count=0
 for row in receipt['rows']:
  checked={}
  for original,digest in row['source_sha256'].items():
@@ -20,6 +21,9 @@ for row in receipt['rows']:
   assert sha(b)==digest,('receipt source changed',src)
   checked[original]=(src,b);readset.append(dict(source=str(src),receipt_path=original,sha256=digest))
  lp=[(p,b) for p,b in checked.values() if '_LP__' in p.name];assert len(lp)==1
+ for face in ['C','LP']:
+  matched=re.search(r'\b(\w+)\s+(?:#\([^\n]*\)\s+)?'+re.escape(row['station']+'_'+face)+r'\s*\(',top)
+  assert matched and any(p.name==matched[1]+'.sv' for p,b in checked.values()),('station type changed',row['station'],face)
  src,b=lp[0];s=b.decode();params=[]
  for lane in row['lanes']:
   wr,rd=lane['writer_reset_edge'],lane['reader_reset_edge']
