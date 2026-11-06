@@ -3223,3 +3223,8 @@ CODEX: 2026-11-06 00:32 PST HBM q3 VM:7dfa31a52d4 source-event candidate pushed;
 CODEX: 2026-11-06 00:33 PST MERGE: corrected sealed-parameter IDXactivation ad041 landedf6e16e0def2, S81tagab verified; actual childSIGNED pack+M6PG reservation, parentK8trial notyetqualified. ForgottenRXREADY source/proofs verified, HBMgeometryadoptionpending.
 
 CODEX: 2026-11-06 00:38 PST MERGE: recovered RX exact safe-form source/recipe and reviewed SRAM homes landed721d9fc1a9b, HBMtagaj verified; prior macro events preserved. Existing jobs continue, no physical/G5 claim.
+CODEX: 2026-11-06 00:42 PST S81 IDX column-A child SIGNED TT+4.48 FF+0.13 DRV/DRC0, routed5385EQ and v-s81 re-sign; published actual view. Parent guarded hardchild/PGM6 activation ad041 merged; olddeadmetadata760359 READY, K9 trial running intel2 unit3850104. See lanes/CODEX-S81-CORES.md.
+
+CODEX: DS native833 actualclockPASS, earlyLAND_FAULT diagnosed to6edgewriter/reader resetorigin skew. Scoped default0 reader EPOCH_BIAS+12/12smallestdata/reference/mutant proof READY f217e57fd20, no boundadoption; TOK-DS-5 notes. IMG2 exactsource2/5restoredcomponentsPASS, serialrecoveryactive epyc2.
+
+CODEX: 2026-11-06 00:53 PST MERGE: urgent multi-letter flow parser +dormant QC split support +exact Q2NF +IDXmetadata landed7ddbd3b72f0,tagsab/z/x/ac/ak verified. CurrentQC POR unchanged; fresh re-sign clients need parser refresh.
