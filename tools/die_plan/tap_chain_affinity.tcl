@@ -18,6 +18,11 @@ namespace eval ::ot_tap_chain {
   if {[regexp {^(.*(?:u_d[0-9]+_|u_lpad_|u_r8b_strap_|u_pd[0-9]+_).+[/.])q\$_DFF_P} $name -> prefix]} {
    return [list ${prefix}r terminal scalar]
   }
+  # Exact no-reset CROM read/table-write relay pairs from vm8q_rp1.
+  # Each bit is a separate two-register group, never a whole vector.
+  if {[regexp {^(.*u_suvm_u_vm8q_u_)(crh|crl|twl|twh)([12])[/.]q\[([0-9]+)\]\$_DFF_P_} $name -> prefix pair stage bit]} {
+   return [list ${prefix}${pair} $stage $bit]
+  }
   return {}
  }
  proc direct {net} {
@@ -119,11 +124,22 @@ namespace eval ::ot_tap_chain {
    dict lappend groups "[lindex $source 0]:$prefix:$bit" [list $stage $it $x $y]
   }
   foreach key [lsort [dict keys $groups]] {
-   set rows [lsort -integer -index 0 [dict get $groups $key]];set segment {};set prev -2
+   set rows [lsort -integer -index 0 [dict get $groups $key]]
+   # Preserve every already coherent consecutive clock run indivisibly.
+   # A bounded join may remove old boundaries, never create a new one.
+   set runs {};set run {};set prev -2;set lastnet {}
    foreach row $rows {
-    set stage [lindex $row 0];set trial [concat $segment [list $row]]
+    set stage [lindex $row 0];set net [[lindex $row 1] getNet]
+    if {[llength $run] && ($stage!=$prev+1 || $net ne $lastnet)} {lappend runs $run;set run {}}
+    lappend run $row;set prev $stage;set lastnet $net
+   }
+   if {[llength $run]} {lappend runs $run}
+   set segment {};set prev -2
+   foreach run $runs {
+    set stage [lindex [lindex $run 0] 0];set trial [concat $segment $run]
     if {[llength $segment] && ($stage!=$prev+1 || [llength $trial]>$limit || [target $trial] eq {})} {join $segment;set segment {}}
-    lappend segment $row;set prev $stage
+    if {[llength $run]>$limit} {set prev [lindex [lindex $run end] 0];continue}
+    set segment [concat $segment $run];set prev [lindex [lindex $run end] 0]
    }
    join $segment
   }
