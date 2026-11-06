@@ -43,6 +43,7 @@ if {[info exists ::env(OT_EDGE_SPLIT_PORTS)] && !([info exists ::env(OT_EDGE_SPL
   # repeater chain port -> group root (one L path per group): CTS skips one-sink nets, so the port's own tree only spans the
   # chain heads beside the pin.  Without it the CTS H-tree over the whole type cost ~400 ps at 30 ps a level (coll_s probe).
   set es_seg [expr {([info exists ::env(OT_EDGE_SPLIT_SEG_UM)] ? $::env(OT_EDGE_SPLIT_SEG_UM) : 200) * $es_dbu}]
+  set es_mpin [expr {[info exists ::env(OT_EDGE_SPLIT_MACRO_PIN)] && $::env(OT_EDGE_SPLIT_MACRO_PIN) eq "1"}]
   set es_blocks {}
   foreach i [$es_blk getInsts] {
     if {[$i isBlock]} { set bb [$i getBBox]; lappend es_blocks [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]] }
@@ -88,7 +89,13 @@ if {[info exists ::env(OT_EDGE_SPLIT_PORTS)] && !([info exists ::env(OT_EDGE_SPL
       if {![$it isInputSignal]} continue
       set inst [$it getInst]
       lassign [$inst getLocation] x y
-      if {[$inst isBlock]} { lappend mrows [list $x $y $it] } else { lappend rows [list $x $y $it] }
+      # DIE-KV-84 11-06: a macro sink is keyed on its clock PIN, not the macro origin (kv3_sys_SD: PHY origin (17,54), clk
+      # pin ~930 um east of it; the chain ran to the origin corner and the last 1.2 mm crossed the macro: 2175 ps arrival).
+      # Opt-in per die (OT_EDGE_SPLIT_MACRO_PIN=1, gen_phys EDGE_SPLIT_MACRO_PIN_DIES): unset = the old origin key.
+      if {[$inst isBlock]} {
+        if {$es_mpin && ![catch {$it getAvgXY} axy] && [llength $axy] == 3 && [lindex $axy 0]} { lassign $axy - x y }
+        lappend mrows [list $x $y $it]
+      } else { lappend rows [list $x $y $it] }
     }
     set nm [llength $mrows]
     if {[llength $rows] == 0} { puts "OT_EDGE_SPLIT $es_port: no register sinks ($nm macro)"; continue }
@@ -102,6 +109,24 @@ if {[info exists ::env(OT_EDGE_SPLIT_PORTS)] && !([info exists ::env(OT_EDGE_SPL
       set sx 0.0; set sy 0.0
       foreach r $g { set sx [expr {$sx + [lindex $r 0]}]; set sy [expr {$sy + [lindex $r 1]}] }
       set cx [expr {int($sx / [llength $g])}]; set cy [expr {int($sy / [llength $g])}]
+      # DIE-KV-84 11-06: a macro group root inside a macro moves to the nearest point just outside it (2 um), so the chain
+      # and the root sit in placeable rows next to the clock pin
+      if {$es_mpin && [string match m* $k]} {
+        foreach b $es_blocks {
+          lassign $b x0 y0 x1 y1
+          if {$cx > $x0 && $cx < $x1 && $cy > $y0 && $cy < $y1} {
+            set mg [expr {int(2 * $es_dbu)}]
+            set best {}; set bd 1e18
+            foreach c [list [list [expr {$x0 - $mg}] $cy] [list [expr {$x1 + $mg}] $cy] [list $cx [expr {$y0 - $mg}]] [list $cx [expr {$y1 + $mg}]]] {
+              lassign $c qx qy
+              if {$qx < 0 || $qy < 0} continue
+              set d [expr {abs($qx - $cx) + abs($qy - $cy)}]
+              if {$d < $bd} { set bd $d; set best $c }
+            }
+            if {$best ne {}} { lassign $best cx cy }
+          }
+        }
+      }
       # chain heads sit at the port; the last cell of the chain is the group root at the centroid
       # (distinct head sites: CTS keys sinks by location and loses the connection of a second sink at the same point)
       set src $root; set sn 0
