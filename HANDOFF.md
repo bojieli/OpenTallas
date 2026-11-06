@@ -3221,3 +3221,5 @@ CODEX: 2026-11-06 00:23 PST MERGE: phase-preservingKVsysC +dormantFREG captureba
 CODEX: 2026-11-06 00:32 PST HBM q3 VM:7dfa31a52d4 source-event candidate pushed; actual generated shell=hand q3a=old+1-cycle on16312 words,3mutants caught; adoption waits physicalPASS, HBM-30 already booked.
 
 CODEX: 2026-11-06 00:33 PST MERGE: corrected sealed-parameter IDXactivation ad041 landedf6e16e0def2, S81tagab verified; actual childSIGNED pack+M6PG reservation, parentK8trial notyetqualified. ForgottenRXREADY source/proofs verified, HBMgeometryadoptionpending.
+
+CODEX: 2026-11-06 00:38 PST MERGE: recovered RX exact safe-form source/recipe and reviewed SRAM homes landed721d9fc1a9b, HBMtagaj verified; prior macro events preserved. Existing jobs continue, no physical/G5 claim.
