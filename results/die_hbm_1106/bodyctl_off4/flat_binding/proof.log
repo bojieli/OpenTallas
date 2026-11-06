@@ -1,0 +1,374 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Running command `read_verilog -sv actual_refs.sv miter.sv; prep -top miter -flatten; opt; sat -verify -prove correct 1 -show-inputs -show-outputs' --
+
+1. Executing Verilog-2005 frontend: actual_refs.sv
+Parsing SystemVerilog input from `actual_refs.sv' to AST representation.
+Generating RTLIL representation for module `\actual_pb'.
+Generating RTLIL representation for module `\actual_pc'.
+Generating RTLIL representation for module `\actual_pd'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: miter.sv
+Parsing SystemVerilog input from `miter.sv' to AST representation.
+Generating RTLIL representation for module `\miter'.
+Successfully finished Verilog frontend.
+
+3. Executing PREP pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \actual_pd
+Used module:     \actual_pc
+Used module:     \actual_pb
+
+3.1.2. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \actual_pd
+Used module:     \actual_pc
+Used module:     \actual_pb
+Removed 0 unused modules.
+Mapping positional arguments of cell miter.u_pd (actual_pd).
+Mapping positional arguments of cell miter.u_pc (actual_pc).
+Mapping positional arguments of cell miter.u_pb (actual_pb).
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+<suppressed ~1 debug messages>
+Optimizing module actual_pd.
+Optimizing module actual_pc.
+Optimizing module actual_pb.
+
+3.3. Executing FLATTEN pass (flatten design).
+Deleting now unused module actual_pd.
+Deleting now unused module actual_pc.
+Deleting now unused module actual_pb.
+<suppressed ~3 debug messages>
+
+3.4. Executing FUTURE pass.
+
+3.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+3.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 0 unused cells and 22 unused wires.
+<suppressed ~1 debug messages>
+
+3.7. Executing CHECK pass (checking for obvious problems).
+Checking module miter...
+Found and reported 0 problems.
+
+3.8. Executing OPT pass (performing simple optimizations).
+
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 38 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 33 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 30 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 27 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 24 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 21 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 18 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 16 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+<suppressed ~66 debug messages>
+Removed a total of 22 cells.
+
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 16 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+3.8.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 0 unused cells and 9 unused wires.
+<suppressed ~1 debug messages>
+
+3.8.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+<suppressed ~5 debug messages>
+
+3.8.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.8.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+3.8.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+3.8.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 11 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+3.8.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+3.8.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+3.8.14. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.8.15. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+3.8.16. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+3.8.17. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 11 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+3.8.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+
+3.8.19. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+3.8.20. Finished fast OPT passes. (There is nothing left to do.)
+
+3.9. Executing WREDUCE pass (reducing word size of cells).
+Removed top 15 bits (of 32) from port Y of cell miter.$flatten\u_pb.$add$actual_refs.sv:325$6 ($add).
+Removed top 15 bits (of 32) from port A of cell miter.$flatten\u_pb.$add$actual_refs.sv:325$6 ($add).
+Removed top 31 bits (of 32) from port B of cell miter.$flatten\u_pb.$add$actual_refs.sv:325$6 ($add).
+Removed top 15 bits (of 32) from port Y of cell miter.$flatten\u_pb.$add$actual_refs.sv:324$5 ($add).
+Removed top 15 bits (of 32) from port A of cell miter.$flatten\u_pb.$add$actual_refs.sv:324$5 ($add).
+Removed top 15 bits (of 32) from port B of cell miter.$flatten\u_pb.$add$actual_refs.sv:324$5 ($add).
+Removed top 8 bits (of 32) from port B of cell miter.$flatten\u_pb.$add$actual_refs.sv:323$4 ($add).
+Removed top 15 bits (of 32) from port Y of cell miter.$flatten\u_pb.$add$actual_refs.sv:323$4 ($add).
+Removed top 15 bits (of 32) from port A of cell miter.$flatten\u_pb.$add$actual_refs.sv:323$4 ($add).
+Removed top 7 bits (of 24) from port B of cell miter.$flatten\u_pb.$add$actual_refs.sv:323$4 ($add).
+Removed top 15 bits (of 32) from port Y of cell miter.$flatten\u_pc.$add$actual_refs.sv:657$9 ($add).
+Removed top 15 bits (of 32) from port A of cell miter.$flatten\u_pc.$add$actual_refs.sv:657$9 ($add).
+Removed top 31 bits (of 32) from port B of cell miter.$flatten\u_pc.$add$actual_refs.sv:657$9 ($add).
+Removed top 15 bits (of 32) from port Y of cell miter.$flatten\u_pc.$add$actual_refs.sv:656$8 ($add).
+Removed top 15 bits (of 32) from port A of cell miter.$flatten\u_pc.$add$actual_refs.sv:656$8 ($add).
+Removed top 15 bits (of 32) from port B of cell miter.$flatten\u_pc.$add$actual_refs.sv:656$8 ($add).
+Removed top 16 bits (of 32) from port A of cell miter.$flatten\u_pd.$add$actual_refs.sv:990$13 ($add).
+Removed top 8 bits (of 32) from port B of cell miter.$flatten\u_pd.$add$actual_refs.sv:990$13 ($add).
+Removed top 15 bits (of 32) from port Y of cell miter.$flatten\u_pd.$add$actual_refs.sv:990$13 ($add).
+Removed top 7 bits (of 24) from port B of cell miter.$flatten\u_pd.$add$actual_refs.sv:990$13 ($add).
+Removed top 15 bits (of 32) from wire miter.pd.
+Removed top 15 bits (of 32) from wire miter.pc.
+Removed top 15 bits (of 32) from wire miter.pb.
+Removed top 15 bits (of 32) from wire miter.ref.
+
+3.10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 0 unused cells and 274 unused wires.
+<suppressed ~271 debug messages>
+
+3.11. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.12. Executing OPT pass (performing simple optimizations).
+
+3.12.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+3.12.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 11 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+3.12.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+
+3.12.4. Finished fast OPT passes.
+
+3.13. Executing SORT pass.
+
+3.14. Printing statistics.
+
+=== miter ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      701 wires
+     1593 wire bits
+      700 public wires
+     1592 public wire bits
+        9 ports
+      114 port bits
+       11 cells
+        6   $add
+        1   $eq
+        1   $not
+        3   $scopeinfo
+
+3.15. Executing CHECK pass (checking for obvious problems).
+Checking module miter...
+Found and reported 0 problems.
+
+4. Executing OPT pass (performing simple optimizations).
+
+4.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+<suppressed ~2 debug messages>
+
+4.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 11 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+4.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+4.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+4.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 11 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+4.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+<suppressed ~2 debug messages>
+
+4.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+4.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+4.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+4.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 9 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+4.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+
+4.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+4.16. Finished fast OPT passes. (There is nothing left to do.)
+
+5. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 9 cells to SAT database.
+Import proof-constraint: \correct = 1'1
+Final proof equation: \correct = 1'1
+Import show expression: \p0
+Import show expression: \p1
+Import show expression: \p2
+Import show expression: \p3
+Import show expression: \p4
+Import show expression: \p5
+Import show expression: \p6
+Import show expression: \correct
+Import show expression: \mutant_correct
+
+Solving problem with 830 variables and 2012 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 39bec0c154, time: 0.18s, user: 0.14s, system: 0.03s, MEM: 23.13 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 43% 3x read_verilog (0 sec), 25% 8x opt_clean (0 sec), ...

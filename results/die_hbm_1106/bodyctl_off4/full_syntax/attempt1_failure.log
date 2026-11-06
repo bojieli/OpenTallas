@@ -1,0 +1,9 @@
+ot-run: epyc6          admits   -12 GB (avail 113, reserve 0, fresh 0, peak 59.9, headroom 0, waiters 11/128 GB) load 94/128 running 34 disk 85 GB 
+ot-run: -> epyc6 (will queue: admits -12 GB < 16 GB)
+ot-heavy: waiting for memory on eager-sunfish: need 0.7 x 16 = 11 GB, admissible -11 GB: available 113 GB, growth charged 0 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 0 GB at x1), young 0 GB, floor 38 GB; invariant: committed 702 GB (in use 642, other 0, units max(now, peak) 703, + reserve 0 + fresh 0) vs physical - 64 = 691 GB -> headroom -11 GB
+ot-heavy: admitted on eager-sunfish as oth-ubuntu-3765051-1793977794 after 346 s
+ot_hfd_coll_q3_body_ctl.sv:5: error: Port clk_control (2) of module ot_hfd_coll_q3_body_ctl_x has no direction declaration.
+ot_hfd_coll_q3_body_ctl.sv:5: error: signal clk_control in module ot_hfd_coll_q3_body_ctl.u_core.u_x is not a port.
+ot_hfd_coll_q3_body_ctl.sv:5:      : Are you missing an input/output/inout declaration?
+2 error(s) during elaboration.
+ot-run: RAN on epyc6 (unit oth-ubuntu-3765051-1793977794): exit 2
