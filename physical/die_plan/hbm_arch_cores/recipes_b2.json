@@ -2879,44 +2879,6 @@
    "09e2439b7779198d22cd7330957431b4f8f9ad442661ad0d8f6d6243ae6fa170": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hbm_su_pg_lane1p_core.sv"
   }
  },
- "ot_hbm_su_pg_lane1p_core__alat4": {
-  "top": "ot_hbm_su_pg_lane1p_core",
-  "files": [
-   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
-   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
-   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
-   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
-   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
-   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
-   "rtl/hdc/ot_hdc_delay.sv",
-   "rtl/hdc/ot_hdc_fpu.sv",
-   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
-   "rtl/proto/ot_fp32_add_rne_pipe.sv",
-   "rtl/hdc/ot_hdc_sfu.sv",
-   "rtl/hdc/ot_hdc_fastfp.sv",
-   "rtl/hdc/ot_hdc_fastfp_lat.sv",
-   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
-   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-   "rtl/hdc/ot_hdc_prefix.sv",
-   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
-   "rtl/hdc/v41/ot_hdc_fdiv.sv",
-   "rtl/hdc/v41/ot_hdc_softplus.sv",
-   "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lanes4_core.sv",
-   "rtl/hbm_accel/cores_split/reform_1104a/lanes4/ot_hbm_su_pg_lane1p_core.sv"
-  ],
-  "defines": [],
-  "params": {
-   "ALAT": 4
-  },
-  "macros": [
-   "ot_sram_1r1w_128x256_m1_r2c2"
-  ],
-  "source": "HBM-REFORM-A d44v part 17: lane1 text with the module renamed, lanes_plain tile 440.64 x 112.32 (lockstep receipt in results/die_hbm_1104/reform_a/part17); HBM-GAPS-4-L1P 11-05 vB: + ALAT 4 (existing input-cut FP add, opt-in recipe key, +1 cycle per lane1p add)",
-  "rename_top": "ot_hbm_su_pg_lane1p_core__mc",
-  "wrapper_by_pins_sha256": {
-   "09e2439b7779198d22cd7330957431b4f8f9ad442661ad0d8f6d6243ae6fa170": "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hbm_su_pg_lane1p_core.sv"
-  }
- },
  "ot_hbm_su_pg_lane_exp_x_core": {
   "defines": [],
   "files": [
