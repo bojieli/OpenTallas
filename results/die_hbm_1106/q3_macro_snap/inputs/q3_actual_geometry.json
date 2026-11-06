@@ -1,0 +1,4413 @@
+{
+ "dbu_per_um": 1000,
+ "layers": {
+  "M3": {
+   "direction": "VERTICAL",
+   "width": 18,
+   "spacing": 18,
+   "tracksX": [
+    9,
+    45,
+    81
+   ],
+   "tracksY": [
+    9,
+    45,
+    81
+   ]
+  },
+  "M4": {
+   "direction": "HORIZONTAL",
+   "width": 24,
+   "spacing": 24,
+   "tracksX": [
+    24,
+    72,
+    120
+   ],
+   "tracksY": [
+    24,
+    72,
+    120
+   ]
+  },
+  "M5": {
+   "direction": "VERTICAL",
+   "width": 24,
+   "spacing": 24,
+   "tracksX": [
+    24,
+    72,
+    120
+   ],
+   "tracksY": [
+    24,
+    72,
+    120
+   ]
+  }
+ },
+ "vias": [
+  {
+   "name": "VIA45",
+   "boxes": [
+    {
+     "layer": "M4",
+     "kind": "ROUTING",
+     "rect": [
+      -23,
+      -12,
+      23,
+      12
+     ]
+    },
+    {
+     "layer": "M5",
+     "kind": "ROUTING",
+     "rect": [
+      -12,
+      -23,
+      12,
+      23
+     ]
+    },
+    {
+     "layer": "V4",
+     "kind": "CUT",
+     "rect": [
+      -12,
+      -12,
+      12,
+      12
+     ]
+    }
+   ]
+  },
+  {
+   "name": "VIA34",
+   "boxes": [
+    {
+     "layer": "M3",
+     "kind": "ROUTING",
+     "rect": [
+      -9,
+      -17,
+      9,
+      17
+     ]
+    },
+    {
+     "layer": "M4",
+     "kind": "ROUTING",
+     "rect": [
+      -20,
+      -12,
+      20,
+      12
+     ]
+    },
+    {
+     "layer": "V3",
+     "kind": "CUT",
+     "rect": [
+      -9,
+      -12,
+      9,
+      12
+     ]
+    }
+   ]
+  }
+ ],
+ "master": "ot_sram_1r1w_64x141_m1_r0c0_g141",
+ "pins": [
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    768,
+    24,
+    792
+   ],
+   "pin": "clk",
+   "use": "CLOCK"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    864,
+    24,
+    888
+   ],
+   "pin": "r_ce_in",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    960,
+    24,
+    984
+   ],
+   "pin": "r_addr_in[0]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    1056,
+    24,
+    1080
+   ],
+   "pin": "r_addr_in[1]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    1152,
+    24,
+    1176
+   ],
+   "pin": "r_addr_in[2]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    1248,
+    24,
+    1272
+   ],
+   "pin": "r_addr_in[3]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    1344,
+    24,
+    1368
+   ],
+   "pin": "r_addr_in[4]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    1440,
+    24,
+    1464
+   ],
+   "pin": "r_addr_in[5]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    1536,
+    24,
+    1560
+   ],
+   "pin": "rd_out[0]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    1632,
+    24,
+    1656
+   ],
+   "pin": "rd_out[1]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    1728,
+    24,
+    1752
+   ],
+   "pin": "rd_out[2]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    1824,
+    24,
+    1848
+   ],
+   "pin": "rd_out[3]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    1920,
+    24,
+    1944
+   ],
+   "pin": "rd_out[4]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    2016,
+    24,
+    2040
+   ],
+   "pin": "rd_out[5]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    2112,
+    24,
+    2136
+   ],
+   "pin": "rd_out[6]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    2208,
+    24,
+    2232
+   ],
+   "pin": "rd_out[7]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    2304,
+    24,
+    2328
+   ],
+   "pin": "rd_out[8]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    2400,
+    24,
+    2424
+   ],
+   "pin": "rd_out[9]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    2496,
+    24,
+    2520
+   ],
+   "pin": "rd_out[10]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    2592,
+    24,
+    2616
+   ],
+   "pin": "rd_out[11]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    2688,
+    24,
+    2712
+   ],
+   "pin": "rd_out[12]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    2784,
+    24,
+    2808
+   ],
+   "pin": "rd_out[13]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    2880,
+    24,
+    2904
+   ],
+   "pin": "rd_out[14]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    2976,
+    24,
+    3000
+   ],
+   "pin": "rd_out[15]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    3072,
+    24,
+    3096
+   ],
+   "pin": "rd_out[16]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    3168,
+    24,
+    3192
+   ],
+   "pin": "rd_out[17]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    3264,
+    24,
+    3288
+   ],
+   "pin": "rd_out[18]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    3360,
+    24,
+    3384
+   ],
+   "pin": "rd_out[19]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    3456,
+    24,
+    3480
+   ],
+   "pin": "rd_out[20]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    3552,
+    24,
+    3576
+   ],
+   "pin": "rd_out[21]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    3648,
+    24,
+    3672
+   ],
+   "pin": "rd_out[22]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    3744,
+    24,
+    3768
+   ],
+   "pin": "rd_out[23]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    3840,
+    24,
+    3864
+   ],
+   "pin": "rd_out[24]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    3936,
+    24,
+    3960
+   ],
+   "pin": "rd_out[25]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    4032,
+    24,
+    4056
+   ],
+   "pin": "rd_out[26]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    4128,
+    24,
+    4152
+   ],
+   "pin": "rd_out[27]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    4224,
+    24,
+    4248
+   ],
+   "pin": "rd_out[28]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    4320,
+    24,
+    4344
+   ],
+   "pin": "rd_out[29]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    4416,
+    24,
+    4440
+   ],
+   "pin": "rd_out[30]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    4512,
+    24,
+    4536
+   ],
+   "pin": "rd_out[31]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    4608,
+    24,
+    4632
+   ],
+   "pin": "rd_out[32]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    4704,
+    24,
+    4728
+   ],
+   "pin": "rd_out[33]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    4800,
+    24,
+    4824
+   ],
+   "pin": "rd_out[34]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    4896,
+    24,
+    4920
+   ],
+   "pin": "rd_out[35]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    4992,
+    24,
+    5016
+   ],
+   "pin": "rd_out[36]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    5088,
+    24,
+    5112
+   ],
+   "pin": "rd_out[37]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    5184,
+    24,
+    5208
+   ],
+   "pin": "rd_out[38]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    5280,
+    24,
+    5304
+   ],
+   "pin": "rd_out[39]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    5376,
+    24,
+    5400
+   ],
+   "pin": "rd_out[40]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    5472,
+    24,
+    5496
+   ],
+   "pin": "rd_out[41]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    5568,
+    24,
+    5592
+   ],
+   "pin": "rd_out[42]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    5664,
+    24,
+    5688
+   ],
+   "pin": "rd_out[43]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    5760,
+    24,
+    5784
+   ],
+   "pin": "rd_out[44]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    5856,
+    24,
+    5880
+   ],
+   "pin": "rd_out[45]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    5952,
+    24,
+    5976
+   ],
+   "pin": "rd_out[46]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    6048,
+    24,
+    6072
+   ],
+   "pin": "rd_out[47]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    6144,
+    24,
+    6168
+   ],
+   "pin": "rd_out[48]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    6240,
+    24,
+    6264
+   ],
+   "pin": "rd_out[49]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    6336,
+    24,
+    6360
+   ],
+   "pin": "rd_out[50]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    6432,
+    24,
+    6456
+   ],
+   "pin": "rd_out[51]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    6528,
+    24,
+    6552
+   ],
+   "pin": "rd_out[52]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    6624,
+    24,
+    6648
+   ],
+   "pin": "rd_out[53]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    6720,
+    24,
+    6744
+   ],
+   "pin": "rd_out[54]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    6816,
+    24,
+    6840
+   ],
+   "pin": "rd_out[55]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    6912,
+    24,
+    6936
+   ],
+   "pin": "rd_out[56]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    7008,
+    24,
+    7032
+   ],
+   "pin": "rd_out[57]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    7104,
+    24,
+    7128
+   ],
+   "pin": "rd_out[58]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    7200,
+    24,
+    7224
+   ],
+   "pin": "rd_out[59]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    7296,
+    24,
+    7320
+   ],
+   "pin": "rd_out[60]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    7392,
+    24,
+    7416
+   ],
+   "pin": "rd_out[61]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    7488,
+    24,
+    7512
+   ],
+   "pin": "rd_out[62]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    7584,
+    24,
+    7608
+   ],
+   "pin": "rd_out[63]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    7680,
+    24,
+    7704
+   ],
+   "pin": "rd_out[64]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    7776,
+    24,
+    7800
+   ],
+   "pin": "rd_out[65]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    7872,
+    24,
+    7896
+   ],
+   "pin": "rd_out[66]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    7968,
+    24,
+    7992
+   ],
+   "pin": "rd_out[67]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    8064,
+    24,
+    8088
+   ],
+   "pin": "rd_out[68]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    8160,
+    24,
+    8184
+   ],
+   "pin": "rd_out[69]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    8256,
+    24,
+    8280
+   ],
+   "pin": "rd_out[70]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    8352,
+    24,
+    8376
+   ],
+   "pin": "rd_out[71]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    8448,
+    24,
+    8472
+   ],
+   "pin": "rd_out[72]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    8544,
+    24,
+    8568
+   ],
+   "pin": "rd_out[73]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    8640,
+    24,
+    8664
+   ],
+   "pin": "rd_out[74]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    8736,
+    24,
+    8760
+   ],
+   "pin": "rd_out[75]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    8832,
+    24,
+    8856
+   ],
+   "pin": "rd_out[76]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    8928,
+    24,
+    8952
+   ],
+   "pin": "rd_out[77]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    9024,
+    24,
+    9048
+   ],
+   "pin": "rd_out[78]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    9120,
+    24,
+    9144
+   ],
+   "pin": "rd_out[79]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    9216,
+    24,
+    9240
+   ],
+   "pin": "rd_out[80]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    9312,
+    24,
+    9336
+   ],
+   "pin": "rd_out[81]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    9408,
+    24,
+    9432
+   ],
+   "pin": "rd_out[82]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    9504,
+    24,
+    9528
+   ],
+   "pin": "rd_out[83]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    9600,
+    24,
+    9624
+   ],
+   "pin": "rd_out[84]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    9696,
+    24,
+    9720
+   ],
+   "pin": "rd_out[85]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    9792,
+    24,
+    9816
+   ],
+   "pin": "rd_out[86]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    9888,
+    24,
+    9912
+   ],
+   "pin": "rd_out[87]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    9984,
+    24,
+    10008
+   ],
+   "pin": "rd_out[88]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    10080,
+    24,
+    10104
+   ],
+   "pin": "rd_out[89]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    10176,
+    24,
+    10200
+   ],
+   "pin": "rd_out[90]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    10272,
+    24,
+    10296
+   ],
+   "pin": "rd_out[91]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    10368,
+    24,
+    10392
+   ],
+   "pin": "rd_out[92]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    10464,
+    24,
+    10488
+   ],
+   "pin": "rd_out[93]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    10560,
+    24,
+    10584
+   ],
+   "pin": "rd_out[94]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    10656,
+    24,
+    10680
+   ],
+   "pin": "rd_out[95]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    10752,
+    24,
+    10776
+   ],
+   "pin": "rd_out[96]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    10848,
+    24,
+    10872
+   ],
+   "pin": "rd_out[97]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    10944,
+    24,
+    10968
+   ],
+   "pin": "rd_out[98]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    11040,
+    24,
+    11064
+   ],
+   "pin": "rd_out[99]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    11136,
+    24,
+    11160
+   ],
+   "pin": "rd_out[100]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    11232,
+    24,
+    11256
+   ],
+   "pin": "rd_out[101]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    11328,
+    24,
+    11352
+   ],
+   "pin": "rd_out[102]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    11424,
+    24,
+    11448
+   ],
+   "pin": "rd_out[103]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    11520,
+    24,
+    11544
+   ],
+   "pin": "rd_out[104]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    11616,
+    24,
+    11640
+   ],
+   "pin": "rd_out[105]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    11712,
+    24,
+    11736
+   ],
+   "pin": "rd_out[106]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    11808,
+    24,
+    11832
+   ],
+   "pin": "rd_out[107]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    11904,
+    24,
+    11928
+   ],
+   "pin": "rd_out[108]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    12000,
+    24,
+    12024
+   ],
+   "pin": "rd_out[109]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    12096,
+    24,
+    12120
+   ],
+   "pin": "rd_out[110]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    12192,
+    24,
+    12216
+   ],
+   "pin": "rd_out[111]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    12288,
+    24,
+    12312
+   ],
+   "pin": "rd_out[112]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    12384,
+    24,
+    12408
+   ],
+   "pin": "rd_out[113]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    12480,
+    24,
+    12504
+   ],
+   "pin": "rd_out[114]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    12576,
+    24,
+    12600
+   ],
+   "pin": "rd_out[115]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    12672,
+    24,
+    12696
+   ],
+   "pin": "rd_out[116]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    12768,
+    24,
+    12792
+   ],
+   "pin": "rd_out[117]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    12864,
+    24,
+    12888
+   ],
+   "pin": "rd_out[118]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    12960,
+    24,
+    12984
+   ],
+   "pin": "rd_out[119]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    13056,
+    24,
+    13080
+   ],
+   "pin": "rd_out[120]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    13152,
+    24,
+    13176
+   ],
+   "pin": "rd_out[121]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    13248,
+    24,
+    13272
+   ],
+   "pin": "rd_out[122]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    13344,
+    24,
+    13368
+   ],
+   "pin": "rd_out[123]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    13440,
+    24,
+    13464
+   ],
+   "pin": "rd_out[124]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    13536,
+    24,
+    13560
+   ],
+   "pin": "rd_out[125]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    13632,
+    24,
+    13656
+   ],
+   "pin": "rd_out[126]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    13728,
+    24,
+    13752
+   ],
+   "pin": "rd_out[127]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    13824,
+    24,
+    13848
+   ],
+   "pin": "rd_out[128]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    13920,
+    24,
+    13944
+   ],
+   "pin": "rd_out[129]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    14016,
+    24,
+    14040
+   ],
+   "pin": "rd_out[130]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    14112,
+    24,
+    14136
+   ],
+   "pin": "rd_out[131]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    14208,
+    24,
+    14232
+   ],
+   "pin": "rd_out[132]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    14304,
+    24,
+    14328
+   ],
+   "pin": "rd_out[133]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    14400,
+    24,
+    14424
+   ],
+   "pin": "rd_out[134]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    14496,
+    24,
+    14520
+   ],
+   "pin": "rd_out[135]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    14592,
+    24,
+    14616
+   ],
+   "pin": "rd_out[136]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    14688,
+    24,
+    14712
+   ],
+   "pin": "rd_out[137]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    14784,
+    24,
+    14808
+   ],
+   "pin": "rd_out[138]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    14880,
+    24,
+    14904
+   ],
+   "pin": "rd_out[139]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    14976,
+    24,
+    15000
+   ],
+   "pin": "rd_out[140]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    768,
+    56184,
+    792
+   ],
+   "pin": "w_ce_in",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    864,
+    56184,
+    888
+   ],
+   "pin": "w_addr_in[0]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    960,
+    56184,
+    984
+   ],
+   "pin": "w_addr_in[1]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    1056,
+    56184,
+    1080
+   ],
+   "pin": "w_addr_in[2]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    1152,
+    56184,
+    1176
+   ],
+   "pin": "w_addr_in[3]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    1248,
+    56184,
+    1272
+   ],
+   "pin": "w_addr_in[4]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    1344,
+    56184,
+    1368
+   ],
+   "pin": "w_addr_in[5]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    1440,
+    56184,
+    1464
+   ],
+   "pin": "wd_in[0]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    1536,
+    56184,
+    1560
+   ],
+   "pin": "wd_in[1]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    1632,
+    56184,
+    1656
+   ],
+   "pin": "wd_in[2]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    1728,
+    56184,
+    1752
+   ],
+   "pin": "wd_in[3]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    1824,
+    56184,
+    1848
+   ],
+   "pin": "wd_in[4]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    1920,
+    56184,
+    1944
+   ],
+   "pin": "wd_in[5]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    2016,
+    56184,
+    2040
+   ],
+   "pin": "wd_in[6]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    2112,
+    56184,
+    2136
+   ],
+   "pin": "wd_in[7]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    2208,
+    56184,
+    2232
+   ],
+   "pin": "wd_in[8]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    2304,
+    56184,
+    2328
+   ],
+   "pin": "wd_in[9]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    2400,
+    56184,
+    2424
+   ],
+   "pin": "wd_in[10]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    2496,
+    56184,
+    2520
+   ],
+   "pin": "wd_in[11]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    2592,
+    56184,
+    2616
+   ],
+   "pin": "wd_in[12]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    2688,
+    56184,
+    2712
+   ],
+   "pin": "wd_in[13]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    2784,
+    56184,
+    2808
+   ],
+   "pin": "wd_in[14]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    2880,
+    56184,
+    2904
+   ],
+   "pin": "wd_in[15]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    2976,
+    56184,
+    3000
+   ],
+   "pin": "wd_in[16]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    3072,
+    56184,
+    3096
+   ],
+   "pin": "wd_in[17]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    3168,
+    56184,
+    3192
+   ],
+   "pin": "wd_in[18]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    3264,
+    56184,
+    3288
+   ],
+   "pin": "wd_in[19]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    3360,
+    56184,
+    3384
+   ],
+   "pin": "wd_in[20]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    3456,
+    56184,
+    3480
+   ],
+   "pin": "wd_in[21]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    3552,
+    56184,
+    3576
+   ],
+   "pin": "wd_in[22]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    3648,
+    56184,
+    3672
+   ],
+   "pin": "wd_in[23]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    3744,
+    56184,
+    3768
+   ],
+   "pin": "wd_in[24]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    3840,
+    56184,
+    3864
+   ],
+   "pin": "wd_in[25]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    3936,
+    56184,
+    3960
+   ],
+   "pin": "wd_in[26]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    4032,
+    56184,
+    4056
+   ],
+   "pin": "wd_in[27]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    4128,
+    56184,
+    4152
+   ],
+   "pin": "wd_in[28]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    4224,
+    56184,
+    4248
+   ],
+   "pin": "wd_in[29]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    4320,
+    56184,
+    4344
+   ],
+   "pin": "wd_in[30]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    4416,
+    56184,
+    4440
+   ],
+   "pin": "wd_in[31]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    4512,
+    56184,
+    4536
+   ],
+   "pin": "wd_in[32]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    4608,
+    56184,
+    4632
+   ],
+   "pin": "wd_in[33]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    4704,
+    56184,
+    4728
+   ],
+   "pin": "wd_in[34]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    4800,
+    56184,
+    4824
+   ],
+   "pin": "wd_in[35]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    4896,
+    56184,
+    4920
+   ],
+   "pin": "wd_in[36]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    4992,
+    56184,
+    5016
+   ],
+   "pin": "wd_in[37]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    5088,
+    56184,
+    5112
+   ],
+   "pin": "wd_in[38]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    5184,
+    56184,
+    5208
+   ],
+   "pin": "wd_in[39]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    5280,
+    56184,
+    5304
+   ],
+   "pin": "wd_in[40]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    5376,
+    56184,
+    5400
+   ],
+   "pin": "wd_in[41]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    5472,
+    56184,
+    5496
+   ],
+   "pin": "wd_in[42]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    5568,
+    56184,
+    5592
+   ],
+   "pin": "wd_in[43]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    5664,
+    56184,
+    5688
+   ],
+   "pin": "wd_in[44]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    5760,
+    56184,
+    5784
+   ],
+   "pin": "wd_in[45]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    5856,
+    56184,
+    5880
+   ],
+   "pin": "wd_in[46]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    5952,
+    56184,
+    5976
+   ],
+   "pin": "wd_in[47]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    6048,
+    56184,
+    6072
+   ],
+   "pin": "wd_in[48]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    6144,
+    56184,
+    6168
+   ],
+   "pin": "wd_in[49]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    6240,
+    56184,
+    6264
+   ],
+   "pin": "wd_in[50]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    6336,
+    56184,
+    6360
+   ],
+   "pin": "wd_in[51]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    6432,
+    56184,
+    6456
+   ],
+   "pin": "wd_in[52]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    6528,
+    56184,
+    6552
+   ],
+   "pin": "wd_in[53]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    6624,
+    56184,
+    6648
+   ],
+   "pin": "wd_in[54]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    6720,
+    56184,
+    6744
+   ],
+   "pin": "wd_in[55]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    6816,
+    56184,
+    6840
+   ],
+   "pin": "wd_in[56]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    6912,
+    56184,
+    6936
+   ],
+   "pin": "wd_in[57]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    7008,
+    56184,
+    7032
+   ],
+   "pin": "wd_in[58]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    7104,
+    56184,
+    7128
+   ],
+   "pin": "wd_in[59]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    7200,
+    56184,
+    7224
+   ],
+   "pin": "wd_in[60]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    7296,
+    56184,
+    7320
+   ],
+   "pin": "wd_in[61]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    7392,
+    56184,
+    7416
+   ],
+   "pin": "wd_in[62]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    7488,
+    56184,
+    7512
+   ],
+   "pin": "wd_in[63]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    7584,
+    56184,
+    7608
+   ],
+   "pin": "wd_in[64]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    7680,
+    56184,
+    7704
+   ],
+   "pin": "wd_in[65]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    7776,
+    56184,
+    7800
+   ],
+   "pin": "wd_in[66]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    7872,
+    56184,
+    7896
+   ],
+   "pin": "wd_in[67]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    7968,
+    56184,
+    7992
+   ],
+   "pin": "wd_in[68]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    8064,
+    56184,
+    8088
+   ],
+   "pin": "wd_in[69]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    8160,
+    56184,
+    8184
+   ],
+   "pin": "wd_in[70]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    8256,
+    56184,
+    8280
+   ],
+   "pin": "wd_in[71]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    8352,
+    56184,
+    8376
+   ],
+   "pin": "wd_in[72]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    8448,
+    56184,
+    8472
+   ],
+   "pin": "wd_in[73]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    8544,
+    56184,
+    8568
+   ],
+   "pin": "wd_in[74]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    8640,
+    56184,
+    8664
+   ],
+   "pin": "wd_in[75]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    8736,
+    56184,
+    8760
+   ],
+   "pin": "wd_in[76]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    8832,
+    56184,
+    8856
+   ],
+   "pin": "wd_in[77]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    8928,
+    56184,
+    8952
+   ],
+   "pin": "wd_in[78]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    9024,
+    56184,
+    9048
+   ],
+   "pin": "wd_in[79]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    9120,
+    56184,
+    9144
+   ],
+   "pin": "wd_in[80]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    9216,
+    56184,
+    9240
+   ],
+   "pin": "wd_in[81]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    9312,
+    56184,
+    9336
+   ],
+   "pin": "wd_in[82]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    9408,
+    56184,
+    9432
+   ],
+   "pin": "wd_in[83]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    9504,
+    56184,
+    9528
+   ],
+   "pin": "wd_in[84]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    9600,
+    56184,
+    9624
+   ],
+   "pin": "wd_in[85]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    9696,
+    56184,
+    9720
+   ],
+   "pin": "wd_in[86]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    9792,
+    56184,
+    9816
+   ],
+   "pin": "wd_in[87]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    9888,
+    56184,
+    9912
+   ],
+   "pin": "wd_in[88]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    9984,
+    56184,
+    10008
+   ],
+   "pin": "wd_in[89]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    10080,
+    56184,
+    10104
+   ],
+   "pin": "wd_in[90]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    10176,
+    56184,
+    10200
+   ],
+   "pin": "wd_in[91]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    10272,
+    56184,
+    10296
+   ],
+   "pin": "wd_in[92]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    10368,
+    56184,
+    10392
+   ],
+   "pin": "wd_in[93]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    10464,
+    56184,
+    10488
+   ],
+   "pin": "wd_in[94]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    10560,
+    56184,
+    10584
+   ],
+   "pin": "wd_in[95]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    10656,
+    56184,
+    10680
+   ],
+   "pin": "wd_in[96]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    10752,
+    56184,
+    10776
+   ],
+   "pin": "wd_in[97]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    10848,
+    56184,
+    10872
+   ],
+   "pin": "wd_in[98]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    10944,
+    56184,
+    10968
+   ],
+   "pin": "wd_in[99]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    11040,
+    56184,
+    11064
+   ],
+   "pin": "wd_in[100]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    11136,
+    56184,
+    11160
+   ],
+   "pin": "wd_in[101]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    11232,
+    56184,
+    11256
+   ],
+   "pin": "wd_in[102]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    11328,
+    56184,
+    11352
+   ],
+   "pin": "wd_in[103]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    11424,
+    56184,
+    11448
+   ],
+   "pin": "wd_in[104]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    11520,
+    56184,
+    11544
+   ],
+   "pin": "wd_in[105]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    11616,
+    56184,
+    11640
+   ],
+   "pin": "wd_in[106]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    11712,
+    56184,
+    11736
+   ],
+   "pin": "wd_in[107]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    11808,
+    56184,
+    11832
+   ],
+   "pin": "wd_in[108]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    11904,
+    56184,
+    11928
+   ],
+   "pin": "wd_in[109]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    12000,
+    56184,
+    12024
+   ],
+   "pin": "wd_in[110]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    12096,
+    56184,
+    12120
+   ],
+   "pin": "wd_in[111]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    12192,
+    56184,
+    12216
+   ],
+   "pin": "wd_in[112]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    12288,
+    56184,
+    12312
+   ],
+   "pin": "wd_in[113]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    12384,
+    56184,
+    12408
+   ],
+   "pin": "wd_in[114]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    12480,
+    56184,
+    12504
+   ],
+   "pin": "wd_in[115]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    12576,
+    56184,
+    12600
+   ],
+   "pin": "wd_in[116]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    12672,
+    56184,
+    12696
+   ],
+   "pin": "wd_in[117]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    12768,
+    56184,
+    12792
+   ],
+   "pin": "wd_in[118]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    12864,
+    56184,
+    12888
+   ],
+   "pin": "wd_in[119]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    12960,
+    56184,
+    12984
+   ],
+   "pin": "wd_in[120]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    13056,
+    56184,
+    13080
+   ],
+   "pin": "wd_in[121]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    13152,
+    56184,
+    13176
+   ],
+   "pin": "wd_in[122]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    13248,
+    56184,
+    13272
+   ],
+   "pin": "wd_in[123]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    13344,
+    56184,
+    13368
+   ],
+   "pin": "wd_in[124]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    13440,
+    56184,
+    13464
+   ],
+   "pin": "wd_in[125]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    13536,
+    56184,
+    13560
+   ],
+   "pin": "wd_in[126]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    13632,
+    56184,
+    13656
+   ],
+   "pin": "wd_in[127]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    13728,
+    56184,
+    13752
+   ],
+   "pin": "wd_in[128]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    13824,
+    56184,
+    13848
+   ],
+   "pin": "wd_in[129]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    13920,
+    56184,
+    13944
+   ],
+   "pin": "wd_in[130]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    14016,
+    56184,
+    14040
+   ],
+   "pin": "wd_in[131]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    14112,
+    56184,
+    14136
+   ],
+   "pin": "wd_in[132]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    14208,
+    56184,
+    14232
+   ],
+   "pin": "wd_in[133]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    14304,
+    56184,
+    14328
+   ],
+   "pin": "wd_in[134]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    14400,
+    56184,
+    14424
+   ],
+   "pin": "wd_in[135]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    14496,
+    56184,
+    14520
+   ],
+   "pin": "wd_in[136]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    14592,
+    56184,
+    14616
+   ],
+   "pin": "wd_in[137]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    14688,
+    56184,
+    14712
+   ],
+   "pin": "wd_in[138]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    14784,
+    56184,
+    14808
+   ],
+   "pin": "wd_in[139]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    14880,
+    56184,
+    14904
+   ],
+   "pin": "wd_in[140]",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    56160,
+    14976,
+    56184,
+    15000
+   ],
+   "pin": "w_mask_in",
+   "use": "SIGNAL"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    384,
+    55884,
+    480
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    1152,
+    55884,
+    1248
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    1920,
+    55884,
+    2016
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    2688,
+    55884,
+    2784
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    3456,
+    55884,
+    3552
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    4224,
+    55884,
+    4320
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    4992,
+    55884,
+    5088
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    5760,
+    55884,
+    5856
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    6528,
+    55884,
+    6624
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    7296,
+    55884,
+    7392
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    8064,
+    55884,
+    8160
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    8832,
+    55884,
+    8928
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    9600,
+    55884,
+    9696
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    10368,
+    55884,
+    10464
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    11136,
+    55884,
+    11232
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    11904,
+    55884,
+    12000
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    12672,
+    55884,
+    12768
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    13440,
+    55884,
+    13536
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    14208,
+    55884,
+    14304
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    14976,
+    55884,
+    15072
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    15744,
+    55884,
+    15840
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    16512,
+    55884,
+    16608
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    17280,
+    55884,
+    17376
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    18048,
+    55884,
+    18144
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    18816,
+    55884,
+    18912
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    19584,
+    55884,
+    19680
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    20352,
+    55884,
+    20448
+   ],
+   "pin": "VDD",
+   "use": "POWER"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    768,
+    55884,
+    864
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    1536,
+    55884,
+    1632
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    2304,
+    55884,
+    2400
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    3072,
+    55884,
+    3168
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    3840,
+    55884,
+    3936
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    4608,
+    55884,
+    4704
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    5376,
+    55884,
+    5472
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    6144,
+    55884,
+    6240
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    6912,
+    55884,
+    7008
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    7680,
+    55884,
+    7776
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    8448,
+    55884,
+    8544
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    9216,
+    55884,
+    9312
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    9984,
+    55884,
+    10080
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    10752,
+    55884,
+    10848
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    11520,
+    55884,
+    11616
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    12288,
+    55884,
+    12384
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    13056,
+    55884,
+    13152
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    13824,
+    55884,
+    13920
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    14592,
+    55884,
+    14688
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    15360,
+    55884,
+    15456
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    16128,
+    55884,
+    16224
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    16896,
+    55884,
+    16992
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    17664,
+    55884,
+    17760
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    18432,
+    55884,
+    18528
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    19200,
+    55884,
+    19296
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    300,
+    19968,
+    55884,
+    20064
+   ],
+   "pin": "VSS",
+   "use": "GROUND"
+  }
+ ],
+ "obs": [
+  {
+   "layer": "M1",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    0,
+    56184,
+    20808
+   ]
+  },
+  {
+   "layer": "M2",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    0,
+    56184,
+    20808
+   ]
+  },
+  {
+   "layer": "M3",
+   "kind": "ROUTING",
+   "rect": [
+    0,
+    0,
+    56184,
+    20808
+   ]
+  },
+  {
+   "layer": "M4",
+   "kind": "ROUTING",
+   "rect": [
+    72,
+    0,
+    56112,
+    20808
+   ]
+  }
+ ],
+ "instances": [
+  {
+   "name": "u_fcore.u_link.g_bank\\[0\\].u_store.u_native.g_rw141.u_sram",
+   "location": [
+    110160,
+    36288
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "u_fcore.u_link.g_bank\\[1\\].u_store.u_native.g_rw141.u_sram",
+   "location": [
+    110160,
+    114048
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "u_fcore.u_link.g_bank\\[2\\].u_store.u_native.g_rw141.u_sram",
+   "location": [
+    110160,
+    202608
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "u_fcore.u_link.g_bank\\[3\\].u_store.u_native.g_rw141.u_sram",
+   "location": [
+    110160,
+    280368
+   ],
+   "orient": "R0"
+  }
+ ]
+}
