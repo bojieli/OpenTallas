@@ -390,6 +390,15 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     unc_setup_ps / unc_hold_ps: the full clock uncertainty the SDC must carry; None = policy_uncertainty() (OWNER
     12.24b/c nominal 0 / 25, legacy 60 / 25 with OT_MARGIN_POLICY=legacy).
     -> [errors]"""
+    # Lower only the exact OpenSTA-compatible collection filter we emit.
+    # Its foreach/lsearch semantics are set subtraction; arbitrary Tcl remains
+    # unsupported and fail-closed. No synthetic command is written to the SDC.
+    native_filter = ('set pad_seam_inputs {}\n'
+                     'foreach pad_input $non_clk_in {\n'
+                     '  if {[lsearch -exact $pad_native_inputs $pad_input] < 0} {lappend pad_seam_inputs $pad_input}\n'
+                     '}\n')
+    text = text.replace(native_filter,
+                        'set pad_seam_inputs [remove_from_collection $non_clk_in $pad_native_inputs]\n')
     err = []
     root_exception = ROOT_RESET_FALSE_PATH
     if root_reset_hier is not None:
