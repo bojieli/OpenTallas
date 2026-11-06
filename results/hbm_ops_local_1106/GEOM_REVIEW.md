@@ -1,0 +1,4 @@
+# OPS local stage physical review
+Reviewed actual captured 16 SRAM placements (172.824 x41.064um each), original 760.32 x233.28um outline and candidate register guide rectangles. Image: review.png.
+PASS for guarded synthesis and subsequent early-placement inspection: write cohort chunks occupy three interrow streets per four-bank column; read captures occupy west pin channels adjacent to each SRAM. Macro placement, track phase, halos, pin faces, PDN and clock source remain captured native values. Existing F4 bounded chains stay enabled. Register guides avoid macro halos; no across-column write-data relay is introduced after the new local stages. Native synthesis survival and actual early placement remain required before detailed routing.
+A/B pin-cycle prices and parent-owned IO hold debt are recorded in README and SOURCE_EVENT. No profile activation or physical qualification is claimed.
