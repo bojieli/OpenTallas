@@ -92,3 +92,25 @@ Successor steps (in addition to the 20:40 steps above; core_lane_rules.md still 
 | HBM-FORM-SPLIT-11 | HBM-FORM-SPLIT-10 | lanes/CODEX-HBM-FORMS.md | split forms |
 | HBM-FORM-TIMING-9 | HBM-FORM-TIMING-8 | lanes/CODEX-HBM-FORMS.md | timing forms, f512rp vB |
 Also read: CODEX-LOG.md section '## Handoff to Claude 2026-11-06 04:36 PST' (main Codex handoff, per-die parts) and the [COORD] 'RULINGS on Codex 04:36' line in the queue.
+
+## Weekly-limit stop 05:51 -> 09:0x 11-06 (Codex covered, handed back 09:0x)
+All 21 Claude lanes died at 05:51. Codex covered; central main a9f96d38f5e. Codex handback: CODEX-LOG "## Handoff to Claude 2026-11-06 09:0x" sections + handoff/codex_*_20261106_09*/reset packets. Successors (fresh, short, ~2-3 h):
+| new lane | predecessor | read first (in ~/coord/handoff unless path) | scope |
+|---|---|---|---|
+| ROOT-MERGE-43 | ROOT-MERGE-42 + Codex ROOT | HANDOFF.md 'ROOT-MERGE42' lines today | merge approved READY not on main: CBN b81739870f, KV-PEER 1aa3c3cbdf, SU_l1 3c9f61cd313 (check if Codex released equivalents first) |
+| KW-FIX-22 | KW-FIX-21 | KW-FIX-21 posts; CODEX-LOG kit-wave lines | kit-wave classes; bind-sources-gone (KW-FIX-21: D3 base sparse, rebuild on full src_2c705) |
+| PRUNE-1117 | PRUNE-1116 | PRUNE-1116 posts | disks; epyc2/epyc4/intel2 floors |
+| DIE-S81-69 | DIE-S81-68 (never started) | codex_s81_types_to_claude_20261106_reset.md, codex_token_to_claude_20261106_0854.md (DS part) | S81 die owner, station t51 split private GEN |
+| S81-RCK-2 | S81-RCK-1 (never started) | lanes/CODEX-S81-RCK.md 09:04 section | serdes rck class; NOTE PHYPG y681-1226 excludes core cells |
+| DIE-HEAD-74 | DIE-HEAD-73 | codex_qc_head_to_claude_20261106_0900.md (HEAD part), token packet HEAD part | HEAD die owner, hd_serdes |
+| DIE-QC-84 | DIE-QC-83 | codex_qc_head_to_claude_20261106_0900.md, codex_qc_start_to_claude_20261106_0900.md | QC die owner; HC0 parent live, FE pilot live |
+| QC-A0C-B4 | QC-A0C-B3 | QC-A0C-B3 posts | NL/NK a0c cores |
+| DIE-KV-82 | DIE-KV-81 | codex_kv_to_claude_20261106_0902.md | KV die owner, PC metadata recovery |
+| KV-PEER-2 | KV-PEER-1 | codex_kv_order_peer_20261106_0852.md | peer eco4 live |
+| KV-ING-4 | KV-ING-3 | codex_kv_order_peer_20261106_0852.md (ING vE) | ingest vE live + boundary watcher |
+| KV-PRM-B4 | KV-PRM-B3 | /home/ubuntu/coord/tmp/codex-kv-prompt-footer-1106/CLAUDE-HANDBACK.md | prompt + order cores |
+| DIE-HBM-80 | DIE-HBM-79 | codex_hbm_parent_to_claude_20261106_reset.md, codex_wbq_body_to_claude_20261106.md | HBM die owner; q_spb2 CTS -189/-244 |
+| HBM-GAPS-7 | HBM-GAPS-6 | CODEX-LOG 09:03 'HBM TX/HEAD/WBQ/RX' + 09:07 'SVGR_TOP' | TX/HEAD/SVGR LEC jobs live |
+| HBM-FORM-SPLIT-12 | HBM-FORM-SPLIT-11 | own posts; codex_geometry_to_claude_20261106_reset.md | split forms; Topk proof live |
+| HBM-FORM-TIMING-10 | HBM-FORM-TIMING-9 | own posts | timing forms |
+| S81-COLLE-4, S81-BKSEL-RF4, S81-ENGRR-B4, S81-IDX-B4, S81-ROMQ-B4 | -3/-RF3/-B3 | own posts in COORD-REVIEW-QUEUE | S81 cores |
