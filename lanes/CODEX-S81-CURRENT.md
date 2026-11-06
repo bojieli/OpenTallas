@@ -7,6 +7,27 @@ Owner setup0/FFhold25 applies;60ps margin is INFO per latest owner12.24b/c.
 
 ## Current jobs and next actions
 
+**Final core collection: ALL THREE BKSEL/ENGRR/IDX workers have EXITED.**
+
+- BKSEL E6 unit2859546 exit1: NOT SIGNED TT-82.93/100, FF-69.55/216,
+  TTDRV394slew+2cap/FF222+3, DRC37/ANT0. Clock coverage also
+  UNEXPANDED_CHILD_ETM. Actual native clock PORT/VIA56 landing is valid;
+  SECOND parent M5-to-M6 takeoff/stub lies inside child OBS outsidePORT.
+  Move the takeoff outside macro and approach valid interiorPORT laterally
+  onM6; do not edit native childpin/LEF. Exact E6
+  `codex-bksel-bounded-1106/landing_geometry.log`.
+- ENGRR E6 unit2859571 exit1: NOT SIGNED TT-95.15/131,
+  FFstd-234.83 (SDC-116.98)/1492, TTDRV426+12/FF293+12,
+  DRC0/ANT0, io_hold_parent NEEDS_PARENT. Original full-FF baseline DID
+  close2261 endpoints before DPL8overlap; old25kbuffer inference was invalid.
+  A fresh full-FF postroute ECO from current route is the next bounded path;
+  unchanged constraints, inspect actual TT/FF endpoints, no scope waiver.
+- IDX E2 unit2698023 exit2 DRT0155: M6guide net `_06346_` rejected by
+  native detail-route M2-M5 range. GRTclockM6 does NOT extend native DRT
+  ceiling. Classify that net CLOCK/DATA, repair detail-route ceiling while
+  preserving explicit dataM5 nativewireaudit. Released555/52 is capability
+  only, not physical qualification. No new launch at handback.
+
 - COLLE E/W: both on **epyc2 dedicated scratch2**, root
   `/srv/opentallas-scratch2/claude/codex-s81-colle-compact-1106`.
   Original `e`,`w` completed fullroute/abstract, sourceEQ35784/35784,
