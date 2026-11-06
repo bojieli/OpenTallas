@@ -5,3 +5,5 @@ Current CTS leading path is step[1] to issuer_cfg[3] (−49.93 ps). Only the com
 Universal SAT compares the actual flattened 24-assignment D cone against the 53-case expression for all 1615 unconstrained step/row/assembly/metadata/draining bits. PASS; output-bit-16 mutant fails. No reachable-state, fill, or reset assumption is needed. Instance maps these five original signals directly; guard-off token identity asserted.
 
 Same ASAP7 TT ABC speed mapping / 1-unit output load: baseline2495 cells /351.70 ps; candidate1483 cells /224.66 ps (−127.04 ps). Isolated cone measurements only. No P&R activation; exact whole-kit LEC remains required before physical adoption. RCP1 prior whole-core LEC does not cover this new option.
+
+Complete optional production RTL plus exact helper syntax/internal elaboration passed native Icarus on EP5, unit oth-ubuntu-1004850-1793982158, source409dbb3866a. Flags TGTQ1/MUL4_RT/RCP1/CFG_CASE enabled. -i permits unresolved macro models, so this establishes syntax/internal integration only, not whole-kit functional equivalence.
