@@ -63,7 +63,7 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
         raise ValueError('memory and CPU budgets must be positive')
     if profile == 'partition':
         keys(overrides, ('bind_out', 'asbuilt', 'instance', 'reset_mode', 'assembly_contracts',
-                         'util', 'skip_kit_ir', 'reset_context_plan', 'reset_expected'), 'partition overrides')
+                         'util', 'skip_kit_ir', 'reset_context_plan', 'reset_expected', 'bind_context_plan'), 'partition overrides')
         keys(overrides.get('reset_expected', {}), ('entry', 'depth', 'release_clocks'), 'reset expected contract')
         if not type_name or core_spec or not overrides.get('bind_out'):
             raise ValueError('partition needs --type and overrides.bind_out; no core spec')
@@ -111,8 +111,37 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
             step('history', source / 'tools/autopilot/source_history.py', 'install', '--repo', source,
                  '--pack', Path(history_pack).resolve())
         if profile == 'partition':
+            sys.path.insert(0,str(dp))
+            import kit_topology as KT
             rtl = output / 'rtl'
-            args = [plan, '--out', Path(overrides['bind_out']).resolve(), '--type', type_name, '--kit', rtl]
+            bind_out=Path(overrides['bind_out']).resolve()
+            context=Path(overrides.get('bind_context_plan',overrides.get('reset_context_plan',plan))).resolve()
+            context_raw=read(context)
+            selected_raw=read(plan)
+            if type_name not in context_raw['partition_types'] or KT.contract(selected_raw)['types'][type_name]!=KT.contract(context_raw)['types'][type_name]:
+                raise ValueError('selected stage/reset topology differs from bind_context_plan; update the full native context before regeneration')
+            if KT.has_topology(selected_raw,type_name) and not KT.bind_matches(context_raw,type_name,bind_out,overrides.get('asbuilt')):
+                # A stage/reset change must be emitted by the native factory.
+                # Never repair a cached bound body with a private source patch.
+                if not overrides.get('asbuilt'):
+                    raise ValueError('native topology is unrecorded or changed: supply explicit asbuilt and bind_context_plan to regenerate native bind')
+                regenerated=output/'native_bind';regenerated.mkdir()
+                cached=bind_out/'asbuilt.json'
+                old_receipt=bind_out/'native_topology.json'
+                cfg_sha=hashlib.sha256(Path(overrides['asbuilt']).read_bytes()).hexdigest()
+                reusable=old_receipt.is_file() and read(old_receipt).get('asbuilt_sha256')==cfg_sha
+                if cached.is_file() and reusable:
+                    (regenerated/'asbuilt.json').symlink_to(cached)
+                else:
+                    step('native_elab',dp/'bind.py','elab',context,'--out',regenerated,
+                         '--asbuilt',overrides['asbuilt'],'--mem',mem)
+                step('native_bind',dp/'bind.py','bind',context,'--out',regenerated,
+                     '--asbuilt',overrides['asbuilt'],'--strict','--all-gaps','--mem',mem)
+                if not KT.bind_matches(context_raw,type_name,regenerated,overrides.get('asbuilt')):
+                    raise ValueError('native bind did not record the selected stage/reset topology')
+                bind_out=regenerated
+            record['native_bind']=str(bind_out)
+            args = [plan, '--out', bind_out, '--type', type_name, '--kit', rtl]
             for key in ('asbuilt', 'instance'):
                 if overrides.get(key):
                     args += ['--' + key, overrides[key]]
@@ -136,6 +165,10 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
                     raise ValueError(f'canonical reset differs from selected native contract: {mismatch}')
             # Never omit this because generation/frontend happened to succeed.
             step('istations', dp / 'kit_istations.py', plan, type_name, rtl, '--apply')
+            census=KT.source_census(read(plan),type_name,rtl)
+            (output/'kit_topology.json').write_text(json.dumps(census,indent=2)+'\n')
+            if census['problems']:
+                raise ValueError('emitted native topology differs from plan: '+'; '.join(census['problems']))
             args = ['phys', plan, '--out', output / 'gen', '--rtl-root', source, '--types', type_name,
                     '--kit-rtl', f'{type_name}={rtl / "kit_rtl.f"}', '--trial',
                     '--util', overrides.get('util', .4)]
@@ -148,6 +181,8 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
                 # kit; rtl_lint supplies inventory using its one native frontend.
                 for name in ('kit_assembly.json', 'kit_assembly.py'):
                     shutil.copyfile(output / name, kit / name)
+            KT.install_inventory(census,kit/'kit_assembly.json',read(kit/'freeze.json')['module'])
+            shutil.copyfile(output/'kit_topology.json',kit/'kit_topology.json')
         else:
             step('generate', source / 'physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py',
                  '--module', core_spec['module'], '--recipes', Path(core_spec['recipes']).resolve(),
@@ -174,9 +209,14 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
         step('rtl_lint', dk + ['run', '--rm', '--cpus', str(cpus), '--memory', f'{mem}g',
              '--memory-swap', f'{mem}g', '-v', f'{kit}:/work', '-w', '/OpenROAD-flow-scripts/flow',
              image, 'bash', '-lc', 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 -I /work/rtl_lint.py /work'])
+        if (kit/'kit_assembly.json').exists() and not (kit/'kit_hierarchy.json').is_file():
+            raise ValueError('existing frontend did not produce the selected parent/station inventory')
         if (kit / 'kit_hierarchy.json').is_file():
             record['inventory'] = str(kit / 'kit_hierarchy.json')
             record['frontend_json'] = str(kit / 'kit_assembly_elaborated.json')
+            actual_inventory=read(kit/'kit_hierarchy.json')
+            if actual_inventory.get('status')=='NOT RUN' or actual_inventory.get('problems'):
+                raise ValueError('actual frontend hierarchy differs from selected child/station topology')
         review = output / 'review'; review.mkdir()
         if profile == 'partition':
             step('render', source / 'tools/geom_review/plan_review.py', plan, review, '--tools', dp)
@@ -204,7 +244,7 @@ def main():
         print(json.dumps(prepare(a.source, a.profile, a.plan, a.out, type_name=a.type_name, core_spec=a.core_spec,
                                  overrides=read(a.overrides), history_pack=a.history_pack,
                                  image=a.image, mem=a.mem, cpus=a.cpus)))
-    except (ValueError, RuntimeError, OSError, subprocess.SubprocessError) as error:
+    except (ValueError, RuntimeError, OSError, ImportError, subprocess.SubprocessError) as error:
         p.exit(1, f'fresh_kit: {error}\n')
 
 

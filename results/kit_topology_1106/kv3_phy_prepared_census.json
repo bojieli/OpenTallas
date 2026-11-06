@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.kit_topology.v1",
+  "type": "kv3_phy",
+  "source": "/srv/opentallas-scratch2/claude/wt/codex-kit-topology-1106/results/kit_topology_1106/kv3_phy_prepared/kv3_phy_part_bound.sv",
+  "source_sha256": "140c47e73172af9c23c262b47f26efb3667c6056c28b711cc7c44512cdf75f34",
+  "topology": "7d65b5b00e91549c5f865eda7fe9ef1c0ee6fdf98310ced1ca99ca82b7bb544d",
+  "raw_expected": 0,
+  "raw_emitted": 0,
+  "planned_bus_stages": {
+    "bus:i_host_hbm_rst_n": 3
+  },
+  "emitted_bus_stages": {
+    "bus:i_host_hbm_rst_n": [
+      "u_ist_i_host_hbm_rst_n_0",
+      "u_ist_i_host_hbm_rst_n_1",
+      "u_ist_i_host_hbm_rst_n_2"
+    ]
+  },
+  "required_instances": [
+    {
+      "inst": "u_ist_i_host_hbm_rst_n_0",
+      "master": "ot_dp_st",
+      "kind": "bus:i_host_hbm_rst_n"
+    },
+    {
+      "inst": "u_ist_i_host_hbm_rst_n_1",
+      "master": "ot_dp_st",
+      "kind": "bus:i_host_hbm_rst_n"
+    },
+    {
+      "inst": "u_ist_i_host_hbm_rst_n_2",
+      "master": "ot_dp_st",
+      "kind": "bus:i_host_hbm_rst_n"
+    }
+  ],
+  "problems": []
+}
