@@ -76,6 +76,7 @@ GATE_ROOTS = {"PROVENANCE.json", "PROVENANCE.generated.json", "LEC_TOOL.json", "
               "grt_policy.json", "pin_audit.py", "audit_pins.json", "lec.py", "lec_async.sh", "lec_options.json",
               "lec_async.on", "lec_async.identity", "signoff.py", "lec_options.json", "straps.json",
               "grt183_make.sh", "grt183_resume.tcl"}      # FLOW-28: inert unless a run stops on GRT-0183; a kit with no such stop rebuilds nothing
+GATE_ROOTS |= {"grt_stall_resume.tcl"}   # KW-FIX-17 11-05 GRT-STALL: inert unless a 5_1_grt stage stalls in -end_incremental
 # run_kit.sh reads these config variables itself (outside the ORFS make steps)
 RUNNER_VARS = {"OT_HOLD_FF_MARGIN": "grt", "OT_TAP_GRT_PRE": "cts", "OT_PINREG_PAD": "cts"}
 # ORFS variables first read after synthesis (anything else: synth, i.e. a full rebuild)
