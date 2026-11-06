@@ -91,3 +91,41 @@ def test_prd_mk_final_seed_and_list():
     assert "final) SRC=6_final.odb" in t and 'prd_spef_insts.py" "$SPEF" $OUT/prd_spef_insts.tsv' in t
     r = (HERE / "prd_run.sh").read_text()
     assert "= final ] && OT_PRD_FROM=route" in r
+
+
+# HBM-FORM-SPLIT-12 11-06: yosys merged-register names carry a literal backslash; SPEF escapes it (\\), OpenDB keeps
+# it escaped too but leaves . and $ bare (Q2NF helpers: 2322 false STAGE_MISMATCH misses).  A truly absent instance
+# must still stop the ECO.
+SPEF_MERGED = r"""*NAME_MAP
+*1 u_x\._7_\[0\]\$\\u_x\._7_\[1\]\$dff\[0\]\$_DFF_P_
+
+*D_NET *9 0.001
+*CONN
+*I *1:D I *D DFFHQNx1_ASAP7_75t_R
+*I u_y\._8_\[2\]\$\\u_y\._8_\[3\]\$dff\[1\]\$_DFF_P_:D I *D DFFHQNx1_ASAP7_75t_R
+*END
+"""
+MERGED_DB = [r"u_x._7_\[0\]$\\u_x._7_\[1\]$dff\[0\]$_DFF_P_", r"u_y._8_\[2\]$\\u_y._8_\[3\]$dff\[1\]$_DFF_P_"]
+
+
+@pytest.mark.skipif(not shutil.which("tclsh"), reason="tclsh")
+@pytest.mark.parametrize("db,ok", [(MERGED_DB, True), (MERGED_DB[:1], False)])
+def test_stage_check_merged_backslash_names(tmp_path, db, ok):
+    ins = P.instances(SPEF_MERGED.splitlines(True))
+    assert len(ins) == 2
+    lst = tmp_path / "l.tsv"
+    lst.write_text("".join(f"{i} {m}\n" for i, m in sorted(ins.items())))
+    names = " ".join("{" + n + "}" for n in db)
+    script = f"""
+namespace eval ord {{}}
+proc ord::get_db_block {{}} {{ return blk }}
+set ::db [list {names}]
+proc blk {{op name}} {{ if {{$name in $::db}} {{ return inst }} ; return NULL }}
+{_stage_proc()}
+if {{[catch {{ot_prd_stage_check {lst}}} msg]}} {{ puts "ERR $msg"; exit 1 }}
+puts OK
+"""
+    p = subprocess.run(["tclsh"], input=script, capture_output=True, text=True)
+    assert (p.returncode == 0) == ok, p.stdout + p.stderr
+    if not ok:
+        assert "OT_PRD STAGE_MISMATCH: 1 of 2" in p.stdout and "u_y" in p.stdout
