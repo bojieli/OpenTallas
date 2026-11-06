@@ -1,0 +1,54 @@
+{
+  "scope": "only own completed native-proof binaries and duplicate old mapped netlist; active GEN/sizing/LEC untouched",
+  "files": [
+    {
+      "host": "intel2",
+      "path": "/srv/opentallas-scratch2/claude/svgr-cache136-proof-1106/read_address.vvp",
+      "bytes": 778951,
+      "sha256": "e9c1d1435e8e6ddaa066b09e11d04b7e218c67b68b47a6e56ad1d6e4acd89a6e",
+      "action": "DELETE_GENERATED_COPY",
+      "preserved": "Proof .sv/.log/summary+generator and original source/netlist artifacts retained"
+    },
+    {
+      "host": "intel2",
+      "path": "/srv/opentallas-scratch2/claude/svgr-cache136-proof-1106/read_edge_removed.vvp",
+      "bytes": 778096,
+      "sha256": "2ae0e97f0aea6b7ad7ec8e5f453bf43b3de2b02283853f79e4ed648af617eefc",
+      "action": "DELETE_GENERATED_COPY",
+      "preserved": "Proof .sv/.log/summary+generator and original source/netlist artifacts retained"
+    },
+    {
+      "host": "intel2",
+      "path": "/srv/opentallas-scratch2/claude/svgr-cache136-proof-1106/positive.vvp",
+      "bytes": 777812,
+      "sha256": "9bbe549c4e629fe1677b309f532613e3818190173c4fd29d809f6dd52b2cc766",
+      "action": "DELETE_GENERATED_COPY",
+      "preserved": "Proof .sv/.log/summary+generator and original source/netlist artifacts retained"
+    },
+    {
+      "host": "intel2",
+      "path": "/srv/opentallas-scratch2/claude/svgr-cache136-proof-1106/payload_flip.vvp",
+      "bytes": 782706,
+      "sha256": "9ed94aaa58016edcb2a55b1bdd0606f26265587b911b4ad082ba495818e6228f",
+      "action": "DELETE_GENERATED_COPY",
+      "preserved": "Proof .sv/.log/summary+generator and original source/netlist artifacts retained"
+    },
+    {
+      "host": "intel2",
+      "path": "/srv/opentallas-scratch2/claude/svgr-cache136-default-proof-1106/positive.vvp",
+      "bytes": 329643,
+      "sha256": "7a71b5e96855a52ea1a9a25298f8efe4f1568ba30d2472729f54882aec9d6c5c",
+      "action": "DELETE_GENERATED_COPY",
+      "preserved": "Proof .sv/.log/summary+generator and original source/netlist artifacts retained"
+    },
+    {
+      "host": "intel2",
+      "path": "/tmp/svgr-top-old/1_2_yosys.v",
+      "bytes": 15122738,
+      "sha256": "e40af4a24eabe1e6eb5ffd0eeb4e37ce340f5001e085dbc5e94b24c4fc763de7",
+      "action": "DELETE_GENERATED_COPY",
+      "preserved": "Proof .sv/.log/summary+generator and original source/netlist artifacts retained"
+    }
+  ],
+  "total_deleted_bytes": 18569946
+}
