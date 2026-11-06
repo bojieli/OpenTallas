@@ -8,6 +8,13 @@
 // launches from a TB rising-edge sender flop (IFN plan contract).  Mutants that must fail: OT_QXPQ_SPLIT_MUT_MSEL
 // (the second half built MSEL 0: reads the first macro's rows), OT_PQT_MUT_WRAP (ref NB = 2 tag table with the old wrapped second-macro index: shows the
 // stimulus reaches segment NSEG-1 of the second macro).
+// S81-ROMQ-B 11-05 (rom_q version B): +define+TB_DUT_OLAT=1 builds the split halves with OLAT 1 (one negedge face flop per
+// output bit, 0 cycles; the NB = 2 ref stays OLAT 0).  The DUT face must then equal the ref 0.1 ns after the falling
+// edge and still hold the ref's PREVIOUS value 0.1 ns after the rising edge (the tb_qxpq_go_boundary OLAT check), so a
+// rising-edge face copy (OT_QXPQ_OLAT_MUT_POS, +1 cycle) or a missing face flop fails.
+`ifndef TB_DUT_OLAT
+`define TB_DUT_OLAT 0
+`endif
 module tb_qxpq_split;
  integer SEED = 1;
  reg clk = 0; always #0.5 clk = ~clk;
@@ -23,13 +30,13 @@ module tb_qxpq_split;
  localparam integer OW = 1+1+1+2+64+32+10+10+2+6+1+1;
  wire [1:0] av, bv, ae, be; wire [63:0] ad, bd; wire [31:0] ar, br; wire [9:0] asg, bsg, an, bn; wire [5:0] ap, bp;
  wire ab, bb, af, bf, awk, bwk, abf, bbf, ash, bsh;
-`define QP .MTP(1), .EARLY(1), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4), .QY(1), .QX(10), .PQ(1), .QW(0), .QM(5), .QS(5), .GO_BOUNDARY(1), .RSTP(1), .CGR(0), .OLAT(0), .IFN(1)
- ot_v41_rom_elem_q_qxpq_w10_gb #(`QP, .NB(2), .INSTANCE("r")) ref_e (
+`define QP .MTP(1), .EARLY(1), .FAST(1), .PP(1), .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4), .QY(1), .QX(10), .PQ(1), .QW(0), .QM(5), .QS(5), .GO_BOUNDARY(1), .RSTP(1), .CGR(0), .IFN(1)
+ ot_v41_rom_elem_q_qxpq_w10_gb #(`QP, .OLAT(0), .NB(2), .INSTANCE("r")) ref_e (
   .clk(clk), .rst_n(rst), .cfg_v(s_cfg_v), .cfg_a(s_cfg_a), .cfg_d(s_cfg_d), .go(s_go), .go_tag(s_go_tag),
   .walking(awk), .bank_free(abf), .sh_free(ash),
   .xs_v(s_xs_v), .xs_p(s_xs_p), .xs_b(s_xs_b), .xs_q0(s_xs_q0), .xs_e0(s_xs_e0), .xs_q1(s_xs_q1), .xs_e1(s_xs_e1),
   .xs_pos(s_xs_pos), .pv(av), .pval(ad), .prow(ar), .pseg(asg), .pnseg(an), .perr(ae), .ppos(ap), .busy(ab), .fault(af));
- ot_v41_rom_elem_q_qxpq_w10_gb_split #(`QP, .INSTANCE("r")) dut_e (
+ ot_v41_rom_elem_q_qxpq_w10_gb_split #(`QP, .OLAT(`TB_DUT_OLAT), .INSTANCE("r")) dut_e (
   .clk(clk), .rst_n(rst), .cfg_v(s_cfg_v), .cfg_a(s_cfg_a), .cfg_d(s_cfg_d), .go(s_go), .go_tag(s_go_tag),
   .walking(bwk), .bank_free(bbf), .sh_free(bsh),
   .xs_v(s_xs_v), .xs_p(s_xs_p), .xs_b(s_xs_b), .xs_q0(s_xs_q0), .xs_e0(s_xs_e0), .xs_q1(s_xs_q1), .xs_e1(s_xs_e1),
@@ -40,8 +47,18 @@ module tb_qxpq_split;
  wire [3:0] st_e = {dut_e.u_e.u_h.o_walking, dut_e.u_e.u_h.o_bank_free, dut_e.u_e.u_h.o_sh_free, dut_e.u_e.u_h.o_busy};
  integer cyc = 0, mism = 0, first_mism = -1, st_mism = 0;
  integer pv_seen = 0, pv1_seen = 0, seg7_hi = 0, go_cnt = 0, cfg_cnt = 0, xs_cnt = 0, busy_seen = 0, flt_seen = 0, flt_e_only = 0, idle_hi = 0;
+ reg [OW-1:0] ro_prev = 0; integer olat_mism = 0;
+ always @(posedge clk) begin
+   ro_prev = ro;
+   if (`TB_DUT_OLAT != 0) begin
+     #0.1;
+     if (dov !== ro_prev) begin olat_mism = olat_mism + 1; mism = mism + 1; if (first_mism < 0) first_mism = cyc;
+       if (olat_mism <= 4) $display("OLAT_MISMATCH (rise+0.1) cyc %0d ref_prev %h dut %h", cyc, ro_prev, dov); end
+   end
+ end
  always @(negedge clk) begin
    cyc = cyc + 1;
+   if (`TB_DUT_OLAT != 0) #0.1;
    if (ro !== dov) begin
      mism = mism + 1;
      if (first_mism < 0) first_mism = cyc;

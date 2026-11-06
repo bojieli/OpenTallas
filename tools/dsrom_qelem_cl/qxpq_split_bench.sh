@@ -1,5 +1,5 @@
 #!/bin/bash
-# qxpq_split_bench.sh SRC_ROOT OUT [pass|all]  (DIE-S81-65 2026-11-05, S81 rom_q 2-way split)
+# qxpq_split_bench.sh SRC_ROOT OUT [pass|all|olat]  (DIE-S81-65 2026-11-05, S81 rom_q 2-way split)
 # tb_qxpq_split: ot_v41_rom_elem_q_qxpq_w10_gb_split (2 x NB = 1, MSEL 0 / 1) vs the NB = 2 _gb element, all-output
 # lock-step at the rom_q kit parameters.  pass = three seeds; all = pass + mutants (each must FAIL):
 #   mut_msel (the second half built MSEL 0), mut_wrap (ref NB = 2 tag table with the old wrapped index).
@@ -32,6 +32,16 @@ run() { # name expect seed
   [ $ok = 1 ]
 }
 MODE=${3:-all}
+# S81-ROMQ-B 11-05: olat = the version B halves (OLAT 1, TB_DUT_OLAT=1): three seeds + mutants mut_olat_pos (rising-edge
+# face copy, +1 cycle) and mut_msel_olat (MSEL mutant at OLAT 1), each must FAIL.
+if [ "$MODE" = olat ]; then
+  build olat +define+TB_DUT_OLAT=1 || exit 2
+  rc=0; for s in 1 2 3; do run olat pass $s || rc=1; done
+  build mut_olat_pos +define+TB_DUT_OLAT=1 +define+OT_QXPQ_OLAT_MUT_POS && build mut_msel_olat +define+TB_DUT_OLAT=1 +define+OT_QXPQ_SPLIT_MUT_MSEL || exit 2
+  run mut_olat_pos fail 1 || rc=1
+  run mut_msel_olat fail 1 || rc=1
+  echo "BENCH_RC $rc"; exit $rc
+fi
 build pass || exit 2
 rc=0; for s in 1 2 3; do run pass pass $s || rc=1; done
 if [ "$MODE" = all ]; then
