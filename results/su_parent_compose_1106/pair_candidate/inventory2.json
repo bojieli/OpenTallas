@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.kit_hierarchy.v1",
+  "top": "ot_hnx_su_plain4__lid9_rst3__p17_candidate",
+  "expected": 4,
+  "matched": 4,
+  "problems": [],
+  "hard_instances": [
+    {
+      "instance": "u_fcore.u_core.u_p0",
+      "master": "ot_hbm_su_pg_lane1_core"
+    },
+    {
+      "instance": "u_fcore.u_core.u_p1",
+      "master": "ot_hbm_su_pg_lane1_core"
+    },
+    {
+      "instance": "u_fcore.u_core.u_p2",
+      "master": "ot_hbm_su_pg_lane1_core"
+    },
+    {
+      "instance": "u_fcore.u_core.u_p3",
+      "master": "ot_hbm_su_pg_lane1_core"
+    }
+  ]
+}

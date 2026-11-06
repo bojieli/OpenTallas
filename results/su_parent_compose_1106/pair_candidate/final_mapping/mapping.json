@@ -1,0 +1,42 @@
+{
+  "status": "PHASE_PROOF_PENDING_DO_NOT_ROUTE",
+  "top": "ot_hnx_su_plain4__lid9_rst3__p17_candidate",
+  "native_profile": {
+    "MLAT": 4,
+    "ALAT": 4
+  },
+  "signed_profile": {
+    "MLAT": 5,
+    "ALAT": 3,
+    "face_in": 1,
+    "face_out": 1
+  },
+  "parent_flops": "retained",
+  "input_sha256": {
+    "results/su_parent_compose_1106/native_cut/plain4_net.json": "8c6dd55f89c88c5a06e6678606b45a41d01b2d9962df67320f14e5ebf52ae400",
+    "results/su_parent_compose_1106/native_cut/lane1_native4_4.json": "f8c1ae4d1a668dcb475cb9e6c13c2f52b633030a3b374e4e950c36f8f82ba65c",
+    "results/su_parent_compose_1106/native_cut/lane1_signed_bb.json": "477aac9e94c0a44cdf985ff86de18781f4de5539ece61900b750cc918e1fe37f"
+  },
+  "children": [
+    {
+      "master": "ot_hbm_su_pg_lane1_core",
+      "inst": "u_fcore.u_core.u_p0"
+    },
+    {
+      "master": "ot_hbm_su_pg_lane1_core",
+      "inst": "u_fcore.u_core.u_p1"
+    },
+    {
+      "master": "ot_hbm_su_pg_lane1_core",
+      "inst": "u_fcore.u_core.u_p2"
+    },
+    {
+      "master": "ot_hbm_su_pg_lane1_core",
+      "inst": "u_fcore.u_core.u_p3"
+    }
+  ],
+  "parent_profile": {
+    "top": "ot_hnx_su_plain4__lid9_rst3__p17_candidate",
+    "parameters": {}
+  }
+}

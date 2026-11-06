@@ -1,0 +1,18 @@
+[
+  {
+    "case": "control",
+    "result": "PASS"
+  },
+  {
+    "case": "wrongparam",
+    "result": "Native template parameters/type differ: u_lane0/m1"
+  },
+  {
+    "case": "wrong_vi_link",
+    "result": "Native pair does not share template net 2046: [('m0', 'read_data', 128), ('m1', 'vi_q', 0)]"
+  },
+  {
+    "case": "wrong_clock",
+    "result": "Signed one-clock view cannot join different native clocks"
+  }
+]
