@@ -174,9 +174,26 @@ def main(argv):
     if rel:
         raw.setdefault("reset", {})["release"] = rel
     P = S.Plan(raw, plan)
-    taps = reset_tree.consumer_taps(P, tn)
     man = json.loads((kd / "kit_rtl.json").read_text())
     files = [Path(x) for x in man["files"]]
+    # Native kit-rtl already staged the captured graph, exact RTL hierarchy and
+    # native placement sidecar. Re-converting it loses the u_bound paths and can
+    # rewrite reset connections. Validate the existing authority before any
+    # solver or write, then preserve every staged byte.
+    if (kd / "bound_reset.json").is_file():
+        import bound_reset_contract as BRC
+        import gen_phys
+        captured = BRC.kit(files, tn)
+        if captured is None:
+            raise ValueError("native reset receipt is not beside the selected kit RTL")
+        verified = gen_phys.install_bound_native_reset(P, tn, files, source_contract=captured)
+        for key in ("native_paths", "physical_nodes"):
+            if verified[key] != captured.get(key):
+                raise ValueError("native reset receipt differs from verified " + key)
+        print(json.dumps(dict(type=tn, kit=str(kd), preserved_bound_native_reset=True,
+                              tree_sha256=captured["tree_sha256"])))
+        return 0
+    taps = reset_tree.consumer_taps(P, tn)
     bfile = next(f for f in files if f.stem == man["bound_module"])
     cfile = next((f for f in files if f.name == "bind_cells.sv"), None)
     lines = bfile.read_text().splitlines(keepends=True)
