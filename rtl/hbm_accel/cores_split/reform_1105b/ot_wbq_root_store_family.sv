@@ -2,7 +2,7 @@
 // Existing WD captures live in store_face; every other face retains its old capture.
 // No additional face shell is permitted on this composition. Native bindings need owner adoption.
 `default_nettype none
-module ot_wbq_root_store_family #(parameter integer STORE_GROUP4=0) (
+module ot_wbq_root_store_family (
     input wire hbm_clk,
     input wire fifo_clk,
     input wire stream_rst_n,
@@ -80,7 +80,7 @@ module ot_wbq_root_store_family #(parameter integer STORE_GROUP4=0) (
     (* keep *) ot_hbm_face_reg #(.W(2)) u_bout_g_v (.clk(fifo_clk), .d(g_v__fc), .q(g_v));
     wire [571:0] g_d__fc;
     (* keep *) ot_hbm_face_reg #(.W(572)) u_bout_g_d (.clk(fifo_clk), .d(g_d__fc), .q(g_d));
-    ot_wbq_root #(.STORE_GROUP4(STORE_GROUP4)) u_fcore (
+    ot_wbq_root u_fcore (
         .hbm_clk(hbm_clk),
         .fifo_clk(fifo_clk),
         .stream_rst_n(stream_rst_n),

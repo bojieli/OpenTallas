@@ -524,5 +524,10 @@
       }
     }
   ],
-  "parent": "Group FIFO heads feed unchanged hbm_clk arbitration; historical fullfamily g_v/g_d outer faces remain fifo_clk and are qualified only by exact common-clock parent binding."
+  "parent": "Group FIFO heads feed unchanged hbm_clk arbitration; historical fullfamily g_v/g_d outer faces remain fifo_clk and are qualified only by exact common-clock parent binding.",
+  "opt_in_defines": [
+    "OT_WBQ_ROOT_GROUP4",
+    "OT_WBQ_ROOT_STORE_FACES"
+  ],
+  "default_path_compatibility": "old u_fcore.g_lane hierarchy/text restored byte-exact after preprocessing"
 }

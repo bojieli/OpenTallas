@@ -5,9 +5,12 @@
   "source_base": "497af71eb69",
   "canonical_default": "unchanged",
   "opt_in": {
-    "family": "ot_wbq_root_store_family STORE_GROUP4=1",
-    "root": "ot_wbq_root STORE_GROUP4=1",
-    "define": "OT_WBQ_ROOT_STORE_FACES",
+    "family": "ot_wbq_root_store_family (unchanged parameters)",
+    "root": "ot_wbq_root (unchanged parameters)",
+    "defines": [
+      "OT_WBQ_ROOT_GROUP4",
+      "OT_WBQ_ROOT_STORE_FACES"
+    ],
     "group_parameters": [
       {
         "LANE_BASE": 0,
@@ -465,5 +468,6 @@
         }
       }
     }
-  }
+  },
+  "hierarchy_guard_proof": "hierarchy_guard/summary.json"
 }

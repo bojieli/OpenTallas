@@ -16,7 +16,7 @@
 // All clock pins carry the one core clock (face_shell: "all clock ports carry the one core clock"); the two lane FIFO clock pins stay as they were.
 // MUT (bench only, root): 1 = group 1 stops getting credits after 9 sends (hang), 2 = credit counter starts at CRED+1 (queue overflow).
 
-module ot_wbq_root #(parameter integer CRED=4, parameter integer MUT=0, parameter integer STORE_GROUP4=0)(
+module ot_wbq_root #(parameter integer CRED=4, parameter integer MUT=0)(
  input wire hbm_clk,fifo_clk,stream_rst_n,hbm_rst_n,
  input wire [1:0] root_id,                // from sw, static after reset
  input wire reserve_v,reserve_bank,input wire [11:0] reserve_total,input wire [29:0] reserve_base,
@@ -40,7 +40,8 @@ module ot_wbq_root #(parameter integer CRED=4, parameter integer MUT=0, paramete
  wire [7:0] fifo_empty,fifo_re;
  wire [287:0] fifo_head[0:7];
  genvar g;
- generate if(STORE_GROUP4!=0)begin:g_store_groups
+`ifdef OT_WBQ_ROOT_GROUP4
+ generate if(1)begin:g_store_groups
   for(g=0;g<2;g=g+1)begin:g_group4
 `ifdef OT_WBQ_ROOT_STORE_FACES
    localparam integer FACES=1;
@@ -58,8 +59,9 @@ module ot_wbq_root #(parameter integer CRED=4, parameter integer MUT=0, paramete
     assign fifo_head[4*g+j]=heads[288*j+:288];
    end
   end
- end else begin:g_native_stores
-  for(g=0;g<8;g=g+1)begin:g_lane
+ end endgenerate
+`else
+ generate for(g=0;g<8;g=g+1)begin:g_lane
 `ifdef OT_WBQ_ROOT_STORE_FACES
   ot_wbq_root_store_face #(.LANE(g)) u_store(
 `else
@@ -70,8 +72,8 @@ module ot_wbq_root #(parameter integer CRED=4, parameter integer MUT=0, paramete
    .filling(filling),.fill_bank(fill_bank),.ordinal(ordinal),.copy_q(copy_q),.copy_bank(copy_bank),
    .copy_start(copy_on&&!copy_q),.s_stop(s_stop),.wd(wd[g]),.wd_v(wd_v[g]),
    .fifo_re(fifo_re[g]),.fifo_head(fifo_head[g]),.fifo_empty(fifo_empty[g]));
-  end
  end endgenerate
+`endif
  integer s;
  always @(posedge fifo_clk or negedge srst)begin
   if(!srst)begin
