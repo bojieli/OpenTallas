@@ -1,0 +1,13 @@
+{
+ "schema": "land_slots/3",
+ "buses": {
+  "d": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "t_rst_n": {
+   "form": "ring_start",
+   "ring": "d"
+  }
+ }
+}
