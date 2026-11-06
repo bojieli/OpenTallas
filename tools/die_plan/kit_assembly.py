@@ -62,7 +62,7 @@ def specialize_native_children(rtl_dir, children):
     paths = [p for p in sorted(Path(rtl_dir).iterdir())
              if p.suffix in ('.sv', '.v') and not p.name.endswith('_bb.v')]
     texts = {p:p.read_text() for p in paths}
-    masters = {c['master'] for c in children}
+    masters = {c.get('native_master', c['master']) for c in children}
     counts = {}
     for master in sorted(masters):
         alias = master+'__soft'
@@ -73,13 +73,17 @@ def specialize_native_children(rtl_dir, children):
         if n != 1:
             raise ValueError(f'expected exactly one native definition for {master}, found {n}')
         texts = {p:_code_rename(t, master, alias) for p,t in texts.items()}
-        leaves = {c['inst'].split('.')[-1] for c in children if c['master'] == master}
-        for leaf in sorted(leaves):
+        selected = [c for c in children if c.get('native_master', c['master']) == master]
+        leaves = {c['inst'].split('.')[-1] for c in selected}
+        if len(leaves) != len(selected):
+            raise ValueError('duplicate selected native instance for '+master)
+        for child in selected:
+            leaf = child['inst'].split('.')[-1]
             hits = [(p, a, b, end) for p,t in texts.items() for a,b,end in _instance_type_spans(t, alias, leaf)]
             if len(hits) != 1:
                 raise ValueError(f'hard child {master}/{leaf}: expected one source instance, found {len(hits)}')
             p,a,b,end = hits[0]
-            texts[p] = texts[p][:a]+master+' '+texts[p][end:]
+            texts[p] = texts[p][:a]+child['master']+' '+texts[p][end:]
         counts[master] = len(leaves)
     for path,text in texts.items():
         if text != path.read_text():
@@ -181,7 +185,9 @@ def assemble_fixed_children(rtl_dir, children, contracts, receipt=None, parent_p
     Contracts use the existing signed_children parameter_contracts format. The
     caller validates child_params against the SIGNED view before this operation;
     this function checks the selected source bytes, instance identity, and fixed
-    blackbox interface. It supports unique lexical instances, not arbitrary
+    blackbox interface. Optional native_master must agree in the selected row
+    and seal; it allows distinct fixed masters for one native parameterized module.
+    It supports unique lexical instances, not arbitrary
     cloning of shared generate/module bodies. Post-elaboration inventory detects
     a lexical instance that elaborates more than once.
     """
@@ -193,6 +199,7 @@ def assemble_fixed_children(rtl_dir, children, contracts, receipt=None, parent_p
     if len(selected) != len(children) or len(sealed) != len(contracts) or selected != sealed:
         raise ValueError("selected hard-child instances differ from sealed assembly contracts")
     bindings = []
+    by_selected = {(c['master'], c['inst']): c for c in children}
     for contract in contracts:
         if parent_profile is not None:
             effective = parent_profile.get('parameters', {})
@@ -200,13 +207,16 @@ def assemble_fixed_children(rtl_dir, children, contracts, receipt=None, parent_p
                 if effective.get(parameter) != value:
                     raise ValueError(f"effective parent parameter {parameter} differs from sealed child binding")
         master, instance = contract["master"], contract["instance"]
+        native_master = contract.get('native_master', master)
+        if by_selected[(master, instance)].get('native_master', master) != native_master:
+            raise ValueError(f'{master}/{instance}: selected native master differs from sealed contract')
         leaf = instance.split(".")[-1]
         if not re.fullmatch(r"[A-Za-z_][\w$]*", leaf):
             raise ValueError(f"unsupported selected source instance {instance!r}")
         if not isinstance(contract.get("child_params"), dict):
             raise ValueError(f"missing sealed child parameters: {master}/{instance}")
         hits = [(p, a, b, end) for p, text in sources.items()
-                for a, b, end in _instance_type_spans(text, master, leaf)]
+                for a, b, end in _instance_type_spans(text, native_master, leaf)]
         if len(hits) != 1:
             raise ValueError(f"{master}/{instance}: expected one source instance, found {len(hits)}")
         path, _, type_end, instance_start = hits[0]
@@ -230,6 +240,8 @@ def assemble_fixed_children(rtl_dir, children, contracts, receipt=None, parent_p
                              source_sha256=digest, child_params=contract["child_params"],
                              blackbox=blackboxes[0].name,
                              blackbox_sha256=hashlib.sha256(blackboxes[0].read_bytes()).hexdigest()))
+        if native_master != master:
+            bindings[-1]['native_master'] = native_master
     # Stage all transforms in memory first. No partially transformed output on
     # a missing/ambiguous native definition or source instance.
     import tempfile
@@ -238,20 +250,21 @@ def assemble_fixed_children(rtl_dir, children, contracts, receipt=None, parent_p
         stage = Path(directory)
         for p in paths:
             shutil.copyfile(p, stage / p.name)
-        native_masters = {c["master"] for c in children if any(
-            c["master"] in module_names(text) for text in sources.values())}
-        native = [c for c in children if c["master"] in native_masters]
+        native_masters = {c.get('native_master', c['master']) for c in children if any(
+            c.get('native_master', c['master']) in module_names(text) for text in sources.values())}
+        native = [c for c in children if c.get('native_master', c['master']) in native_masters]
         if native:
             specialize_native_children(stage, native)
         # Some parent closures already omit the native child body and stage the
         # fixed view directly. Only seal the explicitly listed calls in that case.
         for contract in contracts:
             master, instance = contract["master"], contract["instance"]
-            if master in native_masters:
+            native_master = contract.get('native_master', master)
+            if native_master in native_masters:
                 continue
             leaf = instance.split(".")[-1]
             hits = [(p, a, b, end) for p in stage.iterdir() if not p.name.endswith("_bb.v")
-                    for a, b, end in _instance_type_spans(p.read_text(), master, leaf)]
+                    for a, b, end in _instance_type_spans(p.read_text(), native_master, leaf)]
             if len(hits) != 1:
                 raise ValueError(f"{master}/{instance}: fixed source instance is ambiguous")
             p, a, _, end = hits[0]
