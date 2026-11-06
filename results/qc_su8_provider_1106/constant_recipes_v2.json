@@ -1,0 +1,40 @@
+{
+ "qfd_dv_s5_su8_rst3": {
+  "ref_tile": "physical/ref_tile/qfd_dv_s5_su8",
+  "plan_type": "slw_su_c",
+  "lef_contract": "physical/ref_tile/qfd_dv_s5_su8/views/qfd_dv_s5_su8_rst3/qfd_dv_s5_su8_rst3.lef",
+  "rtl_patches": [
+   {
+    "file": "rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).; strict current LEC rootcause: expose arithmeticconstant stride lowbits and nvec highzeros structurally before conditional storage; preload unknown refines to zero, comparison contract is admitted postinitialization outputs; no cycles or KEEP exception",
+    "edits": [
+     [
+      "    (* async_reg = \"true\" *) reg rs0, rs1;\n    always @(posedge ck or negedge rst_n)\n        if (!rst_n) begin rs0<=1'b0;rs1<=1'b0;end",
+      "    reg rs0, rs1;   // QC-CORES kit patch (OWNER DECISION 13): synchronous 2-stage relay on the registered rst_n input\n    always @(posedge ck)\n        if (!rst_n) begin rs0<=1'b0;rs1<=1'b0;end"
+     ],
+     [
+      "        qfd_dv_su8_kff #(.W(4*AW), .ID(670 + gc)) u_pin (.ck(ck), .d(xs_raw), .q(xs_pin));",
+      "        assign xs_pin = {c_si[109:86], c_si[182:159], c_si[255:232], c_si[341:318]};   // QC-CORES kit patch: was 8 per-lane pin replicas of si (face_guard shared 96: ONE pin register per input bit); c_si = the u_input_pins register of the same edge, 0 cycles, bit-exact"
+     ],
+     [
+      "    for (gc = 0; gc < 8; gc = gc + 1) begin : g_xsl",
+      "    // QC-CORES-1 10-27 (rst3 KEEP-FAIL fix): lane 0 has multiplier K=0, so qfd_dv_su8_stride #(0) is y=0 and\n    // xs_l[0] can only ever load 0 -> its 16 select replicas g_xsl[0].g_sel[*] and the K=0 xlane register were dead\n    // logic (yosys const-folded g_xsl[0].u.q, ORFS 1_synth eliminate_dead_logic then removed the 16 kept-but-unloaded\n    // kff instances -> routed LEC KEEP FAIL 16/3254).  Lane 0 is now the constant it already was (power-up X of the\n    // never-loaded-nonzero register refined to 0, as synthesis and the LEC gold already did); lanes 1..7 keep their\n    // names g_xsl[1..7].* unchanged.  0 edges, same values.\n    assign xs_l[0] = {4*AW{1'b0}};\n    for (gc = 1; gc < 8; gc = gc + 1) begin : g_xsl"
+     ],
+     [
+      "    reg  [FAW-1:0] fa;\n    integer fi;\n    always @(posedge ck)\n        for (fi = 0; fi < FAW; fi = fi + 1) if (acc_k[fi / FCW]) fa[fi] <= fa_in[fi];",
+      "    wire [FAW-1:0] fa;\n    // Nvec is ceil(nin/8), at most 32768 for any 18bit nin; bits17:16 are structuralzero.\n    genvar fi;\n    generate for (fi = 0; fi < FAW; fi = fi + 1) begin : g_fa_payload\n        if (fi == 332 || fi == 333) begin : g_zero\n            assign fa[fi] = 1'b0;\n        end else begin : g_live\n            reg payload;\n            always @(posedge ck) if (acc_k[fi / FCW]) payload <= fa_in[fi];\n            assign fa[fi] = payload;\n        end\n    end endgenerate"
+     ],
+     [
+      "input wire ck, input wire [15:0] sel, input wire [95:0] xin, output reg [95:0] q);",
+      "input wire ck, input wire [15:0] sel, input wire [95:0] xin, output wire [95:0] q);"
+     ],
+     [
+      "    integer c;\n    always @(posedge ck)\n        for (c = 0; c < 16; c = c + 1) if (sel[c]) q[6*c +: 6] <= m[6*c +: 6];",
+      "    // Multiplication by constant K has exactzero trailingbits; only payloadbits require storage.\n    genvar b;\n    generate for (b = 0; b < 96; b = b + 1) begin : g_payload\n        if ((K % (1 << ((b % 24) + 1))) == 0) begin : g_zero\n            assign q[b] = 1'b0;\n        end else begin : g_live\n            reg payload;\n            always @(posedge ck) if (sel[b / 6]) payload <= m[b];\n            assign q[b] = payload;\n        end\n    end endgenerate"
+     ]
+    ]
+   }
+  ],
+  "_why_face": "r1 post-synth face_guard FAIL shared 96: si stride bits loaded by u_input_pins + 8 per-lane u_pin replicas -> lanes read c_si (same edge)."
+ }
+}
