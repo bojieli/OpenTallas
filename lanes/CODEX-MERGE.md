@@ -23,3 +23,5 @@ CODEX took over ROOT-MERGE-41 on codex/root-merge-1105. Own sparse tree intel2:/
 2026-11-06 00:17: main1698b4de6f8==origin. Shared batch228912fe6a4/e738c7e68b7/1698b4de6f8: opt-in hold scope, selected child fix, explicit turnaround schema.16files0deleted; tagsz-head/x-qc/v-kv/z-s81/ah-hbm. No global scope activation or canonical hierarchy adoption. All owners notified, no active scripts changed.
 
 2026-11-06 00:23: main396c545e5d8==origin. KVsysC68024d70cc5,FREGoption396c545e5d8;tagsaa-head/y-qc/w-kv/aa-s81/ai-hbm. a735activationunmerged pending hard-instance parameter-sealing fix; no wrong route. Collidingcoordnotescleared, retrying journalpush.
+
+2026-11-06 00:33: mainf6e16e0def2==origin; S81-onlytagab-s81. CorrectedIDXad041 includes signedchildpack+selectedfixedparametersealing+M6PG/OBS event;10tests/GEN8/strictlintpass,parentK8physicalpending. Olda735nevermergedalone/K6failurepreserved. HistoricalRXb2c34c68c0 stillunmerged: exactprivate source/proofs nowconfirmed, geometryadoption/rootapprovalpending.
