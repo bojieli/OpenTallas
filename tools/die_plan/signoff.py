@@ -880,6 +880,7 @@ puts "SO_PATH_BEGIN DRV"
 report_check_types -max_slew -max_capacitance -violators -max_count 10
 puts "SO_PATH_END"
 # ---- constraint coverage ----
+@STATIC_STRAPS@
 puts "SO_PATH_BEGIN CHECK_SETUP"
 check_setup -verbose -unconstrained_endpoints -no_clock -loops -generated_clocks -multiple_clock
 puts "SO_PATH_END"
@@ -999,7 +1000,8 @@ def ft_fill_model(decl, model, corners):
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
                 ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False, hold_out_min_ports=None,
                 ft_decl=None, tap_window=None, droop=None, pair_targets=False, fwd_ring=None, margin_policy=None,
-                fwd_ring_min=None, retain_child_clock_witness=False, parent_boundary_instances=(), parent_boundary_std_limit=0):
+                fwd_ring_min=None, retain_child_clock_witness=False, parent_boundary_instances=(), parent_boundary_std_limit=0,
+                static_straps=()):
     """pair_targets: True = the corner's planned core clock-pin earliness file is mounted at /sdc/pair_targets.txt
     (pair_target_file): the related pair skew is then also measured target-relative (pair_skew.tcl ot_ps_load_targets)
     and the gate reads that; False = no target lines (session byte-identical).  tap_window: the plan's per-tap latency window (sdc_lint.json tap_window_ps, gen_phys.tap_window_ps): the
@@ -1067,6 +1069,7 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                  ("@OUT_MIN_PORTS@\n", _port_hold_overlay("output", hold_out_min_ports, ft_decl,
                                                          float(tap_window or 0.0))),
                  ("@FANOUT_MAX@", str(int(fanout_max))),
+                 ("@STATIC_STRAPS@\n", static_strap_tcl(static_straps)),
                  ("@CLOCK_FAMILY@", _clock_family_tcl()),
                  ("@PAIR_SKEW@", (HERE / "pair_skew.tcl").read_text()),
                  ("@PAIR_TARGETS@", "ot_ps_load_targets /sdc/pair_targets.txt\n" if pair_targets else ""),
@@ -1298,6 +1301,9 @@ def parse_session(text):
             except (ValueError, IndexError):
                 pass
             continue
+        if re.fullmatch(r"SO_STATIC_STRAP_ENDPOINT \S+", ln):
+            r.setdefault("static_strap_endpoints", []).append(ln.split(None, 1)[1])
+            continue
         if ln.startswith("SO "):
             f = ln.split(None, 2)
             if len(f) >= 2:
@@ -1326,7 +1332,78 @@ def stats(v):
                 spread=round(max(v) - min(v), 2))
 
 
-def check_setup_counts(text, ft_out=()):
+def declared_static_straps(kit, sdc):
+    """Only R7-declared straps with the generator's explicit source false-path.
+
+    No wildcard or arbitrary false-path is a strap declaration.  Missing or
+    unrecognized constraint syntax retains ordinary coverage gating.
+    """
+    if not kit:
+        return []
+    import face_guard
+    declared = set(face_guard.kit_strap_list(kit))
+    constrained = set()
+    for line in sdc.splitlines():
+        m = re.fullmatch(r"\s*set_false_path\s+-from\s+\[get_ports\s+\{([^{}]+)\}\]\s*", line)
+        if m:
+            constrained.update(m.group(1).split())
+    return sorted(declared & constrained)
+
+
+def static_strap_tcl(straps):
+    """Observe register data pins fed exclusively by declared static straps.
+
+    The timing network and constraints are unchanged.  Names are emitted only
+    after a complete successful structural walk; Python intersects them with
+    the actual verbose unconstrained endpoint list.
+    """
+    if not straps:
+        return ""
+    import face_guard
+    names = " ".join(face_guard.strap_list(straps))
+    return r'''# OWNER R7: quasi-static ID/count straps, false-pathed at the parent boundary.
+if {[catch {
+  set so_ss_roots [dict create]
+  foreach so_ss_root {@NAMES@} { dict set so_ss_roots $so_ss_root 1 }
+  set so_ss_ports [dict create]
+  set so_ss_sources {}
+  foreach so_ss_p [all_inputs] {
+    set so_ss_name [get_full_name $so_ss_p]
+    set so_ss_root $so_ss_name
+    regexp {^(.+)\[[0-9]+\]$} $so_ss_name -> so_ss_root
+    if {[dict exists $so_ss_roots $so_ss_root]} {
+      dict set so_ss_ports $so_ss_name 1
+      lappend so_ss_sources $so_ss_p
+    }
+  }
+  set so_ss_data [dict create]
+  foreach so_ss_p [all_registers -data_pins] {
+    dict set so_ss_data [get_full_name $so_ss_p] 1
+  }
+  set so_ss_proven [dict create]
+  if {[llength $so_ss_sources]} {
+    foreach so_ss_p [get_fanout -from $so_ss_sources -flat -endpoints_only -trace_arcs all] {
+      set so_ss_name [get_full_name $so_ss_p]
+      if {![dict exists $so_ss_data $so_ss_name]} { continue }
+      set so_ss_start [get_fanin -to $so_ss_p -flat -startpoints_only -trace_arcs all]
+      set so_ss_ok [expr {[llength $so_ss_start] > 0}]
+      foreach so_ss_s $so_ss_start {
+        if {![dict exists $so_ss_ports [get_full_name $so_ss_s]]} { set so_ss_ok 0; break }
+      }
+      if {$so_ss_ok} { dict set so_ss_proven $so_ss_name 1 }
+    }
+  }
+} so_ss_error]} {
+  puts "SO STATIC_STRAP_ERROR $so_ss_error"
+} else {
+  foreach so_ss_name [lsort [dict keys $so_ss_proven]] {
+    puts "SO_STATIC_STRAP_ENDPOINT $so_ss_name"
+  }
+}
+'''.replace("@NAMES@", names)
+
+
+def check_setup_counts(text, ft_out=(), static_strap_endpoints=()):
     """counts from check_setup output.  ft_out: declared 12.2a1 die-timed ft outputs -- listed (verbose) unconstrained
     endpoints among them are counted as ft_die_timed, not as unconstrained core IO."""
     c = dict(unconstrained=0, unclocked=0, loops=0, multiple_clock=0, generated=0)
@@ -1335,7 +1412,7 @@ def check_setup_counts(text, ft_out=()):
         m = re.search(r"There (?:are|is) (\d+) unconstrained endpoints?", ln)
         if m:
             c["unconstrained"] = int(m.group(1))
-            if ft_out:
+            if ft_out or static_strap_endpoints:
                 listed = []
                 for x in lines[i + 1:]:
                     if not x.startswith((" ", "\t")) or not x.strip():
@@ -1344,6 +1421,10 @@ def check_setup_counts(text, ft_out=()):
                 ft = sorted(set(listed) & set(ft_out))
                 c["unconstrained"] -= len(ft)
                 c["ft_die_timed"] = len(ft)
+                static = sorted((set(listed) & set(static_strap_endpoints)) - set(ft))
+                c["unconstrained"] -= len(static)
+                if static:
+                    c["static_strap_endpoints"] = len(static)
         m = re.search(r"There (?:are|is) (\d+) register/latch pins? with no clock", ln)
         if m:
             c["unclocked"] = int(m.group(1))
@@ -1380,7 +1461,10 @@ def corner_result(parsed):
     out["fanout_viol"] = _f(kv.get("FANOUT_VIOL"))
     ftd = (kv.get("FT_DIE_TIMED") or "").split()
     ft_out = ftd[ftd.index("out") + 1:] if "out" in ftd else []
-    out["check_setup"] = check_setup_counts(parsed["blocks"].get("CHECK_SETUP", ""), ft_out)
+    static_strap_endpoints = parsed.get("static_strap_endpoints", [])
+    out["check_setup"] = check_setup_counts(parsed["blocks"].get("CHECK_SETUP", ""), ft_out, static_strap_endpoints)
+    if static_strap_endpoints:
+        out["static_strap_endpoints"] = sorted(set(static_strap_endpoints))
     if ftd:
         out["ft_die_timed"] = " ".join(ftd)
     out["ck_errors"] = _f(kv.get("CK_ERRORS"))
@@ -1519,7 +1603,8 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 margin_policy=margin_policy,
                                                 retain_child_clock_witness=retain_child_clock_witness,
                                                 parent_boundary_instances=parent_boundary_instances,
-                                                parent_boundary_std_limit=parent_boundary_std_limit))
+                                                parent_boundary_std_limit=parent_boundary_std_limit,
+                                                static_straps=declared_static_straps(disc.get("kit"), Path(disc["sdc"]).read_text())))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
