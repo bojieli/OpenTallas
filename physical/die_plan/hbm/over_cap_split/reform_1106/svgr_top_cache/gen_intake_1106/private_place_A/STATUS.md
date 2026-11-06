@@ -9,3 +9,7 @@ No missing/wrong-net POWER/GROUND ITerm. Actual M5 stream_clk pin box [151.152,3
 B actual frozen kit remains unlaunched. Current runner has fixed WORK_HOME/FLOW_VARIANT; live cross-kit proof reuse unsupported. Completed transfer currently requires exact freeze identity, incompatible with truthful B geometry differences. Shared-flow owner is reporting the precise capability gap to root. No copied pending markers, substituted freeze, or geometry override.
 
 Remaining: collect actual PG continuity result; final placed functional count <=150000 and post-halo row utilization <=.45; inspect actual placed image; retain compiler verdict independently. No CTS/canonical activation.
+
+Actual `floorplan_actual.png` opened and reviewed: exact nine A SRAM homes and separated 4.32 um halos retained. The clock point is over programme_lo, local (87.346,69.684), 0.804 um inside its top edge; it is not an open-channel pin. Its M5 layer has no macro OBS, and the actual PG shape audit above finds no overlap. Actual CTS via/pin access remains an ordinary later qualification. There are no placed cells in this floorplan image; it is not the required final placement-density image.
+
+OpenROAD `check_power_grid -net VDD -floorplanning` reports `[INFO PSM-0040] All shapes on net VDD are connected.`, Tcl catch 0 / result 1. VSS remains running. This floorplanning connectivity result does not qualify detailed routing, IR, or signal access.
