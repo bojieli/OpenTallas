@@ -1,0 +1,347 @@
+{
+  "qualification": "PROPOSED_NOT_GENERATED_OR_ROUTED",
+  "source": "same exact optional RW source/proof as A",
+  "outline_um": [
+    302.4,
+    639.36
+  ],
+  "pins_sha256": "c26588462899db8eb3c0062061af066b503e0c8235525b66e683774ec3b1e4c4",
+  "clock_entry_um": [
+    151.176,
+    319.68
+  ],
+  "face_flops": 7427,
+  "added_cycles": 0,
+  "A": {
+    "kind": "actual p37 GEN4bd72c160cc846a2",
+    "macros": [
+      {
+        "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[0].g_rw.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+        "origin_um": [
+          17.28,
+          30.012
+        ],
+        "size_um": [
+          91.8,
+          27.576
+        ],
+        "orient": "MY",
+        "pins": 530,
+        "macro_area_um2": 2531.4768,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[1].g_rw.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+        "origin_um": [
+          17.28,
+          99.996
+        ],
+        "size_um": [
+          91.8,
+          27.576
+        ],
+        "orient": "MY",
+        "pins": 530,
+        "macro_area_um2": 2531.4768,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[2].g_rw.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+        "origin_um": [
+          17.28,
+          169.98
+        ],
+        "size_um": [
+          91.8,
+          27.576
+        ],
+        "orient": "MY",
+        "pins": 530,
+        "macro_area_um2": 2531.4768,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[3].g_rw.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+        "origin_um": [
+          17.28,
+          344.988
+        ],
+        "size_um": [
+          91.8,
+          27.576
+        ],
+        "orient": "MY",
+        "pins": 530,
+        "macro_area_um2": 2531.4768,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[4].g_rw.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+        "origin_um": [
+          17.28,
+          415.02
+        ],
+        "size_um": [
+          91.8,
+          27.576
+        ],
+        "orient": "MY",
+        "pins": 530,
+        "macro_area_um2": 2531.4768,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_lo",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "origin_um": [
+          63.83,
+          249.996
+        ],
+        "size_um": [
+          174.744,
+          70.488
+        ],
+        "orient": "R0",
+        "pins": 829,
+        "macro_area_um2": 12317.355072,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_hi",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "origin_um": [
+          63.83,
+          489.996
+        ],
+        "size_um": [
+          174.744,
+          70.488
+        ],
+        "orient": "R0",
+        "pins": 829,
+        "macro_area_um2": 12317.355072,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.issuer.g_t2.u_desc_lo",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "origin_um": [
+          172.8,
+          49.98
+        ],
+        "size_um": [
+          94.824,
+          41.064
+        ],
+        "orient": "R0",
+        "pins": 819,
+        "macro_area_um2": 3893.852736,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.issuer.g_t2.u_desc_hi",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "origin_um": [
+          172.8,
+          139.98
+        ],
+        "size_um": [
+          94.824,
+          41.064
+        ],
+        "orient": "R0",
+        "pins": 819,
+        "macro_area_um2": 3893.852736,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      }
+    ]
+  },
+  "B": {
+    "kind": "conservative proposed local stagger; pending HBM/root geometry adoption and actual GEN image",
+    "changes": [
+      {
+        "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[2].g_rw.u_payload",
+        "from_y_um": 169.98,
+        "to_y_um": 157.98
+      },
+      {
+        "instance": "u_fcore.u_core.issuer.g_t2.u_desc_hi",
+        "from_y_um": 139.98,
+        "to_y_um": 195.036
+      }
+    ],
+    "macros": [
+      {
+        "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[0].g_rw.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+        "origin_um": [
+          17.28,
+          30.012
+        ],
+        "size_um": [
+          91.8,
+          27.576
+        ],
+        "orient": "MY",
+        "pins": 530,
+        "macro_area_um2": 2531.4768,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[1].g_rw.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+        "origin_um": [
+          17.28,
+          99.996
+        ],
+        "size_um": [
+          91.8,
+          27.576
+        ],
+        "orient": "MY",
+        "pins": 530,
+        "macro_area_um2": 2531.4768,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[2].g_rw.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+        "origin_um": [
+          17.28,
+          157.98
+        ],
+        "size_um": [
+          91.8,
+          27.576
+        ],
+        "orient": "MY",
+        "pins": 530,
+        "macro_area_um2": 2531.4768,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[3].g_rw.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+        "origin_um": [
+          17.28,
+          344.988
+        ],
+        "size_um": [
+          91.8,
+          27.576
+        ],
+        "orient": "MY",
+        "pins": 530,
+        "macro_area_um2": 2531.4768,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.feed.rows.g_on.g_cache[4].g_rw.u_payload",
+        "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+        "origin_um": [
+          17.28,
+          415.02
+        ],
+        "size_um": [
+          91.8,
+          27.576
+        ],
+        "orient": "MY",
+        "pins": 530,
+        "macro_area_um2": 2531.4768,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_lo",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "origin_um": [
+          63.83,
+          249.996
+        ],
+        "size_um": [
+          174.744,
+          70.488
+        ],
+        "orient": "R0",
+        "pins": 829,
+        "macro_area_um2": 12317.355072,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_hi",
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "origin_um": [
+          63.83,
+          489.996
+        ],
+        "size_um": [
+          174.744,
+          70.488
+        ],
+        "orient": "R0",
+        "pins": 829,
+        "macro_area_um2": 12317.355072,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.issuer.g_t2.u_desc_lo",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "origin_um": [
+          172.8,
+          49.98
+        ],
+        "size_um": [
+          94.824,
+          41.064
+        ],
+        "orient": "R0",
+        "pins": 819,
+        "macro_area_um2": 3893.852736,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      },
+      {
+        "instance": "u_fcore.u_core.issuer.g_t2.u_desc_hi",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "origin_um": [
+          172.8,
+          195.036
+        ],
+        "size_um": [
+          94.824,
+          41.064
+        ],
+        "orient": "R0",
+        "pins": 819,
+        "macro_area_um2": 3893.852736,
+        "off_track_M4_signal_pin_centres": 0,
+        "off_track_examples": []
+      }
+    ],
+    "cache2_desc_hi_y_overlap_um": 0,
+    "desc_hi_to_programme_lo_vertical_gap_um": 13.896,
+    "reason": "separate cache2 and desc_hi pin rows in former y160..200 concentration without changing outer shell, source, or clock; cache2 moves12um and descriptor55.056um",
+    "risk": "wide logic/gather congestion can remain; wire delay and clock effects require physical measurement after adoption"
+  }
+}
