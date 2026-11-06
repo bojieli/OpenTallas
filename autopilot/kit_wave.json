@@ -20,10 +20,10 @@
     "clock": "PASS",
     "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw11/src_730/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "plan": "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "epyc5",
-   "src": "/srv/opentallas-scratch2/claude/kw11/src_730",
-   "src_sha": "7305773106e80a869ece81d0ceda9a308e52a9a8",
+   "src": "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705",
+   "src_sha": "2c7054fd3cda3f76c35bb1e4b04f8d9ddd06711e",
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch2/claude/kw11/asbuilt_kv_o.json",
@@ -34,7 +34,7 @@
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw11/src_730/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+    "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
     "--native-cell-cap",
     "517000"
    ],
@@ -185,7 +185,12 @@
     "kv3_pv_v4n@7",
     "kv3_pv_v8@9",
     "kv3_pc_v1__cl4ea58a5c@9",
-    "kv3_pv_v5n@6"
+    "kv3_pv_v5n@6",
+    "kv3_pc__cl254f2e73@2",
+    "kv3_pc__cl5a95b461@2",
+    "kv3_pc_v3@2",
+    "kv3_pc_v1__cl23f6a148@5",
+    "kv3_pc_v1__cl7f648944@5"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -234,11 +239,8 @@
     "kv3_hub_C": "Known actual GEN_LINT OOM at8GB and measured16GB (rc137,16,726,636KiB); typed AHUB/CTL hard-child closure required, no blind memory escalation or same-flat-source retry.",
     "kv3_hg_v1": "RE-FORM (OWNER TWO-STRIKES, KW-FIX-4 08:4x): a1/a2/a3 FAIL place PLAN; release on a DIE-KV-64 RE-FORM post",
     "kv3_hroot": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
-    "kv3_sys_SD_v1": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
     "kv3_hub_Wi": "DIE-KV-69 09:08: no retry, class A symptom, waits for 21 HR core views + view plan event",
     "kv3_phy_v1": "KW-FIX-8 10:1x DIE-KV-69 09:17: follows the kv3_phy G2 read on phymid; release on that read",
-    "kv3_pc_v1__cl23f6a148": "KW-FIX-8 11-04 20:1x: PDN-0006 same error a3-a5, PC core LEF in kit is the plan stub with full-rect M6/M7 OBS; INFRA label masked it. Waits real PC core views (DIE-KV-70), no blind retry",
-    "kv3_pc_v1__cl7f648944": "KW-FIX-8 11-04 20:1x: PDN-0006 same error a3-a5, PC core LEF in kit is the plan stub with full-rect M6/M7 OBS; INFRA label masked it. Waits real PC core views (DIE-KV-70), no blind retry",
     "kv3_sys_c": "KW-FIX-8 11-04 20:1x: OT_CLAND band on u_cland_raw_fs_ft1_o same error a2-a3, INFRA label masked it. Waits KV CLAND class form (DIE-KV-70), no blind retry"
    },
    "work_root": "/srv/opentallas-scratch2/claude/codex-wave-1105/runs/qwen_kvsys/kit-wave",
@@ -408,7 +410,12 @@
     "kv3_pv_v4n@7": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
     "kv3_pv_v8@9": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
     "kv3_pc_v1__cl4ea58a5c@9": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6",
-    "kv3_pv_v5n@6": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6"
+    "kv3_pv_v5n@6": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6",
+    "kv3_pc__cl254f2e73@2": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
+    "kv3_pc__cl5a95b461@2": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
+    "kv3_pc_v3@2": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
+    "kv3_pc_v1__cl23f6a148@5": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
+    "kv3_pc_v1__cl7f648944@5": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11."
    },
    "only_items": [
     "kv3_astk",
@@ -494,7 +501,7 @@
    ],
    "plan_items_from_allowlist": true,
    "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-   "queue_src": "",
+   "queue_src": "main@2c7054fd3cda3f76c35bb1e4b04f8d9ddd06711e",
    "hold_items_released": {
     "kv3_pc": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
     "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -710,7 +717,8 @@
     "qkd_ahub",
     "qkd_kvs_ctl"
    ],
-   "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)"
+   "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
+   "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained."
   },
   "s81": {
    "enabled": true,
@@ -721,10 +729,10 @@
     "clock": "PASS",
     "evidence": "KIT-WAVE-12 04:1x PST: main e8cbe5f6c70 plan 381e75b001cd = DIE-S81-46 kva3 407b175146b (COORD 03:16 APPROVED, ROOT-MERGE-AL 03:51): G0C 18 = base, 0 new; die clock GRT 0 ov, TT +49.70, CA 0/2330; strict bind die-s81-46/bind_g3tag2 errors 0 unbound 0 (plan 1064f31a3d21 = 381e minus 22 SDC-only cdc keys, DIE-S81-47 CHECKED) | prev: KIT-WAVE-9 19:5x: main bfdc480ffc7 plan a6320661bc9e = bfe27b2c00be + serdes__t13/serdes__t4 lots (DIE-S81-44 bccb99bde74, G0C 18 = base, 0 new; COORD 16:5x/ROOT-MERGE-AL 17:24; DIE-S81-45 18:03 request); bind = bindm (strict 0) via bindm9 | KIT-WAVE-8 18:0x: main f1a8dcffa6e plan bfe27b2c00be = cb76a9754330 (DIE-S81-43 ring-hold stack 5a/rt4/ringfall, COORD 15:56 (2)) + S81-SERDES-PHY-3 eb964df6dd4 (8 serdes types only; G0C 19/1865 = main, 0 new; block-identity diff CHECKED: only those 8 blocks changed); strict bind bindm BIND_RC 0 (VERIFY died without RC, see lane) | COORD 10-31 08:46 APPROVED DIE-S81-42 claude/die-s81-42-band-1031@e6e75a4ea7e (plan bfa0a6902dd9 -> a83e52c0ae4e, sidecar db92d7423d2c): G0C 19 = base 19, 0 new; strict bind BIND_RC 0 errors 0 + VERIFY_RC 0 (DIE-S81-43 12:18 CHECKED); die clock GRT 0 ov, TT setup +9.22. Merged main 96420e84b92 (ROOT-MERGE-AK). | prev: COORD RULING 10-31 04:07: DIE-S81-39 variant A claude/die-s81-39-geom-1030@54dda45985a (grid+explicit taps, plan 84fc22ab807d -> 7515f32564e8 taps only) APPROVED: G0C 18=18 0 new, strict bind BIND_RC 0 errors 0 (intel1 die-s81-39/gbind), die clock ckclk3 GRT 0 ov, CA PASS; exceptions 1 (57 plan_geom residuals) + 2 (7 pre-existing neg TT setup pairs bk_sel__t2, NOT waived, DIE-S81-41) accepted; COORD 04:4x: S81 plan of record on main = 7515f32564e8 | COORD 10-31: DIE-S81-41 daaa48cc29b per-type station tap window on main 41b02d873, plan bfa0a6902dd9 strict bind BIND_RC 0 errors 0 (intel1 die-s81-41/sbind, DIE-S81-42 07:21). | CODEX1131/root approved composed1cd on mainb1: G0C0 errors, bind_ev2 strict0 11:40, clock GRT0 TT+49.70 CA0/2330 unchanged, 17 reset-safe bands independently rendered/reviewed. Provisional views remain provisional; normal kit physical gates retained."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw11/src_730/physical/die_plan/s81/plan_h2_2249.json",
+   "plan": "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705/physical/die_plan/s81/plan_h2_2249.json",
    "gen_host": "epyc5",
-   "src": "/srv/opentallas-scratch2/claude/kw11/src_730",
-   "src_sha": "7305773106e80a869ece81d0ceda9a308e52a9a8",
+   "src": "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705",
+   "src_sha": "2c7054fd3cda3f76c35bb1e4b04f8d9ddd06711e",
    "kit_rtl": {
     "mode": "script",
     "script": "/srv/opentallas-scratch2/claude/kw11/kit_rtl_s81p.sh",
@@ -736,7 +744,7 @@
     "--max-wire-um",
     "100",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw11/src_730/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
+    "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
    ],
    "owner_lane": "S81 die owner (DIE-S81-63)",
    "lane": "KIT-WAVE-3",
@@ -1589,7 +1597,9 @@
     "ot_s81sl_leaf__t40__clf8bbdae1@4",
     "slice_station__t24__cl64811a5d@5",
     "svc_hi_dsdv_svc_rs__t1@4",
-    "svc_lo_dsdv_svc_rs__t1@3"
+    "svc_lo_dsdv_svc_rs__t1@3",
+    "iqf__t1@5",
+    "slice_station__t6__cl54a9ceeb@9"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -1669,7 +1679,7 @@
     "ot_v41_bf16_half": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)",
     "ot_v41_bf_col3_c": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)"
    },
-   "queue_src": "",
+   "queue_src": "main@2c7054fd3cda3f76c35bb1e4b04f8d9ddd06711e",
    "work_root": "/srv/opentallas-scratch2/claude/codex-wave-1105/runs/s81/kit-wave",
    "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
    "retry_fix": {
@@ -2308,7 +2318,9 @@
     "ot_s81sl_leaf__t40__clf8bbdae1@4": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6",
     "slice_station__t24__cl64811a5d@5": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6",
     "svc_hi_dsdv_svc_rs__t1@4": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6",
-    "svc_lo_dsdv_svc_rs__t1@3": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6"
+    "svc_lo_dsdv_svc_rs__t1@3": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6",
+    "iqf__t1@5": "CODEX S81 class recovery: existing I39 ft_ring_max_ps166.6 is in currentplan; old failed falllanding SDC used699.72ps beforefix. No newconstraintchange/cycles. Older alternativeblock qRUNNING cache stale: actualAP jobs83490/4e2e CANCELLED Nov4.",
+    "slice_station__t6__cl54a9ceeb@9": "CODEX S81 class recovery: existing I39 ft_ring_max_ps166.6 is in currentplan; old failed falllanding SDC used699.72ps beforefix. No newconstraintchange/cycles. Older alternativeblock qRUNNING cache stale: actualAP jobs83490/4e2e CANCELLED Nov4."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -2462,7 +2474,8 @@
     }
    },
    "note_gen_epyc56": "KW-FIX-18 19:5x (COORD 19:4x): gen_hosts epyc5+epyc6 first (kw11/src_16b + 14 GB referenced deps rsynced from epyc4 at the same paths); epyc4 kept in the base list, the disk watcher drops it while its scratch is low",
-   "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)"
+   "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
+   "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained."
   },
   "s81_head": {
    "enabled": true,
@@ -2473,13 +2486,13 @@
     "clock": "PASS",
     "evidence": "KW-FIX-16 13:1x l48uf I135 tag flow-20261106-d-head (COORD 13:00 GO): prep_uf = repo l48uf unpacked from src_r 79e52bd98b2 (SHA256SUMS OK, plan 69ce0830f6e4, sidecar = l48ue bytes); only hd_tile u_core params + published tile_p differ from prep_ue. | KW-FIX-14 11:2x l48ue I121 9ac2d25b51e tag flow-20261106-a-head, COORD 11:05 GO: prep_ue = repo l48ue unpacked (SHA256SUMS OK, plan 9a2186d89486, sidecar = l48ud bytes), 9 types; hd_host/hd_mesh l48ud rows keep running (only_items_l48ud kept for restore). | KW-FIX-12 08:3x l48ud I107 COORD 08:12 GO. | KW-FIX-8 08:4x COORD 06:51 (3) + 07:34 (3): event l48ua = DIE-HEAD-61 07:09 READY prepared_l48ua (plan f64ad52c1726, sidecar bbdd2f7b5ad1), GATE_EVENTS l48ua merged I34 fe4a38b9337, pilot rows only. | KW-FIX-6 04:4x COORD 04:00: event l48se = l48sd + hd_tile RE-FORM only [CHECKED raw diff], src main I23. | KW-FIX-6 03:4x: event l48sd = DIE-HEAD-59 00:56 READY prepared_l48sd (plan 830b9a799df1, sidecar bbdd2f7b5ad1 unchanged), src dh59/serdes/wt@b65c0e2d46, GATE_EVENTS l48sd merged I18, COORD 00:4x + 03:2x GO; 5 items | KW-FIX-5 01:0x: event l48tc = DIE-HEAD-59 FREG-1 prepared_l48tc (plan e094ebb2b6e8, sidecar bbdd2f7b5ad1 unchanged), GATE_EVENTS l48tc merged I16, COORD GO; 2 items | KW-FIX-4 20:12: event l48rc = DH58-RF2 CONSERVATIVE prepared_l48rc (plan 8327f303db76, sidecar bbdd2f7b5ad1 unchanged), GATE_EVENTS l48rc (kw-fix-4-l48rc@3c9994a17c0), OWNER directive via DIE-HEAD-58; 4 items; l48tb turn_a/b keep running (cancel_superseded false) | KW-FIX-4 19:04: event l48tb = DH58-TURNB prepared_l48tb (plan f9623a82a239, sidecar there), GATE_EVENTS l48tb merged (kw-fix-4-itemenv@7585347926, RM-27 I4); turn_a/turn_b only (only_items_l48rf kept for restore); running l48rf kits untouched | KW-FIX-4 11:3x: event l48rf = DH58-RFPLAN PREPARED (intel2+epyc4 dh58/rfplan_work/prepared_l48rf, plan 59c391855c18, sidecar bbdd2f7b5ad1 = l48h1), DIE-HEAD-58 GO 11:24, COORD APPROVED 11:27, GATE_EVENTS l48rf 38b86b7486 merged; G0C advisory (0 new errors, 17 warn). cancel_superseded false: the 6 live l48h0 jobs finish on l48h0 (die owner). hd_mesh_e/hd_ctl_e/hd_ctl_n/hd_host_n holds released (l48rf geometry). | prev event l48h0 plan /srv/opentallas-scratch2/claude/dh55/prepared_l48h0/source_plan.json | KIT-WAVE-9 20:0x (COORD 19:03 (1)+(3)): HEAD plan of record l48x = l48w + 51 rst_start_raw pin moves (DIE-HEAD-52 a146f75cad3, G0C l48x = l48w 0 new, strict bind PASS); 12.25 gate on l48x variant h + --ca-write-fall TT +252.75 contract 0 BLOCKED(kits); hold_gate contract-relative limit FLOW-19 5751e5a949c merged (main f3e4659f554) | COORD 04:4x (4) + 05:4x: HEAD plan l47k (= l47 plan b87c81920f4c + K re-plan strap ties / sidecar dfe1fd228189; G0C l47k = l47: 1 ERROR reset-wavefront PENDING + 49 WARN, identical, main results/die_head_47_1031/l47k CHECKED); gate code l47k cb8aa342d07 merged main 1904e23afd2 (ROOT-MERGE-AI 05:46). Parent l47: COORD RULING 10-31 01:43: DIE-HEAD-47 l47 (l46a + value-only insertion_ff_ps 380 -> 342 on 21 types; G0C 0 new/0 gone, ot_clk kit byte-identical = l46 die clock, strict bind l46a PASS stands) APPROVED; merged main 1a34525e751 (ROOT-MERGE-AH); gate l47 = kit-wave-3 87dda5f5fce (main 8ce125d6a98) | COORD 11-01 09:2x/14:0x approved l48z event; gate b3cb024e493 merged main a0f8f0ad6; prepared plan 0c98a23000ad / sidecar dfe1fd228189; DIE-HEAD-53 export PASS n3_turn,mesh_e,hd_spn | ROOT COORDAPPROVED fe9f369d8 paired mesh SOURCE STAGE ONLY: plan ad1e5a17b355 / sidecar bbdd2f7b5ad1; frozen703 GEN PASS; wrapper+10 generated helpers byte-identical to measured mesh_kit4 (7671b3dde p90 29.81/GRT0/nativeEQ). hd_mesh_e held until actual checkpoint resume/adopt joins; no duplicate PLACE or physical-release credit; parent clock/signoff holds remain."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw11/prep_uh/source_plan.json",
+   "plan": "/srv/opentallas-scratch2/claude/codex-head-1105/prep_ctlrq/source_plan.json",
    "gen_host": "epyc5",
-   "src": "/srv/opentallas-scratch2/claude/kw11/src_730",
-   "src_sha": "7305773106e80a869ece81d0ceda9a308e52a9a8",
+   "src": "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705",
+   "src_sha": "2c7054fd3cda3f76c35bb1e4b04f8d9ddd06711e",
    "kit_rtl": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch2/claude/kw11/src_730/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+    "script": "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
     "note": "KW-FIX-16 12:5x I133 tag flow-20261106-c-head: src_q main 3d13a314805 (hardlink of src_p, schema accepts clock.tap_window.per_port_note), kit_rtl.sh byte-same as src_n. | KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46: src_s full clone main c512ffc3a94 | KW-FIX-8 I44 tag: src_r full clone main f8170b8b778, plan+sidecar same | KW-FIX-8 fall tag: kit_rtl from src_q main bf1e2233ce0, plan staged at same path on epyc4 | KW-FIX-8 08:4x: kit_rtl from src kw-fix-8/wt-head main fe4a38b9337. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | KW-FIX-3 11-03 05:1x: kit_rtl from my src wt/kw-fix-3-headsrc | KW-FIX-2 11-03 00:3x (COORD 00:2x (a)): kit_rtl from src claude/dh55-headsrc-1102@69e06c8b9 | KIT-WAVE-9 20:0x: head_wave_kit_rtl.py export on prepared l48x dir (DIE-HEAD-52: source plan e63f00ea5740, prepared 6b0b4547b074, sidecar dfe1fd228189, 20 types; export check PASS hd_st_turn/hd_tile/hd_spn CHECKED by DIE-HEAD-52) | KIT-WAVE-5: head_wave_kit_rtl.py export on prepared l47k dir (source die-head-47/head_source_l47k copy; source plan b87c81920f4c = l47, sidecar dfe1fd228189, prepared plan 7919bb9a0f9f, 20 types, wrappers byte-identical to l47); export hd_spn_end + hd_st_m PASS (CHECKED)"
    },
    "gen_args": [
@@ -2582,7 +2595,12 @@
     "hd_st_n4@5",
     "hd_lep0N@8",
     "hd_serdes@4",
-    "hd_tile@3"
+    "hd_tile@3",
+    "hd_ctl_n@5",
+    "hd_spn_eshim_rx@5",
+    "hd_spn_wshim_rx@5",
+    "hd_spn_wshim_tx@8",
+    "hd_tile@4"
    ],
    "pilot_max": 2,
    "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -2679,7 +2697,12 @@
     "hd_tile@2": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
     "hd_lep0N@8": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6",
     "hd_serdes@4": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6",
-    "hd_tile@3": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6"
+    "hd_tile@3": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6",
+    "hd_ctl_n@5": "CODEX-WAVE INFRA: I184 psroot source insertion Tcl correction now in pinned src; routed data was PASS, not structural failure.",
+    "hd_spn_eshim_rx@5": "CODEX-WAVE INFRA: I184 psroot source insertion Tcl correction now in pinned src; routed data was PASS, not structural failure.",
+    "hd_spn_wshim_rx@5": "CODEX-WAVE INFRA: I184 psroot source insertion Tcl correction now in pinned src; routed data was PASS, not structural failure.",
+    "hd_spn_wshim_tx@8": "CODEX-WAVE INFRA: I184 psroot source insertion Tcl correction now in pinned src; routed data was PASS, not structural failure.",
+    "hd_tile@4": "CODEX-WAVE INFRA: I184 psroot source insertion Tcl correction now in pinned src; routed data was PASS, not structural failure."
    },
    "gen_hosts": [
     "epyc5",
@@ -2687,7 +2710,7 @@
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": false,
-   "queue_src": "",
+   "queue_src": "main@2c7054fd3cda3f76c35bb1e4b04f8d9ddd06711e",
    "item_env": {
     "hd_ctl": {
      "OT_IO_HOLD": "sender_min"
@@ -2914,7 +2937,8 @@
     "hd_st_turn",
     "hd_turn_a"
    ],
-   "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)"
+   "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
+   "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained."
   },
   "qwen_compute": {
    "enabled": true,
@@ -2926,13 +2950,13 @@
     "clock": "PASS",
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw11/src_730/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
+   "plan": "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
    "gen_host": "epyc5",
-   "src": "/srv/opentallas-scratch2/claude/kw11/src_730",
-   "src_sha": "7305773106e80a869ece81d0ceda9a308e52a9a8",
+   "src": "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705",
+   "src_sha": "2c7054fd3cda3f76c35bb1e4b04f8d9ddd06711e",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw11/src_730/results/qc_ringfall_1105/bind/final_asbuilt.json",
+    "asbuilt": "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705/results/qc_ringfall_1105/bind/final_asbuilt.json",
     "bind_out": "/srv/opentallas-scratch2/claude/kw11/bind_qc_f",
     "note": "KW-FIX-16 13:1x I136 tag flow-20261106-f-qc (ringff I125 + ringfall I136 + coll_core fold I124): src_r main 79e52bd98b2; asbuilt/sidecar results/qc_ringfall_1105 (DIE-QC-78 chain78, copied into src_r, untracked), bind_out bind_qc_f = copy of dq78/bind, strict FINAL errors 0, 1921 crossings, inputs plan_qc52 b398e285 = src_r plan bytes. | KW-FIX-10 04:2x COORD: SC event I67+I68 src_c main cbb7cfda19b tag s-qc, bind_out sc_ev/pub. | KW-FIX-8 23:1x I66 collector batch: src_b main cb98b2e2324 tag q-qc; bind_tip_i57 unchanged, kit-rtl trial rc 0 on the new plan, no QC RTL moved. | KW-FIX-8 19:1x COORD I57 class relaunch: src_w main 62777284106 tag flow-20261105-h-qc, bind_tip_i57 = byte copy of dq71/bind_tip (DIE-QC-71: bind_tip stays bind_out), same path on epyc4 and intel1. KW-FIX-8 17:0x COORD 16:4x: bind_out dq71/bind_tip (main 3277e531772, BIND_RC 0, copy on epyc2). KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46 tag w-qc: src_s main c512ffc3a94, plan efdb36e864, bind_qs = DIE-QC-70 q70/bind9 strict rc 0 (W1+straps; coll_ucie field after it) | KW-FIX-8 fall tag: QC on src_q main bf1e2233ce0, strict bind_qq rc 0 | KW-FIX-8 I38 tag p-qc: QC event 5bcec8dc59 on src_p, plan_qc52, strict bind_qp | KW-FIX-6 05:1x: src kw-fix-6-qcd. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | QC approved immutable combined d90 strict119types/377parts/1921crossings/790393bits0errors;201-file closed readset event1131_fixed. Matching pre-D13 RTL/recipe retained; Q4 untrusted hints included; no fresh ELAB or old freeze mutation."
    },
@@ -2940,7 +2964,7 @@
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw11/src_730/results/qc_ringfall_1105/bind/sidecar.json"
+    "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705/results/qc_ringfall_1105/bind/sidecar.json"
    ],
    "kinds": [
     "type"
@@ -2975,7 +2999,6 @@
     "slw_hc3__cld86a7ad4": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
     "sle_hc0__cl929603c0__cl38badc56": "KW-FIX-8 17:5x COORD: stale row stopped; other hc wait one proof row past CTS with no big-tap failure",
     "sle_fe_v3": "KW-FIX-11 07:2x COORD 07:21: DIE-QC-75-R stopped it 07:07, autopilot revived 07:17 on pre-fix tick; DIE-QC-75 ring_place=ff pilot on dq75/fe3ff is the path; release on its read",
-    "coll_ftn": "KW-FIX-12 08:5x brief: coll_ftn stays held, DIE-QC-75 form; was eligible in the wave with no hold",
     "sle_hc0__cl05696ed1": "KW-FIX-12 08:5x DIE-QC-76 stopped 08:45 per COORD, GRT rising; no resubmit of same form, DIE-QC-76 form lifts"
    },
    "work_root": "/srv/opentallas-scratch2/claude/codex-wave-1105/runs/qwen_compute/kit-wave",
@@ -3265,9 +3288,10 @@
     "slw_su_c__cl92142dac@15",
     "slw_su_l1__cla2a78701@6",
     "slw_su_l1__clcc9d0155@7",
-    "slw_sc_v2@5"
+    "slw_sc_v2@5",
+    "coll_ftn@4"
    ],
-   "queue_src": "",
+   "queue_src": "main@2c7054fd3cda3f76c35bb1e4b04f8d9ddd06711e",
    "type_args": {
     "sle_fw_v2__cl69f5e854": [
      "--gpl-plain",
@@ -3620,7 +3644,7 @@
     "coll_ft__cla4a25d77@2": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "coll_ft__cla4a25d77@3": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "coll_ft__cla4a25d77@1": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
-    "coll_ftc@1": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
+    "coll_ftc@1": "CODEX-WAVE class recovery: coll_ftn externally stopped noOOM INFRA; coll_ftc current type old checkpoint gone, one fresh vehicle with merged reg2reg-only hold gate; actual timing still gates.",
     "coll_n@7": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "coll_s@1": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "sle_hc1__cl22c1ff36@5": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
@@ -3684,7 +3708,8 @@
     "slw_su_c__cl92142dac@15": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
     "slw_su_l1__cla2a78701@6": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
     "slw_su_l1__clcc9d0155@7": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
-    "slw_sc_v2@5": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6"
+    "slw_sc_v2@5": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6",
+    "coll_ftn@4": "CODEX-WAVE class recovery: coll_ftn externally stopped noOOM INFRA; coll_ftc current type old checkpoint gone, one fresh vehicle with merged reg2reg-only hold gate; actual timing still gates."
    },
    "gen_hosts": [
     "epyc5",
@@ -3805,7 +3830,8 @@
     "slw_fe_v1__clfe325744__cl08d14f0d",
     "sle_sc_v1__cl115da35f",
     "slw_sc_v1__cl63e5a7a2",
-    "slw_sc_v1__cl64543eaf__cl5e017c6f"
+    "slw_sc_v1__cl64543eaf__cl5e017c6f",
+    "coll_ftc"
    ],
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
@@ -3840,7 +3866,8 @@
    ],
    "gen_host_base": "epyc5",
    "note_gen_epyc56": "KW-FIX-18 19:5x (COORD 19:4x): gen_hosts epyc5+epyc6 first (kw11/src_16b + 14 GB referenced deps rsynced from epyc4 at the same paths); epyc4 kept in the base list, the disk watcher drops it while its scratch is low",
-   "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)"
+   "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
+   "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained."
   },
   "hbm": {
    "enabled": true,
@@ -3945,10 +3972,10 @@
    ],
    "note": "KW-FIX-19 21:0x: src kw11/src_730 @7305773106e (main: I178 prdfo, I180 rootscr, I181 classretry, prdguard; kit diff vs 16b4 = prd_hook guard only); gen_hosts [epyc5, epyc6] (epyc4 scratch2 11 GB); GEN-HOST-DEPS relaunch 0 rows | KW-FIX-18 19:4x: tag flow-20261106-r-hbm 16b4ea85026 (I177 ev76 HBM d44v, I178 prdfo, I179 q3e RXPRE) -> src kw11/src_16b; referenced files byte-same (8/8 sha256) | KW-FIX-17 18:4x: tag flow-20261106-p-hbm e920ea3c22b (grtstall + leafitems + S81 TAPWIN-PORT plan ef4d951b60bf) -> src kw11/src_e92; referenced files byte-same except S81 plan_h2_2249.json (clock.tap_window per_port_ps only, COORD 18:20) | KW-FIX-17 18:2x: tag flow-20261106-o-hbm 77b4b069dc3 (holdgaterr + ev75 + romq + wbqhd) -> src kw11/src_77b; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:3x: tag flow-20261106-n-hbm 17dcf533a38 (resignlib + ev74f + provobs) -> src kw11/src_17d; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 16:5x: tag flow-20261106-m-hbm 76201bc074c (holdrr reg2reg hold stop, grtpost, placeretry) -> src kw11/src_m76; every referenced plan/sidecar/asbuilt/kit_rtl file byte-same (cmp CHECKED) | KW-FIX-17 16:4x: HBM tag flow-20261106-l-hbm c299a5dfc10 (B7..B10 forms, recipes_b2) -> src kw11/src_hbml | KW-FIX-17 16:2x: HBM tag flow-20261106-k-hbm 7040684e850 -> src kw11/src_x (scratch2); plan d44v11 + core_clock_regions unchanged (outside src); d44v/ev74 plan_of_record change in the tag is DIE-HBM-75's event, not adopted here | KW-FIX-8 21:4x I62: plan d44v11 = d44v10 + main d5f67b31226 plan_of_record/d44v, parts 13 8 14; src src_y (cp -al); cancel_superseded false so the stage stops no live row. | KW-FIX-6 05:5x COORD 05:42 (4): plan d44v10 = fold 80ac3f4decbd (main df511fc9ae6, flow-20261104-f-hbm), src hbmsrc2; cancel_superseded false so the fold stops no live row; 22 of 24 live rows keep their keys, hnx_fused_lane@9 + hnx_rp3lp3h_s@6 run on as old-key reads; hnx_rp3h_xs in only_items for the xs class fix. | KW-FIX-6 03:5x COORD 03:41: LEC + tkm root class batch, src kw-fix-6/hbmsrc = main 902085405d8; DIE-HBM-63 hand-flow items and clock-window resumes untouched | KW-FIX-5 01:1x HBM-STAGE: 3 recipe pin refs fetched into hbmsrc store; wr_q @4 retry; 7 stale names out of only_items; NO_RECIPE and PORT_MISMATCH held | KW-FIX-5: d44v9 lacked 74 PoR core files + macro views in sparse src (DIE-HBM /FLOW 00:1x); staged 00:20; tkm root held on /FLOW MAP_AMBIGUOUS | KW-FIX-5 00:0x (DIE-HBM-62 23:19 list, COORD 23:2x): plan d44v9 = d44v part 6+6a (die_plan 0b93e32e4ce8), src sparse kw-fix-5/hbmsrc = main 386f7a71f8a; 6 sub-cores RF1 recipe, 4 stale vms_bank, tkm_m root retry | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-hbmi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE); RF1 d35a67594c7 included | KW-FIX-4 19:5x HBM-RF1 (OWNER 18:57, COORD 19:04, DIE-HBM-61/RF1-BUILD): src kw-fix-4-hbmrf1 = d35a67594c7 (b07b52ff0c7 + q2_reduce oneclk / llr RW if-generate fixes, approved I6); RF1 item_args (util 0.40, face-reset-relay 2, regions rf1 69ed115a) on 6 not-in-flight items; the 6 in-flight RF1 items are launched by RF1-BUILD via ot-run (no double launch); old item_args in item_args_rf1prev | KW-FIX-4 19:0x I4 batch: src kw-fix-4-hbmi4 = main b07b52ff0c7 (hold/CLK-BAND 9855c866403: multiport density + hard_core_latency default-on) | KW-FIX-4 11-03 12:0x (COORD 10:4x item 2, DIE-HBM-61 11:4x d44v_por FROZEN 8/84): d44o -> d44v (prev d44o /srv/opentallas-scratch2/claude/kit-wave/hbm/d44o_cm/die_plan.json src 89eb1d03dba84a57aae71fa7c662ba005c8c6acc). KW-FIX-4-HBMV 2026-11-03 11:56 PST: d44o -> d44v (COORD 10:4x, DIE-HBM-61 11:0x). src claude/kw-fix-4-hbmv-1103@78e511e3a45 = main 5ef0158c8fa + gen_core_kit_hbm_rw.py (opt-in MEM recipe delta wrapper). RF1 item_args: --clock-regions 33 modules, --face-lockup '.*' 38 RF1 cores (census+regions), --rw-recipe-delta ['hfd_ep_static', 'ot_hbm_host_cp_rxs', 'ot_hnx_idxn_keybuf_slice'] (held until KNOWN RW rects: ['hfd_ep_static', 'ot_hbm_host_cp_rxs']), q3_edge on its current recipe. retry += 19 unchanged-key terminal records (move every row to d44v). | KW-FIX-3 2026-11-03 04:3x: retry += ot_hbm_idx_score_hcol_h1@1 (GEOM-111 class R member, pin_reg_max 156.3; fix merged 65396c58159, wave src rfh 53d3ca14368 carries the same face_flops change). The other 10 class R kits already run on rfh (KW-FIX-2 batch 00:0x), collected, not relaunched. | KW-FIX-2 11-03 00:0x (GEOM-111 class R, COORD 23:0x): src e96f241822a + reset-face-home (gen_core_kit_hbm skip set = clocks+straps; main branch claude/kw-fix-2-1102@d483825fd6e) = 53d3ca14368, locked sparse intel2 wt kit-wave-15-hbmtaps-rfh; 11 class-R holds released, batch retry item@last; retry q3_edge_core@2 / opstore_b@3 dropped (those attempts are RUNNING; kept they would HOLD at enqueue on the src change). | DIE-HBM-58/CORES 11-02 18:2x: take_states += REVIEW, KIT-PLACED so the 7 ccband CANCELLED-SOURCE rows (first_core, tailx_rest x2, lane_exp0_id, qcore_r13, xcal_rel_t, q2_reduce; OWNERS state REVIEW/KIT-PLACED) and never-waved bank128_pair_core / hcp_sys1 / tkm root relaunch on the fixed src (no-blind-retry guard still holds every other stored FAIL). | KIT-WAVE-15 18:3x ccband: src e5b857a7e34 (taps) + cherry-pick of ccband 0c1986bda = e96f241822a (branch pushed), new locked sparse intel2 wt kit-wave-15-hbmtaps (same cone as kit-wave-14-hbmtaps, which other procs still read). | KIT-WAVE-14 14:5x DIE-HBM-57 RULING (OWNER 12.23 fully automatic): the wave re-cuts the 21 lane-built single-root views on e5b857a7e34 whatever their OWNERS state: take_states += REVIEW/ROUTING/GEOM-REQ/KIT-PLACED/SIGNED-UNVERSIONED; the 13 other lan",
    "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
-   "plan": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/die_plan.json",
+   "plan": "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/die_plan.json",
    "gen_host": "epyc5",
-   "src": "/srv/opentallas-scratch2/claude/kw11/src_730",
-   "src_sha": "7305773106e80a869ece81d0ceda9a308e52a9a8",
+   "src": "/srv/opentallas-scratch2/claude/codex-wave-1105/src_2c705",
+   "src_sha": "2c7054fd3cda3f76c35bb1e4b04f8d9ddd06711e",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
@@ -3961,11 +3988,11 @@
     "item_args": {
      "hfd_ep_static": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*",
       "--rw-recipe-delta",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/mem_recipe_delta.json"
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/mem_recipe_delta.json"
      ],
      "hfd_hgi_vm_calendar_f20": [
       "--face-lockup",
@@ -3973,37 +4000,37 @@
      ],
      "hnx_fused_lane": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "hnx_rp3lp3h_n": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "hnx_rp3lp3h_s": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hbm_hc_bank128_pair_first_core": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hbm_hc_root_static__tailx_rest__v4f4566": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hbm_hc_root_static__tailx_rest__v6bc7f2": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
@@ -4027,59 +4054,59 @@
       "--clock-regions",
       "/srv/opentallas-scratch2/claude/kit-wave/hbm/rf1_1103/core_clock_regions_rf1.json",
       "--rw-recipe-delta",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/mem_recipe_delta.json"
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/mem_recipe_delta.json"
      ],
      "ot_hbm_idx_query_static": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hbm_idx_rootctl_static_am": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hbm_idx_score_hcol_h0": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hbm_idx_vm_query_static_n12": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hbm_sm_vm_wr_q_t_lanes4": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hbm_su_programme_pslice_c5": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hbm_su_static_cxport_ij_q": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hbm_su_static_pgslice_lg__lanes8_11": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
@@ -4105,7 +4132,7 @@
      ],
      "ot_hbm_su_static_qcore_r13": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
@@ -4115,7 +4142,7 @@
      ],
      "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
@@ -4139,55 +4166,55 @@
      ],
      "ot_hfd_coll_q2n2_vm_core": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hfd_coll_q3_body_core": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hfd_coll_q3_edge_core": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hfd_coll_q3_vm_core": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hgi_qw_dec": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hgi_sfu_split3_lane_core__idpin": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
      "ot_hgi_sm_xload_cl2_bdring": [
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json",
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*"
      ],
@@ -4205,7 +4232,7 @@
       "--face-lockup",
       ".*",
       "--rw-recipe-delta",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/mem_recipe_delta.json"
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/mem_recipe_delta.json"
      ],
      "ot_hgi_dma_back_static_vp4_banks_cp": [
       "--util",
@@ -4223,7 +4250,7 @@
       "--face-lockup",
       ".*",
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json"
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json"
      ],
      "ot_hbm_idx_score_hcol_h0_rb": [
       "--util",
@@ -4233,7 +4260,7 @@
       "--face-lockup",
       ".*",
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json"
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json"
      ],
      "ot_hbm_su_pg_lane1_core": [
       "--util",
@@ -4243,7 +4270,7 @@
       "--face-lockup",
       ".*",
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json"
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json"
      ],
      "ot_hgi_sfu_split3_lane_core_bk": [
       "--util",
@@ -4253,7 +4280,7 @@
       "--face-lockup",
       ".*",
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json"
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json"
      ],
      "ot_hgi_sfu_split3_lane_core_ex": [
       "--util",
@@ -4263,7 +4290,7 @@
       "--face-lockup",
       ".*",
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json"
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json"
      ],
      "ot_hgi_sfu_split3_lane_core_fr": [
       "--util",
@@ -4273,7 +4300,7 @@
       "--face-lockup",
       ".*",
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v11/core_clock_regions.json"
+      "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json"
      ]
     }
    },
@@ -4449,7 +4476,7 @@
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
    "pilot_mode": "queue",
-   "queue_src": "main@d5f67b31226a5007e591b2e55927a017e7d46491",
+   "queue_src": "main@2c7054fd3cda3f76c35bb1e4b04f8d9ddd06711e",
    "hold_items": {
     "hnx_vms_bank_q0_faces__vec6293*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)",
     "*_mu1*": "COORD 11-02 18:4x: mu1 3-SRAM vs 4-SRAM is an owner question (default A=3-SRAM); no vec6293/mu1 kit until answered (DIE-HBM-58)",
@@ -4611,7 +4638,8 @@
     "epyc4"
    ],
    "gen_host_base": "epyc5",
-   "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)"
+   "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
+   "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained."
   }
  },
  "place_prefer": [
