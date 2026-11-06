@@ -1,0 +1,387 @@
+{
+  "result": "PASS conditional dynamic equivalence; mutant detected",
+  "assumption": "One-time matching concrete tc deposits in all 13 ring writers per side; not boot qualification or arbitrary-state formal proof",
+  "latency_delta_cycles": 0,
+  "duration_ps_per_run": 300000,
+  "nominal_cycles_per_run": 360.1440576230492,
+  "warm_resets_per_run": 2,
+  "output_ports": 29,
+  "output_bits": 7589,
+  "runs": [
+    {
+      "log": "phase_0_seed_0.log",
+      "phase_ps": 0,
+      "samples": 7317,
+      "errors": 0,
+      "ports": [
+        {
+          "port": "rst_o_0",
+          "bits": 1,
+          "known_snapshots": 7165,
+          "transitions": 6
+        },
+        {
+          "port": "ft0_o",
+          "bits": 1105,
+          "known_snapshots": 7226,
+          "transitions": 356
+        },
+        {
+          "port": "ft10_o",
+          "bits": 277,
+          "known_snapshots": 7226,
+          "transitions": 356
+        },
+        {
+          "port": "ft11_o",
+          "bits": 513,
+          "known_snapshots": 7226,
+          "transitions": 356
+        },
+        {
+          "port": "ft12_o",
+          "bits": 513,
+          "known_snapshots": 7226,
+          "transitions": 356
+        },
+        {
+          "port": "ft13_o",
+          "bits": 71,
+          "known_snapshots": 6637,
+          "transitions": 327
+        },
+        {
+          "port": "ft14_o",
+          "bits": 71,
+          "known_snapshots": 6637,
+          "transitions": 327
+        },
+        {
+          "port": "ft15_o",
+          "bits": 71,
+          "known_snapshots": 6637,
+          "transitions": 327
+        },
+        {
+          "port": "ft16_o",
+          "bits": 71,
+          "known_snapshots": 6637,
+          "transitions": 327
+        },
+        {
+          "port": "ft17_o",
+          "bits": 71,
+          "known_snapshots": 6637,
+          "transitions": 326
+        },
+        {
+          "port": "ft18_o",
+          "bits": 71,
+          "known_snapshots": 6637,
+          "transitions": 326
+        },
+        {
+          "port": "ft1_o",
+          "bits": 1105,
+          "known_snapshots": 7226,
+          "transitions": 356
+        },
+        {
+          "port": "ft2_o",
+          "bits": 515,
+          "known_snapshots": 6637,
+          "transitions": 326
+        },
+        {
+          "port": "ft3_o",
+          "bits": 515,
+          "known_snapshots": 6637,
+          "transitions": 326
+        },
+        {
+          "port": "ft4_o",
+          "bits": 277,
+          "known_snapshots": 6637,
+          "transitions": 326
+        },
+        {
+          "port": "ft5_o",
+          "bits": 515,
+          "known_snapshots": 6637,
+          "transitions": 326
+        },
+        {
+          "port": "ft6_o",
+          "bits": 515,
+          "known_snapshots": 6617,
+          "transitions": 325
+        },
+        {
+          "port": "ft7_o",
+          "bits": 277,
+          "known_snapshots": 6637,
+          "transitions": 326
+        },
+        {
+          "port": "ft8_o",
+          "bits": 513,
+          "known_snapshots": 7226,
+          "transitions": 356
+        },
+        {
+          "port": "ft9_o",
+          "bits": 513,
+          "known_snapshots": 7226,
+          "transitions": 356
+        },
+        {
+          "port": "fclk_out_ft0_o",
+          "bits": 1,
+          "known_snapshots": 7317,
+          "transitions": 721
+        },
+        {
+          "port": "fclk_out_ft10_o",
+          "bits": 1,
+          "known_snapshots": 7317,
+          "transitions": 721
+        },
+        {
+          "port": "fclk_out_ft11_o",
+          "bits": 1,
+          "known_snapshots": 7317,
+          "transitions": 721
+        },
+        {
+          "port": "fclk_out_ft12_o",
+          "bits": 1,
+          "known_snapshots": 7317,
+          "transitions": 720
+        },
+        {
+          "port": "fclk_out_ft1_o",
+          "bits": 1,
+          "known_snapshots": 7317,
+          "transitions": 720
+        },
+        {
+          "port": "fclk_out_ft8_o",
+          "bits": 1,
+          "known_snapshots": 7317,
+          "transitions": 720
+        },
+        {
+          "port": "fclk_out_ft9_o",
+          "bits": 1,
+          "known_snapshots": 7317,
+          "transitions": 720
+        },
+        {
+          "port": "cland_up_ready",
+          "bits": 1,
+          "known_snapshots": 7287,
+          "transitions": 6
+        },
+        {
+          "port": "cland_up_fault",
+          "bits": 1,
+          "known_snapshots": 7287,
+          "transitions": 3
+        }
+      ],
+      "fully_known_bit_comparisons": 53037952
+    },
+    {
+      "log": "phase_416_seed_5.log",
+      "phase_ps": 416,
+      "samples": 7317,
+      "errors": 0,
+      "ports": [
+        {
+          "port": "rst_o_0",
+          "bits": 1,
+          "known_snapshots": 7155,
+          "transitions": 6
+        },
+        {
+          "port": "ft0_o",
+          "bits": 1105,
+          "known_snapshots": 7216,
+          "transitions": 356
+        },
+        {
+          "port": "ft10_o",
+          "bits": 277,
+          "known_snapshots": 7216,
+          "transitions": 356
+        },
+        {
+          "port": "ft11_o",
+          "bits": 513,
+          "known_snapshots": 7216,
+          "transitions": 356
+        },
+        {
+          "port": "ft12_o",
+          "bits": 513,
+          "known_snapshots": 7216,
+          "transitions": 356
+        },
+        {
+          "port": "ft13_o",
+          "bits": 71,
+          "known_snapshots": 6647,
+          "transitions": 328
+        },
+        {
+          "port": "ft14_o",
+          "bits": 71,
+          "known_snapshots": 6647,
+          "transitions": 327
+        },
+        {
+          "port": "ft15_o",
+          "bits": 71,
+          "known_snapshots": 6647,
+          "transitions": 327
+        },
+        {
+          "port": "ft16_o",
+          "bits": 71,
+          "known_snapshots": 6647,
+          "transitions": 327
+        },
+        {
+          "port": "ft17_o",
+          "bits": 71,
+          "known_snapshots": 6647,
+          "transitions": 327
+        },
+        {
+          "port": "ft18_o",
+          "bits": 71,
+          "known_snapshots": 6647,
+          "transitions": 326
+        },
+        {
+          "port": "ft1_o",
+          "bits": 1105,
+          "known_snapshots": 7216,
+          "transitions": 356
+        },
+        {
+          "port": "ft2_o",
+          "bits": 515,
+          "known_snapshots": 6647,
+          "transitions": 327
+        },
+        {
+          "port": "ft3_o",
+          "bits": 515,
+          "known_snapshots": 6647,
+          "transitions": 327
+        },
+        {
+          "port": "ft4_o",
+          "bits": 277,
+          "known_snapshots": 6647,
+          "transitions": 326
+        },
+        {
+          "port": "ft5_o",
+          "bits": 515,
+          "known_snapshots": 6647,
+          "transitions": 327
+        },
+        {
+          "port": "ft6_o",
+          "bits": 515,
+          "known_snapshots": 6627,
+          "transitions": 325
+        },
+        {
+          "port": "ft7_o",
+          "bits": 277,
+          "known_snapshots": 6647,
+          "transitions": 327
+        },
+        {
+          "port": "ft8_o",
+          "bits": 513,
+          "known_snapshots": 7216,
+          "transitions": 356
+        },
+        {
+          "port": "ft9_o",
+          "bits": 513,
+          "known_snapshots": 7216,
+          "transitions": 356
+        },
+        {
+          "port": "fclk_out_ft0_o",
+          "bits": 1,
+          "known_snapshots": 7317,
+          "transitions": 720
+        },
+        {
+          "port": "fclk_out_ft10_o",
+          "bits": 1,
+          "known_snapshots": 7317,
+          "transitions": 720
+        },
+        {
+          "port": "fclk_out_ft11_o",
+          "bits": 1,
+          "known_snapshots": 7317,
+          "transitions": 720
+        },
+        {
+          "port": "fclk_out_ft12_o",
+          "bits": 1,
+          "known_snapshots": 7317,
+          "transitions": 719
+        },
+        {
+          "port": "fclk_out_ft1_o",
+          "bits": 1,
+          "known_snapshots": 7317,
+          "transitions": 719
+        },
+        {
+          "port": "fclk_out_ft8_o",
+          "bits": 1,
+          "known_snapshots": 7317,
+          "transitions": 719
+        },
+        {
+          "port": "fclk_out_ft9_o",
+          "bits": 1,
+          "known_snapshots": 7317,
+          "transitions": 719
+        },
+        {
+          "port": "cland_up_ready",
+          "bits": 1,
+          "known_snapshots": 7277,
+          "transitions": 6
+        },
+        {
+          "port": "cland_up_fault",
+          "bits": 1,
+          "known_snapshots": 7277,
+          "transitions": 3
+        }
+      ],
+      "fully_known_bit_comparisons": 53022932
+    }
+  ],
+  "snapshots_total": 14634,
+  "known_bit_comparisons_total": 106060884,
+  "mutant": "FATAL: tb_seeded.sv:368: Routing mutant caught at t=27513\n       Time: 27513  Scope: tb",
+  "input_sha256": {
+    "captured.sv": "6c6933742d278764631be2328365ce520be85c75873f62ce1903fc54d265e9ee",
+    "split.sv": "fe3f0ff7328f0907c110610c99f455cae73d27cb701ed0040093efcb3aa2cb9c",
+    "split_final.sv": "0e4af34d3c0e2e7715d7a3a7bdbc0edc2ae02837eb25e67bc563d4aa78afbeab",
+    "tb_seeded.sv": "369c98cdc2f3cb4631bf8551e8e2637c21171376f58f6c8b319b6661fb4e2fcc"
+  }
+}

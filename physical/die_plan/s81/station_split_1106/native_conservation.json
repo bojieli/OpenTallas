@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.station_split_conservation.v1",
+ "verdict": "PASS",
+ "checked_cells": 188969,
+ "selected_whole_cells": 172502,
+ "state_bits_before": 53074,
+ "state_bits_after": 53074,
+ "cycles_added": 0,
+ "children": {
+  "ot_s81_station_t51_native_w": {
+   "instances": 97491,
+   "state_bits": 28053,
+   "module": "s81p_slice_station__t51_ot_s81_station_t51_native_w",
+   "ports": 11061
+  },
+  "ot_s81_station_t51_native_e": {
+   "instances": 75011,
+   "state_bits": 24595,
+   "module": "s81p_slice_station__t51_ot_s81_station_t51_native_e",
+   "ports": 11119
+  }
+ },
+ "physical_qualified": false
+}
