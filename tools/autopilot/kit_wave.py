@@ -3823,19 +3823,27 @@ def auto_rejudge(AP, cfg, st, notices, log=None):
 # is dropped from this tick's in-memory retry set (kit_wave.json is never written).  Entries added in-tick (pending
 # rows, LEAFSLEW) and COORD releases of an already failed / running attempt keep working unchanged.
 def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
-    now = now_s() if now is None else now
+    # KW-FIX-23 14:0x hot-fix: epoch seconds on both sides (now_s() is a display string; 13:57 TypeError)
+    now = time.time() if now is None else float(now)
     seen = st.setdefault("retry_seen", {})
     latest = {}
     for rec in (st.get("items") or {}).values():
         k = (rec.get("die"), rec.get("item"), str(rec.get("attempt")))
-        latest[k] = max(latest.get(k, 0.0), float(rec.get("started") or 0))
+        try:
+            t = float(rec.get("started") or 0)
+        except (TypeError, ValueError):
+            continue
+        latest[k] = max(latest.get(k, 0.0), t)
     dropped = {}
     for die, d in (cfg.get("dies") or {}).items():
         if not isinstance(d, dict) or not d.get("retry"):
             continue
         keep = []
         for ia in d["retry"]:
-            first = seen.setdefault(f"{die}|{ia}", now)
+            try:
+                first = float(seen.setdefault(f"{die}|{ia}", now))
+            except (TypeError, ValueError):
+                first = seen[f"{die}|{ia}"] = now      # unparsable (old string) -> first seen now
             item, _, n = str(ia).rpartition("@")
             started = latest.get((die, item, n), 0.0)
             if started and started > first:
