@@ -323,7 +323,7 @@ proc is_chain {bus W names face core_glob tag} {
 
 EXACT_BANK_TCL = r'''
 # Generic exact internal/face FF banks: no spiral or post-measurement placement.
-proc is_exact_bank {inst W sites fw fh tag} {
+proc is_exact_bank {inst W sites fw fh tag {epoch_unobserved 0}} {
   global ff_blk ff_dbu ff_orient ff_sw ff_x0 ff_y0 ff_x1 ff_y1 is_n is_fh
   set seen {}
   foreach i [$ff_blk getInsts] {
@@ -357,8 +357,12 @@ proc is_exact_bank {inst W sites fw fh tag} {
     puts $is_fh "$nm\t$tag\t$x\t$y\t-"
     incr is_n
   }
-  if {[dict size $seen] != $W+1} {
-    error "exact internal bank $inst expected [expr {$W+1}] payload+epoch flops, got [dict size $seen]"
+  for {set bit 0} {$bit < $W} {incr bit} {
+    if {![dict exists $seen $bit]} { error "exact internal bank $inst missing payload bit $bit" }
+  }
+  if {![dict exists $seen $W]} {
+    if {!$epoch_unobserved} { error "exact internal bank $inst missing observed/unproved epoch" }
+    puts "OT_ISTATIONS exact bank $inst: all $W payload flops; unobserved epoch absent, site reserved"
   }
 }
 '''
@@ -670,11 +674,11 @@ def main(argv):
             banks, (fw, fh), face = exact
             for nm, bank in zip(names, banks):
                 sites = " ".join("{%0.9g %0.9g}" % tuple(xy) for xy in bank)
-                tcl.append(f"is_exact_bank {{{nm}}} {W} {{{sites}}} {fw:.9g} {fh:.9g} ist:{bus}")
+                tcl.append(f"is_exact_bank {{{nm}}} {W} {{{sites}}} {fw:.9g} {fh:.9g} ist:{bus} @EPOCH:{nm}@")
             if face is not None:
                 face_inst = f"u_b{'in' if b['dir'] == 'in' else 'out'}_{n}"
                 sites = " ".join("{%0.9g %0.9g}" % tuple(xy) for xy in face)
-                tcl.append(f"is_exact_bank {{{face_inst}}} {W} {{{sites}}} {fw:.9g} {fh:.9g} face:{bus}")
+                tcl.append(f"is_exact_bank {{{face_inst}}} {W} {{{sites}}} {fw:.9g} {fh:.9g} face:{bus} @EPOCH:{face_inst}@")
         elif e.get("bit_route") == "chain":
             # D-QC-FE-REACH 10-26: per-bit sites on each bit's own in-pin -> landing-register route (is_chain)
             if b["dir"] != "in" or "face" not in b:
@@ -710,6 +714,17 @@ def main(argv):
         tcl.extend(rs)
         man["kit_relay_sites"] = len(t["relay_sites"])       # not a station entry: receipts list stations only
     tcl.append("close $is_fh\nputs \"OT_ISTATIONS placed $is_n flops FIRM (missing: [llength $is_miss] $is_miss)\"")
+    from kit_epoch_observability import inspect as epoch_inspect
+    epochs = {}
+    for index, line in enumerate(tcl):
+        for match in re.finditer(r'@EPOCH:(\w+)@', line):
+            inst = match[1]
+            epochs[inst] = epoch_inspect(txt, inst)
+            line = line.replace(match[0], str(int(epochs[inst]['unobserved'])))
+        tcl[index] = line
+    if epochs:
+        import hashlib
+        man['kit_epoch_observability'] = dict(source_sha256=hashlib.sha256(txt.encode()).hexdigest(), stations=epochs)
     bfile.write_text(txt)
     (kd / "istations.tcl").write_text("\n".join(tcl) + "\n")
     man["kit_istations"] = rep
