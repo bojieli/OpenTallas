@@ -32,6 +32,18 @@ def apply(base, delta, output):
         if 'wavefront_min_depth' in typ['reset']:
             raise ValueError('base already has a reset depth floor')
         typ['reset']['wavefront_min_depth'] = spec['wavefront_min_depth']
+    for change in spec.get('raw_export_rebind', []):
+        port = change['port']
+        rows = typ['reset_start_raw_exports']
+        idx = next(i for i, row in enumerate(rows) if row['port'] == port)
+        if rows[idx] != change['before']:
+            raise ValueError('raw reset export differs: ' + port)
+        rows[idx] = change['after']
+        pins = typ['clock']['landing_contract']['pins']
+        idx = next(i for i, pin in enumerate(pins) if pin['name'] == port)
+        if pins[idx] != change['pin_before']:
+            raise ValueError('raw reset export pin differs: ' + port)
+        pins[idx] = change['pin_after']
     result = (json.dumps(plan, indent=2) + '\n').encode()
     if hashlib.sha256(result).hexdigest() != spec['candidate_sha256']:
         raise ValueError('candidate differs from reviewed geometry')
