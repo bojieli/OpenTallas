@@ -161,9 +161,26 @@ def main():
         sst = next((k for k in (1, None) if json.dumps(side, indent=k) + "\n" == stext), 1)
         ch = False
         for tn in TYPES:
-            if rep["types"][tn]["reset_tree_moved"]:
-                side["collector"]["types"][tn]["tree"] = copy.deepcopy(
-                    P["partition_types"][tn]["clock"]["landing_contract"]["collector_tree"])
+            if P["partition_types"][tn].get("hard_cores"):
+                import landing_collector as LC
+                typ = P["partition_types"][tn]
+                by_inst = {h["inst"]: h for h in typ["hard_cores"]}
+                bands = typ["clock"]["landing_contract"]["bands"]
+                points = {}
+                for name, band in bands.items():
+                    if not band.get("hard_core"):
+                        continue
+                    h = by_inst[band["hard_core"]]
+                    pins = {q["name"]: q for q in json.loads((odir / h["pins_file"]).read_text())["pins"]}
+                    off = h.get("track_offset_um", [0, 0])
+                    points[name] = [[h["origin_um"][0]+pins[n]["x"]+off[0],
+                                     h["origin_um"][1]+pins[n]["y"]+off[1]] for n in ("ready", "fault")]
+                info = side["collector"]["types"][tn]
+                rep["types"][tn]["collector_attachments"] = LC.reattach_sources(
+                    info, typ["clock"]["landing_contract"]["collector_tree"], status_points=points)
+                for source in info["local_sources"]:
+                    if source["name"] in points:
+                        source["band"] = copy.deepcopy(bands[source["name"]])
                 ch = True
         open(sys.argv[5], "w").write(json.dumps(side, indent=sst) + "\n")
         rep["sidecar_changed"] = ch

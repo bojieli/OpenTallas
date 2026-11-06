@@ -1,0 +1,778 @@
+{
+ "sle_ctl__cl67434795": {
+  "added_collector_cycles": 0,
+  "sources": [
+   {
+    "name": "b_tw_data_i",
+    "old_node": "rst_n_t2",
+    "node": "rst_n_t8",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 62.76400000000001
+   },
+   {
+    "name": "cws1_i",
+    "old_node": "rst_n_t32",
+    "node": "rst_n_t32",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 199.43600000000004
+   },
+   {
+    "name": "cws2_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 183.18000000000018
+   },
+   {
+    "name": "flt_hc1_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 61.05600000000004
+   },
+   {
+    "name": "flt_hc2_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 57.408000000000015
+   },
+   {
+    "name": "x_fw_i",
+    "old_node": "rst_n_t20",
+    "node": "rst_n_t20",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 104.72999999999992
+   },
+   {
+    "name": "x_fw_p1_i",
+    "old_node": "rst_n_t8",
+    "node": "rst_n_t1",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 104.03600000000013
+   },
+   {
+    "name": "x_fw_p2_i",
+    "old_node": "rst_n_t16",
+    "node": "rst_n_t17",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 106.41800000000012
+   },
+   {
+    "name": "x_hc0_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 59.06400000000002
+   },
+   {
+    "name": "x_hc1_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 56.59200000000004
+   },
+   {
+    "name": "x_hc1_st_b_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 173.14800000000014
+   },
+   {
+    "name": "x_hc2_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 59.23199999999997
+   },
+   {
+    "name": "x_hc3_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 61.615999999999985
+   },
+   {
+    "name": "x_sc_i",
+    "old_node": "rst_n_t5",
+    "node": "rst_n_t5",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 105.61600000000008
+   },
+   {
+    "name": "x_st_a_i",
+    "old_node": "rst_n_t20",
+    "node": "rst_n_t20",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 32.455999999999946
+   },
+   {
+    "name": "x_st_a_st_b_i",
+    "old_node": "rst_n_t23",
+    "node": "rst_n_t23",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 243.54199999999986
+   },
+   {
+    "name": "x_st_b_i",
+    "old_node": "rst_n_t19",
+    "node": "rst_n_t19",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 36.17600000000016
+   },
+   {
+    "name": "x_st_b_st_a_i",
+    "old_node": "rst_n_t19",
+    "node": "rst_n_t19",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 156.04800000000012
+   },
+   {
+    "name": "x_su_c_i",
+    "old_node": "rst_n_t4",
+    "node": "rst_n_t4",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 181.88800000000015
+   },
+   {
+    "name": "x_su_l0_i",
+    "old_node": "rst_n_t19",
+    "node": "rst_n_t19",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 100.21000000000015
+   },
+   {
+    "name": "x_su_l1_i",
+    "old_node": "rst_n_t9",
+    "node": "rst_n_t10",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 92.66799999999995
+   },
+   {
+    "name": "child0",
+    "old_node": "rst_n_t38",
+    "node": "rst_n_t38",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 0.0
+   },
+   {
+    "name": "child1",
+    "old_node": "rst_n_t37",
+    "node": "rst_n_t37",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 0.0
+   }
+  ],
+  "max_source_hop_um": 243.54199999999986
+ },
+ "sle_ctl__cl372cea1c": {
+  "added_collector_cycles": 0,
+  "sources": [
+   {
+    "name": "b_tw_data_i",
+    "old_node": "rst_n_t2",
+    "node": "rst_n_t8",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 62.76400000000001
+   },
+   {
+    "name": "cws1_i",
+    "old_node": "rst_n_t32",
+    "node": "rst_n_t32",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 199.43600000000004
+   },
+   {
+    "name": "cws2_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 183.18000000000018
+   },
+   {
+    "name": "flt_hc1_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 61.05600000000004
+   },
+   {
+    "name": "flt_hc2_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 57.408000000000015
+   },
+   {
+    "name": "x_fw_i",
+    "old_node": "rst_n_t20",
+    "node": "rst_n_t20",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 104.72999999999992
+   },
+   {
+    "name": "x_fw_p1_i",
+    "old_node": "rst_n_t8",
+    "node": "rst_n_t1",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 104.03600000000013
+   },
+   {
+    "name": "x_fw_p2_i",
+    "old_node": "rst_n_t16",
+    "node": "rst_n_t17",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 106.41800000000012
+   },
+   {
+    "name": "x_hc0_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 59.06400000000002
+   },
+   {
+    "name": "x_hc1_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 56.59200000000004
+   },
+   {
+    "name": "x_hc1_st_b_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 173.14800000000014
+   },
+   {
+    "name": "x_hc2_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 59.23199999999997
+   },
+   {
+    "name": "x_hc3_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 61.615999999999985
+   },
+   {
+    "name": "x_sc_i",
+    "old_node": "rst_n_t5",
+    "node": "rst_n_t5",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 105.61600000000008
+   },
+   {
+    "name": "x_st_a_i",
+    "old_node": "rst_n_t20",
+    "node": "rst_n_t20",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 32.455999999999946
+   },
+   {
+    "name": "x_st_a_st_b_i",
+    "old_node": "rst_n_t23",
+    "node": "rst_n_t23",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 243.54199999999986
+   },
+   {
+    "name": "x_st_b_i",
+    "old_node": "rst_n_t19",
+    "node": "rst_n_t19",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 36.17600000000016
+   },
+   {
+    "name": "x_st_b_st_a_i",
+    "old_node": "rst_n_t19",
+    "node": "rst_n_t19",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 156.04800000000012
+   },
+   {
+    "name": "x_su_c_i",
+    "old_node": "rst_n_t4",
+    "node": "rst_n_t4",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 181.88800000000015
+   },
+   {
+    "name": "x_su_l0_i",
+    "old_node": "rst_n_t19",
+    "node": "rst_n_t19",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 100.21000000000015
+   },
+   {
+    "name": "x_su_l1_i",
+    "old_node": "rst_n_t9",
+    "node": "rst_n_t10",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 92.66799999999995
+   },
+   {
+    "name": "child0",
+    "old_node": "rst_n_t39",
+    "node": "rst_n_t39",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 0.0
+   },
+   {
+    "name": "child1",
+    "old_node": "rst_n_t37",
+    "node": "rst_n_t37",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 0.0
+   },
+   {
+    "name": "child2",
+    "old_node": "rst_n_t38",
+    "node": "rst_n_t38",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 0.0
+   }
+  ],
+  "max_source_hop_um": 243.54199999999986
+ },
+ "sle_ctl__cla4f6f12f": {
+  "added_collector_cycles": 0,
+  "sources": [
+   {
+    "name": "b_tw_data_i",
+    "old_node": "rst_n_t2",
+    "node": "rst_n_t8",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 62.76400000000001
+   },
+   {
+    "name": "cws1_i",
+    "old_node": "rst_n_t32",
+    "node": "rst_n_t32",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 199.43600000000004
+   },
+   {
+    "name": "cws2_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 183.18000000000018
+   },
+   {
+    "name": "flt_hc1_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 61.05600000000004
+   },
+   {
+    "name": "flt_hc2_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 57.408000000000015
+   },
+   {
+    "name": "x_fw_i",
+    "old_node": "rst_n_t20",
+    "node": "rst_n_t20",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 104.72999999999992
+   },
+   {
+    "name": "x_fw_p1_i",
+    "old_node": "rst_n_t8",
+    "node": "rst_n_t1",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 104.03600000000013
+   },
+   {
+    "name": "x_fw_p2_i",
+    "old_node": "rst_n_t16",
+    "node": "rst_n_t17",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 106.41800000000012
+   },
+   {
+    "name": "x_hc0_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 59.06400000000002
+   },
+   {
+    "name": "x_hc1_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 56.59200000000004
+   },
+   {
+    "name": "x_hc1_st_b_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 173.14800000000014
+   },
+   {
+    "name": "x_hc2_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 59.23199999999997
+   },
+   {
+    "name": "x_hc3_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 61.615999999999985
+   },
+   {
+    "name": "x_sc_i",
+    "old_node": "rst_n_t5",
+    "node": "rst_n_t5",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 105.61600000000008
+   },
+   {
+    "name": "x_st_a_i",
+    "old_node": "rst_n_t20",
+    "node": "rst_n_t20",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 32.455999999999946
+   },
+   {
+    "name": "x_st_a_st_b_i",
+    "old_node": "rst_n_t23",
+    "node": "rst_n_t23",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 243.54199999999986
+   },
+   {
+    "name": "x_st_b_i",
+    "old_node": "rst_n_t19",
+    "node": "rst_n_t19",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 36.17600000000016
+   },
+   {
+    "name": "x_st_b_st_a_i",
+    "old_node": "rst_n_t19",
+    "node": "rst_n_t19",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 156.04800000000012
+   },
+   {
+    "name": "x_su_c_i",
+    "old_node": "rst_n_t4",
+    "node": "rst_n_t4",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 181.88800000000015
+   },
+   {
+    "name": "x_su_l0_i",
+    "old_node": "rst_n_t19",
+    "node": "rst_n_t19",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 100.21000000000015
+   },
+   {
+    "name": "x_su_l1_i",
+    "old_node": "rst_n_t9",
+    "node": "rst_n_t10",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 92.66799999999995
+   },
+   {
+    "name": "child0",
+    "old_node": "rst_n_t40",
+    "node": "rst_n_t40",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 0.0
+   },
+   {
+    "name": "child1",
+    "old_node": "rst_n_t38",
+    "node": "rst_n_t38",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 0.0
+   },
+   {
+    "name": "child2",
+    "old_node": "rst_n_t39",
+    "node": "rst_n_t39",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 0.0
+   },
+   {
+    "name": "child3",
+    "old_node": "rst_n_t37",
+    "node": "rst_n_t37",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 0.0
+   },
+   {
+    "name": "child4",
+    "old_node": "rst_n_t37",
+    "node": "rst_n_t37",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 0.0
+   }
+  ],
+  "max_source_hop_um": 243.54199999999986
+ },
+ "sle_ctl__cl503337ff": {
+  "added_collector_cycles": 0,
+  "sources": [
+   {
+    "name": "b_tw_data_i",
+    "old_node": "rst_n_t2",
+    "node": "rst_n_t8",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 62.76400000000001
+   },
+   {
+    "name": "cws1_i",
+    "old_node": "rst_n_t32",
+    "node": "rst_n_t32",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 199.43600000000004
+   },
+   {
+    "name": "cws2_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 183.18000000000018
+   },
+   {
+    "name": "flt_hc1_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 61.05600000000004
+   },
+   {
+    "name": "flt_hc2_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 57.408000000000015
+   },
+   {
+    "name": "x_fw_i",
+    "old_node": "rst_n_t20",
+    "node": "rst_n_t20",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 104.72999999999992
+   },
+   {
+    "name": "x_fw_p1_i",
+    "old_node": "rst_n_t8",
+    "node": "rst_n_t1",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 104.03600000000013
+   },
+   {
+    "name": "x_fw_p2_i",
+    "old_node": "rst_n_t16",
+    "node": "rst_n_t17",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 106.41800000000012
+   },
+   {
+    "name": "x_hc0_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 59.06400000000002
+   },
+   {
+    "name": "x_hc1_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 56.59200000000004
+   },
+   {
+    "name": "x_hc1_st_b_i",
+    "old_node": "rst_n_t33",
+    "node": "rst_n_t33",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 173.14800000000014
+   },
+   {
+    "name": "x_hc2_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 59.23199999999997
+   },
+   {
+    "name": "x_hc3_i",
+    "old_node": "rst_n_t36",
+    "node": "rst_n_t36",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 61.615999999999985
+   },
+   {
+    "name": "x_sc_i",
+    "old_node": "rst_n_t5",
+    "node": "rst_n_t5",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 105.61600000000008
+   },
+   {
+    "name": "x_st_a_i",
+    "old_node": "rst_n_t20",
+    "node": "rst_n_t20",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 32.455999999999946
+   },
+   {
+    "name": "x_st_a_st_b_i",
+    "old_node": "rst_n_t23",
+    "node": "rst_n_t23",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 243.54199999999986
+   },
+   {
+    "name": "x_st_b_i",
+    "old_node": "rst_n_t19",
+    "node": "rst_n_t19",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 36.17600000000016
+   },
+   {
+    "name": "x_st_b_st_a_i",
+    "old_node": "rst_n_t19",
+    "node": "rst_n_t19",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 156.04800000000012
+   },
+   {
+    "name": "x_su_c_i",
+    "old_node": "rst_n_t4",
+    "node": "rst_n_t4",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 181.88800000000015
+   },
+   {
+    "name": "x_su_l0_i",
+    "old_node": "rst_n_t19",
+    "node": "rst_n_t19",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 100.21000000000015
+   },
+   {
+    "name": "x_su_l1_i",
+    "old_node": "rst_n_t9",
+    "node": "rst_n_t10",
+    "old_depth": 7,
+    "depth": 7,
+    "max_source_hop_um": 92.66799999999995
+   }
+  ],
+  "max_source_hop_um": 243.54199999999986
+ }
+}

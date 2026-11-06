@@ -74,7 +74,8 @@ def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n"):
         if node not in xy:
             raise ValueError(f"collector source {src['name']}: reset tap {node} absent")
         point = src.get("xy_um", xy[node])
-        hop = abs(point[0]-xy[node][0])+abs(point[1]-xy[node][1])
+        hop = max(abs(p[0]-xy[node][0])+abs(p[1]-xy[node][1])
+                  for p in src.get("status_pins_xy_um", [point]))
         max_source_hop = max(max_source_hop, hop)
         if hop > reach_um + 1e-6:
             raise ValueError(f"collector source {src['name']} -> {node}: {hop:.3f}um exceeds {reach_um}")
@@ -173,3 +174,50 @@ def build_hard_chain(tree, sources, *, reach_um=405):
                           raw_reset="rst_n (delivered, hard wrapper)",depth_to_root=len(chain)-i))
     return dict(rtl=lines,instances=insts,active=True,depth=len(chain),max_hop_um=max(h["hop_um"] for h in hops),
                 hops=hops,source_count=len(sources),data_cycles_added=0,hard_wrapper=True)
+
+
+def reattach_sources(info, tree, *, status_points=None, reach_um=405):
+    """Reattach status sources after reset sites move, preserving their relative depth.
+
+    The source and each registered collector edge retain the same cycle count
+    when the old/new tree depth is equal. A depth change is explicit in the
+    report. Actual hard-child ready/fault points may replace the old soft-band
+    estimate; every point must reach the selected real reset relay.
+    """
+    import copy
+    status_points = status_points or {}
+    old = info["tree"]
+    nodes = lambda t: {"rst_root_n": dict(xy=t["root"], depth=0),
+                       **{r["q"]: r for r in t["relays"]}}
+    before, after = nodes(old), nodes(tree)
+    root = info.get("collector_root_node", "rst_root_n")
+    if root not in after or before[root]["xy"] != after[root]["xy"]:
+        raise ValueError("collector root moved; requires an explicit parent seam event")
+    added = tree["depth"] - old["depth"]
+    rows = []
+    for group in ("local_sources", "children"):
+        for index, src in enumerate(info[group]):
+            name = src.get("name", "child"+str(index))
+            was = src.get("node", "rst_n_t"+str(src.get("tap", 0)))
+            if was not in before:
+                raise ValueError(f"collector source {name}: old node {was} absent")
+            depth = before[was]["depth"] + added
+            points = status_points.get(name, src.get("status_pins_xy_um", [src["xy_um"]]))
+            dist = lambda r: max(abs(p[0]-r["xy"][0])+abs(p[1]-r["xy"][1]) for p in points)
+            eligible = [(dist(r), n) for n, r in after.items()
+                        if r["depth"] == depth and dist(r) <= reach_um+1e-6]
+            if not eligible:
+                raise ValueError(f"collector source {name}: no depth-{depth} relay within {reach_um}um")
+            keep = [(d,n) for d,n in eligible if n == was]
+            hop, node = min(keep or eligible)
+            src["node"] = node
+            if re.fullmatch(r"rst_n_t\d+", node): src["tap"] = int(node[7:])
+            else: src.pop("tap", None)
+            if name in status_points:
+                src["xy_um"] = list(points[0])
+                src["status_pins_xy_um"] = [list(p) for p in points]
+            rows.append(dict(name=name, old_node=was, node=node, old_depth=before[was]["depth"],
+                             depth=depth, max_source_hop_um=hop))
+    info["tree"] = copy.deepcopy(tree)
+    return dict(added_collector_cycles=added, sources=rows,
+                max_source_hop_um=max((r["max_source_hop_um"] for r in rows), default=0))
