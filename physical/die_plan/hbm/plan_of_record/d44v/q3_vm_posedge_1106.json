@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.hbm.q3_vm_face_event.v1",
+ "status": "CANDIDATE_WAIT_PHYSICAL_PASS",
+ "module": "ot_hfd_coll_q3_vm_core",
+ "source": "HBM-FORM-TIMING-6 q3a FORM A; COORD16:41 11-05; TOK HBM-30",
+ "generator": "physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py",
+ "master_rtl_changed": false,
+ "pins_changed": false,
+ "outline_changed": false,
+ "clock_period_ps": 833,
+ "old_output_form": "one posedge face register then negative-edge lockup on every output",
+ "new_writer_form": "two posedge registers on writer_kq0..7, existing --face-stage=1; other outputs retain negative-edge lockup",
+ "item_args_change": {
+  "replace_face_lockup_with": "^(?!writer_kq[0-7]$).*",
+  "append_face_stage": "^writer_kq[0-7]$=1",
+  "preserve_other_args": true
+ },
+ "pin_cycles": {
+  "writer_kq0": 1,
+  "writer_kq1": 1,
+  "writer_kq2": 1,
+  "writer_kq3": 1,
+  "writer_kq4": 1,
+  "writer_kq5": 1,
+  "writer_kq6": 1,
+  "writer_kq7": 1
+ },
+ "unchanged_output_cycles": [
+  "writer_fault",
+  "vmasm_as_il"
+ ],
+ "seam_hold": "writer_kq no longer has falling-edge launch; actual die related-pair FF hold remains required",
+ "latency_adoption": "After physical PASS and generated-shell phase proof, add eight corelat writer_kq+1 rows and HBM-30 COLL +1 in compiler delta; token ledger already books conservative upper bound",
+ "proof": "results/die_hbm_1106/q3_vm_posedge",
+ "physical_build": "intel1:/srv/opentallas-scratch2/claude/hbm-form-timing/forms/q3a/ot_hfd_coll_q3_vm_core_3eccb9f38cef",
+ "adoption": "Coordinator applies core_kit.item_args change to hbm only after physical PASS; no live config modified by this candidate",
+ "phase_proof": {
+  "checks": 16312,
+  "generated_vs_q3a_hand_mismatches": 0,
+  "old_shell_plus1_cycle_mismatches": 0,
+  "other_output_mismatches": 0,
+  "mutants_caught": {
+   "short_stage": 16312,
+   "long_stage": 16312,
+   "old_negedge": 16312
+  },
+  "clock_ps": 833,
+  "source_commit": "396c545e5d8c8b228c248f95207e624e8558cb25"
+ }
+}

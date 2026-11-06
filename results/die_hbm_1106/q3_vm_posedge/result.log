@@ -1,0 +1,5 @@
+Q3_FACE checks=16312 generated_vs_hand=0 old_phase_plus1=0 other_fault=0 mutant_short=16312 mutant_long=16312 mutant_oldedge=16312
+- tb.sv:14: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.040 s; speed 42.923 us/s
+- Verilator: cpu 0.040 s on 1 threads; allocated 7 MB
