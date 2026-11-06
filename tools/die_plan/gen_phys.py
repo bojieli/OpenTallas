@@ -36,6 +36,14 @@ import taps as T
 from schema import DIE_PART
 
 
+
+def _rtl_lint_dead_output_vars():
+    modules = os.environ.get("OT_RTL_LINT_DEAD_OUTPUT_MODULES", "").split()
+    if any(not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_$]*", m) for m in modules):
+        raise ValueError("OT_RTL_LINT_DEAD_OUTPUT_MODULES requires module identifiers")
+    return ["export OT_RTL_LINT_DEAD_OUTPUT_MODULES = " + " ".join(modules)] if modules else []
+
+
 def _common_flow_file(name, repo):
     """physical/common_flow/<name> of checkout `repo`, from git HEAD in a sparse checkout without it
     (common_flow_src.py, DIE-KV-62 11-02); a copy of this module without the helper: the plain path."""
@@ -3547,6 +3555,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
              if os.environ.get("OT_CTS_NO_NDR") == "1" else []),
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
+           *_rtl_lint_dead_output_vars(),
            "export SYNTH_REPEATABLE_BUILD = 1",
            # HEAD-KITS-3 10-28: OWNER D-ROM-2 declared-logic math tables (tools/mem_compiler/rom_declared_logic.json,
            # e.g. the KP4 GF(1024) inverse 1024x10 in every serdes FEC lane) are synthesised logic by decision; the ORFS
