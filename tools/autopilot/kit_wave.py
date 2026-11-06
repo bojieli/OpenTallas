@@ -177,6 +177,20 @@ SSH_DROP = re.compile(r"ot-run: NOT RUN|Connection (?:reset|refused|closed)|kex_
 STATE_FILE = "kit_wave_state.json"
 
 
+def place_retry_sh(inner, log):
+    """KW-FIX-17 11-05 (QC sle_stm_v1 a6 INFRA 15:12): the async PLACE service ran its ot-run client ONCE, so a gen-host
+    sshd drop during ot-run's probe ('NOT RUN: no host qualifies (... epyc4: SSH probe exit 255 ...)') failed the
+    attempt as INFRA; run() already retries such a drop.  Same rule here: a try whose own output says 'ot-run: NOT RUN'
+    and has no 'ot-run: RAN on' (the command never started) is rerun up to SSH_RETRIES more times; rc in $rc."""
+    lq = shlex.quote(log)
+    return (f"for i in $(seq 0 {SSH_RETRIES}); do echo KW_PLACE_TRY $i; {inner}; rc=$?; [ $rc -eq 0 ] && break; "
+            f"t=$(sed -n \"/^KW_PLACE_TRY $i\\$/,\\$p\" {lq}); "
+            f"printf '%s' \"$t\" | grep -q 'ot-run: RAN on' && break; "
+            f"printf '%s' \"$t\" | grep -q 'ot-run: NOT RUN' || break; [ $i -lt {SSH_RETRIES} ] || break; "
+            f"echo \"KW_SSH_RETRY place try $((i+2)) (ot-run NOT RUN before the command ran)\"; "
+            f"sleep $((20*(i+1)+RANDOM%20)); done")
+
+
 def now_s():
     return time.strftime("%Y-%m-%d %H:%M %Z")
 
@@ -1918,7 +1932,8 @@ def run_item(spec_path):
         cmd = ["systemd-run", "--user", "--quiet", "--collect", f"--unit={unit}",
                f"--setenv=PATH={HOME}/.local/bin:/usr/local/bin:/usr/bin:/bin", f"--setenv=HOME={HOME}",
                "--setenv=OT_RUN_SPILL_HANDOFF=place", "--property=TimeoutStopSec=120", "/bin/bash", "-c",
-               f"exec >> {shlex.quote(svc['log'])} 2>&1; echo KW_PLACE_START $(date +%s) {unit}; {inner}; echo KW_PLACE_RC=$?"]
+               f"exec >> {shlex.quote(svc['log'])} 2>&1; echo KW_PLACE_START $(date +%s) {unit}; "
+               + place_retry_sh(inner, svc["log"]) + "; echo KW_PLACE_RC=$rc"]
         p = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
         svc["launch"] = "launched" if p.returncode == 0 else "failed"
         save_svc(svc)
