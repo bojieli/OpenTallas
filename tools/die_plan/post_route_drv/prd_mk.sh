@@ -68,7 +68,7 @@ OUT_ABS=$(realpath -m -- "$OUT")
 case "$OUT_ABS" in
   "$KIT"/*) OUT_REL=${OUT_ABS#"$KIT"/}; OUT_EXCLUDE=(--exclude "/${OUT_REL%%/*}/") ;;
 esac
-rsync -a "${OUT_EXCLUDE[@]}" --exclude .ot-run-spill-copy --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_*' --exclude '/signoff*.log' \
+rsync -a "${OUT_EXCLUDE[@]}" --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_*' --exclude '/signoff*.log' \
   --exclude '/run_*.log' --exclude /rc.txt --exclude '/pass[0-9]*' --exclude '/prd_*.json' --exclude '/prd_*.log' \
   --exclude '/eco_[0-9]*' --exclude '/lec_routed_autopilot_*' $KIT/ $OUT/
 B=$OUT/run/results/asap7/$NICK/base
@@ -82,7 +82,7 @@ for f in 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_un
   test -f $RS/$f && cp $RS/$f $B/; done
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
-for f in prd_hook.tcl prd_count.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py; do cp $HERE/$f $OUT/; done
+for f in prd_hook.tcl prd_count.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py; do cp $HERE/$f $OUT/; done
 # An explicitly selected pass hook stays pinned across subsequent passes.
 if [ -n "${OT_PRD_HOOK:-}" ]; then cp "$OT_PRD_HOOK" "$OUT/prd_hook.tcl"; fi
 for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh kit_modes_eco.tcl pg_connect.tcl; do cp "$SO/tools/die_plan/$f" $OUT/; done
@@ -187,6 +187,11 @@ printf '{"tool": "post_route_drv", "variant": "%s", "source_kit": "%s:%s", "sour
   $V "$(hostname)" $KIT $RS "$SPEF" "$SO" > $OUT/PRD.json
 else
 echo "OT_PRD_FROM=$FROM" >> $OUT/variant.env
+if [ -n "${OT_PRD_LOCAL_BRANCHES:-}" ]; then
+  test -f "$OT_PRD_LOCAL_BRANCHES" || { echo "prd_mk: missing exact local-branch manifest"; exit 2; }
+  cp "$OT_PRD_LOCAL_BRANCHES" "$OUT/prd_local_branches_targets.tsv"
+  echo "OT_PRD_LOCAL_BRANCHES=/work/prd_local_branches_targets.tsv" >> $OUT/variant.env
+fi
 printf '{"tool": "post_route_drv", "variant": "%s", "from": "%s", "source_kit": "%s:%s", "source_route": "%s/%s", "parasitics": "%s", "signoff_tools": "%s"}\n' \
   $V $FROM "$(hostname)" $KIT $RS $SRC "$SPEF" "$SO" > $OUT/PRD.json
 fi

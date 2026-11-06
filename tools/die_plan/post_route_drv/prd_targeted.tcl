@@ -28,6 +28,8 @@ proc ot_prd_repair_targeted {drv_args} {
     }
     foreach net [get_nets -quiet -of_objects $objects] {dict set keep [ot_prd_net_key [get_full_name $net]] 1}
   }
+  # Exact driver locality manifest overrides report expansion, never the signoff checks.
+  if {[info exists ::ot_prd_local_targets]} { set keep $::ot_prd_local_targets }
   set guards {}
   foreach net [[ord::get_db_block] getNets] {
     if {[$net getSigType] ne "SIGNAL" || [$net isDoNotTouch] || [dict exists $keep [ot_prd_net_key [$net getName]]]} continue

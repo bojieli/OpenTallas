@@ -49,6 +49,51 @@ puts PASS
    run=subprocess.run(['tclsh',str(p),d,str(helper)],capture_output=True,text=True)
    self.assertEqual(run.returncode,0,run.stderr)
    self.assertIn('PASS',run.stdout)
+ def test_explicit_allowlist_rejects_report_expansion(self):
+  helper=pathlib.Path(__file__).with_name('prd_targeted.tcl')
+  original=helper.read_text()
+  with tempfile.TemporaryDirectory() as d:
+   script=r'''
+set ::env(REPORTS_DIR) [lindex $argv 0]
+source [lindex $argv 1]
+set ::ot_prd_local_targets [dict create keep 1]
+set dt(keep) 0;set dt(other) 0;set dt(frozen) 1
+foreach n {keep other frozen} {
+ proc $n {method args} [string map [list @N@ $n] {
+  switch $method {
+   getSigType {return SIGNAL}
+   isDoNotTouch {return $::dt(@N@)}
+   getName {return @N@}
+   setDoNotTouch {set ::dt(@N@) [lindex $args 0]}
+  }
+ }]
+}
+namespace eval ord {proc get_db_block {} {return block}}
+proc block {method} {return {keep other frozen}}
+proc get_pins {args} {return other/D}
+proc get_ports {args} {return {}}
+proc get_nets {args} {return other}
+proc get_full_name {arg} {return $arg}
+proc report_check_types {args} {
+ set f [open [lindex $args end] w]
+ puts $f {other/D 10.0 12.0 -2.0 (VIOLATED)};close $f
+}
+proc repair_design {args} {
+ if {$::dt(keep) || !$::dt(other) || !$::dt(frozen)} {error ALLOWLIST_ESCAPED}
+}
+ot_prd_repair_targeted {-slew_margin 20}
+if {$dt(other) || !$dt(frozen)} {error GUARD_LEAK}
+puts PASS
+'''
+   p=pathlib.Path(d)/'test.tcl';p.write_text(script)
+   result=subprocess.run(['tclsh',str(p),d,str(helper)],capture_output=True,text=True)
+   self.assertEqual(result.returncode,0,result.stderr)
+   self.assertIn('PASS',result.stdout)
+   mutant=pathlib.Path(d)/'mutant.tcl'
+   mutant.write_text(original.replace('if {[info exists ::ot_prd_local_targets]} { set keep $::ot_prd_local_targets }',''))
+   result=subprocess.run(['tclsh',str(p),d,str(mutant)],capture_output=True,text=True)
+   self.assertNotEqual(result.returncode,0)
+   self.assertIn('ALLOWLIST_ESCAPED',result.stderr)
  def test_bracketed_violator_is_not_guarded(self):
   helper=pathlib.Path(__file__).with_name('prd_targeted.tcl')
   with tempfile.TemporaryDirectory() as d:
