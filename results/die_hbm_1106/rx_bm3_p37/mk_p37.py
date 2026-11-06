@@ -3,7 +3,7 @@
 
 ot_pdie_serdes_rx (302.4 x 345.6, 5 instances, all R0) becomes, inside the SAME slot (origin and outline kept):
   u_rest  ot_pdie_serdes_rx_bm3_rest   197.856 x 345.6 at rx-frame (104.544, 0)         view @7826e3baf53d (Model-A table)
-  u_bm0-2 ot_pdie_serdes_rx_bm_native   95.904 x 106.56 at rx-frame (0, 4.32 + 115.2 i)  view @cefde5fe417d (signed kit table)
+  u_bm0-2 ot_pdie_serdes_rx_bm_native   95.904 x 106.56 at rx-frame (0, 2.112 / 119.52 / 234.72)  view @cefde5fe417d (signed kit table)
 Tables = the HBM-GAPS-7 Model-A tables byte for byte (Codex prep_modelA on the current rx table fd611656, 8.64 street).
 Every outer rx port moves to the residual (BM pins are seam-only), so all sidecar refs u_lk_X__rx -> u_lk_X__rx__rest;
 the BMs get their own hard_cores rows, clock entries, taps and seam core_conns.  physical_inst follows the plan composition
@@ -16,7 +16,8 @@ G = 8.64
 REST, BM = "ot_pdie_serdes_rx_bm3_rest", "ot_pdie_serdes_rx_bm_native"
 TR, TB = f"{REST}__197.856x345.6__hg7_modelA.json", f"{BM}__95.904x106.56__hg7_modelA.json"
 WR, WB = [197.856, 345.6], [95.904, 106.56]
-OR_, OB = [104.544, 0.0], [[0.0, 4.32], [0.0, 119.52], [0.0, 234.72]]
+OR_, OB = [104.544, 0.0], [[0.0, 2.112], [0.0, 119.52], [0.0, 234.72]]   # bm0 2.112 (not 4.32): sub-lattice offset < 2.16 (check.py)
+SUB = 2.16
 r3 = lambda v: round(v + 0.0, 3)
 
 
@@ -67,6 +68,7 @@ for tn, T in P["partition_types"].items():
         def row(tag, mod, loc, wh, tab, phys):
             X, Y = ox + loc[0], oy + loc[1]
             gx, gy = round(X / G) * G, round(Y / G) * G
+            assert max(abs(X - gx), abs(Y - gy)) < SUB - 1e-9, (tn, I, tag, X - gx, Y - gy)
             return dict(inst=f"{I}__{tag}", module=mod, origin_um=[r3(gx), r3(gy)], outline_um=list(wh),
                         track_offset_um=[r3(X - gx), r3(Y - gy)], pins_file=f"cores/{tab}",
                         physical_inst=f"{old['physical_inst']}.{phys}", physical_master=mod, obs_max=old.get("obs_max", "M5"),
