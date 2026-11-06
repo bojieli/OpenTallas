@@ -700,13 +700,17 @@ def planned_pin_geometry(q, shapes, w, h, modern=True, interior_clock=None):
     return q, pw, ph, int(distance > 1e-3)
 
 
-NATIVE_FF_POSE_GUARDS = ("NATIVE_POSE undeclared source FF", "NATIVE_POSE missing source FFs", "setPlacementStatus FIXED")
+# S81-T51-RECUT 11-06: odb has no placement status FIXED (setPlacementStatus FIXED -> "ValueError Unknown placement
+# status" at global_place); LOCKED is odb's DEF FIXED (gpl/DPL/rsz never move it, face_flops_release.tcl only releases
+# FIRM), as tools/die_plan/clk_freeze.tcl.  A pose still saying FIXED is refused here instead of at place.
+NATIVE_FF_POSE_GUARDS = ("NATIVE_POSE undeclared source FF", "NATIVE_POSE missing source FFs", "setPlacementStatus LOCKED")
+NATIVE_FF_POSE_REFUSED = ("setPlacementStatus FIXED",)
 
 
 def stage_native_ff_pose(kd, rec, recipes_dir):
     """recipe "native_ff_pose": {"file": tcl (absolute or relative to the recipes file), "sha256": hex} -> the kit's
     native_ff_pose.tcl + its freeze record; None without the key.  Fail-closed: sha256 must match, and the Tcl must
-    carry the reviewed pose's own guards (undeclared FF / missing FF refusal, FIXED status)."""
+    carry the reviewed pose's own guards (undeclared FF / missing FF refusal, LOCKED status = DEF FIXED)."""
     spec = rec.get("native_ff_pose")
     if not spec:
         return None
@@ -725,6 +729,9 @@ def stage_native_ff_pose(kd, rec, recipes_dir):
     miss = [g for g in NATIVE_FF_POSE_GUARDS if g not in text]
     if miss:
         raise SystemExit(f"recipe native_ff_pose: {src} lacks guard(s) {miss}")
+    bad = [g for g in NATIVE_FF_POSE_REFUSED if g in text]
+    if bad:
+        raise SystemExit(f"recipe native_ff_pose: {src} uses {bad} (no such odb status; use LOCKED = DEF FIXED)")
     n = len(re.findall(r"^ \{[^}]*\} \{[-0-9.]+ [-0-9.]+ [-0-9.]+ [-0-9.]+ \S+ \S+\} \\$", text, re.M))
     if n == 0:
         raise SystemExit(f"recipe native_ff_pose: {src} has no pose entries")
@@ -1991,7 +1998,7 @@ def main():
         shutil.copyfile(S81 / "cores/split_clock/macro_if_flops.tcl", kd / "macro_if_flops.tcl")
         pre_place.append("source /work/macro_if_flops.tcl")
     # DIE-S81-69 11-06 (opt-in recipe native_ff_pose): reviewed exact whole-group source FF pose (t51 native split),
-    # sourced LAST at PRE_GLOBAL_PLACE so it overrides the FIRM face/station placement; FIXED survives
+    # sourced LAST at PRE_GLOBAL_PLACE so it overrides the FIRM face/station placement; LOCKED (DEF FIXED) survives
     # face_flops_release.tcl (which only releases FIRM) and DPL.  No recipe key = kit unchanged.
     ff_pose = stage_native_ff_pose(kd, rec, Path(a.recipes).resolve().parent)
     if ff_pose:

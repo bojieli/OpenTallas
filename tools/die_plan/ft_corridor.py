@@ -43,7 +43,8 @@ from tools.die_trial.legal_sites import RowAllocator  # noqa: E402
 
 INWARD = dict(N=(0, -1), S=(0, 1), E=(-1, 0), W=(1, 0))
 CELL = (1.404, .27)
-KEEPOFF = 1.08          # flop keep-off from a core edge (pin access ring), not a wall for the corridor
+KEEPOFF = 2.0           # flop keep-off from a core edge (pin access ring + 2-um halo, COORD 11:4x 11-06 GEOM on
+                        # S81 t58/t68: station columns sat on macro edges at 1.08), not a wall for the corridor
 MAX_PROJ = 40.0         # a lane point may move at most this far to reach free space at a station
 PROJ_W = 4.0            # DP weight of the mean projection distance (prefer stations fully in a channel)
 SLACK = 10.0            # allocator displacement allowance per hop
@@ -451,7 +452,12 @@ def _place_type(model, tn, reach_um, margin, jogs, bands, errs=None):
             continue
         if lw is not None:
             led.update(jog_um=round(float(jg), 3), jog_lane_um=round(float(lw), 3))
-        slot["regs_um"] = [a.mean(axis=0).round(4).tolist()] + [c.round(4).tolist() for c in cents]
+        # DIE-S81-70 11-06: a station's regs_um is its bit column's representative SITE (the legal bit site nearest the
+        # column centroid), never the raw centroid: a column split around a core put the centroid inside the core
+        # (t58 ft7 41 um inside u_ve.u_s), which geometry reviews and regs_um readers took as a station in a macro
+        reps = [np.asarray(st)[np.argmin(np.abs(np.asarray(st) - c).sum(axis=1))] for st, c in
+                zip(sites, cents)]
+        slot["regs_um"] = [a.mean(axis=0).round(4).tolist()] + [r.round(4).tolist() for r in reps]
         slot["bit_site_cell_um"] = list(CELL)
         slot["bit_sites_um"] = [(p - np.array([CELL[0] / 2, CELL[1] / 2])).round(6).tolist() for p in sites]
         led.update(type=tn, slot=name, width=slot["width"], budget_um=round(budget, 2))
