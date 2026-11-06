@@ -47,7 +47,12 @@ module ot_hbm_hc_root_static #(
     // derived (do not override): per-slot lanes 256/NQ, tree levels outside the core, slot widths
     parameter integer QB   = (NQ == 2) ? 7 : 6,
     parameter integer NVQ  = QB + 1,
-    parameter integer QWW  = (NQ == 2) ? 6 : 5
+    parameter integer QWW  = (NQ == 2) ? 6 : 5,
+    // Owned-row component: defaults preserve the24-row command and global row numbering.
+    // Weight rows are bank-local; output rows join the24-row gathered mix store. No extra cycles.
+    parameter integer NOUT = 24,
+    parameter integer WROW0 = 0,
+    parameter integer OROW0 = 0              // -1: latch global row from launch.lo (shared owned-row master)
 )(
     input  wire           clk, rst_n,
     // F20 programme bus (folded targets: programme id tgt, table id tgt + 1)
@@ -98,6 +103,9 @@ module ot_hbm_hc_root_static #(
     initial if (K % (8 * W) != 0 || R > 16) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
     initial if (!((NQ == 4 && QB == 6 && QWW == 5) || (NQ == 2 && QB == 7 && QWW == 6)) || NVQ != QB + 1)
         $fatal(1, "NQ must be 4 or 2 (QB / NVQ / QWW are derived)");
+
+    initial if (NOUT < 1 || NOUT > 24 || WROW0 < 0 || WROW0 + NOUT > 24 || OROW0 < -1 || (OROW0 >= 0 && OROW0 + NOUT > 24))
+        $fatal(1, "owned row range must fit24 logical rows");
 
     // ------------------------------------------------------------------ synced reset
     wire [1:0] rn;
@@ -175,18 +183,30 @@ module ot_hbm_hc_root_static #(
     reg ev_fault;
     always @(posedge clk or negedge rst_c)
         if (!rst_c) ev_fault <= 1'b0;
-        else if ((e_ing && e_w[6:QWW] != {(7-QWW){1'b0}}) || slot_bad) ev_fault <= 1'b1;   // slot wave index < 2^QWW
+        else if ((e_ing && e_w[6:QWW] != {(7-QWW){1'b0}}) || slot_bad || (e_launch && OROW0 == -1 && ({1'b0,e_lo} + NOUT > 24))) ev_fault <= 1'b1;   // slot wave index < 2^QWW
 
     // ------------------------------------------------------------------ HCP core (TPRE = QB: partial-sum tree root; 6 at NQ 4, 7 at NQ 2)
     wire sd_v, sd_ss; wire [NVW-1:0] sd_nv; wire [AW-1:0] sd_wa, sd_xa;
-    wire o_valid, o_last, core_fault, core_idle; wire [2:0] o_pos; wire [4:0] o_idx; wire [31:0] o_data;
+    wire o_valid, o_last, core_fault, core_idle; wire [2:0] o_pos; wire [4:0] o_idx, core_o_idx; wire [31:0] o_data;
+    // MUT8 bypasses the owned global-row join; MUT9 reads the unused adjacent weight row.
+    wire [4:0] output_row0;
+    generate if (OROW0 == -1) begin : g_owned_row
+        reg [4:0] row_q;
+        always @(posedge clk or negedge rst_c)
+            if (!rst_c) row_q <= 0; else if (e_launch) row_q <= e_lo;
+        assign output_row0 = row_q;
+    end else begin : g_static_row
+        assign output_row0 = 5'(OROW0);
+    end endgenerate
+    assign o_idx = core_o_idx + ((MUT == 8) ? 5'd0 : output_row0);
+    localparam integer WBROW = WROW0 + ((MUT == 9) ? 1 : 0);
     ot_hdc_v41x_hcp_sys1_static #(.W(W), .TL(4), .PMAX(8), .OMAX(32), .AW(AW), .CW(16), .ML(ML), .DF(32),
         .STATIC_CALENDAR(1), .SYS(1), .SYS_LAT(SYS_LAT), .TPRE(QB)) u_core (
         .clk(clk), .reduction_clk(clk), .scalar_clk(clk), .rst_n(rst_c), .calendar_pop(e_pop),
-        .cmd_valid(e_launch), .cmd_ready(), .cmd_npos(e_npos), .cmd_nout(6'd24), .cmd_nchunk(16'(K / 8)),
-        .cmd_scale(1'b1), .cmd_nf(NF), .cmd_eps(e_eps), .cmd_wbase(AW'({e_wslot, 8'd0})), .cmd_xbase({AW{1'b0}}),
+        .cmd_valid(e_launch), .cmd_ready(), .cmd_npos(e_npos), .cmd_nout(6'(NOUT)), .cmd_nchunk(16'(K / 8)),
+        .cmd_scale(1'b1), .cmd_nf(NF), .cmd_eps(e_eps), .cmd_wbase(AW'(e_wslot * 256 + WBROW * R)), .cmd_xbase({AW{1'b0}}),
         .w_re(), .x_re(), .w_addr(), .x_addr(), .w_data({(8*W*32){1'b0}}), .x_data({(8*W*16){1'b0}}),
-        .o_valid(o_valid), .o_ready(1'b1), .o_pos(o_pos), .o_idx(o_idx), .o_data(o_data), .o_last(o_last),
+        .o_valid(o_valid), .o_ready(1'b1), .o_pos(o_pos), .o_idx(core_o_idx), .o_data(o_data), .o_last(o_last),
         .fault(core_fault), .idle(core_idle),
         .sd_v(sd_v), .sd_ss(sd_ss), .sd_nv(sd_nv), .sd_wa(sd_wa), .sd_xa(sd_xa), .sys_sum(ps_q), .sys_fault(|psf_q));
     // descriptor -> the NQ slots (out flops); slot q's lanes are QL q .. QL q + QL - 1 of the run (QL = 64 / 128)
