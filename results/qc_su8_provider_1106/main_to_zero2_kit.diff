@@ -1,0 +1,82 @@
+--- main/rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv
++++ zero2_candidate/qfd_dv_s5_su8_rst3.sv
+@@ -53,8 +53,8 @@
+     // ASSERT remains asynchronous, including with ck held; RELEASE leaf age2->3 (+1 boot).
+     // (standard 2-FF reset landing; recovery/removal checked by the gate STA)
+     localparam integer NR2 = 6, NRC = 10;
+-    (* async_reg = "true" *) reg rs0, rs1;
+-    always @(posedge ck or negedge rst_n)
++    reg rs0, rs1;   // QC-CORES kit patch (OWNER DECISION 13): synchronous 2-stage relay on the registered rst_n input
++    always @(posedge ck)
+         if (!rst_n) begin rs0<=1'b0;rs1<=1'b0;end
+         else begin rs0<=1'b1;rs1<=rs0;end
+     wire [NR2-1:0] rst_k;                     // rs2 replicas (= qfd_dv_s5_rst2 output)
+@@ -110,10 +110,18 @@
+     wire [FAW-1:0] fa_in = {i_nout, i_nin, nvec_in, ({1'b0, nvec_in} - 19'd8), i_aso, i_asi, i_bso, i_bsi, i_cso, i_csi,
+                             i_dso, i_dsi, i_rso, i_asrc, i_bsrc, i_csrc, i_mc, i_md, i_redsq, i_ma, i_mb, i_dst, i_red,
+                             i_ad, i_imm1, i_imm2};
+-    reg  [FAW-1:0] fa;
+-    integer fi;
+-    always @(posedge ck)
+-        for (fi = 0; fi < FAW; fi = fi + 1) if (acc_k[fi / FCW]) fa[fi] <= fa_in[fi];
++    wire [FAW-1:0] fa;
++    // Nvec is ceil(nin/8), at most 32768 for any 18bit nin; bits17:16 are structuralzero.
++    genvar fi;
++    generate for (fi = 0; fi < FAW; fi = fi + 1) begin : g_fa_payload
++        if (fi == 332 || fi == 333) begin : g_zero
++            assign fa[fi] = 1'b0;
++        end else begin : g_live
++            reg payload;
++            always @(posedge ck) if (acc_k[fi / FCW]) payload <= fa_in[fi];
++            assign fa[fi] = payload;
++        end
++    end endgenerate
+     wire [NW-1:0] nout_r = fa[369:352], nin_r = fa[351:334], nvec_r = fa[333:316];
+     wire [NW:0]   fin_th = fa[315:297];
+     wire [AW-1:0] aso = fa[296:273], asi = fa[272:249], bso = fa[248:225], bsi = fa[224:201];
+@@ -215,10 +223,17 @@
+     generate for (gc = 0; gc < 4; gc = gc + 1) begin : g_curl
+         qfd_dv_su8_kff #(.W(4*AW), .ID(650 + gc)) u (.ck(ck), .d(cur_nx), .q(cur_l[gc]));
+     end
+-    for (gc = 0; gc < 8; gc = gc + 1) begin : g_xsl
++    // QC-CORES-1 10-27 (rst3 KEEP-FAIL fix): lane 0 has multiplier K=0, so qfd_dv_su8_stride #(0) is y=0 and
++    // xs_l[0] can only ever load 0 -> its 16 select replicas g_xsl[0].g_sel[*] and the K=0 xlane register were dead
++    // logic (yosys const-folded g_xsl[0].u.q, ORFS 1_synth eliminate_dead_logic then removed the 16 kept-but-unloaded
++    // kff instances -> routed LEC KEEP FAIL 16/3254).  Lane 0 is now the constant it already was (power-up X of the
++    // never-loaded-nonzero register refined to 0, as synthesis and the LEC gold already did); lanes 1..7 keep their
++    // names g_xsl[1..7].* unchanged.  0 edges, same values.
++    assign xs_l[0] = {4*AW{1'b0}};
++    for (gc = 1; gc < 8; gc = gc + 1) begin : g_xsl
+         wire [4*AW-1:0] xs_pin;
+         wire [15:0] xsel;
+-        qfd_dv_su8_kff #(.W(4*AW), .ID(670 + gc)) u_pin (.ck(ck), .d(xs_raw), .q(xs_pin));
++        assign xs_pin = {c_si[109:86], c_si[182:159], c_si[255:232], c_si[341:318]};   // QC-CORES kit patch: was 8 per-lane pin replicas of si (face_guard shared 96: ONE pin register per input bit); c_si = the u_input_pins register of the same edge, 0 cycles, bit-exact
+         for (genvar c = 0; c < 16; c = c + 1) begin : g_sel
+             qfd_dv_su8_kff #(.W(1), .ID(800 + 16 * gc + c)) u (.ck(ck), .d(sg1[(16 * gc + c) % 6]), .q(xsel[c]));
+         end
+@@ -311,13 +326,21 @@
+ // QW-SU8 r3/r4: one lane's stride offset register: q 6-bit chunk c <= sel[c] ? (K * xin) chunk c : hold (K*stride, mod 2^24).
+ // Kept so the per-lane copies (and their own select replicas) are never merged back.
+ (* keep_hierarchy = "yes" *) module qfd_dv_su8_xlane #(parameter integer K = 0) (
+-    input wire ck, input wire [15:0] sel, input wire [95:0] xin, output reg [95:0] q);
++    input wire ck, input wire [15:0] sel, input wire [95:0] xin, output wire [95:0] q);
+     wire [95:0] m;
+     genvar f;
+     generate for (f = 0; f < 4; f = f + 1) begin : g_f
+         qfd_dv_su8_stride #(.K(K)) u_off (.x(xin[24*f +: 24]), .y(m[24*f +: 24]));
+     end endgenerate
+-    integer c;
+-    always @(posedge ck)
+-        for (c = 0; c < 16; c = c + 1) if (sel[c]) q[6*c +: 6] <= m[6*c +: 6];
++    // Multiplication by constant K has exactzero trailingbits; only payloadbits require storage.
++    genvar b;
++    generate for (b = 0; b < 96; b = b + 1) begin : g_payload
++        if ((K % (1 << ((b % 24) + 1))) == 0) begin : g_zero
++            assign q[b] = 1'b0;
++        end else begin : g_live
++            reg payload;
++            always @(posedge ck) if (sel[b / 6]) payload <= m[b];
++            assign q[b] = payload;
++        end
++    end endgenerate
+ endmodule
