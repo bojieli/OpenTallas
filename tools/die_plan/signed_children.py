@@ -127,22 +127,75 @@ def prepare_hard_children(spec, hcr, repo, outline, margin=0.0):
     return out, children
 
 
-def strip_native_children(rtl_dir, masters):
-    """Replace only hardened modules with the separately staged fixed-port blackboxes."""
-    counts = {m: 0 for m in masters}
-    for path in sorted(Path(rtl_dir).iterdir()):
-        if path.suffix not in (".sv", ".v") or path.name.endswith("_bb.v"):
-            continue
-        source = path.read_text()
-        out = source
-        for m in sorted(masters):
-            pattern = (r"(?ms)^[ \t]*module\s+" + re.escape(m) +
-                       r"\b.*?^[ \t]*endmodule\b[^\n]*(?:\n|$)")
-            out, n = re.subn(pattern, "", out)
-            counts[m] += n
-        if out != source:
-            path.write_text(out)
-    bad = {m:n for m,n in counts.items() if n != 1}
-    if bad:
-        raise ValueError(f"expected exactly one native definition per hardened master: {bad}")
+
+def _masked_rtl(text):
+    return re.sub(r'//[^\n]*|/\*.*?\*/|"(?:\\.|[^"\\])*"',
+                  lambda m: re.sub(r'[^\n]', ' ', m[0]), text, flags=re.S)
+
+
+def _code_rename(text, old, new):
+    matches = list(re.finditer(r'\b'+re.escape(old)+r'\b', _masked_rtl(text)))
+    for hit in reversed(matches):
+        text = text[:hit.start()]+new+text[hit.end():]
+    return text
+
+
+def _instance_type_spans(text, master, instance):
+    code = _masked_rtl(text)
+    spans = []
+    for hit in re.finditer(r'\b'+re.escape(master)+r'\b', code):
+        i = hit.end()
+        while i < len(code) and code[i].isspace():
+            i += 1
+        if i < len(code) and code[i] == '#':
+            i += 1
+            while i < len(code) and code[i].isspace():
+                i += 1
+            if i == len(code) or code[i] != '(':
+                continue
+            depth = 1
+            i += 1
+            while i < len(code) and depth:
+                depth += (code[i] == '(') - (code[i] == ')')
+                i += 1
+            if depth:
+                raise ValueError('unbalanced hard-child parameter list')
+        if re.match(r'\s*'+re.escape(instance)+r'\s*\(', code[i:]):
+            spans.append((hit.start(), hit.end()))
+    return spans
+
+
+def specialize_native_children(rtl_dir, children):
+    """Only selected instances use the hard view; other parameterizations remain native.
+
+    A source module may serve both a hardened bank and soft banks with different
+    parameters. Rename its native definition/references, then restore the type of
+    each selected instance to the separately staged fixed-port blackbox master.
+    Port/parameter expressions and native logic remain unchanged.
+    """
+    paths = [p for p in sorted(Path(rtl_dir).iterdir())
+             if p.suffix in ('.sv', '.v') and not p.name.endswith('_bb.v')]
+    texts = {p:p.read_text() for p in paths}
+    masters = {c['master'] for c in children}
+    counts = {}
+    for master in sorted(masters):
+        alias = master+'__soft'
+        if any(re.search(r'\b'+re.escape(alias)+r'\b', _masked_rtl(t)) for t in texts.values()):
+            raise ValueError('hard child native alias already exists: '+alias)
+        n = sum(len(re.findall(r'(?m)^[ \t]*module\s+'+re.escape(master)+r'\b', _masked_rtl(t)))
+                for t in texts.values())
+        if n != 1:
+            raise ValueError(f'expected exactly one native definition for {master}, found {n}')
+        texts = {p:_code_rename(t, master, alias) for p,t in texts.items()}
+        leaves = {c['inst'].split('.')[-1] for c in children if c['master'] == master}
+        for leaf in sorted(leaves):
+            hits = [(p, a, b) for p,t in texts.items() for a,b in _instance_type_spans(t, alias, leaf)]
+            if len(hits) != 1:
+                raise ValueError(f'hard child {master}/{leaf}: expected one source instance, found {len(hits)}')
+            p,a,b = hits[0]
+            texts[p] = texts[p][:a]+master+texts[p][b:]
+        counts[master] = len(leaves)
+    for path,text in texts.items():
+        if text != path.read_text():
+            path.write_text(text)
     return counts
