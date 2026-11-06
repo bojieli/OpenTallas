@@ -14,14 +14,14 @@ for ax in axs:
   x,y,X,Y=q['rect'];ax.plot((x+X)/2,(y+Y)/2,'.',color='#b33b36',ms=3)
  for p in c['hop_paths_um']:
   ax.plot([q[0] for q in p],[q[1] for q in p],color='#177f42',lw=1.5)
- pts=c['points_um']+[c['proposed_s2_um']]
+ pts=c['points_um']+[c['proposed_pd1_um']]
  for j,(x,y) in enumerate(pts):ax.plot(x,y,'o',color='#177f42',ms=5)
  ax.set_aspect('equal');ax.grid(alpha=.2);ax.set_xlabel('x (um)');ax.set_ylabel('y (um)')
 axs[0].set(xlim=(0,1900.8),ylim=(0,1036.8),title='SYS_SD actual GRT origin in red; proposed complete START chain in green')
 axs[0].text(850,550,'PHY macro: M1-M5 obstruction',ha='center')
-axs[1].set(xlim=(140,1900),ylim=(0,70),title='Bottom corridor: two added START bundle stages, then existing s0 and s1')
-for j,(x,y) in enumerate(c['points_um']):axs[1].annotate(['NEW0','NEW1','s0','s1'][j],(x,y),xytext=(0,13),textcoords='offset points',ha='center')
-axs[2].set(xlim=(1845,1900),ylim=(100,205),title='East corridor: retain existing s2/pd stages; proposed sites clear macro and reservations')
-for name,p in [('s2',c['proposed_s2_um']),('pd',c['proposed_pd_um'])]:axs[2].annotate(name,p,xytext=(10,0),textcoords='offset points');axs[2].plot(*p,'o',color='#177f42',ms=5)
+axs[1].set(xlim=(140,1900),ylim=(0,70),title='Bottom corridor: existing s0/s1/s2 then pd[0]; selected PAD2')
+for j,(x,y) in enumerate(c['points_um']):axs[1].annotate(['s0','s1','s2','pd[0]'][j],(x,y),xytext=(0,13),textcoords='offset points',ha='center')
+axs[2].set(xlim=(1845,1900),ylim=(100,205),title='East corridor: selected pd[1] and unused pd[2]; proposed sites clear macro and reservations')
+for name,p in [('pd[1]',c['proposed_pd1_um']),('pd[2]',c['unused_pd2_um'])]:axs[2].annotate(name,p,xytext=(10,0),textcoords='offset points');axs[2].plot(*p,'o',color='#177f42',ms=5)
 fig.text(.02,.01,'Planning candidate only. Actual full path 1846.05 um; maximum planned hop 369.252 um; +2 boot cycles. Clock source offsets remain real semantics.',fontsize=10)
 fig.tight_layout(rect=(0,.03,1,1));fig.savefig(base/'sd_origin_review.png',dpi=150)

@@ -101,14 +101,14 @@
   ],
   "length_um": 1846.0500000000002,
   "added_cycles": 2,
-  "note": "Two added complete START epoch/control stages explicitly priced; original downstream sampling stages retained",
+  "note": "Use existing arbitrary-PAD origin form with PADW2/PAD2; two added pd registers, +2 effective boot cycles",
   "stage_roles": [
-    "new START epoch/control relay0",
-    "new START epoch/control relay1",
     "existing origin s0",
-    "existing origin s1"
+    "existing origin s1",
+    "existing origin s2",
+    "origin pd[0]"
   ],
-  "endpoint_role": "existing origin s2; existing pd should remain local with same stage/phase",
+  "endpoint_role": "origin pd[1], selected by PAD2; unused pd[2] remains local",
   "input": "original sf/strap selected s_in -> complete START epoch/control bundle before existing s0; retain original negedge sf selection/reset phase",
   "added_boot_cycles": 2,
   "route_macro_clearance_um": 5.0,
@@ -132,13 +132,19 @@
       181.44
     ]
   },
-  "proposed_s2_um": [
+  "proposed_pd1_um": [
     1876.5,
     180.09
   ],
-  "proposed_pd_um": [
+  "sf_site_um": [
+    189.0,
+    20.25
+  ],
+  "padw": 2,
+  "selected_pad": 2,
+  "unused_pd2_um": [
     1876.5,
     182.52
   ],
-  "scope": "candidate only: KV owner implements RTL bundle/phase/ledger proof before adoption; no current plan mutation"
+  "scope": "candidate only: KV owner implements CA leaf PAD/K phase/ledger proof before adoption; no current plan mutation"
 }
