@@ -7,6 +7,25 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 
+
+def test_signed_hardcore_view_does_not_emit_soft_cell_guide(tmp_path):
+    """Actual q_spb2 shape: contents lacks LEF; two explicit hard-core views own the cells."""
+    sys.path.insert(0, str(HERE))
+    import kit_istations
+    t = dict(contents=[
+        dict(inst='u_xc_Q2', module='xcal', origin_um=[682.56, 1244.16], outline_um=[138.24, 224.64]),
+        dict(inst='u_xc_Q3', module='xcal', origin_um=[1321.92, 1244.16], outline_um=[138.24, 224.64]),
+        dict(inst='fault_or', module='qkd_hp_or2', origin_um=[10, 20], outline_um=[4, 4])],
+        hard_cores=[dict(inst=name, module='xcal', physical_inst='u_bound.u_'+name,
+                         physical_master='xcal', lef=str(tmp_path/'xcal.lef'),
+                         origin_um=at, outline_um=[241.92, 224.64])
+                    for name, at in [('u_xc_Q2', [717.12, 1244.16]), ('u_xc_Q3', [1321.92, 1244.16])]])
+    (tmp_path/'xcal.lef').write_text('MACRO xcal\nSIZE 241.92 BY 224.64 ;\nEND xcal\n')
+    assert [c['inst'] for c in kit_istations.soft_plan_cells('q_spb2', t)] == ['fault_or']
+    # Without the explicit view the logical cell remains soft; do not skip by module name.
+    t['hard_cores'] = []
+    assert len(kit_istations.soft_plan_cells('q_spb2', t)) == 3
+
 BOUND = """module t_part_bound (input wire clk, input wire rst_n, input wire [1:0] i_a, output wire q);
     wire [0:0] i_a_q;
     wire i_a_eq;
