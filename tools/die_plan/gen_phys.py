@@ -3925,6 +3925,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # plan (the same tree gen_rtl emitted).
     rtt = [Path(f).parent / "reset_tree.tcl" for f in rtl_files[:1] if (Path(f).parent / "reset_tree.tcl").is_file()]
     import reset_tree as RT
+    live_boot_placement = t.get("reset", {}).get("source_live_bootstrap_placement", False)
+    if native_reset and live_boot_placement:
+        raise ValueError(f"{tn}: source-live omission cannot change captured native reset authority")
     if native_reset:
         # Captured native authority survives isolated plans without a die-level
         # reset solver configuration. Never fall back to a re-solved graph.
@@ -3932,10 +3935,26 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             native_paths=native_reset["native_paths"],
             native_nodes=native_reset["physical_nodes"],
             native_sites=native_reset["placement_sites"]))
-    elif rtt:
+    elif rtt and not live_boot_placement:
         shutil.copyfile(rtt[0], kd / "reset_tree.tcl")
     elif RT.delivered(P) and not t.get("hard"):
-        (kd / "reset_tree.tcl").write_text(RT.tcl_text(RT.for_type(P, tn)))
+        reset_model = RT.for_type(P, tn)
+        unused_bootstrap = []
+        if live_boot_placement:
+            wrappers = []
+            for f in rtl_files:
+                text = Path(f).read_text()
+                clean = re.sub(r"//[^\n]*|/\*.*?\*/", "", text, flags=re.S)
+                if re.search(r"\bmodule\s+" + re.escape(t['module']) + r"\b", clean):
+                    wrappers.append((Path(f), text))
+            if len(wrappers) != 1 or native_reset:
+                raise ValueError(f'{tn}: source-live reset placement needs one literal top wrapper')
+            audit = RT.unused_bootstrap_placements(RT.start_relays(reset_model), wrappers[0][1], t['module'])
+            audit['wrapper'] = str(wrappers[0][0])
+            (kd / 'reset_source_live_inventory.json').write_text(json.dumps(audit, indent=1) + '\n')
+            unused_bootstrap = audit['omitted']
+        (kd / "reset_tree.tcl").write_text(RT.tcl_text(reset_model,
+            unused_bootstrap=unused_bootstrap))
     # AUTOBUILD-PIPE-5 10-31 (DIE-KV-50 kv3_phy, COORD 04:4x): a hard wrapper (gen phys --hard-wrappers) is a hard
     # partition of the die reset wavefront (reset_tree.wf_solve: leaf, raw delivered reset at reset.tap_um, depth
     # reset.depth); its bound RTL carries its own reset form, so the kit gets no generated reset tree (no file).
