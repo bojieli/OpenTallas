@@ -90,3 +90,18 @@ def test_scalar_generated_delay_is_grouped_by_full_bit_prefix():
 def test_identity_change_is_refused():
     t,state,insts=fixture();insts['inst1']['name']+='_renamed'
     with pytest.raises(tkinter.TclError,match='identity changed'):t.call('::ot_tap_chain::apply')
+
+
+def test_terminal_identity_matches_exact_bit_or_scalar_prefix():
+    t,_,_=fixture()
+    for name,expected in [('u_bound.u_d68_test.q[452]$_DFF_P_', ('u_bound.u_d68_test.r','terminal','452')), ('u_bound.u_pd23_owner_data_225.q$_DFF_P_', ('u_bound.u_pd23_owner_data_225.r','terminal','scalar'))]:
+        assert tuple(t.call('::ot_tap_chain::identity',name))==expected
+    assert not t.call('::ot_tap_chain::identity','u_bound.u_d68_test.q[2][3]$_DFF_P_')
+
+@pytest.mark.parametrize('scalar',[False,True])
+def test_terminal_register_is_joined_with_its_real_preceding_chain(scalar):
+    t,state,insts=fixture(scalar=scalar)
+    insts['inst1']['name']=('u_bound.u_pd23_owner_data_225.q$_DFF_P_' if scalar else 'u_bound.u_d3_test.q\\[7\\]$_DFF_P_')
+    state['it1']='tap0';t.call('::ot_tap_chain::capture','tap0');state['it1']='tap1'
+    t.call('::ot_tap_chain::apply')
+    assert state['it0']==state['it1'] and state['it2']=='gated'

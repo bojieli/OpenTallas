@@ -12,6 +12,12 @@ namespace eval ::ot_tap_chain {
   if {[regexp {^(.*(?:u_d[0-9]+_|u_lpad_|u_r8b_strap_|u_pd[0-9]+_).+[/.]r)\[([0-9]+)\]\$_DFF_P} $name -> prefix stage]} {
    return [list $prefix $stage scalar]
   }
+  if {[regexp {^(.*(?:u_d[0-9]+_|u_lpad_|u_r8b_strap_|u_pd[0-9]+_).+[/.])q\[([0-9]+)\]\$_DFF_P} $name -> prefix bit]} {
+   return [list ${prefix}r terminal $bit]
+  }
+  if {[regexp {^(.*(?:u_d[0-9]+_|u_lpad_|u_r8b_strap_|u_pd[0-9]+_).+[/.])q\$_DFF_P} $name -> prefix]} {
+   return [list ${prefix}r terminal scalar]
+  }
   return {}
  }
  proc direct {net} {
@@ -102,7 +108,14 @@ namespace eval ::ot_tap_chain {
    dict lappend groups "[lindex $source 0]:$prefix:$bit" [list $stage $it $x $y]
   }
   foreach key [lsort [dict keys $groups]] {
-   set rows [lsort -integer -index 0 [dict get $groups $key]];set segment {};set prev -2
+   set rows {};set terminals {};set top -1
+   foreach row [dict get $groups $key] {
+    if {[lindex $row 0] eq "terminal"} {lappend terminals $row;continue}
+    set top [expr {max($top,[lindex $row 0])}];lappend rows $row
+   }
+   # A terminal is included only beside its actually captured preceding stages.
+   if {$top>=0 && [llength $terminals]==1} {lappend rows [lreplace [lindex $terminals 0] 0 0 [expr {$top+1}]]}
+   set rows [lsort -integer -index 0 $rows];set segment {};set prev -2
    foreach row $rows {
     set stage [lindex $row 0];set trial [concat $segment [list $row]]
     if {[llength $segment] && ($stage!=$prev+1 || [llength $trial]>$limit || [target $trial] eq {})} {join $segment;set segment {}}
