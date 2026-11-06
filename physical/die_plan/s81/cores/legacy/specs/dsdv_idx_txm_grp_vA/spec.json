@@ -1,0 +1,138 @@
+{
+ "name": "dsdv_idx_txm_grp_vA",
+ "top": "dsdv_idx_txm_grp",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "params": {
+  "D": 8192,
+  "B0": 0,
+  "NG": 5,
+  "RDL": 1,
+  "WDL": 1,
+  "RIL": 1,
+  "RIL_MUT": 0,
+  "POUT": 1,
+  "FL": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 291.6,
+  "h": 459.54,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_b[0].u_mem",
+   "at": [
+    50.976,
+    4.32
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_b[1].u_mem",
+   "at": [
+    50.976,
+    99.36
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_b[2].u_mem",
+   "at": [
+    50.976,
+    194.4
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_b[3].u_mem",
+   "at": [
+    50.976,
+    289.44
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_b[4].u_mem",
+   "at": [
+    50.976,
+    384.48
+   ]
+  }
+ ],
+ "pins": {
+  "E": [
+   "re",
+   "ra",
+   "we",
+   "wa",
+   "wd",
+   "wm_next",
+   "p"
+  ],
+  "W": [
+   "ck"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered child of dsdv_idx_tx_n32 SPLIT (TOPK TX y): every input lands in a flop at the pin (RIL re_l/ra_l + ra_q, WDL we_l/wa_l/wd_l, wm_next mask copies); POUT=1 (r2, STW-S81c-TOK5): the output p is a pin flop (the AND-OR of the RDL q_l under bsk1 registered here; the parent ORs pa|pb combinationally into rd, same edge, 0 cycles). A recipe pin stage would add a lookup edge (reference LPX 3)."
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "No reset input: every register of the score-store group is reset-free data (landings, captures, bank-select copies, mask copies with rn tied 1), exactly as in the x/v store; the parent owns the TX reset."
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "inter": [],
+ "structural_change": "DIE-S81-66/IDX vA 11-05 (idx_tx_n32 strike 2 cf1l -> RE-FORM, COORD 19:56 default (A)): SPLIT=2 (FL=1 face-landed) column-A child of dsdv_idx_tx_n32 (RTL claude/form-idx-rtl-1105@68c1c988f1f, unchanged; lock-step SPLIT=1 vs SPLIT=0 at the kit params PASS, MUT 1/3/4/5 caught). Outline cut to the old column-A macro rows (291.6 x 459.54 at parent (21.6, 38.88)) so the parent keeps its N/S face bands and a W channel for ck/rst; pins = the 10-22 txga contract order, E face, ck on W at the parent ck height.",
+ "why_floorplan": "col A x 50.976 (= parent 72.576), rows pitch 95.04 from y 4.32; W band 51 um, E band 66 um (landing/capture flops, 556 E pins).",
+ "children": [],
+ "hold_budget": "die",
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0",
+  "OT_SPINE_LEAF_N": "16",
+  "OT_SPINE_BIN": "32",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_SEG": "80",
+  "OT_SPINE_SYM_MERGE": "60",
+  "OT_SPINE_SYM_FAN": "8",
+  "OT_MEG_OUT_UM": "1.2",
+  "OT_MEG_DEPTH_UM": "2.4",
+  "OT_OFLOP_PORT_RE": "^p(\\[|$)"
+ },
+ "clock": "spine",
+ "pin_hook_before_flops": [
+  "physical/common_flow/macro_pin_flops.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/common_flow/macro_pin_flops_release.tcl"
+ ]
+}
