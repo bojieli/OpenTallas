@@ -76,8 +76,11 @@ endmodule
 // edge 2 checks seen_q[src_l] | (src_k==src_l for an earlier lane k) in parallel. seen itself is
 // updated exactly as before (seen | one-hot of every lane that reached the check).
 // fault_fp(t) == fault_orig(t-1) for every t (proved: yosys equiv_induct + mutant, lock-step bench).
+// SEEN_DEFER=1 (HBM-GAPS-9 v2, routed q3 vD: -35 ps on the seen update meta->sub->range->seen D): seen itself is
+// updated one edge later from the stage-1 registers (seen <= (start_q1 ? 0 : seen) | one-hot(chk_q, src_q)), so at
+// stage 2 it holds exactly the lanes before the checked edge and no snapshot is needed. Same ports and cycles.
 module ot_hgi_coll_argmax_static_fp #(
- parameter integer MUT_TIE=0, MUT_SLOT_CHECK=0, MAX_GROUP=96, MUT_FP=0
+ parameter integer MUT_TIE=0, MUT_SLOT_CHECK=0, MAX_GROUP=96, MUT_FP=0, SEEN_DEFER=0
 )(
  input wire clk,rst_n,start,
  input wire [7:0] cfg_g,cfg_gbase,cfg_rank,
@@ -97,6 +100,8 @@ module ot_hgi_coll_argmax_static_fp #(
  reg [3:0] chk_q;
  reg [31:0] src_q;
  reg [MAX_GROUP-1:0] seen_q;
+ reg start_q1;
+ wire [MAX_GROUP-1:0] seen_chk=(SEEN_DEFER!=0)?seen:seen_q;
  wire [3:0] raw_v;
  wire [2179:0] raw_flit;
  ot_hgi_coll_amerge #(.MUT_TIE(MUT_TIE)) u_fold(
@@ -108,7 +113,7 @@ module ot_hgi_coll_argmax_static_fp #(
  always @* begin:dupchk
   dup=1'b0;
   for(integer l=0;l<4;l=l+1)if(chk_q[l])begin
-   if(int'(src_q[l*8+:8])<MAX_GROUP && seen_q[src_q[l*8+:8]])dup=1'b1;
+   if(int'(src_q[l*8+:8])<MAX_GROUP && seen_chk[src_q[l*8+:8]])dup=1'b1;
    for(integer k=0;k<l;k=k+1)
     if(chk_q[k] && src_q[k*8+:8]==src_q[l*8+:8] && (MUT_FP==0 || k!=0))dup=1'b1;
   end
@@ -118,11 +123,11 @@ module ot_hgi_coll_argmax_static_fp #(
   reg set;
   reg [3:0] chk;
   reg [31:0] srcv;
-  reg [MAX_GROUP-1:0] next_seen;
+  reg [MAX_GROUP-1:0] next_seen,upd;
   if(!rst_n)begin
    active<=0;flushed<=0;group_q<=0;gbase_q<=0;rank_q<=0;
    observed<=0;seen<=0;out_v<=0;fault<=0;
-   set_q<=0;chk_q<=0;src_q<=0;seen_q<=0;
+   set_q<=0;chk_q<=0;src_q<=0;seen_q<=0;start_q1<=0;
   end else begin
    set=1'b0;chk=4'b0;srcv=32'b0;
    out_v<=publish_slot;
@@ -132,7 +137,7 @@ module ot_hgi_coll_argmax_static_fp #(
     if(!(cfg_g==1 || cfg_g==2 || cfg_g==4 || cfg_g==8 || cfg_g==96 || (MAX_GROUP>=192 && cfg_g==192)) ||
        {1'b0,cfg_gbase}+{1'b0,cfg_g}>9'd256)set=1'b1;
     group_q<=cfg_g;gbase_q<=cfg_gbase;rank_q<=cfg_rank;
-    observed<=0;seen<=0;active<=1;flushed<=0;
+    observed<=0;if(SEEN_DEFER==0)seen<=0;active<=1;flushed<=0;
    end else begin
     count=0;next_seen=seen;
     for(integer l=0;l<4;l=l+1)if(in_v[l])begin
@@ -143,7 +148,7 @@ module ot_hgi_coll_argmax_static_fp #(
       next_seen[src]=1'b1;
      end
     end
-    seen<=next_seen;observed<=observed+8'(count);
+    if(SEEN_DEFER==0)seen<=next_seen;observed<=observed+8'(count);
     if(int'(observed)+count>int'(group_q))set=1'b1;
     if(flush_slot)begin
      if(!active || flushed || int'(observed)+count!=int'(group_q))set=1'b1;
@@ -154,7 +159,12 @@ module ot_hgi_coll_argmax_static_fp #(
      active<=0;
     end
    end
-   set_q<=set;chk_q<=chk;src_q<=srcv;seen_q<=seen;
+   set_q<=set;chk_q<=chk;src_q<=srcv;seen_q<=seen;start_q1<=start;
+   if(SEEN_DEFER!=0)begin
+    upd=start_q1?{MAX_GROUP{1'b0}}:seen;
+    for(integer l=0;l<4;l=l+1)if(chk_q[l] && int'(src_q[l*8+:8])<MAX_GROUP)upd[src_q[l*8+:8]]=1'b1;
+    seen<=upd;
+   end
    if(set_q || dup)fault<=1'b1;
   end
  end
