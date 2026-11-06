@@ -199,3 +199,57 @@ def test_fresh_kit_forwards_library_profile(tmp_path):
     with pytest.raises(Exception):
         F.prepare(source, 'partition', plan, tmp_path / 'f3', type_name='t', overrides=F_ov, run=factory(False))
     assert '--library-profile' not in seen[-1]
+
+
+def test_profile_original_from_repo_wide_index(tmp_path):
+    """S81-RCK-3 11-06: the S81 serdes decoder top is a captured child outside the manifest index (taken from the
+    unique repo-wide file); its profile row must be accepted and replace it everywhere, not fail 'absent from index'."""
+    old = tmp_path / "old.sv"; old.write_text("module leaf(input a,output y); assign y=a; endmodule\n")
+    new = tmp_path / "new.sv"; new.write_text("module leaf(input a,output y); assign y=~a; endmodule\n")
+    doc = dict(schema=L.SCHEMA, type="t", defines=["CAND"], proof="p", model={"cycles": 1}, bound_body_policy=L.POLICY,
+               replacements=[dict(original=str(old), replacement=str(new), original_sha256=sha(old),
+                                  replacement_sha256=sha(new), original_modules=["leaf"], replacement_modules=["leaf"])])
+    prof = tmp_path / "p.json"; prof.write_text(json.dumps(doc))
+    assert bind.library_profile_unindexed(str(prof), {}, {"leaf": [str(old)]}, tmp_path) == {"leaf": [str(old)]}
+    # ambiguous or different repo-wide file: left unindexed, so apply still refuses it
+    assert bind.library_profile_unindexed(str(prof), {}, {"leaf": [str(old), str(new)]}, tmp_path) == {}
+    assert bind.library_profile_unindexed(str(prof), {}, {"leaf": [str(new)]}, tmp_path) == {}
+    idx, _, wide, _, _ = bind.kit_library_select(str(prof), "t", {}, [], {"leaf": [str(old)]}, [], tmp_path)
+    assert idx["leaf"] == [str(new)] and wide == {"leaf": [str(new)]}
+    with pytest.raises(bind.BindError, match="absent"):
+        bind.kit_library_select(str(prof), "t", {}, [], {"leaf": [str(new)]}, [], tmp_path)
+
+
+def test_fresh_kit_preserved_bound_reset(tmp_path):
+    """S81-RCK-3 11-06: kit_rsync on a bound native reset writes no kit_rsync record (it preserves the verified reset);
+    fresh_kit must record that instead of KeyError, and still refuse a reset_expected it cannot check."""
+    import fresh_kit as F
+    from test_kit_istations import BOUND
+    import kit_topology as KT
+    source = F.HERE.parents[1]
+    plan = tmp_path / 'plan.json'
+    plan.write_text(json.dumps(dict(partition_types=dict(t=dict(
+        buses=[dict(name='i_a', dir='in', width=1, kind='data')], contents=[], internal_stations=[])))))
+    bound_dir = tmp_path / 'bound'; bound_dir.mkdir()
+    KT.write_bind_receipt(json.loads(plan.read_text()), bound_dir)
+
+    def run(cmd, **kwargs):
+        name = Path(cmd[2]).name
+        if name == 'bind.py':
+            rtl = Path(cmd[cmd.index('--kit')+1]); rtl.mkdir()
+            (rtl / 't_part_bound.sv').write_text(BOUND)
+            (rtl / 'bound_reset.json').write_text('{}')
+            (rtl / 'kit_rtl.json').write_text(json.dumps(dict(bound_module='t_part_bound', files=[str(rtl / 't_part_bound.sv')])))
+            (rtl / 'kit_rtl.f').write_text(str(rtl / 't_part_bound.sv')+'\n')
+            return subprocess.CompletedProcess(cmd, 0, 'fixture\n')
+        if name == 'kit_rsync.py':
+            return subprocess.CompletedProcess(cmd, 0, '{"preserved_bound_native_reset": true}\n')
+        raise RuntimeError('stop after reset (fixture)')
+    ov = dict(bind_out=str(bound_dir), reset_mode='canonical')
+    with pytest.raises(RuntimeError, match='stop after reset'):
+        F.prepare(source, 'partition', plan, tmp_path / 'f1', type_name='t', overrides=ov, run=run)
+    rec = json.loads((tmp_path / 'f1' / 'fresh_kit.json').read_text())
+    assert rec['reset_context']['actual'] == 'preserved_bound_native_reset'
+    with pytest.raises(ValueError, match='bound native reset preserved'):
+        F.prepare(source, 'partition', plan, tmp_path / 'f2', type_name='t', run=run,
+                  overrides=dict(ov, reset_expected=dict(depth=2)))

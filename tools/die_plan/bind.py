@@ -4872,12 +4872,39 @@ def kit_inline_imports(fl, kd):
     return out, rec
 
 
+def library_profile_unindexed(profile, idx, wide, base):
+    """S81-RCK-3 11-06: a captured child module outside the manifest index is taken from the repo-wide rtl/ index when
+    unique (DIE-S81-23 dependency walk, 'unindexed_sources').  A profile row whose original is exactly that unique
+    repo-wide file (S81 serdes: ot_s81_kp4_dec_native_flat_lp.sv) is part of the captured closure, so it enters the
+    index the profile is checked against; anything else (ambiguous, other file, already indexed) is left to
+    kit_library_profile.apply, which refuses it.  -> idx (copy)"""
+    try:
+        doc = json.loads(Path(profile).read_text())
+    except (OSError, ValueError):
+        return idx
+    out = {m: list(fs) for m, fs in idx.items()}
+    for row in doc.get("replacements") or []:
+        if not isinstance(row, dict) or not isinstance(row.get("original"), str) or not isinstance(
+                row.get("original_modules"), list) or not row["original_modules"]:
+            continue
+        old = Path(row["original"])
+        old = str(old.resolve() if old.is_absolute() else (Path(base) / old).resolve())
+        mods = row["original_modules"]
+        if any(m in out for m in mods):
+            continue
+        if all([str(Path(f).resolve()) for f in (wide or {}).get(m, [])] == [old] for m in mods):
+            for m in mods:
+                out[m] = [old]
+    return out
+
+
 def kit_library_select(profile, tn, idx, prefer, wide, defines, base):
     """KW-FIX-22 11-06 (kit-rtl --library-profile): an explicit, hash-pinned candidate library (kit_library_profile.apply)
     replaces captured as-built sources in the kit closure index, the preferred list AND the repo-wide fallback index, so
     neither the bind's own bind.f preference nor the rtl/ scan can bring the captured (stale) file back.  The captured
     bind output is never edited.  -> idx, prefer, wide, defines, receipt"""
     import kit_library_profile as KLP
+    idx = library_profile_unindexed(profile, idx, wide, base)
     try:
         idx, prefer, receipt = KLP.apply(profile, tn, idx, prefer, list(defines), base)
     except (ValueError, OSError, KeyError, TypeError) as exc:
