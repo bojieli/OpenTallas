@@ -1,0 +1,63 @@
+{
+  "rtl_source_sha": "48aaf04cf2b70ac5dee7fae6e61f4684b86c196e",
+  "basis": "incremental cycles relative to captured k27c masters; face-shell dates unchanged",
+  "opsa": {
+    "stage_write_cohort": [
+      "stage_v[7:0]",
+      "stage_group[15:0]",
+      "stage_addr[119:0]",
+      "stage_data[2047:0]"
+    ],
+    "read_request_cohort": [
+      "rd_re[15:0]",
+      "rd_addr[383:0]",
+      "rd_src[31:0]"
+    ],
+    "scalar_cohort": [
+      "scalar_load",
+      "scalar_enable",
+      "scalar_data[31:0]"
+    ],
+    "read_response": [
+      "rd_q[511:0]"
+    ],
+    "A": {
+      "write_visibility_delta": 1,
+      "read_response_delta": 0,
+      "scalar_read_delta": 0
+    },
+    "B": {
+      "write_visibility_delta": 1,
+      "read_response_delta": 1,
+      "scalar_read_delta": 1
+    }
+  },
+  "opsb": {
+    "stage_write_cohort": [
+      "sw_v[7:0]",
+      "sw_addr[119:0]",
+      "sw_mask[63:0]",
+      "sw_d[2047:0]"
+    ],
+    "read_request_cohort": [
+      "rq[15:0]",
+      "ra[383:0]"
+    ],
+    "read_response": [
+      "rd[511:0]"
+    ],
+    "A": {
+      "write_visibility_delta": 0,
+      "read_response_delta": 1
+    },
+    "B": {
+      "write_visibility_delta": 1,
+      "read_response_delta": 1
+    }
+  },
+  "fault": "No added output fault register. Existing FREG unchanged. A delayed write cohort delays its write-caused fault terms; read-caused terms keep their source relation. Do not apply blanket fault-output latency.",
+  "raw_read_go_guard_owner": "HBM native controller/profile composition and token/model owner; DREG variants require dependent read/go delayed one additional edge after writes. Candidate contains no automatic RAW stall or bypass.",
+  "reset_edges": 64,
+  "inflight_reset": "New distribution registers have no reset, preserving issued writes across reset as existing BREG; no discard or warmup widening.",
+  "adoption": "conditional candidate only; no canonical profile/POR activation"
+}
