@@ -137,7 +137,10 @@ endmodule
 // ot_hgi_coll_argmax_m #(.TP(192),.START_REG(1)) reduced to its pin-captured instance (ports identical to
 // ot_hgi_coll_argmax_m_tp192).  Alignment of the old u_chk: lane / flush / publish / key / meta +1 edge, start and
 // cfg +2 edges (START_REG pin register + 1), so the fold sees exactly the old u_data schedule 1 edge later.
-module ot_hgi_coll_argmax_m_tp192_pr(
+module ot_hgi_coll_argmax_m_tp192_pr #(
+ // HBM-GAPS-9: FAULT_PIPE=1 = fault +1 edge (two-stage dup check, ot_hgi_coll_argmax_static_fp); 0 = unchanged
+ parameter integer FAULT_PIPE=0
+)(
  input wire clk,rst_n,start,mode,input wire [7:0] cfg_g,cfg_gbase,cfg_rank,
  input wire [3:0] in_slot,in_v,input wire [255:0] in_key,input wire [131:0] in_meta,input wire flush_slot,publish_slot,
  output wire out_v,output wire [544:0] out_flit,output wire fault);
@@ -162,8 +165,14 @@ module ot_hgi_coll_argmax_m_tp192_pr(
  // mode gate AFTER the pin registers (== the old slot_q / v_q = registered (x & {4{mode}}))
  wire [3:0] slot_g=slot_q & {4{mode_q}};
  wire [3:0] v_g=v_q & {4{mode_q}};
+ generate if(FAULT_PIPE!=0)begin:g_fp
+ ot_hgi_coll_argmax_static_fp #(.MAX_GROUP(TP)) u_chk(.clk(clk),.rst_n(rst_l),.start(start_qq),
+  .cfg_g(g_qq),.cfg_gbase(gb_qq),.cfg_rank(rk_qq),.in_slot(slot_g),.in_v(v_g),.in_flit(flit_q),
+  .flush_slot(flush_q),.publish_slot(pub_q),.out_v(out_v),.out_flit(out_flit),.fault(fault));
+ end else begin:g_base
  ot_hgi_coll_argmax_static #(.MAX_GROUP(TP)) u_chk(.clk(clk),.rst_n(rst_l),.start(start_qq),
   .cfg_g(g_qq),.cfg_gbase(gb_qq),.cfg_rank(rk_qq),.in_slot(slot_g),.in_v(v_g),.in_flit(flit_q),
   .flush_slot(flush_q),.publish_slot(pub_q),.out_v(out_v),.out_flit(out_flit),.fault(fault));
+ end endgenerate
 endmodule
 `default_nettype wire

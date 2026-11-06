@@ -1,0 +1,8 @@
+q3_edge_arg pin-cycle form (HBM-GAPS-9 11-06, DIE-HBM-81 13:37): ot_hgi_coll_argmax_static_fp = ot_hgi_coll_argmax_static
+with the duplicate-source check over two edges. PIN CYCLES: fault +1 edge; out_v / out_flit exact.
+Enabled only by define OT_Q3ARG_FAULT_PIPE (recipe key ot_hfd_coll_q3_edge_arg__fpipe); without it the RTL is unchanged.
+eq.sh TAG MUT_FP (orfs container, /fv = this dir, /wt = repo): gold = original + 1 register on fault, gate = _fp;
+ equiv_make (u.fault blacklisted) + equiv_simple/induct -seq 5. eq_ok: 7357/7357 proven; eq_mut (MUT_FP=1, lane 0 not
+ compared with later lanes): 1 unproven = caught.
+tb_fp.sv: iverilog -g2012 lock-step bench, random stimulus with dense duplicate sources, reset every ~48 cycles,
+ 200k cycles: tb0.out 0 mismatches (4092 fault rises); tb1.out (mutant) 8 mismatches = caught.

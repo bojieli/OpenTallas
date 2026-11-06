@@ -1,0 +1,6 @@
+MISMATCH t=220959000 ov 0/0 fault_d 1 fp 0
+MISMATCH t=220961000 ov 0/0 fault_d 1 fp 0
+MISMATCH t=220963000 ov 0/0 fault_d 1 fp 0
+MISMATCH t=220965000 ov 0/0 fault_d 1 fp 0
+TB_FP MUT_FP=1 N=200000 errs=8 fault_rises=4092
+tb_fp.sv:37: $finish called at 408274000 (1ps)
