@@ -1,0 +1,6 @@
+read_verilog /w/wa_fix.v
+read_verilog /w/wa_ref.v
+read_verilog /w/wa_mut.v
+proc; opt_clean
+miter -equiv -flatten -make_assert wa_ref wa_fix miter
+sat -verify -prove-asserts -show-ports miter

@@ -45,6 +45,9 @@
 // 17 V/R safe  busy is a flop (engine busy | FIFO non-empty now or next | push this edge); falls 1 edge later.
 // 18 Exact     n_sectors in two 16-bit halves; the high half steps on a registered low-all-ones flag (vA routed path wf_q -> n_sectors[31] was a 32-bit carry chain, -61 ps).
 // TOK-VERIFY on top of r2: QKV beat -> bank write +1 (15), port -> engine +1 for beats and descriptors (16), busy fall +1 (17); rates kept.
+// KV-ING-5 11-06 vF cut 19 (exact, 0 cycles, no new state): st_wa_r took ap_kcode + st_ph / ap_kscal + (st_ph == 4) through one
+//   ripple carry chain that started at st_ph (vE_ff TT -13.65 ps, 10-deep OR chain st_ph[1] -> st_wa_r[30]).  Now carry-select:
+//   the 3 low bits add st_ph, the 29 high bits +1 are formed from the registers alone, and the low carry only selects.
 module qkd_host_native_engine_ing3 (
     input  wire         clk,
     input  wire         rst_n,
@@ -479,6 +482,13 @@ module qkd_host_native_engine_ing3 (
     end endgenerate
     wire [255:0] st_wd = is_raw ? wq0 : (is_ikey && ik_sc) ? (st_ph[0] ? sc0 : sc1) : (sh_r & m_byte);
     wire [31:0]  st_wa = is_raw ? (st_d[47:16] + st_row) : st_wa_r;
+    // cut 19 (KV-ING-5 vF): carry-select sums for st_wa_r, exact identities kc_sum == ap_kcode + st_ph, ks_sum == ap_kscal + (st_ph == 4)
+    wire [3:0]   kc_lo  = {1'b0, ap_kcode[2:0]} + {1'b0, st_ph};
+    wire [28:0]  kc_hi1 = ap_kcode[31:3] + 29'd1;
+    wire [31:0]  kc_sum = {kc_lo[3] ? kc_hi1 : ap_kcode[31:3], kc_lo[2:0]};
+    wire [3:0]   ks_lo  = {1'b0, ap_kscal[2:0]} + {3'd0, st_ph == 3'd4};
+    wire [28:0]  ks_hi1 = ap_kscal[31:3] + 29'd1;
+    wire [31:0]  ks_sum = {ks_lo[3] ? ks_hi1 : ap_kscal[31:3], ks_lo[2:0]};
 
     // -- ports ---------------------------------------------------------------------------------------------------------
     assign w_v    = qk_wv || st_wv;
@@ -628,7 +638,7 @@ module qkd_host_native_engine_ing3 (
         if (st_run && !is_raw) begin
             take_r <= is_rows ? k_take : ik_low ? 6'd32 : st_ph == 3'd2 ? 6'd4 : 6'd0;
             st_end_r <= ap_mine ? (st_sec + 5'd1 >= s_pitch) : (st_rem <= 16'd32);
-            st_wa_r <= is_rows ? (ap_raddr + {27'd0, st_sec}) : ik_sc ? (ap_kscal + (st_ph == 3'd4 ? 32'd1 : 32'd0)) : (ap_kcode + {29'd0, st_ph});
+            st_wa_r <= is_rows ? (ap_raddr + {27'd0, st_sec}) : ik_sc ? ks_sum : kc_sum;
         end
         if (st_go && is_ikey && st_ph == 3'd2) begin
             for (sci = 0; sci < 8; sci = sci + 1) begin

@@ -1,0 +1,12 @@
+read_liberty -ignore_miss_func /tmp/libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib
+read_liberty -ignore_miss_func /tmp/libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+read_liberty -ignore_miss_func /tmp/libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+read_liberty -ignore_miss_func /tmp/libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+read_verilog /w/run/results/asap7/wa_fix/base/1_2_yosys.v
+rename wa_fix wa_gate
+read_verilog /w/wa_ref.v
+proc
+miter -equiv -flatten -make_assert wa_ref wa_gate miter
+hierarchy -top miter
+flatten
+sat -verify -prove-asserts miter
