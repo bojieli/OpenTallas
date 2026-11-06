@@ -1,0 +1,151 @@
+{
+ "scope": "544bit4bank exact capture cut; source-labelled phase/reset proof; no fullPHY or physical timing claim",
+ "positive_cases": 6,
+ "mutant_cases": 18,
+ "results": [
+  {
+   "mode": "positive",
+   "phase_ps": -90,
+   "rc": 0,
+   "result": "RXCAP_RESULT phase_ps=-90.0 checks=305 fall_checks=304 reset_checks=6 errors=0 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=0"
+  },
+  {
+   "mode": "positive",
+   "phase_ps": -1,
+   "rc": 0,
+   "result": "RXCAP_RESULT phase_ps=-1.0 checks=305 fall_checks=304 reset_checks=6 errors=0 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=0"
+  },
+  {
+   "mode": "positive",
+   "phase_ps": 0,
+   "rc": 0,
+   "result": "RXCAP_RESULT phase_ps=0.0 checks=305 fall_checks=304 reset_checks=6 errors=0 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  },
+  {
+   "mode": "positive",
+   "phase_ps": 1,
+   "rc": 0,
+   "result": "RXCAP_RESULT phase_ps=1.0 checks=305 fall_checks=304 reset_checks=6 errors=0 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  },
+  {
+   "mode": "positive",
+   "phase_ps": 83.3,
+   "rc": 0,
+   "result": "RXCAP_RESULT phase_ps=83.3 checks=305 fall_checks=304 reset_checks=6 errors=0 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  },
+  {
+   "mode": "positive",
+   "phase_ps": 166.6,
+   "rc": 0,
+   "result": "RXCAP_RESULT phase_ps=166.6 checks=305 fall_checks=304 reset_checks=6 errors=0 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  },
+  {
+   "mode": "mut_rise",
+   "phase_ps": -90,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=-90.0 checks=305 fall_checks=304 reset_checks=6 errors=302 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=0"
+  },
+  {
+   "mode": "mut_rise",
+   "phase_ps": -1,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=-1.0 checks=305 fall_checks=304 reset_checks=6 errors=302 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=0"
+  },
+  {
+   "mode": "mut_rise",
+   "phase_ps": 0,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=0.0 checks=305 fall_checks=304 reset_checks=6 errors=2412 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  },
+  {
+   "mode": "mut_rise",
+   "phase_ps": 1,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=1.0 checks=305 fall_checks=304 reset_checks=6 errors=2412 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  },
+  {
+   "mode": "mut_rise",
+   "phase_ps": 83.3,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=83.3 checks=305 fall_checks=304 reset_checks=6 errors=2412 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  },
+  {
+   "mode": "mut_rise",
+   "phase_ps": 166.6,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=166.6 checks=305 fall_checks=304 reset_checks=6 errors=2412 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  },
+  {
+   "mode": "mut_tail",
+   "phase_ps": -90,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=-90.0 checks=305 fall_checks=304 reset_checks=6 errors=302 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=0"
+  },
+  {
+   "mode": "mut_tail",
+   "phase_ps": -1,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=-1.0 checks=305 fall_checks=304 reset_checks=6 errors=302 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=0"
+  },
+  {
+   "mode": "mut_tail",
+   "phase_ps": 0,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=0.0 checks=305 fall_checks=304 reset_checks=6 errors=302 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  },
+  {
+   "mode": "mut_tail",
+   "phase_ps": 1,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=1.0 checks=305 fall_checks=304 reset_checks=6 errors=302 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  },
+  {
+   "mode": "mut_tail",
+   "phase_ps": 83.3,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=83.3 checks=305 fall_checks=304 reset_checks=6 errors=302 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  },
+  {
+   "mode": "mut_tail",
+   "phase_ps": 166.6,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=166.6 checks=305 fall_checks=304 reset_checks=6 errors=302 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  },
+  {
+   "mode": "mut_bit",
+   "phase_ps": -90,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=-90.0 checks=305 fall_checks=304 reset_checks=6 errors=305 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=0"
+  },
+  {
+   "mode": "mut_bit",
+   "phase_ps": -1,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=-1.0 checks=305 fall_checks=304 reset_checks=6 errors=305 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=0"
+  },
+  {
+   "mode": "mut_bit",
+   "phase_ps": 0,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=0.0 checks=305 fall_checks=304 reset_checks=6 errors=305 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  },
+  {
+   "mode": "mut_bit",
+   "phase_ps": 1,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=1.0 checks=305 fall_checks=304 reset_checks=6 errors=305 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  },
+  {
+   "mode": "mut_bit",
+   "phase_ps": 83.3,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=83.3 checks=305 fall_checks=304 reset_checks=6 errors=305 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  },
+  {
+   "mode": "mut_bit",
+   "phase_ps": 166.6,
+   "rc": 1,
+   "result": "RXCAP_RESULT phase_ps=166.6 checks=305 fall_checks=304 reset_checks=6 errors=305 all544bits=1 canonical_output_advance_rck=1 raw_model_advance_rck=1"
+  }
+ ]
+}

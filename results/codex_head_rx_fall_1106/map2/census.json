@@ -1,0 +1,33 @@
+{
+ "source_lib": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+ "source_lib_sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+ "counts": {
+  "0": {
+   "$_NOT_": 2176,
+   "DFFHQNx1_ASAP7_75t_R": 2176,
+   "$scopeinfo": 1
+  },
+  "1": {
+   "$_NOT_": 2176,
+   "DFFLQNx1_ASAP7_75t_R": 544,
+   "DFFHQNx1_ASAP7_75t_R": 1632,
+   "$scopeinfo": 1
+  }
+ },
+ "cells": {
+  "DFFHQNx1_ASAP7_75t_R": {
+   "area_um2": 0.2916,
+   "clock_capacitance": 0.474736
+  },
+  "DFFLQNx1_ASAP7_75t_R": {
+   "area_um2": 0.2916,
+   "clock_capacitance": 0.480775
+  }
+ },
+ "FF_bits_baseline": 2176,
+ "FF_bits_F1": 2176,
+ "FF_area_baseline_um2": 634.5216,
+ "FF_area_F1_um2": 634.5216,
+ "clock_cap_delta": 3.285216000000009,
+ "scope": "Capture banks only; preABC output inverter count equal in both; no wholePHY area or physicaltiming claim"
+}

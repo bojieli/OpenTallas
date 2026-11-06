@@ -1,0 +1,3 @@
+ot_s81hd_serdes_rxq.sv
+ot_s81hd_serdes_link.sv
+ot_s81hd_pma_rx_capture.sv

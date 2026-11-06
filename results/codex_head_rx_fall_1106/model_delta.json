@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.head.rx_first_fall_candidate.v1",
+ "enabled_in_main_recipe": false,
+ "width_bits": 544,
+ "banks_before": 4,
+ "banks_after": 4,
+ "FF_state_bits_delta": 0,
+ "throughput_words_per_recovered_edge": 1,
+ "phase_contract_ps": {"period": 833, "source_word_publication_min": -90, "source_word_publication_max": 166.6},
+ "first_capture_cycles_after_labelled_source_rise": {"qualified_rising": 1, "falling": 0.5},
+ "first_internal_hop_cycles_excluding_clock_skew": {"rising": 1, "falling_to_rising": 0.5},
+ "mature_output_rising_edge_after_labelled_source_rise": {"qualified_rising": 4, "falling": 3},
+ "typed_cycle_delta": {"rx_front_recovered_edges": -1, "local_core_edges": 0, "tx_edges": 0},
+ "RXQ_existing_cost_not_replaced": {"recovered_edges": 2, "local_core_edges": 1},
+ "external_HOST_gearbox_age": "UNMEASURED for new cohort; no fixed delta asserted",
+ "FF_area_um2": {"before": 634.5216, "after": 634.5216, "delta": 0},
+ "stage0_clock_cap_delta_fF": 3.285216,
+ "physical_hold_padding_and_clock_tree_cost": "PENDING actual TT/FF estimate; rising tail hops and rest-domain handoff still priced separately before physical build",
+ "reset_change": "none; original pipe is unreset; original positive-edge reset synchronizer remains unchanged",
+ "source_activation": "default-off helper and pinned private RXQ overlay only; canonical adapter unchanged",
+ "qualification": "capture-cut proof and cell census only; no fullPHY, physical timing or production boot authority"
+}
