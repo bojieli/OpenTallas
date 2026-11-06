@@ -1,0 +1,26 @@
+{
+  "artifact_host": "intel2",
+  "artifact_dir": "/srv/opentallas-scratch2/claude/codex-geometry-pg6-1106",
+  "overflow": 0,
+  "m6_demand": 239276,
+  "m6_capacity": 3081499,
+  "total_usage_percent": 18.69,
+  "wirelength_um": 1393365,
+  "grt_max_iterations": 50,
+  "allow_congestion": false,
+  "runtime_seconds": 307,
+  "canonical_parent_pg_mode": [
+    "grid",
+    "M6",
+    "M7"
+  ],
+  "actual_obs_layers": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+  ],
+  "signoff": "NOT RUN"
+}

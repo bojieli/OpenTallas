@@ -1,0 +1,22 @@
+read_verilog -sv /out/fixtures/pll.sv /out/fixtures/status.sv
+hierarchy -top status
+proc
+flatten
+opt_clean
+rename status gold
+design -stash original
+read_verilog -sv /out/fixtures/pll.sv /out/fixtures/status.sv
+hierarchy -top status
+proc
+opt_hier qkd_pll_analog_model
+opt_clean
+flatten
+opt_clean
+rename status gate
+design -copy-from original -as gold gold
+equiv_make gold gate equiv
+hierarchy -top equiv
+async2sync
+equiv_simple -short -seq 2
+equiv_induct -seq 3
+equiv_status -assert

@@ -33,6 +33,12 @@ def script(kit, mount='/work', flatten=None):
     # Standalone chparam derives/replaces the top once. hierarchy -chparam can
     # re-add a deferred module under its existing name (Yosys rtlil.cc assertion).
     parameter_commands = [f'chparam{parameter_args} {top[0]}'] if params else []
+    dead_modules = cfg.get("OT_RTL_LINT_DEAD_OUTPUT_MODULES", [])
+    if any(not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_$]*", m) or m == top[0] for m in dead_modules):
+        raise ValueError("OT_RTL_LINT_DEAD_OUTPUT_MODULES requires native non-top module identifiers")
+    # opt_hier propagates only parent-unused/constant signals across selected native
+    # modules. Live outputs and check -assert stay intact; hard views are untouched.
+    dead_output_commands = ["opt_hier " + " ".join(dead_modules)] if dead_modules else []
     libs, seen = [], set()
     for p in sorted((kit / 'macros').glob('*.lib*'), key=lambda p: ('_tt.lib' not in p.name, p.name)):
         key = re.sub(r'_(tt|ff|ss)\.lib(?:\.gz)?$|\.lib(?:\.gz)?$', '', p.name)
@@ -71,11 +77,14 @@ def script(kit, mount='/work', flatten=None):
                      # retain undriven cones whose consumers disappear only across module boundaries. Flatten
                      # before pruning preserves every LIVE undriven top connection for check -assert.
                      parameter_commands + [f'hierarchy -check -top {top[0]}', 'proc'] +
+                     dead_output_commands +
                      (['flatten', 'opt_expr -keepdc'] if (cfg.get('OT_RTL_LINT_FLATTEN') == ['1'] if flatten is None else flatten) else []) + [
                                            # Check the elaborated live design. Dead parameter-disabled cones can
                                            # retain unassigned legacy wires after proc (safe4 PIPE=2); live
                                            # undriven nets still survive opt_clean and fail check -assert.
-                                           'opt_clean'] + ([f'write_json {mount}/rtl_lint_elaborated.json'] if cfg.get('OT_PRIVATE_HHP_CLOCK_MESH') == ['1'] else []) + ['check -assert']) + '\n'
+                                           'opt_clean'] +
+                     ([f'write_json {mount}/kit_assembly_elaborated.json'] if (kit / 'kit_assembly.json').is_file() else []) +
+                     ([f'write_json {mount}/rtl_lint_elaborated.json'] if cfg.get('OT_PRIVATE_HHP_CLOCK_MESH') == ['1'] else []) + ['check -assert']) + '\n'
 
 
 # ---- YOSYS-CONCAT 10-26: reject source forms that the flow's yosys read_verilog -sv (0.68+post, orfs:asap7lock)
@@ -364,6 +373,8 @@ def dead_undriven_only(log):
 def run(kit, yosys='yosys'):
     out = kit / 'rtl_lint.json'
     try:
+        if (kit / 'kit_assembly.json').is_file():
+            (kit / 'kit_assembly_elaborated.json').unlink(missing_ok=True)
         private_mesh = config(kit).get('OT_PRIVATE_HHP_CLOCK_MESH') == ['1']
         if private_mesh:
             import hhp_clock_mesh_role
@@ -400,6 +411,30 @@ def run(kit, yosys='yosys'):
             if native_rc:
                 clock_mesh = hhp_clock_mesh_role.classify_native_clock_conflict(kit, log, native_rc,
                     json.loads((kit / "rtl_lint_elaborated.json").read_text()))
+        assembly_inventory = None
+        manifest = kit / 'kit_assembly.json'
+        if manifest.is_file():
+            # Reuse this frontend's actual elaboration. This is an assembly
+            # diagnostic only; ordinary lint and signoff verdicts stay intact.
+            try:
+                import importlib.util
+                module = importlib.util.spec_from_file_location('_kit_assembly', kit / 'kit_assembly.py')
+                helper = importlib.util.module_from_spec(module)
+                module.loader.exec_module(helper)
+                binding = json.loads(manifest.read_text())
+                children = [dict(inst=b['instance'], master=b['master']) for b in binding['bindings']]
+                elaborated = json.loads((kit / 'kit_assembly_elaborated.json').read_text())
+                assembly_inventory = helper.hierarchy_inventory(elaborated, config(kit)['DESIGN_NAME'][0], children,
+                                                                binding.get('parent_profile'),binding.get('required_instances'))
+                declared = binding.get('parent_profile', {}).get('parameters', {})
+                actual = config(kit).get('VERILOG_TOP_PARAMS', [])
+                actual = dict(zip(actual[::2], actual[1::2]))
+                for parameter, value in declared.items():
+                    if actual.get(parameter) != str(value):
+                        assembly_inventory['problems'].append(f'parent parameter {parameter} differs from selected profile')
+            except (OSError, ValueError, KeyError, TypeError, ImportError) as error:
+                assembly_inventory = dict(status='NOT RUN', reason=str(error))
+            (kit / 'kit_hierarchy.json').write_text(json.dumps(assembly_inventory, indent=1) + '\n')
         effective_rc = 0 if clock_mesh is not None else native_rc
         cast = yosys_cast_scan(_kit_sources(kit))
         cast_errors = [f'{p}:{ln}: ERROR: {rule} yosys read_verilog -sv mis-elaborates this cast form '
@@ -409,6 +444,7 @@ def run(kit, yosys='yosys'):
         record = dict(verdict='PASS' if effective_rc == 0 and not cast_errors else 'FAIL', rc=effective_rc,
                       mapped_cell_types=len(mapped_cells(_kit_sources(kit))),
                       top_params=config(kit).get('VERILOG_TOP_PARAMS', []),
+                      **({'kit_assembly': assembly_inventory} if assembly_inventory is not None else {}),
                       errors=([] if clock_mesh is not None else re.findall(r'^.*\bERROR:.*$', log, re.M)) + cast_errors, yosys_cast=len(cast_errors),
                       **({'private_clock_mesh': clock_mesh, 'native_check_rc': native_rc,
                           'native_errors': re.findall(r'^.*\bERROR:.*$', log, re.M)} if clock_mesh is not None else {}),

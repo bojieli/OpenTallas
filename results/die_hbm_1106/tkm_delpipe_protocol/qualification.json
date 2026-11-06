@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.tkm_delpipe_protocol.v1",
+  "source_commit": "840d5e9b406",
+  "source_sha256": "101a04825316ac0e65b53059f74a282a82abf572ac692dc48c033a3a64c91fc0",
+  "gold_sha256": "2214efc605dac6ac80efbb29fe03a38486a272fde801af7e27ad1f48d27c62ff",
+  "feature": "OT_TKM_DEL_PIPE1",
+  "root_protocol": "PASS",
+  "cycles": 200000,
+  "source_specific_calendar_rtl_mutant": "CAUGHT",
+  "added_core_edges": 1,
+  "external_del_calendar_unchanged": true,
+  "tile_response": "independent per-DUT actual-command identity, native154edge contract",
+  "child_arithmetic_requalification": false,
+  "routed_signoff": false,
+  "physical_run_launched": false,
+  "actual_new_source_gbpf_invariant": "unbounded one-step induction PASS",
+  "actual_new_source_product_xor1_rtl_mutant": "CAUGHT"
+}

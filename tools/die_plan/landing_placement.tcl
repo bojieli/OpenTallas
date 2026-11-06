@@ -219,7 +219,7 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
    set rc [catch {cland_put $i [lindex $rects $k] $tag $sp $cur} err opts]
    unset ::cland_multi_in
    if {!$rc} {
-    if {!([info exists ::cland_multi_at] && [dict exists $::cland_multi_at $tag] && [dict get $::cland_multi_at $tag] == $k)} {
+    if {![info exists ::cland_fill_dry] && !([info exists ::cland_multi_at] && [dict exists $::cland_multi_at $tag] && [dict get $::cland_multi_at $tag] == $k)} {
      puts "OT_CLAND multi-rect $tag: rect [expr {$k+1}]/[llength $rects] {[lindex $rects $k]} from [$i getName]"
     }
     dict set ::cland_multi_at $tag $k
@@ -321,13 +321,16 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
      }
     }
     if {$lim<$x} { set x [expr {$ff_x0+int(floor(double($lim-$ff_x0)/$ff_sw))*$ff_sw}];continue }
+    set dry [info exists ::cland_fill_dry]
+    if {!$dry} {
     if {[$i getPlacementStatus] eq "FIRM"} { $i setPlacementStatus PLACED }
     $i setOrient [dict get $ff_orient $y];$i setLocation $x $y;$i setPlacementStatus FIRM
+    }
     if {$sp eq {}} { set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp }
     set rw [expr {int(ceil(double($w)/0.4*$sp/$ff_sw))*$ff_sw}]
     cland_occupy [expr {$x+$w-$rw}] $y $rw $h
     dict set cland_done $name 1;incr cland_n
-    puts $cland_fh "$name\tcland:$tag\t[expr {$x/double($ff_dbu)}]\t[expr {$y/double($ff_dbu)}]\t-"
+    if {!$dry} { puts $cland_fh "$name\tcland:$tag\t[expr {$x/double($ff_dbu)}]\t[expr {$y/double($ff_dbu)}]\t-" }
     return
    }
   }
@@ -348,8 +351,11 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
     }
    }
    if {$skip>$x} { set x [expr {$ff_x0+int(ceil(double($skip-$ff_x0)/$ff_sw))*$ff_sw}];continue }
+   set dry [info exists ::cland_fill_dry]
+   if {!$dry} {
    if {[$i getPlacementStatus] eq "FIRM"} { $i setPlacementStatus PLACED }
    $i setOrient [dict get $ff_orient $y];$i setLocation $x $y;$i setPlacementStatus FIRM
+   }
    # Reserve spacing as well as the real body. Density margin permits the
    # datapath mux/control cells and leaves room for clock/reset repair.
    # DIE-HEAD-12 opt-in band spread: tag ring:<bus>@<spread> widens the reserved footprint so the ring fills its band
@@ -358,7 +364,7 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
    cland_occupy $x $y $rw $h
    if {$cur} { set cland_cursor [list $y [expr {$x+$rw}]] }
    dict set cland_done $name 1;incr cland_n
-   puts $cland_fh "$name\tcland:$tag\t[expr {$x/double($ff_dbu)}]\t[expr {$y/double($ff_dbu)}]\t-"
+   if {!$dry} { puts $cland_fh "$name\tcland:$tag\t[expr {$x/double($ff_dbu)}]\t[expr {$y/double($ff_dbu)}]\t-" }
    return
   }
  }
@@ -537,6 +543,39 @@ proc cland_dsel_wch {names} {
  }
  return $w
 }
+# DIE-S81-66/CLS 11-05 (KW-RELAUNCH-1 class CLAND-BAND; S81 dsdv_slice_c1x_C__t3 attempt 3, ring sid_i0: ~66 flops in a
+# 25.9 x 15.9 um band, fill spread ~6.4, failed at its 63rd flop with the band ~85 % empty): the old fill reserves each
+# flop rw = w/0.4 x sp along its row (DIE-S81-53 keeps only the FIT footprint at w/0.4, the reservation stays rw), so in
+# a row whose free run is shorter than two reservations (here an obstacle took x 1399.7..1410.5 of a 1399.7..1425.6 band
+# in every row from y 550.8) one flop fits per row and the ring runs out of ROWS, not area.  Dry-run the whole ordered
+# fill at sp (no DB move, no record); if it does not fit, shrink the spread in 3/4 steps down to 1.0 and place at the
+# first spread at which the whole ring fits.  A ring that fits at sp keeps sp (placement unchanged); a ring that fits at
+# no spread keeps sp and fails closed exactly as before.  OT_CLAND_SPREAD_FIT=0 turns the dry run off (old behaviour).
+proc cland_fill_spread {ordered rect tag sp} {
+ global cland_occ cland_done cland_n cland_cursor
+ if {[info exists ::env(OT_CLAND_SPREAD_FIT)] && $::env(OT_CLAND_SPREAD_FIT) eq "0"} { return $sp }
+ set had_at [info exists ::cland_multi_at]
+ set saved [list $cland_occ $cland_done $cland_n $cland_cursor [expr {$had_at ? $::cland_multi_at : {}}]]
+ set tsp $sp
+ try {
+  set ::cland_fill_dry 1
+  while 1 {
+   lassign $saved cland_occ cland_done cland_n cland_cursor
+   if {$had_at} { set ::cland_multi_at [lindex $saved 4] } else { unset -nocomplain ::cland_multi_at }
+   set rc [catch { foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $tsp 1} } msg opts]
+   if {!$rc} { break }
+   if {![string match {OT_CLAND no legal*} $msg]} { return -options $opts $msg }
+   if {$tsp <= 1.0} { set tsp $sp; break }
+   set tsp [expr {max(1.0,$tsp*0.75)}]
+  }
+ } finally {
+  unset -nocomplain ::cland_fill_dry
+  lassign $saved cland_occ cland_done cland_n cland_cursor
+  if {$had_at} { set ::cland_multi_at [lindex $saved 4] } else { unset -nocomplain ::cland_multi_at }
+ }
+ if {$tsp != $sp} { puts "OT_CLAND fill spread $tag: [llength $ordered] flops do not fit at spread [format %.4f $sp] (row-limited), placed at [format %.4f $tsp]" }
+ return $tsp
+}
 # Select the largest native-row spacing that fits the WHOLE ordered band.
 # The continuous 90% area estimate can overflow after vertical ceil rounding
 # (HEAD turn_b: 2885 cells fit, then writer bit12 fails). Probe the exact same
@@ -610,6 +649,7 @@ proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0}} {
   set dx [expr {[tcl::mathfunc::max {*}$xs]-[tcl::mathfunc::min {*}$xs]}]
  }
  if {!$n || $hi <= $lo || $dy < $dx} {
+  set sp [cland_fill_spread $ordered $rect $tag $sp]
   foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
   return [list 0 [llength $ordered] "pins not a y column in key order: old fill"]
  }
@@ -854,6 +894,7 @@ proc cland_place_ff {prefix rect tag} {
   puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, spread [format %.4f $ypsp]), $nr by the band cursor"
   }
  } else {
+  set sp [cland_fill_spread $ordered $rect $tag $sp]
   foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
  }
  set cland_cursor {};set cland_col_cursor {}

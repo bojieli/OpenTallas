@@ -166,14 +166,31 @@ def discover(base, kit=None, sdc=None, record=None):
     d = dict(base=str(base), orfs=str(root) if root else None, design=design, kit=str(kit) if kit else None,
              odb=str(base / (routed_db(base) or "6_final.odb")), spef=None, sdc=None, sdc_source=None, synth=None, final_v=None,
              metrics={}, drc_rpt=None, pins=None, sdc_lint_ctx=None, record=str(record) if record else None)
-    if kit and (kit / "ft_ports.json").is_file():             # 12.2a1 die-timed ft declaration (key only when present)
-        d["ft_ports"] = str(kit / "ft_ports.json")
+
+    def ctx(n):
+        """DS66-STA 11-05 (AUTO-RESIGN ECO-dir class, second half of KW-FIX-17): a post-route ECO pass dir (eco_*/iN) whose
+        kit context files were removed after its sign-off (s81 slice_station__t48 i3: no constraint.sdc / sdc_lint.json /
+        pins.json -> re-sign timed 6_final.sdc without the per-corner FF binding, ff_ref_missing FF -72.32 vs signed +0.06)
+        reads them from its parent kit (kit_config root).  prd_mk.sh rsyncs them unchanged from that kit, so they are the
+        same bytes the pass dir was signed with.  A file in the dir itself always wins; a normal kit is unchanged."""
+        if not kit:
+            return None
+        if (kit / n).is_file():
+            return kit / n
+        _cfg, parent = kit_config(kit)
+        if parent is not None and Path(parent).resolve() != kit and (Path(parent) / n).is_file():
+            d.setdefault("kit_ctx_parent", str(Path(parent).resolve()))
+            return Path(parent).resolve() / n
+        return None
+
+    if ctx("ft_ports.json"):                                   # 12.2a1 die-timed ft declaration (key only when present)
+        d["ft_ports"] = str(ctx("ft_ports.json"))
     if (base / "6_final.spef").is_file() and Path(d["odb"]).name == "6_final.odb":
         d["spef"] = str(base / "6_final.spef")
     if sdc:
         d["sdc"], d["sdc_source"] = str(Path(sdc).resolve()), "arg"
-    elif kit and (kit / "constraint.sdc").is_file():
-        d["sdc"], d["sdc_source"] = str(kit / "constraint.sdc"), "kit"
+    elif ctx("constraint.sdc"):
+        d["sdc"], d["sdc_source"] = str(ctx("constraint.sdc")), "kit"
     elif (base / "6_final.sdc").is_file():
         d["sdc"], d["sdc_source"] = str(base / "6_final.sdc"), "6_final.sdc"
     for n in ("1_synth.v", "1_2_yosys.v"):
@@ -195,10 +212,10 @@ def discover(base, kit=None, sdc=None, record=None):
             d["drc_rpt"] = str(r)
     if kit:
         for n in ("pins.json",):
-            if (kit / n).is_file():
-                d["pins"] = str(kit / n)
-        if (kit / "sdc_lint.json").is_file():
-            d["sdc_lint_ctx"] = str(kit / "sdc_lint.json")
+            if ctx(n):
+                d["pins"] = str(ctx(n))
+        if ctx("sdc_lint.json"):
+            d["sdc_lint_ctx"] = str(ctx("sdc_lint.json"))
     return d
 
 
@@ -517,6 +534,8 @@ def signed_child_etm(model, flow_tag):
     if not names or files[names[0]] != model['liberty_sha256']:
         raise ValueError(f'{lib.name}: sha256 differs from the signed view export {pf}')
     so = ex.get('signoff')
+    if so and not Path(so).is_absolute():
+        so = str((pf.parent / so).resolve())
     if not so or not Path(so).is_file():
         raise ValueError(f'{pf}: child signoff.json {so} unavailable')
     if ex.get('signoff_sha256') and _sha_file(so) != ex['signoff_sha256']:
@@ -1697,7 +1716,7 @@ def internal_core_guard_source(kit):
     return None
 
 
-def run_internal_core_face_guard(disc, fz, contract):
+def run_internal_core_face_guard(disc, fz, contract, mixed=False):
     """HEAD-SERDES-2 10-31: a kit whose freeze.json declares source_profile.endpoint_contract (INTERNAL_CORE,
     METHODOLOGY 9.10 R2_INTERNAL_TIMED_IN_PARTITION: the ports are timed in the parent partition) is judged by the SAME
     typed endpoint census its kit preflight ran (face_guard_core.py -> internal_core_guard.guard), not by the partition
@@ -1705,7 +1724,8 @@ def run_internal_core_face_guard(disc, fz, contract):
     ports of freeze.json); fail closed when the census or its inputs are missing."""
     import importlib.util
     src = internal_core_guard_source(disc["kit"])
-    base = dict(netlist=disc["synth"], contract=contract, mode="INTERNAL_CORE endpoint census (kit face_guard_core rule)")
+    base = dict(netlist=disc["synth"], contract=contract, mode=("R2 native seam endpoints + ordinary exclusive external faces" if mixed else
+                                          "INTERNAL_CORE endpoint census (kit face_guard_core rule)"))
     if src is None:
         return dict(base, verdict="FAIL", reason="INTERNAL_CORE contract but no internal_core_guard.py",
                     fail_counts={"contract": 1})
@@ -1714,7 +1734,8 @@ def run_internal_core_face_guard(disc, fz, contract):
         icg = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(icg)
         skip = "^(" + "|".join(re.escape(re.sub(r"\[\d+\]$", "", n)) for n in fz["clocks"] + fz["resets"]) + ")$"
-        r = icg.guard(Path(disc["synth"]).read_text(errors="replace"), fz["design"], Path(disc["kit"]), fz, skip)
+        checker = icg.mixed_guard if mixed else icg.guard
+        r = checker(Path(disc["synth"]).read_text(errors="replace"), fz["design"], Path(disc["kit"]), fz, skip)
     except Exception as e:
         return dict(base, verdict="FAIL", reason=f"internal_core_guard error: {e}", fail_counts={"contract": 1},
                     guard=str(src))
@@ -1751,6 +1772,9 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
         contract = (fz.get("source_profile") or {}).get("endpoint_contract")
         if contract:
             return run_internal_core_face_guard(disc, fz, contract)
+        native_contract = (fz.get("face_shell") or {}).get("native_endpoint_contract")
+        if native_contract:
+            return run_internal_core_face_guard(disc, fz, native_contract, mixed=True)
     pins = json.loads(Path(disc["pins"]).read_text()) if disc.get("pins") else None
     if isinstance(pins, dict):
         pins = pins.get("pins")

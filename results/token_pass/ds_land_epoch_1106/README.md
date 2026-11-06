@@ -1,0 +1,36 @@
+# Static landing epoch origins
+
+The recovered pinned 11-01 S81 native diagnostic measured 833000 fs, then aborted before KS ingress at `s_7S_LP.u_u_lnl1.u_kn.u_r.g_chunk[68]`: slot0 epoch4 expected0. The unchanged protected hierarchy was observed through a read-only C++ main; no RTL force or assertion suppression was used.
+
+The station writer takes `rs_k=lpc_i0_q[0]`, while its reader takes `rs_n=rst_n`. Writer `rq` rises at cycle37, reader `rq` at43. Thus the writer counter is six edges ahead when the reader starts. D4/K2 with independently zeroed counters selects the wrong slot as well as checking the wrong epoch. Changing K or suppressing the check does not repair the transport.
+
+`ot_pl_land_local_r.EPOCH_BIAS` is the writer counter age at the reader origin: `(reader_reset_release_edge - writer_reset_release_edge) mod (2*D)`. Thus a writer released six edges earlier has bias+6, not-6. Both release edges must refer to the matching ring-counter reset stages. It defaults to0; the old reader is kept as a frozen lockstep reference in the bench. The bias rotates the initial onehot pointer and translates the expected epoch. Local `rc` and `warm` still measure reader age. There are zero added data/pin cycles; K2 still captures a word two edges after its writer capture, visible to the downstream consumer on its third edge.
+
+Allowed contracts: D is a power of two >=2, AW matches D, 1<=K<D, 0<=EPOCH_BIAS<2D. D4 therefore permits0..7, D8 permits0..15. Bias is a bind-time constant, not dynamically inferred from data.
+
+The smallest proof compares arbitrary32-bit LFSR payloads to an independent two-edge history. D4 andD8 pass at equal origins and at both +6/-6 origins with the corresponding bias. A wrong bias of5 fails payload comparison. The actual +6 origin with bias0 reproduces the original epoch4/expected0 failure. Invalid D6 and D4 biases8/-1 are rejected. The original12 expected outcomes passed in ot-run epyc2 unit3329383-1793954812,8GB1T. Logs remain at `/srv/opentallas-scratch2/claude/codex-ds-land-origin-1106`.
+
+Replay via `python3 tools/s81_dv/check_pl_land_epoch.py --work NEW_SCRATCH_DIR --verilator VERILATOR` under ot-run. No die bound adopts a nonzero bias in this change. Each direction needs a receipt deriving both reset release ages from its actual bound source before adoption; observed six at this station is not a blanket die setting. The bias must propagate through the vector-reader/parent ABI when that receipt is integrated.
+
+A common reset origin also passes the core vehicle, but feeding the K-side control reset into the N-side reader forest changes reset routing and source assumptions. Static bias preserves the existing physical reset forests. Physical review and timing closure remain required for any adopted nonzero configuration.
+
+The scoped S7S receipt is now derived from the actual frozen V1c `v0copy` source, including its original top (not the IMG2 image-overlay top). Relative to `s_7S_C.arst_n`, C local reset and the neighbour LP reset input both release at7; C outbound payload register and LP inbound payload register place the K reset at9; LP entry plus local reset tree places the N reset at15. Both ring forests add3 and both `rq` registers add1, giving13/19 and biases KN6/NK2. Adding the observed C origin24 reproduces the measured writer37/reader43. The two derivation scripts retain path/connectivity assertions and record their exact source inputs.
+
+The same graph has been mapped to the active wave kit inputs on epyc5: `die-s81-59/ev/bind/rtl` with `die-s81-59/wc1` leaf sources. Its newer C/LP/top sources derive the same13/19 ages for this station. The C reset graph includes `ot_dp_rrelay_nl`: it captures on the positive edge and presents at the negative edge; the following positive-edge relay samples it at the same numbered edge as the ordinary relay output. The derivation tracks this half-edge phase explicitly before confirming integer endpoint ages. The selected mu72 landing source is unchanged. This is a static source receipt for one station, with no current-cohort runtime claim and no die-wide bias authorization. `provenance_elab.json` reports ce264f185ec58f82c9d8d4a7090cbfcd089ab5ae with dirty=true; the wave source commit2c705 is not substituted for this generated bind identity.
+
+The active-source derivation now covers all14 lnland instances individually, using actual type/reset graph and outbound/inbound payload registers for each station:
+
+| Station | Lanes | C local / LP entry | K reset / N reset | KN / NK bias |
+|---|---:|---:|---:|---:|
+| s_0N | 4 | 9 | 11 / 16 | 5 / 3 |
+| s_0S | 4 | 7 | 9 / 14 | 5 / 3 |
+| s_7N | 4 | 8 | 10 / 15 | 5 / 3 |
+| s_7S | 2 | 7 | 9 / 15 | 6 / 2 |
+
+All ages are relative to the respective C reset input. Both endpoint forests and `rq` stages add4 more equally. This demonstrates why applying6 everywhere would be incorrect. The derivation preserves half-edge phases through wire aliases, then quantizes only at actual positive-edge registers. Final endpoint phases are integer for these14 instances. The D4 data proof was extended with the actual+5/bias5 and reverse-5/bias3 cases:60 arbitrary words each PASS, ot-run3699520-1793955558,8GB1T. The combined result now records14/14 expected outcomes. No nonzero parameter adoption is included.
+
+The default-zero parameter is now carried through `ot_pl_land_vector_reset_r`, `ot_s81_mu72_land`, and canonical/portfix178 `ot_s81_mu72_lnland{,_nst}`. Existing positional parameters retain their order; new parameters are appended. No generated parent chooses a nonzero value. The two directional lnland parameters make the reviewed per-station pair explicit.
+
+The actual parent chain is qualified with arbitrary full-width data/control in both directions:556-bit K-to-N and560-bit N-to-K for lnland,556/558 for lnland_nst. Default0 passes55 words per direction, the active5/3 pair passes60, and6/2 passes61 at the unchanged two-edge output capture/third downstream edge. Two wrong-pair controls fail the payload comparison at edge41, including applying5/3 to the actual6-edge reset skew. This checks every payload/control bit and catches a latency mistake even where epoch tags can agree. Parent proof5/5 expected outcomes PASS, epyc2 ot-run3910835-1793956014 (8GB1T), with the reused5/3 binary wrong-latency control under3996802-1793956194 (2GB1T). Replay: `tools/s81_dv/check_mu72_lnland_epoch.py --work NEW_SCRATCH_DIR --verilator VERILATOR` under ot-run. The initial frontend failure was an omitted field-copy source dependency; its log is retained and the runner now includes that dependency.
+
+Physical closure for selected nonzero configurations and generated-parent adoption remain open. The old protected395-library executable is unchanged and retains its real boot FAIL. No native/token/G5 pass is claimed by these component proofs.

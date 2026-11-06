@@ -52,7 +52,7 @@ IN_CAP_FF = 1.0
 PIN_ACCESS_BAND = 0.24  # um: smallest tested form with planar and via access on M4/M5 edge pins
 RECT = {"M2": (0.072, 0.018), "M3": (0.018, 0.038), "M4": (0.084, 0.024), "M5": (0.024, 0.084), "M6": (0.112, 0.032),
         "M7": (0.032, 0.112), "M8": (0.16, 0.08), "M9": (0.08, 0.16)}
-CLOCK_RE = re.compile(r"^(clk|ck|clock)(_[A-Za-z0-9]+)*$|_(clk|ck)$", re.I)
+CLOCK_RE = re.compile(r"^(clk|ck|clock|fclk)(_[A-Za-z0-9]+)*$|_(clk|ck)$", re.I)
 DIRS = {"in": "INPUT", "input": "INPUT", "out": "OUTPUT", "output": "OUTPUT", "inout": "INOUT"}
 
 

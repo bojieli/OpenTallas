@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.legacy_input_freg_proof.v1",
+  "gold_base_commit": "396c545e5d8c8b228c248f95207e624e8558cb25",
+  "gold_original_sha256": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce",
+  "width": 517,
+  "phases_ps": [
+    0,
+    1,
+    50,
+    200,
+    400,
+    416,
+    417,
+    600,
+    800,
+    832
+  ],
+  "writer_edges": [
+    "rise",
+    "fall"
+  ],
+  "warm_resets": 3,
+  "valid_word_comparisons": 34060,
+  "mismatches": 0,
+  "mutants": {
+    "bypass": {
+      "rise_errors": 1703,
+      "fall_errors": 1703
+    },
+    "bit_flip": {
+      "rise_errors": 1703,
+      "fall_errors": 1703
+    },
+    "falling_capture": {
+      "rise_errors": 1703,
+      "fall_errors": 0
+    }
+  },
+  "python_tests": "53 passed",
+  "data_cycles_added": 1,
+  "ring_ready_fault_cycles_added": 0,
+  "inband_status_cycles_added": 1,
+  "ca_k_change": 0,
+  "physical_timing": "NOT RUN",
+  "token_qualification": "NOT RUN",
+  "run_host": "epyc4 via ot-run spill",
+  "retained_outputs": "epyc5:/srv/opentallas-scratch2/claude/codex-legacy-input-freg-1106/out_final"
+}

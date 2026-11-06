@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.hbm_native_metadata_cleanup.v1",
+ "base_commit": "fefda1602d6cb747e67afc3255b1fa271cea9d69",
+ "summary": {
+  "restored_root_buses": 6,
+  "obsolete_orphan_ports": 4,
+  "obsolete_unused_ft_slots": 30,
+  "obsolete_unreferenced_regular_buses": 33,
+  "physical_order_repairs": 23,
+  "explicit_port_order_repairs": 0,
+  "obsolete_latency_groups": 1,
+  "lane_aliases": 1
+ },
+ "active_lanes_unchanged": 422,
+ "hardcore_geometry_changes": 0,
+ "internal_station_changes": 0,
+ "explicit_disjoint_turnarounds": 20,
+ "WBQ": "original hardcores/clock_entries/core_conns preserved; safe-split profile and allocation remain separate unadopted candidate",
+ "qualification": "schema/source metadata repair only; no full parent/token/physical readiness claim",
+ "proof": "results/die_hbm_1106/native_metadata/identity_proof.json",
+ "ledger": "results/die_hbm_1106/native_metadata/metadata_cleanup_ledger.json"
+}

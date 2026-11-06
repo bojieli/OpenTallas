@@ -1,0 +1,63 @@
+{
+ "dsdv_idx_tx_n32": {
+  "ref_tile": "physical/die_plan/s81/cores/legacy/specs/dsdv_idx_tx_n32_vA",
+  "suffix": "vA",
+  "_why": "DIE-S81-66/IDX vA 11-05: SPLIT=1 parent (column A = hard child dsdv_idx_txm_grp_vA); CF1 clock (no regional taps); dead_inputs/spare_out as rfc_ei_1103.",
+  "spare_out": {
+   "bits": [
+    "lo[19]",
+    "lo[2]",
+    "lo[1]",
+    "st[7]",
+    "st[6]",
+    "st[5]",
+    "st[4]"
+   ],
+   "why": "constant output bits of this parameterisation (lo[2:1] = s_p & IK[1:0] with IK 4, lo[19] constant tree-link field bit, st[7:4] = 4'b0 by the status format); g49 face_guard_raw found them on one tie net.  Plan delta posted: remove them from the port list (OWNER no-constant-pin) in S81-RF1."
+  },
+  "hard_children": {
+   "views": {
+    "dsdv_idx_txm_grp": "physical/die_plan/s81/cores/legacy/specs/dsdv_idx_txm_grp_vA/views/dsdv_idx_txm_grp"
+   },
+   "parameter_contracts": [
+    {
+     "master": "dsdv_idx_txm_grp",
+     "instance": "u_sm.g_s.u_ga",
+     "child_spec": "physical/die_plan/s81/cores/legacy/specs/dsdv_idx_txm_grp_vA/spec.json",
+     "child_params": {
+      "D": 8192,
+      "B0": 0,
+      "NG": 5,
+      "RDL": 1,
+      "WDL": 1,
+      "RIL": 1,
+      "RIL_MUT": 0,
+      "POUT": 1,
+      "FL": 1
+     },
+     "parent_params": {
+      "D": 8192,
+      "SRAM_MACRO": 1,
+      "RDL": 1,
+      "WDL": 1,
+      "RIL": 1,
+      "MUT": 0,
+      "SPLIT": 2,
+      "WDC": 1
+     },
+     "binding_source": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv",
+     "binding_sha256": "babb26dd4635ba5738d245f235224b4fa5f8a3e45d0f52b7f2bcd4923efbe529",
+     "binding": "u_sm forwards D/RDL/WDL/RIL; RIL_MUT=(MUT==5); native WCB default5; u_ga B0=0 NG=WCB POUT=1 FL=(SPLIT==2); source byte-identical to the SIGNED child kit"
+    }
+   ]
+  },
+  "pg_top": "M6"
+ },
+ "dsdv_idx_txm_grp": {
+  "child_of": "dsdv_idx_tx_n32",
+  "ref_tile": "physical/die_plan/s81/cores/legacy/specs/dsdv_idx_txm_grp_vA",
+  "lef_contract": "physical/die_plan/s81/cores/legacy/specs/dsdv_idx_txm_grp_vA/views/dsdv_idx_txm_grp/dsdv_idx_txm_grp.lef",
+  "suffix": "vA",
+  "why": "DIE-S81-66/IDX vA 11-05: SPLIT=1 column-A hard child of dsdv_idx_tx_n32, kit before its parent (parent refused until SIGNED)."
+ }
+}

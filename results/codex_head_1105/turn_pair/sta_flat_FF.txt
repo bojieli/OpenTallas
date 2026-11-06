@@ -1,0 +1,32 @@
+mode flat corner FF
+CLOCK_ENDPOINT_MASTER_HEX 44464648514e78315f41534150375f3735745f52
+CLOCK_ENDPOINT_MASTER_HEX 4446464c514e78315f41534150375f3735745f52
+CLOCK_ENDPOINT_MASTER_HEX 44464648514e78325f41534150375f3735745f52
+CLOCK_ENDPOINT_MASTER_HEX 44464641535248514e78315f41534150375f3735745f52
+CLOCK_ENDPOINT_CATALOG complete 1 errors 0
+SEAM turnE0a->turnE0b/cland_dn_fault_t_i max paths 1 worst 700.257 neg 0 tns 0.000 launch 326.69 capture 365.67 from turnE0a/u_cland_up_t_o/fault_o$_SDFF_PN0_/CLK to turnE0b/u_cland_t_i/u_ring.s_d[0][567]$_DFFE_PP_/D
+SEAM turnE0a->turnE0b/cland_dn_fault_t_i min paths 1 worst 65.967 neg 0 tns 0.000 launch 326.69 capture 365.67 from turnE0a/u_cland_up_t_o/fault_o$_SDFF_PN0_/CLK to turnE0b/u_cland_t_i/u_ring.s_d[0][567]$_DFFE_PP_/D
+PAIRSKEW turnE0a->turnE0b/cland_dn_fault_t_i n 4 max 48.12 maxl turnE0a/u_cland_up_t_o/fault_o$_SDFF_PN0_/CLK maxc turnE0b/u_cland_t_i/u_ring.s_d[0][567]$_DFFE_PP_/D min 27.99 minl turnE0a/u_cland_up_t_o/fault_o$_SDFF_PN0_/CLK minc turnE0b/u_cland_t_i/u_ring.s_d[2][567]$_DFFE_PP_/D p99 48.12 over 0
+SEAM turnE0a->turnE0b/cland_dn_ready_t_i max paths 1 worst 715.685 neg 0 tns 0.000 launch 326.96 capture 365.23 from turnE0a/u_cland_up_t_o/ready_o$_SDFF_PN0_/CLK to turnE0b/u_cland_t_i/u_ring.s_d[0][566]$_DFFE_PP_/D
+SEAM turnE0a->turnE0b/cland_dn_ready_t_i min paths 1 worst 67.801 neg 0 tns 0.000 launch 326.96 capture 365.23 from turnE0a/u_cland_up_t_o/ready_o$_SDFF_PN0_/CLK to turnE0b/u_cland_t_i/u_ring.s_d[0][566]$_DFFE_PP_/D
+PAIRSKEW turnE0a->turnE0b/cland_dn_ready_t_i n 4 max 47.89 maxl turnE0a/u_cland_up_t_o/ready_o$_SDFF_PN0_/CLK maxc turnE0b/u_cland_t_i/u_ring.s_d[3][566]$_DFFE_PP_/D min 27.83 minl turnE0a/u_cland_up_t_o/ready_o$_SDFF_PN0_/CLK minc turnE0b/u_cland_t_i/u_ring.s_d[2][566]$_DFFE_PP_/D p99 47.89 over 0
+SEAM turnE0a->turnE0b/cland_fstart_in_t_i max paths 1 worst 703.281 neg 0 tns 0.000 launch 325.29 capture 364.87 from turnE0a/u_cland_fstart_t_o/q$_SDFF_PN0_/CLK to turnE0b/u_cland_t_i/u_ring.g_wreg.fs_q$_DFF_P_/D
+SEAM turnE0a->turnE0b/cland_fstart_in_t_i min paths 1 worst 47.838 neg 0 tns 0.000 launch 325.29 capture 364.87 from turnE0a/u_cland_fstart_t_o/q$_SDFF_PN0_/CLK to turnE0b/u_cland_t_i/u_ring.g_wreg.fs_q$_DFF_P_/D
+PAIRSKEW turnE0a->turnE0b/cland_fstart_in_t_i n 37 max 52.21 maxl turnE0a/u_cland_fstart_t_o/q$_SDFF_PN0_/CLK maxc turnE0b/u_cland_t_i/u_ring.g_wreg.sl[1].ch[3].u_wen/q$_DFF_P_/D min 27.80 minl turnE0a/u_cland_fstart_t_o/q$_SDFF_PN0_/CLK minc turnE0b/u_cland_t_i/u_ring.g_wreg.sl[1].ch[0].u_wen/q$_DFF_P_/D p99 52.21 over 0
+SEAM turnE0a->turnE0b/fclk_in_t_i max paths 1 worst 238.345 neg 0 tns 0.000 launch NA capture 364.49 from turnE0a/fclk_out_t_o to turnE0b/u_cland_t_i/u_ring.ctl_lap[0]$_DFFE_PP_/CLK
+SEAM turnE0a->turnE0b/fclk_in_t_i min paths 1 worst 22.301 neg 0 tns 0.000 launch NA capture 364.49 from turnE0a/fclk_out_t_o to turnE0b/u_cland_t_i/u_ring.ctl_lap[0]$_DFFE_PP_/CLK
+SEAM turnE0a->turnE0b/t_i max paths 566 worst 684.372 neg 0 tns 0.000 launch 332.83 capture 361.37 from turnE0a/u_ft_t_s2/q[329]$_DFF_P_/CLK to turnE0b/u_cland_t_i/u_ring.s_d[0][329]$_DFFE_PP_/D
+SEAM turnE0a->turnE0b/t_i min paths 566 worst 57.550 neg 0 tns 0.000 launch 324.91 capture 367.40 from turnE0a/u_ft_t_s2/q[191]$_DFF_P_/CLK to turnE0b/u_cland_t_i/u_ring.s_d[0][191]$_DFFE_PP_/D
+PAIRSKEW turnE0a->turnE0b/t_i n 2264 max 53.57 maxl turnE0a/u_ft_t_s2/q[194]$_DFF_P_/CLK maxc turnE0b/u_cland_t_i/u_ring.s_d[1][194]$_DFFE_PP_/D min 12.87 minl turnE0a/u_ft_t_s2/q[507]$_DFF_P_/CLK minc turnE0b/u_cland_t_i/u_ring.s_d[1][507]$_DFFE_PP_/D p99 51.12 over 0
+FFSPREAD turnE0a n 569 min 323.44 max 341.51 spread 18.07
+FFSPREAD turnE0b n 4644 min 360.49 max 370.52 spread 10.03
+CRPR turnE0a->turnE0b/t_i hold 2.840
+CRPR turnE0a->turnE0b/cland_fstart_in_t_i hold 2.840
+CRPR turnE0a->turnE0b/cland_dn_fault_t_i hold 2.840
+CRPR turnE0a->turnE0b/cland_dn_ready_t_i hold 2.840
+CRPR turnE0a->turnE0b/t_i setup 2.840
+CRPR turnE0a->turnE0b/cland_fstart_in_t_i setup 2.840
+CRPR turnE0a->turnE0b/cland_dn_ready_t_i setup 2.840
+CRPR turnE0a->turnE0b/cland_dn_fault_t_i setup 2.840
+WNS 2.383446218168217e-10 WHS 3.078204358075709e-12
+SECONDS 20.198

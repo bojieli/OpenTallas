@@ -1,0 +1,10 @@
+POSITIVE_RC=0
+Warning: found logic loop in module qkd_pll_analog_model:
+    cell $not$/out/fixtures/pll.sv:18$7 ($not) source: /out/fixtures/pll.sv:18.32-18.37
+      A[0] --> Y[0]
+    cell $ternary$/out/fixtures/pll.sv:18$8 ($mux) source: /out/fixtures/pll.sv:18.26-18.42
+      B[0] --> Y[0]
+    wire \core source: /out/fixtures/pll.sv:13.6-13.10
+ERROR: Found 1 problems in 'check -assert'.
+LIVE_MUTANT_RC=1
+LOCK_EQ_RC=0

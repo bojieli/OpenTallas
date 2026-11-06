@@ -20,6 +20,9 @@ contract = (fz.get("source_profile") or {}).get("endpoint_contract")
 if contract:
     import internal_core_guard as ICG
     r = ICG.guard(Path(net).read_text(), fz["design"], kd, fz, skip)
+elif (fz.get("face_shell") or {}).get("native_endpoint_contract"):
+    import internal_core_guard as ICG
+    r = ICG.mixed_guard(Path(net).read_text(), fz["design"], kd, fz, skip)
 else:
     r = FG.guard(Path(net).read_text(), fz["design"], skip_re=skip, pins=pins,
                  straps=FG.kit_strap_list(kd), dead=FG.kit_dead_list(kd))

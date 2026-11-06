@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Existing fixed-latency D4/K2 landing transport. Exactly +3 destination edges.
 // Resets affect epochs/valid only; data bank is the existing reset-free body.
-module ot_s81_mu72_land #(parameter integer W=1)(
+module ot_s81_mu72_land #(parameter integer W=1,EPOCH_BIAS=0)(
     input wire ck_w, ck_r, rs_w, rs_r,
     input wire [W-1:0] i, output wire [W-1:0] o
 );
@@ -16,6 +16,6 @@ module ot_s81_mu72_land #(parameter integer W=1)(
         .ck(ck_r),.d(rs_r),.q(rr));
     ot_pl_land_vector_reset_kw_w #(.W(W),.D(4),.CHUNK_BITS(8)) u_w(
         .ck(ck_w),.rsi(rw),.i(i),.bank(bank),.epo(epo),.vld(vld));
-    ot_pl_land_vector_reset_r #(.W(W),.D(4),.K(2),.CHUNK_BITS(8)) u_r(
+    ot_pl_land_vector_reset_r #(.W(W),.D(4),.K(2),.CHUNK_BITS(8),.EPOCH_BIAS(EPOCH_BIAS)) u_r(
         .ck(ck_r),.rsi(rr),.bank(bank),.epo(epo),.vld(vld),.o(o));
 endmodule

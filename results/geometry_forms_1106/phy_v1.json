@@ -1,0 +1,93 @@
+{
+  "fits": true,
+  "reason": "prepared",
+  "stages": 1,
+  "minimum_stages": 1,
+  "points_um": [
+    [
+      701.514,
+      515.16
+    ]
+  ],
+  "hop_paths_um": [
+    [
+      [
+        842.4,
+        768.96
+      ],
+      [
+        701.514,
+        768.96
+      ],
+      [
+        701.514,
+        515.16
+      ]
+    ],
+    [
+      [
+        701.514,
+        515.16
+      ],
+      [
+        701.514,
+        515.064
+      ],
+      [
+        306.72,
+        515.064
+      ]
+    ]
+  ],
+  "hop_lengths_um": [
+    394.68600000000004,
+    394.89
+  ],
+  "max_hop_um": 394.89,
+  "path_um": [
+    [
+      842.4,
+      768.96
+    ],
+    [
+      842.4,
+      515.064
+    ],
+    [
+      306.72,
+      515.064
+    ]
+  ],
+  "length_um": 789.576,
+  "added_cycles": 0,
+  "note": "existing stage count preserved; caller retains source/consumer phase contract",
+  "case": "kv_phy_v1_existing_two_reset_flops",
+  "source_module": "ot_dp_rsync",
+  "parameters": {
+    "W": 1,
+    "S": 2
+  },
+  "first_stage_um": [
+    842.4,
+    768.96
+  ],
+  "sink_um": [
+    306.72,
+    515.064
+  ],
+  "reservation_count": 1384,
+  "existing_reset_flops": 2,
+  "added_flops": 0,
+  "contract": "same existing asynchronous-assert/two-edge-release chain; no new flop/stage",
+  "first_stage_conflicts": [],
+  "relay_sites_delta": {
+    "u_rs_ri_core_rst_n.b[0].r[0]": [
+      842.4,
+      768.96
+    ],
+    "u_rs_ri_core_rst_n.b[0].r[1]": [
+      701.514,
+      515.16
+    ]
+  }
+}

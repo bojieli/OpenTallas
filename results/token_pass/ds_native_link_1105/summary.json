@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.native_vehicle_link.v1",
+  "source_host": "epyc2",
+  "source_obj": "/home/ubuntu/scratch-root/claude/tok-ds-2/build_v1c3/obj",
+  "output": "/srv/opentallas-scratch2/claude/codex-ds-link-1105/Vtb_s81_die",
+  "ot_run_unit": "oth-ubuntu-1721402-1793950524",
+  "source_failure": "LINK-2GB: R_X86_64_PC32/PLT overflow",
+  "static_text_bytes": 4295884338,
+  "hierarchical_libraries": 395,
+  "shared_library_link_failures": 0,
+  "top_link_rc": 0,
+  "loader_ldd_r_rc": 0,
+  "rtl_changed": false,
+  "input_cache_modified": false,
+  "simulation": "NOT RUN",
+  "token_pass": "NOT RUN",
+  "scope": "native vehicle link recovery; no source-currentness or token-functional claim"
+}

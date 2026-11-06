@@ -1,0 +1,29 @@
+{
+ "module": "dsdv_idx_txm_grp",
+ "plan_type": "bk_sel__t2",
+ "boundary_role": {
+  "ck": "clk"
+ },
+ "clock_contract": {
+  "kind": "hard_core_latency",
+  "ruling": "COORD 10-24",
+  "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+  "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json"
+ },
+ "clock_latency_measured": {
+  "tt": {
+   "n": 556,
+   "min": 436.42,
+   "mean": 486.31,
+   "max": 528.67,
+   "spread": 92.25
+  },
+  "ff": {
+   "n": 556,
+   "min": 360.69,
+   "mean": 404.83,
+   "max": 443.27,
+   "spread": 82.58
+  }
+ }
+}

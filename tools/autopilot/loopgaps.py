@@ -24,6 +24,7 @@ Gaps:
                              row id, only a token they share (the branch sha): no verdict is applied to any of them
 """
 import os
+from functools import lru_cache
 import re
 import time
 
@@ -55,7 +56,8 @@ def tag_of(s):
     return re.sub(r"\s+", " ", s).strip(" ,;+ ")
 
 
-def geom_events(text, keep_lines=False):
+@lru_cache(maxsize=2)
+def _geom_events_cached(text, keep_lines=False):
     """Parse complete review entries, including their indented kit/verdict lists (joined with ' ', or with '\\n' when
     keep_lines: geom_verdicts reads which physical line names a kit).  A RECONCILE / AMEND [tag] counts as a reply; an
     entry that withdraws a verdict reads FAIL."""
@@ -79,7 +81,18 @@ def geom_events(text, keep_lines=False):
             v = VERDICT_WORD.search(line[m.end():])
             v = "FAIL" if WITHDRAW.search(line[m.end():]) else v.group(1) if v else None
             reps.append((t or last_t, tag_of(m.group(1)), v, line))
-    return reqs, reps
+    return tuple(reqs), tuple(reps)
+
+
+def geom_events(text, keep_lines=False):
+    """Reuse parsing only for identical journal text; each caller still gets its own lists.
+
+    The two cached immutable snapshots cover joined and physical-line views of the
+    current journal. An append or in-place edit is a different key, so later FAILs,
+    withdrawals and amendments are always parsed before applying a verdict.
+    """
+    reqs, reps = _geom_events_cached(text, bool(keep_lines))
+    return list(reqs), list(reps)
 
 
 GENERIC_KIT_DIRS = {"kit", "kits", "run", "runs", "flow", "work"}

@@ -2,6 +2,7 @@
 OpenROAD): eligibility, stop rules (PASS / no improvement / max iterations / error), best pick + pruning, record."""
 import json
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -9,6 +10,56 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import eco_loop as E  # noqa: E402
+
+
+def test_stage_so_keeps_selected_tool_cohort_and_kit_hooks(tmp_path):
+    k = tmp_path / "old_kit"
+    k.mkdir()
+    # The observed failure: a refreshed signoff alongside a legacy helper.
+    (k / "signoff.py").write_bytes((E.HERE / "signoff.py").read_bytes())
+    (k / "sdc_lint.py").write_text("# old helper, no policy_uncertainty API\n")
+    (k / "lec.py").write_text("# old shared Python tool\n")
+    (k / "clock_family.tcl").write_text("# old signoff helper\n")
+    local = {"kit_only.py": "# custom kit input helper\n",
+             "cts_post.tcl": "# kit-specific clock geometry\n",
+             "run_kit.sh": "# kit-specific runner\n"}
+    for name, text in local.items():
+        (k / name).write_text(text)
+    dp = E.stage_so(k, tmp_path / "eco") / "tools" / "die_plan"
+    for name in ("signoff.py", "sdc_lint.py", "lec.py"):
+        assert (dp / name).read_bytes() == (E.HERE / name).read_bytes()
+    for name, text in local.items():
+        assert (dp / name).read_text() == text
+    assert (dp / "clock_family.tcl").read_text() != "# old signoff helper\n"
+    # Exercise the staged entry point; the mixed helper formerly raised before
+    # `bundle` could run, without requiring an OpenROAD vehicle.
+    result = subprocess.run([sys.executable, "-I", str(dp / "signoff.py"), "bundle",
+                             str(tmp_path / "pass_bundle")], capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    assert "SIGNOFF_BUNDLE" in result.stdout
+    assert (k / "sdc_lint.py").read_text() == "# old helper, no policy_uncertainty API\n"
+
+
+@pytest.mark.parametrize("relative", ["eco2/i1", "repairs/custom/i1", None])
+def test_prd_staging_preserves_inputs_without_copying_own_output(tmp_path, relative):
+    k = tmp_path / "kit"
+    base = k / "run/results/asap7/dp_x/base"
+    base.mkdir(parents=True)
+    for name in ("5_1_grt.odb", "4_1_cts.odb", "6_final.spef"):
+        (base / name).write_text("fixture\n")
+    (k / "config.mk").write_text("export DESIGN_NAME = x\n")
+    (k / "constraint.sdc").write_text("# original kit SDC\n")
+    (k / "pins.json").write_text('{"kit_input": true}\n')
+    out = k / relative if relative else tmp_path / "external_pass"
+    so = E.stage_so(k, tmp_path / "selected_tools")
+    env = dict(os.environ, OT_PRD_SEED_CHECK="0", OT_PRD_FROM="grt")
+    result = subprocess.run(["bash", str(E.PRD / "prd_mk.sh"), str(k), str(out), "b0", str(so)],
+                            env=env, capture_output=True, text=True)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert (out / "pins.json").read_bytes() == (k / "pins.json").read_bytes()
+    assert (out / "constraint.sdc").read_bytes() == (k / "constraint.sdc").read_bytes()
+    if relative:
+        assert not (out / Path(relative).parts[0]).exists()
 
 
 def rec(tt=-5.0, ff=-3.0, slew=0, drc=0, verdict=None, local=None, extra_fail=None, base="/x/base"):
@@ -432,3 +483,46 @@ def test_trim_skips_signed_unfinished_and_switch(tmp_path, monkeypatch):
     gone = E.trim_superseded(root, root / "i4")
     assert sorted(Path(g).parent.parent.parent.parent.parent.parent.name for g in gone) == ["i3"] * 3
     assert all((root / d / "run/results/asap7/n/base" / n).exists() for d in ("i1", "i2", "i4") for n in names)
+
+
+def test_relative_output_is_absolute_for_abstract_docker_mount(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    k = kit(tmp_path)
+    b = base_rec(k, rec(-4, -2, slew=1))
+    f = Fake([rec(1, 2)])
+    def stage(_kit, root, tools):
+        (root / "so").mkdir()
+        return root / "so"
+    monkeypatch.setattr(E, "stage_so", stage)
+    result = E.run_loop("kit", b.relative_to(tmp_path), root="kit/eco_relative", run=f, mem=8, cpus=2)
+    assert result["verdict"] == "PASS"
+    assert Path(result["root"]) == tmp_path / "kit/eco_relative"
+    assert Path(result["base_signoff"]).is_absolute()
+    abstract = [cmd for cmd, _ in f.calls if "do-generate_abstract" in " ".join(cmd)]
+    assert abstract
+    for cmd in abstract:
+        for index, arg in enumerate(cmd[:-1]):
+            if arg == "-v":
+                assert Path(cmd[index + 1].split(":")[0]).is_absolute(), cmd
+
+
+def test_terminal_abstract_failure_keeps_routed_recovery_pass(tmp_path, monkeypatch):
+    k = kit(tmp_path)
+    b = base_rec(k, rec(-4, -2, slew=1))
+    class AbstractFail(Fake):
+        def __call__(self, cmd, **kw):
+            if 'do-generate_abstract' in ' '.join(str(c) for c in cmd):
+                self.calls.append((cmd, kw.get('env') or {}))
+                return 2
+            return super().__call__(cmd, **kw)
+    def stage(_kit, root, tools):
+        (root / 'so').mkdir()
+        return root / 'so'
+    monkeypatch.setattr(E, 'stage_so', stage)
+    r = E.run_loop(k, b, run=AbstractFail([rec(1, 2)]), mem=8, cpus=2)
+    assert r['verdict'] == 'ERROR' and 'best' not in r
+    assert r['recovery']['status'] == 'ERROR'
+    for name in r['recovery']['pass_dirs']:
+        assert (Path(name) / 'run/results').is_dir()
+        assert (Path(name) / 'run/objects').is_dir()
+    assert r['iterations'][-1]['retained_for_recovery']

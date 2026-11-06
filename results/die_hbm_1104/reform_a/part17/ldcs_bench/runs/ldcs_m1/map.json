@@ -1,0 +1,35 @@
+{
+ "MLAT": "4",
+ "ALAT": "3",
+ "LDCS": "1",
+ "DM": 0,
+ "DA": 0,
+ "MUT": 0,
+ "in_delay": {
+  "lane0_cm_m1": 0,
+  "lane0_cm_m2": 0,
+  "lane0_cm_qm": 0,
+  "lane0_cm_imm1": 0,
+  "lane0_ca_ad": 0,
+  "lane0_ca_imm2": 0,
+  "lane0_ci_sfu": 0,
+  "lane0_cs_sfu": 0,
+  "lane0_cs_e1": 0,
+  "lane0_cs_imm2": 0,
+  "lane0_ce_e2": 0,
+  "lane0_ce_imm1": 0,
+  "lane0_co_rnd": 0,
+  "lane0_co_dst": 0,
+  "lane0_side_y": 0
+ },
+ "out_shift": {
+  "lane0_vm_we": 0,
+  "lane0_vm_waddr": 0,
+  "lane0_vm_wdata": 0,
+  "lane0_kv_we": 0,
+  "lane0_kv_waddr": 0,
+  "lane0_kv_wdata": 0,
+  "lane0_ro_v": 0,
+  "lane0_ro_x": 0
+ }
+}

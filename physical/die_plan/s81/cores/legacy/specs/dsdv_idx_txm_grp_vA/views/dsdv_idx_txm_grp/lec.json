@@ -1,0 +1,227 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-11-06T10:35:13+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": null,
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "top": "dsdv_idx_txm_grp",
+ "netlist": "/work/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/6_final.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "macro_bodies_blackboxed": [
+  "ot_sram_1r1w_1024x256_m2_r2c2"
+ ],
+ "implicit_nets": [],
+ "black_boxes": {
+  "ot_sram_1r1w_1024x256_m2_r2c2": 12
+ },
+ "ports": {
+  "inputs": 301,
+  "outputs": 256
+ },
+ "t_aig_s": 8.2,
+ "async_reset_regs": {
+  "gold": 0,
+  "gate": 0
+ },
+ "kit_reset_ports": null,
+ "auto_loaded": {
+  "proposed": 0
+ },
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [],
+   "gate": []
+  },
+  "reset_asserted": {
+   "gold": {},
+   "gate": {}
+  },
+  "reset_cycles": 4,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 4,
+  "raw_prefix_wall_s": 900.0,
+  "raw_prefix_ands_cap": 500000,
+  "n_raw_prefix_sim_refuted": 0,
+  "n_raw_prefix_bounded": 0,
+  "raw_prefix_bounded": [],
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_self_hold": 0,
+  "self_hold": [],
+  "n_kept": 0,
+  "n_reloaded": 0,
+  "n_dropped": 0,
+  "reloaded": [],
+  "dropped": [],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants, or (self_hold, COORD 11-04) the register has no load path and one net forces the constant, listed per register with that net, which must be asserted before use; equality/FSM assumptions never establish a constant's base case",
+  "listing": {
+   "file": "/eco/lec/noreset_constants.tsv",
+   "sha256": "9281382eae0f24f9f712bdb4a59941a62eb981266c9b391c19101559de2e8b23",
+   "n_kept": 0,
+   "n_dropped": 0
+  }
+ },
+ "constraint_bases": {
+  "checks": [],
+  "refused": []
+ },
+ "t_corr_s": 9.2,
+ "keypoints": {
+  "gold": {
+   "inputs": 307,
+   "flops": 6397,
+   "outputs": 0,
+   "ands": 2774
+  },
+  "gate": {
+   "inputs": 307,
+   "flops": 8393,
+   "outputs": 0,
+   "ands": 7975
+  },
+  "matched": 3577,
+  "gold_constant_flops": {
+   "n": 0,
+   "first": []
+  },
+  "paired_flops": {
+   "n": 134,
+   "first": [
+    "both:ff:u_dut.bsk0[11]=ff:u_dut.bsk0[10]",
+    "both:ff:u_dut.bsk0[12]=ff:u_dut.bsk0[10]",
+    "both:ff:u_dut.bsk0[13]=ff:u_dut.bsk0[10]",
+    "both:ff:u_dut.bsk0[14]=ff:u_dut.bsk0[10]",
+    "both:ff:u_dut.bsk0[15]=ff:u_dut.bsk0[10]",
+    "both:ff:u_dut.bsk0[17]=ff:u_dut.bsk0[16]",
+    "both:ff:u_dut.bsk0[18]=ff:u_dut.bsk0[16]",
+    "both:ff:u_dut.bsk0[19]=ff:u_dut.bsk0[16]",
+    "both:ff:u_dut.bsk0[1]=ff:u_dut.bsk0[0]",
+    "both:ff:u_dut.bsk0[20]=ff:u_dut.bsk0[16]",
+    "both:ff:u_dut.bsk0[21]=ff:u_dut.bsk0[16]",
+    "both:ff:u_dut.bsk0[22]=ff:u_dut.bsk0[16]",
+    "both:ff:u_dut.bsk0[23]=ff:u_dut.bsk0[16]",
+    "both:ff:u_dut.bsk0[25]=ff:u_dut.bsk0[24]",
+    "both:ff:u_dut.bsk0[26]=ff:u_dut.bsk0[24]",
+    "both:ff:u_dut.bsk0[27]=ff:u_dut.bsk0[24]",
+    "both:ff:u_dut.bsk0[28]=ff:u_dut.bsk0[24]",
+    "both:ff:u_dut.bsk0[29]=ff:u_dut.bsk0[24]",
+    "both:ff:u_dut.bsk0[2]=ff:u_dut.bsk0[0]",
+    "both:ff:u_dut.bsk0[30]=ff:u_dut.bsk0[24]",
+    "both:ff:u_dut.bsk0[31]=ff:u_dut.bsk0[24]",
+    "both:ff:u_dut.bsk0[33]=ff:u_dut.bsk0[32]",
+    "both:ff:u_dut.bsk0[34]=ff:u_dut.bsk0[32]",
+    "both:ff:u_dut.bsk0[35]=ff:u_dut.bsk0[32]",
+    "both:ff:u_dut.bsk0[36]=ff:u_dut.bsk0[32]",
+    "both:ff:u_dut.bsk0[37]=ff:u_dut.bsk0[32]",
+    "both:ff:u_dut.bsk0[38]=ff:u_dut.bsk0[32]",
+    "both:ff:u_dut.bsk0[39]=ff:u_dut.bsk0[32]",
+    "both:ff:u_dut.bsk0[3]=ff:u_dut.bsk0[0]",
+    "both:ff:u_dut.bsk0[4]=ff:u_dut.bsk0[0]",
+    "both:ff:u_dut.bsk0[5]=ff:u_dut.bsk0[0]",
+    "both:ff:u_dut.bsk0[6]=ff:u_dut.bsk0[0]",
+    "both:ff:u_dut.bsk0[7]=ff:u_dut.bsk0[0]",
+    "both:ff:u_dut.bsk0[8]=ff:u_dut.bsk0[10]",
+    "both:ff:u_dut.bsk0[9]=ff:u_dut.bsk0[10]",
+    "both:ff:u_dut.g_b[1].g_mask[0].g_wdl.u2.q=ff:u_dut.g_b[0].g_mask[0].g_wdl.u2.q",
+    "both:ff:u_dut.g_b[1].g_mask[10].g_wdl.u2.q=ff:u_dut.g_b[0].g_mask[10].g_wdl.u2.q",
+    "both:ff:u_dut.g_b[1].g_mask[11].g_wdl.u2.q=ff:u_dut.g_b[0].g_mask[11].g_wdl.u2.q",
+    "both:ff:u_dut.g_b[1].g_mask[12].g_wdl.u2.q=ff:u_dut.g_b[0].g_mask[12].g_wdl.u2.q",
+    "both:ff:u_dut.g_b[1].g_mask[13].g_wdl.u2.q=ff:u_dut.g_b[0].g_mask[13].g_wdl.u2.q"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 0,
+   "first": []
+  },
+  "gold_x_sources": 6,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 6,
+  "gold_only_compare": {
+   "n": 0,
+   "first": []
+  },
+  "gate_only_compare": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "t_prove_s": 0.3,
+ "x_dont_care_points": {
+  "n": 0,
+  "first": []
+ },
+ "kept_registers": {
+  "declared": 1740,
+  "in_netlist": 1740,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null,
+  "functionally_unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "functionally_unobservable_reason": null,
+  "dead_twin_classes_removed": {
+   "n": 0,
+   "first": []
+  },
+  "dead_twin_classes_reason": null,
+  "merged_twins_proved": {
+   "n": 0,
+   "first": []
+  },
+  "merged_twins_reason": null
+ },
+ "counts": {
+  "compare_points": 5385,
+  "proved": 5385,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "5385 compare points proved; 3577 key points matched by name, 134 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs)",
+ "superset_vec": {
+  "enabled": true,
+  "n_extra": 0,
+  "all_shown": true,
+  "extra_bits": [],
+  "basis": "free bits: free inputs of the proved miter (unobservable); const/eq/cube bits: bound by inductively proved correspondence hypotheses; shown only when the verdict is EQUIVALENT"
+ },
+ "t_total_s": 18.5,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "kit provenance invalid: FileNotFoundError: [Errno 2] No such file or directory: '/work/PROVENANCE.json'",
+  "tool_update": null
+ }
+}

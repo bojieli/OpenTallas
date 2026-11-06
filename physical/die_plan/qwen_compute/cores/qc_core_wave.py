@@ -76,6 +76,15 @@ COLL_FOLD_PATCHES = [
         "    always @(posedge clk) if (!arst_n) s <= 2'b00;"]]}]
 
 
+SLE_CTL = "qfd_dv_s5_ctl_repair4_leaf"   # QC-SLECTL-B 11-05 sle_ctl split: u_ctl hard child (ctl family)
+SLE_CTL_SOURCES = ["rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_leaf.sv", "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv",
+                   "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv",
+                   "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv", "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv"]
+SLE_CLAND_RE = r"sle_cland_w\d+_[nsew](?:_\d+)?"   # QC-SLECTL-B: landing-ring wrapper masters (cland family)
+SLE_CLAND_SOURCES = ["rtl/common/ot_dp_clk_landing_ca.sv", "rtl/common/ot_dp_clk_landing.sv",
+                     "rtl/common/ot_meso_fifo.sv"]
+
+
 SC_HELPERS = "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_helpers.sv"
 SC_LEAF = {   # module -> (wrapper, netlist): DIE-QC-63/SC 11-02 sc_leaf family
     "qfd_dv_s5_sc2_leaf": ("rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv", "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv"),
@@ -99,6 +108,12 @@ def family(module, repo=REPO):
     if module == COLL_FOLD:
         f = COLL_FOLD_SOURCES[0]
         return ("coll_fold", f) if (repo / f).is_file() else (None, f"fold slice RTL {f} missing")
+    if module == SLE_CTL:
+        f = SLE_CTL_SOURCES[0]
+        return ("sle_ctl", f) if (repo / f).is_file() else (None, f"ctl leaf RTL {f} missing")
+    if re.fullmatch(SLE_CLAND_RE, module):
+        f = f"rtl/physical/sle_ctl/{module}.sv"
+        return ("sle_cland", f) if (repo / f).is_file() else (None, f"ring wrapper RTL {f} missing")
     return None, "no QC core recipe family (qc_core_wave.py)"
 
 
@@ -233,6 +248,76 @@ def coll_fold_recipe(e, out, plan=None):
     return rec
 
 
+def sle_ctl_input_share_patch(repo=REPO):
+    """Coalesce only identical no-reset input captures. Every C/D must match;
+    after one edge each removed Q equals its retained Q, with zero added cycles.
+    The immutable production source remains unchanged; patch the child kit only.
+    """
+    rel = "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv"
+    text = (repo / rel).read_text()
+    groups = ((2, (21189, 21190, 21191, 21192)), (124, (20790, 20791, 20792)),
+              (0, (20827, 20828, 21188)), (67, (20882, 20883, 21203)),
+              (2176, (20959, 20960)), (2671, (20999,)))
+    edits = []
+    def capture(i):
+        hits = re.findall(r"(?m)^.*qfd_bmath_dff_p #\(\.ID\(0\)\) u_" + str(i) +
+                          r"\(\.C\(([^()]*)\),\.D\(([^()]*)\),\.Q\(([^()]*)\)\);$", text)
+        if len(hits) != 1:
+            raise ValueError(f"sle_ctl input share: expected one no-reset capture u_{i}, got {len(hits)}")
+        return hits[0]
+    for keeper, copies in groups:
+        c, d, q = capture(keeper)
+        for i in copies:
+            cc, dd, qq = capture(i)
+            if (cc, dd) != (c, d):
+                raise ValueError(f"sle_ctl input share u_{i}: clock/data differ from u_{keeper}")
+            old = next(x for x in text.splitlines() if re.search(r" u_" + str(i) + r"\(", x))
+            edits.append([old, f"assign {qq} = {q}; // same C/D input capture as u_{keeper}; 0 cycles"])
+    return {"file": rel, "why": "QC ctl child: one pin capture per data input; identical no-reset C/D copies coalesced, 0 cycles", "edits": edits}
+
+
+def sle_ctl_recipe(e, out, plan=None):
+    """QC-SLECTL-B 11-05: u_ctl of sle_ctl (HARD=1 production shape, 42.7k cells): one clock ck, rst_n (bound net
+    rst_n, reset_net), no macros, util 0.45, M5 ceiling (the sc_leaf / coll_fold conservative form)."""
+    m = e["module"]
+    spec = dict(name=m, top=m, kind="tile", sources=SLE_CTL_SOURCES, params={}, clock_port="ck",
+                reset_ports=["rst_n"], macros=[], route=dict(pd=0.45))
+    sd = out / "_spec" / m
+    sd.mkdir(parents=True, exist_ok=True)
+    (sd / "spec.json").write_text(json.dumps(spec, indent=1) + "\n")
+    rec = dict(ref_tile=str(sd), plan_pins_contract=True, suffix="h" + e["view"].split("@")[1][:6], util=0.45,
+               max_layer="M5", insertion_balance=False, rtl_patches=[sle_ctl_input_share_patch()],
+               _why=f"qc_core_wave sle_ctl view {e['view']} (QC-SLECTL-B): plan pin table {e['pins_file']}")
+    ins = plan_core_tap_insertion(plan, m) if plan else None
+    if ins:
+        rec.update(insertion_ps=ins[0], insertion_ff_ps=ins[1],
+                   insertion_basis=f"plan early core tap {ins[0]:g} TT / {ins[1]:g} FF ({ins[2]})")
+    return rec
+
+
+def sle_cland_recipe(e, out, plan=None):
+    """QC-SLECTL-B 11-05: a landing-ring wrapper master (rtl/physical/sle_ctl/<m>.sv = param_wrap.wrapper_sv of
+    ot_dp_clk_landing_cas #(W, DEPTH 4, WFALL 1, WREG 1, DSREP 1)): core clock clk, RELATED forwarded write clock fclk
+    (its own root; d / t_rst_n timed on fclk, the landing_contract.ring_input_sdc law), rst_n (bound net cland_start),
+    util 0.45, M5 ceiling."""
+    m = e["module"]
+    spec = dict(name=m, top=m, kind="tile", sources=[e["rtl"]] + SLE_CLAND_SOURCES, params={}, clock_port="clk",
+                reset_ports=["rst_n", "t_rst_n"], macros=[], route=dict(pd=0.45))
+    sd = out / "_spec" / m
+    sd.mkdir(parents=True, exist_ok=True)
+    (sd / "spec.json").write_text(json.dumps(spec, indent=1) + "\n")
+    rec = dict(ref_tile=str(sd), plan_pins_contract=True, suffix="h" + e["view"].split("@")[1][:6], util=0.45,
+               max_layer="M5", insertion_balance=False,
+               related_clocks={"fclk": ["d", "t_rst_n"]}, strap_ports=["strap_k"],
+               land_slots={"d": {"D": 4, "form": "hold_mux"}, "t_rst_n": {"form": "ring_start", "ring": "d"}},
+               _why=f"qc_core_wave sle_cland view {e['view']} (QC-SLECTL-B): plan pin table {e['pins_file']}")
+    ins = plan_core_tap_insertion(plan, m) if plan else None
+    if ins:
+        rec.update(insertion_ps=ins[0], insertion_ff_ps=ins[1],
+                   insertion_basis=f"plan early core tap {ins[0]:g} TT / {ins[1]:g} FF ({ins[2]})")
+    return rec
+
+
 def gen(a, extra):
     v = json.load(open(a.views))
     e = next((x for x in v.get("view_list") or [] if x["view"] == a.view), None)
@@ -240,7 +325,8 @@ def gen(a, extra):
         sys.exit(f"CORE_VIEW FAIL {a.view}: not in {a.views}")
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    rec = {"su_lane": su_lane_recipe, "sc_leaf": sc_leaf_recipe, "coll_fold": coll_fold_recipe}[e["family"]](e, out, json.load(open(a.plan or v["plan"])))
+    rec = {"su_lane": su_lane_recipe, "sc_leaf": sc_leaf_recipe, "coll_fold": coll_fold_recipe,
+           "sle_ctl": sle_ctl_recipe, "sle_cland": sle_cland_recipe}[e["family"]](e, out, json.load(open(a.plan or v["plan"])))
     (out / "_recipes.json").write_text(json.dumps({e["module"]: rec}, indent=1) + "\n")
     cmd = [sys.executable, str(GEN), "--module", e["module"], "--recipes", str(out / "_recipes.json"),
            "--plan", a.plan or v["plan"], "--out", str(out), "--seam-hold", "25,25"] + list(extra)

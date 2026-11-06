@@ -1,0 +1,12 @@
+read_verilog -sv helpers.sv gold.sv gate.sv
+proc
+setattr -mod -unset keep_hierarchy
+setattr -unset keep_hierarchy
+flatten ctl_gold ctl_gate
+async2sync
+opt_clean
+equiv_make ctl_gold ctl_gate eq
+hierarchy -top eq
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status -assert

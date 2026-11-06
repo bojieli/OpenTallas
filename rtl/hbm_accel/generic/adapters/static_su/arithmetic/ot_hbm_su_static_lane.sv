@@ -52,7 +52,10 @@ module ot_hbm_su_static_lane #(
     parameter integer KVT_SH = 9,
     parameter integer LEAF = 0,         // 1: the broadcast tree's LAST stage is this lane's own leaf register (below)
     parameter integer MLAT = 3,         // multiplier latency (ot_hdc_qmul_lat): 3, 4, or 5 (W11 serial domain, 0.9 GHz)
-    parameter integer ALAT = 3          // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
+    parameter integer ALAT = 3,         // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
+    // LDCS = 1 (opt-in, HBM-GAPS-4-L1P 11-05; default 0 keeps g_ld3k): the LEAF offset load (K = 1) in carry-save
+    // over the same three cycles: same offsets mod 2^AW, same edges, same banks (g_ld3c below)
+    parameter integer LDCS = 0
 ) (
     input wire [7:0] clk_stage,
     input wire [3:0] clk_insert,
@@ -321,7 +324,7 @@ module ot_hbm_su_static_lane #(
                 for (s = 0; s < 5; s = s + 1)
                     if (ldq_bank) off1[s] <= ldq_01[s] + ldq_2[s]; else off0[s] <= ldq_01[s] + ldq_2[s];
         end
-    end else begin : g_ld3k
+    end else if (LDCS == 0) begin : g_ld3k
         // the same three cycles on keep-prefix adders: a group's (at most 4) masked terms in a two-level tree
         reg          ldp_v, ldq_v, ldp_bank, ldq_bank;
         always @(posedge clk_stage[0] or negedge rst_n) begin
@@ -375,6 +378,90 @@ module ot_hbm_su_static_lane #(
             always @(posedge clk_stage[0]) begin
                 if (ld_e) begin p0 <= grp[0 +: AW]; p1 <= grp[AW +: AW]; p2 <= grp[2*AW +: AW]; end
                 if (ldp_v) begin q01 <= s_01; q2 <= p2; end
+            end
+        end
+    end else begin : g_ld3c
+        // LDCS = 1: g_ld3k's three cycles in carry-save.  Cycle 1: per group (at most 4 masked terms) two carry-save
+        // levels -> a sum and a carry row (6 rows a stream); cycle 2: four carry-save levels, 6 rows -> 2; cycle 3:
+        // the one carry-propagate add into the bank.  Every row is mod 2^AW (the carry's shifted-out bit is the
+        // 2^AW term), so the bank value equals g_ld3k's sum of the selected terms mod 2^AW.
+        reg          ldp_v, ldq_v, ldp_bank, ldq_bank;
+        always @(posedge clk_stage[0] or negedge rst_n) begin
+            if (!rst_n) begin ldp_v <= 1'b0; ldq_v <= 1'b0; end
+            else begin ldp_v <= ld_e; ldq_v <= ldp_v; end
+        end
+        always @(posedge clk_stage[0]) begin
+            if (ld_e) ldp_bank <= ldbank_e;
+            if (ldp_v) ldq_bank <= ldp_bank;
+        end
+        genvar ss, jj, kk;
+        wire [5*AW-1:0] s_bus;
+        integer s;
+        always @(posedge clk_stage[0])
+            if (ldq_v)
+                for (s = 0; s < 5; s = s + 1)
+                    if (ldq_bank) off1[s] <= s_bus[s*AW +: AW]; else off0[s] <= s_bus[s*AW +: AW];
+        for (ss = 0; ss < 5; ss = ss + 1) begin : g_s
+            wire [6*AW-1:0] cs1;                       // per group jj: sum row 2*jj, carry row 2*jj + 1
+            for (jj = 0; jj < 3; jj = jj + 1) begin : g_j
+                localparam integer LO = (jj == 0) ? 0 : (jj == 1) ? G1 : G2;
+                localparam integer HI = (jj == 0) ? G1 : (jj == 1) ? G2 : LN;
+                wire [4*AW-1:0] t;
+                for (kk = 0; kk < 4; kk = kk + 1) begin : g_t
+                    if (LO + kk < HI) begin : g_on
+                        assign t[kk*AW +: AW] = lane_id[LO + kk] ? ldc_e[(ss*LN + LO + kk)*AW +: AW] : {AW{1'b0}};
+                    end else begin : g_off
+                        assign t[kk*AW +: AW] = {AW{1'b0}};
+                    end
+                end
+                wire [AW-1:0] t0 = t[0 +: AW], t1 = t[AW +: AW], t2 = t[2*AW +: AW], t3 = t[3*AW +: AW];
+                wire [AW-1:0] s1 = t0 ^ t1 ^ t2;
+                wire [AW-1:0] c1 = ((t0 & t1) | (t0 & t2) | (t1 & t2)) << 1;
+`ifdef LDCS_MUT_NOSHIFT
+                assign cs1[2*jj*AW +: AW] = s1 ^ c1 ^ t3;
+                assign cs1[(2*jj+1)*AW +: AW] = ((s1 & c1) | (s1 & t3) | (c1 & t3));
+`elsif LDCS_MUT_DROPT3
+                assign cs1[2*jj*AW +: AW] = s1 ^ c1;
+                assign cs1[(2*jj+1)*AW +: AW] = (s1 & c1) << 1;
+`else
+                if (LDCS >= 2 && HI-LO <= 3) begin : g_three_terms
+                    // The fourth term is zero: retain the first carry-save rows.
+                    // s1+c1 equals the four-term sum modulo 2^AW; no edge changes.
+                    assign cs1[2*jj*AW +: AW] = s1;
+`ifdef LDCS_MUT_PRUNE_CARRY
+                    assign cs1[(2*jj+1)*AW +: AW] = c1 >> 1;
+`else
+                    assign cs1[(2*jj+1)*AW +: AW] = c1;
+`endif
+                end else begin : g_four_terms
+                    assign cs1[2*jj*AW +: AW] = s1 ^ c1 ^ t3;
+                    assign cs1[(2*jj+1)*AW +: AW] = ((s1 & c1) | (s1 & t3) | (c1 & t3)) << 1;
+                end
+`endif
+            end
+            reg  [6*AW-1:0] p;
+            wire [AW-1:0] r0 = p[0 +: AW], r1 = p[AW +: AW], r2 = p[2*AW +: AW];
+            wire [AW-1:0] r3 = p[3*AW +: AW], r4 = p[4*AW +: AW], r5 = p[5*AW +: AW];
+            wire [AW-1:0] sa = r0 ^ r1 ^ r2, ca = ((r0 & r1) | (r0 & r2) | (r1 & r2)) << 1;
+            wire [AW-1:0] sb = r3 ^ r4 ^ r5, cb = ((r3 & r4) | (r3 & r5) | (r4 & r5)) << 1;
+            wire [AW-1:0] sc = sa ^ ca ^ sb, cc = ((sa & ca) | (sa & sb) | (ca & sb)) << 1;
+`ifdef LDCS_MUT_DROPCB
+            wire [AW-1:0] sd = sc ^ cc, cd = (sc & cc) << 1;
+`else
+            wire [AW-1:0] sd = sc ^ cc ^ cb, cd = ((sc & cc) | (sc & cb) | (cc & cb)) << 1;
+`endif
+            reg  [AW-1:0] q_s, q_c;
+            wire [AW-1:0] s_all;
+            wire          unused_co;
+            ot_hdc_kadd #(.W(AW), .K(1)) u_o (.a(q_s), .b(q_c), .cin(1'b0), .s(s_all), .cout(unused_co));
+            assign s_bus[ss*AW +: AW] = s_all;
+            always @(posedge clk_stage[0]) begin
+`ifdef LDCS_MUT_STALE
+                if (ldp_v) p <= cs1;
+`else
+                if (ld_e) p <= cs1;
+`endif
+                if (ldp_v) begin q_s <= sd; q_c <= cd; end
             end
         end
     end endgenerate

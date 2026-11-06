@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "faecd095101b0b673d0cc87586e7f33ac8da7d6b",
+ "flow_tag": "flow-20261106-ad-s81",
+ "routed_db": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/6_final.odb",
+ "build_commit": "75e186f4e710a070ffa48ee9bdbba2186a9dfaad",
+ "lec": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/resign_ad/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/resign_ad/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1",
+ "original_signoff": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/i1/signoff/signoff.json",
+ "name": "kl_dsdv_idx_txm_grp_vA",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "key-cardinal",
+ "created": "2026-11-06 02:35 PST",
+ "routed_db_sha256": "ff579dd13d528dd494fbd0098840d889d5a3417a8a059dc49c86913cdea69c1b",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch3/claude/codex-idx-child-ad-1106/tag_ad/tools/die_plan",
+  "sha256": {
+   "signoff.py": "b9b4ba551775a439e7a934fb176587ff8f1134b918d23e036bec38c498edfbb9",
+   "lec.py": "313d77f094144205893055f199eff7274f8ecc2aea2c0caae3d2eb05958542e6"
+  },
+  "checked": "byte-identical to flow-20261106-ad-s81"
+ },
+ "lane": "CODEX-S81-CORES",
+ "as_run_note": "Exact unchanged signed child DB fresh at pinned parent ad tag for same-flow ETM qualification; no physical rerun, no signal cycles; original v pass retained"
+}

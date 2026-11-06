@@ -1,0 +1,62 @@
+{
+ "base_commit": "fefda1602d6cb747e67afc3255b1fa271cea9d69",
+ "active_lane_count": 422,
+ "active_lane_records_sha256": "41fab6ef3822f93e41917d51bd12fecc380d308fe9ae8d47bf48cf8f7fd33343",
+ "new_active_lane_records_sha256": "41fab6ef3822f93e41917d51bd12fecc380d308fe9ae8d47bf48cf8f7fd33343",
+ "hardcore_records_sha256": "ce8d34843ed7b29d12c3ce272f3d82314a01a2e0b320e0c1f46804c6c424f8ed",
+ "new_hardcore_records_sha256": "ce8d34843ed7b29d12c3ce272f3d82314a01a2e0b320e0c1f46804c6c424f8ed",
+ "internal_station_records_sha256": "f7c5f0db843d9a5cad6fa0063db0ebd535364b4a15ecc77eb749c85a34537bc1",
+ "new_internal_station_records_sha256": "f7c5f0db843d9a5cad6fa0063db0ebd535364b4a15ecc77eb749c85a34537bc1",
+ "unchanged_files_sha256": {
+  "core_conns.json.gz": "bf614d637fb9f05049c742e86710049718a61a2b28f382747b6a460af6e1a8fa",
+  "clock_entries.json.gz": "79e0ae635535a60189017a111f68de13aed53c513037a65804381c21e039baa3",
+  "core_macros.json": "d9626da09fbf2a18adf234ff9f373c73ea19587041ec6da195965bbb50d1ed7f"
+ },
+ "ft_geometry_differences": [],
+ "physical_geometry_changes": 0,
+ "native_root_restoration_source": "epyc2:/srv/opentallas-scratch2/claude/hbm-bind-6/m89/r5_NE/die_plan.json; exact root origin/outline matches current; six named endpoints used in actual m79f native root",
+ "native_root_bus_port_matches": [
+  {
+   "name": "L5037_o",
+   "payload_bits": 1980,
+   "dir": "out",
+   "native_epoch_bits": 1,
+   "match": true
+  },
+  {
+   "name": "L5038_i",
+   "payload_bits": 279,
+   "dir": "in",
+   "native_epoch_bits": 1,
+   "match": true
+  },
+  {
+   "name": "L5057_i",
+   "payload_bits": 297,
+   "dir": "in",
+   "native_epoch_bits": 1,
+   "match": true
+  },
+  {
+   "name": "L5062_o",
+   "payload_bits": 178,
+   "dir": "out",
+   "native_epoch_bits": 1,
+   "match": true
+  },
+  {
+   "name": "L5097_i",
+   "payload_bits": 8,
+   "dir": "in",
+   "native_epoch_bits": 1,
+   "match": true
+  },
+  {
+   "name": "L7504_i",
+   "payload_bits": 297,
+   "dir": "in",
+   "native_epoch_bits": 1,
+   "match": true
+  }
+ ]
+}

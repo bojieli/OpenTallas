@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.xfin_latest_publication.v1",
+  "basis": "SS33-TOK 2026-11-05 08:39 measured 16 slices; current nf1 confirmed by S81 owner",
+  "old_first": 234,
+  "old_latest": 247,
+  "new_first": 243,
+  "new_latest": 261,
+  "prior_plan_row": 248,
+  "new_plan_row": 261,
+  "added_plan_cycles": 13,
+  "added_plan_ps_at_833": 10829,
+  "issue_rows_changed": false,
+  "hardware_words_changed": false,
+  "consumers": [
+    "tools/s81_dv/dv_layer_compile.py lower_norm plan_only XQ event",
+    "tools/s81_dv/layer_prog/lower_head.py plan_only XB egress events"
+  ],
+  "scope": "plan publication/model only; native snake/all-gather and QDELAYS schedule not qualified",
+  "beat_normr_prior": 115,
+  "beat_normr_current": 117,
+  "beat_normr_basis": "SS34-TOK 2026-11-05 09:37 measured 80/80 beats + mutant caught; other SLBEAT fields unchanged",
+  "combined_plan_publication_added_cycles": 15,
+  "combined_plan_publication_added_ps_at_833": 12495
+}

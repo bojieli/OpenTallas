@@ -43,6 +43,7 @@ import datetime
 import fcntl
 import fnmatch
 import hashlib
+from functools import lru_cache
 import json
 import math
 import os
@@ -105,7 +106,7 @@ QCOLS = ["die", "type", "kit", "src", "geom", "geom_ref", "mem_gb", "cells", "la
 # PER-DIE FLOW RELEASES (METHODOLOGY 12.9e, OWNER 2026-10-26): flow-YYYYMMDD-a|b covers every die;
 # flow-YYYYMMDD-a|b-<die tag> covers only that die (route holds / provenance lift per die; a die whose canary is
 # pending keeps its previous tag).
-FLOW_TAG_RE = re.compile(r"^flow-\d{8}-[a-z](?:-(qc|s81|head|kv|hbm))?$")
+FLOW_TAG_RE = re.compile(r"^flow-\d{8}-[a-z]+(?:-(qc|s81|head|kv|hbm))?$")
 DIE_FLOW_TAG = {"qwen_compute": "qc", "s81": "s81", "cp1": "s81", "s81_head": "head", "qwen_kvsys": "kv", "kv": "kv",
                 "hbm": "hbm"}
 
@@ -578,6 +579,19 @@ txt = "\n".join(rd(p, 200000) for p in logs if os.path.getmtime(p) >= since)
 runlog = rd(os.path.join(K, "run_%s.log" % goal), 400000)
 alltxt = txt + "\n" + runlog
 out["runlog_tail"] = runlog[-600:]
+# A legacy gate can write a PASS receipt, then throw in its clock-source census.
+# This is a tool failure, not a timing verdict. Require all three current-run
+# witnesses; PASS/exit 1 alone must never override a real setup/hold failure.
+marker = out.get("FAIL_POSTCTS", "")
+p = os.path.join(K, "postcts_gate_tt.json")
+q = os.path.join(K, "postcts_gate_TT.log")
+if ("TT global-routing insertion gate failed: PASS exit 1" in marker
+        and os.path.isfile(p) and os.path.getmtime(p) >= since
+        and os.path.isfile(q) and os.path.getmtime(q) >= since
+        and (jl(p) or {}).get("verdict") == "PASS"):
+    m = re.search(r"(?m)^Error: grt_policy_tt\.tcl, \d+ clock [^\n]+ has no unique rise source insertion arrival\s*$", rd(q))
+    if m:
+        out["clock_source_error"] = m.group(0).strip()[:300]
 pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[^\n]*|[Rr]outing congestion too high[^\n]*",
        "segfault": r"Segmentation fault[^\n]*|Signal 11 received[^\n]*|SIGSEGV[^\n]*|core dumped[^\n]*",
        "oom": r"Error 137[^\n]*|\] Error 247[^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
@@ -602,6 +616,9 @@ for js in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*.json
         if k.endswith("__design__instance__count__stdcell") and isinstance(v, (int, float)):
             cells = max(cells, int(v))
 out["cells"] = cells
+nc = jl(os.path.join(K, "native_cell_count.json")) or {}
+if nc.get("schema") == "opentallas.native_cell_count.v1" and type(nc.get("stdcells")) is int:
+    out["native_cells"] = nc["stdcells"]
 g = rd(next(iter(glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "5_1_grt.log"))), ""))
 tot = re.findall(r"^Total\s+.*?(\d+)\s*$", g, re.M)
 out["grt_overflow"] = int(tot[-1]) if tot else None
@@ -931,14 +948,17 @@ def classify(c, client):
         return "STRUCTURAL", "routed-not-signed", reasons
     if c.get("FAIL_PREFLOOR"):
         return "STRUCTURAL", "preflight", "FAIL_PREFLOOR " + c["FAIL_PREFLOOR"]
+    if (c.get("clock_source_error") and
+            "TT global-routing insertion gate failed: PASS exit 1" in c.get("FAIL_POSTCTS", "")):
+        # Not in INFRA_KINDS: keep the physical checkpoint and await the fixed
+        # flow/source refresh; retrying the same broken gate cannot help.
+        return "CRASH", "infra-clock-source", c["clock_source_error"]
     if c.get("FAIL_POSTCTS"):
         return "STRUCTURAL", "post-cts-hold", "FAIL_POSTCTS " + c["FAIL_POSTCTS"]
     if c.get("hold_structural"):
         return "STRUCTURAL", "hold-structural", c["hold_structural"]
     if c.get("congestion"):
         return "STRUCTURAL", "grt-overflow", c["congestion"]
-    if c.get("cells", 0) > CELL_CAP:
-        return "STRUCTURAL", "cell-cap", f"{c['cells']} std cells > {CELL_CAP}"
     if c.get("gate_fail"):
         # CRASH-TRIAGE 10-25: 8 rows (CORE_PREFLIGHT shared, RP1_GATE FF hold, SDC_LINT) were design verdicts
         # filed as CRASH because the runner printed the gate line without a FAIL_* marker file
@@ -955,6 +975,12 @@ def classify(c, client):
         # COORD 11-05 07:01: exit 137/143 with no memory line in the logs is a signal from outside, usually a lane's
         # docker stop, not an OOM (opstore_b stopped by ruling 06:51 came back 06:58). Not in INFRA_KINDS: no retry.
         return "CRASH", "infra-stopped", f"exit {client['exit']}, no OOM line in the run logs: stopped from outside"
+    # KW-RELAUNCH-2 11-05: the cap is judged after the infra outcomes (sle_ctl a7630b8a28e2 was NOT RUN on a disk floor
+    # and filed as cell-cap), on the kit's own pre-floorplan native count when it has one (the post-place stdcell
+    # count adds TAPCELL/endcaps: 522k placed = 316k native), the basis kit_wave.after_place and native_cell_cap.tcl use.
+    cells = c.get("native_cells", c.get("cells", 0)) or 0
+    if cells > CELL_CAP:
+        return "STRUCTURAL", "cell-cap", f"{cells} std cells > {CELL_CAP}"
     if client.get("exit") == 0 and c.get("goal") == "grt" and c.get("grt_odb"):
         if c.get("grt_overflow") not in (None, 0):
             return "STRUCTURAL", "grt-overflow", f"GRT-only overflow {c['grt_overflow']}"
@@ -1047,17 +1073,16 @@ def launch_unit(unit, logfile, argv):
 
 
 # ------------------------------------------------------------------------------------------------ actions
-def process_uses_kit(argv, path):
-    """A parent staging directory owns its nested kits even when ot-run spills to another host."""
-    path = path.rstrip("/")
-    if re.search(re.escape(path) + r"(?=[/\s]|$)", argv):
-        return True
+@lru_cache(maxsize=4096)
+def process_staging_roots(argv):
+    """Parse each immutable live argv once across the tick's many ownership queries."""
     try:
         words = shlex.split(argv)
     except ValueError:
-        return True  # malformed live client: retain data until it can be identified
+        return None  # malformed live client: retain data until it can be identified
     if not any(w.rsplit("/", 1)[-1] == "ot-run" for w in words):
-        return False
+        return ()
+    roots = []
     for i, word in enumerate(words):
         candidate = None
         if word in ("--dir", "--stage") and i + 1 < len(words):
@@ -1065,22 +1090,29 @@ def process_uses_kit(argv, path):
         elif word.startswith(("--dir=", "--stage=")):
             candidate = word.split("=", 1)[1]
         if candidate and candidate.startswith("/srv/opentallas-scratch") and "/claude/" in candidate:
-            if path.startswith(candidate.rstrip("/") + "/"):
-                return True
-    return False
+            roots.append(candidate.rstrip("/"))
+    return tuple(roots)
+
+
+def process_uses_kit(argv, path):
+    """A parent staging directory owns its nested kits even when ot-run spills to another host."""
+    path = path.rstrip("/")
+    if path in argv and re.search(re.escape(path) + r"(?=[/\s]|$)", argv):
+        return True
+    roots = process_staging_roots(argv)
+    return roots is None or any(path.startswith(root + "/") for root in roots)
 
 
 def hub_procs(path):
     """processes on the hub (ot-run clients, local docker run / run_kit.sh) whose command line names the kit dir
     -> [(pid, elapsed_s)]; ot-run clients always run here, also when the job itself spilled to another host"""
     rc, out, _ = sh(["ps", "-eo", "pid=,etimes=,args="], timeout=60)
-    pat = re.compile(re.escape(path.rstrip("/")) + r"(?=[/\s]|$)")
     me = os.getpid()
     res = []
     for line in out.splitlines():
         f = line.split(None, 2)
-        if len(f) == 3 and f[0].isdigit() and int(f[0]) != me and process_uses_kit(f[2], path) and "autopilot" not in f[2] \
-                and not f[2].startswith(("ssh ", "python3 -I -")):
+        if len(f) == 3 and f[0].isdigit() and int(f[0]) != me and "autopilot" not in f[2] \
+                and not f[2].startswith(("ssh ", "python3 -I -")) and process_uses_kit(f[2], path):
             res.append((int(f[0]), int(f[1])))
     return res
 
@@ -2234,6 +2266,21 @@ def finish(st, j, c, client):
             return
     set_status(st, j, cls, f"{kind}: {reasons[:200]}")
     after_class(st, j)
+    released_cleanup()
+
+
+def released_cleanup():
+    """Terminal notification only: owners explicitly queue exact file releases."""
+    queue = Path(os.environ.get("OT_REAPER_RELEASE_QUEUE", "~/.local/state/ot-reaper/releases")).expanduser()
+    runner = Path(os.environ.get("OT_REAPER_RELEASE_RUNNER", "~/.local/lib/fleet/released-reaper-1106/ot-reaper.py")).expanduser()
+    if not runner.is_file() or not queue.is_dir() or not any(queue.glob("*.json")):
+        return
+    try:
+        with (queue.parent / "routine.log").open("a") as stream:
+            subprocess.Popen([sys.executable, str(runner), "--released-manifest", str(queue)],
+                             stdin=subprocess.DEVNULL, stdout=stream, stderr=subprocess.STDOUT, start_new_session=True)
+    except OSError as error:
+        log(f"released cleanup deferred to periodic pass: {error}")
 
 
 def after_class(st, j):
@@ -2809,6 +2856,10 @@ def classify_cmd(args):
 
 
 def main(argv=None):
+    operator_args = sys.argv[1:] if argv is None else argv
+    if operator_args[:1] == ["reconcile-wave"]:
+        import wave_reconcile
+        return wave_reconcile.main(operator_args[1:])
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)
     t = sp.add_parser("tick")
@@ -2819,6 +2870,7 @@ def main(argv=None):
     c.add_argument("--since", type=float, default=0)
     c.add_argument("--goal", default="route")
     c.add_argument("--exit", type=int, default=None)
+    sp.add_parser("reconcile-wave", help="read-only current-row/terminal-job report and approved recovery suggestions")
     a = ap.parse_args(argv)
     return {"tick": tick, "status": status, "classify": classify_cmd}[a.cmd](a)
 

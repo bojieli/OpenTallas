@@ -7,7 +7,7 @@
 // Only crossing ports change; die-facing ports keep their registers.  The cut regs only reset to the values their sources
 // already hold in reset (valid state resets), so the unreset face flops flush within 2 reset edges (reset contract 64).
 // DMUT (bench mutants): 1 rstop keeps the ri input reg (+1); 2 status takes the ring fault at the flags stage (+2);
-// 3 hub keeps the cco input regs (+1); 4 rcl inverts the ri return port.
+// 3 hub keeps the cco input regs (+1); 4 rcl inverts the ri return port; 5 hub popcount drops source 9 (B13).
 `default_nettype none
 // Compiler scheduled successor of the historical B2 ring stop. The flit ABI
 // stays 2224 bits. Every injected, forwarded, replayed and committed beat has
@@ -216,6 +216,19 @@ module ot_vms_hub_static_pc #(
     reg active[0:N-1][0:3], writes[0:N-1][0:3];
     reg [2:0] expected[0:N-1][0:3], seen[0:N-1][0:3];
     reg [2:0] arrivals[0:N-1][0:3];
+    reg [9:0] hit[0:N-1][0:3];   // B13: one bit per response source (8 banks + 2 ring stops)
+    function automatic [2:0] pc10(input [9:0] h);   // balanced popcount mod 8 (was a serial +1 chain)
+        reg [1:0] s0,s1,s2,s3,s4;
+        reg [2:0] t0,t1;
+        reg [3:0] u;
+        begin
+            s0={1'b0,h[0]}+{1'b0,h[1]}; s1={1'b0,h[2]}+{1'b0,h[3]}; s2={1'b0,h[4]}+{1'b0,h[5]};
+            s3={1'b0,h[6]}+{1'b0,h[7]}; s4={1'b0,h[8]}+{1'b0,h[9]};
+            t0={1'b0,s0}+{1'b0,s1}; t1={1'b0,s2}+{1'b0,s3};
+            u={1'b0,t0}+{1'b0,t1}+{2'b0,s4};
+            pc10=u[2:0];
+        end
+    endfunction
     reg [255:0] returned_data[0:N-1][0:3];
     reg [N*274-1:0] cr_next;
     reg [8*285-1:0] pq_next;
@@ -331,7 +344,7 @@ module ot_vms_hub_static_pc #(
             if(q[335:325]!=0||q[308:304]!=0||(q[324]&&q[323:322]!=0)||(c==NC&&!q[324]&&q[323:322]!=me)) fault[2]=1;
             for(integer w=0;w<8;w=w+1) if(q[336]&&q[16+4*w+:4]!={4{wm[w]}}) fault[1]=1;
         end
-        for(c=0;c<N;c=c+1) for(k=0;k<4;k=k+1) begin arrivals[c][k]=0; returned_data[c][k]=0; end
+        for(c=0;c<N;c=c+1) for(k=0;k<4;k=k+1) begin arrivals[c][k]=0; hit[c][k]=0; returned_data[c][k]=0; end
         // Tag-decode demultiplex only; no response priority or ready signals.
         for(b=0;b<10;b=b+1) begin
             if(b<8) begin
@@ -346,11 +359,12 @@ module ot_vms_hub_static_pc #(
                 if(rc>=N) fault[0]=1;
                 else begin
                     if(!active[rc][rs]||writes[rc][rs]!=rp[256]) fault[0]=1;
-                    arrivals[rc][rs]=arrivals[rc][rs]+3'd1;
+                    hit[rc][rs][b]=!(DMUT==5 && b==9);
                     returned_data[rc][rs]=returned_data[rc][rs]|rp[255:0];
                 end
             end
         end
+        for(c=0;c<N;c=c+1) for(k=0;k<4;k=k+1) arrivals[c][k]=pc10(hit[c][k]);
         for(c=0;c<N;c=c+1) begin
             for(k=0;k<4;k=k+1) if(arrivals[c][k]!=0)
                 if({1'b0,seen[c][k]}+{1'b0,arrivals[c][k]}>{1'b0,expected[c][k]}) fault[0]=1;
@@ -447,7 +461,7 @@ module ot_vms_rcl_static_pc #(parameter integer MUT=0, parameter integer DMUT=0)
 endmodule
 // Real status producer for command processor vmstat19. Three balanced adder
 // rungs saturate the eight bank CE counters; all faults follow the same delay.
-module ot_vms_status_static_pc #(parameter integer DMUT=0) (
+module ot_vms_status_static_pc #(parameter integer DMUT=0, parameter integer STATUS_INPUT_STAGE=0) (
     input wire clk,rst_n,
     input wire [143:0] bank_status,
     input wire [2:0] hub_status,
@@ -455,30 +469,49 @@ module ot_vms_status_static_pc #(parameter integer DMUT=0) (
     input wire ring_fault_late,  // ring stop faults over a crossing: 2 face edges late = the flags1 stage
     output reg [18:0] vmstat
 );
+    // Optional input register separates face-to-status reach from the adder (STATUS_INPUT_STAGE=1);
+    // numeric/flag paths and actual warmup gain one edge only when enabled. sum_valid guards unreset input state.
+    reg [143:0] bank_status_q;
+    reg [2:0] hub_status_q;
+    reg ring_fault_q, ring_fault_late_q;
+    generate if (STATUS_INPUT_STAGE != 0) begin : g_status_input
+        always @(posedge clk) begin
+            bank_status_q<=bank_status; hub_status_q<=hub_status;
+            ring_fault_q<=ring_fault; ring_fault_late_q<=ring_fault_late;
+        end
+    end else begin : g_status_direct
+        // Default is the released direct frame: no input state or added warmup edge.
+        always @* begin
+            bank_status_q=bank_status; hub_status_q=hub_status;
+            ring_fault_q=ring_fault; ring_fault_late_q=ring_fault_late;
+        end
+    end endgenerate
+    localparam integer STATUS_VALID_STAGES = (STATUS_INPUT_STAGE != 0) ? 3 : 2;
+
     reg [16:0] pair_sum[0:3];
     reg [17:0] half_sum[0:1];
     reg [2:0] flags0,flags1;
-    reg [1:0] sum_valid;
+    reg [STATUS_VALID_STAGES-1:0] sum_valid;
     wire [18:0] total={1'b0,half_sum[0]}+{1'b0,half_sum[1]};
     reg [2:0] flags;
     always @* begin
-        flags={hub_status[2]|hub_status[0]|ring_fault|(DMUT==2 && ring_fault_late),hub_status[1],1'b0};
+        flags={hub_status_q[2]|hub_status_q[0]|ring_fault_q|(DMUT==2 && ring_fault_late_q),hub_status_q[1],1'b0};
         for(integer b=0;b<8;b=b+1)begin
-            flags[2]=flags[2]|bank_status[b*18+17];
-            flags[0]=flags[0]|bank_status[b*18+16];
+            flags[2]=flags[2]|bank_status_q[b*18+17];
+            flags[0]=flags[0]|bank_status_q[b*18+16];
         end
     end
     always @(posedge clk)begin
         for(integer i=0;i<4;i=i+1)
-            pair_sum[i]<={1'b0,bank_status[(i*2)*18+:16]}+{1'b0,bank_status[(i*2+1)*18+:16]};
+            pair_sum[i]<={1'b0,bank_status_q[(i*2)*18+:16]}+{1'b0,bank_status_q[(i*2+1)*18+:16]};
         half_sum[0]<={1'b0,pair_sum[0]}+{1'b0,pair_sum[1]};
         half_sum[1]<={1'b0,pair_sum[2]}+{1'b0,pair_sum[3]};
     end
     always @(posedge clk or negedge rst_n)
         if(!rst_n)begin flags0<=0;flags1<=0;sum_valid<=0;vmstat<=0;end
         else begin
-            flags0<=flags;flags1<=flags0;sum_valid<={sum_valid[0],1'b1};
-            vmstat<=sum_valid[1]?{flags1|{DMUT!=2 && ring_fault_late,2'b0},(|total[18:16])?16'hffff:total[15:0]}:19'd0;
+            flags0<=flags;flags1<=flags0;sum_valid<={sum_valid[STATUS_VALID_STAGES-2:0],1'b1};
+            vmstat<=sum_valid[STATUS_VALID_STAGES-1]?{flags1|{DMUT!=2 && ring_fault_late_q,2'b0},(|total[18:16])?16'hffff:total[15:0]}:19'd0;
         end
 endmodule
 `default_nettype wire

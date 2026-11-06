@@ -25058,7 +25058,7 @@
     {"inst":"u_bound.u_u_seqhost.u.u_u.u_l2.u_tts","module":"ot_sram_1r1w_128x256_m1_r2c2","status":"new","lef":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef","lib":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib","origin_um":[794.88,665.292],"outline_um":[94.824,41.064],"orient":"R0","obs_max":"M4","note":"DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"},
     {"inst":"u_bound.u_u_seqhost.u.u_u.u_l0.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem0","module":"ot_sram_1r1w2c_16x257_m1_p192","status":"new","lef":"physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x257_m1_p192/ot_sram_1r1w2c_16x257_m1_p192.lef","lib":"physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x257_m1_p192/ot_sram_1r1w2c_16x257_m1_p192_tt.lib","origin_um":[604.8,406.092],"outline_um":[89.448,76.968],"orient":"R0","obs_max":"M4","note":"DIE-S81-42 10-31 seqhost SRAM FIFO site (delta_seqhost_sram_1031.py)"},
     {"inst":"u_bound.u_u_seqhost.u.u_u.u_l0.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1","module":"ot_sram_1r1w2c_16x257_m1_p192","status":"new","lef":"physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x257_m1_p192/ot_sram_1r1w2c_16x257_m1_p192.lef","lib":"physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x257_m1_p192/ot_sram_1r1w2c_16x257_m1_p192_tt.lib","origin_um":[604.8,501.132],"outline_um":[89.448,76.968],"orient":"R0","obs_max":"M4","note":"DIE-S81-42 10-31 seqhost SRAM FIFO site (delta_seqhost_sram_1031.py)"},
-    {"inst":"u_bound.u_u_seqhost.u.u_u.u_l0.u_h.host.u_hi.g_ox_sram.u_ox.g_rsz1.u_mem","module":"ot_sram_1r1w2c_16x289_m1_p192","status":"new","lef":"physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x289_m1_p192/ot_sram_1r1w2c_16x289_m1_p192.lef","lib":"physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x289_m1_p192/ot_sram_1r1w2c_16x289_m1_p192_tt.lib","origin_um":[708.48,725.772],"outline_um":[99.144,86.136],"orient":"R0","obs_max":"M4","note":"DIE-S81-42 10-31 seqhost SRAM FIFO site (delta_seqhost_sram_1031.py)"},
+    {"inst":"u_bound.u_u_seqhost.u.u_u.u_l0.u_h.host.u_hi.g_ox_sram.u_ox.genblk2.g_rsz1.u_mem","module":"ot_sram_1r1w2c_16x289_m1_p192","status":"new","lef":"physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x289_m1_p192/ot_sram_1r1w2c_16x289_m1_p192.lef","lib":"physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x289_m1_p192/ot_sram_1r1w2c_16x289_m1_p192_tt.lib","origin_um":[708.48,725.772],"outline_um":[99.144,86.136],"orient":"R0","obs_max":"M4","note":"DIE-S81-42 10-31 seqhost SRAM FIFO site (delta_seqhost_sram_1031.py); inst ...u_ox.genblk2.g_rsz1.u_mem = Yosys name of the else-if branch (DIE-S81-66 11-05 MPL-0020 fix)"},
     {"inst":"u_bound.u_u_seqhost.u.u_u.u_l0.u_sd.u_mem","module":"ot_sram_1r1w2c_16x289_m1_p192","status":"new","lef":"physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x289_m1_p192/ot_sram_1r1w2c_16x289_m1_p192.lef","lib":"physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x289_m1_p192/ot_sram_1r1w2c_16x289_m1_p192_tt.lib","origin_um":[708.48,829.452],"outline_um":[99.144,86.136],"orient":"R0","obs_max":"M4","note":"DIE-S81-42 10-31 seqhost SRAM FIFO site (delta_seqhost_sram_1031.py)"}
    ],
    "note": "unit partition; 1 instance(s) (R0)"
@@ -463096,9 +463096,9 @@
       "ft3_i": {
        "ring_place": "ff",
        "rect_um": [
-        227.88,
-        1099.44,
-        253.8,
+        302.4,
+        1144.8,
+        388.8,
         1209.228
        ],
        "width": 514,
@@ -463109,7 +463109,7 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 207.306,
+       "max_pin_to_band_hop_um": 351.84,
        "area_reserve_um2": 2636.064,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_ft3_i"
@@ -468045,7 +468045,15 @@
     "obstacle_model": "lef_origin"
    },
    "contents": [
-    {"inst":"u_gunit","module":"dsdv_gunit","status":"rework","params":{"SID":"4'd3"},"note":"re-aspected 950x1469 -> 2-cell row slot"}
+    {"inst":"u_gunit","module":"dsdv_gunit","status":"rework","params":{"SID":"4'd3"},"note":"re-aspected 950x1469 -> 2-cell row slot"},
+    {"inst":"u_bound.u_u_gunit_g_l1f_0_u_l1f.g_m[0].u_b","module":"ot_sram_1r1w_128x256_m1_r2c2","status":"new","lef":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef","lib":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib","origin_um":[552.96,224.652],"outline_um":[94.824,41.064],"orient":"R0","obs_max":"M4","note":"DIE-S81-66/PLAN 11-05 gunit l1f SRAM site (delta_gunit_l1f_sites_1105.py)"},
+    {"inst":"u_bound.u_u_gunit_g_l1f_0_u_l1f.g_m[1].u_b","module":"ot_sram_1r1w_128x256_m1_r2c2","status":"new","lef":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef","lib":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib","origin_um":[552.96,328.332],"outline_um":[94.824,41.064],"orient":"R0","obs_max":"M4","note":"DIE-S81-66/PLAN 11-05 gunit l1f SRAM site (delta_gunit_l1f_sites_1105.py)"},
+    {"inst":"u_bound.u_u_gunit_g_l1f_1_u_l1f.g_m[0].u_b","module":"ot_sram_1r1w_128x256_m1_r2c2","status":"new","lef":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef","lib":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib","origin_um":[552.96,388.812],"outline_um":[94.824,41.064],"orient":"R0","obs_max":"M4","note":"DIE-S81-66/PLAN 11-05 gunit l1f SRAM site (delta_gunit_l1f_sites_1105.py)"},
+    {"inst":"u_bound.u_u_gunit_g_l1f_1_u_l1f.g_m[1].u_b","module":"ot_sram_1r1w_128x256_m1_r2c2","status":"new","lef":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef","lib":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib","origin_um":[552.96,483.852],"outline_um":[94.824,41.064],"orient":"R0","obs_max":"M4","note":"DIE-S81-66/PLAN 11-05 gunit l1f SRAM site (delta_gunit_l1f_sites_1105.py)"},
+    {"inst":"u_bound.u_u_gunit_g_l1f_2_u_l1f.g_m[0].u_b","module":"ot_sram_1r1w_128x256_m1_r2c2","status":"new","lef":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef","lib":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib","origin_um":[552.96,544.332],"outline_um":[94.824,41.064],"orient":"R0","obs_max":"M4","note":"DIE-S81-66/PLAN 11-05 gunit l1f SRAM site (delta_gunit_l1f_sites_1105.py)"},
+    {"inst":"u_bound.u_u_gunit_g_l1f_2_u_l1f.g_m[1].u_b","module":"ot_sram_1r1w_128x256_m1_r2c2","status":"new","lef":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef","lib":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib","origin_um":[552.96,604.812],"outline_um":[94.824,41.064],"orient":"R0","obs_max":"M4","note":"DIE-S81-66/PLAN 11-05 gunit l1f SRAM site (delta_gunit_l1f_sites_1105.py)"},
+    {"inst":"u_bound.u_u_gunit_g_l1f_3_u_l1f.g_m[0].u_b","module":"ot_sram_1r1w_128x256_m1_r2c2","status":"new","lef":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef","lib":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib","origin_um":[552.96,665.292],"outline_um":[94.824,41.064],"orient":"R0","obs_max":"M4","note":"DIE-S81-66/PLAN 11-05 gunit l1f SRAM site (delta_gunit_l1f_sites_1105.py)"},
+    {"inst":"u_bound.u_u_gunit_g_l1f_3_u_l1f.g_m[1].u_b","module":"ot_sram_1r1w_128x256_m1_r2c2","status":"new","lef":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef","lib":"physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib","origin_um":[552.96,794.892],"outline_um":[94.824,41.064],"orient":"R0","obs_max":"M4","note":"DIE-S81-66/PLAN 11-05 gunit l1f SRAM site (delta_gunit_l1f_sites_1105.py)"}
    ],
    "hard_cores": [
     {"inst":"u_gunit.u_l5","module":"dsdv_gunit_l5","lef":"physical/ref_tile/dsdv_gunit_l5/views/dsdv_gunit_l5/dsdv_gunit_l5.lef","origin_um":[1270.08,17.28],"outline_um":[345.6,302.4],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/dsdv_gunit_l5.json","obs_max":"M5"},
@@ -469137,7 +469145,7 @@
     {"inst":"u_bk_sel.u_sel.g_q[1].u_q","module":"dsdv_bksel_q","lef":"physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q.lef","origin_um":[699.84,34.56],"outline_um":[648.0,648.0],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_bksel_q.json","obs_max":"M7","lib":"physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q_tt.lib"},
     {"inst":"u_bk_sel.u_sel.g_q[2].u_q","module":"dsdv_bksel_q","lef":"physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q.lef","origin_um":[1365.12,34.56],"outline_um":[648.0,648.0],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_bksel_q.json","obs_max":"M7","lib":"physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q_tt.lib"},
     {"inst":"u_bk_sel.u_sel.g_q[3].u_q","module":"dsdv_bksel_q","lef":"physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q.lef","origin_um":[2030.4,34.56],"outline_um":[648.0,648.0],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_bksel_q.json","obs_max":"M7","lib":"physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q_tt.lib"},
-    {"inst":"u_bk_sel.u_tx","module":"dsdv_idx_tx_n32","lef":"physical/die_plan/s81/cores/legacy/lef/dsdv_idx_tx_n32_clkm5_1101.lef","origin_um":[2695.68,34.56],"outline_um":[626.4,561.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_idx_tx_n32_clkm5_1101.json","obs_max":"M5","lib":"physical/s81_die_views/closed_import/dsdv_idx_tx_n32/dsdv_idx_tx_n32_tt.lib"},
+    {"inst":"u_bk_sel.u_tx","module":"dsdv_idx_tx_n32","lef":"physical/die_plan/s81/cores/legacy/lef/dsdv_idx_tx_n32_clkm5_1101.lef","origin_um":[2695.68,34.56],"outline_um":[626.4,561.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_idx_tx_n32_clkm5_1101.json","obs_max":"M6","lib":"physical/s81_die_views/closed_import/dsdv_idx_tx_n32/dsdv_idx_tx_n32_tt.lib"},
     {"inst":"u_bk_sel.u_sel.u_c","module":"dsdv_bksel_c","lef":"physical/die_plan/s81/cores/views/bksel_c3_1104/dsdv_bksel_c/dsdv_bksel_c.lef","origin_um":[3343.68,34.56],"outline_um":[388.8,129.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_bksel_c_c3_1104.json","obs_max":"M6","lib":"physical/die_plan/s81/cores/views/bksel_c3_1104/dsdv_bksel_c/dsdv_bksel_c_tt.lib"},
     {"inst":"u_bk_sel.u_sel.u_g","module":"dsdv_bk_g","lef":"physical/die_plan/s81/cores/views/bk_g_rfd8_1104/dsdv_bk_g/dsdv_bk_g.lef","origin_um":[3749.76,34.56],"outline_um":[216.0,172.8],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_bk_g.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/bk_g_rfd8_1104/dsdv_bk_g/dsdv_bk_g_tt.lib"}
    ],
@@ -471307,7 +471315,7 @@
       "name": "clk_t28",
       "xy": [
        1150.308,
-       954.666
+       879.12
       ]
      },
      {
@@ -472303,7 +472311,7 @@
       "name": "clk_t28",
       "xy": [
        1150.308,
-       954.666
+       879.12
       ]
      },
      {

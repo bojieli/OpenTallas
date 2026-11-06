@@ -1,0 +1,26 @@
+Excerpt; full raw log retained at epyc2:/srv/opentallas-scratch2/claude/codex-tkm-phase-proof-1106/actual_precompute_eq.log
+Base case for induction length 1 proven.
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 88 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+[induction step 1] Solving problem with 31803 variables and 89899 clauses..
+Induction step proven: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+Warnings: 2 unique messages, 2 total
+End of script. Logfile hash: 88b396c9e6, time: 6.62s, user: 6.52s, system: 0.17s, MEM: 246.94 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+Time spent: 55% 2x read_verilog (3 sec), 12% 1x sat (0 sec), ...

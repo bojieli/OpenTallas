@@ -105,8 +105,8 @@ module dsdv_idx_txm #(
         genvar b;
         for (b = 0; b < NB; b = b + 1) begin : g_b
             ot_sram_1r1w_1024x256_m2_r2c2 u_mem (
-                .clk(ck), .r_ce_in(re && (NB == 1 || ra[AW-1:10] == b)), .r_addr_in(ra[9:0]), .rd_out(q[b]), // selrange-ok: ra[AW-1:10] is unnecessary at NB=1/D=1024 because constant true NB==1 masks the comparison; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
-                .w_ce_in(we && (NB == 1 || wa[AW-1:10] == b)), .w_addr_in(wa[9:0]), .wd_in(wd), .w_mask_in(wm), // selrange-ok: wa[AW-1:10] is unnecessary at NB=1/D=1024 because constant true NB==1 masks the comparison; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
+                .clk(ck), .r_ce_in(re && (NB == 1 || (ra >> 10) == b)), .r_addr_in(ra[9:0]), .rd_out(q[b]), // selrange-ok: ra[AW-1:10] is unnecessary at NB=1/D=1024 because constant true NB==1 masks the comparison; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
+                .w_ce_in(we && (NB == 1 || (wa >> 10) == b)), .w_addr_in(wa[9:0]), .wd_in(wd), .w_mask_in(wm), // selrange-ok: wa[AW-1:10] is unnecessary at NB=1/D=1024 because constant true NB==1 masks the comparison; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
                 .rr_en(2'b0), .rr_addr(18'b0), .cr_en(2'b0), .cr_sel(16'b0));
         end
         // bank select: one-hot AND-OR (no runtime-indexed part-select)
@@ -114,10 +114,10 @@ module dsdv_idx_txm #(
         integer k;
         always @* begin
             mx = 256'd0;
-            for (k = 0; k < NB; k = k + 1) if (bs == k) mx = mx | q[k];
+            for (k = 0; k < NB; k = k + 1) if (NB == 1 || bs == k) mx = mx | q[k];
         end
         always @(posedge ck) begin
-            if (re) bs <= (NB == 1) ? '0 : ra[AW-1:10]; // selrange-ok: ra[AW-1:10] dead at NB=1/D=1024 because constant ternary chooses zero; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
+            if (re) bs <= (NB == 1) ? '0 : (ra >> 10); // selrange-ok: ra[AW-1:10] dead at NB=1/D=1024 because constant ternary chooses zero; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
             rd <= mx;
         end
     end else begin : g_b

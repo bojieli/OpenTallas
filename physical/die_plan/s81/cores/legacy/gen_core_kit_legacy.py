@@ -147,6 +147,38 @@ def macro_pdn(mplace, macro_dir, obs_max=None):
     return out, info
 
 
+def pg_top_pdn(pdn, info, pg_top=None, obs_max=None):
+    """Opt in to a real M6 exported supply interface above M6 signal OBS.
+
+    The default preserves legacy PDN bytes. A label alone cannot lift PG:
+    M6 stripes, M5/M6 vias and M6 boundary pins are generated together.
+    The containing parent must reserve a real M7 landing bridge.
+    """
+    if pg_top is None or pg_top == "M5":
+        return pdn, info
+    if pg_top != "M6":
+        raise ValueError(f"unsupported pg_top {pg_top!r}; supported M5/M6")
+    if not isinstance(obs_max, str) or not re.fullmatch(r"M[6-9]", obs_max):
+        raise ValueError(f"M6 PG interface requires declared obs_max>=M6, found {obs_max!r}")
+    old = "define_pdn_grid -name {top} -voltage_domains {CORE} -pins {M5}"
+    if pdn.count(old) != 1:
+        raise ValueError("expected exactly one native M5 top PG grid")
+    pdn = pdn.replace(old, old.replace("-pins {M5}", "-pins {M6}"), 1)
+    if "add_pdn_stripe -grid {top} -layer {M6}" not in pdn:
+        pdn += ("# Export actual M6 PG pins; parent landing requires M7.\n"
+                "add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {4.32} -offset {1.968}\n"
+                "add_pdn_connect -grid {top} -layers {M5 M6}\n")
+    elif "add_pdn_connect -grid {top} -layers {M5 M6}" not in pdn:
+        raise ValueError("existing M6 stripes lack M5/M6 PG connection")
+    info = dict(info or {})
+    info.update(schema="opentallas.core_pg_interface.v1", exported_pg_pin_layer="M6",
+                added_pg_layers=["M6"], declared_parent_obs_max=obs_max,
+                abstract_obstruction_min_layer="M6", parent_landing_layer="M7",
+                parent_adoption="requires actual M6 PG pins and explicit parent M7 landing",
+                m6_stripe_um=dict(width=.288, spacing=.096, pitch=4.32, offset=1.968))
+    return pdn, info
+
+
 FACE_GUARD_CORE = r'''"""kits_repin wrapper of tools/die_plan/face_guard.py (copied beside it, unmodified): guard the Yosys netlist with this
 core's clock / reset skip set; planned bits from pins.json (scalar ports by bare name).
     python3 -I face_guard_core.py NETLIST TOP SKIP_RE pins.json OUT.json      exit 1 = FAIL"""
@@ -1291,8 +1323,14 @@ def main():
     spec = json.loads(git_show(spec_src)) if spec_src else json.load(open(REPO / rec["ref_tile"] / "spec.json"))
     mod = spec["top"]
     assert mod == hc["module"], (mod, hc["module"])
+    hcb = []
     if spec.get("children"):
-        raise SystemExit(hard_children_refusal(mod, spec, REPO))
+        if not rec.get("hard_children"):
+            raise SystemExit(hard_children_refusal(mod, spec, REPO))
+        from signed_children import prepare_hard_children
+        spec, hcb = prepare_hard_children(spec, rec["hard_children"], REPO,
+                                         hc["outline_um"], rec.get("core_margin", CORE_MARGIN_UM))
+    hard_masters = {c["master"] for c in hcb}
     mr = multi_root_contract(mod, spec, rec)   # None (single root) or the declared multi-root contract; refuses else
     # S81-CORE-LAT-R21 (COORD R20 ruling (e)): a multi-root core takes a master slice only in the multi-root form
     # (clock_entries[], one entry per root pin, master_slice.py); kit_apply refuses the single-entry form and any
@@ -1355,6 +1393,9 @@ def main():
             if not (md / f"{master}{ext}").is_file():
                 raise SystemExit(f"{master}: no {ext} in {m['view']} (native TT/FF models required)")
             shutil.copyfile(md / f"{master}{ext}", kd / "macros" / f"{master}{ext}")
+        if master in hard_masters:
+            from signed_child_evidence import stage_signed_child_evidence
+            stage_signed_child_evidence(md, master, kd / "macros")
         if f"/work/macros/{master}.lef" not in lefs:
             lefs.append(f"/work/macros/{master}.lef")
             libs.append(f"/work/macros/{master}_tt.lib")
@@ -1374,19 +1415,30 @@ def main():
         ph = (float(mm.group(1)) + float(mm.group(2))) / 2 if mm else 0.012
         for _ in range(int(m.get("count") or 1)):
             idx = len(mplace.setdefault(master, []))
-            if master in sites:
+            if master in hard_masters:
+                x, y = m["at"]
+                o = m.get("orient", "R0")
+            elif master in sites:
                 x, y, o = sites[master][idx]
             else:
                 x, y = m["at"]
                 o = m.get("orient", "R0")
                 y = round(round((y + ph - 0.012) / 0.048) * 0.048 + 0.012 - ph, 4)
             k = (y + ph - 0.012) / 0.048
-            if abs(k - round(k)) > 1e-3:
+            if master not in hard_masters and abs(k - round(k)) > 1e-3:
                 raise SystemExit(f"{master}: site y {y} off the M4 track phase")
             m_ = rec.get("core_margin", CORE_MARGIN_UM)
             if not (x >= m_ and y >= m_ and x + mw <= w - m_ and y + mh <= h - m_):
                 raise SystemExit(f"{master}: site {x},{y} ({mw}x{mh}) outside the core area of {w}x{h}")
             mplace[master].append((x, y, o))
+    if hcb:
+        from kit_assembly import assemble_fixed_children
+        assemble_fixed_children(kd / "rtl", hcb,
+                                rec["hard_children"].get("parameter_contracts", []),
+                                receipt=kd / "kit_assembly.json",
+                                parent_profile=dict(top=mod, parameters=dict(spec.get("params", {}) or {},
+                                                                            **rec.get("params", {}))))
+
     # pins: exact plan centres + plan shapes, on the kit tracks
     m6_off = m6_pin_grant(pins, hc, plan)
     # DIE-S81-52/RF-H 11-03: recipe route_m6 = signal routing up to M6 inside a plan grant obs_max >= M6, no M6 pin (ROM walls block M1-M4)
@@ -1672,6 +1724,7 @@ def main():
     shutil.copyfile(S81 / "cores/svc/pin_audit_core.py", kd / "pin_audit.py")
     shutil.copyfile(S81 / "cores/svc/dump_placed.py", kd / "dump_placed.py")
     pdn_text, pg_interface = macro_pdn(mplace, kd / "macros", hc.get("obs_max"))
+    pdn_text, pg_interface = pg_top_pdn(pdn_text, pg_interface, rec.get("pg_top"), hc.get("obs_max"))
     (kd / "pdn.tcl").write_text(pdn_text)
     if pg_interface is not None:
         (kd / "pg_interface.json").write_text(json.dumps(pg_interface, indent=1) + "\n")
@@ -1809,6 +1862,10 @@ def main():
                       **({"clock_ports": [p for r_ in mr["roots"] for p in r_["pins"]]} if mr else {}))
     planned_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
+    if hcb:
+        from signed_children import hard_children_tcl
+        with (kd / "macro_place.tcl").open("a") as f:
+            f.write(hard_children_tcl(hcb))
     tm = (timing_modes_stage(kd, rec.get("two_mode"))
           if rec.get("two_mode") or (rec.get("two_mode") is None and modern) else None)   # FLOW-20: default-on (modern kits)
     reset_contract = stage_reset_contract(kd, mod)
@@ -1834,6 +1891,7 @@ def main():
               + (["LEC EQUIVALENT (post-synth)", "reg_fanout (post-synth)", "TT/FF insertion (GRT, before route)"] if modern else []) + ["pin_audit", "signoff.py tt,ff"], repo_rev=rev,
               sdc_lint_sha256=sha(TOOL / "sdc_lint.py"), face_guard_sha256=sha(TOOL / "face_guard.py"),
               signoff_sha256=sha(TOOL / "signoff.py"), macros=mplace,
+              **({"hard_children": hcb} if hcb else {}),
               rtl_patches=[dict(file=f, why=pt["why"], sha256=hashlib.sha256(json.dumps(pt["edits"]).encode()).hexdigest())
                            for f, pt in patches.items()], kit_hash=kit_hash(kd))
     if ms is not None:

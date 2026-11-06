@@ -508,6 +508,7 @@ SCHEMA = {
                         "additionalProperties": False,
                         "properties": {"name": _name, "in_face": {"enum": list(FACES)},
                                        "out_face": {"enum": list(FACES)},
+                                       "turnaround": {"type": "boolean"},  # explicit registered same-face path
                                        "width": {"type": "integer", "minimum": 1},
                                        "stations": {"type": "integer", "minimum": 1},
                                        "regs_um": {"type": "array", "items": _xy},   # station sites, type frame
@@ -686,6 +687,14 @@ SCHEMA = {
                                        "physical_inst": _name, "physical_master": _name,
                                        "straps": _core_id_straps,
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"}, "sub_core_parent": {"type": "string", "minLength": 1}, "sub_core_leaf_pin": {"type": "string", "minLength": 1},
+                                       # QC-SLECTL-B 11-05: one paramod instance of the bound module hardened as a named
+                                       # wrapper master (param_wrap.py: kit-only rename, exact params, no logic)
+                                       "param_wrap": {"type": "object", "required": ["base", "params"], "additionalProperties": False,
+                                                      "properties": {"base": _name, "params": {"type": "object", "minProperties": 1,
+                                                                     "additionalProperties": {"type": "integer"}}}},
+                                       # QC-SLECTL-B 11-05: the core reset pin keeps its bound net (e.g. cland_start, rst_n);
+                                       # not a wavefront reset target (no relay, no RTL rewire)
+                                       "reset_net": _name,
                                        "physical_id_alias": _physical_id_alias,
                                        "position_id_contract": _position_id_contract,
                                        "bump_ports": _bump_ports,
@@ -1128,6 +1137,13 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                 "cdc": {"enum": ["synchronized"]}, "cdc_evidence": _name,
                 "sink_pins": {"type": "array", "items": {"type": "object", "additionalProperties": False,
                     "required": ["module", "pin"], "properties": {"module": _name, "pin": _name}}}}}}}}
+# Opt-in: realize the already priced internal stations in logical and physical source alike.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["realize_internal_stations"] = {"type": "boolean"}
+# Explicit source-synchronous data pads retain declared budgets on their actual PHY clock.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["data_inputs"] = {
+    "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
+        "required": ["port", "max_ps", "min_ps", "evidence"], "properties": {
+            "port": _name, "max_ps": {"type": "number"}, "min_ps": {"type": "number"}, "evidence": _name}}}
 # FLOW-GEN-2 CTS-0114 (DIE-HEAD-14/15): a forwarded clock output leaves through ONE dedicated buffer at its source tap
 # (landing_contract.export_tcl "fwd_buffer", the DEFAULT since AUTOBUILD-PIPE-3 10-31), not tied onto the clk root net;
 # explicit "tie" = legacy text (TritonCTS CTS-0114 on any kit with the generated export clock).
@@ -1180,6 +1196,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
     "properties": {"buses": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}},
                    "dsrep": {"type": "integer", "enum": [1, 2, 4, 8, 16]},
                    "freg": {"type": "boolean"}}}
+# Legacy free-running landing input capture: one extra payload cycle on each
+# listed bus. Clock_landings validates bus membership, sidecar pricing and mode.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_input_freg"] = {
+    "type": "array", "minItems": 1, "uniqueItems": True,
+    "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}
 # DIE-HEAD-38 R2 (opt-in, default absent = byte-identical): registered 1-input status relays on ONE landed ring's
 # ready/fault before the N-input status collect of <target> ("agg" = the aggregate chain, or a local status output
 # bus), at planned sites; +len(stages) status cycles on that input only, 0 data cycles.  Anchors pin existing
@@ -1282,6 +1303,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
  'required': ['kind', 'reset_pin', 'memory_alignment', 'members'],
  'type': 'object'}
 # DIE-HBM-25 (HBM-047/048): split piece of a reuse content bound whole -> where the piece reset comes from in the master
+# CODEX KV 11-06: opt-in exact native AHUB/ck7 projected hard boundary.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["native_boundary_adapter"] = {"enum": ["qkd_ahub_ck7_r27"]}
 # DIE-KV-69 11-04 (kv3_astk): core port form vs the native leaf ports the bind wires; kit_core_clocks.adapt_core_ports.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["native_port_adapter"] = {'additionalProperties': False,
  'properties': {'merge': {'additionalProperties': {'items': {'minLength': 1, 'type': 'string'}, 'minItems': 1, 'type': 'array'}, 'type': 'object'},
@@ -2357,7 +2380,15 @@ def validate(raw):
             except ValueError as exc:
                 errs.append(f"type {tn} slot {s['name']}: {exc}")
             if s["in_face"] == s["out_face"]:
-                errs.append(f"type {tn} slot {s['name']}: in_face == out_face")
+                if not s.get("turnaround", False):
+                    errs.append(f"type {tn} slot {s['name']}: in_face == out_face")
+                else:
+                    # A registered U-turn has independent ingress and egress pins on one
+                    # edge. Keep their windows disjoint; all station/reach/bit-site and
+                    # generated _i/_o checks continue unchanged.
+                    iw, ow = s.get("in_window_um"), s.get("out_window_um")
+                    if iw is None or ow is None or min(iw[1], ow[1]) > max(iw[0], ow[0]):
+                        errs.append(f"type {tn} slot {s['name']}: turnaround needs disjoint in/out windows")
             if "regs_um" in s and len(s["regs_um"]) != s.get("stations", 1):
                 errs.append(f"type {tn} slot {s['name']}: {len(s['regs_um'])} regs_um for {s.get('stations', 1)} "
                             "stations")

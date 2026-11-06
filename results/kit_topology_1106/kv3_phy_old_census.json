@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.kit_topology.v1",
+  "type": "kv3_phy",
+  "source": "/srv/opentallas-scratch2/claude/wt/codex-kit-topology-1106/results/kit_topology_1106/kv3_phy/kv3_phy_part_bound.sv",
+  "source_sha256": "4155a46f58b55ad739595220609dd4fa2f3a6d014b7ec83af120d569b86bdd67",
+  "topology": "7d65b5b00e91549c5f865eda7fe9ef1c0ee6fdf98310ced1ca99ca82b7bb544d",
+  "raw_expected": 0,
+  "raw_emitted": 0,
+  "planned_bus_stages": {
+    "bus:i_host_hbm_rst_n": 3
+  },
+  "emitted_bus_stages": {
+    "bus:i_host_hbm_rst_n": []
+  },
+  "required_instances": [],
+  "problems": [
+    "bus:i_host_hbm_rst_n: actual source emitted 0 stages, expected 3",
+    "bus:i_host_hbm_rst_n: missing kit_istations factory receipt for 3 stages"
+  ]
+}

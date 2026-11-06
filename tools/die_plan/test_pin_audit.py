@@ -53,3 +53,37 @@ def test_boundary_alias_never_hides_width_or_identity_errors():
     assert PA.scalar_aliases(wider, ["valid"]) == {}
     ambiguous = dict(scalar, **{"valid[0]": dict(bus="valid", bit=0)})
     assert PA.scalar_aliases(ambiguous, ["valid"]) == {}
+def test_declared_clock_role_only_exempts_unplanned_ports(tmp_path, monkeypatch):
+    """Actual ck-role case; a declared face clock still fails bad geometry."""
+    import json
+    import sys
+    from types import SimpleNamespace as NS
+
+    class Term:
+        def __init__(self, name): self.name = name
+        def getName(self): return self.name
+        def getSigType(self): return "SIGNAL"
+        def getBPins(self): return []
+
+    block = NS(getDefUnits=lambda: 1000,
+               getDieArea=lambda: NS(xMax=lambda: 10000, yMax=lambda: 10000),
+               getBTerms=lambda: [Term("ck"), Term("unknown")])
+    db = NS(getChip=lambda: NS(getBlock=lambda: block))
+    monkeypatch.setitem(sys.modules, "odb", NS(dbDatabase=NS(create=lambda: db), read_db=lambda *_: db))
+    pins, out = tmp_path / "pins.json", tmp_path / "audit.json"
+    (tmp_path / "core.json").write_text(json.dumps({"boundary_role": {"ck": "clk", "unknown": "data"}}))
+    for key, value in {"PINS": str(pins), "OUT": str(out), "ODB": "fake"}.items():
+        monkeypatch.setenv(key, value)
+    pins.write_text("[]")
+    PA.main()
+    result = json.loads(out.read_text())
+    assert result["extra"] == ["unknown"]
+    # Planned clocks enter the ordinary strict layer/position branch.
+    pins.write_text(json.dumps([dict(bus="ck", bit=None, layer="M5", x=5, y=5, face="C")]))
+    PA.main()
+    result = json.loads(out.read_text())
+    assert result["wrong_layer_n"] == 1 and result["verdict"] == "FAIL"
+    (tmp_path / "core.json").unlink()
+    pins.write_text("[]")
+    PA.main()
+    assert json.loads(out.read_text())["extra"] == ["ck", "unknown"]

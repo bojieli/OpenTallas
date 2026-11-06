@@ -1,0 +1,27 @@
+{
+  "scope": "Currentdie-s81-59 ev/bind wc1 source: s_7S_C -> s_7S_LP u_lnl1; static source receipt, no currentcohort runtime",
+  "reference_origin": "s_7S_C.arst_n release edge0",
+  "source_sha256": {
+    "/srv/opentallas-scratch2/claude/die-s81-59/ev/bind/rtl/s81p_dsdv_slice_lepe_nh_mus_C__t1.sv": "6dee182f824516777e1159fb4ed4e74ac09925586d414c52ba5f8f203ae93d67",
+    "/srv/opentallas-scratch2/claude/die-s81-59/ev/bind/rtl/s81p_dsdv_slice_lepe_nh_mus_LP__t1.sv": "eabe348963c801a31e51ec27d5d3bb2c681f04dd07441c67b26a1b50610ef127",
+    "/srv/opentallas-scratch2/claude/die-s81-59/ev/bind/rtl/s81_bound_top.sv": "00af769f89f279b803dd27a32a557ddd2b74c58f1010072332b11498186f3bd3",
+    "/srv/opentallas-scratch2/claude/die-s81-59/wc1/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv": "49a79b888cf0194f084055fb11c902d2c7e27878711f045cd9ce0eab332e54db"
+  },
+  "derived_edges": {
+    "C_local_rst": 7,
+    "C_rst_o_1_LP_arst": 7,
+    "C_lpc_tx": 8,
+    "LP_lpc_rx_kn_rs": 9,
+    "LP_local_rst_nk_rs": 15,
+    "KN_writer_rq_origin": 13,
+    "KN_reader_rq_origin": 19
+  },
+  "formula": "EPOCH_BIAS=(reader_release_edge-writer_release_edge) mod(2D)",
+  "D": 4,
+  "K": 2,
+  "KN_bias": 6,
+  "NK_bias": 2,
+  "pin_cycles_added": 0,
+  "observed_trace_current": null,
+  "current_bound_adopted": false
+}

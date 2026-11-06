@@ -88,6 +88,25 @@ add_pdn_connect -grid {macro} -layers {M4 M5}
 """
 
 
+# Default remains byte-identical M5. M6 is a physical PDN option: real stripes
+# and VIA56 connections are generated before GRT, never invented at export.
+PG6_STRIPE = dict(layer="M6", width_um=0.288, spacing_um=0.096,
+                  pitch_um=4.32, offset_um=1.968)
+
+def pdn_text(top_layer="M5", macros=False):
+    if top_layer not in ("M5", "M6"):
+        raise ValueError("HBM PDN top layer must be M5 or M6")
+    text = PDN
+    if top_layer == "M6":
+        text = text.replace("follow-pins + M5 stripes = core PG pins on the partition M5 grid",
+                            "follow-pins + M5/M6 stripes = core PG pins on M6")
+        text = text.replace("-pins {M5}", "-pins {M6}")
+        text += ("# Opt-in real M6 PG; parent must reserve M6 and land from M7.\n"
+                 "add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {4.32} -offset {1.968}\n"
+                 "add_pdn_connect -grid {top} -layers {M5 M6}\n")
+    return text + (PDN_MACRO if macros else "")
+
+
 def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
@@ -1357,6 +1376,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--corner", default="TC", choices=["WC", "TC", "BC"])
     ap.add_argument("--util", type=float, default=None)
     ap.add_argument("--sigmax", default="auto", help="auto = M5 or the highest plan pin layer (B2r2 pins use M6/M7 on 64 tables)")
+    ap.add_argument("--pg-top-layer", choices=["M5", "M6"], default="M5",
+                    help="opt-in real M6 PDN stripes/vias; requires parent M6 reservation and M7 PG landing")
     ap.add_argument("--recipe-key", default=None)
     ap.add_argument("--wrapper", default=None, help="hand-checked wrapper SV defining the plan module")
     # HBM-CORES 10-24: default 30 -> 0.  The gate (TT setup / FF hold, 60/25 ps uncertainty in the SDC) is unchanged;
@@ -1410,6 +1431,12 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--face-shell", default="on", choices=["on", "off"],
                     help="HBM-FACE 10-25: wrap the core in its face-register shell (face_shell.py; +1 cycle per crossing, "
                          "latency table results/arch/hbm_arch_1024/core_face_shell_latency.json); default on")
+    ap.add_argument("--face-pass", action="append", default=[], metavar="BUSRE",
+                    help="opt-in native registered seam: matching signal buses keep their native source/capture "
+                         "flops without an extra wrapper face stage; unmatched patterns fail; default none")
+    ap.add_argument("--face-pass-contract", default=None, metavar="JSON",
+                    help="required with --face-pass: exact peer module/port mapping; every view replica must have "
+                         "reciprocal hard-child connectivity inside its same parent partition")
     ap.add_argument("--face-stage", action="append", default=[], metavar="BUSRE=K",
                     help="opt-in (HBM-CORES-KITS-36/opstore, COORD 10-31 15:05): K extra free-placed pipeline register "
                          "stages before the face flop of every shell OUTPUT bus matching BUSRE (read data +K cycles on "
@@ -1493,6 +1520,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     MS = _ms()
     MS.add_args(ap)   # 12.7c: --master-slice DIR (opt-in), --trial
     a = ap.parse_args()
+    if a.face_pass and a.face_shell == "off":
+        raise SystemExit("--face-pass requires --face-shell on")
+    if bool(a.face_pass) != bool(a.face_pass_contract):
+        raise SystemExit("--face-pass and --face-pass-contract are required together")
     if a.final_ff_hold and a.single_mode_grt:
         raise SystemExit("--final-ff-hold requires the coupled TT/FF GRT session")
     V = json.load(open(a.views))
@@ -1622,7 +1653,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     top = rec.get("top", module)
     params = dict(rec.get("params", {}))
     if canon:
-        if not source_profile and canon[0].get("file") and canon[0]["file"] not in files:
+        # HBM-GAPS-3 11-05 (opt-in recipe field replaces_canonical_file, absent = unchanged): a drop-in variant of the
+        # canonical file (same module names, e.g. the tkm root __ctlrst reset form) replaces it instead of adding it.
+        if not source_profile and canon[0].get("file") and canon[0]["file"] not in files \
+                and not rec.get("replaces_canonical_file"):
             files = files + [canon[0]["file"]]
         top = canon[0]["top"]
         # HBM-FACE 10-25: keep the split recipe's parameters of the canonical top (build_split_tops.py writes them, e.g.
@@ -1764,12 +1798,23 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             md_ = REPO / (rec.get("macro_dirs", {}).get(m_) or f"physical/asap7_memory_macros_v2/{m_}")
             if (md_ / f"{m_}_tt.lib").is_file():
                 mlibs.append(str(md_ / f"{m_}_tt.lib"))
+        native_context = None
+        if a.face_pass:
+            from native_seams import validate as validate_native_seams
+            native_scope = [n_ for n_ in pb if any(re.search(rx_, n_) for rx_ in a.face_pass)
+                            and not re.match(clock_re, n_) and not re.match(reset_re, n_)]
+            try:
+                native_context = validate_native_seams(plan, pdir, v, native_scope,
+                                                       json.load(open(a.face_pass_contract)), sha(plan_path))
+            except (ValueError, KeyError, OSError) as exc:
+                raise SystemExit(f"NATIVE_SEAM {a.view}: {exc}")
         try:
             shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, clock_re, reset_re,
                              drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_},
                              stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_stage} or None,
                              lockup=a.face_lockup or None, reset_relay=a.face_reset_relay,
-                             in_stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_in_stage} or None)
+                             in_stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_in_stage} or None,
+                             pass_buses=a.face_pass or None, native_context=native_context)
         except RuntimeError as e:
             raise SystemExit(f"FACE_SHELL {a.view}: {e}")
         for f_ in shell["files"]:
@@ -2000,7 +2045,16 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         lefs.append(f"/work/macros/{m}.lef")
         cl = {"WC": "_ss.lib", "TC": "_tt.lib", "BC": "_ff.lib"}[a.corner]
         libs.append(f"/work/macros/{m}{cl if (md / f'{m}{cl}').is_file() else '_tt.lib'}")
-    (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if lefs else ""))
+    (kd / "pdn.tcl").write_text(pdn_text(a.pg_top_layer, bool(lefs)))
+    if a.pg_top_layer == "M6":
+        (kd / "pg_contract.json").write_text(json.dumps(dict(
+            schema="opentallas.core_pg_contract.v1", top_layer="M6",
+            construction="PDN_BEFORE_GRT_REAL_STRIPES_AND_VIAS", stripe=PG6_STRIPE,
+            connection_layers=["M5", "M6"], parent_grid_layer="M7",
+            parent_reservation_layers=["M6"], parent_reservation_pending=True,
+            nominal_m6_stripe_width_fraction=2 * PG6_STRIPE["width_um"] / PG6_STRIPE["pitch_um"],
+            qualification="ACTUAL_FINAL_ODB_LEF_AND_PARENT_ACCESS_PENDING",
+            added_signal_cycles=0), indent=1) + "\n")
     (kd / "make_tracks.tcl").write_text(make_tracks(plan_path))
     ff = face_flops_text((TOOL / "face_flops.tcl").read_text(), clks, rsts, kit_straps,
                          home_resets=not a.no_reset_face_home)
@@ -2316,9 +2370,15 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                const_out_bits=shell["const_out_bits"], dup_out_bits=shell["dup_out_bits"],
                                plan_pins=len(names) + len(shell["dropped"]),
                                **({"out_extra_stages": shell["out_extra_stages"]} if shell.get("out_extra_stages") else {}),
-                               **({"out_lockup": shell["out_lockup"]} if shell.get("out_lockup") else {}))
+                               **({"out_lockup": shell["out_lockup"]} if shell.get("out_lockup") else {}),
+                               **({"native_registered_passthrough": shell["native_registered_passthrough"],
+                                   "face_cycle_overrides": shell["face_cycle_overrides"],
+                                   "native_endpoint_contract": shell["native_endpoint_contract"]}
+                                  if shell.get("native_registered_passthrough") else {}))
                           if shell else None),
               kit_hash=kit_hash(kd))
+    if a.pg_top_layer == "M6":
+        fz["pg_contract"] = json.loads((kd / "pg_contract.json").read_text())
     if runtime_files:
         fz["runtime_files"] = runtime_files
     if not source_profile:

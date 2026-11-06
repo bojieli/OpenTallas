@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.core_pg_contract.v1",
+ "top_layer": "M6",
+ "construction": "PDN_BEFORE_GRT_REAL_STRIPES_AND_VIAS",
+ "stripe": {
+  "layer": "M6",
+  "width_um": 0.288,
+  "spacing_um": 0.096,
+  "pitch_um": 4.32,
+  "offset_um": 1.968
+ },
+ "connection_layers": [
+  "M5",
+  "M6"
+ ],
+ "parent_grid_layer": "M7",
+ "parent_reservation_layers": [
+  "M6"
+ ],
+ "parent_reservation_pending": true,
+ "nominal_m6_stripe_width_fraction": 0.1333333333333333,
+ "qualification": "ACTUAL_FINAL_ODB_LEF_AND_PARENT_ACCESS_PENDING",
+ "added_signal_cycles": 0
+}

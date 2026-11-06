@@ -1,0 +1,9 @@
+TB_S81_DIE HOSTIN 2875 words from cycle 16
+TB_S81_DIE KS mode: 575 valid host words native_link=1
+NATIVE_KS_PERIOD_FS 833000
+TB_S81_DIE RELEASE t=53000
+TB_S81_DIE THOST cycle 0 alive 0 fault 0 wf 0000 sseq 0 tv 0 td 0000000000000000
+TB_S81_DIE PROGRESS cycle 0 ready 0/266 faults 0
+[92047000] %Error: ot_pl_land.sv:239: Assertion failed in tb_s81_die.dut.s_7S_LP.s81p_dsdv_slice_lepe_nh_mus_LP__t1_c.u_u_lnl1.u_kn.u_r.g_chunk[68].u_local.unnamedblk2: LAND_FAULT tb_s81_die.dut.s_7S_LP.s81p_dsdv_slice_lepe_nh_mus_LP__t1_c.u_u_lnl1.u_kn.u_r.g_chunk[68].u_local.unnamedblk2: slot0 epoch4 expected0
+%Error: /srv/opentallas-scratch2/claude/wt/tok-ds-2/rtl/common/landed_parent/ot_pl_land.sv:239: Verilog $stop
+Aborting...

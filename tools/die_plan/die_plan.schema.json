@@ -1502,6 +1502,9 @@
           "W"
          ]
         },
+        "turnaround": {
+         "type": "boolean"
+        },
         "width": {
          "type": "integer",
          "minimum": 1
@@ -2419,6 +2422,36 @@
                }
               }
              }
+            },
+            "data_inputs": {
+             "type": "array",
+             "minItems": 1,
+             "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+               "port",
+               "max_ps",
+               "min_ps",
+               "evidence"
+              ],
+              "properties": {
+               "port": {
+                "type": "string",
+                "minLength": 1
+               },
+               "max_ps": {
+                "type": "number"
+               },
+               "min_ps": {
+                "type": "number"
+               },
+               "evidence": {
+                "type": "string",
+                "minLength": 1
+               }
+              }
+             }
             }
            }
           }
@@ -2587,6 +2620,15 @@
          "freg": {
           "type": "boolean"
          }
+        }
+       },
+       "landing_input_freg": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+         "type": "string",
+         "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
         }
        },
        "landing_status_input_stages": {
@@ -3131,16 +3173,41 @@
           }
          }
         },
-        "sub_core_parent": {
-         "minLength": 1,
-         "type": "string"
-        },
-        "sub_core_leaf_pin": {
-         "minLength": 1,
-         "type": "string"
-        },
         "parent_id_leaf": {
          "type": "string"
+        },
+        "sub_core_parent": {
+         "type": "string",
+         "minLength": 1
+        },
+        "sub_core_leaf_pin": {
+         "type": "string",
+         "minLength": 1
+        },
+        "param_wrap": {
+         "type": "object",
+         "required": [
+          "base",
+          "params"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "base": {
+           "type": "string",
+           "minLength": 1
+          },
+          "params": {
+           "type": "object",
+           "minProperties": 1,
+           "additionalProperties": {
+            "type": "integer"
+           }
+          }
+         }
+        },
+        "reset_net": {
+         "type": "string",
+         "minLength": 1
         },
         "physical_id_alias": {
          "type": "object",
@@ -3358,6 +3425,11 @@
           "members"
          ],
          "type": "object"
+        },
+        "native_boundary_adapter": {
+         "enum": [
+          "qkd_ahub_ck7_r27"
+         ]
         },
         "native_port_adapter": {
          "additionalProperties": false,
@@ -3905,16 +3977,16 @@
           }
          }
         },
-        "sub_core_parent": {
-         "minLength": 1,
-         "type": "string"
-        },
-        "sub_core_leaf_pin": {
-         "minLength": 1,
-         "type": "string"
-        },
         "parent_id_leaf": {
          "type": "string"
+        },
+        "sub_core_parent": {
+         "type": "string",
+         "minLength": 1
+        },
+        "sub_core_leaf_pin": {
+         "type": "string",
+         "minLength": 1
         },
         "position_id_contract": {
          "type": "object",
@@ -4353,6 +4425,9 @@
         }
        }
       }
+     },
+     "realize_internal_stations": {
+      "type": "boolean"
      },
      "landing_base_type": {
       "type": "string"

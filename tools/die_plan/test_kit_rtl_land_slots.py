@@ -100,3 +100,22 @@ def test_relay_stage_instance_paths_are_declared_and_qualified():
     got = run(ls, text)
     assert got["buses"]["cland_start_in"]["stages"] == ["u_bound.u_stage"]
     assert refused(ls, text.replace("ot_dp_landing_relay u_stage", "unrelated_relay u_stage"))
+
+
+def test_named_hard_ring_keeps_land_slots_and_rejects_missing_master():
+    text = RTL.replace("ot_dp_clk_landing_cas #(.W(524), .DEPTH(4))", "sle_cland_w524_s")
+    lands = Lands(spec())
+    lands.plan = {"partition_types": {"t": {"hard_cores": [{
+        "inst": "cl_ft0_i", "physical_inst": "u_bound.u_cland_ft0_i", "module": "sle_cland_w524_s",
+        "param_wrap": {"base": "ot_dp_clk_landing_cas", "params": {"W": 524, "DEPTH": 4}}}]}}}
+    with tempfile.TemporaryDirectory() as d:
+        f = Path(d) / "bound.sv"; f.write_text(text)
+        got = gen_phys.kit_rtl_land_slots(lands, "t", [str(f)])
+        assert got["buses"]["ft0_i"]["D"] == 4
+        f.write_text(text.replace("sle_cland_w524_s", "wrong_master"))
+        try:
+            gen_phys.kit_rtl_land_slots(lands, "t", [str(f)])
+        except gen_rtl.GenError:
+            pass
+        else:
+            assert False, "a planned hard ring without its actual instance must be refused"

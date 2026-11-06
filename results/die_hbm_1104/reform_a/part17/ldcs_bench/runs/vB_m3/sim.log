@@ -1,0 +1,16 @@
+MISMATCH cyc=201 lane0_vm_waddr[0] ref=1 dut=0
+MISMATCH cyc=201 lane0_vm_waddr[1] ref=0 dut=1
+MISMATCH cyc=201 lane0_vm_waddr[3] ref=0 dut=1
+MISMATCH cyc=201 lane0_vm_waddr[4] ref=1 dut=0
+MISMATCH cyc=201 lane0_vm_waddr[5] ref=0 dut=1
+MISMATCH cyc=201 lane0_vm_waddr[8] ref=1 dut=0
+MISMATCH cyc=201 lane0_vm_waddr[9] ref=0 dut=1
+MISMATCH cyc=201 lane0_vm_waddr[11] ref=0 dut=1
+MISMATCH cyc=201 lane0_vm_waddr[12] ref=0 dut=1
+MISMATCH cyc=201 lane0_vm_waddr[15] ref=1 dut=0
+LOCKSTEP FAIL errs=980010 checks=435600 toggled_out_bits=387
+- /srv/opentallas-scratch2/claude/hbm-gaps-5-l1p/eq/runs/vB_m3/tb.sv:266: Verilog $finish
+FAULT_SRC_PULSES f_m1=77 f_m2=69 f_q=141 f_ad=4 f_e1m=40 f_e1a=3 f_e2=148 f_d1=0 f_sfu=0
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.241 s; speed 166.226 us/s
+- Verilator: cpu 0.241 s on 1 threads; allocated 7 MB

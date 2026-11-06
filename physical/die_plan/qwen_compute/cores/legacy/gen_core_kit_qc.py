@@ -720,6 +720,35 @@ def sdc(per, ins, tol, clks, rsts, name, seam=None):
                 "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
 
+def related_sdc(per, related, straps, in_min):
+    """QC-SLECTL-B 11-05 (opt-in recipe related_clocks / strap_ports; empty = legacy text unchanged).  related
+    {port: [input buses]}: each port (a landing ring's forwarded write clock fclk) is its own RELATED real clock root
+    at the core period (the DIE-KV-10 gen_core_kit_kv --related-clock form): landed-crossing window to/from clk
+    (sdc_lint landed_clock_inputs: max -ignore_clock_latency T/2 - landing setup, min 0, both directions), and its
+    source-synchronous inputs re-referenced to it (landing_contract.ring_input_sdc law: max = IO budget, no T/2 shift
+    for the falling writer; min = the seam-hold input min).  OpenSTA replaces a port's input delays when
+    set_input_delay names another clock, so these lines come last.  straps: declared quasi-static ID straps (tied at
+    the parent; OWNER 10-25 option B): one set_false_path -from."""
+    s = ""
+    win = per / 2 - sdc_lint.landing_window_setup_ps()
+    for n in sorted(related):
+        for a_, b_ in ((n, "clk"), ("clk", n)):
+            s += (f"set_max_delay -ignore_clock_latency {win:.4f} -from [get_clocks {a_}] -to [get_clocks {b_}]\n"
+                  f"set_min_delay -ignore_clock_latency 0 -from [get_clocks {a_}] -to [get_clocks {b_}]\n")
+    if straps:
+        s += ("# ID straps (OWNER 10-25 option B): tied at the parent, quasi-static\n"
+              f"set_false_path -from [get_ports {{{' '.join(sorted(straps))}}}]\n")
+    for n in sorted(related):
+        # Shared sign-off / measured-hold consumers identify the forwarded
+        # family through the same canonical tag as landing_contract.py.
+        s += f"# OT_FWD_RING_INPUTS {n} {' '.join(related[n])}\n"
+        s += f"# source-synchronous ring inputs on their forwarded write clock {n} (landing_contract.ring_input_sdc law)\n"
+        for b in related[n]:
+            s += (f"set_input_delay -max {IO_BUDGET * per:.4f} -clock {n} [get_ports {{{b}}}]\n"
+                  f"set_input_delay -min {in_min:.4f} -clock {n} [get_ports {{{b}}}]\n")
+    return s
+
+
 def parse_seam_hold(arg, name):
     """--seam-hold 'SENDER_PS,SEAM_PS' -> (sender, seam) floats, None when unset; refused below the shared floor
     (sdc_lint.SEAM_HOLD_MIN_PS) or with a negative sender."""
@@ -1196,12 +1225,30 @@ def main():
     clks = [ckb]
     rsts = sorted({base(n) for n in rsts})
     seam = parse_seam_hold(a.seam_hold, mod)
-    (kd / "constraint.sdc").write_text(sdc(per, ins / TIME_UNIT_PS, tol, clks, rsts, mod, seam))
-    buses_in = sorted({base(n) for n in names if dirs[n] == "INPUT" and base(n) != ckb})
+    # QC-SLECTL-B 11-05 (opt-in): related forwarded-clock roots + declared straps (recipe related_clocks / strap_ports)
+    rel = dict(rec.get("related_clocks") or {})
+    bset = {base(n) for n in names}
+    straps = sorted(x for x in rec.get("strap_ports", []) if x in bset)
+    if set(rec.get("strap_ports", [])) - bset or any(r not in bset or r == ckb or set(v) - bset for r, v in rel.items()):
+        raise SystemExit(f"{mod}: recipe related_clocks {rel} / strap_ports {rec.get('strap_ports')} not plan pins")
+    text_sdc = sdc(per, ins / TIME_UNIT_PS, tol, clks, rsts, mod, seam)
+    if rel or straps:
+        in_min = (seam[0] - seam[1]) if seam else -tol
+        tail = "set_load "
+        i_ = text_sdc.index(tail)
+        text_sdc = text_sdc[:i_] + related_sdc(per, rel, straps, in_min) + text_sdc[i_:]
+        # the related roots are created right after clk, before [all_inputs -no_clocks] is taken
+        j_ = text_sdc.index("\n", text_sdc.index("create_clock -name clk ")) + 1
+        text_sdc = text_sdc[:j_] + "".join(
+            f"# related clock root {n} (QC-SLECTL-B, DIE-KV-10 form): same period as clk, own CTS root; die CA owns the "
+            f"phase\ncreate_clock -name {n} -period {per:.4f} [get_ports {{{n}}}]\n" for n in sorted(rel)) + text_sdc[j_:]
+    (kd / "constraint.sdc").write_text(text_sdc)
+    buses_in = sorted({base(n) for n in names if dirs[n] == "INPUT" and base(n) != ckb and base(n) not in rel})
     buses_out = sorted({base(n) for n in names if dirs[n] == "OUTPUT"})
-    assert len(buses_in) + len(buses_out) + 1 == len({base(n) for n in names}), "inout / mixed-direction buses"
+    assert len(buses_in) + len(buses_out) + 1 + len(rel) == len({base(n) for n in names}), "inout / mixed-direction buses"
     floor = {b: IO_BUDGET * per for b in buses_in + buses_out}
-    lctx = dict(period_ps=per, insertion_ps=ins, insertion_tol_ps=tol, clock_ports=clks, inputs=buses_in,
+    lctx = dict(period_ps=per, insertion_ps=ins, insertion_tol_ps=tol, clock_ports=clks + sorted(rel), inputs=buses_in,
+                **({"landed_clock_inputs": sorted(rel)} if rel else {}), **({"straps": straps} if straps else {}),
                 outputs=buses_out, unc_setup_ps=sdc_lint.POLICY_SETUP_PS, unc_hold_ps=sdc_lint.POLICY_HOLD_PS,
                 time_unit_ps=1.0, io_floor_ps=floor, port_latency_ps={}, insertion_ff_ps=ib["ff"],
                 **(dict(hold_in_min_ps=seam[0] - seam[1], hold_out_min_ps=-seam[0], seam_hold_ps=seam[1]) if seam else {}))
@@ -1243,7 +1290,18 @@ def main():
     # DIE-QC-35 10-29: the POST_SYNTH face flops (core_face_post_synth.tcl, unconditional) exist in every kit, so the
     # pre-CTS dont_touch lift is emitted unconditionally (insertion_balance off: ODB-0370 in cts.tcl on A0 NL/NK)
     (kd / FC_DT_LIFT).write_text(FC_DT_LIFT_TCL)
-    (kd / "face_guard_core.py").write_text(FACE_GUARD_CORE)
+    guard_source = FACE_GUARD_CORE
+    if rec.get("land_slots") or rec.get("strap_ports"):
+        # Use the existing landing-slot/start proof and declared-ID-strap
+        # contract for explicit landing children. Other core scripts unchanged.
+        guard_source = guard_source.replace(
+            "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set())",
+            "_land = Path(pins).with_name('land_slots.json')\n"
+            "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set(), "
+            "straps=G.kit_strap_list(Path(pins).parent), land=G.kit_land(_land) if _land.is_file() else None)")
+    if rec.get("land_slots"):
+        (kd / "land_slots.json").write_text(json.dumps(dict(schema="land_slots/3", buses=rec["land_slots"]), indent=1) + "\n")
+    (kd / "face_guard_core.py").write_text(guard_source)
     # one-station bus pairs of the core's RTL contract (reviewed per recipe; face_guard / signoff read ft_stations.txt)
     pairs = rec.get("ft1_pairs", [])
     for i_, o_ in pairs:
@@ -1252,7 +1310,7 @@ def main():
     (kd / "ft_stations.txt").write_text("# core kit (gen_core_kit_qc.py): no ft slots; one-station bus pairs below\n"
                                         + "".join(f"pair {i_} {o_}\n" for i_, o_ in pairs))
     # typed boundary roles (signoff.py boundary_controls): the clock / reset buses only, never a data pin
-    roles = {ckb: "clk", **{r: "reset" for r in rsb}}
+    roles = {ckb: "clk", **{r: "clk" for r in rel}, **{r: "reset" for r in rsb}}
     core_meta = dict(module=mod, plan_type=ptype, boundary_role=roles)
     if rec.get("clock_contract") is not None:
         cc = rec["clock_contract"]
@@ -1261,9 +1319,9 @@ def main():
         core_meta["clock_contract"] = cc
     (kd / "core.json").write_text(json.dumps(core_meta, indent=1) + "\n")
     (kd / "boundary_guard_context.json").write_text(json.dumps(dict(
-        schema="opentallas.core_boundary_guard_context.v1", source_core_json="core.json", clock_ports=[ckb],
+        schema="opentallas.core_boundary_guard_context.v1", source_core_json="core.json", clock_ports=[ckb] + sorted(rel),
         unused_clock_ports=[], reset_ports=rsb, data_pin_exemptions=[]), indent=1) + "\n")
-    skip = "^(" + "|".join(re.escape(x) for x in [ckb] + rsb) + r")(\[[0-9]+\])?$"
+    skip = "^(" + "|".join(re.escape(x) for x in [ckb] + sorted(rel) + rsb) + r")(\[[0-9]+\])?$"
     (kd / "face_guard_skip.txt").write_text(skip + "\n")
     ff = (TOOL / "face_flops.tcl").read_text()
     # structural anchors (FLOW-FIX 10-25: main's skip line grew start_i|start_o_ + a trailing comment): the whole

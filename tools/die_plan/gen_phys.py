@@ -36,6 +36,14 @@ import taps as T
 from schema import DIE_PART
 
 
+
+def _rtl_lint_dead_output_vars():
+    modules = os.environ.get("OT_RTL_LINT_DEAD_OUTPUT_MODULES", "").split()
+    if any(not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_$]*", m) for m in modules):
+        raise ValueError("OT_RTL_LINT_DEAD_OUTPUT_MODULES requires module identifiers")
+    return ["export OT_RTL_LINT_DEAD_OUTPUT_MODULES = " + " ".join(modules)] if modules else []
+
+
 def _common_flow_file(name, repo):
     """physical/common_flow/<name> of checkout `repo`, from git HEAD in a sparse checkout without it
     (common_flow_src.py, DIE-KV-62 11-02); a copy of this module without the helper: the plain path."""
@@ -2964,6 +2972,13 @@ def declared_rom_bits(rtl_dir):
 # the kit gen lint measures; gen phys raises SYNTH_MEMORY_MAX_BITS to exactly the largest one the kit RTL defines (the
 # same exact-size form as declared_rom_bits), so any other inferred memory above that size still fails.
 DECLARED_FLOP_MEMORIES = {
+    # KV hub_Wi control FIFOs: exact audited production shapes. Inferred mux/
+    # read-pointer-copy heads are part of their cycle contract; no SRAM latency
+    # is introduced. Wider future elaborations still fail the measured limit.
+    "qkd_host_rx_class_admission": 16 * 514,       # iq[16], IR_REPL grouped heads
+    "qkd_host_qm_ingress16_service_debt": 16 * 514, # q[16], RP_REPL paired 8:1 heads
+    "ot_link_afifo": 16 * 514,                    # mem[16], asynchronous/RCOPY head
+    "ot_fdi_join2": 16 * 522,                     # qa 522b / qb 521b, 16 entries
     # KV kv3_hub_Eo / kv3_hub_Wo qkd_seq_xs_s u_q: 40 x 128 Q store FIFO (rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv)
     "ot_qkvd_seq_m_sfifo": 40 * 128,
     # S81 T7 svc_lo_dsdv_svc_rs__t7 u_att.sw (TOK-DS-3 11-02): 32 x 512 score-window FIFO, bound native glue of
@@ -3020,6 +3035,7 @@ def plain_ring_land_slots(rtl_dir, buses):
     -- face_guard then proves per bit the D enable-mux slot flops (own-Q hold, exclusive write conditions) exactly as
     for count-aligned rings.  A ring with any other .d expression, or a kit without the ot_dp_clk_landing module /
     a literal ring DEPTH, declares nothing (its bits stay undeclared, so a 1-to-D fan still FAILs).  {} if none."""
+    import gen_rtl
     text = "\n".join(f.read_text(errors="replace") for f in sorted(Path(rtl_dir).glob("*.sv")))
     body = _LANDING_BODY.search(text)
     dm = _RING_DEPTH.search(body.group(1)) if body else None
@@ -3027,6 +3043,16 @@ def plain_ring_land_slots(rtl_dir, buses):
         return {}
     depth, out = int(dm.group(1)), {}
     for m in _PLAIN_RING.finditer(text):
+        # An explicit FREG captures the bus in one ordinary face register;
+        # the four-slot ring is internal and grants no pin-guard exemption.
+        params = m.group(0).split(m.group(1), 1)[0]
+        fm = re.search(r"\.FREG\s*\(\s*([^()]+)\s*\)", params)
+        if fm:
+            value = fm.group(1).strip()
+            if value not in ("0", "1", "1'b0", "1'b1", "1'd0", "1'd1"):
+                raise gen_rtl.GenError(f"{m.group(1)}: plain landing FREG needs literal 0/1")
+            if value in ("1", "1'b1", "1'd1"):
+                continue
         d = _RING_D.search(m.group(2))
         if not d:
             continue
@@ -3547,6 +3573,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
              if os.environ.get("OT_CTS_NO_NDR") == "1" else []),
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
+           *_rtl_lint_dead_output_vars(),
            "export SYNTH_REPEATABLE_BUILD = 1",
            # HEAD-KITS-3 10-28: OWNER D-ROM-2 declared-logic math tables (tools/mem_compiler/rom_declared_logic.json,
            # e.g. the KP4 GF(1024) inverse 1024x10 in every serdes FEC lane) are synthesised logic by decision; the ORFS
@@ -3851,9 +3878,20 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if forest:
         shutil.copyfile(Path(__file__).with_name("forest_recluster.tcl"), kd / "forest_recluster.tcl")
     # KV-G3 10-24: FIRM plan internal stations / plan-cell sites of a bound kit (kit_istations.py next to its RTL)
-    ist = [Path(f).parent / "istations.tcl" for f in rtl_files[:1] if (Path(f).parent / "istations.tcl").is_file()]
+    ist = []
+    if t.get('realize_internal_stations'):
+        ist = [Path(f).parent / (t['module'] + '.istations.tcl') for f in rtl_files[:1]
+               if (Path(f).parent / (t['module'] + '.istations.tcl')).is_file()]
+        if not ist:
+            raise ValueError(f'{tn}: realized source lacks its exact station placement sidecar')
+    if not ist:
+        ist = [Path(f).parent / "istations.tcl" for f in rtl_files[:1] if (Path(f).parent / "istations.tcl").is_file()]
     if ist:
         shutil.copyfile(ist[0], kd / "istations.tcl")
+        if t.get('realize_internal_stations'):
+            # The exported exact kit RTL is later rebound from rtl/. Preserve
+            # its per-module placement sidecar across that export boundary.
+            shutil.copyfile(ist[0], kd / 'rtl' / (t['module'] + '.istations.tcl'))
     elif t.get("relay_sites"):
         # DIE-KV-60 11-01: plan relay_sites on a bound kit without a native station sidecar (KV hard PHY wrappers)
         import kit_istations
@@ -3946,6 +3984,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("pin_audit.py"), kd / "pin_audit.py")
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
     shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
+    shutil.copyfile(Path(__file__).with_name("hard_landing.py"), kd / "hard_landing.py")
     shutil.copyfile(Path(__file__).with_name("selrange_gate.py"), kd / "selrange_gate.py")
     shutil.copyfile(Path(__file__).with_name("native_bb.py"), kd / "native_bb.py")
     shutil.copyfile(Path(__file__).resolve().parents[1] / "orfs_hold_mm.py", kd / "orfs_hold_mm.py")
@@ -3957,6 +3996,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("lec.py"), kd / "lec.py")
     # FLOW-21 / COORD 11-01: the pre-route LEC runs beside place/CTS/route (lec_async.sh, OT_LEC_ASYNC=0 = inline)
     shutil.copyfile(Path(__file__).with_name("lec_async.sh"), kd / "lec_async.sh")
+    shutil.copyfile(Path(__file__).with_name("lec_completed_transfer.py"), kd / "lec_completed_transfer.py")
     import core_flow; core_flow.stage_grt183(kd)   # FLOW-28 11-04: GRT-0183 fresh-process re-run (run_kit.sh)
     shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
@@ -3987,6 +4027,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             raise gen_rtl.GenError(f"type {tn}: buses declared by both the landing sidecar and a plain ring: {clash[:5]}")
         land_slots["buses"] = {**land_slots.get("buses", {}), **plain}
     land_slots = export_land_slots(P.types[tn], land_slots)
+    if land_slots is not None:
+        import hard_landing
+        land_slots = hard_landing.emit(t, land_slots, kd,
+                                      Path(root) if root else Path(__file__).resolve().parents[2])
     if land_slots is not None:                  # face_guard reads it beside pins.json (count-aligned landing rings)
         (kd / "land_slots.json").write_text(json.dumps(land_slots, indent=1) + "\n")
     port_pins = port_bind_pin_records(P, tn, pins, bump_ports)
@@ -4205,7 +4249,9 @@ def fit_text(t, pins):
     have = present(t)
     miss = {n: d for n, d in pins.items() if n not in have}
     buses, added = {}, sorted(miss)
-    for n, d in miss.items():
+    # Textual timed members can already exist outside the declared bus range.
+    # Visit every physical LEF bit, while adding pin bodies only when missing.
+    for n, d in pins.items():
         m = BUS.match(n)
         if m:
             buses.setdefault(m.group(1), {})[int(m.group(2))] = d
@@ -4215,8 +4261,11 @@ def fit_text(t, pins):
             t = t[:e] + pin_text(n, d) + t[e:]
     for name, bits in sorted(buses.items()):
         g = group(t, "bus", name)
-        body = "".join(pin_text(f"{name}[{i}]", bits[i]) for i in sorted(bits, reverse=True))
+        body = "".join(pin_text(f"{name}[{i}]", bits[i]) for i in sorted(bits, reverse=True)
+                       if f"{name}[{i}]" in miss)
         if not g:
+            if not body:
+                continue
             f, o = max(bits), min(bits)
             e = close_of(t, c.end() - 1)
             ty = f"{name}_busfit"
@@ -4229,6 +4278,8 @@ def fit_text(t, pins):
             raise ValueError(f"bus {name}: no bit range")
         lo, hi = min(f, o, *bits), max(f, o, *bits)
         nf, no = (hi, lo) if f >= o else (lo, hi)
+        if not body and (nf, no) == (f, o):
+            continue
         t = t[:e] + body + t[e:]
         new = f"{name}_busfit"
         t = t[:s] + re.sub(r"\bbus_type\s*:\s*\"?\w+\"?\s*;", f"bus_type : {new};", t[s:], count=1)
@@ -4258,7 +4309,7 @@ def fit(k, out=None):
         if not c or c.group(1) not in macros:
             continue
         ft, added = fit_text(t, macros[c.group(1)])
-        if not added:
+        if ft == t:
             continue
         os.makedirs(out, exist_ok=True)
         fd, tmp = tempfile.mkstemp(dir=out)
@@ -4447,6 +4498,24 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
         if not d:
             raise gen_rtl.GenError(f"type {tn}: bound ring u_cland_{m.group(3)} ({m.group(1)}) has no literal DEPTH")
         built[m.group(3)] = int(d.group(1))
+    # Named hard wrappers preserve the ring at u_cland_<bus>, but no longer
+    # instantiate the parameterized base in the parent. The binder checks the
+    # exact base/parameters before this rename (param_wrap.wrap_bound).
+    raw_plan = getattr(lands, "plan", None) or {}
+    for hc in raw_plan.get("partition_types", {}).get(tn, {}).get("hard_cores", []):
+        pw = hc.get("param_wrap") or {}
+        if pw.get("base") not in ("ot_dp_clk_landing_ca", "ot_dp_clk_landing_cas"):
+            continue
+        inst = hc.get("physical_inst", "").removeprefix("u_bound.")
+        master = hc.get("physical_master") or hc["module"]
+        if not inst.startswith("u_cland_") or "." in inst:
+            raise gen_rtl.GenError(f"type {tn}: hard landing wrapper has invalid path {inst}")
+        if not re.search(r"\b" + re.escape(master) + r"\s+" + re.escape(inst) + r"\s*\(", txt):
+            raise gen_rtl.GenError(f"type {tn}: hard landing wrapper {master} {inst} missing from bound RTL")
+        r = inst.removeprefix("u_cland_")
+        if r in built:
+            raise gen_rtl.GenError(f"type {tn}: ring {r} has both native and hard-wrapper instances")
+        built[r] = int(pw["params"]["DEPTH"])
     buses = (ls or {}).get("buses", {})
     rings = {}
     for b, v in buses.items():

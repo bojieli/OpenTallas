@@ -15,6 +15,18 @@ import odb  # noqa: E402  (OpenROAD python)
 TOL = 0.001
 
 
+def declared_clock_ports(pins_path):
+    """Only explicit core clock roles exempt otherwise unplanned interior ports."""
+    try:
+        with open(os.path.join(os.path.dirname(pins_path), "core.json")) as stream:
+            roles = json.load(stream).get("boundary_role", {})
+    except (OSError, ValueError, AttributeError):
+        return set()
+    if not isinstance(roles, dict):
+        return set()
+    return {name for name, role in roles.items() if role == "clk"}
+
+
 def main():
     db = odb.dbDatabase.create()
     db = odb.read_db(db, os.environ["ODB"])
@@ -24,13 +36,14 @@ def main():
     W, H = die.xMax() / dbu, die.yMax() / dbu
     # CORE-HBM copy: scalar ports (bit None) are the bare name (tools/die_plan pins always carry a bit)
     want = {(p['bus'] if p.get('bit') is None else f"{p['bus']}[{p['bit']}]"): p for p in json.load(open(os.environ["PINS"]))}
+    clock_ports = declared_clock_ports(os.environ["PINS"])
     res = dict(pins=len(want), ok=0, missing=[], wrong_layer=[], wrong_place=[], extra=[])
     seen = set()
     for bt in block.getBTerms():
         n = bt.getName()
         if n not in want:
             # clock taps (R4: clk, clk_t<i>) and the reset tap are interior die-spine pins, not face pins
-            if not re.match(r"^(clk(_t[0-9]+)?|arst_n)$", n) and not bt.getSigType() in ("POWER", "GROUND"):
+            if n not in clock_ports and not re.match(r"^(clk(_t[0-9]+)?|arst_n)$", n) and not bt.getSigType() in ("POWER", "GROUND"):
                 res["extra"].append(n)
             continue
         seen.add(n)
