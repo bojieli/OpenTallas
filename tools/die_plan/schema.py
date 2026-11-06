@@ -1181,6 +1181,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
     "properties": {"buses": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}},
                    "dsrep": {"type": "integer", "enum": [1, 2, 4, 8, 16]},
                    "freg": {"type": "boolean"}}}
+# Legacy free-running landing input capture: one extra payload cycle on each
+# listed bus. Clock_landings validates bus membership, sidecar pricing and mode.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_input_freg"] = {
+    "type": "array", "minItems": 1, "uniqueItems": True,
+    "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}
 # DIE-HEAD-38 R2 (opt-in, default absent = byte-identical): registered 1-input status relays on ONE landed ring's
 # ready/fault before the N-input status collect of <target> ("agg" = the aggregate chain, or a local status output
 # bus), at planned sites; +len(stages) status cycles on that input only, 0 data cycles.  Anchors pin existing
