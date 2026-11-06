@@ -1,0 +1,46 @@
+{
+  "scope": "default-preserving owned-row root wrapper extension; model before RTL",
+  "default": {
+    "NOUT": 24,
+    "WROW0": 0,
+    "OROW0": 0
+  },
+  "owned_example": {
+    "NOUT": 1,
+    "WROW0": 0,
+    "OROW0": -1,
+    "owner_rank": 95,
+    "npos": 1,
+    "launch_lo": 23
+  },
+  "command": {
+    "cmd_nout": "NOUT",
+    "cmd_wbase": "wslot*256 + WROW0*(K/2048)",
+    "output_global_row": "latched launch.lo + core_local_row when OROW0=-1; otherwise static OROW0 + core_local_row"
+  },
+  "bounds": [
+    "1 <= NOUT <=24",
+    "0 <= WROW0; WROW0+NOUT <=24",
+    "OROW0=-1 with launch.lo+NOUT<=24, or static0<=OROW0 and OROW0+NOUT<=24"
+  ],
+  "added_cycles": 0,
+  "production_default_changed": false,
+  "proof_required": [
+    "original/new default wrapper exact comparison",
+    "owned command base and output mapping checks",
+    "row-map and weight-base mutants caught",
+    "actual P1 projection plus23 explicit remote gather inputs through canonical arithmetic"
+  ],
+  "proof_scope_split": "wrapper checks may abstract arithmetic; separate actual native component must not",
+  "batch": {
+    "qualified": false,
+    "issue_edges_per_position": 20,
+    "residual_ingress_edges_per_position": 160,
+    "rms_pop_guard": 114,
+    "requires": "derive residual preload, scalar pops and queue occupancy; first gate P1"
+  },
+  "qualifies_current_die": false,
+  "qualifies_owned_arithmetic": false,
+  "owned_only_state_bits": 5,
+  "physical_types": "one shared NOUT1/WROW00/OROW0-1 option for all owners; global row comes from launch.lo"
+}
