@@ -63,7 +63,24 @@
         "clock": "hbm_clk",
         "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
       },
-      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged",
+      "group_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group",
+      "native_leaf_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[0].g_face.u_store.u_native",
+      "macro_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[0].g_face.u_store.u_native.u_payload",
+      "fifo_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[0].g_face.u_store.u_native.u_fifo",
+      "native_clock_ports": {
+        "fifo_clk": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[0].g_face.u_store.u_native.fifo_clk",
+        "hbm_clk": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[0].g_face.u_store.u_native.hbm_clk"
+      },
+      "native_reset_ports": {
+        "srst": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[0].g_face.u_store.u_native.srst",
+        "hrst": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[0].g_face.u_store.u_native.hrst"
+      },
+      "accepted_root_event": {
+        "signal": "u_fcore.g_group[0].send",
+        "clock": "hbm_clk",
+        "lane_select": "u_fcore.fifo_re[0]"
+      }
     },
     {
       "group": 0,
@@ -109,7 +126,24 @@
         "clock": "hbm_clk",
         "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
       },
-      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged",
+      "group_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group",
+      "native_leaf_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[1].g_face.u_store.u_native",
+      "macro_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[1].g_face.u_store.u_native.u_payload",
+      "fifo_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[1].g_face.u_store.u_native.u_fifo",
+      "native_clock_ports": {
+        "fifo_clk": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[1].g_face.u_store.u_native.fifo_clk",
+        "hbm_clk": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[1].g_face.u_store.u_native.hbm_clk"
+      },
+      "native_reset_ports": {
+        "srst": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[1].g_face.u_store.u_native.srst",
+        "hrst": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[1].g_face.u_store.u_native.hrst"
+      },
+      "accepted_root_event": {
+        "signal": "u_fcore.g_group[0].send",
+        "clock": "hbm_clk",
+        "lane_select": "u_fcore.fifo_re[1]"
+      }
     },
     {
       "group": 0,
@@ -155,7 +189,24 @@
         "clock": "hbm_clk",
         "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
       },
-      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged",
+      "group_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group",
+      "native_leaf_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[2].g_face.u_store.u_native",
+      "macro_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[2].g_face.u_store.u_native.u_payload",
+      "fifo_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[2].g_face.u_store.u_native.u_fifo",
+      "native_clock_ports": {
+        "fifo_clk": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[2].g_face.u_store.u_native.fifo_clk",
+        "hbm_clk": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[2].g_face.u_store.u_native.hbm_clk"
+      },
+      "native_reset_ports": {
+        "srst": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[2].g_face.u_store.u_native.srst",
+        "hrst": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[2].g_face.u_store.u_native.hrst"
+      },
+      "accepted_root_event": {
+        "signal": "u_fcore.g_group[0].send",
+        "clock": "hbm_clk",
+        "lane_select": "u_fcore.fifo_re[2]"
+      }
     },
     {
       "group": 0,
@@ -201,7 +252,24 @@
         "clock": "hbm_clk",
         "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
       },
-      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged",
+      "group_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group",
+      "native_leaf_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[3].g_face.u_store.u_native",
+      "macro_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[3].g_face.u_store.u_native.u_payload",
+      "fifo_instance": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[3].g_face.u_store.u_native.u_fifo",
+      "native_clock_ports": {
+        "fifo_clk": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[3].g_face.u_store.u_native.fifo_clk",
+        "hbm_clk": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[3].g_face.u_store.u_native.hbm_clk"
+      },
+      "native_reset_ports": {
+        "srst": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[3].g_face.u_store.u_native.srst",
+        "hrst": "u_fcore.g_store_groups.g_group4[0].u_store_group.g_lane[3].g_face.u_store.u_native.hrst"
+      },
+      "accepted_root_event": {
+        "signal": "u_fcore.g_group[0].send",
+        "clock": "hbm_clk",
+        "lane_select": "u_fcore.fifo_re[3]"
+      }
     },
     {
       "group": 1,
@@ -247,7 +315,24 @@
         "clock": "hbm_clk",
         "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
       },
-      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged",
+      "group_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group",
+      "native_leaf_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[0].g_face.u_store.u_native",
+      "macro_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[0].g_face.u_store.u_native.u_payload",
+      "fifo_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[0].g_face.u_store.u_native.u_fifo",
+      "native_clock_ports": {
+        "fifo_clk": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[0].g_face.u_store.u_native.fifo_clk",
+        "hbm_clk": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[0].g_face.u_store.u_native.hbm_clk"
+      },
+      "native_reset_ports": {
+        "srst": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[0].g_face.u_store.u_native.srst",
+        "hrst": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[0].g_face.u_store.u_native.hrst"
+      },
+      "accepted_root_event": {
+        "signal": "u_fcore.g_group[1].send",
+        "clock": "hbm_clk",
+        "lane_select": "u_fcore.fifo_re[4]"
+      }
     },
     {
       "group": 1,
@@ -293,7 +378,24 @@
         "clock": "hbm_clk",
         "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
       },
-      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged",
+      "group_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group",
+      "native_leaf_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[1].g_face.u_store.u_native",
+      "macro_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[1].g_face.u_store.u_native.u_payload",
+      "fifo_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[1].g_face.u_store.u_native.u_fifo",
+      "native_clock_ports": {
+        "fifo_clk": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[1].g_face.u_store.u_native.fifo_clk",
+        "hbm_clk": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[1].g_face.u_store.u_native.hbm_clk"
+      },
+      "native_reset_ports": {
+        "srst": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[1].g_face.u_store.u_native.srst",
+        "hrst": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[1].g_face.u_store.u_native.hrst"
+      },
+      "accepted_root_event": {
+        "signal": "u_fcore.g_group[1].send",
+        "clock": "hbm_clk",
+        "lane_select": "u_fcore.fifo_re[5]"
+      }
     },
     {
       "group": 1,
@@ -339,7 +441,24 @@
         "clock": "hbm_clk",
         "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
       },
-      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged",
+      "group_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group",
+      "native_leaf_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[2].g_face.u_store.u_native",
+      "macro_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[2].g_face.u_store.u_native.u_payload",
+      "fifo_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[2].g_face.u_store.u_native.u_fifo",
+      "native_clock_ports": {
+        "fifo_clk": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[2].g_face.u_store.u_native.fifo_clk",
+        "hbm_clk": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[2].g_face.u_store.u_native.hbm_clk"
+      },
+      "native_reset_ports": {
+        "srst": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[2].g_face.u_store.u_native.srst",
+        "hrst": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[2].g_face.u_store.u_native.hrst"
+      },
+      "accepted_root_event": {
+        "signal": "u_fcore.g_group[1].send",
+        "clock": "hbm_clk",
+        "lane_select": "u_fcore.fifo_re[6]"
+      }
     },
     {
       "group": 1,
@@ -385,7 +504,24 @@
         "clock": "hbm_clk",
         "source": "rgray[2:0] == wg_r2[2:0]; both read-domain FF, wg_r2 from preserved 2FF pointer synchronizer"
       },
-      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged"
+      "cdc": "original Gray pointers and 2FF cross-domain synchronizers unchanged",
+      "group_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group",
+      "native_leaf_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[3].g_face.u_store.u_native",
+      "macro_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[3].g_face.u_store.u_native.u_payload",
+      "fifo_instance": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[3].g_face.u_store.u_native.u_fifo",
+      "native_clock_ports": {
+        "fifo_clk": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[3].g_face.u_store.u_native.fifo_clk",
+        "hbm_clk": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[3].g_face.u_store.u_native.hbm_clk"
+      },
+      "native_reset_ports": {
+        "srst": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[3].g_face.u_store.u_native.srst",
+        "hrst": "u_fcore.g_store_groups.g_group4[1].u_store_group.g_lane[3].g_face.u_store.u_native.hrst"
+      },
+      "accepted_root_event": {
+        "signal": "u_fcore.g_group[1].send",
+        "clock": "hbm_clk",
+        "lane_select": "u_fcore.fifo_re[7]"
+      }
     }
   ],
   "parent": "Group FIFO heads feed unchanged hbm_clk arbitration; historical fullfamily g_v/g_d outer faces remain fifo_clk and are qualified only by exact common-clock parent binding."
