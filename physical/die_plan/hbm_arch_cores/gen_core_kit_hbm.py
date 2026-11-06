@@ -1622,7 +1622,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     top = rec.get("top", module)
     params = dict(rec.get("params", {}))
     if canon:
-        if not source_profile and canon[0].get("file") and canon[0]["file"] not in files:
+        # HBM-GAPS-3 11-05 (opt-in recipe field replaces_canonical_file, absent = unchanged): a drop-in variant of the
+        # canonical file (same module names, e.g. the tkm root __ctlrst reset form) replaces it instead of adding it.
+        if not source_profile and canon[0].get("file") and canon[0]["file"] not in files \
+                and not rec.get("replaces_canonical_file"):
             files = files + [canon[0]["file"]]
         top = canon[0]["top"]
         # HBM-FACE 10-25: keep the split recipe's parameters of the canonical top (build_split_tops.py writes them, e.g.

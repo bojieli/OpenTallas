@@ -508,6 +508,7 @@ SCHEMA = {
                         "additionalProperties": False,
                         "properties": {"name": _name, "in_face": {"enum": list(FACES)},
                                        "out_face": {"enum": list(FACES)},
+                                       "turnaround": {"type": "boolean"},  # explicit registered same-face path
                                        "width": {"type": "integer", "minimum": 1},
                                        "stations": {"type": "integer", "minimum": 1},
                                        "regs_um": {"type": "array", "items": _xy},   # station sites, type frame
@@ -2357,7 +2358,15 @@ def validate(raw):
             except ValueError as exc:
                 errs.append(f"type {tn} slot {s['name']}: {exc}")
             if s["in_face"] == s["out_face"]:
-                errs.append(f"type {tn} slot {s['name']}: in_face == out_face")
+                if not s.get("turnaround", False):
+                    errs.append(f"type {tn} slot {s['name']}: in_face == out_face")
+                else:
+                    # A registered U-turn has independent ingress and egress pins on one
+                    # edge. Keep their windows disjoint; all station/reach/bit-site and
+                    # generated _i/_o checks continue unchanged.
+                    iw, ow = s.get("in_window_um"), s.get("out_window_um")
+                    if iw is None or ow is None or min(iw[1], ow[1]) > max(iw[0], ow[0]):
+                        errs.append(f"type {tn} slot {s['name']}: turnaround needs disjoint in/out windows")
             if "regs_um" in s and len(s["regs_um"]) != s.get("stations", 1):
                 errs.append(f"type {tn} slot {s['name']}: {len(s['regs_um'])} regs_um for {s.get('stations', 1)} "
                             "stations")

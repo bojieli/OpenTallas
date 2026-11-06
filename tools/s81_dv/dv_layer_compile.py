@@ -68,15 +68,18 @@ RSTOP_HOP = 2
 BKSEL_TRANSIT = 5                   # S81-RF1 11-03 (DIE-S81-51/RF-D, S81-062): +1, dsdv_bk_g RF 1 (vstop FPIPE); +1 RF 4 posedge out-face (form 5)
 # tb_s81sl_beat on the current vp (S81-SLICE NORMR, Verilator 5.050): results/rtl/s81_slice_1017/beat/g_b37 (op 7 NORMR,
 # hc_pre = G-unit leaf row R: SLBEAT go_to_partial=115 rstd_to_y0=18 rstd_to_xq=59 post_cmd_to_last_hw=63, PASS) and g_b37i
-# (op 5 NORM imm: go_to_partial=112); mutants g_mni (NORMR ignores the row) / g_mpl (old POST row order) FAIL.  (Was the
+# (op 5 NORM imm: go_to_partial=112). SS34-TOK 11-05 current-source beat replay measured NORMR 117 on all 80 beats;
+# other beat fields stayed fixed. These partial-publication dates are plan-only, not issue words. Mutants g_mni (NORMR ignores the row) / g_mpl (old POST row order) FAIL.  (Was the
 # pre-NORMR bt_base: 111 / 18 / 47.)  The bench's proven command spacing HLOAD -> GAIN 40, GAIN -> NORM 20 is kept.
-BEAT = dict(go_to_partial=112, go_to_partial_normr=115, rstd_to_y0=18, rstd_to_xq=59, post_cmd_to_last_hw=63,
+BEAT = dict(go_to_partial=112, go_to_partial_normr=117, rstd_to_y0=18, rstd_to_xq=59, post_cmd_to_last_hw=63,
             hload_slot=40, gain_slot=20)
 # dv_price.py (S81-DV measured): beat partial -> xfin DL 4 + collector 5; xfin last partial -> rstd 234 (tb_s81dv_xfin16);
 # rstd -> XQ complete at the ring stop 59 + 4 * 4 (last leaf) + DL 4.
-# FORM-NF 11-05 (DIE-S81-56): norm_finish hard core, last_partial -> rstd 234 + 14; r_v shift varies by arrival order, the
-# static row takes the max seen (rtl/test/s81_lec_xfin/run_nf.sh, 3 seeds: max_shift 14, go->r_v max 259 -> 272).
-XFIN = dict(dl=4, collector=5, last_partial_to_rstd=248, rstd_to_xq_ring=59 + 16 + 4)
+# FORM-NF 11-05: the 16-slice measurement is first rstd 243, last rstd 261 (SS33-TOK xf old/new).
+# The old 234 + 14 mixed the pre-form first-root date with the latest-root shift: 248 was 13 edges before all
+# slices had their norm. Use the measured latest date for these plan-only publication edges. This changes no
+# issue row or hardware word; QDELAYS remains 0 and the full native snake/all-gather schedule is still open.
+XFIN = dict(dl=4, collector=5, last_partial_to_rstd=261, rstd_to_xq_ring=59 + 16 + 4)
 # TOK-DS NORM-DESKEW 10-25 (COORD ruling 01:34; claude/s81-norm-deskew-1025): ot_s81sl_xrt1 / xrt3 PDSK = leaf 0..4
 # depth 4, 3, 2, 1, 0 -- the per-leaf NORMRs must reach the slice on 5 consecutive edges in leaf order (lower_norm_smoke
 # issues them on t .. t + 4) and the partial set leaves xr 4 edges after the first one would have.

@@ -1,0 +1,5 @@
+Actual shared helper, real OpenROAD26Q3-1510 / ASAP7 TT+FF, fixture.sdc:
+OT_HOLD_SCOPE begin full_ff=-276.697540 -279.976445 2 input_ports=2 output_ports=1
+OT_HOLD_SCOPE repair_ff=-3.278905 -3.278905 1 (register-to-register only)
+OT_HOLD_SCOPE restored exact FF SDC; full_ff=-276.697540 -279.976445 2 (port hold remains visible)
+FLOW_SCOPE_PASS exact_TT_FF_SDC original_FF_slack mode exception IO_mask internal_paths default_bypass

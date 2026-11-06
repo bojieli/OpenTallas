@@ -1,0 +1,56 @@
+progress cyc 0 mism 0 done 0 wv 0
+MISMATCH cyc 7 ctl a=0000000 b=1000000 sc 00000000/00000000 wv 0 addr 0000000000/0000000000 evq 0 eqdiff 0
+MISMATCH cyc 8 ctl a=0000000 b=1000000 sc 00000000/00000000 wv 0 addr 0000000000/0000000000 evq 0 eqdiff 0
+MISMATCH cyc 9 ctl a=0000000 b=1000000 sc 00000000/00000000 wv 0 addr 0000000000/0000000000 evq 0 eqdiff 0
+MISMATCH cyc 10 ctl a=0000000 b=1000000 sc 00000000/00000000 wv 0 addr 0000000000/0000000000 evq 0 eqdiff 0
+MISMATCH cyc 11 ctl a=0000000 b=1000000 sc 00000000/00000000 wv 0 addr 0000000000/0000000000 evq 0 eqdiff 0
+MISMATCH cyc 12 ctl a=0000000 b=1000000 sc 00000000/00000000 wv 0 addr 0000000000/0000000000 evq 0 eqdiff 0
+MISMATCH cyc 13 ctl a=0000000 b=1000000 sc 00000000/00000000 wv 0 addr 0000000000/0000000000 evq 0 eqdiff 0
+MISMATCH cyc 14 ctl a=0000000 b=1000000 sc 00000000/00000000 wv 0 addr 0000000000/0000000000 evq 0 eqdiff 0
+MISMATCH cyc 15 ctl a=0000000 b=1000000 sc 00000000/00000000 wv 0 addr 0000000000/0000000000 evq 0 eqdiff 0
+MISMATCH cyc 16 ctl a=0000000 b=1000000 sc 00000000/00000000 wv 0 addr 0000000000/0000000000 evq 0 eqdiff 0
+progress cyc 5000 mism 4993 done 2 wv 4
+progress cyc 10000 mism 9993 done 5 wv 9
+progress cyc 15000 mism 14993 done 8 wv 13
+progress cyc 20000 mism 19993 done 11 wv 15
+progress cyc 25000 mism 24993 done 13 wv 18
+progress cyc 30000 mism 29993 done 16 wv 22
+progress cyc 35000 mism 34993 done 16 wv 60
+progress cyc 40000 mism 39993 done 17 wv 262
+progress cyc 45000 mism 44993 done 20 wv 266
+progress cyc 50000 mism 49993 done 21 wv 267
+progress cyc 55000 mism 54993 done 23 wv 270
+progress cyc 60000 mism 59993 done 26 wv 276
+progress cyc 65000 mism 64993 done 29 wv 278
+progress cyc 70000 mism 69993 done 30 wv 280
+progress cyc 75000 mism 74993 done 34 wv 285
+progress cyc 80000 mism 79993 done 37 wv 289
+progress cyc 85000 mism 84993 done 40 wv 292
+progress cyc 90000 mism 89993 done 42 wv 293
+progress cyc 95000 mism 94993 done 44 wv 297
+progress cyc 100000 mism 99993 done 45 wv 299
+progress cyc 105000 mism 104993 done 47 wv 302
+progress cyc 110000 mism 109993 done 47 wv 302
+progress cyc 115000 mism 114993 done 49 wv 303
+progress cyc 120000 mism 119993 done 52 wv 307
+progress cyc 125000 mism 124993 done 54 wv 309
+progress cyc 130000 mism 129993 done 58 wv 313
+progress cyc 135000 mism 134993 done 60 wv 316
+progress cyc 140000 mism 139993 done 60 wv 316
+progress cyc 145000 mism 144993 done 63 wv 322
+progress cyc 150000 mism 149993 done 65 wv 323
+progress cyc 155000 mism 154993 done 66 wv 324
+progress cyc 160000 mism 159993 done 68 wv 327
+progress cyc 165000 mism 164993 done 68 wv 327
+progress cyc 170000 mism 169993 done 70 wv 330
+progress cyc 175000 mism 174993 done 71 wv 331
+progress cyc 180000 mism 179993 done 74 wv 337
+progress cyc 185000 mism 184993 done 77 wv 342
+progress cyc 190000 mism 189993 done 78 wv 344
+progress cyc 195000 mism 194993 done 80 wv 347
+progress cyc 200000 mism 199993 done 82 wv 350
+SUMMARY seed=1 cycles=200000 mismatches=199993 raw_unqualified_payload_diff_cycles=199993 resets=130 start=4928 busy_cyc=9313 done_cyc=82 wv_cyc=350 fault_cyc=194305
+[400001000] %Fatal: tb.sv:76: Assertion failed in tb_tkm_root_ctlrst: FAIL
+%Error: tb.sv:76: Verilog $stop
+Aborting...
+MUTANT_RC=1

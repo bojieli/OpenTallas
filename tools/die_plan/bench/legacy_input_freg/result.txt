@@ -1,0 +1,80 @@
+CASE_RESULT WNEG=0 checks=1703 errors=1703
+CASE_RESULT WNEG=1 checks=1703 errors=1703
+MUTANT_CAUGHT bypass rc=1
+CASE_RESULT WNEG=0 checks=1703 errors=1703
+CASE_RESULT WNEG=1 checks=1703 errors=1703
+MUTANT_CAUGHT bit rc=1
+CASE_RESULT WNEG=0 checks=1703 errors=1703
+CASE_RESULT WNEG=1 checks=1703 errors=0
+MUTANT_CAUGHT fall rc=1
+CASE_RESULT WNEG=0 checks=1703 errors=0
+CASE_RESULT WNEG=1 checks=1703 errors=0
+LEGACY_FREG_PASS phase=0 checks=1703/1703
+- tb_legacy_input_freg.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.009 s; speed 172.860 us/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 7 MB
+CASE_RESULT WNEG=0 checks=1703 errors=0
+CASE_RESULT WNEG=1 checks=1703 errors=0
+LEGACY_FREG_PASS phase=1 checks=1703/1703
+- tb_legacy_input_freg.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.009 s; speed 170.015 us/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 7 MB
+CASE_RESULT WNEG=0 checks=1703 errors=0
+CASE_RESULT WNEG=1 checks=1703 errors=0
+LEGACY_FREG_PASS phase=50 checks=1703/1703
+- tb_legacy_input_freg.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.009 s; speed 168.383 us/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 7 MB
+CASE_RESULT WNEG=0 checks=1703 errors=0
+CASE_RESULT WNEG=1 checks=1703 errors=0
+LEGACY_FREG_PASS phase=200 checks=1703/1703
+- tb_legacy_input_freg.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.009 s; speed 169.480 us/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 7 MB
+CASE_RESULT WNEG=0 checks=1703 errors=0
+CASE_RESULT WNEG=1 checks=1703 errors=0
+LEGACY_FREG_PASS phase=400 checks=1703/1703
+- tb_legacy_input_freg.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.009 s; speed 168.695 us/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 7 MB
+CASE_RESULT WNEG=0 checks=1703 errors=0
+CASE_RESULT WNEG=1 checks=1703 errors=0
+LEGACY_FREG_PASS phase=416 checks=1703/1703
+- tb_legacy_input_freg.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.009 s; speed 167.932 us/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 7 MB
+CASE_RESULT WNEG=0 checks=1703 errors=0
+CASE_RESULT WNEG=1 checks=1703 errors=0
+LEGACY_FREG_PASS phase=417 checks=1703/1703
+- tb_legacy_input_freg.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.009 s; speed 169.950 us/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 7 MB
+CASE_RESULT WNEG=0 checks=1703 errors=0
+CASE_RESULT WNEG=1 checks=1703 errors=0
+LEGACY_FREG_PASS phase=600 checks=1703/1703
+- tb_legacy_input_freg.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.012 s; speed 125.139 us/s
+- Verilator: cpu 0.012 s on 1 threads; allocated 7 MB
+CASE_RESULT WNEG=0 checks=1703 errors=0
+CASE_RESULT WNEG=1 checks=1703 errors=0
+LEGACY_FREG_PASS phase=800 checks=1703/1703
+- tb_legacy_input_freg.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.011 s; speed 134.994 us/s
+- Verilator: cpu 0.011 s on 1 threads; allocated 7 MB
+CASE_RESULT WNEG=0 checks=1703 errors=0
+CASE_RESULT WNEG=1 checks=1703 errors=0
+LEGACY_FREG_PASS phase=832 checks=1703/1703
+- tb_legacy_input_freg.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.011 s; speed 135.755 us/s
+- Verilator: cpu 0.011 s on 1 threads; allocated 7 MB
+LEGACY_INPUT_FREG_ALL_PASS
