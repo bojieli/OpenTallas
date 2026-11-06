@@ -7,7 +7,7 @@
 // The seam stage registers carry no reset (as the face shells they replace). MUT 1-4: bench mutants (as topk__comp.sv).
 `timescale 1ns/1ps
 `default_nettype none
-module ot_hbm_idx_topk_link_pd3 #(parameter integer MUT = 0) (
+module ot_hbm_idx_topk_link_pd3 #(parameter integer MUT = 0, FILL_GROUPS = 0) (
  input wire clk,input wire[7:0]clk_mem,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
@@ -15,7 +15,7 @@ module ot_hbm_idx_topk_link_pd3 #(parameter integer MUT = 0) (
  output wire fault,output wire[9:0]selected_count
 );
  wire[7:0]c_we;wire[47:0]c_wa;wire[4095:0]c_wd;
- ot_hbm_idx_topk_ingest #(.MUT(0)) u_ing(.clk(clk),.rst_n(rst_n),.clear(clear),.ingest_v(ingest_v),.selected_line(selected_line),
+ ot_hbm_idx_topk_ingest #(.MUT(0),.FILL_GROUPS(FILL_GROUPS)) u_ing(.clk(clk),.rst_n(rst_n),.clear(clear),.ingest_v(ingest_v),.selected_line(selected_line),
   .flush(flush),.emit_v(emit_v),.rank(rank),.gbase(gbase),
   .fault(fault),.selected_count(selected_count),.wo_we(c_we),.wo_wa(c_wa),.wo_wd(c_wd));
  // write seam: ingest output stage, then store input stage (the two part 30 tile face stages)

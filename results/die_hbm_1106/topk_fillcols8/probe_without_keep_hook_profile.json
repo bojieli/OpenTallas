@@ -1,0 +1,246 @@
+{
+  "standard_cells": 98723,
+  "sequential_cells": 9893,
+  "fill_nets": [
+    {
+      "net": "$abc$362964$genblk2.g_fill_columns.column_group[2].fill_local[0]",
+      "bits": [
+        26086
+      ],
+      "fanouts": [
+        9
+      ],
+      "attributes": {
+        "src": "/work/topk_tiles_fill.sv:64.23-64.33"
+      }
+    },
+    {
+      "net": "$abc$362964$genblk2.g_fill_columns.column_group[2].fill_local[1]",
+      "bits": [
+        6334
+      ],
+      "fanouts": [
+        9
+      ],
+      "attributes": {
+        "src": "/work/topk_tiles_fill.sv:64.23-64.33"
+      }
+    },
+    {
+      "net": "$abc$362964$genblk2.g_fill_columns.column_group[2].fill_local[2]",
+      "bits": [
+        27626
+      ],
+      "fanouts": [
+        9
+      ],
+      "attributes": {
+        "src": "/work/topk_tiles_fill.sv:64.23-64.33"
+      }
+    },
+    {
+      "net": "fill",
+      "bits": [
+        26086,
+        6334,
+        27626
+      ],
+      "fanouts": [
+        9,
+        9,
+        9
+      ],
+      "attributes": {
+        "src": "/work/topk_tiles_fill.sv:32.10-32.14"
+      }
+    },
+    {
+      "net": "genblk2.g_fill_columns.column_group[0].fill_local",
+      "bits": [
+        26086,
+        6334,
+        27626
+      ],
+      "fanouts": [
+        9,
+        9,
+        9
+      ],
+      "attributes": {
+        "keep": "00000000000000000000000000000001",
+        "src": "/work/topk_tiles_fill.sv:64.23-64.33"
+      }
+    },
+    {
+      "net": "genblk2.g_fill_columns.column_group[1].fill_local",
+      "bits": [
+        26086,
+        6334,
+        27626
+      ],
+      "fanouts": [
+        9,
+        9,
+        9
+      ],
+      "attributes": {
+        "keep": "00000000000000000000000000000001",
+        "src": "/work/topk_tiles_fill.sv:64.23-64.33"
+      }
+    },
+    {
+      "net": "genblk2.g_fill_columns.column_group[2].fill_local",
+      "bits": [
+        26086,
+        6334,
+        27626
+      ],
+      "fanouts": [
+        9,
+        9,
+        9
+      ],
+      "attributes": {
+        "keep": "00000000000000000000000000000001",
+        "src": "/work/topk_tiles_fill.sv:64.23-64.33"
+      }
+    },
+    {
+      "net": "genblk2.g_fill_columns.column_group[3].fill_local",
+      "bits": [
+        26086,
+        6334,
+        27626
+      ],
+      "fanouts": [
+        9,
+        9,
+        9
+      ],
+      "attributes": {
+        "keep": "00000000000000000000000000000001",
+        "src": "/work/topk_tiles_fill.sv:64.23-64.33"
+      }
+    },
+    {
+      "net": "genblk2.g_fill_columns.column_group[4].fill_local",
+      "bits": [
+        26086,
+        6334,
+        27626
+      ],
+      "fanouts": [
+        9,
+        9,
+        9
+      ],
+      "attributes": {
+        "keep": "00000000000000000000000000000001",
+        "src": "/work/topk_tiles_fill.sv:64.23-64.33"
+      }
+    },
+    {
+      "net": "genblk2.g_fill_columns.column_group[5].fill_local",
+      "bits": [
+        26086,
+        6334,
+        27626
+      ],
+      "fanouts": [
+        9,
+        9,
+        9
+      ],
+      "attributes": {
+        "keep": "00000000000000000000000000000001",
+        "src": "/work/topk_tiles_fill.sv:64.23-64.33"
+      }
+    },
+    {
+      "net": "genblk2.g_fill_columns.column_group[6].fill_local",
+      "bits": [
+        26086,
+        6334,
+        27626
+      ],
+      "fanouts": [
+        9,
+        9,
+        9
+      ],
+      "attributes": {
+        "keep": "00000000000000000000000000000001",
+        "src": "/work/topk_tiles_fill.sv:64.23-64.33"
+      }
+    },
+    {
+      "net": "genblk2.g_fill_columns.column_group[7].fill_local",
+      "bits": [
+        26086,
+        6334,
+        27626
+      ],
+      "fanouts": [
+        9,
+        9,
+        9
+      ],
+      "attributes": {
+        "keep": "00000000000000000000000000000001",
+        "src": "/work/topk_tiles_fill.sv:64.23-64.33"
+      }
+    }
+  ],
+  "cell_types": {
+    "INVx1_ASAP7_75t_R": 7236,
+    "BUFx2_ASAP7_75t_R": 8423,
+    "AND2x2_ASAP7_75t_R": 7122,
+    "AO21x1_ASAP7_75t_R": 10862,
+    "NOR2x1_ASAP7_75t_R": 2908,
+    "NAND2x1_ASAP7_75t_R": 5242,
+    "OR2x2_ASAP7_75t_R": 5649,
+    "BUFx6f_ASAP7_75t_R": 24,
+    "AOI21x1_ASAP7_75t_R": 2800,
+    "OA21x2_ASAP7_75t_R": 9260,
+    "OA211x2_ASAP7_75t_R": 4467,
+    "AO22x1_ASAP7_75t_R": 2178,
+    "BUFx3_ASAP7_75t_R": 96,
+    "BUFx5_ASAP7_75t_R": 9,
+    "OAI21x1_ASAP7_75t_R": 1623,
+    "OAI22x1_ASAP7_75t_R": 1421,
+    "AND3x1_ASAP7_75t_R": 2089,
+    "OA22x2_ASAP7_75t_R": 1604,
+    "OR3x1_ASAP7_75t_R": 3271,
+    "XNOR2x2_ASAP7_75t_R": 126,
+    "XOR2x2_ASAP7_75t_R": 51,
+    "BUFx4f_ASAP7_75t_R": 6,
+    "OR4x1_ASAP7_75t_R": 415,
+    "NOR3x1_ASAP7_75t_R": 39,
+    "AO32x1_ASAP7_75t_R": 3321,
+    "AOI22x1_ASAP7_75t_R": 308,
+    "MAJx2_ASAP7_75t_R": 42,
+    "AOI221x1_ASAP7_75t_R": 41,
+    "AO221x1_ASAP7_75t_R": 3747,
+    "BUFx4_ASAP7_75t_R": 9,
+    "AOI211x1_ASAP7_75t_R": 253,
+    "AO211x2_ASAP7_75t_R": 136,
+    "AO31x2_ASAP7_75t_R": 156,
+    "OA31x2_ASAP7_75t_R": 227,
+    "NAND3x1_ASAP7_75t_R": 32,
+    "OA222x2_ASAP7_75t_R": 583,
+    "AO222x2_ASAP7_75t_R": 2953,
+    "INVx2_ASAP7_75t_R": 1,
+    "AND4x1_ASAP7_75t_R": 39,
+    "NOR3x2_ASAP7_75t_R": 1,
+    "NOR2x2_ASAP7_75t_R": 2,
+    "OR5x1_ASAP7_75t_R": 7,
+    "OA33x2_ASAP7_75t_R": 39,
+    "NAND2x2_ASAP7_75t_R": 1,
+    "AND2x4_ASAP7_75t_R": 6,
+    "OA221x2_ASAP7_75t_R": 2,
+    "AND5x1_ASAP7_75t_R": 3,
+    "DFFASRHQNx1_ASAP7_75t_R": 35,
+    "DFFHQNx1_ASAP7_75t_R": 9858,
+    "$scopeinfo": 127
+  }
+}
