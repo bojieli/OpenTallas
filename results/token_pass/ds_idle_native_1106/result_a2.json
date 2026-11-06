@@ -1,0 +1,38 @@
+{
+  "verdict": "PASS",
+  "scope": "idle image material and ownership guard only; historical source resolver unavailable",
+  "actual_slice": "u_s_7N",
+  "actual_frame_count": 6,
+  "actual_ownership_sha256": "fe492da5343b419b16c7ea0a707fee79206a84a41e47bdeda60eea2e0f4ebcb0",
+  "zero_roms": 7,
+  "logical_zero_words": 28672,
+  "frame_weights_emitted": 0,
+  "issuer_commands_emitted": false,
+  "selected_source_resolution_qualified": false,
+  "production_bundle_emitted": false,
+  "layer_lifetime_qualified": false,
+  "guard_controls": [
+    {
+      "name": "active_row",
+      "rejected": true,
+      "reason": "idle native slice cannot contain active or unknown rows"
+    },
+    {
+      "name": "unknown_row",
+      "rejected": true,
+      "reason": "idle native slice cannot contain active or unknown rows"
+    },
+    {
+      "name": "missing_frame",
+      "rejected": true,
+      "reason": "idle native slice frame list differs from actual placement"
+    },
+    {
+      "name": "wrong_master",
+      "rejected": true,
+      "reason": "idle native slice cannot contain active or unknown rows"
+    }
+  ],
+  "pin_cycles_added": 0,
+  "output": "/srv/opentallas-scratch2/claude/codex-ds-idle-native-1106/output_a2"
+}
