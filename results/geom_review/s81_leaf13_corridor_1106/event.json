@@ -381,5 +381,16 @@
  "control_added_cycles": 0,
  "rtl_changed": false,
  "pins_changed": false,
- "physical_status": "NOT RUN"
+ "physical_status": "NOT RUN",
+ "native_verdict": "REJECTED",
+ "native_failure": {
+  "new_direct_core_overreach_paths": 183,
+  "direct_core_max_um": 443.532,
+  "full_cone_captures_gt405": 2067,
+  "full_cone_max_um": 2537.3,
+  "source_reset_relays": 306,
+  "physical_recomputed_reset_relays": 308,
+  "stopped_unit": "oth-ubuntu-640969-1793958541",
+  "retained_checkpoint": "4_cts.odb"
+ }
 }

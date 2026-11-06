@@ -1,3 +1,7 @@
+# REJECTED after native canary — do not route or adopt
+
+The original conditional review below is historical. The actual private canary exposed183 new direct VS/VNA-to-VQ core-pin reaches above402.84um (max443.532um). Full-cone audit additionally found2067 register captures above405um, max2537.3um. Physical reset_tree.tcl recomputed308 relay nodes against306 immutable bound RTL nodes, assigning existing instance names to different depths and sites. Abstract reset and internal-station checks did not measure that actual connectivity. Root and plan owner authorized stopping only this private canary; it exited137 with all checkpoints and logs retained. The inherited intel1 pilot remains untouched. A corrected macro pose and canonical bound-reset export are being prepared; no new canary is authorized by this report.
+
 # S81 t13 corridor candidate — owner PASS-COND
 
 This private replay widens the upper west M7-free corridor by moving four
