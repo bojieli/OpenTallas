@@ -5237,7 +5237,7 @@ def cmd_kit_rtl(a):
         from types import SimpleNamespace
         native_type = copy.deepcopy(t)
         native_type.setdefault("clock", {}).setdefault("landing_contract", {})["collector_tree"] = bound_reset_source["tree"]
-        native_plan = SimpleNamespace(types={tn: native_type})
+        native_plan = SimpleNamespace(types={tn: native_type}, path=Path(a.plan))
         try:
             bound_reset = gen_phys.install_bound_native_reset(native_plan, tn, fl, source_contract=bound_reset_source)
             BRC.stage(kd, bound_reset_source, bound_reset)
