@@ -277,6 +277,8 @@ def main(argv):
     man["kit_rsync"] = dict(taps=len(taps), firm_repointed=nfirm, firm_nearest=nnear, ste=nste, converted_from=conv,
                             bound_sync_stages=ns, leaf_tap=leaf, reset_tree=reset_tree.summary(tree),
                             reset_outs=[n for n, _, _ in routs])
+    from kit_dead_inputs import refresh as refresh_dead_inputs
+    refresh_dead_inputs(man, nf[0])
     (kd / "kit_rtl.json").write_text(json.dumps(man, indent=1))
     print(json.dumps(dict(type=tn, kit=str(kd), **man["kit_rsync"])))
     return 0
