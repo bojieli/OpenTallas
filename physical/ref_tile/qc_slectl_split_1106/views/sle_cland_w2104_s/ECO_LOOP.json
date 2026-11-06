@@ -1,0 +1,115 @@
+{
+ "schema": "opentallas.eco_loop.v1",
+ "kind": "eco",
+ "tool": "tools/die_plan/eco_loop.py",
+ "kit": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag",
+ "root": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z",
+ "mem_requested_gb": 16,
+ "mem_gb": 16,
+ "kit_peak_gb": 6.66,
+ "mem_factor": 1.5,
+ "base_signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/signoff/signoff.json",
+ "base_routed_db": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/run/results/asap7/kq_sle_cland_w2104_s_hed6d0c/base/6_final.odb",
+ "base_metrics": {
+  "verdict": "NOT SIGNED",
+  "signed": false,
+  "tt": 152.46,
+  "ff": 16.29,
+  "drv": 27,
+  "drc": 0,
+  "drv_tt": 15,
+  "drv_ff": 12,
+  "fails": [
+   "drv"
+  ],
+  "vclk_tt": 166.222445,
+  "vclk_ff": 134.734987
+ },
+ "max_iter": 3,
+ "hold_margin_ps": 0,
+ "started": 1793956184.4761384,
+ "iterations": [
+  {
+   "n": 1,
+   "dir": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1",
+   "source": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag",
+   "mode": "route",
+   "variant": "m0",
+   "started": 1793956184.89452,
+   "commands": [
+    "bash /srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/tools/die_plan/post_route_drv/prd_mk.sh /srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag /srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1 m0 /srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/so",
+    "bash /srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/tools/die_plan/post_route_drv/prd_run.sh /srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1 4 16 1",
+    "bash -c 'set -uo pipefail\nD=$1; CPUS=$2; MEM=$3; IMAGE=$4; DK=$5; MM=$6\nPATCH=true; [ \"$MM\" = 1 ] && PATCH=\"python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || exit 9\"\n[ -f \"$D/kwrs_busfit.py\" ] && PATCH=\"python3 -I /work/kwrs_busfit.py patch /OpenROAD-flow-scripts/flow/scripts/util.tcl; $PATCH\"\n$DK run --rm --name eco-abs-$$ --cpus=\"$CPUS\" --memory=\"${MEM}g\" --memory-swap=\"${MEM}g\" -v \"$D\":/work -w /OpenROAD-flow-scripts/flow \\\n  \"$IMAGE\" bash -lc \"source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $PATCH; \\\n  make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS do-generate_abstract\" > \"$D/run_eco_abstract.log\" 2>&1\nrc=$?\n$DK run --rm -v \"$D\":/work \"$IMAGE\" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1\nexit $rc\n' eco_abstract /srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1 4 16 openroad/orfs:asap7lock docker 1",
+    "/usr/bin/python3 -I /srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/signoff.py run --run-dir /srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/run --kit /srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1 --out /srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/signoff --image openroad/orfs:asap7lock --corners tt,ff"
+   ],
+   "rc": {
+    "prd_mk": 0,
+    "prd_run": 0,
+    "abstract": 0,
+    "signoff": 0
+   },
+   "pass_dirs": [
+    "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1"
+   ],
+   "repair_rc": "auto",
+   "eco_vclk_ps": {
+    "m0": null
+   },
+   "signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/signoff/signoff.json",
+   "base": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/run/results/asap7/kq_sle_cland_w2104_s_hed6d0c/base",
+   "metrics": {
+    "verdict": "SIGNED",
+    "signed": true,
+    "tt": 152.46,
+    "ff": 16.29,
+    "drv": 0,
+    "drc": 0,
+    "drv_tt": 0,
+    "drv_ff": 0,
+    "fails": [],
+    "vclk_tt": 166.21539,
+    "vclk_ff": 134.731152
+   },
+   "status": "SIGNED",
+   "reason": "",
+   "finished": 1793959044.1611967,
+   "wall_s": 2859.3
+  }
+ ],
+ "flow": {
+  "tools_sha256": "86453770bfae831ed955c3a1cfd70ddd99fc6490fa9433690547b68f4f100568"
+ },
+ "host": "dear-crayfish",
+ "eligibility": "ECO class: drv",
+ "best": {
+  "n": 1,
+  "dir": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1",
+  "signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/signoff/signoff.json",
+  "base": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/run/results/asap7/kq_sle_cland_w2104_s_hed6d0c/base",
+  "metrics": {
+   "verdict": "SIGNED",
+   "signed": true,
+   "tt": 152.46,
+   "ff": 16.29,
+   "drv": 0,
+   "drc": 0,
+   "drv_tt": 0,
+   "drv_ff": 0,
+   "fails": [],
+   "vclk_tt": 166.21539,
+   "vclk_ff": 134.731152
+  }
+ },
+ "verdict": "PASS",
+ "reason": "signed off after 1 ECO iteration(s)",
+ "finished": 1793959044.1612601,
+ "wall_s": 2859.7,
+ "lec": {
+  "tool": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/tools/die_plan/lec.py",
+  "netlist": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/run/results/asap7/kq_sle_cland_w2104_s_hed6d0c/base/6_final.v",
+  "record": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/lec_postroute_3h58ugwo/lec.json",
+  "exit": 0,
+  "verdict": "EQUIVALENT",
+  "all_shown": true
+ }
+}

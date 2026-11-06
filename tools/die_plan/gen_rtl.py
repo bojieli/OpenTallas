@@ -692,6 +692,27 @@ def die_top(P, epochs, dropped=None, rtl_root=None):
             + "\n".join(wires + rlines) + "\n" + "\n".join(insts) + f"\nendmodule : {mod}\n`default_nettype wire\n")
 
 
+def realize_plan_stations(raw, tn, text, out):
+    """Opt-in source realization using the same planned station emitter as bound kits."""
+    import json
+    import shutil
+    import kit_istations
+    t = raw['partition_types'][tn]
+    if not t.get('internal_stations'):
+        raise GenError(f'{tn}: realize_internal_stations needs explicit planned stations')
+    work = Path(out) / '_internal_stations' / tn
+    work.mkdir(parents=True, exist_ok=False)
+    wrapper = work / (t['module'] + '.sv')
+    wrapper.write_text(text)
+    plan = work / 'station_plan.json'
+    plan.write_text(json.dumps({'partition_types': {tn: t}}))
+    manifest = work / 'kit_rtl.json'
+    manifest.write_text(json.dumps(dict(files=[str(wrapper.resolve())], bound_module=t['module'])))
+    kit_istations.main([str(plan), tn, str(work), '--apply'])
+    shutil.copy2(work / 'istations.tcl', Path(out) / (t['module'] + '.istations.tcl'))
+    return wrapper.read_text()
+
+
 def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None, *, emit_die_top=True):
     """landing (opt-in, LAND-HEAD-BIND-1): the clock_landing_plan sidecar of a landed plan.  The SAME emitter the
     as-built binder uses (clock_landings.Landings.type_rtl / top_rtl) is applied to every generated wrapper and to the
@@ -733,6 +754,8 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
                 text = L.type_rtl(tn, text)
             except CL.LandingError as e:
                 raise GenError(f"clock landing: {e}") from e
+        if t.get('realize_internal_stations'):
+            text = realize_plan_stations(raw, tn, text, out)
         f.write_text(text)
         files.append(f)
     if not emit_die_top:

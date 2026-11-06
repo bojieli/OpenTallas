@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+ "flow_tag": "flow-20261106-z-qc",
+ "routed_db": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/run/results/asap7/kq_sle_cland_w2104_s_hed6d0c/base/6_final.odb",
+ "build_commit": "abd257a000c7f87b407e6fa15055558933850b8d",
+ "lec": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/out_eco2104/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/out_eco2104/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1",
+ "original_signoff": "/srv/opentallas-scratch2/claude/codex-qc-slectl/builds3/kits/sle_cland_w2104_s_hed6d0c_fwdtag/eco_drv_z/i1/signoff/signoff.json",
+ "name": "kq_sle_cland_w2104_s_hed6d0c",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "devoted-wren",
+ "created": "2026-11-06 10:30 UTC",
+ "routed_db_sha256": "b786e2dd2f8986caa4487df68411af93b1277eaeced4aa6c481a6b94932e4b3a",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch2/claude/codex-qc-slectl/resign_z/tools/die_plan",
+  "sha256": {
+   "signoff.py": "3e97ef41823cac5d5dbff8d672eeb6839ef32278c58ca44cbd22865476eebfc5",
+   "lec.py": "313d77f094144205893055f199eff7274f8ecc2aea2c0caae3d2eb05958542e6"
+  },
+  "checked": "byte-identical to flow-20261106-z-qc"
+ },
+ "lane": "QC-SLECTL-B",
+ "as_run_note": "Exact released tag tools already completed successful ECO signoff and all-shown routed LEC; immutable captured input files restored directly from completed epyc2 run"
+}

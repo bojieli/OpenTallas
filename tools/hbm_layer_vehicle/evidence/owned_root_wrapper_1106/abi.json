@@ -1,0 +1,87 @@
+{
+  "original_parameter_count": 12,
+  "original_parameters": [
+    [
+      "K",
+      "20480"
+    ],
+    [
+      "NF",
+      "32'h46a00000"
+    ],
+    [
+      "XRD",
+      "0"
+    ],
+    [
+      "XRU",
+      "0"
+    ],
+    [
+      "QDRLY",
+      "1"
+    ],
+    [
+      "QCHX",
+      "0"
+    ],
+    [
+      "TLA",
+      "7"
+    ],
+    [
+      "NQ",
+      "4"
+    ],
+    [
+      "MUT",
+      "0"
+    ],
+    [
+      "QB",
+      "(NQ == 2) ? 7 : 6"
+    ],
+    [
+      "NVQ",
+      "QB + 1"
+    ],
+    [
+      "QWW",
+      "(NQ == 2) ? 6 : 5"
+    ]
+  ],
+  "new_parameters_appended": [
+    [
+      "NOUT",
+      "24"
+    ],
+    [
+      "WROW0",
+      "0"
+    ],
+    [
+      "OROW0",
+      "0"
+    ]
+  ],
+  "legacy_positional_and_named_defaults_preserved": true,
+  "proof_body_identical_after_header_only_reorder": true,
+  "current_root_sha256": "a9ede09e61ab2980c99375c5857c7fa54a148df53c51fce74b03989140c0012d",
+  "prior_proof_root_sha256": "b5f0daf1b092f3d84817f69a006069b13fec5beb210e8b263fd88476fa678b6e",
+  "owned_launch_fields": {
+    "launch": 1,
+    "ingest": 0,
+    "lo": 23
+  },
+  "lo_runtime_use_requires": "OROW0==-1 and e_launch",
+  "default_OROW0": 0,
+  "f20_payload_bits": 124,
+  "ports_unchanged": true,
+  "arithmetic_qualified": false,
+  "current_die_qualified": false,
+  "legacy_positional_compiled": true,
+  "compiled_receipt": "runpositional.log",
+  "compiled_host": "epyc5",
+  "compiled_unit": "oth-ubuntu-2928591-1793961561",
+  "compiled_scope": "legacy12 positional elaboration and parameter values; no arithmetic/F20 qualification"
+}
