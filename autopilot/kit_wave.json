@@ -220,17 +220,17 @@
     "snapshot_asbuilt": "/srv/opentallas-scratch2/claude/die-kv-64/pvrec/asbuilt.json",
     "critical": true
    },
-   "hold_items": [
-    "kv3_hub_C",
-    "kv3_hg_v1",
-    "kv3_hroot",
-    "kv3_sys_SD_v1",
-    "kv3_hub_Wi",
-    "kv3_phy_v1",
-    "kv3_pc_v1__cl23f6a148",
-    "kv3_pc_v1__cl7f648944",
-    "kv3_sys_c"
-   ],
+   "hold_items": {
+    "kv3_hub_C": "Known actual GEN_LINT OOM at8GB and measured16GB (rc137,16,726,636KiB); typed AHUB/CTL hard-child closure required, no blind memory escalation or same-flat-source retry.",
+    "kv3_hg_v1": "RE-FORM (OWNER TWO-STRIKES, KW-FIX-4 08:4x): a1/a2/a3 FAIL place PLAN; release on a DIE-KV-64 RE-FORM post",
+    "kv3_hroot": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
+    "kv3_sys_SD_v1": "KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft lift); this row stays out, it was not taken before",
+    "kv3_hub_Wi": "DIE-KV-69 09:08: no retry, class A symptom, waits for 21 HR core views + view plan event",
+    "kv3_phy_v1": "KW-FIX-8 10:1x DIE-KV-69 09:17: follows the kv3_phy G2 read on phymid; release on that read",
+    "kv3_pc_v1__cl23f6a148": "KW-FIX-8 11-04 20:1x: PDN-0006 same error a3-a5, PC core LEF in kit is the plan stub with full-rect M6/M7 OBS; INFRA label masked it. Waits real PC core views (DIE-KV-70), no blind retry",
+    "kv3_pc_v1__cl7f648944": "KW-FIX-8 11-04 20:1x: PDN-0006 same error a3-a5, PC core LEF in kit is the plan stub with full-rect M6/M7 OBS; INFRA label masked it. Waits real PC core views (DIE-KV-70), no blind retry",
+    "kv3_sys_c": "KW-FIX-8 11-04 20:1x: OT_CLAND band on u_cland_raw_fs_ft1_o same error a2-a3, INFRA label masked it. Waits KV CLAND class form (DIE-KV-70), no blind retry"
+   },
    "work_root": "/srv/opentallas-scratch2/claude/kv-wave-1105e4/kit-wave",
    "retry_fix": {
     "kv3_io_cor@2": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d; relaunched 07:03 as a3 (resume from a2)",
