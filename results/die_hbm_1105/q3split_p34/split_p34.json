@@ -1,0 +1,140 @@
+[
+ {
+  "core": "ot_hfd_coll_q3_edge_core",
+  "sha": "p34",
+  "part": "p34",
+  "glue": "ot_hfd_coll_q3_edge_core__p34glue.sv",
+  "conn": "ot_hfd_coll_q3_edge_core.conn.json",
+  "subs": [
+   {
+    "module": "ot_hfd_coll_q3_edge_arg",
+    "cells": 11000
+   },
+   {
+    "module": "ot_hfd_coll_q3_edge_link",
+    "cells": 27000
+   },
+   {
+    "module": "ot_hfd_coll_q3_edge_link",
+    "cells": 27000
+   },
+   {
+    "module": "ot_hfd_coll_q3_edge_link",
+    "cells": 27000
+   }
+  ],
+  "added_cycles": "0 on every port (no member-to-member wire; each sub pin keeps the one kit face flop in and out of the uncut core); parent fans out arg_rst_n to the 4 rst_n and link0_epoch_new to the 3 link epoch_new",
+  "keep_face": true,
+  "sub_face": {
+   "ot_hfd_coll_q3_edge_arg": {
+    "out_flit": "S",
+    "out_v": "S",
+    "fault": "S"
+   }
+  },
+  "layout": {
+   "u_fcore.u_core.u_arg": {
+    "xy": [
+     0.0,
+     0.0
+    ],
+    "wh": [
+     276.48,
+     43.2
+    ]
+   },
+   "u_fcore.u_core.u_link0": {
+    "xy": [
+     0.0,
+     43.2
+    ],
+    "wh": [
+     276.48,
+     336.96
+    ]
+   },
+   "u_fcore.u_core.u_link1": {
+    "xy": [
+     0.0,
+     380.16
+    ],
+    "wh": [
+     276.48,
+     336.96
+    ]
+   },
+   "u_fcore.u_core.u_link2": {
+    "xy": [
+     0.0,
+     717.12
+    ],
+    "wh": [
+     276.48,
+     336.96
+    ]
+   }
+  },
+  "boundary_sub": "u_fcore.u_core.u_arg",
+  "hub_sub": "u_fcore.u_core.u_arg",
+  "clock_entry": {
+   "ot_hfd_coll_q3_edge_link": [
+    138.24,
+    168.48
+   ],
+   "ot_hfd_coll_q3_edge_arg": [
+    138.24,
+    21.6
+   ]
+  },
+  "macros": {
+   "ot_hfd_coll_q3_edge_link": [
+    {
+     "name": "u_fcore.u_link.g_bank[0].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      52.56,
+      7.548,
+      223.848,
+      85.308
+     ]
+    },
+    {
+     "name": "u_fcore.u_link.g_bank[1].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      52.56,
+      85.356,
+      223.848,
+      163.116
+     ]
+    },
+    {
+     "name": "u_fcore.u_link.g_bank[2].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      52.56,
+      173.964,
+      223.848,
+      251.724
+     ]
+    },
+    {
+     "name": "u_fcore.u_link.g_bank[3].u_store.u_native.u_sram",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      52.56,
+      251.772,
+      223.848,
+      329.532
+     ]
+    }
+   ]
+  },
+  "macro_basis": "HBM-GAPS-4-Q3SPLIT d44v q3_edge link: the 4 SRAMs of ONE link as one centred column (x 52.56, W/E bands 48.2/48.3 for the SRAM W/E pin faces), pairs abutted (0.048) with one 10.848 interior channel (kit_contract 10.8 rule) holding the clock entry; replaces the 12-SRAM full-height column of the uncut core",
+  "pins_post": "mk_p34pins.py: link W face rx_pin side (rx lower half, tx upper half), E face flit side (rx_flit lower half aligned with rx_pin, wr_flit + controls upper half aligned with tx), each bus spread over its half of the tile"
+ }
+]
