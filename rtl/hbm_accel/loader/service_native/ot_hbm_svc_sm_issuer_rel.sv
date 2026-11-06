@@ -40,7 +40,12 @@
 module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer LB=(LBANKS>2)?2:1, parameter integer QD=4,
  parameter integer NID=6, parameter integer IDW=9, parameter integer PAW=11, parameter integer DD=256, parameter integer MUT=0,
  parameter integer DAW=(DD>128)?8:7, parameter integer ID_COHORT=0, parameter integer XSLOT=0,
- parameter integer CTXW=(XSLOT!=0)?53:46)(
+ parameter integer CTXW=(XSLOT!=0)?53:46,
+ // HBM-GAPS-8 SVGR_TOP P1: MPIPE 1 = (a) the id-wait test reads a REGISTERED copy of ids_ok_q && ids_layer_q==layer_q,
+ // computed from the next-state of those registers (exact, never stale); (b) a stage M between A and P holds the
+ // descriptor + the selected id + the layer, so P only multiplies.  Reserve path +1 edge (elastic; go stays the fixed slot).
+ // 0 (default) = unchanged.
+ parameter integer MPIPE=0)(
  input wire clk,rst_n,
  input wire desc_we,input wire[DAW-1:0]desc_addr,input wire[255:0]desc_data,
  input wire run_v,input wire[DAW-1:0]run_base,input wire[DAW:0]run_count,input wire[7:0]run_layer,
@@ -84,8 +89,10 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
  // reserve pipeline A -> P -> S
  reg[DAW:0]n_rd,n_go;reg a_v,p_v,st_v;reg[206:0]a,p;reg[142:0]st;reg[23:0]p_lay,p_id;reg[23:0]rc;
  wire[3:0]a_sel=a[176:173];
- wire a_ids=a_sel==0||(ids_ok_q&&ids_layer_q==layer_q);
- wire a_go=a_v&&!p_v&&a_ids;
+ reg match_q;reg m_v;reg[206:0]m;reg[IDW-1:0]m_id;reg[7:0]m_layer;
+ wire a_ids=a_sel==0||((MPIPE!=0)?match_q:(ids_ok_q&&ids_layer_q==layer_q));
+ wire a_go=a_v&&!((MPIPE!=0)?m_v:p_v)&&a_ids;
+ wire m_go=(MPIPE!=0)&&m_v&&!p_v;
  wire[IDW-1:0]a_id=(a_sel==0||MUT==2)?{IDW{1'b0}}:ids_q[(a_sel-4'd1)*IDW+:IDW];
  wire[25:0]s_blk={8'd0,p[46:32],p[9:7]}+{2'd0,p_lay}+{2'd0,p_id};
  wire s_go=p_v&&!st_v;
@@ -115,12 +122,18 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
  else begin:g_nx assign program_start_ctx=ctx46;end endgenerate
  wire push_s=reserve_v,pop_s=start_v,push_g=start_v,pop_g=program_start_v;
  wire[DAW-1:0]rd_id=rd[232+:DAW];
+ wire run_acc=run_v&&!(running||run_count==0||{1'b0,run_base}+run_count>(DD));
+ wire ids_acc=ids_v&&!(ID_COHORT!=0&&(!running||run_v||ids_ok_q||ids_layer!=layer_q||ids_cohort!=run_cohort_q));
+ wire[7:0]layer_n=run_acc?run_layer:layer_q;wire[7:0]ids_layer_n=ids_acc?ids_layer:ids_layer_q;
+ wire ids_ok_n=ids_acc?1'b1:((run_acc&&ID_COHORT!=0)?1'b0:ids_ok_q);
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
    running<=0;run_done<=0;fault<=0;rd_q<=0;rp<=0;rp_q<=0;n_rd<=0;n_go<=0;a_v<=0;p_v<=0;st_v<=0;st<=0;rc<=0;
    sq_n<=0;gq_n<=0;sq_r<=0;sq_w<=0;gq_r<=0;gq_w<=0;go_busy<=0;layer_q<=0;ids_layer_q<=0;ids_ok_q<=0;run_cohort_q<=0;
+   match_q<=0;m_v<=0;
   end else begin
    run_done<=0;
+   match_q<=ids_ok_n&&ids_layer_n==layer_n;
    if(run_v)begin
     if(running||run_count==0||{1'b0,run_base}+run_count>(DD))fault<=1;
     else begin
@@ -139,10 +152,16 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
     a<=rd[206:0];a_v<=1;
     if(rd[255:240]!=16'h5d15||rd_id!=rp_q||(DAW==7&&rd[239])||rd[231:207]!=0||(XSLOT==0&&rd[206:200]!=0)||rd[176:173]>NID)fault<=1;
    end
-   if(a_go)begin
+   if(a_go&&MPIPE==0)begin
     a_v<=0;p_v<=1;p<=a;
     p_lay<=(MUT==1)?24'd0:24'(layer_q)*24'(a[157:143]);
     p_id<=24'(a_id)*24'(a[172:158]);
+   end
+   if(a_go&&MPIPE!=0)begin a_v<=0;m_v<=1;m<=a;m_id<=a_id;m_layer<=(MUT==1)?8'd0:layer_q;end
+   if(m_go)begin
+    m_v<=0;p_v<=1;p<=m;
+    p_lay<=24'(m_layer)*24'(m[157:143]);
+    p_id<=24'(m_id)*24'(m[172:158]);
    end
    // In native mode a missing/stale result cannot silently hold an expert past its fixed slot.
    if(ID_COHORT!=0&&a_v&&a_sel!=0&&!a_ids&&rc>=a[142:119])fault<=1;
