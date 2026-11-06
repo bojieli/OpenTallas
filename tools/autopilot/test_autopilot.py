@@ -83,6 +83,13 @@ class TestQueue(Base):
         self.assertIn("kit must be", r["error"])
         r = list(self.ap.parse_queue("\t".join(ROW[:2] + [KIT + "/../x"] + ROW[3:])).values())[0]
         self.assertIn("kit must be", r["error"])
+        # any numbered scratch root is a kit root (kw21 wave on epyc5 scratch3)
+        k3 = "epyc5:/srv/opentallas-scratch3/claude/kw21-wave-1106/runs/s81/kit"
+        r = list(self.ap.parse_queue("	".join(ROW[:2] + [k3] + ROW[3:])).values())[0]
+        self.assertEqual(r["error"], "")
+        self.assertEqual((r["host"], r["path"]), ("epyc5", k3.split(":", 1)[1]))
+        r = list(self.ap.parse_queue("	".join(ROW[:2] + ["epyc5:/srv/opentallas-scratchx/claude/k"] + ROW[3:])).values())[0]
+        self.assertIn("kit must be", r["error"])
         self.assertTrue(bad)
 
     def test_last_row_wins_and_comments(self):
