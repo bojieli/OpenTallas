@@ -39,6 +39,9 @@ def native_contract(raw,asbuilt=None,plan_path=None):
             base=Path(plan_path).resolve().parent/base
         path=Path(ab['clock_landing_table'])
         if not path.is_absolute():path=base/path
+        base,path=base.resolve(),path.resolve()
+        try:path.relative_to(base)
+        except ValueError as error:raise ValueError('native clock table must resolve inside its declared native base') from error
         payload=path.read_bytes();table=json.loads(payload);table_sha=hashlib.sha256(payload).hexdigest()
     selected=set(ab.get('internal_stations_types',[]))
     lineage=table.get('collector',{}).get('types',{})
