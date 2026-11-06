@@ -1,0 +1,1413 @@
+{
+  "case": "s81_coll_parent_fit",
+  "occurrences": [
+    {
+      "type": "dsdv_slice_lepw_mus_LP__t2",
+      "module": "dsfd_coll_lane_w_safe8_ntf",
+      "tall": {
+        "instance": "u_bound.u_u_ln0",
+        "orient": "R0",
+        "origin_um": [
+          8.64,
+          129.6
+        ],
+        "outline_um": [
+          295.92,
+          660.96
+        ],
+        "bbox_um": [
+          8.748000000000001,
+          129.612,
+          304.668,
+          790.572
+        ],
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "fits": false,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [
+          {
+            "name": "u_bound.u_u_lnl0",
+            "rect_um": [
+              95.14800000000001,
+              596.1719999999999,
+              207.46800000000002,
+              708.492
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[0].u_m",
+            "rect_um": [
+              43.2,
+              734.412,
+              217.32,
+              764.148
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[1].u_m",
+            "rect_um": [
+              233.28,
+              734.412,
+              407.4,
+              764.148
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[1].u_m",
+            "rect_um": [
+              43.2,
+              777.612,
+              217.32,
+              807.348
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[2].u_m",
+            "rect_um": [
+              233.28,
+              777.612,
+              407.4,
+              807.348
+            ]
+          }
+        ],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": true
+      },
+      "compact": {
+        "instance": "u_bound.u_u_ln0",
+        "orient": "R0",
+        "origin_um": [
+          8.64,
+          129.6
+        ],
+        "outline_um": [
+          295.92,
+          444.96
+        ],
+        "bbox_um": [
+          8.748000000000001,
+          129.612,
+          304.668,
+          574.572
+        ],
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "fits": true,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": false
+      }
+    },
+    {
+      "type": "dsdv_slice_lepw_mus_LP__t2",
+      "module": "dsfd_coll_lane_w_safe8_ntf",
+      "tall": {
+        "instance": "u_bound.u_u_ln1",
+        "orient": "R0",
+        "origin_um": [
+          319.68,
+          129.6
+        ],
+        "outline_um": [
+          295.92,
+          660.96
+        ],
+        "bbox_um": [
+          319.788,
+          129.612,
+          615.7080000000001,
+          790.572
+        ],
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "fits": false,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [
+          {
+            "name": "u_bound.u_u_lnl1",
+            "rect_um": [
+              406.18800000000005,
+              596.1719999999999,
+              518.508,
+              708.492
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[1].u_m",
+            "rect_um": [
+              233.28,
+              734.412,
+              407.4,
+              764.148
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[2].u_m",
+            "rect_um": [
+              423.36,
+              734.412,
+              597.48,
+              764.148
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[2].u_m",
+            "rect_um": [
+              233.28,
+              777.612,
+              407.4,
+              807.348
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[3].u_m",
+            "rect_um": [
+              423.36,
+              777.612,
+              597.48,
+              807.348
+            ]
+          }
+        ],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": true
+      },
+      "compact": {
+        "instance": "u_bound.u_u_ln1",
+        "orient": "R0",
+        "origin_um": [
+          319.68,
+          129.6
+        ],
+        "outline_um": [
+          295.92,
+          444.96
+        ],
+        "bbox_um": [
+          319.788,
+          129.612,
+          615.7080000000001,
+          574.572
+        ],
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "fits": true,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": false
+      }
+    },
+    {
+      "type": "dsdv_slice_lepw_mus_LP__t2",
+      "module": "dsfd_coll_lane_w_safe8_ntf",
+      "tall": {
+        "instance": "u_bound.u_u_ln2",
+        "orient": "R0",
+        "origin_um": [
+          820.8,
+          129.6
+        ],
+        "outline_um": [
+          295.92,
+          660.96
+        ],
+        "bbox_um": [
+          820.9079999999999,
+          129.612,
+          1116.828,
+          790.572
+        ],
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "fits": false,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [
+          {
+            "name": "u_bound.u_u_lnl2",
+            "rect_um": [
+              907.3079999999999,
+              596.1719999999999,
+              1019.6279999999999,
+              708.492
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[3].u_m",
+            "rect_um": [
+              838.08,
+              734.412,
+              1012.2,
+              764.148
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[4].u_m",
+            "rect_um": [
+              1028.16,
+              734.412,
+              1202.2800000000002,
+              764.148
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m",
+            "rect_um": [
+              838.08,
+              777.612,
+              1012.2,
+              807.348
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[0].u_m",
+            "rect_um": [
+              1028.16,
+              777.612,
+              1202.2800000000002,
+              807.348
+            ]
+          }
+        ],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": true
+      },
+      "compact": {
+        "instance": "u_bound.u_u_ln2",
+        "orient": "R0",
+        "origin_um": [
+          820.8,
+          129.6
+        ],
+        "outline_um": [
+          295.92,
+          444.96
+        ],
+        "bbox_um": [
+          820.9079999999999,
+          129.612,
+          1116.828,
+          574.572
+        ],
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "fits": true,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": false
+      }
+    },
+    {
+      "type": "dsdv_slice_lepw_mus_LP__t2",
+      "module": "dsfd_coll_lane_w_safe8_ntf",
+      "tall": {
+        "instance": "u_bound.u_u_ln3",
+        "orient": "R0",
+        "origin_um": [
+          1131.84,
+          129.6
+        ],
+        "outline_um": [
+          295.92,
+          660.96
+        ],
+        "bbox_um": [
+          1131.9479999999999,
+          129.612,
+          1427.868,
+          790.572
+        ],
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "fits": false,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [
+          {
+            "name": "u_bound.u_u_lnl3",
+            "rect_um": [
+              1218.348,
+              596.1719999999999,
+              1330.668,
+              708.492
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[4].u_m",
+            "rect_um": [
+              1028.16,
+              734.412,
+              1202.2800000000002,
+              764.148
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[0].u_m",
+            "rect_um": [
+              1218.24,
+              734.412,
+              1392.3600000000001,
+              764.148
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[0].u_m",
+            "rect_um": [
+              1028.16,
+              777.612,
+              1202.2800000000002,
+              807.348
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[1].u_m",
+            "rect_um": [
+              1218.24,
+              777.612,
+              1392.3600000000001,
+              807.348
+            ]
+          }
+        ],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": true
+      },
+      "compact": {
+        "instance": "u_bound.u_u_ln3",
+        "orient": "R0",
+        "origin_um": [
+          1131.84,
+          129.6
+        ],
+        "outline_um": [
+          295.92,
+          444.96
+        ],
+        "bbox_um": [
+          1131.9479999999999,
+          129.612,
+          1427.868,
+          574.572
+        ],
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "fits": true,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": false
+      }
+    },
+    {
+      "type": "dsdv_slice_lepw_mu_LP__t2",
+      "module": "dsfd_coll_lane_w_safe8_ntf",
+      "tall": {
+        "instance": "u_bound.u_u_ln0",
+        "orient": "MX",
+        "origin_um": [
+          8.64,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          660.96
+        ],
+        "bbox_um": [
+          8.748000000000001,
+          648.036,
+          304.668,
+          1308.996
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": false,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 82.11599999999999
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": true
+      },
+      "compact": {
+        "instance": "u_bound.u_u_ln0",
+        "orient": "MX",
+        "origin_um": [
+          8.64,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          444.96
+        ],
+        "bbox_um": [
+          8.748000000000001,
+          648.036,
+          304.668,
+          1092.9959999999999
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": true,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": false
+      }
+    },
+    {
+      "type": "dsdv_slice_lepw_mu_LP__t2",
+      "module": "dsfd_coll_lane_w_safe8_ntf",
+      "tall": {
+        "instance": "u_bound.u_u_ln1",
+        "orient": "MX",
+        "origin_um": [
+          319.68,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          660.96
+        ],
+        "bbox_um": [
+          319.788,
+          648.036,
+          615.7080000000001,
+          1308.996
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": false,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 82.11599999999999
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": true
+      },
+      "compact": {
+        "instance": "u_bound.u_u_ln1",
+        "orient": "MX",
+        "origin_um": [
+          319.68,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          444.96
+        ],
+        "bbox_um": [
+          319.788,
+          648.036,
+          615.7080000000001,
+          1092.9959999999999
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": true,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": false
+      }
+    },
+    {
+      "type": "dsdv_slice_lepw_mu_LP__t2",
+      "module": "dsfd_coll_lane_w_safe8_ntf",
+      "tall": {
+        "instance": "u_bound.u_u_ln2",
+        "orient": "MX",
+        "origin_um": [
+          820.8,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          660.96
+        ],
+        "bbox_um": [
+          820.9079999999999,
+          648.036,
+          1116.828,
+          1308.996
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": false,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 82.11599999999999
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": true
+      },
+      "compact": {
+        "instance": "u_bound.u_u_ln2",
+        "orient": "MX",
+        "origin_um": [
+          820.8,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          444.96
+        ],
+        "bbox_um": [
+          820.9079999999999,
+          648.036,
+          1116.828,
+          1092.9959999999999
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": true,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": false
+      }
+    },
+    {
+      "type": "dsdv_slice_lepw_mu_LP__t2",
+      "module": "dsfd_coll_lane_w_safe8_ntf",
+      "tall": {
+        "instance": "u_bound.u_u_ln3",
+        "orient": "MX",
+        "origin_um": [
+          1131.84,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          660.96
+        ],
+        "bbox_um": [
+          1131.9479999999999,
+          648.036,
+          1427.868,
+          1308.996
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": false,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 82.11599999999999
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": true
+      },
+      "compact": {
+        "instance": "u_bound.u_u_ln3",
+        "orient": "MX",
+        "origin_um": [
+          1131.84,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          444.96
+        ],
+        "bbox_um": [
+          1131.9479999999999,
+          648.036,
+          1427.868,
+          1092.9959999999999
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": true,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": false
+      }
+    },
+    {
+      "type": "dsdv_slice_lepe_nh_mus_LP__t1",
+      "module": "dsfd_coll_lane_e_safe8_ntf",
+      "tall": {
+        "instance": "u_bound.u_u_ln0",
+        "orient": "R0",
+        "origin_um": [
+          8.64,
+          129.6
+        ],
+        "outline_um": [
+          295.92,
+          660.96
+        ],
+        "bbox_um": [
+          8.748000000000001,
+          129.612,
+          304.668,
+          790.572
+        ],
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "fits": false,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [
+          {
+            "name": "u_bound.u_u_lnl0",
+            "rect_um": [
+              95.14800000000001,
+              596.1719999999999,
+              207.46800000000002,
+              708.492
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[0].u_m",
+            "rect_um": [
+              51.84,
+              734.412,
+              225.96,
+              764.148
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[1].u_m",
+            "rect_um": [
+              241.92,
+              734.412,
+              416.03999999999996,
+              764.148
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[0].u_m",
+            "rect_um": [
+              51.84,
+              777.612,
+              225.96,
+              807.348
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[1].u_m",
+            "rect_um": [
+              241.92,
+              777.612,
+              416.03999999999996,
+              807.348
+            ]
+          }
+        ],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": true
+      },
+      "compact": {
+        "instance": "u_bound.u_u_ln0",
+        "orient": "R0",
+        "origin_um": [
+          8.64,
+          129.6
+        ],
+        "outline_um": [
+          295.92,
+          444.96
+        ],
+        "bbox_um": [
+          8.748000000000001,
+          129.612,
+          304.668,
+          574.572
+        ],
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "fits": true,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": false
+      }
+    },
+    {
+      "type": "dsdv_slice_lepe_nh_mus_LP__t1",
+      "module": "dsfd_coll_lane_e_safe8_ntf",
+      "tall": {
+        "instance": "u_bound.u_u_ln1",
+        "orient": "R0",
+        "origin_um": [
+          319.68,
+          129.6
+        ],
+        "outline_um": [
+          295.92,
+          660.96
+        ],
+        "bbox_um": [
+          319.788,
+          129.612,
+          615.7080000000001,
+          790.572
+        ],
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "fits": false,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [
+          {
+            "name": "u_bound.u_u_lnl1",
+            "rect_um": [
+              406.18800000000005,
+              596.1719999999999,
+              518.508,
+              708.492
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+            "rect_um": [
+              544.32,
+              734.412,
+              595.7280000000001,
+              755.202
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+            "rect_um": [
+              544.32,
+              768.972,
+              595.7280000000001,
+              789.762
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[1].u_m",
+            "rect_um": [
+              241.92,
+              734.412,
+              416.03999999999996,
+              764.148
+            ]
+          },
+          {
+            "name": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[1].u_m",
+            "rect_um": [
+              241.92,
+              777.612,
+              416.03999999999996,
+              807.348
+            ]
+          },
+          {
+            "name": "u_bound.u_u_land.g_sram.g_t[0].g_128.u_m",
+            "rect_um": [
+              432.0,
+              734.412,
+              526.824,
+              775.476
+            ]
+          }
+        ],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": true
+      },
+      "compact": {
+        "instance": "u_bound.u_u_ln1",
+        "orient": "R0",
+        "origin_um": [
+          319.68,
+          129.6
+        ],
+        "outline_um": [
+          295.92,
+          444.96
+        ],
+        "bbox_um": [
+          319.788,
+          129.612,
+          615.7080000000001,
+          574.572
+        ],
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "fits": true,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": false
+      }
+    },
+    {
+      "type": "dsdv_slice_lepe_mu_LP__t2",
+      "module": "dsfd_coll_lane_e_safe8_ntf",
+      "tall": {
+        "instance": "u_bound.u_u_ln0",
+        "orient": "MX",
+        "origin_um": [
+          8.64,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          660.96
+        ],
+        "bbox_um": [
+          8.748000000000001,
+          648.036,
+          304.668,
+          1308.996
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": false,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 82.11599999999999
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": true
+      },
+      "compact": {
+        "instance": "u_bound.u_u_ln0",
+        "orient": "MX",
+        "origin_um": [
+          8.64,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          444.96
+        ],
+        "bbox_um": [
+          8.748000000000001,
+          648.036,
+          304.668,
+          1092.9959999999999
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": true,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": false
+      }
+    },
+    {
+      "type": "dsdv_slice_lepe_mu_LP__t2",
+      "module": "dsfd_coll_lane_e_safe8_ntf",
+      "tall": {
+        "instance": "u_bound.u_u_ln1",
+        "orient": "MX",
+        "origin_um": [
+          319.68,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          660.96
+        ],
+        "bbox_um": [
+          319.788,
+          648.036,
+          615.7080000000001,
+          1308.996
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": false,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 82.11599999999999
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": true
+      },
+      "compact": {
+        "instance": "u_bound.u_u_ln1",
+        "orient": "MX",
+        "origin_um": [
+          319.68,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          444.96
+        ],
+        "bbox_um": [
+          319.788,
+          648.036,
+          615.7080000000001,
+          1092.9959999999999
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": true,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": false
+      }
+    },
+    {
+      "type": "dsdv_slice_lepe_mu_LP__t2",
+      "module": "dsfd_coll_lane_e_safe8_ntf",
+      "tall": {
+        "instance": "u_bound.u_u_ln2",
+        "orient": "MX",
+        "origin_um": [
+          820.8,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          660.96
+        ],
+        "bbox_um": [
+          820.9079999999999,
+          648.036,
+          1116.828,
+          1308.996
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": false,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 82.11599999999999
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": true
+      },
+      "compact": {
+        "instance": "u_bound.u_u_ln2",
+        "orient": "MX",
+        "origin_um": [
+          820.8,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          444.96
+        ],
+        "bbox_um": [
+          820.9079999999999,
+          648.036,
+          1116.828,
+          1092.9959999999999
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": true,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": false
+      }
+    },
+    {
+      "type": "dsdv_slice_lepe_mu_LP__t2",
+      "module": "dsfd_coll_lane_e_safe8_ntf",
+      "tall": {
+        "instance": "u_bound.u_u_ln3",
+        "orient": "MX",
+        "origin_um": [
+          1131.84,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          660.96
+        ],
+        "bbox_um": [
+          1131.9479999999999,
+          648.036,
+          1427.868,
+          1308.996
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": false,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 82.11599999999999
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": true
+      },
+      "compact": {
+        "instance": "u_bound.u_u_ln3",
+        "orient": "MX",
+        "origin_um": [
+          1131.84,
+          648.0
+        ],
+        "outline_um": [
+          295.92,
+          444.96
+        ],
+        "bbox_um": [
+          1131.9479999999999,
+          648.036,
+          1427.868,
+          1092.9959999999999
+        ],
+        "track_offset_um": [
+          0.108,
+          0.036
+        ],
+        "fits": true,
+        "outside_um": {
+          "W": 0.0,
+          "S": 0.0,
+          "E": 0.0,
+          "N": 0.0
+        },
+        "collisions": [],
+        "halo_um": 0.0,
+        "obs_max": "M6",
+        "new_obstruction_layers": [
+          "M6"
+        ],
+        "route_reservation_conflicts": [],
+        "parent_route_review_needed": true,
+        "pin_review_needed": false
+      }
+    }
+  ],
+  "tall_fits": 0,
+  "compact_fits": 14,
+  "note": "M6 OBS needs actual PG/interface reservation; bbox fit is not a physical signoff"
+}

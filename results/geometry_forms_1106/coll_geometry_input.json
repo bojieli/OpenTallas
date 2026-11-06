@@ -1,0 +1,3537 @@
+{
+ "source": "396c545e5d8 physical/die_plan/s81/plan_h2_2249.json; exact geometry subset",
+ "partition_types": {
+  "dsdv_slice_lepw_mus_LP__t2": {
+   "outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "contents": [
+    {
+     "inst": "u_lp",
+     "module": "dsdv_slice_lepw_mus.LP",
+     "status": "rework",
+     "note": "lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      535.68,
+      864.012
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1287.36,
+      864.012
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1356.48,
+      864.012
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      535.68,
+      898.572
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1287.36,
+      898.572
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1356.48,
+      898.572
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      51.84,
+      907.212
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      120.96,
+      907.212
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      190.08,
+      907.212
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      259.2,
+      907.212
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      328.32,
+      907.212
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      397.44,
+      924.492
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      466.56,
+      924.492
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      838.08,
+      924.492
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      907.2,
+      924.492
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      976.32,
+      924.492
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1045.44,
+      924.492
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1114.56,
+      924.492
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1183.68,
+      924.492
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      535.68,
+      933.132
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      43.2,
+      734.412
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      233.28,
+      734.412
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      423.36,
+      734.412
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      838.08,
+      734.412
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1028.16,
+      734.412
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1218.24,
+      734.412
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      43.2,
+      777.612
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      233.28,
+      777.612
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      423.36,
+      777.612
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      838.08,
+      777.612
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1028.16,
+      777.612
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1218.24,
+      777.612
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      43.2,
+      820.812
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      233.28,
+      820.812
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      423.36,
+      820.812
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      838.08,
+      820.812
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1028.16,
+      820.812
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1218.24,
+      820.812
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      43.2,
+      864.012
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      233.28,
+      864.012
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[0].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      423.36,
+      864.012
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[1].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      838.08,
+      864.012
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[2].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      950.4,
+      864.012
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[3].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      1062.72,
+      864.012
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[4].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      1175.04,
+      864.012
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    }
+   ],
+   "hard_cores": [
+    {
+     "inst": "u_bound.u_u_ln0",
+     "module": "dsfd_coll_lane_w_safe8_ntf",
+     "origin_um": [
+      8.64,
+      129.6
+     ],
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "h2_2249/coll_w/plan_pins.json",
+     "lef": "physical/die_plan/s81/h2_2249/coll_w/lane.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_lnl0",
+     "module": "ot_s81_mu72_lnland_nst",
+     "origin_um": [
+      95.04,
+      596.16
+     ],
+     "outline_um": [
+      112.32,
+      112.32
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "cores/h2/ot_s81_mu72_lnland_nst/pins.json",
+     "lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_ln1",
+     "module": "dsfd_coll_lane_w_safe8_ntf",
+     "origin_um": [
+      319.68,
+      129.6
+     ],
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "h2_2249/coll_w/plan_pins.json",
+     "lef": "physical/die_plan/s81/h2_2249/coll_w/lane.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_lnl1",
+     "module": "ot_s81_mu72_lnland_nst",
+     "origin_um": [
+      406.08000000000004,
+      596.16
+     ],
+     "outline_um": [
+      112.32,
+      112.32
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "cores/h2/ot_s81_mu72_lnland_nst/pins.json",
+     "lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_ln2",
+     "module": "dsfd_coll_lane_w_safe8_ntf",
+     "origin_um": [
+      820.8,
+      129.6
+     ],
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "h2_2249/coll_w/plan_pins.json",
+     "lef": "physical/die_plan/s81/h2_2249/coll_w/lane.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_lnl2",
+     "module": "ot_s81_mu72_lnland_nst",
+     "origin_um": [
+      907.1999999999999,
+      596.16
+     ],
+     "outline_um": [
+      112.32,
+      112.32
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "cores/h2/ot_s81_mu72_lnland_nst/pins.json",
+     "lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_ln3",
+     "module": "dsfd_coll_lane_w_safe8_ntf",
+     "origin_um": [
+      1131.84,
+      129.6
+     ],
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "h2_2249/coll_w/plan_pins.json",
+     "lef": "physical/die_plan/s81/h2_2249/coll_w/lane.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_lnl3",
+     "module": "ot_s81_mu72_lnland_nst",
+     "origin_um": [
+      1218.24,
+      596.16
+     ],
+     "outline_um": [
+      112.32,
+      112.32
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "cores/h2/ot_s81_mu72_lnland_nst/pins.json",
+     "lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    }
+   ]
+  },
+  "dsdv_slice_lepw_mu_LP__t2": {
+   "outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "contents": [
+    {
+     "inst": "u_lp",
+     "module": "dsdv_slice_lepw_mu.LP",
+     "status": "rework",
+     "note": "lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      544.32,
+      466.572
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      544.32,
+      432.012
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      544.32,
+      397.452
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      544.32,
+      362.892
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      544.32,
+      328.332
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      276.48,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      345.6,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      544.32,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      838.08,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      907.2,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      976.32,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1045.44,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1114.56,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1183.68,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1252.8,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1321.92,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      414.72,
+      285.132
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      276.48,
+      259.212
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      345.6,
+      259.212
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      483.84,
+      259.212
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      51.84,
+      457.932
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      241.92,
+      457.932
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      838.08,
+      457.932
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1028.16,
+      457.932
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1218.24,
+      457.932
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      51.84,
+      414.732
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      241.92,
+      414.732
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      838.08,
+      414.732
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1028.16,
+      414.732
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1218.24,
+      414.732
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      51.84,
+      371.532
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      241.92,
+      371.532
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      838.08,
+      371.532
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1028.16,
+      371.532
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1218.24,
+      371.532
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      51.84,
+      328.332
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      241.92,
+      328.332
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      838.08,
+      328.332
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1028.16,
+      328.332
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1218.24,
+      328.332
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[0].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      432.0,
+      440.652
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[1].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      432.0,
+      380.172
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[2].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      432.0,
+      319.692
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[3].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      51.84,
+      267.852
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[4].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      164.16,
+      267.852
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    }
+   ],
+   "hard_cores": [
+    {
+     "inst": "u_bound.u_u_ln0",
+     "module": "dsfd_coll_lane_w_safe8_ntf",
+     "origin_um": [
+      8.64,
+      648.0
+     ],
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "h2_2249/coll_w/plan_pins.json",
+     "lef": "physical/die_plan/s81/h2_2249/coll_w/lane.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_lnl0",
+     "module": "ot_s81_mu72_lnland_nst",
+     "origin_um": [
+      95.04,
+      509.76
+     ],
+     "outline_um": [
+      112.32,
+      112.32
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "cores/h2/ot_s81_mu72_lnland_nst/pins.json",
+     "lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_ln1",
+     "module": "dsfd_coll_lane_w_safe8_ntf",
+     "origin_um": [
+      319.68,
+      648.0
+     ],
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "h2_2249/coll_w/plan_pins.json",
+     "lef": "physical/die_plan/s81/h2_2249/coll_w/lane.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_lnl1",
+     "module": "ot_s81_mu72_lnland_nst",
+     "origin_um": [
+      406.08000000000004,
+      509.76
+     ],
+     "outline_um": [
+      112.32,
+      112.32
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "cores/h2/ot_s81_mu72_lnland_nst/pins.json",
+     "lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_ln2",
+     "module": "dsfd_coll_lane_w_safe8_ntf",
+     "origin_um": [
+      820.8,
+      648.0
+     ],
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "h2_2249/coll_w/plan_pins.json",
+     "lef": "physical/die_plan/s81/h2_2249/coll_w/lane.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_lnl2",
+     "module": "ot_s81_mu72_lnland_nst",
+     "origin_um": [
+      907.1999999999999,
+      509.76
+     ],
+     "outline_um": [
+      112.32,
+      112.32
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "cores/h2/ot_s81_mu72_lnland_nst/pins.json",
+     "lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_ln3",
+     "module": "dsfd_coll_lane_w_safe8_ntf",
+     "origin_um": [
+      1131.84,
+      648.0
+     ],
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "h2_2249/coll_w/plan_pins.json",
+     "lef": "physical/die_plan/s81/h2_2249/coll_w/lane.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_lnl3",
+     "module": "ot_s81_mu72_lnland_nst",
+     "origin_um": [
+      1218.24,
+      509.76
+     ],
+     "outline_um": [
+      112.32,
+      112.32
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "cores/h2/ot_s81_mu72_lnland_nst/pins.json",
+     "lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    }
+   ]
+  },
+  "dsdv_slice_lepe_nh_mus_LP__t1": {
+   "outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "contents": [
+    {
+     "inst": "u_lp",
+     "module": "dsdv_slice_lepe_nh_mus.LP",
+     "status": "rework",
+     "note": "lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      544.32,
+      734.412
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      544.32,
+      768.972
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      544.32,
+      803.532
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      838.08,
+      820.812
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      907.2,
+      820.812
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      976.32,
+      820.812
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1045.44,
+      820.812
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1114.56,
+      820.812
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1183.68,
+      820.812
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1252.8,
+      820.812
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      51.84,
+      734.412
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      241.92,
+      734.412
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      838.08,
+      734.412
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1028.16,
+      734.412
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1218.24,
+      734.412
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      51.84,
+      777.612
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      241.92,
+      777.612
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      838.08,
+      777.612
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1028.16,
+      777.612
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1218.24,
+      777.612
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[0].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      432.0,
+      734.412
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[1].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      432.0,
+      794.892
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[2].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      51.84,
+      820.812
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[3].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      164.16,
+      820.812
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[4].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      276.48,
+      820.812
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    }
+   ],
+   "hard_cores": [
+    {
+     "inst": "u_bound.u_u_ln0",
+     "module": "dsfd_coll_lane_e_safe8_ntf",
+     "origin_um": [
+      8.64,
+      129.6
+     ],
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "h2_2249/coll_e/plan_pins.json",
+     "lef": "physical/die_plan/s81/h2_2249/coll_e/lane.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_lnl0",
+     "module": "ot_s81_mu72_lnland_nst",
+     "origin_um": [
+      95.04,
+      596.16
+     ],
+     "outline_um": [
+      112.32,
+      112.32
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "cores/h2/ot_s81_mu72_lnland_nst/pins.json",
+     "lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_ln1",
+     "module": "dsfd_coll_lane_e_safe8_ntf",
+     "origin_um": [
+      319.68,
+      129.6
+     ],
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "h2_2249/coll_e/plan_pins.json",
+     "lef": "physical/die_plan/s81/h2_2249/coll_e/lane.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_lnl1",
+     "module": "ot_s81_mu72_lnland_nst",
+     "origin_um": [
+      406.08000000000004,
+      596.16
+     ],
+     "outline_um": [
+      112.32,
+      112.32
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "cores/h2/ot_s81_mu72_lnland_nst/pins.json",
+     "lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    }
+   ]
+  },
+  "dsdv_slice_lepe_mu_LP__t2": {
+   "outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "contents": [
+    {
+     "inst": "u_lp",
+     "module": "dsdv_slice_lepe_mu.LP",
+     "status": "rework",
+     "note": "lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      544.32,
+      466.572
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      544.32,
+      432.012
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      544.32,
+      397.452
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      544.32,
+      362.892
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      544.32,
+      328.332
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      276.48,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      345.6,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      544.32,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      838.08,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      907.2,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      976.32,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1045.44,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1114.56,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1183.68,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1252.8,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      1321.92,
+      293.772
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      414.72,
+      285.132
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      276.48,
+      259.212
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      345.6,
+      259.212
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_32x128_m1",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+     "origin_um": [
+      483.84,
+      259.212
+     ],
+     "outline_um": [
+      51.408,
+      20.79
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      51.84,
+      457.932
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      241.92,
+      457.932
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      838.08,
+      457.932
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1028.16,
+      457.932
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1218.24,
+      457.932
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      51.84,
+      414.732
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      241.92,
+      414.732
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      838.08,
+      414.732
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1028.16,
+      414.732
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1218.24,
+      414.732
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      51.84,
+      371.532
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      241.92,
+      371.532
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      838.08,
+      371.532
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1028.16,
+      371.532
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1218.24,
+      371.532
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      51.84,
+      328.332
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[1].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      241.92,
+      328.332
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[2].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      838.08,
+      328.332
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[3].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1028.16,
+      328.332
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[4].u_m",
+     "module": "ot_sram_1r1w_512x128_m4_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+     "origin_um": [
+      1218.24,
+      328.332
+     ],
+     "outline_um": [
+      174.12,
+      29.736
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[0].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      432.0,
+      440.652
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[1].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      432.0,
+      380.172
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[2].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      432.0,
+      319.692
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[3].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      51.84,
+      267.852
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    },
+    {
+     "inst": "u_bound.u_u_land.g_sram.g_t[4].g_128.u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "new",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "origin_um": [
+      164.16,
+      267.852
+     ],
+     "outline_um": [
+      94.824,
+      41.064
+     ],
+     "orient": "R0",
+     "obs_max": "M4",
+     "note": "DIE-S81-32/MACRO 10-29 static macro site (delta_macro_sites_1029.py)"
+    }
+   ],
+   "hard_cores": [
+    {
+     "inst": "u_bound.u_u_ln0",
+     "module": "dsfd_coll_lane_e_safe8_ntf",
+     "origin_um": [
+      8.64,
+      648.0
+     ],
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "h2_2249/coll_e/plan_pins.json",
+     "lef": "physical/die_plan/s81/h2_2249/coll_e/lane.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_lnl0",
+     "module": "ot_s81_mu72_lnland",
+     "origin_um": [
+      95.04,
+      509.76
+     ],
+     "outline_um": [
+      112.32,
+      112.32
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "cores/h2/ot_s81_mu72_lnland/pins.json",
+     "lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland/ot_s81_mu72_lnland.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_ln1",
+     "module": "dsfd_coll_lane_e_safe8_ntf",
+     "origin_um": [
+      319.68,
+      648.0
+     ],
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "h2_2249/coll_e/plan_pins.json",
+     "lef": "physical/die_plan/s81/h2_2249/coll_e/lane.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_lnl1",
+     "module": "ot_s81_mu72_lnland",
+     "origin_um": [
+      406.08000000000004,
+      509.76
+     ],
+     "outline_um": [
+      112.32,
+      112.32
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "cores/h2/ot_s81_mu72_lnland/pins.json",
+     "lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland/ot_s81_mu72_lnland.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_ln2",
+     "module": "dsfd_coll_lane_e_safe8_ntf",
+     "origin_um": [
+      820.8,
+      648.0
+     ],
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "h2_2249/coll_e/plan_pins.json",
+     "lef": "physical/die_plan/s81/h2_2249/coll_e/lane.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_lnl2",
+     "module": "ot_s81_mu72_lnland_nst",
+     "origin_um": [
+      907.1999999999999,
+      509.76
+     ],
+     "outline_um": [
+      112.32,
+      112.32
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "cores/h2/ot_s81_mu72_lnland_nst/pins.json",
+     "lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_ln3",
+     "module": "dsfd_coll_lane_e_safe8_ntf",
+     "origin_um": [
+      1131.84,
+      648.0
+     ],
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "h2_2249/coll_e/plan_pins.json",
+     "lef": "physical/die_plan/s81/h2_2249/coll_e/lane.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    },
+    {
+     "inst": "u_bound.u_u_lnl3",
+     "module": "ot_s81_mu72_lnland_nst",
+     "origin_um": [
+      1218.24,
+      509.76
+     ],
+     "outline_um": [
+      112.32,
+      112.32
+     ],
+     "orient": "MX",
+     "track_offset_um": [
+      0.108,
+      0.036
+     ],
+     "pins_file": "cores/h2/ot_s81_mu72_lnland_nst/pins.json",
+     "lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef",
+     "obs_max": "M5",
+     "note": "H2 LP existing module boundary; prospective view, no SIGNED/timing claim"
+    }
+   ]
+  }
+ }
+}
