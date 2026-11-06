@@ -47,3 +47,4 @@ fa68f2c8863	src	qwen_compute	coll_ftm@3	KW-RELAUNCH-1	11-05 19:5x holdgaterr I16
 559369a70e3	src	qwen_kvsys	kv3_sys_SD@5	KW-RELAUNCH-2	11-05 21:4x class batch, releases when the die src carries the fix: DIE-KV-80/REFORM 21:36 band move + pinslot off (GRT-CONG)
 559369a70e3	src	qwen_kvsys	kv3_io_ft@5	KW-RELAUNCH-2	11-05 21:4x class batch, releases when the die src carries the fix: DIE-KV-80/REFORM 21:36 pinslot off (GRT-0183)
 559369a70e3	src	qwen_kvsys	kv3_io_ft_v1@6	KW-RELAUNCH-2	11-05 21:4x class batch, releases when the die src carries the fix: DIE-KV-80/REFORM 21:36 pinslot off (GRT-0183)
+fa68f2c8863	src	qwen_compute	coll_n@5	DIE-QC-82	11-05 22:2x holdgaterr I169 class: a5 kit (src a201f608d85) hold_gate.tcl has 0 OT_HOLD_PORT lines; FF -258.83/2411 all-path; re-judged on src_16b gate: reg2reg -235.65/1806 inside stop -245 (port rest advisory) [epyc4 scratch3 dq82/hgprobe/coll_n]
