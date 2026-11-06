@@ -1,0 +1,9 @@
+ot-run: localhost      admits   120 GB (avail 289, reserve 0, fresh 84.1, peak 20.5, headroom 0, waiters 4/88 GB) load 192/112 running 56 disk 124 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2973539-1793978189 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+VMS_WCE_RESTORE PASS: net22261 exact DRC0 reference metal/vias/endpoints/placements, DATA wire FIXED and healthy driver locked; all clock nets untouched; cycles0
+ot-run: RAN on localhost (unit oth-ubuntu-2973539-1793978189): exit 0
