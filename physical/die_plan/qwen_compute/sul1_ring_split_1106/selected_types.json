@@ -25398,7 +25398,17 @@
        "area_reserve_um2": 2636.064,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_cws0_i"
-      }
+      },
+      "status_pins_xy_um": [
+       [
+        498.408,
+        1280.94
+       ],
+       [
+        498.6,
+        1280.94
+       ]
+      ]
      },
      {
       "name": "flt_su_c_i",
@@ -25432,7 +25442,17 @@
        "area_reserve_um2": 396.576,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_flt_su_c_i"
-      }
+      },
+      "status_pins_xy_um": [
+       [
+        581.0939999999999,
+        31.704
+       ],
+       [
+        581.0939999999999,
+        31.992
+       ]
+      ]
      },
      {
       "name": "rsf_i",
@@ -25466,7 +25486,17 @@
        "area_reserve_um2": 2636.064,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_rsf_i"
-      }
+      },
+      "status_pins_xy_um": [
+       [
+        522.6,
+        62.604
+       ],
+       [
+        522.792,
+        62.604
+       ]
+      ]
      },
      {
       "name": "rsn_i",
@@ -25500,7 +25530,17 @@
        "area_reserve_um2": 2636.064,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_rsn_i"
-      }
+      },
+      "status_pins_xy_um": [
+       [
+        298.536,
+        30.204
+       ],
+       [
+        298.82399999999996,
+        30.204
+       ]
+      ]
      },
      {
       "name": "x_su_c_i",
@@ -25534,7 +25574,17 @@
        "area_reserve_um2": 3475.872,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_x_su_c_i"
-      }
+      },
+      "status_pins_xy_um": [
+       [
+        527.0939999999999,
+        223.94400000000002
+       ],
+       [
+        527.0939999999999,
+        224.04
+       ]
+      ]
      },
      {
       "name": "x_su_c_p1_i",
@@ -25568,7 +25618,17 @@
        "area_reserve_um2": 3475.872,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_x_su_c_p1_i"
-      }
+      },
+      "status_pins_xy_um": [
+       [
+        539.1899999999999,
+        455.928
+       ],
+       [
+        539.1899999999999,
+        456.024
+       ]
+      ]
      }
     ],
     "collector_children": [
@@ -25582,7 +25642,13 @@
       "seam": true,
       "index": 0,
       "ready": "cland_dn_ready_0",
-      "fault": "cland_dn_fault_0"
+      "fault": "cland_dn_fault_0",
+      "status_pins_xy_um": [
+       [
+        8.16,
+        167.392
+       ]
+      ]
      },
      {
       "part": "c_W5_bn_00",
@@ -25594,7 +25660,13 @@
       "seam": true,
       "index": 1,
       "ready": "cland_dn_ready_1",
-      "fault": "cland_dn_fault_1"
+      "fault": "cland_dn_fault_1",
+      "status_pins_xy_um": [
+       [
+        156.0,
+        8.608
+       ]
+      ]
      }
     ],
     "forwarded_clock_only_inputs": true
@@ -51648,7 +51720,17 @@
        "area_reserve_um2": 2636.064,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_cws0_i"
-      }
+      },
+      "status_pins_xy_um": [
+       [
+        498.408,
+        1280.94
+       ],
+       [
+        498.6,
+        1280.94
+       ]
+      ]
      },
      {
       "name": "flt_su_c_i",
@@ -51682,7 +51764,17 @@
        "area_reserve_um2": 396.576,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_flt_su_c_i"
-      }
+      },
+      "status_pins_xy_um": [
+       [
+        581.0939999999999,
+        31.704
+       ],
+       [
+        581.0939999999999,
+        31.992
+       ]
+      ]
      },
      {
       "name": "rsf_i",
@@ -51716,7 +51808,17 @@
        "area_reserve_um2": 2636.064,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_rsf_i"
-      }
+      },
+      "status_pins_xy_um": [
+       [
+        522.6,
+        62.604
+       ],
+       [
+        522.792,
+        62.604
+       ]
+      ]
      },
      {
       "name": "rsn_i",
@@ -51750,7 +51852,17 @@
        "area_reserve_um2": 2636.064,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_rsn_i"
-      }
+      },
+      "status_pins_xy_um": [
+       [
+        298.536,
+        30.204
+       ],
+       [
+        298.82399999999996,
+        30.204
+       ]
+      ]
      },
      {
       "name": "x_su_c_i",
@@ -51784,7 +51896,17 @@
        "area_reserve_um2": 3475.872,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_x_su_c_i"
-      }
+      },
+      "status_pins_xy_um": [
+       [
+        527.0939999999999,
+        223.94400000000002
+       ],
+       [
+        527.0939999999999,
+        224.04
+       ]
+      ]
      },
      {
       "name": "x_su_c_p1_i",
@@ -51818,7 +51940,17 @@
        "area_reserve_um2": 3475.872,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_x_su_c_p1_i"
-      }
+      },
+      "status_pins_xy_um": [
+       [
+        539.1899999999999,
+        455.928
+       ],
+       [
+        539.1899999999999,
+        456.024
+       ]
+      ]
      }
     ],
     "collector_children": [
@@ -51832,7 +51964,13 @@
       "seam": true,
       "index": 0,
       "ready": "cland_dn_ready_0",
-      "fault": "cland_dn_fault_0"
+      "fault": "cland_dn_fault_0",
+      "status_pins_xy_um": [
+       [
+        156.0,
+        8.608
+       ]
+      ]
      },
      {
       "part": "sl_W4_su_c",
@@ -51844,7 +51982,13 @@
       "seam": true,
       "index": 1,
       "ready": "cland_dn_ready_1",
-      "fault": "cland_dn_fault_1"
+      "fault": "cland_dn_fault_1",
+      "status_pins_xy_um": [
+       [
+        612.96,
+        1330.592
+       ]
+      ]
      }
     ],
     "forwarded_clock_only_inputs": true
