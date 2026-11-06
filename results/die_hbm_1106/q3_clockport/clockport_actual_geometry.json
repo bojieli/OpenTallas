@@ -1,0 +1,39 @@
+{
+ "window": [
+  273000,
+  168100,
+  276500,
+  168950
+ ],
+ "rects": [
+  {
+   "kind": "port",
+   "net": "clk",
+   "rect": [
+    276000,
+    168456,
+    276480,
+    168504
+   ],
+   "orient": "N"
+  },
+  {
+   "kind": "wire",
+   "net": "clk",
+   "rect": [
+    276108,
+    168468,
+    276132,
+    168612
+   ]
+  }
+ ],
+ "proposed_pad": [
+  276000,
+  168456,
+  276480,
+  168624
+ ],
+ "foreign_M5_near_pad": [],
+ "note": "Actual DEF signal/PG-wire/port neighborhood; ordinary final DRC remains required"
+}
