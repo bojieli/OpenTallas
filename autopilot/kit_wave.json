@@ -1599,7 +1599,10 @@
     "svc_hi_dsdv_svc_rs__t1@4",
     "svc_lo_dsdv_svc_rs__t1@3",
     "iqf__t1@5",
-    "slice_station__t6__cl54a9ceeb@9"
+    "slice_station__t6__cl54a9ceeb@9",
+    "slice_station__t30__cl1653104c@9",
+    "slice_station__t30__cl6a190133@12",
+    "slice_station__t7__cl362204c4@14"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -2320,7 +2323,10 @@
     "svc_hi_dsdv_svc_rs__t1@4": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6",
     "svc_lo_dsdv_svc_rs__t1@3": "KW-FIX-19 21:3x GEN-HOST-DEPS b: kit_rtl ran 20:55 before the dep copy landed (20:58); file now on epyc5/epyc6",
     "iqf__t1@5": "CODEX S81 class recovery: existing I39 ft_ring_max_ps166.6 is in currentplan; old failed falllanding SDC used699.72ps beforefix. No newconstraintchange/cycles. Older alternativeblock qRUNNING cache stale: actualAP jobs83490/4e2e CANCELLED Nov4.",
-    "slice_station__t6__cl54a9ceeb@9": "CODEX S81 class recovery: existing I39 ft_ring_max_ps166.6 is in currentplan; old failed falllanding SDC used699.72ps beforefix. No newconstraintchange/cycles. Older alternativeblock qRUNNING cache stale: actualAP jobs83490/4e2e CANCELLED Nov4."
+    "slice_station__t6__cl54a9ceeb@9": "CODEX S81 class recovery: existing I39 ft_ring_max_ps166.6 is in currentplan; old failed falllanding SDC used699.72ps beforefix. No newconstraintchange/cycles. Older alternativeblock qRUNNING cache stale: actualAP jobs83490/4e2e CANCELLED Nov4.",
+    "slice_station__t30__cl1653104c@9": "CODEX current qRUNNING-cache recovery: exactAPDONE-CRASH source730 unique-rise insertion Tcl; current2c includesI184psroot. No physicaljobrunning, no designstrike; finalTT/FFgatesunchanged.",
+    "slice_station__t30__cl6a190133@12": "CODEX current qRUNNING-cache recovery: exactAPDONE-CRASH source730 unique-rise insertion Tcl; current2c includesI184psroot. No physicaljobrunning, no designstrike; finalTT/FFgatesunchanged.",
+    "slice_station__t7__cl362204c4@14": "CODEX current qRUNNING-cache recovery: exactAPDONE-CRASH source730 unique-rise insertion Tcl; current2c includesI184psroot. No physicaljobrunning, no designstrike; finalTT/FFgatesunchanged."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -2986,19 +2992,6 @@
    "note": "KW-FIX-19 21:0x: src kw11/src_730 @7305773106e (main: I178 prdfo, I180 rootscr, I181 classretry, prdguard; kit diff vs 16b4 = prd_hook guard only); gen_hosts [epyc5, epyc6] (epyc4 scratch2 11 GB); GEN-HOST-DEPS relaunch 53 rows | KW-FIX-18 19:4x: tag flow-20261106-m-qc 16b4ea85026 (I177 ev76 HBM d44v, I178 prdfo, I179 q3e RXPRE) -> src kw11/src_16b; referenced files byte-same (8/8 sha256) | KW-FIX-17 18:4x: tag flow-20261106-l-qc e920ea3c22b (grtstall + leafitems + S81 TAPWIN-PORT plan ef4d951b60bf) -> src kw11/src_e92; referenced files byte-same except S81 plan_h2_2249.json (clock.tap_window per_port_ps only, COORD 18:20) | KW-FIX-17 18:2x: tag flow-20261106-k-qc 77b4b069dc3 (holdgaterr + ev75 + romq + wbqhd) -> src kw11/src_77b; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:3x: tag flow-20261106-j-qc 17dcf533a38 (resignlib + ev74f + provobs) -> src kw11/src_17d; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:1x: tag flow-20261106-i-qc 556ee1c5557 (dplfb + leafslew) -> src kw11/src_556; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 16:5x: tag flow-20261106-h-qc 76201bc074c (holdrr reg2reg hold stop, grtpost, placeretry) -> src kw11/src_m76; every referenced plan/sidecar/asbuilt/kit_rtl file byte-same (cmp CHECKED) | KW-FIX-16 13:5x tags e-head/g-qc/g-s81 = main a201f608d85 (I139 ecotrim + I140 g2setup, tools only vs src_r): src_t; plan/sidecar/asbuilt bytes unchanged [CHECKED cmp]. | KW-FIX-12 08:4x hold stop 7f4f20064d5: src_k main 714dd1ea120 (S81/HEAD plan bytes same; QC I102 coll_ft 2 keys). | KW-FIX-8 19:1x I57 writer guard class relaunch, src_w on epyc4+intel1. KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 16:4x COORD stale bind: hold hc1-3, stm, coll_ftm, su until DIE-QC-71 tip bind passes; then bind_out in one change | KW-FIX-8 14:1x I46 tag w-qc: src_s, W1 + R8 straps + coll_ucie event efdb36e864; W1 list from q70/ws_report.json added to only_items | KW-FIX-8 10:0x: src wt-qc2 488b89796f3 (common_flow class fix); 3 rows outside the event now; 13 of the 22 + su_c at event tag (COORD 09:59) | KW-FIX-8 09:1x COORD I35: src kw-fix-8/wt-qc 1a4f626d4a8 = rtl + physical 46029291c7f, tools main d3001422956 + reset dot ccb4065691e (not on main yet). QC 19 prov batch. | KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-6 05:4x COORD 05:36 disk: place on epyc4 only; gen stays intel2 (plan + src there). | KW-FIX-6 05:1x COORD 05:07: src = rtl + physical of 46029291c7f + whole tools/ at main a4b44ffeac1 (I25, flow-20261104-d-qc), 28 type rows dq68-types-coreinst 780e4a72f74. | KW-FIX-5 01:2x COORD 01:20: overlay 66c713ed6a on src (46029291c7f); 12 SU + 14 CB holds lifted same tick; CB at gen is an honest class row | KW-FIX-5 00:1x: relay_bay 4 launched 23:58, one-tick allowlist removed | KW-FIX-5 23:5x: one-tick allowlist of the 4 relay_bay classes (parents ROUTING/REVIEW in OWNERS, outside take_states); restored after launch | KW-FIX-5: DPL class port f0ed37ff9a5 in fl-qc2, row predates it | KW-FIX-5: INFRA ENOSPC/no-host remainder (disks freed 20:54) | KW-FIX-5: relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub) | KW-FIX-4 20:3x: fl-qc2 d85db82cddb = + bo",
    "pilot_mode": "queue",
    "hold_items": {
-    "tt_ctlm": "DIE-QC-61 16:3x: GEOM-107 FAIL PLAN (r2r 955.8 reset relays unpinned, E/S face regs far, 4 taps/38k FF); same plan block on d90 -> doomed. plan_qc52 tt_ctlm delta (density taps + relay sites + face homes) in progress; release on its merge.",
-    "sle_su_c": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
-    "sle_su_l0__cl086d85ba": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
-    "slw_su_c__cl19bb38ef": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
-    "slw_su_l0__cl1a1c1f8f": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
-    "slw_su_l0__cl1e5219ea": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
-    "slw_su_l0__cl76fb247e": "KW-FIX-8 I38: after su_c pilot slw_su_c__cl92142dac reads past global place (OT_RESET class), COORD 09:59, 10:11",
-    "slw_hc1__cl3449ea95": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
-    "slw_hc1__cl68f9248e__cl144ee7b3": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
-    "slw_hc2__cl6bcaba89": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
-    "slw_hc3__cld86a7ad4": "KW-FIX-8 17:0x COORD 16:35: other hc wait one proof row past CTS with no big-tap failure",
-    "sle_hc0__cl929603c0__cl38badc56": "KW-FIX-8 17:5x COORD: stale row stopped; other hc wait one proof row past CTS with no big-tap failure",
-    "sle_fe_v3": "KW-FIX-11 07:2x COORD 07:21: DIE-QC-75-R stopped it 07:07, autopilot revived 07:17 on pre-fix tick; DIE-QC-75 ring_place=ff pilot on dq75/fe3ff is the path; release on its read",
     "sle_hc0__cl05696ed1": "KW-FIX-12 08:5x DIE-QC-76 stopped 08:45 per COORD, GRT rising; no resubmit of same form, DIE-QC-76 form lifts"
    },
    "work_root": "/srv/opentallas-scratch2/claude/codex-wave-1105/runs/qwen_compute/kit-wave",
@@ -3289,7 +3282,20 @@
     "slw_su_l1__cla2a78701@6",
     "slw_su_l1__clcc9d0155@7",
     "slw_sc_v2@5",
-    "coll_ftn@4"
+    "coll_ftn@4",
+    "sle_su_c@3",
+    "sle_su_l0__cl086d85ba@2",
+    "slw_su_c__cl19bb38ef@3",
+    "slw_su_l0__cl1a1c1f8f@2",
+    "slw_su_l0__cl1e5219ea@2",
+    "slw_su_l0__cl76fb247e@2",
+    "slw_hc1__cl3449ea95@1",
+    "slw_hc1__cl68f9248e__cl144ee7b3@3",
+    "slw_hc2__cl6bcaba89@3",
+    "slw_hc3__cld86a7ad4@2",
+    "sle_hc0__cl929603c0__cl38badc56@5",
+    "tt_ctlm@1",
+    "sle_fe_v3@1"
    ],
    "queue_src": "main@2c7054fd3cda3f76c35bb1e4b04f8d9ddd06711e",
    "type_args": {
@@ -3542,7 +3548,7 @@
     "slw_fw_v3@4": "gen on intel1 had no dq71/co, the source tree bind_tip_i57 names; gen_hosts epyc4 (KW-FIX-8 23:2x), no attempt judged",
     "slw_stm_v1__cle34a73c3@3": "grt_maxwire class: type_args --max-wire-um gives the kit the Tcl, relay_bay sets the pitch; tool fix claude/kw8-relaymw-1104@38a6a1b2bdf (COORD 22:1x)",
     "sle_hc2__cl9c4c4509__clf60c5152@3": "INFRA ENOSPC/no-host remainder (disks freed 20:54)",
-    "slw_hc1__cl68f9248e__cl144ee7b3@3": "INFRA ENOSPC/no-host remainder (disks freed 20:54)",
+    "slw_hc1__cl68f9248e__cl144ee7b3@3": "CODEX current-hold recovery: SU pilot slw_su_ccl921@16 passedGPL/DPL22:44 andactiveCTS; HCpilot slw_hc3clccfc@7 spilledintel1 reachedroutedSIGNOFF pairskew77.9/72.6(no bigtapfailure), preserve itsECO; tt_ctlmPINDUP917f andFE3ringfall7c82 confirmedancestors2c. Onecurrentfixed-sourcevehicle; actualtiminggatesunchanged.",
     "slw_st_a_v2__cl9f076a5c@3": "INFRA ENOSPC/no-host remainder (disks freed 20:54)",
     "slw_st_b_v1__cl6357f1cc@5": "DPL class port f0ed37ff9a5 in fl-qc2, row predates it",
     "cbf_q00__cl1b5a6458@2": "dq68-types-coreinst 780e4a72f74 (I25): native tile swap, u_bound names, main tools",
@@ -3709,7 +3715,19 @@
     "slw_su_l1__cla2a78701@6": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
     "slw_su_l1__clcc9d0155@7": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
     "slw_sc_v2@5": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6",
-    "coll_ftn@4": "CODEX-WAVE class recovery: coll_ftn externally stopped noOOM INFRA; coll_ftc current type old checkpoint gone, one fresh vehicle with merged reg2reg-only hold gate; actual timing still gates."
+    "coll_ftn@4": "CODEX-WAVE class recovery: coll_ftn externally stopped noOOM INFRA; coll_ftc current type old checkpoint gone, one fresh vehicle with merged reg2reg-only hold gate; actual timing still gates.",
+    "sle_su_c@3": "CODEX current-hold recovery: SU pilot slw_su_ccl921@16 passedGPL/DPL22:44 andactiveCTS; HCpilot slw_hc3clccfc@7 spilledintel1 reachedroutedSIGNOFF pairskew77.9/72.6(no bigtapfailure), preserve itsECO; tt_ctlmPINDUP917f andFE3ringfall7c82 confirmedancestors2c. Onecurrentfixed-sourcevehicle; actualtiminggatesunchanged.",
+    "sle_su_l0__cl086d85ba@2": "CODEX current-hold recovery: SU pilot slw_su_ccl921@16 passedGPL/DPL22:44 andactiveCTS; HCpilot slw_hc3clccfc@7 spilledintel1 reachedroutedSIGNOFF pairskew77.9/72.6(no bigtapfailure), preserve itsECO; tt_ctlmPINDUP917f andFE3ringfall7c82 confirmedancestors2c. Onecurrentfixed-sourcevehicle; actualtiminggatesunchanged.",
+    "slw_su_c__cl19bb38ef@3": "CODEX current-hold recovery: SU pilot slw_su_ccl921@16 passedGPL/DPL22:44 andactiveCTS; HCpilot slw_hc3clccfc@7 spilledintel1 reachedroutedSIGNOFF pairskew77.9/72.6(no bigtapfailure), preserve itsECO; tt_ctlmPINDUP917f andFE3ringfall7c82 confirmedancestors2c. Onecurrentfixed-sourcevehicle; actualtiminggatesunchanged.",
+    "slw_su_l0__cl1a1c1f8f@2": "CODEX current-hold recovery: SU pilot slw_su_ccl921@16 passedGPL/DPL22:44 andactiveCTS; HCpilot slw_hc3clccfc@7 spilledintel1 reachedroutedSIGNOFF pairskew77.9/72.6(no bigtapfailure), preserve itsECO; tt_ctlmPINDUP917f andFE3ringfall7c82 confirmedancestors2c. Onecurrentfixed-sourcevehicle; actualtiminggatesunchanged.",
+    "slw_su_l0__cl1e5219ea@2": "CODEX current-hold recovery: SU pilot slw_su_ccl921@16 passedGPL/DPL22:44 andactiveCTS; HCpilot slw_hc3clccfc@7 spilledintel1 reachedroutedSIGNOFF pairskew77.9/72.6(no bigtapfailure), preserve itsECO; tt_ctlmPINDUP917f andFE3ringfall7c82 confirmedancestors2c. Onecurrentfixed-sourcevehicle; actualtiminggatesunchanged.",
+    "slw_su_l0__cl76fb247e@2": "CODEX current-hold recovery: SU pilot slw_su_ccl921@16 passedGPL/DPL22:44 andactiveCTS; HCpilot slw_hc3clccfc@7 spilledintel1 reachedroutedSIGNOFF pairskew77.9/72.6(no bigtapfailure), preserve itsECO; tt_ctlmPINDUP917f andFE3ringfall7c82 confirmedancestors2c. Onecurrentfixed-sourcevehicle; actualtiminggatesunchanged.",
+    "slw_hc1__cl3449ea95@1": "CODEX current-hold recovery: SU pilot slw_su_ccl921@16 passedGPL/DPL22:44 andactiveCTS; HCpilot slw_hc3clccfc@7 spilledintel1 reachedroutedSIGNOFF pairskew77.9/72.6(no bigtapfailure), preserve itsECO; tt_ctlmPINDUP917f andFE3ringfall7c82 confirmedancestors2c. Onecurrentfixed-sourcevehicle; actualtiminggatesunchanged.",
+    "slw_hc2__cl6bcaba89@3": "CODEX current-hold recovery: SU pilot slw_su_ccl921@16 passedGPL/DPL22:44 andactiveCTS; HCpilot slw_hc3clccfc@7 spilledintel1 reachedroutedSIGNOFF pairskew77.9/72.6(no bigtapfailure), preserve itsECO; tt_ctlmPINDUP917f andFE3ringfall7c82 confirmedancestors2c. Onecurrentfixed-sourcevehicle; actualtiminggatesunchanged.",
+    "slw_hc3__cld86a7ad4@2": "CODEX current-hold recovery: SU pilot slw_su_ccl921@16 passedGPL/DPL22:44 andactiveCTS; HCpilot slw_hc3clccfc@7 spilledintel1 reachedroutedSIGNOFF pairskew77.9/72.6(no bigtapfailure), preserve itsECO; tt_ctlmPINDUP917f andFE3ringfall7c82 confirmedancestors2c. Onecurrentfixed-sourcevehicle; actualtiminggatesunchanged.",
+    "sle_hc0__cl929603c0__cl38badc56@5": "CODEX current-hold recovery: SU pilot slw_su_ccl921@16 passedGPL/DPL22:44 andactiveCTS; HCpilot slw_hc3clccfc@7 spilledintel1 reachedroutedSIGNOFF pairskew77.9/72.6(no bigtapfailure), preserve itsECO; tt_ctlmPINDUP917f andFE3ringfall7c82 confirmedancestors2c. Onecurrentfixed-sourcevehicle; actualtiminggatesunchanged.",
+    "tt_ctlm@1": "CODEX current-hold recovery: SU pilot slw_su_ccl921@16 passedGPL/DPL22:44 andactiveCTS; HCpilot slw_hc3clccfc@7 spilledintel1 reachedroutedSIGNOFF pairskew77.9/72.6(no bigtapfailure), preserve itsECO; tt_ctlmPINDUP917f andFE3ringfall7c82 confirmedancestors2c. Onecurrentfixed-sourcevehicle; actualtiminggatesunchanged.",
+    "sle_fe_v3@1": "CODEX current-hold recovery: SU pilot slw_su_ccl921@16 passedGPL/DPL22:44 andactiveCTS; HCpilot slw_hc3clccfc@7 spilledintel1 reachedroutedSIGNOFF pairskew77.9/72.6(no bigtapfailure), preserve itsECO; tt_ctlmPINDUP917f andFE3ringfall7c82 confirmedancestors2c. Onecurrentfixed-sourcevehicle; actualtiminggatesunchanged."
    },
    "gen_hosts": [
     "epyc5",
@@ -3831,7 +3849,8 @@
     "sle_sc_v1__cl115da35f",
     "slw_sc_v1__cl63e5a7a2",
     "slw_sc_v1__cl64543eaf__cl5e017c6f",
-    "coll_ftc"
+    "coll_ftc",
+    "tt_ctlm"
    ],
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
@@ -4488,7 +4507,7 @@
     "ot_hgi_sfu_split3_lane_core_fr": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
     "ot_hbm_idx_query_static": "KW-FIX-5 01:1x HBM-STAGE dry run: PORT_MISMATCH mp_isl; DIE-HBM-61 20:51 counts q7b2 with no rebuild; no re-gen",
     "ot_hbm_idx_score_hcol_h1": "KW-FIX-5 01:1x HBM-STAGE dry run: PORT_MISMATCH mp_isl; DIE-HBM-61 20:51 counts q7b2 with no rebuild; no re-gen",
-    "hfd_ep_static": "KW-FIX-6 06:1x: DIE-HBM-63 06:04 ECO on routed ep is live; hand flow, not relaunched by the wave",
+    "hfd_ep_static": "CODEX CLOSED: actualSIGNEDview epyc2:/srv/opentallas-scratch2/claude/ss27/resign/ep_k/signoff/signoff.json matchesplannedpins; oldECOliveownershipnoteobsolete. PreserveSIGNEDview; no rebuild.",
     "ot_hnx_fused_host_program": "COORD 11-04: signed off (ss29/resign/fhp_i); I62 part 14 only makes the plan match that build; no wave relaunch",
     "ot_hbm_su_programme_pslice_c5": "I61 part 8 removes this core; stopped per DIE-HBM-66, RM-31 21:03",
     "ot_hbm_su_pcol_h": "I61: signed kit exists, plan matches its 769 pins; no rebuild, re-sign by SS29",
