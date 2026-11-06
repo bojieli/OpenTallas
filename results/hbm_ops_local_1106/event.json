@@ -1,0 +1,58 @@
+{
+  "status": "SOURCE_MECHANISM_PASS_MAP_AND_PHYSICAL_PENDING",
+  "opsa": {
+    "pins_cycles": {
+      "stage_write_visibility": 1,
+      "read_response": 0,
+      "scalar": 0
+    },
+    "source_frame_bits": 2240,
+    "columns": 4,
+    "raw_ff": 8960,
+    "baseline_cells_incl16macros": 57298,
+    "estimated_cells_upper": 75218,
+    "estimated_added_std_um2": 2613.8,
+    "same_outline_um": [
+      760.32,
+      233.28
+    ],
+    "estimated_std_util_of_nonmacro_rows": 0.18,
+    "column_map": "bank index//4, verified actual macro_placement.tcl columns13.824/200.448/387.072/573.696",
+    "placement": "two disjoint channel boxes per column, after4.32um macro halos; existing reg-guide-boxes schema",
+    "preservation": "existing canonical SYNTH_CANONICALIZE_TCL=ot_keep_regs.tcl required; no toolflow bypass",
+    "macro_area_um2_estimate": 113609
+  },
+  "opsb": {
+    "pins_cycles": {
+      "read_response": 1,
+      "write_visibility": 0,
+      "fault": 0
+    },
+    "raw_ff": 616,
+    "baseline_cells_incl16macros": 54042,
+    "estimated_cells_upper": 55274,
+    "local_capture_budget_ps": "412 SRAMclkQ +~50localwire +~50setup +~80relatedskew =592 <833; nextedge registerQ replaces412ps macroQ on760um network"
+  },
+  "proof": {
+    "banks": 16,
+    "LWB": 15,
+    "AW": 24,
+    "NS": 8,
+    "BREG": 1,
+    "FREG": 1,
+    "model": "behavioral nativebank read-first word semantics, physical macro binding not changed",
+    "checks": 1509,
+    "data_words": 217296,
+    "fault_checks": 3018,
+    "write_stage_bypass_diff": 46,
+    "read_stage_bypass_diff": 1476,
+    "resets": "two midtraffic reset episodes plus startup; writes remain inflight, resetvalid flush checked",
+    "source_sha256": {
+      "lgroup2_lf_captured.sv": "10c18eddfec970f1fec0363d88751bd2191c2221427d0d6c1a46075767bf6a8e",
+      "lbank.sv": "8efa798aef1897a339606c86a60177168e8b486bf2b7f93295b7b1e48299980f",
+      "tb_ops_local.sv": "ef7073fadb4cb81fb274a64028024e55a3be8428886916e41036d15f301c979f"
+    }
+  },
+  "physical": "none launched yet; original jobs retained",
+  "adoption": "no sourceprofile/recipe/POR change"
+}
