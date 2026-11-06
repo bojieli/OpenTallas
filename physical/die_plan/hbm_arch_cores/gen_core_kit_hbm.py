@@ -2376,7 +2376,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             scope="SOURCE_PROOF_ONLY", release_eligible=False,
             physical_reset_qualification=False, die_contract_staged=False), indent=1) + "\n")
     else:
-        reset_contract = kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["hbm"])
+        reset_contract = kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["hbm"], required_source=True)
     # Optional source-pinned placement/model assets are assembled before the
     # normal kit hash and generation provenance; never retrofit a built kit.
     from kit_runtime_assets import stage as stage_runtime_assets
