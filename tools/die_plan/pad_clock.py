@@ -71,8 +71,10 @@ def pins(P, tn):
             if p['dir'] != 'in' or not isinstance(rows, list) or not rows:
                 raise ValueError(f'{tn}.{n}: data_inputs needs a nonempty list on an input pad clock')
             for row in rows:
-                if not isinstance(row, dict) or set(row) != {'port', 'max_ps', 'min_ps', 'evidence'}:
+                base = {'port', 'max_ps', 'min_ps', 'evidence'}
+                if not isinstance(row, dict) or base - set(row) or set(row) - base - SAME_EDGE_KEYS:
                     raise ValueError(f'{tn}.{n}: data_inputs requires port/max_ps/min_ps/evidence')
+                same_edge_row(tn, n, row, per)
                 name = row['port']
                 if not isinstance(name, str):
                     raise ValueError(f'{tn}.{n}: data input port must be a literal pad name')
@@ -110,6 +112,31 @@ def pins(P, tn):
     if seen != set(pads):
         raise ValueError(f'{tn}: pad_clock must cover every existing clock pad: {sorted(set(pads) - seen)}')
     return result
+
+
+SAME_EDGE_KEYS = {'capture', 'eye_hold_extra_ps'}
+
+
+def same_edge_row(tn, n, row, period_ps):
+    """Optional same-edge eye capture of source-synchronous pad data (DIE-HEAD-74 11-06).
+
+    When the capture clock tree is close to one pad period deep, the receiving
+    flop samples the data launched by the SAME pad edge (inside its eye), not
+    the previous one.  The SDC then states that relation exactly
+    (set_multicycle_path 0 -setup: setup on the same edge, hold on the edge
+    before), and the declared min budget is lowered by eye_hold_extra_ps, the
+    measured TT-minus-FF capture insertion gap plus margin, so the FF-only hold
+    sign-off also covers the TT eye edge.  Both fields are required together;
+    absent fields keep the generated SDC byte-identical."""
+    keys = SAME_EDGE_KEYS & set(row)
+    if not keys:
+        return False
+    if keys != SAME_EDGE_KEYS or row['capture'] != 'same_edge':
+        raise ValueError(f"{tn}.{n}: same-edge capture needs capture='same_edge' and eye_hold_extra_ps together")
+    x = row['eye_hold_extra_ps']
+    if isinstance(x, bool) or not isinstance(x, (int, float)) or not math.isfinite(x) or not 0 < x < period_ps:
+        raise ValueError(f'{tn}.{n}: eye_hold_extra_ps must be finite, > 0 and below the pad period')
+    return True
 
 
 def io_tcl(P, tn):
@@ -164,10 +191,14 @@ def sdc(P, tn, text):
                          if line.startswith('set_input_delay ') else line
                          for line in text.splitlines()) + '\n'
         for clock, row in data:
+            same = row.get('capture') == 'same_edge'
             for kind in ('max', 'min'):
-                value = gen_phys.t_lib(row[kind + '_ps'])
+                budget = row[kind + '_ps'] - (row['eye_hold_extra_ps'] if same and kind == 'min' else 0)
+                value = gen_phys.t_lib(budget)
                 text += (f'set_input_delay -{kind} {value:.4f} -clock {clock} '
                          f'[get_ports {{{row["port"]}[*]}}]\n')
+            if same:
+                text += f'set_multicycle_path 0 -setup -from [get_ports {{{row["port"]}[*]}}]\n'
     output_data = [(p['name'], row) for p in exports for row in p.get('data_outputs', [])]
     if output_data:
         # Keep the existing loads on every data output. Only their generic
