@@ -4,7 +4,7 @@
 // controls delayed to match; store: clear/emit/emit_group/rank/gbase delayed PD so the pair is the part 30 form delayed PD at every output.
 `timescale 1ns/1ps
 `default_nettype none
-module ot_hbm_idx_topk_ingest #(parameter integer MUT=0)(
+module ot_hbm_idx_topk_ingest #(parameter integer MUT=0, FILL_GROUPS=0)(
  input wire clk,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,
  input wire flush,emit_v,input wire[7:0]rank,gbase,
@@ -51,7 +51,36 @@ module ot_hbm_idx_topk_ingest #(parameter integer MUT=0)(
  end
  // Carry has only seven live records. Mask it by fill before merging, so the
  // datapath flops require no reset; fill is the reset control state.
- wire[4607:0]packed_next=({512'd0,compacted} << {fill,6'b0}) | {4160'd0,live_carry};
+ wire[4607:0]packed_next;
+ wire[4607:0]live_carry_padded={4160'd0,live_carry};
+ // Optional zero-edge fanout form: each eight-bit record-column group owns
+ // its own three fill bits. Replicas sample the SAME next-state expression
+ // and the SAME reset/clear/ingest priority as the original master fill.
+ // No copy samples the old master, which would add a wrong edge.
+ generate if(FILL_GROUPS==0)begin:g_fill_direct
+  assign packed_next=({512'd0,compacted} << {fill,6'b0}) | {4160'd0,live_carry};
+ end else if(FILL_GROUPS==8)begin:g_fill_columns
+  for(genvar g=0;g<8;g=g+1)begin:column_group
+   (* keep *) reg[2:0]fill_local;
+   always @(posedge clk or negedge rst_core_n)begin
+    if(!rst_core_n)fill_local<=0;
+    else begin
+     if(clear_p)fill_local<=0;
+     if(ingest_p)fill_local<=(MUT==7&&g==2)?(n[2:0]^3'd1):
+                              (MUT==8&&g==2)?fill:n[2:0];
+    end
+   end
+   wire[4607:0]shifted=({512'd0,compacted} << {fill_local,6'b0});
+   // The selected bits are disjoint; dead shift columns are removed normally.
+   for(genvar r=0;r<72;r=r+1)begin:record_column
+    assign packed_next[r*64+g*8+:8]=shifted[r*64+g*8+:8] |
+                                      live_carry_padded[r*64+g*8+:8];
+   end
+  end
+ end else begin:g_bad_fill_groups
+  initial $fatal(1,"FILL_GROUPS must be 0 or 8");
+  assign packed_next=0;
+ end endgenerate
  reg[447:0]carry_next;
  always @*begin
   carry_next=0;
