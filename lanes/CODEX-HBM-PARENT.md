@@ -1,8 +1,16 @@
 # HBM bounded parent: q_spb2
 
-Updated 2026-11-06. Owner hbm_parent; canonical plan owner hbm. Two real signed xcal children; diagnostic local parent, no die/global-bind/token closure. ROOT=/srv/opentallas-scratch2/claude/codex-hbm-parent-1106 on hub/E2/E6.
+Updated 2026-11-06 06:09 PST. Owner hbm_parent; canonical plan owner hbm. Two real signed xcal children; diagnostic local parent, no die/global-bind/token closure. ROOT=/srv/opentallas-scratch2/claude/codex-hbm-parent-1106 on hub/E2/E6.
 
-## Actual result and remaining failure
+## Current live attempt
+
+Intel2 dedicated scratch2 PLACE unit **oth-ubuntu-1164857-1793974144**,24GB8CPU20GB, ROOT/prep1_continuation/gen5/q_spb2. Log local coord/tmp/codex-hbm-parent-1106/prep1_place.log. No route. Reused actual Claude q_spb2_prep1 (E2 scratch3/die-hbm-79) passed RTL/reset/assembly/stations, never repeated full bind. Original FAILED receipt preserved.
+
+5736 schema now merged. Continuation GEN PASS1072557, RTL_LINT PASS1081473/errors0; actual frontend2/2signed children+20/20stations/problems[]. Exact plan and detailed4275site bank image rendered/viewed PASS-COND PLACE-only, review ROOT/prep1_continuation/REVIEW.md.
+
+Shared fixes READY913a4d7ed68 (canonical reset conversion changes wrapper, so structurally re-prove narrow dead-input bits; omitted-bit/whole-vector mutants refuse) and56367a08e38 (explicit selected plan module into inventory; partition freeze has no module). Branch codex/hbm-parent-resume-1106, narrow focused tests PASS, merge owns release. Relocated identical prepared SVs to dedicated hub scratch; filelists/census paths localized after byte checks. Original globalFAIL1 retained.
+
+## Previous actual result and remaining failure
 
 E6 PLACE unit oth-ubuntu-1429122-1793955200 finished shell0 and async LEC0. SYNTH 69,585 stdcells+2 real macros; PORT_BIND12505/12505, FACE_GUARD0fails, fanout>64=0. Final actual DB ROOT/xcal_gen_rstport/q_spb2/run/results/asap7/dp_q_spb2/base/3_place.odb and rendered ROOT/xcal_actual_placement.png preserved. No route launched.
 
@@ -10,11 +18,11 @@ Actual reset subgate FAIL: isolated generation expected u_rst_root, while native
 
 ## Next preparation READY
 
-Provider3b2dda053b4 + phase helper b9dccb67643 + consumer9e0ca4bb878 are READY for coherent release (merge owns integration). New read-only component proof is explicitly LOCAL_COMPONENT/source_preparation_only; global g_t11m79f FAIL1 (unrelated q_hub_nw reset emission) stays verbatim. No native_topology receipt, borrowed top, global PASS or wave-route waiver.
+Provider3b2dda053b4 + phase helper b9dccb67643 + consumer9e0ca4bb878 are merged in current main. New read-only component proof is explicitly LOCAL_COMPONENT/source_preparation_only; global g_t11m79f FAIL1 (unrelated q_hub_nw reset emission) stays verbatim. No native_topology receipt, borrowed top, global PASS or wave-route waiver.
 
 Actual proof ROOT/component_q_spb2_v1.json PASS: original selected source,27ports, unique defaults82/83/210/211,23reset taps+out all depth9,104edges, phase-aware native contract. Actual kit emission from ORIGINAL g_t11m79f without bound_top PASS, narrow99->28 dead-input proof PASS, two sealed DD256/PAW11/PREL1/XSLOT1 BB joins PASS. UID/width/reset-shortcut mutants all refused. Source inspection and local preparation only.
 
-Fleet owns ONE admitted fresh prep; none running or reserved. Exact E2 overrides ROOT/q_spb2_component_overrides_v1.json: original g_t11m79f, above proof, bind_context ROOT/bind_context_banks20_taps/die_plan.json, original m79fp reset context, exact existing assembly contract. Prepared plan ROOT/xcal_subplan/die_plan_banks20_taps_TRIAL.json. KIT-owned stations require no80type rebind. Fleet coordinates actual disk reservation with TOKEN.
+Previous fleet prep handoff (superseded by current live attempt): Exact E2 overrides ROOT/q_spb2_component_overrides_v1.json: original g_t11m79f, above proof, bind_context ROOT/bind_context_banks20_taps/die_plan.json, original m79fp reset context, exact existing assembly contract. Prepared plan ROOT/xcal_subplan/die_plan_banks20_taps_TRIAL.json. KIT-owned stations require no80type rebind. Fleet coordinates actual disk reservation with TOKEN.
 
 Released shared fixes: e88 native-width proof guard; d918 authoritative hard-child classification;607 actual selected BB staging before sealed assembly, all already on released source. Consumer preserves LOCAL/globalFAIL metadata and mandatory census/inventory. Prior v1 transport and v2 missing-local-BB failures retained and diagnosed.
 
@@ -30,4 +38,4 @@ After release: fleet prep -> inspect generated reset/stations/assembly and rende
 
 SU q_su21 retained old plain4 MLAT4 versus signed16lane1 MLAT5; prior attempted join yielded0actual lane1 macros. hbm owns phase/enable semantic proof, kit_assembly common composition; no invented outputs or false SU route.
 
-Only own abandoned duplicates removed: hub old parent/station worktrees + narrowed remaining worktree (~.536GiB), E2 old own checkout (~.127GiB), E5 unused gen copies85.3MB. Final E6 PLACE/LEC, exact signed views, current source/model/proof and important failed joins preserved. No jobs killed. Active original m79f/m79fp/asbuilt closure must stay. Own current code tree hub /srv/opentallas-scratch2/claude/wt/codex-hbm-view-stage-1106 branch codex/hbm-component-1106.
+Only own abandoned duplicates removed: hub old parent/station worktrees + narrowed remaining worktree (~.536GiB), E2 old own checkout (~.127GiB), E5 unused gen copies85.3MB. Final E6 PLACE/LEC, exact signed views, current source/model/proof and important failed joins preserved. No jobs killed. Active original m79f/m79fp/asbuilt closure must stay. Own current code tree hub /srv/opentallas-scratch2/claude/wt/codex-hbm-view-stage-1106 branch codex/hbm-parent-resume-1106.
