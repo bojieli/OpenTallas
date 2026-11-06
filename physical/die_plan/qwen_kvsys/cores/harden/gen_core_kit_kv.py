@@ -1223,6 +1223,7 @@ def main():
     ap.add_argument("--sigmax", default=None, help="explicit signal ceiling overrides recipe (fallback M5)")
     ap.add_argument("--prompt-rx-spread", action="store_true", help="opt-in prompt C: reserve density headroom in the north RX pin band")
     ap.add_argument("--prompt-reset-local-sites", help="Opt-in same-cycle qualified host reset replicas near prior placed sinks TSV")
+    ap.add_argument("--prompt-clean-bundle", action="store_true", help="Explicitly price the opt-in registered full program bundle +1 edge; requires matching emitted face source")
     # FLOW-FIX 2026-10-25 (flow canary F1/F2 + COORD per-corner insertion): main's kit-flow defaults via
     # tools/die_plan/core_flow.py -- RTL lint before synth, RCX-calibrated RC for place/CTS/GRT, per-corner IO vclk
     # binding (TT in constraint.sdc, FF in the FF-only GRT hold repair step of run_kit_kv.sh)
@@ -2021,6 +2022,16 @@ def main():
         shutil.copyfile(Path(__file__).with_name("prompt_rx_spread_release.tcl"), kd / "prompt_rx_spread_release.tcl")
         f = kd / "face_flops_release.tcl"
         f.write_text(f.read_text() + "\nsource /work/prompt_rx_spread_release.tcl\n")
+    if a.prompt_clean_bundle:
+        source = kd / "rtl" / "qkd_hr_core_prompt.v"
+        if mod != "qkd_hr_core_prompt" or not source.exists() or not all(x in source.read_text() for x in ("u_program_rx.clean_pipe_result", "u_program_rx.p2_v")):
+            raise SystemExit("--prompt-clean-bundle requires the emitted registered program bundle source")
+        (kd / "prompt_program_delta.json").write_text(json.dumps(dict(
+            schema="opentallas.prompt.program_delta.v1", added_program_cycles=1, cycle_ps=833,
+            outputs=["begin_image", "image_epoch", "image_target", "pw_count", "dw_count", "word_v", "word_desc", "word_addr", "word_data", "seal", "auth_v", "auth_epoch", "auth_digest", "auth_target"],
+            output_prefix="u_program_rx__", invalid_program_fault_cycles=1,
+            credit_return_cycles=0, normal_frame_cycles=0, overflow_fault_cycles=0,
+            parent_requirement="bind same opt-in receiver and price one added program service edge plus one later invalid-frame fault observation; not a parent qualification receipt"), indent=1) + "\n")
     if a.prompt_reset_local_sites:
         if mod != "qkd_hr_core_prompt" or not rec.get("face_flops", True):
             raise SystemExit("--prompt-reset-local-sites requires the prompt registered-face form")
