@@ -1,0 +1,938 @@
+{
+ "schema": "opentallas.kv_pv_affinity_native_canary.v1",
+ "source": "953d045464 private Aoff/Bon pre-CTS assignment only",
+ "passed": false,
+ "capacity_failures": {
+  "clk_t112": 1856,
+  "clk_t138": 1576,
+  "clk_t151": 1212,
+  "clk_t152": 1226
+ },
+ "changed_clock_inputs": 33144,
+ "eligible": 64034,
+ "joined_groups": 3201,
+ "max_group": 89,
+ "max_reach_um": 199.984,
+ "max_tap_load": 1856,
+ "unchanged_cells_poses": true,
+ "unchanged_all_other_data_reset_hard_and_gated_clock_pins": true,
+ "critical_chains": [
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[5\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1059210,
+    837270
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[5\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t150",
+   "new": "clk_t150",
+   "xy": [
+    202284,
+    1462860
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[4\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1058130,
+    837540
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.q\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t89",
+   "new": "clk_t100",
+   "xy": [
+    1147230,
+    797040
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[57\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t97",
+   "new": "clk_t100",
+   "xy": [
+    1112778,
+    817560
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[21\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t121",
+   "new": "clk_t121",
+   "xy": [
+    749844,
+    1292760
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[59\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t87",
+   "new": "clk_t100",
+   "xy": [
+    1120554,
+    803520
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[9\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t137",
+   "new": "clk_t154",
+   "xy": [
+    361800,
+    1425870
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[1\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1049436,
+    835920
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[11\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t154",
+   "new": "clk_t154",
+   "xy": [
+    423468,
+    1397250
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[37\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1087938,
+    856170
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[7\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1062072,
+    835380
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[20\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t157",
+   "new": "clk_t157",
+   "xy": [
+    746928,
+    1297080
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[64\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t89",
+   "new": "clk_t100",
+   "xy": [
+    1142910,
+    797040
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[19\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t138",
+   "new": "clk_t138",
+   "xy": [
+    644004,
+    1303290
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[61\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t97",
+   "new": "clk_t100",
+   "xy": [
+    1124388,
+    798660
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[14\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t155",
+   "new": "clk_t154",
+   "xy": [
+    488970,
+    1385100
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[12\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1072278,
+    835380
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[2\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t150",
+   "new": "clk_t150",
+   "xy": [
+    113724,
+    1472310
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[0\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t150",
+   "new": "clk_t150",
+   "xy": [
+    90720,
+    1482840
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[16\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t155",
+   "new": "clk_t154",
+   "xy": [
+    496314,
+    1364580
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[10\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1069632,
+    835650
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[51\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t94",
+   "new": "clk_t100",
+   "xy": [
+    1092420,
+    828630
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[3\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t150",
+   "new": "clk_t150",
+   "xy": [
+    116208,
+    1466910
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[7\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t137",
+   "new": "clk_t154",
+   "xy": [
+    337932,
+    1456650
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[52\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t94",
+   "new": "clk_t100",
+   "xy": [
+    1094310,
+    826470
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[32\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1087290,
+    855360
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[58\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t87",
+   "new": "clk_t100",
+   "xy": [
+    1114992,
+    809730
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[8\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1063908,
+    835650
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[17\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t119",
+   "new": "clk_t119",
+   "xy": [
+    585360,
+    1317870
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[1\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t150",
+   "new": "clk_t150",
+   "xy": [
+    93906,
+    1481220
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[48\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t94",
+   "new": "clk_t100",
+   "xy": [
+    1086966,
+    834570
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[9\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1066824,
+    835650
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[13\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t94",
+   "new": "clk_t100",
+   "xy": [
+    1073844,
+    835650
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[56\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t97",
+   "new": "clk_t100",
+   "xy": [
+    1110942,
+    818910
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[23\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1075950,
+    859680
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[18\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t138",
+   "new": "clk_t138",
+   "xy": [
+    638010,
+    1315980
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[21\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1073142,
+    857790
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[31\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1085616,
+    856170
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[54\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t97",
+   "new": "clk_t100",
+   "xy": [
+    1101870,
+    822690
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[38\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1088640,
+    856440
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[25\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1076436,
+    859950
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[44\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1088046,
+    843750
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[18\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1071576,
+    848070
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[17\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1071846,
+    845100
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[11\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1071198,
+    835380
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[50\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t94",
+   "new": "clk_t100",
+   "xy": [
+    1090800,
+    829980
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[65\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t89",
+   "new": "clk_t100",
+   "xy": [
+    1144530,
+    796230
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[45\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1085562,
+    842130
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[8\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t137",
+   "new": "clk_t154",
+   "xy": [
+    340308,
+    1428300
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[6\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1060290,
+    835920
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[4\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t150",
+   "new": "clk_t150",
+   "xy": [
+    129600,
+    1464750
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[27\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1078218,
+    859410
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[53\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t94",
+   "new": "clk_t100",
+   "xy": [
+    1096686,
+    824310
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[26\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1077138,
+    859410
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[33\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1088100,
+    854280
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[40\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1090152,
+    850500
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[3\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1052136,
+    837810
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[22\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1074600,
+    859410
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[39\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1089504,
+    852930
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[10\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t154",
+   "new": "clk_t154",
+   "xy": [
+    419742,
+    1399140
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[42\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1090098,
+    846990
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[55\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t97",
+   "new": "clk_t100",
+   "xy": [
+    1106568,
+    820800
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[13\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t155",
+   "new": "clk_t154",
+   "xy": [
+    477252,
+    1389960
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[2\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1050678,
+    836730
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[60\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t87",
+   "new": "clk_t100",
+   "xy": [
+    1122282,
+    799740
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[16\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1072170,
+    842130
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[47\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t94",
+   "new": "clk_t100",
+   "xy": [
+    1086102,
+    835920
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[49\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t94",
+   "new": "clk_t100",
+   "xy": [
+    1088208,
+    833490
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[12\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t155",
+   "new": "clk_t154",
+   "xy": [
+    473202,
+    1396170
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[15\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t155",
+   "new": "clk_t154",
+   "xy": [
+    491832,
+    1365660
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[66\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t89",
+   "new": "clk_t100",
+   "xy": [
+    1146042,
+    796770
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[19\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1070334,
+    851040
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[0\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1048896,
+    834570
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[36\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1087614,
+    855900
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[62\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t97",
+   "new": "clk_t100",
+   "xy": [
+    1126710,
+    797850
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.q$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t157",
+   "new": "clk_t157",
+   "xy": [
+    771066,
+    1290600
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[14\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1074276,
+    837270
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[34\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1088424,
+    854820
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[30\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1083780,
+    857790
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[20\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1071198,
+    854010
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[28\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1079406,
+    858870
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[29\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1082214,
+    858870
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[43\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1088478,
+    845640
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[46\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1085346,
+    838890
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[35\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1087182,
+    855630
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[15\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t98",
+   "new": "clk_t100",
+   "xy": [
+    1072332,
+    839700
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[63\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t89",
+   "new": "clk_t100",
+   "xy": [
+    1139832,
+    797850
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[41\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1090800,
+    848340
+   ]
+  },
+  {
+   "instance": "u_bound.u_pd23_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_225.r\\[6\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t137",
+   "new": "clk_t150",
+   "xy": [
+    256392,
+    1460970
+   ]
+  },
+  {
+   "instance": "u_bound.u_d68_vport_E_out_v_lo.r\\[24\\]\\[452\\]$_DFF_P_",
+   "pin": "CLK",
+   "old": "clk_t100",
+   "new": "clk_t100",
+   "xy": [
+    1076112,
+    860220
+   ]
+  }
+ ],
+ "inventory": {
+  "instances": 866486,
+  "iterms": 3542872
+ },
+ "timing_qualified": false,
+ "routed": false,
+ "added_cycles": 0
+}

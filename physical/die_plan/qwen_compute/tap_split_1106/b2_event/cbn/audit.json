@@ -1,0 +1,101 @@
+{
+ "source": "f87028ff0c",
+ "case": "cbn",
+ "baseline": "measured A density: 97 taps; same actual3_place",
+ "assignment_only": true,
+ "instances_unchanged": 348544,
+ "pins_unchanged": 1288523,
+ "clock_pins_changed": 15400,
+ "joined_groups": 5313,
+ "max_joined_group_size": 9,
+ "max_joined_group_reach_um": 199.98800000000006,
+ "A_max_grid_load": 1049,
+ "B2_max_grid_load": 1200,
+ "adjacent_edges": 27776,
+ "A_cross_tap_edges": 13496,
+ "B2_cross_tap_edges": 3403,
+ "boundaries_removed": 10093,
+ "new_boundaries": 0,
+ "old28_port_control_cap1200_to_A97": {
+  "common_edges": 27776,
+  "old28_cross_tap": 5899,
+  "A97_cross_tap": 13496,
+  "removed_by_A": 1229,
+  "introduced_by_A": 8826,
+  "B2_changes_not_credited_to_A": true
+ },
+ "remaining_edge_examples": [
+  {
+   "prefix": "u_bound.u_d10_u_t_1_0_n_y.",
+   "bit": "0",
+   "stage_pair": [
+    2,
+    3
+   ],
+   "taps": [
+    "ot_proto_clk_43",
+    "ot_proto_clk_57"
+   ]
+  },
+  {
+   "prefix": "u_bound.u_d10_u_t_1_0_n_y.",
+   "bit": "1",
+   "stage_pair": [
+    3,
+    4
+   ],
+   "taps": [
+    "ot_proto_clk_43",
+    "ot_proto_clk_60"
+   ]
+  },
+  {
+   "prefix": "u_bound.u_d10_u_t_1_0_n_y.",
+   "bit": "10",
+   "stage_pair": [
+    2,
+    3
+   ],
+   "taps": [
+    "ot_proto_clk_43",
+    "ot_proto_clk_57"
+   ]
+  },
+  {
+   "prefix": "u_bound.u_d10_u_t_1_0_n_y.",
+   "bit": "100",
+   "stage_pair": [
+    3,
+    4
+   ],
+   "taps": [
+    "ot_proto_clk_49",
+    "ot_proto_clk_60"
+   ]
+  },
+  {
+   "prefix": "u_bound.u_d10_u_t_1_0_n_y.",
+   "bit": "101",
+   "stage_pair": [
+    2,
+    3
+   ],
+   "taps": [
+    "ot_proto_clk_43",
+    "ot_proto_clk_60"
+   ]
+  },
+  {
+   "prefix": "u_bound.u_d10_u_t_1_0_n_y.",
+   "bit": "102",
+   "stage_pair": [
+    2,
+    3
+   ],
+   "taps": [
+    "ot_proto_clk_43",
+    "ot_proto_clk_60"
+   ]
+  }
+ ]
+}

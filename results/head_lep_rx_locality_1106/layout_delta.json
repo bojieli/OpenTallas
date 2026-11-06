@@ -1,0 +1,672 @@
+{
+  "schema": "head_lep_rx_locality_delta.v1",
+  "base_sha256": "268f5579145c2bdd8c872398751aecb75a004971c6422ac7db8a04f260812388",
+  "candidate_sha256": "0c40fc53244a182777aa3547b120012e5996df7d4426d4e61a7e1e929ad5ae35",
+  "partition_type": "hd_lep0N",
+  "macro_origin_changes": [
+    {
+      "instance": "u_core.u.g_pp[1].u_pair",
+      "before": [
+        69.12,
+        665.28
+      ],
+      "after": [
+        69.12,
+        708.48
+      ]
+    },
+    {
+      "instance": "u_core.u.g_pp[3].u_pair",
+      "before": [
+        881.28,
+        665.28
+      ],
+      "after": [
+        881.28,
+        708.48
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+      "before": [
+        69.12,
+        1166.4
+      ],
+      "after": [
+        879.12,
+        653.4
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+      "before": [
+        129.6,
+        1166.4
+      ],
+      "after": [
+        939.6,
+        653.4
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+      "before": [
+        190.08,
+        1166.4
+      ],
+      "after": [
+        1099.44,
+        653.4
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+      "before": [
+        250.56,
+        1166.4
+      ],
+      "after": [
+        1175.04,
+        653.4
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+      "before": [
+        311.04,
+        1166.4
+      ],
+      "after": [
+        1235.52,
+        653.4
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+      "before": [
+        371.52,
+        1166.4
+      ],
+      "after": [
+        91.8,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+      "before": [
+        691.2,
+        1166.4
+      ],
+      "after": [
+        182.52,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+      "before": [
+        751.68,
+        1166.4
+      ],
+      "after": [
+        272.16,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+      "before": [
+        812.16,
+        1166.4
+      ],
+      "after": [
+        362.88,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+      "before": [
+        872.64,
+        1166.4
+      ],
+      "after": [
+        423.36,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+      "before": [
+        933.12,
+        1166.4
+      ],
+      "after": [
+        91.8,
+        643.68
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+      "before": [
+        993.6,
+        1166.4
+      ],
+      "after": [
+        182.52,
+        643.68
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+      "before": [
+        1054.08,
+        1166.4
+      ],
+      "after": [
+        272.16,
+        643.68
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+      "before": [
+        1114.56,
+        1166.4
+      ],
+      "after": [
+        362.88,
+        643.68
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+      "before": [
+        1175.04,
+        1166.4
+      ],
+      "after": [
+        423.36,
+        643.68
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+      "before": [
+        1235.52,
+        1166.4
+      ],
+      "after": [
+        1555.2,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+      "before": [
+        1296.0,
+        1166.4
+      ],
+      "after": [
+        1494.72,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+      "before": [
+        1356.48,
+        1166.4
+      ],
+      "after": [
+        1434.24,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+      "before": [
+        1416.96,
+        1166.4
+      ],
+      "after": [
+        1373.76,
+        673.92
+      ]
+    },
+    {
+      "instance": "u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+      "before": [
+        1477.44,
+        1166.4
+      ],
+      "after": [
+        1313.28,
+        673.92
+      ]
+    }
+  ],
+  "reset_site_changes": [
+    {
+      "index": 9,
+      "before": [
+        1533.6,
+        1162.08
+      ],
+      "after": [
+        1533.6,
+        1205.55
+      ]
+    },
+    {
+      "index": 10,
+      "before": [
+        613.44,
+        1162.08
+      ],
+      "after": [
+        613.44,
+        1205.55
+      ]
+    },
+    {
+      "index": 23,
+      "before": [
+        1200.96,
+        652.32
+      ],
+      "after": [
+        1200.96,
+        648.81
+      ]
+    }
+  ],
+  "added_data_cycles": 0,
+  "added_K_cycles": 0,
+  "clock_provider": "UNBOUND",
+  "physical_approval": "GEN_ONLY",
+  "fit_errors": [],
+  "wavefront_min_depth": 7,
+  "dependency": "tools/die_plan/reset_tree.py optional per-type wavefront_min_depth",
+  "raw_export_rebind": [
+    {
+      "port": "rst_start_raw_0",
+      "before": {
+        "port": "rst_start_raw_0",
+        "instance": "u_rrl_91",
+        "net": "rst_rl_91",
+        "xy_um": [
+          972.0,
+          595.08
+        ]
+      },
+      "after": {
+        "port": "rst_start_raw_0",
+        "instance": "u_rrl_67",
+        "net": "rst_rl_67",
+        "xy_um": [
+          855.36,
+          311.04
+        ]
+      },
+      "pin_before": {
+        "name": "rst_start_raw_0",
+        "dir": "out",
+        "kind": "ctl",
+        "layer": "M7",
+        "xy_um": [
+          972.576,
+          595.08
+        ],
+        "epoch": false,
+        "source_instance": "u_rrl_91",
+        "source_net": "rst_start_raw_0",
+        "source_registered": true,
+        "source_output_pin": "export_q",
+        "source_copy_from_net": "rst_rl_91"
+      },
+      "pin_after": {
+        "name": "rst_start_raw_0",
+        "dir": "out",
+        "kind": "ctl",
+        "layer": "M7",
+        "xy_um": [
+          972.576,
+          595.08
+        ],
+        "epoch": false,
+        "source_instance": "u_rrl_67",
+        "source_net": "rst_start_raw_0",
+        "source_registered": true,
+        "source_output_pin": "export_q",
+        "source_copy_from_net": "rst_rl_67"
+      },
+      "raw_depth": 5
+    },
+    {
+      "port": "rst_start_raw_3",
+      "before": {
+        "port": "rst_start_raw_3",
+        "instance": "u_rrl_88",
+        "net": "rst_rl_88",
+        "xy_um": [
+          824.8,
+          660.9599999999999
+        ]
+      },
+      "after": {
+        "port": "rst_start_raw_3",
+        "instance": "u_rrl_80",
+        "net": "rst_rl_80",
+        "xy_um": [
+          851.0400000000001,
+          704.16
+        ]
+      },
+      "pin_before": {
+        "name": "rst_start_raw_3",
+        "dir": "out",
+        "kind": "ctl",
+        "layer": "M7",
+        "xy_um": [
+          824.544,
+          660.96
+        ],
+        "epoch": false,
+        "source_instance": "u_rrl_88",
+        "source_net": "rst_start_raw_3",
+        "source_registered": true,
+        "source_output_pin": "export_q",
+        "source_copy_from_net": "rst_rl_88"
+      },
+      "pin_after": {
+        "name": "rst_start_raw_3",
+        "dir": "out",
+        "kind": "ctl",
+        "layer": "M7",
+        "xy_um": [
+          824.544,
+          660.96
+        ],
+        "epoch": false,
+        "source_instance": "u_rrl_80",
+        "source_net": "rst_start_raw_3",
+        "source_registered": true,
+        "source_output_pin": "export_q",
+        "source_copy_from_net": "rst_rl_80"
+      },
+      "raw_depth": 5
+    },
+    {
+      "port": "rst_start_raw_5",
+      "before": {
+        "port": "rst_start_raw_5",
+        "instance": "u_rrl_82",
+        "net": "rst_rl_82",
+        "xy_um": [
+          876.9599999999999,
+          755.9599999999999
+        ]
+      },
+      "after": {
+        "port": "rst_start_raw_5",
+        "instance": "u_rrl_89",
+        "net": "rst_rl_89",
+        "xy_um": [
+          876.9599999999999,
+          894.16
+        ]
+      },
+      "pin_before": {
+        "name": "rst_start_raw_5",
+        "dir": "out",
+        "kind": "ctl",
+        "layer": "M7",
+        "xy_um": [
+          876.448,
+          755.96
+        ],
+        "epoch": false,
+        "source_instance": "u_rrl_82",
+        "source_net": "rst_start_raw_5",
+        "source_registered": true,
+        "source_output_pin": "export_q",
+        "source_copy_from_net": "rst_rl_82"
+      },
+      "pin_after": {
+        "name": "rst_start_raw_5",
+        "dir": "out",
+        "kind": "ctl",
+        "layer": "M7",
+        "xy_um": [
+          876.448,
+          755.96
+        ],
+        "epoch": false,
+        "source_instance": "u_rrl_89",
+        "source_net": "rst_start_raw_5",
+        "source_registered": true,
+        "source_output_pin": "export_q",
+        "source_copy_from_net": "rst_rl_89"
+      },
+      "raw_depth": 5
+    },
+    {
+      "port": "rst_start_raw_1",
+      "before": {
+        "port": "rst_start_raw_1",
+        "instance": "u_rrl_80",
+        "net": "rst_rl_80",
+        "xy_um": [
+          851.0400000000001,
+          1040.96
+        ]
+      },
+      "after": {
+        "port": "rst_start_raw_1",
+        "instance": "u_rrl_81",
+        "net": "rst_rl_81",
+        "xy_um": [
+          851.0400000000001,
+          1084.1599999999999
+        ]
+      },
+      "pin_before": {
+        "name": "rst_start_raw_1",
+        "dir": "out",
+        "kind": "ctl",
+        "layer": "M7",
+        "xy_um": [
+          851.552,
+          1040.96
+        ],
+        "epoch": false,
+        "source_instance": "u_rrl_80",
+        "source_net": "rst_start_raw_1",
+        "source_registered": true,
+        "source_output_pin": "export_q",
+        "source_copy_from_net": "rst_rl_80"
+      },
+      "pin_after": {
+        "name": "rst_start_raw_1",
+        "dir": "out",
+        "kind": "ctl",
+        "layer": "M7",
+        "xy_um": [
+          851.552,
+          1040.96
+        ],
+        "epoch": false,
+        "source_instance": "u_rrl_81",
+        "source_net": "rst_start_raw_1",
+        "source_registered": true,
+        "source_output_pin": "export_q",
+        "source_copy_from_net": "rst_rl_81"
+      },
+      "raw_depth": 6
+    },
+    {
+      "port": "rst_start_raw_2",
+      "before": {
+        "port": "rst_start_raw_2",
+        "instance": "u_rrl_43",
+        "net": "rst_rl_43",
+        "xy_um": [
+          1663.2,
+          514.08
+        ]
+      },
+      "after": {
+        "port": "rst_start_raw_2",
+        "instance": "u_rrl_43",
+        "net": "rst_rl_43",
+        "xy_um": [
+          1663.2,
+          514.08
+        ]
+      },
+      "pin_before": {
+        "name": "rst_start_raw_2",
+        "dir": "out",
+        "kind": "ctl",
+        "layer": "M7",
+        "xy_um": [
+          1662.688,
+          514.08
+        ],
+        "epoch": false,
+        "source_instance": "u_rrl_43",
+        "source_net": "rst_start_raw_2",
+        "source_registered": true,
+        "source_output_pin": "export_q",
+        "source_copy_from_net": "rst_rl_43"
+      },
+      "pin_after": {
+        "name": "rst_start_raw_2",
+        "dir": "out",
+        "kind": "ctl",
+        "layer": "M7",
+        "xy_um": [
+          1662.688,
+          514.08
+        ],
+        "epoch": false,
+        "source_instance": "u_rrl_43",
+        "source_net": "rst_start_raw_2",
+        "source_registered": true,
+        "source_output_pin": "export_q",
+        "source_copy_from_net": "rst_rl_43"
+      },
+      "raw_depth": 6
+    },
+    {
+      "port": "rst_start_raw_4",
+      "before": {
+        "port": "rst_start_raw_4",
+        "instance": "u_rrl_92",
+        "net": "rst_rl_92",
+        "xy_um": [
+          972.0,
+          595.08
+        ]
+      },
+      "after": {
+        "port": "rst_start_raw_4",
+        "instance": "u_rrl_107",
+        "net": "rst_rl_107",
+        "xy_um": [
+          885.56,
+          595.08
+        ]
+      },
+      "pin_before": {
+        "name": "rst_start_raw_4",
+        "dir": "out",
+        "kind": "ctl",
+        "layer": "M7",
+        "xy_um": [
+          971.424,
+          595.08
+        ],
+        "epoch": false,
+        "source_instance": "u_rrl_92",
+        "source_net": "rst_start_raw_4",
+        "source_registered": true,
+        "source_output_pin": "export_q",
+        "source_copy_from_net": "rst_rl_92"
+      },
+      "pin_after": {
+        "name": "rst_start_raw_4",
+        "dir": "out",
+        "kind": "ctl",
+        "layer": "M7",
+        "xy_um": [
+          971.424,
+          595.08
+        ],
+        "epoch": false,
+        "source_instance": "u_rrl_107",
+        "source_net": "rst_start_raw_4",
+        "source_registered": true,
+        "source_output_pin": "export_q",
+        "source_copy_from_net": "rst_rl_107"
+      },
+      "raw_depth": 6
+    },
+    {
+      "port": "rst_start_raw_6",
+      "before": {
+        "port": "rst_start_raw_6",
+        "instance": "u_rrl_96",
+        "net": "rst_rl_96",
+        "xy_um": [
+          341.24,
+          514.0799999999999
+        ]
+      },
+      "after": {
+        "port": "rst_start_raw_6",
+        "instance": "u_rrl_92",
+        "net": "rst_rl_92",
+        "xy_um": [
+          634.8,
+          514.08
+        ]
+      },
+      "pin_before": {
+        "name": "rst_start_raw_6",
+        "dir": "out",
+        "kind": "ctl",
+        "layer": "M7",
+        "xy_um": [
+          340.704,
+          514.08
+        ],
+        "epoch": false,
+        "source_instance": "u_rrl_96",
+        "source_net": "rst_start_raw_6",
+        "source_registered": true,
+        "source_output_pin": "export_q",
+        "source_copy_from_net": "rst_rl_96"
+      },
+      "pin_after": {
+        "name": "rst_start_raw_6",
+        "dir": "out",
+        "kind": "ctl",
+        "layer": "M7",
+        "xy_um": [
+          605.88,
+          520.02
+        ],
+        "epoch": false,
+        "source_instance": "u_rrl_92",
+        "source_net": "rst_start_raw_6",
+        "source_registered": true,
+        "source_output_pin": "export_q",
+        "source_copy_from_net": "rst_rl_92"
+      },
+      "raw_depth": 4
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+ "type": "sle_su_c",
+ "AP": "f6a8a1576762",
+ "aggregate_FF_hold_ps": -410.1634048805578,
+ "aggregate_endpoints": 7425,
+ "clock_pair_negative_path_rows": {
+  "clk->clk": 7241,
+  "clk->vclk": 183,
+  "vclk->clk": 2
+ },
+ "note": "7426 explicit negative path rows; aggregate STA endpoint counter7425 is separately retained, not relabeled",
+ "worst_launch": "u_bound.u_u_suvm_u_vm8q_u_crh1.q[87]$_DFF_P_",
+ "worst_capture": "u_bound.u_u_suvm_u_vm8q_u_crh2.q[87]$_DFF_P_",
+ "launch_tap": "clk_t11",
+ "capture_tap": "clk_t8",
+ "launch_local_clock_ps": 209.42,
+ "capture_local_clock_ps": 509.74,
+ "local_tree_difference_ps": 300.32,
+ "source_window_ps": 120,
+ "data_delay_ps": 47.668,
+ "uncertainty_ps": 25,
+ "capture_hold_ps": 12.512,
+ "actual_tap11_load": 2164,
+ "actual_tap8_load": 5518,
+ "kind": "same logical local clk / soft positive FF paired-relay skew; not early-core or forwarded write CDC"
+}

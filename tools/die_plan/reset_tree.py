@@ -1498,6 +1498,18 @@ def core_reset_targets(P, tn):
     return out
 
 
+def wavefront_min_depth(t):
+    """Optional per-type physical reset padding; never shortens the built tree.
+
+    Preserve a published release cohort when moving macros makes the legal
+    reset topology shallower. Data and K pipelines are unaffected.
+    """
+    depth = t.get("reset", {}).get("wavefront_min_depth")
+    if depth is not None and (type(depth) is not int or depth < 0):
+        raise ResetError("reset.wavefront_min_depth must be a nonnegative integer")
+    return depth
+
+
 def _wf_type_tree(P, tn):
     cache = P.__dict__.setdefault("_reset_tree_cache", {})
     key = ("wf_tree", tn)
@@ -1514,7 +1526,7 @@ def _wf_type_tree(P, tn):
         topo = topology(pts, in_pin(P, tn), reach=relay_um(P), boxes=blockages(t),
                         box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM), walls=walls(P, tn),
                         avoid_cores=bool(P.reset.get("relay_avoid_cores")))
-        T = assign(topo, None, pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
+        T = assign(topo, wavefront_min_depth(t), pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
                    box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn))
         T.update(n_clock_taps=len(_taps(P, tn)), n_reset_consumers=len(taps),
                  local_reset_taps=bool(t.get("reset", {}).get("local_taps_um")), outs=[[x, y] for _, x, y in outs], core_resets=core_rst)

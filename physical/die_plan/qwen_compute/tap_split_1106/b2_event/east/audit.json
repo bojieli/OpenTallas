@@ -1,0 +1,103 @@
+{
+ "source": "f87028ff0c",
+ "case": "east",
+ "baseline": "measured A density: 81 taps; same actual3_place",
+ "assignment_only": true,
+ "instances_unchanged": 359875,
+ "pins_unchanged": 1416036,
+ "clock_pins_changed": 2932,
+ "joined_groups": 547,
+ "max_joined_group_size": 14,
+ "max_joined_group_reach_um": 199.72000000000008,
+ "A_max_grid_load": 1134,
+ "B2_max_grid_load": 1172,
+ "adjacent_edges": 6139,
+ "A_cross_tap_edges": 1336,
+ "B2_cross_tap_edges": 319,
+ "boundaries_removed": 1017,
+ "new_boundaries": 0,
+ "actual_worst_crh87_pair": {
+  "A": {
+   "1": "ot_proto_clk_27",
+   "2": "ot_proto_clk_27"
+  },
+  "B2": {
+   "1": "ot_proto_clk_27",
+   "2": "ot_proto_clk_27"
+  }
+ },
+ "remaining_edge_examples": [
+  {
+   "prefix": "u_bound.u_pd13_x_su_l0_i_167.",
+   "bit": "scalar",
+   "stage_pair": [
+    7,
+    8
+   ],
+   "taps": [
+    "ot_proto_clk_14",
+    "ot_proto_clk_10"
+   ]
+  },
+  {
+   "prefix": "u_bound.u_pd13_x_su_l0_i_169.",
+   "bit": "scalar",
+   "stage_pair": [
+    10,
+    11
+   ],
+   "taps": [
+    "ot_proto_clk_14",
+    "ot_proto_clk_10"
+   ]
+  },
+  {
+   "prefix": "u_bound.u_pd13_x_su_l0_i_170.",
+   "bit": "scalar",
+   "stage_pair": [
+    10,
+    11
+   ],
+   "taps": [
+    "ot_proto_clk_19",
+    "ot_proto_clk_10"
+   ]
+  },
+  {
+   "prefix": "u_bound.u_pd13_x_su_l0_i_173.",
+   "bit": "scalar",
+   "stage_pair": [
+    11,
+    12
+   ],
+   "taps": [
+    "ot_proto_clk_14",
+    "ot_proto_clk_4"
+   ]
+  },
+  {
+   "prefix": "u_bound.u_pd13_x_su_l0_i_176.",
+   "bit": "scalar",
+   "stage_pair": [
+    6,
+    7
+   ],
+   "taps": [
+    "ot_proto_clk_19",
+    "ot_proto_clk_10"
+   ]
+  },
+  {
+   "prefix": "u_bound.u_pd13_x_su_l0_i_180.",
+   "bit": "scalar",
+   "stage_pair": [
+    8,
+    9
+   ],
+   "taps": [
+    "ot_proto_clk_19",
+    "ot_proto_clk_10"
+   ]
+  }
+ ]
+}

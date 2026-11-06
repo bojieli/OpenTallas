@@ -114,3 +114,21 @@ def test_terminal_cannot_skip_preceding_stage_behind_gated_source():
     insts['inst3']['name']='unrelated_hard'
     state['it1']='tap0';t.call('::ot_tap_chain::capture','tap0');state['it1']='tap1'
     before=dict(state);t.call('::ot_tap_chain::apply');assert state==before
+
+
+def test_existing_coherent_run_is_indivisible_when_whole_join_is_impossible():
+    t,state,insts=fixture(cap=6,radius=100)
+    state['it1']='tap0';state['it2']='tap0';insts['inst2']['xy']=(500,0)
+    t.call('::ot_tap_chain::capture','tap0');state['it1']='tap1';state['it2']='tap1'
+    t.setvar('ct_taps',(('clk','tap0',0,0),('clk_t1','tap1',500,0)))
+    before=dict(state);t.call('::ot_tap_chain::apply');assert state==before
+
+@pytest.mark.parametrize('pair',['crh','crl','twl','twh'])
+def test_literal_two_relay_family_keeps_bits_separate_and_joins_only_actual_source(pair):
+    t,state,insts=fixture()
+    for i in [0,1]:insts[f'inst{i}']['name']=f'u_bound.u_u_suvm_u_vm8q_u_{pair}{i+1}.q[87]$_DFF_P_'
+    state['it1']='tap0';t.call('::ot_tap_chain::capture','tap0');state['it1']='tap1'
+    t.call('::ot_tap_chain::apply');assert state['it0']==state['it1'] and state['it2']=='gated'
+    ident=tuple(t.call('::ot_tap_chain::identity',f'u_bound.u_u_suvm_u_vm8q_u_{pair}1.q[88]$_DFF_P_'))
+    assert ident[2]=='88'
+    assert not t.call('::ot_tap_chain::identity',f'u_bound.u_u_suvm_u_vm8q_u_{pair}3.q[87]$_DFF_P_')

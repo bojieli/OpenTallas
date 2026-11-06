@@ -1,0 +1,7 @@
+read_verilog -formal -sv primitive.sv graphs.sv formal.sv mutant.sv
+hierarchy -top proof_mut
+proc
+flatten
+opt
+chformal -lower
+sat -seq 32 -prove-asserts -set-init-zero -verify
