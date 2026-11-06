@@ -1,0 +1,141 @@
+{
+ "schema": "opentallas.core_pins.v1",
+ "core": "sle_cland_w2_e",
+ "frame": "core R0, origin (0,0)",
+ "source": "sle_ctl_pins.py ring_pins (QC-SLECTL-B)",
+ "outline_um": [
+  84.24,
+  8.208
+ ],
+ "pins": [
+  {
+   "name": "d[1]",
+   "dir": "in",
+   "face": "E",
+   "x": 84.198,
+   "y": 3.66,
+   "layer": "M4"
+  },
+  {
+   "name": "fclk",
+   "dir": "in",
+   "face": "E",
+   "x": 84.198,
+   "y": 3.948,
+   "layer": "M4"
+  },
+  {
+   "name": "t_rst_n",
+   "dir": "in",
+   "face": "E",
+   "x": 84.198,
+   "y": 4.236,
+   "layer": "M4"
+  },
+  {
+   "name": "d[0]",
+   "dir": "in",
+   "face": "E",
+   "x": 84.198,
+   "y": 4.524,
+   "layer": "M4"
+  },
+  {
+   "name": "q[1]",
+   "dir": "out",
+   "face": "W",
+   "x": 0.042,
+   "y": 2.508,
+   "layer": "M4"
+  },
+  {
+   "name": "clk",
+   "dir": "in",
+   "face": "W",
+   "x": 0.042,
+   "y": 2.796,
+   "layer": "M4"
+  },
+  {
+   "name": "rst_n",
+   "dir": "in",
+   "face": "W",
+   "x": 0.042,
+   "y": 3.084,
+   "layer": "M4"
+  },
+  {
+   "name": "ready",
+   "dir": "out",
+   "face": "W",
+   "x": 0.042,
+   "y": 3.372,
+   "layer": "M4"
+  },
+  {
+   "name": "fault",
+   "dir": "out",
+   "face": "W",
+   "x": 0.042,
+   "y": 3.66,
+   "layer": "M4"
+  },
+  {
+   "name": "strap_k[0]",
+   "dir": "in",
+   "face": "W",
+   "x": 0.042,
+   "y": 3.948,
+   "layer": "M4"
+  },
+  {
+   "name": "strap_k[1]",
+   "dir": "in",
+   "face": "W",
+   "x": 0.042,
+   "y": 4.236,
+   "layer": "M4"
+  },
+  {
+   "name": "strap_k[2]",
+   "dir": "in",
+   "face": "W",
+   "x": 0.042,
+   "y": 4.524,
+   "layer": "M4"
+  },
+  {
+   "name": "strap_k[3]",
+   "dir": "in",
+   "face": "W",
+   "x": 0.042,
+   "y": 4.812,
+   "layer": "M4"
+  },
+  {
+   "name": "strap_k[4]",
+   "dir": "in",
+   "face": "W",
+   "x": 0.042,
+   "y": 5.1,
+   "layer": "M4"
+  },
+  {
+   "name": "strap_k[5]",
+   "dir": "in",
+   "face": "W",
+   "x": 0.042,
+   "y": 5.388,
+   "layer": "M4"
+  },
+  {
+   "name": "q[0]",
+   "dir": "out",
+   "face": "W",
+   "x": 0.042,
+   "y": 5.676,
+   "layer": "M4"
+  }
+ ],
+ "note": "QC-SLECTL-B: ring child, d/fclk/t_rst_n on E (parent pin order), q/clk/rst_n/ready/fault/strap_k on W; M4, kit track 0.012 + 0.048 k"
+}
