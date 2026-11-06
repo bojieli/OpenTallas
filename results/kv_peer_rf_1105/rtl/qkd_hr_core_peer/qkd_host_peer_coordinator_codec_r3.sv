@@ -15,10 +15,10 @@
 //  Terminal queue count moves on the pulses alone: a duplicate user, an overflow and a retire before the head is done drive only the sticky fault.
 //  Request identity compare registers on its own (rid_q, fault +1 as the other RX compares).
 //  participant_*, cancel_tag/gen, program_*, service/certificate data, tq/al/term data, result word: no reset, valid qualified.
-module qkd_host_peer_coordinator_codec_r3 #(parameter integer MU=1)(
+module qkd_host_peer_coordinator_codec_r3 #(parameter integer MU=1,parameter integer KCONST=0)(
  input wire ck,por_n,
  input wire[7:0]rx_valid,input wire[4095:0]rx_data,output wire[7:0]rx_ready,
- output wire[7:0]tx_valid,output reg[4095:0]tx_data,input wire[7:0]tx_ready,
+ output wire[7:0]tx_valid,output wire[4095:0]tx_data,input wire[7:0]tx_ready,
  input wire allocated_valid,allocated_delivered,input wire[58:0]allocated_tag,input wire[1:0]allocated_gen,input wire[17:0]allocated_position,
  output reg[7:0]participant_valid,output reg[471:0]participant_tag,output reg[15:0]participant_gen,
  output reg[255:0]participant_trace,output reg[143:0]participant_token,participant_pos,input wire[7:0]participant_accepted,
@@ -59,6 +59,10 @@ module qkd_host_peer_coordinator_codec_r3 #(parameter integer MU=1)(
  reg[31:0] choice;reg[3:0] choice_n[0:7];reg[7:0] rx_bad_q,rid_q;reg[1:0] recovery_q;
  wire[80:0] allocation;
  reg[80:0] allocation_prev;
+ // DIE-KV-79 r4k (KCONST=1): tag fields [5:0] and [42:37] are 0 by construction (allocator), and allocation bits [7:2] and
+ // [44:39] are 0 (fold audit); al_tag and allocation_prev read them as literals
+ function automatic [58:0] al_tag_k(input[58:0]x);al_tag_k=KCONST!=0?x&~59'h0000_07E0_0000_003F:x;endfunction
+ function automatic [80:0] alloc_k(input[80:0]x);alloc_k=KCONST!=0?x&~(81'h3F<<2|81'h3F<<39):x;endfunction
  reg[7:0] allocation_dirty;
  wire[1:0] recovery;
  integer i;
@@ -70,7 +74,7 @@ module qkd_host_peer_coordinator_codec_r3 #(parameter integer MU=1)(
  wire[2:0] tq_next=tq_n+3'(tq_push)-3'(tq_pop);
  wire tq_start=(tq_push&&tq_n==0)||(tq_pop&&tq_next!=0);
  assign allocation={allocated_position,allocated_gen,allocated_tag,allocated_delivered,allocated_valid};
- wire allocation_change=allocation!=allocation_prev;
+ wire allocation_change=allocation!=alloc_k(allocation_prev);
  assign recovery=recovery_q;
  // DIE-KV-73 11-05 r4: rank copies of the sticky fault (+1 edge, each holds itself so synthesis keeps them apart), one TX slice per rank
  // (+1 edge per frame; order and payload exact, payload sampled when the slice loads), one-hot payload select from choice next state.
@@ -105,7 +109,7 @@ module qkd_host_peer_coordinator_codec_r3 #(parameter integer MU=1)(
   wire hdr_bad=d[10:8]!=3'(g)||d[13:11]!=0||d[29:14]!=rx_seq[g];
   assign op1[g]=d[7:0]==1;assign op2[g]=d[7:0]==2;assign op3[g]=d[7:0]==3;assign op4[g]=d[7:0]==4;assign op5[g]=d[7:0]==5;
   assign op6[g]=d[7:0]==6;assign op7[g]=d[7:0]==7;assign op8[g]=d[7:0]==8;assign op9[g]=d[7:0]==9;
-  wire req_id_bad=(!sel4(al_v,u)||d[88:30]!=al_tag[u]||d[90:89]!=al_gen[u])&&
+  wire req_id_bad=(!sel4(al_v,u)||d[88:30]!=al_tag_k(al_tag[u])||d[90:89]!=al_gen[u])&&
                   (!sel4(term_v,u)||{d[88:73],6'd37,d[66:30]}!=term_tag[u]||d[90:89]!=term_gen[u]);
   assign rx_bad[g]=hdr_bad||
    (op1[g]&&(request_queued[g]||request_ack[g]||d[511:159]!=0))||
@@ -209,5 +213,12 @@ module qkd_host_peer_coordinator_codec_r3 #(parameter integer MU=1)(
   end
  end
  // TX slice data: no reset, o_v qualifies it
- always @(posedge ck)for(integer k=0;k<8;k=k+1)if(i_valid[k]&&i_ready[k])tx_data[k*512+:512]<=i_data[k*512+:512];
+ reg[4095:0] tx_q;
+ always @(posedge ck)for(integer k=0;k<8;k=k+1)if(i_valid[k]&&i_ready[k])tx_q[k*512+:512]<=i_data[k*512+:512];
+ // DIE-KV-79 r4k (KCONST=1): the fixed header fields of every lane ([7]=1, [6:3]=0, [10:8]=0, [13:11]=lane, [511:179]=0)
+ // are literals at the slice output, as i_data builds them; the slice registers only [2:0] and [178:14]
+ for(genvar gk=0;gk<8;gk=gk+1)begin:g_txk
+  if(KCONST!=0)begin:k1 assign tx_data[gk*512+:512]={333'd0,tx_q[gk*512+14+:165],3'(gk),3'd0,5'b10000,tx_q[gk*512+:3]};end
+  else begin:k0 assign tx_data[gk*512+:512]=tx_q[gk*512+:512];end
+ end
 endmodule

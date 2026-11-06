@@ -15,7 +15,9 @@ import sys
 p,a,b=sys.argv[1:4]; s=open(p).read(); assert s.count(a)>=1,(p,a); open(p,'w').write(s.replace(a,b))
 PY
 }
-FORM=1
+FORM=1; KC=0
+# DIE-KV-80: a mutant name with suffix _k runs that mutant on the KCONST=1 form
+case $CASE in m_*_k) KC=1; CASE=${CASE%_k};; esac
 case $CASE in
  base) FORM=0;;
  base_abort) FORM=0; PA=+ABORT;;
@@ -23,11 +25,17 @@ case $CASE in
  form_uid) sub $TBF 'parameter integer UIDSLOT=0;' 'parameter integer UIDSLOT=1;';;
  form_abort) PA=+ABORT;;
  form_abort_uid) PA=+ABORT; sub $TBF 'parameter integer UIDSLOT=0;' 'parameter integer UIDSLOT=1;';;
+ # DIE-KV-79 r4k: the same rows with the coordinator at KCONST=1 (fixed frame / tag fields read as literals)
+ form_k) KC=1;;
+ form_uid_k) KC=1; sub $TBF 'parameter integer UIDSLOT=0;' 'parameter integer UIDSLOT=1;';;
+ form_abort_k) KC=1; PA=+ABORT;;
+ form_abort_uid_k) KC=1; PA=+ABORT; sub $TBF 'parameter integer UIDSLOT=0;' 'parameter integer UIDSLOT=1;';;
 esac
 if [ $FORM = 1 ]; then
  mkdir -p $W/$R3; cp $R3/*.sv $W/$R3/; LIST="$LIST $(cd $W; ls $R3/*.sv)"
  sub $TBF 'qkd_host_tp8_coordinator_mu #(.MU(1),.POST_UID_SLOT(UIDSLOT)) co(' 'qkd_host_tp8_coordinator_r3 #(.MU(1),.POST_UID_SLOT(UIDSLOT)) co('
  sub $TBF 'qkd_host_peer_rank_codec #(.RANK(d))rc(' 'qkd_host_peer_rank_codec_r3 #(.RANK(d))rc('
+ [ $KC = 1 ] && sub $TBF 'qkd_host_tp8_coordinator_r3 #(.MU(1),.POST_UID_SLOT(UIDSLOT)) co(' 'qkd_host_tp8_coordinator_r3 #(.MU(1),.POST_UID_SLOT(UIDSLOT),.KCONST(1)) co('
  # form round 2 (frame choice register, request stage): measured overlap_dispatch 6 of 12, source 10; limit moved from 8 to 6, perf loss accepted
  sub $TBF 'if(overlap_disp<4*ROUNDS-4)fail' 'if(overlap_disp<4*ROUNDS-6)fail'
  sed -i -e 's/co\.g_mu\.u_lifecycle\.g_mu\.u_lifecycle\.g_mu\./co.u_lifecycle.u_lifecycle./g' -e 's/co\.g_mu\.u_peer\.g_mu\./co.u_peer./g' -e 's/co\.g_mu\./co./g' $W/$TBF
@@ -47,7 +55,7 @@ case $CASE in
  # allocation dirty cleared without a frame: rank never sees the change
  m_dirty) sub $CD 'if(allocation_change)allocation_dirty[i]<=1;' 'if(allocation_change)allocation_dirty[i]<=0;';;
  # cohort face does not wait for the registered payload
- m_usq) sub $CO 'assign cohort_tag = ctag_r;' 'assign cohort_tag = ctag_r^59'"'"'d1;';;
+ m_usq) sub $CO '? ctag_r & ~' '? (ctag_r^59'"'"'d64) & ~'; sub $CO ': ctag_r;' ': ctag_r^59'"'"'d64;';;
  # cohort participant join drops the registered pulse
  m_join) sub $CO 'if (req_v_q[r]) begin' 'if (req_v_q[r]&&r!=3) begin';;
  # rank status dirty never set

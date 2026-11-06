@@ -3,10 +3,10 @@
 // The shape and bad-header checks drive only fault, rq_oh / rq_v and the grant pointer; the 512-bit data registers load
 // on the handshake alone (fault is sticky, so a word loaded on a fault edge is never presented).  physical_tx_data has no
 // reset (physical_tx_valid qualifies it).  QKD_HR_PE_PL2_MUTANT (bench only): the physical RX slice corrupts bit 40.
-module qkd_host_peer_root_mux_r3(
+module qkd_host_peer_root_mux_r3 #(parameter integer KCONST=0)(
  input wire ck,por_n,
  input wire physical_rx_valid,input wire[511:0]physical_rx_data,output wire physical_rx_ready,
- output reg physical_tx_valid,output reg[511:0]physical_tx_data,input wire physical_tx_ready,
+ output reg physical_tx_valid,output wire[511:0]physical_tx_data,input wire physical_tx_ready,
  input wire local_tx_valid,input wire[511:0]local_tx_data,output wire local_tx_ready,
  output wire local_rx_valid,output wire[511:0]local_rx_data,input wire local_rx_ready,
  output reg[7:0]coordinator_rx_valid,output reg[4095:0]coordinator_rx_data,input wire[7:0]coordinator_rx_ready,
@@ -25,7 +25,15 @@ module qkd_host_peer_root_mux_r3(
  // ---- TX local slice (rank 0) ----
  reg tq_v;reg[511:0]tq_d;
  assign local_rx_valid=tq_v&&!fault;
- assign local_rx_data=tq_d;
+ // DIE-KV-79 r4k (KCONST=1): fixed fields read as literals (0 cycles). tq_d = coordinator lane-0 word: [7]=1, [13:8]=0,
+ // [6:3]=0, [511:179]=0. lq_d = rank-0 codec word: [13:4]=0, [511:159]=0. physical_tx_data (lanes 1..7, lane in [13:11]):
+ // [6:3]=0, [10:8]=0, [511:179]=0. The masked flop bits drive nothing.
+ localparam [511:0] TQ_M=KCONST!=0?(~(512'd0)<<179|512'h3FF8):512'd0, TQ_V=KCONST!=0?512'h80:512'd0;
+ localparam [511:0] LQ_M=KCONST!=0?(~(512'd0)<<159|512'h3FF0):512'd0;
+ localparam [511:0] PT_M=KCONST!=0?(~(512'd0)<<179|512'h778):512'd0;
+ reg[511:0] ptx_q;
+ assign physical_tx_data=ptx_q&~PT_M;
+ assign local_rx_data=tq_d&~TQ_M|TQ_V;
  wire tq_drain=tq_v&&local_rx_ready&&!fault;
  // ---- TX physical: registered one-hot grant ----
  reg[2:0]rr;reg[7:0]g;
@@ -54,7 +62,7 @@ module qkd_host_peer_root_mux_r3(
   coordinator_rx_valid=rq_oh&{8{rq_v&&!fault}};
   coordinator_rx_valid[0]=lq_v&&!fault;
   coordinator_rx_data=0;
-  coordinator_rx_data[0+:512]=lq_d;
+  coordinator_rx_data[0+:512]=lq_d&~LQ_M;
   for(integer r=1;r<8;r=r+1)coordinator_rx_data[r*512+:512]=rq_d;
  end
  always @(posedge ck or negedge por_n)begin
@@ -78,7 +86,7 @@ module qkd_host_peer_root_mux_r3(
  end
  // data registers: no reset (their valid bits are reset)
  always @(posedge ck)begin
-  if(hit!=0)physical_tx_data<=pick;
+  if(hit!=0)ptx_q<=pick;
   if(rx_take)begin
 `ifdef QKD_HR_PE_PL2_MUTANT
    rq_d<=physical_rx_data^(512'd1<<40);

@@ -6,7 +6,7 @@
 //         identity is the lifecycle's accepted-terminal tag (acknowledged_tag during the terminal_accepted pulse), not
 //         the latest grant's: with 4 users in flight the latest grant is usually another user's.
 module qkd_host_coordinator_services_r3 #(parameter [15:0] INITIAL_EPOCH = 16'd0, parameter integer MU = 1,
-  parameter integer POST_UID_SLOT = 0) (  // POST_UID_SLOT 1: real-observer binding (raw positions + slot UID), see post_collector_mu
+  parameter integer POST_UID_SLOT = 0, parameter integer KCONST = 0) (  // POST_UID_SLOT 1: real-observer binding (raw positions + slot UID), see post_collector_mu
  input wire clk, por_n, warm_ready,
  input wire request_valid, output wire request_ready,
  input wire [17:0] request_token, request_position,
@@ -57,7 +57,7 @@ module qkd_host_coordinator_services_r3 #(parameter [15:0] INITIAL_EPOCH = 16'd0
  input wire[7:0]cancel_released,cancel_release_required,
  input wire result_transport_idle,host_observer_fault,output wire post_fault
 );
- qkd_host_lifecycle_r3 #(.INITIAL_EPOCH(INITIAL_EPOCH),.MU(1))u_lifecycle(
+ qkd_host_lifecycle_r3 #(.INITIAL_EPOCH(INITIAL_EPOCH),.MU(1),.KCONST(KCONST))u_lifecycle(
  .clk(clk),
  .por_n(por_n),
  .warm_ready(warm_ready&&!post_fault),

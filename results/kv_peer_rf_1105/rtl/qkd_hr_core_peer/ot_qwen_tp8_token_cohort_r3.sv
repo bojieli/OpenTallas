@@ -5,7 +5,7 @@
 //  Face payload cohort_tag / generation / accepted_ranks / dispatched is registered.  dispatch_valid is same-edge combinational as
 //  the source and asserts only when the registered payload shows the head cohort (us_q == ud), so a handshake always carries
 //  the head's identity; first assertion +1 edge, dispatched +1 edge.  dispatch valid/ready is not staged.
-module ot_qwen_tp8_token_cohort_r3 #(parameter integer MU = 1) (
+module ot_qwen_tp8_token_cohort_r3 #(parameter integer MU = 1, parameter integer KCONST = 0) (
     input wire clk, input wire por_n, input wire warm_ready,
     input wire begin_valid, output wire begin_ready, input wire begin_identity_ok,
     input wire [58:0] begin_tag, input wire [1:0] begin_generation,
@@ -57,7 +57,8 @@ module ot_qwen_tp8_token_cohort_r3 #(parameter integer MU = 1) (
     end
     assign dispatch_valid = dn != 0 && us_q == ud && act_d && (&acc_r) && !disp_r &&
         warm_ready && !idf;  // DIE-KV-73 r4: participant, terminal and begin faults stop dispatch through idf, +1 edge
-    assign cohort_tag = ctag_r; assign cohort_generation = cgen_r; assign accepted_ranks = acc_r;
+    assign cohort_tag = KCONST != 0 ? ctag_r & ~59'h0000_07E0_0000_003F : ctag_r;  // DIE-KV-79 r4k: tag [5:0], [42:37] = 0
+    assign cohort_generation = cgen_r; assign accepted_ranks = acc_r;
     assign dispatched = disp_r; assign active = (|act) || (|req_v_q); assign identity_fault = idf;
     assign terminal_accepted = tacc; assign request_credit = credit;
     always @(posedge clk) begin ctag_r <= ctag[us]; cgen_r <= cgen[us]; end

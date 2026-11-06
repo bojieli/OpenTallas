@@ -7,7 +7,7 @@
 //  TX normal: nhd head register on nq (+1 on the word and its reservation credit, full rate, valid/credit safe; nn counts
 //    nq + nhd).  tx_d loads every edge, tx_v qualifies it.
 //  Data registers (normal_rx_d, tx_d, peer_word, pq, nq, phd, nhd) carry no reset: every one is valid qualified.
-module qkd_host_peer_link_r3 #(parameter integer MUT=0)(
+module qkd_host_peer_link_r3 #(parameter integer MUT=0,parameter integer KCONST=0)(
  input wire ck,rst_n,
  input wire rx_v,input wire[527:0]rx_d,output reg rx_cr,
  output reg normal_rx_v,output reg[527:0]normal_rx_d,input wire normal_rx_cr,
@@ -19,6 +19,8 @@ module qkd_host_peer_link_r3 #(parameter integer MUT=0)(
  reg[527:0]nq[0:3];reg[511:0]pq[0:3];reg[1:0]nw,nr,pw,pr;
  reg[2:0]nn,pn,nf,pf;reg[2:0]physical;reg peer_pending,rr;
  reg[511:0]peer_word;reg[3:0]returns;
+ // DIE-KV-79 r4k (KCONST=1): peer_word is a root-mux physical TX word: [6:3]=0, [10:8]=0, [511:179]=0 read as literals
+ localparam [511:0] PW_M=KCONST!=0?(~(512'd0)<<179|512'h778):512'd0;
  reg rx_pk_q,rx_pk_bad_q;
  reg phd_v,nhd_v;reg[511:0]phd;reg[527:0]nhd;
  wire peer_frame=rx_d[527:524]==9;
@@ -43,7 +45,7 @@ module qkd_host_peer_link_r3 #(parameter integer MUT=0)(
   if(nq_wr)nq[nw]<=normal_tx_d;
   if(n_load)nhd<=nq[nr];
   if(take_peer)peer_word<=peer_tx_data;
-  tx_d<=choose_peer?{4'd9,12'd0,peer_word ^ 512'(MUT==1)}:nhd;
+  tx_d<=choose_peer?{4'd9,12'd0,(peer_word&~PW_M) ^ 512'(MUT==1)}:nhd;
  end
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin nw<=0;nr<=0;pw<=0;pr<=0;nn<=0;pn<=0;nf<=0;pf<=0;physical<=4;peer_pending<=0;rr<=0;returns<=0;rx_cr<=0;normal_rx_v<=0;normal_tx_cr<=0;tx_v<=0;fault<=0;rx_pk_q<=0;rx_pk_bad_q<=0;phd_v<=0;nhd_v<=0;end

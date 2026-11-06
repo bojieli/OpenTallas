@@ -21,7 +21,7 @@
 //    one rank exclude each other, so a stale candidate cannot capture an accepted cancel.
 //  Identity mismatch faults: mis_q is split per source (c_mis_q, r_mis_q, p_mis_q), same edge as before.
 //  t_tag, t_gen, ack_tag, ack_gen, hd_*, w_* data: no reset, valid qualified.
-module qkd_host_lifecycle_r3 #(parameter [15:0] INITIAL_EPOCH = 16'd0, parameter integer MU = 1) (
+module qkd_host_lifecycle_r3 #(parameter [15:0] INITIAL_EPOCH = 16'd0, parameter integer MU = 1, parameter integer KCONST = 0) (
  input wire clk, por_n, warm_ready,
  input wire request_valid, output wire request_ready,
  input wire [17:0] request_token, request_position,
@@ -167,7 +167,7 @@ module qkd_host_lifecycle_r3 #(parameter [15:0] INITIAL_EPOCH = 16'd0, parameter
  reg [7:0] pmask;
  always @* for (integer n = 0; n < 8; n = n + 1)
   pmask[n] = !sel4(tp, participant_tag[59*n+43 +: 2]) && !sel4(pp, participant_tag[59*n+43 +: 2]);
- ot_qwen_tp8_token_cohort_r3 #(.MU(1)) cohort (
+ ot_qwen_tp8_token_cohort_r3 #(.MU(1), .KCONST(KCONST)) cohort (
   .clk(clk), .por_n(por_n), .warm_ready(admission_ready),
   .begin_valid(begin_valid), .begin_ready(cohort_begin_ready), .begin_identity_ok(g_id_ok), .begin_tag(grant_tag), .begin_generation(grant_generation),
   .request_valid(participant_valid & pmask), .request_tag(participant_tag), .request_generation(participant_generation),

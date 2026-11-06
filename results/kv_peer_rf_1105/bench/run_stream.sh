@@ -14,11 +14,20 @@ PY
 bld mref tb_mux $REFM $B/tb_mux.sv
 bld mr3 tb_mux -DUSE_R3 $R3/qkd_host_peer_root_mux_r3.sv $B/tb_mux.sv
 bld mmut tb_mux -DUSE_R3 -DQKD_HR_PE_PL2_MUTANT $R3/qkd_host_peer_root_mux_r3.sv $B/tb_mux.sv
-mut $R3/qkd_host_peer_root_mux_r3.sv $O/mux_m2.sv "if(hit!=0)physical_tx_data<=pick;" "physical_tx_data<=pick;"
+mut $R3/qkd_host_peer_root_mux_r3.sv $O/mux_m2.sv "if(hit!=0)ptx_q<=pick;" "ptx_q<=pick;"
 bld mm2 tb_mux -DUSE_R3 $O/mux_m2.sv $B/tb_mux.sv
 for s in 1 2 3; do row "mux src  seed $s" mref +SEED=$s; row "mux r3   seed $s" mr3 +SEED=$s; done
 for b in 1 2; do row "mux src  bad $b" mref +BAD=$b; row "mux r3   bad $b" mr3 +BAD=$b; done
 row "mux m_data (must FAIL)" mmut +SEED=1; row "mux m_txload (must FAIL)" mm2 +SEED=1
+# DIE-KV-80: r4k rows, the r3 mux at KCONST=1 (fixed fields of tq_d/lq_d/physical_tx_data read as literals)
+mut $B/tb_mux.sv $O/tb_mux_k.sv " qkd_host_peer_root_mux_r3
+" " qkd_host_peer_root_mux_r3 #(.KCONST(1))
+"
+bld mk tb_mux -DUSE_R3 $R3/qkd_host_peer_root_mux_r3.sv $O/tb_mux_k.sv
+bld mkm2 tb_mux -DUSE_R3 $O/mux_m2.sv $O/tb_mux_k.sv
+for s in 1 2 3; do row "mux r4k  seed $s" mk +SEED=$s; done
+for b in 1 2; do row "mux r4k  bad $b" mk +BAD=$b; done
+row "mux r4k m_txload (must FAIL)" mkm2 +SEED=1
 L=$R3/qkd_host_peer_link_r3.sv
 bld lref tb_link $REFL $B/tb_link.sv
 bld lr3 tb_link -DUSE_R3 $L $B/tb_link.sv
@@ -35,3 +44,11 @@ for s in 1 2 3; do row "link src seed $s" lref +SEED=$s; row "link r3  seed $s" 
 for b in 1 2 3 4; do row "link src bad $b" lref +BAD=$b; row "link r3  bad $b" lr3 +BAD=$b; done
 row "link m_peerword (must FAIL)" lm1 +SEED=1; row "link m_phd_overwrite (must FAIL)" lm2 +SEED=1
 row "link m_txcredit_early (must FAIL)" lm3 +SEED=1; row "link m_nobadcheck (BAD=1, must FAIL)" lm4 +BAD=1; row "link m_peer_credit_lost (must FAIL)" lm5 +SEED=1
+# DIE-KV-80: r4k rows, the r3 link at KCONST=1 (peer_word fixed fields read as literals)
+mut $B/tb_link.sv $O/tb_link_k.sv " #(.MUT(MUTP)) dut(" " #(.MUT(MUTP),.KCONST(1)) dut("
+bld lk tb_link -DUSE_R3 $L $O/tb_link_k.sv
+bld lkm1 tb_link -DUSE_R3 -GMUTP=1 $L $O/tb_link_k.sv
+bld lkm2 tb_link -DUSE_R3 $O/l_m2.sv $O/tb_link_k.sv
+for s in 1 2 3; do row "link r4k seed $s" lk +SEED=$s; done
+for b in 1 2 3 4; do row "link r4k bad $b" lk +BAD=$b; done
+row "link r4k m_peerword (must FAIL)" lkm1 +SEED=1; row "link r4k m_phd_overwrite (must FAIL)" lkm2 +SEED=1

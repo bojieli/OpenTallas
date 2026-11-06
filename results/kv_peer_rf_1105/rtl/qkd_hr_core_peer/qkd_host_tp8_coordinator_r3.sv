@@ -3,7 +3,7 @@
 //  engine_result_* faces: one input stage (+1 edge).  result_cr still allows one outstanding result.
 //  token_request_*: registered face, half rate, valid/ready safe (+1 edge; the request waits there while admission is closed).
 //  program_consensus and the stable part of warm_ready: registered (+1 edge).  codec fault still drops warm_ready at once.
-module qkd_host_tp8_coordinator_r3 #(parameter integer MU=1,parameter integer POST_UID_SLOT=0)(
+module qkd_host_tp8_coordinator_r3 #(parameter integer MU=1,parameter integer POST_UID_SLOT=0,parameter integer KCONST=0)(
  input wire ck_codec,ck_lifecycle,ck_post,por_n,
  input wire[7:0]peer_rx_valid,input wire[4095:0]peer_rx_data,output wire[7:0]peer_rx_ready,
  output wire[7:0]peer_tx_valid,output wire[4095:0]peer_tx_data,input wire[7:0]peer_tx_ready,
@@ -76,7 +76,7 @@ module qkd_host_tp8_coordinator_r3 #(parameter integer MU=1,parameter integer PO
    if(recovery_complete)begin recovery_active<=0;recovery_required<=0;end
   end
  end
- qkd_host_peer_coordinator_codec_r3 #(.MU(1)) u_peer(
+ qkd_host_peer_coordinator_codec_r3 #(.MU(1),.KCONST(KCONST)) u_peer(
  .ck(ck_codec),.por_n(por_n),.rx_valid(peer_rx_valid),.rx_data(peer_rx_data),.rx_ready(peer_rx_ready),.tx_valid(peer_tx_valid),.tx_data(peer_tx_data),.tx_ready(peer_tx_ready),
  .allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.allocated_tag(token_grant_tag),.allocated_gen(token_grant_gen),.allocated_position(token_grant_position),
  .participant_valid(participant_valid),.participant_tag(participant_tag),.participant_gen(participant_gen),.participant_trace(participant_trace),.participant_token(participant_token),.participant_pos(participant_pos),.participant_accepted(participant_accepted),
@@ -87,7 +87,7 @@ module qkd_host_tp8_coordinator_r3 #(parameter integer MU=1,parameter integer PO
  .terminal_accepted(terminal_accepted),.terminal_tag(acknowledged_tag),.terminal_gen(acknowledged_gen),.post_retired(post_retired),.terminal_released(terminal_released),.result_transport_idle(result_transport_idle),.link_reset_request(link_reset_request),.retraining_request(retraining_request),
  .step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
  .cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.certificate_valid(certificate_valid),.certificate(certificate),.certificate_prefix(certificate_prefix),.fault(codec_fault));
- qkd_host_coordinator_services_r3 #(.MU(1),.POST_UID_SLOT(POST_UID_SLOT)) u_lifecycle(
+ qkd_host_coordinator_services_r3 #(.MU(1),.POST_UID_SLOT(POST_UID_SLOT),.KCONST(KCONST)) u_lifecycle(
  .clk(ck_lifecycle),.ck_post(ck_post),.por_n(por_n),.warm_ready(warm_ready),
  .request_valid(rq_v&&request_admission),.request_ready(local_request_ready),.request_token(rq_tok),.request_position(rq_pos),.request_generation(rq_gen),
  .grant_valid(token_grant_valid),.grant_ready(token_grant_ready),.grant_epoch(token_grant_epoch),.grant_token(token_grant_token),.grant_position(token_grant_position),.grant_generation(token_grant_gen),.grant_tag(token_grant_tag),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),
