@@ -188,6 +188,8 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
                     '--util', overrides.get('util', .4)]
             if selected_raw['partition_types'][type_name].get('hard'):
                 args += ['--hard-wrappers',type_name]
+            if (rtl / 'bound_reset.json').is_file():
+                args += ['--bound-native-reset', type_name]
             if overrides.get('skip_kit_ir', True):
                 args += ['--skip-kit-ir']
             step('generate', dp / 'gen.py', *args)
@@ -197,7 +199,7 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
                 # kit; rtl_lint supplies inventory using its one native frontend.
                 for name in ('kit_assembly.json', 'kit_assembly.py'):
                     shutil.copyfile(output / name, kit / name)
-            KT.install_inventory(census,kit/'kit_assembly.json',read(kit/'freeze.json')['module'])
+            KT.install_inventory(census,kit/'kit_assembly.json',read(plan)['partition_types'][type_name]['module'])
             shutil.copyfile(output/'kit_topology.json',kit/'kit_topology.json')
         else:
             step('generate', source / 'physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py',

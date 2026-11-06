@@ -35,8 +35,11 @@ def native_contract(raw,asbuilt=None,plan_path=None):
     if ab.get('clock_landing_table'):
         base=Path(ab.get('base',Path(__file__).resolve().parents[2]))
         if not base.is_absolute():
-            if plan_path is None:raise ValueError('native clock table requires explicit full plan context')
-            base=Path(plan_path).resolve().parent/base
+            # Match bind.plan_base: an explicit manifest owns its relative base.
+            # Inline asbuilt metadata remains relative to the containing plan.
+            context = asbuilt or plan_path
+            if context is None:raise ValueError('native clock table requires explicit full plan context')
+            base=Path(context).parent/base
         path=Path(ab['clock_landing_table'])
         if not path.is_absolute():path=base/path
         base,path=base.resolve(),path.resolve()
@@ -243,7 +246,7 @@ def prepare_stations(plan,tn,rtl_dir,native_plan=None,asbuilt=None):
     return result
 
 
-def stage_inventory(rtl_dir,kit):
+def stage_inventory(rtl_dir,kit,*,top=None):
     """Carry preparation expectations through the ordinary gen.py physical kit."""
     rtl_dir,kit=Path(rtl_dir),Path(kit)
     source=rtl_dir/'kit_topology.json'
@@ -256,7 +259,10 @@ def stage_inventory(rtl_dir,kit):
     assembly=rtl_dir/'kit_assembly.json'
     if assembly.exists() and not (kit/'kit_assembly.json').exists():
         shutil.copyfile(assembly,kit/'kit_assembly.json')
-    top=json.loads((kit/'freeze.json').read_text())['module']
+    if top is None:
+        top=json.loads((kit/'freeze.json').read_text()).get('module')
+    if not isinstance(top,str) or not top:
+        raise ValueError('KIT_TOPOLOGY_SOURCE: explicit selected parent module required')
     install_inventory(census,kit/'kit_assembly.json',top)
     shutil.copyfile(source,kit/'kit_topology.json')
 

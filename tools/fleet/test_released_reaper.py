@@ -93,3 +93,19 @@ def test_tracked_git_cpp_inside_obj_is_source_not_cache(tmp_path):
     subprocess.run(['git','-C',str(repo),'add','obj/'+source.name],check=True)
     result=ns['apply_release'](row)
     assert result['status']=='SKIP' and 'tracked Git source' in result['reason'] and source.exists()
+
+
+def test_deep_orfs_base_checks_capsule_signoff(tmp_path):
+    ns=worker(tmp_path)
+    kit=tmp_path/'lane'/'kit'
+    base=kit/'run/results/asap7/design/base'
+    base.mkdir(parents=True)
+    stale=base/'3_place.odb';stale.write_text('intermediate')
+    final=base/'6_final.odb';final.write_text('final checkpoint')
+    (kit/'signoff').mkdir()
+    (kit/'signoff/signoff.json').write_text(json.dumps({'verdict':'SIGNED'}))
+    s=stale.stat()
+    row=dict(id='deep',path=str(base),kind='intermediate-bulk',creator_release='creator explicit intermediate release',preserve=[str(final)],files=[dict(path=str(stale),bytes=s.st_size,inode=s.st_ino,mtime_ns=s.st_mtime_ns)])
+    result=ns['apply_release'](row)
+    assert result['status']=='SKIP' and 'SIGNED' in result['reason']
+    assert stale.exists() and final.exists()
