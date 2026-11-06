@@ -182,7 +182,11 @@ def clock_entry_pin(p, w, h, m5):
     d = min(p["x"], w - p["x"], p["y"], h - p["y"])
     sx, sy = CLOCK_ENTRY_SIZE
     if d > PIN_LEN_UM:
-        return round(snap(p["x"]), 4), round(float(p["y"]), 4), (sx, sy), None
+        # HBM-GAPS-5-QCOL4 11-05: an interior entry also lands its two y ends on the M4 track grid (same offset/pitch).
+        # A centre on the half grid (qcol4 clk y 34.56 -> ends 34.32/34.80) leaves the router's M5 stub 0.024 past the
+        # 0.048-wide pin: 3 DRT 'Rect Only' on clk that stayed from iteration 5 to 61 (vA 5_route_drc.rpt-5..60).
+        cy = snap(float(p["y"]) - sy / 2) + sy / 2
+        return round(snap(p["x"]), 4), round(cy, 4), (sx, sy), None
     if f in "NS":
         cy = h - sy / 2 if f == "N" else sy / 2
         return round(snap(p["x"]), 4), round(cy, 4), (sx, sy), f
