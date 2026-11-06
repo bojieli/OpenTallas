@@ -1,0 +1,34 @@
+{
+  "schema": "opentallas.hbm.tkm_clock_pin_sites.v1",
+  "module": "ot_hgi_coll_tkm_m_tp192__root",
+  "entry": "root.u_tkm_SW_root",
+  "before_legacy_spread_um": {
+    "buffer_clk": [
+      159.864,
+      172.8
+    ],
+    "clk": [
+      159.96,
+      172.8
+    ]
+  },
+  "after_exact_sites_um": {
+    "clk": [
+      159.96,
+      172.8
+    ],
+    "buffer_clk": [
+      160.344,
+      172.8
+    ]
+  },
+  "basis": "p35 canonical referenced pin table; coarse legacy centre spread must not override reviewed pair",
+  "clock_sources_merged_unchanged": [
+    "buffer_clk",
+    "clk"
+  ],
+  "pin_cycles": 0,
+  "pins_outline_core_macros_die_plan_unchanged": true,
+  "clock_entries_sha256": "c45da49afc611d08eb64a75771abbea62163720da641282b626126466d19aafc",
+  "other_clock_entries_semantically_identical": true
+}
