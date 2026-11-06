@@ -311,6 +311,10 @@ def sle_cland_recipe(e, out, plan=None):
                related_clocks={"fclk": ["d", "t_rst_n"]}, strap_ports=["strap_k"],
                land_slots={"d": {"D": 4, "form": "hold_mux"}, "t_rst_n": {"form": "ring_start", "ring": "d"}},
                _why=f"qc_core_wave sle_cland view {e['view']} (QC-SLECTL-B): plan pin table {e['pins_file']}")
+    # Small START-only rings need real rows inside the narrow face band.
+    # The ordinary 4.32um margin would invert an 8.208um outline's core.
+    if min(e["outline_um"]) < 12.96:
+        rec["core_margin"] = 1.08
     ins = plan_core_tap_insertion(plan, m) if plan else None
     if ins:
         rec.update(insertion_ps=ins[0], insertion_ff_ps=ins[1],
