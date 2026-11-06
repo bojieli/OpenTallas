@@ -1693,7 +1693,15 @@
     "dsdv_slice_c1x_C__t6@9",
     "dsdv_slice_c1x_C__t1@4",
     "dsdv_slice_c1x_C__t3@6",
-    "dsdv_slice_lepw_mu_C__t1@4"
+    "dsdv_slice_lepw_mu_C__t1@4",
+    "bk_sel__t2@15",
+    "dsdv_slice_c1x_C__t3@7",
+    "dsdv_slice_c1x_C__t8@9",
+    "dsdv_slice_lepe_mu_C__t1@7",
+    "slice_station__t47@16",
+    "dsdv_slice_lepw_mu_C__t1@5",
+    "dsdv_slice_c1x_C__t6@10",
+    "dsdv_slice_c1x_C__t7@7"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -2630,7 +2638,7 @@
    "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
    "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained.",
    "kw22_src_note": "KW-FIX-22 10:0x DIE-S81-69 09:49 CLASS (PORT_BIND extra rst_o_k[0]): src_9f316 reset_tree.out_pins() returned [] for native types; fixed on main by 7ceea6ad772 (tag bn-s81). Wave tools now main 8eeea8e066 (contains 9f316 + I202 pin audit). src_8eeea on epyc5 scratch3 = hardlink copy of Codex src_9f316 + git-archive of all 688 9f..8eeea changed files (0 deletions); reset_tree/gen_phys/kit_topology hashes equal 8eeea [CHECKED]. Native plan/asbuilt SRC28 + kit_rtl s81_ready_v3 unchanged (Codex recovery context kept).",
-   "note_kw23_src": "KW-FIX-23 2026-11-06 12:0x: src /srv/opentallas-scratch3/claude/kw22/src_8eeea (8eeea8e0661) -> /srv/opentallas-scratch2/claude/kw23/src_e9c49 = main e9c4952edf0 I212 (KW-FIX-22 classfix + libwire + KIT_RE scratch3; tags cf-s81/cf-qc/ca-head); hardlink of kw21/src_c926f + git-archive of the 1805 changed files, blob sha verified 0 mismatches, on epyc5+epyc6 scratch2 | ONE batch 12:1x: slice_station__t47@15, bk_sel__t2@14, slice_station__t52@13, slice_station__t8@10 = class 'enqueue REFUSED: kit must be HOST:/srv/opentallas-scratch{,2}' (scratch3 work_root), fixed by KIT_RE 404b423268 on main I212. | KW-FIX-23 12:1x (COORD 12:1x): src -> /srv/opentallas-scratch2/claude/kw23/src_e9eda = main e9eda32d41c I213 (tags cg-s81/cg-qc/cb-head): hardlink of src_e9c49 + git-archive of the 13 changed files, blob sha 0 mismatches, epyc5+epyc6. | same batch: PORT_BIND extra rst_o_k[0] rows launched 09:18-09:28 on the pre-fix src_9f316 (class fixed by out_pins 7ceea6ad772, in this src): dsdv_slice_c1x_C__t5@4, dsdv_slice_c1x_C__t7@6, dsdv_slice_c1x_C__t8@8, dsdv_slice_lepe_mu_C__t1@6, dsdv_slice_lepw_mus_C__t1@8. | 12:2x same rst_o class, pre-fix src launches 09:18-09:28: dsdv_slice_c1x_C__t6@9, dsdv_slice_c1x_C__t1@4, dsdv_slice_c1x_C__t3@6, dsdv_slice_lepw_mu_C__t1@4 (the 3 still in PLACE relaunch on src_e9eda only if they FAIL).",
+   "note_kw23_src": "KW-FIX-23 2026-11-06 12:0x: src /srv/opentallas-scratch3/claude/kw22/src_8eeea (8eeea8e0661) -> /srv/opentallas-scratch2/claude/kw23/src_e9c49 = main e9c4952edf0 I212 (KW-FIX-22 classfix + libwire + KIT_RE scratch3; tags cf-s81/cf-qc/ca-head); hardlink of kw21/src_c926f + git-archive of the 1805 changed files, blob sha verified 0 mismatches, on epyc5+epyc6 scratch2 | ONE batch 12:1x: slice_station__t47@15, bk_sel__t2@14, slice_station__t52@13, slice_station__t8@10 = class 'enqueue REFUSED: kit must be HOST:/srv/opentallas-scratch{,2}' (scratch3 work_root), fixed by KIT_RE 404b423268 on main I212. | KW-FIX-23 12:1x (COORD 12:1x): src -> /srv/opentallas-scratch2/claude/kw23/src_e9eda = main e9eda32d41c I213 (tags cg-s81/cg-qc/cb-head): hardlink of src_e9c49 + git-archive of the 13 changed files, blob sha 0 mismatches, epyc5+epyc6. | same batch: PORT_BIND extra rst_o_k[0] rows launched 09:18-09:28 on the pre-fix src_9f316 (class fixed by out_pins 7ceea6ad772, in this src): dsdv_slice_c1x_C__t5@4, dsdv_slice_c1x_C__t7@6, dsdv_slice_c1x_C__t8@8, dsdv_slice_lepe_mu_C__t1@6, dsdv_slice_lepw_mus_C__t1@8. | 12:2x same rst_o class, pre-fix src launches 09:18-09:28: dsdv_slice_c1x_C__t6@9, dsdv_slice_c1x_C__t1@4, dsdv_slice_c1x_C__t3@6, dsdv_slice_lepw_mu_C__t1@4 (the 3 still in PLACE relaunch on src_e9eda only if they FAIL). | 13:52 KW-FIX-23 stopped these 8 waiting PLACE clients (epyc5 funnel, COORD 13:5x) -> KW_PLACE_RC=143 read as FLOW; not a design result, released once: bk_sel__t2@15, dsdv_slice_c1x_C__t3@7, dsdv_slice_c1x_C__t8@9, dsdv_slice_lepe_mu_C__t1@7, slice_station__t47@16, dsdv_slice_lepw_mu_C__t1@5, dsdv_slice_c1x_C__t6@10, dsdv_slice_c1x_C__t7@7",
    "note_hosts_kw23": "KW-FIX-23 12:5x COORD 12:4x (epyc6 admits 167 GB load 40/128, epyc2 476 GB 68/128; epyc4+epyc5 REFUSED): S81 gen stays epyc5 (plan/kit_rtl inputs + 62 GB Codex bind only there); PLACE prefers epyc6 then epyc2 (spill via the intel2 relay, KW-FIX-22). Revert: place_prefer [epyc5, epyc6]."
   },
   "s81_head": {
