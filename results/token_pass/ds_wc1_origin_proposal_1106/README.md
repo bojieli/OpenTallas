@@ -1,6 +1,6 @@
 # Active wc1 LP origin proposal — inactive
 
-This proposal copies four actual generated LP wrapper types and inserts fourteen per-instance origin pairs from the actual wc1 reset-release graph. All eight C/LP source hashes match the retained receipt exactly. Binder outputs are untracked and have no verified source commit, so proposal.json records source_binder_commit=null and the actual byte readset. Wave source2c705 is distinct and is not presented as binder provenance.
+This proposal copies four actual generated LP wrapper types and inserts fourteen per-instance origin pairs from the actual wc1 reset-release graph. All eight C/LP source hashes match the retained receipt exactly. The actual bound top is also hashed, and every C/LP station-to-type association is checked before writing the proposal. Binder outputs are untracked and have no verified source commit, so proposal.json records source_binder_commit=null and the actual byte readset. Wave source2c705 is distinct and is not presented as binder provenance.
 
 Typed map:
 - s_0N: s81p_dsdv_slice_lepw_mu_LP__t2, u_u_lnl0..3 = KN5/NK3.
@@ -19,4 +19,4 @@ Reproduce from a worktree containing the capability:
       --source-root /srv/opentallas-scratch2/claude/die-s81-59/ev/bind/rtl \
       --capability-root "$PWD" --output /new/owned/proposal
 
-Prepared copy: epyc5 /srv/opentallas-scratch2/claude/codex-ds-wc1-origin-1106/proposal. No active source2c, ev/bind, wc1 or wave inputs were edited. Review this scoped source event before selecting an overlay into a current binding. Any future physical job remains subject to image review before route. The next current-die integration must rebuild the affected landing consumers from this selected cohort, rather than reuse zero-bias LP caches or graft frozen native libraries.
+Prepared copy: epyc5 /srv/opentallas-scratch2/claude/codex-ds-wc1-origin-1106/proposal_v2. No active source2c, ev/bind, wc1 or wave inputs were edited. Review this scoped source event before selecting an overlay into a current binding. Any future physical job remains subject to image review before route. The next current-die integration must rebuild the affected landing consumers from this selected cohort, rather than reuse zero-bias LP caches or graft frozen native libraries.
