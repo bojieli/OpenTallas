@@ -1,6 +1,6 @@
 # OpenTallas — current Codex handoff
 
-Updated 2026-11-05 23:23 PST. This file is a current working summary; historical detail belongs in lane files and the coordination queue.
+Updated 2026-11-05 23:36 PST. This file is a current working summary; historical detail belongs in lane files and the coordination queue.
 
 Claude stopped on the weekly usage limit. Reported reset: **2026-11-12 04:00 America/Los_Angeles**. Codex continues all lanes until explicitly told to hand back. Read `CODEX-ROLE.md`; record owner questions as plain text under OWNER? in `CODEX-LOG.md` and continue other work. Never open a blocking question dialog.
 
@@ -51,15 +51,19 @@ Codex workers are active for every scope below. Their concrete job paths/results
 | Integration / `merge` | I195 test suite has same 41 failures as prior baseline, no new IDs. ctlrq and shared LEC constant fix in integration batch. | Batch pushed, tags confirmed, operator notified. Integrate next approved class fix; no broad validation repeat without a new concern. |
 | Shared residuals / `residual` | Autopilot labels explicit clock-source tool exceptions STRUCTURAL, suppressing proper infra recovery. | Fix narrowly by class, preserving actual timing FAIL classification; collect other unanswered READY/ASK and orphan work. |
 
-## Immediate integration queue
+## Current integration and follow-ups
 
 - `claude/dh71-ctlrq-1105@4c71aa4289b`: root approved after scoped source/default review and token-cycle bookkeeping. Private proof covers held ctlx changes. Only hd_ctl behavior should change; raw plan keys stay unchanged.
 - `codex/qc-lec-constant-1105@1fd5f3b4e3`: root approved, tiny shared tool fix with focused tests. No RTL or cycles.
 - **Merged and pushed:** `875d41f5423` (ctlrq) and `eedc0185670` (LEC fix); HEAD == origin/main confirmed at `eedc0185670`. New tags on that commit: `flow-20261106-s-head`, `q-qc`, `n-kv`, `s-s81`, `x-hbm` (each with the same `flow-20261106-` prefix). Operator is refreshing sources. Focused integration tests: 12/12 PASS.
 - HBM WBQ `claude/hbm-gaps-5-wbq-1105@12b6f8761b`: collect remaining exactness controls before adoption; vA/vB builds already live. GIN version adds +1 hbm_clk edge to g_v/g_d.
 - HBM SerDes TX: root approved recommended taller 285.12 x 207.36 slot subject legal neighbor fit and image review, in p35 with clock-pin fixes. No new owner question needed.
-- `codex/grt-tool-error-1105@067d834145e`: shared classifier fix READY, 15 targeted tests PASS. Recognizes the exact clock-source exception only with a PASS timing receipt; actual timing failures remain structural. Root review/merge next.
+- `codex/grt-tool-error-1105@067d834145e`: shared classifier fix READY, 15 targeted tests PASS. Recognizes the exact clock-source exception only with a PASS timing receipt; actual timing failures remain structural. Merged as `4d2e62a337e`.
 - KV ORDER completed: routed TT +8.66 / FF +4.48, DRC0; remaining 16 proof cones discharged by BDD. COUNT-CREDIT addition pending; do not add it to 167 before the counter consumes the credit.
+- Further pushed merges: `b95013ffc4e` lane1p vA source, `defc53fa878` WBQ HREG2/optional GIN1, `c6252e2eaf8` reset-copy naming fix, `2c7054fd3cd` HBM p35 pins/TX height. Main == origin/main confirmed at `2c7054fd3cd`.
+- Latest shared tags on `c6252e2eaf8`: `flow-20261106-t-head`, `r-qc`, `o-kv`, `t-s81`; HBM-only `flow-20261106-z-hbm` on `2c7054fd3cd`. Wave source refresh is in progress; tags issued does not mean deployment complete.
+- New generator precedence class: KV recipe defaults overrode explicit safe CLI util/layer settings. Merge worker owns generic fix; KV corrects actual peer/ingest kits. Inspect generated config, not launch flags.
+- S81 COLLE same-placement M6 estimate reached overflow0 versus M5 overflow1041. Full build and parent M6 obstruction reservation remain.
 - S81 svc_lo t7 fit/path additions are not ready until their existing proof completes.
 
 ## Live job anchors worth retaining
@@ -74,4 +78,4 @@ Codex workers are active for every scope below. Their concrete job paths/results
 
 Latest evidence and handback state: `CODEX-LOG.md`, per-lane `## CODEX notes`, `lanes/CODEX-FLEET.md`, `lanes/CODEX-HBM-FORMS.md`, and `lanes/COORD-REVIEW-QUEUE.md` on **intel2 coord/state**. `lanes/CODEX.md` indexes historical lane files; a historical filename is not a new active task.
 
-New OWNER? items: none at this update. Earlier questions remain in their logs; never invent approval or wait for an answer. On explicit Claude-reset notice, park safely, write per-lane handback (branches, SHAs, jobs, results, failures, questions), reply exactly `HANDOFF DONE`, and stop.
+New nonblocking OWNER? items in `CODEX-LOG.md`: permission to migrate exact predecessor unstarted svc_lo proof waiter; and manifest-controlled moves of inactive superseded Codex attempts protected only by historical terminal-job references. Defaults retain the waiter and existing cleanup guards. Earlier questions remain in their logs; never invent approval or wait for an answer. On explicit Claude-reset notice, park safely, write per-lane handback (branches, SHAs, jobs, results, failures, questions), reply exactly `HANDOFF DONE`, and stop.
