@@ -256,7 +256,9 @@ def _band_groups(tn, name, band, typ):
         # Optional first capture at the physical pin face. FREG otherwise shares
         # the storage band; adding the register alone does not shorten pin reach.
         wreg = (typ or {}).get('clock', {}).get('landing_ring_wreg') or {}
-        if not wreg.get('freg') or name not in wreg.get('buses', []):
+        legacy = (typ or {}).get('clock', {}).get('landing_input_freg') or []
+        ca_freg = wreg.get('freg') and name in wreg.get('buses', [])
+        if not ca_freg and name not in legacy:
             raise ValueError(f'{tn}.{name}: freg_rect_um requires this bus FREG')
         if cfg or len(rects) != 1:
             raise ValueError(f'{tn}.{name}: separate FREG bank requires one ordinary storage band')

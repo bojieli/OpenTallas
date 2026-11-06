@@ -65,3 +65,12 @@ puts "SEPARATE_CAPTURE_PASS"
     r = subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
     assert r.returncode == 0 and 'SEPARATE_CAPTURE_PASS' in r.stdout, (r.stdout, r.stderr)
     assert not r.stderr
+
+def test_legacy_capture_bank_uses_explicit_legacy_bus_selection():
+    t, b = fixture()
+    t['clock'] = {'landing_input_freg': ['ft2_i']}
+    b['freg_rect_um'] = [6.48, 1211.76, 117.72, 1221.48]
+    assert L._band_groups('T', 'ft2_i', b, t)[0][0] == 'u_cland_ft2_i.g_freg.u_face'
+    t['clock']['landing_input_freg'] = ['other_i']
+    with pytest.raises(ValueError, match='requires this bus FREG'):
+        L._band_groups('T', 'ft2_i', b, t)
