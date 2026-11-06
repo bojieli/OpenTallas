@@ -22,4 +22,6 @@ profile['write_face']=dict(define='OT_HC128_WFACE',cycles=1,cohort=['write_data'
 sys.path.insert(0,str(repo/'physical/die_plan/hbm_arch_cores'))
 p=repo/'physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py';spec=importlib.util.spec_from_file_location('b128_gen',p);gen=importlib.util.module_from_spec(spec);spec.loader.exec_module(gen)
 sys.argv=[str(p),'--views',str(ctx/'views.json'),'--view',view['view'],'--out',str(out),'--tag','_wface_vB' if a.write_face=='on' else '_shallow_vA','--util','.40','--sigmax','M6','--face-shell','off','--clock-pin-entry','on','--clock-taps','off','--single-root-taps','off','--core-insertion','none','--core-macros','off']
+if a.write_face=='on':
+ guide=ctx/'write_face_guide.json';guide.write_text(json.dumps(dict(boxes=[dict(name='write_ingress_north',prefixes=['wface_data','wface_addr','wface_we0','wface_we1','wface_xwe'],box_um=[4.32,237.6,246.24,263.52])]),indent=1)+'\n');sys.argv.extend(['--reg-guide-boxes',str(guide)])
 gen.main(recipe_overrides={module:rec},source_overrides={virtual:str(ap)},source_profile=profile)
