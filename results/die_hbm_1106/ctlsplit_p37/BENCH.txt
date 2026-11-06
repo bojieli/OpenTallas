@@ -1,0 +1,10 @@
+HBM-FORM-TIMING-11 part 37 lock-step bench, 2026-11-06 20:05 UTC on epyc5 (iverilog 800 cycles, every output, every cycle; bench_p37.sh)
+old plan module ot_hgi_sfu_core_split3__ctl (oneclk wrapper + gold ot_hgi_sfu_split3_ctl_core) vs part-37 plan module
+(glue -> ot_hgi_sfu_core_split3__ctl__split -> ot_hgi_sfu_split3_ctl_rest_1c + ot_hgi_sfu_split3_ctl_pipe_1c, local reset sync copy)
+ok : BENCH_DONE cycles 800 errors 0    PASS (0 cycles added, local reset copy cycle-identical)
+m2 : BENCH_DONE cycles 800 errors 577    seam bits 0/1 swapped at the pipe input -> FAIL (caught)
+m3 : BENCH_DONE cycles 800 errors 217    pipe reset never asserted (rst_vm_n = 1) -> FAIL (caught)
+m1 : BENCH_DONE cycles 800 errors 0    pipe relay one cycle early (sync_q[0]) -> not observable: the pipe flops reset to 0 and the rest
+     drives seam_d = 0 for more than one cycle after release, so the early release captures the same 0. Informational only; the
+     shipped copy is the gold synchroniser itself (same D, same async clear rst_n, same posedge clk), so it equals u_rst.relay_q[0][0] every cycle.
+Prior proof of the cut itself: HBM-FORM-TIMING-10 I205 (main 3ff919b60c), yosys equiv 33,853/33,854 + bench; last point (sticky fault) see ctlsplit_1106.
