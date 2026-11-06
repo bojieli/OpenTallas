@@ -71,6 +71,8 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
             raise ValueError('native reset needs reset_context_plan; an isolated plan can invent a different root/tree')
         if overrides.get('reset_mode') not in ('native', 'canonical'):
             raise ValueError('choose reset_mode native (full original context) or canonical (kit_rsync)')
+        if read(plan)['partition_types'][type_name].get('hard') and (overrides['reset_mode']!='native' or overrides.get('reset_expected')):
+            raise ValueError('hard bound partitions preserve their delivered native reset; no generated canonical reset tree/expected tree')
     elif profile == 's81-coll':
         keys(overrides, ('clock_pin',), 'compact COLL overrides')
         if type_name or not core_spec or not overrides.get('clock_pin'):
@@ -152,7 +154,7 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
                      '--rtl-dir', rtl, '--contracts', Path(overrides['assembly_contracts']).resolve())
                 step('assembly', dp / 'kit_assembly.py', 'assemble', '--rtl-dir', rtl, '--contracts',
                      Path(overrides['assembly_contracts']).resolve(), '--receipt', receipt)
-            if overrides['reset_mode'] == 'canonical' or overrides.get('reset_context_plan'):
+            if (overrides['reset_mode'] == 'canonical' or overrides.get('reset_context_plan')) and not selected_raw['partition_types'][type_name].get('hard'):
                 reset_plan = Path(overrides.get('reset_context_plan', plan)).resolve()
                 step('reset', dp / 'kit_rsync.py', reset_plan, type_name, rtl)
                 # Native profiles use the full original context: an isolated
@@ -164,14 +166,16 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
                 if mismatch:
                     raise ValueError(f'canonical reset differs from selected native contract: {mismatch}')
             # Never omit this because generation/frontend happened to succeed.
-            step('istations', dp / 'kit_istations.py', plan, type_name, rtl, '--apply')
-            census=KT.source_census(read(plan),type_name,rtl)
-            (output/'kit_topology.json').write_text(json.dumps(census,indent=2)+'\n')
+            step('istations', dp / 'kit_topology.py', 'prepare-stations', plan, type_name, rtl)
+            census=read(rtl/'kit_topology.json')
+            shutil.copyfile(rtl/'kit_topology.json',output/'kit_topology.json')
             if census['problems']:
                 raise ValueError('emitted native topology differs from plan: '+'; '.join(census['problems']))
             args = ['phys', plan, '--out', output / 'gen', '--rtl-root', source, '--types', type_name,
                     '--kit-rtl', f'{type_name}={rtl / "kit_rtl.f"}', '--trial',
                     '--util', overrides.get('util', .4)]
+            if selected_raw['partition_types'][type_name].get('hard'):
+                args += ['--hard-wrappers',type_name]
             if overrides.get('skip_kit_ir', True):
                 args += ['--skip-kit-ir']
             step('generate', dp / 'gen.py', *args)

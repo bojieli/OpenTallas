@@ -324,6 +324,17 @@ def hierarchy_inventory(design, top, children, parent_profile=None, required_ins
         if kind!=required['master'] and original!=required['master']:
             problems.append(f"{name}: factory instance {kind}, expected {required['master']}")
         else:
+            definition=modules.get(kind,{})
+            for parameter,expected in required.get('parameters',{}).items():
+                value=definition.get('parameter_default_values',{}).get(parameter)
+                actual=int(value,2) if isinstance(value,str) and re.fullmatch('[01]+',value) else value
+                if actual!=expected:
+                    problems.append(f'{name}: actual {parameter}={actual}, expected {expected}')
+            if 'register_bits' in required:
+                bits=sum(len(c.get('connections',{}).get('Q',[])) for c in definition.get('cells',{}).values()
+                         if c['type']=='$dff')
+                if bits!=required['register_bits']:
+                    problems.append(f"{name}: actual registered bits {bits}, expected {required['register_bits']}")
             required_found.append(hits[0])
     unplanned = [c for c in cells if c["master"] in masters and c["instance"] not in selected]
     problems += [f"unplanned hard instance {c['instance']} ({c['master']})" for c in unplanned]
