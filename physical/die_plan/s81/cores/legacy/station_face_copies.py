@@ -466,12 +466,25 @@ def apply(split, top, child_modules, abi, poses, blockages=None):
         # odb has no status FIXED ("ValueError Unknown placement status" at global_place); LOCKED = DEF FIXED
         pose_out[cm] = pose_out[cm].replace("setPlacementStatus FIXED", "setPlacementStatus LOCKED").replace(
             "# Uses FIXED status", "# Uses LOCKED (= DEF FIXED) status")
-        # LOCKED stops moves, not resizing: repair_design upsized posed DFFHQNx1 to x2 -> 217 DPL overlaps (E place4).
-        # dont_touch keeps the reviewed master (and so the posed footprint); nets stay bufferable
-        l_old = " $ot_np_i setPlacementStatus LOCKED\n"
-        if pose_out[cm].count(l_old) != 1:
-            raise ValueError("pose lock line changed")
-        pose_out[cm] = pose_out[cm].replace(l_old, l_old + " $ot_np_i setDoNotTouch 1\n")
+        # LOCKED stops moves, not resizing: repair_design upsized posed DFFHQNx1 to x2 -> 217 DPL overlaps (E place4);
+        # dont_touch is no way out (rsz then cannot buffer into the FF pins: RSZ-3006).  The pose anchors GPL only:
+        # it lists the posed FFs in RESULTS_DIR/ot_native_pose.txt and face_flops_release.tcl (PRE_DETAIL_PLACE)
+        # releases them to PLACED, so DPL legalises a resized FF next to its pose
+        s_old = " dict set ot_np_seen $ot_np_nm 1\n"
+        if pose_out[cm].count(s_old) != 1:
+            raise ValueError("pose seen line changed")
+        pose_out[cm] = pose_out[cm].replace(s_old, s_old + " lappend ot_np_raw [$ot_np_i getName]\n")
+        e_old = "puts \"NATIVE_POSE source FFs $ot_np_ff exact placements applied\""
+        if pose_out[cm].count(e_old) != 1:
+            raise ValueError("pose final line changed")
+        pose_out[cm] = pose_out[cm].replace(e_old, e_old + "\n"
+            "set ot_np_fh [open $::env(RESULTS_DIR)/ot_native_pose.txt w]\n"
+            "foreach ot_np_r $ot_np_raw { puts $ot_np_fh $ot_np_r }\n"
+            "close $ot_np_fh")
+        i_old = "set ot_np_ff 0\n"
+        if pose_out[cm].count(i_old) != 1:
+            raise ValueError("pose init line changed")
+        pose_out[cm] = pose_out[cm].replace(i_old, i_old + "set ot_np_raw {}\n")
         # pin contract names every child port as a scalar (pins.json / io.tcl findBTerm {fclk_in_ft13_i}); a 1-bit port
         # tagged single_bit_vector is written "[0:0]" and becomes BTerm "fclk_in_ft13_i[0]" (floorplan: native multiPORT
         # BTerm missing).  Drop the tag on 1-bit port nets: same bit, same connections, scalar declaration.
