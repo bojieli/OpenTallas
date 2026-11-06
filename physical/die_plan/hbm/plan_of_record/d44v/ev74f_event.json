@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.hbm_plan_event.ev74f",
+ "rulings": "COORD 11-05 14:01 (HBM-BIND-10 C-form on main d44v), 15:0x (a) L15x1 +1 station = +1 pin cycle, 14:52 l1r5 MLAT 5, 16:0x ft_nudge explicit-slot class fix",
+ "base": "d44v ev74 (main 5238f449c5c), die_plan.json sha256 5ca25c1d55a1aa686b62c83389cf6cecb8611e57184d0b4512d4da786b5b0b8e",
+ "steps": [
+  "results/hbm_bind_10_1105/plan_delta.py apply delta_714_k13f.json.gz (36 base-differs, all ev74 edits on C-deleted slots or the same L29_i value)",
+  "tools/die_plan/ft_add_station.py q_b011:L15x1,q_b011__physical_v1:L15x1 L15,L15m (+1 station, LAT_L15/L15M 6->7)",
+  "tools/die_plan/ft_nudge.py (explicit regs_um chains keep their route; only station centres inside a core move)",
+  "tools/die_plan/ft_reach_fix.py (no bit flagged)"
+ ],
+ "result_sha256": "520f3d3bb2ac0c316f8a72f39f9d087b28734c8391e54ed310b267fc1152fc36",
+ "latency": {
+  "L15": 7,
+  "L15m": 7
+ },
+ "rtl": {
+  "ot_hbm_su_pg_lane1_core": "MLAT 4 -> 5 (commit 308663537a8; recipes_b2 files_at pinned to it)"
+ },
+ "replay": "results/die_hbm_1105/ev74/run_ev74f.sh"
+}

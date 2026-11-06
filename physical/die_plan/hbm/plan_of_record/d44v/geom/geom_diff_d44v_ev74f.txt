@@ -1,0 +1,6 @@
+top keys ['schema', 'plan', 'types'] types 74 74
+FAIL count 225 -> 233 | types FAIL 74 -> 74
+NEW 13 [('q_b000', 'r2r', ('PASS', 349.5), ('FAIL', 414.88)), ('q_b001', 'partial_face', ('PASS', 0), ('FAIL', 1)), ('q_b001__physical_v1', 'partial_face', ('PASS', 0), ('FAIL', 2)), ('q_b010', 'partial_face', ('PASS', 0), ('FAIL', 1)), ('q_b010__physical_v1', 'r2r', ('PASS', 356.13), ('FAIL', 410.8
+GONE 5 [('NE_io', 'clock_reach', ('FAIL', 420.69), ('PASS', 182.8)), ('NW_io', 'clock_tap_sinks', ('FAIL', 1763.0), ('PASS', 1254.0)), ('q_b002', 'partial_face', ('FAIL', 2), ('PASS', 0)), ('q_b111', 'partial_face', ('FAIL', 2), ('PASS', 0)), ('q_b111__physical_v1', 'partial_face', ('FAIL', 2), ('PA
+WORSE 72 [('q_b000', 'clock_reach', 308.82, 350.18), ('q_b000', 'clock_tap_sinks', 6541.0, 8881.0), ('q_b000__physical_v1', 'clock_reach', 308.82, 350.16), ('q_b000__physical_v1', 'clock_tap_sinks', 6541.0, 10546.0), ('q_b001', 'clock_tap_sinks', 5754.0, 8427.0), ('q_b001__physical_v1', 'clock_tap_s
+BETTER 62 [('NE_io', 'partial_face', 2, 1), ('NW_io', 'clock_reach', 661.66, 356.02), ('q_b002', 'clock_tap_sinks', 6771.0, 6481.0), ('q_b002__physical_v1', 'clock_tap_sinks', 6771.0, 6453.0), ('q_b002__physical_v1', 'partial_face', 2, 1), ('q_b003', 'partial_face', 2, 1), ('q_b003__physical_v1', 'p

@@ -1,0 +1,51 @@
+by check: {'clock': (15, 0), 'cuts': (1, 0), 'hops': (4, 0), 'reset': (1, 0), 'schema': (0, 23), 'stations': (5, 0)}
+gone 26 new 23
+NEW schema type q_b012 slot L5011x1: in_face == out_face
+NEW schema type q_b111 slot L1270x2: in_face == out_face
+NEW schema type q_b113 slot L1269x2: in_face == out_face
+NEW schema type q_spb2 slot L1278x3: in_face == out_face
+NEW schema type q_spb2 slot L1280x6: in_face == out_face
+NEW schema type q_spb2 slot L3012x5: in_face == out_face
+NEW schema type q_spt0 slot L1271x8: in_face == out_face
+NEW schema type q_spt0 slot L1276x1: in_face == out_face
+NEW schema type q_hub_nw slot L1218x1: in_face == out_face
+NEW schema type q_hub_nw slot L1219x1: in_face == out_face
+NEW schema type q_hub_nw slot L1225x1: in_face == out_face
+NEW schema type q_hub_nw slot L1238x1: in_face == out_face
+NEW schema type q_hub_nw slot L1239x1: in_face == out_face
+NEW schema type q_hub_ne slot L5018x1: in_face == out_face
+NEW schema type q_hub_ne slot L5019x1: in_face == out_face
+NEW schema type q_hub_ne slot L5025x1: in_face == out_face
+NEW schema type q_hub_ne slot L5039x1: in_face == out_face
+NEW schema type q_hub_ne slot L5040x1: in_face == out_face
+NEW schema type q_b012__physical_v1 slot L1211x1: in_face == out_face
+NEW schema type q_b113__physical_v1 slot L5095x8: in_face == out_face
+NEW schema type q_b113__physical_v1 slot L5099x8: in_face == out_face
+NEW schema type q_spt0__physical_v1 slot L5076x2: in_face == out_face
+NEW schema type q_spt0__physical_v1 slot L5096x9: in_face == out_face
+GONE hops lane L15: normal FT NW_b011.L15x1 real input bit 1699 S0->S1 is 473 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L15m: normal FT NE_b011.L15x1 real input bit 1699 S0->S1 is 473 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L700: normal FT NW_b112.L700x3 real input bit 2807 S0->S1 is 622 um > reach 405; regs_um[0] is not a native placement
+GONE hops lane L701: normal FT NE_b112.L701x3 real input bit 2762 S0->S1 is 622 um > reach 405; regs_um[0] is not a native placement
+GONE stations type q_b011__physical_v1 slot L15x1: real normal input S0->S1 = 473 um > ft_station_max_um 405
+GONE stations type q_b011 slot L15x1: real normal input S0->S1 = 473 um > ft_station_max_um 405
+GONE stations type q_b112__physical_v1 slot L700x1: real normal input S0->S1 = 602 um > ft_station_max_um 405
+GONE stations type q_b112 slot L700x3: real normal input S0->S1 = 622 um > ft_station_max_um 405
+GONE stations type q_b112__physical_v1 slot L701x3: real normal input S0->S1 = 622 um > ft_station_max_um 405
+GONE cuts horizontal cut at 5750: NW_b101 segment carries 2808 bits on 3334 tracks = 0.84 > 0.6
+GONE clock type root: branch buffer u_tkmclk_L4_c0 leg to u_tkm_SW_tile4__hb 445.1 um > reach 405
+GONE clock type root: branch buffer u_tkmclk_L150_c0 leg to u_tkm_SW_tile6__ha 462.2 um > reach 405
+GONE clock type root: branch buffer u_tkmclk_L150_c0 leg to u_tkm_SW_tile7__hb 453.6 um > reach 405
+GONE clock type root: branch buffer u_tkmclk_L150_c1 leg to u_tkm_SW_tile8__ha 457.8 um > reach 405
+GONE clock type root: branch buffer u_tkmclk_L150_c1 leg to u_tkm_SW_tile9__hb 440.7 um > reach 405
+GONE clock type root: branch buffer u_tkmclk_L4_c1 leg to u_tkm_SW_tile11__ha 410.3 um > reach 405
+GONE clock type root: branch buffer u_tkmclk_L4_c1 leg to u_tkm_SW_tile12__hb 410.5 um > reach 405
+GONE clock type root: branch buffer u_tkmclk_L4_c2 leg to u_tkm_SW_tile19__ha 418.9 um > reach 405
+GONE clock type root: branch buffer u_tkmclk_L4_c2 leg to u_tkm_SW_tile20__hb 419.1 um > reach 405
+GONE clock type root: branch buffer u_tkmclk_L150_c2 leg to u_tkm_SW_tile22__ha 431.9 um > reach 405
+GONE clock type root: branch buffer u_tkmclk_L150_c2 leg to u_tkm_SW_tile23__hb 432.1 um > reach 405
+GONE clock type root: branch buffer u_tkmclk_L150_c3 leg to u_tkm_SW_tile24__ha 423.2 um > reach 405
+GONE clock type root: branch buffer u_tkmclk_L150_c3 leg to u_tkm_SW_tile25__hb 423.4 um > reach 405
+GONE clock type root: branch buffer u_tkmclk_L4_c3 leg to u_tkm_SW_tile27__ha 427.6 um > reach 405
+GONE clock type root: branch buffer u_tkmclk_L4_c3 leg to u_tkm_SW_tile28__hb 427.8 um > reach 405
+GONE reset type NE_io: cannot uniquely resolve hard-core pin table cores/ot_pdie_serdes_rx__302.4x345.6__d44v_split.json from /srv/opentallas-scratch2/claude/die-hbm-75/wt

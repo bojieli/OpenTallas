@@ -53,6 +53,52 @@ def rect_hits(r, boxes):
     return any(min(r[2], x1) - max(r[0], x0) > 1e-6 and min(r[3], y1) - max(r[1], y0) > 1e-6 for x0, y0, x1, y1 in boxes)
 
 
+
+def nudge_explicit(regs, boxes, w, h, A, B, max_slide=None, step=8.0):
+    """DIE-HBM-75 11-05: re-site an EXPLICIT regs_um chain (threaded / non-straight slots, e.g. HBM C-form) with the
+    least change.  A station whose centre is free stays exactly where it is; a centre inside a core gets candidates =
+    the nearest free box sides + free grid points <= max_slide away.  A DP picks one candidate per moved station that
+    minimises the worst hop touching a MOVED station (hops between two kept stations are the route's own and are not
+    scored), then the total slide.  A / B are the in / out face anchors (pin means).  Returns (regs, worst, max_slide).
+    The plain z-route re-spacing of such a slot stretched hub hops to 780 um on HBM ev74f."""
+    max_slide = MAX_SLIDE if max_slide is None else max_slide
+    man = lambda u, v: abs(u[0] - v[0]) + abs(u[1] - v[1])
+    pts = [tuple(map(float, r)) for r in regs]
+    cand, moved = [], []
+    for q0 in pts:
+        if not inside(q0, boxes):
+            cand.append([(0.0, q0)]); moved.append(False); continue
+        cs = []
+        for x0, y0, x1, y1 in boxes:
+            if x0 < q0[0] < x1 and y0 < q0[1] < y1:
+                for e in ((x0 - .01, q0[1]), (x1 + .01, q0[1]), (q0[0], y0 - .01), (q0[0], y1 + .01)):
+                    if 5.32 <= e[0] <= w - 5.32 and 5.32 <= e[1] <= h - 5.32 and not inside(e, boxes) \
+                            and man(q0, e) <= max_slide:
+                        cs.append((man(q0, e), e))
+        for dx in np.arange(-max_slide, max_slide + .1, step):
+            for dy in np.arange(-max_slide, max_slide + .1, step):
+                e = (q0[0] + dx, q0[1] + dy)
+                if abs(dx) + abs(dy) <= max_slide and 5.32 <= e[0] <= w - 5.32 and 5.32 <= e[1] <= h - 5.32 \
+                        and not inside(e, boxes):
+                    cs.append((abs(dx) + abs(dy), e))
+        if not cs:
+            raise SystemExit(f"explicit station at {q0} has no free point within {max_slide} um")
+        cand.append(cs); moved.append(True)
+    hop = lambda u, v, scored: man(u, v) if scored else 0.0
+    back = [[((hop(A, q, moved[0]), d), None) for d, q in cand[0]]]
+    for j in range(1, len(cand)):
+        sc = moved[j] or moved[j - 1]
+        back.append([min(((max(c[0][0], hop(cand[j - 1][i][1], q, sc)), c[0][1] + d), i) for i, c in enumerate(back[-1]))
+                     for d, q in cand[j]])
+    fin = min(((max(c[0][0], hop(cand[-1][i][1], B, moved[-1])), c[0][1]), i) for i, c in enumerate(back[-1]))
+    idx = [fin[1]]
+    for j in range(len(cand) - 1, 0, -1):
+        idx.append(back[j][idx[-1]][1])
+    idx = idx[::-1]
+    out = [[round(cand[j][i][1][0], 4), round(cand[j][i][1][1], 4)] if moved[j] else list(pts[j]) for j, i in enumerate(idx)]
+    return out, fin[0][0], max(cand[j][i][0] for j, i in enumerate(idx))
+
+
 def main():
     plan, out, ledger_f = sys.argv[1:4]
     raw = json.loads(Path(plan).read_text()); P = S.Plan(raw)
@@ -111,6 +157,12 @@ def main():
                 B = np.mean([inset(po.get(b_) or pi[b_]) for b_ in bits], axis=0)
                 fin = (pi.get(bits[0]) or po[bits[0]])[2]; fout = (po.get(bits[0]) or pi[bits[0]])[2]
                 route = C.zroute(tuple(A), tuple(B), fin, fout); L = C.plen(route)
+                if len(s.get("regs_um") or []) == k:     # explicit chain: keep the route, move only stations in a core
+                    regs, worst, smax = nudge_explicit(s["regs_um"], boxes, w, h, A, B)
+                    s["regs_um"] = regs
+                    rec.update(mode="regs_explicit", max_hop_moved_um=round(worst, 1), max_slide_um=round(smax, 1))
+                    ledger.append(rec)
+                    continue
                 # DP over free candidate points per station: minimise the worst hop (face pin register -> stations ->
                 # face pin register; the faces are registered so the slot's hops are the lane's hops), then total slide
                 hop0 = 0.0
