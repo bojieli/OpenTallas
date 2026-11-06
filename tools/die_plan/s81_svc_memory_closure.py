@@ -66,19 +66,36 @@ def children(form):
 def idx_fit(closed, files, rtl=None):
     """MEM idx fit (v2 only): rename the svc_lo dsdv_idx_rg3 instance to dsdv_idx_rg3_fit and generate that child
     from the dsdv_idx_rg3.sv the kit lists (`files`; sha-checked + proof preconditions in s81_svc_idx_fit).
+    DIE-S81-66 11-05: the chain-end reader dsdv_idx_rg3_nq (svc_lo t7) -> dsdv_idx_rg3_nq_fit + dsdv_idx_rg3_nq_native_fit
+    from the listed dsdv_idx_rg3_nq.sv / dsdv_idx_rg3_nq_native.sv.
     Returns (closed, {child name: text}, macros, receipt) - no children / macros when the bound has no reader."""
     closed, n = IDX.fit_bound(closed)
-    if not n and not re.search(r'^\s*dsdv_idx_rg3_fit #\(', closed, re.M): return closed, {}, {}, None
-    srcs = [f for f in files if Path(f).name == 'dsdv_idx_rg3.sv']
-    if len(srcs) != 1: raise ValueError('idx fit: %d dsdv_idx_rg3.sv in the kit file list' % len(srcs))
-    src = Path(srcs[0]).read_text(); fit = IDX.fit_source(src)
-    kids = {'dsdv_idx_fit_mem.sv': (ROOT / IDX.FIT_MEM).read_text(), 'dsdv_idx_rg3_fit.sv': fit}
-    # the original reader leaves the kit lists when nothing else instantiates it (bound now binds the fit child)
-    users = [f for f in files if f.endswith('.sv') and f != srcs[0] and Path(f).exists()
-             and re.search(r'^\s*dsdv_idx_rg3\s+#\(', Path(f).read_text(), re.M)]
-    if rtl is not None: users = [f for f in users if Path(f).resolve() != Path(rtl).resolve()]
-    return closed, kids, IDX.MACROS, dict(source=srcs[0], source_sha=IDX.sha12(src), fit_sha=IDX.sha12(fit), renamed=n,
-                                          dropped=[] if users else [srcs[0]])
+    kind = IDX.bound_kind(closed)
+    if kind is None: return closed, {}, {}, None
+
+    def one(name):
+        srcs = [f for f in files if Path(f).name == name]
+        if len(srcs) != 1: raise ValueError('idx fit: %d %s in the kit file list' % (len(srcs), name))
+        return srcs[0], Path(srcs[0]).read_text()
+
+    kids = {'dsdv_idx_fit_mem.sv': (ROOT / IDX.FIT_MEM).read_text()}
+    if kind == 'rg3':
+        p, src = one('dsdv_idx_rg3.sv'); fit = IDX.fit_source(src)
+        kids['dsdv_idx_rg3_fit.sv'] = fit; origs = {p: 'dsdv_idx_rg3'}
+    else:
+        p, src = one('dsdv_idx_rg3_nq_native.sv'); fit = IDX.fit_source(src, nq=True)
+        pw, wsrc = one('dsdv_idx_rg3_nq.sv')
+        kids['dsdv_idx_rg3_nq_native_fit.sv'] = fit; kids['dsdv_idx_rg3_nq_fit.sv'] = IDX.fit_nq_wrapper(wsrc)
+        origs = {pw: 'dsdv_idx_rg3_nq', p: 'dsdv_idx_rg3_nq_native'}
+    # an original reader leaves the kit lists when nothing else instantiates it (bound now binds the fit child)
+    dropped = []
+    for o, mod in origs.items():
+        users = [f for f in files if f.endswith('.sv') and f not in origs and Path(f).exists()
+                 and re.search(r'^\s*' + mod + r'\s+#\(', Path(f).read_text(), re.M)]
+        if rtl is not None: users = [f for f in users if Path(f).resolve() != Path(rtl).resolve()]
+        if not users: dropped.append(o)
+    return closed, kids, IDX.MACROS, dict(source=p, source_sha=IDX.sha12(src), fit_sha=IDX.sha12(fit), renamed=n,
+                                          kind=kind, dropped=dropped)
 
 
 REF_GZ = ROOT / 'results/rtl/s81_T7_pmem_bound_cut_0900/native_parent.sv.gz'   # T7 original bound 61c902f1
