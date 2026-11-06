@@ -2464,6 +2464,15 @@
                "evidence": {
                 "type": "string",
                 "minLength": 1
+               },
+               "capture": {
+                "enum": [
+                 "same_edge"
+                ]
+               },
+               "eye_hold_extra_ps": {
+                "type": "number",
+                "exclusiveMinimum": 0
                }
               }
              }
