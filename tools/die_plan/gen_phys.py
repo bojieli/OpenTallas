@@ -2964,6 +2964,13 @@ def declared_rom_bits(rtl_dir):
 # the kit gen lint measures; gen phys raises SYNTH_MEMORY_MAX_BITS to exactly the largest one the kit RTL defines (the
 # same exact-size form as declared_rom_bits), so any other inferred memory above that size still fails.
 DECLARED_FLOP_MEMORIES = {
+    # KV hub_Wi control FIFOs: exact audited production shapes. Inferred mux/
+    # read-pointer-copy heads are part of their cycle contract; no SRAM latency
+    # is introduced. Wider future elaborations still fail the measured limit.
+    "qkd_host_rx_class_admission": 16 * 514,       # iq[16], IR_REPL grouped heads
+    "qkd_host_qm_ingress16_service_debt": 16 * 514, # q[16], RP_REPL paired 8:1 heads
+    "ot_link_afifo": 16 * 514,                    # mem[16], asynchronous/RCOPY head
+    "ot_fdi_join2": 16 * 522,                     # qa 522b / qb 521b, 16 entries
     # KV kv3_hub_Eo / kv3_hub_Wo qkd_seq_xs_s u_q: 40 x 128 Q store FIFO (rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv)
     "ot_qkvd_seq_m_sfifo": 40 * 128,
     # S81 T7 svc_lo_dsdv_svc_rs__t7 u_att.sw (TOK-DS-3 11-02): 32 x 512 score-window FIFO, bound native glue of
