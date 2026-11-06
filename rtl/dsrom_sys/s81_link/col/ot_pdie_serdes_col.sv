@@ -37,6 +37,12 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     input  wire          pma_rck,
     input  wire          pma_lock
 );
+`ifdef OT_S81_RCK_RELAY4
+    // The outer rate matcher keeps its native immediate reset. Its existing
+    // lock guard must hold it reset while the delayed decoder calendar flushes.
+    initial if (LOCKSAFE != 1 || HOLD_EDGES < 64)
+        $error("RCK relay4 requires LOCKSAFE=1 and HOLD_EDGES>=64");
+`endif
     // ---- S81.RESET warm-reset sequencer (LOCKSAFE=1 only; region syn, on pma_rck)
     wire rst_g;
     generate if (LOCKSAFE != 0) begin : g_locksafe
