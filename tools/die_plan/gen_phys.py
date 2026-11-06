@@ -4240,7 +4240,9 @@ def fit_text(t, pins):
     have = present(t)
     miss = {n: d for n, d in pins.items() if n not in have}
     buses, added = {}, sorted(miss)
-    for n, d in miss.items():
+    # Textual timed members can already exist outside the declared bus range.
+    # Visit every physical LEF bit, while adding pin bodies only when missing.
+    for n, d in pins.items():
         m = BUS.match(n)
         if m:
             buses.setdefault(m.group(1), {})[int(m.group(2))] = d
@@ -4250,8 +4252,11 @@ def fit_text(t, pins):
             t = t[:e] + pin_text(n, d) + t[e:]
     for name, bits in sorted(buses.items()):
         g = group(t, "bus", name)
-        body = "".join(pin_text(f"{name}[{i}]", bits[i]) for i in sorted(bits, reverse=True))
+        body = "".join(pin_text(f"{name}[{i}]", bits[i]) for i in sorted(bits, reverse=True)
+                       if f"{name}[{i}]" in miss)
         if not g:
+            if not body:
+                continue
             f, o = max(bits), min(bits)
             e = close_of(t, c.end() - 1)
             ty = f"{name}_busfit"
@@ -4264,6 +4269,8 @@ def fit_text(t, pins):
             raise ValueError(f"bus {name}: no bit range")
         lo, hi = min(f, o, *bits), max(f, o, *bits)
         nf, no = (hi, lo) if f >= o else (lo, hi)
+        if not body and (nf, no) == (f, o):
+            continue
         t = t[:e] + body + t[e:]
         new = f"{name}_busfit"
         t = t[:s] + re.sub(r"\bbus_type\s*:\s*\"?\w+\"?\s*;", f"bus_type : {new};", t[s:], count=1)
@@ -4293,7 +4300,7 @@ def fit(k, out=None):
         if not c or c.group(1) not in macros:
             continue
         ft, added = fit_text(t, macros[c.group(1)])
-        if not added:
+        if ft == t:
             continue
         os.makedirs(out, exist_ok=True)
         fd, tmp = tempfile.mkstemp(dir=out)
