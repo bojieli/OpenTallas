@@ -37,7 +37,8 @@ def test_relocated_evidence_qualifies_without_changing_physical_inputs(tmp_path)
     shutil.rmtree(source)
     shutil.rmtree(tmp_path / "child_resign")
     assert T.coverage(relocated / "child_tt.lib")["verdict"] == "PASS"
-    assert T.coverage(relocated / "child_tt.lib", "flow-other")["verdict"] == "NOT RUN"
+    assert T.coverage(relocated / "child_tt.lib", "flow-other")["verdict"] == "PASS"   # own signed tag (11-06)
+    assert T.coverage(relocated / "child_tt.lib", None)["verdict"] == "NOT RUN"
     assert {p.name: p.read_bytes() for p in relocated.glob("*.lib")} == before
 
 

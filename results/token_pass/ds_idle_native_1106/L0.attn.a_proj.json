@@ -1,0 +1,68 @@
+{
+ "schema": "opentallas.s81_dv.xs_lowering.v1",
+ "op": {
+  "id": "L0.attn.a_proj",
+  "op": "attn.a_proj",
+  "cls": "field",
+  "start": 473.0,
+  "end": 1128.0,
+  "cycles": 655.0,
+  "delta": 27.0,
+  "critical": true
+ },
+ "slice": "u_s_7N",
+ "slice_index": 15,
+ "nseg": 5,
+ "rows_per_slice": 0,
+ "frames": [
+  {
+   "frame": "u_f_7L10",
+   "master": "col_h9_l4_lp_asb_x",
+   "lk": 1170,
+   "rows": [],
+   "phase": null,
+   "note": "idle actual frame: no a_proj rows in selected ownership map"
+  },
+  {
+   "frame": "u_f_7L12",
+   "master": "col_h9_l4_lp_asb_x",
+   "lk": 1170,
+   "rows": [],
+   "phase": null,
+   "note": "idle actual frame: no a_proj rows in selected ownership map"
+  },
+  {
+   "frame": "u_f_7L13",
+   "master": "col_h9_l4_lp_asb_nx",
+   "lk": 1170,
+   "rows": [],
+   "phase": null,
+   "note": "idle actual frame: no a_proj rows in selected ownership map"
+  },
+  {
+   "frame": "u_f_7R10",
+   "master": "col_h9_l4_lp_asb_x",
+   "lk": 1170,
+   "rows": [],
+   "phase": null,
+   "note": "idle actual frame: no a_proj rows in selected ownership map"
+  },
+  {
+   "frame": "u_f_7R12",
+   "master": "col_h9_l4_lp_asb_x",
+   "lk": 1170,
+   "rows": [],
+   "phase": null,
+   "note": "idle actual frame: no a_proj rows in selected ownership map"
+  },
+  {
+   "frame": "u_f_7R13",
+   "master": "col_h9_l4_lp_asb_nx",
+   "lk": 1170,
+   "rows": [],
+   "phase": null,
+   "note": "idle actual frame: no a_proj rows in selected ownership map"
+  }
+ ],
+ "images": "per frame: python3 tools/s81_dv/layer_prog/lower_xs.py gen --frame <inst> --out DIR (element via-maps + il7 cfg banks named <inst>_*, xs pq_phase0 / pq_stream0..3)"
+}

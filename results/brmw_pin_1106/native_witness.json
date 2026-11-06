@@ -1,0 +1,24 @@
+[
+  {
+    "type": "nw",
+    "path": "epyc2:/srv/opentallas-scratch2/claude/hbm-bind-9/g_t11m79f/rtl/hbm_arch_q_hub__q_hub_nw.sv",
+    "sha256": "2758befd5424b2b84f523d69ef1793db7f53f0f4ecd112d0f2ae3656cff4f1bb",
+    "declaration": "wire [25:0] w_u_xl_Q_ctl_q1_bsel;",
+    "producer_connection": ".bsel(w_u_xl_Q_ctl_q1_bsel),",
+    "consumer_connections_before": 2,
+    "consumer_connections_after": "bsel(w_u_xl_Q_ctl_q1_bsel[24:0])",
+    "witness": "actual full source adapter pass; all other statement lines unchanged modulo moved connection order",
+    "full_bind": "Not claimed: retained m79f global bind has unrelated missing p28 ctl reset-leaf EMIT error"
+  },
+  {
+    "type": "ne",
+    "path": "epyc2:/srv/opentallas-scratch2/claude/hbm-bind-9/g_t11m79f/rtl/hbm_arch_q_hub__q_hub_ne.sv",
+    "sha256": "7dfaabcc22d5a775cdf67abc0c474939951c9f166dbe1e3daae2f09d0e9ec017",
+    "declaration": "wire [25:0] w_u_xl_Q_ctl_q1_bsel;",
+    "producer_connection": ".bsel(w_u_xl_Q_ctl_q1_bsel),",
+    "consumer_connections_before": 2,
+    "consumer_connections_after": "bsel(w_u_xl_Q_ctl_q1_bsel[24:0])",
+    "witness": "actual full source adapter pass; all other statement lines unchanged modulo moved connection order",
+    "full_bind": "Not claimed: retained m79f global bind has unrelated missing p28 ctl reset-leaf EMIT error"
+  }
+]

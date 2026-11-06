@@ -364,7 +364,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
          ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None, ring_clock_ports=None,
          landed_clock_inputs=None, edge_clock_latency_ps=None, pad_clock_inputs=None, pad_clock_outputs=None,
-         pad_clock_cdc=None, pad_clock_data_inputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None):
+         pad_clock_cdc=None, pad_clock_data_inputs=None, pad_clock_data_outputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -759,6 +759,12 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                     raise SdcLintError(f"{c}: {cmd}")
                 val = _num(rest[0], "delay") * u
                 k, ps = _eval_obj(ctx, rest[1])
+                if ck in ctx.gclocks or ck in pad_out:
+                    allowed = (c == 'set_output_delay' and ps and ck in pad_out and
+                               ctx.gclocks.get(ck) == [ck] and all(
+                                   (pad_clock_data_outputs or {}).get(p, {}).get('clock') == ck for p in ps))
+                    if not allowed:
+                        err.append(f'pad_clock: generated clock {ck} may time only its declared output data pads')
                 tab = idly if c == "set_input_delay" else odly
                 bitsel = rest[1].startswith("[get_ports") and all(
                     BITSEL.match(x) for x in _words(rest[1][1:-1])[1:][-1].strip("{}").split())
@@ -799,8 +805,10 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         if idly[p] or odly[p]:
             err.append(f"pad_clock: IO delay on clock output {p}" if p in pad_out else
                        f"landing: IO delay on forwarded clock output {p}")
+    native_output_clocks = {row['clock'] for row in (pad_clock_data_outputs or {}).values()
+                            if row.get('clock') in pad_out and gen_src.get(row['clock']) == row['clock']}
     for n in ctx.gclocks:
-        if n in refs or any(n in (a_, b_) for _k, a_, b_ in land_ex):
+        if (n in refs and n not in native_output_clocks) or any(n in (a_, b_) for _k, a_, b_ in land_ex):
             err.append(f"landing: generated clock {n} times a path (IO delay / exception); not the landing form")
     for p in land_l:
         n = clk_src.get(p)
@@ -829,7 +837,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     if pad_l and len(pad_fp) != 1:
         err.append(f"reset pad: {len(pad_fp)} raw-pad false paths (want exactly one, to {pad_l})")
     for ck in refs:
-        if ck not in ctx.clocks:
+        if ck not in ctx.clocks and ck not in native_output_clocks:
             err.append(f"clocks: -clock {ck} is not defined")
     for p in ctx.clock_ports:
         if p not in clk_src:
@@ -917,9 +925,18 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
             if got is None or got[0] != clock or abs(got[1] - row[kind + '_ps']) > EPS:
                 err.append(f'pad_clock: data input {port} {kind} delay must use actual {clock} '
                            f'and declared {row[kind + "_ps"]:g} ps, found {got}')
+    for port, row in (pad_clock_data_outputs or {}).items():
+        clock = row['clock']
+        if port not in ctx.outputs or clock not in pad_out:
+            err.append(f'pad_clock: data output {port} needs an existing output and declared output pad clock')
+        for kind in ('max', 'min'):
+            got = odly[port].get(kind)
+            if got is None or got[0] != clock or abs(got[1] - row[kind + '_ps']) > EPS:
+                err.append(f'pad_clock: data output {port} {kind} delay must use actual {clock} '
+                           f'and declared {row[kind + "_ps"]:g} ps, found {got}')
     full = {"setup": unc_setup_ps, "hold": unc_hold_ps}
     for kk, fv in full.items():
-        for n in ctx.clocks:
+        for n in list(ctx.clocks) + sorted(native_output_clocks):
             v = unc.get((kk, n, None))
             if v is None:
                 err.append(f"uncertainty: no {kk} uncertainty on clock {n}" + (" (hold off)" if kk == "hold" else ""))
@@ -1021,7 +1038,11 @@ def kit_context(P, tn):
                 **({"pad_clock_data_inputs": {
                     row['port']: dict(clock=pin['name'], max_ps=row['max_ps'], min_ps=row['min_ps'])
                     for pin in pad_pins for row in pin.get('data_inputs', [])}}
-                   if any(pin.get('data_inputs') for pin in pad_pins) else {}), **_seam_ctx(P, tn), **_io_hold_ctx(P, tn),
+                   if any(pin.get('data_inputs') for pin in pad_pins) else {}),
+                **({"pad_clock_data_outputs": {
+                    row['port']: dict(clock=pin['name'], max_ps=row['max_ps'], min_ps=row['min_ps'])
+                    for pin in pad_pins for row in pin.get('data_outputs', [])}}
+                   if any(pin.get('data_outputs') for pin in pad_pins) else {}), **_seam_ctx(P, tn), **_io_hold_ctx(P, tn),
                 **({"tap_window_ps": gen_phys.tap_window_ps(P, tn)} if gen_phys.tap_window_ps(P, tn)
                    and not gen_phys.tap_window_port_table(P, tn) else {}),
                 **_tap_window_port_ctx(P, tn),

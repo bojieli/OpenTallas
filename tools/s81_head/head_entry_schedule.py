@@ -23,7 +23,12 @@ def uint(value, bits, name):
     return value
 
 
-def compile_entry(inventory, job, timing):
+def compile_hbc_setup(inventory, job, timing, *, clock_reset_id=None):
+    """Compile only the three HBC setup records from their measured ingress.
+
+    CSR/context/activation dates are downstream of this admission and are not
+    prerequisites. No CSR, RUN or START authority is emitted here.
+    """
     if inventory.get("TP") != 4 or inventory.get("head_dies") != 4:
         raise ValueError("selected four-rank/four-head inventory required")
     # The selected model enumerates layer stages0..S-1 and a separate head
@@ -36,8 +41,7 @@ def compile_entry(inventory, job, timing):
            (("tid",16),("user",10),("position",21),("token",21),("epoch",32),("programme",64))}
     t = {k: uint(timing[k], 48, k) for k in
          ("reset_deassert_edge", "host_counter_zero_edge", "link_ready_edge", "peer_to_hbc_input",
-          "peer_frame_period", "peer_launch_modulus", "peer_launch_residue", "peer_to_ctl_settled",
-          "commit_to_context_valid", "ctl_start_offset")}
+          "peer_frame_period", "peer_launch_modulus", "peer_launch_residue")}
     period, modulus = t["peer_frame_period"], t["peer_launch_modulus"]
     if not period or not modulus or period % modulus or t["peer_launch_residue"] >= modulus:
         raise ValueError("frame period must preserve the measured launch phase class")
@@ -67,6 +71,10 @@ def compile_entry(inventory, job, timing):
         raise ValueError('variable HOST book and namespace alternatives are unadopted; retain current417 ABI')
     identity = int.from_bytes(hashlib.sha256(json.dumps(dict(timing=timing, stage=stage, rank=rank),
                                                        sort_keys=True).encode()).digest()[:8], "little") or 1
+    if clock_reset_id is not None:
+        identity = uint(clock_reset_id, 64, 'explicit clock/reset identity')
+        if not identity:
+            raise ValueError('explicit clock/reset identity must be nonzero')
     # The affine book is HBC1's existing context format. HOST_FRAMES1 does
     # not execute its layer HBE words; keep the legacy417 ABI by default.
     # A variable HOST book is an explicit separate candidate, never inferred
@@ -91,6 +99,31 @@ def compile_entry(inventory, job, timing):
               dict(lane=0, edge=launch+4, frame=frame(body), kind="HBC_BODY"),
               dict(lane=0, edge=zero+commit-t["peer_to_hbc_input"],
                    frame=frame(envelope(1,1,0,commit)), kind="HBC_COMMIT")]
+    params = dict(LOCAL_STAGE=stage, LOCAL_RANK=rank, PHASE_BOUND=1, CLOCK_RESET_ID=identity,
+                  BOOT_HEADER_EDGE=header, BOOT_COMMIT_EDGE=commit)
+    return dict(schema='opentallas.head.hbc_setup.v1', scope='HBC_SETUP_ONLY',
+                host_params=params, frames=frames, context=ctx, timing=t,
+                hbc_book_scope='legacy417 HOST affine book; no activation data',
+                authority=dict(CSR=False, GO=False, START=False),
+                added_data_cycles=0, full_head_token=False,
+                production_transport_qualified=False,
+                missing_release_gates=['actual HBC context admission', 'successful CSR transport and apply',
+                                       'actual vector residence before issue', 'real-view timing', 'whole-head token'])
+
+
+def compile_entry(inventory, job, timing):
+    setup = compile_hbc_setup(inventory, job, timing)
+    params = setup['host_params']
+    stage, rank = params['LOCAL_STAGE'], params['LOCAL_RANK']
+    ctx = setup['context']
+    t = dict(setup['timing'])
+    for key in ('peer_to_ctl_settled', 'commit_to_context_valid', 'ctl_start_offset'):
+        t[key] = uint(timing[key], 48, key)
+    period, modulus = t['peer_frame_period'], t['peer_launch_modulus']
+    zero, commit = t['host_counter_zero_edge'], params['BOOT_COMMIT_EDGE']
+    def slot(edge):
+        return edge + (t['peer_launch_residue'] - edge) % modulus
+    frames = setup['frames']
     context_edge = zero + commit + t["commit_to_context_valid"]
     next_csr = slot(context_edge + period)
     values = {0:uint(job["plen"],21,"plen"),1:uint(job["glen"],21,"glen"),2:rank,
@@ -152,8 +185,6 @@ def compile_entry(inventory, job, timing):
         issue=start+t['ctl_start_offset']+job['issue_offset']
     else:
         resident=start=issue=None
-    params=dict(LOCAL_STAGE=stage,LOCAL_RANK=rank,PHASE_BOUND=1,CLOCK_RESET_ID=identity,
-                BOOT_HEADER_EDGE=header,BOOT_COMMIT_EDGE=commit)
     return dict(schema="opentallas.head.provider_entry.v1", scope="CURRENT_PROVIDER_ENTRY_ONLY",
                 full_head_token=False, production_transport_qualified=timing.get("scope")=="CURRENT_DIE_TRANSPORT",
                 authority=dict(start_producer="@die.start", start_global_edge=start,

@@ -1,0 +1,72 @@
+{
+  "scope": "Root-authorized frozen11-01 LP reset-origin candidate; boundednativefirstdispatch only",
+  "rtl_source_capability": "204f8dac0c9",
+  "original_cache_readonly": "/home/ubuntu/scratch-root/claude/tok-ds-2/build_v1c3/obj",
+  "source_receipt": "/srv/opentallas-scratch2/claude/codex-ds-img2-service-1105/frozen_all_LP_epoch_receipts.json",
+  "pin_cycles_added": 0,
+  "parents": [
+    {
+      "station": "s_0N",
+      "source": "/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/s81p_dsdv_slice_lepw_mu_LP__t2.sv",
+      "candidate": "/srv/opentallas-scratch2/claude/codex-ds-native-origin-1106/parents/s81p_dsdv_slice_lepw_mu_LP__t2.sv",
+      "KN": 5,
+      "NK": 3,
+      "lanes": 4,
+      "sha": "07c9873840f7ad0f13c43678d614c6604ae545b66b84125062f72408d4901a60"
+    },
+    {
+      "station": "s_0S",
+      "source": "/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/s81p_dsdv_slice_lepw_mus_LP__t2.sv",
+      "candidate": "/srv/opentallas-scratch2/claude/codex-ds-native-origin-1106/parents/s81p_dsdv_slice_lepw_mus_LP__t2.sv",
+      "KN": 5,
+      "NK": 3,
+      "lanes": 4,
+      "sha": "b8b1498006ad1fd99ae2b88ee277b09a091468aa65916aa24a06c515d5bd8d27"
+    },
+    {
+      "station": "s_7N",
+      "source": "/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/s81p_dsdv_slice_lepe_mu_LP__t2.sv",
+      "candidate": "/srv/opentallas-scratch2/claude/codex-ds-native-origin-1106/parents/s81p_dsdv_slice_lepe_mu_LP__t2.sv",
+      "KN": 5,
+      "NK": 3,
+      "lanes": 4,
+      "sha": "cd27e1f3dd0def14651bbb992e88fac3cffe391b2d05b038bfc6372d966edbb7"
+    },
+    {
+      "station": "s_7S",
+      "source": "/srv/opentallas-scratch2/claude/tok-ds-2/v0copy/rtl/s81p_dsdv_slice_lepe_nh_mus_LP__t1.sv",
+      "candidate": "/srv/opentallas-scratch2/claude/codex-ds-native-origin-1106/parents/s81p_dsdv_slice_lepe_nh_mus_LP__t1.sv",
+      "KN": 6,
+      "NK": 2,
+      "lanes": 2,
+      "sha": "b472f4c7315003b2ce5f96025184170e1e97728f06163d684dfb32f9c53e5f82"
+    }
+  ],
+  "children": [
+    {
+      "prefix": "Vs81p_dsdv_slice_lepe_nh_mus_LP___05Ft1_c",
+      "args": "/srv/opentallas-scratch2/claude/codex-ds-native-origin-1106/Vs81p_dsdv_slice_lepe_nh_mus_LP___05Ft1_c.f",
+      "archive": "libs81p_dsdv_slice_lepe_nh_mus_LP___05Ft1_c.a",
+      "sv": "s81p_dsdv_slice_lepe_nh_mus_LP___05Ft1_c.sv"
+    },
+    {
+      "prefix": "Vs81p_dsdv_slice_lepw_mu_LP___05Ft2_9",
+      "args": "/srv/opentallas-scratch2/claude/codex-ds-native-origin-1106/Vs81p_dsdv_slice_lepw_mu_LP___05Ft2_9.f",
+      "archive": "libs81p_dsdv_slice_lepw_mu_LP___05Ft2_9.a",
+      "sv": "s81p_dsdv_slice_lepw_mu_LP___05Ft2_9.sv"
+    },
+    {
+      "prefix": "Vs81p_dsdv_slice_lepw_mus_LP___05Ft2_6",
+      "args": "/srv/opentallas-scratch2/claude/codex-ds-native-origin-1106/Vs81p_dsdv_slice_lepw_mus_LP___05Ft2_6.f",
+      "archive": "libs81p_dsdv_slice_lepw_mus_LP___05Ft2_6.a",
+      "sv": "s81p_dsdv_slice_lepw_mus_LP___05Ft2_6.sv"
+    }
+  ],
+  "protected_libraries_reused": 392,
+  "clock_fs": 833000,
+  "top_inlined_parent": "s_7N_LP",
+  "current_main": false,
+  "physical_release_adopted": false,
+  "diagnostic_stop": "First observed PROG VO after real native KS, then one edge for existing summary;11000 failbudget",
+  "candidate_tb_sha256": "e7d6a2d35977a70d8bfb11228115efbd003acb60b010935796fc3154460d925a"
+}

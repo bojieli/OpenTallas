@@ -1,0 +1,36 @@
+PHASE op=0 first_output=54
+PHASE op=1 first_output=54
+PHASE op=2 first_output=54
+PHASE op=3 first_output=54
+PHASE op=4 first_output=54
+PHASE op=5 first_output=54
+PHASE op=6 first_output=54
+PHASE op=7 first_output=54
+PHASE op=8 first_output=54
+PHASE op=9 first_output=54
+PHASE op=10 first_output=54
+PHASE op=11 first_output=54
+PHASE op=12 first_output=54
+PHASE op=13 first_output=54
+PHASE op=14 first_output=54
+PHASE op=15 first_output=54
+PHASE op=16 first_output=54
+PHASE op=17 first_output=54
+PHASE op=18 first_output=54
+PHASE op=19 first_output=54
+PHASE op=20 first_output=54
+PHASE op=21 first_output=54
+PHASE op=22 first_output=54
+PHASE op=23 first_output=54
+PHASE op=24 first_output=54
+PHASE op=25 first_output=54
+PHASE op=26 first_output=54
+PHASE op=27 first_output=54
+PHASE op=28 first_output=54
+PHASE op=29 first_output=54
+PHASE op=30 first_output=54
+SU_LANE PASS lane=288 quarter=2 outputs=1984 checks=3968 first_output=48 issue_to_output=32 MLAT=5 ALAT=3 LEAF=1
+- /srv/opentallas-scratch2/claude/codex-hbm-su-opf4-1106/tb_indirect.sv:149: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 81us; walltime 3.308 s; speed 24.546 us/s
+- Verilator: cpu 3.308 s on 1 threads; allocated 17 MB

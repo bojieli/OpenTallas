@@ -1,0 +1,85 @@
+{
+ "schema": "opentallas.s81.native_slice_images.v1",
+ "slice": "u_s_7N",
+ "op": "L0.attn.a_proj",
+ "status": "PARTIAL",
+ "selected_slice_source": {
+  "schema": "opentallas.s81.selected_slice_source.v1",
+  "slice": "u_s_7N",
+  "die_master": "ot_s81sl_slice_lepe_mab_tp_mu_72",
+  "wrapper_chain": [
+   "ot_s81sl_slice_lepe_mab_tp_mu_72",
+   "ot_s81sl_slice_c1x_k8_cap5r_lp_e6"
+  ],
+  "xg": "ot_s81sl_xgt_xo",
+  "ring": "ot_s81sl_rstopt_xo",
+  "streamer": "ot_s81sl_xs4",
+  "capture": "ot_s81sl_capc5r_e6",
+  "xr": "ot_s81sl_xrt1",
+  "xr_source_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+  "selected_hb": null,
+  "streamer_added_capture_edges": 1,
+  "source_sha256": {
+   "idle_source_selection.json": "4d519e8d773fcdd51d54b68ce13b993058ac6768eb6eb311d2eaebc7bb10785c",
+   "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepe_mab_tp_mu_72.sv": "2079a524d93271886c12d34f0cfc9afdd8c8ff08a04a8368769460af6745b502",
+   "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv": "38399616e10125726bc3f645e9a6028eb7ccae3a06a4b0c9db93a683d54e80ca",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "59a53960b2c66851b14fbfcc615e451d380774ac483f2987a5f806abeb0cffa9",
+   "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+   "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv": "483557d65447ed7ff6763331c5d42bf139574fd9bd651ed4e6a87556e68a0b9a"
+  },
+  "source_root": "/srv/opentallas-scratch2/claude/codex-ds-idle-source-1106/source",
+  "explicit_source_root": true,
+  "physical_binding_qualified": false,
+  "qualification": "SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required",
+  "selected_asbuilt_manifest": "idle_source_selection.json",
+  "resolved_module_sources": {
+   "ot_s81sl_slice_lepe_mab_tp_mu_72": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepe_mab_tp_mu_72.sv",
+   "ot_s81sl_slice_c1x_k8_cap5r_lp_e6": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv",
+   "ot_s81sl_xrt1": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+   "ot_s81sl_xgt_xo": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+   "ot_s81sl_xs4": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+   "ot_s81sl_rstopt_xo": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+   "ot_s81sl_capc5r_e6": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv"
+  }
+ },
+ "lifetime_qualified": false,
+ "sealed_programme_held": true,
+ "native_rows": 0,
+ "issuer_commands_emitted": false,
+ "idle_actual_slice": true,
+ "idle_actual_frames": [
+  {
+   "frame": "u_f_7L10",
+   "master": "col_h9_l4_lp_asb_x",
+   "rows": []
+  },
+  {
+   "frame": "u_f_7L12",
+   "master": "col_h9_l4_lp_asb_x",
+   "rows": []
+  },
+  {
+   "frame": "u_f_7L13",
+   "master": "col_h9_l4_lp_asb_nx",
+   "rows": []
+  },
+  {
+   "frame": "u_f_7R10",
+   "master": "col_h9_l4_lp_asb_x",
+   "rows": []
+  },
+  {
+   "frame": "u_f_7R12",
+   "master": "col_h9_l4_lp_asb_x",
+   "rows": []
+  },
+  {
+   "frame": "u_f_7R13",
+   "master": "col_h9_l4_lp_asb_nx",
+   "rows": []
+  }
+ ],
+ "qualification": "zero-owner slice only; no native commands, frame weights or layer retirement qualified"
+}

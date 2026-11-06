@@ -1,0 +1,465 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `p_m_bit.ys' --
+
+1. Executing Verilog-2005 frontend: d_m_bit.vh
+Parsing Verilog input from `d_m_bit.vh' to AST representation.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: blk.v
+Parsing Verilog input from `blk.v' to AST representation.
+Generating RTLIL representation for module `\old_blk'.
+Generating RTLIL representation for module `\new_blk'.
+Generating RTLIL representation for module `\miter'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \new_blk
+Used module:     \old_blk
+
+3.2. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \new_blk
+Used module:     \old_blk
+Removed 0 unused modules.
+Mapping positional arguments of cell miter.n (new_blk).
+Mapping positional arguments of cell miter.o (old_blk).
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$blk.v:14$4 in module new_blk.
+Marked 1 switch rules as full_case in process $proc$blk.v:4$1 in module old_blk.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 2 redundant assignments.
+Promoted 2 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rcp7 in `\new_blk.$proc$blk.v:14$4'.
+Found async reset \rcp7 in `\old_blk.$proc$blk.v:4$1'.
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\new_blk.$proc$blk.v:19$6'.
+Creating decoders for process `\new_blk.$proc$blk.v:14$4'.
+     1/1: $0\_229667_[0:0]
+Creating decoders for process `\old_blk.$proc$blk.v:9$3'.
+Creating decoders for process `\old_blk.$proc$blk.v:4$1'.
+     1/1: $0\_229667_[18:0]
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\new_blk.\_229719_' using process `\new_blk.$proc$blk.v:19$6'.
+  created $dff cell `$procdff$10' with positive edge clock.
+Creating register for signal `\new_blk.\_229667_' using process `\new_blk.$proc$blk.v:14$4'.
+  created $adff cell `$procdff$15' with positive edge clock and positive level reset.
+Creating register for signal `\old_blk.\_229719_' using process `\old_blk.$proc$blk.v:9$3'.
+  created $dff cell `$procdff$16' with positive edge clock.
+Creating register for signal `\old_blk.\_229667_' using process `\old_blk.$proc$blk.v:4$1'.
+  created $adff cell `$procdff$21' with positive edge clock and positive level reset.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `new_blk.$proc$blk.v:19$6'.
+Removing empty process `new_blk.$proc$blk.v:14$4'.
+Removing empty process `old_blk.$proc$blk.v:9$3'.
+Removing empty process `old_blk.$proc$blk.v:4$1'.
+Cleaned up 0 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+Optimizing module new_blk.
+<suppressed ~2 debug messages>
+Optimizing module old_blk.
+<suppressed ~2 debug messages>
+
+5. Executing ASYNC2SYNC pass.
+Replacing new_blk.$procdff$15 ($adff): ARST=\rcp7, D=\adv_x, Q=\_229667_
+Replacing old_blk.$procdff$21 ($adff): ARST=\rcp7, D={ \adv_x \adv_x \adv_x \adv_x \adv_x \adv_x \adv_x \adv_x \adv_x \adv_x \adv_x \adv_x \adv_x \adv_x \adv_x \adv_x \adv_x \adv_x \adv_x }, Q=\_229667_
+
+6. Executing FLATTEN pass (flatten design).
+Deleting now unused module new_blk.
+Deleting now unused module old_blk.
+<suppressed ~2 debug messages>
+
+7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 4 unused cells and 11 unused wires.
+<suppressed ~5 debug messages>
+
+8. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+No constraints for initial state found.
+
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 7:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 8:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 9:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 10:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 11:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 12:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 13:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 14:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 15:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 16:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 17:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 18:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 19:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 20:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 21:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 22:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 23:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 24:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 25:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 26:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 27:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 28:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 29:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+Setting up time step 30:
+Final constraint equation: { } = { }
+Imported 11 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+Import show expression: \take_x
+Import show expression: \adv_x
+Import show expression: \rcp7
+Import show expression: \clk_issue
+
+Solving problem with 14873 variables and 41141 clauses..
+SAT proof finished - model found: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Time Signal Name                                                Dec       Hex                                Bin
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+  init $flatten\n.$auto$async2sync.cc:253:execute$22                0         0                                  0
+  init $flatten\o.$auto$async2sync.cc:253:execute$24                0         0                0000000000000000000
+  init \n._229719_                                                  1         1                                  1
+  init \o._229719_                                                  0         0    0000000000000000000000000000000
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+     1 \adv_x                                                       0         0                                  0
+     1 \clk_issue                                                   0         0                                  0
+     1 \rcp7                                                        0         0                                  0
+     1 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+     2 \adv_x                                                       0         0                                  0
+     2 \clk_issue                                                   0         0                                  0
+     2 \rcp7                                                        0         0                                  0
+     2 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+     3 \adv_x                                                       0         0                                  0
+     3 \clk_issue                                                   0         0                                  0
+     3 \rcp7                                                        0         0                                  0
+     3 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+     4 \adv_x                                                       0         0                                  0
+     4 \clk_issue                                                   0         0                                  0
+     4 \rcp7                                                        0         0                                  0
+     4 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+     5 \adv_x                                                       1         1                                  1
+     5 \clk_issue                                                   0         0                                  0
+     5 \rcp7                                                        0         0                                  0
+     5 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+     6 \adv_x                                                       1         1                                  1
+     6 \clk_issue                                                   0         0                                  0
+     6 \rcp7                                                        1         1                                  1
+     6 \take_x                                                      1         1                                  1
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+     7 \adv_x                                                       0         0                                  0
+     7 \clk_issue                                                   0         0                                  0
+     7 \rcp7                                                        1         1                                  1
+     7 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+     8 \adv_x                                                       0         0                                  0
+     8 \clk_issue                                                   0         0                                  0
+     8 \rcp7                                                        0         0                                  0
+     8 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+     9 \adv_x                                                       1         1                                  1
+     9 \clk_issue                                                   0         0                                  0
+     9 \rcp7                                                        1         1                                  1
+     9 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    10 \adv_x                                                       0         0                                  0
+    10 \clk_issue                                                   0         0                                  0
+    10 \rcp7                                                        0         0                                  0
+    10 \take_x                                                      1         1                                  1
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    11 \adv_x                                                       1         1                                  1
+    11 \clk_issue                                                   0         0                                  0
+    11 \rcp7                                                        1         1                                  1
+    11 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    12 \adv_x                                                       0         0                                  0
+    12 \clk_issue                                                   0         0                                  0
+    12 \rcp7                                                        1         1                                  1
+    12 \take_x                                                      1         1                                  1
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    13 \adv_x                                                       0         0                                  0
+    13 \clk_issue                                                   0         0                                  0
+    13 \rcp7                                                        1         1                                  1
+    13 \take_x                                                      1         1                                  1
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    14 \adv_x                                                       0         0                                  0
+    14 \clk_issue                                                   0         0                                  0
+    14 \rcp7                                                        1         1                                  1
+    14 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    15 \adv_x                                                       1         1                                  1
+    15 \clk_issue                                                   0         0                                  0
+    15 \rcp7                                                        1         1                                  1
+    15 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    16 \adv_x                                                       1         1                                  1
+    16 \clk_issue                                                   0         0                                  0
+    16 \rcp7                                                        1         1                                  1
+    16 \take_x                                                      1         1                                  1
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    17 \adv_x                                                       1         1                                  1
+    17 \clk_issue                                                   0         0                                  0
+    17 \rcp7                                                        1         1                                  1
+    17 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    18 \adv_x                                                       1         1                                  1
+    18 \clk_issue                                                   0         0                                  0
+    18 \rcp7                                                        1         1                                  1
+    18 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    19 \adv_x                                                       1         1                                  1
+    19 \clk_issue                                                   0         0                                  0
+    19 \rcp7                                                        1         1                                  1
+    19 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    20 \adv_x                                                       0         0                                  0
+    20 \clk_issue                                                   0         0                                  0
+    20 \rcp7                                                        1         1                                  1
+    20 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    21 \adv_x                                                       0         0                                  0
+    21 \clk_issue                                                   0         0                                  0
+    21 \rcp7                                                        1         1                                  1
+    21 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    22 \adv_x                                                       1         1                                  1
+    22 \clk_issue                                                   0         0                                  0
+    22 \rcp7                                                        1         1                                  1
+    22 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    23 \adv_x                                                       0         0                                  0
+    23 \clk_issue                                                   0         0                                  0
+    23 \rcp7                                                        1         1                                  1
+    23 \take_x                                                      1         1                                  1
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    24 \adv_x                                                       1         1                                  1
+    24 \clk_issue                                                   0         0                                  0
+    24 \rcp7                                                        1         1                                  1
+    24 \take_x                                                      1         1                                  1
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    25 \adv_x                                                       0         0                                  0
+    25 \clk_issue                                                   0         0                                  0
+    25 \rcp7                                                        1         1                                  1
+    25 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    26 \adv_x                                                       0         0                                  0
+    26 \clk_issue                                                   0         0                                  0
+    26 \rcp7                                                        1         1                                  1
+    26 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    27 \adv_x                                                       0         0                                  0
+    27 \clk_issue                                                   0         0                                  0
+    27 \rcp7                                                        1         1                                  1
+    27 \take_x                                                      0         0                                  0
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    28 \adv_x                                                       0         0                                  0
+    28 \clk_issue                                                   0         0                                  0
+    28 \rcp7                                                        1         1                                  1
+    28 \take_x                                                      1         1                                  1
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    29 \adv_x                                                       1         1                                  1
+    29 \clk_issue                                                   0         0                                  0
+    29 \rcp7                                                        1         1                                  1
+    29 \take_x                                                      1         1                                  1
+  ---- -------------------------------------------------- ----------- --------- ----------------------------------
+    30 \adv_x                                                       0         0                                  0
+    30 \clk_issue                                                   0         0                                  0
+    30 \rcp7                                                        1         1                                  1
+    30 \take_x                                                      0         0                                  0
+
+ERROR: Called with -verify and proof did fail!

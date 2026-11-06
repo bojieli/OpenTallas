@@ -1,0 +1,178 @@
+VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+UNITS
+    DATABASE MICRONS 1000 ;
+END UNITS
+
+MACRO sle_cland_w2_e_200
+  FOREIGN sle_cland_w2_e_200 0 0 ;
+  CLASS BLOCK ;
+  SIZE 23.76 BY 30.24 ;
+  PIN clk
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 13.824 0.084 13.848 ;
+    END
+  END clk
+  PIN d[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  23.676 14.688 23.76 14.712 ;
+    END
+  END d[0]
+  PIN d[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  23.676 15.552 23.76 15.576 ;
+    END
+  END d[1]
+  PIN fault
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 14.688 0.084 14.712 ;
+    END
+  END fault
+  PIN fclk
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  23.676 14.976 23.76 15 ;
+    END
+  END fclk
+  PIN q[0]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 13.536 0.084 13.56 ;
+    END
+  END q[0]
+  PIN q[1]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 16.704 0.084 16.728 ;
+    END
+  END q[1]
+  PIN ready
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 14.4 0.084 14.424 ;
+    END
+  END ready
+  PIN rst_n
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 14.112 0.084 14.136 ;
+    END
+  END rst_n
+  PIN strap_k[0]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 14.976 0.084 15 ;
+    END
+  END strap_k[0]
+  PIN strap_k[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 15.264 0.084 15.288 ;
+    END
+  END strap_k[1]
+  PIN strap_k[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 15.552 0.084 15.576 ;
+    END
+  END strap_k[2]
+  PIN strap_k[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 15.84 0.084 15.864 ;
+    END
+  END strap_k[3]
+  PIN strap_k[4]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 16.128 0.084 16.152 ;
+    END
+  END strap_k[4]
+  PIN strap_k[5]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  0 16.416 0.084 16.44 ;
+    END
+  END strap_k[5]
+  PIN t_rst_n
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT  23.676 15.264 23.76 15.288 ;
+    END
+  END t_rst_n
+  PIN VDD
+    DIRECTION INOUT ;
+    USE POWER ;
+    PORT
+      LAYER M5 ;
+        RECT  15.156 4.311 15.276 25.929 ;
+        RECT  10.836 4.311 10.956 25.929 ;
+        RECT  6.516 4.311 6.636 25.929 ;
+    END
+  END VDD
+  PIN VSS
+    DIRECTION INOUT ;
+    USE GROUND ;
+    PORT
+      LAYER M5 ;
+        RECT  19.284 4.297 19.404 25.943 ;
+        RECT  14.964 4.297 15.084 25.943 ;
+        RECT  10.644 4.297 10.764 25.943 ;
+        RECT  6.324 4.297 6.444 25.943 ;
+    END
+  END VSS
+  OBS
+    LAYER RVTN ;
+     RECT  0 4.297 23.76 25.943 ;
+    LAYER RVTP ;
+     RECT  0 4.297 23.76 25.943 ;
+    LAYER M1 ;
+     RECT  0 4.297 23.76 25.943 ;
+    LAYER M2 ;
+     RECT  0 4.297 23.76 25.943 ;
+    LAYER M3 ;
+     RECT  0 4.297 23.76 25.943 ;
+    LAYER M4 ;
+     RECT  0 4.297 23.76 25.943 ;
+    LAYER M5 ;
+     RECT  0 4.297 23.76 25.943 ;
+  END
+END sle_cland_w2_e_200
+END LIBRARY

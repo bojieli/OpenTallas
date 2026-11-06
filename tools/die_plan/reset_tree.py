@@ -2035,11 +2035,60 @@ proc rtr_reset_equiv {net parity seen} {
 """
 
 
-def tcl_text(T, native_paths=None):
+def unused_bootstrap_placements(relays, text, module):
+    """Physical inventory of final-wrapper BOOT leaves with no RTL consumer.
+
+    Only declaration plus this exact relay's own Q connection is admitted.
+    Aliases, output exports, another consumer or an ambiguous cell retain it.
+    The RTL/tree/release table is unchanged; synthesis has no physical cell for
+    a source-dead leaf, so it must not be a required placement point.
+    """
+    import hashlib
+    clean = re.sub(r"//[^\n]*|/\*.*?\*/", "", text, flags=re.S)
+    bodies = re.findall(r"\bmodule\s+" + re.escape(module) + r"\b.*?\bendmodule\b", clean, re.S)
+    if len(bodies) != 1:
+        raise ResetError('unused BOOT inventory requires one exact final wrapper module')
+    body = bodies[0]
+    rows = []
+    for relay in relays:
+        if relay.get('role') != 'bootstrap_transport' or not relay['name'].endswith('_b'):
+            continue
+        name, q = relay['name'], relay['q']
+        if not re.fullmatch(r'rst_boot_t[0-9]+', q):
+            continue
+        cells = re.findall(r'\bot_dp_rrelay\s+' + re.escape(name) + r'\s*\(([^;]+)\);', body)
+        pins = dict(re.findall(r'\.(\w+)\(\s*([^()]+?)\s*\)', cells[0])) if len(cells) == 1 else {}
+        count = len(re.findall(r'\b' + re.escape(q) + r'\b', body))
+        declaration = len(re.findall(r'\bwire\s+' + re.escape(q) + r'\s*;', body)) == 1
+        dead = (len(cells) == 1 and pins == dict(clk='clk', d=relay['d'], q=q)
+                and declaration and count == 2)
+        rows.append(dict(instance=name, q=q, d=relay['d'], occurrences=count,
+                         exact_declaration=declaration, source_dead=dead))
+    return dict(schema='opentallas.reset_source_live_inventory.v1', module=module,
+                wrapper_sha256=hashlib.sha256(text.encode()).hexdigest(), leaves=rows,
+                omitted=[x['instance'] for x in rows if x['source_dead']],
+                method='exact source declaration + own Q only; every consumer/alias/export retains placement')
+
+
+def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None, unused_bootstrap=()):
+    if unused_bootstrap and (native_paths is not None or native_nodes is not None or native_sites is not None):
+        raise ResetError("source-live omission cannot change a captured native reset contract")
+    if native_paths is not None and (T.get("outs") or T.get("core_resets")) and native_nodes is None:
+        raise ResetError("native reset exports require verified physical nodes; no implicit output/core rewiring")
+    if native_nodes is not None and native_paths is None:
+        raise ResetError("native reset placement nodes require exact verified hierarchy paths")
     ent = "u_rst_root" if T["entry"] == "sync" else "u_rst_in"
+    root_xy = (native_sites or {}).get(ent, T['root'])
     t = [TCL_HEAD.replace("REACH", f"{T['reach_um']:g} um"),
-         f"rtr_place rst_root_n {{*{ent}[./]*}} {T['root'][0]:.3f} {T['root'][1]:.3f} rentry"]
+         f"rtr_place rst_root_n {{*{ent}[./]*}} {root_xy[0]:.3f} {root_xy[1]:.3f} rentry"]
     rel = start_relays(T) if T.get("start") else [dict(r, dlab=r["d"]) for r in T["relays"]]
+    omitted = set(unused_bootstrap)
+    eligible = {r['name'] for r in rel if r.get('role') == 'bootstrap_transport' and r['name'].endswith('_b')}
+    if omitted - eligible:
+        raise ResetError('unused physical inventory can omit only audited BOOT leaves')
+    if omitted:
+        rel = [r for r in rel if r['name'] not in omitted]
+        t.append('puts {OT_RESET_SOURCE_DEAD_BOOTSTRAP ' + str(len(omitted)) + ' leaves: ' + ' '.join(sorted(omitted)) + '}')
     if T.get("relay_driver"):
         specs = []
         if T["entry"] != "sync":
@@ -2065,20 +2114,22 @@ def tcl_text(T, native_paths=None):
               "}"]
     if T.get("start"):
         rent = "u_run_root" if T["entry"] == "sync" else "u_run_in"
-        t.append(f"rtr_place run_root {{*{rent}[./]*}} {T['start_in'][0]:.3f} {T['start_in'][1]:.3f} sentry")
+        run_xy = (native_sites or {}).get(rent, T['start_in'])
+        t.append(f"rtr_place run_root {{*{rent}[./]*}} {run_xy[0]:.3f} {run_xy[1]:.3f} sentry")
     oq = out_relays(T)
-    for r in rel:
-        t.append(f"rtr_place {r['q']} {{*{r['name']}[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} rrl:{r['kind']}{r['depth']}")
-        if r["q"] in oq:
+    for r in (native_nodes if native_nodes is not None else rel):
+        place = "rtr_place_opt" if r.get("optional") else "rtr_place"
+        t.append(f"{place} {r['q']} {{*{r['name']}[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} rrl:{r['kind']}{r['depth']}")
+        if native_nodes is None and r["q"] in oq:
             # the out relay's tap-net copy (rtl_lines): placed beside it when synthesis kept it (it has loads)
             t.append(f"rtr_place_opt {r['q']}:copy {{*{r['name']}_t[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} "
                      f"rrl:{r['kind']}{r['depth']}c")
-    if T.get("core_resets"):
+    if T.get("core_resets") and native_nodes is None:
         terminals = " ".join(r["q"] for r in T["relays"] if r["depth"] == T["depth"])
         t += ["set rtr_terminal_qnets {}", f"foreach key {{{terminals}}} {{",
               "  if {[dict exists $rtr_qnets $key]} { dict set rtr_terminal_qnets [[dict get $rtr_qnets $key] getName] [dict get $rtr_qpol $key] }",
               "}", CORE_RESET_EQ_TCL]
-    for c in T.get("core_resets", []):
+    for c in (T.get("core_resets", []) if native_nodes is None else []):
         q = f"rst_n_t{c['tap']}"
         inst, pin = c["inst"], c["pin"]
         # ODB getName escapes brackets (u_core.u.g_pp\\[0\\].u_pair); match on the plain Verilog form (hd_lep0N).
@@ -2105,8 +2156,12 @@ def tcl_text(T, native_paths=None):
               f"  dict set rtr_at core:{c['tap']} [list [expr {{round({c['pin_um'][0]:.5f} * $ff_dbu)}}] [expr {{round({c['pin_um'][1]:.5f} * $ff_dbu)}}]]",
               f"  puts {{OT_RESET_CORE {inst}.{pin} <- {q} depth {T['depth']}}}",
               "}"]
-    edges = " ".join(f"{r['q']} {r['d']}" for r in rel)
-    edges += " " + " ".join(f"core:{c['tap']} rst_n_t{c['tap']}" for c in T.get("core_resets", []))
+    edges = " ".join(f"{r['q']} {r['d']}" for r in (native_nodes if native_nodes is not None else rel))
+    if native_nodes is None:
+        edges += " " + " ".join(f"core:{c['tap']} rst_n_t{c['tap']}" for c in T.get("core_resets", []))
+    else:
+        edges += " " + " ".join(f"{r['q']} {r['run']}" for r in native_nodes if r.get('run'))
+        t.append("# NATIVE RESET: core connections remain exactly as bound; no core rewiring or claimed core-hop check.")
     t += ["close $rtr_fh",
           "# placed hop check (driver relay -> relay, Manhattan between placed sites)",
           f"set rtr_hmax 0; set rtr_hbad 0; set rtr_lim [expr {{{T['reach_um']:g} * $ff_dbu}}]",
@@ -2127,7 +2182,7 @@ def tcl_text(T, native_paths=None):
         for name, path in native_paths.items():
             exact = "[./]".join(path.split(".")) + "[./]*"
             text = text.replace("*" + name + "[./]*", exact)
-        if re.search(r"^rtr_place\s+\S+\s+\{\*", text, re.M):
+        if re.search(r"^rtr_place(?:_opt)?\s+\S+\s+\{\*", text, re.M):
             raise ResetError("native reset placement contains an unverified wildcard instance")
     return text
 

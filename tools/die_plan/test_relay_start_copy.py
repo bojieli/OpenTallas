@@ -56,3 +56,14 @@ def test_relay_copy_rejects_non_boolean_or_wrong_origin_role():
     c=fixture(False);c.types['B']['landing_relay_start_copy']=True
     from test_clock_landings import B_BODY
     with pytest.raises(LandingError,match='strap-form relay'):c.type_rtl('B',B_BODY)
+
+
+def test_reader_origin_region_matches_actual_relay_and_typed_face():
+    import landing_place as LP
+    c=fixture(True)
+    c.types['C'].setdefault('clock',{})['landing_reader_start']=dict(depth=2,origin_rect_um=[1,2,9,10],branches={'z':{'stages':[dict(xy_um=[3,3],raw_reset='cland_reset_z'),dict(xy_um=[6,3],raw_reset='cland_reset_z')]}})
+    rtl=c.type_rtl('C',C_BODY)
+    group=LP._reader_start_groups(c.types['C'])[0]
+    actual=c.land_slots('C')['buses']['cland_rstart_in']['origin']
+    assert group == (actual,[1,2,9,10],'reader-start-origin')
+    assert actual == 'u_cland_rstart_rx' and actual+' (' in rtl

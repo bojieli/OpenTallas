@@ -446,6 +446,14 @@ foreach spec $cland_status {
   }
   if {[llength $cland_qd]==1 && [string match "*DFF*" [[[lindex $cland_qd 0] getMaster] getName]]} { set drivers $cland_qd }
  }
+ # DIE-QC-83 11-06 (QC HC0 AP parent 3_3 'OT_CLAND landing_ready_rsf_i requires one actual dedicated output FF'): a
+ # landing ring hardened as a hard child (QC hc0/sul1 ring-split events) drives its ready/fault status from inside the
+ # macro.  The status FF lives in the signed child and the plan places the macro, so there is no parent cell to place.
+ # Only a single block driver is skipped; any other non-FF driver still fails closed below.
+ if {[llength $drivers]==1 && [[[lindex $drivers 0] getMaster] isBlock]} {
+  puts "OT_CLAND status $net: driver [[lindex $drivers 0] getName] is hard child [[[lindex $drivers 0] getMaster] getName] (status FF inside the child), not placed"
+  continue
+ }
  if {[llength $drivers]!=1 || ![string match "*DFF*" [[[lindex $drivers 0] getMaster] getName]]} {
   error "OT_CLAND $net requires one actual dedicated output FF"
  }

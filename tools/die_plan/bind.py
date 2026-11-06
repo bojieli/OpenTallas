@@ -3094,6 +3094,11 @@ class Binder:
                 files.extend(hbm_spb_native.materialize(self, tn, f))
             except (ValueError, KeyError, OSError) as exc:
                 raise BindError(f"HBM SPB native {tn}: {exc}") from exc
+            if tn in getattr(self, "_emitted_reset_trees", {}):
+                import bound_reset_contract as BRC
+                prov_file = out.parent / "provenance_bind.json"
+                prov = json.loads(prov_file.read_text()) if prov_file.is_file() else None
+                BRC.emitted(f, tn, self._emitted_reset_trees[tn], provenance=prov)
             files.append(f)
         if getattr(self, "_reset_consumer_changes", None):
             (out.parent / "bind_reset_consumers.json").write_text(
@@ -3330,6 +3335,8 @@ class Binder:
                 body.append("    wire rst_n = arst_n;  // delivered reset to the native hard partition")
             else:
                 rtree = RT.for_type(P, ptn)
+                import copy
+                self.__dict__.setdefault("_emitted_reset_trees", {})[tn] = copy.deepcopy(rtree)
                 ports += [f"    output wire {n}   // registered reset to neighbour" for n, _x, _y in RT.out_pins(P, ptn)]
                 if RT.start_broadcast(P):              # OWNER DECISION 13c: START broadcast beside the reset
                     ports.append("    input  wire start_i   // START in (wavefront broadcast)")
@@ -4953,13 +4960,32 @@ def cmd_kit_rtl(a):
         raise BindError(f"kit-rtl: no partition type {tn} in the plan")
     t = raw["partition_types"][tn]
     rep = json.loads((out / "bind_report.json").read_text())
+    component_report = None
+    if getattr(a, "component_proof", None):
+        import bind_component
+        proof = json.loads(Path(a.component_proof).read_text())
+        try:
+            component_report = bind_component.verify(
+                a.component_proof, context_plan=proof["context_plan"], prepared_plan=a.plan,
+                bind_out=out, type_name=tn, instance=a.instance, asbuilt=a.asbuilt)
+        except ValueError as exc:
+            raise BindError(str(exc)) from exc
+    elif rep.get("n_errors", 0):
+        raise BindError("kit-rtl: failing global bind needs an explicit verified LOCAL component proof")
     key = a.variant or tn
+    if component_report is not None and key != tn:
+        raise BindError("kit-rtl: LOCAL component proof does not authorize a different type variant")
     variants = sorted(k for k in rep["types"] if k == tn or k.startswith(tn + "__"))
     if key not in rep["types"]:
         raise BindError(f"kit-rtl: bound type {key} not in {out}/bind_report.json (variants: {variants})")
     bmod = rep["types"][key]["module"]
     bfile = out / "rtl" / f"{bmod}.sv"
     btxt = bfile.read_text()
+    import bound_reset_contract as BRC
+    try:
+        bound_reset_source = BRC.source(bfile, key, out, E.REPO)
+    except (ValueError, OSError, subprocess.CalledProcessError) as exc:
+        raise BindError(f"kit-rtl {tn}: captured reset identity: {exc}") from exc
     # The generic plan wrapper has early-core clocks as well as grid clocks.
     # Connect them to real native leaf clock pins in a private kit source copy.
     import gen_phys
@@ -5101,9 +5127,14 @@ def cmd_kit_rtl(a):
         ports.append((f"{d:6} wire [{w - 1}:0] {n}", "bound-only pin (die IO / reset spine / clock role): not a plan bus"))
         conns.append(f".{n}({n})")
     # per-instance parameters (straps) of the bound module, as the bound top passes them: one hardened kit = one value set
-    top = (out / "rtl" / f"{sv_id(raw['die']['name'])}_bound_top.sv").read_text()
-    pinst = {m.group(2): (m.group(1) or "").strip() for m in
-             re.finditer(rf"^\s*{re.escape(bmod)}\s*(#\(.*?\))?\s*(\w+)\s*\(", top, re.M)}
+    if component_report is not None:
+        # One native instance: its own verified header defaults are its exact
+        # binding. Do not borrow another cohort's (possibly incomplete) top.
+        pinst = {component_report["instance"]: ""}
+    else:
+        top = (out / "rtl" / f"{sv_id(raw['die']['name'])}_bound_top.sv").read_text()
+        pinst = {m.group(2): (m.group(1) or "").strip() for m in
+                 re.finditer(rf"^\s*{re.escape(bmod)}\s*(#\(.*?\))?\s*(\w+)\s*\(", top, re.M)}
     if a.instance:
         if a.instance not in pinst:
             raise BindError(f"kit-rtl {tn}: instance {a.instance} of {bmod} not in the bound top ({sorted(pinst)[:8]})")
@@ -5200,6 +5231,18 @@ def cmd_kit_rtl(a):
     sims = [str(f) for f in fl if SIM_FILE.search(f.name)]
     if sims:
         raise BindError(f"kit-rtl {tn}: simulation models in the kit filelist {sims[:5]} (no *_sim in a kit)")
+    bound_reset = None
+    if bound_reset_source:
+        import copy
+        from types import SimpleNamespace
+        native_type = copy.deepcopy(t)
+        native_type.setdefault("clock", {}).setdefault("landing_contract", {})["collector_tree"] = bound_reset_source["tree"]
+        native_plan = SimpleNamespace(types={tn: native_type}, path=Path(a.plan))
+        try:
+            bound_reset = gen_phys.install_bound_native_reset(native_plan, tn, fl, source_contract=bound_reset_source)
+            BRC.stage(kd, bound_reset_source, bound_reset)
+        except (ValueError, gen_rtl.GenError) as exc:
+            raise BindError(f"kit-rtl {tn}: native reset export: {exc}") from exc
     (kd / "kit_rtl.f").write_text("\n".join(str(x) for x in fl) + "\n")
     # simulation view of the same kit: the hard macros' behavioural models instead of their black boxes
     bbs = {str(Path(m["bb"])): m["model"] for m in macros.values() if m.get("bb") and m.get("model")}
@@ -5212,10 +5255,16 @@ def cmd_kit_rtl(a):
                packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, include_inlined=incl, module_dedup=deduped,
                hard_macros=dict(sorted(macros.items())), unindexed_sources=dict(sorted(widened.items())), native_station_geometry=native_geometry,
                hbm_spb_native_geometry=spb_geometry,
+               **({"bound_reset": dict(file="bound_reset.json", tree_sha256=bound_reset_source["tree_sha256"],
+                                        source=bound_reset_source["authority"])} if bound_reset else {}),
                **({"native_glue": native_glue} if native_glue else {}),
                hard_macros_note="memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; "
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
                                 "type_macros); kit_rtl_sim.f carries the behavioural models")
+    if component_report is not None:
+        man.update(component_proof=str(Path(a.component_proof).resolve()), component_report=component_report,
+                   source_scope="LOCAL_COMPONENT", source_preparation_only=True,
+                   global_bind=component_report["global_bind"])
     (kd / "kit_rtl.json").write_text(json.dumps(man, indent=1))
     # Physical provider specialization follows the declared plan in normal bind
     # mode, including unattended kit-wave source updates. Functional bind stays unchanged.
@@ -5289,6 +5338,16 @@ def main(argv=None):
     k.add_argument("--kit", help="output directory (default OUT/kit_rtl/TYPE)")
     k.add_argument("--instance", help="the bound instance whose parameters the kit takes (types whose instances differ)")
     k.add_argument("--asbuilt")
+    k.add_argument("--component-proof", help="verified read-only LOCAL source report; never a global bind PASS")
+    c = sub.add_parser("component-proof", help="read-only local source/port/reset checks; preserve global bind failure")
+    c.add_argument("plan", help="original full reference context recorded by the native producer")
+    c.add_argument("--out", required=True, help="original bind output (read-only)")
+    c.add_argument("--type", required=True)
+    c.add_argument("--instance", required=True)
+    c.add_argument("--prepared-plan", required=True)
+    c.add_argument("--bind-context")
+    c.add_argument("--asbuilt")
+    c.add_argument("--receipt", required=True, help="new local report outside the original bind directory")
     for n in ("elab", "bind", "verify", "all", "portbind"):
         s = sub.add_parser(n)
         s.add_argument("plan")
@@ -5305,6 +5364,22 @@ def main(argv=None):
     _AB_OVERRIDE["path"] = a.asbuilt
     _AB_OVERRIDE["allow_external_paths"] = bool(getattr(a, "allow_external_paths", False))
     try:
+        if a.cmd == "component-proof":
+            import bind_component
+            receipt = Path(a.receipt).resolve()
+            if receipt.exists() or receipt.is_relative_to(Path(a.out).resolve()):
+                raise BindError("component-proof needs a new report outside the read-only original bind")
+            try:
+                result = bind_component.inspect(a.plan, a.out, a.type, a.instance,
+                                                prepared_plan=a.prepared_plan, context_plan=a.bind_context,
+                                                asbuilt=a.asbuilt)
+            except (ValueError, KeyError, OSError) as exc:
+                raise BindError(str(exc)) from exc
+            receipt.parent.mkdir(parents=True, exist_ok=True)
+            receipt.write_text(json.dumps(result, indent=2)+"\n")
+            print(json.dumps(dict(scope=result["scope"], verdict=result["verdict"],
+                                  global_bind=result["global_bind"], selected_errors=result["selected_errors"])))
+            return 0 if result["verdict"] == "PASS" else 2
         if a.cmd == "kit-rtl":
             return cmd_kit_rtl(a)
         if a.cmd == "elab":

@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.tx_ff_mapped_size.v1",
+  "source_encoder_sha256": "44f04f55367c3de622394fcd8e4e3fe2c69cbea51f754d0ed304be145edc910e",
+  "source_commit": "dc98564b80a",
+  "dimensions_um": [
+    285.12,
+    207.36
+  ],
+  "core_dimensions_um": [
+    276.48,
+    198.72
+  ],
+  "stdcell_count": 110078,
+  "stdcell_area_um2": 18173.9,
+  "stdutil": 0.33078273578215395,
+  "max_cell_count": 150000,
+  "max_stdutil": 0.45,
+  "physical_status": "NOT RUN (synth estimate only)",
+  "size_admission_pass": true,
+  "cq_mapped_named_dff_cells": {
+    "0": 520,
+    "1": 520,
+    "2": 520,
+    "3": 520
+  },
+  "yosys_dff_count_including_faces": 16882,
+  "yosys_mapped_cell_area_um2_including_faces": 18245.73276,
+  "yosys_conservative_stdutil": 0.33209016219429344,
+  "cq_positive_net_direct_loads_after_QN_inverter": {
+    "0": {
+      "bits": 520,
+      "min": 0,
+      "max": 4,
+      "mean": 1.2307692307692308
+    },
+    "1": {
+      "bits": 520,
+      "min": 0,
+      "max": 5,
+      "mean": 1.2365384615384616
+    },
+    "2": {
+      "bits": 520,
+      "min": 0,
+      "max": 5,
+      "mean": 1.1826923076923077
+    },
+    "3": {
+      "bits": 520,
+      "min": 0,
+      "max": 4,
+      "mean": 1.198076923076923
+    }
+  },
+  "yosys_conservative_cell_count_including_faces": 111698,
+  "placed_size_estimate": {
+    "status": "ESTIMATE ONLY; no candidate placement run",
+    "baseline_synth_cells": 96425,
+    "baseline_placed_cells": 101929,
+    "baseline_synth_area_um2": 15551.1,
+    "baseline_placed_area_um2": 15788.4,
+    "candidate_estimated_placed_cells": 118073.79250194451,
+    "candidate_estimated_placed_area_um2": 18524.151160238438,
+    "candidate_estimated_placed_stdutil": 0.3371576490916001
+  }
+}

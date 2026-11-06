@@ -60,7 +60,7 @@ def adapt_core_ports(bound, hard_cores):
         if not spec:
             continue
         inst, master = "u_" + core["inst"], core["module"]
-        heads = list(re.finditer(r"^([ \t]+)" + master + r"[ \t]+" + inst + r"[ \t]*\(", bound, re.M))
+        heads = list(re.finditer(r"^([ \t]+)" + re.escape(master) + r"(?:[ \t]+#\([^\n]*\))?[ \t]+" + re.escape(inst) + r"[ \t]*\(", bound, re.M))
         if len(heads) != 1:
             raise ValueError(f"core {core['inst']}: expected one {master} {inst}, got {len(heads)}")
         head = heads[0]
@@ -83,10 +83,46 @@ def adapt_core_ports(bound, hard_cores):
             if re.search(r"\." + port + r"\(", body):
                 raise ValueError(f"core {core['inst']}: tie {port} is already connected")
             rows.append((port, value))
+        # Explicit dead consumer bits may be omitted by a physical child. The
+        # native producer remains intact; only this opted-in connection narrows.
+        slices = []
+        for port, rule in spec.get("slice", {}).items():
+            if not isinstance(rule, dict) or set(rule) != {"msb", "lsb", "source_width", "evidence"}:
+                raise ValueError(f"core {core['inst']}: slice {port} needs exact bounds, source width and evidence")
+            hi, lo, width = rule["msb"], rule["lsb"], rule["source_width"]
+            if (any(type(v) is not int for v in (hi, lo, width)) or
+                    not width > hi >= lo >= 0 or not isinstance(rule["evidence"], str) or not rule["evidence"].strip()):
+                raise ValueError(f"core {core['inst']}: invalid slice {port}: {rule}")
+            matches = list(re.finditer(r"^[ \t]*\." + re.escape(port) + r"\(([^()]*)\),?[ \t]*(?:\n|$)", body, re.M))
+            if len(matches) != 1:
+                raise ValueError(f"core {core['inst']}: slice pin {port} found {len(matches)} times")
+            match = matches[0]
+            source = match.group(1).strip()
+            net_match = re.fullmatch(r"([A-Za-z_$][A-Za-z0-9_$]*)(?:\[(\d+):(\d+)\])?", source)
+            if not net_match or (net_match.group(2) is not None and
+                    (int(net_match.group(2)), int(net_match.group(3))) != (width - 1, 0)):
+                raise ValueError(f"core {core['inst']}: slice {port} requires a simple net or exact [{width-1}:0] selection: {source}")
+            net = net_match.group(1)
+            # Limit declarations to this actual containing module. Reject a
+            # parameterized, ascending or inconsistent range rather than guess.
+            starts = list(re.finditer(r"^\s*module\b", bound[:head.start()], re.M))
+            if not starts:
+                raise ValueError(f"core {core['inst']}: slice {port} has no containing module")
+            scope = bound[starts[-1].start():head.start()]
+            declared = []
+            for decl in re.finditer(r"\b(?:wire|logic|reg)\s+(?:signed\s+)?\[\s*(\d+)\s*:\s*(\d+)\s*\]\s*([^;]+);", scope):
+                names = [v.strip() for v in decl.group(3).split(",")]
+                if net in names:
+                    declared.append((int(decl.group(1)), int(decl.group(2))))
+            if not declared or set(declared) != {(width - 1, 0)}:
+                raise ValueError(f"core {core['inst']}: slice {port} native {net} needs [{width-1}:0], found {declared}")
+            body = body[:match.start()] + body[match.end():]
+            rows.append((port, f"{net}[{hi}:{lo}]"))
+            slices.append(dict(port=port, net=net, source_width=width, msb=hi, lsb=lo, evidence=rule["evidence"]))
         body = body.rstrip().rstrip(",")
         add = ",\n".join(f"{head.group(1)}    .{p}({v})" for p, v in rows)
         bound = bound[:head.end()] + body + ",\n" + add + bound[end:]
-        receipt.append(dict(inst=core["inst"], module=master, ports=[p for p, _ in rows], cycles_changed=0))
+        receipt.append(dict(inst=core["inst"], module=master, ports=[p for p, _ in rows], cycles_changed=0, **({"slices": slices} if slices else {})))
     return bound, receipt
 
 

@@ -1,0 +1,22 @@
+PMA_STATUS_RISE edge=175
+NATIVE_HOST_PEER_RX frame=1 kind=3 parity=0 header=0006
+PMA_HOST_ALIVE edge=331
+PMA_HOST_RX index=0 edge=449
+PMA_HOST_RX index=1 edge=454
+PMA_HOST_RX index=2 edge=459
+PMA_HOST_RX index=3 edge=465
+PMA_HOST_RX index=4 edge=469
+PMA_HOST_RX index=5 edge=474
+PMA_HOST_RX index=6 edge=479
+PMA_HOST_RX index=7 edge=485
+PMA_HOST_RX index=8 edge=489
+PMA_HOST_RX index=9 edge=494
+PMA_HOST_RX index=10 edge=499
+PMA_STATE edge=500 phy=2/2 peer_gb=1 up=1 die_gb=1 up=1 ph_v=0 hpgo=0 hist=800
+PMA_HOST_RX index=11 edge=505
+PMA_KS_QUEUE edge=505
+PMA_HOST_PASS words514=12 valid_andKS53_exact=1 edge=625
+- /srv/opentallas-scratch2/claude/codex-ds-pma-peer-1106/tb_legal_status_a2.sv:59: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 521ns; walltime 0.335 s; speed 1.555 us/s
+- Verilator: cpu 0.335 s on 1 threads; allocated 21 MB
