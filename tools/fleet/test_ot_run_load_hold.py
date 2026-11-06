@@ -14,6 +14,9 @@ def load(path):
     spec = importlib.util.spec_from_loader(loader.name, loader)
     module = importlib.util.module_from_spec(spec)
     loader.exec_module(module)
+    # These cases pin the v6/v11 ORDER and LOAD SPILL rules below the ot-heavy load cap; several rows sit above 1.5 x
+    # cores only incidentally (pve 43/28).  The cap-aware placement (QUEUE-BAL-1) is tested in test_ot_run_queue_bal.py.
+    module.LOAD_CAP_FACTOR = 0
     return module
 
 

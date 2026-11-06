@@ -84,7 +84,7 @@ class AutoFanout(unittest.TestCase):
         hook = (HERE / "prd_hook.tcl").read_text()
         i, j = hook.index("ot_prd_auto_fanout $_drv_args"), hook.index("source [file join $_here prd_targeted.tcl]")
         self.assertLess(i, j)                                # before the targeted / plain repair
-        self.assertIn("$::env(OT_MAX_FANOUT) == 0 && $_tfo == 0", hook)   # explicit caps win
+        self.assertIn("$::env(OT_MAX_FANOUT) : 0) == 0 && $_tfo == 0", hook)   # explicit caps win
         self.assertIn("prd_autofo.tcl", (HERE / "prd_mk.sh").read_text())
         self.assertIn("-e OT_PRD_AUTO_FANOUT=", (HERE / "prd_run.sh").read_text())
         self.assertIn("post_route_drv/prd_autofo.tcl", (HERE.parent / "eco_loop.py").read_text())
