@@ -1,0 +1,67 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+Startpoint: state[1] (input port clocked by clk)
+Endpoint: shadow_d[30] (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                          0.00    0.00 ^ input external delay
+    12    7.55    0.00    0.00    0.00 ^ state[1] (in)
+                                         state[1] (net)
+                  0.00    0.00    0.00 ^ _181_/E (AND5x2_ASAP7_75t_R)
+     6    5.37   33.34   47.60   47.60 ^ _181_/Y (AND5x2_ASAP7_75t_R)
+                                         _150_ (net)
+                 33.34    0.00   47.60 ^ _192_/B1 (AOI221x1_ASAP7_75t_R)
+     2    1.82   40.02   28.47   76.07 v _192_/Y (AOI221x1_ASAP7_75t_R)
+                                         _161_ (net)
+                 40.02    0.00   76.07 v _209_/B (OA21x2_ASAP7_75t_R)
+     1    1.20   10.56   27.89  103.96 v _209_/Y (OA21x2_ASAP7_75t_R)
+                                         _000_ (net)
+                 10.56    0.00  103.96 v _210_/A (BUFx6f_ASAP7_75t_R)
+     7    5.33   10.76   19.80  123.76 v _210_/Y (BUFx6f_ASAP7_75t_R)
+                                         _001_ (net)
+                 10.76    0.00  123.76 v _273_/B (AO211x2_ASAP7_75t_R)
+     4    2.87   15.54   28.58  152.34 v _273_/Y (AO211x2_ASAP7_75t_R)
+                                         _052_ (net)
+                 15.54    0.00  152.34 v _295_/B (OR3x1_ASAP7_75t_R)
+     3    2.00   20.52   35.78  188.11 v _295_/Y (OR3x1_ASAP7_75t_R)
+                                         _073_ (net)
+                 20.52    0.00  188.11 v _297_/D (OR5x1_ASAP7_75t_R)
+     1    0.57   15.07   46.99  235.10 v _297_/Y (OR5x1_ASAP7_75t_R)
+                                         _075_ (net)
+                 15.07    0.00  235.10 v _298_/A2 (AO21x1_ASAP7_75t_R)
+     1    1.00   11.83   23.02  258.13 v _298_/Y (AO21x1_ASAP7_75t_R)
+                                         shadow_d[30] (net)
+                 11.83    0.00  258.13 v shadow_d[30] (out)
+                                258.13   data arrival time
+
+                  0.00  833.00  833.00   clock clk (rise edge)
+                          0.00  833.00   clock network delay (ideal)
+                          0.00  833.00   clock reconvergence pessimism
+                          0.00  833.00   output external delay
+                                833.00   data required time
+-----------------------------------------------------------------------------
+                                833.00   data required time
+                               -258.13   data arrival time
+-----------------------------------------------------------------------------
+                                574.87   slack (MET)
+
+

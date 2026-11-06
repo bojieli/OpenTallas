@@ -1,0 +1,239 @@
+
+-- Running command `read_verilog -formal tkshadow_formal.sv; prep -top tkshadow_formal; async2sync; dffunmap; sat -seq 1 -tempinduct -set-assumes -set-def-inputs -prove-asserts -verify' --
+
+1. Executing Verilog-2005 frontend: tkshadow_formal.sv
+Parsing formal Verilog input from `tkshadow_formal.sv' to AST representation.
+Generating RTLIL representation for module `\tkshadow_formal'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \tkshadow_formal
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \tkshadow_formal
+Removed 0 unused modules.
+Module tkshadow_formal directly or indirectly contains formal properties -> setting "keep" attribute.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$tkshadow_formal.sv:2$2 in module tkshadow_formal.
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 3 redundant assignments.
+Promoted 1 assignment to connection.
+
+2.2.4. Executing PROC_INIT pass (extract init attributes).
+
+2.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\tkshadow_formal.$proc$tkshadow_formal.sv:2$2'.
+
+2.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~1 debug messages>
+
+2.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\tkshadow_formal.$proc$tkshadow_formal.sv:13$5'.
+     1/1: $assume$tkshadow_formal.sv:14$6_EN
+Creating decoders for process `\tkshadow_formal.$proc$tkshadow_formal.sv:2$2'.
+     1/2: $0\shadow[31:0]
+     2/2: $0\tick[31:0]
+
+2.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+2.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\tkshadow_formal.\tick' using process `\tkshadow_formal.$proc$tkshadow_formal.sv:2$2'.
+  created $adff cell `$procdff$17' with positive edge clock and positive level reset.
+Creating register for signal `\tkshadow_formal.\shadow' using process `\tkshadow_formal.$proc$tkshadow_formal.sv:2$2'.
+  created $adff cell `$procdff$22' with positive edge clock and positive level reset.
+
+2.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+2.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\tkshadow_formal.$proc$tkshadow_formal.sv:13$5'.
+Removing empty process `tkshadow_formal.$proc$tkshadow_formal.sv:13$5'.
+Removing empty process `tkshadow_formal.$proc$tkshadow_formal.sv:2$2'.
+Cleaned up 1 empty switch.
+
+2.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tkshadow_formal.
+<suppressed ~4 debug messages>
+
+2.3. Executing FUTURE pass.
+
+2.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tkshadow_formal.
+
+2.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tkshadow_formal..
+Removed 3 unused cells and 10 unused wires.
+<suppressed ~4 debug messages>
+
+2.6. Executing CHECK pass (checking for obvious problems).
+Checking module tkshadow_formal...
+Found and reported 0 problems.
+
+2.7. Executing OPT pass (performing simple optimizations).
+
+2.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tkshadow_formal.
+
+2.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tkshadow_formal'.
+Computing hashes of 10 cells of `\tkshadow_formal'.
+Finding duplicate cells in `\tkshadow_formal'.
+Removed a total of 0 cells.
+
+2.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tkshadow_formal..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+2.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tkshadow_formal.
+Performed a total of 0 changes.
+
+2.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tkshadow_formal'.
+Computing hashes of 10 cells of `\tkshadow_formal'.
+Finding duplicate cells in `\tkshadow_formal'.
+Removed a total of 0 cells.
+
+2.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tkshadow_formal..
+
+2.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tkshadow_formal.
+
+2.7.8. Finished fast OPT passes. (There is nothing left to do.)
+
+2.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 24 bits (of 32) from port B of cell tkshadow_formal.$sub$tkshadow_formal.sv:9$4 ($sub).
+Removed top 24 bits (of 32) from port B of cell tkshadow_formal.$sub$tkshadow_formal.sv:15$9 ($sub).
+
+2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tkshadow_formal..
+
+2.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.11. Executing OPT pass (performing simple optimizations).
+
+2.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tkshadow_formal.
+
+2.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tkshadow_formal'.
+Computing hashes of 10 cells of `\tkshadow_formal'.
+Finding duplicate cells in `\tkshadow_formal'.
+Removed a total of 0 cells.
+
+2.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tkshadow_formal..
+
+2.11.4. Finished fast OPT passes.
+
+2.12. Executing SORT pass.
+
+2.13. Printing statistics.
+
+=== tkshadow_formal ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       11 wires
+      166 wire bits
+        5 public wires
+       98 public wire bits
+        5 ports
+       98 port bits
+       10 cells
+        2   $adff
+        2   $check
+        1   $eq
+        1   $initstate
+        1   $logic_not
+        1   $mux
+        2   $sub
+
+2.14. Executing CHECK pass (checking for obvious problems).
+Checking module tkshadow_formal...
+Found and reported 0 problems.
+
+3. Executing ASYNC2SYNC pass.
+Replacing tkshadow_formal.$procdff$17 ($adff): ARST=\rst_n, D=\native_d, Q=\tick
+Replacing tkshadow_formal.$procdff$22 ($adff): ARST=\rst_n, D=$0\shadow[31:0], Q=\shadow
+
+4. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+5. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \native_d
+Imported 18 cells to SAT database.
+Import constraint from assume cell: $logic_not$tkshadow_formal.sv:14$7_Y when $assume$tkshadow_formal.sv:14$6_EN.
+No constraints for initial state found.
+
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \native_d
+Imported 18 cells to SAT database.
+Import constraint from assume cell: $logic_not$tkshadow_formal.sv:14$7_Y when $assume$tkshadow_formal.sv:14$6_EN.
+Import proof for assert: $eq$tkshadow_formal.sv:15$10_Y when 1'1.
+
+** Trying induction with length 1 **
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \native_d
+Imported 18 cells to SAT database.
+Import constraint from assume cell: $logic_not$tkshadow_formal.sv:14$7_Y when $assume$tkshadow_formal.sv:14$6_EN.
+Import proof for assert: $eq$tkshadow_formal.sv:15$10_Y when 1'1.
+
+[base case 1] Solving problem with 10081 variables and 27043 clauses..
+Base case for induction length 1 proven.
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \native_d
+Imported 18 cells to SAT database.
+Import constraint from assume cell: $logic_not$tkshadow_formal.sv:14$7_Y when $assume$tkshadow_formal.sv:14$6_EN.
+Import proof for assert: $eq$tkshadow_formal.sv:15$10_Y when 1'1.
+
+[induction step 1] Solving problem with 10082 variables and 27048 clauses..
+Induction step proven: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: d9b30c6e20, time: 0.07s, user: 0.06s, system: 0.02s, MEM: 36.23 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 90% 1x sat (0 sec), 1% 4x opt_clean (0 sec), ...
