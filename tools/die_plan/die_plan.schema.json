@@ -3502,6 +3502,38 @@
           },
           "note": {
            "type": "string"
+          },
+          "slice": {
+           "type": "object",
+           "minProperties": 1,
+           "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+             "msb": {
+              "type": "integer",
+              "minimum": 0
+             },
+             "lsb": {
+              "type": "integer",
+              "minimum": 0
+             },
+             "source_width": {
+              "type": "integer",
+              "minimum": 1
+             },
+             "evidence": {
+              "type": "string",
+              "minLength": 1
+             }
+            },
+            "required": [
+             "msb",
+             "lsb",
+             "source_width",
+             "evidence"
+            ]
+           }
           }
          },
          "required": [

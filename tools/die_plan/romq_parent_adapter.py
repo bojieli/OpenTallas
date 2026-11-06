@@ -46,6 +46,7 @@ def raw_overrides(block):
 def adapt(text, contracts):
     digest = hashlib.sha256(text.encode()).hexdigest()
     edits, rows, seen = [], [], set()
+    profiles = set()
     for contract in contracts:
         if contract['source_sha256'] != digest:
             raise ValueError('ROMQ parent source hash differs from captured contract')
@@ -77,19 +78,30 @@ def adapt(text, contracts):
                 raise ValueError(instance + ': unsupported parameter ' + name + '=' + value)
         new = {k:v for k,v in old.items() if k != 'NB'}
         new.update(SELECTED)
+        stages = (contract.get('input_stages', 1), contract.get('output_stages', 1))
+        if stages not in ((1, 1), (3, 2)) or any(type(x) is not int for x in stages):
+            raise ValueError(instance + ': unsupported capture-stage profile')
+        profiles.add(stages)
+        if 'input_stages' in contract or 'output_stages' in contract:
+            new.update(INPUT_STAGES=str(stages[0]), OUTPUT_STAGES=str(stages[1]))
         if new != contract['selected_params']:
             raise ValueError(instance + ': selected form differs from explicit contract')
         block = SHELL + ' #(' + ', '.join('.' + k + '(' + v + ')' for k,v in new.items()) + ') '
         edits.append((a, end, block))
         rows.append(dict(instance=instance, input_params=old, selected_params=new,
                          retained_instance_expression=old.get('INSTANCE'), removed_sealed_param=dict(NB=2)))
+    if len(profiles) != 1:
+        raise ValueError("one explicit ROMQ capture-stage profile required per parent type")
+    input_stages, output_stages = next(iter(profiles))
     for a, end, block in sorted(edits, reverse=True):
         text = text[:a] + block + text[end:]
     return text, dict(schema='opentallas.romq_parent_adapter.v1', source_sha256=digest,
                       output_sha256=hashlib.sha256(text.encode()).hexdigest(), instances=rows,
-                      added_interface_cycles=2, added_child_reset_edges=1,
+                      input_stages=input_stages, output_stages=output_stages,
+                      added_interface_cycles=input_stages + output_stages,
+                      added_child_reset_edges=input_stages,
                       physical_status='PREPARATION_ONLY',
-                      pending=['signed same-flow child views', 'COL parent capture/clock/buffer row budget',
+                      pending=['qualified exact child exports under accepted view/tag policy', 'COL parent capture/clock/buffer row budget',
                                'actual full-cone pin/capture/consumer reach', 'PG/clock endpoint handoff',
                                'explicit compiler/plan cycle adoption', 'native final signoff and routed EQ'])
 

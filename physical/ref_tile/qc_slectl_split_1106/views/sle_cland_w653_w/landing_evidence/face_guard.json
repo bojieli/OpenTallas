@@ -1,0 +1,241 @@
+{
+ "top": "sle_cland_w653_w",
+ "checked": 1308,
+ "ok": 1308,
+ "fails": {},
+ "flops": {
+  "fault": "u_w/u_fault_port/q$_SDFF_PN0_",
+  "ready": "u_w/ready$_SDFF_PN0_",
+  "d[652]": "u_w/u_ring.s_d[2][652]$_DFFE_NP_",
+  "d[651]": "u_w/u_ring.s_d[2][651]$_DFFE_NP_",
+  "d[650]": "u_w/u_ring.s_d[2][650]$_DFFE_NP_",
+  "d[649]": "u_w/u_ring.s_d[2][649]$_DFFE_NP_",
+  "d[648]": "u_w/u_ring.s_d[2][648]$_DFFE_NP_",
+  "d[647]": "u_w/u_ring.s_d[2][647]$_DFFE_NP_",
+  "d[646]": "u_w/u_ring.s_d[2][646]$_DFFE_NP_",
+  "d[645]": "u_w/u_ring.s_d[2][645]$_DFFE_NP_",
+  "d[644]": "u_w/u_ring.s_d[2][644]$_DFFE_NP_",
+  "d[643]": "u_w/u_ring.s_d[2][643]$_DFFE_NP_",
+  "d[642]": "u_w/u_ring.s_d[2][642]$_DFFE_NP_",
+  "d[641]": "u_w/u_ring.s_d[2][641]$_DFFE_NP_",
+  "d[640]": "u_w/u_ring.s_d[2][640]$_DFFE_NP_",
+  "d[639]": "u_w/u_ring.s_d[0][639]$_DFFE_NP_",
+  "d[638]": "u_w/u_ring.s_d[0][638]$_DFFE_NP_",
+  "d[637]": "u_w/u_ring.s_d[0][637]$_DFFE_NP_",
+  "d[636]": "u_w/u_ring.s_d[0][636]$_DFFE_NP_",
+  "d[635]": "u_w/u_ring.s_d[0][635]$_DFFE_NP_"
+ },
+ "straps_exempt": [
+  "strap_k"
+ ],
+ "dead_declared": [],
+ "bumps_exempt": [],
+ "clock_exports": {},
+ "registered_atmost_one": {
+  "u_w/u_ring.g_wreg.sl[0].ch[10].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[10].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[10].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[10].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[10].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_02663_",
+    "u_w/_02675_",
+    "u_w/_02678_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[9].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[9].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[9].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[9].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[9].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_02663_",
+    "u_w/_02675_",
+    "u_w/_02678_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[8].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[8].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[8].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[8].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[8].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_02663_",
+    "u_w/_02675_",
+    "u_w/_02678_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[7].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[7].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[7].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[7].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[7].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_02663_",
+    "u_w/_02675_",
+    "u_w/_02678_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[6].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[6].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[6].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[6].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[6].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_02663_",
+    "u_w/_02675_",
+    "u_w/_02678_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[5].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[5].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[5].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[5].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[5].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_02663_",
+    "u_w/_02675_",
+    "u_w/_02678_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[4].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[4].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[4].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[4].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[4].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_02663_",
+    "u_w/_02675_",
+    "u_w/_02678_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[3].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[3].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[3].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[3].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[3].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_02663_",
+    "u_w/_02675_",
+    "u_w/_02678_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[2].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[2].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[2].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[2].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[2].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_02663_",
+    "u_w/_02675_",
+    "u_w/_02678_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[1].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[1].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[1].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[1].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[1].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_02663_",
+    "u_w/_02675_",
+    "u_w/_02678_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  },
+  "u_w/u_ring.g_wreg.sl[0].ch[0].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[0].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[0].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[0].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[0].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_02663_",
+    "u_w/_02675_",
+    "u_w/_02678_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  }
+ },
+ "land_mux_depth": {
+  "1": 2611,
+  "3": 1
+ },
+ "land_slot_bits": 653,
+ "land_mux_bits": 653,
+ "pairs_declared": [],
+ "fail_counts": {},
+ "verdict": "PASS",
+ "planned_bits": 1314,
+ "missing_ports": [],
+ "extra_ports": [],
+ "missing_n": 0,
+ "extra_n": 0,
+ "self_loop_only": false,
+ "self_loops": [],
+ "non_self_loop_fails": [],
+ "netlist": "/work/run/results/asap7/kq_sle_cland_w653_w_h70dbd8/base/1_synth.v"
+}

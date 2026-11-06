@@ -33,6 +33,19 @@ mark='''  always @(negedge clk) if (rst_n && cyc >= 0) begin
     if (dut.seqhost.w_u_seqhost_t_host[76] === 1'b1 && alive_at < 0)'''
 provider='''  // Preserve the source fixture's valid-word gaps, but start from real returned
   // THOST alive and stretch for physical peer backpressure. Record actual dates.
+  // The die fault ring can report MU faults after a short first-VO smoke ends.
+  // Observe the real selected mux's fault output directly in this native mode.
+  integer native_boot_mc_words=0,native_boot_mw_words=0;
+  initial begin
+    #1;
+    if($test$plusargs("NATIVE_HOST_LINK"))begin
+      for(integer boot_i=0;boot_i<nh;boot_i=boot_i+1)if(hmem[boot_i][0]&&hmem[boot_i][514:513]==2'd0)begin
+        if(hmem[boot_i][8:1]==8'h15)native_boot_mc_words=native_boot_mc_words+1;
+        if(hmem[boot_i][8:1]==8'h16)native_boot_mw_words=native_boot_mw_words+1;
+      end
+      $display("NATIVE_HOST_MU_BOOT mc_words=%0d mw_words=%0d",native_boot_mc_words,native_boot_mw_words);
+    end
+  end
   integer native_host_index=0,native_host_rx_index=0,native_host_seq_index=0;
   integer native_host_ordinal=0,native_host_rx_count=0,native_host_seq_count=0;
   integer native_host_base=-1,native_host_next=-1,native_host_prev=0;
@@ -69,6 +82,8 @@ provider='''  // Preserve the source fixture's valid-word gaps, but start from r
       native_host_rx_index=native_next_valid(native_host_rx_index+1);
     end
     if(native_host_ks_accepted)$display("NATIVE_KS_PEER_ACCEPT edge=%0d word=%h",cyc,native_ks_word);
+    if(dut.seqhost.u_u_seqhost.t_mf!==4'd0)
+      $fatal(1,"NATIVE_HOST_MU_FAULT edge=%0d value=%h mc_words=%0d mw_words=%0d",cyc,dut.seqhost.u_u_seqhost.t_mf,native_boot_mc_words,native_boot_mw_words);
     if(native_host_fault!==native_host_fault_prev)begin
       $display("NATIVE_HOST_PEER_FAULT edge=%0d value=%h",cyc,native_host_fault);native_host_fault_prev=native_host_fault;
     end

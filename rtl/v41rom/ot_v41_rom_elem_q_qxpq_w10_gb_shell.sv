@@ -28,7 +28,9 @@ module ot_v41_rom_elem_q_qxpq_w10_gb_shell #(
     parameter integer IFN = 1,
     parameter INSTANCE = "",
     parameter integer IOREG = 0,
-    parameter integer OUTPUT_NEG = 1
+    parameter integer OUTPUT_NEG = 1,
+    parameter integer INPUT_STAGES = 1,
+    parameter integer OUTPUT_STAGES = 1
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -63,6 +65,10 @@ module ot_v41_rom_elem_q_qxpq_w10_gb_shell #(
     // the split module's parameter prefix. IOREG=1 captures ALL inputs together,
     // including reset, so free-running child state has the same age as payload
     // and go/tag after reset. It adds +1 child reset assertion/release edge.
+    // Positive INPUT_STAGES/OUTPUT_STAGES stage EVERY bit at equal depth.
+    // For falling output capture, interface delta is INPUT_STAGES+OUTPUT_STAGES
+    // and child reset assertion/release delta is INPUT_STAGES rising edges.
+    // Defaults retain the original one-input/one-output capture contract.
     // The complete output word includes status/fault and adds +1 further edge:
     // +2 interface cycles at rising-edge producers/consumers, no child RTL edit.
     // OUTPUT_NEG=1 uses the OLAT1 child's falling edge, giving a full-cycle hop.
@@ -105,25 +111,60 @@ module ot_v41_rom_elem_q_qxpq_w10_gb_shell #(
         // instances may share logical input nets but require separate local flops.
         (* keep = 1, dont_touch = 1 *) reg [IW-1:0] input_q;
         (* keep = 1, dont_touch = 1 *) reg [OW-1:0] output_q;
+        wire [IW-1:0] input_tail;
+        wire [OW-1:0] output_tail;
+        initial begin
+            if (INPUT_STAGES < 1 || OUTPUT_STAGES < 1)
+                $fatal(1, "ROMQ IOREG stages must be positive");
+        end
         always @(posedge clk) input_q<=input_face;
+        if (INPUT_STAGES > 1) begin : g_input_pipeline
+            (* keep = 1, dont_touch = 1 *) reg [IW-1:0] q [0:INPUT_STAGES-2];
+            integer k;
+            always @(posedge clk) begin
+                q[0] <= input_q;
+                for (k=1; k<INPUT_STAGES-1; k=k+1) q[k] <= q[k-1];
+            end
+            assign input_tail=q[INPUT_STAGES-2];
+        end else begin : g_input_single
+            assign input_tail=input_q;
+        end
         if (OUTPUT_NEG != 0) begin : g_output_negative
             always @(negedge clk) output_q<=child_face;
         end else begin : g_output_positive
             always @(posedge clk) output_q<=child_face;
         end
+        if (OUTPUT_STAGES > 1) begin : g_output_pipeline
+            (* keep = 1, dont_touch = 1 *) reg [OW-1:0] q [0:OUTPUT_STAGES-2];
+            integer k;
+            if (OUTPUT_NEG != 0) begin : g_negative
+                always @(negedge clk) begin
+                    q[0] <= output_q;
+                    for (k=1; k<OUTPUT_STAGES-1; k=k+1) q[k] <= q[k-1];
+                end
+            end else begin : g_positive
+                always @(posedge clk) begin
+                    q[0] <= output_q;
+                    for (k=1; k<OUTPUT_STAGES-1; k=k+1) q[k] <= q[k-1];
+                end
+            end
+            assign output_tail=q[OUTPUT_STAGES-2];
+        end else begin : g_output_single
+            assign output_tail=output_q;
+        end
 `ifdef OT_ROMQ_SHELL_MUT_TAG
-        assign child_input={input_q[604:549],input_face[548:547],input_q[546:0]};
+        assign child_input={input_tail[604:549],input_face[548:547],input_tail[546:0]};
 `elsif OT_ROMQ_SHELL_MUT_RESET
-        assign child_input={rst_n,input_q[603:0]};
+        assign child_input={rst_n,input_tail[603:0]};
 `else
-        assign child_input=input_q;
+        assign child_input=input_tail;
 `endif
 `ifdef OT_ROMQ_SHELL_MUT_OUTPUT
-        assign output_face=output_q ^ 131'b1;
+        assign output_face=output_tail ^ 131'b1;
 `elsif OT_ROMQ_SHELL_MUT_STATUS
-        assign output_face={child_face[130],output_q[129:0]};
+        assign output_face={child_face[130],output_tail[129:0]};
 `else
-        assign output_face=output_q;
+        assign output_face=output_tail;
 `endif
     end else begin : g_bypass
         assign child_input=input_face;

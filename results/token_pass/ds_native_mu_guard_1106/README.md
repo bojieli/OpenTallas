@@ -1,0 +1,9 @@
+# Direct MU fault visibility in native HOST diagnostics
+
+The old first-VO existence smoke remains a recorded transport/programming/first-command PASS. Its actual2875-slot fixture contains575 valid HOST words but zero MC0x15/MW0x16 words, and is byte-for-byte the raw job0 stream after invalid slots are removed. The selected mux hardcodes NSLOT47 and requires an explicit tracker/window configuration before a start. The earlier short stop cannot establish that contract merely because its propagated host fault was still clear.
+
+The new minimum component supplies a concrete counterexample through the real PMA/LEP/selected mux: all HOST words and KS arrive, then the real t_mf output becomes8 at3177 after KS3176; peer/lane/LEP faults0 and issuer fault0. The hslot/hwin source bytes are identical to the earlier native smoke (fe83722... and9fa7ee...). Source gn resets0; with no MC pulse, cfg_bad remains true and first start latches fault3. This is a missing native setup contract, not a PHY failure or a proved arithmetic issue. base.log/result.json preserve the failed component verdict.
+
+The patcher now reports raw MC/MW word counts and checks the actual selected mux's t_mf output directly in NATIVE_HOST_LINK mode. A nonzero/unknown value fails immediately, without waiting for the distributed die fault ring. The actual bound child is dsdv_seq_host_mux at dut.seqhost.u_u_seqhost, and its four-bit output is the observed source. No input is forced and no DUT cycle changes. The legacy non-native mode stays unchanged.
+
+The patched pinned native-KS TB was generated successfully; the receipt pins input/output bytes and the supported source binding. No full-array compile/rerun was performed. The parent-approved successor component uses the published native_boot encoder's explicit35-word bootstrap and test-only shared KIT/END booking; it remains separate from production/global retirement qualification.
