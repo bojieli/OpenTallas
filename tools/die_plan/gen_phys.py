@@ -4632,13 +4632,45 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
     return ls
 
 
-def _kit_inst_path(txt, inst, mod_re):
+def _kit_rooted_rtl(text, top):
+    """Restrict hierarchy queries to definitions reachable from the explicit kit top."""
+    from kit_assembly import _masked_rtl
+    masked = _masked_rtl(text)
+    definitions = {}
+    for match in re.finditer(r"^\s*module\s+(\w+)(.*?)\bendmodule\b", masked, re.S | re.M):
+        definitions.setdefault(match[1], []).append(match)
+    selected, visiting = set(), set()
+    call = re.compile(r"\b(\w+)\s*(?:#\([^;]*?\))?\s+(\w+)\s*\(")
+
+    def visit(name):
+        if name in visiting:
+            raise ValueError(f"recursive selected kit hierarchy at {name}")
+        if name in selected:
+            return
+        if len(definitions.get(name, [])) != 1:
+            raise ValueError(f"selected kit module {name} is missing or duplicated")
+        visiting.add(name)
+        body = definitions[name][0][2]
+        for cell in call.finditer(body):
+            if cell[1] in definitions:
+                visit(cell[1])
+        visiting.remove(name)
+        selected.add(name)
+
+    visit(top)
+    return "\n".join(text[m.start():m.end()]
+                     for name, matches in definitions.items() if name in selected
+                     for m in matches)
+
+
+def _kit_inst_path(txt, inst, mod_re, owner_module=None):
     """Dotted instance path of the ONE `<mod_re> inst (` instance from the kit top of the bound RTL text (each enclosing
-    module instantiated exactly once up to a module nobody instantiates, e.g. kit top -> u_bound -> inst); else None."""
+    module instantiated exactly once up to a module nobody instantiates, e.g. kit top -> u_bound -> inst); else None.
+    owner_module restricts the local name to an already verified reset-forest owner."""
     txt = re.sub(r"//[^\n]*|/\*.*?\*/", "", txt, flags=re.S)       # "bound module X" in a header comment
     mods = {m.group(1): m.group(2) for m in re.finditer(r"^\s*module\s+(\w+)(.*?)\bendmodule\b", txt, re.S | re.M)}
     own = [mn for mn, body in mods.items()
-           if re.search(rf"\b{mod_re}\s*(?:#\([^;]*?\))?\s*{re.escape(inst)}\s*\(", body)]
+           if (owner_module is None or mn == owner_module) and re.search(rf"\b{mod_re}\s*(?:#\([^;]*?\))?\s*{re.escape(inst)}\s*\(", body)]
     if len(own) != 1:
         return None
     path, mn = [inst], own[0]
@@ -4715,7 +4747,14 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
         if depths.get(f"rst_n_t{i}") != tree.get("depth"):
             raise gen_rtl.GenError(f"type {tn}: native reset tap {i} release depth differs")
     text = "\n".join(Path(f).read_text() for f in rtl_files if Path(f).suffix in (".sv", ".v"))
-    clean = re.sub(r"//[^\n]*|/\*.*?\*/", "", text, flags=re.S)
+    scoped_text = text
+    top = P.types[tn].get("module")
+    if top is not None:
+        try:
+            scoped_text = _kit_rooted_rtl(text, top)
+        except ValueError as exc:
+            raise gen_rtl.GenError(f"type {tn}: native reset selected hierarchy: {exc}") from exc
+    clean = re.sub(r"//[^\n]*|/\*.*?\*/", "", scoped_text, flags=re.S)
     modules = list(re.finditer(r"^\s*module\s+(\w+)(.*?)\bendmodule\b", clean, re.S | re.M))
     paths, owner = {}, None
     verified_cell_classes = set()
@@ -4732,11 +4771,14 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
             if actual_cell is None or actual_cell != canonical_cell(gen_rtl.CELLS + getattr(gen_rtl, "LOCKUP_CELLS", ""), module):
                 raise gen_rtl.GenError(f"type {tn}: native reset cell {module} source differs from canonical stage/gate behavior")
             verified_cell_classes.add(module)
-        path = _kit_inst_path(text, name, re.escape(module))
+        path = _kit_inst_path(scoped_text, name, re.escape(module),
+                              owner_module=owner[0] if owner else None)
         if path is None:
             raise gen_rtl.GenError(f"type {tn}: native reset {name}: missing/duplicate/wrong-module hierarchy")
         hits = []
         for m in modules:
+            if owner is not None and m.group(1) != owner[0]:
+                continue
             for c in re.finditer(rf"\b{re.escape(module)}\s*(?:#\([^;]*?\))?\s*{re.escape(name)}\s*\((.*?)\)\s*;", m.group(2), re.S):
                 hits.append((m.group(1), m.group(2), c.group(1)))
         if len(hits) != 1:
