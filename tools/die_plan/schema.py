@@ -508,6 +508,7 @@ SCHEMA = {
                         "additionalProperties": False,
                         "properties": {"name": _name, "in_face": {"enum": list(FACES)},
                                        "out_face": {"enum": list(FACES)},
+                                       "turnaround": {"type": "boolean"},  # explicit registered same-face path
                                        "width": {"type": "integer", "minimum": 1},
                                        "stations": {"type": "integer", "minimum": 1},
                                        "regs_um": {"type": "array", "items": _xy},   # station sites, type frame
@@ -686,6 +687,14 @@ SCHEMA = {
                                        "physical_inst": _name, "physical_master": _name,
                                        "straps": _core_id_straps,
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"}, "sub_core_parent": {"type": "string", "minLength": 1}, "sub_core_leaf_pin": {"type": "string", "minLength": 1},
+                                       # QC-SLECTL-B 11-05: one paramod instance of the bound module hardened as a named
+                                       # wrapper master (param_wrap.py: kit-only rename, exact params, no logic)
+                                       "param_wrap": {"type": "object", "required": ["base", "params"], "additionalProperties": False,
+                                                      "properties": {"base": _name, "params": {"type": "object", "minProperties": 1,
+                                                                     "additionalProperties": {"type": "integer"}}}},
+                                       # QC-SLECTL-B 11-05: the core reset pin keeps its bound net (e.g. cland_start, rst_n);
+                                       # not a wavefront reset target (no relay, no RTL rewire)
+                                       "reset_net": _name,
                                        "physical_id_alias": _physical_id_alias,
                                        "position_id_contract": _position_id_contract,
                                        "bump_ports": _bump_ports,
@@ -2357,7 +2366,15 @@ def validate(raw):
             except ValueError as exc:
                 errs.append(f"type {tn} slot {s['name']}: {exc}")
             if s["in_face"] == s["out_face"]:
-                errs.append(f"type {tn} slot {s['name']}: in_face == out_face")
+                if not s.get("turnaround", False):
+                    errs.append(f"type {tn} slot {s['name']}: in_face == out_face")
+                else:
+                    # A registered U-turn has independent ingress and egress pins on one
+                    # edge. Keep their windows disjoint; all station/reach/bit-site and
+                    # generated _i/_o checks continue unchanged.
+                    iw, ow = s.get("in_window_um"), s.get("out_window_um")
+                    if iw is None or ow is None or min(iw[1], ow[1]) > max(iw[0], ow[0]):
+                        errs.append(f"type {tn} slot {s['name']}: turnaround needs disjoint in/out windows")
             if "regs_um" in s and len(s["regs_um"]) != s.get("stations", 1):
                 errs.append(f"type {tn} slot {s['name']}: {len(s['regs_um'])} regs_um for {s.get('stations', 1)} "
                             "stations")

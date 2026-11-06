@@ -7985,10 +7985,10 @@
      "master": "ot_sram_1r1w2c_64x546_m1",
      "orient": "R0",
      "rect_um": [
-      60.0,
-      8.4,
-      238.632,
-      89.4
+      106.488,
+      54.0,
+      285.12,
+      135.0
      ]
     },
     {
@@ -7996,15 +7996,15 @@
      "master": "ot_sram_1r1w_32x546_m1",
      "orient": "R0",
      "rect_um": [
-      60.0,
-      105.0,
-      237.768,
-      186.0
+      106.488,
+      151.2,
+      284.256,
+      232.2
      ]
     }
    ],
    "channel_rule_um": 10.8,
-   "basis": "DIE-HBM-61/SPLIT d44v part 6"
+   "basis": "DIE-HBM-61/SPLIT d44v part 6 | HBM-GAPS-2 rxmac 11-05: both macros up ~46 um: the S face (875 M5 pins, x 0-197.6) had no flop band under u_dmem (y 8.4), DPL-0033 in rxm6 and B5 f27c; S band now 49.7 um, N band 104.8 um | HBM-GAPS-3 rx3 11-06: both macros right (x 60 -> 106.488, R0): the pin wall (rd_out 546 + wd_in 267 on the W macro edge) faced a 55.7 um strip and GRT overflowed at the u_cmem NW corner (x 40-80, y 220-240: cw_q face nets + u_out.c_rd); W logic region now 102.2 um, E gap 12.96 um to the core edge (wd_in E half + w_mask ties)"
   },
   "ot_hidx_s3_q": {
    "status": "KNOWN",

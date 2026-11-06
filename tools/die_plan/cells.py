@@ -149,7 +149,8 @@ def ring_cells(width):
 def landing_rings(t):
     """cells of all landing rings a type carries (clock.landing_contract.bands[*].width)."""
     bands = ((t.get("clock") or {}).get("landing_contract") or {}).get("bands") or {}
-    return sum(ring_cells(b["width"]) for b in bands.values() if isinstance(b, dict) and b.get("width"))
+    return sum(ring_cells(b["width"]) for b in bands.values()
+               if isinstance(b, dict) and b.get("width") and not b.get("hard_core"))   # QC-SLECTL-B: ring in a child
 
 
 def _add_landing(types, out, by_type=None):

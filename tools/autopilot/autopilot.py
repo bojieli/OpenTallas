@@ -105,7 +105,7 @@ QCOLS = ["die", "type", "kit", "src", "geom", "geom_ref", "mem_gb", "cells", "la
 # PER-DIE FLOW RELEASES (METHODOLOGY 12.9e, OWNER 2026-10-26): flow-YYYYMMDD-a|b covers every die;
 # flow-YYYYMMDD-a|b-<die tag> covers only that die (route holds / provenance lift per die; a die whose canary is
 # pending keeps its previous tag).
-FLOW_TAG_RE = re.compile(r"^flow-\d{8}-[a-z](?:-(qc|s81|head|kv|hbm))?$")
+FLOW_TAG_RE = re.compile(r"^flow-\d{8}-[a-z]+(?:-(qc|s81|head|kv|hbm))?$")
 DIE_FLOW_TAG = {"qwen_compute": "qc", "s81": "s81", "cp1": "s81", "s81_head": "head", "qwen_kvsys": "kv", "kv": "kv",
                 "hbm": "hbm"}
 

@@ -2777,13 +2777,15 @@
    "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh"
   ],
   "defines": [],
-  "params": {},
+  "params": {
+   "BMTHC": 1
+  },
   "macros": [
    "ot_sram_1r1w2c_64x546_m1",
    "ot_sram_1r1w_32x546_m1"
   ],
-  "source": "HBM-REFORM-B d44v part 20 sub-core of ot_pdie_serdes; lockstep bench results/die_hbm_1104/reform_b/split_p20/run_eq.sh",
-  "source_commit": "c7546b975b1504036f1b513d28e5dc1675ed9e57",
+  "source": "HBM-REFORM-B d44v part 20 sub-core of ot_pdie_serdes; lockstep bench results/die_hbm_1104/reform_b/split_p20/run_eq.sh; HBM-GAPS-3 rx3 11-06: BMTHC 1 (RiBM theta_45 reachable form, LEC th[45][9:1] X power-up)",
+  "source_commit": "2a1bd4ec8b26acf74c4f4463db087ee748f8a9d9",
   "read_at_commit": true,
   "util": 0.4
  },
@@ -3174,10 +3176,12 @@
    "ot_sram_1r1w_64x512_m1_r2c2",
    "ot_sram_1rw_256x64_m4_r2c2"
   ],
-  "defines": [],
+  "defines": [
+   "OT_Q2NF_TGTQ1"
+  ],
   "params": {},
   "source": "HBM-REFORM-B5 d44v part 33 tile of ot_hfd_coll_q2n2_body_core; bench results/die_hbm_1104/reform_b/split_p33/",
-  "source_commit": "7b542aa63fa34be4292360da286a76cca3487451",
+  "source_commit": "c009441731c50f29d09a0916a9aecd15804493ea",
   "read_at_commit": true,
   "util": 0.45
  },

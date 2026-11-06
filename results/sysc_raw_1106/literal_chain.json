@@ -1,0 +1,122 @@
+{
+ "branches": 23,
+ "flops": 101,
+ "consumers": {
+  "origin": {
+   "net": "cland_raw_o_0",
+   "original": "rst_n_t31",
+   "branch": "o"
+  },
+  "fstart:ft1_o": {
+   "net": "cland_raw_fs_ft1_o_6",
+   "original": "rst_n_t31",
+   "branch": "fs_ft1_o"
+  },
+  "fstart:o_dNd_kv_att_tx_beat": {
+   "net": "cland_raw_fs_o_dNd_kv_att_tx_beat_6",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dNd_kv_att_tx_beat"
+  },
+  "fstart:o_dNd_kv_att_tx_kind": {
+   "net": "cland_raw_fs_o_dNd_kv_att_tx_kind_6",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dNd_kv_att_tx_kind"
+  },
+  "fstart:o_dNd_kv_att_tx_slot": {
+   "net": "cland_raw_fs_o_dNd_kv_att_tx_slot_6",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dNd_kv_att_tx_slot"
+  },
+  "fstart:o_dNd_kv_emb_tx_slot": {
+   "net": "cland_raw_fs_o_dNd_kv_emb_tx_slot_0",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dNd_kv_emb_tx_slot"
+  },
+  "fstart:o_dNd_kv_kvn_word_generation": {
+   "net": "cland_raw_fs_o_dNd_kv_kvn_word_generation_6",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dNd_kv_kvn_word_generation"
+  },
+  "fstart:o_dNd_kv_kvn_word_identity": {
+   "net": "cland_raw_fs_o_dNd_kv_kvn_word_identity_6",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dNd_kv_kvn_word_identity"
+  },
+  "fstart:o_dNd_kv_lpf": {
+   "net": "cland_raw_fs_o_dNd_kv_lpf_0",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dNd_kv_lpf"
+  },
+  "fstart:o_dNd_kv_lup": {
+   "net": "cland_raw_fs_o_dNd_kv_lup_0",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dNd_kv_lup"
+  },
+  "fstart:o_dNd_kv_rcy": {
+   "net": "cland_raw_fs_o_dNd_kv_rcy_0",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dNd_kv_rcy"
+  },
+  "fstart:o_dNd_kv_rec_rx": {
+   "net": "cland_raw_fs_o_dNd_kv_rec_rx_0",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dNd_kv_rec_rx"
+  },
+  "fstart:o_dNd_kv_rx_payload": {
+   "net": "cland_raw_fs_o_dNd_kv_rx_payload_6",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dNd_kv_rx_payload"
+  },
+  "fstart:o_dNd_kv_skw": {
+   "net": "cland_raw_fs_o_dNd_kv_skw_6",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dNd_kv_skw"
+  },
+  "fstart:o_dNd_kv_srx": {
+   "net": "cland_raw_fs_o_dNd_kv_srx_6",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dNd_kv_srx"
+  },
+  "fstart:o_dNd_kv_svc": {
+   "net": "cland_raw_fs_o_dNd_kv_svc_6",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dNd_kv_svc"
+  },
+  "fstart:o_dNd_kv_svc_d1": {
+   "net": "cland_raw_fs_o_dNd_kv_svc_d1_0",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dNd_kv_svc_d1"
+  },
+  "fstart:o_dcal_dob": {
+   "net": "cland_raw_fs_o_dcal_dob_0",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dcal_dob"
+  },
+  "fstart:o_dcal_flt": {
+   "net": "cland_raw_fs_o_dcal_flt_6",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dcal_flt"
+  },
+  "fstart:o_dcal_lay": {
+   "net": "cland_raw_fs_o_dcal_lay_0",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dcal_lay"
+  },
+  "fstart:o_dcal_tks": {
+   "net": "cland_raw_fs_o_dcal_tks_6",
+   "original": "rst_n_t31",
+   "branch": "fs_o_dcal_tks"
+  },
+  "fstart:o_host_link_rst_n": {
+   "net": "cland_raw_fs_o_host_link_rst_n_6",
+   "original": "rst_n_t31",
+   "branch": "fs_o_host_link_rst_n"
+  },
+  "fstart:o_serdes_E_tx_up": {
+   "net": "cland_raw_fs_o_serdes_E_tx_up_0",
+   "original": "rst_n_t31",
+   "branch": "fs_o_serdes_E_tx_up"
+  }
+ },
+ "status": "literal source chains verified; cold admission still requires actual mechanism proof"
+}

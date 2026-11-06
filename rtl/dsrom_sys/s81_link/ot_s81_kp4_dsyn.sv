@@ -8,8 +8,9 @@
 //   and the 3:1 result select.  Out: the received words x_q (to ot_s81_kp4_ddly) and the key-equation result k_* (to
 //   ot_s81_kp4_dchn).  T = the cycle word 0 of a frame sits in x1.  Regional synchronous reset, no datapath reset.
 // MUT 3: the syndrome loop is not restarted at chunk 0 (stale syndromes) -- bench mutant of this tile.
+// BMTHC (opt-in, default 0): ot_s81_kp4_bm THC (theta_45 reachable form) in the RiBM units.
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3) (
+module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, parameter integer BMTHC = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          p_v,
@@ -111,7 +112,7 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3) (
     wire         u_any [0:NBM-1];
     wire [3:0]   u_dn  [0:NBM-1];
     generate for (gu = 0; gu < NBM; gu = gu + 1) begin : g_bm
-        ot_s81_kp4_bm #(.NG(4), .NCD(4)) u_bm (.clk(clk), .rs_n(rs_n[2]), .ld(ldr[gu]), .S(S_q),
+        ot_s81_kp4_bm #(.NG(4), .NCD(4), .THC(BMTHC)) u_bm (.clk(clk), .rs_n(rs_n[2]), .ld(ldr[gu]), .S(S_q),
             .lam(u_lam[gu]), .om(u_om[gu]), .L(u_L[gu]), .any(u_any[gu]), .done(u_dn[gu]));
     end endgenerate
     // ================= result of the unit that is done (to the back tile)
