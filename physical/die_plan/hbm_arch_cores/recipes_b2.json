@@ -3559,5 +3559,36 @@
     "defines": [],
     "util": 0.4,
     "source": "Default-off exact captured injmw2 registered-source profile. Six idx_tx input buses retain negative-edge input face then positive-edge stage, same1logicalinputcycle; allotherports originalfacephase. Use --face-shell off to retain actualsourcefaces, strict external face_guard retained. No canonical recipe/plan activation; current pinview correction must qualify separately."
+  },
+  "ot_pdie_serdes_tx__ff": {
+    "top": "ot_pdie_serdes_tx",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1104b/ot_pdie_serdes_split.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+      "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh",
+      "rtl/hbm_accel/cores_split/reform_1104b/ot_s81_kp4_enc_la.sv",
+      "rtl/hbm_accel/cores_split/reform_1104b/ot_s81_kp4_enc_la2_mat.svh",
+      "rtl/hbm_accel/cores_split/reform_1104b/ot_s81_kp4_enc_ff_mat.svh"
+    ],
+    "defines": [],
+    "params": {
+      "ELA": 2,
+      "EFF": 1
+    },
+    "macros": [],
+    "source": "HBM-REFORM-B d44v part 20 sub-core of ot_pdie_serdes; lockstep bench results/die_hbm_1104/reform_b/split_p20/run_eq.sh; HBM-GAPS-3 11-05 ELA=2 (two-step KP4 parity lookahead, +1 edge, tb_kp4_enc_la.sv / tb_pdie_tx_ela.sv); dormant full TX FF option ELA2/EFF1: exact native pma_tx +1 logical common-clock cohort edge, e_flt_o unchanged,544bits/edge; HBM-48 conditional TOK ACK; reset/drain and arbitrary serializer/gearbox phase excluded",
+    "source_commit": "dc98564b80a03d9e73d824af80053810042efd19",
+    "read_at_commit": true,
+    "util": 0.4
   }
 }
