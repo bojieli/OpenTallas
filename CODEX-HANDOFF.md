@@ -1,6 +1,10 @@
+# Codex handoff document (generated 2026-11-06 02:19 PST)
+
+Read ~/coord/CODEX-ROLE.md first: your role, the binding rules, and how to cover every task.
+
 # OpenTallas — current Codex handoff
 
-Updated 2026-11-06 00:02 PST. Current work only; historical evidence stays in lane files and the queue.
+Updated 2026-11-06 02:19 PST. Current work only; historical evidence stays in lane files and the queue.
 
 Claude stopped on the weekly limit; reported reset **2026-11-12 04:00 America/Los_Angeles**. Codex continues all lanes until explicitly told to hand back. Read `CODEX-ROLE.md`. Owner questions go as plain text under OWNER? in `CODEX-LOG.md`; keep working, never open a blocking dialog.
 
@@ -20,7 +24,7 @@ Totals: **150/216 core views; 17/486 types**. HBM's module-only count is46/94; i
 
 **No complete die release exists.** Remaining release work includes current partition views, real-view parent composition, die routing/clock/STA and token qualification. Component or bounded-region passes are not whole-die passes.
 
-New results not yet incorporated into that census: KV ORDER qualified (credit submitted); S81 t46 re-signed LOCAL_PASS_NEEDS_PARENT; HBM brmw current-tag SIGNED+LEC. IDX's signed child is not its still-unsigned parent core.
+New results outside that cached census: KV ORDER qualified/count credit submitted; S81 t46 local signed; HBM brmw, injmw2 (TT+171.23/FF+.07, EQ18691) and N4rsq (TT+21.75/FF+.01, EQ13427) qualified. Do not recompute totals by adding these without checking existing census membership. IDX's signed child is not its unsigned parent. No die is released.
 
 ## Execution rules
 
@@ -37,41 +41,54 @@ New results not yet incorporated into that census: KV ORDER qualified (credit su
 
 | Core | Current action |
 |---|---|
-| S81 BKSEL Q | LEC66785EQ; internal-SRAM hold repair remains negative but progressing. Not an external-port padding case. |
-| S81 ENG RR E | Measured IO-reference recovery in GRT; original congestion0, timing frame was mismatched. |
-| S81 IDX TX | Child SIGNED TT+4.48/FF+.13 and routedLEC5385EQ. Current-tag view then real SPLIT2 parent; canonical hard-child generator support being integrated. |
-| S81 COLL E/W | Old forms preserved; conservative west M6-access estimate0overflow, full sample inGRT. East follows qualified form plus plan/OBS allocation. |
-| S81 ROM Q | HW half DRT complete DRCempty/ANT0, finish/RCX/signoff next; HE LEC47533EQ/GRT active. Both halves and real hard-child parent still required. |
-| QC NK | Protected-data-repeater obstruction fixed; GRT setup table positive/TNS0, final routing/signoff still pending. |
-| QC NL | Corrected macro/pin form inDRT; parallel routed-form ECO active. Current child/model LEC collection continues. |
-| KV ORDER | Qualified TT+8.66/FF+4.48/DRC0;16remaining proof cones BDD UNSAT; count credit submitted. |
-| KV PEER | Corrected .40/M7 reset/locality A/B queued. Admission being right-sized from measured29.8GiB whole-container peak, only own unstarted clients replaced. |
-| KV PROMPT | RoutedLEC32050EQ; DRT active with oscillating violations. Preserve progressing form; true .40 fallback prepared if required. |
-| KV INGEST | New form proof67309EQ+mutant, actual .40/M7 verified; admitted and nowCTS. |
+| S81 BKSEL Q | LEC66785EQ; retained GRT TT+146.25/FF-.8, private route continuation with actual PG6 pending. |
+| S81 ENG RR E | Internal repair closes with ~1.4k buffers vs failed25k baseline; full parent IO still -148.38. Corrected continuation active. |
+| S81 IDX TX | Child SIGNED TT+4.48/FF+.13/EQ5385; parent K10 rebuild with fixed hard-child generation/PG6 active. |
+| S81 COLL E/W | Tall form rejected for parent fit. Original-footprint PG6/M6 canary GRT0, actual rails/vias; compact E/W builds active on epyc2. |
+| S81 ROM Q | East TT+24.69/FF-22.28; west TT-22.79/FF-57.58, both DRC0. Late ECOs active; parent needs glue rows around exact-fit halves. |
+| QC NK | Routed proof closed36818EQ. Long-leg repeater repair hit epyc4 ENOSPC during DRT; retained GRT recovered to epyc6 for resume. |
+| QC NL | CE-preserving correction proved41990EQ; physical ECO active, three M6 PG shorts remain. |
+| KV ORDER | Qualified TT+8.66/FF+4.48/DRC0; all proof complete; count credit submitted. |
+| KV PEER | Actual .40/M7 reset/locality A/B active; measured29.8GiB peak,32GB admission. |
+| KV PROMPT | Old B TT-72.86/FF-50.49; C2 physical completion hit ep4 ENOSPC, checkpoints salvaged for postwork resume elsewhere. |
+| KV INGEST | r3 DRC0/EQ37991, TT-35.97/FF-3.40. C2 duplicates high-fanout phase control (34copies/528loads), no extra cycle; active. |
 
-## Other active work and owners
+## Active lanes and next work
 
-- **S81 (`s81`, `s81_core_results`, `s81_types`):** remaining cores above; dedicated leaf/station conservative-form lane owns17 genuine held types. Reset-family and two tap moves merged. Old -378ps FT failures were stale pre-I39 kits; current plan already166.6ps, so only exact missed retries released, no new timing relaxation.
-- **HEAD/QC (`qc_head`, `head`, `residual`):** HEAD n4 FREG/WREG event merged, +1data on4links/K+2, real physical trial live. Final START face-placement fix merged. QC SLECTL split has10 small child masters; source/guard integration and builds active.13/14 old QC holds cleared from actual pilot/fix evidence; HC0 remains genuine reform work.
-- **KV (`kv`, `order_peer`):** cores above; short landing status-lap alternative exact/proved/defaultOFF, physical A/B queued. PHY reset3stations/+3boot event merged. HubWi must use typed-core overlay: bounded FIFO declarations alone do not solve historical whole-HR inlining. KV08 witness-pad explanation is unproven and held; observer traces actual native witness before any plan change.
-- **HBM (`hbm`, `gaps`, `wbq_safe`, `hbm_forms`, `vms_safe`, `bank128`):** q3 SRAM right-width macro fix, clock-pin separations/TX taller slot, TX header source, SVGR RF1 source integrated. Safe WBQ split/parent allocation, bank128 write-face, N4 macro-access, EXPX shallow-clock and remaining core forms active. brmw qualified; h9b and ECO results collecting.
-- **HBM parent (`hbm_parent`):** current real-view q_su21 bounded trial with16signed lane1 children. q_spb2 direct kit hit same-face-slot schema issue; selected useful alternate instead of waiving it. Current type matches retained native m79f bind body exactly.
-- **HBM projection (`hbm_projection`):** production native two-half projection compiler gap being filled. Canonical root+two-half component bench building. Bank128 write-face is dormant until runtime write-to-dependent-read/go+1 guard qualifies; arithmetic-stubbed boundary proof is not full projection qualification.
-- **TOK (`token`, `ds_native`):** DS LINK-2GB repaired using395existingPIC libraries; no cache rebuild. Real pad/link first-dispatch diagnostic authorized, cohort11/01 explicit. IMG2 five missing components restored/rebuilding, not all395. QW controlled hierarchy build4 active, no40frontend burst. HBMvh1 build4 active. Model-only +13XFIN/+2partial updates do not change issued words.
-- **Wave (`wave_flow`):** all5 waves activated on pinned2c705 source, p35 HBM/ctlrq HEAD, fresh roots. Publishing/fixing exact stale holds/retries in class batches; preserve live spilled jobs. Advance a stable later cohort after current tick, do not chase every merge.
-- **Shared repair (`hbm_forms`):** private repair-only port-hold mask prototype repairs814internal qout violations in one chunk vs thousands of port-padding iterations. Final TT/FF constraints must restore exactly (17digit snapshot); unchanged final signoff, no live-kit edits. Not yet adopted.
-- **Fleet/integration (`fleet`, `merge`):** all6hosts active; cleanup recovered45GB from creator-released pristine aborted checkout plus approved manifest cleanup. No safe large unreferenced candidates remain. Shared ECO bundle/nested-output fix merged. Integration READY queue stays batched; TKM old reset branch still awaits missing mutant control.
+- **S81 (`s81`, `s81_core_results`, `s81_types`):** cores above; t13 macro resites and t51 conservative leaf forms active. t51 actual functional-cell growth exceeds150k: structural whole-payload split if current alternative cannot fix it. Legacy whole-payload FREG source/event merged; reset/control stages remain explicit.
+- **HEAD/QC (`qc_head`, `head`, `residual`):** QC HC0 four real signed children and SLECTL split ready for coherent native adoption; union their independent sidecars. SU_l1 six station pilots launched after exact geometry/lockstep. HEAD actual clock association exposes severe real clock/FF hold problems (about-820ps), not a budget issue; real-view native transport/boot integration continues.
+- **KV (`kv`, `order_peer`):** cores above; ring pilots active. Fresh SYS_C and PHY generation caught stale wrappers (101planned vs96emitted stages;3reset stations vs0): own prephysical workers stopped, canonical full bind regenerating. Fix shared fresh-kit preparation before releasing them. No physical-design strike for that tooling mismatch.
+- **HBM (`hbm`, `gaps`, `wbq_safe`, `hbm_forms`, `vms_safe`, `bank128`):** q3 corrected SRAM width GRT0; qout repair-only hold pilot active; VMS remaining clock slew needs clock corridor fix. Bank128 A DRT0/ANT0, final timing pending; B and write-face trials active. Actual PG6 default-off capability ready (real rails/vias), parent M6 reservation/M7 landing still owed. WBQ p36 native split/profile/source guards ready; eight store helpers and body arithmetic repair active. q2nf_rest actual209669placed cells fails150k rule; geometry_forms owns two4-SRAM helper split with hbm/gaps.
+- **HBM parent (`hbm_parent`, `kit_assembly`):** q_spb2 uses two real signed children, full reset context and mandatory internal stations; native field/control/face fixes before route. q_su21 measured fixed-face phase mismatch: preserve internal VI index2, separately retime external operand path4 under default-off variant, prove before new child qualification. Old signed views untouched.
+- **HBM projection (`hbm_projection`):** actual arithmetic build progressing; do not restart. Owned-row option/compiler boundary proof passes, but arithmetic qualification pending. One shared owned-root type will latch global row from existing launch metadata rather than require24 rank-specific views; explicit23 remote inputs/calendar still required.
+- **TOK (`token`, `ds_native`):** DS exact14station epoch biases merged dormant; scoped rebuilt candidate passes old epoch fault. Current KS diagnostic still has external HOST programming cut; do not call native boot. Default-off actual HOST frame queue/removal of force authorized. QW controlled build active; HBM top recovery reused86 interfaces and reduced frontend277GB to2.8GB, current top archive compiling. Historical cohort is not current G5.
+- **Wave/shared (`wave_flow`, `kit_assembly`):** staged pinned cohorts, preserve live jobs. Shared source realization, sealed hard-child generation, full reset context/internal stations, actual PG publication, typed clocks, argv cache/parser and exact proof transfer merged. Mandatory canonical bind emission is the next construction fix.
+- **Fleet (`fleet`):** **epyc4 scratch2 exhausted**, confirmed NK and PROMPT failures; recover creator-released inactive duplicates only, preserve live/SIGNED/.keep/unique. KV ring A remains active on that filesystem. epyc2 scratch~49GB below normal50GB admission floor. Resume retained checkpoints on hosts with space; no guard bypass or foreign job kills.
 
-## Current integration / where to look
+## Integration / where to look
 
-Latest confirmed main **7eff5fd60d2**; current physical shared tags at a9afc0fdd8b: x-head/v-qc/s-kv/x-s81/ae-hbm; newer KV-onlyt-kv on c63e950d550. Every abbreviated tag has prefix `flow-20261106-`. Wave's active2c705 cohort is older by design; merged does not mean deployed.
+Latest confirmed main **99c5ae21116881c67ebe0649acdd5c13850ea614**; published tags ae-head/ac-qc/aa-kv/af-s81/an-hbm (prefix `flow-20261106-`). Merged source does not imply deployment or physical qualification. Merge worker owns central intel2 lock and source merges.
 
-Pending next merges: S81 opt-in IDX hard-child support/source (activation waits actualGEN/current view/PG-OBS event); +2BEATnorm metadata. Other READYs go through merge owner, preserve exact proof/scope.
+Next READY batch: dormant bank PG6 `19323f08a0`; coherent WBQ p36 `cedee7b597c` + `27d8a911e60`; QC HC0 `e299c62a7c` plus actual dependency collector; proof-only N4 `b973a60daf3` (never old bad16fc branch). Owners must supply exact dependency/proof scope; no unqualified form activation.
 
-Concrete job paths/PIDs and newest results: per-lane `## CODEX notes`, `CODEX-LOG.md`, `lanes/CODEX-*.md`, and `lanes/COORD-REVIEW-QUEUE.md` on intel2 `coord/state`. Historical lane index: `lanes/CODEX.md`. Do not copy historical journals into this summary.
+Concrete jobs, branches and latest evidence: active `lanes/CODEX-*.md`, `CODEX-LOG.md`, and `lanes/COORD-REVIEW-QUEUE.md` on intel2 `coord/state`. Historical lane index stays in `lanes/CODEX.md`; do not copy historical journals here.
 
 ## OWNER? / handback
 
 Two nonblocking questions are logged in CODEX-LOG: permission to migrate predecessor's exact unstarted192GB svc_lo proof waiter; permission for manifest moves of inactive superseded attempts protected only by terminal metadata. Defaults retain waiter and existing cleanup guards. Keep other work moving.
 
 On explicit Claude-reset notice: park safely, append per-lane branches/SHAs/jobs/results/open failures/questions to CODEX-LOG, reply exactly `HANDOFF DONE`, stop.
+
+## Latest handoff milestones
+
+CODEX: DS native833 actualclockPASS, earlyLAND_FAULT diagnosed to6edgewriter/reader resetorigin skew. Scoped default0 reader EPOCH_BIAS+12/12smallestdata/reference/mutant proof READY f217e57fd20, no boundadoption; TOK-DS-5 notes. IMG2 exactsource2/5restoredcomponentsPASS, serialrecoveryactive epyc2.
+
+CODEX: 2026-11-06 00:53 PST MERGE: urgent multi-letter flow parser +dormant QC split support +exact Q2NF +IDXmetadata landed7ddbd3b72f0,tagsab/z/x/ac/ak verified. CurrentQC POR unchanged; fresh re-sign clients need parser refresh.
+CODEX: 2026-11-06 00:56 PST KV AHUB typed parent READY codex/kv-ahub-typed-1106@6fbf41e728: exact guarded ck7/AM projection, two signed hard views retained, GEN/PREFLIGHT PASS and image reviewed; one prepared parent kit handed to WAVE-FLOW after merge. Peer A/B and prompt C physical variants admitte
+
+CODEX: 2026-11-06 01:33 PST: main1b913c2b296==origin. Prior faecd095101 batch landed assembly70e623, PG6d655, incrementalIDX6320, typedAHUB6fbf, dormantCE5fadc, same-parent native seam661; tagsac-head/aa-qc/y-kv/ad-s81/al-hbm. Current batch44378953d42/7db00756012/1b913c2b296 lands legacyFREGf555, S8
+
+CODEX: 2026-11-06 02:06 PST: main99c5ae21116881c67ebe0649acdd5c13850ea614==origin. Eight approved sources: geometry7066 (only two existing PHYflop resites active, SD planning only), wave668, hardchildstationsd918, nativewidthe88, freshkit4cd, completedEQfdf7, optionalXOR414, QC8views e698. Merges a2
+
+For live jobs and new results, read the active lane files and lanes/COORD-REVIEW-QUEUE.md on intel2. Historical lane contents are intentionally omitted from this handoff.
+
