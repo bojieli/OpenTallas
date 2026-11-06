@@ -174,7 +174,7 @@ def main():
     ap.add_argument("--repo", default=str(Path(__file__).resolve().parents[5]))
     ap.add_argument("--tool", default=None, help="plan tool dir (default: REPO/tools/die_plan, this checkout)")
     ap.add_argument("--plan-commit", default="0ea1350db")
-    ap.add_argument("--util", type=float, default=0.5)
+    ap.add_argument("--util", type=float, default=None, help="explicit density overrides recipe (fallback 0.5)")
     ap.add_argument("--sigmax", default="M5")
     ap.add_argument("--pins-file", default=None, help="pick the plan core with this pins_file when one type id has "
                     "several (e.g. hfd_ep_static, vm_calendar pv0/pv1); the kit dir gets the pins-file stem as suffix")
@@ -292,7 +292,7 @@ def main():
            "override export MAKE_TRACKS = /work/make_tracks.tcl",
            "export MIN_ROUTING_LAYER = M2",
            f"export MAX_ROUTING_LAYER = {a.sigmax}",
-           f"export PLACE_DENSITY = {rec.get('util', a.util):g}",
+           f"export PLACE_DENSITY = {a.util if a.util is not None else rec.get('util', 0.5):g}",
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",
            "export LEC_CHECK = 0",
