@@ -1,0 +1,292 @@
+{
+  "verdict": "PASS",
+  "canonical_hook": "physical/common_flow/ot_keep_regs.tcl; same hook exported by original actual topk kit",
+  "mapped_standard_cells": 97304,
+  "mapped_cell_area_um2": 11622.447,
+  "seq_cells": 9914,
+  "extra_cycles": 0,
+  "distinct_replica_flops": 24,
+  "master_fill_bits": [
+    38090,
+    38092,
+    13078
+  ],
+  "master_fill_alias_note": "Unkept original master aliases three equal local copy bits; all eight local three-bit copies have distinct actual FF drivers",
+  "replica_nets": [
+    {
+      "net": "genblk2.g_fill_columns.column_group[0].fill_local",
+      "bits": [
+        37626,
+        38043,
+        38040
+      ],
+      "flop_drivers": [
+        {
+          "instance": "$auto$ff.cc:337:slice$6009",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$6019",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$5979",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        }
+      ]
+    },
+    {
+      "net": "genblk2.g_fill_columns.column_group[1].fill_local",
+      "bits": [
+        38044,
+        38045,
+        38041
+      ],
+      "flop_drivers": [
+        {
+          "instance": "$auto$ff.cc:337:slice$6029",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$6039",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$5989",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        }
+      ]
+    },
+    {
+      "net": "genblk2.g_fill_columns.column_group[2].fill_local",
+      "bits": [
+        11555,
+        11553,
+        13078
+      ],
+      "flop_drivers": [
+        {
+          "instance": "$auto$ff.cc:337:slice$6049",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$6059",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$5999",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        }
+      ]
+    },
+    {
+      "net": "genblk2.g_fill_columns.column_group[3].fill_local",
+      "bits": [
+        11481,
+        11438,
+        12094
+      ],
+      "flop_drivers": [
+        {
+          "instance": "$auto$ff.cc:337:slice$6069",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$6079",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$5922",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        }
+      ]
+    },
+    {
+      "net": "genblk2.g_fill_columns.column_group[4].fill_local",
+      "bits": [
+        11324,
+        11333,
+        11353
+      ],
+      "flop_drivers": [
+        {
+          "instance": "$auto$ff.cc:337:slice$6089",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$6099",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$5953",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        }
+      ]
+    },
+    {
+      "net": "genblk2.g_fill_columns.column_group[5].fill_local",
+      "bits": [
+        11226,
+        11171,
+        13298
+      ],
+      "flop_drivers": [
+        {
+          "instance": "$auto$ff.cc:337:slice$6109",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$6119",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$5969",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        }
+      ]
+    },
+    {
+      "net": "genblk2.g_fill_columns.column_group[6].fill_local",
+      "bits": [
+        10237,
+        10238,
+        12732
+      ],
+      "flop_drivers": [
+        {
+          "instance": "$auto$ff.cc:337:slice$6129",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$6139",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$5943",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        }
+      ]
+    },
+    {
+      "net": "genblk2.g_fill_columns.column_group[7].fill_local",
+      "bits": [
+        38090,
+        38092,
+        37922
+      ],
+      "flop_drivers": [
+        {
+          "instance": "$auto$ff.cc:337:slice$6149",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$6159",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        },
+        {
+          "instance": "$auto$ff.cc:337:slice$5912",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "keep": null
+        }
+      ]
+    }
+  ],
+  "cell_types": {
+    "AO21x1_ASAP7_75t_R": 11336,
+    "AO32x1_ASAP7_75t_R": 3883,
+    "OA22x2_ASAP7_75t_R": 1596,
+    "AO221x1_ASAP7_75t_R": 4972,
+    "BUFx2_ASAP7_75t_R": 8493,
+    "OA21x2_ASAP7_75t_R": 7779,
+    "OA222x2_ASAP7_75t_R": 836,
+    "AO222x2_ASAP7_75t_R": 2604,
+    "OR2x2_ASAP7_75t_R": 3496,
+    "AND3x1_ASAP7_75t_R": 2357,
+    "OAI22x1_ASAP7_75t_R": 1525,
+    "AO22x1_ASAP7_75t_R": 2096,
+    "NOR2x1_ASAP7_75t_R": 2435,
+    "INVx1_ASAP7_75t_R": 7918,
+    "AOI22x1_ASAP7_75t_R": 145,
+    "OAI21x1_ASAP7_75t_R": 1160,
+    "AOI211x1_ASAP7_75t_R": 179,
+    "XNOR2x2_ASAP7_75t_R": 129,
+    "OA211x2_ASAP7_75t_R": 6146,
+    "AND4x1_ASAP7_75t_R": 55,
+    "XOR2x2_ASAP7_75t_R": 50,
+    "OR4x1_ASAP7_75t_R": 317,
+    "MAJx2_ASAP7_75t_R": 42,
+    "AND2x2_ASAP7_75t_R": 5683,
+    "OR3x1_ASAP7_75t_R": 4052,
+    "OR5x1_ASAP7_75t_R": 4,
+    "AO31x2_ASAP7_75t_R": 325,
+    "AOI21x1_ASAP7_75t_R": 2158,
+    "NAND2x1_ASAP7_75t_R": 4768,
+    "BUFx3_ASAP7_75t_R": 84,
+    "BUFx6f_ASAP7_75t_R": 13,
+    "AND2x4_ASAP7_75t_R": 4,
+    "BUFx4f_ASAP7_75t_R": 5,
+    "NOR3x1_ASAP7_75t_R": 39,
+    "AO211x2_ASAP7_75t_R": 239,
+    "AND5x1_ASAP7_75t_R": 4,
+    "OA31x2_ASAP7_75t_R": 275,
+    "AOI221x1_ASAP7_75t_R": 59,
+    "NAND3x1_ASAP7_75t_R": 30,
+    "OA33x2_ASAP7_75t_R": 42,
+    "BUFx4_ASAP7_75t_R": 4,
+    "OA221x2_ASAP7_75t_R": 38,
+    "BUFx5_ASAP7_75t_R": 7,
+    "AO33x2_ASAP7_75t_R": 6,
+    "NOR2x2_ASAP7_75t_R": 1,
+    "AND3x2_ASAP7_75t_R": 1,
+    "DFFASRHQNx1_ASAP7_75t_R": 56,
+    "DFFHQNx1_ASAP7_75t_R": 9858,
+    "$scopeinfo": 127
+  }
+}
