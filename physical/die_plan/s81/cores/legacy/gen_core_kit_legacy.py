@@ -36,6 +36,7 @@ core generators, claude/flow-fix-1025b):
 import argparse
 import hashlib
 import json
+import math
 import re
 import shutil
 import subprocess
@@ -1096,6 +1097,73 @@ def multi_root_sdc(text, mr, per):
     return text
 
 
+
+def root_window_contract(spec, mr):
+    """Optional canonical per-port source windows; no IO-budget or mask change.
+
+    tap_window_port_ps is the existing gen_phys/sdc_lint contract, not a new
+    clock relationship. Every scalar physical root must be explicitly covered.
+    Bus-root aggregation cannot represent unequal source frames and is refused.
+    """
+    if "tap_window_port_ps" not in spec:
+        return None
+    if not mr:
+        raise SystemExit("tap_window_port_ps requires an explicit multi-root contract")
+    roots = [p for r in mr["roots"] for p in r["pins"]]
+    if any(len(r["pins"]) != 1 or r["pins"][0] != r["base"] for r in mr["roots"]):
+        raise SystemExit("tap_window_port_ps requires scalar root ports; scalarize bus entries without changing bindings")
+    raw = spec["tap_window_port_ps"]
+    if not isinstance(raw, dict) or set(raw) != set(roots):
+        raise SystemExit("tap_window_port_ps must cover exactly every declared root port")
+    out = {}
+    for root, value in sorted(raw.items()):
+        if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or value < 0:
+            raise SystemExit(f"tap_window_port_ps: {root} needs a finite nonnegative window")
+        out[root] = float(value)
+    return out
+
+
+def root_landed_contract(spec, mr):
+    """Canonical landed-clock role; preserve half-cycle bounds to each real tap."""
+    if "landed_clock_inputs" not in spec:
+        return []
+    landed = spec["landed_clock_inputs"]
+    roots = {r["base"] for r in (mr or {}).get("roots", [])}
+    if not isinstance(landed, list) or not landed or len(set(landed)) != len(landed) \
+            or not set(landed) < roots:
+        raise SystemExit("landed_clock_inputs needs unique scalar declared roots and at least one regular root")
+    return sorted(landed)
+
+
+def root_landed_sdc(text, landed, mr, per):
+    if not landed:
+        return text
+    clocks = {r["base"]: r["clock"] for r in mr["roots"]}
+    bound = per / 2 - sdc_lint.landing_window_setup_ps()
+    if bound <= 0:
+        raise SystemExit("nonpositive landed-clock crossing window")
+    text += "# Captured forwarded-input roles: preserve timed half-cycle max and zero-min in both directions.\n"
+    for receive in landed:
+        for tap in sorted(set(clocks) - set(landed)):
+            for launch, capture in ((receive, tap), (tap, receive)):
+                text += (f"set_max_delay -ignore_clock_latency {bound:.4f} -from [get_clocks {clocks[launch]}] "
+                         f"-to [get_clocks {clocks[capture]}]\n"
+                         f"set_min_delay -ignore_clock_latency 0 -from [get_clocks {clocks[launch]}] "
+                         f"-to [get_clocks {clocks[capture]}]\n")
+    return text
+
+
+def root_window_sdc(text, windows):
+    """Keep the measured early/late frames; existing child IO budgets stay exact."""
+    if windows is None:
+        return text
+    text += "# Captured parent physical-root frames: source early=-window, late=0. No IO credit or exception added.\n"
+    for root, window in windows.items():
+        text += (f"set_clock_latency -source -early {-window:.4f} [get_ports {{{root}}}]\n"
+                 f"set_clock_latency -source -late 0.0000 [get_ports {{{root}}}]\n")
+    return text
+
+
 def multi_root_tcl_patches(kd, mr):
     """kit-copy patches for the per-root consumers (default kits keep the shared files byte-identical):
     core_face_post_synth.tcl  face capture / constant launch flops on the root of the bus's declared domain;
@@ -1546,7 +1614,10 @@ def main():
         from io_hold_qualification import core_kit_budget
         (kd / 'budget.json').write_text(json.dumps(core_kit_budget(plan, mod, ptype), indent=1) + '\n')
     _sdc = sdc(per, ins, tol, [ckb], rsts, mod, in_min_ports, half_max)
-    (kd / "constraint.sdc").write_text(multi_root_sdc(_sdc, mr, per) if mr else _sdc)
+    root_windows = root_window_contract(spec, mr)
+    landed_roots = root_landed_contract(spec, mr)
+    (kd / "constraint.sdc").write_text(root_landed_sdc(
+        root_window_sdc(multi_root_sdc(_sdc, mr, per) if mr else _sdc, root_windows), landed_roots, mr, per))
     if in_min_ports:
         # hold_gate.tcl / sign-off overlays re-apply the flat fallback on every input, then source this (gen_phys form)
         (kd / "io_hold.tcl").write_text(
@@ -1567,6 +1638,11 @@ def main():
                 time_unit_ps=1.0, io_floor_ps=floor, port_latency_ps={},
                 **({"hold_in_min_ports_ps": dict(in_min_ports)} if in_min_ports else {}),
                 **({"insertion_ff_ps": ib["ff"]} if modern else {}))
+    if root_windows is not None:
+        lctx.update(tap_window_port_ps=root_windows, tap_window_ps=min(root_windows.values()),
+                    tap_window_in_ps=max(root_windows.values()))
+    if landed_roots:
+        lctx["landed_clock_inputs"] = landed_roots
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:
