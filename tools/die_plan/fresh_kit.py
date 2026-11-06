@@ -63,7 +63,7 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
         raise ValueError('memory and CPU budgets must be positive')
     if profile == 'partition':
         keys(overrides, ('bind_out', 'asbuilt', 'instance', 'reset_mode', 'assembly_contracts',
-                         'util', 'skip_kit_ir', 'reset_context_plan', 'reset_expected', 'bind_context_plan', 'component_proof'), 'partition overrides')
+                         'util', 'skip_kit_ir', 'reset_context_plan', 'reset_expected', 'bind_context_plan', 'component_proof', 'library_profile'), 'partition overrides')
         keys(overrides.get('reset_expected', {}), ('entry', 'depth', 'release_clocks'), 'reset expected contract')
         if not type_name or core_spec or not overrides.get('bind_out'):
             raise ValueError('partition needs --type and overrides.bind_out; no core spec')
@@ -156,7 +156,11 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
                     args += ['--' + key, overrides[key]]
             if overrides.get('component_proof'):
                 args += ['--component-proof',str(Path(overrides['component_proof']).resolve())]
+            if overrides.get('library_profile'):
+                args += ['--library-profile',str(Path(overrides['library_profile']).resolve())]
             step('kit_rtl', dp / 'bind.py', 'kit-rtl', *args)
+            if overrides.get('library_profile') and not read(rtl / 'kit_rtl.json').get('library_profile_selected'):
+                raise ValueError('kit-rtl did not record the selected library profile replacements')
             receipt = output / 'kit_assembly.json'
             if overrides.get('assembly_contracts'):
                 step('hard_views', dp / 'kit_hard_views.py', '--plan', plan, '--type', type_name,
