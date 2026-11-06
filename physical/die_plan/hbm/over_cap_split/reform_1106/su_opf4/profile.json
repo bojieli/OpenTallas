@@ -1,0 +1,32 @@
+{
+  "status": "FUNCTION_QUALIFIED_PHYSICAL_PENDING",
+  "master": "ot_hbm_su_pg_lane1_opf4_core",
+  "source_sha256": {
+    "physical/die_plan/hbm/over_cap_split/reform_1106/su_opf4/rtl/ot_hbm_su_pg_lane1_opf4_core.sv": "2441cfafbee91462009982d948d38519e264a9c5ad219d353e73b44e1297da6d",
+    "physical/die_plan/hbm/over_cap_split/reform_1106/su_opf4/rtl/ot_hbm_su_pg_lane1_opf4_core__fshell.sv": "f920005fd63204b783d91bfa44821767003affd707660e377b8fb30f02cd219d",
+    "physical/die_plan/hbm/over_cap_split/reform_1106/su_opf4/rtl/ot_hbm_su_pg_lane1_opf4_core__wrap.sv": "e56c69ce26b770e1d0dadc87301f72dae523de15a8c84ccf084540c21c017c47",
+    "physical/die_plan/hbm/over_cap_split/reform_1106/su_opf4/rtl/ot_hbm_su_static_lane__op_extra2.sv": "4e63c9d7de1be0143ff966b1fb4fb3b1a75dc39e47c5404bae005e0cf2a02ee1",
+    "physical/die_plan/hbm/over_cap_split/reform_1106/su_opf4/rtl/ot_hbm_su_static_lane_pinreg__op_extra2.sv": "741c4d8da75154796d440bff324481a4561c63fe3c2d5103099604c8484e1497"
+  },
+  "params": {
+    "MLAT": 5,
+    "ALAT": 3,
+    "outer_index_response_edges": 2,
+    "outer_operand_response_edges": 4,
+    "arithmetic_index_response_edges": 4,
+    "arithmetic_operand_response_edges": 6
+  },
+  "outline_um": [
+    190.08,
+    311.04
+  ],
+  "pins": "identical names/locations/directions to frozen lane1 core; distinct master only",
+  "new_logic": "operand metadata delayed2; four local read enables rd_re && rd_src==0, exact native qualification; external drain bit retained",
+  "new_raw_ff_bits": 52,
+  "physical_view": null,
+  "remaining": [
+    "physical requalification of new distinct master",
+    "source-profile child substitution and exact config/start/fetch/operation schedule",
+    "current native parent/clock/PG integration"
+  ]
+}
