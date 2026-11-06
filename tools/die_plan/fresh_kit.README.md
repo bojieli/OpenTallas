@@ -64,3 +64,16 @@ python3 -I tools/die_plan/kit_topology.py census PLAN TYPE KIT_RTL --receipt CEN
 
 Stamping requires the existing bind report to contain zero errors. It does not
 replace the actual emitted-instance census or authorize P&R.
+
+Future kit-wave captures use the same `kit_topology.prepare_stations` operation
+after their actual typed overlay and before `gen.py phys`. The operation checks
+the full native plan/asbuilt context, applies missing IN/core stations through
+`kit_istations`, and preserves already materialized OUT stations. An idempotence
+receipt makes a second application byte-identical; changed prepared inputs must
+be regenerated. `gen_phys` carries successful preparation expectations into the
+existing frontend inventory. Older captured worker specs keep their old path;
+they do not acquire a helper overlay or a changed source tree.
+
+Hard bound PHY partitions retain their delivered native reset and use the
+existing hard-wrapper generator flag. They do not acquire a generated reset
+tree. Their separately planned input reset stations still use the shared hook.

@@ -417,6 +417,23 @@ def escaped_instance_safe(files, blackboxes):
     return res
 
 
+def slang_unroll_args(env):
+    """An explicit finite elaboration budget, not a proof/reset/RTL option.
+
+    Slang's default 4000 loop iterations cannot elaborate the native XS4
+    output-register process (32912 nested-loop iterations). Keep the frontend
+    default unless the captured kit or caller supplies its required budget.
+    In particular, reject zero rather than disabling the frontend's limit.
+    """
+    key = "OT_LEC_SLANG_UNROLL_LIMIT"
+    value = env.get(key, os.environ.get(key))
+    if value is None:
+        return []
+    if not re.fullmatch(r"[1-9][0-9]*", str(value)):
+        raise LecError(f"{key} must be a positive finite integer")
+    return ["--unroll-limit=" + str(int(value))]
+
+
 def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     """yosys commands reading the kit RTL with `frontend` ('verilog' | 'slang'); lib_bbs: macro liberty files whose
     cells have no Verilog body in the sources (read as blackbox cells); slang_extra: extra read_slang options."""
@@ -431,7 +448,7 @@ def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     if env.get("_LEC_ICG_GOLD_V"):        # ICG cells instantiated by the RTL: read_liberty skips them (statetable)
         cmds.append(f"read_verilog -sv {env['_LEC_ICG_GOLD_V']}")
     if frontend == "slang":
-        a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]] + list(slang_extra)
+        a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]] + slang_unroll_args(env) + list(slang_extra)
         # Yosys read_verilog keeps preprocessor state across the ordered source
         # list. Its independent Slang replay must use the same compilation unit;
         # otherwise a later source cannot see an earlier source's width macros.
@@ -5533,6 +5550,47 @@ def _same_reading_self(a, b, k, c):
     return (a ^ b) <= two and bool(a & two) == bool(b & two)
 
 
+def anchored_word_proposals(L, log, cap=32):
+    """Propose merged siblings after a narrowed word acquires a late cross-side anchor.
+
+    Called only at a proved correspondence fixpoint. The normal reset filter and
+    next induction round check every proposal; grouping by a word is only search.
+    """
+    anchors = anchored(L) - set(L.matched)
+    groups = collections.defaultdict(list)
+    for key in L.gp:
+        indexed = IDX.match(key)
+        if key.startswith("ff:") and indexed:
+            indices = tuple(int(v) for v in re.findall(r"\d+", indexed[2]))
+            groups[(indexed[1], indices[:-1])].append(key)
+    proposed = {}
+    for keys in groups.values():
+        if len(keys) > cap:
+            continue
+        representatives = [key for key in keys if key in anchors and ("gold", key) not in L.hyp]
+        if len(representatives) != 1:
+            continue
+        representative = representatives[0]
+        for key in keys:
+            if key != representative and key in L.gonly and ("gold", key) not in L.hyp:
+                L.hyp[("gold", key)] = ("eq", "gold", representative, 0)
+                proposed[key] = representative
+    if not proposed:
+        return {}
+    # Simulation filters proposals cheaply; only joint induction proves them.
+    model, _ = L.build(with_compare=False, with_hyp=True)
+    values, mask = model.simulate(4, seed=2891)
+    kept = {}
+    for key, representative in proposed.items():
+        if lit_val(values, mask, L.dlit[("gold", key)]) == \
+                lit_val(values, mask, L.dlit[("gold", representative)]):
+            kept[key] = representative
+        else:
+            L.hyp.pop(("gold", key), None)
+    log.append(f"anchored word siblings: {len(kept)} candidates after simulation; joint proof required")
+    return kept
+
+
 def merged_proposals(L, log, cap=4096):
     """a gold-only register synthesis MERGED into another register of the same function (opt_merge: the TKM tile's
     X[0..3] and up_out load the same value on every op, so the gate keeps only up_out): neither the names nor a raw
@@ -6125,6 +6183,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 continue     # prove the new surviving relations before returning
             if structural_twin_closure(L, log) and surviving_change():
                 continue     # rejected constants must not starve the twin closure
+            if anchored_word_proposals(L, log) and surviving_change():
+                continue     # late proved cross-side anchors can expose merged word siblings
             if traces is None:
                 traces = seq_traces(L, log)
             if os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
@@ -7347,6 +7407,9 @@ def via_docker(args, image, mem):
     me = str(Path(__file__).resolve())
     cmd = ["docker", "run", "--rm", f"--memory={mem}g", f"--memory-swap={mem}g", "-v", f"{kit}:/work:ro",
            "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}", "-e", f"OT_LEC_REFINE_S={os.environ.get('OT_LEC_REFINE_S', '3600')}", "-e", f"OT_LEC_CONE_S={os.environ.get('OT_LEC_CONE_S', str(CONE_S_DEFAULT))}"]
+    if "OT_LEC_SLANG_UNROLL_LIMIT" in os.environ:
+        value = slang_unroll_args({})[0].split("=", 1)[1]
+        cmd += ["-e", f"OT_LEC_SLANG_UNROLL_LIMIT={value}"]
     if (Path(kit) / "lec_native_stub_metadata.json").is_file():
         for name in ("native_stub_metadata.py", "native_bb.py"):
             path = Path(me).with_name(name)

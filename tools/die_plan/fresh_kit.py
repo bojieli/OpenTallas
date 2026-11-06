@@ -63,7 +63,7 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
         raise ValueError('memory and CPU budgets must be positive')
     if profile == 'partition':
         keys(overrides, ('bind_out', 'asbuilt', 'instance', 'reset_mode', 'assembly_contracts',
-                         'util', 'skip_kit_ir', 'reset_context_plan', 'reset_expected', 'bind_context_plan'), 'partition overrides')
+                         'util', 'skip_kit_ir', 'reset_context_plan', 'reset_expected', 'bind_context_plan', 'component_proof'), 'partition overrides')
         keys(overrides.get('reset_expected', {}), ('entry', 'depth', 'release_clocks'), 'reset expected contract')
         if not type_name or core_spec or not overrides.get('bind_out'):
             raise ValueError('partition needs --type and overrides.bind_out; no core spec')
@@ -71,6 +71,8 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
             raise ValueError('native reset needs reset_context_plan; an isolated plan can invent a different root/tree')
         if overrides.get('reset_mode') not in ('native', 'canonical'):
             raise ValueError('choose reset_mode native (full original context) or canonical (kit_rsync)')
+        if read(plan)['partition_types'][type_name].get('hard') and (overrides['reset_mode']!='native' or overrides.get('reset_expected')):
+            raise ValueError('hard bound partitions preserve their delivered native reset; no generated canonical reset tree/expected tree')
     elif profile == 's81-coll':
         keys(overrides, ('clock_pin',), 'compact COLL overrides')
         if type_name or not core_spec or not overrides.get('clock_pin'):
@@ -118,9 +120,16 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
             context=Path(overrides.get('bind_context_plan',overrides.get('reset_context_plan',plan))).resolve()
             context_raw=read(context)
             selected_raw=read(plan)
-            if type_name not in context_raw['partition_types'] or KT.native_contract(selected_raw,overrides.get('asbuilt'),plan)['types'][type_name]!=KT.native_contract(context_raw,overrides.get('asbuilt'),context)['types'][type_name]:
+            component_report=None
+            if overrides.get('component_proof'):
+                component_report=KT.verify_component_source(Path(overrides['component_proof']).resolve(),
+                    context_plan=context,prepared_plan=plan,bind_out=bind_out,type_name=type_name,
+                    instance=overrides.get('instance'),asbuilt=overrides.get('asbuilt'))
+                record.update(source_scope='LOCAL_COMPONENT',source_preparation_only=True,
+                              component_report=component_report,global_bind=component_report['global_bind'])
+            if component_report is None and (type_name not in context_raw['partition_types'] or KT.native_contract(dict(selected_raw,asbuilt=context_raw.get('asbuilt',{})) if not overrides.get('asbuilt') else selected_raw,overrides.get('asbuilt'),context)['types'][type_name]!=KT.native_contract(context_raw,overrides.get('asbuilt'),context)['types'][type_name]):
                 raise ValueError('selected stage/reset topology differs from bind_context_plan; update the full native context before regeneration')
-            if KT.has_topology(selected_raw,type_name,overrides.get('asbuilt')) and not KT.bind_matches(context_raw,type_name,bind_out,overrides.get('asbuilt'),context):
+            if KT.has_topology(selected_raw,type_name,overrides.get('asbuilt')) and component_report is None and not KT.bind_matches(context_raw,type_name,bind_out,overrides.get('asbuilt'),context):
                 # A stage/reset change must be emitted by the native factory.
                 # Never repair a cached bound body with a private source patch.
                 if not overrides.get('asbuilt'):
@@ -145,6 +154,8 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
             for key in ('asbuilt', 'instance'):
                 if overrides.get(key):
                     args += ['--' + key, overrides[key]]
+            if overrides.get('component_proof'):
+                args += ['--component-proof',str(Path(overrides['component_proof']).resolve())]
             step('kit_rtl', dp / 'bind.py', 'kit-rtl', *args)
             receipt = output / 'kit_assembly.json'
             if overrides.get('assembly_contracts'):
@@ -152,7 +163,7 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
                      '--rtl-dir', rtl, '--contracts', Path(overrides['assembly_contracts']).resolve())
                 step('assembly', dp / 'kit_assembly.py', 'assemble', '--rtl-dir', rtl, '--contracts',
                      Path(overrides['assembly_contracts']).resolve(), '--receipt', receipt)
-            if overrides['reset_mode'] == 'canonical' or overrides.get('reset_context_plan'):
+            if (overrides['reset_mode'] == 'canonical' or overrides.get('reset_context_plan')) and not selected_raw['partition_types'][type_name].get('hard'):
                 reset_plan = Path(overrides.get('reset_context_plan', plan)).resolve()
                 step('reset', dp / 'kit_rsync.py', reset_plan, type_name, rtl)
                 # Native profiles use the full original context: an isolated
@@ -164,9 +175,12 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
                 if mismatch:
                     raise ValueError(f'canonical reset differs from selected native contract: {mismatch}')
             # Never omit this because generation/frontend happened to succeed.
-            step('istations', dp / 'kit_istations.py', plan, type_name, rtl, '--apply')
-            census=KT.source_census(read(plan),type_name,rtl)
-            (output/'kit_topology.json').write_text(json.dumps(census,indent=2)+'\n')
+            station_args=['prepare-stations',plan,type_name,rtl]
+            if component_report is not None:
+                station_args += ['--native-plan',context]
+            step('istations', dp / 'kit_topology.py', *station_args)
+            census=read(rtl/'kit_topology.json')
+            shutil.copyfile(rtl/'kit_topology.json',output/'kit_topology.json')
             if census['problems']:
                 raise ValueError('emitted native topology differs from plan: '+'; '.join(census['problems']))
             args = ['phys', plan, '--out', output / 'gen', '--rtl-root', source, '--types', type_name,
@@ -174,6 +188,8 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
                     '--util', overrides.get('util', .4)]
             if (rtl / 'bound_reset.json').is_file():
                 args += ['--bound-native-reset', type_name]
+            if selected_raw['partition_types'][type_name].get('hard'):
+                args += ['--hard-wrappers',type_name]
             if overrides.get('skip_kit_ir', True):
                 args += ['--skip-kit-ir']
             step('generate', dp / 'gen.py', *args)

@@ -73,7 +73,7 @@ RUNNER_ROOTS = {"orfs_hold_mm.py": "synth", "native_bb.py": "synth", "partition_
 # Gates / proofs / sign-off: re-run by run_kit.sh on every invocation (their verdicts are never reused).
 GATE_ROOTS = {"PROVENANCE.json", "PROVENANCE.generated.json", "LEC_TOOL.json", "kit_preflight.py", "sdc_lint.py", "rtl_lint.py", "rtl_lint.ys", "selrange_gate.py", "port_bind_gate.py",
               "face_guard.py", "reg_fanout_gate.py", "hold_gate.tcl", "postcts_gate.tcl", "legacy_gate.py",
-              "grt_policy.json", "pin_audit.py", "audit_pins.json", "lec.py", "lec_async.sh", "lec_completed_transfer.py", "lec_options.json",
+              "grt_policy.json", "pin_audit.py", "native_pin_contract.py", "audit_pins.json", "lec.py", "lec_async.sh", "lec_completed_transfer.py", "lec_options.json",
               "lec_async.on", "lec_async.identity", "signoff.py", "lec_options.json", "straps.json",
               "grt183_make.sh", "grt183_resume.tcl"}      # FLOW-28: inert unless a run stops on GRT-0183; a kit with no such stop rebuilds nothing
 GATE_ROOTS |= {"grt_stall_resume.tcl"}   # KW-FIX-17 11-05 GRT-STALL: inert unless a 5_1_grt stage stalls in -end_incremental

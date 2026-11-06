@@ -1,5 +1,5 @@
 """COORD 11-02 19:2x (d) (FLOW-22): UNEXPANDED_CHILD_ETM counts as covered when every child ETM is its SIGNED
-child's own export at the same flow tag; otherwise the clock coverage stays NOT RUN (fail closed)."""
+child's own export (at its own signed tag, COORD 11-06 05:2x); otherwise the clock coverage stays NOT RUN (fail closed)."""
 import hashlib
 import json
 import sys
@@ -62,8 +62,22 @@ def test_unsigned_child_stays_not_run(tmp_path):
     assert "child verdict" in r["signed_child_etm_misses"][0]
 
 
-def test_other_flow_tag_stays_not_run(tmp_path):
+def test_child_counts_at_its_own_signed_tag(tmp_path):
+    # COORD 11-06 05:2x: a frozen child view signed at an older tag counts (libs = its export, LEC EQ)
     kit, lib = build(tmp_path, tag="flow-20261101-m-kv")
+    r = coverage(lib)
+    assert r["verdict"] == "PASS"
+    ev = r["models"][0]["signed_child_etm"]
+    assert ev["flow_tag"] == "flow-20261101-m-kv" and ev["parent_flow_tag"] == TAG
+
+
+def test_other_tag_child_without_equivalent_lec_stays_not_run(tmp_path):
+    kit, lib = build(tmp_path, tag="flow-20261101-m-kv", lec="NOT_EQUIVALENT")
+    assert coverage(lib)["verdict"] == "NOT RUN"
+
+
+def test_child_without_signed_tag_stays_not_run(tmp_path):
+    kit, lib = build(tmp_path, tag="")
     assert coverage(lib)["verdict"] == "NOT RUN"
 
 

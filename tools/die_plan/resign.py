@@ -274,6 +274,14 @@ def mark_keep(rec, *dirs):
             f.write(line)
 
 
+def default_container_suffix(out):
+    """Keep parallel output directories distinct without permitting same-output writers."""
+    canonical = os.path.realpath(os.path.abspath(out))
+    stem = re.sub(r'[^A-Za-z0-9_.-]', '_', os.path.basename(canonical)) or 'out'
+    digest = hashlib.sha256(os.fsencode(canonical)).hexdigest()[:16]
+    return '%s-%s' % (stem, digest)
+
+
 def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g', cpus=8, superset=False):
     """the two commands of one re-sign (same as the lane scripts resign3.sh / tag_signoff_lec.sh)."""
     kit, run_dir, tools, out = map(os.path.abspath, (kit, run_dir, tools, out))
@@ -340,7 +348,7 @@ def main(argv=None):
             tag_commit(a.repo, a.tag)
             check_tools(a.repo, a.tag, a.tools)  # fail before spending an RCX run on the wrong tools
             print('clock_family.tcl from %s: %s' % (a.tag, export_clock_family(a.repo, a.tag, a.tools)), file=sys.stderr)
-            name = a.name or re.sub(r'[^A-Za-z0-9_.-]', '_', os.path.basename(os.path.abspath(a.out)))
+            name = a.name or default_container_suffix(a.out)
             so, lec = run_cmds(a.kit, a.run_dir or os.path.join(a.kit, 'run'), a.tools, a.out, a.image, name,
                                a.lec_netlist, mem=a.lec_mem, superset=a.auto)
             if a.dry_run:

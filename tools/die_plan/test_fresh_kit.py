@@ -26,7 +26,7 @@ def test_partition_realizes_all_stations_before_generation(tmp_path):
     out = tmp_path / 'fresh'
     def run(cmd, **kwargs):
         name = Path(cmd[2]).name
-        if name == 'kit_istations.py':
+        if name == 'kit_topology.py':
             return subprocess.run(cmd, **kwargs)
         if name == 'bind.py':
             rtl = Path(cmd[cmd.index('--kit')+1]); rtl.mkdir()

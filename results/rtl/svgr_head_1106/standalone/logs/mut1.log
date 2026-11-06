@@ -1,0 +1,3 @@
+SKID_HEAD FAIL MUT=1 check=849 n=1/1 ok=0/1
+FATAL: tb_skid_head.sv:42: refinement mismatch
+       Time: 2267100  Scope: tb_skid_head.tick

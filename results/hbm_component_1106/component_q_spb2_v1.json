@@ -1,0 +1,286 @@
+{
+  "schema": "opentallas.bind_component.v1",
+  "scope": "LOCAL_COMPONENT",
+  "verdict": "PASS",
+  "source_preparation_only": true,
+  "global_bind": {
+    "status": "FAIL",
+    "n_errors": 1,
+    "errors": [
+      "EMIT wavefront core reset q_hub_nw/u_hb_coll_Q_body_core__q0__ctl.rst_n: expected one bound leaf, found 0 (partition NW_hub root ; e.g. )"
+    ]
+  },
+  "reference_plan": "/srv/opentallas-scratch2/claude/hbm-bind-9/m79fp/die_plan.json",
+  "context_plan": "/srv/opentallas-scratch2/claude/codex-hbm-parent-1106/bind_context_banks20_taps/die_plan.json",
+  "prepared_plan": "/srv/opentallas-scratch2/claude/codex-hbm-parent-1106/xcal_subplan/die_plan_banks20_taps_TRIAL.json",
+  "bind_out": "/srv/opentallas-scratch2/claude/hbm-bind-9/g_t11m79f",
+  "type": "q_spb2",
+  "instance": "NW_spb2",
+  "asbuilt": "/srv/opentallas-scratch2/claude/hbm-bind-6/tip2/physical/die_plan/hbm/bind/d44v/asbuilt_t11.json",
+  "asbuilt_sha256": "861dd95dea2d514bcb27ac0a79c9f5907620540f757ca7399853b87a1eeed4b5",
+  "source": {
+    "path": "/srv/opentallas-scratch2/claude/hbm-bind-9/g_t11m79f/rtl/hbm_arch_q_spb2.sv",
+    "module": "hbm_arch_q_spb2",
+    "sha256": "397e7b08dba987b70df27187eaa37854c60aa866c86927d5460670967dc5bff5"
+  },
+  "ports": {
+    "clk": {
+      "direction": "input",
+      "width": 1
+    },
+    "arst_n": {
+      "direction": "input",
+      "width": 1
+    },
+    "rst_o_0": {
+      "direction": "output",
+      "width": 1
+    },
+    "L49_i": {
+      "direction": "input",
+      "width": 619
+    },
+    "L83_i": {
+      "direction": "input",
+      "width": 29
+    },
+    "L40_o": {
+      "direction": "output",
+      "width": 1065
+    },
+    "L75_o": {
+      "direction": "output",
+      "width": 174
+    },
+    "L76_o": {
+      "direction": "output",
+      "width": 174
+    },
+    "L87_o": {
+      "direction": "output",
+      "width": 69
+    },
+    "L1278x3_i": {
+      "direction": "input",
+      "width": 1484
+    },
+    "L1278x3_o": {
+      "direction": "output",
+      "width": 1484
+    },
+    "L1280x6_i": {
+      "direction": "input",
+      "width": 747
+    },
+    "L1280x6_o": {
+      "direction": "output",
+      "width": 747
+    },
+    "L3012x5_i": {
+      "direction": "input",
+      "width": 28
+    },
+    "L3012x5_o": {
+      "direction": "output",
+      "width": 28
+    },
+    "L33x2_i": {
+      "direction": "input",
+      "width": 1616
+    },
+    "L33x2_o": {
+      "direction": "output",
+      "width": 1616
+    },
+    "L720x2_i": {
+      "direction": "input",
+      "width": 633
+    },
+    "L720x2_o": {
+      "direction": "output",
+      "width": 633
+    },
+    "L722x2_i": {
+      "direction": "input",
+      "width": 309
+    },
+    "L722x2_o": {
+      "direction": "output",
+      "width": 309
+    },
+    "L723x2_i": {
+      "direction": "input",
+      "width": 308
+    },
+    "L723x2_o": {
+      "direction": "output",
+      "width": 308
+    },
+    "L8370x2_i": {
+      "direction": "input",
+      "width": 12
+    },
+    "L8370x2_o": {
+      "direction": "output",
+      "width": 12
+    },
+    "L8371x2_i": {
+      "direction": "input",
+      "width": 3
+    },
+    "L8371x2_o": {
+      "direction": "output",
+      "width": 3
+    }
+  },
+  "default_parameters": {
+    "S_u_cp_svg_Q2_tgt": {
+      "width": 8,
+      "literal": "8'b01010010",
+      "value": 82
+    },
+    "S_u_cp_svg_Q3_tgt": {
+      "width": 8,
+      "literal": "8'b01010011",
+      "value": 83
+    },
+    "S_u_xc_Q2_tgt": {
+      "width": 8,
+      "literal": "8'b11010010",
+      "value": 210
+    },
+    "S_u_xc_Q3_tgt": {
+      "width": 8,
+      "literal": "8'b11010011",
+      "value": 211
+    }
+  },
+  "parameter_binding": "UNIQUE_NATIVE_INSTANCE_DEFAULTS",
+  "native_contract": {
+    "type": "64fb12275b720d85f9122888c842ee7ae82bfaf202634904d88752f6318f517c",
+    "metadata": {
+      "schema": "opentallas.native_topology.v2",
+      "clock_table_sha256": null,
+      "reset": "fef01d007917da1a81ca28f3a89491e2cb71047f74e185432b2470235b44018e",
+      "transport": "16cec1f47dd52bc1415586cfd3c4524f43ad21f28a2179ecf92b50ab0f6c1e90"
+    }
+  },
+  "prepared_contract": "f98b6f5ea9fd63c303c9867aa36955d6de0b8a72c80d3533fc7c14ca613280e5",
+  "reset": {
+    "entry": "relayed",
+    "depth": 8,
+    "release_after_pin": 9,
+    "tap_depths": {
+      "rst_n_t0": 9,
+      "rst_n_t1": 9,
+      "rst_n_t10": 9,
+      "rst_n_t11": 9,
+      "rst_n_t12": 9,
+      "rst_n_t13": 9,
+      "rst_n_t14": 9,
+      "rst_n_t15": 9,
+      "rst_n_t16": 9,
+      "rst_n_t17": 9,
+      "rst_n_t18": 9,
+      "rst_n_t19": 9,
+      "rst_n_t2": 9,
+      "rst_n_t20": 9,
+      "rst_n_t21": 9,
+      "rst_n_t22": 9,
+      "rst_n_t3": 9,
+      "rst_n_t4": 9,
+      "rst_n_t5": 9,
+      "rst_n_t6": 9,
+      "rst_n_t7": 9,
+      "rst_n_t8": 9,
+      "rst_n_t9": 9
+    },
+    "relay_edges": 104,
+    "outputs": {
+      "rst_o_0": 9
+    },
+    "consumers": [
+      {
+        "inst": "u_u_xc_Q2",
+        "pin": "rst_n",
+        "reset": "rst_n_t21",
+        "reference_internal_depth": 1
+      },
+      {
+        "inst": "u_u_xc_Q3",
+        "pin": "rst_n",
+        "reset": "rst_n_t22",
+        "reference_internal_depth": 1
+      }
+    ]
+  },
+  "ft_stages": [
+    {
+      "name": "L33x2",
+      "width": 1615,
+      "stages": 7
+    },
+    {
+      "name": "L720x2",
+      "width": 632,
+      "stages": 5
+    },
+    {
+      "name": "L722x2",
+      "width": 308,
+      "stages": 5
+    },
+    {
+      "name": "L723x2",
+      "width": 307,
+      "stages": 5
+    },
+    {
+      "name": "L1278x3",
+      "width": 1483,
+      "stages": 5
+    },
+    {
+      "name": "L1280x6",
+      "width": 746,
+      "stages": 6
+    },
+    {
+      "name": "L3012x5",
+      "width": 27,
+      "stages": 1
+    },
+    {
+      "name": "L8370x2",
+      "width": 11,
+      "stages": 5
+    },
+    {
+      "name": "L8371x2",
+      "width": 2,
+      "stages": 5
+    }
+  ],
+  "narrow_buses": [
+    {
+      "port": "L83_i",
+      "plan": 99,
+      "bound": 28,
+      "prepared_wrapper_dead_input_proof": "REQUIRED"
+    }
+  ],
+  "producer_context": {
+    "commit": null,
+    "dirty": null,
+    "source": "none",
+    "step": "bind",
+    "plan": "/srv/opentallas-scratch2/claude/hbm-bind-9/m79fp/die_plan.json",
+    "manifest": "physical/die_plan/hbm/bind/d44v/asbuilt_t11.json",
+    "external_paths_allowed": false,
+    "inputs": [
+      "/srv/opentallas-scratch2/claude/hbm-bind-9/m79fp/die_plan.json",
+      "physical/die_plan/hbm/bind/d44v/asbuilt_t11.json"
+    ]
+  },
+  "selected_errors": []
+}

@@ -4960,7 +4960,21 @@ def cmd_kit_rtl(a):
         raise BindError(f"kit-rtl: no partition type {tn} in the plan")
     t = raw["partition_types"][tn]
     rep = json.loads((out / "bind_report.json").read_text())
+    component_report = None
+    if getattr(a, "component_proof", None):
+        import bind_component
+        proof = json.loads(Path(a.component_proof).read_text())
+        try:
+            component_report = bind_component.verify(
+                a.component_proof, context_plan=proof["context_plan"], prepared_plan=a.plan,
+                bind_out=out, type_name=tn, instance=a.instance, asbuilt=a.asbuilt)
+        except ValueError as exc:
+            raise BindError(str(exc)) from exc
+    elif rep.get("n_errors", 0):
+        raise BindError("kit-rtl: failing global bind needs an explicit verified LOCAL component proof")
     key = a.variant or tn
+    if component_report is not None and key != tn:
+        raise BindError("kit-rtl: LOCAL component proof does not authorize a different type variant")
     variants = sorted(k for k in rep["types"] if k == tn or k.startswith(tn + "__"))
     if key not in rep["types"]:
         raise BindError(f"kit-rtl: bound type {key} not in {out}/bind_report.json (variants: {variants})")
@@ -5113,9 +5127,14 @@ def cmd_kit_rtl(a):
         ports.append((f"{d:6} wire [{w - 1}:0] {n}", "bound-only pin (die IO / reset spine / clock role): not a plan bus"))
         conns.append(f".{n}({n})")
     # per-instance parameters (straps) of the bound module, as the bound top passes them: one hardened kit = one value set
-    top = (out / "rtl" / f"{sv_id(raw['die']['name'])}_bound_top.sv").read_text()
-    pinst = {m.group(2): (m.group(1) or "").strip() for m in
-             re.finditer(rf"^\s*{re.escape(bmod)}\s*(#\(.*?\))?\s*(\w+)\s*\(", top, re.M)}
+    if component_report is not None:
+        # One native instance: its own verified header defaults are its exact
+        # binding. Do not borrow another cohort's (possibly incomplete) top.
+        pinst = {component_report["instance"]: ""}
+    else:
+        top = (out / "rtl" / f"{sv_id(raw['die']['name'])}_bound_top.sv").read_text()
+        pinst = {m.group(2): (m.group(1) or "").strip() for m in
+                 re.finditer(rf"^\s*{re.escape(bmod)}\s*(#\(.*?\))?\s*(\w+)\s*\(", top, re.M)}
     if a.instance:
         if a.instance not in pinst:
             raise BindError(f"kit-rtl {tn}: instance {a.instance} of {bmod} not in the bound top ({sorted(pinst)[:8]})")
@@ -5229,6 +5248,7 @@ def cmd_kit_rtl(a):
     bbs = {str(Path(m["bb"])): m["model"] for m in macros.values() if m.get("bb") and m.get("model")}
     (kd / "kit_rtl_sim.f").write_text("\n".join(bbs.get(str(x), str(x)) for x in fl) + "\n")
     man = dict(schema="opentallas.die_plan.kit_rtl.v1", plan_type=tn, plan_module=mod, bound_type=key, bound_module=bmod,
+               asbuilt_manifest=str(Path(a.asbuilt).resolve()) if a.asbuilt else None,
                variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, spare_ft_landed=spare_landed, narrow_buses=narrow,
                **({"dead_inputs": dead_doc} if dead_doc else {}),
                plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl],
@@ -5241,6 +5261,10 @@ def cmd_kit_rtl(a):
                hard_macros_note="memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; "
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
                                 "type_macros); kit_rtl_sim.f carries the behavioural models")
+    if component_report is not None:
+        man.update(component_proof=str(Path(a.component_proof).resolve()), component_report=component_report,
+                   source_scope="LOCAL_COMPONENT", source_preparation_only=True,
+                   global_bind=component_report["global_bind"])
     (kd / "kit_rtl.json").write_text(json.dumps(man, indent=1))
     # Physical provider specialization follows the declared plan in normal bind
     # mode, including unattended kit-wave source updates. Functional bind stays unchanged.
@@ -5314,6 +5338,16 @@ def main(argv=None):
     k.add_argument("--kit", help="output directory (default OUT/kit_rtl/TYPE)")
     k.add_argument("--instance", help="the bound instance whose parameters the kit takes (types whose instances differ)")
     k.add_argument("--asbuilt")
+    k.add_argument("--component-proof", help="verified read-only LOCAL source report; never a global bind PASS")
+    c = sub.add_parser("component-proof", help="read-only local source/port/reset checks; preserve global bind failure")
+    c.add_argument("plan", help="original full reference context recorded by the native producer")
+    c.add_argument("--out", required=True, help="original bind output (read-only)")
+    c.add_argument("--type", required=True)
+    c.add_argument("--instance", required=True)
+    c.add_argument("--prepared-plan", required=True)
+    c.add_argument("--bind-context")
+    c.add_argument("--asbuilt")
+    c.add_argument("--receipt", required=True, help="new local report outside the original bind directory")
     for n in ("elab", "bind", "verify", "all", "portbind"):
         s = sub.add_parser(n)
         s.add_argument("plan")
@@ -5330,6 +5364,22 @@ def main(argv=None):
     _AB_OVERRIDE["path"] = a.asbuilt
     _AB_OVERRIDE["allow_external_paths"] = bool(getattr(a, "allow_external_paths", False))
     try:
+        if a.cmd == "component-proof":
+            import bind_component
+            receipt = Path(a.receipt).resolve()
+            if receipt.exists() or receipt.is_relative_to(Path(a.out).resolve()):
+                raise BindError("component-proof needs a new report outside the read-only original bind")
+            try:
+                result = bind_component.inspect(a.plan, a.out, a.type, a.instance,
+                                                prepared_plan=a.prepared_plan, context_plan=a.bind_context,
+                                                asbuilt=a.asbuilt)
+            except (ValueError, KeyError, OSError) as exc:
+                raise BindError(str(exc)) from exc
+            receipt.parent.mkdir(parents=True, exist_ok=True)
+            receipt.write_text(json.dumps(result, indent=2)+"\n")
+            print(json.dumps(dict(scope=result["scope"], verdict=result["verdict"],
+                                  global_bind=result["global_bind"], selected_errors=result["selected_errors"])))
+            return 0 if result["verdict"] == "PASS" else 2
         if a.cmd == "kit-rtl":
             return cmd_kit_rtl(a)
         if a.cmd == "elab":

@@ -44,6 +44,16 @@ def _rtl_lint_dead_output_vars():
     return ["export OT_RTL_LINT_DEAD_OUTPUT_MODULES = " + " ".join(modules)] if modules else []
 
 
+def _lec_frontend_vars():
+    key = "OT_LEC_SLANG_UNROLL_LIMIT"
+    value = os.environ.get(key)
+    if value is None:
+        return []
+    if not re.fullmatch(r"[1-9][0-9]*", value):
+        raise ValueError(f"{key} must be a positive finite integer")
+    return [f"export {key} = {int(value)}"]
+
+
 def _common_flow_file(name, repo):
     """physical/common_flow/<name> of checkout `repo`, from git HEAD in a sparse checkout without it
     (common_flow_src.py, DIE-KV-62 11-02); a copy of this module without the helper: the plain path."""
@@ -324,7 +334,15 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
 def audit_pin_records(face_rows, planned_rows):
     """Keep boundary-flop rows separate from the full planned physical pin audit."""
     from pin_audit import INTERIOR, pin_key
-    rows = list(face_rows)
+    rows = [dict(p) for p in face_rows]
+    declared = {p["name"]: p for p in planned_rows}
+    for row in rows:
+        for key in ("native_rects", "native_rects_review", "declared_native_shape"):
+            if key in declared.get(pin_key(row), {}):
+                value = declared[pin_key(row)][key]
+                if key in row and row[key] != value:
+                    raise ValueError("conflicting native pin contract: " + pin_key(row))
+                row[key] = value
     seen = {pin_key(p) for p in rows}
     if len(seen) != len(rows):
         raise ValueError("duplicate face pin in audit metadata")
@@ -337,6 +355,8 @@ def audit_pin_records(face_rows, planned_rows):
             continue
         bus, bit = _pin_bus_bit(name)
         rows.append(dict(bus=bus, bit=bit, layer=p["layer"], x=p["x"], y=p["y"], face="island"))
+        for key in ("native_rects", "native_rects_review", "declared_native_shape"):
+            if key in p: rows[-1][key] = p[key]
     return rows
 
 
@@ -3577,6 +3597,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
            *_rtl_lint_dead_output_vars(),
+           *_lec_frontend_vars(),
            "export SYNTH_REPEATABLE_BUILD = 1",
            # HEAD-KITS-3 10-28: OWNER D-ROM-2 declared-logic math tables (tools/mem_compiler/rom_declared_logic.json,
            # e.g. the KP4 GF(1024) inverse 1024x10 in every serdes FEC lane) are synthesised logic by decision; the ORFS
@@ -3991,6 +4012,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         bud["bump_ports"] = [dict(b) for b in bump_ports]
     (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     shutil.copyfile(Path(__file__).with_name("pin_audit.py"), kd / "pin_audit.py")
+    shutil.copyfile(Path(__file__).with_name("native_pin_contract.py"), kd / "native_pin_contract.py")
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
     shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
     shutil.copyfile(Path(__file__).with_name("hard_landing.py"), kd / "hard_landing.py")
@@ -4954,6 +4976,9 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                    spare_out=kit_spare_out_bits(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else (),
                                    dead_inputs=kit_dead_inputs(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else None,
                                    private_clock_mesh=(private_clock_mesh or {}).get(tn)))
+        if kit_rtl and tn in kit_rtl and (Path(kit_rtl[tn]).parent/'kit_topology.json').is_file():
+            import kit_topology
+            kit_topology.stage_inventory(Path(kit_rtl[tn]).parent,kits[-1])
         if tn in macro_paths:
             (Path(kits[-1]) / BMP.RECEIPT).write_text(json.dumps(macro_paths[tn], indent=1) + "\n")
     (out / "run_kit.sh").write_text(RUN_KIT)

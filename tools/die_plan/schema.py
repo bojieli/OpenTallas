@@ -811,7 +811,10 @@ SCHEMA = {
                                        # Exact lower-left FF banks, payload then epoch; one bank per regs_um.
                                        "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},
                                        "bit_site_cell_um": _xy,
-                                       "face_bit_sites_um": {"type": "array", "items": _xy}}}},
+                                       "face_bit_sites_um": {"type": "array", "items": _xy},
+                                       # Selected native bound width of a narrowed input bus (bind_component.py reads it
+                                       # to accept a proven dead-input narrowing); metadata only, no generator effect.
+                                       "native_width": {"type": "integer", "minimum": 1}}}},
                     "channels": {"type": "array", "items": {
                         "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
                         "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},
@@ -1141,6 +1144,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["realize_internal_stations"] = {"type": "boolean"}
 # Explicit source-synchronous data pads retain declared budgets on their actual PHY clock.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["data_inputs"] = {
+    "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
+        "required": ["port", "max_ps", "min_ps", "evidence"], "properties": {
+            "port": _name, "max_ps": {"type": "number"}, "min_ps": {"type": "number"}, "evidence": _name}}}
+# Output pad data uses the real exported PHY clock, retaining explicit budgets.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["data_outputs"] = {
     "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
         "required": ["port", "max_ps", "min_ps", "evidence"], "properties": {
             "port": _name, "max_ps": {"type": "number"}, "min_ps": {"type": "number"}, "evidence": _name}}}
