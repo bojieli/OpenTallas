@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Stage an exact W128 HC master with the shared current HBM M5 kit generator.
+"""Stage an exact W128 HC master (default M5; optional reviewed common-pair M6 form).
 
 Example: hc128_native_kit.py --masters /.../masters_drst --view MODULE@SHA12 --out KITROOT
 All normal kit arguments pass through; this candidate adds zero face cycles.
 """
 import argparse,hashlib,importlib.util,json,os,sys
 from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parent))
 from hc_alpha_names import normalize_names, placement_name
 ap=argparse.ArgumentParser(add_help=False);ap.add_argument('--masters',type=Path,required=True);ap.add_argument('--repo',type=Path,default=Path(__file__).resolve().parents[2]);ap.add_argument('--diagnostic-plan',action='store_true');ap.add_argument('--b128-safe',action='store_true',help='opt-in common-pair M6, single-root CTS and balanced SRAM channels; parent must reserve M6');ap.add_argument('--write-face',action='store_true',help='opt-in grouped common-pair write pipeline; requires updated master and native projection +1 write guard');a,rest=ap.parse_known_args();a.b128_safe=a.b128_safe or a.write_face;a.repo=a.repo.resolve();cfg=a.repo/'physical/die_plan/hbm_arch_cores/native128';views=json.loads((cfg/'views.json').read_text());recipes={};overrides={};receipts={}
 if '--out' not in rest:raise SystemExit('--out required')
@@ -61,9 +62,10 @@ if a.write_face:
   vp=Path(rest[rest.index('--views')+1]);vi=json.loads(vp.read_text());pp=Path(vi['plan']);pp=pp if pp.is_absolute() else vp.resolve().parent/pp
   pin_table=json.loads((pp.resolve().parent/selected['pins_file']).read_text())
   east=next(p for p in pin_table if p['name']=='weight_we0')['x']>selected['outline_um'][0]-1
-  data=['wface_data'];control=['wface_addr','wface_we0','wface_we1','wface_xwe']
-  boxes=[dict(name='write_ingress_north',prefixes=data if east else data+control,box_um=[4.32,237.6,246.24,263.52])]
-  if east:boxes.append(dict(name='write_control_east',prefixes=control,box_um=[226.8,43.2,246.24,86.4]))
+  # Direct data/address flops are already FIRM at their faces. Guide only
+  # the reset-gated enables that the face hook leaves movable.
+  control=['wface_we0','wface_we1','wface_xwe']
+  boxes=[dict(name='write_enable_east' if east else 'write_enable_north',prefixes=control,box_um=[226.8,43.2,246.24,86.4] if east else [4.32,237.6,246.24,263.52])]
   guide=alpha_dir/'write_face_guide.json';guide.write_text(json.dumps(dict(boxes=boxes),indent=1)+'\n');rest.extend(['--reg-guide-boxes',str(guide)])
 
 # HBM-CORES-R8 10-27: --diagnostic-plan (as q3sync_kits/build_kit.py) admits an external scratch plan (trial kit, not release evidence)
