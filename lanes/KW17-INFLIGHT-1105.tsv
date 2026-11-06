@@ -1,0 +1,92 @@
+die	item	released_attempt	class_fix	now
+qwen_kvsys	kv3_hgi	5	holdgaterr	7:ENQUEUED/RUNNING
+qwen_kvsys	kv3_hgi_v3	5	holdgaterr	6:RUNNING/None
+qwen_kvsys	kv3_hgi_v4	5	holdgaterr	8:ENQUEUED/RUNNING
+qwen_kvsys	kv3_hgi_v5	5	holdgaterr	6:ENQUEUED/RUNNING
+qwen_kvsys	kv3_hgi_v6	7	holdgaterr	8:ENQUEUED/RUNNING
+qwen_kvsys	kv3_hgi_v7	5	holdgaterr	6:RUNNING/None
+qwen_kvsys	kv3_hub_Ei	3	holdgaterr	5:ENQUEUED/FAIL
+qwen_kvsys	kv3_io_cor_v1	5	holdgaterr	7:ENQUEUED/RUNNING
+qwen_kvsys	kv3_pv	1	holdgaterr	6:RUNNING/None
+qwen_kvsys	kv3_pv_v1	1	holdgaterr	6:RUNNING/None
+qwen_kvsys	kv3_pv_v1n	1	holdgaterr	6:RUNNING/None
+qwen_kvsys	kv3_pv_v2	1	holdgaterr	6:RUNNING/None
+qwen_kvsys	kv3_pv_v2n	1	holdgaterr	6:RUNNING/None
+qwen_kvsys	kv3_pv_v3n	1	holdgaterr	6:RUNNING/None
+qwen_kvsys	kv3_pv_v4	1	holdgaterr	6:RUNNING/None
+qwen_kvsys	kv3_pv_v4n	1	holdgaterr	6:RUNNING/None
+qwen_kvsys	kv3_pv_v5	1	holdgaterr	6:RUNNING/None
+qwen_kvsys	kv3_pv_v5n	1	holdgaterr	6:RUNNING/None
+qwen_kvsys	kv3_pv_v6	1	holdgaterr	6:RUNNING/None
+qwen_kvsys	kv3_pv_v6n	1	holdgaterr	6:RUNNING/None
+qwen_kvsys	kv3_pv_v8	1	holdgaterr	8:RUNNING/None
+qwen_kvsys	kv3_pv_v8	7	holdgaterr	8:RUNNING/None
+s81	col_h9_r0_p2__t1__cl0045af7b	11	holdgaterr	11:ENQUEUED/FAIL
+s81	col_h9_r0_p4__t1__clcb2fbfe8	8	holdgaterr	8:ENQUEUED/FAIL
+s81	dsdv_slice_iq_C__t1	5	KW-FIX-17 16:1x COORD 16:0x (c): PLACE w	6:RUNNING/None
+s81	dsdv_slice_kv512_C__t1	4	KW-FIX-17 16:1x COORD 16:0x (c): PLACE w	5:RUNNING/None
+s81	ot_s81sl_leaf__t22	9	holdgaterr	9:ENQUEUED/FAIL
+s81	ot_s81sl_leaf__t28	10	holdgaterr	10:ENQUEUED/FAIL
+s81	serdes__t12	2	KW-FIX-17 16:3x: S81 tag flow-20261106-i	7:FAIL/None
+s81	serdes__t13	10	KW-FIX-17 16:3x: S81 tag flow-20261106-i	11:RUNNING/None
+s81	serdes__t14	2	KW-FIX-17 16:3x: S81 tag flow-20261106-i	7:FAIL/None
+s81	serdes__t15__cla2127225	12	KW-FIX-17 16:3x: S81 tag flow-20261106-i	13:RUNNING/None
+s81	serdes__t15__cla3d02796	5	KW-FIX-17 16:3x: S81 tag flow-20261106-i	6:RUNNING/None
+s81	serdes__t16	5	KW-FIX-17 16:3x: S81 tag flow-20261106-i	7:FAIL/None
+s81	serdes__t1__clb45db5be	3	KW-FIX-17 16:3x: S81 tag flow-20261106-i	4:RUNNING/None
+s81	serdes__t1__clfe1f0815	3	KW-FIX-17 16:3x: S81 tag flow-20261106-i	4:RUNNING/None
+s81	serdes__t2	5	KW-FIX-17 16:3x: S81 tag flow-20261106-i	6:RUNNING/None
+s81	serdes__t3	5	KW-FIX-17 16:3x: S81 tag flow-20261106-i	6:FAIL/None
+s81	serdes__t4	4	KW-FIX-17 16:3x: S81 tag flow-20261106-i	7:FAIL/None
+s81	slice_station__t17	6	slice_station TAPWIN+leafslew	7:RUNNING/None
+s81	slice_station__t18	5	slice_station TAPWIN+leafslew	6:RUNNING/None
+s81	slice_station__t21	6	slice_station TAPWIN+leafslew	7:RUNNING/None
+s81	slice_station__t22	1	slice_station TAPWIN+leafslew	6:ENQUEUED/RUNNING
+s81	slice_station__t23	4	slice_station TAPWIN+leafslew	5:ENQUEUED/SIGNED
+s81	slice_station__t24__cl64811a5d	7	slice_station TAPWIN+leafslew	7:CANCELLED/RUNNING
+s81	slice_station__t24__cl66b71008	7	slice_station TAPWIN+leafslew	7:ENQUEUED/FAIL
+s81	slice_station__t28	2	slice_station TAPWIN+leafslew	4:RUNNING/None
+s81	slice_station__t28	3	slice_station TAPWIN+leafslew	4:RUNNING/None
+s81	slice_station__t29__clc7772371	6	slice_station TAPWIN+leafslew	9:ENQUEUED/FAIL
+s81	slice_station__t30__cl1653104c	4	slice_station TAPWIN+leafslew	7:RUNNING/None
+s81	slice_station__t30__cl1653104c	6	slice_station TAPWIN+leafslew	7:RUNNING/None
+s81	slice_station__t30__cl6a190133	9	slice_station TAPWIN+leafslew	10:RUNNING/None
+s81	slice_station__t30__clcedefe91	8	slice_station TAPWIN+leafslew	9:RUNNING/None
+s81	slice_station__t31	1	slice_station TAPWIN+leafslew	3:ENQUEUED/RUNNING
+s81	slice_station__t36	1	slice_station TAPWIN+leafslew	4:ENQUEUED/RUNNING
+s81	slice_station__t38	1	slice_station TAPWIN+leafslew	5:ENQUEUED/RUNNING
+s81	slice_station__t40__clc8fb2c8c	8	slice_station TAPWIN+leafslew	8:ENQUEUED/FAIL
+s81	slice_station__t43	3	slice_station TAPWIN+leafslew	4:ENQUEUED/RUNNING
+s81	slice_station__t45	5	slice_station TAPWIN+leafslew	6:RUNNING/None
+s81	slice_station__t46	3	slice_station TAPWIN+leafslew	5:ENQUEUED/FAIL
+s81	slice_station__t46	5	slice_station TAPWIN+leafslew	5:ENQUEUED/FAIL
+s81	slice_station__t47	4	slice_station TAPWIN+leafslew	5:RUNNING/None
+s81	slice_station__t48	3	slice_station TAPWIN+leafslew	5:ENQUEUED/WAIT-PARENT
+s81	slice_station__t49	7	slice_station TAPWIN+leafslew	7:CANCELLED/RUNNING
+s81	slice_station__t50__cl39451317	6	slice_station TAPWIN+leafslew	8:CANCELLED/RUNNING
+s81	slice_station__t50__cl39451317	8	slice_station TAPWIN+leafslew	8:CANCELLED/RUNNING
+s81	slice_station__t52	4	slice_station TAPWIN+leafslew	5:RUNNING/None
+s81	slice_station__t6__cl0755c26e	9	slice_station TAPWIN+leafslew	9:ENQUEUED/FAIL
+s81	slice_station__t6__cl54a9ceeb	6	slice_station TAPWIN+leafslew	9:ENQUEUED/RUNNING
+s81	slice_station__t7__cl362204c4	11	slice_station TAPWIN+leafslew	12:RUNNING/None
+s81	slice_station__t7__cl503f4913	9	slice_station TAPWIN+leafslew	10:RUNNING/None
+s81	slice_station__t8	1	slice_station TAPWIN+leafslew	2:RUNNING/None
+s81_head	hd_ctl_n	4	holdgaterr	7:ENQUEUED/FAIL
+s81_head	hd_lep0N	6	KW-FIX-17 16:4x: HEAD tag i-head 8123521	6:ENQUEUED/FAIL
+s81_head	hd_serdes	2	holdgaterr	2:ENQUEUED/FAIL
+qwen_compute	cbn_q00__cldbcda913	2	holdgaterr	7:CANCELLED/None
+qwen_compute	coll_ft__cl78c7b300	1	holdgaterr	3:RUNNING/None
+qwen_compute	coll_ft__cla4a25d77	1	holdgaterr	4:ENQUEUED/FAIL
+qwen_compute	coll_ft__cla4a25d77	2	holdgaterr	4:ENQUEUED/FAIL
+qwen_compute	coll_ft__cla4a25d77	3	holdgaterr	4:ENQUEUED/FAIL
+qwen_compute	coll_ftc	1	holdgaterr	1:ENQUEUED/FAIL
+qwen_compute	coll_n	7	holdgaterr	7:ENQUEUED/FAIL
+qwen_compute	coll_s	1	holdgaterr	2:RUNNING/None
+qwen_compute	sle_hc1__cl22c1ff36	5	holdgaterr	7:RUNNING/None
+qwen_compute	sle_hc1__cl22c1ff36	7	holdgaterr	7:RUNNING/None
+qwen_compute	sle_hc1__cl7d360508	5	holdgaterr	6:RUNNING/None
+qwen_compute	sle_stm_v1__clbe630b9c	4	holdgaterr	6:FAIL/None
+qwen_compute	sle_stm_v2__cl7b3062fa	4	holdgaterr	5:RUNNING/None
+qwen_compute	sle_su_l1__clc6d66f5b	4	holdgaterr	5:RUNNING/None
+qwen_compute	slw_st_a_v2__cl9f076a5c	5	holdgaterr	6:RUNNING/None
+hbm	hfd_ep_static	7	KW-FIX-17 16:5x: holdrr d3132f0ac3f (str	8:ENQUEUED/FAIL
