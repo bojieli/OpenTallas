@@ -97,6 +97,12 @@ def tile_identity(inst, row, column):
     """Read the exact source ID through either emitted parent-strap spelling."""
     suffix = f'u_t_{row}_{column}_tile_id'
     values = [(p, n) for p, n in inst['conns'] if p in ('S_' + suffix, 'strap_' + suffix)]
+    if not values:
+        # Native bind emits the same source strap as an instance parameter.
+        # Only the literal instance header is authoritative; never infer an ID
+        # from the partition nickname or substitute a default value.
+        header = inst.get('text', [''])[0]
+        values = re.findall(r'\.(' + re.escape('S_' + suffix) + r')\(([^()]*)\)', header)
     if len(values) != 1:
         raise ValueError(f'{inst["name"]}.{suffix}: expected exactly one source tile strap, got {values}')
     width, value = known_literal(values[0][1])

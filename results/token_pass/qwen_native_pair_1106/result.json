@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.qwen.literal_pair.v1",
+ "qc_top": "/srv/opentallas-scratch2/claude/codex-qc-functional-1106/stage_UNION_a3/bound/rtl/qwen_compute_bound_top.sv",
+ "kv_top": "/srv/opentallas-scratch2/claude/codex-kv-fresh-bind/bind/rtl/qwen_kvsys_bound_top.sv",
+ "qc_plan": "/srv/opentallas-scratch2/claude/codex-qc-functional-1106/plan_qc_union_candidate.json",
+ "qc_top_sha256": "c9563e81cbf1ceef941b121a3be5e33a71b99006310536f30219edd689d57b52",
+ "kv_top_sha256": "b42a1d9983ffa7f25357b8447726835105e10a6188cde778a98ff37ab54fa1a9",
+ "plan_sha256": "6f5a9bdbee3b36f2c6eb87d2da466bec9e64a609caa8ada93256b43a1ce65791",
+ "whole_qc": false,
+ "rom_tiles": 64,
+ "link": "QC.ucie_kv_link_* -> KV.sys_c_far_* and KV.sys_c_link_* -> QC.ucie_kv_far_*",
+ "scope": "Structural adapter only. Scheduler must drive every environmental input; no boot/token verdict implied.",
+ "retained_instances": 35,
+ "retained_instance_text": "35/35 byte-identical",
+ "declared_environmental_ports": 570,
+ "gate": "SOURCE_CONSTRUCTION_ONLY; execution not run"
+}
