@@ -22,7 +22,7 @@
 # OT_PRD_PROTECT_NETS = Tcl list of exact measured data nets to preserve during
 # repair; persisted through both passes. Does not waive any signoff checks.
 set -euo pipefail
-KIT=$(cd "$1" && pwd); OUT=$2; V=$3; SO=$(cd "$4" && pwd); SPEF=${5:-}
+KIT=$(cd "$1" && pwd -P); OUT=$2; V=$3; SO=$(cd "$4" && pwd); SPEF=${5:-}
 HERE=$(cd "$(dirname "$0")" && pwd)
 test ! -e "$OUT" || { echo "prd_mk: $OUT exists (never relaunch into a run dir)"; exit 2; }
 RS=$(ls -d $KIT/run/results/asap7/*/base); NICK=$(basename $(dirname $RS))
@@ -61,7 +61,14 @@ fi
 HM=${V:1}; [[ "$HM" =~ ^[0-9]+$ && ${V:0:1} =~ ^[bmt]$ ]] || { echo "prd_mk: variant $V: want b<hold margin ps>, m<hold margin ps> or t<N>"; exit 2; }
 mkdir -p $OUT
 test -z "$SEEDCHK" || echo "$SEEDCHK" > $OUT/prd_seed.json
-rsync -a --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_*' --exclude '/signoff*.log' \
+# Exclude the actual output subtree even for caller-selected names such as eco2.
+# Otherwise creating OUT inside KIT makes rsync copy the growing pass into itself.
+OUT_EXCLUDE=()
+OUT_ABS=$(realpath -m -- "$OUT")
+case "$OUT_ABS" in
+  "$KIT"/*) OUT_REL=${OUT_ABS#"$KIT"/}; OUT_EXCLUDE=(--exclude "/${OUT_REL%%/*}/") ;;
+esac
+rsync -a "${OUT_EXCLUDE[@]}" --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_*' --exclude '/signoff*.log' \
   --exclude '/run_*.log' --exclude /rc.txt --exclude '/pass[0-9]*' --exclude '/prd_*.json' --exclude '/prd_*.log' \
   --exclude '/eco_[0-9]*' --exclude '/lec_routed_autopilot_*' $KIT/ $OUT/
 B=$OUT/run/results/asap7/$NICK/base
