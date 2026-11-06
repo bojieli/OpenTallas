@@ -2040,6 +2040,23 @@ def _density(t):
     return t.get("clock", {}).get("tap_mode") == "density"
 
 
+def tap_chain_affinity_exports(t):
+    """Default-off, bounded per-bit pre-CTS grouping; no timing-budget change."""
+    clock = t.get("clock", {})
+    if "tap_chain_affinity" not in clock:
+        return []
+    spec = clock["tap_chain_affinity"]
+    radius = float(spec.get("radius_um", clock.get("tap_radius_um", 200.)))
+    limit = int(spec.get("max_group", 24))
+    if not 0 < radius <= float(clock.get("tap_radius_um", 200.)):
+        raise ValueError("tap_chain_affinity radius must fit the declared tap radius")
+    if not 2 <= limit <= min(1200, _tap_cap(t)):
+        raise ValueError("tap_chain_affinity group must fit the declared tap capacity")
+    return ["export OT_TAP_CHAIN_AFFINITY = 1",
+            f"export OT_TAP_CHAIN_RADIUS_UM = {radius:g}",
+            f"export OT_TAP_CHAIN_MAX_GROUP = {limit}"]
+
+
 def _tap_cap(t):
     """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 3000 (COORD 10-23; applies to grid and added taps);
     density taps default to 1500 (decision 5: ~1000-1500 sinks a tap)."""
@@ -3774,13 +3791,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if t.get("clock", {}).get("pregrt_ff_hold"):
         # HEAD-TILE-PREGRT-HOLD (DH59-TILE 11-03, opt-in clock.pregrt_ff_hold): pregrt_ff_hold.py, run_kit.sh step below
         cfg.append("export OT_PREGRT_FF_HOLD = 1")
+    cfg += tap_chain_affinity_exports(t)
     import pad_clock as PC
     PC.write_contract(P, tn, kd)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
-              "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
+              "clock_taps.tcl", "tap_chain_affinity.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl",
               "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)

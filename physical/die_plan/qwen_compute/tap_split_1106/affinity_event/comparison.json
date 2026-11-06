@@ -1,0 +1,84 @@
+{
+  "source": "a3ab6b89bd",
+  "prototype_only": true,
+  "physical_cts": "NOT RUN",
+  "instances_unchanged": 348544,
+  "pins_unchanged": 1288379,
+  "clock_pins_changed": 15544,
+  "invalid_changes": [],
+  "examples": [
+    [
+      [
+        "P",
+        "{u_bound.u_d10_u_t_1_0_n_y.q\\[0\\]$_DFF_P_}",
+        "CLK",
+        "ot_proto_clk_65"
+      ],
+      [
+        "P",
+        "{u_bound.u_d10_u_t_1_0_n_y.q\\[0\\]$_DFF_P_}",
+        "CLK",
+        "ot_proto_clk_60"
+      ]
+    ],
+    [
+      [
+        "P",
+        "{u_bound.u_d10_u_t_1_0_n_y.q\\[100\\]$_DFF_P_}",
+        "CLK",
+        "ot_proto_clk_65"
+      ],
+      [
+        "P",
+        "{u_bound.u_d10_u_t_1_0_n_y.q\\[100\\]$_DFF_P_}",
+        "CLK",
+        "ot_proto_clk_60"
+      ]
+    ],
+    [
+      [
+        "P",
+        "{u_bound.u_d10_u_t_1_0_n_y.q\\[101\\]$_DFF_P_}",
+        "CLK",
+        "ot_proto_clk_65"
+      ],
+      [
+        "P",
+        "{u_bound.u_d10_u_t_1_0_n_y.q\\[101\\]$_DFF_P_}",
+        "CLK",
+        "ot_proto_clk_60"
+      ]
+    ],
+    [
+      [
+        "P",
+        "{u_bound.u_d10_u_t_1_0_n_y.q\\[102\\]$_DFF_P_}",
+        "CLK",
+        "ot_proto_clk_65"
+      ],
+      [
+        "P",
+        "{u_bound.u_d10_u_t_1_0_n_y.q\\[102\\]$_DFF_P_}",
+        "CLK",
+        "ot_proto_clk_60"
+      ]
+    ],
+    [
+      [
+        "P",
+        "{u_bound.u_d10_u_t_1_0_n_y.q\\[103\\]$_DFF_P_}",
+        "CLK",
+        "ot_proto_clk_65"
+      ],
+      [
+        "P",
+        "{u_bound.u_d10_u_t_1_0_n_y.q\\[103\\]$_DFF_P_}",
+        "CLK",
+        "ot_proto_clk_60"
+      ]
+    ]
+  ],
+  "joined_groups": 5302,
+  "max_joined_group_reach_um": 199.99000000000007,
+  "max_grid_load": 1200
+}

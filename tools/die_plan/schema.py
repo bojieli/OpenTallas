@@ -591,6 +591,10 @@ SCHEMA = {
                                                "additionalProperties": False, "properties": {
                                                    "tt": _early_late, "ff": _early_late,
                                                    "basis": {"type": "string", "minLength": 1}}}}}},
+                        # Default-off: bounded same-bit delay-chain clock affinity before CTS.
+                        "tap_chain_affinity": {"type": "object", "additionalProperties": False,
+                            "properties": {"radius_um": _pos,
+                                           "max_group": {"type": "integer", "minimum": 2, "maximum": 1200}}},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
                         "tap_target_sinks": {"type": "integer", "minimum": 1},
                         "tap_min_sinks": {"type": "integer", "minimum": 1},

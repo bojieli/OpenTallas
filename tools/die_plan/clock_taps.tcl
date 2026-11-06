@@ -82,6 +82,11 @@ if {[info exists ::env(OT_CORE_TAPS)] && [file exists $::env(OT_CORE_TAPS)]} {
     if {!$k} { puts "OT_CLOCK_TAPS WARN core tap $port: no clock pin of $iname/$pin on clk" }
   }
 }
+# Default-off bounded per-bit affinity; capture before the ordinary tap split.
+if {[info exists ::env(OT_TAP_CHAIN_AFFINITY)] && $::env(OT_TAP_CHAIN_AFFINITY) eq "1"} {
+ source [file join [file dirname [info script]] tap_chain_affinity.tcl]
+ ::ot_tap_chain::capture [[$ct_blk findBTerm $ct_port] getNet]
+}
 if {[llength $ct_taps] < 2} {
   puts "OT_CLOCK_TAPS single tap: nothing to split"
 } else {
@@ -366,6 +371,10 @@ if {[llength $ct_taps] >= 2 && $ct_min > 0} {
     lappend ct_merged "[lindex $tp 0]($n)->[lindex $best 0]"
   }
   puts "OT_CLOCK_TAPS MIN $ct_min sinks/tap: [llength $ct_merged] small taps merged [join $ct_merged { }]"
+}
+# Bounded opt-in affinity uses individual bits, not whole wide station rows.
+if {[info exists ::env(OT_TAP_CHAIN_AFFINITY)] && $::env(OT_TAP_CHAIN_AFFINITY) eq "1"} {
+ ::ot_tap_chain::apply
 }
 # COORD 10-23 (CP1 r9: 7 of 16 grid taps over macros / empty areas): per-tap sink counts after the cap pass, and
 # every tap that got NO sink is DROPPED: its port stays (plan pins unchanged) but carries no tree, and the die

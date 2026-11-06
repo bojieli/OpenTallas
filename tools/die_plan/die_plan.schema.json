@@ -1873,6 +1873,21 @@
          }
         }
        },
+       "tap_chain_affinity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+         "radius_um": {
+          "type": "number",
+          "exclusiveMinimum": 0
+         },
+         "max_group": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 1200
+         }
+        }
+       },
        "tap_max_sinks": {
         "type": "integer",
         "minimum": 1
