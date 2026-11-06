@@ -534,6 +534,8 @@ def signed_child_etm(model, flow_tag):
     if not names or files[names[0]] != model['liberty_sha256']:
         raise ValueError(f'{lib.name}: sha256 differs from the signed view export {pf}')
     so = ex.get('signoff')
+    if so and not Path(so).is_absolute():
+        so = str((pf.parent / so).resolve())
     if not so or not Path(so).is_file():
         raise ValueError(f'{pf}: child signoff.json {so} unavailable')
     if ex.get('signoff_sha256') and _sha_file(so) != ex['signoff_sha256']:
