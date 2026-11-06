@@ -4,7 +4,9 @@
 // phase*64 shift and 4/4/4/5 head advance. Its handshake machinery is absent.
 // Source sectors follow 4,4,4,4,1 fixed pulses per five edges; missing slots
 // fault, never hold/retry. Each record is 128 weight bytes then8 scale bytes.
-module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter integer RW_SRAM=0)(
+// HBM-GAPS-8 SVGR_TOP P1: WPIPE 1 = the row commit (SRAM write port, tags[] and valid[]) is registered one edge after the
+// row slot, so the 5-of-16 gather + shift ends at a register, not at the SRAM pins; ready/busy follow one edge later.
+module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter integer RW_SRAM=0, parameter integer WPIPE=0)(
  input wire clk,rst_n,
  input wire open_v,open_bank,input wire [15:0] open_epoch,input wire [6:0] open_count,input wire [9:0] open_tag_base,
  input wire [3:0] sector_v,input wire [95:0] sector_index,input wire [63:0] sector_epoch,input wire [1023:0] sector_data,
@@ -28,6 +30,10 @@ module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter intege
   wire row_slot=running&&elapsed>=2&&slot_phase!=1&&emitted<load_rows;
   wire [1087:0] row_data=gathered>>(record_phase*64);
   wire row_write=row_slot&&complete&&!sticky;
+  reg w_q;reg[6:0]w_addr_q;reg[9:0]w_tag_q;reg[1087:0]w_data_q;
+  wire c_we=(WPIPE!=0)?w_q:row_write;wire[6:0]c_wa=(WPIPE!=0)?w_addr_q:{load_bank,emitted[5:0]};
+  wire[1087:0]c_wd=(WPIPE!=0)?w_data_q:row_data;
+  always @(posedge clk)if(WPIPE!=0)begin w_addr_q<={load_bank,emitted[5:0]};w_tag_q<=tag_base+emitted;w_data_q<=row_data;end
   wire open_ok=open_v&&!running&&!owned[open_bank]&&open_count!=0&&open_count<=64&&!sticky&&!(retire_v&&retire_bank==open_bank);
   wire read_ok=read_v&&ready[read_bank]&&read_epoch==epoch[read_bank]&&{1'b0,read_row}<count[read_bank]&&
     read_tag==tags[read_addr]&&!sticky&&!(retire_v&&retire_bank==read_bank);
@@ -46,7 +52,7 @@ module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter intege
     if(total_sectors-received<expected_sectors)expected_sectors=total_sectors-received;
    end
   end
-  assign block_ready=ready;assign bank_owned=owned;assign busy=running;assign fault=sticky;
+  assign block_ready=ready;assign bank_owned=owned;assign busy=running||((WPIPE!=0)&&w_q);assign fault=sticky;
   assign out_packet={out_valid&&!sticky,out_tag,cache_data[4][63:0],cache_data[3],cache_data[2],cache_data[1],cache_data[0]};
 `ifdef CACHE_TRACE
   // Diagnostic only: report the exact violated existing predicate, never change it.
@@ -61,10 +67,12 @@ module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter intege
    if(!rst_n)begin
     owned<=0;epoch[0]<=0;epoch[1]<=0;count[0]<=0;count[1]<=0;valid[0]<=0;valid[1]<=0;
     running<=0;load_bank<=0;sticky<=0;load_epoch<=0;load_rows<=0;emitted<=0;tag_base<=0;received<=0;total_sectors<=0;
-    head<=0;slot_phase<=0;elapsed<=0;record_phase<=0;present<=0;out_valid<=0;out_tag<=0;
+    head<=0;slot_phase<=0;elapsed<=0;record_phase<=0;present<=0;out_valid<=0;out_tag<=0;w_q<=0;
     for(i=0;i<128;i=i+1)tags[i]<=0;
    end else begin
     out_valid<=read_ok;if(read_ok)out_tag<=tags[read_addr];
+    w_q<=(WPIPE!=0)&&row_write;
+    if(WPIPE!=0&&w_q)begin tags[w_addr_q]<=w_tag_q;valid[w_addr_q[6]][w_addr_q[5:0]]<=1;end
     if(open_v&&!open_ok)sticky<=1;
     if(open_ok)begin
      owned[open_bank]<=1;epoch[open_bank]<=open_epoch;count[open_bank]<=open_count;valid[open_bank]<=0;
@@ -85,8 +93,8 @@ module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter intege
      if(row_slot)begin
       if(!complete)sticky<=1;
       else begin
-       tags[{load_bank,emitted[5:0]}]<=tag_base+emitted;
-       valid[load_bank][emitted[5:0]]<=1;emitted<=emitted+1'b1;
+       if(WPIPE==0)begin tags[{load_bank,emitted[5:0]}]<=tag_base+emitted;valid[load_bank][emitted[5:0]]<=1;end
+       emitted<=emitted+1'b1;
        for(i=0;i<5;i=i+1)if(i<(record_phase==3?5:4))present[(head+i)%16]<=0;
        head<=head+(record_phase==3?5:4);record_phase<=record_phase+1'b1;
       end
@@ -101,16 +109,16 @@ module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter intege
    end
   end
   genvar p;for(p=0;p<5;p=p+1)begin:g_cache
-   wire [1279:0] padded_row={192'b0,row_data};
+   wire [1279:0] padded_row={192'b0,c_wd};
    wire [255:0] write_data=padded_row[p*256+:256];
    if (RW_SRAM!=0) begin:g_rw
     ot_sram_1r1w_128x256_m1_r0c0_g256 u_payload(
      .clk(clk),.r_ce_in(read_ok),.r_addr_in(read_addr),.rd_out(cache_data[p]),
-     .w_ce_in(row_write),.w_addr_in({load_bank,emitted[5:0]}),.wd_in(write_data),.w_mask_in(1'b1));
+     .w_ce_in(c_we),.w_addr_in(c_wa),.wd_in(write_data),.w_mask_in(1'b1));
    end else begin:g_original
    ot_sram_1r1w_128x256_m1_r2c2 u_payload(
     .clk(clk),.r_ce_in(read_ok),.r_addr_in(read_addr),.rd_out(cache_data[p]),
-    .w_ce_in(row_write),.w_addr_in({load_bank,emitted[5:0]}),.wd_in(write_data),.w_mask_in({256{1'b1}}),
+    .w_ce_in(c_we),.w_addr_in(c_wa),.wd_in(write_data),.w_mask_in({256{1'b1}}),
     .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
    end
   end
