@@ -1,0 +1,107 @@
+{
+  "scope": "READ_ONLY_METADATA_WITNESS_NO_REPROOF",
+  "live_compiler_pid": 1174004,
+  "live_compiler_startup_overrides": {},
+  "staged_compiler_selector_sha256": "2658c706853709f705a5a69c8533fe1a3a4c935a933476197f2527781b0c3710",
+  "actual_check_call": "lec.py check(): top=parse_config(kit)[DESIGN_NAME]=ot_svgr_top; rec[reset_contract]=reset_contract_gate(kit,top) before AIG/model preparation",
+  "fixtures": [
+    {
+      "label": "A",
+      "kit": "/srv/opentallas-scratch2/claude/svgr-top-rw-gen-1106-p37/ot_svgr_top_c26588462899",
+      "contract_sha256": "d95b0c5bc593188ff8a5c827bfbff6b4d95929fe7c70787ca712a403c963acc7",
+      "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a",
+      "edges": 64,
+      "assert_edges": 66,
+      "proof_verdict": "PASS",
+      "mutant": "CAUGHT",
+      "module_selected": true,
+      "freeze_reset_contract": {
+        "edges": 64,
+        "module": "ot_svgr_top",
+        "die": "hbm",
+        "contract": "/srv/opentallas-scratch2/claude/wt/codex-hbm-svgr-top-native-1106/physical/die_plan/hbm/reset_contract.json",
+        "contract_sha256": "d95b0c5bc593188ff8a5c827bfbff6b4d95929fe7c70787ca712a403c963acc7",
+        "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a"
+      },
+      "same_staged_selector_result": {
+        "default": 4,
+        "requested": null,
+        "contract": {
+          "file": "/srv/opentallas-scratch2/claude/svgr-top-rw-gen-1106-p37/ot_svgr_top_c26588462899/reset_contract.json",
+          "die": "hbm",
+          "edges": 64,
+          "assert_edges": 66,
+          "receipt": "/srv/opentallas-scratch2/claude/svgr-top-rw-gen-1106-p37/ot_svgr_top_c26588462899/reset_contract/receipt.txt"
+        },
+        "used": 64,
+        "debug_overrides": {}
+      }
+    },
+    {
+      "label": "B",
+      "kit": "/srv/opentallas-scratch2/claude/svgr-top-rw-gen-1106-p37-B/ot_svgr_top_c26588462899",
+      "contract_sha256": "d95b0c5bc593188ff8a5c827bfbff6b4d95929fe7c70787ca712a403c963acc7",
+      "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a",
+      "edges": 64,
+      "assert_edges": 66,
+      "proof_verdict": "PASS",
+      "mutant": "CAUGHT",
+      "module_selected": true,
+      "freeze_reset_contract": {
+        "edges": 64,
+        "module": "ot_svgr_top",
+        "die": "hbm",
+        "contract": "/srv/opentallas-scratch2/claude/wt/codex-hbm-svgr-top-native-1106/physical/die_plan/hbm/reset_contract.json",
+        "contract_sha256": "d95b0c5bc593188ff8a5c827bfbff6b4d95929fe7c70787ca712a403c963acc7",
+        "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a"
+      },
+      "same_staged_selector_result": {
+        "default": 4,
+        "requested": null,
+        "contract": {
+          "file": "/srv/opentallas-scratch2/claude/svgr-top-rw-gen-1106-p37-B/ot_svgr_top_c26588462899/reset_contract.json",
+          "die": "hbm",
+          "edges": 64,
+          "assert_edges": 66,
+          "receipt": "/srv/opentallas-scratch2/claude/svgr-top-rw-gen-1106-p37-B/ot_svgr_top_c26588462899/reset_contract/receipt.txt"
+        },
+        "used": 64,
+        "debug_overrides": {}
+      }
+    },
+    {
+      "label": "ACTIVE_COMPILER",
+      "kit": "/srv/opentallas-scratch2/claude/svgr-top-rw-sizing-1106/kit",
+      "contract_sha256": "d95b0c5bc593188ff8a5c827bfbff6b4d95929fe7c70787ca712a403c963acc7",
+      "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a",
+      "edges": 64,
+      "assert_edges": 66,
+      "proof_verdict": "PASS",
+      "mutant": "CAUGHT",
+      "module_selected": true,
+      "freeze_reset_contract": {
+        "edges": 64,
+        "module": "ot_svgr_top",
+        "die": "hbm",
+        "contract": "/srv/opentallas-scratch2/claude/wt/codex-hbm-svgr-top-native-1106/physical/die_plan/hbm/reset_contract.json",
+        "contract_sha256": "d95b0c5bc593188ff8a5c827bfbff6b4d95929fe7c70787ca712a403c963acc7",
+        "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a"
+      },
+      "same_staged_selector_result": {
+        "default": 4,
+        "requested": null,
+        "contract": {
+          "file": "/srv/opentallas-scratch2/claude/svgr-top-rw-sizing-1106/kit/reset_contract.json",
+          "die": "hbm",
+          "edges": 64,
+          "assert_edges": 66,
+          "receipt": "/srv/opentallas-scratch2/claude/svgr-top-rw-sizing-1106/kit/reset_contract/receipt.txt"
+        },
+        "used": 64,
+        "debug_overrides": {}
+      }
+    }
+  ],
+  "verdict": "PASS: intrinsic contract64/assert66 and valid receipt; same staged selector chooses64 rather than default4",
+  "limitations": "Live proof verdict is still pending; this does not alter or rerun the proof or inspect its Python locals."
+}
