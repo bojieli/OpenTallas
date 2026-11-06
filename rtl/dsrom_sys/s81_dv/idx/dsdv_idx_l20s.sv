@@ -416,10 +416,10 @@ module dsdv_idx_tx_n32 #(
     // shifted).  FACE = 0 is the old form, unchanged.
     parameter integer FACE = 0,
     // S81-IDX-B 11-05 (OWNER 19:3x version B, safe by construction): FACE = 2 keeps the FACE 1 face flops at the pins and
-    // re-times both face rows to the core through a negative-edge lockup flop and a positive-edge flop (+1 edge in:
-    // vi_f -> vi_n (negedge) -> vi_g -> core; +1 edge out: lo_q / st_q -> lo_n (negedge) -> lo_o (posedge, at the pin) ->
-    // port).  Every face <-> core crossing then has half a cycle of hold and setup margin against clock skew between the
-    // far face rows and the core: lo / st = the FACE 1 core lo / st delayed by exactly +2 ck edges (tb_dsdv_idx_tx_vb).
+    // re-times both face rows to the core (+1 edge in: vi_f -> vi_g (one full cycle of pure wire) -> core; +1 edge out:
+    // lo_q / st_q -> lo_n (negedge lockup) -> lo_o (posedge, at the pin) -> port: the core -> late face-row crossing gets
+    // half a cycle of hold and setup margin against clock skew).  lo / st = the FACE 1 core lo / st delayed by exactly
+    // +2 ck edges (tb_dsdv_idx_tx_vb).
     // MLK = 1: every SRAM macro input (ce / addr / wd / mask of the score store and the IDX buffer) passes a
     // negative-edge lockup flop at the macro pins: the macro still samples at the same rising edge the value launched one
     // edge earlier (0 cycles, bit-exact), and the register -> macro hold check gets half a cycle of margin.
@@ -456,10 +456,11 @@ module dsdv_idx_tx_n32 #(
             else begin vi_f[0] <= vi[0]; vo_f[0] <= vo[0]; end
         always @(posedge ck) begin vi_f[V-1:1] <= vi[V-1:1]; vo_f[V-1:1] <= vo[V-1:1]; end
         if (FACE >= 2) begin : g_fl
-            // FACE 2: no reset on the re-time stages (rst is held >= 64 ck: vi_f[0] / vo_f[0] = 0 flushes through)
-            reg [V-1:0] vi_n, vo_n, vi_g, vo_g;
-            always @(negedge ck) begin vi_n <= vi_f; vo_n <= vo_f; end
-            always @(posedge ck) begin vi_g <= vi_n; vo_g <= vo_n; end
+            // FACE 2: one rising-edge re-time stage, a full cycle of pure wire from the face row into the core (the
+            // probe measured the N face rows ~100-200 ps LATER than the core: hold-safe direction, so no half-cycle leg).
+            // No reset (rst is held >= 64 ck: vi_f[0] / vo_f[0] = 0 flushes through).
+            reg [V-1:0] vi_g, vo_g;
+            always @(posedge ck) begin vi_g <= vi_f; vo_g <= vo_f; end
             assign vi_p = vi_g; assign vo_p = vo_g;
         end else begin : g_fl0
             assign vi_p = vi_f; assign vo_p = vo_f;
