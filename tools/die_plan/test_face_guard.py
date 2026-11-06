@@ -1342,3 +1342,34 @@ def test_main_reads_generated_dead_inputs_beside_pins(tmp_path):
                                                                        narrow_buses=[dict(port="a", plan=2, bound=1)])))))
     assert face_guard.main([str(tmp_path / "net.v"), "--pins", str(tmp_path / "pins.json"), "--out", str(fg)]) == 0
     assert json.loads(fg.read_text())["dead_declared"] == ["a[1]"]
+
+
+def _local_reset_leaf_vehicle(leaf):
+    """DIE-QC-84 11-06 (QC slw_fw_v2 START4): the face copy samples the start under its OWN local reset leaf, an
+    equal-depth reset relay copy of the origin's reset root (ot_dp_rrelay, 'local same-cycle reset copy')."""
+    text, spec = _relay_copy_vehicle()
+    text = text.replace("ot_dp_landing_relay copy0", leaf + " ot_dp_landing_relay copy0")
+    return text.replace("copy0 (.clk(clk), .st(st), .rq(rq)", "copy0 (.clk(clk), .st(st), .rq(rq2)"), spec
+
+
+def test_relay_copy_on_equal_depth_local_reset_leaf_passes():
+    text, spec = _local_reset_leaf_vehicle(f"DFFHQNx1{_X} reset_ff2 (.CLK(clk), .D(rst_n), .QN(rq2));")
+    got = face_guard.guard(text, "top", land=spec)
+    assert got["verdict"] == "PASS", got["fails"]
+    assert got["ring_start"]["st"]["face_copies"] == {"copy0": "o0", "copy1": "o1"}
+
+
+@pytest.mark.parametrize("leaf", [
+    # one cycle later than the origin's reset leaf
+    f"DFFHQNx1{_X} r2a (.CLK(clk), .D(rst_n), .QN(r2a)); INVx1{_X} r2i (.A(r2a), .Y(r2b)); "
+    f"DFFHQNx1{_X} reset_ff2 (.CLK(clk), .D(r2b), .QN(rq2));",
+    # another root
+    f"DFFHQNx1{_X} reset_ff2 (.CLK(clk), .D(st), .QN(rq2));",
+    # another clock
+    f"DFFHQNx1{_X} reset_ff2 (.CLK(st), .D(rst_n), .QN(rq2));",
+    # inverted parity
+    f"DFFHQNx1{_X} r2a (.CLK(clk), .D(rst_n), .QN(r2a)); INVx1{_X} reset_inv2 (.A(r2a), .Y(rq2));",
+])
+def test_relay_copy_local_reset_leaf_mutants_fail_closed(leaf):
+    text, spec = _local_reset_leaf_vehicle(leaf)
+    assert face_guard.guard(text, "top", land=spec)["verdict"] == "FAIL", leaf
