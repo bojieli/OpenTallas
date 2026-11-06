@@ -101,8 +101,9 @@ proc ot_prd_local_hold_sequential {} {
   if {[regexp {^(DFF|SDFF)} [[$i getMaster] getName]]} {set seq 1}
   if {!$seq || [[$i getMaster] isBlock]} continue
   dict set ::ot_prd_local_sequential [$i getName] [list [[$i getMaster] getName] [$i getLocation] [$i getOrient] [$i getPlacementStatus] [$i isDoNotTouch]]
+  # KW-FIX-23 (COORD 12:0x, KV-PRM-B4): hold the pose FIRM only.  dont_touch on every flop made repair_design
+  # fail RSZ-3006; any master/location/orient change still fails ot_prd_local_sequential_audit.
   $i setPlacementStatus FIRM
-  $i setDoNotTouch 1
  }
  puts "OT_PRD_LOCAL_BRANCH sequential poses held [dict size $::ot_prd_local_sequential]"
 }
