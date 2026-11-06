@@ -24,7 +24,7 @@ foreach a $body {
 if {$found != 1} {error "expected one measured clock access point, got $found"}
 set layer [[[$block getDb] getTech] findLayer M5]
 # Append, so EVERY existing junction/property index remains unchanged.
-set extra [list [list newPath $layer FIXED] {addPoint 276120 168480} {addRect -120 -24 360 144}]
+set extra [list [list newPath $layer FIXED] {addPoint 276120 168480} {addRect -144 -24 360 480}]
 set expected [concat $body $extra]
 set nw [odb::dbWire_create $block];set enc [odb::dbWireEncoder];$enc begin $nw
 foreach a $expected {$enc {*}$a}
@@ -43,4 +43,4 @@ foreach p [$bt getBPins] {foreach b [$p getBoxes] {
 }}
 if {$after_boxes ne $port_boxes} {error "BPin changed"}
 write_db $::env(Q3_OUTPUT_ODB)
-puts "Q3_CLOCK_RECTANGLE PASS: clk-only M5 rectangle276000,168456..276480,168624nm; exact original wire operations retained, BPin unchanged, no cell/net/endpoint/phase/RTL/cycle changes"
+puts "Q3_CLOCK_RECTANGLE PASS: clk-only M5 rectangle275976,168456..276480,168960nm; exact original wire operations retained, BPin unchanged, no cell/net/endpoint/phase/RTL/cycle changes"
