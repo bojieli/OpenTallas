@@ -1,0 +1,11 @@
+# HBM-GAPS-5-LEC 2026-11-06 05:49 UTC: proof of OT_Q2NF_TGTQ1 (ot_q2nf_rest only, recipe define)
+# run: docker openroad/orfs:asap7lock, python3 -I prove.py <patched rest.sv> <main 49759b8371 rest.sv> <wd> <yosys>
+# cause: u_program.target_q reg _55083_ <= target_eff = hit(_23041_) ? 8h34 : 8h00, no reset; bits 0,1,3,6,7 const 0, bits 2,4,5 three copies of one flop;
+# synth merges 2/4/5 into one flop, the gold keeps three: kit LEC gold-only _55083_[2] (2017 differ) [epyc4 scratch2 hbm-reform-b5/f33k/ot_q2nf_rest_420e7cd7fa90/lec/lec.json].
+TEXT old sha256 006d69bc3798238898e7623bd11d803935ccafb391c6abdad88d406bbd1fcd59 patched-minus-ifdef sha256 006d69bc3798238898e7623bd11d803935ccafb391c6abdad88d406bbd1fcd59 IDENTICAL
+FORMAL M0 new form vs old: PASS
+MUTANT M1_bit2_tied0: caught (proof FAILS)
+MUTANT M2_no_register: caught (proof FAILS)
+MUTANT M3_bit0_not_const: caught (proof FAILS)
+MUTANT M4_bit3_for_bit2: caught (proof FAILS)
+RESULT PASS
