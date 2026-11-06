@@ -1,47 +1,34 @@
 # CODEX HBM bounded parent trial
 
-Updated 2026-11-06; latest resumed PLACE and station diagnosis. Owner: Codex hbm_parent, in coordination with HBM die owner.
+Updated 2026-11-06. Owner: hbm_parent; canonical plan owner: hbm. This is a diagnostic two-child q_spb2 parent, not parent/die/token closure.
 
-Current concrete vehicle: q_spb2/NW_spb2, two actual signed ot_hbm_svc_sm_xcal_rel_t macros, current d44v36 type and retained native m79f body. No whole-die or parent closure claim.
+## Current result
 
-- Source plans: intel2 `/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v36/die_plan.json`; native bind epyc2 `hbm-bind-9/g_t11m79f` (strict-bind retained corrected bodies). Exact source and full original snapshots retained.
-- Own tools: intel2 and epyc2 `/srv/opentallas-scratch2/claude/wt/codex-hbm-parent-1106` (codex/hbm-parent-1106 / codex/hbm-parent-run-1106).
-- Own artifacts: `/srv/opentallas-scratch2/claude/codex-hbm-parent-1106/` on intel2/epyc2; staged kit/views on epyc5/epyc6.
-- Submitted PLACE job: intel2 client PID 3582567, `~/codex-hbm-parent-1106/place.otrun.log`. Kit `.../xcal_gen_fixed/q_spb2`, ot-run priority die, 24GB/8threads/20GBdisk. It initially waited because epyc2 had81GB free minus70GB existing die reservations; same self-contained inputs now staged to epyc5/6 for automatic re-placement, no other job cancelled.
+PLACE shell PASS, async LEC exit0: epyc6 unit `oth-ubuntu-1429122-1793955200`, intel2 log `~/codex-hbm-parent-1106/place_rstport2.otrun.log`. Actual two signed xcal macros retained. SYNTH:69,585 stdcells+2macros; macro108690um2, standard11657um2. PORT_BIND12505/12505, FACE_GUARD failures0, REG_FANOUT33627regs/over64=0. Final placement rendered/viewed; no stdcell centers inside macros. No route launched.
 
-## Results and diagnosed failures
+Important actual PLACE subfailure: OT_RESET_TREE FAIL missing `u_rst_root`; native has synchronous relayed `u_rst_in`. Isolated gen_phys incorrectly treated the partition as die root. Shell exit0 does not clear this failure.
 
-1. q_su21 first candidate: current type equals retained m79f type exactly. However native leaf is flattened ot_hnx_su_plain4__lid9_rst3 with MLAT4 lane_pinreg, while plan expects16 p17 lane1 children, signed at MLAT5. Attached real views yielded ZERO lane1 macros and would flatten1.37M logic cells. Do not route this false join. HBM owner/root informed; source composition repair remains open.
-2. Real lane1 and xcal signed runs lacked LEF exports. Read-only OpenROAD abstract extraction from their actual signed6_final.odb plus canonical autopilot export now produces complete=true views with actual pins and both TT/FF libraries. No original signed run edited. Lane1 view remains available for later corrected SU composition; xcal view used now.
-3. Current full plan's old same-face FT declarations blocked schema generation. Die owner supplied explicit tested turnaround support; bounded xcal plan retains3 turnarounds with exact same windows/stations/pins. Two obsolete slots L117x2/L138x2 removed only in bounded plan, owner-confirmed zero full-plan ports and zero native RTL mentions. Canonical cleanup remains die-owner work.
-4. Native wrapper source basename collision (SU case): two different ot_hdc_prefix.sv files define disjoint suffixed/unsuffixed modules. Private kit_dedupe byte-preserving filename aliases unblock source assembly only when module sets are disjoint and no relative includes exist; actual bytes asserted unchanged. Shared kit_assembly owner has details.
-5. xcal physical abstract ABI: signed hardmacro has no elaboration parameters, while native instances pass DD256/PAW11/PREL1/XSLOT1. Minimal hierarchy probe demonstrated missing-XSLOT error. Those values match the signed face-shell's u_fcore exactly; only redundant parameter lists stripped at two private physical macro instances. Record `xcal_fixed_parameters.json`. No new cycles, arithmetic, ports or constraints changed. Existing signed shell +1in/+1out timing contract still needs full native schedule/model reconciliation for release; TOK notified.
-6. Physical kit generation PASS:6RTL files, two real xcal macros, no unbound buses, no spare output tie-offs. L83_i has71 known unread spare input bits retained in generated dead-input metadata.
+Artifact root (ROOT): `/srv/opentallas-scratch2/claude/codex-hbm-parent-1106` on intel2/epyc2/epyc6. Final DB epyc6 `ROOT/xcal_gen_rstport/q_spb2/run/results/asap7/dp_q_spb2/base/3_place.odb`; image `ROOT/xcal_actual_placement.png` on epyc6, local `coord/tmp/codex-hbm-parent-1106`. Own tools intel2+epyc2 `.../wt/codex-hbm-parent-1106`; never merge these private exploratory copies to main blindly.
 
-## Review and model
+## Failures diagnosed and owners
 
-Actual `xcal_review/die_cores.png` viewed. Two241.92x224.64 macros have34.56um north channel and362.88um inter-macro gap; no macro wall/overlap. Native registered chains/turnarounds retained, clock entries exact, actual LEF and timing views paired. Verdict PASS-COND for diagnostic SYNTH/PLACE. Review in kit `results/geom_review/REVIEW.md`, image copied there. Parent own route ceiling M7, actual PLACE_DENSITY .40, original833ps clock and released timing policy unchanged. Plan footprint1745.28x1503.36um, planned27778logic cells; no array replication in this trial. First stop PLACE, then actual-placement review before CTS/GRT/STA. Sign-off, parent integration and token qualification not yet run.
+- q_su21 native composition lacks the16 signed p17 lane1 MLAT5 paths; old plain4 uses MLAT4 and different address/data ABI. Attaching real views yielded ZERO lane1 macros and1.37M flattened logic. Never route false join. kit_assembly+hbm now own focused semantic proof/composition, including possible unused VI word4; no fabricated outputs.
+- q_spb2 missing internal stations: original native has0pads. Original kit_istations loops duplicate bus rows and fails L83 generated3>laterplanned2. Native L83 width28 versus plan99; stale cfg_data256 rows on L83/L87 are wrong. A diagnostic-only normalized plan coalesced each bus once at max depth/native width and PASSed insertion23stages. No geometry or cycle adoption claim.
+- Full-plan reset context is epyc2 `hbm-bind-9/m79fp/die_plan.json` (native provenance). `g_t11m79f/bind_reset.json` requires relayed entry, depth8, release9, rst_o_0, hard reset taps21/22/internal_depth1. Fleet prep owns admitted canonical kit_rsync on this full context, then mandatory bounded stations, then gen honoring canonical sidecars. Preserve kept kit_cells; do not skip reset conventions or regenerate isolated-root geometry. Direct full-context probes stopped (exact own PIDs); no live probe remains.
+- Shared kit_assembly helper handles exact source-byte-sealed parameter tuple DD256/PAW11/PREL1/XSLOT1. Its successful contract is intel2 own worktree `results/kit_assembly_1106/hbm_q_spb2/contracts.json`; fleet has it. Shared hard-child classification fix READY `d91819ffd37`, resolving bogus soft guides for real xcal macros.
+- Same-face support uses explicit tested turnaround annotations; bounded plan drops only unused L117x2/L138x2 with owner approval. Canonical repair belongs hbm.
+- HBM-40 conditional signed-shell latency input+1/output+1 (+2 command/response), reset+2, negative lockup0. Native raw child does not yet consume shell. HBM-42 conditional internal stage debt; original fullplan fixed0/pad0 on all6cohorts, L75/L76 only2boundarycycles versus internal8/5. Token owner reconciling; no adoption claim.
+
+## Concrete geometry repair ready
+
+HBM owner has exact native field map plus all646 actual soft first-capture endpoints. Every used input bit has a legal final bank outside macro+4.32halo within403um, worst385.32um before row allocation. File intel2 `codex-hbm-parent-fieldmap/input_lastbank_legal.json`. Physical cells must use actual .054um site/.270um row grid; conservative footprint1.404x.270um; coordinates are lower-left, not centers.
+
+My `ROOT/output_banks_DRAFT.json` provides all L75/L76 banks at existing8/5 depths,173payload+epoch slots each: row/site legal, no mutual overlap/halo intrusion, actual payload max hops266.706/351.702um. Image `ROOT/output_banks_DRAFT.png` rendered/viewed. Draft still needs input/existing-FIRM occupancy merge and canonical epoch/reset source check. Reproducer `allocate_output_banks.py`.
+
+Source-preserving reduction options, not applied: all1064 L40 launch->face FF hops <=199.962um, so stale internal2 may be unnecessary. L87 soft60bits <=352.35um; hard8statusbits486..603um require relay, coherent1stage may suffice versus stale2. HBM/token owners decide coherent depths. Exact traces `ROOT/output_launch_points.tsv`, `hard_status_output_reach.json`, `command_output_escape_paths.json`.
+
+`ROOT/soft_all_interfaces_relay_sites_DRAFT.json` freezes1770 existing soft FFs (646 input capture+1124 output launch) at actual legal lower-left sites with0cycles, preserving measured endpoint assumptions. Nearest-free placer can displace them: remeasure after fresh PLACE. Do not trust precomputed reach if GPL moves endpoints.
 
 ## Next
 
-Collect PLACE admission/result, diagnose any source/placement failure; inspect actual placement, then continue bounded clock/GRT and real-child timing joins. Preserve all originals and failed diagnostics. No blocking owner question.
-
-## Current milestone (supersedes original submitted-job paragraph)
-
-First actual SYNTH completed: 69,585 standard cells + two real xcal macros; macro area108690um2, standard area11657um2. Initial PORT_BIND failed solely because isolated extraction omitted actual native rst_o_0. Original failed run preserved. Added exact original reset.in_sites and keep_outs[1]; retained-netlist checks PASS:12505/12505 pins, FACE_GUARD12482bits/fails{}, REG_FANOUT33627regs/over64=0. All6RTL files unchanged, so resumed from synthesis.
-
-Current PLACE-only job: intel2 client222381, log ~/codex-hbm-parent-1106/place_rstport2.otrun.log; epyc6 unit oth-ubuntu-1429122-1793955200; kit xcal_gen_rstport/q_spb2. Detailed placement reached, zero overlap/site/row/region violations. Resizer585buffers, area130357um2/5%. Never route current source: native lacks planned core/face stations.
-
-Fresh inactive kit_istations probe FAIL L83_i bound3>planned2. Tool processes duplicate bus rows and faults against its own earlier insertion; metadata also stale: L83 native28desc/control bits versus plan99 and cfg_data256 row; L87 native68bits versus cfg_data256 row. HBM owner owns exact native field map and coherent bus/depth/geometry repair; shared prep driver will stop on mandatory station failure. Whole-bus candidates L75 173bits/8stages, L83 28bits/3, L87 68bits/2 still need endpoint geometry and cycle alignment before use. Probe/log xcal_kit_rtl_ist_probe and xcal_ist_probe.log on epyc2.
-
-Fresh inactive kit_rsync probe on isolated plan changes original relayed reset entry/release9 into root sync/release10. Therefore preserve original native reset tree/contract or rebuild only with original full-plan parent context; never blindly regenerate isolated reset. Probe xcal_kit_rtl_reset_probe retained. Original rst_o_0 source remains native registered output.
-
-TOK booked conditional HBM-40: signed child face shell adds+1 rising input/+1 rising output versus raw native child (+2 command/response), negative lockup0, boot reset+2. Native does not yet consume shell; no functional/token closure claim. Shared kit assembly helper verified exact source-byte-sealed two-child parameter contract, replacing private adaptation for future kits.
-
-## Final PLACE result and assigned next closure
-
-Resumed diagnostic PLACE PASS exit0; async LEC exit0 (epyc6 oth-ubuntu-1429122-1793955200). Final DB xcal_gen_rstport/q_spb2/run/results/asap7/dp_q_spb2/base/3_place.odb. Actual final placement rendered/viewed; zero standard-cell centers inside either hard macro. Image epyc6 artifact root/xcal_actual_placement.png and local coord/tmp/codex-hbm-parent-1106/xcal_actual_placement.png. No route launched.
-
-Fresh diagnostic normalized plan (one row/bus, max depth, native widths) makes kit_istations PASS: L75+8,L76+5,L40+2,L49+3,L83+3,L87+2; original had zero pads. Geometry remains explicitly unresolved; never use diagnostic candidate for route. HBM owner owns exact native field-map/geometry, including actual W-side hardchild pins and measured soft cp placement. Shared kit_assembly owner owns false soft-cell classification of real signed children. Fleet prep driver preserves native reset and stops mandatory station errors.
-
-Additional latency debt sent TOK: current fullplan fixed0/pad0 on all six cohorts. L75/L76 latency is2 boundary cycles/0stations despite internal8/5; L40/L87 latency8, L49/L83 latency12 include route stations but no internal fixed cycles. Exact ports/lanes/latency in intel2 artifact root/station_lane_contracts.json. Token owner reconciling existing route model before adopting stages. Exact native field map intel2 codex-hbm-parent-fieldmap/q_spb2_native_fieldmap.json. Current trial proves source/BB/lib/pin/reset placement join only; next route requires repaired field geometry and explicit coherent cycle contract.
+Combine legal input/output banks, existing soft guides and corrected hard-child classification; reconcile cycle calendar; run fresh admitted prep with full-context reset. Render/review combined geometry, SYNTH/PLACE, inspect parsed reset/station PASS and actual reach, then bounded CTS/GRT/STA. Every prior failed kit/log remains preserved. No blocking owner question.
