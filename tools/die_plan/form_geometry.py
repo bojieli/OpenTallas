@@ -78,6 +78,35 @@ def placement_reservations(parent, exclude=(), macro_halo=5.0, clock_halo=8.64):
     return out
 
 
+def parent_cell_space(parent, *, inset=4.32, halo=0.0, glue_area_um2=None, utilization=.45):
+    """Exact rectangle-union row area after opaque macro footprints are cut.
+
+    Bbox containment alone does not make a composable parent: two abutted
+    opaque halves can leave zero rows for even one OR gate. Caller supplies
+    measured glue area; unknown area is never reported as a capacity pass.
+    """
+    W,H=parent["outline_um"];core=[inset,inset,W-inset,H-inset]
+    if core[2] <= core[0] or core[3] <= core[1]:
+        raise ValueError("parent outline smaller than core inset")
+    boxes=[]
+    for r in parent_obstacles(parent).values():
+        r=grow(r,halo);q=[max(core[0],r[0]),max(core[1],r[1]),min(core[2],r[2]),min(core[3],r[3])]
+        if q[0]<q[2] and q[1]<q[3]:boxes.append(q)
+    xs=sorted({core[0],core[2]}|{q[k] for q in boxes for k in (0,2)})
+    occupied=0.0
+    for a,b in zip(xs,xs[1:]):
+        intervals=sorted((q[1],q[3]) for q in boxes if q[0] < b-EPS and q[2] > a+EPS)
+        end=-float("inf");height=0.0
+        for lo,hi in intervals:
+            height+=max(0.0,hi-max(lo,end));end=max(end,hi)
+        occupied+=(b-a)*height
+    area=(core[2]-core[0])*(core[3]-core[1]);free=max(0.0,area-occupied)
+    return {"core_area_um2":area,"macro_union_um2":occupied,"free_row_area_um2":free,
+            "utilization":utilization,"glue_area_um2":glue_area_um2,
+            "capacity_fits":None if glue_area_um2 is None else glue_area_um2 <= free*utilization+EPS,
+            "note":"cell-row capacity only; routing, clock, PG and parent pin contracts remain separate"}
+
+
 def fit_core(parent, instance, outline=None, origin=None, obs_max=None, halo=0.0, route_reservations=()):
     """Check a candidate at a real parent's instance, not just its standalone box.
 
@@ -303,6 +332,9 @@ def main(argv=None):
     c.add_argument("input"); c.add_argument("report")
     c = sub.add_parser("guides", help="exclude fixed or already-owned cells from placement groups")
     c.add_argument("input"); c.add_argument("report")
+    c = sub.add_parser("capacity",help="report exact parent row space after macro cutouts")
+    c.add_argument("input");c.add_argument("report");c.add_argument("--type",required=True)
+    c.add_argument("--glue-area",type=float);c.add_argument("--utilization",type=float,default=.45)
     a = ap.parse_args(argv)
     raw = json.loads(Path(a.plan if a.command=="core" else a.input).read_text())
     if a.command == "core":
@@ -320,6 +352,8 @@ def main(argv=None):
         result = {"module":a.module,"occurrences":rows,"fit_count":sum(r["fits"] for r in rows),"total":len(rows)}
     elif a.command == "chain":
         result = prepare_chain(**raw)
+    elif a.command == "capacity":
+        result = parent_cell_space(raw["partition_types"][a.type],glue_area_um2=a.glue_area,utilization=a.utilization)
     else:
         result = unowned_guides(**raw)
     Path(a.report).write_text(json.dumps(result,indent=2)+"\n")

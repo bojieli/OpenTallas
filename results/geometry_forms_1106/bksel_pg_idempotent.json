@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.pg_pin_publish.v1",
+  "input_db": "/work/pg6_published.odb",
+  "output_db": "/work/pg6_twice.odb",
+  "layer": "M6",
+  "supply": {
+    "VDD": {
+      "added_pin_rectangles": 0,
+      "existing_pg_geometry_sha256": "8159f117a5e9ba49691aca9d3987121f9ee8ecdc7ab658bae0a0968567c90337"
+    },
+    "VSS": {
+      "added_pin_rectangles": 0,
+      "existing_pg_geometry_sha256": "130bab31ae834f1e9bfad68f3339e07b930a804b60d0218a7ef9ed6e4f9623ee"
+    }
+  },
+  "interface_only": true,
+  "added_signal_cycles": 0
+}

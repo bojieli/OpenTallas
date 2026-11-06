@@ -42,6 +42,15 @@ class FormGeometryTests(unittest.TestCase):
         self.assertEqual([g["instances"] for g in result["groups"]],[["we0"],["we1"]])
         self.assertEqual(len(result["excluded"]),3)
 
+    def test_abutted_halves_have_no_parent_glue_capacity(self):
+        p=dict(outline_um=[536.76,221.4],hard_cores=[
+            dict(inst="w",origin_um=[0,0],outline_um=[268.38,221.4]),
+            dict(inst="e",origin_um=[268.38,0],outline_um=[268.38,221.4])])
+        r=F.parent_cell_space(p,glue_area_um2=.1)
+        self.assertAlmostEqual(r["free_row_area_um2"],0)
+        self.assertFalse(r["capacity_fits"])
+        self.assertIsNone(F.parent_cell_space(p)["capacity_fits"])
+
 
 if __name__ == "__main__":
     unittest.main()
