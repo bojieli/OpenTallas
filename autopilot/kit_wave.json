@@ -4847,5 +4847,6 @@
  "note_mlpt_kw19": "KW-FIX-19 21:2x: max_launch_floor 40 (disk watcher kw17/disk_hosts.py no longer lowers the per-tick cap below it; its epyc4-disk limit predates gen on epyc5/epyc6). Set back to 0 when the GEN-HOST-DEPS batch is out.",
  "max_launch_floor": 40,
  "note_codex_workroots": "CODEX-WAVE 11-05: fresh roots avoid spill-copy markers on 1105f2/1105e4. Existing jobs and sources retained.",
- "ot_run": "/home/ubuntu/.local/lib/kw21/ot-run"
+ "ot_run": "/home/ubuntu/.local/lib/kw22/ot-run",
+ "note_otrun_kw22": "KW-FIX-22 11-06 10:1x COORD 10:0x (epyc2 admits 638 GB, 0 waiters; batches to epyc2): ot_run kw21 -> kw22 = same wrapper on fleet/kw22-230e562 (230e562aa5c + SPILL_DST_ROOT_FLOOR epyc2 500->200 per owner 11-05 all-disks-scratch, and a spill that writes only on the epyc2 root fs (scratch3 = root there, 452 GB) is no longer refused by the 51-GB scratch2 floor). Async PLACE (--stage, unpinned) waiters now spill to epyc2 via the intel2 relay. epyc2 NOT added to die hosts: the gen->host sync runs from the gen host and epyc5/6 cannot ssh epyc2. Revert: ot_run back to kw21/ot-run."
 }
