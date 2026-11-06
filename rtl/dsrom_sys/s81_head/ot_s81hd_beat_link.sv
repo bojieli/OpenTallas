@@ -35,7 +35,14 @@ module ot_s81hd_beat_tx #(
     // DIE-HEAD-31 (COORD 14:10 hd_ctl u_tx (B)): opt-in, default 0 = unchanged.  1: the payload pin bits are 0 in an
     // idle cycle (vb = 0) instead of repeating the no-reset hold register, so oq_p never carries power-up X; the RX
     // ignores pay when vb = 0, so words, beats, latency (0 added cycles) and faults are identical.
-    parameter integer IDLE_ZERO = 0
+    parameter integer IDLE_ZERO = 0,
+    // DIE-HEAD-71 (COORD 14:43, hd_ctl LEC, 0 cycles): opt-in, default 0 = unchanged.  1: the hold register keeps only the
+    // W - P real data bits of beats 1 .. N-1 (zero-extended on read) instead of N*P - P bits whose top N*P - W pad bits
+    // only ever load 0 but have no reset (X until the first word; synthesis drops them as constant, so a register-mapped
+    // LEC sees free RTL-only registers on oq_p).  Words, beats, latency and faults are identical; only the pad state that
+    // never holds anything but 0 after the first word is gone.  Ignored (full width) for MUT 1, whose beat swap moves
+    // data into the pad positions.
+    parameter integer HOLD_REAL = 0
 ) (
     input  wire                 ck,
     input  wire                 rn,          // control-only reset, active low
@@ -54,17 +61,27 @@ module ot_s81hd_beat_tx #(
     reg           oq_v;
     reg  [BW-1:0] oq_b;
     generate if (N > 1) begin : g_multi
-        reg [NP-P-1:0] hold;                 // beats 1 .. N-1 (data, no reset)
+        // HW: stored hold bits; HOLD_REAL 1 keeps only the W - P real bits of beats 1 .. N-1, the pad reads as 0
+        localparam integer HW = (HOLD_REAL != 0 && MUT != 1 && W > P) ? (W - P) : (NP - P);
+        reg  [HW-1:0] hold;                  // beats 1 .. N-1 (data, no reset)
+        wire [NP-P-1:0] hold_x;              // hold zero-extended to the N-1 beat positions
+        if (HW < NP - P) begin : g_hx
+            assign hold_x = {{(NP - P - HW){1'b0}}, hold};
+        end else begin : g_hf
+            assign hold_x = hold;
+        end
         wire [P-1:0] b0 = wp[P-1:0];
         wire [P-1:0] b1 = wp[2*P-1:P];
         reg  [NP-1:0] swp;                   // MUT 1 only: beats 0 and 1 exchanged
         always @(*) begin swp = wp; swp[P-1:0] = b1; swp[2*P-1:P] = b0; end
+        wire [NP-P-1:0] hold_ld = (MUT == 1) ? swp[NP-1:P] : wp[NP-1:P];
+        wire [NP-P-1:0] hold_sh = hold_x >> P;
         always @(posedge ck) begin
-            if (start) hold <= (MUT == 1) ? swp[NP-1:P] : wp[NP-1:P];
-            else if (owe != 0) hold <= hold >> P;
+            if (start) hold <= hold_ld[HW-1:0];
+            else if (owe != 0) hold <= hold_sh[HW-1:0];
             if (start) oq_p <= (MUT == 1) ? b1 : b0;
             else if (IDLE_ZERO != 0 && owe == 0) oq_p <= {P{1'b0}};
-            else oq_p <= hold[P-1:0];
+            else oq_p <= hold_x[P-1:0];
         end
         always @(posedge ck or negedge rn)
             if (!rn) begin owe <= 0; nxt <= 0; fault <= 1'b0; oq_v <= 1'b0; oq_b <= 0; end

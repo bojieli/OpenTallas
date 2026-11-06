@@ -172,3 +172,17 @@ def test_generate_scope_wrong_module_stays_unmapped():
 def test_generate_scope_two_roots_no_rows():
     two = (SCOPED % "ot_s81sl_capc5r").replace("u_s_3S.u_sl.u_eg.u_nh", "u_s_4S.u_sl.u_eg.u_nh")
     assert BMP.resolve(SCOPED_T, two) == []
+
+
+def test_plan_path_in_bound_instance_names():
+    """KW-FIX-17 11-05: S81 serdes plan path u_core.u_dec.u_chn names the bound leaf u_core (as-built u_lk_ES1 bound
+    whole, plan content u_phy of another module) -> u_bound.u_core.u_dec.u_chn; ambiguous or unknown names stay."""
+    t = {"contents": [{"inst": "u_phy", "module": "ot_pdie_serdes"}],
+         "hard_cores": [{"inst": "u_core.u_dec.u_chn", "module": "ot_s81_kp4_dchn", "lef": "k.lef"}]}
+    bound = "    // as-built u_lk_ES1\n    ot_pdie_serdes_col #(.TXL(2)) u_core (\n"
+    rows = {r["inst"]: r["physical_inst"] for r in BMP.resolve(t, bound)}
+    assert rows == {"u_core.u_dec.u_chn": "u_bound.u_core.u_dec.u_chn"}
+    two = bound + "    // as-built u_lk_WN2\n    ot_pdie_serdes_col #(.TXL(2)) u_core (\n"
+    assert BMP.resolve(t, two) == []                                  # two leaves named u_core: no row
+    t2 = {"contents": [], "hard_cores": [{"inst": "u_nope.u_dec.u_chn", "module": "ot_s81_kp4_dchn", "lef": "k.lef"}]}
+    assert BMP.resolve(t2, bound) == []                               # no bound leaf of that name: no row

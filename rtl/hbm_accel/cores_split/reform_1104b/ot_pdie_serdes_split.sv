@@ -15,9 +15,12 @@
 //     HBM kit carries one core clock (face_shell.apply), so all three designs run on the slot's clock entry.
 //   * pma_tck leaves tx: it is the core clock with no die-level consumer, and a tile output pin would be shelled as
 //     data (OT_CLOCK_FAMILY stop at CTS).  The composition keeps ot_pdie_serdes.pma_tck = clk, wire only.
+//   * ELA (HBM-GAPS-3 11-05, opt-in, default 1 = unchanged): ELA = 2 builds the encoder as ot_s81_kp4_enc_la #(.LA(2))
+//     (two-step parity lookahead, the rem_q loop gets two cycles; serdes_tx routed TT -180.76 on rem_q -> rem_q in the
+//     ELA = 1 form).  pma_tx is then the ELA = 1 stream delayed by exactly one edge, e_flt is unchanged (tb_kp4_enc_la.sv, tb_pdie_tx_ela.sv).
 // The face registers are the kit's; this file adds none.  dchn rst_n is the slot reset (no consumer before k_v).
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_pdie_serdes_tx #(parameter integer PMA_LAT = 4, parameter integer EMUT = 0) (
+module ot_pdie_serdes_tx #(parameter integer PMA_LAT = 4, parameter integer EMUT = 0, parameter integer ELA = 1) (
     input  wire          clk,
     input  wire          rst,
     input  wire [511:0]  tx,
@@ -28,7 +31,12 @@ module ot_pdie_serdes_tx #(parameter integer PMA_LAT = 4, parameter integer EMUT
     always @(posedge clk or negedge rst) if (!rst) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
     wire rn_t = rs_t[1];
     wire e_v; wire [543:0] e_d;
-    ot_s81_kp4_enc #(.MUT(EMUT)) u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt_o));
+    generate if (ELA == 1) begin : g_e1
+        ot_s81_kp4_enc #(.MUT(EMUT)) u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt_o));
+    end else begin : g_ela
+        ot_s81_kp4_enc_la #(.MUT(EMUT), .LA(ELA)) u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d),
+                                                        .fault(e_flt_o));
+    end endgenerate
     ot_s81_pma_bm #(.W(544), .LAT(PMA_LAT)) u_ptx (.clk(clk), .d_v(e_v), .d(e_d), .q(pma_tx));
 endmodule
 

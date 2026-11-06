@@ -601,6 +601,29 @@ proc ot_io_hold_pad {} {
 # tools/orfs_hold_mm.tcl and physical/die_plan/hbm_arch_cores/hold_gate.tcl (test_hold_structural_gate pins it).
 # COORD 11-05 07:36: default stop -200 (was -150): GRT hold repair closed 9 of 11 kits from -109 to -172 (DIE-HBM-70 07:04); routed sign-off still decides.
 set ::OT_HOLD_STOP_PS -200.0
+# KW-FIX-17 11-05 (COORD 16:2x class fix, default-on): the structural stop counts REGISTER-TO-REGISTER FF hold only,
+# the same scope as the post-CTS check (physical/die_plan/hbm_arch_cores/hold_gate.tcl reg2reg).  In/out-port hold
+# paths (port startpoint or endpoint, timed against the kit's boundary vclk contract) are an ADVISORY report line: die
+# STA checks them against the parent's measured arrivals (owner 11-03 NEEDS_PARENT + insertion band -> die STA).
+# Trigger: HBM kshare stopped at GRT on FF -150.89 / 4243 endpoints where reg-to-reg was -53.29 / 507 and the port paths
+# -443.35 / 3724 (insertion 494.7 vs the 202.5 vclk band).  OT_HOLD_STOP_SCOPE=all restores the all-path stop.
+# -> {worst reg->reg FF hold slack (1e6 when none fails), failing reg->reg endpoints}; {} when unavailable (fail closed).
+proc ot_hold_rr_stats {} {
+  set sc {}
+  if {[info exists ::ot_mm_synced]} { set sc [list -scenes BC] }
+  set w 1e6; set n 0; set ps {}
+  if {[catch {
+    set ck [all_registers -clock_pins]; set d [all_registers -data_pins]
+    if {[llength $ck] && [llength $d]} {
+      set ps [find_timing_paths -path_delay min {*}$sc -from $ck -to $d -group_path_count 1000000 -endpoint_path_count 1 -slack_max 0]
+    }
+  } err]} {
+    puts "OT_HOLD_PORT: register-to-register split unavailable ($err); the stop counts all paths"
+    return {}
+  }
+  foreach p $ps { set s [get_property $p slack]; if {$s ne "INF" && $s < 0} { incr n; if {$s < $w} { set w $s } } }
+  return [list $w $n]
+}
 proc ot_hold_structural_gate {} {
   # ot_mm_sync creates/times the real FF BC scene with its own FF boundary SDC.
   # A primary-corner min path is not evidence of FF hold: fail closed without it.
@@ -631,12 +654,28 @@ proc ot_hold_structural_gate {} {
   # stop -- the chunked OT_HOLD_GUARD bounds a runaway repair and FF hold on the routed real views is the gate.  Stop only
   # below ::OT_HOLD_STOP_PS (-200 ps, structural), or with OT_HOLD_PREROUTE_STOP=1.
   set stop [expr {[info exists ::env(OT_HOLD_PREROUTE_STOP)] && $::env(OT_HOLD_PREROUTE_STOP) eq "1"}]
-  if {!$stop && $w >= $::OT_HOLD_STOP_PS} {
+  set wstop $w
+  if {!$stop && $w < $::OT_HOLD_STOP_PS && (![info exists ::env(OT_HOLD_STOP_SCOPE)] || $::env(OT_HOLD_STOP_SCOPE) ne "all")} {
+    set rr [ot_hold_rr_stats]
+    if {[llength $rr]} {
+      lassign $rr wrr nrr
+      set wstop $wrr
+      set srr -; if {$nrr} { set srr [format %.2f $wrr] }
+      set adv [format "OT_HOLD_PORT ADVISORY stage=%s: FF hold ws %.2f ps over %d endpoints includes in/out-port paths; register-to-register ws %s over %d endpoints; the structural stop counts register-to-register only (port hold -> die STA against parent arrivals)" $stage $w $n $srr $nrr]
+      puts $adv
+      catch {
+        set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hold_port_advisory_${stage}.rpt" : "ot_hold_port_advisory_${stage}.rpt"}]
+        set fh [open $f w]; puts $fh $adv; close $fh
+      }
+      append msg [format "; register-to-register ws %s, %d endpoints" $srr $nrr]
+    }
+  }
+  if {!$stop && $wstop >= $::OT_HOLD_STOP_PS} {
     set info [string map {"OT_HOLD_STRUCTURAL " "OT_HOLD_PREREPAIR INFO " "; revise plan/RTL/boundary before repair" ""} $msg]
     puts "$info -> information only, repair proceeds (routed FF hold sign-off decides)"
     return
   }
-  if {$w < $::OT_HOLD_STOP_PS} { append msg [format " (beyond the structural stop OT_HOLD_STOP_PS %.0f ps)" $::OT_HOLD_STOP_PS] }
+  if {$wstop < $::OT_HOLD_STOP_PS} { append msg [format " (beyond the structural stop OT_HOLD_STOP_PS %.0f ps)" $::OT_HOLD_STOP_PS] }
   puts $msg
   catch {
     set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hold_structural_${stage}.rpt" : "ot_hold_structural_${stage}.rpt"}]
