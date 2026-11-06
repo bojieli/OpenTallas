@@ -239,6 +239,11 @@ SCRATCH_OWN_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_OWN_FLOOR_GB", "10"))
 # v13: on a host with a separate scratch disk, new work goes ONLY there; below this free space the host admits nothing
 # (NOT RUN / placed elsewhere) instead of falling back to the root fs.
 SCRATCH_DISK_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_DISK_FLOOR_GB", "50"))
+# QUEUE-BAL-2 11-05 (COORD 21:2x, OWNER 11-05 every disk is scratch): a SECOND root on the root fs (scratch3 bind) only
+# needs this much USABLE space (free - its per-host root floor).  The root floor (epyc 500, intel 150, epyc5/6 100) is
+# already the reserve; demanding SCRATCH_DISK_FLOOR_GB on top refused intel2 at 21:2x (scratch2 29 GB, root 197 GB free,
+# usable 47 GB < 50) although jobs fit there.
+SCRATCH_SECOND_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_SECOND_FLOOR_GB", "20"))
 # v13 DISK GUARD: a host whose root fs is more than this % full admits no new job (any host, md0 included).
 ROOTFS_MAX_PCT = int(os.environ.get("OT_RUN_ROOTFS_MAX_PCT", "85"))
 # COORD 2026-10-24 ~20:00 (owner split epyc1/epyc3 RAID1 -> separate scratch disk): on a host whose new work goes to
@@ -283,7 +288,7 @@ def scratch_disk(row, d, out, host=None):
         roots = disk_roots
         sr = SCRATCH_PIN if SCRATCH_PIN in second else (max(second, key=second.get) if second else None)
         if sr and (sr == SCRATCH_PIN or (extra["scratch_disk_gb"] < SCRATCH_DISK_FLOOR_GB
-                                         and second[sr] >= SCRATCH_DISK_FLOOR_GB)):
+                                         and second[sr] >= SCRATCH_SECOND_FLOOR_GB)):
             extra.update(scratch_disk=sr, scratch_disk_gb=second[sr], scratch_second=True, root_floor_gb=rfl)
             roots = {sr: second[sr]}                          # new run dirs go to the second root
     row = dict(row, **extra)
@@ -305,16 +310,30 @@ def host_refusal(row):
         return ""
     pct = row.get("rootfs_pct")
     lim = ROOTFS_MAX_PCT_SCRATCH if row.get("scratch_disk") else ROOTFS_MAX_PCT
-    if row.get("scratch_second") and row.get("scratch_disk_gb", 0) < SCRATCH_DISK_FLOOR_GB:
+    if row.get("scratch_second") and row.get("scratch_disk_gb", 0) < SCRATCH_SECOND_FLOOR_GB:
         return (f"second scratch root {row['scratch_disk']} (root fs) has {row['scratch_disk_gb']} GB usable < floor "
-                f"{SCRATCH_DISK_FLOOR_GB} GB after keeping {row.get('root_floor_gb', ROOT_SCRATCH_FLOOR_GB)} GB free on the root fs (ROOTSCR_1101)")
+                f"{SCRATCH_SECOND_FLOOR_GB} GB after keeping {row.get('root_floor_gb', ROOT_SCRATCH_FLOOR_GB)} GB free on the root fs (ROOTSCR_1101)")
     if pct is not None and pct > lim:
         return (f"ROOT FS {pct}% full > {lim}% (DISK GUARD, owner 2026-10-24: never use root disks for work; "
                 f"move data to the scratch disk, OT_RUN_ROOTFS_MAX_PCT overrides)")
-    if row.get("scratch_disk") and row.get("scratch_disk_gb", 0) < SCRATCH_DISK_FLOOR_GB:
+    if row.get("scratch_disk") and not row.get("scratch_second") and row.get("scratch_disk_gb", 0) < SCRATCH_DISK_FLOOR_GB:
         return (f"scratch disk {row['scratch_disk']} has {row['scratch_disk_gb']} GB free < floor {SCRATCH_DISK_FLOOR_GB} GB "
                 f"(the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FLOOR_GB overrides)")
     return ""
+
+
+DIR_FULL_NOTE = "--dir sits on a full disk"
+
+
+def dir_disk_full(row):
+    """QUEUE-BAL-2 (COORD 21:2x): the host admits new work on its second root (scratch3) because its scratch disk is below
+    the floor, but this job's --dir is ON that full disk and the job writes into its --dir: keep the data's host only as a
+    spill source (epyc5/epyc6 run it), never fill the full disk further.  '' when the job may run here."""
+    own = row.get("disk_own_gb") if isinstance(row, dict) else None
+    if not (row.get("scratch_second") and own is not None and own < SCRATCH_DISK_FLOOR_GB):
+        return ""
+    return (f"{DIR_FULL_NOTE} ({own} GB free < floor {SCRATCH_DISK_FLOOR_GB} GB); new work here goes to "
+            f"{row.get('scratch_disk')} only")
 
 
 THREADS, SMALL_CORES, SMALL_THREADS = 16, 48, 8
@@ -859,10 +878,10 @@ def scratch_env(host=None):
                # ROOTSCR_1101: a second root (root fs, ROOT_SCRATCH_ROOTS) is o=2 with usable free = free - root floor
                "case ' " + " ".join(ROOT_SCRATCH_ROOTS) + " ' in *\" $r \"*) [ $o = 1 ] && { o=2; f=$((${f:-0}-"
                + str(root_floor(host)) + ")); };; esac; echo $o $f $r; done | "
-               "awk -v fl=" + str(SCRATCH_DISK_FLOOR_GB) + " -v pin=" + shlex.quote(SCRATCH_PIN or "-") + " "
+               "awk -v fl=" + str(SCRATCH_DISK_FLOOR_GB) + " -v sfl=" + str(SCRATCH_SECOND_FLOOR_GB) + " -v pin=" + shlex.quote(SCRATCH_PIN or "-") + " "
                "'{o[NR]=$1; f[NR]=$2; r[NR]=$3; if ($1==0) {d=1; if ($2>bd) bd=$2} if ($1==2 && $2>bs) {bs=$2; bsr=$3} "
-               "if ($3==pin && ($1!=2 || $2>=fl)) pr=$3} "
-               "END {if (pr!=\"\") {print 0, pr; exit} if (d && bd<fl && bs>=fl) {print 0, bsr; exit} "
+               "if ($3==pin && ($1!=2 || $2>=sfl)) pr=$3} "
+               "END {if (pr!=\"\") {print 0, pr; exit} if (d && bd<fl && bs>=sfl) {print 0, bsr; exit} "
                "for (i=1; i<=NR; i++) if (o[i]!=2 && (!d || o[i]==0)) print f[i], r[i]}' "
                "| sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; ")
 
@@ -875,9 +894,9 @@ def disk_guard_sh(tag, host=None):
     return (f"p=$(df --output=pcent / | tail -1 | tr -dc 0-9); lim={ROOTFS_MAX_PCT}; sd0=$(stat -L -c %d \"$OT_SCRATCH/claude\" 2>/dev/null) && [ \"$sd0\" != \"$(stat -c %d /)\" ] && lim={ROOTFS_MAX_PCT_SCRATCH}; "
             # ROOTSCR_1101: OT_SCRATCH = a second root on the root fs: keep ROOT_SCRATCH_FLOOR_GB free on the root fs
             f"case ' {sec} ' in *\" $OT_SCRATCH \"*) lim={ROOTFS_MAX_PCT_SCRATCH}; f=$(df -BG --output=avail / | tail -1 | tr -dc 0-9); "
-            f"if [ $(( ${{f:-0}} - {rfl} )) -lt {SCRATCH_DISK_FLOOR_GB} ]; then "
+            f"if [ $(( ${{f:-0}} - {rfl} )) -lt {SCRATCH_SECOND_FLOOR_GB} ]; then "
             f"echo \"ot-run: second scratch root $OT_SCRATCH: root fs has ${{f}} GB free, keeps {rfl} GB; "
-            f"usable < floor {SCRATCH_DISK_FLOOR_GB} GB on $(hostname -s)\" >&2; echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; fi;; esac; "
+            f"usable < floor {SCRATCH_SECOND_FLOOR_GB} GB on $(hostname -s)\" >&2; echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; fi;; esac; "
             f"if [ \"${{p:-0}}\" -gt $lim ]; then "
             f"echo \"ot-run: DISK GUARD: root fs $p% full > $lim% on $(hostname -s); no new job admitted "
             f"(owner 2026-10-24: never use root disks for work)\" >&2; echo OT_RUN_ROOTFULL {tag} >&2; exit 97; fi; "
@@ -900,6 +919,7 @@ SAFE = re.compile(r"^/srv/opentallas-scratch[^\s$*?{}\[\]`~\\'\"]*$")
 say = lambda m: print("ot-run: SCRATCH2: " + m, file=sys.stderr)
 d, cmd, dry = sys.argv[1], json.loads(base64.b64decode(sys.argv[2])), len(sys.argv) > 3
 FLOOR = int(os.environ.get("OT_RUN_SCRATCH_DISK_FLOOR_GB") or 50) << 30
+SFLOOR = int(os.environ.get("OT_RUN_PLACE_SFLOOR") or (FLOOR >> 30)) << 30   # QUEUE-BAL-2: second-root usable floor
 free, devs, onroot, second = {}, set(), set(), {}
 try:
     rdev = os.stat("/").st_dev
@@ -925,9 +945,9 @@ disk = {r: v for r, v in free.items() if r not in onroot} if onroot and len(onro
 best = max(disk or free, key=(disk or free).get) if free else None
 # ROOTSCR_1101: a pinned root, or the second root when every scratch disk is below the floor, takes ALL new run dirs
 forced = None
-if PIN in second and second[PIN] >= FLOOR or PIN in free:
+if PIN in second and second[PIN] >= SFLOOR or PIN in free:
     forced = PIN
-elif second and disk and max(disk.values()) < FLOOR and max(second.values()) >= FLOOR:
+elif second and disk and max(disk.values()) < FLOOR and max(second.values()) >= SFLOOR:
     forced = max(second, key=second.get)
 if forced:
     best = forced
@@ -1046,7 +1066,7 @@ def scratch_place_sh(d, cmd, dry=False, tag="otrun", host=None):
     if len(arg) > 32000:          # the whole remote command is ONE argv string to the remote shell (<= 128 KiB)
         arg = base64.b64encode(json.dumps([x for x in cmd if len(x) < 4000]).encode()).decode()
     pe = (f'OT_RUN_PLACE_ROOTS={shlex.quote(" ".join(SCRATCH_ROOTS))} OT_RUN_PLACE_SECOND={shlex.quote(" ".join(ROOT_SCRATCH_ROOTS))} '
-          f'OT_RUN_PLACE_RFLOOR={root_floor(host)} OT_RUN_PLACE_PIN={shlex.quote(SCRATCH_PIN)} ')
+          f'OT_RUN_PLACE_RFLOOR={root_floor(host)} OT_RUN_PLACE_SFLOOR={SCRATCH_SECOND_FLOOR_GB} OT_RUN_PLACE_PIN={shlex.quote(SCRATCH_PIN)} ')
     return (f'pl=$({pe}OT_RUN_SCRATCH_DISK_FLOOR_GB={SCRATCH_DISK_FLOOR_GB} timeout 60 python3 -c "$(echo {code} | base64 -d)" '
             f'{shlex.quote(d or "")} {arg}' + (" dry" if dry else "") + ' 2>&1 >/dev/null); prc=$?; '
             '[ -n "$pl" ] && printf "%s\n" "$pl" | head -20 >&2; '
@@ -2287,6 +2307,8 @@ def place(hosts, d, disk, mem, quiet=False):
             note = "request %d GB exceeds physical RAM after mandatory headroom" % mem
         if r and not r.get("error") and host_refusal(r):
             note = host_refusal(r)                      # v13 DISK GUARD / scratch-disk floor: refused, never queued here
+        elif r and not r.get("error") and not note and dir_disk_full(r):
+            note = dir_disk_full(r)                     # QUEUE-BAL-2: the host takes new work on scratch3, not this --dir
         if r and not r.get("error") and r["disk_gb"] < disk and trigger_reaper(h, note):
             note += " (ot-reaper started for this host)"
         if r and not r.get("error") and r.get("dir_onroot") and r.get("scratch_disk") and d and not quiet:
@@ -2300,8 +2322,7 @@ def place(hosts, d, disk, mem, quiet=False):
                       f"running {r['running']} disk {r['disk_gb']} GB {note}", file=sys.stderr)
             if not note:
                 ok[h] = r
-            elif d and r.get("ncpu") and (host_refusal(r) or r["disk_gb"] < disk) and note.startswith(
-                    (host_refusal(r) or "\0", "disk ")):
+            elif d and r.get("ncpu") and note.startswith((host_refusal(r) or "\0", "disk ", DIR_FULL_NOTE)):
                 REFUSED_SRC[h] = r                      # QUEUE-BAL-2: has the data, refused for disk only
         elif not quiet:
             print(f"ot-run: {h:14s} skipped: {note}", file=sys.stderr)
