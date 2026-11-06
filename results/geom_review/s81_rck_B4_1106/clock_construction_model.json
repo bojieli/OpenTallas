@@ -1,0 +1,66 @@
+{
+ "schema": "opentallas.s81_rck_clock_construction_model.v1",
+ "status": "ACTUAL_CHILD_IDENTITY_PARENT_CONSTRUCTION_UNRUN",
+ "physical_source": "same io_pma_rck through real positive buffers; no independent generated clocks",
+ "child": {
+  "views": {
+   "ot_s81_kp4_dchn_tt.lib": "e240e3b283041ef69f5e21e3004f64375fc02131141dc1e0f629b6d906c8a8f2",
+   "ot_s81_kp4_dchn_ff.lib": "cc493b64ea7930488f525d9404aff9cacb6aa288593195823800fd0d59d76642",
+   "ot_s81_kp4_dchn.lef": "16155b5365b05f92666d964fd5e3a05c26cc5855bcb6d6ce9207bc27b6974ddb"
+  },
+  "receipt": "dchn_donor_signoff.json",
+  "all_endpoints": 3237,
+  "TT_internal_ps": [
+   272.94,
+   287.32,
+   315.1
+  ],
+  "FF_internal_ps": [
+   214.31,
+   228.46,
+   255.41
+  ],
+  "order": "min,mean,max",
+  "qualification": "Original standalone native child SIGNED, exact LEF/TT/FF match; no new S81 qualification, same slew/source/expansion required"
+ },
+ "construction_targets": [
+  {
+   "group": "RX_and_capture",
+   "TT_ps": 280,
+   "FF_ps": 225
+  },
+  {
+   "group": "transport1",
+   "TT_ps": 345,
+   "FF_ps": 280
+  },
+  {
+   "group": "transport2",
+   "TT_ps": 410,
+   "FF_ps": 335
+  },
+  {
+   "group": "transport3_4_decode",
+   "TT_ps": 450,
+   "FF_ps": 365
+  }
+ ],
+ "rules": [
+  "Targets are not timing annotations or qualified limits",
+  "Actual related pair extremes with own CPPR must satisfy80ps at TT and FF; differences of means are insufficient",
+  "65ps nominal steps leave15ps only; within-group variation can consume it",
+  "Measure every real corridor path and actual native loads; no target-minus-child-mean shortcut",
+  "Real padding or geometry/stage revisions required if measured pair fails"
+ ],
+ "model": {
+  "added_recovered_PIN_cycles": 4,
+  "period_ps": 833,
+  "added_latency_ps": 3332,
+  "words_per_recovered_edge": 1,
+  "transport_reset_FF_upper_bound": 2220,
+  "AM_FF": 9,
+  "total_FF_upper_bound": 2229,
+  "required_LOCKSAFE": 1,
+  "minimum_HOLD_EDGES": 64
+ }
+}
