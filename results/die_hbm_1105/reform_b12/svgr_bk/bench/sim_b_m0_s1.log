@@ -1,0 +1,15 @@
+ABORT_PHASE 15 (vB: events and read-back not compared)
+ABORT_PHASE 17 (vB: events and read-back not compared)
+ABORT_PHASE 26 (vB: events and read-back not compared)
+ABORT_PHASE 31 (vB: events and read-back not compared)
+ABORT_PHASE 34 (vB: events and read-back not compared)
+ABORT_PHASE 41 (vB: events and read-back not compared)
+ABORT_PHASE 46 (vB: events and read-back not compared)
+ABORT_PHASE 51 (vB: events and read-back not compared)
+ABORT_PHASE 52 (vB: events and read-back not compared)
+BENCH aborts=9 var=1 mut=0 seed=1 phases=60 writes=13207 completes=215 fault_phases=17 exact_samples=0 errors=0
+SVGR_BK_B12_BENCH PASS
+- tb_svgr_bk_b12.sv:212: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 77us; walltime 0.188 s; speed 409.855 us/s
+- Verilator: cpu 0.188 s on 1 threads; allocated 10 MB
