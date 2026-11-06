@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Stage a distinct OPS candidate from captured inputs and a released tool cohort.
 No source profile, POR or existing kit changes. The original sixteen SRAM sites,
-pin table and boundary constraints remain byte-identical.
+pin table and boundary constraints remain byte-identical by default. An explicit
+parent-reviewed H250.56 pin source uses the selected factory pin emitter and
+requires every generated pin centre to equal that table.
 """
 import argparse, ast, hashlib, importlib.util, json, re, shutil, subprocess
 from pathlib import Path
