@@ -3228,3 +3228,4 @@ CODEX: 2026-11-06 00:42 PST S81 IDX column-A child SIGNED TT+4.48 FF+0.13 DRV/DR
 CODEX: DS native833 actualclockPASS, earlyLAND_FAULT diagnosed to6edgewriter/reader resetorigin skew. Scoped default0 reader EPOCH_BIAS+12/12smallestdata/reference/mutant proof READY f217e57fd20, no boundadoption; TOK-DS-5 notes. IMG2 exactsource2/5restoredcomponentsPASS, serialrecoveryactive epyc2.
 
 CODEX: 2026-11-06 00:53 PST MERGE: urgent multi-letter flow parser +dormant QC split support +exact Q2NF +IDXmetadata landed7ddbd3b72f0,tagsab/z/x/ac/ak verified. CurrentQC POR unchanged; fresh re-sign clients need parser refresh.
+CODEX: 2026-11-06 00:56 PST KV AHUB typed parent READY codex/kv-ahub-typed-1106@6fbf41e728: exact guarded ck7/AM projection, two signed hard views retained, GEN/PREFLIGHT PASS and image reviewed; one prepared parent kit handed to WAVE-FLOW after merge. Peer A/B and prompt C physical variants admitted; old jobs preserved.
