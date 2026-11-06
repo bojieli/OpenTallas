@@ -1,0 +1,11 @@
+read_verilog -sv -DSYNTHESIS /w/sram_stub.v /w/rtl/ot_hbm_svc_ring_h9b.sv /w/rtl/ot_rst_relay.sv /w/rtl/ot_hbm_r14_stream_pc_strap_h9.sv /w/rtl/ot_hbm_svc_pin_skid2_h9.sv  /w/mutA_cfg.sv
+hierarchy -top ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__fcore -chparam OREG 1 -chparam KREG 1 -chparam KRREG 1 -chparam RREG 1 -chparam WPAY 1 -chparam QREG 1 -chparam STKREG 1 -chparam ENQREG 0
+proc
+flatten
+memory
+memory_map
+expose -evert t:ot_sram_1r1w_128x256_m1_r2c2
+opt_clean
+opt_clean
+rename ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__fcore mutA_0
+write_json /w/mutA_0.json

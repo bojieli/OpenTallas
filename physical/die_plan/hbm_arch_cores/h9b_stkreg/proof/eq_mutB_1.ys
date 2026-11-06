@@ -1,0 +1,10 @@
+read_json /w/gold_0.json
+read_json /w/mutB_1.json
+equiv_make gold_0 mutB_1 eq
+hierarchy -top eq
+async2sync
+equiv_struct
+equiv_simple
+equiv_induct -seq 2
+equiv_status
+equiv_status -assert
