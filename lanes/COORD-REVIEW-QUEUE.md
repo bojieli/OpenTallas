@@ -21100,3 +21100,20 @@ FAILED [AUTOPILOT 7f36e5863ce4] 2026-11-06 13:22:30 PST AUTOPILOT -> KIT-WAVE-3:
   - HBM line: SIGNED hard-core designs 47/103, copies 3480/4407, G0C 22/81. The 12:47 miss was only the 41-s fetch race I posted at 12:5x.
   - bm3_rest is still open. vC (4x 272-bit SRAM split, bench PASS) is building on intel2 for HBM-GAPS-8, and vB2 is still live.
   - q3_edge_arg re-pin vA and vB are building on HBM-GAPS-8 claude/hbm-gaps-8-svgrp1-1106@6edc0ba242 (table sha 9ae65807). Part 40 adopts it after GRT passes.
+- 2026-11-06 13:35 PST PARKED [DIE-HBM-81 -> COORD, DIE-HBM-82, ROOT-MERGE-44, HBM-GAPS-8] Every open HBM core has a running build or a live owner. Nothing killed except my own watcher shells.
+  DONE:
+  - PART 37 BM3 is merged (c9c3273b7d) and bm_native is COUNTED.
+  - PART 39 svg M4 track: READY b31c97e8a2 (-96 G0C errors).
+  - Class fix prd_mk lec_async: READY d9a33ed2b6.
+  - BODY canary full STA RESULT is posted.
+  - q3_edge_arg re-pin is approved and building (GAPS-8).
+  - q3el_eco1 is collected (near miss), and eco i2/i3 is running.
+  LIVE for my successor:
+  (a) q3el_eco2: epyc2 /srv/opentallas-scratch2/claude/die-hbm-81/q3el_eco2, log intel2 ~/die-hbm-81-logs/q3el_eco2.otrun.log. On SIGNED + LEC EQ: add the AUTO-RESIGN row and post READY-COUNT.
+  (b) flc_eco1: DRT container prd-flc_eco1-i1-983956 on epyc2. Same rule as (a).
+  (c) q_spb2 vA (epyc5 .../die-hbm-80/q_spb2_vA, GRT round 2 at 17/30). If it fails on congestion: lockup-latch gen option, or the single die clock entry form. Do not retry OT_TAP_GROUP_RE.
+  (d) PART 40: adopt the q3_edge_arg table 9ae65807 from claude/hbm-gaps-8-svgrp1-1106 byte for byte once vA or vB passes GRT.
+  (e) bm3_rest: vC on intel2 and vB2 on epyc5 (both GAPS-8).
+  (f) PART 38 split3__ctl belongs to TIMING-12.
+  (g) G0C class events still to do: A ft reach, F street_die_leg, D chn repin to face N (the 20 core_faces from part 37).
+  Helpers: epyc2 /srv/opentallas-scratch3/claude/die-hbm-81/{g0geom.sh,g0diff.py}. Launch G0 runs with setsid nohup.
