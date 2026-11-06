@@ -700,6 +700,38 @@ def planned_pin_geometry(q, shapes, w, h, modern=True, interior_clock=None):
     return q, pw, ph, int(distance > 1e-3)
 
 
+NATIVE_FF_POSE_GUARDS = ("NATIVE_POSE undeclared source FF", "NATIVE_POSE missing source FFs", "setPlacementStatus FIXED")
+
+
+def stage_native_ff_pose(kd, rec, recipes_dir):
+    """recipe "native_ff_pose": {"file": tcl (absolute or relative to the recipes file), "sha256": hex} -> the kit's
+    native_ff_pose.tcl + its freeze record; None without the key.  Fail-closed: sha256 must match, and the Tcl must
+    carry the reviewed pose's own guards (undeclared FF / missing FF refusal, FIXED status)."""
+    spec = rec.get("native_ff_pose")
+    if not spec:
+        return None
+    if not isinstance(spec, dict) or not spec.get("file") or not spec.get("sha256"):
+        raise SystemExit("recipe native_ff_pose needs {file, sha256}")
+    src = Path(spec["file"])
+    if not src.is_absolute():
+        src = Path(recipes_dir) / src
+    if not src.is_file():
+        raise SystemExit(f"recipe native_ff_pose: {src} missing")
+    data = src.read_bytes()
+    got = hashlib.sha256(data).hexdigest()
+    if got != spec["sha256"]:
+        raise SystemExit(f"recipe native_ff_pose: {src} sha256 {got} != recipe {spec['sha256']}")
+    text = data.decode()
+    miss = [g for g in NATIVE_FF_POSE_GUARDS if g not in text]
+    if miss:
+        raise SystemExit(f"recipe native_ff_pose: {src} lacks guard(s) {miss}")
+    n = len(re.findall(r"^ \{[^}]*\} \{[-0-9.]+ [-0-9.]+ [-0-9.]+ [-0-9.]+ \S+ \S+\} \\$", text, re.M))
+    if n == 0:
+        raise SystemExit(f"recipe native_ff_pose: {src} has no pose entries")
+    (kd / "native_ff_pose.tcl").write_bytes(data)
+    return dict(file=str(spec["file"]), sha256=got, ffs=n)
+
+
 def kit_hash(kd):
     h = hashlib.sha256()
     for f in sorted(p for p in Path(kd).rglob("*") if p.is_file() and p.relative_to(kd).parts[0] not in ("run", "views")
@@ -1954,9 +1986,18 @@ def main():
     if modern:
         shutil.copyfile(TOOL / "leaf_affinity.tcl", kd / "leaf_affinity.tcl")
     gpl = "/work/face_flops.tcl"
+    pre_place = ["source /work/face_flops.tcl"]
     if rec.get("macro_if_flops", False):
         shutil.copyfile(S81 / "cores/split_clock/macro_if_flops.tcl", kd / "macro_if_flops.tcl")
-        (kd / "pre_place.tcl").write_text("source /work/face_flops.tcl\nsource /work/macro_if_flops.tcl\n")
+        pre_place.append("source /work/macro_if_flops.tcl")
+    # DIE-S81-69 11-06 (opt-in recipe native_ff_pose): reviewed exact whole-group source FF pose (t51 native split),
+    # sourced LAST at PRE_GLOBAL_PLACE so it overrides the FIRM face/station placement; FIXED survives
+    # face_flops_release.tcl (which only releases FIRM) and DPL.  No recipe key = kit unchanged.
+    ff_pose = stage_native_ff_pose(kd, rec, Path(a.recipes).resolve().parent)
+    if ff_pose:
+        pre_place.append("source /work/native_ff_pose.tcl")
+    if len(pre_place) > 1:
+        (kd / "pre_place.tcl").write_text("\n".join(pre_place) + "\n")
         gpl = "/work/pre_place.tcl"
     m_ = rec.get("core_margin", CORE_MARGIN_UM)   # tiny station cores: 1.08 (4 rows)
     params = dict(spec.get("params", {}) or {}, **rec.get("params", {}))
@@ -2081,6 +2122,8 @@ def main():
         fz["master_plan"] = ms
     if reset_contract is not None:
         fz["reset_contract"] = reset_contract
+    if ff_pose:
+        fz["native_ff_pose"] = ff_pose
     if tm:
         fz["timing_modes"] = tm
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
