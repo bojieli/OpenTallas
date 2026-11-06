@@ -739,6 +739,9 @@ def related_sdc(per, related, straps, in_min):
         s += ("# ID straps (OWNER 10-25 option B): tied at the parent, quasi-static\n"
               f"set_false_path -from [get_ports {{{' '.join(sorted(straps))}}}]\n")
     for n in sorted(related):
+        # Shared sign-off / measured-hold consumers identify the forwarded
+        # family through the same canonical tag as landing_contract.py.
+        s += f"# OT_FWD_RING_INPUTS {n} {' '.join(related[n])}\n"
         s += f"# source-synchronous ring inputs on their forwarded write clock {n} (landing_contract.ring_input_sdc law)\n"
         for b in related[n]:
             s += (f"set_input_delay -max {IO_BUDGET * per:.4f} -clock {n} [get_ports {{{b}}}]\n"
