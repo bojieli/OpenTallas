@@ -77,7 +77,8 @@
   }
  },
  "pending_not_folded": {
-  "HBM-30": "q3_vm_core writer_kq0..7 +1 (FORM A, q3a build): folds only after its form RTL merges (COORD 17:3x)"
+  "HBM-30": "q3_vm_core writer_kq0..7 +1 (FORM A, q3a build): folds only after its form RTL merges (COORD 17:3x)",
+  "HBM-GAPS-7 RX BM3 (part 37)": "ot_pdie_serdes_rx_bm3_rest rx / st[0] +5 on every inbound SerDes crossing (corelat/cycles_rxbm3_1106.tsv); fold into S2 extra COLL_XING and ext/crossing_latency at the next ext_census regen (TOK lane). Owner 12.21: tok/s loss from closure fixes accepted"
  },
  "lanes_ev74f": "L15/L15m 6->7 (HBM-27) is a die lane: LAT_L15/LAT_L15M in latency.lanes (compiler LAT ABI), 0.000%"
 }

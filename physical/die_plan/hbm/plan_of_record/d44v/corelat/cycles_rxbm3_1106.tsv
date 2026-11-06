@@ -1,0 +1,4 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+ot_pdie_serdes_rx_bm3_rest		rx	port	5	HBM-GAPS-7 RX BM3 vB (BM relay + SEAM 7), part 37: rx data gold +7 vs p20 form +2; bench gen_hg7/bench/runD.log PASS, SEAM 6/8 + BMIN 3 FAIL
+ot_pdie_serdes_rx_bm3_rest		st[0]	port	5	uncorrectable flag into st[0] +5 (fault edge gold +7); the TX-fault path into st[0] is unchanged (+2, part 20)
+ot_pdie_serdes_rx_bm3_rest		st[1]	port	0	lock: exact
