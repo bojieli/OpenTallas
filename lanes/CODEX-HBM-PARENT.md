@@ -1,6 +1,6 @@
 # HBM parent q_spb2 — current handoff
 
-Updated 2026-11-06. Owner: hbm_parent. Canonical plan/calendar: hbm. **Bounded real-child CTS diagnostic complete; path diagnosis active, no route or parent/die signoff.** ROOT=/srv/opentallas-scratch2/claude/codex-hbm-parent-1106.
+Updated 2026-11-06. Owner: hbm_parent. Canonical plan/calendar: hbm. **Bounded real-child CTS diagnostic complete; PARKED after Claude reset; no live jobs, route or parent/die signoff.** ROOT=/srv/opentallas-scratch2/claude/codex-hbm-parent-1106.
 
 ## Actual result
 
@@ -31,3 +31,9 @@ Shared fixes are released:5736 schema;913 dead-input structural reproof+563 expl
 Scope stays LOCAL_COMPONENT/source_preparation_only. Original g_t11m79f unrelated q_hub_nw globalFAIL1 remains visible; no native/global PASS stamp or borrowed top. Original m79fp reset context and actual signed views remain unchanged. SU native/signed phase join belongs hbm; no false old plain4 route.
 
 Own cleanup removed3.189GB apparent duplicate failed intermediate ODBs plus earlier~0.74GiB abandoned copies. Each final failed DB, mapped netlist, source/log/receipt and current result are preserved; no healthy job killed. Canonical resume conservatively required FULL for reset Tcl changes; no classifier waiver.
+
+## Claude reset handback
+
+Parked on HBM owner instruction; all own jobs finished, no new launch or mutation. SOURCE: ROOT/prep3_reset_paths/gen/q_spb2 (immutable original PLACE); CTS: ROOT/cts1/gen/q_spb2; exact measured path logs and TT/FF JSON: E2 dedicated ROOT/postcts_capsule/{cts_paths_TT.log,cts_paths_FF.log,postcts_gate_tt.json,postcts_gate_ff.json,actual_bank_landing.json}. Local actual geometry/reach/path logs: coord/tmp/codex-hbm-parent-1106/cts1_actual. Final path unit3207298 finished0.
+
+**No early150 clock update, clock-plan change, or bank geometry change adopted.** ETM rise399.59/fall431.11 is UNSIGNED legacy MAX-bound, not mean. Actual historical signed child report at Intel2 /srv/opentallas-scratch2/claude/die-hbm-72/resign/xcal/signoff/signoff.json has mean TT325.113421/FF262.961909, spreads149.37/141.0 marked info-only; it does not establish current<=80ps clock closure. Preserve exact per-bit ETM timing and old advisory scope. Proposed geometry/tap repairs remain unadopted suggestions. TT−189.03/FF−244.05 are real open timing; geometry/reach positive. Original globalFAIL1/LOCAL component scope unchanged.
