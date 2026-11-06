@@ -1,5 +1,7 @@
-/srv/opentallas-scratch2/claude/codex-qc-tapsplit-1106/ft_src/tools/die_plan/die_plan.schema.json
-title": "OpenTallas die plan (TOPDOWN-PLAN)",
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "opentallas.die_plan.v1",
+ "title": "OpenTallas die plan (TOPDOWN-PLAN)",
  "type": "object",
  "required": [
   "schema",
