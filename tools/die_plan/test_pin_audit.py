@@ -37,6 +37,22 @@ def test_face_edge_exact_one_nm_decimal_boundary():
     assert not PA.box_ok(p, (20.484, 60.443, 20.502, 60.481001), 30.24, 60.48)
 
 
+def test_scalar_boundary_alias_is_unique_and_bidirectional():
+    scalar = {"valid": dict(bus="valid", bit=None)}
+    vector = {"valid[0]": dict(bus="valid", bit=0)}
+    assert PA.scalar_aliases(scalar, ["valid[0]", "unmatched_extra"]) == {"valid[0]": "valid"}
+    assert PA.scalar_aliases(vector, ["valid", "unmatched_extra"]) == {"valid": "valid[0]"}
+    assert PA.scalar_aliases(scalar, ["valid"]) == {}
+
+
+def test_boundary_alias_never_hides_width_or_identity_errors():
+    scalar = {"valid": dict(bus="valid", bit=None)}
+    for actual in (["valid", "valid[0]"], ["valid[0]", "valid[1]"], ["valid[1]"], ["other[0]"]):
+        assert PA.scalar_aliases(scalar, actual) == {}
+    wider = {"valid[0]": dict(bus="valid", bit=0), "valid[1]": dict(bus="valid", bit=1)}
+    assert PA.scalar_aliases(wider, ["valid"]) == {}
+    ambiguous = dict(scalar, **{"valid[0]": dict(bus="valid", bit=0)})
+    assert PA.scalar_aliases(ambiguous, ["valid"]) == {}
 def test_declared_clock_role_only_exempts_unplanned_ports(tmp_path, monkeypatch):
     """Actual ck-role case; a declared face clock still fails bad geometry."""
     import json
