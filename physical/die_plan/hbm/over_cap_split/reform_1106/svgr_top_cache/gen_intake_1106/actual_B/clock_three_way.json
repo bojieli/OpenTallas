@@ -1,0 +1,343 @@
+{
+  "canonical_pin": {
+    "name": "stream_clk",
+    "layer": "M5",
+    "x": 151.176,
+    "y": 319.68,
+    "w": 0.048,
+    "h": 0.48
+  },
+  "canonical_pin_file": "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v37/cores/ot_svgr_top__302.4x639.36__d44v_split.json",
+  "coarse_entries": [
+    {
+      "partition": "q_hub_nw",
+      "instance": "u_svg_Q3__t",
+      "entry": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q3 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          151.2,
+          319.68
+        ],
+        "island_um": [
+          146.88,
+          315.36,
+          155.52,
+          324.0
+        ],
+        "port": "stream_clk",
+        "merged_clock_ports": [],
+        "tap": "u_svg_Q3__t",
+        "module": "ot_svgr_top",
+        "native_module": "ot_svgr_top"
+      },
+      "snap_by_current_shared_GEN_um": [
+        151.176,
+        319.68
+      ]
+    },
+    {
+      "partition": "q_hub_nw",
+      "instance": "u_svg_Q2__t",
+      "entry": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q2 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          151.2,
+          319.68
+        ],
+        "island_um": [
+          146.88,
+          315.36,
+          155.52,
+          324.0
+        ],
+        "port": "stream_clk",
+        "merged_clock_ports": [],
+        "tap": "u_svg_Q2__t",
+        "module": "ot_svgr_top",
+        "native_module": "ot_svgr_top"
+      },
+      "snap_by_current_shared_GEN_um": [
+        151.176,
+        319.68
+      ]
+    },
+    {
+      "partition": "q_hub_nw",
+      "instance": "u_svg_Q1__t",
+      "entry": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q1 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          151.2,
+          319.68
+        ],
+        "island_um": [
+          146.88,
+          315.36,
+          155.52,
+          324.0
+        ],
+        "port": "stream_clk",
+        "merged_clock_ports": [],
+        "tap": "u_svg_Q1__t",
+        "module": "ot_svgr_top",
+        "native_module": "ot_svgr_top"
+      },
+      "snap_by_current_shared_GEN_um": [
+        151.176,
+        319.68
+      ]
+    },
+    {
+      "partition": "q_hub_nw",
+      "instance": "u_svg_Q0__t",
+      "entry": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q0 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          151.2,
+          319.68
+        ],
+        "island_um": [
+          146.88,
+          315.36,
+          155.52,
+          324.0
+        ],
+        "port": "stream_clk",
+        "merged_clock_ports": [],
+        "tap": "u_svg_Q0__t",
+        "module": "ot_svgr_top",
+        "native_module": "ot_svgr_top"
+      },
+      "snap_by_current_shared_GEN_um": [
+        151.176,
+        319.68
+      ]
+    },
+    {
+      "partition": "q_hub_ne",
+      "instance": "u_svg_Q3__t",
+      "entry": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q3 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          151.2,
+          319.68
+        ],
+        "island_um": [
+          146.88,
+          315.36,
+          155.52,
+          324.0
+        ],
+        "port": "stream_clk",
+        "merged_clock_ports": [],
+        "tap": "u_svg_Q3__t",
+        "module": "ot_svgr_top",
+        "native_module": "ot_svgr_top"
+      },
+      "snap_by_current_shared_GEN_um": [
+        151.176,
+        319.68
+      ]
+    },
+    {
+      "partition": "q_hub_ne",
+      "instance": "u_svg_Q2__t",
+      "entry": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q2 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          151.2,
+          319.68
+        ],
+        "island_um": [
+          146.88,
+          315.36,
+          155.52,
+          324.0
+        ],
+        "port": "stream_clk",
+        "merged_clock_ports": [],
+        "tap": "u_svg_Q2__t",
+        "module": "ot_svgr_top",
+        "native_module": "ot_svgr_top"
+      },
+      "snap_by_current_shared_GEN_um": [
+        151.176,
+        319.68
+      ]
+    },
+    {
+      "partition": "q_hub_ne",
+      "instance": "u_svg_Q1__t",
+      "entry": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q1 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          151.2,
+          319.68
+        ],
+        "island_um": [
+          146.88,
+          315.36,
+          155.52,
+          324.0
+        ],
+        "port": "stream_clk",
+        "merged_clock_ports": [],
+        "tap": "u_svg_Q1__t",
+        "module": "ot_svgr_top",
+        "native_module": "ot_svgr_top"
+      },
+      "snap_by_current_shared_GEN_um": [
+        151.176,
+        319.68
+      ]
+    },
+    {
+      "partition": "q_hub_ne",
+      "instance": "u_svg_Q0__t",
+      "entry": {
+        "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1) | DIE-HBM-61/SPLIT p6: sub-core centre entry of u_svg_Q0 (4.32 PG lattice, sub frame)",
+        "stack": [
+          "M9",
+          "M5"
+        ],
+        "latency_target_tt_ps": 250.0,
+        "latency_target_ff_ps": 202.5,
+        "xy_um": [
+          151.2,
+          319.68
+        ],
+        "island_um": [
+          146.88,
+          315.36,
+          155.52,
+          324.0
+        ],
+        "port": "stream_clk",
+        "merged_clock_ports": [],
+        "tap": "u_svg_Q0__t",
+        "module": "ot_svgr_top",
+        "native_module": "ot_svgr_top"
+      },
+      "snap_by_current_shared_GEN_um": [
+        151.176,
+        319.68
+      ]
+    }
+  ],
+  "kits": {
+    "A": {
+      "path": "/srv/opentallas-scratch2/claude/svgr-top-rw-gen-1106-p37/ot_svgr_top_c26588462899",
+      "hash": "4bd72c160cc846a2",
+      "requested_GEN_flags": {
+        "clock-pin-entry": "on",
+        "face-shell": "on",
+        "sigmax": "M5",
+        "clock-taps": "density",
+        "core-macros": "off"
+      },
+      "plan_pin": {
+        "name": "stream_clk",
+        "layer": "M5",
+        "x": 151.176,
+        "y": 319.68
+      },
+      "actual_pin": {
+        "bus": "stream_clk",
+        "bit": null,
+        "layer": "M5",
+        "x": 151.176,
+        "y": 319.68,
+        "face": "I",
+        "w": 0.048,
+        "h": 0.48,
+        "entry": [
+          151.176,
+          319.68
+        ]
+      },
+      "io_statement": "place_pin -pin_name {stream_clk} -layer M5 -location {151.1760 319.6800} -pin_size {0.0480 0.4800}",
+      "source_commit": "edb2c9b3256d1eb8c484448ee57bfea325e52f1c"
+    },
+    "B": {
+      "path": "/srv/opentallas-scratch2/claude/svgr-top-rw-gen-1106-p37-B/ot_svgr_top_c26588462899",
+      "hash": "1ec4d26519ae25d6",
+      "requested_GEN_flags": {
+        "clock-pin-entry": "on",
+        "face-shell": "on",
+        "sigmax": "M5",
+        "clock-taps": "density",
+        "core-macros": "off"
+      },
+      "plan_pin": {
+        "name": "stream_clk",
+        "layer": "M5",
+        "x": 151.176,
+        "y": 319.68
+      },
+      "actual_pin": {
+        "bus": "stream_clk",
+        "bit": null,
+        "layer": "M5",
+        "x": 151.176,
+        "y": 319.68,
+        "face": "I",
+        "w": 0.048,
+        "h": 0.48,
+        "entry": [
+          151.176,
+          319.68
+        ]
+      },
+      "io_statement": "place_pin -pin_name {stream_clk} -layer M5 -location {151.1760 319.6800} -pin_size {0.0480 0.4800}",
+      "source_commit": "8db0236ea24835fa081871e8ed614d174663abd8"
+    }
+  },
+  "verdict": "PASS",
+  "delta_raw_coarse_to_actual_um": [
+    -0.024,
+    0
+  ],
+  "explanation": "All eight raw coarse entries are151.2,319.68. The shared generator snaps x onto M5 offset.024/pitch.048, yielding151.176 in this canonical input/version, exactly the authoritative pin table and actual io; no edge projection or physical clock-point migration."
+}

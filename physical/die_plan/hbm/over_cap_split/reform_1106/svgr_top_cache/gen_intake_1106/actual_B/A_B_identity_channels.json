@@ -1,0 +1,318 @@
+{
+  "source_kit_A": "/srv/opentallas-scratch2/claude/svgr-top-rw-gen-1106-p37/ot_svgr_top_c26588462899",
+  "actual_kit_B": "/srv/opentallas-scratch2/claude/svgr-top-rw-gen-1106-p37-B/ot_svgr_top_c26588462899",
+  "same_files": [
+    {
+      "file": "rtl/ot_svgr_top__fshell.sv",
+      "sha256": "8e0515c37cf7563c432f2566ce176d475662c2806e400208d083320270ecf317"
+    },
+    {
+      "file": "rtl/ot_smh_static_feed.sv",
+      "sha256": "fb0ed7163cf1a0adadaea5dd0820523f01d1dbed48dd8aeaf3e6640ccd2b7d84"
+    },
+    {
+      "file": "rtl/ot_hbm_face_reg.sv",
+      "sha256": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5"
+    },
+    {
+      "file": "rtl/ot_hbm_accel_cdc_fifo.sv",
+      "sha256": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b"
+    },
+    {
+      "file": "rtl/ot_svgr_cache136_native.sv",
+      "sha256": "bfc3ee681a8ac1e1643153a39f459de2ce10de3ff42ce8ad24d2abf0a93390b3"
+    },
+    {
+      "file": "rtl/ot_smh_calendar_static_x.sv",
+      "sha256": "53e9b0be9dcdd7a405a7b53a8d359df3413a305a6c24eb03118b162e577b8d40"
+    },
+    {
+      "file": "rtl/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+      "sha256": "af431efd6145da137f530535966c3d01080bbb985ef10488d573decb7d7fcce9"
+    },
+    {
+      "file": "rtl/ot_svgr_top__wrap.sv",
+      "sha256": "040cf15d885c1305067c87d23fe7cf3ffe9fbf31656426aa9ab30f472fbe0901"
+    },
+    {
+      "file": "rtl/ot_svgr_top_cachecut.sv",
+      "sha256": "83d1a0ca6e47d8ed534dcd6c9d7d8c02f7f975a5ba295bae22d5e00831afaecc"
+    },
+    {
+      "file": "rtl/ot_hbm_svc_async_fifo.sv",
+      "sha256": "08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b"
+    },
+    {
+      "file": "rtl/ot_reset_sync.sv",
+      "sha256": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a"
+    },
+    {
+      "file": "rtl/ot_hbm_svc_sm_issuer_rel.sv",
+      "sha256": "d92bd3902801aa5c1c14da066bbb4cdc734c86260b3a79c050271aef4a8c73b9"
+    },
+    {
+      "file": "macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+      "sha256": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48"
+    },
+    {
+      "file": "macros/ot_sram_1r1w_128x256_m1_r0c0_g256_ss.lib",
+      "sha256": "719a631cf10af8e9c9a84acff04fc8cee89033ed97b871da8e3e69c0496b5c7c"
+    },
+    {
+      "file": "macros/ot_sram_1r1w_128x256_m1_r0c0_g256_ff.lib",
+      "sha256": "8c5a7b05549ed764bad6e6115f15dad96f1521bbf880f3d615cd30a573da1a86"
+    },
+    {
+      "file": "macros/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib",
+      "sha256": "51240a0ad457c0290788a03f7ce3d2675257dd1dc6e9a16a3333c4cf899e97fb"
+    },
+    {
+      "file": "macros/ot_sram_1r1w_128x256_m1_r2c2_ss.lib",
+      "sha256": "1b82c8597f1113bfb9e256cfab01630d79e2032c29ecae4a5aca1203f7efe7ff"
+    },
+    {
+      "file": "macros/ot_sram_1r1w_128x256_m1_r2c2.lef",
+      "sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+    },
+    {
+      "file": "macros/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib",
+      "sha256": "e4abb07a12f55661ae4386ffd09ee5a2a4d7d631804d7626fc56b9d1f56110eb"
+    },
+    {
+      "file": "macros/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+      "sha256": "bf6dcf70da6aa07d62dbf642e266663c58034b2a938b7277c2fbc558a1e868a9"
+    },
+    {
+      "file": "macros/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
+      "sha256": "293f3a6cddd1c5d993e3f3aba3aa81437ae1cd9042372b9246086a0e38e1cb49"
+    },
+    {
+      "file": "macros/ot_sram_1r1w_128x256_m1_r0c0_g256.lef",
+      "sha256": "737f07d39436403371adcc85f95050f7a46389e68d63017b966acc164aa4a643"
+    },
+    {
+      "file": "macros/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib",
+      "sha256": "6d043397b0f7a42ce63a02796f2fdc17c6e155adea56bad12c1e7cf7696962e0"
+    },
+    {
+      "file": "macros/ot_sram_1r1w_128x256_m1_r0c0_g256_tt.lib",
+      "sha256": "bf40d2b4b50d71128e1156f81a3ad83e01357740c3908562b2a3137eb922716e"
+    },
+    {
+      "file": "constraint.sdc",
+      "sha256": "1d1cb1ef0e54832abe0556c5fa07cf79dbd9987c1b9a29668dbb80485e726454"
+    },
+    {
+      "file": "pins.json",
+      "sha256": "69e5fec2f87ff02ad4c27c6acf3c0360f52dd48bf9d9755e096108a976e8e003"
+    },
+    {
+      "file": "plan_pins.json",
+      "sha256": "0334499192ea92e423573edaa95c8b839d5601331a87f5ba2abeac568e1b2677"
+    },
+    {
+      "file": "make_tracks.tcl",
+      "sha256": "6f1836c3f11060f8112fed969a738aed096aea64200bd0858850463ec06936be"
+    },
+    {
+      "file": "pdn.tcl",
+      "sha256": "9a3c284f4e5b94d9c528b739e2049348f57d88c353804a37bfe2b3c5e5477145"
+    }
+  ],
+  "different_files": [],
+  "halo_um": 4.32,
+  "halo_overlaps": [],
+  "projected_macro_gaps": [
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[0].g_rw.u_payload",
+        "u_fcore.u_core.feed.rows.g_on.g_cache[1].g_rw.u_payload"
+      ],
+      "vertical_gap_um": 42.407999999999994
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[0].g_rw.u_payload",
+        "u_fcore.u_core.feed.rows.g_on.g_cache[2].g_rw.u_payload"
+      ],
+      "vertical_gap_um": 100.392
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[0].g_rw.u_payload",
+        "u_fcore.u_core.feed.rows.g_on.g_cache[3].g_rw.u_payload"
+      ],
+      "vertical_gap_um": 287.4
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[0].g_rw.u_payload",
+        "u_fcore.u_core.feed.rows.g_on.g_cache[4].g_rw.u_payload"
+      ],
+      "vertical_gap_um": 357.43199999999996
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[0].g_rw.u_payload",
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_lo"
+      ],
+      "vertical_gap_um": 192.40800000000002
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[0].g_rw.u_payload",
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_hi"
+      ],
+      "vertical_gap_um": 432.40799999999996
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[0].g_rw.u_payload",
+        "u_fcore.u_core.issuer.g_t2.u_desc_lo"
+      ],
+      "horizontal_gap_um": 63.72000000000001
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[1].g_rw.u_payload",
+        "u_fcore.u_core.feed.rows.g_on.g_cache[2].g_rw.u_payload"
+      ],
+      "vertical_gap_um": 30.407999999999987
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[1].g_rw.u_payload",
+        "u_fcore.u_core.feed.rows.g_on.g_cache[3].g_rw.u_payload"
+      ],
+      "vertical_gap_um": 217.416
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[1].g_rw.u_payload",
+        "u_fcore.u_core.feed.rows.g_on.g_cache[4].g_rw.u_payload"
+      ],
+      "vertical_gap_um": 287.448
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[1].g_rw.u_payload",
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_lo"
+      ],
+      "vertical_gap_um": 122.424
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[1].g_rw.u_payload",
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_hi"
+      ],
+      "vertical_gap_um": 362.424
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[2].g_rw.u_payload",
+        "u_fcore.u_core.feed.rows.g_on.g_cache[3].g_rw.u_payload"
+      ],
+      "vertical_gap_um": 159.43200000000002
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[2].g_rw.u_payload",
+        "u_fcore.u_core.feed.rows.g_on.g_cache[4].g_rw.u_payload"
+      ],
+      "vertical_gap_um": 229.464
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[2].g_rw.u_payload",
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_lo"
+      ],
+      "vertical_gap_um": 64.44000000000003
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[2].g_rw.u_payload",
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_hi"
+      ],
+      "vertical_gap_um": 304.44
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[3].g_rw.u_payload",
+        "u_fcore.u_core.feed.rows.g_on.g_cache[4].g_rw.u_payload"
+      ],
+      "vertical_gap_um": 42.45599999999996
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[3].g_rw.u_payload",
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_lo"
+      ],
+      "vertical_gap_um": 24.503999999999962
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[3].g_rw.u_payload",
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_hi"
+      ],
+      "vertical_gap_um": 117.43199999999996
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[4].g_rw.u_payload",
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_lo"
+      ],
+      "vertical_gap_um": 94.53599999999994
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.rows.g_on.g_cache[4].g_rw.u_payload",
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_hi"
+      ],
+      "vertical_gap_um": 47.39999999999998
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_lo",
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_hi"
+      ],
+      "vertical_gap_um": 169.51199999999994
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_lo",
+        "u_fcore.u_core.issuer.g_t2.u_desc_lo"
+      ],
+      "vertical_gap_um": 158.952
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_lo",
+        "u_fcore.u_core.issuer.g_t2.u_desc_hi"
+      ],
+      "vertical_gap_um": 13.896000000000015
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_hi",
+        "u_fcore.u_core.issuer.g_t2.u_desc_lo"
+      ],
+      "vertical_gap_um": 398.952
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.feed.programme_leaf.g_m2.u_program_hi",
+        "u_fcore.u_core.issuer.g_t2.u_desc_hi"
+      ],
+      "vertical_gap_um": 253.896
+    },
+    {
+      "instances": [
+        "u_fcore.u_core.issuer.g_t2.u_desc_lo",
+        "u_fcore.u_core.issuer.g_t2.u_desc_hi"
+      ],
+      "vertical_gap_um": 103.992
+    }
+  ],
+  "review_verdict": "PASS-COND: actual B source, pin grid and macro geometry; no physical closure claim",
+  "physical_status": "NOT_RUN"
+}
