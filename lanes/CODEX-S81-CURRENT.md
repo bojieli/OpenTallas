@@ -1,7 +1,7 @@
 # S81 handback — Claude reset, 2026-11-06
 
 No new manual launches after root's handback message. Keep healthy bounded jobs.
-Core helper's authoritative BKSEL/ENGRR/IDX details are in CODEX-S81-CORES.md;
+Core helper's authoritative BKSEL/ENGRR/IDX details are in CODEX-S81-CORES-HANDBACK-1106.md;
 types/stations are in CODEX-S81-TYPES.md. No final gate or same-flow child rule waived.
 Owner setup0/FFhold25 applies;60ps margin is INFO per latest owner12.24b/c.
 
