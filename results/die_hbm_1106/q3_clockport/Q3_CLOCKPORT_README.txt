@@ -41,3 +41,12 @@ were canceled NOT_RUN and its168nm candidate directory renamed
 kit_A.rectangle168_REJECTED, so stale waiters cannot route that geometry.
 Correct504 construction passed unit1537447-1793974958; ordinary24GB/8thread
 targeted data ECO runs via ot-run localhost with the new clock freeze.
+
+Final seed phase: run_q3_clockrect_eco.sh uses existing OT_ECO_FROM=final,
+which removes final-stage fillers before repair. Do not rename6_final as a
+route seed and select route mode: the first attempt retained327883 cells,
+98.6% utilization and divergent legalization; it was manually stopped before
+routing. The wrapper interpreted manual exit137 as ECO_OOM, but the preserved
+CODEX_PHASE_FAILURE.json identifies the actual seed-phase cause, not memory.
+Corrected unit2058198-1793976103 removed fillers and legalized at12.3%.
+The construction itself and all timing/clock/DRV/DRC/proof gates are unchanged.
