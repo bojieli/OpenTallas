@@ -3728,10 +3728,23 @@ class Binder:
             import bind_core_split
             core_gate_ports = bind_core_split.gate_ports(self.ab["core_splits"])
 
-        def core_reset_gate(x, c, r):
+        import bind_leaf_reset
+        try:
+            leaf_reset_rules = bind_leaf_reset.selected(self.ab.get("reset_gate_bindings"), tn, t.get("hard_cores", []))
+        except ValueError as exc:
+            raise BindError(f"LEAF_RESET {tn}: {exc}") from exc
+        for rule in leaf_reset_rules:
+            core_gate_ports[rule["module"]] = tuple(set(core_gate_ports.get(rule["module"], ())) | set(rule["ports"]))
+
+        def core_reset_gate(x, c, r, pn):
             key = (r, x)
             if key not in core_gates:
-                hc = next((h for h in t.get("hard_cores", []) if h["inst"] in (r, r.removeprefix("u_"))), None)
+                try:
+                    anchor = bind_leaf_reset.resolve(leaf_reset_rules, c.module, r, pn)
+                except ValueError as exc:
+                    raise BindError(f"LEAF_RESET {tn}: {exc}") from exc
+                names = (anchor,) if anchor is not None else (r, r.removeprefix("u_"))
+                hc = next((h for h in t.get("hard_cores", []) if h["inst"] in names), None)
                 if rtree is None or hc is None:
                     raise BindError(f"CORE_SPLIT reset_gate {tn}/{r}: needs a wavefront tree and a plan hard core row")
                 w, h = hc["outline_um"]
@@ -3761,7 +3774,7 @@ class Binder:
                 elif dd == "input":
                     e = [expr(self.sinks[(ci, pn, i)], ci, pn, i) for i in range(len(bits))]
                     if pn in core_gate_ports.get(c.module, ()):
-                        e = [core_reset_gate(x, c, r) for x in e]
+                        e = [core_reset_gate(x, c, r, pn) for x in e]
                     conns.append((pn, _concat(e)))
             conns += bumps.get(ci, [])
             if G.kind[ci] == "glue":

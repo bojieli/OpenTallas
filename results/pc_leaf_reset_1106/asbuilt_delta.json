@@ -1,0 +1,35 @@
+{
+  "reset_gate_bindings": [
+    {
+      "type": "kv3_pc_v1__cl4ea58a5c",
+      "module": "qkd_host_pc_slice_die",
+      "ports": [
+        "hbm_rst_n",
+        "host_rst_n"
+      ],
+      "anchors": {
+        "hsl0": "kvpc0",
+        "hsl1": "kvpc1",
+        "hsl2": "kvpc2",
+        "hsl3": "kvpc3"
+      }
+    },
+    {
+      "type": "kv3_pc_v1__cl23f6a148",
+      "module": "qkd_host_pc_slice_die",
+      "ports": [
+        "hbm_rst_n",
+        "host_rst_n"
+      ],
+      "anchors": {
+        "hsl0": "kvpc0",
+        "hsl1": "kvpc1",
+        "hsl2": "kvpc2",
+        "hsl3": "kvpc3"
+      }
+    }
+  ],
+  "reset_release_edges_added": 1,
+  "data_cycles_added": 0,
+  "scope": "opt-in two diagnosed PC parts only; actual eight HSL gates and16-edge local contract required before route"
+}
