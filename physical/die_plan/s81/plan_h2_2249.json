@@ -267369,6 +267369,48 @@
      "launch": "core:u_lf.u_vs.sw_d",
      "capture": "u_lf.u_vsw.i_d",
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 307 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_a.hw_d|core:u_lf.u_vp.g_ln[14].u_l",
+     "from_um": [
+      909.426,
+      729.427
+     ],
+     "to_um": [
+      1192.428,
+      632.892
+     ],
+     "regs_um": [
+      [
+       1056.348,
+       706.121
+      ]
+     ],
+     "bits": 256,
+     "launch": "core:u_lf.u_vn.u_a.hw_d",
+     "capture": "u_lf.u_vp.g_ln[14].u_l",
+     "note": "DIE-S81-69 11-06 hi/ho class coverage (COORD 10:2x): lane 14 ho stage exists in the leaf RTL (one CS_HO_D for all lanes); sited at the planner's hi site for this lane"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_a.hw_d|core:u_lf.u_vp.g_ln[15].u_l",
+     "from_um": [
+      909.426,
+      729.427
+     ],
+     "to_um": [
+      915.948,
+      356.412
+     ],
+     "regs_um": [
+      [
+       907.308,
+       567.881
+      ]
+     ],
+     "bits": 256,
+     "launch": "core:u_lf.u_vn.u_a.hw_d",
+     "capture": "u_lf.u_vp.g_ln[15].u_l",
+     "note": "DIE-S81-69 11-06 hi/ho class coverage (COORD 10:2x): lane 15 ho stage exists in the leaf RTL (one CS_HO_D for all lanes); sited at the planner's hi site for this lane"
     }
    ]
   },
@@ -278909,6 +278951,27 @@
      "launch": "core:u_lf.u_vsw.o_v",
      "capture": "u_lf.u_vs.sw_v",
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 504 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_a.hq_d|core:u_lf.u_vp.g_ln[8].u_l",
+     "from_um": [
+      1125.426,
+      482.137
+     ],
+     "to_um": [
+      1278.828,
+      287.316
+     ],
+     "regs_um": [
+      [
+       1202.127,
+       440.676
+      ]
+     ],
+     "bits": 256,
+     "launch": "core:u_lf.u_vn.u_a.hq_d",
+     "capture": "u_lf.u_vp.g_ln[8].u_l",
+     "note": "DIE-S81-69 11-06 hi/ho class coverage (COORD 10:2x): lane 8 hi stage exists in the leaf RTL (one CS_HI_D for all lanes); sited at the planner's ho site for this lane"
     }
    ],
    "ft_track_frac": 0.27
@@ -281181,6 +281244,48 @@
      "launch": "core:u_lf.u_vs.sw_ri",
      "capture": "u_lf.u_vsw.o_d",
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 335 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_a.hw_d|core:u_lf.u_vp.g_ln[10].u_l",
+     "from_um": [
+      952.626,
+      488.861
+     ],
+     "to_um": [
+      1088.748,
+      699.876
+     ],
+     "regs_um": [
+      [
+       1020.687,
+       563.796
+      ]
+     ],
+     "bits": 256,
+     "launch": "core:u_lf.u_vn.u_a.hw_d",
+     "capture": "u_lf.u_vp.g_ln[10].u_l",
+     "note": "DIE-S81-69 11-06 hi/ho class coverage (COORD 10:2x): lane 10 ho stage exists in the leaf RTL (one CS_HO_D for all lanes); sited at the planner's hi site for this lane"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_a.hw_d|core:u_lf.u_vp.g_ln[15].u_l",
+     "from_um": [
+      952.626,
+      488.861
+     ],
+     "to_um": [
+      959.148,
+      846.756
+     ],
+     "regs_um": [
+      [
+       955.887,
+       642.847
+      ]
+     ],
+     "bits": 256,
+     "launch": "core:u_lf.u_vn.u_a.hw_d",
+     "capture": "u_lf.u_vp.g_ln[15].u_l",
+     "note": "DIE-S81-69 11-06 hi/ho class coverage (COORD 10:2x): lane 15 ho stage exists in the leaf RTL (one CS_HO_D for all lanes); sited at the planner's hi site for this lane"
     }
    ]
   },
@@ -284137,6 +284242,27 @@
      "launch": "core:u_lf.u_rxsb.o_f",
      "capture": "u_lf.u_vs.ra_vi",
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 569 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_a.hw_d|core:u_lf.u_vp.g_ln[4].u_l",
+     "from_um": [
+      328.47,
+      730.78
+     ],
+     "to_um": [
+      192.348,
+      967.716
+     ],
+     "regs_um": [
+      [
+       260.409,
+       822.996
+      ]
+     ],
+     "bits": 256,
+     "launch": "core:u_lf.u_vn.u_a.hw_d",
+     "capture": "u_lf.u_vp.g_ln[4].u_l",
+     "note": "DIE-S81-69 11-06 hi/ho class coverage (COORD 10:2x): lane 4 ho stage exists in the leaf RTL (one CS_HO_D for all lanes); sited at the planner's hi site for this lane"
     }
    ]
   },
