@@ -1,0 +1,15 @@
+HBM-FORM-SPLIT-10+REFORM-B13 gnw_hub arrivals popcount form 2026-11-06 05:28 UTC (epyc5)
+Cause: glue piece hfd_hgi_vms_gnw_hub CTS TT setup -1189.86 (u_fcore.u_hub.br[522] -> u_hub.status[0]): ot_vms_hub_static_pc summed arrivals[c][k] with 10 serial conditional +1 (HAxp5 chain) before the seen/expected compare.
+Form: one hit bit per response source and (c,k); arrivals = balanced popcount mod 8 (pc10). Same registers, same function, 0 PIN CYCLES. mk_pc.py edit (regen == committed ot_vms_glue_pc.sv from the glue_d15r kit rtl).
+Formal (yosys Yosys 0.68 (git sha1 38e001a6f, Release,, hub_eq.sh: old HEAD module vs new, NC=0 CW=1, proc/memory/async2sync, equiv_make + equiv_simple -seq 2 + equiv_induct -seq 2 + equiv_status -assert):
+  DMUT 0:   Of those cells 14474 are proven and 0 are unproven.
+  DMUT 0:   Equivalence successfully proven!
+  DMUT 5 (negative control, source 9 dropped): Found a total of 12 unproven $equiv cells.
+Lock-step bench (run_glue_ls.sh, uncut glue_d15r ref vs 3 pieces, 200 episodes x 600 cycles):
+  GLUE_LOCKSTEP DMUT 0 episodes 200 err 0 live 6011 faultcycles 113726
+  GLUE_LOCKSTEP DMUT 1 episodes 200 err 738 live 6295 faultcycles 116121
+  GLUE_LOCKSTEP DMUT 2 episodes 200 err 184 live 6943 faultcycles 116588
+  GLUE_LOCKSTEP DMUT 3 episodes 200 err 92 live 6585 faultcycles 113660
+  GLUE_LOCKSTEP DMUT 4 episodes 200 err 18598 live 5730 faultcycles 115258
+  GLUE_LOCKSTEP DMUT 5 episodes 200 err 0 live 6994 faultcycles 114002
+  Note: DMUT 5 is not seen by the bench (status is sticky and the bench is fault-heavy), so the proof of this form is the formal equivalence above.
