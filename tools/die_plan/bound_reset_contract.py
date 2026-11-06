@@ -78,16 +78,19 @@ def stage(kd,source_record,contract):
  return record
 
 
-def placement(P,tn,tree,nodes,paths):
+def placement(P,tn,tree,nodes,paths,source_record=None):
  """A reviewed sites-only overlay cannot change a native graph or relay ID."""
  import math
  nodes=copy.deepcopy(nodes)
  overlay=P.types[tn].get('clock',{}).get('landing_contract',{}).get('bound_reset_placement')
+ if overlay is None and source_record and source_record.get('placement_sites'):
+  overlay=dict(schema='opentallas.bound_reset_placement.v1',source_tree_sha256=source_record['tree_sha256'],
+               sites=source_record['placement_sites'],review=source_record.get('placement_review'))
  sites={};review=None
  if overlay is not None:
   if not isinstance(overlay,dict) or set(overlay)-{'schema','source_tree_sha256','sites','review'} or overlay.get('schema')!='opentallas.bound_reset_placement.v1' or overlay.get('source_tree_sha256')!=digest(tree):
    raise ValueError('bound reset placement must name the exact captured tree and sites-only schema')
-  sites=copy.deepcopy(overlay.get('sites'));review=overlay.get('review')
+  sites=copy.deepcopy(overlay.get('sites'));review=copy.deepcopy(overlay.get('review'))
   if not isinstance(sites,dict) or not sites or not isinstance(review,dict) or review.get('verdict')!='PASS' or not review.get('findings') or not review.get('image'):
    raise ValueError('bound reset resites require explicit PASS image review and findings')
   image=Path(review['image'])
@@ -95,6 +98,7 @@ def placement(P,tn,tree,nodes,paths):
    if not getattr(P,'path',None):raise ValueError('relative reset review image needs the actual plan path')
    image=Path(P.path).parent/image
   if not image.is_file():raise ValueError('bound reset resite review image is missing')
+  review['image']=str(image.resolve())
   if set(sites)-set(paths):raise ValueError('bound reset placement names an unknown native instance ID')
   w,h=P.types[tn]['outline_um']
   for name,xy in sites.items():

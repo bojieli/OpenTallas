@@ -3925,13 +3925,17 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # plan (the same tree gen_rtl emitted).
     rtt = [Path(f).parent / "reset_tree.tcl" for f in rtl_files[:1] if (Path(f).parent / "reset_tree.tcl").is_file()]
     import reset_tree as RT
-    if rtt and not native_reset:
+    if native_reset:
+        # Captured native authority survives isolated plans without a die-level
+        # reset solver configuration. Never fall back to a re-solved graph.
+        (kd / "reset_tree.tcl").write_text(RT.tcl_text(native_reset["tree"],
+            native_paths=native_reset["native_paths"],
+            native_nodes=native_reset["physical_nodes"],
+            native_sites=native_reset["placement_sites"]))
+    elif rtt:
         shutil.copyfile(rtt[0], kd / "reset_tree.tcl")
     elif RT.delivered(P) and not t.get("hard"):
-        (kd / "reset_tree.tcl").write_text(RT.tcl_text(RT.for_type(P, tn),
-            native_paths=native_reset["native_paths"] if native_reset else None,
-            native_nodes=native_reset["physical_nodes"] if native_reset else None,
-            native_sites=native_reset["placement_sites"] if native_reset else None))
+        (kd / "reset_tree.tcl").write_text(RT.tcl_text(RT.for_type(P, tn)))
     # AUTOBUILD-PIPE-5 10-31 (DIE-KV-50 kv3_phy, COORD 04:4x): a hard wrapper (gen phys --hard-wrappers) is a hard
     # partition of the die reset wavefront (reset_tree.wf_solve: leaf, raw delivered reset at reset.tap_um, depth
     # reset.depth); its bound RTL carries its own reset form, so the kit gets no generated reset tree (no file).
@@ -4762,7 +4766,7 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
     if source_contract and source_contract.get("native_paths") and source_contract["native_paths"] != paths:
         raise gen_rtl.GenError(f"type {tn}: native reset hierarchy differs from captured kit receipt")
     try:
-        physical_nodes, placement_sites, placement_review, planned_native_max_hop = BRC.placement(P, tn, tree, physical_nodes, paths)
+        physical_nodes, placement_sites, placement_review, planned_native_max_hop = BRC.placement(P, tn, tree, physical_nodes, paths, source_contract)
     except ValueError as exc:
         raise gen_rtl.GenError(f"type {tn}: {exc}") from exc
     contract = dict(tree=tree, entry_path=paths[ent], native_paths=paths, physical_nodes=physical_nodes,
