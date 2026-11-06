@@ -1320,6 +1320,14 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
 # DIE-HBM-25 (HBM-047/048): split piece of a reuse content bound whole -> where the piece reset comes from in the master
 # CODEX KV 11-06: opt-in exact native AHUB/ck7 projected hard boundary.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["native_boundary_adapter"] = {"enum": ["qkd_ahub_ck7_r27"]}
+# Explicit independent physical FT ports: exact qualified proof, never a pin-check exemption.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["physical_ft"] = {
+ "type": "object", "additionalProperties": False,
+ "required": ["proof", "proof_sha256", "unconsumed_outputs"],
+ "properties": {"proof": {"type": "string", "minLength": 1},
+                "proof_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                "unconsumed_outputs": {"type": "array", "uniqueItems": True, "minItems": 2, "maxItems": 2,
+                                        "items": {"type": "string", "minLength": 1}}}}
 # DIE-KV-69 11-04 (kv3_astk): core port form vs the native leaf ports the bind wires; kit_core_clocks.adapt_core_ports.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["native_port_adapter"] = {'additionalProperties': False,
  'properties': {'merge': {'additionalProperties': {'items': {'minLength': 1, 'type': 'string'}, 'minItems': 1, 'type': 'array'}, 'type': 'object'},

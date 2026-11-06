@@ -485,7 +485,7 @@ def contract_lib(module, corner, w, h, pins, dirs, clocks, period_ps):
 
 
 # ------------------------------------------------------------------------------------------------------ make
-def check_routed(cdir, module, entry, ppins, plan_lef):
+def check_routed(cdir, module, entry, ppins, plan_lef, source_root=None):
     """-> (ok, why) for a routed candidate dir"""
     lef, tt, ff = (os.path.join(cdir, f"{module}{s}") for s in (".lef", "_tt.lib", "_ff.lib"))
     for f in (tt, ff) + (() if plan_lef else (lef,)):
@@ -501,6 +501,19 @@ def check_routed(cdir, module, entry, ppins, plan_lef):
         ow = [float(x) for x in entry.get("outline_um") or []]
         if size and len(ow) == 2 and (abs(size[0] - ow[0]) > 0.002 or abs(size[1] - ow[1]) > 0.002):
             return False, f"LEF SIZE {size[0]}x{size[1]} != plan outline {ow[0]}x{ow[1]}"
+        if entry.get("physical_ft"):
+            try:
+                if not source_root:
+                    raise ValueError("physical FT needs the explicit selected --src tool cohort")
+                helpers = os.path.join(source_root, "tools", "die_plan")
+                if not os.path.isfile(os.path.join(helpers, "core_ft_physical.py")):
+                    raise ValueError("selected source lacks the matched physical FT helper")
+                sys.path.insert(0, helpers)
+                import core_ft_physical as CF
+                contract = CF.load(entry, module, lef, tt, ff, ppins=ppins)
+                ppins = list(ppins) + [{"name": p["name"]} for p in contract["ports"]]
+            except (ValueError, OSError) as exc:
+                return False, "physical FT contract: " + str(exc)
         names = {n for n, v in lp.items() if v[1] not in ("POWER", "GROUND")}
         if ppins is not None and names != {p["name"] for p in ppins}:
             a, b = names - {p["name"] for p in ppins}, {p["name"] for p in ppins} - names
@@ -541,7 +554,7 @@ def make(a):
         rd = os.path.join(a.routed or "", m)
         for c in sorted(os.listdir(rd)) if a.routed and os.path.isdir(rd) else []:
             cdir = os.path.join(rd, c)
-            ok, why = check_routed(cdir, m, entry, ppins, plan_lef)
+            ok, why = check_routed(cdir, m, entry, ppins, plan_lef, a.src)
             meta = {}
             try:
                 meta = json.load(open(os.path.join(cdir, "meta.json")))
@@ -554,6 +567,9 @@ def make(a):
                 rec = dict(source="routed", job=meta.get("job"), host=meta.get("host"), signoff=meta.get("signoff"),
                            drc=meta.get("drc"), tt_wns=meta.get("tt_wns"), ff_wns=meta.get("ff_wns"))
                 break
+        if rec is None and entry.get("physical_ft"):
+            errors.append(f"{m}: explicit physical FT requires its exact routed view ({'; '.join(tried)})")
+            continue
         if rec is None:
             # plan-contract abstract
             ow = [float(x) for x in entry.get("outline_um") or []]

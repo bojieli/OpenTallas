@@ -3323,19 +3323,26 @@ def strip_module_definition(text, mod):
     return "".join(out), cnt
 
 
-def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
+def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=(), plan_dir=None):
     """Write rtl_dir/<module>_bb.v for every macro module that the staged RTL instantiates with a parameter override
     and that has no _bb view yet; header copied from the module's own RTL (exact staged files, their dirs, then
     <root>/rtl).  Returns the new files.  Macros without overrides are untouched (byte-identical kits)."""
     rtl_dir = Path(rtl_dir)
     staged = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files
                        if Path(f).suffix in (".sv", ".v") and Path(f).is_file())
+    declared_ft = {}
+    if any(c.get("physical_ft") for c in physical_ft):
+        import core_ft_physical as CF
+        declared_ft = CF.contracts(physical_ft, macros, staged, root, plan_dir)
+        CF.retain(declared_ft, rtl_dir.parent / "ft_physical")
     have = {Path(f).name for f in rtl_files}
     out = []
     for mod in sorted({m[1] for m in macros}):
         if f"{mod}_bb.v" in have or f"{mod}_bb.sv" in have:
+            if mod in declared_ft:
+                raise ValueError(f"macro {mod}: explicit FT header conflicts with existing blackbox")
             continue
-        if not re.search(r"(?<![\w$])" + re.escape(mod) + r"\s*#\s*\(", staged):
+        if mod not in declared_ft and not re.search(r"(?<![\w$])" + re.escape(mod) + r"\s*#\s*\(", staged):
             continue
         dirs = list(dict.fromkeys(Path(f).parent for f in rtl_files))
         # Multi-module HDL sources need not be named after this physical master
@@ -3356,12 +3363,15 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
         # The RTL defaults (PINREG 0) are not the configuration the one signed view was built with; every staged
         # instance giving the same numeric literal is.  Parameters the instances disagree on keep the RTL default
         # (a non-default override still stops synth there, as before).
+        logical_header = hdr
         lit = macro_instance_identity(staged, mod)
         spec_id = macro_spec_identity(root, mod, staged, lit)
         # byte-identical kits: a spec value equal to the RTL default is no change (.V(V) = 276, .MUT(X) = 0)
         spec_id = {k: v for k, v in spec_id.items()
                    if not re.search(r"(?<![\w$])" + re.escape(k) + r"\s*=\s*" + re.escape(v) + r"\s*(?:,|\)|//|\n)", hdr)}
         hdr, ident = _header_with_defaults(hdr, {**lit, **spec_id})
+        if mod in declared_ft:
+            hdr = CF.extend_header(hdr, declared_ft[mod], logical_header)
         from_inst = {k: v for k, v in ident.items() if k not in spec_id}
         note = ("// signed identity from the staged instances: " + ", ".join(f"{k}={v}" for k, v in sorted(from_inst.items()))
                 + "\n") if from_inst else ""
@@ -3462,7 +3472,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # g_pp[k].u_pair = ot_s81hd_lep_pair #(.CHB(..))) has only a Liberty cell, which declares no parameters, so
     # yosys elaboration (GEN_LINT rtl_check, synth) stops with "does not have a parameter named ..".  Stage a
     # header-only blackbox <module>_bb.v (the native_bb form, read -lib -overwrite like the SRAM _bb views).
-    for f in macro_param_blackboxes(macros, rtl_files, kd / "rtl", root):
+    for f in macro_param_blackboxes(macros, rtl_files, kd / "rtl", root, t.get("hard_cores", []),
+                                    Path(P.path).parent if getattr(P, "path", None) else None):
         srcs.append(f"/work/rtl/{f.name}")
     rom_bits = max(declared_rom_bits(kd / "rtl"), declared_flop_mem_bits(kd / "rtl"))   # + DIE-KV-60/hubeo flop FIFOs
     landing_ff = defines_landing_ring(kd / "rtl")
