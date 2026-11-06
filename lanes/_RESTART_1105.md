@@ -59,3 +59,35 @@ Successor steps:
 4. Post a RESTART STATE within 30 min: what you took over, what is running, the next step.
 5. Keep posts every 60-90 min. On low context, post PARKED with a successor list.
 Context at 20:40: the count is 164 (S81 52+4t, HEAD 4+12t, QC 17, KV 27, HBM 48). epyc5 and epyc6 are NEW live hosts (about 677 GB admits each, empty). intel1 has about 107 waiters, so do not pin work to intel1. Every disk is scratch (scratch3 = root bind).
+
+## Weekly-limit stop 22:10 11-05 -> 04:3x 11-06 (Codex covered, now handed back)
+All Claude lanes stopped about 22:10 11-05. Codex covered coordination from then to 04:33 11-06 and handed back; it parked its own lanes and left healthy jobs RUNNING. Main is now d3c2675c51f (tags ar-head / aq-qc / an-kv / at-s81 / bg-hbm). Codex installed a 15-min exact-release cleanup routine on the hub (~/.local/lib/fleet/released-reaper-1106/); do not fight or duplicate it.
+Successor steps (in addition to the 20:40 steps above; core_lane_rules.md still applies, merge lane is now ROOT-MERGE-42):
+1. FIRST `cd /`. Read the Codex packets named in your row below, in full: ~/coord/handoff/<file> and ~/coord/CODEX-LOG.md sections "## Handoff to Claude 2026-11-06 04:3x". Codex jobs left running are YOURS now: collect them, never kill or duplicate them. A Codex frontend that shows exit 1 / rc 137 may still have a live docker container (check docker ps before calling anything dead).
+2. Read your predecessor's posts (grep its name in lanes/COORD-REVIEW-QUEUE.md) and [COORD] lines to it.
+3. Post RESTART STATE within 30 min.
+4. Codex branches named READY in the packets need COORD approval through the normal READY post; do not merge yourself.
+5. Disk: intel1 scratch2 has 11 GB (REFUSED); intel2/epyc2/epyc4/epyc6 scratch2 have 66-71 GB. Do not write big trees there; prefer epyc5 root (815 GB free) and epyc6 root (814 GB) via scratch3 where ot-run allows.
+
+| Lane | Predecessor | Codex packets to read | Scope |
+|---|---|---|---|
+| ROOT-MERGE-42 | ROOT-MERGE-41 | CODEX-LOG CODEX-MERGE lines, all packets' READY branches | merge train; approved-not-merged: claude/hbm-reform-b13-1105@2b160cb935, claude/die-hbm-78-p34-1105@82d8734037; list every Codex READY not on main for COORD |
+| KW-FIX-21 | KW-FIX-20, KW-RELAUNCH-2 | lanes/CODEX-FLEET.md tail | repoint kit-wave src trees to newest main so kit_wave_pending rows release; failure classes since 22:00: S81 route Signal 11, ENOSPC @unit 02:50, epyc4 geom_run "--dir is on the ROOT filesystem", RSZ-0060 max buffer; batch relaunch |
+| PRUNE-1116 | PRUNE-1115 | lanes/CODEX-FLEET.md cleanup ledger | apply approved PRUNE-1115 ASK rows (~/coord/lanes/PRUNE-1115-ask.tsv) not yet done, intel1 first (REFUSED at 11 GB), then intel2/epyc4/epyc6/epyc2; enable root scratch3 for intel1 in ot-run (root 402 GB free, floor 150) |
+| DIE-S81-67 | DIE-S81-66 | codex_ds_native_20261106_0432.md, CODEX-FLEET.md | S81 die owner; kit-wave S81 events; 3 slice_station bind repoints |
+| DIE-HEAD-73 | DIE-HEAD-72 | CODEX-LOG HEAD lines | HEAD die owner; hd_serdes vB; 13 open types |
+| DIE-QC-83 | DIE-QC-82 | CODEX-LOG QC lines (NL redo 03:31) | QC die owner; NL a0c re-sign/redo, NK a0c, coll_n CDC |
+| DIE-KV-81 | DIE-KV-80 | codex_kv_to_claude_20261106_back.md | KV die owner; types, ring kv3_io_ft, KV-08 kvdbg result |
+| DIE-HBM-79 | DIE-HBM-78 | lanes/CODEX-HBM-FORMS.md, codex_hbm_gaps_to_claude_20261106_0432.md | HBM die owner; tkmrst pins, cores without a lane |
+| S81-COLLE-3 | S81-COLLE-2 | - | coll_lane vC/vD conservative forms |
+| S81-BKSEL-RF3 | S81-BKSEL-RF2 | - | dsdv_bksel_q |
+| S81-ENGRR-B3 | S81-ENGRR-B2 | - | eng_rr_e vB |
+| S81-IDX-B3 | S81-IDX-B2 | CODEX-LOG IDX lines | idx vA split / vB |
+| S81-ROMQ-B3 | S81-ROMQ-B2 | - | rom_q hw_vB / he_vB2 |
+| KV-PRM-B3 | KV-PRM-B2 | codex_kv_order_peer_20261106_0432.md, codex_kv_to_claude_20261106_back.md | qkd_hr_core_prompt (C2 / D) and qkd_hr_core_order |
+| KV-PEER-1 | (Codex) | codex_kv_order_peer_20261106_0432.md, codex_kv_to_claude_20261106_back.md | qkd_hr_core_peer A_ECO TT -4.35; load_bank helper codex/kv-peer-loadbank-1106@24364508c2 |
+| KV-ING-3 | KV-ING-2 | codex_kv_to_claude_20261106_back.md | qkd_hr_ingest_eng C2 (live proof) / D form |
+| QC-A0C-B3 | QC-A0C-B2 | CODEX-LOG QC lines | qfd_tile_nl_a0c / nk_a0c |
+| HBM-GAPS-6 | HBM-GAPS-5 | codex_hbm_gaps_to_claude_20261106_0432.md, lanes/HBM-GAPS-5.md, CODEX-LOG TX/SVGR handoff, codex_wbq_body_to_claude_20261106.md | TKM, RX/QCOL, lane1p, GQI, SVGR, TX, BODY, WBQ live jobs |
+| HBM-FORM-SPLIT-11 | HBM-FORM-SPLIT-10 | lanes/CODEX-HBM-FORMS.md | split forms |
+| HBM-FORM-TIMING-9 | HBM-FORM-TIMING-8 | lanes/CODEX-HBM-FORMS.md | timing forms, f512rp vB |
