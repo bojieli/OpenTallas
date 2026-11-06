@@ -1,5 +1,6 @@
 `timescale 1ps/1ps
-module tb_romq_shell;
+module tb_romq_shell #(parameter integer IN_STAGES=1, OUT_STAGES=1);
+  localparam integer TOTAL_STAGES=IN_STAGES+OUT_STAGES;
   reg clk=0;
   initial forever begin #416 clk=1; #417 clk=0; end
   reg rst_n=0;
@@ -71,11 +72,14 @@ module tb_romq_shell;
   assign ref_face={r_walking, r_bank_free, r_sh_free, r_pv, r_pval, r_prow, r_pseg, r_pnseg, r_perr, r_ppos, r_busy, r_fault};
   ot_v41_rom_elem_q_qxpq_w10_gb_shell #(.OLAT(0),.IOREG(0)) u_b (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go), .go_tag(go_tag), .walking(b_walking), .bank_free(b_bank_free), .sh_free(b_sh_free), .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1), .xs_pos(xs_pos), .pv(b_pv), .pval(b_pval), .prow(b_prow), .pseg(b_pseg), .pnseg(b_pnseg), .perr(b_perr), .ppos(b_ppos), .busy(b_busy), .fault(b_fault));
   assign bypass_face={b_walking, b_bank_free, b_sh_free, b_pv, b_pval, b_prow, b_pseg, b_pnseg, b_perr, b_ppos, b_busy, b_fault};
-  ot_v41_rom_elem_q_qxpq_w10_gb_shell #(.OLAT(1),.IOREG(1),.OUTPUT_NEG(1)) u_d (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go), .go_tag(go_tag), .walking(d_walking), .bank_free(d_bank_free), .sh_free(d_sh_free), .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1), .xs_pos(xs_pos), .pv(d_pv), .pval(d_pval), .prow(d_prow), .pseg(d_pseg), .pnseg(d_pnseg), .perr(d_perr), .ppos(d_ppos), .busy(d_busy), .fault(d_fault));
+  ot_v41_rom_elem_q_qxpq_w10_gb_shell #(.OLAT(1),.IOREG(1),.INPUT_STAGES(IN_STAGES),.OUTPUT_STAGES(OUT_STAGES),.OUTPUT_NEG(1)) u_d (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go), .go_tag(go_tag), .walking(d_walking), .bank_free(d_bank_free), .sh_free(d_sh_free), .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1), .xs_pos(xs_pos), .pv(d_pv), .pval(d_pval), .prow(d_prow), .pseg(d_pseg), .pnseg(d_pnseg), .perr(d_perr), .ppos(d_ppos), .busy(d_busy), .fault(d_fault));
   assign dut_face={d_walking, d_bank_free, d_sh_free, d_pv, d_pval, d_prow, d_pseg, d_pnseg, d_perr, d_ppos, d_busy, d_fault};
-  ot_v41_rom_elem_q_qxpq_w10_gb_shell #(.OLAT(1),.IOREG(1),.OUTPUT_NEG(0)) u_p (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go), .go_tag(go_tag), .walking(p_walking), .bank_free(p_bank_free), .sh_free(p_sh_free), .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1), .xs_pos(xs_pos), .pv(p_pv), .pval(p_pval), .prow(p_prow), .pseg(p_pseg), .pnseg(p_pnseg), .perr(p_perr), .ppos(p_ppos), .busy(p_busy), .fault(p_fault));
+  ot_v41_rom_elem_q_qxpq_w10_gb_shell #(.OLAT(1),.IOREG(1),.INPUT_STAGES(IN_STAGES),.OUTPUT_STAGES(OUT_STAGES),.OUTPUT_NEG(0)) u_p (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go), .go_tag(go_tag), .walking(p_walking), .bank_free(p_bank_free), .sh_free(p_sh_free), .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1), .xs_pos(xs_pos), .pv(p_pv), .pval(p_pval), .prow(p_prow), .pseg(p_pseg), .pnseg(p_pnseg), .perr(p_perr), .ppos(p_ppos), .busy(p_busy), .fault(p_fault));
   assign pos_face={p_walking, p_bank_free, p_sh_free, p_pv, p_pval, p_prow, p_pseg, p_pnseg, p_perr, p_ppos, p_busy, p_fault};
-  reg [130:0] hist0=0,hist1=0,hist2=0,expected,expected_early;
+  reg [130:0] hist [0:15];
+  reg [IN_STAGES-1:0] reset_hist=0;
+  reg [130:0] expected,expected_early;
+  integer j;
   reg sampled_reset;
   integer n,age=0,comparisons=0,errors=0,reset_checks=0;
   function automatic [603:0] random_word;
@@ -93,17 +97,19 @@ module tb_romq_shell;
     end
   endtask
   initial begin
+    for(j=0;j<16;j=j+1) hist[j]=0;
     for(n=0;n<2400;n=n+1) begin
       @(posedge clk); #1;
-      sampled_reset=rst_n;
+      for(j=IN_STAGES-1;j>0;j=j-1) reset_hist[j]=reset_hist[j-1];
+      reset_hist[0]=rst_n; sampled_reset=reset_hist[IN_STAGES-1];
       if(!rst_n) age=0; else age=age+1;
-      expected=hist1; expected_early=hist2;
-      if(age>6) begin
+      expected=hist[TOTAL_STAGES-1]; expected_early=hist[TOTAL_STAGES];
+      if(age>TOTAL_STAGES+4) begin
         compare_words(dut_face,expected_early,0);
         compare_words(pos_face,expected,4);
         compare_words(bypass_face,ref_face,1);
       end
-      hist2=hist1; hist1=hist0; hist0=ref_face;
+      for(j=15;j>0;j=j-1) hist[j]=hist[j-1]; hist[0]=ref_face;
       #(40+25*(n%6));
       if(n%127==8) rst_n=1;
       if(n%127==119) rst_n=0;
@@ -116,7 +122,7 @@ module tb_romq_shell;
         if(errors<5) $display("RESET AGE MISMATCH cycle%0d",n);
       end
       @(negedge clk); #1;
-      if(age>6) begin
+      if(age>TOTAL_STAGES+4) begin
         compare_words(dut_face,expected,2);
         compare_words(pos_face,expected,5);
         compare_words(bypass_face,ref_face,3);
