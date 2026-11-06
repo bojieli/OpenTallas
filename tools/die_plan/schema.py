@@ -1291,6 +1291,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
  'required': ['kind', 'reset_pin', 'memory_alignment', 'members'],
  'type': 'object'}
 # DIE-HBM-25 (HBM-047/048): split piece of a reuse content bound whole -> where the piece reset comes from in the master
+# CODEX KV 11-06: opt-in exact native AHUB/ck7 projected hard boundary.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["native_boundary_adapter"] = {"enum": ["qkd_ahub_ck7_r27"]}
 # DIE-KV-69 11-04 (kv3_astk): core port form vs the native leaf ports the bind wires; kit_core_clocks.adapt_core_ports.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["native_port_adapter"] = {'additionalProperties': False,
  'properties': {'merge': {'additionalProperties': {'items': {'minLength': 1, 'type': 'string'}, 'minItems': 1, 'type': 'array'}, 'type': 'object'},
