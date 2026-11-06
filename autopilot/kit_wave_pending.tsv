@@ -38,3 +38,12 @@ fa68f2c8863	src	qwen_compute	coll_ftm@3	KW-RELAUNCH-1	11-05 19:5x holdgaterr I16
 27f8cb874d9	src	s81_head	hd_spn_eshim_rx@5	KW-RELAUNCH-2	11-05 21:1x psroot I184 class batch (COORD 21:01 (2)): a5 FAIL_POSTCTS pair_skew multi-root source insertion error; releases when HEAD src carries 27f8cb874d9 (tag p-head 6d4bed7abfe); retry as is. Only row with this error [CHECKED state reasons]
 6d4bed7abfe	hub	qwen_compute	sle_ctl__cl372cea1c@2	KW-RELAUNCH-2	11-05 21:3x CELLCAP-MISCLASS (COORD 21:01 (3) vA): route job a7630b8a28e2 was NOT RUN (intel1 disk floor, AP_RC 98) and filed cell-cap from placed 522k incl 118k TAPCELL; native 315,910 < kit limit 400k; relaunch, stage_resume on
 6d4bed7abfe	hub	s81	dsdv_slice_c1x_C__t10@3	KW-RELAUNCH-2	11-05 21:3x CELLCAP-MISCLASS: route job 2c6227721244 died on epyc4 ENOSPC (exit 7) and was filed cell-cap 529k placed; infra, relaunch
+850f4f5618	src	s81	dsdv_slice_c1x_C__t3@3	KW-RELAUNCH-2	11-05 21:4x class batch, releases when the die src carries the fix: DIE-S81-66/CLS 21:31 cland_fill_spread (CLAND no legal site)
+61b94552190	src	s81	gunit__t1@4	KW-RELAUNCH-2	11-05 21:4x class batch, releases when the die src carries the fix: DIE-S81-66/PLAN 21:33 gunit l1f 8 SRAM sites (ORD-2013)
+61b94552190	src	s81	seqhost__t1@7	KW-RELAUNCH-2	11-05 21:4x class batch, releases when the die src carries the fix: DIE-S81-66/PLAN 21:33 seqhost genblk2 path (MPL-0020)
+19b7f4ece79	src	qwen_kvsys	kv3_hub_Eo@6	KW-RELAUNCH-2	11-05 21:4x class batch, releases when the die src carries the fix: DIE-KV-80/PLAN 21:35 cland_band_fit (CLAND-BAND)
+19b7f4ece79	src	qwen_kvsys	kv3_hub_Wo@8	KW-RELAUNCH-2	11-05 21:4x class batch, releases when the die src carries the fix: DIE-KV-80/PLAN 21:35 cland_band_fit (CLAND-BAND)
+19b7f4ece79	src	qwen_kvsys	kv3_hgi_v8@5	KW-RELAUNCH-2	11-05 21:4x class batch, releases when the die src carries the fix: DIE-KV-80/PLAN 21:35 ft_nudge grid snap (FT off-row)
+559369a70e3	src	qwen_kvsys	kv3_sys_SD@5	KW-RELAUNCH-2	11-05 21:4x class batch, releases when the die src carries the fix: DIE-KV-80/REFORM 21:36 band move + pinslot off (GRT-CONG)
+559369a70e3	src	qwen_kvsys	kv3_io_ft@5	KW-RELAUNCH-2	11-05 21:4x class batch, releases when the die src carries the fix: DIE-KV-80/REFORM 21:36 pinslot off (GRT-0183)
+559369a70e3	src	qwen_kvsys	kv3_io_ft_v1@6	KW-RELAUNCH-2	11-05 21:4x class batch, releases when the die src carries the fix: DIE-KV-80/REFORM 21:36 pinslot off (GRT-0183)
