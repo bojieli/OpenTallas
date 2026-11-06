@@ -841,7 +841,8 @@ ADMISSION = re.compile(r"^\s*(?:ot-run: (?:\S+\s+admits\b|-> |waiting\b|queued\b
                        r"KIT_PREFLIGHT ADVISORY\b|"
                        # KW-FIX-8 11-04: the kill of the pre-route LEC beside a stopped flow; its exit 137 read as INFRA and
                        # relaunched 9 KV rows on the same PDN-0006 / OT_CLAND error.  The flow's own error decides.
-                       r"LEC_ASYNC \S+ \S+ aborted with its flow\b)")
+                       # KW-FIX-24 11-06: a pre-route LEC killed by a signal (docker stop / OOM) is no verdict either
+                       r"LEC_ASYNC \S+ \S+ aborted (?:with its flow|by signal)\b)")
 EXC_LINE = re.compile(r"^\s*(?:[A-Za-z_][\w.]*(?:Error|Exception|Exit|Interrupt)(?::|$)|bind: ERROR|ERROR\b|Error:|"
                       r"[A-Z][A-Z0-9_]+ FAIL\b|FAIL_PREFLOOR\b)")
 ID_PARAM = re.compile(r"(?:_id|_tid|sidx|map_lane_j)$")

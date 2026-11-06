@@ -76,7 +76,7 @@ rsync -a "${OUT_EXCLUDE[@]}" --exclude .ot-run-spill-copy --exclude /run --exclu
   --exclude '/run_*.log' --exclude /rc.txt --exclude '/pass[0-9]*' --exclude '/prd_*.json' --exclude '/prd_*.log' \
   --exclude '/eco_[0-9]*' --exclude '/lec_routed_autopilot_*' --exclude '/lec_async.runs' \
   --exclude '/lec_async.on' --exclude '/lec_async.ready' --exclude '/lec_async.done' --exclude '/lec_async.rc' --exclude '/lec_async.stop' \
-  --exclude '/lec_async.abort' --exclude '/lec_async.pid' --exclude '/lec_async.identity' --exclude '/lec_async.source_identity' \
+  --exclude '/lec_async.abort' --exclude '/lec_async.aborted' --exclude '/lec_async.pid' --exclude '/lec_async.identity' --exclude '/lec_async.source_identity' \
   --exclude '/lec_async.owner' --exclude '/lec_async.lock' --exclude '/lec_async.log' $KIT/ $OUT/
 B=$OUT/run/results/asap7/$NICK/base
 mkdir -p $B $OUT/run/logs/asap7/$NICK/base $OUT/run/reports/asap7/$NICK/base $OUT/run/objects/asap7/$NICK/base
@@ -183,6 +183,9 @@ done
 # FLOW-25 11-03: unset = the hook decides (a seed with routed data wires repairs on placement, RSZ-0074 class); grt = A/B
 case "${OT_PRD_REPAIR_RC:-}" in '') ;; placement|grt) echo "OT_PRD_REPAIR_RC=$OT_PRD_REPAIR_RC" >> $OUT/variant.env ;;
   *) echo "prd_mk: OT_PRD_REPAIR_RC=$OT_PRD_REPAIR_RC: want placement|grt"; exit 2 ;; esac
+# KW-FIX-24 11-06: OT_HOLD_REPAIR_SCOPE=reg2reg (orfs_hold_mm HOLD-REPAIR-SCOPE) reaches the post-route hold repair
+case "${OT_HOLD_REPAIR_SCOPE:-}" in '') ;; reg2reg) echo "OT_HOLD_REPAIR_SCOPE=reg2reg" >> $OUT/variant.env ;;
+  *) echo "prd_mk: OT_HOLD_REPAIR_SCOPE=$OT_HOLD_REPAIR_SCOPE: want reg2reg"; exit 2 ;; esac
 # DIE-S81-49 11-02: OT_PRD_BUFFER_REMOVAL=1 re-enables setup-repair buffer removal (default off: removed-buffer class)
 case "${OT_PRD_BUFFER_REMOVAL:-}" in ''|0) ;; 1) echo "OT_PRD_BUFFER_REMOVAL=1" >> $OUT/variant.env ;;
   *) echo "prd_mk: OT_PRD_BUFFER_REMOVAL=$OT_PRD_BUFFER_REMOVAL: want 0|1"; exit 2 ;; esac

@@ -1,0 +1,39 @@
+MISMATCH t=1282692000 ph 0 u1 write 1 differs
+MISMATCH t=1282692000 ph 0 u1 write 2 differs
+MISMATCH t=1282692000 ph 0 u1 write 3 differs
+MISMATCH t=1282692000 ph 0 u1 write 4 differs
+MISMATCH t=1282692000 ph 0 u1 write 5 differs
+MISMATCH t=1282692000 ph 0 u1 write 6 differs
+MISMATCH t=1282692000 ph 0 u1 write 7 differs
+MISMATCH t=1282692000 ph 0 u1 write 9 differs
+MISMATCH t=1282692000 ph 0 u1 write 10 differs
+MISMATCH t=1282692000 ph 0 u1 write 11 differs
+MISMATCH t=1282692000 ph 0 u1 write 12 differs
+MISMATCH t=1282692000 ph 0 u1 write 13 differs
+MISMATCH t=1282692000 ph 0 u1 write 14 differs
+MISMATCH t=1313134000 read_data
+MISMATCH t=1313281000 read_data
+MISMATCH t=1313968000 read_data
+MISMATCH t=1314305000 read_data
+MISMATCH t=1338988000 read_data
+MISMATCH t=1539148000 read_data
+ABORT_PHASE 5 (vB: events and read-back not compared)
+ABORT_PHASE 13 (vB: events and read-back not compared)
+ABORT_PHASE 16 (vB: events and read-back not compared)
+ABORT_PHASE 18 (vB: events and read-back not compared)
+ABORT_PHASE 19 (vB: events and read-back not compared)
+ABORT_PHASE 26 (vB: events and read-back not compared)
+ABORT_PHASE 28 (vB: events and read-back not compared)
+ABORT_PHASE 29 (vB: events and read-back not compared)
+ABORT_PHASE 32 (vB: events and read-back not compared)
+ABORT_PHASE 39 (vB: events and read-back not compared)
+ABORT_PHASE 46 (vB: events and read-back not compared)
+ABORT_PHASE 49 (vB: events and read-back not compared)
+ABORT_PHASE 51 (vB: events and read-back not compared)
+ABORT_PHASE 55 (vB: events and read-back not compared)
+BENCH aborts=14 var=0 mut=1 seed=1 phases=60 writes=11754 completes=175 fault_phases=27 exact_samples=166970 errors=106336
+SVGR_BK_B12_BENCH FAIL
+- tb_svgr_bk_b12.sv:212: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 77us; walltime 0.318 s; speed 241.697 us/s
+- Verilator: cpu 0.318 s on 1 threads; allocated 10 MB

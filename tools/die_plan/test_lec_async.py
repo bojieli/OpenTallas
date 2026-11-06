@@ -13,11 +13,13 @@ FAKE_DOCKER = r'''#!/bin/bash
 op=$1; shift
 case $op in
 exec) echo "$*" >> "$FAKE_K/docker_exec.args"; K=$FAKE_K; while [ $# -gt 0 ]; do case $1 in -v) K=${2%%:/work}; shift 2;; bash) shift; [ "$1" = -lc ] && shift; CMD=$1; shift;; *) shift;; esac; done
-     CMD=${CMD//\/work/$K}; CMD=${CMD//source \/OpenROAD-flow-scripts\/env.sh/true}; bash -c "$CMD"; exit $?;;
+     # like the docker CLI: the exec'd command's stderr is kept, this shell's own "Killed" job notice is not
+     CMD=${CMD//\/work/$K}; CMD=${CMD//source \/OpenROAD-flow-scripts\/env.sh/true}; { bash -c "$CMD" 2>&3; } 3>&2 2>/dev/null; exit $?;;
 inspect) if [ "$1" != -f ]; then
            [[ "$1" = *-lec ]] && exit 1
            printf '[{"State":{"Running":true},"Mounts":[{"Source":"%s"}]}]\n' "$FAKE_K"
          elif [[ "$*" = *range*Mounts* ]]; then echo "$FAKE_K";
+         elif [[ "$*" = *OOMKilled* ]]; then [ -f "$FAKE_K/oomkilled" ] && echo true || echo false;
          else [ -f "$FAKE_K/flow.exited" ] && echo false || echo true; fi;;
 top) printf 'PID COMMAND\n123 bash /work/lec_async.sh wait /work\n';;
 stop) touch "$FAKE_K/flow.stopped";;
@@ -251,3 +253,62 @@ def test_stop_after_place_keeps_the_proof(tmp_path):
     assert "aborted" not in _wait(k, env, 2)
     assert (k / "lec_async.rc").read_text().strip() == "0" and not (k / "lec_async.abort").exists()
     assert (k / "lec_async.identity").exists()
+
+
+# KW-FIX-24 11-06 (S81-ENGRR-B5): a LEC killed by a signal is ABORTED, never FAIL_PREFLOOR NOT EQUIVALENT
+def _aborted(k, env, pol, run, timeout=30):
+    (k / "lec_async.ready").write_text(f"{pol}\n{run}\n")
+    t = time.time()
+    while not (k / "lec_async.done").exists() and time.time() - t < timeout:
+        time.sleep(0.1)
+    assert (k / "lec_async.done").exists()
+    return _finish(k, env, 0)
+
+
+def test_sigterm_and_sigkill_are_aborted_not_neq(tmp_path):
+    for i, (pol, sig, rc) in enumerate((("nz", "TERM", 143), ("nz", "KILL", 137), ("1", "TERM", 143))):
+        d = tmp_path / str(i)
+        d.mkdir()
+        k, env = _kit(d, 0)
+        assert _aborted(k, env, pol, f"echo lec >> /work/lec_run.log; kill -{sig} $$") == "0"    # the flow rc stands
+        rec = (k / "lec_async.aborted").read_text()
+        assert rec.startswith(f"ABORTED rc={rc} oom=no "), rec
+        assert not (k / "FAIL_PREFLOOR").exists() and not (k / "lec_async.stop").exists()
+        assert not (k / "flow.stopped").exists() and not (k / "lec_async.rc").exists()
+        # no later scope may take it as a finished proof
+        assert not (k / "lec_async.ready").exists() and not (k / "lec_async.identity").exists()
+        log = (k / "lec_async.log").read_text()
+        assert f"aborted by signal (exit {rc}, OOM evidence no)" in log and "NOT EQUIVALENT" not in log
+
+
+def test_signal_with_oom_evidence_is_recorded_as_oom(tmp_path):
+    k, env = _kit(tmp_path, 0)
+    assert _aborted(k, env, "nz", "echo 'Killed process 4242 (yosys)' >> /work/lec_run.log; kill -KILL $$") == "0"
+    assert (k / "lec_async.aborted").read_text().startswith("ABORTED rc=137 oom=yes ")
+    assert not (k / "FAIL_PREFLOOR").exists()
+    (tmp_path / "b").mkdir()
+    k2, env2 = _kit(tmp_path / "b", 0)
+    (k2 / "oomkilled").touch()                                    # docker inspect State.OOMKilled true
+    assert _aborted(k2, env2, "1", "kill -KILL $$") == "0"
+    assert (k2 / "lec_async.aborted").read_text().startswith("ABORTED rc=137 oom=yes ")
+
+
+def test_real_neq_exit1_unchanged_under_nz(tmp_path):
+    k, env = _kit(tmp_path, 0)
+    (k / "lec_async.ready").write_text("nz\necho 'LEC NOT EQUIVALENT: x' >> /work/lec_run.log; exit 1\n")
+    t = time.time()
+    while not (k / "flow.stopped").exists() and time.time() - t < 30:
+        time.sleep(0.1)
+    assert _finish(k, env, 137, 5) == "5"
+    assert "LEC NOT EQUIVALENT" in (k / "FAIL_PREFLOOR").read_text() and (k / "lec_async.stop").exists()
+    assert (k / "lec_async.rc").read_text().strip() == "1" and not (k / "lec_async.aborted").exists()
+
+
+def test_kit_wave_does_not_read_aborted_lec_as_neq_or_infra():
+    import sys
+    sys.path.insert(0, str(HERE.parent / "autopilot"))
+    import kit_wave
+    log = ("LEC_ASYNC 2026-11-06 10:00:00 aborted by signal (exit 137, OOM evidence no): no LEC verdict, "
+           "the kit needs a fresh LEC\n[ERROR PDN-0006] bad grid\n")
+    cls, why = kit_wave.classify("route", log)
+    assert "PDN-0006" in why and "LEC" not in why, (cls, why)

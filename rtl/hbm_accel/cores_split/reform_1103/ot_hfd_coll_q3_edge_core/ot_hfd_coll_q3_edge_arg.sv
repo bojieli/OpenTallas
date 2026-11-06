@@ -20,7 +20,17 @@ module ot_hfd_coll_q3_edge_arg (
     output wire [544:0] out_flit,
     output wire         fault
 );
-    ot_hgi_coll_argmax_m_tp192_pr u_arg (
+    // HBM-GAPS-9 11-06 (DIE-HBM-81 13:37): opt-in define OT_Q3ARG_FAULT_PIPE = two-stage dup check,
+    // PIN CYCLES fault +1 edge, all other outputs exact (d44v PART 40 corelat row). No define = unchanged.
+    // OT_Q3ARG_FAULT_PIPE2 = the same + seen updated from the stage-1 registers (same pins and cycles).
+`ifdef OT_Q3ARG_FAULT_PIPE2
+    localparam integer FP = 2;
+`elsif OT_Q3ARG_FAULT_PIPE
+    localparam integer FP = 1;
+`else
+    localparam integer FP = 0;
+`endif
+    ot_hgi_coll_argmax_m_tp192_pr #(.FAULT_PIPE(FP)) u_arg (
         .clk(clk), .rst_n(rst_n), .start(start), .mode(mode), .cfg_g(cfg_g), .cfg_gbase(cfg_gbase), .cfg_rank(cfg_rank),
         .in_slot(in_slot), .in_v(in_v), .in_key(in_key), .in_meta(in_meta), .flush_slot(flush_slot),
         .publish_slot(publish_slot), .out_v(out_v), .out_flit(out_flit), .fault(fault));

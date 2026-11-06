@@ -1,0 +1,28 @@
+HBM-B12-SVGRBK ot_svgr_bk forms (RTL rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_bk_b12.sv, recipes ot_svgr_bk__vA / __vB)
+
+B8 routed DB re-timed (signoff TT session, epyc4 hbm-reform-b8/k/ot_svgr_bk_8ba152814ecb): 407 violators
+  345  head packet -> identity_ok -> fifo_pop -> 285-bit head load enable tree -> packet D      worst -61.7
+   16  rbin -> 8:1 FIFO read mux (rbin buffer tree ~400 ps) -> packet D                         worst -72.9
+   18  hbm reset_pipe -> mem write enable (async-reset always block puts reset in the enable)    worst -24.8
+    7  packet -> identity -> pop -> rbin+1 -> gray -> rgray D                                   worst -28.0
+   20  packet -> identity -> take -> received_q D                                               worst  -6.4
+    1  packet -> rbin D                                                                         worst  -4.6
+  (sta/b8_tt_violators.txt, sta/b8_tt_class_paths.txt)
+
+vA (targeted, 0 pin cycles, every output cycle-identical to B8):
+  head data bits load on !empty&&!stop&&!sticky (no identity term; bank bits keep fifo_pop), one-hot replicated
+  read select (9 slices x 8 kept flops), pointer next = mux of precomputed +1, mem write without reset term.
+  Estimate: 345+16+18+8 endpoints lose the identity->enable tree (~270 ps) / rbin tree (~400 ps) / reset term;
+  remaining limiter is packet -> identity -> pop/take -> rbin/sel/received (B8 -28/-6 with the 285-load enable
+  tree on the same net, now gone) -> about 0..+60 ps [estimate], so vA is a near miss risk.
+vB (safe by construction): registered identity check (head loaded -> id_q next cycle -> take next cycle; reserve
+  clears chk), one packet per 2 stream cycles per landing bank; every path reg -> 1-2 gates -> reg except
+  identity_c -> id_q (reg-to-reg, ~620 ps incl clk-q, no fanout tail); reset sync pair per landing bank.
+  PIN CYCLES vs B8: landing write / complete / bank fault +1 stream_clk per packet, credits follow the later pops.
+  Credits: the FIFO still never pops past a failing head (same credit count after a fault as B8).
+
+Bench (bench/MATRIX.txt): lock-step vs B8 source 4ce474326fb, independent hbm/stream clocks (1024/834 ps and swapped),
+  async resets, random traffic, bad packets (dup / epoch / bank_id / row / slot), stop, reserves, re-reserve aborts.
+  vA: EXACT (all outputs every edge) + events; vB: events (writes, completes, faults, credits, read-back) + id_q invariant.
+  MUT0 PASS: 4 seeds each.  Mutants FAIL: vA m1 one-hot slice, m2 bank bits on the data enable, m3 load ignores stop;
+  vB m1 one-hot slice, m2 pop past failing head (credits), m3 check ignores reserve (stale id_q).
