@@ -1,0 +1,9 @@
+{
+  "verdict": "PASS",
+  "command": "iverilog -g2012 -Wall -DOT_Q3CTL_OFF4_RT -s hook_only -tnull hook_only.sv ot_bodyctl_off32_split_d.sv",
+  "exit_code": 0,
+  "diagnostic_bytes": 0,
+  "helper_sha256": "e44fe63f42fc3568eede51e70e4cd6006ff6fed48dcf2e7e7f9a8d8ec3e86d6b",
+  "hook_sha256": "19004cf28ffbd0f68bbabcc5dd11a57cd861c2611532b03e844e2e368f9c7eca",
+  "scope": "Actual hook namespace/grammar/ports/widths only. No simulation or whole-body parse. Full GEN and kit LEC remain required before future P&R."
+}

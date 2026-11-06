@@ -5,7 +5,7 @@ sel=json.load(open('/srv/opentallas-scratch2/claude/wt/codex-bodyctl-csa-1106/ph
 for g in ['pc','pd']:
  for ix in [3,6]:assert q[g+str(ix)]['pre_a']==q['pb'+str(ix)]['pre_a']
 preit='{ '+', '.join(q[k]['pre_a'] for k in ['pb3','pb6','pa1','pa2'])+' }'
-manifest=[];decl=[];out=s
+manifest=[];decl=[];instances=[];out=s
 for arr,outname in [('pb','m_iaddr_l'),('pc','m_del_l'),('pd','m_rgx_l')]:
  prestep='{ '+q[arr+'6']['pre_b']+', '+q[arr+'3']['pre_b']+' }'
  pat=r'^  assign (.*?u_mul\.'+outname+r'\[.*?\}) = (_\d+_);$'
@@ -14,9 +14,10 @@ for arr,outname in [('pb','m_iaddr_l'),('pc','m_del_l'),('pd','m_rgx_l')]:
  old=cap[0];name='ot_q3_off4_'+outname
  new='`ifdef OT_Q3CTL_OFF4_RT\n  always @(posedge clk_control)\n    '+reg+' <= '+name+'_d;\n`else\n'+old+'\n`endif'
  out=out[:cap.start()]+new+out[cap.end():]
- decl+=['wire[31:0] '+name+'_d;','ot_bodyctl_off32_split_d '+name+'(.clk(clk_control),.iteration('+preit+'),.step('+prestep+'),.out_d('+name+'_d));']
+ decl+=['wire[31:0] '+name+'_d;'];instances+=['ot_bodyctl_off32_split_d '+name+'(.clk(clk_control),.iteration('+preit+'),.step('+prestep+'),.out_d('+name+'_d));']
  manifest.append(dict(output=outname,register=reg,clock='clk_control',iteration_D=preit,step_D=prestep,old_capture=old,new_capture='same original phase3 register, helper output is combinational after two internal captures'))
 pos=out.index(');',out.index('module '))+2;out=out[:pos]+'\n`ifdef OT_Q3CTL_OFF4_RT\n'+'\n'.join(decl)+'\n`endif'+out[pos:]
+pos=out.index('\nendmodule');out=out[:pos]+'\n`ifdef OT_Q3CTL_OFF4_RT\n'+'\n'.join(instances)+'\n`endif'+out[pos:]
 # Preprocess ONLY the newly added flag false; all prior conditionals stay literal.
 keep=[];stack=[]
 for line in out.splitlines(keepends=True):
