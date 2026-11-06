@@ -1,5 +1,7 @@
 // HBM-FORM-SPLIT d44v part 30: ot_hbm_idx_topk_link_static (WRITE_PIPE_STAGES=2 form) as two tiles at the SRAM write seam. Pin registers of the master stay in each
 // tile. The output face of ingest and the input face of store are the two opt-in writer stages we0/wa0/wd0 and we1/wa1/wd1, so the seam adds no flop over that form.
+// HBM-REFORM-B9: PD=3 form. ingest: compact tree registered at subtree sizes 8, 32 and 64 (ot_hbm_idx_compact_tree_p), the
+// controls delayed to match; store: clear/emit/emit_group/rank/gbase delayed PD so the pair is the part 30 form delayed PD at every output.
 `timescale 1ns/1ps
 `default_nettype none
 module ot_hbm_idx_topk_ingest #(parameter integer MUT=0)(
@@ -14,6 +16,14 @@ module ot_hbm_idx_topk_ingest #(parameter integer MUT=0)(
  wire rst_core_n=rst_sync[1];
  (* keep *) reg clear_r,ingest_r,flush_r,emit_r;(* keep *) reg[2367:0]line_r;(* keep *) reg[7:0]rank_r,gbase_r;
  reg c_fault;wire[9:0]c_count;
+ localparam integer PD=3;
+ reg[PD-1:0]clear_s,ingest_s,flush_s,emit_s;reg[7:0]rank_s[0:PD-1],gbase_s[0:PD-1];
+ always @(posedge clk or negedge rst_core_n)if(!rst_core_n)begin clear_s<=0;ingest_s<=0;flush_s<=0;emit_s<=0;end
+  else begin clear_s<={clear_s[PD-2:0],clear_r};ingest_s<={ingest_s[PD-2:0],ingest_r};flush_s<={flush_s[PD-2:0],flush_r};emit_s<={emit_s[PD-2:0],emit_r};end
+ always @(posedge clk)begin
+  rank_s[0]<=rank_r;gbase_s[0]<=gbase_r;for(integer i=1;i<PD;i=i+1)begin rank_s[i]<=rank_s[i-1];gbase_s[i]<=gbase_s[i-1];end
+ end
+ wire clear_p=clear_s[PD-1],ingest_p=ingest_s[PD-1],flush_p=flush_s[PD-1],emit_p=emit_s[PD-1];wire[7:0]rank_p=rank_s[PD-1],gbase_p=gbase_s[PD-1];
  always @(posedge clk)begin
   clear_r<=clear;ingest_r<=ingest_v;line_r<=selected_line;flush_r<=flush;emit_r<=emit_v;rank_r<=rank;gbase_r<=gbase;
   fault<=c_fault;selected_count<=c_count;
@@ -31,7 +41,7 @@ module ot_hbm_idx_topk_ingest #(parameter integer MUT=0)(
   wire[63:0]normal_word={12'd0,line_r[j*37+17+:20],line_r[j*37+1+:16],16'd0};
   assign words[j*64+:64]=(MUT==1)?{normal_word[31:0],normal_word[63:32]}:normal_word;
  end
- ot_hbm_idx_compact_tree #(.N(64),.W(64)) compact(.mask(mask),.words(words),.packed_words(compacted),.count(count));
+ ot_hbm_idx_compact_tree_p #(.N(64),.W(64),.PREG(7'b1101000)) compact(.clk(clk),.mask(mask),.words(words),.packed_words(compacted),.count(count));
  wire[6:0]n=7'(fill)+count;
  wire[3:0]nf=n[6:3];
  reg[447:0]live_carry;
@@ -48,7 +58,7 @@ module ot_hbm_idx_topk_ingest #(parameter integer MUT=0)(
   for(integer f=0;f<=8;f=f+1)if(nf==4'(f))
    for(integer r=0;r<7;r=r+1)carry_next[r*64+:64]=packed_next[(f*8+r)*64+:64];
  end
- always @(posedge clk)if(ingest_r)carry<=carry_next;
+ always @(posedge clk)if(ingest_p)carry<=carry_next;
  wire[511:0]write_flit[0:7];
  for(genvar j=0;j<8;j=j+1)begin:flit_pack
   for(genvar r=0;r<8;r=r+1)begin:record_pack
@@ -66,19 +76,19 @@ module ot_hbm_idx_topk_ingest #(parameter integer MUT=0)(
    end
  end
 
- assign wo_we=(rst_core_n&&!clear_r)?we:8'd0;
+ assign wo_we=(rst_core_n&&!clear_p)?we:8'd0;
  assign wo_wa=wa;assign wo_wd=wd;
  always @(posedge clk or negedge rst_core_n)begin
   if(!rst_core_n)begin fill<=0;flits<=0;total<=0;c_fault<=0;end
   else begin
-   if(clear_r)begin fill<=0;flits<=0;total<=0;end
-   if(ingest_r)begin
+   if(clear_p)begin fill<=0;flits<=0;total<=0;end
+   if(ingest_p)begin
     fill<=n[2:0];flits<=flits+7'(nf);total<=total+10'(count);
     if(int'(total)+int'(count)>512||int'(flits)+int'(nf)>64)c_fault<=1;
    end
-   if(emit_r&&rank_r<gbase_r)c_fault<=1;
-   if(flush_r&&(total!=512||flits!=64||fill!=0))c_fault<=1;
-   if((clear_r&&ingest_r)||(emit_r&&(ingest_r||flits!=64)))c_fault<=1;
+   if(emit_p&&rank_p<gbase_p)c_fault<=1;
+   if(flush_p&&(total!=512||flits!=64||fill!=0))c_fault<=1;
+   if((clear_p&&ingest_p)||(emit_p&&(ingest_p||flits!=64)))c_fault<=1;
   end
  end
 endmodule
@@ -93,8 +103,14 @@ module ot_hbm_idx_topk_store #(parameter integer MUT=0)(
  wire rst_core_n=rst_sync[1];
  (* keep *) reg clear_r,clear_d,emit_r;(* keep *) reg[3:0]group_r;(* keep *) reg[7:0]rank_r,gbase_r;
  reg[3:0]c_tx_v;wire[2179:0]c_tx;
+ localparam integer PD=3;
+ reg[PD-1:0]clear_s,emit_s;reg[3:0]group_s[0:PD-1];reg[7:0]rank_s[0:PD-1],gbase_s[0:PD-1];
+ always @(posedge clk or negedge rst_core_n)if(!rst_core_n)begin clear_s<=0;emit_s<=0;end
+  else begin clear_s<={clear_s[PD-2:0],clear};emit_s<={emit_s[PD-2:0],emit_v};end
  always @(posedge clk)begin
-  clear_r<=clear;clear_d<=clear_r;emit_r<=emit_v;group_r<=emit_group;rank_r<=rank;gbase_r<=gbase;
+  clear_r<=clear_s[PD-1];clear_d<=clear_r;emit_r<=emit_s[PD-1];group_r<=group_s[PD-1];rank_r<=rank_s[PD-1];gbase_r<=gbase_s[PD-1];
+  group_s[0]<=emit_group;rank_s[0]<=rank;gbase_s[0]<=gbase;
+  for(integer i=1;i<PD;i=i+1)begin group_s[i]<=group_s[i-1];rank_s[i]<=rank_s[i-1];gbase_s[i]<=gbase_s[i-1];end
   tx_v<=c_tx_v;tx<=c_tx;
  end
  // clear kills both writer stages: wi_we left the first stage before this clear when clear_d is set.
@@ -123,5 +139,35 @@ module ot_hbm_idx_topk_store #(parameter integer MUT=0)(
    end
   end
  end
+endmodule
+// pipelined compact tree: same packing as ot_hbm_idx_compact_tree; the outputs of every subtree of size 2^k with PREG[k] set
+// are registered (PREG 7'b1101000: sizes 8, 32, 64 -> 3 cycles from mask/words to packed_words/count).
+module ot_hbm_idx_compact_tree_p #(parameter integer N=64,W=64,parameter [6:0] PREG=7'b0)(
+ input wire clk,input wire[N-1:0]mask,input wire[N*W-1:0]words,
+ output wire[N*W-1:0]packed_words,
+ output wire[$clog2(N+1)-1:0]count
+);
+ wire[N*W-1:0]pw;wire[$clog2(N+1)-1:0]c;
+ generate if(N==1)begin:leaf
+  assign pw=mask[0]?words:{W{1'b0}};
+  assign c=mask[0];
+ end else begin:branch
+  localparam integer L=N/2,R=N-L;
+  wire[L*W-1:0]left;wire[R*W-1:0]right;
+  wire[$clog2(L+1)-1:0]lc;wire[$clog2(R+1)-1:0]rc;
+  ot_hbm_idx_compact_tree_p #(.N(L),.W(W),.PREG(PREG)) lhs(
+   .clk(clk),.mask(mask[L-1:0]),.words(words[L*W-1:0]),.packed_words(left),.count(lc));
+  ot_hbm_idx_compact_tree_p #(.N(R),.W(W),.PREG(PREG)) rhs(
+   .clk(clk),.mask(mask[N-1:L]),.words(words[N*W-1:L*W]),.packed_words(right),.count(rc));
+  assign c=($clog2(N+1))'(lc)+($clog2(N+1))'(rc);
+  assign pw={{R*W{1'b0}},left}|({{L*W{1'b0}},right} << (lc*W));
+ end
+ if(PREG[$clog2(N)])begin:q
+  reg[N*W-1:0]pw_q;reg[$clog2(N+1)-1:0]c_q;
+  always @(posedge clk)begin pw_q<=pw;c_q<=c;end
+  assign packed_words=pw_q;assign count=c_q;
+ end else begin:nq
+  assign packed_words=pw;assign count=c;
+ end endgenerate
 endmodule
 `default_nettype wire

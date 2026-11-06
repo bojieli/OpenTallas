@@ -8,8 +8,8 @@
 // A mutant run (MUT 1/2/3) must print FAIL (caught): phase A (MUT 1/2) or phase B (MUT 3) sees a mismatch, a missing
 // word or an RX fault.
 module tb_s81hd_beat_link;
-    parameter integer W = 553, N = 2, S = 2, MUT = 0, NREC = 1200, IDLE_ZERO = 0;
-    localparam integer P = (W + N - 1) / N, BW = (N > 1) ? $clog2(N) : 1, PW = P + BW + 1;
+    parameter integer W = 553, N = 2, S = 2, MUT = 0, NREC = 1200, IDLE_ZERO = 0, HOLD_REAL = 0, PFIX = 0;
+    localparam integer P = (PFIX > 0) ? PFIX : (W + N - 1) / N, BW = (N > 1) ? $clog2(N) : 1, PW = P + BW + 1;
     localparam integer LAT = N + 1 + S;
     reg ck = 0, rn = 0;
     always #1 ck = ~ck;
@@ -19,7 +19,7 @@ module tb_s81hd_beat_link;
     reg  inj; reg [PW-1:0] inj_w;
     wire [PW-1:0] ri = inj ? inj_w : st[S];
     wire rv; wire [W-1:0] rd; wire rf;
-    ot_s81hd_beat_tx #(.W(W), .N(N), .MUT(MUT), .IDLE_ZERO(IDLE_ZERO)) u_tx (.ck(ck), .rn(rn), .v(tv), .d(td), .o(to), .fault(tf));
+    ot_s81hd_beat_tx #(.W(W), .N(N), .P(P), .MUT(MUT), .IDLE_ZERO(IDLE_ZERO), .HOLD_REAL(HOLD_REAL)) u_tx (.ck(ck), .rn(rn), .v(tv), .d(td), .o(to), .fault(tf));
     assign st[0] = to;
     genvar g;
     generate for (g = 1; g <= S; g = g + 1) begin : g_st   // plan relay stations (plain registers, no reset)
@@ -27,7 +27,7 @@ module tb_s81hd_beat_link;
         always @(posedge ck) q <= st[g - 1];
         assign st[g] = q;
     end endgenerate
-    ot_s81hd_beat_rx #(.W(W), .N(N)) u_rx (.ck(ck), .rn(rn), .i(ri), .v(rv), .d(rd), .fault(rf));
+    ot_s81hd_beat_rx #(.W(W), .N(N), .P(P)) u_rx (.ck(ck), .rn(rn), .i(ri), .v(rv), .d(rd), .fault(rf));
 
     reg [W-1:0] qw [0:65535]; integer qt [0:65535];
     integer qh = 0, qtl = 0, cyc = 0, errs = 0, got = 0, sent = 0, seed = 1, i, k, gap;
@@ -112,8 +112,8 @@ module tb_s81hd_beat_link;
             if (N > 1 && rxf[2:0] != 3'b111) begin errs = errs + 1; $display("ERR RX injection faults %b", rxf); end
             if ((N * P > W) && !rxf[3]) begin errs = errs + 1; $display("ERR RX pad fault missing"); end
         end
-        $display("BEAT_LINK W=%0d N=%0d P=%0d S=%0d LAT=%0d MUT=%0d IZ=%0d seed=%0d sent=%0d got=%0d txf=%b rxinj=%b errors=%0d %s",
-                 W, N, P, S, LAT, MUT, IDLE_ZERO, seed, sent, got, tf, rxf, errs, errs == 0 ? "PASS" : "FAIL");
+        $display("BEAT_LINK W=%0d N=%0d P=%0d S=%0d LAT=%0d MUT=%0d IZ=%0d HR=%0d seed=%0d sent=%0d got=%0d txf=%b rxinj=%b errors=%0d %s",
+                 W, N, P, S, LAT, MUT, IDLE_ZERO, HOLD_REAL, seed, sent, got, tf, rxf, errs, errs == 0 ? "PASS" : "FAIL");
         $finish;
     end
 endmodule

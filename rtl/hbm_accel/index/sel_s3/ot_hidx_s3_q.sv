@@ -25,7 +25,15 @@
 //     pack prefix network is a kept module (ot_hidx_s3_pfx) per chunk copy, the compare path
 //     has its own kept valid + key copy (rawc), the last-valid-lane one-hot is a kept module (ot_hidx_s3_pri);
 //   * reset: ot_rst_relay with 15 regional leaves (2 sync + region stage = the 2-stage landing), <= 31 loads per leaf.
-// DMUT (bench only, 0 in every kit): 1 tie compare >= ; 3 lane-5 SRAM write-data select one edge late; 5 histogram read
+// HBM-REFORM-B11 (11-05, COORD 16:18 RE-FORM after 2 strikes: sign-off TT -146 ps s2_gtot -> c_gb prefix -> er -> tie
+//   compare -> gsv.v): S2B stage.  The per-lane equal-rank er = c_gb[g] + s2_loc is registered one edge after S2 (er_q),
+//   with the S2 line / gt / eq / valids / pair sums / address delayed beside it; S3 is only compare + choose.  The whole
+//   S3..S5 domain (tie budget, selected count, fill, pack chain, pack writes) moves one edge later, so every control that
+//   meets it is delayed once more: op1t / op1s / op1f / op7f, the ties pin copy tg, the pack chain (c12), bclr and fl.
+//   CALENDAR: sel_out / sel_choose_rt +1 (selected_v_o / selected_line_o one edge later); ret / qfault timing unchanged;
+//   the op6 busy window seen by the op2 / op7 hazards (hz[0], hz[1]) is one edge longer (compiler spacing op6 -> op2/op7 +1).
+// DMUT (bench only, 0 in every kit): 10 er_q without the group base; 11 op1t not realigned; 12 tg not realigned;
+//   13 pack loads not realigned (c11); 6 ecnt +1 on one pair value; 7 hi_nz misses bit 5; 8 hi_m1 by 2; 9 tie compare bit 4; 1 tie compare >= ; 3 lane-5 SRAM write-data select one edge late; 5 histogram read
 //   returned one edge later than its op tags.
 // Pack prefix network (kept hierarchy, SYNTH_KEEP_MODULES): positions of the selected lanes in 4-lane groups.  As its
 // own module ABC cannot flatten the popcounts into the 16 x 16 one-hot match decode (that put up to 63 loads on the
@@ -117,9 +125,12 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
  (* keep *) reg op1s;                  // selected counter
  (* keep *) reg [3:0] op1l;            // last_id replicas
  (* keep *) reg [4:0] op1f,op7f;       // fill replicas (4 = master)
+ // B11 S2B: the S3..S5 domain is one edge later, so its op flags are delayed once more (op1l stays: S1 domain)
+ (* keep *) reg [3:0] op1t_a; (* keep *) reg op1s_a; (* keep *) reg [4:0] op1f_a,op7f_a;
  always @(posedge clk)begin
   qc<=p1[5];
-  op1t<={4{p5op1}};op1s<=p5op1;op1l<={4{p5op1}};op1f<={5{p5op1}};op7f<={5{p5op7}};
+  op1t_a<={4{p5op1}};op1s_a<=p5op1;op1l<={4{p5op1}};op1f_a<={5{p5op1}};op7f_a<={5{p5op7}};
+  op1t<=op1t_a;op1s<=op1s_a;op1f<=op1f_a;op7f<=op7f_a;
  end
  // ---------------- P2: per-SRAM control copies (from p1[4]): 0 re 1 ing 2..9 addr ----------------
  wire [9:0] sq[0:2];
@@ -135,10 +146,12 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
   wire [3:0] o=p1[l/4][3:0];
   (* keep *) reg [2:0] wsel,bclr,fl,ld12,ld13;
   (* keep *) reg [1:0] ing;             // 0: histogram source bits 0..8, 1: bits 9..16 + pass / match
-  (* keep *) reg c7,c8,c9,c10,c11;      // op6 pack chain
+  (* keep *) reg c7,c8,c9,c10,c11,c12;  // op6 pack chain (B11: c12, one edge later)
+  (* keep *) reg bclr_a,fl_a;          // B11: buffer clear / flush one edge later
   always @(posedge clk)begin
-   wsel<={3{o==2}};bclr<={3{o==1||o==7}};fl<={3{o==7}};ing<={2{o==2}};
-   c7<=o==6;c8<=c7;c9<=c8;c10<=c9;c11<=c10;ld12<={3{c11}};ld13<={3{c11}};
+   wsel<={3{o==2}};bclr_a<=o==1||o==7;fl_a<=o==7;bclr<={3{bclr_a}};fl<={3{fl_a}};ing<={2{o==2}};
+   c7<=o==6;c8<=c7;c9<=c8;c10<=c9;c11<=c10;c12<=c11;
+   ld12<={3{(DMUT==13)?c11:c12}};ld13<={3{(DMUT==13)?c11:c12}};
   end
   if(DMUT==3&&l==5)begin:gd3
    (* keep *) reg [2:0] wsel_d;
@@ -232,36 +245,52 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
   for(integer l=0;l<W;l=l+1)s2_loc[l]<=c_loc[l];
   for(integer g=0;g<4;g=g+1)s2_gtot[g]<=c_gtot[g];
  end
- // ---------------- S3: tie budget, one replica per 4-lane group ----------------
+ // ---------------- S2B (HBM-REFORM-B11): per-lane equal rank registered; S2 data delayed beside it ----------------
+ reg [7:0] s2b_addr;reg [LW-1:0] s2b_line;reg [15:0] s2b_gt,s2b_eq;
+ (* keep *) reg [3:0] s2bv_l;          // selected-lane valid (per 4 lanes)
+ (* keep *) reg [7:0] s2bv_t;          // tie replicas (2 per replica)
+ (* keep *) reg s2bv_m;                // s3 copies, sel_v, hazards
  reg [3:0] c_gb[0:3];
  always @*begin
   c_gb[0]=4'd0;c_gb[1]=4'(s2_gtot[0]);c_gb[2]=4'(s2_gtot[0])+4'(s2_gtot[1]);
   c_gb[3]=(4'(s2_gtot[0])+4'(s2_gtot[1]))+4'(s2_gtot[2]);
  end
- // tie-group equal count, summed here from the registered group totals (was the S2 register s2_ecnt: the 5-bit sum is
- // the last 2 adder levels of the S2 popcount, which closed TT -155 ps; S3 reads it on the same edge)
- wire [4:0] s2_ecnt=(5'(s2_gtot[0])+5'(s2_gtot[1]))+(5'(s2_gtot[2])+5'(s2_gtot[3]));
+ always @(posedge clk)begin s2b_addr<=s2_addr;s2b_line<=s2_line;s2b_gt<=s2_gt;s2b_eq<=s2_eq;end
+ // ---------------- S3: tie budget, one replica per 4-lane group ----------------
+ // tie-group equal count (HBM-REFORM-B7 11-05): each tie replica holds its own pair sums, loaded on the S2 edge, and adds
+ // them in S3: one adder level and no wire from the far lane groups into the S3 subtract.  s3_q M6 GRT had 66 setup
+ // endpoints, all tie_rem, -209 ps.  Same value on the same edge as the former (gtot0+gtot1)+(gtot2+gtot3): no calendar change.
  wire [15:0] c_choose;
  for(genvar g=0;g<4;g=g+1)begin:gtie
-  (* keep *) reg [13:0] tg;             // ties pin flop copy
+  (* keep *) reg [13:0] tg_a,tg;        // ties pin flop copy (B11: one more edge, the S3 domain moved)
   (* keep *) reg [13:0] tie_rem;
   (* keep *) reg [1:0] comp;            // comp_started, one copy per tavail half
-  always @(posedge clk)tg<=ties;
-  wire [13:0] tavail={comp[1]?tie_rem[13:7]:tg[13:7],comp[0]?tie_rem[6:0]:tg[6:0]};
-  wire [13:0] tuse=({9'd0,s2_ecnt}<tavail)?{9'd0,s2_ecnt}:tavail;
-  wire [13:0] trem=tavail-tuse;
+  always @(posedge clk)begin tg_a<=ties;tg<=tg_a;end
+  wire [13:0] tgs=(DMUT==12)?tg_a:tg;
+  wire [3:0] op1g=(DMUT==11)?op1t_a:op1t;
+  wire [13:0] tavail={comp[1]?tie_rem[13:7]:tgs[13:7],comp[0]?tie_rem[6:0]:tgs[6:0]};
+  (* keep *) reg [3:0] e01,e23;         // pair sums, at most 8 each (B11: loaded on the S2B edge from the S2 group totals)
+  always @(posedge clk)begin e01<=4'(s2_gtot[0])+4'(s2_gtot[1]);e23<=4'(s2_gtot[2])+4'(s2_gtot[3]);end
+  wire [4:0] ecnt=5'(e01)+5'(e23)+5'(DMUT==6 && e01==4'd3);
+  // saturating tavail - ecnt with ecnt <= 16: subtract on the low 5 bits only, the high bits select between kept and
+  // decremented, which do not depend on ecnt.  Same function as tavail - min(ecnt, tavail).
+  wire hi_nz=(DMUT==7)?(|tavail[13:6]):(|tavail[13:5]);
+  wire [8:0] hi_m1=tavail[13:5]-((DMUT==8)?9'd2:9'd1);
+  wire [5:0] lo_sub={1'b0,tavail[4:0]}-{1'b0,ecnt};
+  wire [13:0] trem=!lo_sub[5]?{tavail[13:5],lo_sub[4:0]}:(hi_nz?{hi_m1,lo_sub[4:0]}:14'd0);
   always @(posedge clk or negedge rr[4+g])begin
    if(!rr[4+g])begin tie_rem<=0;comp<=0;end
    else begin
-    if(s2v_t[2*g])begin tie_rem[6:0]<=trem[6:0];comp[0]<=1;end
-    else if(op1t[g])begin tie_rem[6:0]<=0;comp[0]<=0;end
-    if(s2v_t[2*g+1])begin tie_rem[13:7]<=trem[13:7];comp[1]<=1;end
-    else if(op1t[g])begin tie_rem[13:7]<=0;comp[1]<=0;end
+    if(s2bv_t[2*g])begin tie_rem[6:0]<=trem[6:0];comp[0]<=1;end
+    else if(op1g[g])begin tie_rem[6:0]<=0;comp[0]<=0;end
+    if(s2bv_t[2*g+1])begin tie_rem[13:7]<=trem[13:7];comp[1]<=1;end
+    else if(op1g[g])begin tie_rem[13:7]<=0;comp[1]<=0;end
    end
   end
   for(genvar j=0;j<4;j=j+1)begin:gl
-   wire [4:0] er=5'(c_gb[g])+5'(s2_loc[4*g+j]);
-   assign c_choose[4*g+j]=s2_gt[4*g+j]||(s2_eq[4*g+j]&&({9'd0,er}<tavail));
+   (* keep *) reg [4:0] er_q;          // B11 S2B: equal rank of this lane, registered beside its compare
+   always @(posedge clk)er_q<=((DMUT==10)?5'd0:5'(c_gb[g]))+5'(s2_loc[4*g+j]);
+   assign c_choose[4*g+j]=s2b_gt[4*g+j]||(s2b_eq[4*g+j]&&(hi_nz||(er_q<{(DMUT==9)?1'b1:tavail[4],tavail[3:0]})));
   end
  end
  // selected line: main copy (-> pin flop, pack data) + 3 kept valid-bit copies (one pack prefix network per chunk)
@@ -269,13 +298,13 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
  wire [15:0] chv[0:2];
  for(genvar l=0;l<16;l=l+1)begin:gsv
   (* keep *) reg [2:0] v;
-  always @(posedge clk)v<={3{s2v_l[l/4]&&c_choose[l]}};
+  always @(posedge clk)v<={3{s2bv_l[l/4]&&c_choose[l]}};
   for(genvar k=0;k<3;k=k+1)begin:gk
    assign chv[k][l]=v[k];
   end
  end
  always @(posedge clk)for(integer l=0;l<W;l=l+1)begin
-  sel_line[l*EW+:EW]<=s2_line[l*EW+:EW];sel_line[l*EW]<=s2v_l[l/4]&&c_choose[l];
+  sel_line[l*EW+:EW]<=s2b_line[l*EW+:EW];sel_line[l*EW]<=s2bv_l[l/4]&&c_choose[l];
  end
  // ---------------- S4: dense pack, one prefix network per chunk ----------------
  (* keep *) reg [4:0] s3v_f;           // fill replicas (dcnt / s4_v copies)
@@ -300,7 +329,7 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
   end
  end
  reg [LW-1:0] dense;
- always @(posedge clk)begin dense<=c_dense;s3_addr<=s2_addr;s4_addr<=s3_addr;end
+ always @(posedge clk)begin dense<=c_dense;s3_addr<=s2b_addr;s4_addr<=s3_addr;end
  // ---------------- S5: fill replicas (0..3 = lane groups, 4 = master) and per-chunk rotate selects ----------------
  (* keep *) reg [4:0] s4v_f;
  wire [3:0] fr_q[0:4];wire [4:0] nf_q[0:4];
@@ -444,15 +473,15 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
  wire wr_fl=op7f[4]&&fr_q[4]!=0;       // op7 flush of a partial line
  always @(posedge clk or negedge rr[0])begin
   if(!rr[0])begin
-   rv<=0;s16_id<=0;s16_c<=0;s14<=0;s16_l<=0;s2v_m<=0;s3v_b<=0;s3v_h<=0;sel_v<=0;wreq<=0;hz<=0;qfault<=0;
+   rv<=0;s16_id<=0;s16_c<=0;s14<=0;s16_l<=0;s2v_m<=0;s2bv_m<=0;s3v_b<=0;s3v_h<=0;sel_v<=0;wreq<=0;hz<=0;qfault<=0;
   end else begin
    rv<=qop==4||qop==6;
    s16_id<=rv&&rop==6;s16_c<=rv&&rop==6;s16_l<={8{rv&&rop==6}};s14<=rv&&rop==4;
-   s2v_m<=s16_c;s3v_b<=s2v_m;s3v_h<=s2v_m;sel_v<=s2v_m;
+   s2v_m<=s16_c;s2bv_m<=s2v_m;s3v_b<=s2bv_m;s3v_h<=s2bv_m;sel_v<=s2bv_m;
    wreq<=wr_pk||wr_fl;
    // schedule hazards the compiler must never issue (registered terms, sticky OR one edge later)
-   hz[0]<=qop==2&&(rv&&rop==6||s16_c||s2v_m||s3v_b||s4v_f[4]||wreq);
-   hz[1]<=qop==7&&(rv&&rop==6||s16_c||s2v_m||s3v_b||s4v_f[4]);
+   hz[0]<=qop==2&&(rv&&rop==6||s16_c||s2v_m||s2bv_m||s3v_b||s4v_f[4]||wreq);
+   hz[1]<=qop==7&&(rv&&rop==6||s16_c||s2v_m||s2bv_m||s3v_b||s4v_f[4]);
    hz[2]<=qop==3&&(rv&&rop==4||s14||f_h7[0]||f_h2v[0][0]);
    hz[3]<=s3v_h&&(int'(selected)+int'(c_cnt[0])>512);
    hz[4]<=wr_pk&&({2'd0,wp}>s4_addr);   // never overwrite an unread source line
@@ -461,8 +490,8 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
   end
  end
  always @(posedge clk or negedge rr[1])begin
-  if(!rr[1])begin s2v_l<=0;s2v_t<=0;s3v_f<=0;s4v_f<=0;end
-  else begin s2v_l<={4{s16_c}};s2v_t<={8{s16_c}};s3v_f<={5{s2v_m}};s4v_f<=s3v_f;end
+  if(!rr[1])begin s2v_l<=0;s2v_t<=0;s2bv_l<=0;s2bv_t<=0;s3v_f<=0;s4v_f<=0;end
+  else begin s2v_l<={4{s16_c}};s2v_t<={8{s16_c}};s2bv_l<=s2v_l;s2bv_t<=s2v_t;s3v_f<={5{s2bv_m}};s4v_f<=s3v_f;end
  end
  always @(posedge clk or negedge rr[2])begin
   if(!rr[2])wp<=0;

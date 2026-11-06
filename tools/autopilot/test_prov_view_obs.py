@@ -58,5 +58,29 @@ class ContractObs(unittest.TestCase):
             self.assertEqual(P.lef_info(f)[3], 7)
 
 
+
+class ContractObsTop(unittest.TestCase):
+    """PROV-OBS-M5 (11-05): default OBS top M5 = PG pin layer, so core_pg_connect M5->M6 lands (no PDN-0006)"""
+
+    def test_default_m5(self):
+        self.assertEqual(P.contract_obs_top({}), 5)
+        self.assertEqual(P.contract_obs_top({"obs_max": None}), 5)
+
+    def test_plan_override(self):
+        self.assertEqual(P.contract_obs_top({"obs_max": "M6"}), 6)
+        self.assertEqual(P.contract_obs_top({"obs_max": "m7"}), 7)
+
+    def test_default_lef_pg_on_top_obs_layer(self):
+        with tempfile.TemporaryDirectory() as d:
+            f = os.path.join(d, "m.lef")
+            pins = [dict(name="a", x=0.1, y=5.0, layer="M4")]
+            open(f, "w").write(P.contract_lef("m", 20.0, 10.0, pins, {"a": "INPUT"}, P.contract_obs_top({})))
+            txt = open(f).read()
+            obs = txt.split("  OBS")[1]
+            self.assertNotIn("LAYER M6", obs)
+            self.assertNotIn("LAYER M7", obs)
+            vdd = txt.split("PIN VDD")[1].split("END VDD")[0]
+            self.assertIn("LAYER M5", vdd)
+
 if __name__ == "__main__":
     unittest.main()

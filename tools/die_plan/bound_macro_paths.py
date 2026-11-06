@@ -69,6 +69,15 @@ def resolve(t, bound_text):
             if whole and whole[1] == module:
                 rows.extend(dict(inst=c["inst"], physical_inst="u_bound." + whole[0] + "." + ".".join(rest),
                                  physical_master=c["module"], asbuilt=head) for c, rest in members)
+                continue
+            # KW-FIX-17 11-05 (S81 serdes, I138 u_phy -> u_core): the plan path already names the BOUND instance
+            # (u_core.u_dec.u_chn, bound u_core = as-built u_lk_ES1 bound whole), only the kit wrapper's u_bound is
+            # missing.  Exactly one bound leaf of that name and no as-built path of that name; preflight still checks
+            # the full path and the leaf module.
+            named = [a for a, v in ab.items() if v[0] == head]
+            if whole is None and len(named) == 1:
+                rows.extend(dict(inst=c["inst"], physical_inst="u_bound." + c["inst"], physical_master=c["module"],
+                                 asbuilt=named[0]) for c, rest in members)
             continue
         if len(common) != 1:
             rows.extend(_resolve_scoped(members, ab))

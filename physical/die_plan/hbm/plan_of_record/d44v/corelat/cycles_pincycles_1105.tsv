@@ -1,0 +1,13 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+ot_hidx_s3_q		selected_v_o,selected_line_o	port	1	HBM-31 (strike-2 RE-FORM) built as I166 hbm-reform-b11@43ced21571 (main 97a021f9a9d): S2B stage registers the per-lane tie-rank one edge after S2, S3..S5 +1; schedule op6 -> op2/op7 min spacing 7 -> 8 is HBM-34 (compiler_core_delta IDX)
+ot_hidx_s3_q		ret,qfault	port	0	I166: unchanged
+ot_hgi_sfu_opsb_output		sr_d,sr_rv	port	2	HBM-33, I166: IREG input regs + ot_hgi_su_lgroup2_lf log-depth select
+ot_hgi_sfu_opsb_output		flt	port	2	HBM-33, I166: fault-only (not priced)
+ot_hgi_sfu_opsa_group0		rd_q	port	2	HBM-28 Part 27 B10 form (bank-input reg + FREG), I158 hbm-reform-b10@cd0682b7e6 (main c299a5dfc10)
+ot_hgi_sfu_opsa_group1		rd_q	port	2	HBM-28, I158
+ot_hgi_sfu_opsb_group		rd	port	2	HBM-28, I158
+ot_hgi_sfu_opsa_group0		flt	port	2	HBM-28, I158: group fault (not priced)
+ot_hgi_sfu_opsa_group1		flt	port	2	HBM-28, I158: group fault (not priced)
+ot_hgi_sfu_opsb_group		flt	port	2	HBM-28, I158: group fault (not priced)
+ot_pdie_serdes_tx		pma_tx	port	1	HBM-29 two-step KP4 parity lookahead (ELA=2, ot_s81_kp4_enc_la.sv), I154 hbm-gaps-3-txla@20d6af45b7 (main 7040684e850); e_flt_o unchanged
+ot_hbm_su_pg_lane1_core		(multiply in->out)	in->out	1	HBM-26 l1r5 MLAT 4 -> 5 (308663537a8, ev74f): +1 per lane1 multiply; FO rule +4 per SU record (compiler_core_delta SU)

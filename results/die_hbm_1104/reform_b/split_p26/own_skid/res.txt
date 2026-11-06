@@ -1,0 +1,7 @@
+oc5 1 SMB_UNIT FAIL ops=20 pass=1 gos=1/29 go_slots_exact=False runs=0 fault=FAULT svg cycle 1035 issuer 0 feed 1 (desc 0 cdc 1 cache 0 prog 0 s1 0 fl 0) None | tree oc5 ok
+oc4 1 SMB_UNIT FAIL ops=20 pass=1 gos=1/29 go_slots_exact=False runs=0 fault=FAULT svg cycle 1039 issuer 0 feed 1 (desc 0 cdc 1 cache 0 prog 0 s1 0 fl 0) None | tree oc4 ok
+oc2 1 SMB_UNIT FAIL ops=20 pass=0 gos=1/29 go_slots_exact=False runs=0 fault=FAULT svg cycle 827 issuer 0 feed 1 (desc 0 cdc 1 cache 0 prog 0 s1 0 fl 0) None | tree oc2 ok
+oc0 1 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988 | tree oc0 ok
+oc1 1 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988 | tree oc1 ok
+ALLDONE
+# read: oc0 skid, oc1 skid + stall: PASS, same counts as the flat. oc5 skid overrun under stall, oc2 ow1, oc4 ow4 under stall: FAIL. cycles= is the same stalled and unstalled, so it does not measure this latency; the +1 word cycle is by construction, not measured.

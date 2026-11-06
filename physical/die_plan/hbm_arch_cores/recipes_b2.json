@@ -1704,7 +1704,8 @@
    "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
   ],
   "defines": [
-   "OT_COLL_ISSUER256_NATIVE32"
+   "OT_COLL_ISSUER256_NATIVE32",
+   "OT_COLL_LINK_RXPRE"
   ],
   "params": {},
   "macros": [
@@ -2669,7 +2670,7 @@
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
   "files_at": {
-   "rtl/hbm_accel/cores_split/reform_1103/ot_hbm_su_static_pgslice_lg__lanes8_11/ot_hbm_su_pg_lane1_core.sv": "8dd205e8bcc"
+   "rtl/hbm_accel/cores_split/reform_1103/ot_hbm_su_static_pgslice_lg__lanes8_11/ot_hbm_su_pg_lane1_core.sv": "308663537a8"
   },
   "source": "DIE-HBM-63 d44v part 6: sub-core of the EQ-PASS ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77 split (over_cap_split/reform_1103, 8dd205e8bcc); parent recipe file set + the split RTL, read at its pin.",
   "rename_top": "ot_hbm_su_pg_lane1_core__mc",
@@ -2744,13 +2745,17 @@
    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
    "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
    "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
-   "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh"
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh",
+   "rtl/hbm_accel/cores_split/reform_1104b/ot_s81_kp4_enc_la.sv",
+   "rtl/hbm_accel/cores_split/reform_1104b/ot_s81_kp4_enc_la2_mat.svh"
   ],
   "defines": [],
-  "params": {},
+  "params": {
+   "ELA": 2
+  },
   "macros": [],
-  "source": "HBM-REFORM-B d44v part 20 sub-core of ot_pdie_serdes; lockstep bench results/die_hbm_1104/reform_b/split_p20/run_eq.sh",
-  "source_commit": "c7546b975b1504036f1b513d28e5dc1675ed9e57",
+  "source": "HBM-REFORM-B d44v part 20 sub-core of ot_pdie_serdes; lockstep bench results/die_hbm_1104/reform_b/split_p20/run_eq.sh; HBM-GAPS-3 11-05 ELA=2 (two-step KP4 parity lookahead, +1 edge, tb_kp4_enc_la.sv / tb_pdie_tx_ela.sv)",
+  "source_commit": "3dd2c0739e5b01f687de50f282ca6fb8c42f407d",
   "read_at_commit": true,
   "util": 0.4
  },
@@ -2807,8 +2812,8 @@
   "macros": [
    "ot_sram_1r1w_256x256_m2_r2c2"
   ],
-  "source": "HBM-REFORM-B d44v part 21 tile of ot_hbm_idx_selector_static_sel; bench results/die_hbm_1104/reform_b/split_p21/run_eq.sh",
-  "source_commit": "b6e90b734ac5f1f5aa89e8e86cf1d3b23a7b7912",
+  "source": "HBM-REFORM-B d44v part 21 tile of ot_hbm_idx_selector_static_sel; bench results/die_hbm_1104/reform_b/split_p21/run_eq.sh; HBM-REFORM-B11 S2B form (er registered after S2; sel outputs +1; op6->op2/op7 spacing +1); bench results/die_hbm_1105/reform_b11/s3q",
+  "source_commit": "729bf4dbae",
   "read_at_commit": true,
   "util": 0.4
  },
@@ -2982,9 +2987,9 @@
    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv"
   ],
   "defines": [],
-  "params": {},
-  "source": "HBM-REFORM-B4 d44v part 25 tile of ot_hbm_svc_wb_kport_q; bench results/die_hbm_1104/reform_b/split_p25/run_eq.sh",
-  "source_commit": "69d1b175663e0b62a3c8c2883404342f3b2e22b9",
+  "params": {"HREG": 1},
+  "source": "HBM-REFORM-B4 d44v part 25 tile of ot_hbm_svc_wb_kport_q; bench results/die_hbm_1104/reform_b/split_p25/run_eq.sh; HREG=1 (HBM-GAPS-3 11-05): registered heads + pick, one-hot K switch, cycle-exact vs HREG=0 (run_lock.sh)",
+  "source_commit": "358e13d198d73d010f855e29ff4f3ac167430918",
   "read_at_commit": true,
   "util": 0.45
  },
@@ -3011,14 +3016,17 @@
   "params": {},
   "files": [
    "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
    "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv"
   ],
   "macros": [
    "ot_sram_1r1w_256x256_m2_r2c2"
   ],
-  "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27",
+  "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B9 log-depth lgroup2 selects (ot_hgi_su_lgroup2_lf, yosys equiv vs ot_hgi_su_lgroup2); HBM-REFORM-B9 RE-FORM lgroup2_lf BREG=1 (registered bank inputs, rd +1 edge); HBM-REFORM-B10 IREG+FREG (registered tile inputs + registered per-bank fault terms, rd +2 / flt +2)",
   "top": "ot_hgi_sfu_opsb_group",
-  "util": 0.45
+  "util": 0.45,
+  "source_commit": "30d2553b62",
+  "read_at_commit": true
  },
  "ot_hgi_sfu_opsa_rest": {
   "defines": [],
@@ -3062,14 +3070,17 @@
   "params": {},
   "files": [
    "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
    "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv"
   ],
   "macros": [
    "ot_sram_1r1w_256x256_m2_r2c2"
   ],
-  "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27",
+  "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B11 ev74 RE-FORM: IREG + lgroup2_lf (log lane-write / sector-read selects) + BREG + FREG, sr_d/sr_rv/flt +2; bench results/die_hbm_1105/reform_b11/opsb_output",
   "top": "ot_hgi_sfu_opsb_output",
-  "util": 0.45
+  "util": 0.45,
+  "source_commit": "729bf4dbae",
+  "read_at_commit": true
  },
  "ot_hgi_sfu_opsa_group1": {
   "defines": [],
@@ -3078,12 +3089,15 @@
   "macros": [
    "ot_sram_1r1w_256x256_m2_r2c2"
   ],
-  "source": "HBM-FORM-SPLIT d44v part 27: tile of ot_hgi_sfu_core_split3__opstore_a; bench results/die_hbm_1105/form_split/p27",
+  "source": "HBM-FORM-SPLIT d44v part 27: tile of ot_hgi_sfu_core_split3__opstore_a; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B9 log-depth lgroup2 selects (ot_hgi_su_lgroup2_lf, yosys equiv vs ot_hgi_su_lgroup2); HBM-REFORM-B9 RE-FORM lgroup2_lf BREG=1 (registered bank inputs, rd +1 edge); HBM-REFORM-B10 IREG+FREG (registered tile inputs + registered per-bank fault terms, rd +2 / flt +2)",
   "top": "ot_hgi_sfu_opsa_group1",
   "files": [
    "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
    "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsa_group.sv"
-  ]
+  ],
+  "source_commit": "30d2553b62",
+  "read_at_commit": true
  },
  "ot_hgi_sfu_opsa_group0": {
   "defines": [],
@@ -3092,12 +3106,15 @@
   "macros": [
    "ot_sram_1r1w_256x256_m2_r2c2"
   ],
-  "source": "HBM-FORM-SPLIT d44v part 27: tile of ot_hgi_sfu_core_split3__opstore_a; bench results/die_hbm_1105/form_split/p27",
+  "source": "HBM-FORM-SPLIT d44v part 27: tile of ot_hgi_sfu_core_split3__opstore_a; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B9 log-depth lgroup2 selects (ot_hgi_su_lgroup2_lf, yosys equiv vs ot_hgi_su_lgroup2); HBM-REFORM-B9 RE-FORM lgroup2_lf BREG=1 (registered bank inputs, rd +1 edge); HBM-REFORM-B10 IREG+FREG (registered tile inputs + registered per-bank fault terms, rd +2 / flt +2)",
   "top": "ot_hgi_sfu_opsa_group0",
   "files": [
    "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
    "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsa_group.sv"
-  ]
+  ],
+  "source_commit": "30d2553b62",
+  "read_at_commit": true
  },
  "ot_hgi_coll_gqi_issue": {
   "defines": [],
@@ -3207,7 +3224,7 @@
   "macros": [],
   "defines": [],
   "source": "HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/",
-  "source_commit": "488794d287c337c1c617bd532a3c37f9e416a082",
+  "source_commit": "767a7f2d1e1b419e29714c1f9ed05990f29b18e7",
   "read_at_commit": true,
   "util": 0.45
  },
@@ -3229,8 +3246,8 @@
    "ot_sram_1r1w_256x256_m2_r2c2"
   ],
   "defines": [],
-  "source": "HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/",
-  "source_commit": "488794d287c337c1c617bd532a3c37f9e416a082",
+  "source": "HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/; HBM-REFORM-B8 landing head register (re-form after 2 strikes)",
+  "source_commit": "4ce474326fbc9702e33306b430af36bfb2bcb924",
   "read_at_commit": true,
   "util": 0.45
  },
@@ -3336,5 +3353,64 @@
   "source": "DIE-HBM-66 11-05 COORD ruling A: S81 row Sinkhorn on HBM tail; lockstep results/die_hbm_1105/sk_fsr (FSR_EQ PASS, mutants FAIL).",
   "top": "ot_hbm_hc_tail_rest_core_fsr",
   "synth_memory_max_bits": 16384
+ },
+ "ot_hbm_idx_topk_link_static__ev74_pd3": {
+  "defines": [],
+  "params": {},
+  "util": 0.45,
+  "source": "HBM-REFORM-B10: ev74_tall topk_link slot as ONE core = part 30 PD=3 ingest + store tiles composed (ot_hbm_idx_topk_link_pd3); outputs +3 vs WRITE_PIPE_STAGES=2; bench results/die_hbm_1105/form_split/p30/RESULTS_B10.txt",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_link_pd3.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_tiles.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
+  ],
+  "top": "ot_hbm_idx_topk_link_pd3",
+  "macros": [
+   "ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "source_commit": "30d2553b62",
+  "read_at_commit": true
+ },
+ "hfd_hgi_vms_gnw_cw": {
+  "top": "hfd_hgi_vms_gnw_cw",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/glue/hfd_hgi_vms_glue_nw_pieces.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/glue/ot_vms_glue_pc.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "HBM-FORM-SPLIT-8+REFORM-B11 glue_d15r RE-FORM: piece of hfd_hgi_vms_glue_nw_t (port-cut, 0 added cycles); bench results/die_hbm_1105/form_split/glue_b11/",
+  "source_commit": "12ad6ca444",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "hfd_hgi_vms_gnw_ccw": {
+  "top": "hfd_hgi_vms_gnw_ccw",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/glue/hfd_hgi_vms_glue_nw_pieces.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/glue/ot_vms_glue_pc.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "HBM-FORM-SPLIT-8+REFORM-B11 glue_d15r RE-FORM: piece of hfd_hgi_vms_glue_nw_t (port-cut, 0 added cycles); bench results/die_hbm_1105/form_split/glue_b11/",
+  "source_commit": "12ad6ca444",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "hfd_hgi_vms_gnw_hub": {
+  "top": "hfd_hgi_vms_gnw_hub",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/glue/hfd_hgi_vms_glue_nw_pieces.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/glue/ot_vms_glue_pc.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "HBM-FORM-SPLIT-8+REFORM-B11 glue_d15r RE-FORM: piece of hfd_hgi_vms_glue_nw_t (port-cut, 0 added cycles); bench results/die_hbm_1105/form_split/glue_b11/",
+  "source_commit": "12ad6ca444",
+  "read_at_commit": true,
+  "util": 0.45
  }
 }

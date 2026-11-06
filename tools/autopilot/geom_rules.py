@@ -95,7 +95,7 @@ def load(path, extra=None):
             elif t == "O":
                 ex["mobs"][f[1]] = set(x for x in f[2:] if x)
             elif t == "I":
-                ex.setdefault("macro_ports", {})[f[1]] = dict(v.split(":",1) for v in f[2:])
+                ex.setdefault("macro_ports", {})[f[1]] = dict(v.split(":",1) for v in f[2:] if v)  # a master with no signal port dumps "I\tM\t"
             elif t == "Q":
                 ex["status"][int(f[1])] = f[2]
             elif t == "MC":               # hard-macro clock-pin XY (geom_dump.tcl): nearest split by pin, not centre
