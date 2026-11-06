@@ -3654,5 +3654,25 @@
       "ot_sram_1r1w_256x256_m2_r2c2",
       "ot_sram_1rw_256x64_m4_r2c2"
     ]
+  },
+  "ot_hfd_coll_q3_body_ctl__mul4rt_rcp1_cfgcase": {
+    "defines": [
+      "OT_Q3CTL_TGTQ1",
+      "OT_Q3CTL_RCP1",
+      "OT_Q3CTL_MUL4_RT",
+      "OT_Q3CTL_CFG_CASE"
+    ],
+    "params": {},
+    "util": 0.45,
+    "source": "Optional constant-step issuer CFG D-cone; actual flattened D universally proved, original FF/clock/reset preserved; zero added cycles. Physical closure pending.",
+    "top": "ot_hfd_coll_q3_body_ctl",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105s/q3/ot_hfd_coll_q3_body_ctl.sv",
+      "rtl/hbm_accel/cores_split/reform_1106/ot_bodyctl_cfg_case.sv"
+    ],
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2",
+      "ot_sram_1rw_256x64_m4_r2c2"
+    ]
   }
 }
