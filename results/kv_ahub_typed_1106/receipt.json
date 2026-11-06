@@ -1,0 +1,39 @@
+[
+ {
+  "inst": "ahub",
+  "module": "qkd_ahub",
+  "native_leaf": "u_ahub",
+  "native_module": "qkd_ahub_static_dw",
+  "native_params": {
+   "AP_OFS": "64'hffddffdcffdfffdf",
+   "FR_OFS": "-7",
+   "Z_IN_STRIDE": "4"
+  },
+  "clock_net": "ck",
+  "clock_copies": 7,
+  "am_projection": {
+   "am0": {
+    "native": "a0",
+    "kept_bits": "35:2,0",
+    "unexposed_bit": 1
+   },
+   "am1": {
+    "native": "a1",
+    "kept_bits": "35:2,0",
+    "unexposed_bit": 1
+   },
+   "am2": {
+    "native": "a2",
+    "kept_bits": "35:2,0",
+    "unexposed_bit": 1
+   },
+   "am3": {
+    "native": "a3",
+    "kept_bits": "35:2,0",
+    "unexposed_bit": 1
+   }
+  },
+  "cycles_changed": 0,
+  "tieoffs": []
+ }
+]

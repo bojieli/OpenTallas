@@ -673195,7 +673195,10 @@
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ahub_pins_r27_track.json"
+     "pins_file": "pins/qkd_ahub_pins_r27_track.json",
+     "native_boundary_adapter": "qkd_ahub_ck7_r27",
+     "physical_inst": "u_bound.u_ahub",
+     "physical_master": "qkd_ahub"
     },
     {
      "inst": "kvs_ctl",
@@ -673214,7 +673217,9 @@
       0.0
      ],
      "pins_file": "pins/kvs_ctl_pins.json",
-     "note": "qkd_kvs_ctl current-source candidate; historical d20111be0 views are not current after the 7076-pin refresh; exact rebuilt boundary/physical signoff required; retained origin + [0.108, 0.012] platform-track basis | KV-PLAN3 v3.9e: re-outlined 475.2^2 -> 371.52^2, x-centred on the type (GEOM-REVIEW-2 05:45 FAIL: S half ~70 % empty)"
+     "note": "qkd_kvs_ctl current-source candidate; historical d20111be0 views are not current after the 7076-pin refresh; exact rebuilt boundary/physical signoff required; retained origin + [0.108, 0.012] platform-track basis | KV-PLAN3 v3.9e: re-outlined 475.2^2 -> 371.52^2, x-centred on the type (GEOM-REVIEW-2 05:45 FAIL: S half ~70 % empty)",
+     "physical_inst": "u_bound.u_kvs_ctl",
+     "physical_master": "qkd_kvs_ctl"
     }
    ],
    "face_pins_per_um": 12.1,

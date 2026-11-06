@@ -21,7 +21,7 @@ NATIVE_CORE_BODY = {"qfd_tile_nk_a0c": "qfd_tile_nk_rp2_romleaf_rr", "qfd_tile_n
 
 def swap_native_cores(bound, hard_cores):
     """-> (bound, receipt): each planned A0 core u_t<r><c> replaces its native bound leaf u_u_t_<r>_<c> (see above)."""
-    receipt = []
+    bound, receipt = swap_ahub_boundary(bound, hard_cores)
     for core in hard_cores or []:
         master, inst = core.get("module"), core.get("inst", "")
         name = re.fullmatch(r"u_t(\d)(\d)", inst)
@@ -156,4 +156,50 @@ def wire(bound, module, rows):
         declarations = "".join(f"    input wire {p},  // planned early-core clock\n" for p in ports
                                if not re.search(r"^\s*input\s+(?:wire\s+)?" + re.escape(p) + r"\s*[,)]", bound, re.M))
         bound = header.sub(lambda m: m.group(1) + declarations, bound, count=1)
+    return bound, receipt
+
+
+def swap_ahub_boundary(bound, hard_cores):
+    """Opt-in exact native AHUB -> its already signed ck7/35-bit hard boundary.
+
+    The parent's plan already projects am[35:2],am[0]; bit 1 is not exposed.
+    All seven ck pins belong to the same core domain. No state or cycle changes.
+    """
+    receipt = []
+    for core in hard_cores or []:
+        if core.get("native_boundary_adapter") != "qkd_ahub_ck7_r27":
+            continue
+        if core.get("module") != "qkd_ahub" or core.get("inst") != "ahub":
+            raise ValueError("AHUB boundary adapter requires qkd_ahub ahub")
+        pat = re.compile(r"^([ \t]+)qkd_ahub_static_dw[ \t]+#\(([^\n]*)\)[ \t]+u_ahub[ \t]*\(", re.M)
+        heads = list(pat.finditer(bound))
+        if len(heads) != 1:
+            raise ValueError(f"AHUB boundary: expected one native u_ahub, got {len(heads)}")
+        head = heads[0]
+        params = dict(re.findall(r"\.(\w+)\(([^()]*)\)", head.group(2)))
+        params = {k: re.sub(r"[\s_]", "", v).lower() for k, v in params.items()}
+        expected = {"AP_OFS": "64'hffddffdcffdfffdf", "FR_OFS": "-7", "Z_IN_STRIDE": "4"}
+        if params != expected:
+            raise ValueError(f"AHUB boundary: native parameter signature changed: {params}")
+        end = bound.find("\n" + head.group(1) + ");", head.end())
+        if end < 0:
+            raise ValueError("AHUB boundary: unclosed native instance")
+        body = bound[head.end():end]
+        clocks = re.findall(r"\.ck\(([^()]*)\)", body)
+        if len(clocks) != 1 or not re.fullmatch(r"[A-Za-z_$][\w$]*", clocks[0].strip()):
+            raise ValueError("AHUB boundary: expected one simple native ck net")
+        clock = clocks[0].strip()
+        body = re.sub(r"\.ck\([^()]*\)", ".ck({7{" + clock + "}})", body, count=1)
+        projections = {}
+        for pin in ("am0", "am1", "am2", "am3"):
+            values = re.findall(r"\." + pin + r"\(([^()]*)\)", body)
+            if len(values) != 1 or not re.fullmatch(r"[A-Za-z_$][\w$]*", values[0].strip()):
+                raise ValueError(f"AHUB boundary: expected one whole bus for {pin}")
+            net = values[0].strip()
+            body = re.sub(r"\." + pin + r"\([^()]*\)", "." + pin + "({" + net + "[35:2], " + net + "[0]})", body, count=1)
+            projections[pin] = dict(native=net, kept_bits="35:2,0", unexposed_bit=1)
+        bound = bound[:head.start()] + head.group(1) + "qkd_ahub u_ahub (" + body + bound[end:]
+        receipt.append(dict(inst="ahub", module="qkd_ahub", native_leaf="u_ahub", native_module="qkd_ahub_static_dw",
+                            native_params=params, clock_net=clock, clock_copies=7, am_projection=projections,
+                            cycles_changed=0, tieoffs=[]))
     return bound, receipt

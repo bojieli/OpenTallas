@@ -1,0 +1,302 @@
+
+-- Executing script file `/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant_v2.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_ahub_static_dw'.
+Generating RTLIL representation for module `\qkd_ahub'.
+Generating RTLIL representation for module `\gold'.
+Generating RTLIL representation for module `\gate'.
+Successfully finished Verilog frontend.
+
+2. Executing PROC pass (convert processes to netlists).
+
+2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 8 assignments to connections.
+
+2.4. Executing PROC_INIT pass (extract init attributes).
+
+2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\qkd_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:8$5'.
+Creating decoders for process `\qkd_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:7$4'.
+Creating decoders for process `\qkd_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:6$3'.
+Creating decoders for process `\qkd_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:5$2'.
+Creating decoders for process `\qkd_ahub_static_dw.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:2$1'.
+
+2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\qkd_ahub.\am3' using process `\qkd_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:8$5'.
+  created $dff cell `$procdff$6' with positive edge clock.
+Creating register for signal `\qkd_ahub.\am2' using process `\qkd_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:7$4'.
+  created $dff cell `$procdff$7' with positive edge clock.
+Creating register for signal `\qkd_ahub.\am1' using process `\qkd_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:6$3'.
+  created $dff cell `$procdff$8' with positive edge clock.
+Creating register for signal `\qkd_ahub.\am0' using process `\qkd_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:5$2'.
+  created $dff cell `$procdff$9' with positive edge clock.
+Creating register for signal `\qkd_ahub_static_dw.\am0' using process `\qkd_ahub_static_dw.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:2$1'.
+  created $dff cell `$procdff$10' with positive edge clock.
+Creating register for signal `\qkd_ahub_static_dw.\am1' using process `\qkd_ahub_static_dw.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:2$1'.
+  created $dff cell `$procdff$11' with positive edge clock.
+Creating register for signal `\qkd_ahub_static_dw.\am2' using process `\qkd_ahub_static_dw.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:2$1'.
+  created $dff cell `$procdff$12' with positive edge clock.
+Creating register for signal `\qkd_ahub_static_dw.\am3' using process `\qkd_ahub_static_dw.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:2$1'.
+  created $dff cell `$procdff$13' with positive edge clock.
+
+2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `qkd_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:8$5'.
+Removing empty process `qkd_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:7$4'.
+Removing empty process `qkd_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:6$3'.
+Removing empty process `qkd_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:5$2'.
+Removing empty process `qkd_ahub_static_dw.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:2$1'.
+Cleaned up 0 empty switches.
+
+2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate.
+Optimizing module gold.
+Optimizing module qkd_ahub.
+Optimizing module qkd_ahub_static_dw.
+
+3. Executing MITER pass (creating miter circuit).
+Creating miter cell "miter" with gold cell "gold" and gate cell "gate".
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \gate
+Used module:         \qkd_ahub
+Used module:     \gold
+Used module:         \qkd_ahub_static_dw
+Parameter \AP_OFS = 64'1111111111011101111111111101110011111111110111111111111111011111
+Parameter \FR_OFS = 32'11111111111111111111111111111001
+Parameter \Z_IN_STRIDE = 4
+
+4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_ahub_static_dw'.
+Parameter \AP_OFS = 64'1111111111011101111111111101110011111111110111111111111111011111
+Parameter \FR_OFS = 32'11111111111111111111111111111001
+Parameter \Z_IN_STRIDE = 4
+Generating RTLIL representation for module `$paramod$d6cd6af560d15b65fd8da0f1eecb18b3b4c0ca4b\qkd_ahub_static_dw'.
+
+4.3. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \gate
+Used module:         \qkd_ahub
+Used module:     \gold
+Used module:         $paramod$d6cd6af560d15b65fd8da0f1eecb18b3b4c0ca4b\qkd_ahub_static_dw
+
+4.4. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \gate
+Used module:         \qkd_ahub
+Used module:     \gold
+Used module:         $paramod$d6cd6af560d15b65fd8da0f1eecb18b3b4c0ca4b\qkd_ahub_static_dw
+Removing unused module `\qkd_ahub_static_dw'.
+Removed 1 unused modules.
+
+5. Executing FLATTEN pass (flatten design).
+Deleting now unused module gate.
+Deleting now unused module gold.
+Deleting now unused module qkd_ahub.
+Deleting now unused module $paramod$d6cd6af560d15b65fd8da0f1eecb18b3b4c0ca4b\qkd_ahub_static_dw.
+<suppressed ~4 debug messages>
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+6.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 4 assignments to connections.
+
+6.4. Executing PROC_INIT pass (extract init attributes).
+
+6.5. Executing PROC_ARST pass (detect async resets in processes).
+
+6.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+6.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\miter.$flatten\gold.\u_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:2$25'.
+
+6.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+6.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\miter.\gold.u_ahub.am0' using process `\miter.$flatten\gold.\u_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:2$25'.
+  created $dff cell `$procdff$30' with positive edge clock.
+Creating register for signal `\miter.\gold.u_ahub.am1' using process `\miter.$flatten\gold.\u_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:2$25'.
+  created $dff cell `$procdff$31' with positive edge clock.
+Creating register for signal `\miter.\gold.u_ahub.am2' using process `\miter.$flatten\gold.\u_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:2$25'.
+  created $dff cell `$procdff$32' with positive edge clock.
+Creating register for signal `\miter.\gold.u_ahub.am3' using process `\miter.$flatten\gold.\u_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:2$25'.
+  created $dff cell `$procdff$33' with positive edge clock.
+
+6.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `miter.$flatten\gold.\u_ahub.$proc$/srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/mutant.sv:2$25'.
+Cleaned up 0 empty switches.
+
+6.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+7. Executing OPT pass (performing simple optimizations).
+
+7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 18 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 18 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+7.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 0 unused cells and 8 unused wires.
+<suppressed ~1 debug messages>
+
+7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+7.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+7.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+7.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 18 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+7.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+
+7.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+7.16. Finished fast OPT passes. (There is nothing left to do.)
+
+8. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 18 cells to SAT database.
+Final init constraint equation: { \gate.u_ahub.am3 \gate.u_ahub.am2 \gate.u_ahub.am1 \gate.u_ahub.am0 \gold.u_ahub.am0 \gold.u_ahub.am1 \gold.u_ahub.am2 \gold.u_ahub.am3 } = 284'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 18 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 18 cells to SAT database.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 18 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+** Trying induction with length 1 **
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Imported 18 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+[base case 1] Solving problem with 6634 variables and 16390 clauses..
+SAT temporal induction proof finished - model found for base case: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Time Signal Name                   Dec       Hex                                     Bin
+  ---- --------------------- ----------- --------- ---------------------------------------
+  init \gate.u_ahub.am0               --        --     00000000000000000000000000000000000
+  init \gate.u_ahub.am1               --        --     00000000000000000000000000000000000
+  init \gate.u_ahub.am2               --        --     00000000000000000000000000000000000
+  init \gate.u_ahub.am3               --        --     00000000000000000000000000000000000
+  init \gold.u_ahub.am0               --        --    000000000000000000000000000000000000
+  init \gold.u_ahub.am1               --        --    000000000000000000000000000000000000
+  init \gold.u_ahub.am2               --        --    000000000000000000000000000000000000
+  init \gold.u_ahub.am3               --        --    000000000000000000000000000000000000
+  ---- --------------------- ----------- --------- ---------------------------------------
+     1 \in_ap0 [35:0]                 --        --    000000000000000000000000000000000100
+     1 \in_ap1 [35:0]                 --        --    000000000000000000000000000000000000
+     1 \in_ap2 [35:0]                 --        --    000110101000100000000000010100000100
+     1 \in_ap3 [35:0]                 --        --    000000000000000000000000010000110100
+     1 \trigger                        0         0                                       0
+  ---- --------------------- ----------- --------- ---------------------------------------
+     2 \in_ap0 [35:0]                 --        --    001000000000000000010000000110000001
+     2 \in_ap1 [35:0]                 --        --    000000000000000000000000000000000000
+     2 \in_ap2 [35:0]                 --        --    000000000000000000000000000000000000
+     2 \in_ap3 [35:0]                 --        --    000000000000000000000000000000000000
+     2 \trigger                        1         1                                       1
+  ---- --------------------- ----------- --------- ---------------------------------------
+     3 \in_ap0 [35:0]                 --        --    000000000000000000000000000000000100
+     3 \in_ap1 [35:0]                 --        --    000000000000000000000000000000000000
+     3 \in_ap2 [35:0]                 --        --    000000000000000000000000000000000000
+     3 \in_ap3 [35:0]                 --        --    000000000000000000000000000000000000
+     3 \trigger                        1         1                                       1
+  ---- --------------------- ----------- --------- ---------------------------------------
+     4 \in_ap0 [35:0]                 --        --    000000000000000000000000000000000000
+     4 \in_ap1 [35:0]                 --        --    000000000000000000000000000000000000
+     4 \in_ap2 [35:0]                 --        --    000000000000000000000000000000000000
+     4 \in_ap3 [35:0]                 --        --    000000000000000000000000000000000000
+     4 \trigger                        1         1                                       1
+
+ERROR: Called with -verify and proof did fail!
