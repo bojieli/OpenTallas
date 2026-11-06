@@ -1236051,7 +1236051,8 @@
        ],
        "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
        "ring_place": "ff",
-       "resize_stations_1102": "DIE-KV-62/stations 11-02: fill_axis x dropped. The bus pins are a y column on the E face, so the +x column form refused pinslot ('pins not an x row in key order: old column fill') and packed the ring bit-agnostic over the band (kv3_io_ft_v1 wave attempt_2 ft0_i pin_reg p50 74.9 / max 153.8 um). The +ff y-column pinslot form (as the W twin ft2_i) puts each bit's slot flops in the rows beside its own pin."
+       "resize_stations_1102": "DIE-KV-62/stations 11-02: fill_axis x dropped. The bus pins are a y column on the E face, so the +x column form refused pinslot ('pins not an x row in key order: old column fill') and packed the ring bit-agnostic over the band (kv3_io_ft_v1 wave attempt_2 ft0_i pin_reg p50 74.9 / max 153.8 um). The +ff y-column pinslot form (as the W twin ft2_i) puts each bit's slot flops in the rows beside its own pin.",
+       "reform_1105": "DIE-KV-80/REFORM 11-05 (COORD 19:37 (3)(c)(d) RE-FORM, util <= 0.45): pinslot off (budgets.cland_pinslot_off_types) and out of cland_pinslot_dense_types: the dense y-column form packed the ring flops body to body in a ~10 um strip at the pins (10-um bins at 0.90 util, global 0.7 %); GRT-time io hold pads then boxed in net225/net226 (GRT-0183, attempts 5/6). The ring flops now fill this whole band bit-major at the band fill spread (ring + pads ~1730 um2 over the 4526 um2 band = ~0.38). Rect, pins and outline unchanged."
       },
       "ft1_i": {
        "rect_um": [
@@ -1236107,7 +1236108,8 @@
        ],
        "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
        "ring_place": "ff",
-       "resize_ioft_1101": "DIE-KV-60/ioft 11-01: ring_place ff (only the ring flops FIRM, ring logic to GPL, as twin band ft0_i); the all-cells FIRM ring jammed GRT (391k congestion at the W landing)"
+       "resize_ioft_1101": "DIE-KV-60/ioft 11-01: ring_place ff (only the ring flops FIRM, ring logic to GPL, as twin band ft0_i); the all-cells FIRM ring jammed GRT (391k congestion at the W landing)",
+       "reform_1105": "DIE-KV-80/REFORM 11-05 (COORD 19:37 (3)(c)(d) RE-FORM, util <= 0.45): pinslot off (budgets.cland_pinslot_off_types) and out of cland_pinslot_dense_types: the dense y-column form packed the ring flops body to body in a ~10 um strip at the pins (10-um bins at 0.90 util, global 0.7 %); GRT-time io hold pads then boxed in net225/net226 (GRT-0183, attempts 5/6). The ring flops now fill this whole band bit-major at the band fill spread (ring + pads ~1730 um2 over the 4526 um2 band = ~0.38). Rect, pins and outline unchanged."
       },
       "ft3_i": {
        "rect_um": [
@@ -1260734,7 +1260736,8 @@
        ],
        "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
        "ring_place": "ff",
-       "resize_stations_1102": "DIE-KV-62/stations 11-02: fill_axis x dropped. The bus pins are a y column on the E face, so the +x column form refused pinslot ('pins not an x row in key order: old column fill') and packed the ring bit-agnostic over the band (kv3_io_ft_v1 wave attempt_2 ft0_i pin_reg p50 74.9 / max 153.8 um). The +ff y-column pinslot form (as the W twin ft2_i) puts each bit's slot flops in the rows beside its own pin."
+       "resize_stations_1102": "DIE-KV-62/stations 11-02: fill_axis x dropped. The bus pins are a y column on the E face, so the +x column form refused pinslot ('pins not an x row in key order: old column fill') and packed the ring bit-agnostic over the band (kv3_io_ft_v1 wave attempt_2 ft0_i pin_reg p50 74.9 / max 153.8 um). The +ff y-column pinslot form (as the W twin ft2_i) puts each bit's slot flops in the rows beside its own pin.",
+       "reform_1105": "DIE-KV-80/REFORM 11-05 (COORD 19:37 (3)(c)(d) RE-FORM, util <= 0.45): pinslot off (budgets.cland_pinslot_off_types) and out of cland_pinslot_dense_types: the dense y-column form packed the ring flops body to body in a ~10 um strip at the pins (10-um bins at 0.90 util, global 0.7 %); GRT-time io hold pads then boxed in net225/net226 (GRT-0183, attempts 5/6). The ring flops now fill this whole band bit-major at the band fill spread (ring + pads ~1730 um2 over the 4526 um2 band = ~0.38). Rect, pins and outline unchanged."
       },
       "ft1_i": {
        "rect_um": [
@@ -1260790,7 +1260793,8 @@
        ],
        "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
        "ring_place": "ff",
-       "resize_ioft_1101": "DIE-KV-60/ioft 11-01: ring_place ff (only the ring flops FIRM, ring logic to GPL, as twin band ft0_i); the all-cells FIRM ring jammed GRT (391k congestion at the W landing)"
+       "resize_ioft_1101": "DIE-KV-60/ioft 11-01: ring_place ff (only the ring flops FIRM, ring logic to GPL, as twin band ft0_i); the all-cells FIRM ring jammed GRT (391k congestion at the W landing)",
+       "reform_1105": "DIE-KV-80/REFORM 11-05 (COORD 19:37 (3)(c)(d) RE-FORM, util <= 0.45): pinslot off (budgets.cland_pinslot_off_types) and out of cland_pinslot_dense_types: the dense y-column form packed the ring flops body to body in a ~10 um strip at the pins (10-um bins at 0.90 util, global 0.7 %); GRT-time io hold pads then boxed in net225/net226 (GRT-0183, attempts 5/6). The ring flops now fill this whole band bit-major at the band fill spread (ring + pads ~1730 um2 over the 4526 um2 band = ~0.38). Rect, pins and outline unchanged."
       },
       "ft3_i": {
        "rect_um": [
@@ -1708223,10 +1708227,10 @@
      "bands": {
       "i_host_fdi": {
        "rect_um": [
-        1721.52,
-        17.28,
-        1883.52,
-        45.36
+        1883.7,
+        54.0,
+        1895.4,
+        560.0
        ],
        "width": 523,
        "ring_width": 576,
@@ -1708236,7 +1708240,7 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 381.438,
+       "max_pin_to_band_hop_um": 357.662,
        "area_reserve_um2": 4521.621,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "reset_sites_avoided_um": [
@@ -1708255,12 +1708259,13 @@
        ],
        "instance": "u_cland_i_host_fdi",
        "resized_from_um": [
-        1872.72,
+        1721.52,
         17.28,
         1883.52,
-        436.32
+        45.36
        ],
-       "resize": "DIE-KV-47-SD one-block re-site: band off the declared x6 PHY macro / VDDPHY region (ring_ff reserve)"
+       "resize": "DIE-KV-80/REFORM 11-05 (COORD 19:37 (3)(c)(d) RE-FORM, util <= 0.45): band back to the E channel beside its pins (x 1883.70-1895.40, y 54-560, 5920 um2 >= reserve 4521.6, clear of i_host_link_rst_n band and the avoided reset sites at x <= 1881.36), ring_place ff (flops FIRM bit-major, ring logic to GPL) and pinslot off (band fill). Why: attempt 5 GRT-0116, congestion 137k of 138k markers on u_cland_i_host_fdi nets around the PHY corner x 1500-1900 y 0-250: the ring sat in the bottom strip 381 um from its pins and placed FIRM with its logic, so all 523 bits went round the macro corner (M1-M5 OBS over the PHY). Outline, pins, macro site unchanged.",
+       "ring_place": "ff"
       },
       "i_host_link_rst_n": {
        "rect_um": [
@@ -1709697,10 +1709702,10 @@
      "bands": {
       "i_host_fdi": {
        "rect_um": [
-        1721.52,
-        17.28,
-        1883.52,
-        45.36
+        1883.7,
+        54.0,
+        1895.4,
+        560.0
        ],
        "width": 522,
        "ring_width": 576,
@@ -1709710,7 +1709715,7 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 381.475,
+       "max_pin_to_band_hop_um": 357.662,
        "area_reserve_um2": 4521.621,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "reset_sites_avoided_um": [
@@ -1709729,12 +1709734,13 @@
        ],
        "instance": "u_cland_i_host_fdi",
        "resized_from_um": [
-        1872.72,
+        1721.52,
         17.28,
         1883.52,
-        436.32
+        45.36
        ],
-       "resize": "DIE-KV-47-SD one-block re-site: band off the declared x6 PHY macro / VDDPHY region (ring_ff reserve)"
+       "resize": "DIE-KV-80/REFORM 11-05 (COORD 19:37 (3)(c)(d) RE-FORM, util <= 0.45): band back to the E channel beside its pins (x 1883.70-1895.40, y 54-560, 5920 um2 >= reserve 4521.6, clear of i_host_link_rst_n band and the avoided reset sites at x <= 1881.36), ring_place ff (flops FIRM bit-major, ring logic to GPL) and pinslot off (band fill). Why: attempt 5 GRT-0116, congestion 137k of 138k markers on u_cland_i_host_fdi nets around the PHY corner x 1500-1900 y 0-250: the ring sat in the bottom strip 381 um from its pins and placed FIRM with its logic, so all 523 bits went round the macro corner (M1-M5 OBS over the PHY). Outline, pins, macro site unchanged.",
+       "ring_place": "ff"
       },
       "i_host_link_rst_n": {
        "rect_um": [
@@ -2639347,8 +2639353,6 @@
    "kv3_io_cor_v1"
   ],
   "cland_pinslot_dense_types": [
-   "kv3_io_ft",
-   "kv3_io_ft_v1",
    "kv3_hroot",
    "kv3_hgi_v5"
   ],
@@ -2639356,7 +2639360,11 @@
    "kv3_io_cor_v1",
    "kv3_hgi",
    "kv3_hgi_v3",
-   "kv3_hgi_v4"
+   "kv3_hgi_v4",
+   "kv3_io_ft",
+   "kv3_io_ft_v1",
+   "kv3_sys_SD",
+   "kv3_sys_SD_v1"
   ]
  },
  "census": [
