@@ -98,6 +98,8 @@ def pdn_text(top_layer="M5", macros=False):
         raise ValueError("HBM PDN top layer must be M5 or M6")
     text = PDN
     if top_layer == "M6":
+        text = text.replace("follow-pins + M5 stripes = core PG pins on the partition M5 grid",
+                            "follow-pins + M5/M6 stripes = core PG pins on M6")
         text = text.replace("-pins {M5}", "-pins {M6}")
         text += ("# Opt-in real M6 PG; parent must reserve M6 and land from M7.\n"
                  "add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {4.32} -offset {1.968}\n"
