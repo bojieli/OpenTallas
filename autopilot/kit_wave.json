@@ -1,7 +1,7 @@
 {
  "enabled": true,
  "max_inflight": 300,
- "max_launch_per_tick": 40,
+ "max_launch_per_tick": 12,
  "geom_sample": 5,
  "hosts": [
   "epyc5",
@@ -505,8 +505,7 @@
     "intel2"
    ],
    "gen_hosts": [
-    "epyc5",
-    "epyc6"
+    "epyc4"
    ],
    "place_prefer": [
     "epyc5",
@@ -2639,8 +2638,7 @@
     "hd_serdes@2": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch"
    },
    "gen_hosts": [
-    "epyc5",
-    "epyc6"
+    "epyc4"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": false,
@@ -4428,8 +4426,7 @@
     "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch"
    },
    "gen_hosts": [
-    "epyc5",
-    "epyc6"
+    "epyc4"
    ],
    "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "retry_fix": {
