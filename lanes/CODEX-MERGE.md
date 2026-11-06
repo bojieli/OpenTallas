@@ -53,3 +53,5 @@ CODEX took over ROOT-MERGE-41 on codex/root-merge-1105. Own sparse tree intel2:/
 2026-11-06 02:48 PST: dormantROMQ8289publishedmaina17b272124cea38028d253e1641b3d49a7846a47==origin/flow-aj-s81. Exactly5newunreferencedfiles, IOREG0transparent; optinwhole605input/131output captures+2interface/+1childreset.11934wholeword/2400resetchecks+4mutants ownerproof, no rerun. Noexistingmodule/plan/constraintchange orparentadoption/physicalclaim.
 
 2026-11-06 02:49 PST: receipt953publishedmaind5ac265ad0f4cf0dd6627f3c57bc5cc70c54879a==origin. Threeevidence/docfiles only; actuallegacy12positionalABIcompilePASS exactmergedrootE5unit2928591. No code/flowtag; arithmeticF20/currentdiequalificationunchangedopen.
+
+2026-11-06 02:50 PST: fleetmount0cpublishedmain318358c0e8611c48b4db1406d1b84f618986e33f==origin. Actualwork/outputFSdevice/floors+submissionrecheck, implicitrootexceptiondefaultEMPTY; explicitmechanismnotpopulated. Rootapprovedatomicdeploymenttonewadmissionsonly; fleetnotifiedexactSHA, receiptpending. No livejobmutation/restarts/foreignkills/physicalflowtag;39focusedaccepted,no newbroadtests.
