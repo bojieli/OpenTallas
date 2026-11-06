@@ -119,6 +119,8 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
             step('kit_rtl', dp / 'bind.py', 'kit-rtl', *args)
             receipt = output / 'kit_assembly.json'
             if overrides.get('assembly_contracts'):
+                step('hard_views', dp / 'kit_hard_views.py', '--plan', plan, '--type', type_name,
+                     '--rtl-dir', rtl, '--contracts', Path(overrides['assembly_contracts']).resolve())
                 step('assembly', dp / 'kit_assembly.py', 'assemble', '--rtl-dir', rtl, '--contracts',
                      Path(overrides['assembly_contracts']).resolve(), '--receipt', receipt)
             if overrides['reset_mode'] == 'canonical' or overrides.get('reset_context_plan'):
