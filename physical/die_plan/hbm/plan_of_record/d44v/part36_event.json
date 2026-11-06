@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.hbm_p36_true_wbq_split.v1",
+ "base": "202980878d1 (p35+q3-rightwidth+TXh0); retain current-main macro records",
+ "parent_profile": "ot_wbq_sw__safe_split",
+ "source_profile": "codex/wbq-safe-1105@41ba3e486d3",
+ "hardchild_path_suffixes": [
+  ".u_main",
+  ".u_out"
+ ],
+ "main_outline": [
+  86.4,
+  544.32
+ ],
+ "out_outline": [
+  43.2,
+  544.32
+ ],
+ "aqhi_x_shift": -25.92,
+ "proof": "40234/40563 accepted sector comparisons; bitflip and overwrite-understall controls caught",
+ "cycle_changes": {
+  "HBM36": "GIN1 input +1",
+  "HBM39": "elastic K output +1; unchanged one sector/PC/edge throughput",
+  "station_added_cycles": 0
+ },
+ "station_resited": {
+  "q_hub_nw": 167,
+  "q_hub_ne": 147
+ },
+ "active_lanes": 422,
+ "active_lanes_unchanged": true,
+ "metadata_cleanup": "results/die_hbm_1106/wbq_plan/metadata_cleanup_ledger.json",
+ "turnaround": "explicit disjoint same-face windows only; 20 annotations",
+ "rx_tx_obs_max": "M6",
+ "tkm": "exact snapped 2-SRAM homes; outline319.68x389.664",
+ "status": "candidate geometry integration; no physical signoff claim"
+}
