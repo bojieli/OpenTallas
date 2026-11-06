@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.autopilot.gates.v1",
+ "id": "export-view:39b5db9c4844",
+ "die": "qwen_compute",
+ "type": "qfd_dv_s5_ctl_repair4_leaf",
+ "src": "/srv/opentallas-scratch2/claude/codex-ctl-repeater-form-1106/kit",
+ "geom": "n/a (view export of a signed run; geometry was reviewed at sign-off)",
+ "preflight": "PASS (kit_preflight before runner)",
+ "signoff": "SIGNED",
+ "signoff_record": "/srv/opentallas-scratch2/claude/codex-ctl-repeater-form-1106/kit/signoff_repeater/signoff.json",
+ "tt_wns_ps": 29.17,
+ "ff_wns_ps": 2.92,
+ "gates": {},
+ "routed_lec": "EQUIVALENT",
+ "routed_lec_all_shown": true,
+ "routed_lec_record": "/srv/opentallas-scratch2/claude/codex-ctl-repeater-form-1106/kit/lec_repeater/lec.json",
+ "lec_tool": null,
+ "admission_tools_sha256": null,
+ "view_complete": true,
+ "view_problems": []
+}

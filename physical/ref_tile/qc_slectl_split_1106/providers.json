@@ -1,0 +1,102 @@
+{
+ "sle_cland_w2104_s": {
+  "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w2104_s",
+  "flow_tag": "flow-20261106-z-qc",
+  "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+  "clock_pin": "clk",
+  "measured_pinflop_ps": {
+   "tt": 166.22,
+   "ff": 134.73
+  }
+ },
+ "sle_cland_w457_e": {
+  "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w457_e",
+  "flow_tag": "flow-20261106-z-qc",
+  "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+  "clock_pin": "clk",
+  "measured_pinflop_ps": {
+   "tt": 82.01,
+   "ff": 65.28
+  }
+ },
+ "sle_cland_w457_s": {
+  "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w457_s",
+  "flow_tag": "flow-20261106-z-qc",
+  "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+  "clock_pin": "clk",
+  "measured_pinflop_ps": {
+   "tt": 87.18,
+   "ff": 68.71
+  }
+ },
+ "sle_cland_w517_n": {
+  "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w517_n",
+  "flow_tag": "flow-20261106-z-qc",
+  "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+  "clock_pin": "clk",
+  "measured_pinflop_ps": {
+   "tt": 89.78,
+   "ff": 71.47
+  }
+ },
+ "sle_cland_w517_n_1": {
+  "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w517_n_1",
+  "flow_tag": "flow-20261106-z-qc",
+  "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+  "clock_pin": "clk",
+  "measured_pinflop_ps": {
+   "tt": 89.73,
+   "ff": 71.8
+  }
+ },
+ "sle_cland_w537_e": {
+  "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w537_e",
+  "flow_tag": "flow-20261106-z-qc",
+  "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+  "clock_pin": "clk",
+  "measured_pinflop_ps": {
+   "tt": 85.85,
+   "ff": 68.49
+  }
+ },
+ "sle_cland_w537_s": {
+  "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w537_s",
+  "flow_tag": "flow-20261106-z-qc",
+  "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+  "clock_pin": "clk",
+  "measured_pinflop_ps": {
+   "tt": 85.31,
+   "ff": 67.81
+  }
+ },
+ "sle_cland_w537_w": {
+  "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w537_w",
+  "flow_tag": "flow-20261106-z-qc",
+  "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+  "clock_pin": "clk",
+  "measured_pinflop_ps": {
+   "tt": 83.32,
+   "ff": 66.36
+  }
+ },
+ "sle_cland_w653_w": {
+  "view": "physical/ref_tile/qc_slectl_split_1106/views/sle_cland_w653_w",
+  "flow_tag": "flow-20261106-z-qc",
+  "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+  "clock_pin": "clk",
+  "measured_pinflop_ps": {
+   "tt": 88.75,
+   "ff": 70.53
+  }
+ },
+ "qfd_dv_s5_ctl_repair4_leaf": {
+  "view": "physical/ref_tile/qc_slectl_split_1106/views/qfd_dv_s5_ctl_repair4_leaf",
+  "flow_tag": "flow-20261106-z-qc",
+  "src_commit": "7ddbd3b72f0b92fb19247390ec8e5569a7d5965d",
+  "clock_pin": "ck",
+  "measured_pinflop_ps": {
+   "tt": 303.56,
+   "ff": 251.75
+  }
+ }
+}
