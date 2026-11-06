@@ -25,7 +25,7 @@ def test_ports_filter(monkeypatch):
     assert G.edge_split_ports(plan(edges, die="s81"), "t") == []  # opt-in per die: a die not in EDGE_SPLIT_DIES
 
 
-def run_split(tmp_path, n_sinks, env):
+def run_split(tmp_path, n_sinks, env, extra=""):
     """the odb block as a Tcl stub: 2 macros + n flops in a row; prints the OT_EDGE_SPLIT line + connect log"""
     if not shutil.which("tclsh"):
         pytest.skip("tclsh unavailable")
@@ -56,7 +56,7 @@ proc nop {args} {}
 proc odb::dbNet_create {b n} {proc ::$n {m args} {}; return $n}
 """.replace("%N%", str(n_sinks))
     e = "".join(f"set ::env({k}) {{{v}}}\n" for k, v in env.items())
-    tcl = stub + e + f"source {HERE / 'clock_edge_split.tcl'}\n"
+    tcl = stub + extra + e + f"source {HERE / 'clock_edge_split.tcl'}\n"
     f = tmp_path / "t.tcl"
     f.write_text(tcl)
     r = subprocess.run(["tclsh", str(f)], capture_output=True, text=True)
@@ -77,3 +77,21 @@ def test_small_domain_left_alone(tmp_path):
 def test_off_switch_and_unset(tmp_path):
     assert run_split(tmp_path, 40, dict(OT_EDGE_SPLIT_PORTS="clk_x", OT_EDGE_SPLIT=0)) == ""
     assert run_split(tmp_path, 40, {}) == ""
+
+
+def test_macro_root_at_clock_pin_outside_block(tmp_path):
+    """DIE-KV-84 11-06: macro sinks key on the clock pin (getAvgXY), not the macro origin; a root inside a block moves out"""
+    extra = """
+proc m0 {m args} {switch $m {isInputSignal {return 1} getInst {return m0_i} getAvgXY {return {1 900000 56000}} disconnect {} connect {lappend ::conn m0[lindex $args 0]}}}
+proc m1 {m args} {switch $m {isInputSignal {return 1} getInst {return m1_i} getAvgXY {return {1 900000 56000}} disconnect {} connect {lappend ::conn m1[lindex $args 0]}}}
+proc mac {m args} {switch $m {isBlock {return 1} getBBox {return macbb}}}
+proc macbb {m} {switch $m {xMin {return 17000} yMin {return 54000} xMax {return 1866000} yMax {return 1026000}}}
+proc blk {m args} {switch $m {getInsts {return {mac}} getDbUnitsPerMicron {return 1000} findBTerm {if {[lindex $args 0] eq {clk_x[0]}} {return bt}; return NULL}}}
+"""
+    env = dict(OT_EDGE_SPLIT_PORTS="clk_x", OT_EDGE_SPLIT_MAX_SINKS=10, OT_EDGE_SPLIT_SPAN_UM=100000)
+    o = run_split(tmp_path, 40, dict(env, OT_EDGE_SPLIT_MACRO_PIN=1), extra)
+    assert "m0:2@(900,52)" in o, o
+    # opt-in per die (COORD 14:4x): unset keeps the macro-origin key, so QC kits are byte-same
+    o0 = run_split(tmp_path, 40, env, extra)
+    assert "m0:2@(900,52)" not in o0 and "m0:2@(5,50)" in o0, o0
+    assert G.EDGE_SPLIT_MACRO_PIN_DIES == {"qwen_kvsys"} and "qwen_compute" not in G.EDGE_SPLIT_MACRO_PIN_DIES

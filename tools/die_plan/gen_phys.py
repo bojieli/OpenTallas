@@ -821,6 +821,9 @@ def edge_clock_pins(P, tn):
 # Opt-in per die (COORD 11-05): QC only.  KV kv3_sys_SD (clk_clk_phy) has the same port shape; its owner adds the die after
 # its own estimate.
 EDGE_SPLIT_DIES = {"qwen_compute", "qwen_kvsys"}  # KV-SYSSD-2 11-06 (COORD approved): KV kv3_sys_SD/_v1 clk_clk_phy 5250 sinks
+# DIE-KV-84 11-06 (COORD 14:4x hold rule): macro sinks keyed on their clock pin, roots kept out of the macro; opt-in
+# per die so QC kits stay byte-same.
+EDGE_SPLIT_MACRO_PIN_DIES = {"qwen_kvsys"}
 
 
 def edge_split_ports(P, tn):
@@ -3699,6 +3702,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
            f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
            *([f"export OT_EDGE_SPLIT_PORTS = {' '.join(edge_split_ports(P, tn))}"] if edge_split_ports(P, tn) else []),
+           *(["export OT_EDGE_SPLIT_MACRO_PIN = 1"] if edge_split_ports(P, tn) and P.die.get("name") in EDGE_SPLIT_MACRO_PIN_DIES else []),
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread), then
            # FLOW 10-25 F4: zero-logic register pairs onto one leaf (leaf_affinity.tcl; OT_LEAF_AFFINITY=0 = off)
            "export POST_CTS_TCL = /work/cts_post.tcl",
