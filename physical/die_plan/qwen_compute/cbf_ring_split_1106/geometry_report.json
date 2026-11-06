@@ -1,0 +1,295 @@
+{
+ "event": "QC-CBF-RF1",
+ "type": "cbf_q00__cl1b5a6458",
+ "source_plan_sha256": "ffdd710edd7a4e4613c485b9af353b7925911988e149674ae898fa434b25c7c5",
+ "rows": [
+  {
+   "bus": "na_i00",
+   "master": "sle_cland_w515_n",
+   "W": 515,
+   "face": "N",
+   "origin": [
+    17.28,
+    2466.72
+   ],
+   "outline": [
+    88.56,
+    51.84
+   ],
+   "pins_sha256": "37dc78dc7a12570794ae81ce84b8591f77b23f4ada8b4406d5810f8a58383c44",
+   "tt_mean": 90.19,
+   "ff_mean": 72.02
+  },
+  {
+   "bus": "nb_i00",
+   "master": "sle_cland_w515_n_301",
+   "W": 515,
+   "face": "N",
+   "origin": [
+    1129.68,
+    2466.72
+   ],
+   "outline": [
+    88.56,
+    51.84
+   ],
+   "pins_sha256": "9eeee6e9dfcdbc4c92fe52c88d8348e2131fa60651e05d28686649e3c64be539",
+   "tt_mean": 89.96,
+   "ff_mean": 71.58
+  },
+  {
+   "bus": "bc_i00",
+   "master": "sle_cland_w517_s_300",
+   "W": 517,
+   "face": "S",
+   "origin": [
+    17.28,
+    17.28
+   ],
+   "outline": [
+    89.184,
+    51.84
+   ],
+   "pins_sha256": "dd1f8f22ecb4940dbcabc3f7a271e31cdbf1110e8d0f867a50c20d698f9075a0",
+   "tt_mean": 89.85,
+   "ff_mean": 71.62
+  },
+  {
+   "bus": "bc_i10",
+   "master": "sle_cland_w517_s_300",
+   "W": 517,
+   "face": "S",
+   "origin": [
+    626.4,
+    17.28
+   ],
+   "outline": [
+    89.184,
+    51.84
+   ],
+   "pins_sha256": "dd1f8f22ecb4940dbcabc3f7a271e31cdbf1110e8d0f867a50c20d698f9075a0",
+   "tt_mean": 89.85,
+   "ff_mean": 71.62
+  }
+ ],
+ "added_data_cycles": 0,
+ "parent_signed": false,
+ "reset_collector": "NOT REATTACHED/NOT PROVED/NOT NATIVE BOUND",
+ "remaining": "Output bc_o01 congestion and FF tap affinity remain independent; no timing closure claim",
+ "hard_cores": [
+  {
+   "inst": "u_t00",
+   "module": "qfd_tile_nk_a0c",
+   "origin_um": [
+    86.4,
+    77.76
+   ],
+   "outline_um": [
+    457.92,
+    1157.76
+   ],
+   "orient": "R0",
+   "track_offset_um": [
+    0.0,
+    0.012
+   ],
+   "pins_file": "cores/a0_nk_pins.json",
+   "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+  },
+  {
+   "inst": "u_t10",
+   "module": "qfd_tile_nk_a0c",
+   "origin_um": [
+    691.2,
+    77.76
+   ],
+   "outline_um": [
+    457.92,
+    1157.76
+   ],
+   "orient": "MY",
+   "track_offset_um": [
+    0.0,
+    0.012
+   ],
+   "pins_file": "cores/a0_nk_pins.json",
+   "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+  },
+  {
+   "inst": "u_t01",
+   "module": "qfd_tile_nk_a0c",
+   "origin_um": [
+    86.4,
+    1304.64
+   ],
+   "outline_um": [
+    457.92,
+    1157.76
+   ],
+   "orient": "R0",
+   "track_offset_um": [
+    0.0,
+    0.012
+   ],
+   "pins_file": "cores/a0_nk_pins.json",
+   "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+  },
+  {
+   "inst": "u_t11",
+   "module": "qfd_tile_nk_a0c",
+   "origin_um": [
+    691.2,
+    1304.64
+   ],
+   "outline_um": [
+    457.92,
+    1157.76
+   ],
+   "orient": "MY",
+   "track_offset_um": [
+    0.0,
+    0.012
+   ],
+   "pins_file": "cores/a0_nk_pins.json",
+   "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+  },
+  {
+   "inst": "cl_na_i00",
+   "module": "sle_cland_w515_n",
+   "origin_um": [
+    17.28,
+    2466.72
+   ],
+   "outline_um": [
+    88.56,
+    51.84
+   ],
+   "orient": "R0",
+   "track_offset_um": [
+    0.012,
+    0.012
+   ],
+   "pins_file": "cores/cbn_ring/sle_cland_w515_n_pins.json",
+   "physical_inst": "u_bound.u_cland_na_i00",
+   "physical_master": "sle_cland_w515_n",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 515,
+     "DEPTH": 4,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 1
+    }
+   },
+   "reset_net": "cland_start",
+   "cells": 11606,
+   "note": "CBF registered input ring reuse; exact signed pin table, zero added data cycles; private candidate, collector event pending"
+  },
+  {
+   "inst": "cl_nb_i00",
+   "module": "sle_cland_w515_n_301",
+   "origin_um": [
+    1129.68,
+    2466.72
+   ],
+   "outline_um": [
+    88.56,
+    51.84
+   ],
+   "orient": "R0",
+   "track_offset_um": [
+    0.012,
+    0.012
+   ],
+   "pins_file": "cores/cbn_ring/sle_cland_w515_n_301_pins.json",
+   "physical_inst": "u_bound.u_cland_nb_i00",
+   "physical_master": "sle_cland_w515_n_301",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 515,
+     "DEPTH": 4,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 1
+    }
+   },
+   "reset_net": "cland_start",
+   "cells": 11606,
+   "note": "CBF registered input ring reuse; exact signed pin table, zero added data cycles; private candidate, collector event pending"
+  },
+  {
+   "inst": "cl_bc_i00",
+   "module": "sle_cland_w517_s_300",
+   "origin_um": [
+    17.28,
+    17.28
+   ],
+   "outline_um": [
+    89.184,
+    51.84
+   ],
+   "orient": "R0",
+   "track_offset_um": [
+    0.012,
+    0.012
+   ],
+   "pins_file": "cores/cbn_ring/sle_cland_w517_s_300_pins.json",
+   "physical_inst": "u_bound.u_cland_bc_i00",
+   "physical_master": "sle_cland_w517_s_300",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 517,
+     "DEPTH": 4,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 1
+    }
+   },
+   "reset_net": "cland_start",
+   "cells": 11652,
+   "note": "CBF registered input ring reuse; exact signed pin table, zero added data cycles; private candidate, collector event pending"
+  },
+  {
+   "inst": "cl_bc_i10",
+   "module": "sle_cland_w517_s_300",
+   "origin_um": [
+    626.4,
+    17.28
+   ],
+   "outline_um": [
+    89.184,
+    51.84
+   ],
+   "orient": "R0",
+   "track_offset_um": [
+    0.012,
+    0.012
+   ],
+   "pins_file": "cores/cbn_ring/sle_cland_w517_s_300_pins.json",
+   "physical_inst": "u_bound.u_cland_bc_i10",
+   "physical_master": "sle_cland_w517_s_300",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 517,
+     "DEPTH": 4,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 1
+    }
+   },
+   "reset_net": "cland_start",
+   "cells": 11652,
+   "note": "CBF registered input ring reuse; exact signed pin table, zero added data cycles; private candidate, collector event pending"
+  }
+ ],
+ "outline": [
+  1235.52,
+  2531.52
+ ],
+ "landing_children_qualified": true,
+ "native_compute_children_qualified": false
+}
