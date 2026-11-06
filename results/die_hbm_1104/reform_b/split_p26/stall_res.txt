@@ -1,0 +1,5 @@
+sb1 sedhits=1 1 SMB_UNIT FAIL ops=20 pass=0 gos=1/29 go_slots_exact=False runs=0 fault=FAULT svg cycle 826 issuer 0 feed 1 (desc 0 cdc 1 cache 0 prog 0 s1 0 fl 0) None | tree sb1 ok
+sb4 sedhits=1 1 SMB_UNIT FAIL ops=20 pass=1 gos=1/29 go_slots_exact=False runs=0 fault=FAULT svg cycle 1038 issuer 0 feed 1 (desc 0 cdc 1 cache 0 prog 0 s1 0 fl 0) None | tree sb4 ok
+sb0 sedhits=1 0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988 | tree sb0 ok
+ALLDONE
+# read: stall 256 of every 1024 stream edges at the landing pop. Control sb0 PASS same counts as unstalled; ow1 and ow4 (survivors of muts.txt) now FAIL. Reaching credit 0 / kr_rdy low is inferred from the mutants, no waveform read. One stall pattern, layer L00, one clock.

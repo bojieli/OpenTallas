@@ -25,7 +25,7 @@
 //     pack prefix network is a kept module (ot_hidx_s3_pfx) per chunk copy, the compare path
 //     has its own kept valid + key copy (rawc), the last-valid-lane one-hot is a kept module (ot_hidx_s3_pri);
 //   * reset: ot_rst_relay with 15 regional leaves (2 sync + region stage = the 2-stage landing), <= 31 loads per leaf.
-// DMUT (bench only, 0 in every kit): 1 tie compare >= ; 3 lane-5 SRAM write-data select one edge late; 5 histogram read
+// DMUT (bench only, 0 in every kit): 6 ecnt +1 on one pair value; 7 hi_nz misses bit 5; 8 hi_m1 by 2; 9 tie compare bit 4; 1 tie compare >= ; 3 lane-5 SRAM write-data select one edge late; 5 histogram read
 //   returned one edge later than its op tags.
 // Pack prefix network (kept hierarchy, SYNTH_KEEP_MODULES): positions of the selected lanes in 4-lane groups.  As its
 // own module ABC cannot flatten the popcounts into the 16 x 16 one-hot match decode (that put up to 63 loads on the
@@ -238,9 +238,9 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
   c_gb[0]=4'd0;c_gb[1]=4'(s2_gtot[0]);c_gb[2]=4'(s2_gtot[0])+4'(s2_gtot[1]);
   c_gb[3]=(4'(s2_gtot[0])+4'(s2_gtot[1]))+4'(s2_gtot[2]);
  end
- // tie-group equal count, summed here from the registered group totals (was the S2 register s2_ecnt: the 5-bit sum is
- // the last 2 adder levels of the S2 popcount, which closed TT -155 ps; S3 reads it on the same edge)
- wire [4:0] s2_ecnt=(5'(s2_gtot[0])+5'(s2_gtot[1]))+(5'(s2_gtot[2])+5'(s2_gtot[3]));
+ // tie-group equal count (HBM-REFORM-B7 11-05): each tie replica holds its own pair sums, loaded on the S2 edge, and adds
+ // them in S3: one adder level and no wire from the far lane groups into the S3 subtract.  s3_q M6 GRT had 66 setup
+ // endpoints, all tie_rem, -209 ps.  Same value on the same edge as the former (gtot0+gtot1)+(gtot2+gtot3): no calendar change.
  wire [15:0] c_choose;
  for(genvar g=0;g<4;g=g+1)begin:gtie
   (* keep *) reg [13:0] tg;             // ties pin flop copy
@@ -248,8 +248,15 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
   (* keep *) reg [1:0] comp;            // comp_started, one copy per tavail half
   always @(posedge clk)tg<=ties;
   wire [13:0] tavail={comp[1]?tie_rem[13:7]:tg[13:7],comp[0]?tie_rem[6:0]:tg[6:0]};
-  wire [13:0] tuse=({9'd0,s2_ecnt}<tavail)?{9'd0,s2_ecnt}:tavail;
-  wire [13:0] trem=tavail-tuse;
+  (* keep *) reg [3:0] e01,e23;         // pair sums, at most 8 each
+  always @(posedge clk)begin e01<=4'(c_gtot[0])+4'(c_gtot[1]);e23<=4'(c_gtot[2])+4'(c_gtot[3]);end
+  wire [4:0] ecnt=5'(e01)+5'(e23)+5'(DMUT==6 && e01==4'd3);
+  // saturating tavail - ecnt with ecnt <= 16: subtract on the low 5 bits only, the high bits select between kept and
+  // decremented, which do not depend on ecnt.  Same function as tavail - min(ecnt, tavail).
+  wire hi_nz=(DMUT==7)?(|tavail[13:6]):(|tavail[13:5]);
+  wire [8:0] hi_m1=tavail[13:5]-((DMUT==8)?9'd2:9'd1);
+  wire [5:0] lo_sub={1'b0,tavail[4:0]}-{1'b0,ecnt};
+  wire [13:0] trem=!lo_sub[5]?{tavail[13:5],lo_sub[4:0]}:(hi_nz?{hi_m1,lo_sub[4:0]}:14'd0);
   always @(posedge clk or negedge rr[4+g])begin
    if(!rr[4+g])begin tie_rem<=0;comp<=0;end
    else begin
@@ -261,7 +268,7 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
   end
   for(genvar j=0;j<4;j=j+1)begin:gl
    wire [4:0] er=5'(c_gb[g])+5'(s2_loc[4*g+j]);
-   assign c_choose[4*g+j]=s2_gt[4*g+j]||(s2_eq[4*g+j]&&({9'd0,er}<tavail));
+   assign c_choose[4*g+j]=s2_gt[4*g+j]||(s2_eq[4*g+j]&&(hi_nz||(er<{(DMUT==9)?1'b1:tavail[4],tavail[3:0]})));
   end
  end
  // selected line: main copy (-> pin flop, pack data) + 3 kept valid-bit copies (one pack prefix network per chunk)

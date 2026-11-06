@@ -1,0 +1,6 @@
+# HBM-REFORM-B10 one-core PD=3 form ot_hbm_idx_topk_link_pd3 vs ot_hbm_idx_topk_link_static WPS=2, both in a +1/+1 face shell, outputs +3 (run_p30_b10.sh, 6000 cycles, 2026-11-05 23:58 UTC)
+MUT 0: LOCKSTEP PASS checks=23400 toggled_out_bits=1254
+MUT 3: LOCKSTEP FAIL errs=3374627 checks=23400 toggled_out_bits=1254
+MUT 1: LOCKSTEP FAIL errs=19031 checks=23400 toggled_out_bits=1254
+MUT 4: LOCKSTEP FAIL errs=112388 checks=23400 toggled_out_bits=1254
+MUT 2: LOCKSTEP FAIL errs=1323679 checks=23400 toggled_out_bits=1254
