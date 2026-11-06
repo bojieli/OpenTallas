@@ -6,7 +6,11 @@
 module ot_hbm_su_pg_lane1p_core #(
     parameter integer MLAT = 5,
     parameter integer ALAT = 3,
+`ifdef OT_L1P_LDCS2
+    parameter integer LDCS = 2,
+`else
     parameter integer LDCS = 1,   // HBM-GAPS-4-L1P: carry-save LEAF offset load (ot_hbm_su_static_lane g_ld3c)
+`endif
     parameter integer WCOPY = 0
 ) (
     input wire bank0_clk,
