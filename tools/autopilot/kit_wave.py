@@ -168,7 +168,10 @@ DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6,
             "work_root": "/srv/opentallas-scratch2/claude/kit-wave", "infra_attempts": 3, "launch_stagger_s": 6,
             # KW-RESUME-1 (OWNER 11-01 19:5x / COORD 20:0x default-on): a relaunch reuses the previous attempt's ORFS
             # steps up to the first step whose input fingerprint changed (kit_resume.py); die/global false opts out
-            "stage_resume": True}
+            "stage_resume": True,
+            # KW-FIX-17 (COORD 11-05 16:4x): a sign-off FAIL with the LEAFSLEW signature relaunches once with the
+            # clk_leaf_repeat post-CTS hook; die/global "leafslew_auto": false opts out
+            "leafslew_auto": True}
 # AUTOBUILD-PIPE-1 10-30: an ssh transport drop before the command ran (sshd MaxStartups on the gen host when a tick
 # launches 16 items at once) is retried inside the item, never charged to the design: up to SSH_RETRIES more tries
 SSH_RETRIES = 3
@@ -2066,6 +2069,21 @@ def run_item(spec_path):
         if rc:
             return fail("relay_bay", txt, f"{G}:{K}/relay_bay_table.tsv")
         res["relay_bay"] = (txt.strip().splitlines() or [""])[-1][:300]
+    # KW-FIX-17 LEAFSLEW form (COORD 11-05 16:4x): stage physical/common_flow/clk_leaf_repeat.tcl from the scheduler
+    # checkout into K (a kit's own copy is kept) and chain it ahead of the kit's POST_CTS_TCL in config.mk; before
+    # resume_inputs, so a stage resume restarts at CTS (POST_CTS_TCL / OT_CLR_NEXT_TCL are cts-stage inputs)
+    lsf = sp.get("leafslew_form")
+    if lsf:
+        src_tcl = Path(__file__).resolve().parents[2] / "physical" / "common_flow" / LEAFSLEW_TCL
+        dest = K + "/" if G in ("localhost", hub) else f"{G}:{K}/"
+        rc, txt = run("leafslew_copy", ["rsync", "-a", "--ignore-existing", "-e", "ssh -o BatchMode=yes -o ControlPath=none",
+                                        str(src_tcl), dest], idempotent=True)
+        if rc:
+            return fail("leafslew", txt)
+        rc, txt = run("leafslew", remote(leafslew_patch_cmd(K, lsf)), idempotent=True)
+        if rc:
+            return fail("leafslew", "KW_LEAFSLEW patch failed (no config.mk / hook not staged)\n" + txt, f"{G}:{K}/config.mk")
+        res["leafslew_form"] = (re.findall(r"KW_LEAFSLEW [^\n]*", txt) or ["KW_LEAFSLEW"])[-1][:200]
     # New-attempt tool update only, before any physical/proof work or resume copy.
     # The generator source stays pinned; record the independent scheduler LEC snapshot.
     lt = sp.get("future_lec")
@@ -2636,6 +2654,10 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
             rgg = region_guide_geom(prev, sp["gen_host"])
             if rgg:
                 sp["region_guide_geom"] = rgg
+    # KW-FIX-17: an attempt released by the LEAFSLEW signature (or following a hooked one) builds with clk_leaf_repeat
+    ls_key, ls_form = leafslew_launch(cfg, st, die, r["item"], prev, attempt) if attempt > 1 else (None, None)
+    if ls_form:
+        sp["leafslew_form"] = ls_form
     unit = f"kw-{re.sub(r'[^A-Za-z0-9]', '', die)[:6]}-{re.sub(r'[^A-Za-z0-9]', '', r['item'])[:28]}-{attempt}-{int(time.time()) % 100000}"
     if AP.DRY:
         AP.log(f"KIT-WAVE would launch {die}/{r['item']} unit {unit}: gen {sp['gen_host']}:{sp['work']} plan {sp['plan']}")
@@ -2688,6 +2710,10 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if sp.get("prov_views"):
         rec["provisional"] = {m: "pending" for m in sp["prov_views"]["modules"]}
         rec["prov_key"] = (d.get("_prov_keys") or {}).get(r["item"])
+    if ls_form and ok:
+        rec["leafslew_form"] = ls_form
+        if ls_key:
+            st["leafslew"][ls_key]["hooked_attempt"] = attempt
     st["items"][key] = rec
     AP.log(f"KIT-WAVE LAUNCH {die}/{r['item']} ({r['kind']}, {r.get('replicas')} replicas) event {sp['event']} unit {unit}")
     return rec
@@ -2942,6 +2968,11 @@ def follow_queue(st, ap_dir, notices):
         stage, status, cls, why = queue_class(j)
         old = (rec.get("q_status"), rec.get("q_class"))
         rec.update(q_id=j.get("id"), q_stage=stage, q_status=status, q_class=cls, q_reason=why)
+        so = j.get("signoff") if isinstance(j.get("signoff"), dict) else {}
+        if status == "FAIL" and so.get("path"):
+            # KW-FIX-17: where the routed sign-off of this attempt lives (leafslew_step reads its TT sta.log)
+            kh = str(j.get("kit") or "").split(":", 1)[0] if ":" in str(j.get("kit") or "") else ""
+            rec.update(q_signoff=so["path"], q_hosts=[h for h in dict.fromkeys([j.get("ran_on"), kh, j.get("host")]) if h])
         n += 1
         if (status, cls) != old:
             rec["q_updated"] = time.time()
@@ -3147,6 +3178,10 @@ def _step(AP, ap_dir):
         release_pending(cfg, st, parse_pending(AP.read_coord(PENDING_FILE)), _merged(AP, cfg), notices)
     except Exception as e:                               # a missing/unreadable pending file never blocks the wave
         AP.log(f"KIT-WAVE pending retries skipped: {type(e).__name__}: {e}")
+    try:                                                 # KW-FIX-17: LEAFSLEW signature -> auto class retry
+        leafslew_step(AP, cfg, st, notices, AP.HUB_NAME)
+    except Exception as e:                               # a sign-off log read never blocks the wave
+        AP.log(f"KIT-WAVE LEAFSLEW step skipped: {type(e).__name__}: {e}")
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
     try:                                        # SUBSTEP-1 (COORD 11-05 10:53): sub-step ODBs of terminal attempts
@@ -3745,6 +3780,142 @@ def release_pending(cfg, st, rows, merged, notices):
         rt = d.setdefault("retry", [])
         if r["retry"] not in rt:
             rt.append(r["retry"])
+
+
+# ------------------------------------------------------------------------------------------------ KW-FIX-17 LEAFSLEW
+# COORD 11-05 16:4x (KW-FIX-17): HBM-CTS-LEAFSLEW is a default-on class fix.  Signature: the routed TT sign-off sta.log
+# lists max_slew violations on clock-tree cell pins (clkbuf_*/A, ot_dtap*_iso/A, CTS inverters / delay buffers, ...) or
+# register clock pins -- 320-563 ps on ~8 HBM + 3-4 S81 failing designs, 0 of 110 signed runs.  Such a queue FAIL
+# releases its item@attempt once per item and source sha (in-memory retry + retry_fix, like kit_wave_pending.tsv),
+# and the next attempt's kit carries physical/common_flow/clk_leaf_repeat.tcl as POST_CTS_TCL (the kit's own
+# POST_CTS_TCL hook still runs after it via OT_CLR_NEXT_TCL).  An attempt built with the hook never auto-releases.
+LEAFSLEW_NOTE = "LEAFSLEW class (KW-FIX-17, COORD 16:4x): clk_leaf_repeat post-CTS hook"
+LEAFSLEW_TCL = "clk_leaf_repeat.tcl"
+LEAFSLEW_CLK_INST = re.compile(r"^(clkbuf|clkload|clkleafrep|clkinv|delaybuf|cts|ot_dtap|.*_tb\d+_d\d+)", re.I)
+LEAFSLEW_CLK_PINS = ("CLK", "CK")
+LEAFSLEW_TRIES = 3                                         # unreadable sign-off log: give up (no trigger) after this
+LEAFSLEW_READS_PER_TICK = 24                               # newest queue FAILs first; the rest are read next tick
+
+
+def leafslew_parse(text):
+    """sta.log text (or its grep of 'Pin .. Limit' headers + VIOLATED rows) -> {pins, worst_ps, worst_pin}: max_slew
+    VIOLATED rows on clock-tree cell pins or register clock pins.  Rows under a max capacitance / fanout table never
+    count (their header names no Slew)."""
+    inslew = False
+    pins, worst, wpin = 0, 0.0, ""
+    for ln in (text or "").splitlines():
+        s = ln.strip()
+        if s.startswith("Pin") and "Limit" in s:
+            inslew = "Slew" in s
+            continue
+        if not inslew or "VIOLATED" not in s:
+            continue
+        m = re.match(r"^(\S+)\s+([\d.]+)\s+([\d.]+)\s+(-[\d.]+)\s+\(VIOLATED\)", s)
+        if not m:
+            continue
+        pin = m.group(1)
+        inst, _, pn = pin.rpartition("/")
+        leaf = re.split(r"(?<!\\)[/.]", inst)[-1] if inst else ""
+        if pn in LEAFSLEW_CLK_PINS or (leaf and LEAFSLEW_CLK_INST.match(leaf)):
+            pins += 1
+            if float(m.group(3)) > worst:
+                worst, wpin = float(m.group(3)), pin
+    return {"pins": pins, "worst_ps": round(worst, 2), "worst_pin": wpin}
+
+
+def leafslew_read(AP, rec, hub):
+    """-> signature dict, or None when no host could read the TT sta.log (fail-soft: never a trigger)"""
+    tt = os.path.join(os.path.dirname(rec["q_signoff"]), "tt", "sta.log")
+    cmd = (f"if test -r {shlex.quote(tt)}; then grep -E '^Pin .*Limit|VIOLATED' {shlex.quote(tt)} | head -n 200000; "
+           f"echo KW_LEAFSLEW_READ; else echo KW_LEAFSLEW_NOLOG; fi")
+    for h in rec.get("q_hosts") or [hub]:
+        h = hub if h == "localhost" else h
+        argv = _ssh(h, hub) + ["bash -c " + shlex.quote(cmd)] if _ssh(h, hub) else ["bash", "-c", cmd]
+        try:
+            rc, out, _ = AP.sh(argv, timeout=60)
+        except Exception:
+            continue
+        if rc == 0 and "KW_LEAFSLEW_READ" in (out or ""):
+            return dict(leafslew_parse(out), log=f"{h}:{tt}")
+    return None
+
+
+def leafslew_step(AP, cfg, st, notices, hub=None):
+    """judge each new queue FAIL once for the LEAFSLEW signature; keep released attempts in the die's in-memory retry
+    set until the hooked attempt launches (launch() reads st['leafslew'])"""
+    hub = hub or getattr(AP, "HUB_NAME", "localhost")
+    ls = st.setdefault("leafslew", {})
+    todo = [rec for rec in (st.get("items") or {}).values()
+            if rec.get("status") == "ENQUEUED" and rec.get("q_status") == "FAIL" and rec.get("q_signoff")
+            and "leafslew" not in rec and rec.get("die") in (cfg.get("dies") or {})
+            and opt(cfg, rec.get("die"), "leafslew_auto") is not False]
+    todo.sort(key=lambda r: -float(r.get("q_updated") or r.get("updated") or 0))
+    for rec in todo[:LEAFSLEW_READS_PER_TICK]:
+        die = rec["die"]
+        sig = leafslew_read(AP, rec, hub)
+        if sig is None:
+            rec["leafslew_tries"] = int(rec.get("leafslew_tries") or 0) + 1
+            if rec["leafslew_tries"] >= LEAFSLEW_TRIES:
+                rec["leafslew"] = {"pins": 0, "error": "TT sta.log unreadable"}
+            continue
+        rec["leafslew"] = sig
+        if not sig["pins"] or rec.get("leafslew_form"):
+            continue                                     # no signature, or the hooked attempt itself failed: no loop
+        src = rec_src_sha(rec)
+        k = f"{die}|{rec['item']}|{src}"
+        if k in ls:
+            continue
+        ls[k] = dict(die=die, item=rec["item"], src_sha=src, attempt=rec.get("attempt"), pins=sig["pins"],
+                     worst_ps=sig["worst_ps"], worst_pin=sig["worst_pin"], log=sig.get("log", ""),
+                     q_id=rec.get("q_id"), released=now_s(), hooked_attempt=None)
+        notices.setdefault(die, []).append(
+            f"{rec['item']}@{rec.get('attempt')} LEAFSLEW signature ({sig['pins']} clock pins over max_slew, worst "
+            f"{sig['worst_ps']:.0f} ps {sig['worst_pin']}) -> auto retry with the clk_leaf_repeat hook (KW-FIX-17)")
+        if hasattr(AP, "log"):
+            AP.log(f"KIT-WAVE LEAFSLEW {die}/{rec['item']}@{rec.get('attempt')}: {sig}")
+    for e in ls.values():
+        d = (cfg.get("dies") or {}).get(e.get("die"))
+        if not isinstance(d, dict) or e.get("hooked_attempt") or opt(cfg, e["die"], "leafslew_auto") is False:
+            continue
+        ia = f"{e['item']}@{e['attempt']}"
+        rt = d.setdefault("retry", [])
+        if ia not in rt:
+            rt.append(ia)
+        if d.get("retry_fix") is None:
+            d["retry_fix"] = {}
+        if isinstance(d["retry_fix"], dict):
+            d["retry_fix"].setdefault(ia, LEAFSLEW_NOTE)
+
+
+def leafslew_launch(cfg, st, die, item, prev, attempt):
+    """-> (released entry key or None, LEAFSLEW form for a new attempt of die/item or None).  A released entry (once
+    per source sha) is claimed by the attempt that launches (launch() sets hooked_attempt once the unit is on record);
+    an item built with the hook keeps it on every later attempt (the class is proven for it)."""
+    if opt(cfg, die, "leafslew_auto") is False:
+        return None, None
+    for k, e in (st.get("leafslew") or {}).items():
+        if e.get("die") == die and e.get("item") == item and not e.get("hooked_attempt") \
+                and int(e.get("attempt") or 0) < attempt:
+            return k, {x: e.get(x) for x in ("attempt", "pins", "worst_ps", "worst_pin", "log", "q_id", "src_sha")}
+    if prev.get("leafslew_form"):
+        return None, dict(prev["leafslew_form"], carried_from=prev.get("attempt"))
+    return None, None
+
+
+def leafslew_patch_cmd(K, form):
+    """remote shell: chain clk_leaf_repeat.tcl ahead of the kit's POST_CTS_TCL in K/config.mk (idempotent; a kit that
+    already names the hook is left as is) and write K/LEAFSLEW_FORM.json"""
+    q = shlex.quote
+    block = ("\n# KW-FIX-17 LEAFSLEW (COORD 11-05 16:4x): clk_leaf_repeat post-CTS hook; the kit's own POST_CTS_TCL runs "
+             "after it\nexport OT_CLR_NEXT_TCL := $(POST_CTS_TCL)\noverride export POST_CTS_TCL = /work/"
+             + LEAFSLEW_TCL + "\n")
+    meta = json.dumps(dict(schema="opentallas.kw_leafslew_form.v1", lane="KW-FIX-17", note=LEAFSLEW_NOTE,
+                           trigger=form), sort_keys=True)
+    return (f"cd {q(K)} && test -f config.mk && test -s {LEAFSLEW_TCL} && "
+            f"if grep -q 'KW-FIX-17 LEAFSLEW' config.mk; then echo KW_LEAFSLEW already patched; "
+            f"elif grep -v '^[[:space:]]*#' config.mk | grep -q 'clk_leaf_repeat'; then echo KW_LEAFSLEW kit already hooked; "
+            f"else printf %s {q(block)} >> config.mk && echo KW_LEAFSLEW patched; fi && "
+            f"printf '%s\\n' {q(meta)} > LEAFSLEW_FORM.json")
 
 
 def _merged(AP, cfg):
