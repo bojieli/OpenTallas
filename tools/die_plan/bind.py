@@ -4367,6 +4367,10 @@ def cmd_bind(a):
     rep["variants"] = dict(instances=len(B.variants), removed_input_bits=dict(getattr(B, "variant_removed", {})),
                            list=B.variants[:500])
     rep["type_splits"] = B.type_splits
+    if B.ab.get("core_splits"):
+        # KW-FIX-24: the split leaves have no source; bind_verify stubs them from this record (interface as emitted)
+        import bind_core_split
+        rep["core_split_ifaces"] = bind_core_split.emitted_ifaces(B.F.cells, B.ab["core_splits"])
     if getattr(B, "r8_sites", None):
         rep["r8_strap_sites"] = dict(types=len(B.r8_sites), sites=sum(len(v) for v in B.r8_sites.values()),
                                      bits=sum(x["width"] for v in B.r8_sites.values() for x in v.values()),

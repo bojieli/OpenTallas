@@ -1,0 +1,7 @@
+480c480,483
+<           pwin[ai] = wq_act_physical[ai] && !(|(wq_older[ai*WQ +: WQ] & wq_act_physical));
+---
+>           // WQDIAG (HBM-FORM-TIMING-12-H9B 11-06): the diagonal age bit wq_older[ai*WQ+ai] is masked: it is never reset
+>           // and every push of slot ai writes it 0 before slot ai can be eligible, so it only carries its X power-up
+>           // value; synthesis already folded it to 0 (the kit LEC could not prove that from the free power-up state).
+>           pwin[ai] = wq_act_physical[ai] && !(|(wq_older[ai*WQ +: WQ] & wq_act_physical & ~(WQ'(1) << ai)));
