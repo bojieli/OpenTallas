@@ -1,0 +1,14 @@
+{
+  "scope": "LOCAL_COMPONENT",
+  "source_preparation_only": true,
+  "global_bind": {
+    "status": "FAIL",
+    "n_errors": 1,
+    "errors": [
+      "EMIT wavefront core reset q_hub_nw/u_hb_coll_Q_body_core__q0__ctl.rst_n: expected one bound leaf, found 0 (partition NW_hub root ; e.g. )"
+    ]
+  },
+  "read_only_inputs_unchanged": true,
+  "native_receipt_written": false,
+  "wrong_identity_refused": true
+}

@@ -1,0 +1,9 @@
+PMA_STATUS_RISE edge=175
+PMA_STATE edge=500 phy=2/2 peer_gb=0 up=0 die_gb=0 up=0 ph_v=0 hpgo=0 hist=800
+PMA_STATE edge=1000 phy=2/2 peer_gb=0 up=0 die_gb=0 up=0 ph_v=0 hpgo=0 hist=800
+PMA_STATE edge=1500 phy=2/2 peer_gb=0 up=0 die_gb=0 up=0 ph_v=0 hpgo=0 hist=800
+PMA_STATE edge=2000 phy=2/2 peer_gb=0 up=0 die_gb=0 up=0 ph_v=0 hpgo=0 hist=800
+PMA_STATE edge=2500 phy=2/2 peer_gb=0 up=0 die_gb=0 up=0 ph_v=0 hpgo=0 hist=800
+[2145000000] %Fatal: tb_legal_status_a2.sv:41: Assertion failed in tb.setup: PMA_HOST_TIMEOUT BAD=1 tx=0 rx=0 ks=0 remote=00000000000000000000 peer_fault=00 lanes=0/0 lep=0
+%Error: /srv/opentallas-scratch2/claude/codex-ds-pma-peer-1106/tb_legal_status_a2.sv:41: Verilog $stop
+Aborting...

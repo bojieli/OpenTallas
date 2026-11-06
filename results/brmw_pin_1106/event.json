@@ -1,0 +1,54 @@
+{
+  "status": "READY_SOURCE_AND_EXPLICIT_NATIVE_CONNECTION_WITNESS",
+  "module": "ot_hgi_sm_xload_cl2_bdring",
+  "params": {
+    "PMAX": 8,
+    "NR": 32
+  },
+  "change": "Remove only consumer bsel[25] from existing d44v physical pin table. Producer remains 26 bits, alive and unchanged. No RTL or cycle change.",
+  "pins_file": "physical/die_plan/hbm/plan_of_record/d44v/cores/ot_hgi_sm_xload_cl2_bdring__120.96x216__c25c__fr15__centry.json",
+  "old_pin_count": 2689,
+  "new_pin_count": 2688,
+  "pin_removed": {
+    "name": "bsel[25]",
+    "layer": "M4",
+    "x": 120.864,
+    "y": 34.152
+  },
+  "proof": {
+    "source_module_sha256": "48d4ec187e705ad1b1775a3905bd801ad68098c254ffb10f591f483752fd0300",
+    "exhaustive_lane_terms": 64,
+    "highest_populated_global_bit": 24191,
+    "beat12_first_bit": 24576,
+    "both_parity_beat12": "constant zero independent of all state and data",
+    "select": "bsel[25] => bs[][NBQ+12] => beat_w[1][12]",
+    "actual_module_miter": "175 cycles0diff; both last beats zero; live bit24 mutant142diff"
+  },
+  "native_consumers": [
+    {
+      "type": "q_hub_nw",
+      "inst": "u_xq_Q_p0_bd",
+      "bsel_producer": "core:u_xl_Q_ctl"
+    },
+    {
+      "type": "q_hub_nw",
+      "inst": "u_xq_Q_p1_bd",
+      "bsel_producer": "core:u_xl_Q_ctl"
+    },
+    {
+      "type": "q_hub_ne",
+      "inst": "u_xq_Q_p0_bd",
+      "bsel_producer": "core:u_xl_Q_ctl"
+    },
+    {
+      "type": "q_hub_ne",
+      "inst": "u_xq_Q_p1_bd",
+      "bsel_producer": "core:u_xl_Q_ctl"
+    }
+  ],
+  "parent_integration": "Emit actual hardened consumer bsel[24:0] connected to native bsel[24:0]; native producer bit25 stays intact. Parent native rebind/shape check required before using view; this event makes no parent proof or qualification claim.",
+  "physical_subject": "intel1:/srv/opentallas-scratch2/claude/hbm-form-timing/eco/brmw_fo/run/i2",
+  "physical_result": "SIGNED TT+1.53 FF+0.90 DRV0 DRC0 ANT0 and routed EQ; this pin fix does not rerun physical closure",
+  "native_witness": "native_witness.json: all four actual m79f consumer statements explicitly cropped, source producer unchanged; unrelated global EMIT unresolved",
+  "adapter": "tools/die_plan/kit_core_clocks.py native_port_adapter.slice, default unchanged, exact descending declaration/source selection checked"
+}

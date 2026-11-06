@@ -1,0 +1,13 @@
+# Explicit native pin rectangle: completed S81 COLL
+
+Both generic and canonical S81 core audits pass2143/2143 against the actual completed E final ODB with the explicit approved native rectangle metadata. Original metadata reproduces2142/2143; the sole mismatch is ck[0]. Wrong rectangle by1nm, wrong layer, anchor outside the rectangle, and wrong pin name each fail2142/2143 in both audits.
+
+Actual evidence kit (mounted read-only during the canary): `epyc2:/srv/opentallas-scratch2/claude/codex-s81-colle-compact-1106/e`; ODB `run/results/asap7/kl_dsfd_coll_lane_e_safe8_ntf_compact_m6_pg6_vB/base/6_final.odb`. Original `pin_audit.json` FAIL is untouched. Canary scripts, metadata copies, reports and preserved initial missing-env failure remain at `epyc2:/srv/opentallas-scratch2/claude/codex-native-pin-rect-1106`.
+
+The existing approved DIE-S81-62 hook extends ck[0]'s M5 bottom236.280→236.232um, retaining x147.924..147.972 and top236.760. Its SHA256 is `e7b51a243359373541376444eb9555de51822bdf3387bf024b8e7f3156f9bc72`. Logical anchor147.948,236.520 stays unchanged inside that exact metal; the rectangle centroid is236.496. This source change declares and audits that existing geometry. It grants no new enclosure permission, changes no pin or wire, and performs no P&R.
+
+`native_rects` retains the existing [layer,x0,y0,x1,y1] contract. The shared predicate compares the exact rectangle multiset and layers in integer database units, checks well-formed geometry and primary-layer anchor containment, and rejects off-grid declarations. The only numerical allowance is sub-millionth-DBU serialization noise; the1nm endpoint mutant fails. Ordinary centre/face auditing and its1nm tolerance are unchanged. Exact bus/bit-to-BTerm matching retains name rejection.
+
+The compact fresh recipe emits this approved rectangle alongside the unchanged anchor, checks unexpected prior geometry, and records the pinned reviewed hook. Generic/core generators and resume packaging stage the shared helper. Static native-metal inspection and original connected multiPORT generation retain the anchor inside exact declared metal. Audit metadata carries the declared shape. Existing view export copies pins.json verbatim, so these fields survive export without changing its implementation.
+
+Validation: actual readonly ODB positive and four mutants for each audit; four small contract/emission checks; ten existing ordinary-pin and native canonical-metal checks. Canary used normal ot-run8GB/2threads with the existing ORFS image and its env.sh. No live kit, route database, source RTL, timing constraints or signed count changed. Per-kit export/signoff collection remains the S81 owner's responsibility; W must use its own copied pin table, not the E table.

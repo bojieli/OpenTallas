@@ -33,7 +33,7 @@ def pins(P, tn):
     periods.update({n: float(P.die['period_ps']) for n, *_ in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn)})
     periods.update({n: float(P.die['period_ps']) * m for n, _x, _y, m in gen_phys.edge_clock_pins(P, tn)})
     for p in c['pins']:
-        if not isinstance(p, dict) or required - set(p) or set(p) - required - {'source_clock_port', 'sink_pins', 'cdc', 'cdc_evidence', 'data_inputs'}:
+        if not isinstance(p, dict) or required - set(p) or set(p) - required - {'source_clock_port', 'sink_pins', 'cdc', 'cdc_evidence', 'data_inputs', 'data_outputs'}:
             raise ValueError(f'{tn}: pad_clock pin requires name/dir/period_ps/source/layer/xy_um')
         n = p['name']; pad = pads.get(n)
         if not isinstance(n, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', n) or n in seen:
@@ -86,6 +86,26 @@ def pins(P, tn):
                     raise ValueError(f'{tn}.{n}: data_inputs requires finite min_ps <= max_ps')
                 if not isinstance(row['evidence'], str) or not row['evidence'].strip():
                     raise ValueError(f'{tn}.{n}: actual source-synchronous data-clock evidence required')
+        if 'data_outputs' in p:
+            rows = p['data_outputs']
+            if p['dir'] != 'out' or not isinstance(rows, list) or not rows:
+                raise ValueError(f'{tn}.{n}: data_outputs needs a nonempty list on an output pad clock')
+            for row in rows:
+                if not isinstance(row, dict) or set(row) != {'port', 'max_ps', 'min_ps', 'evidence'}:
+                    raise ValueError(f'{tn}.{n}: data_outputs requires port/max_ps/min_ps/evidence')
+                name = row['port']
+                if not isinstance(name, str):
+                    raise ValueError(f'{tn}.{n}: data output port must be a literal pad name')
+                data = data_pads.get(name)
+                if not data or data['dir'] != 'out' or name in data_seen:
+                    raise ValueError(f'{tn}.{n}: data_outputs must uniquely select existing output data pads')
+                data_seen.add(name)
+                lo, hi = row['min_ps'], row['max_ps']
+                if any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v)
+                       for v in (lo, hi)) or lo > hi:
+                    raise ValueError(f'{tn}.{n}: data_outputs requires finite min_ps <= max_ps')
+                if not isinstance(row['evidence'], str) or not row['evidence'].strip():
+                    raise ValueError(f'{tn}.{n}: actual source-synchronous data-clock evidence required')
         result.append(dict(p))
     if seen != set(pads):
         raise ValueError(f'{tn}: pad_clock must cover every existing clock pad: {sorted(set(pads) - seen)}')
@@ -136,7 +156,10 @@ def sdc(P, tn, text):
             raise ValueError(f'{tn}: native pad data needs the explicit generic input collection')
         text = text.replace(marker, marker +
             f'set pad_native_inputs [get_ports {{{selectors}}}]\n' +
-            'set pad_seam_inputs [remove_from_collection $non_clk_in $pad_native_inputs]\n')
+            'set pad_seam_inputs {}\n' +
+            'foreach pad_input $non_clk_in {\n' +
+            '  if {[lsearch -exact $pad_native_inputs $pad_input] < 0} {lappend pad_seam_inputs $pad_input}\n' +
+            '}\n')
         text = '\n'.join(line.replace('$non_clk_in', '$pad_seam_inputs')
                          if line.startswith('set_input_delay ') else line
                          for line in text.splitlines()) + '\n'
@@ -144,6 +167,34 @@ def sdc(P, tn, text):
             for kind in ('max', 'min'):
                 value = gen_phys.t_lib(row[kind + '_ps'])
                 text += (f'set_input_delay -{kind} {value:.4f} -clock {clock} '
+                         f'[get_ports {{{row["port"]}[*]}}]\n')
+    output_data = [(p['name'], row) for p in exports for row in p.get('data_outputs', [])]
+    if output_data:
+        # Keep the existing loads on every data output. Only their generic
+        # virtual-clock delays use the filtered explicit collection.
+        native = {row['port'] for _clock, row in output_data}
+        seam = [sel for sel in LC.data_output_selectors(P, tn)
+                if sel.split('[', 1)[0] not in native]
+        collection = '[get_ports {' + ' '.join(seam) + '}]' if seam else '{}'
+        lines = []
+        for line in text.splitlines():
+            if line.startswith('set_output_delay ') and any(
+                    name in line for name in ('$pad_data_outputs', '$cland_data_outputs')):
+                if not seam:
+                    continue
+                line = line.replace('$pad_data_outputs', '$pad_seam_outputs').replace(
+                    '$cland_data_outputs', '$pad_seam_outputs')
+            lines.append(line)
+        text = 'set pad_seam_outputs ' + collection + '\n' + '\n'.join(lines) + '\n'
+        for clock in dict.fromkeys(clock for clock, _row in output_data):
+            text += (f'set_clock_uncertainty {gen_phys.t_lib(gen_phys.unc_setup_ps()):.4f} '
+                     f'-setup [get_clocks {clock}]\n'
+                     f'set_clock_uncertainty {gen_phys.t_lib(gen_phys.unc_hold_ps()):.4f} '
+                     f'-hold [get_clocks {clock}]\n')
+        for clock, row in output_data:
+            for kind in ('max', 'min'):
+                value = gen_phys.t_lib(row[kind + '_ps'])
+                text += (f'set_output_delay -{kind} {value:.4f} -clock {clock} '
                          f'[get_ports {{{row["port"]}[*]}}]\n')
     return text + cdc_sdc(ps, text, gen_phys.t_lib)
 

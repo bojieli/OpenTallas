@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.head_plan_event.v1",
+ "event": "codex_stations_boot_1106",
+ "base": "l48ui",
+ "prepared": "/srv/opentallas-scratch2/claude/codex-head-1105/prep_head_union_exact6",
+ "status": "REVIEWED SOURCE EVENT; owner adoption and new physical trials required",
+ "stations": {
+  "hd_spn": 24,
+  "hd_spn_end": 12
+ },
+ "station_cycles": "previously priced stages now actually emitted; model/K unchanged",
+ "clock_pins": "hd_spn original42 planned endpoints frozen explicit; positions/names unchanged",
+ "raw_reset": "zero relay remaps, zero repoints, zero pin/depth changes",
+ "geometry": "results/codex_head_1105/source_stations/stations_exact_review.png",
+ "proof": "results/codex_head_1105/source_stations",
+ "n4": "inherits owner-adopted FREG data+1/K+2",
+ "bootstrap": "includes transport-only raw START scopes for HOST and pairA plus CTL mixed control FT; component proof ongoing, HOST params deliberately unadmitted",
+ "serdes": "canonical source; RXQ vB not adopted",
+ "physical_signoff": "NOT CLAIMED"
+}

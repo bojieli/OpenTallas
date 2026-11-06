@@ -330,3 +330,28 @@ def test_setup_window_bad_value_fails_closed(tmp_path, monkeypatch, bad):
     monkeypatch.setenv('OT_G2_SETUP_CONTINUE_PS', bad)
     with pytest.raises(ValueError):
         gate.setup_continue_ps(kit(tmp_path))
+
+
+@pytest.mark.parametrize('mutation', [None, 'other-coverage', 'raw-clock-error', 'missing-coverage', 'data-fail'])
+def test_only_unexpanded_child_etm_clock_is_advisory(mutation):
+    import signoff as so
+    corners = {c: so.corner_result(so.parse_session(policy_log(c.upper()))) for c in ('tt', 'ff')}
+    for value in corners.values():
+        value['clock_endpoint_coverage'] = dict(verdict='NOT RUN', status='UNEXPANDED_CHILD_ETM')
+    if mutation == 'other-coverage':
+        corners['ff']['clock_endpoint_coverage']['status'] = 'MISSING_CHILD_LIBERTY'
+    elif mutation == 'raw-clock-error':
+        corners['tt']['ck_errors'] = 1
+    elif mutation == 'missing-coverage':
+        corners['ff'].pop('clock_endpoint_coverage')
+    elif mutation == 'data-fail':
+        corners['tt']['std_wns_max'] = -90
+        corners['tt']['sdc_wns_max'] = -90
+    result = gate.policy_record(corners, {})
+    assert result['checks']['clock']['verdict'] == 'NOT RUN'
+    assert result['verdict'] == ('PASS' if mutation is None else 'FAIL')
+    assert ('clock' in result['advisory']) == (mutation in (None, 'data-fail'))
+    # The routed sign-off evaluator still rejects the same unqualified child ETMs.
+    final = dict(corners=corners, policy={})
+    so.evaluate(final)
+    assert final['checks']['clock']['verdict'] == 'NOT RUN'

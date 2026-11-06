@@ -1,0 +1,11 @@
+# Explicit idle native slice image emission
+
+The retained DENSE2-B A-projection ownership assigns zero rows to all six real frames of u_s_7N. Before this change, lower_xs only emitted a native programme when an active frame established shared_phase. This idle slice therefore fell through the legacy PARTIAL description and disappeared from the native bundle's slice list.
+
+The new branch emits seven all-zero XS ROM images and an explicit idle ownership record. It emits no frame weight/configuration payloads and no GO/CAP or issuer rows. Every declared frame must match the actual frame set and master, with known empty rows and no phase. PARTIAL, sealed_programme_held=true, lifetime_qualified=false and issuer_commands_emitted=false remain explicit. No RTL/data-path cycles change. Active frame lowering follows the existing branch.
+
+The smallest image-material component uses the retained six-frame zero-row ownership record (copied here). It decodes all seven physical512x576 ROM images and checks their entire logical4096x72 contents are zero:28672 words. Active-row, unknown-row, missing-frame and wrong-master controls all reject. PASS, ot-run intel1 unit2341572-1793974012,8GB1T/disk1; output intel1 /srv/opentallas-scratch2/claude/codex-ds-idle-native-1106/output_a2. See result_a2.json and run_a2.py.
+
+The first production-emission attempt failed before output because its inherited driver named the now-absent historical die-s81-46 bind manifest/compiler worktree. This is a retained-source construction failure, not a hardware or bitmap failure. The follow-up component intentionally isolates image material and its ownership guard; it does not stub or claim selected-source resolution. The production idle manifest remains subject to the normal source resolver and fails closed when that source metadata is absent.
+
+No new production bundle was emitted, no 16/16 source integration is claimed, and no current wc1 proposal was activated. The old image bundle remains immutable with its missing-slice report. Next integration must supply the selected source/binder metadata and then regenerate a fresh owned bundle; the remaining2896 uncompiled bound images and aggregate A/B gather/retirement obligations are independent.

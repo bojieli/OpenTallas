@@ -19,29 +19,77 @@ def contract(raw):
     for name,typ in raw['partition_types'].items():
         clock={k:v for k,v in typ.get('clock',{}).items() if k.startswith('landing_')}
         types[name]=digest(dict(internal_stations=typ.get('internal_stations',[]),
-                               clock=clock,reset=typ.get('reset'),buses=[{k:b.get(k) for k in ['name','dir','width','kind']} for b in typ.get('buses',[])]))
+                               clock=clock,reset=typ.get('reset'),count_straps=typ.get('count_straps'),id_straps=typ.get('id_straps'),relay_sites=typ.get('relay_sites'),buses=[{k:b.get(k) for k in ['name','dir','width','kind']} for b in typ.get('buses',[])]))
     return dict(schema='opentallas.native_topology.v1',reset=digest(raw.get('reset')),types=types)
 
 
-def write_bind_receipt(raw,out,asbuilt=None,topology=None):
-    receipt=dict(topology or contract(raw))
+def native_contract(raw,asbuilt=None,plan_path=None):
+    """Fingerprint only fields the native binder consumes, using its actual opt-ins.
+
+    The complete posthook contract remains separate. In particular, IN/core
+    stations and OUT stations not selected by internal_stations_types belong to
+    KIT preparation, not native materialization.
+    """
+    ab=json.loads(Path(asbuilt).read_text()) if asbuilt else raw.get('asbuilt',{})
+    table={};table_sha=None
+    if ab.get('clock_landing_table'):
+        base=Path(ab.get('base',Path(__file__).resolve().parents[2]))
+        if not base.is_absolute():
+            # Match bind.plan_base: an explicit manifest owns its relative base.
+            # Inline asbuilt metadata remains relative to the containing plan.
+            context = asbuilt or plan_path
+            if context is None:raise ValueError('native clock table requires explicit full plan context')
+            base=Path(context).parent/base
+        path=Path(ab['clock_landing_table'])
+        if not path.is_absolute():path=base/path
+        base,path=base.resolve(),path.resolve()
+        try:path.relative_to(base)
+        except ValueError as error:raise ValueError('native clock table must resolve inside its declared native base') from error
+        payload=path.read_bytes();table=json.loads(payload);table_sha=hashlib.sha256(payload).hexdigest()
+    selected=set(ab.get('internal_stations_types',[]))
+    lineage=table.get('collector',{}).get('types',{})
+    types={};reset_context={};ownership={}
+    for name,typ in raw['partition_types'].items():
+        base=lineage.get(name,{}).get('base_type',name)
+        owns_out=any(name==s or base==s or base.startswith(s+'_') for s in selected)
+        entries=[]
+        if owns_out:
+            from native_istations import source_entries
+            entries=source_entries(typ)
+        native_conns={e['conn'] for e in entries}
+        ownership[name]=[dict(conn=e.get('conn'),stages=len(e.get('regs_um',[])),phase='NATIVE' if e.get('conn') in native_conns else 'KIT') for e in typ.get('internal_stations',[])]
+        clock={k:v for k,v in typ.get('clock',{}).items() if k.startswith('landing_')} if table_sha else {}
+        types[name]=digest(dict(native_out_stations=entries,clock=clock,clock_table_sha256=table_sha,
+            buses=[{k:b.get(k) for k in ['name','dir','width','kind']} for b in typ.get('buses',[])],
+            count_straps=typ.get('count_straps'),id_straps=typ.get('id_straps')))
+        reset_context[name]=dict(reset=typ.get('reset'),hard=typ.get('hard'),
+            clock={k:v for k,v in typ.get('clock',{}).items() if not k.startswith('landing_')})
+    transport=dict(lanes=[{k:l.get(k) for k in ['id','ports','fixed_cycles','stations','cycles']} for l in raw.get('lanes',[])],
+                   ports=[{k:p.get(k) for k in ['id','src','dst','width','kind']} for p in raw.get('ports',[])])
+    return dict(schema='opentallas.native_topology.v2',types=types,ownership=ownership,clock_table_sha256=table_sha,
+                reset=digest(dict(global_reset=raw.get('reset'),types=reset_context)),transport=digest(transport))
+
+
+def write_bind_receipt(raw,out,asbuilt=None,topology=None,plan_path=None):
+    receipt=dict(topology or native_contract(raw,asbuilt,plan_path))
     receipt['asbuilt_sha256']=hashlib.sha256(Path(asbuilt).read_bytes()).hexdigest() if asbuilt else digest(raw.get('asbuilt'))
     Path(out,'native_topology.json').write_text(json.dumps(receipt,indent=2)+'\n')
     return receipt
 
 
-def bind_matches(raw,tn,out,asbuilt=None):
+def bind_matches(raw,tn,out,asbuilt=None,plan_path=None):
     path=Path(out)/'native_topology.json'
     if not path.is_file():return False
-    old=json.loads(path.read_text());new=contract(raw)
+    old=json.loads(path.read_text());new=native_contract(raw,asbuilt,plan_path)
     if asbuilt and old.get('asbuilt_sha256')!=hashlib.sha256(Path(asbuilt).read_bytes()).hexdigest():return False
-    return old.get('reset')==new['reset'] and old.get('types',{}).get(tn)==new['types'][tn]
+    return old.get('reset')==new['reset'] and old.get('transport')==new['transport'] and old.get('types',{}).get(tn)==new['types'][tn]
 
 
-def has_topology(raw,tn):
+def has_topology(raw,tn,asbuilt=None):
+    ab=json.loads(Path(asbuilt).read_text()) if asbuilt else raw.get('asbuilt',{})
     typ=raw['partition_types'][tn]
-    return bool(raw.get('reset') or typ.get('reset') or typ.get('internal_stations') or
-                typ.get('clock',{}).get('landing_raw_branches'))
+    return bool(ab.get('clock_landing_table') or raw.get('reset') or typ.get('reset') or typ.get('internal_stations') or
+                typ.get('clock',{}).get('landing_raw_branches') or typ.get('count_straps') or typ.get('id_straps'))
 
 
 def source_census(raw,tn,rtl_dir, *, require_receipt=True):
@@ -90,12 +138,27 @@ def source_census(raw,tn,rtl_dir, *, require_receipt=True):
     for conn,count in stations.items():
         from gen_rtl import sv_id
         bus=sv_id(conn[4:])
+        bus_row=next(b for b in typ['buses'] if b['name']==conn[4:])
+        from kit_istations import packed_input_delay,bound_bus_width
+        width=bound_bus_width(tn,bus_row,text,man)
+        packed=packed_input_delay(tn,bus_row,text,width,count)
+        rows=[r for r in report if r.get('conn')==conn]
+        if packed:
+            emitted_bus_stages[conn]=packed['stage_registers']
+            if require_receipt and not rows:
+                problems.append(f'{conn}: packed {count} stages need canonical placement receipt')
+            if any(r.get('packed_delay')!=packed or r.get('stations')!=packed['stage_registers'] for r in rows):
+                problems.append(f'{conn}: packed-delay source/placement receipt differs')
+            required.append(dict(inst=packed['instance'],master='ot_dp_dly',
+                                 parameters=dict(W=packed['width'],D=packed['depth']),
+                                 register_bits=packed['width']*packed['depth'],kind=conn))
+            continue
         candidates=set(re.findall(r'\b(u_ist_'+re.escape(bus)+r'_\d+|u_b(?:in|out)_'+re.escape(bus)+r'_pad\d+)\b',text))
-        emitted=[name for name in sorted(candidates) if len(_instance_type_spans(text,'ot_dp_st',name))==1]
+        kinds={name:[kind for kind in ['ot_dp_st','ot_dp_ste'] if len(_instance_type_spans(text,kind,name))==1] for name in sorted(candidates)}
+        emitted=[name for name,ks in kinds.items() if len(ks)==1]
         emitted_bus_stages[conn]=emitted
         if len(emitted)!=count:
             problems.append(f'{conn}: actual source emitted {len(emitted)} stages, expected {count}')
-        rows=[r for r in report if r.get('conn')==conn]
         if require_receipt and not rows:
             problems.append(f'{conn}: missing kit_istations factory receipt for {count} stages')
             continue
@@ -104,9 +167,9 @@ def source_census(raw,tn,rtl_dir, *, require_receipt=True):
             if row.get('planned')!=count or len(names)!=count:
                 problems.append(f'{conn}: factory emitted {len(names)} stages, expected {count}')
             for name in names:
-                hits=_instance_type_spans(text,'ot_dp_st',name)
-                if len(hits)!=1:problems.append(f'{name}: expected one emitted ot_dp_st, found {len(hits)}')
-                required.append(dict(inst=name,master='ot_dp_st',kind=conn))
+                choices=kinds.get(name,[])
+                if len(choices)!=1:problems.append(f'{name}: expected one canonical station instance, found {len(choices)}')
+                required.append(dict(inst=name,master=choices[0] if len(choices)==1 else 'ot_dp_st',kind=conn))
     required=list({(r['inst'],r['master']):r for r in required}.values())
     return dict(schema='opentallas.kit_topology.v1',type=tn,source=str(source),
                 source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
@@ -120,9 +183,88 @@ def install_inventory(census,receipt,top):
     receipt=Path(receipt)
     data=json.loads(receipt.read_text()) if receipt.exists() else dict(
         schema='opentallas.kit_assembly.v1',bindings=[],parent_profile=dict(top=top,parameters={}))
-    data['required_instances']=census['required_instances']
+    required={}
+    for row in data.get('required_instances',[])+census['required_instances']:
+        if row['inst'] in required and required[row['inst']]['master']!=row['master']:
+            raise ValueError('conflicting explicit factory instance '+row['inst'])
+        required.setdefault(row['inst'],row)
+    data['required_instances']=list(required.values())
     receipt.write_text(json.dumps(data,indent=2)+'\n')
     shutil.copyfile(helper,receipt.parent/'kit_assembly.py')
+
+
+def verify_component_source(receipt_path, *, context_plan,prepared_plan,bind_out,type_name,instance=None,asbuilt=None):
+    """Use the approved read-only verifier; never turn LOCAL evidence into a bind stamp."""
+    import bind_component
+    report=bind_component.verify(receipt_path,context_plan=context_plan,prepared_plan=prepared_plan,
+        bind_out=bind_out,type_name=type_name,instance=instance,asbuilt=asbuilt)
+    if report.get('scope')!='LOCAL_COMPONENT' or report.get('source_preparation_only') is not True:
+        raise ValueError('component verifier did not return explicit LOCAL source-preparation evidence')
+    return report
+
+
+def prepare_stations(plan,tn,rtl_dir,native_plan=None,asbuilt=None):
+    """Canonical IN/core application and OUT reuse, once on a fresh kit copy."""
+    import kit_istations
+    raw=json.loads(Path(plan).read_text());kd=Path(rtl_dir).resolve()
+    man=json.loads((kd/'kit_rtl.json').read_text())
+    context=json.loads(Path(native_plan).read_text()) if native_plan else raw
+    manifest=asbuilt or man.get('asbuilt_manifest')
+    component_report=None
+    if man.get('component_proof'):
+        component_report=verify_component_source(man['component_proof'],context_plan=native_plan or plan,
+            prepared_plan=plan,bind_out=man['bind_out'],type_name=tn,asbuilt=manifest)
+    if component_report is None and (tn not in context['partition_types'] or native_contract(context,asbuilt or man.get('asbuilt_manifest'),native_plan or plan)['types'][tn]!=native_contract(dict(raw,asbuilt=context.get('asbuilt',{})) if not (asbuilt or man.get('asbuilt_manifest')) else raw,asbuilt or man.get('asbuilt_manifest'),native_plan or plan)['types'][tn]):
+        raise ValueError('KIT_TOPOLOGY_CONTEXT: selected topology differs from full native plan')
+    if native_plan and component_report is None and digest(raw.get('reset'))!=digest(context.get('reset')):
+        raise ValueError('KIT_TOPOLOGY_CONTEXT: selected reset topology differs from full native plan')
+    if native_plan and component_report is None and has_topology(context,tn,manifest):
+        if not man.get('bind_out') or not bind_matches(context,tn,man['bind_out'],manifest,native_plan):
+            raise ValueError('KIT_TOPOLOGY_BIND_STALE: regenerate the canonical native bind for this full plan/asbuilt context')
+    fingerprint=digest(dict(type=contract(raw)['types'][tn],reset=contract(context)['reset'],
+                            asbuilt=hashlib.sha256(Path(manifest).read_bytes()).hexdigest() if manifest else None,
+                            component=hashlib.sha256(Path(man['component_proof']).read_bytes()).hexdigest() if component_report else None))
+    stamp=kd/'kit_topology_prepared.json'
+    bound=next(Path(f) for f in man['files'] if Path(f).stem==man['bound_module'])
+    if stamp.exists():
+        old=json.loads(stamp.read_text())
+        if old['fingerprint']!=fingerprint or old['source_sha256']!=hashlib.sha256(bound.read_bytes()).hexdigest():
+            raise ValueError('KIT_TOPOLOGY_REGENERATE: prepared source/context changed; regenerate a fresh kit copy')
+        result=source_census(raw,tn,kd)
+    else:
+        kit_istations.main([str(plan),tn,str(kd),'--apply'])
+        result=source_census(raw,tn,kd)
+    if component_report is not None:
+        result.update(source_scope='LOCAL_COMPONENT',source_preparation_only=True,
+                      component_report=component_report,global_bind=component_report['global_bind'])
+    (kd/'kit_topology.json').write_text(json.dumps(result,indent=2)+'\n')
+    if result['problems']:
+        raise ValueError('KIT_TOPOLOGY_SOURCE: '+'; '.join(result['problems']))
+    if not stamp.exists():
+        stamp.write_text(json.dumps(dict(fingerprint=fingerprint,source_sha256=result['source_sha256'],
+                         native_plan=str(native_plan or plan),asbuilt=manifest),indent=2)+'\n')
+    return result
+
+
+def stage_inventory(rtl_dir,kit,*,top=None):
+    """Carry preparation expectations through the ordinary gen.py physical kit."""
+    rtl_dir,kit=Path(rtl_dir),Path(kit)
+    source=rtl_dir/'kit_topology.json'
+    if not source.exists():return
+    census=json.loads(source.read_text())
+    if census.get('problems'):raise ValueError('KIT_TOPOLOGY_SOURCE: unsuccessful preparation cannot be staged')
+    bound=Path(census['source'])
+    if hashlib.sha256(bound.read_bytes()).hexdigest()!=census['source_sha256']:
+        raise ValueError('KIT_TOPOLOGY_REGENERATE: source changed after canonical station preparation')
+    assembly=rtl_dir/'kit_assembly.json'
+    if assembly.exists() and not (kit/'kit_assembly.json').exists():
+        shutil.copyfile(assembly,kit/'kit_assembly.json')
+    if top is None:
+        top=json.loads((kit/'freeze.json').read_text()).get('module')
+    if not isinstance(top,str) or not top:
+        raise ValueError('KIT_TOPOLOGY_SOURCE: explicit selected parent module required')
+    install_inventory(census,kit/'kit_assembly.json',top)
+    shutil.copyfile(source,kit/'kit_topology.json')
 
 
 def main():
@@ -131,12 +273,17 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     sub=p.add_subparsers(dest='command',required=True)
     census=sub.add_parser('census');census.add_argument('plan');census.add_argument('type');census.add_argument('rtl_dir');census.add_argument('--receipt',required=True)
+    prepare=sub.add_parser('prepare-stations');prepare.add_argument('plan');prepare.add_argument('type');prepare.add_argument('rtl_dir');prepare.add_argument('--native-plan');prepare.add_argument('--asbuilt')
     stamp=sub.add_parser('stamp-bind');stamp.add_argument('plan');stamp.add_argument('bind_out');stamp.add_argument('--asbuilt')
     a=p.parse_args();raw=json.loads(Path(a.plan).read_text())
+    if a.command=='prepare-stations':
+        result=prepare_stations(a.plan,a.type,a.rtl_dir,a.native_plan,a.asbuilt)
+        print(json.dumps(dict(type=a.type,required_instances=len(result['required_instances']),problems=result['problems'])))
+        return 0
     if a.command=='stamp-bind':
         report=json.loads(Path(a.bind_out,'bind_report.json').read_text())
         if report.get('n_errors',1):raise ValueError('only a successful fresh native bind can record topology')
-        write_bind_receipt(raw,a.bind_out,a.asbuilt)
+        write_bind_receipt(raw,a.bind_out,a.asbuilt,plan_path=a.plan)
         return 0
     result=source_census(raw,a.type,a.rtl_dir)
     Path(a.receipt).write_text(json.dumps(result,indent=2)+'\n')

@@ -27,6 +27,9 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+# Isolated python (-I) omits the script directory; staged helpers are local.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 OUT_PINS = {"Y", "Q", "QN", "H", "L", "CON", "SN", "Z", "ZN", "O"}
 # Clocks and the reset/START *inputs* (arst_n / rst_n / start_i: root synchroniser or typed control) are not face
 # registers.  The registered wavefront OUTS rst_o_<k> / start_o_<k> ARE partition pins and are checked like data: one

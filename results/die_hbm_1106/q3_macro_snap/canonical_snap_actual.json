@@ -1,0 +1,92 @@
+{
+ "source": "existing canonical factory/table with actual failed-kit tracks and LEF",
+ "resolution_cases": 5,
+ "unrelated_recipes_off": 307,
+ "signal_rectangles_per_macro": 298,
+ "before_offtrack": 1192,
+ "after_offtrack": 0,
+ "wrong24nm_offtrack": 1192,
+ "moves": [
+  {
+   "inst": "u_link.g_bank[0].u_store.u_native.g_rw141.u_sram",
+   "orient": "R0",
+   "from_um": [
+    110.16,
+    36.288
+   ],
+   "dx_nm": 0,
+   "dy_nm": 12
+  },
+  {
+   "inst": "u_link.g_bank[1].u_store.u_native.g_rw141.u_sram",
+   "orient": "R0",
+   "from_um": [
+    110.16,
+    114.048
+   ],
+   "dx_nm": 0,
+   "dy_nm": 12
+  },
+  {
+   "inst": "u_link.g_bank[2].u_store.u_native.g_rw141.u_sram",
+   "orient": "R0",
+   "from_um": [
+    110.16,
+    202.608
+   ],
+   "dx_nm": 0,
+   "dy_nm": 12
+  },
+  {
+   "inst": "u_link.g_bank[3].u_store.u_native.g_rw141.u_sram",
+   "orient": "R0",
+   "from_um": [
+    110.16,
+    280.368
+   ],
+   "dx_nm": 0,
+   "dy_nm": 12
+  }
+ ],
+ "placements": [
+  {
+   "inst": "u_link.g_bank[0].u_store.u_native.g_rw141.u_sram",
+   "xy_um": [
+    110.16,
+    36.3
+   ],
+   "orient": "R0",
+   "macro": "ot_sram_1r1w_64x141_m1_r0c0_g141"
+  },
+  {
+   "inst": "u_link.g_bank[1].u_store.u_native.g_rw141.u_sram",
+   "xy_um": [
+    110.16,
+    114.06
+   ],
+   "orient": "R0",
+   "macro": "ot_sram_1r1w_64x141_m1_r0c0_g141"
+  },
+  {
+   "inst": "u_link.g_bank[2].u_store.u_native.g_rw141.u_sram",
+   "xy_um": [
+    110.16,
+    202.62
+   ],
+   "orient": "R0",
+   "macro": "ot_sram_1r1w_64x141_m1_r0c0_g141"
+  },
+  {
+   "inst": "u_link.g_bank[3].u_store.u_native.g_rw141.u_sram",
+   "xy_um": [
+    110.16,
+    280.38
+   ],
+   "orient": "R0",
+   "macro": "ot_sram_1r1w_64x141_m1_r0c0_g141"
+  }
+ ],
+ "lef_sha256": "2cb8f06391f7a1caba3a132301c479c663e02085f3a604d39dbd9d8e07cf94b8",
+ "tracks_sha256": "6f1836c3f11060f8112fed969a738aed096aea64200bd0858850463ec06936be",
+ "extra_data_cycles": 0
+}

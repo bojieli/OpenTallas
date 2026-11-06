@@ -484,7 +484,7 @@ module ot_svgr_kr_in_h #(parameter integer W=277,parameter integer D=4,parameter
  end
 endmodule
 
-module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEPTH=8,parameter integer LBANKS=4,parameter integer LB=2,parameter integer MUT=0)(
+module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEPTH=8,parameter integer LBANKS=4,parameter integer LB=2,parameter integer MUT=0,parameter integer SKID_HEAD=0)(
  input wire [1:0] id_stack,input wire [2:0] id_sm,input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,input wire [3:0] hbm_pc_clk,
  input wire seam_res_v,input wire[96:0]seam_res_word,input wire seam_s_fault,output wire seam_h_fault,
  output reg [7:0] bk_in_v,output wire [2279:0] bk_in_data,input wire [7:0] bk_cr,
@@ -539,6 +539,19 @@ module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEP
   ot_svgr_kr_in_h #(.W(277),.MUT(MUT==4?1:MUT==6?2:0)) u_kr_in(.clk(hbm_pc_clk[pc]),.rst_n(hrst),.p_v(kr_v[pc]),.p_rdy(kr_rdy[pc]),.p_d({kr_tag[17*pc+:17],kr_beat[4*pc+:4],kr_data[256*pc+:256]}),
    .i_v(i_kr_v[pc]),.i_rdy(i_kr_rdy[pc]),.i_d({i_kr_tag[17*pc+:17],i_kr_beat[4*pc+:4],i_kr_data[256*pc+:256]}));
   // K: every head word enters the skid with the owner verdict; a refused word (owner fault) blocks the skid head.
+  if(SKID_HEAD!=0)begin:head_form
+   wire [1:0] sk_n;wire sk_head_ok;
+   wire [256+11+16+LB-1:0] sk_head;
+   // Preserve non-lookahead full behavior: full blocks push even on a pop edge.
+   assign dec_fire[pc]=i_kr_v[pc]&&sk_n!=(MUT==5?2'd3:2'd2);
+   assign i_kr_rdy[pc]=dec_fire[pc];
+   assign response_ok[pc]=sk_n!=0&&!hbm_fault&&sk_head_ok;
+   assign {sk_data[256*pc+:256],response_ordinal[pc],response_epoch[pc],response_bank[pc]}=sk_head;
+   ot_svgr_rf1_skid_head #(.W(256+11+16+LB),.MUT(MUT==8?1:MUT==9?2:MUT==10?3:0)) u_skid(
+    .clk(hbm_pc_clk[pc]),.rst_n(hrst),.push(dec_fire[pc]),.pop(response_accepted[pc]),
+    .in_data({i_kr_data[256*pc+:256],dec_ordinal[pc],dec_epoch[pc],dec_bank[pc]}),.in_ok(dec_ok[pc]),
+    .head_data(sk_head),.head_ok(sk_head_ok),.n(sk_n));
+  end else begin:ring_form
   reg [256+11+16+LB-1:0] sk_m[0:1];reg [1:0] sk_ok;reg sk_wp,sk_rp;reg [1:0] sk_n;
   assign dec_fire[pc]=i_kr_v[pc]&&sk_n!=(MUT==5?2'd3:2'd2);assign i_kr_rdy[pc]=dec_fire[pc];
   assign response_ok[pc]=sk_n!=0&&!hbm_fault&&sk_ok[sk_rp];
@@ -547,6 +560,7 @@ module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEP
   always @(posedge hbm_pc_clk[pc] or negedge hrst)begin
    if(!hrst)begin sk_wp<=0;sk_rp<=0;sk_n<=0;sk_ok<=0;end
    else begin if(dec_fire[pc])begin sk_ok[sk_wp]<=dec_ok[pc];sk_wp<=~sk_wp;end if(response_accepted[pc])sk_rp<=~sk_rp;sk_n<=sk_n+2'(dec_fire[pc])-2'(response_accepted[pc]);end
+  end
   end
  end endgenerate
  // A: per lane, a one-hot grant over the 4 PC skid heads from the rotating cursor; the grant nets drive the data select.

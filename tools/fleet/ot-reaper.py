@@ -24,7 +24,7 @@ Runs on localhost (the job records live here) from cron every 30 min and drives 
         is covered.  EARLY_FAIL_* jobs are FAIL (P4).
 Usage: ot-reaper.py [--dry] [--host H ...] [--no-hand]      log: ~/claude-takeover-20261007/ot-reaper.log
 """
-import collections, datetime as dt, fcntl, glob, json, os, subprocess, sys
+import collections, datetime as dt, fcntl, glob, json, os, subprocess, sys, time
 
 JOBS = os.path.expanduser("~/.local/state/closure_loop/jobs")
 LOG = os.path.expanduser("~/claude-takeover-20261007/ot-reaper.log")
@@ -259,6 +259,246 @@ print("DF " + "; ".join(f"{F1[k][0]} {F0[k][1]/1e9:.0f} -> {F1[k][1]/1e9:.0f} GB
 print(f"TOTAL {tot/1e9:.1f}")
 '''
 
+RELEASED_HOST_PY = r'''
+
+# Exact creator releases only; the legacy broad strip path is not called.
+import hashlib, shlex
+SAFE_RELEASE_ROOTS = ('/srv/opentallas-scratch/claude/', '/srv/opentallas-scratch2/claude/', '/srv/opentallas-scratch3/claude/', '/home/ubuntu/scratch-root/claude/')
+CACHE_EXT = {'.cpp', '.h', '.d', '.dat', '.mk', '.f'}
+BULK_EXT = {'.odb', '.def', '.gds', '.spef', '.rtlil'}
+CHECKPOINTS = {'6_final.odb', '5_1_grt.odb', '4_cts.odb'}
+
+def signed_record(value):
+    if isinstance(value, dict):
+        return any((k in ('verdict', 'local_verdict', 'status') and v == 'SIGNED') or signed_record(v) for k,v in value.items())
+    return isinstance(value, list) and any(signed_record(v) for v in value)
+
+def release_guard(row):
+    d = os.path.normpath(row['path'])
+    if not any(d.startswith(root) and d != root.rstrip('/') for root in SAFE_RELEASE_ROOTS): return 'unsafe root'
+    if not row.get('creator_release'): return 'no creator release'
+    kind = row.get('kind')
+    if kind not in ('generated-cache', 'duplicate-bulk', 'intermediate-bulk'): return 'unknown release kind'
+    if not os.path.isdir(d) or os.path.islink(d): return 'missing or linked root'
+    if kind == 'generated-cache' and not any(x in ('obj', 'obj_dir') for x in d.split('/')): return 'not a generated obj root'
+    # Any live process/container/parent or live record dependency preserves it.
+    pattern = r'/(?:srv/opentallas-scratch[^/\s]*|home/ubuntu/scratch-root)/claude/[^\s\x00\"\'<>|;,:()\[\]=]+'
+    refs = re.findall(pattern, BLOB) + list(A.get('refs', []))
+    for ref in refs:
+        ref = ref.rstrip('/')
+        if ref == d or ref.startswith(d + '/') or d.startswith(ref + '/'): return 'live/reference: ' + ref
+    # A selective empty ancestor marker exception must be explicit per cache.
+    ancestor = d
+    while any((ancestor + '/').startswith(root) for root in SAFE_RELEASE_ROOTS):
+        marker = os.path.join(ancestor, '.keep')
+        if os.path.lexists(marker):
+            allowed = kind == 'generated-cache' and row.get('empty_ancestor_keep_exception') is True and ancestor != d and os.path.isfile(marker) and os.stat(marker).st_size == 0
+            if not allowed: return '.keep: ' + marker
+        ancestor = os.path.dirname(ancestor)
+    checks = [d]
+    # Check direct capsule signoff paths without scanning unrelated sibling kits.
+    ancestor = d
+    while any((ancestor + '/').startswith(root) for root in SAFE_RELEASE_ROOTS):
+        checks += [os.path.join(ancestor, 'signoff'), os.path.join(ancestor, 'signoff.json')]
+        ancestor = os.path.dirname(ancestor)
+    for root in checks:
+        items = [root] if os.path.isfile(root) else (os.path.join(dp, f) for dp, dirs, fs in os.walk(root) for f in fs + [name for name in dirs if name == '.git'] if f in ('.keep', 'signoff.json', 'SIGNED', '.git'))
+        for path in items:
+            name = os.path.basename(path)
+            if name in ('.keep', 'SIGNED', '.git'): return 'protected: ' + path
+            if name == 'signoff.json':
+                try:
+                    if signed_record(json.load(open(path))): return 'SIGNED: ' + path
+                except (OSError, ValueError): return 'unreadable signoff: ' + path
+    if os.path.lexists(os.path.join(d, '.git')): return 'git source'
+    if kind == 'duplicate-bulk' and not row.get('destination'): return 'no preserved destination'
+    if kind == 'intermediate-bulk':
+        if not row.get('preserve'): return 'no latest checkpoint contract'
+        if not all(os.path.isfile(p) and os.path.getsize(p) > 0 for p in row['preserve']): return 'missing preserved checkpoint'
+    return ''
+
+def retained_destination(row):
+    """Verify the retained copy on its actual host in one bounded batch."""
+    destination=row.get('destination','')
+    host, sep, root=destination.partition(':')
+    if not sep or not re.fullmatch(r'[A-Za-z0-9_.-]+',host) or not root.startswith('/'):
+        return 'invalid preserved destination'
+    payload=dict(root=root,files=[dict(relative=os.path.relpath(item['path'],row['path']),bytes=item['bytes'],sha256=item.get('sha256')) for item in row['files']])
+    script="""import os,sys,json,hashlib
+request=json.load(sys.stdin);root=os.path.realpath(request['root'])
+if not os.path.isdir(root):raise ValueError('retained root missing')
+for item in request['files']:
+ path=os.path.join(root,item['relative']);real=os.path.realpath(path)
+ if os.path.commonpath([root,real])!=root or os.path.islink(path):raise ValueError('retained path escapes root')
+ if not os.path.isfile(path) or os.path.getsize(path)!=item['bytes']:raise ValueError('retained file missing or changed')
+ digest=hashlib.sha256()
+ with open(path,'rb') as stream:
+  for block in iter(lambda:stream.read(4<<20),b''):digest.update(block)
+ if digest.hexdigest()!=item['sha256']:raise ValueError('retained hash differs')
+print('RETAINED_COPY_VERIFIED')
+"""
+    same=host==row.get('host') or {host,row.get('host')}<={'localhost','intel2'}
+    command=['python3','-c',script]
+    if not same:
+        if host in ('localhost','intel2'):host='hub'
+        remote='python3 -c '+shlex.quote(script)
+        command=['ssh','-o','ConnectTimeout=10','-o','BatchMode=yes',host,remote]
+        if os.geteuid()==0:command=['sudo','-n','-u','ubuntu']+command
+    try:
+        result=subprocess.run(command,input=json.dumps(payload),capture_output=True,text=True,timeout=180)
+        if result.returncode or result.stdout.strip()!='RETAINED_COPY_VERIFIED':return 'retained destination not verified: '+result.stderr[-160:]
+    except (OSError,subprocess.SubprocessError) as error:return 'retained destination unavailable: '+repr(error)
+    return ''
+
+
+def tracked_files(d):
+    command=['git','-C',d,'ls-files','-z','--']
+    if os.geteuid()==0:command=['sudo','-n','-u','ubuntu']+command
+    try:
+        result=subprocess.run(command,capture_output=True,timeout=30,env=dict(os.environ,GIT_OPTIONAL_LOCKS='0'))
+    except (OSError,subprocess.SubprocessError):return None
+    if result.returncode:
+        if b'not a git repository' in result.stderr:return set()
+        return None
+    return {os.path.normpath(os.path.join(d,os.fsdecode(p))) for p in result.stdout.split(b'\0') if p}
+
+def apply_release(row):
+    result = dict(id=row['id'], path=row['path'], files=0, bytes=0)
+    if not os.path.lexists(row['path']) and all(not os.path.lexists(item['path']) for item in row['files']):
+        result.update(status='ALREADY_REMOVED',actual_freed_bytes=0); return result
+    reason = release_guard(row)
+    if reason:
+        result.update(status='SKIP', reason=reason); return result
+    d = os.path.normpath(row['path']); real_root=os.path.realpath(d); kind = row['kind']; selected=[]
+    tracked=tracked_files(d)
+    if tracked is None:
+        result.update(status='SKIP',reason='Git source guard unavailable');return result
+    # Validate the entire exact manifest before the first mutation.
+    for item in row['files']:
+        p = os.path.normpath(item['path']); ext = os.path.splitext(p)[1]
+        if not p.startswith(d + '/') or os.path.islink(p) or os.path.commonpath([real_root,os.path.realpath(p)])!=real_root:
+            result.update(status='SKIP', reason='unsafe file: ' + p); return result
+        if p in tracked:
+            result.update(status='SKIP',reason='tracked Git source: '+p);return result
+        if kind == 'generated-cache':
+            if ext == '.h' and 'dpi' in os.path.basename(p).lower():
+                result.update(status='SKIP',reason='DPI header required for reuse: '+p);return result
+            if not all(key in item for key in ('mtime_ns', 'inode')):
+                result.update(status='SKIP', reason='cache identity missing: ' + p); return result
+            good = ext in CACHE_EXT and ext in row.get('released_suffixes', []) and os.path.basename(p).startswith('V')
+        else:
+            good = ext in BULK_EXT and p not in row.get('preserve', [])
+            if kind == 'intermediate-bulk': good = good and os.path.basename(p) not in CHECKPOINTS and 'seed' not in os.path.basename(p).lower()
+        if not good:
+            result.update(status='SKIP', reason='unique/source/checkpoint file: ' + p); return result
+        try: st = os.lstat(p)
+        except FileNotFoundError: continue
+        if not stat.S_ISREG(st.st_mode) or st.st_size != item['bytes'] or any(key in item and getattr(st, attr) != item[key] for key, attr in (('mtime_ns','st_mtime_ns'), ('inode','st_ino'))):
+            result.update(status='SKIP', reason='changed file: ' + p); return result
+        if kind == 'duplicate-bulk':
+            if not item.get('sha256'):
+                result.update(status='SKIP', reason='no duplicate identity: ' + p); return result
+            h=hashlib.sha256()
+            with open(p,'rb') as stream:
+                for block in iter(lambda: stream.read(4 << 20), b''): h.update(block)
+            if h.hexdigest()!=item['sha256']:
+                result.update(status='SKIP', reason='duplicate identity changed: ' + p); return result
+        selected.append((p, st))
+    if kind == 'duplicate-bulk' and selected:
+        reason=retained_destination(row)
+        if reason:
+            result.update(status='SKIP',reason=reason);return result
+    # Resample process/mount references immediately before unlinking the batch.
+    global BLOB
+    BLOB = procs()
+    reason=release_guard(row)
+    if reason:
+        result.update(status='SKIP',reason=reason);return result
+    before=os.statvfs(d)
+    for p, st in selected:
+        if os.path.commonpath([real_root,os.path.realpath(p)])!=real_root:
+            result.update(status='SKIP',reason='path escaped at apply: '+p);return result
+        now=os.lstat(p)
+        if (now.st_ino,now.st_mtime_ns,now.st_size)!=(st.st_ino,st.st_mtime_ns,st.st_size):
+            result.update(status='SKIP',reason='file changed at apply: '+p);return result
+    for p, st in selected:
+        if not DRY:
+            rm(p, False)
+            if os.path.lexists(p):
+                result.update(status='FAILED', reason='unlink did not remove: '+p); return result
+        result['files']+=1;result['bytes']+=st.st_blocks*512
+    after=os.statvfs(d)
+    result.update(status='DRY' if DRY else ('APPLIED' if selected else 'ALREADY_REMOVED'), actual_freed_bytes=(after.f_bavail-before.f_bavail)*after.f_frsize)
+    return result
+
+for row in A.get('released', []):
+    try: print('RELEASE ' + json.dumps(apply_release(row)), flush=True)
+    except Exception as ex: print('RELEASE ' + json.dumps(dict(id=row['id'],path=row.get('path'),status='SKIP',reason=repr(ex))),flush=True)
+headroom=[]
+for path in ('/', '/srv/opentallas-scratch/claude', '/srv/opentallas-scratch2/claude', '/srv/opentallas-scratch3/claude'):
+    try:
+        s=os.stat(path);v=os.statvfs(path);headroom.append(dict(path=path,device=s.st_dev,on_root=s.st_dev==os.stat('/').st_dev,available_bytes=v.f_bavail*v.f_frsize))
+    except OSError:pass
+print('HEADROOM '+json.dumps(headroom),flush=True)
+'''
+
+
+def released_main():
+    """Bounded exact-file queue. This path never runs legacy HAND/JOB stripping."""
+    import base64, hashlib, pathlib, shlex
+    queue = pathlib.Path(sys.argv[sys.argv.index('--released-manifest') + 1]).expanduser()
+    receipt_dir = (queue if queue.is_dir() else queue.parent) / 'receipts'
+    receipt_dir.mkdir(parents=True, exist_ok=True)
+    files = sorted(queue.glob('*.json')) if queue.is_dir() else [queue]
+    rows=[]
+    for path in files:
+        try: value=json.loads(path.read_text())
+        except (OSError,ValueError) as error:
+            print('SKIP manifest',str(path),repr(error),flush=True);continue
+        for row in value if isinstance(value,list) else [value]:
+            row=dict(row)
+            identity=hashlib.sha256(json.dumps(row,sort_keys=True).encode()).hexdigest()
+            row['id']=identity
+            previous=receipt_dir/(identity+'.json')
+            if previous.exists():
+                try:
+                    if json.loads(previous.read_text()).get('status') in ('APPLIED','ALREADY_REMOVED'): continue
+                except (OSError,ValueError):pass
+            rows.append(row)
+    hosts=[sys.argv[i+1] for i,a in enumerate(sys.argv) if a=='--host'] or sorted({r['host'] for r in rows})
+    dry='--dry' in sys.argv
+    lock=open('/tmp/ot-reaper.lock','w')
+    try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    except OSError:return
+    # Reuse the existing process/mount scanner and exact unlink helper, never strip().
+    prefix=HOST_PY.split('tot = 0\n',1)[0].replace('BLOB = procs()', 'BLOB = procs() if A.get("released") else ""').replace('docker ps -q |', 'docker ps -aq |')
+    code=prefix+RELEASED_HOST_PY
+    encoded=base64.b64encode(code.encode()).decode()
+    command='sudo -n python3 -c '+shlex.quote('import base64;exec(base64.b64decode('+repr(encoded)+'))')
+    active, _ = table()
+    if active is None:
+        print('SKIP: unreadable job record',flush=True);return
+    def one(host):
+        own=[r for r in rows if r['host']==host or {r['host'],host}=={'intel2','localhost'}]
+        args=dict(dry=dry,quiet_min=20,refs=REFS,released=own)
+        try:
+            result=subprocess.run(['ssh','-o','ConnectTimeout=15','-o','BatchMode=yes',host,command],input=json.dumps(args),capture_output=True,text=True,timeout=900)
+            return host,result
+        except subprocess.SubprocessError as ex:return host,ex
+    import concurrent.futures as cf
+    with cf.ThreadPoolExecutor(max(1,min(6,len(hosts)))) as executor:
+        for host,result in executor.map(one,hosts):
+            if not isinstance(result,subprocess.CompletedProcess):
+                print(host,repr(result),flush=True);continue
+            if result.returncode:print(host,'ERROR',result.stderr[-500:],flush=True)
+            for line in result.stdout.splitlines():
+                print(host,line,flush=True)
+                if not line.startswith('RELEASE ') or dry:continue
+                value=json.loads(line[8:]);value.update(host=host,finished=time.time())
+                dest=receipt_dir/(value['id']+'.json');tmp=dest.with_suffix('.tmp')
+                tmp.write_text(json.dumps(value,indent=2)+'\n');os.replace(tmp,dest)
+
+
 def now(): return dt.datetime.now().astimezone().isoformat(timespec="seconds")
 def log(m):
     with open(LOG, "a") as f: f.write(f"{now()} ot-reaper {m}\n")
@@ -373,6 +613,8 @@ def fleet_hosts():
 MENTIONS = ""
 
 def main():
+    if "--released-manifest" in sys.argv:
+        return released_main()
     dry = "--dry" in sys.argv
     hosts = [sys.argv[i + 1] for i, a in enumerate(sys.argv) if a == "--host"] or fleet_hosts()
     lk = open("/tmp/ot-reaper.lock", "w")

@@ -33,6 +33,12 @@ def script(kit, mount='/work', flatten=None):
     # Standalone chparam derives/replaces the top once. hierarchy -chparam can
     # re-add a deferred module under its existing name (Yosys rtlil.cc assertion).
     parameter_commands = [f'chparam{parameter_args} {top[0]}'] if params else []
+    dead_modules = cfg.get("OT_RTL_LINT_DEAD_OUTPUT_MODULES", [])
+    if any(not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_$]*", m) or m == top[0] for m in dead_modules):
+        raise ValueError("OT_RTL_LINT_DEAD_OUTPUT_MODULES requires native non-top module identifiers")
+    # opt_hier propagates only parent-unused/constant signals across selected native
+    # modules. Live outputs and check -assert stay intact; hard views are untouched.
+    dead_output_commands = ["opt_hier " + " ".join(dead_modules)] if dead_modules else []
     libs, seen = [], set()
     for p in sorted((kit / 'macros').glob('*.lib*'), key=lambda p: ('_tt.lib' not in p.name, p.name)):
         key = re.sub(r'_(tt|ff|ss)\.lib(?:\.gz)?$|\.lib(?:\.gz)?$', '', p.name)
@@ -71,6 +77,7 @@ def script(kit, mount='/work', flatten=None):
                      # retain undriven cones whose consumers disappear only across module boundaries. Flatten
                      # before pruning preserves every LIVE undriven top connection for check -assert.
                      parameter_commands + [f'hierarchy -check -top {top[0]}', 'proc'] +
+                     dead_output_commands +
                      (['flatten', 'opt_expr -keepdc'] if (cfg.get('OT_RTL_LINT_FLATTEN') == ['1'] if flatten is None else flatten) else []) + [
                                            # Check the elaborated live design. Dead parameter-disabled cones can
                                            # retain unassigned legacy wires after proc (safe4 PIPE=2); live

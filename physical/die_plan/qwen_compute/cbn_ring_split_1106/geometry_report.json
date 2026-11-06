@@ -1,0 +1,249 @@
+{
+ "event": "QC-CBN-RF1/RING-SPLIT-1106",
+ "types": {
+  "cbn_q00__cl622f65d2": {
+   "rings": [
+    {
+     "band": "na_i00",
+     "master": "sle_cland_w515_n",
+     "reuse": true,
+     "W": 515,
+     "face": "N",
+     "origin": [
+      17.28,
+      2466.72
+     ],
+     "outline": [
+      88.56,
+      51.84
+     ]
+    },
+    {
+     "band": "rsf_i",
+     "master": "sle_cland_w515_n_300",
+     "reuse": false,
+     "W": 515,
+     "face": "N",
+     "origin": [
+      187.92,
+      2466.72
+     ],
+     "outline": [
+      88.56,
+      51.84
+     ]
+    },
+    {
+     "band": "nb_i00",
+     "master": "sle_cland_w515_n_301",
+     "reuse": false,
+     "W": 515,
+     "face": "N",
+     "origin": [
+      1129.68,
+      2466.72
+     ],
+     "outline": [
+      88.56,
+      51.84
+     ]
+    },
+    {
+     "band": "bc_i00",
+     "master": "sle_cland_w517_s_300",
+     "reuse": false,
+     "W": 517,
+     "face": "S",
+     "origin": [
+      436.32,
+      17.28
+     ],
+     "outline": [
+      89.184,
+      51.84
+     ]
+    },
+    {
+     "band": "bc_i10",
+     "master": "sle_cland_w517_s_301",
+     "reuse": false,
+     "W": 517,
+     "face": "S",
+     "origin": [
+      643.68,
+      17.28
+     ],
+     "outline": [
+      89.184,
+      51.84
+     ]
+    }
+   ],
+   "reset_tree_moved": true,
+   "reset_depth_before": 10,
+   "reset_depth_after": 10
+  },
+  "cbn_q00__cldbcda913": {
+   "rings": [
+    {
+     "band": "na_i00",
+     "master": "sle_cland_w515_n",
+     "reuse": true,
+     "W": 515,
+     "face": "N",
+     "origin": [
+      17.28,
+      2466.72
+     ],
+     "outline": [
+      88.56,
+      51.84
+     ]
+    },
+    {
+     "band": "rsf_i",
+     "master": "sle_cland_w515_n_300",
+     "reuse": false,
+     "W": 515,
+     "face": "N",
+     "origin": [
+      187.92,
+      2466.72
+     ],
+     "outline": [
+      88.56,
+      51.84
+     ]
+    },
+    {
+     "band": "nb_i00",
+     "master": "sle_cland_w515_n_301",
+     "reuse": false,
+     "W": 515,
+     "face": "N",
+     "origin": [
+      1129.68,
+      2466.72
+     ],
+     "outline": [
+      88.56,
+      51.84
+     ]
+    },
+    {
+     "band": "bc_i00",
+     "master": "sle_cland_w517_s_300",
+     "reuse": false,
+     "W": 517,
+     "face": "S",
+     "origin": [
+      436.32,
+      17.28
+     ],
+     "outline": [
+      89.184,
+      51.84
+     ]
+    },
+    {
+     "band": "bc_i10",
+     "master": "sle_cland_w517_s_301",
+     "reuse": false,
+     "W": 517,
+     "face": "S",
+     "origin": [
+      643.68,
+      17.28
+     ],
+     "outline": [
+      89.184,
+      51.84
+     ]
+    }
+   ],
+   "reset_tree_moved": true,
+   "reset_depth_before": 10,
+   "reset_depth_after": 10
+  }
+ },
+ "added_cycles": 0,
+ "masters": [
+  {
+   "name": "sle_cland_w515_n",
+   "W": 515,
+   "face": "N",
+   "outline": [
+    88.56,
+    51.84
+   ],
+   "reuse_signed": true,
+   "pins_sha256": "37dc78dc7a12570794ae81ce84b8591f77b23f4ada8b4406d5810f8a58383c44",
+   "bands": [
+    "cbn_q00__cl622f65d2:na_i00",
+    "cbn_q00__cldbcda913:na_i00"
+   ]
+  },
+  {
+   "name": "sle_cland_w515_n_300",
+   "W": 515,
+   "face": "N",
+   "outline": [
+    88.56,
+    51.84
+   ],
+   "reuse_signed": false,
+   "pins_sha256": "0d62a0f57fdc5d88af37925051e900e9286f44ce1803f3859ca01f85ac3cea41",
+   "bands": [
+    "cbn_q00__cl622f65d2:rsf_i",
+    "cbn_q00__cldbcda913:rsf_i"
+   ]
+  },
+  {
+   "name": "sle_cland_w515_n_301",
+   "W": 515,
+   "face": "N",
+   "outline": [
+    88.56,
+    51.84
+   ],
+   "reuse_signed": false,
+   "pins_sha256": "9eeee6e9dfcdbc4c92fe52c88d8348e2131fa60651e05d28686649e3c64be539",
+   "bands": [
+    "cbn_q00__cl622f65d2:nb_i00",
+    "cbn_q00__cldbcda913:nb_i00"
+   ]
+  },
+  {
+   "name": "sle_cland_w517_s_300",
+   "W": 517,
+   "face": "S",
+   "outline": [
+    89.184,
+    51.84
+   ],
+   "reuse_signed": false,
+   "pins_sha256": "dd1f8f22ecb4940dbcabc3f7a271e31cdbf1110e8d0f867a50c20d698f9075a0",
+   "bands": [
+    "cbn_q00__cl622f65d2:bc_i00",
+    "cbn_q00__cldbcda913:bc_i00"
+   ]
+  },
+  {
+   "name": "sle_cland_w517_s_301",
+   "W": 517,
+   "face": "S",
+   "outline": [
+    89.184,
+    51.84
+   ],
+   "reuse_signed": false,
+   "pins_sha256": "fd1a363aa0b4eea1734eac23f1ea9fa74a03c72c6d26f4a3825e3fcb021dfee2",
+   "bands": [
+    "cbn_q00__cl622f65d2:bc_i10",
+    "cbn_q00__cldbcda913:bc_i10"
+   ]
+  }
+ ],
+ "src_sha256": "b398e285557293311294917c275d0db0890e79d33008588f95e9c4e4ce24125f",
+ "dst_sha256": "25e035f66d20b2b655a33b941aaf0772c356b0413c63a63496a52f74a34f1d36"
+}

@@ -1,0 +1,46 @@
+{
+  "sources": 889,
+  "sha_matches_original_inputs": 889,
+  "exact_overlays": [
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-ds-img2-service-1105/external/srv/opentallas-scratch2/claude/wt/tok-ds-2/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+      "sha256": "ebd2cea8886246e9b8eafa9d5afeb95e7bd97543051dded4798d876e9432be52"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-ds-img2-service-1105/source/rtl/col_h10_r0_p1__t1__cl911743eb.sv",
+      "sha256": "a309c4e6fa772ef16198363388958b3fa81eb9a74bdc9ee88d68d4fec3b74152"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-ds-img2-service-1105/source/rtl/col_h10_r1__t1__cld01bb4ae.sv",
+      "sha256": "61690f3b8a1d91f07e2559a6e0489d9eac7a839b379b6a5728cde04b879a2152"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-ds-img2-service-1105/source/rtl/col_h10_r2__t1__cl8b686b3e.sv",
+      "sha256": "adeba130535f0718f13ec2e11feb4f6a8ebcec993b1ecba3e20851ca8b591502"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-ds-img2-service-1105/source/rtl/col_h10_r2__t1__clac068e56.sv",
+      "sha256": "97742166471432619d6e802b1932d391b28ed28e438a329386290ac13f4e3b20"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-ds-img2-service-1105/source/rtl/col_h9_r0_p3__t1__cl31d0dc4b.sv",
+      "sha256": "a9a8d6e43621572cefae6786101e88fa446856cdb83a319f748c4cbb3940cf77"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-ds-img2-service-1105/source/rtl/col_h9_r2__t1__cl87f3ff59.sv",
+      "sha256": "bb92b3a97b6cd59ee68333009e587f641bd2cbf858fd0a5d35f9a4a8d628ff91"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-ds-img2-service-1105/source/rtl/s81_bound_top.sv",
+      "sha256": "2b06458344a1a986416a02ece6dd69b9232e99009f40bcb1934c531fd1183967"
+    }
+  ],
+  "components": [
+    "Vs81p_svc_hi_dsdv_svc_rs___05Ft4_a__hierMkArgs",
+    "Vs81p_svc_lo_dsdv_svc_rs___05Ft4_f__hierMkArgs",
+    "Vs81p_svc_hi_dsdv_svc_rs___05Ft3_c__hierMkArgs",
+    "Vs81p_svc_hi_dsdv_svc_pvso_entry___05Ft1_9__hierMkArgs",
+    "Vs81p_svc_lo_dsdv_svc_rs___05Ft3_4__hierMkArgs"
+  ],
+  "scope": "same-source IMG2 recovery, private protected-hierarchy substitution only"
+}

@@ -290,7 +290,7 @@ def macro_libs(kit, corner):
 
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
                   "kit_modes.py", "data_droop.py", "core_io_reference.py")
-OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py")
+OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py", "hard_landing.py")
 
 
 def _common_flow(source, name):
@@ -552,11 +552,12 @@ def signed_child_etm(model, flow_tag):
         basis = str(rp)
     else:
         tag, lv, basis = prov.get('flow_tag') or sd.get('flow_tag'), (prov.get('chain') or {}).get('lec_verdict'), str(pf)
-    if tag != flow_tag:
-        raise ValueError(f'child signed at flow tag {tag!r}, this sign-off at {flow_tag!r}')
+    if not tag:   # COORD 11-06 05:2x: the child counts at its OWN signed tag (libs = its export, routed LEC EQ)
+        raise ValueError(f'{pf}: child signed flow tag unknown')
     if lv != 'EQUIVALENT':
         raise ValueError(f'child post-route LEC {lv!r}')
-    return dict(view_provenance=str(pf), signoff=str(so), flow_tag=tag, flow_basis=basis, lec_verdict=lv)
+    return dict(view_provenance=str(pf), signoff=str(so), flow_tag=tag, parent_flow_tag=flow_tag, flow_basis=basis,
+                lec_verdict=lv)
 
 
 def apply_signed_child_etms(result, flow_tag):
@@ -570,7 +571,8 @@ def apply_signed_child_etms(result, flow_tag):
         except (OSError, ValueError, TypeError, KeyError) as error:
             model['signed_child_etm_miss'] = str(error)
             misses.append(f"{model.get('master')}: {error}")
-    result['signed_child_etm_rule'] = 'COORD 11-02 19:2x (d): child endpoints via the SIGNED child ETM at the same flow tag'
+    result['signed_child_etm_rule'] = ('COORD 11-02 19:2x (d) + 11-06 05:2x: child endpoints via the SIGNED child ETM '
+                                       '(libs byte-equal to its signed export, routed LEC EQ) at its own signed tag')
     if misses:
         result['signed_child_etm_misses'] = misses
         return result

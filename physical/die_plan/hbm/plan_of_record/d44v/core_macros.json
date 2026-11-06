@@ -5316,32 +5316,37 @@
    "status": "KNOWN",
    "outline_um": [
     319.68,
-    345.6
+    389.664
    ],
-   "basis": "plan_part19",
+   "basis": "CODEX TKM p35 reset A/B 2026-11-06; both macro_placement.tcl files byte-identical; snapped signal-pin lattice",
    "macros": [
     {
      "name": "u_fcore.u_core.u_x.u.u_buffer.g_bm[0].u_b",
      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
      "rect_um": [
       72.576,
-      68.31,
+      89.916,
       247.32,
-      138.798
-     ]
+      160.404
+     ],
+     "orient": "R0"
     },
     {
      "name": "u_fcore.u_core.u_x.u.u_buffer.g_bm[1].u_b",
      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
      "rect_um": [
       72.576,
-      206.82,
+      228.396,
       247.32,
-      277.308
-     ]
+      298.884
+     ],
+     "orient": "R0"
     }
    ],
-   "sources": [],
+   "sources": [
+    "intel2:/srv/opentallas-scratch2/claude/codex-hbm-tkm-build/kits_vA3/ot_hgi_coll_tkm_m_tp192__root_b07a1cb60b9b-vA/macro_placement.tcl",
+    "intel2:/srv/opentallas-scratch2/claude/codex-hbm-tkm-build/kits_vB3/ot_hgi_coll_tkm_m_tp192__root_b07a1cb60b9b-vB/macro_placement.tcl"
+   ],
    "recipe_macros": [
     "ot_sram_1r1w_1024x256_m2_r2c2"
    ]

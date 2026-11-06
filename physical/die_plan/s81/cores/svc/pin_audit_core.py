@@ -12,6 +12,15 @@ import os
 
 import odb  # noqa: E402  (OpenROAD python)
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from native_pin_contract import native_rects_match
+except ModuleNotFoundError:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[5] / "tools/die_plan"))
+    from native_pin_contract import native_rects_match
+
 TOL = 0.001
 
 
@@ -55,12 +64,7 @@ def main():
             res["wrong_layer"].append([n, p["layer"], sorted({b[0] for b in boxes})])
             continue
         if "native_rects" in p:
-            # A multiPORT contract includes all original rectangles, not a
-            # bounding box or an implicitly projected access point.
-            expected = p["native_rects"]
-            matches = (len(boxes) == len(expected) and all(
-                any(a[0] == b[0] and all(abs(x-y) <= TOL for x,y in zip(a[1:], b[1:]))
-                    for b in boxes) for a in expected))
+            matches = native_rects_match(p, boxes, dbu)
             if matches:
                 res["ok"] += 1
             else:
@@ -92,4 +96,5 @@ def main():
           f"{res['wrong_layer_n']} wrong_place {res['wrong_place_n']} extra {res['extra_n']}")
 
 
-main()
+if __name__ == "__main__":
+    main()

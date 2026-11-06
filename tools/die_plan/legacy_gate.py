@@ -157,10 +157,22 @@ def policy_session(kit, corner, base, disc, ctx, policy):
             + definitions + f'so CORNER {corner}\nso PARASITICS global_routing\n' + tail)
 
 
+def unexpanded_child_clock_advisory(clock):
+    """Pre-signoff only: measured raw pairs pass; child ETMs await their tag."""
+    coverage = clock.get('endpoint_model_coverage') or {}
+    return (clock.get('verdict') == 'NOT RUN' and clock.get('raw_clock_verdict') == 'PASS'
+            and all(isinstance(coverage.get(c), dict) and
+                    (coverage[c].get('verdict') == 'PASS' or
+                     (coverage[c].get('verdict') == 'NOT RUN' and
+                      coverage[c].get('status') == 'UNEXPANDED_CHILD_ETM')) for c in ('tt', 'ff'))
+            and any(coverage[c].get('status') == 'UNEXPANDED_CHILD_ETM' and
+                    coverage[c].get('verdict') == 'NOT RUN' for c in ('tt', 'ff')))
+
+
 def policy_record(corners, policy, hold_blocks=False, setup_continue=0.0):
     """Apply the existing sign-off setup/standard-hold/pair-skew checks only.  A measured hold_ff FAIL is advisory unless
     hold_blocks; a measured setup_tt FAIL no worse than -setup_continue ps is advisory (KW-FIX-16); NOT RUN (standard
-    overlay not applied, no FF reference) still stops: no measurement is not a pass."""
+    overlay not applied, no FF reference) still stops; only the pre-signoff child ETM metadata case is advisory."""
     import signoff as so
     for c in ('tt', 'ff'):
         x = corners[c]
@@ -201,6 +213,8 @@ def policy_record(corners, policy, hold_blocks=False, setup_continue=0.0):
     # This is a G2 prototype receipt, never a SIGNED record: DRC/antenna and
     # routed sign-off are deliberately not claimed or required here.
     advisory = [] if hold_blocks else ['hold_ff']
+    if unexpanded_child_clock_advisory(wanted['clock']):
+        advisory.append('clock')  # COORD05:01: routed sign-off still qualifies child ETMs.
     st = wanted['setup_tt']
     w = st.get('wns_ps')
     if (st['verdict'] == 'FAIL' and setup_continue > 0 and w is not None and math.isfinite(float(w))
@@ -211,7 +225,8 @@ def policy_record(corners, policy, hold_blocks=False, setup_continue=0.0):
                             uncertainty_hold_ps=so.UNC_HOLD_PS, pair_skew_max_ps=so.PAIR_SKEW_MAX_PS,
                             setup_continue_ps=setup_continue, **policy),
                 checks=wanted, advisory=advisory,
-                verdict='PASS' if all(x['verdict']=='PASS' or (k in advisory and x['verdict']=='FAIL')
+                verdict='PASS' if all(x['verdict']=='PASS' or (k in advisory and (x['verdict']=='FAIL' or
+                                        (k == 'clock' and unexpanded_child_clock_advisory(x))))
                                       for k, x in wanted.items()) else 'FAIL')
 
 
@@ -318,7 +333,8 @@ def run(kit, stage, netlist=None, execute=subprocess.run):
         result = policy_record(corners, policy, hold_ff_blocks(kit), setup_continue_ps(kit))
         timing_receipt.write_text(json.dumps(result, indent=1) + '\n')
         for k in result['advisory']:
-            if result['checks'][k]['verdict'] == 'FAIL':
+            if (result['checks'][k]['verdict'] == 'FAIL' or
+                    (k == 'clock' and unexpanded_child_clock_advisory(result['checks'][k]))):
                 print(f'OT_LEGACY_GATE ADVISORY G2 {k} {so._detail(k, result["checks"][k])} (not a gate, sign-off decides)')
         if result['verdict'] != 'PASS':
             why = '; '.join(f'{k}: {v["verdict"]} {so._detail(k, v)}'
