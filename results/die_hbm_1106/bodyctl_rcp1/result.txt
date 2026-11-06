@@ -1,0 +1,9 @@
+OT_Q3CTL_RCP1 (HBM-GAPS-6 2026-11-06): ot_hfd_coll_q3_body_ctl replicated-copy registers
+_229667_ (19 copies of u_issuer.adv_x, async reset rcp[7]) and _229719_ (31 copies of take_x, no reset)
+become one 1-bit register each, fanned out by {N{q}}.  Synthesis already merges each to one flop
+(gate has only _229667_[0] / _229719_[0]); the kit LEC could not pair the gold copies -> UNPROVEN 346
+(all 346 cones depend only on these two registers, plus 35 gold X points).
+Define off: file byte-identical to main (only ifdef/else/endif lines added).
+Proof (yosys sat -seq 30, free initial state, prove-skip 1 = equal on every cycle after the first edge):
+  new PASS (SUCCESS); mutants m_inv, m_bit, m_swap, m_noreg, m_noreg2 all FAIL (caught).
+Files: blk.v run.sh all.sh patch_rcp.py p_new.full.log p_m_bit.full.log.  0 added cycles, no pin change.
