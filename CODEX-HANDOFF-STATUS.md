@@ -1,6 +1,6 @@
 # OpenTallas — current Codex handoff
 
-Updated 2026-11-06 03:02 PST. Current work only; historical evidence stays in lane files and the queue.
+Updated 2026-11-06 02:41 PST. Current work only; historical evidence stays in lane files and the queue.
 
 Claude stopped on the weekly limit; reported reset **2026-11-12 04:00 America/Los_Angeles**. Codex continues all lanes until explicitly told to hand back. Read `CODEX-ROLE.md`. Owner questions go as plain text under OWNER? in `CODEX-LOG.md`; keep working, never open a blocking dialog.
 

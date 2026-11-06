@@ -4,7 +4,7 @@ Read ~/coord/CODEX-ROLE.md first: your role, the binding rules, and how to cover
 
 # OpenTallas — current Codex handoff
 
-Updated 2026-11-06 03:02 PST. Current work only; historical evidence stays in lane files and the queue.
+Updated 2026-11-06 02:41 PST. Current work only; historical evidence stays in lane files and the queue.
 
 Claude stopped on the weekly limit; reported reset **2026-11-12 04:00 America/Los_Angeles**. Codex continues all lanes until explicitly told to hand back. Read `CODEX-ROLE.md`. Owner questions go as plain text under OWNER? in `CODEX-LOG.md`; keep working, never open a blocking dialog.
 
@@ -84,13 +84,13 @@ On explicit Claude-reset notice: park safely, append per-lane branches/SHAs/jobs
 
 ## Latest handoff milestones
 
-CODEX: 2026-11-06 02:25 PST: dormantLDCS2 approved/publishedmainbcf518e7d17763923fcb54efc0325658739bc80f==origin, flow-ap-hbm. JSONsemantic exactly1added __ldcs2 recipe,0changed/removedcanonicalkeys. Sourcefe7 zeroextraedgesMLAT5/ALAT3,2x435600checks+carrymutants, noPORactivation/physicalclaim. Unco
-
 CODEX: 2026-11-06 02:29 PST: HBMmetadata bff publishedmain51f4c117ca5de1338d6500b682a143b991468264==origin/flow-aq-hbm.422active lanes/allhardcores/stations exactidentity, geometry0diff, sixactualnative rootbuses restored, sourceawareschema0. ExistingWBQ/CECCCM/LDCS retained, no sourceprofileactivat
 
 CODEX: 2026-11-06 02:32 PST: VMSclockCresults7a0 landed03122667e23 (no tag/qualification); authoritativeBBstaging607 nowpublishedmain83f59787a6f8f966ea965bf647ddcc9fa5ef936f==origin. Tagsaf-head/ae-qc/ab-kv/ag-s81/ar-hbm. Freshfactory resolvesdeclaredactualfixedBB beforesealedassembly, basenameconfl
 
 CODEX: 2026-11-06 02:39 PST: main7e11225c69a1582c2cef2d842ff7627a6b4d3dbf==origin; ninthQCviewbe83 isolatedcherry86531693dbf/plainmerge excludes42f8candidate; E5geometryparsecache5f directfetch/plainmerge. Tagsag-head/af-qc/ac-kv/ah-s81/as-hbm. NineQCexports complete, noPORactivation. Existing spars
+
+CODEX: 2026-11-06 02:41 PST: TKMphase623results-onlypublishedmaincf615a8ccd5219a8828af6799a209daa29797dc4==origin;16filesrawlogsretained,nosource/flowtag/new+1qualification. Hubstatusdefault0successorb9f reviewPASS (DMUTABIappend, defaultdirectframe/warmup2; enabledoldmechanism/warmup3),272default/e
 
 For live jobs and new results, read the active lane files and lanes/COORD-REVIEW-QUEUE.md on intel2. Historical lane contents are intentionally omitted from this handoff.
 
