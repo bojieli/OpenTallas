@@ -50,7 +50,8 @@
      "binding": "u_sm forwards D/RDL/WDL/RIL; RIL_MUT=(MUT==5); native WCB default5; u_ga B0=0 NG=WCB POUT=1 FL=(SPLIT==2); source byte-identical to the SIGNED child kit"
     }
    ]
-  }
+  },
+  "pg_top": "M6"
  },
  "dsdv_idx_txm_grp": {
   "child_of": "dsdv_idx_tx_n32",
