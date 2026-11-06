@@ -24,3 +24,11 @@ Collect build/probe, measure RAW0. Emit fixed scalar-pop schedule from actual co
 ## OWNER?
 
 None. Full projection inputs for later layers must be actual residuals, never repeated embedding or fixture output substitution.
+
+## CODEX notes — 2026-11-06 00:29 PST
+
+First build failed INFRA at the exact32GiB cgroup limit during top frontend elaboration; completed leaf/bank libraries are retained. Failure receipt `stage/FAILED_INFRA_32G.json`, original log unchanged. No function/design verdict.
+
+New source `190a8eaf145` adds qcen/tail hierarchy boundaries and a fresh exact833ps cohort with explicit selected SM_LAT4/OM_LAT5/NF_TIED1 (measured RS114/OV8 from I146). Fresh job unit `oth-ubuntu-3624669-1793953761`, client3620937,96GB/4threads based on measured OOM; source/cache `stage833`, log `~/hbm-projection-1106/build833.otrun.log`. Native qcen/tail frontends passed and their C++ is compiling. Completed native bank cache was copied, not removed.
+
+The new gate will measure RAW0, check24 actual released-weight projection mixes, verify the one-edge dependent-launch guard and catch the weight-term-swizzle mutant. It refuses a binary lacking exact833ps/selected-profile markers. A guard pass is NOT WFACE hardware adoption. The TP96 rank0 fixture still owns no HC_MIX_ROWS; no global projection_open flag is cleared by this component work.
