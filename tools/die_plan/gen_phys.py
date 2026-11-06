@@ -820,7 +820,7 @@ def edge_clock_pins(P, tn):
 # count, so a small domain is left alone.  Types without such a port generate byte-identical kits.
 # Opt-in per die (COORD 11-05): QC only.  KV kv3_sys_SD (clk_clk_phy) has the same port shape; its owner adds the die after
 # its own estimate.
-EDGE_SPLIT_DIES = {"qwen_compute"}
+EDGE_SPLIT_DIES = {"qwen_compute", "qwen_kvsys"}  # KV-SYSSD-2 11-06 (COORD approved): KV kv3_sys_SD/_v1 clk_clk_phy 5250 sinks
 
 
 def edge_split_ports(P, tn):
