@@ -22,7 +22,10 @@ module ot_hfd_coll_q3_edge_arg (
 );
     // HBM-GAPS-9 11-06 (DIE-HBM-81 13:37): opt-in define OT_Q3ARG_FAULT_PIPE = two-stage dup check,
     // PIN CYCLES fault +1 edge, all other outputs exact (d44v PART 40 corelat row). No define = unchanged.
-`ifdef OT_Q3ARG_FAULT_PIPE
+    // OT_Q3ARG_FAULT_PIPE2 = the same + seen updated from the stage-1 registers (same pins and cycles).
+`ifdef OT_Q3ARG_FAULT_PIPE2
+    localparam integer FP = 2;
+`elsif OT_Q3ARG_FAULT_PIPE
     localparam integer FP = 1;
 `else
     localparam integer FP = 0;

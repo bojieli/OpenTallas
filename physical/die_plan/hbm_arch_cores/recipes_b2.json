@@ -3516,6 +3516,29 @@
     "util": 0.45,
     "source": "HBM-GAPS-9 11-06 (DIE-HBM-81 13:37 ruling, d44v PART 40): q3_edge_arg pin-cycle form = recipe ot_hfd_coll_q3_edge_arg + define OT_Q3ARG_FAULT_PIPE (two-stage duplicate check in ot_hgi_coll_argmax_static_fp). PIN CYCLES: fault +1 edge, every other output exact. Proof: yosys equiv_induct (gold fault delayed 1 edge vs gate) 7357/7357 proven, mutant MUT_FP=1 1 unproven; lock-step iverilog bench 200k cycles 0 mismatches, mutant caught (physical/die_plan/hbm/over_cap_split/reform_1106/q3_edge_arg_repin/fault_pipe)"
   },
+  "ot_hfd_coll_q3_edge_arg__fpipe2": {
+    "top": "ot_hfd_coll_q3_edge_arg",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1103/ot_hfd_coll_q3_edge_core/ot_hfd_coll_q3_edge_arg.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_edge_pr.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+      "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv",
+      "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+      "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
+    ],
+    "defines": [
+      "OT_COLL_ISSUER256_NATIVE32",
+      "OT_COLL_LINK_RXPRE",
+      "OT_Q3ARG_FAULT_PIPE2"
+    ],
+    "params": {},
+    "macros": [],
+    "util": 0.45,
+    "source": "HBM-GAPS-9 11-06 (DIE-HBM-81 13:37 ruling, d44v PART 40): q3_edge_arg pin-cycle form = recipe ot_hfd_coll_q3_edge_arg + define OT_Q3ARG_FAULT_PIPE2 (two-stage duplicate check in ot_hgi_coll_argmax_static_fp, SEEN_DEFER=1: seen updated from the stage-1 registers; routed __fpipe vD had -35 ps on meta->seen D). PIN CYCLES: fault +1 edge, every other output exact. Proof: yosys equiv_induct (gold fault delayed 1 edge vs gate) 7357/7357 proven, mutant MUT_FP=1 1 unproven; v2 vs v1 (v1.seen_q == v2.seen) 7588/7588 proven, mutant 1 unproven; lock-step iverilog bench 200k cycles 0 mismatches, mutant caught (physical/die_plan/hbm/over_cap_split/reform_1106/q3_edge_arg_repin/fault_pipe)"
+  },
   "ot_hbm_su_pg_lane1p_core__ldcs2": {
     "top": "ot_hbm_su_pg_lane1p_core",
     "files": [
