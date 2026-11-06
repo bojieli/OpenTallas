@@ -1,0 +1,55 @@
+{
+  "kit": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits/ot_svgr_own_2054dcac0c09-headtail_p37",
+  "kit_hash": "33cc6d8d234820ef",
+  "view": "ot_svgr_own@2054dcac0c09",
+  "outline_um": [
+    129.6,
+    432.0
+  ],
+  "pins": 4897,
+  "clocks": [
+    {
+      "name": "hbm_clk",
+      "layer": "M5",
+      "x": 0.24,
+      "y": 216.0
+    },
+    {
+      "name": "hbm_pc_clk[0]",
+      "layer": "M5",
+      "x": 0.24,
+      "y": 216.0
+    },
+    {
+      "name": "hbm_pc_clk[1]",
+      "layer": "M5",
+      "x": 129.36,
+      "y": 216.0
+    },
+    {
+      "name": "hbm_pc_clk[2]",
+      "layer": "M5",
+      "x": 129.36,
+      "y": 216.0
+    },
+    {
+      "name": "hbm_pc_clk[3]",
+      "layer": "M5",
+      "x": 129.36,
+      "y": 216.0
+    },
+    {
+      "name": "stream_clk",
+      "layer": "M5",
+      "x": 129.36,
+      "y": 216.0
+    }
+  ],
+  "macros": [],
+  "source_commit": "27cdbd816b0c86654f2e94ed1ab9dde2d9a162dc",
+  "recipe": "ot_svgr_own__headtail",
+  "plan_pins_source_sha256": "2054dcac0c09a03028aaf396af0a04c08bbfb274dd2170b72f1383b2f16b0dac",
+  "io_tcl_sha256": "05cfc2f36f7de1e45d6fe7addad90606691575d56c1aebd11eabad548ef94caf",
+  "generation_only": true,
+  "physical_route_run": false
+}

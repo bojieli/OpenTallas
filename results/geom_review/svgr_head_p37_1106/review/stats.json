@@ -1,0 +1,309 @@
+{
+ "view": "ot_svgr_own@2054dcac0c09",
+ "outline_um": [
+  129.6,
+  432.0
+ ],
+ "pins": 4897,
+ "faces": {
+  "E": {
+   "pins": 2492,
+   "span_um": 432.0,
+   "avg_per_um": 5.769,
+   "max_per_um_10": 10.5,
+   "max_per_track": {
+    "M4": 0.504,
+    "M5": 0.019
+   },
+   "layers": {
+    "M4": 2488,
+    "M5": 4
+   }
+  },
+  "S": {
+   "pins": 1,
+   "span_um": 129.6,
+   "avg_per_um": 0.008,
+   "max_per_um_10": 0.1,
+   "max_per_track": {
+    "M5": 0.005
+   },
+   "layers": {
+    "M5": 1
+   }
+  },
+  "W": {
+   "pins": 2404,
+   "span_um": 432.0,
+   "avg_per_um": 5.565,
+   "max_per_um_10": 10.7,
+   "max_per_track": {
+    "M4": 0.504,
+    "M5": 0.01
+   },
+   "layers": {
+    "M4": 2402,
+    "M5": 2
+   }
+  }
+ },
+ "face_budget_violations": [
+  "E",
+  "W"
+ ],
+ "partition": "q_hub_nw",
+ "inst": "u_svg_Q0__o",
+ "connected_buses": 28,
+ "buses": 28,
+ "connected_bits": 4897,
+ "bits_facing_away": 1,
+ "bits_beyond_local_reach": 2495,
+ "partner_checks": [
+  {
+   "bus": "stream_rst_n",
+   "partner": "core:u_svg_Q0__b1",
+   "endpoints": 3,
+   "bits": 1,
+   "face": "S",
+   "cos": -0.531,
+   "dist_um": 268.7
+  },
+  {
+   "bus": "kr_v",
+   "partner": "core:u_vmks_Q0",
+   "endpoints": 1,
+   "bits": 4,
+   "face": "E",
+   "cos": 0.261,
+   "dist_um": 2088.8
+  },
+  {
+   "bus": "kr_tag",
+   "partner": "core:u_vmks_Q0",
+   "endpoints": 1,
+   "bits": 68,
+   "face": "E",
+   "cos": 0.261,
+   "dist_um": 2088.8
+  },
+  {
+   "bus": "kr_rdy",
+   "partner": "core:u_vmks_Q0",
+   "endpoints": 1,
+   "bits": 4,
+   "face": "E",
+   "cos": 0.261,
+   "dist_um": 2088.8
+  },
+  {
+   "bus": "kr_data",
+   "partner": "core:u_vmks_Q0",
+   "endpoints": 1,
+   "bits": 1024,
+   "face": "E",
+   "cos": 0.263,
+   "dist_um": 2076.6
+  },
+  {
+   "bus": "kr_beat",
+   "partner": "core:u_vmks_Q0",
+   "endpoints": 1,
+   "bits": 16,
+   "face": "E",
+   "cos": 0.265,
+   "dist_um": 2061.7
+  },
+  {
+   "bus": "k_wstrb",
+   "partner": "core:u_vmks_Q0",
+   "endpoints": 1,
+   "bits": 128,
+   "face": "E",
+   "cos": 0.266,
+   "dist_um": 2059.7
+  },
+  {
+   "bus": "k_wr_done",
+   "partner": "core:u_vmks_Q0",
+   "endpoints": 1,
+   "bits": 4,
+   "face": "E",
+   "cos": 0.266,
+   "dist_um": 2057.8
+  },
+  {
+   "bus": "k_we",
+   "partner": "core:u_vmks_Q0",
+   "endpoints": 1,
+   "bits": 4,
+   "face": "E",
+   "cos": 0.266,
+   "dist_um": 2057.6
+  },
+  {
+   "bus": "k_wdata",
+   "partner": "core:u_vmks_Q0",
+   "endpoints": 1,
+   "bits": 1024,
+   "face": "E",
+   "cos": 0.267,
+   "dist_um": 2051.6
+  },
+  {
+   "bus": "k_v",
+   "partner": "core:u_vmks_Q0",
+   "endpoints": 1,
+   "bits": 4,
+   "face": "E",
+   "cos": 0.267,
+   "dist_um": 2051.1
+  },
+  {
+   "bus": "k_tag",
+   "partner": "core:u_vmks_Q0",
+   "endpoints": 1,
+   "bits": 68,
+   "face": "E",
+   "cos": 0.267,
+   "dist_um": 2051.5
+  },
+  {
+   "bus": "k_rdy",
+   "partner": "core:u_vmks_Q0",
+   "endpoints": 1,
+   "bits": 4,
+   "face": "E",
+   "cos": 0.267,
+   "dist_um": 2050.9
+  },
+  {
+   "bus": "k_len",
+   "partner": "core:u_vmks_Q0",
+   "endpoints": 1,
+   "bits": 16,
+   "face": "E",
+   "cos": 0.267,
+   "dist_um": 2050.9
+  },
+  {
+   "bus": "k_addr",
+   "partner": "core:u_vmks_Q0",
+   "endpoints": 1,
+   "bits": 120,
+   "face": "E",
+   "cos": 0.267,
+   "dist_um": 2050.9
+  },
+  {
+   "bus": "bk_in_v",
+   "partner": "core:u_svg_Q0__b0",
+   "endpoints": 2,
+   "bits": 8,
+   "face": "W",
+   "cos": 0.818,
+   "dist_um": 279.7
+  },
+  {
+   "bus": "seam_res_v",
+   "partner": "core:u_svg_Q0__b0",
+   "endpoints": 3,
+   "bits": 1,
+   "face": "W",
+   "cos": 0.819,
+   "dist_um": 279.1
+  },
+  {
+   "bus": "seam_res_word",
+   "partner": "core:u_svg_Q0__b0",
+   "endpoints": 3,
+   "bits": 97,
+   "face": "W",
+   "cos": 0.83,
+   "dist_um": 274.4
+  },
+  {
+   "bus": "hbm_rst_n",
+   "partner": "core:u_svg_Q0__b1",
+   "endpoints": 3,
+   "bits": 1,
+   "face": "W",
+   "cos": 0.848,
+   "dist_um": 267.0
+  },
+  {
+   "bus": "bk_cr",
+   "partner": "core:u_svg_Q0__b1",
+   "endpoints": 2,
+   "bits": 8,
+   "face": "W",
+   "cos": 0.85,
+   "dist_um": 266.0
+  },
+  {
+   "bus": "id_stack",
+   "partner": "core:u_svg_Q0__t",
+   "endpoints": 1,
+   "bits": 2,
+   "face": "W",
+   "cos": 0.915,
+   "dist_um": 703.1
+  },
+  {
+   "bus": "id_sm",
+   "partner": "core:u_svg_Q0__t",
+   "endpoints": 1,
+   "bits": 3,
+   "face": "W",
+   "cos": 0.915,
+   "dist_um": 702.9
+  },
+  {
+   "bus": "bk_in_data",
+   "partner": "core:u_svg_Q0__b1",
+   "endpoints": 2,
+   "bits": 2280,
+   "face": "W",
+   "cos": 0.999,
+   "dist_um": 172.3
+  },
+  {
+   "bus": "seam_s_fault",
+   "partner": "core:u_svg_Q0__t",
+   "endpoints": 1,
+   "bits": 1,
+   "face": "W",
+   "cos": 0.999,
+   "dist_um": 503.7
+  },
+  {
+   "bus": "seam_h_fault",
+   "partner": "core:u_svg_Q0__t",
+   "endpoints": 1,
+   "bits": 1,
+   "face": "W",
+   "cos": 1.0,
+   "dist_um": 494.2
+  },
+  {
+   "bus": "hbm_clk",
+   "partner": "tap:u_svg_Q0__o",
+   "bits": 1,
+   "cos": null,
+   "dist_um": null
+  },
+  {
+   "bus": "hbm_pc_clk",
+   "partner": "tap:u_svg_Q0__o",
+   "bits": 4,
+   "cos": null,
+   "dist_um": null
+  },
+  {
+   "bus": "stream_clk",
+   "partner": "tap:u_svg_Q0__o",
+   "bits": 1,
+   "cos": null,
+   "dist_um": null
+  }
+ ]
+}

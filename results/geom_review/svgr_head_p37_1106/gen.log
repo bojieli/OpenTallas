@@ -1,0 +1,115 @@
+ot-run: localhost      admits   217 GB (avail 341, reserve 0, fresh 28, peak 31.3, headroom 0, waiters 2/16 GB) load 132/112 running 48 disk 195 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-1167124-1793974146 after 1 s
+{"views": 102, "placed": 4392, "modules": 94, "by_family": {"HC": 8, "IDX": 10, "MISC": 44, "SFU": 1, "SU": 12, "LINK": 2, "SMSVC": 5, "PGS": 1, "COLL": 13, "TKM": 1, "VM": 5}}
+{
+  "view": "ot_svgr_own@2054dcac0c09",
+  "module": "ot_svgr_own",
+  "outline_um": [
+    129.6,
+    432.0
+  ],
+  "pins_file": "cores/ot_svgr_own__129.6x432__d44v_split.json",
+  "pins_sha256": "2054dcac0c09a03028aaf396af0a04c08bbfb274dd2170b72f1383b2f16b0dac",
+  "pins": 4897,
+  "family": "MISC",
+  "instances": [
+    "q_hub_nw.u_svg_Q0__o",
+    "q_hub_nw.u_svg_Q1__o",
+    "q_hub_nw.u_svg_Q2__o",
+    "q_hub_nw.u_svg_Q3__o",
+    "q_hub_ne.u_svg_Q0__o",
+    "q_hub_ne.u_svg_Q1__o",
+    "q_hub_ne.u_svg_Q2__o",
+    "q_hub_ne.u_svg_Q3__o"
+  ],
+  "placed": 8,
+  "tables_for_module": 1,
+  "canonical_type": null,
+  "recipe_keys": [],
+  "blockers": [
+    "NO_RECIPE"
+  ]
+}
+SIGNOFF_BUNDLE signoff.py sdc_lint.py face_guard.py io_hold_qualification.py pair_skew.tcl clock_family.tcl kit_modes.py data_droop.py core_io_reference.py child_clock_witness.py parent_boundary.py hard_landing.py
+{"kit": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits/ot_svgr_own_2054dcac0c09-headtail_p37", "pins": 4897, "clocks": ["hbm_clk", "hbm_pc_clk[0]", "hbm_pc_clk[1]", "hbm_pc_clk[2]", "hbm_pc_clk[3]", "stream_clk"], "resets": 2, "design": "ot_svgr_own", "top": "ot_svgr_own", "wrapper": false, "face_shell": {"core": "ot_svgr_own__fcore", "in_cycles": 1, "out_cycles": 1, "face_flops": 4889, "dropped": 0, "unread_kept": 0, "const_out_bits": 1156, "dup_out_bits": 0, "plan_pins": 4897}, "kit_hash": "33cc6d8d234820ef"}
+{"view": "ot_svgr_own@2054dcac0c09", "pins": 4897, "face_budget_violations": ["E", "W"], "connected_buses": 28, "buses": 28, "connected_bits": 4897, "bits_facing_away": 1, "bits_beyond_local_reach": 2495}
+{
+  "kit": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits/ot_svgr_own_2054dcac0c09-headtail_p37",
+  "kit_hash": "33cc6d8d234820ef",
+  "view": "ot_svgr_own@2054dcac0c09",
+  "outline_um": [
+    129.6,
+    432.0
+  ],
+  "pins": 4897,
+  "clocks": [
+    {
+      "name": "hbm_clk",
+      "layer": "M5",
+      "x": 0.24,
+      "y": 216.0
+    },
+    {
+      "name": "hbm_pc_clk[0]",
+      "layer": "M5",
+      "x": 0.24,
+      "y": 216.0
+    },
+    {
+      "name": "hbm_pc_clk[1]",
+      "layer": "M5",
+      "x": 129.36,
+      "y": 216.0
+    },
+    {
+      "name": "hbm_pc_clk[2]",
+      "layer": "M5",
+      "x": 129.36,
+      "y": 216.0
+    },
+    {
+      "name": "hbm_pc_clk[3]",
+      "layer": "M5",
+      "x": 129.36,
+      "y": 216.0
+    },
+    {
+      "name": "stream_clk",
+      "layer": "M5",
+      "x": 129.36,
+      "y": 216.0
+    }
+  ],
+  "macros": [],
+  "source_commit": "27cdbd816b0c86654f2e94ed1ab9dde2d9a162dc",
+  "recipe": "ot_svgr_own__headtail",
+  "plan_pins_source_sha256": "2054dcac0c09a03028aaf396af0a04c08bbfb274dd2170b72f1383b2f16b0dac",
+  "io_tcl_sha256": "05cfc2f36f7de1e45d6fe7addad90606691575d56c1aebd11eabad548ef94caf",
+  "generation_only": true,
+  "physical_route_run": false
+}
+	Command being timed: "bash ./run_gen.sh"
+	User time (seconds): 32.85
+	System time (seconds): 3.18
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:36.13
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 563232
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 4
+	Minor (reclaiming a frame) page faults: 660489
+	Voluntary context switches: 406
+	Involuntary context switches: 770
+	Swaps: 0
+	File system inputs: 1600
+	File system outputs: 30304
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on localhost (unit oth-ubuntu-1167124-1793974146): exit 0

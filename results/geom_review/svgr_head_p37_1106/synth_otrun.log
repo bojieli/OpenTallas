@@ -1,0 +1,50 @@
+ot-run: localhost      admits   181 GB (avail 331, reserve 0, fresh 54.4, peak 31.7, headroom 0, waiters 0/0 GB) load 168/112 running 49 disk 194 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-1230600-1793974269 after 1 s
+{
+  "verdict": "PASS",
+  "kit_hash": "33cc6d8d234820ef",
+  "view": "ot_svgr_own@2054dcac0c09",
+  "outline_um": [
+    129.6,
+    432.0
+  ],
+  "standard_cells": 91866,
+  "standard_area_um2": 12991.1,
+  "nonmacro_core_area_um2": 51209.6256,
+  "standard_utilization": 0.25368472914592055,
+  "limits": {
+    "cells": 150000,
+    "standard_utilization": 0.45
+  },
+  "mapped_only": true,
+  "placement_run": false,
+  "route_run": false,
+  "source_recipe": "ot_svgr_own__headtail",
+  "source_commit": "40139073ec3ce4fa4fca4f81d16ee5192d4f245c",
+  "backend_commit": "27cdbd816b0c86654f2e94ed1ab9dde2d9a162dc"
+}
+	Command being timed: "bash ./run_synth.sh"
+	User time (seconds): 0.15
+	System time (seconds): 0.09
+	Percent of CPU this job got: 0%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 4:41.80
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 32092
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 12101
+	Voluntary context switches: 2146
+	Involuntary context switches: 369
+	Swaps: 0
+	File system inputs: 8
+	File system outputs: 96
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on localhost (unit oth-ubuntu-1230600-1793974269): exit 0

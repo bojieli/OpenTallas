@@ -1,0 +1,53 @@
+SVGR optional head/tail form — generated kit preflight, 2026-11-06
+
+Actual generated image actual_kit.png and review/context.png were viewed.
+Kit: 33cc6d8d234820ef; view: ot_svgr_own@2054dcac0c09.
+Optional recipe: ot_svgr_own__headtail, SKID_HEAD=1.
+Backend: 27cdbd816b0; RTL source: 40139073ec3.
+P37 plan SHA256: 80ed6e571900f1f5dc0eab590445c10c90d80d2cec43306e252edf57870eab35.
+
+The actual generated outline remains 129.6 x 432 um, with no macros,
+4,897 plan pins and 4,889 face flops. Face stages remain +1 in / +1 out.
+M4 carries 4,890 pins and M5 carries 7 pins. Clock entries remain at
+side-centre y=216 um: two west ports at x=.24, four east ports at x=129.36.
+Coincident native clock-port sites are inherited from the current slot.
+The optional source changes the internal skid representation; its measured
+refinement adds zero edges and retains occupancy 2 and full-pop admission.
+
+The tall E/W data faces follow the existing OWN/landing layout. No SRAM
+wall or macro-channel issue exists inside this macro-free kit. Material
+inherited findings remain: E average 5.769 pins/um, maximum 10-um window
+10.5 pins/um; W average 5.565, maximum 10.7. Maximum M4 pins/track is .504
+on each face. review_core flags both faces above its local 6-pins/um guide.
+The parent context reports 2,495 bits beyond its 364.5-um direct-local
+reach and one facing-away bit. These lines summarize endpoints; this
+preflight does not independently establish parent relay/station paths.
+PDN and native clock-density recipes match the existing form. This
+GEN-only image does not establish routed PDN, skew or pin access.
+
+Mapped sizing PASS: 91,866 standard cells and 12,991.1 um² in the unchanged
+51,209.6256-um² nonmacro core area, utilization .2536847291. Limits are
+150,000 cells and .45 utilization. Raw 1_synth.json and synthesis logs are
+retained; mapped_size.json is recomputed from them. This is mapped size,
+with no placement or route claim. The synthesis-only command completed
+exit 0 in 4m41.80s using normal 4-GB / 2-thread admission.
+
+Disposition: source, pin identity, GEN and mapped sizing are concrete and
+ready for parent physical disposition. No general geometry PASS is claimed;
+inherited density and parent-connection findings remain recorded for the
+plan owner. No floorplan, placement, CTS, GRT or route was launched. No
+canonical recipe, default parameter, or plan was changed.
+
+Native refinement results-only commit d0be94fba4b records 51,048 same-edge
+checks and 23,952 accepted 285-bit words across four epochs, with zero
+extra edges. Mutants 8/9/10 were caught. actual_source_equivalence.json
+binds generated renamed source to 401390; actual_rtl_hashes.json records
+all kit RTL hashes, including the unchanged helper. The generated face
+shell explicitly instantiates ot_svgr_own__fcore #(.SKID_HEAD(1)).
+
+Earlier EP6 GEN failed because its git object database lacked exact source
+401390. That failed attempt is retained separately. The positive fresh kit
+was generated on the verified dedicated hub filesystem (device 66307,
+root device 66306), using normal 4-GB / 2-thread admission without overrides.
+GEN exited 0 in 36.13s, peak RSS 563,232 KB. The complete kit remains at:
+intel2:/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits/ot_svgr_own_2054dcac0c09-headtail_p37
