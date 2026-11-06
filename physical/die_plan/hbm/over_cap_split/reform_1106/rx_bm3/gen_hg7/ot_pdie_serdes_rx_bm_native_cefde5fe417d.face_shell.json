@@ -1,0 +1,145 @@
+{
+ "schema": "opentallas.hbm_arch.core_face_shell.v1",
+ "module": "ot_pdie_serdes_rx_bm_native",
+ "core": "ot_pdie_serdes_rx_bm_native__fcore",
+ "core_def_file": "ot_pdie_serdes_rx_bm3.sv",
+ "clock": "clk",
+ "passthrough": [
+  "clk"
+ ],
+ "scalars": [
+  "any",
+  "clk",
+  "rs_n"
+ ],
+ "params": {
+  "BMTHC": 1
+ },
+ "mutant": null,
+ "latency": {
+  "in_cycles": 1,
+  "out_cycles": 1,
+  "in_to_out_extra_cycles": 2,
+  "reset_delay_cycles": 0,
+  "note": "every signal input +1, every signal output +1; clock pins pass through; reset pins pass through"
+ },
+ "out_extra_stages": {},
+ "out_extra_stage_flops": 0,
+ "in_buses": 3,
+ "out_buses": 5,
+ "in_bits": 305,
+ "out_bits": 320,
+ "face_flops": 625,
+ "dropped": [],
+ "unread_kept": [],
+ "const_out": {},
+ "const_out_bits": 0,
+ "dup_out_groups": 0,
+ "dup_out_bits": 0,
+ "dup_out": [],
+ "feedthrough": [],
+ "feedthrough_bits": 0,
+ "widths": {
+  "clk": 1,
+  "rs_n": 1,
+  "ld": 4,
+  "S": 300,
+  "lam": 160,
+  "om": 150,
+  "L": 5,
+  "any": 1,
+  "done": 4
+ },
+ "dirs": {
+  "clk": "input",
+  "rs_n": "input",
+  "ld": "input",
+  "S": "input",
+  "lam": "output",
+  "om": "output",
+  "L": "output",
+  "any": "output",
+  "done": "output"
+ },
+ "keep": {
+  "clk": 1,
+  "rs_n": 1,
+  "ld": 4,
+  "S": 300,
+  "lam": 160,
+  "om": 150,
+  "L": 5,
+  "any": 1,
+  "done": 4
+ },
+ "top_fanout_in": [
+  [
+   35,
+   "ld[0]"
+  ],
+  [
+   27,
+   "ld[2]"
+  ],
+  [
+   27,
+   "ld[1]"
+  ],
+  [
+   22,
+   "ld[3]"
+  ],
+  [
+   6,
+   "S[9]"
+  ],
+  [
+   6,
+   "S[8]"
+  ],
+  [
+   6,
+   "S[7]"
+  ],
+  [
+   6,
+   "S[6]"
+  ],
+  [
+   6,
+   "S[5]"
+  ],
+  [
+   6,
+   "S[4]"
+  ],
+  [
+   6,
+   "S[3]"
+  ],
+  [
+   6,
+   "S[2]"
+  ],
+  [
+   6,
+   "S[1]"
+  ],
+  [
+   6,
+   "S[0]"
+  ],
+  [
+   5,
+   "rs_n[0]"
+  ],
+  [
+   3,
+   "S[99]"
+  ]
+ ],
+ "files": [
+  "ot_pdie_serdes_rx_bm_native__fshell.sv",
+  "ot_hbm_face_reg.sv"
+ ]
+}

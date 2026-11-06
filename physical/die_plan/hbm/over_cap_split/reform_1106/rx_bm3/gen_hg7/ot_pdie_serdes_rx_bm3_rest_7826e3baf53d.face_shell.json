@@ -1,0 +1,204 @@
+{
+ "schema": "opentallas.hbm_arch.core_face_shell.v1",
+ "module": "ot_pdie_serdes_rx_bm3_rest",
+ "core": "ot_pdie_serdes_rx_bm3_rest__fcore",
+ "core_def_file": "ot_pdie_serdes_rx_bm3.sv",
+ "clock": "clk",
+ "passthrough": [
+  "clk",
+  "rck_clk",
+  "rst"
+ ],
+ "scalars": [
+  "bm_rs_n",
+  "clk",
+  "e_flt_i",
+  "fs",
+  "k_any",
+  "o_unc",
+  "rck_clk",
+  "rst"
+ ],
+ "params": {
+  "BMTHC": 1,
+  "SEAM": 6
+ },
+ "mutant": null,
+ "latency": {
+  "in_cycles": 1,
+  "out_cycles": 1,
+  "in_to_out_extra_cycles": 2,
+  "reset_delay_cycles": 0,
+  "note": "every signal input +1, every signal output +1; clock pins pass through; reset pins pass through"
+ },
+ "out_extra_stages": {},
+ "out_extra_stage_flops": 0,
+ "in_buses": 12,
+ "out_buses": 9,
+ "in_bits": 2059,
+ "out_bits": 1147,
+ "face_flops": 3206,
+ "dropped": [
+  "o_ne[0]",
+  "o_ne[1]",
+  "o_ne[2]",
+  "o_ne[3]",
+  "o_ne[4]"
+ ],
+ "unread_kept": [],
+ "const_out": {},
+ "const_out_bits": 0,
+ "dup_out_groups": 0,
+ "dup_out_bits": 0,
+ "dup_out": [],
+ "feedthrough": [],
+ "feedthrough_bits": 0,
+ "widths": {
+  "clk": 1,
+  "rck_clk": 1,
+  "rst": 1,
+  "rx": 512,
+  "st": 2,
+  "pma_rx": 544,
+  "e_flt_i": 1,
+  "k_v": 4,
+  "k_lo": 310,
+  "k_L": 5,
+  "k_any": 1,
+  "cw_q": 544,
+  "apply": 8,
+  "o_unc": 1,
+  "o_ne": 5,
+  "fs": 1,
+  "bm_S": 300,
+  "bm_ld": 12,
+  "bm_rs_n": 1,
+  "bm_lam": 480,
+  "bm_om": 450,
+  "bm_L": 15,
+  "bm_any": 3,
+  "bm_done": 12
+ },
+ "dirs": {
+  "clk": "input",
+  "rck_clk": "input",
+  "rst": "input",
+  "rx": "output",
+  "st": "output",
+  "pma_rx": "input",
+  "e_flt_i": "input",
+  "k_v": "output",
+  "k_lo": "output",
+  "k_L": "output",
+  "k_any": "output",
+  "cw_q": "input",
+  "apply": "input",
+  "o_unc": "input",
+  "o_ne": "input",
+  "fs": "input",
+  "bm_S": "output",
+  "bm_ld": "output",
+  "bm_rs_n": "output",
+  "bm_lam": "input",
+  "bm_om": "input",
+  "bm_L": "input",
+  "bm_any": "input",
+  "bm_done": "input"
+ },
+ "keep": {
+  "clk": 1,
+  "rck_clk": 1,
+  "rst": 1,
+  "rx": 512,
+  "st": 2,
+  "pma_rx": 544,
+  "e_flt_i": 1,
+  "k_v": 4,
+  "k_lo": 310,
+  "k_L": 5,
+  "k_any": 1,
+  "cw_q": 544,
+  "apply": 8,
+  "o_unc": 1,
+  "o_ne": 0,
+  "fs": 1,
+  "bm_S": 300,
+  "bm_ld": 12,
+  "bm_rs_n": 1,
+  "bm_lam": 480,
+  "bm_om": 450,
+  "bm_L": 15,
+  "bm_any": 3,
+  "bm_done": 12
+ },
+ "top_fanout_in": [
+  [
+   81,
+   "bm_done[8]"
+  ],
+  [
+   81,
+   "bm_done[4]"
+  ],
+  [
+   81,
+   "bm_done[0]"
+  ],
+  [
+   79,
+   "bm_done[9]"
+  ],
+  [
+   79,
+   "bm_done[6]"
+  ],
+  [
+   79,
+   "bm_done[5]"
+  ],
+  [
+   79,
+   "bm_done[2]"
+  ],
+  [
+   79,
+   "bm_done[1]"
+  ],
+  [
+   79,
+   "bm_done[10]"
+  ],
+  [
+   77,
+   "bm_done[7]"
+  ],
+  [
+   77,
+   "bm_done[3]"
+  ],
+  [
+   77,
+   "bm_done[11]"
+  ],
+  [
+   68,
+   "apply[7]"
+  ],
+  [
+   68,
+   "apply[6]"
+  ],
+  [
+   68,
+   "apply[5]"
+  ],
+  [
+   68,
+   "apply[4]"
+  ]
+ ],
+ "files": [
+  "ot_pdie_serdes_rx_bm3_rest__fshell.sv",
+  "ot_hbm_face_reg.sv"
+ ]
+}
