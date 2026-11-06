@@ -3,7 +3,7 @@
 import sys,json,hashlib,importlib.util,os,argparse,subprocess
 from pathlib import Path
 repo=Path(__file__).resolve().parents[4]
-a=argparse.ArgumentParser();a.add_argument('--context',type=Path,required=True);a.add_argument('--out',type=Path,required=True);a.add_argument('--write-face',choices=['on','off'],default='on');a.add_argument('--util',type=float,default=.45);a.add_argument('--tag');a.add_argument('--sigmax',choices=['M5','M6'],default='M6');a=a.parse_args();ctx=a.context;out=a.out
+a=argparse.ArgumentParser();a.add_argument('--context',type=Path,required=True);a.add_argument('--out',type=Path,required=True);a.add_argument('--write-face',choices=['on','off'],default='on');a.add_argument('--util',type=float,default=.45);a.add_argument('--tag');a.add_argument('--sigmax',choices=['M5','M6'],default='M6');a.add_argument('--pg-top-layer',choices=['M5','M6'],default='M5');a=a.parse_args();ctx=a.context;out=a.out
 commit=subprocess.check_output(['git','-C',str(repo),'rev-parse','HEAD'],text=True).strip()
 module='ot_hbm_hc_bank128_pair_core'
 base=json.loads((ctx/'base_freeze.json').read_text()); src=repo/'rtl/hbm_accel/cores_split/ot_hbm_hc_native128'/f'{module}.sv'
@@ -21,7 +21,7 @@ profile['port_inventory']=dict(top=module,source_file=virtual,source_sha256=sha(
 profile['write_face']=dict(define='OT_HC128_WFACE',enabled=a.write_face=='on',cycles=int(a.write_face=='on'),cohort=['write_data','write_addr','weight_we0','weight_we1','x_write'],arithmetic_cycles=0,precondition='no programming during reset; firstdependentread/go shifted1edge')
 sys.path.insert(0,str(repo/'physical/die_plan/hbm_arch_cores'))
 p=repo/'physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py';spec=importlib.util.spec_from_file_location('b128_gen',p);gen=importlib.util.module_from_spec(spec);spec.loader.exec_module(gen)
-sys.argv=[str(p),'--views',str(ctx/'views.json'),'--view',view['view'],'--out',str(out),'--tag',a.tag or ('_wface_vB' if a.write_face=='on' else '_shallow_vA'),'--util',str(a.util),'--sigmax',a.sigmax,'--face-shell','off','--clock-pin-entry','on','--clock-taps','off','--single-root-taps','off','--core-insertion','none','--core-macros','off']
+sys.argv=[str(p),'--views',str(ctx/'views.json'),'--view',view['view'],'--out',str(out),'--tag',a.tag or ('_wface_vB' if a.write_face=='on' else '_shallow_vA'),'--util',str(a.util),'--sigmax',a.sigmax,'--pg-top-layer',a.pg_top_layer,'--face-shell','off','--clock-pin-entry','on','--clock-taps','off','--single-root-taps','off','--core-insertion','none','--core-macros','off']
 if a.write_face=='on':
  pins=json.loads((ctx/view['pins_file']).read_text());ctrl=next(p for p in pins if p['name']=='weight_we0');east=ctrl['x']>view['outline_um'][0]-1
  # face_flops.tcl already fixes direct data/address registers at their pins.

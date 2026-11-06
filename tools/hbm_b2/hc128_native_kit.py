@@ -8,7 +8,7 @@ import argparse,hashlib,importlib.util,json,os,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from hc_alpha_names import normalize_names, placement_name
-ap=argparse.ArgumentParser(add_help=False);ap.add_argument('--masters',type=Path,required=True);ap.add_argument('--repo',type=Path,default=Path(__file__).resolve().parents[2]);ap.add_argument('--diagnostic-plan',action='store_true');ap.add_argument('--b128-safe',action='store_true',help='opt-in common-pair M6, single-root CTS and balanced SRAM channels; parent must reserve M6');ap.add_argument('--write-face',action='store_true',help='opt-in grouped common-pair write pipeline; requires updated master and native projection +1 write guard');a,rest=ap.parse_known_args();a.b128_safe=a.b128_safe or a.write_face;a.repo=a.repo.resolve();cfg=a.repo/'physical/die_plan/hbm_arch_cores/native128';views=json.loads((cfg/'views.json').read_text());recipes={};overrides={};receipts={}
+ap=argparse.ArgumentParser(add_help=False);ap.add_argument('--masters',type=Path,required=True);ap.add_argument('--repo',type=Path,default=Path(__file__).resolve().parents[2]);ap.add_argument('--diagnostic-plan',action='store_true');ap.add_argument('--b128-safe',action='store_true',help='opt-in common-pair M6, single-root CTS and balanced SRAM channels; parent must reserve M6');ap.add_argument('--write-face',action='store_true',help='opt-in grouped common-pair write pipeline; requires updated master and native projection +1 write guard');ap.add_argument('--pg6',action='store_true',help='opt-in real M6 PG rails/vias; requires M6 reservation and parent M7 landing');a,rest=ap.parse_known_args();a.b128_safe=a.b128_safe or a.write_face or a.pg6;a.repo=a.repo.resolve();cfg=a.repo/'physical/die_plan/hbm_arch_cores/native128';views=json.loads((cfg/'views.json').read_text());recipes={};overrides={};receipts={}
 if '--out' not in rest:raise SystemExit('--out required')
 alpha_dir=Path(rest[rest.index('--out')+1]).resolve()/'_hc128_alpha';alpha_dir.mkdir(parents=True,exist_ok=True)
 for view in views['view_list']:
@@ -42,6 +42,9 @@ if a.b128_safe and mod!='ot_hbm_hc_bank128_pair_core':raise SystemExit('--b128-s
 for name,want in [('--face-shell','off'),('--sigmax','M6' if a.b128_safe else 'M5')]:
  if name in rest and rest[rest.index(name)+1]!=want:raise SystemExit(name+' must be '+want+' for this native HC candidate')
  if name not in rest:rest.extend([name,want])
+if a.pg6:
+ if '--pg-top-layer' in rest and rest[rest.index('--pg-top-layer')+1]!='M6':raise SystemExit('--pg6 requires --pg-top-layer M6')
+ if '--pg-top-layer' not in rest:rest.extend(['--pg-top-layer','M6'])
 if '--views' not in rest:rest.extend(['--views',str(cfg/'views.json')])
 if '--core-insertion' not in rest:rest.extend(['--core-insertion','none'])
 # A single real clock port; dense local clock taps are built by the shared flow.
@@ -53,6 +56,7 @@ source_file='native_hc128/'+mod+'.sv';profile=dict(source_commit=receipt['source
 # A write pipeline is not a uniform face-shell delay: read/go/arithmetic stay
 # native, while the projection compiler defers first dependent read/go one edge.
 if a.b128_safe:profile['physical_form']='B128_M6_SINGLE_ROOT_BALANCED_CHANNELS'
+if a.pg6:profile['pg_access']='REAL_PG6_PARENT_M7_RESERVATION_AND_FINAL_ACCESS_PENDING'
 if a.write_face:
  profile['added_write_cycles']=1
  profile['pin_cycle_delta']={p:1 for p in ['write_data','write_addr','weight_we0','weight_we1','x_write']}
