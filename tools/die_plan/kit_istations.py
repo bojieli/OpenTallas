@@ -449,11 +449,18 @@ def core_stations(t, txt, apply, htree, tcl, rep):
             raise SystemExit(f"kit_istations: class {c}: lanes carry unequal stage counts {depth[c]} / {ns[0]} "
                              "(every lane must see one depth: static schedule)")
         depth[c] = ns[0]
+    h_lanes = {}
     if "hi" in depth or "ho" in depth:
+        # DIE-S81-69 11-06: the leaf RTL applies CS_HI_D / CS_HO_D to all 16 lanes (one depth per class: the static
+        # schedule holds whatever lanes the plan sited).  The planner sites a lane's stations only where that lane's
+        # hop exceeds reach, so hi and ho may be sited on different lanes (kv_leaf t1/t3/t4/t5).  A lane without a
+        # sited entry for a class gets its stage(s) placed by GPL, exactly like the lanes sited in neither class;
+        # the unequal-depth checks above still fail closed.  Reported (h_lanes), not failed.
         lanes = {lane for (c, lane) in groups if c in H_CLASSES}
         for c in H_CLASSES:
-            if c in depth and {l for (cc, l) in groups if cc == c} != lanes:
-                raise SystemExit(f"kit_istations: class {c}: planned on a subset of the lanes (fail closed)")
+            if c in depth:
+                sited = sorted(l for (cc, l) in groups if cc == c)
+                h_lanes[c] = dict(sited=sited, unsited_of_planned=sorted(lanes - set(sited)))
     m, have = leaf_params(txt)
     want = {CLASS_PARAM[c]: d for c, d in depth.items() if c != "cs"}
     G, GSI, GSO = htree
@@ -485,6 +492,8 @@ def core_stations(t, txt, apply, htree, tcl, rep):
                 if shared:
                     for g in range(16 // G):
                         es = [x for l in range(G * g, G * g + G) for x in groups.get((c, l), [])]
+                        if not es:
+                            continue                # no sited lane in this group: GPL places the shared stage
                         jj = j if c == "hi" else j - (d - gs)
                         sites.append((f"{LEAF_INST}.u_vp.g_{c}g[{g}].u_cst.gd.s[{jj}].u", centroid(es, j), c))
                 else:
@@ -499,7 +508,7 @@ def core_stations(t, txt, apply, htree, tcl, rep):
     rep.append(dict(core_classes={c: dict(param=CLASS_PARAM.get(c), stages=d,
                                           entries=sum(len(v) for (cc, _), v in groups.items() if cc == c))
                                   for c, d in sorted(depth.items())},
-                    h_tree=dict(G=G, GS_IN=GSI, GS_OUT=GSO), placed_stages=len(sites)))
+                    h_tree=dict(G=G, GS_IN=GSI, GS_OUT=GSO), h_lanes=h_lanes, placed_stages=len(sites)))
     return txt
 
 
