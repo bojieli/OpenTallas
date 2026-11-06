@@ -1,0 +1,11 @@
+# HBM-GAPS-5-BODYCTL 2026-11-06 05:26 UTC: proof of OT_Q3CTL_TGTQ1 (ot_hfd_coll_q3_body_ctl only, recipe define)
+# run: docker openroad/orfs:asap7lock, python3 -I prove.py <patched ctl.sv> <main 33ff3f432d ctl.sv> <wd> <yosys>
+# cause: u_program.target_q reg _237836_ <= target_eff = hit ? 8h34 : 8h00, no reset; bits 0,1,3,6,7 const 0, bits 2,4,5 three copies of one flop;
+# synth merges 2/4/5 into one flop, the gold keeps three, so the kit LEC had gold-only _237836_[2] (2016 differ).
+TEXT old sha256 9fabb0c20b96e5eca77b19593f1a4761641f222c5a10e766fb551794b658351e patched-minus-ifdef sha256 9fabb0c20b96e5eca77b19593f1a4761641f222c5a10e766fb551794b658351e IDENTICAL
+FORMAL M0 new form vs old: PASS
+MUTANT M1_bit2_tied0: caught (proof FAILS)
+MUTANT M2_no_register: caught (proof FAILS)
+MUTANT M3_bit0_not_const: caught (proof FAILS)
+MUTANT M4_bit3_for_bit2: caught (proof FAILS)
+RESULT PASS

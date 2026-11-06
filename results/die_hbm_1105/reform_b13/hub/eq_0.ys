@@ -1,0 +1,11 @@
+read_verilog -sv gold.sv
+read_verilog -sv gate.sv
+chparam -set NC 0 -set CW 1 -set DMUT 0 hub_gold
+chparam -set NC 0 -set CW 1 -set DMUT 0 hub_gate
+proc; memory; opt_clean
+async2sync
+equiv_make hub_gold hub_gate eqm
+hierarchy -top eqm
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status -assert

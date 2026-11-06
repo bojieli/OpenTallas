@@ -157,5 +157,99 @@ class SpillRequeue(unittest.TestCase):
         self.assertEqual(runs, [("epyc4", self.m.REQUEUE_S)])
 
 
+class RefusedSource(unittest.TestCase):
+    """QUEUE-BAL-2 20:4x: epyc4 scratch2 100% (26 GB < 50 GB floor) held the only copy of the kits; ot-run said 'NOT RUN: no
+    host qualifies' without trying SPILL while epyc5/epyc6 admitted 1.4 TB."""
+    D = "/srv/x/claude/l/k"
+
+    def setUp(self):
+        self.m = load()
+
+    def refused_row(self, gb=26):
+        return dict(row(225, 62.0, 256), disk_gb=gb, scratch_disk="/srv/opentallas-scratch", scratch_disk_gb=gb)
+
+    def place(self, probes, disk=20):
+        with patch.object(self.m, "probe", side_effect=lambda h, d: (h, probes[h][1])), \
+             patch.object(self.m, "trigger_reaper", return_value=False), contextlib.redirect_stderr(io.StringIO()):
+            return self.m.place(list(probes), self.D, disk, 48, quiet=True)
+
+    def test_place_records_disk_refused_host_with_dir(self):
+        ok = self.place(dict(epyc4=(None, self.refused_row()), epyc5=(None, None)))
+        self.assertEqual(ok, {})
+        self.assertEqual(list(self.m.REFUSED_SRC), ["epyc4"])
+        self.assertIn("scratch disk", self.m.PLACE_NOTES["epyc4"])
+
+    def test_place_ignores_hosts_without_dir_or_other_refusals(self):
+        big = dict(row(225, 62.0, 256), total_gb=40)          # physically too small: not a disk refusal
+        ok = self.place(dict(epyc5=(None, None), epyc6=(None, dict(error="unreachable")), intel1=(None, big)))
+        self.assertEqual(ok, {})
+        self.assertEqual(self.m.REFUSED_SRC, {})
+
+    def test_place_clears_between_calls(self):
+        self.place(dict(epyc4=(None, self.refused_row())))
+        self.place(dict(epyc4=(None, row(225, 62.0, 256))))
+        self.assertEqual(self.m.REFUSED_SRC, {})
+
+    def main(self, refused, plan, argv_extra=(), spill_rc=0, spill_seq=None, gb=26, plans=None):
+        def place(hosts, d, disk, mem, quiet=False):
+            self.m.REFUSED_SRC.clear()
+            if refused:
+                self.m.REFUSED_SRC["epyc4"] = self.refused_row(gb)
+                self.m.PLACE_NOTES["epyc4"] = "scratch disk /srv/opentallas-scratch has 26 GB free < floor 50 GB"
+            return {}
+        runs = iter(spill_seq or [spill_rc])
+        err = io.StringIO()
+        with patch.object(self.m, "HOSTS", ["epyc4", "epyc5"]), patch.object(self.m, "place", side_effect=place), \
+             patch.object(self.m, "reload_conf", return_value=[]), patch.object(self.m, "trigger_sweep"), \
+             patch.object(self.m, "held_hosts", return_value={}), patch.object(self.m.time, "sleep"), \
+             patch.object(self.m, "retryable_queued_probe_failures", return_value=set()), \
+             patch.object(self.m, "spill_plan", **(dict(side_effect=plans) if plans else dict(return_value=plan))) as splan, \
+             patch.object(self.m, "spill_run", side_effect=lambda *a, **k: next(runs)) as srun, \
+             patch.object(self.m.sys, "argv", ["ot-run", "--mem", "48", "--threads", "8", *argv_extra, "--dir", self.D, "--", "true"]), \
+             patch.dict(os.environ, {}, clear=True), contextlib.redirect_stderr(err):
+            with self.assertRaises(SystemExit) as ex:
+                self.m.main()
+        return ex.exception.code, splan, srun, err.getvalue()
+
+    def test_refused_dir_host_spills_to_free_host(self):
+        code, splan, srun, err = self.main(True, (("epyc5", [self.D], 2.7), "", False))
+        self.assertEqual(code, 0)
+        self.assertEqual(splan.call_args.args[0], "epyc4")
+        self.assertEqual(srun.call_args.args[:2], ("epyc4", "epyc5"))
+        self.assertIn("REFUSED-SOURCE SPILL", err)
+
+    def test_unadmitted_refused_spill_places_again(self):
+        code, splan, srun, _ = self.main(True, (("epyc5", [self.D], 2.7), "", False), spill_seq=[None, 7])
+        self.assertEqual(code, 7)
+        self.assertEqual(srun.call_count, 2)
+
+    def test_no_spill_host_now_waits_instead_of_not_run(self):
+        plans = [(None, "no spill host admits it now", False), (("epyc5", [self.D], 2.7), "", False)]
+        code, splan, srun, err = self.main(True, None, plans=plans)
+        self.assertEqual(code, 0)
+        self.assertEqual(splan.call_count, 2)
+        self.assertIn("re-placing every", err)
+
+    def test_permanent_refusal_still_not_run(self):
+        code, _, srun, err = self.main(True, (None, "command names /srv/y outside the --stage paths", True))
+        self.assertIn("no host qualifies", str(code))
+        self.assertFalse(srun.called)
+
+    def test_pinned_job_is_not_spilled(self):
+        code, splan, srun, _ = self.main(True, (("epyc5", [self.D], 2.7), "", False), argv_extra=("--hosts", "epyc4"))
+        self.assertIn("no host qualifies", str(code))
+        self.assertFalse(splan.called or srun.called)
+
+    def test_too_little_room_for_back_copy_waits(self):
+        code, splan, srun, err = self.main(True, (("epyc5", [self.D], 2.7), "", False), argv_extra=("--max-wait", "1"), gb=2)
+        self.assertFalse(splan.called or srun.called)
+        self.assertIn("for the back-copy", err)
+
+    def test_no_refused_host_keeps_old_not_run(self):
+        code, splan, _, _ = self.main(False, (("epyc5", [self.D], 2.7), "", False))
+        self.assertIn("no host qualifies", str(code))
+        self.assertFalse(splan.called)
+
+
 if __name__ == "__main__":
     unittest.main()

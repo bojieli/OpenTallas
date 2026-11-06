@@ -578,6 +578,19 @@ txt = "\n".join(rd(p, 200000) for p in logs if os.path.getmtime(p) >= since)
 runlog = rd(os.path.join(K, "run_%s.log" % goal), 400000)
 alltxt = txt + "\n" + runlog
 out["runlog_tail"] = runlog[-600:]
+# A legacy gate can write a PASS receipt, then throw in its clock-source census.
+# This is a tool failure, not a timing verdict. Require all three current-run
+# witnesses; PASS/exit 1 alone must never override a real setup/hold failure.
+marker = out.get("FAIL_POSTCTS", "")
+p = os.path.join(K, "postcts_gate_tt.json")
+q = os.path.join(K, "postcts_gate_TT.log")
+if ("TT global-routing insertion gate failed: PASS exit 1" in marker
+        and os.path.isfile(p) and os.path.getmtime(p) >= since
+        and os.path.isfile(q) and os.path.getmtime(q) >= since
+        and (jl(p) or {}).get("verdict") == "PASS"):
+    m = re.search(r"(?m)^Error: grt_policy_tt\.tcl, \d+ clock [^\n]+ has no unique rise source insertion arrival\s*$", rd(q))
+    if m:
+        out["clock_source_error"] = m.group(0).strip()[:300]
 pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[^\n]*|[Rr]outing congestion too high[^\n]*",
        "segfault": r"Segmentation fault[^\n]*|Signal 11 received[^\n]*|SIGSEGV[^\n]*|core dumped[^\n]*",
        "oom": r"Error 137[^\n]*|\] Error 247[^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
@@ -602,6 +615,9 @@ for js in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*.json
         if k.endswith("__design__instance__count__stdcell") and isinstance(v, (int, float)):
             cells = max(cells, int(v))
 out["cells"] = cells
+nc = jl(os.path.join(K, "native_cell_count.json")) or {}
+if nc.get("schema") == "opentallas.native_cell_count.v1" and type(nc.get("stdcells")) is int:
+    out["native_cells"] = nc["stdcells"]
 g = rd(next(iter(glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "5_1_grt.log"))), ""))
 tot = re.findall(r"^Total\s+.*?(\d+)\s*$", g, re.M)
 out["grt_overflow"] = int(tot[-1]) if tot else None
@@ -931,14 +947,17 @@ def classify(c, client):
         return "STRUCTURAL", "routed-not-signed", reasons
     if c.get("FAIL_PREFLOOR"):
         return "STRUCTURAL", "preflight", "FAIL_PREFLOOR " + c["FAIL_PREFLOOR"]
+    if (c.get("clock_source_error") and
+            "TT global-routing insertion gate failed: PASS exit 1" in c.get("FAIL_POSTCTS", "")):
+        # Not in INFRA_KINDS: keep the physical checkpoint and await the fixed
+        # flow/source refresh; retrying the same broken gate cannot help.
+        return "CRASH", "infra-clock-source", c["clock_source_error"]
     if c.get("FAIL_POSTCTS"):
         return "STRUCTURAL", "post-cts-hold", "FAIL_POSTCTS " + c["FAIL_POSTCTS"]
     if c.get("hold_structural"):
         return "STRUCTURAL", "hold-structural", c["hold_structural"]
     if c.get("congestion"):
         return "STRUCTURAL", "grt-overflow", c["congestion"]
-    if c.get("cells", 0) > CELL_CAP:
-        return "STRUCTURAL", "cell-cap", f"{c['cells']} std cells > {CELL_CAP}"
     if c.get("gate_fail"):
         # CRASH-TRIAGE 10-25: 8 rows (CORE_PREFLIGHT shared, RP1_GATE FF hold, SDC_LINT) were design verdicts
         # filed as CRASH because the runner printed the gate line without a FAIL_* marker file
@@ -955,6 +974,12 @@ def classify(c, client):
         # COORD 11-05 07:01: exit 137/143 with no memory line in the logs is a signal from outside, usually a lane's
         # docker stop, not an OOM (opstore_b stopped by ruling 06:51 came back 06:58). Not in INFRA_KINDS: no retry.
         return "CRASH", "infra-stopped", f"exit {client['exit']}, no OOM line in the run logs: stopped from outside"
+    # KW-RELAUNCH-2 11-05: the cap is judged after the infra outcomes (sle_ctl a7630b8a28e2 was NOT RUN on a disk floor
+    # and filed as cell-cap), on the kit's own pre-floorplan native count when it has one (the post-place stdcell
+    # count adds TAPCELL/endcaps: 522k placed = 316k native), the basis kit_wave.after_place and native_cell_cap.tcl use.
+    cells = c.get("native_cells", c.get("cells", 0)) or 0
+    if cells > CELL_CAP:
+        return "STRUCTURAL", "cell-cap", f"{cells} std cells > {CELL_CAP}"
     if client.get("exit") == 0 and c.get("goal") == "grt" and c.get("grt_odb"):
         if c.get("grt_overflow") not in (None, 0):
             return "STRUCTURAL", "grt-overflow", f"GRT-only overflow {c['grt_overflow']}"

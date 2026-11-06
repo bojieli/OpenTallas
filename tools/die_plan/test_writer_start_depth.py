@@ -105,3 +105,17 @@ def test_parameter_form_fails_closed():
     p, t = ca_vehicle(); enable(p)
     with pytest.raises(LandingError, match='strap-form'):
         Landings(p, t).type_rtl('A', A_BODY)
+
+
+def test_final_writer_relay_keeps_reset_gate_at_face():
+    # A final relay is Q plus the reset AND. The whole mapped instance must
+    # stay near its output, rather than letting the AND follow a far reset.
+    p, _ = strap_vehicle(); enable(p, 2)
+    t = p['partition_types']['A']
+    t['outline_um'] = [100, 120]
+    t['clock']['landing_contract'] = {'pins': [
+        {'name': 'cland_fstart_out_x', 'dir': 'out', 'xy_um': [99, 119]}]}
+    g = LP._writer_start_groups(t)
+    assert g[-1][0] == 'u_cland_fstart_x' and g[-1][2] == 'writer-face:x'
+    assert g[-1][1] == pytest.approx([91.36, 111.36, 100.0, 120.0])
+    assert [x[0] for x in g[:-1]] == ['u_cland_writer_start_x_0', 'u_cland_writer_start_x_1']

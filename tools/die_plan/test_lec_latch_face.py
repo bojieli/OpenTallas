@@ -181,3 +181,15 @@ def test_ot_dp_lk_gold_against_missing_latch_is_not_equivalent(tmp_path):
     """MISSING LATCH: the golden has the ot_dp_lk latch, the netlist has a buffer -> NOT EQUIVALENT (not UNPROVEN)."""
     rc, r = _run(_kit(tmp_path, "DROP", RTL_DPLK))
     assert rc == 1 and r["verdict"] == "NOT EQUIVALENT" and "latch phase" in r["reason"], r
+
+
+@pytest.mark.parametrize("literal", ["0", "1"])
+def test_constant_capture_data_has_constant_phase(tmp_path, literal):
+    src = _po_json(tmp_path / "s.json")
+    d = json.loads(src.read_text())
+    d["modules"]["lec_top"]["cells"]["po"]["connections"]["D"] = [literal]
+    src.write_text(json.dumps(d))
+    st = lec.latch_to_wire(src, tmp_path / "d.json", "gate")
+    assert st["port_phase_counts"] == {"const": 1}
+    assert st["port_phase"] == {"po": "const"}
+    assert json.loads((tmp_path / "d.json").read_text())["modules"]["lec_top"]["cells"]["po"]["connections"]["D"] == [literal]

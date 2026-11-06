@@ -42,7 +42,13 @@ module ot_s81hd_beat_tx #(
     // LEC sees free RTL-only registers on oq_p).  Words, beats, latency and faults are identical; only the pad state that
     // never holds anything but 0 after the first word is gone.  Ignored (full width) for MUT 1, whose beat swap moves
     // data into the pad positions.
-    parameter integer HOLD_REAL = 0
+    parameter integer HOLD_REAL = 0,
+    // DIE-HEAD-71 (11-05 ctlrq, hd_ctl LEC, 0 cycles): opt-in, default 0 = unchanged.  1: the hold register is cleared
+    // by the control reset rn (async, like owe / nxt).  hold is read only while owe != 0, i.e. after a word started,
+    // and a start loads it, so every word, beat, latency and fault is identical; only the power-up X of hold is gone.
+    // Hold bits whose data is a structural constant of the caller (host276 frame pad / constant fields) then hold that
+    // constant from reset instead of X until the first word, so synthesis and a register-mapped LEC agree on them.
+    parameter integer HOLD_RST = 0
 ) (
     input  wire                 ck,
     input  wire                 rn,          // control-only reset, active low
@@ -76,9 +82,17 @@ module ot_s81hd_beat_tx #(
         always @(*) begin swp = wp; swp[P-1:0] = b1; swp[2*P-1:P] = b0; end
         wire [NP-P-1:0] hold_ld = (MUT == 1) ? swp[NP-1:P] : wp[NP-1:P];
         wire [NP-P-1:0] hold_sh = hold_x >> P;
+        if (HOLD_RST != 0) begin : g_hr
+            always @(posedge ck or negedge rn)
+                if (!rn) hold <= {HW{1'b0}};
+                else if (start) hold <= hold_ld[HW-1:0];
+                else if (owe != 0) hold <= hold_sh[HW-1:0];
+        end else begin : g_hn
+            always @(posedge ck)
+                if (start) hold <= hold_ld[HW-1:0];
+                else if (owe != 0) hold <= hold_sh[HW-1:0];
+        end
         always @(posedge ck) begin
-            if (start) hold <= hold_ld[HW-1:0];
-            else if (owe != 0) hold <= hold_sh[HW-1:0];
             if (start) oq_p <= (MUT == 1) ? b1 : b0;
             else if (IDLE_ZERO != 0 && owe == 0) oq_p <= {P{1'b0}};
             else oq_p <= hold_x[P-1:0];
