@@ -1,0 +1,11 @@
+# Corrected bank-only source, 2026-11-06
+
+Source qualification PASS; physical preparation remains open. Existing E5 ot-run unit oth-ubuntu-1290941-1793968298 finished exit0. Actual emitted SV was reread with actual SRAM BB modules and hierarchy -check passed. Final named-parent graph equals all 9928 original hardware cells including exact register parameters, drivers and output connections. Zero added registers/cycles. Original A source, recipes and prior failed logs remain unchanged.
+
+Mapped RVT TT833 counts: controller115864 standard cells /18460.78776um2 plus11 SRAM; bank0 and bank1 each6542 /1066.35204um2 plus4 SRAM. Total128948 mapped standard cells /20593.49184um2, not placed counts. Full older link split had85672/21211/21216; retain its profile as historical_whole_link_profile.json.
+
+Complete bank logic/register ownership is extracted, not SRAM-only wrappers. Native original bank clocks are indices1..4 and6..9; controller retains original link0/5 protocol/front/back registers. Each bank cut has581 input and561 output bits; bitwise original clock ownership and original child bus index masks are attached. Parent external R2 shell stays on actual clk_control input/output captures; no new face stages. Existing smallest real-RTL lockstep/mutant evidence under ../proof remains applicable to extraction mechanism; final bank source exact graph is authoritative here.
+
+Use two hard bank-store helpers and soft real controller within original full parent to avoid artificial opaque center native-face/reach trap. Initial three-box layout is historical and unsafe. Preserve19 SRAM sites/21.6um channels. Native mapped endpoint census/clock aliases, full dataflow render, actual pin access and real PG6/parent landing remain required before physical launch. Diagnostic q2nf_native_prep --gen remains disabled.
+
+Reproduction: original preparation uses ../prepare.ys then q2nf_linkstore_extract.py prepare original.json grouped3.json --split-rest --bank-only; bank_cut/native_gen_fixed.sh performs extraction, explicit type correction, final graph comparison and actual emitted hierarchy reread. Source working artifacts retained E5 /srv/opentallas-scratch2/claude/codex-q2nf-native-banks-1106.

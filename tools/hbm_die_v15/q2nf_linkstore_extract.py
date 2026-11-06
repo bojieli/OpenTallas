@@ -8,11 +8,13 @@ private anonymous combinational cones follow their sole owned consumers.
 import argparse,collections,json,re
 from pathlib import Path
 
-def prepare(raw,top='ot_q2nf_rest',split_rest=False):
+def prepare(raw,top='ot_q2nf_rest',split_rest=False,entry_capture=None,bank_only=False):
  t=raw['modules'][top];cells=t['cells'];owners={};aliases=collections.defaultdict(set);users=collections.defaultdict(set)
  def group(n):
   for j in range(2):
-   if f'g_link[{j}].u_link.' in n or f'u_body_g_link_{j}_u_link_' in n:return f'g_linkstore{j}'
+   needle=f'g_link[{j}].u_link.g_bank[' if bank_only else f'g_link[{j}].u_link.'
+   encoded=f'u_body_g_link_{j}_u_link_g_bank_' if bank_only else f'u_body_g_link_{j}_u_link_'
+   if needle in n or encoded in n:return f'g_linkstore{j}'
   return None
  def semantic(n):return not n.startswith('$') and not re.fullmatch(r'(?:u_x\.)?_\d+_(?:\[\d+\])?',n)
  for n,q in t['netnames'].items():
@@ -41,6 +43,18 @@ def prepare(raw,top='ot_q2nf_rest',split_rest=False):
    use=set().union(*(users[b] for b in bits));gs={owners.get(q,'rest') for q in use}
    if use and len(gs)==1 and 'rest' not in gs:
     owners[n]=next(iter(gs));changed=True
+ if entry_capture:
+  if entry_capture.get('schema')!='q2nf.entry_capture.v1' or not split_rest:
+   raise ValueError('entry capture needs exact Q2NF source spec and controller split')
+  expected=t['ports'][entry_capture['external_port']]['bits']
+  selected=[expected[i] for i in entry_capture['source_bit_indices']]
+  rows=entry_capture['first_registers']
+  if len(rows)!=1 or rows[0]['Q_bits']!=612 or entry_capture['comb_cells']:
+   raise ValueError('expected the one direct612-bit native right RX capture, no guessed cone')
+  n=rows[0]['cell'];c=cells[n]
+  if owners.get(n)!='g_linkstore1' or c['connections']['D']!=selected or c['connections']['CLK']!=[t['ports']['clk_link']['bits'][5]]:
+   raise ValueError('right RX first-capture source/data/clock identity changed')
+  owners.pop(n) # existing cell becomes controller-owned, no state/edge changes
  profile={}
  for n,c in cells.items():
   c.setdefault('attributes',{})['q2nf_original_cell']=n
@@ -107,14 +121,14 @@ def trim_ports(raw,top='ot_q2nf_rest'):
  return raw,manifest
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('mode',choices=['prepare','trim','compare']);p.add_argument('input');p.add_argument('output');p.add_argument('--top',default='ot_q2nf_rest');p.add_argument('--split-rest',action='store_true');a=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('mode',choices=['prepare','trim','compare']);p.add_argument('input');p.add_argument('output');p.add_argument('--top',default='ot_q2nf_rest');p.add_argument('--split-rest',action='store_true');p.add_argument('--entry-capture-json');p.add_argument('--bank-only',action='store_true');p.add_argument('--other-top');a=p.parse_args()
  r=json.loads(Path(a.input).read_text())
  if a.mode=='prepare':
-  r,profile=prepare(r,a.top,a.split_rest);Path(a.output).write_text(json.dumps(r));Path(a.output+'.profile.json').write_text(json.dumps(profile,indent=2)+'\n');print(json.dumps(profile))
+  r,profile=prepare(r,a.top,a.split_rest,json.loads(Path(a.entry_capture_json).read_text()) if a.entry_capture_json else None,a.bank_only);Path(a.output).write_text(json.dumps(r));Path(a.output+'.profile.json').write_text(json.dumps(profile,indent=2)+'\n');print(json.dumps(profile))
  elif a.mode=='trim':
   r,manifest=trim_ports(r,a.top);Path(a.output).write_text(json.dumps(r));Path(a.output+'.ports.json').write_text(json.dumps(manifest,indent=2)+'\n');print('trimmed unused child input bits; exact original index masks recorded')
  else:
-  other=json.loads(Path(a.output).read_text());g=graph(r,a.top);h=graph(other,a.top)
+  other=json.loads(Path(a.output).read_text());g=graph(r,a.top);h=graph(other,a.other_top or a.top)
   if g!=h:raise SystemExit('FAIL: hierarchy changed exact cell/parameter/driver graph')
   print('PASS: exact sequential graph,',len(g['cells']),'cells; no changed register, parameter, connection or cycle')
 if __name__=='__main__':main()
