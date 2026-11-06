@@ -3,6 +3,21 @@
  "plan_sha256": "6641f0fdf7497b673818b8c87b2ff11cb2ebc6a1f8516663b93c33fef14576e9",
  "rows": [
   {
+   "type": "coll_ftm",
+   "sinks": 22935,
+   "old_max_load_actual": 1750,
+   "old_mode": "density",
+   "old_cap": 1000,
+   "cap": 1000,
+   "target": 750,
+   "radius": 200.0,
+   "status": "OK",
+   "new_taps": 50,
+   "new_max_load": 787,
+   "new_max_reach_um": 185.705,
+   "error": ""
+  },
+  {
    "type": "slw_fe_v1__clfe325744__cl08d14f0d",
    "sinks": 56177,
    "old_max_load_actual": 8931,
