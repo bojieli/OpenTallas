@@ -3191,3 +3191,9 @@ CODEX: 2026-11-05 23:38 PST DS LINK-2GB recovered395 shared libs + top link/load
 CODEX: 2026-11-05 23:41 PST S81 t46 current re-sign RECORDED TT61.19/FF0.02+LECEQ; reset clock-inverter class fix02adfe1d5b6 READY; COLLE conservativeM6 estimate0overflow->full sample epyc2unit1782147.
 
 CODEX: 2026-11-05 23:43 PST MERGE:q3width+KVwrapper+STARTface+TXh0 landed202980878d1,tagsv/t/q/v/ab;DSnative395PIC linkhelperlandedc04a5fb3037,simulationNOTRUN. CachedHBM count48/102designs vs46/94modules;old101denominatorpredatesq3split.
+
+CODEX: 2026-11-05 23:43 PST TOK DS LINK-2GB fixed b22128a81d0 (395sharedPIC libs, no runtime); QW controlledfrontend build4 admitted epyc4 unit1341647; HBMvh1build4 live epyc5; KV08 simplepadfix ruledout by exactcommonorigin control, actualwitness diagnosis/probe continues; pinbounds f9cdb39cee3.
+
+CODEX: 2026-11-05 23:44 PST HBM q3_link rightwidth SRAM event merged9218b7b2243, TX sourcefix202980878d1; TX taller build and N4H staggered-macro M5 safeform queued, rootctl/N4rsq/expx fixes continue; allcorefailures have owners.
+
+CODEX: 2026-11-05 23:48 PST MERGE: reset-family, two reviewed S81 tap moves, token receipts and ECO cohort/recursive-copy fixes landed f99434ca9b9; shared tags w/u/r/w/ac verified. Owners notified for fresh-copy recovery only.
