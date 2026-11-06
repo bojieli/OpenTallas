@@ -1,0 +1,11 @@
+# Unchanged bank A + real PG6 — review before route
+
+PASS-COND, inspected 2026-11-06 02:48 PST. Root explicitly authorized this new physical grid form after actual A final LEF proved M5 PG buried under M6 OBS.
+
+Fresh kit source main `cf615a8ccd`, kit hash `244808536f724f7c`, suffix `7d149b37532c-_shallow_pg6_vA`. Actual normalized RTL SHA `e2efd5a8e87ae5ec32cae80d9d737a174ebf736fa66628178a5c4693a214ac30`, pin SHA `7d149b37532c52673ef4878fa3f3d35197a73b4b8b4a085bcb189db375c2bb0a`, outline 250.56 x 267.84 and zero added cycles exactly match original A. Density target remains0.40, single-root clock, balanced X SRAM site unchanged. Current factory/tool changes are used; no old runner copied.
+
+For actual PG review, original A's completed PRE-PDN checkpoint `2_3_floorplan_tapcell.odb` was read privately on E5 and the freshly generated PG6 PDN applied. No routed wires were altered. Actual checkpoint contains60 M6 rails per supply and3360 same-net VIA56 connections per supply. Image `bank_pg6_actual.png` was rendered from those actual rectangles and inspected. M6 rails stay inside core; original macro positions and12.792um halo-clear channels remain. Rails cross above SRAM only on actual M6, leaving the planned lower channels. Nominal M6 stripe width budget13.33%, explicit parent M6 reservation and M7 landing owed.
+
+Review job E5 unit `oth-ubuntu-3139834-1793962007` exited0. Actual artifacts: `epyc5:/srv/opentallas-scratch2/claude/codex-bank128-wface/review_A_pg6/{A_pg6.odb,A_pg6.lef,probe.log,build.log}`. Root-backed filesystems are not used. E5 dedicated scratch2 had246GB available; root815GB. E6 dedicated scratch2 also staged but guard currently prefers E5. One unstarted E5-only preview waiter was canceled by exact ot-run client before the normally admitted dual-host preview; no progressing run was stopped.
+
+Proceed with a fresh ordinary synthesis/physical run. No checkpoint reuse is needed. Re-measure functional cells/util excluding TAP/fillers (<=150k / <=0.45), final TT setup/FF hold, DRV/DRC, actual LEF access and routed LEC. Existing unmodified A's released aq signoff is NOT SIGNED (TT+34.56, FF-11.33/226 endpoints, slew95/39 and cap1/1, DRC0); its actual M6 route/M5 PG remains parent NOT READY. No original run is changed by this new form.

@@ -1130,6 +1130,18 @@ def item_env(d, item):
     return {str(k): str(v) for k, v in sorted(env.items())}
 
 
+def capture_ot_run(cfg):
+    """Resolve an explicit frontend only when capturing a new immutable spec."""
+    chosen = cfg.get("ot_run")
+    if chosen is None:
+        return OT_RUN
+    if not isinstance(chosen, str) or not Path(chosen).is_absolute():
+        raise ValueError("kit-wave ot_run override must be an absolute executable path")
+    if not Path(chosen).is_file() or not os.access(chosen, os.X_OK):
+        raise ValueError("kit-wave ot_run override is not an existing executable: " + chosen)
+    return chosen
+
+
 def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
@@ -1164,7 +1176,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "place_spill": bool(opt(cfg, die, "place_spill") if opt(cfg, die, "place_spill") is not None else True),
             "relay_bay_re": (d["relay_bay_re"] if "relay_bay_re" in d else RELAY_BAY_RE.get(die, "")) if kind == "type" else "",
             "prov_first_re": (d.get("prov_first_re") or "") if kind == "type" else "",
-            "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": OT_RUN,
+            "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": capture_ot_run(cfg),
             "crit": near_count_hit(cfg.get("_near_count") or set(), die, item, parent, core_module(item))}
 
 
@@ -1382,7 +1394,7 @@ def prov_resign_step(AP, cfg, st, notices, ap_dir, hub):
         gh = d.get("gen_host") or hub
         jd = Path(rec["dir"]).parent / f"resign{int(time.time())}"
         sp = {"key": key, "die": rec["die"], "item": rec["item"], "plan_host": gh, "kit_host": host, "kit": kp,
-              "children": ch, "hub": hub, "ot_run": OT_RUN, "image": d.get("prov_resign_image") or ""}
+              "children": ch, "hub": hub, "ot_run": capture_ot_run(cfg), "image": d.get("prov_resign_image") or ""}
         unit = f"kw-prs-{re.sub(r'[^A-Za-z0-9]', '', rec['item'])[:28]}-{int(time.time()) % 100000}"
         if AP.DRY:
             AP.log(f"KIT-WAVE would PROV-RESIGN {rec['die']}/{rec['item']} kit {host}:{kp}")

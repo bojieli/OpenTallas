@@ -1,0 +1,5 @@
+ot-run: epyc6          admits    67 GB (avail 184, reserve 0, fresh 0, peak 52.1, headroom 0, waiters 0/0 GB) load 74/128 running 38 disk 80 GB 
+ot-run: -> epyc6
+ot-heavy: admitted on eager-sunfish as oth-ubuntu-454435-1793966441 after 0 s
+{"out": "/srv/opentallas-scratch2/claude/codex-head-hbc-1106/prep_hbc", "plan": "153f6160826a", "sidecar": "90d006a48f17", "regions": [], "republished": ["hd_host"]}
+ot-run: RAN on epyc6 (unit oth-ubuntu-454435-1793966441): exit 0

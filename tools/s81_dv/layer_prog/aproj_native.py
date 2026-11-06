@@ -62,6 +62,43 @@ def image_material(phases, cal):
     return material
 
 
+
+def idle_image_material(die, sl, frames):
+    """Zero-action images only for a complete, known zero-owner frame set."""
+    actual = die.frames_of(sl)
+    if not actual or len(actual) != len(set(actual)):
+        raise ValueError('idle native slice requires nonempty unique actual frames')
+    if len(frames) != len(actual) or {f['frame'] for f in frames} != set(actual):
+        raise ValueError('idle native slice frame list differs from actual placement')
+    if any(f.get('rows') != [] or f.get('phase') is not None or
+           f['master'] != die.inst[f['frame']]['master'] for f in frames):
+        raise ValueError('idle native slice cannot contain active or unknown rows')
+    # A zero calendar contains no valid action. Phase/stream data are zero too;
+    # there are no GO/CAP commands or phantom frame weight/configuration images.
+    return image_material(([], []), {'packed': []})
+
+
+def idle_programme(die, op, ctx, frames):
+    """Materialize an actual zero-owner slice without inventing work or weights."""
+    from layer_prog.slice_source import resolve
+    sl = ctx['slice']
+    material = idle_image_material(die, sl, frames)
+    prefix = f'prog/xs/native/{op["id"]}/{sl}'
+    files = {prefix + '/' + name: text for name, text in material.items()}
+    ownership = [dict(frame=f['frame'], master=f['master'], rows=[]) for f in frames]
+    manifest = dict(schema='opentallas.s81.native_slice_images.v1', slice=sl, op=op['id'],
+        status='PARTIAL', selected_slice_source=resolve(die, sl),
+        lifetime_qualified=False, sealed_programme_held=True,
+        native_rows=0, issuer_commands_emitted=False, idle_actual_slice=True,
+        idle_actual_frames=ownership,
+        qualification='zero-owner slice only; no native commands, frame weights or layer retirement qualified')
+    files[prefix + '/programme.json'] = json.dumps(manifest, indent=1) + '\n'
+    # Keep the normal bundle frame_images directory present with an explicit
+    # ownership record. Its image glob remains empty for this actual idle slice.
+    files[prefix + '/frame_images/idle.json'] = json.dumps(ownership, indent=1) + '\n'
+    return files
+
+
 def vi_entry_age(selected_source):
     """Measured current V-rung CTL entry; this only enables the former vi gap."""
     if selected_source.get('ring') != 'ot_s81sl_rstopt_xo' or selected_source.get('xr') not in ('ot_s81sl_xrt1', 'ot_s81sl_xrt3'):

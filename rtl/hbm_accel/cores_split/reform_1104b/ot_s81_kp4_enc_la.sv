@@ -29,7 +29,7 @@
 // v = A w_k ^ w_(k+1) is feed-forward.  Parity is ready one cycle later, so the PMA side reads one more beat stage
 // (d6): port -> p_d latency 8 cycles (LA = 1: 7); the output stream is the LA = 1 stream delayed by exactly one cycle.
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2) (
+module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, parameter integer FF = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          tx_v,
@@ -39,6 +39,9 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2) 
     output wire          fault          // a cycle without a beat once the stream has started (sticky)
 );
 `include "ot_s81_gf1024.svh"
+    // FF=1: four 65-input registered partials per half-matrix, then combine.
+    // Supported on LA2; port -> p_d is 9 edges, exactly LA2 +1. Default unchanged.
+    localparam integer FFS = (LA == 2 && FF != 0) ? 1 : 0;
     localparam integer NP = 30;
     localparam integer NRC = 4;          // chunk-select copies (130 window bits each)
     localparam integer NRO = 17;         // word-select copies (32 PMA bits each)
@@ -52,11 +55,11 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2) 
     // part as no-reset flops read X before the first frame; synthesis folded them, kit LEC could not prove them).
     reg  [7:0]  h0s;                     // seq of the frame whose beats are in flight (loaded with beat 0)
     wire [19:0] h0 = {12'hA5C, h0s};
-    reg  [511:0] d0, d1, d2, d3, d4, d5, d6;     // d6: LA = 2 only (no load at LA = 1)
+    reg  [511:0] d0, d1, d2, d3, d4, d5, d6, d7; // d6: LA2; d7: LA2+FF; unused stages fold away
     wire       st = tx_v || run;         // a beat enters d0 this cycle
     (* keep *) reg [9:0] sk [0:NRC-1];   // one-hot beat index of d0 (zero = no beat), NRC copies
     always @(posedge clk) begin
-        d0 <= tx_d; d1 <= d0; d2 <= d1; d3 <= d2; d4 <= d3; d5 <= d4; d6 <= d5;
+        d0 <= tx_d; d1 <= d0; d2 <= d1; d3 <= d2; d4 <= d3; d5 <= d4; d6 <= d5; d7 <= d6;
         if (st && ph == 4'd0) h0s <= seq;
     end
     integer i;
@@ -97,23 +100,44 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2) 
     wire [299:0] e_ar, e_p0, e_p1;
     reg  [299:0] rem_q, pp0, pp1, wb, par;
 `include "ot_s81_kp4_enc_mat.svh"
-    // control pipeline: chunk-0 / chunk-9 flags at the ch, pp, wb and rem stages
-    reg  [4:0] f0, f9;                   // [0] = ch stage, [1] = pp stage, [2] = wb stage, [3] = rem (par load)
+    // Control flags follow the parity path; FF adds one stage before pp.
+    // Non-FF flag indices retain the LA1/LA2 schedule below.
+    reg  [5:0] f0, f9;                   // [0] = ch stage, [1] = pp stage, [2] = wb stage, [3] = rem (par load)
                                          // LA = 2: [3] = A w stage, [4] = rem after the pair (par load)
-    reg  [3:0] fe;                       // LA = 2: even chunk (first of a pair), stages as f0[3:0]
+    reg  [4:0] fe;                       // LA = 2: even chunk (first of a pair), stages as f0[3:0]
     (* keep *) reg [3:0] f0w;            // chunk-0 flag at the wb stage, 4 copies (75 rem bits each)
     always @(posedge clk) begin
         ch_q <= ch_n;
-        pp0 <= e_p0; pp1 <= e_p1;
         wb <= pp0 ^ pp1;
     end
+    generate if (FFS) begin : g_ff
+        // Four physical copies own disjoint 75-bit parity regions. They capture
+        // the same chunk edge as ch_q and reduce the matrix input fanout by four.
+        (* keep *) reg [519:0] cq [0:3];
+        wire [299:0] fp [0:7];
+        reg [299:0] fq [0:7];
+        genvar r, c;
+        for (r=0; r<4; r=r+1) begin : g_cq
+            always @(posedge clk) cq[r] <= ch_n;
+        end
+`include "ot_s81_kp4_enc_ff_mat.svh"
+        for (c=0; c<8; c=c+1) begin : g_fq
+            always @(posedge clk) fq[c] <= fp[c] ^ ((MUT == 2 && c == 0) ? 300'b1 : 300'b0);
+        end
+        always @(posedge clk) begin
+            pp0 <= fq[0] ^ fq[1] ^ fq[2] ^ fq[3];
+            pp1 <= fq[4] ^ fq[5] ^ fq[6] ^ fq[7];
+        end
+    end else begin : g_nff
+        always @(posedge clk) begin pp0 <= e_p0; pp1 <= e_p1; end
+    end endgenerate
     always @(posedge clk)
-        if (!rs_n[1]) begin f0 <= 5'd0; f9 <= 5'd0; fe <= 4'd0; f0w <= 4'd0; end
+        if (!rs_n[1]) begin f0 <= 6'd0; f9 <= 6'd0; fe <= 5'd0; f0w <= 4'd0; end
         else begin
-            f0 <= {f0[3:0], sk[0][0]};
-            f9 <= {f9[3:0], sk[0][9]};
-            fe <= {fe[2:0], sk[0][0] | sk[0][2] | sk[0][4] | sk[0][6] | sk[0][8]};
-            f0w <= {4{f0[1]}};
+            f0 <= {f0[4:0], sk[0][0]};
+            f9 <= {f9[4:0], sk[0][9]};
+            fe <= {fe[3:0], sk[0][0] | sk[0][2] | sk[0][4] | sk[0][6] | sk[0][8]};
+            f0w <= {4{f0[1+FFS]}};
         end
     genvar gr;
     generate if (LA == 2) begin : g_la2
@@ -130,7 +154,7 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2) 
         end
         always @(posedge clk)
             if (!rs_n[1]) begin fv <= 4'd0; f0v <= 4'd0; end
-            else begin fv <= {4{fe[3]}}; f0v <= {4{f0[3]}}; end
+            else begin fv <= {4{fe[3+FFS]}}; f0v <= {4{f0[3+FFS]}}; end
         for (gr = 0; gr < 300; gr = gr + 1) begin : g_rem
             always @(posedge clk)
                 if (fv[gr / 75]) rem_q[gr] <= (f0v[gr / 75] ? 1'b0 : (rp0[gr] ^ rp1[gr] ^ rp2[gr] ^ rp3[gr])) ^ v[gr];
@@ -147,25 +171,25 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2) 
         assign rem_tx[299 - 10 * gr -: 10] = rem_q[10 * gr +: 10] ^ ((MUT == 1 && gr == 7) ? 10'h3FF : 10'h000);
     end endgenerate
     always @(posedge clk)
-        if (LA == 2 ? f9[4] : f9[3]) par <= rem_tx;
+        if (LA == 2 ? f9[4+((MUT == 3) ? 0 : FFS)] : f9[3]) par <= rem_tx;
     // ---------------- PMA words: word w = {d5, d4} at a fixed offset (cycle t_w + 5; d5 = beat w, d4 = beat w + 1)
-    reg  [9:0] so [0:5];                 // one-hot beat index delayed 1..6 (so[4] = index of d5, so[5] of d6)
+    reg  [9:0] so [0:6];                 // one-hot beat index delayed 1..7 (so[4]/[5]/[6] = d5/d6/d7)
     (* keep *) reg [9:0] sw [0:NRO-1];   // so[3] delayed once more: the word select at the d5 stage, NRO copies
     reg        o_v;
     always @(posedge clk)
         if (!rs_n[2]) begin
-            for (i = 0; i < 6; i = i + 1) so[i] <= 10'd0;
+            for (i = 0; i < 7; i = i + 1) so[i] <= 10'd0;
             for (i = 0; i < NRO; i = i + 1) sw[i] <= 10'd0;
             o_v <= 1'b0; p_v <= 1'b0;
         end else begin
-            so[0] <= sk[1]; so[1] <= so[0]; so[2] <= so[1]; so[3] <= so[2]; so[4] <= so[3]; so[5] <= so[4];
-            for (i = 0; i < NRO; i = i + 1) sw[i] <= (LA == 2) ? so[4] : so[3];
-            if ((LA == 2) ? so[5][0] : so[4][0]) o_v <= 1'b1;
-            p_v <= o_v || ((LA == 2) ? so[5][0] : so[4][0]);
+            so[0] <= sk[1]; so[1] <= so[0]; so[2] <= so[1]; so[3] <= so[2]; so[4] <= so[3]; so[5] <= so[4]; so[6] <= so[5];
+            for (i = 0; i < NRO; i = i + 1) sw[i] <= (LA == 2) ? so[4+FFS] : so[3];
+            if ((LA == 2) ? so[5+FFS][0] : so[4][0]) o_v <= 1'b1;
+            p_v <= o_v || ((LA == 2) ? so[5+FFS][0] : so[4][0]);
         end
-    // LA = 1: word w = {d5, d4} at t_w + 5; LA = 2: {d6, d5} at t_w + 6 (par one cycle later)
-    wire [511:0]  oa = (LA == 2) ? d6 : d5;
-    wire [511:0]  ob = (LA == 2) ? d5 : d4;
+    // LA1: {d5,d4}; LA2: {d6,d5}; LA2+FF: {d7,d6}. FF moves parity and the PMA phase together.
+    wire [511:0]  oa = FFS ? d7 : ((LA == 2) ? d6 : d5);
+    wire [511:0]  ob = FFS ? d6 : ((LA == 2) ? d5 : d4);
     wire [1023:0] wo = {oa, ob};
     wire [543:0]  wsrc [0:9];
     generate for (gk = 0; gk < 10; gk = gk + 1) begin : g_wsrc

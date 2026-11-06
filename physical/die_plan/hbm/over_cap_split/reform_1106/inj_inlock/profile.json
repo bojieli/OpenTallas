@@ -1,0 +1,59 @@
+{
+  "status": "CAPTURED_SIGNED_SOURCE; NEW_PIN_VIEW_PENDING",
+  "source_subject": "epyc6:/srv/opentallas-scratch2/claude/codex-hbm-forms-1105/eco/injmw2/i3",
+  "recipe": "ot_hgi_coll_inj_idx_join_rg__inlock",
+  "required_gen_args": [
+    "--face-shell",
+    "off",
+    "--clock-pin-entry",
+    "on"
+  ],
+  "source_sha256": {
+    "physical/die_plan/hbm/over_cap_split/reform_1106/inj_inlock/rtl/ot_hbm_face_nreg.sv": "8b82d267fc316fc0def1804a03ecc8c0267b3df1194f3dc73db4f7f7ebe17b47",
+    "physical/die_plan/hbm/over_cap_split/reform_1106/inj_inlock/rtl/ot_hbm_face_reg.sv": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5",
+    "physical/die_plan/hbm/over_cap_split/reform_1106/inj_inlock/rtl/ot_hgi_coll_inj_idx_join_rg.sv": "08d72f0bda836caeb6e6e5e16ecdf7461ab6117c69ec9e7354643e20ba7ca8c4",
+    "physical/die_plan/hbm/over_cap_split/reform_1106/inj_inlock/rtl/ot_hgi_coll_inj_idx_join_rg__fshell.sv": "593ba401ef23140711a0209f2f5a39107b66d9c1d84627006139783184d7ec28"
+  },
+  "unchanged_source": true,
+  "removed_inputs": [
+    "inj_rd_r1[1]",
+    "idx_tx_h_r1[102]",
+    "idx_tx_h_r1[103]",
+    "idx_tx_h_r1[104]",
+    "idx_tx_h_r1[105]",
+    "idx_tx_h_r1[106]",
+    "idx_tx_h_r1[107]",
+    "idx_tx_h_r1[108]",
+    "idx_tx_h_r1[109]",
+    "idx_tx_h_r1[110]",
+    "idx_tx_h_r1[111]",
+    "idx_tx_h_r1[112]",
+    "idx_tx_h_r1[113]",
+    "idx_tx_h_r1[114]",
+    "idx_tx_h_r1[115]",
+    "idx_tx_h_r1[116]",
+    "idx_tx_h_r1[117]",
+    "idx_tx_h_r1[118]",
+    "idx_tx_h_r1[119]",
+    "idx_tx_h_r1[120]",
+    "idx_tx_h_r1[121]",
+    "idx_tx_h_r1[122]",
+    "idx_tx_h_r1[123]",
+    "idx_tx_h_r1[124]",
+    "idx_tx_h_r1[125]",
+    "idx_tx_h_r1[126]",
+    "idx_tx_h_r1[127]",
+    "idx_tx_h_r1[128]",
+    "idx_tx_h_r1[129]",
+    "idx_tx_h_r1[130]",
+    "idx_tx_h_r1[131]"
+  ],
+  "clock_pin_change": {
+    "port": "clk_r1",
+    "old_x_um": 103.8,
+    "new_x_um": 104.088,
+    "y_um": 103.68
+  },
+  "logical_cycle_change": 0,
+  "proof": "exact bare_core proc/flatten loaded-bit graph, no opt_dff; low-bit101 and inj_rd_r1[0] live controls; see results/die_hbm_1106/inj_pin/def_use.json"
+}

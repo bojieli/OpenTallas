@@ -3464,6 +3464,7 @@
     "macros": [
       "ot_sram_1r1w_64x141_m1_r0c0_g141"
     ],
+    "core_macros": "auto",
     "util": 0.45,
     "source": "HBM-GAPS-4-Q3SPLIT d44v part 34 (vB, safe form): tile of ot_hfd_coll_q3_edge_core (member boundary, 0 added cycles); lock-step bench physical/die_plan/hbm/over_cap_split/reform_1103/bench/q3_edge/run.sh (XDEFS=OT_COLL_LINK_RXPRE RXSTIM=1); member RTL files and defines as the uncut core recipe; CODEX 11-05: adopt existing right-width 141b replay macro, same read-before-write and forwarding ages, 0 pin cycles; store miter 11991 checks + mutant caught"
   },
@@ -3544,6 +3545,77 @@
       "ot_sram_1r1w_256x256_m2_r2c2",
       "ot_sram_1rw_256x64_m4_r2c2"
     ]
+  },
+  "ot_hgi_coll_inj_idx_join_rg__inlock": {
+    "top": "ot_hgi_coll_inj_idx_join_rg",
+    "files": [
+      "physical/die_plan/hbm/over_cap_split/reform_1106/inj_inlock/rtl/ot_hbm_face_nreg.sv",
+      "physical/die_plan/hbm/over_cap_split/reform_1106/inj_inlock/rtl/ot_hbm_face_reg.sv",
+      "physical/die_plan/hbm/over_cap_split/reform_1106/inj_inlock/rtl/ot_hgi_coll_inj_idx_join_rg.sv",
+      "physical/die_plan/hbm/over_cap_split/reform_1106/inj_inlock/rtl/ot_hgi_coll_inj_idx_join_rg__fshell.sv"
+    ],
+    "macros": [],
+    "params": {},
+    "defines": [],
+    "util": 0.4,
+    "source": "Default-off exact captured injmw2 registered-source profile. Six idx_tx input buses retain negative-edge input face then positive-edge stage, same1logicalinputcycle; allotherports originalfacephase. Use --face-shell off to retain actualsourcefaces, strict external face_guard retained. No canonical recipe/plan activation; current pinview correction must qualify separately."
+  },
+  "ot_pdie_serdes_tx__ff": {
+    "top": "ot_pdie_serdes_tx",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1104b/ot_pdie_serdes_split.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+      "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh",
+      "rtl/hbm_accel/cores_split/reform_1104b/ot_s81_kp4_enc_la.sv",
+      "rtl/hbm_accel/cores_split/reform_1104b/ot_s81_kp4_enc_la2_mat.svh",
+      "rtl/hbm_accel/cores_split/reform_1104b/ot_s81_kp4_enc_ff_mat.svh"
+    ],
+    "defines": [],
+    "params": {
+      "ELA": 2,
+      "EFF": 1
+    },
+    "macros": [],
+    "source": "HBM-REFORM-B d44v part 20 sub-core of ot_pdie_serdes; lockstep bench results/die_hbm_1104/reform_b/split_p20/run_eq.sh; HBM-GAPS-3 11-05 ELA=2 (two-step KP4 parity lookahead, +1 edge, tb_kp4_enc_la.sv / tb_pdie_tx_ela.sv); dormant full TX FF option ELA2/EFF1: exact native pma_tx +1 logical common-clock cohort edge, e_flt_o unchanged,544bits/edge; HBM-48 conditional TOK ACK; reset/drain and arbitrary serializer/gearbox phase excluded",
+    "source_commit": "dc98564b80a03d9e73d824af80053810042efd19",
+    "read_at_commit": true,
+    "util": 0.4
+  },
+  "ot_svgr_own__headtail": {
+    "top": "ot_svgr_own",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_split.sv",
+      "rtl/lib/ot_reset_sync.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+      "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+      "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv",
+      "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_rf1_skid_head.sv"
+    ],
+    "params": {
+      "SKID_HEAD": 1
+    },
+    "macros": [],
+    "defines": [
+      "OT_SVGR_OWN_RF1"
+    ],
+    "source": "HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/; HBM-GAPS-5 RF1 registered owner, +1 descriptor/Kresponse/bank-free edges; four smoke controls PASS,7mutants caught; optional head/tail skid representation, zero additional edges vs RF1, full rejects same-edge push/pop, standalone1592864checks+3mutants; whole native accepted-stream proof pending",
+    "source_commit": "40139073ec3ce4fa4fca4f81d16ee5192d4f245c",
+    "read_at_commit": true,
+    "util": 0.45
   },
   "ot_hfd_coll_q3_body_ctl__mul4rt_rcp1": {
     "defines": [

@@ -1,0 +1,14 @@
+{
+ "schema": "opentallas.pad_output_binding.v1",
+ "status": "PASS",
+ "default": "OFF; no existing plan changed",
+ "tests": 43,
+ "actual_OpenSTA_read": "PASS four real TX ports, generated pma_tck, bothsetup/holdpaths",
+ "tiny_setup_ps": 625.201,
+ "tiny_hold_ps": 15.211,
+ "hold_uncertainty_ps": 25,
+ "output_max_ps": 166.6,
+ "output_min_ps": 0,
+ "physical_qualification": "NOT CLAIMED; physical export source/phase belongs clock owner",
+ "data_cycles_added": 0
+}
