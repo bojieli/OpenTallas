@@ -1868,6 +1868,10 @@ def main():
             f.write(hard_children_tcl(hcb))
     tm = (timing_modes_stage(kd, rec.get("two_mode"))
           if rec.get("two_mode") or (rec.get("two_mode") is None and modern) else None)   # FLOW-20: default-on (modern kits)
+    clock_overpass = None
+    if rec.get("clock_top") is not None:
+        from core_clock_overpass import stage_clock_overpass
+        clock_overpass = stage_clock_overpass(kd, rec["clock_top"], hc.get("obs_max"), rec.get("pg_top"), hcb)
     reset_contract = stage_reset_contract(kd, mod)
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True).stdout.strip() or "?"
@@ -1887,6 +1891,7 @@ def main():
               **({"flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)", "insertion_ff_ps": ib["ff"],
                   "insertion_basis": ib["basis"], "rc": core_flow.RC_CAL_FILE} if modern else {}),
               **({"regional_taps": rt} if rt else {}),
+              **({"clock_overpass": clock_overpass} if clock_overpass else {}),
               gates=(["rtl_lint (pre-synth)"] if modern else []) + ["sdc_lint (pre-synth)", "face_guard (post-synth)"]
               + (["LEC EQUIVALENT (post-synth)", "reg_fanout (post-synth)", "TT/FF insertion (GRT, before route)"] if modern else []) + ["pin_audit", "signoff.py tt,ff"], repo_rev=rev,
               sdc_lint_sha256=sha(TOOL / "sdc_lint.py"), face_guard_sha256=sha(TOOL / "face_guard.py"),
