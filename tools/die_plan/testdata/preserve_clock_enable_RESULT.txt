@@ -1,0 +1,2 @@
+Mechanism: ICG-gated async-set flop vs ungated QN flop with explicit ENA Dmux. Icarus lockstep10000cyclesPASS; wrong-QNfeedbackmutantcaught3540. Generic Tcl on actual NL6_final.odb exported byte-identical netlist to 3-cell prototype physicalseed. FullproductionRTL/routedLEC and post-ECO TT/FF signoff RUNNING, notclaimedPASS. Addedcycles0.
+Current A0 ICG SE is physically TIELO. Dynamic/test-enable mutation explicitlyrefused; no droppingtestsemantics. PhysicalENdata path retains all ordinaryTTsetup/FFhold checks, and productionroutedLEC stillrequired.

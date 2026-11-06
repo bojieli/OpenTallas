@@ -93,6 +93,7 @@ def hard_children_tcl(children):
                f"[regexp {{{child_inst_regex(c['inst'])}}} [$i getName]]}} {{ lappend hit $i }} }}",
                f"if {{[llength $hit] != 1}} {{ error \"hard child {c['inst']}: [llength $hit] matches\" }}",
                "set i [lindex $hit 0]",
+               "$i setPlacementStatus PLACED",
                f"$i setOrient {c['orient']}",
                "$i setLocation 0 0",
                "set bb [$i getBBox]",
@@ -157,78 +158,10 @@ def prepare_hard_children(spec, hcr, repo, outline, margin=0.0):
 
 
 
-def _masked_rtl(text):
-    return re.sub(r'//[^\n]*|/\*.*?\*/|"(?:\\.|[^"\\])*"',
-                  lambda m: re.sub(r'[^\n]', ' ', m[0]), text, flags=re.S)
-
-
-def _code_rename(text, old, new):
-    matches = list(re.finditer(r'\b'+re.escape(old)+r'\b', _masked_rtl(text)))
-    for hit in reversed(matches):
-        text = text[:hit.start()]+new+text[hit.end():]
-    return text
-
-
-def _instance_type_spans(text, master, instance):
-    code = _masked_rtl(text)
-    spans = []
-    for hit in re.finditer(r'\b'+re.escape(master)+r'\b', code):
-        i = hit.end()
-        while i < len(code) and code[i].isspace():
-            i += 1
-        if i < len(code) and code[i] == '#':
-            i += 1
-            while i < len(code) and code[i].isspace():
-                i += 1
-            if i == len(code) or code[i] != '(':
-                continue
-            depth = 1
-            i += 1
-            while i < len(code) and depth:
-                depth += (code[i] == '(') - (code[i] == ')')
-                i += 1
-            if depth:
-                raise ValueError('unbalanced hard-child parameter list')
-        while i < len(code) and code[i].isspace():
-            i += 1
-        if re.match(re.escape(instance)+r'\s*\(', code[i:]):
-            spans.append((hit.start(), hit.end(), i))
-    return spans
-
-
 def specialize_native_children(rtl_dir, children):
-    """Only selected instances use the hard view; other parameterizations remain native.
-
-    A source module may serve both a hardened bank and soft banks with different
-    parameters. Rename its native definition/references, then restore the type of
-    each selected instance to the separately staged fixed-port blackbox master.
-    The selected hard instance has fixed sealed parameters, so its native
-    override block is removed. Soft-instance parameters/ports and native logic
-    remain unchanged.
-    """
-    paths = [p for p in sorted(Path(rtl_dir).iterdir())
-             if p.suffix in ('.sv', '.v') and not p.name.endswith('_bb.v')]
-    texts = {p:p.read_text() for p in paths}
-    masters = {c['master'] for c in children}
-    counts = {}
-    for master in sorted(masters):
-        alias = master+'__soft'
-        if any(re.search(r'\b'+re.escape(alias)+r'\b', _masked_rtl(t)) for t in texts.values()):
-            raise ValueError('hard child native alias already exists: '+alias)
-        n = sum(len(re.findall(r'(?m)^[ \t]*module\s+'+re.escape(master)+r'\b', _masked_rtl(t)))
-                for t in texts.values())
-        if n != 1:
-            raise ValueError(f'expected exactly one native definition for {master}, found {n}')
-        texts = {p:_code_rename(t, master, alias) for p,t in texts.items()}
-        leaves = {c['inst'].split('.')[-1] for c in children if c['master'] == master}
-        for leaf in sorted(leaves):
-            hits = [(p, a, b, end) for p,t in texts.items() for a,b,end in _instance_type_spans(t, alias, leaf)]
-            if len(hits) != 1:
-                raise ValueError(f'hard child {master}/{leaf}: expected one source instance, found {len(hits)}')
-            p,a,b,end = hits[0]
-            texts[p] = texts[p][:a]+master+' '+texts[p][end:]
-        counts[master] = len(leaves)
-    for path,text in texts.items():
-        if text != path.read_text():
-            path.write_text(text)
-    return counts
+    """Compatibility entry point; the shared assembler owns source specialization."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("_kit_assembly_shared", Path(__file__).with_name("kit_assembly.py"))
+    assembly = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(assembly)
+    return assembly.specialize_native_children(rtl_dir, children)

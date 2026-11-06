@@ -1714,7 +1714,7 @@ def internal_core_guard_source(kit):
     return None
 
 
-def run_internal_core_face_guard(disc, fz, contract):
+def run_internal_core_face_guard(disc, fz, contract, mixed=False):
     """HEAD-SERDES-2 10-31: a kit whose freeze.json declares source_profile.endpoint_contract (INTERNAL_CORE,
     METHODOLOGY 9.10 R2_INTERNAL_TIMED_IN_PARTITION: the ports are timed in the parent partition) is judged by the SAME
     typed endpoint census its kit preflight ran (face_guard_core.py -> internal_core_guard.guard), not by the partition
@@ -1722,7 +1722,8 @@ def run_internal_core_face_guard(disc, fz, contract):
     ports of freeze.json); fail closed when the census or its inputs are missing."""
     import importlib.util
     src = internal_core_guard_source(disc["kit"])
-    base = dict(netlist=disc["synth"], contract=contract, mode="INTERNAL_CORE endpoint census (kit face_guard_core rule)")
+    base = dict(netlist=disc["synth"], contract=contract, mode=("R2 native seam endpoints + ordinary exclusive external faces" if mixed else
+                                          "INTERNAL_CORE endpoint census (kit face_guard_core rule)"))
     if src is None:
         return dict(base, verdict="FAIL", reason="INTERNAL_CORE contract but no internal_core_guard.py",
                     fail_counts={"contract": 1})
@@ -1731,7 +1732,8 @@ def run_internal_core_face_guard(disc, fz, contract):
         icg = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(icg)
         skip = "^(" + "|".join(re.escape(re.sub(r"\[\d+\]$", "", n)) for n in fz["clocks"] + fz["resets"]) + ")$"
-        r = icg.guard(Path(disc["synth"]).read_text(errors="replace"), fz["design"], Path(disc["kit"]), fz, skip)
+        checker = icg.mixed_guard if mixed else icg.guard
+        r = checker(Path(disc["synth"]).read_text(errors="replace"), fz["design"], Path(disc["kit"]), fz, skip)
     except Exception as e:
         return dict(base, verdict="FAIL", reason=f"internal_core_guard error: {e}", fail_counts={"contract": 1},
                     guard=str(src))
@@ -1768,6 +1770,9 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
         contract = (fz.get("source_profile") or {}).get("endpoint_contract")
         if contract:
             return run_internal_core_face_guard(disc, fz, contract)
+        native_contract = (fz.get("face_shell") or {}).get("native_endpoint_contract")
+        if native_contract:
+            return run_internal_core_face_guard(disc, fz, native_contract, mixed=True)
     pins = json.loads(Path(disc["pins"]).read_text()) if disc.get("pins") else None
     if isinstance(pins, dict):
         pins = pins.get("pins")

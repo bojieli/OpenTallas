@@ -1410,6 +1410,12 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--face-shell", default="on", choices=["on", "off"],
                     help="HBM-FACE 10-25: wrap the core in its face-register shell (face_shell.py; +1 cycle per crossing, "
                          "latency table results/arch/hbm_arch_1024/core_face_shell_latency.json); default on")
+    ap.add_argument("--face-pass", action="append", default=[], metavar="BUSRE",
+                    help="opt-in native registered seam: matching signal buses keep their native source/capture "
+                         "flops without an extra wrapper face stage; unmatched patterns fail; default none")
+    ap.add_argument("--face-pass-contract", default=None, metavar="JSON",
+                    help="required with --face-pass: exact peer module/port mapping; every view replica must have "
+                         "reciprocal hard-child connectivity inside its same parent partition")
     ap.add_argument("--face-stage", action="append", default=[], metavar="BUSRE=K",
                     help="opt-in (HBM-CORES-KITS-36/opstore, COORD 10-31 15:05): K extra free-placed pipeline register "
                          "stages before the face flop of every shell OUTPUT bus matching BUSRE (read data +K cycles on "
@@ -1493,6 +1499,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     MS = _ms()
     MS.add_args(ap)   # 12.7c: --master-slice DIR (opt-in), --trial
     a = ap.parse_args()
+    if a.face_pass and a.face_shell == "off":
+        raise SystemExit("--face-pass requires --face-shell on")
+    if bool(a.face_pass) != bool(a.face_pass_contract):
+        raise SystemExit("--face-pass and --face-pass-contract are required together")
     if a.final_ff_hold and a.single_mode_grt:
         raise SystemExit("--final-ff-hold requires the coupled TT/FF GRT session")
     V = json.load(open(a.views))
@@ -1767,12 +1777,23 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             md_ = REPO / (rec.get("macro_dirs", {}).get(m_) or f"physical/asap7_memory_macros_v2/{m_}")
             if (md_ / f"{m_}_tt.lib").is_file():
                 mlibs.append(str(md_ / f"{m_}_tt.lib"))
+        native_context = None
+        if a.face_pass:
+            from native_seams import validate as validate_native_seams
+            native_scope = [n_ for n_ in pb if any(re.search(rx_, n_) for rx_ in a.face_pass)
+                            and not re.match(clock_re, n_) and not re.match(reset_re, n_)]
+            try:
+                native_context = validate_native_seams(plan, pdir, v, native_scope,
+                                                       json.load(open(a.face_pass_contract)), sha(plan_path))
+            except (ValueError, KeyError, OSError) as exc:
+                raise SystemExit(f"NATIVE_SEAM {a.view}: {exc}")
         try:
             shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, clock_re, reset_re,
                              drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_},
                              stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_stage} or None,
                              lockup=a.face_lockup or None, reset_relay=a.face_reset_relay,
-                             in_stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_in_stage} or None)
+                             in_stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_in_stage} or None,
+                             pass_buses=a.face_pass or None, native_context=native_context)
         except RuntimeError as e:
             raise SystemExit(f"FACE_SHELL {a.view}: {e}")
         for f_ in shell["files"]:
@@ -2319,7 +2340,11 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                const_out_bits=shell["const_out_bits"], dup_out_bits=shell["dup_out_bits"],
                                plan_pins=len(names) + len(shell["dropped"]),
                                **({"out_extra_stages": shell["out_extra_stages"]} if shell.get("out_extra_stages") else {}),
-                               **({"out_lockup": shell["out_lockup"]} if shell.get("out_lockup") else {}))
+                               **({"out_lockup": shell["out_lockup"]} if shell.get("out_lockup") else {}),
+                               **({"native_registered_passthrough": shell["native_registered_passthrough"],
+                                   "face_cycle_overrides": shell["face_cycle_overrides"],
+                                   "native_endpoint_contract": shell["native_endpoint_contract"]}
+                                  if shell.get("native_registered_passthrough") else {}))
                           if shell else None),
               kit_hash=kit_hash(kd))
     if runtime_files:

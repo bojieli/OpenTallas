@@ -1,0 +1,8 @@
+read_verilog -sv /srv/opentallas-scratch2/claude/codex-kv-ahub-typed/proof/base.sv
+proc
+miter -equiv -make_outputs gold gate miter
+hierarchy -top miter
+flatten
+proc
+opt
+sat -seq 3 -tempinduct -set-init-zero -prove trigger 0 -verify

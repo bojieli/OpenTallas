@@ -3387,6 +3387,11 @@
          ],
          "type": "object"
         },
+        "native_boundary_adapter": {
+         "enum": [
+          "qkd_ahub_ck7_r27"
+         ]
+        },
         "native_port_adapter": {
          "additionalProperties": false,
          "properties": {
