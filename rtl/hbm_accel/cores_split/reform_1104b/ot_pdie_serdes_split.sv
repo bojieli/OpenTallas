@@ -18,11 +18,12 @@
 //   * ELA (HBM-GAPS-3 11-05, opt-in, default 1 = unchanged): ELA = 2 builds the encoder as ot_s81_kp4_enc_la #(.LA(2))
 //     (two-step parity lookahead, the rem_q loop gets two cycles; serdes_tx routed TT -180.76 on rem_q -> rem_q in the
 //     ELA = 1 form).  pma_tx is then the ELA = 1 stream delayed by exactly one edge, e_flt is unchanged (tb_kp4_enc_la.sv, tb_pdie_tx_ela.sv).
+//   * EFF (default 0): LA2 feed-forward partial stage, pma_tx delayed exactly one further edge.
 //   * BMTHC (opt-in, default 0; recipe ot_pdie_serdes_rx sets 1): RiBM theta_45 reachable form (ot_s81_kp4_bm THC),
 //     so the X power-up of the unloaded theta_45 bits matches the folded netlist under LEC.
 // The face registers are the kit's; this file adds none.  dchn rst_n is the slot reset (no consumer before k_v).
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_pdie_serdes_tx #(parameter integer PMA_LAT = 4, parameter integer EMUT = 0, parameter integer ELA = 1) (
+module ot_pdie_serdes_tx #(parameter integer PMA_LAT = 4, parameter integer EMUT = 0, parameter integer ELA = 1, parameter integer EFF = 0) (
     input  wire          clk,
     input  wire          rst,
     input  wire [511:0]  tx,
@@ -36,7 +37,7 @@ module ot_pdie_serdes_tx #(parameter integer PMA_LAT = 4, parameter integer EMUT
     generate if (ELA == 1) begin : g_e1
         ot_s81_kp4_enc #(.MUT(EMUT)) u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt_o));
     end else begin : g_ela
-        ot_s81_kp4_enc_la #(.MUT(EMUT), .LA(ELA)) u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d),
+        ot_s81_kp4_enc_la #(.MUT(EMUT), .LA(ELA), .FF(EFF)) u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d),
                                                         .fault(e_flt_o));
     end endgenerate
     ot_s81_pma_bm #(.W(544), .LAT(PMA_LAT)) u_ptx (.clk(clk), .d_v(e_v), .d(e_d), .q(pma_tx));
