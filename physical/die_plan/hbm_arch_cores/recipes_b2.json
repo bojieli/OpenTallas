@@ -2811,8 +2811,8 @@
   "macros": [
    "ot_sram_1r1w_256x256_m2_r2c2"
   ],
-  "source": "HBM-REFORM-B d44v part 21 tile of ot_hbm_idx_selector_static_sel; bench results/die_hbm_1104/reform_b/split_p21/run_eq.sh",
-  "source_commit": "e1308b45f998385e824436dcca0fc8d61cafee43",
+  "source": "HBM-REFORM-B d44v part 21 tile of ot_hbm_idx_selector_static_sel; bench results/die_hbm_1104/reform_b/split_p21/run_eq.sh; HBM-REFORM-B11 S2B form (er registered after S2; sel outputs +1; op6->op2/op7 spacing +1); bench results/die_hbm_1105/reform_b11/s3q",
+  "source_commit": "729bf4dbae",
   "read_at_commit": true,
   "util": 0.4
  },
@@ -3069,14 +3069,17 @@
   "params": {},
   "files": [
    "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
    "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv"
   ],
   "macros": [
    "ot_sram_1r1w_256x256_m2_r2c2"
   ],
-  "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27",
+  "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B11 ev74 RE-FORM: IREG + lgroup2_lf (log lane-write / sector-read selects) + BREG + FREG, sr_d/sr_rv/flt +2; bench results/die_hbm_1105/reform_b11/opsb_output",
   "top": "ot_hgi_sfu_opsb_output",
-  "util": 0.45
+  "util": 0.45,
+  "source_commit": "729bf4dbae",
+  "read_at_commit": true
  },
  "ot_hgi_sfu_opsa_group1": {
   "defines": [],
