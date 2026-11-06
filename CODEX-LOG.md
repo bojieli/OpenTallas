@@ -10082,3 +10082,5 @@ CODEX HBM 2026-11-06 01:18 PST: p36 READY codex/hbm-wbq-compose-1106@cedee7b597c
 
 OWNER?
 Projection producer bridge has an exact component proof, but current-die scratch/calendar ownership is unspecified. Recommended candidate allocation is quarters0/1, index64 onward, four logical rows/page (640readslots), as recorded in codex/hbm-projection-1106@0dd4a1bce41. Should that become the selected native HC/FUSED producer allocation after the existing VM/root/profile bounds are checked, or is there an existing reserved allocation to retain? Component proofs and core/parent fixes continue; proposed values remain labelled unadopted.
+
+OWNER? AHUB hub_C typed parent retains the native PLL lock counter (8 pad_refclk edges), while all13 model oscillator outputs are unused because real die clocks arrive through top ports. What is the physical off-chip pad_refclk period/clock contract? Current generated SDC has no io_pad_refclk clock. I am fixing the proven unused-output RTL-lint false failure and continuing; this question does not hold source preparation or admission.
