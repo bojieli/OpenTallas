@@ -120,7 +120,7 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
             context=Path(overrides.get('bind_context_plan',overrides.get('reset_context_plan',plan))).resolve()
             context_raw=read(context)
             selected_raw=read(plan)
-            if type_name not in context_raw['partition_types'] or KT.native_contract(selected_raw,overrides.get('asbuilt'),plan)['types'][type_name]!=KT.native_contract(context_raw,overrides.get('asbuilt'),context)['types'][type_name]:
+            if type_name not in context_raw['partition_types'] or KT.native_contract(dict(selected_raw,asbuilt=context_raw.get('asbuilt',{})) if not overrides.get('asbuilt') else selected_raw,overrides.get('asbuilt'),context)['types'][type_name]!=KT.native_contract(context_raw,overrides.get('asbuilt'),context)['types'][type_name]:
                 raise ValueError('selected stage/reset topology differs from bind_context_plan; update the full native context before regeneration')
             if KT.has_topology(selected_raw,type_name,overrides.get('asbuilt')) and not KT.bind_matches(context_raw,type_name,bind_out,overrides.get('asbuilt'),context):
                 # A stage/reset change must be emitted by the native factory.

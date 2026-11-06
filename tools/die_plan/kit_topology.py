@@ -193,13 +193,13 @@ def prepare_stations(plan,tn,rtl_dir,native_plan=None,asbuilt=None):
     raw=json.loads(Path(plan).read_text());kd=Path(rtl_dir).resolve()
     man=json.loads((kd/'kit_rtl.json').read_text())
     context=json.loads(Path(native_plan).read_text()) if native_plan else raw
-    if tn not in context['partition_types'] or contract(context)['types'][tn]!=contract(raw)['types'][tn]:
+    if tn not in context['partition_types'] or native_contract(context,asbuilt or man.get('asbuilt_manifest'),native_plan or plan)['types'][tn]!=native_contract(dict(raw,asbuilt=context.get('asbuilt',{})) if not (asbuilt or man.get('asbuilt_manifest')) else raw,asbuilt or man.get('asbuilt_manifest'),native_plan or plan)['types'][tn]:
         raise ValueError('KIT_TOPOLOGY_CONTEXT: selected topology differs from full native plan')
     manifest=asbuilt or man.get('asbuilt_manifest')
     if native_plan and digest(raw.get('reset'))!=digest(context.get('reset')):
         raise ValueError('KIT_TOPOLOGY_CONTEXT: selected reset topology differs from full native plan')
-    if native_plan and has_topology(context,tn):
-        if not man.get('bind_out') or not bind_matches(context,tn,man['bind_out'],manifest):
+    if native_plan and has_topology(context,tn,manifest):
+        if not man.get('bind_out') or not bind_matches(context,tn,man['bind_out'],manifest,native_plan):
             raise ValueError('KIT_TOPOLOGY_BIND_STALE: regenerate the canonical native bind for this full plan/asbuilt context')
     fingerprint=digest(dict(type=contract(raw)['types'][tn],reset=contract(context)['reset'],
                             asbuilt=hashlib.sha256(Path(manifest).read_bytes()).hexdigest() if manifest else None))
