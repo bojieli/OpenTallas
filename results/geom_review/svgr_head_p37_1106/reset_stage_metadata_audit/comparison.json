@@ -1,0 +1,67 @@
+{
+  "scope": "Read-only metadata consumer calls, no solver/GEN/proof job",
+  "old_kit_hash": "f3b51fdee8898467",
+  "old_kit": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits_clockon/ot_svgr_own_2054dcac0c09-headtail_p37_clockon",
+  "old_intrinsic_reset_gate": {
+    "default": 4,
+    "requested": null,
+    "contract": null,
+    "used": 4,
+    "debug_overrides": {}
+  },
+  "old_freeze_reset_contract": null,
+  "old_component_proof_reset_exists": false,
+  "old_gen_command": "#!/usr/bin/env bash\nset -euo pipefail\ncd \"$(dirname \"$0\")\"\nTASK_ROOT=$PWD\nTOOL=\"$TASK_ROOT/wt/physical/die_plan/hbm_arch_cores\"\npython3 \"$TOOL/gen_core_kit_hbm.py\" --views \"$TASK_ROOT/views_own.json\" --view ot_svgr_own@2054dcac0c09 --recipe-key ot_svgr_own__headtail --out \"$TASK_ROOT/kits_clockon\" --corner TC --sigmax M5 --face-shell on --clock-taps density --clock-tap-sinks 1250 --clock-tap-dmax 80 --tag headtail_p37_clockon --clock-pin-entry on\npython3 \"$TASK_ROOT/render_clockon.py\"\n",
+  "old_views_source_profile": null,
+  "old_views_keys": [
+    "view",
+    "module",
+    "outline_um",
+    "pins_file",
+    "pins_sha256",
+    "pins",
+    "family",
+    "instances",
+    "placed",
+    "tables_for_module",
+    "canonical_type",
+    "recipe_keys",
+    "blockers"
+  ],
+  "old_component_source_proof_option_present": false,
+  "new_kit_hash": "7ef91ae3ca9bc49a",
+  "new_kit": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits_clockon_reset64/ot_svgr_own_2054dcac0c09-headtail_p37_clockon_reset64",
+  "new_intrinsic_reset_gate": {
+    "default": 4,
+    "requested": null,
+    "contract": {
+      "file": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits_clockon_reset64/ot_svgr_own_2054dcac0c09-headtail_p37_clockon_reset64/reset_contract.json",
+      "die": "hbm",
+      "edges": 64,
+      "assert_edges": 66,
+      "receipt": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/kits_clockon_reset64/ot_svgr_own_2054dcac0c09-headtail_p37_clockon_reset64/reset_contract/receipt.txt"
+    },
+    "used": 64,
+    "debug_overrides": {}
+  },
+  "new_freeze_reset_contract": {
+    "edges": 64,
+    "module": "ot_svgr_own",
+    "die": "hbm",
+    "contract": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/wt/physical/die_plan/hbm/reset_contract.json",
+    "contract_sha256": "d95b0c5bc593188ff8a5c827bfbff6b4d95929fe7c70787ca712a403c963acc7",
+    "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a"
+  },
+  "caller": {
+    "file": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/wt/physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py",
+    "sha256": "3b93d587a2fdd9a36245a85ec3a0207803dd4d662b959dbef66815a2b5721711",
+    "lines": "2338-2362"
+  },
+  "callee": {
+    "file": "/srv/opentallas-scratch2/claude/codex-svgr-head-gen-hub-1106/wt/tools/die_plan/kit_reset_contract.py",
+    "sha256": "e71bdc3688986244ff6866e0f32db06185c1c6071f88f348c960fb264729bff4",
+    "behavior": "stage(): source=Path(source); if not source.is_file(): return None"
+  },
+  "cause": "Sparse GEN fixture omitted tracked physical/die_plan/hbm/reset_contract.json while including reset_contract/receipt.txt; absent contract quietly returned None. The root file was materialized later for fresh7ef GEN; F3 was not changed.",
+  "qualification": "F3 intrinsic default4/unqualified for staged die reset; separately authorized compiler LEC uses byteexact readonly external64 contract. Fresh7ef intrinsically stages64/assert66 and matches that external contract exactly."
+}
