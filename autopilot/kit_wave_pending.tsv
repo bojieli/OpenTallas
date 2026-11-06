@@ -74,3 +74,9 @@ fa68f2c8863	src	qwen_compute	coll_n@5	DIE-QC-82	11-05 22:2x holdgaterr I169 clas
 c92647a21554	src	s81_head	hd_spn_wshim_rx@8	KW-FIX-22	KW-FIX-22 10:3x COORD 10:0x: a8 (03:00) work dir on epyc6 scratch2 (Codex codex-wave-1105 root) waited in KW12_DISK_WAIT since 09:02 (64 GB < 100 floor); unit stopped, new attempt goes to work_root scratch3 (epyc6 root)
 c92647a21554	src	s81_head	hd_ctl@2	KW-FIX-22	KW-FIX-22 10:3x COORD 10:2x (5): supersede l48uf hd_ctl (autopilot 1e03d1516d9a, LEC NOT EQ, 4 h; unit + container dpkit-hd_ctl-1412144 stopped) -> fresh hd_ctl on event l48uh + hd_host relaunch, one batch
 c92647a21554	src	s81_head	hd_host@2	KW-FIX-22	KW-FIX-22 10:3x COORD 10:2x (5): supersede l48uf hd_ctl (autopilot 1e03d1516d9a, LEC NOT EQ, 4 h; unit + container dpkit-hd_ctl-1412144 stopped) -> fresh hd_ctl on event l48uh + hd_host relaunch, one batch
+3761570a71ce	src	qwen_compute	coll_ftc@3	KW-FIX-22	KW-FIX-22 11:2x BIND_STALE class fix: canonical native re-bind bind_qc_g (native_topology.json) -> ONE QC batch
+3761570a71ce	src	qwen_compute	sle_hc1__cl22c1ff36@14	KW-FIX-22	KW-FIX-22 11:2x BIND_STALE class fix: canonical native re-bind bind_qc_g (native_topology.json) -> ONE QC batch
+3761570a71ce	src	qwen_compute	sle_stm_v1__cl27746664@8	KW-FIX-22	KW-FIX-22 11:2x BIND_STALE class fix: canonical native re-bind bind_qc_g (native_topology.json) -> ONE QC batch
+3761570a71ce	src	qwen_compute	sle_su_c@6	KW-FIX-22	KW-FIX-22 11:2x BIND_STALE class fix: canonical native re-bind bind_qc_g (native_topology.json) -> ONE QC batch
+3761570a71ce	src	qwen_compute	slw_stm_v1__cl05fc43f7__cl389df4e9@13	KW-FIX-22	KW-FIX-22 11:2x BIND_STALE class fix: canonical native re-bind bind_qc_g (native_topology.json) -> ONE QC batch
+3761570a71ce	src	qwen_compute	slw_stm_v3@8	KW-FIX-22	KW-FIX-22 11:2x BIND_STALE class fix: canonical native re-bind bind_qc_g (native_topology.json) -> ONE QC batch
