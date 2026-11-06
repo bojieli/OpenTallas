@@ -13,3 +13,10 @@ Twenty added entries are outside actual macro outlines plus4.32um halo and outsi
 Local branches are95.0–103.68um estimates; actual child M5 access through detailed M6/M7 and clock RC still require ordinary qualification.
 The worst scalar D23 chain physically spans~680x192um and has593um whole-chain nearest-tap reach: it CANNOT be collapsed. Only contiguous subgroups passing200um/capacity rules are proposed.
 The representative D68 per-bit chain includes67 r stages plus terminal q (68FF), fits97x63um and has80.643um nearest-tap maximum reach.
+
+Repaired native166-port profile viewed in profile166_actual.png:
+PASS-COND for assignment-only component. Seven local capacity sites occupy
+macro-free channels; all data, macro and FF poses stay fixed. Native cap<=1200
+passes; density-only fixes the observed adjacent pd23 clock seam, B2 adds no
+new adjacent-stage crossings. Parent clock/header/context and actual CTS/RC,
+reset/START authority, input access and final gates remain required.
