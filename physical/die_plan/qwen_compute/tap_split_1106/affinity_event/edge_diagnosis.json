@@ -1,0 +1,106 @@
+{
+  "assignment_only": true,
+  "adjacent_edges": 27776,
+  "A_cross_tap": 13496,
+  "B_cross_tap": 3375,
+  "improved": 10443,
+  "new_boundary": 322,
+  "remaining_examples": [
+    {
+      "prefix": "u_bound.u_d10_u_t_1_0_n_y.",
+      "bit": "0",
+      "stages": [
+        4,
+        5
+      ],
+      "B_taps": [
+        "ot_proto_clk_43",
+        "ot_proto_clk_60"
+      ]
+    },
+    {
+      "prefix": "u_bound.u_d10_u_t_1_0_n_y.",
+      "bit": "100",
+      "stages": [
+        3,
+        4
+      ],
+      "B_taps": [
+        "ot_proto_clk_49",
+        "ot_proto_clk_60"
+      ]
+    },
+    {
+      "prefix": "u_bound.u_d10_u_t_1_0_n_y.",
+      "bit": "101",
+      "stages": [
+        2,
+        3
+      ],
+      "B_taps": [
+        "ot_proto_clk_43",
+        "ot_proto_clk_60"
+      ]
+    },
+    {
+      "prefix": "u_bound.u_d10_u_t_1_0_n_y.",
+      "bit": "102",
+      "stages": [
+        2,
+        3
+      ],
+      "B_taps": [
+        "ot_proto_clk_43",
+        "ot_proto_clk_60"
+      ]
+    },
+    {
+      "prefix": "u_bound.u_d10_u_t_1_0_n_y.",
+      "bit": "103",
+      "stages": [
+        2,
+        3
+      ],
+      "B_taps": [
+        "ot_proto_clk_43",
+        "ot_proto_clk_60"
+      ]
+    },
+    {
+      "prefix": "u_bound.u_d10_u_t_1_0_n_y.",
+      "bit": "104",
+      "stages": [
+        4,
+        5
+      ],
+      "B_taps": [
+        "ot_proto_clk_49",
+        "ot_proto_clk_60"
+      ]
+    },
+    {
+      "prefix": "u_bound.u_d10_u_t_1_0_n_y.",
+      "bit": "105",
+      "stages": [
+        2,
+        3
+      ],
+      "B_taps": [
+        "ot_proto_clk_43",
+        "ot_proto_clk_60"
+      ]
+    },
+    {
+      "prefix": "u_bound.u_d10_u_t_1_0_n_y.",
+      "bit": "106",
+      "stages": [
+        2,
+        3
+      ],
+      "B_taps": [
+        "ot_proto_clk_43",
+        "ot_proto_clk_60"
+      ]
+    }
+  ]
+}
