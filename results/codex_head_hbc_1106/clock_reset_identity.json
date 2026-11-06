@@ -1,0 +1,49 @@
+{
+ "profile": {
+  "schema": "opentallas.head_clock_reset_profile.v1",
+  "source_event": "codex_stations_boot_1106",
+  "source_plan_sha256": "268f5579145c2bdd8c872398751aecb75a004971c6422ac7db8a04f260812388",
+  "source_sidecar_sha256": "90d006a48f17adc6795bbf55e3077ff308bb6b417604167248051501cda25d77",
+  "source_profile": "canonical SerDes; exact fullBOOT transport; native32+native32_OFF; functional memory substitutions selected by head_token_sources",
+  "clock_profile": "actual component same-root nominal833ps KP4 peers and source clocks",
+  "root_reset_deassert_global_edge": 8,
+  "host_boot_counter_zero_global_edge": 27,
+  "qualified_host0_launch_edges": [
+   600,
+   604,
+   608
+  ],
+  "qualified_host0_input_edges": [
+   720,
+   724,
+   728
+  ],
+  "qualified_host1_launch_edges": [
+   900
+  ],
+  "qualified_host1_input_edges": [
+   1013
+  ],
+  "measured_host_mux_to_ctl_edges": 61,
+  "phase_binding": "PHASE_BOUND is a nonzero compile-time VALID_PROFILE admission flag in actual dsdv_hbc1_loader, not a numeric phase tolerance; value1 binds this named profile only",
+  "scope": "Explicit stage81/rank0 TP4 candidate component profile; no full-parent or board/PMA phase qualification",
+  "pending": [
+   "actual80beat CTL residence",
+   "final CSR apply edge",
+   "HBC context-valid delay",
+   "entry programme owner adoption",
+   "complete native parent token qualification"
+  ]
+ },
+ "profile_sha256": "60475dd5111da25e59c6fd83efb731150b48b2b3d7cb9568fc08a20f56ff2274",
+ "clock_reset_id": 6819044748223661920,
+ "clock_reset_id_hex": "5ea21d11d55d4760",
+ "phase_bound": 1,
+ "host_params_candidate": {
+  "LOCAL_STAGE": 81,
+  "LOCAL_RANK": 0,
+  "PHASE_BOUND": 1,
+  "CLOCK_RESET_ID": 6819044748223661920
+ },
+ "status": "IDENTITY CANDIDATE; boot dates/programme remain unbound until actual residence/CSR results"
+}
