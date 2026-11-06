@@ -1287,7 +1287,18 @@ def main():
     # DIE-QC-35 10-29: the POST_SYNTH face flops (core_face_post_synth.tcl, unconditional) exist in every kit, so the
     # pre-CTS dont_touch lift is emitted unconditionally (insertion_balance off: ODB-0370 in cts.tcl on A0 NL/NK)
     (kd / FC_DT_LIFT).write_text(FC_DT_LIFT_TCL)
-    (kd / "face_guard_core.py").write_text(FACE_GUARD_CORE)
+    guard_source = FACE_GUARD_CORE
+    if rec.get("land_slots") or rec.get("strap_ports"):
+        # Use the existing landing-slot/start proof and declared-ID-strap
+        # contract for explicit landing children. Other core scripts unchanged.
+        guard_source = guard_source.replace(
+            "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set())",
+            "_land = Path(pins).with_name('land_slots.json')\n"
+            "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set(), "
+            "straps=G.kit_strap_list(Path(pins).parent), land=G.kit_land(_land) if _land.is_file() else None)")
+    if rec.get("land_slots"):
+        (kd / "land_slots.json").write_text(json.dumps(dict(schema="land_slots/3", buses=rec["land_slots"]), indent=1) + "\n")
+    (kd / "face_guard_core.py").write_text(guard_source)
     # one-station bus pairs of the core's RTL contract (reviewed per recipe; face_guard / signoff read ft_stations.txt)
     pairs = rec.get("ft1_pairs", [])
     for i_, o_ in pairs:
