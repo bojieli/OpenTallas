@@ -68,9 +68,16 @@ OUT_ABS=$(realpath -m -- "$OUT")
 case "$OUT_ABS" in
   "$KIT"/*) OUT_REL=${OUT_ABS#"$KIT"/}; OUT_EXCLUDE=(--exclude "/${OUT_REL%%/*}/") ;;
 esac
+# DIE-HBM-81 11-06: the source kit's async-LEC state (lec_async.{on,ready,done,rc,identity,...}, lec_async.runs/) is never
+# copied: the pass edits kit files, so the copied identity differs and lec_async.sh start refuses the pass ('proof inputs
+# differ ... use a fresh kit', rc 11 -> sign-off wrote no record; q3el_eco1 11-06, lane_elp 11-05).  lec_async.sh itself is
+# kept, so the pass starts its own fresh proof.
 rsync -a "${OUT_EXCLUDE[@]}" --exclude .ot-run-spill-copy --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_*' --exclude '/signoff*.log' \
   --exclude '/run_*.log' --exclude /rc.txt --exclude '/pass[0-9]*' --exclude '/prd_*.json' --exclude '/prd_*.log' \
-  --exclude '/eco_[0-9]*' --exclude '/lec_routed_autopilot_*' $KIT/ $OUT/
+  --exclude '/eco_[0-9]*' --exclude '/lec_routed_autopilot_*' --exclude '/lec_async.runs' \
+  --exclude '/lec_async.on' --exclude '/lec_async.ready' --exclude '/lec_async.done' --exclude '/lec_async.rc' --exclude '/lec_async.stop' \
+  --exclude '/lec_async.abort' --exclude '/lec_async.pid' --exclude '/lec_async.identity' --exclude '/lec_async.source_identity' \
+  --exclude '/lec_async.owner' --exclude '/lec_async.lock' --exclude '/lec_async.log' $KIT/ $OUT/
 B=$OUT/run/results/asap7/$NICK/base
 mkdir -p $B $OUT/run/logs/asap7/$NICK/base $OUT/run/reports/asap7/$NICK/base $OUT/run/objects/asap7/$NICK/base
 cp $RS/$SRC $B/4_cts.odb
