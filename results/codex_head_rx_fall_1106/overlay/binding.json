@@ -1,0 +1,21 @@
+{
+ "source": "exact private RXQ donor",
+ "helper_sha256": "4ff72dc3e1bbf9c742deb8aa0bf33bfd4dcd7711a7362d46af36956900613167",
+ "overlay_files": [
+  "ot_s81hd_serdes_rxq.sv",
+  "ot_s81hd_serdes_link.sv",
+  "ot_s81hd_pma_rx_capture.sv"
+ ],
+ "old_source_closure": "retained donor dependencies still required; overlay.f is only replacements/addition",
+ "first_fall": 1,
+ "default_parameter": 0,
+ "rxq_input_sha256": "e173eb3a0db5866bb4e8b5294cf0f412a18844d7fe488b0e07ec09036913a94d",
+ "rxq_output_sha256": "8f10c2ecafa42e478ea9525aadbdfca110eca6b47910ac3b68e5d21c39172043",
+ "adapter_output_sha256": "1a4a539ada9e0f7bfc5acc1246797838c908342d0e6008240c5bb294da907088",
+ "stages": 4,
+ "width": 544,
+ "stage0_edge": "fall",
+ "remaining_edges": "rise",
+ "tx_change": 0,
+ "external_transport_age": "must remeasure; no fixed core/HOST age inherited"
+}
