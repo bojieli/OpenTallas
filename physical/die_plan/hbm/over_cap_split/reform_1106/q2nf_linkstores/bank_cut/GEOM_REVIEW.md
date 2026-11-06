@@ -1,0 +1,9 @@
+# Q2NF bank-focused geometry review
+
+Image bank_parent_review.png was rendered and visually inspected on 2026-11-06. Verdict PREP / PASS-COND, no physical release. Two224.64x414.72 raw bank-helper candidates retain all eight bank SRAM sites and originalR0. Eleven controller SRAMs remain in the real soft controller within the full786.24x622.08 parent. All19 original SRAM sites and21.6um channels are retained. Native bank fields each have282bits (last279) near each actual bank center plus13shared controls. All2276 nonclock candidates preserve source producer/consumer domains. Packed child clocks0..3 bind to original1..4 /6..9. Raw bank source has no reset input.
+
+Controller free area before halos254285.331264um2, nominal.45 capacity114428.399069 vs measured mapped cell area18460.78776um2. This is capacity planning, not placement qualification. Actual R2 captures, clock/reset anchors and native first-capture/launch paths still need placement. Parent source has67ports and seven original clock buses; aliases are exact and reversible.
+
+Actual retained SRAM64x512 LEF OBS blocksM1-M4, M4 inset.072; M5 remains available over SRAM. Raw-helper signal/clock/PG M5 with parent bridgeM6/PG6 is the first candidate to measure. Route closure, PG metal/export and M5 capacity remain unmeasured. Preserve actual M4 pin phase and run real pin access. Soft controller front/back captures can occupy outer face corridors, but their actual paths and parent STA remain required.
+
+q2nf_native_prep.py prepares two bank-helper physical profiles plus full real parent. Controller remains actual RTL. Each bank has1142ports including four indexed clock pins and no fabricated rst_n. Original controller/R2 reset semantics remain. GEN stays disabled pending actual mapped endpoint placement, pin access and PG binding.
