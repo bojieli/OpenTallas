@@ -23,7 +23,7 @@
   "box_um": [
    24.0,
    240.0,
-   60.48,
+   43.2,
    304.0
   ]
  },
@@ -4908,99 +4908,55 @@
   ]
  },
  {
-  "name": "input_g0",
+  "name": "input_root0",
   "prefixes": [
-   "u_fcore.g_q[0]."
-  ],
-  "box_um": [
-   64.8,
-   45.36,
-   99.36,
-   83.712
-  ]
- },
- {
-  "name": "input_g1",
-  "prefixes": [
+   "u_fcore.g_q[0].",
    "u_fcore.g_q[1]."
   ],
   "box_um": [
-   64.8,
-   100.44,
+   47.52,
+   5.4,
    99.36,
-   138.792
+   62.256
   ]
  },
  {
-  "name": "input_g2",
+  "name": "input_root1",
   "prefixes": [
-   "u_fcore.g_q[2]."
-  ],
-  "box_um": [
-   64.8,
-   155.52,
-   99.36,
-   193.872
-  ]
- },
- {
-  "name": "input_g3",
-  "prefixes": [
+   "u_fcore.g_q[2].",
    "u_fcore.g_q[3]."
   ],
   "box_um": [
-   64.8,
-   210.6,
+   47.52,
+   134.208,
    99.36,
-   248.952
+   200.496
   ]
  },
  {
-  "name": "input_g4",
+  "name": "input_root2",
   "prefixes": [
-   "u_fcore.g_q[4]."
-  ],
-  "box_um": [
-   64.8,
-   265.68,
-   99.36,
-   304.032
-  ]
- },
- {
-  "name": "input_g5",
-  "prefixes": [
+   "u_fcore.g_q[4].",
    "u_fcore.g_q[5]."
   ],
   "box_um": [
-   64.8,
-   320.76,
+   47.52,
+   272.448,
    99.36,
-   359.112
+   338.736
   ]
  },
  {
-  "name": "input_g6",
+  "name": "input_root3",
   "prefixes": [
-   "u_fcore.g_q[6]."
-  ],
-  "box_um": [
-   64.8,
-   375.84,
-   99.36,
-   414.192
-  ]
- },
- {
-  "name": "input_g7",
-  "prefixes": [
+   "u_fcore.g_q[6].",
    "u_fcore.g_q[7]."
   ],
   "box_um": [
-   64.8,
-   430.92,
+   47.52,
+   410.688,
    99.36,
-   469.272
+   476.976
   ]
  }
 ]

@@ -8,9 +8,12 @@ for width,variant in [(103.68,'A'),(120.96,'B')]:
   if idx is None:
    m=re.search(r'\[(\d+)\]',x.get('name',''));idx=int(m[1]) if m else 0
   if abs(x['x']-86.304)<.001:x['x']=round(width-.096,3)
-  if bus=='g_d':g,bit=divmod(idx,286);x['y']=round(50.76+55.08*g+.096*bit,3)
+  if bus=='g_d':
+   g,bit=divmod(idx,286);r,k=divmod(g,2);x['y']=round(138.24*r+1.368+27.456*k+.096*bit,3)
   if bus in ('g_v','g_credit'):
-   x['y']=round(50.76+55.08*idx+27.456+(0 if bus=='g_v' else .096),3)
+   r,k=divmod(idx,2);x['y']=round(138.24*r+(56.28 if bus=='g_v' else 1.176)+.096*k,3)
+  if bus=='root_id':r,k=divmod(idx,2);x['y']=round(138.24*r+56.568+.096*k,3)
+  if bus=='root_ready':x['y']=round(138.24*idx+56.76,3)
   if bus in ('hbm_clk','stream_clk'):x['x']=round(x['x']+(width-86.4)/2,3)
  positions={}
  for x in a:
