@@ -1,0 +1,4440 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/base_equiv_v3.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv' to AST representation.
+Generating RTLIL representation for module `\reference'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_host_program_rx_target_cp'.
+Successfully finished Verilog frontend.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 3 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77 in module qkd_host_program_rx_target_cp.
+Marked 3 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30 in module reference.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 25 redundant assignments.
+Promoted 30 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+Found async reset \rst_n in `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~8 debug messages>
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$115'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$113'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$111'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$109'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$107'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$105'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$103'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$101'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$99'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$97'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$95'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$93'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$91'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$89'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$87'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+     1/23: $0\clean_pipe_result[0:0]
+     2/23: $0\p2_v[0:0]
+     3/23: $0\p1_v[0:0]
+     4/23: $0\auth_v[0:0]
+     5/23: $0\seal[0:0]
+     6/23: $0\word_v[0:0]
+     7/23: $0\begin_image[0:0]
+     8/23: $0\normal_v[0:0]
+     9/23: $0\returns[6:0]
+    10/23: $0\rx_cr[0:0]
+    11/23: $0\ncq[0:0]
+    12/23: $0\rv[0:0]
+    13/23: $0\fault[0:0]
+    14/23: $0\auth_digest[63:0]
+    15/23: $0\auth_epoch[15:0]
+    16/23: $0\word_data[63:0]
+    17/23: $0\word_addr[9:0]
+    18/23: $0\word_desc[0:0]
+    19/23: $0\dw_count[3:0]
+    20/23: $0\pw_count[10:0]
+    21/23: $0\auth_target[3:0]
+    22/23: $0\image_target[3:0]
+    23/23: $0\image_epoch[15:0]
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:42$76'.
+Creating decoders for process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:36$68'.
+Creating decoders for process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+     1/24: $0\p2_clean[0:0]
+     2/24: $0\p2_v[0:0]
+     3/24: $0\p1_clean[0:0]
+     4/24: $0\p1_v[0:0]
+     5/24: $0\auth_v[0:0]
+     6/24: $0\seal[0:0]
+     7/24: $0\word_v[0:0]
+     8/24: $0\begin_image[0:0]
+     9/24: $0\normal_v[0:0]
+    10/24: $0\returns[6:0]
+    11/24: $0\rx_cr[0:0]
+    12/24: $0\ncq[0:0]
+    13/24: $0\rv[0:0]
+    14/24: $0\fault[0:0]
+    15/24: $0\auth_digest[63:0]
+    16/24: $0\auth_epoch[15:0]
+    17/24: $0\word_data[63:0]
+    18/24: $0\word_addr[9:0]
+    19/24: $0\word_desc[0:0]
+    20/24: $0\dw_count[3:0]
+    21/24: $0\pw_count[10:0]
+    22/24: $0\auth_target[3:0]
+    23/24: $0\image_target[3:0]
+    24/24: $0\image_epoch[15:0]
+Creating decoders for process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:30$29'.
+Creating decoders for process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:29$28'.
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_zero [14]' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$115'.
+  created $dff cell `$procdff$415' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_zero [13]' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$113'.
+  created $dff cell `$procdff$416' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_zero [12]' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$111'.
+  created $dff cell `$procdff$417' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_zero [11]' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$109'.
+  created $dff cell `$procdff$418' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_zero [10]' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$107'.
+  created $dff cell `$procdff$419' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_zero [9]' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$105'.
+  created $dff cell `$procdff$420' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_zero [8]' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$103'.
+  created $dff cell `$procdff$421' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_zero [7]' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$101'.
+  created $dff cell `$procdff$422' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_zero [6]' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$99'.
+  created $dff cell `$procdff$423' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_zero [5]' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$97'.
+  created $dff cell `$procdff$424' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_zero [4]' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$95'.
+  created $dff cell `$procdff$425' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_zero [3]' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$93'.
+  created $dff cell `$procdff$426' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_zero [2]' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$91'.
+  created $dff cell `$procdff$427' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_zero [1]' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$89'.
+  created $dff cell `$procdff$428' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_zero [0]' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$87'.
+  created $dff cell `$procdff$429' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\rx_cr' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$434' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\normal_v' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$439' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\begin_image' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$444' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\image_epoch' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$449' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\image_target' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$454' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\auth_target' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$459' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\pw_count' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$464' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\dw_count' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$469' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\word_v' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$474' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\word_desc' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$479' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\word_addr' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$484' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\word_data' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$489' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\seal' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$494' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\auth_v' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$499' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\auth_epoch' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$504' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\auth_digest' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$509' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\fault' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$514' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\rv' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$519' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\ncq' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$524' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\returns' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$529' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_v' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$534' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p2_v' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$539' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\clean_pipe_result' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+  created $adff cell `$procdff$544' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_program_rx_target_cp.\normal_d' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:42$76'.
+  created $dff cell `$procdff$545' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\rd' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:42$76'.
+  created $dff cell `$procdff$546' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_d' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:42$76'.
+  created $dff cell `$procdff$547' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\clean_pipe_op' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:42$76'.
+  created $dff cell `$procdff$548' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p2_op' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:36$68'.
+  created $dff cell `$procdff$549' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p2_d' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:36$68'.
+  created $dff cell `$procdff$550' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_boundary' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:36$68'.
+  created $dff cell `$procdff$551' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_target' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:36$68'.
+  created $dff cell `$procdff$552' with positive edge clock.
+Creating register for signal `\qkd_host_program_rx_target_cp.\p1_header' using process `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:36$68'.
+  created $dff cell `$procdff$553' with positive edge clock.
+Creating register for signal `\reference.\rx_cr' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$558' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\normal_v' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$563' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\begin_image' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$568' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\image_epoch' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$573' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\image_target' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$578' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\auth_target' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$583' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\pw_count' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$588' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\dw_count' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$593' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\word_v' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$598' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\word_desc' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$603' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\word_addr' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$608' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\word_data' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$613' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\seal' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$618' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\auth_v' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$623' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\auth_epoch' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$628' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\auth_digest' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$633' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\fault' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$638' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\rv' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$643' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\ncq' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$648' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\returns' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$653' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\p1_v' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$658' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\p1_clean' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$663' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\p2_v' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$668' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\p2_clean' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+  created $adff cell `$procdff$673' with positive edge clock and positive level reset.
+Creating register for signal `\reference.\normal_d' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:30$29'.
+  created $dff cell `$procdff$674' with positive edge clock.
+Creating register for signal `\reference.\rd' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:30$29'.
+  created $dff cell `$procdff$675' with positive edge clock.
+Creating register for signal `\reference.\p1_op' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:30$29'.
+  created $dff cell `$procdff$676' with positive edge clock.
+Creating register for signal `\reference.\p1_d' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:30$29'.
+  created $dff cell `$procdff$677' with positive edge clock.
+Creating register for signal `\reference.\p2_op' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:29$28'.
+  created $dff cell `$procdff$678' with positive edge clock.
+Creating register for signal `\reference.\p2_d' using process `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:29$28'.
+  created $dff cell `$procdff$679' with positive edge clock.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$115'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$113'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$111'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$109'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$107'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$105'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$103'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$101'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$99'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$97'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$95'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$93'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$91'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$89'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$87'.
+Found and cleaned up 4 empty switches in `\qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:43$77'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:42$76'.
+Removing empty process `qkd_host_program_rx_target_cp.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:36$68'.
+Found and cleaned up 4 empty switches in `\reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+Removing empty process `reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:31$30'.
+Removing empty process `reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:30$29'.
+Removing empty process `reference.$proc$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:29$28'.
+Cleaned up 8 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_host_program_rx_target_cp.
+<suppressed ~83 debug messages>
+Optimizing module reference.
+<suppressed ~70 debug messages>
+
+4. Executing OPT pass (performing simple optimizations).
+
+4.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_host_program_rx_target_cp.
+Optimizing module reference.
+
+4.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_host_program_rx_target_cp'.
+Computing hashes of 192 cells of `\qkd_host_program_rx_target_cp'.
+Finding duplicate cells in `\qkd_host_program_rx_target_cp'.
+Computing hashes of 154 cells of `\qkd_host_program_rx_target_cp'.
+Finding duplicate cells in `\qkd_host_program_rx_target_cp'.
+<suppressed ~114 debug messages>
+Finding identical cells in module `\reference'.
+Computing hashes of 153 cells of `\reference'.
+Finding duplicate cells in `\reference'.
+Computing hashes of 115 cells of `\reference'.
+Finding duplicate cells in `\reference'.
+<suppressed ~114 debug messages>
+Removed a total of 76 cells.
+
+4.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_host_program_rx_target_cp..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \reference..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~134 debug messages>
+
+4.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_host_program_rx_target_cp.
+    New ctrl vector for $pmux cell $procmux$158: $auto$opt_reduce.cc:137:opt_pmux$681
+  Optimizing cells in module \qkd_host_program_rx_target_cp.
+  Optimizing cells in module \reference.
+    New ctrl vector for $pmux cell $procmux$307: $auto$opt_reduce.cc:137:opt_pmux$683
+  Optimizing cells in module \reference.
+Performed a total of 2 changes.
+
+4.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_host_program_rx_target_cp'.
+Computing hashes of 155 cells of `\qkd_host_program_rx_target_cp'.
+Finding duplicate cells in `\qkd_host_program_rx_target_cp'.
+Finding identical cells in module `\reference'.
+Computing hashes of 116 cells of `\reference'.
+Finding duplicate cells in `\reference'.
+Removed a total of 0 cells.
+
+4.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$459 ($adff) from module qkd_host_program_rx_target_cp (D = \p2_d [83:80], Q = \auth_target).
+Adding EN signal on $procdff$464 ($adff) from module qkd_host_program_rx_target_cp (D = \p2_d [26:16], Q = \pw_count).
+Adding EN signal on $procdff$469 ($adff) from module qkd_host_program_rx_target_cp (D = \p2_d [30:27], Q = \dw_count).
+Adding EN signal on $procdff$504 ($adff) from module qkd_host_program_rx_target_cp (D = \p2_d [15:0], Q = \auth_epoch).
+Adding EN signal on $procdff$479 ($adff) from module qkd_host_program_rx_target_cp (D = \p2_d [0], Q = \word_desc).
+Adding EN signal on $procdff$484 ($adff) from module qkd_host_program_rx_target_cp (D = \p2_d [10:1], Q = \word_addr).
+Adding EN signal on $procdff$509 ($adff) from module qkd_host_program_rx_target_cp (D = \p2_d [79:16], Q = \auth_digest).
+Adding EN signal on $procdff$489 ($adff) from module qkd_host_program_rx_target_cp (D = $xor$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:53$86_Y, Q = \word_data).
+Adding EN signal on $procdff$449 ($adff) from module qkd_host_program_rx_target_cp (D = \p2_d [15:0], Q = \image_epoch).
+Adding EN signal on $procdff$454 ($adff) from module qkd_host_program_rx_target_cp (D = \p2_d [34:31], Q = \image_target).
+Adding EN signal on $procdff$633 ($adff) from module reference (D = \p2_d [79:16], Q = \auth_digest).
+Adding EN signal on $procdff$583 ($adff) from module reference (D = \p2_d [83:80], Q = \auth_target).
+Adding EN signal on $procdff$588 ($adff) from module reference (D = \p2_d [26:16], Q = \pw_count).
+Adding EN signal on $procdff$593 ($adff) from module reference (D = \p2_d [30:27], Q = \dw_count).
+Adding EN signal on $procdff$603 ($adff) from module reference (D = \p2_d [0], Q = \word_desc).
+Adding EN signal on $procdff$628 ($adff) from module reference (D = \p2_d [15:0], Q = \auth_epoch).
+Adding EN signal on $procdff$608 ($adff) from module reference (D = \p2_d [10:1], Q = \word_addr).
+Adding EN signal on $procdff$613 ($adff) from module reference (D = $xor$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:41$39_Y, Q = \word_data).
+Adding EN signal on $procdff$573 ($adff) from module reference (D = \p2_d [15:0], Q = \image_epoch).
+Adding EN signal on $procdff$578 ($adff) from module reference (D = \p2_d [34:31], Q = \image_target).
+
+4.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_host_program_rx_target_cp..
+Finding unused cells or wires in module \reference..
+Removed 66 unused cells and 344 unused wires.
+<suppressed ~68 debug messages>
+
+4.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_host_program_rx_target_cp.
+Optimizing module reference.
+
+4.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_host_program_rx_target_cp..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \reference..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~48 debug messages>
+
+4.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_host_program_rx_target_cp.
+  Optimizing cells in module \reference.
+Performed a total of 0 changes.
+
+4.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_host_program_rx_target_cp'.
+Computing hashes of 132 cells of `\qkd_host_program_rx_target_cp'.
+Finding duplicate cells in `\qkd_host_program_rx_target_cp'.
+Computing hashes of 125 cells of `\qkd_host_program_rx_target_cp'.
+Finding duplicate cells in `\qkd_host_program_rx_target_cp'.
+<suppressed ~21 debug messages>
+Finding identical cells in module `\reference'.
+Computing hashes of 93 cells of `\reference'.
+Finding duplicate cells in `\reference'.
+Computing hashes of 86 cells of `\reference'.
+Finding duplicate cells in `\reference'.
+<suppressed ~21 debug messages>
+Removed a total of 14 cells.
+
+4.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_host_program_rx_target_cp..
+Finding unused cells or wires in module \reference..
+Removed 0 unused cells and 14 unused wires.
+<suppressed ~2 debug messages>
+
+4.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_host_program_rx_target_cp.
+Optimizing module reference.
+
+4.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_host_program_rx_target_cp..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \reference..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~48 debug messages>
+
+4.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_host_program_rx_target_cp.
+  Optimizing cells in module \reference.
+Performed a total of 0 changes.
+
+4.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_host_program_rx_target_cp'.
+Computing hashes of 125 cells of `\qkd_host_program_rx_target_cp'.
+Finding duplicate cells in `\qkd_host_program_rx_target_cp'.
+Finding identical cells in module `\reference'.
+Computing hashes of 86 cells of `\reference'.
+Finding duplicate cells in `\reference'.
+Removed a total of 0 cells.
+
+4.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_host_program_rx_target_cp..
+Finding unused cells or wires in module \reference..
+
+4.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_host_program_rx_target_cp.
+Optimizing module reference.
+
+4.23. Finished fast OPT passes. (There is nothing left to do.)
+
+5. Executing ASYNC2SYNC pass.
+Replacing qkd_host_program_rx_target_cp.$auto$ff.cc:337:slice$699 ($adffe): ARST=\rst_n, D=\p2_d [10:1], Q=\word_addr
+Replacing qkd_host_program_rx_target_cp.$auto$ff.cc:337:slice$702 ($adffe): ARST=\rst_n, D=\p2_d [79:16], Q=\auth_digest
+Replacing qkd_host_program_rx_target_cp.$procdff$434 ($adff): ARST=\rst_n, D=\emit, Q=\rx_cr
+Replacing qkd_host_program_rx_target_cp.$procdff$519 ($adff): ARST=\rst_n, D=\rx_v, Q=\rv
+Replacing qkd_host_program_rx_target_cp.$procdff$524 ($adff): ARST=\rst_n, D=\normal_cr, Q=\ncq
+Replacing qkd_host_program_rx_target_cp.$procdff$439 ($adff): ARST=\rst_n, D=$0\normal_v[0:0], Q=\normal_v
+Replacing qkd_host_program_rx_target_cp.$procdff$539 ($adff): ARST=\rst_n, D=\p1_v, Q=\p2_v
+Replacing qkd_host_program_rx_target_cp.$auto$ff.cc:337:slice$705 ($adffe): ARST=\rst_n, D=\p2_d [74:11], Q=\word_data
+Replacing qkd_host_program_rx_target_cp.$procdff$444 ($adff): ARST=\rst_n, D=$0\begin_image[0:0], Q=\begin_image
+Replacing qkd_host_program_rx_target_cp.$auto$ff.cc:337:slice$708 ($adffe): ARST=\rst_n, D=\p2_d [15:0], Q=\image_epoch
+Replacing qkd_host_program_rx_target_cp.$procdff$494 ($adff): ARST=\rst_n, D=$0\seal[0:0], Q=\seal
+Replacing qkd_host_program_rx_target_cp.$procdff$529 ($adff): ARST=\rst_n, D=\next_returns [6:0], Q=\returns
+Replacing qkd_host_program_rx_target_cp.$auto$ff.cc:337:slice$711 ($adffe): ARST=\rst_n, D=\p2_d [34:31], Q=\image_target
+Replacing qkd_host_program_rx_target_cp.$auto$ff.cc:337:slice$696 ($adffe): ARST=\rst_n, D=\p2_d [0], Q=\word_desc
+Replacing qkd_host_program_rx_target_cp.$procdff$514 ($adff): ARST=\rst_n, D=$0\fault[0:0], Q=\fault
+Replacing qkd_host_program_rx_target_cp.$procdff$474 ($adff): ARST=\rst_n, D=$0\word_v[0:0], Q=\word_v
+Replacing qkd_host_program_rx_target_cp.$auto$ff.cc:337:slice$693 ($adffe): ARST=\rst_n, D=\p2_d [15:0], Q=\auth_epoch
+Replacing qkd_host_program_rx_target_cp.$auto$ff.cc:337:slice$690 ($adffe): ARST=\rst_n, D=\p2_d [30:27], Q=\dw_count
+Replacing qkd_host_program_rx_target_cp.$procdff$534 ($adff): ARST=\rst_n, D=\pop, Q=\p1_v
+Replacing qkd_host_program_rx_target_cp.$auto$ff.cc:337:slice$687 ($adffe): ARST=\rst_n, D=\p2_d [26:16], Q=\pw_count
+Replacing qkd_host_program_rx_target_cp.$procdff$499 ($adff): ARST=\rst_n, D=$0\auth_v[0:0], Q=\auth_v
+Replacing qkd_host_program_rx_target_cp.$auto$ff.cc:337:slice$684 ($adffe): ARST=\rst_n, D=\p2_d [83:80], Q=\auth_target
+Replacing qkd_host_program_rx_target_cp.$procdff$544 ($adff): ARST=\rst_n, D=\clean_stage2, Q=\clean_pipe_result
+Replacing reference.$procdff$668 ($adff): ARST=\rst_n, D=\p1_v, Q=\p2_v
+Replacing reference.$procdff$563 ($adff): ARST=\rst_n, D=$0\normal_v[0:0], Q=\normal_v
+Replacing reference.$procdff$638 ($adff): ARST=\rst_n, D=$0\fault[0:0], Q=\fault
+Replacing reference.$procdff$648 ($adff): ARST=\rst_n, D=\normal_cr, Q=\ncq
+Replacing reference.$procdff$568 ($adff): ARST=\rst_n, D=$0\begin_image[0:0], Q=\begin_image
+Replacing reference.$procdff$663 ($adff): ARST=\rst_n, D=\clean, Q=\p1_clean
+Replacing reference.$auto$ff.cc:337:slice$735 ($adffe): ARST=\rst_n, D=\p2_d [74:11], Q=\word_data
+Replacing reference.$auto$ff.cc:337:slice$738 ($adffe): ARST=\rst_n, D=\p2_d [15:0], Q=\image_epoch
+Replacing reference.$procdff$598 ($adff): ARST=\rst_n, D=$0\word_v[0:0], Q=\word_v
+Replacing reference.$auto$ff.cc:337:slice$741 ($adffe): ARST=\rst_n, D=\p2_d [34:31], Q=\image_target
+Replacing reference.$procdff$658 ($adff): ARST=\rst_n, D=\pop, Q=\p1_v
+Replacing reference.$auto$ff.cc:337:slice$726 ($adffe): ARST=\rst_n, D=\p2_d [0], Q=\word_desc
+Replacing reference.$auto$ff.cc:337:slice$729 ($adffe): ARST=\rst_n, D=\p2_d [15:0], Q=\auth_epoch
+Replacing reference.$procdff$623 ($adff): ARST=\rst_n, D=$0\auth_v[0:0], Q=\auth_v
+Replacing reference.$auto$ff.cc:337:slice$723 ($adffe): ARST=\rst_n, D=\p2_d [30:27], Q=\dw_count
+Replacing reference.$auto$ff.cc:337:slice$720 ($adffe): ARST=\rst_n, D=\p2_d [26:16], Q=\pw_count
+Replacing reference.$procdff$673 ($adff): ARST=\rst_n, D=\p1_clean, Q=\p2_clean
+Replacing reference.$procdff$618 ($adff): ARST=\rst_n, D=$0\seal[0:0], Q=\seal
+Replacing reference.$auto$ff.cc:337:slice$717 ($adffe): ARST=\rst_n, D=\p2_d [83:80], Q=\auth_target
+Replacing reference.$procdff$653 ($adff): ARST=\rst_n, D=\next_returns [6:0], Q=\returns
+Replacing reference.$procdff$643 ($adff): ARST=\rst_n, D=\rx_v, Q=\rv
+Replacing reference.$procdff$558 ($adff): ARST=\rst_n, D=\emit, Q=\rx_cr
+Replacing reference.$auto$ff.cc:337:slice$714 ($adffe): ARST=\rst_n, D=\p2_d [79:16], Q=\auth_digest
+Replacing reference.$auto$ff.cc:337:slice$732 ($adffe): ARST=\rst_n, D=\p2_d [10:1], Q=\word_addr
+
+6. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: p2_d_gold (\p2_d_gold), p2_d_gate (\p2_d_gate) -> p2_d
+Presumably equivalent wires: p2_op_gold (\p2_op_gold), p2_op_gate (\p2_op_gate) -> p2_op
+Presumably equivalent wires: p2_v_gold (\p2_v_gold), p2_v_gate (\p2_v_gate) -> p2_v
+Presumably equivalent wires: p1_d_gold (\p1_d_gold), p1_d_gate (\p1_d_gate) -> p1_d
+Presumably equivalent wires: p1_v_gold (\p1_v_gold), p1_v_gate (\p1_v_gate) -> p1_v
+Presumably equivalent wires: next_returns_gold (\next_returns_gold), next_returns_gate (\next_returns_gate) -> next_returns
+Presumably equivalent wires: emit_gold (\emit_gold), emit_gate (\emit_gate) -> emit
+Presumably equivalent wires: op_gold (\rd_gold [7:0]), op_gate (\rd_gate [7:0]) -> op
+Presumably equivalent wires: pop_gold (\pop_gold), pop_gate (\pop_gate) -> pop
+Presumably equivalent wires: is_program_gold (\is_program_gold), is_program_gate (\is_program_gate) -> is_program
+Presumably equivalent wires: returns_gold (\returns_gold), returns_gate (\returns_gate) -> returns
+Presumably equivalent wires: rd_gold (\rd_gold), rd_gate (\rd_gate) -> rd
+Presumably equivalent wires: ncq_gold (\ncq_gold), ncq_gate (\ncq_gate) -> ncq
+Presumably equivalent wires: rv_gold (\rv_gold), rv_gate (\rv_gate) -> rv
+Presumably equivalent wires: fault_gold (\fault_gold), fault_gate (\fault_gate) -> fault
+Presumably equivalent wires: auth_digest_gold (\auth_digest_gold), auth_digest_gate (\auth_digest_gate) -> auth_digest
+Presumably equivalent wires: auth_epoch_gold (\auth_epoch_gold), auth_epoch_gate (\auth_epoch_gate) -> auth_epoch
+Presumably equivalent wires: auth_v_gold (\auth_v_gold), auth_v_gate (\auth_v_gate) -> auth_v
+Presumably equivalent wires: seal_gold (\seal_gold), seal_gate (\seal_gate) -> seal
+Presumably equivalent wires: word_data_gold (\word_data_gold), word_data_gate (\word_data_gate) -> word_data
+Presumably equivalent wires: word_addr_gold (\word_addr_gold), word_addr_gate (\word_addr_gate) -> word_addr
+Presumably equivalent wires: word_desc_gold (\word_desc_gold), word_desc_gate (\word_desc_gate) -> word_desc
+Presumably equivalent wires: word_v_gold (\word_v_gold), word_v_gate (\word_v_gate) -> word_v
+Presumably equivalent wires: dw_count_gold (\dw_count_gold), dw_count_gate (\dw_count_gate) -> dw_count
+Presumably equivalent wires: pw_count_gold (\pw_count_gold), pw_count_gate (\pw_count_gate) -> pw_count
+Presumably equivalent wires: auth_target_gold (\auth_target_gold), auth_target_gate (\auth_target_gate) -> auth_target
+Presumably equivalent wires: image_target_gold (\image_target_gold), image_target_gate (\image_target_gate) -> image_target
+Presumably equivalent wires: image_epoch_gold (\image_epoch_gold), image_epoch_gate (\image_epoch_gate) -> image_epoch
+Presumably equivalent wires: begin_image_gold (\begin_image_gold), begin_image_gate (\begin_image_gate) -> begin_image
+Presumably equivalent wires: normal_cr_gold (\normal_cr_gold), normal_cr_gate (\normal_cr_gate) -> normal_cr
+Presumably equivalent wires: normal_d_gold (\normal_d_gold), normal_d_gate (\normal_d_gate) -> normal_d
+Presumably equivalent wires: normal_v_gold (\normal_v_gold), normal_v_gate (\normal_v_gate) -> normal_v
+Presumably equivalent wires: rx_cr_gold (\rx_cr_gold), rx_cr_gate (\rx_cr_gate) -> rx_cr
+Presumably equivalent wires: rx_d_gold (\rx_d_gold), rx_d_gate (\rx_d_gate) -> rx_d
+Presumably equivalent wires: rx_v_gold (\rx_v_gold), rx_v_gate (\rx_v_gate) -> rx_v
+Presumably equivalent wires: rst_n_gold (\rst_n_gold), rst_n_gate (\rst_n_gate) -> rst_n
+Presumably equivalent wires: ck_gold (\ck_gold), ck_gate (\ck_gate) -> ck
+Changing input D of cell $auto$ff.cc:337:slice$684_gate ($sdffe): \p2_d_gate [83:80] -> \p2_d [83:80]
+Changing input D of cell $auto$ff.cc:337:slice$687_gate ($sdffe): \p2_d_gate [26:16] -> \p2_d [26:16]
+Changing input D of cell $procdff$534_gate ($sdff): \pop_gate -> \pop
+Changing input D of cell $auto$ff.cc:337:slice$690_gate ($sdffe): \p2_d_gate [30:27] -> \p2_d [30:27]
+Changing input D of cell $auto$ff.cc:337:slice$693_gate ($sdffe): \p2_d_gate [15:0] -> \p2_d [15:0]
+Changing input D of cell $auto$ff.cc:337:slice$696_gate ($sdffe): \p2_d_gate [0] -> \p2_d [0]
+Changing input D of cell $auto$ff.cc:337:slice$711_gate ($sdffe): \p2_d_gate [34:31] -> \p2_d [34:31]
+Changing input D of cell $procdff$529_gate ($sdff): \next_returns_gate [6:0] -> \next_returns [6:0]
+Changing input D of cell $auto$ff.cc:337:slice$708_gate ($sdffe): \p2_d_gate [15:0] -> \p2_d [15:0]
+Changing input D of cell $auto$ff.cc:337:slice$705_gate ($sdffe): \p2_d_gate [74:11] -> \p2_d [74:11]
+Changing input D of cell $procdff$539_gate ($sdff): \p1_v_gate -> \p1_v
+Changing input D of cell $procdff$434_gate ($sdff): \emit_gate -> \emit
+Changing input D of cell $auto$ff.cc:337:slice$702_gate ($sdffe): \p2_d_gate [79:16] -> \p2_d [79:16]
+Changing input D of cell $auto$ff.cc:337:slice$699_gate ($sdffe): \p2_d_gate [10:1] -> \p2_d [10:1]
+Changing input A of cell $procmux$260_CMP0_gate ($eq): \p2_op_gate -> \p2_op
+Changing input A of cell $procmux$238_CMP0_gate ($eq): \p2_op_gate -> \p2_op
+Changing input D of cell $procdff$547_gate ($dff): \rd_gate [91:8] -> \rd [91:8]
+Changing input D of cell $procdff$550_gate ($dff): \p1_d_gate -> \p1_d
+Changing input A of cell $procmux$208_CMP0_gate ($eq): \p2_op_gate -> \p2_op
+Changing input D of cell $procdff$548_gate ($dff): \rd_gate [7:0] -> \rd [7:0]
+Changing input D of cell $procdff$545_gate ($dff): \rd_gate -> \rd
+Changing input A of cell $procmux$160_CMP0_gate ($eq): \p2_op_gate -> \p2_op
+Changing input S of cell $procmux$155_gate ($mux): \next_returns_gate [7] -> \next_returns [7]
+Changing input A of cell $procmux$155_gate ($mux): \fault_gate -> \fault
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$116_gate ($logic_not): \rd_gate [511:480] -> \rd [511:480]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$114_gate ($logic_not): \rd_gate [479:448] -> \rd [479:448]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$112_gate ($logic_not): \rd_gate [447:416] -> \rd [447:416]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$110_gate ($logic_not): \rd_gate [415:384] -> \rd [415:384]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$108_gate ($logic_not): \rd_gate [383:352] -> \rd [383:352]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$106_gate ($logic_not): \rd_gate [351:320] -> \rd [351:320]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$104_gate ($logic_not): \rd_gate [319:288] -> \rd [319:288]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$102_gate ($logic_not): \rd_gate [287:256] -> \rd [287:256]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$100_gate ($logic_not): \rd_gate [255:224] -> \rd [255:224]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$98_gate ($logic_not): \rd_gate [223:192] -> \rd [223:192]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$96_gate ($logic_not): \rd_gate [191:160] -> \rd [191:160]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$94_gate ($logic_not): \rd_gate [159:128] -> \rd [159:128]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$92_gate ($logic_not): \rd_gate [127:96] -> \rd [127:96]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$90_gate ($logic_not): \rd_gate [95:64] -> \rd [95:64]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:34$88_gate ($logic_not): \rd_gate [63:32] -> \rd [63:32]
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:49$84_gate ($logic_and): \p2_v_gate -> \p2_v
+Changing input A of cell $logic_not$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:49$83_gate ($logic_not): \fault_gate -> \fault
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:47$80_gate ($logic_and): \rv_gate -> \rv
+Changing input A of cell $logic_not$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:47$79_gate ($logic_not): \is_program_gate -> \is_program
+Changing input A of cell $le$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:39$75_gate ($le): \rd_gate [91:88] -> \rd [91:88]
+Changing input A of cell $le$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:39$74_gate ($le): \rd_gate [42:39] -> \rd [42:39]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:38$73_gate ($logic_not): \rd_gate [95:92] -> \rd [95:92]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:38$72_gate ($logic_not): \rd_gate [31:8] -> \rd [31:8]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:38$71_gate ($logic_not): \rd_gate [95:83] -> \rd [95:83]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:38$70_gate ($logic_not): \rd_gate [63:43] -> \rd [63:43]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:37$69_gate ($logic_not): \rd_gate [523:512] -> \rd [523:512]
+Changing input B of cell $sub$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:23$45_gate ($sub): { 7'0000000 \emit_gate } -> { 7'0000000 \emit }
+Changing input B of cell $add$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:23$44_gate ($add): { 7'0000000 \pop_gate } -> { 7'0000000 \pop }
+Changing input B of cell $add$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:23$43_gate ($add): { 7'0000000 \ncq_gate } -> { 7'0000000 \ncq }
+Changing input A of cell $add$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:23$43_gate ($add): { 1'0 \returns_gate } -> { 1'0 \returns }
+Changing input A of cell $ne$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:23$42_gate ($reduce_bool): \returns_gate -> \returns
+Changing input B of cell $logic_and$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:21$41_gate ($logic_and): \is_program_gate -> \is_program
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:21$41_gate ($logic_and): \rv_gate -> \rv
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv:21$40_gate ($eq): \rd_gate [527:524] -> \rd [527:524]
+Changing input D of cell $auto$ff.cc:337:slice$714_gold ($sdffe): \p2_d_gold [79:16] -> \p2_d [79:16]
+Changing input D of cell $procdff$558_gold ($sdff): \emit_gold -> \emit
+Changing input D of cell $procdff$653_gold ($sdff): \next_returns_gold [6:0] -> \next_returns [6:0]
+Changing input D of cell $auto$ff.cc:337:slice$717_gold ($sdffe): \p2_d_gold [83:80] -> \p2_d [83:80]
+Changing input D of cell $auto$ff.cc:337:slice$720_gold ($sdffe): \p2_d_gold [26:16] -> \p2_d [26:16]
+Changing input D of cell $auto$ff.cc:337:slice$723_gold ($sdffe): \p2_d_gold [30:27] -> \p2_d [30:27]
+Changing input D of cell $auto$ff.cc:337:slice$729_gold ($sdffe): \p2_d_gold [15:0] -> \p2_d [15:0]
+Changing input D of cell $auto$ff.cc:337:slice$726_gold ($sdffe): \p2_d_gold [0] -> \p2_d [0]
+Changing input D of cell $procdff$658_gold ($sdff): \pop_gold -> \pop
+Changing input D of cell $auto$ff.cc:337:slice$741_gold ($sdffe): \p2_d_gold [34:31] -> \p2_d [34:31]
+Changing input D of cell $auto$ff.cc:337:slice$738_gold ($sdffe): \p2_d_gold [15:0] -> \p2_d [15:0]
+Changing input D of cell $auto$ff.cc:337:slice$735_gold ($sdffe): \p2_d_gold [74:11] -> \p2_d [74:11]
+Changing input D of cell $procdff$668_gold ($sdff): \p1_v_gold -> \p1_v
+Changing input D of cell $procdff$674_gold ($dff): \rd_gold -> \rd
+Changing input D of cell $procdff$679_gold ($dff): \p1_d_gold -> \p1_d
+Changing input A of cell $procmux$357_CMP0_gold ($eq): \p2_op_gold -> \p2_op
+Changing input A of cell $procmux$409_CMP0_gold ($eq): \p2_op_gold -> \p2_op
+Changing input D of cell $procdff$677_gold ($dff): \rd_gold [91:8] -> \rd [91:8]
+Changing input A of cell $procmux$387_CMP0_gold ($eq): \p2_op_gold -> \p2_op
+Changing input D of cell $procdff$676_gold ($dff): \rd_gold [7:0] -> \rd [7:0]
+Changing input A of cell $procmux$309_CMP0_gold ($eq): \p2_op_gold -> \p2_op
+Changing input S of cell $procmux$304_gold ($mux): \next_returns_gold [7] -> \next_returns [7]
+Changing input A of cell $procmux$304_gold ($mux): \fault_gold -> \fault
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:37$37_gold ($logic_and): \p2_v_gold -> \p2_v
+Changing input A of cell $logic_not$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:37$36_gold ($logic_not): \fault_gold -> \fault
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:35$33_gold ($logic_and): \rv_gold -> \rv
+Changing input A of cell $logic_not$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:35$32_gold ($logic_not): \is_program_gold -> \is_program
+Changing input B of cell $sub$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:24$27_gold ($sub): { 7'0000000 \emit_gold } -> { 7'0000000 \emit }
+Changing input B of cell $add$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:24$26_gold ($add): { 7'0000000 \pop_gold } -> { 7'0000000 \pop }
+Changing input B of cell $add$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:24$25_gold ($add): { 7'0000000 \ncq_gold } -> { 7'0000000 \ncq }
+Changing input A of cell $add$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:24$25_gold ($add): { 1'0 \returns_gold } -> { 1'0 \returns }
+Changing input A of cell $ne$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:24$24_gold ($reduce_bool): \returns_gold -> \returns
+Changing input A of cell $le$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:23$20_gold ($le): \rd_gold [91:88] -> \rd [91:88]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:23$18_gold ($logic_not): \rd_gold [511:92] -> \rd [511:92]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:23$17_gold ($eq): \rd_gold [7:0] -> \rd [7:0]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:23$14_gold ($logic_not): \rd_gold [511:8] -> \rd [511:8]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:23$13_gold ($eq): \rd_gold [7:0] -> \rd [7:0]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:23$10_gold ($logic_not): \rd_gold [511:83] -> \rd [511:83]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:23$9_gold ($eq): \rd_gold [7:0] -> \rd [7:0]
+Changing input A of cell $le$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:23$7_gold ($le): \rd_gold [42:39] -> \rd [42:39]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:23$5_gold ($logic_not): \rd_gold [511:43] -> \rd [511:43]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:23$4_gold ($eq): \rd_gold [7:0] -> \rd [7:0]
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:23$3_gold ($logic_not): \rd_gold [523:512] -> \rd [523:512]
+Changing input B of cell $logic_and$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:21$2_gold ($logic_and): \is_program_gold -> \is_program
+Changing input A of cell $logic_and$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:21$2_gold ($logic_and): \rv_gold -> \rv
+Changing input A of cell $eq$/srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv:21$1_gold ($eq): \rd_gold [527:524] -> \rd [527:524]
+Changing input D of cell $auto$ff.cc:337:slice$732_gold ($sdffe): \p2_d_gold [10:1] -> \p2_d [10:1]
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+7.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\qkd_host_program_rx_target_cp'.
+Removing unused module `\reference'.
+Removed 2 unused modules.
+
+8. Executing EQUIV_SIMPLE pass.
+Found 1463 unproven $equiv cells (32 groups) in equiv:
+  Trying to prove $equiv for \rx_cr:ezsat
+ success!
+  Trying to prove $equiv for \normal_v:ezsat
+ezsat
+ success!
+ Grouping SAT models for \normal_d:
+  Trying to prove $equiv for \normal_d [0]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [1]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [2]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [3]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [4]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [5]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [6]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [7]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [8]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [9]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [10]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [11]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [12]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [13]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [14]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [15]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [16]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [17]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [18]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [19]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [20]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [21]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [22]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [23]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [24]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [25]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [26]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [27]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [28]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [29]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [30]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [31]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [32]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [33]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [34]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [35]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [36]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [37]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [38]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [39]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [40]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [41]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [42]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [43]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [44]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [45]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [46]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [47]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [48]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [49]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [50]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [51]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [52]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [53]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [54]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [55]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [56]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [57]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [58]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [59]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [60]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [61]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [62]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [63]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [64]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [65]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [66]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [67]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [68]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [69]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [70]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [71]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [72]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [73]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [74]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [75]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [76]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [77]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [78]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [79]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [80]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [81]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [82]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [83]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [84]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [85]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [86]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [87]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [88]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [89]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [90]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [91]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [92]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [93]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [94]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [95]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [96]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [97]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [98]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [99]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [100]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [101]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [102]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [103]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [104]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [105]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [106]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [107]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [108]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [109]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [110]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [111]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [112]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [113]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [114]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [115]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [116]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [117]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [118]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [119]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [120]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [121]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [122]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [123]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [124]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [125]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [126]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [127]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [128]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [129]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [130]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [131]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [132]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [133]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [134]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [135]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [136]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [137]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [138]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [139]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [140]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [141]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [142]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [143]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [144]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [145]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [146]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [147]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [148]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [149]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [150]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [151]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [152]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [153]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [154]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [155]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [156]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [157]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [158]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [159]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [160]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [161]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [162]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [163]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [164]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [165]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [166]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [167]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [168]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [169]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [170]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [171]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [172]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [173]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [174]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [175]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [176]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [177]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [178]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [179]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [180]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [181]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [182]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [183]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [184]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [185]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [186]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [187]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [188]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [189]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [190]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [191]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [192]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [193]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [194]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [195]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [196]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [197]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [198]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [199]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [200]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [201]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [202]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [203]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [204]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [205]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [206]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [207]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [208]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [209]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [210]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [211]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [212]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [213]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [214]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [215]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [216]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [217]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [218]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [219]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [220]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [221]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [222]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [223]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [224]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [225]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [226]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [227]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [228]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [229]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [230]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [231]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [232]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [233]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [234]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [235]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [236]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [237]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [238]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [239]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [240]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [241]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [242]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [243]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [244]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [245]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [246]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [247]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [248]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [249]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [250]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [251]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [252]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [253]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [254]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [255]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [256]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [257]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [258]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [259]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [260]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [261]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [262]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [263]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [264]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [265]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [266]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [267]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [268]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [269]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [270]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [271]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [272]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [273]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [274]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [275]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [276]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [277]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [278]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [279]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [280]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [281]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [282]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [283]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [284]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [285]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [286]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [287]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [288]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [289]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [290]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [291]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [292]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [293]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [294]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [295]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [296]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [297]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [298]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [299]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [300]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [301]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [302]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [303]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [304]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [305]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [306]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [307]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [308]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [309]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [310]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [311]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [312]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [313]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [314]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [315]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [316]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [317]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [318]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [319]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [320]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [321]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [322]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [323]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [324]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [325]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [326]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [327]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [328]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [329]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [330]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [331]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [332]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [333]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [334]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [335]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [336]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [337]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [338]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [339]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [340]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [341]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [342]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [343]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [344]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [345]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [346]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [347]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [348]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [349]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [350]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [351]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [352]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [353]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [354]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [355]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [356]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [357]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [358]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [359]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [360]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [361]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [362]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [363]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [364]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [365]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [366]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [367]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [368]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [369]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [370]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [371]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [372]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [373]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [374]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [375]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [376]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [377]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [378]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [379]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [380]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [381]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [382]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [383]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [384]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [385]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [386]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [387]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [388]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [389]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [390]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [391]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [392]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [393]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [394]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [395]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [396]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [397]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [398]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [399]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [400]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [401]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [402]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [403]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [404]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [405]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [406]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [407]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [408]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [409]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [410]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [411]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [412]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [413]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [414]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [415]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [416]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [417]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [418]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [419]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [420]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [421]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [422]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [423]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [424]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [425]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [426]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [427]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [428]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [429]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [430]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [431]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [432]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [433]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [434]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [435]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [436]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [437]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [438]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [439]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [440]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [441]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [442]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [443]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [444]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [445]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [446]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [447]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [448]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [449]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [450]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [451]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [452]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [453]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [454]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [455]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [456]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [457]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [458]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [459]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [460]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [461]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [462]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [463]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [464]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [465]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [466]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [467]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [468]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [469]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [470]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [471]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [472]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [473]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [474]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [475]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [476]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [477]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [478]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [479]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [480]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [481]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [482]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [483]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [484]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [485]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [486]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [487]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [488]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [489]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [490]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [491]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [492]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [493]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [494]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [495]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [496]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [497]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [498]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [499]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [500]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [501]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [502]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [503]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [504]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [505]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [506]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [507]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [508]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [509]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [510]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [511]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [512]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [513]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [514]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [515]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [516]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [517]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [518]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [519]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [520]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [521]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [522]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [523]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [524]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [525]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [526]:ezsat
+ success!
+  Trying to prove $equiv for \normal_d [527]:ezsat
+ success!
+  Trying to prove $equiv for \begin_image:ezsat
+ezsat
+ezsat
+ezsat
+ success!
+ Grouping SAT models for \image_epoch:
+  Trying to prove $equiv for \image_epoch [0]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_epoch [1]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_epoch [2]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_epoch [3]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_epoch [4]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_epoch [5]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_epoch [6]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_epoch [7]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_epoch [8]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_epoch [9]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_epoch [10]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_epoch [11]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_epoch [12]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_epoch [13]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_epoch [14]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_epoch [15]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+ Grouping SAT models for \image_target:
+  Trying to prove $equiv for \image_target [0]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_target [1]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_target [2]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \image_target [3]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+ Grouping SAT models for \auth_target:
+  Trying to prove $equiv for \auth_target [0]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_target [1]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_target [2]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_target [3]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+ Grouping SAT models for \pw_count:
+  Trying to prove $equiv for \pw_count [0]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \pw_count [1]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \pw_count [2]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \pw_count [3]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \pw_count [4]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \pw_count [5]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \pw_count [6]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \pw_count [7]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \pw_count [8]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \pw_count [9]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \pw_count [10]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+ Grouping SAT models for \dw_count:
+  Trying to prove $equiv for \dw_count [0]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \dw_count [1]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \dw_count [2]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \dw_count [3]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_v:ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \word_desc:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+ Grouping SAT models for \word_addr:
+  Trying to prove $equiv for \word_addr [0]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_addr [1]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_addr [2]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_addr [3]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_addr [4]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_addr [5]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_addr [6]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_addr [7]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_addr [8]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_addr [9]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+ Grouping SAT models for \word_data:
+  Trying to prove $equiv for \word_data [0]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [1]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [2]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [3]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [4]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [5]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [6]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [7]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [8]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [9]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [10]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [11]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [12]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [13]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [14]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [15]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [16]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [17]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [18]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [19]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [20]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [21]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [22]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [23]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [24]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [25]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [26]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [27]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [28]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [29]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [30]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [31]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [32]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [33]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [34]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [35]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [36]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [37]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [38]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [39]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [40]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [41]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [42]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [43]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [44]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [45]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [46]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [47]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [48]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [49]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [50]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [51]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [52]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [53]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [54]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [55]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [56]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [57]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [58]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [59]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [60]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [61]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [62]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \word_data [63]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \seal:ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \auth_v:ezsat
+ezsat
+ezsat
+ezsat
+ success!
+ Grouping SAT models for \auth_epoch:
+  Trying to prove $equiv for \auth_epoch [0]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_epoch [1]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_epoch [2]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_epoch [3]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_epoch [4]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_epoch [5]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_epoch [6]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_epoch [7]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_epoch [8]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_epoch [9]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_epoch [10]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_epoch [11]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_epoch [12]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_epoch [13]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_epoch [14]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_epoch [15]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+ Grouping SAT models for \auth_digest:
+  Trying to prove $equiv for \auth_digest [0]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [1]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [2]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [3]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [4]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [5]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [6]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [7]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [8]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [9]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [10]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [11]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [12]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [13]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [14]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [15]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [16]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [17]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [18]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [19]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [20]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [21]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [22]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [23]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [24]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [25]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [26]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [27]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [28]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [29]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [30]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [31]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [32]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [33]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [34]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [35]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [36]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [37]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [38]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [39]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [40]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [41]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [42]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [43]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [44]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [45]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [46]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [47]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [48]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [49]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [50]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [51]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [52]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [53]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [54]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [55]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [56]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [57]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [58]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [59]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [60]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [61]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [62]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \auth_digest [63]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \fault:ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \rv:ezsat
+ success!
+  Trying to prove $equiv for \ncq:ezsat
+ success!
+ Grouping SAT models for \rd:
+  Trying to prove $equiv for \rd [0]:ezsat
+ success!
+  Trying to prove $equiv for \rd [1]:ezsat
+ success!
+  Trying to prove $equiv for \rd [2]:ezsat
+ success!
+  Trying to prove $equiv for \rd [3]:ezsat
+ success!
+  Trying to prove $equiv for \rd [4]:ezsat
+ success!
+  Trying to prove $equiv for \rd [5]:ezsat
+ success!
+  Trying to prove $equiv for \rd [6]:ezsat
+ success!
+  Trying to prove $equiv for \rd [7]:ezsat
+ success!
+  Trying to prove $equiv for \rd [8]:ezsat
+ success!
+  Trying to prove $equiv for \rd [9]:ezsat
+ success!
+  Trying to prove $equiv for \rd [10]:ezsat
+ success!
+  Trying to prove $equiv for \rd [11]:ezsat
+ success!
+  Trying to prove $equiv for \rd [12]:ezsat
+ success!
+  Trying to prove $equiv for \rd [13]:ezsat
+ success!
+  Trying to prove $equiv for \rd [14]:ezsat
+ success!
+  Trying to prove $equiv for \rd [15]:ezsat
+ success!
+  Trying to prove $equiv for \rd [16]:ezsat
+ success!
+  Trying to prove $equiv for \rd [17]:ezsat
+ success!
+  Trying to prove $equiv for \rd [18]:ezsat
+ success!
+  Trying to prove $equiv for \rd [19]:ezsat
+ success!
+  Trying to prove $equiv for \rd [20]:ezsat
+ success!
+  Trying to prove $equiv for \rd [21]:ezsat
+ success!
+  Trying to prove $equiv for \rd [22]:ezsat
+ success!
+  Trying to prove $equiv for \rd [23]:ezsat
+ success!
+  Trying to prove $equiv for \rd [24]:ezsat
+ success!
+  Trying to prove $equiv for \rd [25]:ezsat
+ success!
+  Trying to prove $equiv for \rd [26]:ezsat
+ success!
+  Trying to prove $equiv for \rd [27]:ezsat
+ success!
+  Trying to prove $equiv for \rd [28]:ezsat
+ success!
+  Trying to prove $equiv for \rd [29]:ezsat
+ success!
+  Trying to prove $equiv for \rd [30]:ezsat
+ success!
+  Trying to prove $equiv for \rd [31]:ezsat
+ success!
+  Trying to prove $equiv for \rd [32]:ezsat
+ success!
+  Trying to prove $equiv for \rd [33]:ezsat
+ success!
+  Trying to prove $equiv for \rd [34]:ezsat
+ success!
+  Trying to prove $equiv for \rd [35]:ezsat
+ success!
+  Trying to prove $equiv for \rd [36]:ezsat
+ success!
+  Trying to prove $equiv for \rd [37]:ezsat
+ success!
+  Trying to prove $equiv for \rd [38]:ezsat
+ success!
+  Trying to prove $equiv for \rd [39]:ezsat
+ success!
+  Trying to prove $equiv for \rd [40]:ezsat
+ success!
+  Trying to prove $equiv for \rd [41]:ezsat
+ success!
+  Trying to prove $equiv for \rd [42]:ezsat
+ success!
+  Trying to prove $equiv for \rd [43]:ezsat
+ success!
+  Trying to prove $equiv for \rd [44]:ezsat
+ success!
+  Trying to prove $equiv for \rd [45]:ezsat
+ success!
+  Trying to prove $equiv for \rd [46]:ezsat
+ success!
+  Trying to prove $equiv for \rd [47]:ezsat
+ success!
+  Trying to prove $equiv for \rd [48]:ezsat
+ success!
+  Trying to prove $equiv for \rd [49]:ezsat
+ success!
+  Trying to prove $equiv for \rd [50]:ezsat
+ success!
+  Trying to prove $equiv for \rd [51]:ezsat
+ success!
+  Trying to prove $equiv for \rd [52]:ezsat
+ success!
+  Trying to prove $equiv for \rd [53]:ezsat
+ success!
+  Trying to prove $equiv for \rd [54]:ezsat
+ success!
+  Trying to prove $equiv for \rd [55]:ezsat
+ success!
+  Trying to prove $equiv for \rd [56]:ezsat
+ success!
+  Trying to prove $equiv for \rd [57]:ezsat
+ success!
+  Trying to prove $equiv for \rd [58]:ezsat
+ success!
+  Trying to prove $equiv for \rd [59]:ezsat
+ success!
+  Trying to prove $equiv for \rd [60]:ezsat
+ success!
+  Trying to prove $equiv for \rd [61]:ezsat
+ success!
+  Trying to prove $equiv for \rd [62]:ezsat
+ success!
+  Trying to prove $equiv for \rd [63]:ezsat
+ success!
+  Trying to prove $equiv for \rd [64]:ezsat
+ success!
+  Trying to prove $equiv for \rd [65]:ezsat
+ success!
+  Trying to prove $equiv for \rd [66]:ezsat
+ success!
+  Trying to prove $equiv for \rd [67]:ezsat
+ success!
+  Trying to prove $equiv for \rd [68]:ezsat
+ success!
+  Trying to prove $equiv for \rd [69]:ezsat
+ success!
+  Trying to prove $equiv for \rd [70]:ezsat
+ success!
+  Trying to prove $equiv for \rd [71]:ezsat
+ success!
+  Trying to prove $equiv for \rd [72]:ezsat
+ success!
+  Trying to prove $equiv for \rd [73]:ezsat
+ success!
+  Trying to prove $equiv for \rd [74]:ezsat
+ success!
+  Trying to prove $equiv for \rd [75]:ezsat
+ success!
+  Trying to prove $equiv for \rd [76]:ezsat
+ success!
+  Trying to prove $equiv for \rd [77]:ezsat
+ success!
+  Trying to prove $equiv for \rd [78]:ezsat
+ success!
+  Trying to prove $equiv for \rd [79]:ezsat
+ success!
+  Trying to prove $equiv for \rd [80]:ezsat
+ success!
+  Trying to prove $equiv for \rd [81]:ezsat
+ success!
+  Trying to prove $equiv for \rd [82]:ezsat
+ success!
+  Trying to prove $equiv for \rd [83]:ezsat
+ success!
+  Trying to prove $equiv for \rd [84]:ezsat
+ success!
+  Trying to prove $equiv for \rd [85]:ezsat
+ success!
+  Trying to prove $equiv for \rd [86]:ezsat
+ success!
+  Trying to prove $equiv for \rd [87]:ezsat
+ success!
+  Trying to prove $equiv for \rd [88]:ezsat
+ success!
+  Trying to prove $equiv for \rd [89]:ezsat
+ success!
+  Trying to prove $equiv for \rd [90]:ezsat
+ success!
+  Trying to prove $equiv for \rd [91]:ezsat
+ success!
+  Trying to prove $equiv for \rd [92]:ezsat
+ success!
+  Trying to prove $equiv for \rd [93]:ezsat
+ success!
+  Trying to prove $equiv for \rd [94]:ezsat
+ success!
+  Trying to prove $equiv for \rd [95]:ezsat
+ success!
+  Trying to prove $equiv for \rd [96]:ezsat
+ success!
+  Trying to prove $equiv for \rd [97]:ezsat
+ success!
+  Trying to prove $equiv for \rd [98]:ezsat
+ success!
+  Trying to prove $equiv for \rd [99]:ezsat
+ success!
+  Trying to prove $equiv for \rd [100]:ezsat
+ success!
+  Trying to prove $equiv for \rd [101]:ezsat
+ success!
+  Trying to prove $equiv for \rd [102]:ezsat
+ success!
+  Trying to prove $equiv for \rd [103]:ezsat
+ success!
+  Trying to prove $equiv for \rd [104]:ezsat
+ success!
+  Trying to prove $equiv for \rd [105]:ezsat
+ success!
+  Trying to prove $equiv for \rd [106]:ezsat
+ success!
+  Trying to prove $equiv for \rd [107]:ezsat
+ success!
+  Trying to prove $equiv for \rd [108]:ezsat
+ success!
+  Trying to prove $equiv for \rd [109]:ezsat
+ success!
+  Trying to prove $equiv for \rd [110]:ezsat
+ success!
+  Trying to prove $equiv for \rd [111]:ezsat
+ success!
+  Trying to prove $equiv for \rd [112]:ezsat
+ success!
+  Trying to prove $equiv for \rd [113]:ezsat
+ success!
+  Trying to prove $equiv for \rd [114]:ezsat
+ success!
+  Trying to prove $equiv for \rd [115]:ezsat
+ success!
+  Trying to prove $equiv for \rd [116]:ezsat
+ success!
+  Trying to prove $equiv for \rd [117]:ezsat
+ success!
+  Trying to prove $equiv for \rd [118]:ezsat
+ success!
+  Trying to prove $equiv for \rd [119]:ezsat
+ success!
+  Trying to prove $equiv for \rd [120]:ezsat
+ success!
+  Trying to prove $equiv for \rd [121]:ezsat
+ success!
+  Trying to prove $equiv for \rd [122]:ezsat
+ success!
+  Trying to prove $equiv for \rd [123]:ezsat
+ success!
+  Trying to prove $equiv for \rd [124]:ezsat
+ success!
+  Trying to prove $equiv for \rd [125]:ezsat
+ success!
+  Trying to prove $equiv for \rd [126]:ezsat
+ success!
+  Trying to prove $equiv for \rd [127]:ezsat
+ success!
+  Trying to prove $equiv for \rd [128]:ezsat
+ success!
+  Trying to prove $equiv for \rd [129]:ezsat
+ success!
+  Trying to prove $equiv for \rd [130]:ezsat
+ success!
+  Trying to prove $equiv for \rd [131]:ezsat
+ success!
+  Trying to prove $equiv for \rd [132]:ezsat
+ success!
+  Trying to prove $equiv for \rd [133]:ezsat
+ success!
+  Trying to prove $equiv for \rd [134]:ezsat
+ success!
+  Trying to prove $equiv for \rd [135]:ezsat
+ success!
+  Trying to prove $equiv for \rd [136]:ezsat
+ success!
+  Trying to prove $equiv for \rd [137]:ezsat
+ success!
+  Trying to prove $equiv for \rd [138]:ezsat
+ success!
+  Trying to prove $equiv for \rd [139]:ezsat
+ success!
+  Trying to prove $equiv for \rd [140]:ezsat
+ success!
+  Trying to prove $equiv for \rd [141]:ezsat
+ success!
+  Trying to prove $equiv for \rd [142]:ezsat
+ success!
+  Trying to prove $equiv for \rd [143]:ezsat
+ success!
+  Trying to prove $equiv for \rd [144]:ezsat
+ success!
+  Trying to prove $equiv for \rd [145]:ezsat
+ success!
+  Trying to prove $equiv for \rd [146]:ezsat
+ success!
+  Trying to prove $equiv for \rd [147]:ezsat
+ success!
+  Trying to prove $equiv for \rd [148]:ezsat
+ success!
+  Trying to prove $equiv for \rd [149]:ezsat
+ success!
+  Trying to prove $equiv for \rd [150]:ezsat
+ success!
+  Trying to prove $equiv for \rd [151]:ezsat
+ success!
+  Trying to prove $equiv for \rd [152]:ezsat
+ success!
+  Trying to prove $equiv for \rd [153]:ezsat
+ success!
+  Trying to prove $equiv for \rd [154]:ezsat
+ success!
+  Trying to prove $equiv for \rd [155]:ezsat
+ success!
+  Trying to prove $equiv for \rd [156]:ezsat
+ success!
+  Trying to prove $equiv for \rd [157]:ezsat
+ success!
+  Trying to prove $equiv for \rd [158]:ezsat
+ success!
+  Trying to prove $equiv for \rd [159]:ezsat
+ success!
+  Trying to prove $equiv for \rd [160]:ezsat
+ success!
+  Trying to prove $equiv for \rd [161]:ezsat
+ success!
+  Trying to prove $equiv for \rd [162]:ezsat
+ success!
+  Trying to prove $equiv for \rd [163]:ezsat
+ success!
+  Trying to prove $equiv for \rd [164]:ezsat
+ success!
+  Trying to prove $equiv for \rd [165]:ezsat
+ success!
+  Trying to prove $equiv for \rd [166]:ezsat
+ success!
+  Trying to prove $equiv for \rd [167]:ezsat
+ success!
+  Trying to prove $equiv for \rd [168]:ezsat
+ success!
+  Trying to prove $equiv for \rd [169]:ezsat
+ success!
+  Trying to prove $equiv for \rd [170]:ezsat
+ success!
+  Trying to prove $equiv for \rd [171]:ezsat
+ success!
+  Trying to prove $equiv for \rd [172]:ezsat
+ success!
+  Trying to prove $equiv for \rd [173]:ezsat
+ success!
+  Trying to prove $equiv for \rd [174]:ezsat
+ success!
+  Trying to prove $equiv for \rd [175]:ezsat
+ success!
+  Trying to prove $equiv for \rd [176]:ezsat
+ success!
+  Trying to prove $equiv for \rd [177]:ezsat
+ success!
+  Trying to prove $equiv for \rd [178]:ezsat
+ success!
+  Trying to prove $equiv for \rd [179]:ezsat
+ success!
+  Trying to prove $equiv for \rd [180]:ezsat
+ success!
+  Trying to prove $equiv for \rd [181]:ezsat
+ success!
+  Trying to prove $equiv for \rd [182]:ezsat
+ success!
+  Trying to prove $equiv for \rd [183]:ezsat
+ success!
+  Trying to prove $equiv for \rd [184]:ezsat
+ success!
+  Trying to prove $equiv for \rd [185]:ezsat
+ success!
+  Trying to prove $equiv for \rd [186]:ezsat
+ success!
+  Trying to prove $equiv for \rd [187]:ezsat
+ success!
+  Trying to prove $equiv for \rd [188]:ezsat
+ success!
+  Trying to prove $equiv for \rd [189]:ezsat
+ success!
+  Trying to prove $equiv for \rd [190]:ezsat
+ success!
+  Trying to prove $equiv for \rd [191]:ezsat
+ success!
+  Trying to prove $equiv for \rd [192]:ezsat
+ success!
+  Trying to prove $equiv for \rd [193]:ezsat
+ success!
+  Trying to prove $equiv for \rd [194]:ezsat
+ success!
+  Trying to prove $equiv for \rd [195]:ezsat
+ success!
+  Trying to prove $equiv for \rd [196]:ezsat
+ success!
+  Trying to prove $equiv for \rd [197]:ezsat
+ success!
+  Trying to prove $equiv for \rd [198]:ezsat
+ success!
+  Trying to prove $equiv for \rd [199]:ezsat
+ success!
+  Trying to prove $equiv for \rd [200]:ezsat
+ success!
+  Trying to prove $equiv for \rd [201]:ezsat
+ success!
+  Trying to prove $equiv for \rd [202]:ezsat
+ success!
+  Trying to prove $equiv for \rd [203]:ezsat
+ success!
+  Trying to prove $equiv for \rd [204]:ezsat
+ success!
+  Trying to prove $equiv for \rd [205]:ezsat
+ success!
+  Trying to prove $equiv for \rd [206]:ezsat
+ success!
+  Trying to prove $equiv for \rd [207]:ezsat
+ success!
+  Trying to prove $equiv for \rd [208]:ezsat
+ success!
+  Trying to prove $equiv for \rd [209]:ezsat
+ success!
+  Trying to prove $equiv for \rd [210]:ezsat
+ success!
+  Trying to prove $equiv for \rd [211]:ezsat
+ success!
+  Trying to prove $equiv for \rd [212]:ezsat
+ success!
+  Trying to prove $equiv for \rd [213]:ezsat
+ success!
+  Trying to prove $equiv for \rd [214]:ezsat
+ success!
+  Trying to prove $equiv for \rd [215]:ezsat
+ success!
+  Trying to prove $equiv for \rd [216]:ezsat
+ success!
+  Trying to prove $equiv for \rd [217]:ezsat
+ success!
+  Trying to prove $equiv for \rd [218]:ezsat
+ success!
+  Trying to prove $equiv for \rd [219]:ezsat
+ success!
+  Trying to prove $equiv for \rd [220]:ezsat
+ success!
+  Trying to prove $equiv for \rd [221]:ezsat
+ success!
+  Trying to prove $equiv for \rd [222]:ezsat
+ success!
+  Trying to prove $equiv for \rd [223]:ezsat
+ success!
+  Trying to prove $equiv for \rd [224]:ezsat
+ success!
+  Trying to prove $equiv for \rd [225]:ezsat
+ success!
+  Trying to prove $equiv for \rd [226]:ezsat
+ success!
+  Trying to prove $equiv for \rd [227]:ezsat
+ success!
+  Trying to prove $equiv for \rd [228]:ezsat
+ success!
+  Trying to prove $equiv for \rd [229]:ezsat
+ success!
+  Trying to prove $equiv for \rd [230]:ezsat
+ success!
+  Trying to prove $equiv for \rd [231]:ezsat
+ success!
+  Trying to prove $equiv for \rd [232]:ezsat
+ success!
+  Trying to prove $equiv for \rd [233]:ezsat
+ success!
+  Trying to prove $equiv for \rd [234]:ezsat
+ success!
+  Trying to prove $equiv for \rd [235]:ezsat
+ success!
+  Trying to prove $equiv for \rd [236]:ezsat
+ success!
+  Trying to prove $equiv for \rd [237]:ezsat
+ success!
+  Trying to prove $equiv for \rd [238]:ezsat
+ success!
+  Trying to prove $equiv for \rd [239]:ezsat
+ success!
+  Trying to prove $equiv for \rd [240]:ezsat
+ success!
+  Trying to prove $equiv for \rd [241]:ezsat
+ success!
+  Trying to prove $equiv for \rd [242]:ezsat
+ success!
+  Trying to prove $equiv for \rd [243]:ezsat
+ success!
+  Trying to prove $equiv for \rd [244]:ezsat
+ success!
+  Trying to prove $equiv for \rd [245]:ezsat
+ success!
+  Trying to prove $equiv for \rd [246]:ezsat
+ success!
+  Trying to prove $equiv for \rd [247]:ezsat
+ success!
+  Trying to prove $equiv for \rd [248]:ezsat
+ success!
+  Trying to prove $equiv for \rd [249]:ezsat
+ success!
+  Trying to prove $equiv for \rd [250]:ezsat
+ success!
+  Trying to prove $equiv for \rd [251]:ezsat
+ success!
+  Trying to prove $equiv for \rd [252]:ezsat
+ success!
+  Trying to prove $equiv for \rd [253]:ezsat
+ success!
+  Trying to prove $equiv for \rd [254]:ezsat
+ success!
+  Trying to prove $equiv for \rd [255]:ezsat
+ success!
+  Trying to prove $equiv for \rd [256]:ezsat
+ success!
+  Trying to prove $equiv for \rd [257]:ezsat
+ success!
+  Trying to prove $equiv for \rd [258]:ezsat
+ success!
+  Trying to prove $equiv for \rd [259]:ezsat
+ success!
+  Trying to prove $equiv for \rd [260]:ezsat
+ success!
+  Trying to prove $equiv for \rd [261]:ezsat
+ success!
+  Trying to prove $equiv for \rd [262]:ezsat
+ success!
+  Trying to prove $equiv for \rd [263]:ezsat
+ success!
+  Trying to prove $equiv for \rd [264]:ezsat
+ success!
+  Trying to prove $equiv for \rd [265]:ezsat
+ success!
+  Trying to prove $equiv for \rd [266]:ezsat
+ success!
+  Trying to prove $equiv for \rd [267]:ezsat
+ success!
+  Trying to prove $equiv for \rd [268]:ezsat
+ success!
+  Trying to prove $equiv for \rd [269]:ezsat
+ success!
+  Trying to prove $equiv for \rd [270]:ezsat
+ success!
+  Trying to prove $equiv for \rd [271]:ezsat
+ success!
+  Trying to prove $equiv for \rd [272]:ezsat
+ success!
+  Trying to prove $equiv for \rd [273]:ezsat
+ success!
+  Trying to prove $equiv for \rd [274]:ezsat
+ success!
+  Trying to prove $equiv for \rd [275]:ezsat
+ success!
+  Trying to prove $equiv for \rd [276]:ezsat
+ success!
+  Trying to prove $equiv for \rd [277]:ezsat
+ success!
+  Trying to prove $equiv for \rd [278]:ezsat
+ success!
+  Trying to prove $equiv for \rd [279]:ezsat
+ success!
+  Trying to prove $equiv for \rd [280]:ezsat
+ success!
+  Trying to prove $equiv for \rd [281]:ezsat
+ success!
+  Trying to prove $equiv for \rd [282]:ezsat
+ success!
+  Trying to prove $equiv for \rd [283]:ezsat
+ success!
+  Trying to prove $equiv for \rd [284]:ezsat
+ success!
+  Trying to prove $equiv for \rd [285]:ezsat
+ success!
+  Trying to prove $equiv for \rd [286]:ezsat
+ success!
+  Trying to prove $equiv for \rd [287]:ezsat
+ success!
+  Trying to prove $equiv for \rd [288]:ezsat
+ success!
+  Trying to prove $equiv for \rd [289]:ezsat
+ success!
+  Trying to prove $equiv for \rd [290]:ezsat
+ success!
+  Trying to prove $equiv for \rd [291]:ezsat
+ success!
+  Trying to prove $equiv for \rd [292]:ezsat
+ success!
+  Trying to prove $equiv for \rd [293]:ezsat
+ success!
+  Trying to prove $equiv for \rd [294]:ezsat
+ success!
+  Trying to prove $equiv for \rd [295]:ezsat
+ success!
+  Trying to prove $equiv for \rd [296]:ezsat
+ success!
+  Trying to prove $equiv for \rd [297]:ezsat
+ success!
+  Trying to prove $equiv for \rd [298]:ezsat
+ success!
+  Trying to prove $equiv for \rd [299]:ezsat
+ success!
+  Trying to prove $equiv for \rd [300]:ezsat
+ success!
+  Trying to prove $equiv for \rd [301]:ezsat
+ success!
+  Trying to prove $equiv for \rd [302]:ezsat
+ success!
+  Trying to prove $equiv for \rd [303]:ezsat
+ success!
+  Trying to prove $equiv for \rd [304]:ezsat
+ success!
+  Trying to prove $equiv for \rd [305]:ezsat
+ success!
+  Trying to prove $equiv for \rd [306]:ezsat
+ success!
+  Trying to prove $equiv for \rd [307]:ezsat
+ success!
+  Trying to prove $equiv for \rd [308]:ezsat
+ success!
+  Trying to prove $equiv for \rd [309]:ezsat
+ success!
+  Trying to prove $equiv for \rd [310]:ezsat
+ success!
+  Trying to prove $equiv for \rd [311]:ezsat
+ success!
+  Trying to prove $equiv for \rd [312]:ezsat
+ success!
+  Trying to prove $equiv for \rd [313]:ezsat
+ success!
+  Trying to prove $equiv for \rd [314]:ezsat
+ success!
+  Trying to prove $equiv for \rd [315]:ezsat
+ success!
+  Trying to prove $equiv for \rd [316]:ezsat
+ success!
+  Trying to prove $equiv for \rd [317]:ezsat
+ success!
+  Trying to prove $equiv for \rd [318]:ezsat
+ success!
+  Trying to prove $equiv for \rd [319]:ezsat
+ success!
+  Trying to prove $equiv for \rd [320]:ezsat
+ success!
+  Trying to prove $equiv for \rd [321]:ezsat
+ success!
+  Trying to prove $equiv for \rd [322]:ezsat
+ success!
+  Trying to prove $equiv for \rd [323]:ezsat
+ success!
+  Trying to prove $equiv for \rd [324]:ezsat
+ success!
+  Trying to prove $equiv for \rd [325]:ezsat
+ success!
+  Trying to prove $equiv for \rd [326]:ezsat
+ success!
+  Trying to prove $equiv for \rd [327]:ezsat
+ success!
+  Trying to prove $equiv for \rd [328]:ezsat
+ success!
+  Trying to prove $equiv for \rd [329]:ezsat
+ success!
+  Trying to prove $equiv for \rd [330]:ezsat
+ success!
+  Trying to prove $equiv for \rd [331]:ezsat
+ success!
+  Trying to prove $equiv for \rd [332]:ezsat
+ success!
+  Trying to prove $equiv for \rd [333]:ezsat
+ success!
+  Trying to prove $equiv for \rd [334]:ezsat
+ success!
+  Trying to prove $equiv for \rd [335]:ezsat
+ success!
+  Trying to prove $equiv for \rd [336]:ezsat
+ success!
+  Trying to prove $equiv for \rd [337]:ezsat
+ success!
+  Trying to prove $equiv for \rd [338]:ezsat
+ success!
+  Trying to prove $equiv for \rd [339]:ezsat
+ success!
+  Trying to prove $equiv for \rd [340]:ezsat
+ success!
+  Trying to prove $equiv for \rd [341]:ezsat
+ success!
+  Trying to prove $equiv for \rd [342]:ezsat
+ success!
+  Trying to prove $equiv for \rd [343]:ezsat
+ success!
+  Trying to prove $equiv for \rd [344]:ezsat
+ success!
+  Trying to prove $equiv for \rd [345]:ezsat
+ success!
+  Trying to prove $equiv for \rd [346]:ezsat
+ success!
+  Trying to prove $equiv for \rd [347]:ezsat
+ success!
+  Trying to prove $equiv for \rd [348]:ezsat
+ success!
+  Trying to prove $equiv for \rd [349]:ezsat
+ success!
+  Trying to prove $equiv for \rd [350]:ezsat
+ success!
+  Trying to prove $equiv for \rd [351]:ezsat
+ success!
+  Trying to prove $equiv for \rd [352]:ezsat
+ success!
+  Trying to prove $equiv for \rd [353]:ezsat
+ success!
+  Trying to prove $equiv for \rd [354]:ezsat
+ success!
+  Trying to prove $equiv for \rd [355]:ezsat
+ success!
+  Trying to prove $equiv for \rd [356]:ezsat
+ success!
+  Trying to prove $equiv for \rd [357]:ezsat
+ success!
+  Trying to prove $equiv for \rd [358]:ezsat
+ success!
+  Trying to prove $equiv for \rd [359]:ezsat
+ success!
+  Trying to prove $equiv for \rd [360]:ezsat
+ success!
+  Trying to prove $equiv for \rd [361]:ezsat
+ success!
+  Trying to prove $equiv for \rd [362]:ezsat
+ success!
+  Trying to prove $equiv for \rd [363]:ezsat
+ success!
+  Trying to prove $equiv for \rd [364]:ezsat
+ success!
+  Trying to prove $equiv for \rd [365]:ezsat
+ success!
+  Trying to prove $equiv for \rd [366]:ezsat
+ success!
+  Trying to prove $equiv for \rd [367]:ezsat
+ success!
+  Trying to prove $equiv for \rd [368]:ezsat
+ success!
+  Trying to prove $equiv for \rd [369]:ezsat
+ success!
+  Trying to prove $equiv for \rd [370]:ezsat
+ success!
+  Trying to prove $equiv for \rd [371]:ezsat
+ success!
+  Trying to prove $equiv for \rd [372]:ezsat
+ success!
+  Trying to prove $equiv for \rd [373]:ezsat
+ success!
+  Trying to prove $equiv for \rd [374]:ezsat
+ success!
+  Trying to prove $equiv for \rd [375]:ezsat
+ success!
+  Trying to prove $equiv for \rd [376]:ezsat
+ success!
+  Trying to prove $equiv for \rd [377]:ezsat
+ success!
+  Trying to prove $equiv for \rd [378]:ezsat
+ success!
+  Trying to prove $equiv for \rd [379]:ezsat
+ success!
+  Trying to prove $equiv for \rd [380]:ezsat
+ success!
+  Trying to prove $equiv for \rd [381]:ezsat
+ success!
+  Trying to prove $equiv for \rd [382]:ezsat
+ success!
+  Trying to prove $equiv for \rd [383]:ezsat
+ success!
+  Trying to prove $equiv for \rd [384]:ezsat
+ success!
+  Trying to prove $equiv for \rd [385]:ezsat
+ success!
+  Trying to prove $equiv for \rd [386]:ezsat
+ success!
+  Trying to prove $equiv for \rd [387]:ezsat
+ success!
+  Trying to prove $equiv for \rd [388]:ezsat
+ success!
+  Trying to prove $equiv for \rd [389]:ezsat
+ success!
+  Trying to prove $equiv for \rd [390]:ezsat
+ success!
+  Trying to prove $equiv for \rd [391]:ezsat
+ success!
+  Trying to prove $equiv for \rd [392]:ezsat
+ success!
+  Trying to prove $equiv for \rd [393]:ezsat
+ success!
+  Trying to prove $equiv for \rd [394]:ezsat
+ success!
+  Trying to prove $equiv for \rd [395]:ezsat
+ success!
+  Trying to prove $equiv for \rd [396]:ezsat
+ success!
+  Trying to prove $equiv for \rd [397]:ezsat
+ success!
+  Trying to prove $equiv for \rd [398]:ezsat
+ success!
+  Trying to prove $equiv for \rd [399]:ezsat
+ success!
+  Trying to prove $equiv for \rd [400]:ezsat
+ success!
+  Trying to prove $equiv for \rd [401]:ezsat
+ success!
+  Trying to prove $equiv for \rd [402]:ezsat
+ success!
+  Trying to prove $equiv for \rd [403]:ezsat
+ success!
+  Trying to prove $equiv for \rd [404]:ezsat
+ success!
+  Trying to prove $equiv for \rd [405]:ezsat
+ success!
+  Trying to prove $equiv for \rd [406]:ezsat
+ success!
+  Trying to prove $equiv for \rd [407]:ezsat
+ success!
+  Trying to prove $equiv for \rd [408]:ezsat
+ success!
+  Trying to prove $equiv for \rd [409]:ezsat
+ success!
+  Trying to prove $equiv for \rd [410]:ezsat
+ success!
+  Trying to prove $equiv for \rd [411]:ezsat
+ success!
+  Trying to prove $equiv for \rd [412]:ezsat
+ success!
+  Trying to prove $equiv for \rd [413]:ezsat
+ success!
+  Trying to prove $equiv for \rd [414]:ezsat
+ success!
+  Trying to prove $equiv for \rd [415]:ezsat
+ success!
+  Trying to prove $equiv for \rd [416]:ezsat
+ success!
+  Trying to prove $equiv for \rd [417]:ezsat
+ success!
+  Trying to prove $equiv for \rd [418]:ezsat
+ success!
+  Trying to prove $equiv for \rd [419]:ezsat
+ success!
+  Trying to prove $equiv for \rd [420]:ezsat
+ success!
+  Trying to prove $equiv for \rd [421]:ezsat
+ success!
+  Trying to prove $equiv for \rd [422]:ezsat
+ success!
+  Trying to prove $equiv for \rd [423]:ezsat
+ success!
+  Trying to prove $equiv for \rd [424]:ezsat
+ success!
+  Trying to prove $equiv for \rd [425]:ezsat
+ success!
+  Trying to prove $equiv for \rd [426]:ezsat
+ success!
+  Trying to prove $equiv for \rd [427]:ezsat
+ success!
+  Trying to prove $equiv for \rd [428]:ezsat
+ success!
+  Trying to prove $equiv for \rd [429]:ezsat
+ success!
+  Trying to prove $equiv for \rd [430]:ezsat
+ success!
+  Trying to prove $equiv for \rd [431]:ezsat
+ success!
+  Trying to prove $equiv for \rd [432]:ezsat
+ success!
+  Trying to prove $equiv for \rd [433]:ezsat
+ success!
+  Trying to prove $equiv for \rd [434]:ezsat
+ success!
+  Trying to prove $equiv for \rd [435]:ezsat
+ success!
+  Trying to prove $equiv for \rd [436]:ezsat
+ success!
+  Trying to prove $equiv for \rd [437]:ezsat
+ success!
+  Trying to prove $equiv for \rd [438]:ezsat
+ success!
+  Trying to prove $equiv for \rd [439]:ezsat
+ success!
+  Trying to prove $equiv for \rd [440]:ezsat
+ success!
+  Trying to prove $equiv for \rd [441]:ezsat
+ success!
+  Trying to prove $equiv for \rd [442]:ezsat
+ success!
+  Trying to prove $equiv for \rd [443]:ezsat
+ success!
+  Trying to prove $equiv for \rd [444]:ezsat
+ success!
+  Trying to prove $equiv for \rd [445]:ezsat
+ success!
+  Trying to prove $equiv for \rd [446]:ezsat
+ success!
+  Trying to prove $equiv for \rd [447]:ezsat
+ success!
+  Trying to prove $equiv for \rd [448]:ezsat
+ success!
+  Trying to prove $equiv for \rd [449]:ezsat
+ success!
+  Trying to prove $equiv for \rd [450]:ezsat
+ success!
+  Trying to prove $equiv for \rd [451]:ezsat
+ success!
+  Trying to prove $equiv for \rd [452]:ezsat
+ success!
+  Trying to prove $equiv for \rd [453]:ezsat
+ success!
+  Trying to prove $equiv for \rd [454]:ezsat
+ success!
+  Trying to prove $equiv for \rd [455]:ezsat
+ success!
+  Trying to prove $equiv for \rd [456]:ezsat
+ success!
+  Trying to prove $equiv for \rd [457]:ezsat
+ success!
+  Trying to prove $equiv for \rd [458]:ezsat
+ success!
+  Trying to prove $equiv for \rd [459]:ezsat
+ success!
+  Trying to prove $equiv for \rd [460]:ezsat
+ success!
+  Trying to prove $equiv for \rd [461]:ezsat
+ success!
+  Trying to prove $equiv for \rd [462]:ezsat
+ success!
+  Trying to prove $equiv for \rd [463]:ezsat
+ success!
+  Trying to prove $equiv for \rd [464]:ezsat
+ success!
+  Trying to prove $equiv for \rd [465]:ezsat
+ success!
+  Trying to prove $equiv for \rd [466]:ezsat
+ success!
+  Trying to prove $equiv for \rd [467]:ezsat
+ success!
+  Trying to prove $equiv for \rd [468]:ezsat
+ success!
+  Trying to prove $equiv for \rd [469]:ezsat
+ success!
+  Trying to prove $equiv for \rd [470]:ezsat
+ success!
+  Trying to prove $equiv for \rd [471]:ezsat
+ success!
+  Trying to prove $equiv for \rd [472]:ezsat
+ success!
+  Trying to prove $equiv for \rd [473]:ezsat
+ success!
+  Trying to prove $equiv for \rd [474]:ezsat
+ success!
+  Trying to prove $equiv for \rd [475]:ezsat
+ success!
+  Trying to prove $equiv for \rd [476]:ezsat
+ success!
+  Trying to prove $equiv for \rd [477]:ezsat
+ success!
+  Trying to prove $equiv for \rd [478]:ezsat
+ success!
+  Trying to prove $equiv for \rd [479]:ezsat
+ success!
+  Trying to prove $equiv for \rd [480]:ezsat
+ success!
+  Trying to prove $equiv for \rd [481]:ezsat
+ success!
+  Trying to prove $equiv for \rd [482]:ezsat
+ success!
+  Trying to prove $equiv for \rd [483]:ezsat
+ success!
+  Trying to prove $equiv for \rd [484]:ezsat
+ success!
+  Trying to prove $equiv for \rd [485]:ezsat
+ success!
+  Trying to prove $equiv for \rd [486]:ezsat
+ success!
+  Trying to prove $equiv for \rd [487]:ezsat
+ success!
+  Trying to prove $equiv for \rd [488]:ezsat
+ success!
+  Trying to prove $equiv for \rd [489]:ezsat
+ success!
+  Trying to prove $equiv for \rd [490]:ezsat
+ success!
+  Trying to prove $equiv for \rd [491]:ezsat
+ success!
+  Trying to prove $equiv for \rd [492]:ezsat
+ success!
+  Trying to prove $equiv for \rd [493]:ezsat
+ success!
+  Trying to prove $equiv for \rd [494]:ezsat
+ success!
+  Trying to prove $equiv for \rd [495]:ezsat
+ success!
+  Trying to prove $equiv for \rd [496]:ezsat
+ success!
+  Trying to prove $equiv for \rd [497]:ezsat
+ success!
+  Trying to prove $equiv for \rd [498]:ezsat
+ success!
+  Trying to prove $equiv for \rd [499]:ezsat
+ success!
+  Trying to prove $equiv for \rd [500]:ezsat
+ success!
+  Trying to prove $equiv for \rd [501]:ezsat
+ success!
+  Trying to prove $equiv for \rd [502]:ezsat
+ success!
+  Trying to prove $equiv for \rd [503]:ezsat
+ success!
+  Trying to prove $equiv for \rd [504]:ezsat
+ success!
+  Trying to prove $equiv for \rd [505]:ezsat
+ success!
+  Trying to prove $equiv for \rd [506]:ezsat
+ success!
+  Trying to prove $equiv for \rd [507]:ezsat
+ success!
+  Trying to prove $equiv for \rd [508]:ezsat
+ success!
+  Trying to prove $equiv for \rd [509]:ezsat
+ success!
+  Trying to prove $equiv for \rd [510]:ezsat
+ success!
+  Trying to prove $equiv for \rd [511]:ezsat
+ success!
+  Trying to prove $equiv for \rd [512]:ezsat
+ success!
+  Trying to prove $equiv for \rd [513]:ezsat
+ success!
+  Trying to prove $equiv for \rd [514]:ezsat
+ success!
+  Trying to prove $equiv for \rd [515]:ezsat
+ success!
+  Trying to prove $equiv for \rd [516]:ezsat
+ success!
+  Trying to prove $equiv for \rd [517]:ezsat
+ success!
+  Trying to prove $equiv for \rd [518]:ezsat
+ success!
+  Trying to prove $equiv for \rd [519]:ezsat
+ success!
+  Trying to prove $equiv for \rd [520]:ezsat
+ success!
+  Trying to prove $equiv for \rd [521]:ezsat
+ success!
+  Trying to prove $equiv for \rd [522]:ezsat
+ success!
+  Trying to prove $equiv for \rd [523]:ezsat
+ success!
+  Trying to prove $equiv for \rd [524]:ezsat
+ success!
+  Trying to prove $equiv for \rd [525]:ezsat
+ success!
+  Trying to prove $equiv for \rd [526]:ezsat
+ success!
+  Trying to prove $equiv for \rd [527]:ezsat
+ success!
+ Grouping SAT models for \returns:
+  Trying to prove $equiv for \returns [0]:ezsat
+ success!
+  Trying to prove $equiv for \returns [1]:ezsat
+ success!
+  Trying to prove $equiv for \returns [2]:ezsat
+ success!
+  Trying to prove $equiv for \returns [3]:ezsat
+ success!
+  Trying to prove $equiv for \returns [4]:ezsat
+ success!
+  Trying to prove $equiv for \returns [5]:ezsat
+ success!
+  Trying to prove $equiv for \returns [6]:ezsat
+ success!
+  Trying to prove $equiv for \is_program:ezsat
+ success!
+  Trying to prove $equiv for \pop:ezsat
+ success!
+ Grouping SAT models for \op:
+  Trying to prove $equiv for \op [0]:ezsat
+ success!
+  Trying to prove $equiv for \op [1]:ezsat
+ success!
+  Trying to prove $equiv for \op [2]:ezsat
+ success!
+  Trying to prove $equiv for \op [3]:ezsat
+ success!
+  Trying to prove $equiv for \op [4]:ezsat
+ success!
+  Trying to prove $equiv for \op [5]:ezsat
+ success!
+  Trying to prove $equiv for \op [6]:ezsat
+ success!
+  Trying to prove $equiv for \op [7]:ezsat
+ success!
+  Trying to prove $equiv for \emit:ezsat
+ success!
+ Grouping SAT models for \next_returns:
+  Trying to prove $equiv for \next_returns [0]:ezsat
+ success!
+  Trying to prove $equiv for \next_returns [1]:ezsat
+ success!
+  Trying to prove $equiv for \next_returns [2]:ezsat
+ success!
+  Trying to prove $equiv for \next_returns [3]:ezsat
+ success!
+  Trying to prove $equiv for \next_returns [4]:ezsat
+ success!
+  Trying to prove $equiv for \next_returns [5]:ezsat
+ success!
+  Trying to prove $equiv for \next_returns [6]:ezsat
+ success!
+  Trying to prove $equiv for \next_returns [7]:ezsat
+ success!
+  Trying to prove $equiv for \p1_v:ezsat
+ success!
+ Grouping SAT models for \p1_d:
+  Trying to prove $equiv for \p1_d [0]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [1]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [2]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [3]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [4]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [5]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [6]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [7]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [8]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [9]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [10]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [11]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [12]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [13]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [14]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [15]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [16]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [17]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [18]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [19]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [20]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [21]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [22]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [23]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [24]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [25]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [26]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [27]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [28]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [29]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [30]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [31]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [32]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [33]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [34]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [35]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [36]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [37]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [38]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [39]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [40]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [41]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [42]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [43]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [44]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [45]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [46]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [47]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [48]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [49]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [50]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [51]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [52]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [53]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [54]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [55]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [56]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [57]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [58]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [59]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [60]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [61]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [62]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [63]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [64]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [65]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [66]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [67]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [68]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [69]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [70]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [71]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [72]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [73]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [74]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [75]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [76]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [77]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [78]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [79]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [80]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [81]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [82]:ezsat
+ success!
+  Trying to prove $equiv for \p1_d [83]:ezsat
+ success!
+  Trying to prove $equiv for \p2_v:ezsat
+ success!
+ Grouping SAT models for \p2_op:
+  Trying to prove $equiv for \p2_op [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \p2_op [1]:ezsat
+ success!
+  Trying to prove $equiv for \p2_op [2]:ezsat
+ success!
+  Trying to prove $equiv for \p2_op [3]:ezsat
+ success!
+  Trying to prove $equiv for \p2_op [4]:ezsat
+ success!
+  Trying to prove $equiv for \p2_op [5]:ezsat
+ success!
+  Trying to prove $equiv for \p2_op [6]:ezsat
+ success!
+  Trying to prove $equiv for \p2_op [7]:ezsat
+ success!
+ Grouping SAT models for \p2_d:
+  Trying to prove $equiv for \p2_d [0]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [1]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [2]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [3]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [4]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [5]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [6]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [7]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [8]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [9]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [10]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [11]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [12]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [13]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [14]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [15]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [16]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [17]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [18]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [19]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [20]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [21]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [22]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [23]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [24]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [25]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [26]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [27]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [28]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [29]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [30]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [31]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [32]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [33]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [34]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [35]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [36]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [37]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [38]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [39]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [40]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [41]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [42]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [43]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [44]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [45]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [46]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [47]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [48]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [49]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [50]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [51]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [52]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [53]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [54]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [55]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [56]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [57]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [58]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [59]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [60]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [61]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [62]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [63]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [64]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [65]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [66]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [67]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [68]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [69]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [70]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [71]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [72]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [73]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [74]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [75]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [76]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [77]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [78]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [79]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [80]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [81]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [82]:ezsat
+ success!
+  Trying to prove $equiv for \p2_d [83]:ezsat
+ success!
+Proved 1269 previously unproven $equiv cells.
+
+9. Executing EQUIV_INDUCT pass.
+Found 194 unproven $equiv cells in module equiv:
+  Proving existence of base case for step 1. (29216 clauses over 11925 variables)
+  Proving induction step 1. (93703 clauses over 36408 variables)
+  Proof for induction step failed. Extending to next time step.
+  Proving existence of base case for step 2. (93704 clauses over 36408 variables)
+  Proving induction step 2. (158191 clauses over 60883 variables)
+  Proof for induction step failed. Extending to next time step.
+  Proving existence of base case for step 3. (158192 clauses over 60883 variables)
+  Proving induction step 3. (222679 clauses over 85358 variables)
+  Proof for induction step holds. Entire workset of 194 cells proven!
+Proved 194 previously unproven $equiv cells.
+
+10. Executing EQUIV_STATUS pass.
+Found 1463 $equiv cells in equiv:
+  Of those cells 1463 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 45a340bc31, time: 3.80s, user: 3.76s, system: 0.05s, MEM: 78.37 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 77% 1x equiv_simple (2 sec), 20% 1x equiv_induct (0 sec), ...

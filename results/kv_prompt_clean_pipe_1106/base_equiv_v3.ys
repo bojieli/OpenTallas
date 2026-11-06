@@ -1,0 +1,9 @@
+read_verilog -sv /srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/proof/reference.sv /srv/opentallas-scratch2/claude/codex-kv-prompt-pipe/repo/rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target_cp.sv
+proc
+opt
+async2sync
+equiv_make reference qkd_host_program_rx_target_cp equiv
+hierarchy -top equiv
+equiv_simple -seq 4
+equiv_induct -seq 4
+equiv_status -assert
