@@ -1,0 +1,58 @@
+
+-- Running command `read_verilog -sv primitive.sv miter.sv; hierarchy -top miter; setattr -mod -unset keep_hierarchy; flatten; opt_clean; select -module miter; sat -verify -prove eq 1 -show-inputs -show-outputs' --
+
+1. Executing Verilog-2005 frontend: primitive.sv
+Parsing SystemVerilog input from `primitive.sv' to AST representation.
+Generating RTLIL representation for module `\ot_link_credit_rx_b64_pop'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: miter.sv
+Parsing SystemVerilog input from `miter.sv' to AST representation.
+Generating RTLIL representation for module `\miter'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \ot_link_credit_rx_b64_pop
+
+3.2. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \ot_link_credit_rx_b64_pop
+Removed 0 unused modules.
+
+4. Executing FLATTEN pass (flatten design).
+Deleting now unused module ot_link_credit_rx_b64_pop.
+<suppressed ~2 debug messages>
+
+5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+6. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 8 cells to SAT database.
+Import proof-constraint: \eq = 1'1
+Final proof equation: \eq = 1'1
+Import show expression: \b
+Import show expression: \a
+Import show expression: \eq
+
+Solving problem with 38 variables and 94 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+

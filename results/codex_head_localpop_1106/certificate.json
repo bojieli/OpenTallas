@@ -1,0 +1,19 @@
+{
+ "source": "rtl/common/ot_link_credit_rx_b64.sv",
+ "primitive_literal_sha256": "c5ee9602be0f28a0b7bb8c7383da6363f9c5330331edc7121bb30e20797e07fc",
+ "fifo_source_sha256": "52076e97161fe616ea5f892f5bf9859a329b3ef753e7801a574e63e44e7e7b2d",
+ "wrapper_reference_sha256": "47b0d96ec8e42a4113e59b18469d7b3ee5bb82561e92d07f1c9458cbeb66449b",
+ "wrapper_inverse_byte_identity": true,
+ "changed_binding": {
+  "old": ".LOCAL_POP(CORE_CRED==12)",
+  "new": ".LOCAL_POP((CORE_CRED==12)||(RBL!=0))"
+ },
+ "default_RBL0_unchanged": true,
+ "added_data_cycles": 0,
+ "added_reset_cycles": 0,
+ "added_ports": 0,
+ "proof": "PASS exhaustive combinational formal miter of actual literal helper two-copy outputs vs old shared AND, all two-state inputs",
+ "mutant": "actual helper AND->OR",
+ "mutant_result": "FAIL as required; AND->OR counterexample a=0,b=1",
+ "proof_preprocess": "remove physical keep_hierarchy attribute for logical flattening only; source unchanged"
+}
