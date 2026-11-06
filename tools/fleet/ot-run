@@ -211,11 +211,11 @@ def probe(host, d, spill_ok=False):
 # keeps ROOT_SCRATCH_FLOOR_GB free on the root fs: its usable free = root fs free - that floor.  Other root-fs roots
 # (/srv/opentallas-scratch on the scratch-disk hosts) stay excluded (v13).  Reaper, PROTECTED-DBS and .keep rules
 # cover the path like every /srv/opentallas-scratch* root.
-# ROOTSCR-INTEL 11-05 (OWNER 18:5x + 19:00: every root disk and every other disk on every host is scratch; intel1/intel2
-# roots keep >= 150 GB free, epyc2/epyc4 keep 500): ON by default (owner 11-04 put scratch3 in the release SCAN_ROOTS);
-# OT_RUN_ROOT_SCRATCH_ROOTS= (empty) turns it off.  The root floor is per host: ROOT_SCRATCH_FLOOR_GB_HOSTS
-# (OT_RUN_ROOT_SCRATCH_FLOOR_GB_HOSTS="host=GB,..."; intel2 is "localhost" here), other hosts ROOT_SCRATCH_FLOOR_GB.
-ROOT_SCRATCH_ROOTS = tuple(x for x in os.environ.get("OT_RUN_ROOT_SCRATCH_ROOTS", "/srv/opentallas-scratch3").split(",") if x)
+# MOUNT-TARGET 11-06: scratch3 binds were advertised as usable scratch even when
+# they shared /. Root scratch now requires an explicit existing owner exception:
+# OT_RUN_ROOT_SCRATCH_ROOTS lists only those authorized roots. The default is empty.
+# Existing per-host floors still apply to explicitly authorized roots.
+ROOT_SCRATCH_ROOTS = tuple(x for x in os.environ.get("OT_RUN_ROOT_SCRATCH_ROOTS", "").split(",") if x)
 ROOT_SCRATCH_FLOOR_GB = int(os.environ.get("OT_RUN_ROOT_SCRATCH_FLOOR_GB", "500"))
 ROOT_SCRATCH_FLOOR_GB_HOSTS = {k.strip(): int(v) for k, _, v in (x.partition("=") for x in os.environ.get(
     "OT_RUN_ROOT_SCRATCH_FLOOR_GB_HOSTS", "intel1=150,intel2=150,localhost=150,epyc5=100,epyc6=100").split(",")) if k.strip() and v.strip()}
@@ -226,8 +226,8 @@ def root_floor(host=None):
     return ROOT_SCRATCH_FLOOR_GB_HOSTS.get(host, ROOT_SCRATCH_FLOOR_GB)
 
 SCRATCH_PIN = os.path.normpath(os.environ["OT_RUN_SCRATCH_ROOT"]) if os.environ.get("OT_RUN_SCRATCH_ROOT") else ""
-SCRATCH_ROOTS = ("/srv/opentallas-scratch", "/srv/opentallas-scratch2") + tuple(
-    r for r in ROOT_SCRATCH_ROOTS if r not in ("/srv/opentallas-scratch", "/srv/opentallas-scratch2"))
+SCRATCH_ROOTS = ("/srv/opentallas-scratch", "/srv/opentallas-scratch2", "/srv/opentallas-scratch3") + tuple(
+    r for r in ROOT_SCRATCH_ROOTS if r not in ("/srv/opentallas-scratch", "/srv/opentallas-scratch2", "/srv/opentallas-scratch3"))
 SCRATCH_FREE_SH = ("rd=$(stat -c %d /); for r in " + " ".join(SCRATCH_ROOTS) + "; do test -d $r/claude && "
                    "echo OT_SCRATCH_FREE $r $(df -BG --output=avail $r/claude/ | tail -1 | tr -dc 0-9) "
                    "$([ \"$(stat -L -c %d $r/claude)\" = \"$rd\" ] && echo 1 || echo 0); "
@@ -291,15 +291,33 @@ def scratch_disk(row, d, out, host=None):
                                          and second[sr] >= SCRATCH_SECOND_FLOOR_GB)):
             extra.update(scratch_disk=sr, scratch_disk_gb=second[sr], scratch_second=True, root_floor_gb=rfl)
             roots = {sr: second[sr]}                          # new run dirs go to the second root
+    # Status measures the best eligible filesystem. A concrete --dir measures its
+    # own device: output redirection is optional and cannot justify admission.
     row = dict(row, **extra)
-    if not (scratch2_on() and d and SCRATCH_RE.match(os.path.normpath(d))):
+    eligible = dict(disk_roots)
+    if extra.get("scratch_second"):
+        eligible = {extra["scratch_disk"]: extra["scratch_disk_gb"]}
+    if not d:
+        if eligible:
+            best = max(eligible, key=eligible.get)
+            return dict(row, disk_gb=eligible[best], disk_dev=devs.get(best))
+        if roots or onroot or extra.get("dir_onroot"):
+            row["disk_refusal"] = "no dedicated scratch filesystem or explicitly authorized root scratch"
         return row
     own = row["disk_gb"]
-    if "scratch_disk" in row and (row.get("dir_onroot") or max(roots.values()) > own):
-        # new run dirs go to the disk, never the root fs
-        return dict(row, disk_own_gb=own, disk_gb=max(roots.values()), disk_dev=devs.get(max(roots, key=roots.get)))
-    if roots and own >= SCRATCH_OWN_FLOOR_GB and max(roots.values()) > own:
-        row = dict(row, disk_own_gb=own, disk_gb=max(roots.values()), disk_dev=devs.get(max(roots, key=roots.get)))
+    row["disk_own_gb"] = own
+    if row.get("dir_onroot"):
+        authorized = next((r for r in second if os.path.normpath(d) == r or os.path.normpath(d).startswith(r + "/")), None)
+        if not authorized:
+            row["disk_refusal"] = "--dir is on the ROOT filesystem without an explicit root scratch exception"
+            return row
+        usable = min(own, second[authorized])
+        return dict(row, disk_gb=usable, scratch_disk=authorized,
+                    scratch_disk_gb=usable, scratch_second=True, root_floor_gb=rfl)
+    # Match device, including symlinked paths, rather than guessing from path names.
+    matching = [r for r in disk_roots if devs.get(r) and devs[r] == row.get("disk_dev")]
+    if matching:
+        row.update(scratch_disk=matching[0], scratch_disk_gb=own, scratch_second=False)
     return row
 
 
@@ -308,6 +326,8 @@ def host_refusal(row):
     separate scratch disk below SCRATCH_DISK_FLOOR_GB (the root fs is never the fallback).  Rows of older probes: ''."""
     if not isinstance(row, dict):
         return ""
+    if row.get("disk_refusal"):
+        return row["disk_refusal"]
     pct = row.get("rootfs_pct")
     lim = ROOTFS_MAX_PCT_SCRATCH if row.get("scratch_disk") else ROOTFS_MAX_PCT
     if row.get("scratch_second") and row.get("scratch_disk_gb", 0) < SCRATCH_SECOND_FLOOR_GB:
@@ -880,18 +900,32 @@ def scratch_env(host=None):
                + str(root_floor(host)) + ")); };; esac; echo $o $f $r; done | "
                "awk -v fl=" + str(SCRATCH_DISK_FLOOR_GB) + " -v sfl=" + str(SCRATCH_SECOND_FLOOR_GB) + " -v pin=" + shlex.quote(SCRATCH_PIN or "-") + " "
                "'{o[NR]=$1; f[NR]=$2; r[NR]=$3; if ($1==0) {d=1; if ($2>bd) bd=$2} if ($1==2 && $2>bs) {bs=$2; bsr=$3} "
-               "if ($3==pin && ($1!=2 || $2>=sfl)) pr=$3} "
+               "if ($3==pin && ($1==0 || ($1==2 && $2>=sfl))) pr=$3} "
                "END {if (pr!=\"\") {print 0, pr; exit} if (d && bd<fl && bs>=sfl) {print 0, bsr; exit} "
-               "for (i=1; i<=NR; i++) if (o[i]!=2 && (!d || o[i]==0)) print f[i], r[i]}' "
+               "for (i=1; i<=NR; i++) if (o[i]==0) print f[i], r[i]}' "
                "| sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; ")
 
 
 SCRATCH_ENV = scratch_env()
 # v13 DISK GUARD on the job host (the client checked the probe; this re-checks at submission, so a stale probe or an
 # old client cannot start work on a full root fs, nor on a scratch-disk host whose disk is below its floor).
-def disk_guard_sh(tag, host=None):
+def disk_guard_sh(tag, host=None, d=None):
     sec, rfl = " ".join(ROOT_SCRATCH_ROOTS), root_floor(host)
-    return (f"p=$(df --output=pcent / | tail -1 | tr -dc 0-9); lim={ROOTFS_MAX_PCT}; sd0=$(stat -L -c %d \"$OT_SCRATCH/claude\" 2>/dev/null) && [ \"$sd0\" != \"$(stat -c %d /)\" ] && lim={ROOTFS_MAX_PCT_SCRATCH}; "
+    work = shlex.quote(d) if d else '"$PWD"'
+    return (f"rd=$(stat -c %d /); for q in {work} \"$OT_SCRATCH/claude\"; do "
+            f"qd=$(stat -L -c %d \"$q\" 2>/dev/null) || {{ echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; }}; "
+            f"if [ \"$qd\" = \"$rd\" ]; then allowed=0; "
+            f"for ar in {sec}; do case \"$q\" in \"$ar\"|\"$ar\"/*) allowed=1;; esac; done; "
+            f"if [ $allowed = 0 ]; then echo \"ot-run: ROOT filesystem working/output directory refused: $q\" >&2; "
+            f"echo OT_RUN_ROOTDIR {tag} >&2; exit 97; fi; "
+            f"qfree=$(df -BG --output=avail \"$q\" | tail -1 | tr -dc 0-9); "
+            f"if [ $(( ${{qfree:-0}} - {rfl} )) -lt {SCRATCH_SECOND_FLOOR_GB} ]; then "
+            f"echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; fi; "
+            f"else qfree=$(df -BG --output=avail \"$q\" | tail -1 | tr -dc 0-9); "
+            f"if [ \"${{qfree:-0}}\" -lt {SCRATCH_DISK_FLOOR_GB} ]; then "
+            f"echo \"ot-run: actual working/output filesystem $q has $qfree GB below floor\" >&2; "
+            f"echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; fi; fi; done; "
+            f"p=$(df --output=pcent / | tail -1 | tr -dc 0-9); lim={ROOTFS_MAX_PCT}; sd0=$(stat -L -c %d \"$OT_SCRATCH/claude\" 2>/dev/null) && [ \"$sd0\" != \"$(stat -c %d /)\" ] && lim={ROOTFS_MAX_PCT_SCRATCH}; "
             # ROOTSCR_1101: OT_SCRATCH = a second root on the root fs: keep ROOT_SCRATCH_FLOOR_GB free on the root fs
             f"case ' {sec} ' in *\" $OT_SCRATCH \"*) lim={ROOTFS_MAX_PCT_SCRATCH}; f=$(df -BG --output=avail / | tail -1 | tr -dc 0-9); "
             f"if [ $(( ${{f:-0}} - {rfl} )) -lt {SCRATCH_SECOND_FLOOR_GB} ]; then "
@@ -1105,7 +1139,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     # Recheck before output placement: never recreate an input directory that
     # disappeared after the probe and then launch in an empty source tree.
     workdir_guard = (f"test -d {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "")
-    remote = scratch_env(host) + disk_guard_sh(tag, host) + workdir_guard + scratch_place_sh(d, cmd, tag=tag, host=host) \
+    remote = scratch_env(host) + disk_guard_sh(tag, host, d) + workdir_guard + scratch_place_sh(d, cmd, tag=tag, host=host) \
         + (f"cd {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "") \
         + inner + f'; rc=$?; echo "OT_RUN_EXIT {tag} $rc" >&2; exit $rc'
     p = subprocess.Popen(["ssh", "-o", "ServerAliveInterval=30", "-o", "ServerAliveCountMax=6", host, remote], stderr=subprocess.PIPE)
@@ -1147,8 +1181,8 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
         if "OT_RUN_NOCD" in ln and tag in ln:
             state["nocd"] = True
             continue
-        if tag in ln and ("OT_RUN_ROOTFULL" in ln or "OT_RUN_SCRATCHLOW" in ln):     # v13 DISK GUARD on the host
-            state["refused"] = ("root fs above %d%% (DISK GUARD)" % ROOTFS_MAX_PCT if "ROOTFULL" in ln
+        if tag in ln and ("OT_RUN_ROOTFULL" in ln or "OT_RUN_ROOTDIR" in ln or "OT_RUN_SCRATCHLOW" in ln):     # v13 DISK GUARD on the host
+            state["refused"] = ("actual working/output directory is on the ROOT filesystem without an exception" if "ROOTDIR" in ln else "root fs above %d%% (DISK GUARD)" % ROOTFS_MAX_PCT if "ROOTFULL" in ln
                                 else "scratch disk below its floor / new run dir could not be placed on it (root fs never used)")
             continue
         if not state["started"] and any(k in ln for k in SSH_CONNFAIL):

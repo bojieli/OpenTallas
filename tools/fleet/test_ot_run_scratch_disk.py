@@ -39,14 +39,14 @@ MD0 = 'OT_SCRATCH_FREE /srv/opentallas-scratch 6500 1\nOT_ROOTFS 6 6500\nOT_DIR_
 
 class ProbeRows(unittest.TestCase):
     def test_separate_disk_counts_only_the_disk_even_when_root_is_emptier(self):
-        row = m.scratch_disk({'disk_gb': 3000}, '/srv/opentallas-scratch/claude/lane/run', EPYC2)
+        row = m.scratch_disk({'disk_gb': 3000}, None, EPYC2)
         self.assertEqual(row['disk_gb'], 835)
         self.assertEqual(row['scratch_disk'], '/srv/opentallas-scratch2')
         self.assertEqual(m.host_refusal(row), '')
 
     def test_scratch_disk_below_floor_refuses_host_no_root_fallback(self):
         out = EPYC2.replace('scratch2 835', 'scratch2 %d' % (m.SCRATCH_DISK_FLOOR_GB - 1))
-        row = m.scratch_disk({'disk_gb': 3000}, '/srv/opentallas-scratch/claude/lane/run', out)
+        row = m.scratch_disk({'disk_gb': 3000}, None, out)
         self.assertLess(row['disk_gb'], 3000)
         self.assertIn('floor', m.host_refusal(row))
 
@@ -63,11 +63,11 @@ class ProbeRows(unittest.TestCase):
         self.assertEqual(row.get('scratch_disk_gb'), 30)
         self.assertIn('floor', m.host_refusal(row))
 
-    def test_md0_host_keeps_root_scratch(self):
+    def test_md0_host_requires_root_exception(self):
         row = m.scratch_disk({'disk_gb': 6500}, '/srv/opentallas-scratch/claude/lane/run', MD0)
         self.assertNotIn('scratch_disk', row)
         self.assertEqual(row['disk_gb'], 6500)
-        self.assertEqual(m.host_refusal(row), '')
+        self.assertIn('ROOT filesystem', m.host_refusal(row))
 
     def test_old_probe_rows_are_not_refused(self):
         self.assertEqual(m.host_refusal({'disk_gb': 100, 'free_gb': 10}), '')
@@ -139,7 +139,7 @@ class RemoteShell(unittest.TestCase):
         self.assertEqual((r.returncode, r.stdout.strip()), (0, 'ADMITTED'), r.stderr)
 
     def test_run_reports_refusal_as_not_run(self):
-        env = fake_bin(self.base, {}, {}, 90)
+        env = fake_bin(self.base, {os.getcwd(): 1}, {}, 90)
         real_popen = subprocess.Popen
 
         def popen(args, **kw):
