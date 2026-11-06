@@ -1,0 +1,38 @@
+{
+ "schema": "opentallas.split_proof.v1",
+ "lane": "HBM-FORM-TIMING-10",
+ "date": "2026-11-06",
+ "gold": {
+  "file": "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_core.sv",
+  "sha256": "3d5d43ce0a2cc5292f91e592542f223d954397745c05653fb2dadddf9e2d42a3",
+  "top": "ot_hgi_sfu_split3_ctl_core"
+ },
+ "pieces": {
+  "rest": {
+   "file": "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_rest_core.sv",
+   "top": "ot_hgi_sfu_split3_ctl_rest_core",
+   "sha256": "f523cfc00bec7a48664915519730772c8fa5d106ff9153718ce5895dc2ea1dbd"
+  },
+  "pipe": {
+   "file": "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_pipe_core.sv",
+   "top": "ot_hgi_sfu_split3_ctl_pipe_core",
+   "sha256": "9ae0f66330373521688e779ab7dce506922cf32cd27b3c9a229d222b4ce7ef3e"
+  }
+ },
+ "cut": "pipe = every $adff whose D bits are all driven by FF Q and whose Q bits load only FF D (no port, no logic): vm bridge delay lines meta[0..77] x4 groups (44b), write_expected[1..75] x4 (2b), scalar_addr_pipe[0..77] (96b); 690 cells, 21816 of 33440 FF bits. Both faces registered by construction, 0 cycles changed.",
+ "seam": {
+  "rest_to_pipe": 280,
+  "pipe_to_rest": 280,
+  "rst_vm_n": "rest u_rst.relay_q[0][0] (bridge region reset) -> pipe",
+  "clocks": "clk, clk_lg[3:0]; resets rst_lg_n[3:0] from parent"
+ },
+ "bench": {
+  "tool": "iverilog lock-step, all 23 outputs compared every cycle, random inputs, reset pulses rst_lg_n@300 rst_n@500",
+  "cycles": 800,
+  "errors": 0,
+  "mutants": {
+   "swap 2 seam_q bits": "38 mismatches (caught)"
+  }
+ },
+ "formal": "yosys equiv_make/async2sync/equiv_struct/equiv_simple/equiv_induct running (eq3.ys); result posted separately"
+}

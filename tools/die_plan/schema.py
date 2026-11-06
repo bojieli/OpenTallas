@@ -1153,7 +1153,9 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["data_inputs"] = {
     "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
         "required": ["port", "max_ps", "min_ps", "evidence"], "properties": {
-            "port": _name, "max_ps": {"type": "number"}, "min_ps": {"type": "number"}, "evidence": _name}}}
+            "port": _name, "max_ps": {"type": "number"}, "min_ps": {"type": "number"}, "evidence": _name,
+            # DIE-HEAD-74 11-06: optional same-edge eye capture (capture tree near one pad period).
+            "capture": {"enum": ["same_edge"]}, "eye_hold_extra_ps": {"type": "number", "exclusiveMinimum": 0}}}}
 # Output pad data uses the real exported PHY clock, retaining explicit budgets.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["data_outputs"] = {
     "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,

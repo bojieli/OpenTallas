@@ -1,0 +1,6 @@
+read_verilog -sv /w/gen/ctl_rest_core.v /w/gen/ctl_pipe_core.v /w/mut/ctl_compose_mut.v
+hierarchy -top ot_hgi_sfu_split3_ctl_core
+proc
+flatten
+opt_clean
+write_json /w/mut/gate_flat.json
