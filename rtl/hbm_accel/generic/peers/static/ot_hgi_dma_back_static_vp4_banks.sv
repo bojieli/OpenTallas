@@ -8,7 +8,8 @@
 module ot_hgi_dma_back_static_vp4_banks #(
     parameter [35:0] STACK_BYTES=36'd22500000000,
     parameter integer MUT=0, // 1 wrong destination sector; 2 premature source retire; 3 strap ignored (bench only)
-    parameter integer RR_RT=7 // VM read round trip at the controller pins (see the controller header)
+    parameter integer RR_RT=7, // VM read round trip at the controller pins (see the controller header)
+    parameter integer LOCAL_CTRL=0 // opt-in same-edge command predicate copies; no added cycle
 )(
     input wire clk,rst_n,
     // stack identity strap (H-HARDEN 2026-10-15, DEDUPE: ONE controller/cluster master for all four stacks; replaces
@@ -42,9 +43,10 @@ module ot_hgi_dma_back_static_vp4_banks #(
     // OT_DBK_HARD (hb_dbk wires-only cluster route): the controller is a hard view, instantiated without overrides
     // (its defaults ARE the hardened configuration); simulation keeps the bench MUT/STACK_BYTES pass-through.
 `ifdef OT_DBK_HARD
+    if(LOCAL_CTRL!=0)begin:G_BAD_LOCAL_CTRL $error("LOCAL_CTRL requires a newly qualified soft controller");end
     ot_hgi_dma_back_static_vp4_controller u_control(
 `else
-    ot_hgi_dma_back_static_vp4_controller #(.STACK_BYTES(STACK_BYTES),.MUT(MUT),.RR_RT(RR_RT)) u_control(
+    ot_hgi_dma_back_static_vp4_controller #(.STACK_BYTES(STACK_BYTES),.MUT(MUT),.RR_RT(RR_RT),.LOCAL_CTRL(LOCAL_CTRL)) u_control(
 `endif
         .clk(clk),
         .rst_n(rst_n),
@@ -97,7 +99,8 @@ module ot_hgi_dma_back_static_vp4_controller #(
     // far after issue_rel: tools/hbm_die_v16/d4g_bank_latency.py dma_min_drain_lag). Default 7 = today's closed
     // behaviour (ot_vms_bank_static wired directly: samples rq one edge after launch, registered answer n+6).
     // d4g budget: 80 (GEN2c lanes 33..58, worst-case landing E 72; GEN2d headroom), see lanes/HBM-BANKLAT-DMA.md.
-    parameter integer RR_RT=7
+    parameter integer RR_RT=7,
+    parameter integer LOCAL_CTRL=0 // opt-in same-edge command predicate copies; no added cycle
 )(
     input wire clk,rst_n,
     input wire [1:0] stk,   // stack identity strap: die constant per instance (stack = HBM queue id)
@@ -298,6 +301,35 @@ module ot_hgi_dma_back_static_vp4_controller #(
     wire drain_slot=busy&&!cv&&drain_index<chunks&&m_drain;
     wire valid_move=c_static_ok&&c_vok&&c_nchunk_ok&&c_hok&&c_ilead_ok&&c_lag_ok;
     wire reload=cv&&valid_move;
+    // Each command chunk receives its own copy of the existing C-cohort flags
+    // and CV on their original edges. Payload and absolute issue/drain dates do
+    // not change. The default branch elaborates no additional state.
+    wire [16:0] chunk_cv,chunk_valid,chunk_reload;
+    wire [18:0] local_vend=b_vbase_end+19'(b_vprod[16:0]);
+    wire [40:0] local_hend=b_hbase_end+b_hprod;
+    generate for(genvar g=0;g<17;g=g+1)begin:G_COMMAND_CTRL
+        if(LOCAL_CTRL!=0)begin:G_LOCAL
+            (* keep = "true" *) reg [5:0] flags;
+            (* keep = "true" *) reg valid_q;
+            always @(posedge clk)begin
+                flags[0]<=b_static_ok&&b_mv[44:22]==0&&b_vprod[40:17]==0;
+                flags[1]<=(b_mv[44:5]<65536&&41'(local_vend)<=65536)||(b_mv[44:5]>=65536&&41'(local_vend)<=98304);
+                flags[2]<=b_nchunk>0&&b_nchunk<=128;
+                flags[3]<=local_hend[40:37]==0&&local_hend[36:35]==stk_q&&{1'b0,local_hend[34:0]}<=STACK_BYTES;
+                flags[4]<=$signed(b_ci_m2-cycle_q)>=1;
+                flags[5]<=$signed(b_cd-b_ci)>=RR_RT+3;
+            end
+            always @(posedge clk or negedge local_rst_n)
+                if(!local_rst_n)valid_q<=0;else valid_q<=b_v;
+            assign chunk_cv[g]=valid_q;
+            assign chunk_valid[g]=&flags;
+        end else begin:G_LEGACY
+            assign chunk_cv[g]=cv;
+            assign chunk_valid[g]=valid_move;
+        end
+        assign chunk_reload[g]=chunk_cv[g]&&chunk_valid[g];
+    end endgenerate
+
     reg [7:0] issue_mask;
     reg [15:0] issue_sec;
     always @* begin
@@ -340,16 +372,15 @@ module ot_hgi_dma_back_static_vp4_controller #(
         for(integer b=0;b<8;b=b+1) rq_payload[b]<={issue_sec[15:3],3'(b)};
         wb_ready_q<=wb_ready;
         // match registers: value of each absolute-cycle comparison at the next edge
-        m_issue<=issue_slot?1'b1:reload?c_ihit:(cycle_q==ni_m2);
-        m_drain<=drain_slot?1'b1:reload?c_dhit:(cycle_q==nd_m2);
-        m_pre<=drain_slot?1'b0:reload?c_phit:(cycle_q==nd_m3);
-        m_fill<=reload?c_fhit:(cycle_q==fa_m2);
-        m_end<=reload?c_ehit:(cycle_q==ea_m2);
-        if(reload)begin ni_m2<=c_ci_m2;nd_m2<=c_cd_m2;nd_m3<=c_cd_m3;fa_m2<=c_cd_m1;ea_m2<=c_end_m2;end
-        else begin
-            if(issue_slot)ni_m2<=inc32(ni_m2);
-            if(drain_slot)begin nd_m2<=inc32(nd_m2);nd_m3<=inc32(nd_m3);end
-        end
+        m_issue<=issue_slot?1'b1:chunk_reload[0]?c_ihit:(cycle_q==ni_m2);
+        m_drain<=drain_slot?1'b1:chunk_reload[0]?c_dhit:(cycle_q==nd_m2);
+        m_pre<=drain_slot?1'b0:chunk_reload[0]?c_phit:(cycle_q==nd_m3);
+        m_fill<=chunk_reload[0]?c_fhit:(cycle_q==fa_m2);
+        m_end<=chunk_reload[0]?c_ehit:(cycle_q==ea_m2);
+        if(chunk_reload[1])ni_m2<=c_ci_m2;else if(issue_slot)ni_m2<=inc32(ni_m2);
+        if(chunk_reload[2])nd_m2<=c_cd_m2;else if(drain_slot)nd_m2<=inc32(nd_m2);
+        if(chunk_reload[3])nd_m3<=c_cd_m3;else if(drain_slot)nd_m3<=inc32(nd_m3);
+        if(chunk_reload[4])begin fa_m2<=c_cd_m1;ea_m2<=c_end_m2;end
     end
     always @(posedge clk or negedge local_rst_n) begin:CONTROL
         integer nland;
@@ -409,19 +440,54 @@ module ot_hgi_dma_back_static_vp4_controller #(
             if(wa_valid_q&&32'(wa_q)>ack_base_q)mv_fault<=1;
             quiet<=!busy&&!cv&&!b_v&&observed_pending_zero;
             if(dirty&&!busy&&!cv&&!b_v&&observed_pending_zero)begin mv_done<=1;dirty<=0;end
-            if(cv)begin
-                if(!valid_move)mv_fault<=1;
-                else begin
-                    busy<=1;dirty<=1;src_sent<=0;
-                    issue_index<=0;drain_index<=0;column<=0;chunks<=8'(c_nchunk);row_chunks<=c_rchunk;
-                    row_sectors<=18'(cm[226:209]);land_left<=20'(c_total);
-                    row_vm<=cm[21:5];chunk_vm<=cm[21:5];vm_stride<=cm[76:45];
-                    row_hbm<=cm[134:98];chunk_hbm<=cm[134:98];hbm_stride<=cm[169:138];
-                    drain_row_hbm<=cm[134:98];drain_chunk_hbm<=cm[134:98];drain_column<=0;
-                    pending_sectors<=add_total_sub_ack(pending_sectors,32'(c_total),32'(wa_q));
-                    wb_reserve_bank<=cb;wb_fill_bank<=cb;wb_reserve_epoch<=ce;wb_fill_epoch<=ce;
-                    wb_reserve_v<=1;wb_reserve_sectors<=12'(c_total);wb_reserve_base<=cm[134:103];
-                end
+            if(cv)if(!valid_move)mv_fault<=1;
+            if(chunk_cv[5])begin
+                if(!chunk_valid[5])begin end
+                else begin busy<=1;dirty<=1;src_sent<=0;issue_index<=0;drain_index<=0;column<=0; end
+            end
+            if(chunk_cv[6])begin
+                if(!chunk_valid[6])begin end
+                else begin chunks<=8'(c_nchunk);row_chunks<=c_rchunk;row_sectors<=18'(cm[226:209]);land_left<=20'(c_total); end
+            end
+            if(chunk_cv[7])begin
+                if(!chunk_valid[7])begin end
+                else begin row_vm<=cm[21:5];chunk_vm<=cm[21:5]; end
+            end
+            if(chunk_cv[8])begin
+                if(!chunk_valid[8])begin end
+                else begin vm_stride<=cm[76:45]; end
+            end
+            if(chunk_cv[9])begin
+                if(!chunk_valid[9])begin end
+                else begin row_hbm<=cm[134:98]; end
+            end
+            if(chunk_cv[10])begin
+                if(!chunk_valid[10])begin end
+                else begin chunk_hbm<=cm[134:98]; end
+            end
+            if(chunk_cv[11])begin
+                if(!chunk_valid[11])begin end
+                else begin hbm_stride<=cm[169:138]; end
+            end
+            if(chunk_cv[12])begin
+                if(!chunk_valid[12])begin end
+                else begin drain_row_hbm<=cm[134:98]; end
+            end
+            if(chunk_cv[13])begin
+                if(!chunk_valid[13])begin end
+                else begin drain_chunk_hbm<=cm[134:98];drain_column<=0; end
+            end
+            if(chunk_cv[14])begin
+                if(!chunk_valid[14])begin end
+                else begin pending_sectors<=add_total_sub_ack(pending_sectors,32'(c_total),32'(wa_q)); end
+            end
+            if(chunk_cv[15])begin
+                if(!chunk_valid[15])begin end
+                else begin wb_reserve_bank<=cb;wb_fill_bank<=cb;wb_reserve_epoch<=ce;wb_fill_epoch<=ce; end
+            end
+            if(chunk_cv[16])begin
+                if(!chunk_valid[16])begin end
+                else begin wb_reserve_v<=1;wb_reserve_sectors<=12'(c_total);wb_reserve_base<=cm[134:103]; end
             end
         end
     end
