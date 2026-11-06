@@ -1,0 +1,86 @@
+{
+ "actual_clock_roots": 206,
+ "soft_FF_clock_loads": 155270,
+ "hard_core_clock_loads": 20,
+ "mixed_roots": [
+  {
+   "root": "clk_t58",
+   "FF": 178,
+   "cores": 2
+  },
+  {
+   "root": "clk_t8",
+   "FF": 318,
+   "cores": 1
+  },
+  {
+   "root": "clk_t71",
+   "FF": 634,
+   "cores": 1
+  },
+  {
+   "root": "clk_t107",
+   "FF": 29,
+   "cores": 2
+  },
+  {
+   "root": "clk_t110",
+   "FF": 272,
+   "cores": 1
+  },
+  {
+   "root": "clk_t98",
+   "FF": 1199,
+   "cores": 1
+  },
+  {
+   "root": "clk_t62",
+   "FF": 11,
+   "cores": 2
+  },
+  {
+   "root": "clk_t115",
+   "FF": 119,
+   "cores": 1
+  },
+  {
+   "root": "clk_t63",
+   "FF": 427,
+   "cores": 1
+  },
+  {
+   "root": "clk_t31",
+   "FF": 103,
+   "cores": 2
+  },
+  {
+   "root": "clk_t130",
+   "FF": 360,
+   "cores": 1
+  },
+  {
+   "root": "clk_t108",
+   "FF": 51,
+   "cores": 1
+  },
+  {
+   "root": "clk_t121",
+   "FF": 1199,
+   "cores": 1
+  },
+  {
+   "root": "clk_t24",
+   "FF": 304,
+   "cores": 2
+  },
+  {
+   "root": "clk_t9",
+   "FF": 312,
+   "cores": 1
+  }
+ ],
+ "retained_ff_wns_ps": -360.25,
+ "replayed_ff_wns_ps": -360.25,
+ "placement_estimate_only": true,
+ "production_qualified": false
+}
