@@ -1708189,10 +1708189,11 @@
        "kind": "ctl",
        "layer": "M7",
        "xy_um": [
-        1861.888,
+        1424.304,
         2.656
        ],
-       "epoch": false
+       "epoch": false,
+       "note": "KV-SYSSD-2 11-06: status/forwarded-clock pair to the parent collector pc_[EW]N_0 cland_dn_*_1 (type x 1038-1043): die hop 389 um <= 405; source-synchronous with its forwarded clock"
       },
       {
        "name": "cland_up_fault",
@@ -1708200,10 +1708201,11 @@
        "kind": "ctl",
        "layer": "M7",
        "xy_um": [
-        1864.064,
+        1426.464,
         2.656
        ],
-       "epoch": false
+       "epoch": false,
+       "note": "KV-SYSSD-2 11-06: status/forwarded-clock pair to the parent collector pc_[EW]N_0 cland_dn_*_1 (type x 1038-1043): die hop 389 um <= 405; source-synchronous with its forwarded clock"
       },
       {
        "name": "fclk_out_cland_up",
@@ -1708211,12 +1708213,13 @@
        "kind": "clock",
        "layer": "M7",
        "xy_um": [
-        1859.712,
+        1422.144,
         2.656
        ],
        "epoch": false,
-       "source_clock_port": "clk_t3",
-       "source_clock_tap": "clk_t3"
+       "source_clock_port": "clk_t1",
+       "source_clock_tap": "clk_t1",
+       "note": "KV-SYSSD-2 11-06: status/forwarded-clock pair to the parent collector pc_[EW]N_0 cland_dn_*_1 (type x 1038-1043): die hop 389 um <= 405; source-synchronous with its forwarded clock"
       },
       {
        "name": "cland_tstart_in",
@@ -1708983,10 +1708986,11 @@
        "kind": "ctl",
        "layer": "M7",
        "xy_um": [
-        1861.888,
+        1424.304,
         2.656
        ],
-       "epoch": false
+       "epoch": false,
+       "note": "KV-SYSSD-2 11-06: status/forwarded-clock pair to the parent collector pc_[EW]N_0 cland_dn_*_1 (type x 1038-1043): die hop 389 um <= 405; source-synchronous with its forwarded clock"
       },
       {
        "name": "cland_up_fault",
@@ -1708994,10 +1708998,11 @@
        "kind": "ctl",
        "layer": "M7",
        "xy_um": [
-        1864.064,
+        1426.464,
         2.656
        ],
-       "epoch": false
+       "epoch": false,
+       "note": "KV-SYSSD-2 11-06: status/forwarded-clock pair to the parent collector pc_[EW]N_0 cland_dn_*_1 (type x 1038-1043): die hop 389 um <= 405; source-synchronous with its forwarded clock"
       },
       {
        "name": "fclk_out_cland_up",
@@ -1709005,12 +1709010,13 @@
        "kind": "clock",
        "layer": "M7",
        "xy_um": [
-        1859.712,
+        1422.144,
         2.656
        ],
        "epoch": false,
-       "source_clock_port": "clk_t3",
-       "source_clock_tap": "clk_t3"
+       "source_clock_port": "clk_t1",
+       "source_clock_tap": "clk_t1",
+       "note": "KV-SYSSD-2 11-06: status/forwarded-clock pair to the parent collector pc_[EW]N_0 cland_dn_*_1 (type x 1038-1043): die hop 389 um <= 405; source-synchronous with its forwarded clock"
       },
       {
        "name": "cland_tstart_in",
