@@ -98,7 +98,8 @@ ORPHAN_IDLE_S = 3 * 3600
 CHAIN_VERSION = 2
 MAX_SUBMIT_PER_TICK = int(os.environ.get("AP_MAX_SUBMIT", "12"))
 MAX_NOTRUN = 3                                          # 'NOT RUN' (never admitted) resubmits
-KIT_RE = re.compile(r"^([A-Za-z0-9_.-]+):(/srv/opentallas-scratch2?/claude/[A-Za-z0-9_./+=-]+)$")
+# DIE-S81-70 11-06: any numbered scratch root (owner 11-05: every disk is scratch; kw21 wave lives on epyc5 scratch3).
+KIT_RE = re.compile(r"^([A-Za-z0-9_.-]+):(/srv/opentallas-scratch[0-9]*/claude/[A-Za-z0-9_./+=-]+)$")
 SRC_RE = re.compile(r"^[A-Za-z0-9_./-]+@[0-9a-f]{7,40}$")
 GEOM_OK = ("PASS", "PASS-COND")
 QCOLS = ["die", "type", "kit", "src", "geom", "geom_ref", "mem_gb", "cells", "lane", "goal", "runner", "threads", "mode", "canary_fix",
@@ -295,7 +296,7 @@ def validate_row(r):
     if not r["die"] or not r["type"]:
         return "die/type missing"
     if not KIT_RE.match(r["kit"]) or ".." in r["kit"]:
-        return "kit must be HOST:/srv/opentallas-scratch{,2}/claude/<lane>/... (absolute, no ..)"
+        return "kit must be HOST:/srv/opentallas-scratch[N]/claude/<lane>/... (absolute, no ..)"
     if not SRC_RE.match(r["src"]):
         return "src must be branch@sha"
     try:
