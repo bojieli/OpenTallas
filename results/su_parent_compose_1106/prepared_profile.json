@@ -1,0 +1,1925 @@
+{
+  "status": "SOURCE_PREPARATION_ONLY",
+  "physical_child_substitution": false,
+  "source": "/srv/opentallas-scratch2/claude/hbm-bind-6/tip2/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv",
+  "source_sha256": "5261416d1b0fa2402c55d11450e1f3534eba238cc71b3ab4674fccfc364dd039",
+  "compose": "/srv/opentallas-scratch2/claude/hbm-bind-6/tip2/physical/die_plan/hbm/bind/d44v/inputs/compose_t9.json",
+  "compose_sha256": "cdb89fb996ffd0663f44435db134f5a361d006519836b99468f9f838bfa25509",
+  "changes": [
+    {
+      "instance": "su_NW0.__cut_lane_exp0",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lane_exp1",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lane_exp2",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lane_exp3",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lane_exp4",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lane_exp5",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lane_exp6",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lane_exp7",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lane_exp8",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lane_exp9",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lane_exp10",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lane_exp11",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lane_exp12",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lane_exp13",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lane_exp14",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lane_exp_l",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lanes_plain0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lanes_plain4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lanes_plain8_11",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW0.__cut_lanes_plain12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp0",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp1",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp2",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp3",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp4",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp5",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp6",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp7",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp8",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp9",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp10",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp11",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp12",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp13",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp14",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lane_exp_l",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lanes_plain0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lanes_plain4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lanes_plain8_11",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW1.__cut_lanes_plain12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW2.__cut_lanes0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW2.__cut_lanes4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW2.__cut_lanes8_11",
+      "native_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+      "module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW2.__cut_lanes12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW2.__cut_lanes16_19",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW2.__cut_lanes20_23",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW2.__cut_lanes24_27",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW2.__cut_lanes28_31",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW3.__cut_lanes0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW3.__cut_lanes4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW3.__cut_lanes8_11",
+      "native_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+      "module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW3.__cut_lanes12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW3.__cut_lanes16_19",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW3.__cut_lanes20_23",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW3.__cut_lanes24_27",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NW3.__cut_lanes28_31",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp0",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp1",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp2",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp3",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp4",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp5",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp6",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp7",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp8",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp9",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp10",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp11",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp12",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp13",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp14",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lane_exp_l",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lanes_plain0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lanes_plain4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lanes_plain8_11",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE0.__cut_lanes_plain12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp0",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp1",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp2",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp3",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp4",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp5",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp6",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp7",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp8",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp9",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp10",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp11",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp12",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp13",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp14",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lane_exp_l",
+      "native_module": "ot_hnx_su_exp__rst3",
+      "module": "ot_hnx_su_exp__rst3__p17_boundary",
+      "before_bits": 192,
+      "after_bits": 160,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          24,
+          18
+        ],
+        "lane_kv_waddr": [
+          24,
+          18
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lanes_plain0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lanes_plain4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lanes_plain8_11",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE1.__cut_lanes_plain12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE2.__cut_lanes0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE2.__cut_lanes4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE2.__cut_lanes8_11",
+      "native_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+      "module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE2.__cut_lanes12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE2.__cut_lanes16_19",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE2.__cut_lanes20_23",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE2.__cut_lanes24_27",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE2.__cut_lanes28_31",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE3.__cut_lanes0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE3.__cut_lanes4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE3.__cut_lanes8_11",
+      "native_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+      "module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE3.__cut_lanes12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE3.__cut_lanes16_19",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE3.__cut_lanes20_23",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE3.__cut_lanes24_27",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    },
+    {
+      "instance": "su_NE3.__cut_lanes28_31",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "module": "ot_hnx_su_plain4__lid9_rst3__p17_boundary",
+      "before_bits": 768,
+      "after_bits": 640,
+      "write_addresses": {
+        "lane_vm_waddr": [
+          96,
+          72
+        ],
+        "lane_kv_waddr": [
+          96,
+          72
+        ]
+      }
+    }
+  ],
+  "added_cycles": 0,
+  "retained_native_local_feedback": "bank read word4 to paired lane vi_q",
+  "controller_words": [
+    0,
+    1,
+    2,
+    3,
+    5
+  ],
+  "write_address_observation": "Bank row bits17:16/13:7 and id checks15:14/6:0 only; upper bits23:18 remain unobserved native outputs",
+  "next": "Reelaborate this explicit source/compose cohort before signed child composition; do not route this preparation artifact."
+}
