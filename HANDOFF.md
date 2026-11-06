@@ -3201,3 +3201,8 @@ CODEX: 2026-11-05 23:48 PST MERGE: reset-family, two reviewed S81 tap moves, tok
 CODEX: 2026-11-05 23:49 PST HBM-VMS: filled missing f512rp vB with structural native CTS +46.152um SRAM corridors, unchanged RTL0cycles;9b9965eac3f form/review pushed, build epyc2 client2498969.
 
 CODEX: 2026-11-05 23:52 PST MERGE: SVGR RF1 source landed1db3eb88fa7(HBM-38 conditional); HEAD l48ui snapshot +dormant bank128 WFACE +bounded KV FIFO declarations landed a9afc0fdd8b, tags x/v/s/x/ae; PHY successor not included. No physical closure claims.
+CODEX: 2026-11-05 23:54 PST HEAD: final START face class469737b340 merged; n4 FREG l48ui b9a85de13c adopted(+1data, K+2), proof+mutantPASS, physicalcanariesepyc4/6; bounded real-view565bit A/B seamtrialepyc2 running.
+
+CODEX: 2026-11-05 23:55 PST HBM GAPS: recovered unmerged TXconstantheader fix; SVGRRF1 exactsource+4positive/7mutants integrated8fd8754bf13 -> main1db3eb88fa7, freshA/B and TXp35 reviewed/queued; lane1p/QCOL4/RX routedECOs live; qout portpad claim diagnosed/genericfixownedwave_flow; WBQtrue-safe split proof+mapped-sizing underway.
+
+CODEX: 2026-11-05 23:58 PST MERGE: KV PHY3resetstations landedc63e950d550(tag t-kv), +3bootonly; latest norm publication model248->261 landed7eff5fd60d2, no physicalchange/tag.
