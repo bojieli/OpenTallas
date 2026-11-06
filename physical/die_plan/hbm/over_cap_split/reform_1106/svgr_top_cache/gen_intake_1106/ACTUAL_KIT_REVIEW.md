@@ -13,3 +13,5 @@ Mapped sizing is running in a separate copy under normal ot-run admission: intel
 `physical_AB_proposal.json`: A keeps the actual reviewed GEN geometry. B proposes only cache2 y169.98->157.98 and desc_hi y139.98->195.036, using the same grid phase, source, outer pins/clock and face stages. That removes their shared y interval and leaves13.896um between desc_hi and programme_lo. B is a proposed geometry, not a generated or routed result. First obtain HBM/root source/CM/PG adoption, generate and inspect B's actual kit image, then compare physical A/B under the unchanged833ps TT/FF policy. No physical run is launched here.
 
 Fetched canonical main efbdb61c3b5 does not contain the optional `ot_svgr_cache136_native.sv` source. The source remains on codex/hbm-svgr-top-1106; no main activation or merge was requested/performed during this review.
+
+Opened the explicitly labelled proposed_B_kit.png as well: the two changed SRAMs no longer share a y interval; all nine M4 pin grids remain legal, halos stay disjoint, and descriptor_hi retains13.896um clearance to programme_lo. This is still a proposed B layout, not an actual B GEN or physical result.
