@@ -1,0 +1,21 @@
+{
+  "ot_hbm_idx_topk_link_static__ev74_pd3_fillcols8": {
+    "defines": [],
+    "params": {
+      "FILL_GROUPS": 8
+    },
+    "util": 0.45,
+    "source": "Default-off zero-edge fill-column replication; original PD3 writer/output calendar preserved. Exact real-ingest lockstep304cycles +bitflip/stale-edge mutants PASS. Same canonical keep-regs hook required; mapped97304std/11622.447um2 with24distinct local FF drivers. Physical qualification remains pending.",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_link_pd3.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_tiles.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
+    ],
+    "top": "ot_hbm_idx_topk_link_pd3",
+    "macros": [
+      "ot_sram_1r1w_64x512_m1_r2c2"
+    ],
+    "source_commit": "d07bf283590",
+    "read_at_commit": true
+  }
+}
