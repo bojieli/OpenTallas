@@ -811,7 +811,10 @@ SCHEMA = {
                                        # Exact lower-left FF banks, payload then epoch; one bank per regs_um.
                                        "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},
                                        "bit_site_cell_um": _xy,
-                                       "face_bit_sites_um": {"type": "array", "items": _xy}}}},
+                                       "face_bit_sites_um": {"type": "array", "items": _xy},
+                                       # Selected native bound width of a narrowed input bus (bind_component.py reads it
+                                       # to accept a proven dead-input narrowing); metadata only, no generator effect.
+                                       "native_width": {"type": "integer", "minimum": 1}}}},
                     "channels": {"type": "array", "items": {
                         "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
                         "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},
