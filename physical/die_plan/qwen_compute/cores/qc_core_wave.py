@@ -248,6 +248,34 @@ def coll_fold_recipe(e, out, plan=None):
     return rec
 
 
+def sle_ctl_input_share_patch(repo=REPO):
+    """Coalesce only identical no-reset input captures. Every C/D must match;
+    after one edge each removed Q equals its retained Q, with zero added cycles.
+    The immutable production source remains unchanged; patch the child kit only.
+    """
+    rel = "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv"
+    text = (repo / rel).read_text()
+    groups = ((2, (21189, 21190, 21191, 21192)), (124, (20790, 20791, 20792)),
+              (0, (20827, 20828, 21188)), (67, (20882, 20883, 21203)),
+              (2176, (20959, 20960)), (2671, (20999,)))
+    edits = []
+    def capture(i):
+        hits = re.findall(r"(?m)^.*qfd_bmath_dff_p #\(\.ID\(0\)\) u_" + str(i) +
+                          r"\(\.C\(([^()]*)\),\.D\(([^()]*)\),\.Q\(([^()]*)\)\);$", text)
+        if len(hits) != 1:
+            raise ValueError(f"sle_ctl input share: expected one no-reset capture u_{i}, got {len(hits)}")
+        return hits[0]
+    for keeper, copies in groups:
+        c, d, q = capture(keeper)
+        for i in copies:
+            cc, dd, qq = capture(i)
+            if (cc, dd) != (c, d):
+                raise ValueError(f"sle_ctl input share u_{i}: clock/data differ from u_{keeper}")
+            old = next(x for x in text.splitlines() if re.search(r" u_" + str(i) + r"\(", x))
+            edits.append([old, f"assign {qq} = {q}; // same C/D input capture as u_{keeper}; 0 cycles"])
+    return {"file": rel, "why": "QC ctl child: one pin capture per data input; identical no-reset C/D copies coalesced, 0 cycles", "edits": edits}
+
+
 def sle_ctl_recipe(e, out, plan=None):
     """QC-SLECTL-B 11-05: u_ctl of sle_ctl (HARD=1 production shape, 42.7k cells): one clock ck, rst_n (bound net
     rst_n, reset_net), no macros, util 0.45, M5 ceiling (the sc_leaf / coll_fold conservative form)."""
@@ -258,7 +286,7 @@ def sle_ctl_recipe(e, out, plan=None):
     sd.mkdir(parents=True, exist_ok=True)
     (sd / "spec.json").write_text(json.dumps(spec, indent=1) + "\n")
     rec = dict(ref_tile=str(sd), plan_pins_contract=True, suffix="h" + e["view"].split("@")[1][:6], util=0.45,
-               max_layer="M5", insertion_balance=False,
+               max_layer="M5", insertion_balance=False, rtl_patch=[sle_ctl_input_share_patch()],
                _why=f"qc_core_wave sle_ctl view {e['view']} (QC-SLECTL-B): plan pin table {e['pins_file']}")
     ins = plan_core_tap_insertion(plan, m) if plan else None
     if ins:
