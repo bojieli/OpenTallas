@@ -1,0 +1,91 @@
+KV-ING-1 r3 vB bench 2026-11-05 19:30 PST intel1 /srv/opentallas-scratch2/claude/kving1/bench (bench_all.sh)
+seeds: 48/48 PASS (pm 0 mix, 1 QKV, 2 stream, 3 descriptor bursts; 12 seeds each)
+full rate QKV: SIM cycles=8202 consumed=2323/2323 writes=2160/2160 dones=23/23 last_w=8104/8136 mismatches=0
+mutants: 36/37 DETECTED; m_ihv SURVIVE = equivalent (s_fill holds qp_busy from the first beat until fset_r, which follows ih_v)
+
+pm0 s1 SIM cycles=21337 consumed=2349/2349 writes=3072/3072 dones=22/22 last_w=8545/21270 mismatches=0 PASS 
+pm0 s2 SIM cycles=21311 consumed=2593/2593 writes=2920/2920 dones=28/28 last_w=8275/21245 mismatches=0 PASS 
+pm0 s3 SIM cycles=20213 consumed=1701/1701 writes=2641/2641 dones=26/26 last_w=5830/20148 mismatches=0 PASS 
+pm0 s4 SIM cycles=20568 consumed=2072/2072 writes=2541/2541 dones=25/25 last_w=7971/20488 mismatches=0 PASS 
+pm0 s5 SIM cycles=16897 consumed=1773/1773 writes=2193/2193 dones=25/25 last_w=5810/16700 mismatches=0 PASS 
+pm0 s6 SIM cycles=21392 consumed=2375/2375 writes=2895/2895 dones=20/20 last_w=7578/21080 mismatches=0 PASS 
+pm0 s7 SIM cycles=29758 consumed=2419/2419 writes=4055/4055 dones=22/22 last_w=8495/29691 mismatches=0 PASS 
+pm0 s8 SIM cycles=14285 consumed=1534/1534 writes=2012/2012 dones=21/21 last_w=6211/14207 mismatches=0 PASS 
+pm0 s9 SIM cycles=20461 consumed=2056/2056 writes=2611/2611 dones=28/28 last_w=7103/20394 mismatches=0 PASS 
+pm0 s10 SIM cycles=20447 consumed=2018/2018 writes=2921/2921 dones=21/21 last_w=6555/20377 mismatches=0 PASS 
+pm0 s11 SIM cycles=18897 consumed=2112/2112 writes=2572/2572 dones=22/22 last_w=7847/18800 mismatches=0 PASS 
+pm0 s12 SIM cycles=17639 consumed=2398/2398 writes=2533/2533 dones=29/29 last_w=7462/17572 mismatches=0 PASS 
+pm1 s1 SIM cycles=11841 consumed=2323/2323 writes=2160/2160 dones=23/23 last_w=8813/11775 mismatches=0 PASS 
+pm1 s2 SIM cycles=11163 consumed=1986/1986 writes=2016/2016 dones=22/22 last_w=8529/11097 mismatches=0 PASS 
+pm1 s3 SIM cycles=11800 consumed=2535/2535 writes=2288/2288 dones=24/24 last_w=9025/11734 mismatches=0 PASS 
+pm1 s4 SIM cycles=11942 consumed=1908/1908 writes=2120/2120 dones=24/24 last_w=8869/11876 mismatches=0 PASS 
+pm1 s5 SIM cycles=11539 consumed=2299/2299 writes=2032/2032 dones=24/24 last_w=8792/11473 mismatches=0 PASS 
+pm1 s6 SIM cycles=11108 consumed=2133/2133 writes=2136/2136 dones=21/21 last_w=7825/11042 mismatches=0 PASS 
+pm1 s7 SIM cycles=12119 consumed=2135/2135 writes=2024/2024 dones=26/26 last_w=9271/12054 mismatches=0 PASS 
+pm1 s8 SIM cycles=11764 consumed=2185/2185 writes=2040/2040 dones=18/18 last_w=8899/11686 mismatches=0 PASS 
+pm1 s9 SIM cycles=9986 consumed=1282/1282 writes=1576/1576 dones=20/20 last_w=8271/9921 mismatches=0 PASS 
+pm1 s10 SIM cycles=11783 consumed=2277/2277 writes=2024/2024 dones=21/21 last_w=8801/11476 mismatches=0 PASS 
+pm1 s11 SIM cycles=11640 consumed=1988/1988 writes=2168/2168 dones=23/23 last_w=8723/11565 mismatches=0 PASS 
+pm1 s12 SIM cycles=10772 consumed=2063/2063 writes=1808/1808 dones=21/21 last_w=8301/10689 mismatches=0 PASS 
+pm2 s1 SIM cycles=22259 consumed=1913/1913 writes=3304/3304 dones=27/27 last_w=6066/22194 mismatches=0 PASS 
+pm2 s2 SIM cycles=22721 consumed=2222/2222 writes=2715/2715 dones=26/26 last_w=7155/22656 mismatches=0 PASS 
+pm2 s3 SIM cycles=24113 consumed=2131/2131 writes=3304/3304 dones=25/25 last_w=6698/24046 mismatches=0 PASS 
+pm2 s4 SIM cycles=25676 consumed=2219/2219 writes=3508/3508 dones=24/24 last_w=6736/25609 mismatches=0 PASS 
+pm2 s5 SIM cycles=20806 consumed=2098/2098 writes=2840/2840 dones=26/26 last_w=7350/20739 mismatches=0 PASS 
+pm2 s6 SIM cycles=14734 consumed=2005/2005 writes=2052/2052 dones=26/26 last_w=5783/14668 mismatches=0 PASS 
+pm2 s7 SIM cycles=23796 consumed=2034/2034 writes=2612/2612 dones=29/29 last_w=6904/23730 mismatches=0 PASS 
+pm2 s8 SIM cycles=24457 consumed=1967/1967 writes=3303/3303 dones=25/25 last_w=6405/24391 mismatches=0 PASS 
+pm2 s9 SIM cycles=16586 consumed=1635/1635 writes=1802/1802 dones=30/30 last_w=5384/16519 mismatches=0 PASS 
+pm2 s10 SIM cycles=22196 consumed=2299/2299 writes=3556/3556 dones=25/25 last_w=6779/22130 mismatches=0 PASS 
+pm2 s11 SIM cycles=28450 consumed=2368/2368 writes=4524/4524 dones=22/22 last_w=8245/28384 mismatches=0 PASS 
+pm2 s12 SIM cycles=25670 consumed=2309/2309 writes=2732/2732 dones=24/24 last_w=7525/25603 mismatches=0 PASS 
+pm3 s1 SIM cycles=9597 consumed=941/941 writes=1410/1410 dones=25/25 last_w=3050/9532 mismatches=0 PASS 
+pm3 s2 SIM cycles=17165 consumed=1520/1520 writes=2303/2303 dones=26/26 last_w=5018/17095 mismatches=0 PASS 
+pm3 s3 SIM cycles=7781 consumed=898/898 writes=1129/1129 dones=25/25 last_w=3353/7712 mismatches=0 PASS 
+pm3 s4 SIM cycles=7038 consumed=590/590 writes=878/878 dones=23/23 last_w=2919/6973 mismatches=0 PASS 
+pm3 s5 SIM cycles=10799 consumed=826/826 writes=1524/1524 dones=21/21 last_w=3051/10331 mismatches=0 PASS 
+pm3 s6 SIM cycles=12944 consumed=1338/1338 writes=1800/1800 dones=25/25 last_w=4384/12876 mismatches=0 PASS 
+pm3 s7 SIM cycles=4682 consumed=458/458 writes=524/524 dones=22/22 last_w=2349/4617 mismatches=0 PASS 
+pm3 s8 SIM cycles=20706 consumed=1843/1843 writes=2696/2696 dones=25/25 last_w=5867/20627 mismatches=0 PASS 
+pm3 s9 SIM cycles=8326 consumed=994/994 writes=1119/1119 dones=29/29 last_w=3565/8259 mismatches=0 PASS 
+pm3 s10 SIM cycles=10049 consumed=1628/1628 writes=1392/1392 dones=29/29 last_w=4747/9852 mismatches=0 PASS 
+pm3 s11 SIM cycles=6006 consumed=992/992 writes=948/948 dones=20/20 last_w=3621/5934 mismatches=0 PASS 
+pm3 s12 SIM cycles=11191 consumed=910/910 writes=1534/1534 dones=25/25 last_w=3424/11109 mismatches=0 PASS 
+
+m_lane DETECTED pm3 s1: mism=276 FAIL
+m_round DETECTED pm3 s2: mism=89 FAIL
+m_last DETECTED pm3 s1: mism=4 FAIL
+m_bank DETECTED pm3 s1: mism=552 FAIL
+m_cred DETECTED pm3 s1: mism=29 FAIL
+m_slot DETECTED pm3 s1: mism=1153 FAIL
+m_shstale DETECTED pm3 s1: mism=642 FAIL
+m_nowait DETECTED pm3 s1: mism=1158 FAIL
+m_apskip DETECTED pm3 s1: mism=1398 FAIL
+m_kvswap DETECTED pm3 s1: mism=544 FAIL
+m_pushq DETECTED pm3 s1: mism=218 FAIL
+m_kvbit DETECTED pm3 s1: mism=448 FAIL
+m_use DETECTED pm3 s2: mism=2 FAIL
+m_bvsel DETECTED pm3 s1: mism=552 FAIL
+m_done DETECTED pm3 s1: mism=4 FAIL
+m_addr DETECTED pm3 s2: mism=256 FAIL
+m_scale DETECTED pm3 s1: mism=2 FAIL
+m_take DETECTED pm3 s1: mism=34 FAIL
+m_oh DETECTED pm3 s1: mism=482 FAIL
+m_qkc DETECTED pm3 s1: mism=4 FAIL
+m_rawclr DETECTED pm3 s1: mism=1219 FAIL
+m_ibq DETECTED pm3 s1: mism=53 FAIL
+m_ok0 DETECTED pm3 s1: mism=306 FAIL
+m_off DETECTED pm3 s1: mism=704 FAIL
+m_ihq DETECTED pm3 s1: mism=202 FAIL
+m_gw DETECTED pm3 s1: mism=418 FAIL
+m_w1 DETECTED pm3 s1: mism=380 FAIL
+m_fiwp DETECTED pm3 s1: mism=1091 FAIL
+m_ibsel DETECTED pm3 s1: mism=276 FAIL
+m_ihv SURVIVE
+m_ihlast DETECTED pm3 s2: mism=14 FAIL
+m_rawq DETECTED pm3 s1: mism=8 FAIL
+m_busyf DETECTED pm3 s1: mism=2 FAIL
+m_fdrdy DETECTED pm3 s1: mism=723 FAIL
+m_busyn DETECTED pm3 s3: mism=1 FAIL
+m_firdy DETECTED pm3 s1: mism=33 FAIL
+m_fdrp DETECTED pm3 s1: mism=3 FAIL

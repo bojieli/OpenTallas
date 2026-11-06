@@ -120,12 +120,22 @@ tb = rep(tb, "  qkd_host_native_engine_ing2 W (.clk(ck), .rst_n(rst_n), .d_v(w_i
               "  qkd_host_native_engine_ing3 W (.clk(ck), .rst_n(rst_n), .p_d_v(w_isd), .p_d_rdy(w_drdy), .p_d_data(w_head[255:0]),\n    .p_in_v(w_isp), .p_in_rdy(w_inrdy), .p_in_data(w_head),")
 tb = rep(tb, ".done_v(w_dv), .done_tag(w_tg), .busy(w_busy), .n_sectors(w_ns));", ".done_v(w_dv), .done_tag(w_tg), .p_busy(w_busy), .n_sectors(w_ns));")
 tb = rep(tb, "// DIE-KV-70/ING 11-04: transaction co-sim", "// KV-ING-1 11-05: r3 (ing3) on the DIE-KV-70/ING 11-04 transaction co-sim")
+# r3 checks: busy contract at the registered face (busy_q covers both input FIFOs and the engine busy, every edge),
+# and +pm=3: descriptor bursts (RAW with no sector and no beat on half the descriptors) so the d FIFO and dq fill.
+tb = rep(tb, "    if (w_dv) begin\n", """    if (W.fi_n != 2'd0 || W.fd_n != 2'd0 || W.busy) if (!w_busy) begin bad = bad + 1; if (bad < 8) $display("BUSY CONTRACT cyc=%0d fi %0d fd %0d eng %b", cyc, W.fi_n, W.fd_n, W.busy); end
+    if (w_dv) begin
+""")
+tb = rep(tb, "      if (pm == 1) mode = 0; if (pm == 2) mode = 1 + {rr()} % 7;\n",
+             "      if (pm == 1) mode = 0; if (pm == 2) mode = 1 + {rr()} % 7; if (pm == 3 && ({rr()} % 2)) mode = 9;\n")
+tb = rep(tb, "        n = 2 * (1 + {rr()} % 24); if (({rr()} % 5) == 0) n = 0;\n        b = {rr()} % 2;                 // an extra pad beat sometimes\n",
+             "        n = 2 * (1 + {rr()} % 24); if (({rr()} % 5) == 0) n = 0;\n        b = {rr()} % 2;                 // an extra pad beat sometimes\n        if (mode == 9) begin n = 0; b = 0; end   // r3 +pm=3: descriptor only\n")
+tb = rep(tb, "      end else if (mode <= 4) begin              // RAW\n", "      end else if (mode <= 4 || mode == 9) begin   // RAW (9: r3 burst, descriptor only)\n")
 (B / "tb_ing3.sv").write_text(tb)
 (B / "tb_fp8q.sv").write_text((S / "bench/tb_fp8q.sv").read_text())
 r = (S / "bench/run_ing.sh").read_text()
 r = r.replace("results/kv_ing_rf2_1105", "results/kv_ing_rf3_1105").replace("qkd_host_native_engine_ing2", "qkd_host_native_engine_ing3").replace("tb_ing2", "tb_ing3")
 r = rep(r, """ m_ibsel) sub $E "ib_sel1 <= i1_sel1;" "ib_sel1 <= i1_sel0;";;""", """ m_ibsel) sub $E "ib_sel1 <= ih_sel1;" "ib_sel1 <= ih_sel0;";;
- m_ihq) sub $E "ib_all <= {ih_all[1023:512], ih_all[1023:512], ih_all[511:0], ih_all[511:0]};" "ib_all <= {ih_all[1023:512], ih_all[511:0], ih_all[511:0], ih_all[511:0]};";;
+ m_ihq) sub $E "ib_all <= {ih_all[1023:512], ih_all[1023:512], ih_all[511:0], ih_all[511:0]};" "ib_all <= {ih_all[1023:512], i1_code, ih_all[511:0], ih_all[511:0]};";;
  m_ihv) sub $E "wire qp_busy = i0_v || q1_v || i1_v || ih_v || ib_v" "wire qp_busy = i0_v || q1_v || i1_v || ib_v";;
  m_ihlast) sub $E "ih_last <= i1_last;" "ih_last <= i1_last || i1_v;";;
  m_fiwp) sub $E "if (fi_push) fi_wp <= !fi_wp;" "fi_wp <= 1'b0;";;

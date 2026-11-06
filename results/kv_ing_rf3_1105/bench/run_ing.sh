@@ -29,7 +29,7 @@ case $CASE in
  m_off) sub $E "always @(posedge clk) off <= ra_rp[4:0];" "always @(posedge clk) off <= (gy == 3) ? ra_rp[4:0] ^ 5'd1 : ra_rp[4:0];";;
  m_ibq) sub $E "wire [511:0] w_code = ib_all[QB*512 +: 512];" "wire [511:0] w_code = (gb == 13) ? i1_code : ib_all[QB*512 +: 512];";;
  m_ibsel) sub $E "ib_sel1 <= ih_sel1;" "ib_sel1 <= ih_sel0;";;
- m_ihq) sub $E "ib_all <= {ih_all[1023:512], ih_all[1023:512], ih_all[511:0], ih_all[511:0]};" "ib_all <= {ih_all[1023:512], ih_all[511:0], ih_all[511:0], ih_all[511:0]};";;
+ m_ihq) sub $E "ib_all <= {ih_all[1023:512], ih_all[1023:512], ih_all[511:0], ih_all[511:0]};" "ib_all <= {ih_all[1023:512], i1_code, ih_all[511:0], ih_all[511:0]};";;
  m_ihv) sub $E "wire qp_busy = i0_v || q1_v || i1_v || ih_v || ib_v" "wire qp_busy = i0_v || q1_v || i1_v || ib_v";;
  m_ihlast) sub $E "ih_last <= i1_last;" "ih_last <= i1_last || i1_v;";;
  m_fiwp) sub $E "if (fi_push) fi_wp <= !fi_wp;" "fi_wp <= 1'b0;";;

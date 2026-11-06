@@ -43,6 +43,7 @@ module tb;
     if (g_wv && grdy) begin gwl[gwn] = {g_wa, g_wd}; gwn = gwn + 1; g_last = cyc; end
     if (w_wv && wrdy) begin wwl[wwn] = {w_wa, w_wd}; wwn = wwn + 1; w_last = cyc; end
     if (g_dv) begin gdl[gdn] = {g_tg, g_ns}; gdn = gdn + 1; end
+    if (W.fi_n != 2'd0 || W.fd_n != 2'd0 || W.busy) if (!w_busy) begin bad = bad + 1; if (bad < 8) $display("BUSY CONTRACT cyc=%0d fi %0d fd %0d eng %b", cyc, W.fi_n, W.fd_n, W.busy); end
     if (w_dv) begin
       wdl[wdn] = {w_tg, w_ns}; wdn = wdn + 1;
       if (wwn < w_ns) begin bad = bad + 1; if (bad < 8) $display("EARLY DONE cyc=%0d ns=%0d port=%0d", cyc, w_ns, wwn); end
@@ -93,7 +94,7 @@ module tb;
     np = 0; ggap = 0; wgap = 0; grdy = 1; wrdy = 1; junk = 0;
     for (i = 0; i < nd && np < NP - 6000; i = i + 1) begin
       mode = {rr()} % 8;
-      if (pm == 1) mode = 0; if (pm == 2) mode = 1 + {rr()} % 7;
+      if (pm == 1) mode = 0; if (pm == 2) mode = 1 + {rr()} % 7; if (pm == 3 && ({rr()} % 2)) mode = 9;
       dsc = 0; dsc[7] = ({rr()} % 3) != 0; dsc[15:8] = i;
       dsc[47:16] = {rr()} & 32'h00ff_ffc0;
       if (mode <= 2) begin                       // QKV
@@ -106,9 +107,10 @@ module tb;
         add(0, {256'd0, dsc});
         for (b = 0; b < nbt; b = b + 1) add(1, rbeat(fmt >= 2 ? 2 : fmt));
         if (th == tl) add(2, 0);
-      end else if (mode <= 4) begin              // RAW
+      end else if (mode <= 4 || mode == 9) begin   // RAW (9: r3 burst, descriptor only)
         n = 2 * (1 + {rr()} % 24); if (({rr()} % 5) == 0) n = 0;
         b = {rr()} % 2;                 // an extra pad beat sometimes
+        if (mode == 9) begin n = 0; b = 0; end   // r3 +pm=3: descriptor only
         dsc[3:0] = 0; dsc[167:144] = n; dsc[255:240] = n / 2 + b; nbt = n / 2 + b;
         add(0, {256'd0, dsc});
         for (b = 0; b < nbt; b = b + 1) add(1, rbeat(2));
