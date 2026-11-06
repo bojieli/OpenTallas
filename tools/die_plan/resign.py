@@ -33,7 +33,7 @@ import subprocess
 import sys
 import time
 
-TAG_RE = re.compile(r'^flow-\d{8}-[a-z](?:-(qc|s81|head|kv|hbm))?$')  # = release_tree_plan.check_resign_tag
+TAG_RE = re.compile(r'^flow-\d{8}-[a-z]+(?:-(qc|s81|head|kv|hbm))?$')  # = release_tree_plan.check_resign_tag
 SHA_RE = re.compile(r'^[0-9a-f]{40}$')
 TOOLS = ('signoff.py', 'lec.py')
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
