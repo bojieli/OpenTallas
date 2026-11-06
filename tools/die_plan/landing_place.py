@@ -282,7 +282,8 @@ def _reader_start_groups(t):
         return []
     groups = []
     if 'origin_rect_um' in cfg:
-        groups.append(('u_cland_origin', cfg['origin_rect_um'], 'reader-start-origin'))
+        origin = 'u_cland_rstart_rx' if (t or {}).get('landing_relay_start_copy') else 'u_cland_origin'
+        groups.append((origin, cfg['origin_rect_um'], 'reader-start-origin'))
     for bus, branch in sorted(cfg['branches'].items()):
         for i, stage in enumerate(branch['stages']):
             x, y = stage['xy_um']
