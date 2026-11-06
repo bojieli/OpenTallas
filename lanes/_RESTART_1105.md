@@ -49,3 +49,13 @@ Agent shells START in /home/ubuntu/OpenTallas on localhost: that is the owner's 
 
 ## Limit stop 09:42-10:40 11-05
 Every lane stopped at about 09:42 on a session limit, mid-work, without PARKED. Successor steps: read your predecessor's posts for today in the queue and find its live jobs (docker ps, ot-run units, its run dirs); do not relaunch anything still running. Rulings up to 09:45 stand. Lanes run 60 min, then PARKED, with PARKED posted before the watcher wait if a limit looks near. Disk 10:40 scratch2/root: intel1 233/406, intel2 84/342, epyc2 168/552, epyc4 138/554. Intel2 under 100: no new unit there. Epyc4 under 570 root: no new run on scratch3.
+
+## Limit stop ~20:00-20:40 11-05 (second evening stop)
+Every lane stopped at about 20:00 on a session limit, mid-work, mostly without PARKED. Builds kept running in ot-run/docker.
+Successor steps:
+1. FIRST `cd /` in every shell. Read /home/ubuntu/.claude/jobs/b7f906df/tmp/core_lane_rules.md: the rules, including OWNER 19:3x vA+vB in parallel per failing core.
+2. Read your predecessor's posts from today in ~/coord/lanes/COORD-REVIEW-QUEUE.md on origin/coord/state (grep its name), plus the [COORD] lines addressed to it.
+3. Find its live jobs (ot-run --status units, docker ps on the host, its scratch dir mtimes) and collect them. Do NOT relaunch something that is still running. Do not start a duplicate.
+4. Post a RESTART STATE within 30 min: what you took over, what is running, the next step.
+5. Keep posts every 60-90 min. On low context, post PARKED with a successor list.
+Context at 20:40: the count is 164 (S81 52+4t, HEAD 4+12t, QC 17, KV 27, HBM 48). epyc5 and epyc6 are NEW live hosts (about 677 GB admits each, empty). intel1 has about 107 waiters, so do not pin work to intel1. Every disk is scratch (scratch3 = root bind).
