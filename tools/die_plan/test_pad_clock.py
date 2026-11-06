@@ -222,3 +222,29 @@ def test_cdc_fields_reach_contract_sidecar_and_schema(tmp_path):
     pc = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]
     item = pc["properties"]["pins"]["items"]["properties"]
     assert item["cdc"] == {"enum": ["synchronized"]} and item["cdc_evidence"]["minLength"] == 1
+
+
+def test_native_pad_data_keeps_budget_and_uses_recovered_clock():
+    p = plan(); p.types['mid']['pads'].append(dict(name='pma_rx', width=544, dir='in'))
+    p.types['mid']['clock']['pad_clock']['pins'][0]['data_inputs'] = [
+        dict(port='pma_rx', max_ps=166.6, min_ps=-90, evidence='actual peer TX and RX use recovered clock')]
+    text = GP.sdc(p, 'mid', GP.type_pins(p, 'mid'))
+    ctx = SL.kit_context(p, 'mid')
+    assert not SL.lint(text, **ctx)
+    assert 'remove_from_collection $non_clk_in $pad_native_inputs' in text
+    assert 'set_input_delay -max 166.6000 -clock pma_rck [get_ports {pma_rx[*]}]' in text
+    wrong = text.replace('-clock pma_rck [get_ports {pma_rx[*]}]', '-clock vclk [get_ports {pma_rx[*]}]')
+    assert any('actual pma_rck' in e for e in SL.lint(wrong, **ctx))
+
+
+@pytest.mark.parametrize('fault', ['unknown', 'output', 'duplicate', 'budget', 'evidence'])
+def test_native_pad_data_refuses_untyped_or_ambiguous_association(fault):
+    p = plan(); p.types['mid']['pads'].append(dict(name='pma_rx', width=544, dir='in'))
+    row = dict(port='pma_rx', max_ps=166.6, min_ps=-90, evidence='actual source')
+    p.types['mid']['clock']['pad_clock']['pins'][0]['data_inputs'] = [row]
+    if fault == 'unknown': row['port'] = 'missing'
+    if fault == 'output': p.types['mid']['pads'][-1]['dir'] = 'out'
+    if fault == 'duplicate': p.types['mid']['clock']['pad_clock']['pins'][0]['data_inputs'].append(dict(row))
+    if fault == 'budget': row['min_ps'] = 200
+    if fault == 'evidence': row['evidence'] = ''
+    with pytest.raises(ValueError): PC.pins(p, 'mid')
