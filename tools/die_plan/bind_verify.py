@@ -383,6 +383,49 @@ def native_lib_stubs(lib, vdir):
     return staged
 
 
+PORT_RE = re.compile(r"\b(input|output|inout)\s+(?:wire\s+|logic\s+|reg\s+)?(?:signed\s+)?"
+                     r"(?:\[\s*(\d+)\s*:\s*(\d+)\s*\]\s*)?([A-Za-z_]\w*)(?=\s*(?:,|\)|$))")
+
+
+def stub_ifaces(text):
+    """{module: {port: (dir, width)}} of the ANSI-header stubs in text with numeric ranges (the lib_stubs form)."""
+    out = {}
+    for m in re.finditer(r"^\s*module\s+([A-Za-z_]\w*)\b(.*?)\)\s*;", text, re.S | re.M):
+        hdr = re.sub(r"^\s*#\s*\(.*?\)\s*\(", "(", m.group(2), flags=re.S)
+        ports = {p.group(4): (p.group(1), abs(int(p.group(2)) - int(p.group(3))) + 1 if p.group(2) else 1)
+                 for p in PORT_RE.finditer(hdr)}
+        # a port this form cannot read (parametric range, packed type): no interface rather than a wrong one
+        out[m.group(1)] = ports if len(ports) == len(re.findall(r"\b(?:input|output|inout)\b", hdr)) else None
+    return out
+
+
+def core_split_stubs(raw_ab, rep, stub_text, vdir):
+    """Interface stubs for the leaves asbuilt.core_splits creates (e.g. qkd_kvs_pc -> qkd_kvs_pcc + qkd_kvs_pcf).
+
+    The split leaves are hard leaves with no RTL source, so the lib stubs never define them and bound.ys stops on
+    an undefined module.  Interfaces: bind_report core_split_ifaces (the final bind cells, exact), else derived from
+    the source leaf's stub by the same port transform.  A split leaf that a lib file already defines keeps that."""
+    specs = raw_ab.get("core_splits") or []
+    if not specs:
+        return []
+    import bind_core_split
+    have = stub_ifaces(stub_text)
+    ifs = rep.get("core_split_ifaces") or bind_core_split.derived_ifaces(specs, have.get)
+    body = []
+    for mod, e in sorted(ifs.items()):
+        if mod in have:
+            continue
+        ps = ", ".join(f"parameter {p} = 0" for p in e.get("params", []))
+        pl = ",\n".join(f"    {d} wire [{w - 1}:0] {p}" for p, (d, w) in e["ports"].items())
+        body.append(f"// core_splits leaf (no source): interface as bound\nmodule {mod}{f' #({ps})' if ps else ''} (\n"
+                    f"{pl}\n);\nendmodule\n")
+    if not body:
+        return []
+    f = vdir / "core_split_stubs.sv"
+    f.write_text("\n".join(body))
+    return [str(f)]
+
+
 def cmd_verify(a):
     import bind as _b
     _b._AB_OVERRIDE["path"] = getattr(a, "asbuilt", None)
@@ -408,6 +451,7 @@ def cmd_verify(a):
     sc = vdir / "bound.ys"
     js = vdir / "bound.json"
     ylib = native_lib_stubs(lib, vdir)
+    ylib += core_split_stubs(raw["asbuilt"], rep, (vdir / "lib_stubs.sv").read_text() if lib else "", vdir)
     sc.write_text(E.yosys_script(ab, ab["netlist"], full, ylib, js, check=True, inc_files=lib))
     mounts = [out, E.REPO] + [Path(f).parent for f in lib]
     roots = sorted({str(Path(m).resolve()) for m in mounts}, key=len)
