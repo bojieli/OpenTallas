@@ -39,19 +39,28 @@ def compile_hbc_setup(inventory, job, timing, *, clock_reset_id=None):
     rank = uint(job["rank"], 2, "rank")
     ctx = {k: uint(job[k], n, k) for k, n in
            (("tid",16),("user",10),("position",21),("token",21),("epoch",32),("programme",64))}
-    t = {k: uint(timing[k], 48, k) for k in
-         ("reset_deassert_edge", "host_counter_zero_edge", "link_ready_edge", "peer_to_hbc_input",
-          "peer_frame_period", "peer_launch_modulus", "peer_launch_residue")}
+    native_ages = timing.get('hbc_arrival_boot_edges')
+    keys = (("reset_deassert_edge", "host_counter_zero_edge", "link_ready_edge", "peer_to_hbc_input",
+             "peer_frame_period", "peer_launch_modulus", "peer_launch_residue") if native_ages is None else
+            ("reset_deassert_edge", "link_ready_edge", "peer_frame_period", "peer_launch_modulus", "peer_launch_residue"))
+    t = {k: uint(timing[k], 48, k) for k in keys}
+    if native_ages is not None:
+        if 'host_counter_zero_edge' in timing or 'peer_to_hbc_input' in timing:
+            raise ValueError('native boot-age calendar cannot mix common-clock global timing')
+        if not isinstance(native_ages, list) or len(native_ages) != 3:
+            raise ValueError('three measured native HBC arrival boot ages required')
+        native_ages = [uint(v, 48, 'measured HBC arrival boot age') for v in native_ages]
+        t['hbc_arrival_boot_edges'] = native_ages
     period, modulus = t["peer_frame_period"], t["peer_launch_modulus"]
     if not period or not modulus or period % modulus or t["peer_launch_residue"] >= modulus:
         raise ValueError("frame period must preserve the measured launch phase class")
-    if t["host_counter_zero_edge"] < t["reset_deassert_edge"]:
+    if native_ages is None and t["host_counter_zero_edge"] < t["reset_deassert_edge"]:
         raise ValueError("counter origin precedes actual reset release")
     def slot(edge):
         return edge + (t["peer_launch_residue"] - edge) % modulus
     launch = slot(max(t["link_ready_edge"], t["reset_deassert_edge"] + period))
-    zero = t["host_counter_zero_edge"]
-    header = launch + t["peer_to_hbc_input"] - zero
+    zero = t.get("host_counter_zero_edge")
+    header = native_ages[0] if native_ages is not None else launch + t["peer_to_hbc_input"] - zero
     if header < 0:
         raise ValueError("HBC receive counter date would be negative")
     # LOAD/body are fixed four edges apart in the existing HBC protocol.
@@ -59,6 +68,8 @@ def compile_hbc_setup(inventory, job, timing, *, clock_reset_id=None):
         raise ValueError("HBC four-edge body gap leaves the qualified phase class")
     commit_gap = ((7 + modulus - 1) // modulus) * modulus
     commit = header + commit_gap
+    if native_ages is not None and native_ages != [header, header + 4, commit]:
+        raise ValueError("measured native arrivals do not satisfy the fixed HBC four-edge calendar")
     # HBC's affine-book word count describes the HOST programme ABI, not
     # the separate80x1024-bit K_XB activation stream.
     words = uint(job.get("host_word_count",417), 10, "HBC HOST programme word count")
@@ -97,7 +108,7 @@ def compile_hbc_setup(inventory, job, timing, *, clock_reset_id=None):
         return (1<<552) | (payload<<16) | kind
     frames = [dict(lane=0, edge=launch, frame=frame(envelope(0,0,512,header+4)), kind="HBC_LOAD"),
               dict(lane=0, edge=launch+4, frame=frame(body), kind="HBC_BODY"),
-              dict(lane=0, edge=zero+commit-t["peer_to_hbc_input"],
+              dict(lane=0, edge=launch+commit_gap,
                    frame=frame(envelope(1,1,0,commit)), kind="HBC_COMMIT")]
     params = dict(LOCAL_STAGE=stage, LOCAL_RANK=rank, PHASE_BOUND=1, CLOCK_RESET_ID=identity,
                   BOOT_HEADER_EDGE=header, BOOT_COMMIT_EDGE=commit)
@@ -112,6 +123,8 @@ def compile_hbc_setup(inventory, job, timing, *, clock_reset_id=None):
 
 
 def compile_entry(inventory, job, timing):
+    if "hbc_arrival_boot_edges" in timing:
+        raise ValueError("native boot-age calendar is HBC setup only; full entry requires measured downstream global timing")
     setup = compile_hbc_setup(inventory, job, timing)
     params = setup['host_params']
     stage, rank = params['LOCAL_STAGE'], params['LOCAL_RANK']
