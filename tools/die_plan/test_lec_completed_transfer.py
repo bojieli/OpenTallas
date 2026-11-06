@@ -18,6 +18,7 @@ class CompletedTransferTest(unittest.TestCase):
               'lec_async.ready':'1\npython3 /work/lec.py --netlist /work/net.v\n'}
         for n,v in rows.items(): (self.k/n).write_text(v)
         (self.k/'lec_async.source_identity').write_text(identity(self.k,'source')+'\n')
+        (self.k/'lec_async.ready').touch()
         (self.k/'lec_async.identity').write_text(identity(self.k)+'\n')
         (self.k/'lec/lec.json').write_text(json.dumps({'verdict':'EQUIVALENT','netlist':'/work/net.v','counts':{'proved':17}}))
         (self.k/'lec_async.rc').write_text('0\n'); (self.k/'lec_async.done').touch()

@@ -42,6 +42,10 @@ def transfer(original, copied):
             raise ValueError('captured proof identity absent: '+name)
         if identity(original,mode,ready) != value or identity(copied,mode,ready) != value:
             raise ValueError('captured proof identity differs: '+mode)
+        captured_at = (original/name).stat().st_mtime
+        limit = ready.stat().st_mtime if mode=='source' else (original/'lec/lec.json').stat().st_mtime
+        if captured_at > limit+.001:
+            raise ValueError('identity was not captured before proof: '+name)
         expected[name] = value
     net = report.get('netlist','')
     if not net.startswith('/work/'):
