@@ -10,5 +10,8 @@ patch = json.loads((EV / "clock_patches.json").read_text()); res = {}
 for tn in sorted(patch):
     tp = T.density_taps(P, tn, False); res[tn] = [list(x) for x in tp]
     assert len(tp) == patch[tn]["model"]["taps"], (tn, len(tp))
+    import gen_phys as G   # the kit exports this clock block produces must be legal (affinity radius <= tap radius)
+    ex = G.tap_chain_affinity_exports(raw["partition_types"][tn]) + G._density_cfg(raw["partition_types"][tn])
+    assert any("OT_TAP_CHAIN_AFFINITY" in e for e in ex) and any("OT_TAP_REASSIGN_UM" in e for e in ex), (tn, ex)
 (EV / "new_taps.json").write_text(json.dumps(res, separators=(",", ":")) + "\n")
 print("VALIDATE PASS", len(res), "types; taps", sum(len(v) for v in res.values()))

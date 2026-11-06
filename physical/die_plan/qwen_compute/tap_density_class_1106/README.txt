@@ -14,17 +14,19 @@ Recipe per type (model_class.py, one script for the class):
   already on main, bounded per-bit chain grouping, never adds cross-tap boundaries);
 - new taps = taps.density_taps (unchanged code); check = taps.assign (python mirror of clock_taps.tcl) of every
   measured sink: max load <= cap and max reach <= 200 um.
-Result (model_run.log / model.json): 47/50 PASS (5174 taps over the 47 types; validate.py reproduces every count). 3 types miss reach by 0.8-6.9 um only
-(cbf_q00__cl870de686 200.8, sle_hc1__cl7d360508 206.9, slw_fw_v3 203.0): NOT in clock_patches.json; they need one
-explicit corner tap each (next step), not a cap/radius change.
+Result (model_run.log / model.json): 50/50 PASS, 5501 taps. 47 at radius 200; the 3 first-run reach misses
+(cbf_q00__cl870de686 200.8, sle_hc1__cl7d360508 206.9, slw_fw_v3 203.0 um) were bin quantisation (density_taps sees
+8.64 um bin centres, a member register sits up to 8.64 um L1 from its centre): COORD 10:0x asked for all 50, so these
+3 use tap_radius_um 191 (= 200 - one bin), giving actual reach 174.9 / 185.8 / 170.1 um, load <= 1200 (update
+11-06 10:3x, model_class.py retries radius 191 after the target fractions).
 
-apply_event.py replaces only partition_types[<type>].clock for the 47 types, each guarded by the sha256 of the
+apply_event.py replaces only partition_types[<type>].clock for the 50 types, each guarded by the sha256 of the
 base type (refuses on any change). validate.py applies it to plan_qc52, reloads with schema.Plan and recomputes the
 taps (counts equal the model) -> new_taps.json. tap_class_geometry.png = per-type sinks (gray), hard cores (blue),
 new taps (red x).
 
 NOT claimed: no CTS/STA/route, no hold or sign-off credit. Remaining zero-logic cross-tap pairs and the 120/160 ps
 source windows still need actual CTS + ordinary hold repair. New tap ports change type interfaces: adoption needs ONE
-native re-bind + parent clock composition (ROOT/wave), then ONE batch relaunch of the 47 rows. Types re-formed in
+native re-bind + parent clock composition (ROOT/wave), then ONE batch relaunch of the 50 rows. Types re-formed in
 the meantime (CBN/CBF ring split, SU2, START4) must be re-measured on their new 3_place before their patch applies
 (the hash guard refuses a changed base type).

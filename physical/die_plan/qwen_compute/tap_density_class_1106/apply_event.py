@@ -1,4 +1,4 @@
-"""QC over-cap tap class (DIE-QC-84, 2026-11-06): apply measured density taps to every studied type.
+"""QC over-cap tap class (DIE-QC-84, 2026-11-06): apply measured density taps to every studied type (50).
 
 For each type in clock_patches.json the base type must hash-match (sha256 of canonical JSON) or nothing is written.
 Only partition_types[<type>].clock is replaced: sink_bins_file (measured register inventory of the type's retained
