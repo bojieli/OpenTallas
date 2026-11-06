@@ -1,0 +1,38 @@
+{
+  "kit_only_IN_OUT_change_native_hash_unchanged": true,
+  "kit_hash_changed": true,
+  "selected_native_OUT_change_detected": true,
+  "selected_IN_stays_KIT": true,
+  "count_strap_width_change_detected": true,
+  "native_transport_price_change_detected": true,
+  "actual_clock_table_content_change_detected": true,
+  "external_table_outside_base_refused": true,
+  "ownership_without_optin": {
+    "t": [
+      {
+        "conn": "bus:i",
+        "stages": 1,
+        "phase": "KIT"
+      },
+      {
+        "conn": "bus:o",
+        "stages": 1,
+        "phase": "KIT"
+      }
+    ]
+  },
+  "ownership_with_optin": {
+    "t": [
+      {
+        "conn": "bus:i",
+        "stages": 1,
+        "phase": "KIT"
+      },
+      {
+        "conn": "bus:o",
+        "stages": 1,
+        "phase": "NATIVE"
+      }
+    ]
+  }
+}

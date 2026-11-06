@@ -19,29 +19,74 @@ def contract(raw):
     for name,typ in raw['partition_types'].items():
         clock={k:v for k,v in typ.get('clock',{}).items() if k.startswith('landing_')}
         types[name]=digest(dict(internal_stations=typ.get('internal_stations',[]),
-                               clock=clock,reset=typ.get('reset'),buses=[{k:b.get(k) for k in ['name','dir','width','kind']} for b in typ.get('buses',[])]))
+                               clock=clock,reset=typ.get('reset'),count_straps=typ.get('count_straps'),id_straps=typ.get('id_straps'),relay_sites=typ.get('relay_sites'),buses=[{k:b.get(k) for k in ['name','dir','width','kind']} for b in typ.get('buses',[])]))
     return dict(schema='opentallas.native_topology.v1',reset=digest(raw.get('reset')),types=types)
 
 
-def write_bind_receipt(raw,out,asbuilt=None,topology=None):
-    receipt=dict(topology or contract(raw))
+def native_contract(raw,asbuilt=None,plan_path=None):
+    """Fingerprint only fields the native binder consumes, using its actual opt-ins.
+
+    The complete posthook contract remains separate. In particular, IN/core
+    stations and OUT stations not selected by internal_stations_types belong to
+    KIT preparation, not native materialization.
+    """
+    ab=json.loads(Path(asbuilt).read_text()) if asbuilt else raw.get('asbuilt',{})
+    table={};table_sha=None
+    if ab.get('clock_landing_table'):
+        base=Path(ab.get('base',Path(__file__).resolve().parents[2]))
+        if not base.is_absolute():
+            if plan_path is None:raise ValueError('native clock table requires explicit full plan context')
+            base=Path(plan_path).resolve().parent/base
+        path=Path(ab['clock_landing_table'])
+        if not path.is_absolute():path=base/path
+        base,path=base.resolve(),path.resolve()
+        try:path.relative_to(base)
+        except ValueError as error:raise ValueError('native clock table must resolve inside its declared native base') from error
+        payload=path.read_bytes();table=json.loads(payload);table_sha=hashlib.sha256(payload).hexdigest()
+    selected=set(ab.get('internal_stations_types',[]))
+    lineage=table.get('collector',{}).get('types',{})
+    types={};reset_context={};ownership={}
+    for name,typ in raw['partition_types'].items():
+        base=lineage.get(name,{}).get('base_type',name)
+        owns_out=any(name==s or base==s or base.startswith(s+'_') for s in selected)
+        entries=[]
+        if owns_out:
+            from native_istations import source_entries
+            entries=source_entries(typ)
+        native_conns={e['conn'] for e in entries}
+        ownership[name]=[dict(conn=e.get('conn'),stages=len(e.get('regs_um',[])),phase='NATIVE' if e.get('conn') in native_conns else 'KIT') for e in typ.get('internal_stations',[])]
+        clock={k:v for k,v in typ.get('clock',{}).items() if k.startswith('landing_')} if table_sha else {}
+        types[name]=digest(dict(native_out_stations=entries,clock=clock,clock_table_sha256=table_sha,
+            buses=[{k:b.get(k) for k in ['name','dir','width','kind']} for b in typ.get('buses',[])],
+            count_straps=typ.get('count_straps'),id_straps=typ.get('id_straps')))
+        reset_context[name]=dict(reset=typ.get('reset'),hard=typ.get('hard'),
+            clock={k:v for k,v in typ.get('clock',{}).items() if not k.startswith('landing_')})
+    transport=dict(lanes=[{k:l.get(k) for k in ['id','ports','fixed_cycles','stations','cycles']} for l in raw.get('lanes',[])],
+                   ports=[{k:p.get(k) for k in ['id','src','dst','width','kind']} for p in raw.get('ports',[])])
+    return dict(schema='opentallas.native_topology.v2',types=types,ownership=ownership,clock_table_sha256=table_sha,
+                reset=digest(dict(global_reset=raw.get('reset'),types=reset_context)),transport=digest(transport))
+
+
+def write_bind_receipt(raw,out,asbuilt=None,topology=None,plan_path=None):
+    receipt=dict(topology or native_contract(raw,asbuilt,plan_path))
     receipt['asbuilt_sha256']=hashlib.sha256(Path(asbuilt).read_bytes()).hexdigest() if asbuilt else digest(raw.get('asbuilt'))
     Path(out,'native_topology.json').write_text(json.dumps(receipt,indent=2)+'\n')
     return receipt
 
 
-def bind_matches(raw,tn,out,asbuilt=None):
+def bind_matches(raw,tn,out,asbuilt=None,plan_path=None):
     path=Path(out)/'native_topology.json'
     if not path.is_file():return False
-    old=json.loads(path.read_text());new=contract(raw)
+    old=json.loads(path.read_text());new=native_contract(raw,asbuilt,plan_path)
     if asbuilt and old.get('asbuilt_sha256')!=hashlib.sha256(Path(asbuilt).read_bytes()).hexdigest():return False
-    return old.get('reset')==new['reset'] and old.get('types',{}).get(tn)==new['types'][tn]
+    return old.get('reset')==new['reset'] and old.get('transport')==new['transport'] and old.get('types',{}).get(tn)==new['types'][tn]
 
 
-def has_topology(raw,tn):
+def has_topology(raw,tn,asbuilt=None):
+    ab=json.loads(Path(asbuilt).read_text()) if asbuilt else raw.get('asbuilt',{})
     typ=raw['partition_types'][tn]
-    return bool(raw.get('reset') or typ.get('reset') or typ.get('internal_stations') or
-                typ.get('clock',{}).get('landing_raw_branches'))
+    return bool(ab.get('clock_landing_table') or raw.get('reset') or typ.get('reset') or typ.get('internal_stations') or
+                typ.get('clock',{}).get('landing_raw_branches') or typ.get('count_straps') or typ.get('id_straps'))
 
 
 def source_census(raw,tn,rtl_dir, *, require_receipt=True):
@@ -136,7 +181,7 @@ def main():
     if a.command=='stamp-bind':
         report=json.loads(Path(a.bind_out,'bind_report.json').read_text())
         if report.get('n_errors',1):raise ValueError('only a successful fresh native bind can record topology')
-        write_bind_receipt(raw,a.bind_out,a.asbuilt)
+        write_bind_receipt(raw,a.bind_out,a.asbuilt,plan_path=a.plan)
         return 0
     result=source_census(raw,a.type,a.rtl_dir)
     Path(a.receipt).write_text(json.dumps(result,indent=2)+'\n')
