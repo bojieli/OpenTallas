@@ -25,14 +25,18 @@ T1 |= {f'c_W5_{s}_{r}{c}' for s in ['bf','bn','tn','tf'] for r in range(2) for c
 T1 |= {'coll_f4','native59','glue','ucie_kv','tt_ctlm'}
 
 
-def path_seeds(plan):
+PROGRAMMING = {'native59', 'glue', 'ucie_kv', 'tt_ctlm'}
+
+
+def path_seeds(plan, endpoints=None):
     """Include actual projection plus every transit of a lane between the retained functional endpoints."""
-    wanted = set(T1)
+    endpoints = T1 if endpoints is None else set(endpoints)
+    wanted = set(endpoints)
     ports = {x['id']: x for x in plan['ports']}
     # Only endpoints of the specified path determine closure: transit-only additions do not pull in unrelated work.
     for lane in plan['lanes']:
         chain = [ports[n] for n in lane['ports']]
-        if chain[0]['src']['part'] in T1 and chain[-1]['dst']['part'] in T1:
+        if chain[0]['src']['part'] in endpoints and chain[-1]['dst']['part'] in endpoints:
             wanted.update(x[k]['part'] for x in chain for k in ['src','dst'])
     return sorted(wanted)
 
@@ -43,16 +47,18 @@ def top_ports(path):
         m = re.match(r'^\s*(input|output)\s+wire\s*(?:\[(\d+):(\d+)\])?\s*(\w+)\s*[,;]?', line)
         if m:
             result[m[4]] = dict(direction=m[1], width=int(m[2])-int(m[3])+1 if m[2] else 1)
-        if re.match(r'^\s*wire\b', line):
+        if re.match(r'^\s*endmodule\b', line):
             break
     return result
 
 
-def compose(qc_top, qc_plan, kv_top, out, whole_qc=False):
+def compose(qc_top, qc_plan, kv_top, out, whole_qc=False, programming_only=False):
+    if whole_qc and programming_only:
+        raise ValueError('whole-QC and programming-only are exclusive')
     out.mkdir(parents=True, exist_ok=False)
     plan = json.loads(qc_plan.read_text())
     _, _, insts = BC.parse_top(qc_top)
-    seeds = sorted(i['name'] for i in insts) if whole_qc else path_seeds(plan)
+    seeds = sorted(i['name'] for i in insts) if whole_qc else path_seeds(plan, PROGRAMMING if programming_only else None)
     if whole_qc:
         pp = top_ports(qc_top)
         manifest = {k:{n:v for n,v in pp.items() if v['direction']==d} for k,d in [('inputs','input'),('outputs','output')]}
@@ -80,7 +86,7 @@ def compose(qc_top, qc_plan, kv_top, out, whole_qc=False):
                 raise ValueError(f'duplicate ROM image {rid}')
             rom_ids.add(rid)
             rom.append(f'defparam `OT_ROM_BIND_TOP.u_qc.{local}.ROM_TILE = {rid};')
-    expected_roms = 768 if whole_qc else 64
+    expected_roms = 0 if programming_only else (768 if whole_qc else 64)
     if rom_ids != set(range(expected_roms)):
         raise ValueError(f'expected {expected_roms} distinct source ROM images, got {sorted(rom_ids)}')
     (out/'rom_bind_pair.vh').write_text('// Define OT_ROM_BIND_TOP as the pair instance. Source-derived image IDs.\n'+'\n'.join(rom)+'\n')
@@ -157,7 +163,7 @@ def compose(qc_top, qc_plan, kv_top, out, whole_qc=False):
     (out/'qwen_native_pair.sv').write_text(text)
     report = dict(schema='opentallas.qwen.literal_pair.v1',qc_top=str(qc_top),kv_top=str(kv_top),qc_plan=str(qc_plan),
                   qc_top_sha256=BC.sha256(qc_top),kv_top_sha256=BC.sha256(kv_top),plan_sha256=BC.sha256(qc_plan),
-                  qc_seeds=seeds, whole_qc=whole_qc, rom_tiles=len(rom_ids), reset=reset, boundary_ports=external,
+                  qc_seeds=seeds, whole_qc=whole_qc, programming_only=programming_only, rom_tiles=len(rom_ids), reset=reset, boundary_ports=external,
                   link='QC.ucie_kv_link_* -> KV.sys_c_far_* and KV.sys_c_link_* -> QC.ucie_kv_far_*',
                   scope='Structural adapter only. Scheduler must drive every environmental input; no boot/token verdict implied.')
     (out/'pair.json').write_text(json.dumps(report,indent=1)+'\n')
@@ -169,5 +175,6 @@ if __name__ == '__main__':
     ap.add_argument('--qc-top',type=Path,required=True);ap.add_argument('--qc-plan',type=Path,required=True)
     ap.add_argument('--kv-top',type=Path,required=True);ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--whole-qc',action='store_true',help='Retain the entire native QC top for complete projection coverage')
-    a=ap.parse_args();r=compose(a.qc_top,a.qc_plan,a.kv_top,a.out,a.whole_qc)
+    ap.add_argument('--programming-only',action='store_true',help='Retain actual native programming/transport endpoints; expose arithmetic paths as component ports')
+    a=ap.parse_args();r=compose(a.qc_top,a.qc_plan,a.kv_top,a.out,a.whole_qc,a.programming_only)
     print('LITERAL_PAIR_STAGED',len(r['qc_seeds']),'QC partitions,',len(r['boundary_ports']),'explicit boundary ports')

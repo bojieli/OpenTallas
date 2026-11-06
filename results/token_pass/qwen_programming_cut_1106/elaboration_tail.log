@@ -1,0 +1,5 @@
+  642 |             else if (!(s == 0 ? tx_slot_canonical : tx_slot_k[R_OWNER[s*4 +: 4]]) && result_v_k[s]) r[HI-1:LO] <= rin[HI-1:LO];
+      |                                                                                                     ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 68124.985 MB sources in 1334 modules, into 52.701 MB in 48 C++ files needing 0.000 MB
+- Verilator: Walltime 138.377 s (elab=23.829, cvt=54.679, bld=0.000); cpu 137.772 s on 1 threads; allocated 6964.922 MB
