@@ -32,6 +32,21 @@ class ParentAdapterTests(unittest.TestCase):
                 self.assertEqual((receipt['added_interface_cycles'], receipt['added_child_reset_edges']), (2, 1))
                 self.assertEqual(receipt['physical_status'], 'PREPARATION_ONLY')
 
+    def test_staged_profile_seal_and_cycle_prices(self):
+        source, contract = fixture()
+        contract.update(input_stages=3, output_stages=2)
+        contract['selected_params'].update(INPUT_STAGES='3', OUTPUT_STAGES='2')
+        output, receipt = A.adapt(source, [contract])
+        self.assertIn('.INPUT_STAGES(3), .OUTPUT_STAGES(2)', output)
+        self.assertEqual((receipt['added_interface_cycles'], receipt['added_child_reset_edges']), (5, 3))
+        contract['output_stages'] = 1
+        with self.assertRaisesRegex(ValueError, 'capture-stage profile'):
+            A.adapt(source, [contract])
+        contract['output_stages'] = 2
+        contract['selected_params']['OUTPUT_STAGES'] = '1'
+        with self.assertRaisesRegex(ValueError, 'selected form'):
+            A.adapt(source, [contract])
+
     def test_foreign_half_configuration_rejected(self):
         for nb, mtp in [('3', '1'), ('NB_VALUE', '1'), ('2', '0')]:
             with self.subTest(nb=nb, mtp=mtp):
