@@ -23,5 +23,8 @@ sys.path.insert(0,str(repo/'physical/die_plan/hbm_arch_cores'))
 p=repo/'physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py';spec=importlib.util.spec_from_file_location('b128_gen',p);gen=importlib.util.module_from_spec(spec);spec.loader.exec_module(gen)
 sys.argv=[str(p),'--views',str(ctx/'views.json'),'--view',view['view'],'--out',str(out),'--tag','_wface_vB' if a.write_face=='on' else '_shallow_vA','--util','.40','--sigmax','M6','--face-shell','off','--clock-pin-entry','on','--clock-taps','off','--single-root-taps','off','--core-insertion','none','--core-macros','off']
 if a.write_face=='on':
- guide=ctx/'write_face_guide.json';guide.write_text(json.dumps(dict(boxes=[dict(name='write_ingress_north',prefixes=['wface_data','wface_addr','wface_we0','wface_we1','wface_xwe'],box_um=[4.32,237.6,246.24,263.52])]),indent=1)+'\n');sys.argv.extend(['--reg-guide-boxes',str(guide)])
+ pins=json.loads((ctx/view['pins_file']).read_text());ctrl=next(p for p in pins if p['name']=='weight_we0');north=['wface_data'];controls=['wface_addr','wface_we0','wface_we1','wface_xwe'];east=ctrl['x']>view['outline_um'][0]-1
+ boxes=[dict(name='write_ingress_north',prefixes=north if east else north+controls,box_um=[4.32,237.6,246.24,263.52])]
+ if east:boxes.append(dict(name='write_control_east',prefixes=controls,box_um=[226.8,43.2,246.24,86.4]))
+ guide=ctx/'write_face_guide.json';guide.write_text(json.dumps(dict(boxes=boxes),indent=1)+'\n');sys.argv.extend(['--reg-guide-boxes',str(guide)])
 gen.main(recipe_overrides={module:rec},source_overrides={virtual:str(ap)},source_profile=profile)
