@@ -768,8 +768,8 @@
    },
    "plan": "/srv/opentallas-scratch3/claude/codex-wave-bind-1106/src_28fc7/physical/die_plan/s81/plan_h2_2249.json",
    "gen_host": "epyc5",
-   "src": "/srv/opentallas-scratch3/claude/codex-wave-bind-1106/src_9f316",
-   "src_sha": "9f316bda6efa197bc78e7fecb4b8588eeea421b0",
+   "src": "/srv/opentallas-scratch3/claude/kw22/src_8eeea",
+   "src_sha": "8eeea8e066115477412972bfe0d8436ca496a0aa",
    "kit_rtl": {
     "mode": "script",
     "script": "/srv/opentallas-scratch3/claude/codex-wave-bind-1106/kit_rtl_s81_ready_v3.sh",
@@ -1763,7 +1763,7 @@
     "ot_s81sl_kv_leaf__t4": "KW-FIX-22 09:4x: PLAN loop stop. On the S81 src_9f316/src_28fc7 recovery the wave relaunched this row every tick (09:18 @2, 09:28 @3, 09:37 @4) into the same kit_topology fail-closed 'kit_istations: class hi/ho planned on a subset of the lanes' (vnzero block). Plan/native-station owner DIE-S81-69 + Codex recovery: fix the station class coverage (or say it is a tool bug), then remove this hold; no design strike.",
     "ot_s81sl_kv_leaf__t5": "KW-FIX-22 09:4x: PLAN loop stop. On the S81 src_9f316/src_28fc7 recovery the wave relaunched this row every tick (09:18 @2, 09:28 @3, 09:37 @4) into the same kit_topology fail-closed 'kit_istations: class hi/ho planned on a subset of the lanes' (vnzero block). Plan/native-station owner DIE-S81-69 + Codex recovery: fix the station class coverage (or say it is a tool bug), then remove this hold; no design strike."
    },
-   "queue_src": "main@c92647a21554177b48cb5c147348a9c220b1538f",
+   "queue_src": "main@8eeea8e066115477412972bfe0d8436ca496a0aa",
    "work_root": "/srv/opentallas-scratch3/claude/kw21-wave-1106/runs/s81/kit-wave",
    "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
    "retry_fix": {
@@ -2613,7 +2613,8 @@
    },
    "note_gen_epyc56": "KW-FIX-18 19:5x (COORD 19:4x): gen_hosts epyc5+epyc6 first (kw11/src_16b + 14 GB referenced deps rsynced from epyc4 at the same paths); epyc4 kept in the base list, the disk watcher drops it while its scratch is low",
    "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
-   "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained."
+   "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained.",
+   "kw22_src_note": "KW-FIX-22 10:0x DIE-S81-69 09:49 CLASS (PORT_BIND extra rst_o_k[0]): src_9f316 reset_tree.out_pins() returned [] for native types; fixed on main by 7ceea6ad772 (tag bn-s81). Wave tools now main 8eeea8e066 (contains 9f316 + I202 pin audit). src_8eeea on epyc5 scratch3 = hardlink copy of Codex src_9f316 + git-archive of all 688 9f..8eeea changed files (0 deletions); reset_tree/gen_phys/kit_topology hashes equal 8eeea [CHECKED]. Native plan/asbuilt SRC28 + kit_rtl s81_ready_v3 unchanged (Codex recovery context kept)."
   },
   "s81_head": {
    "enabled": true,
