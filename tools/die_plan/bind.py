@@ -4845,6 +4845,52 @@ def kit_inline_imports(fl, kd):
     return out, rec
 
 
+def kit_library_select(profile, tn, idx, prefer, wide, defines, base):
+    """KW-FIX-22 11-06 (kit-rtl --library-profile): an explicit, hash-pinned candidate library (kit_library_profile.apply)
+    replaces captured as-built sources in the kit closure index, the preferred list AND the repo-wide fallback index, so
+    neither the bind's own bind.f preference nor the rtl/ scan can bring the captured (stale) file back.  The captured
+    bind output is never edited.  -> idx, prefer, wide, defines, receipt"""
+    import kit_library_profile as KLP
+    try:
+        idx, prefer, receipt = KLP.apply(profile, tn, idx, prefer, list(defines), base)
+    except (ValueError, OSError, KeyError, TypeError) as exc:
+        raise BindError(f"kit-rtl {tn}: library profile {profile}: {exc}") from exc
+    E.validate_preferred_files(prefer)
+    olds = {row["original"] for row in receipt["replacements"]}
+    new_wide = {}
+    for m, fs in (wide or {}).items():
+        keep = [f for f in fs if str(Path(f).resolve()) not in olds]
+        if keep:
+            new_wide[m] = keep
+    for row in receipt["replacements"]:
+        for m in row["replacement_modules"]:
+            if m in new_wide or m in (wide or {}):
+                new_wide[m] = [row["replacement"]]
+    return idx, prefer, new_wide, list(receipt["defines"]), receipt
+
+
+def kit_library_verify(tn, receipt, closure_files, picks, filelist, dedup=None):
+    """KW-FIX-22: fail closed unless every profile replacement is the source the closure actually selected: each
+    replacement file is in the closure, no captured original is in the closure or the final filelist (directly or as a
+    dedup copy), and every reached module of a replaced file was picked from its replacement.  -> per-row record"""
+    sel = {str(Path(f).resolve()) for f in closure_files}
+    final = {str(Path(f).resolve()) for f in filelist}
+    copied = {str(Path(r["original"]).resolve()) for r in (dedup or {}).values() if r.get("original")}
+    rows = []
+    for row in receipt["replacements"]:
+        old, new = row["original"], row["replacement"]
+        if old in sel or old in final or old in copied:
+            raise BindError(f"kit-rtl {tn}: library profile: captured original {old} still selected (stale RTL)")
+        if new not in sel:
+            raise BindError(f"kit-rtl {tn}: library profile replacement {new} was not selected by the kit closure")
+        reached = sorted(m for m in row["replacement_modules"] if m in picks)
+        bad = [m for m in reached if str(Path(picks[m]).resolve()) != new]
+        if not reached or bad:
+            raise BindError(f"kit-rtl {tn}: library profile replacement {new} not picked for {bad or row['replacement_modules']}")
+        rows.append(dict(original=old, replacement=new, replacement_sha256=row["replacement_sha256"], modules=reached))
+    return rows
+
+
 def bindf_prefer(out, base):
     """QC-A0 10-24: the RTL files the bind itself listed (OUT/bind.f, relative to the source tree) win every module-name
     ambiguity in the kit closure.  A later tree that adds a second definition of a bound module (the A0 snapshot dirs
@@ -5211,6 +5257,11 @@ def cmd_kit_rtl(a):
     picks = {}
     rtl_all = Path(base) / "rtl"
     wide = E.module_index([str(rtl_all)], [], base) if rtl_all.is_dir() else {}
+    kit_defines = ab0.get("defines", [])
+    lib_profile = None
+    if getattr(a, "library_profile", None):
+        idx, prefer, wide, kit_defines, lib_profile = kit_library_select(a.library_profile, tn, idx, prefer, wide,
+                                                                        kit_defines, base)
     widened = {}
     views = macro_views(base)
     # S81-SERDES-PHY-2 10-31: a macro view generated after the bind (S81 PMA abstracts) lives in the kit tool checkout,
@@ -5230,7 +5281,7 @@ def cmd_kit_rtl(a):
             idx[m] = [str(wf.resolve())]
         leafm = sorted(set(leafm) | {x["base"] for x in kit_param_wraps})
     cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks, views=views, wide=wide, widened=widened,
-                                         defines=ab0.get("defines", []))
+                                         defines=kit_defines)
     if widened:
         print(f"kit-rtl {tn}: {len(widened)} child module(s) outside the manifest index taken from rtl/: "
               + ", ".join(f"{k}={v}" for k, v in sorted(widened.items())[:10]), file=sys.stderr)
@@ -5247,7 +5298,8 @@ def cmd_kit_rtl(a):
     fl, inlined = kit_inline_imports(fl, kd)
     fl, deduped = kit_strip_dups(fl, kd, picks)
     fl, native_glue = kit_native_glue(tn, fl, out)
-    sims = [str(f) for f in fl if SIM_FILE.search(f.name)]
+    lib_selected = kit_library_verify(tn, lib_profile, cl, picks, fl, deduped) if lib_profile else None
+    sims =[str(f) for f in fl if SIM_FILE.search(f.name)]
     if sims:
         raise BindError(f"kit-rtl {tn}: simulation models in the kit filelist {sims[:5]} (no *_sim in a kit)")
     bound_reset = None
@@ -5270,13 +5322,14 @@ def cmd_kit_rtl(a):
                asbuilt_manifest=str(Path(a.asbuilt).resolve()) if a.asbuilt else None,
                variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, spare_ft_landed=spare_landed, narrow_buses=narrow,
                **({"dead_inputs": dead_doc} if dead_doc else {}),
-               plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl],
+               plan_buses_unbound=missing, bound_only_pins=extra, defines=kit_defines, files=[str(x) for x in fl],
                packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, include_inlined=incl, module_dedup=deduped,
                hard_macros=dict(sorted(macros.items())), unindexed_sources=dict(sorted(widened.items())), native_station_geometry=native_geometry,
                hbm_spb_native_geometry=spb_geometry,
                **({"bound_reset": dict(file="bound_reset.json", tree_sha256=bound_reset_source["tree_sha256"],
                                         source=bound_reset_source["authority"])} if bound_reset else {}),
                **({"native_glue": native_glue} if native_glue else {}),
+               **({"library_profile": lib_profile, "library_profile_selected": lib_selected} if lib_profile else {}),
                hard_macros_note="memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; "
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
                                 "type_macros); kit_rtl_sim.f carries the behavioural models")
@@ -5358,6 +5411,8 @@ def main(argv=None):
     k.add_argument("--instance", help="the bound instance whose parameters the kit takes (types whose instances differ)")
     k.add_argument("--asbuilt")
     k.add_argument("--component-proof", help="verified read-only LOCAL source report; never a global bind PASS")
+    k.add_argument("--library-profile", help="explicit hash-pinned candidate library (kit_library_profile.v1): replaces "
+                                             "captured sources in the kit closure; the captured bind stays unchanged")
     c = sub.add_parser("component-proof", help="read-only local source/port/reset checks; preserve global bind failure")
     c.add_argument("plan", help="original full reference context recorded by the native producer")
     c.add_argument("--out", required=True, help="original bind output (read-only)")
