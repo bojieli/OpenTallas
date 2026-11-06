@@ -3263,7 +3263,7 @@
   "macros": []
  },
  "ot_hfd_coll_q3_body_ctl": {
-  "defines": [],
+  "defines": ["OT_Q3CTL_TGTQ1"],
   "params": {},
   "util": 0.45,
   "source": "HBM-FORM-SPLIT d44v part 28: tile of ot_hfd_coll_q3_body_core; bench results/die_hbm_1105/form_split/p28",
