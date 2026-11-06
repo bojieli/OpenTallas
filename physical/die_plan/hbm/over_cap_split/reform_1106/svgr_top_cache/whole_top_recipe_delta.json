@@ -36,7 +36,7 @@
     "util": 0.45,
     "macro_placement": [
       {
-        "inst": "feed.rows.g_on.g_cache[0].g_rw.u_payload",
+        "inst": "u_core.feed.rows.g_on.g_cache[0].g_rw.u_payload",
         "macro": "ot_sram_1r1w_128x256_m1_r0c0_g256",
         "xy_um": [
           17.28,
@@ -45,7 +45,7 @@
         "orient": "MY"
       },
       {
-        "inst": "feed.rows.g_on.g_cache[1].g_rw.u_payload",
+        "inst": "u_core.feed.rows.g_on.g_cache[1].g_rw.u_payload",
         "macro": "ot_sram_1r1w_128x256_m1_r0c0_g256",
         "xy_um": [
           17.28,
@@ -54,7 +54,7 @@
         "orient": "MY"
       },
       {
-        "inst": "feed.rows.g_on.g_cache[2].g_rw.u_payload",
+        "inst": "u_core.feed.rows.g_on.g_cache[2].g_rw.u_payload",
         "macro": "ot_sram_1r1w_128x256_m1_r0c0_g256",
         "xy_um": [
           17.28,
@@ -63,7 +63,7 @@
         "orient": "MY"
       },
       {
-        "inst": "feed.rows.g_on.g_cache[3].g_rw.u_payload",
+        "inst": "u_core.feed.rows.g_on.g_cache[3].g_rw.u_payload",
         "macro": "ot_sram_1r1w_128x256_m1_r0c0_g256",
         "xy_um": [
           17.28,
@@ -72,7 +72,7 @@
         "orient": "MY"
       },
       {
-        "inst": "feed.rows.g_on.g_cache[4].g_rw.u_payload",
+        "inst": "u_core.feed.rows.g_on.g_cache[4].g_rw.u_payload",
         "macro": "ot_sram_1r1w_128x256_m1_r0c0_g256",
         "xy_um": [
           17.28,
@@ -81,7 +81,7 @@
         "orient": "MY"
       },
       {
-        "inst": "feed.programme_leaf.g_m2.u_program_lo",
+        "inst": "u_core.feed.programme_leaf.g_m2.u_program_lo",
         "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
         "xy_um": [
           63.83,
@@ -90,7 +90,7 @@
         "orient": "R0"
       },
       {
-        "inst": "feed.programme_leaf.g_m2.u_program_hi",
+        "inst": "u_core.feed.programme_leaf.g_m2.u_program_hi",
         "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
         "xy_um": [
           63.83,
@@ -99,7 +99,7 @@
         "orient": "R0"
       },
       {
-        "inst": "issuer.g_t2.u_desc_lo",
+        "inst": "u_core.issuer.g_t2.u_desc_lo",
         "macro": "ot_sram_1r1w_128x256_m1_r2c2",
         "xy_um": [
           172.8,
@@ -108,7 +108,7 @@
         "orient": "R0"
       },
       {
-        "inst": "issuer.g_t2.u_desc_hi",
+        "inst": "u_core.issuer.g_t2.u_desc_hi",
         "macro": "ot_sram_1r1w_128x256_m1_r2c2",
         "xy_um": [
           172.8,
