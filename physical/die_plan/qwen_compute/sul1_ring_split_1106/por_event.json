@@ -1,0 +1,21 @@
+{
+ "scope": "ONLY two SU types and two collector entries; no SC4/HC0 union adoption",
+ "types": [
+  "slw_su_l1__cla2a78701",
+  "slw_su_l1__clcc9d0155"
+ ],
+ "base_plan_sha256": "b398e285557293311294917c275d0db0890e79d33008588f95e9c4e4ce24125f",
+ "base_sidecar_sha256": "eda1bf5533ba029a2f6a4919a19e25e7860b76a0eb5469b6f2dc309f72edea5c",
+ "sidecar_uncompressed_sha256": "cac174aa960ecd6bda202b562c972eade223049776d924e45787edb2c5b2c0a8",
+ "sidecar_gzip_sha256": "bad94de2c6ec964c8c43b489f5b0e5488c55c3d7317dc161af4148a7d001fa9e",
+ "plan_output_sha256": "f71c1ee99e81025ff3b2850b06b6f4c93eb75046b6fd09ff7866f18b48d6e548",
+ "global_preservation": "PASS",
+ "data_cycles": 0,
+ "boot_cycles": 0,
+ "review": {
+  "verdict": "PASS-COND",
+  "image": "sul1-parent.png",
+  "findings": "Six face children fit at right and bottom around four compute blocks; RSN below lane4 and east channel remain open. Child AP signoff is separate from parent qualification."
+ },
+ "activation": "Explicit fresh thin context must unpack and hash-check matching sidecar; old runtime provider remains untouched. No parent qualification claimed."
+}
