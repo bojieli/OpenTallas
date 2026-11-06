@@ -1,0 +1,22 @@
+host	disk	group	action	path	GB	idle_h	git	dirty	untracked	unpushed	refs	utSIGNED	utKEEP	procs/docker
+dear-crayfish	root	G	WT-REMOVE	/srv/opentallas-scratch3/claude/die-hbm-60-cores/wt	46	76	git	0	0	0	0	0	0	0/0
+dear-crayfish	root	G	WT-REMOVE	/srv/opentallas-scratch3/claude/die-hbm-61-mem/repo	46	74	git	0	0	0	0	0	0	0/0
+dear-crayfish	root	G	WT-REMOVE	/srv/opentallas-scratch3/claude/die-kv-62/wt-q2e6	3	77	git	0	0	0	0	0	0	0/0
+dear-crayfish	root	G	WT-REMOVE	/srv/opentallas-scratch3/claude/die-kv-64/hgsplit	46	64	git	0	0	0	0	0	0	0/0
+dear-crayfish	root	G	WT-REMOVE	/srv/opentallas-scratch3/claude/die-kv-64/wt	46	65	git	0	0	0	0	0	0	0/0
+dear-crayfish	root	G	WT-SAVE+REMOVE	/srv/opentallas-scratch3/claude/die-qc-63-kits/wt	46	81	git	0	3	0	0	0	0	0/0
+dear-crayfish	root	G	WT-SAVE+REMOVE	/srv/opentallas-scratch3/claude/die-qc-63-kits/wtsrc	46	86	git	0	0	1	0	0	0	0/0
+dear-crayfish	root	G	WT-SAVE+REMOVE	/srv/opentallas-scratch3/claude/die-qc-64-bind/wt	46	81	git	2	2	0	0	0	0	0/0
+dear-crayfish	root	G	WT-REMOVE	/srv/opentallas-scratch3/claude/die-qc-66-clk/wt	46	62	git	0	0	0	0	0	0	0/0
+dear-crayfish	root	G	WT-REMOVE	/srv/opentallas-scratch3/claude/die-s81-51/pg3	27	61	git	0	0	0	0	0	0	0/0
+tolerant-swine	root	M	MOVE->epyc6 root scratch3 + .MOVED pointer	/home/ubuntu/scratch-root/claude/kw18	14	14	-	-	-	-	0	0	0	0/0
+tolerant-swine	root	M	MOVE->epyc6 root scratch3 + .MOVED pointer	/home/ubuntu/scratch/kv-g3	19	311	-	-	-	-	0	0	0	0/0
+tolerant-swine	root	G	WT-REMOVE	/home/ubuntu/wt/die-ci-results	43	27	git	0	0	0	0	0	0	0/0
+tolerant-swine	s2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/die-hbm-77-n4/repo	46	14	git	0	0	0	0	0	0	0/0
+tolerant-swine	s2	M	MOVE->epyc6 root scratch3 + .MOVED pointer	/srv/opentallas-scratch2/claude/die-head-48/tile52	4	133	-	-	-	-	0	0	0	0/0
+tolerant-swine	s2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/die-s81-66/wt	46	13	git	0	0	0	0	0	0	0/0
+tolerant-swine	s2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/dkv75/wt	26	25	git	0	0	0	0	0	0	0/0
+tolerant-swine	s2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/kw-relaunch-2/wt	46	12	git	0	0	0	0	0	0	0/0
+tolerant-swine	s2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/wt/dh65-uc	7	27	git	0	0	0	0	0	0	0/0
+tolerant-swine	s2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/wt/dh66	5	25	git	0	0	0	0	0	0	0/0
+tolerant-swine	s2	G	WT-REMOVE	/srv/opentallas-scratch2/claude/wt/dh66u	6	26	git	0	0	0	0	0	0	0/0
