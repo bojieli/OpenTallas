@@ -3964,6 +3964,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("pin_audit.py"), kd / "pin_audit.py")
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
     shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
+    shutil.copyfile(Path(__file__).with_name("hard_landing.py"), kd / "hard_landing.py")
     shutil.copyfile(Path(__file__).with_name("selrange_gate.py"), kd / "selrange_gate.py")
     shutil.copyfile(Path(__file__).with_name("native_bb.py"), kd / "native_bb.py")
     shutil.copyfile(Path(__file__).resolve().parents[1] / "orfs_hold_mm.py", kd / "orfs_hold_mm.py")
@@ -4006,6 +4007,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             raise gen_rtl.GenError(f"type {tn}: buses declared by both the landing sidecar and a plain ring: {clash[:5]}")
         land_slots["buses"] = {**land_slots.get("buses", {}), **plain}
     land_slots = export_land_slots(P.types[tn], land_slots)
+    if land_slots is not None:
+        import hard_landing
+        land_slots = hard_landing.emit(t, land_slots, kd,
+                                      Path(root) if root else Path(__file__).resolve().parents[2])
     if land_slots is not None:                  # face_guard reads it beside pins.json (count-aligned landing rings)
         (kd / "land_slots.json").write_text(json.dumps(land_slots, indent=1) + "\n")
     port_pins = port_bind_pin_records(P, tn, pins, bump_ports)
