@@ -501,6 +501,10 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     if len(set(strap_l)) != len(strap_l):
         err.append("straps: duplicate names")
     strap_fp = set()
+    # DIE-HEAD-74 11-06: declared same-edge pad data (pad_clock data_inputs capture=same_edge) carries exactly
+    # 'set_multicycle_path 0 -setup -from [get_ports {<port>[*]}]'; refused on any other port, required on each.
+    same_edge = {pt for pt, r in (pad_clock_data_inputs or {}).items() if r.get('capture') == 'same_edge'}
+    same_edge_fp = set()
     pad_l, pad_fp = list(reset_pad_pins or []), []
     root_fp = 0
     cdc_ex = {}                       # (max|hold, from clock, to clock) -> ps (hold: 0) : declared pad cdc exceptions
@@ -549,6 +553,18 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                 pad_fp.append(cmd)
                 continue
 
+            if c == "set_multicycle_path" and same_edge:
+                ok = len(w) == 5 and w[1:4] == ["0", "-setup", "-from"]
+                if ok:
+                    k, ps = _eval_obj(ctx, w[4])
+                    names = {x.split("[", 1)[0] for x in ps}
+                    ok = k == "ports" and len(names) == 1 and next(iter(names)) in same_edge
+                if not ok:
+                    err.append(f"pad_clock: only 'set_multicycle_path 0 -setup -from [get_ports {{<same-edge pad>[*]}}]'"
+                               f" is allowed (fail-closed): {cmd}")
+                    continue
+                same_edge_fp |= names
+                continue
             if c == "set_false_path" and strap_l:
                 if len(w) != 3 or w[1] != "-from":
                     err.append(f"straps: only 'set_false_path -from [get_ports {{strap_*}}]' is allowed (fail-closed): {cmd}")
@@ -944,11 +960,15 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         clock = row['clock']
         if port not in ctx.inputs or clock not in pad_in:
             err.append(f'pad_clock: data input {port} needs an existing input and declared input pad clock')
+        same = row.get('capture') == 'same_edge'
         for kind in ('max', 'min'):
+            want = row[kind + '_ps'] - (row.get('eye_hold_extra_ps', 0) if same and kind == 'min' else 0)
             got = idly[port].get(kind)
-            if got is None or got[0] != clock or abs(got[1] - row[kind + '_ps']) > EPS:
+            if got is None or got[0] != clock or abs(got[1] - want) > EPS:
                 err.append(f'pad_clock: data input {port} {kind} delay must use actual {clock} '
-                           f'and declared {row[kind + "_ps"]:g} ps, found {got}')
+                           f'and declared {want:g} ps, found {got}')
+        if same and port.split('[', 1)[0] not in same_edge_fp:
+            err.append(f'pad_clock: same-edge data input {port} has no set_multicycle_path 0 -setup')
     for port, row in (pad_clock_data_outputs or {}).items():
         clock = row['clock']
         if port not in ctx.outputs or clock not in pad_out:
@@ -1060,7 +1080,8 @@ def kit_context(P, tn):
                 **(dict(pad_clock_inputs=pad_in, pad_clock_outputs=pad_out) if pad_pins else {}),
                 **({"pad_clock_cdc": pad_cdc} if pad_cdc else {}),
                 **({"pad_clock_data_inputs": {
-                    row['port']: dict(clock=pin['name'], max_ps=row['max_ps'], min_ps=row['min_ps'])
+                    row['port']: dict(clock=pin['name'], max_ps=row['max_ps'], min_ps=row['min_ps'],
+                                      **{k: row[k] for k in ('capture', 'eye_hold_extra_ps') if k in row})
                     for pin in pad_pins for row in pin.get('data_inputs', [])}}
                    if any(pin.get('data_inputs') for pin in pad_pins) else {}),
                 **({"pad_clock_data_outputs": {
