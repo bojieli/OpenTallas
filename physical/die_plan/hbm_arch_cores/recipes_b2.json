@@ -3089,20 +3089,23 @@
     "macros": []
   },
   "ot_hgi_sfu_opsb_output": {
-    "defines": [],
+    "defines": [
+      "OT_OPSB_N32"
+    ],
     "params": {},
     "files": [
       "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
       "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
-      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv"
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lbank_n32.sv"
     ],
     "macros": [
-      "ot_sram_1r1w_256x256_m2_r2c2"
+      "ot_sram_1r1w_2048x32_m8_r0c0_g32"
     ],
-    "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B11 ev74 RE-FORM: IREG + lgroup2_lf (log lane-write / sector-read selects) + BREG + FREG, sr_d/sr_rv/flt +2; bench results/die_hbm_1105/reform_b11/opsb_output",
+    "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B11 ev74 RE-FORM: IREG + lgroup2_lf (log lane-write / sector-read selects) + BREG + FREG, sr_d/sr_rv/flt +2; bench results/die_hbm_1105/reform_b11/opsb_output; HBM-FORM-SPLIT-13-OPSB d44v part 41: OT_OPSB_N32 narrow-macro banks (16 x ot_sram_1r1w_2048x32_m8_r0c0_g32, 90 signal pins each, was 823), lock-step bench results/die_hbm_1106/opsb_n32 (0 errors, 4/4 mutants FAIL), PIN CYCLES 0",
     "top": "ot_hgi_sfu_opsb_output",
     "util": 0.45,
-    "source_commit": "729bf4dbae",
+    "source_commit": "422257f31e",
     "read_at_commit": true
   },
   "ot_hgi_sfu_opsa_group1": {
@@ -3749,5 +3752,22 @@
     "source_commit": "d727c1122244e484d0d2d0a0fb72f6fc9ae51e42",
     "read_at_commit": true,
     "util": 0.4
+  },
+  "ot_hgi_sfu_opsb_output__row256": {
+    "defines": [],
+    "params": {},
+    "files": [
+      "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv"
+    ],
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B11 ev74 RE-FORM: IREG + lgroup2_lf (log lane-write / sector-read selects) + BREG + FREG, sr_d/sr_rv/flt +2; bench results/die_hbm_1105/reform_b11/opsb_output; kept as the fallback row-macro form by d44v part 41",
+    "top": "ot_hgi_sfu_opsb_output",
+    "util": 0.45,
+    "source_commit": "729bf4dbae",
+    "read_at_commit": true
   }
 }
