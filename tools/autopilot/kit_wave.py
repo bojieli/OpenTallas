@@ -3228,6 +3228,7 @@ def _step(AP, ap_dir):
     source_follow.step(AP, cfg, st)
     st.setdefault("items", {})
     notices = {}
+    prune_stale_retries(cfg, st, notices, AP.log)
     collect(AP, cfg, st, notices)
     retry_enqueue(AP, cfg, st, notices)
     follow_queue(st, ap_dir, notices)
@@ -3240,6 +3241,7 @@ def _step(AP, ap_dir):
         leafslew_step(AP, cfg, st, notices, AP.HUB_NAME)
     except Exception as e:                               # a sign-off log read never blocks the wave
         AP.log(f"KIT-WAVE LEAFSLEW step skipped: {type(e).__name__}: {e}")
+    prune_stale_retries(cfg, st, notices, AP.log)          # KW-FIX-23: pending / LEAFSLEW entries too
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
     try:                                        # SUBSTEP-1 (COORD 11-05 10:53): sub-step ODBs of terminal attempts
@@ -3811,6 +3813,45 @@ def auto_rejudge(AP, cfg, st, notices, log=None):
     st["auto_rejudge_code"] = cid
     log(f"KIT-WAVE auto-rejudge {cid}: reclassified {len(ch)}, geom re-judged {len(rows)}, released {len(rel)}")
     return len(ch), len(rows), len(rel)
+
+
+# ------------------------------------------------------------------------------------------------ KW-FIX-23 RETRY-EPOCH
+# COORD 11-06 11:4x (KW-FIX-23): a die's retry list holds plain "item@N" strings with no source or time, so an old
+# entry fired again whenever a NEW attempt reached N (S81 ot_s81sl_leaf__t50: stale @2..@5 entries from 11-03/04
+# relaunched a4/a5/a6 every tick).  Rule: a retry entry releases attempt N only when attempt N was launched BEFORE the
+# entry was first seen by the scheduler (st["retry_seen"]); an entry that names an attempt launched later is stale and
+# is dropped from this tick's in-memory retry set (kit_wave.json is never written).  Entries added in-tick (pending
+# rows, LEAFSLEW) and COORD releases of an already failed / running attempt keep working unchanged.
+def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
+    now = now_s() if now is None else now
+    seen = st.setdefault("retry_seen", {})
+    latest = {}
+    for rec in (st.get("items") or {}).values():
+        k = (rec.get("die"), rec.get("item"), str(rec.get("attempt")))
+        latest[k] = max(latest.get(k, 0.0), float(rec.get("started") or 0))
+    dropped = {}
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or not d.get("retry"):
+            continue
+        keep = []
+        for ia in d["retry"]:
+            first = seen.setdefault(f"{die}|{ia}", now)
+            item, _, n = str(ia).rpartition("@")
+            started = latest.get((die, item, n), 0.0)
+            if started and started > first:
+                dropped.setdefault(die, []).append(ia)
+                continue
+            keep.append(ia)
+        d["retry"] = keep
+    logged = st.setdefault("retry_stale_logged", {})
+    for die, xs in dropped.items():
+        new = [x for x in xs if f"{die}|{x}" not in logged]
+        for x in new:
+            logged[f"{die}|{x}"] = now
+        if new and log:
+            log(f"KIT-WAVE retry stale {die}: {len(new)} entries name an attempt launched after the entry "
+                f"(KW-FIX-23 retry epoch; not released): {' '.join(new[:12])}")
+    return dropped
 
 
 def parse_pending(text):
