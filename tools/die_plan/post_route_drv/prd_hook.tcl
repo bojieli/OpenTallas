@@ -76,7 +76,11 @@ proc ot_prd_stage_check {list} {
     if {$name eq ""} continue
     incr n
     set found 0
-    foreach cand [list $name [regsub -all {\\([^\[\]])} $name {\1}] [string map {\\ {}} $name]] {
+    # HBM-FORM-SPLIT-12 11-06: yosys merged-register names hold a literal backslash (u_x._1_[0]$\u_x._1_[1]$dff[0]).
+    # SPEF writes u_x\._1_\[0\]\$\\u_x..., OpenDB keeps u_x._1_\[0\]$\\u_x... (brackets and the backslash stay escaped,
+    # . and $ do not), so the third candidate unescapes \X but keeps a \\ pair (Q2NF: 2322 of 12396 false misses -> 0)
+    foreach cand [list $name [regsub -all {\\([^\[\]])} $name {\1}] [regsub -all {\\([^\[\]\\])|(\\\\)} $name {\1\2}] \
+        [string map {\\ {}} $name]] {
       set i [$block findInst $cand]
       if {$i ne "NULL" && $i ne ""} { set found 1; break }
     }
