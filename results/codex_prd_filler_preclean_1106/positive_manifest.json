@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.prd_filler_preclean.v1",
+  "source": "/input/run/results/asap7/dp_hd_st_n4/base/6_final.odb",
+  "output": "/out/6_final_preclean.odb",
+  "mechanism": "separate odb.dbDatabase; no ord-managed STA/DRT database",
+  "source_sha256": "484a59a01fb1fd586e2b1275d53d053dfc6db5643e2acfb7dee89282ebebf104",
+  "timings": {
+    "read_s": 8.81536063800013,
+    "selection_s": 20.582324041999527,
+    "fingerprint_before_s": 14.802874640001392,
+    "delete_s": 6.755650720995618,
+    "fingerprint_after_s": 9.867559992999304,
+    "write_s": 0.4391712180004106
+  },
+  "instances_before": 3732364,
+  "instances_after": 177564,
+  "removed": 3554800,
+  "removed_by_master": {
+    "DECAPx10_ASAP7_75t_R": 3286868,
+    "DECAPx6_ASAP7_75t_R": 81776,
+    "DECAPx2_ASAP7_75t_R": 82551,
+    "FILLER_ASAP7_75t_R": 33395,
+    "FILLERxp5_ASAP7_75t_R": 42597,
+    "DECAPx1_ASAP7_75t_R": 15731,
+    "DECAPx4_ASAP7_75t_R": 11882
+  },
+  "removed_names_sha256": "ab433fe980ca18ac16f12b4a643229b84332bb6b1e61783019b186d1cf0d5832",
+  "preserved": {
+    "nonfiller_instances": 177564,
+    "nonfiller_placement_sha256": "104fc756b395c2e2ca3ab800578aed3d328cdb696e09a514aa12a3505ececb5e",
+    "ports": 4215,
+    "ports_sha256": "c320e39738b018cf3e6674664c435aac956dd144fc455deb0458b688840d2ed6",
+    "nonpg_nets": 91357,
+    "nonpg_net_connectivity_and_exact_wire_sha256": "029e4d79327cf58172766723238c433a9c43823011b1a914f9e906c360aa5e1c",
+    "clock_nets": 1560,
+    "clock_connectivity_and_exact_wire_sha256": "8689bdf3746fd1987a762097523fa4cb39114d895afc56be8f6bca10b140a7ce",
+    "wire_ops": 7057128
+  },
+  "preservation_match": true,
+  "status": "DERIVED_FINAL_SEED_READY_NOT_ADOPTED",
+  "output_sha256": "98b7a9c48a7e7a6df8c018b20ec982cfebff4b84d8ecb22bbd520c41522a5a8f",
+  "output_bytes": 589804772,
+  "peak_rss_kb": 4147792,
+  "total_s": 66.45201406499837
+}
