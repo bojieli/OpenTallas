@@ -220,7 +220,7 @@ set ot_pg_band_gate [expr {[info exists ::env(OT_POSTCTS_BAND_GATE)] && $::env(O
 set ot_pg_band_verdict [expr {$dev <= $ot_pg_tol ? "PASS" : ($ot_pg_band_policy eq "info" ? "INFO" : ($ot_pg_band_gate ? "FAIL" : "ADVISORY"))}]
 set v [expr {$n && $ot_pg_band_verdict ne "FAIL" ? "PASS" : "FAIL"}]
 set fh [open /work/postcts_gate_${ot_pg_c}.json w]
-puts $fh [format "{\"corner\": \"%s\", \"pinreg_n\": %d, \"pinreg_mean_ps\": %.2f, \"pinreg_min_ps\": %.2f, \"pinreg_max_ps\": %.2f, \"bound_ps\": %.2f, \"dev_ps\": %.2f, \"tol_ps\": %.1f, \"setup_wns_est_ps\": %.2f, \"hold_wns_est_ps\": %.2f, \"rc\": \"%s\", \"parasitics\": \"%s\", \"verdict\": \"%s\", \"band_policy\": \"%s\", \"band_verdict\": \"%s\"}" \
+puts $fh [format "{\"corner\": \"%s\", \"pinreg_n\": %d, \"pinreg_mean_ps\": %.2f, \"pinreg_min_ps\": %.2f, \"pinreg_max_ps\": %.2f, \"bound_ps\": %.4f, \"dev_ps\": %.2f, \"tol_ps\": %.1f, \"setup_wns_est_ps\": %.2f, \"hold_wns_est_ps\": %.2f, \"rc\": \"%s\", \"parasitics\": \"%s\", \"verdict\": \"%s\", \"band_policy\": \"%s\", \"band_verdict\": \"%s\"}" \
   $ot_pg_C $n $mean [expr {$n ? [lindex $arr 0] : -1}] [expr {$n ? [lindex $arr end] : -1}] $ot_pg_bound $dev $ot_pg_tol $ws $hs \
   [expr {[info exists ::env(LAYER_PARASITICS_FILE)] ? $::env(LAYER_PARASITICS_FILE) : "platform setRC.tcl"}] $ot_pg_mode $v $ot_pg_band_policy $ot_pg_band_verdict]
 close $fh
