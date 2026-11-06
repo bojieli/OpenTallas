@@ -28,7 +28,14 @@ def test_stopped_post_leg_stays_pending_and_declares_nothing(tmp_path):
     assert json.loads((kit/'hr_dead_inputs_proof.json').read_text())['verdict']=='PENDING'
     assert not (kit/'dead_inputs.json').exists()
     import pytest
-    for bad in ('post stopped mut pending emitted_v pending','post stopped mut rc=0 emitted_v rc=0',
+    # KV-PRM-B3 11-06: legs not yet returned (none failed) stay PENDING and declare nothing, as a stopped post leg does
+    for open_ in ('post stopped mut pending emitted_v pending', 'post pending mut pending emitted_v pending'):
+        (kit/'hr_dead_inputs_proof.json').unlink()
+        (fp/'eq_rc.txt').write_text(open_)
+        assert H.emit(fp,'m',kit,['dead[0]']) == []
+        assert json.loads((kit/'hr_dead_inputs_proof.json').read_text())['verdict']=='PENDING'
+        assert not (kit/'dead_inputs.json').exists()
+    for bad in ('post stopped mut rc=0 emitted_v rc=0',
                 'post stopped mut rc=1 emitted_v rc=1','post rc=1 mut rc=1 emitted_v rc=0'):
         (fp/'eq_rc.txt').write_text(bad)
         with pytest.raises(ValueError): H.emit(fp,'m',kit,['dead[0]'])
