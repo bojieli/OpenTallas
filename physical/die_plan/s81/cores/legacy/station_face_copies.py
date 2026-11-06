@@ -237,6 +237,40 @@ def classify(split, top, child_modules, abi):
     return out
 
 
+def dead_ffs(m):
+    """FFs whose forward comb cone reaches no port and no live FF (fixpoint): ORFS synth (eliminate_dead_logic) removes
+    exactly these, so the pose must not demand them (t51: W 24 / E 39 reset relay leaves, matched 1:1 against 1_synth.v).
+    A child-dead FF is dead in the unsplit type too: every crossing is a port."""
+    N = Net(m)
+    reach = {}
+    for n, c in m["cells"].items():
+        if not FF_RE.search(c["type"]):
+            continue
+        seen, st, port, tgt = set(), [b for _, bb in N.outs(n) for b in bb], False, set()
+        while st:
+            b = st.pop()
+            if isinstance(b, str) or b in seen:
+                continue
+            seen.add(b)
+            for ln, _ in N.lds[b]:
+                if ln == "<port>":
+                    port = True
+                elif FF_RE.search(N.ctype(ln)):
+                    tgt.add(ln)
+                else:
+                    st += [x for _, bb in N.outs(ln) for x in bb]
+        reach[n] = (port, tgt)
+    live = {n for n, (p, _) in reach.items() if p}
+    grew = True
+    while grew:
+        grew = False
+        for n, (_, t) in reach.items():
+            if n not in live and t & live:
+                live.add(n)
+                grew = True
+    return sorted(set(reach) - live)
+
+
 def read_pose(path):
     t = Path(path).read_text()
     ent = re.findall(r"^ \{(.+?)\} \{([0-9.]+) ([0-9.]+) ([0-9.]+) ([0-9.]+) (\S+) (\S+)\} \\$", t, re.M)
@@ -268,7 +302,7 @@ def apply(split, top, child_modules, abi, poses):
                     for bits in c["connections"].values() for b in bits if isinstance(b, int)]
                  + [b for m in split["modules"].values() for v in m.get("ports", {}).values()
                     for b in v["bits"] if isinstance(b, int)])
-    pose_out, record = {}, {}
+    pose_out, record, record_dead = {}, {}, {}
     for cm in child_modules:
         mod = new["modules"][cm]
         text, sites = read_pose(poses[cm])
@@ -338,6 +372,30 @@ def apply(split, top, child_modules, abi, poses):
             raise ValueError("pose dict anchor changed")
         pose_out[cm] = text.replace(anchor, "\n" + lines.rstrip("\n").rstrip() + "\n]\nset ot_np_blk", 1) if lines else text
         pose_out[cm] = pose_out[cm].replace(" \\\n\n", " \\\n")
+        # dead FFs leave the pose (synth removes them; the pose's missing-FF guard stays exact for every live FF);
+        # the kit's own face capture flops ot_fcap_* (unused-input pin registers, core_face_post_synth.tcl, FIRM at the
+        # pin by face_flops.tcl) are not source FFs: the undeclared-FF guard skips that one name class only
+        dead = dead_ffs(mod)
+        dset = set(dead)
+        keep_lines = []
+        for ln in pose_out[cm].split("\n"):
+            mm = re.match(r"^ \{(.+?)\} \{", ln)
+            if mm and mm.group(1) in dset:
+                continue
+            keep_lines.append(ln)
+        if len(keep_lines) != len(pose_out[cm].split("\n")) - len(dead):
+            raise ValueError(f"{cm}: dead FF not found in the pose")
+        pose_out[cm] = "\n".join(keep_lines)
+        g_old = "if {[string match *DFF* [[$ot_np_i getMaster] getName]]} {error \"NATIVE_POSE undeclared source FF"
+        g_new = ("if {[string match *DFF* [[$ot_np_i getMaster] getName]] && ![string match ot_fcap_* $ot_np_nm]} "
+                 "{error \"NATIVE_POSE undeclared source FF")
+        if pose_out[cm].count(g_old) != 1:
+            raise ValueError("pose undeclared-FF guard changed")
+        pose_out[cm] = pose_out[cm].replace(g_old, g_new)
+        record_dead[cm] = dead
+        # odb has no status FIXED ("ValueError Unknown placement status" at global_place); LOCKED = DEF FIXED
+        pose_out[cm] = pose_out[cm].replace("setPlacementStatus FIXED", "setPlacementStatus LOCKED").replace(
+            "# Uses FIXED status", "# Uses LOCKED (= DEF FIXED) status")
         # pin contract names every child port as a scalar (pins.json / io.tcl findBTerm {fclk_in_ft13_i}); a 1-bit port
         # tagged single_bit_vector is written "[0:0]" and becomes BTerm "fclk_in_ft13_i[0]" (floorplan: native multiPORT
         # BTerm missing).  Drop the tag on 1-bit port nets: same bit, same connections, scalar declaration.
@@ -346,7 +404,7 @@ def apply(split, top, child_modules, abi, poses):
             nn = mod["netnames"].get(pn)
             if len(pv["bits"]) == 1 and nn and nn.get("attributes", {}).pop("single_bit_vector", None) is not None:
                 scalar.append(pn)
-        record[cm] = dict(copies=recs, scalar_ports=sorted(scalar))
+        record[cm] = dict(copies=recs, scalar_ports=sorted(scalar), dead_ffs_not_posed=record_dead[cm])
     # second pass on the transformed netlist: every output is now dedicated; inputs are declared from what the kit sees
     # (a copied relay that is also an input face register makes its capture input fan out: it is a reset input)
     cls2 = classify(new, top, child_modules, abi)

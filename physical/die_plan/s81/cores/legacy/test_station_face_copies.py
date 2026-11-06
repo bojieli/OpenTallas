@@ -46,7 +46,10 @@ def _split():
 def _pose(p, names):
     body = "".join(f" {{{n}}} {{{1.0 + 2 * i:.6f} 1.080000 1.080000 1.080000 R0 DFFHQNx1_ASAP7_75t_R}} \\\n"
                    for i, n in enumerate(names))
-    p.write_text("set ot_np_ffs [dict create \\\n" + body + "\n]\nset ot_np_blk 1\n")
+    p.write_text("# Uses FIXED status so ordinary face-flop release cannot collapse the source stages.\n"
+                 "set ot_np_ffs [dict create \\\n" + body + "\n]\nset ot_np_blk 1\n"
+                 "if {[string match *DFF* [[$ot_np_i getMaster] getName]]} {error \"NATIVE_POSE undeclared source FF $ot_np_nm\"}\n"
+                 " $ot_np_i setPlacementStatus FIXED\n")
 
 
 def test_apply_check(tmp_path):
@@ -68,7 +71,12 @@ def test_apply_check(tmp_path):
     cp = "u_bound.u_rrl_1/q$_DFF_P___fc_p00002"
     assert wm[cp]["connections"]["D"] == [3] and wm[cp]["attributes"]["ot_face_copy_of"] == "u_bound.u_rrl_1/q$_DFF_P_"
     assert wm["u_bound.u_rrl_2/q$_DFF_P_"]["connections"]["D"] != [4]          # local load moved off the port bit
-    assert cp in (out / "pw.tcl").read_text()
+    pw = (out / "pw.tcl").read_text()
+    assert cp in pw and "setPlacementStatus LOCKED" in pw and "FIXED" not in pw.replace("DEF FIXED", "")
+    assert "![string match ot_fcap_* $ot_np_nm]" in pw
+    # u_rrl_2 drives nothing, and the original u_rrl_1 now only feeds u_rrl_2: both dead -> not posed, recorded
+    assert rec["children"]["T_w"]["dead_ffs_not_posed"] == ["u_bound.u_rrl_1/q$_DFF_P_", "u_bound.u_rrl_2/q$_DFF_P_"]
+    assert "u_bound.u_rrl_2/" not in pw
     r = subprocess.run([sys.executable, "-I", str(TOOL), "check", str(sp), str(out / "split_fc.json"),
                         str(out / "face_copies.json")], capture_output=True, text=True)
     assert r.returncode == 0 and '"PASS"' in r.stdout, r.stderr

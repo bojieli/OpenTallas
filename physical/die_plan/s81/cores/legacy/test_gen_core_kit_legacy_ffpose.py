@@ -15,7 +15,7 @@ POSE = """set ot_np_sites [dict create \\
  {u_bound.u_b/q[0]$_DFF_P_} {3.000000 2.000000 1.080000 0.270000 MX DFFHQNx1_ASAP7_75t_R} \\
 ]
 if {0} {error "NATIVE_POSE undeclared source FF x"}
-$i setPlacementStatus FIXED
+$i setPlacementStatus LOCKED
 if {0} {error "NATIVE_POSE missing source FFs 0/0"}
 """
 
@@ -45,7 +45,7 @@ def test_sha_mismatch_refused(tmp_path):
 
 
 def test_missing_guard_refused(tmp_path):
-    text = POSE.replace("setPlacementStatus FIXED", "setPlacementStatus PLACED")
+    text = POSE.replace("setPlacementStatus LOCKED", "setPlacementStatus PLACED")
     with pytest.raises(SystemExit, match="guard"):
         G.stage_native_ff_pose(tmp_path, _rec(tmp_path, text), tmp_path)
 
@@ -54,3 +54,10 @@ def test_missing_sha_refused(tmp_path):
     (tmp_path / "pose.tcl").write_text(POSE)
     with pytest.raises(SystemExit, match="file, sha256"):
         G.stage_native_ff_pose(tmp_path, {"native_ff_pose": {"file": "pose.tcl"}}, tmp_path)
+
+
+def test_fixed_status_refused(tmp_path):
+    # odb has no status FIXED (global_place: "ValueError Unknown placement status"); LOCKED = DEF FIXED
+    text = POSE.replace("setPlacementStatus LOCKED", "setPlacementStatus LOCKED\n$i setPlacementStatus FIXED")
+    with pytest.raises(SystemExit, match="LOCKED"):
+        G.stage_native_ff_pose(tmp_path, _rec(tmp_path, text), tmp_path)
