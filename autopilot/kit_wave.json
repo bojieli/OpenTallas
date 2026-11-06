@@ -768,8 +768,8 @@
    },
    "plan": "/srv/opentallas-scratch3/claude/codex-wave-bind-1106/src_28fc7/physical/die_plan/s81/plan_h2_2249.json",
    "gen_host": "epyc5",
-   "src": "/srv/opentallas-scratch3/claude/kw22/src_8eeea",
-   "src_sha": "8eeea8e066115477412972bfe0d8436ca496a0aa",
+   "src": "/srv/opentallas-scratch2/claude/kw23/src_e9c49",
+   "src_sha": "e9c4952edf023ac3c29ec28db7c8d41546bab210",
    "kit_rtl": {
     "mode": "script",
     "script": "/srv/opentallas-scratch3/claude/codex-wave-bind-1106/kit_rtl_s81_ready_v3.sh",
@@ -1679,7 +1679,11 @@
     "dsdv_slice_c1x_C__t8@7",
     "dsdv_slice_lepw_mus_C__t1@7",
     "slice_station__t47@13",
-    "slice_station__t8@8"
+    "slice_station__t8@8",
+    "slice_station__t47@15",
+    "bk_sel__t2@14",
+    "slice_station__t52@13",
+    "slice_station__t8@10"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -1764,7 +1768,7 @@
     "ot_s81sl_kv_leaf__t5": "KW-FIX-22 09:4x: PLAN loop stop. On the S81 src_9f316/src_28fc7 recovery the wave relaunched this row every tick (09:18 @2, 09:28 @3, 09:37 @4) into the same kit_topology fail-closed 'kit_istations: class hi/ho planned on a subset of the lanes' (vnzero block). Plan/native-station owner DIE-S81-69 + Codex recovery: fix the station class coverage (or say it is a tool bug), then remove this hold; no design strike.",
     "ot_s81sl_leaf__t50": "KW-FIX-22 11:0x: PLAN loop stop. Stale retry entries ot_s81sl_leaf__t50@2..@5 (KW-FIX-4/6 11-03/04) matched today's new attempts, so the wave relaunched it every tick (10:28 a4, 10:37 a5, 10:57 a6) into the same kit_topology fail-closed 'kit_istations: leafup_o0 stations already inserted'. Same kit_istations class as kv_leaf__t1/t3/t4/t5 (DIE-S81-69 owns, COORD 10:2x (3)); release with that plan fix"
    },
-   "queue_src": "main@8eeea8e066115477412972bfe0d8436ca496a0aa",
+   "queue_src": "main@e9c4952edf023ac3c29ec28db7c8d41546bab210",
    "work_root": "/srv/opentallas-scratch3/claude/kw21-wave-1106/runs/s81/kit-wave",
    "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
    "retry_fix": {
@@ -2615,24 +2619,25 @@
    "note_gen_epyc56": "KW-FIX-18 19:5x (COORD 19:4x): gen_hosts epyc5+epyc6 first (kw11/src_16b + 14 GB referenced deps rsynced from epyc4 at the same paths); epyc4 kept in the base list, the disk watcher drops it while its scratch is low",
    "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
    "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained.",
-   "kw22_src_note": "KW-FIX-22 10:0x DIE-S81-69 09:49 CLASS (PORT_BIND extra rst_o_k[0]): src_9f316 reset_tree.out_pins() returned [] for native types; fixed on main by 7ceea6ad772 (tag bn-s81). Wave tools now main 8eeea8e066 (contains 9f316 + I202 pin audit). src_8eeea on epyc5 scratch3 = hardlink copy of Codex src_9f316 + git-archive of all 688 9f..8eeea changed files (0 deletions); reset_tree/gen_phys/kit_topology hashes equal 8eeea [CHECKED]. Native plan/asbuilt SRC28 + kit_rtl s81_ready_v3 unchanged (Codex recovery context kept)."
+   "kw22_src_note": "KW-FIX-22 10:0x DIE-S81-69 09:49 CLASS (PORT_BIND extra rst_o_k[0]): src_9f316 reset_tree.out_pins() returned [] for native types; fixed on main by 7ceea6ad772 (tag bn-s81). Wave tools now main 8eeea8e066 (contains 9f316 + I202 pin audit). src_8eeea on epyc5 scratch3 = hardlink copy of Codex src_9f316 + git-archive of all 688 9f..8eeea changed files (0 deletions); reset_tree/gen_phys/kit_topology hashes equal 8eeea [CHECKED]. Native plan/asbuilt SRC28 + kit_rtl s81_ready_v3 unchanged (Codex recovery context kept).",
+   "note_kw23_src": "KW-FIX-23 2026-11-06 12:0x: src /srv/opentallas-scratch3/claude/kw22/src_8eeea (8eeea8e0661) -> /srv/opentallas-scratch2/claude/kw23/src_e9c49 = main e9c4952edf0 I212 (KW-FIX-22 classfix + libwire + KIT_RE scratch3; tags cf-s81/cf-qc/ca-head); hardlink of kw21/src_c926f + git-archive of the 1805 changed files, blob sha verified 0 mismatches, on epyc5+epyc6 scratch2 | ONE batch 12:1x: slice_station__t47@15, bk_sel__t2@14, slice_station__t52@13, slice_station__t8@10 = class 'enqueue REFUSED: kit must be HOST:/srv/opentallas-scratch{,2}' (scratch3 work_root), fixed by KIT_RE 404b423268 on main I212."
   },
   "s81_head": {
    "enabled": true,
-   "event": "l48uh",
+   "event": "l48ui",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
     "clock": "PASS",
     "evidence": "KW-FIX-16 13:1x l48uf I135 tag flow-20261106-d-head (COORD 13:00 GO): prep_uf = repo l48uf unpacked from src_r 79e52bd98b2 (SHA256SUMS OK, plan 69ce0830f6e4, sidecar = l48ue bytes); only hd_tile u_core params + published tile_p differ from prep_ue. | KW-FIX-14 11:2x l48ue I121 9ac2d25b51e tag flow-20261106-a-head, COORD 11:05 GO: prep_ue = repo l48ue unpacked (SHA256SUMS OK, plan 9a2186d89486, sidecar = l48ud bytes), 9 types; hd_host/hd_mesh l48ud rows keep running (only_items_l48ud kept for restore). | KW-FIX-12 08:3x l48ud I107 COORD 08:12 GO. | KW-FIX-8 08:4x COORD 06:51 (3) + 07:34 (3): event l48ua = DIE-HEAD-61 07:09 READY prepared_l48ua (plan f64ad52c1726, sidecar bbdd2f7b5ad1), GATE_EVENTS l48ua merged I34 fe4a38b9337, pilot rows only. | KW-FIX-6 04:4x COORD 04:00: event l48se = l48sd + hd_tile RE-FORM only [CHECKED raw diff], src main I23. | KW-FIX-6 03:4x: event l48sd = DIE-HEAD-59 00:56 READY prepared_l48sd (plan 830b9a799df1, sidecar bbdd2f7b5ad1 unchanged), src dh59/serdes/wt@b65c0e2d46, GATE_EVENTS l48sd merged I18, COORD 00:4x + 03:2x GO; 5 items | KW-FIX-5 01:0x: event l48tc = DIE-HEAD-59 FREG-1 prepared_l48tc (plan e094ebb2b6e8, sidecar bbdd2f7b5ad1 unchanged), GATE_EVENTS l48tc merged I16, COORD GO; 2 items | KW-FIX-4 20:12: event l48rc = DH58-RF2 CONSERVATIVE prepared_l48rc (plan 8327f303db76, sidecar bbdd2f7b5ad1 unchanged), GATE_EVENTS l48rc (kw-fix-4-l48rc@3c9994a17c0), OWNER directive via DIE-HEAD-58; 4 items; l48tb turn_a/b keep running (cancel_superseded false) | KW-FIX-4 19:04: event l48tb = DH58-TURNB prepared_l48tb (plan f9623a82a239, sidecar there), GATE_EVENTS l48tb merged (kw-fix-4-itemenv@7585347926, RM-27 I4); turn_a/turn_b only (only_items_l48rf kept for restore); running l48rf kits untouched | KW-FIX-4 11:3x: event l48rf = DH58-RFPLAN PREPARED (intel2+epyc4 dh58/rfplan_work/prepared_l48rf, plan 59c391855c18, sidecar bbdd2f7b5ad1 = l48h1), DIE-HEAD-58 GO 11:24, COORD APPROVED 11:27, GATE_EVENTS l48rf 38b86b7486 merged; G0C advisory (0 new errors, 17 warn). cancel_superseded false: the 6 live l48h0 jobs finish on l48h0 (die owner). hd_mesh_e/hd_ctl_e/hd_ctl_n/hd_host_n holds released (l48rf geometry). | prev event l48h0 plan /srv/opentallas-scratch2/claude/dh55/prepared_l48h0/source_plan.json | KIT-WAVE-9 20:0x (COORD 19:03 (1)+(3)): HEAD plan of record l48x = l48w + 51 rst_start_raw pin moves (DIE-HEAD-52 a146f75cad3, G0C l48x = l48w 0 new, strict bind PASS); 12.25 gate on l48x variant h + --ca-write-fall TT +252.75 contract 0 BLOCKED(kits); hold_gate contract-relative limit FLOW-19 5751e5a949c merged (main f3e4659f554) | COORD 04:4x (4) + 05:4x: HEAD plan l47k (= l47 plan b87c81920f4c + K re-plan strap ties / sidecar dfe1fd228189; G0C l47k = l47: 1 ERROR reset-wavefront PENDING + 49 WARN, identical, main results/die_head_47_1031/l47k CHECKED); gate code l47k cb8aa342d07 merged main 1904e23afd2 (ROOT-MERGE-AI 05:46). Parent l47: COORD RULING 10-31 01:43: DIE-HEAD-47 l47 (l46a + value-only insertion_ff_ps 380 -> 342 on 21 types; G0C 0 new/0 gone, ot_clk kit byte-identical = l46 die clock, strict bind l46a PASS stands) APPROVED; merged main 1a34525e751 (ROOT-MERGE-AH); gate l47 = kit-wave-3 87dda5f5fce (main 8ce125d6a98) | COORD 11-01 09:2x/14:0x approved l48z event; gate b3cb024e493 merged main a0f8f0ad6; prepared plan 0c98a23000ad / sidecar dfe1fd228189; DIE-HEAD-53 export PASS n3_turn,mesh_e,hd_spn | ROOT COORDAPPROVED fe9f369d8 paired mesh SOURCE STAGE ONLY: plan ad1e5a17b355 / sidecar bbdd2f7b5ad1; frozen703 GEN PASS; wrapper+10 generated helpers byte-identical to measured mesh_kit4 (7671b3dde p90 29.81/GRT0/nativeEQ). hd_mesh_e held until actual checkpoint resume/adopt joins; no duplicate PLACE or physical-release credit; parent clock/signoff holds remain."
    },
-   "plan": "/srv/opentallas-scratch2/claude/codex-head-1105/prep_ctlrq/source_plan.json",
+   "plan": "/srv/opentallas-scratch3/claude/kw23/prep_l48ui/source_plan.json",
    "gen_host": "epyc5",
-   "src": "/srv/opentallas-scratch2/claude/kw21/src_c926f",
-   "src_sha": "c92647a21554177b48cb5c147348a9c220b1538f",
+   "src": "/srv/opentallas-scratch2/claude/kw23/src_e9c49",
+   "src_sha": "e9c4952edf023ac3c29ec28db7c8d41546bab210",
    "kit_rtl": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch2/claude/kw21/src_c926f/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+    "script": "/srv/opentallas-scratch2/claude/kw23/src_e9c49/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
     "note": "KW-FIX-16 12:5x I133 tag flow-20261106-c-head: src_q main 3d13a314805 (hardlink of src_p, schema accepts clock.tap_window.per_port_note), kit_rtl.sh byte-same as src_n. | KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46: src_s full clone main c512ffc3a94 | KW-FIX-8 I44 tag: src_r full clone main f8170b8b778, plan+sidecar same | KW-FIX-8 fall tag: kit_rtl from src_q main bf1e2233ce0, plan staged at same path on epyc4 | KW-FIX-8 08:4x: kit_rtl from src kw-fix-8/wt-head main fe4a38b9337. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | KW-FIX-3 11-03 05:1x: kit_rtl from my src wt/kw-fix-3-headsrc | KW-FIX-2 11-03 00:3x (COORD 00:2x (a)): kit_rtl from src claude/dh55-headsrc-1102@69e06c8b9 | KIT-WAVE-9 20:0x: head_wave_kit_rtl.py export on prepared l48x dir (DIE-HEAD-52: source plan e63f00ea5740, prepared 6b0b4547b074, sidecar dfe1fd228189, 20 types; export check PASS hd_st_turn/hd_tile/hd_spn CHECKED by DIE-HEAD-52) | KIT-WAVE-5: head_wave_kit_rtl.py export on prepared l47k dir (source die-head-47/head_source_l47k copy; source plan b87c81920f4c = l47, sidecar dfe1fd228189, prepared plan 7919bb9a0f9f, 20 types, wrappers byte-identical to l47); export hd_spn_end + hd_st_m PASS (CHECKED)"
    },
    "gen_args": [
@@ -2653,7 +2658,8 @@
     "hd_st_n4",
     "hd_tile",
     "hd_serdes",
-    "hd_lep0N"
+    "hd_lep0N",
+    "hd_host"
    ],
    "die_max_inflight": 60,
    "owner_lane": "HEAD die owner (DIE-HEAD-70)",
@@ -2740,7 +2746,10 @@
     "hd_spn_eshim_rx@5",
     "hd_spn_wshim_rx@5",
     "hd_spn_wshim_tx@8",
-    "hd_tile@4"
+    "hd_tile@4",
+    "hd_spn_wshim_rx@9",
+    "hd_ctl@2",
+    "hd_tile@5"
    ],
    "pilot_max": 2,
    "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -2853,7 +2862,7 @@
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": false,
-   "queue_src": "main@c92647a21554177b48cb5c147348a9c220b1538f",
+   "queue_src": "main@e9c4952edf023ac3c29ec28db7c8d41546bab210",
    "item_env": {
     "hd_ctl": {
      "OT_IO_HOLD": "sender_min"
@@ -3081,7 +3090,10 @@
     "hd_turn_a"
    ],
    "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
-   "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained."
+   "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained.",
+   "note_kw23_src": "KW-FIX-23 2026-11-06 12:0x: src /srv/opentallas-scratch2/claude/kw21/src_c926f (c92647a2155) -> /srv/opentallas-scratch2/claude/kw23/src_e9c49 = main e9c4952edf0 I212 (KW-FIX-22 classfix + libwire + KIT_RE scratch3; tags cf-s81/cf-qc/ca-head); hardlink of kw21/src_c926f + git-archive of the 1805 changed files, blob sha verified 0 mismatches, on epyc5+epyc6 scratch2",
+   "canonical_topology_prepare": false,
+   "note_kw23": "KW-FIX-23 2026-11-06 12:0x: COORD 11:2x (3) + DIE-HEAD-76 11:19: canonical_topology_prepare false (kit_wave opt-out b5726154290 on main I211; HEAD kit RTL = head_wave_kit_rtl export, no bind manifest, so kit_topology BIND_STALE cannot apply; pre-03:42 path that built the 13 counted HEAD types). Event l48ui (DIE-HEAD-75 195d87ac2d4 merged I208): plan prep_l48ui a2c18c19e08c = prep_ctlrq 8a47a824b3c4 + hd_serdes same_edge only (checked: only partition_types.hd_serdes differs), staged epyc4/5/6 scratch3 kw23/prep_l48ui (SHA256SUMS OK). ONE batch: hd_serdes (new block), hd_spn_wshim_rx@9 (BIND_STALE), hd_ctl@2 (fresh, l48uf cancelled), hd_host@2 (+ only_items), hd_tile@5."
   },
   "qwen_compute": {
    "enabled": true,
@@ -3095,8 +3107,8 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/kw21/src_c926f/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
    "gen_host": "epyc5",
-   "src": "/srv/opentallas-scratch2/claude/kw22/src_3761",
-   "src_sha": "3761570a71ceee45b7a7e8e5ce39502e9e8609ac",
+   "src": "/srv/opentallas-scratch2/claude/kw23/src_e9c49",
+   "src_sha": "e9c4952edf023ac3c29ec28db7c8d41546bab210",
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch2/claude/kw21/src_c926f/results/qc_ringfall_1105/bind/final_asbuilt.json",
@@ -3441,7 +3453,7 @@
     "slw_stm_v1__cl05fc43f7__cl389df4e9@10",
     "slw_stm_v3@6"
    ],
-   "queue_src": "main@3761570a71ceee45b7a7e8e5ce39502e9e8609ac",
+   "queue_src": "main@e9c4952edf023ac3c29ec28db7c8d41546bab210",
    "type_args": {
     "sle_fw_v2__cl69f5e854": [
      "--gpl-plain",
@@ -4038,7 +4050,8 @@
    "note_gen_epyc56": "KW-FIX-18 19:5x (COORD 19:4x): gen_hosts epyc5+epyc6 first (kw11/src_16b + 14 GB referenced deps rsynced from epyc4 at the same paths); epyc4 kept in the base list, the disk watcher drops it while its scratch is low",
    "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
    "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained.",
-   "kw22_src_note": "KW-FIX-22 09:5x COORD 09:3x: QC tools moved to tag flow-20261106-bz-qc (main 3761570a71c: I202 pin audit fd16143f611 + kit_topology explicit-asbuilt base fix). src_3761 on epyc5+epyc6 = hardlink copy of kw21/src_c926f + git-archive of every c926..3761 changed file (0 deletions); tree hashes of plan/kit_topology/pin_audit/kit_wave equal 3761 [CHECKED]; git HEAD inside still says c926 (index stale, tree is 3761). 'plan' deliberately stays src_c926f plan_qc52 (b398e285, base of the two-SU-type event) so plan + final_asbuilt + sidecar stay the one coherent ringfall_1105 context; the 3761 plan (ffdd710e) needs the new thin SU2 context the event names (DIE-QC-84 runs SU2 separately)."
+   "kw22_src_note": "KW-FIX-22 09:5x COORD 09:3x: QC tools moved to tag flow-20261106-bz-qc (main 3761570a71c: I202 pin audit fd16143f611 + kit_topology explicit-asbuilt base fix). src_3761 on epyc5+epyc6 = hardlink copy of kw21/src_c926f + git-archive of every c926..3761 changed file (0 deletions); tree hashes of plan/kit_topology/pin_audit/kit_wave equal 3761 [CHECKED]; git HEAD inside still says c926 (index stale, tree is 3761). 'plan' deliberately stays src_c926f plan_qc52 (b398e285, base of the two-SU-type event) so plan + final_asbuilt + sidecar stay the one coherent ringfall_1105 context; the 3761 plan (ffdd710e) needs the new thin SU2 context the event names (DIE-QC-84 runs SU2 separately).",
+   "note_kw23_src": "KW-FIX-23 2026-11-06 12:0x: src /srv/opentallas-scratch2/claude/kw22/src_3761 (3761570a71c) -> /srv/opentallas-scratch2/claude/kw23/src_e9c49 = main e9c4952edf0 I212 (KW-FIX-22 classfix + libwire + KIT_RE scratch3; tags cf-s81/cf-qc/ca-head); hardlink of kw21/src_c926f + git-archive of the 1805 changed files, blob sha verified 0 mismatches, on epyc5+epyc6 scratch2"
   },
   "hbm": {
    "enabled": true,
