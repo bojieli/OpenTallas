@@ -1,0 +1,161 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 2 thread(s).
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+OT_TIMING_LIBS TT exact_count 10 receipt /work/postcts_gate_tt.libraries.json
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/macros/ot_s81_pma_rxm.lef, created 1 library cells
+[WARNING ORD-2056] The following 4 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  ot_s81_kp4_dchn
+  ot_s81_pma_txm
+  ot_sram_1r1w2c_64x546_m1
+  ot_sram_1r1w_32x546_m1
+AM_MAP_RESULT native_PMA_to_face max 701.5786868403443 start=prx/q[532] end=$auto$ff.cc:337:slice$722/D
+Startpoint: prx (rising edge-triggered flip-flop clocked by rck)
+Endpoint: $auto$ff.cc:337:slice$722
+          (rising edge-triggered flip-flop clocked by rck)
+Path Group: rck
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock rck (rise edge)
+ 250.00  250.00   clock network delay (ideal)
+   0.00  250.00 ^ prx/pma_rck (ot_s81_pma_rxm)
+ 120.20  370.20 ^ prx/q[532] (ot_s81_pma_rxm)
+   0.00  370.20 ^ $auto$ff.cc:337:slice$722/D (DFFHQNx1_ASAP7_75t_R)
+         370.20   data arrival time
+
+ 833.00  833.00   clock rck (rise edge)
+ 250.00 1083.00   clock network delay (ideal)
+   0.00 1083.00   clock reconvergence pessimism
+        1083.00 ^ $auto$ff.cc:337:slice$722/CLK (DFFHQNx1_ASAP7_75t_R)
+ -11.22 1071.78   library setup time
+        1071.78   data required time
+---------------------------------------------------------
+        1071.78   data required time
+        -370.20   data arrival time
+---------------------------------------------------------
+         701.58   slack (MET)
+
+
+AM_MAP_RESULT native_PMA_to_face min 82.5836069498227 start=prx/q[532] end=$auto$ff.cc:337:slice$722/D
+Startpoint: prx (rising edge-triggered flip-flop clocked by rck)
+Endpoint: $auto$ff.cc:337:slice$722
+          (rising edge-triggered flip-flop clocked by rck)
+Path Group: rck
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock rck (rise edge)
+ 250.00  250.00   clock network delay (ideal)
+   0.00  250.00 ^ prx/pma_rck (ot_s81_pma_rxm)
+ 120.17  370.17 v prx/q[532] (ot_s81_pma_rxm)
+   0.00  370.17 v $auto$ff.cc:337:slice$722/D (DFFHQNx1_ASAP7_75t_R)
+         370.17   data arrival time
+
+   0.00    0.00   clock rck (rise edge)
+ 250.00  250.00   clock network delay (ideal)
+  25.00  275.00   clock uncertainty
+   0.00  275.00   clock reconvergence pessimism
+         275.00 ^ $auto$ff.cc:337:slice$722/CLK (DFFHQNx1_ASAP7_75t_R)
+  12.58  287.58   library hold time
+         287.58   data required time
+---------------------------------------------------------
+         287.58   data required time
+        -370.17   data arrival time
+---------------------------------------------------------
+          82.58   slack (MET)
+
+
+AM_MAP_RESULT face_to_pop12_am_ok max 313.907512350147 start=$auto$ff.cc:337:slice$723/QN end=$auto$ff.cc:337:slice$188/D
+Startpoint: $auto$ff.cc:337:slice$723
+            (rising edge-triggered flip-flop clocked by rck)
+Endpoint: $auto$ff.cc:337:slice$188
+          (rising edge-triggered flip-flop clocked by rck)
+Path Group: rck
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock rck (rise edge)
+ 250.00  250.00   clock network delay (ideal)
+   0.00  250.00 ^ $auto$ff.cc:337:slice$723/CLK (DFFHQNx1_ASAP7_75t_R)
+  53.56  303.56 v $auto$ff.cc:337:slice$723/QN (DFFHQNx1_ASAP7_75t_R)
+  25.45  329.01 v $abc$2519$auto$blifparse.cc:397:parse_blif$3071/Y (BUFx2_ASAP7_75t_R)
+  63.75  392.76 v $auto$extract_fa.cc:397:run$1020.genblk1[0].genblk1.fulladder/SN (FAx1_ASAP7_75t_R)
+  32.44  425.21 ^ $auto$extract_fa.cc:397:run$923.genblk1[0].genblk1.fulladder/CON (FAx1_ASAP7_75t_R)
+  17.57  442.77 v $auto$extract_fa.cc:397:run$923.genblk1[0].genblk1.fulladder/SN (FAx1_ASAP7_75t_R)
+  18.67  461.45 ^ $abc$2519$auto$blifparse.cc:397:parse_blif$3072/Y (INVx1_ASAP7_75t_R)
+  26.53  487.97 v $auto$extract_fa.cc:397:run$933.genblk1[0].genblk1.fulladder/CON (FAx1_ASAP7_75t_R)
+  27.35  515.32 ^ $auto$extract_fa.cc:397:run$933.genblk1[0].genblk1.fulladder/SN (FAx1_ASAP7_75t_R)
+  77.15  592.47 v $auto$extract_fa.cc:397:run$938.genblk1[0].genblk1.fulladder/SN (FAx1_ASAP7_75t_R)
+  34.26  626.73 v $abc$2519$auto$blifparse.cc:397:parse_blif$3070/Y (AND2x2_ASAP7_75t_R)
+  19.77  646.50 ^ $auto$extract_fa.cc:397:run$1036.genblk1[0].genblk1.fulladder/CON (FAx1_ASAP7_75t_R)
+  17.89  664.39 v $abc$2519$auto$blifparse.cc:397:parse_blif$2521/Y (INVx1_ASAP7_75t_R)
+  45.88  710.27 v $auto$extract_fa.cc:397:run$928.genblk1[0].genblk1.fulladder/SN (FAx1_ASAP7_75t_R)
+  24.56  734.83 v $abc$2519$auto$blifparse.cc:397:parse_blif$3074/Y (AND2x4_ASAP7_75t_R)
+  33.07  767.90 v $abc$2519$auto$blifparse.cc:397:parse_blif$3075/Y (OA211x2_ASAP7_75t_R)
+   0.00  767.90 v $auto$ff.cc:337:slice$188/D (DFFHQNx1_ASAP7_75t_R)
+         767.90   data arrival time
+
+ 833.00  833.00   clock rck (rise edge)
+ 250.00 1083.00   clock network delay (ideal)
+   0.00 1083.00   clock reconvergence pessimism
+        1083.00 ^ $auto$ff.cc:337:slice$188/CLK (DFFHQNx1_ASAP7_75t_R)
+  -1.19 1081.81   library setup time
+        1081.81   data required time
+---------------------------------------------------------
+        1081.81   data required time
+        -767.90   data arrival time
+---------------------------------------------------------
+         313.91   slack (MET)
+
+
+AM_MAP_RESULT face_to_pop12_am_ok min 60.34905932450735 start=$auto$ff.cc:337:slice$726/QN end=$auto$ff.cc:337:slice$188/D
+Startpoint: $auto$ff.cc:337:slice$726
+            (rising edge-triggered flip-flop clocked by rck)
+Endpoint: $auto$ff.cc:337:slice$188
+          (rising edge-triggered flip-flop clocked by rck)
+Path Group: rck
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock rck (rise edge)
+ 250.00  250.00   clock network delay (ideal)
+   0.00  250.00 ^ $auto$ff.cc:337:slice$726/CLK (DFFHQNx1_ASAP7_75t_R)
+  59.58  309.58 ^ $auto$ff.cc:337:slice$726/QN (DFFHQNx1_ASAP7_75t_R)
+  10.12  319.70 v $abc$2519$auto$blifparse.cc:397:parse_blif$3073/Y (XNOR2x1_ASAP7_75t_R)
+  29.98  349.68 v $abc$2519$auto$blifparse.cc:397:parse_blif$3075/Y (OA211x2_ASAP7_75t_R)
+   0.00  349.68 v $auto$ff.cc:337:slice$188/D (DFFHQNx1_ASAP7_75t_R)
+         349.68   data arrival time
+
+   0.00    0.00   clock rck (rise edge)
+ 250.00  250.00   clock network delay (ideal)
+  25.00  275.00   clock uncertainty
+   0.00  275.00   clock reconvergence pessimism
+         275.00 ^ $auto$ff.cc:337:slice$188/CLK (DFFHQNx1_ASAP7_75t_R)
+  14.34  289.34   library hold time
+         289.34   data required time
+---------------------------------------------------------
+         289.34   data required time
+        -349.68   data arrival time
+---------------------------------------------------------
+          60.35   slack (MET)
+
+
+AM_MAP_DONE

@@ -1819,6 +1819,11 @@ def gen(S: dict, mut_unland=False, rtl_out=None):
     top_lp = S.get("top_lp") or S["top"] + "_lp"
     P = Pm.plan(mut_unland=mut_unland)
     rtl, rt = Pm.emit(P, top_lp)
+    if top_lp == "ot_s81_kp4_dec_native_flat_lp":
+        # Preserve the default-off source option without changing its calendar.
+        sys.path.insert(0, str(ROOT / "tools" / "s81_link"))
+        from s81_rck_am import add_face3_option
+        rtl = add_face3_option(rtl)
     out = ROOT / S["out_dir"]
     out.mkdir(parents=True, exist_ok=True)
     if rtl_out:
