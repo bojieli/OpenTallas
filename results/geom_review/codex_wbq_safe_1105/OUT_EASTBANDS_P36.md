@@ -1,0 +1,5 @@
+# WBQ OUT east-half register-band review
+
+Previous full-width native FF regions caused actual GPL-0301: fixed regionarea15175.447um2 + movable4667.909um2 within18513.101um2 yields139.856% movable utilization, although true standardfill39.7%. Preserve failed candidate3. This is a placement reservation failure, not a mapped footprint failure.
+
+Source guide80528f9efc6 narrows all16 OUT native capture boxes to x21.6..38.88, same ypacket bands50.76..491.13. Actual generated pins+macro_reg_guide.json rendered and viewed in out_eastbands_generated_p36.png. PASS-COND for PLACE: captures stay beside E seam, the W half now admits shared combinational and externalface cells, clock entry central, no macros or halos. All pins, outline, RTL and cycle contracts unchanged. New kit intel2 codex-wbq-production/out-p36-eastbands-candidate4/kit/ot_wbq_sw_split_out_3e81981035f1-vB. Only byte-identical synthesis1_* reused; no previous floorplan/placement checkpoints copied. Actual placement endpoint/reach/clock/PDN review required before CTS or route.
