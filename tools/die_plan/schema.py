@@ -686,6 +686,14 @@ SCHEMA = {
                                        "physical_inst": _name, "physical_master": _name,
                                        "straps": _core_id_straps,
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"}, "sub_core_parent": {"type": "string", "minLength": 1}, "sub_core_leaf_pin": {"type": "string", "minLength": 1},
+                                       # QC-SLECTL-B 11-05: one paramod instance of the bound module hardened as a named
+                                       # wrapper master (param_wrap.py: kit-only rename, exact params, no logic)
+                                       "param_wrap": {"type": "object", "required": ["base", "params"], "additionalProperties": False,
+                                                      "properties": {"base": _name, "params": {"type": "object", "minProperties": 1,
+                                                                     "additionalProperties": {"type": "integer"}}}},
+                                       # QC-SLECTL-B 11-05: the core reset pin keeps its bound net (e.g. cland_start, rst_n);
+                                       # not a wavefront reset target (no relay, no RTL rewire)
+                                       "reset_net": _name,
                                        "physical_id_alias": _physical_id_alias,
                                        "position_id_contract": _position_id_contract,
                                        "bump_ports": _bump_ports,

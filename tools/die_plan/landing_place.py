@@ -316,6 +316,7 @@ def tcl(P,tn):
     if c.get('monitor')=='dataflow' or (root and tree is None):
         return _dataflow_tcl(tn,c,P.types[tn])
     for name,band in c.get('bands',{}).items():
+        if band.get('hard_core'):continue   # QC-SLECTL-B: the ring is a hard child placed on this band (hard_cores[])
         groups += _band_groups(tn, name, band, P.types[tn])
     for s in c.get('collector_local_sources',[]):
         x,y=s['xy_um']
@@ -361,6 +362,7 @@ def _dataflow_tcl(tn,c,t=None):
     output at each sender pin. No reset-tree collector exists, so nothing else is placed by this hook."""
     groups=_reader_start_groups(t)+_writer_start_groups(t)+_status_reset_groups(t);status=[]
     for name,band in sorted(c.get('bands',{}).items()):
+        if band.get('hard_core'):raise ValueError(f"{tn}: band {name} is a hard child; dataflow monitor form unsupported")
         groups += _band_groups(tn, name, band, t)
     for pin in sorted(c.get('pins',[]),key=lambda q:q['name']):
         if pin['dir']=='out' and pin['name'].startswith(('cland_up_ready_','cland_up_fault_')):
