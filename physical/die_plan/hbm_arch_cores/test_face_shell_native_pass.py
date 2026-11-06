@@ -3,6 +3,7 @@
 import importlib.util
 import subprocess
 import tempfile
+from test_native_seams import context_fixture
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -67,7 +68,8 @@ def fixture(root, module, source, pass_buses=None, extra=()):
     local=[str(path)]; srcs=[f'/work/rtl/{module}.sv']
     for f in extra:
         target=kd/'rtl'/f.name;target.write_text(f.read_text());local.append(str(target));srcs.append('/work/rtl/'+f.name)
-    report=fs.apply(kd,module,local,srcs,{},[],[],r'^clk$',r'^rst_n$',drop=False,pass_buses=pass_buses)
+    report=fs.apply(kd,module,local,srcs,{},[],[],r'^clk$',r'^rst_n$',drop=False,pass_buses=pass_buses,
+                    native_context=context_fixture(root/'context',module) if pass_buses else None)
     return kd,report
 
 

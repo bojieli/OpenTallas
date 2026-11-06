@@ -59,6 +59,22 @@ def guard(text,top,kd,fz,skip,scope=None):
             or sh.get('face_cycle_overrides')!={n:0 for n in sorted(declared)}):
             raise ValueError('native seam scope/cycle metadata disagree')
         if contract.get('kind')!='INTERNAL_CORE':raise ValueError('native seam needs the explicit INTERNAL_CORE contract')
+        ctx=contract.get('hard_child_context') or {}
+        if (ctx.get('schema')!='opentallas.native_hard_child_seam.v1' or ctx.get('module')!=fz.get('module')
+            or set(ctx.get('scope_buses',()))!=declared or not ctx.get('parent_contexts')
+            or ctx.get('plan_sha256')!=fz.get('plan_sha256') or ctx.get('pins_sha256')!=fz.get('pins_sha256')
+            or not re.fullmatch('[0-9a-f]{64}',ctx.get('core_conns_sha256',''))):
+            raise ValueError('native seam lacks its validated parent plan/pin/connectivity context')
+        for parent in ctx['parent_contexts']:
+            child=parent.get('child_inst')
+            if (not child or not parent.get('parent_partition_type') or parent.get('child_module')!=fz.get('module')
+                or set(parent.get('peers',{}))!=declared):raise ValueError('native seam parent/child scope invalid')
+            for bus,peer in parent['peers'].items():
+                other=peer.get('peer_inst')
+                if (not other or other==child or not peer.get('peer_module') or not peer.get('peer_port')
+                    or peer.get('width')!=ctx.get('bus_widths',{}).get(bus)
+                    or peer.get('child_targets')!=['core:'+other] or peer.get('peer_targets')!=['core:'+child]):
+                    raise ValueError('native seam is not an exclusive reciprocal peer hard child')
     if contract.get('partition_rule')!='R2_INTERNAL_TIMED_IN_PARTITION':raise ValueError('missing partition timing contract')
     models=macro_models(kd,fz['macros']);mods=FG.parse(text)
     for master in models:mods.pop(master,None) # retain opaque timed memory leaves
@@ -117,7 +133,8 @@ def guard(text,top,kd,fz,skip,scope=None):
     ports={};fails={}
     if scope is not None:
         for port in scope:
-            if port not in T.ports or re.match(skip,port) or T.dirs[port]!=contract.get('port_roles',{}).get(port):
+            if (port not in T.ports or re.match(skip,port) or T.dirs[port]!=contract.get('port_roles',{}).get(port)
+                or len(FG._bits_of(T,port))!=ctx.get('bus_widths',{}).get(port)):
                 raise ValueError('native seam port role missing/mismatched: '+port)
     for port in T.ports:
         if re.match(skip,port) or (scope is not None and port not in scope):continue

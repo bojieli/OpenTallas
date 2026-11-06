@@ -30,7 +30,14 @@ endmodule'''
 SCOPE=['b','nctrl','nout']
 CONTRACT=dict(kind='INTERNAL_CORE',partition_rule='R2_INTERNAL_TIMED_IN_PARTITION',scope_buses=SCOPE,
               port_roles=dict(b='input',nctrl='input',nout='output'))
-FZ=dict(schema='opentallas.hbm_arch.core_kit.v1',design='top',clocks=['clk'],resets=[],macros=[],
+CONTEXT=dict(schema='opentallas.native_hard_child_seam.v1',module='top',scope_buses=SCOPE,
+ bus_widths={n:1 for n in SCOPE},plan_sha256='1'*64,pins_sha256='2'*64,core_conns_sha256='3'*64,
+ parent_contexts=[dict(parent_partition_type='P',child_inst='child',child_module='top',peers={
+ n:dict(peer_inst='peer',peer_module='peer_top',peer_port=n,width=1,
+        child_targets=['core:peer'],peer_targets=['core:child']) for n in SCOPE})])
+CONTRACT['hard_child_context']=CONTEXT
+FZ=dict(schema='opentallas.hbm_arch.core_kit.v1',module='top',design='top',clocks=['clk'],resets=[],macros=[],
+        plan_sha256='1'*64,pins_sha256='2'*64,
         face_shell=dict(native_registered_passthrough=SCOPE,face_cycle_overrides={n:0 for n in SCOPE},
                         native_endpoint_contract=CONTRACT))
 SKIP='^(clk|clk_bad)$'
@@ -51,6 +58,11 @@ with tempfile.TemporaryDirectory() as tmp:
         rr=G.mixed_guard(mut,'top',kd,FZ,SKIP)
         assert rr['verdict']=='FAIL',(name,rr)
         print(name,'REJECTED',rr['fail_counts'])
+    external=copy.deepcopy(FZ)
+    external['face_shell']['native_endpoint_contract']['hard_child_context']['parent_contexts'][0]['peers']['b']['child_targets']=['bus:external']
+    try:G.mixed_guard(NET,'top',kd,external,SKIP)
+    except ValueError:pass
+    else:raise AssertionError('external bus masquerading as native peer accepted')
     malformed=copy.deepcopy(FZ);malformed['face_shell']['face_cycle_overrides']['b']=1
     try:G.mixed_guard(NET,'top',kd,malformed,SKIP)
     except ValueError:pass

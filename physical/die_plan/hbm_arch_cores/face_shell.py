@@ -396,7 +396,7 @@ def rename_module(files, module, new, defines=None):
 
 
 def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, drop=True, mutant=None, scalars=None,
-          stages=None, lockup=None, reset_relay=0, in_stages=None, pass_buses=None):
+          stages=None, lockup=None, reset_relay=0, in_stages=None, pass_buses=None, native_context=None):
     """turn kit `kd` (generated, top = `module` with exactly the plan pins) into a shelled kit.
     local: kit RTL paths (host), srcs: /work paths (config.mk), params: top params of `module` (moved onto the core
     instance).  reset_relay (opt-in, DIE-HBM-61/RTL): N >= 2 -> every active-low reset input (rst_re, name ending
@@ -420,6 +420,12 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
         if not hit_:
             raise RuntimeError(f"face_shell: pass {rx_!r} matches no signal bus")
         native_pass.update(hit_)
+    if native_pass:
+        if (not native_context or native_context.get("schema") != "opentallas.native_hard_child_seam.v1"
+            or native_context.get("module") != module or set(native_context.get("scope_buses", ())) != native_pass
+            or native_context.get("bus_widths") != {n: widths[n] for n in native_pass}
+            or not native_context.get("parent_contexts")):
+            raise RuntimeError("face_shell: native pass needs validated same-parent hard-child peer context")
     passthru.update(native_pass)
     clks = sorted(n for n in passthru if re.match(clk_re, n) and dirs[n] == "input")
     if not clks:
@@ -505,7 +511,7 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
         out["face_cycle_overrides"] = {n: 0 for n in sorted(native_pass)}
         out["native_endpoint_contract"] = dict(kind="INTERNAL_CORE",
             partition_rule="R2_INTERNAL_TIMED_IN_PARTITION", scope_buses=sorted(native_pass),
-            port_roles={n: dirs[n] for n in sorted(native_pass)},
+            port_roles={n: dirs[n] for n in sorted(native_pass)}, hard_child_context=native_context,
             parent_timing="all native data/valid/ready paths remain timed in the parent")
         out["latency"]["note"] += "; native registered buses in face_cycle_overrides retain zero wrapper cycles"
     if ist_:

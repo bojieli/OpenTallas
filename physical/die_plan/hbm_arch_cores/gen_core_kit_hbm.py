@@ -1413,6 +1413,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--face-pass", action="append", default=[], metavar="BUSRE",
                     help="opt-in native registered seam: matching signal buses keep their native source/capture "
                          "flops without an extra wrapper face stage; unmatched patterns fail; default none")
+    ap.add_argument("--face-pass-contract", default=None, metavar="JSON",
+                    help="required with --face-pass: exact peer module/port mapping; every view replica must have "
+                         "reciprocal hard-child connectivity inside its same parent partition")
     ap.add_argument("--face-stage", action="append", default=[], metavar="BUSRE=K",
                     help="opt-in (HBM-CORES-KITS-36/opstore, COORD 10-31 15:05): K extra free-placed pipeline register "
                          "stages before the face flop of every shell OUTPUT bus matching BUSRE (read data +K cycles on "
@@ -1498,6 +1501,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     a = ap.parse_args()
     if a.face_pass and a.face_shell == "off":
         raise SystemExit("--face-pass requires --face-shell on")
+    if bool(a.face_pass) != bool(a.face_pass_contract):
+        raise SystemExit("--face-pass and --face-pass-contract are required together")
     if a.final_ff_hold and a.single_mode_grt:
         raise SystemExit("--final-ff-hold requires the coupled TT/FF GRT session")
     V = json.load(open(a.views))
@@ -1772,13 +1777,23 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             md_ = REPO / (rec.get("macro_dirs", {}).get(m_) or f"physical/asap7_memory_macros_v2/{m_}")
             if (md_ / f"{m_}_tt.lib").is_file():
                 mlibs.append(str(md_ / f"{m_}_tt.lib"))
+        native_context = None
+        if a.face_pass:
+            from native_seams import validate as validate_native_seams
+            native_scope = [n_ for n_ in pb if any(re.search(rx_, n_) for rx_ in a.face_pass)
+                            and not re.match(clock_re, n_) and not re.match(reset_re, n_)]
+            try:
+                native_context = validate_native_seams(plan, pdir, v, native_scope,
+                                                       json.load(open(a.face_pass_contract)), sha(plan_path))
+            except (ValueError, KeyError, OSError) as exc:
+                raise SystemExit(f"NATIVE_SEAM {a.view}: {exc}")
         try:
             shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, clock_re, reset_re,
                              drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_},
                              stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_stage} or None,
                              lockup=a.face_lockup or None, reset_relay=a.face_reset_relay,
                              in_stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_in_stage} or None,
-                             pass_buses=a.face_pass or None)
+                             pass_buses=a.face_pass or None, native_context=native_context)
         except RuntimeError as e:
             raise SystemExit(f"FACE_SHELL {a.view}: {e}")
         for f_ in shell["files"]:
