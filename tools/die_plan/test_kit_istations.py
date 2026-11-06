@@ -277,3 +277,50 @@ def test_relay_sites_ring_keys_post_landing():
     assert KI.relay_sites_post_tcl("t", {"relay_sites": {"u_slg.xe0[0]": [1, 2]}}) is None
     only_ring = KI.relay_sites_only_tcl("t", {"relay_sites": {"u_cland_a/y[0]": [1, 2]}})
     assert "proc rs_place_all" in only_ring and "rs_place_all [dict" not in only_ring
+
+
+# ---- DIE-S81-70 11-06: flat native kv_leaf binds (stations bound at the slice LF_CS_* depths, counted, flat globs)
+def _flat_bound(hi=1, ho=1, y=1, extra=""):
+    regs = []
+    for l in range(16):
+        regs.append(f"    wire [1:0] w_u_vp_g_ln_{l}_u_cst_hi_0_Y;")
+        regs.append(f"    wire [1:0] w_u_vp_g_ln_{l}_u_cst_ho_0_Y;")
+        for j in range(hi):
+            regs.append(f"    always @(posedge clk) g_u_vp_g_ln_{l}_u_cst_hi_gd_s_{j}_u_q <= 1'b0;")
+        for j in range(ho):
+            regs.append(f"    always @(posedge clk) g_u_vp_g_ln_{l}_u_cst_ho_gd_s_{j}_u_q <= 1'b0;")
+    for j in range(y):
+        regs.append(f"    always @(posedge clk) g_u_cst_y_gd_s_{j}_u_q <= 1'b0;")
+    return "module t_leaf_bound (input wire clk, input wire rst_n);\n" + "\n".join(regs) + extra + "\nendmodule\n"
+
+
+def _run_native(tmp_path, plan, bound, *opts):
+    kd = tmp_path / "kit"
+    kd.mkdir(exist_ok=True)
+    (kd / "t_leaf_bound.sv").write_text(bound)
+    (kd / "kit_rtl.json").write_text(json.dumps(dict(bound_module="t_leaf_bound", files=[str(kd / "t_leaf_bound.sv")])))
+    return _run_core(tmp_path, plan, *opts)
+
+
+def test_native_flat_bind_depths_match_and_flat_sites(tmp_path):
+    bound = _flat_bound(hi=1, ho=1, y=1)
+    r, kd = _run_native(tmp_path, _core_plan(hi=1, ho=1), bound, "--apply")
+    assert r.returncode == 0, r.stderr
+    assert (kd / "t_leaf_bound.sv").read_text() == bound          # native: never re-parameterised
+    tcl = (kd / "istations.tcl").read_text()
+    assert "is_place {*u_vp_g_ln_9_u_cst_hi_gd_s_0_u_*} 109.0 10.0 cst:hi" in tcl
+    assert "is_place {*u_vp_g_ln_9_u_cst_ho_gd_s_0_u_*} 209.0 5.0 cst:ho" in tcl
+    assert "is_place {*u_cst_y_gd_s_0_u_*} 50.015 60.015 cst:y" in tcl
+    rep = json.loads((kd / "kit_rtl.json").read_text())["kit_istations"]
+    assert any(x.get("bind") == "native_flat" for x in rep)
+
+
+def test_native_flat_bind_depth_differs_fails_closed(tmp_path):
+    r, _ = _run_native(tmp_path, _core_plan(hi=2, ho=1), _flat_bound(hi=1, ho=1, y=1), "--apply")
+    assert r.returncode != 0 and "CS_HI_D" in r.stderr and "LF_CS_" in r.stderr
+
+
+def test_native_flat_bind_unplanned_station_fails_closed(tmp_path):
+    bound = _flat_bound(hi=1, ho=1, y=1, extra="\n    always @(posedge clk) g_u_cst_sw_gd_s_0_u_q <= 1'b0;")
+    r, _ = _run_native(tmp_path, _core_plan(hi=1, ho=1), bound)
+    assert r.returncode != 0 and "CS_SW_D" in r.stderr
