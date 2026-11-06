@@ -1,10 +1,10 @@
-# Codex handoff document (generated 2026-11-06 02:19 PST)
+# Codex handoff document (generated 2026-11-06 02:41 PST)
 
 Read ~/coord/CODEX-ROLE.md first: your role, the binding rules, and how to cover every task.
 
 # OpenTallas — current Codex handoff
 
-Updated 2026-11-06 02:19 PST. Current work only; historical evidence stays in lane files and the queue.
+Updated 2026-11-06 02:41 PST. Current work only; historical evidence stays in lane files and the queue.
 
 Claude stopped on the weekly limit; reported reset **2026-11-12 04:00 America/Los_Angeles**. Codex continues all lanes until explicitly told to hand back. Read `CODEX-ROLE.md`. Owner questions go as plain text under OWNER? in `CODEX-LOG.md`; keep working, never open a blocking dialog.
 
@@ -34,6 +34,7 @@ New results outside that cached census: KV ORDER qualified/count credit submitte
 - Failing cores get parallel targetedA and genuinely conservativeB (registered faces, <=150k functional cells, util<=.45, short reach/reset locality). Inspect actual generated config: explicit CLI settings previously lost to recipe defaults. Two structural strikes require a new form; few-endpoint residual ECO is permitted.
 - RTL stays exact: smallest meaningful lockstep/formal plus mutant, kit LEC for adoption. Declare every added cycle to TOK/model. Preserve failed evidence. Only released sign-off qualifies; later owner policy accepts LOCAL_PASS_NEEDS_PARENT for local counting, not die release.
 - **Hub=intel2. Localhost `/home/ubuntu/OpenTallas` is protected owner's checkout: no git there.** Own `codex/*` worktrees only. Heavy work via intel2 `ot-run`, measured RAM/disk admission. Preserve live jobs; do not duplicate them or kill another lane's jobs.
+- New worktrees: use `--no-checkout` then narrow sparse paths before checkout. Tracked physical artifacts make a full checkout tens of GB; abandoned partial checkouts caused a fleet ENOSPC incident.
 - Never edit scripts a live job reads. Fresh recovery copies and matched tool cohorts. No stash, force push, add-A, ours/theirs merges or deletion of others' unique work. Merge under intel2 lock, resolve in own branch, push and confirm HEAD==origin/main.
 - Cleanup only approved exact scopes/manifests; preserve actual SIGNED/.keep/live/bind/unique state. Root floors: epyc2/4=500GB, intel=150GB, epyc5/6=100GB. Follow admission guards.
 
@@ -63,13 +64,15 @@ New results outside that cached census: KV ORDER qualified/count credit submitte
 - **HBM projection (`hbm_projection`):** actual arithmetic build progressing; do not restart. Owned-row option/compiler boundary proof passes, but arithmetic qualification pending. One shared owned-root type will latch global row from existing launch metadata rather than require24 rank-specific views; explicit23 remote inputs/calendar still required.
 - **TOK (`token`, `ds_native`):** DS exact14station epoch biases merged dormant; scoped rebuilt candidate passes old epoch fault. Current KS diagnostic still has external HOST programming cut; do not call native boot. Default-off actual HOST frame queue/removal of force authorized. QW controlled build active; HBM top recovery reused86 interfaces and reduced frontend277GB to2.8GB, current top archive compiling. Historical cohort is not current G5.
 - **Wave/shared (`wave_flow`, `kit_assembly`):** staged pinned cohorts, preserve live jobs. Shared source realization, sealed hard-child generation, full reset context/internal stations, actual PG publication, typed clocks, argv cache/parser and exact proof transfer merged. Mandatory canonical bind emission is the next construction fix.
-- **Fleet (`fleet`):** **epyc4 scratch2 exhausted**, confirmed NK and PROMPT failures; recover creator-released inactive duplicates only, preserve live/SIGNED/.keep/unique. KV ring A remains active on that filesystem. epyc2 scratch~49GB below normal50GB admission floor. Resume retained checkpoints on hosts with space; no guard bypass or foreign job kills.
+- **Fleet (`fleet`):** disk incident on intel2/epyc4 interrupted jobs; preserve checkpoints, resume after measured headroom. Typed helper reclaimed its own abandoned50GB checkout; n4 reduced its own46GB source tree to120MB. Creator-released duplicate outputs only, no foreign/SIGNED/live cleanup. **Compare requested filesystem device against `/`, not just its pathname:** intel1 scratch3 and epyc2 scratch3 are ROOT-backed, contrary to earlier summaries. Direct OWNER root-heavy exception not located; only own unsupported root-backed jobs are being parked/re-homed. Verified epyc5/6 scratch2 are distinct from root. Scheduler status/admission misreports some root-backed capacity; fleet fixing it. No floor overrides.
+
 
 ## Integration / where to look
 
-Latest confirmed main **99c5ae21116881c67ebe0649acdd5c13850ea614**; published tags ae-head/ac-qc/aa-kv/af-s81/an-hbm (prefix `flow-20261106-`). Merged source does not imply deployment or physical qualification. Merge worker owns central intel2 lock and source merges.
+Latest confirmed main **7e11225c69a1582c2cef2d842ff7627a6b4d3dbf**; published tags ag-head/af-qc/ac-kv/ah-s81/as-hbm (prefix `flow-20261106-`). Merged source does not imply deployment or physical qualification. Merge worker owns central intel2 lock and source merges.
 
-Next READY batch: dormant bank PG6 `19323f08a0`; coherent WBQ p36 `cedee7b597c` + `27d8a911e60`; QC HC0 `e299c62a7c` plus actual dependency collector; proof-only N4 `b973a60daf3` (never old bad16fc branch). Owners must supply exact dependency/proof scope; no unqualified form activation.
+Merged since prior update: dormant real PG6, native source hash guard, dependency collector, optional LDCS2, HBM metadata-only cleanup, ninth QC ring export, selected hard-BB staging and geometry parse cache. All9 QC SLECTL rings qualified; controller remains ECO. HC0/SC five-type native union running; strict typed registered-hard-child face contract helper is active (no soft-D4 exemption). Pending source successors: hub-status must append default0 parameter; owned-root must preserve old12 positional parameters and exclude broad draft ancestry. Bank A coupled report looked positive but actual FF is-11.33/213 and DRV95/1; NOT SIGNED, M5 PG buried by M6 OBS also prevents parent use. RealPG6 A variant being prepared. WBQ p36 still requires actual native/profile/calendar/reset/PG qualification.
+
 
 Concrete jobs, branches and latest evidence: active `lanes/CODEX-*.md`, `CODEX-LOG.md`, and `lanes/COORD-REVIEW-QUEUE.md` on intel2 `coord/state`. Historical lane index stays in `lanes/CODEX.md`; do not copy historical journals here.
 
@@ -81,14 +84,13 @@ On explicit Claude-reset notice: park safely, append per-lane branches/SHAs/jobs
 
 ## Latest handoff milestones
 
-CODEX: DS native833 actualclockPASS, earlyLAND_FAULT diagnosed to6edgewriter/reader resetorigin skew. Scoped default0 reader EPOCH_BIAS+12/12smallestdata/reference/mutant proof READY f217e57fd20, no boundadoption; TOK-DS-5 notes. IMG2 exactsource2/5restoredcomponentsPASS, serialrecoveryactive epyc2.
+CODEX: 2026-11-06 02:29 PST: HBMmetadata bff publishedmain51f4c117ca5de1338d6500b682a143b991468264==origin/flow-aq-hbm.422active lanes/allhardcores/stations exactidentity, geometry0diff, sixactualnative rootbuses restored, sourceawareschema0. ExistingWBQ/CECCCM/LDCS retained, no sourceprofileactivat
 
-CODEX: 2026-11-06 00:53 PST MERGE: urgent multi-letter flow parser +dormant QC split support +exact Q2NF +IDXmetadata landed7ddbd3b72f0,tagsab/z/x/ac/ak verified. CurrentQC POR unchanged; fresh re-sign clients need parser refresh.
-CODEX: 2026-11-06 00:56 PST KV AHUB typed parent READY codex/kv-ahub-typed-1106@6fbf41e728: exact guarded ck7/AM projection, two signed hard views retained, GEN/PREFLIGHT PASS and image reviewed; one prepared parent kit handed to WAVE-FLOW after merge. Peer A/B and prompt C physical variants admitte
+CODEX: 2026-11-06 02:32 PST: VMSclockCresults7a0 landed03122667e23 (no tag/qualification); authoritativeBBstaging607 nowpublishedmain83f59787a6f8f966ea965bf647ddcc9fa5ef936f==origin. Tagsaf-head/ae-qc/ab-kv/ag-s81/ar-hbm. Freshfactory resolvesdeclaredactualfixedBB beforesealedassembly, basenameconfl
 
-CODEX: 2026-11-06 01:33 PST: main1b913c2b296==origin. Prior faecd095101 batch landed assembly70e623, PG6d655, incrementalIDX6320, typedAHUB6fbf, dormantCE5fadc, same-parent native seam661; tagsac-head/aa-qc/y-kv/ad-s81/al-hbm. Current batch44378953d42/7db00756012/1b913c2b296 lands legacyFREGf555, S8
+CODEX: 2026-11-06 02:39 PST: main7e11225c69a1582c2cef2d842ff7627a6b4d3dbf==origin; ninthQCviewbe83 isolatedcherry86531693dbf/plainmerge excludes42f8candidate; E5geometryparsecache5f directfetch/plainmerge. Tagsag-head/af-qc/ac-kv/ah-s81/as-hbm. NineQCexports complete, noPORactivation. Existing spars
 
-CODEX: 2026-11-06 02:06 PST: main99c5ae21116881c67ebe0649acdd5c13850ea614==origin. Eight approved sources: geometry7066 (only two existing PHYflop resites active, SD planning only), wave668, hardchildstationsd918, nativewidthe88, freshkit4cd, completedEQfdf7, optionalXOR414, QC8views e698. Merges a2
+CODEX: 2026-11-06 02:41 PST: TKMphase623results-onlypublishedmaincf615a8ccd5219a8828af6799a209daa29797dc4==origin;16filesrawlogsretained,nosource/flowtag/new+1qualification. Hubstatusdefault0successorb9f reviewPASS (DMUTABIappend, defaultdirectframe/warmup2; enabledoldmechanism/warmup3),272default/e
 
 For live jobs and new results, read the active lane files and lanes/COORD-REVIEW-QUEUE.md on intel2. Historical lane contents are intentionally omitted from this handoff.
 
