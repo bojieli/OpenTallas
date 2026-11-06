@@ -7,3 +7,5 @@ CODEX took over ROOT-MERGE-41 on codex/root-merge-1105. Own sparse tree intel2:/
 2026-11-05 23:28: HBMp35 plan-only landed2c7054fd3cd, flow-20261106-z-hbm remoteverified.20files0deletions. Other die tags remain c625. No open approved READY known; integration tree clean except keys.json untracked own diagnostic.
 
 2026-11-05 23:35: new class fixed on codex/core-cli-precedence-1105@8e18db45436, mergedbcd53c587e7 plus optedOFF ring71ff3ed4b14.15focused parser/config/freeze testsPASS. Explicit util/sigmax no longer lost to recipes on freshkits. All-die tagsu-head/s-qc/p-kv/u-s81/aa-hbm. Historical TXh0READY1c0a595fac found still unmerged, root ruling pending.
+
+2026-11-05 23:43: mainc04a5fb3037==origin. Publishedbatch202980878d1 q3width9218b7b2243+wrapperd9a362d313e+STARTface65bcdb2336a+TXh0202980878d1;tagsv-head/t-qc/q-kv/v-s81/ab-hbm. DSlinkhelperc04a5fb3037 no physicaltag. Q3SHAconflictresolvedownbranchb9c822a0dfb keptboth additions. Cache discrepancyresolvedsamecache:48/102physicaldesigns vs46/94modules;old101predatespart34split. TKM61589 remainsunmergedwaitingnegativecontrol.
