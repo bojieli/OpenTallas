@@ -20,6 +20,12 @@ proc ot_prd_repair_targeted {drv_args} {
     set objects [get_pins -quiet $pin]
     if {![llength $objects]} {set objects [get_ports -quiet $pin]}
     if {![llength $objects]} continue
+    # KV-PEER-1 11-06 (class fix): a violator that is a top PORT (selected at OT_PRD_TARGET_SLEW_PS below the limit)
+    # has no -of_objects net in STA (STA-0100 unsupported object type Port, peer eco1): select the net of its name.
+    if {[llength [get_ports -quiet $pin]] && ![llength [get_pins -quiet $pin]]} {
+      foreach net [get_nets -quiet [get_full_name $objects]] {dict set keep [ot_prd_net_key [get_full_name $net]] 1}
+      continue
+    }
     foreach net [get_nets -quiet -of_objects $objects] {dict set keep [ot_prd_net_key [get_full_name $net]] 1}
   }
   set guards {}
