@@ -359,6 +359,54 @@ if {$::env(OT_SETUP_MARGIN) ne ""} {
   puts "OT_PRD pass $_pass repair_timing $_st_args"
   repair_timing {*}$_st_args
 }
+# KW-FIX-24 11-06 (COORD 13:2x item 4): OT_HOLD_REPAIR_SCOPE=reg2reg (HOLD-REPAIR-SCOPE, orfs_hold_mm.tcl
+# ot_hold_repair_scope) now also scopes this post-route hold repair: port hold is the parent's (io_hold_parent), so no
+# buffer budget is spent on the standalone IO frame.  Two-mode session (kit_modes_eco.tcl synced, stage 4_cts.sdc): the
+# shared ot_hold_repair_scope itself.  Single-mode session (no orfs_hold_mm): the same temporary -hold false paths from
+# the non-clock inputs / to the outputs around the repair, then the exact SDC replay + write-back compare of that proc.
+# Env unset (or any other value): the body runs exactly as before.
+proc ot_prd_hold_scope {body} {
+  if {![info exists ::env(OT_HOLD_REPAIR_SCOPE)] || $::env(OT_HOLD_REPAIR_SCOPE) ne "reg2reg"} {
+    return [uplevel 1 $body]
+  }
+  if {[llength [info commands ot_hold_repair_scope]] && [info exists ::ot_mm_active] && $::ot_mm_active} {
+    puts "OT_PRD hold scope reg2reg: shared ot_hold_repair_scope (orfs_hold_mm.tcl)"
+    return [uplevel 1 [list ot_hold_repair_scope $body]]
+  }
+  set dir [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : [pwd]}]
+  set stem [file join $dir ot_prd_hold_scope_[pid]_[clock clicks]]
+  set before ${stem}_before.sdc
+  set after ${stem}_after.sdc
+  write_sdc -digits 17 -no_timestamp $before
+  set clock_sources [dict create]
+  foreach clock [all_clocks] {
+    foreach source [get_property $clock sources] { dict set clock_sources [get_full_name $source] 1 }
+  }
+  set inputs {}
+  foreach port [all_inputs] {
+    if {![dict exists $clock_sources [get_full_name $port]]} { lappend inputs $port }
+  }
+  set outputs [all_outputs]
+  puts "OT_HOLD_SCOPE begin (post-route single-mode) input_ports=[llength $inputs] output_ports=[llength $outputs]"
+  try {
+    if {[llength $inputs]} { set_false_path -hold -from $inputs }
+    if {[llength $outputs]} { set_false_path -hold -to $outputs }
+    puts "OT_HOLD_SCOPE repair (register-to-register only)"
+    return [uplevel 1 $body]
+  } finally {
+    if {[llength $inputs]} { unset_path_exceptions -hold -from $inputs }
+    if {[llength $outputs]} { unset_path_exceptions -hold -to $outputs }
+    read_sdc $before
+    write_sdc -digits 17 -no_timestamp $after
+    set fb [open $before r]; set tb [read $fb]; close $fb
+    set fa [open $after r]; set ta [read $fa]; close $fa
+    if {$tb ne $ta} { error "OT_HOLD_SCOPE restore differs: retained $before $after" }
+    puts "OT_HOLD_SCOPE restored exact SDC (port hold remains visible)"
+    if {![info exists ::env(OT_HOLD_SCOPE_KEEP_SDC)] || $::env(OT_HOLD_SCOPE_KEEP_SDC) ne "1"} {
+      file delete $before $after
+    }
+  }
+}
 set args [list -hold_margin $::env(OT_HOLD_MARGIN) -max_buffer_percent $::env(OT_HOLD_MAXBUF)]
 if {$::env(OT_HOLD_ALLOW_SETUP) == 1} { lappend args -allow_setup_violations }
 # two-mode kits: the SHARED guarded hold repair of orfs_hold_mm.tcl (R5 chunk buffer cap inside the same total budget,
@@ -369,10 +417,10 @@ if {[info exists ::env(OT_PRD_NO_HOLD)] && $::env(OT_PRD_NO_HOLD) eq "1"} {
   puts "OT_PRD pass $_pass hold: skipped (OT_PRD_NO_HOLD=1, TT-only pass)"
 } elseif {[llength [info commands ot_repair_hold_guarded]] && [ot_hold_guard_on]} {
   puts "OT_PRD pass $_pass hold: shared guarded repair (orfs_hold_mm.tcl) $args"
-  ot_rc_cal_hold { ot_repair_hold_guarded $args }
+  ot_rc_cal_hold { ot_prd_hold_scope { ot_repair_hold_guarded $args } }
 } else {
   puts "OT_PRD pass $_pass repair_timing -hold $args"
-  repair_timing -hold {*}$args
+  ot_prd_hold_scope { repair_timing -hold {*}$args }
 }
 
 # fail-safe: any clock-net instance whose master changed is put back (LOCKED cells are never legalized, so a grown
