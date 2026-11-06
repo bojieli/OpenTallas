@@ -3175,3 +3175,19 @@ CODEX: 2026-11-05 23:21 PST takeover active across all die/core/TOK/wave/fleet/i
 CODEX: 2026-11-05 23:22 PST S81 takeover: ROMQ hw_vB private DRT/finish launched epyc2 unit1553856 after viewed placement; vA ECO exhausted; svc_lo proof OOM diagnosed,192GB predecessor waiter retained; COLLE probes1041/2210 overflow, full variants live.
 
 CODEX: 2026-11-05 23:23 PST MERGE: HEAD ctlrq + shared literal capture LEC class landed main eedc0185670; focused12 tests pass, i195s 0 new failures, all-die tags s/q/n/s/x, TOK ingress+1 booked.
+
+CODEX: 2026-11-05 23:27 PST MERGE: exact HBM lane1p/WBQ source + shared GRT-error classification/reset-copy naming landed main c6252e2eaf8, all-die tags t/r/o/t/y; physical closure remains open. Concise handoff published coord fbe4dfc5e9e.
+
+CODEX: 2026-11-05 23:27 PST HBM p35 READY codex/hbm-1105@203db392bba:12 clock-pin access fixes + TX taller safe form, reviewed; wave main part34 fully extracted for source refresh.
+
+CODEX: 2026-11-05 23:28 PST MERGE: HBMp35 pairedclockpins/tallerTX plan merged2c7054fd3cd, HBMtagz verified; HBMowner launchingTXvB.
+
+CODEX: 2026-11-05 23:35 PST MERGE: explicit safeform CLIprecedence3generator class +defaultOFF CA-slotlap source landed71ff3ed4b14,15focused testsPASS, tagsu/s/p/u/aa, no activekit changes.
+
+CODEX: 2026-11-05 23:36 PST HBM-FORMS: q3_link macro-wall fix bc3c84df212 (existing right-width branch,0cycles,11991check lockstep+mutant,GEOM viewed) READY to HBM owner; h9b/brmw signed routed results in re-LEC/re-sign; rb/lcmw/injmw2 ECOs active.
+CODEX: 2026-11-05 23:38 PST DS LINK-2GB recovered395 shared libs + top link/loader PASS; b22128a81d0 pushed; no simulation.
+2026-11-05 23:40 PST CODEX: all-die wave source activated 2c7054fd3cd on epyc4/5/6, HBM d44v35 + fresh HEAD ctlrq prep; five HEAD PSROOT + QC ftc/ftn infrastructure/class recovery released, KV sys_SD_v1 old hold removed per COORD21:40; original sources/jobs retained. coord local5d59981dc64 pending publication due unrelated dirty auto-handoff files.
+
+CODEX: 2026-11-05 23:41 PST S81 t46 current re-sign RECORDED TT61.19/FF0.02+LECEQ; reset clock-inverter class fix02adfe1d5b6 READY; COLLE conservativeM6 estimate0overflow->full sample epyc2unit1782147.
+
+CODEX: 2026-11-05 23:43 PST MERGE:q3width+KVwrapper+STARTface+TXh0 landed202980878d1,tagsv/t/q/v/ab;DSnative395PIC linkhelperlandedc04a5fb3037,simulationNOTRUN. CachedHBM count48/102designs vs46/94modules;old101denominatorpredatesq3split.

@@ -10061,3 +10061,11 @@ OWNER?
 None newly raised at takeover. Existing owner choices remain logged; no blocking dialogs.
 
 2026-11-05 23:21 PST milestone: collected Claude trajectory through weekly-limit stop; 10 continuation scopes active. Approved dh71-ctlrq conditioned source scope+existing cycle price; qc-lec-constant@1fd5f3b4e3 focused6 tests PASS; HBM SerDes taller TX recommendation approved subject legal plan fit/render. Latest OWNER12.24b/c (queue10-31 00:56/01:08/01:19) supersedes stale summary: released setup uncertainty0ps, hold25ps, 60ps setup margin INFO; no constraints changed.
+
+OWNER? 2026-11-05 23:28 PST — Authorize cancellation of the exact unstarted S81 svc_lo t7 proof waiter (intel2 client PID4094614; verify still unstarted) and migration to a new Codex job on epyc2? The 192GB proof is pinned epyc5/6 while epyc2 has >300GB admission. Recommendation: migrate after rechecking no workload started; default without authorization: retain waiter, do not duplicate or kill it, continue other lanes. Role prohibits stopping jobs Codex did not start.
+
+OWNER? 2026-11-05 23:30 PST — intel2 scratch2 is approaching its floor; 131 superseded Codex attempts remain protected by exact historical KW-LOG/JOB-SPEC/item-state references. May the cleanup lane MOVE (not delete) confirmed inactive superseded terminal attempts to epyc5/6 with verified copies and path-preserving symlinks, retaining all SIGNED/.keep/live/bind protections? Recommendation: permit exact manifest moves after terminal-state and path checks; default: preserve current guard/ref rule and spill new jobs elsewhere. Existing21:41 ruling says referenced rows KEEP, so this exception needs owner decision.
+
+- 2026-11-05 23:35 PST CODEX fleet: collected PRUNE1115 apply2 (639.88GB nominal removed/moved across intel2/epyc4/intel1), applied67 remaining approved dirs16.35GB nominal, recovered45.079GB actual from exact creator-released pristine aborted token checkout after root duplicate-source exception. Intel2 scratch2 73GB. Details lanes/CODEX-FLEET.md; existing signed/live/bind artifacts retained.
+
+2026-11-05 23:37 PST HBM: p35 merged2c7054fd3cd/z-hbm; current expanded waveplan d44v35 ready. Own rootctl ECO live epyc2, N4rsq refresh/ECO queued epyc6, EXPX shallowclock comparison queued epyc5. All job paths in DIE-HBM-78.md.
