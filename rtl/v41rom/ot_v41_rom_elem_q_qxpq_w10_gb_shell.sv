@@ -101,8 +101,10 @@ module ot_v41_rom_elem_q_qxpq_w10_gb_shell #(
     assign child_face={c_walking, c_bank_free, c_sh_free, c_pv, c_pval, c_prow, c_pseg, c_pnseg, c_perr, c_ppos, c_busy, c_fault};
     assign {walking, bank_free, sh_free, pv, pval, prow, pseg, pnseg, perr, ppos, busy, fault}=output_face;
     if (IOREG != 0) begin : g_ioreg
-        reg [IW-1:0] input_q;
-        reg [OW-1:0] output_q;
+        // Preserve each selected parent physical capture bank. Different ROMQ
+        // instances may share logical input nets but require separate local flops.
+        (* keep = 1, dont_touch = 1 *) reg [IW-1:0] input_q;
+        (* keep = 1, dont_touch = 1 *) reg [OW-1:0] output_q;
         always @(posedge clk) input_q<=input_face;
         if (OUTPUT_NEG != 0) begin : g_output_negative
             always @(negedge clk) output_q<=child_face;
