@@ -1,3 +1,58 @@
+# Opt-in continuation of an already repaired route-keeping ECO whose DRT has
+# exhausted stale kept-route pin access (e.g. DRT-1231 after a full AP wipe).
+# Run on the retained 5_1_grt DB: no repair_timing or SPEF replay is performed.
+# Ordinary ECOs retain their existing incremental-route behavior.
+proc ot_eco_reroute_data {} {
+  if {![info exists ::env(RESULTS_DIR)]} { error "OT_ECO_REROUTE_DATA: RESULTS_DIR missing" }
+  set rd $::env(RESULTS_DIR)
+  set nf [file join $rd clk_freeze_nets.txt]
+  set here [file dirname [info script]]
+  foreach f [list $nf [file join $here clk_freeze.tcl] [file join $here clk_geom_diff.py]] {
+    if {![file exists $f]} { error "OT_ECO_REROUTE_DATA: required file missing: $f" }
+  }
+  source [file join $here clk_freeze.tcl]
+  set b [ord::get_db_block]
+  set fh [open $nf r]; set keep [dict create]
+  foreach nm [split [read $fh] \n] {
+    if {$nm eq ""} continue
+    set n [$b findNet $nm]
+    if {$n eq "NULL" || $n eq ""} { close $fh; error "OT_ECO_REROUTE_DATA: frozen net missing: $nm" }
+    dict set keep $nm 1
+  }
+  close $fh
+  if {![dict size $keep]} { error "OT_ECO_REROUTE_DATA: frozen clock list empty" }
+  # Keep every recognized clock net as well as the immutable ECO freeze list.
+  foreach n [ot_clk_dbnets] { dict set keep [$n getName] 1 }
+  set rip {}
+  foreach n [$b getNets] {
+    if {[$n getSigType] in {POWER GROUND} || [dict exists $keep [$n getName]]} continue
+    set w [$n getWire]
+    if {$w eq "NULL" || $w eq ""} continue
+    if {![llength [$n getGuides]] && [llength [$n getITerms]]+[llength [$n getBTerms]]>1} {
+      error "OT_ECO_REROUTE_DATA: wired data net has no retained guides: [$n getName]"
+    }
+    lappend rip $w
+  }
+  set pre [file join $rd data_reroute_clock_before.tsv]
+  set post [file join $rd data_reroute_clock_after.tsv]
+  ot_clk_dump $pre before_data_unwire $nf
+  foreach w $rip { odb::dbWire_destroy $w }
+  ot_clk_dump $post after_data_unwire $nf
+  if {[catch {exec python3 -I [file join $here clk_geom_diff.py] $pre $post --json [file join $rd data_reroute_clock.json]} msg]} {
+    puts $msg; error "OT_ECO_REROUTE_DATA: frozen clock geometry changed"
+  }
+  puts $msg
+  puts "OT_ECO_REROUTE_DATA ripped_data_nets [llength $rip] preserved_clock_nets [dict size $keep]"
+  write_db [file join $rd 5_1_grt_data_unwired.odb]
+}
+if {[info exists ::env(OT_ECO_REROUTE_DATA)] && $::env(OT_ECO_REROUTE_DATA) eq "1"} {
+  ot_eco_reroute_data
+  # A fully ripped data route needs fresh PA for all masters, including insts
+  # whose old index happened to be nonnegative. The canonical wipe below clears
+  # the MPin and block catalogs after these indices become invalid.
+  foreach i [[ord::get_db_block] getInsts] { $i setPinAccessIdx -1 }
+}
+
 # FLOW-9 2026-10-30 (shared form of KVHEAD-KITS-2 rx259_eco8 drt_pre.tcl): PRE_DETAIL_ROUTE hook for DRT on an ECO'd
 # GRT DB (clk_freeze FIXED + setSpecial clock nets, swapMaster / inserted ECO cells, custom global_route + write_db).
 # Stock ORFS detail_route.tcl SIGSEGVs on two kinds of stale state such a DB can carry:
