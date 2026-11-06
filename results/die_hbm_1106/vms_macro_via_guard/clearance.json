@@ -1,0 +1,99 @@
+{
+  "candidate_only": true,
+  "layer": "M5",
+  "region_um": [
+    47.664,
+    76.356,
+    47.688,
+    146.892
+  ],
+  "actual_instance": "u_fcore.u_core.u_ot_pr_core.bank.u_a",
+  "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+  "origin_um": [
+    47.616,
+    76.38
+  ],
+  "orientation": "N",
+  "west_ports": 415,
+  "signal_clock_rectangles": 829,
+  "M4_OBS_local": [
+    0.072,
+    0.0,
+    174.672,
+    70.488
+  ],
+  "M5_actual_track_offset_pitch": [
+    0.024,
+    0.048
+  ],
+  "bad_good_via_x_um": [
+    47.64,
+    47.592
+  ],
+  "VIA45_M4_local": [
+    -0.023,
+    -0.012,
+    0.023,
+    0.012
+  ],
+  "VIA45_M5_local": [
+    -0.012,
+    -0.023,
+    0.012,
+    0.023
+  ],
+  "gap_um": {
+    "bad_M4_to_OBS": 0.02499999999999858,
+    "good_M4_to_OBS": 0.0730000000000004,
+    "bad_M5_to_guard": 0.012000000000000455,
+    "good_M5_to_guard": 0.060000000000002274
+  },
+  "wide_spacing_threshold_required_um": [
+    0.025,
+    0.072
+  ],
+  "M5_guard_width_required_spacing_um": [
+    0.024,
+    0.024
+  ],
+  "clock_nets_screened": 1721,
+  "actual_clock_M5_shapes": 15530,
+  "clock_M5_patches": 729,
+  "actual_clock_NDR_M5_width_spacing_um": [
+    0.024,
+    0.048
+  ],
+  "clock_hits_with_actual_rule_spacing": [],
+  "nearest_clock": {
+    "net": "clknet_1_1__leaf_ot_dtap_net_600001",
+    "box": [
+      47.58,
+      68.652,
+      47.604,
+      76.932
+    ],
+    "required_um": 0.048,
+    "gap_um": 0.060000000000002274
+  },
+  "wide_clock_shapes": 0,
+  "nearest_wide_clock_gap_um": null,
+  "actual_pg_boxes_screened": 77381,
+  "pg_hits_with_actual_rule_spacing": [],
+  "nearest_pg": {
+    "box": [
+      49.524,
+      146.293,
+      49.644000000000005,
+      146.339
+    ],
+    "gap_um": 1.8359999999999985,
+    "required_um": 0.072
+  },
+  "outline_um": [
+    0,
+    0,
+    270,
+    403.92
+  ],
+  "source_data_cycles": 0
+}
