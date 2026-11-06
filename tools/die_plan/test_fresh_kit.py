@@ -20,6 +20,9 @@ def test_partition_realizes_all_stations_before_generation(tmp_path):
         buses=[dict(name='i_a', dir='in', width=1, kind='data')], contents=[],
         internal_stations=[dict(conn='bus:i_a', from_um=[0, 0], to_um=[10, 20],
                                 regs_um=[[j+1, 0] for j in range(8)])])))))
+    import kit_topology as KT
+    bound=tmp_path/'bound';bound.mkdir()
+    KT.write_bind_receipt(json.loads(plan.read_text()),bound)
     out = tmp_path / 'fresh'
     def run(cmd, **kwargs):
         name = Path(cmd[2]).name
@@ -36,6 +39,9 @@ def test_partition_realizes_all_stations_before_generation(tmp_path):
             assert sv.count('u_ist_i_a_') == 8
             assert '.a(i_a_is7_q[0])' in sv
             kit = out / 'gen/t'; kit.mkdir(parents=True)
+            (kit/'freeze.json').write_text(json.dumps(dict(module='t_part')))
+        if any('/work/rtl_lint.py' in str(c) for c in cmd):
+            (out/'gen/t/kit_hierarchy.json').write_text(json.dumps(dict(problems=[],required_expected=8,required_matched=8)))
         if name == 'plan_review.py':
             (out / 'review/die_cores.png').write_bytes(b'fixture-render')
         return subprocess.CompletedProcess(cmd, 0, 'fixture factory\n')

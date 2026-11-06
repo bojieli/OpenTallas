@@ -37,3 +37,30 @@ macro paths resolve; the same frontend supplies the assembly/native inventory.
 means preparation completed, not physical signoff. Review the image before route;
 only the existing signoff flow qualifies a built block. Unknown overrides are
 rejected instead of being translated into guessed patches.
+
+Native bind freshness now follows the selected stage/reset topology. Successful
+`bind.py bind` records `native_topology.json`. An unrecorded or changed topology
+makes fresh preparation regenerate native bind into its own `native_bind`
+directory, using explicit `asbuilt` and the full `bind_context_plan` (defaults to
+`reset_context_plan`, then the selected plan). The selected topology must match
+that context. A same-manifest cached asbuilt JSON can be reused for plan-only
+changes; otherwise the ordinary native elaborator runs first. Old binds/kits are
+not rewritten.
+
+After canonical reset and `kit_istations --apply`, preparation checks actual
+kit-local instance names and literal raw-reset D/Q/clock connections against the
+plan and factory receipt. This covers input stations as well as native output
+stations without inserting them twice. The same RTL-lint frontend also records
+these required instances in `kit_hierarchy.json`; any discrepancy stops fresh
+preparation before route. Ordinary RTL-lint verdicts/signoff are unchanged.
+
+For a freshly completed bind produced by an older source cohort, its producer
+can record the exact input plan without repeating binding:
+
+```
+python3 -I tools/die_plan/kit_topology.py stamp-bind PLAN BIND --asbuilt CONFIG
+python3 -I tools/die_plan/kit_topology.py census PLAN TYPE KIT_RTL --receipt CENSUS.json
+```
+
+Stamping requires the existing bind report to contain zero errors. It does not
+replace the actual emitted-instance census or authorize P&R.
