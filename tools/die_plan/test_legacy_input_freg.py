@@ -75,3 +75,12 @@ def test_count_aligned_form_cannot_silently_take_legacy_capture():
     p, t = configured()
     t['count_aligned'] = {'ports': {}}
     with pytest.raises(CL.LandingError, match='legacy ring'): CL.Landings(p, t)
+
+def test_capture_configuration_passes_real_plan_schema():
+    import schema as S
+    clock_schema = S.SCHEMA['properties']['partition_types']['additionalProperties']['properties']['clock']
+    errors = []
+    S._check({'landing_input_freg': ['y']}, clock_schema, '$.clock', errors)
+    assert not errors
+    S._check({'landing_input_freg': ['bad bus']}, clock_schema, '$.clock', errors)
+    assert any('landing_input_freg' in e for e in errors)
