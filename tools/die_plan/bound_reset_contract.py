@@ -6,6 +6,9 @@ SCHEMA='opentallas.bound_reset_source.v1'
 KIT_SCHEMA='opentallas.bound_reset_kit.v1'
 
 def digest(value):
+ # Receipts are JSON: integer tap-map keys become strings on disk.
+ # Canonicalize that representation before ordering keys, including before emission.
+ value=json.loads(json.dumps(value))
  return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
 def emitted(path,tn,tree,provenance=None):
