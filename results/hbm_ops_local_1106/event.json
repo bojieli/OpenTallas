@@ -11,14 +11,14 @@
     "raw_ff": 8960,
     "baseline_cells_incl16macros": 57298,
     "estimated_cells_upper": 75218,
-    "estimated_added_std_um2": 2613.8,
+    "estimated_added_std_um2": 3270,
     "same_outline_um": [
       760.32,
       233.28
     ],
     "estimated_std_util_of_nonmacro_rows": 0.18,
     "column_map": "bank index//4, verified actual macro_placement.tcl columns13.824/200.448/387.072/573.696",
-    "placement": "two disjoint channel boxes per column, after4.32um macro halos; existing reg-guide-boxes schema",
+    "placement": "three atomic-storage partitions per column in three disjoint legal interrow channels after4.32um halo, existing reg-guide-boxes schema",
     "preservation": "existing canonical SYNTH_CANONICALIZE_TCL=ot_keep_regs.tcl required; no toolflow bypass",
     "macro_area_um2_estimate": 113609
   },
@@ -54,5 +54,15 @@
     }
   },
   "physical": "none launched yet; original jobs retained",
-  "adoption": "no sourceprofile/recipe/POR change"
+  "adoption": "no sourceprofile/recipe/POR change",
+  "both_variants": {
+    "opsa": "write+1/read+1/scalarread+1, write-cohort fault schedule only",
+    "opsb": "read+1/write+1, write-cohort fault schedule only",
+    "additional_raw_ff_upper_opsa": 10089,
+    "full_G0_G1_proof_checks": 1144,
+    "word_compares": 73216,
+    "latency_mutant_diff": 877,
+    "original_sources": "unchanged"
+  },
+  "scope_approval": "ROOT06:~20 narrow fresh OPS only released reg2reg on already parent-owned IO; exact fullTT/FF restored, NEEDS_PARENT debt visible, allfinalgates unchanged"
 }

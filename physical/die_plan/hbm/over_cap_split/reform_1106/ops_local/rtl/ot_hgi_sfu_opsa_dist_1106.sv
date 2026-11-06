@@ -1,11 +1,11 @@
-// Distinct source capability: column-local stage write cohort; stage-write visibility +1, all read/scalar response latency unchanged.
+// Distinct source capability: column-local stage write cohort; stage-write visibility +1, targeted default read/scalar latency unchanged; explicit both variant adds+1 read/scalar response.
 // HBM-REFORM-B10: IREG = 1 (registered tile inputs) + lgroup2_lf FREG = 1: rd_q +2 edges, flt +2 edges (COORD 15:16 pre-approved).
 // HBM-REFORM-B9: lgroup2_lf BREG = 1 (registered bank inputs): data and the scalar read path both +1 edge, so rd_q is +1 edge.
 // HBM-FORM-SPLIT d44v part 27: one operand group of ot_hgi_sfu_static_operand_store as a tile: g_operand[G] whole (request and stage decode,
 // scalar read path, rd_q mux, lgroup2) plus scalar_data_q[G]. Every input is an uncut-core pin, so the shell's +1/+1 keeps every read and stage date.
 `timescale 1ns/1ps
 `default_nettype none
-module ot_hgi_sfu_opsa_gblock_dist_1106 #(parameter [1:0] G = 2'd0, parameter integer IREG = 1) (
+module ot_hgi_sfu_opsa_gblock_dist_1106 #(parameter [1:0] G = 2'd0, parameter integer IREG = 1, RREG = 0) (
     input  wire          clk, rst_n,
     input  wire          scalar_load, scalar_enable,
     input  wire [31:0]   scalar_data,
@@ -43,6 +43,9 @@ module ot_hgi_sfu_opsa_gblock_dist_1106 #(parameter [1:0] G = 2'd0, parameter in
     reg  [511:0] scalar_read;
     reg          scalar_selected, scalar_selected2;
     reg  [511:0] scalar_read2;
+    reg [511:0] scalar_read3;
+    reg scalar_selected3;
+    always @(posedge clk) begin scalar_read3 <= scalar_read2; scalar_selected3 <= scalar_selected2; end
     wire [15:0]  req;
     wire [511:0] data;
     wire [7:0]   sw;
@@ -54,12 +57,13 @@ module ot_hgi_sfu_opsa_gblock_dist_1106 #(parameter [1:0] G = 2'd0, parameter in
     end
     for (genvar l = 0; l < 16; l = l + 1) begin : g_lane
         assign req[l] = rd_re_i[l] && rd_src_i[2*l +: 2] == 2'd0 && !scalar_enable_i;
-        assign rd_q[32*l +: 32] = scalar_selected2 ? scalar_read2[32*l +: 32] : data[32*l +: 32];
+        assign rd_q[32*l +: 32] = ((RREG != 0) ? scalar_selected3 : scalar_selected2) ?
+            ((RREG != 0) ? scalar_read3[32*l +: 32] : scalar_read2[32*l +: 32]) : data[32*l +: 32];
     end
     for (genvar b = 0; b < 8; b = b + 1) begin : g_stage
         assign sw[b] = stage_v_i[b] && stage_group_i[2*b +: 2] == G;
     end
-    ot_hgi_su_lgroup2_local_1106 #(.N(16),.M(16),.LWB(15),.AW(24),.NLW(0),.MACRO(1),.MUT_XBAR(0),.NS(8),.BREG(1),.FREG(1),.DREG(1)) u_g (
+    ot_hgi_su_lgroup2_local_1106 #(.N(16),.M(16),.LWB(15),.AW(24),.NLW(0),.MACRO(1),.MUT_XBAR(0),.NS(8),.BREG(1),.FREG(1),.DREG(1),.RREG(RREG)) u_g (
         .clk(clk), .rst_n(rst_n), .rq(req), .rr(req), .ra(rd_addr_i), .rd(data),
         .sr_v(8'd0), .sr_addr(120'd0), .sr_d(), .sr_rv(),
         .sw_v(sw), .sw_addr(stage_addr_i), .sw_mask(64'hffffffffffffffff), .sw_d(stage_data_i),
@@ -74,5 +78,15 @@ module ot_hgi_sfu_opsa_group1_dist_1106__fcore (
     input  wire clk, rst_n, scalar_load, scalar_enable, input wire [31:0] scalar_data, input wire [15:0] rd_re, input wire [383:0] rd_addr, input wire [31:0] rd_src,
     output wire [511:0] rd_q, input wire [7:0] stage_v, input wire [15:0] stage_group, input wire [119:0] stage_addr, input wire [2047:0] stage_data, output wire flt);
     ot_hgi_sfu_opsa_gblock_dist_1106 #(.G(2'd1)) u_t (.*);
+endmodule
+module ot_hgi_sfu_opsa_group0_both_1106__fcore (
+    input  wire clk, rst_n, scalar_load, scalar_enable, input wire [31:0] scalar_data, input wire [15:0] rd_re, input wire [383:0] rd_addr, input wire [31:0] rd_src,
+    output wire [511:0] rd_q, input wire [7:0] stage_v, input wire [15:0] stage_group, input wire [119:0] stage_addr, input wire [2047:0] stage_data, output wire flt);
+    ot_hgi_sfu_opsa_gblock_dist_1106 #(.G(2'd0),.RREG(1)) u_t (.*);
+endmodule
+module ot_hgi_sfu_opsa_group1_both_1106__fcore (
+    input  wire clk, rst_n, scalar_load, scalar_enable, input wire [31:0] scalar_data, input wire [15:0] rd_re, input wire [383:0] rd_addr, input wire [31:0] rd_src,
+    output wire [511:0] rd_q, input wire [7:0] stage_v, input wire [15:0] stage_group, input wire [119:0] stage_addr, input wire [2047:0] stage_data, output wire flt);
+    ot_hgi_sfu_opsa_gblock_dist_1106 #(.G(2'd1),.RREG(1)) u_t (.*);
 endmodule
 `default_nettype wire

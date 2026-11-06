@@ -1,0 +1,340 @@
+{
+  "boxes": [
+    {
+      "name": "write_c0_a",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_dist[0].g_reg.q_a"
+      ],
+      "box_um": [
+        31.104,
+        59.4,
+        169.344,
+        63.99
+      ]
+    },
+    {
+      "name": "write_c0_b",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_dist[0].g_reg.q_b"
+      ],
+      "box_um": [
+        31.104,
+        113.94,
+        169.344,
+        119.34
+      ]
+    },
+    {
+      "name": "write_c0_c",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_dist[0].g_reg.q_c"
+      ],
+      "box_um": [
+        31.104,
+        169.29,
+        169.344,
+        174.15
+      ]
+    },
+    {
+      "name": "read_b0",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[0].g_rreg.q"
+      ],
+      "box_um": [
+        4.32,
+        14.868,
+        9.504,
+        22.968
+      ]
+    },
+    {
+      "name": "read_b1",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[1].g_rreg.q"
+      ],
+      "box_um": [
+        4.32,
+        69.636,
+        9.504,
+        77.736
+      ]
+    },
+    {
+      "name": "read_b2",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[2].g_rreg.q"
+      ],
+      "box_um": [
+        4.32,
+        124.74,
+        9.504,
+        132.84
+      ]
+    },
+    {
+      "name": "read_b3",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[3].g_rreg.q"
+      ],
+      "box_um": [
+        4.32,
+        179.556,
+        9.504,
+        187.656
+      ]
+    },
+    {
+      "name": "write_c1_a",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_dist[1].g_reg.q_a"
+      ],
+      "box_um": [
+        217.728,
+        59.4,
+        355.968,
+        63.99
+      ]
+    },
+    {
+      "name": "write_c1_b",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_dist[1].g_reg.q_b"
+      ],
+      "box_um": [
+        217.728,
+        113.94,
+        355.968,
+        119.34
+      ]
+    },
+    {
+      "name": "write_c1_c",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_dist[1].g_reg.q_c"
+      ],
+      "box_um": [
+        217.728,
+        169.29,
+        355.968,
+        174.15
+      ]
+    },
+    {
+      "name": "read_b4",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[4].g_rreg.q"
+      ],
+      "box_um": [
+        190.944,
+        14.868,
+        196.128,
+        22.968
+      ]
+    },
+    {
+      "name": "read_b5",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[5].g_rreg.q"
+      ],
+      "box_um": [
+        190.944,
+        69.636,
+        196.128,
+        77.736
+      ]
+    },
+    {
+      "name": "read_b6",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[6].g_rreg.q"
+      ],
+      "box_um": [
+        190.944,
+        124.74,
+        196.128,
+        132.84
+      ]
+    },
+    {
+      "name": "read_b7",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[7].g_rreg.q"
+      ],
+      "box_um": [
+        190.944,
+        179.556,
+        196.128,
+        187.656
+      ]
+    },
+    {
+      "name": "write_c2_a",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_dist[2].g_reg.q_a"
+      ],
+      "box_um": [
+        404.352,
+        59.4,
+        542.592,
+        63.99
+      ]
+    },
+    {
+      "name": "write_c2_b",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_dist[2].g_reg.q_b"
+      ],
+      "box_um": [
+        404.352,
+        113.94,
+        542.592,
+        119.34
+      ]
+    },
+    {
+      "name": "write_c2_c",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_dist[2].g_reg.q_c"
+      ],
+      "box_um": [
+        404.352,
+        169.29,
+        542.592,
+        174.15
+      ]
+    },
+    {
+      "name": "read_b8",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[8].g_rreg.q"
+      ],
+      "box_um": [
+        377.568,
+        14.868,
+        382.752,
+        22.968
+      ]
+    },
+    {
+      "name": "read_b9",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[9].g_rreg.q"
+      ],
+      "box_um": [
+        377.568,
+        69.636,
+        382.752,
+        77.736
+      ]
+    },
+    {
+      "name": "read_b10",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[10].g_rreg.q"
+      ],
+      "box_um": [
+        377.568,
+        124.74,
+        382.752,
+        132.84
+      ]
+    },
+    {
+      "name": "read_b11",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[11].g_rreg.q"
+      ],
+      "box_um": [
+        377.568,
+        179.556,
+        382.752,
+        187.656
+      ]
+    },
+    {
+      "name": "write_c3_a",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_dist[3].g_reg.q_a"
+      ],
+      "box_um": [
+        590.976,
+        59.4,
+        729.216,
+        63.99
+      ]
+    },
+    {
+      "name": "write_c3_b",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_dist[3].g_reg.q_b"
+      ],
+      "box_um": [
+        590.976,
+        113.94,
+        729.216,
+        119.34
+      ]
+    },
+    {
+      "name": "write_c3_c",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_dist[3].g_reg.q_c"
+      ],
+      "box_um": [
+        590.976,
+        169.29,
+        729.216,
+        174.15
+      ]
+    },
+    {
+      "name": "read_b12",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[12].g_rreg.q"
+      ],
+      "box_um": [
+        564.192,
+        14.868,
+        569.376,
+        22.968
+      ]
+    },
+    {
+      "name": "read_b13",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[13].g_rreg.q"
+      ],
+      "box_um": [
+        564.192,
+        69.636,
+        569.376,
+        77.736
+      ]
+    },
+    {
+      "name": "read_b14",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[14].g_rreg.q"
+      ],
+      "box_um": [
+        564.192,
+        124.74,
+        569.376,
+        132.84
+      ]
+    },
+    {
+      "name": "read_b15",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_bank[15].g_rreg.q"
+      ],
+      "box_um": [
+        564.192,
+        179.556,
+        569.376,
+        187.656
+      ]
+    }
+  ]
+}

@@ -42,11 +42,11 @@ module ot_hgi_su_lgroup2_local_1106 #(
     wire [NS*256-1:0] sw_d_col[0:NCOL-1];
     generate for (genvar dc=0; dc<NCOL; dc=dc+1) begin:g_dist
         if (DREG != 0) begin:g_reg
-            localparam integer W = NS*(1+LWB+8+256), HALF = W/2;
-            (* keep = 1 *) reg [HALF-1:0] q_lo;
-            (* keep = 1 *) reg [W-HALF-1:0] q_hi;
-            wire [W-1:0] q = {q_hi,q_lo};
-            always @(posedge clk) {q_hi,q_lo} <= {sw_v, sw_addr, sw_mask, sw_d};
+            localparam integer W = NS*(1+LWB+8+256), PART = W/3;
+            (* keep = 1 *) reg [PART-1:0] q_a, q_b;
+            (* keep = 1 *) reg [W-2*PART-1:0] q_c;
+            wire [W-1:0] q = {q_c,q_b,q_a};
+            always @(posedge clk) {q_c,q_b,q_a} <= {sw_v, sw_addr, sw_mask, sw_d};
             assign {sw_v_col[dc],sw_addr_col[dc],sw_mask_col[dc],sw_d_col[dc]} = q;
         end else begin:g_direct
             assign {sw_v_col[dc],sw_addr_col[dc],sw_mask_col[dc],sw_d_col[dc]} = {sw_v,sw_addr,sw_mask,sw_d};
