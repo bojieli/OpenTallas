@@ -292,6 +292,47 @@ def split_revoked(recs, rows, sha=rec_netlist_sha):
 def revoked_module(m, rows):
     """an unreachable host's credit of a revoked name is not carried: its netlist cannot be checked on this refresh"""
     return any(row['name'] == m for row in rows)
+# COUNT-CREDIT (COUNT-AUDIT-1 2026-11-05): a COORD ruling that credits one signed view the tools cannot version (e.g. KV
+# order o4f, COORD 13:00: routed LEC UNPROVEN only on the u_sum.parts cones, BDD UNSAT on its own miter; resign.py fails
+# closed on a non-EQUIVALENT lec.json, so no kind:resign PROVENANCE exists).  lanes/COUNT-CREDIT.tsv:
+# '<die>\t<design/type>\t<scan_host>:<re-sign dir>\t<flow_tag>\t<ruling>\t<evidence>'.  A SIGNED record of that name below
+# that dir on that host, not already versioned, is versioned at the row's flow tag (src_commit = the tag's commit on
+# origin; a row whose tag is not a flow tag on origin credits nothing).  Pins / outline / RETIRED / COUNT-REVOKED still
+# apply; the ref carries 'COUNT-CREDIT <ruling>' so the credit stays visible.  One row = one view; remove it once a tool
+# path versions the view.
+COUNT_CREDIT = pathlib.Path(__file__).resolve().parent.parent / 'lanes' / 'COUNT-CREDIT.tsv'
+FLOW_TAG_RE = re.compile(r'^flow-\d{8}-[a-z](?:-(qc|s81|head|kv|hbm))?$')
+
+
+def credit_rows(path=None):
+    try: lines = pathlib.Path(path or COUNT_CREDIT).read_text().splitlines()
+    except Exception: return []
+    out = []
+    for ln in lines:
+        if not ln.strip() or ln.startswith('#'): continue
+        f = [x.strip() for x in ln.split('\t')]
+        if len(f) >= 4 and f[1] and ':' in f[2] and f[3]:
+            out.append(dict(die=f[0], name=f[1], key=f[2], flow_tag=f[3], ruling=f[4] if len(f) > 4 else '',
+                            evidence=f[5] if len(f) > 5 else ''))
+    return out
+
+
+def apply_credit(recs, rows, tag_commit=None):
+    """version the records a COUNT-CREDIT row names; -> list of (row, record path) applied"""
+    tag_commit = tag_commit or globals()['tag_commit']
+    done = []
+    for row in rows:
+        h, _, d = row['key'].partition(':'); d = d.rstrip('/') + '/'
+        full = tag_commit(row['flow_tag']) if FLOW_TAG_RE.match(row['flow_tag']) else ''
+        if not full: continue
+        for r_ in recs:
+            if r_.get('versioned') or r_.get('scan_host') != h or not str(r_.get('path') or '').startswith(d): continue
+            if row['name'] not in rec_keys(r_): continue
+            r_.update(src_commit=full, flow_tag=row['flow_tag'], versioned=True,
+                      credit=('%s %s' % (row['ruling'], row['evidence'])).strip())
+            r_.pop('resign_error', None)
+            done.append((row, r_['path']))
+    return done
 PROV_PY = r'''
 RESIGN_KEYS = ('src_commit', 'flow_tag', 'routed_db', 'build_commit', 'lec')
 def reloc(x, f):
@@ -1192,6 +1233,7 @@ def refresh(log=lambda *a: None):
         cutoff = first_flow_tag_ts(); res['first_flow_tag_ts'] = cutoff
         for r_ in recs:
             check_resign_tag(r_)
+        res['credited'] = [dict(row, path=p) for row, p in apply_credit(recs, credit_rows())]
         for r_ in recs:
             r_['legacy'] = is_legacy(r_, cutoff)
         recs, res['retired_records'] = split_retired(recs, retired_refs())
@@ -1211,6 +1253,8 @@ def refresh(log=lambda *a: None):
                     ref += ' src %s flow %s' % (str(r_['src_commit'])[:12], r_['flow_tag'])
                     if r_.get('resign'):
                         ref += ' RE-SIGN build %s db %s' % (str(r_['build_commit'])[:12], r_['routed_db'])
+                    if r_.get('credit'):
+                        ref += ' COUNT-CREDIT ' + r_['credit']
                 elif r_.get('resign_error'):
                     ref += ' RE-SIGN-INVALID ' + r_['resign_error']
                 elif r_.get('legacy'):
