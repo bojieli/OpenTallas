@@ -79,11 +79,15 @@ def adapt(text, contracts):
         new = {k:v for k,v in old.items() if k != 'NB'}
         new.update(SELECTED)
         stages = (contract.get('input_stages', 1), contract.get('output_stages', 1))
-        if stages not in ((1, 1), (3, 2)) or any(type(x) is not int for x in stages):
+        pair = contract.get('input_pair', 0)
+        profile = stages + (pair,)
+        if profile not in ((1, 1, 0), (3, 2, 0), (3, 2, 1), (4, 2, 1)) or any(type(x) is not int for x in profile):
             raise ValueError(instance + ': unsupported capture-stage profile')
-        profiles.add(stages)
+        profiles.add(profile)
         if 'input_stages' in contract or 'output_stages' in contract:
             new.update(INPUT_STAGES=str(stages[0]), OUTPUT_STAGES=str(stages[1]))
+        if 'input_pair' in contract:
+            new['INPUT_PAIR'] = str(pair)
         if new != contract['selected_params']:
             raise ValueError(instance + ': selected form differs from explicit contract')
         block = SHELL + ' #(' + ', '.join('.' + k + '(' + v + ')' for k,v in new.items()) + ') '
@@ -92,12 +96,13 @@ def adapt(text, contracts):
                          retained_instance_expression=old.get('INSTANCE'), removed_sealed_param=dict(NB=2)))
     if len(profiles) != 1:
         raise ValueError("one explicit ROMQ capture-stage profile required per parent type")
-    input_stages, output_stages = next(iter(profiles))
+    input_stages, output_stages, input_pair = next(iter(profiles))
     for a, end, block in sorted(edits, reverse=True):
         text = text[:a] + block + text[end:]
     return text, dict(schema='opentallas.romq_parent_adapter.v1', source_sha256=digest,
                       output_sha256=hashlib.sha256(text.encode()).hexdigest(), instances=rows,
-                      input_stages=input_stages, output_stages=output_stages,
+                      input_stages=input_stages, output_stages=output_stages, input_pair=input_pair,
+                      physical_FF_per_ROMQ=605*(input_stages+input_pair)+131*output_stages,
                       added_interface_cycles=input_stages + output_stages,
                       added_child_reset_edges=input_stages,
                       physical_status='PREPARATION_ONLY',
