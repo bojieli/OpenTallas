@@ -24,6 +24,32 @@ def pin_key(p):
     return p["bus"] if p.get("bit") is None else f"{p['bus']}[{p['bit']}]"
 
 
+def scalar_aliases(want, actual_names):
+    """Unique boundary-bit identity only: bare scalar <-> vector[0].
+
+    Both the complete plan and actual BTerm inventory must contain exactly
+    one bit of this bus. Ambiguous dual spellings and any wider bus stay exact.
+    """
+    planned = {}
+    for name, pin in want.items():
+        planned.setdefault(pin["bus"], []).append(name)
+    actual = {}
+    for name in actual_names:
+        m = re.fullmatch(r"(.*)\[([0-9]+)\]", name)
+        base = m[1] if m else name
+        actual.setdefault(base, []).append(name)
+    aliases = {}
+    for bus, names in planned.items():
+        if len(names) != 1 or len(actual.get(bus, [])) != 1:
+            continue
+        pn, an = names[0], actual[bus][0]
+        if pn == an or want[pn].get("bit") not in (None, 0):
+            continue
+        if {pn, an} == {bus, bus + "[0]"}:
+            aliases[an] = pn
+    return aliases
+
+
 def within_tolerance(delta):
     """Include the declared 1 nm boundary despite binary subtraction roundoff."""
     return delta <= TOL or math.isclose(delta, TOL, rel_tol=0.0, abs_tol=1e-12)
@@ -52,8 +78,10 @@ def main():
     want = {pin_key(p): p for p in json.load(open(os.environ["PINS"]))}
     res = dict(pins=len(want), ok=0, missing=[], wrong_layer=[], wrong_place=[], extra=[])
     seen = set()
+    aliases = scalar_aliases(want, [bt.getName() for bt in block.getBTerms()])
+    res["scalar_aliases"] = aliases
     for bt in block.getBTerms():
-        n = bt.getName()
+        n = aliases.get(bt.getName(), bt.getName())
         if n not in want:
             # clock taps (R4: clk, clk_t<i>), the reset tap and reset wavefront outs are interior die pins, not face pins;
             # so are the 12.2a1 pushdown island feed-through ports (ft_ck_i/o, ft_rst_i/o, mp_isl*: die-owned, checked by
