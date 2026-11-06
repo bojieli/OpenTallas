@@ -191,6 +191,7 @@ if [ -n "${OT_PRD_LOCAL_BRANCHES:-}" ]; then
   test -f "$OT_PRD_LOCAL_BRANCHES" || { echo "prd_mk: missing exact local-branch manifest"; exit 2; }
   cp "$OT_PRD_LOCAL_BRANCHES" "$OUT/prd_local_branches_targets.tsv"
   echo "OT_PRD_LOCAL_BRANCHES=/work/prd_local_branches_targets.tsv" >> $OUT/variant.env
+  [ -z "${OT_PRD_LOCAL_MACRO_HALO_UM:-}" ] || printf 'OT_PRD_LOCAL_MACRO_HALO_UM=%q\n' "$OT_PRD_LOCAL_MACRO_HALO_UM" >> $OUT/variant.env
 fi
 printf '{"tool": "post_route_drv", "variant": "%s", "from": "%s", "source_kit": "%s:%s", "source_route": "%s/%s", "parasitics": "%s", "signoff_tools": "%s"}\n' \
   $V $FROM "$(hostname)" $KIT $RS $SRC "$SPEF" "$SO" > $OUT/PRD.json

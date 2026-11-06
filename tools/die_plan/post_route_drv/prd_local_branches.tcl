@@ -23,9 +23,15 @@ proc ot_prd_local_site {b x y master} {
 }
 proc ot_prd_local_branches {file} {
  set b [ord::get_db_block];set u [[ord::get_db_tech] getDbUnitsPerMicron]
- set ::ot_prd_local_macros {};set halo [expr {round(2.16*$u)}]
+ set ::ot_prd_local_macros {};set halo 0
+ if {[info exists ::env(OT_PRD_LOCAL_MACRO_HALO_UM)]} {
+  set value $::env(OT_PRD_LOCAL_MACRO_HALO_UM)
+  if {![string is double -strict $value] || $value<=0} {error "OT_PRD_LOCAL_BRANCH invalid explicit macro halo"}
+  set halo [expr {round($value*$u)}]
+ }
  foreach i [$b getInsts] {
   if {![[$i getMaster] isBlock]} continue
+  if {!$halo} {error "OT_PRD_LOCAL_BRANCH macro-bearing use requires explicit site-authorized OT_PRD_LOCAL_MACRO_HALO_UM"}
   set r [$i getBBox];lappend ::ot_prd_local_macros [list [expr {[$r xMin]-$halo}] [expr {[$r yMin]-$halo}] [expr {[$r xMax]+$halo}] [expr {[$r yMax]+$halo}]]
  }
  set ::ot_prd_local_targets {};set plans {};set used {};set expected 0
@@ -83,7 +89,7 @@ proc ot_prd_local_branches {file} {
   if {![info exists ::env(OT_PRD_LOCAL_BRANCH_PLAN_ONLY)] || $::env(OT_PRD_LOCAL_BRANCH_PLAN_ONLY) ne "1"} {$i setLocation $x $y}
  }
  close $f
- puts "OT_PRD_LOCAL_BRANCH targets [dict size $::ot_prd_local_targets] movable_chain_buffers [dict size $used] macro_halo2.16um netlist_and_clocks_unchanged"
+ puts "OT_PRD_LOCAL_BRANCH targets [dict size $::ot_prd_local_targets] movable_chain_buffers [dict size $used] hardmacros[llength $::ot_prd_local_macros] explicit_macro_halo_dbu$halo netlist_and_clocks_unchanged"
 }
 
 proc ot_prd_local_hold_sequential {} {
