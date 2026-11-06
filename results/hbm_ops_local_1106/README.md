@@ -9,3 +9,10 @@ ConservativeB variants combine both local stages. OpsA B also delays scalar data
 The first component log reported217296 datawords conservatively; the literal two512+2048-bit comparisons contain24144032-bit word comparisons. The full-G0/G1 log73216 counts its four512-bit comparisons exactly. No result is inferred from an unexecuted physical variant.
 
 ConservativeB also uses existing empty ADDER_MAP_FILE mapping, as in measured rb_vB/s3_q_vC: the original OPS setup paths include slow FA/HA carry cells. A keeps the original mapping. No arithmetic/clock/gate change or sweep.
+
+
+Actual native maps: OPSB A54692std/6531.45um2, B99454std/12144.8um2; both16SRAM+512readFF, B8960writeFF. OPSA1 A109005std/13009um2, B103109std/12714.4um2; both8704dynamicwriteFF (exactly64constant-one maskbits/column removed), B512readFF.
+
+The native233.28um floorplan has3520ROWsegments/23807.3904um2 legal post4.32um-halo site area. DREG variants require parent-reviewed250.56um height and actual new pin/clock-entry event before PLACE. Captured old slot is not qualified for these variants.
+
+OPSB A first PLACE failed GPL0307 with331.2percent routability inflation and16 overflowing read-guide regions. Read guides now cover the actual full256-pin native M4 read field (localY1.728..26.232): guideY+.54..+27.54,27um tall, same west channel. Actual whole-site guide areas137..139um2 support the observed resized-region18.896um2 at~14percent; measured global4.4357x initialFF area is~30percent. Original failure retained. Same-outline A2 may PLACE after reviewed image/model; taller variants remain held for parent geometry. No GPL parameter change or density waiver.
