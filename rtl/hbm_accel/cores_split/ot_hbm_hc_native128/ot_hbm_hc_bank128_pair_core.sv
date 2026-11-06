@@ -35,6 +35,26 @@ module ot_hbm_hc_bank128_pair_core(clk, fault, go, lane_valid, rst_n, square, su
   wire x_read;
   input x_write;
   wire x_write;
+  // Bank128 write ingress: parent programming advances by one edge. The
+  // address/data/enable cohort is never separated; read/compute paths stay native.
+`ifdef OT_HC128_WFACE
+  reg [511:0] wface_data;
+  reg [9:0] wface_addr;
+  reg wface_we0, wface_we1, wface_xwe;
+  always @(posedge clk) begin
+    wface_data <= write_data;
+    wface_addr <= write_addr;
+    if (!rst_n) begin
+      wface_we0 <= 1'b0;
+      wface_we1 <= 1'b0;
+      wface_xwe <= 1'b0;
+    end else begin
+      wface_we0 <= weight_we0;
+      wface_we1 <= weight_we1;
+      wface_xwe <= x_write;
+    end
+  end
+`endif
   wire \u_c.u_b.g_w[0].we ;
   wire \u_c.u_b.g_w[1].we ;
   wire \u_c.u_b.g_x[0].we ;
@@ -3177,10 +3197,22 @@ module ot_hbm_hc_bank128_pair_core(clk, fault, go, lane_valid, rst_n, square, su
     .rd_out({ \u_c.u_b.wq[255] , \u_c.u_b.wq[254] , \u_c.u_b.wq[253] , \u_c.u_b.wq[252] , \u_c.u_b.wq[251] , \u_c.u_b.wq[250] , \u_c.u_b.wq[249] , \u_c.u_b.wq[248] , \u_c.u_b.wq[247] , \u_c.u_b.wq[246] , \u_c.u_b.wq[245] , \u_c.u_b.wq[244] , \u_c.u_b.wq[243] , \u_c.u_b.wq[242] , \u_c.u_b.wq[241] , \u_c.u_b.wq[240] , \u_c.u_b.wq[239] , \u_c.u_b.wq[238] , \u_c.u_b.wq[237] , \u_c.u_b.wq[236] , \u_c.u_b.wq[235] , \u_c.u_b.wq[234] , \u_c.u_b.wq[233] , \u_c.u_b.wq[232] , \u_c.u_b.wq[231] , \u_c.u_b.wq[230] , \u_c.u_b.wq[229] , \u_c.u_b.wq[228] , \u_c.u_b.wq[227] , \u_c.u_b.wq[226] , \u_c.u_b.wq[225] , \u_c.u_b.wq[224] , \u_c.u_b.wq[223] , \u_c.u_b.wq[222] , \u_c.u_b.wq[221] , \u_c.u_b.wq[220] , \u_c.u_b.wq[219] , \u_c.u_b.wq[218] , \u_c.u_b.wq[217] , \u_c.u_b.wq[216] , \u_c.u_b.wq[215] , \u_c.u_b.wq[214] , \u_c.u_b.wq[213] , \u_c.u_b.wq[212] , \u_c.u_b.wq[211] , \u_c.u_b.wq[210] , \u_c.u_b.wq[209] , \u_c.u_b.wq[208] , \u_c.u_b.wq[207] , \u_c.u_b.wq[206] , \u_c.u_b.wq[205] , \u_c.u_b.wq[204] , \u_c.u_b.wq[203] , \u_c.u_b.wq[202] , \u_c.u_b.wq[201] , \u_c.u_b.wq[200] , \u_c.u_b.wq[199] , \u_c.u_b.wq[198] , \u_c.u_b.wq[197] , \u_c.u_b.wq[196] , \u_c.u_b.wq[195] , \u_c.u_b.wq[194] , \u_c.u_b.wq[193] , \u_c.u_b.wq[192] , \u_c.u_b.wq[191] , \u_c.u_b.wq[190] , \u_c.u_b.wq[189] , \u_c.u_b.wq[188] , \u_c.u_b.wq[187] , \u_c.u_b.wq[186] , \u_c.u_b.wq[185] , \u_c.u_b.wq[184] , \u_c.u_b.wq[183] , \u_c.u_b.wq[182] , \u_c.u_b.wq[181] , \u_c.u_b.wq[180] , \u_c.u_b.wq[179] , \u_c.u_b.wq[178] , \u_c.u_b.wq[177] , \u_c.u_b.wq[176] , \u_c.u_b.wq[175] , \u_c.u_b.wq[174] , \u_c.u_b.wq[173] , \u_c.u_b.wq[172] , \u_c.u_b.wq[171] , \u_c.u_b.wq[170] , \u_c.u_b.wq[169] , \u_c.u_b.wq[168] , \u_c.u_b.wq[167] , \u_c.u_b.wq[166] , \u_c.u_b.wq[165] , \u_c.u_b.wq[164] , \u_c.u_b.wq[163] , \u_c.u_b.wq[162] , \u_c.u_b.wq[161] , \u_c.u_b.wq[160] , \u_c.u_b.wq[159] , \u_c.u_b.wq[158] , \u_c.u_b.wq[157] , \u_c.u_b.wq[156] , \u_c.u_b.wq[155] , \u_c.u_b.wq[154] , \u_c.u_b.wq[153] , \u_c.u_b.wq[152] , \u_c.u_b.wq[151] , \u_c.u_b.wq[150] , \u_c.u_b.wq[149] , \u_c.u_b.wq[148] , \u_c.u_b.wq[147] , \u_c.u_b.wq[146] , \u_c.u_b.wq[145] , \u_c.u_b.wq[144] , \u_c.u_b.wq[143] , \u_c.u_b.wq[142] , \u_c.u_b.wq[141] , \u_c.u_b.wq[140] , \u_c.u_b.wq[139] , \u_c.u_b.wq[138] , \u_c.u_b.wq[137] , \u_c.u_b.wq[136] , \u_c.u_b.wq[135] , \u_c.u_b.wq[134] , \u_c.u_b.wq[133] , \u_c.u_b.wq[132] , \u_c.u_b.wq[131] , \u_c.u_b.wq[130] , \u_c.u_b.wq[129] , \u_c.u_b.wq[128] , \u_c.u_b.wq[127] , \u_c.u_b.wq[126] , \u_c.u_b.wq[125] , \u_c.u_b.wq[124] , \u_c.u_b.wq[123] , \u_c.u_b.wq[122] , \u_c.u_b.wq[121] , \u_c.u_b.wq[120] , \u_c.u_b.wq[119] , \u_c.u_b.wq[118] , \u_c.u_b.wq[117] , \u_c.u_b.wq[116] , \u_c.u_b.wq[115] , \u_c.u_b.wq[114] , \u_c.u_b.wq[113] , \u_c.u_b.wq[112] , \u_c.u_b.wq[111] , \u_c.u_b.wq[110] , \u_c.u_b.wq[109] , \u_c.u_b.wq[108] , \u_c.u_b.wq[107] , \u_c.u_b.wq[106] , \u_c.u_b.wq[105] , \u_c.u_b.wq[104] , \u_c.u_b.wq[103] , \u_c.u_b.wq[102] , \u_c.u_b.wq[101] , \u_c.u_b.wq[100] , \u_c.u_b.wq[99] , \u_c.u_b.wq[98] , \u_c.u_b.wq[97] , \u_c.u_b.wq[96] , \u_c.u_b.wq[95] , \u_c.u_b.wq[94] , \u_c.u_b.wq[93] , \u_c.u_b.wq[92] , \u_c.u_b.wq[91] , \u_c.u_b.wq[90] , \u_c.u_b.wq[89] , \u_c.u_b.wq[88] , \u_c.u_b.wq[87] , \u_c.u_b.wq[86] , \u_c.u_b.wq[85] , \u_c.u_b.wq[84] , \u_c.u_b.wq[83] , \u_c.u_b.wq[82] , \u_c.u_b.wq[81] , \u_c.u_b.wq[80] , \u_c.u_b.wq[79] , \u_c.u_b.wq[78] , \u_c.u_b.wq[77] , \u_c.u_b.wq[76] , \u_c.u_b.wq[75] , \u_c.u_b.wq[74] , \u_c.u_b.wq[73] , \u_c.u_b.wq[72] , \u_c.u_b.wq[71] , \u_c.u_b.wq[70] , \u_c.u_b.wq[69] , \u_c.u_b.wq[68] , \u_c.u_b.wq[67] , \u_c.u_b.wq[66] , \u_c.u_b.wq[65] , \u_c.u_b.wq[64] , \u_c.u_b.wq[63] , \u_c.u_b.wq[62] , \u_c.u_b.wq[61] , \u_c.u_b.wq[60] , \u_c.u_b.wq[59] , \u_c.u_b.wq[58] , \u_c.u_b.wq[57] , \u_c.u_b.wq[56] , \u_c.u_b.wq[55] , \u_c.u_b.wq[54] , \u_c.u_b.wq[53] , \u_c.u_b.wq[52] , \u_c.u_b.wq[51] , \u_c.u_b.wq[50] , \u_c.u_b.wq[49] , \u_c.u_b.wq[48] , \u_c.u_b.wq[47] , \u_c.u_b.wq[46] , \u_c.u_b.wq[45] , \u_c.u_b.wq[44] , \u_c.u_b.wq[43] , \u_c.u_b.wq[42] , \u_c.u_b.wq[41] , \u_c.u_b.wq[40] , \u_c.u_b.wq[39] , \u_c.u_b.wq[38] , \u_c.u_b.wq[37] , \u_c.u_b.wq[36] , \u_c.u_b.wq[35] , \u_c.u_b.wq[34] , \u_c.u_b.wq[33] , \u_c.u_b.wq[32] , \u_c.u_b.wq[31] , \u_c.u_b.wq[30] , \u_c.u_b.wq[29] , \u_c.u_b.wq[28] , \u_c.u_b.wq[27] , \u_c.u_b.wq[26] , \u_c.u_b.wq[25] , \u_c.u_b.wq[24] , \u_c.u_b.wq[23] , \u_c.u_b.wq[22] , \u_c.u_b.wq[21] , \u_c.u_b.wq[20] , \u_c.u_b.wq[19] , \u_c.u_b.wq[18] , \u_c.u_b.wq[17] , \u_c.u_b.wq[16] , \u_c.u_b.wq[15] , \u_c.u_b.wq[14] , \u_c.u_b.wq[13] , \u_c.u_b.wq[12] , \u_c.u_b.wq[11] , \u_c.u_b.wq[10] , \u_c.u_b.wq[9] , \u_c.u_b.wq[8] , \u_c.u_b.wq[7] , \u_c.u_b.wq[6] , \u_c.u_b.wq[5] , \u_c.u_b.wq[4] , \u_c.u_b.wq[3] , \u_c.u_b.wq[2] , \u_c.u_b.wq[1] , \u_c.u_b.wq[0]  }),
     .rr_addr(18'h00000),
     .rr_en(2'h0),
+`ifdef OT_HC128_WFACE
+    .w_addr_in(wface_addr),
+`else
     .w_addr_in(write_addr),
+`endif
+`ifdef OT_HC128_WFACE
+    .w_ce_in(wface_we0),
+`else
     .w_ce_in(weight_we0),
+`endif
     .w_mask_in(256'hffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff),
+`ifdef OT_HC128_WFACE
+    .wd_in(wface_data[255:0])
+`else
     .wd_in(write_data[255:0])
+`endif
   );
   ot_sram_1r1w_1024x256_m2_r2c2 \u_c.u_b.g_w[1].u_m  (
     .clk(clk),
@@ -3191,10 +3223,22 @@ module ot_hbm_hc_bank128_pair_core(clk, fault, go, lane_valid, rst_n, square, su
     .rd_out({ \u_c.u_b.wq[511] , \u_c.u_b.wq[510] , \u_c.u_b.wq[509] , \u_c.u_b.wq[508] , \u_c.u_b.wq[507] , \u_c.u_b.wq[506] , \u_c.u_b.wq[505] , \u_c.u_b.wq[504] , \u_c.u_b.wq[503] , \u_c.u_b.wq[502] , \u_c.u_b.wq[501] , \u_c.u_b.wq[500] , \u_c.u_b.wq[499] , \u_c.u_b.wq[498] , \u_c.u_b.wq[497] , \u_c.u_b.wq[496] , \u_c.u_b.wq[495] , \u_c.u_b.wq[494] , \u_c.u_b.wq[493] , \u_c.u_b.wq[492] , \u_c.u_b.wq[491] , \u_c.u_b.wq[490] , \u_c.u_b.wq[489] , \u_c.u_b.wq[488] , \u_c.u_b.wq[487] , \u_c.u_b.wq[486] , \u_c.u_b.wq[485] , \u_c.u_b.wq[484] , \u_c.u_b.wq[483] , \u_c.u_b.wq[482] , \u_c.u_b.wq[481] , \u_c.u_b.wq[480] , \u_c.u_b.wq[479] , \u_c.u_b.wq[478] , \u_c.u_b.wq[477] , \u_c.u_b.wq[476] , \u_c.u_b.wq[475] , \u_c.u_b.wq[474] , \u_c.u_b.wq[473] , \u_c.u_b.wq[472] , \u_c.u_b.wq[471] , \u_c.u_b.wq[470] , \u_c.u_b.wq[469] , \u_c.u_b.wq[468] , \u_c.u_b.wq[467] , \u_c.u_b.wq[466] , \u_c.u_b.wq[465] , \u_c.u_b.wq[464] , \u_c.u_b.wq[463] , \u_c.u_b.wq[462] , \u_c.u_b.wq[461] , \u_c.u_b.wq[460] , \u_c.u_b.wq[459] , \u_c.u_b.wq[458] , \u_c.u_b.wq[457] , \u_c.u_b.wq[456] , \u_c.u_b.wq[455] , \u_c.u_b.wq[454] , \u_c.u_b.wq[453] , \u_c.u_b.wq[452] , \u_c.u_b.wq[451] , \u_c.u_b.wq[450] , \u_c.u_b.wq[449] , \u_c.u_b.wq[448] , \u_c.u_b.wq[447] , \u_c.u_b.wq[446] , \u_c.u_b.wq[445] , \u_c.u_b.wq[444] , \u_c.u_b.wq[443] , \u_c.u_b.wq[442] , \u_c.u_b.wq[441] , \u_c.u_b.wq[440] , \u_c.u_b.wq[439] , \u_c.u_b.wq[438] , \u_c.u_b.wq[437] , \u_c.u_b.wq[436] , \u_c.u_b.wq[435] , \u_c.u_b.wq[434] , \u_c.u_b.wq[433] , \u_c.u_b.wq[432] , \u_c.u_b.wq[431] , \u_c.u_b.wq[430] , \u_c.u_b.wq[429] , \u_c.u_b.wq[428] , \u_c.u_b.wq[427] , \u_c.u_b.wq[426] , \u_c.u_b.wq[425] , \u_c.u_b.wq[424] , \u_c.u_b.wq[423] , \u_c.u_b.wq[422] , \u_c.u_b.wq[421] , \u_c.u_b.wq[420] , \u_c.u_b.wq[419] , \u_c.u_b.wq[418] , \u_c.u_b.wq[417] , \u_c.u_b.wq[416] , \u_c.u_b.wq[415] , \u_c.u_b.wq[414] , \u_c.u_b.wq[413] , \u_c.u_b.wq[412] , \u_c.u_b.wq[411] , \u_c.u_b.wq[410] , \u_c.u_b.wq[409] , \u_c.u_b.wq[408] , \u_c.u_b.wq[407] , \u_c.u_b.wq[406] , \u_c.u_b.wq[405] , \u_c.u_b.wq[404] , \u_c.u_b.wq[403] , \u_c.u_b.wq[402] , \u_c.u_b.wq[401] , \u_c.u_b.wq[400] , \u_c.u_b.wq[399] , \u_c.u_b.wq[398] , \u_c.u_b.wq[397] , \u_c.u_b.wq[396] , \u_c.u_b.wq[395] , \u_c.u_b.wq[394] , \u_c.u_b.wq[393] , \u_c.u_b.wq[392] , \u_c.u_b.wq[391] , \u_c.u_b.wq[390] , \u_c.u_b.wq[389] , \u_c.u_b.wq[388] , \u_c.u_b.wq[387] , \u_c.u_b.wq[386] , \u_c.u_b.wq[385] , \u_c.u_b.wq[384] , \u_c.u_b.wq[383] , \u_c.u_b.wq[382] , \u_c.u_b.wq[381] , \u_c.u_b.wq[380] , \u_c.u_b.wq[379] , \u_c.u_b.wq[378] , \u_c.u_b.wq[377] , \u_c.u_b.wq[376] , \u_c.u_b.wq[375] , \u_c.u_b.wq[374] , \u_c.u_b.wq[373] , \u_c.u_b.wq[372] , \u_c.u_b.wq[371] , \u_c.u_b.wq[370] , \u_c.u_b.wq[369] , \u_c.u_b.wq[368] , \u_c.u_b.wq[367] , \u_c.u_b.wq[366] , \u_c.u_b.wq[365] , \u_c.u_b.wq[364] , \u_c.u_b.wq[363] , \u_c.u_b.wq[362] , \u_c.u_b.wq[361] , \u_c.u_b.wq[360] , \u_c.u_b.wq[359] , \u_c.u_b.wq[358] , \u_c.u_b.wq[357] , \u_c.u_b.wq[356] , \u_c.u_b.wq[355] , \u_c.u_b.wq[354] , \u_c.u_b.wq[353] , \u_c.u_b.wq[352] , \u_c.u_b.wq[351] , \u_c.u_b.wq[350] , \u_c.u_b.wq[349] , \u_c.u_b.wq[348] , \u_c.u_b.wq[347] , \u_c.u_b.wq[346] , \u_c.u_b.wq[345] , \u_c.u_b.wq[344] , \u_c.u_b.wq[343] , \u_c.u_b.wq[342] , \u_c.u_b.wq[341] , \u_c.u_b.wq[340] , \u_c.u_b.wq[339] , \u_c.u_b.wq[338] , \u_c.u_b.wq[337] , \u_c.u_b.wq[336] , \u_c.u_b.wq[335] , \u_c.u_b.wq[334] , \u_c.u_b.wq[333] , \u_c.u_b.wq[332] , \u_c.u_b.wq[331] , \u_c.u_b.wq[330] , \u_c.u_b.wq[329] , \u_c.u_b.wq[328] , \u_c.u_b.wq[327] , \u_c.u_b.wq[326] , \u_c.u_b.wq[325] , \u_c.u_b.wq[324] , \u_c.u_b.wq[323] , \u_c.u_b.wq[322] , \u_c.u_b.wq[321] , \u_c.u_b.wq[320] , \u_c.u_b.wq[319] , \u_c.u_b.wq[318] , \u_c.u_b.wq[317] , \u_c.u_b.wq[316] , \u_c.u_b.wq[315] , \u_c.u_b.wq[314] , \u_c.u_b.wq[313] , \u_c.u_b.wq[312] , \u_c.u_b.wq[311] , \u_c.u_b.wq[310] , \u_c.u_b.wq[309] , \u_c.u_b.wq[308] , \u_c.u_b.wq[307] , \u_c.u_b.wq[306] , \u_c.u_b.wq[305] , \u_c.u_b.wq[304] , \u_c.u_b.wq[303] , \u_c.u_b.wq[302] , \u_c.u_b.wq[301] , \u_c.u_b.wq[300] , \u_c.u_b.wq[299] , \u_c.u_b.wq[298] , \u_c.u_b.wq[297] , \u_c.u_b.wq[296] , \u_c.u_b.wq[295] , \u_c.u_b.wq[294] , \u_c.u_b.wq[293] , \u_c.u_b.wq[292] , \u_c.u_b.wq[291] , \u_c.u_b.wq[290] , \u_c.u_b.wq[289] , \u_c.u_b.wq[288] , \u_c.u_b.wq[287] , \u_c.u_b.wq[286] , \u_c.u_b.wq[285] , \u_c.u_b.wq[284] , \u_c.u_b.wq[283] , \u_c.u_b.wq[282] , \u_c.u_b.wq[281] , \u_c.u_b.wq[280] , \u_c.u_b.wq[279] , \u_c.u_b.wq[278] , \u_c.u_b.wq[277] , \u_c.u_b.wq[276] , \u_c.u_b.wq[275] , \u_c.u_b.wq[274] , \u_c.u_b.wq[273] , \u_c.u_b.wq[272] , \u_c.u_b.wq[271] , \u_c.u_b.wq[270] , \u_c.u_b.wq[269] , \u_c.u_b.wq[268] , \u_c.u_b.wq[267] , \u_c.u_b.wq[266] , \u_c.u_b.wq[265] , \u_c.u_b.wq[264] , \u_c.u_b.wq[263] , \u_c.u_b.wq[262] , \u_c.u_b.wq[261] , \u_c.u_b.wq[260] , \u_c.u_b.wq[259] , \u_c.u_b.wq[258] , \u_c.u_b.wq[257] , \u_c.u_b.wq[256]  }),
     .rr_addr(18'h00000),
     .rr_en(2'h0),
+`ifdef OT_HC128_WFACE
+    .w_addr_in(wface_addr),
+`else
     .w_addr_in(write_addr),
+`endif
+`ifdef OT_HC128_WFACE
+    .w_ce_in(wface_we1),
+`else
     .w_ce_in(weight_we1),
+`endif
     .w_mask_in(256'hffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff),
+`ifdef OT_HC128_WFACE
+    .wd_in(wface_data[511:256])
+`else
     .wd_in(write_data[511:256])
+`endif
   );
   ot_sram_1r1w_128x256_m1_r2c2 \u_c.u_b.g_x[0].u_m  (
     .clk(clk),
@@ -3205,10 +3249,22 @@ module ot_hbm_hc_bank128_pair_core(clk, fault, go, lane_valid, rst_n, square, su
     .rd_out({ \u_c.u_b.xq[255] , \u_c.u_b.xq[254] , \u_c.u_b.xq[253] , \u_c.u_b.xq[252] , \u_c.u_b.xq[251] , \u_c.u_b.xq[250] , \u_c.u_b.xq[249] , \u_c.u_b.xq[248] , \u_c.u_b.xq[247] , \u_c.u_b.xq[246] , \u_c.u_b.xq[245] , \u_c.u_b.xq[244] , \u_c.u_b.xq[243] , \u_c.u_b.xq[242] , \u_c.u_b.xq[241] , \u_c.u_b.xq[240] , \u_c.u_b.xq[239] , \u_c.u_b.xq[238] , \u_c.u_b.xq[237] , \u_c.u_b.xq[236] , \u_c.u_b.xq[235] , \u_c.u_b.xq[234] , \u_c.u_b.xq[233] , \u_c.u_b.xq[232] , \u_c.u_b.xq[231] , \u_c.u_b.xq[230] , \u_c.u_b.xq[229] , \u_c.u_b.xq[228] , \u_c.u_b.xq[227] , \u_c.u_b.xq[226] , \u_c.u_b.xq[225] , \u_c.u_b.xq[224] , \u_c.u_b.xq[223] , \u_c.u_b.xq[222] , \u_c.u_b.xq[221] , \u_c.u_b.xq[220] , \u_c.u_b.xq[219] , \u_c.u_b.xq[218] , \u_c.u_b.xq[217] , \u_c.u_b.xq[216] , \u_c.u_b.xq[215] , \u_c.u_b.xq[214] , \u_c.u_b.xq[213] , \u_c.u_b.xq[212] , \u_c.u_b.xq[211] , \u_c.u_b.xq[210] , \u_c.u_b.xq[209] , \u_c.u_b.xq[208] , \u_c.u_b.xq[207] , \u_c.u_b.xq[206] , \u_c.u_b.xq[205] , \u_c.u_b.xq[204] , \u_c.u_b.xq[203] , \u_c.u_b.xq[202] , \u_c.u_b.xq[201] , \u_c.u_b.xq[200] , \u_c.u_b.xq[199] , \u_c.u_b.xq[198] , \u_c.u_b.xq[197] , \u_c.u_b.xq[196] , \u_c.u_b.xq[195] , \u_c.u_b.xq[194] , \u_c.u_b.xq[193] , \u_c.u_b.xq[192] , \u_c.u_b.xq[191] , \u_c.u_b.xq[190] , \u_c.u_b.xq[189] , \u_c.u_b.xq[188] , \u_c.u_b.xq[187] , \u_c.u_b.xq[186] , \u_c.u_b.xq[185] , \u_c.u_b.xq[184] , \u_c.u_b.xq[183] , \u_c.u_b.xq[182] , \u_c.u_b.xq[181] , \u_c.u_b.xq[180] , \u_c.u_b.xq[179] , \u_c.u_b.xq[178] , \u_c.u_b.xq[177] , \u_c.u_b.xq[176] , \u_c.u_b.xq[175] , \u_c.u_b.xq[174] , \u_c.u_b.xq[173] , \u_c.u_b.xq[172] , \u_c.u_b.xq[171] , \u_c.u_b.xq[170] , \u_c.u_b.xq[169] , \u_c.u_b.xq[168] , \u_c.u_b.xq[167] , \u_c.u_b.xq[166] , \u_c.u_b.xq[165] , \u_c.u_b.xq[164] , \u_c.u_b.xq[163] , \u_c.u_b.xq[162] , \u_c.u_b.xq[161] , \u_c.u_b.xq[160] , \u_c.u_b.xq[159] , \u_c.u_b.xq[158] , \u_c.u_b.xq[157] , \u_c.u_b.xq[156] , \u_c.u_b.xq[155] , \u_c.u_b.xq[154] , \u_c.u_b.xq[153] , \u_c.u_b.xq[152] , \u_c.u_b.xq[151] , \u_c.u_b.xq[150] , \u_c.u_b.xq[149] , \u_c.u_b.xq[148] , \u_c.u_b.xq[147] , \u_c.u_b.xq[146] , \u_c.u_b.xq[145] , \u_c.u_b.xq[144] , \u_c.u_b.xq[143] , \u_c.u_b.xq[142] , \u_c.u_b.xq[141] , \u_c.u_b.xq[140] , \u_c.u_b.xq[139] , \u_c.u_b.xq[138] , \u_c.u_b.xq[137] , \u_c.u_b.xq[136] , \u_c.u_b.xq[135] , \u_c.u_b.xq[134] , \u_c.u_b.xq[133] , \u_c.u_b.xq[132] , \u_c.u_b.xq[131] , \u_c.u_b.xq[130] , \u_c.u_b.xq[129] , \u_c.u_b.xq[128] , \u_c.u_b.xq[127] , \u_c.u_b.xq[126] , \u_c.u_b.xq[125] , \u_c.u_b.xq[124] , \u_c.u_b.xq[123] , \u_c.u_b.xq[122] , \u_c.u_b.xq[121] , \u_c.u_b.xq[120] , \u_c.u_b.xq[119] , \u_c.u_b.xq[118] , \u_c.u_b.xq[117] , \u_c.u_b.xq[116] , \u_c.u_b.xq[115] , \u_c.u_b.xq[114] , \u_c.u_b.xq[113] , \u_c.u_b.xq[112] , \u_c.u_b.xq[111] , \u_c.u_b.xq[110] , \u_c.u_b.xq[109] , \u_c.u_b.xq[108] , \u_c.u_b.xq[107] , \u_c.u_b.xq[106] , \u_c.u_b.xq[105] , \u_c.u_b.xq[104] , \u_c.u_b.xq[103] , \u_c.u_b.xq[102] , \u_c.u_b.xq[101] , \u_c.u_b.xq[100] , \u_c.u_b.xq[99] , \u_c.u_b.xq[98] , \u_c.u_b.xq[97] , \u_c.u_b.xq[96] , \u_c.u_b.xq[95] , \u_c.u_b.xq[94] , \u_c.u_b.xq[93] , \u_c.u_b.xq[92] , \u_c.u_b.xq[91] , \u_c.u_b.xq[90] , \u_c.u_b.xq[89] , \u_c.u_b.xq[88] , \u_c.u_b.xq[87] , \u_c.u_b.xq[86] , \u_c.u_b.xq[85] , \u_c.u_b.xq[84] , \u_c.u_b.xq[83] , \u_c.u_b.xq[82] , \u_c.u_b.xq[81] , \u_c.u_b.xq[80] , \u_c.u_b.xq[79] , \u_c.u_b.xq[78] , \u_c.u_b.xq[77] , \u_c.u_b.xq[76] , \u_c.u_b.xq[75] , \u_c.u_b.xq[74] , \u_c.u_b.xq[73] , \u_c.u_b.xq[72] , \u_c.u_b.xq[71] , \u_c.u_b.xq[70] , \u_c.u_b.xq[69] , \u_c.u_b.xq[68] , \u_c.u_b.xq[67] , \u_c.u_b.xq[66] , \u_c.u_b.xq[65] , \u_c.u_b.xq[64] , \u_c.u_b.xq[63] , \u_c.u_b.xq[62] , \u_c.u_b.xq[61] , \u_c.u_b.xq[60] , \u_c.u_b.xq[59] , \u_c.u_b.xq[58] , \u_c.u_b.xq[57] , \u_c.u_b.xq[56] , \u_c.u_b.xq[55] , \u_c.u_b.xq[54] , \u_c.u_b.xq[53] , \u_c.u_b.xq[52] , \u_c.u_b.xq[51] , \u_c.u_b.xq[50] , \u_c.u_b.xq[49] , \u_c.u_b.xq[48] , \u_c.u_b.xq[47] , \u_c.u_b.xq[46] , \u_c.u_b.xq[45] , \u_c.u_b.xq[44] , \u_c.u_b.xq[43] , \u_c.u_b.xq[42] , \u_c.u_b.xq[41] , \u_c.u_b.xq[40] , \u_c.u_b.xq[39] , \u_c.u_b.xq[38] , \u_c.u_b.xq[37] , \u_c.u_b.xq[36] , \u_c.u_b.xq[35] , \u_c.u_b.xq[34] , \u_c.u_b.xq[33] , \u_c.u_b.xq[32] , \u_c.u_b.xq[31] , \u_c.u_b.xq[30] , \u_c.u_b.xq[29] , \u_c.u_b.xq[28] , \u_c.u_b.xq[27] , \u_c.u_b.xq[26] , \u_c.u_b.xq[25] , \u_c.u_b.xq[24] , \u_c.u_b.xq[23] , \u_c.u_b.xq[22] , \u_c.u_b.xq[21] , \u_c.u_b.xq[20] , \u_c.u_b.xq[19] , \u_c.u_b.xq[18] , \u_c.u_b.xq[17] , \u_c.u_b.xq[16] , \u_c.u_b.xq[15] , \u_c.u_b.xq[14] , \u_c.u_b.xq[13] , \u_c.u_b.xq[12] , \u_c.u_b.xq[11] , \u_c.u_b.xq[10] , \u_c.u_b.xq[9] , \u_c.u_b.xq[8] , \u_c.u_b.xq[7] , \u_c.u_b.xq[6] , \u_c.u_b.xq[5] , \u_c.u_b.xq[4] , \u_c.u_b.xq[3] , \u_c.u_b.xq[2] , \u_c.u_b.xq[1] , \u_c.u_b.xq[0]  }),
     .rr_addr(14'h0000),
     .rr_en(2'h0),
+`ifdef OT_HC128_WFACE
+    .w_addr_in(wface_addr[6:0]),
+`else
     .w_addr_in(write_addr[6:0]),
+`endif
+`ifdef OT_HC128_WFACE
+    .w_ce_in(wface_xwe),
+`else
     .w_ce_in(x_write),
+`endif
     .w_mask_in(256'hffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff),
+`ifdef OT_HC128_WFACE
+    .wd_in({ wface_data[511:496], wface_data[479:464], wface_data[447:432], wface_data[415:400], wface_data[383:368], wface_data[351:336], wface_data[319:304], wface_data[287:272], wface_data[255:240], wface_data[223:208], wface_data[191:176], wface_data[159:144], wface_data[127:112], wface_data[95:80], wface_data[63:48], wface_data[31:16] })
+`else
     .wd_in({ write_data[511:496], write_data[479:464], write_data[447:432], write_data[415:400], write_data[383:368], write_data[351:336], write_data[319:304], write_data[287:272], write_data[255:240], write_data[223:208], write_data[191:176], write_data[159:144], write_data[127:112], write_data[95:80], write_data[63:48], write_data[31:16] })
+`endif
   );
   \ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].u_lg  u_c_u_b_u_st_g_lg_g_grp_0__u_lg (
     .clk(clk),
