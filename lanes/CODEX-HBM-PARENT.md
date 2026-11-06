@@ -1,6 +1,6 @@
 # HBM parent q_spb2 — current handoff
 
-Updated 2026-11-06. Owner: hbm_parent. Canonical plan/calendar: hbm. **Bounded real-child PLACE diagnostic complete; no live job, no route, no parent/die signoff.** ROOT=/srv/opentallas-scratch2/claude/codex-hbm-parent-1106.
+Updated 2026-11-06. Owner: hbm_parent. Canonical plan/calendar: hbm. **Bounded real-child CTS diagnostic complete; path diagnosis active, no route or parent/die signoff.** ROOT=/srv/opentallas-scratch2/claude/codex-hbm-parent-1106.
 
 ## Actual result
 
@@ -12,11 +12,15 @@ All4,269 required bank FFs present; six input epochs are proved unobserved. Ever
 
 Actual image viewed. Zero standard-cell rectangle overlap with macro bodies; zero new station-FF overlap with4.32µm macro clearance.836 other cells (mostly buffers,7FFs) lie within that expanded outline; owner confirms station/allocation clearance is not an undeclared universal keepout. Owner also accepts two data buffers occupying one unused epoch allocation as a capacity reservation; no dummy state/clock load.
 
-## Timing and remaining scope
+## Current CTS result and next step
 
-Fresh same-DB TT reload with calibrated RC,833ps/setup0/hold25, gives worst setup **+39.911ps**,TNS0, on soft Q3 fault_r feedback. Stock DPL report gives−7.275ps on the same path because upstream detail_place.tcl re-sources stock platform RC after calibrated load. Wave_flow owns the future-only generic correction; both reports retained. Modeled250ps clock insertion/zeroed pre-CTS delivery windows are not measured CTS clocks; FF hold is unqualified.
+HBM owner explicitly approved CTS-only continuation. Intel2 unit **oth-ubuntu-741506-1793982726** completed exit 0 at ROOT/cts1/gen/q_spb2. Canonical resume reused immutable PLACE; exact shared completed-LEC transfer retained 45,403 equivalent points. No routing occurred.
 
-**OWNER? recorded:** extend prior PLACE-only scope to bounded CTS plus TT setup/FF hold and actual clock-interface measurements, without route/global/calendar adoption. No blocking dialog or wait. HBM40 signed-shell/reset phase and HBM42 per-bus calendar remain conditional. Stage vector L75+8,L76+5,L49+3,L83+3,L87+1,L40+0 is not+20 per operation. Canonical event belongs hbm.
+Actual calibrated post-CTS estimates: TT setup **−189.03 ps**, FF hold **−244.05 ps** (14,276 negative endpoints). Structural hold guard passes its −260 ps threshold; this is not actual hold closure. Pin-register clock range TT222.45–408.66 ps / FF184.28–340.69 ps, means289.52/235.84 versus targets250/202.5. Ordinary t16/t17 have8,360/6,448 sinks; t17 spans320–488 ps. Hard-child clock report decomposes pin0+signed internal400=effective400 ps versus250 target; current early shift is0. Full ordinary and both hard clocks retained.
+
+Post-CTS all4,269 required bank FFs remain present; no missing/extra payload. Worst payload reach stays L49=394.686µm<=403; L40 changes only to185.166µm. No geometry repair is justified by these measurements. E2 diagnostic unit3194827 finished0; exact failing TT/FF path extraction unit3207298 is active in ROOT/postcts_capsule. Next step: diagnose measured clock/data path contributions, propose bounded clock-plan repair to hbm, then seek any further stage authorization. No route authorized.
+
+Pre-CTS calibrated TT+39.911ps and stock DPL−7.275ps are preserved. Upstream DPL overrode calibrated RC; wave_flow owns generic future-only fix f7747f4351. CTS used calibrated RC. HBM40 shell/reset phase and HBM42 calendar remain conditional; L75+8,L76+5,L49+3,L83+3,L87+1,L40+0 is not+20 per operation. Canonical event belongs hbm.
 
 ## Artifacts and fixes
 
