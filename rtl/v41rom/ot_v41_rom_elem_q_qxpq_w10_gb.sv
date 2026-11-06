@@ -52,6 +52,7 @@ module ot_v41_rom_elem_q_qxpq_w10_gb #(
                                        // registered output face bit (hold-safe core->parent crossing, 0 cycles; see g_olat)
     parameter integer IFN = 0,         // S81 RF-J (DIE-S81-52/RF-J 2026-11-03): 1 = one negative-edge flop on every data input pin bit
                                        // (input hold +T/2, no input hold buffers, 0 cycles for a rising-edge sender; see g_ifn)
+    parameter integer MSEL = 0,        // NB = 1, PQ = 1: 1 = the second macro of a split pair (ot_v41_rom_elem_q_qxpq_w10_gb_split)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -170,7 +171,7 @@ module ot_v41_rom_elem_q_qxpq_w10_gb #(
     end
     assign {walking, bank_free, sh_free, pv, pval, prow, pseg, pnseg, perr, ppos, busy, fault} = p_face;
     /* verilator lint_off PINCONNECTEMPTY */
-    ot_v41_rom_elem_qx_pq_w10 #(.PQ(PQ), .QW(QW), .QM(QM), .QS(QS), .QX(QX), .QY(QY), .QZ(QZ), .QZ_NS(QZ_NS), .QZ_NE(QZ_NE), .QTIMING_FIX(QTIMING_FIX), .QPIPE(QPIPE), .QP_XS(QP_XS), .QP_CAP(QP_CAP), .QP_P1(QP_P1), .QP_CSAM(QP_CSAM), .CGR(CGR), .BF16(0), .NB(NB), .MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .FRONT_PAR(FRONT_PAR), .INSTANCE(INSTANCE)) u_e (
+    ot_v41_rom_elem_qx_pq_w10 #(.PQ(PQ), .QW(QW), .QM(QM), .QS(QS), .QX(QX), .QY(QY), .QZ(QZ), .QZ_NS(QZ_NS), .QZ_NE(QZ_NE), .QTIMING_FIX(QTIMING_FIX), .QPIPE(QPIPE), .QP_XS(QP_XS), .QP_CAP(QP_CAP), .QP_P1(QP_P1), .QP_CSAM(QP_CSAM), .CGR(CGR), .MSEL(MSEL), .BF16(0), .NB(NB), .MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .FRONT_PAR(FRONT_PAR), .INSTANCE(INSTANCE)) u_e (
         .clk(clk), .rst_n_pin(rst_n_e), .cfg_v_pin(cfg_v_i), .cfg_a_pin(cfg_a_i), .cfg_d_pin(cfg_d_i), .go_pin(go_e_in), .go_bf_pin(1'b0), .go_tag_pin(go_tag_e_in), .walking(o_walking), .bank_free(o_bank_free), .sh_free(o_sh_free),
         .xs_v_pin(xs_v_i), .xs_p_pin(xs_p_i), .xs_b_pin(xs_b_i), .xs_sv_pin(), .xs_q0_pin(xs_q0_i), .xs_e0_pin(xs_e0_i), .xs_q1_pin(xs_q1_i),
         .xs_e1_pin(xs_e1_i), .xs_pos_pin(xs_pos_i), .xb_pos_pin(3'd0), .ppos(o_ppos), .xb_v_pin(1'b0), .xb_b_pin(3'd0), .xb_sv_pin(4'd0),

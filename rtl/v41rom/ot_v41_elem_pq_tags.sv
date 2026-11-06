@@ -27,6 +27,11 @@ module ot_v41_elem_pq_tags #(
     parameter integer SETTLE = 5,
     parameter integer WP = 0,          // 1 (q-element QM >= 4): the tag-table writes one cycle later through a write
                                        // stage (registered enables per entry, word, bank); faults / sh_full unchanged
+    parameter integer MSEL = 0,        // NB = 1 only (S81 rom_q 2-way split, DIE-S81-65 2026-11-05): which macro of the
+                                       // pair this element is.  0 = the first macro: rows from words s (< NSEG), the
+                                       // second-macro words 2NSEG+1+s ignored; 1 = the second macro: rows from words
+                                       // 2NSEG+1+s, words s still give idx / n.  Two NB = 1 halves (MSEL 0 / 1) on one
+                                       // configuration stream = one NB = 2 element (bench tb_qxpq_split).
     // derived
     parameter integer SW = $clog2(NSEG),
     parameter integer TRW = SW + (MTP != 0 ? 1 : 0)
@@ -63,11 +68,19 @@ module ot_v41_elem_pq_tags #(
     if (WP == 0) begin : g_w0
     always @(posedge clk) if (cfg_v) begin
         if ({27'd0, cfg_a} < NSEG) begin
-            s_row[{wb, RW'(cfg_a[SW-1:0])}] <= cfg_d[15:0];
+            if (!(NB == 1 && MSEL != 0)) s_row[{wb, RW'(cfg_a[SW-1:0])}] <= cfg_d[15:0];
             s_idx[{wb, cfg_a[SW-1:0]}] <= cfg_d[20:16];
             s_n[{wb, cfg_a[SW-1:0]}]   <= cfg_d[25:21];
-        end else if ({27'd0, cfg_a} > 2 * NSEG) begin   // 2NSEG+1+s: the row of segment s on the second macro
-            s_row[{wb, RW'(NSEG + cfg_a[SW-1:0] - 1)}] <= cfg_d[15:0];
+        end else if ({27'd0, cfg_a} > 2 * NSEG && {27'd0, cfg_a} <= 3 * NSEG) begin   // 2NSEG+1+s: segment s, second macro
+            // 2NSEG+1+s -> NSEG+s for every s, including s = NSEG-1 (the low-bit decode NSEG + cfg_a[SW-1:0] - 1 wrapped
+            // address 3NSEG onto entry NSEG-1 = the FIRST macro's last segment; the body fixed it in main b9e873649, the
+            // tag table read here at the output did not: DIE-S81-65 2026-11-05, probe tb_pqt_wrap)
+`ifdef OT_PQT_MUT_WRAP
+            if (NB > 1) s_row[{wb, RW'(NSEG + cfg_a[SW-1:0] - 1)}] <= cfg_d[15:0];   // MUTANT: the old wrapped index
+`else
+            if (NB > 1) s_row[{wb, RW'({27'd0, cfg_a} - (NSEG + 1))}] <= cfg_d[15:0];
+`endif
+            else if (MSEL != 0) s_row[{wb, RW'({27'd0, cfg_a} - (2 * NSEG + 1))}] <= cfg_d[15:0];
         end
     end
     end else begin : g_w1
@@ -78,8 +91,16 @@ module ot_v41_elem_pq_tags #(
     reg [25:0]        e_d;
     always @(posedge clk) begin
         for (int k = 0; k < NB * NSEG; k++)
-            e_row[k] <= cfg_v && (({27'd0, cfg_a} < NSEG && {27'd0, cfg_a} == k)
-                                  || ({27'd0, cfg_a} > 2 * NSEG && RW'(NSEG + cfg_a[SW-1:0] - 1) == RW'(k)));   // = the WP 0 index
+            e_row[k] <= cfg_v && (NB > 1 ? (({27'd0, cfg_a} < NSEG && {27'd0, cfg_a} == k)
+                                             || ({27'd0, cfg_a} > 2 * NSEG && {27'd0, cfg_a} <= 3 * NSEG
+`ifdef OT_PQT_MUT_WRAP
+                                                 && RW'(NSEG + cfg_a[SW-1:0] - 1) == RW'(k)))     // MUTANT: old wrapped index
+`else
+                                                 && {27'd0, cfg_a} - (NSEG + 1) == k))           // = the WP 0 index
+`endif
+                                  : MSEL == 0 ? ({27'd0, cfg_a} < NSEG && {27'd0, cfg_a} == k)
+                                  : ({27'd0, cfg_a} > 2 * NSEG && {27'd0, cfg_a} <= 3 * NSEG
+                                     && {27'd0, cfg_a} - (2 * NSEG + 1) == k));
         for (int k = 0; k < NSEG; k++) e_seg[k] <= cfg_v && {27'd0, cfg_a} == k;
         e_wb <= wb; e_d <= cfg_d;
     end
