@@ -4379,5 +4379,19 @@
   "orfs_vars": {
    "GLOBAL_PLACEMENT_ARGS": "-bin_grid_count 256"
   }
+ },
+ "ot_hgi_coll_tkm_m_tp192__root__319.68x345.6__ctlrst": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_root_core__ctlrst.sv"
+  ],
+  "functional_type": "tkm_root",
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "params": {},
+  "port_map_note": "remainder core (unique): pin COUNT equals the cut; cut pin -> port map by name / unique width where derivable (canonical_ports_split.json)",
+  "source": "rest_extract_mem.sh (part 19): ot_hgi_coll_tkm_m_tp192_pfdh32 (ot_hgi_coll_tkm_static_pdh PTILE 32) minus the 64 half-tile cells; rest_wrap.py: master del_flit bits the root never reads (64) tied 0 inside; reset form (opt-in, HBM-GAPS-3 TKMRST 11-05): tools/hbm_b2/tkm_l74/tkm_root_ctlrst.py adds async rst_n->0 to the control/config hold registers + slot tag/valid bits (kit LEC X/no-reset class)",
+  "top": "ot_hgi_coll_tkm_tp192_root_core"
  }
 }
