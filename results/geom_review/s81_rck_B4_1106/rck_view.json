@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.s81_rck_view.v1",
+ "master": "ot_s81_pma_rxm",
+ "footprint_um": [
+  2246.4,
+  129.6
+ ],
+ "clock_layer": "M5",
+ "old_clock_rect": [
+  13.428,
+  0.0,
+  13.452,
+  0.192
+ ],
+ "new_clock_rect": [
+  1125.2040000000002,
+  0.0,
+  1125.228,
+  0.192
+ ],
+ "clearance_um": 1.9920000000001892,
+ "pma_latency_cycles": 4,
+ "timing_and_bb": "byte-identical retained native views",
+ "inputs": {
+  "/srv/opentallas-scratch2/claude/codex-s81-rck-1106/macros/ot_s81_pma_rxm.lef": "de458d0f5e68989c89d3d9bc0c11f18b6d828de1123cd1d61aed7b5cb1961949",
+  "/srv/opentallas-scratch2/claude/codex-s81-rck-1106/macros/ot_s81_pma_rxm_tt.lib": "9a936757b0c5b74acb6c2bcf6dd029845be59b04d5c9bca633e64f99aff3b7f9",
+  "/srv/opentallas-scratch2/claude/codex-s81-rck-1106/macros/ot_s81_pma_rxm_ff.lib": "57caa0558a0c6b33248b15e2603418cca949c288a5116e286e32d68311085987",
+  "/srv/opentallas-scratch2/claude/codex-s81-rck-1106/am_map/ot_s81_pma_rxm_bb.v": "8ebae1b7cd659c13651ed2c6d1ff507657f1452e1184370319fa359c13f746c7"
+ },
+ "outputs": {
+  "ot_s81_pma_rxm_bb.v": "8ebae1b7cd659c13651ed2c6d1ff507657f1452e1184370319fa359c13f746c7",
+  "ot_s81_pma_rxm_tt.lib": "9a936757b0c5b74acb6c2bcf6dd029845be59b04d5c9bca633e64f99aff3b7f9",
+  "ot_s81_pma_rxm.lef": "3d7721aea03376cace185e423e54cab1bffdbfc20041d314991a743d17bc4ac4",
+  "ot_s81_pma_rxm_ff.lib": "57caa0558a0c6b33248b15e2603418cca949c288a5116e286e32d68311085987"
+ }
+}
