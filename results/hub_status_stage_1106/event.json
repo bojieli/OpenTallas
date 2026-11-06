@@ -1,0 +1,18 @@
+{
+  "status": "CANDIDATE_WAIT_PHYSICAL_PASS_AND_PARENT_LATENCY_ADOPTION",
+  "core": "hfd_hgi_vms_gnw_hub",
+  "candidate_source": "rtl/hbm_accel/cores_split/reform_1105s/glue/ot_vms_glue_pc.sv",
+  "pin_cycles_added": {
+    "vmstat": 1
+  },
+  "other_data_cycles_added": 0,
+  "status_warmup_edges_added": 1,
+  "existing_B2_reset_release_edges": 2,
+  "checks": 26000,
+  "differences": 0,
+  "mutant_differences": {
+    "bank_stage_bypass": 10399,
+    "late_flag_bypass": 6403,
+    "early_warmup": 200
+  }
+}
