@@ -34,19 +34,19 @@
    "inst": "u_out",
    "module": "ot_wbq_sw_split_out",
    "origin_delta_um": [
-    -34.56,
+    -43.2,
     0
    ],
    "outline_um": [
-    34.56,
+    43.2,
     544.32
    ],
-   "pins_file": "pins/ot_wbq_sw_split_out__34.56x544.32.json",
+   "pins_file": "pins/ot_wbq_sw_split_out__43.2x544.32.json",
    "recipe_key": "ot_wbq_sw_split_out",
    "clock_entry": {
     "name": "hbm_clk",
     "layer": "M5",
-    "x": 17.304,
+    "x": 21.624,
     "y": 272.16,
     "w": 0.048,
     "h": 0.48
@@ -87,7 +87,7 @@
   "group_selection_to_K_output": 1
  },
  "parent_q1_aqhi_move_um": [
-  -17.28,
+  -25.92,
   0
  ],
  "physical_stage_overrides": {
@@ -112,5 +112,6 @@
    ]
   }
  },
- "status": "SOURCE_PROOF_PASS; plan candidate; no P&R/sign-off yet"
+ "status": "SOURCE_PROOF_PASS; plan candidate; no P&R/sign-off yet",
+ "pin_order": "Per PC: valid1 + address30 + data256 + ready1,16x288 bits,0.096um pitch"
 }
