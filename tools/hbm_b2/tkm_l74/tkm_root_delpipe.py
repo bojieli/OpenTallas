@@ -18,6 +18,13 @@ for n in [60220,60225,60226,60227,60228]:
 pat=r'(?m)^  assign \\u\.issue1\s*= .+;$';m=re.search(pat,s);assert m
 old=m.group(0);new="  assign \\u.issue1  = \\u.busy  && (_60260_ >= 32'd10) && (_60260_ <= (_60224_ + 32'd1));"
 s=s[:m.start()]+conditional(old,new)+s[m.end():]
+# Preserve the old DEL validation window on the added final busy edge.
+# Frozen source CLRB=0 and tk=tick-153; only receipt mismatch terms close.
+for n in [20455,20456]:
+    pat=rf'(?m)^  assign _{n}_ = (.+);$';m=re.search(pat,s);assert m,n
+    old=m.group(0)
+    new=f"  assign _{n}_ = ({m.group(1)}) && !((_60260_ - 32'd153) == _60228_);"
+    s=s[:m.start()]+conditional(old,new)+s[m.end():]
 # Exact old slot payload/reset masking stays; only its next-state equations change.
 slot_regs=[]
 for k in range(8):
