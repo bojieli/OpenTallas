@@ -1,0 +1,53 @@
+{
+  "scope": "Frozen11-01 receipt-selected LP cohort: actual native HOST programme and KS pads to first dispatch",
+  "current_main": false,
+  "token_pass": false,
+  "physical_release_adopted": false,
+  "rtl_changed": true,
+  "pin_cycles_added": 0,
+  "cycles_budget": 11000,
+  "runtime_rc": 0,
+  "elapsed_s": 1648.12,
+  "native_clock_833ps": true,
+  "host_forced": false,
+  "ks_forced": false,
+  "host_order_matches": true,
+  "host_count": {
+    "queued": 575,
+    "LEP": 575,
+    "SEQ": 575
+  },
+  "remote_alive": [
+    [
+      "545",
+      "562",
+      "10000000000000000000"
+    ]
+  ],
+  "received_KS": [
+    [
+      "3955",
+      "1094007d001388",
+      "00"
+    ]
+  ],
+  "first_dispatch": [
+    [
+      "S",
+      "3967",
+      "000000000000000000000000000000000000000000000000000000001fc0000200801"
+    ]
+  ],
+  "first_dispatch_stop": [
+    [
+      "3967",
+      "3968"
+    ]
+  ],
+  "first_dispatch_verdict": "PASS",
+  "die_summary": [
+    "TB_S81_DIE SUMMARY cycles 3968 landings 266 ready 266 last_ready_cycle 286 faults 0 first_fault_cycle -1 host_words 2875 host_alive 47 host_fault -1 tv_words 0 tv_hash 0000000000000000",
+    "TB_S81_DIE PASS"
+  ],
+  "fault_details": []
+}

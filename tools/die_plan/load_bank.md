@@ -7,3 +7,15 @@ Every comb master/input/output is copied exactly and memoized per bank. Only exp
 Actual peer-final ODB read-only API probe covered internal ch_oh FF +2 buffers (6 checked inputs), and actual AND2/OA21/INV decoder cone (10 more copied cells,23 total checked inputs). A copy-input crosswire mutant was rejected. The probe removed dont-touch nets only in its in-memory read-only final-ODB fixture and wrote no ODB/netlist. Production use stays pre-CTS.
 
 Independent sequential phase fixture load_bank_phase.sv: CE feedback, async reset/set and unreset data FF plus replicated decoder projection prove equivalent with equiv_simple/induct. An extra-edge data-copy mutant fails equivalence. Proof receipts are sibling parent folder base.log/base.rc=0, mutant.log/mutant.rc=1. Full physical kit mapped proof remains required; this small proof is not that claim.
+
+When an ORFS hook sources a caller-owned bank script that uses face_flops.tcl's
+global ff_blk, use the shared entry point:
+
+    source /work/load_bank.tcl
+    lb_apply /work/apply_load_banks.tcl
+
+lb_apply sources that file at global scope, including when ORFS invokes the hook
+inside a procedure with local variables. It passes the filename as one Tcl list
+element, preserves the script result, and propagates errors. The bank script
+still calls lb_begin/lb_bank normally; placement, clock, audit and cell limits
+are unchanged.

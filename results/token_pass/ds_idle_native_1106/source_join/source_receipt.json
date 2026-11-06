@@ -1,0 +1,88 @@
+{
+  "scope": "New explicit source-only selector, not restored original manifest",
+  "source_ref": "d75e9a5d2ed967d03561f4a7f48ff6bfff3f3305",
+  "files": [
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_w3.sv",
+      "sha256": "854fecaf29785a39b5d1a72f38db35cf24559b925091967860c1398945510fdd",
+      "matched_retained_selected_source": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_w3.sv",
+      "sha256": "9ea89d68e21ec99d0bbcc095d264ac4fb2af4f9a06172e46f2fad3ce8bdc759b",
+      "matched_retained_selected_source": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+      "sha256": "59a53960b2c66851b14fbfcc615e451d380774ac483f2987a5f806abeb0cffa9",
+      "matched_retained_selected_source": true
+    },
+    {
+      "path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+      "sha256": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+      "matched_retained_selected_source": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+      "sha256": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+      "matched_retained_selected_source": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+      "sha256": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+      "matched_retained_selected_source": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_w3.sv",
+      "sha256": "24935f7cddc07eb9738a67657b1731801ba0b126089ab0d9294e3e9c3a08bc76",
+      "matched_retained_selected_source": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_tp_mu_72.sv",
+      "sha256": "df060515198e412d051a5f19ddb188a7f2e816fffd37eb56dc94dbbc5a247f77",
+      "matched_retained_selected_source": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv",
+      "sha256": "38399616e10125726bc3f645e9a6028eb7ccae3a06a4b0c9db93a683d54e80ca",
+      "matched_retained_selected_source": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv",
+      "sha256": "483557d65447ed7ff6763331c5d42bf139574fd9bd651ed4e6a87556e68a0b9a",
+      "matched_retained_selected_source": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepe_mab_tp_mu_72.sv",
+      "sha256": "2079a524d93271886c12d34f0cfc9afdd8c8ff08a04a8368769460af6745b502",
+      "matched_retained_selected_source": false
+    }
+  ],
+  "original_untracked_selector_restored": false,
+  "actual_die_gz_sha256": "81dd194142eb74cf0f92176071fc62f8192462cd9591399bdf352af78ec8d4d4",
+  "actual_idle_slice_master": "ot_s81sl_slice_lepe_mab_tp_mu_72",
+  "actual_idle_slice_params": "",
+  "defines_from_retained_native_top": [
+    "DSFD_PQ_STATIC_X2",
+    "S81CTRL_SRAM_FIFO",
+    "S81CTRL_SRAM_P192",
+    "S81CTRL_NATIVE32",
+    "OT_COLL_NATIVE32",
+    "OT_COLL_NATIVE32_OFF",
+    "OT_S81ENG_TAP_N32R2",
+    "OT_S81SL_KV_TRANSPORT",
+    "OT_SVC_ALLQ",
+    "SU_SMU_T",
+    "OT_ATTN_HCORE",
+    "OT_S81ENG_RR_N32",
+    "OT_S81C_HCORE_CTLA",
+    "OT_S81C_HCORE_RST_TIMED",
+    "S81_HOSTB_LAND_OBS",
+    "OT_S81_SH_SRAM",
+    "OT_S81_SH_RSZ",
+    "OT_S81_SH_P192",
+    "OT_S81_SH_APIPE9",
+    "OT_S81_SH_APIPE10"
+  ],
+  "physical_binding_qualified": false
+}

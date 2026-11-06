@@ -46,6 +46,38 @@ def macro_models(kd,masters):
     return result
 
 
+def check_ranged_context(ctx,parent):
+    """Reject damaged ranged receipts before running the unchanged endpoint census."""
+    digest=parent.get('netlist_sha256','');top=parent.get('netlist_top')
+    if not re.fullmatch('[0-9a-f]{64}',digest) or not top or not any(
+        row.get('parent_partition_type')==parent['parent_partition_type'] and row.get('sha256')==digest and row.get('top')==top
+        for row in ctx.get('parent_netlists',[])):
+        raise ValueError('native ranged seam lacks its exact parent netlist capture')
+    family=parent.get('family_endpoints',[]);endpoints={e['inst']:e for e in family}
+    child=parent['child_inst'];own=endpoints.get(child,{})
+    if (len(endpoints)!=len(family) or own.get('module')!=parent['child_module']
+        or own.get('pins_sha256')!=ctx['pins_sha256'] or own.get('buses')!=parent['peers']
+        or own.get('clock_port')!=parent.get('clock_port') or own.get('reset_port')!=parent.get('reset_port')):
+        raise ValueError('native ranged endpoint identity/scope differs')
+    for bus,links in parent['peers'].items():
+        covered=set()
+        for link in links:
+            other=link.get('peer_inst');peer=endpoints.get(other,{})
+            lo,plo,n=link.get('own_lsb'),link.get('peer_lsb'),link.get('width')
+            if (not other or other==child or link.get('peer_module')!=peer.get('module')
+                or not peer.get('clock_port') or not peer.get('reset_port')
+                or any(type(v)!=int for v in (lo,plo,n)) or lo<0 or plo<0 or n<1):
+                raise ValueError('invalid native ranged peer')
+            bits=set(range(lo,lo+n))
+            if covered & bits:raise ValueError('overlapping native ranged receipt')
+            covered.update(bits)
+            reciprocal=dict(own_lsb=plo,width=n,peer_inst=child,peer_module=own['module'],peer_port=bus,peer_lsb=lo)
+            if peer.get('buses',{}).get(link.get('peer_port'),[]).count(reciprocal)!=1:
+                raise ValueError('native ranged receipt missing reciprocal peer')
+        if covered!=set(range(ctx.get('bus_widths',{}).get(bus,0))):
+            raise ValueError('native ranged receipt incomplete coverage')
+
+
 def guard(text,top,kd,fz,skip,scope=None):
     # Full no-shell native cuts retain their existing contract.  A selected native seam is explicitly scoped;
     # the caller must also run the ordinary exclusive-face checker on every other signal port.
@@ -60,11 +92,11 @@ def guard(text,top,kd,fz,skip,scope=None):
             raise ValueError('native seam scope/cycle metadata disagree')
         if contract.get('kind')!='INTERNAL_CORE':raise ValueError('native seam needs the explicit INTERNAL_CORE contract')
         ctx=contract.get('hard_child_context') or {}
-        if (ctx.get('schema')!='opentallas.native_hard_child_seam.v1' or ctx.get('module')!=fz.get('module')
+        if (ctx.get('schema') not in ('opentallas.native_hard_child_seam.v1','opentallas.native_hard_child_seam.v2') or ctx.get('module')!=fz.get('module')
             or set(ctx.get('scope_buses',()))!=declared or not ctx.get('parent_contexts')
             or ctx.get('plan_sha256')!=fz.get('plan_sha256')
             or ctx.get('pins_sha256')!=fz.get('plan_pins_source_sha256',fz.get('pins_sha256'))
-            or not re.fullmatch('[0-9a-f]{64}',ctx.get('core_conns_sha256',''))):
+            or (ctx.get('schema')=='opentallas.native_hard_child_seam.v1' and not re.fullmatch('[0-9a-f]{64}',ctx.get('core_conns_sha256','')))):
             raise ValueError('native seam lacks its validated parent plan/pin/connectivity context')
         # GATE-PINS-2 emits kit-local normalized plan_pins.json and retains the original source hash separately.
         # Context authenticates the declared parent table; authenticate the emitted physical table independently.
@@ -78,13 +110,16 @@ def guard(text,top,kd,fz,skip,scope=None):
             child=parent.get('child_inst')
             if (not child or not parent.get('parent_partition_type') or parent.get('child_module')!=fz.get('module')
                 or set(parent.get('peers',{}))!=declared):raise ValueError('native seam parent/child scope invalid')
-            for bus,peer in parent['peers'].items():
-                other=peer.get('peer_inst')
-                if (not other or other==child or not peer.get('peer_module') or not peer.get('peer_port')
-                    or peer.get('peer_parent_partition_type')!=parent['parent_partition_type']
-                    or peer.get('width')!=ctx.get('bus_widths',{}).get(bus)
-                    or peer.get('child_targets')!=['core:'+other] or peer.get('peer_targets')!=['core:'+child]):
-                    raise ValueError('native seam is not an exclusive reciprocal peer hard child')
+            if ctx['schema']=='opentallas.native_hard_child_seam.v2':
+                check_ranged_context(ctx,parent)
+            else:
+                for bus,peer in parent['peers'].items():
+                    other=peer.get('peer_inst')
+                    if (not other or other==child or not peer.get('peer_module') or not peer.get('peer_port')
+                        or peer.get('peer_parent_partition_type')!=parent['parent_partition_type']
+                        or peer.get('width')!=ctx.get('bus_widths',{}).get(bus)
+                        or peer.get('child_targets')!=['core:'+other] or peer.get('peer_targets')!=['core:'+child]):
+                        raise ValueError('native seam is not an exclusive reciprocal peer hard child')
     if contract.get('partition_rule')!='R2_INTERNAL_TIMED_IN_PARTITION':raise ValueError('missing partition timing contract')
     models=macro_models(kd,fz['macros']);mods=FG.parse(text)
     for master in models:mods.pop(master,None) # retain opaque timed memory leaves
