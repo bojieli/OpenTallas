@@ -68,7 +68,7 @@ OUT_ABS=$(realpath -m -- "$OUT")
 case "$OUT_ABS" in
   "$KIT"/*) OUT_REL=${OUT_ABS#"$KIT"/}; OUT_EXCLUDE=(--exclude "/${OUT_REL%%/*}/") ;;
 esac
-rsync -a "${OUT_EXCLUDE[@]}" --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_*' --exclude '/signoff*.log' \
+rsync -a "${OUT_EXCLUDE[@]}" --exclude .ot-run-spill-copy --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_*' --exclude '/signoff*.log' \
   --exclude '/run_*.log' --exclude /rc.txt --exclude '/pass[0-9]*' --exclude '/prd_*.json' --exclude '/prd_*.log' \
   --exclude '/eco_[0-9]*' --exclude '/lec_routed_autopilot_*' $KIT/ $OUT/
 B=$OUT/run/results/asap7/$NICK/base
