@@ -518,6 +518,7 @@
     "epyc5",
     "epyc6",
     "intel1",
+    "intel2",
     "epyc2"
    ],
    "gen_hosts": [
@@ -527,6 +528,7 @@
    "place_prefer": [
     "epyc5",
     "epyc6",
+    "intel2",
     "epyc2"
    ],
    "item_env": {
@@ -2324,6 +2326,7 @@
     "epyc5",
     "epyc6",
     "intel1",
+    "intel2",
     "epyc2"
    ],
    "note_gen_hosts_kwf5": "KW-FIX-5 23:1x (COORD 23:0x: epyc4 36 waiters / admits <0, intel1 admits 352 with 0 waiters; PRUNE + worktree removal freed intel1 to 264 GB): s81 gen_hosts [epyc4, intel1]; src s81i8, plan, kit_rtl_h10.sh present on intel1; pick_gen_host sends new attempts to the host with most admits. Back to [epyc4] if intel1 scratch2 <100 GB.",
@@ -2365,6 +2368,7 @@
    "place_prefer": [
     "epyc5",
     "epyc6",
+    "intel2",
     "epyc2"
    ],
    "note_hosts_1104b": "KW-FIX-7 07:1x COORD 06:51 (6): epyc2 scratch 161 GB > 150, S81 PLACE steered to epyc2 first (admit-gated, falls back to epyc4); gen stays epyc4.",
@@ -2805,12 +2809,14 @@
     "epyc5",
     "epyc6",
     "intel1",
+    "intel2",
     "epyc2"
    ],
    "live_claim_h": 0,
    "place_prefer": [
     "epyc5",
     "epyc6",
+    "intel2",
     "epyc2"
    ],
    "only_items_l48rc": [
@@ -3701,12 +3707,14 @@
     "epyc5",
     "epyc6",
     "intel1",
+    "intel2",
     "epyc2"
    ],
    "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged.",
    "place_prefer": [
     "epyc5",
     "epyc6",
+    "intel2",
     "epyc2"
    ],
    "cancel_superseded": true,
@@ -4592,6 +4600,7 @@
     "epyc5",
     "epyc6",
     "intel1",
+    "intel2",
     "epyc2"
    ],
    "cancel_superseded": false,
@@ -4650,6 +4659,7 @@
  "note_hosts_kw17": "KW-FIX-17 15:4x COORD 15:3x: per-host disk exclusion; epyc4 (scratch2 93) and epyc2 (scratch2 96) out of place hosts, global stop lifted; *_base = full lists, watcher kw17/disk_hosts.sh restores a host at scratch2 >=100",
  "_kw17_ok": [
   "intel1",
+  "intel2",
   "epyc2",
   "epyc5",
   "epyc6"
