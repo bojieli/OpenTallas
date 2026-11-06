@@ -417,6 +417,23 @@ def escaped_instance_safe(files, blackboxes):
     return res
 
 
+def slang_unroll_args(env):
+    """An explicit finite elaboration budget, not a proof/reset/RTL option.
+
+    Slang's default 4000 loop iterations cannot elaborate the native XS4
+    output-register process (32912 nested-loop iterations). Keep the frontend
+    default unless the captured kit or caller supplies its required budget.
+    In particular, reject zero rather than disabling the frontend's limit.
+    """
+    key = "OT_LEC_SLANG_UNROLL_LIMIT"
+    value = env.get(key, os.environ.get(key))
+    if value is None:
+        return []
+    if not re.fullmatch(r"[1-9][0-9]*", str(value)):
+        raise LecError(f"{key} must be a positive finite integer")
+    return ["--unroll-limit=" + str(int(value))]
+
+
 def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     """yosys commands reading the kit RTL with `frontend` ('verilog' | 'slang'); lib_bbs: macro liberty files whose
     cells have no Verilog body in the sources (read as blackbox cells); slang_extra: extra read_slang options."""
@@ -431,7 +448,7 @@ def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     if env.get("_LEC_ICG_GOLD_V"):        # ICG cells instantiated by the RTL: read_liberty skips them (statetable)
         cmds.append(f"read_verilog -sv {env['_LEC_ICG_GOLD_V']}")
     if frontend == "slang":
-        a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]] + list(slang_extra)
+        a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]] + slang_unroll_args(env) + list(slang_extra)
         # Yosys read_verilog keeps preprocessor state across the ordered source
         # list. Its independent Slang replay must use the same compilation unit;
         # otherwise a later source cannot see an earlier source's width macros.
@@ -7347,6 +7364,9 @@ def via_docker(args, image, mem):
     me = str(Path(__file__).resolve())
     cmd = ["docker", "run", "--rm", f"--memory={mem}g", f"--memory-swap={mem}g", "-v", f"{kit}:/work:ro",
            "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}", "-e", f"OT_LEC_REFINE_S={os.environ.get('OT_LEC_REFINE_S', '3600')}", "-e", f"OT_LEC_CONE_S={os.environ.get('OT_LEC_CONE_S', str(CONE_S_DEFAULT))}"]
+    if "OT_LEC_SLANG_UNROLL_LIMIT" in os.environ:
+        value = slang_unroll_args({})[0].split("=", 1)[1]
+        cmd += ["-e", f"OT_LEC_SLANG_UNROLL_LIMIT={value}"]
     if (Path(kit) / "lec_native_stub_metadata.json").is_file():
         for name in ("native_stub_metadata.py", "native_bb.py"):
             path = Path(me).with_name(name)

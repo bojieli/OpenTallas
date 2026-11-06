@@ -30,7 +30,8 @@ for key in sorted(os.environ):
  if key.startswith('OT_LEC_') and key not in ('OT_LEC_ASYNC','OT_LEC_ASYNC_POLL','OT_LEC_MEM_GB'):
   h.update((key+'='+os.environ[key]).encode())
 for line in cfg.splitlines():
- if re.match(r'^(?:override )?export (?:DESIGN_NAME|VERILOG_FILES|VERILOG_DEFINES|SYNTH_HDL_FRONTEND|ADDITIONAL_LIBS)\s*=',line):
+ if (re.match(r'^(?:override )?export (?:DESIGN_NAME|VERILOG_FILES|VERILOG_DEFINES|SYNTH_HDL_FRONTEND|ADDITIONAL_LIBS)\s*=',line) or
+     re.match(r'^\s*(?:override\s+)?(?:export\s+)?OT_LEC_SLANG_UNROLL_LIMIT\s*[:?+]?=',line)):
   h.update(line.encode())
   if 'VERILOG_FILES' in line or 'ADDITIONAL_LIBS' in line:
    for x in shlex.split(line.split('=',1)[1]):
