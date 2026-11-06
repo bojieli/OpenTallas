@@ -59,7 +59,7 @@ def prepare(repo,out):
   clockmap={f'clk_link[{j}]':f'clk_link[{j+(1 if i==0 else 6)}]'for j in range(4)}
   assert masks['ot_q2nf_rest_'+group]['clk_link']['kept_original_indices_lsb_first']==list(range(1 if i==0 else 6,5 if i==0 else 10))
   for j,cy in enumerate((249.384,327.24,415.896,493.752)):
-   rows.append(dict(name=f'clk_link[{j}]',layer='M5',x=W-4.32 if i==0 else 4.32,y=round(cy-origin[1],6),face='I'))
+   rows.append(dict(name=f'clk_link[{j}]',layer='M5',x=round(W-4.344,6) if i==0 else 4.344,y=round(cy-origin[1],6),face='I'))
   assert len(rows)==1142 and len({(r['layer'],r['x'],r['y'])for r in rows})==len(rows)
   pf=out/(m+'_pins.json');write(pf,rows)
   macros=[dict(inst=r['inst'],macro=r['macro'],xy_um=[round(r['xy_um'][0]-origin[0],6),round(r['xy_um'][1]-origin[1],6)],orient=r['orient'])for r in all_macros if r['owner']==m]
