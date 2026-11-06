@@ -298,7 +298,7 @@ def release_guard(row):
     checks = [d]
     # Check direct capsule signoff paths without scanning unrelated sibling kits.
     ancestor = d
-    for _ in range(3):
+    while any((ancestor + '/').startswith(root) for root in SAFE_RELEASE_ROOTS):
         checks += [os.path.join(ancestor, 'signoff'), os.path.join(ancestor, 'signoff.json')]
         ancestor = os.path.dirname(ancestor)
     for root in checks:
