@@ -1,0 +1,9 @@
+# Exact local load banks
+
+Source load_bank.tcl after loading a fresh pre-CTS ODB. Invoke lb_begin BLOCK EXACT_INTERNAL_FF_NAMES MAX_CELLS_PER_BANK (default64), then lb_bank NET {{INSTANCE PIN} ...} X_DBU Y_DBU. NET and every selected load must match exactly. The return is the cumulative list of new cell objects; all copies are movable PLACED. Caller groups at most16 loads per bank and owns actual local placement and review before route. No sink placement regions are added.
+
+Every comb master/input/output is copied exactly and memoized per bank. Only explicitly allowed FFs are copied, with every D/CK/reset/set input connected to its original net, including CE feedback. Other FF outputs and primary nets remain frontier inputs. Boundary input capture FFs are rejected even if allowed. No cycles are added. Hard macros and cones exceeding64 cells or32 levels are rejected; preserve that failed scope rather than continuing it. This is not a routed ECO: use before CTS and perform normal route/signoff/postroute LEC. Never unset frozen clock policy in a production scope to use this helper.
+
+Actual peer-final ODB read-only API probe covered internal ch_oh FF +2 buffers (6 checked inputs), and actual AND2/OA21/INV decoder cone (10 more copied cells,23 total checked inputs). A copy-input crosswire mutant was rejected. The probe removed dont-touch nets only in its in-memory read-only final-ODB fixture and wrote no ODB/netlist. Production use stays pre-CTS.
+
+Independent sequential phase fixture load_bank_phase.sv: CE feedback, async reset/set and unreset data FF plus replicated decoder projection prove equivalent with equiv_simple/induct. An extra-edge data-copy mutant fails equivalence. Proof receipts are sibling parent folder base.log/base.rc=0, mutant.log/mutant.rc=1. Full physical kit mapped proof remains required; this small proof is not that claim.
