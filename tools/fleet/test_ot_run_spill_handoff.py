@@ -271,7 +271,7 @@ class Handoff(base.Spill):
         self.m.HANDOFF_POLL_S = 0.1
         self.m.log_signal = lambda *a: None
 
-        def fake_run(dst, mem, cmd, d, max_wait, on_start=None, disk=None):
+        def fake_run(dst, mem, cmd, d, max_wait, on_start=None, disk=None, quiet_notrun=False):
             on_start("u1")
             return body(), True
         self.m.run = fake_run

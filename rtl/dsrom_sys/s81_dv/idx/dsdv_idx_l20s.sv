@@ -133,6 +133,7 @@ module dsdv_idx_txm_n32 #(
     // (dsdv_idx_txm_grp: banks [0, WCB) = column A, a hardened child with its own clock root; banks [WCB, NB) = column B
     // in the parent).  Each group lands its read/write ports (RIL/WDL), captures rd_out (RDL) and ORs its banks under its
     // own bank-select copies; the parent ORs the two partial words into rd.  Same function, same edges (0 cycles).
+    // DIE-S81-66/IDX vA 11-05: SPLIT = 2 = SPLIT 1 with the column-A child in its face-landed form (dsdv_idx_txm_grp FL = 1).
     parameter integer SPLIT = 0
 ) (
     input  wire                 ck,
@@ -154,7 +155,7 @@ module dsdv_idx_txm_n32 #(
         initial if (D % 1024 != 0 || NB <= WCB) $fatal(1, "dsdv_idx_txm_n32 SPLIT: D must be a multiple of 1024 with NB > WCB");
         wire [255:0] pa, pb;
         // column A (banks 0..WCB-1): the hardened child (own clock root)
-        dsdv_idx_txm_grp #(.D(D), .B0(0), .NG(WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT), .POUT(1)) u_ga (
+        dsdv_idx_txm_grp #(.D(D), .B0(0), .NG(WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT), .POUT(1), .FL((SPLIT == 2) ? 1 : 0)) u_ga (
             .ck(ck), .re(re), .ra(ra), .we(we), .wa(wa), .wd(wd), .wm_next(wm_next), .p(pa));
         // column B (banks WCB..NB-1, fed by the WDC copy of the write port when WDC = 1)
         dsdv_idx_txm_grp #(.D(D), .B0(WCB), .NG(NB - WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT), .POUT(1)) u_gb (
@@ -274,7 +275,12 @@ module dsdv_idx_txm_grp #(
     // bsk1, unregistered, driving the pin with a 0.6 T output budget; worst g_bsl.bsk1[0] -> p[1] 435 ps wire): POUT = 1
     // registers the AND-OR inside the group one stage later (p is a pin flop) and the SPLIT parent ORs pa | pb
     // combinationally into rd.  rd sees the same edge as the old rd <= pa | pb (0 cycles).
-    parameter integer POUT = 0
+    parameter integer POUT = 0,
+    // DIE-S81-66/IDX vA 11-05 (face_guard RAW 'shared' 300: every input pin fed 5 per-bank landing flops across the
+    // column): FL = 1 lands each input bit in ONE flop at the pin (re_f / ra_f / we_f / wa_f / wd_f, mask stage 1 wm_f) and
+    // moves the per-bank decode (re && ra[AW-1:10] == b, we && wa[AW-1:10] == b) after that flop; the mask keeps its
+    // per-bank second stage.  Needs RIL = 1 and WDL = 1 (the landing edge it replaces).  Same function, same edges (0 cycles).
+    parameter integer FL = 0
 ) (
     input  wire                 ck,
     input  wire                 re,
@@ -286,6 +292,17 @@ module dsdv_idx_txm_grp #(
     output reg  [255:0]         p
 );
     localparam integer AW = $clog2(D), NB = D / 1024;
+    initial if (FL != 0 && (RIL == 0 || WDL == 0)) $fatal(1, "dsdv_idx_txm_grp FL needs RIL = 1 and WDL = 1");
+    // FL = 1: the face landing (one kept flop per input bit at the pin)
+    wire re_f, we_f; wire [AW-1:0] ra_f, wa_f; wire [255:0] wd_f; wire [15:0] wm_f;
+    if (FL != 0) begin : g_fl
+        (* keep = "true" *) reg re_r, we_r; (* keep = "true" *) reg [AW-1:0] ra_r, wa_r;
+        (* keep = "true" *) reg [255:0] wd_r; (* keep = "true" *) reg [15:0] wm_r;
+        always @(posedge ck) begin re_r <= re; ra_r <= ra; we_r <= we; wa_r <= wa; wd_r <= wd; wm_r <= wm_next; end
+        assign re_f = re_r; assign ra_f = ra_r; assign we_f = we_r; assign wa_f = wa_r; assign wd_f = wd_r; assign wm_f = wm_r;
+    end else begin : g_fl0
+        assign re_f = 1'b0; assign ra_f = '0; assign we_f = 1'b0; assign wa_f = '0; assign wd_f = '0; assign wm_f = '0;
+    end
     wire [255:0] q [0:NG-1];
     genvar i;
     for (i = 0; i < NG; i = i + 1) begin : g_b
@@ -293,7 +310,11 @@ module dsdv_idx_txm_grp #(
         wire[255:0]wm_bank;
         for(genvar f=0;f<16;f=f+1)begin:g_mask
             wire bit_q;
-            dsdv_tx_copy #(.W(1),.ID(1000+b*16+f))u(.ck(ck),.rn(1'b1),.d(wm_next[f]),.q(bit_q));
+            if (FL != 0) begin : g_mf
+                assign bit_q = wm_f[f];
+            end else begin : g_m1
+                dsdv_tx_copy #(.W(1),.ID(1000+b*16+f))u(.ck(ck),.rn(1'b1),.d(wm_next[f]),.q(bit_q));
+            end
             if (WDL != 0) begin : g_wdl
                 wire bit_q2;
                 dsdv_tx_copy #(.W(1),.ID(5000+b*16+f))u2(.ck(ck),.rn(1'b1),.d(bit_q),.q(bit_q2));
@@ -303,7 +324,9 @@ module dsdv_idx_txm_grp #(
             end
         end
         wire we_m; wire [9:0] wa_m; wire [255:0] wd_m;
-        if (WDL != 0) begin : g_wl
+        if (FL != 0) begin : g_wf
+            assign we_m = we_f && (NB == 1 || wa_f[AW-1:10] == b); assign wa_m = wa_f[9:0]; assign wd_m = wd_f;
+        end else if (WDL != 0) begin : g_wl
             (* keep = "true" *) reg we_l; (* keep = "true" *) reg [9:0] wa_l; (* keep = "true" *) reg [255:0] wd_l;
             always @(posedge ck) begin we_l <= we && (NB == 1 || wa[AW-1:10] == b); wa_l <= wa[9:0]; wd_l <= wd; end
             assign we_m = we_l; assign wa_m = wa_l; assign wd_m = wd_l;
@@ -312,7 +335,9 @@ module dsdv_idx_txm_grp #(
         end
         wire [255:0] q_raw;
         wire re_m; wire [9:0] ra_m;
-        if (RIL != 0) begin : g_ril
+        if (FL != 0) begin : g_rf
+            assign re_m = re_f && (NB == 1 || ra_f[AW-1:10] == b); assign ra_m = ra_f[9:0];
+        end else if (RIL != 0) begin : g_ril
             (* keep = "true" *) reg re_l; (* keep = "true" *) reg [9:0] ra_l;
             always @(posedge ck) begin re_l <= re && (NB == 1 || ra[AW-1:10] == b); ra_l <= ra[9:0]; end
             assign re_m = re_l; assign ra_m = ra_l;
@@ -333,7 +358,9 @@ module dsdv_idx_txm_grp #(
     end
     (* keep = "true" *) reg [NG*8-1:0] bsk0;
     wire [AW-1:0] ra_bs;
-    if (RIL != 0) begin : g_rabs
+    if (FL != 0) begin : g_rabsf
+        assign ra_bs = (RIL_MUT != 0) ? ra : ra_f;   // FL: the face-landed ra is the RIL ra_q
+    end else if (RIL != 0) begin : g_rabs
         reg [AW-1:0] ra_q;
         always @(posedge ck) ra_q <= ra;
         assign ra_bs = (RIL_MUT != 0) ? ra : ra_q;
@@ -435,7 +462,8 @@ module dsdv_idx_tx_n32 #(
     end else begin : g_face0
         assign vi_p = vi; assign vo_p = vo;
     end endgenerate
-    reg [V-1:0] vi_r, vo_r;
+    // rf1y: keep, so the 23 unread pin bits have a load in the raw netlist; synth_odb removes the unread flops and the face hook adds the capture flop
+    (* keep *) reg [V-1:0] vi_r, vo_r;
     always @(posedge ck or negedge rl[0])
         if (!rl[0]) begin vi_r[0] <= 1'b0; vo_r[0] <= 1'b0; end
         else begin vi_r[0] <= vi_p[0]; vo_r[0] <= vo_p[0]; end
@@ -639,7 +667,8 @@ module dsdv_idx_tx_n32 #(
     // ------------------------------------------------------------------ window store (2 buffers) + beat descriptor
     reg         wv;                          // a window is open (in buffer act)
     reg         act;                         // buffer of the open window
-    reg  [19:0] w0c;                         // the open window's base
+    reg  [15:0] w0c_h;                       // the open window's base, 16-aligned: no state for the zero low bits (LEC: unreset constants)
+    wire [19:0] w0c = {w0c_h, 4'd0};
     wire [19:0] w0b [0:1]; wire [15:0] wlvb [0:1]; wire [255:0] wscb [0:1];
     reg  [19:0] lcur;                        // the parent lane's cursor
     reg  [2:0]  bq_n;                        // beats left in the descriptor
@@ -790,7 +819,7 @@ module dsdv_idx_tx_n32 #(
             if (ib_push) ib_w <= ib_w + 1'b1;
         end
     always @(posedge ck) begin
-        act <= nx_act; w0c <= nx_w0c; tc <= nx_tc; rc <= nx_rc; sn <= nx_sn; bix <= nx_bix; lcur <= nx_lcur_private;
+        act <= nx_act; w0c_h <= nx_w0c[19:4]; tc <= nx_tc; rc <= nx_rc; sn <= nx_sn; bix <= nx_bix; lcur <= nx_lcur_private;
         d_h <= nx_d_h; d_buf <= nx_d_buf; d_rb <= nx_d_rb; d_em <= nx_d_em; d_last <= nx_d_last;
     end
     // window buffers: field f of buffer b written with the result score when the result lands in b

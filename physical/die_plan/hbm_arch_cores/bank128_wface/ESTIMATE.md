@@ -1,0 +1,5 @@
+# Bank128 write face candidate
+
+525 input-register bits (512 data,10 address,3 enables), compared with measured109k placed cells: safely below150k. Old stdcell util0.42; added525 FF is small versus measured42% occupancy but actual synthesis/placement must confirm <=0.45. Existing3 SRAMs and outline250.56x267.84 unchanged. Added clock sinks~525, no combinational data logic. Shallow single-root CTS avoids measured415/390ps density tree and port-hold pad debt. M6 horizontal escape is a separate structural candidate: parent obstruction reservation required before adoption.
+
+PIN CYCLES: write_data/write_addr/weight_we0/weight_we1/x_write +1 risingclk edge, grouped. Read/go/arithmetic paths0 added cycles. Parent sends programming1edgeearlier or defers first dependent read/go1edge; same-edge/next-edge read-after-write hazards are part of the cut bench. No writes during reset, as the programming contract requires; enables reset0, datapath flops unreset. Default-off OT_HC128_WFACE keeps original source behavior.

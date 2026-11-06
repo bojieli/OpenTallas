@@ -220,10 +220,8 @@ def gen(a, extra):
             hard_macros=hm), indent=1) + "\n")
     cmd = [sys.executable, str(HERE / "gen_core_kit_kv.py"), "--core-json", str(cjw), "--plan", a.plan or v["plan"],
            "--out", str(out), "--kit-rtl", kit_rtl, "--tool", str(repo / "tools/die_plan")]
-    # The new native PVPAIR consumes its established .45/M7 recipe.  The host defaults
-    # below would otherwise override it; preserve their existing behavior for other cores.
-    if m != "kv3_pv_pair":
-        cmd += ["--util", "0.6", "--sigmax", "M5"]
+    # Leave physical defaults to the recipe/generator. Only the caller's extra flags
+    # below are explicit overrides; injecting .6/M5 here would now override the recipe.
     fp = None
     if e.get("hr"):
         for r in a.fp_root:

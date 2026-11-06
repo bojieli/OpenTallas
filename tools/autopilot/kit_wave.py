@@ -485,8 +485,16 @@ def select(rows, cfg, die, state, plan_types=None):
             continue
         blk = lambda t: plan_types.get(t) if isinstance(plan_types, dict) else None
         rec = (state.get("items") or {}).get(item_key(die, ev, r["item"], blk(r["item"])))
+        only_retry = False
         if r["state"] not in states:
-            continue
+            # KW-RELAUNCH-1 11-05: the parent row of a class-split item carries the state of the wave's OWN running class
+            # (ROUTING / QUEUED ...).  That hid every released retry of its sibling classes (S81 slice_station t29 / t40 /
+            # t6: retry @6 / @8 / @9 set, never launched).  Such a parent still expands, but only into released retries.
+            if not (str(r.get("owner", "")).startswith("KIT-WAVE") and _own_wave_unit(r)
+                    and plan_types is not None and r["item"] not in plan_types
+                    and any(x.split("@", 1)[0].startswith(r["item"] + "__") for x in retry)):
+                continue
+            only_retry = True
         if r["kind"] not in kinds:
             why = f"kind {r['kind']} not in wave"
         elif d.get("_cores_only") and r["kind"] != "core":
@@ -538,7 +546,9 @@ def select(rows, cfg, die, state, plan_types=None):
             # KW-FIX-8 11-04: a class in flight is never picked again.  Without this a retry row naming the live attempt
             # relaunched a RUNNING class (QC 11:30: 12 classes launched twice in one pass, a2 then a3)
             cls_live = lambda c: (its.get(item_key(die, ev, c, blk(c))) or {}).get("status") in ("RUNNING", "LAUNCHING")
-            todo = [c for c in cls if not cls_live(c) and (not its.get(item_key(die, ev, c, blk(c)))
+            released = lambda c: f"{c}@{(its.get(item_key(die, ev, c, blk(c))) or {}).get('attempt')}" in retry
+            todo = [c for c in cls if not cls_live(c) and (not only_retry or released(c))
+                    and (not its.get(item_key(die, ev, c, blk(c)))
                     or f"{c}@{its[item_key(die, ev, c, blk(c))].get('attempt')}" in retry
                     or (is_wait_dep(its[item_key(die, ev, c, blk(c))]) and not its[item_key(die, ev, c, blk(c))].get("provisional")
                         and prov_item(d, c)))]
@@ -3393,6 +3403,12 @@ def write_stages(st, ap_dir, cfg=None):
             # the wave record itself (attempts, two-strike history) is unchanged
             v.update(status="SUPERSEDED", **{"class": "SUPERSEDED"},
                      reason=f"superseded plan block (plan_current=no), was FAIL {v.get('class') or ''}: {v.get('reason') or ''}"[:240])
+        if v.get("status") in ("FAIL", "SUPERSEDED", "PENDING-DEP") and r.get("item") in set(
+                (((cfg or {}).get("dies") or {}).get(r.get("die")) or {}).get("counted_items") or []):
+            # KW-RELAUNCH-1 11-05 (COORD 19:4x): die option counted_items = items already signed off and counted on
+            # another path (lane build, OWNERS SIGNED); their old wave FAIL row reads SIGNED / COUNTED, not open work
+            v.update(status="SIGNED", **{"class": "COUNTED"},
+                     reason=f"counted elsewhere (counted_items), was {v.get('status')} {v.get('class') or ''}: {v.get('reason') or ''}"[:240])
         if r.get("provisional"):
             # KW-PROV-1: built on PROVISIONAL child views (never counted until the STA-only re-sign on the signed libs)
             pv = ",".join(f"{m}:{str(src).split()[0] if src else '?'}" for m, src in sorted(r["provisional"].items()))

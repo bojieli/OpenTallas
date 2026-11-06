@@ -1,0 +1,25 @@
+MISMATCH A/B case 0 cyc 6 ready 0/0 fault 0/0
+MISMATCH A/B case 0 cyc 7 ready 0/0 fault 0/0
+MISMATCH A/B case 0 cyc 8 ready 0/0 fault 0/0
+MISMATCH A/B case 0 cyc 9 ready 0/0 fault 0/0
+MISMATCH A/B case 0 cyc 10 ready 0/0 fault 0/0
+c45 ra 0 rc 1 fa 0 fc 0 qa==qc 0
+c100 ra 0 rc 1 fa 1 fc 0 qa==qc 0
+case 0 k 4 phase 426 rs 0 firstA -1 firstC 22
+case 1 k 2 phase 561 rs 1 firstA 31 firstC 29
+case 2 k 3 phase 491 rs 0 firstA 31 firstC 29
+case 3 k 3 phase 188 rs 1 firstA -1 firstC 37
+case 4 k 2 phase 557 rs 1 firstA 22 firstC 20
+case 5 k 4 phase 322 rs 1 firstA -1 firstC -1
+case 6 k 3 phase 706 rs 0 firstA 22 firstC 20
+case 7 k 3 phase 344 rs 1 firstA -1 firstC 31
+case 8 k 4 phase 711 rs 0 firstA -1 firstC 29
+case 9 k 2 phase 335 rs 1 firstA 34 firstC 32
+case 10 k 4 phase 576 rs 0 firstA -1 firstC 36
+case 11 k 4 phase 686 rs 0 firstA -1 firstC 22
+ready_A=8619 ready_C=15912 fault_A=5470 fault_C=1485
+WREG_EQUIV cases=160 ready_cycles_AC=8619 match_AC=0 errors=31013 FAIL
+- tb.sv:110: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.080 s; speed 253.975 us/s
+- Verilator: cpu 0.080 s on 1 threads; allocated 7 MB

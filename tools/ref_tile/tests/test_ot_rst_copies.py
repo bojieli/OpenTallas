@@ -1,5 +1,7 @@
 """KV-RELAYGEN 2026-10-19: physical/common_flow/ot_rst_copies.py (regional reset relay copies) on synthetic netlists."""
 import importlib.util
+import os
+from unittest.mock import patch
 import json
 import tempfile
 import unittest
@@ -45,6 +47,32 @@ class T(unittest.TestCase):
             j.write_text(json.dumps(nl))
             rc = RS.main(["--json", str(j), "--max", str(mx), "--ys", f"{td}/o.ys", "--tsv", f"{td}/o.tsv"])
             return rc, (Path(td) / "o.ys").read_text(), (Path(td) / "o.tsv").read_text()
+
+
+    def test_prep_keep_register_q_alias(self):
+        # An early per-bit map can name state flops after their public aliases.
+        # Keeping the named coarse register preserves the proof correspondence.
+        nl = netlist(loads=0, wide=2)
+        m = nl["modules"]["top"]
+        q = m["cells"]["u_m.u_w.v0"]["connections"]["Q"]
+        m["netnames"]["u_m.g_st[0].q"] = {"bits": q}
+        m["netnames"]["a_end"] = {"bits": q[:1]}
+        with patch.dict(os.environ, {"OT_RST_COPIES_PREP_KEEP": ""}):
+            n_base, base = RS.prep(nl, RS.DEFAULT_RE)
+        with patch.dict(os.environ, {"OT_RST_COPIES_PREP_KEEP": r"(^|\.)g_st\[[0-9]+\]\.q$"}):
+            n_keep, kept = RS.prep(nl, RS.DEFAULT_RE)
+        self.assertEqual(n_base, 2)
+        self.assertEqual(n_keep, 1)
+        self.assertIn("u_m.u_w.v0", base)
+        self.assertNotIn("u_m.u_w.v0", kept)
+        self.assertIn("u_m.u_w.v1", kept)
+
+    def test_prep_keep_unmatched_default_unchanged(self):
+        nl = netlist(loads=0, wide=2)
+        with patch.dict(os.environ, {"OT_RST_COPIES_PREP_KEEP": ""}):
+            base = RS.prep(nl, RS.DEFAULT_RE)
+        with patch.dict(os.environ, {"OT_RST_COPIES_PREP_KEEP": r"no_such_register"}):
+            self.assertEqual(base, RS.prep(nl, RS.DEFAULT_RE))
 
     def test_split_even(self):
         rc, ys, tsv = self.run_nl(netlist())

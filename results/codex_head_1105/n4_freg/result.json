@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS",
+ "width": 517,
+ "period_ps": 833,
+ "cases": 160,
+ "seed": 173,
+ "pass": "WREG_EQUIV cases=160 ready_cycles_AC=15632 match_AC=15632 errors=0 PASS",
+ "mutant": "WREG_EQUIV cases=160 ready_cycles_AC=8619 match_AC=0 errors=31013 FAIL",
+ "mutant_caught": true,
+ "note": "bench reports verdict in text and exits zero even on FAIL; client rc1 came from incorrect rc-only mutant check, corrected to text verdict; no RTL/test rerun needed",
+ "dsrep": 8
+}

@@ -2755,7 +2755,7 @@
   },
   "macros": [],
   "source": "HBM-REFORM-B d44v part 20 sub-core of ot_pdie_serdes; lockstep bench results/die_hbm_1104/reform_b/split_p20/run_eq.sh; HBM-GAPS-3 11-05 ELA=2 (two-step KP4 parity lookahead, +1 edge, tb_kp4_enc_la.sv / tb_pdie_tx_ela.sv)",
-  "source_commit": "3dd2c0739e5b01f687de50f282ca6fb8c42f407d",
+  "source_commit": "f163a41643581ede8cb1337b44cbd7f6adfef513",
   "read_at_commit": true,
   "util": 0.4
  },
@@ -2989,9 +2989,25 @@
    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv"
   ],
   "defines": [],
-  "params": {"HREG": 1},
-  "source": "HBM-REFORM-B4 d44v part 25 tile of ot_hbm_svc_wb_kport_q; bench results/die_hbm_1104/reform_b/split_p25/run_eq.sh; HREG=1 (HBM-GAPS-3 11-05): registered heads + pick, one-hot K switch, cycle-exact vs HREG=0 (run_lock.sh)",
-  "source_commit": "358e13d198d73d010f855e29ff4f3ac167430918",
+  "params": {"HREG": 2},
+  "source": "HBM-REFORM-B4 d44v part 25 tile of ot_hbm_svc_wb_kport_q; bench results/die_hbm_1104/reform_b/split_p25/run_eq.sh; HREG=1 (HBM-GAPS-3 11-05): registered heads + pick, one-hot K switch, cycle-exact vs HREG=0 (run_lock.sh); HREG=2 (HBM-GAPS-5-WBQ 11-05): + registered replicated fault/meta gates, registered half popcounts, per-slice head pointers, per-PC skid reset sync, cycle-exact (run_lock.sh LOCK_HREG=2)",
+  "source_commit": "ce61f34f47d9b9dbdde346f8d8b5c52a2c4df24e",
+  "read_at_commit": true,
+  "util": 0.45
+ },
+ "ot_wbq_sw__gin": {
+  "top": "ot_wbq_sw",
+  "macros": [],
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_split.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv"
+  ],
+  "defines": [],
+  "params": {"HREG": 2, "GIN": 1},
+  "source": "HBM-REFORM-B4 d44v part 25 tile of ot_hbm_svc_wb_kport_q; bench results/die_hbm_1104/reform_b/split_p25/run_eq.sh; HREG=1 (HBM-GAPS-3 11-05): registered heads + pick, one-hot K switch, cycle-exact vs HREG=0 (run_lock.sh); HREG=2 (HBM-GAPS-5-WBQ 11-05): + registered replicated fault/meta gates, registered half popcounts, per-slice head pointers, per-PC skid reset sync, cycle-exact (run_lock.sh LOCK_HREG=2); __gin = version B (opt-in key): + GIN=1 input stage on g_v/g_d, PIN CYCLES +1 hbm_clk edge on g_v/g_d, credit flow unchanged (run_eq.sh SW_HREG=2 SW_GIN=1, mutants g1/g2)",
+  "source_commit": "ce61f34f47d9b9dbdde346f8d8b5c52a2c4df24e",
   "read_at_commit": true,
   "util": 0.45
  },
@@ -3224,9 +3240,11 @@
   ],
   "params": {},
   "macros": [],
-  "defines": [],
-  "source": "HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/",
-  "source_commit": "767a7f2d1e1b419e29714c1f9ed05990f29b18e7",
+  "defines": [
+   "OT_SVGR_OWN_RF1"
+  ],
+  "source": "HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/; HBM-GAPS-5 RF1 registered owner, +1 descriptor/Kresponse/bank-free edges; four smoke controls PASS,7mutants caught",
+  "source_commit": "d8e2036d33d55e93ce27cb7848bce4b90ec774e7",
   "read_at_commit": true,
   "util": 0.45
  },
@@ -3265,7 +3283,7 @@
   "macros": []
  },
  "ot_hfd_coll_q3_body_ctl": {
-  "defines": [],
+  "defines": ["OT_Q3CTL_TGTQ1"],
   "params": {},
   "util": 0.45,
   "source": "HBM-FORM-SPLIT d44v part 28: tile of ot_hfd_coll_q3_body_core; bench results/die_hbm_1105/form_split/p28",
@@ -3410,9 +3428,56 @@
   "defines": [],
   "params": {},
   "macros": [],
-  "source": "HBM-FORM-SPLIT-8+REFORM-B11 glue_d15r RE-FORM: piece of hfd_hgi_vms_glue_nw_t (port-cut, 0 added cycles); bench results/die_hbm_1105/form_split/glue_b11/",
-  "source_commit": "12ad6ca444",
+  "source": "HBM-FORM-SPLIT-8+REFORM-B11 glue_d15r RE-FORM: piece of hfd_hgi_vms_glue_nw_t (port-cut, 0 added cycles); bench results/die_hbm_1105/form_split/glue_b11/; HBM-FORM-SPLIT-10+REFORM-B13: hub arrivals balanced popcount (0 cycles, yosys equiv results/die_hbm_1105/reform_b13/hub/)",
+  "source_commit": "7e44d99b8b",
   "read_at_commit": true,
   "util": 0.45
+ },
+ "ot_hfd_coll_q3_edge_link": {
+  "top": "ot_hfd_coll_q3_edge_link",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1103/ot_hfd_coll_q3_edge_core/ot_hfd_coll_q3_edge_link.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_edge_pr.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+   "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv",
+   "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+   "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
+  ],
+  "defines": [
+   "OT_COLL_ISSUER256_NATIVE32",
+   "OT_COLL_LINK_RXPRE",
+   "OT_HBM_RW_MACROS"
+  ],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_64x141_m1_r0c0_g141"
+  ],
+  "util": 0.45,
+  "source": "HBM-GAPS-4-Q3SPLIT d44v part 34 (vB, safe form): tile of ot_hfd_coll_q3_edge_core (member boundary, 0 added cycles); lock-step bench physical/die_plan/hbm/over_cap_split/reform_1103/bench/q3_edge/run.sh (XDEFS=OT_COLL_LINK_RXPRE RXSTIM=1); member RTL files and defines as the uncut core recipe; CODEX 11-05: adopt existing right-width 141b replay macro, same read-before-write and forwarding ages, 0 pin cycles; store miter 11991 checks + mutant caught"
+ },
+ "ot_hfd_coll_q3_edge_arg": {
+  "top": "ot_hfd_coll_q3_edge_arg",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1103/ot_hfd_coll_q3_edge_core/ot_hfd_coll_q3_edge_arg.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_edge_pr.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+   "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv",
+   "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+   "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
+  ],
+  "defines": [
+   "OT_COLL_ISSUER256_NATIVE32",
+   "OT_COLL_LINK_RXPRE"
+  ],
+  "params": {},
+  "macros": [],
+  "util": 0.45,
+  "source": "HBM-GAPS-4-Q3SPLIT d44v part 34 (vB, safe form): tile of ot_hfd_coll_q3_edge_core (member boundary, 0 added cycles); lock-step bench physical/die_plan/hbm/over_cap_split/reform_1103/bench/q3_edge/run.sh (XDEFS=OT_COLL_LINK_RXPRE RXSTIM=1); member RTL files and defines as the uncut core recipe"
  }
 }
