@@ -3403,6 +3403,12 @@ def write_stages(st, ap_dir, cfg=None):
             # the wave record itself (attempts, two-strike history) is unchanged
             v.update(status="SUPERSEDED", **{"class": "SUPERSEDED"},
                      reason=f"superseded plan block (plan_current=no), was FAIL {v.get('class') or ''}: {v.get('reason') or ''}"[:240])
+        if v.get("status") in ("FAIL", "SUPERSEDED", "PENDING-DEP") and r.get("item") in set(
+                (((cfg or {}).get("dies") or {}).get(r.get("die")) or {}).get("counted_items") or []):
+            # KW-RELAUNCH-1 11-05 (COORD 19:4x): die option counted_items = items already signed off and counted on
+            # another path (lane build, OWNERS SIGNED); their old wave FAIL row reads SIGNED / COUNTED, not open work
+            v.update(status="SIGNED", **{"class": "COUNTED"},
+                     reason=f"counted elsewhere (counted_items), was {v.get('status')} {v.get('class') or ''}: {v.get('reason') or ''}"[:240])
         if r.get("provisional"):
             # KW-PROV-1: built on PROVISIONAL child views (never counted until the STA-only re-sign on the signed libs)
             pv = ",".join(f"{m}:{str(src).split()[0] if src else '?'}" for m, src in sorted(r["provisional"].items()))
