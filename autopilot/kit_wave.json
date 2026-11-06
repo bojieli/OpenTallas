@@ -3011,7 +3011,9 @@
     "sle_stm_v1__clbe630b9c@4",
     "sle_stm_v2__cl7b3062fa@4",
     "sle_su_l1__clc6d66f5b@4",
-    "slw_st_a_v2__cl9f076a5c@5"
+    "slw_st_a_v2__cl9f076a5c@5",
+    "coll_ft__cla4a25d77@4",
+    "coll_ftm@3"
    ],
    "queue_src": "",
    "type_args": {
@@ -3375,7 +3377,9 @@
     "sle_stm_v1__clbe630b9c@4": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "sle_stm_v2__cl7b3062fa@4": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "sle_su_l1__clc6d66f5b@4": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
-    "slw_st_a_v2__cl9f076a5c@5": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch"
+    "slw_st_a_v2__cl9f076a5c@5": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
+    "coll_ft__cla4a25d77@4": "KW-FIX-18 19:5x holdgaterr I169: a4/a3 kits were generated on pre-holdgaterr src a201f608d85; probe of the same 4_cts.odb with the src_16b hold_gate.tcl = PASS (coll_ft r2r -38.74/4 vs stop -245; coll_ftm r2r -208.13/64 vs stop -260; port-only overshoot = advisory) -> re-kit on src_16b",
+    "coll_ftm@3": "KW-FIX-18 19:5x holdgaterr I169: a4/a3 kits were generated on pre-holdgaterr src a201f608d85; probe of the same 4_cts.odb with the src_16b hold_gate.tcl = PASS (coll_ft r2r -38.74/4 vs stop -245; coll_ftm r2r -208.13/64 vs stop -260; port-only overshoot = advisory) -> re-kit on src_16b"
    },
    "gen_hosts": [
     "epyc4"
