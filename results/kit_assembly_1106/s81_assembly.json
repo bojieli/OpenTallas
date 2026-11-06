@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.kit_assembly.v1",
+  "bindings": [
+    {
+      "master": "dsdv_idx_txm_grp",
+      "instance": "u_sm.g_s.u_ga",
+      "source": "dsdv_idx_l20s.sv",
+      "source_sha256": "babb26dd4635ba5738d245f235224b4fa5f8a3e45d0f52b7f2bcd4923efbe529",
+      "child_params": {
+        "D": 8192,
+        "B0": 0,
+        "NG": 5,
+        "RDL": 1,
+        "WDL": 1,
+        "RIL": 1,
+        "RIL_MUT": 0,
+        "POUT": 1,
+        "FL": 1
+      },
+      "blackbox": "dsdv_idx_txm_grp_bb.v",
+      "blackbox_sha256": "6356e7b524f5fd878f1f8a94e8dde3698dd8aefea86eef246e8dec012baacb49"
+    }
+  ],
+  "changed_sources": [
+    "dsdv_idx_l20s.sv"
+  ],
+  "cycles_changed": 0,
+  "elaborated_inventory": "NOT RUN",
+  "accepted_original_helper_bytes_equal": true
+}

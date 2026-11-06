@@ -1397,8 +1397,12 @@ def main():
                 raise SystemExit(f"{master}: site {x},{y} ({mw}x{mh}) outside the core area of {w}x{h}")
             mplace[master].append((x, y, o))
     if hcb:
-        from signed_children import specialize_native_children
-        specialize_native_children(kd / "rtl", hcb)
+        from kit_assembly import assemble_fixed_children
+        assemble_fixed_children(kd / "rtl", hcb,
+                                rec["hard_children"].get("parameter_contracts", []),
+                                receipt=kd / "kit_assembly.json",
+                                parent_profile=dict(top=mod, parameters=dict(spec.get("params", {}) or {},
+                                                                            **rec.get("params", {}))))
 
     # pins: exact plan centres + plan shapes, on the kit tracks
     m6_off = m6_pin_grant(pins, hc, plan)
