@@ -47,3 +47,14 @@ def test_unknown_item_kept():
     cfg = _cfg(["x@1"])
     kw.prune_stale_retries(cfg, st, now=1.0)
     assert cfg["dies"]["s81"]["retry"] == ["x@1"]
+
+
+def test_default_clock_and_string_times():
+    """13:57 hub crash: now defaulted to the now_s() display string; started may be a string; old seen strings"""
+    st = {"items": {"a": {"die": "s", "item": "x", "attempt": 3, "started": "100.5"},
+                    "b": {"die": "s", "item": "y", "attempt": 2, "started": "bad"}},
+          "retry_seen": {"s|x@3": "2026-11-06 13:57 PST"}}
+    cfg = {"dies": {"s": {"retry": ["x@3", "y@2"]}}}
+    assert kw.prune_stale_retries(cfg, st) == {}
+    assert cfg["dies"]["s"]["retry"] == ["x@3", "y@2"]
+    assert all(isinstance(v, float) for v in st["retry_seen"].values())
