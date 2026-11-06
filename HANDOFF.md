@@ -3181,3 +3181,5 @@ CODEX: 2026-11-05 23:27 PST MERGE: exact HBM lane1p/WBQ source + shared GRT-erro
 CODEX: 2026-11-05 23:27 PST HBM p35 READY codex/hbm-1105@203db392bba:12 clock-pin access fixes + TX taller safe form, reviewed; wave main part34 fully extracted for source refresh.
 
 CODEX: 2026-11-05 23:28 PST MERGE: HBMp35 pairedclockpins/tallerTX plan merged2c7054fd3cd, HBMtagz verified; HBMowner launchingTXvB.
+
+CODEX: 2026-11-05 23:35 PST MERGE: explicit safeform CLIprecedence3generator class +defaultOFF CA-slotlap source landed71ff3ed4b14,15focused testsPASS, tagsu/s/p/u/aa, no activekit changes.
