@@ -246,7 +246,7 @@ def prepare_stations(plan,tn,rtl_dir,native_plan=None,asbuilt=None):
     return result
 
 
-def stage_inventory(rtl_dir,kit):
+def stage_inventory(rtl_dir,kit,*,top=None):
     """Carry preparation expectations through the ordinary gen.py physical kit."""
     rtl_dir,kit=Path(rtl_dir),Path(kit)
     source=rtl_dir/'kit_topology.json'
@@ -259,7 +259,10 @@ def stage_inventory(rtl_dir,kit):
     assembly=rtl_dir/'kit_assembly.json'
     if assembly.exists() and not (kit/'kit_assembly.json').exists():
         shutil.copyfile(assembly,kit/'kit_assembly.json')
-    top=json.loads((kit/'freeze.json').read_text())['module']
+    if top is None:
+        top=json.loads((kit/'freeze.json').read_text()).get('module')
+    if not isinstance(top,str) or not top:
+        raise ValueError('KIT_TOPOLOGY_SOURCE: explicit selected parent module required')
     install_inventory(census,kit/'kit_assembly.json',top)
     shutil.copyfile(source,kit/'kit_topology.json')
 
