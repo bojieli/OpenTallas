@@ -76,7 +76,7 @@ rsync -a "${OUT_EXCLUDE[@]}" --exclude .ot-run-spill-copy --exclude /run --exclu
   --exclude '/run_*.log' --exclude /rc.txt --exclude '/pass[0-9]*' --exclude '/prd_*.json' --exclude '/prd_*.log' \
   --exclude '/eco_[0-9]*' --exclude '/lec_routed_autopilot_*' --exclude '/lec_async.runs' \
   --exclude '/lec_async.on' --exclude '/lec_async.ready' --exclude '/lec_async.done' --exclude '/lec_async.rc' --exclude '/lec_async.stop' \
-  --exclude '/lec_async.abort' --exclude '/lec_async.pid' --exclude '/lec_async.identity' --exclude '/lec_async.source_identity' \
+  --exclude '/lec_async.abort' --exclude '/lec_async.aborted' --exclude '/lec_async.pid' --exclude '/lec_async.identity' --exclude '/lec_async.source_identity' \
   --exclude '/lec_async.owner' --exclude '/lec_async.lock' --exclude '/lec_async.log' $KIT/ $OUT/
 B=$OUT/run/results/asap7/$NICK/base
 mkdir -p $B $OUT/run/logs/asap7/$NICK/base $OUT/run/reports/asap7/$NICK/base $OUT/run/objects/asap7/$NICK/base
