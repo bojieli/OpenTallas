@@ -1,0 +1,948 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `area.ys' --
+
+1. Executing Verilog-2005 frontend: sram_bb.sv
+Parsing SystemVerilog input from `sram_bb.sv' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x256_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: new.sv
+Parsing SystemVerilog input from `new.sv' to AST representation.
+Generating RTLIL representation for module `\ot_wbq_root'.
+Warning: Replacing memory \credit with list of registers. See new.sv:77
+Warning: Replacing memory \committed with list of registers. See new.sv:55
+Warning: Replacing memory \total with list of registers. See new.sv:55
+Warning: Replacing memory \base with list of registers. See new.sv:55
+Generating RTLIL representation for module `\ot_wbq_root_store'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: ot_hbm_accel_cdc_fifo.sv
+Parsing SystemVerilog input from `ot_hbm_accel_cdc_fifo.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_accel_cdc_fifo'.
+Warning: Replacing memory \mem with list of registers. See ot_hbm_accel_cdc_fifo.sv:32
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: ot_reset_sync.sv
+Parsing SystemVerilog input from `ot_reset_sync.sv' to AST representation.
+Generating RTLIL representation for module `\ot_reset_sync'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: area_top.sv
+Parsing SystemVerilog input from `area_top.sv' to AST representation.
+Generating RTLIL representation for module `\area_top'.
+Successfully finished Verilog frontend.
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1. Analyzing design hierarchy..
+Top module:  \area_top
+Used module:     \ot_wbq_root_store
+Used module:         \ot_hbm_accel_cdc_fifo
+Parameter \W = 288
+Parameter \AW = 2
+
+6.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_accel_cdc_fifo'.
+Parameter \W = 288
+Parameter \AW = 2
+Generating RTLIL representation for module `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo'.
+Warning: Replacing memory \mem with list of registers. See ot_hbm_accel_cdc_fifo.sv:32
+
+6.3. Analyzing design hierarchy..
+Top module:  \area_top
+Used module:     \ot_wbq_root_store
+Used module:         $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo
+
+6.4. Analyzing design hierarchy..
+Top module:  \area_top
+Used module:     \ot_wbq_root_store
+Used module:         $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo
+Removing unused module `\ot_reset_sync'.
+Removing unused module `\ot_hbm_accel_cdc_fifo'.
+Removing unused module `\ot_wbq_root'.
+Removed 3 unused modules.
+
+7. Executing SYNTH pass.
+
+7.1. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1.1. Analyzing design hierarchy..
+Top module:  \area_top
+Used module:     \ot_wbq_root_store
+Used module:         $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo
+
+7.1.2. Analyzing design hierarchy..
+Top module:  \area_top
+Used module:     \ot_wbq_root_store
+Used module:         $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo
+Removed 0 unused modules.
+
+7.2. Executing PROC pass (convert processes to netlists).
+
+7.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+7.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$new.sv:124$267 in module ot_wbq_root_store.
+Removed 1 dead cases from process $proc$ot_hbm_accel_cdc_fifo.sv:25$359 in module $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.
+Marked 1 switch rules as full_case in process $proc$ot_hbm_accel_cdc_fifo.sv:25$359 in module $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.
+Marked 1 switch rules as full_case in process $proc$ot_hbm_accel_cdc_fifo.sv:36$348 in module $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.
+Marked 3 switch rules as full_case in process $proc$ot_hbm_accel_cdc_fifo.sv:29$336 in module $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.
+Removed a total of 1 dead cases.
+
+7.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 9 redundant assignments.
+Promoted 10 assignments to connections.
+
+7.2.4. Executing PROC_INIT pass (extract init attributes).
+
+7.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \srst in `\ot_wbq_root_store.$proc$new.sv:124$267'.
+Found async reset \rrst_n in `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:36$348'.
+Found async reset \wrst_n in `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$336'.
+
+7.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~6 debug messages>
+
+7.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\area_top.$proc$area_top.sv:9$319'.
+Creating decoders for process `\ot_wbq_root_store.$proc$new.sv:124$267'.
+     1/3: $0\read_pending[0:0]
+     2/3: $0\pending_row[5:0]
+     3/3: $0\copy_row[6:0]
+Creating decoders for process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:25$359'.
+     1/1: $1$mem2reg_rd$\mem$ot_hbm_accel_cdc_fifo.sv:25$322_DATA[287:0]$361
+Creating decoders for process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:27$352'.
+Creating decoders for process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:36$348'.
+     1/4: $0\wg_r2[2:0]
+     2/4: $0\wg_r1[2:0]
+     3/4: $0\rgray[2:0]
+     4/4: $0\rbin[2:0]
+Creating decoders for process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$336'.
+     1/13: $2$mem2reg_wr$\mem$ot_hbm_accel_cdc_fifo.sv:32$323_ADDR[1:0]$344
+     2/13: $2$mem2reg_wr$\mem$ot_hbm_accel_cdc_fifo.sv:32$323_DATA[287:0]$345
+     3/13: $0\rsync_bin_q[2:0]
+     4/13: $0\rg_w2[2:0]
+     5/13: $0\rg_w1[2:0]
+     6/13: $0\wgray[2:0]
+     7/13: $0\wbin[2:0]
+     8/13: $1$mem2reg_wr$\mem$ot_hbm_accel_cdc_fifo.sv:32$323_DATA[287:0]$341
+     9/13: $1$mem2reg_wr$\mem$ot_hbm_accel_cdc_fifo.sv:32$323_ADDR[1:0]$340
+    10/13: $0\mem[3][287:0]
+    11/13: $0\mem[2][287:0]
+    12/13: $0\mem[1][287:0]
+    13/13: $0\mem[0][287:0]
+
+7.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$mem2reg_rd$\mem$ot_hbm_accel_cdc_fifo.sv:25$322_DATA' from process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:25$359'.
+No latch inferred for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\g2b$func$ot_hbm_accel_cdc_fifo.sv:27$320.$result' from process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:27$352'.
+No latch inferred for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\g2b$func$ot_hbm_accel_cdc_fifo.sv:27$321.$fordecl_block$270.i' from process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:27$352'.
+
+7.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\area_top.\wd_q' using process `\area_top.$proc$area_top.sv:9$319'.
+  created $dff cell `$procdff$416' with positive edge clock.
+Creating register for signal `\ot_wbq_root_store.\copy_row' using process `\ot_wbq_root_store.$proc$new.sv:124$267'.
+  created $adff cell `$procdff$421' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root_store.\pending_row' using process `\ot_wbq_root_store.$proc$new.sv:124$267'.
+  created $adff cell `$procdff$426' with positive edge clock and positive level reset.
+Creating register for signal `\ot_wbq_root_store.\read_pending' using process `\ot_wbq_root_store.$proc$new.sv:124$267'.
+  created $adff cell `$procdff$431' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\rbin' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:36$348'.
+  created $adff cell `$procdff$436' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\rgray' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:36$348'.
+  created $adff cell `$procdff$441' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\wg_r1' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:36$348'.
+  created $adff cell `$procdff$446' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\wg_r2' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:36$348'.
+  created $adff cell `$procdff$451' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\wbin' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$336'.
+  created $adff cell `$procdff$456' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\wgray' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$336'.
+  created $adff cell `$procdff$461' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\rg_w1' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$336'.
+  created $adff cell `$procdff$466' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\rg_w2' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$336'.
+  created $adff cell `$procdff$471' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\rsync_bin_q' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$336'.
+  created $adff cell `$procdff$476' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\mem[0]' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$336'.
+  created $dff cell `$procdff$483' with positive edge clock.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\mem[1]' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$336'.
+  created $dff cell `$procdff$490' with positive edge clock.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\mem[2]' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$336'.
+  created $dff cell `$procdff$497' with positive edge clock.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.\mem[3]' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$336'.
+  created $dff cell `$procdff$504' with positive edge clock.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$mem2reg_wr$\mem$ot_hbm_accel_cdc_fifo.sv:32$323_ADDR' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$336'.
+  created $adff cell `$procdff$509' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$mem2reg_wr$\mem$ot_hbm_accel_cdc_fifo.sv:32$323_DATA' using process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$336'.
+  created $adff cell `$procdff$514' with positive edge clock and positive level reset.
+
+7.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+7.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `area_top.$proc$area_top.sv:9$319'.
+Found and cleaned up 3 empty switches in `\ot_wbq_root_store.$proc$new.sv:124$267'.
+Removing empty process `ot_wbq_root_store.$proc$new.sv:124$267'.
+Found and cleaned up 1 empty switch in `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:25$359'.
+Removing empty process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:25$359'.
+Removing empty process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:27$352'.
+Removing empty process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:36$348'.
+Found and cleaned up 2 empty switches in `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$336'.
+Removing empty process `$paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.$proc$ot_hbm_accel_cdc_fifo.sv:29$336'.
+Cleaned up 6 empty switches.
+
+7.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+Optimizing module ot_wbq_root_store.
+<suppressed ~6 debug messages>
+Optimizing module $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.
+<suppressed ~34 debug messages>
+
+7.3. Executing CHECK pass (checking for obvious problems).
+Checking module area_top...
+Checking module ot_wbq_root_store...
+Checking module $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo...
+Found and reported 0 problems.
+
+7.4. Executing FLATTEN pass (flatten design).
+Deleting now unused module ot_wbq_root_store.
+Deleting now unused module $paramod$ff5ff3880a1ef31fa3f0aa49f069f5d2c604e9ea\ot_hbm_accel_cdc_fifo.
+<suppressed ~2 debug messages>
+
+7.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+<suppressed ~3 debug messages>
+
+7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+Removed 29 unused cells and 107 unused wires.
+<suppressed ~33 debug messages>
+
+7.7. Executing CHECK pass (checking for obvious problems).
+Checking module area_top...
+Found and reported 0 problems.
+
+7.8. Executing OPT pass (performing simple optimizations).
+
+7.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+
+7.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\area_top'.
+Computing hashes of 85 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Computing hashes of 81 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Computing hashes of 80 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+<suppressed ~15 debug messages>
+Removed a total of 5 cells.
+
+7.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \area_top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~32 debug messages>
+
+7.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \area_top.
+Performed a total of 0 changes.
+
+7.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\area_top'.
+Computing hashes of 80 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Removed a total of 0 cells.
+
+7.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+Removed 0 unused cells and 5 unused wires.
+<suppressed ~1 debug messages>
+
+7.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+
+7.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \area_top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~32 debug messages>
+
+7.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \area_top.
+Performed a total of 0 changes.
+
+7.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\area_top'.
+Computing hashes of 80 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Removed a total of 0 cells.
+
+7.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+
+7.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+
+7.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+7.9. Executing FSM pass (extract and optimize FSM).
+
+7.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+7.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+7.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+7.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+
+7.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+7.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+7.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+7.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+7.10. Executing OPT pass (performing simple optimizations).
+
+7.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+
+7.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\area_top'.
+Computing hashes of 80 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Removed a total of 0 cells.
+
+7.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \area_top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~32 debug messages>
+
+7.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \area_top.
+Performed a total of 0 changes.
+
+7.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\area_top'.
+Computing hashes of 80 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Removed a total of 0 cells.
+
+7.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $flatten\u.\u_fifo.$procdff$490 ($dff) from module area_top (D = { \u.sector \u.mem_data }, Q = \u.u_fifo.mem[1]).
+Adding EN signal on $flatten\u.\u_fifo.$procdff$497 ($dff) from module area_top (D = { \u.sector \u.mem_data }, Q = \u.u_fifo.mem[2]).
+Adding EN signal on $flatten\u.\u_fifo.$procdff$504 ($dff) from module area_top (D = { \u.sector \u.mem_data }, Q = \u.u_fifo.mem[3]).
+Adding EN signal on $flatten\u.\u_fifo.$procdff$483 ($dff) from module area_top (D = { \u.sector \u.mem_data }, Q = \u.u_fifo.mem[0]).
+Adding EN signal on $flatten\u.$procdff$426 ($adff) from module area_top (D = $flatten\u.$0\pending_row[5:0], Q = \u.pending_row).
+Adding EN signal on $flatten\u.$procdff$431 ($adff) from module area_top (D = $flatten\u.$0\read_pending[0:0], Q = \u.read_pending).
+Adding EN signal on $flatten\u.$procdff$421 ($adff) from module area_top (D = $flatten\u.$0\copy_row[6:0], Q = \u.copy_row).
+
+7.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+Removed 12 unused cells and 12 unused wires.
+<suppressed ~13 debug messages>
+
+7.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+<suppressed ~3 debug messages>
+
+7.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \area_top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~16 debug messages>
+
+7.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \area_top.
+Performed a total of 0 changes.
+
+7.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\area_top'.
+Computing hashes of 75 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Computing hashes of 74 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+7.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+7.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+
+7.10.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.10.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \area_top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~16 debug messages>
+
+7.10.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \area_top.
+Performed a total of 0 changes.
+
+7.10.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\area_top'.
+Computing hashes of 74 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Removed a total of 0 cells.
+
+7.10.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.10.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+
+7.10.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+
+7.10.23. Finished fast OPT passes. (There is nothing left to do.)
+
+7.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 2 bits (of 3) from port B of cell area_top.$flatten\u.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$327 ($add).
+Removed top 2 bits (of 3) from port B of cell area_top.$flatten\u.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$331 ($add).
+Removed top 1 bits (of 3) from port B of cell area_top.$flatten\u.\u_fifo.$xor$ot_hbm_accel_cdc_fifo.sv:33$347 ($xor).
+Removed top 1 bits (of 3) from port B of cell area_top.$flatten\u.\u_fifo.$xor$ot_hbm_accel_cdc_fifo.sv:39$351 ($xor).
+Removed top 1 bits (of 2) from port B of cell area_top.$flatten\u.\u_fifo.$procmux$382_CMP0 ($eq).
+Removed top 1 bits (of 2) from port B of cell area_top.$flatten\u.\u_fifo.$procmux$405_CMP0 ($eq).
+Removed top 20 bits (of 32) from port A of cell area_top.$flatten\u.$lt$new.sv:117$262 ($lt).
+Removed top 20 bits (of 32) from port A of cell area_top.$flatten\u.$add$new.sv:110$254 ($add).
+Removed top 27 bits (of 32) from port B of cell area_top.$flatten\u.$add$new.sv:110$254 ($add).
+Removed top 19 bits (of 32) from port Y of cell area_top.$flatten\u.$add$new.sv:110$254 ($add).
+Removed top 21 bits (of 32) from port B of cell area_top.$flatten\u.$add$new.sv:107$243 ($add).
+Removed top 19 bits (of 32) from wire area_top.$flatten\u.$add$new.sv:110$254_Y.
+
+7.12. Executing PEEPOPT pass (run peephole optimizers).
+
+7.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+7.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module area_top:
+  creating $macc model for $flatten\u.$add$new.sv:107$244 ($add).
+  creating $macc model for $flatten\u.$add$new.sv:129$269 ($add).
+  creating $macc model for $flatten\u.$add$new.sv:110$254 ($add).
+  creating $macc model for $flatten\u.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$331 ($add).
+  creating $macc model for $flatten\u.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$327 ($add).
+  creating $macc model for $flatten\u.$add$new.sv:107$243 ($add).
+  merging $macc model for $flatten\u.$add$new.sv:107$243 into $flatten\u.$add$new.sv:107$244.
+  creating $alu model for $macc $flatten\u.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$327.
+  creating $alu model for $macc $flatten\u.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$331.
+  creating $alu model for $macc $flatten\u.$add$new.sv:110$254.
+  creating $alu model for $macc $flatten\u.$add$new.sv:129$269.
+  creating $macc cell for $flatten\u.$add$new.sv:107$244: $auto$alumacc.cc:399:replace_macc$539
+  creating $alu model for $flatten\u.$lt$new.sv:117$262 ($lt): new $alu
+  creating $alu model for $flatten\u.$lt$new.sv:110$255 ($lt): new $alu
+  creating $alu cell for $flatten\u.$lt$new.sv:110$255: $auto$alumacc.cc:548:replace_alu$542
+  creating $alu cell for $flatten\u.$lt$new.sv:117$262: $auto$alumacc.cc:548:replace_alu$547
+  creating $alu cell for $flatten\u.$add$new.sv:129$269: $auto$alumacc.cc:548:replace_alu$552
+  creating $alu cell for $flatten\u.$add$new.sv:110$254: $auto$alumacc.cc:548:replace_alu$555
+  creating $alu cell for $flatten\u.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:22$331: $auto$alumacc.cc:548:replace_alu$558
+  creating $alu cell for $flatten\u.\u_fifo.$add$ot_hbm_accel_cdc_fifo.sv:21$327: $auto$alumacc.cc:548:replace_alu$561
+  created 6 $alu and 1 $macc cells.
+
+7.15. Executing SHARE pass (SAT-based resource sharing).
+
+7.16. Executing OPT pass (performing simple optimizations).
+
+7.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+
+7.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\area_top'.
+Computing hashes of 76 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Removed a total of 0 cells.
+
+7.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \area_top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~16 debug messages>
+
+7.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \area_top.
+Performed a total of 0 changes.
+
+7.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\area_top'.
+Computing hashes of 76 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Removed a total of 0 cells.
+
+7.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+Removed 1 unused cells and 3 unused wires.
+<suppressed ~2 debug messages>
+
+7.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+
+7.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \area_top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~16 debug messages>
+
+7.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \area_top.
+Performed a total of 0 changes.
+
+7.16.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\area_top'.
+Computing hashes of 75 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Removed a total of 0 cells.
+
+7.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+
+7.16.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+
+7.16.16. Finished fast OPT passes. (There is nothing left to do.)
+
+7.17. Executing MEMORY pass.
+
+7.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+7.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+7.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+7.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+7.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+7.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+
+7.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+7.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+7.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+
+7.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+7.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+
+7.19. Executing OPT pass (performing simple optimizations).
+
+7.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+<suppressed ~27 debug messages>
+
+7.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\area_top'.
+Computing hashes of 69 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Removed a total of 0 cells.
+
+7.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+Removed 1 unused cells and 16 unused wires.
+<suppressed ~3 debug messages>
+
+7.19.5. Finished fast OPT passes.
+
+7.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+7.21. Executing OPT pass (performing simple optimizations).
+
+7.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+
+7.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\area_top'.
+Computing hashes of 67 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Removed a total of 0 cells.
+
+7.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \area_top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+7.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \area_top.
+Performed a total of 0 changes.
+
+7.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\area_top'.
+Computing hashes of 67 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Removed a total of 0 cells.
+
+7.21.6. Executing OPT_SHARE pass.
+
+7.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+
+7.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+
+7.21.10. Finished fast OPT passes. (There is nothing left to do.)
+
+7.22. Executing TECHMAP pass (map to technology primitives).
+
+7.22.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+7.22.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod$3ef7d3dd227da7627a99c5e5a6a4deb817573e39\_90_alu for cells of type $alu.
+Using template $paramod$103b4016182df467cceab67bcf3e18e6361ec0fd\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $not.
+Using template $paramod$ee3d784672cdb1cb32d9a801a3af776716f16b74\_90_alu for cells of type $alu.
+Using template $paramod$a55d269037242acb578fc1d25501141e6158ef84\_90_alu for cells of type $alu.
+Using extmapper maccmap for cells of type $macc_v2.
+  add \base (32 bits, unsigned)
+  add { \root_id 3'000 } (5 bits, unsigned)
+  add { \u.pending_row 5'00000 } (11 bits, unsigned)
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $reduce_and.
+Using extmapper simplemap for cells of type $dffe.
+Using extmapper simplemap for cells of type $dff.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $pmux.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $logic_or.
+Using template $paramod$fbc7873bff55778c0b3173955b7e4bce1d9d6834\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000100000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000100000 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001100 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001100 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000111 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000111 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000011 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000011 for cells of type $lcu.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $or.
+No more expansions possible.
+<suppressed ~1196 debug messages>
+
+7.23. Executing OPT pass (performing simple optimizations).
+
+7.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module area_top.
+<suppressed ~775 debug messages>
+
+7.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\area_top'.
+Computing hashes of 3626 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Computing hashes of 3591 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Computing hashes of 3590 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+Computing hashes of 3589 cells of `\area_top'.
+Finding duplicate cells in `\area_top'.
+<suppressed ~111 debug messages>
+Removed a total of 37 cells.
+
+7.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \area_top..
+Removed 76 unused cells and 491 unused wires.
+<suppressed ~79 debug messages>
+
+7.23.5. Finished fast OPT passes.
+
+7.24. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `area_top'. Setting top module to area_top.
+
+7.24.1. Analyzing design hierarchy..
+Top module:  \area_top
+
+7.24.2. Analyzing design hierarchy..
+Top module:  \area_top
+Removed 0 unused modules.
+
+7.25. Printing statistics.
+
+=== area_top ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     1678 wires
+     5527 wire bits
+       74 public wires
+     3590 public wire bits
+       20 ports
+      627 port bits
+     3513 cells
+     1011   $_AND_
+       14   $_DFFE_PN0P_
+     1152   $_DFFE_PP_
+       22   $_DFF_PN0_
+      256   $_DFF_P_
+      302   $_MUX_
+       44   $_NOT_
+      628   $_OR_
+       81   $_XOR_
+        2   $scopeinfo
+        1   ot_sram_1r1w_128x256_m1_r2c2
+
+7.26. Executing CHECK pass (checking for obvious problems).
+Checking module area_top...
+Found and reported 0 problems.
+
+8. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+8.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\area_top':
+  mapped 36 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 1408 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+9. Executing ABC pass (technology mapping using ABC).
+
+9.1. Extracting gate netlist of module `\area_top' to `<abc-temp-dir>/input.blif'..
+
+9.1.1. Executed ABC.
+Extracted 4676 gates and 6454 wires to a netlist network with 1777 inputs and 1741 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_558ac198.scl 
+ABC: Warning: Detected 1 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + source /OpenROAD-flow-scripts/flow/scripts/abc_speed.script 
+ABC: WireLoad = "none"  Gates =   5121 ( 22.7 %)   Cap =  1.1 ff (  1.8 %)   Area =      445.27 ( 94.9 %)   Delay =   239.67 ps  ( 16.6 %)               
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+9.1.2. Re-integrating ABC results.
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:      628
+ABC RESULTS:   AND2x4_ASAP7_75t_R cells:        1
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:       12
+ABC RESULTS:   AND3x2_ASAP7_75t_R cells:        2
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:       10
+ABC RESULTS:   AND5x1_ASAP7_75t_R cells:        5
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:     1625
+ABC RESULTS:   AO221x1_ASAP7_75t_R cells:        6
+ABC RESULTS:   AO22x1_ASAP7_75t_R cells:        3
+ABC RESULTS:   AO31x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI21x1_ASAP7_75t_R cells:       86
+ABC RESULTS:   AOI221x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI22x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   BUFx2_ASAP7_75t_R cells:      182
+ABC RESULTS:   BUFx3_ASAP7_75t_R cells:      105
+ABC RESULTS:   BUFx4f_ASAP7_75t_R cells:        2
+ABC RESULTS:   BUFx6f_ASAP7_75t_R cells:        1
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:      868
+ABC RESULTS:   INVx2_ASAP7_75t_R cells:        2
+ABC RESULTS:   MAJx2_ASAP7_75t_R cells:       14
+ABC RESULTS:   NAND2x1_ASAP7_75t_R cells:      315
+ABC RESULTS:   NOR2x1_ASAP7_75t_R cells:      807
+ABC RESULTS:   NOR2x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:      303
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:       22
+ABC RESULTS:   OA22x2_ASAP7_75t_R cells:        2
+ABC RESULTS:   OA31x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI21x1_ASAP7_75t_R cells:       23
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:       24
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:        7
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:        7
+ABC RESULTS:   OR5x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   XNOR2x1_ASAP7_75t_R cells:       13
+ABC RESULTS:   XNOR2x2_ASAP7_75t_R cells:       34
+ABC RESULTS:   XOR2x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   XOR2x2_ASAP7_75t_R cells:        4
+ABC RESULTS:        internal signals:     2936
+ABC RESULTS:           input signals:     1777
+ABC RESULTS:          output signals:     1741
+Removing temp directory.
+Removing global temp directory.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+10. Printing statistics.
+
+=== area_top ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    11186        - wires
+    15035        - wire bits
+       74        - public wires
+     3590        - public wire bits
+       20        - ports
+      627        - port bits
+     6568  850.291 cells
+        2        -   $scopeinfo
+      628   54.937   AND2x2_ASAP7_75t_R
+        1    0.146   AND2x4_ASAP7_75t_R
+       12     1.05   AND3x1_ASAP7_75t_R
+        2    0.204   AND3x2_ASAP7_75t_R
+       10    1.021   AND4x1_ASAP7_75t_R
+        5    0.583   AND5x1_ASAP7_75t_R
+     1625  142.155   AO21x1_ASAP7_75t_R
+        6    0.875   AO221x1_ASAP7_75t_R
+        3    0.394   AO22x1_ASAP7_75t_R
+        1    0.233   AO31x2_ASAP7_75t_R
+       86   10.031   AOI21x1_ASAP7_75t_R
+        1    0.204   AOI221x1_ASAP7_75t_R
+        1    0.146   AOI22x1_ASAP7_75t_R
+      182   13.268   BUFx2_ASAP7_75t_R
+      105    9.185   BUFx3_ASAP7_75t_R
+        2    0.233   BUFx4f_ASAP7_75t_R
+        1    0.146   BUFx6f_ASAP7_75t_R
+       36   13.647   DFFASRHQNx1_ASAP7_75t_R
+     1408  410.573   DFFHQNx1_ASAP7_75t_R
+      868   37.966   INVx1_ASAP7_75t_R
+        2    0.117   INVx2_ASAP7_75t_R
+       14    1.837   MAJx2_ASAP7_75t_R
+      315   27.556   NAND2x1_ASAP7_75t_R
+      807   70.596   NOR2x1_ASAP7_75t_R
+        1    0.146   NOR2x2_ASAP7_75t_R
+      303   35.342   OA211x2_ASAP7_75t_R
+       22    2.245   OA21x2_ASAP7_75t_R
+        2    0.292   OA22x2_ASAP7_75t_R
+        1    0.219   OA31x2_ASAP7_75t_R
+       23    2.683   OAI21x1_ASAP7_75t_R
+       24      2.1   OR2x2_ASAP7_75t_R
+        7    0.612   OR3x1_ASAP7_75t_R
+        7    0.714   OR4x1_ASAP7_75t_R
+        1    0.117   OR5x1_ASAP7_75t_R
+       13    2.274   XNOR2x1_ASAP7_75t_R
+       34    5.453   XNOR2x2_ASAP7_75t_R
+        2     0.35   XOR2x1_ASAP7_75t_R
+        4    0.642   XOR2x2_ASAP7_75t_R
+        1        -   ot_sram_1r1w_128x256_m1_r2c2
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_sram_1r1w_128x256_m1_r2c2 is unknown!
+
+   Chip area for module '\area_top': 850.291020
+     of which used for sequential elements: 424.219680 (49.89%)
+
+11. Executing JSON backend.
+
+Warnings: 5 unique messages, 6 total
+End of script. Logfile hash: 284087810a, time: 5.04s, user: 1.12s, system: 0.08s, MEM: 91.53 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 78% 1x abc (3 sec), 10% 2x stat (0 sec), ...
