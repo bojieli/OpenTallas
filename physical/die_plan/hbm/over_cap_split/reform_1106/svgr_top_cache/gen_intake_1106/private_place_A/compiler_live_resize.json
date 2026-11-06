@@ -1,0 +1,15 @@
+{
+  "status": "RESIZED",
+  "unit": "oth-ubuntu-818343-1793973397",
+  "container": "03fdcaeb8d08",
+  "container_id": "03fdcaeb8d084c2792f5a75953322b2fe6ed122d72adf2e29130eeadad74b361",
+  "old_gb": 32,
+  "new_gb": 64,
+  "gate": "OK 32 ot-heavy-live-resize-top-proof | need 0.7 x 32 = 22 GB, admissible 52 GB: available 162 GB, growth charged 0 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 0 GB at x1), young 0 GB, floor 50 GB; invariant: committed 892 GB (in use 846, other 29, units max(now, peak) 863, + reserve 0 + fresh 0) vs physical - 64 = 943 GB -> headroom 52 GB",
+  "res": "oth-ubuntu-818343-1793973397 64\n",
+  "meta": "64 run_kit_hbm.sh:kit\n",
+  "time": 1793983521.698699,
+  "scope_memory_max": "68719476736",
+  "docker_memory": 68719476736,
+  "docker_swap": 68719476736
+}
