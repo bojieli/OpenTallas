@@ -1,6 +1,6 @@
 # CODEX bank128 — current continuation
 
-Own branch: `codex/hbm-bank128-wface-1106`, tip `2fff4dbb9e`, pushed to the intel2 hub. Own tree: `epyc6:/srv/opentallas-scratch2/claude/wt/codex-hbm-bank128-wface-1106`. RTL change is still the original default-off `OT_HC128_WFACE`; later commits cover generation, geometry and results.
+Own branch: `codex/hbm-bank128-wface-1106`, tip `19323f08a0`, pushed to the intel2 hub. Own tree: `epyc6:/srv/opentallas-scratch2/claude/wt/codex-hbm-bank128-wface-1106`. RTL change is still the original default-off `OT_HC128_WFACE`; later commits cover generation, geometry and results.
 
 ## Implementation and limits
 
@@ -50,3 +50,7 @@ Canonical registered B GRT completed: estimated TT setup +121.474 ps, FF hold -2
 Actual B frozen GRT ODB supply probe finds 56 M5 pin rectangles per VDD/VSS, no M6 PG pins and no actual M6 supply special-wire metal. Private ORFS-equivalent GRT abstract has OBS M1..M5 (GRT guides are not routed metal). Final DRT LEF must be checked using gen_phys.core_pg_mode(strict=False): if final OBS includes M6, M5-only PG is buried and cannot be adopted without true PG6 metal/access construction. Existing pg_pin_publish cannot publish nonexistent M6 metal. Root and geometry_forms informed. Probe log intel2:/home/ubuntu/coord/tmp/codex-bank128-launch/pg_grt_B.log; private stage LEF /home/ubuntu/coord/tmp/codex-bank128-pg/grt_B.lef. No active kit edited.
 
 Actual pair arithmetic comparison is running on epyc6 (ot-run 8GB/1thread, unit 447754-1793958898): both pair tops with actual unchanged arithmetic leaves, behavioral SRAM, explicit delayed-write adapter on default-off reference, 3000 randomized runtime write/read/go/reset cycles and known-output gate. No verdict yet. This extends stubbed boundary proof but excludes canonical bankq/cutmap/full parent identity. Native projection owner agrees this is the proper intermediate scope.
+
+PG6 capability READY at `19323f08a0` (includes `ca3f88082a`), bank branch pushed. Shared factory `--pg-top-layer M6`, native common-pair `--pg6`, own helper matching flag. Default M5 PDN byte-identical. Actual private bank pre-PDN checkpoint plus new factory PDN produces 60 real M6 rails and 3,360 VIA56 connections per supply; exported M6 PG / OBS M1..M6 passes actual-LEF mode `grid,M6,M7`. Rendered actual rails inspected PASS-COND before any new route. Review/artifacts committed under `results/geom_review/codex_bank128_wface_1106/pg6`. Explicit nominal M6 rail-width resource 13.33%, parent M6 reservation/M7 landing pending. No new full physical run yet; current runs unchanged.
+
+A completed DRT with 0 violations (empty DRC report), antenna 0, actual M6 signal length 78,900 um; final timing/corners pending. Pre-route synthesis LEC now EQUIVALENT for A 32,365/32,365 and B 32,890/32,890 points; routed LEC remains pending. Arithmetic vehicle still running (real full leaves, no verdict yet).
