@@ -111,7 +111,7 @@ module tb_s81hd_ctl_mtp_ring;
     end
     always@(negedge ck)if(rst_n)begin
       if(dut.u_logic.qpend||dut.u_logic.f_qv)$display("QTRACE cyc%0d pend%b cr%b hold%h f_qv%b f_qd%h",cyc,dut.u_logic.qpend,dut.u_logic.q_cr,dut.u_logic.q_hold,dut.u_logic.f_qv,dut.u_logic.f_qd);
-      if(dut.u_logic.fset!=0&&dut.u_logic.fv==0)$display("FAULTTRACE cyc%0d set%h fv%h ej%0d expectj%0d eu%0d",cyc,dut.u_logic.fset,dut.u_logic.fv,dut.u_logic.u_seq.u_seq.ej,dut.u_logic.u_seq.u_seq.r_j,dut.u_logic.u_seq.u_seq.eu);
+      if(dut.u_logic.fset!=0&&dut.u_logic.fv==0)$display("FAULTTRACE cyc%0d set%h fv%h ej%0d expectj%0d eu%0d",cyc,dut.u_logic.fset,dut.u_logic.fv,dut.u_logic.g_seqf.u_seq.u_seq.ej,dut.u_logic.g_seqf.u_seq.u_seq.r_j,dut.u_logic.g_seqf.u_seq.u_seq.eu);
     end
     integer ntok=0,ndraft=0,ndh=0,nseed=0,nres=0,reply_due=-1;
     reg fixture_active=0;reg[3:0]reply_type;reg[33:0]reply_data;integer jj;
