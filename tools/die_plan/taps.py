@@ -25,7 +25,12 @@ tap_max_sinks, default 1500) per tap within tap_radius_um (200), none on a hard 
 own nearest-tap + cap split (assign = clock_taps.tcl).  gen_phys exports OT_TAP_REASSIGN_UM = radius and the GRT-RC tap
 hook (tap_balance_grt.tcl, clock.tap_balance_rc grt_report | grt | placement).
 """
+from collections import OrderedDict
+import hashlib
+import json
 import math
+import sys
+from threading import RLock
 
 TAP_MARGIN_UM = 17.28          # keep the interior tap pins off the face pin bands
 FACE_INSET_UM = 2.0            # a face register sits just inside its pin
@@ -35,6 +40,70 @@ SEP_UM = 8.64                  # two taps closer than one lattice step merge (on
 # transient compose Plan is collected, otherwise returning another plan's taps.
 # The identity check also keeps cache hits correct for plan-like test objects.
 _CACHE = {}
+
+# Density results may be requested through many transient compose Plans. Retain
+# immutable values by their resolved inputs, never the Plan or its mutable lists.
+_DENSITY_CACHE = OrderedDict()
+_DENSITY_CACHE_BYTES = 0
+_DENSITY_CACHE_MAX_BYTES = 4 << 20
+_DENSITY_CACHE_MAX_ENTRIES = 16
+_DENSITY_CACHE_LOCK = RLock()
+
+
+def _clear_density_cache():
+    global _DENSITY_CACHE_BYTES
+    with _DENSITY_CACHE_LOCK:
+        _DENSITY_CACHE.clear()
+        _DENSITY_CACHE_BYTES = 0
+
+
+def _density_key(P, tn, control, pts, taken, boxes):
+    import schema
+    import gen_phys
+    inputs = dict(type_name=tn, type=P.types[tn], control=control,
+                  sinks=pts, reserved=taken, boxes=boxes,
+                  layers=getattr(P, "layers", None), layer_budget=getattr(P, "layer_budget", None),
+                  grid=getattr(P, "grid", None), core_margin=gen_phys.CORE_MARGIN_UM,
+                  tap_clear=schema.TAP_CLEAR_UM, tap_step=schema.TAP_STEP_UM,
+                  pg_bands=schema.PART_PG_BANDS, tap_margin=TAP_MARGIN_UM)
+    try:
+        # Resolved sites include external bin/per-bit files and type origins.
+        # Only the digest is retained, even for hundreds of thousands of sites.
+        text = json.dumps(inputs, sort_keys=True, separators=(",", ":"), allow_nan=False)
+    except (TypeError, ValueError):
+        return None  # unusual plan-like callers retain uncached planner behavior
+    return hashlib.sha256(text.encode()).digest()
+
+
+def _density_cached(key):
+    with _DENSITY_CACHE_LOCK:
+        value = _DENSITY_CACHE.get(key) if key is not None else None
+        if value is None:
+            return None
+        _DENSITY_CACHE.move_to_end(key)
+    return list(value[0])
+
+
+def _density_remember(key, result):
+    global _DENSITY_CACHE_BYTES
+    if key is None:
+        return
+    value = tuple(tuple(row) for row in result)
+    # Conservative deep size, including scalar values and container overhead.
+    size = (256 + sys.getsizeof(key) + sys.getsizeof(value)
+            + sum(sys.getsizeof(row) + sum(sys.getsizeof(v) for v in row) for row in value))
+    if size > _DENSITY_CACHE_MAX_BYTES:
+        return
+    with _DENSITY_CACHE_LOCK:
+        old = _DENSITY_CACHE.pop(key, None)
+        if old is not None:
+            _DENSITY_CACHE_BYTES -= old[1]
+        while _DENSITY_CACHE and (len(_DENSITY_CACHE) >= _DENSITY_CACHE_MAX_ENTRIES
+                                or _DENSITY_CACHE_BYTES + size > _DENSITY_CACHE_MAX_BYTES):
+            _, (_, removed) = _DENSITY_CACHE.popitem(last=False)
+            _DENSITY_CACHE_BYTES -= removed
+        _DENSITY_CACHE[key] = (value, size)
+        _DENSITY_CACHE_BYTES += size
 
 
 def _zroute(a, b, fin, fout):
@@ -479,10 +548,6 @@ def density_taps(P, tn, control=True):
     # rst_o from the tap set (reset_tree._est_depth / face_sites), so it must read these to stay acyclic; the final
     # taps (control=True, the default = schema.tap_grid) then add the control pins as sinks (clock.control_sinks).
     control = bool(control and P.types[tn].get("clock", {}).get("control_sinks"))
-    key = ("density", id(P), tn, control)
-    cached = _CACHE.get(key)
-    if cached is not None and cached[0] is P:
-        return cached[1]
     import schema
     t = P.types[tn]
     ck = t.get("clock", {})
@@ -508,6 +573,10 @@ def density_taps(P, tn, control=True):
     else:
         from placement_obstacles import placement_boxes
         boxes = list(placement_boxes(t).values())
+    key = _density_key(P, tn, control, pts, taken, boxes)
+    cached = _density_cached(key)
+    if cached is not None:
+        return cached
     blocked = lambda x, y: any(x0 < x < x1 and y0 < y < y1 for x0, y0, x1, y1 in boxes)
     min_sinks = int(ck.get("tap_min_sinks", max(1, target // 20)))
     leaves = sorted(_bisect(pts, target, radius, blocked, min_sinks), key=lambda a: (round(a[1], 3), round(a[0], 3)))
@@ -564,7 +633,7 @@ def density_taps(P, tn, control=True):
     i0 = min(range(len(out)), key=lambda i: (abs(out[i][0] - root[0]) + abs(out[i][1] - root[1]), i))
     out = [out[i0]] + [p for i, p in enumerate(out) if i != i0]
     res = [("clk" if i == 0 else f"clk_t{i}", x, y, n, r) for i, (x, y, n, r) in enumerate(out)]
-    _CACHE[key] = (P, res)
+    _density_remember(key, res)
     return res
 
 
