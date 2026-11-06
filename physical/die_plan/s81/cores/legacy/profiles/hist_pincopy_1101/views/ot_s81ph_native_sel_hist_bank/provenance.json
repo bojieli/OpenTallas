@@ -84,28 +84,28 @@
  },
  "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
  "views_status": "signoff",
- "src": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/hist1131/ot_s81ph_native_sel_hist_bank_hrB20",
- "src_commit": "2b24234ec46",
+ "src": "/srv/opentallas-scratch2/claude/s81-bksel-rf4/hist_n24",
+ "src_commit": null,
  "flow_tag": null,
  "autopilot_id": null,
  "export": {
   "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
-  "exported": "2026-11-01T12:47:58-08:00",
-  "kit": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/hist1131/ot_s81ph_native_sel_hist_bank_hrB20",
-  "base": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/hist1131/ot_s81ph_native_sel_hist_bank_hrB20/run/results/asap7/kl_ot_s81ph_native_sel_hist_bank_hrB20/base",
-  "signoff": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/hist1131/ot_s81ph_native_sel_hist_bank_hrB20/signoff/signoff.json",
-  "signoff_sha256": "504c627ed8266eceba9afe9cd14b7bda3729a34ce0c75ab0fc4bdd81363c0fe2",
-  "signoff_generated": "2026-11-01T12:38:08-08:00",
-  "odb": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/hist1131/ot_s81ph_native_sel_hist_bank_hrB20/run/results/asap7/kl_ot_s81ph_native_sel_hist_bank_hrB20/base/6_final.odb",
+  "exported": "2026-11-06T12:55:26-08:00",
+  "kit": "/srv/opentallas-scratch2/claude/s81-bksel-rf4/hist_n24",
+  "base": "/srv/opentallas-scratch2/claude/s81-bksel-rf4/hist_n24/run/results/asap7/kl_ot_s81ph_native_sel_hist_bank_hrB20/base",
+  "signoff": "/srv/opentallas-scratch2/claude/s81-bksel-rf4/hist_n24/signoff/signoff.json",
+  "signoff_sha256": "ad0ca84cb306ab72522f7b3bb2a21365fa165818e9211ce31bc697fd4b6d2df7",
+  "signoff_generated": "2026-11-06T10:05:31-08:00",
+  "odb": "/srv/opentallas-scratch2/claude/s81-bksel-rf4/hist_n24/run/results/asap7/kl_ot_s81ph_native_sel_hist_bank_hrB20/base/6_final.odb",
   "odb_not_newer_than_signoff": true,
-  "lec": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/hist1131/ot_s81ph_native_sel_hist_bank_hrB20/lec_post1131/lec.json",
-  "note": "Fresh canonical435pinPINCOPYchild recovery; actual measured clock insertion; no parent adoption",
+  "lec": "/srv/opentallas-scratch2/claude/s81-bksel-rf4/hist_n24/lec_post_n24/lec.json",
+  "note": "S81-BKSEL-RF4/RF5 hist_n24: clk plan pin 0.024 x 0.084 M5 on-track edge (was 0.048 x 0.48, 2-track on RECTONLY M5)",
   "lib_basis": null,
   "files_sha256": {
-   "ot_s81ph_native_sel_hist_bank.lef": "8bea59762f9b8eff55de4429c845915abbd2de508085f114df0f47c10c8b5958",
-   "ot_s81ph_native_sel_hist_bank_ff.lib": "c12e678980c48fca1e335ccc150099ce1d679b3784ab258dd7f8cf755b5816d8",
-   "ot_s81ph_native_sel_hist_bank_tt.lib": "11993958edbe9ada8968d60243a0c82dbe014dc70da4315d4c5e06a07b025cc3",
-   "pins.json": "6ef43754c0f9363025163542392c924830fbab7822c6af06c697e83b937c10d9"
+   "ot_s81ph_native_sel_hist_bank.lef": "a1ad6a7036908f8383ce56b3b0f81a38fe820b06d1a7fb14ac085999a3b1bc71",
+   "ot_s81ph_native_sel_hist_bank_ff.lib": "21cc08ac76bcd3f9d4ec5abb6a42074cc2a05d1fe877cf5094ede9d821092fb6",
+   "ot_s81ph_native_sel_hist_bank_tt.lib": "9bfe39a41055c53b0c69c92cb6a53c05180f87471e9e33fa48a0fad08743495e",
+   "pins.json": "079ff262898f42617af04216448c770560f5a3d565c68288911c8162da9303e0"
   }
  }
 }
