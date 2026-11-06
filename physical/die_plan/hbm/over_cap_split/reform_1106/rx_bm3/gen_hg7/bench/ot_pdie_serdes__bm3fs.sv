@@ -21,16 +21,22 @@ module ot_rx_bm3_rest_fs #(parameter integer SEAM = 6, parameter integer BMUT = 
         .o_unc(unc_q), .o_ne(5'd0), .fs(fs_q), .bm_S(S_c), .bm_ld(ld_c), .bm_rs_n(rs_c),
         .bm_lam((BMUT == 2) ? bm_lam : lam_q), .bm_om(om_q), .bm_L(L_q), .bm_any(any_q), .bm_done(dn_q));
 endmodule
-module ot_rx_bm_native_fs #(parameter integer NOLD = 0) (
+module ot_rx_bm_native_fs #(parameter integer NOLD = 0, parameter integer BMIN = 1) (
     input wire clk, input wire rs_n, input wire [3:0] ld, input wire [299:0] S,
     output reg [159:0] lam, output reg [149:0] om, output reg [4:0] L, output reg any, output reg [3:0] done);
     reg rs_q; reg [3:0] ld_q; reg [299:0] S_q;
     wire [159:0] lam_c; wire [149:0] om_c; wire [4:0] L_c; wire any_c; wire [3:0] dn_c;
-    always @(posedge clk) begin rs_q <= rs_n; ld_q <= ld; S_q <= S; lam <= lam_c; om <= om_c; L <= L_c; any <= any_c; done <= dn_c; end
-    ot_pdie_serdes_rx_bm_native #(.BMTHC(1)) u_fcore (.clk(clk), .rs_n(rs_q), .ld((NOLD != 0) ? ld : ld_q), .S(S_q),
+    // BMIN 1: one face FF per input; 2: face FF + one relay stage on S, ld, rs_n (kit --face-in-stage 1); 3 (mutant): relay on ld only
+    reg rs_q2; reg [3:0] ld_q2; reg [299:0] S_q2;
+    always @(posedge clk) begin rs_q <= rs_n; ld_q <= ld; S_q <= S; rs_q2 <= rs_q; ld_q2 <= ld_q; S_q2 <= S_q;
+        lam <= lam_c; om <= om_c; L <= L_c; any <= any_c; done <= dn_c; end
+    wire rs_i = (BMIN == 2) ? rs_q2 : rs_q;
+    wire [3:0] ld_i = (BMIN >= 2) ? ld_q2 : ld_q;
+    wire [299:0] S_i = (BMIN == 2) ? S_q2 : S_q;
+    ot_pdie_serdes_rx_bm_native #(.BMTHC(1)) u_fcore (.clk(clk), .rs_n(rs_i), .ld((NOLD != 0) ? ld : ld_i), .S(S_i),
         .lam(lam_c), .om(om_c), .L(L_c), .any(any_c), .done(dn_c));
 endmodule
-module ot_rx_bm3fs #(parameter integer SEAM = 6, parameter integer BMUT = 0) (
+module ot_rx_bm3fs #(parameter integer SEAM = 6, parameter integer BMUT = 0, parameter integer BMIN = 1) (
     input wire clk, input wire rck_clk, input wire rst, output wire [511:0] rx, output wire [1:0] st, input wire [543:0] pma_rx,
     input wire e_flt_i, output wire [3:0] k_v, output wire [309:0] k_lo, output wire [4:0] k_L, output wire k_any,
     input wire [543:0] cw_q, input wire [7:0] apply, input wire o_unc, input wire fs);
@@ -39,12 +45,12 @@ module ot_rx_bm3fs #(parameter integer SEAM = 6, parameter integer BMUT = 0) (
         .e_flt_i(e_flt_i), .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any), .cw_q(cw_q), .apply(apply), .o_unc(o_unc), .fs(fs),
         .bm_S(bm_S), .bm_ld(bm_ld), .bm_rs_n(bm_rs_n), .bm_lam(bm_lam), .bm_om(bm_om), .bm_L(bm_L), .bm_any(bm_any), .bm_done(bm_done));
     for (genvar e = 0; e < 3; e = e + 1) begin : g_bm
-        ot_rx_bm_native_fs #(.NOLD(((BMUT == 1) && (e == 0)) ? 1 : 0)) u_bm (.clk(rck_clk), .rs_n(bm_rs_n), .ld(bm_ld[4*e+:4]), .S(bm_S),
+        ot_rx_bm_native_fs #(.NOLD(((BMUT == 1) && (e == 0)) ? 1 : 0), .BMIN(BMIN)) u_bm (.clk(rck_clk), .rs_n(bm_rs_n), .ld(bm_ld[4*e+:4]), .S(bm_S),
             .lam(bm_lam[160*e+:160]), .om(bm_om[150*e+:150]), .L(bm_L[5*e+:5]), .any(bm_any[e]), .done(bm_done[4*e+:4]));
     end
 endmodule
 // p20fs bench form with rx replaced by the BM3 face-shelled form (TX and dchn unchanged)
-module ot_pdie_serdes__p20fs #(parameter integer SMUT = 0, parameter integer SEAM = 6, parameter integer BMUT = 0) (
+module ot_pdie_serdes__p20fs #(parameter integer SMUT = 0, parameter integer SEAM = 6, parameter integer BMUT = 0, parameter integer BMIN = 1) (
     input wire clk, input wire rst, input wire [511:0] tx, output wire [511:0] rx, output wire [1:0] st,
     output wire [543:0] pma_tx, output wire pma_tck, input wire [543:0] pma_rx, input wire pma_rck);
     wire ef; wire [3:0] k_v; wire [309:0] k_lo; wire [4:0] k_L; wire k_any;
@@ -52,7 +58,7 @@ module ot_pdie_serdes__p20fs #(parameter integer SMUT = 0, parameter integer SEA
     wire [309:0] k_lo_m = (SMUT == 9) ? {k_lo[309:1], ~k_lo[0]} : k_lo;
     ot_pdie_serdes_tx__fs u_tx (.clk(clk), .rst(rst), .tx(tx), .pma_tx(pma_tx), .e_flt_o(ef));
     assign pma_tck = clk;
-    ot_rx_bm3fs #(.SEAM(SEAM), .BMUT(BMUT)) u_rx (.clk(clk), .rck_clk(pma_rck), .rst(rst), .rx(rx), .st(st), .pma_rx(pma_rx), .e_flt_i(ef),
+    ot_rx_bm3fs #(.SEAM(SEAM), .BMUT(BMUT), .BMIN(BMIN)) u_rx (.clk(clk), .rck_clk(pma_rck), .rst(rst), .rx(rx), .st(st), .pma_rx(pma_rx), .e_flt_i(ef),
         .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any), .cw_q(cw_q), .apply(apply), .o_unc(o_unc), .fs(fs));
     ot_s81_kp4_dchn u_chn (.clk(pma_rck), .rst_n(rst), .k_v(k_v), .k_lo(k_lo_m), .k_L(k_L), .k_any(k_any),
         .cw_q(cw_q), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs), .n_corr(), .n_unc());
