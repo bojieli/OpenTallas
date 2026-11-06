@@ -391,7 +391,17 @@ if {[info exists ::env(OT_PAD_MASTERS)] && $::env(OT_PAD_MASTERS) ne ""} {
   }
 }
 detailed_placement
-if {[catch {check_placement} msg]} { error "OT_PRD FAIL: check_placement after the ECO legalization: $msg" }
+# KW-FIX-17 11-05 (DPL-0033 class, COORD 14:52 / HBM-FORM-TIMING-6 14:55, default-on): when the ECO legalization leaves
+# overlaps (pcol_s3 ECO i1: DPL-0033, 33 overlaps), run the diamond legalizer once and re-check before failing.  The
+# same block let pcol_s3b pass legalization (lane copy, prd_hook.tcl sha 05a165647b00).  OT_PRD_DIAMOND_FALLBACK=0 = off.
+if {[catch {check_placement} msg]} {
+  if {[info exists ::env(OT_PRD_DIAMOND_FALLBACK)] && $::env(OT_PRD_DIAMOND_FALLBACK) eq "0"} {
+    error "OT_PRD FAIL: check_placement after the ECO legalization: $msg"
+  }
+  puts "OT_PRD legalizer fallback: diamond after: $msg"
+  detailed_placement -use_diamond_legalizer
+  if {[catch {check_placement} msg]} { error "OT_PRD FAIL: check_placement after the ECO legalization: $msg" }
+}
 # FLOW-12 opt-in OT_PRD_FROM=route (prd_mk.sh): the ECO started from the ROUTED DB -> rip only the nets it touched,
 # keep every other net's routed wires for an incremental detailed route (prd_route_keep.tcl).  FLOW-13: selection + rip
 # run BEFORE the incremental GRT end and the kept wires are parked (detached) across it, since updateDirtyNets destroys
