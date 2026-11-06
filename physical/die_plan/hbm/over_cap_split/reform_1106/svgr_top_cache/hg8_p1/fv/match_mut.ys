@@ -1,0 +1,5 @@
+read_verilog -sv /fv/bb.v
+read_verilog -sv /fv/iss_mut.sv
+hierarchy -top ot_hbm_svc_sm_issuer_rel -chparam MPIPE 1 -chparam ID_COHORT 1
+proc; flatten; delete t:ot_sram*; setundef -undriven -anyseq; async2sync; opt_clean
+sat -tempinduct -prove chk_eq 1 -set-init-zero -seq 1 -maxsteps 6 -verify

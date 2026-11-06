@@ -20,6 +20,13 @@ foreach ln [split [read $fh] "\n"] {
 }
 close $fh
 puts "OT_FACE_FLOPS released $ff_n pin registers for DPL"
+# HBM-GAPS-8 11-06 (OT_FF_CHAIN_PIN): release the face-chain BUF/INV cells too (empty list when off)
+set ff_cf $::env(RESULTS_DIR)/ot_face_chain.txt
+if {[file exists $ff_cf]} {
+  set ff_nc 0; set fh [open $ff_cf r]
+  foreach n [split [read $fh] "\n"] { if {$n eq ""} continue; set i [$ff_blk findInst $n]; if {$i ne "NULL" && $i ne "" && [$i getPlacementStatus] eq "FIRM"} { $i setPlacementStatus PLACED; incr ff_nc } }
+  close $fh; if {$ff_nc} { puts "OT_FACE_CHAIN released $ff_nc face-chain cells for DPL" }
+}
 # S81-P8 10-23: relay_mid.tcl stations
 set ff_f $::env(RESULTS_DIR)/ot_relay_mid.txt
 if {[file exists $ff_f]} {

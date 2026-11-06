@@ -414,6 +414,38 @@ def _glob(path):
     return "*" + path.replace(".", "?").replace("[", "\\[").replace("]", "\\]") + "[./]*"
 
 
+# DIE-S81-70 11-06 (spec s81_istations_native_spec_1106, form A1): the S81 native binds are FLAT (ot_s81sl_leaf /
+# ot_s81sl_vp / ot_s81sl_cst dissolved): the leaf's station chains are bound at the depths the slice instance sets
+# (LF_CS_*), as registers named after the flattened path (u_lf.u_vp.g_ln[9].u_cst_hi.gd.s[0].u -> ..u_vp_g_ln_9_u_cst_hi_
+# gd_s_0_u..).  Native mode: no re-parameterisation (the depths are bound), the bound depth per class is COUNTED from
+# the stage registers and must equal the plan's (fail closed), and the sites use flat-name globs.
+NATIVE_MARK = re.compile(r"\bw_u_vp_g_ln_\d+_u_cst_h[io]_")
+
+
+def _flat(path):
+    """leaf-relative inst path -> the bind's flattened name stem (u_lf. prefix dropped, [n] -> _n, . -> _)."""
+    path = path[len(LEAF_INST) + 1:] if path.startswith(LEAF_INST + ".") else path
+    return re.sub(r"\[(\d+)\]", r"_\1", path).replace(".", "_")
+
+
+def native_params(txt):
+    """bound CS_* of a flat native kv_leaf bind, counted from the stage registers (d stages = s_0..s_{d-1})."""
+    def stages(rx):
+        return len({int(j) for j in re.findall(rx + r"_gd_s_(\d+)_u_", txt)})
+    have = {}
+    for c in {c for c, _, _ in CORE_CLASSES if c != "cs"}:
+        if c in H_CLASSES:
+            shared = stages(rf"\bg_u_vp_g_{c[0]}{c[1]}g_\d+_u_cst")
+            lane = max((stages(rf"\bg_u_vp_g_ln_{l}_u_cst_{c}") for l in range(16)), default=0)
+            have[CLASS_PARAM[c]] = shared + lane
+            have[f"CS_{c.upper()}_GS"] = shared
+        else:
+            have[CLASS_PARAM[c]] = stages(rf"\bg_u_cst_{c}")
+    groups = {int(g) for g in re.findall(r"\bg_u_vp_g_h[io]g_(\d+)_u_cst_gd_s_", txt)}
+    have["CS_H_G"] = 16 // len(groups) if groups else 4
+    return have
+
+
 def leaf_params(txt):
     m = re.search(rf"\bot_s81sl_leaf\b\s*(#\((?P<p>(?:[^()]|\([^()]*\))*)\))?\s*{LEAF_INST}\s*\(", txt)
     if not m:
@@ -461,10 +493,14 @@ def core_stations(t, txt, apply, htree, tcl, rep):
             if c in depth:
                 sited = sorted(l for (cc, l) in groups if cc == c)
                 h_lanes[c] = dict(sited=sited, unsited_of_planned=sorted(lanes - set(sited)))
-    m, have = leaf_params(txt)
+    native = not re.search(rf"\bot_s81sl_leaf\b[^;]*?\b{LEAF_INST}\s*\(", txt) and bool(NATIVE_MARK.search(txt))
+    if native:
+        m, have = None, native_params(txt)
+    else:
+        m, have = leaf_params(txt)
     want = {CLASS_PARAM[c]: d for c, d in depth.items() if c != "cs"}
     G, GSI, GSO = htree
-    if apply:
+    if apply and not native:
         want.update(CS_H_G=G, CS_HI_GS=min(GSI, want.get("CS_HI_D", 0)), CS_HO_GS=min(GSO, want.get("CS_HO_D", 0)))
         merged = dict(have)
         merged.update(want)
@@ -476,7 +512,12 @@ def core_stations(t, txt, apply, htree, tcl, rep):
     for k, v in sorted(want.items()):
         if k.endswith("_D") and have.get(k, 0) != v:
             raise SystemExit(f"kit_istations: leaf RTL {k} = {have.get(k, 0)} but the plan stations {v} stage(s) "
-                             "(fail closed; --apply sets the plan's depths)")
+                             + ("(fail closed; flat native bind: set the slice LF_CS_* depths and re-bind)" if native
+                                else "(fail closed; --apply sets the plan's depths)"))
+    if native:
+        extra = {k: v for k, v in have.items() if k.endswith("_D") and v and k not in want}
+        if extra:
+            raise SystemExit(f"kit_istations: flat native bind carries stations the plan does not: {extra} (fail closed)")
     G, GSI, GSO = have.get("CS_H_G", 4), have.get("CS_HI_GS", 0), have.get("CS_HO_GS", 0)
 
     def centroid(es, j):
@@ -504,11 +545,12 @@ def core_stations(t, txt, apply, htree, tcl, rep):
             for j in range(d):
                 sites.append((f"{LEAF_INST}.u_cst_{c}.gd.s[{j}].u", centroid(groups[(c, None)], j), c))
     for nm, (x, y), c in sites:
-        tcl.append(f"is_place {{{_glob(nm)}}} {x} {y} cst:{c}")
+        tcl.append(f"is_place {{{'*' + _flat(nm) + '_*' if native else _glob(nm)}}} {x} {y} cst:{c}")
     rep.append(dict(core_classes={c: dict(param=CLASS_PARAM.get(c), stages=d,
                                           entries=sum(len(v) for (cc, _), v in groups.items() if cc == c))
                                   for c, d in sorted(depth.items())},
-                    h_tree=dict(G=G, GS_IN=GSI, GS_OUT=GSO), h_lanes=h_lanes, placed_stages=len(sites)))
+                    h_tree=dict(G=G, GS_IN=GSI, GS_OUT=GSO), h_lanes=h_lanes, placed_stages=len(sites),
+                    bind="native_flat" if native else "leaf_instance"))
     return txt
 
 
