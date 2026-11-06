@@ -1,0 +1,12 @@
+{
+  "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-tkm-pmerge-1106/rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_root_core__delpipe1_pmerge.sv",
+  "base_sha256": "a419dbc27e9d9866ea228d0165adef46c9619d0ec6996a372621fea475fd4336",
+  "candidate_sha256": "666543b15a55accfd5325821c8baa34692cf20181ec66bb03018366df64bc1f7",
+  "native_tick_block": "  reg [31:0] _60260_;\n  always @(posedge clk, negedge rst_n)\n    if (!rst_n) _60260_ <= 32'd0;\n    else _60260_ <= { _06549_, _06548_, _06546_, _06545_, _06544_, _06543_, _06542_, _06541_, _06540_, _06539_, _06538_, _06537_, _06535_, _06534_, _06533_, _06532_, _06531_, _06530_, _06529_, _06528_, _06527_, _06526_, _06556_, _06555_, _06554_, _06553_, _06552_, _06551_, _06550_, _06547_, _06536_, _06525_ };",
+  "native_D": "{ _06549_, _06548_, _06546_, _06545_, _06544_, _06543_, _06542_, _06541_, _06540_, _06539_, _06538_, _06537_, _06535_, _06534_, _06533_, _06532_, _06531_, _06530_, _06529_, _06528_, _06527_, _06526_, _06556_, _06555_, _06554_, _06553_, _06552_, _06551_, _06550_, _06547_, _06536_, _06525_ }",
+  "old_tk_assignment": "  assign { \\u.tk[31] , \\u.tk[30] , \\u.tk[29] , \\u.tk[28] , \\u.tk[27] , \\u.tk[26] , \\u.tk[25] , \\u.tk[24] , \\u.tk[23] , \\u.tk[22] , \\u.tk[21] , \\u.tk[20] , \\u.tk[19] , \\u.tk[18] , \\u.tk[17] , \\u.tk[16] , \\u.tk[15] , \\u.tk[14] , \\u.tk[13] , \\u.tk[12] , \\u.tk[11] , \\u.tk[10] , \\u.tk[9] , \\u.tk[8] , \\u.tk[7] , \\u.tk[6] , \\u.tk[5] , \\u.tk[4] , \\u.tk[3] , \\u.tk[2] , \\u.tk[1] , \\u.tk[0]  } = { \\u.tick[31] , \\u.tick[30] , \\u.tick[29] , \\u.tick[28] , \\u.tick[27] , \\u.tick[26] , \\u.tick[25] , \\u.tick[24] , \\u.tick[23] , \\u.tick[22] , \\u.tick[21] , \\u.tick[20] , \\u.tick[19] , \\u.tick[18] , \\u.tick[17] , \\u.tick[16] , \\u.tick[15] , \\u.tick[14] , \\u.tick[13] , \\u.tick[12] , \\u.tick[11] , \\u.tick[10] , \\u.tick[9] , \\u.tick[8] , \\u.tick[7] , \\u.tick[6] , \\u.tick[5] , \\u.tick[4] , \\u.tick[3] , \\u.tick[2] , \\u.tick[1] , \\u.tick[0]  } - 32'd153;",
+  "shadow_reset_hex": "ffffff67",
+  "declared_extra_state_bits": 32,
+  "added_cycles": 0,
+  "scope": "exact native tick reset/clock/unconditional D; all downstream uses unchanged"
+}
