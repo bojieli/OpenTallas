@@ -1,0 +1,44 @@
+# HBM-FORM-SPLIT-13-EXPX Fri Nov  6 13:45:49 PST 2026 epyc2 /srv/opentallas-scratch3/claude/hbm-form-split-13-expx/benv (verilator 5.050), tb = eq_xc.py T=10 S=6
+MUT 0: XEQ PASS checks=560000 errs=0 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MUT 1: XEQ FAIL checks=560000 errs=606 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_ro_x cyc=919 ep=0 kind=0
+MISMATCH lane_vm_wdata cyc=943 ep=0 kind=0
+MISMATCH lane_ro_x cyc=943 ep=0 kind=0
+MISMATCH lane_ro_x cyc=1017 ep=0 kind=0
+MUT 2: XEQ FAIL checks=560000 errs=1975 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_kv_we cyc=919 ep=0 kind=0
+MISMATCH lane_ro_x cyc=919 ep=0 kind=0
+MISMATCH lane_vm_we cyc=925 ep=0 kind=0
+MISMATCH lane_vm_wdata cyc=925 ep=0 kind=0
+MUT 3: XEQ FAIL checks=560000 errs=2451 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=200
+MISMATCH lane_vm_wdata cyc=925 ep=0 kind=0
+MISMATCH lane_ro_x cyc=925 ep=0 kind=0
+MISMATCH lane_vm_wdata cyc=943 ep=0 kind=0
+MISMATCH lane_ro_x cyc=943 ep=0 kind=0
+MUT 4: XEQ FAIL checks=560000 errs=80858 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_rd_addr cyc=819 ep=0 kind=0
+MISMATCH bank_read_data cyc=819 ep=0 kind=0
+MISMATCH lane_rd_addr cyc=820 ep=0 kind=0
+MISMATCH bank_read_data cyc=820 ep=0 kind=0
+MUT 5: XEQ FAIL checks=560000 errs=80858 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_rd_addr cyc=819 ep=0 kind=0
+MISMATCH bank_read_data cyc=819 ep=0 kind=0
+MISMATCH lane_rd_addr cyc=820 ep=0 kind=0
+MISMATCH bank_read_data cyc=820 ep=0 kind=0
+MUT 6: XEQ FAIL checks=560000 errs=421 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_fault cyc=968 ep=0 kind=0
+MISMATCH lane_fault cyc=969 ep=0 kind=0
+MISMATCH lane_fault cyc=1147 ep=0 kind=0
+MISMATCH lane_fault cyc=1148 ep=0 kind=0
+# negative controls (MUT 0, wrong offsets must FAIL): T=9 S=6
+MUT 0: XEQ FAIL checks=560000 errs=10125 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_kv_we cyc=918 ep=0 kind=0
+MISMATCH lane_kv_waddr cyc=918 ep=0 kind=0
+MISMATCH lane_kv_wdata cyc=918 ep=0 kind=0
+MISMATCH lane_ro_v cyc=918 ep=0 kind=0
+# T=10 S=5
+MUT 0: XEQ FAIL checks=560000 errs=374 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH f_sfu cyc=30339 ep=21 kind=5
+MISMATCH f_sfu cyc=30340 ep=21 kind=5
+MISMATCH f_sfu cyc=30341 ep=21 kind=5
+MISMATCH f_sfu cyc=30342 ep=21 kind=5
