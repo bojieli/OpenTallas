@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "202980878d1b7f95d7370c36bf83b722362ddb61",
+ "flow_tag": "flow-20261106-v-s81",
+ "routed_db": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/6_final.odb",
+ "build_commit": "75e186f4e710a070ffa48ee9bdbba2186a9dfaad",
+ "lec": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_resign_v/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_resign_v/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1",
+ "original_signoff": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/signoff/signoff.json",
+ "name": "kl_dsdv_idx_txm_grp_vA",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "eager-sunfish",
+ "created": "2026-11-06 07:58 UTC",
+ "routed_db_sha256": "ff579dd13d528dd494fbd0098840d889d5a3417a8a059dc49c86913cdea69c1b",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/tag_v/tools/die_plan",
+  "sha256": {
+   "signoff.py": "3e97ef41823cac5d5dbff8d672eeb6839ef32278c58ca44cbd22865476eebfc5",
+   "lec.py": "313d77f094144205893055f199eff7274f8ecc2aea2c0caae3d2eb05958542e6"
+  },
+  "checked": "byte-identical to flow-20261106-v-s81"
+ },
+ "lane": "CODEX-S81-CORES",
+ "as_run_note": "Exact one data driver ECO place5598 BUFx3 to BUFx5 clears final slew; TT4.48 FF0.13 DRC0; routed LEC5385/5385 EQ; child of IDX SPLIT2,0PIN CYCLES"
+}

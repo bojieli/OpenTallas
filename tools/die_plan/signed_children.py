@@ -1,5 +1,6 @@
 """SIGNED hard-child view/geometry and exact named placement, shared with the established QC flow."""
 import copy
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -104,7 +105,35 @@ def hard_children_tcl(children):
 
 
 
+def verify_parameter_contracts(spec, hcr, repo):
+    """Assert an explicitly selected parent's binding matches its sealed signed child."""
+    repo = Path(repo)
+    contracts = hcr.get("parameter_contracts", [])
+    if contracts:
+        selected = {(c["master"], c["inst"]) for c in hard_children_list(hcr, spec, repo)}
+        sealed = {(c["master"], c["instance"]) for c in contracts}
+        if selected != sealed:
+            raise ValueError("selected hard-child instances differ from sealed parameter bindings")
+    for contract in contracts:
+        for key, value in contract["parent_params"].items():
+            if spec.get("params", {}).get(key) != value:
+                raise ValueError(f"hard child parent parameter {key} does not match sealed binding")
+        source = repo / contract["binding_source"]
+        if hashlib.sha256(source.read_bytes()).hexdigest() != contract["binding_sha256"]:
+            raise ValueError("hard child parameter-binding source changed: " + str(source))
+        child = json.loads((repo / contract["child_spec"]).read_text())
+        if child.get("params") != contract["child_params"]:
+            raise ValueError("hard child parameters do not match sealed view")
+        view = Path(hcr["views"][contract["master"]])
+        if not view.is_absolute():
+            view = repo / view
+        seal = json.loads((view / "provenance.json").read_text()).get("kit", {}).get("spec_sha256")
+        if seal != hashlib.sha256(json.dumps(child, sort_keys=True).encode()).hexdigest():
+            raise ValueError("hard child spec is not the spec of the SIGNED view")
+
+
 def prepare_hard_children(spec, hcr, repo, outline, margin=0.0):
+    verify_parameter_contracts(spec, hcr, repo)
     children = hard_children_list(hcr, spec, repo)
     views = {m: (Path(v) if Path(v).is_absolute() else Path(repo) / v)
              for m, v in hcr["views"].items()}
@@ -160,8 +189,10 @@ def _instance_type_spans(text, master, instance):
                 i += 1
             if depth:
                 raise ValueError('unbalanced hard-child parameter list')
-        if re.match(r'\s*'+re.escape(instance)+r'\s*\(', code[i:]):
-            spans.append((hit.start(), hit.end()))
+        while i < len(code) and code[i].isspace():
+            i += 1
+        if re.match(re.escape(instance)+r'\s*\(', code[i:]):
+            spans.append((hit.start(), hit.end(), i))
     return spans
 
 
@@ -171,7 +202,9 @@ def specialize_native_children(rtl_dir, children):
     A source module may serve both a hardened bank and soft banks with different
     parameters. Rename its native definition/references, then restore the type of
     each selected instance to the separately staged fixed-port blackbox master.
-    Port/parameter expressions and native logic remain unchanged.
+    The selected hard instance has fixed sealed parameters, so its native
+    override block is removed. Soft-instance parameters/ports and native logic
+    remain unchanged.
     """
     paths = [p for p in sorted(Path(rtl_dir).iterdir())
              if p.suffix in ('.sv', '.v') and not p.name.endswith('_bb.v')]
@@ -189,11 +222,11 @@ def specialize_native_children(rtl_dir, children):
         texts = {p:_code_rename(t, master, alias) for p,t in texts.items()}
         leaves = {c['inst'].split('.')[-1] for c in children if c['master'] == master}
         for leaf in sorted(leaves):
-            hits = [(p, a, b) for p,t in texts.items() for a,b in _instance_type_spans(t, alias, leaf)]
+            hits = [(p, a, b, end) for p,t in texts.items() for a,b,end in _instance_type_spans(t, alias, leaf)]
             if len(hits) != 1:
                 raise ValueError(f'hard child {master}/{leaf}: expected one source instance, found {len(hits)}')
-            p,a,b = hits[0]
-            texts[p] = texts[p][:a]+master+texts[p][b:]
+            p,a,b,end = hits[0]
+            texts[p] = texts[p][:a]+master+' '+texts[p][end:]
         counts[master] = len(leaves)
     for path,text in texts.items():
         if text != path.read_text():

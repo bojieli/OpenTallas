@@ -1,0 +1,125 @@
+{
+ "kit": {
+  "schema": "opentallas.s81.core_freeze.v1",
+  "kit": "dsdv_idx_txm_grp_vA",
+  "module": "dsdv_idx_txm_grp",
+  "plan_type": "bk_sel__t2",
+  "outline_um": [
+   291.6,
+   459.54
+  ],
+  "ref_tile": "physical/die_plan/s81/cores/legacy/specs/dsdv_idx_txm_grp_vA",
+  "spec": "physical/die_plan/s81/cores/legacy/specs/dsdv_idx_txm_grp_vA/spec.json",
+  "spec_sha256": "785fb2b941ebd5d7a4cb325c2efbfead0b7a8914a725b28aac85d0aeef1378e6",
+  "child_of": "dsdv_idx_tx_n32",
+  "child_count": 1,
+  "drop_sources": [],
+  "pin_expand": {},
+  "pins_file": "physical/die_plan/s81/cores/legacy/specs/dsdv_idx_txm_grp_vA/views/dsdv_idx_txm_grp/dsdv_idx_txm_grp.lef",
+  "pins_sha256": "e045bba4ec096199a390172531f8401f49c1f0770e5b21c10061669b85411ecf",
+  "pins": 557,
+  "plan_lef": "physical/die_plan/s81/cores/legacy/specs/dsdv_idx_txm_grp_vA/views/dsdv_idx_txm_grp/dsdv_idx_txm_grp.lef",
+  "pins_canon_sha256": "367ce666fdb535941e7eeabe5a06676f220d68b19f70923211a5bbdcaee58de3",
+  "pins_placed_canon_sha256": "367ce666fdb535941e7eeabe5a06676f220d68b19f70923211a5bbdcaee58de3",
+  "pins_staged_file": "declared_pin_contract/dsdv_idx_txm_grp.lef",
+  "pins_staged_sha256": "e045bba4ec096199a390172531f8401f49c1f0770e5b21c10061669b85411ecf",
+  "clocks": [
+   "ck"
+  ],
+  "resets": [],
+  "recipe_sha256": "1dca1919b88747f41db58d65ca7059c70bd418367249f436adf23cdd5b2e5740",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_tol_ps": 40.0,
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan clock.insertion_ps",
+   "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "rc": "setRC_rcx_asap7.tcl",
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "face_guard (post-synth)",
+   "LEC EQUIVALENT (post-synth)",
+   "reg_fanout (post-synth)",
+   "TT/FF insertion (GRT, before route)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "fbdbf3ab05b",
+  "sdc_lint_sha256": "1009707936b623e070d7637a3336af8ca8ea79bfb1ad981e6d8f095d123634a3",
+  "face_guard_sha256": "89d14d085ae0292e3c1d0765d6c946765386a94aefcb28510d0b3d675552d5bf",
+  "signoff_sha256": "6f0b9e8124d2b014adfb5bf855a5127272fda92c84f94062a7010967958b487f",
+  "macros": {
+   "ot_sram_1r1w_1024x256_m2_r2c2": [
+    [
+     50.976,
+     4.32,
+     "R0"
+    ],
+    [
+     50.976,
+     99.36,
+     "R0"
+    ],
+    [
+     50.976,
+     194.4,
+     "R0"
+    ],
+    [
+     50.976,
+     289.44,
+     "R0"
+    ],
+    [
+     50.976,
+     384.48,
+     "R0"
+    ]
+   ]
+  },
+  "rtl_patches": [],
+  "kit_hash": "2de9318314a1b539",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5,
+   "default": true
+  },
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1",
+ "src_commit": "202980878d1b7f95d7370c36bf83b722362ddb61",
+ "flow_tag": "flow-20261106-v-s81",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-06T08:00:33+00:00",
+  "kit": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1",
+  "base": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base",
+  "signoff": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_resign_v/signoff/signoff.json",
+  "signoff_sha256": "7ce103a8626adfbeaa662e5b0bebc7a89eb3953d98a4bb068c7726d033cdea1b",
+  "signoff_generated": "2026-11-06T07:57:53+00:00",
+  "odb": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_driver_x5/i1/run/results/asap7/kl_dsdv_idx_txm_grp_vA/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/codex-s81-cores-1105/idxa_resign_v/lec/lec.json",
+  "note": "IDX SPLIT2 column-A child exact mappeddriver ECO; TT4.48 FF0.13 slew0 DRC0,5385EQ,0PIN CYCLES",
+  "lib_basis": {
+   "dsdv_idx_txm_grp_tt.lib": "base dsdv_idx_txm_grp_tc.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)",
+   "dsdv_idx_txm_grp_ff.lib": "base dsdv_idx_txm_grp_BC.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
+  },
+  "files_sha256": {
+   "dsdv_idx_txm_grp.lef": "8dab41e9a471cba2c2fb9f322fe412d5bab7b8db5a1601dc3eeefc8599b6287e",
+   "dsdv_idx_txm_grp_ff.lib": "f67a73e802028bf05066a4341c4bd8edb92d71ba65b6ba0f7100213baede76ae",
+   "dsdv_idx_txm_grp_tt.lib": "465d3067a15f8566521f9ee261655602bd81eb7a9479010c8cac5b95bc62547a",
+   "pins.json": "f7bb44da408a272d8f5baea613f03281fcc0946549cb7d221e7a8d538056b212"
+  }
+ }
+}

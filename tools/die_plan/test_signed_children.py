@@ -1,4 +1,5 @@
 import importlib.util
+import hashlib
 import json
 import tempfile
 import unittest
@@ -29,6 +30,52 @@ class SignedChildren(unittest.TestCase):
             self.assertEqual(out['macros'][0]['inst'], 'u.g[0].u_leaf')
             self.assertIn('u_leaf', C.hard_children_tcl(children))
 
+    def parameter_fixture(self, root):
+        spec, recipe = self.fixture(root)
+        source = root/'binding.sv'
+        source.write_text('the measured parameter binding')
+        child = dict(params=dict(D=8192, B0=0, NG=5, FL=1))
+        (root/'child.json').write_text(json.dumps(child))
+        prov = json.loads((root/'leaf/provenance.json').read_text())
+        prov['kit'] = dict(spec_sha256=hashlib.sha256(json.dumps(child,sort_keys=True).encode()).hexdigest())
+        (root/'leaf/provenance.json').write_text(json.dumps(prov))
+        spec['params'] = dict(D=8192)
+        recipe['parameter_contracts'] = [dict(master='leaf', instance='u.g[0].u_leaf', child_spec='child.json', child_params=child['params'],
+            parent_params=dict(D=8192), binding_source='binding.sv',binding_sha256=hashlib.sha256(source.read_bytes()).hexdigest())]
+        return spec, recipe
+
+    def test_parameter_binding_and_signed_spec_match(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d)
+            spec, recipe = self.parameter_fixture(p)
+            C.prepare_hard_children(spec, recipe, p, [100,100])
+
+    def test_wrong_hard_child_bank_count_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d)
+            spec, recipe = self.parameter_fixture(p)
+            child = json.loads((p/'child.json').read_text())
+            child['params']['NG'] = 4
+            (p/'child.json').write_text(json.dumps(child))
+            with self.assertRaisesRegex(ValueError,'parameters do not match'):
+                C.prepare_hard_children(spec, recipe, p, [100,100])
+
+    def test_changed_parent_parameter_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d)
+            spec, recipe = self.parameter_fixture(p)
+            spec['params']['D'] = 4096
+            with self.assertRaisesRegex(ValueError,'parent parameter D'):
+                C.prepare_hard_children(spec, recipe, p, [100,100])
+
+    def test_selecting_other_bank_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d)
+            spec, recipe = self.parameter_fixture(p)
+            spec['children'][0]['inst'] = 'u.g[1].u_leaf'
+            with self.assertRaisesRegex(ValueError,'instances differ'):
+                C.prepare_hard_children(spec, recipe, p, [100,100])
+
     def test_unsigned_view_refused(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d)
@@ -56,7 +103,7 @@ class SignedChildren(unittest.TestCase):
             result = (p / 'native.sv').read_text()
             self.assertIn('module leaf__soft #', result)
             self.assertIn('assign y=a^P;', result)
-            self.assertIn('leaf #(.P(0)) u_hard(a,yh);', result)
+            self.assertIn('leaf u_hard(a,yh);', result)
             self.assertIn('leaf__soft #(.P(4)) u_soft(a,ys);', result)
             self.assertEqual((p / 'leaf_bb.v').read_text(), bb)
 
@@ -68,7 +115,8 @@ class SignedChildren(unittest.TestCase):
             C.specialize_native_children(p, [dict(master='leaf',inst='u_hard')])
             result = (p/'a.sv').read_text()
             self.assertTrue(result.startswith('// leaf should stay in this comment'))
-            self.assertIn('leaf #(.P((2 == 2) ? 1 : 0)) u_hard', result)
+            self.assertIn('leaf u_hard', result)
+            self.assertNotIn('.P((2 == 2)', result)
 
     def test_missing_native_child_refused(self):
         with tempfile.TemporaryDirectory() as d:
