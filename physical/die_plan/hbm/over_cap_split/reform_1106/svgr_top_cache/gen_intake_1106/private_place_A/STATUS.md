@@ -13,3 +13,5 @@ Remaining: collect actual PG continuity result; final placed functional count <=
 Actual `floorplan_actual.png` opened and reviewed: exact nine A SRAM homes and separated 4.32 um halos retained. The clock point is over programme_lo, local (87.346,69.684), 0.804 um inside its top edge; it is not an open-channel pin. Its M5 layer has no macro OBS, and the actual PG shape audit above finds no overlap. Actual CTS via/pin access remains an ordinary later qualification. There are no placed cells in this floorplan image; it is not the required final placement-density image.
 
 OpenROAD `check_power_grid -net VDD -floorplanning` reports `[INFO PSM-0040] All shapes on net VDD are connected.`, Tcl catch 0 / result 1. VSS remains running. This floorplanning connectivity result does not qualify detailed routing, IR, or signal access.
+
+PG connectivity completed for VSS too: `[INFO PSM-0040] All shapes on net VSS are connected.`, Tcl catch 0 / result 1. Full both-net output is retained in `floorplan_pg_check.log`. Both floorplanning connectivity checks PASS; electrical/IR and post-placement/detailed-routing checks remain separate.
