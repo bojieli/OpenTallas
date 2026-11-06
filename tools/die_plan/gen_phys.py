@@ -217,6 +217,20 @@ def type_pins(P, tn):
 # face_flops.tcl line that runs the landing placement (FLOW-GEN-1 10-28, DIE-HEAD-9 bug 3: at global scope, where the
 # face block's ff_blk/ff_dbu live; a bare `source` inside ORFS's hook proc failed "OT_CLAND missing face placement context")
 LANDING_PLACEMENT_HOOK = "uplevel #0 {source /work/landing_placement.tcl}"
+RCK_BAND_HOOK = "uplevel #0 {source /work/rck_band.tcl}"
+
+
+def rck_band_exports(P, tn):
+    """S81-RCK-3 11-06 (opt-in type key rck_band = {inst, rows}): config.mk exports of rck_band.tcl.  The band top is
+    the lower edge of the PHY PG region that holds the receiver macro (no core cell above it); [] when the key is absent."""
+    rb = P.types[tn].get("rck_band")
+    if not rb:
+        return []
+    doms = [d for d in phy_pg_domains(P, tn) if rb["inst"] in d[4]]
+    if len(doms) != 1:
+        raise ValueError(f"type {tn}: rck_band inst {rb['inst']} must sit in exactly one PHY PG domain")
+    return [f"export OT_RCK_BAND_INST = {rb['inst']}", f"export OT_RCK_BAND_TOP_UM = {_um(doms[0][3][1])}",
+            f"export OT_RCK_BAND_ROWS = {int(rb.get('rows', 4))}"]
 
 
 def logical_strap_names(t):
@@ -2243,6 +2257,24 @@ def type_macros(P, tn):
     return out
 
 
+PHY_PG_NOTCH_SITE_UM = 0.054   # ASAP7 placement site width: the notched region edge sits on a site boundary
+
+
+def phy_pg_west_notch(t, tn, name, rt, mac_x0):
+    """S81-RCK-3 11-06 (COORD 09:41 class form for the S81 serdes types; opt-in type key phy_pg_west_notch_um = halo):
+    the type's PHY supply region (no core cells) starts at its westmost macro edge minus the halo (floored to the site
+    grid) instead of the partition edge.  The strip west of the PMA macros then takes core cells, so the clock drivers
+    of the PMA clock pins (pma_rck / ck at the macro west end) land next to them instead of 401/412 um away below the
+    region.  The region still covers every macro; die.pg.domains (die mesh, bumps) is unchanged.  Key absent = unchanged."""
+    halo = t.get("phy_pg_west_notch_um")
+    if halo is None or not mac_x0:
+        return rt
+    x = round(math.floor(round((min(mac_x0) - float(halo)) / PHY_PG_NOTCH_SITE_UM, 6)) * PHY_PG_NOTCH_SITE_UM, 4) + 0.0
+    if x <= rt[0]:
+        return rt
+    return [x] + list(rt[1:])
+
+
 def phy_pg_domains(P, tn):
     """PATH-KV-SYSC 10-25 (OWNER decision 7, PHY PG hook): the die.pg.domains that fall inside partition type tn, as
     [(name, power_net, ground_net, rect_type_um, [macro inst fully inside])].  Identical for every instance (a hardened
@@ -2269,7 +2301,7 @@ def phy_pg_domains(P, tn):
             # failed the per-instance identity below on the sign of zero alone)
             rt = [round(min(u[0], v[0]), 4) + 0.0, round(min(u[1], v[1]), 4) + 0.0, round(max(u[0], v[0]), 4) + 0.0,
                   round(max(u[1], v[1]), 4) + 0.0]
-            mac = []
+            mac, mac_x0 = [], []
             # S81-SERDES-PHY-1 10-31: a content with physical_parts is judged by its placed parts, not its logical lot
             placed = []
             for c in t.get("contents", []) + t.get("hard_cores", []):
@@ -2289,8 +2321,10 @@ def phy_pg_domains(P, tn):
                 if not (box[0] >= rt[0] and box[1] >= rt[1] and box[2] <= rt[2] and box[3] <= rt[3]):
                     raise ValueError(f"type {tn}: macro {c['inst']} straddles PG domain {d['name']} {rt}")
                 mac.append(content_physical_identity(c)[0] if "physical_inst" in c or "physical_master" in c else c["inst"])
+                mac_x0.append(box[0])
             if not mac and not t.get("phy_pg_offmodel"):
                 raise ValueError(f"type {tn}: PG domain {d['name']} holds no macro (a PHY domain powers its PHY macro)")
+            rt = phy_pg_west_notch(t, tn, d["name"], rt, mac_x0)
             got.append((d["name"], d["nets"][0], d["nets"][1], rt, sorted(mac)))
         per.append(got)
     # DIE-HEAD-5: compare supply/geometry/macros, not the per-instance domain name (die.pg.domains names one per window)
@@ -3803,6 +3837,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # HEAD-TILE-PREGRT-HOLD (DH59-TILE 11-03, opt-in clock.pregrt_ff_hold): pregrt_ff_hold.py, run_kit.sh step below
         cfg.append("export OT_PREGRT_FF_HOLD = 1")
     cfg += tap_chain_affinity_exports(t)
+    cfg += rck_band_exports(P, tn)
     import pad_clock as PC
     PC.write_contract(P, tn, kd)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
@@ -3884,6 +3919,12 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         hook.write_text(hook.read_text() + "\nsource /work/reserved_banks.tcl\n")
         hook = kd / "face_flops_release.tcl"
         hook.write_text("source /work/reserved_banks_release.tcl\n" + hook.read_text())
+    if t.get("rck_band"):
+        # S81-RCK-3 (COORD 09:41 class form): first-stage capture flops of the PHY receiver FIRM under its PG region;
+        # face_flops_release.tcl releases them (ot_face_flops.txt rows tagged RCKB) for DPL
+        shutil.copyfile(Path(__file__).with_name("rck_band.tcl"), kd / "rck_band.tcl")
+        hook = kd / "face_flops.tcl"
+        hook.write_text(hook.read_text() + "\n" + RCK_BAND_HOOK + "\n")
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): the type's slice -> master_slice.json/.tcl, sourced at
     # PRE_GLOBAL_PLACE (face_flops.tcl: after io placement, before GPL); refused without a slice once required
     import master_slice as MS
