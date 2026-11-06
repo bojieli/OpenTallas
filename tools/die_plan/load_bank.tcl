@@ -2,6 +2,11 @@
 # API: lb_begin block whitelistFF maxCells; lb_bank net {{inst pin} ...} x y
 # Coordinates are DBU. Copies remain movable; caller owns placement policy.
 namespace eval lb { variable serial 0; variable audit {}; variable created {} }
+# ORFS can source hooks inside a procedure; face_flops publishes ff_blk globally.
+# Use one explicit global scope for the caller's bank declarations as well.
+proc lb_apply {path} {
+ return [uplevel #0 [list source $path]]
+}
 proc lb_begin {block ff_names {limit 64}} {
  set ::lb::block $block; set ::lb::limit $limit; set ::lb::allow [dict create]
  foreach n $ff_names {dict set ::lb::allow $n 1}
