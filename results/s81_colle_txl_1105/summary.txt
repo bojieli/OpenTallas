@@ -1,0 +1,7 @@
+loop F rc=1 COLL_REACH7 FAIL errors=0 received=0/36912 faults=001/001 vs 000/000 
+loop 0 rc=0 COLL_REACH7 PASS received=36903/36912 errors=0 
+loop D rc=1 COLL_REACH7 FAIL errors=0 received=0/36912 faults=001/001 vs 000/000 
+miter D rc=1 COLL_TXL_MITER errors=79948 tx_cmp=79948 marker_beats=19966 COLL_REACH7 FAIL errors=79949 received=37309/36912 faults=000/000 vs 000/000 
+miter 0 rc=0 COLL_TXL_MITER errors=0 tx_cmp=79948 marker_beats=19966 COLL_REACH7 PASS received=37309/36912 errors=0 
+miter F rc=1 COLL_TXL_MITER errors=52945 tx_cmp=79948 marker_beats=19966 COLL_REACH7 FAIL errors=52946 received=37309/36912 faults=000/000 vs 000/000 
+DONE 2026-11-05T19:36:12-08:00

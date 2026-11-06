@@ -29,7 +29,9 @@ module tb_coll_reach7;
     .lo_v(lv[v][1]),.lo_r(cr[v][1]),.lo_d(ld[v][1]),.li_v(ov[v][1]),.li_r(ret[v][1]),.li_d(od[v][1]),.flt(flt[v][1]));
   end else begin:dut7
 `ifdef OT_COLL_REACH8N
-`ifdef OT_COLL_RBL_DUT
+`ifdef OT_COLL_TXL_DUT
+   dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(CORE_CRED), .RBL(1), .TXL(1)) w(
+`elsif OT_COLL_RBL_DUT
    dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(CORE_CRED), .RBL(1)) w(
 `else
    dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(CORE_CRED)) w(
@@ -42,7 +44,9 @@ module tb_coll_reach7;
     .ck(clk),.rs(rst_n),.chb(1'b1),.rx({1'b0,1'b1,tx[v][1]^imp[1],rxv[1]}),.tx(tx[v][0]),
     .lo_v(lv[v][0]),.lo_r(cr[v][0]),.lo_d(ld[v][0]),.li_v(ov[v][0]),.li_r(ret[v][0]),.li_d(od[v][0]),.flt(flt[v][0]));
 `ifdef OT_COLL_REACH8N
-`ifdef OT_COLL_RBL_DUT
+`ifdef OT_COLL_TXL_DUT
+   dsfd_coll_lane_e_safe8_ntf #(.CORE_CRED(CORE_CRED), .RBL(1), .TXL(1)) e(
+`elsif OT_COLL_RBL_DUT
    dsfd_coll_lane_e_safe8_ntf #(.CORE_CRED(CORE_CRED), .RBL(1)) e(
 `else
    dsfd_coll_lane_e_safe8_ntf #(.CORE_CRED(CORE_CRED)) e(
@@ -86,6 +90,33 @@ module tb_coll_reach7;
  end
  `OT_RBL_CMP(w,sw,0)
  `OT_RBL_CMP(e,se,1)
+`endif
+`ifdef OT_COLL_TXL_MITER
+ // S81-COLLE-1 11-05 TXL shadow miter: a TXL = 1 lane (RBL 1) beside each lane of the RBL = 1 DUT pair (run with
+ // OT_COLL_RBL_DUT), on the same rx / lo / li_r / reset inputs.  Every cycle: lo_r, li_v, li_d (when valid), flt identical;
+ // tx exactly the DUT tx one edge late (flags always; all 512 bits once the delayed beat is X-free).
+ wire [511:0] ttx[0:1]; wire tcr[0:1],tov[0:1]; wire [552:0] tod[0:1]; wire [2:0] tflt[0:1];
+ dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(CORE_CRED), .RBL(1), .TXL(1)) tw(
+    .ck(clk),.rs(rst_n),.chb(1'b1),.rx({1'b0,1'b1,tx[1][1]^imp[1],rxv[1]}),.tx(ttx[0]),
+    .lo_v(lv[1][0]),.lo_r(tcr[0]),.lo_d(ld[1][0]),.li_v(tov[0]),.li_r(ret[1][0]),.li_d(tod[0]),.flt(tflt[0]));
+ dsfd_coll_lane_e_safe8_ntf #(.CORE_CRED(CORE_CRED), .RBL(1), .TXL(1)) te(
+    .ck(clk),.rs(rst_n),.chb(1'b1),.rx({1'b0,1'b1,tx[1][0]^imp[0],rxv[0]}),.tx(ttx[1]),
+    .lo_v(lv[1][1]),.lo_r(tcr[1]),.lo_d(ld[1][1]),.li_v(tov[1]),.li_r(ret[1][1]),.li_d(tod[1]),.flt(tflt[1]));
+ integer t_err=0, t_cmp=0, t_fr=0, tn;
+ reg [511:0] ptx[0:1];
+ always @(posedge clk) begin ptx[0] <= tx[1][0]; ptx[1] <= tx[1][1]; end
+ always @(negedge clk) if (rst_n) begin
+  for (tn = 0; tn < 2; tn = tn + 1) begin
+   if (tcr[tn] !== cr[1][tn] || tov[tn] !== ov[1][tn] || (ov[1][tn] && tod[tn] !== od[1][tn]) || tflt[tn] !== flt[1][tn]) begin
+    t_err=t_err+1; if(t_err<8) $display("COLL_TXL_STATE_ERR side=%0d cycle=%0d",tn,c); end
+   if (c > 12) begin
+    if (ttx[tn][2:0] !== ptx[tn][2:0] || ((^ptx[tn]) !== 1'bx && ttx[tn] !== ptx[tn])) begin
+     t_err=t_err+1; if(t_err<8) $display("COLL_TXL_TX_ERR side=%0d cycle=%0d",tn,c); end
+    if ((^ptx[tn]) !== 1'bx) t_cmp=t_cmp+1;
+    if (ptx[tn][0] && !ptx[tn][1]) t_fr=t_fr+1;
+   end
+  end
+ end
 `endif
  function automatic [552:0] word(input integer side, input integer ep, input integer k);
   reg [31:0] h; integer b; begin
@@ -132,6 +163,10 @@ module tb_coll_reach7;
 `ifdef OT_COLL_RBL_MITER
    $display("COLL_RBL_MITER errors=%0d tx_frames=%0d replay_cycles=%0d", m_err, m_txw, m_rep);
    if (m_err!=0 || m_txw<1000 || m_rep<20) err=err+1+m_err;
+`endif
+`ifdef OT_COLL_TXL_MITER
+   $display("COLL_TXL_MITER errors=%0d tx_cmp=%0d marker_beats=%0d", t_err, t_cmp, t_fr);
+   if (t_err!=0 || t_cmp<10000 || t_fr<1000) err=err+1+t_err;
 `endif
    $display("COLL_REACH7_STATS ref4 sent=%0d received=%0d mean_latency=%0d.%02d | safe7 sent=%0d received=%0d mean_latency=%0d.%02d | faults ref4=%b/%b safe7=%b/%b | naks=%0d/%0d replays=%0d/%0d timeouts=%0d/%0d",
     sent[0],got[0],lat[0]/(got[0]>0?got[0]:1),(lat[0]*100/(got[0]>0?got[0]:1))%100,

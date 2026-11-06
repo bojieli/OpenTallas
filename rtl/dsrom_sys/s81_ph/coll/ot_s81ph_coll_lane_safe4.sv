@@ -33,6 +33,13 @@ module ot_s81ph_coll_lane_safe4 #(
     parameter integer REACH = 0,
     // RBL (FORM-COLL 11-05, opt-in, default 0 = unchanged netlist): see ot_s81ph_link_ep_safe4; +1 TX edge per lane.
     parameter integer RBL = 0,
+    // TXL (S81-COLLE-1 11-05, opt-in, default 0 = unchanged netlist): TX PIN LANDING, one more register between the
+    // gearbox beat register and the tx pins.  The beat register is then free to sit between the slot-store SRAMs and the
+    // pins (the fc1 routed worst path u_gb.u_sf bank -> beat_tx crossed the SRAM field), and the new register is the tx
+    // face flop.  tx is the TXL = 0 tx exactly one edge late: flag bits [2:0] reset with the gearbox TX control (reset
+    // value 0 = the beat_tx[2:0] reset value), payload reset-free as beat_tx.  +1 TX edge per lane (PIN CYCLES); the link
+    // protocol absorbs it (ACK timeout margin 2*KEEPALIVE+32, as REACH / RBL).
+    parameter integer TXL = 0,
     parameter integer CORE_CRED = 8 // opt-in matched endpoint credit/buffer depth, legacy8 unchanged
 ) (
     input  wire          clk,
@@ -139,6 +146,23 @@ module ot_s81ph_coll_lane_safe4 #(
         .f_tx_v(ftv), .f_tx(ft), .f_rx_v(frv), .f_rx(fr), .r_tx_v(rtv0), .r_tx(rt0), .r_rx_v(rrv), .r_rx(rrf),
         .credit_stalls(), .fault(ep_f), .fault_code(), .st_flits_tx(), .st_flits_rx_ok(), .st_crc_err(),
         .st_naks(), .st_replays(), .st_timeouts(), .st_retx_flits(), .st_max_replay_occ());
+    wire [511:0] tx_g;                           // gearbox beat register (TXL = 0: the tx pins)
+    generate if (TXL != 0) begin : g_txl
+        reg [2:0] txl_f; reg [508:0] txl_d;
+        always @(posedge clk or negedge rr[R_GB]) if (!rr[R_GB]) txl_f <= 3'b000; else txl_f <= tx_g[2:0];
+`ifdef OT_COLL_TXL_MUT_D
+        always @(posedge clk) txl_d <= txl_d;   // mutant: the tx landing payload never loads
+`else
+        always @(posedge clk) txl_d <= tx_g[511:3];
+`endif
+`ifdef OT_COLL_TXL_MUT_F
+        assign tx = {txl_d, tx_g[2:0]};         // mutant: flags skip the landing edge (misaligned with the payload)
+`else
+        assign tx = {txl_d, txl_f};
+`endif
+    end else begin : g_txl0
+        assign tx = tx_g;
+    end endgenerate
     ot_s81ph_link_gbx_safe3 #(.FFW(FFW), .RFW(RFW), .IDLE_P(IDLE_P), .RN(GB_RN),
 `ifdef OT_S81PH_GBX3_MUT
         .MUT(`OT_S81PH_GBX3_MUT)
@@ -146,7 +170,7 @@ module ot_s81ph_coll_lane_safe4 #(
         .MUT(0)
 `endif
     ) u_gb (
-        .clk(clk), .rst_n(rr[R_GB +: GB_RN]), .f_tx_v(ftv), .f_tx(ft), .r_tx_v(rtv && lk1), .r_tx(rt), .beat_tx(tx),
+        .clk(clk), .rst_n(rr[R_GB +: GB_RN]), .f_tx_v(ftv), .f_tx(ft), .r_tx_v(rtv && lk1), .r_tx(rt), .beat_tx(tx_g),
         .beat_rx_v(lr_f[0] && lr_f[1]), .beat_rx(lr_d), .f_rx_v(frv), .f_rx(fr), .r_rx_v(rrv), .r_rx(rrf),
         .locked(gb_l), .fault(gb_f));
     always @(posedge clk or negedge rst_n) if (!rst_n) flt <= 3'b000; else flt <= {lr_f[2], gb_f, ep_f};
@@ -268,19 +292,19 @@ endmodule
 // configuration as dsfd_coll_lane_{w,e}_safe8 (safe4 = legacy GFMT 1 / EPPIPE 2 / LCR 1 / RXSRAM 1 cycle-identical,
 // + REACH 2 relay hops and the RX FIFO write landing), no tf pin (the clock feedthrough has no consumer on the die), and
 // NO parameters, so a default-parameter die bind is the closed view (kits dscoll_lane_{w,e}_s8n*).
-module dsfd_coll_lane_w_safe8_ntf #(parameter integer CORE_CRED = 8, parameter integer RBL = 0) (
+module dsfd_coll_lane_w_safe8_ntf #(parameter integer CORE_CRED = 8, parameter integer RBL = 0, parameter integer TXL = 0) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
     wire tf_unused;
-    ot_s81ph_coll_lane_safe4 #(.CH_BOARD(700), .TF_CLEANUP(1), .REACH(2), .CORE_CRED(CORE_CRED), .RBL(RBL)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx),
+    ot_s81ph_coll_lane_safe4 #(.CH_BOARD(700), .TF_CLEANUP(1), .REACH(2), .CORE_CRED(CORE_CRED), .RBL(RBL), .TXL(TXL)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx),
         .tf(tf_unused), .lo_v(lo_v[0]), .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule
-module dsfd_coll_lane_e_safe8_ntf #(parameter integer CORE_CRED = 8, parameter integer RBL = 0) (
+module dsfd_coll_lane_e_safe8_ntf #(parameter integer CORE_CRED = 8, parameter integer RBL = 0, parameter integer TXL = 0) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
     wire tf_unused;
-    ot_s81ph_coll_lane_safe4 #(.CH_BOARD(700), .TF_CLEANUP(1), .REACH(2), .CORE_CRED(CORE_CRED), .RBL(RBL)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx),
+    ot_s81ph_coll_lane_safe4 #(.CH_BOARD(700), .TF_CLEANUP(1), .REACH(2), .CORE_CRED(CORE_CRED), .RBL(RBL), .TXL(TXL)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx),
         .tf(tf_unused), .lo_v(lo_v[0]), .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule
