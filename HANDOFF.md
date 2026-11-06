@@ -3217,3 +3217,7 @@ CODEX: 2026-11-06 00:12 PST HBM-FORMS: brmw READY-COUNT (TT+1.53 FF+.90 routedEQ
 CODEX: 2026-11-06 00:17 PST MERGE: default-off FF repair scope, selected hard-child correctness and explicit registered-turnaround schema landed1698b4de6f8; tagsz/x/v/z/ah verified; qout pilot remains local opt-in only.
 
 CODEX: 2026-11-06 00:23 PST MERGE: phase-preservingKVsysC +dormantFREG captureband landed396c545e5d8,tagsaa/y/w/aa/ai. IDXactivationa735held beforemerge afterRTLlint parameter mismatch; helperfix pending.
+
+CODEX: 2026-11-06 00:32 PST HBM q3 VM:7dfa31a52d4 source-event candidate pushed; actual generated shell=hand q3a=old+1-cycle on16312 words,3mutants caught; adoption waits physicalPASS, HBM-30 already booked.
+
+CODEX: 2026-11-06 00:33 PST MERGE: corrected sealed-parameter IDXactivation ad041 landedf6e16e0def2, S81tagab verified; actual childSIGNED pack+M6PG reservation, parentK8trial notyetqualified. ForgottenRXREADY source/proofs verified, HBMgeometryadoptionpending.
