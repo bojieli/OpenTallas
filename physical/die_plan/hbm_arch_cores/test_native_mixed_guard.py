@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Selected internal seams use typed endpoints; every external face remains exclusive and registered."""
 import copy
+import hashlib
 import importlib.util
 import json
 import sys
@@ -49,6 +50,19 @@ with tempfile.TemporaryDirectory() as tmp:
     assert len(r['native_endpoint_census']['ports']['b']['endpoints'])==2
     assert r['native_endpoint_census']['ports']['nctrl']['endpoints']
     assert r['native_endpoint_census']['ports']['nout']['endpoints']
+    # Production GATE-PINS-2 keeps raw source identity while emitting a normalized kit table.
+    transformed=copy.deepcopy(FZ);body='[]\n';(kd/'plan_pins.json').write_text(body)
+    transformed.update(plan_pins_source_sha256=FZ['pins_sha256'],pins_file='plan_pins.json',
+                       pins_sha256=hashlib.sha256(body.encode()).hexdigest())
+    assert G.mixed_guard(NET,'top',kd,transformed,SKIP)['verdict']=='PASS'
+    for field in ('source','emitted'):
+        bad=copy.deepcopy(transformed)
+        if field=='source':bad['plan_pins_source_sha256']='4'*64
+        else:(kd/'plan_pins.json').write_text('[1]\n')
+        try:G.mixed_guard(NET,'top',kd,bad,SKIP)
+        except ValueError:print('transformed_'+field+'_pin_tamper REJECTED')
+        else:raise AssertionError('transformed '+field+' pin tamper accepted')
+        (kd/'plan_pins.json').write_text(body)
     # External face and native endpoint failures are independent: neither class can hide the other.
     for name,mut in [
         ('native_wrong_clock',NET.replace('n1(.CLK(clk)','n1(.CLK(clk_bad)')),

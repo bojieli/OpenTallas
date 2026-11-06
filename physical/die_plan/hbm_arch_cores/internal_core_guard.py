@@ -62,9 +62,18 @@ def guard(text,top,kd,fz,skip,scope=None):
         ctx=contract.get('hard_child_context') or {}
         if (ctx.get('schema')!='opentallas.native_hard_child_seam.v1' or ctx.get('module')!=fz.get('module')
             or set(ctx.get('scope_buses',()))!=declared or not ctx.get('parent_contexts')
-            or ctx.get('plan_sha256')!=fz.get('plan_sha256') or ctx.get('pins_sha256')!=fz.get('pins_sha256')
+            or ctx.get('plan_sha256')!=fz.get('plan_sha256')
+            or ctx.get('pins_sha256')!=fz.get('plan_pins_source_sha256',fz.get('pins_sha256'))
             or not re.fullmatch('[0-9a-f]{64}',ctx.get('core_conns_sha256',''))):
             raise ValueError('native seam lacks its validated parent plan/pin/connectivity context')
+        # GATE-PINS-2 emits kit-local normalized plan_pins.json and retains the original source hash separately.
+        # Context authenticates the declared parent table; authenticate the emitted physical table independently.
+        if 'plan_pins_source_sha256' in fz:
+            emitted=Path(kd)/fz.get('pins_file','')
+            if (not re.fullmatch('[0-9a-f]{64}',fz.get('plan_pins_source_sha256',''))
+                or not emitted.is_file()
+                or hashlib.sha256(emitted.read_bytes()).hexdigest()!=fz.get('pins_sha256')):
+                raise ValueError('native seam emitted kit pin table missing/changed')
         for parent in ctx['parent_contexts']:
             child=parent.get('child_inst')
             if (not child or not parent.get('parent_partition_type') or parent.get('child_module')!=fz.get('module')
