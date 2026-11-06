@@ -15,3 +15,5 @@ s81	dsdv_gunit_l0	NEEDS_PARENT	intel1:codex-s81-gunit-parent-1101/l0_view	+88.34
 s81	dsfd_qbank_S	NEEDS_PARENT	intel1:(QBS20 cqS20 kit)	+338.97/0	+9.55/0	0/0	0	Codex S81	col_h10_r0_p4__t1 real-parent receipt (parent not placed)	parent-gated
 hbm	ot_hbm_idx_query_static	NEEDS_PARENT	epyc2:codex-hbm-cores-1101/query/q7b2	+0.35/0	+6.54/0	0/0	0	HBM-CORES-KITS-40/Codex	parent receipt + tagged re-sign	parent-gated
 s81_head	hd_st_m (HEAD tile, not a count core)	HOLD_MARGIN	intel2:codex-head-stm-prd-1131/D	+111.12/0	+7.77/0	0/0	0	SIGNOFF-SPRINT-19 (COORD 20:0x)	hold ECO: PRD route-keep m20/m15 from D (epyc2 signoff-sprint-19/stm), then sign-off + LEC	~23:30 (die-assembly receipt, no count change)
+s81	dsdv_slice_iq_C__t1	PILOT	epyc4:s81-wave-1105f2 iq_C a5 (wave)	?	?	?	?	DIE-S81-65	COORD 16:0x (c): S81 C-row pilot to critical (waited intel1 load cap since 14:47); KW-FIX-17	-
+s81	dsdv_slice_kv512_C__t1	PILOT	epyc4:s81-wave-1105f2 kv512_C a4 (wave)	?	?	?	?	DIE-S81-65	COORD 16:0x (c): S81 C-row pilot to critical; KW-FIX-17	-
