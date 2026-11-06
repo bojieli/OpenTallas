@@ -192,7 +192,9 @@
     "kv3_pc_v1__cl23f6a148@5",
     "kv3_pc_v1__cl7f648944@5",
     "kv3_hub_C@3",
-    "kv3_hroot@4"
+    "kv3_hroot@4",
+    "kv3_hg_v1@3",
+    "kv3_hg_v1@5"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -238,7 +240,6 @@
     "critical": true
    },
    "hold_items": {
-    "kv3_hg_v1": "RE-FORM (OWNER TWO-STRIKES, KW-FIX-4 08:4x): a1/a2/a3 FAIL place PLAN; release on a DIE-KV-64 RE-FORM post",
     "kv3_hub_Wi": "DIE-KV-69 09:08: no retry, class A symptom, waits for 21 HR core views + view plan event",
     "kv3_phy_v1": "KW-FIX-8 10:1x DIE-KV-69 09:17: follows the kv3_phy G2 read on phymid; release on that read",
     "kv3_sys_c": "KW-FIX-8 11-04 20:1x: OT_CLAND band on u_cland_raw_fs_ft1_o same error a2-a3, INFRA label masked it. Waits KV CLAND class form (DIE-KV-70), no blind retry",
@@ -418,7 +419,9 @@
     "kv3_pc_v1__cl23f6a148@5": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
     "kv3_pc_v1__cl7f648944@5": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
     "kv3_hub_C@3": "CODEX KV ownership recovery: hubC actual2SIGNEDviewoverlay+routedchildlibs PASS, kitRTL36files unbound0, noflatten; old16GBflatOOMobsolete. hrootcurrentplanpictureVIEWEDPASSCOND nativebusmaxhop358.01 nohardmacros (codex_hroot_1106review). Onecurrenttyped/boundedvehicle; parenttimingstillowed.",
-    "kv3_hroot@4": "CODEX KV ownership recovery: hubC actual2SIGNEDviewoverlay+routedchildlibs PASS, kitRTL36files unbound0, noflatten; old16GBflatOOMobsolete. hrootcurrentplanpictureVIEWEDPASSCOND nativebusmaxhop358.01 nohardmacros (codex_hroot_1106review). Onecurrenttyped/boundedvehicle; parenttimingstillowed."
+    "kv3_hroot@4": "CODEX KV ownership recovery: hubC actual2SIGNEDviewoverlay+routedchildlibs PASS, kitRTL36files unbound0, noflatten; old16GBflatOOMobsolete. hrootcurrentplanpictureVIEWEDPASSCOND nativebusmaxhop358.01 nohardmacros (codex_hroot_1106review). Onecurrenttyped/boundedvehicle; parenttimingstillowed.",
+    "kv3_hg_v1@3": "CODEX currentHG recovery: source2cGENrc0/PREFLIGHT0 actual20macro_instances, correctedECTL u_bound.u_ectl.u_cols.u_columns.u_q[0:3]; memory16384budgetfixpresent. CurrentimageVIEWEDPASSCOND broad104um/min76umchannels,16heads+4ECTL,4EXsoftexplicit. Onecurrenttrial, oldFAILsretained; actualparentSTAstillrequired.",
+    "kv3_hg_v1@5": "CODEX currentHG recovery: source2cGENrc0/PREFLIGHT0 actual20macro_instances, correctedECTL u_bound.u_ectl.u_cols.u_columns.u_q[0:3]; memory16384budgetfixpresent. CurrentimageVIEWEDPASSCOND broad104um/min76umchannels,16heads+4ECTL,4EXsoftexplicit. Onecurrenttrial, oldFAILsretained; actualparentSTAstillrequired."
    },
    "only_items": [
     "kv3_astk",
