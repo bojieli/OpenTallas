@@ -438,5 +438,51 @@
    "pad": 6,
    "param": "LAT_L6CM"
   }
+ },
+ "L15": {
+  "before": {
+   "cycles": 6,
+   "stations": 4,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 6,
+   "pad": 0,
+   "param": "LAT_L15"
+  },
+  "after": {
+   "cycles": 7,
+   "stations": 5,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_L15"
+  },
+  "event": "ev74f"
+ },
+ "L15m": {
+  "before": {
+   "cycles": 6,
+   "stations": 4,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 6,
+   "pad": 0,
+   "param": "LAT_L15M"
+  },
+  "after": {
+   "cycles": 7,
+   "stations": 5,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_L15M"
+  },
+  "event": "ev74f"
  }
 }

@@ -7,13 +7,21 @@
    "HC_POST": 4
   },
   "extra": {
-   "SM": 7
+   "SM": 7,
+   "SFU": 4,
+   "IDX": 2,
+   "SU": 4,
+   "COLL_XING": 1
   }
  },
  "basis": {
   "HC_PRE_NORM": "hnx_fused_lane +8, bench S vs K record N=1 406->414, N=2 488->496",
   "HC_POST": "hnx_fused_lane +4, bench S vs K record N=1 196->200, N=2 304->308",
-  "SM": "hnx_rp3lp3h_n/s LEAF RESULT +7 (every SM leaf alike): n sb_bank g0m, s gout[49:0], s gout[99:50] via the seam; pass lanes gout[199:100] carry other tiles leaves, already +7 at source: +7 once per SM record, not per hop"
+  "SM": "hnx_rp3lp3h_n/s LEAF RESULT +7 (every SM leaf alike): n sb_bank g0m, s gout[49:0], s gout[99:50] via the seam; pass lanes gout[199:100] carry other tiles leaves, already +7 at source: +7 once per SM record, not per hop",
+  "SFU": "+4 per SFU record = HBM-28 Part 27 opsa/opsb group rd +2 (I158 B10 form) + HBM-33 opsb_output sr_d/sr_rv +2 (I166), in series (TOK-LEDGER -0.122% stacked); flt +2 fault-only, not priced",
+  "IDX": "+2 per IDX record = HBM-31 s3_q selected_v_o/selected_line_o +1 + HBM-34 op6 -> op2/op7 min spacing 7 -> 8 (both I166; -0.014%)",
+  "SU": "+4 per SU record = HBM-26 l1r5 ot_hbm_su_pg_lane1_core MLAT 4 -> 5 (+1 per lane1 multiply, FO rule +4; ev74f 308663537a8; -0.61%)",
+  "COLL_XING": "+1 per COLL crossing = HBM-29 ot_pdie_serdes_tx pma_tx +1 (I154 txla, KP4 two-step lookahead; -0.082%)"
  },
  "other_edges": "glue +1, subtree32 +17 and tailx_rest are core_internal rows of ext/crossing_latency.json; their record-class mapping stays with TOK-VERIFY (SS26 price_big rows: bounds, HC records have slack)",
  "folded": {
@@ -35,7 +43,8 @@
   "ot_hbm_hc_subtree32_core": "physical/die_plan/hbm/reform_1103/cycles/subtree32.tsv",
   "ot_hbm_hc_root_static": "physical/die_plan/hbm/reform_1103/cycles/subtree32.tsv",
   "ot_hbm_hc_root_static__tailx_rest__v4f4566": "physical/die_plan/hbm/reform_1103/cycles/tailx_rest.tsv",
-  "ot_hbm_hc_root_static__tailx_rest__v6bc7f2": "physical/die_plan/hbm/reform_1103/cycles/tailx_rest.tsv"
+  "ot_hbm_hc_root_static__tailx_rest__v6bc7f2": "physical/die_plan/hbm/reform_1103/cycles/tailx_rest.tsv",
+  "cycles_pincycles_1105": "physical/die_plan/hbm/plan_of_record/d44v/corelat/cycles_pincycles_1105.tsv (HBM-26/28/29/31/33; port rows of ext/crossing_latency.json)"
  },
  "not_in_plan": {
   "ot_hfd_coll_q3_body_core": {
@@ -66,5 +75,9 @@
    "source": "physical/die_plan/hbm/reform_1103/cycles/subtree32.tsv",
    "why": "not a hard core of this plan"
   }
- }
+ },
+ "pending_not_folded": {
+  "HBM-30": "q3_vm_core writer_kq0..7 +1 (FORM A, q3a build): folds only after its form RTL merges (COORD 17:3x)"
+ },
+ "lanes_ev74f": "L15/L15m 6->7 (HBM-27) is a die lane: LAT_L15/LAT_L15M in latency.lanes (compiler LAT ABI), 0.000%"
 }
