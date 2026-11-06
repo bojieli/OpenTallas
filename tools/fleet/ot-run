@@ -1817,6 +1817,38 @@ def stage_pre(src, r):
     return s + f"mkdir -p {q} && echo {src} > {shlex.quote(r + '/' + SPILL_MARK)} || exit 4;"
 
 
+# Seed-input metadata must return even when cp -a retains an old timestamp.
+SPILL_REQUIRED_METADATA = ("freeze.json", "config.mk", "core.json", "pins.json",
+                           "kit_rtl.f", "rtl_manifest.json", "source_overlay.json", "kit_assembly.json")
+SPILL_SELECT_PY = r'''import os, sys
+stamp = sys.argv[1]
+try:
+    with open(stamp + ".inputs", "rb") as stream:
+        before = set(stream.read().split(b"\0"))
+except FileNotFoundError:
+    before = None  # Existing pending records retain their original timestamp contract.
+threshold = os.stat(stamp).st_mtime_ns
+required = {os.fsencode(x) for x in sys.argv[2:]}
+for path in sys.stdin.buffer.read().split(b"\0"):
+    if not path:
+        continue
+    try:
+        modified = os.lstat(path).st_mtime_ns > threshold
+    except FileNotFoundError:
+        continue
+    if modified or (before is not None and path not in before) or path.rsplit(b"/", 1)[-1] in required:
+        sys.stdout.buffer.write(path + b"\0")
+'''
+
+
+def spill_written_listing(roots, stamp, held=""):
+    """New paths, ordinary writes and required seed metadata; no payload hashing."""
+    rels = " ".join(shlex.quote(r.lstrip("/")) for r in roots)
+    finder = f"find {rels} ! -name {SPILL_MARK} {held} \\( -type f -o -type l \\) -print0"
+    args = " ".join(shlex.quote(x) for x in (stamp,) + SPILL_REQUIRED_METADATA)
+    return finder + " | python3 -c " + shlex.quote(SPILL_SELECT_PY) + " " + args
+
+
 def spill_fwd_cmd(src, dst, roots, stamp, listed=False):
     """src -> dst copy.  v10: on dst the marker is written BEFORE extraction, so a failed or partial copy is never a
     'real' data host for normal placement (v8 wrote it after a successful tar: a failed copy left an UNMARKED tree, the next
@@ -1827,7 +1859,9 @@ def spill_fwd_cmd(src, dst, roots, stamp, listed=False):
                    f"{shlex.quote(r)} >&2; exit 3; fi; mkdir -p {shlex.quote(r)} && echo {src} > {shlex.quote(r + '/' + SPILL_MARK)} || exit 4;"
                    if spill_root(r) == os.path.normpath(r) else stage_pre(src, r)
                    for r in sorted(roots, key=lambda x: os.path.normpath(x) not in STAGE_FILES))   # files first: a staged dir's mkdir -p must not create a file's parent
-    dcmd = f"{pre} {tar_x(roots)} && touch {stamp}"
+    dcmd = (f"{pre} {tar_x(roots)} && cd / && "
+            f"find {rels} ! -name {SPILL_MARK} \\( -type f -o -type l \\) -print0 > {shlex.quote(stamp + '.inputs')} "
+            f"&& touch {stamp}")
     stc = "cd / && tar --null --no-recursion -T - -cf - | zstd -q -1 -T8" if listed else f"tar -C / -cf - {rels} | zstd -q -1 -T8"
     return (f"ssh -o ControlPath=none -o BatchMode=yes {src} {shlex.quote(stc)}" + (f" < {shlex.quote(listed)}" if listed else "") + " | "
             f"ssh -o ControlPath=none -o BatchMode=yes {dst} {shlex.quote(dcmd)}")
@@ -1884,12 +1918,12 @@ def spill_copy_fwd(src, dst, roots, stamp):
 
 
 def spill_back_cmd(src, dst, roots, stamp, only=None):
-    """dst -> src: every file the run wrote (newer than the stamp).  The stamp is removed only after src extracted it
+    """dst -> src: written/new paths and required seed metadata.  The stamp is removed only after src extracted it
     (v8 removed it on dst even when the src side failed, so a retry had nothing to compare against).
     only (SPILL-PROOF-1, after a hand-off): exactly these paths, whatever their age; nothing else ever comes back."""
     rels = " ".join(shlex.quote(r.lstrip("/")) for r in roots)
     listing = (f"{{ {handoff_paths_listing(only)}; }}" if only else
-               f"find {rels} -newer {stamp} ! -name {SPILL_MARK} \\( -type f -o -type l \\) -print0")
+               spill_written_listing(roots, stamp))
     dcmd = (f"test -e {stamp} || {{ echo OT_SPILL_NOSTAMP >&2; exit 5; }}; cd / && {listing} | tar --null -T - -cf - | zstd -q -1 -T8")
     scmd = tar_x(roots)
     return (f"ssh -o ControlPath=none -o BatchMode=yes {dst} {shlex.quote(dcmd)} | "
@@ -1913,7 +1947,7 @@ def spill_copy_back(src, dst, roots, stamp, say=lambda m: None, only=None):
     for k in range(SPILL_BACK_TRIES):
         b = subprocess.run(["bash", "-o", "pipefail", "-c", spill_back_cmd(src, dst, roots, stamp, only)], capture_output=True, text=True)
         if not b.returncode:
-            ssh_sh(dst, f"rm -f {stamp} {stamp}.next", timeout=60)
+            ssh_sh(dst, f"rm -f {stamp} {stamp}.next {stamp}.inputs", timeout=60)
             return True, ""
         err = b.stderr.strip()[-300:]
         if "OT_SPILL_NOSTAMP" in err:
@@ -1993,7 +2027,7 @@ def handoff_physical_listing(roots, kit, stamp):
     rels = " ".join(shlex.quote(r.lstrip("/")) for r in roots)
     k = kit.lstrip("/")
     held = " ".join(f"! -path {shlex.quote(k + '/' + h)} ! -path {shlex.quote(k + '/' + h + '/*')}" for h in HANDOFF_HELD)
-    return f"find {rels} -newer {shlex.quote(stamp)} ! -name {SPILL_MARK} {held} \\( -type f -o -type l \\) -print0"
+    return spill_written_listing(roots, stamp, held)
 
 
 def handoff_paths_listing(paths, older_than=None):
