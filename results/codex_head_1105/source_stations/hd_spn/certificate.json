@@ -1,0 +1,13 @@
+{
+ "type": "hd_spn",
+ "unchanged_nonstation_tokens": true,
+ "stages": {
+  "xw_o": 1,
+  "xe_o": 2,
+  "bw_i": 5,
+  "be_i": 4,
+  "x_o": 6,
+  "b_i": 6
+ },
+ "method": "Inverse exactly declared station cells/declarations and restore only final consumers; complete remaining RTL token stream equals reference."
+}

@@ -364,7 +364,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
          ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None, ring_clock_ports=None,
          landed_clock_inputs=None, edge_clock_latency_ps=None, pad_clock_inputs=None, pad_clock_outputs=None,
-         pad_clock_cdc=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None):
+         pad_clock_cdc=None, pad_clock_data_inputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -899,6 +899,15 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         tab = idly if p in ctx.inputs else odly
         if "max" in tab.get(p, {}) and tab[p]["max"][1] < fl - (tw_in if p in ctx.inputs else 0.0) - EPS:
             err.append(f"relaxation: {p} max delay {tab[p]['max'][1]:g} ps below its IO budget {fl:g} ps")
+    for port, row in (pad_clock_data_inputs or {}).items():
+        clock = row['clock']
+        if port not in ctx.inputs or clock not in pad_in:
+            err.append(f'pad_clock: data input {port} needs an existing input and declared input pad clock')
+        for kind in ('max', 'min'):
+            got = idly[port].get(kind)
+            if got is None or got[0] != clock or abs(got[1] - row[kind + '_ps']) > EPS:
+                err.append(f'pad_clock: data input {port} {kind} delay must use actual {clock} '
+                           f'and declared {row[kind + "_ps"]:g} ps, found {got}')
     full = {"setup": unc_setup_ps, "hold": unc_hold_ps}
     for kk, fv in full.items():
         for n in ctx.clocks:
@@ -999,7 +1008,11 @@ def kit_context(P, tn):
                 time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
                 port_period_mult=edge,
                 **(dict(pad_clock_inputs=pad_in, pad_clock_outputs=pad_out) if pad_pins else {}),
-                **({"pad_clock_cdc": pad_cdc} if pad_cdc else {}), **_seam_ctx(P, tn), **_io_hold_ctx(P, tn),
+                **({"pad_clock_cdc": pad_cdc} if pad_cdc else {}),
+                **({"pad_clock_data_inputs": {
+                    row['port']: dict(clock=pin['name'], max_ps=row['max_ps'], min_ps=row['min_ps'])
+                    for pin in pad_pins for row in pin.get('data_inputs', [])}}
+                   if any(pin.get('data_inputs') for pin in pad_pins) else {}), **_seam_ctx(P, tn), **_io_hold_ctx(P, tn),
                 **({"tap_window_ps": gen_phys.tap_window_ps(P, tn)} if gen_phys.tap_window_ps(P, tn)
                    and not gen_phys.tap_window_port_table(P, tn) else {}),
                 **_tap_window_port_ctx(P, tn),
