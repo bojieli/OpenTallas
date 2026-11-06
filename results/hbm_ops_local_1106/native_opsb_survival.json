@@ -1,0 +1,26 @@
+{
+  "opsb_A": {
+    "synth__design__instance__count__stdcell": 54692,
+    "synth__design__instance__area__stdcell": 6531.45,
+    "synth__design__instance__count__macros": 16,
+    "source_sha": "48aaf04cf2b70ac5dee7fae6e61f4684b86c196e",
+    "flow": "flow-20261106-bp-hbm",
+    "netlist": "/srv/opentallas-scratch2/claude/codex-hbm-ops-local-1106/kits/opsb_A/run/results/asap7/hbc_ot_hgi_sfu_opsb_group_rreg_1106/base/1_synth.v",
+    "read_capture_ff": 512,
+    "column_write_ff": 0,
+    "rvt_ff_master": "DFFHQNx1_ASAP7_75t_R",
+    "verdict": "PASS_NATIVE_SYNTH_ONLY"
+  },
+  "opsb_B": {
+    "synth__design__instance__count__stdcell": 99454,
+    "synth__design__instance__area__stdcell": 12144.8,
+    "synth__design__instance__count__macros": 16,
+    "source_sha": "48aaf04cf2b70ac5dee7fae6e61f4684b86c196e",
+    "flow": "flow-20261106-bp-hbm",
+    "netlist": "/srv/opentallas-scratch2/claude/codex-hbm-ops-local-1106/kits/opsb_B/run/results/asap7/hbc_ot_hgi_sfu_opsb_group_both_1106/base/1_synth.v",
+    "read_capture_ff": 512,
+    "column_write_ff": 8960,
+    "rvt_ff_master": "DFFHQNx1_ASAP7_75t_R",
+    "verdict": "PASS_NATIVE_SYNTH_ONLY"
+  }
+}
