@@ -1,0 +1,5 @@
+# AUTOCLEAN-5 13:1x epyc2 from-* delete under COORD 11:2x. gb src dest why. Item: 0 signoff/PROVENANCE/6_final/5_route, 0 files <6 h, 0 multilink, not live, not in PROTECTED union or fleet args, leaf not in a lane queue post in 24 h incl continuation lines; no job row names it on the source host (localhost=intel2).
+2.5	epyc6	/srv/opentallas-scratch3/claude/from-epyc6-1107/codex-wave-1105/runs/s81/kit-wave/s81/bf1e2233ce05/items/ot_s81sl_leaf__t39	no state row; AC4 row kept only on a docker check failure
+4.0	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/ot_s81sl_kv_leaf__t5	no job row; release cache names only epyc4 and epyc6 copies (signoff.json under plandir, 0 such file in this copy)
+3.3	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t25	rows gen epyc4/epyc4 and a2 epyc4/ran intel1, source intel2 neither
+# 13:13 result: 3 of 3 deleted, root 133 -> 142.
