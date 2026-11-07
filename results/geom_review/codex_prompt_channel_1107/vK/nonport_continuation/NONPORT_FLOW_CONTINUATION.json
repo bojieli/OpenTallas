@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.flow_class_continuation.v1",
+  "source_commit": "1369d2ba06",
+  "scope": "nonport",
+  "excluded_hold": "input-start only during repair; outputs/macros/internal retained; exact FF SDC restored",
+  "original_4_cts_sha256": "21792a0985577a897afa4d01478d7b832dab7b8ab6bb76046ff08138cdc637b6",
+  "old_attempt": "/srv/opentallas-scratch2/claude/codex-kv-prompt-0615/vK_stale_mm_attempt",
+  "new_runner": "/srv/opentallas-scratch2/claude/codex-kv-prompt-0615/qkd_hr_core_prompt_vK/run_kit_kv_nonport.sh",
+  "new_log": "/srv/opentallas-scratch2/claude/codex-kv-prompt-0615/qkd_hr_core_prompt_vK/run_grt_nonport.log",
+  "proof_inputs": "RTL/config/lec.py unchanged; original proof owner retained",
+  "files": {
+    "orfs_hold_mm.py": "28fd2a59c995a5c3fb4c480c49875c90bfdb06c34da73b5c4ab775834b54146a",
+    "orfs_hold_mm.tcl": "2514f87a7ed1bcf86125587ee396f5ceb0cdfe3cfe127304fed5e5ad8776d934",
+    "run_kit_kv_nonport.sh": "995b3c78a9197927af6736c037ca5bf2542e16be7cbdbaf8a4b7c4187a95a1ac"
+  }
+}
