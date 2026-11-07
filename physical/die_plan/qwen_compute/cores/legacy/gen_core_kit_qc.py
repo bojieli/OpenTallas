@@ -1497,6 +1497,8 @@ def main():
     # untrusted register correspondences, each proved by the same induction and dropped if it fails (never a waiver).
     if rec.get("lec_hints"):
         (kd / "lec_hints.json").write_text(json.dumps(rec["lec_hints"], indent=1) + "\n")
+    import lec_gray_twin                          # KW-FIX-24: GRAY-MSB TWIN hints by default, before kit_hash
+    lec_gray_twin.stage(kd, mod)
     fz = dict(schema="opentallas.qc.core_freeze.v1", kit=f"{mod}_{suffix}", module=mod, plan_type=ptype,
               outline_um=[w, h], ref_tile=rec.get("ref_tile"), spec=spec_src or f"{rec['ref_tile']}/spec.json",
               spec_sha256=hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest(),

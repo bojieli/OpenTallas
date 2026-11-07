@@ -1813,6 +1813,8 @@ def main():
     shutil.copyfile(Path(a.tool) / "lec_async.sh", kd / "lec_async.sh")   # FLOW-21 11-01: pre-route LEC beside the flow
     if a.lec_hints:
         shutil.copyfile(a.lec_hints, kd / "lec_hints.json")         # lec.py reads KIT/lec_hints.json (PATH-KV-PC4)
+    sys.path.insert(0, str(a.tool)); import lec_gray_twin          # KW-FIX-24: GRAY-MSB TWIN hints by default
+    lec_gray_twin.stage(kd, mod)
     # SIGNOFF 10-24 (coordinator): tools/die_plan/signoff.py is the final kit step (run_kit_kv.sh); closed = SIGNED only
     subprocess.run([sys.executable, "-I", str(Path(a.tool) / "signoff.py"), "bundle", str(kd)], check=True)
     write_core_contract(kd, cj, clks, rsts)

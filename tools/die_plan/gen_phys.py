@@ -576,6 +576,13 @@ def write_partition_freeze(P, tn, kd, recs, *, private_clock_mesh=None):
         (kd / "lec_hints.json").write_text(body)
         fz["lec_hints"] = dict(file="lec_hints.json", count=len(hints),
                                sha256=hashlib.sha256(body.encode()).hexdigest())
+    # KW-FIX-24 (COORD 11-06 21:2x (5)): GRAY-MSB TWIN class hints (gray FIFO pointer P[msb] == P_g[msb]) by
+    # default, merged after the type's own hints (never overriding one); kits without a gray pointer are unchanged.
+    import lec_gray_twin
+    gray = lec_gray_twin.stage(kd, P.types[tn].get("module", tn))
+    if gray is not None:
+        fz["lec_hints"] = dict(file="lec_hints.json", count=gray["count"], sha256=gray["sha256"],
+                               gray_msb_twin=gray["added"])
     if (kd / "signed_parent_source.json").is_file():
         fz["signed_parent_source"] = json.loads((kd / "signed_parent_source.json").read_text())
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
