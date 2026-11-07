@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "b1485eaa469ec5dea391cd21fae5d3e06b149bdf",
+ "flow_tag": "flow-20261107-du-hbm",
+ "routed_db": "/srv/opentallas-scratch3/claude/hbm-hard-2-n12/kits/ot_hbm_idx_vm_query_static_n12_vN/run/results/asap7/hbc_ot_hbm_idx_vm_query_static_n12/base/6_final.odb",
+ "build_commit": "ecc1dbab482078e0aa9082f9fe880591355992d7",
+ "lec": "/srv/opentallas-scratch3/claude/hbm-hard-2-n12/resign/n12_vN_du/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch3/claude/hbm-hard-2-n12/resign/n12_vN_du/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch3/claude/hbm-hard-2-n12/kits/ot_hbm_idx_vm_query_static_n12_vN",
+ "original_signoff": "/srv/opentallas-scratch3/claude/hbm-hard-2-n12/kits/ot_hbm_idx_vm_query_static_n12_vN/signoff/signoff.json",
+ "name": "hbc_ot_hbm_idx_vm_query_static_n12",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "aware-parakeet",
+ "created": "2026-11-07 17:40 UTC",
+ "routed_db_sha256": "d2d386025932f0508880d398b48da2b45f687a46c9dfa56041443b7e13a9b738",
+ "verdict_basis": "LOCAL_PASS_NEEDS_PARENT (local SIGNED, only io_hold_parent open) counts SIGNED per COORD 2026-11-03 18:48 ruling / OWNER 18:49; io_hold_parent receipt moves to die STA FF",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch3/claude/hbm-hard-2-n12/tags/flow-20261107-du-hbm/tools/die_plan",
+  "sha256": {
+   "signoff.py": "a8d9d49661c29602f66edb999319d56b320aa56f0a29baeeea3905244fa4be4e",
+   "lec.py": "dc2f31c3598d57f627d5aa8ca394c8aed29c024bd9ee212e8ccff10e26ec2225"
+  },
+  "checked": "byte-identical to flow-20261107-du-hbm"
+ },
+ "lane": "HBM-HARD-2-N12",
+ "as_run_note": "form vN n12s core, re-sign same routed DB on main tag; kit build from branch claude/hbm-hard-2-n12-1107"
+}
