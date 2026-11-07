@@ -456,9 +456,11 @@ def test_superseded_pass_odbs_trimmed_when_next_pass_staged(tmp_path, monkeypatc
     by = {}
     for x in trimmed:
         by.setdefault(Path(x).parents[5].name, set()).add(Path(x).name)
-    assert by == {d: {"5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb"} for d in ("i1t", "i1", "i2t", "i2", "i3t")}
+    # KW-FIX-24: the best (final) dir i3 also drops them once its 6_final.odb exists (trim_best)
+    assert by == {d: {"5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb"} for d in ("i1t", "i1", "i2t", "i2", "i3t", "i3")}
     last = Path(r["root"]) / "i3" / "run/results/asap7/n/base"
-    assert {p.name for p in last.iterdir()} >= {"5_route.odb", "6_1_fill.odb", "6_final.odb"}
+    names = {p.name for p in last.iterdir()}
+    assert "6_final.odb" in names and not names & {"5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb"}
     # keep (debug runs) keeps everything
     k2 = kit(tmp_path / "k2", mm=False)
     r2 = E.run_loop(k2, base_rec(k2, rec(-6, -2, slew=0)), run=OdbFake([rec(-3, -1), rec(1, 2)]), mem=8, cpus=2, keep=True)
@@ -705,3 +707,41 @@ def test_stop_eco_container_stops_only_this_pass(tmp_path, monkeypatch):
     monkeypatch.setattr(E.subprocess, "run", run)
     assert E.stop_eco_container(pd) == ["prd-eco-i1-aaa"]
     assert [c for c in calls if c[1] == "stop"] == [["docker", "stop", "-t", "30", "aaa"]]
+
+
+class Odbs(Fake):
+    """prd_mk / finish leave the ORFS route odbs in each pass dir (as a real ECO route does)"""
+
+    def __call__(self, cmd, **kw):
+        rc = super().__call__(cmd, **kw)
+        if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh") and rc == 0:
+            b = Path(cmd[2]) / "run/results/asap7/n/base"
+            b.mkdir(parents=True, exist_ok=True)
+            for n in ("5_2_route.odb", "5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb", "6_final.odb", "6_final.spef"):
+                (b / n).write_text("odb\n")
+        return rc
+
+
+def test_best_dir_drops_superseded_route_odbs(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_ECO_KEEP_ROUTED", raising=False)
+    k = kit(tmp_path)
+    res = E.run_loop(k, base_rec(k, rec(-80, 2)), tmp_path / "eco", run=Odbs([rec(5, 5)]), tools=Path(E.HERE))
+    assert res["verdict"] == "PASS" and res["best_trimmed"] == 3
+    b = Path(res["best"]["dir"]) / "run/results/asap7/n/base"
+    assert sorted(p.name for p in b.iterdir()) == ["5_2_route.odb", "6_final.odb", "6_final.spef"]
+
+
+def test_best_dir_trim_needs_final_and_honours_keep(tmp_path, monkeypatch):
+    b = tmp_path / "i1/run/results/asap7/n/base"
+    b.mkdir(parents=True)
+    for n in ("5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb"):
+        (b / n).write_text("odb\n")
+    it = {"dir": str(tmp_path / "i1")}
+    assert E.trim_best(it) == []                                   # no 6_final.odb: the route DB is the routed DB
+    (b / "6_final.odb").write_text("")
+    assert E.trim_best(it) == []                                   # empty 6_final: not a DB
+    (b / "6_final.odb").write_text("odb\n")
+    monkeypatch.setenv("OT_ECO_KEEP_ROUTED", "1")
+    assert E.trim_best(it) == []
+    monkeypatch.delenv("OT_ECO_KEEP_ROUTED")
+    assert len(E.trim_best(it)) == 3 and sorted(p.name for p in b.iterdir()) == ["6_final.odb"]
