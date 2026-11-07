@@ -11,7 +11,7 @@
 #     flipped at once; one with content is moved idle-entry by idle-entry by ot-scratch-consolidate --loop, which
 #     never touches a dir held by a process or bind-mounted by a running container).  Helpers ot-mvlink,
 #     ot-scratch-consolidate, ot-docker-relocate go to /usr/local/bin.  md0-only hosts (localhost/epyc3) are unchanged.
-#  2. ot-heavy helpers: /usr/local/bin/{ot-heavy,ot-heavy-reconcile}, /usr/local/lib/ot-heavy/{ot-heavy-exit,bin/docker},
+#  2. ot-heavy helpers: /usr/local/bin/{ot-heavy,ot-heavy-reconcile,ot-direct-pending}, /usr/local/lib/ot-heavy/{ot-heavy-exit,bin/docker},
 #     then the repo installers for ot-vl-jcap (VL_JCAP_1022), ot-protect-die (DIE_WATCHDOG_1021) and OOMADJ_999_1022.
 #  3. earlyoom (install_host_guard.sh arguments), /etc/ot-heavy.conf (coord role: MIN_AVAIL_FRAC=0.15 so the agents on the
 #     coordinator keep >= 15 % of RAM), user linger (the systemd --user manager that owns the oth-* scopes survives the
@@ -48,6 +48,7 @@ fi
 # 2. helpers
 sudo -n install -d -m 0755 /usr/local/lib/ot-heavy /usr/local/lib/ot-heavy/bin
 sudo -n install -d -m 1777 /var/tmp/ot-heavy
+sudo -n install -m 0755 "$here/ot-direct-pending" /usr/local/bin/ot-direct-pending
 sudo -n install -m 0755 "$here/ot-heavy" /usr/local/bin/ot-heavy
 sudo -n install -m 0755 "$here/ot-heavy-reconcile" /usr/local/bin/ot-heavy-reconcile
 sudo -n install -m 0755 "$here/ot-heavy-exit" /usr/local/lib/ot-heavy/ot-heavy-exit
