@@ -8,9 +8,9 @@ srcs={
 for name,src in srcs.items():
  dst=out/name
  assert not dst.exists(),str(dst)
- dst.mkdir(parents=True);(dst/.keep).touch()
+ dst.mkdir(parents=True);(dst/'.keep').touch()
  for p in src.iterdir():
-  if p.name in ['run','lec','lec_async.runs','face_shell_work','__pycache__','signoff'] or p.name.startswith('FAIL') or p.name.startswith('lec_async.'):
+  if p.name in ['run','lec','lec_async.runs','face_shell_work','__pycache__','signoff'] or p.name.startswith('FAIL') or (p.name.startswith('lec_async.') and p.suffix not in ['.sh','.py']):
    continue
   if p.is_dir():shutil.copytree(p,dst/p.name,symlinks=True)
   elif p.is_file():shutil.copy2(p,dst/p.name)

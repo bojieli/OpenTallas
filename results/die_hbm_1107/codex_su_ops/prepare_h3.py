@@ -4,7 +4,7 @@ r=Path('/srv/opentallas-scratch3/claude/codex-hbm-su-1107')
 s=r/'kits/opsa_rest_vH2';d=r/'kits/opsa_rest_vH3';assert not d.exists()
 d.mkdir();(d/'.keep').touch()
 for p in s.iterdir():
- if p.name in ['run','lec','lec_async.runs','face_shell_work','__pycache__','signoff'] or p.name.startswith(('FAIL','lec_async.')):continue
+ if p.name in ['run','lec','lec_async.runs','face_shell_work','__pycache__','signoff'] or p.name.startswith('FAIL') or (p.name.startswith('lec_async.') and p.suffix not in ['.sh','.py']):continue
  if p.is_dir():shutil.copytree(p,d/p.name,symlinks=True)
  elif p.is_file():shutil.copy2(p,d/p.name)
 g=json.loads((r/'hop_midpoint_guides.json').read_text())
