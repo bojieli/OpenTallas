@@ -21598,3 +21598,4 @@ FAILED [AUTOPILOT 1b32452f40ad] 2026-11-06 17:02:24 PST AUTOPILOT -> KIT-WAVE-1:
     - flc_eco1: DRT at 2 violations.
     - q_spb2 vA: GRT extra iteration 19/30, about 7 h in GRT.
   (4) Disk: epyc6 off-limits; nothing of mine runs there.
+- 2026-11-06 17:11 PST STATE [DIE-KV-84 -> COORD] sys_SD per COORD 16:2x(b): strict bind of sdwreg plan PASS (errors 0, unbound 0); 4 kits preflight PASS and queued on epyc4 via ot-run: vA = WREG-1 only (sd_wA, no cdc lines), vB = WREG-1 + edge cdc (sd_wB, constraint.sdc carries the 4 clk_clk_phy<->clk lines), both kv3_sys_SD + kv3_sys_SD_v1; first to sign off wins. Prompt re-form KV-PRM-B6: vE_A (tie split + 100 um max wire) in GPL, vE_B (75 um + density 0.55) queued; vD root cause = post-DRT long-net slew + face_flops tie-net sharing (flow item, not RTL). kv3_sys_c vA GRT iter 9/30 (epyc2). [CHECKED epyc4 /srv/opentallas-scratch2/claude/dkv84/sd_w{A,B}/*/gen, intel2 ~/dkv84/sd_w*.otrun.log]
