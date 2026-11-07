@@ -663,6 +663,10 @@ def parse_otrun_status(text):
             w = re.search(r"\bwaiters (\d+):(\d+) GB", part)
             if w:
                 out[m.group(1)].update(wait_n=int(w.group(1)), wait_gb=int(w.group(2)))
+            # KW-FIX-24 11-06 (COORD 16:2x): the scratch disk's free GB ('scratch 44 GB') -> scratch_gb (gen_disk_low)
+            sc = re.search(r"\bscratch (\d+) GB", part)
+            if sc:
+                out[m.group(1)]["scratch_gb"] = int(sc.group(1))
     return out
 
 
@@ -1463,12 +1467,25 @@ def prov_resign_run(spec_path):
     return done("PASS" if p.returncode == 0 else "FAIL", txt)
 
 
+GEN_DISK_MIN_GB = 60      # KW-FIX-24 11-06 (COORD 16:2x): cfg gen_disk_min_gb; 0 turns it off
+
+
+def gen_disk_low(v, floor=None):
+    """KW-FIX-24 11-06 (COORD 16:2x: epyc6 scratch2 44 GB, ot-run REFUSED): an ot-run status row whose scratch disk
+    has < gen_disk_min_gb free -- no new or restaged attempt goes there while another gen host has room"""
+    floor = GEN_DISK_MIN_GB if floor is None else floor
+    return bool(v) and floor > 0 and v.get("scratch_gb") is not None and int(v["scratch_gb"]) < floor
+
+
 def host_score(v):
     """ot-run --status row -> preference (higher first): free admits MINUS the GB already waiting there (KW-FIX-4 11-03,
     COORD 12:1x FLEET: raw admits sent every burst to epyc4 while 131 waiters / 1359 GB queued there and intel1 had 0),
-    a positive score discounted 4x on a host already >= 0.9 x cores"""
+    a positive score discounted 4x on a host already >= 0.9 x cores.  A host under the gen disk floor (gen_disk_low)
+    ranks below every host with room (KW-FIX-24)."""
     if not v:
         return -1e9
+    if gen_disk_low(v):
+        return -1e8 + int(v.get("scratch_gb") or 0)
     busy = float(v.get("load", 0)) >= 0.9 * max(1, int(v.get("cores") or 1))
     s = float(v.get("admit", 0)) - float(v.get("wait_gb", 0))
     return s * 0.25 if (busy and s > 0) else s
@@ -3254,6 +3271,13 @@ def _step(AP, ap_dir):
     rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
     status = parse_otrun_status(out if rc == 0 else "")
     cfg["_otrun_status"], cfg["_hub"], cfg["_ap_dir"] = {h: dict(v) for h, v in status.items()}, AP.HUB_NAME, ap_dir
+    global GEN_DISK_MIN_GB
+    GEN_DISK_MIN_GB = int(cfg.get("gen_disk_min_gb", 60))
+    low = sorted(h for h, v in status.items() if gen_disk_low(v))
+    if low:
+        txt = " ".join("%s=%s" % (h, status[h]["scratch_gb"]) for h in low)
+        AP.log(f"KIT-WAVE GEN-DISK-LOW {txt} GB < {GEN_DISK_MIN_GB}: new/restaged attempts go to gen hosts with room "
+               "(KW-FIX-24)")
     try:
         cfg["_spill_marked"] = spill_marked(AP, cfg)
         for h, rs in cfg["_spill_marked"].items():
