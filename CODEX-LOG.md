@@ -10712,3 +10712,5 @@ Read-onlysourcealiasaudit /tmp/codex-watch-hbm-1107/source_aliases.json confirms
 
 ## CODEX notes 2026-11-07 02:04 PST — RCK vE t4/t15clA3 views
 New existing PLACE images t4(01:48)/t15cla3d02796(01:53) VIEWED; north PMA band/access risk9, broad central channels. t4 has hard+soft logic row nearx1000–1650,y520–670; t15 rowy320–460 plus isolated soft island2100,570 (potential4/7reach). Density maxima0.57/.53, no>0.7hotspot. Blank PLACE GRT0 panels are NOT route results. Review /tmp/watch-s81-1107/results/geom_review/rck_t4_t15clA3_place_1107.md. Current RCK vE placed reviews completed6/11 (t12,t14,t2,t1clb45db5be,t4,t15cla3d02796).
+
+2026-11-07 02:04:46 PST HBM SVGR_OWNvD NEW NOT SIGNED: intel1 die-hbm-82-svgr, TT-29.94/626ep hbm_fault→pc_owner3.skid.head_data69 trueR2R; FF-53.92/162ep seam_s_fault inputcapture; slew1155/762 worst481.73TT/459.20FF _088775_/B2, DRC0. Broad fault/controlfanout plusboundaryhold, no manualECO/re-sign; existinghealthySVGRjobs retained.
