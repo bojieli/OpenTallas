@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch3/claude/die-hbm-86/wtinj/tools/die_plan/check.py", line 2363, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch3/claude/die-hbm-86/wtinj/tools/die_plan/check.py", line 2329, in main
+    raw = S.load(a.plan)
+  File "/srv/opentallas-scratch3/claude/die-hbm-86/wtinj/tools/die_plan/schema.py", line 2404, in load
+    raw = json.loads(Path(path).read_text())
+                     ~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 789, in read_text
+    return f.read()
+           ~~~~~~^^
+  File "<frozen codecs>", line 325, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0x8b in position 1: invalid start byte

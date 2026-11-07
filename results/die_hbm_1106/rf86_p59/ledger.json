@@ -1,0 +1,6603 @@
+{
+ "sites": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q0__t",
+   "bbox_um": [
+    846.72,
+    1814.4,
+    1149.12,
+    2453.76
+   ],
+   "orient": "MX",
+   "ft_slots_over": [],
+   "stations_inside": 0,
+   "clock_points_inside": [
+    [
+     "u_svg_Q0__t",
+     [
+      997.92,
+      2134.08
+     ],
+     "core"
+    ]
+   ],
+   "conns_over": [
+    {
+     "conn": "u_hcollgi_Q.isa_lp_data|u_hb_coll_Q_body_core",
+     "bits": 128,
+     "hop_um": [
+      [
+       959.04,
+       2626.56
+      ],
+      [
+       842.4,
+       2376.0
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_lp_data|u_hb_coll_Q_body_core",
+     "bits": 128,
+     "hop_um": [
+      [
+       959.04,
+       2583.36
+      ],
+      [
+       842.4,
+       2302.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L110_o",
+     "bits": 16,
+     "hop_um": [
+      [
+       829.44,
+       2052.0
+      ],
+      [
+       963.36,
+       1784.16
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L24_i",
+     "bits": 99,
+     "hop_um": [
+      [
+       838.08,
+       2034.72
+      ],
+      [
+       1010.88,
+       1805.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L27_i",
+     "bits": 1024,
+     "hop_um": [
+      [
+       1118.88,
+       1788.48
+      ],
+      [
+       825.12,
+       1853.28
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L28_o",
+     "bits": 28,
+     "hop_um": [
+      [
+       838.08,
+       2242.08
+      ],
+      [
+       1015.2,
+       2466.72
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L41_i",
+     "bits": 256,
+     "hop_um": [
+      [
+       851.04,
+       2535.84
+      ],
+      [
+       838.08,
+       2410.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L41_i",
+     "bits": 11,
+     "hop_um": [
+      [
+       851.04,
+       2501.28
+      ],
+      [
+       838.08,
+       2259.36
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L41_i",
+     "bits": 256,
+     "hop_um": [
+      [
+       838.08,
+       2052.0
+      ],
+      [
+       993.6,
+       1805.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L50_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1438.392,
+       2453.664
+      ],
+      [
+       1148.88,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L66_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1438.392,
+       2453.664
+      ],
+      [
+       1148.88,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L79_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1438.392,
+       2453.664
+      ],
+      [
+       1148.88,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L84_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1438.392,
+       2453.664
+      ],
+      [
+       1148.88,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 8,
+     "hop_um": [
+      [
+       1427.168,
+       2443.104
+      ],
+      [
+       1136.992,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       1428.432,
+       2445.0
+      ],
+      [
+       1137.624,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 5,
+     "hop_um": [
+      [
+       851.04,
+       2488.32
+      ],
+      [
+       838.08,
+       2259.36
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       1428.112,
+       2444.52
+      ],
+      [
+       1137.464,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       1427.984,
+       2444.328
+      ],
+      [
+       1137.4,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q1__t",
+   "bbox_um": [
+    6143.04,
+    3551.04,
+    6445.44,
+    4190.4
+   ],
+   "orient": "MX",
+   "ft_slots_over": [
+    {
+     "name": "L1282x7",
+     "width": 297,
+     "in_layers": [
+      "M7",
+      "M5"
+     ],
+     "out_layers": [
+      "M7",
+      "M5"
+     ],
+     "layers": null,
+     "regs_inside": 0,
+     "hops_over": 1
+    }
+   ],
+   "stations_inside": 0,
+   "clock_points_inside": [
+    [
+     "u_svg_Q1__t",
+     [
+      6294.24,
+      3870.72
+     ],
+     "core"
+    ]
+   ],
+   "conns_over": [
+    {
+     "conn": "u_xq_Q_p0_bfq3.wce|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3553.224
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi0|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3553.512
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi1|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3553.8
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi2|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3554.04
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi3|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3554.328
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi4|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3554.616
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi5|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3554.904
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi6|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3555.144
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi7|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3555.432
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo0|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3555.72
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo1|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3556.008
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo2|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3556.248
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo3|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3556.536
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo4|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3556.824
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo5|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3557.112
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo6|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3557.352
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo7|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3557.64
+      ],
+      [
+       6337.44,
+       3373.92
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.wa|u_xl_Q_ctl",
+     "bits": 4,
+     "hop_um": [
+      [
+       6117.101,
+       3558.758
+      ],
+      [
+       6333.12,
+       3373.92
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.r_ce|u_xl_Q_ctl",
+     "bits": 4,
+     "hop_um": [
+      [
+       6117.101,
+       3562.764
+      ],
+      [
+       6333.12,
+       3373.92
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.r_a|u_xl_Q_ctl",
+     "bits": 4,
+     "hop_um": [
+      [
+       6117.101,
+       3560.691
+      ],
+      [
+       6333.12,
+       3373.92
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L22_i",
+     "bits": 86,
+     "hop_um": [
+      [
+       6255.36,
+       3542.4
+      ],
+      [
+       6134.4,
+       3620.16
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L41_i",
+     "bits": 86,
+     "hop_um": [
+      [
+       6138.72,
+       4062.801
+      ],
+      [
+       6143.136,
+       4146.979
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L41_i",
+     "bits": 4,
+     "hop_um": [
+      [
+       6143.04,
+       4315.68
+      ],
+      [
+       6143.136,
+       3996.692
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L41_i",
+     "bits": 86,
+     "hop_um": [
+      [
+       6134.4,
+       3788.64
+      ],
+      [
+       6143.136,
+       3983.272
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L41_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6138.72,
+       4187.186
+      ],
+      [
+       6143.136,
+       3924.675
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L50_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6125.76,
+       4315.68
+      ],
+      [
+       6155.688,
+       4190.304
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L50_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6125.76,
+       4315.68
+      ],
+      [
+       6333.672,
+       4190.304
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L50_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6125.76,
+       4315.68
+      ],
+      [
+       6333.576,
+       4190.304
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L66_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6134.4,
+       4091.04
+      ],
+      [
+       6372.0,
+       4203.36
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L66_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6125.76,
+       4315.68
+      ],
+      [
+       6155.688,
+       4190.304
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L66_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6121.44,
+       3628.8
+      ],
+      [
+       6449.76,
+       3618.204
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L79_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6134.4,
+       4091.04
+      ],
+      [
+       6376.32,
+       4203.36
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L79_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6125.76,
+       4315.68
+      ],
+      [
+       6155.688,
+       4190.304
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L7_o",
+     "bits": 1099,
+     "hop_um": [
+      [
+       6449.76,
+       3941.96
+      ],
+      [
+       6387.191,
+       4190.304
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L84_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6125.76,
+       4315.68
+      ],
+      [
+       6155.688,
+       4190.304
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L84_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6125.76,
+       4315.68
+      ],
+      [
+       6333.672,
+       4190.304
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L84_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6130.08,
+       4315.68
+      ],
+      [
+       6333.576,
+       4190.304
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6138.72,
+       4315.68
+      ],
+      [
+       6143.136,
+       4179.744
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6134.4,
+       4315.68
+      ],
+      [
+       6143.136,
+       4181.64
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6138.72,
+       4315.68
+      ],
+      [
+       6143.136,
+       4181.16
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6138.72,
+       4315.68
+      ],
+      [
+       6143.136,
+       4177.974
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6143.04,
+       4315.68
+      ],
+      [
+       6143.136,
+       4176.204
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6138.72,
+       4315.68
+      ],
+      [
+       6143.136,
+       4180.968
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:n4x_dn_i",
+     "bits": 173,
+     "hop_um": [
+      [
+       6454.08,
+       3775.68
+      ],
+      [
+       6134.4,
+       3758.4
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q2__t",
+   "bbox_um": [
+    864.0,
+    1131.792,
+    1166.4,
+    1771.152
+   ],
+   "orient": "MY",
+   "ft_slots_over": [
+    {
+     "name": "L1257x1",
+     "width": 472,
+     "in_layers": [
+      "M7",
+      "M5"
+     ],
+     "out_layers": [
+      "M6",
+      "M4"
+     ],
+     "layers": null,
+     "regs_inside": 0,
+     "hops_over": 1
+    },
+    {
+     "name": "L3011x2",
+     "width": 33,
+     "in_layers": [
+      "M6",
+      "M4"
+     ],
+     "out_layers": [
+      "M7",
+      "M5"
+     ],
+     "layers": null,
+     "regs_inside": 0,
+     "hops_over": 1
+    }
+   ],
+   "stations_inside": 0,
+   "clock_points_inside": [
+    [
+     "u_svg_Q2__t",
+     [
+      1015.2,
+      1451.472
+     ],
+     "core"
+    ]
+   ],
+   "conns_over": [
+    {
+     "conn": "u_cij_Q.inj_d_r0|u_hb_coll_Q_reduce",
+     "bits": 256,
+     "hop_um": [
+      [
+       1209.6,
+       1131.84
+      ],
+      [
+       1110.24,
+       1123.2
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_cij_Q.inj_idx|u_hb_coll_Q_reduce",
+     "bits": 16,
+     "hop_um": [
+      [
+       1183.68,
+       1188.0
+      ],
+      [
+       1153.44,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_cij_Q.inj_idx_r1|u_hb_coll_Q_reduce",
+     "bits": 16,
+     "hop_um": [
+      [
+       1179.36,
+       1196.64
+      ],
+      [
+       1157.76,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.isa_lp_data|u_hb_coll_Q_body_core",
+     "bits": 128,
+     "hop_um": [
+      [
+       1023.84,
+       1788.48
+      ],
+      [
+       1179.36,
+       1546.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.isa_ring|u_hb_coll_Q_body_core",
+     "bits": 29,
+     "hop_um": [
+      [
+       1183.68,
+       1373.76
+      ],
+      [
+       1036.8,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_add_rhs_acc|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1183.68,
+       1356.48
+      ],
+      [
+       1019.52,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_add_src|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1183.68,
+       1356.48
+      ],
+      [
+       1019.52,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_add_tag|u_hb_coll_Q_body_core",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1356.48
+      ],
+      [
+       1015.2,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_add_v|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1183.68,
+       1356.48
+      ],
+      [
+       1019.52,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_lp_data|u_hb_coll_Q_body_core",
+     "bits": 128,
+     "hop_um": [
+      [
+       1097.28,
+       1784.16
+      ],
+      [
+       1179.36,
+       1490.4
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_lp_tag|u_hb_coll_Q_body_core",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1356.48
+      ],
+      [
+       1015.2,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_lp_we|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1183.68,
+       1356.48
+      ],
+      [
+       1019.52,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_rr_local|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1183.68,
+       1356.48
+      ],
+      [
+       1019.52,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_rr_local_tag|u_hb_coll_Q_body_core",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1356.48
+      ],
+      [
+       1015.2,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_rx_kind|u_hb_coll_Q_body_core",
+     "bits": 2,
+     "hop_um": [
+      [
+       1183.68,
+       1365.12
+      ],
+      [
+       1028.16,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_rx_slot|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1183.68,
+       1356.48
+      ],
+      [
+       1019.52,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_rx_src|u_hb_coll_Q_body_core",
+     "bits": 2,
+     "hop_um": [
+      [
+       1183.68,
+       1365.12
+      ],
+      [
+       1028.16,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_rx_tag|u_hb_coll_Q_body_core",
+     "bits": 3,
+     "hop_um": [
+      [
+       1179.36,
+       1365.12
+      ],
+      [
+       1023.84,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_add_rhs_acc|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1183.68,
+       1356.48
+      ],
+      [
+       1019.52,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_add_src|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1183.68,
+       1356.48
+      ],
+      [
+       1019.52,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_add_tag|u_hb_coll_Q_body_core",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1356.48
+      ],
+      [
+       1015.2,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_read_add|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1183.68,
+       1356.48
+      ],
+      [
+       1019.52,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_read_rr|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1183.68,
+       1356.48
+      ],
+      [
+       1019.52,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_read_tx|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1183.68,
+       1356.48
+      ],
+      [
+       1019.52,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_rr_tag|u_hb_coll_Q_body_core",
+     "bits": 2,
+     "hop_um": [
+      [
+       1183.68,
+       1365.12
+      ],
+      [
+       1028.16,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_tx_acc|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1183.68,
+       1356.48
+      ],
+      [
+       1019.52,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_tx_tag|u_hb_coll_Q_body_core",
+     "bits": 2,
+     "hop_um": [
+      [
+       1183.68,
+       1365.12
+      ],
+      [
+       1028.16,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_acc|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1183.68,
+       1356.48
+      ],
+      [
+       1019.52,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_dst|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1356.48
+      ],
+      [
+       1015.2,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_forward|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1356.48
+      ],
+      [
+       1015.2,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_gather|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1183.68,
+       1356.48
+      ],
+      [
+       1019.52,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_inject|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1356.48
+      ],
+      [
+       1015.2,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_result|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1183.68,
+       1356.48
+      ],
+      [
+       1019.52,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_tag|u_hb_coll_Q_body_core",
+     "bits": 2,
+     "hop_um": [
+      [
+       1183.68,
+       1365.12
+      ],
+      [
+       1028.16,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_ttl|u_hb_coll_Q_body_core",
+     "bits": 2,
+     "hop_um": [
+      [
+       1183.68,
+       1365.12
+      ],
+      [
+       1028.16,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgl_Q.pa_d|u_hb_coll_Q_body_core",
+     "bits": 256,
+     "hop_um": [
+      [
+       1179.36,
+       1507.68
+      ],
+      [
+       1162.08,
+       1123.2
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgl_Q.pa_src|u_hb_coll_Q_body_core",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1166.4
+      ],
+      [
+       972.0,
+       972.0
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgl_Q.pa_tag|u_hb_coll_Q_body_core",
+     "bits": 3,
+     "hop_um": [
+      [
+       1179.36,
+       1166.4
+      ],
+      [
+       972.0,
+       972.0
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgl_Q.pa_v|u_hb_coll_Q_body_core",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1166.4
+      ],
+      [
+       972.0,
+       972.0
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L103_o",
+     "bits": 21,
+     "hop_um": [
+      [
+       1179.36,
+       1339.2
+      ],
+      [
+       1041.12,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L110_o",
+     "bits": 16,
+     "hop_um": [
+      [
+       963.36,
+       1784.16
+      ],
+      [
+       1183.68,
+       1602.72
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L13_i",
+     "bits": 18,
+     "hop_um": [
+      [
+       1516.32,
+       1745.28
+      ],
+      [
+       1157.76,
+       1784.16
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L13_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1758.24
+      ],
+      [
+       803.52,
+       1784.16
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L24_i",
+     "bits": 99,
+     "hop_um": [
+      [
+       1010.88,
+       1805.76
+      ],
+      [
+       1179.36,
+       1658.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L27_i",
+     "bits": 1024,
+     "hop_um": [
+      [
+       1179.36,
+       1490.4
+      ],
+      [
+       1118.88,
+       1788.48
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L33_o",
+     "bits": 83,
+     "hop_um": [
+      [
+       1080.0,
+       1123.2
+      ],
+      [
+       1179.36,
+       1425.6
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L33_o",
+     "bits": 1099,
+     "hop_um": [
+      [
+       1179.36,
+       1572.48
+      ],
+      [
+       859.68,
+       1480.764
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L37_o",
+     "bits": 351,
+     "hop_um": [
+      [
+       1183.68,
+       1326.24
+      ],
+      [
+       1032.48,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L40_i",
+     "bits": 256,
+     "hop_um": [
+      [
+       1157.76,
+       1118.88
+      ],
+      [
+       1179.36,
+       1499.04
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L40_i",
+     "bits": 11,
+     "hop_um": [
+      [
+       1170.72,
+       1371.302
+      ],
+      [
+       1166.304,
+       1325.548
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L40_i",
+     "bits": 256,
+     "hop_um": [
+      [
+       1170.72,
+       1563.772
+      ],
+      [
+       1166.304,
+       1338.968
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L49_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1170.72,
+       1466.532
+      ],
+      [
+       1153.752,
+       1131.936
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L49_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1378.08
+      ],
+      [
+       859.68,
+       1356.804
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L49_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1200.96
+      ],
+      [
+       1112.124,
+       1127.52
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L66_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1153.752,
+       1823.222
+      ],
+      [
+       1170.72,
+       1477.579
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L79_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1153.752,
+       1823.222
+      ],
+      [
+       1170.72,
+       1477.579
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L83_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1170.72,
+       1466.532
+      ],
+      [
+       1153.752,
+       1131.936
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L83_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1378.08
+      ],
+      [
+       859.68,
+       1356.804
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L83_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1200.96
+      ],
+      [
+       1112.124,
+       1127.52
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 8,
+     "hop_um": [
+      [
+       1170.72,
+       1286.256
+      ],
+      [
+       1166.304,
+       1142.496
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 14,
+     "hop_um": [
+      [
+       980.64,
+       976.32
+      ],
+      [
+       1179.36,
+       1144.8
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       1170.72,
+       1265.868
+      ],
+      [
+       1166.304,
+       1140.6
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       1170.72,
+       1270.428
+      ],
+      [
+       1166.304,
+       1141.08
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 8,
+     "hop_um": [
+      [
+       1170.72,
+       1276.341
+      ],
+      [
+       1166.304,
+       1144.266
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 8,
+     "hop_um": [
+      [
+       1170.72,
+       1277.226
+      ],
+      [
+       1166.304,
+       1146.036
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       1170.72,
+       1270.524
+      ],
+      [
+       1166.304,
+       1141.272
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q3__t",
+   "bbox_um": [
+    6151.68,
+    25.92,
+    6454.08,
+    665.28
+   ],
+   "orient": "MY",
+   "ft_slots_over": [],
+   "stations_inside": 0,
+   "clock_points_inside": [
+    [
+     "u_svg_Q3__t",
+     [
+      6302.88,
+      345.6
+     ],
+     "core"
+    ]
+   ],
+   "conns_over": [
+    {
+     "conn": "u_hb_idx__qctl_Q.frame_start|u_hb_idx__q_Q",
+     "bits": 1,
+     "hop_um": [
+      [
+       6467.04,
+       509.76
+      ],
+      [
+       6233.76,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_hb_idx__qctl_Q.qf|u_hb_idx__q_Q",
+     "bits": 1,
+     "hop_um": [
+      [
+       6467.04,
+       509.76
+      ],
+      [
+       6233.76,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_hb_idx__qctl_Q.query_emit|u_hb_idx__q_Q",
+     "bits": 1,
+     "hop_um": [
+      [
+       6467.04,
+       509.76
+      ],
+      [
+       6233.76,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_hb_idx__qctl_Q.query_emit_head|u_hb_idx__q_Q",
+     "bits": 3,
+     "hop_um": [
+      [
+       6467.04,
+       509.76
+      ],
+      [
+       6233.76,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_hb_idx__q_Q.emit_head|u_hb_idx__qctl_Q",
+     "bits": 3,
+     "hop_um": [
+      [
+       6372.0,
+       678.24
+      ],
+      [
+       6592.32,
+       531.36
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_hb_idx__q_Q.emit_v|u_hb_idx__qctl_Q",
+     "bits": 1,
+     "hop_um": [
+      [
+       6294.24,
+       678.24
+      ],
+      [
+       6527.52,
+       531.36
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_hb_idx__q_Q.fault|u_hb_idx__qctl_Q",
+     "bits": 1,
+     "hop_um": [
+      [
+       6311.52,
+       678.24
+      ],
+      [
+       6540.48,
+       531.36
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_hb_idx__q_Q.frame_start|u_hb_idx__qctl_Q",
+     "bits": 1,
+     "hop_um": [
+      [
+       6324.48,
+       678.24
+      ],
+      [
+       6553.44,
+       531.36
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 54,
+     "hop_um": [
+      [
+       6312.852,
+       0.0
+      ],
+      [
+       6467.04,
+       250.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 16,
+     "hop_um": [
+      [
+       6376.32,
+       4.32
+      ],
+      [
+       6484.32,
+       293.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 8,
+     "hop_um": [
+      [
+       6322.586,
+       0.0
+      ],
+      [
+       6467.04,
+       259.2
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6323.518,
+       0.0
+      ],
+      [
+       6467.04,
+       259.2
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 18,
+     "hop_um": [
+      [
+       6336.67,
+       0.0
+      ],
+      [
+       6467.04,
+       272.16
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L13_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6475.68,
+       635.04
+      ],
+      [
+       6341.76,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L13_i",
+     "bits": 6,
+     "hop_um": [
+      [
+       6467.04,
+       587.52
+      ],
+      [
+       6160.32,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L26_i",
+     "bits": 6,
+     "hop_um": [
+      [
+       6285.6,
+       4.32
+      ],
+      [
+       6566.4,
+       77.76
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L2_o",
+     "bits": 86,
+     "hop_um": [
+      [
+       6315.84,
+       4.32
+      ],
+      [
+       6566.4,
+       90.72
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L2_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6264.0,
+       4.32
+      ],
+      [
+       6566.4,
+       60.48
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L40_i",
+     "bits": 86,
+     "hop_um": [
+      [
+       6181.92,
+       4.32
+      ],
+      [
+       6453.984,
+       69.341
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L40_i",
+     "bits": 4,
+     "hop_um": [
+      [
+       6143.04,
+       181.44
+      ],
+      [
+       6462.72,
+       220.32
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L40_i",
+     "bits": 86,
+     "hop_um": [
+      [
+       6143.04,
+       194.4
+      ],
+      [
+       6462.72,
+       233.28
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L40_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6143.04,
+       241.92
+      ],
+      [
+       6462.72,
+       293.76
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L49_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6151.68,
+       4.32
+      ],
+      [
+       6263.448,
+       26.016
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L49_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6151.68,
+       4.32
+      ],
+      [
+       6263.544,
+       26.016
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L66_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6441.432,
+       744.454
+      ],
+      [
+       6458.4,
+       385.235
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L74_o",
+     "bits": 11,
+     "hop_um": [
+      [
+       6471.36,
+       51.84
+      ],
+      [
+       6173.28,
+       21.6
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L74_o",
+     "bits": 11,
+     "hop_um": [
+      [
+       6467.04,
+       211.68
+      ],
+      [
+       6259.68,
+       17.28
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L74_o",
+     "bits": 11,
+     "hop_um": [
+      [
+       6652.8,
+       30.24
+      ],
+      [
+       6428.16,
+       17.28
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L83_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6151.68,
+       4.32
+      ],
+      [
+       6263.448,
+       26.016
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L83_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6151.68,
+       4.32
+      ],
+      [
+       6263.544,
+       26.016
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6151.68,
+       4.32
+      ],
+      [
+       6453.984,
+       36.576
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6151.68,
+       4.32
+      ],
+      [
+       6453.984,
+       34.68
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6151.68,
+       4.32
+      ],
+      [
+       6453.984,
+       35.16
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6156.0,
+       4.32
+      ],
+      [
+       6453.984,
+       38.346
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6156.0,
+       4.32
+      ],
+      [
+       6453.984,
+       40.116
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6151.68,
+       4.32
+      ],
+      [
+       6453.984,
+       35.352
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L13_i",
+     "bits": 10,
+     "hop_um": [
+      [
+       6467.04,
+       34.56
+      ],
+      [
+       6130.08,
+       12.96
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L13_i",
+     "bits": 44,
+     "hop_um": [
+      [
+       6791.04,
+       635.04
+      ],
+      [
+       6432.48,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L13_i",
+     "bits": 2,
+     "hop_um": [
+      [
+       6467.04,
+       60.48
+      ],
+      [
+       6156.0,
+       12.96
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L13_i",
+     "bits": 2,
+     "hop_um": [
+      [
+       6467.04,
+       60.48
+      ],
+      [
+       6156.0,
+       12.96
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L13_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6600.96,
+       635.04
+      ],
+      [
+       6285.6,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L13_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6600.96,
+       635.04
+      ],
+      [
+       6285.6,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L13_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6467.04,
+       69.12
+      ],
+      [
+       6160.32,
+       17.28
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L13_i",
+     "bits": 190,
+     "hop_um": [
+      [
+       6544.8,
+       635.04
+      ],
+      [
+       6229.44,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L13_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6467.04,
+       159.84
+      ],
+      [
+       6251.04,
+       17.28
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L89_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6480.0,
+       635.04
+      ],
+      [
+       6341.76,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L89_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6475.68,
+       635.04
+      ],
+      [
+       6341.76,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L89_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6475.68,
+       635.04
+      ],
+      [
+       6341.76,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L89_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6475.68,
+       635.04
+      ],
+      [
+       6341.76,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_hb_idx__q_Q.kin|u_mu_keybuf_0_s6",
+     "bits": 1127,
+     "hop_um": [
+      [
+       6333.12,
+       682.56
+      ],
+      [
+       6583.68,
+       613.44
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_mu_keybuf_0_s6.kout|u_hb_idx__q_Q",
+     "bits": 1100,
+     "hop_um": [
+      [
+       6583.68,
+       613.44
+      ],
+      [
+       6281.28,
+       682.56
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 104,
+     "hop_um": [
+      [
+       6467.04,
+       194.4
+      ],
+      [
+       6242.4,
+       17.28
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 1016,
+     "hop_um": [
+      [
+       6467.04,
+       224.64
+      ],
+      [
+       6272.64,
+       17.28
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 1016,
+     "hop_um": [
+      [
+       6467.04,
+       190.08
+      ],
+      [
+       6238.08,
+       17.28
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6467.04,
+       345.6
+      ],
+      [
+       6445.44,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6467.04,
+       345.6
+      ],
+      [
+       6445.44,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 256,
+     "hop_um": [
+      [
+       6467.04,
+       345.6
+      ],
+      [
+       6445.44,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 16,
+     "hop_um": [
+      [
+       6467.04,
+       527.04
+      ],
+      [
+       6445.44,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 256,
+     "hop_um": [
+      [
+       6467.04,
+       527.04
+      ],
+      [
+       6445.44,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 7,
+     "hop_um": [
+      [
+       6467.04,
+       527.04
+      ],
+      [
+       6445.44,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6467.04,
+       527.04
+      ],
+      [
+       6445.44,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 16,
+     "hop_um": [
+      [
+       6467.04,
+       527.04
+      ],
+      [
+       6445.44,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6467.04,
+       527.04
+      ],
+      [
+       6445.44,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 18,
+     "hop_um": [
+      [
+       6467.04,
+       345.6
+      ],
+      [
+       6445.44,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 6,
+     "hop_um": [
+      [
+       6467.04,
+       345.6
+      ],
+      [
+       6445.44,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6467.04,
+       345.6
+      ],
+      [
+       6445.44,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6467.04,
+       345.6
+      ],
+      [
+       6445.44,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 6,
+     "hop_um": [
+      [
+       6467.04,
+       345.6
+      ],
+      [
+       6445.44,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 6,
+     "hop_um": [
+      [
+       6467.04,
+       345.6
+      ],
+      [
+       6445.44,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q0__t",
+   "bbox_um": [
+    846.72,
+    1814.4,
+    1149.12,
+    2453.76
+   ],
+   "orient": "MX",
+   "ft_slots_over": [],
+   "stations_inside": 0,
+   "clock_points_inside": [
+    [
+     "u_svg_Q0__t",
+     [
+      997.92,
+      2134.08
+     ],
+     "core"
+    ]
+   ],
+   "conns_over": [
+    {
+     "conn": "u_hb_coll_Q_body_n2.u_body_u_upipe_SL_6_u_d3|u_hcollgi_Q",
+     "bits": 44,
+     "hop_um": [
+      [
+       1010.88,
+       1805.76
+      ],
+      [
+       833.76,
+       2030.4
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hb_coll_Q_body_n2.u_body_u_upipe_SL_7_u_d3|u_hcollgi_Q",
+     "bits": 9,
+     "hop_um": [
+      [
+       876.96,
+       1805.76
+      ],
+      [
+       838.08,
+       2168.64
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L110_o",
+     "bits": 16,
+     "hop_um": [
+      [
+       829.44,
+       2052.0
+      ],
+      [
+       963.36,
+       1784.16
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L24_i",
+     "bits": 99,
+     "hop_um": [
+      [
+       825.12,
+       1836.0
+      ],
+      [
+       976.32,
+       1784.16
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L27_i",
+     "bits": 1024,
+     "hop_um": [
+      [
+       1118.88,
+       1788.48
+      ],
+      [
+       825.12,
+       1853.28
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L28_o",
+     "bits": 28,
+     "hop_um": [
+      [
+       838.08,
+       2285.28
+      ],
+      [
+       1058.4,
+       2466.72
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L41_i",
+     "bits": 256,
+     "hop_um": [
+      [
+       851.04,
+       2531.52
+      ],
+      [
+       838.08,
+       2410.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L41_i",
+     "bits": 11,
+     "hop_um": [
+      [
+       855.36,
+       2518.56
+      ],
+      [
+       838.08,
+       2259.36
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L41_i",
+     "bits": 256,
+     "hop_um": [
+      [
+       838.08,
+       2052.0
+      ],
+      [
+       993.6,
+       1805.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L41_i",
+     "bits": 9,
+     "hop_um": [
+      [
+       851.04,
+       2462.4
+      ],
+      [
+       838.08,
+       2185.92
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L50_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1392.312,
+       2453.664
+      ],
+      [
+       1125.84,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L66_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1418.232,
+       2453.664
+      ],
+      [
+       1138.8,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L79_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1418.232,
+       2453.664
+      ],
+      [
+       1138.8,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L84_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1438.392,
+       2453.664
+      ],
+      [
+       1148.88,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 8,
+     "hop_um": [
+      [
+       1427.168,
+       2443.104
+      ],
+      [
+       1136.992,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       1428.432,
+       2445.0
+      ],
+      [
+       1137.624,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 5,
+     "hop_um": [
+      [
+       855.36,
+       2501.28
+      ],
+      [
+       838.08,
+       2259.36
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       1428.112,
+       2444.52
+      ],
+      [
+       1137.464,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       1427.984,
+       2444.328
+      ],
+      [
+       1137.4,
+       2458.08
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q1__t",
+   "bbox_um": [
+    6143.04,
+    3551.04,
+    6445.44,
+    4190.4
+   ],
+   "orient": "MX",
+   "ft_slots_over": [],
+   "stations_inside": 0,
+   "clock_points_inside": [
+    [
+     "u_svg_Q1__t",
+     [
+      6294.24,
+      3870.72
+     ],
+     "core"
+    ]
+   ],
+   "conns_over": [
+    {
+     "conn": "u_xq_Q_p0_bfq3.wce|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3553.224
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi0|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3553.512
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi1|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3553.8
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi2|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3554.04
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi3|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3554.328
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi4|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3554.616
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi5|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3554.904
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi6|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3555.144
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mhi7|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3555.432
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo0|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3555.72
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo1|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3556.008
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo2|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3556.248
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo3|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3556.536
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo4|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3556.824
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo5|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3557.112
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo6|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3557.352
+      ],
+      [
+       6255.36,
+       3494.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.mlo7|u_xl_Q_ctl",
+     "bits": 1,
+     "hop_um": [
+      [
+       6117.101,
+       3557.64
+      ],
+      [
+       6337.44,
+       3373.92
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.wa|u_xl_Q_ctl",
+     "bits": 4,
+     "hop_um": [
+      [
+       6117.101,
+       3558.758
+      ],
+      [
+       6333.12,
+       3373.92
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.r_ce|u_xl_Q_ctl",
+     "bits": 4,
+     "hop_um": [
+      [
+       6117.101,
+       3562.764
+      ],
+      [
+       6333.12,
+       3373.92
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_xq_Q_p0_bfq3.r_a|u_xl_Q_ctl",
+     "bits": 4,
+     "hop_um": [
+      [
+       6117.101,
+       3560.691
+      ],
+      [
+       6333.12,
+       3373.92
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_vmks_Q1.c_kr_tag|u_ctl_Q_p04",
+     "bits": 35,
+     "hop_um": [
+      [
+       6441.12,
+       4203.36
+      ],
+      [
+       6134.4,
+       4108.32
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_vmks_Q1.c_k_rdy|u_ctl_Q_p04",
+     "bits": 3,
+     "hop_um": [
+      [
+       6467.04,
+       4203.36
+      ],
+      [
+       6138.72,
+       4147.2
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_vmks_Q1.c_k_wr_done|u_ctl_Q_p04",
+     "bits": 3,
+     "hop_um": [
+      [
+       6449.76,
+       4203.36
+      ],
+      [
+       6138.72,
+       4155.84
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_vmks_Q1.c_kr_beat|u_ctl_Q_p04",
+     "bits": 9,
+     "hop_um": [
+      [
+       6436.8,
+       4203.36
+      ],
+      [
+       6138.72,
+       4142.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_vmks_Q1.c_kr_v|u_ctl_Q_p04",
+     "bits": 3,
+     "hop_um": [
+      [
+       6441.12,
+       4203.36
+      ],
+      [
+       6134.4,
+       4108.32
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_vmks_Q1.c_k_len|u_ctl_Q_p04",
+     "bits": 9,
+     "hop_um": [
+      [
+       6402.24,
+       4203.36
+      ],
+      [
+       6134.4,
+       4151.52
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_vmks_Q1.c_k_v|u_ctl_Q_p04",
+     "bits": 3,
+     "hop_um": [
+      [
+       6467.04,
+       4203.36
+      ],
+      [
+       6134.4,
+       4151.52
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_vmks_Q1.c_k_we|u_ctl_Q_p04",
+     "bits": 3,
+     "hop_um": [
+      [
+       6488.64,
+       4203.36
+      ],
+      [
+       6130.08,
+       4177.44
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_vmks_Q1.c_kr_rdy|u_ctl_Q_p04",
+     "bits": 3,
+     "hop_um": [
+      [
+       6467.04,
+       4203.36
+      ],
+      [
+       6138.72,
+       4164.48
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_vmks_Q1.c_k_tag|u_ctl_Q_p04",
+     "bits": 35,
+     "hop_um": [
+      [
+       6467.04,
+       4203.36
+      ],
+      [
+       6134.4,
+       4151.52
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_vmks_Q1.c_k_addr|u_ctl_Q_p04",
+     "bits": 61,
+     "hop_um": [
+      [
+       6471.36,
+       4203.36
+      ],
+      [
+       6138.72,
+       4151.52
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_vmks_Q1.c_k_wstrb|u_ctl_Q_p04",
+     "bits": 65,
+     "hop_um": [
+      [
+       6436.8,
+       4203.36
+      ],
+      [
+       6138.72,
+       4173.12
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L22_i",
+     "bits": 80,
+     "hop_um": [
+      [
+       6216.48,
+       3542.4
+      ],
+      [
+       6125.76,
+       3624.48
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L41_i",
+     "bits": 86,
+     "hop_um": [
+      [
+       6138.72,
+       4062.801
+      ],
+      [
+       6143.136,
+       4146.979
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L41_i",
+     "bits": 4,
+     "hop_um": [
+      [
+       6143.04,
+       4315.68
+      ],
+      [
+       6143.136,
+       3996.692
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L41_i",
+     "bits": 86,
+     "hop_um": [
+      [
+       6134.4,
+       3788.64
+      ],
+      [
+       6143.136,
+       3983.272
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L41_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6138.72,
+       4187.186
+      ],
+      [
+       6143.136,
+       3924.675
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L50_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6134.4,
+       4315.68
+      ],
+      [
+       6155.688,
+       4190.304
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L50_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6134.4,
+       4315.68
+      ],
+      [
+       6333.672,
+       4190.304
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L50_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6134.4,
+       4315.68
+      ],
+      [
+       6333.576,
+       4190.304
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L66_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6134.4,
+       4091.04
+      ],
+      [
+       6372.0,
+       4203.36
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L66_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6138.72,
+       4315.68
+      ],
+      [
+       6155.688,
+       4190.304
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L79_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6134.4,
+       4091.04
+      ],
+      [
+       6376.32,
+       4203.36
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L79_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6130.08,
+       4315.68
+      ],
+      [
+       6155.688,
+       4190.304
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L7_o",
+     "bits": 1099,
+     "hop_um": [
+      [
+       6387.191,
+       3520.815
+      ],
+      [
+       6449.76,
+       3855.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L84_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6138.72,
+       4315.68
+      ],
+      [
+       6155.688,
+       4190.304
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L84_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6138.72,
+       4315.68
+      ],
+      [
+       6333.672,
+       4190.304
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L84_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6143.04,
+       4315.68
+      ],
+      [
+       6333.576,
+       4190.304
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6138.72,
+       4315.68
+      ],
+      [
+       6143.136,
+       4179.744
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6134.4,
+       4315.68
+      ],
+      [
+       6143.136,
+       4181.64
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6138.72,
+       4315.68
+      ],
+      [
+       6143.136,
+       4181.16
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6138.72,
+       4315.68
+      ],
+      [
+       6143.136,
+       4177.974
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6143.04,
+       4315.68
+      ],
+      [
+       6143.136,
+       4176.204
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L88_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6138.72,
+       4315.68
+      ],
+      [
+       6143.136,
+       4180.968
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L63_o",
+     "bits": 2,
+     "hop_um": [
+      [
+       6333.12,
+       3378.24
+      ],
+      [
+       6130.08,
+       3576.96
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L63_o",
+     "bits": 2,
+     "hop_um": [
+      [
+       6333.12,
+       3378.24
+      ],
+      [
+       6130.08,
+       3576.96
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L63_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6333.12,
+       3378.24
+      ],
+      [
+       6130.08,
+       3576.96
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L63_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6333.12,
+       3378.24
+      ],
+      [
+       6130.08,
+       3576.96
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L63_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6333.12,
+       3378.24
+      ],
+      [
+       6130.08,
+       3576.96
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L63_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6333.12,
+       3378.24
+      ],
+      [
+       6130.08,
+       3576.96
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:n4x_dn_i",
+     "bits": 173,
+     "hop_um": [
+      [
+       6454.08,
+       3775.68
+      ],
+      [
+       6134.4,
+       3758.4
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q2__t",
+   "bbox_um": [
+    864.0,
+    1131.792,
+    1166.4,
+    1771.152
+   ],
+   "orient": "MY",
+   "ft_slots_over": [],
+   "stations_inside": 0,
+   "clock_points_inside": [
+    [
+     "u_svg_Q2__t",
+     [
+      1015.2,
+      1451.472
+     ],
+     "core"
+    ]
+   ],
+   "conns_over": [
+    {
+     "conn": "u_hb_coll_Q_body_n2.u_body_u_upipe_SL_6_u_d3|u_hcollgi_Q",
+     "bits": 44,
+     "hop_um": [
+      [
+       1075.68,
+       872.64
+      ],
+      [
+       1179.36,
+       1170.72
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hb_coll_Q_body_n2.u_body_u_upipe_SL_7_u_d3|u_hcollgi_Q",
+     "bits": 9,
+     "hop_um": [
+      [
+       1071.36,
+       1019.52
+      ],
+      [
+       1183.68,
+       1308.96
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_cij_Q.inj_d_r1|u_hb_coll_Q_body_n2",
+     "bits": 256,
+     "hop_um": [
+      [
+       1179.36,
+       1213.92
+      ],
+      [
+       1071.36,
+       1123.2
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_cij_Q.inj_idx|u_hb_coll_Q_body_n2",
+     "bits": 16,
+     "hop_um": [
+      [
+       1179.36,
+       1261.44
+      ],
+      [
+       1071.36,
+       1123.2
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_cij_Q.inj_idx_r1|u_hb_coll_Q_body_n2",
+     "bits": 16,
+     "hop_um": [
+      [
+       1179.36,
+       1261.44
+      ],
+      [
+       1071.36,
+       1123.2
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.isa_lp_data|u_hb_coll_Q_body_n2",
+     "bits": 128,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.isa_ring|u_hb_coll_Q_body_n2",
+     "bits": 29,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_add_rhs_acc|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_add_src|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_add_tag|u_hb_coll_Q_body_n2",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_add_v|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_lp_data|u_hb_coll_Q_body_n2",
+     "bits": 128,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_lp_tag|u_hb_coll_Q_body_n2",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_lp_we|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_rr_local|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_rr_local_tag|u_hb_coll_Q_body_n2",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_rx_kind|u_hb_coll_Q_body_n2",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_rx_slot|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_rx_src|u_hb_coll_Q_body_n2",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_rx_tag|u_hb_coll_Q_body_n2",
+     "bits": 3,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_add_rhs_acc|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_add_src|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_add_tag|u_hb_coll_Q_body_n2",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_read_add|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_read_rr|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_read_tx|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_rr_tag|u_hb_coll_Q_body_n2",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_tx_acc|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_state_tx_tag|u_hb_coll_Q_body_n2",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_acc|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_dst|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_forward|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_gather|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_inject|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_result|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_tag|u_hb_coll_Q_body_n2",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgi_Q.ra_tx_ttl|u_hb_coll_Q_body_n2",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1226.88
+      ],
+      [
+       1062.72,
+       941.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgl_Q.pa_d|u_hb_coll_Q_body_n2",
+     "bits": 256,
+     "hop_um": [
+      [
+       1179.36,
+       1507.68
+      ],
+      [
+       1162.08,
+       1123.2
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgl_Q.pa_src|u_hb_coll_Q_body_n2",
+     "bits": 2,
+     "hop_um": [
+      [
+       1179.36,
+       1166.4
+      ],
+      [
+       1075.68,
+       868.32
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgl_Q.pa_tag|u_hb_coll_Q_body_n2",
+     "bits": 3,
+     "hop_um": [
+      [
+       1179.36,
+       1166.4
+      ],
+      [
+       1075.68,
+       868.32
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_hcollgl_Q.pa_v|u_hb_coll_Q_body_n2",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1166.4
+      ],
+      [
+       1075.68,
+       868.32
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L103_o",
+     "bits": 16,
+     "hop_um": [
+      [
+       1179.36,
+       1343.52
+      ],
+      [
+       1075.68,
+       1088.64
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L110_o",
+     "bits": 16,
+     "hop_um": [
+      [
+       963.36,
+       1784.16
+      ],
+      [
+       1183.68,
+       1602.72
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 18,
+     "hop_um": [
+      [
+       859.68,
+       1458.536
+      ],
+      [
+       868.68,
+       1771.104
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 6,
+     "hop_um": [
+      [
+       859.68,
+       1459.276
+      ],
+      [
+       870.78,
+       1771.104
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       859.68,
+       1462.504
+      ],
+      [
+       865.416,
+       1771.104
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       1192.32,
+       1728.0
+      ],
+      [
+       846.72,
+       1784.16
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L24_i",
+     "bits": 99,
+     "hop_um": [
+      [
+       976.32,
+       1784.16
+      ],
+      [
+       1179.36,
+       1585.44
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L27_i",
+     "bits": 1024,
+     "hop_um": [
+      [
+       1179.36,
+       1490.4
+      ],
+      [
+       1118.88,
+       1788.48
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L33_o",
+     "bits": 83,
+     "hop_um": [
+      [
+       1131.84,
+       1058.4
+      ],
+      [
+       1179.36,
+       1296.0
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L33_o",
+     "bits": 1099,
+     "hop_um": [
+      [
+       859.68,
+       1304.008
+      ],
+      [
+       922.249,
+       1131.936
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L37_o",
+     "bits": 160,
+     "hop_um": [
+      [
+       1183.68,
+       1442.88
+      ],
+      [
+       1149.12,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L37_o",
+     "bits": 56,
+     "hop_um": [
+      [
+       1179.36,
+       1131.84
+      ],
+      [
+       1075.68,
+       876.96
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L37_o",
+     "bits": 288,
+     "hop_um": [
+      [
+       1179.36,
+       1416.96
+      ],
+      [
+       1118.88,
+       1118.88
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L37_o",
+     "bits": 288,
+     "hop_um": [
+      [
+       1183.68,
+       1153.44
+      ],
+      [
+       1071.36,
+       907.2
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L40_i",
+     "bits": 256,
+     "hop_um": [
+      [
+       1058.4,
+       1006.56
+      ],
+      [
+       1179.36,
+       1265.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L40_i",
+     "bits": 11,
+     "hop_um": [
+      [
+       1153.44,
+       1028.16
+      ],
+      [
+       1179.36,
+       1278.72
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L40_i",
+     "bits": 256,
+     "hop_um": [
+      [
+       1170.72,
+       1511.932
+      ],
+      [
+       1166.304,
+       1338.968
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L40_i",
+     "bits": 9,
+     "hop_um": [
+      [
+       1157.76,
+       1002.24
+      ],
+      [
+       1179.36,
+       1261.44
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L49_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1170.72,
+       1431.972
+      ],
+      [
+       1153.752,
+       1131.936
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L49_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1265.76
+      ],
+      [
+       1144.476,
+       1127.52
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L49_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1265.76
+      ],
+      [
+       1144.524,
+       1127.52
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L57_i",
+     "bits": 9,
+     "hop_um": [
+      [
+       1179.36,
+       1287.36
+      ],
+      [
+       1075.68,
+       1032.48
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L57_i",
+     "bits": 104,
+     "hop_um": [
+      [
+       1179.36,
+       1153.44
+      ],
+      [
+       1075.68,
+       898.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L57_i",
+     "bits": 5,
+     "hop_um": [
+      [
+       1179.36,
+       1170.72
+      ],
+      [
+       1075.68,
+       915.84
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L66_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1153.752,
+       1823.222
+      ],
+      [
+       1170.72,
+       1477.579
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L79_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1153.752,
+       1823.222
+      ],
+      [
+       1170.72,
+       1477.579
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L83_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1170.72,
+       1442.772
+      ],
+      [
+       1153.752,
+       1131.936
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L83_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1265.76
+      ],
+      [
+       1144.476,
+       1127.52
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L83_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       1179.36,
+       1265.76
+      ],
+      [
+       1144.524,
+       1127.52
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 8,
+     "hop_um": [
+      [
+       1170.72,
+       1208.496
+      ],
+      [
+       1166.304,
+       1142.496
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 14,
+     "hop_um": [
+      [
+       1058.4,
+       963.36
+      ],
+      [
+       1179.36,
+       1175.04
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       1170.72,
+       1207.548
+      ],
+      [
+       1166.304,
+       1140.6
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       1170.72,
+       1207.788
+      ],
+      [
+       1166.304,
+       1141.08
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 8,
+     "hop_um": [
+      [
+       1162.08,
+       1002.24
+      ],
+      [
+       1179.36,
+       1261.44
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 8,
+     "hop_um": [
+      [
+       1162.08,
+       997.92
+      ],
+      [
+       1179.36,
+       1257.12
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       1170.72,
+       1207.884
+      ],
+      [
+       1166.304,
+       1141.272
+      ]
+     ],
+     "dir": "V",
+     "forced": true
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 18,
+     "hop_um": [
+      [
+       868.68,
+       1012.746
+      ],
+      [
+       859.68,
+       1265.532
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 6,
+     "hop_um": [
+      [
+       870.78,
+       1011.171
+      ],
+      [
+       859.68,
+       1264.482
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12s_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       865.416,
+       1015.194
+      ],
+      [
+       859.68,
+       1267.164
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q3__t",
+   "bbox_um": [
+    6151.68,
+    25.92,
+    6454.08,
+    665.28
+   ],
+   "orient": "MY",
+   "ft_slots_over": [],
+   "stations_inside": 0,
+   "clock_points_inside": [
+    [
+     "u_svg_Q3__t",
+     [
+      6302.88,
+      345.6
+     ],
+     "core"
+    ]
+   ],
+   "conns_over": [
+    {
+     "conn": "u_hb_idx__q_Q.emit_head|u_hb_idx__qctl_Q",
+     "bits": 3,
+     "hop_um": [
+      [
+       6346.08,
+       678.24
+      ],
+      [
+       6544.8,
+       604.8
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_hb_idx__q_Q.emit_v|u_hb_idx__qctl_Q",
+     "bits": 1,
+     "hop_um": [
+      [
+       6259.68,
+       678.24
+      ],
+      [
+       6471.36,
+       604.8
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_hb_idx__q_Q.fault|u_hb_idx__qctl_Q",
+     "bits": 1,
+     "hop_um": [
+      [
+       6276.96,
+       678.24
+      ],
+      [
+       6484.32,
+       604.8
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_hb_idx__q_Q.frame_start|u_hb_idx__qctl_Q",
+     "bits": 1,
+     "hop_um": [
+      [
+       6294.24,
+       678.24
+      ],
+      [
+       6501.6,
+       604.8
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L100_o",
+     "bits": 22,
+     "hop_um": [
+      [
+       6285.6,
+       4.32
+      ],
+      [
+       6207.064,
+       26.016
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 54,
+     "hop_um": [
+      [
+       6272.212,
+       0.0
+      ],
+      [
+       6467.04,
+       207.36
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 16,
+     "hop_um": [
+      [
+       6376.32,
+       4.32
+      ],
+      [
+       6484.32,
+       293.76
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 8,
+     "hop_um": [
+      [
+       6280.841,
+       0.0
+      ],
+      [
+       6467.04,
+       216.0
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6281.667,
+       0.0
+      ],
+      [
+       6467.04,
+       216.0
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 54,
+     "hop_um": [
+      [
+       6156.36,
+       21.6
+      ],
+      [
+       6147.36,
+       345.656
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 16,
+     "hop_um": [
+      [
+       6158.46,
+       24.648
+      ],
+      [
+       6147.36,
+       344.916
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 8,
+     "hop_um": [
+      [
+       6153.096,
+       21.072
+      ],
+      [
+       6147.36,
+       343.128
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6152.664,
+       20.784
+      ],
+      [
+       6147.36,
+       342.984
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 18,
+     "hop_um": [
+      [
+       6325.637,
+       0.0
+      ],
+      [
+       6467.04,
+       177.12
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L12_i",
+     "bits": 18,
+     "hop_um": [
+      [
+       6328.942,
+       0.0
+      ],
+      [
+       6467.04,
+       263.52
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L34_o",
+     "bits": 83,
+     "hop_um": [
+      [
+       6467.04,
+       60.48
+      ],
+      [
+       6207.064,
+       26.016
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L35_o",
+     "bits": 83,
+     "hop_um": [
+      [
+       6467.04,
+       38.88
+      ],
+      [
+       6207.064,
+       26.016
+      ]
+     ],
+     "dir": "H",
+     "forced": true
+    },
+    {
+     "conn": "bus:L39_o",
+     "bits": 765,
+     "hop_um": [
+      [
+       6467.04,
+       557.28
+      ],
+      [
+       6393.6,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L40_i",
+     "bits": 86,
+     "hop_um": [
+      [
+       6117.12,
+       17.28
+      ],
+      [
+       6467.04,
+       69.12
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L40_i",
+     "bits": 4,
+     "hop_um": [
+      [
+       6086.88,
+       17.28
+      ],
+      [
+       6467.04,
+       38.88
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L40_i",
+     "bits": 86,
+     "hop_um": [
+      [
+       6177.6,
+       17.28
+      ],
+      [
+       6467.04,
+       129.6
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L40_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6082.56,
+       17.28
+      ],
+      [
+       6467.04,
+       34.56
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L49_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6078.24,
+       17.28
+      ],
+      [
+       6467.04,
+       30.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L49_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6078.24,
+       17.28
+      ],
+      [
+       6467.04,
+       30.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L66_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6441.432,
+       740.861
+      ],
+      [
+       6458.4,
+       383.438
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L74_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6471.36,
+       570.24
+      ],
+      [
+       6384.96,
+       682.56
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L74_o",
+     "bits": 86,
+     "hop_um": [
+      [
+       6467.04,
+       552.96
+      ],
+      [
+       6238.08,
+       725.76
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L79_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6441.432,
+       740.861
+      ],
+      [
+       6458.4,
+       383.438
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "bus:L83_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6078.24,
+       17.28
+      ],
+      [
+       6467.04,
+       30.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L83_o",
+     "bits": 1,
+     "hop_um": [
+      [
+       6078.24,
+       17.28
+      ],
+      [
+       6467.04,
+       30.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6078.24,
+       17.28
+      ],
+      [
+       6467.04,
+       30.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6078.24,
+       17.28
+      ],
+      [
+       6467.04,
+       30.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6078.24,
+       17.28
+      ],
+      [
+       6467.04,
+       30.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6078.24,
+       17.28
+      ],
+      [
+       6467.04,
+       30.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 3,
+     "hop_um": [
+      [
+       6082.56,
+       17.28
+      ],
+      [
+       6467.04,
+       34.56
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "bus:L87_i",
+     "bits": 1,
+     "hop_um": [
+      [
+       6078.24,
+       17.28
+      ],
+      [
+       6467.04,
+       30.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_hb_idx__q_Q.kin|u_mu_keybuf_0_s2",
+     "bits": 1127,
+     "hop_um": [
+      [
+       6384.96,
+       682.56
+      ],
+      [
+       6583.68,
+       613.44
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_mu_keybuf_0_s2.kout|u_hb_idx__q_Q",
+     "bits": 1100,
+     "hop_um": [
+      [
+       6583.68,
+       613.44
+      ],
+      [
+       6346.08,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    },
+    {
+     "conn": "u_hb_idx__q_Q.kin|u_mu_keybuf_0_s4",
+     "bits": 1127,
+     "hop_um": [
+      [
+       6384.96,
+       682.56
+      ],
+      [
+       6471.36,
+       406.08
+      ]
+     ],
+     "dir": "V",
+     "forced": false
+    },
+    {
+     "conn": "u_mu_keybuf_0_s4.kout|u_hb_idx__q_Q",
+     "bits": 1100,
+     "hop_um": [
+      [
+       6467.04,
+       540.0
+      ],
+      [
+       6203.52,
+       678.24
+      ]
+     ],
+     "dir": "H",
+     "forced": false
+    }
+   ]
+  }
+ ]
+}
