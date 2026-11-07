@@ -92,7 +92,8 @@ module qkd_hr_ingest_eng (
         if (!rq) begin o_v <= 1'b0; o_vp <= 1'b0; s_wp <= 1'b0; s_rp <= 1'b0; s_n <= 2'd0; er_w <= 1'b0; end
         else begin
             er_w <= er_n;
-            if (ld_o) begin o_v <= s_nz || push; o_vp <= s_nz || push; end
+            if (ld_o) o_v <= s_nz || push;
+            o_vp <= ld_o ? (s_nz || push) : o_v;   // holds from the twin: the port flop has no internal load
             if (s_keep) s_wp <= !s_wp;
             if (s_take) s_rp <= !s_rp;
             s_n <= s_n + {1'b0, s_keep} - {1'b0, s_take};
