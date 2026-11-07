@@ -355,3 +355,39 @@ def test_only_unexpanded_child_etm_clock_is_advisory(mutation):
     final = dict(corners=corners, policy={})
     so.evaluate(final)
     assert final['checks']['clock']['verdict'] == 'NOT RUN'
+
+
+def _grt_log(k, line):
+    log = k / 'run/logs/asap7/design/base/5_1_grt.log'
+    log.parent.mkdir(parents=True, exist_ok=True)
+    log.write_text('[INFO GRT-0020] Min routing layer: M2\n' + line + '\n')
+    return log
+
+
+def test_grt_layer_check_matches_differs_and_missing(tmp_path):
+    """KW-FIX-30 11-07 (COORD 14:48): GRT keeps the floorplan ODB layer; config.mk raised later must fail closed"""
+    k = kit(tmp_path)
+    assert gate.grt_layer_check(k) is None                       # config.mk names no layer: nothing to compare
+    (k / 'config.mk').write_text((k / 'config.mk').read_text() + 'export MAX_ROUTING_LAYER = M7\n')
+    with pytest.raises(ValueError, match='no 5_1_grt.log'):
+        gate.grt_layer_check(k)
+    _grt_log(k, '[INFO GRT-0021] Max routing layer: M7')
+    assert gate.grt_layer_check(k)['grt'] == 'M7'
+    _grt_log(k, '[INFO GRT-0021] Max routing layer: M6')
+    with pytest.raises(ValueError, match='M6 != config.mk MAX_ROUTING_LAYER M7'):
+        gate.grt_layer_check(k)
+    _grt_log(k, '[INFO GRT-0019] something else')
+    with pytest.raises(ValueError, match='no GRT-0021'):
+        gate.grt_layer_check(k)
+    (k / 'config.mk').write_text((k / 'config.mk').read_text() + 'override export MAX_ROUTING_LAYER = M6\n')
+    _grt_log(k, '[INFO GRT-0021] Max routing layer: M6')
+    assert gate.grt_layer_check(k)['config'] == 'M6'               # the last (override) assignment is the one make uses
+
+
+def test_grt_gate_layer_mismatch_stops_before_openroad(tmp_path):
+    k = kit(tmp_path)
+    (k / 'config.mk').write_text((k / 'config.mk').read_text() + 'export MAX_ROUTING_LAYER = M7\n')
+    _grt_log(k, '[INFO GRT-0021] Max routing layer: M6')
+    def forbidden(*a, **kw): raise AssertionError('OpenROAD should not run')
+    assert gate.run(k, 'grt', execute=forbidden) == 6
+    assert 'GRT-0021 Max routing layer M6 != config.mk MAX_ROUTING_LAYER M7' in (k / 'FAIL_POSTCTS').read_text()

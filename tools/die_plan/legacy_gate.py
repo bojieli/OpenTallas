@@ -230,6 +230,36 @@ def policy_record(corners, policy, hold_blocks=False, setup_continue=0.0):
                                       for k, x in wanted.items()) else 'FAIL')
 
 
+GRT_LAYER_RE = re.compile(r'\[INFO GRT-0021\] Max routing layer:\s*(\S+?)\.?\s*$', re.M)
+CFG_LAYER_RE = re.compile(r'^\s*(?:override\s+)?(?:export\s+)?MAX_ROUTING_LAYER\s*[:?]?=\s*(\S+)\s*$', re.M)
+
+
+def grt_layer_check(kit):
+    """KW-FIX-30 11-07 (COORD 14:48, DIE-QC-90 NK vR5b): GRT reads the routing layer stored in the ODB at floorplan, so a
+    MAX_ROUTING_LAYER raised or lowered in config.mk after floorplan is silently ignored (do-route ran GRT at M6 with
+    config.mk M7).  -> None (config.mk names no layer: nothing to compare), else {config, grt, log}; raises ValueError
+    when 5_1_grt.log has no GRT-0021 line or its layer differs from config.mk (fail closed)."""
+    kit = Path(kit)
+    try:
+        cfg = (kit / 'config.mk').read_text(errors='replace')
+    except OSError:
+        return None
+    want = CFG_LAYER_RE.findall(cfg)
+    if not want:
+        return None
+    want = want[-1]
+    logs = sorted((kit / 'run/logs/asap7').glob('*/base/5_1_grt.log'))
+    if not logs:
+        raise ValueError(f'GRT layer check: no 5_1_grt.log (config.mk MAX_ROUTING_LAYER {want})')
+    got = GRT_LAYER_RE.findall(logs[-1].read_text(errors='replace'))
+    if not got:
+        raise ValueError(f'GRT layer check: {logs[-1].name} has no GRT-0021 Max routing layer line')
+    if got[-1] != want:
+        raise ValueError(f'GRT-0021 Max routing layer {got[-1]} != config.mk MAX_ROUTING_LAYER {want}: the ODB keeps '
+                         f'the floorplan layer; set the layer at floorplan and rebuild from floorplan')
+    return dict(config=want, grt=got[-1], log=str(logs[-1]))
+
+
 def run(kit, stage, netlist=None, execute=subprocess.run):
     kit = Path(kit)
     marker = kit / ('FAIL_PREFLOOR' if stage == 'lec' else 'FAIL_POSTCTS')
@@ -257,6 +287,9 @@ def run(kit, stage, netlist=None, execute=subprocess.run):
             return 0
         if stage != 'grt':
             raise ValueError(f'unknown gate {stage}')
+        layer = grt_layer_check(kit)
+        if layer:
+            print(f'OT_LEGACY_GATE GRT layer {layer["grt"]} = config.mk MAX_ROUTING_LAYER')
         candidates = list((kit / 'run/results/asap7').glob('*/base/5_1_grt.odb'))
         if len(candidates) != 1:
             raise ValueError('expected exactly one real 5_1_grt.odb')

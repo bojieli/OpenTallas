@@ -519,3 +519,48 @@ class HoldGuardCapTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RunKitChildContext(unittest.TestCase):
+    """KW-FIX-30 11-07 (COORD 15:01 (b)): run_kit.sh passes the flow tag and mounts signed child records read-only"""
+    def block(self):
+        import gen_phys
+        lines = gen_phys.RUN_KIT.splitlines()
+        a = next(i for i, ln in enumerate(lines) if ln.startswith("FT=${OT_FLOW_TAG:-"))
+        b = next(i for i, ln in enumerate(lines) if ln.startswith("[ ${#CHILD_RO[@]} = 0 ]"))
+        return "\n".join(lines[a:b + 1])
+
+    def run_block(self, K, env=None):
+        sh = "K=%s\n%s\nprintf 'FT=[%%s]\\n' \"$FT\"; for x in \"${CHILD_RO[@]}\"; do printf 'ARG=[%%s]\\n' \"$x\"; done\n" % (K, self.block())
+        e = dict(os.environ); e.pop("OT_FLOW_TAG", None); e.update(env or {})
+        p = subprocess.run(["bash", "-c", sh], capture_output=True, text=True, env=e)
+        self.assertEqual(p.returncode, 0, p.stderr)
+        return [ln for ln in p.stdout.splitlines() if ln.startswith(("FT=", "ARG="))]
+
+    def test_tag_and_child_mounts(self):
+        d = tempfile.mkdtemp()
+        try:
+            K = Path(d, "kit"); (K / "macros").mkdir(parents=True)
+            rec = Path(d, "child_rec"); (rec / "signoff").mkdir(parents=True)
+            (rec / "signoff" / "signoff.json").write_text("{}")
+            lecd = Path(d, "lecs", "c1"); lecd.mkdir(parents=True); (lecd / "lec.json").write_text("{}")
+            (rec / "PROVENANCE.json").write_text(json.dumps({"kind": "resign", "lec": str(lecd / "lec.json")}))
+            (K / "macros" / "c1.provenance.json").write_text(json.dumps({"export": {"signoff": str(rec / "signoff" / "signoff.json")}}))
+            (K / "macros" / "inner.provenance.json").write_text(json.dumps({"export": {"signoff": "own/signoff/signoff.json"}}))
+            (K / "macros" / "own" / "signoff").mkdir(parents=True)
+            (K / "macros" / "bad.provenance.json").write_text("not json")
+            self.assertEqual(self.run_block(K), ["FT=[]", "ARG=[-v]", "ARG=[%s:%s:ro]" % (rec, rec),
+                                                 "ARG=[-v]", "ARG=[%s:%s:ro]" % (lecd, lecd)])
+            (K / "flow_tag").write_text("flow-20261107-ea-hbm\n")
+            self.assertEqual(self.run_block(K)[0], "FT=[flow-20261107-ea-hbm]")
+            self.assertEqual(self.run_block(K, {"OT_FLOW_TAG": "flow-x"})[0], "FT=[flow-x]")   # host env wins
+            shutil.rmtree(K / "macros")
+            self.assertEqual(self.run_block(K)[1:], [])                                         # no sidecar: no mount
+        finally:
+            shutil.rmtree(d)
+
+    def test_docker_run_carries_mounts_and_tag(self):
+        import gen_phys
+        self.assertIn('-v "$K":/work "${CHILD_RO[@]}" -e OT_FLOW_TAG="$FT" \\\n  -e HUID=', gen_phys.RUN_KIT)
+        p = subprocess.run(["bash", "-n"], input=gen_phys.RUN_KIT, capture_output=True, text=True)
+        self.assertEqual(p.returncode, 0, p.stderr)
