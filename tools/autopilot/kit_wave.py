@@ -1818,12 +1818,16 @@ def input_hash(sp, prov_key=None):
 def unchanged_fail(cfg, st, die, item, rec, parent=None, kind="type"):
     """True: a design FAIL whose relaunch would build the same inputs.  INFRA and unreadable records are never held.
     COORD 11-07 05:24: after a TIMING or ROUTING FAIL a new source alone is no change: the retry entry's retry_fix text must
-    name a redesign (REDESIGN: changed RTL, pin cycles, macros, outline or clock), or another input of the row must differ."""
+    name a redesign (REDESIGN: changed RTL, pin cycles, macros, outline or clock).  Other spec differences do not count:
+    on 11-07 flow flags and paths differed on 144 of 147 such rows, none of them a redesign."""
     if not rec or not (rec.get("status") == "FAIL" or (rec.get("status") == "ENQUEUED" and rec.get("q_status") == "FAIL")):
         return False
     cls = str((rec.get("q_class") if rec.get("q_status") == "FAIL" else "") or rec.get("class") or "")
     if cls == "INFRA":
         return False
+    if cls in ("TIMING", "ROUTING"):
+        rf = ((cfg.get("dies") or {}).get(die) or {}).get("retry_fix")
+        return "REDESIGN:" not in str((rf.get(f"{item}@{rec.get('attempt')}") if isinstance(rf, dict) else "") or "")
     try:
         old = json.loads((Path(rec["dir"]) / "spec.json").read_text())
         cand = spec_for(dict(cfg, _otrun_status={}), die, item, cfg.get("_hub") or "", parent or rec.get("parent_item"),
@@ -1835,11 +1839,6 @@ def unchanged_fail(cfg, st, die, item, rec, parent=None, kind="type"):
         if form:
             cand["leafslew_form"] = form
         d = cfg["dies"][die]
-        if cls in ("TIMING", "ROUTING"):
-            rf = d.get("retry_fix")
-            if "REDESIGN:" in str((rf.get(f"{item}@{rec.get('attempt')}") if isinstance(rf, dict) else "") or ""):
-                return False
-            old, cand = {k: v for k, v in old.items() if k != "src_sha"}, {k: v for k, v in cand.items() if k != "src_sha"}
         return input_hash(old, rec.get("prov_key")) == input_hash(cand, (d.get("_prov_keys") or {}).get(item) or rec.get("prov_key"))
     except (OSError, ValueError, KeyError, TypeError):
         return False

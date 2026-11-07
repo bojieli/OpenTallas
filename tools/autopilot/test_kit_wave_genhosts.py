@@ -392,6 +392,6 @@ def test_timing_or_routing_fail_needs_a_named_redesign(tmp_path):
     assert K.unchanged_fail(c, {}, "s81", "t1", r)
     c["dies"]["s81"]["retry_fix"] = {"t1@1": "REDESIGN: +1 pin cycle on u_k_off"}
     assert not K.unchanged_fail(c, {}, "s81", "t1", r)
-    c2 = cfg(); c2["dies"]["s81"]["gen_args"] = ["--form", "x"]                           # another input differs
-    assert not K.unchanged_fail(c2, {}, "s81", "t1", r)
+    c2 = cfg(); c2["dies"]["s81"]["gen_args"] = ["--form", "x"]                           # a changed flag is not named
+    assert K.unchanged_fail(c2, {}, "s81", "t1", r)
     assert not K.unchanged_fail(c, {}, "s81", "t1", dict(r, q_class="INFRA"))
