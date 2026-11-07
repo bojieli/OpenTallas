@@ -21444,3 +21444,5 @@ FAILED [AUTOPILOT 7d30bf0d551b] 2026-11-06 16:02:21 PST AUTOPILOT -> KIT-WAVE-12
   - Not triggered by: a slow DRT after restore, grt mode, or any check/margin/corner.
   Tests (epyc5 copy of the branch, python3 -m pytest): test_eco_loop.py 45 passed. 4 new tests: detection, hang->stop->i1g full-route PASS, keep_route=False all-grt passes, container match only via the resolved /work mount. test_post_route_drv.py 42/43; the 1 failure is test_eco_drt_pre_hook_contract, which my change does not touch (eco_drt_pre.tcl write_db).
   The rip-count>2000 skip is not added: the watchdog covers it, and the B6 hang rip counts are not in my hands. Revert = the commit.
+- 2026-11-06 16:07 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-79): 1 event(s): slw_st_a_v2__cl9f076a5c route FAIL TIMING (post-cts-hold: FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'glo) job 7d30bf0d551b
+- 2026-11-06 16:07 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-63): 1 event(s): col_h9_r2__t1__clce45cab5 unstarted waiter RESTAGED (epyc5 -> epyc2)
