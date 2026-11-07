@@ -1,0 +1,16 @@
+{
+ "owner": "CODEX-HBM-0615",
+ "form": "f512_vCF1",
+ "kind": "NEW_REBUILD_NOT_ECO",
+ "base": "intel1:hbm-form-timing-12/f512rp_eco/i3",
+ "changes": [
+  "2059 guidedinputrelays",
+  "one extra delivered resetrelease cycle",
+  "reg2reg holdscope",
+  "fanout64to8"
+ ],
+ "native_clock_contract": "unchanged separate8roots+densitycommonalignment",
+ "qualification": "DO_NOT_COUNT pending actualgates and parentcompiler+latencyadoption",
+ "geometry": "actualpin/nativecapture guidepositions; worstleg280.113um inclguideextent; maxadded8umbin.15947",
+ "proof": "m0 lockstep0diff/2564reads/412writes; exercised rowbit268 bypassmutant6516 mismatches; deadbit267mutant retainedFAIL"
+}

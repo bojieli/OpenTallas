@@ -1,0 +1,124 @@
+{
+ "schema": "opentallas.hbm_arch.core_freeze.v1",
+ "view": "hnx_vms_bank_q0_faces__vecd4ae@512b2172bf16",
+ "module": "hnx_vms_bank_q0_faces__vecd4ae",
+ "design": "hnx_vms_bank_q0_faces__vecd4ae",
+ "rtl_top": "hfd_vms_bank_native_q0_faces",
+ "recipe_key": "hnx_vms_bank_q0_faces__vecd4ae",
+ "recipe_sha256": "2155280bfc8d44256c81c27e1c45be318d619010d00958bded65d3b4ecb1341e",
+ "canonical_type": null,
+ "wrapper": {
+  "open_outputs": [],
+  "tied_inputs": [],
+  "straps": {},
+  "mapped": 3919
+ },
+ "outline_um": [
+  270.0,
+  403.92
+ ],
+ "plan": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v8h/die_plan.json",
+ "plan_sha256": "a396208a7ec4978dc9b2572f8633833543ee344d46963cf64ad36e56bfa677b5",
+ "pins_file": "plan_pins.json",
+ "pins_sha256": "34c0c3f2e01682d08eb723c76ef215e20c2b506089c5eba5152bf6db0dd9d21d",
+ "pins_canon_sha256": "6b0b9671d16f23675be8c92d42603a897abab82580219f205fe73b9c5078fb69",
+ "pins": 3919,
+ "clocks": [
+  "clk_w",
+  "clk_macro0",
+  "clk_macro1",
+  "clk_macro2",
+  "clk_e",
+  "clk_s",
+  "clk_n",
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "period_ps": 833.0,
+ "common_latency_ps": 250.0,
+ "corner": "TC",
+ "plan_common_latency_ps": 250.0,
+ "core_clock_contract": null,
+ "orfs_var_overrides": [],
+ "sdc_lint": "PASS (gen)",
+ "macros": [
+  "ot_sram_1r1w_1024x256_m2_r2c2"
+ ],
+ "face_shell": {
+  "core": "hnx_vms_bank_q0_faces__vecd4ae__fcore",
+  "in_cycles": 1,
+  "out_cycles": 1,
+  "face_flops": 3910,
+  "dropped": 0,
+  "unread_kept": 0,
+  "const_out_bits": 0,
+  "dup_out_bits": 0,
+  "plan_pins": 3919
+ },
+ "kit_hash": "4d2c453a7a979129",
+ "plan_pins_source": "cores/hnx_vms_bank_q0_faces__vecd4ae__mu1s3__270x403.92__canon__o_R0__codex_g21__centry.json",
+ "plan_pins_source_sha256": "512b2172bf16be27e5244d319786eaea33378b62fcc6e291303f03aedbcb6c16",
+ "plan_pins_source_canon_sha256": "f15e03624ea85631822e69356b97df5f882760c0fcae9d8bc0e788d34a107627",
+ "flow_defaults": {
+  "rc_cal": true,
+  "f1": {
+   "io_tt_ps": 250.0,
+   "io_ff_ps": 202.5,
+   "mechanism": "two-mode GRT (scene BC vclk_ff.sdc FF hold, scene tc TT setup) + gates",
+   "basis": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "f4": true,
+  "cts_setup_tt": {
+   "previous_post_cts": "/work/f4_chain_leaf.tcl",
+   "repair": "setup only (scene tc / vclk OT_VCLK_TT)",
+   "hold": "GRT step only"
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold",
+   "tt": 250.0,
+   "ff": 202.5,
+   "measured_hold_dropped": true
+  },
+  "rule": "FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)"
+ },
+ "clock_density_contract": {
+  "schema": "opentallas.hbm_multi_density.v1",
+  "module": "hnx_vms_bank_q0_faces__vecd4ae",
+  "clock_ports": [
+   "clk",
+   "clk_e",
+   "clk_macro0",
+   "clk_macro1",
+   "clk_macro2",
+   "clk_n",
+   "clk_s",
+   "clk_w"
+  ],
+  "layout": "density",
+  "common_alignment": true,
+  "merge_roots": false,
+  "review": {
+   "verdict": "AUTO",
+   "by": "gen_core_kit_hbm --multiport-density auto",
+   "note": "DIE-HBM-61/HOLD 11-03 class MULTIPORT-HOLD (OWNER 11-03 safe forms; targets, not gates): a native multi-port core (face clocks clk_n/e/s/w + clk_macro* + clk) without a reviewed density contract got one independent TritonCTS tree per port; tap_balance pads short trees to the fixed 250-ps target only, so face trees stayed 50-95 ps early vs the macro-fan core tree (130-167 um leaf fans) -> face->body zero-logic reg2reg FF hold -158..-212 ps.  Auto form = the reviewed vec6293 form: per-port density trees (no pin merged or dropped) + common tap alignment.  Probe vms vb64bbf321780 CTS: FF reg2reg -212.47 -> -34.32 (screen PASS), tap spread 20.6 ps, TT setup -82.9 -> -9.3; insertion ~482 ps TT -> hard_core_latency contract (band INFO)"
+  },
+  "delay_cell": "BUFx12_ASAP7_75t_R",
+  "file": "clock_density_contract.json"
+ },
+ "clock_taps": {
+  "mode": "density",
+  "sinks": 1250,
+  "dmax_um": 80.0
+ },
+ "reset_contract": {
+  "edges": 64,
+  "module": "hnx_vms_bank_q0_faces__vecd4ae",
+  "die": "hbm",
+  "contract": "/srv/opentallas-scratch2/claude/wt/kw-fix-4-hbmi4/physical/die_plan/hbm/reset_contract.json",
+  "contract_sha256": "df3508496db4614c7f07b7e13e9f557ab5263edbbbad7807e93ea9b2584c0418",
+  "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a"
+ },
+ "source_commit": "b07b52ff0c7353bc1a15df6c141ec74fdb5c4b34"
+}

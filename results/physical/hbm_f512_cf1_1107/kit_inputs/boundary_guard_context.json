@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.core_boundary_guard_context.v1",
+ "source_core_json": "core.json",
+ "clock_ports": [
+  "clk",
+  "clk_e",
+  "clk_macro0",
+  "clk_macro1",
+  "clk_macro2",
+  "clk_n",
+  "clk_s",
+  "clk_w"
+ ],
+ "unused_clock_ports": [],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "data_pin_exemptions": []
+}

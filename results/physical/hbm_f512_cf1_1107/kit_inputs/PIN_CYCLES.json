@@ -1,0 +1,26 @@
+{
+ "in_extra_stages": {
+  "bid": 1,
+  "dq": 1,
+  "kq": 1,
+  "pq": 1,
+  "rq0": 1,
+  "rq1": 1,
+  "rq2": 1,
+  "rq3": 1,
+  "rq4": 1,
+  "rslot": 1,
+  "rslot_v": 1,
+  "sid": 1,
+  "wq0": 1,
+  "wq1": 1,
+  "wslot": 1,
+  "wslot_v": 1,
+  "xq": 1,
+  "xq2": 1
+ },
+ "reset_release_cycles": 1,
+ "immediate_assert_cycles": 0,
+ "output_latency_delta": 1,
+ "throughput_delta": 0
+}
