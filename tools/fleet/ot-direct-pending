@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+"""Fresh unused direct reservations, including Docker outside the job scope.
+
+Read-only admission helper. Failure/unknown identity gives no usage credit. Never
+read sampled use.* files or change reservation records, limits, or queues.
+"""
+import json
+import math
+import os
+from pathlib import Path
+import subprocess
+import time
+
+GB = 1 << 30
+
+
+def read(path):
+    try:
+        return Path(path).read_text()
+    except OSError:
+        return ""
+
+
+def number(path):
+    try:
+        return max(0, int(read(path)))
+    except ValueError:
+        return 0
+
+
+def run(*args):
+    return subprocess.run(args, capture_output=True, text=True, timeout=5, check=True).stdout
+
+
+def matched_container(argv, containers):
+    """Exact live docker client command, image and mounts; ambiguity gives no credit."""
+    if not argv or Path(argv[0]).name != "docker" or "run" not in argv[:3]:
+        return None
+    matches = []
+    for c in containers:
+        cmd = (c["Config"].get("Entrypoint") or []) + (c["Config"].get("Cmd") or [])
+        if (not c.get("State", {}).get("Running") or not cmd or argv[-len(cmd):] != cmd
+                or c["Config"].get("Image") not in argv):
+            continue
+        if any(b not in argv for b in (c["HostConfig"].get("Binds") or [])):
+            continue
+        # A reused --name must not credit an older container with the same command.
+        names = [argv[i + 1] for i, x in enumerate(argv[:-1]) if x == "--name"]
+        names += [x.split("=", 1)[1] for x in argv if x.startswith("--name=")]
+        if names and c.get("Name", "").lstrip("/") not in names:
+            continue
+        matches.append(c)
+    return matches[0] if len(matches) == 1 else None
+
+
+def live_usage(scope, containers, credited, cgroup_root=Path('/sys/fs/cgroup'), proc_root=Path('/proc')):
+    scope = Path(scope)
+    own = number(scope / 'memory.current')
+    external = 0
+    for f in scope.rglob('cgroup.procs'):
+        for pid in read(f).split():
+            cmdfile = proc_root / pid / 'cmdline'
+            raw = read(cmdfile)
+            argv = raw.rstrip('\0').split('\0')
+            c = matched_container(argv, containers)
+            if c is None:
+                continue
+            cid = c['Id']
+            if cid in credited:
+                continue
+            dirs = [cgroup_root / 'system.slice' / ('docker-' + cid + '.scope'), cgroup_root / 'docker' / cid]
+            for cg in dirs:
+                # Only an extant cgroup with the exact current container ID counts.
+                if not (cg / 'memory.current').exists() or cg == scope or scope in cg.parents:
+                    continue
+                used = number(cg / 'memory.current')
+                if read(cmdfile) != raw or pid not in read(f).split() or not (cg / 'memory.current').exists():
+                    continue
+                external += used
+                credited.add(cid)
+                break
+    return own + external
+
+
+def unused_gb(request_gb, usage_bytes):
+    # Round each remaining reservation upward; do not count partially-used GiB as free.
+    return math.ceil(max(0, request_gb * GB - usage_bytes) / GB)
+
+
+def pending(state_dir=Path('/var/tmp/ot-heavy')):
+    files = list(state_dir.glob('direct.*'))
+    try:
+        ids = run('docker', 'ps', '-q', '--no-trunc').split()
+        containers = json.loads(run('docker', 'inspect', *ids)) if ids else []
+    except (OSError, subprocess.SubprocessError, ValueError):
+        containers = []
+    total, credited = 0, set()
+    for f in files:
+        unit, request = read(f).split()  # malformed state fails helper; caller falls back conservatively
+        request = int(request)
+        if request < 0:
+            raise ValueError('negative direct reservation')
+        try:
+            props = dict(x.split('=', 1) for x in run('systemctl', '--user', 'show', unit + '.scope',
+                         '-p', 'ActiveState', '-p', 'ControlGroup').splitlines() if '=' in x)
+        except (OSError, subprocess.SubprocessError):
+            props = {}
+        if props.get('ActiveState') == 'active' and props.get('ControlGroup'):
+            scope = Path('/sys/fs/cgroup') / props['ControlGroup'].lstrip('/')
+            total += unused_gb(request, live_usage(scope, containers, credited))
+        elif props.get('ActiveState') in ('inactive', 'failed') and time.time() - f.stat().st_mtime > 120:
+            continue  # same stale-unit policy as ot-heavy, without deleting state
+        else:
+            total += request  # full fresh/unstarted/unknown reservation
+    return total
+
+
+if __name__ == '__main__':
+    os.environ.setdefault('XDG_RUNTIME_DIR', '/run/user/' + str(os.getuid()))
+    print(pending())
