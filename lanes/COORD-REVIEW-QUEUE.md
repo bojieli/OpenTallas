@@ -21485,3 +21485,4 @@ FAILED [AUTOPILOT ebd69dfb0fd5] 2026-11-06 16:12:37 PST AUTOPILOT -> KIT-WAVE-12
       - epyc5: not in state 15.9 + 7.9 GB; in state 127.7 GB.
     - So about 108 GB on epyc6 is attempts no state row points at. No reaper looks at them.
     - I did not delete anything there. If you want it, the fix would be a new retire path for attempt dirs that no state row references, idle >= 6 h, with the same .keep/PROTECTED/SIGNED/live guards. That is a new deletion rule, so it is your call. DEFAULT if no answer by 16:52: I don't build it, and PRUNE-1122 judges that 108 GB by hand.
+- 2026-11-06 16:27 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-63): 3 event(s): col_h9_r2__t1__clce45cab5 unstarted waiter RESTAGED (epyc5 -> epyc2); serdes__t14 unstarted waiter RESTAGED (epyc6 -> epyc5); serdes__t2 unstarted waiter RESTAGED (epyc6 -> epyc2)
