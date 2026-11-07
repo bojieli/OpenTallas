@@ -29,7 +29,12 @@ CAT_STATUS = {'closed (TT era)': 'closed', 'closed (TT re-verified)': 'closed', 
               'first trial in flight': 'running', 'failed, re-running': 'failing', 'revoked, re-running': 'revoked',
               'revoked (no live job)': 'revoked', 'needs redesign (no live job)': 'failing',
               'flow failure (no live job)': 'failing', 'cancelled only': 'failing', 'superseded': 'superseded',
-              'not started (open)': 'placeholder', 'implementation recorded (no physical job)': 'placeholder'}
+              'not started (open)': 'placeholder', 'implementation recorded (no physical job)': 'placeholder',
+              # WEBVIEW-1 11-03: current-plan categories (plan_rows.py)
+              'signed off': 'closed', 'signed off (legacy view)': 'closed', 'routed, not signed (timing)': 'failing',
+              'route failure': 'failing', 'flow failure': 'failing', 'plan / geometry failure': 'failing', 'RTL / kit failure': 'failing',
+              'routing / sign-off running': 'running', 'running (pre-route)': 'running', 'queued': 'running',
+              'waiting (dependency / plan delta)': 'placeholder', 'cancelled': 'placeholder', 'not started': 'placeholder'}
 ROLL = ['failing', 'revoked', 'running', 'below', 'closed', 'superseded']
 MARGIN = 15.0
 MASTER_TOKEN = re.compile(r'\b((?:hfd|qfd|dsfd)_[A-Za-z0-9_]+)')

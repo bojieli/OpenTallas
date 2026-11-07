@@ -36,6 +36,11 @@ fi
 rm -rf "$dst/landing"; mkdir -p "$dst/landing/recordings"
 cp "$src"/landing/{index.html,landing.css,landing.js} "$dst/landing/"; cp "$src"/landing/recordings/*.json "$dst/landing/recordings/"
 cp "$src"/fleet-viz.service "$HOME/.config/systemd/user/"
+# WEBVIEW-1 11-03 current-plan data + MONITOR-FIX 11-06 verdict feed and host discovery. Crontab needs (WEBVIEW-1):
+#   4,34 * * * * ~/.local/share/fleet-viz/repo_sync/refresh.sh
+cp "$src"/{plan_now.py,plan_rows.py,plan_dataflow.py,dataflow_links.py,fleet_discover.py,kit_verdicts.py} "$dst"/
+mkdir -p "$dst/repo_sync"; cp "$src"/repo_sync/* "$dst/repo_sync/"
+mkdir -p "$HOME/.config/systemd/user/fleet-viz.service.d"; cp "$src"/fleet-viz.service.d/*.conf "$HOME/.config/systemd/user/fleet-viz.service.d/"
 cp "$src"/fleet-viz-elem-sync.{service,timer} "$HOME/.config/systemd/user/"
 systemctl --user daemon-reload
 systemctl --user enable fleet-viz.service >/dev/null
