@@ -18,7 +18,7 @@ SKIP_FILES = {"image.txt", "PROVENANCE.json", ".ot-run-spill-copy"}
 
 def ignored(directory, names):
     return [n for n in names if n in SKIP_DIRS or n in SKIP_FILES
-            or n.startswith(("sta_", "postcts_gate_", "insertion_band"))
+            or n.startswith(("sta_", "postcts_gate_", "insertion_band", ".kwrs_done."))
             or n.endswith((".log", ".log.previous"))]
 
 
