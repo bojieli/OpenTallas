@@ -15,3 +15,4 @@ qwen_compute	NL vR3 conservative + _lec	epyc2	/srv/opentallas-scratch2/claude/dq
 qwen_compute	NK vR3 conservative + _lec	intel1	/srv/opentallas-scratch2/claude/dq87_vr3/qfd_tile_nk_a0c_vR3	new form, owner critical	build, LEC kit proves	DIE-QC-87	11-07 03:45
 s81	bksel_q conservative	-	owner adds the path	new form, owner critical	build	S81-BKSEL-RF7	11-07 03:45
 s81	eng_rr_e conservative	-	owner adds the path	new form, owner critical	build	S81-ENGRR-B7	11-07 03:45
+s81	slice_station__t26_tsB ECO	epyc4	/srv/opentallas-scratch2/claude/type-safe-1/canary26/slice_station__t26_tsB/eco_ts	decides the batch recipe for S81 stations	eco_loop 3 iter + LEC	TYPE-SAFE-1	11-07 03:57
