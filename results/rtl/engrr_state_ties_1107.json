@@ -1,0 +1,71 @@
+{
+  "default_off_tokens_identical": true,
+  "canonical_on_tokens_equal_proven_vJ": true,
+  "production_shape": {
+    "ABW": 36,
+    "CPR": 6,
+    "baddr_top_bit": 0,
+    "roff_low_bit": 0
+  },
+  "tests": [
+    {
+      "path": "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640_hx.sv",
+      "mode": "pass",
+      "result": "PASS"
+    },
+    {
+      "path": "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640_hx.sv",
+      "mode": "mut_top",
+      "result": "MUTANT_CAUGHT"
+    },
+    {
+      "path": "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640_hx.sv",
+      "mode": "mut_offset",
+      "result": "MUTANT_CAUGHT"
+    },
+    {
+      "path": "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/dsfd_engram_lkp_ra640_hx.sv",
+      "mode": "pass",
+      "result": "PASS"
+    },
+    {
+      "path": "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/dsfd_engram_lkp_ra640_hx.sv",
+      "mode": "mut_top",
+      "result": "MUTANT_CAUGHT"
+    },
+    {
+      "path": "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/dsfd_engram_lkp_ra640_hx.sv",
+      "mode": "mut_offset",
+      "result": "MUTANT_CAUGHT"
+    }
+  ],
+  "schema": "opentallas.engrr_state_ties.v1",
+  "status": "SOURCE_ONLY_DO_NOT_COUNT",
+  "base_commit": "1b84207dfe3dae26792fc08019f5c901f9b3f910",
+  "define": "OT_S81ENG_STATE_TIES",
+  "default": "off",
+  "added_pin_cycles": 0,
+  "scope": "Qualified production BASE=0 form only; default-off generic RTL unchanged. No main profile or plan activation.",
+  "whole_core_proof": {
+    "host": "epyc6",
+    "kit": "/srv/opentallas-scratch2/claude/s81-engrr-b8/dsdv_eng_rr_e_vJ",
+    "receipt": "lec/lec.json",
+    "outer_receipt": "lec_async.rc",
+    "outer_exit": 0,
+    "completed": "2026-11-07 12:02:23 PST",
+    "verdict": "EQUIVALENT",
+    "compare_points": 48659,
+    "proved": 48659,
+    "differs": 0,
+    "undecided": 0,
+    "canonical_on_tokens_equal_proof_source": true
+  },
+  "limits": [
+    "The whole-core proof covers canonical RTL with production defines; the older physical template has local miter coverage for this edit.",
+    "The local miter checks defined-value preservation and first-edge zero states under baddr[35]=0 and roff[0]=0, not arbitrary address bases.",
+    "The physical template keeps its original unguarded inactive array read; no unrelated q_off guard change was introduced.",
+    "vJ has not completed physical signoff; this receipt is not a release qualification."
+  ],
+  "artifacts": "intel2:/srv/opentallas-scratch2/claude/codex-engrr-1209/state_tie_checks",
+  "test_script_sha256": "f0230b38eb06609fc8a5329931a3cf931207465f99cfda284af0eebe8fc0dd56"
+}

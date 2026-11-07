@@ -417,6 +417,10 @@ module ot_s81_engram_lookup_ra640_hx #(
     localparam integer AW = ABW - 5;                 // 31 hq_atom bits: slices [10:0] [21:11] [30:22] (+ hq_tag)
     wire [2:0]     iss;
     wire [CPR-1:0] isel [0:2];
+`ifdef OT_S81ENG_STATE_TIES
+    // Production BASE=0 form: match the known-zero states in its mapped netlist.
+    always @(posedge clk_ctl) hq_atom[AW-1] <= 1'b0;
+`endif
     genvar gi;
     generate
         for (gi = 0; gi < 3; gi = gi + 1) begin : g_iss
@@ -429,7 +433,14 @@ module ot_s81_engram_lookup_ra640_hx #(
                 am = {(HI-LO+1){1'b0}};
                 for (ia = 0; ia < CPR; ia = ia + 1) am = am | ({(HI-LO+1){isel[gi][ia]}} & baddr[ia][5+LO +: HI-LO+1]);
             end
+`ifdef OT_S81ENG_STATE_TIES
+            // top slice stops one bit short: hq_atom[AW-1] is structurally 0 (no address reaches it) and has no enable below,
+            // so it is 0 from the first edge rather than X until the first load (FORM-S81-2 11-05: synthesis ties it)
+            localparam integer HK = (gi == 2) ? HI - 1 : HI;
+            always @(posedge clk_ctl) if (iss[gi]) hq_atom[HK:LO] <= am[HK-LO:0];
+`else
             always @(posedge clk_ctl) if (iss[gi]) hq_atom[HI:LO] <= am;
+`endif
         end
     endgenerate
     always @(posedge clk_ctl) if (iss[2]) hq_tag <= icnt;
@@ -489,7 +500,12 @@ module ot_s81_engram_lookup_ra640_hx #(
     always @(posedge clk_ctl) begin
         // ej advances to CPR after the final row. Define the inactive read, too:
         // downstream valid is off there; this also preserves a fully defined LEC cone.
+`ifdef OT_S81ENG_STATE_TIES
+        // roff = 0 / 2 in 8-byte units: bit 0 is structurally 0 and is written so, X-free from the first edge (FORM-S81-2 11-05)
+        q_off <= (ej < CPR) ? {roff[ej][1], 1'b0} : 2'b00; q_j <= ej; q_k <= ek[2:0]; q_s <= slot;
+`else
         q_off <= (ej < CPR) ? roff[ej] : 2'b00; q_j <= ej; q_k <= ek[2:0]; q_s <= slot;
+`endif
         rq_ea <= {ej, ek[0] ? ek1[3:1] : ek[3:1]};
         rq_oa <= {ej, ek[3:1]};
         rq_aa <= ej;
