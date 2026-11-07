@@ -244,3 +244,17 @@ def test_restage_moves_waiters_off_low_disk_host(tmp_path, monkeypatch):
     ap = FakeAP()
     assert K.restage_waiters(ap, c, {"items": items}, {}) == 3
     assert all(r["status"] == "RETRY-INFRA" and "epyc6 -> " in r["reason"] for r in items.values())
+
+
+def test_restage_young_waiter_stays(tmp_path, monkeypatch):
+    # KW-FIX-24: a waiter launched < restage_min_wait_s ago is not moved (ping-pong); an old one is
+    monkeypatch.setattr(K, "stop_reason", lambda *a, **k: None)
+    c = cfg(gen_hosts=["intel1", "epyc4"], place_mem_gb=48); c["_otrun_status"] = {h: dict(v) for h, v in ST.items()}
+    young = _rec(tmp_path, "intel1"); young["started"] = time.time() - 600
+    st = {"items": {"y": young}}
+    assert K.restage_waiters(FakeAP(), c, st, {}) == 0 and young["status"] == "RUNNING"
+    young["started"] = time.time() - 2400
+    assert K.restage_waiters(FakeAP(), c, st, {}) == 1 and young["status"] == "RETRY-INFRA"
+    c["restage_min_wait_s"] = 0
+    y2 = dict(young, status="RUNNING", started=time.time())
+    assert K.restage_waiters(FakeAP(), c, {"items": {"y": y2}}, {}) == 1
