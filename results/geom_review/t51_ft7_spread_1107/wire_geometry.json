@@ -1,0 +1,115 @@
+{
+  "measurement": "single-driver buffer/inverter, two-pin SIGNAL net endpoint Manhattan span; not routed length",
+  "count": 65832,
+  "over_120um": 27,
+  "over_150um": 0,
+  "quantiles_um": {
+    "0.1": 1.4919999999999831,
+    "0.5": 91.28000000000003,
+    "0.9": 108.6819999999999,
+    "0.99": 117.02100000000004,
+    "1": 121.44400000000005
+  },
+  "longest": [
+    {
+      "span_um": 121.44400000000005,
+      "net": "u_bound.ft7_o_s1\\[175\\]",
+      "driver": "INVx3_ASAP7_75t_R"
+    },
+    {
+      "span_um": 121.30400000000006,
+      "net": "u_bound.cland_ft6_i\\[480\\]",
+      "driver": "INVx1_ASAP7_75t_R"
+    },
+    {
+      "span_um": 121.17399999999999,
+      "net": "u_bound.ft7_o_s1\\[81\\]",
+      "driver": "INVx3_ASAP7_75t_R"
+    },
+    {
+      "span_um": 121.15599999999995,
+      "net": "u_bound.ft11_o_s2\\[305\\]",
+      "driver": "INVx2_ASAP7_75t_R"
+    },
+    {
+      "span_um": 121.10200000000003,
+      "net": "u_bound.ft11_o_s2\\[298\\]",
+      "driver": "INVx2_ASAP7_75t_R"
+    },
+    {
+      "span_um": 121.03399999999998,
+      "net": "u_bound.cland_ft6_i\\[422\\]",
+      "driver": "INVx1_ASAP7_75t_R"
+    },
+    {
+      "span_um": 120.95800000000003,
+      "net": "u_bound.ft7_o_s1\\[162\\]",
+      "driver": "INVx3_ASAP7_75t_R"
+    },
+    {
+      "span_um": 120.93999999999994,
+      "net": "u_bound.ft11_o_s2\\[322\\]",
+      "driver": "INVx2_ASAP7_75t_R"
+    },
+    {
+      "span_um": 120.88599999999997,
+      "net": "u_bound.ft11_o_s2\\[315\\]",
+      "driver": "INVx2_ASAP7_75t_R"
+    },
+    {
+      "span_um": 120.87200000000003,
+      "net": "u_bound.cland_ft6_i\\[446\\]",
+      "driver": "INVx1_ASAP7_75t_R"
+    },
+    {
+      "span_um": 120.81799999999997,
+      "net": "u_bound.cland_ft6_i\\[437\\]",
+      "driver": "INVx1_ASAP7_75t_R"
+    },
+    {
+      "span_um": 120.66999999999997,
+      "net": "u_bound.ft0_o_s1\\[1091\\]",
+      "driver": "INVx2_ASAP7_75t_R"
+    },
+    {
+      "span_um": 120.56200000000001,
+      "net": "u_bound.ft11_o_s2\\[290\\]",
+      "driver": "INVx2_ASAP7_75t_R"
+    },
+    {
+      "span_um": 120.52599999999998,
+      "net": "u_bound.ft7_o_s1\\[140\\]",
+      "driver": "INVx3_ASAP7_75t_R"
+    },
+    {
+      "span_um": 120.454,
+      "net": "u_bound.ft0_o_s1\\[742\\]",
+      "driver": "INVx2_ASAP7_75t_R"
+    },
+    {
+      "span_um": 120.36400000000006,
+      "net": "u_bound.ft7_o_s1\\[122\\]",
+      "driver": "INVx3_ASAP7_75t_R"
+    },
+    {
+      "span_um": 120.346,
+      "net": "u_bound.ft11_o_s2\\[350\\]",
+      "driver": "INVx2_ASAP7_75t_R"
+    },
+    {
+      "span_um": 120.292,
+      "net": "u_bound.ft0_o_s1\\[186\\]",
+      "driver": "INVx2_ASAP7_75t_R"
+    },
+    {
+      "span_um": 120.23799999999996,
+      "net": "u_bound.ft0_o_s1\\[953\\]",
+      "driver": "INVx2_ASAP7_75t_R"
+    },
+    {
+      "span_um": 120.20200000000003,
+      "net": "u_bound.ft7_o_s1\\[213\\]",
+      "driver": "INVx3_ASAP7_75t_R"
+    }
+  ]
+}
