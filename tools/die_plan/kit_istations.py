@@ -419,7 +419,7 @@ def _glob(path):
 # (LF_CS_*), as registers named after the flattened path (u_lf.u_vp.g_ln[9].u_cst_hi.gd.s[0].u -> ..u_vp_g_ln_9_u_cst_hi_
 # gd_s_0_u..).  Native mode: no re-parameterisation (the depths are bound), the bound depth per class is COUNTED from
 # the stage registers and must equal the plan's (fail closed), and the sites use flat-name globs.
-NATIVE_MARK = re.compile(r"\bw_u_vp_g_ln_\d+_u_cst_h[io]_")
+NATIVE_MARK = re.compile(r"\bw_(?:u_lf\d*_)?u_vp_g_ln_\d+_u_cst_h[io]_")  # KW-FIX-27: u_lf<k>_ of the image-flat leaf binds
 
 
 def _flat(path):
@@ -508,44 +508,53 @@ def col_st_stations(t, txt, tcl, rep):
     if chain is None:
         have = sorted({int(j) for j in re.findall(r"cst_st_s(\d+)(?!\d)", txt)})
         chain = [f"cst_st_s{j}" for j in have] if have == list(range(len(have))) else []
-    if len(chain) != ns[0]:
-        raise SystemExit(f"kit_istations: col st stations: bound RTL stages {chain} but the plan has {ns[0]} "
-                         "(fail closed; the col plan_kit RTL carries cst_st_s*: re-bind on it)")
     for q, (x, y) in zip(chain, regs[0]):
         tcl.append(f"is_place {{*{q}*}} {x} {y} cst:st")
-    rep.append(dict(col_st=dict(stages=ns[0], entries=len(es), regs=chain, sites=[list(r) for r in regs[0]])))
+    # KW-FIX-27 (OWNER 11-03 only sign-off blocks): an older bind without the chain builds as bound; sign-off judges the hop
+    rep.append(dict(col_st=dict(stages=ns[0], entries=len(es), regs=chain, sites=[list(r) for r in regs[0]],
+                                **({"bound_stages": len(chain)} if len(chain) != ns[0] else {}))))
     return es
 
 
 def core_stations(t, txt, apply, htree, tcl, rep):
-    """Map core<->core entries onto the leaf's station chains; returns the (maybe re-parameterised) bound text."""
+    """Map core<->core entries onto the leaf's station chains; returns the (maybe re-parameterised) bound text.
+    KW-FIX-27 (OWNER 11-03 only sign-off blocks): plan stations here are sites, the bound RTL holds the stages.  One
+    interface is one chain, so its depth is the deepest entry, sited from its deepest entries.  What the bound text
+    does not show (no class, a depth a flat bind cannot count) is reported in the receipt, and GPL places those flops."""
     groups = {}
+    unmapped = []
     col = col_st_stations(t, txt, tcl, rep)
     for e in t.get("internal_stations", []):
         if e.get("conn", "").startswith("bus:") or any(e is c for c in col):
             continue
         c, fwd, lane = core_class(e)
         if c is None:
-            raise SystemExit(f"kit_istations: core<->core entry {e['conn']} matches no leaf station class (fail closed)")
+            unmapped.append(e["conn"])
+            continue
         regs = [list(r) for r in e["regs_um"]]
         if not fwd:
             regs.reverse()
         groups.setdefault((c, lane), []).append((regs, int(e.get("bits", 1)), e["conn"]))
+    if unmapped:
+        rep.append(dict(core_unmapped=sorted(set(unmapped))))
     if not groups:
         return txt
+    native = not re.search(rf"\bot_s81sl_leaf\b[^;]*?\b{LEAF_INST}\s*\(", txt) and bool(NATIVE_MARK.search(txt))
     depth = {}
-    for (c, lane), es in groups.items():
-        ns = sorted({len(r) for r, _, _ in es})
-        if len(ns) != 1:
-            raise SystemExit(f"kit_istations: class {c}{'' if lane is None else f' lane {lane}'}: unequal planned stage "
-                             f"counts {ns} within one interface (fail closed)")
-        if c == "cs" and ns[0]:
+    merged = {}
+    for key, es in list(groups.items()):
+        c, lane = key
+        deep = max(len(r) for r, _, _ in es)
+        if len({len(r) for r, _, _ in es}) > 1:
+            merged[f"{c}{'' if lane is None else lane}"] = sorted({len(r) for r, _, _ in es})
+            groups[key] = es = [x for x in es if len(x[0]) == deep]
+        if c == "cs" and deep and native:
+            rep.append(dict(cs_stations_unrealized=deep))   # the flat bind's RTL holds no such stage; sign-off judges the hop
+            continue
+        if c == "cs" and deep:
             raise SystemExit("kit_istations: vn_a -> vn_b c_s stations planned, but vn_b's chain adders read c_s on a "
                              "fixed edge (hard cores): no RTL realises them; re-plan vn_a / vn_b within reach")
-        if c in depth and depth[c] != ns[0]:
-            raise SystemExit(f"kit_istations: class {c}: lanes carry unequal stage counts {depth[c]} / {ns[0]} "
-                             "(every lane must see one depth: static schedule)")
-        depth[c] = ns[0]
+        depth[c] = max(depth.get(c, 0), deep)
     h_lanes = {}
     if "hi" in depth or "ho" in depth:
         # DIE-S81-69 11-06: the leaf RTL applies CS_HI_D / CS_HO_D to all 16 lanes (one depth per class: the static
@@ -558,7 +567,6 @@ def core_stations(t, txt, apply, htree, tcl, rep):
             if c in depth:
                 sited = sorted(l for (cc, l) in groups if cc == c)
                 h_lanes[c] = dict(sited=sited, unsited_of_planned=sorted(lanes - set(sited)))
-    native = not re.search(rf"\bot_s81sl_leaf\b[^;]*?\b{LEAF_INST}\s*\(", txt) and bool(NATIVE_MARK.search(txt))
     if native:
         m, have = None, native_params(txt)
     else:
@@ -574,18 +582,19 @@ def core_stations(t, txt, apply, htree, tcl, rep):
         newp = ", ".join(rest + [ps])
         txt = txt[:m.start()] + f"ot_s81sl_leaf #({newp}) {LEAF_INST} (" + txt[m.end():]
         m, have = leaf_params(txt)
+    counted = {}
     for k, v in sorted(want.items()):
         if k.endswith("_D") and have.get(k, 0) != v:
-            raise SystemExit(f"kit_istations: leaf RTL {k} = {have.get(k, 0)} but the plan stations {v} stage(s) "
-                             + ("(fail closed; flat native bind: set the slice LF_CS_* depths and re-bind)" if native
-                                else "(fail closed; --apply sets the plan's depths)"))
+            if not native:
+                raise SystemExit(f"kit_istations: leaf RTL {k} = {have.get(k, 0)} but the plan stations {v} stage(s) "
+                                 "(--apply sets the plan's depths)")
+            counted[k] = dict(plan=v, counted=have.get(k, 0))
     if native:
-        extra = {k: v for k, v in have.items() if k.endswith("_D") and v and k not in want}
-        if extra:
-            raise SystemExit(f"kit_istations: flat native bind carries stations the plan does not: {extra} (fail closed)")
+        counted.update({k: dict(plan=0, counted=v) for k, v in have.items() if k.endswith("_D") and v and k not in want})
     G, GSI, GSO = have.get("CS_H_G", 4), have.get("CS_HI_GS", 0), have.get("CS_HO_GS", 0)
 
     def centroid(es, j):
+        es = [x for x in es if len(x[0]) > j]
         w = sum(b for _, b, _ in es)
         return (round(sum(r[j][0] * b for r, b, _ in es) / w, 3), round(sum(r[j][1] * b for r, b, _ in es) / w, 3))
 
@@ -597,7 +606,7 @@ def core_stations(t, txt, apply, htree, tcl, rep):
                 shared = j < gs if c == "hi" else j >= d - gs
                 if shared:
                     for g in range(16 // G):
-                        es = [x for l in range(G * g, G * g + G) for x in groups.get((c, l), [])]
+                        es = [x for l in range(G * g, G * g + G) for x in groups.get((c, l), []) if len(x[0]) > j]
                         if not es:
                             continue                # no sited lane in this group: GPL places the shared stage
                         jj = j if c == "hi" else j - (d - gs)
@@ -605,7 +614,8 @@ def core_stations(t, txt, apply, htree, tcl, rep):
                 else:
                     jj = j - gs if c == "hi" else j
                     for l in sorted(l for (cc, l) in groups if cc == c):
-                        sites.append((f"{LEAF_INST}.u_vp.g_ln[{l}].u_cst_{c}.gd.s[{jj}].u", centroid(groups[(c, l)], j), c))
+                        if any(len(x[0]) > j for x in groups[(c, l)]):      # a shallower lane: GPL places this stage
+                            sites.append((f"{LEAF_INST}.u_vp.g_ln[{l}].u_cst_{c}.gd.s[{jj}].u", centroid(groups[(c, l)], j), c))
         else:
             for j in range(d):
                 sites.append((f"{LEAF_INST}.u_cst_{c}.gd.s[{j}].u", centroid(groups[(c, None)], j), c))
@@ -615,6 +625,7 @@ def core_stations(t, txt, apply, htree, tcl, rep):
                                           entries=sum(len(v) for (cc, _), v in groups.items() if cc == c))
                                   for c, d in sorted(depth.items())},
                     h_tree=dict(G=G, GS_IN=GSI, GS_OUT=GSO), h_lanes=h_lanes, placed_stages=len(sites),
+                    **({"merged_depths": merged} if merged else {}), **({"native_depth_differs": counted} if counted else {}),
                     bind="native_flat" if native else "leaf_instance"))
     return txt
 
@@ -685,6 +696,28 @@ def soft_plan_cells(tn, t):
             if 'origin_um' in c and not c.get('lef') and c['inst'] not in hard]
 
 
+def bus_entries(t):
+    """Station entries of a type's buses, one per bus.  The planner lists one entry per capture group, but a bus has one
+    chain (bind face register -> leaf): its depth is the deepest entry, stage j at the bits-weighted centroid of the
+    deepest entries (KW-FIX-27: depths 1,1,2 restarted the out chain at j=0).  bit_route / exact-site entries stay as
+    written."""
+    by = {}
+    for e in t.get("internal_stations", []):
+        if e.get("conn", "").startswith("bus:"):
+            by.setdefault(e["conn"], []).append(e)
+    out = []
+    for conn, es in by.items():
+        if len(es) == 1 or any(e.get("bit_route") or "bit_sites_um" in e or "face_bit_sites_um" in e for e in es):
+            out.extend(es)
+            continue
+        n = max(len(e["regs_um"]) for e in es)
+        deep = [e for e in es if len(e["regs_um"]) == n]
+        w = sum(int(e.get("bits", 1)) for e in deep)
+        regs = [[round(sum(e["regs_um"][j][k] * int(e.get("bits", 1)) for e in deep) / w, 3) for k in (0, 1)] for j in range(n)]
+        out.append(dict(deep[0], regs_um=regs, bits=sum(int(e.get("bits", 1)) for e in es), merged_entries=len(es)))
+    return out
+
+
 def main(argv):
     apply = "--apply" in argv
     argv = [a for a in argv if a != "--apply"]
@@ -705,10 +738,8 @@ def main(argv):
     txt = bfile.read_text()
     tcl = [TCL_HEAD]
     rep = []
-    for e in t.get("internal_stations", []):
-        conn = e.get("conn", "")
-        if not conn.startswith("bus:"):
-            continue                       # core<->core: core_stations() below
+    for e in bus_entries(t):           # core<->core: core_stations() below
+        conn = e["conn"]
         bus = conn[4:]
         n = gen_rtl.sv_id(bus)
         regs = e["regs_um"]
@@ -775,7 +806,7 @@ def main(argv):
                 d0, ea0 = m.group(2), m.group(4)
                 decl, body = [], []
                 cq, ceq = d0, ea0
-                for j in range(need):
+                for j in range(len(prev), len(prev) + need):
                     decl.append(f"    wire [{W - 1}:0] {n}_is{j}_q;\n    wire {n}_is{j}_eq;  // kit_istations")
                     body.append(f"    ot_dp_st #(.W({W})) u_ist_{n}_{j} (.clk(clk), .rst_n(rst_n), .d({cq}), .ea({ceq}), "
                                 f".q({n}_is{j}_q), .eq({n}_is{j}_eq));  // kit_istations: FIRM plan station")
@@ -785,7 +816,10 @@ def main(argv):
                 line = re.sub(r"^(\s*)ot_dp_ste\b", r"\1ot_dp_st", line)   # ea is now a station epoch, not a reset net
                 txt = txt[:m.start()] + line + txt[m.end():]
                 txt = re.sub(r"(\n\s*endmodule\b)", "\n" + "\n".join(decl + body) + r"\1", txt, count=1)
-            # out bus: the stations run from the leaf toward the face, regs_um is ordered from_um -> to_um
+            # out bus: the stations run from the leaf toward the face, regs_um is ordered from_um -> to_um.
+            # KW-FIX-27: a planner entry launched at the face lists the face side first; site stage 0 at the leaf side.
+            if not pads and str(e.get("launch", "")).startswith("face bus"):
+                regs = regs[::-1]
         if exact is not None:
             banks, (fw, fh), face = exact
             for nm, bank in zip(names, banks):
