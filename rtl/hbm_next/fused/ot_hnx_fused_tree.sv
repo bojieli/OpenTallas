@@ -334,6 +334,8 @@ module ot_hnx_fused_hub #(
         end
     endgenerate
     wire ss_v = nd[1]; wire [31:0] ss = nv[1];
+    wire fault_nodes_any;
+    ot_hnx_fault_reduce #(.W(2*NBP)) u_fault_reduce (.d(ncol), .q(fault_nodes_any));
     // scalar tail: / D, + eps, rsqrt
     reg [31:0] eps_r;
     reg ssv_q; reg [31:0] ss_q;
@@ -370,7 +372,7 @@ module ot_hnx_fused_hub #(
             if (sc_in) scl <= scl + 6'd1;
             if (vsum_v) bi <= (bi == 6'(NB - 1)) ? 6'd0 : bi + 6'd1;
             if (r_fl) sfault <= 1'b1;                                  // lane / tree-node faults
-            if (|ncol) sfault <= 1'b1;
+            if (fault_nodes_any) sfault <= 1'b1;
             if (f_div || f_eps || f_rsq) sfault <= 1'b1;
             if (rr_v2) begin rbv <= 1'b1; rb <= rr; hr <= hr + 4'd1; end
             if (r_fo && !r_fa) sfault <= 1'b1;                        // fins of one record on one edge
@@ -429,4 +431,24 @@ module ot_hnx_fused_hub #(
     end
 endmodule
 
+
+// Bound the collision reduction separately from the heap consume cone.  This is
+// combinational and cycle exact: ABC must not absorb the 64-node OR into the
+// nd/cons expressions and turn the fault path into one long serial cone.
+(* keep_hierarchy *) module ot_hnx_fault_or8(input wire [7:0] d, output wire q);
+    assign q = |d;
+endmodule
+(* keep_hierarchy *) module ot_hnx_fault_reduce #(parameter integer W=64)(input wire [W-1:0] d, output wire q);
+    localparam integer G=(W+7)/8;
+    wire [G-1:0] group_any;
+    for(genvar g=0;g<G;g=g+1) begin:gg
+        wire [7:0] x;
+        for(genvar b=0;b<8;b=b+1) begin:gb
+            if(8*g+b<W) assign x[b]=d[8*g+b];
+            else assign x[b]=1'b0;
+        end
+        ot_hnx_fault_or8 u_or(.d(x),.q(group_any[g]));
+    end
+    assign q=|group_any;
+endmodule
 `default_nettype wire
