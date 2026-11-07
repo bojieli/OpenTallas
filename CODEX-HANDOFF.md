@@ -72,6 +72,12 @@ Die gates (BIND/GRT/STA/CLK) are not yet passed on any die. ETAs: non-HBM cores 
    - say "signed off".
 
 5b. **epyc5 + epyc6 KEPT** (OWNER 22:5x: "keep both hosts. pause the deletion and move the workload from the waitlist to it."). No termination; the Cherry DELETE approval is withdrawn. Root floor 150 GB on epyc2/epyc4 (OWNER "use 150GB for floor decisions"); INV_HEADROOM_GB 32 on epyc4/5/6. Lanes: REBAL-1 (waiters to epyc5/6), AUTOCLEAN-1 (cleanup after each job), MONITOR-FIX.
+5c. **Prune finished runs in Codex trees** (OWNER 23:0x: "all finished runs in the codex trees must be pruned, both on localhost and fleet. it should also be in codex handoff doc").
+   - Codex: when a run finishes or is killed, prune it at once, and again before every handback. This covers codex-*, wt-codex-* and scratch-codex-* trees on localhost and every fleet host.
+   - A finished run has no process, container mount or queued job on it, and no live path references it. Save patches for uncommitted or unpushed git work first. Never touch ~/.codex.
+   - Signed-off run: archive to AGIdock `/archive/opentallas-signed-1106/<host>/<path>`, verify, then keep the stub (signoff, PROVENANCE, 6_final.odb, final views, ARCHIVED.json). Stage ODBs 1_*..5_* leave the host (OWNER 23:0x: "the stage result ODBs can be archived on the agidock"). The AGIdock key is on localhost only.
+   - Not signed off: delete, keeping only the newest resume DB of a block still being worked on.
+   - Lanes: CODEX-PRUNE-1 (backlog), AUTOCLEAN-1 (after each job).
 
 ## main and merge train
 
