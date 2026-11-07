@@ -1,0 +1,138 @@
+{
+ "schema": "opentallas.s81.seqhost_native_boot.v1",
+ "slot_gaps": [
+  152,
+  152
+ ],
+ "return_latency": 79,
+ "kit_issue": 72,
+ "events": [
+  {
+   "kind": 0,
+   "endpoint": 0,
+   "delay": 8,
+   "attributes": [
+    {
+     "ab": 0,
+     "land": 0
+    },
+    {
+     "ab": 0,
+     "land": 0
+    }
+   ]
+  },
+  {
+   "kind": 0,
+   "endpoint": 1,
+   "delay": 9,
+   "attributes": [
+    {
+     "ab": 0,
+     "land": 0
+    },
+    {
+     "ab": 0,
+     "land": 0
+    }
+   ]
+  },
+  {
+   "kind": 0,
+   "endpoint": 2,
+   "delay": 10,
+   "attributes": [
+    {
+     "ab": 0,
+     "land": 0
+    },
+    {
+     "ab": 0,
+     "land": 0
+    }
+   ]
+  },
+  {
+   "kind": 0,
+   "endpoint": 3,
+   "delay": 11,
+   "attributes": [
+    {
+     "ab": 0,
+     "land": 0
+    },
+    {
+     "ab": 0,
+     "land": 0
+    }
+   ]
+  },
+  {
+   "kind": 0,
+   "endpoint": 0,
+   "delay": 12,
+   "attributes": [
+    {
+     "ab": 0,
+     "land": 0
+    },
+    {
+     "ab": 0,
+     "land": 0
+    }
+   ]
+  },
+  {
+   "kind": 0,
+   "endpoint": 1,
+   "delay": 13,
+   "attributes": [
+    {
+     "ab": 0,
+     "land": 0
+    },
+    {
+     "ab": 0,
+     "land": 0
+    }
+   ]
+  },
+  {
+   "kind": 0,
+   "endpoint": 2,
+   "delay": 14,
+   "attributes": [
+    {
+     "ab": 0,
+     "land": 0
+    },
+    {
+     "ab": 0,
+     "land": 0
+    }
+   ]
+  },
+  {
+   "kind": 0,
+   "endpoint": 3,
+   "delay": 15,
+   "attributes": [
+    {
+     "ab": 0,
+     "land": 0
+    },
+    {
+     "ab": 0,
+     "land": 0
+    }
+   ]
+  }
+ ],
+ "launch": {
+  "reset_release_pin_edge": 30,
+  "ks_pin_edges": [
+   901,
+   1053
+  ]
+ }
+}

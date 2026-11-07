@@ -12,7 +12,28 @@ from native_boot import compile_boot
 from native_phase import seqhost_phase_contract,qualify_selected
 
 
-def encode(page, timing, *, stage, start_phase, source_root=None, manifest=None, inventory=None, kit_issue=None, slot_gap=None, emit_mux=True):
+def mu_boot_config(gap, kit, edges, supplied=None):
+    """Keep the legacy two-slot bytes, or consume an explicit uniform slot/event map.
+
+    This books no production ownership. Nonuniform slot calendars need a
+    separate page-reload schedule and are rejected instead of flattened.
+    """
+    if supplied is None:
+        return dict(schema='opentallas.s81.seqhost_native_boot.v1',slot_gaps=[gap,gap],
+            return_latency=kit+edges['f_ks_pin_event_plus_kit_issue_to_t_kd']-1,kit_issue=kit,
+            events=[dict(kind=1,endpoint=0,delay=4+i,attributes=[dict(ab=0,land=0),dict(ab=0,land=0)])for i in range(8)])
+    if not isinstance(supplied,dict):
+        raise ValueError('explicit caller-owned MU configuration object required')
+    config=copy.deepcopy(supplied)
+    gaps=config.get('slot_gaps')
+    if not isinstance(gaps,list) or not 1<=len(gaps)<=47 or any(type(x)is not int or x<gap or x%4 for x in gaps) or len(set(gaps))!=1:
+        raise ValueError('explicit uniform MU gaps must preserve page reload lifetime and phase')
+    if config.get('schema')!='opentallas.s81.seqhost_native_boot.v1' or config.get('kit_issue')!=kit or config.get('return_latency')!=kit+edges['f_ks_pin_event_plus_kit_issue_to_t_kd']-1:
+        raise ValueError('supplied MU map must retain the selected shared KIT/return book')
+    return config
+
+
+def encode(page, timing, *, stage, start_phase, source_root=None, manifest=None, inventory=None, kit_issue=None, slot_gap=None, emit_mux=True, mu_config=None):
     check_page(page)
     seqhost_phase_contract(timing)
     qualify_selected(timing,source_root,manifest,inventory)
@@ -37,15 +58,14 @@ def encode(page, timing, *, stage, start_phase, source_root=None, manifest=None,
     result.update(stage=stage,start_phase=start_phase,local_KIT_issue=kit,local_END_issue=end,
         local_KIT_return_edge_from_age0=kit+delta,actual_global_launch_booked=False)
     validate_rows(result)
-    # No MU traffic is required by these pages (only VN/VS target5/HLOAD/GAIN).
-    # Explicitly initialize every event/slot with replay disabled, not defaults.
+    # These pages need no MU traffic themselves (VN/VS target5/HLOAD/GAIN).
+    # Preserve the explicit disabled legacy map unless the caller supplies its
+    # own complete slot/event book; encoding it does not qualify its lifetime.
     gap=((end+edges['f_ks_pin_event_to_age0_command']+1+3)//4)*4
     if slot_gap is not None:
         if type(slot_gap)is not int or slot_gap<gap or slot_gap%4:raise ValueError('shared KS gap violates local phase or page lifetime')
         gap=slot_gap
-    config=dict(schema='opentallas.s81.seqhost_native_boot.v1',slot_gaps=[gap,gap],
-        return_latency=kit+edges['f_ks_pin_event_plus_kit_issue_to_t_kd']-1,kit_issue=kit,
-        events=[dict(kind=1,endpoint=0,delay=4+i,attributes=[dict(ab=0,land=0),dict(ab=0,land=0)])for i in range(8)])
+    config=mu_boot_config(gap,kit,edges,mu_config)
     mux,emission=compile_boot(config,timing,allow_unbooked_launch=True,source_root=source_root,manifest=manifest,inventory=inventory)
     result['MU_initialized_in_this_page']=emit_mux
     rows=result['rows'];words=(list(mux)if emit_mux else[])+[D.csr_len(len(rows)),D.csr_pw(0,D.pw_header(len(rows),stage,start_phase))]
@@ -77,7 +97,7 @@ def validate_rows(page):
 
 
 def decode_check(page,words):
-    cells={};templates={};headers=[];lengths=[];mu15=mu16=0
+    cells={};templates={};headers=[];lengths=[];mu15=mu16=0;mu_words=[]
     for word in words:
         if type(word)is not int or not 0<=word<1<<515:raise ValueError('HOST native word outside515bits')
         x=word>>1;op=x&255
@@ -87,9 +107,15 @@ def decode_check(page,words):
             else:headers.append(value)
         elif op==0x11:lengths.append((x>>32)&255)
         elif op==0x13:templates[(x>>8)&127]=(x>>16)&((1<<186)-1)
-        elif op==0x15:mu15+=1
-        elif op==0x16:mu16+=1
-    if lengths!=[104]or len(cells)!=3*104 or mu15!=(3 if page.get('MU_initialized_in_this_page',True)else 0) or mu16!=(32 if page.get('MU_initialized_in_this_page',True)else 0):raise ValueError('native HOST calendar/MU boot incomplete')
+        elif op==0x15:mu15+=1;mu_words.append(word)
+        elif op==0x16:mu16+=1;mu_words.append(word)
+    config=page['local_mux_config'];slots=47 if len(config['slot_gaps'])==1 else len(config['slot_gaps'])
+    active=page.get('MU_initialized_in_this_page',True)
+    if lengths!=[104]or len(cells)!=3*104 or mu15!=(len(config['slot_gaps'])+1 if active else 0) or mu16!=(8*(2+slots)if active else 0):raise ValueError('native HOST calendar/MU boot incomplete')
+    if active:
+        from layer_prog.native_mu_calendar import decode_initialization
+        if decode_initialization(mu_words)!={k:config[k]for k in ('schema','slot_gaps','return_latency','events')}:
+            raise ValueError('native MU initialization differs from supplied slot/event map')
     want=[D.pw_header(104,page['stage'],page['start_phase']),D.pw_header(104,page['stage'],page['start_phase'],seal=True)]
     if headers!=want:raise ValueError('actual BEGIN/SEAL headers differ')
     for n,r in enumerate(page['rows']):
@@ -97,7 +123,7 @@ def decode_check(page,words):
     if templates!={t['i']:int(t['payload186'],16)for t in page['templates']}:raise ValueError('actual CTL payload bytes differ')
 
 
-def encode_programme(pages,timing,*,stage,start_phase,source_root,manifest,inventory,post_host_guard_edges=16):
+def encode_programme(pages,timing,*,stage,start_phase,source_root,manifest,inventory,post_host_guard_edges=16,mu_config=None):
     """Use one boot-only MU configuration and one fixed return/slot calendar.
 
     These are local pin-relative compiler bookings. No global reset release,
@@ -112,10 +138,12 @@ def encode_programme(pages,timing,*,stage,start_phase,source_root,manifest,inven
     reload_words=1+1+3*104+1+102
     first_host=e['f_ks_pin_event_to_age0_command']+end+1
     gap=((first_host+5*reload_words+post_host_guard_edges+3)//4)*4
+    if mu_config is not None:
+        gap=mu_boot_config(gap,kit,e,mu_config)['slot_gaps'][0]
     jobs=[];streams=[]
     for index,page in enumerate(pages):
         j,words=encode(page,timing,stage=stage,start_phase=start_phase,source_root=source_root,manifest=manifest,inventory=inventory,
-            kit_issue=kit,slot_gap=gap,emit_mux=index==0)
+            kit_issue=kit,slot_gap=gap,emit_mux=index==0,mu_config=mu_config)
         if index and len(words)!=reload_words:raise ValueError('actual native page reload word count changed')
         # The armed slot/window trackers cannot be configured again until reset.
         if index and any(((w>>1)&255)in(0x15,0x16)for w in words):raise ValueError('MU reconfiguration after first start forbidden')
@@ -127,7 +155,7 @@ def encode_programme(pages,timing,*,stage,start_phase,source_root,manifest,inven
         jobs.append(j);streams.append(words)
     record=dict(schema='opentallas.s81.entry_native_page_sequence.v1',status='SOURCE_RELATIVE_PROTOCOL_COMPILED',
         pages=len(jobs),shared_KIT_issue=kit,shared_END_issue=end,shared_RL=kit+e['f_ks_pin_event_plus_kit_issue_to_t_kd']-1,
-        shared_KS_gap=gap,initial_MU_words=35,MU_reconfigured_after_first_page=False,
+        shared_KS_gap=gap,initial_MU_words=jobs[0]['local_mux_emission']['words'],MU_reconfigured_after_first_page=False,
         following_page_HOST_words=reload_words,first_HOST_pin_from_previous_KS=first_host,
         HOST_words=sum(map(len,streams)),local_HOST_reservation_edges=5*sum(map(len,streams)),
         post_host_guard_edges=post_host_guard_edges,all_page_stores_before_KIT=all(kit>=p['source_relative_retire_not_before']for p in pages),
@@ -143,6 +171,7 @@ def main():
     for name in('pages-dir','timing','seqhost-receipt','inventory','source-root','manifest','out'):
         p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--stage',type=int,required=True);p.add_argument('--start-phase',type=int,required=True)
+    p.add_argument('--mu-config',type=Path,help='explicit caller-owned uniform slot/event map; no production map is inferred')
     a=p.parse_args();read=lambda p:json.loads(p.read_text())
     timing=read(a.timing);phase=read(a.seqhost_receipt)
     if phase.get('verdict')!='PASS' or phase.get('masters',{}).get('dsdv_hostb_seqhost_mux')!=timing['masters']['dsdv_hostb_seqhost_mux']:
@@ -154,7 +183,7 @@ def main():
     timing=dict(timing,seqhost_input_clock=contract)
     paths=sorted(a.pages_dir.glob('job*.json'))
     record,jobs,streams=encode_programme([read(p)for p in paths],timing,stage=a.stage,start_phase=a.start_phase,
-        source_root=a.source_root,manifest=a.manifest,inventory=read(a.inventory))
+        source_root=a.source_root,manifest=a.manifest,inventory=read(a.inventory),mu_config=read(a.mu_config)if a.mu_config else None)
     a.out.mkdir(parents=True,exist_ok=False)
     for index,(j,words)in enumerate(zip(jobs,streams)):
         name=f'job{index:03d}'
