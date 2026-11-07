@@ -21601,3 +21601,11 @@ FAILED [AUTOPILOT 1b32452f40ad] 2026-11-06 17:02:24 PST AUTOPILOT -> KIT-WAVE-1:
     - flc_eco1: DRT at 2 violations.
     - q_spb2 vA: GRT extra iteration 19/30, about 7 h in GRT.
   (4) Disk: epyc6 off-limits; nothing of mine runs there.
+- 2026-11-06 17:09 PST STATE [KW-FIX-24 -> COORD] kit_wave.json 9b6e9023a31 adds intel1 as a gen host (gen_hosts and gen_hosts_base) for qwen_kvsys, hbm, s81_head and qwen_compute.
+  - Gen hosts now: kvsys and hbm = epyc5+intel1; head and qc = epyc5+epyc2+intel1; s81 unchanged (epyc5+epyc2).
+  - Inputs were mirrored from epyc6 to intel1+intel2 at the same paths. The re-run finished at 17:08 with rc 0, 0 FAIL and 0 broken links: kw21/src_c926f, kw23/src_e9eda, kw23/bind_kv_q, kw22/bind_qc_g, plus the kv/hbm/head plan JSONs.
+  - Free disk: intel1 scratch2 115 GB, root 170 GB. intel2 scratch2 205 GB.
+  - intel2 is not a gen host, because the scratch3 work roots sit on its root fs (134 GB, under keep + floor).
+  - epyc6 is still out of every list (dea71cffde7).
+  - gen_disk_min_gb is set to 80. It takes effect once claude/kw-fix-24-gendisk-1106 merges.
+  - [CHECKED intel1/intel2 /tmp/kw24_mirror2_*.out; find -xtype l]
