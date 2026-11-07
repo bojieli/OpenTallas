@@ -1,0 +1,9 @@
+GUARD_FINAL a_rx_i ready1 fault0
+GUARD_FINAL b7_rx_i ready1 fault0
+GUARD_FINAL b_i ready1 fault0
+GUARD_FINAL h_rx_i ready1 fault0
+GUARD_FINAL lepk_i0 ready1 fault0
+- tb.sv:12089: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 666ns; walltime 3.516 s; speed 189.545 ns/s
+- Verilator: cpu 3.513 s on 1 threads; allocated 12 MB
