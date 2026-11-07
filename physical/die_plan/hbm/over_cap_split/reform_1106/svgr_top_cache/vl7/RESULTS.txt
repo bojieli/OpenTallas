@@ -1,0 +1,59 @@
+DIE-HBM-87-SVGR vL7 source proof, 2026-11-07, intel1 (iverilog 12.0, yosys 0.68, verilator 5.050 host tools). RTL only: no
+physical build, no kit, no queue post.
+
+SOURCE (rtl/hbm_accel/cores_split/reform_1106_svgr_top/): repo files at main were byte-identical to the vL6 kit rtl/ copies
+(sha256 cache f913722a..., cachecut d951468b...). New parameters, default 0 = unchanged:
+  ot_svgr_cache136_native  WDECOUPLE, GSEL, GREP(=1)      ot_svgr_top_cachecut (+feed)  CACHE_WDEC, CACHE_GSEL, CACHE_GREP(=1)
+vL7 kit wrapper needs: .CACHE_WDEC(1), .CACHE_GSEL(1), .CACHE_GREP(n) next to the vL6 .CACHE_RW_SRAM(1), .P1(1). Zero added edges.
+
+EXACTNESS ARGUMENT (WDECOUPLE), checked in the RTL: sticky is assigned only <=1 (reset clears it). A sector compare miss sets
+sticky at the same edge the word/present write lands; the gather/complete read those regs one edge later at the earliest,
+when row_write (=row_slot&&complete&&!sticky -> w_q -> SRAM w_ce, WPIPE 0 or 1), read_ok/out_valid (&&!sticky), open_ok
+(&&!sticky) and the whole running&&!sticky branch are off; present[] is cleared only by open_ok or reset. A WPIPE write in
+flight at that edge carries w_data_q captured from the pre-miss words. So no port sees a word/present bit written in a miss
+edge. GSEL: head changes only at reset/open_ok (->0) and running&&!sticky&&row_slot&&complete (+4/+5); one-hot vectors
+follow it by rotation, invariant gsel[j]=onehot((head+j)%16).
+
+LOCK-STEP (cache ports: block_ready, bank_owned, busy, fault, out_packet[1098:0] = 1105 bits, !== every edge), new vs vL6
+copy, PACKED136=1 RW_SRAM=1, protocol-steered random stimulus + injections (bad index, wrong epoch, missing/extra sector,
+aliased +/-16 index, sector while idle, open while running / illegal count / owned bank, bad read tag/epoch/row, bad
+retire, read/retire/open collisions, async resets). intel1:/srv/opentallas-scratch2/claude/die-hbm-87/work/bench/logs
+  config (WDEC,GSEL,GREP,WPIPE)  seeds  cycles/seed  mismatches  per seed: resets ~1725, injections ~1060, row slots ~110k
+  off  (0,0,1,1)                 1-3    200000       0           (rp3 ~26k), opens ~4000, reads ok ~7500, miss-edge
+  wdec (1,0,1,1)                 1-3    200000       0           sector writes ~400 (390..438)
+  gsel (0,1,1,1) (0,1,2,1)       1-3    200000       0
+  comb (1,1,2,1) (1,1,4,1)       1-3    200000       0
+  comb (1,1,2,0)                 1-3    200000       0
+  = 21 runs, 4.2M compared edges, 0 mismatches. Re-run from the committed scripts at 50000 cycles: 21/21, 0 mismatches
+  (intel1:/srv/opentallas-scratch2/claude/die-hbm-87/work/v2/cache.out).
+
+MUTANTS (combined form 1,1,2,1, seed 7, 100000 edges, stop at first port mismatch) work/v2/mut.out
+  caught: W1 no sticky on index miss (edge 914), W2 no sticky on epoch miss (2698), W4 wrong word index (245),
+          W5 present not set (28); G1 stale one-hot on open (107), G2 always rotate 4 (33), G3 wrong select lane (245),
+          G5 replica 1 not rotated (245), G7 present clear skipped (30), G8 wrong one-hot value on open (29),
+          G9 complete check off by one (31)                         -> WDEC 4/4 intended, GSEL 7/7 intended
+  not caught (100000 edges, 0 port diffs; equivalent under the reachable protocol, inference not proof):
+          W3 present term dropped from the compare (a correct index can never hit a present slot: the 4,4,4,4,1 arrivals
+             and 4,4,4,5 row consumption are locked), G4 wrong one-hot reset value (always rewritten by open_ok before the
+             first row slot), G6 complete checks lane 0 only (sectors land in order, so 'complete' never fails unless sticky
+             already fired).
+
+SYSTEM SMOKE (smb_unit L00:0 real traffic, the hg8_p1 bench recipe on intel1:/srv/opentallas-scratch2/claude/die-hbm-87/work/sys,
+group face-shell, P1=1 OPEN_IL=1, RW_SRAM 0 macro): v6 / v7 off / v7 WDEC / v7 GSEL GREP4 / v7 WDEC+GSEL GREP2 all
+SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True cycles=12764 dram_reads=5988 fault=None.
+
+LINT: verilator 5.050 --lint-only of the full kit file set with the vL7 wrapper params: 0 errors, only width warnings on
+unchanged lines. Yosys coarse synth (cache module, on 1,1,2): +160 kept one-hot flops ($adffe_160), head[8:0] removed
+(only read through the selects), words still 16x256 $dffe.
+
+YOSYS EQUIV (bonus, eq_off.sh, off form vs vL6, -mem2reg, SRAM cells cut): 9530 $equiv cells unproven after equiv_struct,
+equiv_simple -seq 2 proved 4035, equiv_induct -seq 2 did not finish in 3000 s. NOT PROVEN; equality of the off form rests
+on the lock-step runs.
+
+ISSUER CONE (item 3): Codex LOCAL_FAULT (59e1803178 results/physical/svgr_local_fault_1209, bench-only) replaces only the
+producer's per-bank reserve ENABLES (allocated/bank_epoch/bank_total/completed_q/ready_q/announced) with 4 kept registered
+stream_fault mirrors. It leaves producer reserve_ready = srst&&!allocated[rb]&&!fault (fault = stream_fault||seam_h_fault||
+|seam_bfault) unchanged, and that net is feed reserve_ready -> issuer reserve_v = st_v&&reserve_ready -> push_s -> sq[sq_w]
+write enable (4 x QW 117 = 468 endpoints), sq_w/sq_n, st_v. So the issuer sq[][] cone is NOT covered. Not extended here:
+it needs a mirror-driven reserve_ready copy plumbed producer -> feed -> issuer (3 modules, issuer port change), and the
+seam_h_fault/bfault terms stay combinational from the pins either way.

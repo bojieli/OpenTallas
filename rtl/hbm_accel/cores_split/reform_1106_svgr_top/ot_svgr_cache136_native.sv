@@ -6,7 +6,17 @@
 // fault, never hold/retry. Each record is 128 weight bytes then8 scale bytes.
 // HBM-GAPS-8 SVGR_TOP P1: WPIPE 1 = the row commit (SRAM write port, tags[] and valid[]) is registered one edge after the
 // row slot, so the 5-of-16 gather + shift ends at a register, not at the SRAM pins; ready/busy follow one edge later.
-module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter integer RW_SRAM=0, parameter integer WPIPE=0)(
+// DIE-HBM-87 vL7 (all default 0 = unchanged):
+//  WDECOUPLE 1: an arriving sector writes its staging word whenever sector_v[i] (in the running && !sticky slot); the
+//   index / epoch / present compare only sets sticky (words[] and present[] are written by sector_v alone).  Exact at
+//   the ports: sticky never clears except by reset; a word / present bit written in a mismatch edge is read (gather,
+//   complete) one edge later at the earliest, and from then on row_write (hence the SRAM write, WPIPE or not),
+//   out_valid, open_ok and the whole running branch are off, and present[] is cleared only by open_ok or reset.
+//  GSEL 1: the five gather selects (head+j)%16 are registered one-hot vectors (reset / open: 1<<j, row advance: rotate
+//   by 4 or 5 with head); gather, complete and the present clear use them, no adder or decode in front of the mux.
+//   GREP = kept replicas per gather lane (each drives 256/GREP bits).  Cycle-exact.
+module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter integer RW_SRAM=0, parameter integer WPIPE=0,
+ parameter integer WDECOUPLE=0,parameter integer GSEL=0,parameter integer GREP=1)(
  input wire clk,rst_n,
  input wire open_v,open_bank,input wire [15:0] open_epoch,input wire [6:0] open_count,input wire [9:0] open_tag_base,
  input wire [3:0] sector_v,input wire [95:0] sector_index,input wire [63:0] sector_epoch,input wire [1023:0] sector_data,
@@ -24,7 +34,8 @@ module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter intege
   reg [2:0] slot_phase;reg [8:0] elapsed;
   reg [1:0] record_phase;reg [15:0] present;reg [255:0] words[0:15];
   reg [1279:0] gathered;reg complete;reg [2:0] expected_sectors;
-  reg [1:0] ready;integer b,r,j;
+  reg [1:0] ready;integer b,r,j,gk,gc;
+  localparam integer GCW=256/GREP;wire [80*GREP-1:0] gsel;
   wire [255:0] cache_data[0:4];reg out_valid;reg [9:0] out_tag;
   wire [6:0] read_addr={read_bank,read_row};
   wire row_slot=running&&elapsed>=2&&slot_phase!=1&&emitted<load_rows;
@@ -44,8 +55,14 @@ module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter intege
     for(r=0;r<64;r=r+1)if(r<count[b]&&!valid[b][r])ready[b]=0;
    end
    for(j=0;j<5;j=j+1)begin
+    if(GSEL!=0)begin
+     if((gsel[j*GREP*16+:16]&present)==16'd0)complete=0;
+     for(gk=0;gk<16;gk=gk+1)for(gc=0;gc<GREP;gc=gc+1)
+      if(gsel[(j*GREP+gc)*16+gk])gathered[j*256+gc*GCW+:GCW]=gathered[j*256+gc*GCW+:GCW]|words[gk][gc*GCW+:GCW];
+    end else begin
     if(!present[(head+j)%16])complete=0;
     gathered[j*256+:256]=words[(head+j)%16];
+    end
    end
    if(running&&received<total_sectors)begin
     expected_sectors=slot_phase==4?1:4;
@@ -86,7 +103,8 @@ module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter intege
       if(sector_v[i]!=(i<expected_sectors))sticky<=1;
       if(sector_v[i])begin
        if(sector_epoch[i*16+:16]!=load_epoch||sector_index[i*24+:24]!=received+i||present[(received+i)%16])sticky<=1;
-       else begin words[(received+i)%16]<=sector_data[i*256+:256];present[(received+i)%16]<=1;end
+       else if(WDECOUPLE==0)begin words[(received+i)%16]<=sector_data[i*256+:256];present[(received+i)%16]<=1;end
+       if(WDECOUPLE!=0)begin words[(received+i)%16]<=sector_data[i*256+:256];present[(received+i)%16]<=1;end
       end
      end
      received<=received+expected_sectors;
@@ -95,6 +113,8 @@ module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter intege
       else begin
        if(WPIPE==0)begin tags[{load_bank,emitted[5:0]}]<=tag_base+emitted;valid[load_bank][emitted[5:0]]<=1;end
        emitted<=emitted+1'b1;
+       if(GSEL!=0)begin for(i=0;i<5;i=i+1)if(i<(record_phase==3?5:4))for(gk=0;gk<16;gk=gk+1)if(gsel[i*GREP*16+gk])present[gk]<=0;end
+       else
        for(i=0;i<5;i=i+1)if(i<(record_phase==3?5:4))present[(head+i)%16]<=0;
        head<=head+(record_phase==3?5:4);record_phase<=record_phase+1'b1;
       end
@@ -107,6 +127,23 @@ module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter intege
      else owned[retire_bank]<=0;
     end
    end
+  end
+  if(GSEL!=0)begin:g_gsel
+   // one-hot of (head+j)%16 per gather lane j and replica c; head changes only at reset, open_ok (head<=0) and the row
+   // advance (running && !sticky && row_slot && complete: head += 4 or 5), so the vectors follow it edge for edge.
+   (* keep *) reg [80*GREP-1:0] q;integer qj,qc;
+   always @(posedge clk or negedge rst_n)begin
+    if(!rst_n)begin for(qj=0;qj<5;qj=qj+1)for(qc=0;qc<GREP;qc=qc+1)q[(qj*GREP+qc)*16+:16]<=16'd1<<qj;end
+    else if(open_ok)begin for(qj=0;qj<5;qj=qj+1)for(qc=0;qc<GREP;qc=qc+1)q[(qj*GREP+qc)*16+:16]<=16'd1<<qj;end
+    else if(running&&!sticky&&row_slot&&complete)begin
+     for(qj=0;qj<5;qj=qj+1)for(qc=0;qc<GREP;qc=qc+1)
+      q[(qj*GREP+qc)*16+:16]<=(record_phase==3)?{q[(qj*GREP+qc)*16+:11],q[(qj*GREP+qc)*16+11+:5]}
+                                              :{q[(qj*GREP+qc)*16+:12],q[(qj*GREP+qc)*16+12+:4]};
+    end
+   end
+   assign gsel=q;
+  end else begin:g_nsel
+   assign gsel=0;
   end
   genvar p;for(p=0;p<5;p=p+1)begin:g_cache
    wire [1279:0] padded_row={192'b0,c_wd};
