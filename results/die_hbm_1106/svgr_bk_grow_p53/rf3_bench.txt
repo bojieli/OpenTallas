@@ -1,0 +1,25 @@
+# DIE-HBM-82-SVGR RF3 bench (epyc5 /srv/opentallas-scratch2/claude/die-hbm-82-svgr/bench): r_rf3.sv = resolved RF1+RF2+RF3 ot_svgr_split.sv at 4058c765b2 (= 60e96fc1d6 blob); mk3.sh builds rf3 (stall) / rf3n (no stall) / m15 / m16; smb_unit smoke
+rf2 smoke rc 0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988
+rf2n smoke rc 0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988
+m15 smoke rc 1 SMB_UNIT FAIL ops=20 pass=0 gos=0/29 go_slots_exact=False runs=0 fault=FAULT svg cycle 327 issuer 0 feed 1 (desc 0 cdc 1 cache 0 prog 0 s1 0 fl 0) None
+m16 smoke rc 1 SMB_UNIT FAIL ops=20 pass=0 gos=0/29 go_slots_exact=False runs=0 fault=FAULT svg cycle 328 issuer 0 feed 1 (desc 0 cdc 1 cache 0 prog 0 s1 0 fl 0) None
+rf3 smoke rc 0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988
+rf3n smoke rc 0 SMB_UNIT PASS ops=20 pass=20 gos=29/29 go_slots_exact=True runs=1 fault=None DONE cycles=12764 results=81 gos=29 runs=1 ing=221/221 xw=7176/7176 ids=1/1 dram_reads=5988
+# MUT15: bk_in_v not delayed (v one cycle ahead of the registered data); MUT16: lane mux select from unregistered gnt -> both FAIL = caught
+### mk3.sh
+#!/bin/bash
+# mk2.sh NAME STALL(0/1) MUT : bench tree src_NAME = src_rf1 (HBM-GAPS-5-LEC) with the resolved RF2 split in place of the RF1 split.
+set -e; N=$1; ST=$2; M=$3
+S=/srv/opentallas-scratch2/claude/hbm-gaps-5-lec/bench; B=/srv/opentallas-scratch2/claude/die-hbm-82-svgr/bench
+G=rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv
+rm -rf $B/src_$N; cp -a $S/src_rf1 $B/src_$N; rm -f $B/src_$N/$G
+cp $B/r_rf3.sv $B/split_$N.sv
+[ "$ST" = 1 ] && sed -i -f $S/stall_s1.sed $B/split_$N.sv
+[ "$M" != 0 ] && sed -i "/^module ot_svgr_own #(/s/parameter integer MUT=0)(/parameter integer MUT=$M)(/" $B/split_$N.sv
+python3 -I - $S/src_rf1/$G $S/tmp_rf1/split.sv $B/split_$N.sv $B/src_$N/$G <<'PY'
+import sys
+g=open(sys.argv[1]).read(); old=open(sys.argv[2]).read(); new=open(sys.argv[3]).read()
+assert g.count(old)==1, g.count(old)
+open(sys.argv[4],'w').write(g.replace(old,new))
+PY
+echo "tree $N stall=$ST mut=$(grep -c "MUT=$M)(" $B/split_$N.sv) stallbench=$(grep -c STALLBENCH $B/split_$N.sv)"
