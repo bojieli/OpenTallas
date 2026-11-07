@@ -4280,7 +4280,7 @@
     "intel2",
     "epyc4"
    ],
-   "cancel_superseded": true,
+   "cancel_superseded": false,
    "only_items": [
     "cbf_q00__cl1b5a6458",
     "cbf_q00__cl870de686",
@@ -4436,7 +4436,8 @@
     "intel1"
    ],
    "gen_host_prev_kw25": "epyc5",
-   "note_kw25_rehome": "KW-FIX-25 22:5x: OWNER 22:5x reversed the drain (COORD 22:52): epyc5/epyc6 back, first in place_prefer and gen_hosts; gen_disk_low still ranks them last while their scratch2 is under the floor. KV/HBM/HEAD new attempts stay on scratch2 kw25-wave-1106."
+   "note_kw25_rehome": "KW-FIX-25 22:5x: OWNER 22:5x reversed the drain (COORD 22:52): epyc5/epyc6 back, first in place_prefer and gen_hosts; gen_disk_low still ranks them last while their scratch2 is under the floor. KV/HBM/HEAD new attempts stay on scratch2 kw25-wave-1106.",
+   "note_codex_qc_preserve_1107": "CODEX QC watcher: COORD23:45/00:14 approved QCv4 release after strict0; disable cancellation BEFORE plan repoint so all live old QC rows finish. Current plan/source unchanged at this first step."
   },
   "hbm": {
    "enabled": true,
