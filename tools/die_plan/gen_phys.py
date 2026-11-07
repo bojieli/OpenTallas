@@ -448,7 +448,12 @@ def reset_spine_pin_sites(P, tn):
         xy = sp["sites_um"]
         if len(xy) != sp["width"]:
             raise ValueError(f"type {tn}: reset spine pin {sp['name']} needs exactly {sp['width']} sites_um")
-        out += [(f"{sp['name']}[{i}]", sp["layer"], float(x), float(y)) for i, (x, y) in enumerate(xy)]
+        # DIE-KV-88 11-07: same half-pitch class as FLOW-KITFAIL-2 (a narrow pin off its plan track is DRT-0255 at route:
+        # ri_head2_u_score_rst_n, ri_pv_u_g0_j_rst_n on M7 at half a pitch).  A site already on a track keeps its bytes.
+        import landing_contract as LC
+        for i, (x, y) in enumerate(xy):
+            x, y = LC.on_track(P, sp["layer"], float(x), float(y))
+            out.append((f"{sp['name']}[{i}]", sp["layer"], x, y))
     return out
 
 
@@ -3682,6 +3687,48 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=()
     return out
 
 
+# S81-TYPES-2/3 11-07: kit-local hard core moves, opt-in per row through wave item_env, default off (byte-identical kits).
+# OT_MACRO_MOVES = inst:x:y[:orient],... in the type frame; orient given = mirror the core and take the track offset of
+# that orient.  Only macro_place.tcl changes, as in the TYPE-CONS-5 t27/t42 pilots: the plan, pins, clock and core taps
+# stay at their plan sites, so the die sees the same type.  A tap under a moved core stays there; the pilots route it.
+_CORE_TRACK_OFFSET = {"R0": (0.108, 0.012), "MY": (0.132, 0.012), "MX": (0.108, 0.036), "R180": (0.132, 0.036)}
+
+
+def macro_move_table(t, tn, env=None):
+    """-> {placed inst: {inst, from, to, orient, x, y}}, x/y = origin + track offset; {} when OT_MACRO_MOVES is unset."""
+    raw = (os.environ if env is None else env).get("OT_MACRO_MOVES", "")
+    out = {}
+    if not raw:
+        return out
+    cores = {c.get("inst"): c for c in t.get("hard_cores", []) or []}
+    w, h = t["outline_um"]
+    pos = {n: list(c["origin_um"]) for n, c in cores.items()}
+    for e in raw.split(","):
+        f = e.split(":")
+        if len(f) not in (3, 4) or f[0] not in cores:
+            raise ValueError(f"type {tn}: OT_MACRO_MOVES entry {e!r}: not inst:x:y[:orient] of a hard core")
+        c = cores[f[0]]
+        x, y = float(f[1]), float(f[2])
+        cw, ch = c["outline_um"]
+        if x < 0 or y < 0 or x + cw > w or y + ch > h:
+            raise ValueError(f"type {tn}: OT_MACRO_MOVES {f[0]} at {x},{y} leaves the outline")
+        orient = f[3] if len(f) == 4 else c.get("orient", "R0")
+        if orient not in _CORE_TRACK_OFFSET:
+            raise ValueError(f"type {tn}: OT_MACRO_MOVES {f[0]} orient {orient!r}")
+        ox, oy = _CORE_TRACK_OFFSET[orient]
+        pos[f[0]] = [x, y]
+        out[c.get("physical_inst", f[0])] = {"inst": f[0], "from": list(c["origin_um"]), "to": [x, y], "orient": orient,
+                                             "x": x + ox, "y": y + oy}
+    names = sorted(cores)
+    for i, a in enumerate(names):
+        for b in names[i + 1:]:
+            ax, ay = pos[a]; aw, ah = cores[a]["outline_um"]
+            bx, by = pos[b]; bw, bh = cores[b]["outline_um"]
+            if ax < bx + bw and bx < ax + aw and ay < by + bh and by < ay + ah:
+                raise ValueError(f"type {tn}: OT_MACRO_MOVES overlap {a} / {b}")
+    return out
+
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
@@ -3690,6 +3737,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
+    macro_moves = macro_move_table(t, tn)
     if gpl_plain and not t.get("ft_slots"):
         raise ValueError(f"type {tn}: --gpl-plain is for pure-FT corridor kits; the type has no ft_slots")
     import core_clock_groups as CG
@@ -3748,6 +3796,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             # ODB keeps an escaped Verilog name's array brackets as \[ \] (a plan inst like g_writer[0].u_mem is not found
             # otherwise: native59 MPL-0020, PATH-QC-A0N59 10-25); escape the bare ones
             inst_db = re.sub(r"(?<!\\)([\[\]])", r"\\\1", inst)
+            if inst in macro_moves:
+                x, y, o = macro_moves[inst]["x"], macro_moves[inst]["y"], macro_moves[inst]["orient"]
             mplace.append(f"place_macro -macro_name {{{inst_db}}} -location {{{x:.4f} {y:.4f}}} -orientation {o} -exact")
         # KW6-CODE 11-04: advisory LEF/lib compare; a view with no LEF of its own gets its staged copy pruned to the lib's
         # ports.  Clean masters stay byte-identical.  bump kits keep the plain copy (bump pins are on the macro LEF).
@@ -4050,6 +4100,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else [])]
     if macros:
         (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
+        if macro_moves:
+            if set(macro_moves) - {m[0] for m in macros}:
+                raise ValueError(f"type {tn}: OT_MACRO_MOVES names no placed macro: {sorted(set(macro_moves) - {m[0] for m in macros})}")
+            (kd / "macro_moves.json").write_text(json.dumps(macro_moves, indent=1) + "\n")
     # Explicit full fixed-macro contract: use the standard stage pre-hook,
     # preserving the native placement deck and all following ORFS stages.
     import fully_fixed_macros as FFM

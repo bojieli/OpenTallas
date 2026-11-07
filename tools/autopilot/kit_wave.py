@@ -4577,6 +4577,7 @@ def main(argv=None):
     status = parse_otrun_status(out if rc == 0 else "")
     st = load_state()
     st.setdefault("items", {})
+    prune_stale_retries(cfg, st)                 # KW-FIX-28: as the real pass does, or plan lists rows the pass never takes
     res, todo = plan_dies(AP, cfg, st, owners, status, AP.HUB_NAME, probe=a.probe)
     print(f"# KIT-WAVE plan {now_s()} (dry run; nothing launched) hosts: " +
           ", ".join(f"{h} admits {v['admit']} GB run {v['run']}" for h, v in status.items()))

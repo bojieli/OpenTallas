@@ -1,0 +1,20 @@
+AGE nst4__d1_i main ready1 fault0 checks463 lo3 hi3
+AGE nst4__d1_i oldK ready0 fault1 checks0 lo1000000 hi-1000000
+AGE nst4__d1_i old ready1 fault0 checks463 lo2 hi2
+AGE nst4__d1_i kp1 ready1 fault0 checks463 lo4 hi4
+AGE nst4__d2_i main ready1 fault0 checks463 lo3 hi3
+AGE nst4__d2_i oldK ready0 fault1 checks0 lo1000000 hi-1000000
+AGE nst4__d2_i old ready1 fault0 checks463 lo2 hi2
+AGE nst4__d2_i kp1 ready1 fault0 checks463 lo4 hi4
+AGE nst4__u1_i main ready1 fault0 checks450 lo2 hi2
+AGE nst4__u1_i oldK ready0 fault1 checks0 lo1000000 hi-1000000
+AGE nst4__u1_i old ready1 fault0 checks452 lo1 hi1
+AGE nst4__u1_i kp1 ready1 fault0 checks449 lo3 hi3
+AGE nst4__u2_i main ready1 fault0 checks450 lo2 hi2
+AGE nst4__u2_i oldK ready0 fault1 checks0 lo1000000 hi-1000000
+AGE nst4__u2_i old ready1 fault0 checks452 lo1 hi1
+AGE nst4__u2_i kp1 ready1 fault0 checks449 lo3 hi3
+GUARD_FINAL nst4__d1_i ready1 fault0
+GUARD_FINAL nst4__d2_i ready1 fault0
+GUARD_FINAL nst4__u1_i ready1 fault0
+GUARD_FINAL nst4__u2_i ready1 fault0
