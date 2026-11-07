@@ -1,0 +1,38 @@
+54a55,61
+>     // STKREG=1 (HBM-FORM-TIMING-11-H9B 2026-11-06, routed TT -28.21 / 124: ofs -> |ofs -> enqueue -> controller
+>     // per-slot wq_bank/wq_col enables): sticky is a flop loaded with its exact next value (sticky | any fault class
+>     // set this edge, cleared with ofs), so the traffic kills start from a flop instead of a 6-bit OR. ENQREG=1 (needs
+>     // EREG=1, QREG=1, STKREG=1): enqueue itself is a flop loaded from the exact next values of its terms. Same edges,
+>     // same decisions (yosys equiv_induct gold vs new). STKREG=0 / ENQREG=0 = previous form exactly.
+>     parameter integer STKREG=1,
+>     parameter integer ENQREG=0,
+111c118
+<     reg[1:0]state;wire sticky=|ofs;reg[18:0]active_row;reg[31:0]observed_open;
+---
+>     reg[1:0]state;wire sticky;reg sticky_q;wire[5:0]ofs_set;reg[18:0]active_row;reg[31:0]observed_open;
+136c143,144
+<     wire enqueue=enq_run && enq_unp && (!push_read || enq_rr) && !sticky;
+---
+>     wire enqueue_c=enq_run && enq_unp && (!push_read || enq_rr) && !sticky;
+>     wire enqueue;
+274a283,302
+>     end
+>     // STKREG: the fault class set conditions of the main block, one wire each (the main block still loads ofs).
+>     assign ofs_set[0]=i_v&&!legal;
+>     assign ofs_set[1]=cv&&(state!=RUN || count==0 || cwe!=head[319] || cb!=head[318:314] || cc!=head[313:309] || (!cwe&&!caq));
+>     assign ofs_set[2]=cv&&(WPAY!=0 && cwe && fresh_v && fresh_slot==rp);
+>     assign ofs_set[3]=(cv&&!cwe&&pending_count>=32)||(ret_v&&(pending_count==0 || (response_count>=32&&!response_take)));
+>     assign ofs_set[4]=response_take&&(read_reserved==0||response_count==0);
+>     assign ofs_set[5]=(read_reserved>32||pending_count>32||response_count>32)||kq_fault||krq_fault;
+>     wire sticky_n=sticky||(|ofs_set);
+>     always @(posedge clk) if(!reset_regions[3]) sticky_q<=1'b0; else sticky_q<=sticky_n;
+>     assign sticky=(STKREG!=0)?sticky_q:(|ofs);
+>     if(ENQREG!=0 && EREG!=0 && QREG!=0)begin:g_enqreg
+>         wire[63:0]push_nx=lrst_n?push_n:queue[0];
+>         reg enq_q;
+>         always @(posedge clk)
+>             if(!reset_regions[3]) enq_q<=1'b0;
+>             else enq_q<=(g_ereg.state_n==RUN)&&(g_ereg.unposted_n!=0)&&(push_nx[63]||(g_ereg.read_reserved_n<32))&&!sticky_n;
+>         assign enqueue=enq_q;
+>     end else begin:g_enqcomb
+>         assign enqueue=enqueue_c;

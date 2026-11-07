@@ -2,6 +2,7 @@
 OpenROAD): eligibility, stop rules (PASS / no improvement / max iterations / error), best pick + pruning, record."""
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -562,3 +563,50 @@ def test_oom_evidence_needs_a_memory_line(tmp_path):
     assert not E.oom_evidence(137, p)
     p.write_text("make: *** [do-route] Error 137\n")
     assert E.oom_evidence(2, p)
+
+
+def _tools_copy(tmp_path, with_common_flow=True):
+    """a standalone tools copy as lanes make it (tools/die_plan files, optionally physical/common_flow beside it)"""
+    from common_flow_src import common_flow_file
+    src = tmp_path / "tools_copy"
+    dp = src / "tools" / "die_plan"
+    dp.mkdir(parents=True)
+    for p in E.HERE.iterdir():
+        if p.is_file() and p.name != "clock_family.tcl":
+            shutil.copy2(p, dp / p.name)
+    if with_common_flow:
+        cf = src / "physical" / "common_flow"
+        cf.mkdir(parents=True)
+        for name in E.COMMON_FLOW_BUNDLE:
+            shutil.copy2(common_flow_file(name, E.HERE.parents[1]), cf / name)
+    return dp
+
+
+def test_stage_so_stages_common_flow_beside_die_plan(tmp_path):
+    """KW-FIX-24: the staged SO tree carries physical/common_flow next to tools/die_plan, so its own signoff.py bundle
+    (prd_mk.sh, every pass) resolves clock_family.tcl / macro_cts_cluster.tcl (formerly 'incomplete tool bundle')."""
+    tools = _tools_copy(tmp_path)
+    k = tmp_path / "kit"
+    k.mkdir()
+    (k / "config.mk").write_text("export DESIGN_NAME = x\n")
+    so = E.stage_so(k, tmp_path / "eco", tools)
+    cf = so / "physical" / "common_flow"
+    for name in E.COMMON_FLOW_BUNDLE:
+        assert (cf / name).read_bytes() == (tools.parents[1] / "physical/common_flow" / name).read_bytes()
+    # prd_mk.sh: SO/tools/die_plan/signoff.py bundle OUT on a two-mode pass dir (orfs_hold_mm.tcl needs macro_cts_cluster)
+    out = tmp_path / "pass"
+    out.mkdir()
+    (out / "orfs_hold_mm.tcl").write_text("# kit two-mode hook\n")
+    r = subprocess.run([sys.executable, "-I", str(so / "tools/die_plan/signoff.py"), "bundle", str(out)],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    assert (out / "macro_cts_cluster.tcl").read_bytes() == (cf / "macro_cts_cluster.tcl").read_bytes()
+    assert (out / "clock_family.tcl").read_bytes() == (cf / "clock_family.tcl").read_bytes()
+
+
+def test_stage_so_without_common_flow_names_the_gap(tmp_path):
+    tools = _tools_copy(tmp_path, with_common_flow=False)
+    k = tmp_path / "kit"
+    k.mkdir()
+    with pytest.raises(ValueError, match="physical/common_flow/clock_family.tcl"):
+        E.stage_so(k, tmp_path / "eco", tools)

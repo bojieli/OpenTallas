@@ -255,13 +255,57 @@ def hold_mm(kit):
     return mm == "1"
 
 
+# KW-FIX-24 11-06 (COORD 11:14 class tool gap, S81-IDX-B4 eco_vbc): signoff.py / prd_mk.sh / tap_balance.tcl resolve
+# shared Tcl from physical/common_flow BESIDE tools/die_plan (clock_family.tcl; macro_cts_cluster.tcl for two-mode
+# kits' orfs_hold_mm.tcl).  The staged SO tree had only tools/die_plan, so its own signoff.py bundle (prd_mk.sh, every
+# pass) found nothing there and stopped with 'incomplete tool bundle'.  stage_so now stages physical/common_flow next to
+# so/tools/die_plan: the whole directory when the tool source has it, else the bundle's common_flow members (admission
+# bundle copy beside signoff.py, or git HEAD of a sparse checkout).
+COMMON_FLOW_BUNDLE = ("clock_family.tcl", "macro_cts_cluster.tcl")
+COMMON_FLOW_REQUIRED = ("clock_family.tcl",)
+
+
+def stage_common_flow(so, tools=HERE):
+    """so/physical/common_flow from the checkout of `tools`; returns the staged dir.  Raises ValueError when a required
+    member (clock_family.tcl) has no source, naming the fix (stage physical/common_flow next to tools/die_plan)."""
+    tools = Path(tools)
+    out = Path(so) / "physical" / "common_flow"
+    out.mkdir(parents=True, exist_ok=True)
+    src_dir = tools.parents[1] / "physical" / "common_flow"
+    if src_dir.is_dir():
+        shutil.copytree(src_dir, out, dirs_exist_ok=True,
+                        ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    for name in COMMON_FLOW_BUNDLE:
+        if (out / name).is_file():
+            continue
+        src = tools / name                      # admission bundle: copy beside signoff.py
+        if not src.is_file():
+            try:                                # sparse checkout: the bytes from git HEAD (common_flow_src.py)
+                sys.path.insert(0, str(tools))
+                from common_flow_src import common_flow_file
+                src = common_flow_file(name, tools.parents[1])
+            except (ImportError, ValueError):
+                pass
+            finally:
+                if sys.path and sys.path[0] == str(tools):
+                    sys.path.pop(0)
+        if Path(src).is_file():
+            shutil.copy2(src, out / name)
+    missing = [n for n in COMMON_FLOW_REQUIRED if not (out / n).is_file()]
+    if missing:
+        raise ValueError(f"eco_loop: incomplete tool bundle: physical/common_flow/{', '.join(missing)} not found for "
+                         f"tools {tools} (stage physical/common_flow next to tools/die_plan)")
+    return out
+
+
 def stage_so(kit, root, tools=HERE):
     """Stage one selected tool cohort, retaining kit-local hooks and inputs.
 
     Shared Python tools must come from `tools`: old kits can contain a partially
     refreshed signoff.py whose sdc_lint.py no longer implements its API.  Preserve
     unique kit scripts and geometry/runner overrides, then bundle the selected
-    sign-off family together (including its Tcl helpers).
+    sign-off family together (including its Tcl helpers), with physical/common_flow staged beside tools/die_plan
+    (stage_common_flow, KW-FIX-24).
     """
     so = Path(root) / "so"
     dp = so / "tools" / "die_plan"
@@ -274,6 +318,7 @@ def stage_so(kit, root, tools=HERE):
             if p.suffix == ".py" and (Path(tools) / p.name).is_file():
                 continue
             shutil.copy2(p, dp / p.name)
+    stage_common_flow(so, tools)
     subprocess.run([sys.executable, "-I", str(Path(tools) / "signoff.py"), "bundle", str(dp)],
                    check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     for n in ECO_TOOL_FILES:

@@ -17,6 +17,8 @@ reset contract does not cover them. Each listed pin gets one ot_dp_rgate: q <= l
 one edge later; while the die reset holds the tap low the pin is held low, so the wavefront proof covers it by construction.
 """
 import re
+from types import SimpleNamespace
+
 from bind_elab import Cell
 
 
@@ -66,6 +68,68 @@ def fit_view(c, s, pc, dc):
             pc[name], dc[name] = [bits[i] for i in sel], d
 
 
+def split_ports(path, ports, dirs, s, face):
+    """(pcc ports, pcc dirs, pcf ports, pcf dirs) of one split leaf: the pure port transform of apply.  ports maps a
+    port to its bit list (any ids), face is the bit list of the new PCC->PCF face vector."""
+    fp = s["face"]["port"]
+    pc, pf = dict(ports), {}
+    dc, df = dict(dirs), {}
+    for port, m in s["split"].items():
+        if port not in ports:
+            raise CoreSplitError(f"{path}: no port {port}")
+        bits, d = ports[port], dirs[port]
+        if sorted(m["pcc"] + m["pcf"]) != list(range(len(bits))):
+            raise CoreSplitError(f"{path}.{port}: split does not cover {len(bits)} bits exactly once")
+        pc.pop(port), dc.pop(port)
+        pc[m["pcc_port"]], dc[m["pcc_port"]] = [bits[i] for i in m["pcc"]], d
+        pf[m["pcf_port"]], df[m["pcf_port"]] = [bits[i] for i in m["pcf"]], d
+    for port, sel in s["shared"].items():
+        if port not in ports:
+            raise CoreSplitError(f"{path}: no shared port {port}")
+        bits = ports[port]
+        pf[port], df[port] = (list(bits) if sel is None else [bits[i] for i in sel]), dirs[port]
+    fit_view(SimpleNamespace(path=path), s, pc, dc)
+    pc[fp], dc[fp] = list(face), "output"
+    pf[fp], df[fp] = list(face), "input"
+    return pc, dc, pf, df
+
+
+def emitted_ifaces(cells, specs):
+    """{split leaf module: {"params": [names], "ports": {port: [dir, width]}}} as the bound parents instantiate them
+    (view_drop pins left out), from the final bind cells.  bind_verify stubs these: the split leaves have no source."""
+    mods = {m for s in specs for m in (s["pcc"], s["pcf"])}
+    hide = view_hidden(specs)
+    out = {}
+    for c in cells:
+        if c.kind != "leaf" or c.module not in mods:
+            continue
+        e = out.setdefault(c.module, {"params": set(), "ports": {}})
+        e["params"] |= set(c.params or {})
+        for pn, bits in c.ports.items():
+            if pn in hide.get(c.module, ()):
+                continue
+            w = max(len(bits), e["ports"].get(pn, [None, 0])[1])
+            e["ports"][pn] = [c.dirs[pn], w]
+    return {m: {"params": sorted(e["params"]), "ports": dict(sorted(e["ports"].items()))} for m, e in sorted(out.items())}
+
+
+def derived_ifaces(specs, iface_of):
+    """emitted_ifaces without the bind cells (bind outputs written before bind recorded them): the same split_ports
+    transform on the interface of each spec's source leaf.  iface_of(module) -> {port: (dir, width)} or None."""
+    out = {}
+    for s in specs:
+        src = iface_of(s["from"])
+        if not src:
+            raise CoreSplitError(f"no interface of split source {s['from']}: re-run bind to record core_split_ifaces")
+        ports = {p: list(range(w)) for p, (d, w) in src.items()}
+        dirs = {p: d for p, (d, w) in src.items()}
+        pc, dc, pf, df = split_ports(s["from"], ports, dirs, s, list(range(int(s["face"]["width"]))))
+        hide = set(s.get("view_drop", ()))
+        out[s["pcc"]] = {"params": [], "ports": {p: [dc[p], len(b)] for p, b in sorted(pc.items()) if p not in hide}}
+        out[s["pcf"]] = {"params": [], "ports": {p: [df[p], len(b)] for p, b in sorted(pf.items())}}
+    return out
+
+
 def apply(binder, specs):
     F, R = binder.F, binder.R
     by = {s["from"]: s for s in specs}
@@ -75,28 +139,9 @@ def apply(binder, specs):
         if s is None:
             out.append(c)
             continue
-        fp, n = s["face"]["port"], int(s["face"]["width"])
+        n = int(s["face"]["width"])
         base = F.new(n)
-        face = list(range(base, base + n))
-        pc, pf = dict(c.ports), {}
-        dc, df = dict(c.dirs), {}
-        for port, m in s["split"].items():
-            if port not in c.ports:
-                raise CoreSplitError(f"{c.path}: no port {port}")
-            bits, d = c.ports[port], c.dirs[port]
-            if sorted(m["pcc"] + m["pcf"]) != list(range(len(bits))):
-                raise CoreSplitError(f"{c.path}.{port}: split does not cover {len(bits)} bits exactly once")
-            pc.pop(port), dc.pop(port)
-            pc[m["pcc_port"]], dc[m["pcc_port"]] = [bits[i] for i in m["pcc"]], d
-            pf[m["pcf_port"]], df[m["pcf_port"]] = [bits[i] for i in m["pcf"]], d
-        for port, sel in s["shared"].items():
-            if port not in c.ports:
-                raise CoreSplitError(f"{c.path}: no shared port {port}")
-            bits = c.ports[port]
-            pf[port], df[port] = (list(bits) if sel is None else [bits[i] for i in sel]), c.dirs[port]
-        fit_view(c, s, pc, dc)
-        pc[fp], dc[fp] = list(face), "output"
-        pf[fp], df[fp] = list(face), "input"
+        pc, dc, pf, df = split_ports(c.path, c.ports, c.dirs, s, list(range(base, base + n)))
         lp, part = c.path + "_f", R.part_of(c.path)
         if part is None:
             raise CoreSplitError(f"{c.path}: leaf is in no partition")
