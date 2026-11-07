@@ -78,3 +78,15 @@ Class rule (tools/die_plan/reset_tree.py resite_crossing / resite_type / native_
   Tests: test_reset_tree.py (4 new: su_l0 resite, no-op + native overlay, unresolvable report, opt-in flag) and every
   die_plan test that imports reset_tree: 452 passed.  test_check.py::test_run_keeps_plan_path_for_plan_relative_files
   fails on the base too (gen_phys S.Plan.rect).
+vC / vD results (11-06, intel1):
+  vC (replica + reset re-site, PD 0.50): GRT-0116 after 30 iterations, overflow 1880 -> 940 (M3 470 + M7 470, Max V 1).
+    No reset net overflows any more.  Only 2 nets are left, both u_bout_x_su_c_p1_o (the 369-b output bin: D from lane3
+    w_u_lrly3_*, Q to the west M6 ports at y 262-338), each a straight vertical over lane2 (x 350.0 and 571.7,
+    y 725.6-992.9, 470 gcells).  This is the same class: a register net joining the lane1/lane2 gap to the lane2/lane3
+    gap.  Candidate next form: site u_bout_x_su_c_p1_o FIRM in the west strip at the lane3 channel mouth (sul0_sites
+    mechanism).  Its D nets then run west along the lane3 south channel and its Q nets down the west strip, so no
+    net crosses a lane.
+  vD (vC + PD 0.40): stopped at the post-CTS structural hold gate before GRT.  FF register-to-register wns -340.65 ps
+    is beyond the -260 stop, and it is 1 path only: u_bound.u_cland_origin/s0 -> s1 (launch clock 151.7 ps, capture clock
+    578.1 ps; 426 ps of skew on one landing-origin flop).  Not a reset or bus net.  vA/vB/vC had register-to-register
+    above the stop (port-only advisory).  Probe: dq85sul0/probe/hgprobe_vD.log.
