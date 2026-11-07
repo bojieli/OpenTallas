@@ -37,11 +37,11 @@
  "tables": {
   "ot_wbq_root_g0": {
    "pins_file": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
-   "sha256": "98cdcd1a1eb981ede5a0981ab23ff347e6df35af6c1772ad01ed5cbe68ad8cdf"
+   "sha256": "73293b7602133f1909e6bcdf7e1f9f9100919f80f4cc2607297af742625b9773"
   },
   "ot_wbq_root_g1": {
    "pins_file": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
-   "sha256": "98cdcd1a1eb981ede5a0981ab23ff347e6df35af6c1772ad01ed5cbe68ad8cdf"
+   "sha256": "73293b7602133f1909e6bcdf7e1f9f9100919f80f4cc2607297af742625b9773"
   }
  },
  "glue": "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_split.sv ot_wbq_root_g2 (u_rK = u_g0 ot_wbq_root_g0 + u_g1 ot_wbq_root_g1)",
