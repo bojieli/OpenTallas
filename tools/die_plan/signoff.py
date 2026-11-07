@@ -892,24 +892,28 @@ if {[sta::endpoint_violation_count min] > 0} {
   so STD_MIN_START_PORTS {*}[lsort -unique $so_hs_ports]
   # DIE-KV-88 11-07: non-port hold, report only: endpoints with a violating min path not started at an input port, a
   # register-launched path hidden behind a worse port path included, and their worst slack.  eco_loop.near_miss scores
-  # this, since port-start hold is the parent's.  Own catch: a failure here prints nothing and cannot touch the census above.
+  # this, since port-start hold is the parent's.  Each find_timing_paths result is read before the next call: a later
+  # call frees the earlier PathEnds, and reading them crashes OpenROAD, which no catch stops.
   catch {
-    set so_np [dict create]
-    foreach so_pe $so_hs_pe {
+    set so_np [dict create]; set so_np_all 0; set so_np_reg 0
+    foreach so_pe [find_timing_paths -path_delay min -group_path_count 100000 -endpoint_path_count 1 -slack_max 0] {
+      incr so_np_all
+      set so_sl [get_property $so_pe slack]
       set so_sp [get_property $so_pe startpoint]
-      if {[get_property $so_pe slack] < 0 && !([$so_sp is_top_level_port] && [get_full_name $so_sp] ni $so_ck_ports)} {
-        dict set so_np [get_full_name [get_property $so_pe endpoint]] [get_property $so_pe slack]
+      if {$so_sl < 0 && !([$so_sp is_top_level_port] && [get_full_name $so_sp] ni $so_ck_ports)} {
+        dict set so_np [get_full_name [get_property $so_pe endpoint]] $so_sl
       }
     }
-    set so_np_pe {}
-    if {[llength $so_hs_regs]} { set so_np_pe [find_timing_paths -path_delay min -from $so_hs_regs -group_path_count 100000 -endpoint_path_count 1 -slack_max 0] }
-    foreach so_pe $so_np_pe {
-      set so_sl [get_property $so_pe slack]
-      if {$so_sl >= 0} continue
-      set so_ep [get_full_name [get_property $so_pe endpoint]]
-      if {![dict exists $so_np $so_ep] || $so_sl < [dict get $so_np $so_ep]} { dict set so_np $so_ep $so_sl }
+    if {[llength [all_registers -clock_pins]]} {
+      foreach so_pe [find_timing_paths -path_delay min -from [all_registers -clock_pins] -group_path_count 100000 -endpoint_path_count 1 -slack_max 0] {
+        incr so_np_reg
+        set so_sl [get_property $so_pe slack]
+        if {$so_sl >= 0} continue
+        set so_ep [get_full_name [get_property $so_pe endpoint]]
+        if {![dict exists $so_np $so_ep] || $so_sl < [dict get $so_np $so_ep]} { dict set so_np $so_ep $so_sl }
+      }
     }
-    if {[llength $so_np_pe] < 100000} {
+    if {$so_np_all < 100000 && $so_np_reg < 100000} {
       set so_np_w 0.0
       dict for {so_ep so_sl} $so_np { if {$so_sl < $so_np_w} { set so_np_w $so_sl } }
       so STD_MIN_NONPORT n [dict size $so_np] wns [format %.2f $so_np_w]
