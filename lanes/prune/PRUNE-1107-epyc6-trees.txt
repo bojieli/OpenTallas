@@ -1,0 +1,68 @@
+
+codex-wave-1105 total 258.2 GB, rows 83, in plan rows 257.9
+  final: KEEP-REF=99.0/51 KEEP-LEAF=63.0/23 KEEP-SOURCE=56.6/3 KEEP-LIVE-WAVE=39.3/6
+  classifier before overlay, removable: 
+   hold 87.6 GB KEEP-REF: refK codex-wave-1105/pack_history.py (intel2)
+   hold 56.6 GB KEEP-SOURCE: dir name
+   hold 39.3 GB KEEP-LIVE-WAVE: 
+   hold 11.8 GB KEEP-LEAF: Q:queue
+   hold 9.6 GB KEEP-LEAF: proc:cmd@intel1
+   hold 7.4 GB KEEP-LEAF: refK codex-wave-1105/runs/s81_head/kit-wave/s81_head/l48uh/items/ (intel2)
+   hold 6.4 GB KEEP-REF: refR /home/ubuntu/type-safe-2-logs/ts2_rows.json (intel2)
+
+kw11 total 75.6 GB, rows 14, in plan rows 75.6
+  final: KEEP-SOURCE=75.6/9 KEEP-REF=0.0/5
+  classifier before overlay, removable: 
+   hold 75.6 GB KEEP-SOURCE: dir name
+   hold 0.0 GB KEEP-REF: P:protected_union.tsv
+
+s81-wave-1105e4 total 61.1 GB, rows 28, in plan rows 60.7
+  final: KEEP-REF=45.2/26 KEEP-LEAF=15.5/2
+  classifier before overlay, removable: 
+   hold 24.4 GB KEEP-REF: counted
+   hold 15.5 GB KEEP-LEAF: recent<6h
+   hold 12.1 GB KEEP-REF: refK s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/slice_statio (intel2)
+   hold 8.6 GB KEEP-REF: refR /home/ubuntu/type-safe-2-logs/ts2_rows.json (intel2)
+   hold 0.1 GB KEEP-REF: proc:cmd@epyc6
+
+qc-wave-1105e4 total 61.2 GB, rows 20, in plan rows 61.2
+  final: KEEP-LIVE-WAVE=61.2/20
+  classifier before overlay, removable: 
+   hold 61.2 GB KEEP-LIVE-WAVE: 
+
+moved total 57.6 GB, rows 1, in plan rows 57.6
+  final: KEEP-REF=57.6/1
+  classifier before overlay, removable: 
+   hold 57.6 GB KEEP-REF: proc:cmd@localhost
+
+kv-wave-1105f2 total 53.7 GB, rows 10, in plan rows 53.7
+  final: KEEP-LIVE-WAVE=51.5/8 KEEP-REF=1.6/1 KEEP-SOURCE=0.6/1
+  classifier before overlay, removable: 
+   hold 51.5 GB KEEP-LIVE-WAVE: 
+   hold 1.6 GB KEEP-REF: refL kv-wave-1105f2/kit-wave/qwen_kvsys/event28w_c/items/kv3_pc_v (epyc6)
+   hold 0.6 GB KEEP-SOURCE: dir name
+
+kw21 total 4.4 GB, rows 2, in plan rows 4.4
+  final: KEEP-SOURCE=4.4/2
+  classifier before overlay, removable: 
+   hold 4.4 GB KEEP-SOURCE: dir name
+
+kw23 total 1.4 GB, rows 5, in plan rows 1.1
+  final: KEEP-SOURCE=1.1/5
+  classifier before overlay, removable: 
+   hold 1.1 GB KEEP-SOURCE: dir name
+
+kw22 total 0.7 GB, rows 1, in plan rows 0.4
+  final: KEEP-SOURCE=0.4/1
+  classifier before overlay, removable: 
+   hold 0.4 GB KEEP-SOURCE: dir name
+
+type-safe-2 total 0.8 GB, rows 4, in plan rows 0.8
+  final: KEEP-MARKER=0.8/1 KEEP-REF=0.0/2 KEEP-LEAF=0.0/1
+  classifier before overlay, removable: 
+   hold 0.8 GB KEEP-MARKER: .keep
+   hold 0.0 GB KEEP-REF: refK type-safe-2/zs/run_pc.sh (intel2)
+   hold 0.0 GB KEEP-REF: proc:cmd@epyc5
+   hold 0.0 GB KEEP-LEAF: refR type-safe-2/views/t54_vS_cts/check.json (epyc5)
+
+DELETE+GITRM on the 10 trees: 0.0 GB
