@@ -1,0 +1,6 @@
+DIFF cycle1 old1 new1 expected0 state1/1
+DIFF cycle5 old0 new0 expected1 state0/0
+DIFF cycle7 old1 new1 expected0 state1/1
+LOCKSTEP cycles270 errors116
+FATAL: /srv/opentallas-scratch2/claude/codex-kv-prompt-0615/fault_pin_proof/bypass_mutant.v:36: 
+       Time: 2701  Scope: tb

@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.private_pin_cycles.v1",
+  "variant": "vK",
+  "parent_variant": "vJ2",
+  "added_rx_clk_PIN_cycles": {
+    "u_program__fault": 1
+  },
+  "inherited_PIN_cycles": {
+    "s_ar_to_s_r": 1,
+    "u_program__authorized_footer_and_valid": 1
+  },
+  "inherited_reset_release_cycles": 3,
+  "RTL_change": "else u_program__fault <= _3129_; -> else u_program__fault <= hrfp_u_program__fault_0_internal_state;",
+  "internal_logic_byte_exact": true,
+  "old_rtl_sha256": "83d8fefeda28fbac9e731f8225008008e5b115090daddddf868b9a1ebb79c63f",
+  "new_rtl_sha256": "3051cee57cc069b1b46f911ba2ea05e459346a021ce19847ff92eebe6fa417d2",
+  "source_transform": "codex/kv-prompt-channel-1107 fault_pin_cycle.py",
+  "parent_model_obligation": "compiler/token parent must delay program fault observation by one ck edge; no state/feedback/handshake change"
+}

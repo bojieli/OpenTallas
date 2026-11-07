@@ -1,0 +1,10 @@
+{
+  "new": {
+    "rc": 0,
+    "log": "LOCKSTEP cycles270 errors0\n/srv/opentallas-scratch2/claude/codex-kv-prompt-0615/fault_pin_proof/new.v:36: $finish called at 2701 (1s)\n"
+  },
+  "bypass_mutant": {
+    "rc": 1,
+    "log": "DIFF cycle1 old1 new1 expected0 state1/1\nDIFF cycle5 old0 new0 expected1 state0/0\nDIFF cycle7 old1 new1 expected0 state1/1\nLOCKSTEP cycles270 errors116\nFATAL: /srv/opentallas-scratch2/claude/codex-kv-prompt-0615/fault_pin_proof/bypass_mutant.v:36: \n       Time: 2701  Scope: tb\n"
+  }
+}
