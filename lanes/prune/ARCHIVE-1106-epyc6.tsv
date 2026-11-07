@@ -3,17 +3,17 @@ path	class	bytes	mtime	archive_path	verify	action
 /srv/opentallas-scratch3/claude/die-s81-67/t23/resign_at	closed-resign	-	2026-11-06	/archive/opentallas-signed-1106/epyc6/srv/opentallas-scratch3/claude/die-s81-67/t23/resign_at	OK files+bytes+sha256(PROVENANCE,signoff) match	ARCHIVED, kept intact on host
 /srv/opentallas-scratch3/claude/dkv82/resign_ft_bs2	closed-resign	-	2026-11-06	/archive/opentallas-signed-1106/epyc6/srv/opentallas-scratch3/claude/dkv82/resign_ft_bs2	OK files+bytes+sha256(PROVENANCE,signoff) match	ARCHIVED, kept intact on host
 /srv/opentallas-scratch3/claude/dkv83/resign_io_ft_i2_bu2	closed-resign	-	2026-11-06	/archive/opentallas-signed-1106/epyc6/srv/opentallas-scratch3/claude/dkv83/resign_io_ft_i2_bu2	OK files+bytes+sha256(PROVENANCE,signoff) match	ARCHIVED, kept intact on host
-/srv/opentallas-scratch3/claude/dh75/eco_wshim_tx_vB/i1	nonclosed	4432811516	2026-11-06 11:48	-	-	PLANNED delete (never signed; not protected/cited/queue/linked/live; idle>6h; no .keep/.git)
-/srv/opentallas-scratch3/claude/die-hbm-79/bg	nonclosed	283689139	2026-11-06 05:42	-	-	PLANNED delete (never signed; not protected/cited/queue/linked/live; idle>6h; no .keep/.git)
-/srv/opentallas-scratch3/claude/die-s81-67/t29cl2e5/eco_e_nostage	nonclosed	2002643490	2026-11-06 05:05	-	-	PLANNED delete (never signed; not protected/cited/queue/linked/live; idle>6h; no .keep/.git)
-/srv/opentallas-scratch3/claude/die-s81-67/t29cl2e5/kit_i3	nonclosed	15809808875	2026-11-06 03:53	-	-	PLANNED delete (never signed; not protected/cited/queue/linked/live; idle>6h; no .keep/.git)
-/srv/opentallas-scratch3/claude/die-s81-67/t31/kit_i3	nonclosed	14224832602	2026-11-06 01:04	-	-	PLANNED delete (never signed; not protected/cited/queue/linked/live; idle>6h; no .keep/.git)
-/srv/opentallas-scratch3/claude/die-s81-67/t42cl4bd/kit_i3	nonclosed	15792334599	2026-11-06 00:07	-	-	PLANNED delete (never signed; not protected/cited/queue/linked/live; idle>6h; no .keep/.git)
-/srv/opentallas-scratch3/claude/dkv81/eco_v1vB	nonclosed	9128643499	2026-11-06 09:17	-	-	PLANNED delete (never signed; not protected/cited/queue/linked/live; idle>6h; no .keep/.git)
-/srv/opentallas-scratch3/claude/dkv81/kits	nonclosed	8815731267	2026-11-06 04:51	-	-	PLANNED delete (never signed; not protected/cited/queue/linked/live; idle>6h; no .keep/.git)
-/srv/opentallas-scratch3/claude/kv-prm-b4	nonclosed	12746155445	2026-11-06 11:58	-	-	PLANNED delete (never signed; not protected/cited/queue/linked/live; idle>6h; no .keep/.git)
-/srv/opentallas-scratch3/claude/s81-engrr-b3	nonclosed	4202208638	2026-11-06 09:18	-	-	PLANNED delete (never signed; not protected/cited/queue/linked/live; idle>6h; no .keep/.git)
-/srv/opentallas-scratch3/claude/die-s81-67/t14	nonclosed	23200000000	2026-11-06 10:15	-	-	HELD: ECO exhausted at FF -9.90 one endpoint; may be next ECO base -> kept
 /srv/opentallas-scratch3/claude/die-s81-67/t12/kit_i3	closed	11354322930	2026-11-06	/archive/opentallas-signed-1106/epyc6/srv/opentallas-scratch3/claude/die-s81-67/t12/kit_i3	OK files+bytes+sha256(signoff.json,6_final.odb) match	STUBBED 2026-11-06 19:0x PST: deleted [1-5]_*/6_1_* odbs, route.guide, *_rcx.spef (8.17 GB); run/logs restored; ARCHIVED.json written
 /srv/opentallas-scratch3/claude/die-s81-67/t23/kit_i3	closed	12124178753	2026-11-06	/archive/opentallas-signed-1106/epyc6/srv/opentallas-scratch3/claude/die-s81-67/t23/kit_i3	OK files+bytes+sha256(signoff.json,6_final.odb) match	STUBBED 2026-11-06 19:0x PST: deleted [1-5]_*/6_1_* odbs, route.guide, *_rcx.spef (8.63 GB); run/logs restored; ARCHIVED.json written
-/srv/opentallas-scratch3/claude/dkv82/eco_ft_i3/i2	closed	10075664811	2026-11-06	/archive/opentallas-signed-1106/epyc6/srv/opentallas-scratch3/claude/dkv82/eco_ft_i3/i2	OK files+bytes+sha256(signoff.json,6_final.odb) match	STUBBED 2026-11-06 19:0x PST: deleted [1-5]_*/6_1_* odbs, route.guide, *_rcx.spef (7.36 GB); run/logs restored; ARCHIVED.json written
+/srv/opentallas-scratch3/claude/dh75/eco_wshim_tx_vB/i1	nonclosed	4432811516	2026-11-06 11:48	-	-	DELETED 2026-11-06 19:22 PST
+/srv/opentallas-scratch3/claude/die-hbm-79/bg	nonclosed	283689139	2026-11-06 05:42	-	-	DELETED 2026-11-06 19:22 PST
+/srv/opentallas-scratch3/claude/die-s81-67/t29cl2e5/eco_e_nostage	nonclosed	2002643490	2026-11-06 05:05	-	-	DELETED 2026-11-06 19:22 PST
+/srv/opentallas-scratch3/claude/die-s81-67/t29cl2e5/kit_i3	nonclosed	15809808875	2026-11-06 03:53	-	-	DELETED 2026-11-06 19:23 PST
+/srv/opentallas-scratch3/claude/die-s81-67/t31/kit_i3	nonclosed	14224832602	2026-11-06 01:04	-	-	DELETED 2026-11-06 19:23 PST
+/srv/opentallas-scratch3/claude/die-s81-67/t42cl4bd/kit_i3	nonclosed	15792334599	2026-11-06 00:07	-	-	DELETED 2026-11-06 19:23 PST
+/srv/opentallas-scratch3/claude/dkv81/eco_v1vB	nonclosed	9128643499	2026-11-06 09:17	-	-	DELETED 2026-11-06 19:23 PST
+/srv/opentallas-scratch3/claude/dkv81/kits	nonclosed	8815731267	2026-11-06 04:51	-	-	DELETED 2026-11-06 19:23 PST
+/srv/opentallas-scratch3/claude/kv-prm-b4	nonclosed	12746155445	2026-11-06 11:58	-	-	DELETED 2026-11-06 19:23 PST
+/srv/opentallas-scratch3/claude/s81-engrr-b3	nonclosed	4202208638	2026-11-06 09:18	-	-	DELETED 2026-11-06 19:23 PST
+/srv/opentallas-scratch3/claude/dkv82/eco_ft_i3/i2	closed	10075664811	2026-11-06	/archive/opentallas-signed-1106/epyc6/srv/opentallas-scratch3/claude/dkv82/eco_ft_i3/i2	OK files+bytes+sha256 match	ARCHIVED; stub REVERTED 19:3x PST (parent eco_ft_i3 on PROTECTED-DBS; all 7.4 GB restored from archive, files/bytes re-verified)
+/srv/opentallas-scratch3/claude/die-s81-67/t14	nonclosed	23200000000	2026-11-06 10:15	-	-	DELETED 2026-11-06 19:22 PST (meant to HOLD: filter bug; never signed, ECO exhausted FF -9.90, idle 9 h; not restorable)
