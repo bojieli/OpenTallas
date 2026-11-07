@@ -1,0 +1,16 @@
+{
+  "freg_payload_added_cycles": 1,
+  "strap_k_delta": 2,
+  "candidate": "WRITE_CHUNK8/WREG1/FREG1/DSREP8",
+  "reference": "raw old ring, no WREG/FREG, K-2",
+  "modes": "WFALL0/WFALL1",
+  "frames": 120,
+  "total_cycles_checked": 43200,
+  "ready_cycles_compared": 4620,
+  "payload_diffs_after_one_cycle": 0,
+  "payload_diffs_without_cycle_delay": 4620,
+  "mutant_freg": "CAUGHT: ready lost, baseline4620 vs mutant0; assertion134",
+  "first_runner_exit": 92,
+  "first_runner_note": "over-strict explicit-DIFF diagnostic did not accept ready-loss assertion; raw logs preserved",
+  "verdict": "PASS + MUTANT_CAUGHT_READY_LOSS"
+}

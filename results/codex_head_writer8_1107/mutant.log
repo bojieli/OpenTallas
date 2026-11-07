@@ -1,0 +1,12 @@
+DIFF mode=0 check=35 phase=257 K=4 data=7c4b44c8e757a000/7c4b44c8e757a0c0 ready=0/0 fault=0/0
+DIFF mode=1 check=36 phase=257 K=4 data=7c4b44c8e757a000/7c4b44c8e757a0c0 ready=0/0 fault=0/0
+DIFF mode=0 check=43 phase=257 K=4 data=dbb55ace0ab9f300/dbb55ace0ab9f332 ready=0/0 fault=0/0
+DIFF mode=1 check=44 phase=257 K=4 data=dbb55ace0ab9f300/dbb55ace0ab9f332 ready=0/0 fault=0/0
+DIFF mode=0 check=51 phase=257 K=4 data=9244b990ad98c700/9244b990ad98c75f ready=0/0 fault=0/0
+DIFF mode=1 check=52 phase=257 K=4 data=9244b990ad98c700/9244b990ad98c75f ready=0/0 fault=0/0
+DIFF mode=0 check=59 phase=257 K=4 data=8d542823c8476500/8d542823c84765e1 ready=0/0 fault=0/0
+DIFF mode=1 check=60 phase=257 K=4 data=8d542823c8476500/8d542823c84765e1 ready=0/0 fault=0/0
+WRITE_CHUNK_EQ cases=120 modes=2 checks=43200 ready_checks=4680 errors=14252 FAIL
+[19623000] %Fatal: tb.sv:66: Assertion failed in tb: writer chunk proof failed
+%Error: tb.sv:66: Verilog $stop
+Aborting...

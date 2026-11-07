@@ -55,7 +55,10 @@ def ring_write_reg(plan, tn, bus):
     freg = cfg.get("freg", False)
     if not isinstance(freg, bool):
         raise ValueError(f"{tn}: landing_ring_wreg.freg must be a boolean")
-    return dict(depth=1 + int(freg), dsrep=dsrep, freg=freg)
+    write_chunk = cfg.get("write_chunk", 64)
+    if isinstance(write_chunk, bool) or not isinstance(write_chunk, int) or write_chunk not in (1, 2, 4, 8, 16, 32, 64):
+        raise ValueError(f"{tn}: landing_ring_wreg.write_chunk must divide 64")
+    return dict(depth=1 + int(freg), dsrep=dsrep, freg=freg, write_chunk=write_chunk)
 
 
 
@@ -1137,8 +1140,8 @@ class Landings:
                 if wreg:
                     if not cat.get("straps"):
                         raise LandingError(f"{tn}.{b}: landing_ring_wreg needs the count-aligned strap form")
-                    ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']})" + (", .FREG(1))" if wreg["freg"] else ")")
-                    self.reset_placements[tn][b].update(ring_wreg=1, ring_dsrep=wreg["dsrep"], ring_freg=int(wreg["freg"]),
+                    ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']})" + (f", .WRITE_CHUNK({wreg['write_chunk']})" if wreg["write_chunk"] != 64 else "") + (", .FREG(1))" if wreg["freg"] else ")")
+                    self.reset_placements[tn][b].update(ring_wreg=1, ring_dsrep=wreg["dsrep"], ring_freg=int(wreg["freg"]), ring_write_chunk=wreg["write_chunk"],
                                                         strap_k_delta=wreg["depth"])
                 self.reset_placements[tn][b].update(ring_rst_n=reader_start, origin_raw_reset=reset)
             else:

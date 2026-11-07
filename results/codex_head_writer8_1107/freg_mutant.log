@@ -1,0 +1,4 @@
+FREG_PIN_CYCLE_EQ cases=120 modes=2 checks=43200 ready_checks=0 errors=0 zero_delay_diffs=0 FAIL
+[19623000] %Fatal: tb_freg.sv:72: Assertion failed in tb: writer chunk proof failed
+%Error: tb_freg.sv:72: Verilog $stop
+Aborting...

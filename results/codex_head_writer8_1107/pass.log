@@ -1,0 +1,5 @@
+WRITE_CHUNK_EQ cases=120 modes=2 checks=43200 ready_checks=4680 errors=0 PASS
+- tb.sv:67: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 20us; walltime 0.245 s; speed 130.101 us/s
+- Verilator: cpu 0.151 s on 1 threads; alloced 1017 MB
