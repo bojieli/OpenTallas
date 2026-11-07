@@ -250,10 +250,12 @@ module qkd_hr_ingest_eng (
     reg          er_w;                          // same D as the engine's copies
     wire [FW-1:0] e_all = {e_last, e_tag, e_addr, e_data};
     reg  [FW-1:0] s0, s1;
-    (* keep = 1 *) reg [288:0] o_pin;           // {w_v, w_addr, w_data}: reaches only the pins
+    (* keep = 1 *) reg [287:0] o_pin;           // {w_addr, w_data}: reaches only the pins
     (* keep = 1 *) reg [287:0] o_h;             // the same value, holds the register (face guard: a port flop has no internal load)
     reg  [8:0]   o_dn;                          // {last, tag}
-    (* keep = 1 *) reg o_v;                     // internal twin of the port flop o_pin[288]
+    (* keep = 1 *) reg o_vn;                    // internal copy of the port flop o_vp, inverted so synthesis cannot fold them
+    reg o_vp;                                   // port flop, no keep: a kept scalar name leaves an alias buffer on the port net
+    wire o_v = !o_vn;
     reg          s_wp, s_rp;
     reg  [1:0]   s_n;
     wire         push = e_wv && er_w;
@@ -265,23 +267,23 @@ module qkd_hr_ingest_eng (
     wire [FW-1:0] o_n = s_nz ? s_h : e_all;
     assign er_n = ({2'd0, o_v} + {1'b0, s_n} + {2'd0, push}) <= 3'd2;
     assign face_idle = !o_v && !s_nz;
-    assign w_v = o_pin[288];
+    assign w_v = o_vp;
     assign w_addr = o_pin[287:256];
     assign w_data = o_pin[255:0];
     always @(posedge ck) begin
         if (push && !s_wp) s0 <= e_all;
         if (push && s_wp) s1 <= e_all;
-        o_pin[287:0] <= ld_o ? o_n[287:0] : o_h;
+        o_pin <= ld_o ? o_n[287:0] : o_h;
         o_h <= ld_o ? o_n[287:0] : o_h;
         if (ld_o) o_dn <= o_n[296:288];
     end
     wire         fire = o_v && w_rdy;
     always @(posedge ck or negedge rq)
-        if (!rq) begin o_v <= 1'b0; o_pin[288] <= 1'b0; s_wp <= 1'b0; s_rp <= 1'b0; s_n <= 2'd0; er_w <= 1'b0; end
+        if (!rq) begin o_vn <= 1'b1; o_vp <= 1'b0; s_wp <= 1'b0; s_rp <= 1'b0; s_n <= 2'd0; er_w <= 1'b0; end
         else begin
             er_w <= er_n;
-            if (ld_o) o_v <= s_nz || push;
-            o_pin[288] <= ld_o ? (s_nz || push) : o_v;   // holds from the twin: the port flop has no internal load
+            if (ld_o) o_vn <= !(s_nz || push);
+            o_vp <= ld_o ? (s_nz || push) : o_v;   // holds from the twin: the port flop has no internal load
             if (s_keep) s_wp <= !s_wp;
             if (s_take) s_rp <= !s_rp;
             s_n <= s_n + {1'b0, s_keep} - {1'b0, s_take};

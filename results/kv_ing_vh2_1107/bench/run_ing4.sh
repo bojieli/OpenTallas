@@ -76,8 +76,8 @@ case $CASE in
  m_dnfast) sub $T "dn_b <= dn_a; dn_q <= dn_b;" "dn_b <= dn_a; dn_q <= dn_a;";;
  m_dnslow) sub $T "wf_a <= fire; wf_b <= wf_a;" "wf_a <= fire; wf_b <= wf_a; wf_c <= wf_b;"; sub $T "nsec_lo_n = wf_b ?" "nsec_lo_n = wf_c ?"; sub $T "(wf_b && nsec_lf)" "(wf_c && nsec_lf)"; sub $T "if (wf_b) nsec_lf" "if (wf_c) nsec_lf"; sub $T "reg  wf_a, wf_b," "reg  wf_c; reg  wf_a, wf_b,";;
  m_oh2) sub $T "o_h <= ld_o ? o_n[287:0] : o_h;" "o_h <= o_pin;";;
- m_ovp) sub $T "o_pin[288] <= ld_o ? (s_nz || push) : o_v;" "o_pin[288] <= ld_o ? push : o_v;";;
- m_ovph) sub $T "o_pin[288] <= ld_o ? (s_nz || push) : o_v;" "o_pin[288] <= ld_o ? (s_nz || push) : 1'b0;";;
+ m_ovp) sub $T "o_vp <= ld_o ? (s_nz || push) : o_v;" "o_vp <= ld_o ? push : o_v;";;
+ m_ovph) sub $T "o_vp <= ld_o ? (s_nz || push) : o_v;" "o_vp <= ld_o ? (s_nz || push) : 1'b0;";;
  m_elast) sub $E "assign       e_last = qk_s[34] && ft[8];" "assign       e_last = ft[8];";;
  # exact cuts
  m_slraw) sub $E "sl_raw <= {34{raw_n}};" "sl_raw <= {34{is_raw}};";;
