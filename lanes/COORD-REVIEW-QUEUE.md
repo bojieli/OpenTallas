@@ -22341,3 +22341,30 @@ FAILED [AUTOPILOT 3368eccf0362] 2026-11-06 21:32:23 PST AUTOPILOT -> KIT-WAVE-3:
   4. COORD's 15:0x ruling recorded as the exception to METHODOLOGY 12.8a (centre clock entry).
   Next: rebuild hd_lep0N (the current single-core form, or the D2 split) with the vE detailed view.
 - 2026-11-06 22:03 PST STATE [DIE-HBM-82-SPB -> DIE-HBM-82, cc COORD, HBM-CONS-1] q_spb2 under OWNER 21:5x/22:0x. Util 5.1% (type <=0.35 OK), 123k cells (<=150k OK), so no util vD. (1) vA STOPPED by me 22:5x: post-CTS GRT hung 1 h 35 at extra iteration 13 (same as the old 9 h), probe 0 overflow did not carry over. Residual congestion (21 gcells at it 10) is ALL in the 34.6-um strip between u_xc_Q2 top (y 1468.8) and the N edge, x 800-820, nets L49_i station nets. Root cause found by placement dump: that strip holds 1048 L40_o face flops (pins over Q2) + 1708 u_cp_svg_Q2/Q3 soft-interface relay FFs (kit relay_sites) + 465 L49_i s1/s2 station flops + L87/L83 stations; only M6/M7 can leave over the macro. (2) vC (PART 52+54) probe 0/0/0, route running epyc6; expect the same strip stall. (3) NEW vD = vC + strip_clear.tcl (kit-local, 0 cycles, netlist unchanged): every FIRM station/relay FF in the strip above a hard core moves to the nearer core side below the strip, order kept; face flops stay. Chain: place -> chain/hop dump -> GRT probe -> route; queued ot-run epyc6. SMELLS (place view vA/vC): 3 narrow channel above u_xc_Q2 (fix = vD); 9 macro under L40_o/L723x2_o pin edge (pins stay, logic moved out = vD); 6+7 spaghetti: 320 L49_i bits end at Q2 west pins (x 717) but run east to s1 (x 811-1007) and back (fix = vD moves s1 off the strip; full per-bit re-route = plan event if vD shows long hops); 8 L33x2 station banks round blobs 0.55-0.60 (<0.7, watch); 4 one clk net 37,897 sinks over the full block pre-CTS (CTS taps clk_t1..t19, check at CTS view). [CHECKED epyc6 /srv/opentallas-scratch3/claude/die-hbm-82-spb/vis/vA_place_grt.png, vis/vC_place.png]
+- 2026-11-06 22:06 PST PARKED [DIE-HBM-82 -> COORD, successor] Weekly agent limit hit at about 22:2x: sub-lanes EP6, COLL and SPB died with HTTP 429 (limit resets Nov 13 09:00 PST per the error). Nothing killed. No sub-lane is confirmed alive; running ot-run jobs continue on their own, but nobody is collecting them. HANDOVER state follows.
+  READY, not confirmed merged (check main):
+    - PART 51 wbq_root g0/g1: claude/die-hbm-82-ep6-wbqg2-1106@de3ea04f5f (supersedes 5e5e75c6dd)
+    - PART 49 wbq_sw: e18a931865
+    - PART 52 + 54 q_spb2 corridors + L3012 windows: claude/die-hbm-82-spb-1106@dda5714a16 (in order, with replay scripts)
+    - PART 53 svgr_bk grow + svgr_own RF3: f064077e8f. HOLD until the vPW45c result: its core_macros rects may need amending (channels 11.5 um).
+    - PART 50 clock sites: d494336288
+    - centry-m5only: 27427d7af5
+    - macro-gap: dfe62dcec9
+    - p40names: 14424429f6
+    - PART 47: 07dceca6b0
+    Parts 49/51/52/53/54 all rewrite die_plan.json.gz: land each by its replay script on the previous tree, not by binary merge.
+  LIVE BUILDS to collect (kit -> next action):
+    - flc_eco1 i2: epyc2 /srv/opentallas-scratch3/claude/die-hbm-80/eco/flc_eco1, DRT ~20 violations; i1 was TT +61, FF -3.88/28, DRC 2. On SIGNED + LEC EQ: re-sign, AUTO-RESIGN row, READY-COUNT.
+    - q3_edge_link rebuild vA/vB: epyc2, centre clk, parity recipe, sub-lane P40. Needed for it to count; the old record is pin-unmatched.
+    - q_spb2 vA (epyc5 /srv/opentallas-scratch2/claude/die-hbm-82-spb/q_spb2_vA) and vC (epyc6, PART 54); vB is TYPE-SAFE-2's.
+    - wbq_root g0/g1 vA/vB (epyc5 queue), wbq_sw vA/vB + vms wA/wA/wB + opsb vA/vB/vC + hidx_s3_q eco_loop: */srv/opentallas-scratch2/claude/die-hbm-82-ep6/kits; status: intel2 bash /tmp/ep6_st.sh.
+    - qcol4 vA/vB DRT at 3-4 DRC (COLL, epyc4 /srv/opentallas-scratch2/claude/die-hbm-82-coll). vC pin spread was approved but may not have started. Hold that PART if vA or vB signs on today's table.
+    - rx_bm3_rest vA (intel2 /srv/opentallas-scratch2/claude/die-hbm-82-rf/rx/kits, GRT0 0 overflow, hold repair then route, lec_hints.json needed for routed LEC); vB is congested, let it fail.
+    - svgr_top vM6 congested: next form is the split on the issuer | feed boundary with a registered seam (RF default; or take HBM-CONS-1 vK if it is one).
+    - svgr_bk vPW45c (intel1), svgr_own RF3 vC/vD (epyc4/intel1), svgr_own vB: /srv/opentallas-scratch2/claude/die-hbm-82-svgr.
+    - inj_vA (epyc6, ~/dh82s-logs/inj_vA, driver pid 1297452 on intel2): HOLD_ROUTE set, place view then remove the file and route.
+    - bank128 weight_E vA/vB (B128, epyc2).
+  DONE this session: READY-COUNT q2_hard reduce, gq_land MY 4222, lane_core_fr, q3_edge_arg __fpipe2, subtree32 (re-signed dm-hbm). q3_edge_link does NOT count (pin table mismatch, see 18:5x); its READY-COUNT stands corrected.
+  Stale sweep: 32 rows, 29 no build. q2n2_vm_core goes to HBM-CONS-1.
+  Open: hcol_h0_rb NO_RECIPE.
+  OWNER 21:5x/22:0x visual + smell rules apply to all of the above. Some sub-lanes had not reached their next stage's view when they stopped.
