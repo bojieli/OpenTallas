@@ -176,6 +176,8 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     assign mu_c = {muc_d, muc_v};
     // x store write port (P2) and message fill
     reg busy;
+    // Declare before drain logic for both HDL frontends.
+    reg [13:0] n;
     // Optional SRAM capture pipeline: drain protects the final captured word,
     // while the original issue counter/read count remains unchanged.
     reg sram_drain;
@@ -210,7 +212,6 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
         else if (start) nbeat <= 7'd0;
         else if (wv2) nbeat <= nbeat + 7'd1;
     // ================================================================== X STORE (4 x 64x512 macros)
-    reg [13:0] n;
     wire go0 = busy && n == 14'd0;
     wire xv0 = busy && n >= 14'd5;
     wire [13:0] m0 = n - 14'd5;
@@ -274,6 +275,7 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
         assign rb0_c = rb0; assign rb1_c = rb1;
         assign sa_mux = sa_c; assign sb_mux = sb_c;
     end endgenerate
+    reg ctlf_q;
     reg go3, xv3, ctlf_d;
     always @(posedge ck or negedge rr[2])
         if (!rr[2]) begin go3 <= 1'b0; xv3 <= 1'b0; end
@@ -294,7 +296,6 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     wire gon, gos;
     ot_s81hd_kf u_gon (.ck(ck), .d(SRAM_RAW_CAPTURE != 0 ? go2 : go1), .q(gon));
     ot_s81hd_kf u_gos (.ck(ck), .d(SRAM_RAW_CAPTURE != 0 ? go2 : go1), .q(gos));
-    reg ctlf_q;
     reg [564:0] sno_q, sso_q;
     always @(posedge ck) begin
         sno_q <= {fault_out, gon, {8{gon}}, 23'd0, {17{gon}}, go_out, xv_out, go_out, xb2, xa2};
