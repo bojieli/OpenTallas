@@ -28,5 +28,5 @@ mutc m_ldq ".ld(ldq), .S(S_b)" ".ld(ld_i), .S(S_b)"
 mutc m_sb ".ld(ldq), .S(S_b)" ".ld(ldq), .S(S_i)"
 mutc m_ff ".LA(2), .FF(1)" ".LA(2), .FF(0)"
 mut m_bm1 ".ld_i(ldr[1])" ".ld_i(ldr[2])"
-mut m_rm ".rrst_n(rn_m)" ".rrst_n(rn_r)"
+mut m_rm "else rs_m <= {rs_m[0], 1'b1};" "else rs_m <= 2'b11;"
 echo "SERDES_SC_BENCH rc=$rc"; exit $rc
