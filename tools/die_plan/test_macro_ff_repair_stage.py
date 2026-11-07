@@ -73,6 +73,7 @@ def test_exported_runner_expands_inner_stage_commands(tmp_path, macro_ff):
     executable("make", '''#!/usr/bin/python3
 import os,sys,json
 with open(os.environ['MAKE_CAPTURE'],'a') as f:f.write(json.dumps(sys.argv[1:])+'\\n')
+if 'print-OT_HOLD_FF_MARGIN' in sys.argv: print('OT_HOLD_FF_MARGIN: 10')
 ''')
     executable("docker", '''#!/usr/bin/python3
 import os,sys,json,subprocess

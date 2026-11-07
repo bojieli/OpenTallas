@@ -48,6 +48,8 @@ LECA=
 if { [ "${OT_LEC_ASYNC:-1}" != 0 ] || [ -f "$K/lec_async.on" ] || [ -f "$K/lec_async.identity" ]; } && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then
   LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS" "$DK" "$GOAL" || exit $?
 fi
+# Read the repair margin through Make: export/override and assignment precedence must match the flow.
+# An unset margin keeps the legacy no-explicit-repair path; malformed explicit values stop before GRT.
 $DK run "${LECSOLVER[@]}" --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
@@ -81,7 +83,11 @@ $DK run "${LECSOLVER[@]}" --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" 
         LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; hgrc=\$?; grep OT_HOLD_GATE /work/hold_gate.log; \
       if [ \$hgrc != 0 ] || ! grep -qE 'OT_HOLD_GATE (PASS|INFO)' /work/hold_gate.log; then grep OT_HOLD_GATE /work/hold_gate.log | sed 's/^/FAIL_POSTCTS /' | tee /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
-  HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk); \
+  HM=; if [ \$rc = 0 ]; then HMR=\$(\$M print-OT_HOLD_FF_MARGIN 2> /work/hold_margin_read.log); hmr=\$?; \
+    if [ \$hmr != 0 ]; then cat /work/hold_margin_read.log; echo 'FAIL_POSTCTS hold margin Make read' | tee -a /work/FAIL_POSTCTS; rc=9; \
+    else HM=\$(printf '%s\\n' \"\$HMR\" | sed -nE 's/^OT_HOLD_FF_MARGIN[[:space:]]*[:=][[:space:]]*//p'); \
+      if [ -n \"\$HM\" ] && ! python3 -c 'import math,re,sys; s=sys.argv[1].strip(); valid=re.fullmatch(r\"[+-]?(?:[0-9]+(?:[.][0-9]*)?|[.][0-9]+)(?:[eE][+-]?[0-9]+)?\",s); x=float(s) if valid else float(\"nan\"); sys.exit(not math.isfinite(x))' \"\$HM\" > /work/hold_margin_value.log 2>&1; then \
+        echo \"FAIL_POSTCTS invalid OT_HOLD_FF_MARGIN [\$HM]: expected a finite number\" | tee -a /work/FAIL_POSTCTS; rc=9; fi; fi; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     python3 -I /work/kit_modes.py check /work --step cts > /work/kit_modes_cts.log 2>&1 || echo 'KIT_MODES ADVISORY cts (QoR only)'; cat /work/kit_modes_cts.log; \
     if [ \$MM != 0 ]; then python3 -I /work/kit_modes.py check /work --step grt --session 'tc bc' --hold-repair || rc=9; \
