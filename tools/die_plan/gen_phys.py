@@ -2258,21 +2258,29 @@ def type_macros(P, tn):
 
 
 PHY_PG_NOTCH_SITE_UM = 0.054   # ASAP7 placement site width: the notched region edge sits on a site boundary
+PHY_PG_NOTCH_ROW_UM = 0.27     # ASAP7 row height: the south-notched region edge sits on a row boundary
 
 
-def phy_pg_west_notch(t, tn, name, rt, mac_x0):
+def phy_pg_west_notch(t, tn, name, rt, mac_x0, mac_y0=()):
     """S81-RCK-3 11-06 (COORD 09:41 class form for the S81 serdes types; opt-in type key phy_pg_west_notch_um = halo):
     the type's PHY supply region (no core cells) starts at its westmost macro edge minus the halo (floored to the site
     grid) instead of the partition edge.  The strip west of the PMA macros then takes core cells, so the clock drivers
     of the PMA clock pins (pma_rck / ck at the macro west end) land next to them instead of 401/412 um away below the
-    region.  The region still covers every macro; die.pg.domains (die mesh, bumps) is unchanged.  Key absent = unchanged."""
+    region.  The region still covers every macro; die.pg.domains (die mesh, bumps) is unchanged.  Key absent = unchanged.
+    S81-RCK-3 11-06 (pilots serdes__t4 vA/vB): phy_pg_south_notch_um = halo does the same for the south edge (lowest
+    macro edge minus the halo, floored to the row grid).  vA (west notch only, region bottom 681.372) failed post-CTS GRT
+    with 30859 overflow, all of it at x 1200-1500 / y 500-700: the 19-um channel between the decoder SRAMs (top 662.1)
+    and the region; vB (region bottom 948.24 = PMA bottom - 4.32) routed GRT with 0 overflow."""
+    rt = list(rt)
     halo = t.get("phy_pg_west_notch_um")
-    if halo is None or not mac_x0:
-        return rt
-    x = round(math.floor(round((min(mac_x0) - float(halo)) / PHY_PG_NOTCH_SITE_UM, 6)) * PHY_PG_NOTCH_SITE_UM, 4) + 0.0
-    if x <= rt[0]:
-        return rt
-    return [x] + list(rt[1:])
+    if halo is not None and mac_x0:
+        x = round(math.floor(round((min(mac_x0) - float(halo)) / PHY_PG_NOTCH_SITE_UM, 6)) * PHY_PG_NOTCH_SITE_UM, 4) + 0.0
+        rt[0] = max(rt[0], x)
+    halo = t.get("phy_pg_south_notch_um")
+    if halo is not None and mac_y0:
+        y = round(math.floor(round((min(mac_y0) - float(halo)) / PHY_PG_NOTCH_ROW_UM, 6)) * PHY_PG_NOTCH_ROW_UM, 4) + 0.0
+        rt[1] = max(rt[1], y)
+    return rt
 
 
 def phy_pg_domains(P, tn):
@@ -2301,7 +2309,7 @@ def phy_pg_domains(P, tn):
             # failed the per-instance identity below on the sign of zero alone)
             rt = [round(min(u[0], v[0]), 4) + 0.0, round(min(u[1], v[1]), 4) + 0.0, round(max(u[0], v[0]), 4) + 0.0,
                   round(max(u[1], v[1]), 4) + 0.0]
-            mac, mac_x0 = [], []
+            mac, mac_x0, mac_y0 = [], [], []
             # S81-SERDES-PHY-1 10-31: a content with physical_parts is judged by its placed parts, not its logical lot
             placed = []
             for c in t.get("contents", []) + t.get("hard_cores", []):
@@ -2322,9 +2330,10 @@ def phy_pg_domains(P, tn):
                     raise ValueError(f"type {tn}: macro {c['inst']} straddles PG domain {d['name']} {rt}")
                 mac.append(content_physical_identity(c)[0] if "physical_inst" in c or "physical_master" in c else c["inst"])
                 mac_x0.append(box[0])
+                mac_y0.append(box[1])
             if not mac and not t.get("phy_pg_offmodel"):
                 raise ValueError(f"type {tn}: PG domain {d['name']} holds no macro (a PHY domain powers its PHY macro)")
-            rt = phy_pg_west_notch(t, tn, d["name"], rt, mac_x0)
+            rt = phy_pg_west_notch(t, tn, d["name"], rt, mac_x0, mac_y0)
             got.append((d["name"], d["nets"][0], d["nets"][1], rt, sorted(mac)))
         per.append(got)
     # DIE-HEAD-5: compare supply/geometry/macros, not the per-instance domain name (die.pg.domains names one per window)

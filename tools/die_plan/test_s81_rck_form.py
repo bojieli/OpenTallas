@@ -10,7 +10,7 @@ PLAN = HERE.parents[1] / "physical/die_plan/s81/plan_h2_2249.json"
 SERDES = sorted(t for t in json.loads(PLAN.read_text())["partition_types"] if t.startswith("serdes__"))
 
 
-def _plan(notch=None, band=None):
+def _plan(notch=None, band=None, south=None):
     raw = json.loads((HERE / "examples/tiny_plan.json").read_text())
     q = dict(lef="m.lef", lib="m_tt.lib", outline_um=[8.64, 2.16], orient="MX")
     c = dict(inst="u_phy", module="logical_phy", status="rework", origin_um=[17.28, 25.92], outline_um=[8.64, 8.64],
@@ -22,6 +22,8 @@ def _plan(notch=None, band=None):
         t["phy_pg_west_notch_um"] = notch
     if band is not None:
         t["rck_band"] = band
+    if south is not None:
+        t["phy_pg_south_notch_um"] = south
     p = S.Plan(raw)
     n = next(n for n, r in p.parts.items() if r["type"] == "src")
     a, b = p.to_die(n, (4.32, 25.92)), p.to_die(n, (25.92, 34.56))      # region reaches 13 um west of the macros
@@ -44,6 +46,22 @@ def test_west_notch_starts_at_macro_edge_minus_halo_on_site_grid():
     assert abs(r[0] / G.PHY_PG_NOTCH_SITE_UM - round(r[0] / G.PHY_PG_NOTCH_SITE_UM)) < 1e-6
     # a halo wider than the gap keeps the plan edge (never grows the region)
     assert G.phy_pg_domains(_plan(notch=40.0), "src")[0][3][0] == 4.32
+
+
+def test_south_notch_starts_at_lowest_macro_minus_halo_on_row_grid():
+    p = _plan(notch=4.32, south=1.0)
+    assert not [e for e in S.validate(p.raw) if "phy_pg_south_notch_um" in e]
+    base = G.phy_pg_domains(_plan(notch=4.32), "src")[0][3]
+    r = G.phy_pg_domains(p, "src")[0][3]
+    lo = base[1] + (28.08 - 25.92)          # lowest macro (u_prx) bottom in type coordinates
+    assert r[0] == base[0] and r[2:] == base[2:]
+    assert r[1] == round(int((lo - 1.0) / G.PHY_PG_NOTCH_ROW_UM + 1e-9) * G.PHY_PG_NOTCH_ROW_UM, 4)
+    assert r[1] <= lo - 1.0 < r[1] + G.PHY_PG_NOTCH_ROW_UM
+    # the band follows the region bottom
+    pb = _plan(notch=4.32, south=1.0, band={"inst": "u_bound.u_core.u_prx"})
+    assert G.rck_band_exports(pb, "src")[1] == f"export OT_RCK_BAND_TOP_UM = {G._um(r[1])}"
+    # a halo larger than the gap keeps the plan edge
+    assert G.phy_pg_domains(_plan(south=40.0), "src")[0][3][1] == base[1]
 
 
 def test_notch_reaches_the_kit_pdn(tmp_path):
@@ -80,9 +98,13 @@ def test_all_s81_serdes_types_carry_the_class_form():
     for tn in SERDES:
         t = P.types[tn]
         assert t["phy_pg_west_notch_um"] == 4.32 and t["rck_band"] == {"inst": "u_bound.u_core.u_prx"}, tn
+        assert t["phy_pg_south_notch_um"] == 4.32, tn
         dom = G.phy_pg_domains(P, tn)
         assert len(dom) == 1 and "u_bound.u_core.u_prx" in dom[0][4], tn
         prx = min(q["origin_um"][0] for c in t["contents"] for q in c.get("physical_parts", [])
                   if q["physical_inst"] in dom[0][4])
         assert prx - 4.32 - G.PHY_PG_NOTCH_SITE_UM < dom[0][3][0] <= prx - 4.32, tn
+        bot = min(q["origin_um"][1] for c in t["contents"] for q in c.get("physical_parts", [])
+                  if q["physical_inst"] in dom[0][4])
+        assert bot - 4.32 - G.PHY_PG_NOTCH_ROW_UM < dom[0][3][1] <= bot - 4.32 + 1e-9, tn
         assert G.rck_band_exports(P, tn)[1] == f"export OT_RCK_BAND_TOP_UM = {G._um(dom[0][3][1])}", tn

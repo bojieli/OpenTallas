@@ -906,6 +906,10 @@
       "type": "number",
       "minimum": 0
      },
+     "phy_pg_south_notch_um": {
+      "type": "number",
+      "minimum": 0
+     },
      "rck_band": {
       "type": "object",
       "additionalProperties": false,
