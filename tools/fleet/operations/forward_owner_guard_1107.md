@@ -7,3 +7,5 @@ OT_RUN_FORWARD_OWNER_GUARD=1 optionally checks the original client boot/PID/star
 New pending records include client_identity. Existing pending records are neither rewritten nor classified as cancelled. spill_sweep and back-copy recovery never call the forward guard, including when a legacy record's client is dead or an opt-in STOP file exists. Ordinary defaults do not probe or hold the forward owner.
 
 Validation:7 targeted tests cover live/dead/stopped/reused identities, exact-intent matching, unchanged legacy default, no copy or record mutation on a forward hold, and continued dead-client back-copy recovery with the forward opt-in active. No live install, no records/data changed, no legacy scheduler deployment.
+
+Initial integration test FAILED because the guarded call was not inserted around the newer metadata_scope forward-copy signature. The test caught actual mock copy calls; the hook was corrected at that call site before READY. The failed source candidate was never installed.

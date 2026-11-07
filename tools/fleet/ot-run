@@ -2223,6 +2223,10 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
     say(f"ot-run: SPILL: copying {', '.join(roots)} ({size_gb:.1f} GB) {src} -> {dst} (no host with --dir admits {mem} GB now)")
     t0 = time.time()
     for k in range(SPILL_COPY_TRIES):
+        hold = forward_owner_guard(owner)
+        if hold:
+            say(f"ot-run: SPILL forward held: {hold}; no copy started, no data removed")
+            return None
         r = spill_copy_fwd(src, dst, roots, stamp, metadata_scope=d)
         if not r.returncode or "OT_SPILL_REAL" in r.stderr:
             break
