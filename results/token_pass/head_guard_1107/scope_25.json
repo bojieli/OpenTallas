@@ -1,0 +1,270 @@
+{
+  "scope": "explicit25 local CA guards on four neighboring parts only; upstream faults/arithmetic/codecs absent",
+  "primitive_control_parts": 357,
+  "clocks": 1608,
+  "probes": [
+    {
+      "part": "ctl",
+      "bus": "a_rx_i",
+      "width": 67,
+      "clock": "clock_landing_fwd_sp0__au_o",
+      "reader_start": "cland_reader_start_a_rx_i_1",
+      "writer_start": "clock_landing_start_sp0__au_o",
+      "K": "6'b100111"
+    },
+    {
+      "part": "ctl",
+      "bus": "b7_rx_i",
+      "width": 67,
+      "clock": "clock_landing_fwd_sp0__bu_o",
+      "reader_start": "cland_reader_start_b7_rx_i_1",
+      "writer_start": "clock_landing_start_sp0__bu_o",
+      "K": "6'b100111"
+    },
+    {
+      "part": "ctl",
+      "bus": "b_i",
+      "width": 568,
+      "clock": "clock_landing_fwd_sp0__b_o",
+      "reader_start": "cland_reader_start_b_i_1",
+      "writer_start": "clock_landing_start_sp0__b_o",
+      "K": "6'b100111"
+    },
+    {
+      "part": "ctl",
+      "bus": "h_rx_i",
+      "width": 279,
+      "clock": "clock_landing_fwd_sp0__hu_o",
+      "reader_start": "cland_reader_start_h_rx_i_1",
+      "writer_start": "clock_landing_start_sp0__hu_o",
+      "K": "6'b100111"
+    },
+    {
+      "part": "ctl",
+      "bus": "lepk_i0",
+      "width": 1107,
+      "clock": "clock_landing_fwd_lep0N__lepk_o0",
+      "reader_start": "cland_reader_start_lepk_i0_1",
+      "writer_start": "clock_landing_start_lep0N__lepk_o0",
+      "K": "6'b111100"
+    },
+    {
+      "part": "sp0",
+      "bus": "ad_i",
+      "width": 67,
+      "clock": "clock_landing_fwd_ctl__a_tx_o",
+      "reader_start": "cland_reader_start_ad_i_5",
+      "writer_start": "clock_landing_start_ctl__a_tx_o",
+      "K": "6'b011010"
+    },
+    {
+      "part": "sp0",
+      "bus": "au_i",
+      "width": 67,
+      "clock": "clock_landing_fwd_sp1__au_o",
+      "reader_start": "cland_reader_start_au_i_5",
+      "writer_start": "clock_landing_start_sp1__au_o",
+      "K": "6'b101111"
+    },
+    {
+      "part": "sp0",
+      "bus": "b_i",
+      "width": 568,
+      "clock": "clock_landing_fwd_sp1__b_o",
+      "reader_start": "cland_reader_start_b_i_5",
+      "writer_start": "clock_landing_start_sp1__b_o",
+      "K": "6'b101111"
+    },
+    {
+      "part": "sp0",
+      "bus": "bd_i",
+      "width": 67,
+      "clock": "clock_landing_fwd_ctl__b7_tx_o",
+      "reader_start": "cland_reader_start_bd_i_5",
+      "writer_start": "clock_landing_start_ctl__b7_tx_o",
+      "K": "6'b011010"
+    },
+    {
+      "part": "sp0",
+      "bus": "bu_i",
+      "width": 67,
+      "clock": "clock_landing_fwd_sp1__bu_o",
+      "reader_start": "cland_reader_start_bu_i_5",
+      "writer_start": "clock_landing_start_sp1__bu_o",
+      "K": "6'b101111"
+    },
+    {
+      "part": "sp0",
+      "bus": "hd_i",
+      "width": 280,
+      "clock": "clock_landing_fwd_ctl__h_tx_o",
+      "reader_start": "cland_reader_start_hd_i_5",
+      "writer_start": "clock_landing_start_ctl__h_tx_o",
+      "K": "6'b011010"
+    },
+    {
+      "part": "sp0",
+      "bus": "hu_i",
+      "width": 279,
+      "clock": "clock_landing_fwd_sp1__hu_o",
+      "reader_start": "cland_reader_start_hu_i_5",
+      "writer_start": "clock_landing_start_sp1__hu_o",
+      "K": "6'b101111"
+    },
+    {
+      "part": "sp0",
+      "bus": "x_i",
+      "width": 568,
+      "clock": "clock_landing_fwd_ctl__x_o",
+      "reader_start": "cland_reader_start_x_i_5",
+      "writer_start": "clock_landing_start_ctl__x_o",
+      "K": "6'b011010"
+    },
+    {
+      "part": "ctl_nstrip",
+      "bus": "ctrl_ft_i",
+      "width": 35,
+      "clock": "clock_landing_fwd_lep0N__ctrl_o0",
+      "reader_start": "cland_reader_start_ctrl_ft_i_2",
+      "writer_start": "clock_landing_start_lep0N__ctrl_o0",
+      "K": "6'b000101"
+    },
+    {
+      "part": "ctl_nstrip",
+      "bus": "lep_fault_ft_i",
+      "width": 4,
+      "clock": "clock_landing_fwd_lep0N__fault_o0",
+      "reader_start": "cland_reader_start_lep_fault_ft_i_2",
+      "writer_start": "clock_landing_start_lep0N__fault_o0",
+      "K": "6'b000101"
+    },
+    {
+      "part": "ctl_nstrip",
+      "bus": "lw_ft_i",
+      "width": 14,
+      "clock": "clock_landing_fwd_lep0N__lw_o",
+      "reader_start": "cland_reader_start_lw_ft_i_2",
+      "writer_start": "clock_landing_start_lep0N__lw_o",
+      "K": "6'b000101"
+    },
+    {
+      "part": "ctl_nstrip",
+      "bus": "w3d_i",
+      "width": 515,
+      "clock": "clock_landing_fwd_lep0N__coll_o3",
+      "reader_start": "cland_reader_start_w3d_i_2",
+      "writer_start": "clock_landing_start_lep0N__coll_o3",
+      "K": "6'b000101"
+    },
+    {
+      "part": "ctl_nstrip",
+      "bus": "w3u_i",
+      "width": 517,
+      "clock": "clock_landing_fwd_lk_WN3__coll_o0",
+      "reader_start": "cland_reader_start_w3u_i_2",
+      "writer_start": "clock_landing_start_lk_WN3__coll_o0",
+      "K": "6'b001000"
+    },
+    {
+      "part": "lep0N",
+      "bus": "coll_i0",
+      "width": 517,
+      "clock": "clock_landing_fwd_lk_WN0__coll_o0",
+      "reader_start": "cland_start",
+      "writer_start": "clock_landing_start_lk_WN0__coll_o0",
+      "K": "6'b010001"
+    },
+    {
+      "part": "lep0N",
+      "bus": "coll_i1",
+      "width": 517,
+      "clock": "clock_landing_fwd_nst4__u1_o",
+      "reader_start": "cland_start",
+      "writer_start": "clock_landing_start_nst4__u1_o",
+      "K": "6'b011100"
+    },
+    {
+      "part": "lep0N",
+      "bus": "coll_i2",
+      "width": 517,
+      "clock": "clock_landing_fwd_nst4__u2_o",
+      "reader_start": "cland_start",
+      "writer_start": "clock_landing_start_nst4__u2_o",
+      "K": "6'b011100"
+    },
+    {
+      "part": "lep0N",
+      "bus": "coll_i3",
+      "width": 517,
+      "clock": "clock_landing_fwd_ctl_nstrip__w3u_o",
+      "reader_start": "cland_start",
+      "writer_start": "clock_landing_start_ctl_nstrip__w3u_o",
+      "K": "6'b111100"
+    },
+    {
+      "part": "lep0N",
+      "bus": "lepf_i0",
+      "width": 4,
+      "clock": "clock_landing_fwd_ctl_nstrip__lepf_ft_o",
+      "reader_start": "cland_start",
+      "writer_start": "clock_landing_start_ctl_nstrip__lepf_ft_o",
+      "K": "6'b111100"
+    },
+    {
+      "part": "lep0N",
+      "bus": "lepk_i0",
+      "width": 1107,
+      "clock": "clock_landing_fwd_ctl__lepk_o0",
+      "reader_start": "cland_start",
+      "writer_start": "clock_landing_start_ctl__lepk_o0",
+      "K": "6'b000100"
+    },
+    {
+      "part": "lep0N",
+      "bus": "unit_i0",
+      "width": 48,
+      "clock": "clock_landing_fwd_ctl_nstrip__unit_ft_o",
+      "reader_start": "cland_start",
+      "writer_start": "clock_landing_start_ctl_nstrip__unit_ft_o",
+      "K": "6'b111100"
+    }
+  ],
+  "source_readset": {
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/s81_head_top.sv": "825b886bb092dce5f640c60d7e6c043f6060f511b5f1d603afa0c1b81b7d8d4a",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_ctl.sv": "6929213c24fbc40de56f7ca7b488935a93a786a0c93f35582084936112489345",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_spn_strip.sv": "d9eae21ccbb543bf0c5baae690f1a1c827520f38716dcfc03a64fddf97ef6b43",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_ctl_nstrip.sv": "4a48d4f61efa886a269ab0ffda8d5a56b98050749c4c45fec4b8aaba91971f74",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_lep0N.sv": "da737d5f8c55185eb8895abdf63256f6f067b74f7e360a87eb7a254f8e8e3738",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_serdes.sv": "18e8818b2f838c55ecc003aa4c6414039eb8f4cb710e175e27c0ef11fe6ec21d",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_st_turn.sv": "287e5115a654fb13cbf06b2385ffab7b7c02b0c33016ae0bcd306737c595a6f6",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_st_str.sv": "21b9125be0d5877e10b38c9149bcba49000f4d45ade490caaea8412fc5fa8ad7",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_st_n4.sv": "236bfc66e6d82adb5713961a764cb649383ee470fd5a269d67e7fb70ce2bb971",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_st_m.sv": "29c5133b37fd4cfb674e788e5b593fc130c74e830087cb28f4c0da42ea5299d6",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_mesh_ep.sv": "b95b2077705aeb68d0a27ce13df61f7c0b441e7d9c261f4576e0ceb5c22582ec",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_st_k5.sv": "350cab897e0b39b9e54611b1e899e60a338418fc5edc2d1eec84ac75e273a34d",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_host_ep.sv": "906772f541c2ba7d0fa59ddc138f185d5ed8c64c7f59d80b42c08dff4db4dd5d",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_turn_a.sv": "e70de72eabf20e4e2b3f4170159fa1a0ace46059c900db84822f4d40965987d6",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_turn_b.sv": "12eb76b419d88d44e4b2eb56d8228effd18c8c3cf5d125b02ff3ec468c39ab63",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_tile_p.sv": "c9ea011630848e6664d2392a5927741665cd3ad5e8a7219200834b6cc09fb9bc",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_spn_end_strip.sv": "de7e642d54184d4f626d2860e2ce754696cdd4980fdacbf962e47cbc009e4378",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_st_n3_transit.sv": "9551a86ab0a0d747d68f4cd3d9fc405ac5b2c430226b8c71c1f51d6fc6e7dfaf",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_st_n3_turn.sv": "d94eae9ab62005db60ad3c82399f11f9e218675da648f025167423b54b489732",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_spn_wshim_tx.sv": "7b7e22d1747e1a4def9d467fe98f34f6b77da509f9d68809fed821da3d90d5ff",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_spn_wshim_rx.sv": "74aba5ae0c641a287c6da4a04c0c43a4f53563ed58a48fc1bf87ba7997aedc69",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_spn_eshim_tx.sv": "fe1fd582313f296ccf6231b61cba65dcc1744be6bcb5ad171d29276410a29cdc",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_spn_eshim_rx.sv": "96a9245b47f1da0e4289eee7df9d553cf00504f8c5bae4b33019955deac781eb",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_ctl_estrip.sv": "cb12695bd2bd77058e9efc1bb533c2ddcfdf5f92043c9667d9c58377efa0fceb",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_host_nstrip.sv": "1ee7a974225b486395095f59bea883f75591d1932388c34620008c2be07d03f8",
+    "/srv/opentallas-scratch/claude/wt/codex-token-production-1107/head_frontier/parent/ot_s81hd_mesh_estrip.sv": "df6a611fc97498e1d46bcf9d77f0560cc33faf600fafa4680f1e1508413dff88"
+  },
+  "TT_profile_sha256": "21056f966362f36dcdd05216efb35c29cda7347f43b39b534c46c37bc2292c74",
+  "FF_profile_sha256": "1471f8141bc9fc663a4ef2684d021cbf6071a8884322616e3ac24f3550054129",
+  "production_enabled": false,
+  "physical_signoff": false,
+  "frontier_parts": [
+    "ctl",
+    "sp0",
+    "ctl_nstrip",
+    "lep0N"
+  ]
+}

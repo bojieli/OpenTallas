@@ -6,6 +6,26 @@ through `lepf_q`, while fv12 ORs the link faults including dflt. These two bits
 therefore need not represent independent LEP and mesh failures. The actual
 partition passes `lep_fault_i_q | cland_up_fault` into that core input.
 
+The subsequent one-hop25-ring frontier on CTL/SP0/CTL_nstrip/LEP found a real
+FF failure: TT25/25 clear, FF21/25 clear. SP0 ad_i/bd_i/hd_i/x_i, all driven
+from CTL with K26 and reader START+5 relays, fail the lower opposite-edge guard.
+Read-only observation of the unchanged compiled model gives first-count times:
+
+| Corner | Reader count0 (ps) | Writer count0 (ps) | Lag R-W+26*833 (ps) |
+|---|---:|---:|---:|
+| TT | 229701.746 | 250342.585 | 1017.161 |
+| FF | 228407.675 | 249810.593 | 255.082 |
+
+FF lag is below the416.5ps guard. Its armed failure has valid1/lap1/lower0/upper1
+and timeout counter40, so this is a lower-window failure, not missing data or
+a ready timeout. No K, reset or clock was changed. SP1-to-SP0's four other
+rings, K47, pass. These are functional observations under the retained
+phase/internal-budget model, not routed STA slack or proof of the old TT fault.
+The HEAD owner has the measured source/phase/cohort issue; no manual K fix was
+made. Nominal25-ring unit3001753 and read-only observer unit3300559 both ended0.
+The observer's first attempt failed to find verilated.h because of an include
+prefix error; that failure remains and only the observer was relinked.
+
 The retained full18 generator `/home/ubuntu/coord/tmp/phase_boot_full.py` checks
 `cycles>400 && fv`. Its abort at401 is the first permitted observation, not the
 measured time that the fault began. Reset, K or timeout conclusions cannot be

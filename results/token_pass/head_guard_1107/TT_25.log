@@ -1,0 +1,29 @@
+GUARD_FINAL ctl__a_rx_i ready1 fault0
+GUARD_FINAL ctl__b7_rx_i ready1 fault0
+GUARD_FINAL ctl__b_i ready1 fault0
+GUARD_FINAL ctl__h_rx_i ready1 fault0
+GUARD_FINAL ctl__lepk_i0 ready1 fault0
+GUARD_FINAL sp0__ad_i ready1 fault0
+GUARD_FINAL sp0__au_i ready1 fault0
+GUARD_FINAL sp0__b_i ready1 fault0
+GUARD_FINAL sp0__bd_i ready1 fault0
+GUARD_FINAL sp0__bu_i ready1 fault0
+GUARD_FINAL sp0__hd_i ready1 fault0
+GUARD_FINAL sp0__hu_i ready1 fault0
+GUARD_FINAL sp0__x_i ready1 fault0
+GUARD_FINAL ctl_nstrip__ctrl_ft_i ready1 fault0
+GUARD_FINAL ctl_nstrip__lep_fault_ft_i ready1 fault0
+GUARD_FINAL ctl_nstrip__lw_ft_i ready1 fault0
+GUARD_FINAL ctl_nstrip__w3d_i ready1 fault0
+GUARD_FINAL ctl_nstrip__w3u_i ready1 fault0
+GUARD_FINAL lep0N__coll_i0 ready1 fault0
+GUARD_FINAL lep0N__coll_i1 ready1 fault0
+GUARD_FINAL lep0N__coll_i2 ready1 fault0
+GUARD_FINAL lep0N__coll_i3 ready1 fault0
+GUARD_FINAL lep0N__lepf_i0 ready1 fault0
+GUARD_FINAL lep0N__lepk_i0 ready1 fault0
+GUARD_FINAL lep0N__unit_i0 ready1 fault0
+- tb.sv:12169: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 666ns; walltime 4.980 s; speed 133.813 ns/s
+- Verilator: cpu 4.975 s on 1 threads; allocated 12 MB

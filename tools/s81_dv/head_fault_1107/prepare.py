@@ -1,4 +1,4 @@
-"""Isolate five actual CTL count guards; no codecs, arithmetic or die run.
+"""Isolate an explicit local count-guard frontier; no codecs/arithmetic/die run.
 
 Control expressions are copied from the selected parent, and clocks come from
 the caller's retained TT/FF profile. No clock, start origin, K or guard is tuned.
@@ -36,6 +36,7 @@ def main():
     p.add_argument('--tt',type=Path,required=True)
     p.add_argument('--ff',type=Path,required=True)
     p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--parts',default='ctl',help='explicit comma-separated local count-guard frontier')
     a = p.parse_args(); a.out.mkdir(exist_ok=False,parents=True)
     tt = json.loads(a.tt.read_text())['phase']; ff = json.loads(a.ff.read_text())['phase']
     assert set(tt)==set(ff)
@@ -46,8 +47,17 @@ def main():
         return s
     parent = source('s81_head_top'); pp=ports(parent)
     instances = list(INST.finditer(parent))
-    ctl_m = next(m for m in instances if m[2]=='ctl')
-    ctl_mod = ctl_m[1]; ctl_conn=dict(CONN.findall(ctl_m[3]))
+    selected = a.parts.split(','); specs=[]; extra_by_module={}
+    for part in selected:
+        im=next(m for m in instances if m[2]==part)
+        mod=im[1]; conn=dict(CONN.findall(im[3])); src=source(mod)
+        for cm in re.finditer(r'(ot_dp_clk_landing_cas\s*#\([^;]*?\))\s+(u_cland_\w+)\s*\((.*?)\);',src,re.S):
+            bus=cm[2][len('u_cland_'):]; pins=dict(CONN.findall(cm[3]))
+            reset=pins['rst_n']; assert re.fullmatch(r'\w+',reset),(part,bus,reset)
+            extra_by_module.setdefault(mod,set()).add(reset)
+            specs.append(dict(part=part,bus=bus,params=cm[1].partition('ot_dp_clk_landing_cas')[2],
+                              reset=reset,conn=conn))
+    if not specs:raise ValueError('explicit frontier contains no literal CA rings')
     def control(mod):
         if mod in definitions:return definitions[mod][:2]
         s=source(mod); ps=ports(s); drivers={}
@@ -63,7 +73,7 @@ def main():
             if m[1] not in drivers:drivers[m[1]]=dict(text=m[0],deps=refs(m[2]))
         targets=[k for k,(d,_) in ps.items() if d=='output' and k.startswith(
             ('rst_o_','start_o_','rst_start_raw_','fclk_out_','cland_fstart_out_'))]
-        extra = ['cland_reader_start_'+b+'_1' for b in BUSES] if mod==ctl_mod else []
+        extra = sorted(extra_by_module.get(mod,set()))
         need=set();used=set();primary=set()
         def walk(n):
             if n in need:return
@@ -106,28 +116,26 @@ def main():
         lines.append(cn+' '+n+'('+','.join(cs)+');')
         mapping[n]=dict(module=mod,ports=names)
     probes=[]
-    ctl_source=source(ctl_mod)
-    for bus in BUSES:
-        im=re.search(r'(ot_dp_clk_landing_cas\s*#\(.*?\))\s+u_cland_'+bus+r'\s*\(',ctl_source,re.S)
-        assert im,(bus,'literal ring absent')
-        # Match only the parameter line nearest this named instance.
-        params=im[1].rpartition('ot_dp_clk_landing_cas')[2]
-        name='probe_'+bus
+    labels=[]
+    for spec in specs:
+        part=spec['part'];bus=spec['bus'];params=spec['params'];conn=spec['conn']
+        label=part+'__'+bus;name='probe_'+label;labels.append(label)
         w=int(re.search(r'\.W\((\d+)\)',params)[1])
-        lines += [f'wire [{w-1}:0] q_{bus};wire ready_{bus},fault_{bus};',
-            f'ot_dp_clk_landing_cas{params} {name}(.fclk({ctl_conn["fclk_in_"+bus]}),'+
-            f'.t_rst_n({ctl_conn["cland_fstart_in_"+bus]}),.clk(pc_ctl),'+
-            f'.rst_n(ctl.cland_reader_start_{bus}_1),.strap_k({ctl_conn["strap_ca_k_"+bus]}+($test$plusargs("SHIFT4")?6\'d4:6\'d0)),'+
-            f".d({w}'d0),.q(q_{bus}),.ready(ready_{bus}),.fault(fault_{bus}));",
-            f'reg seen_{bus}=0;always@(negedge refclk)if(fault_{bus}&&!seen_{bus})begin seen_{bus}=1;$display("FIRST_GUARD_FAULT {bus} c%0d ready%b",cycles,ready_{bus});end']
-        probes.append(dict(bus=bus,width=w,clock=ctl_conn['fclk_in_'+bus],
-                           writer_start=ctl_conn['cland_fstart_in_'+bus],K=ctl_conn['strap_ca_k_'+bus]))
+        lines += [f'wire [{w-1}:0] q_{label};wire ready_{label},fault_{label};',
+            f'ot_dp_clk_landing_cas{params} {name}(.fclk({conn["fclk_in_"+bus]}),'+
+            f'.t_rst_n({conn["cland_fstart_in_"+bus]}),.clk(pc_{part}),'+
+            f'.rst_n({part}.{spec["reset"]}),.strap_k({conn["strap_ca_k_"+bus]}+($test$plusargs("SHIFT4")?6\'d4:6\'d0)),'+
+            f".d({w}'d0),.q(q_{label}),.ready(ready_{label}),.fault(fault_{label}));",
+            f'reg seen_{label}=0;always@(negedge refclk)if(fault_{label}&&!seen_{label})begin seen_{label}=1;$display("FIRST_GUARD_FAULT {label} c%0d ready%b",cycles,ready_{label});end']
+        probes.append(dict(part=part,bus=bus,width=w,clock=conn['fclk_in_'+bus],
+                           reader_start=spec['reset'],writer_start=conn['cland_fstart_in_'+bus],K=conn['strap_ca_k_'+bus]))
     lines+=['always@(negedge refclk)if(cycles==800)begin']
-    for b in BUSES:lines.append(f'$display("GUARD_FINAL {b} ready%0d fault%0d",ready_{b},fault_{b});')
+    for b in labels:lines.append(f'$display("GUARD_FINAL {b} ready%0d fault%0d",ready_{b},fault_{b});')
     lines += ['$finish;end','endmodule']
     (a.out/'tb.sv').write_text('\n'.join(lines)+'\n')
     (a.out/'controls.sv').write_text('\n'.join(v[2] for v in definitions.values())+'\n')
-    (a.out/'scope.json').write_text(json.dumps(dict(scope='five CTL local CA guards only; no upstream faults, arithmetic, codecs or whole-die proof',
+    (a.out/'scope.json').write_text(json.dumps(dict(scope='explicit local CA guards only; no upstream faults, arithmetic, codecs or whole-die proof',
+        frontier_parts=selected,
         primitive_control_parts=len(mapping),clocks=len(tt),probes=probes,source_readset=readset,
         TT_profile_sha256=hashlib.sha256(a.tt.read_bytes()).hexdigest(),FF_profile_sha256=hashlib.sha256(a.ff.read_bytes()).hexdigest(),
         production_enabled=False,physical_signoff=False),indent=2)+'\n')
