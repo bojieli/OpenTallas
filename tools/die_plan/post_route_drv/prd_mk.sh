@@ -151,6 +151,26 @@ fi
 if [[ ${V:0:1} = t ]] && ! grep -q '^override export CORNERS = tc' $OUT/config.mk; then
   printf 'override export OT_HOLD_MM = 0\noverride export CORNERS = tc\n' >> $OUT/config.mk
 fi
+# S81-T51-RECUT-2 11-07 (opt-in: kit has native_clock_drt.tcl = native M7 clock root pins): a route seed holds M7 clock
+# wires, and DRT refuses a net with wires above the odb top routing layer ("DRT-0415 Net clk_t1 already has routes")
+# once the signal range is M2-M6.  Measured on t51 W 5_2_route.odb: range 2-7 reads, range 2-6 stops.  Only the GRT
+# stage pin_access read needs M7, so it runs with M7 in range and M2-M6 comes back; GRT and data wires stay <=M6.
+if [ -f "$OUT/native_clock_drt.tcl" ] && [ -f "$OUT/grt_pre_core.tcl" ] && ! grep -q ot_ncd_pa_orig "$OUT/grt_pre_core.tcl"; then
+cat >> "$OUT/grt_pre_core.tcl" <<'TCL'
+if {[info commands ot_ncd_pa_orig] eq ""} {
+  rename pin_access ot_ncd_pa_orig
+  proc pin_access {args} {
+    set b [ord::get_db_block]
+    set hi [$b getMaxRoutingLayer]
+    set m7 [[[ord::get_db_tech] findLayer M7] getRoutingLevel]
+    if {$hi < $m7} { $b setMaxRoutingLayer $m7; puts "OT_NATIVE_CLOCK_ECO pin_access read range top $hi -> $m7" }
+    set rc [catch {uplevel 1 [list ot_ncd_pa_orig {*}$args]} res opts]
+    $b setMaxRoutingLayer $hi
+    return -options $opts $res
+  }
+}
+TCL
+fi
 # FLOW-CLOCK-R8: no fanout limit by default.  Sign-off limits are liberty max_transition/max_capacitance; fanout is
 # WARN-only there (64) and ASAP7 liberty has no max_fanout.  The R7 KV-recipe basis 24 split bdring's 56-load bs[*]
 # nets with BUFx2 fanout buffers: TT setup -22.43 -> -39.69 ps (10 -> 100 endpoints).  OT_PRD_MAX_FANOUT=<n> opts in.
