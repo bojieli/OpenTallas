@@ -147,3 +147,11 @@ def test_removed_net_is_skipped_too(tmp_path):
     out = _run(tmp_path, "dict unset ::nets n_keep\nestimate_parasitics -placement\n")
     last = [l for l in out.splitlines() if l.startswith("READ")][-1]
     assert " 3 " in last and "*D_NET *2" not in last
+
+
+def test_filtered_copy_removed_when_read_fails(tmp_path):
+    body = SPLIT + ("rename read_spef real_read\nproc read_spef {args} { if {[string match *ot_prd_eco_* [lindex $args end]]}"
+                    " { error boom }; real_read {*}$args }\n"
+                    "puts RC[catch {estimate_parasitics -placement} msg]$msg\n")
+    out = _run(tmp_path, body)
+    assert "RC1boom" in out and "LEFT0" in out
