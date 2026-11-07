@@ -14,6 +14,9 @@
 // FREG = 1 (HBM-REFORM-B10, COORD 15:16 pre-approved form after BREG CTS -392/-432/-700): the fault check is split per bank
 // and registered (br_q -> flt crossed the tile on opsa_group0, -392 ps); flt +1 edge. Inputs get one more register stage in
 // the tiles (IREG), so the select logic no longer shares a cycle with the face-to-logic wire: rd +2 edges, flt +2 edges total.
+// RREG (HBM-FORM-SPLIT-13-OPSB 11-06, opsb_output N32 vB/vC TT -452/-483: SRAM rd_out -> 16:1 sector select -> 700 um haul
+// -> face reg in one cycle): RREG >= 1 registers every bank's rd next to its macro (and delays the network selects with it),
+// RREG = 2 also registers the network output; the response (rd / sr_d / sr_rv) moves RREG edges later, nothing else changes.
 `timescale 1ns/1ps
 `default_nettype none
 module ot_hgi_su_lgroup2_lf #(
@@ -24,7 +27,9 @@ module ot_hgi_su_lgroup2_lf #(
     parameter integer LAT = 0,             // bench mutant: bank read latency 1 = +1 edge, 2 = -1 edge (see ot_hgi_su_lbank)
     parameter integer NS = 1,              // sector lanes: NS independent 8-word stage writes / drain reads an edge
     parameter integer BREG = 0,            // 1 = registered bank inputs (+1 edge on rd / sr_d / sr_rv)
-    parameter integer FREG = 0             // 1 = registered fault terms (per bank row check next to the bank): flt +1 edge
+    parameter integer FREG = 0,            // 1 = registered fault terms (per bank row check next to the bank): flt +1 edge
+    parameter integer RREG = 0             // HBM-FORM-SPLIT-13-OPSB: 1 = bank-local read register on every bank rd (rd / sr_d /
+                                           // sr_rv +1 edge); 2 = also the registered read-network output (+2 edges); flt unchanged
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -136,8 +141,11 @@ module ot_hgi_su_lgroup2_lf #(
     // the response valid and the network selects follow the banks' latency (LAT mutants move the data, valid and
     // selects together, so a valid-driven reader stays exact and a fixed-latency one does not)
     localparam integer NLAT = (BREG != 0) ? 1 : LAT;   // network latency mode (BREG = a 2-edge bank)
-    assign sr_rv = (NLAT == 1) ? srv2 : (NLAT == 2) ? sr_v : srv1;
+    wire [NS-1:0] sr_rv_m = (NLAT == 1) ? srv2 : (NLAT == 2) ? sr_v : srv1;
     wire [LN-1:0] lb_s [0:N-1];
+    // RREG: the network reads m_rd (the bank rd, registered next to the bank when RREG >= 1) with selects lb_m / sr_m
+    // delayed by the same edge; its outputs rd_m / sr_d_m are registered once more when RREG = 2
+    wire [31:0] m_rd [0:N-1]; wire [LN-1:0] lb_m [0:N-1]; wire [N*32-1:0] rd_m; wire [NS*256-1:0] sr_d_m;
     for (genvar gs_ = 0; gs_ < N; gs_ = gs_ + 1) begin : g_ls
         assign lb_s[gs_] = (NLAT == 1) ? lb_q2[gs_] : (NLAT == 2) ? ra[gs_*AW +: LN] : lb_q[gs_];
     end
@@ -145,25 +153,47 @@ module ot_hgi_su_lgroup2_lf #(
     genvar gl, gj, gk;
     for (gl = 0; gl < N; gl = gl + 1) begin : g_rd
         if (gl == 0) begin : g_any
-            wire [LN-1:0] bs = lb_s[gl] + MUT_XBAR[LN-1:0];
-            assign rd[0 +: 32] = b_rd[bs];
+            wire [LN-1:0] bs = lb_m[gl] + MUT_XBAR[LN-1:0];
+            assign rd_m[0 +: 32] = m_rd[bs];
         end else begin : g_c
             reg [31:0] dv;
             always @* begin : mx
                 integer kk;
                 dv = 32'd0;
                 for (kk = NCAND - 1; kk >= 0; kk = kk - 1)
-                    if (lb_s[gl] == cbank(gl, kk)) dv = b_rd[(cbank(gl, kk) + MUT_XBAR) % N];
+                    if (lb_m[gl] == cbank(gl, kk)) dv = m_rd[(cbank(gl, kk) + MUT_XBAR) % N];
             end
-            assign rd[32*gl +: 32] = dv;
+            assign rd_m[32*gl +: 32] = dv;
         end
     end
     for (gk = 0; gk < NS; gk = gk + 1) begin : g_srl
         wire [LN-1:0] sr_s = (NLAT == 1) ? sr_lo2[gk] : (NLAT == 2) ? sr_addr[gk*LWB +: LN] : sr_lo[gk];
+        reg [LN-1:0] sr_s_q; always @(posedge clk) sr_s_q <= sr_s;
+        wire [LN-1:0] sr_m = (RREG >= 1) ? sr_s_q : sr_s;
         for (gj = 0; gj < 8; gj = gj + 1) begin : g_sr
-            wire [LN-1:0] bj = sr_s + gj;
-            assign sr_d[256*gk + 32*gj +: 32] = b_rd[bj];
+            wire [LN-1:0] bj = sr_m + gj;
+            assign sr_d_m[256*gk + 32*gj +: 32] = m_rd[bj];
         end
+    end
+    for (genvar gq = 0; gq < N; gq = gq + 1) begin : g_rq
+        if (RREG >= 1) begin : g_r
+            reg [31:0] q; reg [LN-1:0] lq;
+            always @(posedge clk) begin q <= b_rd[gq]; lq <= lb_s[gq]; end
+            assign m_rd[gq] = q; assign lb_m[gq] = lq;
+        end else begin : g_n
+            assign m_rd[gq] = b_rd[gq]; assign lb_m[gq] = lb_s[gq];
+        end
+    end
+    reg [NS-1:0] srv_r1, srv_r2;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin srv_r1 <= {NS{1'b0}}; srv_r2 <= {NS{1'b0}}; end
+        else begin srv_r1 <= sr_rv_m; srv_r2 <= srv_r1; end
+    assign sr_rv = (RREG >= 2) ? srv_r2 : (RREG == 1) ? srv_r1 : sr_rv_m;
+    if (RREG >= 2) begin : g_oreg
+        reg [N*32-1:0] rd_q; reg [NS*256-1:0] sr_d_q;
+        always @(posedge clk) begin rd_q <= rd_m; sr_d_q <= sr_d_m; end
+        assign rd = rd_q; assign sr_d = sr_d_q;
+    end else begin : g_onreg
+        assign rd = rd_m; assign sr_d = sr_d_m;
     end
     // ---- write side: stage (8 words) > lane writes > the single-word STREAM landing (its own group in practice)
     reg  [N-1:0] b_we; reg [RB-1:0] b_wa [0:N-1]; reg [31:0] b_wd [0:N-1];
