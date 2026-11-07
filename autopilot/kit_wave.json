@@ -1979,7 +1979,8 @@
     "ot_s81sl_leaf__t72@6",
     "col_h10_r2__t1__clac068e56@13",
     "dsdv_slice_iq_C__t1@7",
-    "dsdv_slice_kv512_C__t1@7"
+    "dsdv_slice_kv512_C__t1@7",
+    "dsdv_slice_kv512_C__t1@11"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -3163,7 +3164,8 @@
     "slice_station__t48",
     "slice_station__t7__cl362204c4",
     "slice_station__t7__cl945bc067"
-   ]
+   ],
+   "retry_kw28_b2": "KW-FIX-28 08:4x: kv512 kit_rtl INFRA disk floor only"
   },
   "s81_head": {
    "enabled": true,
@@ -4120,7 +4122,10 @@
     "slw_fw_v1__cl51d45468@7",
     "slw_hc0__cl1bc59e1c@6",
     "slw_st_a_v2__cl9f076a5c@9",
-    "slw_st_a_v2__clf4365a62@9"
+    "slw_st_a_v2__clf4365a62@9",
+    "sle_stm_v1__cl27746664@9",
+    "slw_stm_v1__cl05fc43f7__cl389df4e9@14",
+    "sle_fe_v2@4"
    ],
    "queue_src": "main@93c061c396c7bd38c04eaf958b30d465f087fe58",
    "type_args": {
@@ -4799,7 +4804,8 @@
     "--clock-landing",
     "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/sidecar.json"
    ],
-   "note_kw28_mw": "KW-FIX-28 11-07 08:3x: QC new launches --max-wire-um 120 (DQ89-TYPES: coll_ftn a5 1318 slew pins, 83% of worst nets over 120 um on M3, 0 slew at GRT, appears only after route; S81 already runs 100). Unproven on QC: pilot coll_ftn vW has no result yet. gen_args apply at launch only; running rows keep their kit."
+   "note_kw28_mw": "KW-FIX-28 11-07 08:3x: QC new launches --max-wire-um 120 (DQ89-TYPES: coll_ftn a5 1318 slew pins, 83% of worst nets over 120 um on M3, 0 slew at GRT, appears only after route; S81 already runs 100). Unproven on QC: pilot coll_ftn vW has no result yet. gen_args apply at launch only; running rows keep their kit.",
+   "retry_kw28_b2": "KW-FIX-28 08:4x: stm rows flow-error exit 127 11-06 on epyc6 (launcher, no design cause); sle_fe_v2 kit_rsync class fixed on main 8d348fbaae5"
   },
   "hbm": {
    "enabled": true,
