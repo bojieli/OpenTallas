@@ -6,7 +6,7 @@ assert not dst.exists(),dst
 assert hashlib.sha256((base/'rtl/qkd_hr_core_prompt.v').read_bytes()).hexdigest()=='3051cee57cc069b1b46f911ba2ea05e459346a021ce19847ff92eebe6fa417d2'
 assert hashlib.sha256(src.read_bytes()).hexdigest()=='088e078f15cce944bd4f321f62e5faece692e40599f248fd58bdbe12a711ef2b'
 dst.mkdir(parents=True)
-inputs={'CHANNEL_REDESIGN.json','hr_ft_regs.json','PIN_CYCLES.json','hr_face_delta.json','hr_dead_inputs_proof.json','freeze.json','lec_hints.json','clock_binding.json','pins.json','core.json','dead_inputs.json','reset_contract.json','boundary_guard_context.json','timed_face.json','pins_added.json'}
+inputs={'sdc_lint.json','ft_stations.txt','CHANNEL_REDESIGN.json','hr_ft_regs.json','PIN_CYCLES.json','hr_face_delta.json','hr_dead_inputs_proof.json','freeze.json','lec_hints.json','clock_binding.json','pins.json','core.json','dead_inputs.json','reset_contract.json','boundary_guard_context.json','timed_face.json','pins_added.json'}
 for f in base.iterdir():
  if f.is_file() and (f.name in inputs or f.suffix in {'.sh','.tcl','.py','.mk','.sdc'}):shutil.copy2(f,dst/f.name)
 for d in ['rtl','macros','reset_contract']:shutil.copytree(base/d,dst/d,symlinks=True)
