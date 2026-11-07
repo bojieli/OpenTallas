@@ -1,0 +1,9 @@
+DIE-HBM-82-EP6 2026-11-06 16:16 PST ot_wbq_root OT_WBQ_N1M lock-step (bench_n1m.sh, verilator 5.050, CYC 40000, reset every 400 fifo cycles, root_ready/g_v/g_d compared on every hbm_clk and fifo_clk edge with !==)
+m0: N1M LOCKSTEP PASS errs=0 g_v_cycles=9528 of 40000
+m1: N1M LOCKSTEP FAIL errs=85236 g_v_cycles=9528 of 40000
+m2: N1M LOCKSTEP FAIL errs=85179 g_v_cycles=9528 of 40000
+m3: N1M LOCKSTEP FAIL errs=85236 g_v_cycles=9528 of 40000
+m4: N1M LOCKSTEP FAIL errs=16768 g_v_cycles=9528 of 40000
+m0 +verilator+seed+7: N1M LOCKSTEP PASS errs=0 g_v_cycles=11779 of 40000
+m0 +verilator+seed+1234: N1M LOCKSTEP PASS errs=0 g_v_cycles=10076 of 40000
+m1 read addr bit0 flipped / m2 w_mask_in 0 / m3 write addr bit0 flipped / m4 r_ce tied 1: all FAIL as required
