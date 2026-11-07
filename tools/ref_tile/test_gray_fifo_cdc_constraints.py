@@ -212,6 +212,61 @@ class Lint(Fixture):
         self.assertNotIn('ot_gf_', C.generate(A.spec(), ROOT))
 
 
+# KV-FDICDC-1 2026-11-06: ot_async_fifo SEL_PIPE (registered-select storage) under the same lint as the default form.
+AF_FIXTURE = r'''
+module af_fix #(parameter integer SP = 0, parameter integer MUT = 0) (
+    input wire wr_clk, input wire wr_rst_n, input wire wr_valid, input wire [15:0] wr_data,
+    output wire wr_ready, output wire wr_overflow,
+    input wire rd_clk, input wire rd_rst_n, input wire rd_ready,
+    output reg [15:0] q, output reg v, output wire rd_underflow);
+  wire rv; wire [15:0] rd;
+  ot_async_fifo #(.WIDTH(16), .DEPTH(8), .SEL_PIPE(SP), .SEL_CHUNK(8)) u_f (
+    .wr_clk(wr_clk), .wr_rst_n(wr_rst_n), .wr_valid(wr_valid), .wr_ready(wr_ready), .wr_data(wr_data),
+    .wr_overflow(wr_overflow), .rd_clk(rd_clk), .rd_rst_n(rd_rst_n), .rd_valid(rv), .rd_ready(rd_ready),
+    .rd_data(rd), .rd_underflow(rd_underflow));
+  always @(posedge rd_clk or negedge rd_rst_n) if (!rd_rst_n) v <= 1'b0; else v <= rv & rd_ready;
+  always @(posedge rd_clk) if ((MUT == 1) ? rd_ready : (rv & rd_ready)) q <= rd;
+endmodule
+'''
+AF_SOURCES = ['rtl/lib/ot_reset_sync.sv', 'rtl/lib/ot_async_fifo.sv']
+
+
+@unittest.skipUnless(Path(YOSYS).exists(), 'Yosys 0.68 required')
+class SelPipe(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        for f in AF_SOURCES:
+            (self.root / f).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(ROOT / f, self.root / f)
+        (self.root / 'af_fix.sv').write_text(AF_FIXTURE)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def spec(self, sp, mut=0):
+        doms = dict(phy=dict(ratio=G.family_ratio('phy'), ports=['wr_clk'], inputs=['wr_rst_n', 'wr_valid', 'wr_data'],
+                             outputs=['wr_ready', 'wr_overflow']),
+                    core=dict(ratio=[1, 1], ports=['rd_clk'], inputs=['rd_rst_n', 'rd_ready'],
+                              outputs=['q', 'v', 'rd_underflow']))
+        return dict(top='af_fix', kind='tile', clock='multiple_cts_roots', clock_port='rd_clk',
+                    clock_ports=['wr_clk', 'rd_clk'], params=dict(SP=sp, MUT=mut), clock_data_paths='reviewed_gray_fifos',
+                    sources=AF_SOURCES + ['af_fix.sv'],
+                    clock_relationship=dict(kind='independent_clock_families', periods_ps=dict(phy=1043.0, core=833.333)),
+                    clock_entry_domains=doms)
+
+    def test_sel_pipe_same_structure_as_default(self):
+        base, pipe = G.lint(self.spec(0), self.root), G.lint(self.spec(1), self.root)
+        self.assertEqual(base['counts'], pipe['counts'])         # same pointer chains, storage bits and consumers
+        self.assertEqual(pipe['counts']['mem'], 128)               # 8 x 16 per-chunk smem, all writer-side
+        self.assertEqual(next(iter(pipe['fifos'].values()))['pointer_max_delay_ps'], 773.333)
+
+    def test_sel_pipe_ungated_consumer_refused(self):
+        for sp in (0, 1):
+            with self.assertRaisesRegex(G.GrayFifoError, 'read not gated by the FIFO'):
+                G.lint(self.spec(sp, mut=1), self.root)
+
+
 def fixture_lib(module):
     funcs = {'$_AND_': 'A & B', '$_OR_': 'A | B', '$_XOR_': 'A ^ B', '$_NOT_': '!A', '$_MUX_': '(A & !S) | (B & S)'}
     rows = ['library(probe) { delay_model : table_lookup; time_unit : "1ps"; capacitive_load_unit(1,ff); '
