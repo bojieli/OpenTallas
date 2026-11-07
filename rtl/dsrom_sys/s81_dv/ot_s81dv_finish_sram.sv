@@ -1,3 +1,10 @@
+`ifndef OT_ARST
+ `ifdef OT_S81ENG_SYNC_RST
+  `define OT_ARST(x)
+ `else
+  `define OT_ARST(x) or negedge x
+ `endif
+`endif
 `timescale 1ns/1ps
 // Opt-in XFIN SRAM payload successor. Source-bound model18f13c8ce; same operand capture edge.
 module ot_s81dv_norm_finish_sram #(
@@ -58,16 +65,16 @@ module ot_s81dv_norm_finish_sram #(
     (* keep *) reg [NGO-1:0] go_t;
     genvar gk;
     generate for (gk = 0; gk < NGO; gk = gk + 1) begin : g_gt
-        always @(posedge clk or negedge rc[gk / 8]) if (!rc[gk / 8]) go_t[gk] <= 1'b0; else go_t[gk] <= go;
+        always @(posedge clk `OT_ARST(rc[gk / 8])) if (!rc[gk / 8]) go_t[gk] <= 1'b0; else go_t[gk] <= go;
     end endgenerate
     reg [P-1:0] iv; reg [P*8-1:0] ib; reg [P*K*32-1:0] id; reg [31:0] eps_c;
-    always @(posedge clk or negedge rc[4]) if (!rc[4]) iv <= {P{1'b0}}; else iv <= go_t[0] ? {P{1'b0}} : f_v;
+    always @(posedge clk `OT_ARST(rc[4])) if (!rc[4]) iv <= {P{1'b0}}; else iv <= go_t[0] ? {P{1'b0}} : f_v;
     always @(posedge clk) begin ib <= f_base; id <= f_d; eps_c <= eps; end
     (* keep *) reg [NLC*P-1:0] ivl; (* keep *) reg [NLC*P*8-1:0] ibl;   // leaf-match copies, one per IX region
     genvar cl;
     genvar n, p, k;                     // slang: declared before g_dec uses p (source order only)
     generate for (cl = 0; cl < NLC; cl = cl + 1) begin : g_lc
-        always @(posedge clk or negedge rsr[cl % NRS]) if (!rsr[cl % NRS]) ivl[cl*P +: P] <= {P{1'b0}};
+        always @(posedge clk `OT_ARST(rsr[cl % NRS])) if (!rsr[cl % NRS]) ivl[cl*P +: P] <= {P{1'b0}};
             else ivl[cl*P +: P] <= go_t[cl % NGO] ? {P{1'b0}} : f_v;
         always @(posedge clk) ibl[cl*P*8 +: P*8] <= f_base;
     end endgenerate
@@ -120,7 +127,7 @@ module ot_s81dv_norm_finish_sram #(
                     assign ph[IX * P + p] = |m[p * K +: K];
                 end
                 reg vld;
-                always @(posedge clk or negedge rsr[IX % NRS])
+                always @(posedge clk `OT_ARST(rsr[IX % NRS]))
                     if (!rsr[IX % NRS]) vld <= 1'b0; else if (go_t[IX % NGO]) vld <= 1'b0; else if (hit) vld <= 1'b1;
 
                 assign dup[IX] = hit && (vld || ((m & (m - 1)) != 0));
@@ -136,7 +143,7 @@ module ot_s81dv_norm_finish_sram #(
         for (n = 1; n < NVP; n = n + 1) begin : g_node
             if (isadd(n)) begin : g_add
                 reg vld;
-                always @(posedge clk or negedge rsr[n % NRS])
+                always @(posedge clk `OT_ARST(rsr[n % NRS]))
                     if (!rsr[n % NRS]) vld <= 1'b0; else if (go_t[(n + 5) % NGO]) vld <= 1'b0; else if (wr_v && wr_n == n) vld <= 1'b1;
 
                  assign VD[n] = vld;
@@ -173,7 +180,7 @@ module ot_s81dv_norm_finish_sram #(
             wire [7:0] r8 = rdy[q * 8 +: 8];
             wire [7:0] o8 = r8 & ~(r8 - 8'd1);          // lowest set bit (8-bit)
             reg [7:0] o_r; reg g_r;
-            always @(posedge clk or negedge rsr[q % NRS])
+            always @(posedge clk `OT_ARST(rsr[q % NRS]))
                 if (!rsr[q % NRS]) begin o_r <= 8'd0; g_r <= 1'b0; end
                 else begin o_r <= o8; g_r <= (|r8) && !go_t[(q + 2) % NGO]; end
             assign oh1[q * 8 +: 8] = o_r; assign ga1[q] = g_r && !go_t[(q + 7) % NGO];
@@ -201,7 +208,7 @@ module ot_s81dv_norm_finish_sram #(
         end
     endgenerate
     reg f_q; wire [31:0] a_q, b_q; reg [7:0] t_q;      // operand stage (registered: issue mux -> adder)
-    always @(posedge clk or negedge rc[4]) if (!rc[4]) f_q <= 1'b0; else f_q <= fire;
+    always @(posedge clk `OT_ARST(rc[4])) if (!rc[4]) f_q <= 1'b0; else f_q <= fire;
     always @(posedge clk) t_q <= ot[NVP];
     wire[7:0] read_fire;wire[71:0] read_tags;
     wire[8*NG8-1:0] mem_reset;
@@ -211,7 +218,7 @@ module ot_s81dv_norm_finish_sram #(
       for(genvar mq=0;mq<NG8;mq=mq+1)begin:g_group
         wire[7:0] mr=rdy[mq*8+:8];
         (* keep *) reg[7:0] o;(* keep *) reg g;
-        always @(posedge clk or negedge mem_reset[mc*NG8+mq])
+        always @(posedge clk `OT_ARST(mem_reset[mc*NG8+mq]))
           if(!mem_reset[mc*NG8+mq])begin o<=0;g<=0;end
           else begin o<=mr & ~(mr-8'd1);g<=(|mr) && !go_t[(mq+2)%NGO];end
         assign mo[mq*8+:8]=o;
@@ -238,7 +245,7 @@ module ot_s81dv_norm_finish_sram #(
     assign wr_v = av[LAV];
     // ---------------------------------------------------------------- tail: / D, + eps, rsqrt (ot_dsrom_su_norm)
     reg ssr_v; reg [31:0] ssr;
-    always @(posedge clk or negedge rc[6]) if (!rc[6]) ssr_v <= 1'b0; else ssr_v <= wr_v && wr_n == 8'd1 && !go_t[1 % NGO];
+    always @(posedge clk `OT_ARST(rc[6])) if (!rc[6]) ssr_v <= 1'b0; else ssr_v <= wr_v && wr_n == 8'd1 && !go_t[1 % NGO];
     always @(posedge clk) ssr <= wr_d;
     wire [31:0] mq, me, rr;
     wire        mq_v, me_v, rr_v, f_div, f_eps, f_rsq;
@@ -249,7 +256,7 @@ module ot_s81dv_norm_finish_sram #(
     assign me_v = ve[LA];
     ot_s81dv_rsqrt_n32 #(.LM(LM), .LA(LA)) u_rsq (.clk(clk), .rst_n(rst_n), .v(me_v), .x(me), .y(rr), .vo(rr_v), .fault(f_rsq));
     reg r_v_o; reg [31:0] r_o; reg flt;
-    always @(posedge clk or negedge rc[7])
+    always @(posedge clk `OT_ARST(rc[7]))
         if (!rc[7]) begin r_v_o <= 1'b0; flt <= 1'b0; end
         else begin
             r_v_o <= rr_v;
@@ -323,15 +330,15 @@ module ot_s81dv_eng_finish_sram #(
     (* keep *) reg [NGO-1:0] go_t;
     genvar gk;
     generate for (gk = 0; gk < NGO; gk = gk + 1) begin : g_gt
-        always @(posedge clk or negedge rc[gk / 8]) if (!rc[gk / 8]) go_t[gk] <= 1'b0; else go_t[gk] <= go;
+        always @(posedge clk `OT_ARST(rc[gk / 8])) if (!rc[gk / 8]) go_t[gk] <= 1'b0; else go_t[gk] <= go;
     end endgenerate
     reg [P-1:0] iv; reg [P*2-1:0] it; reg [P*8-1:0] ib; reg [P*K*32-1:0] id;
-    always @(posedge clk or negedge rc[4]) if (!rc[4]) iv <= {P{1'b0}}; else iv <= go_t[0] ? {P{1'b0}} : f_v;
+    always @(posedge clk `OT_ARST(rc[4])) if (!rc[4]) iv <= {P{1'b0}}; else iv <= go_t[0] ? {P{1'b0}} : f_v;
     always @(posedge clk) begin it <= f_t; ib <= f_base; id <= f_d; end
     (* keep *) reg [NLC*P-1:0] ivl; (* keep *) reg [NLC*P*2-1:0] itl; (* keep *) reg [NLC*P*8-1:0] ibl;
     genvar cl;
     generate for (cl = 0; cl < NLC; cl = cl + 1) begin : g_lc
-        always @(posedge clk or negedge rsr[cl % NRS]) if (!rsr[cl % NRS]) ivl[cl*P +: P] <= {P{1'b0}};
+        always @(posedge clk `OT_ARST(rsr[cl % NRS])) if (!rsr[cl % NRS]) ivl[cl*P +: P] <= {P{1'b0}};
             else ivl[cl*P +: P] <= go_t[cl % NGO] ? {P{1'b0}} : f_v;
         always @(posedge clk) begin itl[cl*P*2 +: P*2] <= f_t; ibl[cl*P*8 +: P*8] <= f_base; end
     end endgenerate
@@ -379,7 +386,7 @@ module ot_s81dv_eng_finish_sram #(
                     assign ph[(t * NV + IX) * P + p] = |m[p * K +: K];
                 end
                 reg vld;
-                always @(posedge clk or negedge rsr[IX % NRS])
+                always @(posedge clk `OT_ARST(rsr[IX % NRS]))
                     if (!rsr[IX % NRS]) vld <= 1'b0; else if (go_t[(t * NVP + IX) % NGO]) vld <= 1'b0; else if (hit) vld <= 1'b1;
 
                 assign dup[t * NVP + IX] = hit && (vld || ((m & (m - 1)) != 0));
@@ -395,7 +402,7 @@ module ot_s81dv_eng_finish_sram #(
         for (n = 1; n < NVP; n = n + 1) begin : g_node
             if (isadd(n)) begin : g_add
                 reg vld;
-                always @(posedge clk or negedge rsr[n % NRS])
+                always @(posedge clk `OT_ARST(rsr[n % NRS]))
                     if (!rsr[n % NRS]) vld <= 1'b0; else if (go_t[(t * NVP + n + 11) % NGO]) vld <= 1'b0;
                     else if (wr_v && wr_n == t * NVP + n) vld <= 1'b1;
 
@@ -425,7 +432,7 @@ module ot_s81dv_eng_finish_sram #(
         wire [7:0] r8 = rdy[q * 8 +: 8];
         wire [7:0] o8 = r8 & ~(r8 - 8'd1);
         reg [7:0] o_r; reg g_r;
-        always @(posedge clk or negedge rsr[q % NRS])
+        always @(posedge clk `OT_ARST(rsr[q % NRS]))
             if (!rsr[q % NRS]) begin o_r <= 8'd0; g_r <= 1'b0; end
             else begin o_r <= o8; g_r <= (|r8) && !go_t[(q + 3) % NGO]; end
         assign oh1[q * 8 +: 8] = o_r; assign ga1[q] = g_r && !go_t[(q + 17) % NGO];
@@ -450,7 +457,7 @@ module ot_s81dv_eng_finish_sram #(
         end
     end endgenerate
     reg f_q; wire [31:0] a_q, b_q; reg [CW-1:0] t_q;
-    always @(posedge clk or negedge rc[4]) if (!rc[4]) f_q <= 1'b0; else f_q <= fire;
+    always @(posedge clk `OT_ARST(rc[4])) if (!rc[4]) f_q <= 1'b0; else f_q <= fire;
     always @(posedge clk) t_q <= ot[NC];
     wire[7:0] read_fire;wire[71:0] read_tags;
     wire[8*NG8-1:0] mem_reset;
@@ -460,7 +467,7 @@ module ot_s81dv_eng_finish_sram #(
       for(genvar mq=0;mq<NG8;mq=mq+1)begin:g_group
         wire[7:0] mr=rdy[mq*8+:8];
         (* keep *) reg[7:0] o;(* keep *) reg g;
-        always @(posedge clk or negedge mem_reset[mc*NG8+mq])
+        always @(posedge clk `OT_ARST(mem_reset[mc*NG8+mq]))
           if(!mem_reset[mc*NG8+mq])begin o<=0;g<=0;end
           else begin o<=mr & ~(mr-8'd1);g<=(|mr) && !go_t[(mq+3)%NGO];end
         assign mo[mq*8+:8]=o;
@@ -486,7 +493,7 @@ module ot_s81dv_eng_finish_sram #(
     assign wr_v = av[LAV];
     // roots: node 1 of each tree
     reg [T-1:0] dn; reg flt;
-    always @(posedge clk or negedge rc[7])
+    always @(posedge clk `OT_ARST(rc[7]))
         if (!rc[7]) begin dn <= {T{1'b0}}; r_v <= 1'b0; flt <= 1'b0; end
         else begin
             r_v <= 1'b0;
@@ -502,7 +509,7 @@ module ot_s81dv_eng_finish_sram #(
         end
     // r_vk: same next state as r_v (reset 0; go_t[1] clears; set on the completing root write)
     (* keep *) reg [24:0] rvk;
-    always @(posedge clk or negedge rc[6])
+    always @(posedge clk `OT_ARST(rc[6]))
         if (!rc[6]) rvk <= 25'd0;
         else if (go_t[1]) rvk <= 25'd0;
         else rvk <= {25{dn != {T{1'b1}} && (dn | {wr_v && wr_n == 2 * NVP + 1, wr_v && wr_n == NVP + 1, wr_v && wr_n == 1})
@@ -1353,10 +1360,10 @@ endmodule
 module ot_s81dv_finish_reset2 #(parameter integer LEAVES=64)(input wire clk,rst_n,output wire[LEAVES-1:0] q);
  localparam integer NP=(LEAVES+23)/24;
  (* keep=1 *) reg[NP-1:0] prefix;
- always @(posedge clk or negedge rst_n)if(!rst_n)prefix<=0;else prefix<={NP{1'b1}};
+ always @(posedge clk `OT_ARST(rst_n))if(!rst_n)prefix<=0;else prefix<={NP{1'b1}};
  for(genvar g=0;g<LEAVES;g=g+1)begin:g_leaf
   (* keep=1 *) reg r;
-  always @(posedge clk or negedge prefix[g/24])if(!prefix[g/24])r<=0;else r<=1;
+  always @(posedge clk `OT_ARST(prefix[g/24]))if(!prefix[g/24])r<=0;else r<=1;
   assign q[g]=r;
  end
 endmodule

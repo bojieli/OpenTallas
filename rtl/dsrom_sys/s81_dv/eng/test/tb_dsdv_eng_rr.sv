@@ -69,13 +69,18 @@ module tb_dsdv_eng_rr;
     // S81-KITS-RTLA 10-24: the H cores capture in_w in one pin flop (+1 edge): the crossing res_m is the monolith's hres
     // one ck edge later.  Both change on negedges only, so they are compared at posedge against last posedge's hres.
     // DIE-S81-51/RF-C 11-03: H0 (res_m[575:0]) is the RE-FORM _pr half = one more edge (+2 vs hres); H1 stays +1.
-    reg [1151:0] lk_hres_d, lk_hres_d2; longint lk_xbad = 0; reg lk_arm = 0;
+    reg [1151:0] lk_hres_d, lk_hres_d2, lk_hres_d3; longint lk_xbad = 0; reg lk_arm = 0;
     always @(posedge ck) begin
+`ifdef OT_S81ENG_HXW_POS
+        // S81-ENGRR-B7 11-07: with hx_w launched at posedge the H cores see it one edge later than the monolith's negedge hres path.
+        if (rst && lk_arm && {u_sp.res_m[1151:576], u_sp.res_m[575:0]} !== {lk_hres_d2[1151:576], lk_hres_d3[575:0]}) begin
+`else
         if (rst && lk_arm && {u_sp.res_m[1151:576], u_sp.res_m[575:0]} !== {lk_hres_d[1151:576], lk_hres_d2[575:0]}) begin
+`endif
             lk_xbad <= lk_xbad + 1;
             if (lk_xbad < 4) $display("TB_ENG_RR_LOCKSTEP crossing mismatch cyc %0d", cyc);
         end
-        lk_hres_d <= u_rr.u_lkp.u_e.hres; lk_hres_d2 <= lk_hres_d; lk_arm <= rst;
+        lk_hres_d <= u_rr.u_lkp.u_e.hres; lk_hres_d2 <= lk_hres_d; lk_hres_d3 <= lk_hres_d2; lk_arm <= rst;
     end
 `endif
     // ------------------------------------------------------------------ taps, chains, controllers, PHY

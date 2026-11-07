@@ -1,3 +1,10 @@
+`ifndef OT_ARST
+ `ifdef OT_S81ENG_SYNC_RST
+  `define OT_ARST(x)
+ `else
+  `define OT_ARST(x) or negedge x
+ `endif
+`endif
 `timescale 1ns/1ps
 // Real source-derived 14-root static lookup successor. The compiler supplies
 // RETURN_AGE from its proved external service bound; this parameter is not a
@@ -130,7 +137,7 @@ module ot_s81_engram_lookup_static #(
     wire response_ok = hr_valid && active && age < RETURN_AGE &&
         hr_slot == slot && hr_tag < CPR && hr_idx < 9 && !seen[hr_tag][hr_idx];
     integer sr;
-    always @(posedge clk_ctl or negedge rst_n) begin
+    always @(posedge clk_ctl `OT_ARST(rst_n)) begin
         if (!rst_n) begin
             active<=0; age<=0; protocol_bad<=0;
             for(sr=0;sr<CPR;sr=sr+1) seen[sr]<=0;
@@ -164,7 +171,7 @@ module ot_s81_engram_lookup_static #(
     wire [QW*ENG_LAYERS*ENG_COLS-1:0] hres;
     ot_s81_engram_hash_static u_hash (.clk(clk_seed), .clk_columns(clk_hash), .in_w(win_n), .out_res(hres));
     reg [12:1] lastl;                        // marks the 4th feed through the hash latency
-    always @(posedge clk_ctl or negedge rst_n) begin
+    always @(posedge clk_ctl `OT_ARST(rst_n)) begin
         if (!rst_n) lastl <= 12'd0;
         else lastl <= {lastl[11:1], hfeed && fcnt == 2'd3};
     end
@@ -235,7 +242,7 @@ module ot_s81_engram_lookup_static #(
     generate for (bank=0; bank<CPR; bank=bank+1) begin : g_clocked_row
         wire [256*ATOMS-1:0] stored;
         reg  [ATOMS-1:0] wen_q;
-        always @(posedge clk_ctl or negedge rst_n)
+        always @(posedge clk_ctl `OT_ARST(rst_n))
             if (!rst_n) wen_q <= {ATOMS{1'b0}};
             else        wen_q <= (response_ok && hr_tag == bank) ? ({{(ATOMS-1){1'b0}}, 1'b1} << hr_idx) : {ATOMS{1'b0}};
         // core -> row hop (st8): this bank's ck-POSEDGE copy (full core cycle from the shared wdata_q, so its tile-wide
@@ -252,7 +259,7 @@ module ot_s81_engram_lookup_static #(
 
     // ---- issue ------------------------------------------------------------------------
     reg [2:0] icnt;
-    always @(posedge clk_ctl or negedge rst_n) begin
+    always @(posedge clk_ctl `OT_ARST(rst_n)) begin
         if (!rst_n) begin
             st <= S_IDLE; fcnt <= 2'd0; acnt <= 2'd0; icnt <= 3'd0; hq_valid <= 1'b0;
             slot <= {SLW{1'b0}};
@@ -319,7 +326,7 @@ module ot_s81_engram_lookup_static #(
     reg [1:0]   e1_off;
     reg [2:0]   e1_j, e1_k;
     reg [SLW-1:0] e1_s, e2_s, e3_s;
-    always @(posedge clk_ctl or negedge rst_n) begin
+    always @(posedge clk_ctl `OT_ARST(rst_n)) begin
         if (!rst_n) begin
             ej <= 3'd0; ek <= 4'd0; emit_done_r <= 1'b0; e1_v <= 1'b0; e0q_v <= 1'b0; e0r_v <= 1'b0;
         end else begin
@@ -414,7 +421,7 @@ module ot_s81_engram_lookup_static #(
     reg [2:0]   e2_j, e2_k;
     wire [511:0] e1_cat = {e1_hi, e1_lo};
     wire [255:0] e1_a8s = e1_a8 >> {e1_off, 6'd0};
-    always @(posedge clk_em or negedge rst_n) begin
+    always @(posedge clk_em `OT_ARST(rst_n)) begin
         if (!rst_n) e2_v <= 1'b0;
         else e2_v <= e1_v;
     end
@@ -436,7 +443,7 @@ module ot_s81_engram_lookup_static #(
     reg transport_v, ov;
     reg [FW-1:0] transport_d, od;
     wire [4:0] e2_col = crank * CPR + e2_j;
-    always @(posedge clk_em or negedge rst_n) begin
+    always @(posedge clk_em `OT_ARST(rst_n)) begin
         if(!rst_n) begin transport_v<=0;ov<=0;end
         else begin transport_v<=e2_v;ov<=transport_v;end
     end
@@ -529,7 +536,7 @@ module ot_s81_engram_lookup_static #(
     reg [31:0] e3_exp;
     generate
         if (PIPE == 0) begin : g_crc0
-            always @(posedge clk_em or negedge rst_n) begin
+            always @(posedge clk_em `OT_ARST(rst_n)) begin
                 if (!rst_n) begin
                     crc <= 32'hFFFFFFFF; e3_last <= 1'b0;
                 end else begin
@@ -546,7 +553,7 @@ module ot_s81_engram_lookup_static #(
             reg [63:0] a_sc8;
             reg [31:0] a_exp;
             reg [SLW-1:0] a_s;
-            always @(posedge clk_em or negedge rst_n) begin
+            always @(posedge clk_em `OT_ARST(rst_n)) begin
                 if (!rst_n) begin a_v <= 1'b0; a_last <= 1'b0; crc <= 32'hFFFFFFFF; e3_last <= 1'b0; end
                 else begin
                     a_v <= e2_v;
@@ -565,7 +572,7 @@ module ot_s81_engram_lookup_static #(
         end
     endgenerate
     // final: fold the 8 exponent bytes and compare
-    always @(posedge clk_em or negedge rst_n) begin
+    always @(posedge clk_em `OT_ARST(rst_n)) begin
         if (!rst_n) begin
             st_valid <= 1'b0; st_slot <= {SLW{1'b0}}; st_bad <= 1'b0; fault <= 1'b0;
         end else begin

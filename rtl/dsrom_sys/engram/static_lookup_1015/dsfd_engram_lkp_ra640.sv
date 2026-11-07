@@ -1,3 +1,10 @@
+`ifndef OT_ARST
+ `ifdef OT_S81ENG_SYNC_RST
+  `define OT_ARST(x)
+ `else
+  `define OT_ARST(x) or negedge x
+ `endif
+`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------------
 // dsfd_engram_lkp_ra640 (S81-FIX2/ENG 10-21): dsfd_engram_lkp_ra512 for the G7 die's measured Engram response age
@@ -91,10 +98,10 @@ module dsfd_engram_lkp_ra640 #(
     reg [255:0]          hrd_q;
     // st9 (coordinator 10-17 ~09:35): regional face roots for the pin flops.  ck_n / ck_s / ck are phase-0 1:1
     // roots of one PLL (same edge), so every pin flop still captures on the same cycle: 0 cycles added.
-    always @(posedge ck_n or negedge rst_n)
+    always @(posedge ck_n `OT_ARST(rst_n))
         if (!rst_n) wv_q <= 1'b0;
         else        wv_q <= win_v;
-    always @(posedge ck_s or negedge rst_n)
+    always @(posedge ck_s `OT_ARST(rst_n))
         if (!rst_n) hrv_q <= 1'b0;
         else        hrv_q <= hr_v;
     always @(posedge ck_n) begin ws_q <= win_slot; wid_q <= win_ids; end
@@ -136,13 +143,13 @@ module dsfd_engram_lkp_ra640 #(
         .o_valid(e_ov), .o_col(e_oc), .o_beat(e_ob), .o_slot(e_os), .o_data(e_od),
         .st_valid(e_stv), .st_slot(e_sts), .st_bad(e_stb), .fault(e_fault));
     // ---- output pin flops -----------------------------------------------------------
-    always @(posedge ck_s or negedge rst_n)
+    always @(posedge ck_s `OT_ARST(rst_n))
         if (!rst_n) hq_v <= 1'b0;
         else        hq_v <= e_hqv;
-    always @(posedge ck_n or negedge rst_n)
+    always @(posedge ck_n `OT_ARST(rst_n))
         if (!rst_n) begin o_v <= 1'b0; st_v <= 1'b0; end
         else begin o_v <= e_ov; st_v <= e_stv; end
-    always @(posedge ck or negedge rst_n)
+    always @(posedge ck `OT_ARST(rst_n))
         if (!rst_n) fault <= 1'b0;
         else        fault <= e_fault;
     always @(posedge ck_s) begin hq_atom <= e_hqa; hq_tag <= e_hqt; end
