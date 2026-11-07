@@ -3850,7 +3850,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         macro_ff_repair_stage(kd, macros, mlib)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_chain_affinity.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
-              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl",
+              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
               "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
@@ -4042,7 +4042,21 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                   f"{regs}".rstrip())
     (kd / "ft_stations.txt").write_text("\n".join(ft) + "\n")
     from ft_bit_sites import table as ft_bit_sites_table
-    (kd / "ft_bit_sites.tcl").write_text(ft_bit_sites_table(t.get("ft_slots", [])))
+    # TYPE-SAFE-2 11-06 (OWNER 18:5x, COORD 19:2x (4a)): gen-time ft station spread (ft_spread.py docstring): a slot
+    # with station points but no per-bit sites gets a bit column across its bundle at each planned station instead of
+    # the ff_put_near clump; stations, hops, RTL and LEC unchanged.  Default on; partition_types.<t>.ft_spread false
+    # = the plan sites only.  ft_track_use.json: advisory track-use report (never a gate).
+    import ft_spread
+    try:
+        ft_kit_slots, ft_spread_ledger = ft_spread.spread_type(P, tn, t)
+    except Exception as ex:                  # the spread is a form improvement, never a gen failure: plan sites only
+        ft_kit_slots = list(t.get("ft_slots", []) or [])
+        ft_spread_ledger = [dict(form="clump", reason=f"ft_spread error {type(ex).__name__}: {ex}")]
+        print(f"[gen] {tn}: FT_SPREAD ADVISORY {type(ex).__name__}: {ex} (plan sites only)")
+    (kd / "ft_bit_sites.tcl").write_text(ft_bit_sites_table(ft_kit_slots))
+    if ft_kit_slots:
+        (kd / "ft_track_use.json").write_text(json.dumps(dict(ft_spread.track_use(ft_kit_slots, ft_spread_ledger),
+                                                              type=tn, spread=ft_spread_ledger), indent=1) + "\n")
     ff_core_taps = {r[0]: r for r in core_tap_rows(P, tn, "FF")}
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
