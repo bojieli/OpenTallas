@@ -41,7 +41,11 @@ module ot_hgi_sfu_opsb_output (
     // one-hot); BREG: bank inputs registered; FREG: fault terms registered. sr_d / sr_rv +2 edges, flt +2 edges.
     reg [1:0] q_sv; reg [29:0] q_sa; reg [15:0] q_lw; reg [383:0] q_la; reg [511:0] q_ld;
     always @(posedge clk) begin q_sv <= sr_v; q_sa <= sr_addr; q_lw <= lw; q_la <= lwa; q_ld <= lwd; end
+`ifdef OT_OPSB_RREG   // HBM-FORM-SPLIT-13-OPSB opt-in: bank-local read registers (RREG 1: sr_d / sr_rv +1 edge, 2: +2)
+    ot_hgi_su_lgroup2_lf #(.N(16),.M(16),.LWB(15),.AW(24),.NLW(16),.MACRO(1),.MUT_XBAR(0),.NS(2),.BREG(1),.FREG(1),.RREG(`OT_OPSB_RREG)) u_g (
+`else
     ot_hgi_su_lgroup2_lf #(.N(16),.M(16),.LWB(15),.AW(24),.NLW(16),.MACRO(1),.MUT_XBAR(0),.NS(2),.BREG(1),.FREG(1)) u_g (
+`endif
         .clk(clk), .rst_n(rst_n), .rq(16'd0), .rr(16'd0), .ra(384'd0), .rd(),
         .sr_v(q_sv), .sr_addr(q_sa), .sr_d(sr_d), .sr_rv(sr_rv),
         .sw_v(2'd0), .sw_addr(30'd0), .sw_mask(16'd0), .sw_d(512'd0),
