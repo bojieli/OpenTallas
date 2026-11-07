@@ -17,7 +17,7 @@ def _procs():
     put = re.search(r"proc cland_put \{i rect tag \{sp \{\}\} \{cur 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     occ = re.search(r"proc cland_occupy \{x y w h\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     grow = re.search(r"proc cland_put_grow \{i rect tag kind\} \{\n.*?\n\}\n", TCL, re.S).group(0)
-    coll = re.search(r"proc cland_put_collector \{i rect tag\} \{[^\n]*\}\n", TCL).group(0)
+    coll = re.search(r"proc cland_put_collector \{i rect tag\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     return occ + put + grow + coll
 
 
@@ -111,3 +111,60 @@ def test_optional_group_cells_take_the_grow_path():
     body = TCL.split("foreach spec $cland_optional_groups {", 1)[1].split("\n}\n", 1)[0]
     assert "cland_put_grow $i $rect $tag raw-copy" in body
     assert "\n  cland_put $i" not in body
+
+
+FOLLOW = r"""
+rename file _file
+proc file {op args} { if {$op eq "exists" && [lindex $args 0] eq "/work/macro_moves.json"} { return %(MOVES)d }; return [_file $op {*}$args] }
+%(RTR)s
+"""
+
+
+def _run_follow(moves, rtr, ol=0, ou=40000):
+    # every row fully taken, so the plan window cannot reach a site at any grow
+    mock = MOCK % dict(OL=ol, OU=ou)
+    head = FOLLOW % dict(MOVES=moves, RTR=rtr)
+    out = subprocess.run(["tclsh"], input=_procs() + head + mock, capture_output=True, text=True)
+    assert out.returncode == 0, out.stderr
+    return out.stdout
+
+
+@needs_tcl
+def test_no_macro_moves_fails_closed_as_before():
+    out = _run_follow(0, "set ::rtr_at [dict create rst_rl_1 {20000 5400}]")
+    assert "ERR OT_CLAND no legal" in out and "follows relay" not in out
+
+
+@needs_tcl
+def test_macro_moves_without_a_relay_fails_closed():
+    out = _run_follow(1, "set ::rtr_at [dict create rst_rl_9 {20000 5400}]")
+    assert "ERR OT_CLAND no legal" in out and "follows relay" not in out
+
+
+@needs_tcl
+def test_macro_moves_with_relay_also_blocked_fails_closed():
+    out = _run_follow(1, "set ::rtr_at [dict create rst_rl_1 {20000 5400}]")
+    assert "follows relay" in out and "ERR OT_CLAND no legal" in out
+
+
+@needs_tcl
+def test_macro_moves_follows_the_placed_relay():
+    # core 0..200 um, occupancy 0..150 um in every row: plan window at x=20 um reaches 89 um at x32, so no site; relay at x=155
+    mock = (MOCK % dict(OL=0, OU=150000)).replace("set ff_x1 40000", "set ff_x1 200000")
+    head = FOLLOW % dict(MOVES=1, RTR="set ::rtr_at [dict create rst_rl_1 {155000 5400}]")
+    out = subprocess.run(["tclsh"], input=_procs() + head + mock, capture_output=True, text=True)
+    assert out.returncode == 0, out.stderr
+    out = out.stdout
+    assert "follows relay" in out, out
+    x = int(re.search(r"LOC (\d+) (\d+)", out).group(1))
+    assert 150000 <= x <= 160000
+
+
+@needs_tcl
+def test_macro_moves_window_that_fits_ignores_the_relay():
+    mock = MOCK % dict(OL=0, OU=0)
+    head = FOLLOW % dict(MOVES=1, RTR="set ::rtr_at [dict create rst_rl_1 {35000 5400}]")
+    out = subprocess.run(["tclsh"], input=_procs() + head + mock, capture_output=True, text=True).stdout
+    assert "follows relay" not in out
+    x = int(re.search(r"LOC (\d+) (\d+)", out).group(1))
+    assert 17840 <= x <= 22160 - 108

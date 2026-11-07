@@ -987,7 +987,21 @@ proc cland_band_fit {prefix rect tag} {
 # took (t21 rst_n_t8 in ft5_i).  A collector cell with no site in its window takes the window grown about the same
 # centre x2, x4, x8 (<= +-17.28 um; a reset status hop, far below the 405 um relay reach); still none fails closed as
 # before.  Rings, status, start relays and every collector that fits its window are unchanged.
-proc cland_put_collector {i rect tag} { cland_put_grow $i $rect $tag collector }
+# S81-TYPES-4 11-07 (S81 leaf macro-facing batch: t7 t10 t56 t67 place FAIL, relay window inside a moved macro, deeper
+# than the x32 window reaches; t10 rst_rl_148 is 73.8 um inside u_vsw): OT_MACRO_MOVES edits macro_place.tcl only, so the
+# plan's relay xy stands, but rtr_place has already put the relay flop on its nearest free site (ff_put_near).  The kit
+# holds macro_moves.json on exactly those rows: a collector with no site about its plan xy follows the placed relay,
+# same window law about the relay's site.  No macro_moves.json, or a window that fits: unchanged.  Still no site: fails closed.
+proc cland_put_collector {i rect tag} {
+ if {![catch {cland_put_grow $i $rect $tag collector} err opts]} { return }
+ if {![string match {OT_CLAND no legal*} $err] || ![file exists /work/macro_moves.json] || ![info exists ::rtr_at]
+     || ![regexp {^collector:(.+)$} $tag -> key] || ![dict exists $::rtr_at $key]} { return -options $opts $err }
+ lassign $rect ax ay bx by
+ lassign [dict get $::rtr_at $key] x y
+ set cx [expr {double($x)/$::ff_dbu}]; set cy [expr {double($y)/$::ff_dbu}]; set hx [expr {($bx-$ax)/2.0}]; set hy [expr {($by-$ay)/2.0}]
+ puts "OT_CLAND collector follows relay [$i getName] ($tag): plan window [format {%.2f %.2f} [expr {($ax+$bx)/2.0}] [expr {($ay+$by)/2.0}]] has no site, relay at [format {%.2f %.2f} $cx $cy]"
+ cland_put_grow $i [list [expr {$cx-$hx}] [expr {$cy-$hy}] [expr {$cx+$hx}] [expr {$cy+$hy}]] $tag collector
+}
 # BEGIN NATIVE_ROLE_BANKS
 # Opt-in native clock/data-role banks. All membership checks finish before any bank moves.
 proc cland_role_lib_clocks {i} {
