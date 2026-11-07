@@ -77,10 +77,15 @@ def main():
                    compatibility=compatibility(images),
                    production_enabled=False, lifetime_qualified=False, full_token=False)
     (a.out/'candidate.json').write_text(json.dumps(summary,indent=2)+'\n')
-    for name in ('tb.sv', 'run.sh'):
+    for name in ('tb.sv', 'run.sh', 'tb47.sv', 'run47.sh'):
         shutil.copyfile(Path(__file__).parent/name, a.out/name)
     shutil.copyfile(ROOT/'rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv',
                     a.out/'ot_dsdv_walk_issue.sv')
+    for name in ('rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv',
+                 'rtl/lib/ot_rst_relay.sv',
+                 'rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv',
+                 'physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v'):
+        shutil.copyfile(ROOT/name, a.out/Path(name).name)
 
 
 if __name__ == '__main__':

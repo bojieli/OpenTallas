@@ -37,3 +37,16 @@ by these amounts and must be priced before adoption. Generated calendars stay
 initialization, global HOST/KS/reset/resource booking, and new tags through all
 downstream consumers remain open. No production bootstrap, token rate or G5
 qualification is claimed.
+
+The subsequent literal47-entry tracker join also PASSed: one reset, one immutable
+RL7170 configuration, 376 starts and 376 exact user/position returns over eight
+full47-entry wraps, with44885 exact command comparisons. Its actual SRAM model,
+reset relay and slot tracker are current source; the8 pages are the new candidate
+above. Runtime28.954s/7MB, Intel2 unit2205511-1794061781 exit0. The same executable
+with stale response tags faulted code6 atpage0/t7158, unit2263757-1794061886.
+`bash run47.sh` reproduces this fixed diagnostic7163/7183 book after preparation.
+The uniform16384 slot gap and6-edge pin-to-issuer delay are explicit fixture
+premises (KIT pin offset7), not a measured production transport/global calendar.
+This is47-entry hardware coverage, not adoption of a47-user throughput target.
+It does not initialize/prove the eight separate MW resource windows or perform
+actual consumer arithmetic/retirement. Those production obligations remain open.
