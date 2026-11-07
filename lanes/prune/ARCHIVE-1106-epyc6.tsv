@@ -20,7 +20,6 @@ path	class	bytes	mtime	archive_path	verify	action
 /srv/opentallas-scratch2/claude/s81-engrr-b4/main_505972e	nonclosed	300000000	2026-11-06 12:06	-	-	HELD (source extract main@505972e, may feed live s81-engrr-b5)
 /srv/opentallas-scratch2/claude/die-hbm-78-n4/bench/mut	nonclosed	320321911	2026-11-05 21:25	-	-	DELETED 2026-11-06 19:31 PST
 /srv/opentallas-scratch2/claude/die-hbm-78-n4/kits	nonclosed	2738577437	2026-11-05 22:42	-	-	RM-FAILED
-/srv/opentallas-scratch2/claude/die-kv-64/pvrec/composed_rtl	nonclosed	494641904	2026-11-03 12:13	-	-	DELETED 2026-11-06 19:31 PST
 /srv/opentallas-scratch2/claude/die-s81-66	nonclosed	1325730058	2026-11-05 22:13	-	-	DELETED 2026-11-06 19:31 PST
 /srv/opentallas-scratch2/claude/die-s81-66-idxa/eco	nonclosed	638433752	2026-11-05 22:29	-	-	DELETED 2026-11-06 19:31 PST
 /srv/opentallas-scratch2/claude/die-s81-66-idxa/kits	nonclosed	747514468	2026-11-05 21:50	-	-	DELETED 2026-11-06 19:31 PST
@@ -33,3 +32,4 @@ path	class	bytes	mtime	archive_path	verify	action
 /srv/opentallas-scratch2/claude/kv-prm-b3/qkd_hr_core_prompt_vA_eco	nonclosed	677085086	2026-11-06 05:33	-	-	DELETED 2026-11-06 19:32 PST
 /srv/opentallas-scratch2/claude/kw11/bind_kv_h	nonclosed	626572010	2026-11-05 06:59	-	-	DELETED 2026-11-06 19:32 PST
 /srv/opentallas-scratch2/claude/kw11/bind_kv_k	nonclosed	626572010	2026-11-05 09:48	-	-	DELETED 2026-11-06 19:32 PST
+/srv/opentallas-scratch2/claude/die-kv-64/pvrec/composed_rtl	nonclosed	494641904	-	-	-	RESTORED 2026-11-06 20:09 PST from epyc5 copy (8 files, bytes+tree sha256 identical): kit_wave.json KV src_follow input (COORD 20:0x); deleted 19:31 in error
