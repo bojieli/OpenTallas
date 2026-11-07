@@ -19,6 +19,18 @@ lassign [cland_ctl_rekey [list [list $kw writer] [list $kr reader]] {u_cland_x/u
 if {$n != 0 || $out ne [list [list $kw writer] [list $kr reader]]} {error "START rekey collapsed local controls"}
 puts {PASS: writer/read groups keyed to own payload; reverse order; START rekey preserves them; default unchanged}
 '''
+a+=s[s.index('proc cland_freg_rekey '):s.index('proc cland_dsel_wch ')]
+a+=r'''
+set fq0 {u_cland_link_i/g_freg.u_face/q\[0\]$_DFF_P_}
+set fq100 {u_cland_link_i/g_freg.u_face/q\[100\]$_DFF_P_}
+set fq565 {u_cland_link_i/g_freg.u_face/q\[565\]$_DFF_P_}
+set fbase {u_cland_link_i.g_freg.u_face/q}
+lassign [cland_freg_rekey [list [list $fq0 q0] [list $fq100 q100] [list $fq565 q565]] $fbase 566 1] nf keyed
+if {$nf != 3} {error "standalone face-bank bit names not recognized"}
+set ordered [lsort -index 0 $keyed]
+if {[lindex $ordered 0 1] ne {q565} || [lindex $ordered end 1] ne {q0}} {error "lsb_high input bank reversed"}
+puts {PASS: actual standalone FREG names use numeric bit order aligned with lsb_high pins}
+'''
 r=subprocess.run(['tclsh'],input=a,text=True,capture_output=True);print(r.stdout+r.stderr,end='');assert r.returncode==0 and 'PASS:' in r.stdout
 sys.path.insert(0,str(root/'tools/die_plan'));from landing_place import _local_chunk_config
 assert _local_chunk_config({})==''

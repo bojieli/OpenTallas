@@ -867,6 +867,10 @@ proc cland_place_ff {prefix rect tag} {
   }
   set base {}
   foreach pr $ffs { set k [lindex $pr 0]; if {[regexp {^([^|]+s_d)\|} $k -> b0]} { set base $b0; break } }
+  # A separate FREG-only bank has no s_d storage keys from which to infer
+  # the bit family. Give it its own family so numeric/reversed pin ordering
+  # applies instead of raw ASCII q[0],q[100],... packing.
+  if {$base eq {} && [string match {*g_freg.u_face} $prefix]} { set base "${prefix}/q" }
   if {[llength $bxy] && $base ne {}} {
    set nfb 0; foreach e $bxy { set nfb [expr {max($nfb,[lindex $e 0]+1)}] }
    lassign [cland_freg_rekey $ffs $base $nfb $rev] nfr ffs
