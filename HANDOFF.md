@@ -3359,3 +3359,9 @@ CODEX: 2026-11-06 22:10 PST temporary takeover STOPPED; no new project changes/j
 CODEX: 2026-11-07 00:35 PST watcher takeover; all lane coverage indexed; collecting detached results, preserving running work. Fleet waiters all hosts; prune control running, epyc4 incomplete scan understood. QC v4 fw_v2 gen PASS; SU rows missing selected child views/lef, logged.
 
 CODEX: 2026-11-07 00:44 PST restored prune-damaged original KV bind inputs on intel1/intel2 (53/60 files), HEAD prep_l48ui on intel2 (68 files); no existing source replaced. Sweep304 records; diagnosed h9b LEC fail/n4 wrong top/injector pin mismatch. Jobs preserved.
+
+CODEX: 2026-11-07 00:54 PST cleanup counter control HELD194 baseline/current, no lost entries/allhostsreachable; detached prune chain continues. Existing COUNT-SCAN-1 fix13testsPASS selected for next control. Wave00:48 source inputs whole. Five die watchers collecting existing jobs; no design changes/merges.
+
+CODEX: 2026-11-07 01:08 PST HEAD collected all dh7* scopes and viewed4 placed/GRT images; restored future-route holds on conservative n4/spn_end for760/712um unstaged hops. TXvB DRT0, finalsignoff pending; n4ECOi2/SCvC-vD/spnvD alive. Full notes CODEX-LOG/S81-HEAD.
+
+CODEX: 2026-11-07 01:11 PST watcher progress all5dies: exp_x ECO exhausted TT-3.84/FF-292.19, sibling forms active; VP4vK1 GRT183 local M5overflow; KV vS strictbind30R8 gaps and io_ft half-cycle setup miss diagnosed; HEAD TXvB DRT0/ANT0 but DO_NOT_COUNT pending parent adoption. QC cached strict replay active, omitted prov_views repaired in owned prep, remaining capture-receipt blocker preserved. Main/source design unchanged; only existing QC wave safety config and operator recovery. epyc4 prune pass scratch112->157GB, full after-host control running.
