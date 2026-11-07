@@ -1288,6 +1288,67 @@ def read_map(path):
     return m
 
 
+MEM_LANE_LOG = re.compile(r"^(?:lec_top\.)?(\S+): removing const-\S+ lane (\d+)\s*$")
+
+
+def gold_memory_lanes(log_path):
+    """LEC-IQN-1 11-07: yosys opt_mem (inside `memory -nomap`) drops a constant data lane of a gold memory and memory_map
+    then names the surviving bits 0..W-k, so the gold's mem[i][j] is the RTL's bit j + (dropped lanes <= it), while the
+    gate (synthesis of the same RTL) keeps the RTL bit names.  -> {memory name: [[lane, ...] per opt_mem pass]}: one
+    pass logs its lanes in the indices of the width it saw; consecutive lines of one memory are one pass."""
+    passes, last = collections.defaultdict(list), None
+    try:
+        lines = Path(log_path).read_text(errors="replace").splitlines()
+    except OSError:
+        return {}
+    for ln in lines:
+        m = MEM_LANE_LOG.match(ln)
+        if not m:
+            last = None
+            continue
+        mem, lane = m[1].replace("\\", ""), int(m[2])
+        if last != mem:
+            passes[mem].append([])
+        passes[mem][-1].append(lane)
+        last = mem
+    return dict(passes)
+
+
+def gold_lane_rename(gmap, log_path, log):
+    """Opt-in OT_LEC_MEM_LANES=1 (default off).  Re-name the gold latches of a lane-narrowed memory to the RTL bit index
+    (h9b u_fcore.queue: reg [63:0] queue[0:31], beat[3:2] = bits 35:34 are written 0 only; gold opt_mem removed lanes
+    34/35 and named RTL bits 36..63 as 34..61, the gate kept 0..33 / 36..63 with inverted .IQN outputs; lec.py then
+    re-keyed the whole array as gate-only queue#t and 72 compare points stayed 'differs').  Only names change: every
+    pairing is still a correspondence obligation proved by induction, so a wrong name can only fail, never hide a
+    difference.  -> number of renamed gold latch names."""
+    lanes = gold_memory_lanes(log_path)
+    if not lanes:
+        return 0
+    def orig(mem, j):
+        for removed in reversed(lanes[mem]):      # undo the passes from the last one back
+            for r in sorted(removed):
+                if r <= j:
+                    j += 1
+        return j
+    pat = re.compile(r"^(" + "|".join(re.escape(m) for m in sorted(lanes, key=len, reverse=True)) +
+                     r")((?:\[\d+\])*)\[(\d+)\](\$.*)?$")
+    n = 0
+    for idx, names in gmap["latch"].items():
+        out = []
+        for name, b in names:
+            m = pat.match(name)
+            if m and m[2]:                         # memory_map word index present: mem[i]...[j]
+                j = orig(m[1], int(m[3]))
+                if j != int(m[3]):
+                    name = f"{m[1]}{m[2]}[{j}]{m[4] or ''}"
+                    n += 1
+            out.append((name, b))
+        gmap["latch"][idx] = out
+    log.append(f"gold memory lanes: {n} latch names re-indexed to RTL bits in "
+               f"{sorted(lanes)[:8]} (opt_mem removed constant lanes)")
+    return n
+
+
 def flop_key(name):
     """'<reg>[b]$_T_.lecq' (gold, or gate stub) / '<reg>[b]$_T_.IQN$_T2_.lecq' (gate liberty flop) ->
     (key, inverted).  ASAP7 IQN state = !D (next_state "!D"); IQ / IQNN hold D."""
@@ -3989,6 +4050,78 @@ def renamed_identity_closure(L, log, T, tried):
     return n
 
 
+def replica_cohort_closure(L, log, tried):
+    """LEC-IQN-1 11-07 (opt-in OT_LEC_REPLICA_MATCH=1, default off): an RTL fanout-replica vector that synthesis merged
+    into ONE gate flop.  HBM q3_body_ctl vK: the RTL writes reg [18:0] _229667_ <= {19{adv_x}} (async load 0 from
+    rcp[7]) and reg [30:0] _229719_ <= {31{take_x}}; yosys opt_merge keeps one DFFASRHQN / DFFHQN per vector, named
+    _229667_[0] / _229719_[0] (inverted .IQN outputs, already undone by flop_key; gold $_ALDFF_PN_ with AD=0 and gate
+    $_DFF_PN0_ are the same function after async2sync).  renamed() re-keys the lone gate bit base#t[0] (its early
+    simulation disagrees only because the gold replicas it reads are still free), renamed_identity_closure skips it
+    because gold base[0] is already the partner of its own replicas (bound), and the gold replicas of _229719_ (each
+    one reads the others through take_x) are never all proposed at once, so 346 compare points stayed 'differs' with
+    the gold vector gold_only and the gate flop gate_only.
+    Candidates, all in one round so the induction sees them together: per renamed base, the gold bits that are free or
+    only partners of their own vector, grouped by their exact next-state literal (assumption-free build: the same AIG
+    node, so one RTL value); a group member whose index the gate keeps (base#t[i], free) is the representative, every
+    other free member is proposed equal to it, and the gate bit equal to it with the polarity of the name pair.  Only
+    proposals: each enters the same simultaneous induction proof and is dropped when refuted (a wrong one can only
+    fail, never hide a difference); each register is proposed at most twice here.  -> number proposed."""
+    if os.environ.get("OT_LEC_REPLICA_MATCH") != "1":
+        return 0
+    bases = getattr(L, "renamed_bases", ())
+    if not bases:
+        return 0
+    L.build(with_compare=False, with_hyp=False)
+    cross = {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and sd != "gold"}   # partners of gate/both relations
+    gonly, tonly = set(L.gonly), set(L.tonly)
+    n, groups_used = 0, 0
+    for b in bases:
+        gate = {tk[len(b) + 2:]: tk for tk in tonly if tk.startswith(b + "#t[") and ("gate", tk) not in L.hyp
+                and tk not in cross}
+        if not gate:
+            continue
+        own = lambda k: L.hyp.get(("gold", k))
+        groups = collections.defaultdict(list)
+        for gk in gonly:
+            if not gk.startswith(b + "[") or gk in cross:
+                continue
+            h = own(gk)
+            # free, or already bound to a bit of its own vector (an earlier twin proposal): regrouped here
+            if h is not None and not (h[0] == "eq" and h[1] == "gold" and h[2].startswith(b + "[")):
+                continue
+            d = L.dlit.get(("gold", gk), 0)
+            if d > 1:
+                groups[d >> 1].append((gk, d))
+        for members in groups.values():
+            idx = {gk[len(b):]: (gk, d) for gk, d in members}
+            keep = sorted(i for i in idx if i in gate)
+            if not keep:
+                continue
+            rep, drep = idx[keep[0]]
+            if own(rep) is not None or tried[("replica", "gold", rep)] >= 2:
+                continue
+            new = []
+            for gk, d in sorted(members):
+                if gk != rep and L.hyp.get(("gold", gk)) != ("eq", "gold", rep, (d ^ drep) & 1):
+                    new.append((("gold", gk), ("eq", "gold", rep, (d ^ drep) & 1)))
+            for i in keep:
+                gk, d = idx[i]
+                new.append((("gate", gate[i]), ("eq", "gold", rep, (d ^ drep) & 1)))
+            new = [(hk, h) for hk, h in new if tried[("replica",) + hk] < 2]
+            if not any(hk[0] == "gate" for hk, _ in new):
+                continue
+            tried[("replica", "gold", rep)] += 1
+            for hk, h in new:
+                tried[("replica",) + hk] += 1
+                L.hyp[hk] = h
+            n += len(new)
+            groups_used += 1
+    if n:
+        log.append(f"replica cohort closure: {n} relations proposed in {groups_used} merged replica vectors "
+                   "(gold cohort == one renamed gate flop)")
+    return n
+
+
 def trace_constant_closure(L, log, tried):
     """Constant-from-reset candidates (LEC-TOOL-2 10-27): a register whose sequential trace (seq_traces: from the
     zero state, random inputs including the reset each cycle) is one constant on every side that has it is proposed
@@ -5798,6 +5931,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     packed = slang_packed_vectors(Path(work) / "gold.aliases.json")
     relayout(L, log, packed=packed)
     renamed(L, log, packed=packed)
+    replica_cohort_closure(L, log, collections.Counter())
     replica_proposals(L, log)
     merged_proposals(L, log)
     register_alias_proposals(L, log)
@@ -6205,6 +6339,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                     continue
             if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0" and trace_constant_closure(L, log, tried) \
                     and surviving_change():
+                continue
+            if replica_cohort_closure(L, log, tried) and surviving_change():
                 continue
             if renamed_identity_closure(L, log, traces, tried) and surviving_change():
                 continue
@@ -7213,7 +7349,10 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                                       differ=[dict(point=k, gold=a, gate=b) for k, a, b in phase_diff[:500]])
         # 3. key points, register correspondence, miter
         t1 = time.time()
-        L = Lec(read_aig(out / "gold.aig"), read_map(out / "gold.map"),
+        gmap = read_map(out / "gold.map")
+        if os.environ.get("OT_LEC_MEM_LANES") == "1":   # LEC-IQN-1 proof option (default off)
+            rec["gold_memory_lanes"] = gold_lane_rename(gmap, out / "gold.ys.log", log)
+        L = Lec(read_aig(out / "gold.aig"), gmap,
                 read_aig(out / "gate.aig"), read_map(out / "gate.map"), port_map)
         L.kit_reset_ports = kit_reset_ports(kit)
         L.async_reset_regs = {s: read_async_resets(out / f"{s}.ys.log", out / f"{s}_b.ys.log") for s in ("gold", "gate")}
@@ -7435,6 +7574,10 @@ def via_docker(args, image, mem):
         cmd += ["-e", "OT_LEC_HINTS_PRESEED=1"]
     if os.environ.get("OT_LEC_EARLY_COMPARE") == "1":
         cmd += ["-e", "OT_LEC_EARLY_COMPARE=1"]
+    if os.environ.get("OT_LEC_MEM_LANES") == "1":
+        cmd += ["-e", "OT_LEC_MEM_LANES=1"]
+    if os.environ.get("OT_LEC_REPLICA_MATCH") == "1":           # LEC-IQN-1 proof option (default off)
+        cmd += ["-e", "OT_LEC_REPLICA_MATCH=1"]
     if "OT_LEC_RAW_BASE_STEPS" in os.environ:
         cmd += ["-e", f"OT_LEC_RAW_BASE_STEPS={os.environ['OT_LEC_RAW_BASE_STEPS']}"]
     if os.environ.get("OT_LEC_GOLD_NOWIDEN") == "1":
@@ -7566,7 +7709,8 @@ def _provenance(kit=None):
 
 
 PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_COMPARE",
-                 "OT_LEC_ENABLE_FILL_GUARD")
+                 "OT_LEC_ENABLE_FILL_GUARD", "OT_LEC_REPLICA_MATCH",
+                 "OT_LEC_MEM_LANES")
 
 
 def nowiden_retry(r, out, run):
