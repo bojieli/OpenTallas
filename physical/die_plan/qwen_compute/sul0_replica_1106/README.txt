@@ -109,3 +109,13 @@ vE (11-06, intel1): vC kit + face OUTPUT registers sited at their source lane ch
   Estimate (sul0_bout_est.py): straight segments crossing a macro, lane pin -> port before = 931, after
   (pin -> site + site -> port) = 0.  Image sul0_bout_vE.png (viewed): every vE segment stays in its channel or in
   the west strip.
+COORD 11-06 19:2x (relayed by DIE-QC-85): reset.relay_resite_crossing is DEFAULT ON for every type that is not signed
+  off.  Guard: an explicit plan list reset.relay_resite_skip_types [type] (schema: array of names).  A listed type's
+  tree object comes back untouched, so its reset tree stays byte-identical.  The plan code has no signed-off record
+  to check against, so an explicit list is the clean form.  Set the list when a QC type signs off.  The list is empty
+  today: RELEASE_TREE 11-06 18:55 shows QC types 0/119 signed off.  false keeps the pre-11-06 trees.
+  Census on the qwen_compute die_plan.json (default on, no skip list): 65 non-hard types, 5 changed, 0 errors:
+  slw_su_l1 7, slw_su_c 6, sle_su_l1 8, sle_su_c 4, native59 2 relays (names as in partition_types).
+  qwen_compute is the only die_plan-schema plan in the repo, so no other die's tree changes.
+  Tests: test_plan_trees_resite_default_on_and_skip replaces the opt-in test.  All 43 test files that import
+  reset_tree pass (test_check plan-relative case deselected, base failure).

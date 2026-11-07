@@ -604,9 +604,10 @@ def native_resite_sites(tree, boxes, box_out=None, paths=None):
 
 
 def resite_type(P, tn, T):
-    """plan hook: reset.relay_resite_crossing (OPT-IN, default off = byte-identical pre-11-06 trees; QC plan is
-    frozen fix-only, DIE-QC-85 11-06: su_l0 kits take the rule through native_resite_sites overlays instead)."""
-    if not P.reset.get("relay_resite_crossing"):
+    """plan hook: reset.relay_resite_crossing (DEFAULT ON, COORD 11-06 19:2x: every type not signed off; false = the
+    pre-11-06 trees).  reset.relay_resite_skip_types [type] keeps the listed (signed-off) types byte-identical: their
+    tree object comes back untouched.  A tree without a crossing comes back unchanged anyway."""
+    if not P.reset.get("relay_resite_crossing", True) or tn in (P.reset.get("relay_resite_skip_types") or ()):
         return T
     t = P.types[tn]
     w, h = t["outline_um"]
