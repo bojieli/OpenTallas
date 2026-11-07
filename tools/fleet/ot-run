@@ -1493,6 +1493,101 @@ SPILL_DST_SCRATCH_FLOOR_ECO = {"epyc2": 50}
 SPILL_ECO_RE = re.compile(r"eco_loop|late_eco|(^|[/_.-])eco($|[/_.-]|\s)")
 
 
+# AUTOCLEAN-3 11-07 (COORD class fix): epyc4 scratch2 fell from 220 GB to 1 GB in 20 min at 06:08 while 78 GB kits came back to it.
+# A copy now states what it will write and the disk it lands on must hold that plus a margin; several copies at once are charged
+# against each other by a small reservation on the target host.  No room: forward picks another host or waits; back-copy waits,
+# with the outputs safe on the spill host and the pending record kept, and starts no writer that could fill the disk.
+SPILL_ROOM_MARGIN_GB = int(os.environ.get("OT_RUN_SPILL_ROOM_MARGIN_GB", "60"))         # forward: new work on the target
+SPILL_BACK_MARGIN_GB = int(os.environ.get("OT_RUN_SPILL_BACK_MARGIN_GB", "10"))         # back: results may return to a tight disk
+SPILL_BACK_ROOM_WAIT_S = int(os.environ.get("OT_RUN_SPILL_BACK_ROOM_WAIT_S", "14400"))  # a live client waits; the sweep never does
+SPILL_BACK_ROOM_POLL_S = int(os.environ.get("OT_RUN_SPILL_BACK_ROOM_POLL_S", "120"))
+SPILL_RESV_DIR = os.environ.get("OT_RUN_SPILL_RESV_DIR", "/var/tmp/ot-run-spill-resv")
+SPILL_RESV_TTL_S = int(os.environ.get("OT_RUN_SPILL_RESV_TTL_S", "7200"))               # a killed client's reservation expires
+SPILL_NOROOM = "OT_SPILL_NOROOM"
+# argv: reserve|check tag need_gb margin_gb resv_dir ttl_s root...   Prints OT_ROOM_OK, or OT_ROOM_NO and the numbers.
+# need_gb is charged on each filesystem the roots land on, less what those roots already hold (a re-spill sends only the delta).
+SPILL_ROOM_PY = r"""
+import fcntl, json, os, subprocess, sys, time
+mode, tag, need, margin, rdir, ttl = sys.argv[1], sys.argv[2], float(sys.argv[3]), float(sys.argv[4]), sys.argv[5], float(sys.argv[6])
+roots = sys.argv[7:]
+def landing(p):
+    p = os.path.realpath(p)
+    while not os.path.exists(p):
+        p = os.path.dirname(p)
+    return p
+held = {}
+devs = {}
+for r in roots:
+    q = landing(r)
+    d = str(os.stat(q).st_dev)
+    v = os.statvfs(q)
+    devs[d] = v.f_bavail * v.f_frsize / 1e9
+    if os.path.exists(r):
+        o = subprocess.run(["du", "-sb", r + "/." if os.path.isdir(r) else r], capture_output=True, text=True).stdout.split()
+        held[d] = held.get(d, 0) + (int(o[0]) / 1e9 if o else 0)
+os.makedirs(rdir, exist_ok=True)
+with open(os.path.join(rdir, ".lock"), "w") as lk:
+    fcntl.flock(lk, fcntl.LOCK_EX)
+    other = {}
+    now = time.time()
+    for f in os.listdir(rdir):
+        if not f.endswith(".json"):
+            continue
+        fp = os.path.join(rdir, f)
+        try:
+            x = json.load(open(fp))
+        except (OSError, ValueError):
+            continue
+        if now - x.get("t", 0) > ttl:
+            os.unlink(fp)
+        elif x.get("tag") != tag:
+            for d, g in x.get("gb", {}).items():
+                other[d] = other.get(d, 0) + g
+    charge = {d: max(0.0, need - held.get(d, 0)) for d in devs}
+    for d, free in devs.items():
+        if free - other.get(d, 0) - charge[d] < margin:
+            print("OT_ROOM_NO free %.0f GB, other copies %.0f, this copy %.0f, margin %.0f" % (free, other.get(d, 0), charge[d], margin))
+            sys.exit(0)
+    if mode == "reserve":
+        tmp = os.path.join(rdir, tag + ".tmp")
+        with open(tmp, "w") as o:
+            json.dump(dict(tag=tag, t=now, gb=charge), o)
+        os.replace(tmp, os.path.join(rdir, tag + ".json"))
+    print("OT_ROOM_OK")
+"""
+
+
+def spill_room(host, roots, need_gb, margin_gb, tag=None):
+    """-> (True, "") room, (False, why) no room, (None, why) could not tell.  tag: also reserve the room on host for this copy."""
+    args = ["reserve" if tag else "check", tag or "-", f"{need_gb:.3f}", str(margin_gb), SPILL_RESV_DIR, str(SPILL_RESV_TTL_S)] + list(roots)
+    try:
+        r = ssh_sh(host, "python3 -I -c " + shlex.quote(SPILL_ROOM_PY) + " " + " ".join(shlex.quote(x) for x in args), timeout=300)
+    except (OSError, subprocess.SubprocessError) as e:
+        return None, f"room check on {host}: {str(e)[:80]}"
+    if "OT_ROOM_OK" in r.stdout:
+        return True, ""
+    if "OT_ROOM_NO" in r.stdout:
+        return False, f"{host}: {r.stdout.strip().split('OT_ROOM_NO ')[-1][:120]}"
+    return None, f"room check on {host}: rc {r.returncode} {r.stderr.strip()[-80:]}"
+
+
+def spill_room_release(host, tag):
+    try:
+        ssh_sh(host, f"rm -f {shlex.quote(SPILL_RESV_DIR + '/' + tag + '.json')}", timeout=60)
+    except (OSError, subprocess.SubprocessError):
+        pass                     # it expires after SPILL_RESV_TTL_S
+
+
+def spill_back_size_gb(dst, roots, stamp, only=None):
+    """GB the back-copy would write: the same listing the copy uses, summed on the spill host.  None = could not tell."""
+    listing = f"{{ {handoff_paths_listing(only)}; }}" if only else spill_written_listing(roots, stamp)
+    try:
+        r = ssh_sh(dst, f"test -e {shlex.quote(stamp)} || exit 0; cd / && {listing} | du --files0-from=- -cb 2>/dev/null | tail -1 | cut -f1", timeout=600)
+        return int(r.stdout.strip()) / 1e9 if r.returncode == 0 and r.stdout.strip() else None
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return None
+
+
 def spill_is_eco(cmd):
     """a --stage job that runs an ECO (eco_loop or an eco dir in its command)"""
     return bool(STAGE) and bool(SPILL_ECO_RE.search(" ".join(cmd or ())))
@@ -1751,9 +1846,17 @@ def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):
           and min(r["disk_gb"] for r in rs) >= disk + size_gb and physically_capable(rs[0], mem) and not host_refusal(rs[0])
           and not spill_dst_full(h, rs[0], roots, cmd)
           and (max_ratio is None or ratio(rs[0], threads) <= max_ratio)}
+    noroom = []
+    if ok:
+        with cf.ThreadPoolExecutor(len(ok)) as ex:
+            room = dict(ex.map(lambda h: (h, spill_room(h, sorted(roots), size_gb + disk, SPILL_ROOM_MARGIN_GB)), list(ok)))
+        for h, (fits, why) in room.items():
+            if fits is not True:                 # unknown is not room: another host, or the next re-place
+                del ok[h]
+                noroom.append(why)
     dst, queue = choose(drop_low_disk(ok, die, disk + size_gb), mem, threads, die)
     if not dst or queue:
-        return None, "no spill host admits it now", False
+        return None, ("no spill host has room: " + "; ".join(noroom)[:300]) if noroom and not ok else "no spill host admits it now", False
     return (dst, sorted(roots), size_gb), "", False
 
 
@@ -1965,8 +2068,38 @@ def pending_write(rec):
         pass
 
 
-def spill_copy_back(src, dst, roots, stamp, say=lambda m: None, only=None):
-    """-> (ok, error).  Retries; removes the dst stamp only after a successful copy."""
+def spill_back_reserve(src, dst, roots, stamp, tag, only, wait_s, say):
+    """-> "" when the back-copy may start, else the reason.  Waits up to wait_s for room; an unknown answer never holds results back."""
+    need = spill_back_size_gb(dst, roots, stamp, only)
+    if need is None:
+        return ""
+    t0, said = time.time(), False
+    while True:
+        fits, why = spill_room(src, roots, need, SPILL_BACK_MARGIN_GB, tag=tag)
+        if fits is not False:
+            return ""
+        if time.time() - t0 >= wait_s:
+            return f"{SPILL_NOROOM} {why}"
+        if not said:
+            say(f"ot-run: SPILL back-copy {dst} -> {src} waits for room ({need:.1f} GB): {why}")
+            said = True
+        time.sleep(SPILL_BACK_ROOM_POLL_S)
+
+
+def spill_copy_back(src, dst, roots, stamp, say=lambda m: None, only=None, wait_s=0):
+    """-> (ok, error).  Retries; removes the dst stamp only after a successful copy.  No room on src: no writer starts, the error
+    holds SPILL_NOROOM, the stamp and pending record stay and the sweep retries."""
+    tag = "back-" + os.path.basename(stamp)
+    noroom = spill_back_reserve(src, dst, roots, stamp, tag, only, wait_s, say)
+    if noroom:
+        return False, noroom
+    try:
+        return spill_copy_back_tries(src, dst, roots, stamp, say, only)
+    finally:
+        spill_room_release(src, tag)
+
+
+def spill_copy_back_tries(src, dst, roots, stamp, say, only):
     err = ""
     for k in range(SPILL_BACK_TRIES):
         b = subprocess.run(["bash", "-o", "pipefail", "-c", spill_back_cmd(src, dst, roots, stamp, only)], capture_output=True, text=True)
@@ -2172,13 +2305,20 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
     stamp = f"/tmp/ot-run-spill.{tag}"
     say(f"ot-run: SPILL: copying {', '.join(roots)} ({size_gb:.1f} GB) {src} -> {dst} (no host with --dir admits {mem} GB now)")
     t0 = time.time()
-    for k in range(SPILL_COPY_TRIES):
-        r = spill_copy_fwd(src, dst, roots, stamp, metadata_scope=d)
-        if not r.returncode or "OT_SPILL_REAL" in r.stderr:
-            break
-        if k + 1 < SPILL_COPY_TRIES:
-            say(f"ot-run: SPILL copy {src} -> {dst} failed (try {k + 1}/{SPILL_COPY_TRIES}): {r.stderr.strip()[-160:]}; retrying")
-            time.sleep(5 * (k + 1))
+    fits, why = spill_room(dst, roots, size_gb + (disk or 0), SPILL_ROOM_MARGIN_GB, tag="fwd-" + tag)
+    if fits is False:            # lost the race for that disk since spill_plan looked: nothing copied, the caller places again
+        say(f"ot-run: SPILL to {dst} not started, no room: {why}")
+        return None
+    try:
+        for k in range(SPILL_COPY_TRIES):
+            r = spill_copy_fwd(src, dst, roots, stamp, metadata_scope=d)
+            if not r.returncode or "OT_SPILL_REAL" in r.stderr:
+                break
+            if k + 1 < SPILL_COPY_TRIES:
+                say(f"ot-run: SPILL copy {src} -> {dst} failed (try {k + 1}/{SPILL_COPY_TRIES}): {r.stderr.strip()[-160:]}; retrying")
+                time.sleep(5 * (k + 1))
+    finally:
+        spill_room_release(dst, "fwd-" + tag)
     global SPILL_REFUSED_REAL
     SPILL_REFUSED_REAL = "OT_SPILL_REAL" in r.stderr
     if r.returncode:
@@ -2221,7 +2361,7 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
     if not ran:                                  # started, connection lost: it may still run; the sweep copies back later
         say(f"ot-run: SPILL: outputs stay on {dst} until the unit ends; `ot-run --spill-sweep` copies them back to {src}")
         return rc or 255
-    ok, err = spill_copy_back(src, dst, roots, stamp, say, only=rec.get("late"))
+    ok, err = spill_copy_back(src, dst, roots, stamp, say, only=rec.get("late"), wait_s=SPILL_BACK_ROOM_WAIT_S)
     if not ok:
         say(f"ot-run: SPILL back-copy {dst} -> {src} FAILED ({err[-200:]}); outputs are on {dst}: NOT COMPLETED "
             f"(recorded in {SPILL_STUCK_LOG}; `ot-run --spill-sweep` retries)")
