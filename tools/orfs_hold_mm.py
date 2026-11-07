@@ -100,11 +100,18 @@ def patch_intermediate_power(scripts: Path) -> str:
 # (Q-TILE45 r5: NK33/NL3 cells, almost all one DBU before a fence edge).
 # Run ordinary legalization after the final optimizer/mirroring mutation, before
 # the original mandatory placement check. No errors or checks are suppressed.
+# HBM-HARD-3 11-07: the negotiation legalizer can stop with a residual overlap (hnx_rp3h_xs
+# attempt_8: 1 overlap, DPL-0033 after 23 min; one more detailed_placement on that DB reads clean).
+# A clean first pass is unchanged. The mandatory check below still decides.
 FINAL_DPL_ANCHOR = ('  log_cmd optimize_mirroring\n\n'
                     '  utl::info FLW 12 "Placement violations [check_placement -verbose]."')
 FINAL_DPL_BLOCK = ('  log_cmd optimize_mirroring\n\n'
                    '  puts "OT_FINAL_DPL: ordinary legalization after final optimizer/mirroring"\n'
-                   '  log_cmd detailed_placement {*}$dpl_args\n\n'
+                   '  log_cmd detailed_placement {*}$dpl_args\n'
+                   '  if {[catch {check_placement}]} {\n'
+                   '    puts "OT_DPL_RESIDUAL: check failed, ordinary legalization once more"\n'
+                   '    log_cmd detailed_placement {*}$dpl_args\n'
+                   '  }\n\n'
                    '  utl::info FLW 12 "Placement violations [check_placement -verbose]."')
 
 
