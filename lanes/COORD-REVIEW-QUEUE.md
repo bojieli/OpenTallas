@@ -21914,3 +21914,4 @@ FAILED [AUTOPILOT d71119fa2d5a] 2026-11-06 19:22:32 PST AUTOPILOT -> KIT-WAVE-12
   3. Lock-step bench for the face cycles.
   4. TOK pricing.
   DEFAULT: merge.
+FAILED [AUTOPILOT 03bcb647e05a] 2026-11-06 19:32:17 PST AUTOPILOT -> KIT-WAVE-3: FAILED 03bcb647e05a s81/col_h9_r0_p3__t1__cl0cd90c0e (STRUCTURAL/grt-overflow): GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. | kit epyc5:/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h9_r0_p3__t1__cl0cd90c0e/attempt_10/gen/col_h9_r0_p3__t1__cl0cd90c0e src main@7305773106e80a869ece81d0ceda9a308e52a9a8 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
