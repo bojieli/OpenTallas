@@ -36,7 +36,8 @@ def _kit(tmp_path, code):
     dk.write_text(FAKE_DOCKER)
     dk.chmod(0o755)
     (k / "lec_async.sh").write_text(TOOL.read_text())
-    env = dict(os.environ, OT_LEC_ASYNC_POLL="0.2", FAKE_K=str(k))
+    # KW-FIX-24/LECUNIT: these cases pin the docker exec form (OT_LECUNIT=0); test_lec_unit.py covers the own-unit form
+    env = dict(os.environ, OT_LEC_ASYNC_POLL="0.2", FAKE_K=str(k), OT_LECUNIT="0")
     subprocess.run(["bash", str(TOOL), "start", str(k), "flowc", "img", "4", "2", str(dk)], check=True, env=env)
     assert (k / "lec_async.on").is_file()
     return k, env
