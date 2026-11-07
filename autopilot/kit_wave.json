@@ -224,7 +224,15 @@
     "kv3_io_ft_v1@9",
     "kv3_pc__cl254f2e73@7",
     "kv3_pc__cl5a95b461@8",
-    "kv3_pc_v1__cl23f6a148@7"
+    "kv3_pc_v1__cl23f6a148@7",
+    "kv3_io_cor@6",
+    "kv3_io_ft@6",
+    "kv3_pc_v1__cl4ea58a5c@11",
+    "kv3_pc_v1__cl7f648944@7",
+    "kv3_pc_v3@6",
+    "qkd_hr_core_order@3",
+    "qkd_hr_core_prompt@3",
+    "qkd_hr_ingest_eng@3"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -494,7 +502,15 @@
     "kv3_pv_v7@9": "KW-FIX-24 14:5x (DIE-KV-84 14:4x answer): KV bind_out -> kw23/bind_kv_q (plan_c 7da_ad + asbuilt_kv_7da, bind.py all --strict: errors 0, 160 partitions, 56 types, 2545 crossings; on epyc6 + copied to epyc5). Its verify/bound.ys step fails only because verify/lib_stubs.sv does not stub the bind-made core_splits leaves (qkd_kvs_pcc/pcf) = bind.py verify bug (class item, KW-FIX-24); verify advisory as for QC bind_qc_g (KW-FIX-22). Was kw11/bind_kv_o + kw11/asbuilt_kv_o.json. One batch of the 4 BIND_STALE rows.",
     "kv3_pc__cl254f2e73@7": "KW-FIX-25 22:5x class batch: queue row rejected, kit carries FAIL_PREFLOOR from an earlier run (many after watchdog LEC stops, now report-only by WATCHDOG.skip /lec); fresh attempt on the re-homed hosts.",
     "kv3_pc__cl5a95b461@8": "KW-FIX-25 22:5x class batch: queue row rejected, kit carries FAIL_PREFLOOR from an earlier run (many after watchdog LEC stops, now report-only by WATCHDOG.skip /lec); fresh attempt on the re-homed hosts.",
-    "kv3_pc_v1__cl23f6a148@7": "KW-FIX-25 22:5x class batch: queue row rejected, kit carries FAIL_PREFLOOR from an earlier run (many after watchdog LEC stops, now report-only by WATCHDOG.skip /lec); fresh attempt on the re-homed hosts."
+    "kv3_pc_v1__cl23f6a148@7": "KW-FIX-25 22:5x class batch: queue row rejected, kit carries FAIL_PREFLOOR from an earlier run (many after watchdog LEC stops, now report-only by WATCHDOG.skip /lec); fresh attempt on the re-homed hosts.",
+    "kv3_io_cor@6": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "kv3_io_ft@6": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "kv3_pc_v1__cl4ea58a5c@11": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "kv3_pc_v1__cl7f648944@7": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "kv3_pc_v3@6": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "qkd_hr_core_order@3": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "qkd_hr_core_prompt@3": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "qkd_hr_ingest_eng@3": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix"
    },
    "only_items": [
     "kv3_astk",
@@ -1820,7 +1836,23 @@
     "slice_station__t25@2",
     "serdes__t13@14",
     "serdes__t15__cla2127225@16",
-    "serdes__t1__clb45db5be@7"
+    "serdes__t1__clb45db5be@7",
+    "col_h10_r0_p4__t1@17",
+    "col_h9_r0_p3__t1__cl0cd90c0e@22",
+    "col_h9_r0_p3__t1__cl8ce97bcb@18",
+    "col_h9_r0_p5__t1@15",
+    "col_h9_r0_p6__t1@16",
+    "col_h9_r1__t1__cl49d7a23e@21",
+    "dsdv_slice_kv512_C__t1@6",
+    "gunit__t1@8",
+    "iqf__t1@10",
+    "ot_s81sl_kv_leaf__t2@7",
+    "ot_s81sl_leaf__t27@7",
+    "ot_s81sl_leaf__t68@6",
+    "serdes__t12@7",
+    "serdes__t16@7",
+    "slice_station__t6__cl54a9ceeb@13",
+    "slice_station__t8@11"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -2114,7 +2146,7 @@
     "ot_s81sl_leaf__t52@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "ot_s81sl_leaf__t53__cl958451dd@7": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
     "ot_s81sl_leaf__t53__clb66fa5cb@6": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
-    "ot_s81sl_leaf__t54__cl501e5681@7": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
+    "ot_s81sl_leaf__t54__cl501e5681@7": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
     "ot_s81sl_leaf__t55@4": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "ot_s81sl_leaf__t56@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "ot_s81sl_leaf__t58@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
@@ -2595,7 +2627,23 @@
     "slice_station__t28@7": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
     "serdes__t13@14": "KW-FIX-25 22:5x class batch: queue row rejected, kit carries FAIL_PREFLOOR from an earlier run (many after watchdog LEC stops, now report-only by WATCHDOG.skip /lec); fresh attempt on the re-homed hosts.",
     "serdes__t15__cla2127225@16": "KW-FIX-25 22:5x class batch: queue row rejected, kit carries FAIL_PREFLOOR from an earlier run (many after watchdog LEC stops, now report-only by WATCHDOG.skip /lec); fresh attempt on the re-homed hosts.",
-    "serdes__t1__clb45db5be@7": "KW-FIX-25 22:5x class batch: queue row rejected, kit carries FAIL_PREFLOOR from an earlier run (many after watchdog LEC stops, now report-only by WATCHDOG.skip /lec); fresh attempt on the re-homed hosts."
+    "serdes__t1__clb45db5be@7": "KW-FIX-25 22:5x class batch: queue row rejected, kit carries FAIL_PREFLOOR from an earlier run (many after watchdog LEC stops, now report-only by WATCHDOG.skip /lec); fresh attempt on the re-homed hosts.",
+    "col_h10_r0_p4__t1@17": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "col_h9_r0_p3__t1__cl0cd90c0e@22": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "col_h9_r0_p3__t1__cl8ce97bcb@18": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "col_h9_r0_p5__t1@15": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "col_h9_r0_p6__t1@16": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "col_h9_r1__t1__cl49d7a23e@21": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "dsdv_slice_kv512_C__t1@6": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "gunit__t1@8": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "iqf__t1@10": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "ot_s81sl_kv_leaf__t2@7": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "ot_s81sl_leaf__t27@7": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "ot_s81sl_leaf__t68@6": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "serdes__t12@7": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "serdes__t16@7": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "slice_station__t6__cl54a9ceeb@13": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "slice_station__t8@11": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -2929,7 +2977,8 @@
     "hd_st_n3_turn@10",
     "hd_st_str@8",
     "hd_st_turn@2",
-    "hd_turn_a@5"
+    "hd_turn_a@5",
+    "hd_mesh@2"
    ],
    "pilot_max": 2,
    "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -3033,7 +3082,8 @@
     "hd_spn_eshim_rx@5": "CODEX-WAVE INFRA: I184 psroot source insertion Tcl correction now in pinned src; routed data was PASS, not structural failure.",
     "hd_spn_wshim_rx@5": "CODEX-WAVE INFRA: I184 psroot source insertion Tcl correction now in pinned src; routed data was PASS, not structural failure.",
     "hd_spn_wshim_tx@8": "CODEX-WAVE INFRA: I184 psroot source insertion Tcl correction now in pinned src; routed data was PASS, not structural failure.",
-    "hd_tile@4": "CODEX-WAVE INFRA: I184 psroot source insertion Tcl correction now in pinned src; routed data was PASS, not structural failure."
+    "hd_tile@4": "CODEX-WAVE INFRA: I184 psroot source insertion Tcl correction now in pinned src; routed data was PASS, not structural failure.",
+    "hd_mesh@2": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix"
    },
    "gen_hosts": [
     "epyc5",
@@ -4915,7 +4965,18 @@
     "ot_hgi_sfu_split3_lane_core__idpin@4",
     "ot_hnx_fused_hub_n4ext@4",
     "ot_hnx_fused_hub_n4ext@5",
-    "ot_hbm_idx_rootctl_static_am@8"
+    "ot_hbm_idx_rootctl_static_am@8",
+    "hfd_hgi_vms_glue_nw_t@4",
+    "hnx_rp3h_xs@1",
+    "ot_hbm_host_cp_rxs@4",
+    "ot_hbm_idx_vm_query_static_n12@7",
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@6",
+    "ot_hbm_svc_vm_kshare_splitstrap__v700685@3",
+    "ot_hbm_svc_vm_kshare_splitstrap__v8e478a@4",
+    "ot_hfd_coll_q3_vm_core@6",
+    "ot_hgi_coll_inj_idx_join_rg@1",
+    "ot_hgi_sm_xload_cl2_ctlx@3",
+    "ot_hnx_idxn_keybuf_slice@4"
    ],
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -5010,7 +5071,19 @@
     "ot_hgi_sfu_programme_store_r10@5": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
     "ot_hgi_sfu_programme_store_r10@6": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6",
     "ot_hbm_idx_rootctl_static_am@1": "CODEX INFRA historical-sourcepin restored: immutable317Gitobjects/19recipepins imported into ownsrc2c on ep4/5/6; d34578d6f rootctlblob nowreadable sameSHA256 05f5acd8 all3. NoRTL/recipepin/constraintchange, priorgen1notdesignstrike. Freshattemptrequired, failedgenkept.",
-    "ot_hbm_hc_root_static__hcp_sys1@2": "KW-FIX-25 22:5x class batch: queue row rejected, kit carries FAIL_PREFLOOR from an earlier run (many after watchdog LEC stops, now report-only by WATCHDOG.skip /lec); fresh attempt on the re-homed hosts."
+    "ot_hbm_hc_root_static__hcp_sys1@2": "KW-FIX-25 22:5x class batch: queue row rejected, kit carries FAIL_PREFLOOR from an earlier run (many after watchdog LEC stops, now report-only by WATCHDOG.skip /lec); fresh attempt on the re-homed hosts.",
+    "hfd_hgi_vms_glue_nw_t@4": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "hnx_rp3h_xs@1": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "ot_hbm_host_cp_rxs@4": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "ot_hbm_idx_tail_native@2": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "ot_hbm_idx_vm_query_static_n12@7": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@6": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "ot_hbm_svc_vm_kshare_splitstrap__v700685@3": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "ot_hbm_svc_vm_kshare_splitstrap__v8e478a@4": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "ot_hfd_coll_q3_vm_core@6": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "ot_hgi_coll_inj_idx_join_rg@1": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "ot_hgi_sm_xload_cl2_ctlx@3": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix",
+    "ot_hnx_idxn_keybuf_slice@4": "KW-FIX-25 23:2x COORD: unattended fill, failed on an older src than the wave's current fix"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
@@ -5169,5 +5242,6 @@
  "restage_max_per_tick": 12,
  "note_kw24_norestage": "KW-FIX-24 20:4x RESTAGE ping-pong (49 moves 19-20 h, waiters moved every tick, never admitted): restage off (restage_max_per_tick 0) until claude/kw-fix-24-restagehyst-1106 (30-min min wait) merges; then restore restage_max_per_tick_prev_kw24",
  "note_kw24_fill56": "KW-FIX-24 21:2x COORD 21:1x/21:2x (epyc5/epyc6 ~31% load, 0 waiters): HEAD/HBM/QC new attempts gen + place on epyc5/epyc6 (inputs whole there, measured 20:1x); prev in gen_hosts_prev_kw24f",
- "note_rebal1": "REBAL-1 23:2x COORD 23:1x + OWNER 22:5x: S81+QC new attempts under kw26-wave-1106 (epyc5: symlink scratch3->scratch2, so its small root is spared; epyc2/epyc6 real scratch3); restage on at 12 per tick (30-min hysteresis on main); gen_disk_min_gb 100 = kw23 wrapper floor for scratch2 work roots, so a host the wrapper would park is not preferred. max_launch_per_tick left at 60 (epyc5 margin >100). Revert: work_root kw24-wave-1106, restage 0, gen_disk 80."
+ "note_rebal1": "REBAL-1 23:2x COORD 23:1x + OWNER 22:5x: S81+QC new attempts under kw26-wave-1106 (epyc5: symlink scratch3->scratch2, so its small root is spared; epyc2/epyc6 real scratch3); restage on at 12 per tick (30-min hysteresis on main); gen_disk_min_gb 100 = kw23 wrapper floor for scratch2 work roots, so a host the wrapper would park is not preferred. max_launch_per_tick left at 60 (epyc5 margin >100). Revert: work_root kw24-wave-1106, restage 0, gen_disk 80.",
+ "note_kw25_unattended": "KW-FIX-25 23:2x: restage 12 (REBAL-1), hosts epyc5/6 first, gen_disk_min_gb 100; ot-run floors pause on disk (KW12_DISK_WAIT)."
 }
