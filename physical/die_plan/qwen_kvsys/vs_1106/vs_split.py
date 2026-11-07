@@ -176,9 +176,12 @@ class Split:
             for g in (ga, gb):
                 if not g["bit_sites_um"]:
                     del g["bit_sites_um"]
+                    g.pop("bit_site_cell_um", None)   # ft_bit_sites: the cell size only goes with explicit sites
         elif respaced:
             ga.pop("bit_sites_um", None)
             gb.pop("bit_sites_um", None)
+            ga.pop("bit_site_cell_um", None)
+            gb.pop("bit_site_cell_um", None)
         for g in (ga, gb):
             g["note"] = (g.get("note", "") + f" | vS: half of crossing {name} (cut y {yc}), stage count kept").lstrip(" |")
         H[si]["ft_slots"].append(ga)
