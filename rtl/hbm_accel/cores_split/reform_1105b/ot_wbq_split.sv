@@ -300,7 +300,7 @@ endmodule
 //  KMUT 5 = hvn ignores pop, 6 = addr slice read pointer one edge late, 7 = addr sel_q of PC 5 one edge late, 8 = root_ready never seen.
 // KMUT (bench only, HREG=3): 1 = room ignores the in-flight word (store overflow), 2 = sel_q slice 2 of PC 5 takes the grant one edge late,
 //  3 = head_d read pointer copy slice 1 stays one edge late, 4 = control sees the word on the edge it is stored (stale entry PC).
-module ot_wbq_sw #(parameter integer KMUT=0, parameter integer WOPEN=0, parameter integer CRED=4, parameter [29:0] STACK_SECTORS=30'd703125000, parameter integer HREG=0, parameter integer GIN=0)(
+module ot_wbq_sw #(parameter integer KMUT=0, parameter integer WOPEN=0, parameter integer CRED=4, parameter [29:0] STACK_SECTORS=30'd703125000, parameter integer HREG=0, parameter integer GIN=0, parameter integer SEL16=0)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire [1:0] stk,input wire quad,
  input wire wb_reserve_v,wb_reserve_bank,wb_fill_bank,
@@ -559,11 +559,14 @@ module ot_wbq_sw #(parameter integer KMUT=0, parameter integer WOPEN=0, paramete
   for(pi=0;pi<16;pi=pi+1)begin:g_pc
    wire [7:0] grant={8{kv1[pi]}}&pick_r[pi];
    wire [285:0] kw;
-   for(ps=0;ps<((HREG>=4)?7:6);ps=ps+1)begin:g_s
-    localparam integer LO=(HREG>=4&&ps==6)?256:48*ps,W=(HREG>=4)?((ps==6)?30:(ps==5)?16:48):((ps==5)?286-240:48);
+   // SEL16 (HBM-HARD-3 11-07, default 0 = unchanged): one sel_q set per 16-bit slice, so each select flop drives
+   // at most 16 AND legs (vH4 routed: 54 slew nets, all one sel_q bit through one buffer to 48 legs). Same cycle.
+   for(ps=0;ps<((SEL16!=0)?18:(HREG>=4)?7:6);ps=ps+1)begin:g_s
+    localparam integer LO=(SEL16!=0)?16*ps:(HREG>=4&&ps==6)?256:48*ps,
+                       W=(SEL16!=0)?((ps==17)?14:16):(HREG>=4)?((ps==6)?30:(ps==5)?16:48):((ps==5)?286-240:48);
     (* keep = "true" *) reg [7:0] sel_q;
     reg [7:0] sel_q2;
-    always @(posedge hbm_clk or negedge hrst)if(!hrst)begin sel_q<=0;sel_q2<=0;end else begin sel_q2<=grant;sel_q<=((KMUT==2&&pi==5&&ps==2)||(KMUT==7&&pi==5&&ps==6))?sel_q2:grant;end
+    always @(posedge hbm_clk or negedge hrst)if(!hrst)begin sel_q<=0;sel_q2<=0;end else begin sel_q2<=grant;sel_q<=((KMUT==2&&pi==5&&ps==2)||(KMUT==7&&pi==5&&ps==6)||(KMUT==9&&pi==5&&ps==11))?sel_q2:grant;end
     wire [W-1:0] o=({W{sel_q[0]}}&hd_all[286*0+LO+:W])|({W{sel_q[1]}}&hd_all[286*1+LO+:W])|({W{sel_q[2]}}&hd_all[286*2+LO+:W])|({W{sel_q[3]}}&hd_all[286*3+LO+:W])
                   |({W{sel_q[4]}}&hd_all[286*4+LO+:W])|({W{sel_q[5]}}&hd_all[286*5+LO+:W])|({W{sel_q[6]}}&hd_all[286*6+LO+:W])|({W{sel_q[7]}}&hd_all[286*7+LO+:W]);
     assign kw[LO+:W]=o;

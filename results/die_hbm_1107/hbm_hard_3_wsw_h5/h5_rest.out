@@ -1,0 +1,9 @@
+k_m0 expect=PASS got=PASS OK copymis=0 | WBQ sectors 39808 writes ref 39808 new 39808 dup 0 0 badpc 0 0 mism 0 only 0 stream_bad 0 wv_bad 0 ready_bad 0 done 48 48 lag max 75 mean 34 fault 0 0 
+k_slow expect=PASS got=PASS OK copymis=0 | WBQ sectors 36486 writes ref 36486 new 36486 dup 0 0 badpc 0 0 mism 0 only 0 stream_bad 0 wv_bad 0 ready_bad 0 done 48 48 lag max 1093 mean 373 fault 0 0 
+k_east expect=PASS got=PASS OK copymis=0 | WBQ sectors 39808 writes ref 39808 new 39808 dup 0 0 badpc 0 0 mism 0 only 0 stream_bad 0 wv_bad 0 ready_bad 0 done 48 48 lag max 75 mean 34 fault 0 0 
+l_k9 expect=FAIL got=FAIL OK copymis=0 | WBQ sectors 39808 writes ref 39808 new 39808 dup 0 0 badpc 0 0 mism 2464 only 0 stream_bad 0 wv_bad 0 ready_bad 0 done 48 48 lag max 0 mean 0 fault 0 0 LOCK diff v 0 addr 0 data 3303 stream 0 credit 0 g_v 0 | writes 39808 stall 13361 done 39808 | pc_min 2475 grp_min 4907 addr_toggle_bits 464 data_toggle_bits 4096 | hv last 13687 more 1114 both 25007 hold 1360 | roots_ready rise ref 4 new 5 
+k_k9 expect=FAIL got=FAIL OK copymis=0 | WBQ sectors 39808 writes ref 39808 new 39808 dup 0 0 badpc 0 0 mism 2464 only 0 stream_bad 0 wv_bad 0 ready_bad 0 done 48 48 lag max 75 mean 34 fault 0 0 
+Terminated                 $O/sim > $O.run.log 2>&1
+l_k5 expect=FAIL got=FAIL OK copymis=0 | 
+Terminated                 $O/sim > $O.run.log 2>&1
+l_k8 expect=FAIL got=FAIL OK copymis=0 | 
