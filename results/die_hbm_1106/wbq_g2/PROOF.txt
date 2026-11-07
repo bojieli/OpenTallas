@@ -1,0 +1,10 @@
+eq MUT=0 rc=0 Found 15067 unproven $equiv cells (242 groups) in equiv: Proved 15067 previously unproven $equiv cells. No selected unproven $equiv cells found in equiv. Proved 0 previously unproven $equiv
+eq MUT=1 rc=1 Found 15068 unproven $equiv cells (242 groups) in equiv: Proved 14939 previously unproven $equiv cells. Found 129 unproven $equiv cells in module equiv: Proved 0 previously unproven $equiv 
+eq MUT=2 rc=1 Found 15067 unproven $equiv cells (242 groups) in equiv: Proved 14555 previously unproven $equiv cells. Found 512 unproven $equiv cells in module equiv: Proved 0 previously unproven $equiv 
+eq MUT=3 rc=1 Found 15067 unproven $equiv cells (242 groups) in equiv: Proved 14479 previously unproven $equiv cells. Found 588 unproven $equiv cells in module equiv: Proved 0 previously unproven $equiv 
+eq MUT=4 rc=1 Found 15067 unproven $equiv cells (242 groups) in equiv: Proved 15064 previously unproven $equiv cells. Found 3 unproven $equiv cells in module equiv: Proved 0 previously unproven $equiv ce
+m0 rc=0 N1M LOCKSTEP PASS errs=0 g_v_cycles=9528 of 40000 
+m1 rc=0 N1M LOCKSTEP FAIL errs=85488 g_v_cycles=9528 of 40000 
+m2 rc=0 N1M LOCKSTEP FAIL errs=7194 g_v_cycles=9528 of 40000 
+m3 rc=0 N1M LOCKSTEP FAIL errs=8361 g_v_cycles=9528 of 40000 
+m4 rc=0 N1M LOCKSTEP FAIL errs=26736 g_v_cycles=9528 of 40000 
