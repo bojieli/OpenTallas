@@ -1,0 +1,2 @@
+bmin2 seam7 bmut0 smut0 ft1 rxd7 fd7 expect=FAIL got=FAIL OK | P20_STATS bmin=2 seam=7 bmut=0 rxd=7 fd=7 smut=0 ft=1 mode=0 cycles=9000 mm_tx=0 mm_rx=14500 mm_lock=0 first=110 beats gold=8845 split=8819 fault gold=7663 split=7670 live=1/1 P20_EQ FAIL lockstep mismatch, first at 110 
+EQ_EXIT 0
