@@ -4,7 +4,46 @@ import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from regen_schedule_constants import ca_lane_cycles, head_transport
+from regen_schedule_constants import ca_lane_cycles, head_transport, landed_sidecar_cycles
+
+
+class FakePlan:
+    def __init__(self, landing):
+        self.lanes = landing
+        self.landing = landing
+
+    def lane_latency(self, lane):
+        return dict(cycles=9, clock_landing=self.landing[lane])
+
+
+class LandedSidecarTests(unittest.TestCase):
+    raw = dict(ports=[dict(id='p0', src=dict(part='a'), dst=dict(part='b')),
+                      dict(id='p1', src=dict(part='b'), dst=dict(part='c'))],
+               lanes=[dict(id='lane', ports=['p0', 'p1'])])
+
+    def side(self, a, b):
+        return dict(ports=[dict(port='p0', lane='lane', src='a', dst='b', added_cycles=a),
+                           dict(port='p1', lane='lane', src='b', dst='c', added_cycles=b)],
+                    count_aligned=dict(ports=dict(p0=dict(sched_lat=a), p1=dict(sched_lat=b))))
+
+    def test_only_cycles_above_the_plan_are_added(self):
+        self.assertEqual(landed_sidecar_cycles(self.raw, FakePlan(dict(lane=5)), self.side(2, 4))[0], dict(lane=1))
+        self.assertEqual(landed_sidecar_cycles(self.raw, FakePlan(dict(lane=6)), self.side(2, 4))[0], {})
+
+    def test_sidecar_below_plan_is_refused(self):
+        with self.assertRaisesRegex(ValueError, 'fewer landing cycles'):
+            landed_sidecar_cycles(self.raw, FakePlan(dict(lane=7)), self.side(2, 4))
+
+    def test_sched_lat_wins_over_a_stale_row_and_is_reported(self):
+        side = self.side(2, 4); side['count_aligned']['ports']['p1']['sched_lat'] = 5
+        extra, stale = landed_sidecar_cycles(self.raw, FakePlan(dict(lane=6)), side)
+        self.assertEqual(extra, dict(lane=1))
+        self.assertEqual([(r['port'], r['added_cycles'], r['sched_lat']) for r in stale], [('p1', 4, 5)])
+
+    def test_wrong_endpoint_is_refused(self):
+        bad = self.side(2, 4); bad['ports'][0]['src'] = 'x'
+        with self.assertRaisesRegex(ValueError, 'endpoints differ'):
+            landed_sidecar_cycles(self.raw, FakePlan(dict(lane=5)), bad)
 
 
 class HeadScheduleTests(unittest.TestCase):

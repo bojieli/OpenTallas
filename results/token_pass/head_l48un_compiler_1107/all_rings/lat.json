@@ -1,0 +1,9972 @@
+{
+ "rings": 427,
+ "max_fraction": 0.00039999999999995595,
+ "table": [
+  {
+   "corner": "FF",
+   "added": 2,
+   "sched_lat": 2,
+   "measured": 1,
+   "rings": 8
+  },
+  {
+   "corner": "FF",
+   "added": 2,
+   "sched_lat": 2,
+   "measured": 2,
+   "rings": 217
+  },
+  {
+   "corner": "FF",
+   "added": 2,
+   "sched_lat": 2,
+   "measured": 3,
+   "rings": 19
+  },
+  {
+   "corner": "FF",
+   "added": 2,
+   "sched_lat": 2,
+   "measured": 50,
+   "rings": 2
+  },
+  {
+   "corner": "FF",
+   "added": 3,
+   "sched_lat": 3,
+   "measured": 2,
+   "rings": 1
+  },
+  {
+   "corner": "FF",
+   "added": 3,
+   "sched_lat": 3,
+   "measured": 3,
+   "rings": 156
+  },
+  {
+   "corner": "FF",
+   "added": 3,
+   "sched_lat": 3,
+   "measured": 4,
+   "rings": 4
+  },
+  {
+   "corner": "FF",
+   "added": 3,
+   "sched_lat": 3,
+   "measured": null,
+   "rings": 7
+  },
+  {
+   "corner": "FF",
+   "added": 3,
+   "sched_lat": 4,
+   "measured": 4,
+   "rings": 7
+  },
+  {
+   "corner": "FF",
+   "added": 3,
+   "sched_lat": 4,
+   "measured": 5,
+   "rings": 4
+  },
+  {
+   "corner": "FF",
+   "added": 4,
+   "sched_lat": 4,
+   "measured": 4,
+   "rings": 2
+  },
+  {
+   "corner": "TT",
+   "added": 2,
+   "sched_lat": 2,
+   "measured": 1,
+   "rings": 5
+  },
+  {
+   "corner": "TT",
+   "added": 2,
+   "sched_lat": 2,
+   "measured": 2,
+   "rings": 218
+  },
+  {
+   "corner": "TT",
+   "added": 2,
+   "sched_lat": 2,
+   "measured": 3,
+   "rings": 18
+  },
+  {
+   "corner": "TT",
+   "added": 2,
+   "sched_lat": 2,
+   "measured": 50,
+   "rings": 2
+  },
+  {
+   "corner": "TT",
+   "added": 2,
+   "sched_lat": 2,
+   "measured": null,
+   "rings": 3
+  },
+  {
+   "corner": "TT",
+   "added": 3,
+   "sched_lat": 3,
+   "measured": 2,
+   "rings": 2
+  },
+  {
+   "corner": "TT",
+   "added": 3,
+   "sched_lat": 3,
+   "measured": 3,
+   "rings": 161
+  },
+  {
+   "corner": "TT",
+   "added": 3,
+   "sched_lat": 3,
+   "measured": 4,
+   "rings": 5
+  },
+  {
+   "corner": "TT",
+   "added": 3,
+   "sched_lat": 4,
+   "measured": 4,
+   "rings": 11
+  },
+  {
+   "corner": "TT",
+   "added": 4,
+   "sched_lat": 4,
+   "measured": 3,
+   "rings": 2
+  }
+ ],
+ "faulted": {
+  "TT": [
+   "lk_ES0__coll_i0",
+   "lk_WN1__coll_i0",
+   "tE1o0__i"
+  ],
+  "FF": [
+   "sp0__ad_i",
+   "sp0__bd_i",
+   "sp0__hd_i",
+   "sp0__x_i",
+   "sp5__au_i",
+   "sp5__bu_i",
+   "sp5__hu_i"
+  ]
+ },
+ "rings_detail": {
+  "lk_WN2__coll_i0": {
+   "port": "coll_WN2_d__4",
+   "lane": "coll_WN2_d",
+   "src": "nst1",
+   "dst": "lk_WN2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -13,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "lk_WN1__coll_i0": {
+   "port": "coll_WN1_d__2",
+   "lane": "coll_WN1_d",
+   "src": "nst3_turn",
+   "dst": "lk_WN1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -15,
+   "TT": {
+    "ready": 0,
+    "fault": 1,
+    "n": 0
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "lk_WN0__coll_i0": {
+   "port": "coll_WN0_d__0",
+   "lane": "coll_WN0_d",
+   "src": "lep0N",
+   "dst": "lk_WN0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -14,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "lk_WN3__coll_i0": {
+   "port": "coll_WN3_d__1",
+   "lane": "coll_WN3_d",
+   "src": "ctl_nstrip",
+   "dst": "lk_WN3",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -9,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "lk_EN0__coll_i0": {
+   "port": "coll_EN0_d__0",
+   "lane": "coll_EN0_d",
+   "src": "mesh7N",
+   "dst": "lk_EN0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -12,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "lk_EN1__coll_i0": {
+   "port": "coll_EN1_d__2",
+   "lane": "coll_EN1_d",
+   "src": "nst10",
+   "dst": "lk_EN1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -18,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "lk_WS1__coll_i0": {
+   "port": "coll_WS1_d__2",
+   "lane": "coll_WS1_d",
+   "src": "sst1",
+   "dst": "lk_WS1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -13,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "lk_WS0__coll_i0": {
+   "port": "coll_WS0_d__0",
+   "lane": "coll_WS0_d",
+   "src": "mesh0S",
+   "dst": "lk_WS0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -18,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "lk_HOST0__coll_i0": {
+   "port": "coll_HOST0_d__1",
+   "lane": "coll_HOST0_d",
+   "src": "sst5",
+   "dst": "lk_HOST0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -15,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "lk_HOST1__coll_i0": {
+   "port": "coll_HOST1_d__0",
+   "lane": "coll_HOST1_d",
+   "src": "host",
+   "dst": "lk_HOST1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -15,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "lk_ES0__coll_i0": {
+   "port": "coll_ES0_d__0",
+   "lane": "coll_ES0_d",
+   "src": "mesh7S",
+   "dst": "lk_ES0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -12,
+   "TT": {
+    "ready": 0,
+    "fault": 1,
+    "n": 0
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "lk_ES1__coll_i0": {
+   "port": "coll_ES1_d__2",
+   "lane": "coll_ES1_d",
+   "src": "sst10",
+   "dst": "lk_ES1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -13,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "nst1__d_i": {
+   "port": "coll_WN2_d__3",
+   "lane": "coll_WN2_d",
+   "src": "nst2",
+   "dst": "nst1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -22,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 1.0,
+    "cycles": 1
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "nst1__u_i": {
+   "port": "coll_WN2_u__0",
+   "lane": "coll_WN2_u",
+   "src": "lk_WN2",
+   "dst": "nst1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 15,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "nst2__d_i": {
+   "port": "coll_WN2_d__2",
+   "lane": "coll_WN2_d",
+   "src": "nst3_transit",
+   "dst": "nst2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -14,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "nst2__u_i": {
+   "port": "coll_WN2_u__1",
+   "lane": "coll_WN2_u",
+   "src": "nst1",
+   "dst": "nst2",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 25,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "nst4__d1_i": {
+   "port": "coll_WN1_d__0",
+   "lane": "coll_WN1_d",
+   "src": "lep0N",
+   "dst": "nst4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -23,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "nst4__d2_i": {
+   "port": "coll_WN2_d__0",
+   "lane": "coll_WN2_d",
+   "src": "lep0N",
+   "dst": "nst4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -23,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "nst4__u1_i": {
+   "port": "coll_WN1_u__1",
+   "lane": "coll_WN1_u",
+   "src": "nst3_turn",
+   "dst": "nst4",
+   "added": 4,
+   "sched_lat": 4,
+   "K": 11,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   }
+  },
+  "nst4__u2_i": {
+   "port": "coll_WN2_u__3",
+   "lane": "coll_WN2_u",
+   "src": "nst3_transit",
+   "dst": "nst4",
+   "added": 4,
+   "sched_lat": 4,
+   "K": 11,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   }
+  },
+  "lep0N__coll_i0": {
+   "port": "coll_WN0_u__0",
+   "lane": "coll_WN0_u",
+   "src": "lk_WN0",
+   "dst": "lep0N",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "lep0N__coll_i1": {
+   "port": "coll_WN1_u__2",
+   "lane": "coll_WN1_u",
+   "src": "nst4",
+   "dst": "lep0N",
+   "added": 3,
+   "sched_lat": 4,
+   "K": 26,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   }
+  },
+  "lep0N__coll_i2": {
+   "port": "coll_WN2_u__4",
+   "lane": "coll_WN2_u",
+   "src": "nst4",
+   "dst": "lep0N",
+   "added": 3,
+   "sched_lat": 4,
+   "K": 26,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   }
+  },
+  "lep0N__coll_i3": {
+   "port": "coll_WN3_u__1",
+   "lane": "coll_WN3_u",
+   "src": "ctl_nstrip",
+   "dst": "lep0N",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -6,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "lep0N__lepf_i0": {
+   "port": "lepf__0",
+   "lane": "lepf",
+   "src": "ctl_nstrip",
+   "dst": "lep0N",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -6,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 50.0,
+    "cycles": 50
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 50.0,
+    "cycles": 50
+   }
+  },
+  "lep0N__lepk_i0": {
+   "port": "kd__0",
+   "lane": "kd",
+   "src": "ctl",
+   "dst": "lep0N",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "lep0N__unit_i0": {
+   "port": "unit_lep__0",
+   "lane": "unit_lep",
+   "src": "ctl_nstrip",
+   "dst": "lep0N",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -6,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "ctl__a_rx_i": {
+   "port": "m0S_rx__9",
+   "lane": "m0S_rx",
+   "src": "sp0",
+   "dst": "ctl",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "ctl__b7_rx_i": {
+   "port": "m7S_rx__8",
+   "lane": "m7S_rx",
+   "src": "sp0",
+   "dst": "ctl",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "ctl__b_i": {
+   "port": "sp_b0__0",
+   "lane": "sp_b0",
+   "src": "sp0",
+   "dst": "ctl",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "ctl__h_rx_i": {
+   "port": "host_rx__6",
+   "lane": "host_rx",
+   "src": "sp0",
+   "dst": "ctl",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "ctl__lepk_i0": {
+   "port": "ku__0",
+   "lane": "ku",
+   "src": "lep0N",
+   "dst": "ctl",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -2,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "nst7__rx_i": {
+   "port": "m7N_rx__0",
+   "lane": "m7N_rx",
+   "src": "mesh7N_estrip",
+   "dst": "nst7",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 32,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "nst7__tx_i": {
+   "port": "m7N_tx__0",
+   "lane": "m7N_tx",
+   "src": "ctl_estrip",
+   "dst": "nst7",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -8,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "mesh7N__coll_ia": {
+   "port": "coll_EN0_u__0",
+   "lane": "coll_EN0_u",
+   "src": "lk_EN0",
+   "dst": "mesh7N",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 14,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "mesh7N__coll_ib": {
+   "port": "coll_EN1_u__2",
+   "lane": "coll_EN1_u",
+   "src": "nst9",
+   "dst": "mesh7N",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 14,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "nst9__d_i": {
+   "port": "coll_EN1_d__0",
+   "lane": "coll_EN1_d",
+   "src": "mesh7N",
+   "dst": "nst9",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -11,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "nst9__u_i": {
+   "port": "coll_EN1_u__1",
+   "lane": "coll_EN1_u",
+   "src": "nst10",
+   "dst": "nst9",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 20,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "nst10__d_i": {
+   "port": "coll_EN1_d__1",
+   "lane": "coll_EN1_d",
+   "src": "nst9",
+   "dst": "nst10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "nst10__u_i": {
+   "port": "coll_EN1_u__0",
+   "lane": "coll_EN1_u",
+   "src": "lk_EN1",
+   "dst": "nst10",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 21,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sst1__d_i": {
+   "port": "coll_WS1_d__1",
+   "lane": "coll_WS1_d",
+   "src": "sst2",
+   "dst": "sst1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -22,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sst1__u_i": {
+   "port": "coll_WS1_u__0",
+   "lane": "coll_WS1_u",
+   "src": "lk_WS1",
+   "dst": "sst1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 15,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sst2__d_i": {
+   "port": "coll_WS1_d__0",
+   "lane": "coll_WS1_d",
+   "src": "mesh0S",
+   "dst": "sst2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sst2__u_i": {
+   "port": "coll_WS1_u__1",
+   "lane": "coll_WS1_u",
+   "src": "sst1",
+   "dst": "sst2",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 25,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "mesh0S__coll_ia": {
+   "port": "coll_WS0_u__0",
+   "lane": "coll_WS0_u",
+   "src": "lk_WS0",
+   "dst": "mesh0S",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 20,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "mesh0S__coll_ib": {
+   "port": "coll_WS1_u__2",
+   "lane": "coll_WS1_u",
+   "src": "sst2",
+   "dst": "mesh0S",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 20,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sst4__rx_i": {
+   "port": "m0S_rx__0",
+   "lane": "m0S_rx",
+   "src": "mesh0S_estrip",
+   "dst": "sst4",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 20,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sst4__tx_i": {
+   "port": "m0S_tx__8",
+   "lane": "m0S_tx",
+   "src": "sst5",
+   "dst": "sst4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sst5__d_i": {
+   "port": "coll_HOST0_d__0",
+   "lane": "coll_HOST0_d",
+   "src": "host",
+   "dst": "sst5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -14,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sst5__rx_i": {
+   "port": "m0S_rx__1",
+   "lane": "m0S_rx",
+   "src": "sst4",
+   "dst": "sst5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 20,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sst5__tx_i": {
+   "port": "m0S_tx__7",
+   "lane": "m0S_tx",
+   "src": "host_nstrip",
+   "dst": "sst5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -14,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sst5__u_i": {
+   "port": "coll_HOST0_u__0",
+   "lane": "coll_HOST0_u",
+   "src": "lk_HOST0",
+   "dst": "sst5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "host__coll_i0": {
+   "port": "coll_HOST0_u__1",
+   "lane": "coll_HOST0_u",
+   "src": "sst5",
+   "dst": "host",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "host__coll_i1": {
+   "port": "coll_HOST1_u__0",
+   "lane": "coll_HOST1_u",
+   "src": "lk_HOST1",
+   "dst": "host",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sst7__rx_i": {
+   "port": "m7S_rx__0",
+   "lane": "m7S_rx",
+   "src": "mesh7S_estrip",
+   "dst": "sst7",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 32,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sst7__tx_i": {
+   "port": "m7S_tx__7",
+   "lane": "m7S_tx",
+   "src": "host_nstrip",
+   "dst": "sst7",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -14,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "mesh7S__coll_ia": {
+   "port": "coll_ES0_u__0",
+   "lane": "coll_ES0_u",
+   "src": "lk_ES0",
+   "dst": "mesh7S",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 14,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "mesh7S__coll_ib": {
+   "port": "coll_ES1_u__2",
+   "lane": "coll_ES1_u",
+   "src": "sst9",
+   "dst": "mesh7S",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 14,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sst9__d_i": {
+   "port": "coll_ES1_d__0",
+   "lane": "coll_ES1_d",
+   "src": "mesh7S",
+   "dst": "sst9",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -11,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sst9__u_i": {
+   "port": "coll_ES1_u__1",
+   "lane": "coll_ES1_u",
+   "src": "sst10",
+   "dst": "sst9",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 25,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sst10__d_i": {
+   "port": "coll_ES1_d__1",
+   "lane": "coll_ES1_d",
+   "src": "sst9",
+   "dst": "sst10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -22,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 1.0,
+    "cycles": 1
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sst10__u_i": {
+   "port": "coll_ES1_u__0",
+   "lane": "coll_ES1_u",
+   "src": "lk_ES1",
+   "dst": "sst10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 15,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp0__ad_i": {
+   "port": "m0S_tx__0",
+   "lane": "m0S_tx",
+   "src": "ctl",
+   "dst": "sp0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 32,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 0,
+    "fault": 1,
+    "n": 0
+   }
+  },
+  "sp0__au_i": {
+   "port": "m0S_rx__8",
+   "lane": "m0S_rx",
+   "src": "sp1",
+   "dst": "sp0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 1.0,
+    "cycles": 1
+   }
+  },
+  "sp0__b_i": {
+   "port": "sp_b1__0",
+   "lane": "sp_b1",
+   "src": "sp1",
+   "dst": "sp0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 1.0,
+    "cycles": 1
+   }
+  },
+  "sp0__bd_i": {
+   "port": "m7S_tx__0",
+   "lane": "m7S_tx",
+   "src": "ctl",
+   "dst": "sp0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 32,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 0,
+    "fault": 1,
+    "n": 0
+   }
+  },
+  "sp0__bu_i": {
+   "port": "m7S_rx__7",
+   "lane": "m7S_rx",
+   "src": "sp1",
+   "dst": "sp0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 1.0,
+    "cycles": 1
+   }
+  },
+  "sp0__hd_i": {
+   "port": "host_tx__0",
+   "lane": "host_tx",
+   "src": "ctl",
+   "dst": "sp0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 32,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 0,
+    "fault": 1,
+    "n": 0
+   }
+  },
+  "sp0__hu_i": {
+   "port": "host_rx__5",
+   "lane": "host_rx",
+   "src": "sp1",
+   "dst": "sp0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 1.0,
+    "cycles": 1
+   }
+  },
+  "sp0__x_i": {
+   "port": "sp_x0__0",
+   "lane": "sp_x0",
+   "src": "ctl",
+   "dst": "sp0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 32,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 0,
+    "fault": 1,
+    "n": 0
+   }
+  },
+  "turnW0a__t_i": {
+   "port": "chW0_t__0",
+   "lane": "chW0_t",
+   "src": "tW0o10",
+   "dst": "turnW0a",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "turnW0b__t_i": {
+   "port": "chW0_t__1",
+   "lane": "chW0_t",
+   "src": "turnW0a",
+   "dst": "turnW0b",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "turnE0a__t_i": {
+   "port": "chE0_t__0",
+   "lane": "chE0_t",
+   "src": "tE0o10",
+   "dst": "turnE0a",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "turnE0b__t_i": {
+   "port": "chE0_t__1",
+   "lane": "chE0_t",
+   "src": "turnE0a",
+   "dst": "turnE0b",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE0o0__i": {
+   "port": "chE0_h__0",
+   "lane": "chE0_h",
+   "src": "sp0_xe_o_shim",
+   "dst": "tE0o0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 10,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE0b0__i": {
+   "port": "chE0_b9__0",
+   "lane": "chE0_b9",
+   "src": "tE0b1",
+   "dst": "tE0b0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW0o0__i": {
+   "port": "chW0_h__0",
+   "lane": "chW0_h",
+   "src": "sp0_xw_o_shim",
+   "dst": "tW0o0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW0b0__i": {
+   "port": "chW0_b9__0",
+   "lane": "chW0_b9",
+   "src": "tW0b1",
+   "dst": "tW0b0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE0o1__i": {
+   "port": "chE0_o0__0",
+   "lane": "chE0_o0",
+   "src": "tE0o0",
+   "dst": "tE0o1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE0b1__i": {
+   "port": "chE0_b8__0",
+   "lane": "chE0_b8",
+   "src": "tE0b2",
+   "dst": "tE0b1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW0o1__i": {
+   "port": "chW0_o0__0",
+   "lane": "chW0_o0",
+   "src": "tW0o0",
+   "dst": "tW0o1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW0b1__i": {
+   "port": "chW0_b8__0",
+   "lane": "chW0_b8",
+   "src": "tW0b2",
+   "dst": "tW0b1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE0o2__i": {
+   "port": "chE0_o1__0",
+   "lane": "chE0_o1",
+   "src": "tE0o1",
+   "dst": "tE0o2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE0b2__i": {
+   "port": "chE0_b7__0",
+   "lane": "chE0_b7",
+   "src": "tE0b3",
+   "dst": "tE0b2",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW0o2__i": {
+   "port": "chW0_o1__0",
+   "lane": "chW0_o1",
+   "src": "tW0o1",
+   "dst": "tW0o2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW0b2__i": {
+   "port": "chW0_b7__0",
+   "lane": "chW0_b7",
+   "src": "tW0b3",
+   "dst": "tW0b2",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE0o3__i": {
+   "port": "chE0_o2__0",
+   "lane": "chE0_o2",
+   "src": "tE0o2",
+   "dst": "tE0o3",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE0b3__i": {
+   "port": "chE0_b6__0",
+   "lane": "chE0_b6",
+   "src": "tE0b4",
+   "dst": "tE0b3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW0o3__i": {
+   "port": "chW0_o2__0",
+   "lane": "chW0_o2",
+   "src": "tW0o2",
+   "dst": "tW0o3",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW0b3__i": {
+   "port": "chW0_b6__0",
+   "lane": "chW0_b6",
+   "src": "tW0b4",
+   "dst": "tW0b3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE0o4__i": {
+   "port": "chE0_o3__0",
+   "lane": "chE0_o3",
+   "src": "tE0o3",
+   "dst": "tE0o4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE0b4__i": {
+   "port": "chE0_b5__0",
+   "lane": "chE0_b5",
+   "src": "tE0b5",
+   "dst": "tE0b4",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW0o4__i": {
+   "port": "chW0_o3__0",
+   "lane": "chW0_o3",
+   "src": "tW0o3",
+   "dst": "tW0o4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW0b4__i": {
+   "port": "chW0_b5__0",
+   "lane": "chW0_b5",
+   "src": "tW0b5",
+   "dst": "tW0b4",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE0o5__i": {
+   "port": "chE0_o4__0",
+   "lane": "chE0_o4",
+   "src": "tE0o4",
+   "dst": "tE0o5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE0b5__i": {
+   "port": "chE0_b4__0",
+   "lane": "chE0_b4",
+   "src": "tE0b6",
+   "dst": "tE0b5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW0o5__i": {
+   "port": "chW0_o4__0",
+   "lane": "chW0_o4",
+   "src": "tW0o4",
+   "dst": "tW0o5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW0b5__i": {
+   "port": "chW0_b4__0",
+   "lane": "chW0_b4",
+   "src": "tW0b6",
+   "dst": "tW0b5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE0o6__i": {
+   "port": "chE0_o5__0",
+   "lane": "chE0_o5",
+   "src": "tE0o5",
+   "dst": "tE0o6",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE0b6__i": {
+   "port": "chE0_b3__0",
+   "lane": "chE0_b3",
+   "src": "tE0b7",
+   "dst": "tE0b6",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW0o6__i": {
+   "port": "chW0_o5__0",
+   "lane": "chW0_o5",
+   "src": "tW0o5",
+   "dst": "tW0o6",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW0b6__i": {
+   "port": "chW0_b3__0",
+   "lane": "chW0_b3",
+   "src": "tW0b7",
+   "dst": "tW0b6",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE0o7__i": {
+   "port": "chE0_o6__0",
+   "lane": "chE0_o6",
+   "src": "tE0o6",
+   "dst": "tE0o7",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE0b7__i": {
+   "port": "chE0_b2__0",
+   "lane": "chE0_b2",
+   "src": "tE0b8",
+   "dst": "tE0b7",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW0o7__i": {
+   "port": "chW0_o6__0",
+   "lane": "chW0_o6",
+   "src": "tW0o6",
+   "dst": "tW0o7",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW0b7__i": {
+   "port": "chW0_b2__0",
+   "lane": "chW0_b2",
+   "src": "tW0b8",
+   "dst": "tW0b7",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE0o8__i": {
+   "port": "chE0_o7__0",
+   "lane": "chE0_o7",
+   "src": "tE0o7",
+   "dst": "tE0o8",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE0b8__i": {
+   "port": "chE0_b1__0",
+   "lane": "chE0_b1",
+   "src": "tE0b9",
+   "dst": "tE0b8",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW0o8__i": {
+   "port": "chW0_o7__0",
+   "lane": "chW0_o7",
+   "src": "tW0o7",
+   "dst": "tW0o8",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW0b8__i": {
+   "port": "chW0_b1__0",
+   "lane": "chW0_b1",
+   "src": "tW0b9",
+   "dst": "tW0b8",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 11,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE0o9__i": {
+   "port": "chE0_o8__0",
+   "lane": "chE0_o8",
+   "src": "tE0o8",
+   "dst": "tE0o9",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE0b9__i": {
+   "port": "chE0_b0__0",
+   "lane": "chE0_b0",
+   "src": "tE0b10",
+   "dst": "tE0b9",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW0o9__i": {
+   "port": "chW0_o8__0",
+   "lane": "chW0_o8",
+   "src": "tW0o8",
+   "dst": "tW0o9",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -8,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW0b9__i": {
+   "port": "chW0_b0__0",
+   "lane": "chW0_b0",
+   "src": "tW0b10",
+   "dst": "tW0b9",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 11,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE0o10__i": {
+   "port": "chE0_o9__0",
+   "lane": "chE0_o9",
+   "src": "tE0o9",
+   "dst": "tE0o10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE0b10__i": {
+   "port": "chE0_t__2",
+   "lane": "chE0_t",
+   "src": "turnE0b",
+   "dst": "tE0b10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 1,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW0o10__i": {
+   "port": "chW0_o9__0",
+   "lane": "chW0_o9",
+   "src": "tW0o9",
+   "dst": "tW0o10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -8,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW0b10__i": {
+   "port": "chW0_t__2",
+   "lane": "chW0_t",
+   "src": "turnW0b",
+   "dst": "tW0b10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 1,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp1__ad_i": {
+   "port": "m0S_tx__1",
+   "lane": "m0S_tx",
+   "src": "sp0",
+   "dst": "sp1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 20,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   }
+  },
+  "sp1__au_i": {
+   "port": "m0S_rx__7",
+   "lane": "m0S_rx",
+   "src": "sp2",
+   "dst": "sp1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp1__b_i": {
+   "port": "sp_b2__0",
+   "lane": "sp_b2",
+   "src": "sp2",
+   "dst": "sp1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp1__bd_i": {
+   "port": "m7S_tx__1",
+   "lane": "m7S_tx",
+   "src": "sp0",
+   "dst": "sp1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 20,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   }
+  },
+  "sp1__bu_i": {
+   "port": "m7S_rx__6",
+   "lane": "m7S_rx",
+   "src": "sp2",
+   "dst": "sp1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp1__hd_i": {
+   "port": "host_tx__1",
+   "lane": "host_tx",
+   "src": "sp0",
+   "dst": "sp1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 20,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   }
+  },
+  "sp1__hu_i": {
+   "port": "host_rx__4",
+   "lane": "host_rx",
+   "src": "sp2",
+   "dst": "sp1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp1__x_i": {
+   "port": "sp_x1__0",
+   "lane": "sp_x1",
+   "src": "sp0",
+   "dst": "sp1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 20,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   }
+  },
+  "turnW1a__t_i": {
+   "port": "chW1_t__0",
+   "lane": "chW1_t",
+   "src": "tW1o10",
+   "dst": "turnW1a",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "turnW1b__t_i": {
+   "port": "chW1_t__1",
+   "lane": "chW1_t",
+   "src": "turnW1a",
+   "dst": "turnW1b",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "turnE1a__t_i": {
+   "port": "chE1_t__0",
+   "lane": "chE1_t",
+   "src": "tE1o10",
+   "dst": "turnE1a",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "turnE1b__t_i": {
+   "port": "chE1_t__1",
+   "lane": "chE1_t",
+   "src": "turnE1a",
+   "dst": "turnE1b",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE1o0__i": {
+   "port": "chE1_h__0",
+   "lane": "chE1_h",
+   "src": "sp1_xe_o_shim",
+   "dst": "tE1o0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 0,
+   "TT": {
+    "ready": 0,
+    "fault": 1,
+    "n": 0
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE1b0__i": {
+   "port": "chE1_b9__0",
+   "lane": "chE1_b9",
+   "src": "tE1b1",
+   "dst": "tE1b0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW1o0__i": {
+   "port": "chW1_h__0",
+   "lane": "chW1_h",
+   "src": "sp1_xw_o_shim",
+   "dst": "tW1o0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW1b0__i": {
+   "port": "chW1_b9__0",
+   "lane": "chW1_b9",
+   "src": "tW1b1",
+   "dst": "tW1b0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE1o1__i": {
+   "port": "chE1_o0__0",
+   "lane": "chE1_o0",
+   "src": "tE1o0",
+   "dst": "tE1o1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE1b1__i": {
+   "port": "chE1_b8__0",
+   "lane": "chE1_b8",
+   "src": "tE1b2",
+   "dst": "tE1b1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW1o1__i": {
+   "port": "chW1_o0__0",
+   "lane": "chW1_o0",
+   "src": "tW1o0",
+   "dst": "tW1o1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW1b1__i": {
+   "port": "chW1_b8__0",
+   "lane": "chW1_b8",
+   "src": "tW1b2",
+   "dst": "tW1b1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE1o2__i": {
+   "port": "chE1_o1__0",
+   "lane": "chE1_o1",
+   "src": "tE1o1",
+   "dst": "tE1o2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE1b2__i": {
+   "port": "chE1_b7__0",
+   "lane": "chE1_b7",
+   "src": "tE1b3",
+   "dst": "tE1b2",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW1o2__i": {
+   "port": "chW1_o1__0",
+   "lane": "chW1_o1",
+   "src": "tW1o1",
+   "dst": "tW1o2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW1b2__i": {
+   "port": "chW1_b7__0",
+   "lane": "chW1_b7",
+   "src": "tW1b3",
+   "dst": "tW1b2",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE1o3__i": {
+   "port": "chE1_o2__0",
+   "lane": "chE1_o2",
+   "src": "tE1o2",
+   "dst": "tE1o3",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE1b3__i": {
+   "port": "chE1_b6__0",
+   "lane": "chE1_b6",
+   "src": "tE1b4",
+   "dst": "tE1b3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW1o3__i": {
+   "port": "chW1_o2__0",
+   "lane": "chW1_o2",
+   "src": "tW1o2",
+   "dst": "tW1o3",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW1b3__i": {
+   "port": "chW1_b6__0",
+   "lane": "chW1_b6",
+   "src": "tW1b4",
+   "dst": "tW1b3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE1o4__i": {
+   "port": "chE1_o3__0",
+   "lane": "chE1_o3",
+   "src": "tE1o3",
+   "dst": "tE1o4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE1b4__i": {
+   "port": "chE1_b5__0",
+   "lane": "chE1_b5",
+   "src": "tE1b5",
+   "dst": "tE1b4",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW1o4__i": {
+   "port": "chW1_o3__0",
+   "lane": "chW1_o3",
+   "src": "tW1o3",
+   "dst": "tW1o4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW1b4__i": {
+   "port": "chW1_b5__0",
+   "lane": "chW1_b5",
+   "src": "tW1b5",
+   "dst": "tW1b4",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE1o5__i": {
+   "port": "chE1_o4__0",
+   "lane": "chE1_o4",
+   "src": "tE1o4",
+   "dst": "tE1o5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE1b5__i": {
+   "port": "chE1_b4__0",
+   "lane": "chE1_b4",
+   "src": "tE1b6",
+   "dst": "tE1b5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW1o5__i": {
+   "port": "chW1_o4__0",
+   "lane": "chW1_o4",
+   "src": "tW1o4",
+   "dst": "tW1o5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW1b5__i": {
+   "port": "chW1_b4__0",
+   "lane": "chW1_b4",
+   "src": "tW1b6",
+   "dst": "tW1b5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE1o6__i": {
+   "port": "chE1_o5__0",
+   "lane": "chE1_o5",
+   "src": "tE1o5",
+   "dst": "tE1o6",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE1b6__i": {
+   "port": "chE1_b3__0",
+   "lane": "chE1_b3",
+   "src": "tE1b7",
+   "dst": "tE1b6",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW1o6__i": {
+   "port": "chW1_o5__0",
+   "lane": "chW1_o5",
+   "src": "tW1o5",
+   "dst": "tW1o6",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW1b6__i": {
+   "port": "chW1_b3__0",
+   "lane": "chW1_b3",
+   "src": "tW1b7",
+   "dst": "tW1b6",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE1o7__i": {
+   "port": "chE1_o6__0",
+   "lane": "chE1_o6",
+   "src": "tE1o6",
+   "dst": "tE1o7",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE1b7__i": {
+   "port": "chE1_b2__0",
+   "lane": "chE1_b2",
+   "src": "tE1b8",
+   "dst": "tE1b7",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 11,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW1o7__i": {
+   "port": "chW1_o6__0",
+   "lane": "chW1_o6",
+   "src": "tW1o6",
+   "dst": "tW1o7",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW1b7__i": {
+   "port": "chW1_b2__0",
+   "lane": "chW1_b2",
+   "src": "tW1b8",
+   "dst": "tW1b7",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE1o8__i": {
+   "port": "chE1_o7__0",
+   "lane": "chE1_o7",
+   "src": "tE1o7",
+   "dst": "tE1o8",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -8,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE1b8__i": {
+   "port": "chE1_b1__0",
+   "lane": "chE1_b1",
+   "src": "tE1b9",
+   "dst": "tE1b8",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW1o8__i": {
+   "port": "chW1_o7__0",
+   "lane": "chW1_o7",
+   "src": "tW1o7",
+   "dst": "tW1o8",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW1b8__i": {
+   "port": "chW1_b1__0",
+   "lane": "chW1_b1",
+   "src": "tW1b9",
+   "dst": "tW1b8",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE1o9__i": {
+   "port": "chE1_o8__0",
+   "lane": "chE1_o8",
+   "src": "tE1o8",
+   "dst": "tE1o9",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE1b9__i": {
+   "port": "chE1_b0__0",
+   "lane": "chE1_b0",
+   "src": "tE1b10",
+   "dst": "tE1b9",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 11,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW1o9__i": {
+   "port": "chW1_o8__0",
+   "lane": "chW1_o8",
+   "src": "tW1o8",
+   "dst": "tW1o9",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW1b9__i": {
+   "port": "chW1_b0__0",
+   "lane": "chW1_b0",
+   "src": "tW1b10",
+   "dst": "tW1b9",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE1o10__i": {
+   "port": "chE1_o9__0",
+   "lane": "chE1_o9",
+   "src": "tE1o9",
+   "dst": "tE1o10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -8,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE1b10__i": {
+   "port": "chE1_t__2",
+   "lane": "chE1_t",
+   "src": "turnE1b",
+   "dst": "tE1b10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 1,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW1o10__i": {
+   "port": "chW1_o9__0",
+   "lane": "chW1_o9",
+   "src": "tW1o9",
+   "dst": "tW1o10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW1b10__i": {
+   "port": "chW1_t__2",
+   "lane": "chW1_t",
+   "src": "turnW1b",
+   "dst": "tW1b10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 1,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp2__ad_i": {
+   "port": "m0S_tx__2",
+   "lane": "m0S_tx",
+   "src": "sp1",
+   "dst": "sp2",
+   "added": 3,
+   "sched_lat": 4,
+   "K": 33,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   }
+  },
+  "sp2__au_i": {
+   "port": "m0S_rx__6",
+   "lane": "m0S_rx",
+   "src": "sp3",
+   "dst": "sp2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -26,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp2__b_i": {
+   "port": "sp_b3__0",
+   "lane": "sp_b3",
+   "src": "sp3",
+   "dst": "sp2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -26,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp2__bd_i": {
+   "port": "m7S_tx__2",
+   "lane": "m7S_tx",
+   "src": "sp1",
+   "dst": "sp2",
+   "added": 3,
+   "sched_lat": 4,
+   "K": 33,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   }
+  },
+  "sp2__bu_i": {
+   "port": "m7S_rx__5",
+   "lane": "m7S_rx",
+   "src": "sp3",
+   "dst": "sp2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -26,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp2__hd_i": {
+   "port": "host_tx__2",
+   "lane": "host_tx",
+   "src": "sp1",
+   "dst": "sp2",
+   "added": 3,
+   "sched_lat": 4,
+   "K": 33,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   }
+  },
+  "sp2__hu_i": {
+   "port": "host_rx__3",
+   "lane": "host_rx",
+   "src": "sp3",
+   "dst": "sp2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -26,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp2__x_i": {
+   "port": "sp_x2__0",
+   "lane": "sp_x2",
+   "src": "sp1",
+   "dst": "sp2",
+   "added": 3,
+   "sched_lat": 4,
+   "K": 33,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   }
+  },
+  "turnW2a__t_i": {
+   "port": "chW2_t__0",
+   "lane": "chW2_t",
+   "src": "tW2o10",
+   "dst": "turnW2a",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "turnW2b__t_i": {
+   "port": "chW2_t__1",
+   "lane": "chW2_t",
+   "src": "turnW2a",
+   "dst": "turnW2b",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "turnE2a__t_i": {
+   "port": "chE2_t__0",
+   "lane": "chE2_t",
+   "src": "tE2o10",
+   "dst": "turnE2a",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "turnE2b__t_i": {
+   "port": "chE2_t__1",
+   "lane": "chE2_t",
+   "src": "turnE2a",
+   "dst": "turnE2b",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE2o0__i": {
+   "port": "chE2_h__0",
+   "lane": "chE2_h",
+   "src": "sp2_xe_o_shim",
+   "dst": "tE2o0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 10,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE2b0__i": {
+   "port": "chE2_b9__0",
+   "lane": "chE2_b9",
+   "src": "tE2b1",
+   "dst": "tE2b0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW2o0__i": {
+   "port": "chW2_h__0",
+   "lane": "chW2_h",
+   "src": "sp2_xw_o_shim",
+   "dst": "tW2o0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW2b0__i": {
+   "port": "chW2_b9__0",
+   "lane": "chW2_b9",
+   "src": "tW2b1",
+   "dst": "tW2b0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE2o1__i": {
+   "port": "chE2_o0__0",
+   "lane": "chE2_o0",
+   "src": "tE2o0",
+   "dst": "tE2o1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE2b1__i": {
+   "port": "chE2_b8__0",
+   "lane": "chE2_b8",
+   "src": "tE2b2",
+   "dst": "tE2b1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW2o1__i": {
+   "port": "chW2_o0__0",
+   "lane": "chW2_o0",
+   "src": "tW2o0",
+   "dst": "tW2o1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW2b1__i": {
+   "port": "chW2_b8__0",
+   "lane": "chW2_b8",
+   "src": "tW2b2",
+   "dst": "tW2b1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE2o2__i": {
+   "port": "chE2_o1__0",
+   "lane": "chE2_o1",
+   "src": "tE2o1",
+   "dst": "tE2o2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE2b2__i": {
+   "port": "chE2_b7__0",
+   "lane": "chE2_b7",
+   "src": "tE2b3",
+   "dst": "tE2b2",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW2o2__i": {
+   "port": "chW2_o1__0",
+   "lane": "chW2_o1",
+   "src": "tW2o1",
+   "dst": "tW2o2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW2b2__i": {
+   "port": "chW2_b7__0",
+   "lane": "chW2_b7",
+   "src": "tW2b3",
+   "dst": "tW2b2",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE2o3__i": {
+   "port": "chE2_o2__0",
+   "lane": "chE2_o2",
+   "src": "tE2o2",
+   "dst": "tE2o3",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE2b3__i": {
+   "port": "chE2_b6__0",
+   "lane": "chE2_b6",
+   "src": "tE2b4",
+   "dst": "tE2b3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW2o3__i": {
+   "port": "chW2_o2__0",
+   "lane": "chW2_o2",
+   "src": "tW2o2",
+   "dst": "tW2o3",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW2b3__i": {
+   "port": "chW2_b6__0",
+   "lane": "chW2_b6",
+   "src": "tW2b4",
+   "dst": "tW2b3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE2o4__i": {
+   "port": "chE2_o3__0",
+   "lane": "chE2_o3",
+   "src": "tE2o3",
+   "dst": "tE2o4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE2b4__i": {
+   "port": "chE2_b5__0",
+   "lane": "chE2_b5",
+   "src": "tE2b5",
+   "dst": "tE2b4",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW2o4__i": {
+   "port": "chW2_o3__0",
+   "lane": "chW2_o3",
+   "src": "tW2o3",
+   "dst": "tW2o4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW2b4__i": {
+   "port": "chW2_b5__0",
+   "lane": "chW2_b5",
+   "src": "tW2b5",
+   "dst": "tW2b4",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE2o5__i": {
+   "port": "chE2_o4__0",
+   "lane": "chE2_o4",
+   "src": "tE2o4",
+   "dst": "tE2o5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE2b5__i": {
+   "port": "chE2_b4__0",
+   "lane": "chE2_b4",
+   "src": "tE2b6",
+   "dst": "tE2b5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW2o5__i": {
+   "port": "chW2_o4__0",
+   "lane": "chW2_o4",
+   "src": "tW2o4",
+   "dst": "tW2o5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW2b5__i": {
+   "port": "chW2_b4__0",
+   "lane": "chW2_b4",
+   "src": "tW2b6",
+   "dst": "tW2b5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE2o6__i": {
+   "port": "chE2_o5__0",
+   "lane": "chE2_o5",
+   "src": "tE2o5",
+   "dst": "tE2o6",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE2b6__i": {
+   "port": "chE2_b3__0",
+   "lane": "chE2_b3",
+   "src": "tE2b7",
+   "dst": "tE2b6",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW2o6__i": {
+   "port": "chW2_o5__0",
+   "lane": "chW2_o5",
+   "src": "tW2o5",
+   "dst": "tW2o6",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW2b6__i": {
+   "port": "chW2_b3__0",
+   "lane": "chW2_b3",
+   "src": "tW2b7",
+   "dst": "tW2b6",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE2o7__i": {
+   "port": "chE2_o6__0",
+   "lane": "chE2_o6",
+   "src": "tE2o6",
+   "dst": "tE2o7",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE2b7__i": {
+   "port": "chE2_b2__0",
+   "lane": "chE2_b2",
+   "src": "tE2b8",
+   "dst": "tE2b7",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW2o7__i": {
+   "port": "chW2_o6__0",
+   "lane": "chW2_o6",
+   "src": "tW2o6",
+   "dst": "tW2o7",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW2b7__i": {
+   "port": "chW2_b2__0",
+   "lane": "chW2_b2",
+   "src": "tW2b8",
+   "dst": "tW2b7",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE2o8__i": {
+   "port": "chE2_o7__0",
+   "lane": "chE2_o7",
+   "src": "tE2o7",
+   "dst": "tE2o8",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE2b8__i": {
+   "port": "chE2_b1__0",
+   "lane": "chE2_b1",
+   "src": "tE2b9",
+   "dst": "tE2b8",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW2o8__i": {
+   "port": "chW2_o7__0",
+   "lane": "chW2_o7",
+   "src": "tW2o7",
+   "dst": "tW2o8",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW2b8__i": {
+   "port": "chW2_b1__0",
+   "lane": "chW2_b1",
+   "src": "tW2b9",
+   "dst": "tW2b8",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE2o9__i": {
+   "port": "chE2_o8__0",
+   "lane": "chE2_o8",
+   "src": "tE2o8",
+   "dst": "tE2o9",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE2b9__i": {
+   "port": "chE2_b0__0",
+   "lane": "chE2_b0",
+   "src": "tE2b10",
+   "dst": "tE2b9",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW2o9__i": {
+   "port": "chW2_o8__0",
+   "lane": "chW2_o8",
+   "src": "tW2o8",
+   "dst": "tW2o9",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW2b9__i": {
+   "port": "chW2_b0__0",
+   "lane": "chW2_b0",
+   "src": "tW2b10",
+   "dst": "tW2b9",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE2o10__i": {
+   "port": "chE2_o9__0",
+   "lane": "chE2_o9",
+   "src": "tE2o9",
+   "dst": "tE2o10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE2b10__i": {
+   "port": "chE2_t__2",
+   "lane": "chE2_t",
+   "src": "turnE2b",
+   "dst": "tE2b10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 1,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW2o10__i": {
+   "port": "chW2_o9__0",
+   "lane": "chW2_o9",
+   "src": "tW2o9",
+   "dst": "tW2o10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW2b10__i": {
+   "port": "chW2_t__2",
+   "lane": "chW2_t",
+   "src": "turnW2b",
+   "dst": "tW2b10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 1,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp3__ad_i": {
+   "port": "m0S_tx__3",
+   "lane": "m0S_tx",
+   "src": "sp2",
+   "dst": "sp3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp3__au_i": {
+   "port": "m0S_rx__5",
+   "lane": "m0S_rx",
+   "src": "sp4",
+   "dst": "sp3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 26,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp3__b_i": {
+   "port": "sp_b4__0",
+   "lane": "sp_b4",
+   "src": "sp4",
+   "dst": "sp3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 26,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp3__bd_i": {
+   "port": "m7S_tx__3",
+   "lane": "m7S_tx",
+   "src": "sp2",
+   "dst": "sp3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp3__bu_i": {
+   "port": "m7S_rx__4",
+   "lane": "m7S_rx",
+   "src": "sp4",
+   "dst": "sp3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 26,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp3__hd_i": {
+   "port": "host_tx__3",
+   "lane": "host_tx",
+   "src": "sp2",
+   "dst": "sp3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp3__hu_i": {
+   "port": "host_rx__2",
+   "lane": "host_rx",
+   "src": "sp4",
+   "dst": "sp3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 26,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp3__x_i": {
+   "port": "sp_x3__0",
+   "lane": "sp_x3",
+   "src": "sp2",
+   "dst": "sp3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "turnW3a__t_i": {
+   "port": "chW3_t__0",
+   "lane": "chW3_t",
+   "src": "tW3o10",
+   "dst": "turnW3a",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "turnW3b__t_i": {
+   "port": "chW3_t__1",
+   "lane": "chW3_t",
+   "src": "turnW3a",
+   "dst": "turnW3b",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "turnE3a__t_i": {
+   "port": "chE3_t__0",
+   "lane": "chE3_t",
+   "src": "tE3o10",
+   "dst": "turnE3a",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "turnE3b__t_i": {
+   "port": "chE3_t__1",
+   "lane": "chE3_t",
+   "src": "turnE3a",
+   "dst": "turnE3b",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE3o0__i": {
+   "port": "chE3_h__0",
+   "lane": "chE3_h",
+   "src": "sp3_xe_o_shim",
+   "dst": "tE3o0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 1,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE3b0__i": {
+   "port": "chE3_b9__0",
+   "lane": "chE3_b9",
+   "src": "tE3b1",
+   "dst": "tE3b0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW3o0__i": {
+   "port": "chW3_h__0",
+   "lane": "chW3_h",
+   "src": "sp3_xw_o_shim",
+   "dst": "tW3o0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW3b0__i": {
+   "port": "chW3_b9__0",
+   "lane": "chW3_b9",
+   "src": "tW3b1",
+   "dst": "tW3b0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE3o1__i": {
+   "port": "chE3_o0__0",
+   "lane": "chE3_o0",
+   "src": "tE3o0",
+   "dst": "tE3o1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE3b1__i": {
+   "port": "chE3_b8__0",
+   "lane": "chE3_b8",
+   "src": "tE3b2",
+   "dst": "tE3b1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW3o1__i": {
+   "port": "chW3_o0__0",
+   "lane": "chW3_o0",
+   "src": "tW3o0",
+   "dst": "tW3o1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW3b1__i": {
+   "port": "chW3_b8__0",
+   "lane": "chW3_b8",
+   "src": "tW3b2",
+   "dst": "tW3b1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE3o2__i": {
+   "port": "chE3_o1__0",
+   "lane": "chE3_o1",
+   "src": "tE3o1",
+   "dst": "tE3o2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE3b2__i": {
+   "port": "chE3_b7__0",
+   "lane": "chE3_b7",
+   "src": "tE3b3",
+   "dst": "tE3b2",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW3o2__i": {
+   "port": "chW3_o1__0",
+   "lane": "chW3_o1",
+   "src": "tW3o1",
+   "dst": "tW3o2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW3b2__i": {
+   "port": "chW3_b7__0",
+   "lane": "chW3_b7",
+   "src": "tW3b3",
+   "dst": "tW3b2",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE3o3__i": {
+   "port": "chE3_o2__0",
+   "lane": "chE3_o2",
+   "src": "tE3o2",
+   "dst": "tE3o3",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE3b3__i": {
+   "port": "chE3_b6__0",
+   "lane": "chE3_b6",
+   "src": "tE3b4",
+   "dst": "tE3b3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW3o3__i": {
+   "port": "chW3_o2__0",
+   "lane": "chW3_o2",
+   "src": "tW3o2",
+   "dst": "tW3o3",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW3b3__i": {
+   "port": "chW3_b6__0",
+   "lane": "chW3_b6",
+   "src": "tW3b4",
+   "dst": "tW3b3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE3o4__i": {
+   "port": "chE3_o3__0",
+   "lane": "chE3_o3",
+   "src": "tE3o3",
+   "dst": "tE3o4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE3b4__i": {
+   "port": "chE3_b5__0",
+   "lane": "chE3_b5",
+   "src": "tE3b5",
+   "dst": "tE3b4",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW3o4__i": {
+   "port": "chW3_o3__0",
+   "lane": "chW3_o3",
+   "src": "tW3o3",
+   "dst": "tW3o4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW3b4__i": {
+   "port": "chW3_b5__0",
+   "lane": "chW3_b5",
+   "src": "tW3b5",
+   "dst": "tW3b4",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE3o5__i": {
+   "port": "chE3_o4__0",
+   "lane": "chE3_o4",
+   "src": "tE3o4",
+   "dst": "tE3o5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE3b5__i": {
+   "port": "chE3_b4__0",
+   "lane": "chE3_b4",
+   "src": "tE3b6",
+   "dst": "tE3b5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW3o5__i": {
+   "port": "chW3_o4__0",
+   "lane": "chW3_o4",
+   "src": "tW3o4",
+   "dst": "tW3o5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW3b5__i": {
+   "port": "chW3_b4__0",
+   "lane": "chW3_b4",
+   "src": "tW3b6",
+   "dst": "tW3b5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE3o6__i": {
+   "port": "chE3_o5__0",
+   "lane": "chE3_o5",
+   "src": "tE3o5",
+   "dst": "tE3o6",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE3b6__i": {
+   "port": "chE3_b3__0",
+   "lane": "chE3_b3",
+   "src": "tE3b7",
+   "dst": "tE3b6",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW3o6__i": {
+   "port": "chW3_o5__0",
+   "lane": "chW3_o5",
+   "src": "tW3o5",
+   "dst": "tW3o6",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW3b6__i": {
+   "port": "chW3_b3__0",
+   "lane": "chW3_b3",
+   "src": "tW3b7",
+   "dst": "tW3b6",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE3o7__i": {
+   "port": "chE3_o6__0",
+   "lane": "chE3_o6",
+   "src": "tE3o6",
+   "dst": "tE3o7",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE3b7__i": {
+   "port": "chE3_b2__0",
+   "lane": "chE3_b2",
+   "src": "tE3b8",
+   "dst": "tE3b7",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW3o7__i": {
+   "port": "chW3_o6__0",
+   "lane": "chW3_o6",
+   "src": "tW3o6",
+   "dst": "tW3o7",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW3b7__i": {
+   "port": "chW3_b2__0",
+   "lane": "chW3_b2",
+   "src": "tW3b8",
+   "dst": "tW3b7",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE3o8__i": {
+   "port": "chE3_o7__0",
+   "lane": "chE3_o7",
+   "src": "tE3o7",
+   "dst": "tE3o8",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE3b8__i": {
+   "port": "chE3_b1__0",
+   "lane": "chE3_b1",
+   "src": "tE3b9",
+   "dst": "tE3b8",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW3o8__i": {
+   "port": "chW3_o7__0",
+   "lane": "chW3_o7",
+   "src": "tW3o7",
+   "dst": "tW3o8",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW3b8__i": {
+   "port": "chW3_b1__0",
+   "lane": "chW3_b1",
+   "src": "tW3b9",
+   "dst": "tW3b8",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.9997,
+    "cycles": 3
+   }
+  },
+  "tE3o9__i": {
+   "port": "chE3_o8__0",
+   "lane": "chE3_o8",
+   "src": "tE3o8",
+   "dst": "tE3o9",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE3b9__i": {
+   "port": "chE3_b0__0",
+   "lane": "chE3_b0",
+   "src": "tE3b10",
+   "dst": "tE3b9",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW3o9__i": {
+   "port": "chW3_o8__0",
+   "lane": "chW3_o8",
+   "src": "tW3o8",
+   "dst": "tW3o9",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW3b9__i": {
+   "port": "chW3_b0__0",
+   "lane": "chW3_b0",
+   "src": "tW3b10",
+   "dst": "tW3b9",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0004,
+    "cycles": 3
+   }
+  },
+  "tE3o10__i": {
+   "port": "chE3_o9__0",
+   "lane": "chE3_o9",
+   "src": "tE3o9",
+   "dst": "tE3o10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE3b10__i": {
+   "port": "chE3_t__2",
+   "lane": "chE3_t",
+   "src": "turnE3b",
+   "dst": "tE3b10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 1,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW3o10__i": {
+   "port": "chW3_o9__0",
+   "lane": "chW3_o9",
+   "src": "tW3o9",
+   "dst": "tW3o10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW3b10__i": {
+   "port": "chW3_t__2",
+   "lane": "chW3_t",
+   "src": "turnW3b",
+   "dst": "tW3b10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 1,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp4__ad_i": {
+   "port": "m0S_tx__4",
+   "lane": "m0S_tx",
+   "src": "sp3",
+   "dst": "sp4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -23,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp4__au_i": {
+   "port": "m0S_rx__4",
+   "lane": "m0S_rx",
+   "src": "sp5",
+   "dst": "sp4",
+   "added": 3,
+   "sched_lat": 4,
+   "K": 33,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 5.0,
+    "cycles": 5
+   }
+  },
+  "sp4__b_i": {
+   "port": "sp_b5__0",
+   "lane": "sp_b5",
+   "src": "sp5",
+   "dst": "sp4",
+   "added": 3,
+   "sched_lat": 4,
+   "K": 33,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 5.0,
+    "cycles": 5
+   }
+  },
+  "sp4__bd_i": {
+   "port": "m7S_tx__4",
+   "lane": "m7S_tx",
+   "src": "sp3",
+   "dst": "sp4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -23,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp4__bu_i": {
+   "port": "m7S_rx__3",
+   "lane": "m7S_rx",
+   "src": "sp5",
+   "dst": "sp4",
+   "added": 3,
+   "sched_lat": 4,
+   "K": 33,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 5.0,
+    "cycles": 5
+   }
+  },
+  "sp4__hd_i": {
+   "port": "host_tx__4",
+   "lane": "host_tx",
+   "src": "sp3",
+   "dst": "sp4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -23,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp4__hu_i": {
+   "port": "host_rx__1",
+   "lane": "host_rx",
+   "src": "sp5",
+   "dst": "sp4",
+   "added": 3,
+   "sched_lat": 4,
+   "K": 33,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 5.0,
+    "cycles": 5
+   }
+  },
+  "sp4__x_i": {
+   "port": "sp_x4__0",
+   "lane": "sp_x4",
+   "src": "sp3",
+   "dst": "sp4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -23,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "turnW4a__t_i": {
+   "port": "chW4_t__0",
+   "lane": "chW4_t",
+   "src": "tW4o10",
+   "dst": "turnW4a",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "turnW4b__t_i": {
+   "port": "chW4_t__1",
+   "lane": "chW4_t",
+   "src": "turnW4a",
+   "dst": "turnW4b",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "turnE4a__t_i": {
+   "port": "chE4_t__0",
+   "lane": "chE4_t",
+   "src": "tE4o10",
+   "dst": "turnE4a",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "turnE4b__t_i": {
+   "port": "chE4_t__1",
+   "lane": "chE4_t",
+   "src": "turnE4a",
+   "dst": "turnE4b",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE4o0__i": {
+   "port": "chE4_h__0",
+   "lane": "chE4_h",
+   "src": "sp4_xe_o_shim",
+   "dst": "tE4o0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE4b0__i": {
+   "port": "chE4_b9__0",
+   "lane": "chE4_b9",
+   "src": "tE4b1",
+   "dst": "tE4b0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW4o0__i": {
+   "port": "chW4_h__0",
+   "lane": "chW4_h",
+   "src": "sp4_xw_o_shim",
+   "dst": "tW4o0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW4b0__i": {
+   "port": "chW4_b9__0",
+   "lane": "chW4_b9",
+   "src": "tW4b1",
+   "dst": "tW4b0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE4o1__i": {
+   "port": "chE4_o0__0",
+   "lane": "chE4_o0",
+   "src": "tE4o0",
+   "dst": "tE4o1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE4b1__i": {
+   "port": "chE4_b8__0",
+   "lane": "chE4_b8",
+   "src": "tE4b2",
+   "dst": "tE4b1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW4o1__i": {
+   "port": "chW4_o0__0",
+   "lane": "chW4_o0",
+   "src": "tW4o0",
+   "dst": "tW4o1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW4b1__i": {
+   "port": "chW4_b8__0",
+   "lane": "chW4_b8",
+   "src": "tW4b2",
+   "dst": "tW4b1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE4o2__i": {
+   "port": "chE4_o1__0",
+   "lane": "chE4_o1",
+   "src": "tE4o1",
+   "dst": "tE4o2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE4b2__i": {
+   "port": "chE4_b7__0",
+   "lane": "chE4_b7",
+   "src": "tE4b3",
+   "dst": "tE4b2",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW4o2__i": {
+   "port": "chW4_o1__0",
+   "lane": "chW4_o1",
+   "src": "tW4o1",
+   "dst": "tW4o2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW4b2__i": {
+   "port": "chW4_b7__0",
+   "lane": "chW4_b7",
+   "src": "tW4b3",
+   "dst": "tW4b2",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE4o3__i": {
+   "port": "chE4_o2__0",
+   "lane": "chE4_o2",
+   "src": "tE4o2",
+   "dst": "tE4o3",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE4b3__i": {
+   "port": "chE4_b6__0",
+   "lane": "chE4_b6",
+   "src": "tE4b4",
+   "dst": "tE4b3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW4o3__i": {
+   "port": "chW4_o2__0",
+   "lane": "chW4_o2",
+   "src": "tW4o2",
+   "dst": "tW4o3",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW4b3__i": {
+   "port": "chW4_b6__0",
+   "lane": "chW4_b6",
+   "src": "tW4b4",
+   "dst": "tW4b3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE4o4__i": {
+   "port": "chE4_o3__0",
+   "lane": "chE4_o3",
+   "src": "tE4o3",
+   "dst": "tE4o4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE4b4__i": {
+   "port": "chE4_b5__0",
+   "lane": "chE4_b5",
+   "src": "tE4b5",
+   "dst": "tE4b4",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW4o4__i": {
+   "port": "chW4_o3__0",
+   "lane": "chW4_o3",
+   "src": "tW4o3",
+   "dst": "tW4o4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW4b4__i": {
+   "port": "chW4_b5__0",
+   "lane": "chW4_b5",
+   "src": "tW4b5",
+   "dst": "tW4b4",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE4o5__i": {
+   "port": "chE4_o4__0",
+   "lane": "chE4_o4",
+   "src": "tE4o4",
+   "dst": "tE4o5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE4b5__i": {
+   "port": "chE4_b4__0",
+   "lane": "chE4_b4",
+   "src": "tE4b6",
+   "dst": "tE4b5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW4o5__i": {
+   "port": "chW4_o4__0",
+   "lane": "chW4_o4",
+   "src": "tW4o4",
+   "dst": "tW4o5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW4b5__i": {
+   "port": "chW4_b4__0",
+   "lane": "chW4_b4",
+   "src": "tW4b6",
+   "dst": "tW4b5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE4o6__i": {
+   "port": "chE4_o5__0",
+   "lane": "chE4_o5",
+   "src": "tE4o5",
+   "dst": "tE4o6",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE4b6__i": {
+   "port": "chE4_b3__0",
+   "lane": "chE4_b3",
+   "src": "tE4b7",
+   "dst": "tE4b6",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW4o6__i": {
+   "port": "chW4_o5__0",
+   "lane": "chW4_o5",
+   "src": "tW4o5",
+   "dst": "tW4o6",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW4b6__i": {
+   "port": "chW4_b3__0",
+   "lane": "chW4_b3",
+   "src": "tW4b7",
+   "dst": "tW4b6",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE4o7__i": {
+   "port": "chE4_o6__0",
+   "lane": "chE4_o6",
+   "src": "tE4o6",
+   "dst": "tE4o7",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE4b7__i": {
+   "port": "chE4_b2__0",
+   "lane": "chE4_b2",
+   "src": "tE4b8",
+   "dst": "tE4b7",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW4o7__i": {
+   "port": "chW4_o6__0",
+   "lane": "chW4_o6",
+   "src": "tW4o6",
+   "dst": "tW4o7",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW4b7__i": {
+   "port": "chW4_b2__0",
+   "lane": "chW4_b2",
+   "src": "tW4b8",
+   "dst": "tW4b7",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE4o8__i": {
+   "port": "chE4_o7__0",
+   "lane": "chE4_o7",
+   "src": "tE4o7",
+   "dst": "tE4o8",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE4b8__i": {
+   "port": "chE4_b1__0",
+   "lane": "chE4_b1",
+   "src": "tE4b9",
+   "dst": "tE4b8",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW4o8__i": {
+   "port": "chW4_o7__0",
+   "lane": "chW4_o7",
+   "src": "tW4o7",
+   "dst": "tW4o8",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW4b8__i": {
+   "port": "chW4_b1__0",
+   "lane": "chW4_b1",
+   "src": "tW4b9",
+   "dst": "tW4b8",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE4o9__i": {
+   "port": "chE4_o8__0",
+   "lane": "chE4_o8",
+   "src": "tE4o8",
+   "dst": "tE4o9",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE4b9__i": {
+   "port": "chE4_b0__0",
+   "lane": "chE4_b0",
+   "src": "tE4b10",
+   "dst": "tE4b9",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 11,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW4o9__i": {
+   "port": "chW4_o8__0",
+   "lane": "chW4_o8",
+   "src": "tW4o8",
+   "dst": "tW4o9",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW4b9__i": {
+   "port": "chW4_b0__0",
+   "lane": "chW4_b0",
+   "src": "tW4b10",
+   "dst": "tW4b9",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE4o10__i": {
+   "port": "chE4_o9__0",
+   "lane": "chE4_o9",
+   "src": "tE4o9",
+   "dst": "tE4o10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -8,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE4b10__i": {
+   "port": "chE4_t__2",
+   "lane": "chE4_t",
+   "src": "turnE4b",
+   "dst": "tE4b10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 1,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW4o10__i": {
+   "port": "chW4_o9__0",
+   "lane": "chW4_o9",
+   "src": "tW4o9",
+   "dst": "tW4o10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW4b10__i": {
+   "port": "chW4_t__2",
+   "lane": "chW4_t",
+   "src": "turnW4b",
+   "dst": "tW4b10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 1,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp5__ad_i": {
+   "port": "m0S_tx__5",
+   "lane": "m0S_tx",
+   "src": "sp4",
+   "dst": "sp5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 1.0,
+    "cycles": 1
+   }
+  },
+  "sp5__au_i": {
+   "port": "m0S_rx__3",
+   "lane": "m0S_rx",
+   "src": "host_nstrip",
+   "dst": "sp5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 10,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 0,
+    "fault": 1,
+    "n": 0
+   }
+  },
+  "sp5__bd_i": {
+   "port": "m7S_tx__5",
+   "lane": "m7S_tx",
+   "src": "sp4",
+   "dst": "sp5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 1.0,
+    "cycles": 1
+   }
+  },
+  "sp5__bu_i": {
+   "port": "m7S_rx__2",
+   "lane": "m7S_rx",
+   "src": "host_nstrip",
+   "dst": "sp5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 10,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 0,
+    "fault": 1,
+    "n": 0
+   }
+  },
+  "sp5__hd_i": {
+   "port": "host_tx__5",
+   "lane": "host_tx",
+   "src": "sp4",
+   "dst": "sp5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 1.0,
+    "cycles": 1
+   }
+  },
+  "sp5__hu_i": {
+   "port": "host_rx__0",
+   "lane": "host_rx",
+   "src": "host_nstrip",
+   "dst": "sp5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 10,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 0,
+    "fault": 1,
+    "n": 0
+   }
+  },
+  "sp5__x_i": {
+   "port": "sp_x5__0",
+   "lane": "sp_x5",
+   "src": "sp4",
+   "dst": "sp5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 1.0,
+    "cycles": 1
+   }
+  },
+  "turnW5a__t_i": {
+   "port": "chW5_t__0",
+   "lane": "chW5_t",
+   "src": "tW5o10",
+   "dst": "turnW5a",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "turnW5b__t_i": {
+   "port": "chW5_t__1",
+   "lane": "chW5_t",
+   "src": "turnW5a",
+   "dst": "turnW5b",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "turnE5a__t_i": {
+   "port": "chE5_t__0",
+   "lane": "chE5_t",
+   "src": "tE5o10",
+   "dst": "turnE5a",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "turnE5b__t_i": {
+   "port": "chE5_t__1",
+   "lane": "chE5_t",
+   "src": "turnE5a",
+   "dst": "turnE5b",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE5o0__i": {
+   "port": "chE5_h__0",
+   "lane": "chE5_h",
+   "src": "sp5_xe_o_shim",
+   "dst": "tE5o0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 16,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE5b0__i": {
+   "port": "chE5_b9__0",
+   "lane": "chE5_b9",
+   "src": "tE5b1",
+   "dst": "tE5b0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW5o0__i": {
+   "port": "chW5_h__0",
+   "lane": "chW5_h",
+   "src": "sp5_xw_o_shim",
+   "dst": "tW5o0",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 10,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW5b0__i": {
+   "port": "chW5_b9__0",
+   "lane": "chW5_b9",
+   "src": "tW5b1",
+   "dst": "tW5b0",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE5o1__i": {
+   "port": "chE5_o0__0",
+   "lane": "chE5_o0",
+   "src": "tE5o0",
+   "dst": "tE5o1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE5b1__i": {
+   "port": "chE5_b8__0",
+   "lane": "chE5_b8",
+   "src": "tE5b2",
+   "dst": "tE5b1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW5o1__i": {
+   "port": "chW5_o0__0",
+   "lane": "chW5_o0",
+   "src": "tW5o0",
+   "dst": "tW5o1",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW5b1__i": {
+   "port": "chW5_b8__0",
+   "lane": "chW5_b8",
+   "src": "tW5b2",
+   "dst": "tW5b1",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE5o2__i": {
+   "port": "chE5_o1__0",
+   "lane": "chE5_o1",
+   "src": "tE5o1",
+   "dst": "tE5o2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE5b2__i": {
+   "port": "chE5_b7__0",
+   "lane": "chE5_b7",
+   "src": "tE5b3",
+   "dst": "tE5b2",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW5o2__i": {
+   "port": "chW5_o1__0",
+   "lane": "chW5_o1",
+   "src": "tW5o1",
+   "dst": "tW5o2",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW5b2__i": {
+   "port": "chW5_b7__0",
+   "lane": "chW5_b7",
+   "src": "tW5b3",
+   "dst": "tW5b2",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE5o3__i": {
+   "port": "chE5_o2__0",
+   "lane": "chE5_o2",
+   "src": "tE5o2",
+   "dst": "tE5o3",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE5b3__i": {
+   "port": "chE5_b6__0",
+   "lane": "chE5_b6",
+   "src": "tE5b4",
+   "dst": "tE5b3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW5o3__i": {
+   "port": "chW5_o2__0",
+   "lane": "chW5_o2",
+   "src": "tW5o2",
+   "dst": "tW5o3",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW5b3__i": {
+   "port": "chW5_b6__0",
+   "lane": "chW5_b6",
+   "src": "tW5b4",
+   "dst": "tW5b3",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE5o4__i": {
+   "port": "chE5_o3__0",
+   "lane": "chE5_o3",
+   "src": "tE5o3",
+   "dst": "tE5o4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE5b4__i": {
+   "port": "chE5_b5__0",
+   "lane": "chE5_b5",
+   "src": "tE5b5",
+   "dst": "tE5b4",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW5o4__i": {
+   "port": "chW5_o3__0",
+   "lane": "chW5_o3",
+   "src": "tW5o3",
+   "dst": "tW5o4",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW5b4__i": {
+   "port": "chW5_b5__0",
+   "lane": "chW5_b5",
+   "src": "tW5b5",
+   "dst": "tW5b4",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE5o5__i": {
+   "port": "chE5_o4__0",
+   "lane": "chE5_o4",
+   "src": "tE5o4",
+   "dst": "tE5o5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE5b5__i": {
+   "port": "chE5_b4__0",
+   "lane": "chE5_b4",
+   "src": "tE5b6",
+   "dst": "tE5b5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW5o5__i": {
+   "port": "chW5_o4__0",
+   "lane": "chW5_o4",
+   "src": "tW5o4",
+   "dst": "tW5o5",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW5b5__i": {
+   "port": "chW5_b4__0",
+   "lane": "chW5_b4",
+   "src": "tW5b6",
+   "dst": "tW5b5",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE5o6__i": {
+   "port": "chE5_o5__0",
+   "lane": "chE5_o5",
+   "src": "tE5o5",
+   "dst": "tE5o6",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE5b6__i": {
+   "port": "chE5_b3__0",
+   "lane": "chE5_b3",
+   "src": "tE5b7",
+   "dst": "tE5b6",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW5o6__i": {
+   "port": "chW5_o5__0",
+   "lane": "chW5_o5",
+   "src": "tW5o5",
+   "dst": "tW5o6",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW5b6__i": {
+   "port": "chW5_b3__0",
+   "lane": "chW5_b3",
+   "src": "tW5b7",
+   "dst": "tW5b6",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE5o7__i": {
+   "port": "chE5_o6__0",
+   "lane": "chE5_o6",
+   "src": "tE5o6",
+   "dst": "tE5o7",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE5b7__i": {
+   "port": "chE5_b2__0",
+   "lane": "chE5_b2",
+   "src": "tE5b8",
+   "dst": "tE5b7",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW5o7__i": {
+   "port": "chW5_o6__0",
+   "lane": "chW5_o6",
+   "src": "tW5o6",
+   "dst": "tW5o7",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW5b7__i": {
+   "port": "chW5_b2__0",
+   "lane": "chW5_b2",
+   "src": "tW5b8",
+   "dst": "tW5b7",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE5o8__i": {
+   "port": "chE5_o7__0",
+   "lane": "chE5_o7",
+   "src": "tE5o7",
+   "dst": "tE5o8",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE5b8__i": {
+   "port": "chE5_b1__0",
+   "lane": "chE5_b1",
+   "src": "tE5b9",
+   "dst": "tE5b8",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW5o8__i": {
+   "port": "chW5_o7__0",
+   "lane": "chW5_o7",
+   "src": "tW5o7",
+   "dst": "tW5o8",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW5b8__i": {
+   "port": "chW5_b1__0",
+   "lane": "chW5_b1",
+   "src": "tW5b9",
+   "dst": "tW5b8",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 11,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE5o9__i": {
+   "port": "chE5_o8__0",
+   "lane": "chE5_o8",
+   "src": "tE5o8",
+   "dst": "tE5o9",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE5b9__i": {
+   "port": "chE5_b0__0",
+   "lane": "chE5_b0",
+   "src": "tE5b10",
+   "dst": "tE5b9",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tW5o9__i": {
+   "port": "chW5_o8__0",
+   "lane": "chW5_o8",
+   "src": "tW5o8",
+   "dst": "tW5o9",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -8,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW5b9__i": {
+   "port": "chW5_b0__0",
+   "lane": "chW5_b0",
+   "src": "tW5b10",
+   "dst": "tW5b9",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "tE5o10__i": {
+   "port": "chE5_o9__0",
+   "lane": "chE5_o9",
+   "src": "tE5o9",
+   "dst": "tE5o10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tE5b10__i": {
+   "port": "chE5_t__2",
+   "lane": "chE5_t",
+   "src": "turnE5b",
+   "dst": "tE5b10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 1,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW5o10__i": {
+   "port": "chW5_o9__0",
+   "lane": "chW5_o9",
+   "src": "tW5o9",
+   "dst": "tW5o10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -4,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "tW5b10__i": {
+   "port": "chW5_t__2",
+   "lane": "chW5_t",
+   "src": "turnW5b",
+   "dst": "tW5b10",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 1,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "nst3_transit__d2_i": {
+   "port": "coll_WN2_d__1",
+   "lane": "coll_WN2_d",
+   "src": "nst4",
+   "dst": "nst3_transit",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -8,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "nst3_transit__u2_i": {
+   "port": "coll_WN2_u__2",
+   "lane": "coll_WN2_u",
+   "src": "nst2",
+   "dst": "nst3_transit",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "nst3_turn__d1_i": {
+   "port": "coll_WN1_d__1",
+   "lane": "coll_WN1_d",
+   "src": "nst4",
+   "dst": "nst3_turn",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -8,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "nst3_turn__u1_i": {
+   "port": "coll_WN1_u__0",
+   "lane": "coll_WN1_u",
+   "src": "lk_WN1",
+   "dst": "nst3_turn",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp0_bw_i_shim__link_i": {
+   "port": "chW0_r__0",
+   "lane": "chW0_r",
+   "src": "tW0b0",
+   "dst": "sp0_bw_i_shim",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 20,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp0_be_i_shim__link_i": {
+   "port": "chE0_r__0",
+   "lane": "chE0_r",
+   "src": "tE0b0",
+   "dst": "sp0_be_i_shim",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 11,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp1_bw_i_shim__link_i": {
+   "port": "chW1_r__0",
+   "lane": "chW1_r",
+   "src": "tW1b0",
+   "dst": "sp1_bw_i_shim",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 14,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp1_be_i_shim__link_i": {
+   "port": "chE1_r__0",
+   "lane": "chE1_r",
+   "src": "tE1b0",
+   "dst": "sp1_be_i_shim",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 8,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp2_bw_i_shim__link_i": {
+   "port": "chW2_r__0",
+   "lane": "chW2_r",
+   "src": "tW2b0",
+   "dst": "sp2_bw_i_shim",
+   "added": 3,
+   "sched_lat": 4,
+   "K": 19,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 4.0,
+    "cycles": 4
+   }
+  },
+  "sp2_be_i_shim__link_i": {
+   "port": "chE2_r__0",
+   "lane": "chE2_r",
+   "src": "tE2b0",
+   "dst": "sp2_be_i_shim",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 11,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp3_bw_i_shim__link_i": {
+   "port": "chW3_r__0",
+   "lane": "chW3_r",
+   "src": "tW3b0",
+   "dst": "sp3_bw_i_shim",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 14,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp3_be_i_shim__link_i": {
+   "port": "chE3_r__0",
+   "lane": "chE3_r",
+   "src": "tE3b0",
+   "dst": "sp3_be_i_shim",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 14,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp4_bw_i_shim__link_i": {
+   "port": "chW4_r__0",
+   "lane": "chW4_r",
+   "src": "tW4b0",
+   "dst": "sp4_bw_i_shim",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp4_be_i_shim__link_i": {
+   "port": "chE4_r__0",
+   "lane": "chE4_r",
+   "src": "tE4b0",
+   "dst": "sp4_be_i_shim",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "sp5_bw_i_shim__link_i": {
+   "port": "chW5_r__0",
+   "lane": "chW5_r",
+   "src": "tW5b0",
+   "dst": "sp5_bw_i_shim",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 5,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "sp5_be_i_shim__link_i": {
+   "port": "chE5_r__0",
+   "lane": "chE5_r",
+   "src": "tE5b0",
+   "dst": "sp5_be_i_shim",
+   "added": 3,
+   "sched_lat": 3,
+   "K": -1,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "ctl_nstrip__ctrl_ft_i": {
+   "port": "ctrl_lep__0",
+   "lane": "ctrl_lep",
+   "src": "lep0N",
+   "dst": "ctl_nstrip",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 8,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "ctl_nstrip__lep_fault_ft_i": {
+   "port": "head_lep_fault_return__0",
+   "lane": "head_lep_fault_return",
+   "src": "lep0N",
+   "dst": "ctl_nstrip",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 8,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 50.0,
+    "cycles": 50
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 50.0,
+    "cycles": 50
+   }
+  },
+  "ctl_nstrip__lw_ft_i": {
+   "port": "head_lep_landing__0",
+   "lane": "head_lep_landing",
+   "src": "lep0N",
+   "dst": "ctl_nstrip",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 8,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "ctl_nstrip__w3d_i": {
+   "port": "coll_WN3_d__0",
+   "lane": "coll_WN3_d",
+   "src": "lep0N",
+   "dst": "ctl_nstrip",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 8,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "ctl_nstrip__w3u_i": {
+   "port": "coll_WN3_u__0",
+   "lane": "coll_WN3_u",
+   "src": "lk_WN3",
+   "dst": "ctl_nstrip",
+   "added": 2,
+   "sched_lat": 2,
+   "K": 11,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "ctl_estrip__n_rx_ft_i": {
+   "port": "m7N_rx__1",
+   "lane": "m7N_rx",
+   "src": "nst7",
+   "dst": "ctl_estrip",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 11,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "host_nstrip__ad_i": {
+   "port": "m0S_tx__6",
+   "lane": "m0S_tx",
+   "src": "sp5",
+   "dst": "host_nstrip",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "host_nstrip__au_i": {
+   "port": "m0S_rx__2",
+   "lane": "m0S_rx",
+   "src": "sst5",
+   "dst": "host_nstrip",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "host_nstrip__bd_i": {
+   "port": "m7S_tx__6",
+   "lane": "m7S_tx",
+   "src": "sp5",
+   "dst": "host_nstrip",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "host_nstrip__bu_i": {
+   "port": "m7S_rx__1",
+   "lane": "m7S_rx",
+   "src": "sst7",
+   "dst": "host_nstrip",
+   "added": 3,
+   "sched_lat": 3,
+   "K": 17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "host_nstrip__h_tx_ft_i": {
+   "port": "host_tx__6",
+   "lane": "host_tx",
+   "src": "sp5",
+   "dst": "host_nstrip",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -7,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 3.0,
+    "cycles": 3
+   }
+  },
+  "mesh7N_estrip__m_tx_ft_i": {
+   "port": "m7N_tx__1",
+   "lane": "m7N_tx",
+   "src": "nst7",
+   "dst": "mesh7N_estrip",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 1.0,
+    "cycles": 1
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "mesh0S_estrip__m_tx_ft_i": {
+   "port": "m0S_tx__9",
+   "lane": "m0S_tx",
+   "src": "sst4",
+   "dst": "mesh0S_estrip",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -17,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 1.0,
+    "cycles": 1
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  },
+  "mesh7S_estrip__m_tx_ft_i": {
+   "port": "m7S_tx__8",
+   "lane": "m7S_tx",
+   "src": "sst7",
+   "dst": "mesh7S_estrip",
+   "added": 2,
+   "sched_lat": 2,
+   "K": -29,
+   "TT": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 1.0,
+    "cycles": 1
+   },
+   "FF": {
+    "ready": 1,
+    "fault": 0,
+    "n": 40,
+    "cycles_exact": 2.0,
+    "cycles": 2
+   }
+  }
+ }
+}

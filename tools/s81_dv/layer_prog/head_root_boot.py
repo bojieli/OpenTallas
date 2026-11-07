@@ -2,25 +2,29 @@
 import hashlib,json,re
 from pathlib import Path
 
-# Owner-supplied coherent current source bundle. A later event needs its own
-# reviewed source selection; this bundle is explicitly not physically admitted.
+# HEAD l48un coherent source bundle, built by
+# results/token_pass/head_l48un_compiler_1107/make_bundle.py from plan_of_record/l48ui.
+# A later event needs its own reviewed source selection; this bundle is not physically admitted.
 PINS={
- 'source_plan.json':'655784af46096873ba3235578fbc045d24a567ec614aedc4ad16b4cb11e12d2f',
- 'source_sidecar.json':'02dececead4ad7facaac03791bcdd63dcb593637ee23cfda73c52ab8925f2044',
- 'start_stages_src25q.json':'268dbd422ba708b36ff9eec33c47b76898b2ec3502eddafa1a0cb98fd8fd40b3',
- 'start_stages.sv':'47d93bb26b712a8a859d596fe273bc7f0af39d38a847993435b4971f7ec071da',
- 'root88_report.json':'6576ac58311ad8cc9550ab037f5fab8e6303a3232955060d2dddf55b7f18750d',
- 'boot88_account.json':'096ec946d40120485b9e12ed68ff664605fb273f278255162b2db355b24d335d'}
+ 'source_plan.json':'340743d8364e8553b687a5dc82879ac2cfbef0a6c34eac102dfc9c9c341f7890',
+ 'source_sidecar.json':'90d006a48f17adc6795bbf55e3077ff308bb6b417604167248051501cda25d77',
+ 'start_stages.json':'255b2b4e27a2c8b1bb202038cb89d021b4a7ff82a5afac3e52b45e84bbacb5eb',
+ 'start_stages.sv':'e9ed25cdd21dab157624adf049b27889d2774dfa530f0331c1595bdfa30c4002',
+ 'root88_report.json':'0aebf3ae714564846871c845cc64a9a39e623dfc43e68426b45e75af2922f21f',
+ 'boot88_account.json':'555d7c0ae6949f86e128d616eee575811fdbb02181849bffe91ce0e16f46db00'}
+MANIFEST_SHA256='d5db7f99d9c8041873d3c82a5dec01da3316d8af188ecea8058bd82674a796e1'
+# The l48ui n4 event: +1 data cycle on these links, in the sidecar and not in plan latency.lanes.
+N4_LINK_ADDED_CYCLES={'coll_WN1_u__1':4,'coll_WN2_u__3':4,'coll_WN1_d__0':2,'coll_WN2_d__0':2}
 
 
 def read_witness(selection,root):
     if selection.get('schema')!='opentallas.head.root88_source_selection.v1':raise ValueError('explicit current HEAD ROOT88 source selection required')
     bundle=Path(root)/selection['bundle_root'];raw={}
     manifest_path=bundle/'current_source_manifest.json'
-    if hashlib.sha256(manifest_path.read_bytes()).hexdigest()!='011c8ca00f9742eaf1c4369fe801d471bb2d61ecc12929d9a038031177d4859b':
+    if hashlib.sha256(manifest_path.read_bytes()).hexdigest()!=MANIFEST_SHA256:
         raise ValueError('current HEAD coherent source manifest differs')
     manifest=json.loads(manifest_path.read_text())
-    if manifest.get('schema')!='opentallas.head_current_source.legal88.v1' or manifest.get('frozen')is not False or manifest.get('physical_admission')is not False:
+    if manifest.get('schema')!='opentallas.head_current_source.l48un.v1' or manifest.get('frozen')is not False or manifest.get('physical_admission')is not False:
         raise ValueError('actual HEAD bundle source-only qualification differs')
     for key,wanted in PINS.items():
         data=(bundle/key).read_bytes()
@@ -28,7 +32,7 @@ def read_witness(selection,root):
             raise ValueError('current HEAD ROOT88 source identity differs: '+key)
         raw[key]=data.decode()
     side=json.loads(raw['source_sidecar.json'])
-    stages=json.loads(raw['start_stages_src25q.json']);report=json.loads(raw['root88_report.json']);account=json.loads(raw['boot88_account.json'])
+    stages=json.loads(raw['start_stages.json']);report=json.loads(raw['root88_report.json']);account=json.loads(raw['boot88_account.json'])
     if type(side['count_aligned']['root_settle_cycles'])is not int or side['count_aligned']['root_settle_cycles']!=88:
         raise ValueError('HEAD compiler rejects stale64/74 settle contract')
     roots=[s for s in stages['stages']if s.get('root')]
@@ -41,6 +45,10 @@ def read_witness(selection,root):
     for obj,values in [(report,dict(root_settle_cycles=88,raw_relative_span=84,guard_cycles=4,delta_boot_cycles=14,added_steady_cycles=0)),
         (account,dict(root_settle_cycles=88,previous_settle_cycles=74,delta_boot_cycles=14,added_steady_cycles=0,root_raw_release_cycle=21,root_start_upper_cycle=110,part_start_max_cycle=382))]:
         if any(type(obj.get(k))is not int or obj[k]!=v for k,v in values.items()):raise ValueError('ROOT88 actual boot cycle accounting differs')
+    for port,cycles in N4_LINK_ADDED_CYCLES.items():
+        row=next((p for p in side['ports'] if p['port']==port),None)
+        if row is None or row['added_cycles']!=cycles or side['count_aligned']['ports'][port]['sched_lat']!=cycles:
+            raise ValueError('HEAD sidecar lacks the n4 +1 data cycle: '+port)
     budget=side['collector']['boot_budget']
     if budget['root_settle_cycles']!=88 or budget['delta_boot_cycles']!=14 or budget['data_cycles_added']!=0:
         raise ValueError('enriched HEAD metadata boot cost differs')
@@ -50,7 +58,8 @@ def read_witness(selection,root):
         raise ValueError('source-only HEAD bound unexpectedly advertises a physical date')
     if account['physical_clock_phase_qualified']is not False or account['actual_external_host_event_cycle']is not None or account['actual_physical_full_array_boot_receipt']is not None:
         raise ValueError('source-only HEAD accounting is not a global physical witness')
-    return dict(schema='opentallas.head.root88_compiler_boot.v1',status='SOURCE_WITNESS_ONLY',
+    return dict(schema='opentallas.head.root88_compiler_boot.v1',status='SOURCE_WITNESS_ONLY',plan_event='l48un',
+        n4_link_added_cycles=dict(N4_LINK_ADDED_CYCLES),n4_data_cycles_added_per_link=1,
         source_plan_sha256=PINS['source_plan.json'],source_witness_sha256=dict(PINS),
         root=expected,root_settle_cycles=88,previous_settle_cycles=74,delta_boot_cycles=14,
         delta_from_original64_boot_cycles=24,added_steady_cycles=0,
