@@ -236,7 +236,14 @@
     "kv3_sys_SD_v1@7",
     "kv3_hub_Wo@11",
     "kv3_pc_v1__cl7f648944@10",
-    "kv3_sys_SD_v1@8"
+    "kv3_sys_SD_v1@8",
+    "kv3_hroot@7",
+    "kv3_hub_Wo@12",
+    "kv3_pc_v1__cl23f6a148@11",
+    "kv3_pc_v1__cl7f648944@12",
+    "kv3_pc__cl254f2e73@11",
+    "kv3_pc__cl5a95b461@13",
+    "kv3_sys_SD_v1@9"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -518,7 +525,14 @@
     "kv3_sys_SD_v1@7": "CODEX KV watcher 11-07: restore10 missing indirect preferred HDL inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change",
     "kv3_hub_Wo@11": "CODEX KV watcher 11-07: restore10 missing indirect preferred HDL inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change",
     "kv3_pc_v1__cl7f648944@10": "CODEX KV watcher 11-07: restore10 missing indirect preferred HDL inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change",
-    "kv3_sys_SD_v1@8": "CODEX KV watcher 11-07: restore declared w521 PHY BB/LEF/TT/FF inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change"
+    "kv3_sys_SD_v1@8": "CODEX KV watcher 11-07: restore declared w521 PHY BB/LEF/TT/FF inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change",
+    "kv3_hroot@7": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change",
+    "kv3_hub_Wo@12": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change",
+    "kv3_pc_v1__cl23f6a148@11": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change",
+    "kv3_pc_v1__cl7f648944@12": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change",
+    "kv3_pc__cl254f2e73@11": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change",
+    "kv3_pc__cl5a95b461@13": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change",
+    "kv3_sys_SD_v1@9": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change"
    },
    "only_items": [
     "kv3_astk",
