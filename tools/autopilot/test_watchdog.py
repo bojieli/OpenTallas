@@ -204,6 +204,13 @@ class VerifyFakeDirTest(unittest.TestCase):
             log = os.path.join(d, 'x.log'); open(log, 'w').write('GRT-0101\n')
             self.assertNotIn('cpu_delta_s', self.one(cs=1, log=log, sample=True))
 
+    def test_verify_no_process_no_sleep(self):
+        with tempfile.TemporaryDirectory() as d:
+            log = os.path.join(d, 'x.log'); open(log, 'w').write('x\n')
+            t = time.time()
+            self.one(cs=30, log=log, sample=False)
+            self.assertLess(time.time() - t, 20)
+
     def test_verify_cpu_sample_counts_busy_process(self):
         import subprocess
         busy = subprocess.Popen([sys.executable, '-c', 'import time\nt=time.time()\nwhile time.time()-t<20: pass'])
@@ -304,7 +311,9 @@ class MainTest(unittest.TestCase):
         self.assertEqual(seen[0][0]['cpu_sample_s'], 60)
         self.assertTrue(seen[0][0]['jobs'][0]['sample'])
         self.assertGreaterEqual(seen[0][1], 180)
-        self.assertEqual(seen[1][0]['cpu_sample_s'], 0)
+        # KW-FIX-25: VERIFY gets the sample length, and sleeps only if it finds a process to sample (PLACE: only an async LEC)
+        self.assertEqual(seen[1][0]['cpu_sample_s'], 60)
+        self.assertFalse(seen[1][0]['jobs'][0]['sample'])
 
     def test_no_openroad_not_acted(self):
         with tempfile.TemporaryDirectory() as d:
@@ -316,6 +325,46 @@ class MainTest(unittest.TestCase):
             r = row(stage='5_1_grt', idle_s=13 * H, age_s=20 * H)  # past the 12 h cap
             calls = self.run_main([r], dict(VERIFY_OK, cpu_delta_s=59.5, cpu_pids=[42], progress_n=20), True, d)
             self.assertEqual(len(calls), 2)
+
+    LEC_V = dict(VERIFY_OK, openroad=False, tool=True, tail='', procs=['123 python3 -I /work/lec.py /work', '124 /tools/yosys-abc -f x'])
+
+    def _lec_row(self, **kw):
+        return row(**dict(dict(log='/srv/k/lec/raw_gate_16.aig', stage='-'), **kw))
+
+    def test_cpu_busy_lec_never_stopped_however_long(self):
+        # KW-FIX-25: serdes__t4_vB, 8 h CPU-bound, stopped at 2h02 for a flat log (11-06 17:53)
+        with tempfile.TemporaryDirectory() as d:
+            calls = self.run_main([self._lec_row(idle_s=40 * H, age_s=50 * H)], dict(self.LEC_V, cpu_delta_s=59.5, cpu_pids=[42]), True, d)
+            self.assertEqual(calls, [])
+
+    def test_lec_cpu_unread_not_stopped(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.assertEqual(self.run_main([self._lec_row()], dict(self.LEC_V, cpu_error='no pid'), True, d), [])
+
+    def test_lec_one_abc_after_another_not_stopped(self):
+        with tempfile.TemporaryDirectory() as d:
+            v = dict(self.LEC_V, cpu_delta_s=1.0, cpu_pids=[42], tool_churn=True)
+            self.assertEqual(self.run_main([self._lec_row()], v, True, d), [])
+
+    def test_lec_idle_alive_still_stopped_no_relaunch(self):
+        with tempfile.TemporaryDirectory() as d:
+            calls = self.run_main([self._lec_row()], dict(self.LEC_V, cpu_delta_s=0.2, cpu_pids=[42]), True, d)
+            self.assertEqual(len(calls), 1)
+            self.assertIn('systemctl --user stop', calls[0][1])
+
+    def test_async_lec_beside_place_stage_log_not_stopped(self):
+        # the first look says PLACE (stale ORFS stage log), the process list says LEC
+        with tempfile.TemporaryDirectory() as d:
+            v = dict(VERIFY_OK, openroad=False, tool=True, procs=['123 python3 -I /work/lec.py /work'], cpu_delta_s=60.0, cpu_pids=[123])
+            self.assertEqual(self.run_main([row(stage='3_3_place_gp')], v, True, d), [])
+
+    def test_lec_tool_pids_found_in_verify(self):
+        ns = {'os': os}
+        exec('def is_lec_tool(av):' + wd.VERIFY.split('def is_lec_tool(av):')[1].split('def or_pids')[0], ns)
+        for av in (['/usr/bin/abc', '-f', 'x'], ['python3', '-I', '/work/lec.py', '/work']):
+            self.assertTrue(ns['is_lec_tool'](av), av)
+        for av in ([], ['bash', '-c', 'python3 /work/lec.py'], ['python3', '/work/gen.py'], ['sleep', '5']):
+            self.assertFalse(ns['is_lec_tool'](av), av)
 
     def test_stdout_moved_not_stopped(self):
         with tempfile.TemporaryDirectory() as d:

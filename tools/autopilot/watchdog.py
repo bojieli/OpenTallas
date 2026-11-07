@@ -10,8 +10,11 @@ Detection reuses tools/auto_owner/stall_watch.py (same probe, same "newest log" 
 newest file under the job's RW mounts / cwd).
 
 Progress signal per step (WATCHDOG-1 11-03):
-  PLACE, CTS, LEC         no log, no new file and no container stdout for 2 h = HUNG, CPU or not.  LEC writes hyp*/raw*
-                          files as it goes, so a silent abc &sat is stuck (dies81-50-lec-vestwin: 16.8 h).
+  PLACE, CTS              no log, no new file and no container stdout for 2 h = HUNG, CPU or not.
+  LEC                     a flat log alone never stops a LEC (OWNER/COORD 11-06; KW-FIX-25): single abc &scorr/&sat calls run
+                          for hours and write nothing (17 CPU-busy S81 serdes/HBM LECs stopped 11-04..11-06).  Report only
+                          while it is busy (tool CPU +--cpu-min-s in --cpu-sample-s, or its tool processes changed in the
+                          sample) or the CPU could not be read; HUNG only with a tool alive, measured and idle, at 2 h.
   GRT, DRT, ROUTE         FastRoute logs once per extra iteration and DRT once per 10%, and late ones take > 2 h, so a
                           busy job (tool CPU +--cpu-min-s in --cpu-sample-s) may stay silent for 3 x its mean progress
                           interval, between 6 h and 12 h; past that it is HUNG.  Without CPU: HUNG at 2 h.
@@ -55,7 +58,7 @@ ORFS_STEP = [(re.compile(r'^1_'), 'SYNTH'), (re.compile(r'^3_'), 'PLACE'), (re.c
              (re.compile(r'^5_2_route'), 'DRT'), (re.compile(r'^5_'), 'ROUTE')]
 LEC_LOG = re.compile(r'/lec[^/]*/|/[^/]*lec[^/]*\.log$')
 # OpenROAD message prefixes in a log tail (custom tcl scripts: die GRT, ECO DRT, ...)
-CPU_STEPS = ('GRT', 'DRT', 'ROUTE', 'SYNTH')   # silent long iterations or passes: CPU progress re-check before any stop
+CPU_STEPS = ('GRT', 'DRT', 'ROUTE', 'SYNTH', 'LEC')   # silent long iterations or passes: CPU progress re-check before any stop
 TAIL_STEP = [('DRT-', 'DRT'), ('GRT-', 'GRT'), ('CTS-', 'CTS'), ('DPL-', 'PLACE'), ('GPL-', 'PLACE'),
              ('detailed_route', 'DRT'), ('global_route', 'GRT'), ('clock_tree_synthesis', 'CTS'),
              ('detailed_placement', 'PLACE'), ('global_placement', 'PLACE')]
@@ -229,16 +232,21 @@ def argv(p):
         return [x.decode('utf-8', 'replace') for x in open('/proc/%d/cmdline' % p, 'rb').read().split(b'\0') if x]
     except OSError:
         return []
+def is_lec_tool(av):
+    # KW-FIX-25: the processes of a LEC that burn CPU: yosys-abc is caught by 'yosys', a bare abc and the python drivers are not
+    b = os.path.basename(av[0]) if av else ''
+    return b == 'abc' or (b.startswith('python') and any(os.path.basename(x) in ('lec.py', 'miter_cone.py') for x in av[1:6]))
 def or_pids(a):
     out = []
     for p in (procs_of_unit(a['unit']) if a.get('unit') else []):
-        if any(k in x for x in argv(p)[:2] for k in ('openroad', 'yosys')):
+        if any(k in x for x in argv(p)[:2] for k in ('openroad', 'yosys')) or is_lec_tool(argv(p)):
             out.append(p)
     for c in a.get('containers', []):
         t = subprocess.run(['docker', 'top', c, '-eo', 'pid,args'], capture_output=True, text=True)
         for l in t.stdout.splitlines()[1:]:
             f = l.split(None, 1)
-            if len(f) == 2 and f[0].isdigit() and any(k in f[1].split(' ', 1)[0] for k in ('openroad', 'yosys')):
+            if len(f) == 2 and f[0].isdigit() and (any(k in f[1].split(' ', 1)[0] for k in ('openroad', 'yosys'))
+                                                   or is_lec_tool(f[1].split())):
                 out.append(int(f[0]))
     return sorted(set(out))
 def cpu_s(pids):
@@ -314,6 +322,11 @@ res = [check(a) for a in A['jobs']]
 if A.get('cpu_sample_s'):
     try:
         ps = [or_pids(a) if a.get('sample') else [] for a in A['jobs']]
+        # KW-FIX-25: the first look has no process list, so an async LEC beside a stale ORFS stage log reads as PLACE/CTS
+        # and asked for no sample; it is sampled once its processes show it (no openroad, a LEC tool alive)
+        for k, (a, r) in enumerate(zip(A['jobs'], res)):
+            if not ps[k] and not r['openroad'] and any(x in c for c in r['procs'] for x in ('lec.py', 'yosys-abc', 'miter_cone')):
+                ps[k] = or_pids(a)
         c0 = [cpu_s(p) for p in ps]
         if any(c is not None for c in c0):
             time.sleep(A['cpu_sample_s'])
@@ -322,6 +335,9 @@ if A.get('cpu_sample_s'):
                 if c1 is not None:
                     r['cpu_delta_s'] = round(c1 - c, 1)
                     r['cpu_pids'] = p[:8]
+            for a, r, p in zip(A['jobs'], res, ps):   # KW-FIX-25: a LEC runs one abc after another: new tool processes = moving
+                if p and set(or_pids(a)) != set(p):
+                    r['tool_churn'] = True
     except Exception as e:
         for r in res:
             r['cpu_error'] = str(e)[:120]
@@ -497,7 +513,7 @@ def main(argv=None):
 
     def verify_host(item):
         h, jobs = item
-        cs = a.cpu_sample_s if any(x[1]['sample'] for x in jobs) else 0
+        cs = a.cpu_sample_s                  # VERIFY sleeps only when it has a process to sample (KW-FIX-25: async LEC)
         try:
             return h, jobs, ssh_py(h, VERIFY, {'jobs': [x[1] for x in jobs], 'cpu_sample_s': cs}, timeout=240 + int(cs)), None
         except Exception as e:  # noqa
@@ -530,10 +546,16 @@ def main(argv=None):
             elif verdict in ('ACT', 'FIX', 'STOP'):
                 busy = step in CPU_STEPS and a.cpu_sample_s and v.get('cpu_delta_s') is not None and v['cpu_delta_s'] >= a.cpu_min_s
                 limit = BUSY_MIN_S if step == 'SYNTH' else silent_limit_s(r.get('age_s'), v.get('progress_n'))
+                lec_idle = (v.get('cpu_delta_s') is not None and v['cpu_delta_s'] < a.cpu_min_s and not v.get('tool_churn'))
                 if v.get('log_mtime') and now - v['log_mtime'] < a.idle_min * 60:
                     verdict, reason = 'REPORT', 'log written again at re-check'
                 elif v.get('stdout_recent'):
                     verdict, reason = 'REPORT', 'container stdout moved within %d min' % a.idle_min
+                elif step == 'LEC' and v.get('tool', v.get('openroad')) and not lec_idle:
+                    verdict, reason = 'REPORT', ('LEC with a flat log, not idle: tool CPU %s s in %g s%s (pids %s); never stopped '
+                                                 'for a flat log (KW-FIX-25), owner lane judges'
+                                                 % (v.get('cpu_delta_s', 'unread'), a.cpu_sample_s,
+                                                    ', tool processes changed' if v.get('tool_churn') else '', v.get('cpu_pids')))
                 elif busy and r['idle_s'] < limit:
                     verdict, reason = 'REPORT', ('progressing, CPU active, log silent: openroad +%.0f s CPU in %g s (pids %s), '
                                                  '%s progress lines, limit %s; not stopped'
