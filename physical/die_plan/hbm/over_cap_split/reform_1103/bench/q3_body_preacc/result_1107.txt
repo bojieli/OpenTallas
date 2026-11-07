@@ -1,0 +1,8 @@
+Sat Nov  7 15:48:01 PST 2026 prove_preacc.py on main d9134e481e + 0ddfac4e8f patch, ORFS yosys 0.68 (openroad/orfs:asap7lock)
+M0_new_form: 0 fail-lines
+M1_no_register: 1 fail-lines
+M2_range_drops_bit64: 1 fail-lines
+M3_ms_bit56: 1 fail-lines
+M4_swap_hz_ms: 1 fail-lines
+M5_reads_copy_not_source: 1 fail-lines
+TEXT IDENTICAL sha256 85d0c41c52720e5e3cc77be678cc603ad855f98cf92fda01a8cde767c27991af; M0 PASS; M1..M5 caught; RESULT PASS
