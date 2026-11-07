@@ -2130,6 +2130,12 @@ class Binder:
                 if R8.is_async(dict(lane=lane, sink_port=pn, source=src)):
                     st["async_bits"] += 1
                     continue
+                # KV-SLGLAND-2 vS 11-07: a registered "leaves" lane adds no stage (bound depth = as-built depth; leaf_pinreg
+                # proves flop to flop on the kit netlist).  It is an inside net a split exposed, not an R8 calendar bit,
+                # so the table has no row for it and needs none.  Any depth change stays R8_UNCOVERED.
+                if L.get("registered") == "leaves" and d[5] == self.bitcyc[(d[1], d[6], d[2], d[3], d[4])]:
+                    st["regleaf_seam_bits"] = st.get("regleaf_seam_bits", 0) + 1
+                    continue
                 st["uncovered"] += 1
                 if st["uncovered"] <= 30:
                     self.errors.append(f"R8_UNCOVERED {path}.{pn}[{i}] <- {src}[{d[4]}]: crossing bit not in the r8 table")
