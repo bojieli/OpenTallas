@@ -10,7 +10,7 @@
  "port_inventory": {
   "top": "codex_svc_sml_native",
   "source_file": "results/physical/codex_svc_hardening_1209/native_sml/rtl/codex_svc_sml_native.sv",
-  "source_sha256": "76dcae1325fc2e15051488a61de5d312e789cb3359586294ac7fa59be285f7b6",
+  "source_sha256": "43652e29c252b62acc31234cdc6ca9da9916e6cb3b62588fc6e7a9a34afebf14",
   "ports": [
    [
     "ck",
@@ -102,6 +102,13 @@
  "added_pin_cycles": 0,
  "added_reset_cycles": 0,
  "release_eligible": false,
- "qualification": "PRIVATE_CHILD_PILOT",
- "component_proof_reset_cycles": 4
+ "qualification": "ISOLATED_STATE_MITER_RUNNING_NO_PHYSICAL_KIT",
+ "component_proof_reset_cycles": 4,
+ "state_duplication": {
+  "signal": "o_mx",
+  "bits": 32,
+  "added_data_cycles": 0,
+  "added_reset_cycles": 0,
+  "feedback": "internal mx_local, dedicated output Q"
+ }
 }

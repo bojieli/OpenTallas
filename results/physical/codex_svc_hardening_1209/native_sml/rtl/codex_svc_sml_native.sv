@@ -17,9 +17,9 @@ module codex_svc_sml_native #(parameter integer MUT=0) (
     output wire o_el,
     output wire [31:0] o_e
 );
-    dsfd_su_t_sml u_native (
-        .ck(ck),
-        .rst(rst),
+    codex_svc_sml_isolated #(.NVMAX(40),.LM(5),.LA(4)) u_native (
+        .clk(ck),
+        .rst_in(rst),
         .sk_en(sk_en),
         .i_cv(i_cv),
         .i_nv(i_nv),
