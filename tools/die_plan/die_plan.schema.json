@@ -2743,6 +2743,18 @@
          },
          "freg": {
           "type": "boolean"
+         },
+         "write_chunk": {
+          "type": "integer",
+          "enum": [
+           1,
+           2,
+           4,
+           8,
+           16,
+           32,
+           64
+          ]
          }
         }
        },
