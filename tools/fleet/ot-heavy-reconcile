@@ -805,7 +805,7 @@ DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v
                 OLD_MIN_SPAN_S=200,                                          # v14 OLD SLOW (SCHED-TUNE2 10-22)
                 MEASURED_RESERVE=1.0, RESERVE_K=1.5, RESERVE_HORIZON_S=1800,  # v16 MEASURED RESERVE (coordinator 10-22)
                 GROWTH_CAP_AVAIL_FRAC=0.0, DIE_HEADROOM_GB=64.0,       # OWNER 10-22 20:10: growth reservation 0 %
-                HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0,
+                HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0,
                 PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
 
@@ -813,7 +813,8 @@ def conf(key):
     """a v8 admission factor: the environment, else /etc/ot-heavy.conf (KEY=value), else DEFAULTS"""
     v = os.environ.get(key)
     if v is None:
-        m = re.search(rf"^{key}=([0-9.]+)", rd("/etc/ot-heavy.conf"), re.M)
+        sign = "-?" if key == "INV_PAST_PEAK_FACTOR" else ""
+        m = re.search(rf"^{key}=({sign}[0-9.]+)", rd("/etc/ot-heavy.conf"), re.M)
         v = m[1] if m else None
     try:
         return float(v) if v is not None else DEFAULTS[key]
@@ -1012,10 +1013,14 @@ def invariant(rows, total, avail, b, table=None):
     # phase targets (class p75 for any unit in a vl/or phase, generic classes such as run_dv_slice.sh at 234 GB) are
     # the bulk of the peak gap.  Their sum beyond what each unit holds or peaked at in this step is capped at
     # PHASE_CAP_AVAIL_FRAC (10 %) of available, scaled per unit; measured step peaks are charged in full.
+    # OWNER 2026-11-07: optionally discount historical peaks, retaining live usage,
+    # full fresh reservations, measured growth and the physical headroom invariant.
+    peak_factor = max(0.0, min(1.0, conf("INV_PAST_PEAK_FACTOR")))
     base, extra = {}, {}
     for r in rows:
         if r["active"]:
-            h0 = max(r["now"], min(r.get("obs", r["now"]), r.get("req", r.get("obs", r["now"]))))
+            peak = max(r["now"], min(r.get("obs", r["now"]), r.get("req", r.get("obs", r["now"]))))
+            h0 = peak if peak_factor == 1.0 else r["now"] + peak_factor * (peak - r["now"])
             base[id(r)], extra[id(r)] = h0, max(0.0, phase_target(r, table) - h0)   # v17.4 (b)/(c): growth-phase units only
     tot_extra = sum(extra.values())
     pcap = conf("PHASE_CAP_AVAIL_FRAC") * max(avail, 0.0)
@@ -1479,8 +1484,9 @@ def selftest():
     keys = ("GROW_WINDOW_S", "GROWING_FACTOR", "LAUNCH_HOLD_S", "RATE_HORIZON_S", "RATE_MULT", "SETTLED_FLOOR_FRAC",
             "OLD_S", "OLD_SLOW_GB", "OLD_MULT", "OLD_HORIZON_S", "OLD_CAP_GB", "OLD_MIN_SPAN_S", "MEASURED_RESERVE",
             "RESERVE_K", "RESERVE_HORIZON_S", "GROWTH_CAP_AVAIL_FRAC", "DIE_HEADROOM_GB", "HARD_INVARIANT", "INV_HEADROOM_GB",
-            "REAL_FLOOR_GB", "PHASE_CAP_AVAIL_FRAC", "PHASE_MARGIN")
+            "REAL_FLOOR_GB", "PHASE_CAP_AVAIL_FRAC", "PHASE_MARGIN", "INV_PAST_PEAK_FACTOR")
     saved = {k: os.environ.get(k) for k in keys}
+    os.environ["INV_PAST_PEAK_FACTOR"] = "1"
     os.environ.update(GROW_WINDOW_S="600", GROWING_FACTOR="1.0", LAUNCH_HOLD_S="120", RATE_HORIZON_S="600",
                       RATE_MULT="2", SETTLED_FLOOR_FRAC="0", MEASURED_RESERVE="0")
     chk("v12 young (60 s): whole remaining reservation", one(800), 90)
@@ -1654,6 +1660,25 @@ def selftest():
     os.environ["PHASE_CAP_AVAIL_FRAC"] = "1.0"
     chk("v17.5 PHASE_CAP_AVAIL_FRAC=1: v17.4 behaviour", invariant(ph_rows, 1008, 450, dict(grow=0.0), ph_tab)["phase_extra"], 450.0)
     os.environ.pop("PHASE_CAP_AVAIL_FRAC", None)
+    os.environ.update(INV_PAST_PEAK_FACTOR="0", PHASE_MARGIN="0", INV_HEADROOM_GB="32")
+    peak_row = u(age=9000, now=10.0, obs=80.0, req=100.0, grow=20.0)
+    discounted = invariant([peak_row], 1000, 800, dict(grow=20.0))
+    chk("past peak zero: live memory remains the floor", discounted["held"], 10.0)
+    chk("past peak zero: running growth retained", discounted["reserve"], 20.0)
+    chk("past peak zero: physical headroom retained", discounted["limit"], 968.0)
+    chk("past peak zero: committed includes live usage and growth", discounted["committed"], 220.0)
+    young = u(age=60, now=10.0, obs=80.0, grow=90.0)
+    pending = u(active=False, grow=64.0)
+    iv0 = invariant([young, pending], 1000, 800, dict(grow=154.0, fresh_gb=154.0))
+    chk("past peak zero: young and pending reservations remain full", iv0["fresh"], 154.0)
+    chk("past peak zero: full pending reservations limit admissions", iv0["free"], 614.0)
+    os.environ["INV_PAST_PEAK_FACTOR"] = "-2"
+    chk("past peak factor lower clamp", invariant([peak_row], 1000, 800, dict(grow=20.0))["held"], 10.0)
+    os.environ["INV_PAST_PEAK_FACTOR"] = "3"
+    chk("past peak factor upper clamp retains old charge", invariant([peak_row], 1000, 800, dict(grow=20.0))["held"], 80.0)
+    os.environ["INV_PAST_PEAK_FACTOR"] = "0.5"
+    chk("past peak fractional charge", invariant([peak_row], 1000, 800, dict(grow=20.0))["held"], 45.0)
+    os.environ["INV_PAST_PEAK_FACTOR"] = "1"
     os.environ.update(HARD_INVARIANT="0")
     chk("v17 HARD_INVARIANT=0: ep7 gate back to v16", gate_sim(e7, 1008, 106, 1)[0], 1)
     for k, v in saved.items():
