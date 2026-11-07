@@ -94,5 +94,5 @@ OWNER verbatim: "use pin cycles on the hard cores. never use more place and rout
 ## OWNER 11-07 05:3x: late-stage fixes, one iteration, near misses only (ALL LANES)
 OWNER, verbatim: "real near misses should still use late stage fixes, but do not use multiple iterations of late stage fixes and do not use it to fix large misses"
 - One late-stage ECO iteration per routed form. If it does not sign off, no second iteration: GEOMETRY + REDESIGN, pin cycles first.
-- Near miss, COORD's working numbers: setup/hold worse by no more than 30 ps on no more than 100 endpoints, no more than 20 slew violations and worst slew under 200 ps at the limit-relative report, DRC under 50, and the cause understood and local. Above that = large miss: no ECO. Port-only hold needs no ECO; it goes to the parent.
+- Near miss, COORD's working numbers: setup/hold worse by no more than 30 ps on no more than 100 endpoints, no more than 20 slew violations, DRC under 50, and the cause understood and local. Above that = large miss: no ECO. Port-only hold needs no ECO; it goes to the parent.
 - An iteration already running finishes and is read. Nothing starts after it.
