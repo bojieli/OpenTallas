@@ -59,3 +59,14 @@ def test_all_incomplete_stops_die_with_reason():
 def test_opt_out():
     c = cfg(); c["src_probe"] = False
     assert K.src_incomplete(FakeAP(), c, run=fake({"epyc5": (1, 1, ["/x"])})) == {}
+
+
+def test_bind_sources_required(tmp_path):
+    b = tmp_path / "bind"; b.mkdir()
+    (b / "bind.f").write_text("/x/src/rtl/a.sv\n/x/src/rtl/b.sv\n")
+    c = cfg(); c["dies"]["qwen_kvsys"]["kit_rtl"] = {"mode": "bind", "bind_out": str(b), "asbuilt": "/x/asb.json"}
+    trees, files = K.src_inputs(c, "qwen_kvsys")
+    assert {"/x/src/rtl/a.sv", "/x/src/rtl/b.sv", "/x/asb.json"} <= set(files)
+    bad = K.src_incomplete(FakeAP(), c, run=fake({"epyc5": (4000, 158, []), "intel2": (4000, 158, ["/x/src/rtl/b.sv"]),
+                                                  "intel1": (4000, 158, [])}))
+    assert set(bad) == {"intel2"} and "/x/src/rtl/b.sv missing" in bad["intel2"]["qwen_kvsys"]
