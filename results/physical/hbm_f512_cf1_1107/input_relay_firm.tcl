@@ -1,7 +1,7 @@
 # F512 vCF1b:2059 reviewed midpoint boxes, existing validated site API
-set hm_macro_halo_um 4.32
-set hm_expected 2059
-set hm_targets {
+set ::hm_macro_halo_um 4.32
+set ::hm_expected 2059
+set ::hm_targets {
 {u_bimid0_rq4/q[0]$_DFF_P_ 4 4 20 20}
 {u_bimid0_rq4/q[1]$_DFF_P_ 4 4 20 20}
 {u_bimid0_rq4/q[2]$_DFF_P_ 4 4 20 20}
