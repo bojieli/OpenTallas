@@ -6,6 +6,7 @@ for i in b.getInsts():
  bb=i.getBBox();row=[i.getName(),bb.xMin()/u,bb.yMin()/u,bb.xMax()/u,bb.yMax()/u]
  d['macros' if i.getMaster().isBlock() else 'cells'].append(row)
 for p in b.getBTerms():
+ if p.getSigType() in ('POWER','GROUND'):continue
  for bp in p.getBPins():
   for x in bp.getBoxes():d['pins'].append([p.getName(),(x.xMin()+x.xMax())/(2*u),(x.yMin()+x.yMax())/(2*u)])
 for n in b.getNets():
