@@ -195,3 +195,29 @@ def test_multi_root_patch_follows_current_postcts_template(tmp_path):
     t = (tmp_path / "postcts_gate.tcl").read_text()
     assert "set ot_pg_propagate [get_clocks {clk clk_io_w}]\n" in t
     assert "set ot_pg_propagate [get_clocks clk]\n" not in t
+
+
+def test_native_clock_drt_stage(tmp_path):
+    # S81-T51-RECUT 11-06: native M7 clock root pins -> DRT clock range M4-M7, data M6, audit chained after DRT
+    (tmp_path / "config.mk").write_text("export MAX_ROUTING_LAYER = M6\nexport POST_DETAIL_ROUTE_TCL = /work/old_post.tcl\n")
+    assert G.stage_native_clock_drt(tmp_path, {}) is None
+    assert "native_clock" not in (tmp_path / "config.mk").read_text()
+    assert G.stage_native_clock_drt(tmp_path, {"clk_t7": ["M7", 0, 0, 1, 1]}) == ["clk_t7"]
+    cfg = (tmp_path / "config.mk").read_text()
+    assert cfg.endswith("override export PRE_DETAIL_ROUTE_TCL = /work/native_clock_drt_pre.tcl\n"
+                        "override export POST_DETAIL_ROUTE_TCL = /work/native_clock_drt_post.tcl\n")
+    assert (tmp_path / "native_clock_drt_pre.tcl").read_text() == "source /work/native_clock_drt.tcl\n"
+    assert (tmp_path / "native_clock_drt_post.tcl").read_text() == "source /work/old_post.tcl\nsource /work/native_clock_drt_audit.tcl\n"
+    assert '-clock "$::env(MIN_CLK_ROUTING_LAYER)-M7"' in (tmp_path / "native_clock_drt.tcl").read_text()
+    audit = (tmp_path / "native_clock_drt_audit.tcl").read_text()
+    assert 'CLOCK" ? 7 : 6' in audit and "odb::dbObstruction_destroy" in audit
+    assert audit.index("dbObstruction_destroy") < audit.index("foreach net [[ord::get_db_block] getNets]")
+    pre = (tmp_path / "native_clock_drt.tcl").read_text()
+    assert "set ot_ncd_pad [$ot_ncd_m7 getSpacing]" in pre
+    assert "dbObstruction_create $ot_ncd_blk $ot_ncd_m7" in pre and '-signal "$::env(MIN_ROUTING_LAYER)-M7"' in pre
+
+
+def test_native_clock_drt_refuses_other_ceiling(tmp_path):
+    (tmp_path / "config.mk").write_text("export MAX_ROUTING_LAYER = M5\n")
+    with pytest.raises(SystemExit, match="M6 data ceiling"):
+        G.stage_native_clock_drt(tmp_path, {"clk_t7": ["M7", 0, 0, 1, 1]})
