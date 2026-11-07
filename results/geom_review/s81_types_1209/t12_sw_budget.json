@@ -1,0 +1,61 @@
+{
+  "model_only": true,
+  "S_ft5": {
+    "old_strip_depth": 8.91,
+    "new_strip_depth": 17.82,
+    "new_rect": [
+      39.582,
+      17.325,
+      184.698,
+      41.085
+    ],
+    "foreign_fixed_sites": 335,
+    "foreign_approx_body_um": [
+      1.08,
+      0.27
+    ],
+    "native_no_macro_collision": true,
+    "reserved_strip_area_um2": 2585.9671200000003,
+    "ring_reserved_est_um2": 2171.5452,
+    "foreign_body_est_um2": 97.686,
+    "farthest_pin_L1_bound_um": 68.823,
+    "root_nearest_box": "clk_t42; cap3000 still unresolved for3385FF"
+  },
+  "S_ft6": {
+    "old_strip_depth": 9.18,
+    "new_strip_depth": 18.36,
+    "new_rect": [
+      979.392,
+      17.28,
+      1008.156,
+      51.84
+    ],
+    "foreign_fixed_sites": 4,
+    "farthest_pin_vertical_bound_um": 35.64,
+    "root_nearest_box": "clk_t47"
+  },
+  "W": {
+    "ready": false,
+    "native_macro_left": 43.308,
+    "core_band_left": 17.28,
+    "channel_width": 26.028,
+    "ft8_foreign_sites": 414,
+    "ft9_foreign_sites": 113,
+    "reason": "pin-adjacent channel occupied by fixed FT4stage1; current bands far from pinY. Requires real channel/FT reform."
+  },
+  "pin_tracks": {
+    "ft5_bits": 669,
+    "ft5_M7_pitch": 0.064,
+    "ft5_span": 144.816,
+    "ft5_use": 0.29565793834935367,
+    "ft6_bits": 133,
+    "ft6_use": 0.29592546238353495,
+    "Wbits_per_bus": 71,
+    "W_M6_pitch": 0.064,
+    "Wspan_min": 15.872,
+    "W_use_max": 0.2862903225806452
+  },
+  "root_config_changed": false,
+  "root_cap_map_proven": false,
+  "pilot_ready": false
+}

@@ -1,0 +1,13 @@
+# Private t12 S/W planning, not a ready pilot
+
+Actual geometry basis: sourceabaf08160896518adf8a1107a6cd9fa2a5db5576, t12a2 E5 3_place296671553bytes12:26:00PST, existing GPL placement hook table and actual macro/pin dump. All native poses/pins/config/clock hooks stay byte-identical in this constructor.
+
+South prepared source is default-identity and exact t12 only. Enabled: ft5 band moves ONLYY by−31.68um to(39.582,17.325)-(184.698,41.085); ft6 ONLYY−12.96 to(979.392,17.28)-(1008.156,51.84). Onlyft5/6 getrows2; any otherNSgroup stays1. Originalslotallocator/occupancy/failclosedcodeunchanged. Native macrocollisionnone in these lowY rectangles. Ft5 strip17.82um andft6strip18.36 fitreserveddepth23.76/34.56. Ft5 farverticalpinreach35.145um plus~33.7umexistingXoffset=>L1bound68.823, ft6vertical35.64. 30ump90targetisnotwaived/no claimmet. Foreignfixedsites preserved:335ft4-stage5FFinft5strip,4smallft0-stage2/resetsitesinft6. Footprintapprox1.08×.27um; ft5 source-derived122columns and1.188umpitch, rows2.54umpitch give3385×1.188×.54+335×1.08×.27=2269.231um2 vs2585.967um2strip,12.25%area margin; fragmentation/tapcells/nativefitNOTproved. ControlFFresthaveextra5.94umreservedbanddepth, butactualallocationmustbechecked.
+
+Clockmodel: nearestrectanglecentroidskeepft5clk_t42,ft6clk_t47; ft5newcornerreach≤~177um vs200radius. The initiallyconsideredwestshiftwouldpushrootreachbeyond200andisrejected. Ft5has3385ringFFagainst3000tapcap, sofinalcap-passmapisnotprovedunchanged. Constructor makesno clock-hook/configchange; that isnotclaimfinalrootassignmentidentity. Beforepilot: resolve/modelcapassignment, occupancyfragmentation andactualbitreach.
+
+Westnotready: ft8/9 currentbandsarefarbelowactualpinY. Desiredpin-adjacentWchannelx17.28..43.308 has414/113foreignFTsites pluscollectorhole; nativevp_ln5 occupiesx43.308..157.788,y1053.708..1168.188. Blind25%wideningalsooverlapsadjacentcornerbandsft11/12/13. Needactualchannel/nativeposeorFTreformwithroot/reset/data-hopbudget; no partial-spacingclaim. A speculativeFTstage1move has449.47umfollowinghopandwouldneedclock/resetownershipreview, soisnotimplemented.
+
+Tracks are not the identified packinglimit: ft5M7pins669/144.816um/.064≈29.6%, ft6≈29.6%, W71/15.872umM6≈28.6%. InheritedM7signalpinsmeansnofullyconservativeM6claim. Exactpintrackphases unchanged.
+
+VIEWED plannedimage t12_sw_planning.png. Sourcefixture: defaultbytesidentity, exactSscope, changedsourcegeometryrefusal andTclsyntaxcompletenessPASS. No source/livekitmutation, CADprobe, kit, PLACE/CTS/GRT/batch launched for this candidate. Rootreviewrequired; pilot_readyfalse; S/Wcohortremainsheld.
