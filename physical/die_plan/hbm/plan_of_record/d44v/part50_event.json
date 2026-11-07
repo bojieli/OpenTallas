@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.hbm_plan_event.part50",
+ "by": "DIE-HBM-82 11-06 (plan owner; scan by DIE-HBM-82-P40: --clock-pin-entry io.tcl vs pin table, 84 d44v views)",
+ "bug": "clock_entries.json without clock_pin_sites_um: gen_core_kit_hbm.py --clock-pin-entry on spreads the clock pins around the entry xy, so kits of these cores miss their own table by 1-2 clock pins (uncountable rebuilds)",
+ "change": {
+  "ot_hbm_static_cfg_collar_idx256r, ot_pdie_serdes_rx_bm3_rest": "clock_pin_sites_um = the pin-table clock pin points (table and entry xy unchanged)",
+  "ot_hbm_idx_qctl_static": "plan entry and die clock taps are the core centre (99.36, 64.8) and the counted DB sits there under the release_tree_plan APPROVED_PIN_EVENTS centre-entry exception (COORD 11-03 00:1x); the table had the clock pins on the S face.  New table cores/ot_hbm_idx_qctl_static__194.832x82.08__d44v_centry_p50.json = the d35a table with clk_program / clk_program_mem at (99.384, 64.8) / (99.48, 64.8) (the generator's entry points), 4 instances repointed, sites = those points.  The APPROVED_PIN_EVENTS qctl entry can be removed once this is on main."
+ },
+ "modules": {
+  "ot_hbm_idx_qctl_static": {
+   "entries": 2,
+   "clock_pin_sites_um": {
+    "clk_program": [
+     99.384,
+     64.8
+    ],
+    "clk_program_mem": [
+     99.48,
+     64.8
+    ]
+   }
+  },
+  "ot_hbm_static_cfg_collar_idx256r": {
+   "entries": 1,
+   "clock_pin_sites_um": {
+    "clk": [
+     43.224,
+     43.2
+    ],
+    "clk_in": [
+     44.664,
+     43.2
+    ]
+   }
+  },
+  "ot_pdie_serdes_rx_bm3_rest": {
+   "entries": 5,
+   "clock_pin_sites_um": {
+    "clk": [
+     42.36,
+     263.52
+    ],
+    "rck_clk": [
+     42.936,
+     263.52
+    ]
+   }
+  }
+ },
+ "not_touched": {
+  "ot_hbm_sm_vm_wr_q_t_lanes4": "6 clock pins are M4 E-face table pins (x 142.464, y 13.85-14.86); the clock_pin_sites_um form is M5-only, so a site entry cannot express them; reported to DIE-HBM-82"
+ },
+ "proof": "results/die_hbm_1106/clkpin_sites_p50/cmp_p50.txt",
+ "pin_cycles": "none",
+ "replay": "results/die_hbm_1106/clkpin_sites_p50/replay_p50.sh"
+}
