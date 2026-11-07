@@ -165,7 +165,8 @@ module ot_dp_clk_landing_cas #(
     // STATUS-REG-1 (KV-SLGLAND-2 11-07): 1 = the ring status crossings end at private per-slot flops (see ot_meso_ring_ca).
     // Data q and ready are cycle-identical in the window; a rv/lap fault is seen one clk later; guard faults unchanged.
     // Default 0 = identical logic.
-    parameter bit STATUS_REG = 0
+    parameter bit STATUS_REG = 0,
+    parameter int WRITE_CHUNK = 64 // appended for positional compatibility; local write-enable fanout bound
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -235,7 +236,7 @@ module ot_dp_clk_landing_cas #(
         end
     end
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
-                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .STATUS_REG(STATUS_REG)) u_ring (
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG)) u_ring (
         .tclk(wclk), .wen_clk(WFALL ? fclk : wclk), .t_rst_n(t_rst_w), .t_d({{(RW-W){1'b0}}, d_w}), .rclk(clk), .r_rst_n(rst_n), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -275,7 +276,8 @@ module ot_meso_ring_ca #(
     // mid-write and go metastable; its select is 0 at the next edge, as an unselected slot's value was masked before.
     // The guards sample the same falling edge into per-slot flops, select at the next rising edge: glo1/ghi1 values and
     // cycles unchanged; oh -> guard becomes a full period instead of T/2. Data path untouched.
-    parameter bit STATUS_REG = 0
+    parameter bit STATUS_REG = 0,
+    parameter int WRITE_CHUNK = 64 // appended for positional compatibility; local write-enable fanout bound
 ) (
     input  logic         tclk,
     input  logic         wen_clk,    // WREG write-enable clock: tclk, or the raw fclk with WEN_NEG; unused when !WREG
@@ -316,7 +318,7 @@ module ot_meso_ring_ca #(
     // WREG 1: t_go = t_rst_n one wclk edge late (fs_q), and wen[i, c] = t_go && tc[slot] == i is precomputed one edge
     // early from the port (fs_q ? tc + 1 : 0 is tc at the next edge), one kept flop per (slot, 64-bit chunk).
     // Exactly the WREG 0 ring fed by t_rst_n through one flop (proof: results/dh58_turnb_1103/wreg_equiv).
-    localparam int WNC = (W % 64 == 0) ? W / 64 : 1;
+    localparam int WNC = (WRITE_CHUNK > 0 && W % WRITE_CHUNK == 0) ? W / WRITE_CHUNK : 1;
     localparam int WWC = W / WNC;
     wire t_go;
     wire [DEPTH*WNC-1:0] wen;
