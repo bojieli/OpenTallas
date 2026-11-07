@@ -1,3 +1,10 @@
+`ifndef OT_ARST
+ `ifdef OT_S81ENG_SYNC_RST
+  `define OT_ARST(x)
+ `else
+  `define OT_ARST(x) or negedge x
+ `endif
+`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // ot_hdc_fp32_add_lat #(LAT): the binary32 adder of ot_hdc_fp32_add_fast (rtl/hdc/ot_hdc_fastfp.sv), bit for bit,
@@ -115,7 +122,7 @@ module ot_hdc_fp32_add_lat #(
     reg [7:0]  s1_exp;
     reg [23:0] s1_big;
     reg [27:0] s1_small;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_ARST(rst_n)) begin
         if (!rst_n) s1_v <= 1'b0;
         else s1_v <= XC_E ? xe_v : x_v;
     end
@@ -218,7 +225,7 @@ module ot_hdc_fp32_add_lat #(
     reg [31:0] s2_code;
     reg [7:0]  s2_exp;
     reg [26:0] s2_val;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_ARST(rst_n)) begin
         if (!rst_n) s2_v <= 1'b0;
         else s2_v <= w_v;
     end
@@ -263,7 +270,7 @@ module ot_hdc_fp32_add_lat #(
         wire g_v, g_byp, g_zero, g_over; wire [31:0] g_ucode, g_code; wire [1:0] g_err;
         assign {g_v, g_byp, g_zero, g_over, g_ucode, g_err, g_code} = g_q;
         if (DRST != 0) begin : g_r
-            always @(posedge clk or negedge rst_n) begin
+            always @(posedge clk `OT_ARST(rst_n)) begin
                 if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
                 else begin
                     valid_out <= g_v;
@@ -274,7 +281,7 @@ module ot_hdc_fp32_add_lat #(
                 end
             end
         end else begin : g_n
-            always @(posedge clk or negedge rst_n) begin
+            always @(posedge clk `OT_ARST(rst_n)) begin
                 if (!rst_n) valid_out <= 1'b0;
                 else valid_out <= g_v;
             end
@@ -286,7 +293,7 @@ module ot_hdc_fp32_add_lat #(
             end
         end
     end else if (DRST != 0) begin : g_yr
-        always @(posedge clk or negedge rst_n) begin
+        always @(posedge clk `OT_ARST(rst_n)) begin
             if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
             else begin
                 valid_out <= u_v;
@@ -297,7 +304,7 @@ module ot_hdc_fp32_add_lat #(
             end
         end
     end else begin : g_yn
-        always @(posedge clk or negedge rst_n) begin
+        always @(posedge clk `OT_ARST(rst_n)) begin
             if (!rst_n) valid_out <= 1'b0;
             else valid_out <= u_v;
         end
@@ -318,7 +325,7 @@ module ot_hdc_w11_cut #(parameter integer W = 1, parameter integer CUT = 0, para
 );
     generate if (CUT && VB < 0) begin : g_r
         reg [W-1:0] r;
-        always @(posedge clk or negedge rst_n) begin
+        always @(posedge clk `OT_ARST(rst_n)) begin
             if (!rst_n) r <= {W{1'b0}};
             else r <= d;
         end
@@ -326,7 +333,7 @@ module ot_hdc_w11_cut #(parameter integer W = 1, parameter integer CUT = 0, para
     end else if (CUT) begin : g_rv
         reg rv;
         reg [W-1:0] rd;
-        always @(posedge clk or negedge rst_n) begin
+        always @(posedge clk `OT_ARST(rst_n)) begin
             if (!rst_n) rv <= 1'b0;
             else rv <= d[VB];
         end

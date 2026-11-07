@@ -1,3 +1,10 @@
+`ifndef OT_ARST
+ `ifdef OT_S81ENG_SYNC_RST
+  `define OT_ARST(x)
+ `else
+  `define OT_ARST(x) or negedge x
+ `endif
+`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // Engram row gather and prefetch of the V4.1 decode core, at shipped scale.
@@ -107,7 +114,7 @@ module ot_hdc_engram_gather #(
     assign req_tag   = rtag;
 
     integer i;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_ARST(rst_n)) begin
         if (!rst_n) begin
             busy <= 2'b00; pend <= {NB{1'b0}}; in_slot <= 1'b0;
         end else begin
@@ -146,7 +153,7 @@ module ot_hdc_engram_gather #(
             reg  [BTW-1:0] bcnt [0:NC-1];
             reg  [7:0]     scl  [0:NC-1];
             integer c;
-            always @(posedge clk or negedge rst_n) begin
+            always @(posedge clk `OT_ARST(rst_n)) begin
                 if (!rst_n) begin
                     pmask <= {NC{1'b0}};
                     for (c = 0; c < NC; c = c + 1) bcnt[c] <= {BTW{1'b0}};
@@ -179,7 +186,7 @@ module ot_hdc_engram_gather #(
             reg [BAW-1:0]    s1_a;
             reg [7:0]        s1_side, s1_scl;
             reg [8*LANES-1:0] s1_c;
-            always @(posedge clk or negedge rst_n) begin
+            always @(posedge clk `OT_ARST(rst_n)) begin
                 if (!rst_n) s1_v <= 1'b0;
                 else s1_v <= gany;
             end
@@ -196,7 +203,7 @@ module ot_hdc_engram_gather #(
             for (gq = 0; gq < LANES; gq = gq + 1) begin : g_dec
                 ot_hdc_engram_e4m3_bf16 u_dec (.code(s1_c[8*gq +: 8]), .scale(s1_s), .bf16(dec[16*gq +: 16]));
             end
-            always @(posedge clk or negedge rst_n) begin
+            always @(posedge clk `OT_ARST(rst_n)) begin
                 if (!rst_n) wr_en[gl] <= 1'b0;
                 else wr_en[gl] <= s1_v;
             end
@@ -207,7 +214,7 @@ module ot_hdc_engram_gather #(
             // completion: counted on the edge the buffer commits the write
             wire wslot = wr_addr[BAW*gl + BAW - 1];
             reg [TW-1:0] cnt0, cnt1;                   // beats written for slot 0 / 1
-            always @(posedge clk or negedge rst_n) begin
+            always @(posedge clk `OT_ARST(rst_n)) begin
                 if (!rst_n) begin
                     cnt0 <= {TW{1'b0}}; cnt1 <= {TW{1'b0}};
                 end else begin

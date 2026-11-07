@@ -1,3 +1,10 @@
+`ifndef OT_ARST
+ `ifdef OT_S81ENG_SYNC_RST
+  `define OT_ARST(x)
+ `else
+  `define OT_ARST(x) or negedge x
+ `endif
+`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------------
 // ot_s81sl_aq12x (S81-TILES3 2026-10-17, vq-only fork of rtl/hdc/v41x/ot_dsrom_aq12.sv , blob 02945a744 on origin/main): the
@@ -188,7 +195,7 @@ module ot_s81sl_aq12x (
         end
     end
     // -- S17: codes and dequantised BF16 (output registers) ----------------------------------------------
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_ARST(rst_n)) begin
         if (!rst_n) begin vo <= 1'b0; fault <= 1'b0; end
         else begin vo <= vl[LATENCY - 1]; fault <= vl[LATENCY - 1] && s16_nf; end
     end

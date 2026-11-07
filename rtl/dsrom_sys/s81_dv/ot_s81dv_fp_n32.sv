@@ -1,3 +1,10 @@
+`ifndef OT_ARST
+ `ifdef OT_S81ENG_SYNC_RST
+  `define OT_ARST(x)
+ `else
+  `define OT_ARST(x) or negedge x
+ `endif
+`endif
 `timescale 1ns/1ps
 // ELEM-XFV/XFIN 10-21 (opt-in, OT_S81DV_XFIN_SRAM only): NATIVE32 successor of ot_hdc_fp32_add_f12 #(CUTS) as used
 // by ot_dsrom_fp32_add_f12_l6 (CUTS 7'b1101011).  Bit for bit and cycle for cycle the original: the cut bundles
@@ -350,7 +357,7 @@ module ot_s81dv_xfin_fp_cut #(parameter integer W = 2, parameter integer CUT = 0
     generate if (CUT) begin : g_r
         reg         v;
         reg [W-2:0] r;
-        always @(posedge clk or negedge rst_n) begin
+        always @(posedge clk `OT_ARST(rst_n)) begin
             if (!rst_n) v <= 1'b0;
             else v <= d[W-1];
         end
@@ -584,9 +591,9 @@ module ot_s81dv_xfin_fp_add_n32 #(
     for(genvar g=0;g<4;g=g+1)begin:g_out
       wire[7:0] nd;
       ot_s81dv_xfin_fp_out_byte u_e(.byp(byp_cp[g]),.zero(u_zero),.over(over),.nz(nz),.code(code[8*g+:8]),.bc(u_code[8*g+:8]),.y(nd));
-      always @(posedge clk or negedge rst_n[g+1]) if(!rst_n[g+1])y[8*g+:8]<=0;else y[8*g+:8]<=nd;
+      always @(posedge clk `OT_ARST(rst_n[g+1])) if(!rst_n[g+1])y[8*g+:8]<=0;else y[8*g+:8]<=nd;
     end
-    always @(posedge clk or negedge rst_n[5])begin
+    always @(posedge clk `OT_ARST(rst_n[5]))begin
       if(!rst_n[5])begin err<=E_NONE;valid_out<=0;end
       else begin
         valid_out<=u_v;
@@ -824,9 +831,9 @@ module ot_s81dv_xfin_fp_mul_n32 #(
     for(genvar g=0;g<4;g=g+1)begin:g_out
       wire[7:0] nd;
       ot_s81dv_xfin_fp_out_zero u_e(.byp(o_byp),.over(over),.nz(nz),.code(code[8*g+:8]),.y(nd));
-      always @(posedge clk or negedge rst_n[g+1])if(!rst_n[g+1])y[8*g+:8]<=0;else y[8*g+:8]<=nd;
+      always @(posedge clk `OT_ARST(rst_n[g+1]))if(!rst_n[g+1])y[8*g+:8]<=0;else y[8*g+:8]<=nd;
     end
-    always @(posedge clk or negedge rst_n[5])begin
+    always @(posedge clk `OT_ARST(rst_n[5]))begin
       if(!rst_n[5])begin err<=E_NONE;valid_out<=0;end
       else begin valid_out<=o_v;if(o_byp)err<=o_err;else if(over)err<=E_OVERFLOW;else err<=E_NONE;end
     end

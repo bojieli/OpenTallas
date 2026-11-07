@@ -1,3 +1,10 @@
+`ifndef OT_ARST
+ `ifdef OT_S81ENG_SYNC_RST
+  `define OT_ARST(x)
+ `else
+  `define OT_ARST(x) or negedge x
+ `endif
+`endif
 `timescale 1ns/1ps
 // Released normalization map; four17-bit IDs per72-bit word, eight real macros.
 // Fault-free ROM contract, no ECC sidecar. Raw-token bounds checked before read.
@@ -23,7 +30,7 @@ module ot_dsrom_engram_token_map (
             .clk(clk), .ce_in(in_v && legal && in_tok[16:14]==g),
             .addr_in(in_tok[13:2]), .rd_out(q[g]));
     end endgenerate
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_ARST(rst_n)) begin
         if(!rst_n) begin pending<=0;out_v<=0;out_cid<=0;fault<=0;bank<=0;lane<=0;end
         else begin
             pending<=in_v && legal;

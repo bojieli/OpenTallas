@@ -1,3 +1,10 @@
+`ifndef OT_ARST
+ `ifdef OT_S81ENG_SYNC_RST
+  `define OT_ARST(x)
+ `else
+  `define OT_ARST(x) or negedge x
+ `endif
+`endif
 `timescale 1ns/1ps
 // =====================================================================================================================
 // S81-RTLGAP/RG-ENG (10-21, RELEASE_TREE TOK.DS.BENCH.4.5 / TOK.DS.LAYER.3): the Engram ROW-READ path of the S81 72-frame
@@ -68,7 +75,7 @@ module ot_s81eng_win #(
     wire [127:0] rd;
     reg  [50:0] h2;
     always @(posedge ck) begin u1 <= ks_user; u2 <= u1; p1 <= ks_pos; p2 <= p1; h2 <= rd[50:0]; end
-    always @(posedge ck or negedge rst_n)
+    always @(posedge ck `OT_ARST(rst_n))
         if (!rst_n) begin v1 <= 1'b0; v2 <= 1'b0; end else begin v1 <= t_v; v2 <= v1; end
     wire         b1 = (p2 < 21'd1), b2 = b1 | (p2 < 21'd2), b3 = b2 | (p2 < 21'd3);
     wire         wr = m_v && v2;
@@ -76,7 +83,7 @@ module ot_s81eng_win #(
         .w_ce_in(wr), .w_addr_in({3'd0, u2[5:0]}), .wd_in({77'd0, h2[33:0], m_cid}), .w_mask_in({128{1'b1}}),
         .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(14'd0));
     always @(posedge ck) if (wr) win_ids <= {b3 ? PAD : h2[50:34], b2 ? PAD : h2[33:17], b1 ? PAD : h2[16:0], m_cid};
-    always @(posedge ck or negedge rst_n)
+    always @(posedge ck `OT_ARST(rst_n))
         if (!rst_n) begin win_v <= 1'b0; win_slot <= 3'd7; fault <= 1'b0; end
         else begin
             win_v <= wr;
@@ -121,7 +128,7 @@ module ot_s81eng_head #(
     always @(posedge ck) if (hq_v && nw < 3'd6) begin ra[nw] <= hq_atom; rt[nw] <= hq_tag; end
     always @(posedge ck) if (win_v) slot <= win_slot;
     // row j arrives at t0 + j and is expanded from t0 + 1 + 9 j: always present, no wait, no check needed
-    always @(posedge ck or negedge rst_n)
+    always @(posedge ck `OT_ARST(rst_n))
         if (!rst_n) begin nw <= 3'd0; rr <= 3'd0; ai <= 4'd0; run <= 1'b0; rco[0] <= 1'b0; fault <= 1'b0; end
         else begin
             if (hq_v && nw == 3'd6) fault <= 1'b1;                    // a 7th request in a window
@@ -144,7 +151,7 @@ module ot_s81eng_head #(
         rco[42:36] <= {rt[rr], ai};
     end
     // response chain -> lookup
-    always @(posedge ck or negedge rst_n)
+    always @(posedge ck `OT_ARST(rst_n))
         if (!rst_n) hr_v <= 1'b0; else hr_v <= pci[0];
     always @(posedge ck) begin hr_slot <= slot; hr_tag <= pci[11:9]; hr_idx <= pci[8:5]; hr_d <= pci[267:12]; end
 endmodule
@@ -229,14 +236,14 @@ endmodule
     wire nz0 = hn0 != 4'd0, nz1 = hn1 != 4'd0;
     dsdv_eng_tap_take u_td (.myslot(myslot), .nz0(nz0), .nz1(nz1), .take(tk_d));
     dsdv_eng_tap_take u_tc (.myslot(myslot), .nz0(nz0), .nz1(nz1), .take(tk_c));
-    always @(posedge ck or negedge rn0)
+    always @(posedge ck `OT_ARST(rn0))
         if (!rn0) begin hw0 <= EH'(1); hr0 <= EH'(1); hn0 <= 4'd0; end
         else begin
             if (e0) hw0 <= {hw0[EH-2:0], hw0[EH-1]};
             if (tk_c[0]) hr0 <= {hr0[EH-2:0], hr0[EH-1]};
             hn0 <= hn0 + (e0 ? 4'd1 : 4'd0) - (tk_c[0] ? 4'd1 : 4'd0);
         end
-    always @(posedge ck or negedge rn1)
+    always @(posedge ck `OT_ARST(rn1))
         if (!rn1) begin hw1 <= EH'(1); hr1 <= EH'(1); hn1 <= 4'd0; end
         else begin
             if (e1) hw1 <= {hw1[EH-2:0], hw1[EH-1]};
@@ -289,11 +296,11 @@ endmodule
     wire out_v = hit | rv;
     reg [4:0] owp;
     reg [7:0] ofi;
-    always @(posedge ck or negedge rn) if (!rn) owp <= 5'd0; else if (out_v) owp <= owp + 5'd1;
+    always @(posedge ck `OT_ARST(rn)) if (!rn) owp <= 5'd0; else if (out_v) owp <= owp + 5'd1;
     always @(posedge ck) if (out_v && owp[4:3] == 2'(B)) ofi[owp[2:0]] <= hit;
 `ifdef OT_S81ENG_TAP_N32R2
     reg [2:0] rp;
-    always @(posedge ck or negedge rn) if (!rn) rp <= 3'd0; else if (popv) rp <= rp + 3'd1;
+    always @(posedge ck `OT_ARST(rn)) if (!rn) rp <= 3'd0; else if (popv) rp <= rp + 3'd1;
     assign rd = ofi[rp];
 `else
     assign rd = ofi[orp_lo];
@@ -322,7 +329,7 @@ endmodule
     wire ofr   = bank_rd[orp[4:3]];
     wire pop_e = popv && ofr;
     wire pop_r = (MUT == 2) ? pop : (pop && !(nz && ofr));
-    always @(posedge ck or negedge rn)
+    always @(posedge ck `OT_ARST(rn))
         if (!rn) begin rqo_v <= 1'b0; rqo_sl <= 1'b0; rro_pop <= 1'b0; eo <= '0; on_ <= '0; orp <= '0; fl <= 1'b0; end
         else begin
             rqo_v   <= out_v;
@@ -355,7 +362,7 @@ endmodule
     reg [3:0] hn0, hn1;
     reg [5:0] er0, er1;
     dsdv_eng_tap_take u_t (.myslot(myslot), .nz0(hn0 != 4'd0), .nz1(hn1 != 4'd0), .take(tk));
-    always @(posedge ck or negedge rn)
+    always @(posedge ck `OT_ARST(rn))
         if (!rn) begin rro_v0 <= 1'b0; rro_v1 <= 1'b0; pco_v <= 1'b0; fxl <= 2'b0; hn0 <= '0; hn1 <= '0; er0 <= '0; er1 <= '0; end
         else begin
             rro_v0 <= bv0 && !e0;
@@ -411,7 +418,7 @@ module dsdv_eng_tap_c #(
     wire [NR-1:0] rl;
     ot_rst_relay_bounded32 #(.REGIONS(NR)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl));
     // request chain forward
-    always @(posedge ck or negedge rl[0]) if (!rl[0]) rco[0] <= 1'b0; else rco[0] <= rci[0];
+    always @(posedge ck `OT_ARST(rl[0])) if (!rl[0]) rco[0] <= 1'b0; else rco[0] <= rci[0];
     always @(posedge ck) rco[42:1] <= rci[42:1];
     wire [9:0]  t10 = {1'b0, rci[38:36], {1'b0, rci[42:40]} + 4'd1, 1'b1, rci[39]};
     wire [43:0] ew  = {t10, 4'd1, rci[35:6]};
@@ -461,7 +468,7 @@ module dsdv_eng_tap_c #(
     reg [3:0] own_q;
     always @(posedge ck) own_q <= own;
     assign pco = {pcq[262:0], own_q, pco_v};
-    always @(posedge ck or negedge rl[0])
+    always @(posedge ck `OT_ARST(rl[0]))
         if (!rl[0]) begin gen <= 4'd0; fault <= 1'b0; end
         else begin
             gen <= gen + 4'd1;
@@ -520,7 +527,7 @@ module ot_s81eng_xq #(
     ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl));
     // ---------------------------------------------------------------- input flops + decode
     reg         iv; reg [4:0] ic; reg [2:0] ib; reg [263:0] id;
-    always @(posedge ck or negedge rl[0]) if (!rl[0]) iv <= 1'b0; else iv <= o_v;
+    always @(posedge ck `OT_ARST(rl[0])) if (!rl[0]) iv <= 1'b0; else iv <= o_v;
     always @(posedge ck) begin ic <= o_col; ib <= o_beat; id <= o_d; end
     wire [511:0] bf_x, bf_d;
     wire [263:0] wl;                       // wait line read: the beat 12 edges ago
@@ -536,7 +543,7 @@ module ot_s81eng_xq #(
     end endgenerate
     // wait line: write every edge at wp, read wp - 11 (registered macro output -> the beat written 12 edges before)
     reg [5:0] wp;
-    always @(posedge ck or negedge rl[0]) if (!rl[0]) wp <= 6'd0; else wp <= wp + 6'd1;
+    always @(posedge ck `OT_ARST(rl[0])) if (!rl[0]) wp <= 6'd0; else wp <= wp + 6'd1;
     wire [511:0] wl_rd;
     ot_sram_1r1w_64x512_m1_r2c2 u_wl (.clk(ck), .r_ce_in(1'b1), .r_addr_in(wp - 6'd11), .rd_out(wl_rd),
         .w_ce_in(1'b1), .w_addr_in(wp), .wd_in({248'd0, id}), .w_mask_in({512{1'b1}}),
@@ -585,9 +592,9 @@ module ot_s81eng_xq #(
     always @(posedge ck) begin ia <= vi_a; ib_ <= vi_b; end
     wire pva = ia[0] || pa != 2'd0, pvb = ib_[0] || pb != 2'd0;
     integer oi;
-    always @(posedge ck or negedge rl[3]) if (!rl[3]) begin txk <= '0; fck <= '0; end
+    always @(posedge ck `OT_ARST(rl[3])) if (!rl[3]) begin txk <= '0; fck <= '0; end
                                           else begin txk <= {48{tx_n}}; fck <= {48{fc_n[1:0]}}; end
-    always @(posedge ck or negedge rl[2])
+    always @(posedge ck `OT_ARST(rl[2]))
         if (!rl[2]) begin
             bw <= 1'b0; bc <= 6'd0; first <= 1'b0; tc <= 8'd0; tx <= 1'b0; fc <= 7'd0; rv <= '0; fault <= 1'b0;
             vo_a <= '0; vo_b <= '0; pa <= 2'd0; pb <= 2'd0;
@@ -648,7 +655,7 @@ module dsdv_eng_rr_c #(
     assign rl[31:2]=0;
 `endif
     reg [52:0] ks; reg en_q, ly_q; reg [1:0] rk_q;
-    always @(posedge ck or negedge rl[0]) if (!rl[0]) ks[52] <= 1'b0; else ks[52] <= f_ks[52];
+    always @(posedge ck `OT_ARST(rl[0])) if (!rl[0]) ks[52] <= 1'b0; else ks[52] <= f_ks[52];
     always @(posedge ck) begin ks[51:0] <= f_ks[51:0]; en_q <= cfg_en; ly_q <= cfg_layer; rk_q <= cfg_rank; end
     wire win_v, wf; wire [2:0] win_slot; wire [67:0] win_ids;
 `ifdef OT_S81ENG_RR_N32
@@ -714,7 +721,7 @@ module dsdv_eng_rr_c #(
 `endif
         ), .o_v(o_v), .o_col(o_col), .o_beat(o_beat), .o_d(o_d),
         .vi_a(vi_s), .vo_a(vo_s), .vi_b(vi_n), .vo_b(vo_n), .fault(xf));
-    always @(posedge ck or negedge rl[0])
+    always @(posedge ck `OT_ARST(rl[0]))
         if (!rl[0]) st <= 4'd0;
         else st <= st | {xf, hf | (o_v && o_slot != hr_slot) | (st_v && st_slot != hr_slot), lf | (st_v & st_bad), wf};
 endmodule

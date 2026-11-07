@@ -1,3 +1,10 @@
+`ifndef OT_ARST
+ `ifdef OT_S81ENG_SYNC_RST
+  `define OT_ARST(x)
+ `else
+  `define OT_ARST(x) or negedge x
+ `endif
+`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // 1.2 GHz (0.833 ns at ASAP7 SS, 60 ps setup uncertainty) binary32 add and multiply for the DS HBM accelerator's
@@ -43,7 +50,7 @@ module ot_hdc_f12_cut #(parameter integer W = 2, parameter integer CUT = 0) (
     generate if (CUT) begin : g_r
         reg         v;
         reg [W-2:0] r;
-        always @(posedge clk or negedge rst_n) begin
+        always @(posedge clk `OT_ARST(rst_n)) begin
             if (!rst_n) v <= 1'b0;
             else v <= d[W-1];
         end
@@ -231,7 +238,7 @@ module ot_hdc_fp32_add_f12 #(
     wire subnormal = (e == 9'd1) && !man[23];
     wire [31:0] code = {u_sign, subnormal ? 8'd0 : e[7:0], man[22:0]};
     wire over = (u_exp == 8'hff) || (e >= 9'd255);
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_ARST(rst_n)) begin
         if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
         else begin
             valid_out <= u_v;
@@ -434,7 +441,7 @@ module ot_hdc_fp32_mul_f12 #(
     wire sub_carry = o_sub && rnd[23];
     wire [31:0] code = o_sub ? (sub_carry ? {o_sign, 8'h01, 23'd0} : {o_sign, 8'h00, rnd[22:0]})
                              : {o_sign, field, man[22:0]};
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_ARST(rst_n)) begin
         if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
         else begin
             valid_out <= o_v;
@@ -484,7 +491,7 @@ endmodule
 // so the lane's operand multiplexers (control decode + 3- to 5-way select, ~250 ps routed) own a whole stage
 // (measured: the LAT-4 adder behind the lane's AD multiplexer missed 0.833 ns by 364 ps at placement)
 module ot_hdc_f12_inreg (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output reg v, output reg [31:0] qa, qb);
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_ARST(rst_n)) begin
         if (!rst_n) v <= 1'b0;
         else v <= valid_in;
     end
