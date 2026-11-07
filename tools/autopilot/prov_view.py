@@ -13,6 +13,10 @@ such child, so type-level place / route failures surface early.  Still a hard vi
                       LEF is MACRO M with the plan outline and exactly the plan pin names, and both libs hold cell (M)
                       with the same port base names.  A plan entry that already names a lef (noview) keeps that plan
                       LEF; only the routed lib is taken (port names checked against the plan LEF).
+            Optional routed meta: detailed_lef + detailed_receipt staged basenames and explicit detail_bloat_factor
+            (0 or 1). The receipt comes from abstract_detail.py splice, adds its actual export bloat_factor, and
+            must hash both the captured base and corrected output with matching-export pins/check_ok. The generator
+            rechecks exact pins/PG/lower OBS using the selected --src helper. No export or P&R is run here.
             contract  blackbox LEF from the plan outline + pins_file (pin directions: pins_file dir, plan LEF, child
                       RTL header) with OBS M1..obs_max (default M5 = 12.1a ceiling; M7 gave PDN-0006 on M5 PG) less pin windows, VDD/VSS
                       stripes; budget lib (TT/FF) from the plan arrival contracts: both faces registered, IO_BUDGET x T
@@ -485,9 +489,56 @@ def contract_lib(module, corner, w, h, pins, dirs, clocks, period_ps):
 
 
 # ------------------------------------------------------------------------------------------------------ make
-def check_routed(cdir, module, entry, ppins, plan_lef, source_root=None):
+def routed_detail(cdir, module, meta, source_root):
+    """Explicit pre-exported detailed abstract only; no OpenROAD/export or guessed bloat policy here.
+
+    The existing abstract_detail splice receipt pins both files. Recheck its unchanged
+    header/pins/PG/lower OBS against the staged base before selecting the detailed LEF.
+    """
+    keys = ("detailed_lef", "detailed_receipt")
+    if not any(meta.get(k) for k in keys):
+        return os.path.join(cdir, module + ".lef"), None
+    if not all(isinstance(meta.get(k), str) and meta[k] == os.path.basename(meta[k])
+               and meta[k] not in (".", "..") for k in keys):
+        raise ValueError("detailed abstract needs both staged artifact basenames")
+    bloat = meta.get("detail_bloat_factor")
+    if type(bloat) is not int or bloat not in (0, 1):
+        raise ValueError("detailed abstract needs an explicit bloat factor 0 or 1")
+    base = os.path.join(cdir, module + ".lef")
+    detail = os.path.join(cdir, meta["detailed_lef"])
+    receipt = json.load(open(os.path.join(cdir, meta["detailed_receipt"])))
+    if not isinstance(receipt, dict):
+        raise ValueError("detailed abstract receipt must be an object")
+    if receipt.get("base_sha256") != sha256(base) or receipt.get("out_sha256") != sha256(detail):
+        raise ValueError("detailed abstract receipt hashes differ from staged files")
+    if receipt.get("check_ok") is not True or receipt.get("detail_pins_equal_base") is not True:
+        raise ValueError("detailed abstract lacks the matching-export pin check")
+    if receipt.get("bloat_factor") != bloat or type(receipt.get("bloat_factor")) is not int:
+        raise ValueError("detailed abstract bloat policy differs from its receipt")
+    if not source_root:
+        raise ValueError("detailed abstract needs the selected --src helper cohort")
+    import importlib.util
+    helper = os.path.join(source_root, "tools", "die_plan", "abstract_detail.py")
+    spec = importlib.util.spec_from_file_location("_prov_abstract_detail", helper)
+    tool = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tool)
+    before = open(base).read().splitlines(keepends=True)
+    after = open(detail).read().splitlines(keepends=True)
+    layers = tool.default_layers(before)
+    if not layers or receipt.get("layers_detailed") != layers:
+        raise ValueError("detailed abstract layers differ from layers above PG pins")
+    ok, problems = tool.check(before, after, layers)
+    if not ok:
+        raise ValueError("detailed abstract changed protected geometry: " + "; ".join(problems))
+    return detail, dict(base_sha256=receipt["base_sha256"], out_sha256=receipt["out_sha256"],
+                        bloat_factor=bloat, layers_detailed=layers, check_ok=True,
+                        detail_pins_equal_base=True, helper_sha256=sha256(helper))
+
+
+def check_routed(cdir, module, entry, ppins, plan_lef, source_root=None, lef_override=None):
     """-> (ok, why) for a routed candidate dir"""
     lef, tt, ff = (os.path.join(cdir, f"{module}{s}") for s in (".lef", "_tt.lib", "_ff.lib"))
+    lef = lef_override or lef
     for f in (tt, ff) + (() if plan_lef else (lef,)):
         if not os.path.isfile(f):
             return False, f"missing {os.path.basename(f)}"
@@ -554,18 +605,29 @@ def make(a):
         rd = os.path.join(a.routed or "", m)
         for c in sorted(os.listdir(rd)) if a.routed and os.path.isdir(rd) else []:
             cdir = os.path.join(rd, c)
-            ok, why = check_routed(cdir, m, entry, ppins, plan_lef, a.src)
             meta = {}
             try:
                 meta = json.load(open(os.path.join(cdir, "meta.json")))
             except (OSError, ValueError):
                 pass
+            detail = None
+            selected_lef = os.path.join(cdir, m + ".lef")
+            try:
+                if not plan_lef:
+                    selected_lef, detail = routed_detail(cdir, m, meta, a.src)
+                ok, why = check_routed(cdir, m, entry, ppins, plan_lef, a.src, selected_lef)
+            except (OSError, ValueError, KeyError, TypeError, ImportError) as exc:
+                ok, why = False, "detailed abstract: " + str(exc)
             tried.append(f"{meta.get('job', c)}: {why}")
             if ok:
-                for s in ("_tt.lib", "_ff.lib") + (() if plan_lef else (".lef",)):
-                    shutil.copyfile(os.path.join(cdir, m + s), os.path.join(vd, m + s))
+                for suffix in ("_tt.lib", "_ff.lib"):
+                    shutil.copyfile(os.path.join(cdir, m + suffix), os.path.join(vd, m + suffix))
+                if not plan_lef:
+                    shutil.copyfile(selected_lef, os.path.join(vd, m + ".lef"))
                 rec = dict(source="routed", job=meta.get("job"), host=meta.get("host"), signoff=meta.get("signoff"),
                            drc=meta.get("drc"), tt_wns=meta.get("tt_wns"), ff_wns=meta.get("ff_wns"))
+                if detail is not None:
+                    rec["abstract_detail"] = detail
                 break
         if rec is None and entry.get("physical_ft"):
             errors.append(f"{m}: explicit physical FT requires its exact routed view ({'; '.join(tried)})")
