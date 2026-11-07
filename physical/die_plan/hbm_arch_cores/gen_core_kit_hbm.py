@@ -2424,6 +2424,12 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                                                                      sha256=sha(a.reg_guide_boxes))),
                                                             indent=1) + "\n")
         rec["reg_guide_boxes"] = dict(boxes=len(rgb), sha256=sha(a.reg_guide_boxes))
+        if atomic_groups:
+            expected = {n.replace("\\", "") for g in atomic_groups["groups"] for n in g["members"]}
+            provided = {n for g in rgb for n in g["prefixes"]}
+            if expected != provided:
+                raise SystemExit("ATOMIC_CLOCK exact guides must name every atomic member and no other prefix")
+            cfg.append("export OT_MACRO_REG_GUIDE_EXACT = 1")
     if a.region_guide:
         # FLOW-23 (COORD 11-02 23:0x, GEOM-111 class D): soft GPL region guides per failing r2r bit slice from the
         # kit's last AUTO-GEOM (tools/die_plan/region_guide.py plan), sourced LAST in face_flops.tcl and released at

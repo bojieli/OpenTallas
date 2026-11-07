@@ -1,3 +1,6 @@
+# OT_MACRO_REG_GUIDE_EXACT=1 is opt-in for complete literal instance names,
+# emitted by atomic-clock groups with exact reviewed guides. Default remains
+# hierarchical prefix matching. Both modes retain fixed ownership/capacity gates.
 # HBM-CORES-REBAL-10 (opt-in gen_core_kit_hbm.py --macro-reg-guide SCOPE): per-macro register guides.
 # Sourced at PRE_GLOBAL_PLACE (end of face_flops.tcl).  ot_mrg_spec = {name {prefix ...} x0 y0 x1 y1 ...} (um, die coords) is
 # written by the generator from the frozen macro placement: one box per static macro <P>.u_m = the macro's placed bbox
