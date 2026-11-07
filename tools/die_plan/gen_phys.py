@@ -3412,7 +3412,10 @@ def ca_ring_land_slots(rtl_dir, buses, inputs=None):
     for m in _CA_ORIGIN.finditer(text):
         ps = re.search(r"\.p_start\s*\(\s*([A-Za-z_]\w*)\s*\)", m.group(2))
         if ps and (inputs is None or ps.group(1) in inputs):
-            out[ps.group(1)] = {"form": "origin_start", "origin": m.group(1)}
+            # face_guard compares the flat instance path: the wrapper's u_bound level is part of it
+            mods = re.findall(r"^\s*module\s+(\w+)", text[:m.start()], re.M)
+            w = re.search(r"\b" + re.escape(mods[-1]) + r"\s+(?:#\s*\((?:[^()]|\([^()]*\))*\)\s*)?(\w+)\s*\(", text) if mods else None
+            out[ps.group(1)] = {"form": "origin_start", "origin": (w.group(1) + "." if w else "") + m.group(1)}
     return out
 
 

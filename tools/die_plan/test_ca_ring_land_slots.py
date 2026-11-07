@@ -21,3 +21,7 @@ def test_declares(tmp_path):
 def test_none(tmp_path):
     (tmp_path / "t.sv").write_text("module m; endmodule\n")
     assert G.ca_ring_land_slots(tmp_path, {"a"}) == {}
+
+def test_origin_path_includes_wrapper(tmp_path):
+    (tmp_path / "t.sv").write_text("module b_bound (input p); ot_dp_landing_origin_s u_cland_origin (.p_start(p)); endmodule\nmodule top (input p); b_bound u_bound (.p(p)); endmodule\n")
+    assert G.ca_ring_land_slots(tmp_path, set())["p"]["origin"] == "u_bound.u_cland_origin"
