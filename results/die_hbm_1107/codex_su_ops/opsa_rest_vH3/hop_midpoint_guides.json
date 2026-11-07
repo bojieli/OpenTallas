@@ -1,0 +1,1859 @@
+{
+  "boxes": [
+    {
+      "name": "hop_mid_0",
+      "prefixes": [
+        "u_hop_u_core_io_r/q[0]$_DFF_P_"
+      ],
+      "box_um": [
+        364.78900000000004,
+        18.11,
+        380.78900000000004,
+        32.11
+      ],
+      "source": "u_bin_u_core_io_r/q[0]$_DFF_P_",
+      "source_xy": [
+        6.912,
+        4.725
+      ],
+      "capture_bbox": [
+        6.912,
+        4.725,
+        738.666,
+        45.495
+      ],
+      "face_hop_before_um": 747.6815624689431,
+      "hop_consumer_before_um": 145.2640148144061
+    },
+    {
+      "name": "hop_mid_1",
+      "prefixes": [
+        "u_hop_u_core_io_r/q[1]$_DFF_P_"
+      ],
+      "box_um": [
+        364.357,
+        15.139999999999997,
+        380.357,
+        29.139999999999997
+      ],
+      "source": "u_bin_u_core_io_r/q[1]$_DFF_P_",
+      "source_xy": [
+        5.562,
+        4.995
+      ],
+      "capture_bbox": [
+        5.562,
+        4.995,
+        739.152,
+        39.285
+      ],
+      "face_hop_before_um": 725.6725907742417,
+      "hop_consumer_before_um": 122.14246439711296
+    },
+    {
+      "name": "hop_mid_2",
+      "prefixes": [
+        "u_hop_u_core_io_r/q[3]$_DFF_P_"
+      ],
+      "box_um": [
+        371.62,
+        31.07,
+        387.62,
+        45.07
+      ],
+      "source": "u_bin_u_core_io_r/q[3]$_DFF_P_",
+      "source_xy": [
+        9.612,
+        4.455
+      ],
+      "capture_bbox": [
+        5.184,
+        4.455,
+        754.056,
+        71.685
+      ],
+      "face_hop_before_um": 27.154484049600356,
+      "hop_consumer_before_um": 738.3444189969881
+    },
+    {
+      "name": "hop_mid_3",
+      "prefixes": [
+        "u_hop_u_core_io_r/q[4]$_DFF_P_"
+      ],
+      "box_um": [
+        236.053,
+        22.565,
+        252.053,
+        36.565
+      ],
+      "source": "u_bin_u_core_io_r/q[4]$_DFF_P_",
+      "source_xy": [
+        5.238,
+        16.875
+      ],
+      "capture_bbox": [
+        5.238,
+        16.875,
+        482.868,
+        42.255
+      ],
+      "face_hop_before_um": 64.62011030631254,
+      "hop_consumer_before_um": 413.69815870511195
+    },
+    {
+      "name": "hop_mid_4",
+      "prefixes": [
+        "u_hop_u_core_io_r/q[6]$_DFF_P_"
+      ],
+      "box_um": [
+        236.701,
+        22.565,
+        252.701,
+        36.565
+      ],
+      "source": "u_bin_u_core_io_r/q[6]$_DFF_P_",
+      "source_xy": [
+        6.534,
+        16.875
+      ],
+      "capture_bbox": [
+        6.534,
+        16.875,
+        482.868,
+        42.255
+      ],
+      "face_hop_before_um": 27.318076433014095,
+      "hop_consumer_before_um": 449.692132125969
+    },
+    {
+      "name": "hop_mid_5",
+      "prefixes": [
+        "u_hop_u_core_io_r/q[7]$_DFF_P_"
+      ],
+      "box_um": [
+        236.404,
+        22.43,
+        252.404,
+        36.43
+      ],
+      "source": "u_bin_u_core_io_r/q[7]$_DFF_P_",
+      "source_xy": [
+        5.94,
+        16.605
+      ],
+      "capture_bbox": [
+        5.94,
+        16.605,
+        482.868,
+        42.255
+      ],
+      "face_hop_before_um": 48.475069427490254,
+      "hop_consumer_before_um": 429.14373155855367
+    },
+    {
+      "name": "hop_mid_6",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[0]$_DFF_P_"
+      ],
+      "box_um": [
+        384.958,
+        44.974999999999994,
+        400.958,
+        58.974999999999994
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[0]$_DFF_P_",
+      "source_xy": [
+        754.812,
+        75.195
+      ],
+      "capture_bbox": [
+        31.104,
+        28.755,
+        754.812,
+        75.195
+      ],
+      "face_hop_before_um": 98.1233493313391,
+      "hop_consumer_before_um": 632.378230014285
+    },
+    {
+      "name": "hop_mid_7",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[10]$_DFF_P_"
+      ],
+      "box_um": [
+        373.672,
+        40.385,
+        389.672,
+        54.385
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[10]$_DFF_P_",
+      "source_xy": [
+        754.812,
+        74.925
+      ],
+      "capture_bbox": [
+        8.532,
+        19.845,
+        754.812,
+        74.925
+      ],
+      "face_hop_before_um": 134.54470344090103,
+      "hop_consumer_before_um": 615.9410386912045
+    },
+    {
+      "name": "hop_mid_8",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[11]$_DFF_P_"
+      ],
+      "box_um": [
+        375.103,
+        44.165000000000006,
+        391.103,
+        58.165000000000006
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[11]$_DFF_P_",
+      "source_xy": [
+        754.164,
+        74.385
+      ],
+      "capture_bbox": [
+        12.042,
+        27.945,
+        754.164,
+        74.385
+      ],
+      "face_hop_before_um": 82.45458735570753,
+      "hop_consumer_before_um": 663.84949800689
+    },
+    {
+      "name": "hop_mid_9",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[12]$_DFF_P_"
+      ],
+      "box_um": [
+        383.608,
+        42.95,
+        399.608,
+        56.95
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[12]$_DFF_P_",
+      "source_xy": [
+        753.516,
+        74.655
+      ],
+      "capture_bbox": [
+        29.7,
+        25.245,
+        753.516,
+        74.655
+      ],
+      "face_hop_before_um": 74.93647533744827,
+      "hop_consumer_before_um": 657.0966319347558
+    },
+    {
+      "name": "hop_mid_10",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[13]$_DFF_P_"
+      ],
+      "box_um": [
+        381.178,
+        41.464999999999996,
+        397.178,
+        55.464999999999996
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[13]$_DFF_P_",
+      "source_xy": [
+        754.596,
+        74.115
+      ],
+      "capture_bbox": [
+        23.76,
+        22.815,
+        754.596,
+        74.115
+      ],
+      "face_hop_before_um": 88.78508165226859,
+      "hop_consumer_before_um": 655.6805081165674
+    },
+    {
+      "name": "hop_mid_11",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[14]$_DFF_P_"
+      ],
+      "box_um": [
+        373.24,
+        38.495000000000005,
+        389.24,
+        52.495000000000005
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[14]$_DFF_P_",
+      "source_xy": [
+        755.136,
+        73.575
+      ],
+      "capture_bbox": [
+        7.344,
+        17.415,
+        755.136,
+        73.575
+      ],
+      "face_hop_before_um": 73.46274794751419,
+      "hop_consumer_before_um": 678.5298892429131
+    },
+    {
+      "name": "hop_mid_12",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[15]$_DFF_P_"
+      ],
+      "box_um": [
+        371.34999999999997,
+        44.3,
+        387.34999999999997,
+        58.3
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[15]$_DFF_P_",
+      "source_xy": [
+        753.516,
+        73.575
+      ],
+      "capture_bbox": [
+        5.184,
+        29.025,
+        753.516,
+        73.575
+      ],
+      "face_hop_before_um": 75.14056827040899,
+      "hop_consumer_before_um": 677.1266022864557
+    },
+    {
+      "name": "hop_mid_13",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[16]$_DFF_P_"
+      ],
+      "box_um": [
+        386.281,
+        42.68,
+        402.281,
+        56.68
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[16]$_DFF_P_",
+      "source_xy": [
+        753.516,
+        73.035
+      ],
+      "capture_bbox": [
+        35.046,
+        26.325,
+        753.516,
+        73.035
+      ],
+      "face_hop_before_um": 65.54107490726705,
+      "hop_consumer_before_um": 663.2216269845247
+    },
+    {
+      "name": "hop_mid_14",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[17]$_DFF_P_"
+      ],
+      "box_um": [
+        386.362,
+        41.870000000000005,
+        402.362,
+        55.870000000000005
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[17]$_DFF_P_",
+      "source_xy": [
+        753.624,
+        72.765
+      ],
+      "capture_bbox": [
+        35.1,
+        24.975,
+        753.624,
+        72.765
+      ],
+      "face_hop_before_um": 77.83775487512469,
+      "hop_consumer_before_um": 654.7040171069672
+    },
+    {
+      "name": "hop_mid_15",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[18]$_DFF_P_"
+      ],
+      "box_um": [
+        372.916,
+        42.005,
+        388.916,
+        56.005
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[18]$_DFF_P_",
+      "source_xy": [
+        753.516,
+        72.495
+      ],
+      "capture_bbox": [
+        8.316,
+        25.515,
+        753.516,
+        72.495
+      ],
+      "face_hop_before_um": 64.67299804400598,
+      "hop_consumer_before_um": 688.324765700029
+    },
+    {
+      "name": "hop_mid_16",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[19]$_DFF_P_"
+      ],
+      "box_um": [
+        371.836,
+        43.22,
+        387.836,
+        57.22
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[19]$_DFF_P_",
+      "source_xy": [
+        751.356,
+        72.495
+      ],
+      "capture_bbox": [
+        8.316,
+        27.945,
+        751.356,
+        72.495
+      ],
+      "face_hop_before_um": 93.88860908544767,
+      "hop_consumer_before_um": 651.629225477188
+    },
+    {
+      "name": "hop_mid_17",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[1]$_DFF_P_"
+      ],
+      "box_um": [
+        385.93,
+        43.49,
+        401.93,
+        57.49
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[1]$_DFF_P_",
+      "source_xy": [
+        754.812,
+        72.495
+      ],
+      "capture_bbox": [
+        33.048,
+        28.485,
+        754.812,
+        72.495
+      ],
+      "face_hop_before_um": 98.37343196209025,
+      "hop_consumer_before_um": 632.6146670762542
+    },
+    {
+      "name": "hop_mid_18",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[20]$_DFF_P_"
+      ],
+      "box_um": [
+        388.117,
+        41.87,
+        404.117,
+        55.87
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[20]$_DFF_P_",
+      "source_xy": [
+        754.812,
+        72.225
+      ],
+      "capture_bbox": [
+        37.422,
+        25.515,
+        754.812,
+        72.225
+      ],
+      "face_hop_before_um": 63.770181934819696,
+      "hop_consumer_before_um": 661.5903699903739
+    },
+    {
+      "name": "hop_mid_19",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[21]$_DFF_P_"
+      ],
+      "box_um": [
+        385.741,
+        41.464999999999996,
+        401.741,
+        55.464999999999996
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[21]$_DFF_P_",
+      "source_xy": [
+        750.168,
+        72.225
+      ],
+      "capture_bbox": [
+        37.314,
+        24.705,
+        750.168,
+        72.225
+      ],
+      "face_hop_before_um": 66.5493861729768,
+      "hop_consumer_before_um": 663.1819146177013
+    },
+    {
+      "name": "hop_mid_20",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[22]$_DFF_P_"
+      ],
+      "box_um": [
+        374.968,
+        42.275,
+        390.968,
+        56.275
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[22]$_DFF_P_",
+      "source_xy": [
+        753.624,
+        71.685
+      ],
+      "capture_bbox": [
+        12.312,
+        26.865,
+        753.624,
+        71.685
+      ],
+      "face_hop_before_um": 115.05738828949664,
+      "hop_consumer_before_um": 630.0173173048499
+    },
+    {
+      "name": "hop_mid_21",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[23]$_DFF_P_"
+      ],
+      "box_um": [
+        374.212,
+        42.68,
+        390.212,
+        56.68
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[23]$_DFF_P_",
+      "source_xy": [
+        751.356,
+        71.955
+      ],
+      "capture_bbox": [
+        13.068,
+        27.405,
+        751.356,
+        71.955
+      ],
+      "face_hop_before_um": 66.5520370537221,
+      "hop_consumer_before_um": 675.7859746428599
+    },
+    {
+      "name": "hop_mid_22",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[24]$_DFF_P_"
+      ],
+      "box_um": [
+        381.55600000000004,
+        44.975,
+        397.55600000000004,
+        58.975
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[24]$_DFF_P_",
+      "source_xy": [
+        753.624,
+        71.955
+      ],
+      "capture_bbox": [
+        25.488,
+        31.995,
+        753.624,
+        71.955
+      ],
+      "face_hop_before_um": 54.29172997796264,
+      "hop_consumer_before_um": 684.8128030169995
+    },
+    {
+      "name": "hop_mid_23",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[25]$_DFF_P_"
+      ],
+      "box_um": [
+        380.61100000000005,
+        43.625,
+        396.61100000000005,
+        57.625
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[25]$_DFF_P_",
+      "source_xy": [
+        751.464,
+        71.415
+      ],
+      "capture_bbox": [
+        25.758,
+        29.835,
+        751.464,
+        71.415
+      ],
+      "face_hop_before_um": 56.830581063367646,
+      "hop_consumer_before_um": 686.394
+    },
+    {
+      "name": "hop_mid_24",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[26]$_DFF_P_"
+      ],
+      "box_um": [
+        372.592,
+        42.815000000000005,
+        388.592,
+        56.815000000000005
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[26]$_DFF_P_",
+      "source_xy": [
+        754.812,
+        71.415
+      ],
+      "capture_bbox": [
+        6.372,
+        28.215,
+        754.812,
+        71.415
+      ],
+      "face_hop_before_um": 44.09998530612004,
+      "hop_consumer_before_um": 711.5536048281956
+    },
+    {
+      "name": "hop_mid_25",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[27]$_DFF_P_"
+      ],
+      "box_um": [
+        371.269,
+        43.355000000000004,
+        387.269,
+        57.355000000000004
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[27]$_DFF_P_",
+      "source_xy": [
+        750.168,
+        71.415
+      ],
+      "capture_bbox": [
+        8.37,
+        29.295,
+        750.168,
+        71.415
+      ],
+      "face_hop_before_um": 88.5222742816745,
+      "hop_consumer_before_um": 655.9337567163318
+    },
+    {
+      "name": "hop_mid_26",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[28]$_DFF_P_"
+      ],
+      "box_um": [
+        380.584,
+        44.975,
+        396.584,
+        58.975
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[28]$_DFF_P_",
+      "source_xy": [
+        753.624,
+        70.875
+      ],
+      "capture_bbox": [
+        23.544,
+        33.075,
+        753.624,
+        70.875
+      ],
+      "face_hop_before_um": 46.59045395786567,
+      "hop_consumer_before_um": 696.6209299181298
+    },
+    {
+      "name": "hop_mid_27",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[29]$_DFF_P_"
+      ],
+      "box_um": [
+        380.233,
+        42.41,
+        396.233,
+        56.41
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[29]$_DFF_P_",
+      "source_xy": [
+        751.356,
+        70.875
+      ],
+      "capture_bbox": [
+        25.11,
+        27.945,
+        751.356,
+        70.875
+      ],
+      "face_hop_before_um": 51.10637142274925,
+      "hop_consumer_before_um": 694.3923515535002
+    },
+    {
+      "name": "hop_mid_28",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[2]$_DFF_P_"
+      ],
+      "box_um": [
+        375.427,
+        41.6,
+        391.427,
+        55.6
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[2]$_DFF_P_",
+      "source_xy": [
+        754.812,
+        70.605
+      ],
+      "capture_bbox": [
+        12.042,
+        26.595,
+        754.812,
+        70.605
+      ],
+      "face_hop_before_um": 145.07946960200817,
+      "hop_consumer_before_um": 599.0973898290661
+    },
+    {
+      "name": "hop_mid_29",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[30]$_DFF_P_"
+      ],
+      "box_um": [
+        371.45799999999997,
+        42.410000000000004,
+        387.45799999999997,
+        56.410000000000004
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[30]$_DFF_P_",
+      "source_xy": [
+        750.06,
+        70.605
+      ],
+      "capture_bbox": [
+        8.856,
+        28.215,
+        750.06,
+        70.605
+      ],
+      "face_hop_before_um": 33.258082265819226,
+      "hop_consumer_before_um": 717.9088281947785
+    },
+    {
+      "name": "hop_mid_30",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[31]$_DFF_P_"
+      ],
+      "box_um": [
+        375.724,
+        42.815,
+        391.724,
+        56.815
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[31]$_DFF_P_",
+      "source_xy": [
+        755.136,
+        70.875
+      ],
+      "capture_bbox": [
+        12.312,
+        28.755,
+        755.136,
+        70.875
+      ],
+      "face_hop_before_um": 94.78982869485519,
+      "hop_consumer_before_um": 650.4921362599243
+    },
+    {
+      "name": "hop_mid_31",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[3]$_DFF_P_"
+      ],
+      "box_um": [
+        370.675,
+        42.544999999999995,
+        386.675,
+        56.544999999999995
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[3]$_DFF_P_",
+      "source_xy": [
+        750.87,
+        69.795
+      ],
+      "capture_bbox": [
+        6.48,
+        28.755,
+        750.87,
+        70.335
+      ],
+      "face_hop_before_um": 146.23555941015167,
+      "hop_consumer_before_um": 599.764817087498
+    },
+    {
+      "name": "hop_mid_32",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[4]$_DFF_P_"
+      ],
+      "box_um": [
+        384.661,
+        40.52,
+        400.661,
+        54.52
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[4]$_DFF_P_",
+      "source_xy": [
+        754.92,
+        67.905
+      ],
+      "capture_bbox": [
+        30.402,
+        27.135,
+        754.92,
+        67.905
+      ],
+      "face_hop_before_um": 130.7394422659053,
+      "hop_consumer_before_um": 596.3727949026514
+    },
+    {
+      "name": "hop_mid_33",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[5]$_DFF_P_"
+      ],
+      "box_um": [
+        380.476,
+        37.685,
+        396.476,
+        51.685
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[5]$_DFF_P_",
+      "source_xy": [
+        750.06,
+        66.285
+      ],
+      "capture_bbox": [
+        26.892,
+        23.085,
+        750.06,
+        66.285
+      ],
+      "face_hop_before_um": 112.29060769271838,
+      "hop_consumer_before_um": 615.5964568319087
+    },
+    {
+      "name": "hop_mid_34",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[6]$_DFF_P_"
+      ],
+      "box_um": [
+        371.863,
+        40.385,
+        387.863,
+        54.385
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[6]$_DFF_P_",
+      "source_xy": [
+        753.57,
+        65.475
+      ],
+      "capture_bbox": [
+        6.156,
+        26.865,
+        753.57,
+        67.905
+      ],
+      "face_hop_before_um": 110.45229750439783,
+      "hop_consumer_before_um": 638.0645324134543
+    },
+    {
+      "name": "hop_mid_35",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[7]$_DFF_P_"
+      ],
+      "box_um": [
+        372.214,
+        39.71,
+        388.214,
+        53.71
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[7]$_DFF_P_",
+      "source_xy": [
+        752.004,
+        65.745
+      ],
+      "capture_bbox": [
+        8.424,
+        27.675,
+        752.004,
+        65.745
+      ],
+      "face_hop_before_um": 146.37486669507174,
+      "hop_consumer_before_um": 598.2627928427439
+    },
+    {
+      "name": "hop_mid_36",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[8]$_DFF_P_"
+      ],
+      "box_um": [
+        383.176,
+        35.93,
+        399.176,
+        49.93
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[8]$_DFF_P_",
+      "source_xy": [
+        754.002,
+        65.205
+      ],
+      "capture_bbox": [
+        28.35,
+        20.655,
+        754.002,
+        65.205
+      ],
+      "face_hop_before_um": 79.37110970623999,
+      "hop_consumer_before_um": 650.5666421851032
+    },
+    {
+      "name": "hop_mid_37",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[9]$_DFF_P_"
+      ],
+      "box_um": [
+        381.043,
+        37.01,
+        397.043,
+        51.01
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_re/q[9]$_DFF_P_",
+      "source_xy": [
+        752.004,
+        65.205
+      ],
+      "capture_bbox": [
+        26.082,
+        22.815,
+        752.004,
+        65.205
+      ],
+      "face_hop_before_um": 87.04056295773827,
+      "hop_consumer_before_um": 645.0079588532222
+    },
+    {
+      "name": "hop_mid_38",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_src/q[102]$_DFF_P_"
+      ],
+      "box_um": [
+        479.21500000000003,
+        48.214999999999996,
+        495.21500000000003,
+        62.214999999999996
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_src/q[102]$_DFF_P_",
+      "source_xy": [
+        223.182,
+        81.675
+      ],
+      "capture_bbox": [
+        223.182,
+        28.755,
+        751.248,
+        81.675
+      ],
+      "face_hop_before_um": 34.456739485911896,
+      "hop_consumer_before_um": 514.1559148779677
+    },
+    {
+      "name": "hop_mid_39",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_src/q[103]$_DFF_P_"
+      ],
+      "box_um": [
+        483.13,
+        48.214999999999996,
+        499.13,
+        62.214999999999996
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_src/q[103]$_DFF_P_",
+      "source_xy": [
+        231.012,
+        81.675
+      ],
+      "capture_bbox": [
+        231.012,
+        28.755,
+        751.248,
+        81.675
+      ],
+      "face_hop_before_um": 88.2424936411024,
+      "hop_consumer_before_um": 438.73157647472794
+    },
+    {
+      "name": "hop_mid_40",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_src/q[118]$_DFF_P_"
+      ],
+      "box_um": [
+        532.4590000000001,
+        48.349999999999994,
+        548.4590000000001,
+        62.349999999999994
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_src/q[118]$_DFF_P_",
+      "source_xy": [
+        326.862,
+        81.675
+      ],
+      "capture_bbox": [
+        326.862,
+        29.025,
+        754.056,
+        81.675
+      ],
+      "face_hop_before_um": 31.431571961962064,
+      "hop_consumer_before_um": 425.083489686438
+    },
+    {
+      "name": "hop_mid_41",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_src/q[68]$_DFF_P_"
+      ],
+      "box_um": [
+        371.458,
+        21.35,
+        387.458,
+        35.35
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_src/q[68]$_DFF_P_",
+      "source_xy": [
+        11.394,
+        23.625
+      ],
+      "capture_bbox": [
+        11.394,
+        23.625,
+        747.522,
+        33.075
+      ],
+      "face_hop_before_um": 436.80023546696947,
+      "hop_consumer_before_um": 299.494388929075
+    },
+    {
+      "name": "hop_mid_42",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_rd_src/q[69]$_DFF_P_"
+      ],
+      "box_um": [
+        368.596,
+        21.62,
+        384.596,
+        35.620000000000005
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_rd_src/q[69]$_DFF_P_",
+      "source_xy": [
+        5.67,
+        24.165
+      ],
+      "capture_bbox": [
+        5.67,
+        24.165,
+        747.522,
+        33.075
+      ],
+      "face_hop_before_um": 440.7356146262745,
+      "hop_consumer_before_um": 301.28169433936745
+    },
+    {
+      "name": "hop_mid_43",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[0]$_DFF_P_"
+      ],
+      "box_um": [
+        297.8155,
+        26.21,
+        313.8155,
+        40.21
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[0]$_DFF_P_",
+      "source_xy": [
+        12.231,
+        25.245
+      ],
+      "capture_bbox": [
+        12.231,
+        25.245,
+        599.4,
+        41.175
+      ],
+      "face_hop_before_um": 18.38715858962444,
+      "hop_consumer_before_um": 586.1750368277379
+    },
+    {
+      "name": "hop_mid_44",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[10]$_DFF_P_"
+      ],
+      "box_um": [
+        299.827,
+        24.32,
+        315.827,
+        38.32
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[10]$_DFF_P_",
+      "source_xy": [
+        5.292,
+        30.375
+      ],
+      "capture_bbox": [
+        5.292,
+        30.375,
+        610.362,
+        32.265
+      ],
+      "face_hop_before_um": 51.46539967784181,
+      "hop_consumer_before_um": 553.6788533473172
+    },
+    {
+      "name": "hop_mid_45",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[11]$_DFF_P_"
+      ],
+      "box_um": [
+        301.339,
+        18.245,
+        317.339,
+        32.245000000000005
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[11]$_DFF_P_",
+      "source_xy": [
+        7.83,
+        25.515
+      ],
+      "capture_bbox": [
+        7.83,
+        24.975,
+        610.848,
+        25.515
+      ],
+      "face_hop_before_um": 62.17510849206457,
+      "hop_consumer_before_um": 540.8650782736855
+    },
+    {
+      "name": "hop_mid_46",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[12]$_DFF_P_"
+      ],
+      "box_um": [
+        303.93100000000004,
+        21.485,
+        319.93100000000004,
+        35.485
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[12]$_DFF_P_",
+      "source_xy": [
+        11.772,
+        24.975
+      ],
+      "capture_bbox": [
+        11.772,
+        24.975,
+        612.09,
+        31.995
+      ],
+      "face_hop_before_um": 43.58024157803626,
+      "hop_consumer_before_um": 557.0067123509375
+    },
+    {
+      "name": "hop_mid_47",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[13]$_DFF_P_"
+      ],
+      "box_um": [
+        302.041,
+        18.11,
+        318.041,
+        32.11
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[13]$_DFF_P_",
+      "source_xy": [
+        6.156,
+        25.785
+      ],
+      "capture_bbox": [
+        6.156,
+        24.435,
+        613.926,
+        25.785
+      ],
+      "face_hop_before_um": 64.81856546545905,
+      "hop_consumer_before_um": 542.998074038021
+    },
+    {
+      "name": "hop_mid_48",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[14]$_DFF_P_"
+      ],
+      "box_um": [
+        293.374,
+        18.515,
+        309.374,
+        32.515
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[14]$_DFF_P_",
+      "source_xy": [
+        8.37,
+        26.055
+      ],
+      "capture_bbox": [
+        8.37,
+        24.975,
+        594.378,
+        26.055
+      ],
+      "face_hop_before_um": 480.978,
+      "hop_consumer_before_um": 105.03555255245723
+    },
+    {
+      "name": "hop_mid_49",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[15]$_DFF_P_"
+      ],
+      "box_um": [
+        303.634,
+        21.08,
+        319.634,
+        35.08
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[15]$_DFF_P_",
+      "source_xy": [
+        6.48,
+        26.055
+      ],
+      "capture_bbox": [
+        6.48,
+        26.055,
+        616.788,
+        30.105
+      ],
+      "face_hop_before_um": 54.459046851739885,
+      "hop_consumer_before_um": 555.9743207199413
+    },
+    {
+      "name": "hop_mid_50",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[1]$_DFF_P_"
+      ],
+      "box_um": [
+        299.4085,
+        27.83,
+        315.4085,
+        41.83
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[1]$_DFF_P_",
+      "source_xy": [
+        8.343,
+        26.325
+      ],
+      "capture_bbox": [
+        8.343,
+        26.325,
+        606.474,
+        43.335
+      ],
+      "face_hop_before_um": 37.207381324140506,
+      "hop_consumer_before_um": 561.8866486721321
+    },
+    {
+      "name": "hop_mid_51",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[2]$_DFF_P_"
+      ],
+      "box_um": [
+        298.018,
+        31.07,
+        314.018,
+        45.07
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[2]$_DFF_P_",
+      "source_xy": [
+        11.88,
+        25.515
+      ],
+      "capture_bbox": [
+        11.88,
+        25.515,
+        600.156,
+        50.625
+      ],
+      "face_hop_before_um": 145.4222506496169,
+      "hop_consumer_before_um": 443.58066878077534
+    },
+    {
+      "name": "hop_mid_52",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[3]$_DFF_P_"
+      ],
+      "box_um": [
+        302.743,
+        24.725,
+        318.743,
+        38.725
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[3]$_DFF_P_",
+      "source_xy": [
+        6.48,
+        26.325
+      ],
+      "capture_bbox": [
+        6.48,
+        26.325,
+        615.006,
+        37.125
+      ],
+      "face_hop_before_um": 75.33435471284001,
+      "hop_consumer_before_um": 533.3223851630455
+    },
+    {
+      "name": "hop_mid_53",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[5]$_DFF_P_"
+      ],
+      "box_um": [
+        330.499,
+        19.73,
+        346.499,
+        33.730000000000004
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[5]$_DFF_P_",
+      "source_xy": [
+        11.826,
+        26.055
+      ],
+      "capture_bbox": [
+        11.826,
+        26.055,
+        665.172,
+        27.405
+      ],
+      "face_hop_before_um": 35.424,
+      "hop_consumer_before_um": 617.9234746989307
+    },
+    {
+      "name": "hop_mid_54",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[6]$_DFF_P_"
+      ],
+      "box_um": [
+        349.615,
+        20.0,
+        365.615,
+        34.0
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[6]$_DFF_P_",
+      "source_xy": [
+        6.75,
+        27.945
+      ],
+      "capture_bbox": [
+        6.75,
+        26.055,
+        708.48,
+        27.945
+      ],
+      "face_hop_before_um": 462.8073150340215,
+      "hop_consumer_before_um": 238.92681395984002
+    },
+    {
+      "name": "hop_mid_55",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[7]$_DFF_P_"
+      ],
+      "box_um": [
+        346.42900000000003,
+        19.325,
+        362.42900000000003,
+        33.325
+      ],
+      "source": "u_bin_u_core_u_engine_u_arithmetic_u_grid_vm_we/q[7]$_DFF_P_",
+      "source_xy": [
+        8.37,
+        26.595
+      ],
+      "capture_bbox": [
+        8.37,
+        26.055,
+        700.488,
+        26.595
+      ],
+      "face_hop_before_um": 466.61470304309955,
+      "hop_consumer_before_um": 225.50416163787318
+    },
+    {
+      "name": "hop_mid_56",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_memory_group_fault/q[1]$_DFF_P_"
+      ],
+      "box_um": [
+        211.8475,
+        22.43,
+        227.8475,
+        36.43
+      ],
+      "source": "u_bin_u_core_u_engine_u_memory_group_fault/q[1]$_DFF_P_",
+      "source_xy": [
+        5.373,
+        29.295
+      ],
+      "capture_bbox": [
+        5.373,
+        29.295,
+        434.322,
+        29.565
+      ],
+      "face_hop_before_um": 9.912677791595971,
+      "hop_consumer_before_um": 419.0403479379999
+    },
+    {
+      "name": "hop_mid_57",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_memory_stage_v/q[0]$_DFF_P_"
+      ],
+      "box_um": [
+        236.24200000000002,
+        18.515,
+        252.24200000000002,
+        32.515
+      ],
+      "source": "u_bin_u_core_u_engine_u_memory_stage_v/q[0]$_DFF_P_",
+      "source_xy": [
+        5.184,
+        7.695
+      ],
+      "capture_bbox": [
+        5.184,
+        7.695,
+        483.3,
+        43.335
+      ],
+      "face_hop_before_um": 6.027957863157306,
+      "hop_consumer_before_um": 473.5960981300416
+    },
+    {
+      "name": "hop_mid_58",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_memory_stage_v/q[1]$_DFF_P_"
+      ],
+      "box_um": [
+        235.37800000000001,
+        19.595,
+        251.37800000000001,
+        33.595
+      ],
+      "source": "u_bin_u_core_u_engine_u_memory_stage_v/q[1]$_DFF_P_",
+      "source_xy": [
+        5.886,
+        9.315
+      ],
+      "capture_bbox": [
+        5.886,
+        9.315,
+        480.87,
+        43.875
+      ],
+      "face_hop_before_um": 5.588152109597591,
+      "hop_consumer_before_um": 470.7324336435721
+    },
+    {
+      "name": "hop_mid_59",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_memory_stage_v/q[2]$_DFF_P_"
+      ],
+      "box_um": [
+        233.137,
+        21.755,
+        249.137,
+        35.754999999999995
+      ],
+      "source": "u_bin_u_core_u_engine_u_memory_stage_v/q[2]$_DFF_P_",
+      "source_xy": [
+        5.346,
+        8.235
+      ],
+      "capture_bbox": [
+        5.346,
+        8.235,
+        476.928,
+        49.275
+      ],
+      "face_hop_before_um": 3.9364481452192406,
+      "hop_consumer_before_um": 471.2966591224682
+    },
+    {
+      "name": "hop_mid_60",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_memory_stage_v/q[3]$_DFF_P_"
+      ],
+      "box_um": [
+        201.412,
+        13.655000000000001,
+        217.412,
+        27.655
+      ],
+      "source": "u_bin_u_core_u_engine_u_memory_stage_v/q[3]$_DFF_P_",
+      "source_xy": [
+        7.29,
+        9.045
+      ],
+      "capture_bbox": [
+        5.184,
+        9.045,
+        413.64,
+        32.265
+      ],
+      "face_hop_before_um": 1.7982891869774444,
+      "hop_consumer_before_um": 405.7518245726074
+    },
+    {
+      "name": "hop_mid_61",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_memory_stage_v/q[4]$_DFF_P_"
+      ],
+      "box_um": [
+        370.108,
+        23.51,
+        386.108,
+        37.510000000000005
+      ],
+      "source": "u_bin_u_core_u_engine_u_memory_stage_v/q[4]$_DFF_P_",
+      "source_xy": [
+        5.508,
+        8.505
+      ],
+      "capture_bbox": [
+        5.508,
+        8.505,
+        750.708,
+        52.515
+      ],
+      "face_hop_before_um": 307.383415987265,
+      "hop_consumer_before_um": 438.3220747623829
+    },
+    {
+      "name": "hop_mid_62",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_memory_stage_v/q[5]$_DFF_P_"
+      ],
+      "box_um": [
+        370.351,
+        23.375,
+        386.351,
+        37.375
+      ],
+      "source": "u_bin_u_core_u_engine_u_memory_stage_v/q[5]$_DFF_P_",
+      "source_xy": [
+        5.994,
+        8.775
+      ],
+      "capture_bbox": [
+        5.994,
+        8.775,
+        750.708,
+        51.975
+      ],
+      "face_hop_before_um": 232.25541245792314,
+      "hop_consumer_before_um": 512.8285924166086
+    },
+    {
+      "name": "hop_mid_63",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_memory_stage_v/q[6]$_DFF_P_"
+      ],
+      "box_um": [
+        372.187,
+        26.479999999999997,
+        388.187,
+        40.48
+      ],
+      "source": "u_bin_u_core_u_engine_u_memory_stage_v/q[6]$_DFF_P_",
+      "source_xy": [
+        5.832,
+        9.855
+      ],
+      "capture_bbox": [
+        5.832,
+        9.855,
+        754.542,
+        57.105
+      ],
+      "face_hop_before_um": 433.9102150860245,
+      "hop_consumer_before_um": 315.1458505771574
+    },
+    {
+      "name": "hop_mid_64",
+      "prefixes": [
+        "u_hop_u_core_u_engine_u_memory_stage_v/q[7]$_DFF_P_"
+      ],
+      "box_um": [
+        370.756,
+        25.67,
+        386.756,
+        39.67
+      ],
+      "source": "u_bin_u_core_u_engine_u_memory_stage_v/q[7]$_DFF_P_",
+      "source_xy": [
+        6.318,
+        10.125
+      ],
+      "capture_bbox": [
+        6.318,
+        10.125,
+        751.194,
+        55.215
+      ],
+      "face_hop_before_um": 236.42766416813407,
+      "hop_consumer_before_um": 509.0075088994267
+    },
+    {
+      "name": "hop_mid_65",
+      "prefixes": [
+        "u_hop_u_core_u_vm_g_lg_2_meta_78/q[30]$_DFF_P_"
+      ],
+      "box_um": [
+        370.729,
+        10.415,
+        386.729,
+        24.415
+      ],
+      "source": "u_bin_u_core_u_vm_g_lg_2_meta_78/q[30]$_DFF_P_",
+      "source_xy": [
+        6.75,
+        6.075
+      ],
+      "capture_bbox": [
+        6.75,
+        6.075,
+        750.708,
+        28.755
+      ],
+      "face_hop_before_um": 294.14569294144013,
+      "hop_consumer_before_um": 450.13879495551146
+    },
+    {
+      "name": "hop_mid_66",
+      "prefixes": [
+        "u_hop_u_core_u_vm_g_lg_2_meta_78/q[31]$_DFF_P_"
+      ],
+      "box_um": [
+        370.621,
+        11.225000000000001,
+        386.621,
+        25.225
+      ],
+      "source": "u_bin_u_core_u_vm_g_lg_2_meta_78/q[31]$_DFF_P_",
+      "source_xy": [
+        6.534,
+        7.695
+      ],
+      "capture_bbox": [
+        6.534,
+        7.695,
+        750.708,
+        28.755
+      ],
+      "face_hop_before_um": 225.29186358144406,
+      "hop_consumer_before_um": 519.5936822595132
+    },
+    {
+      "name": "hop_mid_67",
+      "prefixes": [
+        "u_hop_u_core_u_vm_g_lg_2_meta_78/q[32]$_DFF_P_"
+      ],
+      "box_um": [
+        372.106,
+        10.415,
+        388.106,
+        24.415
+      ],
+      "source": "u_bin_u_core_u_vm_g_lg_2_meta_78/q[32]$_DFF_P_",
+      "source_xy": [
+        9.504,
+        5.805
+      ],
+      "capture_bbox": [
+        9.504,
+        5.805,
+        750.708,
+        29.025
+      ],
+      "face_hop_before_um": 265.3338727038069,
+      "hop_consumer_before_um": 476.2408790055721
+    },
+    {
+      "name": "hop_mid_68",
+      "prefixes": [
+        "u_hop_u_core_u_vm_g_lg_2_meta_78/q[33]$_DFF_P_"
+      ],
+      "box_um": [
+        371.161,
+        10.82,
+        387.161,
+        24.82
+      ],
+      "source": "u_bin_u_core_u_vm_g_lg_2_meta_78/q[33]$_DFF_P_",
+      "source_xy": [
+        7.614,
+        6.615
+      ],
+      "capture_bbox": [
+        7.614,
+        6.615,
+        750.708,
+        29.025
+      ],
+      "face_hop_before_um": 267.0742228295348,
+      "hop_consumer_before_um": 476.38737871190494
+    },
+    {
+      "name": "hop_mid_69",
+      "prefixes": [
+        "u_hop_u_core_u_vm_g_lg_3_meta_78/q[30]$_DFF_P_"
+      ],
+      "box_um": [
+        372.511,
+        11.09,
+        388.511,
+        25.09
+      ],
+      "source": "u_bin_u_core_u_vm_g_lg_3_meta_78/q[30]$_DFF_P_",
+      "source_xy": [
+        6.48,
+        7.155
+      ],
+      "capture_bbox": [
+        6.48,
+        7.155,
+        754.542,
+        29.025
+      ],
+      "face_hop_before_um": 293.227786636942,
+      "hop_consumer_before_um": 455.3460113847491
+    },
+    {
+      "name": "hop_mid_70",
+      "prefixes": [
+        "u_hop_u_core_u_vm_g_lg_3_meta_78/q[31]$_DFF_P_"
+      ],
+      "box_um": [
+        374.10400000000004,
+        10.82,
+        390.10400000000004,
+        24.82
+      ],
+      "source": "u_bin_u_core_u_vm_g_lg_3_meta_78/q[31]$_DFF_P_",
+      "source_xy": [
+        9.666,
+        6.615
+      ],
+      "capture_bbox": [
+        9.666,
+        6.615,
+        754.542,
+        29.025
+      ],
+      "face_hop_before_um": 191.70684494821776,
+      "hop_consumer_before_um": 553.5367082461651
+    },
+    {
+      "name": "hop_mid_71",
+      "prefixes": [
+        "u_hop_u_core_u_vm_g_lg_3_meta_78/q[32]$_DFF_P_"
+      ],
+      "box_um": [
+        372.457,
+        11.494999999999997,
+        388.457,
+        25.494999999999997
+      ],
+      "source": "u_bin_u_core_u_vm_g_lg_3_meta_78/q[32]$_DFF_P_",
+      "source_xy": [
+        9.72,
+        7.965
+      ],
+      "capture_bbox": [
+        9.72,
+        7.965,
+        751.194,
+        29.025
+      ],
+      "face_hop_before_um": 250.19132423807184,
+      "hop_consumer_before_um": 491.624935661323
+    },
+    {
+      "name": "hop_mid_72",
+      "prefixes": [
+        "u_hop_u_core_u_vm_g_lg_3_meta_78/q[33]$_DFF_P_"
+      ],
+      "box_um": [
+        372.43,
+        11.09,
+        388.43,
+        25.09
+      ],
+      "source": "u_bin_u_core_u_vm_g_lg_3_meta_78/q[33]$_DFF_P_",
+      "source_xy": [
+        9.666,
+        7.155
+      ],
+      "capture_bbox": [
+        9.666,
+        7.155,
+        751.194,
+        29.025
+      ],
+      "face_hop_before_um": 207.54325183922506,
+      "hop_consumer_before_um": 534.3123207787745
+    },
+    {
+      "name": "hop_mid_73",
+      "prefixes": [
+        "u_hop_u_core_u_vm_scalar_addr_pipe_78/q[5]$_DFF_P_"
+      ],
+      "box_um": [
+        349.77700000000004,
+        53.615,
+        365.77700000000004,
+        67.61500000000001
+      ],
+      "source": "u_bin_u_core_u_vm_scalar_addr_pipe_78/q[5]$_DFF_P_",
+      "source_xy": [
+        113.373,
+        73.575
+      ],
+      "capture_bbox": [
+        113.373,
+        47.655,
+        602.181,
+        73.575
+      ],
+      "face_hop_before_um": 405.1287920217471,
+      "hop_consumer_before_um": 84.36910731422974
+    }
+  ],
+  "reach_rule_um": 405,
+  "planned_worst_leg_including_extent_um": 383.57950499212023,
+  "count": 74,
+  "max_added_ff_per8um_bin": 12,
+  "max_added_ff_density_8um_bin": 0.054675
+}

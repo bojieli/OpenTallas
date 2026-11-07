@@ -1,0 +1,30 @@
+{
+  "source": "/srv/opentallas-scratch3/claude/codex-hbm-su-1107/kits/opsa_rest_vH2",
+  "form": "opsa_rest_vH3",
+  "rtl_changes": [
+    "asynchronous assertion unchanged; align core reset release one edge after reset pin with added data hop"
+  ],
+  "pin_cycles": {
+    "data_control_vs_part27r_vD": 1,
+    "reset_release_vs_vH1": 1,
+    "reset_assert": 0
+  },
+  "rtl_sha256": {
+    "ot_hbm_face_reg.sv": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5",
+    "ot_hgi_sfu_opsa_rest.sv": "015c92f5cc0229ec985c365fdd083f69bccf0f2577e9aa69d3f791cf4741eadf",
+    "ot_hgi_sfu_opsa_rest__fshell.sv": "7c27e62eb8834ad39563cefd8ee907578664b853c8f297093cb0bec0e64d4716"
+  },
+  "geometry_change": {
+    "class": "SPARSE+reach",
+    "H2_verdict": "GEOMETRY FAIL at PLACE; no route",
+    "face_to_hop_over405": 9,
+    "hop_to_consumer_over405": 65,
+    "guides": 74,
+    "planned_worst_leg_with_extent_um": 383.57950499212023,
+    "guide_size_um": [
+      16,
+      14
+    ],
+    "native_capture_coordinates": "H2 actual3_place.odb all combinational reachable capture FFs; unchanged RTL"
+  }
+}

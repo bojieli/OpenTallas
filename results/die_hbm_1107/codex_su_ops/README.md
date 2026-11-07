@@ -9,3 +9,5 @@ Channel estimate: conservative S1->S2 cut upper bound3456 signal nets(2048data+1
 No POR adoption/merge/tag/deletion. Own isolated branch; old failures retained. Both launches PLACE only.
 
 06:39 collection: vH2 synth LEC EQUIVALENT,9125/9125 points,69.4s. Group0 low global fill is imposed by unchanged760um parent slot and native macro placement/pins; the pilot addresses measured central congestion without enlarging outline or replacing the parent plan.
+
+H2 actual PLACE is GEOMETRY FAIL, no route. Full net fanout walk:2237 input hops,9 face-hop legs>405um,65 hop-native capture legs>405um (all reachable flop D through combinational logic), union74. H3 places these74 stages at centre of actual source+all capture bounding box,16x14um inclusive guide; worst planned source/capture leg including full guide extent383.58um<405. Max12 relocated FF centres per8um bin(~.0547 fill), zero macros. RTL and all PIN CYCLES unchanged vs H2. Review image results/geom_review/codex_opsa_rest_H3_1107.png PASS for one PLACE pilot; actual future PLACE again decides. H2 checkpoint/failed reach preserved. .keep on every own job directory/source/spill copy, deletion chains stopped.

@@ -8,7 +8,7 @@ srcs={
 for name,src in srcs.items():
  dst=out/name
  assert not dst.exists(),str(dst)
- dst.mkdir(parents=True)
+ dst.mkdir(parents=True);(dst/.keep).touch()
  for p in src.iterdir():
   if p.name in ['run','lec','lec_async.runs','face_shell_work','__pycache__','signoff'] or p.name.startswith('FAIL') or p.name.startswith('lec_async.'):
    continue
