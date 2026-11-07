@@ -148,6 +148,20 @@ def measured_vclk(ref):
     return float(m.group(1)) if m else None
 
 
+def fresh_inputs(pass_dir):
+    """Stamp a finished pass dir's kit inputs (everything but run/) with the current time.  They were copied with the kit's
+    old mtimes, and an ot-run spill back-copy takes only files newer than its stamp: on 11-07 slice_station t17 and t30 ran
+    their ECO on a spill copy, came back with no config.mk and 180 other inputs, and the re-sign LEC failed on /work/config.mk."""
+    root = Path(pass_dir)
+    for dp, dirs, files in os.walk(root):
+        if Path(dp) == root and "run" in dirs:
+            dirs.remove("run")
+        for name in files:
+            p = Path(dp) / name
+            if not p.is_symlink():
+                os.utime(p)
+
+
 def eco_vclk_frame(pass_dir, variant, prev):
     """Single-mode pass: repair against the IO frame sign-off measured, not the plan bound.  The session bound
     OT_VCLK_FF (hd_ctl_e FF 342) while sign-off rebinds pin_flop_mean (332.27), so repair_timing saw no hold violation
@@ -611,6 +625,7 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
         if (pd / "config.mk").is_file():
             shutil.copy2(pd / "config.mk", pd / "config_eco.mk")
         shutil.copy2(Path(kit) / "config.mk", pd / "config.mk")
+        fresh_inputs(pd)
         s = pd
     ts = time.time()
     pr = post_runner(d, runner)
