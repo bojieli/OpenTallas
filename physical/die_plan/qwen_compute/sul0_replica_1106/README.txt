@@ -90,3 +90,22 @@ vC / vD results (11-06, intel1):
     is beyond the -260 stop, and it is 1 path only: u_bound.u_cland_origin/s0 -> s1 (launch clock 151.7 ps, capture clock
     578.1 ps; 426 ps of skew on one landing-origin flop).  Not a reset or bus net.  vA/vB/vC had register-to-register
     above the stop (port-only advisory).  Probe: dq85sul0/probe/hgprobe_vD.log.
+vE (11-06, intel1): vC kit + face OUTPUT registers sited at their source lane channel mouth.  Placement only: RTL,
+  istations.tcl and every u_bin replica site are byte-identical to vC (checked).  Rule 4 in sul0_apply.py, so all 3 types:
+ 4. bout rule.  For each `ot_dp_st u_bout_<B>` (q = output port bus), a D bit is sited when (a) a placed macro output
+    drives it from a SOUTH or NORTH pin (west-edge pins already sit on the strip), and (b) the straight pin -> port segment
+    crosses a macro gap to gap.  Its q flop goes FIRM at x = macro x0 - 3.6, in the channel the pin faces (south pin =
+    channel below the macro, north pin = channel above it).  The rows continue after the bin replica columns.  Then the
+    D net stays inside its channel, and Q is mouth -> port along the west strip.  East-edge sources are reported
+    (other_edge), not sited (0 here).
+  Check of every bout/bin on the vC 4_cts.odb (probe/bxcross2.py, nets of each register's cells that cross a lane gap
+  to gap): every u_bin replica 0, x_ctl_o 0, x_sc_o 0, x_stm_o 0, x_su_c_o 0, flt_o 0.  x_su_c_p1_o: 19 nets cross lane2.
+  These are repair_design wire-buffer chains: lane3 south pin (x ~450, y 1045.5) -> buffers at y 996 -> y 723 -> ... ->
+  q flop near its port (x 6, y 308).  The geometric rule sites more bits than were measured crossing, because the
+  same geometry holds by construction in all 3 types:
+    x_su_c_p1_o 340/369 (lane2 177, lane3 163), x_ctl_o 343/456, x_stm_o 172/228, x_sc_o 32/38, x_su_c_o 44/452;
+    931 bout flops in total.  Channels: lane0/lane1 gap 203 (2 columns), lane1/lane2 gap 760 bin + 364 bout (4 columns),
+    lane2/lane3 gap 760 bin + 364 bout (7 columns, x 179.3-186.5).
+  Estimate (sul0_bout_est.py): straight segments crossing a macro, lane pin -> port before = 931, after
+  (pin -> site + site -> port) = 0.  Image sul0_bout_vE.png (viewed): every vE segment stays in its channel or in
+  the west strip.
