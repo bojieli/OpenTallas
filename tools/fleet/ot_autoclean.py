@@ -671,7 +671,9 @@ def sweep(req):
             return res
     live = PathSet(list(live_paths) + list(req.get("other_host_live") or []), realpath=False)
     plans = []
-    kits = find_kits(req["roots"], req.get("only") or "", ()) if req.get("roots") else find_kits(SCAN_ROOTS, req.get("only") or "")
+    # --only narrows what may be planned, never the scan: the control hit needs the protected kits in view
+    only = req.get("only") or ""
+    kits = find_kits(req["roots"], "", ()) if req.get("roots") else find_kits(SCAN_ROOTS, "")
     group_cache = {}
     max_kits = int(req.get("max_kits") or 0)
     for k in kits:
@@ -680,6 +682,8 @@ def sweep(req):
         if prot.related(k) or prot.related(g):
             res["control_hits"] += 1
             tally("protected", k)
+            continue
+        if only and not k.startswith(only):
             continue
         if req.get("skip_codex") and re.search(r"/(codex[^/]*|wt-codex[^/]*|scratch-codex[^/]*)(/|$)", k):
             tally("codex-later", k)
@@ -1012,6 +1016,29 @@ def source_trees(roots):
     return out
 
 
+def tree_activity(t):
+    """mtimes showing the tree was used: its git index (a worktree's lives in the common repo) and every file outside .git and ref_tile"""
+    out = []
+    g = os.path.join(t, ".git")
+    try:
+        if os.path.isfile(g):
+            with open(g) as f:
+                d = f.read().split("gitdir:")[-1].strip()
+            g = d if os.path.isabs(d) else os.path.join(t, d)
+        out.append(os.lstat(os.path.join(g, "index")).st_mtime)
+    except OSError:
+        out.append(time.time())                  # unreadable: treated as just used
+    skip = os.path.join(t, REF_TILE)
+    for d, ds, fs in os.walk(t):
+        ds[:] = [x for x in ds if x != ".git" and os.path.join(d, x) != skip and not os.path.islink(os.path.join(d, x))]
+        for f in fs:
+            try:
+                out.append(os.lstat(os.path.join(d, f)).st_mtime)
+            except OSError:
+                pass
+    return out
+
+
 def ref_tile_sweep(req):
     """host side.  In an idle, clean checkout, remove the tracked files of physical/ref_tile (git checkout restores them).  Same holds as a kit, tree by tree."""
     now = req.get("now") or time.time()
@@ -1027,8 +1054,9 @@ def ref_tile_sweep(req):
         res["fail_closed"] = "no retention notes in the request"
         return res
     retain = Retain(req["retain"])
-    cited = PathSet(req.get("cited") or [])
-    tokens = set(req.get("tokens") or [])
+    ruled = bool(req.get("notes_on_ref_tile_only"))       # COORD 11-07 04:21: a note on the tree does not hold its tracked ref_tile; a row citation does
+    cited = PathSet((req.get("cited_rows") if ruled else req.get("cited")) or [])
+    tokens = set() if ruled else set(req.get("tokens") or [])
     def live_now():
         if "live" in req:
             return PathSet(list(req["live"]) + list(req.get("other_host_live") or []), realpath=False), req.get("blob", "")
@@ -1041,15 +1069,15 @@ def ref_tile_sweep(req):
         return res
     env = dict(os.environ, GIT_OPTIONAL_LOCKS="0")
     plans = []
-    only = req.get("only") or ""
+    only = tuple(req.get("only_list") or ())
     for t in source_trees(req.get("roots") or SCAN_ROOTS[:3]):
-        if only and not t.startswith(only):
-            continue
         res["trees"] += 1
         rt = os.path.join(t, REF_TILE)
         if prot.related(rt):
             res["control_hits"] += 1
             tally("protected")
+            continue
+        if only and t not in only:              # after the check above: the control hit needs the protected trees in view
             continue
         if os.path.exists(os.path.join(t, REF_MARK)):
             tally("already-trimmed")
@@ -1092,11 +1120,8 @@ def ref_tile_sweep(req):
             newest = max(newest, st.st_mtime)
             if stat.S_ISREG(st.st_mode) and st.st_nlink == 1:
                 blocks += st.st_blocks * 512
-        for marker in (".git/index", ".git"):
-            try:
-                newest = max(newest, os.lstat(os.path.join(t, marker)).st_mtime)
-            except OSError:
-                pass
+        for marker in tree_activity(t):
+            newest = max(newest, marker)
         if now - newest < CLOSED_QUIET_H * 3600:
             tally("quiet")
             continue
@@ -1111,11 +1136,12 @@ def ref_tile_sweep(req):
     if not res["control_hits"] and not req.get("no_control"):
         res["fail_closed"] = "no protected tree seen in this scan (no control hit)"
         return res
-    res["planned"].sort(key=lambda x: -x[1])
+    first = lambda t, b: ("/opentallas-scratch3/" in t, -b)      # scratch2 is what blocks builds
+    res["planned"].sort(key=lambda x: first(x[0], x[1]))
     limit = int(req.get("max_kits") or 0)
     if dry:
         return res
-    plans.sort(key=lambda x: -x[2])
+    plans.sort(key=lambda x: first(x[0], x[2]))
     if limit:
         plans = plans[:limit]
     with open(manifest_path(req), "a") as mf:
@@ -1148,6 +1174,7 @@ def ref_tile_sweep(req):
                 except OSError:
                     pass
             res["freed"] += blocks
+            res.setdefault("trimmed", []).append([t, blocks])
     return res
 
 
@@ -1248,7 +1275,7 @@ def off():
     return os.environ.get("OT_AUTOCLEAN") == "0" or os.path.exists(os.path.expanduser(OFF_FILE))
 
 
-FLAGS = {"--apply", "--dry", "--json", "--closed", "--no-codex", "--ref-tile", "--ref-tile-measure"}   # no --apply = dry run: a mistyped command never deletes
+FLAGS = {"--apply", "--dry", "--json", "--closed", "--no-codex", "--ref-tile", "--ref-tile-measure", "--ref-tile-ruled"}   # no --apply = dry run: a mistyped command never deletes
 VALUE_FLAGS = {"--host", "--only", "--max-kits"}
 
 
@@ -1285,7 +1312,7 @@ def main(argv=None):
             if h in hosts:
                 fail[h] = repr(ex)
     req = dict(protected=protected, cited=cited, tokens=tokens, retain=retain, named=named, cite_split=split, other_host_live=sorted(all_live), dry="--apply" not in a,
-               held_detail="--apply" not in a, skip_codex="--no-codex" in a, only=(opt("--only") or [""])[0], max_kits=int((opt("--max-kits") or [0])[0]), now=now)
+               held_detail="--apply" not in a, skip_codex="--no-codex" in a, only=(opt("--only") or [""])[0], only_list=opt("--only"), max_kits=int((opt("--max-kits") or [0])[0]), now=now)
     import concurrent.futures as cf
     todo = [h for h in hosts if h not in fail]
     if "--ref-tile-measure" in a:                 # what a tree-level note holds, measured only: never with --apply
@@ -1293,7 +1320,14 @@ def main(argv=None):
             print("--ref-tile-measure is a dry measure")
             return 2
         req.update(notes_on_ref_tile_only=True, dry=True)
-    fn = "closed_units" if "--closed" in a else "ref_tile_sweep" if "--ref-tile" in a or "--ref-tile-measure" in a else "sweep"
+    if "--ref-tile-ruled" in a:
+        try:
+            sp = read_cite_split(coord, now)
+        except Exception as ex:
+            print(f"ot_autoclean: FAIL CLOSED, nothing removed: {ex!r}")
+            return 0
+        req.update(notes_on_ref_tile_only=True, cited_rows=sorted(set(sp["rows"]) | set(sp["table"])))
+    fn = "closed_units" if "--closed" in a else "ref_tile_sweep" if {"--ref-tile", "--ref-tile-measure", "--ref-tile-ruled"} & set(a) else "sweep"
     with cf.ThreadPoolExecutor(max(1, len(todo))) as ex:
         results = list(ex.map(lambda h: run_on_host(h, req, fn), todo))
     for h, why in fail.items():

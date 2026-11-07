@@ -397,6 +397,15 @@ class T(unittest.TestCase):
         self.assertIn("retention", ac.sweep(req)["fail_closed"])
         self.assertIn("retention", ac.closed_units(req)["fail_closed"])
 
+    def test_only_keeps_control_hit(self):
+        k = self.kit("lane/kits/kit_only_a")
+        o = self.kit("lane/kits/kit_only_b")
+        r = self.go(only=k)
+        self.assertFalse(r.get("fail_closed"))
+        self.assertGreaterEqual(r["control_hits"], 1)
+        self.assertEqual(self.size(k, "3_3_place_gp.odb"), 0)
+        self.assertGreater(self.size(o, "3_3_place_gp.odb"), 0)
+
     def test_named_base_holds_kit(self):
         k = self.kit("lane/kits/kit_named_design")
         self.assertIn(k, [x[0] for x in self.go(dry=True)["kit_rows"]])
@@ -461,6 +470,44 @@ class T(unittest.TestCase):
         self.assertEqual(os.path.getsize(os.path.join(a, "physical/ref_tile/a/view.bin")), 1 << 21)
         again = ac.ref_tile_sweep(dict(base, min_tree_bytes=1))
         self.assertEqual(again["files"], 0)                            # marker stops a second trim
+
+    def test_ref_tile_ruled_tree_note_vs_ref_tile_note(self):
+        a = self._tree("noted_tree_aaaaaaaa")
+        b = self._tree("rt_noted_bbbbbbbb")
+        c = self._tree("rowcited_cccccccc")
+        d = self._tree("queuecited_dddddddd")
+        e = self._tree("recent_use_eeeeeeee")
+        with open(os.path.join(e, "physical/new_output.txt"), "w") as f:
+            f.write("just written")
+        f6 = self._tree("untracked_ffffffff")
+        u = os.path.join(f6, "physical/ref_tile/a/untracked.txt")
+        with open(u, "w") as f:
+            f.write("u")
+        os.utime(u, (OLD, OLD))
+        ret = dict(s_bare=["noted_tree_aaaaaaaa"], s_abs=[os.path.join(b, "physical/ref_tile/a/view.bin")])
+        base = dict(roots=[self.root], protected=self.rows, retain=ret, live=[], blob="", min_rows=1, min_tree_bytes=1, state_dir=os.path.join(self.t, "state"),
+                    notes_on_ref_tile_only=True, cited_rows=[os.path.join(c, "kit/x")], cited=[d], tokens=[])
+        ctl = self._tree("control_prot_gggggggg")
+        base["protected"] = self.rows + [os.path.join(ctl, "physical/ref_tile")]
+        r = ac.ref_tile_sweep(base)
+        self.assertEqual(r["errors"], 0)
+        self.assertFalse(os.path.exists(os.path.join(a, "physical/ref_tile/a/view.bin")))
+        self.assertTrue(os.path.exists(u))                                # an untracked file there is a local change: the whole tree is held
+        self.assertTrue(os.path.exists(os.path.join(f6, "physical/ref_tile/a/view.bin")))
+        self.assertTrue(os.path.exists(os.path.join(b, "physical/ref_tile/a/view.bin")))
+        self.assertTrue(os.path.exists(os.path.join(c, "physical/ref_tile/a/view.bin")))
+        self.assertFalse(os.path.exists(os.path.join(d, "physical/ref_tile/a/view.bin")))   # a queue citation alone does not hold
+        self.assertTrue(os.path.exists(os.path.join(e, "physical/ref_tile/a/view.bin")))    # used under 6 h ago
+
+    def test_ref_tile_only_list_exact_trees(self):
+        a = self._tree("pick_aaaaaaaaaa")
+        b = self._tree("other_bbbbbbbbbb")
+        ctl = self._tree("control_prot_cccccccc")
+        r = ac.ref_tile_sweep(dict(roots=[self.root], protected=self.rows + [os.path.join(ctl, "physical/ref_tile")], retain={}, live=[], blob="", min_rows=1,
+                                   min_tree_bytes=1, state_dir=os.path.join(self.t, "state"), only_list=[a]))
+        self.assertEqual(r["control_hits"], 1)
+        self.assertFalse(os.path.exists(os.path.join(a, "physical/ref_tile/a/view.bin")))
+        self.assertTrue(os.path.exists(os.path.join(b, "physical/ref_tile/a/view.bin")))
 
     def test_parse_rows_all_forms(self):
         rows = ac.parse_rows("# c\nepyc2\t/srv/a/claude/x\tn\nany\t/srv/a/claude/y\t\nepyc4:/srv/a/claude/z note\nepyc4 /srv/a/claude/w\n")
