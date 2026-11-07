@@ -12,14 +12,18 @@ Changes, hd_lep0N only:
      VIEW/clock_contract.json (early_core_taps.add_from_means).
   3. The clk pin on a face is an exception to METHODOLOGY 12.8a (COORD 15:0x), recorded in each pair's note.
 
-Not changed: pin tables, outlines, origins, RTL, cycles, die nets, sidecar, clock.insertion_ps (450; vE pair TT mean is 529).
+Not changed: pin tables, outlines, origins, RTL cycles, sidecar, clock.insertion_ps.  The vE pair TT mean 529.22 is above the
+common latency 450: the spine delivers each tap 79.22 ps early (FF 434.56 vs 380: 54.56 ps, schema.core_tap_early_ps), so the
+pair's registers still land at the common latency.
 
 usage: head_lep_pair_ve_delta.py PLAN OUT --root REPO_ROOT
+       head_lep_pair_ve_delta.py --prepared SRC_DIR OUT_DIR --root REPO_ROOT [--event l48uk]
 """
 import argparse
 import copy
 import json
 import os
+import shutil
 import sys
 from pathlib import Path
 
@@ -52,6 +56,9 @@ def apply(plan, root):
         c['lib'] = VIEW + '_tt.lib'
         c['note'] = (c.get('note', '') + ' | ' + NOTE).lstrip(' |')
     taps = E.add_from_means(t, modules={MODULE}, root=root)
+    ff = json.loads((Path(root) / (VIEW.rsplit('/', 1)[0] + '/clock_contract.json')).read_text())['pins']['clk']['ff']['mean_ps']
+    for x in taps:
+        x['insertion_ff_ps'] = ff
     got = {x['name'].rsplit('.', 1)[0]: tuple(x['xy']) for x in taps}
     if len(taps) != 4 or set(got) != set(EXPECT):
         raise ValueError(f'expected 4 pair taps, got {sorted(got)}')
@@ -61,14 +68,49 @@ def apply(plan, root):
     return out
 
 
+def prepared(a):
+    """prepared dir: source_plan.json + the hd_lep0N wrapper + wave_prepare.json + SHA256SUMS, as head_spn_fstart_delta."""
+    root = a.root.resolve()
+    sys.path[:0] = [str(root / 'tools/s81_head')]
+    import head_cland_stage_delta as C
+    plan = apply(json.loads((a.plan / 'source_plan.json').read_text()), root)
+    old = json.loads((a.plan / 'wave_prepare.json').read_text())
+    shutil.copytree(a.plan, a.out, symlinks=True)
+    C.writable(a.out)
+    (a.out / 'source_plan.json').write_text(json.dumps(plan, indent=1) + '\n')
+    C.republish(a.out, root, [TYPE], a.out / 'source_sidecar.json')
+    rec = json.loads((a.out / 'wave_prepare.json').read_text())
+    assert rec['sidecar_sha256'] == old['sidecar_sha256'], 'sidecar must not change'
+    changed = [t for t, w in old['published_wrappers'].items() if rec['published_wrappers'][t] != w]
+    if set(changed) - {TYPE}:
+        raise SystemExit(f'wrappers changed outside {TYPE}: {changed}')
+    rec[a.event] = dict(event=a.event, tool='tools/s81_head/head_lep_pair_ve_delta.py', types=[TYPE], base_prepared=str(a.plan),
+                        base_prepared_plan_sha256=old['prepared_plan_sha256'], view=VIEW, wrapper_changed=changed,
+                        data_cycles_added=0)
+    (a.out / 'wave_prepare.json').write_text(json.dumps(rec, indent=1) + '\n')
+    sums = a.out / 'SHA256SUMS'
+    if sums.exists():
+        lines = []
+        for ln in sums.read_text().splitlines():
+            _h, _, name = ln.partition('  ')
+            f = a.out / name
+            lines.append(f'{C.digest(f)}  {name}' if f.is_file() and not f.is_symlink() else ln)
+        sums.write_text('\n'.join(lines) + '\n')
+    print(json.dumps(rec[a.event], indent=1))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('plan', type=Path)
     ap.add_argument('out', type=Path)
     ap.add_argument('--root', type=Path, required=True)
+    ap.add_argument('--prepared', action='store_true', help='PLAN and OUT are prepared dirs: wrapper republished, record kept')
+    ap.add_argument('--event', default='l48uk')
     a = ap.parse_args()
     if a.out.exists():
         ap.error('fresh output required')
+    if a.prepared:
+        return prepared(a)
     out = apply(json.loads(a.plan.read_text()), a.root)
     for typ in out['partition_types'].values():  # pin tables stay those of the supplied plan
         for c in typ.get('hard_cores', []):
