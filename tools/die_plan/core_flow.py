@@ -157,6 +157,7 @@ def binding(tt_ps, ff_ps=None, tol_ps=40.0, basis_tt="plan clock", basis_ff=None
 
 
 LEAF_REPEAT_SRC, LEAF_REPEAT_KIT = "clk_leaf_repeat.tcl", "clk_leaf_repeat_default.tcl"
+LAYOUT_RENDER_FILES = ("layout_render_hook.sh", "layout_render.tcl", "layout_smells.py")
 
 
 def stage_grt183(kd):
@@ -170,6 +171,11 @@ def stage_grt183(kd):
     # clk_leaf_repeat.tcl itself) and in global_route.tcl after the first GRT parasitics estimate (long-branch pass).
     # Opt out per kit: 'export OT_CLK_LEAF_REPEAT = 0' (both) / 'export OT_CLK_LEAF_GRT = 0' (GRT pass) in config.mk.
     shutil.copyfile(_common_flow_file(LEAF_REPEAT_SRC, TOOL.parents[1]), Path(kd) / LEAF_REPEAT_KIT)
+    # KW-FIX-25/AUTORENDER 11-06 (OWNER visual check + smells): advisory layout PNGs + smells.json after place, GRT, route.
+    # grt183_make.sh hooks flow.sh's exit; reads stage ODBs only, writes run/layout_review, never fails a run.
+    # Opt out per kit: 'export OT_LAYOUT_RENDER = 0' in config.mk.
+    for f in LAYOUT_RENDER_FILES:
+        shutil.copyfile(_common_flow_file(f, TOOL.parents[1]), Path(kd) / f)
 
 
 # KW-FIX-24/LEAFOPT 11-06 (COORD 21:0x (1)): a kit whose plan owns the whole clock tree (S81 regional-tap kits, HBM /

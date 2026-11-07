@@ -36,6 +36,17 @@ if [ -f "$W/clk_leaf_repeat_default.tcl" ]; then
     else echo "OT_CLK_LEAF_REPEAT grt inactive: no estimate_parasitics -global_routing in $S"; fi
   fi
 fi
+# KW-FIX-25/AUTORENDER 11-06 (OWNER visual check + smell list): advisory PNGs + smells.json after place, GRT and route, when the
+# kit carries layout_render_hook.sh.  flow.sh (disposable container copy) gets an EXIT trap, so the hook runs right after each
+# stage process, before the next stage peaks, also after a failed stage (its -failed ODB).  The stage's exit status is kept and
+# the hook always returns 0, bounded by this timeout.  The hook reads ODBs only and writes under run/layout_review.
+# Opt-out inside the hook: OT_LAYOUT_RENDER=0 or 'export OT_LAYOUT_RENDER = 0' in config.mk.
+FS=$SD/flow.sh
+if [ -f "$W/layout_render_hook.sh" ] && [ -f "$FS" ] && ! grep -qF "OT_LAYOUT_RENDER hook" "$FS"; then
+  LH="trap 'ot_lr=\$?; timeout -k 10 \${OT_LAYOUT_RENDER_TOTAL_S:-1000} bash $W/layout_render_hook.sh \"\${1:-}\" \$ot_lr </dev/null || true; exit \$ot_lr' EXIT ;# OT_LAYOUT_RENDER hook"
+  if grep -q '^set -euo pipefail' "$FS"; then sed -i "0,/^set -euo pipefail/s@@&\n$LH@" "$FS"
+  else echo "OT_LAYOUT_RENDER inactive: no set -euo line in $FS"; fi
+fi
 if [ "${OT_GRT183_RESUME:-1}" = 0 ] || grep -q '^export OT_GRT183_RESUME = 0' "$W/config.mk" 2>/dev/null || [ ! -f "$W/grt183_resume.tcl" ]; then exec "$@"; fi
 # disposable container copy of the ORFS script, as orfs_hold_mm.py: hook first, then the kit's own (also an 'override' one)
 if ! grep -qF "$HOOK" "$S" 2>/dev/null; then
