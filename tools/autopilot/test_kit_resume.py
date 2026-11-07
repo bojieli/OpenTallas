@@ -366,14 +366,76 @@ class RunKitBlock(unittest.TestCase):
         p = subprocess.run(["bash", "-c", sh], capture_output=True, text=True)
         return p.returncode, p.stdout
 
-    def make(self, d, rs, *calls):
-        """kwrs_make.sh with 'echo' as make: -> the make command lines it would run"""
+    OUTF = {"do-floorplan": "2_floorplan.odb", "do-place": "3_place.odb", "do-cts": "4_cts.odb", "do-grt": "5_1_grt.odb",
+            "do-5_2_route": "5_2_route.odb", "do-5_3_fillcell": "5_3_fillcell.odb", "do-5_route": "5_route.odb",
+            "do-5_route.sdc": "5_route.sdc"}
+
+    def fake_make(self, d, rc=0):
+        """a make stand-in: prints its command line and, like ORFS, writes each do-* step's stage output (rc 0 only)"""
+        base = os.path.join(d, "run", "results", "asap7", "dp_x", "base")
+        os.makedirs(base, exist_ok=True)
+        fm = os.path.join(d, "fake_make%d.sh" % rc)
+        Path(fm).write_text("#!/bin/bash\necho \"$*\"\n[ %d = 0 ] || exit %d\n" % (rc, rc) + "".join(
+            'for a in "$@"; do [ "$a" = %s ] && echo x > %s/%s; done\n' % (t, base, f) for t, f in self.OUTF.items()) + "exit 0\n")
+        os.chmod(fm, 0o755)
+        return fm, base
+
+    def make(self, d, rs, *calls, rc=0):
+        """kwrs_make.sh with a fake make (see fake_make): -> the make command lines it would run"""
+        fm, _ = self.fake_make(d, rc)
         out = []
         for c in calls:
-            p = subprocess.run(["bash", os.path.join(d, "kwrs_make.sh"), str(rs), "echo", "DESIGN_CONFIG=/x"] + c.split(),
+            p = subprocess.run(["bash", os.path.join(d, "kwrs_make.sh"), str(rs), fm, "DESIGN_CONFIG=/x"] + c.split(),
                                capture_output=True, text=True, env=dict(os.environ, KWRS_DONE=os.path.join(d, "done")))
             out.append((p.returncode, [ln for ln in p.stdout.splitlines() if ln.startswith("DESIGN_CONFIG")]))
         return out
+
+    def test_copied_marker_without_outputs_reruns(self):
+        """KW-FIX-30 11-07 (DIE-KV-89 Wi vRL): a kit copied with an older run's done list but no stage outputs must run
+        those steps (old runners skipped floorplan + place: 3_place.odb never written)"""
+        d = tempfile.mkdtemp()
+        try:
+            rc, out = self.outer(d, "floorplan", "place")
+            self.assertEqual(rc, 0)
+            Path(d, "done").write_text("do-floorplan\ndo-place\n")
+            self.fake_make(d)
+            r = self.make(d, 1, "place")
+            self.assertEqual(r[0], (0, ["DESIGN_CONFIG=/x do-floorplan do-place"]))
+            r = self.make(d, 1, "place")                    # now done in this kit: outputs exist, skipped
+            self.assertEqual(r[0], (0, []))
+            _, base = self.fake_make(d)
+            os.unlink(os.path.join(base, "3_place.odb"))    # output gone (pruned / partial copy): place runs again
+            r = self.make(d, 1, "place")
+            self.assertEqual(r[0], (0, ["DESIGN_CONFIG=/x do-place"]))
+        finally:
+            shutil.rmtree(d)
+
+    def test_failed_step_not_marked(self):
+        """a step whose make call fails is not written to the done list, so the next runner re-runs it"""
+        d = tempfile.mkdtemp()
+        try:
+            self.outer(d, "cts", "route")
+            r = self.make(d, 3, "cts", rc=2)
+            self.assertEqual(r[0], (2, ["DESIGN_CONFIG=/x do-cts"]))
+            self.assertNotIn("do-cts", Path(d, "done").read_text().split())
+            r = self.make(d, 3, "cts")
+            self.assertEqual(r[0], (0, ["DESIGN_CONFIG=/x do-cts"]))
+            self.assertIn("do-cts", Path(d, "done").read_text().split())
+        finally:
+            shutil.rmtree(d)
+
+    def test_done_list_not_keyed_by_ppid(self):
+        """$PPID is 1 in every container: the default done list is keyed by resume.json, never by $PPID"""
+        rk = self.rk
+        a = rk.index("KWRS_MAKE'  # KWRS-BEGIN")
+        blk = rk[a:rk.index("KWRS_MAKE\n", a + 20)]
+        self.assertNotIn("$PPID", blk)
+        self.assertIn("/work/.kwrs_done.r$(cksum < /work/resume.json", blk)
+        g = Path(os.path.dirname(os.path.abspath(__file__)), "..", "..", "physical", "common_flow", "grt183_make.sh")
+        if g.exists():
+            t = g.read_text()
+            self.assertNotIn(".kwrs_done.$PPID", t)
+            self.assertIn('.kwrs_done.r$(cksum < "$W/resume.json"', t)
 
     def test_no_resume(self):
         d = tempfile.mkdtemp()

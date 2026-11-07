@@ -58,7 +58,7 @@ SHOOK="source /work/grt_stall_resume.tcl"
 if [ -f "$W/grt_stall_resume.tcl" ] && ! grep -qF "$SHOOK" "$S" 2>/dev/null; then
   sed -i "s|^\( *\)source /work/grt183_resume.tcl|\1$SHOOK\n&|" "$S"
 fi
-export KWRS_DONE=${KWRS_DONE:-$W/.kwrs_done.$PPID}   # kwrs_make.sh keeps the runner's own done list under this wrapper
+export KWRS_DONE=${KWRS_DONE:-$W/.kwrs_done.r$(cksum < "$W/resume.json" 2>/dev/null | cut -d" " -f1)}   # same key as kwrs_make.sh (KW-FIX-30: not $PPID, 1 in a container)
 R=$(ls -d "$W"/run/results/asap7/*/base 2>/dev/null | head -1)
 restore() { if [ -n "$R" ] && [ -f "$R/4_cts.pre_grt183.odb" ]; then mv -f "$R/4_cts.pre_grt183.odb" "$R/4_cts.odb"; fi
   [ -z "$R" ] || rm -f "$R/5_1_grt.stall_strip.shapes"; }
