@@ -60,7 +60,7 @@ while :; do
   # independent slot pool. Memory/die-reservation admission above is unchanged.
   # flock leases vanish on exit, including crashes; acquire under the admission lock.
   _short=0
-  if [ "$V" = OK ] && [ "${OT_HEAVY_SHORT_POOL:-1}" != 0 ] &&
+  if [ "$V" = OK ] && [ "${OT_HEAVY_DIRECT:-}" != 1 ] && [ "${OT_HEAVY_SHORT_POOL:-1}" != 0 ] &&
      [[ "$MEM" =~ ^[0-9]+$ ]] && [ "$MEM" -le "${OT_HEAVY_SHORT_MAX_GB:-10}" ] &&
      [[ "${OT_HEAVY_THREADS:-}" =~ ^[12]$ ]]; then
     _slots=12; [ "${OT_HEAVY_SHORT_SLOTS:-}" = 16 ] && _slots=16
@@ -81,6 +81,26 @@ while :; do
     _cap=$(awk -v f="${LOAD_CAP_FACTOR:-1.5}" -v n="$(nproc)" 'BEGIN{printf "%d", f * n}')
     _l1=$(awk '{printf "%d", $1}' /proc/loadavg)
     if [ "$_cap" -gt 0 ] && [ "$_l1" -ge "$_cap" ]; then V=NO; WHY="load cap: load1 ${_l1} >= ${LOAD_CAP_FACTOR:-1.5} x $(nproc) = ${_cap} (non-crit job waits; memory admits)"; fi
+  fi
+  # DIRECT_1107 (OWNER 11-07 "critical, blocking build tasks should bypass the queues and directly start running"; ot-run
+  # --direct): the job starts on real memory alone, past the gate's past-peak/reservation charge, DIE-RESERVE and the load
+  # cap, while MemAvailable minus what earlier direct jobs have not used yet >= MEM + 32 GB.  It is charged its full
+  # request, so later admissions see it.  Under the admission lock, so a burst cannot count the same free memory twice.
+  if [ "${OT_HEAVY_DIRECT:-}" = 1 ]; then
+    _avail=$(awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo); _pend=0
+    for _f in "$D"/direct.*; do
+      [ -e "$_f" ] || continue
+      read -r _u _m < "$_f" || continue
+      systemctl --user is-active --quiet "$_u.scope" 2>/dev/null || { [ $(( $(date +%s) - $(stat -c %Y "$_f") )) -gt 120 ] && rm -f "$_f"; continue; }
+      _cur=$(systemctl --user show "$_u.scope" -p MemoryCurrent --value 2>/dev/null); case "$_cur" in ''|*[!0-9]*) _cur=0;; esac
+      _g=$(( _m - _cur / 1073741824 )); [ $_g -gt 0 ] && _pend=$(( _pend + _g ))
+    done
+    if [ $(( _avail - _pend )) -ge $(( MEM + 32 )) ]; then
+      V=OK; RES=$MEM; _short=0; WHY="DIRECT_1107 available $_avail GB, growth charged $_pend GB (earlier direct jobs), past gate: $WHY"
+      echo "$UNIT $MEM" > "$D/direct.$UNIT"
+    else
+      V=NO; RES=$MEM; WHY="direct job: MemAvailable $_avail GB - unused earlier direct $_pend GB < $MEM + 32 GB"
+    fi
   fi
   [ "$RES" != "$MEM" ] && [ "$RES" != "$LASTRES" ] && echo "ot-heavy: request ${MEM}G is charged ${RES}G (${WHY##*; }); the cap stays ${MEM}G" >&2
   LASTRES=$RES

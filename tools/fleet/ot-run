@@ -36,6 +36,10 @@ Queue candidates must have enough total physical RAM after mandatory headroom fo
 --crit: a critical job (token sims, die GRT50, die clock runs; COORD 11-01): CPUWeight=1000 on its scope and cpu.weight
          ~1000 on its containers (default 100), and it bypasses the host load cap (non-crit jobs wait while load1 >=
          LOAD_CAP_FACTOR x nproc, default 1.5).  Same as OT_RUN_CRIT=1.  Memory admission is unchanged.
+--direct: a critical blocking job listed in ~/coord/lanes/NEAR-CLOSE.tsv (DIRECT_1107, OWNER 11-07): implies --crit, goes to the
+         qualifying host with the most real free memory, and starts at once while real MemAvailable >= --mem + 32 GB, past the
+         load cap, the past-peak/reservation charge and DIE-RESERVE.  Disk floors, held hosts and MemoryMax stay.  Running jobs
+         are never touched.  Without that memory on any host it waits and re-places.  Not for new builds.
 --max-wait SEC: give up (exit 75, NOT RUN) when the host has not admitted the command after SEC seconds.
 
 Exit status (v2, 2026-10-13, after a bench was reported "EXIT 0" although nothing had run): ot-run returns the command's
@@ -657,6 +661,14 @@ def load_capped(r, mem, threads):
     return n > 0 and int(load1(r)) >= int(LOAD_CAP_FACTOR * n)
 
 
+DIRECT_HEADROOM_GB = 32   # = ot-heavy DIRECT_1107: real MemAvailable must stay this far above the job's --mem
+
+
+def direct_job():
+    """DIRECT_1107: ot-run --direct, see the usage text"""
+    return os.environ.get("OT_RUN_DIRECT") == "1"
+
+
 def choose(res, mem, threads=THREADS, die=False):
     """res: host -> --free row (hosts that qualify by disk/dir only).  Returns (host, will_queue).
     die: prefer normal hosts among those admitting now, otherwise keep every admitting host eligible; any other job gets
@@ -665,6 +677,9 @@ def choose(res, mem, threads=THREADS, die=False):
     ok = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu") and physically_capable(r, mem)}
     if not ok:
         return None, False
+    if direct_job():    # DIRECT_1107: the host with the most real free memory; only MemAvailable >= mem + headroom counts
+        fit = [h for h in ok if ok[h].get("avail_gb", 0) >= mem + DIRECT_HEADROOM_GB]
+        return max(fit or ok, key=lambda h: ok[h].get("avail_gb", 0)), not fit
     if die:     # v16 MEASURED RESERVE (coordinator 10-22): a die job is admitted on MemAvailable - 64 GB (die_admit_gb)
         ok = {h: (dict(r, admit_gb=max(r.get("admit_gb", r["free_gb"]), r["die_admit_gb"])) if "die_admit_gb" in r else r)
               for h, r in ok.items()}
@@ -1129,7 +1144,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
     say = (lambda m: None) if quiet else (lambda m: print(m, file=sys.stderr, flush=True))
-    env = os.environ.get("OT_RUN_PRIO_ENV", "") + ("OT_HEAVY_CPU=crit " if crit_job() else "") + env
+    env = os.environ.get("OT_RUN_PRIO_ENV", "") + ("OT_HEAVY_CPU=crit " if crit_job() else "") + ("OT_HEAVY_DIRECT=1 " if direct_job() else "") + env
     env = f"OT_HEAVY_SHORT_SLOTS={16 if host in ('epyc2', 'epyc4', 'epyc5', 'epyc6') else 12} OT_HEAVY_THREADS={int(os.environ.get('OT_RUN_THREADS', THREADS))} OT_HEAVY_WAIT_SINCE={int(RUN_T0)} " + env
     if disk is None:
         disk = DIE_DISK_GB if "OT_HEAVY_PRIO=die" in env else 20
@@ -1281,6 +1296,7 @@ def main():
         elif o == "--max-wait": max_wait = int(a.pop(0))
         elif o == "--threads": threads = int(a.pop(0))
         elif o == "--crit": os.environ["OT_RUN_CRIT"] = "1"
+        elif o == "--direct": os.environ["OT_RUN_CRIT"] = os.environ["OT_RUN_DIRECT"] = "1"
         elif o == "--priority":
             prio = a.pop(0)
             if prio != "die": sys.exit("ot-run: --priority takes only 'die' (owner 2026-10-15 23:50: die-level trials)")
@@ -1342,7 +1358,7 @@ def main():
             first = False
             continue
         best, queue = choose(ok, mem, threads, die=die)
-        if spill and d and not pick and not queue and best and load_spill_wanted(ok[best], threads):   # v11 LOAD SPILL
+        if spill and d and not pick and not queue and best and not direct_job() and load_spill_wanted(ok[best], threads):   # v11 LOAD SPILL
             src_r = ratio(ok[best], threads)
             root = spill_root(d) if not STAGE else "stage_" + __import__("hashlib").sha1(",".join(sorted(STAGE)).encode()).hexdigest()[:16]
             if not load_spill_neg(root):
