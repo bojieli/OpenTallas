@@ -150,3 +150,31 @@ def test_macro_clock_pin_goes_to_tap_nearest_the_pin(tmp_path):
     p = run(tmp_path, MACRO + fill, env='set ::env(OT_TAP_PITCH_UM) 2400')
     assert p.returncode == 0, p.stderr
     assert 'NET ck_u_core nt1' in p.stdout, p.stdout
+
+
+HOPLATCH = r"""
+# TYPE-SAFE-1 11-06: launch station flop at x=0 (tap clk) drives ft hop lockup latch u_fl_ft0_s0 at x=900 (nearest
+# clk_t1) directly; the latch must follow its launch station's tap (clk), a plain flop at x=900 stays nearest (clk_t1)
+proc dllm {m} {return DLLx1_ASAP7_75t_R}
+proc dinp {m} {if {$m eq "getIoType"} {return INPUT}; return D}
+mkflop u_ft_ft0_s0/q_0 0
+mkflop u_fl_ft0_s0/q_0 900
+mkflop plain 900
+rename u_fl_ft0_s0/q_0 lat_orig
+proc u_fl_ft0_s0/q_0 {m args} {if {$m eq "getMaster"} {return dllm}; lat_orig $m {*}$args}
+proc nd {m args} "netproc nd \$m {*}\$args"
+set NET(q_u_ft_ft0_s0/q_0) nd
+proc q_u_ft_ft0_s0/q_0 {m args} {switch $m {getMTerm {return outp} getInst {return u_ft_ft0_s0/q_0} getNet {return nd}}}
+set NET(d_u_fl_ft0_s0/q_0) nd
+proc d_u_fl_ft0_s0/q_0 {m args} {switch $m {getMTerm {return dinp} getInst {return u_fl_ft0_s0/q_0} getNet {return nd}}}
+"""
+
+
+def test_hop_latch_follows_launch_station_tap(tmp_path):
+    fill = ''.join(f'mkflop f{i} {0 if i < 60 else 1000}\n' for i in range(120))
+    p = run(tmp_path, HOPLATCH + fill)
+    assert p.returncode == 0, p.stderr
+    out = p.stdout
+    assert 'NET ck_u_fl_ft0_s0/q_0 nclk' in out, out
+    assert 'NET ck_plain nt1' in out
+    assert 'hop latches: 1 on their launch station' in out and '(1 re-hung)' in out, out

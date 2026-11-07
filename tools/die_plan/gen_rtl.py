@@ -206,6 +206,26 @@ endmodule
 """
 
 
+def ft_hop_lockup(raw, tn):
+    """TYPE-SAFE-1 11-06 (OWNER 18:5x, structurally hold-safe ft hops): True when type tn's internal ft station hops
+    get the ot_dp_lk negative-level lockup latch (W+1 bits incl. the epoch) between station j and j+1.
+
+    Why: a zero-logic station hop whose two flops hang on different kit tap ports pays the whole plan tap window W
+    (launch early -W, capture late 0, no CRPR across ports): S81 slice_station t14 FF ft5_o_3 -> ft5_o_4 -2.5 ps with
+    34 ps of real tree skew and W 140.  The latch is transparent while clk is low, clocked from the LAUNCH station's
+    tap (clock_taps.tcl hop-latch follow-D pass) and placed at the hop midpoint (face_flops.tcl): the latch -> capture
+    check gains ~T/2 of hold, the half hop (<= ~203 um at the 405-um reach) fits T/2 - W of setup, and the hop stays
+    one cycle (lec.py latch_to_wire; bind_verify transport stages 0).  Instances u_fl_<slot>_s<j> (gen) /
+    u_fl_<obus>_<k> (bind).  Plan clock.ft_hop_lockup (absent = off, legacy byte-identical):
+    {"all": true, "except": [types]} or {"types": [types]}."""
+    cfg = ((raw or {}).get("clock") or {}).get("ft_hop_lockup")
+    if not cfg:
+        return False
+    if cfg.get("all"):
+        return tn not in set(cfg.get("except") or [])
+    return tn in set(cfg.get("types") or [])
+
+
 def uses_relay_lockup(raw):
     return bool((raw.get("reset") or {}).get("relay_lockup"))
 
@@ -490,6 +510,7 @@ def wrapper(P, tn, epochs, rtl_root=None):
         ep_o = epochs.get((tn, s["name"] + "_o"), True)
         r = rsel(s["name"] + "_i")
         d, ea = f"{n}_i[{W - 1}:0]", (f"{n}_i[{W}]" if ep_i else r)
+        lk = ft_hop_lockup(P.raw, tn)
         for j in range(k):
             last = j == k - 1
             if last:
@@ -502,6 +523,11 @@ def wrapper(P, tn, epochs, rtl_root=None):
             body.append(f"    {st(ea)} #(.W({W})) u_ft_{n}_s{j} (.clk(clk), .rst_n({r if j == 0 else rsel(s['name'] + '_i', s['name'] + '_o', j / k)}), .d({d}), .ea({ea}), "
                         f".q({q}), .eq({eq}));")
             d, ea = q, eq
+            if lk and not last:
+                # TYPE-SAFE-1 11-06 hop lockup (ft_hop_lockup): station j -> transparent-low latch -> station j+1
+                decl.append(f"    wire [{W}:0] {n}_s{j}_l;")
+                body.append(f"    ot_dp_lk #(.W({W + 1})) u_fl_{n}_s{j} (.clk(clk), .d({{{eq}, {q}}}), .q({n}_s{j}_l));")
+                d, ea = f"{n}_s{j}_l[{W - 1}:0]", f"{n}_s{j}_l[{W}]"
     for nt in t.get("nets", []):
         decl.append(f"    wire [{nt['width'] - 1}:0] n_{sv_id(nt['name'])};")
         sig[f"net:{nt['name']}"] = f"n_{sv_id(nt['name'])}"
