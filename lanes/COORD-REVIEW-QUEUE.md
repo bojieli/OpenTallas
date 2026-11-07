@@ -21925,3 +21925,32 @@ FAILED [AUTOPILOT 03bcb647e05a] 2026-11-06 19:32:17 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-06 19:37 PST KIT-WAVE [s81_head] -> HEAD die owner (DIE-HEAD-70): 1 event(s): hd_ctl_n unstarted waiter RESTAGED (epyc2 -> intel1)
 - 2026-11-06 19:37 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-74): 1 event(s): ot_hbm_idx_rootctl_static_am LAUNCHED (kw-hbm-othbmidxrootctlstaticam-9-22668)
 - 2026-11-06 19:38:20 PST AUTO-RESIGN [AUTOPILOT -> COORD, die owners] s81/slice_station__t7__cl362204c4 needs a lane: FAILED re-sign NOT SIGNED TT 55.1 FF 0.07: face_guard: FAIL {'shared': 584}; io_hold_parent: NEEDS_PARENT; matching real-parent PASS receipt missing; same DB and same signoff.py + lec.py on flow-20261106-co-s81, not retried
+- 2026-11-06 19:41 PST READY+STATE [KW-FIX-24 -> ROOT-MERGE-46, COORD, TYPE-SAFE-1, PRUNE-1125, ARCHIVE-1106, DIE-HBM-82, DIE-KV-84] COORD 18:5x queue push + 19:2x (5)(6)(10).
+  (1) READY -> ROOT-MERGE-46, stale-source class (19:2x (5)): claude/kw-fix-24-srcready-1106@b5710c267de3c8090f9d46618281679adcc02244 (2 commits on main 7281ac2667f), tools/autopilot/kit_wave.py + test_kit_wave_srcready.py.
+    - Each tick, one probe per gen host checks every die input: src tree (file count to depth 3), plan dir (whole), the plan file, tools/die_plan/bind.py, kit_rtl asbuilt/script, and every HDL source in the strict bind of record (bind_out/bind.f, read on the hub).
+    - A copy below 99% of the best copy on any host, or missing any required file, is dropped from that die's gen_hosts and logged SRC-INCOMPLETE. If every gen host is incomplete, work_root_problem stops the die with the reason. An unreachable host is unknown and is never dropped. Opt-out: src_probe false.
+    - Tests: test_kit_wave_srcready.py, 5 tests, fail on base and pass on tip. test_kit_wave*: base 12 fail (8 old + 4 new), tip the same 8 old [CHECKED epyc5 /tmp/kw24_sr/{base,tip}.fails]. autopilot-side only, no flow tag needed.
+    - Not done: syncing the tree automatically before launch. A host is dropped until its copy is whole.
+  (2) Root cause of 'tool input file missing', measured. A prune emptied kit-wave inputs:
+    - intel1: kw21/src_c926f and kw23/src_e9eda had 46.1k and 46.8k files removed (tools/die_plan/bind.py, head_wave_kit_rtl.py); codex-hbm-wave/d44v35 had 3 of 390 files; prep_l48ui 2 of 71.
+    - intel2 (hub): the KV plan dir codex-wave-1105/src_7da_ad/.../plan_of_record had 2 of 158 files; 0 files of that tree's rtl on intel2 and intel1 (KV bind_kv_q names 118 sources there).
+    - PRUNE/ARCHIVE lanes: every path in ~/coord/autopilot/kit_wave.json (src, plan dir, kit_rtl asbuilt/bind_out/script, and the trees bind.f names) is live input. I put .keep in kw24/src_7281a, kw21/src_c926f, kw23/src_e9eda, kw24/hbm_d44v_7281a and kw24/kv_plan_7da_ad on all 5 gen hosts. Please exclude kit_wave.json paths in prune briefs.
+  (3) Repairs, live in kit_wave.json (kwedit, coord/state 553cfccae55 .. 2bd643050d5):
+    - intel1 src copies resynced from epyc5 (copy of missing files only). d44v35, KV plan_of_record and prep_l48ui resynced to intel1.
+    - All dies: src -> kw24/src_7281a = main 7281ac2667f, as I226 asked (flow tags of 11-06; after a0225f4348e only HBM data changed). Built from kw21/src_c926f plus the 2225-file diff; every changed file verified by blob hash, 0 mismatches, on intel2/epyc5/epyc2/intel1/epyc4.
+    - HBM plan -> kw24/hbm_d44v_7281a = main plan_of_record/d44v, parts through 49 plus 38/40, .gz unpacked (401 files). It was d44v35 of 11-05. DIE-HBM-82: this is the PART 47/49 relaunch base.
+    - KV plan -> kw24/kv_plan_7da_ad = byte copy of the epyc5 src_7da_ad plan_of_record. Same plan_c.json; only the path changed.
+    - KV gen_hosts [epyc5, epyc4]: only those hosts (and epyc6) hold the whole src_7da_ad rtl that the strict bind names.
+    - Codex dirs: on intel2/epyc2 I first restored the KV plan files inside codex-wave-1105 by mistake. I removed them again (only files I added; ctime within 40 min). Nothing else under codex-* was touched.
+  (4) Queue push (18:5x), host order (19:2x): place_prefer epyc5, intel2, epyc2 (then intel1, epyc4); gen_hosts epyc5, intel2 first; epyc6 stays out (no_resume_hosts). max_launch_per_tick 40 -> 60.
+    - Retried: 5 infra casualties, 7 HBM queue-rejected rows, 6+1 KV/HEAD 'tool input file missing', 3 KV bind-source rows, HBM n4ext@5 and rootctl@8.
+    - Launched 18:45-19:40: 18 attempts. By gen host: intel1 7, epyc2 6, epyc5 3, intel2 2. 15 are RUNNING and 3 FAIL (the KV bind rows, now retried on epyc5/epyc4).
+    - Not launched: hbm hcp_sys1@2, lanes8_11@8, q2n2_body_core@7, split3_lane_core__idpin@4. lanes8_11 is not in HBM only_items, and the select step does not offer the others (PART 38 renamed split3). DIE-HBM-82 decides whether they belong in only_items.
+    - romqsplit col_h9/h10: not relaunched; I226 (2) is still HOLD.
+  (5) The cap is NOT the limiter. Each tick launches 6-10 against a cap of 60. The limiter is eligible rows.
+    - Most latest-attempt FAIL rows need a form, not a retry: S81 congestion 34 (held per 18:5x), QC post-cts-hold 30 and congestion 22, HBM flow-error 11 and routed 10.
+    - ot-run 19:37 shows no waiters on any host and these admits: epyc2 546 GB, intel2 437 GB, epyc5 235 GB, intel1 211 GB, epyc4 189 GB, epyc6 208 GB. The fleet will fill once the TYPE-SAFE-1 / ft re-site forms land.
+  (6) 19:2x (10) failure_breakdown: 'legacy grt gate: G2 setup_tt' -> SETUP-AT-GRT, matched ahead of 'hold after CTS' [CHECKED label() on both strings]. ~/coord/tools/failure_breakdown.py, coord/state 94dd62931d9. 50 stages rows carry it.
+    - TYPE-SAFE-1: the kit-wave class of those rows is still post-cts-hold, because the GRT G2 gate rides FAIL_POSTCTS. Tell me if your forms key on it; otherwise I will not change the class.
+  (7) 19:2x (6) pre-route LEC as its own ot-run unit (serdes__t4 lost an 8-h LEC on OOM): a sub-lane is building it in tools/die_plan/lec_async.sh. The watcher runs the LEC in a separately admitted container with its own memory, not docker exec into the flow container. Same NEQ stop, ABORTED-on-signal and reuse semantics; opt-out env; READY with tests to follow.
+  (8) epyc6: scratch2 126 GB per ot-run 19:37 (36 GB at 19:07, ARCHIVE-1106 cleared it). It stays out until I confirm >= 80 GB at two 15-min checks, then I restore it to the host lists. 0 'KIT-WAVE failed' since 13:57.
