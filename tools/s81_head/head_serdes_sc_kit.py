@@ -94,6 +94,7 @@ def main():
         view=f"{M}@head", module=M, outline_um=c["outline"], pins_file=str(pinfile),
         pins_sha256=hashlib.sha256(pinfile.read_bytes()).hexdigest(), instances=c["inst"], placed=len(c["inst"]),
         recipe_keys=[M])]), indent=1) + "\n")
+    sys.path.insert(0, str(ROOT / "physical/die_plan/hbm_arch_cores"))   # generator sibling modules (static_id_contracts)
     spec = importlib.util.spec_from_file_location(
         "head_core_shared", ROOT / "physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py")
     G = importlib.util.module_from_spec(spec)
