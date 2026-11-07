@@ -1,0 +1,199 @@
+
+-- Running command `read_verilog /tmp/codex-kv-prompt-1209/carry/induction.v; prep -top step -flatten; sat -verify -prove bad 0 -show-inputs' --
+
+1. Executing Verilog-2005 frontend: /tmp/codex-kv-prompt-1209/carry/induction.v
+Parsing Verilog input from `/tmp/codex-kv-prompt-1209/carry/induction.v' to AST representation.
+Generating RTLIL representation for module `\step'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \step
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \step
+Removed 0 unused modules.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_INIT pass (extract init attributes).
+
+2.2.4. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+2.2.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+2.2.7. Executing PROC_DFF pass (convert process syncs to FFs).
+
+2.2.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.3. Executing FLATTEN pass (flatten design).
+No more expansions possible.
+
+2.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module step.
+
+2.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \step..
+Removed 0 unused cells and 12 unused wires.
+<suppressed ~1 debug messages>
+
+2.6. Executing CHECK pass (checking for obvious problems).
+checking module step..
+found and reported 0 problems.
+
+2.7. Executing OPT pass (performing simple optimizations).
+
+2.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module step.
+
+2.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\step'.
+Removed a total of 0 cells.
+
+2.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \step..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+2.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \step.
+    New input vector for $reduce_and cell $reduce_and$/tmp/codex-kv-prompt-1209/carry/induction.v:2$3: { \count [0] \count [1] \count [2] \count [3] \count [4] \count [5] \count [6] \count [7] \count [8] \count [9] \count [10] \count [11] \count [12] \count [13] \count [14] \count [15] \count [16] \count [17] \count [18] \count [19] \count [20] \count [21] \count [22] \count [23] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/codex-kv-prompt-1209/carry/induction.v:2$2: { \count [0] \count [1] \count [2] \count [3] \count [4] \count [5] \count [6] \count [7] \count [8] \count [9] \count [10] \count [11] \count [12] \count [13] \count [14] \count [15] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/codex-kv-prompt-1209/carry/induction.v:2$1: { \count [0] \count [1] \count [2] \count [3] \count [4] \count [5] \count [6] \count [7] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/codex-kv-prompt-1209/carry/induction.v:11$23: { \next [0] \next [1] \next [2] \next [3] \next [4] \next [5] \next [6] \next [7] \next [8] \next [9] \next [10] \next [11] \next [12] \next [13] \next [14] \next [15] \next [16] \next [17] \next [18] \next [19] \next [20] \next [21] \next [22] \next [23] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/codex-kv-prompt-1209/carry/induction.v:11$20: { \next [0] \next [1] \next [2] \next [3] \next [4] \next [5] \next [6] \next [7] \next [8] \next [9] \next [10] \next [11] \next [12] \next [13] \next [14] \next [15] }
+    New input vector for $reduce_and cell $reduce_and$/tmp/codex-kv-prompt-1209/carry/induction.v:11$17: { \next [0] \next [1] \next [2] \next [3] \next [4] \next [5] \next [6] \next [7] }
+  Optimizing cells in module \step.
+Performed a total of 6 changes.
+
+2.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\step'.
+Removed a total of 0 cells.
+
+2.7.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \step..
+
+2.7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module step.
+
+2.7.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.7.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \step..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+2.7.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \step.
+Performed a total of 0 changes.
+
+2.7.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\step'.
+Removed a total of 0 cells.
+
+2.7.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.7.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \step..
+
+2.7.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module step.
+
+2.7.16. Finished OPT passes. (There is nothing left to do.)
+
+2.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 7 bits (of 8) from port B of cell step.$add$/tmp/codex-kv-prompt-1209/carry/induction.v:6$4 ($add).
+
+2.9. Executing MEMORY_DFF pass (merging $dff cells to $memrd and $memwr).
+
+2.10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \step..
+
+2.11. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.12. Executing OPT pass (performing simple optimizations).
+
+2.12.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module step.
+
+2.12.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\step'.
+Removed a total of 0 cells.
+
+2.12.3. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.12.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \step..
+
+2.12.5. Finished fast OPT passes.
+
+2.13. Printing statistics.
+
+=== step ===
+
+   Number of wires:                 24
+   Number of wire bits:            148
+   Number of public wires:          11
+   Number of public wire bits:     104
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 25
+     $add                            5
+     $eq                             3
+     $mux                            4
+     $ne                             4
+     $or                             3
+     $reduce_and                     6
+
+2.14. Executing CHECK pass (checking for obvious problems).
+checking module step..
+found and reported 0 problems.
+
+3. Executing SAT pass (solving SAT problems in the circuit).
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 25 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+Import show expression: \count
+Import show expression: \inc
+
+Solving problem with 1108 variables and 3149 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: f62d249332
+CPU: user 0.02s system 0.00s, MEM: 16.88 MB total, 11.45 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 25% 1x sat (0 sec), 17% 5x opt_clean (0 sec), ...

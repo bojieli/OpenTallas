@@ -1,0 +1,18 @@
+  // c_reqs vL: derived carry state, same-cycle counter and PIN behavior.
+  // Invariant: ot_creq_cN == &c_reqs[N-1:0]; reset makes all zero.
+  reg ot_creq_c8, ot_creq_c16, ot_creq_c24;
+  wire ot_creq_inc = _1612_ & \u_control.u_control.u_host.u_core.m_bvalid  & _1021_;
+  always @(posedge ck, negedge rr_c_l28)
+    if (!rr_c_l28) begin
+      ot_creq_c8 <= 1'b0;
+      ot_creq_c16 <= 1'b0;
+      ot_creq_c24 <= 1'b0;
+    end else if (ot_creq_inc) begin
+      ot_creq_c8 <= (\u_control.u_control.u_host.u_core.c_reqs [7:0] == 8'hfe);
+      ot_creq_c16 <= (\u_control.u_control.u_host.u_core.c_reqs [15:0] == 16'hfffe);
+      ot_creq_c24 <= (\u_control.u_control.u_host.u_core.c_reqs [23:0] == 24'hfffffe);
+    end
+  assign _0856_ = { (\u_control.u_control.u_host.u_core.c_reqs [31:24] + ot_creq_c24),
+                    (\u_control.u_control.u_host.u_core.c_reqs [23:16] + ot_creq_c16),
+                    (\u_control.u_control.u_host.u_core.c_reqs [15:8] + ot_creq_c8),
+                    (\u_control.u_control.u_host.u_core.c_reqs [7:0] + 8'd1) };
