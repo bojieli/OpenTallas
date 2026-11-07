@@ -1,0 +1,18 @@
+{
+  "status": "SYNTH_COMPLETED_OUTPUT_RETENTION_INFRA",
+  "returncode": 0,
+  "area_um2": 9245.0,
+  "outline_um": [
+    174.96,
+    174.96
+  ],
+  "free_core_util": 0.3342088629486417,
+  "mapped_cell_count": "NOT_RETAINED",
+  "yosys_peak_mb": 985.56,
+  "seconds": 197.85,
+  "source_top": "codex_svc_sml_native/native dsfd_su_t_sml captured production shape",
+  "retained": "host synth.log and ABI miter; no finalDB/netlist",
+  "cause": "minimal ORFS config did not redirect outputs under mounted /work; ephemeral --rm layer lost finalobjects",
+  "fix": "explicit WORK_HOME and all outputdirs under /work/run in future factory/runner; no resynthesis for bookkeeping",
+  "qualification": "SIZE_ONLY; no STA, PLACE, route, currenttag or parent credit"
+}

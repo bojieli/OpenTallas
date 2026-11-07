@@ -21,6 +21,10 @@ def prepare(donor,out):
  srcs=' '.join(paths+['/work/rtl/codex_svc_sml_native.sv'])
  config=f'''export DESIGN_NAME = codex_svc_sml_native
 export PLATFORM = asap7
+export RESULTS_DIR = /work/run/results/asap7/codex_svc_sml_native/base
+export REPORTS_DIR = /work/run/reports/asap7/codex_svc_sml_native/base
+export LOG_DIR = /work/run/logs/asap7/codex_svc_sml_native/base
+export OBJECTS_DIR = /work/run/objects/asap7/codex_svc_sml_native/base
 export VERILOG_FILES = {srcs}
 {defs}
 export SDC_FILE = /work/constraint.sdc
