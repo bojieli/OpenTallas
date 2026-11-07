@@ -629,3 +629,4 @@ CODEX owns current R13 lane multicast/census followup via PATH-HBM. R12 missing2
 
 ## CODEX notes 2026-10-27 08:13 PDT
 Current unified plan work consolidated /root/hbm/plan on codex/hbm-plan-0815 from QUAD6@568934d32a; collects five paused PORTS/CLK/OUTL/EP/HUBPIN results then folds one plan event. Current U6d G0 0/G0C3 phantom partner-face errors. New vmquery50it GRT FAIL3819 -> height/capacity fix before route.
+FIX [WATCHDOG 2026-11-07 08:53 PST] epyc4 oth-ubuntu-3682439-1793988970.scope [hbmcore-kit_-3682765] hung twice (DRT, idle 6h05; first relaunch 2026-11-06 10:13 PST): stopped, NOT relaunched (OWNER 12.22). Kit epyc4:/srv/opentallas-scratch2/claude/hbm-form-timing/forms/n12mw/kit, log /srv/opentallas-scratch2/claude/hbm-form-timing/forms/n12mw/kit/run_finish.log. Owner lane HBM-ARCH: root-cause the hang before any new launch.
