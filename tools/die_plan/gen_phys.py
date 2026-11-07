@@ -435,7 +435,12 @@ def strap_pin_sites(P, tn):
                 raise ValueError(f"type {tn}: strap {sp['name']} is a scalar RTL port, width must be 1")
             out.append((sp["name"], sp["layer"], float(xy[0][0]), float(xy[0][1])))
             continue
-        out += [(f"{sp['name']}[{i}]", sp["layer"], float(x), float(y)) for i, (x, y) in enumerate(xy)]
+        # DIE-KV-88 11-07: same half-pitch class as FLOW-KITFAIL-2 (a narrow pin off its plan track is DRT-0255 at route:
+        # ri_head2_u_score_rst_n, ri_pv_u_g0_j_rst_n on M7 at half a pitch).  A site already on a track keeps its bytes.
+        import landing_contract as LC
+        for i, (x, y) in enumerate(xy):
+            x, y = LC.on_track(P, sp["layer"], float(x), float(y))
+            out.append((f"{sp['name']}[{i}]", sp["layer"], x, y))
     return out
 
 
@@ -448,7 +453,12 @@ def reset_spine_pin_sites(P, tn):
         xy = sp["sites_um"]
         if len(xy) != sp["width"]:
             raise ValueError(f"type {tn}: reset spine pin {sp['name']} needs exactly {sp['width']} sites_um")
-        out += [(f"{sp['name']}[{i}]", sp["layer"], float(x), float(y)) for i, (x, y) in enumerate(xy)]
+        # DIE-KV-88 11-07: same half-pitch class as FLOW-KITFAIL-2 (a narrow pin off its plan track is DRT-0255 at route:
+        # ri_head2_u_score_rst_n, ri_pv_u_g0_j_rst_n on M7 at half a pitch).  A site already on a track keeps its bytes.
+        import landing_contract as LC
+        for i, (x, y) in enumerate(xy):
+            x, y = LC.on_track(P, sp["layer"], float(x), float(y))
+            out.append((f"{sp['name']}[{i}]", sp["layer"], x, y))
     return out
 
 
