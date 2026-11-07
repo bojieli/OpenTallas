@@ -554,7 +554,8 @@
     "intel1"
    ],
    "gen_hosts": [
-    "epyc5"
+    "epyc5",
+    "intel1"
    ],
    "place_prefer": [
     "epyc2"
@@ -735,7 +736,8 @@
    "gen_hosts_base": [
     "epyc5",
     "epyc6",
-    "epyc4"
+    "epyc4",
+    "intel1"
    ],
    "gen_host_base": "epyc5",
    "counted_items": [
@@ -2921,7 +2923,8 @@
    },
    "gen_hosts": [
     "epyc5",
-    "epyc2"
+    "epyc2",
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": false,
@@ -3128,7 +3131,8 @@
     "epyc5",
     "epyc6",
     "epyc4",
-    "epyc2"
+    "epyc2",
+    "intel1"
    ],
    "gen_host_base": "epyc5",
    "only_items_l48uf": [
@@ -3961,7 +3965,8 @@
    },
    "gen_hosts": [
     "epyc5",
-    "epyc2"
+    "epyc2",
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
@@ -4111,7 +4116,8 @@
     "epyc5",
     "epyc6",
     "epyc4",
-    "epyc2"
+    "epyc2",
+    "intel1"
    ],
    "gen_host_base": "epyc5",
    "note_gen_epyc56": "KW-FIX-18 19:5x (COORD 19:4x): gen_hosts epyc5+epyc6 first (kw11/src_16b + 14 GB referenced deps rsynced from epyc4 at the same paths); epyc4 kept in the base list, the disk watcher drops it while its scratch is low",
@@ -4753,7 +4759,8 @@
     "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch"
    },
    "gen_hosts": [
-    "epyc5"
+    "epyc5",
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "retry_fix": {
@@ -4885,7 +4892,8 @@
    "gen_hosts_base": [
     "epyc5",
     "epyc6",
-    "epyc4"
+    "epyc4",
+    "intel1"
    ],
    "gen_host_base": "epyc5",
    "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
@@ -4927,5 +4935,7 @@
  "ot_run": "/home/ubuntu/.local/lib/kw23/ot-run",
  "note_otrun_kw22": "KW-FIX-22 11-06 10:1x COORD 10:0x (epyc2 admits 638 GB, 0 waiters; batches to epyc2): ot_run kw21 -> kw22 = same wrapper on fleet/kw22-230e562 (230e562aa5c + SPILL_DST_ROOT_FLOOR epyc2 500->200 per owner 11-05 all-disks-scratch, and a spill that writes only on the epyc2 root fs (scratch3 = root there, 452 GB) is no longer refused by the 51-GB scratch2 floor). Async PLACE (--stage, unpinned) waiters now spill to epyc2 via the intel2 relay. epyc2 NOT added to die hosts: the gen->host sync runs from the gen host and epyc5/6 cannot ssh epyc2. Revert: ot_run back to kw21/ot-run.",
  "note_otrun_kw23": "KW-FIX-23 13:5x COORD 13:2x/13:5x (epyc5 14-15 waiters ~800 GB while epyc4/epyc2/epyc6 admit): the kw22 wrapper forced OT_RUN_SCRATCH_DISK_FLOOR_GB=100 for every scratch dir, and only epyc5's scratch disk (139 GB) passes 100 (epyc2 67, epyc4 77, epyc6 71), so every spillable wave PLACE (--stage) re-placed onto epyc5. kw23/ot-run = kw22 with floor 40 for /srv/opentallas-scratch3 dirs (those kits write the root fs, which keeps its own ROOTSCR floor); scratch2 dirs keep 100. Waiting S81 PLACE clients stopped once (exact pids) -> INFRA relaunch. Revert: ot_run back to kw22/ot-run.",
- "note_kw24_epyc6_hold": "KW-FIX-24 COORD 16:3x URGENT: epyc6 scratch2 10-16 GB -> epyc6 out of hosts/place_prefer/gen_hosts (global + every die) so no new launch, restage or resume targets it until its scratch2 >= 80 GB; *_base lists keep epyc6 (restore = copy hosts/place_prefer/gen_hosts back from *_base). Running containers untouched."
+ "note_kw24_epyc6_hold": "KW-FIX-24 COORD 16:3x URGENT: epyc6 scratch2 10-16 GB -> epyc6 out of hosts/place_prefer/gen_hosts (global + every die) so no new launch, restage or resume targets it until its scratch2 >= 80 GB; *_base lists keep epyc6 (restore = copy hosts/place_prefer/gen_hosts back from *_base). Running containers untouched.",
+ "gen_disk_min_gb": 80,
+ "note_kw24_gendisk": "KW-FIX-24 COORD 16:2x item (b): epyc6 scratch2 44 GB REFUSED -> intel1 added to gen_hosts of qwen_kvsys/hbm/s81_head/qwen_compute (inputs mirrored from epyc6 at the same paths: kw21/src_c926f, kw23/src_e9eda, kw23/bind_kv_q + asbuilt_kv_7da, kv plan_of_record, hbm d44v35/d44v8h/rf1 json, dh55 + kw23/prep_l48ui, kw22/bind_qc_g). ot-run gives a REFUSED host no row, so pick/restage already skip it; gen_disk_min_gb 80 (COORD 16:3x) needs claude/kw-fix-24-gendisk-1106. intel2 not added: its root fs (scratch3 work roots) has 35 GB above the 100-GB keep < the 40-GB scratch3 floor. Revert: drop intel1 from these gen_hosts"
 }
