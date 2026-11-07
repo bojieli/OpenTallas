@@ -1,0 +1,54 @@
+oc_d MUT 0: XEQ PASS checks=560000 errs=0 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+oc_d MUT 6: XEQ FAIL checks=560000 errs=421 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_fault cyc=972 ep=0 kind=0
+MISMATCH lane_fault cyc=973 ep=0 kind=0
+MISMATCH lane_fault cyc=1151 ep=0 kind=0
+oc_d MUT 1: XEQ FAIL checks=560000 errs=614 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_ro_x cyc=923 ep=0 kind=0
+MISMATCH lane_vm_wdata cyc=947 ep=0 kind=0
+MISMATCH lane_ro_x cyc=947 ep=0 kind=0
+oc_d MUT 2: XEQ FAIL checks=560000 errs=1975 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_kv_we cyc=923 ep=0 kind=0
+MISMATCH lane_ro_x cyc=923 ep=0 kind=0
+MISMATCH lane_vm_we cyc=929 ep=0 kind=0
+oc_d MUT 3: XEQ FAIL checks=560000 errs=2476 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=200
+MISMATCH lane_vm_wdata cyc=929 ep=0 kind=0
+MISMATCH lane_ro_x cyc=929 ep=0 kind=0
+MISMATCH lane_ro_x cyc=1021 ep=0 kind=0
+oc_d MUT 4: XEQ FAIL checks=560000 errs=80858 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_rd_addr cyc=819 ep=0 kind=0
+MISMATCH bank_read_data cyc=819 ep=0 kind=0
+MISMATCH lane_rd_addr cyc=820 ep=0 kind=0
+oc_d MUT 5: XEQ FAIL checks=560000 errs=80858 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_rd_addr cyc=819 ep=0 kind=0
+MISMATCH bank_read_data cyc=819 ep=0 kind=0
+MISMATCH lane_rd_addr cyc=820 ep=0 kind=0
+oc_s7 MUT 0: XEQ FAIL checks=560000 errs=374 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH f_sfu cyc=30341 ep=21 kind=5
+MISMATCH f_sfu cyc=30342 ep=21 kind=5
+MISMATCH f_sfu cyc=30343 ep=21 kind=5
+oc_t13 MUT 0: XEQ FAIL checks=560000 errs=10125 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_kv_we cyc=922 ep=0 kind=0
+MISMATCH lane_kv_waddr cyc=922 ep=0 kind=0
+MISMATCH lane_kv_wdata cyc=922 ep=0 kind=0
+o MUT 0 SIDE_D 7: XEQ PASS checks=640000 errs=0 writes=432 fault_cycles=793 coll_cycles=25 sfu_fault_ref=138 sfu_fault_dut=138 side_v=836
+o MUT 0 SIDE_D 6: XEQ FAIL checks=640000 errs=1337 writes=432 fault_cycles=793 coll_cycles=25 sfu_fault_ref=138 sfu_fault_dut=138 side_v=836
+MISMATCH lane_vm_wdata cyc=3719 ep=2 kind=2
+MISMATCH lane_ro_x cyc=3719 ep=2 kind=2
+MISMATCH lane_kv_wdata cyc=3730 ep=2 kind=2
+o MUT 1 SIDE_D 7: XEQ FAIL checks=640000 errs=715 writes=432 fault_cycles=793 coll_cycles=25 sfu_fault_ref=138 sfu_fault_dut=138 side_v=836
+MISMATCH lane_ro_x cyc=889 ep=0 kind=0
+MISMATCH lane_vm_wdata cyc=938 ep=0 kind=0
+MISMATCH lane_ro_x cyc=938 ep=0 kind=0
+o MUT 3 SIDE_D 7: XEQ FAIL checks=640000 errs=3008 writes=432 fault_cycles=793 coll_cycles=25 sfu_fault_ref=138 sfu_fault_dut=134 side_v=836
+MISMATCH lane_coll cyc=918 ep=0 kind=0
+MISMATCH lane_fault cyc=924 ep=0 kind=0
+MISMATCH lane_ro_v cyc=935 ep=0 kind=0
+o MUT 6 SIDE_D 7: XEQ FAIL checks=640000 errs=374 writes=432 fault_cycles=793 coll_cycles=25 sfu_fault_ref=138 sfu_fault_dut=138 side_v=836
+MISMATCH lane_fault cyc=1116 ep=0 kind=0
+MISMATCH lane_fault cyc=1117 ep=0 kind=0
+MISMATCH lane_fault cyc=1234 ep=0 kind=0
+o_s7 MUT 0 SIDE_D 7: XEQ FAIL checks=640000 errs=252 writes=432 fault_cycles=793 coll_cycles=25 sfu_fault_ref=138 sfu_fault_dut=138 side_v=836
+MISMATCH f_sfu cyc=30341 ep=21 kind=5
+MISMATCH f_sfu cyc=30342 ep=21 kind=5
+MISMATCH f_sfu cyc=30378 ep=21 kind=5
