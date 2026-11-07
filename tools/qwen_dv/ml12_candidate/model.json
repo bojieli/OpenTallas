@@ -1,0 +1,23 @@
+{
+  "status": "PRIVATE_SOURCE_ONLY_NO_BUILD",
+  "baseline_head_ML": 8,
+  "candidate_head_ML": 12,
+  "baseline_S1_age": 14,
+  "candidate_S1_age": 18,
+  "S1_width": 8,
+  "S1_added_slot_bits": 32,
+  "baseline_S2_age": 16,
+  "candidate_S2_age": 20,
+  "S2_width": 133,
+  "preserved_ring_age": 16,
+  "preserved_ring_slot_bits": 1995,
+  "reply_stages": 4,
+  "reply_bits": 532,
+  "approx_added_state_bits_per_head": 565,
+  "four_child_added_state_estimate": 2260,
+  "old_ring_cap_2048_unchanged": true,
+  "source_semantics": "Exact existing modules privately renamed; only READ_EXTRA opt-in and MIF1 reply-stage pattern generalized; arithmetic unchanged",
+  "request_transport_extra": 4,
+  "completion_extra": "MEASURE_IN_REAL_HEAD_BENCH; not assumed8",
+  "no_POR_or_library_replacement": true
+}
