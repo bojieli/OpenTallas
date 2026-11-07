@@ -9,7 +9,10 @@ wires ran 400-700 um along the face and through the 23-um slots beside the bf ma
 Over the macros only M6/M7 are free, so vertical runs on M7 straight over the band are the cheap path.
 
 What: type-frame windows, every col_h10 instance (MX: die x = origin + x; R180: die x = origin + W - x; lane order
-unchanged).  Bit order, widths, faces and layers are unchanged, so RTL, bind and LEC are unchanged.  PIN CYCLES: 0.
+unchanged).  r0->r1 big bus sits on the u_e input column (its x0/x1 pins are on the S face, x 543-632).  r1->r2 big bus has
+two segments: t bits over x 384-518, payload bits over the free slot + x 635-800; not over the bf_front M5 ceiling, where
+flops in the slot had to run along the 16-um face strip (view 05:12).  The small buses go east of the macro band, x > 1143,
+where every layer is free, not over bf_col3_c (M1-M6 OBS: M7 only).  Bit order, widths, faces and layers are unchanged, so RTL, bind and LEC are unchanged.  PIN CYCLES: 0.
     python3 -I delta_col_pinform_1107.py PLAN [--family col_h10] [--dry]        (cwd = repo root)
 """
 import json
@@ -22,7 +25,10 @@ sys.path.insert(0, "tools/die_plan")
 import schema as S  # noqa: E402
 
 # window = (lo, hi) in the TYPE frame; big bus centred on the t + payload + e column, small bus just east of it
-WINDOWS = {"big": (384.0, 768.0), "small": (777.6, 883.2)}
+BIG_R0R1 = (470.4, 710.4)
+BIG_R1R2 = ((384.0, 518.4), (635.52, 800.64))
+SMALL_R0R1 = (1152.0, 1214.4)
+SMALL_R1R2 = (1152.0, 1238.4)
 SNAP = 0.192
 
 
@@ -82,17 +88,42 @@ def main():
         if not sp or not sp["type"].startswith(fam):
             continue
         assert dp["type"].startswith(fam), pt["id"]
-        role = "big" if pt["width"] >= 1000 else "small"
-        lo, hi = even_window(*WINDOWS[role], pt["layers"], TR)
+        stack = "r0r1" if pt["id"].rsplit("__", 1)[0].endswith(("r0r1", "r1r0")) else "r1r2"
+        big = pt["width"] >= 1000
         W = T[sp["type"]]["outline_um"][0]
         ox, orient = sp["origin_um"][0], sp["orient"]
-        if orient in ("MX", "R0"):
-            new = [round(ox + lo, 3), round(ox + hi, 3)]
-        elif orient in ("R180", "MY"):
-            new = [round(ox + W - hi, 3), round(ox + W - lo, 3)]
-        else:
+
+        def die(win):
+            lo, hi = even_window(*win, pt["layers"], TR)
+            if orient in ("MX", "R0"):
+                return [round(ox + lo, 3), round(ox + hi, 3)], (lo, hi)
+            if orient in ("R180", "MY"):
+                return [round(ox + W - hi, 3), round(ox + W - lo, 3)], (lo, hi)
             raise SystemExit(f"orient {orient} {pt['id']}")
-        set_window(idx_port[pt["id"]], new)
+
+        i = idx_port[pt["id"]]
+        if big and stack == "r1r2":
+            n = S.port_pins_count(pt)
+            a0, t0 = die(BIG_R1R2[0])
+            a1, t1 = die(BIG_R1R2[1])
+            new = [min(a0[0], a1[0]), max(a0[1], a1[1])]
+            lo, hi = t0[0], t1[1]
+            n0 = 615
+            set_window(i, new)
+            j = i
+            while '"window_um"' not in lines[j]:
+                j += 1
+            while "]" not in lines[j]:
+                j += 1
+            ind = re.match(r"\s*", lines[j]).group(0)
+            had = lines[j].rstrip().endswith(",")
+            lines[j] = lines[j].rstrip().rstrip(",") + ","
+            lines[j] += "\n" + ind + '"segments": ' + json.dumps(
+                [{"pins": n0, "window_um": a0}, {"pins": n - n0, "window_um": a1}]) + ("," if had else "")
+        else:
+            win = BIG_R0R1 if big else (SMALL_R0R1 if stack == "r0r1" else SMALL_R1R2)
+            new, (lo, hi) = die(win)
+            set_window(i, new)
         changed["ports"] += 1
         for side, part in (("src", sp), ("dst", dp)):
             wins[(part["type"], pt[side]["bus"])] = [lo, hi]
@@ -110,11 +141,11 @@ def main():
     # only windows differ
     for a, b in ((p, q),):
         for pt0, pt1 in zip(a["ports"], b["ports"]):
-            d = {k for k in pt0 if pt0[k] != pt1.get(k)}
-            assert d <= {"window_um"}, (pt0["id"], d)
+            d = {k for k in set(pt0) | set(pt1) if pt0.get(k) != pt1.get(k)}
+            assert d <= {"window_um", "segments"}, (pt0["id"], d)
         assert a["lanes"] == b["lanes"] and a["clock"] == b["clock"]
     print("COL_PINFORM", fam, "ports", changed["ports"], "buses", changed["buses"], "types", len(changed["types"]),
-          {k: even_window(*v, ["M7", "M5"], TR) for k, v in WINDOWS.items()})
+          BIG_R0R1, BIG_R1R2, SMALL_R0R1, SMALL_R1R2)
     if not dry:
         open(plan, "w").write(out)
 
