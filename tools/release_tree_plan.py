@@ -42,8 +42,9 @@ REFRESH_S = 50 * 60
 # 'results/...' tables the plan names are fetched too.  Re-point a line here when a die's plan of record changes.
 _HBM_POR = 'physical/die_plan/hbm/plan_of_record/'
 PLANS = [('s81', 's81', 'physical/die_plan/s81/plan_h2_2249.json', ()),                         # event3 composed (12.20)
-         ('s81_head', 's81_head/plan_of_record/l48ui', 'physical/die_plan/s81_head/plan_of_record/l48ui/source_plan_l48un.json.gz',
-          ('s81_head/plan_of_record/l48ui',)),   # HEAD l48un (DIE-HEAD-81, COORD 11-07 09:4x): main l48ui (n4 FREG = the signed hd_st_n4) + hd_serdes same_edge data_inputs, repo-relative sink_bins; dry run same 16 types + 4 cores
+         ('s81_head', 's81_head/plan_of_record/l48uo', 'physical/die_plan/s81_head/plan_of_record/l48uo/source_plan.json.gz',
+          ('s81_head/plan_of_record/l48uo',)),   # HEAD l48uo (DIE-HEAD-82, COORD 11-07 13:14; main 2d1ee842c5a with native-reset + head_root_boot re-pin f140216c): plain plan-relative tables, plan latency = sidecar sched_lat; dry run 16 types + 4 cores, 0 lost
+         # was l48un: ('s81_head', 's81_head/plan_of_record/l48ui', 'physical/die_plan/s81_head/plan_of_record/l48ui/source_plan_l48un.json.gz', ('s81_head/plan_of_record/l48ui',)),   # HEAD l48un (DIE-HEAD-81, COORD 11-07 09:4x): main l48ui (n4 FREG = the signed hd_st_n4) + hd_serdes same_edge data_inputs, repo-relative sink_bins; dry run same 16 types + 4 cores
          # was l48x: ('s81_head', 's81_head', 'results/die_head_52_1031/pin/source_plan_l48x.json', ('../../results/die_head_47_1031/l47',)),   # HEAD l48x (= l48w + 51 rst_start_raw pin moves; plan of record per COORD 19:0x 10-31, merged f3e4659f5; SIGNOFF-SPRINT-15); same plan-relative core_pins/native_domains refs as l47, laid from the l47 dir
          # was:   # SIGNOFF-SPRINT-11 10-31: plan-relative native_domains/ + core_pins/ (DIE-HEAD-48 fd132f2b694) laid beside the por__ copy   # HEAD l47 (APPROVED, main c68675660; ROOT-MERGE-AI 04:20 READY, SIGNOFF-SPRINT-11 10-31; was l46a)
          ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json', ()),  # QC plan of record qc52 (0735589d; binds btab P8eco), COORD 12:43 10-31 SIGNOFF-SPRINT-13 (was plan_qc50)
