@@ -84,7 +84,7 @@ proc dt_atomic_check {block groups max_sinks max_radius native} {
     }
     set load 0; set driver ""
     foreach pin [$common getITerms] {
-      if {[$pin isInputSignal]} {incr load}
+      if {[[ $pin getMTerm] getIoType] eq "INPUT" && [[ $pin getMTerm] getSigType] ni {POWER GROUND}} {incr load}
       if {[$pin isOutputSignal]} {
         if {$driver ne ""} {error "ATOMIC_CLOCK multiple leaf drivers $id"}
         set driver [$pin getInst]

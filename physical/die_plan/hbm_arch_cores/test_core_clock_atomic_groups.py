@@ -56,11 +56,13 @@ set objects [dict create \
  block {findInst {a ia b ib}} \
  ia {findITerm {CLK pa} getLocation {0 0}} \
  ib {findITerm {CLK pb} getLocation {1 0}} \
- pa {getNet leaf isInputSignal 1 isOutputSignal 0 getInst ia} \
- pb {getNet leaf isInputSignal 1 isOutputSignal 0 getInst ib} \
- py {getNet leaf isInputSignal 0 isOutputSignal 1 getInst buf} \
+ pa {getNet leaf isInputSignal 0 isOutputSignal 0 getInst ia getMTerm clock_input} \
+ pb {getNet leaf isInputSignal 0 isOutputSignal 0 getInst ib getMTerm clock_input} \
+ py {getNet leaf isInputSignal 0 isOutputSignal 1 getInst buf getMTerm signal_output} \
  pi {getNet root isInputSignal 1 isOutputSignal 0 getInst buf} \
  buf {getMaster master getLocation {0 0} getITerms {pi py}} \
+ clock_input {getIoType INPUT getSigType CLOCK} \
+ signal_output {getIoType OUTPUT getSigType SIGNAL} \
  master {getName BUFx24_ASAP7_75t_R} \
  leaf {getITerms {pa pb py} getBTerms {}} \
  root {getITerms {pi} getBTerms {port}} \
