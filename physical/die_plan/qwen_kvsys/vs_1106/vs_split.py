@@ -611,6 +611,8 @@ def main():
     if "map" in ab and "parts" in ab["map"]:
         rep["inline_map_moved"] = remap(ab["map"])
     ab["map_file"] = cfg["map_out"]
+    # bind.py reads clock_landing_table under the asbuilt base (and nowhere else): the base must be the tree holding this event
+    ab["base"] = cfg["base"]
     ab["clock_landing_table"] = cfg["sidecar_out"]
     json.dump(raw, open(out / "plan_c.json", "w"), indent=1)
     json.dump(sd, open(out / "eW_sidecar.json", "w"), indent=1)

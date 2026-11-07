@@ -1,0 +1,107 @@
+{
+ "type": "kv3_hgi_v8",
+ "cut": 622.08,
+ "a": [
+  "head2__g_.*",
+  "head2__u_fts",
+  "head2__u_kt",
+  "head2__u_score",
+  "hst2_.*",
+  "hst3_g"
+ ],
+ "b": [
+  "head3__.*",
+  "head2__u_ftg",
+  "hst3_s1",
+  "hst3_t2"
+ ],
+ "widths": {
+  "ab": 1575,
+  "ba": 34
+ },
+ "ab_y": 620.0,
+ "ba_y": 1100.0,
+ "relay_y": 700.0,
+ "cells_frac_a": 0.62,
+ "reset_tap": {
+  "a": [
+   604.8,
+   760.32
+  ],
+  "b": [
+   17.28,
+   760.32
+  ]
+ },
+ "a_in_site": [
+  611.0,
+  700.0
+ ],
+ "spine_pins": {
+  "a": [
+   {
+    "name": "ri_head2_u_score_rst_n",
+    "width": 1,
+    "layer": "M7",
+    "sites_um": [
+     [
+      596.16,
+      760.32
+     ]
+    ]
+   }
+  ],
+  "b": [
+   {
+    "name": "ri_head2_u_score_rst_n",
+    "width": 1,
+    "layer": "M7",
+    "sites_um": [
+     [
+      25.92,
+      760.32
+     ]
+    ]
+   }
+  ]
+ },
+ "window_moves": [
+  {
+   "port": "L663_1",
+   "window_um": [
+    3709.92,
+    3800.8
+   ],
+   "note": "KV vS: moved 26.9 um W so the bus sits on side a of the x 622.08 cut (neighbour kv3_hgi_v7 ft4_i moves too)"
+  },
+  {
+   "port": "L2045_12",
+   "window_um": [
+    3802.12,
+    3869.61
+   ],
+   "segments": [
+    {
+     "pins": 234,
+     "window_um": [
+      3802.12,
+      3829.02
+     ]
+    },
+    {
+     "pins": 289,
+     "window_um": [
+      3833.49,
+      3869.61
+     ]
+    }
+   ],
+   "note": "KV vS: low segment start 620.26 -> 622.6 so the bus sits on side b"
+  }
+ ],
+ "map_in": "/srv/opentallas-scratch2/claude/die-kv-61-src-54c3c7c9f/src/physical/die_plan/qwen_kvsys/bind/asbuilt_map_binder2.json",
+ "asbuilt_in": "/srv/opentallas-scratch2/claude/kv-slgland-1/asbuilt.json",
+ "map_out": "/srv/opentallas-scratch3/claude/kv-slgland-1-vs/hgi/asbuilt_map.json",
+ "sidecar_out": "physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+ "base": "/srv/opentallas-scratch2/claude/kv-slgland-1-vs/wt"
+}
