@@ -135,3 +135,12 @@ def test_settings_validation():
                 {"OT_CONS_KIT": "1", "OT_CONS_MAX_LAYER": "M1"}, {"OT_CONS_KIT": "1", "OT_CONS_PIN_LAYER_ADJ": "1"}):
         with pytest.raises(ValueError):
             gen_phys.cons_kit_settings(bad)
+
+
+def test_strip_rows_only_in_cons_kits():
+    tcl = Path(__file__).with_name("landing_placement.tcl").read_text()
+    assert tcl.count("OT_CLAND_STRIP_ROWS") >= 4       # opt-in env, both pinslot forms
+    src = Path(__file__).with_name("gen_phys.py").read_text()
+    body = src[src.index("def cons_kit_apply"):]
+    assert 'export OT_CLAND_STRIP_ROWS' in body        # exported by the conservative re-kit only
+    assert src.count('export OT_CLAND_STRIP_ROWS') == 1

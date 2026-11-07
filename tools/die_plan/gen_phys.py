@@ -259,6 +259,11 @@ def cons_kit_apply(cfg, kd, cons, io_text, top, mlef=()):
     cfg += ["# KW-FIX-24/CONSKIT: conservative re-kit (OT_CONS_KIT=1 at generation; cons_kit.json)",
             "export OT_CONS_KIT = 1", f"export OT_CONS_UTIL = {cons['util']:g}",
             f"export OT_CONS_SIGNAL_MAX = {want}"]
+    # TYPE-CONS-4 11-07: ring flops are FIRM, so the density cap above never reaches them; thin their strip too
+    # (landing_placement.tcl).  OT_CONS_STRIP_ROWS=1 keeps the packed strip.
+    strip = int(os.environ.get("OT_CONS_STRIP_ROWS") or 3)
+    if strip > 1:
+        cfg += [f"export OT_CLAND_STRIP_ROWS = {strip}"]
     grt = None
     if access:
         grt = next(c for c in cfg if c.startswith("export PRE_GLOBAL_ROUTE_TCL = "))
@@ -268,6 +273,7 @@ def cons_kit_apply(cfg, kd, cons, io_text, top, mlef=()):
                 f"export OT_CONS_PIN_LAYER_ADJ = {cons['pin_layer_adj']:g}"]
         shutil.copyfile(Path(__file__).with_name("cons_grt_pre.tcl"), Path(kd) / "cons_grt_pre.tcl")
     rec = {"schema": "opentallas.cons_kit.v1", "enabled": True, "source": "OT_CONS_KIT=1 (gen.py phys env)",
+           "cland_strip_rows": strip,
            "place_density": {"kit": pd0, "cap": cons["util"], "used": pd,
                              "floor": "GPL uniform-density lower bound + 0.01 (cons_gpl_pre.tcl, logged OT_CONS_KIT)"},
            "signal_max_layer": {"requested": want, "kit_top": top, "pin_floor": floor,

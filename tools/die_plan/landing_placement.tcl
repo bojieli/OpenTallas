@@ -731,12 +731,22 @@ proc cland_place_pinslot_col {ordered rect tag pins rev {psp 1.0} {rows 2}} {
  # rows 1 (AUTOBUILD-PIPE-2 10-31, the +ff band as +x form): every row of the strip (100 % column density), the strip
  # half as deep; the ring's combinational cells go to global placement beside it (S81 t7__cl503f4913 what-if: strip
  # 18.90 -> 9.45 um, pin_reg_p90 30.25 -> 23.97, GRT 0 overflow at 50 iterations)
- set rh [expr {$rows*int(ceil(double($h0)/$ff_rh))*$ff_rh}]
- # cland_put_column reserves ceil(h/0.4*spread) rows; its column-capacity reduce takes it down to this pitch
- set red [expr {max(0,int(ceil(double($h0)/0.4*$psp/$ff_rh))-$rh/$ff_rh)}]
  set axd [expr {int(ceil($ax*$ff_dbu))}]; set bxd [expr {int(floor($bx*$ff_dbu))}]
  set x0 [expr {$ff_x0+int(ceil(double($axd-$ff_x0)/$ff_sw))*$ff_sw}]
  set nc [expr {max(1,($bxd-$x0)/$rw)}]
+ # TYPE-CONS-4 11-07 (OWNER conservative + visual; opt-in, unset = unchanged): OT_CLAND_STRIP_ROWS=n takes every n-th row of
+ # the strip, as deep as the band allows.  At rows 1 a 2876-flop ring is ~0.75 flop density plus its logic (coll_ft: 300
+ # flops per 10-um bin, density 1.0 under a 0.35 PLACE_DENSITY, because FIRM flops ignore it), and that clump is the GRT
+ # overflow; only the pin_reg_p90 target pays (farthest slot ~3x deeper), and targets do not block.
+ if {[info exists ::env(OT_CLAND_STRIP_ROWS)] && $::env(OT_CLAND_STRIP_ROWS) > $rows} {
+  set q [expr {int(ceil(double($h0)/$ff_rh))*$ff_rh}]
+  set fit [expr {($byd-$ayd)/((int(ceil(1.15*$n/$nc))+1)*$q)}]
+  set rows [expr {max($rows,min($::env(OT_CLAND_STRIP_ROWS),$fit))}]
+  puts "OT_CLAND strip rows $tag: $rows (asked $::env(OT_CLAND_STRIP_ROWS), band fits $fit, $nc columns, $n flops)"
+ }
+ set rh [expr {$rows*int(ceil(double($h0)/$ff_rh))*$ff_rh}]
+ # cland_put_column reserves ceil(h/0.4*spread) rows; its column-capacity reduce takes it down to this pitch
+ set red [expr {max(0,int(ceil(double($h0)/0.4*$psp/$ff_rh))-$rh/$ff_rh)}]
  set depth [expr {min($byd-$ayd,(int(ceil(1.15*$n/$nc))+1)*$rh)}]
  if {$face eq "N"} {
   set s0 [expr {$ff_y0+int(floor(double($byd-$depth-$ff_y0)/$ff_rh))*$ff_rh}]; set s0 [expr {max($ayd,$s0)}]; set s1 $byd
@@ -898,6 +908,13 @@ proc cland_place_ff {prefix rect tag} {
   # 22.7 -> 9 um, farthest-slot pin_reg p90 39.6 -> 27.3 um, wave synth+floorplan probe).  The widest-drive fit
   # (cland_pinslot_fit) still keeps every in-place GPL upsize legal; the ring logic stays with GPL.  Unset = unchanged.
   set ypsp [expr {[info exists ::env(OT_CLAND_PINSLOT_DENSE)] && $::env(OT_CLAND_PINSLOT_DENSE) eq "1" ? 0.4 : $psp}]
+  # TYPE-CONS-4 11-07: OT_CLAND_STRIP_ROWS=n also widens the y-column form to n flop bodies per slot, capped by the band's
+  # fill spread (sp): KV hroot, 5730 ring flops, 47-um band, was a 9-um wall at the E edge, density 0.7 before its logic.
+  if {[info exists ::env(OT_CLAND_STRIP_ROWS)]} {
+   set ypsp0 $ypsp
+   set ypsp [expr {max($ypsp,min(0.4*$::env(OT_CLAND_STRIP_ROWS),$sp))}]
+   puts "OT_CLAND strip rows $tag: y-column spread [format %.4f $ypsp0] -> [format %.4f $ypsp] (band fill spread [format %.4f $sp])"
+  }
   lassign [cland_place_pinslot $ordered $rect $tag $sp $ppins $rev $ypsp] na nr how
   puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, spread [format %.4f $ypsp]), $nr by the band cursor"
   }
