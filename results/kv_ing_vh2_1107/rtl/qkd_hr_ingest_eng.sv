@@ -3,26 +3,26 @@
 // done_v, done_tag, n_sectors +1 on top of that (mid hop towards the top-left pins); stream done additionally waits for the write face to drain; busy falls later accordingly.
 // Faces: every in_data/d_data pin = one free-running flop.  w_rdy reaches only the port register band and the skid count.  Reset: one relay flop, as RF-KV1; the flow's reset replicas fan it out.
 module qkd_hr_ingest_eng (
-    input  wire         ck,
-    output wire         busy,
+    input  wire [0:0]   ck,
+    output wire [0:0]   busy,
     input  wire [255:0] d_data,
-    output wire         d_rdy,
-    input  wire         d_v,
+    output wire [0:0]   d_rdy,
+    input  wire [0:0]   d_v,
     output wire [7:0]   done_tag,
-    output wire         done_v,
+    output wire [0:0]   done_v,
     input  wire [511:0] in_data,
-    output wire         in_rdy,
-    input  wire         in_v,
+    output wire [0:0]   in_rdy,
+    input  wire [0:0]   in_v,
     output wire [31:0]  n_sectors,
     output wire [31:0]  r_addr,
-    output wire         r_v,
+    output wire [0:0]   r_v,
     input  wire [255:0] rd_data,
-    input  wire         rd_v,
-    input  wire         rst_n,
+    input  wire [0:0]   rd_v,
+    input  wire [0:0]   rst_n,
     output wire [31:0]  w_addr,
     output wire [255:0] w_data,
-    input  wire         w_rdy,
-    output wire         w_v
+    input  wire [0:0]   w_rdy,
+    output wire [0:0]   w_v
 );
     assign r_v = 1'b0;
     assign r_addr = 32'd0;
@@ -64,7 +64,9 @@ module qkd_hr_ingest_eng (
     (* keep = 1 *) reg [287:0] o_pin;           // {w_addr, w_data}: reaches only the pins
     (* keep = 1 *) reg [287:0] o_h;             // the same value, holds the register (face guard: a port flop has no internal load)
     reg  [8:0]   o_dn;                          // {last, tag}
-    reg          o_v, o_vp, s_wp, s_rp;
+    (* keep = 1 *) reg o_v;                     // internal twin of the port flop o_vp
+    (* keep = 1 *) reg o_vp;
+    reg          s_wp, s_rp;
     reg  [1:0]   s_n;
     wire         push = e_wv && er_w;
     wire         ld_o = !o_v || w_rdy;
@@ -99,7 +101,7 @@ module qkd_hr_ingest_eng (
     // -- done, n_sectors: one hop towards the top-left pins ----------------------------------------------------------
     reg  wf_a, wf_b, dn_a, dn_b, dn_q;
     reg  [7:0] tg_a, tg_b, tg_q;
-    reg  [15:0] nsec_lo, nsec_hi;
+    (* keep = 1 *) reg [15:0] nsec_lo, nsec_hi;  // internal twin of the port flops nsec_o
     (* keep = 1 *) reg [31:0] nsec_o;           // port flops, same D as the counter
     reg  nsec_lf;
     wire [15:0] nsec_lo_n = wf_b ? nsec_lo + 16'd1 : nsec_lo;
