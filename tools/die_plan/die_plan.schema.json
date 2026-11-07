@@ -4564,6 +4564,9 @@
      "realize_internal_stations": {
       "type": "boolean"
      },
+     "ft_spread": {
+      "type": "boolean"
+     },
      "landing_base_type": {
       "type": "string"
      },
@@ -5431,6 +5434,30 @@
     },
     "landing_network": {
      "type": "object"
+    },
+    "ft_hop_lockup": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "all": {
+       "type": "boolean"
+      },
+      "except": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "types": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "note": {
+       "type": "string"
+      }
+     }
     },
     "cohort": {
      "type": "object",
