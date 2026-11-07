@@ -12,4 +12,9 @@ dict for {g n} $groups {if {$n != 3} {error "group size $g=$n"}}
 foreach n {{u_bound.g_u_lf0_u_vp_ly.\native_memory[1][85]$_DFF_P_} {u_bound.g_u_lf0_u_vp_yrow_d.\native_other[1][85]$_DFF_P_} {u_bound.g_u_lf0_u_vp_yrow_d.\native_memory[3][85]$_DFF_P_}} {
  if {[regexp -- $re $n]} {error "scope negative matched"}
 }
-puts "PASS384 exact bindings,128 groups of3,3 scope negatives"
+set before {}
+foreach n {{u_bound.u_ft_leaf_s0.q[0]} {u_bound.u_ft_leaf_s3.q[85]} {u_bound.u_ft_reset_s1.q[0]}} {
+ if {$before ne "" && [regexp -- $before $n]} {error "baseline was not disabled"}
+ if {[regexp -- $re $n]} {error "FT scope matched"}
+}
+puts "PASS384 exact bindings,128 groups of3,3 scope negatives,3 FT negatives; baseline groups disabled"
