@@ -119,3 +119,8 @@ COORD 11-06 19:2x (relayed by DIE-QC-85): reset.relay_resite_crossing is DEFAULT
   qwen_compute is the only die_plan-schema plan in the repo, so no other die's tree changes.
   Tests: test_plan_trees_resite_default_on_and_skip replaces the opt-in test.  All 43 test files that import
   reset_tree pass (test_check plan-relative case deselected, base failure).
+vE result (11-06, intel1, PD 0.50): place OT_SUL0_REPLICAS 3971/3971 sited (miss 0).  Post-CTS hold gate passed:
+  register-to-register ws -153.94 ps (stop -260).  FF ws -304.63 includes port paths (advisory).
+  GRT: 0 overflow after 2 extra iterations (vC: 940 after 30).  Usage M2 13.9 / M3 25.9 / M4 3.9 / M5 4.7 /
+  M6 2.8 / M7 5.4 %, wirelength 3814198 um.  The kit runs on into GRT hold repair (chunk 1: hold ws -254 -> -168)
+  and detail route.
