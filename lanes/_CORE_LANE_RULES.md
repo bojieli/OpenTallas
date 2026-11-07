@@ -83,3 +83,10 @@ Settings like util 0.40 do not make a form safe. They were often met by making t
 5. DRIVE AND WIRE, NOT JUST FANOUT. Fanout <=8 does not catch wire load. 49 of 74 distinct failed results have more than 100 slew violations; single gates reach 186-462 ps. Limit buffered wire length, resize drivers, and replicate high-fanout control in RTL per group.
 6. MACROS: size channels from track demand, keep the clock spine outside stacks. Seen on bksel (red channels) and eng_rr_e (700 um double-back, 120 ps tap spread).
 7. NAME THE CLASS BEFORE THE NEXT FORM. SPARSE (rules 1-3), DEPTH (logic stages, e.g. n12: no macros, 33 stages), CHANNEL (rule 6), or PORT-ONLY (rule 4, no rebuild). Post "CLASS: ..." with "SMELLS: ...".
+
+## OWNER 11-07 05:1x: pin cycles and redesign, never retries (ALL LANES)
+OWNER verbatim: "use pin cycles on the hard cores. never use more place and route retries. queue the untried cores now. move the cores of KV, QC and S81 to critical list. If no conversative forms are running or it is still failed, you should visually inspect the geometry and redesign"
+- HARD CORE = PIN CYCLES FIRST. Add cycles at the pins for setup reach and depth, declared in the kit (added_rx_clk_PIN_cycles), proved by LEC/bench, reported for compiler and token rescheduling. Do not hold back to save cycles.
+- NO RETRIES. No new place-and-route run of a form whose RTL, pin cycles, macros, outline or clock structure are unchanged: no seeds, knobs, density tweaks or repeat runs. Every new build's post names what changed and which measured problem it fixes. Running builds finish and are read.
+- LATE ECO stays only for a real near miss: small, understood, local misses (a few endpoints, a few ps, a small slew count). A large or failing-again ECO is a redesign case.
+- NO CONSERVATIVE FORM RUNNING, OR IT FAILED: render place, clock, congestion and route, Read the images, name the geometry problem, and redesign (pins, macro positions, outline/fold/split, clock root and spine, RTL stages). Post "GEOMETRY:" and "REDESIGN:" lines. Do not rebuild before that.
