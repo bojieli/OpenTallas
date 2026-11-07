@@ -4163,5 +4163,24 @@
     "source_commit": "db98e2b16b4c3c0bda6ac867a97d362088b69aaa",
     "read_at_commit": true,
     "cts_delay_buffer_derate": 0
+  },
+  "ot_hfd_coll_q3_body_ctl__preacc_off4": {
+    "defines": [
+      "OT_Q3CTL_TGTQ1",
+      "OT_Q3CTL_PREACC",
+      "OT_Q3CTL_OFF4_RT"
+    ],
+    "params": {},
+    "util": 0.4,
+    "source": "DIE-HBM-88-Q3C 11-07 conservative form vC1 of vK: PREACC (u_program |data_q[255:64] and |data_q[63:57] registered one edge early from u_fj.u.data_q, exact; bench reform_1103/bench/q3_body_preacc prove_preacc.py text+SAT+5 mutants) + Codex OFF4_RT (m_iaddr_l/m_del_l/m_rgx_l same-edge retiming, 0 cycles). Not RCP1: the designed adv/sacc/take/fv/fch/mw replicas stay (kit OT_KEEP_WIRES).",
+    "top": "ot_hfd_coll_q3_body_ctl",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105s/q3/ot_hfd_coll_q3_body_ctl.sv",
+      "rtl/hbm_accel/cores_split/reform_1106/ot_bodyctl_off32_split_d.sv"
+    ],
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2",
+      "ot_sram_1rw_256x64_m4_r2c2"
+    ]
   }
 }
