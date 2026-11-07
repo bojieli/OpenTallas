@@ -10,6 +10,7 @@
 // Non-vacuous: each epoch decodes >= MINB peer beats and goes live; the peer decodes the dut stream.
 module tb_s81hd_serdes_sc_ls;
     parameter integer HOLD = 64, IGNORE_LOCK = 0, RUN = 3000, MINB = 1000;
+    parameter integer RM_WSTAGE = 0;      // HEAD-FORMS-1: dut u_rm has the write stage: rx = same beat sequence as refr, later; st within 6 ck edges
     parameter real PH = 0.0;              // start offset of the peer clock, ns
     reg ca = 0, cb = 0, rst = 0, rstb = 0, lock = 0, run = 0, run_q = 0;
     always #0.41667 ca = ~ca;
@@ -43,6 +44,7 @@ module tb_s81hd_serdes_sc_ls;
     wire txr  = dut.u_link.u_tx.rst;
     integer n, ep = -1, mrx = 0, mtx = 0, first = -1, na = 0, nb = 0, got = 0, gotb = 0, minep = 1 << 30, checks = 0;
     reg tx_chk = 0;
+    reg [511:0] q_r[$]; reg [1:0] st_h[0:5] = '{default:2'b00}; integer nseq = 0;
     reg [543:0] r_pa1 = 0, r_pa2 = 0;
     always @(posedge ca) begin r_pa1 <= r_pa; r_pa2 <= r_pa1; end
     task automatic fail(input string s);
@@ -51,7 +53,29 @@ module tb_s81hd_serdes_sc_ls;
     always @(negedge ca) begin
         na = na + 1;
         txa <= (ep < 0 || na % 256 == 0) ? 512'd2 : pat(32'(na));
-        if (d_o[511:0] !== r_rx || d_o[513:512] !== r_st) begin mrx = mrx + 1; if (first < 0) first = na; end
+        if (RM_WSTAGE == 0) begin
+            if (d_o[511:0] !== r_rx || d_o[513:512] !== r_st) begin mrx = mrx + 1; if (first < 0) first = na; end
+        end else if (tx_chk) begin
+            // non-idle beats in order, dut no more than 4 beats behind refr and never ahead (read before written = wrong data)
+            if (r_rx[1:0] != 2'b10) q_r.push_back(r_rx);
+            if (d_o[1:0] != 2'b10) begin
+                if (q_r.size() == 0) begin mrx = mrx + 1; if (first < 0) first = na; end
+                else begin if (q_r[0] !== d_o[511:0]) begin mrx = mrx + 1; if (first < 0) first = na; end; void'(q_r.pop_front()); nseq = nseq + 1; end
+            end
+            if (q_r.size() > 4) begin mrx = mrx + 1; if (first < 0) first = na; end
+            if (d_o[513] !== st_h[5][1] && d_o[513] !== r_st[1] && d_o[513] !== st_h[0][1]) begin mrx = mrx + 1; if (first < 0) first = na; end
+        end else if (RM_WSTAGE != 0) begin
+            // outside the check window: keep refr beats and re-align on each dut beat, so the window opens in phase
+            // (the dut runs one rm write stage behind refr); nothing is counted here
+            if (r_rx[1:0] != 2'b10) q_r.push_back(r_rx);
+            if (d_o[1:0] != 2'b10) begin
+                while (q_r.size() > 0 && q_r[0] !== d_o[511:0]) void'(q_r.pop_front());
+                if (q_r.size() > 0) void'(q_r.pop_front());
+            end
+            while (q_r.size() > 8) void'(q_r.pop_front());
+        end
+        for (int si = 5; si > 0; si--) st_h[si] = st_h[si-1];
+        st_h[0] = r_st;
         if (tx_chk && d_pa !== r_pa2) begin mtx = mtx + 1; if (first < 0) first = na; end
         if (ispat(d_o[511:0])) got = got + 1;
         checks = checks + 1;
@@ -121,7 +145,7 @@ module tb_s81hd_serdes_sc_ls;
         @(negedge pck); rst = 0; held("E4 assert"); @(negedge pck); rst = 1; release_check(); traffic();
         if (mrx + mtx != 0) $display("SERDES_SC_LS FAIL lockstep rx=%0d tx=%0d first=%0d", mrx, mtx, first);
         else if (gotb < MINB) $display("SERDES_SC_LS FAIL vacuous peer decoded %0d", gotb);
-        else $display("SERDES_SC_LS PASS 5 epochs guard 66 chn 68, %0d ck edges rx/st exact vs RXQ on the same sequencer, pma_tx +2, min beats/epoch %0d, peer beats %0d", checks, minep, gotb);
+        else $display("SERDES_SC_LS PASS 5 epochs guard 66 chn 68, %0d ck edges rx/st %s vs RXQ on the same sequencer, pma_tx +2, min beats/epoch %0d, peer beats %0d, seq beats %0d", checks, RM_WSTAGE != 0 ? "in-order beats" : "exact", minep, gotb, nseq);
         $finish;
     end
 endmodule
