@@ -395,7 +395,7 @@
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0.sv",
   "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_tap_entry39.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv",
-  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb.sv",
+  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb.sv", "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb_split.sv",
   "rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_host_afifo_sram.sv",
   "physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x257_m1_p192/ot_sram_1r1w2c_16x257_m1_p192_bb.v",
   "physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x289_m1_p192/ot_sram_1r1w2c_16x289_m1_p192_bb.v"
@@ -839,7 +839,7 @@
   "ot_s81sl_cst1",
   "dsdv_hostb_seqhost_mux",
   "ot_s81sl_eg",
-    "ot_s81dv_xfin"
+    "ot_s81dv_xfin", "ot_v41_rom_elem_q_qxpq_w10_gb_split"
  ],
  "transport": [
   {
@@ -1162,8 +1162,8 @@
   "out": "/srv/opentallas-scratch2/claude/kit-wave/s81/bind_h10"
  },
  "hard_params": [
-  "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_vg.hard_params.json",
-  "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h10_l4_lp_kit_vg.hard_params.json"
+  "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_vg_romq_split.hard_params.json",
+  "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h10_l4_lp_kit_vg_romq_split.hard_params.json"
  ],
  "slang_parameterized_blackboxes": [
   "ot_pl_land_reset_forest",
@@ -1278,16 +1278,6 @@
     }
    },
    "reason": "PCBASE0 entry sector address has26bits;39bit real entry ABI keeps tags/PC/v exact. Require all4 removedsourcebits to resolve0; no waiver."
-  },
-  {
-   "inst": "(u_f_0L01|u_f_0R01|u_f_1L01|u_f_2L01|u_f_2R01|u_f_3L01|u_f_4R01|u_f_5L01|u_f_5R01|u_f_6R01|u_f_7L01|u_f_7R01)\\.u_r(0\\.u_e(0|2|3|4)|1\\.u_e(6|7|8|9)|2\\.u_e(11|12|13|14))",
-   "module": "ot_v41_rom_elem_q_qxpq_w10_gb",
-   "reason": "DIE-S81-19 plan_s12: plan binds every qxpq_w10 ROM hard core as the adopted _gb master (S81-QX-GB 10-26, LEC EQ CGR0/CGR8 vs the legacy master with go/tag delayed 1 edge); col_h10 frames x 12 elements; _gb ports = master minus input xs_sv (variant_removed, not tied)"
-  },
-  {
-   "inst": "(u_f_0L02|u_f_0L03|u_f_0L10|u_f_0L12|u_f_0L13|u_f_0R02|u_f_0R03|u_f_0R10|u_f_0R12|u_f_0R13|u_f_1L02|u_f_1L03|u_f_1L10|u_f_1L12|u_f_1L13|u_f_2L02|u_f_2L03|u_f_2L10|u_f_2L12|u_f_2L13|u_f_2R02|u_f_2R03|u_f_2R10|u_f_2R12|u_f_2R13|u_f_3L02|u_f_3L03|u_f_3L10|u_f_3L12|u_f_3L13|u_f_4R02|u_f_4R03|u_f_4R10|u_f_4R12|u_f_4R13|u_f_5L02|u_f_5L03|u_f_5L10|u_f_5L12|u_f_5L13|u_f_5R02|u_f_5R03|u_f_5R10|u_f_5R12|u_f_5R13|u_f_6R02|u_f_6R03|u_f_6R10|u_f_6R12|u_f_6R13|u_f_7L02|u_f_7L03|u_f_7L10|u_f_7L12|u_f_7L13|u_f_7R02|u_f_7R03|u_f_7R10|u_f_7R12|u_f_7R13)\\.u_r(0\\.u_e(0|1|2|3)|1\\.u_e(5|6|7|9)|2\\.u_e(10|11|12|14))",
-   "module": "ot_v41_rom_elem_q_qxpq_w10_gb",
-   "reason": "DIE-S81-19 plan_s12: plan binds every qxpq_w10 ROM hard core as the adopted _gb master (S81-QX-GB 10-26, LEC EQ CGR0/CGR8 vs the legacy master with go/tag delayed 1 edge); col_h9 frames x 12 elements; _gb ports = master minus input xs_sv (variant_removed, not tied)"
   }
  ],
  "param_regen": {
@@ -1298,10 +1288,7 @@
    "module": "ot_rom_4096x72_m8",
    "param": "INSTANCE"
   },
-  {
-   "module": "ot_v41_rom_elem_q_qxpq_w10",
-   "param": "INSTANCE"
-  }
+  {"module": "ot_v41_rom_elem_q_qxpq_w10_gb_hw", "param": "INSTANCE"}, {"module": "ot_v41_rom_elem_q_qxpq_w10_gb_he", "param": "INSTANCE"}
  ],
  "instance_path_params_note": "TOK-DS-9 10-27 (COORD ruling): emit each ROM leaf INSTANCE = its original elaborated path (tools/die_plan/bind.py instance_path_params, 3b444bc718) so bound partitions read their own viamap image (<path>.viamap.hex); before this every carve ROM was emitted INSTANCE(\"\") and loaded no image (tokds8 l14_missing/rom_ids.json, 84 ROMs). Simulation image selector only: an explicit non-empty selector must equal the path (BindError otherwise); no port/connectivity/timing change.; CODEX 2026-10-29 functional successor: assign actual elaborated predecessor QX INSTANCE before substitute_inst replaces it with _gb. Preserve exact hierarchy image identity; per-frame aliases from source-proven canonical macro suffixes (TOK-DS 81e93ef7e9). BF excluded pending reset/source correspondence. No RTL, clock, physical pin or data cycle change.",
  "dead_input_note_1028": "TOK-S81-1 10-28: proof_closing.json re-proved on main 410e940f4f (s81_dead_prove.py): 36/36 declarations identical; only the opaque-child dependency dsdv_svc_sx_hrow sha changed (2465260038 live-select fix, 10-27 18:43), which failed the strict bind closed (stale dead-input dependency).",
