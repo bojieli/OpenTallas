@@ -544,3 +544,12 @@ intel2	/srv/opentallas-scratch2/claude/codex-wave-1105/src_7da_ad/physical/qwen_
 epyc2	/srv/opentallas-scratch2/claude/codex-wave-1105/src_7da_ad/rtl	KV wave captured source closure (bind_kv_q, kit_rtl closure): DIE-KV-87 restored 11-07 from epyc5, do not prune while KV wave uses src_7da_ad
 epyc2	/srv/opentallas-scratch2/claude/codex-wave-1105/src_7da_ad/physical/die_plan	KV wave captured source closure (bind_kv_q, kit_rtl closure): DIE-KV-87 restored 11-07 from epyc5, do not prune while KV wave uses src_7da_ad
 epyc2	/srv/opentallas-scratch2/claude/codex-wave-1105/src_7da_ad/physical/qwen_missing_phy	KV wave captured source closure (bind_kv_q, kit_rtl closure): DIE-KV-87 restored 11-07 from epyc5, do not prune while KV wave uses src_7da_ad
+intel2	/srv/opentallas-scratch2/claude/cp1106-patches	PRUNE-AUDIT-1 11-07: sole saved WIP and untracked files of worktrees CODEX-PRUNE-1 removed
+intel1	/home/ubuntu/cp1106-manifest/patches	PRUNE-AUDIT-1 11-07: same, intel1 worktrees
+epyc2	/home/ubuntu/cp1106-manifest/patches	PRUNE-AUDIT-1 11-07: same, epyc2 worktrees
+epyc4	/home/ubuntu/cp1106-manifest/patches	PRUNE-AUDIT-1 11-07: same, epyc4 worktrees
+epyc5	/home/ubuntu/cp1106-manifest/patches	PRUNE-AUDIT-1 11-07: same, epyc5 worktrees
+epyc6	/home/ubuntu/cp1106-manifest/patches	PRUNE-AUDIT-1 11-07: same, epyc6 worktrees
+intel1	/srv/opentallas-scratch2/claude/die-kv-63-start/veh60c45/src_0822	PRUNE-AUDIT-1 11-07: only source of the c47 KV dieslice bind.f (118 files), needed to rebuild the lost KV-08 binary
+epyc6	/srv/opentallas-scratch2/claude/dkv80dbg/dkv69	PRUNE-AUDIT-1 11-07: inputs for the KV-08 c47 dieslice rebuild (build.sh, vdir, vimg, c47fc)
+epyc6	/srv/opentallas-scratch2/claude/codex-head-1105/parent_head_union_exact6	PRUNE-AUDIT-1 11-07: published exact6 source for the HEAD boot_full_tt1 rebuild
