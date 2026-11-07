@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.hbm_plan_event.part50",
+ "by": "HBM-FORM-TIMING-13 11-06, plan-owner approved DIE-HBM-82 (owner 11-03: pin cycles are a cheap lever)",
+ "core": "ot_hgi_sfu_split3_ctl_rest_1c",
+ "change": "PIN CYCLE +1 on u_core_u_vm_scalar_data[127:0] via recipe ot_hgi_sfu_split3_ctl_rest_1c__spipe1 (define OT_REST1C_SCALAR_PIPE1); outline, pins, clock entry, conns unchanged",
+ "why": "vA (TT -81.68 ps, 119 endpoints) and vB2 (TT -92.83 ps, 126 endpoints) both failed TT only on rest flops -> 32-fanout select + AO222 3:1 mux -> ~350 ps of wire -> the u_core_u_vm_scalar_data output face (792 ps data at 833 ps); two strikes -> RE-FORM with one pin cycle",
+ "rtl": "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_rest_1c.sv (gen_p50.py; default = wire)",
+ "proof": "results/die_hbm_1106/rest1c_spipe_p50/PROOF.txt: yosys equiv gold (part-37 rest_1c + 1 register on u_core_u_vm_scalar_data) vs ot_hgi_sfu_split3_ctl_rest_1c__spipe1 PASS, default text vs part 37 exact PASS, mutant (2 scalar bits swapped) FAIL",
+ "pin_cycles": "corelat/cycles_rest1c_spipe_1106.tsv: u_core_u_vm_scalar_data +1; all other ports exact",
+ "geometry": "none: die_plan.json, core pin files, clock_entries, core_conns untouched (G0/G0C NEW 0 by construction)",
+ "replay": "results/die_hbm_1106/rest1c_spipe_p50/replay_p50.sh"
+}
