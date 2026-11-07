@@ -20,7 +20,7 @@ module vmks_env #(parameter integer SM=2)(
  input wire[3:0]fill_v,fill_bank,input wire[23:0]fill_slot,input wire[63:0]fill_epoch,input wire[1023:0]fill_data,input wire fault,
  output reg done,output integer errors
 );
- integer WINDOWS=12,SEED=1,wbonly=0,badtag=0;
+ integer WINDOWS=12,SEED=1,wbonly=0,badtag=0,waitt=24,farslow=0;
  function automatic [255:0] f(input [29:0] a,input [3:0] b);
   reg[255:0]r;integer i;begin for(i=0;i<8;i=i+1)r[32*i+:32]=32'h9e3779b9*(a+b+1)+i*32'h85ebca6b^{a[13:0],b,i[3:0],10'h2a5};f=r;end
  endfunction
@@ -32,9 +32,10 @@ module vmks_env #(parameter integer SM=2)(
  reg[29:0]qa[0:3][0:QD-1];reg[16:0]qt[0:3][0:QD-1];reg[3:0]qb[0:3][0:QD-1];integer qh[0:3],qn[0:3];integer wdq[0:3];integer rdy_hold[0:3];reg[3:0]rdy_seen;
  integer gdone_rd[0:3];
  integer gsent[0:3],gn;
+ integer wdc[0:3],tg1[0:3],tg2[0:3]; // WBONLY=3: cumulative write-done counts per lane; the env keeps the 4-entry window FIFO from overflowing (a schedule rule, the master faults on overflow)
  integer wleft[0:3];reg[29:0]wnext[0:3];reg[29:0]wend[0:3];integer wstart;
  integer l,i;
- task automatic bad(input string s);begin errors=errors+1;if(errors<12)$display("ENV %m: %s t=%0t",s,$time);end endtask
+ task automatic bad(input string s);begin errors=errors+1;if(errors<12)$display("ENV %m: %s t=%0t",s,$time);if(errors>=4)begin $display("FAIL env errors");$finish;end end endtask
  always @(posedge hbm_clk)rdy_seen<=hbm_rst_n?c_kr_rdy:4'b0;
  always @(posedge hbm_clk) if(hbm_rst_n)begin:ctl
   integer l,b;reg[29:0]a;reg[3:0]ln;
@@ -52,7 +53,7 @@ module vmks_env #(parameter integer SM=2)(
      qa[l][(qh[l]+qn[l])%QD]=a;qt[l][(qh[l]+qn[l])%QD]=(badtag!=0&&l==3&&c_k_tag[17*l+13+:4]==0)?(c_k_tag[17*l+:17]^17'h100):c_k_tag[17*l+:17];qb[l][(qh[l]+qn[l])%QD]=b;qn[l]=qn[l]+1;
     end
    end
-   if(wdq[l]>0&&rc[l][3:0]<5)begin c_k_wr_done[l]<=1;wdq[l]=wdq[l]-1;end
+   if(wdq[l]>0&&((farslow!=0&&l>=2)?(rc[l][5:0]==0):(rc[l][3:0]<5)))begin c_k_wr_done[l]<=1;wdq[l]=wdq[l]-1;end
    c_k_rdy[l]<=rc[l][5:4]!=0&&qn[l]<64&&wdq[l]<16;
    if(!(c_kr_v[l]&&!rdy_seen[l])&&qn[l]>0&&rc[l][7:6]!=0)begin
     c_kr_v[l]<=1;c_kr_tag[17*l+:17]<=qt[l][qh[l]];c_kr_beat[4*l+:4]<=qb[l][qh[l]];c_kr_data[256*l+:256]<=f(qa[l][qh[l]],qb[l][qh[l]]);
@@ -82,6 +83,7 @@ module vmks_env #(parameter integer SM=2)(
   integer l;reg[29:0]s;
   for(l=0;l<4;l=l+1)begin
    if(w_k_v[l]&&w_k_rdy[l])begin w_k_v[l]<=0;wleft[l]=wleft[l]-1;end
+   if(w_k_wr_done[l])wdc[l]=wdc[l]+1;
    if(!(w_k_v[l]&&!w_k_rdy[l])&&wleft[l]>0)begin
     s=wnext[l];
     while(s<wend[l]&&(s[6:2]^s[11:7]^s[16:12])!=5'(4*SM+l))s=s+1;
@@ -95,15 +97,15 @@ module vmks_env #(parameter integer SM=2)(
  endfunction
  initial begin
   errors=0;done=0;
-  if($value$plusargs("WINDOWS=%d",WINDOWS));if($value$plusargs("SEED=%d",SEED));if($value$plusargs("WBONLY=%d",wbonly));if($value$plusargs("BADTAG=%d",badtag));
+  if($value$plusargs("WINDOWS=%d",WINDOWS));if($value$plusargs("SEED=%d",SEED));if($value$plusargs("WBONLY=%d",wbonly));if($value$plusargs("BADTAG=%d",badtag));if($value$plusargs("WAITT=%d",waitt));if($value$plusargs("FARSLOW=%d",farslow));
   gn=2000;if($value$plusargs("GN=%d",gn));
   hbm_rst_n=0;stream_rst_n=0;g_k_v=0;g_kr_rdy=0;c_k_rdy=0;c_k_wr_done=0;c_kr_v=0;vm_v=0;vm_bank=0;vm_epoch=0;vm_row=0;vm_col=0;wbw_v=0;wbw_base=0;wbw_total=0;w_k_v=0;
   g_k_addr=0;g_k_len=0;g_k_tag=0;g_k_we=0;g_k_wdata=0;g_k_wstrb=0;c_kr_tag=0;c_kr_beat=0;c_kr_data=0;w_k_addr=0;w_k_wdata=0;rdy_seen=0;
-  for(l=0;l<4;l=l+1)begin rc[l]=32'h1234567+SEED*77+l;rg[l]=32'h7654321+SEED*131+l*3;rr[l]=32'h5a5a123+SEED*7+l*11;qh[l]=0;qn[l]=0;wdq[l]=0;gsent[l]=0;wleft[l]=0;wnext[l]=0;wend[l]=0;end
+  for(l=0;l<4;l=l+1)begin rc[l]=32'h1234567+SEED*77+l;rg[l]=32'h7654321+SEED*131+l*3;rr[l]=32'h5a5a123+SEED*7+l*11;qh[l]=0;qn[l]=0;wdq[l]=0;gsent[l]=0;wleft[l]=0;wnext[l]=0;wend[l]=0;wdc[l]=0;tg1[l]=0;tg2[l]=0;end
   rw=32'hABCDEF1+SEED;
   #(30ns);hbm_rst_n=1;stream_rst_n=1;
   for(w=0;w<WINDOWS;w=w+1)begin
-   rw=xs(rw);gap=wbonly?8+rw[4:0]:60+rw[7:0];
+   rw=xs(rw);gap=(wbonly==3)?1:wbonly?8+rw[4:0]:60+rw[7:0];
    repeat(gap)@(posedge stream_clk);
    @(negedge stream_clk);
    if(rw[8]&&!wbonly)begin
@@ -112,9 +114,10 @@ module vmks_env #(parameter integer SM=2)(
     @(negedge stream_clk);vm_v=0;
    end else begin
     reg[29:0]b;integer tot;
-    b={rw[29:12],12'(rw[11:0])};tot=(rw[9]?1+rw[7:0]:1+rw[10:0]);
-    for(l=0;l<4;l=l+1)begin wleft[l]=cnt_lane(l,b,tot);wnext[l]=b;wend[l]=b+tot;end
-    // WBONLY=2: an empty window just ahead, queued so the next take comes right after the lanes return to NORM (the seam norm guard)
+    b={rw[29:12],12'(rw[11:0])};tot=((rw[9]||farslow!=0)?1+rw[7:0]:1+rw[10:0]);
+    if(wbonly==3)begin while(wdc[0]<tg2[0]||wdc[1]<tg2[1]||wdc[2]<tg2[2]||wdc[3]<tg2[3])@(posedge stream_clk);@(negedge stream_clk);end
+    for(l=0;l<4;l=l+1)begin wleft[l]=cnt_lane(l,b,tot);wnext[l]=b;wend[l]=b+tot;tg2[l]=tg1[l];tg1[l]=tg1[l]+wleft[l];end
+    // WBONLY=2,3 (3 = no gap, next window comes as soon as the source has pushed): an empty window just ahead, queued so the next take comes right after the lanes return to NORM (the seam norm guard)
     if(wbonly==2)begin
      reg[29:0]za;za=b^30'h15555;
      while(cnt_lane(0,za,4)!=0||cnt_lane(1,za,4)!=0||cnt_lane(2,za,4)!=0||cnt_lane(3,za,4)!=0)za=za+30'd37;
@@ -124,8 +127,8 @@ module vmks_env #(parameter integer SM=2)(
     @(negedge stream_clk);wbw_v=0;
    end
    // wait for this window to finish on every lane by counting the env's own queues: fixed long gap covers VM (64 beats)/WB (<=68)
-   t=0;while(t<3000&&!(wleft[0]==0&&wleft[1]==0&&wleft[2]==0&&wleft[3]==0&&t>(wbonly?40:1200)))begin @(posedge stream_clk);t=t+1;end
-   if(t>=3000)bad("window timeout");
+   t=0;while(t<30000&&!(wleft[0]==0&&wleft[1]==0&&wleft[2]==0&&wleft[3]==0&&t>((wbonly==3)?waitt:wbonly?40:1200)))begin @(posedge stream_clk);t=t+1;end
+   if(t>=30000)bad("window timeout");
   end
   t=0;
   while(t<400000&&!(gsent[0]>=gn&&gsent[1]>=gn&&gsent[2]>=gn&&gsent[3]>=gn))begin @(posedge hbm_clk);t=t+1;end
