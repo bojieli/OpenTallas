@@ -11,7 +11,15 @@
 #          KW-FIX-24 11-06: a LEC killed by a signal (exit >= 128: docker stop / lane kill / OOM) is no verdict: it
 #          writes K/lec_async.aborted ("ABORTED rc=N oom=yes|no ..."), never FAIL_PREFLOOR / lec_async.stop / rc, and
 #          drops ready/identity so no later scope reuses it as a proof; the flow goes on and needs a fresh LEC.
-#   wait   K                                inside the flow container: keep it alive until its LEC finishes.
+#          KW-FIX-24/LECUNIT 11-06 (COORD 19:2x (6), S81 serdes__t4 lost an 8-h LEC on a flow OOM): by default the
+#          watcher runs that command as its OWN admitted unit, `ot-heavy --mem OT_LEC_MEM_GB (default MEM) -- docker run
+#          --name NAME-lec` with the flow container's image, binds and environment, so the LEC and the flow no longer
+#          share one memory cap.  The unit's own exit is read from K/lec_async.unit_rc (written by the LEC shell inside
+#          the unit): a unit that never ran the command (not admitted, docker refused) or was killed is ABORTED, never a
+#          verdict.  OT_LECUNIT=0 (or no ot-heavy on the host) keeps the old docker exec form; the form is fixed at
+#          start in K/lec_async.mode.
+#   wait   K                                inside the flow container: exec form, keep it alive until its LEC
+#          finishes; unit form, return once the physical result is published (finish on the host waits for the LEC).
 #   finish K RC [STOP_RC=5]                    host, after the flow container: waits for the LEC (aborts it if the
 #          flow never reached its LEC step), prints the kit rc (STOP_RC = the runner's LEC exit code when the LEC
 #          stopped the kit, else RC).
@@ -77,7 +85,7 @@ try:
   if not any(Path(m.get('Source','/')).resolve()==k for m in d.get('Mounts',[])):raise ValueError('Docker kit mount differs')
   return d
  base=inspect(owner);separate=inspect(owner+'-lec')
- if base:
+ if base and not separate:
   top=subprocess.run(dk+['top',owner,'-eo','pid,args'],capture_output=True,text=True,check=True).stdout
   if not any(re.match(r'^\s*\d+\s+(?:/[^ ]*/)?bash\s+/work/lec_async.sh\s+wait\s+/work(?:\s|$)',x) for x in top.splitlines()):
    raise ValueError('original physical scope has not reached its proof wait')
@@ -242,8 +250,9 @@ start)
     echo 'LEC_ASYNC proof inputs differ or existing proof has no identity; retain its scope and use a fresh kit' >&2
     exit 11
   fi
-  rm -f "$K"/lec_async.{on,ready,rc,stop,abort,aborted,done,pid}
+  rm -f "$K"/lec_async.{on,ready,rc,stop,abort,aborted,done,pid,mode,unit_rc}
   identity "$K" source > "$K/lec_async.source_identity"
+  if [ "${OT_LECUNIT:-1}" != 0 ] && command -v ot-heavy > /dev/null 2>&1; then echo unit; else echo exec; fi > "$K/lec_async.mode"
   echo "$NAME" > "$K/lec_async.owner"
   touch "$K/lec_async.on"; run_start "$K" "$NAME" "$GOAL"
   setsid nohup bash "$0" watch "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS" "$DK" >> "$K/lec_async.log" 2>&1 < /dev/null 9>&- &
@@ -253,6 +262,7 @@ watch)
   K=$1; NAME=$2; IMAGE=$3; MEM=$4; CPUS=$5; DK=$6
   trap 'touch "$K/lec_async.done"' EXIT
   trap 'exit 143' TERM INT HUP
+  MODE=$(cat "$K/lec_async.mode" 2>/dev/null || echo exec)
   echo "LEC_ASYNC watcher $(date '+%F %T') pid $$ waiting for the flow's LEC step"
   t0=$(date +%s)
   until [ -f "$K/lec_async.ready" ] || [ -f "$K/lec_async.abort" ]; do
@@ -267,29 +277,60 @@ watch)
   identity "$K" > "$K/lec_async.identity"
   echo "LEC_ASYNC $(date '+%F %T') start ($POL): $RUN"
   LOG0=$(stat -c %s "$K/lec_async.log" 2>/dev/null || echo 0)
+  OOMC=$NAME; NOV=
+  if [ "$MODE" = unit ]; then
+    # Own admitted unit: same image, binds, environment and LEC-option overrides as the exec form, its own memory cap.
+    UN=$NAME-lec; OOMC=$UN; LMEM=${OT_LEC_MEM_GB:-$MEM}; LCPUS=${OT_LECUNIT_CPUS:-$CPUS}; VOL=(); ENVS=()
+    while IFS= read -r b; do [ -z "$b" ] || VOL+=(-v "$b"); done < <($DK inspect -f '{{range .HostConfig.Binds}}{{println .}}{{end}}' "$NAME" 2>/dev/null)
+    [ ${#VOL[@]} -gt 0 ] || VOL=(-v "$K:/work")
+    while IFS= read -r e; do case $e in ''|HOSTNAME=*) ;; *) ENVS+=(-e "$e");; esac; done < <($DK inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$NAME" 2>/dev/null)
+    for v in OT_LEC_HINTS_PRESEED OT_LEC_EARLY_COMPARE OT_LEC_SUPERSET_VEC OT_LEC_RESET_CYCLES; do [ -z "${!v+x}" ] || ENVS+=(-e "$v=${!v}"); done
+    # a stopped leftover of this kit's own earlier unit only (a recycled name of another kit is never removed)
+    if $DK inspect -f '{{range .Mounts}}{{println .Source}}{{end}}' "$UN" 2>/dev/null | grep -Fqx -- "$K"; then $DK rm -f "$UN" > /dev/null 2>&1; fi
+    rm -f "$K/lec_async.unit_rc"
+    echo "LEC_ASYNC $(date '+%F %T') own unit: ot-heavy --mem $LMEM -- $DK run --name $UN (not docker exec in $NAME)"
+    ot-heavy --mem "$LMEM" -- $DK run --name "$UN" --cpus="$LCPUS" --memory="${LMEM}g" --memory-swap="${LMEM}g" "${VOL[@]}" "${ENVS[@]}" \
+      -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; ( $RUN
+); r=\$?; echo \$r > /work/lec_async.unit_rc; chown -R $(id -u):$(id -g) /work/lec /work/lec_run.log /work/lec_async.unit_rc 2>/dev/null; exit \$r" \
+      >> "$K/lec_async.log" 2>&1 < /dev/null &
+    UP=$!
+    trap '$DK stop -t 10 "$UN" > /dev/null 2>&1; kill $UP 2>/dev/null; exit 143' TERM INT HUP
+    while kill -0 $UP 2>/dev/null; do
+      # the flow stopped before a place checkpoint (wait) or never needs this proof (finish): end the unit
+      if [ -f "$K/lec_async.abort" ]; then $DK stop -t 10 "$UN" > /dev/null 2>&1; kill $UP 2>/dev/null; break; fi
+      sleep "${OT_LEC_ASYNC_POLL:-5}"
+    done
+    wait $UP 2>/dev/null; lr=$?
+    trap 'exit 143' TERM INT HUP
+    if [ -f "$K/lec_async.unit_rc" ]; then lr=$(cat "$K/lec_async.unit_rc"); else NOV=1; fi
+    [ ! -f "$K/lec_async.abort" ] || $DK rm -f "$UN" > /dev/null 2>&1
+  else
   $DK exec \
     -e OT_LEC_HINTS_PRESEED -e OT_LEC_EARLY_COMPARE -e OT_LEC_SUPERSET_VEC -e OT_LEC_RESET_CYCLES \
     -w /OpenROAD-flow-scripts/flow "$NAME" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $RUN; r=\$?; chown -R $(id -u):$(id -g) /work/lec /work/lec_run.log 2>/dev/null; exit \$r" \
     >> "$K/lec_async.log" 2>&1
   lr=$?
+  fi
   if [ -f "$K/lec_async.abort" ]; then
     # Not a verdict: no rc, no LEC marker, and no ready/identity for a later scope to take as a finished proof.
     rm -f "$K/lec_async.ready" "$K/lec_async.identity"
     echo "LEC_ASYNC $(date '+%F %T') aborted with its flow (exit $lr)"
     exit 0
   fi
-  if [ "$lr" -ge 128 ]; then
+  if [ "$lr" -ge 128 ] || [ -n "$NOV" ]; then
     # KW-FIX-24: killed by a signal (docker stop / kill 137, SIGTERM 143, or the memory cap) -- not a LEC verdict, in
     # either stop policy.  OOM evidence (docker OOMKilled, or a memory line in this run's logs) is recorded beside it.
     OOM=no
-    [ "$($DK inspect -f '{{.State.OOMKilled}}' "$NAME" 2>/dev/null)" = true ] && OOM=yes
+    [ "$($DK inspect -f '{{.State.OOMKilled}}' "$OOMC" 2>/dev/null)" = true ] && OOM=yes
     { tail -c 20000 "$K/lec_run.log" 2>/dev/null; tail -c +$((LOG0 + 1)) "$K/lec_async.log" 2>/dev/null; } \
       | grep -Eqi 'Killed|out of memory|OOMKilled|Cannot allocate memory|std::bad_alloc|Error 137' && OOM=yes
     rm -f "$K/lec_async.ready" "$K/lec_async.identity"
-    echo "ABORTED rc=$lr oom=$OOM $(date '+%F %T')" > "$K/lec_async.aborted"
+    [ "$MODE" != unit ] || $DK rm -f "$UN" > /dev/null 2>&1
+    echo "ABORTED rc=$lr oom=$OOM $(date '+%F %T')${NOV:+ unit=$UN did not complete its command}" > "$K/lec_async.aborted"
     echo "LEC_ASYNC $(date '+%F %T') aborted by signal (exit $lr, OOM evidence $OOM): no LEC verdict, the kit needs a fresh LEC"
     exit 0
   fi
+  [ "$MODE" != unit ] || $DK rm -f "$UN" > /dev/null 2>&1
   echo $lr > "$K/lec_async.rc"
   tail -1 "$K/lec_run.log" 2>/dev/null
   if { [ "$POL" = nz ] && [ $lr != 0 ]; } || { [ "$POL" = 1 ] && [ $lr = 1 ]; }; then
@@ -336,6 +377,8 @@ wait)
     touch "$K/lec_async.abort"
     exit 0
   fi
+  # Unit form: the LEC has its own admitted unit, so this container need not stay alive for it.
+  [ "$(cat "$K/lec_async.mode" 2>/dev/null)" != unit ] || exit 0
   while [ -f "$K/lec_async.on" ] && [ -f "$K/lec_async.ready" ] && [ ! -f "$K/lec_async.rc" ]; do
     sleep "${OT_LEC_ASYNC_POLL:-5}"
   done
