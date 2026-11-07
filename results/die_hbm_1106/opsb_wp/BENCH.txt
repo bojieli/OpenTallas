@@ -1,4 +1,4 @@
-verilator 5.050, CYC 40000, seed 1, old = ddb087e49d (part 41 text, OT_OPSB_N32, RREG 0); new = -DOT_OPSB_N32 -DOT_OPSB_WP=W (ot_hgi_su_lgroup2_wp.sv). Check every cycle from reset+20: sr_d (512 bits, X==X) and sr_rv new(t) == old(t-(2+W)), flt new(t) == old(t-W). w1/w2 must PASS; mutants m1..m6 (MUT param, file header) must FAIL.
+verilator 5.050, CYC 40000, seed 1, old = ddb087e49d (part 41 text, OT_OPSB_N32, RREG 0); new = -DOT_OPSB_N32 -DOT_OPSB_WP=W (ot_hgi_su_lgroup2_wp.sv). Check every cycle from reset+20: sr_d (512 bits, X==X) and sr_rv new(t) == old(t-(2+W)), flt new(t) == old(t-W). w1/w2/w3 must PASS; mutants m1..m7 (MUT param, file header; m7 only WP 3) must FAIL.
 w1 rc=0 WP1 LOCKSTEP PASS errs=0 (sr_d 0 flt 0) sr_rv=16930 known_valid_reads=16930 flt_cycles=30412 write_cycles=29346 of 40000 
 w1m1 rc=0 SR_D MISMATCH cyc=215 valid 11 SR_D MISMATCH cyc=467 valid 01 
 w1m2 rc=0 CTL MISMATCH cyc=22 v 00 01 CTL MISMATCH cyc=24 v 01 00 
@@ -13,3 +13,11 @@ w2m3 rc=0 SR_D MISMATCH cyc=141 valid 01 SR_D MISMATCH cyc=148 valid 00
 w2m4 rc=0 FLT MISMATCH cyc=205 f 0 1 FLT MISMATCH cyc=433 f 0 1 
 w2m5 rc=0 SR_D MISMATCH cyc=191 valid 00 SR_D MISMATCH cyc=195 valid 00 
 w2m6 rc=0 FLT MISMATCH cyc=2823 f 1 0 FLT MISMATCH cyc=2824 f 1 0 
+w3 rc=0 WP3 LOCKSTEP PASS errs=0 (sr_d 0 flt 0) sr_rv=16935 known_valid_reads=16935 flt_cycles=30291 write_cycles=29346 of 40000 
+w3m1 rc=0 SR_D MISMATCH cyc=217 valid 11 SR_D MISMATCH cyc=420 valid 00 
+w3m2 rc=0 CTL MISMATCH cyc=24 v 00 01 CTL MISMATCH cyc=26 v 01 00 
+w3m3 rc=0 SR_D MISMATCH cyc=142 valid 01 SR_D MISMATCH cyc=149 valid 00 
+w3m4 rc=0 FLT MISMATCH cyc=206 f 0 1 FLT MISMATCH cyc=434 f 0 1 
+w3m5 rc=0 SR_D MISMATCH cyc=192 valid 00 SR_D MISMATCH cyc=196 valid 00 
+w3m6 rc=0 FLT MISMATCH cyc=2824 f 1 0 FLT MISMATCH cyc=2825 f 1 0 
+w3m7 rc=0 SR_D MISMATCH cyc=1439 valid 01 SR_D MISMATCH cyc=1440 valid 00 
