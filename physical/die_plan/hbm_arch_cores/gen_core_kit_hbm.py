@@ -1396,6 +1396,23 @@ def stamp_generation_inputs(kit, repo=REPO):
     return True
 
 
+# FLOW-CLASS-25 11-06 (COORD 18:0x (3c), HBM-FORM-TIMING-13 17:56): OT_FINAL_FF_HOLD in config.mk was only a label,
+# because the generated core_grt_post.tcl called ot_final_ff_hold unconditionally.  The call is now gated on the env:
+# unset or any value but 0 = the pass runs exactly as before (the generator writes OT_FINAL_FF_HOLD = 1); 0 = skipped.
+FINAL_FF_HOLD_CALL = ("if {![info exists ::env(OT_FINAL_FF_HOLD)] || $::env(OT_FINAL_FF_HOLD) ne \"0\"} {\n"
+                      "  uplevel #0 [list source /work/final_ff_hold.tcl]\n"
+                      "  ot_final_ff_hold\n"
+                      "} else { puts \"OT_FINAL_FF_HOLD skipped (OT_FINAL_FF_HOLD=0)\" }\n")
+
+
+def final_ff_hold_post(text):
+    """core_grt_post.tcl text -> the same with the env-gated final FF hold pass before the PG connect."""
+    anchor = "uplevel #0 [list source /work/pg_connect.tcl]"
+    if text.count(anchor) != 1:
+        raise SystemExit("core_grt_post.tcl: no single pg_connect anchor for the final FF hold pass")
+    return text.replace(anchor, FINAL_FF_HOLD_CALL + anchor)
+
+
 def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--views", required=True)
@@ -2016,11 +2033,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         for name in ("final_ff_hold.tcl", "clk_freeze.tcl", "clk_geom_diff.py"):
             shutil.copyfile(TOOL / name, kd / name)
         post = kd / "core_grt_post.tcl"
-        text = post.read_text()
-        text = text.replace("uplevel #0 [list source /work/pg_connect.tcl]",
-                            "uplevel #0 [list source /work/final_ff_hold.tcl]\not_final_ff_hold\n"
-                            "uplevel #0 [list source /work/pg_connect.tcl]")
-        post.write_text(text)
+        post.write_text(final_ff_hold_post(post.read_text()))
     # Keep the standalone runtime complete, including sender-min qualification and clock helpers.
     subprocess.run([sys.executable, "-I", str(TOOL / "signoff.py"), "bundle", str(kd)], check=True)
     # HBM-KITS-B2 10-25: replicated (* keep *) registers (ot_rst_relay region copies, ...) need the ORFS
