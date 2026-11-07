@@ -154,10 +154,11 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                # l48ug = DIE-HEAD-70 l48uf + hd_tile u_core TEN_HOP 2, KEY_HOP 1 (tile4 CTS: ten hop -187, kl_gt -279; 0 cycles; plan 2a0980eb4a82, sidecar same)
                # l48uh = DIE-HEAD-71 l48ug + hd_tile relay_sites only: u_x direct lanes follow BST 3 (head_tile_hop_delta.py --xrelay; tile5 line[899] -126.5; 0 cycles; plan 8a47a824b3c4, sidecar same)
                # l48ui = DIE-HEAD-75 l48uh + hd_serdes pad_clock pma_rck data_inputs pma_rx capture same_edge, eye_hold_extra_ps 175 (SDC only, head_serdes_same_edge_delta.py, plan a2c18c19e08c, sidecar same; COORD 11-06 10:01/10:2x)
+               # l48uj = DIE-HEAD-77 l48ui + hd_spn/hd_spn_end partition blocks of the Codex station_closeout plan 1b9d (clock/reset/internal stations only) + 8 hd_spn fstart_face_* landing_local_resets (head_spn_fstart_delta.py, plan 3b0e9771f47b, sidecar same, 0 cycles; COORD 11-06 21:2x (1))
                # l48rc = DH58-RF2 CONSERVATIVE re-form on l48rf (plan 8327f303db76: clock.plain_seam_split rx_in 480/580 +
                # hd_ctl_n reset.local_taps_um; ctl_e/ctl_n/host_n/spn_eshim_tx), OWNER directive via DIE-HEAD-58 11-03 19:3x
                "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t",
-                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc", "l48tc", "l48sd", "l48se", "l48sf", "l48sg", "l48ua", "l48ub", "l48uc", "l48ud", "l48ue", "l48uf", "l48ug", "l48uh", "l48ui")}}
+                                      "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc", "l48tc", "l48sd", "l48se", "l48sf", "l48sg", "l48ua", "l48ub", "l48uc", "l48ud", "l48ue", "l48uf", "l48ug", "l48uh", "l48ui", "l48uj")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 # SAFE-STATION-1 11-03 (OWNER TWO-STRIKES): wire-only station types take the relay-bay form (tools/die_plan/relay_bay.py)
