@@ -203,6 +203,16 @@ def main():
     shutil.copyfile(HERE / "pin_audit_core.py", kd / "pin_audit.py")
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
     # macro sites: snap y so the macro's M4 pins sit on the core M4 tracks (0.012 + k 0.048)
+    # PINBAND-1 11-06 (COORD 17:4x, QC-A0C-B6 class, default-on; OT_PINBAND_SITE=0 = check only): a macro whose signal
+    # M5 pin row lies under the top-grid M6 PG band moves in y by the smallest row multiple that keeps its M4 track
+    # phase and clears every row (inside the core, gaps kept); the M4 snap below then finds it on its track
+    if c["macros"]:
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parents[5] / "tools/die_plan"))
+        import pinband_site
+        _c = CORE_MARGIN_UM
+        pinband_site.site_rows(kd, c["macros"], PDN + PDN_MACRO, (_c, _c, c["outline_um"][0] - _c, c["outline_um"][1] - _c),
+                               lef_dir=lambda mm: macro_dir(repo, mm) / f"{mm}.lef")
     mp = []
     for m in c["macros"]:
         lef = (macro_dir(repo, m["master"]) / f"{m['master']}.lef").read_text()

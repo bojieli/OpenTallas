@@ -1169,6 +1169,15 @@ def main():
                 shutil.copyfile(hviews[m] / f, kd / "macros" / f)
             lefs.append(f"/work/macros/{m}.lef")
             libs.append(f"/work/macros/{m}_tt.lib")
+        # PINBAND-1 11-06 (COORD 17:4x, QC-A0C-B6 NL/NK DRC class, default-on; OT_PINBAND_SITE=0 = check only): a hard
+        # child whose signal M5 pin row lies under the top-grid M6 PG band moves in y by the smallest grid-keeping row
+        # multiple that clears every row (inside the core, gaps to the other children and SRAM sites kept)
+        import pinband_site
+        m_ = rec.get("core_margin", CORE_MARGIN_UM)
+        srams = [(x, y, x + sz[0], y + sz[1]) for ms, v in mplace.items()
+                 if (kd / "macros" / f"{ms}.lef").is_file()
+                 for sz in [lef_size((kd / "macros" / f"{ms}.lef").read_text())] for x, y, o in v]
+        pinband_site.site_rows(kd, hcb, PDN + PDN_HARD_CHILDREN, (m_, m_, w - m_, h - m_), others=srams)
     # pins: exact plan centres + plan shapes, on the kit tracks
     bad = []
     for q in pins:
