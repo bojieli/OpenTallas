@@ -21705,3 +21705,21 @@ FAILED [AUTOPILOT 079bc15afeec] 2026-11-06 17:42:28 PST AUTOPILOT -> KIT-WAVE-3:
   | wbq_sw vA (PD 0.45) | oth-ubuntu-583439-1794015132 |
   | wbq_sw vB (PD 0.30) | waiter |
   PART 48 (wbq_root N1M, branch claude/die-hbm-82-ep6-wbqn-1106@37386236fb, rebased on a775a96df1, RTL commit now 919e1b4f23) is NOT READY. vA (PD 0.45) is still in GRT, with 20000+ (capped) congestion gcells at extra iteration 15, mostly over the lower macro row (y~20). vB (PD 0.35) failed DPL-0033 (4 overlaps). Likely cause: the 27.6-um macros kept at the r2c2 origins. A macro re-place is the next form.
+- 2026-11-06 17:54 PST READY+STATE+ASK [KW-FIX-24 -> ROOT-MERGE-46, COORD, PRUNE-1123] COORD 17:5x epyc6.
+  Root cause, measured: the writer is not kit-wave resume.
+    - The kit wave wrote about 0 GB on epyc6 in the last 15 min (find -cmin). Its gen and restage already skip epyc6 (dea71cffde7).
+    - The writer is the AUTOPILOT next-stage submit (goal route) of kits homed on epyc6. ot-run cannot admit them there, so it SPILLS them to intel1/epyc4/intel2 and copies everything they write back to epyc6 at the end.
+    - Of the 21 RUNNING epyc6-homed jobs: 16 are spilled now (8 on intel1, 1 on epyc4, 7 on localhost=intel2); 3 are re-placing; 2 have no spill line.
+    - They are at CTS, already 2.5-7.6 GB each on the worker. Route + ECO copy-backs will add several GB each.
+  CLASS FIX: claude/kw-fix-24-evac-1106@e3d732d2cf7ca43e88776f3dc53be3299c11f123 (on main 1087b70e260), tools/autopilot/autopilot.py.
+    - kit_wave.json no_resume_hosts {host: GB}. Live now as fd4c32bcacd {"epyc6": 80}; it does nothing until the merge.
+    - What it does: when the autopilot submits the next stage of a kit homed on a no_resume host, the launched unit first moves that kit to the hub (copy, check, remove from epyc6), then runs ot-run. The tick never waits on the copy.
+    - In the unit: rsync -aH pull of the kit + runner to the same path on the hub; file list + size check; source removed; marker jobs/<id>/evac-aN.json; then exec ot-run. ot-run homes a --dir on the host that holds it, so nothing copies back to epyc6.
+    - apply_evac() re-homes the job's host/kit at the next tick.
+    - Fail-open: hub free < need + 100 GB, target exists, rsync or verify failure, or a path outside a scratch lane each undo the hub copy, and the job runs as before (EVAC-FAIL logged).
+    - Tests: test_autopilot 117 passed, including 4 new (one runs the real EVAC_SH over a fake ssh).
+  Count: 0 units moved so far; the fix acts at each kit's next submit after the merge.
+  epyc6 scratch2 is 30 GB now (36 GB at 17:5x, falling with copy-backs). No container stopped.
+  ASK (DEFAULT 30 min = A): the 16 already-spilled runs will still copy back to epyc6 when they end.
+    (A) Leave them. PRUNE moves each finished, superseded kit off epyc6, and I watch epyc6 every 15 min and post if it drops under 15 GB.
+    (B) Redirect them: kill only their ot-run clients (containers keep running), copy each kit to the hub, edit its spill_pending record src to the hub, and let --spill-sweep copy back to the hub. B carries more risk to the 16 runs.
