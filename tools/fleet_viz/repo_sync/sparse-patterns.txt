@@ -1,0 +1,25 @@
+# WEBVIEW-1 2026-11-03: paths the fleet-viz viewer reads from the trunk (origin/main). Non-cone sparse patterns.
+/results/fleet_viz/
+/results/external/
+/results/arch/coverage_20261008/
+/results/arch/hier_contract_1011/reroute_m5_state.json
+/results/arch/token_path_2*/
+/results/arch/token_path_1018/
+/results/arch/reprice_2*/
+/results/arch/prefill_ingest.json
+/results/arch/v41_lanes.json
+/results/arch/qwen3_budget.json
+/results/arch/qwen_tp8_vs_sysdie_*/result.json
+/results/arch/throughput_budget_*/
+/results/arch/margin_thin_1016.json
+/results/token_pass/*.json
+/results/token_pass/*.md
+/results/token_pass/*/README.md
+/results/token_pass/*/*.json
+/physical/die_plan/*/die_plan.json
+/physical/die_plan/s81/plan_h2_2249.json
+/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json
+/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json
+/physical/die_plan/hbm/plan_of_record/d44c/die_plan.json.gz
+/results/die_head_52_1031/pin/source_plan_l48x.json
+/results/closure_loop/*/verdict.json

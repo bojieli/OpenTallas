@@ -50,7 +50,7 @@ def recipe_commit(repo, d):
 
 
 def recipe_key(d, commit):
-    keep = {k: d[k] for k in ('kind', 'recipe', 'variant', 'opts', 'die', 'relays', 'env') if k in d}
+    keep = {k: d[k] for k in ('kind', 'recipe', 'variant', 'opts', 'die', 'relays', 'env', 'plan_path', 'plan_die') if k in d}
     return commit[:12] + '-' + hashlib.sha256(json.dumps(keep, sort_keys=True).encode()).hexdigest()[:8]
 
 
@@ -358,7 +358,32 @@ def serialise(d, commit, m, W, H, extra):
     return out
 
 
+def export_plan(d, repo, state, out=None):
+    """WEBVIEW-1 11-03: kind 'plan' = a die_plan.v1 plan of record on origin/main (plan_now.plan_geometry), no recipe run"""
+    import gzip as _gz
+    sys.path.insert(0, str(HERE))
+    import plan_now
+    commit = recipe_commit(repo, d)
+    t0 = time.time()
+    raw = git(repo, 'show', '%s:%s' % (commit, d['plan_path']), binary=True)
+    plan = json.loads(_gz.decompress(raw) if raw[:2] == b'\x1f\x8b' else raw)
+    rec = plan_now.plan_geometry(d['plan_die'], d['plan_path'], commit, plan)
+    rec.update(die=d['id'], label=d['label'], key=recipe_key(d, commit),
+               generated=datetime.datetime.now().astimezone().isoformat(timespec='seconds'), build_s=round(time.time() - t0, 1),
+               fetched_files=1, plan_sha256=hashlib.sha256(raw).hexdigest()[:12],
+               plan_date=git(repo, 'log', '-1', '--format=%cI', commit, '--', d['plan_path']))
+    gdir = pathlib.Path(state) / 'explorer' / 'geom'; gdir.mkdir(parents=True, exist_ok=True)
+    out = pathlib.Path(out) if out else gdir / (d['id'] + '.json.gz')
+    tmp = out.with_name(out.name + '.tmp')
+    with gzip.open(tmp, 'wt') as f:
+        json.dump(rec, f, separators=(',', ':'))
+    os.replace(tmp, out)
+    return rec
+
+
 def export(d, repo, state, out=None):
+    if d.get('kind') == 'plan':
+        return export_plan(d, repo, state, out)
     commit = recipe_commit(repo, d)
     root = snapshot(repo, commit, state)
     fs = GitFS(repo, commit, root); fs.install()

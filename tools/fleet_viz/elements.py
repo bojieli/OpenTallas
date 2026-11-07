@@ -42,6 +42,7 @@ metrics) fetched over ssh in the background and cached in <state>/element_area.j
 import collections, datetime, glob, json, os, pathlib, re, subprocess, threading, time
 import flow_state
 import die_contracts
+import plan_rows
 import master_identity
 
 T0 = datetime.datetime.fromisoformat('2026-10-07T20:45:00-07:00').timestamp()   # option-B (TT) switch
@@ -940,11 +941,12 @@ class Elements:
     def run(self):
         while True:
             try:
-                d = self.compute()
+                d0 = self.compute()
+                d = plan_rows.overlay(d0)   # WEBVIEW-1 11-03: current plans of record (plan_now.json) replace the October job rows
                 with self.lock:
                     self.data = d; self.ver += 1
                 if time.time() - self.md_t >= self.md_period:
-                    self.md_t = time.time(); self.write_md(d)
+                    self.md_t = time.time(); self.write_md(d0)
             except Exception as e:
                 self.log('elements: %s' % e)
             time.sleep(self.period)
@@ -984,8 +986,12 @@ class Elements:
         if changed:
             tmp = self.area_path.with_suffix('.tmp'); tmp.write_text(json.dumps(self.area)); tmp.replace(self.area_path)
 
-    def snapshot(self, safe=False):
+    def snapshot(self, safe=False, legacy=False):
         with self.lock: d = self.data; v = self.ver
+        if legacy and not safe and d.get('legacy'):
+            lg = d['legacy']
+            return dict(t=d['t'], v=v, legacy=True, cats=lg.get('cats'), targets=d.get('targets'), summary=lg.get('summary'),
+                        designs=lg.get('designs'), rows=[public(r) for r in lg.get('rows') or []])
         if safe:
             return dict(t=d['t'], safe=True, cats=CATS, targets=TARGETS, summary=d['summary'], flow=d.get('flow'),
                         designs=d.get('designs'), v=v)
