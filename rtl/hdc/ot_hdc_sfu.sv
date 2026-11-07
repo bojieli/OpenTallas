@@ -1,3 +1,10 @@
+`ifndef OT_ARST
+ `ifdef OT_S81ENG_SYNC_RST
+  `define OT_ARST(x)
+ `else
+  `define OT_ARST(x) or negedge x
+ `endif
+`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // Special-function pipelines of the hardwired decode core: exp, reciprocal and
@@ -18,7 +25,7 @@ module ot_hdc_vline #(parameter integer D = 1) (
     output wire [D:0] vd
 );
     reg [D:1] line;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_ARST(rst_n)) begin
         if (!rst_n) line <= {D{1'b0}};
         else line <= {line[D-1:1], v};
     end

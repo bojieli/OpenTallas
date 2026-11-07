@@ -1,3 +1,10 @@
+`ifndef OT_ARST
+ `ifdef OT_S81ENG_SYNC_RST
+  `define OT_ARST(x)
+ `else
+  `define OT_ARST(x) or negedge x
+ `endif
+`endif
 `timescale 1ns/1ps
 // ot_s81_engram_lookup_ra640 (S81-FIX2/ENG 10-21): ot_s81_engram_lookup_ra512 for the G7 die return bound (measured
 // request->response age ~435 + 2 x 70 chain stations = ~575 > 512) -> RETURN_AGE 640 (65-cycle margin), and NATIVE32:
@@ -193,7 +200,7 @@ module ot_s81_engram_lookup_ra640 #(
         (* keep = 1 *) ot_s81eng_kqr #(.W(1)) u_a (.clk(clk_ctl), .rst_n(rrst[0]), .d(active_nx), .q(active_c[acc]));
     end endgenerate
     integer sr;
-    always @(posedge clk_ctl or negedge rrst[0]) begin
+    always @(posedge clk_ctl `OT_ARST(rrst[0])) begin
         if (!rrst[0]) begin
             active<=0; age<=0; protocol_bad<=0;
         end else begin
@@ -237,7 +244,7 @@ module ot_s81_engram_lookup_ra640 #(
     wire [QW*ENG_LAYERS*ENG_COLS-1:0] hres;
     ot_s81_engram_hash_n32 u_hash (.clk(clk_seed), .clk_columns(clk_hash), .in_w(win_n), .out_res(hres));
     reg [12:1] lastl;                        // marks the 4th feed through the hash latency
-    always @(posedge clk_ctl or negedge rrst[1]) begin
+    always @(posedge clk_ctl `OT_ARST(rrst[1])) begin
         if (!rrst[1]) lastl <= 12'd0;
         else lastl <= {lastl[11:1], hfeed && fcnt == 2'd3};
     end
@@ -316,7 +323,7 @@ module ot_s81_engram_lookup_ra640 #(
     reg [2:0]   wbank_q;
     reg [3:0]   watom_q;
     always @(posedge clk_ctl) wdata_q <= hr_data;
-    always @(posedge clk_ctl or negedge rrst[3])
+    always @(posedge clk_ctl `OT_ARST(rrst[3]))
         if (!rrst[3]) wen_q <= 1'b0;
         else        wen_q <= response_ok;
     always @(posedge clk_ctl) begin wbank_q <= hr_tag_w; watom_q <= hr_idx; end
@@ -324,7 +331,7 @@ module ot_s81_engram_lookup_ra640 #(
     reg [5:0]   wx_ea, wx_oa;
     reg [2:0]   wx_aa;
     reg [255:0] wx_de, wx_do, wx_da;          // one kept data copy per macro (256 loads each -> 1 macro pin + local)
-    always @(posedge clk_ctl or negedge rrst[3])
+    always @(posedge clk_ctl `OT_ARST(rrst[3]))
         if (!rrst[3]) begin wx_e <= 1'b0; wx_o <= 1'b0; wx_a <= 1'b0; end
         else begin
             wx_e <= wen_q && !watom_q[0];
@@ -352,7 +359,7 @@ module ot_s81_engram_lookup_ra640 #(
 
     // ---- issue ------------------------------------------------------------------------
     reg [2:0] icnt;
-    always @(posedge clk_ctl or negedge rrst[5]) begin
+    always @(posedge clk_ctl `OT_ARST(rrst[5])) begin
         if (!rrst[5]) begin
             st <= S_IDLE; fcnt <= 2'd0; acnt <= 2'd0; icnt <= 3'd0; hq_valid <= 1'b0;
             slot <= {SLW{1'b0}};
@@ -400,7 +407,7 @@ module ot_s81_engram_lookup_ra640 #(
     end
 `ifdef OT_S81ENG_RR_N32
     integer rcj;
-    always @(posedge clk_ctl or negedge rrst[4])begin
+    always @(posedge clk_ctl `OT_ARST(rrst[4]))begin
         if(!rrst[4])for(rcj=0;rcj<CPR;rcj=rcj+1)rcnt[rcj]<=0;
         else for(rcj=0;rcj<CPR;rcj=rcj+1)begin
             if(st==S_EMIT&&emit_done)rcnt[rcj]<=0;
@@ -454,7 +461,7 @@ module ot_s81_engram_lookup_ra640 #(
     reg [1:0]   e1_off;
     reg [2:0]   e1_j, e1_k;
     reg [SLW-1:0] e1_s, e2_s, e3_s;
-    always @(posedge clk_ctl or negedge rrst[3]) begin
+    always @(posedge clk_ctl `OT_ARST(rrst[3])) begin
         if (!rrst[3]) begin
             ej <= 3'd0; ek <= 4'd0; emit_done_r <= 1'b0; e1_v <= 1'b0; e0q_v <= 1'b0; e0r_v <= 1'b0;
         end else begin
@@ -497,7 +504,7 @@ module ot_s81_engram_lookup_ra640 #(
             (* keep = 1 *) ot_s81eng_kq #(.W(2)) u_r (.clk(clk_rd), .d(q_off), .q(r_offc[gi]));
         end
     endgenerate
-    always @(posedge clk_ctl or negedge rrst[3])
+    always @(posedge clk_ctl `OT_ARST(rrst[3]))
         if (!rrst[3]) rq_v <= 1'b0;
         else        rq_v <= e0_go;
     always @(posedge clk_rd) begin
@@ -539,7 +546,7 @@ module ot_s81_engram_lookup_ra640 #(
     reg [31:0]  e2_crc;
     reg [2:0]   e2_j, e2_k;
     wire [511:0] e1_cat = {e1_hi, e1_lo};
-    always @(posedge clk_em or negedge rrst[3]) begin
+    always @(posedge clk_em `OT_ARST(rrst[3])) begin
         if (!rrst[3]) e2_v <= 1'b0;
         else e2_v <= e1_v;
     end
@@ -595,7 +602,7 @@ module ot_s81_engram_lookup_ra640 #(
     reg transport_v, ov;
     reg [FW-1:0] transport_d, od;
     wire [4:0] e2_col = crank * CPR + e2_j;
-    always @(posedge clk_em or negedge rrst[8]) begin
+    always @(posedge clk_em `OT_ARST(rrst[8])) begin
         if(!rrst[8]) begin transport_v<=0;ov<=0;end
         else begin transport_v<=e2_v;ov<=transport_v;end
     end
@@ -688,7 +695,7 @@ module ot_s81_engram_lookup_ra640 #(
     reg [31:0] e3_exp;
     generate
         if (PIPE == 0) begin : g_crc0
-            always @(posedge clk_em or negedge rrst[14]) begin
+            always @(posedge clk_em `OT_ARST(rrst[14])) begin
                 if (!rrst[14]) begin
                     crc <= 32'hFFFFFFFF; e3_last <= 1'b0;
                 end else begin
@@ -715,7 +722,7 @@ module ot_s81_engram_lookup_ra640 #(
             wire [31:0] c_first = (CRCMAT != 0) ? crc_beat(32'hFFFFFFFF, 256'd0) : 32'd0;
             wire [31:0] c_nxt_f = (CRCMAT != 0) ? (c_first ^ ga) : (crc_beat(32'hFFFFFFFF, 256'd0) ^ ga);
             wire [31:0] c_nxt_s = (CRCMAT != 0) ? (beat_s ^ ga)  : (crc_beat(crc, 256'd0) ^ ga);
-            always @(posedge clk_em or negedge rrst[11]) begin
+            always @(posedge clk_em `OT_ARST(rrst[11])) begin
                 if (!rrst[11]) begin a_v <= 1'b0; a_last <= 1'b0; e3_last <= 1'b0; end
                 else begin
                     a_v <= e2_v;
@@ -724,7 +731,7 @@ module ot_s81_engram_lookup_ra640 #(
                 end
             end
             for (gi = 0; gi < 4; gi = gi + 1) begin : g_crc
-                always @(posedge clk_em or negedge rrst[9+gi/2])
+                always @(posedge clk_em `OT_ARST(rrst[9+gi/2]))
                     if (!rrst[9+gi/2]) crc[8*gi +: 8] <= 8'hFF;
                     else if (avc[gi]) crc[8*gi +: 8] <= afc[gi] ? c_nxt_f[8*gi +: 8] : c_nxt_s[8*gi +: 8];
             end
@@ -736,7 +743,7 @@ module ot_s81_engram_lookup_ra640 #(
         end
     endgenerate
     // final: fold the 8 exponent bytes and compare
-    always @(posedge clk_em or negedge rrst[12]) begin
+    always @(posedge clk_em `OT_ARST(rrst[12])) begin
         if (!rrst[12]) begin
             st_valid <= 1'b0; st_slot <= {SLW{1'b0}}; st_bad <= 1'b0; fault <= 1'b0;
         end else begin

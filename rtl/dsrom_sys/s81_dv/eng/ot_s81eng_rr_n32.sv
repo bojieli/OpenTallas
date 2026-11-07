@@ -1,3 +1,10 @@
+`ifndef OT_ARST
+ `ifdef OT_S81ENG_SYNC_RST
+  `define OT_ARST(x)
+ `else
+  `define OT_ARST(x) or negedge x
+ `endif
+`endif
 `timescale 1ns/1ps
 // Isolated same-edge XQ consumer successor; selected only by OT_S81ENG_RR_N32.
 module ot_s81eng_xq_n32 #(
@@ -31,7 +38,7 @@ module ot_s81eng_xq_n32 #(
     // written one edge later at the registered address wa_q (same entry), read one edge later (registered address ra_q) into
     // bf_dq: the 64 wait-line decoders, wl_code, the 32 wl scale copies and the id_code_w write copies are gone.
     reg         iv; reg [4:0] ic; reg [2:0] ib;
-    always @(posedge ck or negedge rl[0]) if (!rl[0]) iv <= 1'b0; else iv <= o_v;
+    always @(posedge ck `OT_ARST(rl[0])) if (!rl[0]) iv <= 1'b0; else iv <= o_v;
     always @(posedge ck) begin ic <= o_col; ib <= o_beat; end
     wire [255:0] id_scale_c;
     wire [639:0] pd;                       // element g: pd[20g +: 20] registered pre-decode of o_d[8g +: 8]
@@ -57,7 +64,7 @@ module ot_s81eng_xq_n32 #(
         assign xd[32 * g +: 32] = {bf_dq[16 * g +: 16], 16'h0};
     end endgenerate
     reg [5:0] wp;
-    always @(posedge ck or negedge rl[0]) if (!rl[0]) wp <= 6'd0; else wp <= wp + 6'd1;
+    always @(posedge ck `OT_ARST(rl[0])) if (!rl[0]) wp <= 6'd0; else wp <= wp + 6'd1;
     // write copy of the decode and the read address, each one edge later than the raw line used them (exact entries and
     // read order, also across reset pulses of wp)
     reg [511:0] bfxq; reg [5:0] wa_q, ra_q;
@@ -82,7 +89,7 @@ module ot_s81eng_xq_n32 #(
     reg         iv; reg [4:0] ic; reg [2:0] ib; wire [263:0] id;
     reg[255:0] id_code; wire[255:0] id_scale_c,wl_scale_c;
     assign id={id_scale_c[7:0],id_code};
-    always @(posedge ck or negedge rl[0]) if (!rl[0]) iv <= 1'b0; else iv <= o_v;
+    always @(posedge ck `OT_ARST(rl[0])) if (!rl[0]) iv <= 1'b0; else iv <= o_v;
     always @(posedge ck) begin ic <= o_col; ib <= o_beat; id_code <= o_d[255:0]; end
     wire [511:0] wl_rd;                 // slang: declared before g_scale_capture uses it (source order only)
     for(genvar sc=0;sc<32;sc=sc+1)begin:g_scale_capture
@@ -116,7 +123,7 @@ module ot_s81eng_xq_n32 #(
     end endgenerate
     // Wait line: read wp-10 one edge earlier; owned raw landing below restores the original total12-edge age.
     reg [5:0] wp;
-    always @(posedge ck or negedge rl[0]) if (!rl[0]) wp <= 6'd0; else wp <= wp + 6'd1;
+    always @(posedge ck `OT_ARST(rl[0])) if (!rl[0]) wp <= 6'd0; else wp <= wp + 6'd1;
     ot_sram_1r1w_64x512_m1_r0c0_pc u_wl (.clk(ck), .r_ce_in(1'b1), .r_addr_in(wp - 6'd9), .rd_out(wl_rd),
         .w_ce_in(1'b1), .w_addr_in(wp), .wd_in({248'd0, id_scale_c[7:0], id_code_w}), .w_mask_in({512{1'b1}}));
     reg[255:0] wl_code;
@@ -155,7 +162,7 @@ module ot_s81eng_xq_n32 #(
     reg  [6:0]  fc;                        // fragment counter 0..95
     reg[6:0] fc_probe; reg tx_probe;
     wire probe_start=first&&!tx_probe&&tc==8'(TXD-1);
-    always @(posedge ck or negedge rl[17])if(!rl[17])begin fc_probe<=0;tx_probe<=0;end
+    always @(posedge ck `OT_ARST(rl[17]))if(!rl[17])begin fc_probe<=0;tx_probe<=0;end
     else if(probe_start)begin fc_probe<=0;tx_probe<=1;end
     else if(tx_probe)begin fc_probe<=fc_probe+1'b1;if(fc_probe==7'd95)tx_probe<=0;end
     reg  [63:0] rv;                        // beat ring row written (window)
@@ -238,7 +245,7 @@ module ot_s81eng_xq_n32 #(
     always @(posedge ck) begin ia <= vi_a; ib_ <= vi_b; end
     wire pva = ia[0] || pa != 2'd0, pvb = ib_[0] || pb != 2'd0;
     integer oi;
-    always @(posedge ck or negedge rl[2])
+    always @(posedge ck `OT_ARST(rl[2]))
         if (!rl[2]) begin
             bw <= 1'b0; bc <= 6'd0; first <= 1'b0; tc <= 8'd0; tx <= 1'b0; fc <= 7'd0; fault <= 1'b0;
             vo_a[0] <= 1'b0; vo_b[0] <= 1'b0; pa <= 2'd0; pb <= 2'd0;
@@ -302,7 +309,7 @@ endmodule
  wire[1:0] fcn=start?2'd0:local_tx?fc[1:0]+2'd1:fc[1:0];
  for(genvar g=0;g<16;g=g+1)begin:g_c
   (* keep=1 *) reg t;(* keep=1 *)reg[1:0] f;
-  always @(posedge ck or negedge rn[g])if(!rn[g])begin t<=0;f<=0;end else begin t<=txn;f<=fcn;end
+  always @(posedge ck `OT_ARST(rn[g]))if(!rn[g])begin t<=0;f<=0;end else begin t<=txn;f<=fcn;end
   assign txk[g]=t;assign fck[2*g+:2]=f;
  end
 endmodule
@@ -318,14 +325,14 @@ endmodule
  wire[1:0] fcn=start?2'd0:local_tx?fc[1:0]+2'd1:fc[1:0];
  for(genvar g=0;g<16;g=g+1)begin:g_s
   (* keep=1 *) reg sp;(* keep=1 *) reg s0;(* keep=1 *) reg s1;
-  always @(posedge ck or negedge rn[g])if(!rn[g])begin sp<=1'b1;s0<=1'b0;s1<=1'b0;end
+  always @(posedge ck `OT_ARST(rn[g]))if(!rn[g])begin sp<=1'b1;s0<=1'b0;s1<=1'b0;end
    else begin sp<=!txn;s0<=txn&&fcn==2'd0;s1<=txn&&fcn==2'd1;end
   assign p[g]=sp;assign osel[3*g+:3]={s1,s0,sp};
  end
  if(NT>0)begin:g_tf
   for(genvar g=0;g<NT;g=g+1)begin:g_c
    (* keep=1 *) reg t;(* keep=1 *)reg[1:0] f;
-   always @(posedge ck or negedge rn[g])if(!rn[g])begin t<=0;f<=0;end else begin t<=txn;f<=fcn;end
+   always @(posedge ck `OT_ARST(rn[g]))if(!rn[g])begin t<=0;f<=0;end else begin t<=txn;f<=fcn;end
    assign txk[g]=t;assign fck[2*g+:2]=f;
   end
  end else begin:g_none
@@ -429,7 +436,7 @@ module ot_s81eng_token_map_n32 (
             .clk(clk), .ce_in(ce_local),
             .addr_in(addr_local), .rd_out(q[g]));
     end endgenerate
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk `OT_ARST(rst_n)) begin
         if(!rst_n) begin pending<=0;out_v<=0;fault<=0;chk<=0;end
         else begin
             pending<=in_v && legal;
@@ -444,7 +451,7 @@ endmodule
 (* keep_hierarchy = 1 *)module ot_s81eng_token_bit #(parameter integer BIT=0, CAPTURE_FIRST=0)(
  input wire clk,rst_n,v,legal,input wire[4:0] tag,input wire[575:0] qb,output reg sel,output reg cid);
  reg pending;reg[4:0] selq;
- always @(posedge clk or negedge rst_n)if(!rst_n)pending<=0;else pending<=v&&legal;
+ always @(posedge clk `OT_ARST(rst_n))if(!rst_n)pending<=0;else pending<=v&&legal;
  always @(posedge clk)selq<=tag;
  integer b,l;
  always @*begin
@@ -499,7 +506,7 @@ module ot_s81eng_win_n32 #(
     // One priced entry stage. Private ROM/history launch registers capture this
     // same raw record; metadata/control follows this common stage exactly.
     reg ks_v_s;reg en_s;reg[9:0]ks_user_s;reg[20:0]ks_tok_s,ks_pos_s;
-    always@(posedge ck or negedge rst_n)if(!rst_n)ks_v_s<=0;else ks_v_s<=ks_v;
+    always@(posedge ck `OT_ARST(rst_n))if(!rst_n)ks_v_s<=0;else ks_v_s<=ks_v;
     always@(posedge ck)begin en_s<=en;ks_user_s<=ks_user;ks_tok_s<=ks_tok;ks_pos_s<=ks_pos;end
 `else
     wire ks_v_s=ks_v,en_s=en;wire[9:0]ks_user_s=ks_user;wire[20:0]ks_tok_s=ks_tok,ks_pos_s=ks_pos;
@@ -525,7 +532,7 @@ module ot_s81eng_win_n32 #(
  h2 <= rd[50:0];
 `endif
  end
-    always @(posedge ck or negedge rst_n)
+    always @(posedge ck `OT_ARST(rst_n))
         if (!rst_n) begin v1 <= 1'b0; v2 <= 1'b0; end else begin v1 <= t_v; v2 <= v1; end
     for(genvar vg=0;vg<7;vg=vg+1)begin:g_v2copy
         ot_s81eng_rr_validcap u_v(.ck(ck),.rn(rst_copy_n[1]),.d(v1),.q(v2_copy[vg]));
@@ -563,7 +570,7 @@ module ot_s81eng_win_n32 #(
         localparam integer W=(wg==6)?2:11;
         ot_s81eng_rr_wincap #(.W(W)) u_c(.ck(ck),.a(m_v_copy[wg]),.b(v2_copy[wg]),.d(ids_next[11*wg+:W]),.q(win_ids[11*wg+:W]));
     end
-    always @(posedge ck or negedge rst_n)
+    always @(posedge ck `OT_ARST(rst_n))
         if (!rst_n) begin win_v <= 1'b0; win_slot <= 3'd7; fault <= 1'b0; end
         else begin
             win_v <= wr;
@@ -613,7 +620,7 @@ module ot_s81eng_head_n32 #(
     always @(posedge ck) if (win_v) slot <= win_slot;
     reg run_a, run_b;                   // slang: declared before the run FSM uses them (source order only)
     // row j arrives at t0 + j and is expanded from t0 + 1 + 9 j: always present, no wait, no check needed
-    always @(posedge ck or negedge rst_n)
+    always @(posedge ck `OT_ARST(rst_n))
         if (!rst_n) begin nw <= 3'd0; rr <= 3'd0; ai <= 4'd0; run <= 1'b0; run_a <= 1'b0; run_b <= 1'b0; rco[0] <= 1'b0; fault <= 1'b0; end
         else begin
             if (hq_v && nw == 3'd6) fault <= 1'b1;                    // a 7th request in a window
@@ -658,7 +665,7 @@ module ot_s81eng_head_n32 #(
         rco[42:36] <= {tg_b, ai_b};
     end
     // response chain -> lookup
-    always @(posedge ck or negedge rst_n)
+    always @(posedge ck `OT_ARST(rst_n))
         if (!rst_n) hr_v <= 1'b0; else hr_v <= pci[0];
     always @(posedge ck) begin hr_slot <= slot; hr_tag <= pci[11:9]; hr_idx <= pci[8:5]; hr_d <= pci[267:12]; end
 endmodule
@@ -758,7 +765,7 @@ endmodule
     assign q = bf16[LO+:8];
 endmodule
 (* keep_hierarchy=1 *)module ot_s81eng_rr_validcap(input wire ck,rn,d,output reg q);
- always @(posedge ck or negedge rn)if(!rn)q<=0;else q<=d;
+ always @(posedge ck `OT_ARST(rn))if(!rn)q<=0;else q<=d;
 endmodule
 (* keep_hierarchy=1 *)module ot_s81eng_rr_bitcap(input wire ck,d,output reg q);
  always @(posedge ck)q<=d;
@@ -766,7 +773,7 @@ endmodule
 (* keep_hierarchy=1 *)module ot_s81eng_rr_rvbyte #(parameter integer BANK=0)(input wire ck,rn,tx,last,bw,input wire[7:0]mask,output reg[7:0]q);
  wire clear_word,set_word;
  ot_s81eng_rr_rvselect u_sel(.tx(tx),.last(last),.bw(bw),.mask(mask),.clear_word(clear_word),.set_word(set_word));
- always @(posedge ck or negedge rn)if(!rn)q<=0;
+ always @(posedge ck `OT_ARST(rn))if(!rn)q<=0;
  else if(clear_word)q<=0;
  else if(set_word)q<=q|mask;
 endmodule
@@ -810,7 +817,7 @@ endmodule
  always @(posedge ck)q<=d;
 endmodule
 (* keep_hierarchy=1 *)module ot_s81eng_pinreg_r #(parameter integer W=1)(input wire ck,rn,input wire[W-1:0] d,output reg[W-1:0] q);
- always @(posedge ck or negedge rn)if(!rn)q<={W{1'b0}};else q<=d;
+ always @(posedge ck `OT_ARST(rn))if(!rn)q<={W{1'b0}};else q<=d;
 endmodule
 (* keep_hierarchy=1 *)module ot_s81eng_pinreg_e #(parameter integer W=1)(input wire ck,en,input wire[W-1:0] d,output reg[W-1:0] q);
  always @(posedge ck)if(en)q<=d;

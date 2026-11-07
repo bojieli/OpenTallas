@@ -1,3 +1,10 @@
+`ifndef OT_ARST
+ `ifdef OT_S81ENG_SYNC_RST
+  `define OT_ARST(x)
+ `else
+  `define OT_ARST(x) or negedge x
+ `endif
+`endif
 `timescale 1ns/1ps
 // =====================================================================================================================
 // CORE-S81-ENG (10-23): dsdv_eng_rr split into THREE hard cores, each <= 400k cells (the S81 hard-core cap; the whole
@@ -65,7 +72,7 @@ module dsdv_eng_rr_e #(
     wire [31:0] rl;
     ot_s81eng_reset3n32 #(.LEAVES(32)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl), .early_n());
     reg [52:0] ks; reg en_q, ly_q; reg [1:0] rk_q;
-    always @(posedge ck or negedge rl[0]) if (!rl[0]) ks[52] <= 1'b0; else ks[52] <= f_ks[52];
+    always @(posedge ck `OT_ARST(rl[0])) if (!rl[0]) ks[52] <= 1'b0; else ks[52] <= f_ks[52];
     always @(posedge ck) begin ks[51:0] <= f_ks[51:0]; en_q <= cfg_en; ly_q <= cfg_layer; rk_q <= cfg_rank; end
     wire win_v, wf; wire [2:0] win_slot; wire [67:0] win_ids;
     ot_s81eng_win_n32 u_win (.ck(ck), .rst_n(rl[2]), .rst_copy_n(rl[6:5]),
@@ -94,7 +101,7 @@ module dsdv_eng_rr_e #(
     // output-only copy loaded with the same next value (was: st fed back into its own D).  0 cycles, bit / cycle identical.
     (* keep *) reg [3:0] st_s;
     wire [3:0] st_n = st_s | {xf, hf | (o_v && o_slot != hr_slot) | (st_v && st_slot != hr_slot), lf | (st_v & st_bad), wf};
-    always @(posedge ck or negedge rl[0])
+    always @(posedge ck `OT_ARST(rl[0]))
         if (!rl[0]) begin st <= 4'd0; st_s <= 4'd0; end
         else begin st <= st_n; st_s <= st_n; end
 endmodule
