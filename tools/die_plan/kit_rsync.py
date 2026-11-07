@@ -25,6 +25,7 @@ usage: kit_rsync.py PLAN.json TYPE KIT_RTL_DIR [--release wavefront|pipelined]
        (after bind.py kit-rtl, before gen.py phys --kit-rtl; --release treats the plan as switched)"""
 import json
 import re
+import shutil
 import sys
 from pathlib import Path
 
@@ -190,6 +191,16 @@ def main(argv):
         for key in ("native_paths", "physical_nodes"):
             if verified[key] != captured.get(key):
                 raise ValueError("native reset receipt differs from verified " + key)
+        # KW-FIX-27 (Codex QC sle_fe_v2): kit-rtl may leave the bound module at the bind output; the next tool edits a
+        # kit-local copy.  Same bytes, only the kit's paths to it change.
+        bfile = next((f for f in files if f.stem == man.get("bound_module")), kd)
+        if bfile.parent.resolve() != kd.resolve() and bfile != kd:
+            local = kd / bfile.name
+            shutil.copyfile(bfile, local)
+            for fl in kd.glob("kit_rtl*.f"):
+                fl.write_text(fl.read_text().replace(str(bfile), str(local)))
+            man["files"] = [str(local) if f == str(bfile) else f for f in man["files"]]
+            (kd / "kit_rtl.json").write_text(json.dumps(man, indent=1))
         print(json.dumps(dict(type=tn, kit=str(kd), preserved_bound_native_reset=True,
                               tree_sha256=captured["tree_sha256"])))
         return 0

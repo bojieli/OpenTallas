@@ -347,9 +347,43 @@ def _source_node(s):
     return f"rst_n_t{s['tap']}"
 
 
+def collector_event(c):
+    """The collector identity of a landing contract: the sidecar event the collector RTL was emitted from
+    (contract collector_event, set by gen_phys.install_collector_event), else the contract's own published fields.
+    contract collector_tree may hold the native captured reset solve (u_rrl_*): that tree owns the reset relays, not
+    the collectors, and its node names and edges differ (KW-FIX-27 three-reset-tree class)."""
+    ev=c.get('collector_event')
+    if ev:return ev
+    return dict(tree=c.get('collector_tree'),collector_root_node=c.get('collector_root_node'),
+                local_sources=c.get('collector_local_sources',[]),children=c.get('collector_children',[]))
+
+
+def collector_nodes(ev):
+    """Active tree nodes of a collector event: root plus every node on a source's path to it, the set
+    landing_collector.build_local emits an u_cland_collect_<node> for.  -> (active nodes, {node: xy})"""
+    tree,root=ev['tree'],ev['collector_root_node']
+    adj=defaultdict(list);xy={'rst_root_n':tree['root']}
+    for r in tree['relays']:adj[r['q']].append(r['d']);adj[r['d']].append(r['q']);xy[r['q']]=r['xy']
+    parent={root:None};todo=[root]
+    while todo:
+        n=todo.pop()
+        for q in adj[n]:
+            if q not in parent:parent[q]=n;todo.append(q)
+    active=set()
+    for n in [_source_node(s) for s in ev.get('local_sources',[])]+[s['node'] for s in ev.get('children',[])]:
+        while n is not None:active.add(n);n=parent[n]
+    return active,xy
+
+
+def collector_instances(ev):
+    """the u_cland_collect_* instance names of a collector event"""
+    return {'u_cland_collect_'+safe(n) for n in collector_nodes(ev)[0]}
+
+
 def tcl(P,tn):
     c=P.types[tn].get('clock',{}).get('landing_contract',{})
-    groups=_reader_start_groups(P.types[tn])+_writer_start_groups(P.types[tn])+_status_reset_groups(P.types[tn]);status=[];tree=c.get('collector_tree');root=c.get('collector_root_node')
+    ev=collector_event(c)
+    groups=_reader_start_groups(P.types[tn])+_writer_start_groups(P.types[tn])+_status_reset_groups(P.types[tn]);status=[];tree=ev['tree'];root=ev['collector_root_node']
     def near(xy):
         x,y=xy;return [x-2.16,y-2.16,x+2.16,y+2.16]
     if c.get('monitor')=='dataflow' or (root and tree is None):
@@ -357,26 +391,16 @@ def tcl(P,tn):
     for name,band in c.get('bands',{}).items():
         if band.get('hard_core'):continue   # QC-SLECTL-B: the ring is a hard child placed on this band (hard_cores[])
         groups += _band_groups(tn, name, band, P.types[tn])
-    for s in c.get('collector_local_sources',[]):
+    for s in ev.get('local_sources',[]):
         x,y=s['xy_um']
         for kind in ('ready','fault'):status.append((f'landing_{kind}_'+s['name'],x,y))
         groups.append(('u_cland_rst_'+s['name'],near(tree['relays'][next(i for i,r in enumerate(tree['relays']) if r['q']==_source_node(s))]['xy']),'raw-copy-optional'))
     if root:
-        adj=defaultdict(list);xy={'rst_root_n':tree['root']}
-        for r in tree['relays']:adj[r['q']].append(r['d']);adj[r['d']].append(r['q']);xy[r['q']]=r['xy']
-        parent={root:None};todo=[root]
-        while todo:
-            n=todo.pop()
-            for q in adj[n]:
-                if q not in parent:parent[q]=n;todo.append(q)
-        sources=[_source_node(s) for s in c.get('collector_local_sources',[])]+[s['node'] for s in c.get('collector_children',[])]
-        active=set()
-        for n in sources:
-            while n is not None:active.add(n);n=parent[n]
+        active,xy=collector_nodes(ev)
         for n in sorted(active):
             groups.append(('u_cland_collect_'+safe(n),near(xy[n]),'collector:'+n))
             if n!='rst_root_n':groups.append(('u_cland_reset_'+safe(n),near(xy[n]),'raw-copy-optional'))
-        for s in c.get('collector_children',[]):
+        for s in ev.get('children',[]):
             if s['seam']:
                 x,y=s['xy_um'];i=s['index']
                 status.extend([(f'cland_dn_trained_{i}',x,y),(f'cland_dn_guard_{i}',x,y)])

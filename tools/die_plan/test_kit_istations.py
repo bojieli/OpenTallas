@@ -141,7 +141,7 @@ def _run_core(tmp_path, plan, *opts):
 
 def test_core_fails_closed_when_rtl_depth_differs(tmp_path):
     r, _ = _run_core(tmp_path, _core_plan())
-    assert r.returncode != 0 and "CS_" in r.stderr and "fail closed" in r.stderr
+    assert r.returncode != 0 and "CS_" in r.stderr and "--apply sets" in r.stderr
 
 
 def test_core_apply_sets_depths_and_sites(tmp_path):
@@ -161,11 +161,15 @@ def test_core_apply_sets_depths_and_sites(tmp_path):
     assert r.returncode == 0, r.stderr
 
 
-def test_core_unequal_counts_fail(tmp_path):
+def test_core_unequal_counts_take_the_deepest(tmp_path):
+    """KW-FIX-27: one interface is one chain; its depth is the deepest entry, sited from the deepest entries"""
     p = _core_plan()
     p["partition_types"]["t"]["internal_stations"][4]["regs_um"].append([1.0, 1.0])   # lane 2 hi: 3 stages
-    r, _ = _run_core(tmp_path, p, "--apply")
-    assert r.returncode != 0 and "unequal" in r.stderr
+    r, kd = _run_core(tmp_path, p, "--apply")
+    assert r.returncode == 0, r.stderr
+    rows = json.loads((kd / "kit_rtl.json").read_text())["kit_istations"]
+    core = next(x for x in rows if "core_classes" in x)
+    assert core["core_classes"]["hi"]["stages"] == 3 and "merged_depths" in core
 
 
 def test_core_h_classes_on_different_lane_subsets_pass(tmp_path):
@@ -198,7 +202,10 @@ def test_core_unmapped_and_cs_fail(tmp_path):
     bad = dict(conn="core:u_lf.u_vq.xf|core:u_lf.u_vsw", launch="core:u_lf.u_vq.xf", capture="u_lf.u_vsw", bits=1,
                regs_um=[[1.0, 1.0]])
     r, _ = _run_core(tmp_path, _core_plan(extra=[bad]), "--apply")
-    assert r.returncode != 0 and "matches no leaf station class" in r.stderr
+    assert r.returncode == 0, r.stderr     # KW-FIX-27: reported, no RTL stage to site; sign-off judges the hop
+    rows = json.loads((tmp_path / "kit" / "kit_rtl.json").read_text())["kit_istations"]
+    assert any(x.get("core_unmapped") == [bad["conn"]] for x in rows)
+    (tmp_path / "kit" / "istations.tcl").unlink()
     cs = dict(conn="core:u_lf.u_vn.u_a.c_s|core:u_lf.u_vn.u_b.c_s", launch="core:u_lf.u_vn.u_a.c_s",
               capture="u_lf.u_vn.u_b.c_s", bits=31, regs_um=[[1.0, 1.0]])
     r, _ = _run_core(tmp_path / "x" if (tmp_path / "x").mkdir() is None else tmp_path, _core_plan(extra=[cs]), "--apply")
@@ -315,19 +322,64 @@ def test_native_flat_bind_depths_match_and_flat_sites(tmp_path):
     assert any(x.get("bind") == "native_flat" for x in rep)
 
 
-def test_native_flat_bind_depth_differs_fails_closed(tmp_path):
-    r, _ = _run_native(tmp_path, _core_plan(hi=2, ho=1), _flat_bound(hi=1, ho=1, y=1), "--apply")
-    assert r.returncode != 0 and "CS_HI_D" in r.stderr and "LF_CS_" in r.stderr
+def test_native_flat_bind_depth_differs_is_reported(tmp_path):
+    """KW-FIX-27: a flat bind's depth is the bound RTL; its count cannot stop a build (hash-renamed regs count 0)"""
+    r, kd = _run_native(tmp_path, _core_plan(hi=2, ho=1), _flat_bound(hi=1, ho=1, y=1), "--apply")
+    assert r.returncode == 0, r.stderr
+    core = next(x for x in json.loads((kd / "kit_rtl.json").read_text())["kit_istations"] if "core_classes" in x)
+    assert core["native_depth_differs"]["CS_HI_D"] == dict(plan=2, counted=1)
 
 
-def test_native_flat_bind_unplanned_station_fails_closed(tmp_path):
+def test_native_flat_mark_takes_the_leaf_instance_prefix():
+    sys.path.insert(0, str(HERE))
+    import kit_istations
+    assert kit_istations.NATIVE_MARK.search("wire w_u_lf3_u_vp_g_ln_9_u_cst_hi_0_Y;")
+    assert kit_istations.NATIVE_MARK.search("wire w_u_vp_g_ln_9_u_cst_ho_0_Y;")
+
+
+OUT_BOUND = """module t_part_bound (input wire clk, input wire rst_n, input wire a, output wire [1:0] o);
+    wire o_ea;
+    ot_dp_st #(.W(1)) u_bout_o (.clk(clk), .rst_n(rst_n), .d(a), .ea(o_ea), .q(o[0]), .eq(o[1]));
+endmodule
+"""
+
+
+def _bus_run(tmp_path, bus_dir, bound, entries):
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(dict(partition_types=dict(t=dict(
+        buses=[dict(name="o", dir=bus_dir, width=1, kind="data")], internal_stations=entries)))))
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    (kd / "t_part_bound.sv").write_text(bound)
+    (kd / "kit_rtl.json").write_text(json.dumps(dict(bound_module="t_part_bound", files=[str(kd / "t_part_bound.sv")])))
+    r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd)], capture_output=True, text=True)
+    return kd, r
+
+
+def test_out_bus_deeper_later_entry_is_one_chain(tmp_path):
+    """KW-FIX-27 (S81 leafup_o0 depths 1,1,2): one chain at the deepest entry, stage 0 sited on the leaf side"""
+    far = dict(conn="bus:o", launch="face bus o", bits=4, regs_um=[[10, 0], [20, 0]])
+    near = dict(conn="bus:o", launch="face bus o", bits=1, regs_um=[[99, 99]])
+    kd, r = _bus_run(tmp_path, "out", OUT_BOUND, [near, near, far, near])
+    assert r.returncode == 0, r.stderr
+    sv = (kd / "t_part_bound.sv").read_text()
+    assert sv.count("u_ist_o_0 (") == 1 and sv.count("u_ist_o_1 (") == 1 and ".d(o_is1_q)" in sv and ".d(o_is0_q)" in sv
+    rows = json.loads((kd / "kit_rtl.json").read_text())["kit_istations"]
+    assert len(rows) == 1 and rows[0]["planned"] == 2 and rows[0]["stations"] == ["u_ist_o_0", "u_ist_o_1"]
+    tcl = (kd / "istations.tcl").read_text()
+    assert "is_place {*u_ist_o_0[./]*} 20.0 0.0 ist:o" in tcl and "is_place {*u_ist_o_1[./]*} 10.0 0.0 ist:o" in tcl
+
+
+def test_native_flat_bind_unplanned_station_is_reported(tmp_path):
     bound = _flat_bound(hi=1, ho=1, y=1, extra="\n    always @(posedge clk) g_u_cst_sw_gd_s_0_u_q <= 1'b0;")
-    r, _ = _run_native(tmp_path, _core_plan(hi=1, ho=1), bound)
-    assert r.returncode != 0 and "CS_SW_D" in r.stderr
+    r, kd = _run_native(tmp_path, _core_plan(hi=1, ho=1), bound)
+    assert r.returncode == 0, r.stderr
+    core = next(x for x in json.loads((kd / "kit_rtl.json").read_text())["kit_istations"] if "core_classes" in x)
+    assert core["native_depth_differs"]["CS_SW_D"] == dict(plan=0, counted=1)
 
 
 # DIE-S81-71 11-06: col_h9/h10 st -> t0 stations (A1) are realised by the col RTL (cst_st_s* reset chain) and only
-# counted + sited here; a bound text without the chain (or with another depth) fails closed.
+# counted + sited here; a bound text without the chain (or with another depth) is reported (KW-FIX-27).
 COL_BOUND = """module col_part_bound (input wire ck_r0, input wire lpr_c_u_t0, input wire [1:0] st, output wire [1:0] so);
     reg [1:0] u_r0_cst_st_s0; always @(posedge ck_r0 or negedge lpr_c_u_t0) if (!lpr_c_u_t0) u_r0_cst_st_s0 <= 2'b00; else u_r0_cst_st_s0 <= st;
     reg [1:0] u_r0_cst_st_s1; always @(posedge ck_r0 or negedge lpr_c_u_t0) if (!lpr_c_u_t0) u_r0_cst_st_s1 <= 2'b00; else u_r0_cst_st_s1 <= u_r0_cst_st_s0;
@@ -362,14 +414,21 @@ def test_col_st_stations_counted_and_sited(tmp_path):
     assert (kd / "col_part_bound.sv").read_text() == COL_BOUND
 
 
-def test_col_st_stations_depth_differs_fails_closed(tmp_path):
+def _col_receipt(kd):
+    return json.loads((kd / "kit_rtl.json").read_text())["kit_istations"][0]["col_st"]
+
+
+def test_col_st_stations_depth_differs_is_reported(tmp_path):
     kd, r = _col_run(tmp_path, 1, COL_BOUND)
-    assert r.returncode != 0 and "col st stations" in r.stderr
+    assert r.returncode == 0, r.stderr
+    assert _col_receipt(kd)["bound_stages"] == 2
 
 
-def test_col_st_stations_missing_rtl_fails_closed(tmp_path):
+def test_col_st_stations_missing_rtl_is_reported(tmp_path):
+    """an older bind without the chain: builds as bound, sign-off judges the hop"""
     kd, r = _col_run(tmp_path, 2, COL_BOUND.replace("cst_st_s", "xx_s"))
-    assert r.returncode != 0 and "bound RTL stages []" in r.stderr
+    assert r.returncode == 0, r.stderr
+    assert _col_receipt(kd)["bound_stages"] == 0
 
 
 # As bound: the bind re-expresses the stages as src-hash regs; the depth is counted along the chain into u_t0.c0.
@@ -400,6 +459,33 @@ def test_col_st_stations_bound_chain(tmp_path):
     assert "is_place {*g_u_r0_src_aaa_q*} 933.228 172.812 cst:st" in tcl
 
 
-def test_col_st_stations_bound_chain_depth_differs_fails_closed(tmp_path):
+def test_col_st_stations_bound_chain_depth_differs_is_reported(tmp_path):
     kd, r = _col_run(tmp_path, 1, COL_BOUND_B)
-    assert r.returncode != 0 and "col st stations" in r.stderr
+    assert r.returncode == 0, r.stderr
+    assert _col_receipt(kd)["bound_stages"] == 2
+
+
+def _packed_txt(w, d):
+    return (f"module m(input clk, input rst_n);\n"
+            f"    ot_dp_st #(.W({w})) u_bin_a (.clk(clk), .rst_n(rst_n), .d(x), .ea(y), .q(a_b), .eq(a_eb));\n"
+            f"    ot_dp_dly #(.W({w + 1}), .D({d})) u_lpad_a (.clk(clk), .d({{a_eb, a_b}}), .q({{a_eq, a_q}}));\n"
+            f"endmodule\n")
+
+
+def test_packed_delay_deeper_than_plan_pins_first_sites_only():
+    import kit_istations as K
+    bus = dict(name="a", dir="in", width=8)
+    got = K.packed_input_delay("T", bus, _packed_txt(8, 9), 8, 7)
+    assert got["depth"] == 9 and len(got["stage_registers"]) == 9
+    assert K.packed_input_delay("T", bus, _packed_txt(8, 7), 8, 7)["depth"] == 7
+
+
+def test_packed_delay_shallower_than_plan_or_wrong_width_still_fails():
+    import kit_istations as K
+    bus = dict(name="a", dir="in", width=8)
+    for txt in (_packed_txt(8, 6), _packed_txt(9, 9)):
+        try:
+            K.packed_input_delay("T", bus, txt, 8, 7)
+        except ValueError:
+            continue
+        raise AssertionError("expected ValueError")

@@ -133,10 +133,8 @@ def source_census(raw,tn,rtl_dir, *, require_receipt=True):
     for entry in typ.get('internal_stations',[]):
         conn=entry.get('conn','')
         if not conn.startswith('bus:'):continue
-        count=len(entry['regs_um'])
-        if conn in stations and stations[conn]!=count:
-            problems.append(f'{conn}: conflicting planned stage counts')
-        stations[conn]=count
+        # one chain per bus at the deepest entry (kit_istations.bus_entries)
+        stations[conn]=max(stations.get(conn,0),len(entry['regs_um']))
     report=man.get('kit_istations',[])
     emitted_bus_stages={}
     for conn,count in stations.items():
