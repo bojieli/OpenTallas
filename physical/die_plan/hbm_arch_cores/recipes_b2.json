@@ -3403,6 +3403,26 @@
     "source_commit": "30d2553b62",
     "read_at_commit": true
   },
+  "ot_hbm_idx_topk_link_static__ev74_pd3w": {
+    "defines": [],
+    "params": {
+      "FILL_GROUPS": 8,
+      "WPIPE": 1
+    },
+    "util": 0.45,
+    "source": "HBM-FORM-SPLIT-13-TOPK 11-06: ev74_pd3 + Codex column-plane fill (FILL_GROUPS 8) + WPIPE write stage (ingest write side registered, store PD+1); PIN CYCLES tx_v/tx +1 (outputs tx +4, fault/selected_count +3 vs WRITE_PIPE_STAGES=2); bench results/die_hbm_1105/form_split/p30/RESULTS_WPIPE.txt; hand macro placements results/die_hbm_1106/topk_wpipe/{vA,vB}_macro_placement.tcl",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_link_pd3.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_tiles.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
+    ],
+    "top": "ot_hbm_idx_topk_link_pd3",
+    "macros": [
+      "ot_sram_1r1w_64x512_m1_r2c2"
+    ],
+    "source_commit": "0a5be559a7",
+    "read_at_commit": true
+  },
   "hfd_hgi_vms_gnw_cw": {
     "top": "hfd_hgi_vms_gnw_cw",
     "files": [

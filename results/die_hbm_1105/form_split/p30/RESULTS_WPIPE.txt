@@ -1,0 +1,15 @@
+# HBM-FORM-SPLIT-13-TOPK WPIPE=1 kit form ot_hbm_idx_topk_link_pd3 #(FILL_GROUPS 8, WPIPE 1) vs ot_hbm_idx_topk_link_static WPS=2, +1/+1 face shells, tx_v/tx +4, fault/selected_count +3 (run_p30_wpipe.sh, 6000 cycles, 2026-11-06 23:44 UTC)
+MUT 0: LOCKSTEP PASS checks=23400 toggled_out_bits=1254
+MUT 4: LOCKSTEP FAIL errs=112388 checks=23400 toggled_out_bits=1254
+MUT 2: LOCKSTEP FAIL errs=1323949 checks=23400 toggled_out_bits=1254
+MUT 9: LOCKSTEP FAIL errs=575988 checks=23400 toggled_out_bits=1254
+MUT 5: LOCKSTEP FAIL errs=49008 checks=23400 toggled_out_bits=1254
+MUT 1: LOCKSTEP FAIL errs=19031 checks=23400 toggled_out_bits=1254
+MUT 6: LOCKSTEP FAIL errs=3374643 checks=23400 toggled_out_bits=1254
+MUT 3: LOCKSTEP FAIL errs=3374643 checks=23400 toggled_out_bits=1254
+# regression: run_p30_b10.sh (WPIPE=0 default, FILL_GROUPS=0) after the change = RESULTS_B10.txt numbers exactly
+MUT 3: LOCKSTEP FAIL errs=3374627 checks=23400 toggled_out_bits=1254
+MUT 0: LOCKSTEP PASS checks=23400 toggled_out_bits=1254
+MUT 4: LOCKSTEP FAIL errs=112388 checks=23400 toggled_out_bits=1254
+MUT 1: LOCKSTEP FAIL errs=19031 checks=23400 toggled_out_bits=1254
+MUT 2: LOCKSTEP FAIL errs=1323679 checks=23400 toggled_out_bits=1254
