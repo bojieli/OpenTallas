@@ -1,0 +1,91 @@
+{
+  "source": "/srv/opentallas-scratch3/claude/die-hbm-83-opsg/kits/ot_hgi_sfu_opsa_group0_vB/ot_hgi_sfu_opsa_group0_c7fe35538610",
+  "form": "opsa_group0_vC",
+  "rtl_changes": [],
+  "pin_cycles": {
+    "additional_vs_vB": 0,
+    "existing_rd_vs_preGP": 5,
+    "existing_fault": 0
+  },
+  "geometry_change": {
+    "old_hub": {
+      "name": "hub",
+      "prefixes": [
+        "u_fcore.u_t.u_g.g_s1.",
+        "u_fcore.u_t.u_g.g_s2.",
+        "u_fcore.u_t.u_g.g_hc.",
+        "u_fcore.u_t.u_g.g_lane[",
+        "u_fcore.u_t.u_g.q_out[",
+        "u_fcore.u_t.u_g.fq[",
+        "u_fcore.u_t.u_g.wcoll_q",
+        "u_fcore.u_t.u_g.hc["
+      ],
+      "box_um": [
+        332.0,
+        9.0,
+        428.0,
+        224.0
+      ]
+    },
+    "new_hub": [
+      {
+        "name": "hub_s1",
+        "prefixes": [
+          "u_fcore.u_t.u_g.g_s1."
+        ],
+        "box_um": [
+          234.0,
+          70.0,
+          526.0,
+          108.0
+        ]
+      },
+      {
+        "name": "hub_s2",
+        "prefixes": [
+          "u_fcore.u_t.u_g.g_s2."
+        ],
+        "box_um": [
+          234.0,
+          126.0,
+          526.0,
+          164.0
+        ]
+      },
+      {
+        "name": "hub_read",
+        "prefixes": [
+          "u_fcore.u_t.u_g.g_hc.",
+          "u_fcore.u_t.u_g.g_lane[",
+          "u_fcore.u_t.u_g.q_out[",
+          "u_fcore.u_t.u_g.fq[",
+          "u_fcore.u_t.u_g.wcoll_q",
+          "u_fcore.u_t.u_g.hc["
+        ],
+        "box_um": [
+          300.0,
+          108.0,
+          460.0,
+          126.0
+        ]
+      }
+    ],
+    "class": "CHANNEL central staged mux aperture",
+    "upper_bound_S1_S2_cut_nets": 3456,
+    "vertical_pitch_um": {
+      "M3": 0.036,
+      "M5": 0.048
+    },
+    "cut_width_um": 292,
+    "capacity_at_50pct": 7097.222222222223
+  },
+  "rtl_sha256": {
+    "ot_hbm_face_reg.sv": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5",
+    "ot_hgi_su_unit.sv": "e494c109a829a081eae4d4f96a0e1e1ee68f08e87f9ac977f3460250ef77db85",
+    "ot_hgi_su_lgroup2_gp.sv": "3731c12e1ea6e1e18c978d1cb9c9a0f0034db61f4381aba8f02f5b08cd77fa22",
+    "ot_hgi_sfu_opsa_group0__fshell.sv": "8f1aed3a66175f1acaa364bb0c808f0b5714d1952188f3b3f387d59701acbfa3",
+    "ot_hgi_sfu_opsa_group.sv": "b3d10c47d03f8c3b1c4e9e6fab1fc9583cb9d72c1cc915df9d518cb962ddb0c0",
+    "ot_hgi_su_lbank_n32.sv": "70e1670ffff3047a085032395aafad3af4460f78b29b00edff7cae1eeca9b7e6",
+    "ot_hgi_su_lgroup2_lf.sv": "29f2929974135ce244f096c9ba14888ba1cf41a7e6245e5de2ea8697ae40c31f"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "source": "/srv/opentallas-scratch3/claude/hbm-hard-1/kits/ot_hgi_sfu_opsa_rest_vH1/ot_hgi_sfu_opsa_rest_907926fd338d",
+  "form": "opsa_rest_vH2",
+  "rtl_changes": [
+    "asynchronous assertion unchanged; align core reset release one edge after reset pin with added data hop"
+  ],
+  "pin_cycles": {
+    "data_control_vs_part27r_vD": 1,
+    "reset_release_vs_vH1": 1,
+    "reset_assert": 0
+  },
+  "rtl_sha256": {
+    "ot_hbm_face_reg.sv": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5",
+    "ot_hgi_sfu_opsa_rest.sv": "015c92f5cc0229ec985c365fdd083f69bccf0f2577e9aa69d3f791cf4741eadf",
+    "ot_hgi_sfu_opsa_rest__fshell.sv": "7c27e62eb8834ad39563cefd8ee907578664b853c8f297093cb0bec0e64d4716"
+  }
+}

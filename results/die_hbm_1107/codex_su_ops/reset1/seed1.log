@@ -1,0 +1,24 @@
+TRACE t=22203 rstc=60 rst=1 hop=1 old=1 delayed=1 new=1
+TRACE t=22204 rstc=0 rst=0 hop=0 old=1 delayed=1 new=1
+TRACE t=22205 rstc=1 rst=0 hop=0 old=0 delayed=1 new=0
+TRACE t=22206 rstc=2 rst=0 hop=0 old=0 delayed=0 new=0
+TRACE t=22207 rstc=3 rst=0 hop=0 old=0 delayed=0 new=0
+TRACE t=22208 rstc=4 rst=1 hop=0 old=0 delayed=0 new=0
+TRACE t=22209 rstc=5 rst=1 hop=1 old=0 delayed=0 new=0
+TRACE t=22210 rstc=6 rst=1 hop=1 old=0 delayed=0 new=0
+TRACE t=22211 rstc=7 rst=1 hop=1 old=0 delayed=0 new=0
+TRACE t=22212 rstc=8 rst=1 hop=1 old=0 delayed=0 new=0
+TRACE t=22213 rstc=9 rst=1 hop=1 old=0 delayed=0 new=0
+TRACE t=22214 rstc=10 rst=1 hop=1 old=0 delayed=0 new=0
+TRACE t=22215 rstc=11 rst=1 hop=1 old=0 delayed=0 new=0
+TRACE t=22216 rstc=12 rst=1 hop=1 old=0 delayed=0 new=0
+TRACE t=22217 rstc=13 rst=1 hop=1 old=0 delayed=0 new=0
+TRACE t=22218 rstc=14 rst=1 hop=1 old=1 delayed=0 new=0
+TRACE t=22219 rstc=15 rst=1 hop=1 old=1 delayed=1 new=1
+TRACE t=22220 rstc=16 rst=1 hop=1 old=1 delayed=1 new=1
+TRACE t=22221 rstc=17 rst=1 hop=1 old=1 delayed=1 new=1
+RESULT PASS bad=0 fbad=0 fault_edges=47208 fault_rises=2
+- tb.sv:181: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 600us; walltime 1.995 s; speed 300.773 us/s
+- Verilator: cpu 1.995 s on 1 threads; allocated 21 MB
