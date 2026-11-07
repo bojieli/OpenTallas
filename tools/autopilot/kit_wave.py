@@ -181,6 +181,7 @@ SSH_RETRIES = 3
 SSH_DROP = re.compile(r"ot-run: NOT RUN|Connection (?:reset|refused|closed)|kex_exchange_identification|"
                       r"SSH probe exit 255|ssh: connect to host|Could not resolve hostname")
 STATE_FILE = "kit_wave_state.json"
+LOAD_CAP_FACTOR = 1.5                                    # = ot-heavy LOAD_CAP_FACTOR (read here, set there)
 
 
 def place_retry_sh(inner, log):
@@ -441,6 +442,16 @@ def _own_wave_unit(r):
     return ("gen" in segs or "items" in segs) and any(x == r["item"] or x.startswith(r["item"] + "_") for x in segs)
 
 
+def blocked_parents(d):
+    """SCHED-1 11-07 (OWNER closure first): {child module: plan types still waiting for its view}, from the plan probe's
+    _plan_deps / _prov_deps.  The rows that unlock the most blocked parents launch first."""
+    n = {}
+    for deps in (d.get("_prov_deps") or d.get("_plan_deps") or {}).values():
+        for m in set(deps):
+            n[m] = n.get(m, 0) + 1
+    return n
+
+
 def select(rows, cfg, die, state, plan_types=None):
     """-> (picked rows in launch order, {reason: [items]})"""
     d = cfg["dies"][die]
@@ -584,7 +595,8 @@ def select(rows, cfg, die, state, plan_types=None):
             return int(r["replicas"])
         except ValueError:
             return 0
-    picked.sort(key=lambda r: (0 if r["kind"] == "core" else 1, -rep(r), r["item"]))
+    unlocks = blocked_parents(d)
+    picked.sort(key=lambda r: (-unlocks.get(core_module(r["item"]), 0), 0 if r["kind"] == "core" else 1, -rep(r), r["item"]))
     picked = pilot_gate(picked, skip, d, die, state)
     return picked, skip
 
@@ -1153,7 +1165,8 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
     return {"die": die, "item": item, "kind": kind, "event": d["event"], "plan": d["plan"],
-            "gen_host": pick_gen_host(cfg, die, take=int(opt(cfg, die, "place_mem_gb"))),
+            "gen_host": pick_gen_host(cfg, die, take=int(opt(cfg, die, "place_mem_gb")),
+                                      threads=int(opt(cfg, die, "place_threads"))),
             "src": d["src"], "src_sha": d.get("src_sha", ""), "queue_src": d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": d.get("kit_rtl") or {},
             # next captured cohort; old worker specs stay unchanged.  Die option canonical_topology_prepare false:
@@ -1660,16 +1673,53 @@ def work_root_problem(cfg, die, hub_isdir=os.path.isdir):
     return None
 
 
-def pick_gen_host(cfg, die, take=0):
+def over_load_cap(v):
+    """the ot-heavy rule (LOADCAP_1101): a non-crit job waits while int(load1) >= int(LOAD_CAP_FACTOR x nproc)"""
+    n = int((v or {}).get("cores") or 0)
+    return n > 0 and int(float(v.get("load", 0))) >= int(LOAD_CAP_FACTOR * n)
+
+
+def host_room(v):
+    """a status row that can take a new build now: under its load cap and over the gen disk floor"""
+    return bool(v) and not over_load_cap(v) and not gen_disk_low(v)
+
+
+def load_hold(cfg, die, *names):
+    """SCHED-1 11-07 (OWNER closure first): no gen host of the die has room -> the reason a new row stays pending in the
+    wave instead of queueing behind a host's load cap; "" = launch.  It holds no started job and no NEAR-COUNT row (those
+    launch --crit, which bypasses the cap).  No status = unchanged.  cfg load_hold false turns it off."""
+    stt, hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
+    if cfg.get("load_hold") is False or not stt or near_count_hit(cfg.get("_near_count") or set(), die, *names):
+        return ""
+    rows = [(h, stt.get("localhost" if h == hub else h)) for h in gen_hosts(cfg, die)]
+    if any(host_room(v) for _, v in rows):
+        return ""
+    return "LOAD-HOLD no gen host with room: " + " ".join(
+        f"{h} {'absent' if not v else 'load %d/%d' % (v.get('load', 0), v.get('cores', 0))}" for h, v in rows)
+
+
+def pick_gen_host(cfg, die, take=0, threads=0):
     """the gen host for a new attempt (see gen_hosts); with no cached ot-run status the configured gen_host.  take =
-    GB charged to the picked host's cached admits so one tick's burst spreads once that host's headroom is used"""
+    GB charged to the picked host's cached admits so one tick's burst spreads once that host's headroom is used.
+    SCHED-1 11-07: only hosts with room (host_room) while one exists, the least loaded one whose admits minus queue fit
+    take, else the best host_score; threads = load charged to the pick, so one tick's burst stops at the cap."""
     hs, stt, hub = gen_hosts(cfg, die), cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
-    if len(hs) < 2 or not stt:
+    if not stt:
         return cfg["dies"][die]["gen_host"]
     key = lambda h: stt.get("localhost" if h == hub else h)
-    best = max(hs, key=lambda h: (host_score(key(h)), -hs.index(h)))
-    if key(best) is not None and take:
+    if len(hs) < 2:
+        best = cfg["dies"][die]["gen_host"]
+    else:
+        on = cfg.get("load_hold") is not False
+        room = [h for h in hs if host_room(key(h))] if on else []
+        fits = [h for h in room if host_score(key(h)) >= max(take, 1)]
+        frac = lambda h: round(float(key(h).get("load", 0)) / max(1, int(key(h).get("cores") or 1)), 1)
+        best = (min(fits, key=lambda h: (frac(h), -host_score(key(h)), hs.index(h))) if fits
+                else max(room or hs, key=lambda h: (host_score(key(h)), -hs.index(h))))
+    if key(best) is not None and len(hs) >= 2 and take:
         charge(key(best), take)
+    if key(best) is not None and threads:
+        key(best)["load"] = float(key(best).get("load", 0)) + threads
     return best
 
 
@@ -1737,7 +1787,8 @@ def restage_waiters(AP, cfg, st, notices):
             if multi and not young:
                 best = pick_gen_host(cfg, die)
                 v = row(best) or {}
-                if best != g and host_score(v) - host_score(row(g)) >= wsize(row(g), mem):
+                if best != g and (host_room(v) or cfg.get("load_hold") is False) and (
+                        host_score(v) - host_score(row(g)) >= wsize(row(g), mem)):
                     why = f"{g} -> {best}"
             # an async PLACE client started pinned (--hosts G, before place_spill) can never move: relaunch it spillable
             if not why and spill and svc0.get("launch") == "launched" and "--hosts" in (svc0.get("argv") or []):
@@ -2733,7 +2784,10 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     used = sum(1 for r in st["items"].values() if r.get("die") == die and r.get("event") == d["event"]
                                and f"{r.get('item')}@{r.get('attempt')}" not in rel)
                     n = max(0, min(n, int(d["max_items_total"]) - used))
-                per_die.append([(die, r) for r in picks[:n]])
+                go = [r for r in picks if not load_hold(cfg, die, r["item"], r.get("parent_item"), core_module(r["item"]))]
+                if len(go) < len(picks):
+                    skip.setdefault(load_hold(cfg, die), []).extend(r["item"] for r in picks if r not in go)
+                per_die.append([(die, r) for r in go[:n]])
         out.append((die, ok, why, picks, skip))
     # AUTOBUILD-PIPE-2 10-30: round-robin the tick's launches across dies.  Alphabetical fill let S81 (72 queued) take
     # every per-tick slot so HEAD l46 never launched (KIT-WAVE-2 23:17).
@@ -3418,11 +3472,15 @@ def _step(AP, ap_dir):
             save_state(st, ap_dir)
             write_stages(st, ap_dir, cfg)
         return reload_step(AP, ap_dir)
+    held = {}                                            # SCHED-1: rows left pending this tick, per die
     for key, rec in list(st["items"].items()):           # INFRA relaunch (up to infra_attempts)
         # Semantic adoption requires a fresh profile proof. Never launch an
         # old pending retry before plan_dies has had a chance to hold it.
         identity_mode = (cfg.get("dies", {}).get(rec["die"]) or {}).get("block_identity", "raw")
         if infra_relaunch_due(cfg, rec) and identity_mode == "raw" and not stop_reason(cfg, rec["die"], ap_dir):
+            if load_hold(cfg, rec["die"], rec["item"], rec.get("parent_item"), core_module(rec["item"])):
+                held[rec["die"]] = held.get(rec["die"], 0) + 1
+                continue                                 # stays RETRY-INFRA, next tick
             if not ensure_plan_view(AP, st, cfg["dies"].get(rec["die"])):
                 continue                                 # plan unreadable: stays RETRY-INFRA, next tick
             rec["status"] = "FAIL"
@@ -3433,8 +3491,15 @@ def _step(AP, ap_dir):
     if nl and not AP.DRY:                                # launched units are on record before anything else can raise
         save_state(st, ap_dir)
     owners = parse_owners((Path(ap_dir) / "OWNERS.tsv").read_text() if (Path(ap_dir) / "OWNERS.tsv").exists() else "")
-    _, todo = plan_dies(AP, cfg, st, owners, status, AP.HUB_NAME)
+    res, todo = plan_dies(AP, cfg, st, owners, status, AP.HUB_NAME)
+    for die, ok, why, picks, skip in res:
+        n = sum(len(its) for w, its in skip.items() if w.startswith("LOAD-HOLD"))
+        if n:
+            held[die] = held.get(die, 0) + n
     for die, r in todo:
+        if load_hold(cfg, die, r["item"], r.get("parent_item"), core_module(r["item"])):  # this tick's launches filled the hosts
+            held[die] = held.get(die, 0) + 1
+            continue
         rec = launch_safe(AP, cfg, st, die, r, AP.HUB_NAME, delay_s=nl * stagger)
         nl += 1
         if rec:
