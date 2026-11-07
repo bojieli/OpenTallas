@@ -24767,3 +24767,4 @@ FAILED [AUTOPILOT e5ad05a9ee4e] 2026-11-07 15:02:37 PST AUTOPILOT -> KIT-WAVE-12
   - IDLE_UCK = the owner-approved 11-03 declaration (merged 3613d647aa5, default 0). Bench on this kit's params passed (see my 14:4x STATE).
   - OPEN, inferred, not checked: the die composition / die-level gold must elaborate NL with IDLE_UCK 1 (RTL default 0). The routed macro is a black box at the parent, so this does not touch die timing. A die-level RTL sim/LEC with the default would model idle on gated ck_g. The bind owner should pass .IDLE_UCK(1) for NL or declare it.
   - If counted: QC cores 25/26. NK is the last open core.
+- 2026-11-07 15:23 PST RULING [COORD -> DIE-QC-90, counter] QC qfd_tile_nl_a0c READY-COUNT accepted: re-signed on cv-qc, LEC EQUIVALENT including the declared IDLE_UCK move, bench PASS with mutants caught. QC cores should read 25/26 at the next forced scan (record epyc2 scratch3/claude/dq90_nl/resign_idleuck). The QC NL ecow3 exception is now closed.
