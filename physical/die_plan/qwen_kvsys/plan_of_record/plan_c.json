@@ -1134309,7 +1134309,9 @@
         924.9242,
         75.6
        ],
-       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+       "ring_place": "ff",
+       "fill_axis": "x"
       },
       "ft16_i": {
        "rect_um": [
@@ -1134363,7 +1134365,9 @@
         1244.5082,
         97.2
        ],
-       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+       "ring_place": "ff",
+       "fill_axis": "x"
       },
       "ft18_i": {
        "rect_um": [
@@ -1134417,7 +1134421,8 @@
         47.52,
         690.3546
        ],
-       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+       "ring_place": "ff"
       },
       "ft1_i": {
        "rect_um": [
@@ -1134525,7 +1134530,8 @@
         1261.44,
         245.34
        ],
-       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+       "ring_place": "ff"
       },
       "ft5_i": {
        "rect_um": [
@@ -1134552,7 +1134558,8 @@
         1261.44,
         302.4848
        ],
-       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+       "ring_place": "ff"
       },
       "ft6_i": {
        "rect_um": [
@@ -1139605,7 +1139612,34 @@
        "fstart:o_serdes_W_tx_up_d1"
       ]
      }
-    ]
+    ],
+    "landing_ring_wreg": {
+     "buses": [
+      "ft0_i",
+      "ft10_i",
+      "ft11_i",
+      "ft12_i",
+      "ft13_i",
+      "ft14_i",
+      "ft15_i",
+      "ft16_i",
+      "ft17_i",
+      "ft18_i",
+      "ft19_i",
+      "ft1_i",
+      "ft2_i",
+      "ft3_i",
+      "ft4_i",
+      "ft5_i",
+      "ft6_i",
+      "ft7_i",
+      "ft9_i",
+      "i_host_fdi",
+      "i_host_link_rst_n",
+      "i_serdes_W_tx_up"
+     ],
+     "dsrep": 1
+    }
    },
    "reset": {
     "tap_um": [
@@ -1140537,7 +1140571,8 @@
      ]
     }
    ],
-   "cells": 116471
+   "cells": 116471,
+   "landing_control_status_copy": true
   },
   "kv3_io_cor_v1": {
    "module": "kv3_io_cor_v1_part",
@@ -1207407,7 +1207442,8 @@
         1261.44,
         604.7276
        ],
-       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+       "ring_place": "ff"
       },
       "ft12_i": {
        "rect_um": [
@@ -1207461,7 +1207497,8 @@
         958.4897,
         181.44
        ],
-       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+       "ring_place": "ff"
       },
       "ft14_i": {
        "rect_um": [
@@ -1207758,7 +1207795,8 @@
         47.52,
         690.3459
        ],
-       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+       "ring_place": "ff"
       },
       "ft24_i": {
        "rect_um": [
@@ -1207949,7 +1207987,8 @@
         1261.44,
         391.6584
        ],
-       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+       "ring_place": "ff"
       },
       "ft8_i": {
        "rect_um": [
@@ -1207976,7 +1208015,8 @@
         1261.44,
         444.7857
        ],
-       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+       "ring_place": "ff"
       },
       "ft9_i": {
        "rect_um": [
@@ -1213582,7 +1213622,37 @@
        "fstart:ft9_o"
       ]
      }
-    ]
+    ],
+    "landing_ring_wreg": {
+     "buses": [
+      "ft0_i",
+      "ft10_i",
+      "ft11_i",
+      "ft12_i",
+      "ft13_i",
+      "ft14_i",
+      "ft15_i",
+      "ft16_i",
+      "ft17_i",
+      "ft18_i",
+      "ft19_i",
+      "ft1_i",
+      "ft20_i",
+      "ft21_i",
+      "ft22_i",
+      "ft23_i",
+      "ft24_i",
+      "ft2_i",
+      "ft3_i",
+      "ft4_i",
+      "ft5_i",
+      "ft6_i",
+      "ft7_i",
+      "ft8_i",
+      "ft9_i"
+     ],
+     "dsrep": 1
+    }
    },
    "reset": {
     "tap_um": [
@@ -1214460,7 +1214530,8 @@
      ]
     }
    ],
-   "cells": 119885
+   "cells": 119885,
+   "landing_control_status_copy": true
   },
   "kv3_io_ft": {
    "module": "kv3_io_ft_part",
