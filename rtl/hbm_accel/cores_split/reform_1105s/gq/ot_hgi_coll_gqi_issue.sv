@@ -229,8 +229,12 @@ module ot_hgi_coll_gqi_issue #(
     always @(posedge clk or negedge rn)
         if (!rn) ex_we <= '0;
         else for (integer r = 0; r < 2; r = r + 1) begin : nb_pre_we
-            reg [10:0] i; i = flit_n(ev_k[S_P-2], r, g_r2_n);
-            ex_we[r*64 +: 64] <= (ev_v[S_P-2] && g_qbg_n && fv_n(ev_k[S_P-2], r, g_r2_n, g_f_n) && code_n(i, g_qbg_n, g_bs_n))
+            // DIE-HBM-83-COLL 11-06 (post-CTS TT -105 ps, 96 endpoints, all ex_we: cur -> rf[cur] -> tl compare -> fire ->
+            // g_f_n -> 11-bit compare): ev_v[S_P-2] and a fire on the same edge cannot both hold on a legal program, because
+            // a fire with work in flight is the busy fault, so the current g_* equal g_*_n whenever the write enable can be
+            // set. Using g_* takes fire out of this cone; 0 cycles.
+            reg [10:0] i; i = flit_i(ev_k[S_P-2], r);
+            ex_we[r*64 +: 64] <= (ev_v[S_P-2] && g_qbg && fv(ev_k[S_P-2], r) && is_code(i))
                                  ? (64'd1 << i[5:0]) : 64'd0;
         end
     // ------------------------------------------------------------------ VM reads (issue) + response check
