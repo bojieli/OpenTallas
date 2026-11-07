@@ -1729,7 +1729,11 @@ def restage_waiters(AP, cfg, st, notices):
             except (OSError, ValueError):
                 svc0 = {}
             why, best, v = "", g, {}
-            if multi:
+            # KW-FIX-24 20:3x RESTAGE ping-pong class: a host move needs the waiter to have waited restage_min_wait_s
+            # (default 1800) since its launch; a fresh waiter moved every tick (epyc5 <-> epyc2, 24 moves/h, the gen
+            # stage redone each time) never reaches admission
+            young = time.time() - float(r.get("started") or 0) < float(cfg.get("restage_min_wait_s", 1800))
+            if multi and not young:
                 best = pick_gen_host(cfg, die)
                 v = row(best) or {}
                 if best != g and host_score(v) - host_score(row(g)) >= wsize(row(g), mem):
