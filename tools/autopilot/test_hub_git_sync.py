@@ -28,6 +28,7 @@ class HubSync(unittest.TestCase):
         (seed / "CODEX-LOG.md").write_text("c1\n")
         (seed / "lanes/X.md").write_text("x1\n")
         (seed / "BRIEFING.md").write_text("b1\n")
+        (seed / "RELEASE_TREE.md").write_text("t1\n")
         (seed / "autopilot/resolved.tsv").write_text("r1\n")
         self.git(seed, "add", ".")
         self.git(seed, "commit", "-qm", "base")
@@ -125,6 +126,35 @@ class HubSync(unittest.TestCase):
         r = self.sync()
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertFalse((self.hub / "autopilot/HUB-SYNC-FAILED").exists())
+
+    def test_generated_edit_is_discarded_and_commits_still_push(self):
+        # KW-FIX-25 11-06: a dirty RELEASE_TREE.md overlapping upstream stalled every hub commit for 40 min
+        self.append(self.hub, "lanes/X.md", "hub post")
+        self.git(self.hub, "commit", "-qam", "hub post")
+        self.append(self.hub, "RELEASE_TREE.md", "generated on the hub")
+        self.remote_commit("RELEASE_TREE.md", "coordinator body")
+        r = self.sync()
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertFalse((self.hub / "autopilot/HUB-SYNC-FAILED").exists())
+        self.assertIn("hub post", self.remote_file("lanes/X.md"))
+        self.assertEqual((self.hub / "RELEASE_TREE.md").read_text(), "t1\ncoordinator body\n")
+        self.assertIn("discarded local edit of generated RELEASE_TREE.md", r.stdout)
+
+    def test_generated_conflict_takes_origin(self):
+        self.append(self.hub, "RELEASE_TREE.md", "committed on the hub")
+        self.git(self.hub, "commit", "-qam", "hub tree")
+        self.remote_commit("RELEASE_TREE.md", "coordinator body")
+        r = self.sync()
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(self.remote_file("RELEASE_TREE.md"), "t1\ncoordinator body\n")
+
+    def test_generated_discard_leaves_other_edits_failing_loud(self):
+        self.append(self.hub, "RELEASE_TREE.md", "generated")
+        self.append(self.hub, "BRIEFING.md", "hand edit")
+        r = self.sync()
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("BRIEFING.md", (self.hub / "autopilot/HUB-SYNC-FAILED").read_text())
+        self.assertIn("hand edit", (self.hub / "BRIEFING.md").read_text())
 
     def test_conflict_outside_logs_aborts_merge(self):
         self.append(self.hub, "BRIEFING.md", "hub b")
