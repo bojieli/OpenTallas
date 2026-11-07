@@ -1,4 +1,4 @@
-# Codex handoff document (generated 2026-11-06 22:32 PST)
+# Codex handoff document (generated 2026-11-06 22:53 PST)
 
 Standby: Claude is running; this is used only if Claude hits a usage limit.
 
@@ -71,7 +71,7 @@ Die gates (BIND/GRT/STA/CLK) are not yet passed on any die. ETAs: non-HBM cores 
    - owner questions in plain text with a default;
    - say "signed off".
 
-5b. **epyc5 + epyc6 RETIRE** (OWNER 22:3x: "yes, drain them now and terminate them after 8 hours. only copy the closed records to agidock."). Held in ot-run since 22:30. At about 06:37 PST 11-07: confirm RETIRE-EPYC56's RESULT, verify then Cherry DELETE only 1055547 devoted-wren 185.189.45.167 (epyc5) and 1055546 eager-sunfish 88.216.197.41 (epyc6), drop both from ot-run/counter/autopilot hosts. Lane brief and successors: lanes/_RESTART_1106.md.
+5b. **epyc5 + epyc6 KEPT** (OWNER 22:5x: "keep both hosts. pause the deletion and move the workload from the waitlist to it."). No termination; the Cherry DELETE approval is withdrawn. Root floor 150 GB on epyc2/epyc4 (OWNER "use 150GB for floor decisions"); INV_HEADROOM_GB 32 on epyc4/5/6. Lanes: REBAL-1 (waiters to epyc5/6), AUTOCLEAN-1 (cleanup after each job), MONITOR-FIX.
 
 ## main and merge train
 
