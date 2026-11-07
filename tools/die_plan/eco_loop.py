@@ -595,6 +595,27 @@ def trim_superseded(root, current):
     return gone
 
 
+def trim_best(it):
+    """KW-FIX-24 11-06 (COORD 16:3x URGENT: epyc6 scratch2 10 GB; S81 slice_station__t7 a15 eco_*/i2 = 11 GB, copied home
+    by the ot-run spill copy-back): the loop's final dir keeps 5_route / 5_3_fillcell / 6_1_fill odbs (3 x 2 GB) that
+    only lead to its 6_final.odb.  Once 6_final.odb exists and is the dir's sign-off routed DB (signoff.py ROUTED_DBS
+    order: 6_final first), they go.  Kept: 6_final.*, 5_2_route / 5_1_grt seeds, logs, reports, sign-off.
+    OT_ECO_KEEP_ROUTED=1 (or run_loop keep) turns it off.  -> [removed paths]"""
+    if os.environ.get("OT_ECO_KEEP_ROUTED") == "1" or not it or not it.get("dir"):
+        return []
+    gone = []
+    for base in Path(it["dir"]).glob("run/results/asap7/*/base"):
+        fin = base / "6_final.odb"
+        if not fin.is_file() or fin.stat().st_size == 0:
+            continue
+        for name in TRIM_ODBS:
+            f = base / name
+            if f.is_file() and not f.is_symlink():
+                f.unlink()
+                gone.append(str(f))
+    return gone
+
+
 def prune(it, intermediate_only=False):
     """drop the heavy ORFS run data of a superseded iteration (json / logs / sign-off stay as evidence); the best
     iteration keeps its final dir and drops only its intermediate t<N> pass"""
@@ -699,6 +720,11 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
         for it in res["iterations"]:
             if it is not recovery:
                 prune(it, intermediate_only=it is best)
+        if best is not None:
+            gone = trim_best(best)
+            if gone:
+                best.setdefault("trimmed", []).extend(gone)
+                res["best_trimmed"] = len(gone)
     return done(verdict, stop)
 
 
