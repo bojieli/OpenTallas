@@ -1,0 +1,11 @@
+# t27 yrow per-bit clock-affinity candidate, 2026-11-07
+
+Exact predecessor: own t27_vN_exec2, widened VN east corridor41.016um retained. Reviewed PLACE densitymax.336; real3_place.odb retained. CTS found FF−295.47ps/4006 internal endpoints; coordinator explicitly engineering-stopped active GRT07:36:18PST. Exit137 was deliberate stop, no OOM or terminal measuredrouteFAIL.
+
+Actual worst native row1→2 bit85 cells are21.87um apart but use clk_t24 andclk_t22. Launchphysical322.84ps/capture453.08ps plus legitimate180ps sourcewindow causes existing CTS min−296.87ps. BoundRTL yrow is exactly3rows×128bits shift. All384sinks split5roots. Candidate uses existing OT_TAP_GROUP_RE only on exactmodule and groups samebit overrows0..2:128groups×3sinks. Existing CTS geometry estimates maxgroupL1boxspan218.538um, maxcentroid→nearestroot185.061um; bit85span45.252um assignedt24. Aggregate rootcounts change yrowt24=56→54,t22=13→15; other195/117/3 remain. Existing cap3000/window180 unchanged. This treats measured worst class only; no claim all4006violations solved.
+
+Phase API evidence in deployed openroad/orfs:asap7lock: flow/scripts/cts.tcl line5 `load_design 3_place.odb 3_place.sdc`, line6 `source_step_tcl PRE CTS`; clock_tree_synthesis line36. Kit config.mk line35 exports PRE_CTS_TCL=/work/pre_cts.tcl; that file sources /work/clock_taps.tcl before CTS. Existing clock_taps.tcl opt-in groups then pins groups before cap/merge. Therefore same reviewed3PLACE can be reused for ONE private CTS-only what-if, with newgroupRE applied only in freshcopy. No freshPLACE is necessary for this preCTS connectivity-only change. Coordinator review required BEFORE launch; no GRT/repair/DRT proposed until actualnewclockimage/FFpostgate.
+
+Actual CTS plot t27_yrow_clock_geometry.png shows root split and bit85. Planned newclock image: repeat same read-only CTS ODB root-BUF BFS and plot384yrows+bit85; check exact128×3 affinity, no lostsink/module/cap violation and comparable rootload/span. Reuse completed source proof as RTL identical, no rerunproof now.
+
+Binding fixture: Tcl regexp tested against384 exactnames from read-only actualCTS dump,128groups of3, and3 unrelatedmodule/memory/rownegativecases. Freshcandidateprofile asserts originalcap3000,preCTShook,macro509.892positions/window180. No existingkit mutation.
