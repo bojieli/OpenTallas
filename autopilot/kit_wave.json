@@ -4125,7 +4125,9 @@
     "slw_st_a_v2__clf4365a62@9",
     "sle_stm_v1__cl27746664@9",
     "slw_stm_v1__cl05fc43f7__cl389df4e9@14",
-    "sle_fe_v2@4"
+    "sle_fe_v2@4",
+    "glue@3",
+    "native59@4"
    ],
    "queue_src": "main@93c061c396c7bd38c04eaf958b30d465f087fe58",
    "type_args": {
@@ -4805,7 +4807,8 @@
     "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/sidecar.json"
    ],
    "note_kw28_mw": "KW-FIX-28 11-07 08:3x: QC new launches --max-wire-um 120 (DQ89-TYPES: coll_ftn a5 1318 slew pins, 83% of worst nets over 120 um on M3, 0 slew at GRT, appears only after route; S81 already runs 100). Unproven on QC: pilot coll_ftn vW has no result yet. gen_args apply at launch only; running rows keep their kit.",
-   "retry_kw28_b2": "KW-FIX-28 08:4x: stm rows flow-error exit 127 11-06 on epyc6 (launcher, no design cause); sle_fe_v2 kit_rsync class fixed on main 8d348fbaae5"
+   "retry_kw28_b2": "KW-FIX-28 08:4x: stm rows flow-error exit 127 11-06 on epyc6 (launcher, no design cause); sle_fe_v2 kit_rsync class fixed on main 8d348fbaae5",
+   "retry_kw28_b3": "KW-FIX-28 08:4x: glue a3 + native59 a4 REJECTED 11-05 on AUTO-GEOM FAIL (fill 2.4%, 10.7%; pin_reg), preflight PASS, empty reason in the table. Geom is advisory now (OWNER 11-03, kit_wave GEOM-ADVISORY); rebuild on tag 93c06."
   },
   "hbm": {
    "enabled": true,
