@@ -30,7 +30,12 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_fdi_phy_cdc #(
     parameter integer W = 522,
-    parameter integer DEPTH = 8          // power of two >= 4 (ot_async_fifo)
+    parameter integer DEPTH = 8,         // power of two >= 4 (ot_async_fifo)
+    // KV-FDICDC-1 11-06 (default 0 = unchanged): 1 = both FIFOs in the ot_async_fifo SEL_PIPE registered-select form
+    // (a wide FIFO spread along a long PHY face strip) and the tx_up synchroniser reset by its own reset synchroniser
+    // u_urs (same async source, same clock, same 2-stage release edge as u_crs: kept local to up_s, no long recovery
+    // net).  Not visible at the module pins beyond the asynchronous FIFOs' own latency.
+    parameter integer SEL_PIPE = 0
 ) (
     // core side (partition clock)
     input  wire         clk,
@@ -59,7 +64,7 @@ module ot_fdi_phy_cdc #(
     always @(posedge clk_phy or negedge p_rst_n) if (!p_rst_n) rq_v <= 1'b0; else rq_v <= p_rx_v;
     wire         rx_wr_rdy, rx_rd_v, rx_wovf, rx_rund;
     wire [W-1:0] rx_rd_d;
-    ot_async_fifo #(.WIDTH(W), .DEPTH(DEPTH)) u_rx (
+    ot_async_fifo #(.WIDTH(W), .DEPTH(DEPTH), .SEL_PIPE(SEL_PIPE)) u_rx (
         .wr_clk(clk_phy), .wr_rst_n(link_rst_n), .wr_valid(rq_v), .wr_ready(rx_wr_rdy), .wr_data(rq_d), .wr_overflow(rx_wovf),
         .rd_clk(clk), .rd_rst_n(link_rst_n), .rd_valid(rx_rd_v), .rd_ready(1'b1), .rd_data(rx_rd_d), .rd_underflow(rx_rund));
     always @(posedge clk) c_rx_d <= rx_rd_d;
@@ -67,14 +72,24 @@ module ot_fdi_phy_cdc #(
     // ---- TX: core -> PHY ----
     wire         tx_wr_rdy, tx_rd_v, tx_wovf, tx_rund;
     wire [W-1:0] tx_rd_d;
-    ot_async_fifo #(.WIDTH(W), .DEPTH(DEPTH)) u_tx (
+    ot_async_fifo #(.WIDTH(W), .DEPTH(DEPTH), .SEL_PIPE(SEL_PIPE)) u_tx (
         .wr_clk(clk), .wr_rst_n(link_rst_n), .wr_valid(c_tx_v), .wr_ready(tx_wr_rdy), .wr_data(c_tx_d), .wr_overflow(tx_wovf),
         .rd_clk(clk_phy), .rd_rst_n(link_rst_n), .rd_valid(tx_rd_v), .rd_ready(1'b1), .rd_data(tx_rd_d), .rd_underflow(tx_rund));
     always @(posedge clk_phy) p_tx_d <= tx_rd_d;
     always @(posedge clk_phy or negedge p_rst_n) if (!p_rst_n) p_tx_v <= 1'b0; else p_tx_v <= tx_rd_v;
     // ---- tx_up: PHY status level -> core ----
     (* async_reg = "true" *) reg [1:0] up_s;
-    always @(posedge clk or negedge c_rst_n) if (!c_rst_n) up_s <= 2'b00; else up_s <= {up_s[0], p_tx_up};
+    wire u_rst_n;
+    generate if (SEL_PIPE != 0) begin : g_urs
+`ifdef OT_SP_MUT_URS
+        assign u_rst_n = link_rst_n;                       // mutant: unsynchronised release
+`else
+        ot_fdi_up_rsync u_urs (.clk(clk), .async_rst_n(link_rst_n), .sync_rst_n(u_rst_n));
+`endif
+    end else begin : g_urs0
+        assign u_rst_n = c_rst_n;
+    end endgenerate
+    always @(posedge clk or negedge u_rst_n) if (!u_rst_n) up_s <= 2'b00; else up_s <= {up_s[0], p_tx_up};
     assign c_tx_up = up_s[1];
 `ifndef SYNTHESIS
     // a word offered while the FIFO cannot take it is lost (the far adapter then reports a sequence gap)
@@ -88,4 +103,10 @@ module ot_fdi_phy_cdc #(
         if (!tx_wr_rdy) begin n_tx_lost = n_tx_lost + 1; $error("ot_fdi_phy_cdc %m: TX word lost (FIFO full / offline)"); end
     end
 `endif
+endmodule
+
+// KV-FDICDC-1: the tx_up synchroniser's own reset synchroniser (kept hierarchy: not merged back into u_crs).
+(* keep_hierarchy = "yes" *)
+module ot_fdi_up_rsync (input wire clk, input wire async_rst_n, output wire sync_rst_n);
+    ot_reset_sync u_rs (.clk(clk), .async_rst_n(async_rst_n), .sync_rst_n(sync_rst_n));
 endmodule

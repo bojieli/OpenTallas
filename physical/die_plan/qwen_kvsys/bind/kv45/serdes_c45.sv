@@ -1,7 +1,11 @@
 `timescale 1ns/1ps
 `default_nettype none
 // Native C2: exactly one Gray-pointer FIFO crossing per direction at each PHY half.
-module ot_qfd_serdes_112g_x6_phy_c45 #(parameter W=522) (
+// KV-FDICDC-1 11-06 (OWNER safe form, 3rd attempt = RE-FORM): the two 8 x W FIFOs of each half spread up to ~570 um
+// along the PHY face strip (kv3_sys_SD / _v1 post-GRT: rd_bin -> p_tx_d / c_rx_d, enable decode -> mem, reset_pipe ->
+// up_s); SEL_PIPE 1 selects the ot_fdi_phy_cdc registered-select form.  The PHY is inside the hard core: no core pin
+// cycle changes.
+module ot_qfd_serdes_112g_x6_phy_c45 #(parameter W=522, parameter integer SEL_PIPE=1) (
  input wire clk, clk_phy, rst_n, tx_v,
  input wire [W-1:0] tx_flit,
  output wire tx_up, rx_v,
@@ -9,7 +13,7 @@ module ot_qfd_serdes_112g_x6_phy_c45 #(parameter W=522) (
 );
  wire p_rst_n, p_tx_v, p_rx_v, p_tx_up;
  wire [W-1:0] p_tx_d, p_rx_d;
- ot_fdi_phy_cdc #(.W(W), .DEPTH(8)) u_fdi_cdc (
+ ot_fdi_phy_cdc #(.W(W), .DEPTH(8), .SEL_PIPE(SEL_PIPE)) u_fdi_cdc (
   .clk(clk), .link_rst_n(rst_n), .c_tx_v(tx_v), .c_tx_d(tx_flit),
   .c_rx_v(rx_v), .c_rx_d(rx_flit), .c_tx_up(tx_up), .clk_phy(clk_phy),
   .p_rst_n(p_rst_n), .p_tx_v(p_tx_v), .p_tx_d(p_tx_d),
