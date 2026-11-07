@@ -199,15 +199,9 @@ endmodule
 # Kept out of CELLS: only plans that opt in emit it, so every other kit's cell file is byte-identical.
 LOCKUP_CELLS = """(* keep_hierarchy, keep *)
 module ot_dp_rrelay_nl (input wire clk, input wire d, output reg q);
-`ifdef OT_DP_RRELAY_FULL
-    // S81-RCK-4 11-07: same one cycle per relay at every posedge, the hop gets T instead of T/2 and routed FF hold repair
-    // covers the tap skew (2.9-mm serdes types: 405-um hop q->state TT -251..-430 on the T/2 budget).
-    always @(posedge clk) q <= d;
-`else
     (* keep *) reg state;
     always @(posedge clk) state <= d;
     always @(negedge clk) q <= state;
-`endif
 endmodule
 """
 

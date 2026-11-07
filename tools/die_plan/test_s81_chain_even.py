@@ -23,9 +23,13 @@ def test_tool_shipped_and_reads_cfg_vars():
     assert "$::ot_chain_res" in t and "$::ot_chain_groups" in t and "::env(OT_CHAIN" not in t
 
 
-def test_relay_full_form_is_opt_in():
-    c = R.LOCKUP_CELLS
-    assert "`ifdef OT_DP_RRELAY_FULL" in c and "always @(negedge clk) q <= state;" in c
+def test_relay_full_rewrites_only_the_kit_copy(tmp_path):
+    f = tmp_path / "bind_cells.sv"
+    f.write_text("(* keep_hierarchy, keep *)\n" + R.LOCKUP_CELLS.split("\n", 1)[1] + "module other; endmodule\n")
+    G.reset_relay_full(tmp_path)
+    s = f.read_text()
+    assert "always @(posedge clk) q <= d;" in s and "negedge" not in s and "module other" in s
+    assert "always @(negedge clk) q <= state;" in R.LOCKUP_CELLS
 
 
 def test_rate_match_forms_are_opt_in():
