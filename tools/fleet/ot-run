@@ -1504,6 +1504,7 @@ SPILL_BACK_ROOM_POLL_S = int(os.environ.get("OT_RUN_SPILL_BACK_ROOM_POLL_S", "12
 SPILL_RESV_DIR = os.environ.get("OT_RUN_SPILL_RESV_DIR", "/var/tmp/ot-run-spill-resv")
 SPILL_RESV_TTL_S = int(os.environ.get("OT_RUN_SPILL_RESV_TTL_S", "7200"))               # a killed client's reservation expires
 SPILL_NOROOM = "OT_SPILL_NOROOM"
+SPILL_PARTIAL = "OT_SPILL_PARTIAL"
 # argv: reserve|check tag need_gb margin_gb resv_dir ttl_s root...   Prints OT_ROOM_OK, or OT_ROOM_NO and the numbers.
 # need_gb is charged on each filesystem the roots land on, less what those roots already hold (a re-spill sends only the delta).
 SPILL_ROOM_PY = r"""
@@ -2068,6 +2069,74 @@ def pending_write(rec):
         pass
 
 
+# AUTOCLEAN-3 11-07: tar --keep-newer-files treats a partial left by a dead back-copy as newer than its source, so a retry skipped it
+# and the record went .done with truncated results (t36 6_1_fill.odb 1678 of 2683 MB, t43 6_final.odb, found by hand).  After the
+# copy: a file on src that is SHORTER and NEWER than dst, and is an exact prefix of it, is such a partial and is copied again.
+# A file that differs in any other way was written on src on purpose and stays.
+SPILL_STAT_PY = r"""
+import json, os, sys
+for p in sys.stdin.buffer.read().split(b"\0"):
+    if p:
+        try:
+            st = os.lstat(p)
+        except OSError:
+            continue
+        print(json.dumps([os.fsdecode(p), st.st_size, int(st.st_mtime)]))
+"""
+SPILL_SHORTER_PY = r"""
+import json, os, sys
+for line in sys.stdin:
+    p, size, mtime = json.loads(line)
+    try:
+        st = os.lstat(p)
+    except OSError:
+        continue
+    if st.st_size < size and int(st.st_mtime) > mtime:
+        print(json.dumps([p, st.st_size]))
+"""
+
+
+def spill_find_partials(src, dst, roots, stamp, only=None):
+    """-> paths (relative to /) that are partials on src"""
+    listing = f"{{ {handoff_paths_listing(only)}; }}" if only else spill_written_listing(roots, stamp)
+    dcmd = f"cd / && {listing} | python3 -I -c {shlex.quote(SPILL_STAT_PY)}"
+    scmd = f"cd / && python3 -I -c {shlex.quote(SPILL_SHORTER_PY)}"
+    r = subprocess.run(["bash", "-o", "pipefail", "-c",
+                        f"ssh -o ControlPath=none -o BatchMode=yes {dst} {shlex.quote(dcmd)} | "
+                        f"ssh -o ControlPath=none -o BatchMode=yes {src} {shlex.quote(scmd)}"], capture_output=True, text=True)
+    if r.returncode:
+        raise RuntimeError(f"partial check: {r.stderr.strip()[-160:]}")
+    out = []
+    for ln in r.stdout.splitlines():
+        rel, n = json.loads(ln)
+        q = shlex.quote(rel)
+        want = f"cd / && head -c {int(n)} {q} | sha256sum"
+        a, b = ssh_sh(src, want, timeout=1800), ssh_sh(dst, want, timeout=1800)
+        if a.returncode == 0 and a.stdout.split()[:1] == b.stdout.split()[:1]:
+            out.append(rel)
+    return out
+
+
+def spill_repair_partials(src, dst, roots, stamp, only=None, say=lambda m: None):
+    """-> "" when no partial is left on src, else the error"""
+    try:
+        bad = spill_find_partials(src, dst, roots, stamp, only)
+        if not bad:
+            return ""
+        say(f"ot-run: SPILL back-copy {dst} -> {src}: {len(bad)} partial file(s) from an earlier copy, copying again: {bad[0][-80:]}")
+        files = " ".join(shlex.quote(x) for x in bad)
+        scmd = tar_x(roots).replace("--keep-newer-files ", "")
+        c = subprocess.run(["bash", "-o", "pipefail", "-c",
+                            f"ssh -o ControlPath=none -o BatchMode=yes {dst} {shlex.quote(f'cd / && tar -cf - {files} | zstd -q -1 -T8')} | "
+                            f"ssh -o ControlPath=none -o BatchMode=yes {src} {shlex.quote(scmd)}"], capture_output=True, text=True)
+        if c.returncode:
+            return f"{SPILL_PARTIAL} {c.stderr.strip()[-160:]}"
+        left = spill_find_partials(src, dst, roots, stamp, only)
+        return f"{SPILL_PARTIAL} still short: {left[0][-80:]}" if left else ""
+    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as e:
+        return f"{SPILL_PARTIAL} {str(e)[-160:]}"
+
+
 def spill_back_reserve(src, dst, roots, stamp, tag, only, wait_s, say):
     """-> "" when the back-copy may start, else the reason.  Waits up to wait_s for room; an unknown answer never holds results back."""
     need = spill_back_size_gb(dst, roots, stamp, only)
@@ -2104,6 +2173,10 @@ def spill_copy_back_tries(src, dst, roots, stamp, say, only):
     for k in range(SPILL_BACK_TRIES):
         b = subprocess.run(["bash", "-o", "pipefail", "-c", spill_back_cmd(src, dst, roots, stamp, only)], capture_output=True, text=True)
         if not b.returncode:
+            err = spill_repair_partials(src, dst, roots, stamp, only, say)
+            if err:              # the stamp and the pending record stay: not completed
+                say(f"ot-run: SPILL back-copy {dst} -> {src}: {err[-160:]}")
+                return False, err
             ssh_sh(dst, f"rm -f {stamp} {stamp}.next {stamp}.inputs {stamp}.scope", timeout=60)
             return True, ""
         err = b.stderr.strip()[-300:]

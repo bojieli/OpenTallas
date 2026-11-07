@@ -83,6 +83,7 @@ class BackCopyTest(unittest.TestCase):
         self.m.ssh_sh = lambda host, cmd, timeout=120: subprocess.CompletedProcess([], 0, "", "")
         self.m.spill_room_release = lambda host, tag: self.released.append(tag)
         self.m.spill_back_size_gb = lambda dst, roots, stamp, only=None: 78.0
+        self.m.spill_repair_partials = lambda *a, **k: ""
         run = subprocess.run
 
         def fake(a, **k):
