@@ -1,6 +1,12 @@
 {
  "die": {
-  "period_ps": 833
+  "period_ps": 833,
+  "name": "SVC_SML_PRIVATE_CHILD",
+  "outline_um": [
+   174.96,
+   174.96
+  ],
+  "reach_um": 405
  },
  "clock": {
   "insertion_ps": 250,
@@ -9,5 +15,9 @@
  },
  "master_plan": {
   "required": false
- }
+ },
+ "partition_types": {},
+ "partitions": [],
+ "ports": [],
+ "lanes": []
 }
