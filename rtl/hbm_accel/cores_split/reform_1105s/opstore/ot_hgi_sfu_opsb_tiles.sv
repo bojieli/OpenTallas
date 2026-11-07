@@ -18,11 +18,16 @@ module ot_hgi_sfu_opsb_group (
     // rd is +2 edges and flt +2 edges (COORD 15:16 pre-approved form).
     reg [15:0] q_rq; reg [383:0] q_ra; reg [7:0] q_sv; reg [119:0] q_sa; reg [63:0] q_sm; reg [2047:0] q_sd;
     always @(posedge clk) begin q_rq <= rq; q_ra <= ra; q_sv <= sw_v; q_sa <= sw_addr; q_sm <= sw_mask; q_sd <= sw_d; end
+`ifdef OT_OPSG_GP   // DIE-HBM-83-OPSG d44v part 57 opt-in (ot_hgi_su_lgroup2_gp.sv): rd +5 edges, flt unchanged
+    ot_hgi_su_lgroup2_gp u_g (.clk(clk), .rst_n(rst_n), .rq(q_rq), .rr(q_rq), .ra(q_ra), .rd(rd),
+        .sw_v(q_sv), .sw_addr(q_sa), .sw_mask(q_sm), .sw_d(q_sd), .flt(flt));
+`else
     ot_hgi_su_lgroup2_lf #(.N(16),.M(16),.LWB(15),.AW(24),.NLW(0),.MACRO(1),.MUT_XBAR(0),.NS(8),.BREG(1),.FREG(1)) u_g (  // B9 rd +1, B10 rd +2
         .clk(clk), .rst_n(rst_n), .rq(q_rq), .rr(q_rq), .ra(q_ra), .rd(rd),
         .sr_v(8'd0), .sr_addr(120'd0), .sr_d(), .sr_rv(),
         .sw_v(q_sv), .sw_addr(q_sa), .sw_mask(q_sm), .sw_d(q_sd),
         .lw(1'b0), .lwa(24'd0), .lwd(32'd0), .s1_v(1'b0), .s1_a(15'd0), .s1_d(32'd0), .flt(flt));
+`endif
 endmodule
 module ot_hgi_sfu_opsb_output (
     input  wire          clk, rst_n,
