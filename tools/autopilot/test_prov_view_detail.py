@@ -35,7 +35,7 @@ def test_explicit_policy_and_only_upper_obs_replaced(candidate,bloat):
  assert p==str(d/'detail_view.lef') and out['bloat_factor']==bloat
  assert A.check((d/'core.lef').read_text().splitlines(True),Path(p).read_text().splitlines(True),['M6','M7'])[0]
 
-@pytest.mark.parametrize('change',['hash','pin','PG','lower','layers','unproved','bloat','missingpair','path'])
+@pytest.mark.parametrize('change',['hash','pin','PG','lower','layers','unproved','bloat','missingpair','path','pin_clear'])
 def test_reject_corrupt_geometry_and_receipts_even_with_updated_hash(candidate,change):
  d,m,r=candidate
  if change=='hash':r['out_sha256']='0'*64
@@ -49,6 +49,7 @@ def test_reject_corrupt_geometry_and_receipts_even_with_updated_hash(candidate,c
  elif change=='unproved':r['detail_pins_equal_base']=False
  elif change=='bloat':m['detail_bloat_factor']=1
  elif change=='missingpair':del m['detailed_receipt']
+ elif change=='pin_clear':r['pin_clear_um']=.048
  else:m['detailed_lef']='../detail_view.lef'
  (d/'detail_receipt.json').write_text(json.dumps(r))
  with pytest.raises(ValueError):P.routed_detail(str(d),'core',m,str(ROOT))

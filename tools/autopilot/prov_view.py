@@ -511,6 +511,8 @@ def routed_detail(cdir, module, meta, source_root):
         raise ValueError("detailed abstract receipt must be an object")
     if receipt.get("base_sha256") != sha256(base) or receipt.get("out_sha256") != sha256(detail):
         raise ValueError("detailed abstract receipt hashes differ from staged files")
+    if receipt.get("pin_clear_um") is not None:
+        raise ValueError("detailed abstract pin-clear cuts need a separate explicit model contract")
     if receipt.get("check_ok") is not True or receipt.get("detail_pins_equal_base") is not True:
         raise ValueError("detailed abstract lacks the matching-export pin check")
     if receipt.get("bloat_factor") != bloat or type(receipt.get("bloat_factor")) is not int:
