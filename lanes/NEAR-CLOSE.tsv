@@ -8,11 +8,9 @@ hbm	bank128 weight_E	epyc2	/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e
 hbm	GQ	epyc2	/srv/opentallas-scratch3/claude/die-hbm-85/eco/gq_e1	LOCAL_PASS_NEEDS_PARENT TT 28.45 FF -98.85 DRC 0 LEC EQUIVALENT fails: io_hold_parent (1.4 h old)	exact ECO, sign-off + LEC	DIE-HBM-85	11-07 05:07
 hbm	injector	epyc2	/srv/opentallas-scratch3/claude/die-hbm-85/eco/inj_e1	NOT SIGNED TT 115.01 FF -9.1 DRC 0 LEC EQUIVALENT (1.0 h old)	exact ECO, sign-off + LEC	DIE-HBM-85	11-07 05:07
 hbm	full_x	epyc2	/srv/opentallas-scratch3/claude/die-hbm-85/eco/fullx_e1	exact ECO queued from hbm-form-split-14 eco_fullx_vC_t i2	exact ECO, sign-off + LEC	DIE-HBM-85	11-07 03:45
-qwen_compute	NL ecows	epyc6	/srv/opentallas-scratch2/claude/qc-a0c-b6/nl_vB2_ecows	was ecowp i2 TT +19.72 FF +17.15 slew 11/10	running; collect	DIE-QC-87	11-07 03:45
-qwen_compute	NK vB2h ECO	epyc6	/srv/opentallas-scratch2/claude/qc-a0c-b6/qfd_tile_nk_a0c_vB2h	NOT SIGNED TT -152.68 FF -37.47 DRC 50 LEC EQUIVALENT fails: clock,drc 50,drv (2.7 h old)	running; collect; judge on port split	DIE-QC-87	11-07 05:07
-qwen_compute	NK vB2hp ECO	epyc6	/srv/opentallas-scratch2/claude/qc-a0c-b6/qfd_tile_nk_a0c_vB2hp	NOT SIGNED TT -32.64 FF -17.03 DRC 0 LEC EQUIVALENT fails: clock,drv (3.4 h old)	running; collect; judge on port split	DIE-QC-87	11-07 05:07
-qwen_compute	NL vR3 conservative + _lec	epyc2	/srv/opentallas-scratch2/claude/dq87_vr3/qfd_tile_nl_a0c_vR3	new form, owner critical	build, LEC kit proves	DIE-QC-87	11-07 03:45
-qwen_compute	NK vR3 conservative + _lec	intel1	/srv/opentallas-scratch2/claude/dq87_vr3/qfd_tile_nk_a0c_vR3	new form, owner critical	build, LEC kit proves	DIE-QC-87	11-07 03:45
+qwen_compute	NL ecows i2	epyc6	/srv/opentallas-scratch2/claude/qc-a0c-b6/nl_vB2_ecows/i2	i1 TT +17.78 FF +17.62 DRC 0 slew 3/3; real near miss	finishes; slew 0 -> re-sign, routed LEC, READY-COUNT	DIE-QC-87	11-07 05:20
+qwen_compute	NL vR3 conservative + _lec	epyc2	/srv/opentallas-scratch2/claude/dq87_vr3/qfd_tile_nl_a0c_vR3	new form, owner critical	control, finishes; _lec proves RTL	DIE-QC-87	11-07 05:20
+qwen_compute	NK vR3 conservative + _lec	intel1	/srv/opentallas-scratch2/claude/dq87_vr3/qfd_tile_nk_a0c_vR3	new form, owner critical	running; finishes and is read; basis for NK redesign	DIE-QC-87	11-07 05:20
 s81	slice_station__t26_tsB ECO	epyc4	/srv/opentallas-scratch2/claude/type-safe-1/canary26/slice_station__t26_tsB/eco_ts	decides the batch recipe for S81 stations	eco_loop 3 iter + LEC	TYPE-SAFE-1	11-07 03:57
 ?	hc_qkd_hr_ingest_eng__362_88x362_88	intel1	/srv/opentallas-scratch2/claude/kving6/vE_i3_drv/i2	NOT SIGNED TT 10.88 FF 3.61 DRC 0 LEC none fails: drv (2.0 h old)	AUTO: scan find, owner to confirm or delete	die owner	11-07 05:07
 ?	hbc_ot_hbm_idx_score_hcol_h0_ra	epyc2	/srv/opentallas-scratch3/claude/die-hbm-85/src/ra_vK	NOT SIGNED TT 66.92 FF -7.1 DRC 0 LEC EQUIVALENT (1.8 h old)	AUTO: scan find, owner to confirm or delete	die owner	11-07 05:07
@@ -20,12 +18,10 @@ s81	slice_station__t26_tsB ECO	epyc4	/srv/opentallas-scratch2/claude/type-safe-1
 ?	hbc_ot_hgi_coll_inj_idx_join_rg	epyc6	/srv/opentallas-scratch3/claude/hbm-cons-1/kits/ot_hgi_coll_inj_idx_join_rg_17a976246b27_vK/ot_hgi_coll_inj_idx_join_rg_17a976246b27-_vK/eco_cons2/i2	NOT SIGNED TT 115.03 FF -10.39 DRC 0 LEC EQUIVALENT fails: drv,io_hold_parent (2.6 h old)	AUTO: scan find, owner to confirm or delete	die owner	11-07 05:07
 ?	hbc_ot_svgr_bk	epyc2	/srv/opentallas-scratch3/claude/die-hbm-85/eco/svgrbk_e1	NOT SIGNED TT 0.19 FF -1.35 DRC 0 LEC EQUIVALENT fails: drv,io_hold_parent (0.6 h old)	AUTO: scan find, owner to confirm or delete	die owner	11-07 05:07
 ?	hbc_ot_hbm_hc_bank128_pair_core	epyc2	/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq	SIGNED TT 38.68 FF 3.42 DRC 0 LEC none (0.9 h old)	AUTO: scan find, owner to confirm or delete	die owner	11-07 05:07
-?	kq_qfd_tile_nl_a0c_vB2	epyc6	/srv/opentallas-scratch2/claude/qc-a0c-b6/nl_vB2_ecows/i1	NOT SIGNED TT 17.78 FF 17.62 DRC 0 LEC EQUIVALENT fails: clock,drv (0.7 h old)	AUTO: scan find, owner to confirm or delete	die owner	11-07 05:07
 s81	bksel_q vG	intel1	/srv/opentallas-scratch2/claude/s81-bksel-rf7/dsdv_bksel_q_vG	owner critical; t_s +2 PIN CYCLES; in CTS	finish, sign-off, LEC; next change is pin cycles or geometry	S81-BKSEL-RF7	11-07 05:14
 s81	eng_rr_e vH	epyc2	/srv/opentallas-scratch3/claude/s81-engrr-b7/dsdv_eng_rr_e_vH	owner critical; spine fixed; CTS done	finish, sign-off, LEC	S81-ENGRR-B7	11-07 05:14
 s81	eng_rr_e vI	epyc2	/srv/opentallas-scratch3/claude/s81-engrr-b7/dsdv_eng_rr_e_vI	owner critical; sync reset + pin cycle form	build	S81-ENGRR-B7	11-07 05:14
-qwen_compute	NK vR3r	intel1	/srv/opentallas-scratch2/claude/dq87_vr3/qfd_tile_nk_a0c_vR3r	owner critical; homes moved out of macros	build; path by owner if different	DIE-QC-87	11-07 05:14
-qwen_compute	NL vR3b/vR3c	epyc2	/srv/opentallas-scratch2/claude/dq87_vr3/qfd_tile_nl_a0c_vR3b	owner critical; me_idle retap fix	build; path by owner if different	DIE-QC-87	11-07 05:14
+qwen_compute	NL vR3b + vR3c	epyc2	/srv/opentallas-scratch2/claude/dq87_vr3/qfd_tile_nl_a0c_vR3b and _vR3c	vR3 WNS -312 me_idle retap miss; insertion 811	running from CTS; b = retap fix, c = + clock structure; read and pick	DIE-QC-87	11-07 05:20
 qwen_kvsys	qkd_hr_core_prompt vI ECO	epyc2	/srv/opentallas-scratch3/claude/kv-prm-b8/qkd_hr_core_prompt_vI	owner critical; TT -6.73 FF -2.94 slew 166/146	eco_loop --lec, no port padding	KV-PRM-B8	11-07 05:14
 qwen_kvsys	qkd_hr_core_prompt vJ	epyc4	-	owner critical	owner adds the path	KV-PRM-B8	11-07 05:14
 qwen_kvsys	qkd_hr_ingest_eng vH2	-	-	owner critical; conservative + pin cycles	owner adds the path	KV-ING-8	11-07 05:14
