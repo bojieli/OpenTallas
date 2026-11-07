@@ -3411,3 +3411,4 @@ CODEX: 2026-11-07 13:03 PST explicitresetHBM parked; source da1b6d91d4 F512zero-
 - 2026-11-07 15:01 PST COORD: 15:0x gap check: approved kwrs marker a1e0ae1f, collector 004a51fc1b6, svgr vL7 f69e0b0bbb (opt-in) to ROOT-MERGE-49; classes: tap-pair affinity (QC-TYPES-5, also HBM f512), run_kit flow tag + child mount (KW-FIX-30); DIE-HBM-88 started; epyc5 waiters 88.
 - 2026-11-07 15:14 PST COORD: main d9134e481e5 (kwrs key, collector, vL7 opt-in); tags cy-head de-qc cu-kv df-s81 ec-hbm; kit wave moving onto them (KW-FIX-30).
 - 2026-11-07 15:20 PST COORD: KW-FIX-31 started (kit wave on d9134 tags, one-kit canary per die); flowtag-grtlayer 378f94422bd approved; S81 old-form leaf GRTs stop approved; S81 slice_station t24+t26 READY-COUNT.
+- 2026-11-07 15:47 PST COORD: hourly 15:47: 214 (+2 S81 slice_station t24/t26); QC NL + KV e0_M5 signed but not counted -> COUNT-AUDIT-2; main 66d55c026ad tags cz/df/cv/dg/ed; flow_tag guard ruled (no blind relaunch).
