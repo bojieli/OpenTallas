@@ -1,0 +1,5262 @@
+{
+  "scope": "candidate issuer/row-tag repair only; row-done bound is not consumer retirement",
+  "source_commands_changed": 0,
+  "hardware_pin_cycles_added": 0,
+  "common_KIT": 7163,
+  "common_END": 7183,
+  "pages": [
+    {
+      "job": 0,
+      "input_sha256": "1b380725cedcc8ba2ce565501c425451cad1012668935d9547d29612b464661e",
+      "row_tag_map": [
+        {
+          "old": 0,
+          "new": 0,
+          "engine": 1
+        },
+        {
+          "old": 1,
+          "new": 1,
+          "engine": 1
+        },
+        {
+          "old": 2,
+          "new": 2,
+          "engine": 1
+        },
+        {
+          "old": 3,
+          "new": 3,
+          "engine": 1
+        },
+        {
+          "old": 4,
+          "new": 4,
+          "engine": 1
+        },
+        {
+          "old": 5,
+          "new": 5,
+          "engine": 1
+        },
+        {
+          "old": 6,
+          "new": 6,
+          "engine": 1
+        },
+        {
+          "old": 7,
+          "new": 7,
+          "engine": 1
+        },
+        {
+          "old": 8,
+          "new": 8,
+          "engine": 2
+        },
+        {
+          "old": 9,
+          "new": 9,
+          "engine": 1
+        },
+        {
+          "old": 10,
+          "new": 10,
+          "engine": 1
+        },
+        {
+          "old": 11,
+          "new": 11,
+          "engine": 1
+        },
+        {
+          "old": 12,
+          "new": 12,
+          "engine": 1
+        },
+        {
+          "old": 13,
+          "new": 13,
+          "engine": 1
+        },
+        {
+          "old": 14,
+          "new": 14,
+          "engine": 1
+        },
+        {
+          "old": 15,
+          "new": 15,
+          "engine": 0
+        },
+        {
+          "old": 16,
+          "new": 16,
+          "engine": 1
+        },
+        {
+          "old": 17,
+          "new": 17,
+          "engine": 1
+        },
+        {
+          "old": 18,
+          "new": 18,
+          "engine": 0
+        },
+        {
+          "old": 19,
+          "new": 19,
+          "engine": 1
+        },
+        {
+          "old": 20,
+          "new": 20,
+          "engine": 1
+        },
+        {
+          "old": 21,
+          "new": 21,
+          "engine": 0
+        },
+        {
+          "old": 22,
+          "new": 22,
+          "engine": 1
+        },
+        {
+          "old": 23,
+          "new": 23,
+          "engine": 1
+        },
+        {
+          "old": 24,
+          "new": 24,
+          "engine": 0
+        },
+        {
+          "old": 25,
+          "new": 25,
+          "engine": 1
+        },
+        {
+          "old": 26,
+          "new": 26,
+          "engine": 1
+        },
+        {
+          "old": 27,
+          "new": 27,
+          "engine": 0
+        },
+        {
+          "old": 28,
+          "new": 28,
+          "engine": 1
+        },
+        {
+          "old": 29,
+          "new": 29,
+          "engine": 1
+        },
+        {
+          "old": 30,
+          "new": 30,
+          "engine": 0
+        },
+        {
+          "old": 31,
+          "new": 31,
+          "engine": 1
+        },
+        {
+          "old": 32,
+          "new": 32,
+          "engine": 1
+        },
+        {
+          "old": 33,
+          "new": 33,
+          "engine": 0
+        },
+        {
+          "old": 34,
+          "new": 34,
+          "engine": 1
+        },
+        {
+          "old": 35,
+          "new": 35,
+          "engine": 1
+        },
+        {
+          "old": 36,
+          "new": 36,
+          "engine": 0
+        },
+        {
+          "old": 37,
+          "new": 37,
+          "engine": 1
+        },
+        {
+          "old": 38,
+          "new": 38,
+          "engine": 1
+        },
+        {
+          "old": 39,
+          "new": 39,
+          "engine": 0
+        },
+        {
+          "old": 40,
+          "new": 40,
+          "engine": 1
+        },
+        {
+          "old": 41,
+          "new": 41,
+          "engine": 1
+        },
+        {
+          "old": 42,
+          "new": 42,
+          "engine": 0
+        },
+        {
+          "old": 43,
+          "new": 43,
+          "engine": 1
+        },
+        {
+          "old": 44,
+          "new": 44,
+          "engine": 1
+        },
+        {
+          "old": 45,
+          "new": 45,
+          "engine": 0
+        },
+        {
+          "old": 46,
+          "new": 46,
+          "engine": 1
+        },
+        {
+          "old": 47,
+          "new": 47,
+          "engine": 1
+        },
+        {
+          "old": 48,
+          "new": 48,
+          "engine": 0
+        },
+        {
+          "old": 49,
+          "new": 49,
+          "engine": 1
+        },
+        {
+          "old": 50,
+          "new": 50,
+          "engine": 1
+        },
+        {
+          "old": 51,
+          "new": 51,
+          "engine": 0
+        },
+        {
+          "old": 52,
+          "new": 52,
+          "engine": 1
+        },
+        {
+          "old": 53,
+          "new": 53,
+          "engine": 1
+        },
+        {
+          "old": 54,
+          "new": 54,
+          "engine": 0
+        },
+        {
+          "old": 55,
+          "new": 55,
+          "engine": 1
+        },
+        {
+          "old": 56,
+          "new": 56,
+          "engine": 1
+        },
+        {
+          "old": 57,
+          "new": 57,
+          "engine": 0
+        },
+        {
+          "old": 58,
+          "new": 58,
+          "engine": 1
+        },
+        {
+          "old": 59,
+          "new": 59,
+          "engine": 1
+        },
+        {
+          "old": 60,
+          "new": 60,
+          "engine": 0
+        },
+        {
+          "old": 61,
+          "new": 61,
+          "engine": 1
+        },
+        {
+          "old": 62,
+          "new": 62,
+          "engine": 1
+        },
+        {
+          "old": 63,
+          "new": 63,
+          "engine": 0
+        },
+        {
+          "old": 64,
+          "new": 64,
+          "engine": 1
+        },
+        {
+          "old": 65,
+          "new": 65,
+          "engine": 1
+        },
+        {
+          "old": 66,
+          "new": 66,
+          "engine": 0
+        },
+        {
+          "old": 67,
+          "new": 67,
+          "engine": 1
+        },
+        {
+          "old": 68,
+          "new": 68,
+          "engine": 1
+        },
+        {
+          "old": 69,
+          "new": 69,
+          "engine": 0
+        },
+        {
+          "old": 70,
+          "new": 70,
+          "engine": 1
+        },
+        {
+          "old": 71,
+          "new": 71,
+          "engine": 1
+        },
+        {
+          "old": 72,
+          "new": 72,
+          "engine": 0
+        },
+        {
+          "old": 73,
+          "new": 73,
+          "engine": 1
+        },
+        {
+          "old": 74,
+          "new": 74,
+          "engine": 1
+        },
+        {
+          "old": 75,
+          "new": 75,
+          "engine": 0
+        },
+        {
+          "old": 76,
+          "new": 76,
+          "engine": 1
+        },
+        {
+          "old": 77,
+          "new": 77,
+          "engine": 1
+        },
+        {
+          "old": 78,
+          "new": 78,
+          "engine": 0
+        },
+        {
+          "old": 79,
+          "new": 79,
+          "engine": 1
+        },
+        {
+          "old": 80,
+          "new": 80,
+          "engine": 1
+        },
+        {
+          "old": 81,
+          "new": 81,
+          "engine": 0
+        },
+        {
+          "old": 82,
+          "new": 82,
+          "engine": 1
+        },
+        {
+          "old": 83,
+          "new": 83,
+          "engine": 1
+        },
+        {
+          "old": 84,
+          "new": 84,
+          "engine": 0
+        },
+        {
+          "old": 85,
+          "new": 85,
+          "engine": 1
+        },
+        {
+          "old": 86,
+          "new": 86,
+          "engine": 1
+        },
+        {
+          "old": 87,
+          "new": 87,
+          "engine": 0
+        },
+        {
+          "old": 88,
+          "new": 88,
+          "engine": 1
+        },
+        {
+          "old": 89,
+          "new": 89,
+          "engine": 1
+        },
+        {
+          "old": 90,
+          "new": 90,
+          "engine": 0
+        },
+        {
+          "old": 91,
+          "new": 91,
+          "engine": 1
+        },
+        {
+          "old": 92,
+          "new": 92,
+          "engine": 1
+        },
+        {
+          "old": 93,
+          "new": 93,
+          "engine": 0
+        },
+        {
+          "old": 94,
+          "new": 94,
+          "engine": 1
+        },
+        {
+          "old": 95,
+          "new": 95,
+          "engine": 1
+        },
+        {
+          "old": 96,
+          "new": 96,
+          "engine": 0
+        },
+        {
+          "old": 97,
+          "new": 97,
+          "engine": 1
+        },
+        {
+          "old": 98,
+          "new": 98,
+          "engine": 1
+        },
+        {
+          "old": 99,
+          "new": 99,
+          "engine": 4
+        },
+        {
+          "old": 100,
+          "new": 100,
+          "engine": 1
+        },
+        {
+          "old": 101,
+          "new": 101,
+          "engine": 1
+        },
+        {
+          "old": 102,
+          "new": 102,
+          "engine": 1
+        },
+        {
+          "old": 103,
+          "new": 103,
+          "engine": 1
+        },
+        {
+          "old": 104,
+          "new": 104,
+          "engine": 1
+        },
+        {
+          "old": 105,
+          "new": 105,
+          "engine": 1
+        },
+        {
+          "old": 106,
+          "new": 106,
+          "engine": 1
+        },
+        {
+          "old": 107,
+          "new": 107,
+          "engine": 1
+        },
+        {
+          "old": 108,
+          "new": 108,
+          "engine": 1
+        },
+        {
+          "old": 109,
+          "new": 109,
+          "engine": 1
+        },
+        {
+          "old": 110,
+          "new": 110,
+          "engine": 1
+        },
+        {
+          "old": 111,
+          "new": 111,
+          "engine": 1
+        },
+        {
+          "old": 112,
+          "new": 112,
+          "engine": 1
+        },
+        {
+          "old": 113,
+          "new": 113,
+          "engine": 1
+        },
+        {
+          "old": 114,
+          "new": 114,
+          "engine": 1
+        },
+        {
+          "old": 115,
+          "new": 115,
+          "engine": 1
+        },
+        {
+          "old": 116,
+          "new": 116,
+          "engine": 1
+        },
+        {
+          "old": 117,
+          "new": 117,
+          "engine": 1
+        },
+        {
+          "old": 118,
+          "new": 118,
+          "engine": 1
+        },
+        {
+          "old": 119,
+          "new": 119,
+          "engine": 1
+        },
+        {
+          "old": 120,
+          "new": 120,
+          "engine": 1
+        },
+        {
+          "old": 121,
+          "new": 121,
+          "engine": 1
+        },
+        {
+          "old": 122,
+          "new": 126,
+          "engine": 14
+        },
+        {
+          "old": 123,
+          "new": 122,
+          "engine": 0
+        },
+        {
+          "old": 124,
+          "new": 123,
+          "engine": 1
+        },
+        {
+          "old": 125,
+          "new": 124,
+          "engine": 1
+        },
+        {
+          "old": 126,
+          "new": 125,
+          "engine": 0
+        },
+        {
+          "old": 127,
+          "new": 127,
+          "engine": 15
+        }
+      ],
+      "command_dates_and_arguments_unchanged": true,
+      "templates_and_CF_unchanged": true,
+      "KIT_delay": 17,
+      "END_delay": 17,
+      "hardware_pin_cycles_added": 0,
+      "source_command_latency_added": 0,
+      "lifecycle_qualified": false,
+      "required_adoption": [
+        "actual consumer retirement fence",
+        "new row tags through all completion consumers",
+        "priced reload and HOST/KS resource calendar"
+      ]
+    },
+    {
+      "job": 1,
+      "input_sha256": "2b1d5d231c8426ad9388e5893d3739db89daa107d6e9031c1535f33cafba0877",
+      "row_tag_map": [
+        {
+          "old": 0,
+          "new": 0,
+          "engine": 1
+        },
+        {
+          "old": 1,
+          "new": 1,
+          "engine": 1
+        },
+        {
+          "old": 2,
+          "new": 2,
+          "engine": 0
+        },
+        {
+          "old": 3,
+          "new": 3,
+          "engine": 1
+        },
+        {
+          "old": 4,
+          "new": 4,
+          "engine": 1
+        },
+        {
+          "old": 5,
+          "new": 5,
+          "engine": 0
+        },
+        {
+          "old": 6,
+          "new": 6,
+          "engine": 1
+        },
+        {
+          "old": 7,
+          "new": 7,
+          "engine": 1
+        },
+        {
+          "old": 8,
+          "new": 8,
+          "engine": 0
+        },
+        {
+          "old": 9,
+          "new": 9,
+          "engine": 1
+        },
+        {
+          "old": 10,
+          "new": 10,
+          "engine": 1
+        },
+        {
+          "old": 11,
+          "new": 11,
+          "engine": 0
+        },
+        {
+          "old": 12,
+          "new": 12,
+          "engine": 1
+        },
+        {
+          "old": 13,
+          "new": 13,
+          "engine": 1
+        },
+        {
+          "old": 14,
+          "new": 14,
+          "engine": 0
+        },
+        {
+          "old": 15,
+          "new": 15,
+          "engine": 1
+        },
+        {
+          "old": 16,
+          "new": 16,
+          "engine": 1
+        },
+        {
+          "old": 17,
+          "new": 17,
+          "engine": 0
+        },
+        {
+          "old": 18,
+          "new": 18,
+          "engine": 1
+        },
+        {
+          "old": 19,
+          "new": 19,
+          "engine": 1
+        },
+        {
+          "old": 20,
+          "new": 20,
+          "engine": 0
+        },
+        {
+          "old": 21,
+          "new": 21,
+          "engine": 1
+        },
+        {
+          "old": 22,
+          "new": 22,
+          "engine": 1
+        },
+        {
+          "old": 23,
+          "new": 23,
+          "engine": 0
+        },
+        {
+          "old": 24,
+          "new": 24,
+          "engine": 1
+        },
+        {
+          "old": 25,
+          "new": 25,
+          "engine": 1
+        },
+        {
+          "old": 26,
+          "new": 26,
+          "engine": 0
+        },
+        {
+          "old": 27,
+          "new": 27,
+          "engine": 1
+        },
+        {
+          "old": 28,
+          "new": 28,
+          "engine": 1
+        },
+        {
+          "old": 29,
+          "new": 29,
+          "engine": 0
+        },
+        {
+          "old": 30,
+          "new": 30,
+          "engine": 1
+        },
+        {
+          "old": 31,
+          "new": 31,
+          "engine": 1
+        },
+        {
+          "old": 32,
+          "new": 32,
+          "engine": 0
+        },
+        {
+          "old": 33,
+          "new": 33,
+          "engine": 1
+        },
+        {
+          "old": 34,
+          "new": 34,
+          "engine": 1
+        },
+        {
+          "old": 35,
+          "new": 35,
+          "engine": 0
+        },
+        {
+          "old": 36,
+          "new": 36,
+          "engine": 1
+        },
+        {
+          "old": 37,
+          "new": 37,
+          "engine": 1
+        },
+        {
+          "old": 38,
+          "new": 38,
+          "engine": 0
+        },
+        {
+          "old": 39,
+          "new": 39,
+          "engine": 1
+        },
+        {
+          "old": 40,
+          "new": 40,
+          "engine": 1
+        },
+        {
+          "old": 41,
+          "new": 41,
+          "engine": 0
+        },
+        {
+          "old": 42,
+          "new": 42,
+          "engine": 1
+        },
+        {
+          "old": 43,
+          "new": 43,
+          "engine": 1
+        },
+        {
+          "old": 44,
+          "new": 44,
+          "engine": 0
+        },
+        {
+          "old": 45,
+          "new": 45,
+          "engine": 1
+        },
+        {
+          "old": 46,
+          "new": 46,
+          "engine": 1
+        },
+        {
+          "old": 47,
+          "new": 47,
+          "engine": 0
+        },
+        {
+          "old": 48,
+          "new": 48,
+          "engine": 1
+        },
+        {
+          "old": 49,
+          "new": 49,
+          "engine": 1
+        },
+        {
+          "old": 50,
+          "new": 50,
+          "engine": 0
+        },
+        {
+          "old": 51,
+          "new": 51,
+          "engine": 1
+        },
+        {
+          "old": 52,
+          "new": 52,
+          "engine": 1
+        },
+        {
+          "old": 53,
+          "new": 53,
+          "engine": 0
+        },
+        {
+          "old": 54,
+          "new": 54,
+          "engine": 1
+        },
+        {
+          "old": 55,
+          "new": 55,
+          "engine": 1
+        },
+        {
+          "old": 56,
+          "new": 56,
+          "engine": 0
+        },
+        {
+          "old": 57,
+          "new": 57,
+          "engine": 1
+        },
+        {
+          "old": 58,
+          "new": 58,
+          "engine": 1
+        },
+        {
+          "old": 59,
+          "new": 59,
+          "engine": 0
+        },
+        {
+          "old": 60,
+          "new": 60,
+          "engine": 1
+        },
+        {
+          "old": 61,
+          "new": 61,
+          "engine": 1
+        },
+        {
+          "old": 62,
+          "new": 62,
+          "engine": 0
+        },
+        {
+          "old": 63,
+          "new": 63,
+          "engine": 1
+        },
+        {
+          "old": 64,
+          "new": 64,
+          "engine": 1
+        },
+        {
+          "old": 65,
+          "new": 65,
+          "engine": 0
+        },
+        {
+          "old": 66,
+          "new": 66,
+          "engine": 1
+        },
+        {
+          "old": 67,
+          "new": 67,
+          "engine": 1
+        },
+        {
+          "old": 68,
+          "new": 68,
+          "engine": 0
+        },
+        {
+          "old": 69,
+          "new": 69,
+          "engine": 1
+        },
+        {
+          "old": 70,
+          "new": 70,
+          "engine": 1
+        },
+        {
+          "old": 71,
+          "new": 71,
+          "engine": 0
+        },
+        {
+          "old": 72,
+          "new": 72,
+          "engine": 1
+        },
+        {
+          "old": 73,
+          "new": 73,
+          "engine": 1
+        },
+        {
+          "old": 74,
+          "new": 74,
+          "engine": 0
+        },
+        {
+          "old": 75,
+          "new": 75,
+          "engine": 1
+        },
+        {
+          "old": 76,
+          "new": 76,
+          "engine": 1
+        },
+        {
+          "old": 77,
+          "new": 77,
+          "engine": 0
+        },
+        {
+          "old": 78,
+          "new": 78,
+          "engine": 1
+        },
+        {
+          "old": 79,
+          "new": 79,
+          "engine": 1
+        },
+        {
+          "old": 80,
+          "new": 80,
+          "engine": 0
+        },
+        {
+          "old": 81,
+          "new": 81,
+          "engine": 1
+        },
+        {
+          "old": 82,
+          "new": 82,
+          "engine": 1
+        },
+        {
+          "old": 83,
+          "new": 83,
+          "engine": 0
+        },
+        {
+          "old": 84,
+          "new": 84,
+          "engine": 1
+        },
+        {
+          "old": 85,
+          "new": 85,
+          "engine": 1
+        },
+        {
+          "old": 86,
+          "new": 86,
+          "engine": 0
+        },
+        {
+          "old": 87,
+          "new": 87,
+          "engine": 1
+        },
+        {
+          "old": 88,
+          "new": 88,
+          "engine": 1
+        },
+        {
+          "old": 89,
+          "new": 89,
+          "engine": 0
+        },
+        {
+          "old": 90,
+          "new": 90,
+          "engine": 1
+        },
+        {
+          "old": 91,
+          "new": 91,
+          "engine": 1
+        },
+        {
+          "old": 92,
+          "new": 92,
+          "engine": 0
+        },
+        {
+          "old": 93,
+          "new": 93,
+          "engine": 1
+        },
+        {
+          "old": 94,
+          "new": 94,
+          "engine": 1
+        },
+        {
+          "old": 95,
+          "new": 95,
+          "engine": 0
+        },
+        {
+          "old": 96,
+          "new": 96,
+          "engine": 1
+        },
+        {
+          "old": 97,
+          "new": 97,
+          "engine": 1
+        },
+        {
+          "old": 98,
+          "new": 98,
+          "engine": 0
+        },
+        {
+          "old": 99,
+          "new": 99,
+          "engine": 1
+        },
+        {
+          "old": 100,
+          "new": 100,
+          "engine": 1
+        },
+        {
+          "old": 101,
+          "new": 101,
+          "engine": 0
+        },
+        {
+          "old": 102,
+          "new": 102,
+          "engine": 1
+        },
+        {
+          "old": 103,
+          "new": 103,
+          "engine": 1
+        },
+        {
+          "old": 104,
+          "new": 104,
+          "engine": 0
+        },
+        {
+          "old": 105,
+          "new": 105,
+          "engine": 1
+        },
+        {
+          "old": 106,
+          "new": 106,
+          "engine": 1
+        },
+        {
+          "old": 107,
+          "new": 107,
+          "engine": 0
+        },
+        {
+          "old": 108,
+          "new": 108,
+          "engine": 1
+        },
+        {
+          "old": 109,
+          "new": 109,
+          "engine": 1
+        },
+        {
+          "old": 110,
+          "new": 110,
+          "engine": 0
+        },
+        {
+          "old": 111,
+          "new": 111,
+          "engine": 1
+        },
+        {
+          "old": 112,
+          "new": 112,
+          "engine": 1
+        },
+        {
+          "old": 113,
+          "new": 113,
+          "engine": 0
+        },
+        {
+          "old": 114,
+          "new": 114,
+          "engine": 1
+        },
+        {
+          "old": 115,
+          "new": 115,
+          "engine": 1
+        },
+        {
+          "old": 116,
+          "new": 126,
+          "engine": 14
+        },
+        {
+          "old": 117,
+          "new": 116,
+          "engine": 0
+        },
+        {
+          "old": 118,
+          "new": 117,
+          "engine": 1
+        },
+        {
+          "old": 119,
+          "new": 118,
+          "engine": 1
+        },
+        {
+          "old": 120,
+          "new": 119,
+          "engine": 0
+        },
+        {
+          "old": 121,
+          "new": 120,
+          "engine": 1
+        },
+        {
+          "old": 122,
+          "new": 121,
+          "engine": 1
+        },
+        {
+          "old": 123,
+          "new": 122,
+          "engine": 0
+        },
+        {
+          "old": 124,
+          "new": 123,
+          "engine": 1
+        },
+        {
+          "old": 125,
+          "new": 124,
+          "engine": 1
+        },
+        {
+          "old": 126,
+          "new": 125,
+          "engine": 0
+        },
+        {
+          "old": 127,
+          "new": 127,
+          "engine": 15
+        }
+      ],
+      "command_dates_and_arguments_unchanged": true,
+      "templates_and_CF_unchanged": true,
+      "KIT_delay": 7045,
+      "END_delay": 7045,
+      "hardware_pin_cycles_added": 0,
+      "source_command_latency_added": 0,
+      "lifecycle_qualified": false,
+      "required_adoption": [
+        "actual consumer retirement fence",
+        "new row tags through all completion consumers",
+        "priced reload and HOST/KS resource calendar"
+      ]
+    },
+    {
+      "job": 2,
+      "input_sha256": "d0354441341825d1adb7f8a83e3b973edfe9d345ec8a2d25a4c99162c2573545",
+      "row_tag_map": [
+        {
+          "old": 0,
+          "new": 0,
+          "engine": 1
+        },
+        {
+          "old": 1,
+          "new": 1,
+          "engine": 1
+        },
+        {
+          "old": 2,
+          "new": 2,
+          "engine": 0
+        },
+        {
+          "old": 3,
+          "new": 3,
+          "engine": 1
+        },
+        {
+          "old": 4,
+          "new": 4,
+          "engine": 1
+        },
+        {
+          "old": 5,
+          "new": 5,
+          "engine": 0
+        },
+        {
+          "old": 6,
+          "new": 6,
+          "engine": 1
+        },
+        {
+          "old": 7,
+          "new": 7,
+          "engine": 1
+        },
+        {
+          "old": 8,
+          "new": 8,
+          "engine": 0
+        },
+        {
+          "old": 9,
+          "new": 9,
+          "engine": 1
+        },
+        {
+          "old": 10,
+          "new": 10,
+          "engine": 1
+        },
+        {
+          "old": 11,
+          "new": 11,
+          "engine": 0
+        },
+        {
+          "old": 12,
+          "new": 12,
+          "engine": 1
+        },
+        {
+          "old": 13,
+          "new": 13,
+          "engine": 1
+        },
+        {
+          "old": 14,
+          "new": 14,
+          "engine": 0
+        },
+        {
+          "old": 15,
+          "new": 15,
+          "engine": 1
+        },
+        {
+          "old": 16,
+          "new": 16,
+          "engine": 1
+        },
+        {
+          "old": 17,
+          "new": 17,
+          "engine": 0
+        },
+        {
+          "old": 18,
+          "new": 18,
+          "engine": 1
+        },
+        {
+          "old": 19,
+          "new": 19,
+          "engine": 1
+        },
+        {
+          "old": 20,
+          "new": 20,
+          "engine": 0
+        },
+        {
+          "old": 21,
+          "new": 21,
+          "engine": 1
+        },
+        {
+          "old": 22,
+          "new": 22,
+          "engine": 1
+        },
+        {
+          "old": 23,
+          "new": 23,
+          "engine": 0
+        },
+        {
+          "old": 24,
+          "new": 24,
+          "engine": 1
+        },
+        {
+          "old": 25,
+          "new": 25,
+          "engine": 1
+        },
+        {
+          "old": 26,
+          "new": 26,
+          "engine": 0
+        },
+        {
+          "old": 27,
+          "new": 27,
+          "engine": 1
+        },
+        {
+          "old": 28,
+          "new": 28,
+          "engine": 1
+        },
+        {
+          "old": 29,
+          "new": 29,
+          "engine": 0
+        },
+        {
+          "old": 30,
+          "new": 30,
+          "engine": 1
+        },
+        {
+          "old": 31,
+          "new": 31,
+          "engine": 1
+        },
+        {
+          "old": 32,
+          "new": 32,
+          "engine": 0
+        },
+        {
+          "old": 33,
+          "new": 33,
+          "engine": 1
+        },
+        {
+          "old": 34,
+          "new": 34,
+          "engine": 1
+        },
+        {
+          "old": 35,
+          "new": 35,
+          "engine": 0
+        },
+        {
+          "old": 36,
+          "new": 36,
+          "engine": 1
+        },
+        {
+          "old": 37,
+          "new": 37,
+          "engine": 1
+        },
+        {
+          "old": 38,
+          "new": 38,
+          "engine": 0
+        },
+        {
+          "old": 39,
+          "new": 39,
+          "engine": 1
+        },
+        {
+          "old": 40,
+          "new": 40,
+          "engine": 1
+        },
+        {
+          "old": 41,
+          "new": 41,
+          "engine": 0
+        },
+        {
+          "old": 42,
+          "new": 42,
+          "engine": 1
+        },
+        {
+          "old": 43,
+          "new": 43,
+          "engine": 1
+        },
+        {
+          "old": 44,
+          "new": 44,
+          "engine": 0
+        },
+        {
+          "old": 45,
+          "new": 45,
+          "engine": 1
+        },
+        {
+          "old": 46,
+          "new": 46,
+          "engine": 1
+        },
+        {
+          "old": 47,
+          "new": 47,
+          "engine": 0
+        },
+        {
+          "old": 48,
+          "new": 48,
+          "engine": 1
+        },
+        {
+          "old": 49,
+          "new": 49,
+          "engine": 1
+        },
+        {
+          "old": 50,
+          "new": 50,
+          "engine": 0
+        },
+        {
+          "old": 51,
+          "new": 51,
+          "engine": 1
+        },
+        {
+          "old": 52,
+          "new": 52,
+          "engine": 1
+        },
+        {
+          "old": 53,
+          "new": 53,
+          "engine": 0
+        },
+        {
+          "old": 54,
+          "new": 54,
+          "engine": 1
+        },
+        {
+          "old": 55,
+          "new": 55,
+          "engine": 1
+        },
+        {
+          "old": 56,
+          "new": 56,
+          "engine": 0
+        },
+        {
+          "old": 57,
+          "new": 57,
+          "engine": 1
+        },
+        {
+          "old": 58,
+          "new": 58,
+          "engine": 1
+        },
+        {
+          "old": 59,
+          "new": 59,
+          "engine": 0
+        },
+        {
+          "old": 60,
+          "new": 60,
+          "engine": 1
+        },
+        {
+          "old": 61,
+          "new": 61,
+          "engine": 1
+        },
+        {
+          "old": 62,
+          "new": 62,
+          "engine": 0
+        },
+        {
+          "old": 63,
+          "new": 63,
+          "engine": 1
+        },
+        {
+          "old": 64,
+          "new": 64,
+          "engine": 1
+        },
+        {
+          "old": 65,
+          "new": 65,
+          "engine": 0
+        },
+        {
+          "old": 66,
+          "new": 66,
+          "engine": 1
+        },
+        {
+          "old": 67,
+          "new": 67,
+          "engine": 1
+        },
+        {
+          "old": 68,
+          "new": 68,
+          "engine": 0
+        },
+        {
+          "old": 69,
+          "new": 69,
+          "engine": 1
+        },
+        {
+          "old": 70,
+          "new": 70,
+          "engine": 1
+        },
+        {
+          "old": 71,
+          "new": 71,
+          "engine": 0
+        },
+        {
+          "old": 72,
+          "new": 72,
+          "engine": 1
+        },
+        {
+          "old": 73,
+          "new": 73,
+          "engine": 1
+        },
+        {
+          "old": 74,
+          "new": 74,
+          "engine": 0
+        },
+        {
+          "old": 75,
+          "new": 75,
+          "engine": 1
+        },
+        {
+          "old": 76,
+          "new": 76,
+          "engine": 1
+        },
+        {
+          "old": 77,
+          "new": 77,
+          "engine": 0
+        },
+        {
+          "old": 78,
+          "new": 78,
+          "engine": 1
+        },
+        {
+          "old": 79,
+          "new": 79,
+          "engine": 1
+        },
+        {
+          "old": 80,
+          "new": 80,
+          "engine": 0
+        },
+        {
+          "old": 81,
+          "new": 81,
+          "engine": 1
+        },
+        {
+          "old": 82,
+          "new": 82,
+          "engine": 1
+        },
+        {
+          "old": 83,
+          "new": 83,
+          "engine": 0
+        },
+        {
+          "old": 84,
+          "new": 84,
+          "engine": 1
+        },
+        {
+          "old": 85,
+          "new": 85,
+          "engine": 1
+        },
+        {
+          "old": 86,
+          "new": 86,
+          "engine": 0
+        },
+        {
+          "old": 87,
+          "new": 87,
+          "engine": 1
+        },
+        {
+          "old": 88,
+          "new": 88,
+          "engine": 1
+        },
+        {
+          "old": 89,
+          "new": 89,
+          "engine": 0
+        },
+        {
+          "old": 90,
+          "new": 90,
+          "engine": 1
+        },
+        {
+          "old": 91,
+          "new": 91,
+          "engine": 1
+        },
+        {
+          "old": 92,
+          "new": 92,
+          "engine": 0
+        },
+        {
+          "old": 93,
+          "new": 93,
+          "engine": 1
+        },
+        {
+          "old": 94,
+          "new": 94,
+          "engine": 1
+        },
+        {
+          "old": 95,
+          "new": 95,
+          "engine": 0
+        },
+        {
+          "old": 96,
+          "new": 96,
+          "engine": 1
+        },
+        {
+          "old": 97,
+          "new": 97,
+          "engine": 1
+        },
+        {
+          "old": 98,
+          "new": 98,
+          "engine": 0
+        },
+        {
+          "old": 99,
+          "new": 99,
+          "engine": 1
+        },
+        {
+          "old": 100,
+          "new": 100,
+          "engine": 1
+        },
+        {
+          "old": 101,
+          "new": 101,
+          "engine": 0
+        },
+        {
+          "old": 102,
+          "new": 102,
+          "engine": 1
+        },
+        {
+          "old": 103,
+          "new": 103,
+          "engine": 1
+        },
+        {
+          "old": 104,
+          "new": 104,
+          "engine": 0
+        },
+        {
+          "old": 105,
+          "new": 105,
+          "engine": 1
+        },
+        {
+          "old": 106,
+          "new": 106,
+          "engine": 1
+        },
+        {
+          "old": 107,
+          "new": 107,
+          "engine": 0
+        },
+        {
+          "old": 108,
+          "new": 108,
+          "engine": 1
+        },
+        {
+          "old": 109,
+          "new": 109,
+          "engine": 1
+        },
+        {
+          "old": 110,
+          "new": 110,
+          "engine": 0
+        },
+        {
+          "old": 111,
+          "new": 111,
+          "engine": 0
+        },
+        {
+          "old": 112,
+          "new": 112,
+          "engine": 0
+        },
+        {
+          "old": 113,
+          "new": 113,
+          "engine": 0
+        },
+        {
+          "old": 114,
+          "new": 114,
+          "engine": 0
+        },
+        {
+          "old": 115,
+          "new": 115,
+          "engine": 0
+        },
+        {
+          "old": 116,
+          "new": 116,
+          "engine": 0
+        },
+        {
+          "old": 117,
+          "new": 117,
+          "engine": 0
+        },
+        {
+          "old": 118,
+          "new": 118,
+          "engine": 0
+        },
+        {
+          "old": 119,
+          "new": 119,
+          "engine": 0
+        },
+        {
+          "old": 120,
+          "new": 120,
+          "engine": 0
+        },
+        {
+          "old": 121,
+          "new": 121,
+          "engine": 0
+        },
+        {
+          "old": 122,
+          "new": 126,
+          "engine": 14
+        },
+        {
+          "old": 123,
+          "new": 122,
+          "engine": 0
+        },
+        {
+          "old": 124,
+          "new": 123,
+          "engine": 0
+        },
+        {
+          "old": 125,
+          "new": 124,
+          "engine": 0
+        },
+        {
+          "old": 126,
+          "new": 125,
+          "engine": 0
+        },
+        {
+          "old": 127,
+          "new": 127,
+          "engine": 15
+        }
+      ],
+      "command_dates_and_arguments_unchanged": true,
+      "templates_and_CF_unchanged": true,
+      "KIT_delay": 6366,
+      "END_delay": 6366,
+      "hardware_pin_cycles_added": 0,
+      "source_command_latency_added": 0,
+      "lifecycle_qualified": false,
+      "required_adoption": [
+        "actual consumer retirement fence",
+        "new row tags through all completion consumers",
+        "priced reload and HOST/KS resource calendar"
+      ]
+    },
+    {
+      "job": 3,
+      "input_sha256": "c7994db561d3c1bc766ec51a4cb4f42bc64cf33071e3bd219fb3617766089fc0",
+      "row_tag_map": [
+        {
+          "old": 0,
+          "new": 0,
+          "engine": 0
+        },
+        {
+          "old": 1,
+          "new": 1,
+          "engine": 0
+        },
+        {
+          "old": 2,
+          "new": 2,
+          "engine": 0
+        },
+        {
+          "old": 3,
+          "new": 3,
+          "engine": 0
+        },
+        {
+          "old": 4,
+          "new": 4,
+          "engine": 0
+        },
+        {
+          "old": 5,
+          "new": 5,
+          "engine": 0
+        },
+        {
+          "old": 6,
+          "new": 6,
+          "engine": 0
+        },
+        {
+          "old": 7,
+          "new": 7,
+          "engine": 0
+        },
+        {
+          "old": 8,
+          "new": 8,
+          "engine": 0
+        },
+        {
+          "old": 9,
+          "new": 9,
+          "engine": 0
+        },
+        {
+          "old": 10,
+          "new": 10,
+          "engine": 0
+        },
+        {
+          "old": 11,
+          "new": 11,
+          "engine": 0
+        },
+        {
+          "old": 12,
+          "new": 12,
+          "engine": 0
+        },
+        {
+          "old": 13,
+          "new": 13,
+          "engine": 0
+        },
+        {
+          "old": 14,
+          "new": 14,
+          "engine": 0
+        },
+        {
+          "old": 15,
+          "new": 15,
+          "engine": 0
+        },
+        {
+          "old": 16,
+          "new": 16,
+          "engine": 0
+        },
+        {
+          "old": 17,
+          "new": 17,
+          "engine": 0
+        },
+        {
+          "old": 18,
+          "new": 18,
+          "engine": 0
+        },
+        {
+          "old": 19,
+          "new": 19,
+          "engine": 0
+        },
+        {
+          "old": 20,
+          "new": 20,
+          "engine": 0
+        },
+        {
+          "old": 21,
+          "new": 21,
+          "engine": 0
+        },
+        {
+          "old": 22,
+          "new": 22,
+          "engine": 0
+        },
+        {
+          "old": 23,
+          "new": 23,
+          "engine": 0
+        },
+        {
+          "old": 24,
+          "new": 24,
+          "engine": 0
+        },
+        {
+          "old": 25,
+          "new": 25,
+          "engine": 0
+        },
+        {
+          "old": 26,
+          "new": 26,
+          "engine": 0
+        },
+        {
+          "old": 27,
+          "new": 27,
+          "engine": 0
+        },
+        {
+          "old": 28,
+          "new": 28,
+          "engine": 0
+        },
+        {
+          "old": 29,
+          "new": 29,
+          "engine": 0
+        },
+        {
+          "old": 30,
+          "new": 30,
+          "engine": 0
+        },
+        {
+          "old": 31,
+          "new": 31,
+          "engine": 0
+        },
+        {
+          "old": 32,
+          "new": 32,
+          "engine": 0
+        },
+        {
+          "old": 33,
+          "new": 33,
+          "engine": 0
+        },
+        {
+          "old": 34,
+          "new": 34,
+          "engine": 0
+        },
+        {
+          "old": 35,
+          "new": 35,
+          "engine": 0
+        },
+        {
+          "old": 36,
+          "new": 36,
+          "engine": 0
+        },
+        {
+          "old": 37,
+          "new": 37,
+          "engine": 0
+        },
+        {
+          "old": 38,
+          "new": 38,
+          "engine": 0
+        },
+        {
+          "old": 39,
+          "new": 39,
+          "engine": 0
+        },
+        {
+          "old": 40,
+          "new": 40,
+          "engine": 0
+        },
+        {
+          "old": 41,
+          "new": 41,
+          "engine": 0
+        },
+        {
+          "old": 42,
+          "new": 42,
+          "engine": 0
+        },
+        {
+          "old": 43,
+          "new": 43,
+          "engine": 0
+        },
+        {
+          "old": 44,
+          "new": 44,
+          "engine": 0
+        },
+        {
+          "old": 45,
+          "new": 45,
+          "engine": 0
+        },
+        {
+          "old": 46,
+          "new": 46,
+          "engine": 0
+        },
+        {
+          "old": 47,
+          "new": 47,
+          "engine": 0
+        },
+        {
+          "old": 48,
+          "new": 48,
+          "engine": 0
+        },
+        {
+          "old": 49,
+          "new": 49,
+          "engine": 0
+        },
+        {
+          "old": 50,
+          "new": 50,
+          "engine": 0
+        },
+        {
+          "old": 51,
+          "new": 51,
+          "engine": 0
+        },
+        {
+          "old": 52,
+          "new": 52,
+          "engine": 0
+        },
+        {
+          "old": 53,
+          "new": 53,
+          "engine": 0
+        },
+        {
+          "old": 54,
+          "new": 54,
+          "engine": 0
+        },
+        {
+          "old": 55,
+          "new": 55,
+          "engine": 0
+        },
+        {
+          "old": 56,
+          "new": 56,
+          "engine": 0
+        },
+        {
+          "old": 57,
+          "new": 57,
+          "engine": 0
+        },
+        {
+          "old": 58,
+          "new": 58,
+          "engine": 0
+        },
+        {
+          "old": 59,
+          "new": 59,
+          "engine": 0
+        },
+        {
+          "old": 60,
+          "new": 60,
+          "engine": 0
+        },
+        {
+          "old": 61,
+          "new": 61,
+          "engine": 0
+        },
+        {
+          "old": 62,
+          "new": 62,
+          "engine": 0
+        },
+        {
+          "old": 63,
+          "new": 63,
+          "engine": 0
+        },
+        {
+          "old": 64,
+          "new": 64,
+          "engine": 0
+        },
+        {
+          "old": 65,
+          "new": 65,
+          "engine": 0
+        },
+        {
+          "old": 66,
+          "new": 66,
+          "engine": 0
+        },
+        {
+          "old": 67,
+          "new": 67,
+          "engine": 0
+        },
+        {
+          "old": 68,
+          "new": 68,
+          "engine": 0
+        },
+        {
+          "old": 69,
+          "new": 69,
+          "engine": 0
+        },
+        {
+          "old": 70,
+          "new": 70,
+          "engine": 0
+        },
+        {
+          "old": 71,
+          "new": 71,
+          "engine": 0
+        },
+        {
+          "old": 72,
+          "new": 72,
+          "engine": 0
+        },
+        {
+          "old": 73,
+          "new": 73,
+          "engine": 0
+        },
+        {
+          "old": 74,
+          "new": 74,
+          "engine": 0
+        },
+        {
+          "old": 75,
+          "new": 75,
+          "engine": 0
+        },
+        {
+          "old": 76,
+          "new": 76,
+          "engine": 0
+        },
+        {
+          "old": 77,
+          "new": 77,
+          "engine": 0
+        },
+        {
+          "old": 78,
+          "new": 78,
+          "engine": 0
+        },
+        {
+          "old": 79,
+          "new": 79,
+          "engine": 0
+        },
+        {
+          "old": 80,
+          "new": 80,
+          "engine": 0
+        },
+        {
+          "old": 81,
+          "new": 81,
+          "engine": 0
+        },
+        {
+          "old": 82,
+          "new": 82,
+          "engine": 0
+        },
+        {
+          "old": 83,
+          "new": 83,
+          "engine": 0
+        },
+        {
+          "old": 84,
+          "new": 84,
+          "engine": 0
+        },
+        {
+          "old": 85,
+          "new": 85,
+          "engine": 0
+        },
+        {
+          "old": 86,
+          "new": 86,
+          "engine": 0
+        },
+        {
+          "old": 87,
+          "new": 87,
+          "engine": 0
+        },
+        {
+          "old": 88,
+          "new": 88,
+          "engine": 0
+        },
+        {
+          "old": 89,
+          "new": 89,
+          "engine": 0
+        },
+        {
+          "old": 90,
+          "new": 90,
+          "engine": 0
+        },
+        {
+          "old": 91,
+          "new": 91,
+          "engine": 0
+        },
+        {
+          "old": 92,
+          "new": 92,
+          "engine": 0
+        },
+        {
+          "old": 93,
+          "new": 93,
+          "engine": 0
+        },
+        {
+          "old": 94,
+          "new": 94,
+          "engine": 0
+        },
+        {
+          "old": 95,
+          "new": 95,
+          "engine": 0
+        },
+        {
+          "old": 96,
+          "new": 96,
+          "engine": 0
+        },
+        {
+          "old": 97,
+          "new": 97,
+          "engine": 0
+        },
+        {
+          "old": 98,
+          "new": 98,
+          "engine": 0
+        },
+        {
+          "old": 99,
+          "new": 99,
+          "engine": 0
+        },
+        {
+          "old": 100,
+          "new": 100,
+          "engine": 0
+        },
+        {
+          "old": 101,
+          "new": 101,
+          "engine": 0
+        },
+        {
+          "old": 102,
+          "new": 102,
+          "engine": 0
+        },
+        {
+          "old": 103,
+          "new": 103,
+          "engine": 0
+        },
+        {
+          "old": 104,
+          "new": 104,
+          "engine": 0
+        },
+        {
+          "old": 105,
+          "new": 105,
+          "engine": 0
+        },
+        {
+          "old": 106,
+          "new": 106,
+          "engine": 0
+        },
+        {
+          "old": 107,
+          "new": 107,
+          "engine": 0
+        },
+        {
+          "old": 108,
+          "new": 108,
+          "engine": 0
+        },
+        {
+          "old": 109,
+          "new": 109,
+          "engine": 0
+        },
+        {
+          "old": 110,
+          "new": 110,
+          "engine": 0
+        },
+        {
+          "old": 111,
+          "new": 111,
+          "engine": 0
+        },
+        {
+          "old": 112,
+          "new": 112,
+          "engine": 0
+        },
+        {
+          "old": 113,
+          "new": 113,
+          "engine": 0
+        },
+        {
+          "old": 114,
+          "new": 114,
+          "engine": 0
+        },
+        {
+          "old": 115,
+          "new": 115,
+          "engine": 0
+        },
+        {
+          "old": 116,
+          "new": 116,
+          "engine": 0
+        },
+        {
+          "old": 117,
+          "new": 117,
+          "engine": 0
+        },
+        {
+          "old": 118,
+          "new": 118,
+          "engine": 0
+        },
+        {
+          "old": 119,
+          "new": 119,
+          "engine": 0
+        },
+        {
+          "old": 120,
+          "new": 120,
+          "engine": 0
+        },
+        {
+          "old": 121,
+          "new": 121,
+          "engine": 0
+        },
+        {
+          "old": 122,
+          "new": 126,
+          "engine": 14
+        },
+        {
+          "old": 123,
+          "new": 122,
+          "engine": 0
+        },
+        {
+          "old": 124,
+          "new": 123,
+          "engine": 0
+        },
+        {
+          "old": 125,
+          "new": 124,
+          "engine": 0
+        },
+        {
+          "old": 126,
+          "new": 125,
+          "engine": 0
+        },
+        {
+          "old": 127,
+          "new": 127,
+          "engine": 15
+        }
+      ],
+      "command_dates_and_arguments_unchanged": true,
+      "templates_and_CF_unchanged": true,
+      "KIT_delay": 6799,
+      "END_delay": 6799,
+      "hardware_pin_cycles_added": 0,
+      "source_command_latency_added": 0,
+      "lifecycle_qualified": false,
+      "required_adoption": [
+        "actual consumer retirement fence",
+        "new row tags through all completion consumers",
+        "priced reload and HOST/KS resource calendar"
+      ]
+    },
+    {
+      "job": 4,
+      "input_sha256": "047da0c3229bce56bcbf213d13ea3a7c9b0985ac880b8d89939aaeee3a253473",
+      "row_tag_map": [
+        {
+          "old": 0,
+          "new": 0,
+          "engine": 0
+        },
+        {
+          "old": 1,
+          "new": 1,
+          "engine": 0
+        },
+        {
+          "old": 2,
+          "new": 2,
+          "engine": 0
+        },
+        {
+          "old": 3,
+          "new": 3,
+          "engine": 0
+        },
+        {
+          "old": 4,
+          "new": 4,
+          "engine": 0
+        },
+        {
+          "old": 5,
+          "new": 5,
+          "engine": 0
+        },
+        {
+          "old": 6,
+          "new": 6,
+          "engine": 0
+        },
+        {
+          "old": 7,
+          "new": 7,
+          "engine": 0
+        },
+        {
+          "old": 8,
+          "new": 8,
+          "engine": 0
+        },
+        {
+          "old": 9,
+          "new": 9,
+          "engine": 0
+        },
+        {
+          "old": 10,
+          "new": 10,
+          "engine": 0
+        },
+        {
+          "old": 11,
+          "new": 11,
+          "engine": 0
+        },
+        {
+          "old": 12,
+          "new": 12,
+          "engine": 0
+        },
+        {
+          "old": 13,
+          "new": 13,
+          "engine": 0
+        },
+        {
+          "old": 14,
+          "new": 14,
+          "engine": 0
+        },
+        {
+          "old": 15,
+          "new": 15,
+          "engine": 0
+        },
+        {
+          "old": 16,
+          "new": 16,
+          "engine": 0
+        },
+        {
+          "old": 17,
+          "new": 17,
+          "engine": 0
+        },
+        {
+          "old": 18,
+          "new": 18,
+          "engine": 0
+        },
+        {
+          "old": 19,
+          "new": 19,
+          "engine": 0
+        },
+        {
+          "old": 20,
+          "new": 20,
+          "engine": 0
+        },
+        {
+          "old": 21,
+          "new": 21,
+          "engine": 0
+        },
+        {
+          "old": 22,
+          "new": 22,
+          "engine": 0
+        },
+        {
+          "old": 23,
+          "new": 23,
+          "engine": 0
+        },
+        {
+          "old": 24,
+          "new": 24,
+          "engine": 0
+        },
+        {
+          "old": 25,
+          "new": 25,
+          "engine": 0
+        },
+        {
+          "old": 26,
+          "new": 26,
+          "engine": 0
+        },
+        {
+          "old": 27,
+          "new": 27,
+          "engine": 0
+        },
+        {
+          "old": 28,
+          "new": 28,
+          "engine": 0
+        },
+        {
+          "old": 29,
+          "new": 29,
+          "engine": 0
+        },
+        {
+          "old": 30,
+          "new": 30,
+          "engine": 0
+        },
+        {
+          "old": 31,
+          "new": 31,
+          "engine": 0
+        },
+        {
+          "old": 32,
+          "new": 32,
+          "engine": 0
+        },
+        {
+          "old": 33,
+          "new": 33,
+          "engine": 0
+        },
+        {
+          "old": 34,
+          "new": 34,
+          "engine": 0
+        },
+        {
+          "old": 35,
+          "new": 35,
+          "engine": 0
+        },
+        {
+          "old": 36,
+          "new": 36,
+          "engine": 0
+        },
+        {
+          "old": 37,
+          "new": 37,
+          "engine": 0
+        },
+        {
+          "old": 38,
+          "new": 38,
+          "engine": 0
+        },
+        {
+          "old": 39,
+          "new": 39,
+          "engine": 0
+        },
+        {
+          "old": 40,
+          "new": 40,
+          "engine": 0
+        },
+        {
+          "old": 41,
+          "new": 41,
+          "engine": 0
+        },
+        {
+          "old": 42,
+          "new": 42,
+          "engine": 0
+        },
+        {
+          "old": 43,
+          "new": 43,
+          "engine": 0
+        },
+        {
+          "old": 44,
+          "new": 44,
+          "engine": 0
+        },
+        {
+          "old": 45,
+          "new": 45,
+          "engine": 0
+        },
+        {
+          "old": 46,
+          "new": 46,
+          "engine": 0
+        },
+        {
+          "old": 47,
+          "new": 47,
+          "engine": 0
+        },
+        {
+          "old": 48,
+          "new": 48,
+          "engine": 0
+        },
+        {
+          "old": 49,
+          "new": 49,
+          "engine": 0
+        },
+        {
+          "old": 50,
+          "new": 50,
+          "engine": 0
+        },
+        {
+          "old": 51,
+          "new": 51,
+          "engine": 0
+        },
+        {
+          "old": 52,
+          "new": 52,
+          "engine": 0
+        },
+        {
+          "old": 53,
+          "new": 53,
+          "engine": 0
+        },
+        {
+          "old": 54,
+          "new": 54,
+          "engine": 0
+        },
+        {
+          "old": 55,
+          "new": 55,
+          "engine": 0
+        },
+        {
+          "old": 56,
+          "new": 56,
+          "engine": 0
+        },
+        {
+          "old": 57,
+          "new": 57,
+          "engine": 0
+        },
+        {
+          "old": 58,
+          "new": 58,
+          "engine": 0
+        },
+        {
+          "old": 59,
+          "new": 59,
+          "engine": 0
+        },
+        {
+          "old": 60,
+          "new": 60,
+          "engine": 0
+        },
+        {
+          "old": 61,
+          "new": 61,
+          "engine": 0
+        },
+        {
+          "old": 62,
+          "new": 62,
+          "engine": 0
+        },
+        {
+          "old": 63,
+          "new": 63,
+          "engine": 0
+        },
+        {
+          "old": 64,
+          "new": 64,
+          "engine": 0
+        },
+        {
+          "old": 65,
+          "new": 65,
+          "engine": 0
+        },
+        {
+          "old": 66,
+          "new": 66,
+          "engine": 0
+        },
+        {
+          "old": 67,
+          "new": 67,
+          "engine": 0
+        },
+        {
+          "old": 68,
+          "new": 68,
+          "engine": 0
+        },
+        {
+          "old": 69,
+          "new": 69,
+          "engine": 0
+        },
+        {
+          "old": 70,
+          "new": 70,
+          "engine": 0
+        },
+        {
+          "old": 71,
+          "new": 71,
+          "engine": 0
+        },
+        {
+          "old": 72,
+          "new": 72,
+          "engine": 0
+        },
+        {
+          "old": 73,
+          "new": 73,
+          "engine": 0
+        },
+        {
+          "old": 74,
+          "new": 74,
+          "engine": 0
+        },
+        {
+          "old": 75,
+          "new": 75,
+          "engine": 0
+        },
+        {
+          "old": 76,
+          "new": 76,
+          "engine": 0
+        },
+        {
+          "old": 77,
+          "new": 77,
+          "engine": 0
+        },
+        {
+          "old": 78,
+          "new": 78,
+          "engine": 1
+        },
+        {
+          "old": 79,
+          "new": 79,
+          "engine": 0
+        },
+        {
+          "old": 80,
+          "new": 80,
+          "engine": 1
+        },
+        {
+          "old": 81,
+          "new": 81,
+          "engine": 0
+        },
+        {
+          "old": 82,
+          "new": 82,
+          "engine": 0
+        },
+        {
+          "old": 83,
+          "new": 83,
+          "engine": 1
+        },
+        {
+          "old": 84,
+          "new": 84,
+          "engine": 0
+        },
+        {
+          "old": 85,
+          "new": 85,
+          "engine": 1
+        },
+        {
+          "old": 86,
+          "new": 86,
+          "engine": 0
+        },
+        {
+          "old": 87,
+          "new": 87,
+          "engine": 0
+        },
+        {
+          "old": 88,
+          "new": 88,
+          "engine": 1
+        },
+        {
+          "old": 89,
+          "new": 89,
+          "engine": 0
+        },
+        {
+          "old": 90,
+          "new": 90,
+          "engine": 1
+        },
+        {
+          "old": 91,
+          "new": 91,
+          "engine": 0
+        },
+        {
+          "old": 92,
+          "new": 92,
+          "engine": 1
+        },
+        {
+          "old": 93,
+          "new": 93,
+          "engine": 0
+        },
+        {
+          "old": 94,
+          "new": 94,
+          "engine": 1
+        },
+        {
+          "old": 95,
+          "new": 95,
+          "engine": 0
+        },
+        {
+          "old": 96,
+          "new": 96,
+          "engine": 1
+        },
+        {
+          "old": 97,
+          "new": 97,
+          "engine": 0
+        },
+        {
+          "old": 98,
+          "new": 98,
+          "engine": 1
+        },
+        {
+          "old": 99,
+          "new": 99,
+          "engine": 0
+        },
+        {
+          "old": 100,
+          "new": 100,
+          "engine": 1
+        },
+        {
+          "old": 101,
+          "new": 101,
+          "engine": 0
+        },
+        {
+          "old": 102,
+          "new": 102,
+          "engine": 1
+        },
+        {
+          "old": 103,
+          "new": 103,
+          "engine": 0
+        },
+        {
+          "old": 104,
+          "new": 104,
+          "engine": 1
+        },
+        {
+          "old": 105,
+          "new": 105,
+          "engine": 0
+        },
+        {
+          "old": 106,
+          "new": 106,
+          "engine": 1
+        },
+        {
+          "old": 107,
+          "new": 107,
+          "engine": 0
+        },
+        {
+          "old": 108,
+          "new": 108,
+          "engine": 1
+        },
+        {
+          "old": 109,
+          "new": 109,
+          "engine": 0
+        },
+        {
+          "old": 110,
+          "new": 110,
+          "engine": 1
+        },
+        {
+          "old": 111,
+          "new": 126,
+          "engine": 14
+        },
+        {
+          "old": 112,
+          "new": 111,
+          "engine": 0
+        },
+        {
+          "old": 113,
+          "new": 112,
+          "engine": 1
+        },
+        {
+          "old": 114,
+          "new": 113,
+          "engine": 0
+        },
+        {
+          "old": 115,
+          "new": 114,
+          "engine": 1
+        },
+        {
+          "old": 116,
+          "new": 115,
+          "engine": 0
+        },
+        {
+          "old": 117,
+          "new": 116,
+          "engine": 1
+        },
+        {
+          "old": 118,
+          "new": 117,
+          "engine": 0
+        },
+        {
+          "old": 119,
+          "new": 118,
+          "engine": 1
+        },
+        {
+          "old": 120,
+          "new": 119,
+          "engine": 0
+        },
+        {
+          "old": 121,
+          "new": 120,
+          "engine": 1
+        },
+        {
+          "old": 122,
+          "new": 121,
+          "engine": 0
+        },
+        {
+          "old": 123,
+          "new": 122,
+          "engine": 1
+        },
+        {
+          "old": 124,
+          "new": 123,
+          "engine": 0
+        },
+        {
+          "old": 125,
+          "new": 124,
+          "engine": 1
+        },
+        {
+          "old": 126,
+          "new": 125,
+          "engine": 0
+        },
+        {
+          "old": 127,
+          "new": 127,
+          "engine": 15
+        }
+      ],
+      "command_dates_and_arguments_unchanged": true,
+      "templates_and_CF_unchanged": true,
+      "KIT_delay": 6904,
+      "END_delay": 6904,
+      "hardware_pin_cycles_added": 0,
+      "source_command_latency_added": 0,
+      "lifecycle_qualified": false,
+      "required_adoption": [
+        "actual consumer retirement fence",
+        "new row tags through all completion consumers",
+        "priced reload and HOST/KS resource calendar"
+      ]
+    },
+    {
+      "job": 5,
+      "input_sha256": "1a7a249d12081d398520853c9b69792f7395f6c215b741b0090763ce0ab459c7",
+      "row_tag_map": [
+        {
+          "old": 0,
+          "new": 0,
+          "engine": 1
+        },
+        {
+          "old": 1,
+          "new": 1,
+          "engine": 0
+        },
+        {
+          "old": 2,
+          "new": 2,
+          "engine": 1
+        },
+        {
+          "old": 3,
+          "new": 3,
+          "engine": 0
+        },
+        {
+          "old": 4,
+          "new": 4,
+          "engine": 1
+        },
+        {
+          "old": 5,
+          "new": 5,
+          "engine": 0
+        },
+        {
+          "old": 6,
+          "new": 6,
+          "engine": 1
+        },
+        {
+          "old": 7,
+          "new": 7,
+          "engine": 0
+        },
+        {
+          "old": 8,
+          "new": 8,
+          "engine": 1
+        },
+        {
+          "old": 9,
+          "new": 9,
+          "engine": 0
+        },
+        {
+          "old": 10,
+          "new": 10,
+          "engine": 1
+        },
+        {
+          "old": 11,
+          "new": 11,
+          "engine": 0
+        },
+        {
+          "old": 12,
+          "new": 12,
+          "engine": 1
+        },
+        {
+          "old": 13,
+          "new": 13,
+          "engine": 0
+        },
+        {
+          "old": 14,
+          "new": 14,
+          "engine": 1
+        },
+        {
+          "old": 15,
+          "new": 15,
+          "engine": 0
+        },
+        {
+          "old": 16,
+          "new": 16,
+          "engine": 1
+        },
+        {
+          "old": 17,
+          "new": 17,
+          "engine": 0
+        },
+        {
+          "old": 18,
+          "new": 18,
+          "engine": 1
+        },
+        {
+          "old": 19,
+          "new": 19,
+          "engine": 0
+        },
+        {
+          "old": 20,
+          "new": 20,
+          "engine": 1
+        },
+        {
+          "old": 21,
+          "new": 21,
+          "engine": 0
+        },
+        {
+          "old": 22,
+          "new": 22,
+          "engine": 1
+        },
+        {
+          "old": 23,
+          "new": 23,
+          "engine": 0
+        },
+        {
+          "old": 24,
+          "new": 24,
+          "engine": 1
+        },
+        {
+          "old": 25,
+          "new": 25,
+          "engine": 0
+        },
+        {
+          "old": 26,
+          "new": 26,
+          "engine": 1
+        },
+        {
+          "old": 27,
+          "new": 27,
+          "engine": 0
+        },
+        {
+          "old": 28,
+          "new": 28,
+          "engine": 1
+        },
+        {
+          "old": 29,
+          "new": 29,
+          "engine": 0
+        },
+        {
+          "old": 30,
+          "new": 30,
+          "engine": 1
+        },
+        {
+          "old": 31,
+          "new": 31,
+          "engine": 0
+        },
+        {
+          "old": 32,
+          "new": 32,
+          "engine": 1
+        },
+        {
+          "old": 33,
+          "new": 33,
+          "engine": 0
+        },
+        {
+          "old": 34,
+          "new": 34,
+          "engine": 1
+        },
+        {
+          "old": 35,
+          "new": 35,
+          "engine": 0
+        },
+        {
+          "old": 36,
+          "new": 36,
+          "engine": 1
+        },
+        {
+          "old": 37,
+          "new": 37,
+          "engine": 0
+        },
+        {
+          "old": 38,
+          "new": 38,
+          "engine": 1
+        },
+        {
+          "old": 39,
+          "new": 39,
+          "engine": 0
+        },
+        {
+          "old": 40,
+          "new": 40,
+          "engine": 1
+        },
+        {
+          "old": 41,
+          "new": 41,
+          "engine": 0
+        },
+        {
+          "old": 42,
+          "new": 42,
+          "engine": 1
+        },
+        {
+          "old": 43,
+          "new": 43,
+          "engine": 0
+        },
+        {
+          "old": 44,
+          "new": 44,
+          "engine": 1
+        },
+        {
+          "old": 45,
+          "new": 45,
+          "engine": 0
+        },
+        {
+          "old": 46,
+          "new": 46,
+          "engine": 1
+        },
+        {
+          "old": 47,
+          "new": 47,
+          "engine": 0
+        },
+        {
+          "old": 48,
+          "new": 48,
+          "engine": 1
+        },
+        {
+          "old": 49,
+          "new": 49,
+          "engine": 0
+        },
+        {
+          "old": 50,
+          "new": 50,
+          "engine": 1
+        },
+        {
+          "old": 51,
+          "new": 51,
+          "engine": 0
+        },
+        {
+          "old": 52,
+          "new": 52,
+          "engine": 1
+        },
+        {
+          "old": 53,
+          "new": 53,
+          "engine": 0
+        },
+        {
+          "old": 54,
+          "new": 54,
+          "engine": 1
+        },
+        {
+          "old": 55,
+          "new": 55,
+          "engine": 0
+        },
+        {
+          "old": 56,
+          "new": 56,
+          "engine": 1
+        },
+        {
+          "old": 57,
+          "new": 57,
+          "engine": 0
+        },
+        {
+          "old": 58,
+          "new": 58,
+          "engine": 1
+        },
+        {
+          "old": 59,
+          "new": 59,
+          "engine": 0
+        },
+        {
+          "old": 60,
+          "new": 60,
+          "engine": 1
+        },
+        {
+          "old": 61,
+          "new": 61,
+          "engine": 0
+        },
+        {
+          "old": 62,
+          "new": 62,
+          "engine": 1
+        },
+        {
+          "old": 63,
+          "new": 63,
+          "engine": 0
+        },
+        {
+          "old": 64,
+          "new": 64,
+          "engine": 1
+        },
+        {
+          "old": 65,
+          "new": 65,
+          "engine": 0
+        },
+        {
+          "old": 66,
+          "new": 66,
+          "engine": 1
+        },
+        {
+          "old": 67,
+          "new": 67,
+          "engine": 0
+        },
+        {
+          "old": 68,
+          "new": 68,
+          "engine": 1
+        },
+        {
+          "old": 69,
+          "new": 69,
+          "engine": 0
+        },
+        {
+          "old": 70,
+          "new": 70,
+          "engine": 1
+        },
+        {
+          "old": 71,
+          "new": 71,
+          "engine": 0
+        },
+        {
+          "old": 72,
+          "new": 72,
+          "engine": 1
+        },
+        {
+          "old": 73,
+          "new": 73,
+          "engine": 0
+        },
+        {
+          "old": 74,
+          "new": 74,
+          "engine": 1
+        },
+        {
+          "old": 75,
+          "new": 75,
+          "engine": 0
+        },
+        {
+          "old": 76,
+          "new": 76,
+          "engine": 1
+        },
+        {
+          "old": 77,
+          "new": 77,
+          "engine": 0
+        },
+        {
+          "old": 78,
+          "new": 78,
+          "engine": 1
+        },
+        {
+          "old": 79,
+          "new": 79,
+          "engine": 0
+        },
+        {
+          "old": 80,
+          "new": 80,
+          "engine": 1
+        },
+        {
+          "old": 81,
+          "new": 81,
+          "engine": 0
+        },
+        {
+          "old": 82,
+          "new": 82,
+          "engine": 1
+        },
+        {
+          "old": 83,
+          "new": 83,
+          "engine": 0
+        },
+        {
+          "old": 84,
+          "new": 84,
+          "engine": 1
+        },
+        {
+          "old": 85,
+          "new": 85,
+          "engine": 0
+        },
+        {
+          "old": 86,
+          "new": 86,
+          "engine": 1
+        },
+        {
+          "old": 87,
+          "new": 87,
+          "engine": 0
+        },
+        {
+          "old": 88,
+          "new": 88,
+          "engine": 1
+        },
+        {
+          "old": 89,
+          "new": 89,
+          "engine": 0
+        },
+        {
+          "old": 90,
+          "new": 90,
+          "engine": 1
+        },
+        {
+          "old": 91,
+          "new": 91,
+          "engine": 0
+        },
+        {
+          "old": 92,
+          "new": 92,
+          "engine": 1
+        },
+        {
+          "old": 93,
+          "new": 93,
+          "engine": 0
+        },
+        {
+          "old": 94,
+          "new": 94,
+          "engine": 1
+        },
+        {
+          "old": 95,
+          "new": 95,
+          "engine": 0
+        },
+        {
+          "old": 96,
+          "new": 96,
+          "engine": 1
+        },
+        {
+          "old": 97,
+          "new": 97,
+          "engine": 0
+        },
+        {
+          "old": 98,
+          "new": 98,
+          "engine": 1
+        },
+        {
+          "old": 99,
+          "new": 99,
+          "engine": 0
+        },
+        {
+          "old": 100,
+          "new": 100,
+          "engine": 1
+        },
+        {
+          "old": 101,
+          "new": 101,
+          "engine": 0
+        },
+        {
+          "old": 102,
+          "new": 102,
+          "engine": 1
+        },
+        {
+          "old": 103,
+          "new": 103,
+          "engine": 0
+        },
+        {
+          "old": 104,
+          "new": 104,
+          "engine": 1
+        },
+        {
+          "old": 105,
+          "new": 105,
+          "engine": 0
+        },
+        {
+          "old": 106,
+          "new": 106,
+          "engine": 1
+        },
+        {
+          "old": 107,
+          "new": 107,
+          "engine": 0
+        },
+        {
+          "old": 108,
+          "new": 108,
+          "engine": 1
+        },
+        {
+          "old": 109,
+          "new": 109,
+          "engine": 0
+        },
+        {
+          "old": 110,
+          "new": 110,
+          "engine": 1
+        },
+        {
+          "old": 111,
+          "new": 111,
+          "engine": 0
+        },
+        {
+          "old": 112,
+          "new": 112,
+          "engine": 1
+        },
+        {
+          "old": 113,
+          "new": 126,
+          "engine": 14
+        },
+        {
+          "old": 114,
+          "new": 113,
+          "engine": 0
+        },
+        {
+          "old": 115,
+          "new": 114,
+          "engine": 1
+        },
+        {
+          "old": 116,
+          "new": 115,
+          "engine": 0
+        },
+        {
+          "old": 117,
+          "new": 116,
+          "engine": 1
+        },
+        {
+          "old": 118,
+          "new": 117,
+          "engine": 0
+        },
+        {
+          "old": 119,
+          "new": 118,
+          "engine": 1
+        },
+        {
+          "old": 120,
+          "new": 119,
+          "engine": 0
+        },
+        {
+          "old": 121,
+          "new": 120,
+          "engine": 1
+        },
+        {
+          "old": 122,
+          "new": 121,
+          "engine": 0
+        },
+        {
+          "old": 123,
+          "new": 122,
+          "engine": 1
+        },
+        {
+          "old": 124,
+          "new": 123,
+          "engine": 0
+        },
+        {
+          "old": 125,
+          "new": 124,
+          "engine": 1
+        },
+        {
+          "old": 126,
+          "new": 125,
+          "engine": 0
+        },
+        {
+          "old": 127,
+          "new": 127,
+          "engine": 15
+        }
+      ],
+      "command_dates_and_arguments_unchanged": true,
+      "templates_and_CF_unchanged": true,
+      "KIT_delay": 7078,
+      "END_delay": 7079,
+      "hardware_pin_cycles_added": 0,
+      "source_command_latency_added": 0,
+      "lifecycle_qualified": false,
+      "required_adoption": [
+        "actual consumer retirement fence",
+        "new row tags through all completion consumers",
+        "priced reload and HOST/KS resource calendar"
+      ]
+    },
+    {
+      "job": 6,
+      "input_sha256": "0c18d667253f16fc2998dc7c2734f37642ef3c051054d9e98b5a04f2263b4788",
+      "row_tag_map": [
+        {
+          "old": 0,
+          "new": 0,
+          "engine": 1
+        },
+        {
+          "old": 1,
+          "new": 1,
+          "engine": 0
+        },
+        {
+          "old": 2,
+          "new": 2,
+          "engine": 1
+        },
+        {
+          "old": 3,
+          "new": 3,
+          "engine": 0
+        },
+        {
+          "old": 4,
+          "new": 4,
+          "engine": 1
+        },
+        {
+          "old": 5,
+          "new": 5,
+          "engine": 0
+        },
+        {
+          "old": 6,
+          "new": 6,
+          "engine": 1
+        },
+        {
+          "old": 7,
+          "new": 7,
+          "engine": 0
+        },
+        {
+          "old": 8,
+          "new": 8,
+          "engine": 1
+        },
+        {
+          "old": 9,
+          "new": 9,
+          "engine": 0
+        },
+        {
+          "old": 10,
+          "new": 10,
+          "engine": 1
+        },
+        {
+          "old": 11,
+          "new": 11,
+          "engine": 0
+        },
+        {
+          "old": 12,
+          "new": 12,
+          "engine": 1
+        },
+        {
+          "old": 13,
+          "new": 13,
+          "engine": 0
+        },
+        {
+          "old": 14,
+          "new": 14,
+          "engine": 1
+        },
+        {
+          "old": 15,
+          "new": 15,
+          "engine": 0
+        },
+        {
+          "old": 16,
+          "new": 16,
+          "engine": 1
+        },
+        {
+          "old": 17,
+          "new": 17,
+          "engine": 0
+        },
+        {
+          "old": 18,
+          "new": 18,
+          "engine": 1
+        },
+        {
+          "old": 19,
+          "new": 19,
+          "engine": 0
+        },
+        {
+          "old": 20,
+          "new": 20,
+          "engine": 1
+        },
+        {
+          "old": 21,
+          "new": 21,
+          "engine": 0
+        },
+        {
+          "old": 22,
+          "new": 22,
+          "engine": 1
+        },
+        {
+          "old": 23,
+          "new": 23,
+          "engine": 0
+        },
+        {
+          "old": 24,
+          "new": 24,
+          "engine": 1
+        },
+        {
+          "old": 25,
+          "new": 25,
+          "engine": 0
+        },
+        {
+          "old": 26,
+          "new": 26,
+          "engine": 1
+        },
+        {
+          "old": 27,
+          "new": 27,
+          "engine": 0
+        },
+        {
+          "old": 28,
+          "new": 28,
+          "engine": 1
+        },
+        {
+          "old": 29,
+          "new": 29,
+          "engine": 0
+        },
+        {
+          "old": 30,
+          "new": 30,
+          "engine": 1
+        },
+        {
+          "old": 31,
+          "new": 31,
+          "engine": 0
+        },
+        {
+          "old": 32,
+          "new": 32,
+          "engine": 1
+        },
+        {
+          "old": 33,
+          "new": 33,
+          "engine": 0
+        },
+        {
+          "old": 34,
+          "new": 34,
+          "engine": 1
+        },
+        {
+          "old": 35,
+          "new": 35,
+          "engine": 0
+        },
+        {
+          "old": 36,
+          "new": 36,
+          "engine": 1
+        },
+        {
+          "old": 37,
+          "new": 37,
+          "engine": 0
+        },
+        {
+          "old": 38,
+          "new": 38,
+          "engine": 1
+        },
+        {
+          "old": 39,
+          "new": 39,
+          "engine": 0
+        },
+        {
+          "old": 40,
+          "new": 40,
+          "engine": 1
+        },
+        {
+          "old": 41,
+          "new": 41,
+          "engine": 0
+        },
+        {
+          "old": 42,
+          "new": 42,
+          "engine": 1
+        },
+        {
+          "old": 43,
+          "new": 43,
+          "engine": 0
+        },
+        {
+          "old": 44,
+          "new": 44,
+          "engine": 1
+        },
+        {
+          "old": 45,
+          "new": 45,
+          "engine": 0
+        },
+        {
+          "old": 46,
+          "new": 46,
+          "engine": 1
+        },
+        {
+          "old": 47,
+          "new": 47,
+          "engine": 0
+        },
+        {
+          "old": 48,
+          "new": 48,
+          "engine": 1
+        },
+        {
+          "old": 49,
+          "new": 49,
+          "engine": 0
+        },
+        {
+          "old": 50,
+          "new": 50,
+          "engine": 1
+        },
+        {
+          "old": 51,
+          "new": 51,
+          "engine": 0
+        },
+        {
+          "old": 52,
+          "new": 52,
+          "engine": 1
+        },
+        {
+          "old": 53,
+          "new": 53,
+          "engine": 0
+        },
+        {
+          "old": 54,
+          "new": 54,
+          "engine": 1
+        },
+        {
+          "old": 55,
+          "new": 55,
+          "engine": 0
+        },
+        {
+          "old": 56,
+          "new": 56,
+          "engine": 1
+        },
+        {
+          "old": 57,
+          "new": 57,
+          "engine": 0
+        },
+        {
+          "old": 58,
+          "new": 58,
+          "engine": 1
+        },
+        {
+          "old": 59,
+          "new": 59,
+          "engine": 0
+        },
+        {
+          "old": 60,
+          "new": 60,
+          "engine": 1
+        },
+        {
+          "old": 61,
+          "new": 61,
+          "engine": 0
+        },
+        {
+          "old": 62,
+          "new": 62,
+          "engine": 1
+        },
+        {
+          "old": 63,
+          "new": 63,
+          "engine": 0
+        },
+        {
+          "old": 64,
+          "new": 64,
+          "engine": 1
+        },
+        {
+          "old": 65,
+          "new": 65,
+          "engine": 0
+        },
+        {
+          "old": 66,
+          "new": 66,
+          "engine": 1
+        },
+        {
+          "old": 67,
+          "new": 67,
+          "engine": 0
+        },
+        {
+          "old": 68,
+          "new": 68,
+          "engine": 1
+        },
+        {
+          "old": 69,
+          "new": 69,
+          "engine": 0
+        },
+        {
+          "old": 70,
+          "new": 70,
+          "engine": 1
+        },
+        {
+          "old": 71,
+          "new": 71,
+          "engine": 0
+        },
+        {
+          "old": 72,
+          "new": 72,
+          "engine": 1
+        },
+        {
+          "old": 73,
+          "new": 73,
+          "engine": 0
+        },
+        {
+          "old": 74,
+          "new": 74,
+          "engine": 1
+        },
+        {
+          "old": 75,
+          "new": 75,
+          "engine": 0
+        },
+        {
+          "old": 76,
+          "new": 76,
+          "engine": 1
+        },
+        {
+          "old": 77,
+          "new": 77,
+          "engine": 0
+        },
+        {
+          "old": 78,
+          "new": 78,
+          "engine": 1
+        },
+        {
+          "old": 79,
+          "new": 79,
+          "engine": 0
+        },
+        {
+          "old": 80,
+          "new": 80,
+          "engine": 1
+        },
+        {
+          "old": 81,
+          "new": 81,
+          "engine": 0
+        },
+        {
+          "old": 82,
+          "new": 82,
+          "engine": 1
+        },
+        {
+          "old": 83,
+          "new": 83,
+          "engine": 0
+        },
+        {
+          "old": 84,
+          "new": 84,
+          "engine": 1
+        },
+        {
+          "old": 85,
+          "new": 85,
+          "engine": 0
+        },
+        {
+          "old": 86,
+          "new": 86,
+          "engine": 1
+        },
+        {
+          "old": 87,
+          "new": 87,
+          "engine": 0
+        },
+        {
+          "old": 88,
+          "new": 88,
+          "engine": 1
+        },
+        {
+          "old": 89,
+          "new": 89,
+          "engine": 0
+        },
+        {
+          "old": 90,
+          "new": 90,
+          "engine": 1
+        },
+        {
+          "old": 91,
+          "new": 91,
+          "engine": 0
+        },
+        {
+          "old": 92,
+          "new": 92,
+          "engine": 1
+        },
+        {
+          "old": 93,
+          "new": 93,
+          "engine": 0
+        },
+        {
+          "old": 94,
+          "new": 94,
+          "engine": 1
+        },
+        {
+          "old": 95,
+          "new": 95,
+          "engine": 0
+        },
+        {
+          "old": 96,
+          "new": 96,
+          "engine": 1
+        },
+        {
+          "old": 97,
+          "new": 97,
+          "engine": 0
+        },
+        {
+          "old": 98,
+          "new": 98,
+          "engine": 1
+        },
+        {
+          "old": 99,
+          "new": 99,
+          "engine": 0
+        },
+        {
+          "old": 100,
+          "new": 100,
+          "engine": 1
+        },
+        {
+          "old": 101,
+          "new": 101,
+          "engine": 0
+        },
+        {
+          "old": 102,
+          "new": 102,
+          "engine": 1
+        },
+        {
+          "old": 103,
+          "new": 103,
+          "engine": 0
+        },
+        {
+          "old": 104,
+          "new": 104,
+          "engine": 1
+        },
+        {
+          "old": 105,
+          "new": 105,
+          "engine": 0
+        },
+        {
+          "old": 106,
+          "new": 106,
+          "engine": 1
+        },
+        {
+          "old": 107,
+          "new": 107,
+          "engine": 0
+        },
+        {
+          "old": 108,
+          "new": 108,
+          "engine": 1
+        },
+        {
+          "old": 109,
+          "new": 109,
+          "engine": 0
+        },
+        {
+          "old": 110,
+          "new": 110,
+          "engine": 1
+        },
+        {
+          "old": 111,
+          "new": 126,
+          "engine": 14
+        },
+        {
+          "old": 112,
+          "new": 111,
+          "engine": 0
+        },
+        {
+          "old": 113,
+          "new": 112,
+          "engine": 1
+        },
+        {
+          "old": 114,
+          "new": 113,
+          "engine": 0
+        },
+        {
+          "old": 115,
+          "new": 114,
+          "engine": 1
+        },
+        {
+          "old": 116,
+          "new": 115,
+          "engine": 0
+        },
+        {
+          "old": 117,
+          "new": 116,
+          "engine": 1
+        },
+        {
+          "old": 118,
+          "new": 117,
+          "engine": 0
+        },
+        {
+          "old": 119,
+          "new": 118,
+          "engine": 1
+        },
+        {
+          "old": 120,
+          "new": 119,
+          "engine": 0
+        },
+        {
+          "old": 121,
+          "new": 120,
+          "engine": 1
+        },
+        {
+          "old": 122,
+          "new": 121,
+          "engine": 0
+        },
+        {
+          "old": 123,
+          "new": 122,
+          "engine": 1
+        },
+        {
+          "old": 124,
+          "new": 123,
+          "engine": 0
+        },
+        {
+          "old": 125,
+          "new": 124,
+          "engine": 1
+        },
+        {
+          "old": 126,
+          "new": 125,
+          "engine": 0
+        },
+        {
+          "old": 127,
+          "new": 127,
+          "engine": 15
+        }
+      ],
+      "command_dates_and_arguments_unchanged": true,
+      "templates_and_CF_unchanged": true,
+      "KIT_delay": 7080,
+      "END_delay": 7080,
+      "hardware_pin_cycles_added": 0,
+      "source_command_latency_added": 0,
+      "lifecycle_qualified": false,
+      "required_adoption": [
+        "actual consumer retirement fence",
+        "new row tags through all completion consumers",
+        "priced reload and HOST/KS resource calendar"
+      ]
+    },
+    {
+      "job": 7,
+      "input_sha256": "0528cad7de1283f8540f18dd6aa2237d6211f48348f1700c879bc2604bc20858",
+      "row_tag_map": [
+        {
+          "old": 0,
+          "new": 0,
+          "engine": 1
+        },
+        {
+          "old": 1,
+          "new": 1,
+          "engine": 0
+        },
+        {
+          "old": 2,
+          "new": 2,
+          "engine": 1
+        },
+        {
+          "old": 3,
+          "new": 3,
+          "engine": 0
+        },
+        {
+          "old": 4,
+          "new": 4,
+          "engine": 1
+        },
+        {
+          "old": 5,
+          "new": 5,
+          "engine": 0
+        },
+        {
+          "old": 6,
+          "new": 6,
+          "engine": 1
+        },
+        {
+          "old": 7,
+          "new": 7,
+          "engine": 0
+        },
+        {
+          "old": 8,
+          "new": 8,
+          "engine": 1
+        },
+        {
+          "old": 9,
+          "new": 9,
+          "engine": 0
+        },
+        {
+          "old": 10,
+          "new": 10,
+          "engine": 1
+        },
+        {
+          "old": 11,
+          "new": 11,
+          "engine": 0
+        },
+        {
+          "old": 12,
+          "new": 12,
+          "engine": 1
+        },
+        {
+          "old": 13,
+          "new": 13,
+          "engine": 0
+        },
+        {
+          "old": 14,
+          "new": 14,
+          "engine": 0
+        },
+        {
+          "old": 15,
+          "new": 15,
+          "engine": 1
+        },
+        {
+          "old": 16,
+          "new": 16,
+          "engine": 0
+        },
+        {
+          "old": 17,
+          "new": 17,
+          "engine": 1
+        },
+        {
+          "old": 18,
+          "new": 18,
+          "engine": 0
+        },
+        {
+          "old": 19,
+          "new": 19,
+          "engine": 0
+        },
+        {
+          "old": 20,
+          "new": 20,
+          "engine": 1
+        },
+        {
+          "old": 21,
+          "new": 21,
+          "engine": 0
+        },
+        {
+          "old": 22,
+          "new": 22,
+          "engine": 1
+        },
+        {
+          "old": 23,
+          "new": 23,
+          "engine": 0
+        },
+        {
+          "old": 24,
+          "new": 24,
+          "engine": 0
+        },
+        {
+          "old": 25,
+          "new": 25,
+          "engine": 0
+        },
+        {
+          "old": 26,
+          "new": 26,
+          "engine": 0
+        },
+        {
+          "old": 27,
+          "new": 27,
+          "engine": 0
+        },
+        {
+          "old": 28,
+          "new": 28,
+          "engine": 0
+        },
+        {
+          "old": 29,
+          "new": 29,
+          "engine": 0
+        },
+        {
+          "old": 30,
+          "new": 30,
+          "engine": 0
+        },
+        {
+          "old": 31,
+          "new": 31,
+          "engine": 0
+        },
+        {
+          "old": 32,
+          "new": 32,
+          "engine": 0
+        },
+        {
+          "old": 33,
+          "new": 33,
+          "engine": 0
+        },
+        {
+          "old": 34,
+          "new": 34,
+          "engine": 0
+        },
+        {
+          "old": 35,
+          "new": 35,
+          "engine": 0
+        },
+        {
+          "old": 36,
+          "new": 36,
+          "engine": 0
+        },
+        {
+          "old": 37,
+          "new": 37,
+          "engine": 0
+        },
+        {
+          "old": 38,
+          "new": 38,
+          "engine": 0
+        },
+        {
+          "old": 39,
+          "new": 39,
+          "engine": 0
+        },
+        {
+          "old": 40,
+          "new": 40,
+          "engine": 2
+        },
+        {
+          "old": 41,
+          "new": 41,
+          "engine": 1
+        },
+        {
+          "old": 42,
+          "new": 42,
+          "engine": 0
+        },
+        {
+          "old": 43,
+          "new": 43,
+          "engine": 1
+        },
+        {
+          "old": 44,
+          "new": 44,
+          "engine": 1
+        },
+        {
+          "old": 45,
+          "new": 45,
+          "engine": 0
+        },
+        {
+          "old": 46,
+          "new": 46,
+          "engine": 1
+        },
+        {
+          "old": 47,
+          "new": 47,
+          "engine": 1
+        },
+        {
+          "old": 48,
+          "new": 48,
+          "engine": 0
+        },
+        {
+          "old": 49,
+          "new": 49,
+          "engine": 1
+        },
+        {
+          "old": 50,
+          "new": 50,
+          "engine": 1
+        },
+        {
+          "old": 51,
+          "new": 51,
+          "engine": 0
+        },
+        {
+          "old": 52,
+          "new": 52,
+          "engine": 1
+        },
+        {
+          "old": 53,
+          "new": 53,
+          "engine": 1
+        },
+        {
+          "old": 54,
+          "new": 54,
+          "engine": 0
+        },
+        {
+          "old": 55,
+          "new": 55,
+          "engine": 1
+        },
+        {
+          "old": 56,
+          "new": 56,
+          "engine": 1
+        },
+        {
+          "old": 57,
+          "new": 57,
+          "engine": 0
+        },
+        {
+          "old": 58,
+          "new": 58,
+          "engine": 1
+        },
+        {
+          "old": 59,
+          "new": 59,
+          "engine": 1
+        },
+        {
+          "old": 60,
+          "new": 60,
+          "engine": 2
+        },
+        {
+          "old": 61,
+          "new": 61,
+          "engine": 1
+        },
+        {
+          "old": 62,
+          "new": 62,
+          "engine": 1
+        },
+        {
+          "old": 63,
+          "new": 63,
+          "engine": 1
+        },
+        {
+          "old": 64,
+          "new": 64,
+          "engine": 1
+        },
+        {
+          "old": 65,
+          "new": 65,
+          "engine": 1
+        },
+        {
+          "old": 66,
+          "new": 66,
+          "engine": 1
+        },
+        {
+          "old": 67,
+          "new": 67,
+          "engine": 1
+        },
+        {
+          "old": 68,
+          "new": 73,
+          "engine": 14
+        },
+        {
+          "old": 69,
+          "new": 68,
+          "engine": 1
+        },
+        {
+          "old": 70,
+          "new": 69,
+          "engine": 1
+        },
+        {
+          "old": 71,
+          "new": 70,
+          "engine": 1
+        },
+        {
+          "old": 72,
+          "new": 71,
+          "engine": 1
+        },
+        {
+          "old": 73,
+          "new": 72,
+          "engine": 1
+        },
+        {
+          "old": 74,
+          "new": 74,
+          "engine": 15
+        }
+      ],
+      "command_dates_and_arguments_unchanged": true,
+      "templates_and_CF_unchanged": true,
+      "KIT_delay": 3369,
+      "END_delay": 3369,
+      "hardware_pin_cycles_added": 0,
+      "source_command_latency_added": 0,
+      "lifecycle_qualified": false,
+      "required_adoption": [
+        "actual consumer retirement fence",
+        "new row tags through all completion consumers",
+        "priced reload and HOST/KS resource calendar"
+      ]
+    }
+  ],
+  "invalid_marker_controls": [
+    {
+      "job": 0,
+      "case": "KIT_before_command_done",
+      "rejected": "candidate KIT must follow every native command done edge"
+    },
+    {
+      "job": 0,
+      "case": "END_at_KIT",
+      "rejected": "candidate cannot advance an existing completion marker"
+    },
+    {
+      "job": 0,
+      "case": "negative_KIT",
+      "rejected": "explicit 24-bit KIT/END dates required"
+    },
+    {
+      "job": 1,
+      "case": "KIT_before_command_done",
+      "rejected": "candidate KIT must follow every native command done edge"
+    },
+    {
+      "job": 1,
+      "case": "END_at_KIT",
+      "rejected": "END must follow KIT"
+    },
+    {
+      "job": 1,
+      "case": "negative_KIT",
+      "rejected": "explicit 24-bit KIT/END dates required"
+    },
+    {
+      "job": 2,
+      "case": "KIT_before_command_done",
+      "rejected": "candidate KIT must follow every native command done edge"
+    },
+    {
+      "job": 2,
+      "case": "END_at_KIT",
+      "rejected": "END must follow KIT"
+    },
+    {
+      "job": 2,
+      "case": "negative_KIT",
+      "rejected": "explicit 24-bit KIT/END dates required"
+    },
+    {
+      "job": 3,
+      "case": "KIT_before_command_done",
+      "rejected": "candidate KIT must follow every native command done edge"
+    },
+    {
+      "job": 3,
+      "case": "END_at_KIT",
+      "rejected": "END must follow KIT"
+    },
+    {
+      "job": 3,
+      "case": "negative_KIT",
+      "rejected": "explicit 24-bit KIT/END dates required"
+    },
+    {
+      "job": 4,
+      "case": "KIT_before_command_done",
+      "rejected": "candidate KIT must follow every native command done edge"
+    },
+    {
+      "job": 4,
+      "case": "END_at_KIT",
+      "rejected": "END must follow KIT"
+    },
+    {
+      "job": 4,
+      "case": "negative_KIT",
+      "rejected": "explicit 24-bit KIT/END dates required"
+    },
+    {
+      "job": 5,
+      "case": "KIT_before_command_done",
+      "rejected": "candidate KIT must follow every native command done edge"
+    },
+    {
+      "job": 5,
+      "case": "END_at_KIT",
+      "rejected": "END must follow KIT"
+    },
+    {
+      "job": 5,
+      "case": "negative_KIT",
+      "rejected": "explicit 24-bit KIT/END dates required"
+    },
+    {
+      "job": 6,
+      "case": "KIT_before_command_done",
+      "rejected": "candidate KIT must follow every native command done edge"
+    },
+    {
+      "job": 6,
+      "case": "END_at_KIT",
+      "rejected": "END must follow KIT"
+    },
+    {
+      "job": 6,
+      "case": "negative_KIT",
+      "rejected": "explicit 24-bit KIT/END dates required"
+    },
+    {
+      "job": 7,
+      "case": "KIT_before_command_done",
+      "rejected": "candidate KIT must follow every native command done edge"
+    },
+    {
+      "job": 7,
+      "case": "END_at_KIT",
+      "rejected": "END must follow KIT"
+    },
+    {
+      "job": 7,
+      "case": "negative_KIT",
+      "rejected": "explicit 24-bit KIT/END dates required"
+    }
+  ],
+  "compatibility": {
+    "jobs": [
+      {
+        "job": 0,
+        "rows": 128,
+        "templates": 125,
+        "CF": 63,
+        "HOST_words": 575,
+        "KIT": [
+          7163
+        ],
+        "row_done_only_KIT_lower_bound": 7163,
+        "normal_rows_after_KIT": 0,
+        "marker_reordering_would_shift_row_tags": false,
+        "existing_KIT_before_row_done_bound": false
+      },
+      {
+        "job": 1,
+        "rows": 128,
+        "templates": 126,
+        "CF": 0,
+        "HOST_words": 513,
+        "KIT": [
+          7163
+        ],
+        "row_done_only_KIT_lower_bound": 135,
+        "normal_rows_after_KIT": 0,
+        "marker_reordering_would_shift_row_tags": false,
+        "existing_KIT_before_row_done_bound": false
+      },
+      {
+        "job": 2,
+        "rows": 128,
+        "templates": 126,
+        "CF": 0,
+        "HOST_words": 513,
+        "KIT": [
+          7163
+        ],
+        "row_done_only_KIT_lower_bound": 814,
+        "normal_rows_after_KIT": 0,
+        "marker_reordering_would_shift_row_tags": false,
+        "existing_KIT_before_row_done_bound": false
+      },
+      {
+        "job": 3,
+        "rows": 128,
+        "templates": 126,
+        "CF": 0,
+        "HOST_words": 513,
+        "KIT": [
+          7163
+        ],
+        "row_done_only_KIT_lower_bound": 381,
+        "normal_rows_after_KIT": 0,
+        "marker_reordering_would_shift_row_tags": false,
+        "existing_KIT_before_row_done_bound": false
+      },
+      {
+        "job": 4,
+        "rows": 128,
+        "templates": 126,
+        "CF": 0,
+        "HOST_words": 513,
+        "KIT": [
+          7163
+        ],
+        "row_done_only_KIT_lower_bound": 276,
+        "normal_rows_after_KIT": 0,
+        "marker_reordering_would_shift_row_tags": false,
+        "existing_KIT_before_row_done_bound": false
+      },
+      {
+        "job": 5,
+        "rows": 128,
+        "templates": 126,
+        "CF": 0,
+        "HOST_words": 513,
+        "KIT": [
+          7163
+        ],
+        "row_done_only_KIT_lower_bound": 101,
+        "normal_rows_after_KIT": 0,
+        "marker_reordering_would_shift_row_tags": false,
+        "existing_KIT_before_row_done_bound": false
+      },
+      {
+        "job": 6,
+        "rows": 128,
+        "templates": 126,
+        "CF": 0,
+        "HOST_words": 513,
+        "KIT": [
+          7163
+        ],
+        "row_done_only_KIT_lower_bound": 100,
+        "normal_rows_after_KIT": 0,
+        "marker_reordering_would_shift_row_tags": false,
+        "existing_KIT_before_row_done_bound": false
+      },
+      {
+        "job": 7,
+        "rows": 75,
+        "templates": 73,
+        "CF": 0,
+        "HOST_words": 301,
+        "KIT": [
+          7163
+        ],
+        "row_done_only_KIT_lower_bound": 3811,
+        "normal_rows_after_KIT": 0,
+        "marker_reordering_would_shift_row_tags": false,
+        "existing_KIT_before_row_done_bound": false
+      }
+    ],
+    "shared_KIT_row_done_only_lower_bound": 7163,
+    "existing_KIT_values": [
+      7163
+    ],
+    "single_armed_RL_compatible": true,
+    "retiming_performed": false,
+    "V_row_indices_preserved": true,
+    "lifecycle_qualified": false,
+    "required_contracts": [
+      "complete selected resource slot/event initialization",
+      "source/reset/global HOST/KS booking",
+      "actual store/consumer retirement and row-tag preservation for any marker changes"
+    ]
+  },
+  "production_enabled": false,
+  "lifetime_qualified": false,
+  "full_token": false
+}
