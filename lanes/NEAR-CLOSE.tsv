@@ -22,8 +22,8 @@ s81	slice_station__t26_tsB ECO	epyc4	/srv/opentallas-scratch2/claude/type-safe-1
 ?	hbc_ot_hbm_hc_bank128_pair_core	epyc2	/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq	SIGNED TT 38.68 FF 3.42 DRC 0 LEC none (0.9 h old)	AUTO: scan find, owner to confirm or delete	die owner	11-07 05:07
 ?	kq_qfd_tile_nl_a0c_vB2	epyc6	/srv/opentallas-scratch2/claude/qc-a0c-b6/nl_vB2_ecows/i1	NOT SIGNED TT 17.78 FF 17.62 DRC 0 LEC EQUIVALENT fails: clock,drv (0.7 h old)	AUTO: scan find, owner to confirm or delete	die owner	11-07 05:07
 s81	bksel_q vG	intel1	/srv/opentallas-scratch2/claude/s81-bksel-rf7/dsdv_bksel_q_vG	owner critical; t_s +2 PIN CYCLES; in CTS	finish, sign-off, LEC; next change is pin cycles or geometry	S81-BKSEL-RF7	11-07 05:14
-s81	eng_rr_e vH	epyc2	/srv/opentallas-scratch2/claude/s81-engrr-b7/dsdv_eng_rr_e_vH	owner critical; spine fixed; CTS done	finish, sign-off, LEC	S81-ENGRR-B7	11-07 05:14
-s81	eng_rr_e vI	epyc2	/srv/opentallas-scratch2/claude/s81-engrr-b7/dsdv_eng_rr_e_vI	owner critical; sync reset + pin cycle form	build	S81-ENGRR-B7	11-07 05:14
+s81	eng_rr_e vH	epyc2	/srv/opentallas-scratch3/claude/s81-engrr-b7/dsdv_eng_rr_e_vH	owner critical; spine fixed; CTS done	finish, sign-off, LEC	S81-ENGRR-B7	11-07 05:14
+s81	eng_rr_e vI	epyc2	/srv/opentallas-scratch3/claude/s81-engrr-b7/dsdv_eng_rr_e_vI	owner critical; sync reset + pin cycle form	build	S81-ENGRR-B7	11-07 05:14
 qwen_compute	NK vR3r	intel1	/srv/opentallas-scratch2/claude/dq87_vr3/qfd_tile_nk_a0c_vR3r	owner critical; homes moved out of macros	build; path by owner if different	DIE-QC-87	11-07 05:14
 qwen_compute	NL vR3b/vR3c	epyc2	/srv/opentallas-scratch2/claude/dq87_vr3/qfd_tile_nl_a0c_vR3b	owner critical; me_idle retap fix	build; path by owner if different	DIE-QC-87	11-07 05:14
 qwen_kvsys	qkd_hr_core_prompt vI ECO	epyc2	/srv/opentallas-scratch3/claude/kv-prm-b8/qkd_hr_core_prompt_vI	owner critical; TT -6.73 FF -2.94 slew 166/146	eco_loop --lec, no port padding	KV-PRM-B8	11-07 05:14
