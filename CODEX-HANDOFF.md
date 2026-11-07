@@ -1,4 +1,4 @@
-# Codex handoff document (generated 2026-11-06 21:19 PST)
+# Codex handoff document (generated 2026-11-06 21:34 PST)
 
 Standby: Claude is running; this is used only if Claude hits a usage limit.
 
@@ -28,6 +28,16 @@ Die gates (BIND/GRT/STA/CLK) are not yet passed on any die. ETAs: non-HBM cores 
 
 1. **"do not wait for them to merge before rebuild."** (21:2x) A READY fix is rebuilt AT ONCE from its branch head in its own flow tree on the least-loaded host (epyc5/epyc6 now). Signed results re-sign on the main flow tag after the merge (resign.py, PROVENANCE kind:resign) to count. Never hold relaunches for the merge train.
 2. **Keep the fleet loaded.** At 21:1x the fleet was at 49% with 0 ot-run waiters. Target is >=0.85 x cores and >=4 waiters on every host.
+2b. **"it is important to make conservative fixes and visually inspect the layout for all your subagents to remove congestion"** (21:5x).
+   - Every failing core/type gets a conservative version in parallel:
+     - registered faces with fanout <=8;
+     - util <=0.40 for cores, <=0.35 for types;
+     - signals <=M6;
+     - feedthrough flops every <=450 um;
+     - +1 PIN CYCLE for setup reach;
+     - pipelined reset.
+   - Every build has its density + GRT congestion + macro/pin PNGs viewed after place, GRT and route. Hotspots are removed structurally.
+   - Lanes: HBM-CONS-1 (all open HBM cores, vK), QC-NLNK-RF (NL/NK vR), TYPE-CONS-1 (congestion + setup families, vC), ARCHIVE-1106B (disks >90%: epyc6 scratch2 37 GB).
 3. **Types safe by construction, all 5 dies** (TYPE-SAFE). Wiring and hold are fixed in the generator, not by rounds of patches:
    - track-budget corridors;
    - clock follows data (per-port tap windows, the TAPWIN-PORT SDC);
