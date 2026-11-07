@@ -46,6 +46,36 @@ module ot_s81hd_host_frame_mux #(parameter integer MUT=0)(
  end
 endmodule
 
+`ifdef OT_S81HD_HOST_XGRID
+// DH81-HOST 11-07 (opt-in, default off): registered crossing of the empty middle of the 1296-um hd_host slot.  Lane1 sits
+// at the E macro grid, the frame mux and host276 codecs at the N pins by the W grid.  Lane1 carries CSR frames in and
+// STATUS frames out only; RESULT and HFWD stay on lane0, whose dates do not move.  The hub side of the lane is
+// valid-only and fixed phase, so these stages are a pure delay: RX {valid, data, fault} +2, TX {valid, data} +1.
+// Declared as added_rx_clk_PIN_cycles; DO_NOT_COUNT until adopted.  Valid and fault reset, data unreset.
+// OT_S81HD_HOST_XGRID_MUT: bench negative controls, 0 = production.
+`ifndef OT_S81HD_HOST_XGRID_MUT
+`define OT_S81HD_HOST_XGRID_MUT 0
+`endif
+module ot_s81hd_host_xgrid(
+ input wire ck,rst_n,
+ input wire tv_i,input wire[552:0]td_i,output wire tv_o,output wire[552:0]td_o,
+ input wire rv_i,input wire[552:0]rd_i,input wire[3:0]fl_i,
+ output wire rv_o,output wire[552:0]rd_o,output wire[3:0]fl_o
+);
+ localparam integer MUT=`OT_S81HD_HOST_XGRID_MUT;
+ reg[552:0]tq0,tq1x,rq0,rq1;reg tv0,tv1x,rv0,rv1;reg[3:0]fl0,fl1;
+ always@(posedge ck)begin tq0<=td_i;tq1x<=tq0;rq0<=rd_i;rq1<=rq0;end
+ always@(posedge ck or negedge rst_n)
+  if(!rst_n)begin tv0<=0;tv1x<=0;rv0<=0;rv1<=0;fl0<=0;fl1<=0;end
+  else begin tv0<=tv_i;tv1x<=tv0;rv0<=rv_i;rv1<=rv0;fl0<=fl_i;fl1<=fl0;end
+ assign tv_o=MUT==1?tv_i:MUT==2?tv1x:tv0;
+ assign td_o=MUT==2?tq1x:tq0;
+ assign rv_o=MUT==5?rv0:rv1;
+ assign rd_o=MUT==3?{rq1[552:18],rq1[16],rq1[17],rq1[15:0]}:rq1;
+ assign fl_o=MUT==4?fl_i:MUT==6?{1'b0,fl1[2:0]}:fl1;
+endmodule
+`endif
+
 // Actual hd_host provider: two existing stacked safe8 lanes, HBC1 loader/book
 // and the unchanged 553-bit/three-beat host276 transport. Compiled boot dates
 // and clock identity remain explicit parameters, unadmitted by default.
@@ -70,9 +100,18 @@ module ot_s81hd_host_ep_core #(
  ot_s81hd_mesh_lane u_lane0(.ck(ck),.rst_n(rst_n),.chb(CH_B[0]),
   .rx(coll_i0),.tx(coll_o0),.tx_v(txv[0]),.tx_d(txd[552:0]),
   .rx_v(lv[0]),.rx_d(ld[552:0]),.flt(lf0));
+`ifdef OT_S81HD_HOST_XGRID
+ wire x1_tv,x1_rv;wire[552:0]x1_td,x1_rd;wire[3:0]x1_fl;
+ ot_s81hd_mesh_lane u_lane1(.ck(ck),.rst_n(rst_n),.chb(CH_B[1]),
+  .rx(coll_i1),.tx(coll_o1),.tx_v(x1_tv),.tx_d(x1_td),
+  .rx_v(x1_rv),.rx_d(x1_rd),.flt(x1_fl));
+ ot_s81hd_host_xgrid u_xg(.ck(ck),.rst_n(rst_n),.tv_i(txv[1]),.td_i(txd[1105:553]),.tv_o(x1_tv),.td_o(x1_td),
+  .rv_i(x1_rv),.rd_i(x1_rd),.fl_i(x1_fl),.rv_o(lv[1]),.rd_o(ld[1105:553]),.fl_o(lf1));
+`else
  ot_s81hd_mesh_lane u_lane1(.ck(ck),.rst_n(rst_n),.chb(CH_B[1]),
   .rx(coll_i1),.tx(coll_o1),.tx_v(txv[1]),.tx_d(txd[1105:553]),
   .rx_v(lv[1]),.rx_d(ld[1105:553]),.flt(lf1));
+`endif
  wire cv,crxf,ctxv;wire[552:0]cd,rxframe;wire rxv,crtxf;
  ot_s81hd_host276_rx u_ctl_rx(.ck(ck),.rn(rst_n),.lane(h_tx_i[275:0]),.v(cv),.frame(cd),.fault(crxf));
  ot_s81hd_host276_tx u_ctl_tx(.ck(ck),.rn(rst_n),.v(rxv),.frame(rxframe),.lane(h_rx_o),.fault(crtxf));
