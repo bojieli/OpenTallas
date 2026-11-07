@@ -6,7 +6,34 @@ msg="$1"; shift
 exec 9>/home/ubuntu/coord/.coord.lock
 flock 9
 git add -- "$@"
+own_before=$(git rev-parse HEAD)
 git commit -q -m "$msg" -- "$@" || true
+# KW-FIX-25 11-06: a lane's own `git reset --keep origin/coord/state` in this shared tree does not take our lock. Between our
+# commit and our push it silently dropped the commit (9 commits, 20 queue lines today). Remember what we committed, re-apply it
+# if it left HEAD, and exit 0 only when origin holds it.
+OWN=""; [ "$(git rev-parse HEAD)" = "$own_before" ] || OWN=$(git rev-parse HEAD)
+restore_own() {
+[ -n "$OWN" ] || return 0
+git merge-base --is-ancestor "$OWN" HEAD && return 0
+git merge -q --no-edit "$OWN" 2>/dev/null && return 0
+git merge --abort 2>/dev/null || true
+OWN="$OWN" python3 -I - "$@" <<'PY_OWN'
+import os, subprocess as S, sys
+own = os.environ["OWN"]
+g = lambda *a: S.run(["git", *a], capture_output=True, text=True, check=True).stdout
+for f in g("diff", "--name-only", own + "~1", own).split():
+    d = g("diff", own + "~1", own, "--", f).splitlines()
+    new = [l[1:] for l in d if l.startswith("+") and not l.startswith("+++")]
+    have = set(open(f, errors="replace").read().splitlines()) if os.path.exists(f) else set()
+    add = [l for l in new if l not in have]
+    if add:
+        with open(f, "a") as o:
+            o.write("\n".join(add) + "\n")
+PY_OWN
+git add -- "$@"
+git commit -q -m "$msg (re-applied after a reset dropped it)" -- "$@" || true
+OWN=$(git rev-parse HEAD)
+}
 # merge (not rebase): other agents may hold uncommitted edits in this shared tree, which rebase refuses and stash must never touch
 # KW-FIX-17 11-05: a conflicted merge is aborted at once (never leaves conflict markers in kit_wave.json on the hub)
 preserve_append_logs() {
@@ -39,5 +66,5 @@ if [ -f "$HOME/.config/systemd/user/autopilot.service" ] && ! git diff --quiet -
   git checkout -q -- RELEASE_TREE.md
 fi
 }
-for i in 1 2 3 4 5; do discard_generated; preserve_append_logs && git fetch -q origin coord/state && { git merge -q --no-edit origin/coord/state || { git merge --abort 2>/dev/null; false; }; } && git push -q origin coord/state && exit 0; sleep 3; done
+for i in 1 2 3 4 5; do discard_generated; preserve_append_logs && git fetch -q origin coord/state && { git merge -q --no-edit origin/coord/state || { git merge --abort 2>/dev/null; false; }; } && restore_own "$@" && git push -q origin coord/state && git fetch -q origin coord/state && { [ -z "$OWN" ] || git merge-base --is-ancestor "$OWN" origin/coord/state; } && exit 0; sleep 3; done
 echo "coord push failed" >&2; exit 1
