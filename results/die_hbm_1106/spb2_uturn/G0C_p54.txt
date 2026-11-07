@@ -1,0 +1,8 @@
+DIE-HBM-82-SPB d44v PART 54 plan-time G0/G0C (tools/die_plan/check.py --completeness --plan-geom report), 2026-11-06 21:37 PST
+base = d44v with PART 52 (claude/die-hbm-82-spb-1106@7f9bb27ea2 on main b37de6e708); new = base + PART 54 (L3012 windows)
+base: G0C FAIL 971 errors, 64 pending-view, 1314 warnings (pre-existing)
+new : G0C FAIL 971 errors, 64 pending-view, 1314 warnings
+finding diff (2349 vs 2349): no new error; 2 rows change text only:
+  hops ERROR lane L3012 NW_b103.L3012x2 S0->S1 696 um > reach 405 (pre-existing, regs_um[0]): reported bit 0 -> bit 1
+  q_spu1 geom_partial_face WARN: W 4229 pins at 7.6/um -> 4226 at 7.5/um
+kit-local check (q_spb2 kit): kit_pin_patch.py old plan reproduced all 56 L3012x5 rows of pins.json/io.tcl/plan_pins.json/audit_pins.json exactly; after patch kit_contract placed == expected
