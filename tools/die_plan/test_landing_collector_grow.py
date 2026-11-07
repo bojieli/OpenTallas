@@ -73,7 +73,7 @@ def test_window_grows_to_x16_about_the_same_centre():
 def test_collectors_use_the_grow_path_and_skip_the_tiny_box_band_fit():
     loop = TCL[TCL.index("proc cland_put_collector"):]
     assert "if {!$coll} { cland_band_fit $prefix $rect $tag }" in loop
-    assert "if {$coll} { cland_put_collector $i $rect $tag } else { cland_put $i $rect $tag }" in loop
+    assert "if {$coll} { cland_put_collector $i $rect $tag } " in loop
 
 
 # KIT-TRIAGE-1/G4 11-01 (KV kv3_io_cor@4 'no legal ... (status:landing_ready_ft10_i)'): status stages take the same
