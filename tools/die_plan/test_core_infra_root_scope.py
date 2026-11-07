@@ -70,6 +70,8 @@ def test_scoped_hook_guard_runs_before_existing_editor(tmp_path):
     (tmp_path/'core_density_taps.tcl').write_text('# ordinary roots\n')
     cfg = ['export PRE_CTS_TCL = /work/pre.tcl']
     assert CI.kit_cts_hook(tmp_path,cfg)
+    # KW-FIX-24/LEAFOPT: a root-scoped tree keeps the default clk_leaf_repeat (TritonCTS builds the ordinary roots)
+    assert not any('OT_CLK_LEAF_REPEAT' in ln for ln in cfg)
     body = (tmp_path/CI.CTS_PRE_CHAIN).read_text()
     assert body.index('core_infra_scope.tcl') < body.index('/work/pre.tcl') < body.index(CI.CTS_HOOK)
     assert (tmp_path/'pre.tcl').read_text() == 'source /work/core_density_taps.tcl\n'

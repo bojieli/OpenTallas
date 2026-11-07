@@ -117,10 +117,13 @@ def test_planned_tree_cts_hooks(tmp_path):
     c = (tmp_path / "cts_post.tcl").read_text()
     assert c.endswith(post) and "set ::env(OT_TAP_REPORT_ONLY) 1" in c and "set ::env(OT_LEAF_AFF_REPORT_ONLY) 1" in c
     # CTS-HOOK-PORT-1: same bytes as the R12 in-generator form; config.mk lines unchanged (hooks edited in place)
+    # except KW-FIX-24/LEAFOPT (COORD 21:0x): the plan tree opts out of the default clk_leaf_repeat
     assert h == hold + "# S81-CORE-LAT-R12: plan-built tree -> TritonCTS only on CTS-open nets\nsource /work/core_infra_cts.tcl\n"
     assert c == ("# S81-CORE-LAT-R12: plan-built tree -> tap balance + leaf affinity measure/report only\n"
                  "set ::env(OT_TAP_REPORT_ONLY) 1\nset ::env(OT_LEAF_AFF_REPORT_ONLY) 1\n" + post)
-    assert cfg == cfg0
+    assert cfg[:len(cfg0)] == cfg0 and cfg[len(cfg0):] == [
+        "# KW-FIX-24/LEAFOPT (COORD 21:0x): plan-built core tree: the plan owns the whole clock tree -> no default "
+        "clk_leaf_repeat", "export OT_CLK_LEAF_REPEAT = 0"]
 
 
 def test_explicit_slice_interior_clock_exact_rectangle():

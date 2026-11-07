@@ -2195,6 +2195,8 @@ def main():
     if rt:
         (kd / "regional_pre_cts.tcl").write_text("source /work/face_capture_release.tcl\nsource /work/regional_taps.tcl\n")
         cfg += ["export PRE_CTS_TCL = /work/regional_pre_cts.tcl"]
+        # KW-FIX-24/LEAFOPT (COORD 21:0x (1)): the planned trunk / H-tree / regional taps own the clock tree
+        core_flow.leaf_repeat_plan_optout(cfg, "S81 regional-tap kit")
     if modern and rt:
         # F4 follows regional balancing/repair as it does the scalar tap path.
         with (kd / "regional_taps_balance.tcl").open("a") as hook:

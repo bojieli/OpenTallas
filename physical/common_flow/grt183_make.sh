@@ -16,6 +16,26 @@ W=${OT_GRT183_WORK:-/work}
 S=${OT_GRT183_SCRIPTS:-/OpenROAD-flow-scripts/flow/scripts}/global_route.tcl
 HOOK="source /work/grt183_resume.tcl"
 case " $* " in *" print-"*) exec "$@";; esac
+# KW-FIX-24/LEAFREP 11-06 (COORD 20:0x (5) / 20:2x (6)): clk_leaf_repeat default-on for every kit carrying
+# /work/clk_leaf_repeat_default.tcl (tools/die_plan/core_flow.stage_grt183).  Disposable container copies of the ORFS
+# scripts, before any opt-out below: cts.tcl sources it right before 'source_step_tcl POST CTS' (::ot_clr_default:
+# skipped when the kit hooks clk_leaf_repeat.tcl itself), global_route.tcl right after the first
+# 'estimate_parasitics -global_routing' (long-branch pass on GRT RC).  Opt-outs live in the Tcl (OT_CLK_LEAF_REPEAT=0,
+# OT_CLK_LEAF_GRT=0 from config.mk); without the kit file nothing is patched.
+SD=$(dirname "$S")
+if [ -f "$W/clk_leaf_repeat_default.tcl" ]; then
+  CH="set ::ot_clr_default 1; source /work/clk_leaf_repeat_default.tcl; unset -nocomplain ::ot_clr_default ;# OT_CLK_LEAF_REPEAT default"
+  if [ -f "$SD/cts.tcl" ] && ! grep -qF "OT_CLK_LEAF_REPEAT default" "$SD/cts.tcl"; then
+    if grep -q '^ *source_step_tcl POST CTS' "$SD/cts.tcl"; then sed -i "s|^\( *\)source_step_tcl POST CTS|\1$CH\n&|" "$SD/cts.tcl"
+    else echo "OT_CLK_LEAF_REPEAT default inactive: no POST CTS step in $SD/cts.tcl"; fi
+  fi
+  GH="set ::ot_clr_stage grt; source /work/clk_leaf_repeat_default.tcl; unset -nocomplain ::ot_clr_stage ;# OT_CLK_LEAF_REPEAT grt"
+  if [ -f "$S" ] && ! grep -qF "OT_CLK_LEAF_REPEAT grt" "$S"; then
+    if grep -q '^ *log_cmd estimate_parasitics -global_routing' "$S"; then
+      sed -i "0,\|^\( *\)log_cmd estimate_parasitics -global_routing.*|s||&\n\1$GH|" "$S"
+    else echo "OT_CLK_LEAF_REPEAT grt inactive: no estimate_parasitics -global_routing in $S"; fi
+  fi
+fi
 if [ "${OT_GRT183_RESUME:-1}" = 0 ] || grep -q '^export OT_GRT183_RESUME = 0' "$W/config.mk" 2>/dev/null || [ ! -f "$W/grt183_resume.tcl" ]; then exec "$@"; fi
 # disposable container copy of the ORFS script, as orfs_hold_mm.py: hook first, then the kit's own (also an 'override' one)
 if ! grep -qF "$HOOK" "$S" 2>/dev/null; then

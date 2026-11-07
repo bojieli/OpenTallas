@@ -23,6 +23,9 @@ GENS = {
     "s81_legacy": DP / "s81/cores/legacy/gen_core_kit_legacy.py",
 }
 RO = "set ::env(OT_TAP_REPORT_ONLY) 1\nset ::env(OT_LEAF_AFF_REPORT_ONLY) 1\n"
+# KW-FIX-24/LEAFOPT (COORD 21:0x): an unscoped plan tree opts out of the default-on clk_leaf_repeat
+OPT = ["# KW-FIX-24/LEAFOPT (COORD 21:0x): plan-built core tree: the plan owns the whole clock tree -> no default "
+       "clk_leaf_repeat", "export OT_CLK_LEAF_REPEAT = 0"]
 
 
 def _snap(kd):
@@ -102,7 +105,7 @@ def test_qc_insertion_balance(tmp_path):
     (tmp_path / "t").mkdir()
     kd = _kit(tmp_path / "t", files)
     c = list(cfg)
-    assert MS.plan_tree_cts(kd, c) is True and c == cfg
+    assert MS.plan_tree_cts(kd, c) is True and c == cfg + OPT
     assert (kd / "hold_budget.tcl").read_text() == files["hold_budget.tcl"] + CI.CTS_PRE_LINES
     assert (kd / "cts_post.tcl").read_text() == CI.CTS_POST_LINES + files["cts_post.tcl"]
     assert (kd / "tap_balance.tcl").read_text() == files["tap_balance.tcl"]
@@ -153,7 +156,7 @@ def test_hbm_arch(tmp_path):
     (tmp_path / "u").mkdir()
     kd = _kit(tmp_path / "u", files)
     c = list(no_f4)
-    assert MS.plan_tree_cts(kd, c) is True and c == no_f4
+    assert MS.plan_tree_cts(kd, c) is True and c == no_f4 + OPT
     assert (kd / "core_pre_cts.tcl").read_text() == files["core_pre_cts.tcl"] + CI.CTS_PRE_LINES
     assert (kd / "tap_balance.tcl").read_text() == CI.CTS_POST_LINES + files["tap_balance.tcl"]
     dens = ["export PRE_CTS_TCL = /work/core_density_taps.tcl"]
@@ -188,3 +191,25 @@ def test_cfg_effective_make_semantics():
     cfg = ["export A = 1", "override export A = 2", "export A = 3", "export B ?= 4", "export B = 5"]
     assert CI.cfg_effective(cfg, "A") == "2" and CI.cfg_effective(cfg, "B") == "5"
     assert CI.cfg_effective(cfg, "C") is None
+
+
+def test_plan_tree_leaf_repeat_optout(tmp_path):
+    """KW-FIX-24/LEAFOPT (COORD 21:0x (1)): a plan-tree kit gets 'export OT_CLK_LEAF_REPEAT = 0' (the plan owns the
+    whole tree); a normal kit (no plan tree) does not; a kit / recipe value already in cfg wins (no second line)."""
+    cfg = ["export CORNER = TC"]
+    (tmp_path / "t").mkdir()
+    kd = _kit(tmp_path / "t", {})
+    c = list(cfg)
+    assert MS.plan_tree_cts(kd, c) is True
+    assert CI.cfg_effective(c, "OT_CLK_LEAF_REPEAT") == "0" and c.count("export OT_CLK_LEAF_REPEAT = 0") == 1
+    assert c[1:3] == OPT and c[-1] == f"override export PRE_CTS_TCL = /work/{CI.CTS_PRE_CHAIN}"
+    (tmp_path / "n").mkdir()
+    kn = _kit(tmp_path / "n", {}, tree=False)
+    c = list(cfg)
+    assert MS.plan_tree_cts(kn, c) is False and c == cfg
+    assert not any("OT_CLK_LEAF_REPEAT" in ln for ln in c)
+    (tmp_path / "k").mkdir()
+    kk = _kit(tmp_path / "k", {})
+    c = cfg + ["export OT_CLK_LEAF_REPEAT = 1"]
+    assert MS.plan_tree_cts(kk, c) is True
+    assert CI.cfg_effective(c, "OT_CLK_LEAF_REPEAT") == "1" and not any("LEAFOPT" in ln for ln in c)
