@@ -1,0 +1,310 @@
+{
+  "hd_ctl": {
+    "exports": 5,
+    "mismatches": 5,
+    "tree_start": true,
+    "samples": [
+      {
+        "declared": {
+          "port": "rst_start_raw_0",
+          "instance": "u_rrl_59",
+          "net": "rst_rl_59",
+          "xy_um": [
+            48.6,
+            286.2
+          ]
+        },
+        "actual_same_instance": {
+          "xy": [
+            26.976,
+            242.976
+          ],
+          "kind": "tap",
+          "depth": 2,
+          "dlab": "rst_rl_58",
+          "tap": 23,
+          "name": "u_rrl_59",
+          "d": "rst_rl_58",
+          "q": "rst_rl_59",
+          "role": "raw"
+        },
+        "matching_q": [
+          {
+            "xy": [
+              26.976,
+              242.976
+            ],
+            "kind": "tap",
+            "depth": 2,
+            "dlab": "rst_rl_58",
+            "tap": 23,
+            "name": "u_rrl_59",
+            "d": "rst_rl_58",
+            "q": "rst_rl_59",
+            "role": "raw"
+          }
+        ]
+      },
+      {
+        "declared": {
+          "port": "rst_start_raw_1",
+          "instance": "u_rrl_83",
+          "net": "rst_rl_83",
+          "xy_um": [
+            383.176,
+            8.608
+          ]
+        },
+        "actual_same_instance": {
+          "xy": [
+            383.168,
+            8.608
+          ],
+          "kind": "pad",
+          "depth": 1,
+          "dlab": "rst_root_n",
+          "tap": null,
+          "name": "u_rrl_83",
+          "d": "rst_root_n",
+          "q": "rst_rl_83",
+          "role": "raw"
+        },
+        "matching_q": [
+          {
+            "xy": [
+              383.168,
+              8.608
+            ],
+            "kind": "pad",
+            "depth": 1,
+            "dlab": "rst_root_n",
+            "tap": null,
+            "name": "u_rrl_83",
+            "d": "rst_root_n",
+            "q": "rst_rl_83",
+            "role": "raw"
+          }
+        ]
+      },
+      {
+        "declared": {
+          "port": "rst_start_raw_2",
+          "instance": "u_rrl_44",
+          "net": "rst_n_t24",
+          "xy_um": [
+            361.8,
+            264.6
+          ]
+        },
+        "actual_same_instance": {
+          "xy": [
+            145.824,
+            199.776
+          ],
+          "kind": "pad",
+          "depth": 3,
+          "dlab": "rst_rl_43",
+          "tap": 17,
+          "name": "u_rrl_44",
+          "d": "rst_rl_43",
+          "q": "rst_n_t17",
+          "role": "boot"
+        },
+        "matching_q": [
+          {
+            "xy": [
+              361.824,
+              264.608
+            ],
+            "kind": "tap",
+            "depth": 3,
+            "dlab": "rst_rl_59",
+            "tap": 24,
+            "name": "u_rrl_61",
+            "d": "rst_rl_59",
+            "q": "rst_n_t24",
+            "role": "boot"
+          }
+        ]
+      }
+    ]
+  },
+  "hd_spn_wshim_rx": {
+    "exports": 1,
+    "mismatches": 1,
+    "tree_start": true,
+    "samples": [
+      {
+        "declared": {
+          "port": "rst_start_raw_0",
+          "instance": "u_rrl_30",
+          "net": "rst_rl_30",
+          "xy_um": [
+            253.8,
+            783.0
+          ]
+        },
+        "actual_same_instance": {
+          "xy": [
+            351.008,
+            512.992
+          ],
+          "kind": "pad",
+          "depth": 3,
+          "dlab": "rst_rl_29",
+          "tap": 6,
+          "name": "u_rrl_30",
+          "d": "rst_rl_29",
+          "q": "rst_rl_30",
+          "role": "raw"
+        },
+        "matching_q": [
+          {
+            "xy": [
+              351.008,
+              512.992
+            ],
+            "kind": "pad",
+            "depth": 3,
+            "dlab": "rst_rl_29",
+            "tap": 6,
+            "name": "u_rrl_30",
+            "d": "rst_rl_29",
+            "q": "rst_rl_30",
+            "role": "raw"
+          }
+        ]
+      }
+    ]
+  },
+  "hd_serdes": {
+    "exports": 6,
+    "mismatches": 3,
+    "tree_start": true,
+    "samples": [
+      {
+        "declared": {
+          "port": "rst_start_raw_0",
+          "instance": "u_rrl_12",
+          "net": "rst_rl_12",
+          "xy_um": [
+            1422.3616,
+            8.608
+          ]
+        },
+        "actual_same_instance": {
+          "xy": [
+            1313.408,
+            8.608
+          ],
+          "kind": "wire",
+          "depth": 6,
+          "dlab": "rst_rl_11",
+          "tap": null,
+          "name": "u_rrl_12",
+          "d": "rst_rl_11",
+          "q": "rst_rl_12",
+          "role": "raw"
+        },
+        "matching_q": [
+          {
+            "xy": [
+              1313.408,
+              8.608
+            ],
+            "kind": "wire",
+            "depth": 6,
+            "dlab": "rst_rl_11",
+            "tap": null,
+            "name": "u_rrl_12",
+            "d": "rst_rl_11",
+            "q": "rst_rl_12",
+            "role": "raw"
+          }
+        ]
+      },
+      {
+        "declared": {
+          "port": "rst_start_raw_1",
+          "instance": "u_rrl_10",
+          "net": "rst_rl_10",
+          "xy_um": [
+            2063.8688,
+            8.608
+          ]
+        },
+        "actual_same_instance": {
+          "xy": [
+            2009.392,
+            8.608
+          ],
+          "kind": "wire",
+          "depth": 4,
+          "dlab": "rst_rl_9",
+          "tap": null,
+          "name": "u_rrl_10",
+          "d": "rst_rl_9",
+          "q": "rst_rl_10",
+          "role": "raw"
+        },
+        "matching_q": [
+          {
+            "xy": [
+              2009.392,
+              8.608
+            ],
+            "kind": "wire",
+            "depth": 4,
+            "dlab": "rst_rl_9",
+            "tap": null,
+            "name": "u_rrl_10",
+            "d": "rst_rl_9",
+            "q": "rst_rl_10",
+            "role": "raw"
+          }
+        ]
+      },
+      {
+        "declared": {
+          "port": "rst_start_raw_2",
+          "instance": "u_rrl_11",
+          "net": "rst_rl_11",
+          "xy_um": [
+            1743.1152,
+            8.608
+          ]
+        },
+        "actual_same_instance": {
+          "xy": [
+            1661.4,
+            8.608
+          ],
+          "kind": "wire",
+          "depth": 5,
+          "dlab": "rst_rl_10",
+          "tap": null,
+          "name": "u_rrl_11",
+          "d": "rst_rl_10",
+          "q": "rst_rl_11",
+          "role": "raw"
+        },
+        "matching_q": [
+          {
+            "xy": [
+              1661.4,
+              8.608
+            ],
+            "kind": "wire",
+            "depth": 5,
+            "dlab": "rst_rl_10",
+            "tap": null,
+            "name": "u_rrl_11",
+            "d": "rst_rl_10",
+            "q": "rst_rl_11",
+            "role": "raw"
+          }
+        ]
+      }
+    ]
+  }
+}
