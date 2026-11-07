@@ -3153,6 +3153,7 @@ def follow_queue(st, ap_dir, notices):
             rec.update(q_stage="queue", q_status="QUEUED", q_class="", q_reason="queue row not yet read by the autopilot")
             continue
         stage, status, cls, why = queue_class(j)
+        cls, why = leafslew_plan_route(rec, status, cls, why)
         old = (rec.get("q_status"), rec.get("q_class"))
         rec.update(q_id=j.get("id"), q_stage=stage, q_status=status, q_class=cls, q_reason=why)
         so = j.get("signoff") if isinstance(j.get("signoff"), dict) else {}
@@ -4050,6 +4051,7 @@ LEAFSLEW_TCL = "clk_leaf_repeat.tcl"
 LEAFSLEW_CLK_INST = re.compile(r"^(clkbuf|clkload|clkleafrep|clkinv|delaybuf|cts|ot_dtap|.*_tb\d+_d\d+)", re.I)
 LEAFSLEW_CLK_PINS = ("CLK", "CK")
 LEAFSLEW_TRIES = 3                                         # unreadable sign-off log: give up (no trigger) after this
+LEAF_OPTOUT_RE = r"^[[:space:]]*(override[[:space:]]+)?(export[[:space:]]+)?OT_CLK_LEAF_REPEAT[[:space:]]*[:?]?=[[:space:]]*0[[:space:]]*(#.*)?$"
 LEAFSLEW_READS_PER_TICK = 24                               # newest queue FAILs first; the rest are read next tick
 
 
@@ -4082,7 +4084,10 @@ def leafslew_parse(text):
 def leafslew_read(AP, rec, hub):
     """-> signature dict, or None when no host could read the TT sta.log (fail-soft: never a trigger)"""
     tt = os.path.join(os.path.dirname(rec["q_signoff"]), "tt", "sta.log")
+    # KW-FIX-25 (COORD 22:1x (5)): a kit whose plan owns the clock tree sets OT_CLK_LEAF_REPEAT=0, so the hook would do nothing
+    cm = os.path.join(os.path.dirname(os.path.dirname(rec["q_signoff"])), "config.mk")
     cmd = (f"if test -r {shlex.quote(tt)}; then grep -E '^Pin .*Limit|VIOLATED' {shlex.quote(tt)} | head -n 200000; "
+           f"grep -Eqs {shlex.quote(LEAF_OPTOUT_RE)} {shlex.quote(cm)} && echo KW_LEAF_OPTOUT; "
            f"echo KW_LEAFSLEW_READ; else echo KW_LEAFSLEW_NOLOG; fi")
     for h in rec.get("q_hosts") or [hub]:
         h = hub if h == "localhost" else h
@@ -4092,8 +4097,15 @@ def leafslew_read(AP, rec, hub):
         except Exception:
             continue
         if rc == 0 and "KW_LEAFSLEW_READ" in (out or ""):
-            return dict(leafslew_parse(out), log=f"{h}:{tt}")
+            return dict(leafslew_parse(out), log=f"{h}:{tt}", leaf_optout="KW_LEAF_OPTOUT" in out)
     return None
+
+
+def leafslew_plan_route(rec, status, cls, why):
+    """KW-FIX-25: -> (class, reason) of a queue row; a slew FAIL on a plan-owned clock tree stays a PLAN fail on every re-read"""
+    if status == "FAIL" and (rec.get("leafslew") or {}).get("route") == "PLAN":
+        return "PLAN", "plan fix: clock slew on a plan-owned tree, no LEAFSLEW retry: " + str(why or "")
+    return cls, why
 
 
 def leafslew_step(AP, cfg, st, notices, hub=None):
@@ -4117,6 +4129,15 @@ def leafslew_step(AP, cfg, st, notices, hub=None):
         rec["leafslew"] = sig
         if not sig["pins"] or rec.get("leafslew_form"):
             continue                                     # no signature, or the hooked attempt itself failed: no loop
+        if sig.get("leaf_optout"):                       # KW-FIX-25: no retry, the plan owns this tree: goes to a plan fix
+            sig["route"] = "PLAN"
+            rec["q_class"], rec["q_reason"] = leafslew_plan_route(rec, "FAIL", rec.get("q_class"), rec.get("q_reason"))
+            notices.setdefault(die, []).append(
+                f"{rec['item']}@{rec.get('attempt')} clock slew on a plan-owned tree ({sig['pins']} clock pins over max_slew, worst "
+                f"{sig['worst_ps']:.0f} ps {sig['worst_pin']}), OT_CLK_LEAF_REPEAT=0: no LEAFSLEW retry, PLAN FIX needed (KW-FIX-25)")
+            if hasattr(AP, "log"):
+                AP.log(f"KIT-WAVE LEAFSLEW plan-owned {die}/{rec['item']}@{rec.get('attempt')}: no retry, plan fix: {sig}")
+            continue
         src = rec_src_sha(rec)
         k = f"{die}|{rec['item']}|{src}"
         if k in ls:
