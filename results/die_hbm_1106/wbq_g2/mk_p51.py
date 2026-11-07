@@ -9,7 +9,8 @@ The groups share no signal (rtl ot_wbq_split.sv: ot_wbq_root_grp, the fill/copy 
 no cycle changes; ot_wbq_root_g2 (u_g0 + u_g1) is the plan glue of each slot, proven equal to ot_wbq_root (OT_WBQ_N1M) by
 yosys induction (results/die_hbm_1106/wbq_g2/eq_g2.sh) and lock-step (bench_g2.sh).
 One pin table for both masters (child frame): the root-table sites of group 0 (S face control + wd0-3 + wd_v[0-3], W face
-control + g_d[285:0] + g_v[0] + g_credit[0]); clock pins at the child centre entry (108, 64.8) as the root had at (216, 64.8).
+control + g_d[285:0] + g_v[0] + g_credit[0]); clock pins at the child entry (108, 25.92), S logic band.
+Macros in the N part so the 1373 face registers (S wd faces, W g_d face) have a free S band (probe pG: macros on the S edge -> DPL-0033).
 Sidecars: core_conns (every core:<root> -> both children; child = root conns, wd4-7 -> wd0-3 for g1, sibling added on the
 shared nets, root_ready of g1 is not used), clock taps + entries (one centre entry per child), core_macros (4 x
 ot_sram_1r1w_128x256_m1_r0c0_g256 per child, 2 x 2).
@@ -21,7 +22,7 @@ ROOT, M0, M1 = "ot_wbq_root", "ot_wbq_root_g0", "ot_wbq_root_g1"
 RT = "cores/ot_wbq_root__432x129.6__d44v_split.json"
 TB = "cores/ot_wbq_root_g__216x129.6__d44v_p51.json"
 W, H = 216.0, 129.6
-CK = (108.0, 64.8)
+CK = (108.0, 25.92)          # clock entry in the S logic band (the macros sit in the N 2/3, clear of the S / W face registers)
 r3 = lambda v: round(v + 0.0, 3)
 
 
@@ -119,7 +120,7 @@ for tn, T in P["partition_types"].items():
             e.update(xy_um=list(CK), island_um=[r3(CK[0] - 4.32), r3(CK[1] - 4.32), r3(CK[0] + 4.32), r3(CK[1] + 4.32)], tap=f"{I}__g{g}",
                      module=mod, native_module=mod,
                      clock_pin_sites_um={n: [r3(v[0] - 216.0 + CK[0]), r3(v[1] - 64.8 + CK[1])] for n, v in e0["clock_pin_sites_um"].items()},
-                     source=f"DIE-HBM-82-EP6 p51: group {g} centre entry (root entry moved to the child centre, between the macro rows) | " + e0.get("source", ""))
+                     source=f"DIE-HBM-82-EP6 p51: group {g} centre entry (entry in the S logic band below the macros) | " + e0.get("source", ""))
             CE[tn][f"{I}__g{g}"] = e
         taps[ti:ti + 1] = nt
         c0 = C.pop(I)
@@ -152,7 +153,7 @@ wr("die_plan.json", P)
 wr("core_conns.json", CC, indent=1)
 wr("clock_entries.json", CE)
 cm = json.loads((D / "core_macros.json").read_text())
-X0, X1, Y0, Y1 = 8.64, 115.56, 8.64, 73.44
+X0, X1, Y0, Y1 = 12.96, 119.88, 51.84, 90.72
 for g, mod in ((0, M0), (1, M1)):
     cm["cores"][mod] = {
         "status": "KNOWN", "outline_um": [W, H], "macros": [
@@ -160,7 +161,7 @@ for g, mod in ((0, M0), (1, M1)):
              "rect_um": [x, y, r3(x + 91.8), r3(y + 27.576)]}
             for k, (x, y) in enumerate(((X0, Y0), (X1, Y0), (X0, Y1), (X1, Y1)))],
         "channel_rule_um": 10.8,
-        "basis": "DIE-HBM-82-EP6 d44v part 51: one lane group of ot_wbq_root (rows as the root, 2 columns, 15.12 channel; 128x256 one-mask-pin master)"}
+        "basis": "DIE-HBM-82-EP6 d44v part 51: one lane group of ot_wbq_root (2 x 2 in the N part: rows y 51.84 / 90.72 (13.3 channel), columns x 12.96 / 119.88 (15.12 channel, 8.64 W strip for the g_d face); S band 4.32-47.5 for the S/W face registers and the pick; 128x256 one-mask-pin master)"}
 (D / "core_macros.json").write_text(json.dumps(cm, indent=1) + "\n")
 for item in log:
     print("P51", *item)

@@ -9770,10 +9770,10 @@
      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
-      8.64,
-      8.64,
-      100.44,
-      36.216
+      12.96,
+      51.84,
+      104.76,
+      79.416
      ]
     },
     {
@@ -9781,10 +9781,10 @@
      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
-      115.56,
-      8.64,
-      207.36,
-      36.216
+      119.88,
+      51.84,
+      211.68,
+      79.416
      ]
     },
     {
@@ -9792,10 +9792,10 @@
      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
-      8.64,
-      73.44,
-      100.44,
-      101.016
+      12.96,
+      90.72,
+      104.76,
+      118.296
      ]
     },
     {
@@ -9803,15 +9803,15 @@
      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
-      115.56,
-      73.44,
-      207.36,
-      101.016
+      119.88,
+      90.72,
+      211.68,
+      118.296
      ]
     }
    ],
    "channel_rule_um": 10.8,
-   "basis": "DIE-HBM-82-EP6 d44v part 51: one lane group of ot_wbq_root (rows as the root, 2 columns, 15.12 channel; 128x256 one-mask-pin master)"
+   "basis": "DIE-HBM-82-EP6 d44v part 51: one lane group of ot_wbq_root (2 x 2 in the N part: rows y 51.84 / 90.72 (13.3 channel), columns x 12.96 / 119.88 (15.12 channel, 8.64 W strip for the g_d face); S band 4.32-47.5 for the S/W face registers and the pick; 128x256 one-mask-pin master)"
   },
   "ot_wbq_root_g1": {
    "status": "KNOWN",
@@ -9825,10 +9825,10 @@
      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
-      8.64,
-      8.64,
-      100.44,
-      36.216
+      12.96,
+      51.84,
+      104.76,
+      79.416
      ]
     },
     {
@@ -9836,10 +9836,10 @@
      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
-      115.56,
-      8.64,
-      207.36,
-      36.216
+      119.88,
+      51.84,
+      211.68,
+      79.416
      ]
     },
     {
@@ -9847,10 +9847,10 @@
      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
-      8.64,
-      73.44,
-      100.44,
-      101.016
+      12.96,
+      90.72,
+      104.76,
+      118.296
      ]
     },
     {
@@ -9858,15 +9858,15 @@
      "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
-      115.56,
-      73.44,
-      207.36,
-      101.016
+      119.88,
+      90.72,
+      211.68,
+      118.296
      ]
     }
    ],
    "channel_rule_um": 10.8,
-   "basis": "DIE-HBM-82-EP6 d44v part 51: one lane group of ot_wbq_root (rows as the root, 2 columns, 15.12 channel; 128x256 one-mask-pin master)"
+   "basis": "DIE-HBM-82-EP6 d44v part 51: one lane group of ot_wbq_root (2 x 2 in the N part: rows y 51.84 / 90.72 (13.3 channel), columns x 12.96 / 119.88 (15.12 channel, 8.64 W strip for the g_d face); S band 4.32-47.5 for the S/W face registers and the pick; 128x256 one-mask-pin master)"
   }
  },
  "plan_out": "/srv/opentallas-scratch2/claude/hbm-r15-1027/c16clk"
