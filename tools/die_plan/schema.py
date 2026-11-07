@@ -1283,6 +1283,9 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # writer phase; literal raw branches preserve every original reset equation/depth.
 _CKPROPS = SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]
 _CKPROPS["landing_writer_start"]["properties"]["reuse_relay_origin"] = {"type": "boolean"}
+# KV-TYPES-2 11-07: optional FIRM home of the START origin beside its pin (same rule as landing_reader_start).
+_CKPROPS["landing_writer_start"]["properties"]["origin_rect_um"] = {"type": "array", "minItems": 4, "maxItems": 4,
+                                                                    "items": {"type": "number"}}
 _CKPROPS["landing_raw_branches"] = {
     "type": "array", "minItems": 1, "items": {
         "type": "object", "additionalProperties": False,

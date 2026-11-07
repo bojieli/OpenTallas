@@ -298,6 +298,10 @@ def _writer_start_groups(t):
     if cfg is None:
         return []
     groups = []
+    # KV-TYPES-2 11-07 (PV v1n origin 560 um from its START pin, setup -1772): optional origin home, absent = unchanged.
+    if 'origin_rect_um' in cfg:
+        origin = 'u_cland_rstart_rx' if (t or {}).get('landing_relay_start_copy') else 'u_cland_origin'
+        groups.append((origin, cfg['origin_rect_um'], 'writer-start-origin'))
     for bus, branch in sorted(cfg['branches'].items()):
         for i, stage in enumerate(branch['stages']):
             x, y = stage['xy_um']
