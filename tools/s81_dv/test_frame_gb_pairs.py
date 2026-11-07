@@ -24,3 +24,9 @@ def test_actual_frames_preserve_pair_map_after_gb_lowering():
 
 def test_similarly_named_unqualified_module_is_not_a_qx_pair():
     assert not F._Q_RE.search('ot_v41_rom_elem_q_qxpq_w10_gb_wrong u_e0 (');
+    assert not F._Q_RE.search('ot_v41_rom_elem_q_qxpq_w10_gb_hw u_e0 (')
+
+
+def test_split_pair_wrapper_is_one_qx_pair():
+    m = F._Q_RE.search('    ot_v41_rom_elem_q_qxpq_w10_gb_split #(.OLAT(1)) u_e7 (.clk(c));')
+    assert m and m.group(1) == '7'
