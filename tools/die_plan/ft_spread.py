@@ -23,8 +23,15 @@ track_use(): advisory gen-time track-use report (ft_track_use.json in the kit): 
 use (bits / (perpendicular extent x usable tracks/um), TYPE-SAFE-1 track_est method, target <= 0.5).  Report only.
 """
 import math
+import sys
+from pathlib import Path
 
 import numpy as np
+
+HERE = Path(__file__).resolve().parent
+for _p in (str(HERE), str(HERE.parents[1])):  # gen.py phys runs with tools/die_plan only on sys.path (as ft_corridor)
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
 CELL = (1.404, .27)            # ft_corridor.CELL: bit-site cell envelope (um)
 KEEPOFF = 2.0                  # ft_corridor.KEEPOFF: flop keep-off from a macro edge
@@ -172,7 +179,7 @@ def _tracks(slot, horiz):
 
 def track_use(slots, ledger=()):
     """advisory per-slot track use (bundle bits / perpendicular extent x usable tracks per um); report only."""
-    form = {r["slot"]: r.get("form") for r in ledger}
+    form = {r["slot"]: r.get("form") for r in ledger if r.get("slot")}
     rows = []
     for s in slots:
         W, k = int(s["width"]), int(s.get("stations", 1))
