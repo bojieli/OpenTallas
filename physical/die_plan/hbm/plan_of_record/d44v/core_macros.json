@@ -9737,6 +9737,26 @@
    ],
    "channel_rule_um": 10.8,
    "basis": "DIE-HBM-81 d44v part 37: HBM-GAPS-7 RX BM3 residual; macro homes = its kit macro_placement (gen_hg7/macros_res.json)"
+  },
+  "ot_hgi_sfu_split3_ctl_rest_1c": {
+   "status": "NONE",
+   "outline_um": [
+    427.68,
+    453.6
+   ],
+   "basis": "recipe macros []",
+   "macros": [],
+   "note": " | DIE-HBM-61 d44v RE-FORM 669.6x626.4 -> 427.68x453.6 (centre kept, rects shifted) | HBM-FORM-TIMING-11 d44v part 38 (COORD 11-06 10:2x/11:21): split3__ctl rest+pipe (I205 delay-line cut, 0 cycles; glue results/die_hbm_1106/ctlsplit_p37/ot_hgi_sfu_core_split3__ctl__p37glue.sv)"
+  },
+  "ot_hgi_sfu_split3_ctl_pipe_1c": {
+   "status": "NONE",
+   "outline_um": [
+    172.8,
+    151.2
+   ],
+   "basis": "no macros (flops only)",
+   "macros": [],
+   "note": "HBM-FORM-TIMING-11 d44v part 38 (COORD 11-06 10:2x/11:21): split3__ctl rest+pipe (I205 delay-line cut, 0 cycles; glue results/die_hbm_1106/ctlsplit_p37/ot_hgi_sfu_core_split3__ctl__p37glue.sv)"
   }
  },
  "plan_out": "/srv/opentallas-scratch2/claude/hbm-r15-1027/c16clk"

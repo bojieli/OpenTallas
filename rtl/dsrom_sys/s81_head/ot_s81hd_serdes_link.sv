@@ -18,10 +18,19 @@ module ot_s81hd_serdes_link #(
 );
     wire [511:0] rx;
     wire [1:0] st;
+`ifdef OT_S81HD_SERDES_SC
+    // DIE-HEAD-76-SERDESRF 11-06 opt-in SC form (ot_s81hd_serdes_sc.sv): hard children u_tx / u_dec.u_syn.u_bm0..2 /
+    // u_dec.u_chn, RXQ receive side, pma_tx +2 ck edges.  Default (no define) is unchanged.
+    ot_s81hd_pdie_sc #(.PMA_LAT(PMA_LAT)) u_link (
+        .clk(ck), .rst(rst_n), .tx(coll_i0), .rx(rx), .st(st),
+        .pma_tx(pma_tx), .pma_tck(pma_tck), .pma_rx(pma_rx), .pma_rck(pma_rck)
+    );
+`else
     ot_pdie_serdes #(.PMA_LAT(PMA_LAT)) u_link (
         .clk(ck), .rst(rst_n), .tx(coll_i0), .rx(rx), .st(st),
         .pma_tx(pma_tx), .pma_tck(pma_tck), .pma_rx(pma_rx), .pma_rck(pma_rck)
     );
+`endif
 `ifdef OT_S81HD_SERDES_MUT_STATUS
     assign coll_o0 = {st[0], st[1], rx};
 `else

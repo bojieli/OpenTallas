@@ -1,0 +1,7 @@
+default-text (RREG 0, no OT_OPSB_RREG) yosys equiv vs ddb087e49d, shared macro stub sram_stub.v, async2sync, equiv_simple -seq 3 + equiv_induct -undef:
+ot_hgi_sfu_opsb_output_n32 rc=0 Found 4876 $equiv cells in eq:   Of those cells 4876 are proven and 0 are unproven. 
+ot_hgi_sfu_opsb_output rc=0 Found 13094 $equiv cells in eq:   Of those cells 13094 are proven and 0 are unproven. 
+ot_hgi_sfu_opsa_group0 (equiv_struct first, 150 GB):   Of those cells 22332 are proven and 0 are unproven.
+ot_hgi_sfu_opsb_group (equiv_struct first, 150 GB):   Of those cells 20720 are proven and 0 are unproven.
+opsa_group1 / opsa_gblock: same single lgroup2_lf instantiation as opsa_group0 (ot_hgi_sfu_opsa_group.sv:61); their 40 GB runs aborted in equiv_induct after equiv_simple
+sanity old-vs-old: ot_hgi_sfu_opsb_output_n32 rc=0 Found 4876 $equiv cells in eq:   Of those cells 4876 are proven and 0 are unproven.  ot_hgi_sfu_opsb_output rc=0 Found 13160 $equiv cells in eq:   Of those cells 13160 are proven and 0 are unproven.  
