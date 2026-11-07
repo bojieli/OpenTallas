@@ -35,13 +35,16 @@ proc ot_prd_spef_read {why} {
     }
   }
   set scs {}
-  if {[info exists ::ot_mm_active] && $::ot_mm_active && [llength [info commands ot_mm_sc]]} {
-    set scs [list [ot_mm_sc] BC]
-    foreach sc $scs { read_spef -corner $sc $rf }
-  } else {
-    read_spef $rf
+  try {
+    if {[info exists ::ot_mm_active] && $::ot_mm_active && [llength [info commands ot_mm_sc]]} {
+      set scs [list [ot_mm_sc] BC]
+      foreach sc $scs { read_spef -corner $sc $rf }
+    } else {
+      read_spef $rf
+    }
+  } finally {
+    if {$rf ne $f} { file delete $rf }
   }
-  if {$rf ne $f} { file delete $rf }
   incr ::ot_prd_spef_reads
   puts "OT_PRD_SPEF $why: read_spef [expr {[llength $scs] ? "-corner {$scs} " : ""}][file tail $f] (read $::ot_prd_spef_reads$note)"
 }
