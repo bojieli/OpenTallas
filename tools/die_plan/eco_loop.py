@@ -225,9 +225,25 @@ def port_only_hold(signoff_path):
         return False
 
 
+def nonport_hold(signoff_path):
+    """DIE-KV-88 11-07 (COORD ruling): (wns_ps, endpoints) of the hold violators not started at an input port, from the
+    FF corner's std_min_start, the source signoff.port_only_hold reads.  None when the split cannot be read: no census,
+    a census with an error or truncated, or an older record without the non-port fields."""
+    try:
+        s = json.loads((Path(signoff_path).parent / "ff" / "corner.json").read_text()).get("std_min_start") or {}
+    except (OSError, ValueError, AttributeError):
+        return None
+    w, n = s.get("nonport_wns"), s.get("nonport_n")
+    if w is None or n is None or s.get("err") != 0 or s.get("trunc") != 0:
+        return None
+    return w, n
+
+
 def near_miss(rec, signoff_path=None):
     """-> (near, [what is beyond the numbers], [advisories]).  Only FAIL gates count: port-only hold is PASS in a current
-    record, and an older record's FF census gives the same answer; it goes to the parent, not to an ECO."""
+    record, and an older record's FF census gives the same answer; it goes to the parent, not to an ECO.  A mixed record
+    scores hold on its non-port endpoints only (port-start hold is the parent's); with no readable split it scores the
+    whole number."""
     c = rec.get("checks") or {}
     far, warn = [], []
     for key, name in (("setup_tt", "setup"), ("hold_ff", "hold")):
@@ -238,6 +254,10 @@ def near_miss(rec, signoff_path=None):
             warn.append("hold is port-only: the parent's, no ECO for it")
             continue
         w, n = g.get("wns_ps"), g.get("violators") or 0
+        split = nonport_hold(signoff_path) if key == "hold_ff" and signoff_path else None
+        if split:
+            w, n = split
+            warn.append(f"hold scored on non-port only: {int(n)} endpoint(s) at {w} ps; the rest start at ports, the parent's")
         if w is not None and w < -NEAR_WNS_PS:
             far.append(f"{name} WNS {w} ps worse than -{NEAR_WNS_PS:g}")
         if n > NEAR_ENDPOINTS:

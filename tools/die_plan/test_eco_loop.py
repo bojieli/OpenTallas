@@ -827,3 +827,34 @@ def test_best_dir_trim_needs_final_and_honours_keep(tmp_path, monkeypatch):
     assert E.trim_best(it) == []
     monkeypatch.delenv("OT_ECO_KEEP_ROUTED")
     assert len(E.trim_best(it)) == 3 and sorted(p.name for p in b.iterdir()) == ["6_final.odb"]
+
+
+def _mixed_hold_record(tmp_path, census):
+    """a FAIL hold record of -84.65 ps on 1425 endpoints, FF census given, near miss on every other gate"""
+    (tmp_path / "ff").mkdir()
+    (tmp_path / "ff" / "corner.json").write_text(json.dumps(dict(std_nviol_min=1425.0, std_min_start=census)))
+    b = tmp_path / "signoff.json"
+    return far(tt=5, ff=-84.65, ff_n=1425), b
+
+
+MIXED = dict(port=1424.0, other=1.0, reg=1.0, trunc=0.0, err=0.0, ports=["a"])
+
+
+def test_mixed_hold_scores_nonport_only(tmp_path):
+    r, b = _mixed_hold_record(tmp_path, dict(MIXED, nonport_n=1.0, nonport_wns=-0.49))
+    ok, beyond, warn = E.near_miss(r, b)
+    assert ok and not beyond and any("1 endpoint(s) at -0.49" in x for x in warn)
+
+
+def test_mixed_hold_large_nonport_still_far(tmp_path):
+    r, b = _mixed_hold_record(tmp_path, dict(MIXED, nonport_n=101.0, nonport_wns=-31.0))
+    ok, beyond, _ = E.near_miss(r, b)
+    assert not ok and "hold WNS -31.0" in beyond[0] and "101 endpoints" in beyond[1]
+
+
+@pytest.mark.parametrize("census", [MIXED, dict(MIXED, nonport_n=1.0, nonport_wns=-0.49, err=1.0),
+                                    dict(MIXED, nonport_n=1.0, nonport_wns=-0.49, trunc=1.0)])
+def test_mixed_hold_no_split_scores_whole_number(tmp_path, census):
+    r, b = _mixed_hold_record(tmp_path, census)
+    ok, beyond, _ = E.near_miss(r, b)
+    assert not ok and "hold WNS -84.65" in beyond[0] and "1425 endpoints" in beyond[1]

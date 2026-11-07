@@ -890,6 +890,31 @@ if {[sta::endpoint_violation_count min] > 0} {
   } so_hs_msg]} { set so_hs_err 1 }
   so STD_MIN_START port $so_hs_port other $so_hs_other reg $so_hs_reg trunc $so_hs_trunc err $so_hs_err
   so STD_MIN_START_PORTS {*}[lsort -unique $so_hs_ports]
+  # DIE-KV-88 11-07: non-port hold, report only: endpoints with a violating min path not started at an input port, a
+  # register-launched path hidden behind a worse port path included, and their worst slack.  eco_loop.near_miss scores
+  # this, since port-start hold is the parent's.  Own catch: a failure here prints nothing and cannot touch the census above.
+  catch {
+    set so_np [dict create]
+    foreach so_pe $so_hs_pe {
+      set so_sp [get_property $so_pe startpoint]
+      if {[get_property $so_pe slack] < 0 && !([$so_sp is_top_level_port] && [get_full_name $so_sp] ni $so_ck_ports)} {
+        dict set so_np [get_full_name [get_property $so_pe endpoint]] [get_property $so_pe slack]
+      }
+    }
+    set so_np_pe {}
+    if {[llength $so_hs_regs]} { set so_np_pe [find_timing_paths -path_delay min -from $so_hs_regs -group_path_count 100000 -endpoint_path_count 1 -slack_max 0] }
+    foreach so_pe $so_np_pe {
+      set so_sl [get_property $so_pe slack]
+      if {$so_sl >= 0} continue
+      set so_ep [get_full_name [get_property $so_pe endpoint]]
+      if {![dict exists $so_np $so_ep] || $so_sl < [dict get $so_np $so_ep]} { dict set so_np $so_ep $so_sl }
+    }
+    if {[llength $so_np_pe] < 100000} {
+      set so_np_w 0.0
+      dict for {so_ep so_sl} $so_np { if {$so_sl < $so_np_w} { set so_np_w $so_sl } }
+      so STD_MIN_NONPORT n [dict size $so_np] wns [format %.2f $so_np_w]
+    }
+  }
 }
 # ---- DRV ----
 so SLEW_VIOL [sta::max_slew_violation_count]
@@ -1483,6 +1508,9 @@ def corner_result(parsed):
         d = _kvlist(kv["STD_MIN_START"])
         out["std_min_start"] = dict({k: _f(d.get(k)) for k in ("port", "other", "reg", "trunc", "err")},
                                     ports=(kv.get("STD_MIN_START_PORTS") or "").split())
+        if "STD_MIN_NONPORT" in kv:                 # DIE-KV-88 11-07: report only, read by eco_loop.near_miss
+            d = _kvlist(kv["STD_MIN_NONPORT"])
+            out["std_min_start"].update(nonport_n=_f(d.get("n")), nonport_wns=_f(d.get("wns")))
     out["slew_viol"] = _f(kv.get("SLEW_VIOL"))
     out["cap_viol"] = _f(kv.get("CAP_VIOL"))
     fo = (kv.get("FANOUT_MAX") or "").split()
