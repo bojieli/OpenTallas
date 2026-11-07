@@ -34,8 +34,10 @@ class TestPinbandSite(unittest.TestCase):
         self.assertEqual(PB.stripes(PDN), [(1.968, 4.32, 0.672)])
 
     def test_step_keeps_tracks(self):
-        self.assertAlmostEqual(PB.step_um([]), 0.27)
-        self.assertAlmostEqual(PB.step_um(["M4"]), 2.16)
+        self.assertAlmostEqual(PB.step_um([]), 0.192)
+        self.assertAlmostEqual(PB.step_um(["M4"]), 0.192)
+        self.assertAlmostEqual(PB.step_um(["M4", "M6"]), 0.192)
+        self.assertAlmostEqual(PB.step_um(["M8"]), 0.96)
 
     def test_nk_edge_row_r180_moves(self):
         # NK form: 0.084-tall top-edge pin row; R180 puts it at the bottom edge, under band 4.32+1.968+k*4.32
@@ -45,7 +47,8 @@ class TestPinbandSite(unittest.TestCase):
         kids = [dict(inst="u_r", master="raw", orient="R180", x=50.0, y=y)]
         rep = PB.site(kids, PDN, CORE, lambda m: L, move=True)
         self.assertEqual(len(rep["moved"]), 1)
-        self.assertAlmostEqual(abs(rep["moved"][0]["dy"]), 2.16)
+        dy = rep["moved"][0]["dy"]
+        self.assertAlmostEqual(dy / 0.192, round(dy / 0.192))
         self.assertFalse(band_hit(kids[0]["y"], kids[0]["y"] + 0.084))
 
     def test_interior_row_smallest_row_multiple(self):
@@ -54,8 +57,8 @@ class TestPinbandSite(unittest.TestCase):
         kids = [dict(inst="u_l", master="leaf", orient="R0", x=50.0, y=y)]
         rep = PB.site(kids, PDN, CORE, lambda m: L, move=True)
         dy = rep["moved"][0]["dy"]
-        self.assertAlmostEqual(dy / 0.27, round(dy / 0.27))
-        self.assertLessEqual(abs(dy), 0.81 + 1e-9)
+        self.assertAlmostEqual(dy / 0.192, round(dy / 0.192))
+        self.assertLessEqual(abs(dy), 0.768 + 1e-9)
         self.assertFalse(band_hit(kids[0]["y"] + 10.0, kids[0]["y"] + 10.3))
 
     def test_clear_child_unchanged(self):
@@ -83,21 +86,34 @@ class TestPinbandSite(unittest.TestCase):
         self.assertEqual((rep["moved"], len(rep["refused"]), kids[0]["y"]), ([], 1, y))
 
     def test_unclearable_rows_partial_min_bad(self):
-        # two M6 band sets per pitch + two edge rows 26.35 apart (M4 pin -> 2.16 step): no move within 4.32 clears
-        # both; take the legal move that leaves 1 row and report it as partial
+        # two M6 band sets per pitch + an M8 signal pin (step lcm(0.192, 0.08) = 0.96): no move within 4.32 clears the
+        # three rows together; take the legal move that leaves 1 row and report it as partial
         pdn = PDN + "add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {4.32} -offset {0.0}\n"
         bands = [(CORE[1] + o, p, b) for o, p, b in PB.stripes(pdn)]
-        nbad = lambda yy: sum(PB.row_bad(a, b, bands) for a, b, e in PB.abs_rows(rows, h, "R0", yy))
-        h = 26.35 + 0.084
-        L = lef("hc", h, [(0.0, 0.084), (26.35, h)], m4=True)
+        h = 24.64 + 0.084
+        L = lef("hc", h, [(0.0, 0.084), (0.12, 0.204), (24.64, h)]).replace(
+            "  PIN VDD", "  PIN m8\n    DIRECTION INPUT ;\n    PORT\n      LAYER M8 ;\n        RECT 0 5 1 5.08 ;\n"
+                         "    END\n  END m8\n  PIN VDD")
         rows = PB.pin_rows(PB.macro_body(L))[2]
-        y = CORE[1] + 20 * 4.32 + 0.1
+        nbad = lambda yy: sum(PB.row_bad(a, b, bands) for a, b, e in PB.abs_rows(rows, h, "R0", yy))
+        y = CORE[1] + 20 * 4.32 + 0.24
         self.assertEqual(nbad(y), 2)
         kids = [dict(inst="u_h", master="hc", orient="R0", x=50.0, y=y)]
         rep = PB.site(kids, pdn, CORE, lambda m: L, move=True)
         self.assertEqual((len(rep["moved"]), rep["moved"][0]["rows_left"], rep["partial"]), (1, 1, ["u_h"]))
-        self.assertAlmostEqual(abs(rep["moved"][0]["dy"]), 2.16)
+        dy = rep["moved"][0]["dy"]
+        self.assertAlmostEqual(rep["moved"][0]["step"], 0.96)
+        self.assertAlmostEqual(dy / 0.192, round(dy / 0.192))
         self.assertEqual(nbad(kids[0]["y"]), 1)
+
+    def test_every_move_on_0192_grid(self):
+        # QC-A0C-B6 20:58: every move (full or partial) is a multiple of 0.192 um
+        L = lef("leaf", 30.0, [(10.0, 10.3), (21.7, 21.9)], m4=True)
+        for i in range(40):
+            y = CORE[1] + 1.968 + 5 * 4.32 - 10.0 + i * 0.108
+            kids = [dict(inst="u_l", master="leaf", orient="R0", x=50.0, y=y)]
+            for r in PB.site(kids, PDN, CORE, lambda m: L, move=True)["moved"]:
+                self.assertAlmostEqual(r["dy"] / 0.192, round(r["dy"] / 0.192), places=6)
 
     def test_env_off_is_check_only(self):
         L = lef("leaf", 30.0, [(10.0, 10.3)])

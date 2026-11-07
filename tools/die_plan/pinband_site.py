@@ -9,10 +9,10 @@ Check (same numbers as QC-A0C-B6 pinband.py): a signal M5 pin row (y0, y1) is BA
 every band (+-MARG) is shorter than min(VIA, y1 - y0).  Edge rows count too: NK's 50 VSS shorts were the 0.084-tall
 edge pin row of R180/MX rawleafs under a band (QC-A0C-B6 17:35), so an in-plane M5 exit does not save it.
 
-Fix: the smallest y move of the child that clears every pin row (when no grid-keeping move clears all of them, the
-legal move that leaves the fewest bad rows, reported as partial).  The step keeps the child on its grids: a
-multiple of the 0.27 um placement row and of the y pitch of each horizontal layer that carries one of its signal pins
-(M4 0.048, M6 0.064, M8 0.08; M2 rows 0.27), so an M4-track-snapped site stays snapped.  A move must keep the child
+Fix: the smallest y move of the child that clears every pin row; when no grid-keeping move clears all of them, the
+legal move that leaves the fewest bad rows (reported as partial).  The step keeps the child on its track grids: a
+multiple of 0.192 um (lcm of the M4 0.048 / M5 / M6 0.064 pitches; a move off it gives DRT-0073, QC-A0C-B6 20:58) and
+of the y pitch of any other horizontal layer that carries one of its signal pins (M8 0.08; M2 0.27).  A move must keep the child
 inside the core and its gap to every other child / macro >= min(original gap, MIN_GAP).  No legal move = the child
 stays and the row is reported as refused (advisory; only sign-off blocks).
 
@@ -25,6 +25,7 @@ import re
 VIA, MARG, ROW, MIN_GAP, MAX_DY = 0.144, 0.05, 0.27, 1.0, 4.32   # MAX_DY = one band pitch
 FLAT = ("R0", "MY", "MX", "R180", "N", "FN", "S", "FS")      # 90-degree rotated children are reported, not checked
 Y_PITCH_NM = {"M2": 270, "M4": 48, "M6": 64, "M8": 80}     # horizontal layers (y tracks) of the ASAP7 kit stack
+GRID_NM = 192                                               # lcm(M4 48, M6 64): every hard-child y move (QC-A0C-B6 20:58)
 
 
 # the partition / core top-grid M6 stripe pair every ASAP7 kit generator here writes (gen_phys PDN, core PDN_* texts)
@@ -84,7 +85,10 @@ def pin_rows(body):
 
 
 def step_um(layers):
-    s = Y_PITCH_NM["M2"]
+    """y move step: a multiple of GRID_NM (0.192 um = lcm of the M4 0.048 / M5 / M6 0.064 track pitches; QC-A0C-B6
+    20:58 measured DRT-0073 for moves off it) and of the y pitch of every other horizontal layer carrying a signal pin
+    of the child (M8 0.08 -> 0.96; M2 0.27 -> 8.64, i.e. no move within MAX_DY)"""
+    s = GRID_NM
     for L in layers:
         s = s * Y_PITCH_NM[L] // math.gcd(s, Y_PITCH_NM[L])
     return s / 1000.0
