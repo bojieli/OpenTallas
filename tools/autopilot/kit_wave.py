@@ -1877,7 +1877,12 @@ def input_hash(sp, prov_key=None):
         if isinstance(v, (list, tuple)):
             return [clean(x) for x in v]
         return v.replace(src, "<SRC>") if isinstance(v, str) and src else v
-    body = {k: c for k, c in ((k, clean(v)) for k, v in sp.items() if k not in INPUT_SKIP) if c not in (None, "", {}, [])}
+    # OT_FLOW_TAG selects the released sign-off tools/child context, not design inputs. Normalize
+    # both stored and candidate specs; changing only this metadata must never release a failed row.
+    compared = dict(sp)
+    if isinstance(compared.get("gen_env"), dict):
+        compared["gen_env"] = {k: v for k, v in compared["gen_env"].items() if k != "OT_FLOW_TAG"}
+    body = {k: c for k, c in ((k, clean(v)) for k, v in compared.items() if k not in INPUT_SKIP) if c not in (None, "", {}, [])}
     form = sp.get("leafslew_form")
     if form:
         body["leafslew"] = clean(form.get("env") or {})
