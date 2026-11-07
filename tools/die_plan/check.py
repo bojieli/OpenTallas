@@ -2195,7 +2195,7 @@ def _plan_geom_default():
 
 
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
-        clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None):
+        clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -2211,6 +2211,8 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
         return R, dict()
     # Plan-relative declarations (core pins_file for the reset wavefront) resolve against the plan's own directory.
     P = S.Plan(raw, Path(plan_dir) / "die_plan.json" if plan_dir else None)
+    if native_reset_receipt is not None:
+        P._native_reset_release_receipt = native_reset_receipt
     summ = dict(die=P.name, partitions=len(P.parts), types=len(P.types), ports=len(P.ports), lanes=len(P.lanes),
                 bits=sum(p["width"] for p in P.ports.values()))
     if any(t.get("infra_ports") for t in P.types.values()):
@@ -2325,6 +2327,7 @@ def main(argv=None):
     ap.add_argument("--strict-core-pg", action="store_true",
                     help="core_pg: a type placing hard-core macros without core_pg_connect, or a macro LEF with no "
                          "connectable PG geometry, is an ERROR (default WARN until the dies regenerate their kits)")
+    ap.add_argument("--native-reset-receipt", help="explicit measured native conditional reset receipt; no core-cycle deadline or CDC waiver")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
@@ -2332,7 +2335,7 @@ def main(argv=None):
     R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
                   groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
                   completeness=a.completeness, clock_builds=a.clock_build,
-                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg,
+                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt,
                   plan_geom=(a.plan_geom or _plan_geom_default()) if a.completeness else None)
     ne = len(R.errors())
     npv = len(R.pendings())

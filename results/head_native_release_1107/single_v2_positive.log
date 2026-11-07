@@ -1,0 +1,5 @@
+HEAD_RELEASE epoch=0 guard_rck_edge=66 native_rck_edge=68
+HEAD_RELEASE epoch=1 guard_rck_edge=66 native_rck_edge=68
+HEAD_RELEASE epoch=2 guard_rck_edge=66 native_rck_edge=68
+HEAD_NATIVE_RELEASE PASS checks=204 actual_codec_and_fifo=1 leaf_binding=1
+/srv/opentallas-scratch2/claude/codex-head-native-reset-1107/proof/native_single_v2_tb.sv:48: $finish called at 243725725 (1fs)

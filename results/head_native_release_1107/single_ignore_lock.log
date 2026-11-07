@@ -1,0 +1,3 @@
+HEAD_RELEASE epoch=0 guard_rck_edge=66 native_rck_edge=68
+FATAL: /srv/opentallas-scratch2/claude/codex-head-native-reset-1107/proof/native_single_tb.sv:20: unsafe reset while recovered clock stopped epoch=1
+       Time: 91158750  Scope: tb_head_native_release.held
