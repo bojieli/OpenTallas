@@ -95,6 +95,13 @@ while :; do
       _cur=$(systemctl --user show "$_u.scope" -p MemoryCurrent --value 2>/dev/null); case "$_cur" in ''|*[!0-9]*) _cur=0;; esac
       _g=$(( _m - _cur / 1073741824 )); [ $_g -gt 0 ] && _pend=$(( _pend + _g ))
     done
+    # Docker is outside the scope: credit only fresh, uniquely identified live
+    # container cgroups. Keep the old scope-only charge if the helper fails.
+    if _live_pend=$(timeout 15 /usr/local/bin/ot-direct-pending 2>/dev/null) &&
+       [[ "$_live_pend" =~ ^[0-9]+$ ]]; then
+      _pend=$_live_pend
+    fi
+    _avail=$(awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo)
     if [ $(( _avail - _pend )) -ge $(( MEM + 32 )) ]; then
       V=OK; RES=$MEM; _short=0; WHY="DIRECT_1107 available $_avail GB, growth charged $_pend GB (earlier direct jobs), past gate: $WHY"
       echo "$UNIT $MEM" > "$D/direct.$UNIT"
