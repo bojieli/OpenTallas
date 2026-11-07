@@ -348,6 +348,18 @@ def type_pins(P, tn):
 # face block's ff_blk/ff_dbu live; a bare `source` inside ORFS's hook proc failed "OT_CLAND missing face placement context")
 LANDING_PLACEMENT_HOOK = "uplevel #0 {source /work/landing_placement.tcl}"
 RCK_BAND_HOOK = "uplevel #0 {source /work/rck_band.tcl}"
+CHAIN_EVEN_HOOK = "source /work/chain_even_cfg.tcl\nsource /work/chain_even.tcl"
+
+
+def chain_even_cfg(spec):
+    """S81-RCK-4 11-07 (opt-in type key chain_even = {chains: [[head_re, stage_re]..], groups: [[name, from_re, [stage_re..],
+    cone_re, to_re]..]}): the Tcl config of chain_even.tcl.  Regexes stay in a kit file, not config.mk, so '$' survives make."""
+    def tcl(v):
+        return "{" + " ".join(tcl(x) for x in v) + "}" if isinstance(v, list) else "{" + v + "}"
+    out = [f"set ::ot_chain_res {tcl(spec['chains'])}"]
+    if spec.get("groups"):
+        out.append(f"set ::ot_chain_groups {tcl(spec['groups'])}")
+    return "\n".join(out) + "\n"
 
 
 def rck_band_exports(P, tn):
@@ -4159,6 +4171,12 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name("rck_band.tcl"), kd / "rck_band.tcl")
         hook = kd / "face_flops.tcl"
         hook.write_text(hook.read_text() + "\n" + RCK_BAND_HOOK + "\n")
+    if t.get("chain_even"):
+        # S81-RCK-4 11-07: register chains get equal hops after GPL, LAST in the release hook (before DPL); no netlist change
+        shutil.copyfile(Path(__file__).with_name("chain_even.tcl"), kd / "chain_even.tcl")
+        (kd / "chain_even_cfg.tcl").write_text(chain_even_cfg(t["chain_even"]))
+        hook = kd / "face_flops_release.tcl"
+        hook.write_text(hook.read_text() + "\n" + CHAIN_EVEN_HOOK + "\n")
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): the type's slice -> master_slice.json/.tcl, sourced at
     # PRE_GLOBAL_PLACE (face_flops.tcl: after io placement, before GPL); refused without a slice once required
     import master_slice as MS
