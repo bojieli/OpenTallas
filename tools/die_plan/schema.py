@@ -1391,6 +1391,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["i
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_glob"] = {"type":"string"}
 SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}
 # DIE-KV-59 10-31 (opt-in): FIRM sites of existing RTL stage flops, {flop name below the bound inst: [x_um, y_um]}
+# DIE-HEAD-79 11-07: registered hops that cross a hard core: one strong driver, no repair on the net (kit_istations.py)
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["macro_cross"] = {"type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["sink_glob", "sink_pin", "cell"], "properties": {"sink_glob": {"type": "string"}, "sink_pin": {"type": "string"}, "cell": {"type": "string"}}}}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_sites"] = {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}}
 
 

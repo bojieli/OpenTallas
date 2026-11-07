@@ -4695,6 +4695,29 @@
        }
       }
      },
+     "macro_cross": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "sink_glob",
+        "sink_pin",
+        "cell"
+       ],
+       "properties": {
+        "sink_glob": {
+         "type": "string"
+        },
+        "sink_pin": {
+         "type": "string"
+        },
+        "cell": {
+         "type": "string"
+        }
+       }
+      }
+     },
      "relay_sites": {
       "type": "object",
       "additionalProperties": {
