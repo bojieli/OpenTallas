@@ -11577,3 +11577,8 @@ Explicit root/user reset received. No further launches or probes. All source/scr
 - Coordination helper for the prior milestone was already running at reset (local exec session90544); not polled or restarted after reset. This append is final last-known state. OWNER? None new.
 
 QC EXPLICIT RESET 2026-11-07 13:02 PST: parked/childrennotified, no furtherlaunches/probes. Full lastknownhandback appended lanes/CODEX-QC-CORE-1107.md andtypesnote. HealthyNL/NKproofretries/CTS+E6vZPLACEpreserved; NL1idleJSONisINTERMEDIATE, nofullclosure/countclaim. Sourceheads2c8ae5c38d5/383e5285707/56906bf9d99/b112a4edac/2ef0477dab2.
+
+2026-11-07 13:02:20 PST EXPLICIT RESET IDX/rest/qout: stopped launches/probes; healthy RestJ BCabstract/Qout GRT/r3hookprobe left running, no deletions/wait. Source e1857beed9 pushed. Full handoff appended lanes/CODEX-HBM-IDX-REST.md. VP4 no fullPLACE release; Claude must collect hook and review6672 reach/face poses (RRflops intended remainface x4.4–10um, QN inverter local). Prior sourcegap/failures preserved and classified; N12bounded mutant proof5105, counted62 unchanged.
+
+## Handoff to Claude 2026-11-07 13:02:23 PST — RCK child
+Source625613eee4 resetcopies exactCOLphasePASS, physicalHOLD. Sharedexportidempotence583a134100 READY source/realfixture+18testsPASS, hubconfirmed/GitHubcompletionuncollected. vGactualPLACEpassed thenpreCTSexportFLOWfailure; actualPIN0/1cohortSTRUCTURALFAIL preventsCTSrestore. Full currentpaths/results/remainingdensity+rawname+CLANDreach tasks in lanes/CODEX-S81-RCK.md resetsection. Allownproof/viewjobscompleted; existingClaudeproofsintact. No newworkafterexplicitreset.
