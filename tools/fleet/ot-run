@@ -216,7 +216,7 @@ def probe(host, d, spill_ok=False):
 # OT_RUN_ROOT_SCRATCH_ROOTS lists only those authorized roots. The default is empty.
 # Existing per-host floors still apply to explicitly authorized roots.
 ROOT_SCRATCH_ROOTS = tuple(x for x in os.environ.get("OT_RUN_ROOT_SCRATCH_ROOTS", "").split(",") if x)
-ROOT_SCRATCH_FLOOR_GB = int(os.environ.get("OT_RUN_ROOT_SCRATCH_FLOOR_GB", "500"))
+ROOT_SCRATCH_FLOOR_GB = int(os.environ.get("OT_RUN_ROOT_SCRATCH_FLOOR_GB", "150"))   # OWNER 11-06 22:4x "use 150GB for floor decisions" (was 500)
 ROOT_SCRATCH_FLOOR_GB_HOSTS = {k.strip(): int(v) for k, _, v in (x.partition("=") for x in os.environ.get(
     "OT_RUN_ROOT_SCRATCH_FLOOR_GB_HOSTS", "intel1=150,intel2=150,localhost=150,epyc5=100,epyc6=100").split(",")) if k.strip() and v.strip()}
 
@@ -240,7 +240,7 @@ SCRATCH_OWN_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_OWN_FLOOR_GB", "10"))
 # (NOT RUN / placed elsewhere) instead of falling back to the root fs.
 SCRATCH_DISK_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_DISK_FLOOR_GB", "50"))
 # QUEUE-BAL-2 11-05 (COORD 21:2x, OWNER 11-05 every disk is scratch): a SECOND root on the root fs (scratch3 bind) only
-# needs this much USABLE space (free - its per-host root floor).  The root floor (epyc 500, intel 150, epyc5/6 100) is
+# needs this much USABLE space (free - its per-host root floor).  The root floor (epyc 150, intel 150, epyc5/6 100) is
 # already the reserve; demanding SCRATCH_DISK_FLOOR_GB on top refused intel2 at 21:2x (scratch2 29 GB, root 197 GB free,
 # usable 47 GB < 50) although jobs fit there.
 SCRATCH_SECOND_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_SECOND_FLOOR_GB", "20"))
@@ -945,7 +945,7 @@ SCRATCH_PLACE_PY = r'''
 import base64, json, os, re, sys
 ROOTS = tuple(os.environ.get("OT_RUN_PLACE_ROOTS", "/srv/opentallas-scratch /srv/opentallas-scratch2").split())
 SECOND = set(os.environ.get("OT_RUN_PLACE_SECOND", "").split())          # ROOTSCR_1101 second roots (root fs)
-RFLOOR = int(os.environ.get("OT_RUN_PLACE_RFLOOR") or 500) << 30
+RFLOOR = int(os.environ.get("OT_RUN_PLACE_RFLOOR") or 150) << 30
 PIN = os.environ.get("OT_RUN_PLACE_PIN", "")
 MARK, MARGIN = ".ot-run-spill-copy", 50 << 30
 LANE = re.compile(r"^(/srv/opentallas-scratch[^/]*)/claude/([A-Za-z0-9_+-][A-Za-z0-9_.+-]*)(?:/(.*))?$")
@@ -1470,7 +1470,7 @@ SPILL_HOSTS_EXCLUDE = {"ot-pve1", "ot-agidock128"}          # small / shared hos
 # scratch2/claude/<lane> -> scratch-root) under the owner's 500 GB floor.  A spill whose lane lands on the root fs of a host named
 # here needs that much root free; any other spill needs the host's scratch disk above SPILL_DST_SCRATCH_FLOOR.  The host comes
 # back by itself once the disk has room; jobs whose --dir already lives there are unaffected; a probe without the field: not refused.
-SPILL_DST_ROOT_FLOOR = {"epyc2": 500}
+SPILL_DST_ROOT_FLOOR = {"epyc2": 150}   # OWNER 11-06 22:4x: 150 (was 500)
 SPILL_DST_SCRATCH_FLOOR = {"epyc2": 140, "intel1": 100, "intel2": 100, "localhost": 100}   # epyc2 80 -> 140 KW-FIX-8 11-04 (COORD: scratch2 118 GB, 30 GB/h)
 # COORD 11-04 00:2x: epyc4 queue 53 waiters while epyc2 admits; a --stage ECO job may use the epyc2 scratch disk down to this floor.
 SPILL_DST_SCRATCH_FLOOR_ECO = {"epyc2": 50}
