@@ -98,6 +98,32 @@ proc dt_planned_groups {pts sites target} {
   }
   return [list $groups $med]
 }
+# Optional reviewed short-chain groups: remove them before normal density
+# partitioning, then append one real local-clock branch per complete group.
+set dt_atomic_sets {}; set dt_atomic_med {}; set dt_atomic_pinned {}
+set dt_native_sink_count [llength $dt_ff]
+set ::ot_atomic_clock_pinned {}
+if {[info exists ::env(OT_DTAP_ATOMIC_GROUPS)] && $::env(OT_DTAP_ATOMIC_GROUPS) ne ""} {
+  if {[info exists ::env(OT_DTAP_SITES)] && $::env(OT_DTAP_SITES) ne ""} {error "ATOMIC_CLOCK cannot combine with planned density anchors"}
+  source [file join [file dirname [info script]] core_clock_atomic_groups.tcl]
+  set fh [open $::env(OT_DTAP_ATOMIC_GROUPS) r]; set groups [read $fh]; close $fh
+  set points {}; foreach p $dt_ff {dict set points [[[lindex $p 2] getInst] getName] $p}
+  set radius [expr {$::env(OT_DTAP_ATOMIC_RADIUS_UM) * $dt_u}]
+  foreach record $groups {
+    foreach name [lindex $record 1] {
+      if {![dict exists $points $name]} continue
+      set it [lindex [dict get $points $name] 2]
+      if {![string match DFF* [[[$it getInst] getMaster] getName]] || [[$it getMTerm] getName] ni {CLK CK}} {
+        error "ATOMIC_CLOCK member is not a native-root register clock pin: $name"
+      }
+    }
+  }
+  set plan [dt_atomic_plan $points $groups $::env(OT_DTAP_ATOMIC_MAX_SINKS) $radius]
+  set dt_atomic_sets [dict get $plan sets]; set dt_atomic_med [dict get $plan med]
+  set dt_atomic_pinned [dict get $plan pinned]; set dt_ff [dict get $plan rest]
+  # The existing post-CTS F4 pass must not undo this explicit native-clock form.
+  set ::ot_atomic_clock_pinned $dt_atomic_pinned
+}
 set dt_taps {}
 set dt_of [dict create]
 set dt_planned_active 0
@@ -134,6 +160,10 @@ foreach S $dt_sets {
   lappend dt_med [list [lindex $best 0] [lindex $best 1]]
 }
 }
+set dt_regular_count [llength $dt_sets]
+set dt_sets [concat $dt_sets $dt_atomic_sets]
+set dt_med [concat $dt_med $dt_atomic_med]
+if {[llength $dt_atomic_sets]} {puts "OT_DTAP_ATOMIC groups [llength $dt_atomic_sets] pinned [dict size $dt_atomic_pinned]"}
 # stray sinks (the robust split ignores the outer 2%): a sink farther than DMAX from its own tap joins the nearest tap
 set dt_moved 0
 array unset dt_asg
@@ -146,9 +176,9 @@ foreach S $dt_sets {
     # Planned groups already use nearest anchors and explicit load splitting.
     # Reassigning distant members would collapse co-located split groups onto
     # their first anchor, defeating the planned sink cap (hfd:1942 vs1250).
-    if {!$dt_planned_active && abs([lindex $p 0] - $mx) + abs([lindex $p 1] - $my) > $dt_dmax} {
+    if {![dict exists $dt_atomic_pinned [[[lindex $p 2] getInst] getName]] && !$dt_planned_active && abs([lindex $p 0] - $mx) + abs([lindex $p 1] - $my) > $dt_dmax} {
       set bd 1e30
-      for {set j 0} {$j < [llength $dt_med]} {incr j} {
+      for {set j 0} {$j < $dt_regular_count} {incr j} {
         lassign [lindex $dt_med $j] qx qy
         set d [expr {abs([lindex $p 0] - $qx) + abs([lindex $p 1] - $qy)}]
         if {$d < $bd} { set bd $d; set t $j }
@@ -198,6 +228,7 @@ dict for {nm p} $dt_pt {
     set n [$o getNet]; if {$n eq "NULL" || $n eq ""} continue
     if {[$n getSigType] ne "SIGNAL"} continue
     foreach c [dt_d_sinks $n 1] {
+      if {[dict exists $dt_atomic_pinned $nm] || [dict exists $dt_atomic_pinned $c]} continue
       if {![dict exists $dt_tp $c] || [dict get $dt_tp $c] == $t} continue
       set q [dict get $dt_pt $c]
       if {abs([lindex $q 0] - [lindex $p 0]) + abs([lindex $q 1] - [lindex $p 1]) > $dt_dmax / 2} continue
@@ -208,6 +239,9 @@ dict for {nm p} $dt_pt {
 array unset dt_asg
 for {set k 0} {$k < [llength $dt_sets]} {incr k} { set dt_asg($k) {} }
 dict for {nm p} $dt_pt { lappend dt_asg([dict get $dt_tp $nm]) $p }
+dict for {name id} $dt_atomic_pinned {
+  if {![dict exists $dt_tp $name]} {error "ATOMIC_CLOCK lost member $name"}
+}
 for {set k 0} {$k < [llength $dt_sets]} {incr k} {
   set S $dt_asg($k)
   if {![llength $S]} continue
@@ -275,6 +309,6 @@ foreach t $dt_taps {
 }
 foreach l $dt_lines { puts $l }
 foreach l $dt_mrep { puts "OT_DTAP macro $l" }
-puts "OT_DTAP done: $dt_moved stray sinks re-homed; $dt_f4 zero-logic capture regs joined their launch tap (F4); [llength $dt_taps] density taps for [llength $dt_ff] register sinks (target $dt_target/tap), [llength $dt_mac] macro clock pins on nearest tap"
+puts "OT_DTAP done: $dt_moved stray sinks re-homed; $dt_f4 zero-logic capture regs joined their launch tap (F4); [llength $dt_taps] density taps for $dt_native_sink_count register sinks (target $dt_target/tap), [llength $dt_mac] macro clock pins on nearest tap"
 if {[info exists ::env(OT_DTAP_OUT)]} { set fh [open $::env(OT_DTAP_OUT) [expr {[info exists ::env(OT_DTAP_APPEND)] && $::env(OT_DTAP_APPEND) ? "a" : "w"}]]; puts $fh [join [concat $dt_lines $dt_mrep] "\n"]; close $fh }
 }
