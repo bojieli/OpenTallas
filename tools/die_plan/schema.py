@@ -1063,9 +1063,11 @@ SCHEMA = {
             # ALL hard cores / macro leaves of the type, not only outside the walls (G2 kv3_pc: rrl_13 -> rrl_14
             # through kvpc0 gave 1272 M3 overflow)
             "relay_avoid_cores": {"type": "boolean"},
-            # DQ85-SUL0 11-06 (opt-in, default false = pre-11-06 trees): a relay hop with no L route outside every grown
-            # blockage moves the free relays of its chain onto an obstacle-avoiding route (reset_tree.resite_crossing)
+            # DQ85-SUL0 11-06 (default TRUE, COORD 19:2x; false = pre-11-06 trees): a relay hop with no L route outside
+            # every grown blockage moves the free relays of its chain onto an obstacle-avoiding route
+            # (reset_tree.resite_crossing).  relay_resite_skip_types: types kept byte-identical (signed off).
             "relay_resite_crossing": {"type": "boolean"},
+            "relay_resite_skip_types": {"type": "array", "items": _name},
             # raw binder: the FUNCTIONAL top input that carries the mission START level to the sources' declared
             # mission-admission inputs (e.g. KV host mission_start); every such sink binds to its partition's local
             # registered START tap start_t<k> (bootstrap types only).  Unset: such a top port stays a die IO.
