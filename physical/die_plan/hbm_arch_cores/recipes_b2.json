@@ -1712,7 +1712,11 @@
       "ot_sram_1r1w_64x512_m1_r2c2"
     ],
     "source": "DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE): q3 five-core cohort (83f10270495, TOK-HBM q3_producer_native = body+edge+vm+q2 reduce+q2 ring_ag) edge cut (3 link_e_pr + argmax_m_tp192_pr); closure = yosys hierarchy -check; LLR replay SRAM leaf = ot_sram_1r1w_64x512_m1_r2c2 macro; plan pin table has one clk: hand wrapper wrappers/<module>.sv drives every RTL clock port, RTL top renamed rename_top in the kit copy",
-    "rename_top": "ot_hfd_coll_q3_edge_core__mc"
+    "rename_top": "ot_hfd_coll_q3_edge_core__mc",
+    "orfs_vars": {
+      "OT_LEC_PARITY_TERMS": 800
+    },
+    "lec_parity_note": "DIE-HBM-82-P40 11-06 (COORD 18:5x, FLOW-CLASS-25): orfs_vars OT_LEC_PARITY_TERMS=800 -> kit config.mk export, read by resign.py/auto_resign into the LEC container; wide CRC compare g_rxpre.ne_q (612 inputs, ot_hgi_coll_static_seq_ctl RXPRE) hits the 256 default solver limit (DIE-HBM-66 11-04 cp_rxs: EQUIVALENT 20782/20782 at 800)"
   },
   "ot_hfd_coll_q3_body_core": {
     "top": "ot_hfd_coll_q3_body_core",
@@ -3489,7 +3493,11 @@
     ],
     "core_macros": "auto",
     "util": 0.45,
-    "source": "HBM-GAPS-4-Q3SPLIT d44v part 34 (vB, safe form): tile of ot_hfd_coll_q3_edge_core (member boundary, 0 added cycles); lock-step bench physical/die_plan/hbm/over_cap_split/reform_1103/bench/q3_edge/run.sh (XDEFS=OT_COLL_LINK_RXPRE RXSTIM=1); member RTL files and defines as the uncut core recipe; CODEX 11-05: adopt existing right-width 141b replay macro, same read-before-write and forwarding ages, 0 pin cycles; store miter 11991 checks + mutant caught"
+    "source": "HBM-GAPS-4-Q3SPLIT d44v part 34 (vB, safe form): tile of ot_hfd_coll_q3_edge_core (member boundary, 0 added cycles); lock-step bench physical/die_plan/hbm/over_cap_split/reform_1103/bench/q3_edge/run.sh (XDEFS=OT_COLL_LINK_RXPRE RXSTIM=1); member RTL files and defines as the uncut core recipe; CODEX 11-05: adopt existing right-width 141b replay macro, same read-before-write and forwarding ages, 0 pin cycles; store miter 11991 checks + mutant caught",
+    "orfs_vars": {
+      "OT_LEC_PARITY_TERMS": 800
+    },
+    "lec_parity_note": "DIE-HBM-82-P40 11-06 (COORD 18:5x, FLOW-CLASS-25): orfs_vars OT_LEC_PARITY_TERMS=800 -> kit config.mk export, read by resign.py/auto_resign into the LEC container; wide CRC compare g_rxpre.ne_q (612 inputs, ot_hgi_coll_static_seq_ctl RXPRE) hits the 256 default solver limit (DIE-HBM-66 11-04 cp_rxs: EQUIVALENT 20782/20782 at 800)"
   },
   "ot_hfd_coll_q3_edge_arg": {
     "top": "ot_hfd_coll_q3_edge_arg",
