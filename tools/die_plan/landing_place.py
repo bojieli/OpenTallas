@@ -238,6 +238,22 @@ def _native_role_config(tn, typ):
     return ('set ::cland_native_role_banks {}\n' + '\n'.join(rows) + '\n') if rows else ''
 
 
+def _local_chunk_config(typ):
+    """Only the new explicit local-WREG form changes control flop placement."""
+    clock = (typ or {}).get('clock', {})
+    cfg = clock.get('landing_ring_wreg') or {}
+    wc = cfg.get('write_chunk', 64)
+    if wc == 64:
+        return ''
+    rc = 64 // cfg.get('dsrep', 1)
+    rows = []
+    for bus in cfg.get('buses', []):
+        band = clock.get('landing_contract', {}).get('bands', {}).get(bus, {})
+        prefix = band.get('instance', 'u_cland_' + bus)
+        rows.append('dict set ::cland_local_chunks {' + prefix + '} {write ' + str(wc) + ' read ' + str(rc) + '}')
+    return 'set ::cland_local_chunks {}\n' + '\n'.join(rows) + '\n'
+
+
 def _placement_source(active):
     source = Path(__file__).with_name('landing_placement.tcl').read_text()
     if not active:
@@ -417,7 +433,7 @@ def tcl(P,tn):
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     role_config = _native_role_config(tn, P.types[tn])
-    return '\n'.join(out)+'\n'+override_check+role_config+_placement_source(bool(role_config))
+    return '\n'.join(out)+'\n'+override_check+role_config+_local_chunk_config(P.types[tn])+_placement_source(bool(role_config))
 
 
 def _dataflow_tcl(tn,c,t=None):
@@ -437,4 +453,4 @@ def _dataflow_tcl(tn,c,t=None):
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     role_config = _native_role_config(tn, t or {})
-    return '\n'.join(out)+'\n'+override_check+role_config+_placement_source(bool(role_config))
+    return '\n'.join(out)+'\n'+override_check+role_config+_local_chunk_config(t or {})+_placement_source(bool(role_config))
