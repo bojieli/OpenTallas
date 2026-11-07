@@ -19,12 +19,13 @@ end in __ot_rl<k>v, the pass's default family regex).  The kit LEC and its RRS c
 
 Bench-only `OT_RSTP_MUT (must FAIL): 1 = s3 never released, 2 = one stage short (bypass s3), 3 = re-assert lost (only the first
 reset reaches the sinks), 4 = s3 copy 0 fed from a stuck s2 copy.
-usage: rstp_patch.py RTL_DIR nl|nk
+DIE-QC-87 11-07 vR3: third arg "wide" = 8/64/512 copies (4/32/256 left NL s3 at 12 and NK at 10 loads against the 8 target).
+usage: rstp_patch.py RTL_DIR nl|nk [wide]
 """
 import sys
 from pathlib import Path
 
-R = Path(sys.argv[1]); T = sys.argv[2]
+R = Path(sys.argv[1]); T = sys.argv[2]; WIDE = len(sys.argv) > 3 and sys.argv[3] == "wide"
 assert T in ("nl", "nk")
 
 def sub(path, old, new, count=1):
@@ -66,6 +67,11 @@ TREE = """        (* keep *) reg q;
             initial if (RSTP != 3) $fatal(1, "RSTP form: RSTP must be 0 or 3");
         end
 """
+if WIDE:
+    for o, n in (("reg [3:0] s1", "reg [7:0] s1"), ("reg [31:0] s2", "reg [63:0] s2"), ("reg [255:0] s3", "reg [511:0] s3"),
+                 ("{4{q}}", "{8{q}}"), ("{32{s1", "{64{s1"), ("{256{(RMUT", "{512{(RMUT")):
+        assert TREE.count(o) == 1, o
+        TREE = TREE.replace(o, n)
 sub(BODY, "        (* keep *) reg q;\n        always @(posedge ck_fa4) q <= rst_n;\n        assign reset_q = q;\n", TREE)
 sub(TOP, "parameter integer LQR = 0", PDECL)
 s = (R / TOP).read_text()
