@@ -1867,6 +1867,8 @@ INPUT_SKIP = {"die", "item", "kind", "event", "gen_host", "work", "root", "hosts
               "start_delay_s", "resume_from", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
               "prov_views", "geom_advisory", "place_spill"}
 
+INPUT_SKIP_ENV = {"OT_FLOW_TAG"}                         # gen_env keys that are no design input (input_hash)
+
 
 def input_hash(sp, prov_key=None):
     src = str(sp.get("src") or "")
@@ -1878,6 +1880,14 @@ def input_hash(sp, prov_key=None):
             return [clean(x) for x in v]
         return v.replace(src, "<SRC>") if isinstance(v, str) and src else v
     body = {k: c for k, c in ((k, clean(v)) for k, v in sp.items() if k not in INPUT_SKIP) if c not in (None, "", {}, [])}
+    # KW-FIX-31 11-07 (COORD, ROOT-MERGE-49 finding): the die flow tag (OT_FLOW_TAG in gen_env, KW-FIX-30) names the release
+    # the kit is signed against, not a design input.  In the hash it made every non-TIMING/ROUTING FAIL row of a die look
+    # changed when the tag was set or moved, so the hold_unchanged hold released them as blind retries (OWNER 11-07 05:1x).
+    genv = {k: v for k, v in (body.get("gen_env") or {}).items() if k not in INPUT_SKIP_ENV}
+    if genv:
+        body["gen_env"] = genv
+    else:
+        body.pop("gen_env", None)
     form = sp.get("leafslew_form")
     if form:
         body["leafslew"] = clean(form.get("env") or {})

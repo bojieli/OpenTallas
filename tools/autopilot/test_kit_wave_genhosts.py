@@ -384,6 +384,20 @@ def test_unchanged_fail_holds_same_inputs_only(tmp_path):
     assert K.unchanged_fail(c5, {}, "s81", "t1", r)
 
 
+def test_flow_tag_is_no_input_change(tmp_path):
+    """KW-FIX-31 11-07: setting or moving the die flow_tag (OT_FLOW_TAG in gen_env) does not release a held FAIL row"""
+    c = cfg(); r = _failrec(tmp_path, c, **{"class": "FLOW"})
+    c2 = cfg(); c2["dies"]["s81"]["flow_tag"] = "flow-20261107-dg-s81"
+    assert K.spec_for(dict(c2, _otrun_status={}), "s81", "t1", "")["gen_env"]["OT_FLOW_TAG"] == "flow-20261107-dg-s81"
+    assert K.unchanged_fail(c2, {}, "s81", "t1", r)
+    (tmp_path / "b").mkdir()
+    r2 = _failrec(tmp_path / "b", c2, **{"class": "FLOW"})                             # a row failed with a tag set
+    c3 = cfg(); c3["dies"]["s81"]["flow_tag"] = "flow-20261108-a-s81"
+    assert K.unchanged_fail(c3, {}, "s81", "t1", r2)                                    # a moved tag either
+    c4 = cfg(); c4["dies"]["s81"]["flow_tag"] = "flow-20261107-dg-s81"
+    c4["dies"]["s81"]["item_env"] = {"t1": {"OT_IO_HOLD": "sender_min"}}                 # a real env change still counts
+    assert not K.unchanged_fail(c4, {}, "s81", "t1", r)
+
 def test_timing_or_routing_fail_needs_a_named_redesign(tmp_path):
     c = cfg(); r = _failrec(tmp_path, c, status="ENQUEUED", q_status="FAIL", q_class="ROUTING")
     c["dies"]["s81"]["src_sha"] = "new"
