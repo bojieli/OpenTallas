@@ -1,0 +1,6 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_FACE_FLOPS placed 4335 pin registers FIRM at their faces (0 signal ports without a flop within 2 buffers; 0 cells duplicated for output ports sharing a merged flop); 0 ft stations j>=1 FIRM on their routes (0 missing)
+Error: preflight.tcl, 3 Invalid method. Must be one of: configure cget -acquire -disown -delete xMin yMin xMax yMax isVia getTechVia getBlockVia getViaXY getViaBoxes getViaLayerBoxes getDir getDX getDesignRuleWidth setDesignRuleWidth getMinSpacing setMinSpacing getDY setSoft isSoft getBoxOwner getOwnerType getTechLayer getLayerMask setLayerMask getObjectType getDb getId getName isValid getDebugName
