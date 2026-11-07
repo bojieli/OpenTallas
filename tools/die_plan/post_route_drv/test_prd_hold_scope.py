@@ -31,6 +31,7 @@ set _pass 1
 '''
 SHARED = r'''
 set ::ot_mm_active 1
+set ::ot_hold_scope_supported_modes {reg2reg nonport}
 proc ot_hold_repair_scope {body} { L shared_scope; uplevel 1 $body }
 '''
 
@@ -44,11 +45,14 @@ def hook_parts():
 
 
 class Scope(unittest.TestCase):
-    def run_tcl(self, scope=None, two_mode=False, drift=""):
+    def run_tcl(self, scope=None, two_mode=False, drift="", old_shared=False):
         proc, dispatch = hook_parts()
         with tempfile.TemporaryDirectory() as d:
             s = pathlib.Path(d) / "t.tcl"
-            body = STUB + (SHARED if two_mode else "") + proc + "\n"
+            shared = SHARED
+            if old_shared:
+                shared = shared.replace("set ::ot_hold_scope_supported_modes {reg2reg nonport}\n", "")
+            body = STUB + (shared if two_mode else "") + proc + "\n"
             body += "set ::env(OT_HOLD_MARGIN) 0; set ::env(OT_HOLD_MAXBUF) 40; set ::env(OT_HOLD_ALLOW_SETUP) 1\n"
             body += "if {[catch {\n" + dispatch + "\n} e]} { L ERROR $e }\nforeach x $::log { puts \"LOG $x\" }\n"
             body += "puts FILES=[llength [glob -nocomplain -directory " + d + " ot_prd_hold_scope_*]]\n"
@@ -93,6 +97,23 @@ class Scope(unittest.TestCase):
     def test_reg2reg_restore_mismatch_fails_closed(self):
         out = self.run_tcl(scope="reg2reg", drift="x")
         self.assertTrue(any(x.startswith("ERROR OT_HOLD_SCOPE restore differs") for x in out), out)
+
+    def test_nonport_single_mode_retains_output_paths_and_restores(self):
+        out = self.run_tcl(scope="nonport")
+        self.assertEqual(out[:6], [
+            "write_sdc", "set_false_path -hold -from a b",
+            "repair_timing -hold -hold_margin 0 -max_buffer_percent 40 -allow_setup_violations exc=1",
+            "unset_path_exceptions -hold -from a b", "read_sdc", "write_sdc"])
+        self.assertFalse(any("-to y" in x for x in out), out)
+        self.assertIn("FILES=0", out)
+
+    def test_nonport_two_mode_uses_matching_shared_scope(self):
+        self.assertEqual(self.run_tcl(scope="nonport", two_mode=True)[:2], ["rc_cal", "shared_scope"])
+
+    def test_nonport_old_shared_hook_fails_closed(self):
+        out = self.run_tcl(scope="nonport", two_mode=True, old_shared=True)
+        self.assertTrue(any(x.startswith("ERROR OT_HOLD_SCOPE nonport requires matching") for x in out), out)
+        self.assertFalse(any(x.startswith("guarded ") for x in out), out)
 
     def test_no_unscoped_hold_repair_left(self):
         # every hold repair call in the hook goes through ot_prd_hold_scope

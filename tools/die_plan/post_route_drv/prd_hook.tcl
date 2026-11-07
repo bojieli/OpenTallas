@@ -447,13 +447,19 @@ if {$::env(OT_SETUP_MARGIN) ne ""} {
 # buffer budget is spent on the standalone IO frame.  Two-mode session (kit_modes_eco.tcl synced, stage 4_cts.sdc): the
 # shared ot_hold_repair_scope itself.  Single-mode session (no orfs_hold_mm): the same temporary -hold false paths from
 # the non-clock inputs / to the outputs around the repair, then the exact SDC replay + write-back compare of that proc.
-# Env unset (or any other value): the body runs exactly as before.
+# OWNER 11-07: nonport excludes only input-port starts; register-to-output and macro/internal hold remains core work.
+# Env unset (or any other value): the body runs exactly as before. Legacy reg2reg semantics are unchanged.
 proc ot_prd_hold_scope {body} {
-  if {![info exists ::env(OT_HOLD_REPAIR_SCOPE)] || $::env(OT_HOLD_REPAIR_SCOPE) ne "reg2reg"} {
+  if {![info exists ::env(OT_HOLD_REPAIR_SCOPE)] || $::env(OT_HOLD_REPAIR_SCOPE) ni {reg2reg nonport}} {
     return [uplevel 1 $body]
   }
+  set scope $::env(OT_HOLD_REPAIR_SCOPE)
   if {[llength [info commands ot_hold_repair_scope]] && [info exists ::ot_mm_active] && $::ot_mm_active} {
-    puts "OT_PRD hold scope reg2reg: shared ot_hold_repair_scope (orfs_hold_mm.tcl)"
+    if {$scope eq "nonport" && (![info exists ::ot_hold_scope_supported_modes] ||
+        "nonport" ni $::ot_hold_scope_supported_modes)} {
+      error "OT_HOLD_SCOPE nonport requires matching orfs_hold_mm.tcl; refusing unscoped repair"
+    }
+    puts "OT_PRD hold scope $scope: shared ot_hold_repair_scope (orfs_hold_mm.tcl)"
     return [uplevel 1 [list ot_hold_repair_scope $body]]
   }
   set dir [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : [pwd]}]
@@ -469,12 +475,13 @@ proc ot_prd_hold_scope {body} {
   foreach port [all_inputs] {
     if {![dict exists $clock_sources [get_full_name $port]]} { lappend inputs $port }
   }
-  set outputs [all_outputs]
-  puts "OT_HOLD_SCOPE begin (post-route single-mode) input_ports=[llength $inputs] output_ports=[llength $outputs]"
+  set outputs {}
+  if {$scope eq "reg2reg"} { set outputs [all_outputs] }
+  puts "OT_HOLD_SCOPE begin (post-route single-mode) scope=$scope input_ports=[llength $inputs] excluded_output_ports=[llength $outputs]"
   try {
     if {[llength $inputs]} { set_false_path -hold -from $inputs }
     if {[llength $outputs]} { set_false_path -hold -to $outputs }
-    puts "OT_HOLD_SCOPE repair (register-to-register only)"
+    puts "OT_HOLD_SCOPE repair scope=$scope (nonport retains register-to-output and macro/internal paths)"
     return [uplevel 1 $body]
   } finally {
     if {[llength $inputs]} { unset_path_exceptions -hold -from $inputs }
