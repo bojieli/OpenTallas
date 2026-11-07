@@ -4982,6 +4982,36 @@ def _bound_reset_identity(tree):
     return tree
 
 
+def install_collector_event(P, tn, lands, rtl_files):
+    """KW-FIX-27 11-07 three-reset-tree class (DIE-S81-73, Codex): the collector RTL comes from the sidecar event tree,
+    the native u_rrl_* relays from the captured solve, and install_bound_native_reset puts that solve in the contract's
+    collector_tree.  Collector placement (landing_place) therefore names collector nodes from the sidecar event, kept
+    apart from the bound_reset mapping, and they must be the collectors the bound RTL holds: a kit that cannot agree
+    stops here instead of at OT_CLAND in global place.  No event or inactive collector: nothing changes."""
+    import gen_rtl
+    import landing_place as LP
+    info = ((getattr(lands, "collector", None) or {}).get("types") or {}).get(tn)
+    contract = P.types[tn].get("clock", {}).get("landing_contract")
+    if not info or not contract or not info["mask"].get("active") or lands.dataflow:
+        return
+    event = dict(tree=info["tree"], collector_root_node=info.get("collector_root_node", "rst_root_n"),
+                 local_sources=info["local_sources"], children=info["children"])
+    expected = LP.collector_instances(event)
+    pat = re.compile(r"\bot_dp_landing_collect\b[^;]*?\b(u_cland_collect_\w+)\s*\(")
+    bound = set()
+    for f in rtl_files:
+        if Path(f).suffix in (".sv", ".v"):
+            text = Path(f).read_text(errors="replace")
+            if "ot_dp_landing_collect" in text:
+                bound.update(pat.findall(text))
+    if bound != expected:
+        raise gen_rtl.GenError(f"type {tn}: sidecar collector event differs from the bound collector RTL: "
+                               f"event only {sorted(expected - bound)[:5]}, RTL only {sorted(bound - expected)[:5]} "
+                               f"({len(expected)} vs {len(bound)}); bind and --clock-landing are from different events")
+    contract["collector_event"] = event
+    print(f"gen phys: type {tn}: collector placement from the sidecar event, {len(expected)} collectors = bound RTL", flush=True)
+
+
 def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
     """Opt-in bound reset authority: verify the explicit tree against the ONE native hierarchy.
 
@@ -5346,6 +5376,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         captured_reset = BRC.kit(mine, tn)
         if tn in native_reset_types or captured_reset:
             install_bound_native_reset(P, tn, mine, source_contract=captured_reset)
+        if land_decl_only:
+            install_collector_event(P, tn, lands, mine)
         bumps = kit_bump_ports(P, tn, kit_rtl[tn]) if kit_rtl and tn in kit_rtl else None
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
                                    skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps,

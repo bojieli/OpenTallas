@@ -59,6 +59,14 @@ def test_restage_multi_and_pinned(tmp_path, monkeypatch):
     assert st["items"]["c"]["status"] == "RUNNING"
     assert ["systemctl", "--user", "stop", "kw-u"] in ap.calls
     assert K.infra_relaunch_due(c, st["items"]["a"])
+    # KW-FIX-27: the move binds the relaunch, whatever spec_for reselected
+    assert st["items"]["a"]["restage_host"] == "epyc4"
+    sp = {"gen_host": "intel1"}
+    K.bind_restage(c, "s81", st["items"]["a"], sp)
+    assert sp["gen_host"] == "epyc4" and "restage_host" not in st["items"]["a"]
+    sp = {"gen_host": "intel1"}
+    K.bind_restage(c, "s81", {"restage_host": "gone"}, sp)
+    assert sp["gen_host"] == "intel1"
     # pinned async PLACE waiter of a single-gen-host die
     c3 = cfg(place_mem_gb=48)
     d = tmp_path / "pin"; d.mkdir()
