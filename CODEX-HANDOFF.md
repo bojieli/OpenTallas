@@ -1,4 +1,4 @@
-# Codex handoff document (generated 2026-11-06 21:34 PST)
+# Codex handoff document (generated 2026-11-06 21:39 PST)
 
 Standby: Claude is running; this is used only if Claude hits a usage limit.
 
@@ -38,6 +38,19 @@ Die gates (BIND/GRT/STA/CLK) are not yet passed on any die. ETAs: non-HBM cores 
      - pipelined reset.
    - Every build has its density + GRT congestion + macro/pin PNGs viewed after place, GRT and route. Hotspots are removed structurally.
    - Lanes: HBM-CONS-1 (all open HBM cores, vK), QC-NLNK-RF (NL/NK vR), TYPE-CONS-1 (congestion + setup families, vC), ARCHIVE-1106B (disks >90%: epyc6 scratch2 37 GB).
+2c. **"the visual layout checks should also find the fix obvious bad smells in physical design, for example pins on opposite sides, congestions in pins, too narrow channels, long diverged clock paths, etc."** (22:0x). Every place/GRT/route view runs a 10-smell checklist and fixes each smell structurally before the next stage:
+   1. pins on opposite sides;
+   2. pin clumps (>50% pin-layer track use);
+   3. narrow channels;
+   4. long or diverged clock paths, clock over macros;
+   5. single-driver fanout spread >100 um;
+   6. crossing or doubling-back data flow;
+   7. logic far from its pins;
+   8. density >0.7 next to empty areas;
+   9. macros blocking the pin edge or clock entry;
+   10. feedthroughs with no flop or repeater within 450 um.
+
+   Posts carry "SMELLS: <list or none> [CHECKED png]". KW-FIX-24 is building an automatic smells.json plus renders per kit run, advisory, which lanes act on. Full text: job tmp core_lane_rules.md sections 21:5x and 22:0x. Codex: apply the same to every build you touch.
 3. **Types safe by construction, all 5 dies** (TYPE-SAFE). Wiring and hold are fixed in the generator, not by rounds of patches:
    - track-budget corridors;
    - clock follows data (per-port tap windows, the TAPWIN-PORT SDC);
