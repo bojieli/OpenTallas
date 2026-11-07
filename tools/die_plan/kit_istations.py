@@ -72,7 +72,9 @@ def packed_input_delay(tn,bus,txt,width,stages):
                          +re.escape(inst)+r'\s*\(([^;]*)\);',code,re.S))
     if len(hits)!=1:raise ValueError(f'{tn}.{name}: unsupported or duplicate packed receiver delay')
     w,d=map(int,hits[0].group(1,2))
-    if d<=0 or (w,d)!=(width+1,stages):raise ValueError(f'{tn}.{name}: packed delay W{w}/D{d} != payload+epoch {width+1}/planned {stages}')
+    # D above the planned site count is fine: the die latency table priced D cycles, the plan pins the first `stages`
+    # registers and the placer keeps the rest (KW-FIX-27: QC v4 nb_i00 D9/7, nb_i22 D3/2).  Fewer than planned stays an error.
+    if w!=width+1 or d<=0 or d<stages:raise ValueError(f'{tn}.{name}: packed delay W{w}/D{d} != payload+epoch {width+1}/planned {stages}')
     if re.search(r'\b(?:u_ist_'+re.escape(name)+r'_\d+|u_b(?:in|out)_'+re.escape(name)+r'_pad\d+)\s*\(',code):
         raise ValueError(f'{tn}.{name}: mixed packed/individual station forms; regenerate native source')
     pins=dict(re.findall(r'\.(clk|d|q)\s*\(([^()]*)\)',hits[0].group(3)))
@@ -755,7 +757,7 @@ def main(argv):
             for j,(x,y) in enumerate(regs):
                 pattern='*'+packed['instance']+f'[./]r\\[{j}\\]\\[*'
                 tcl.append(f'is_place {{{pattern}}} {x} {y} ist:{bus}')
-            rep.append(dict(conn=conn,planned=len(regs),bound_pads=len(regs),inserted=0,
+            rep.append(dict(conn=conn,planned=len(regs),bound_pads=packed['depth'],inserted=0,
                             stations=packed['stage_registers'],packed_delay=packed,
                             plan_width=b['width'],bound_width=W))
             continue

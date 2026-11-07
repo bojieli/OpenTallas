@@ -463,3 +463,29 @@ def test_col_st_stations_bound_chain_depth_differs_is_reported(tmp_path):
     kd, r = _col_run(tmp_path, 1, COL_BOUND_B)
     assert r.returncode == 0, r.stderr
     assert _col_receipt(kd)["bound_stages"] == 2
+
+
+def _packed_txt(w, d):
+    return (f"module m(input clk, input rst_n);\n"
+            f"    ot_dp_st #(.W({w})) u_bin_a (.clk(clk), .rst_n(rst_n), .d(x), .ea(y), .q(a_b), .eq(a_eb));\n"
+            f"    ot_dp_dly #(.W({w + 1}), .D({d})) u_lpad_a (.clk(clk), .d({{a_eb, a_b}}), .q({{a_eq, a_q}}));\n"
+            f"endmodule\n")
+
+
+def test_packed_delay_deeper_than_plan_pins_first_sites_only():
+    import kit_istations as K
+    bus = dict(name="a", dir="in", width=8)
+    got = K.packed_input_delay("T", bus, _packed_txt(8, 9), 8, 7)
+    assert got["depth"] == 9 and len(got["stage_registers"]) == 9
+    assert K.packed_input_delay("T", bus, _packed_txt(8, 7), 8, 7)["depth"] == 7
+
+
+def test_packed_delay_shallower_than_plan_or_wrong_width_still_fails():
+    import kit_istations as K
+    bus = dict(name="a", dir="in", width=8)
+    for txt in (_packed_txt(8, 6), _packed_txt(9, 9)):
+        try:
+            K.packed_input_delay("T", bus, txt, 8, 7)
+        except ValueError:
+            continue
+        raise AssertionError("expected ValueError")
