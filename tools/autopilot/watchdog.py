@@ -12,7 +12,7 @@ newest file under the job's RW mounts / cwd).
 Progress signal per step (WATCHDOG-1 11-03):
   PLACE, CTS              no log, no new file and no container stdout for 2 h = HUNG, CPU or not.
   LEC                     a flat log alone never stops a LEC (OWNER/COORD 11-06; KW-FIX-25): single abc &scorr/&sat calls run
-                          for hours and write nothing (17 CPU-busy S81 serdes/HBM LECs stopped 11-04..11-06).  Report only
+                          for hours and write nothing (26 LEC stops at ~2 h idle 11-03..11-06, 21 on serdes; t4 vB was CPU-bound).  Report only
                           while it is busy (tool CPU +--cpu-min-s in --cpu-sample-s, or its tool processes changed in the
                           sample) or the CPU could not be read; HUNG only with a tool alive, measured and idle, at 2 h.
   GRT, DRT, ROUTE         FastRoute logs once per extra iteration and DRT once per 10%, and late ones take > 2 h, so a
