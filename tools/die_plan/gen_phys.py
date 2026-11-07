@@ -2243,6 +2243,47 @@ def content_physical_identity(c):
 _VIEW_LEF = {}
 
 
+def pinband_macros(P, tn, macros, root=None, check_only=False):
+    """PINBAND-1 11-06 (COORD 17:4x, QC-A0C-B6 class, default-on): a placed hard child whose signal M5 pin row lies
+    under the partition top-grid M6 PG band (PDN) gets no via up without a VDD/VSS short.  Each such child moves in y
+    by the smallest grid-keeping row multiple that clears every row (tools/die_plan/pinband_site.py: inside the kit
+    core, gaps to the other macros kept).  Check only (report, no move) for a fully_fixed_macros type, a bump-port
+    kit and the macros of a PHY PG domain; OT_PINBAND_SITE=0 = check only everywhere.  -> (macros, report | None)"""
+    if not macros:
+        return macros, None
+    import pinband_site as PBS
+    t = P.types[tn]
+    base = Path(root) if root else Path(__file__).resolve().parent.parent.parent
+    fixed = {i for d in phy_pg_domains(P, tn) for i in d[4]}
+    lefs, kids, keep = {}, [], []
+    for inst, mod, lef, lib, x, y, o in macros:
+        f = _CR.resolve(lef, base) if lef else None
+        if not f or not Path(f).is_file():
+            continue
+        lefs[mod] = Path(f)
+        if inst in fixed:
+            keep.append(inst)
+        kids.append(dict(inst=inst, master=mod, orient=o, x=x, y=y))
+    core = kit_core_area(t)
+    move = PBS.enabled() and not check_only and not t.get("fully_fixed_macros")
+    mv = [k for k in kids if k["inst"] not in keep]
+    others = []
+    for k in kids:
+        if k["inst"] in keep:
+            b = PBS.macro_body(lefs[k["master"]].read_text(errors="replace"), k["master"])
+            if b:
+                kw, kh = PBS.pin_rows(b)[:2]
+                others.append((k["x"], k["y"], k["x"] + kw, k["y"] + kh))
+    rep = PBS.site(mv, PDN, core, lambda m: lefs[m].read_text(errors="replace"), others=others, move=move)
+    rep_fixed = PBS.site([dict(k) for k in kids if k["inst"] in keep], PDN, core,
+                         lambda m: lefs[m].read_text(errors="replace"), move=False) if keep else None
+    if rep_fixed:
+        rep["refused"] += [dict(r, why="PHY PG domain macro (check only)") for r in rep_fixed["refused"]]
+        rep["checked"] += rep_fixed["checked"]
+    ny = {k["inst"]: k["y"] for k in mv}
+    return [(i, m, l, b, x, ny.get(i, y), o) for i, m, l, b, x, y, o in macros], rep
+
+
 def type_macros(P, tn):
     """content macros of a type the kit must place (COORD 10-23): hard_cores[] and contents[] that carry a hardened
     view (lef).  [(inst, module, lef, lib, x, y, orient)], type frame, origin + track offset.  A macro view without a
@@ -3448,6 +3489,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     ib = insertion_binding(P, tn)
     w, h = t["outline_um"]
     macros = type_macros(P, tn)
+    macros, pinband = pinband_macros(P, tn, macros, root, check_only=bool(bump_ports))
     # A physical abstract alone leaves macro paths untimed and prevents load-driven
     # buffering (S81 frame review, 2026-10-24). Reject before writing a partial kit.
     missing_libs = [f"{inst} ({mod})" for inst, mod, lef, lib, x, y, o in macros if not lib]
@@ -3459,6 +3501,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         raise ValueError(f"type {tn}: implementation requires TT macro liberty, not SS: " + ", ".join(ss_libs))
     kd = Path(out) / tn
     (kd / "rtl").mkdir(parents=True, exist_ok=True)
+    if pinband is not None:
+        import pinband_site as _PBS
+        _PBS.write_report(kd, pinband)
     write_lec_options(kd, t)
     import reset_tree as RT
     native_reset = RT.bound_native_contract(P, tn)

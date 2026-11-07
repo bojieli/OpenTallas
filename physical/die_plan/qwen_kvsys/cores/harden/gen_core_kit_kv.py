@@ -1608,6 +1608,14 @@ def main():
                 lefs.append(f"/work/macros/{m}.lef")
                 libs.append(f"/work/macros/{m}_tt.lib")
                 libs_ff.append(f"/work/macros/{m}_ff.lib")   # MCMM bc corner needs the child FF view (STA-1112 without it)
+        # PINBAND-1 11-06 (COORD 17:4x, QC-A0C-B6 class, default-on; OT_PINBAND_SITE=0 = check only): a hard child whose
+        # signal M5 pin row (kit view, after signal_pin_layer) lies under the top-grid M6 PG band moves in y by the
+        # smallest grid-keeping row multiple that clears every row (inside the core, gaps to the other children kept)
+        import pinband_site
+        _spl = hard_children.get("signal_pin_layer")
+        pinband_site.site_rows(kd, hard_children["blocks"], PDN + PDN_HARD_CHILDREN,
+                               (CORE_MARGIN_UM, CORE_MARGIN_UM, w - CORE_MARGIN_UM, h - CORE_MARGIN_UM), xy=None,
+                               lef_fn=(lambda t: macro_pin_layer(t, _spl)) if _spl else None)
         mp = ["# GENERATED (gen_core_kit_kv.py --hard-children): FIRM sites of the hard children (plan proposal)",
               "set blk [ord::get_db_block]", "set dbu [$blk getDbUnitsPerMicron]"]
         for b in hard_children["blocks"]:

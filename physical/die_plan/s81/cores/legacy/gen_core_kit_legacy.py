@@ -1701,6 +1701,16 @@ def main():
     # the M4 track phase of the macro pins
     lefs, libs, mplace, no_gds = [], [], {}, []
     sites = rec.get("macro_sites", {})
+    if hcb:
+        # PINBAND-1 11-06 (COORD 17:4x, QC-A0C-B6 class, default-on; OT_PINBAND_SITE=0 = check only): a hard child whose
+        # signal M5 pin row lies under the top-grid M6 PG band moves in y by the smallest grid-keeping row multiple that
+        # clears every row (inside the core, gaps to the other children kept); spec macros[].at shares the site list
+        import pinband_site
+        m_ = rec.get("core_margin", CORE_MARGIN_UM)
+        _hv = rec["hard_children"]["views"]
+        (kd / "macros").mkdir(exist_ok=True)
+        pinband_site.site_rows(kd, hcb, pinband_site.PARTITION_M6, (m_, m_, w - m_, h - m_),
+                               lef_dir=lambda mm: (Path(_hv[mm]) if Path(_hv[mm]).is_absolute() else REPO / _hv[mm]) / f"{mm}.lef")
     for m in spec.get("macros", []):
         md = REPO / m["view"]
         master = md.name

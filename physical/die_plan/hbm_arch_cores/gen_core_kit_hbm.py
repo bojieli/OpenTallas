@@ -2274,6 +2274,14 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                                                                  for m_ in snap_moves))
             (kd / "macro_grid_snap.json").write_text(json.dumps(dict(source="gen_core_kit_hbm.snap_macro_placement",
                                                                      moves=snap_moves), indent=1) + "\n")
+    if rec.get("macro_placement") and (kd / "pdn.tcl").is_file():
+        # PINBAND-1 11-06 (COORD 17:4x, QC-A0C-B6 class, default-on; OT_PINBAND_SITE=0 = check only): a static macro whose
+        # signal M5 pin row lies under the kit's top-grid M6 PG band moves in y by the smallest grid-keeping row multiple
+        # that clears every row (inside the core, gaps kept; the step keeps the snapped M4/M6 track phase)
+        import pinband_site
+        _c = CORE_MARGIN_UM
+        pinband_site.site_rows(kd, rec["macro_placement"], (kd / "pdn.tcl").read_text(), (_c, _c, w - _c, h - _c),
+                               xy="xy_um", master="macro")
     if rec.get("macro_placement"):
         # HBM-CORES-REBAL-4: one foreach {inst master x y orient} table = the static-site form that
         # kit_contract.macro_boxes already parses (master + LEF SIZE per row), so macro_channels / clock_entry_clear
