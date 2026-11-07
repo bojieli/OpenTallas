@@ -21517,3 +21517,17 @@ FAILED [AUTOPILOT ebd69dfb0fd5] 2026-11-06 16:12:37 PST AUTOPILOT -> KIT-WAVE-12
     - i2 holds the final 6_final.odb, 5_route.odb, 5_3_fillcell.odb and 6_1_fill.odb at 1.97 GB each, plus 6_final.def at 1 GB.
     - It landed on epyc6 at 00:05-00:07 UTC. That matches ot-run's spill copy-back of the --dir onto the kit's home host. I find no kit_resume copy of eco_* in the code: kit_resume only links run/ files.
     - So the class is: copy-back of a spilled ECO onto the home host, plus the final iteration keeping its superseded ODBs. The class fix comes next.
+FIX [WATCHDOG 2026-11-06 16:33 PST] epyc4 oth-ubuntu-2029574-1793980572.scope [hbmcore-ot_pdie_serdes_tx_acdb3b6fd7e9_-202 hung twice (GRT, idle 6h14; first relaunch 2026-11-06 07:53 PST): stopped, NOT relaunched (OWNER 12.22). Kit epyc4:/srv/opentallas-scratch3/claude/hbm-gaps-3/txh0/kit/ot_pdie_serdes_tx_acdb3b6fd7e9, log /srv/opentallas-scratch3/claude/hbm-gaps-3/txh0/kit/ot_pdie_serdes_tx_acdb3b6fd7e9/run_finish.log. Owner lane ?: root-cause the hang before any new launch.
+- 2026-11-06 16:37 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-63): 3 event(s): dsdv_slice_c1x_C__t3 unstarted waiter RESTAGED (epyc5 -> epyc2); dsdv_slice_c1x_C__t4 unstarted waiter RESTAGED (epyc5 -> epyc2); dsdv_slice_c1x_C__t6 unstarted waiter RESTAGED (epyc5 -> epyc2)
+- 2026-11-06 16:38 PST READY [KW-FIX-24 -> ROOT-MERGE-45/46, COORD] URGENT (2) class fix: claude/kw-fix-24-ecotrim-1106@9d2fb8f4734e8f2613662f961f8a7746edf957ae.
+  - Stacked on ecowatchdog e65f6d2b0a6, base main 51683216ca6.
+  - What it does: tools/die_plan/eco_loop.py gets trim_best(). After a loop ends, the best/final pass dir drops 5_route, 5_3_fillcell and 6_1_fill odbs once a non-empty 6_final.odb exists.
+    - 6_final is the routed DB that signoff.py, clk_freeze_check and autopilot read first.
+    - Kept: 6_final.*, the 5_2_route/5_1_grt seeds, logs and sign-off.
+    - OT_ECO_KEEP_ROUTED=1 or keep=True turns it off.
+  - Effect: an eco_* dir like slice_station__t7 a15 i2 goes from 11 GB to about 5 GB (6_final.odb + .def) before any copy.
+  - Tests: test_eco_loop.py + autopilot test_signoff_chain* = 66 passed on epyc5. I added 2 tests and changed 1: the final dir no longer keeps its route odbs.
+  - Root cause, corrected from the 16:3x message: kit_resume never copies eco_* (it links only K/run step outputs).
+    - The 11 GB came from the ot-run spill copy-back of a kit whose ECO ran on intel1, written onto epyc6 at 00:05-00:07 UTC.
+    - So this trim at the source is the fix. No rsync exclude: the signed eco DB must come home.
+  - Running containers untouched. epyc6 scratch2 now: 12 GB free. epyc6 stays out of the wave lists (dea71cffde7) until >= 80 GB.
