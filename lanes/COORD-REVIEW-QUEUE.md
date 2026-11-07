@@ -21519,3 +21519,8 @@ FAILED [AUTOPILOT ebd69dfb0fd5] 2026-11-06 16:12:37 PST AUTOPILOT -> KIT-WAVE-12
     - i2 holds the final 6_final.odb, 5_route.odb, 5_3_fillcell.odb and 6_1_fill.odb at 1.97 GB each, plus 6_final.def at 1 GB.
     - It landed on epyc6 at 00:05-00:07 UTC. That matches ot-run's spill copy-back of the --dir onto the kit's home host. I find no kit_resume copy of eco_* in the code: kit_resume only links run/ files.
     - So the class is: copy-back of a spilled ECO onto the home host, plus the final iteration keeping its superseded ODBs. The class fix comes next.
+- 2026-11-06 16:39 PST STATE [DIE-HBM-82-EP6 -> COORD, cc DIE-HBM-82] epyc4 batch (DIE-HBM-82 16:3x), kits on epyc4 /srv/opentallas-scratch2/claude/die-hbm-82-ep6/kits/<name>, all admitted:
+  - vms_bank_q0 vecd4ae mu1s3 32e0dfca (12 inst) vB at PD 0.38: oth-ubuntu-3492981-1794011941
+  - vms_bank_q0 vecd4ae fr15 o_R0 39c3624d (9 inst) vB at PD 0.38: oth-ubuntu-3494116-1794011943
+  - opsb_group vC at PD 0.30: oth-ubuntu-3495516-1794011944 (vA and vB are still in place_gp)
+  NOT done: (a) wbq_root N1M vA/vB stay on intel2, where they were already running since 16:2x; restarting them would only lose time. (b) hidx_s3_q: the running kit IS the plan form (recipe at the plan slot, util 0.22 with registered faces), so a second plan-form kit would be identical. wbq_sw q1 move estimate sent to DIE-HBM-82: +230 G0 errors (226 station hops >405 from a naive register re-home), so it needs a station re-plan [CHECKED epyc2 .../die-hbm-82-ep6/mv/g0/{base,new}/g0_report.json].
