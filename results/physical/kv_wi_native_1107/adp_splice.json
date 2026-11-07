@@ -1,0 +1,28 @@
+{
+ "base": "/srv/opentallas-scratch3/claude/codex-wi-adp-abstract-b0-1107/source/views/qkd_hr_phy_adp.lef",
+ "base_sha256": "3db2addcdba209d048c07749f27c67b0d5866d380eb0e6d88b5ce40383b97b7d",
+ "detail": "/srv/opentallas-scratch3/claude/codex-wi-adp-abstract-b0-1107/detail.lef",
+ "out": "/srv/opentallas-scratch3/claude/codex-wi-adp-abstract-b0-1107/qkd_hr_phy_adp.lef",
+ "out_sha256": "2eb451ac68c0c930f2f8b2ef310b6d8f24f3e030da5ec04f250e5ea238ad02d7",
+ "layers_detailed": [
+  "M6",
+  "M7"
+ ],
+ "rects": {
+  "M6": 92,
+  "M7": 0
+ },
+ "pin_clear_um": null,
+ "pin_clear": null,
+ "pg_pin_layers": {
+  "VSS": [
+   "M5"
+  ],
+  "VDD": [
+   "M5"
+  ]
+ },
+ "detail_pins_equal_base": true,
+ "check_ok": true,
+ "problems": []
+}
