@@ -610,3 +610,98 @@ def test_stage_so_without_common_flow_names_the_gap(tmp_path):
     k.mkdir()
     with pytest.raises(ValueError, match="physical/common_flow/clock_family.tcl"):
         E.stage_so(k, tmp_path / "eco", tools)
+
+
+class Hang(Fake):
+    """KW-FIX-24: the first prd_run sits in the route-keep incremental GRT (rip line, no restore, flat log) until the
+    watchdog stops it (rc 137 as docker stop gives); the retry passes"""
+
+    def __init__(self, results, stopped):
+        super().__init__(results)
+        self.hit, self.stopped = False, stopped
+
+    def __call__(self, cmd, **kw):
+        if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh") and not self.hit:
+            self.calls.append((cmd, kw.get("env") or {}))
+            self.hit = True
+            log = Path(cmd[2], "run_prd.log")
+            log.write_text("OT_PRD_ROUTE_KEEP ripped 2412 nets (2412 selected: new 10, connectivity 2, ...)\n"
+                           "[INFO GRT-0001] ...\n")
+            os.utime(log, (1, 1))
+            assert self.stopped.wait(10), "watchdog never stopped the hung pass"
+            return 137
+        return super().__call__(cmd, **kw)
+
+
+def test_grt_hang_detection(tmp_path):
+    log = tmp_path / "run_prd.log"
+    assert E.grt_hang(log, 10) is None                                       # no log
+    log.write_text("OT_PRD_ROUTE_KEEP ripped 37 nets (x)\n")
+    assert E.grt_hang(log, 10) is None                                       # fresh log: still working
+    os.utime(log, (1, 1))
+    assert E.grt_hang(log, 10) == 37                                         # flat inside the incremental GRT
+    log.write_text("OT_PRD_ROUTE_KEEP ripped 37 nets (x)\nOT_PRD_ROUTE_KEEP restore: re-attached 9\n")
+    os.utime(log, (1, 1))
+    assert E.grt_hang(log, 10) is None                                       # past the GRT: DRT may be long, not this class
+    log.write_text("[INFO DRT] flat in detailed route, OT_PRD_FROM=grt\n")
+    os.utime(log, (1, 1))
+    assert E.grt_hang(log, 10) is None                                       # no route-keep: not this class
+
+
+def test_grt_hang_stops_container_and_retries_full_route(tmp_path, monkeypatch):
+    import threading
+    monkeypatch.setattr(E, "GRT_FLAT_S", 5)
+    monkeypatch.setattr(E, "WATCH_POLL_S", 0.05)
+    stopped, seen = threading.Event(), []
+
+    def stop(pd):
+        seen.append(str(pd))
+        stopped.set()
+        return ["prd-eco-i1-123"]
+
+    monkeypatch.setattr(E, "stop_eco_container", stop)
+    k = kit(tmp_path)
+    f = Hang([rec(5, 5)], stopped)
+    res = E.run_loop(k, base_rec(k, rec(-80, 2)), tmp_path / "eco", run=f, tools=Path(E.HERE))
+    assert res["verdict"] == "PASS" and "grt_hang_retry" in res
+    assert [i["status"] for i in res["iterations"]] == ["ERROR", "SIGNED"]
+    h = res["iterations"][0]["grt_hang"]
+    assert h["rip"] == 2412 and h["stopped"] == ["prd-eco-i1-123"] and seen == [res["iterations"][0]["dir"]]
+    assert "hung" in res["iterations"][0]["reason"] and res["iterations"][1]["dir"].endswith("/i1g")
+    runs = [env for cmd, env in f.calls if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh")]
+    assert runs[0]["OT_PRD_FROM"] == "route" and runs[1]["OT_PRD_FROM"] == "grt"
+
+
+def test_iterate_keep_route_false_never_route_keeps(tmp_path, monkeypatch):
+    k = kit(tmp_path)
+    monkeypatch.setattr(E, "passes", lambda kit, prev, hm: ["t0", "b0"])
+    f = Fake([rec(5, 5)])
+    so = E.stage_so(k, tmp_path / "so")
+    E.iterate(1, k, tmp_path / "eco", k, None, so, "grt", 0, 8, 2, f, keep_route=False)
+    runs = [env["OT_PRD_FROM"] for cmd, env in f.calls if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh")]
+    assert runs == ["grt", "grt"]
+
+
+def test_stop_eco_container_stops_only_this_pass(tmp_path, monkeypatch):
+    pd = tmp_path / "eco/i1"
+    pd.mkdir(parents=True)
+    (tmp_path / "link").symlink_to(tmp_path / "eco")
+    calls = []
+
+    class R:
+        def __init__(self, out=""):
+            self.stdout = out
+
+    def run(cmd, **kw):
+        calls.append(cmd)
+        if cmd[1] == "ps":
+            return R("aaa\nbbb\n")
+        if cmd[1] == "inspect":
+            src = tmp_path / "link/i1" if cmd[-1] == "aaa" else tmp_path / "eco/i2"
+            return R(f"/prd-eco-i1-{cmd[-1]}\t{src}|/work /x|/y \n")
+        return R()
+
+    monkeypatch.setattr(E, "docker", lambda: "docker")
+    monkeypatch.setattr(E.subprocess, "run", run)
+    assert E.stop_eco_container(pd) == ["prd-eco-i1-aaa"]
+    assert [c for c in calls if c[1] == "stop"] == [["docker", "stop", "-t", "30", "aaa"]]
