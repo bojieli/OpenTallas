@@ -22,6 +22,9 @@ PLAN_DIE = {'s81': 's81', 'results': 's81_head', 'qwen_compute': 'qwen_compute',
 FAIL_MAP = [
     (r'signed off but no flow release tag', 're-sign (flow tag)'),
     (r'insertion gate|band FAIL; fix the clock', 'clock window (resume)'),
+    # KW-FIX-24 11-06 (COORD 19:2x (10)): the GRT-stage G2 setup gate rides the FAIL_POSTCTS marker (kit-wave class
+    # post-cts-hold) but is a setup failure at global route, not a hold after CTS
+    (r'legacy grt gate: G2 setup_tt|SETUP-AT-GRT', 'SETUP-AT-GRT'),
     (r'post-cts-hold|OT_HOLD', 'hold after CTS'),
     (r'routed-not-signed|routed: TT|late-ECO', 'timing after route'),
     (r'LEC not equivalent|LEC NOT EQ', 'LEC'),
