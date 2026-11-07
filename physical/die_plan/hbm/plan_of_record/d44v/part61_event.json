@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "part": 61,
+ "plan": "d44v",
+ "lane": "DIE-HBM-86",
+ "date": "2026-11-07",
+ "approved": "COORD 11-07 09:20 svgr_bk (A)",
+ "what": [
+  "ot_svgr_bk 16 instances: outline, origin, clock taps and core_macros outline return to their pre-part-53 values (from die_plan of 01a61d4b8ca^1)",
+  "part 53 station chain sites stay: they clear the larger outline, and undoing them brings back L40_i hops > 405 um (G0C)",
+  "table cores/ot_svgr_bk__259.2x207.36__d44v_p61.json = pre-p35 table bytes (510f347b9f^): stream_clk M5 21.72, the signed DB's site; clock_pin_sites_um stream_clk follows on 16 rows",
+  "corelat/cycles_svgr_bk_vB_1107.tsv records the +1 on complete, complete_bank, bfault that the signed RTL carries"
+ ],
+ "kept": [
+  "part 53 internal_stations regs_um",
+  "svgr_own RF3 recipe, RTL ifdef and corelat row: not part of the die_plan diff",
+  "302.4 table file stays on disk, unused"
+ ],
+ "signed_db": {
+  "record": "epyc2 die-hbm-85/eco/svgrbk_e2_resign_dq",
+  "rtl": "ot_svgr_bk_b12.sv VARIANT 1, identical to main except module name __fcore",
+  "build_commit": "acdb25db4ae2"
+ }
+}
