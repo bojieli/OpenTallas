@@ -183,9 +183,10 @@ done
 # FLOW-25 11-03: unset = the hook decides (a seed with routed data wires repairs on placement, RSZ-0074 class); grt = A/B
 case "${OT_PRD_REPAIR_RC:-}" in '') ;; placement|grt) echo "OT_PRD_REPAIR_RC=$OT_PRD_REPAIR_RC" >> $OUT/variant.env ;;
   *) echo "prd_mk: OT_PRD_REPAIR_RC=$OT_PRD_REPAIR_RC: want placement|grt"; exit 2 ;; esac
-# KW-FIX-24 11-06: OT_HOLD_REPAIR_SCOPE=reg2reg (orfs_hold_mm HOLD-REPAIR-SCOPE) reaches the post-route hold repair
-case "${OT_HOLD_REPAIR_SCOPE:-}" in '') ;; reg2reg) echo "OT_HOLD_REPAIR_SCOPE=reg2reg" >> $OUT/variant.env ;;
-  *) echo "prd_mk: OT_HOLD_REPAIR_SCOPE=$OT_HOLD_REPAIR_SCOPE: want reg2reg"; exit 2 ;; esac
+# Explicit repair scope must survive into the hook: nonport excludes input starts only.
+# The coupled hook/MM helpers validate capability before any scoped hold repair.
+case "${OT_HOLD_REPAIR_SCOPE:-}" in '') ;; reg2reg|nonport) printf 'OT_HOLD_REPAIR_SCOPE=%s\n' "$OT_HOLD_REPAIR_SCOPE" >> "$OUT/variant.env" ;;
+  *) echo "prd_mk: OT_HOLD_REPAIR_SCOPE=$OT_HOLD_REPAIR_SCOPE: want reg2reg|nonport"; exit 2 ;; esac
 # DIE-S81-49 11-02: OT_PRD_BUFFER_REMOVAL=1 re-enables setup-repair buffer removal (default off: removed-buffer class)
 case "${OT_PRD_BUFFER_REMOVAL:-}" in ''|0) ;; 1) echo "OT_PRD_BUFFER_REMOVAL=1" >> $OUT/variant.env ;;
   *) echo "prd_mk: OT_PRD_BUFFER_REMOVAL=$OT_PRD_BUFFER_REMOVAL: want 0|1"; exit 2 ;; esac
