@@ -110,6 +110,8 @@ for {set mi 0} {$mi < 3} {incr mi} {
     if {!$k} continue
     set g [expr {$s/$k}]
     foreach x $mp { lassign $x it a
+      # an ETM child (OT_RT_ETM_MASTER_RE) is landed below by its own rule, not pin-matched to its regs
+      if {[info exists ::env(OT_RT_ETM_MASTER_RE)] && $::env(OT_RT_ETM_MASTER_RE) ne "" && [regexp $::env(OT_RT_ETM_MASTER_RE) [[[$it getInst] getMaster] getName]]} continue
       set d [expr {$g - $a}]
       puts "OT_RT_MACRO pass$mi [[$it getInst] getName] clk [format %.0f $a] vs interface regs mean [format %.0f $g] ($k regs): [format %+.0f [expr {-$d}]] ps"
       if {$d < -8.0} {
@@ -144,6 +146,116 @@ for {set mi 0} {$mi < 3} {incr mi} {
   }
   if {!$todo} break
   detailed_placement
+}
+# ETM macro clock landing (DIE-S81-75 11-07, opt-in OT_RT_ETM_MASTER_RE + OT_RT_ETM_EARLY_PS). A hardened child with an internal
+# clock tree has its latency in the ETM lib: min/max_clock_tree_path and hold ~= +latency, setup ~= -latency on every input. F3
+# above matches the clk PIN to the interface regs, which lands the child's real flops one internal latency AFTER those regs: every
+# short input path then fails hold by about that latency (bksel hist_bank: 2900 endpoints, -108 FF, CQ+INV 43 vs lib hold 123).
+# Land the pin OT_RT_ETM_EARLY_PS (TT, placement RC) before its interface regs instead: tap the chain AHEAD of the macro tap at the
+# node whose arrival fits, isolated by one buffer so the node keeps its load. Regs stay where the balance loop put them, so
+# insertion does not grow. Delay stays on the regs branch, the common path up to the node keeps its CPPR credit.
+if {[info exists ::env(OT_RT_ETM_MASTER_RE)] && $::env(OT_RT_ETM_MASTER_RE) ne ""} {
+  set rb_em_x [expr {double($::env(OT_RT_ETM_EARLY_PS))}]
+  set rb_em_isom [[ord::get_db] findMaster [expr {[info exists ::env(OT_RT_ETM_ISO)] ? $::env(OT_RT_ETM_ISO) : "BUFx8_ASAP7_75t_R"}]]
+  set rb_em_isops [expr {[info exists ::env(OT_RT_ETM_ISO_PS)] ? double($::env(OT_RT_ETM_ISO_PS)) : 25.0}]
+  proc rb_em_arr {name mterm} {
+    set p [get_pins -quiet "$name/$mterm"]
+    if {$p eq "" || [catch {set a [get_property $p arrival_max_rise]}] || $a eq ""} { return "" }
+    return $a
+  }
+  proc rb_em_io {inst dir} {
+    foreach y [$inst getITerms] { set mt [$y getMTerm]; if {[$mt getSigType] in {POWER GROUND}} continue
+      if {[$mt getIoType] eq $dir && [$y getNet] ne "NULL"} { return $y } }
+    return ""
+  }
+  proc rb_em_driver {net} {
+    foreach y [$net getITerms] { if {[[$y getMTerm] getIoType] eq "OUTPUT"} { return $y } }
+    return ""
+  }
+  set_propagated_clock [all_clocks]; estimate_parasitics -placement
+  set rb_em_targets {}; set rb_em_n 0
+  dict for {tap net} [rb_taps] {
+    if {![string match ot_rt_mtap* $tap]} continue
+    set s 0.0; set k 0; set mp {}
+    foreach it [rb_sinks $net] {
+      set p [get_pins -quiet "[[$it getInst] getName]/[[$it getMTerm] getName]"]
+      if {$p eq "" || [catch {set a [get_property $p arrival_max_rise]}] || $a eq ""} continue
+      if {[[[$it getInst] getMaster] getType] eq "BLOCK"} {
+        if {[regexp $::env(OT_RT_ETM_MASTER_RE) [[[$it getInst] getMaster] getName]]} { lappend mp [list $it $a] }
+      } else { set s [expr {$s+$a}]; incr k }
+    }
+    if {!$k || ![llength $mp]} continue
+    set g [expr {$s/$k}]; set tgt [expr {$g - $rb_em_x}]
+    foreach x $mp { lassign $x it a
+      # walk up from the macro tap input to the first node early enough for node + isolation buffer
+      set n [[rb_em_io [$rb_blk findInst $tap] INPUT] getNet]
+      set drvi ""; set hops 0
+      while {1} {
+        set d [rb_em_driver $n]
+        if {$d eq ""} { set na 0.0; break }
+        set drvi [$d getInst]
+        set na [rb_em_arr [$drvi getName] [[$d getMTerm] getName]]
+        if {$na eq ""} { error "OT_RT_ETM no arrival at [$drvi getName]" }
+        if {$na + $rb_em_isops <= $tgt} break
+        set i [rb_em_io $drvi INPUT]
+        if {$i eq ""} { error "OT_RT_ETM no input on [$drvi getName]" }
+        set n [$i getNet]; incr hops
+      }
+      set old [$it getNet]; set bb [$it getBBox]
+      set isoi [odb::dbInst_create $rb_blk $rb_em_isom "ot_rt_etm_iso[incr rb_em_n]"]
+      set ison [odb::dbNet_create $rb_blk "ot_rt_etm_iso${rb_em_n}_n"]; $ison setSigType CLOCK
+      set nn [$n getName]
+      if {[info exists ::env(OT_RT_PROTECT_SPINE)] && $::env(OT_RT_PROTECT_SPINE)} { unset_dont_touch [get_nets -quiet $nn] }
+      foreach y [$isoi getITerms] { set mt [$y getMTerm]; if {[$mt getSigType] in {POWER GROUND}} continue
+        if {[$mt getIoType] eq "INPUT"} { $y connect $n } elseif {[$mt getIoType] eq "OUTPUT"} { $y connect $ison } }
+      if {[info exists ::env(OT_RT_PROTECT_SPINE)] && $::env(OT_RT_PROTECT_SPINE)} { set_dont_touch [get_nets -quiet $nn] }
+      if {$drvi ne ""} { set db [$drvi getBBox]; $isoi setLocation [$db xMin] [expr {[$db yMin] + 2*[$rb_dm getHeight]}] } else { $isoi setLocation [$bb xMin] [$bb yMin] }
+      $isoi setPlacementStatus PLACED
+      $it disconnect; $it connect $ison
+      # the macro's old branch has no load now: remove it up to the tap net, which keeps the regs tree
+      set cur $old; set rm 0
+      while {1} {
+        set loads 0; foreach y [$cur getITerms] { if {[[$y getMTerm] getIoType] eq "INPUT"} { incr loads } }
+        if {$loads} break
+        set d [rb_em_driver $cur]; if {$d eq ""} break
+        set di [$d getInst]; if {[$di getName] eq $tap} break
+        set i [rb_em_io $di INPUT]; if {$i eq ""} break
+        set up [$i getNet]; odb::dbInst_destroy $di; odb::dbNet_destroy $cur; set cur $up; incr rm
+      }
+      dict set rb_em_targets [[$it getInst] getName] [list $it $g $tgt $tap $nn $hops $rm]
+    }
+  }
+  detailed_placement
+  # second pass: an over-early pin (node granularity, wire) gets BUFx2 pads, one estimate at a time; never above target
+  for {set pp 0} {$pp < 2} {incr pp} {
+    set_propagated_clock [all_clocks]; estimate_parasitics -placement
+    set todo 0
+    dict for {nm v} $rb_em_targets { lassign $v it g tgt tap nn hops rm
+      set a [rb_em_arr $nm [[$it getMTerm] getName]]
+      puts "OT_RT_ETM pass$pp $nm clk [format %.0f $a] regs mean [format %.0f $g] target [format %.0f $tgt] ($tap, node $nn, $hops hops up, $rm old cells removed)"
+      if {$a >= $tgt - 15.0} continue
+      set nb [expr {int(floor(($tgt - $a) / $rb_pad_ps))}]
+      if {$nb < 1} continue
+      set todo 1; set prev [$it getNet]; set bb [$it getBBox]
+      for {set j 0} {$j < $nb} {incr j} {
+        set di [odb::dbInst_create $rb_blk $rb_dm "ot_rt_etm_pad[incr rb_em_n]"]
+        set nx [odb::dbNet_create $rb_blk "ot_rt_etm_pad${rb_em_n}_n"]; $nx setSigType CLOCK
+        foreach y [$di getITerms] { set mt [$y getMTerm]; if {[$mt getSigType] in {POWER GROUND}} continue
+          if {[$mt getIoType] eq "INPUT"} { $y connect $prev } elseif {[$mt getIoType] eq "OUTPUT"} { $y connect $nx } }
+        $di setLocation [expr {[$bb xMin] - 3*[[ord::get_db_tech] getDbUnitsPerMicron] - $j*2*[$rb_dm getWidth]}] [expr {[$bb yMin] - 2*[$rb_dm getHeight]}]; $di setPlacementStatus PLACED
+        set prev $nx
+      }
+      $it disconnect; $it connect $prev
+    }
+    if {!$todo} break
+    detailed_placement
+  }
+  set_propagated_clock [all_clocks]; estimate_parasitics -placement
+  set wmn 1e9; set wmx -1e9
+  dict for {nm v} $rb_em_targets { lassign $v it g tgt
+    set a [rb_em_arr $nm [[$it getMTerm] getName]]
+    set wmn [expr {min($wmn,$g-$a)}]; set wmx [expr {max($wmx,$g-$a)}] }
+  puts "OT_RT_ETM done: [dict size $rb_em_targets] macros landed early by [format %.0f $wmn]..[format %.0f $wmx] ps vs their regs (target $rb_em_x, TT placement RC)"
 }
 set m [rb_measure]
 set lo 1e9; set hi 0; dict for {t v} $m { set lo [expr {min($lo,[lindex $v 0])}]; set hi [expr {max($hi,[lindex $v 0])}] }
