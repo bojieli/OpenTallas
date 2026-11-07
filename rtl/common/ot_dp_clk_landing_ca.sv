@@ -47,6 +47,10 @@ module ot_dp_clk_landing_ca #(
     // consumed: never ready, previously no fault) now raises fault (fv_ca2 A_TMO).
     parameter integer TIMEOUT  = (K > 0 ? K : 0) + ARM + 2 * DEPTH + 8,
     parameter bit CONTROL_STATUS_COPY = 0, // optional private status bank; same cycles
+    // STATUS-REG-1 (KV-SLGLAND-2 11-07): 1 = the ring status crossings end at private per-slot flops (see ot_meso_ring_ca).
+    // Data q and ready are cycle-identical in the window; a rv/lap fault is seen one clk later; guard faults unchanged.
+    // Default 0 = identical logic.
+    parameter bit STATUS_REG = 0,
     parameter bit WFALL = 0 // DIE-HEAD-48 ring-write hold: writer on the falling edge of fclk (see wclk)
 ) (
     input  wire         fclk,
@@ -74,7 +78,12 @@ module ot_dp_clk_landing_ca #(
     wire wclk = WFALL ? ~fclk : fclk;
     reg seen;                       // first valid word consumed
     reg [CW-1:0] arm_cnt;
-    wire armed = seen && (arm_cnt == CW'(ARM));
+`ifdef OT_MESO_CA_MUTANT_SR_ARM
+    localparam integer ARM_E = ARM;            // MUTANT: rv is one count later, so ready slips one count
+`else
+    localparam integer ARM_E = STATUS_REG ? ARM - 1 : ARM;   // STATUS-REG-1: rv one count later, armed on the same count
+`endif
+    wire armed = seen && (arm_cnt == CW'(ARM_E));
     reg fault_state;
     reg [TCW-1:0] tmo_cnt;          // receiver cycles since rst_n release while not armed (saturates at TIMEOUT)
 `ifdef OT_MESO_CA_MUTANT_NO_TIMEOUT
@@ -91,7 +100,7 @@ module ot_dp_clk_landing_ca #(
         end else begin
             if (!armed && tmo_cnt != TCW'(TIMEOUT)) tmo_cnt <= tmo_cnt + 1'b1;
             if (rv) seen <= 1;
-            if (seen && arm_cnt != CW'(ARM)) arm_cnt <= arm_cnt + 1'b1;
+            if (seen && arm_cnt != CW'(ARM_E)) arm_cnt <= arm_cnt + 1'b1;
             ready <= armed && !fault_next;
             fault_state <= fault_next;
         end
@@ -100,7 +109,7 @@ module ot_dp_clk_landing_ca #(
     localparam integer KNT = 1 << KTW;
     localparam integer KM  = ((K % KNT) + KNT) % KNT;
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
-                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY)) u_ring (
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .STATUS_REG(STATUS_REG)) u_ring (
         .tclk(wclk), .wen_clk(1'b0), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .k_s(KTW'(KM)),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -152,7 +161,11 @@ module ot_dp_clk_landing_cas #(
     // K + 1 (count_align_bind.strap_ties) to keep the ring window: q is the same word stream ONE clk cycle later (one
     // added data cycle, results/dh58_turnb_1103/wreg_equiv TB_FREG).
     // Default 0 = identical logic.
-    parameter bit FREG = 0
+    parameter bit FREG = 0,
+    // STATUS-REG-1 (KV-SLGLAND-2 11-07): 1 = the ring status crossings end at private per-slot flops (see ot_meso_ring_ca).
+    // Data q and ready are cycle-identical in the window; a rv/lap fault is seen one clk later; guard faults unchanged.
+    // Default 0 = identical logic.
+    parameter bit STATUS_REG = 0
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -194,7 +207,12 @@ module ot_dp_clk_landing_cas #(
     end endgenerate
     reg seen;                       // first valid word consumed
     reg [CW-1:0] arm_cnt;
-    wire armed = seen && (arm_cnt == CW'(ARM));
+`ifdef OT_MESO_CA_MUTANT_SR_ARM
+    localparam integer ARM_E = ARM;            // MUTANT: rv is one count later, so ready slips one count
+`else
+    localparam integer ARM_E = STATUS_REG ? ARM - 1 : ARM;   // STATUS-REG-1: rv one count later, armed on the same count
+`endif
+    wire armed = seen && (arm_cnt == CW'(ARM_E));
     reg fault_state;
     reg [TCW-1:0] tmo_cnt;          // receiver cycles since rst_n release while not armed (saturates at TIMEOUT)
 `ifdef OT_MESO_CA_MUTANT_NO_TIMEOUT
@@ -211,13 +229,13 @@ module ot_dp_clk_landing_cas #(
         end else begin
             if (!armed && tmo_cnt != TCW'(TIMEOUT)) tmo_cnt <= tmo_cnt + 1'b1;
             if (rv) seen <= 1;
-            if (seen && arm_cnt != CW'(ARM)) arm_cnt <= arm_cnt + 1'b1;
+            if (seen && arm_cnt != CW'(ARM_E)) arm_cnt <= arm_cnt + 1'b1;
             ready <= armed && !fault_next;
             fault_state <= fault_next;
         end
     end
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
-                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP)) u_ring (
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .STATUS_REG(STATUS_REG)) u_ring (
         .tclk(wclk), .wen_clk(WFALL ? fclk : wclk), .t_rst_n(t_rst_w), .t_d({{(RW-W){1'b0}}, d_w}), .rclk(clk), .r_rst_n(rst_n), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -249,7 +267,15 @@ module ot_meso_ring_ca #(
     parameter bit CONTROL_STATUS_COPY = 0,
     parameter bit WREG = 0,         // WREG-1: registered writer start + registered per-(slot, chunk) write enables
     parameter bit WEN_NEG = 0,      // WREG with WFALL: write-enable flops on the falling edge of wen_clk (raw fclk)
-    parameter int DSREP = 1         // DSREP-1: read-select register copies per chunk (ot_meso_dsel SREP)
+    parameter int DSREP = 1,        // DSREP-1: read-select register copies per chunk (ot_meso_dsel SREP)
+    // STATUS-REG-1: every status read of the write domain ends at a private rclk flop per slot, with nothing but the slot
+    // flop before it; the select/compare then sits between rclk flops (a full period), not on the fclk -> clk crossing
+    // (io_ft_v1, io_cor_v1: written/lap_q -> lap_ok 480 ps TT vs 416.5 max_delay). The flops sample at the edge the old
+    // r_v_q / r_lap_q sampled, so r_v and r_lap_ok are the old values exactly one rclk later. An unselected slot may be
+    // mid-write and go metastable; its select is 0 at the next edge, as an unselected slot's value was masked before.
+    // The guards sample the same falling edge into per-slot flops, select at the next rising edge: glo1/ghi1 values and
+    // cycles unchanged; oh -> guard becomes a full period instead of T/2. Data path untouched.
+    parameter bit STATUS_REG = 0
 ) (
     input  logic         tclk,
     input  logic         wen_clk,    // WREG write-enable clock: tclk, or the raw fclk with WEN_NEG; unused when !WREG
@@ -361,11 +387,30 @@ module ot_meso_ring_ca #(
         if (!r_rst_n) begin rp <= RP0T; oh <= NS'(1) << RP0; end
         else begin rp <= rp + 1'b1; oh <= {oh[NS-2:0], oh[NS-1]}; end
     end
-    wire [NS-1:0] pos_v   = {ctl_w & ctl_lap, ctl_w & ~ctl_lap};
-    wire [NS-1:0] pos_lap = {ctl_lap, ~ctl_lap} | {~ctl_w, ~ctl_w};   // not yet written since start: no lap verdict
     function automatic logic [NS-1:0] rot(input logic [NS-1:0] x, input int k);
         for (int j = 0; j < NS; j++) rot[j] = x[(j - k + 2 * NS) % NS];
     endfunction
+    // Status as read by the select: the crossing itself, or (STATUS_REG) its per-slot rclk capture one edge old, read
+    // with the select and reset of that same edge. oh rotates every active edge, so rot(oh, -1) is last edge's oh, and
+    // with r_rst_n low the st_rst term masks the result.
+    wire [DEPTH-1:0] st_w, st_lap;
+    wire [NS-1:0] st_oh;
+    wire st_rst;
+    if (STATUS_REG) begin : g_status_reg
+        logic [DEPTH-1:0] w_q, lap_q;
+        logic rst_q;
+        always_ff @(posedge rclk) begin w_q <= ctl_w; lap_q <= ctl_lap; rst_q <= r_rst_n; end
+        assign st_w = w_q; assign st_lap = lap_q; assign st_rst = rst_q;
+`ifdef OT_MESO_CA_MUTANT_SR_OH
+        assign st_oh = oh;                  // MUTANT: selects the next slot from last edge's capture
+`else
+        assign st_oh = rot(oh, -1);
+`endif
+    end else begin : g_status_direct
+        assign st_w = ctl_w; assign st_lap = ctl_lap; assign st_rst = r_rst_n; assign st_oh = oh;
+    end
+    wire [NS-1:0] pos_v   = {st_w & st_lap, st_w & ~st_lap};
+    wire [NS-1:0] pos_lap = {st_lap, ~st_lap} | {~st_w, ~st_w};   // not yet written since start: no lap verdict
     // data: per-64-bit chunk registered one-hot select (ot_meso_dsel, REG=1), placed at reset, rotating every cycle
     localparam int NCH = (W % 64 == 0) ? W / 64 : 1;
     localparam int WCH = W / NCH;
@@ -379,16 +424,39 @@ module ot_meso_ring_ca #(
             .place(RP0[AW-1:0]), .sd(sd_c), .y(rd_q[c*WCH +: WCH]));
     end
     logic r_v_c, r_lap_c, r_lap1_c;
-    ot_meso_ohor #(.N(NS)) u_v   (.sel(oh), .x(pos_v),   .y(r_v_c));
-    ot_meso_ohor #(.N(NS)) u_lap (.sel(oh), .x(pos_lap), .y(r_lap1_c));
+    ot_meso_ohor #(.N(NS)) u_v   (.sel(st_oh), .x(pos_v),   .y(r_v_c));
+    ot_meso_ohor #(.N(NS)) u_lap (.sel(st_oh), .x(pos_lap), .y(r_lap1_c));
     if (LAPX > 0) begin : g_tag
         // extended lap tag of every slot (written with the word); the consumed slot's tag must equal rp's upper bits
         (* mem2reg *) logic [LAPX-1:0] s_tag [DEPTH];
         always_ff @(posedge tclk) if (t_go) s_tag[tc[AW-1:0]] <= tc[TW-1:PW];
+        wire [LAPX-1:0] st_tag [DEPTH];
+        wire [LAPX-1:0] st_rp;
+        if (STATUS_REG) begin : g_status_tag
+            (* mem2reg *) logic [LAPX-1:0] tag_q [DEPTH];
+            logic [LAPX-1:0] rp_q;
+            always_ff @(posedge rclk) begin
+                for (int i = 0; i < DEPTH; i++) tag_q[i] <= s_tag[i];
+`ifdef OT_MESO_CA_MUTANT_SR_TAG
+                rp_q <= rp[TW-1:PW] + 1'b1;     // MUTANT: compares the tag against the wrong count
+`else
+                rp_q <= rp[TW-1:PW];
+`endif
+            end
+            for (genvar i = 0; i < DEPTH; i++) begin : g_t
+                assign st_tag[i] = tag_q[i];
+            end
+            assign st_rp = rp_q;
+        end else begin : g_direct_tag
+            for (genvar i = 0; i < DEPTH; i++) begin : g_t
+                assign st_tag[i] = s_tag[i];
+            end
+            assign st_rp = rp[TW-1:PW];
+        end
         logic [LAPX-1:0] tag_c; logic w_c;
         always_comb begin
             tag_c = '0; w_c = 1'b0;
-            for (int i = 0; i < DEPTH; i++) if (oh[i] || oh[i + DEPTH]) begin tag_c = tag_c | s_tag[i]; w_c = w_c | ctl_w[i]; end
+            for (int i = 0; i < DEPTH; i++) if (st_oh[i] || st_oh[i + DEPTH]) begin tag_c = tag_c | st_tag[i]; w_c = w_c | st_w[i]; end
         end
 `ifdef OT_MESO_CA_MUTANT_NO_TAG
         assign r_lap_c = r_lap1_c;                                       // MUTANT: extended tag ignored
@@ -399,18 +467,18 @@ module ot_meso_ring_ca #(
         // on every active read edge. No new registers or interface cycles.
         wire [NS-1:0] slot_lap_ok;
         for (genvar li = 0; li < DEPTH; li++) begin : g_slot_lap
-            wire tag_ok = s_tag[li] == rp[TW-1:PW];
+            wire tag_ok = st_tag[li] == st_rp;
 `ifdef OT_MESO_CA_MUTANT_SLOT_LAP
             wire unwritten = 1'b0; // mutant: absent slot must have no lap verdict
 `else
-            wire unwritten = !ctl_w[li];
+            wire unwritten = !st_w[li];
 `endif
-            assign slot_lap_ok[li] = unwritten || (!ctl_lap[li] && tag_ok);
-            assign slot_lap_ok[li+DEPTH] = unwritten || (ctl_lap[li] && tag_ok);
+            assign slot_lap_ok[li] = unwritten || (!st_lap[li] && tag_ok);
+            assign slot_lap_ok[li+DEPTH] = unwritten || (st_lap[li] && tag_ok);
         end
-        assign r_lap_c = |(oh & slot_lap_ok);
+        assign r_lap_c = |(st_oh & slot_lap_ok);
 `else
-        assign r_lap_c = r_lap1_c && (!w_c || tag_c == rp[TW-1:PW]);
+        assign r_lap_c = r_lap1_c && (!w_c || tag_c == st_rp);
 `endif
 `endif
     end else begin : g_notag
@@ -418,6 +486,9 @@ module ot_meso_ring_ca #(
     end
     logic r_v_q, r_lap_q;
 `ifdef OT_MESO_CA_FV
+    if (STATUS_REG) begin : g_fv_status_reg_unmodeled
+        $error("OT_MESO_CA_FV does not model STATUS_REG; prove it with rtl/test/meso/status_reg");
+    end
     // the slot consumed at this edge; if it was written within the STA bound the captured word/flags are arbitrary
     logic [AW-1:0] fv_rs; always_comb begin fv_rs = '0; for (int j = 0; j < NS; j++) if (oh[j]) fv_rs = AW'(j % DEPTH); end
     wire fv_dx = fv_recent[fv_rs];
@@ -430,8 +501,8 @@ module ot_meso_ring_ca #(
     always_ff @(posedge rclk) begin fv_dx_q <= fv_dx; fv_any_q <= W'(fv_any >> 4); end
 `else
     always_ff @(posedge rclk) begin
-        r_v_q   <= r_v_c && r_rst_n;
-        r_lap_q <= r_lap_c || !r_rst_n;
+        r_v_q   <= r_v_c && st_rst;
+        r_lap_q <= r_lap_c || !st_rst;
     end
     assign r_d = rd_q;
 `endif
@@ -440,8 +511,21 @@ module ot_meso_ring_ca #(
     // guards (as ot_meso_ring): falling read edge, then 3 rising flops
     wire [NS-1:0] oh_lo = rot(oh, GUARD_LO);
     wire [NS-1:0] oh_hi = rot(oh, GUARD_HI - 1);
-    wire glo_c = |(oh_lo & {s_lap, ~s_lap} & {s_w, s_w});   // written since start, in this lap
-    wire ghi_c = ~|(oh_hi & {s_lap, ~s_lap} & {s_w, s_w});  // not yet written in this lap
+    wire [DEPTH-1:0] gs_w, gs_lap;
+    if (STATUS_REG) begin : g_guard_reg
+        // same falling edge as glo0/ghi0; oh only changes on the rising edge, so the select below is the select at it
+        logic [DEPTH-1:0] w_n, lap_n;
+`ifdef OT_MESO_CA_MUTANT_SR_GUARD
+        always_ff @(posedge rclk) begin w_n <= s_w; lap_n <= s_lap; end   // MUTANT: guard samples the wrong edge
+`else
+        always_ff @(negedge rclk) begin w_n <= s_w; lap_n <= s_lap; end
+`endif
+        assign gs_w = w_n; assign gs_lap = lap_n;
+    end else begin : g_guard_direct
+        assign gs_w = s_w; assign gs_lap = s_lap;
+    end
+    wire glo_c = |(oh_lo & {gs_lap, ~gs_lap} & {gs_w, gs_w});   // written since start, in this lap
+    wire ghi_c = ~|(oh_hi & {gs_lap, ~gs_lap} & {gs_w, gs_w});  // not yet written in this lap
     (* async_reg = "true" *) logic glo0, ghi0;
     (* async_reg = "true" *) logic glo1, glo2, ghi1, ghi2;
     logic glo3, ghi3;
@@ -457,13 +541,13 @@ module ot_meso_ring_ca #(
     end
 `else
     always_ff @(negedge rclk) begin
-        glo0 <= glo_c;
-        ghi0 <= ghi_c;
+        glo0 <= STATUS_REG ? 1'b0 : glo_c;
+        ghi0 <= STATUS_REG ? 1'b0 : ghi_c;
     end
 `endif
     always_ff @(posedge rclk) begin
-        glo1 <= glo0; glo2 <= glo1; glo3 <= glo2;
-        ghi1 <= ghi0; ghi2 <= ghi1; ghi3 <= ghi2;
+        glo1 <= STATUS_REG ? glo_c : glo0; glo2 <= glo1; glo3 <= glo2;
+        ghi1 <= STATUS_REG ? ghi_c : ghi0; ghi2 <= ghi1; ghi3 <= ghi2;
     end
 `ifdef OT_MESO_CA_MUTANT_NO_GUARD
     assign r_glo_ok = 1'b1;
