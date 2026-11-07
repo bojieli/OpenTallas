@@ -61,6 +61,16 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     always @(posedge clk or negedge rst_g) if (!rst_g) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
     always @(posedge pma_rck or negedge rst_g) if (!rst_g) rs_r <= 2'b00; else rs_r <= {rs_r[0], 1'b1};
     wire rn_t = rs_t[1], rn_r = rs_r[1];
+`ifdef OT_S81_SERDES_COL_RST_LOCAL
+    // Same edge and async assertion as rs_t[1], local to each TX consumer.
+    // No added mission or reset-calendar cycles; HOLD_EDGES contract unchanged.
+    wire [2:0] rn_t_local;
+    ot_s81_serdes_col_rst_local u_rst_t_local
+        (.clk(clk), .rst_n(rst_g), .first_stage(rs_t[0]), .q(rn_t_local));
+    wire rn_t_enc=rn_t_local[0], rn_t_rm=rn_t_local[1], rn_t_status=rn_t_local[2];
+`else
+    wire rn_t_enc=rn_t, rn_t_rm=rn_t, rn_t_status=rn_t;
+`endif
     // ---- transmit: FEC encoder (closed tile) -> TX lane relay rows (clk) -> PMA TX
     wire e_v; wire [543:0] e_d; wire e_flt;
 `ifdef OT_S81_SERDES_COL_PIN
@@ -68,10 +78,10 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     // registered by the same three edges, so the FEC frame calendar moves with
     // data and valid.  TXL is independently priced in the private kit profile.
     ot_s81_serdes_col_tx_pin #(.N(3)) u_tx_pin
-        (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx),
+        (.clk(clk), .rst_n(rn_t_enc), .tx_v(rn_t_enc), .tx_d(tx),
          .p_v(e_v), .p_d(e_d), .fault(e_flt));
 `else
-    ot_s81_kp4_enc u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
+    ot_s81_kp4_enc u_enc (.clk(clk), .rst_n(rn_t_enc), .tx_v(rn_t_enc), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
 `endif
     wire [544:0] l_q;
     ot_pl_pad #(.W(545), .N((MUT == 8) ? TXL - 1 : TXL)) u_txl (.ck(clk), .d({e_v, e_d}), .q(l_q));
@@ -98,15 +108,15 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
         .ck_syn(pma_rck), .ck_dly(pma_rck), .ck_chn(pma_rck), .ck_out(pma_rck));
     reg unc_r; always @(posedge pma_rck or negedge rn_r) if (!rn_r) unc_r <= 1'b0; else if (q_v && q_first && q_unc) unc_r <= 1'b1;
     wire rm_flt;
-    ot_s81_rate_match u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk), .rrst_n(rn_t), .r_d(rx),
+    ot_s81_rate_match u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk), .rrst_n(rn_t_rm), .r_d(rx),
         .fault(rm_flt));
     // ---- status (clk)
     reg [1:0] lk_s, uf_s;
-    always @(posedge clk or negedge rn_t)
-        if (!rn_t) begin lk_s <= 2'b00; uf_s <= 2'b00; end
+    always @(posedge clk or negedge rn_t_status)
+        if (!rn_t_status) begin lk_s <= 2'b00; uf_s <= 2'b00; end
         else begin lk_s <= {lk_s[0], lock}; uf_s <= {uf_s[0], unc_r}; end
     reg [1:0] st_q;
-    always @(posedge clk or negedge rn_t) if (!rn_t) st_q <= 2'b00; else st_q <= {lk_s[1], st_q[0] | uf_s[1] | rm_flt | e_flt};
+    always @(posedge clk or negedge rn_t_status) if (!rn_t_status) st_q <= 2'b00; else st_q <= {lk_s[1], st_q[0] | uf_s[1] | rm_flt | e_flt};
     assign st = st_q;
 endmodule
 
@@ -169,3 +179,16 @@ module ot_s81_pma_rxm #(parameter integer LAT = 4) (
 );
     ot_s81_pma_bm #(.W(544), .LAT(LAT)) u_m (.clk(pma_rck), .d_v(1'b1), .d(pma_rx), .q(q));
 endmodule
+
+`ifdef OT_S81_SERDES_COL_RST_LOCAL
+// Three kept copies of the existing second synchronizer stage; this is not
+// a new synchronizer depth. Consumer indices: encoder0, rate-matcher1, status2.
+module ot_s81_serdes_col_rst_local (
+    input wire clk, input wire rst_n, input wire first_stage,
+    (* keep *) output reg [2:0] q
+);
+    (* keep *) always @(posedge clk or negedge rst_n)
+        if (!rst_n) q <= 3'b000;
+        else q <= {3{first_stage}};
+endmodule
+`endif
