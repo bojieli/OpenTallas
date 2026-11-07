@@ -4011,5 +4011,51 @@
       "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_pipe_core.sv",
       "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_pipe_1c.sv"
     ]
+  },
+  "ot_hgi_sfu_opsb_output__wp1": {
+    "defines": [
+      "OT_OPSB_N32",
+      "OT_OPSB_WP=1"
+    ],
+    "params": {},
+    "files": [
+      "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lbank_n32.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_wp.sv"
+    ],
+    "macros": [
+      "ot_sram_1r1w_2048x32_m8_r0c0_g32"
+    ],
+    "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B11 ev74 RE-FORM: IREG + lgroup2_lf (log lane-write / sector-read selects) + BREG + FREG, sr_d/sr_rv/flt +2; bench results/die_hbm_1105/reform_b11/opsb_output; HBM-FORM-SPLIT-13-OPSB d44v part 41: OT_OPSB_N32 narrow-macro banks (16 x ot_sram_1r1w_2048x32_m8_r0c0_g32, 90 signal pins each, was 823), lock-step bench results/die_hbm_1106/opsb_n32 (0 errors, 4/4 mutants FAIL), PIN CYCLES 0; HBM-FORM-SPLIT-14-OPSB RE-FORM (vD/vE routed TT -310/-308: lane-write decode + broadcast in one cycle across 760 um, bank read regs placed at the sr_d face): OT_OPSB_WP=1 ot_hgi_su_lgroup2_wp (4 kept per-column copies, bank-local regs, sr_d-face read copy); PIN CYCLES sr_d/sr_rv +3, flt +1; lock-step bench results/die_hbm_1106/opsb_wp",
+    "top": "ot_hgi_sfu_opsb_output",
+    "util": 0.45,
+    "source_commit": "22fe73fb66047561ec0433bf8f4a5cf9a03acab7",
+    "read_at_commit": true,
+    "cts_delay_buffer_derate": 0
+  },
+  "ot_hgi_sfu_opsb_output__wp2": {
+    "defines": [
+      "OT_OPSB_N32",
+      "OT_OPSB_WP=2"
+    ],
+    "params": {},
+    "files": [
+      "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lbank_n32.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_wp.sv"
+    ],
+    "macros": [
+      "ot_sram_1r1w_2048x32_m8_r0c0_g32"
+    ],
+    "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B11 ev74 RE-FORM: IREG + lgroup2_lf (log lane-write / sector-read selects) + BREG + FREG, sr_d/sr_rv/flt +2; bench results/die_hbm_1105/reform_b11/opsb_output; HBM-FORM-SPLIT-13-OPSB d44v part 41: OT_OPSB_N32 narrow-macro banks (16 x ot_sram_1r1w_2048x32_m8_r0c0_g32, 90 signal pins each, was 823), lock-step bench results/die_hbm_1106/opsb_n32 (0 errors, 4/4 mutants FAIL), PIN CYCLES 0; HBM-FORM-SPLIT-14-OPSB RE-FORM (vD/vE routed TT -310/-308: lane-write decode + broadcast in one cycle across 760 um, bank read regs placed at the sr_d face): OT_OPSB_WP=2 ot_hgi_su_lgroup2_wp (registered decoded write record + 4 kept per-column copies, bank-local regs, sr_d-face read copy); PIN CYCLES sr_d/sr_rv +4, flt +2; lock-step bench results/die_hbm_1106/opsb_wp",
+    "top": "ot_hgi_sfu_opsb_output",
+    "util": 0.45,
+    "source_commit": "22fe73fb66047561ec0433bf8f4a5cf9a03acab7",
+    "read_at_commit": true,
+    "cts_delay_buffer_derate": 0
   }
 }
