@@ -155,11 +155,20 @@ def binding(tt_ps, ff_ps=None, tol_ps=40.0, basis_tt="plan clock", basis_ff=None
     return dict(tt=tt, ff=ff, tol=float(tol_ps), basis=dict(tt=basis_tt, ff=bf))
 
 
+LEAF_REPEAT_SRC, LEAF_REPEAT_KIT = "clk_leaf_repeat.tcl", "clk_leaf_repeat_default.tcl"
+
+
 def stage_grt183(kd):
     """FLOW-28 11-04: every kit carries the GRT-0183 fresh-process re-run its runner's make goes through (grt183_make.sh,
-    grt183_resume.tcl, ROOT 10-15).  Inert unless an incremental GRT-0183 kills stage 5_1_grt."""
+    grt183_resume.tcl, ROOT 10-15).  Inert unless an incremental GRT-0183 kills stage 5_1_grt.  KW-FIX-24: + the
+    default-on clk_leaf_repeat (clk_leaf_repeat_default.tcl), which the same wrapper hooks into CTS and GRT."""
     for f in ("grt183_make.sh", "grt183_resume.tcl", "grt_stall_resume.tcl"):   # KW-FIX-17 11-05: + GRT-STALL resume
         shutil.copyfile(_common_flow_file(f, TOOL.parents[1]), Path(kd) / f)
+    # KW-FIX-24/LEAFREP 11-06 (COORD 20:0x (5) / 20:2x (6)): clk_leaf_repeat default-on.  grt183_make.sh (the make
+    # wrapper above) sources this copy in the container's cts.tcl before POST_CTS (skipped when the kit hooks
+    # clk_leaf_repeat.tcl itself) and in global_route.tcl after the first GRT parasitics estimate (long-branch pass).
+    # Opt out per kit: 'export OT_CLK_LEAF_REPEAT = 0' (both) / 'export OT_CLK_LEAF_GRT = 0' (GRT pass) in config.mk.
+    shutil.copyfile(_common_flow_file(LEAF_REPEAT_SRC, TOOL.parents[1]), Path(kd) / LEAF_REPEAT_KIT)
 
 
 def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, grt_pre_extra=(),

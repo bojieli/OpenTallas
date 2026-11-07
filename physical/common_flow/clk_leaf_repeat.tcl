@@ -28,7 +28,80 @@
 #   override export POST_CTS_TCL = /work/clk_leaf_repeat.tcl
 # so the kit's own POST_CTS_TCL hook (if any) still runs after this one.  An unset / empty OT_CLR_NEXT_TCL sources
 # nothing; one naming this file itself is ignored (no recursion).
-if {![info exists ::env(OT_CLK_LEAF_REPEAT)] || $::env(OT_CLK_LEAF_REPEAT) ne "0"} {
+# KW-FIX-24/LEAFREP 11-06 (COORD 20:0x (5) + 20:2x (6)): DEFAULT ON for every kit, not only the LEAFSLEW retry.
+#   * CTS: physical/common_flow/grt183_make.sh (the make wrapper of every kit runner: gen_phys RUN_KIT, S81 / QC / KV /
+#     HBM core runners) patches the disposable container's ORFS cts.tcl to source /work/clk_leaf_repeat_default.tcl
+#     (this file, staged by tools/die_plan/core_flow.stage_grt183) right before 'source_step_tcl POST CTS', with
+#     ::ot_clr_default set.  The default run is skipped when the kit hooks this file itself (POST_CTS_TCL names
+#     clk_leaf_repeat.tcl, or its POST_CTS file / a /work file it sources names it, or OT_CLR_NEXT_TCL is set = the
+#     kit-wave LEAFSLEW chain); then that hook runs it as before.  A second CTS run in one process is skipped
+#     (::ot_clr_cts_done).  The default run never sources OT_CLR_NEXT_TCL.  Same rule and thresholds as above
+#     (fanout cap 12, 50 um, 80-ps placement slew gate): no net over the rule = no change.
+#   * GRT long-branch pass (::ot_clr_stage grt): S81 idx_tx vF: a single-load clock branch, 248 um routed over a
+#     macro, routed TT slew 358 ps > 320, passed the 80-ps PLACEMENT-RC gate.  grt183_make.sh sources this file a
+#     second time in ORFS global_route.tcl right after the first 'estimate_parasitics -global_routing' (routes and
+#     GRT parasitics exist, before repair_design / repair_timing).  Candidates: clock-tree branch nets (driven by a
+#     clock buffer / inverter, not a port; every load a clock buffer / inverter, or at most 2 loads) whose GLOBAL-ROUTE
+#     wire length > OT_CLK_LEAF_LONG_UM (default 120 um; 0 = off) or that cross a macro (a GRT guide over a macro that
+#     is not on the net) with routed length > OT_CLK_LEAF_MAX_UM; repeated when the GRT-RC estimated worst load slew
+#     > OT_CLK_LEAF_GRT_SLEW_PS (default 150 ps, all session corners; 0 = length / macro rule alone).  Every load goes
+#     behind a repeater (grouped as above), inside global_route -start_incremental / detailed_placement /
+#     -end_incremental, at most OT_CLK_LEAF_GRT_PASSES (default 3) passes.  OT_CLK_LEAF_GRT=0 = no GRT pass.
+#   OT_CLK_LEAF_REPEAT=0 (env or 'export OT_CLK_LEAF_REPEAT = 0' in config.mk) = both off (old behaviour).
+proc clr_is_clkcell {inst} {
+  set m [[$inst getMaster] getName]
+  return [expr {[string match "BUF*" $m] || [string match "INV*" $m] || [string match "CKINV*" $m] || [string match "CLKBUF*" $m]}]
+}
+proc clr_xy {inst} {
+  set b [$inst getBBox]
+  return [list [expr {([$b xMin] + [$b xMax]) / 2}] [expr {([$b yMin] + [$b yMax]) / 2}]]
+}
+proc clr_is_clock_net {net} {
+  if {[$net getSigType] eq "CLOCK"} { return 1 }
+  return [string match "clknet*" [$net getName]]
+}
+# one net -> list of {driver_inst load_pairs} or "" when the net is not a repeatable clock-tree net
+proc clr_net {net} {
+  if {[llength [$net getBTerms]]} { return "" }
+  set drv ""; set loads {}
+  foreach it [$net getITerms] {
+    if {[$it isOutputSignal]} { if {$drv ne ""} { return "" }; set drv [$it getInst]; continue }
+    if {[$it isInputSignal]} { lappend loads $it }
+  }
+  if {$drv eq "" || ![clr_is_clkcell $drv] || [llength $loads] == 0} { return "" }
+  return [list $drv $loads]
+}
+proc clr_kit_hooked {} {
+  # the kit runs this file itself at POST_CTS (explicit hook / kit-wave LEAFSLEW chain)
+  if {[info exists ::env(OT_CLR_NEXT_TCL)]} { return 1 }
+  if {![info exists ::env(POST_CTS_TCL)] || [string trim $::env(POST_CTS_TCL)] eq ""} { return 0 }
+  set todo [list [string trim $::env(POST_CTS_TCL)]]; set seen {}
+  while {[llength $todo] && [llength $seen] < 64} {
+    set f [lindex $todo 0]; set todo [lrange $todo 1 end]
+    if {[lsearch -exact $seen $f] >= 0} continue
+    lappend seen $f
+    if {[file tail $f] eq "clk_leaf_repeat.tcl"} { return 1 }
+    if {[catch {set fh [open $f r]; set txt [read $fh]; close $fh}]} continue
+    if {[string match "*clk_leaf_repeat*" $txt]} { return 1 }
+    foreach {- s} [regexp -all -inline -line {^\s*source\s+\{?(/work/[A-Za-z0-9_.-]+\.tcl)\}?\s*$} $txt] { lappend todo $s }
+  }
+  return 0
+}
+set ::ot_clr_mode [expr {[info exists ::ot_clr_stage] && $::ot_clr_stage eq "grt" ? "grt" : "cts"}]
+set ::ot_clr_run 1
+if {[info exists ::env(OT_CLK_LEAF_REPEAT)] && $::env(OT_CLK_LEAF_REPEAT) eq "0"} {
+  set ::ot_clr_run 0
+} elseif {$::ot_clr_mode eq "grt"} {
+  if {[info exists ::env(OT_CLK_LEAF_GRT)] && $::env(OT_CLK_LEAF_GRT) eq "0"} { set ::ot_clr_run 0 }
+} elseif {[info exists ::ot_clr_cts_done]} {
+  puts "OT_CLK_LEAF_REPEAT already ran in this process: skipped"
+  set ::ot_clr_run 0
+} elseif {[info exists ::ot_clr_default] && [clr_kit_hooked]} {
+  puts "OT_CLK_LEAF_REPEAT default: the kit hooks clk_leaf_repeat.tcl itself at POST_CTS; default run skipped"
+  set ::ot_clr_run 0
+}
+if {$::ot_clr_run && $::ot_clr_mode eq "cts"} {
+set ::ot_clr_cts_done 1
 uplevel #0 {
   set clr_blk [ord::get_db_block]
   set clr_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
@@ -38,29 +111,6 @@ uplevel #0 {
   set clr_passes [expr {[info exists ::env(OT_CLK_LEAF_PASSES)] ? int($::env(OT_CLK_LEAF_PASSES)) : 6}]
   set clr_slew_ps [expr {[info exists ::env(OT_CLK_LEAF_SLEW_PS)] ? double($::env(OT_CLK_LEAF_SLEW_PS)) : 80.0}]
   set clr_n_skip_slew 0
-  proc clr_is_clkcell {inst} {
-    set m [[$inst getMaster] getName]
-    return [expr {[string match "BUF*" $m] || [string match "INV*" $m] || [string match "CKINV*" $m] || [string match "CLKBUF*" $m]}]
-  }
-  proc clr_xy {inst} {
-    set b [$inst getBBox]
-    return [list [expr {([$b xMin] + [$b xMax]) / 2}] [expr {([$b yMin] + [$b yMax]) / 2}]]
-  }
-  proc clr_is_clock_net {net} {
-    if {[$net getSigType] eq "CLOCK"} { return 1 }
-    return [string match "clknet*" [$net getName]]
-  }
-  # one net -> list of {driver_inst load_pairs} or "" when the net is not a repeatable clock-tree net
-  proc clr_net {net} {
-    if {[llength [$net getBTerms]]} { return "" }
-    set drv ""; set loads {}
-    foreach it [$net getITerms] {
-      if {[$it isOutputSignal]} { if {$drv ne ""} { return "" }; set drv [$it getInst]; continue }
-      if {[$it isInputSignal]} { lappend loads $it }
-    }
-    if {$drv eq "" || ![clr_is_clkcell $drv] || [llength $loads] == 0} { return "" }
-    return [list $drv $loads]
-  }
   set clr_n_nets 0; set clr_n_bufs 0; set clr_worst_before 0.0; set clr_worst_after 0.0; set clr_seq 0
   for {set clr_pass 1} {$clr_pass <= $clr_passes + 1} {incr clr_pass} {
     set clr_todo {}
@@ -153,7 +203,8 @@ uplevel #0 {
         } else {
           insert_buffer -buffer_cell $cell -load_pins $pins -location [list $px $py] -buffer_name $nm -net_name "clknet_${nm}"
         }
-        set nn [$clr_blk findNet "clknet_${nm}"]
+        # the new net is the moved load's net (insert_buffer may uniquify -net_name, so findNet by name can miss it)
+        set nn [[lindex [lindex $g 0] 0] getNet]
         if {$nn ne "NULL" && $nn ne ""} { $nn setSigType CLOCK }
         incr clr_n_bufs
       }
@@ -168,7 +219,143 @@ uplevel #0 {
           $clr_n_nets $clr_n_bufs $clr_worst_before $clr_worst_after $clr_n_skip_slew]
 }
 }
-if {[info exists ::env(OT_CLR_NEXT_TCL)] && [string trim $::env(OT_CLR_NEXT_TCL)] ne ""
+if {$::ot_clr_run && $::ot_clr_mode eq "grt"} {
+uplevel #0 {
+  set clr_blk [ord::get_db_block]
+  set clr_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
+  set clr_max_um [expr {[info exists ::env(OT_CLK_LEAF_MAX_UM)] ? double($::env(OT_CLK_LEAF_MAX_UM)) : 50.0}]
+  set clr_fo [expr {[info exists ::env(OT_CLK_LEAF_MAX_FANOUT)] ? int($::env(OT_CLK_LEAF_MAX_FANOUT)) : 12}]
+  set clr_cell_default [expr {[info exists ::env(OT_CLK_LEAF_CELL)] ? $::env(OT_CLK_LEAF_CELL) : "BUFx16f_ASAP7_75t_R"}]
+  set clr_long_um [expr {[info exists ::env(OT_CLK_LEAF_LONG_UM)] ? double($::env(OT_CLK_LEAF_LONG_UM)) : 120.0}]
+  set clr_gslew [expr {[info exists ::env(OT_CLK_LEAF_GRT_SLEW_PS)] ? double($::env(OT_CLK_LEAF_GRT_SLEW_PS)) : 150.0}]
+  set clr_gpasses [expr {[info exists ::env(OT_CLK_LEAF_GRT_PASSES)] ? int($::env(OT_CLK_LEAF_GRT_PASSES)) : 3}]
+  set clr_macros {}
+  foreach clr_g_inst [$clr_blk getInsts] {
+    if {[[$clr_g_inst getMaster] isBlock]} { set clr_g_b [$clr_g_inst getBBox]; lappend clr_macros [list $clr_g_inst [$clr_g_b xMin] [$clr_g_b yMin] [$clr_g_b xMax] [$clr_g_b yMax]] }
+  }
+  set clr_wl_file [file join [expr {[info exists ::env(OBJECTS_DIR)] && [file isdirectory $::env(OBJECTS_DIR)] ? $::env(OBJECTS_DIR) : "/tmp"}] "ot_clk_leaf_grt_wl.[pid].txt"]
+  set clr_g_nets 0; set clr_g_bufs 0; set clr_g_skip 0; set clr_g_seq 0; set clr_g_worst 0.0
+  for {set clr_pass 1} {$clr_pass <= $clr_gpasses + 1} {incr clr_pass} {
+    set clr_cand {}
+    foreach clr_g_net [$clr_blk getNets] {
+      if {![clr_is_clock_net $clr_g_net]} continue
+      set clr_g_r [clr_net $clr_g_net]
+      if {$clr_g_r eq ""} continue
+      lassign $clr_g_r clr_g_drv clr_g_loads
+      set clr_g_all_clk 1
+      foreach clr_g_it $clr_g_loads { if {![clr_is_clkcell [$clr_g_it getInst]]} { set clr_g_all_clk 0; break } }
+      if {!$clr_g_all_clk && [llength $clr_g_loads] > 2} continue
+      lappend clr_cand [list $clr_g_net $clr_g_drv $clr_g_loads]
+    }
+    # routed (global-route) wire length of every candidate: one report file (grt: <net> <wl um> <pins>)
+    array unset clr_wl
+    if {[llength $clr_cand]} {
+      catch {suppress_message GRT 237}
+      grt::create_wl_report_file $clr_wl_file 0
+      foreach clr_g_c $clr_cand { grt::report_net_wire_length [lindex $clr_g_c 0] 1 0 0 $clr_wl_file }
+      catch {unsuppress_message GRT 237}
+      if {![catch {set clr_g_fh [open $clr_wl_file r]; set clr_g_txt [read $clr_g_fh]; close $clr_g_fh}]} {
+        foreach clr_g_ln [split $clr_g_txt "\n"] {
+          if {[regexp {^grt:\s+(\S+)\s+([0-9.eE+-]+)} $clr_g_ln -> clr_g_n clr_g_w]} { set clr_wl($clr_g_n) $clr_g_w }
+        }
+      }
+      file delete -force $clr_wl_file
+    }
+    set clr_todo {}
+    foreach clr_g_c $clr_cand {
+      lassign $clr_g_c clr_g_net clr_g_drv clr_g_loads
+      set clr_g_nm [$clr_g_net getName]
+      if {![info exists clr_wl($clr_g_nm)]} continue
+      set clr_g_wl $clr_wl($clr_g_nm)
+      if {$clr_g_wl > $clr_g_worst} { set clr_g_worst $clr_g_wl }
+      set clr_g_long [expr {$clr_long_um > 0 && $clr_g_wl > $clr_long_um}]
+      set clr_g_cross 0
+      if {!$clr_g_long && [llength $clr_macros] && $clr_g_wl > $clr_max_um} {
+        set clr_g_own [list [$clr_g_drv getId]]
+        foreach clr_g_it $clr_g_loads { lappend clr_g_own [[$clr_g_it getInst] getId] }
+        foreach clr_g_g [$clr_g_net getGuides] {
+          set clr_g_gb [$clr_g_g getBox]
+          foreach clr_g_m $clr_macros {
+            lassign $clr_g_m clr_g_mi clr_g_mx0 clr_g_my0 clr_g_mx1 clr_g_my1
+            if {[$clr_g_gb xMax] > $clr_g_mx0 && [$clr_g_gb xMin] < $clr_g_mx1 && [$clr_g_gb yMax] > $clr_g_my0 && [$clr_g_gb yMin] < $clr_g_my1
+                && [lsearch -exact $clr_g_own [$clr_g_mi getId]] < 0} { set clr_g_cross 1; break }
+          }
+          if {$clr_g_cross} break
+        }
+      }
+      if {!$clr_g_long && !$clr_g_cross} continue
+      set clr_g_ms 0.0
+      foreach clr_g_it $clr_g_loads {
+        set clr_g_pp [sta::find_pin "[[$clr_g_it getInst] getName]/[[$clr_g_it getMTerm] getName]"]
+        if {$clr_g_pp eq "" || $clr_g_pp eq "NULL"} continue
+        set clr_g_s [get_property $clr_g_pp slew_max]
+        if {$clr_g_s > $clr_g_ms} { set clr_g_ms $clr_g_s }
+      }
+      if {$clr_gslew > 0 && $clr_g_ms <= $clr_gslew} { if {$clr_pass == 1} { incr clr_g_skip }; continue }
+      puts [format "OT_CLK_LEAF_REPEAT grt pass %d net %s routed %.1f um%s, GRT est slew %.1f ps, %d loads" \
+              $clr_pass $clr_g_nm $clr_g_wl [expr {$clr_g_cross ? " over a macro" : ""}] $clr_g_ms [llength $clr_g_loads]]
+      lappend clr_todo [list $clr_g_net $clr_g_drv $clr_g_loads]
+    }
+    puts [format "OT_CLK_LEAF_REPEAT grt pass %d: %d of %d branch nets over rule (routed > %.0f um or over a macro, GRT slew gate %.0f ps)" \
+            $clr_pass [llength $clr_todo] [llength $clr_cand] $clr_long_um $clr_gslew]
+    if {![llength $clr_todo] || $clr_pass > $clr_gpasses} break
+    global_route -start_incremental
+    # the GRT stage process has not run detailed_placement yet: insert_buffer legalises through dpl (Opendp grid),
+    # which segfaults uninitialised (OpenROAD 26Q3 pointOffMacro); the design is legal, so this DPL only builds the grid
+    detailed_placement
+    foreach clr_g_job $clr_todo {
+      lassign $clr_g_job clr_g_net clr_g_drv clr_g_loads
+      lassign [clr_xy $clr_g_drv] clr_g_dx clr_g_dy
+      set clr_g_far {}
+      foreach clr_g_it $clr_g_loads { lassign [clr_xy [$clr_g_it getInst]] clr_g_lx clr_g_ly; lappend clr_g_far [list $clr_g_it $clr_g_lx $clr_g_ly [expr {double(abs($clr_g_lx-$clr_g_dx)+abs($clr_g_ly-$clr_g_dy))/$clr_dbu}]] }
+      set clr_g_far [lsort -real -decreasing -index 3 $clr_g_far]
+      set clr_g_cap [expr {$clr_fo > 0 ? $clr_fo : 1000000}]
+      set clr_g_groups {}
+      while {[llength $clr_g_far]} {
+        set clr_g_seed [lindex $clr_g_far 0]; set clr_g_g [list $clr_g_seed]; set clr_g_rest {}
+        foreach clr_g_f [lrange $clr_g_far 1 end] {
+          if {[llength $clr_g_g] < $clr_g_cap && (abs([lindex $clr_g_f 1] - [lindex $clr_g_seed 1]) + abs([lindex $clr_g_f 2] - [lindex $clr_g_seed 2])) <= $clr_max_um * $clr_dbu / 2.0} {
+            lappend clr_g_g $clr_g_f
+          } else { lappend clr_g_rest $clr_g_f }
+        }
+        lappend clr_g_groups $clr_g_g; set clr_g_far $clr_g_rest
+      }
+      set clr_g_m [[$clr_g_drv getMaster] getName]
+      set clr_g_cell [expr {[string match "BUF*" $clr_g_m] ? $clr_g_m : $clr_cell_default}]
+      foreach clr_g_g $clr_g_groups {
+        set clr_g_sx 0.0; set clr_g_sy 0.0; set clr_g_pins {}
+        foreach clr_g_f $clr_g_g {
+          set clr_g_it [lindex $clr_g_f 0]
+          lappend clr_g_pins [sta::find_pin "[[$clr_g_it getInst] getName]/[[$clr_g_it getMTerm] getName]"]
+          set clr_g_sx [expr {$clr_g_sx + [lindex $clr_g_f 1]}]; set clr_g_sy [expr {$clr_g_sy + [lindex $clr_g_f 2]}]
+        }
+        set clr_g_cx [expr {$clr_g_sx / [llength $clr_g_g]}]; set clr_g_cy [expr {$clr_g_sy / [llength $clr_g_g]}]
+        set clr_g_px [expr {(($clr_g_dx + $clr_g_cx) / 2.0) / $clr_dbu}]; set clr_g_py [expr {(($clr_g_dy + $clr_g_cy) / 2.0) / $clr_dbu}]
+        incr clr_g_seq
+        set clr_g_bn "clkleafrepg_${clr_g_seq}"
+        if {[llength $clr_g_pins] > 1} {
+          insert_buffer -buffer_cell $clr_g_cell -net [sta::db_net_to_sta $clr_g_net] -load_pins $clr_g_pins -location [list $clr_g_px $clr_g_py] \
+            -buffer_name $clr_g_bn -net_name "clknet_${clr_g_bn}"
+        } else {
+          insert_buffer -buffer_cell $clr_g_cell -load_pins $clr_g_pins -location [list $clr_g_px $clr_g_py] -buffer_name $clr_g_bn -net_name "clknet_${clr_g_bn}"
+        }
+        set clr_g_nn [[lindex [lindex $clr_g_g 0] 0] getNet]
+        if {$clr_g_nn ne "NULL" && $clr_g_nn ne ""} { $clr_g_nn setSigType CLOCK }
+        incr clr_g_bufs
+      }
+      incr clr_g_nets
+    }
+    detailed_placement
+    global_route -end_incremental
+    estimate_parasitics -global_routing
+  }
+  if {$clr_g_bufs} { check_placement -verbose }
+  puts [format "OT_CLK_LEAF_REPEAT grt done: %d nets repeated, %d repeaters (%d long / over-macro nets kept: GRT est slew <= gate), longest routed branch %.1f um" \
+          $clr_g_nets $clr_g_bufs $clr_g_skip $clr_g_worst]
+}
+}
+if {![info exists ::ot_clr_default] && $::ot_clr_mode eq "cts"
+    && [info exists ::env(OT_CLR_NEXT_TCL)] && [string trim $::env(OT_CLR_NEXT_TCL)] ne ""
     && [file tail [string trim $::env(OT_CLR_NEXT_TCL)]] ne "clk_leaf_repeat.tcl"} {
   source [string trim $::env(OT_CLR_NEXT_TCL)]
 }
