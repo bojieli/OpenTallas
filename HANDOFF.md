@@ -3386,3 +3386,5 @@ CODEX: 2026-11-07 06:25 PST directDockerfix de99b935 installedall6futurelauncher
 CODEX: 2026-11-07 06:35 PST explicitrootcapacity-protectionSIGSTOP E4backcopytar1539245only06:35:25PST (t43a4,startticks34429160),53GBscratch2freevs~53GBremaining+writers. Data/records/computeintact,parentpipelinesleeping; cleanupcontroller257421stillpaused. NO SIGCONTuntilcapacity/destinationreview; OWNER?CODEX-LOG. Forwardguardcandidate232da12b sourceonly, backcopyrecoveryunchanged.
 
 CODEX: 2026-11-07 06:40:54 PST EPYC6 automatic RAM guard restored historical-peak factor1 at 58.94 GB available; no earlyoom and no jobs stopped. All E4/E5/E6 now factor1, guards not rearmed. E4 tar1539245 and cleanup257421 remain paused pending explicit capacity/deletion review.
+
+CODEX: 2026-11-07 07:16 PST fullcounter203/allhostsreachable: KVingest31/32 accepted; S81/HEADtypes10/16. QCNLownerapprovedoneecow3thirdpassactive. Ownbranchclass/newformpilotsadvanceall5dies; no merges/tags/PORchanges. E4exactmaintenancepauses preservedata; E6memoryguardrolledbackandoneS81Yosysresourcecasualtymapped.
