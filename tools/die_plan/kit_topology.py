@@ -205,10 +205,30 @@ def verify_component_source(receipt_path, *, context_plan,prepared_plan,bind_out
     return report
 
 
+def localize_bound(kd):
+    """Give the kit a local copy of a bound module that bind kit-rtl left at the bind output (a variant bound type whose
+    text it did not rewrite, e.g. QC sle_fe_v2).  kit_istations edits only kit-local copies, and the bind output is never
+    touched.  Same bytes; only the kit's paths change.  Refuses a different file already at the local path."""
+    kd=Path(kd);mfile=kd/'kit_rtl.json';man=json.loads(mfile.read_text())
+    bound=next((Path(f) for f in man['files'] if Path(f).stem==man.get('bound_module')),None)
+    if bound is None or bound.resolve().parent==kd.resolve():return None
+    local=kd/bound.name
+    if local.exists() and local.read_bytes()!=bound.read_bytes():
+        raise ValueError(f'KIT_TOPOLOGY_REGENERATE: {local} differs from bound source {bound}')
+    shutil.copyfile(bound,local)
+    for fl in kd.glob('kit_rtl*.f'):
+        lines=fl.read_text().splitlines(keepends=True)
+        fl.write_text(''.join(str(local)+'\n' if ln.strip()==str(bound) else ln for ln in lines))
+    man['files']=[str(local) if f==str(bound) else f for f in man['files']]
+    mfile.write_text(json.dumps(man,indent=1))
+    return local
+
+
 def prepare_stations(plan,tn,rtl_dir,native_plan=None,asbuilt=None):
     """Canonical IN/core application and OUT reuse, once on a fresh kit copy."""
     import kit_istations
     raw=json.loads(Path(plan).read_text());kd=Path(rtl_dir).resolve()
+    localize_bound(kd)
     man=json.loads((kd/'kit_rtl.json').read_text())
     context=json.loads(Path(native_plan).read_text()) if native_plan else raw
     manifest=asbuilt or man.get('asbuilt_manifest')
