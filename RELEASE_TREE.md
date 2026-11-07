@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-> 2026-11-07 00:25 PST · 194 at the 23:05 auto row; current partial read 192 is an epyc4 scan timeout, full recount running (COUNT-SCAN-1) · limit expected at 23:45 did not hit; 11 successors running; 93 failed rows running on main 0290971a0fd; intel2 root 61 GB (patches moved off; AUTOCLEAN-2 owns the floor); waiters on all hosts
+> 2026-11-07 01:40 PST · complete cleanup counter reports194, allhostsreachable/no lost entries (after_epyc4 control01:19) · Codex WATCHER takeover active · NL/NK conservative synth/LEC retries now admitted; no new counted closure yet · KV source repairs released5rows; QCv4 strict bindPASS, staged release in progress · intel1 scratch375GB after prune; intel2 root68GB protected-source floor issue logged
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
