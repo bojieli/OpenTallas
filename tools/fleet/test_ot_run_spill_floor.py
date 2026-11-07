@@ -12,8 +12,8 @@ def load():
 
 def test_floor():
     m = load()
-    assert m.spill_dst_full("epyc2", {"rootfs_free_gb": 291})
-    assert not m.spill_dst_full("epyc2", {"rootfs_free_gb": 620})
+    assert m.spill_dst_full("epyc2", {"rootfs_free_gb": 149})          # root floor 150 (OWNER 11-06 22:4x)
+    assert not m.spill_dst_full("epyc2", {"rootfs_free_gb": 151})
     assert m.spill_dst_full("intel1", {"scratch_disk_gb": 92})
     assert m.spill_dst_full("localhost", {"scratch_disk_gb": 99})
     assert not m.spill_dst_full("epyc4", {"scratch_disk_gb": 40})      # no floor named
@@ -23,10 +23,10 @@ def test_floor():
 def test_off_root_lane_uses_scratch_floor():
     m = load()
     m.spill_lands_on_root = lambda host, roots: False
-    assert not m.spill_dst_full("epyc2", {"rootfs_free_gb": 291, "scratch_disk_gb": 116}, ["/srv/opentallas-scratch2/claude/l/k"])
-    assert m.spill_dst_full("epyc2", {"rootfs_free_gb": 291, "scratch_disk_gb": 60}, ["/srv/opentallas-scratch2/claude/l/k"])
+    assert not m.spill_dst_full("epyc2", {"rootfs_free_gb": 100, "scratch_disk_gb": 141}, ["/srv/opentallas-scratch2/claude/l/k"])
+    assert m.spill_dst_full("epyc2", {"rootfs_free_gb": 100, "scratch_disk_gb": 139}, ["/srv/opentallas-scratch2/claude/l/k"])
     m.spill_lands_on_root = lambda host, roots: True
-    assert m.spill_dst_full("epyc2", {"rootfs_free_gb": 291, "scratch_disk_gb": 116}, ["/srv/opentallas-scratch2/claude/l/k"])
+    assert m.spill_dst_full("epyc2", {"rootfs_free_gb": 100, "scratch_disk_gb": 141}, ["/srv/opentallas-scratch2/claude/l/k"])
 
 
 def test_drop_stage_only_under_a_lane():
@@ -97,7 +97,8 @@ def test_stage_eco_uses_lower_epyc2_scratch_floor():
     assert m.spill_dst_full("epyc2", r60, r, kit)
     assert m.spill_dst_full("intel1", r60, r, eco)
     m.spill_lands_on_root = lambda host, roots: True
-    assert m.spill_dst_full("epyc2", r60, r, eco)                      # the root floor stays
+    assert not m.spill_dst_full("epyc2", r60, r, eco)                  # root above its floor
+    assert m.spill_dst_full("epyc2", {"rootfs_free_gb": 149, "scratch_disk_gb": 60}, r, eco)  # the root floor stays
 
 
 def test_drop_keeps_a_copy_another_process_uses(tmp_path):
