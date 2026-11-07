@@ -497,6 +497,9 @@ def select(rows, cfg, die, state, plan_types=None):
             skip.setdefault("die-owned hold: " + held, []).append(r["item"])
             continue
         blk = lambda t: plan_types.get(t) if isinstance(plan_types, dict) else None
+        if counted_now(cfg, state, die, r["item"], blk(r["item"])):
+            skip.setdefault("counted by the sign-off counter", []).append(r["item"])
+            continue
         rec = (state.get("items") or {}).get(item_key(die, ev, r["item"], blk(r["item"])))
         only_retry = False
         if r["state"] not in states:
@@ -554,6 +557,10 @@ def select(rows, cfg, die, state, plan_types=None):
                 hc = next((w for pat, w in (d.get("hold_items") or {}).items() if fnmatch.fnmatchcase(c, pat)), None)
                 if hc and c not in blocked:
                     skip.setdefault("die-owned hold: " + hc, []).append(c)
+                    blocked.append(c)
+            for c in cls:
+                if c not in blocked and counted_now(cfg, state, die, c, blk(c)):
+                    skip.setdefault("counted by the sign-off counter", []).append(c)
                     blocked.append(c)
             cls = [c for c in cls if c not in blocked]
             # KW-FIX-8 11-04: a class in flight is never picked again.  Without this a retry row naming the live attempt
@@ -1744,6 +1751,36 @@ def uncharge(v, gb):
         v["wait_n"], v["wait_gb"] = int(v["wait_n"]) - 1, max(0, int(v.get("wait_gb", 0)) - gb)
 
 
+COUNTER_CACHE = Path.home() / ".local/state/fleet-viz/release_tree_plan_cache.json"
+
+
+def load_counter_signed(cfg):
+    """{die: names} the sign-off counter counts now (tools/release_tree_plan.py cache), read at the start of a tick.  An
+    unreadable cache means nothing is known to be counted: the wave then behaves as before."""
+    got = {}
+    try:
+        plans = json.loads(Path(cfg.get("counter_cache") or COUNTER_CACHE).read_text()).get("plans") or {}
+        for ent in plans.values():
+            got.setdefault(ent.get("die"), set()).update(ent.get("signed_types") or {}, ent.get("signed_designs") or {})
+    except (OSError, ValueError, AttributeError):
+        got = {}
+    cfg["_counter_signed"] = got
+    return got
+
+
+def counted_now(cfg, st, die, item, block=None):
+    """KW-FIX-27 11-07 (COORD, hd_st_n4 rebuilt after its ECO sign-off): the wave does not rebuild a design the counter
+    counts unless the plan changed it.  The plan block seen when the row is first found counted is kept in the state; another
+    block later = the plan changed the design.  Die list rebuild_counted names a deliberate rebuild."""
+    if item not in (cfg.get("_counter_signed") or {}).get(die, ()):
+        return False
+    if item in ((cfg.get("dies") or {}).get(die) or {}).get("rebuild_counted", ()):
+        return False
+    if not block:
+        return True
+    return st.setdefault("counted_blocks", {}).setdefault(f"{die}|{item}", block) == block
+
+
 def restage_waiters(AP, cfg, st, notices):
     """KW-FIX-4 11-03 (COORD: not-yet-started waiters may be restaged): a RUNNING attempt of a die with gen_hosts whose
     current ot-run stage still WAITS for admission (volume_started False) on a gen host other than the best one is
@@ -1795,6 +1832,8 @@ def restage_waiters(AP, cfg, st, notices):
             # an async PLACE client started pinned (--hosts G, before place_spill) can never move: relaunch it spillable
             if not why and spill and svc0.get("launch") == "launched" and "--hosts" in (svc0.get("argv") or []):
                 why, best = f"pinned async PLACE waiter on {g} -> spillable PLACE", g
+            if counted_now(cfg, st, die, r.get("item"), r.get("block_sha")):
+                why, best = "counted by the sign-off counter", g      # the INFRA path below ends it instead of relaunching
             if not why or volume_started(r):
                 continue
             if not AP.DRY:
@@ -3475,6 +3514,7 @@ def _step(AP, ap_dir):
                 AP.log(f"KIT-WAVE SRC-INCOMPLETE {h} {die}: {why} (not a gen host for the die until its copy is whole)")
     except Exception as e:                      # a diagnostic probe never stops the tick
         AP.log(f"KIT-WAVE src probe skipped: {e}")
+    load_counter_signed(cfg)
     restage_waiters(AP, cfg, st, notices)
     try:
         reap_orphan_waiters(AP, cfg)
@@ -3492,6 +3532,11 @@ def _step(AP, ap_dir):
         # Semantic adoption requires a fresh profile proof. Never launch an
         # old pending retry before plan_dies has had a chance to hold it.
         identity_mode = (cfg.get("dies", {}).get(rec["die"]) or {}).get("block_identity", "raw")
+        if infra_relaunch_due(cfg, rec) and counted_now(cfg, st, rec["die"], rec["item"], rec.get("block_sha")):
+            rec.update(status="CANCELLED", **{"class": "COUNTED"}, updated=time.time(),
+                       reason="counted by the sign-off counter, not relaunched (KW-FIX-27)")
+            AP.log(f"KIT-WAVE COUNTED {rec['die']}/{rec['item']}: not relaunched")
+            continue
         if infra_relaunch_due(cfg, rec) and identity_mode == "raw" and not stop_reason(cfg, rec["die"], ap_dir):
             if load_hold(cfg, rec["die"], rec["item"], rec.get("parent_item"), core_module(rec["item"])):
                 held[rec["die"]] = held.get(rec["die"], 0) + 1
