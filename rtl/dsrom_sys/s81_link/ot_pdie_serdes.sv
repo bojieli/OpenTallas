@@ -38,9 +38,17 @@ module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 
     always @(posedge clk or negedge rst) if (!rst) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
     always @(posedge pma_rck or negedge rst) if (!rst) rs_r <= 2'b00; else rs_r <= {rs_r[0], 1'b1};
     wire rn_t = rs_t[1], rn_r = rs_r[1];
+`ifdef OT_S81_SERDES_RST_COPIES
+    // S81-RCK-4 11-07: kept identical copies of the last reset synchroniser stage, one per consumer (TT rs_t -> u_rm/u_enc recovery -264..-700)
+    (* keep *) reg rs_t_enc, rs_t_rm;
+    always @(posedge clk or negedge rst) if (!rst) begin rs_t_enc <= 1'b0; rs_t_rm <= 1'b0; end else begin rs_t_enc <= rs_t[0]; rs_t_rm <= rs_t[0]; end
+    wire rn_t_enc = rs_t_enc, rn_t_rm = rs_t_rm;
+`else
+    wire rn_t_enc = rn_t, rn_t_rm = rn_t;
+`endif
     // ---- transmit: FEC encoder (ck) -> PMA TX model
     wire e_v; wire [543:0] e_d; wire e_flt;
-    ot_s81_kp4_enc #(.MUT(EMUT)) u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
+    ot_s81_kp4_enc #(.MUT(EMUT)) u_enc (.clk(clk), .rst_n(rn_t_enc), .tx_v(rn_t_enc), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
     ot_s81_pma_bm #(.W(544), .LAT(PMA_LAT)) u_ptx (.clk(clk), .d_v(e_v), .d(e_d), .q(pma_tx));
     assign pma_tck = clk;
     // ---- receive: PMA RX model (recovered clock) -> FEC decoder -> rate matcher -> ck
@@ -52,7 +60,7 @@ module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 
         .n_relock(n_rl));
     reg unc_r; always @(posedge pma_rck or negedge rn_r) if (!rn_r) unc_r <= 1'b0; else if (q_v && q_first && q_unc) unc_r <= 1'b1;
     wire rm_flt;
-    ot_s81_rate_match u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk), .rrst_n(rn_t), .r_d(rx),
+    ot_s81_rate_match u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk), .rrst_n(rn_t_rm), .r_d(rx),
         .fault(rm_flt));
     // ---- status (ck)
     reg [1:0] lk_s, uf_s;
@@ -141,6 +149,46 @@ module ot_s81_rate_match (
     wire full = fill_w == 4'd8;
     wire push = w_v && !full && !(idle && fill_w >= 4'd6);
     reg flt;
+`ifdef OT_S81_RM_STAGED
+    // S81-RCK-4 11-07 OT_S81_RM_STAGED: rate matcher form for the 2.9-mm serdes types (class: one enable/select across
+    // 4096 mem bits, one reset to 512 flops; TT rp->r_d -300..-872, rp_g2->mem -99..-239).
+    //  write: push decided as before; data + per-slice one-hot write enables take one wclk stage, mem written one wclk
+    //    later.  wp/wp_g move on the old edge; the reader sees wp_g two rclk later and reads on the third: no PIN CYCLE.
+    //  read:  r_m = mux stage beside mem; r_d = free stage for the hop to the output face: +1 rclk PIN CYCLE on r_d.
+    //  r_m/r_d carry no reset: pointers reset => empty => IDLE after 2 rclk edges (reset low >= 64 clk, boot contract).
+    localparam integer RM_NS = 8;           // write-enable copies: one per 64-bit slice
+    reg  [511:0] w_dq;
+    (* keep *) reg [7:0] we_q [0:RM_NS-1];
+    integer rm_i, rm_j;
+    reg  [511:0] r_m;
+    reg  [511:0] mem_rd;
+    always @(posedge wclk) w_dq <= w_d;
+    always @(posedge wclk or negedge wrst_n)
+        if (!wrst_n) for (rm_i = 0; rm_i < RM_NS; rm_i = rm_i + 1) we_q[rm_i] <= 8'd0;
+        else for (rm_i = 0; rm_i < RM_NS; rm_i = rm_i + 1) we_q[rm_i] <= push ? (8'd1 << wp[2:0]) : 8'd0;
+    always @(posedge wclk)
+        for (rm_i = 0; rm_i < RM_NS; rm_i = rm_i + 1)
+            for (rm_j = 0; rm_j < 8; rm_j = rm_j + 1)
+                if (we_q[rm_i][rm_j]) mem[rm_j][rm_i*64 +: 64] <= w_dq[rm_i*64 +: 64];
+    always @(posedge wclk or negedge wrst_n)
+        if (!wrst_n) begin wp <= 0; wp_g <= 0; flt <= 1'b0; end
+        else begin
+            if (push) begin wp <= wp + 1'b1; wp_g <= (wp + 1'b1) ^ ((wp + 1'b1) >> 1); end
+            if (w_v && full && !idle) flt <= 1'b1;
+        end
+    wire empty = g2b(wp_g2) == rp;
+    always @(posedge rclk or negedge rrst_n)
+        if (!rrst_n) begin rp <= 0; rp_g <= 0; end
+        else if (!empty) begin rp <= rp + 1'b1; rp_g <= (rp + 1'b1) ^ ((rp + 1'b1) >> 1); end
+    always @(posedge rclk) begin
+        r_m <= empty ? 512'd2 : mem[rp[2:0]];
+`ifdef RMMUT_NOSTAGE
+        r_d <= empty ? 512'd2 : mem[rp[2:0]];
+`else
+        r_d <= r_m;
+`endif
+    end
+`else
     always @(posedge wclk or negedge wrst_n)
         if (!wrst_n) begin wp <= 0; wp_g <= 0; flt <= 1'b0; end
         else begin
@@ -152,6 +200,7 @@ module ot_s81_rate_match (
         if (!rrst_n) begin rp <= 0; rp_g <= 0; r_d <= 512'd2; end
         else if (!empty) begin r_d <= mem[rp[2:0]]; rp <= rp + 1'b1; rp_g <= (rp + 1'b1) ^ ((rp + 1'b1) >> 1); end
         else r_d <= 512'd2;                        // IDLE beat: bit 1 set, no marker, no reverse frame, no slot bits
+`endif
     reg f1, f2; always @(posedge rclk or negedge rrst_n) if (!rrst_n) begin f1 <= 0; f2 <= 0; end else begin f1 <= flt; f2 <= f1; end
     assign fault = f2;
 endmodule

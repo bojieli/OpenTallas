@@ -393,6 +393,13 @@ SCHEMA = {
                     "rck_band": {"type": "object", "additionalProperties": False, "required": ["inst"],
                                  "properties": {"inst": {"type": "string", "minLength": 1},
                                                 "rows": {"type": "integer", "minimum": 1, "maximum": 8}}},
+                    # S81-RCK-4 11-07 (gen_phys.reset_relay_full): kit copy of ot_dp_rrelay_nl = one posedge flop
+                    "reset_relay_full": {"type": "boolean"},
+                    # S81-RCK-4 11-07 (chain_even.tcl): equal hops on register chains after GPL, no netlist change
+                    "chain_even": {"type": "object", "additionalProperties": False, "required": ["chains"],
+                                   "properties": {"chains": {"type": "array", "items": {"type": "array", "minItems": 2, "maxItems": 2,
+                                                                                         "items": {"type": "string", "minLength": 1}}},
+                                                  "groups": {"type": "array", "items": {"type": "array", "minItems": 5, "maxItems": 5}}}},
                     "infra_ports": {"type": "array", "items": _infra_port},
                     "infra_arcs": {"type": "array", "items": _infra_arc},
                     # HEAD native views: physical (synthesis black-box) source -> simulation model source
