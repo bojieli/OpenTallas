@@ -65,9 +65,11 @@ Die gates (BIND/GRT/STA/CLK) are not yet passed on any die. ETAs: non-HBM cores 
    - owner questions in plain text with a default;
    - say "signed off".
 
+5b. **epyc5 + epyc6 KEPT** (OWNER 22:5x: "keep both hosts. pause the deletion and move the workload from the waitlist to it."). No termination; the Cherry DELETE approval is withdrawn. Root floor 150 GB on epyc2/epyc4 (OWNER "use 150GB for floor decisions"); INV_HEADROOM_GB 32 on epyc4/5/6. Lanes: REBAL-1 (waiters to epyc5/6), AUTOCLEAN-1 (cleanup after each job), MONITOR-FIX.
+
 ## main and merge train
 
-main = `b37de6e7087` (19:54). Merge lane ROOT-MERGE-46 takes merges on intel2 central `/home/ubuntu/OpenTallas`, using the merge lock and a plain merge plus tests. Approved order, none landed yet:
+main = `239726a28c` (21:41, re-read the queue for the train). Merge lane ROOT-MERGE-46 takes merges on intel2 central `/home/ubuntu/OpenTallas`, using the merge lock and a plain merge plus tests. Approved order, none landed yet:
 
 1. srcready b5710c267d
 2. qcbatch 9976373442 (27 QC types, relay_resite_crossing default ON)

@@ -1,4 +1,4 @@
-# Codex handoff document (generated 2026-11-06 21:39 PST)
+# Codex handoff document (generated 2026-11-06 22:53 PST)
 
 Standby: Claude is running; this is used only if Claude hits a usage limit.
 
@@ -71,9 +71,11 @@ Die gates (BIND/GRT/STA/CLK) are not yet passed on any die. ETAs: non-HBM cores 
    - owner questions in plain text with a default;
    - say "signed off".
 
+5b. **epyc5 + epyc6 KEPT** (OWNER 22:5x: "keep both hosts. pause the deletion and move the workload from the waitlist to it."). No termination; the Cherry DELETE approval is withdrawn. Root floor 150 GB on epyc2/epyc4 (OWNER "use 150GB for floor decisions"); INV_HEADROOM_GB 32 on epyc4/5/6. Lanes: REBAL-1 (waiters to epyc5/6), AUTOCLEAN-1 (cleanup after each job), MONITOR-FIX.
+
 ## main and merge train
 
-main = `b37de6e7087` (19:54). Merge lane ROOT-MERGE-46 takes merges on intel2 central `/home/ubuntu/OpenTallas`, using the merge lock and a plain merge plus tests. Approved order, none landed yet:
+main = `239726a28c` (21:41, re-read the queue for the train). Merge lane ROOT-MERGE-46 takes merges on intel2 central `/home/ubuntu/OpenTallas`, using the merge lock and a plain merge plus tests. Approved order, none landed yet:
 
 1. srcready b5710c267d
 2. qcbatch 9976373442 (27 QC types, relay_resite_crossing default ON)
@@ -180,14 +182,14 @@ When told Claude is back:
 
 ## Latest handoff milestones
 
-- 2026-11-06 13:37 PST COORD hourly: count 180 (+1 HBM BM3 child); pending KV peer, HBM idx_tail_native type, S81 rom_q he; HBM 32 not-tried cores -> DIE-HBM-82; disks 92-98% scratch2 -> PRUNE-1122; GEOM kv3_sys_SD vA FAIL.
-- 2026-11-06 14:40 PST COORD hourly: count 182 (+2: KV peer, HBM q2 reduce re-sign) + gq_aq_tile by hand; main de614b8eef7; S81 other-flow-error class 18->31 -> KW-FIX-24; disks scratch2 90-99%.
-- 2026-11-06 15:42 PST COORD hourly: count 184 (+2: HEAD wshim_tx, HBM gq_aq_tile). main 57ec5ae97c3 (I222). epyc2/intel2/epyc4 REFUSED on scratch disk -> PRUNE-1122/1123/1124 + KW-FIX-24 kw-fix-4 repoint. Rulings 15:4x (serdes MEM 64 class, su_l0 bin replicas, NK vB2h, q3_edge_link DRV-only ECO). D
-- 2026-11-06 16:40 PST COORD hourly: count 186 (+2 HBM). main a775a96df17 (I225 topk). Disks: PRUNE-1122/1123/1124 freed ~580 GB (intel2 226, intel1 191, epyc4 213, epyc2 83); epyc6 10 GB REFUSED from s81 kit-wave resume copies -> kit wave kept off epyc6, owner asked about codex-wave-1105 superseded
 - 2026-11-06 17:41 PST COORD hourly: count 187 (+1 HBM TX FF); 3 re-signs pending count; main idle since 16:01 -> ROOT-MERGE-46 told to land 8 approvals; RULINGS 17:4x (S81 ft re-site class, QC pin-under-PG class, HBM svgr M6 obs conditional); epyc6 21 GB REFUSED, move running.
 - 2026-11-06 18:44 PST COORD hourly: count 189 (+2); OWNER rules 18:5x (types safe by construction all 5 dies -> TYPE-SAFE-1; archive closed to AGIdock + delete non-closed -> ARCHIVE-1106/PRUNE-1125; safe forms now on far-off cores); ETA table in RELEASE_TREE line 3; fleet 2/3 loaded -> KW-FIX-24 ba
 - 2026-11-06 19:40 PST COORD hourly: count 190 (+1 HBM pipe_1c). rom_q hw half local SIGNED, re-sign ~21:05. TYPE-SAFE-1 step 1 in (clump not corridor; hold = tap window, midpoint latch). Rulings 19:0x/19:2x posted. Fleet underloaded on epyc4/5/6 -> KW-FIX-24 relaunch. GEOM: opsb p41 macro grid clea
 - 2026-11-06 20:40 PST COORD hourly: count 190 flat. S81 station rows stale (pre-TAPWIN-PORT) -> rebuild batch + all-die stale sweep; DIE-S81-72 + TYPE-SAFE-2 started; KV land_r8 restore; failure label SETUP-AT-GRT live. GEOM: QC sul1 child landing kits sane (opposite-face pins); QC su2 channel lane
+- 2026-11-06 21:40 PST COORD hourly: count 190 flat (main b37de6e708; merge train has not landed). OWNER rules: 21:2x rebuild from branch heads without waiting for merges; 21:5x conservative versions in parallel + visual check; 22:0x 10-smell checklist (all in CODEX-HANDOFF-STATUS + lanes/_CORE_LANE
+
+CODEX: 2026-11-06 22:10 PST temporary takeover STOPPED; no new project changes/jobs/merges. Five new temporary worktrees removed per user; live fleet/source preserved. Full handback in CODEX-LOG.md. Main239726a28ca unchanged.
+2026-11-06 22:32 COORD hourly: count 190 flat; lanes restarted after limit (lanes/_RESTART_1106.md); OWNER 22:3x drain epyc5+epyc6, terminate about 06:37 11-07, RETIRE-EPYC56 copies closed records.
 
 For live jobs and new results, read the active lane files and lanes/COORD-REVIEW-QUEUE.md on intel2. Historical lane contents are intentionally omitted from this handoff.
 
