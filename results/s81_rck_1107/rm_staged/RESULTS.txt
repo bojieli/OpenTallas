@@ -1,0 +1,24 @@
+run.out:same: RESULT TW=833.000 TR=833.000 cmp=49990 data=30216 idle=19774 full_seen=0 bad=0
+run.out:same: PASS
+run.out:ppm_p: RESULT TW=833.000 TR=833.250 cmp=49988 data=30224 idle=19764 full_seen=0 bad=0
+run.out:ppm_p: PASS
+run.out:ppm_m: RESULT TW=833.250 TR=833.000 cmp=49988 data=30221 idle=19767 full_seen=0 bad=0
+run.out:ppm_m: PASS
+run.out:fastw: RESULT TW=770.000 TR=833.000 cmp=49988 data=31625 idle=18363 full_seen=0 bad=0
+run.out:fastw: PASS
+run.out:fastr: RESULT TW=833.000 TR=770.000 cmp=49988 data=27529 idle=22459 full_seen=0 bad=0
+run.out:fastr: PASS
+run.out:fast2: RESULT TW=833.000 TR=620.000 cmp=49988 data=21762 idle=28226 full_seen=0 bad=0
+run.out:fast2: PASS
+run.out:mut_NOSTAGE: RESULT TW=833.000 TR=833.250 cmp=49988 data=30224 idle=19764 full_seen=0 bad=34956
+run.out:mut_NOSTAGE: FAIL
+run.out:mut_slice: FAIL
+run.out:mut_wa: FAIL
+run.out:mut_data: FAIL
+run.out:mut_idle: FAIL
+run_full.out:fullw1: RESULT TW=560.000 TR=833.000 cmp=49988 data=35970 idle=14018 full_seen=717 bad=0
+run_full.out:fullw1: PASS
+run_full.out:fullw2: RESULT TW=420.000 TR=833.000 cmp=49988 data=38918 idle=11070 full_seen=6773 bad=0
+run_full.out:fullw2: PASS
+run_full.out:fullw3: RESULT TW=700.000 TR=833.000 cmp=49988 data=33254 idle=16734 full_seen=2 bad=0
+run_full.out:fullw3: PASS

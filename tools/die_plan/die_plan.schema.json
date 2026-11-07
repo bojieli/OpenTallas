@@ -928,6 +928,38 @@
        }
       }
      },
+     "reset_relay_full": {
+      "type": "boolean"
+     },
+     "chain_even": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "chains"
+      ],
+      "properties": {
+       "chains": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "minItems": 2,
+         "maxItems": 2,
+         "items": {
+          "type": "string",
+          "minLength": 1
+         }
+        }
+       },
+       "groups": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "minItems": 5,
+         "maxItems": 5
+        }
+       }
+      }
+     },
      "infra_ports": {
       "type": "array",
       "items": {

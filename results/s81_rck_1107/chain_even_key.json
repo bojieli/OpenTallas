@@ -1,0 +1,34 @@
+{
+ "chains": [
+  [
+   "u_face_p_d\\.q",
+   "u_rck_transport4|u_syn\\.x0"
+  ],
+  [
+   "u_enc\\.p_d",
+   "u_txl\\."
+  ],
+  [
+   "u_face_p_v\\.q",
+   "u_rck_transport4|u_syn\\.pv\\$"
+  ],
+  [
+   "u_rm\\.r_m",
+   "u_rm\\.r_d"
+  ]
+ ],
+ "groups": [
+  [
+   "am",
+   "u_face_am3\\.parts",
+   [
+    "u_rck_transport4\\.g_reg\\.r\\[0\\]\\[(55[0-3]|54[5-9])\\]",
+    "u_rck_transport4\\.g_reg\\.r\\[1\\]\\[(55[0-3]|54[5-9])\\]",
+    "u_rck_transport4\\.g_reg\\.r\\[2\\]\\[(55[0-3]|54[5-9])\\]",
+    "u_rck_transport4\\.q\\[(55[0-3]|54[5-9])\\]"
+   ],
+   "u_syn\\.am_ok\\$",
+   "u_syn\\.(lock|cand|wc|miss)"
+  ]
+ ]
+}
