@@ -207,3 +207,40 @@ def test_place_service_asks_for_the_spill_handoff():
     # SPILL-PROOF-1: an old ot-run ignores the variable, so ot-run and kit_wave deploy in either order
     src = (Path(__file__).parent / "kit_wave.py").read_text()
     assert "--setenv=OT_RUN_SPILL_HANDOFF=place" in src
+
+
+# KW-FIX-24 11-06 (COORD 16:2x): epyc6 scratch2 44 GB -> new and restaged attempts go to intel1/intel2
+SDISK = ("ot-run status: epyc6 admits 300 GB (avail 400, reserve 0, fresh 0, peak 30) load 10/128 run 3 root 87% "
+         "scratch 44 GB | intel1 admits 100 GB (avail 390, reserve 0, fresh 0, peak 46.8) load 104/112 run 50 root 62% "
+         "scratch 191 GB | localhost admits 90 GB (avail 517, reserve 0, fresh 0, peak 59.8) load 89/112 run 33 "
+         "root 70% scratch 212 GB | epyc5 REFUSED (scratch disk /srv/opentallas-scratch has 34 GB free < floor 50 GB)")
+
+
+def test_gen_disk_low_parsed_and_ranked_last():
+    s = K.parse_otrun_status(SDISK)
+    assert s["epyc6"]["scratch_gb"] == 44 and s["intel1"]["scratch_gb"] == 191 and "epyc5" not in s
+    assert K.gen_disk_low(s["epyc6"]) and not K.gen_disk_low(s["intel1"]) and not K.gen_disk_low({"admit": 5})
+    assert not K.gen_disk_low(s["epyc6"], floor=0) and not K.gen_disk_low(s["epyc6"], floor=40)
+    assert K.host_score(s["epyc6"]) < min(K.host_score(s["localhost"]), K.host_score(s["intel1"]))
+    assert K.host_score(s["epyc6"]) > K.host_score(None)            # REFUSED / absent stays lowest
+    c = cfg(gen_host="epyc6", gen_hosts=["epyc6", "intel1", "intel2"]); c["_hub"] = "intel2"
+    c["_otrun_status"] = s
+    assert K.pick_gen_host(c, "s81") == "intel2"                    # localhost row = the hub; intel1 is busy
+    c1 = cfg(gen_host="epyc6", gen_hosts=["epyc6", "epyc5"]); c1["_otrun_status"] = s
+    assert K.pick_gen_host(c1, "s81") == "epyc6"                    # nothing better: unchanged
+
+
+def test_restage_moves_waiters_off_low_disk_host(tmp_path, monkeypatch):
+    monkeypatch.setattr(K, "stop_reason", lambda *a, **k: None)
+    c = cfg(gen_host="epyc6", gen_hosts=["epyc6", "intel1", "intel2"], place_mem_gb=10)
+    c["_hub"], c["_otrun_status"] = "intel2", K.parse_otrun_status(SDISK)
+    items = {}
+    for k in range(3):
+        d = tmp_path / f"w{k}"; d.mkdir()
+        (d / "spec.json").write_text(json.dumps({"gen_host": "epyc6"}))
+        (d / "place.live.log").write_text("ot-run: -> epyc6 (will queue)\n")
+        items[str(k)] = {"die": "s81", "status": "RUNNING", "unit": f"kw-{k}", "dir": str(d), "attempt": 2,
+                         "infra_base": 0, "item": f"t{k}"}
+    ap = FakeAP()
+    assert K.restage_waiters(ap, c, {"items": items}, {}) == 3
+    assert all(r["status"] == "RETRY-INFRA" and "epyc6 -> " in r["reason"] for r in items.values())
