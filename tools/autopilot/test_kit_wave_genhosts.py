@@ -422,3 +422,53 @@ def test_restage_stops_at_target_load_cap(tmp_path, monkeypatch):
         (d / "place.live.log").write_text("ot-run: -> intel1\n")
         items[f"m{i}"] = {"die": "s81", "status": "RUNNING", "unit": f"u{i}", "dir": str(d), "attempt": 1, "item": f"t{i}"}
     assert K.restage_waiters(FakeAP(), c, {"items": items}, {}) == 1
+
+
+# ------------------------------------------------------------------------------------------------ KW-FIX-30 11-07 work_root disk
+# epyc6 root 94-96 GB held S81/QC work_root (scratch3 = root there) while ot-run's scratch2 figure looked fine
+WR = "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave"
+
+
+def _df_run(free):
+    calls = []
+    def run(h, cmd):
+        calls.append((h, cmd))
+        if free.get(h) is None:
+            return 255, ""
+        return 0, "W /srv/opentallas-scratch3/claude/kw26-wave-1106 %s\n" % free[h]
+    return run, calls
+
+
+def test_workroot_low_reads_the_lane_disk_per_host():
+    c = cfg(gen_host="epyc5", gen_hosts=["epyc5", "epyc6", "intel1"], work_root=WR)
+    c["gen_disk_min_gb"] = 100
+    run, calls = _df_run({"epyc5": 140, "epyc6": 94, "intel1": None})
+    assert K.workroot_low(FakeAP(), c, run=run) == {"epyc6": {"s81": 94}}          # intel1 unreachable = unknown
+    assert len(calls) == 3 and all("df -BG" in x[1] and "kw26-wave-1106" in x[1] for x in calls)
+    c["workroot_probe"] = False
+    assert K.workroot_low(FakeAP(), c, run=run) == {}
+
+
+def test_low_work_root_drops_the_host_while_another_has_room():
+    c = _loadcfg(["epyc5", "intel1"])
+    c["_workroot_low"] = {"epyc5": {"s81": 40}}
+    assert K.gen_hosts(c, "s81") == ["intel1"]
+    assert K.pick_gen_host(c, "s81", take=48) == "intel1"
+    assert K.load_hold(c, "s81") == ""
+    c["_workroot_low"] = {"epyc5": {"s81": 40}, "intel1": {"s81": 60}}               # none left: list as before, held
+    assert K.gen_hosts(c, "s81") == ["epyc5", "intel1"]
+    assert "work_root 40 GB" in K.load_hold(c, "s81") and K.load_hold(c, "s81").startswith("LOAD-HOLD")
+    c["_workroot_low"] = {"epyc5": {"qwen_compute": 40}}                             # another die's floor: no effect
+    assert K.gen_hosts(c, "s81") == ["epyc5", "intel1"]
+
+
+def test_shell_probe_runs(tmp_path):
+    lane = tmp_path / "srv" / "claude" / "lane"
+    lane.mkdir(parents=True)
+    import subprocess
+    c = cfg(gen_host="h1", gen_hosts=["h1"], work_root=str(lane / "runs" / "kit-wave"))
+    c["gen_disk_min_gb"] = 10 ** 9                                                  # every real disk is "low"
+    run = lambda h, cmd: (lambda p: (p.returncode, p.stdout))(subprocess.run(["bash", "-c", cmd], capture_output=True,
+                                                                             text=True))
+    got = K.workroot_low(FakeAP(), c, run=run)
+    assert list(got) == ["h1"] and got["h1"]["s81"] > 0

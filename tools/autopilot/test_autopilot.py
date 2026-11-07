@@ -388,7 +388,7 @@ class FakeHosts:
             return {"exists": True, "config": True, "has_run": k.get("has_run", False), "signoff_dirs": [],
                     "routed": k.get("routed", []), "fail_marks": k.get("fail_marks", []), "busy": k.get("busy", False),
                     "log_age_s": k.get("log_age_s"), "runner": "/srv/opentallas-scratch2/claude/s81/kits/run_kit.sh",
-                    **{x: k[x] for x in ("signoff_missing", "signoff_goals", "gds_gap", "route_runs_finish") if x in k}}
+                    **{x: k[x] for x in ("signoff_missing", "signoff_goals", "gds_gap", "route_runs_finish", "flow_log_age_s") if x in k}}
         if code is self.ap.PROBE_CLASSIFY:
             return dict(k.get("classify", {}), last_log_mtime=k.get("mtime", 0))
         if code is self.ap.PROBE_DELETE:
@@ -1206,6 +1206,117 @@ class TestRouteBesideProof(TickBase):
         self.queue(ROW)
         self.tick()
         self.assertEqual(self.f.launched, [])
+
+    # KW-FIX-30 11-07: on real ticks the kit's PLACE client sits on the hub in lec_async.sh finish and the running
+    # proof keeps K/lec*.log fresh, so BESIDE-PROOF never fired (0 lines 10:59-13:2x, 31 rows "kit busy")
+    def test_own_place_client_on_the_hub_does_not_hold(self):
+        self.proof_only = True
+        self.ap.hub_procs = lambda path: [(4242, 3000)]
+        self.ap.place_client = lambda pid, path: pid == 4242
+        self.queue(ROW)
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "RUNNING")
+        self.assertIn("BESIDE-PROOF", (Path(self.tmp.name) / "log.txt").read_text())
+
+    def test_other_hub_process_holds(self):
+        self.proof_only = True
+        self.ap.hub_procs = lambda path: [(4242, 3000), (4243, 10)]
+        self.ap.place_client = lambda pid, path: pid == 4242
+        self.queue(ROW)
+        self.tick()
+        self.assertEqual(self.f.launched, [])
+
+    def test_place_client_holds_without_proof_only(self):
+        self.proof_only = False
+        self.ap.hub_procs = lambda path: [(4242, 3000)]
+        self.ap.place_client = lambda pid, path: True
+        self.queue(ROW)
+        self.tick()
+        self.assertEqual(self.f.launched, [])
+
+    def test_lec_logs_do_not_hold_beside_proof(self):
+        self.proof_only = True
+        self.f.kits[ROW[2].split(":")[-1]] = {"log_age_s": 60, "flow_log_age_s": 5000}
+        self.queue(ROW)
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "RUNNING")
+
+    def test_fresh_flow_log_still_holds(self):
+        self.proof_only = True
+        self.f.kits[ROW[2].split(":")[-1]] = {"log_age_s": 60, "flow_log_age_s": 60}
+        self.queue(ROW)
+        self.tick()
+        self.assertEqual(self.f.launched, [])
+
+
+class TestProbeBesideProofRealFixture(unittest.TestCase):
+    """KW-FIX-30: the real PROBE_KIT code on a kit laid out as t12 a2 was at 13:1x (place receipt rc 0, ready +
+    identity, watcher alive, its own -lec unit still waiting in ot-heavy so NO container), and the real place_client
+    on a real process command line"""
+
+    def setUp(self):
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import autopilot
+        self.ap = autopilot
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        t = Path(self.tmp.name)
+        self.K = t / "gen" / "ot_s81sl_leaf__t12"
+        (self.K / "physical_completion").mkdir(parents=True)
+        (self.K / "config.mk").write_text("export DESIGN_NAME = x\n")
+        (self.K / "lec_async.sh").write_text("# echo LEC_ASYNC reuse proof\n")
+        (self.K / "lec_async.owner").write_text("dpkit-ot_s81sl_leaf__t12-2639243\n")
+        (self.K / "lec_async.ready").write_text("1\npython3 -I /work/lec.py /work\n")
+        (self.K / "lec_async.identity").write_text("abc\n")
+        (self.K / "lec_async.pid").write_text(str(os.getpid()) + "\n")
+        (self.K / "physical_completion" / "dpkit-ot_s81sl_leaf__t12-2639243.json").write_text('{"goal": "place", "rc": 0}')
+        (self.K / "lec_async.log").write_text("waiting\n")
+        old = time.time() - 4000
+        os.utime(self.K / "config.mk", (old, old))
+        bin_ = t / "bin"
+        bin_.mkdir()
+        (bin_ / "docker").write_text("#!/bin/sh\nexit 0\n")          # no container at all on this host
+        (bin_ / "docker").chmod(0o755)
+        self.env = dict(os.environ, PATH=f"{bin_}:{os.environ.get('PATH', '')}")
+
+    def probe(self):
+        import subprocess
+        out = subprocess.run([sys.executable, "-I", "-", json.dumps({"kit": str(self.K), "runner": ""})],
+                             input=self.ap.PROBE_KIT, capture_output=True, text=True, env=self.env, timeout=120).stdout
+        line = [x for x in out.splitlines() if x.startswith("AP_JSON ")][-1]
+        return json.loads(line[8:])
+
+    def test_queued_proof_is_proof_only(self):
+        p = self.probe()
+        self.assertTrue(p["proof_only"])
+        self.assertIs(p["busy"], False)
+        self.assertLess(p["log_age_s"], 900)            # lec_async.log is fresh ...
+        self.assertIsNone(p["flow_log_age_s"])          # ... but no flow log is
+
+    def test_dead_watcher_or_no_receipt_or_done_is_not(self):
+        (self.K / "lec_async.pid").write_text("999999999\n")
+        self.assertFalse(self.probe()["proof_only"])
+        (self.K / "lec_async.pid").write_text(str(os.getpid()) + "\n")
+        (self.K / "physical_completion" / "dpkit-ot_s81sl_leaf__t12-2639243.json").write_text('{"goal": "place", "rc": 1}')
+        self.assertFalse(self.probe()["proof_only"])
+        (self.K / "physical_completion" / "dpkit-ot_s81sl_leaf__t12-2639243.json").write_text('{"goal": "place", "rc": 0}')
+        (self.K / "lec_async.done").write_text("")
+        self.assertFalse(self.probe()["proof_only"])
+
+    def test_place_client_reads_the_real_command_line(self):
+        import subprocess
+        k = str(self.K)
+        pl = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)", "--", "bash", "-c",
+                               f"bash {k.rsplit('/', 1)[0]}/run_kit.sh {k} place 48 8"])
+        rt = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)", "--", "runner.sh",
+                               f"{k.rsplit('/', 1)[0]}/run_kit.sh", k, "route", "48", "8"])
+        try:
+            time.sleep(0.3)
+            self.assertTrue(self.ap.place_client(pl.pid, k))
+            self.assertFalse(self.ap.place_client(rt.pid, k))
+            self.assertFalse(self.ap.place_client(pl.pid, k + "_other"))
+        finally:
+            pl.kill(); rt.kill(); pl.wait(); rt.wait()
 
 
 class TestRender(unittest.TestCase):
