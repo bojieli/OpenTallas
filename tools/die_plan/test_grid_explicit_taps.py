@@ -66,3 +66,14 @@ def test_grid_taps_keep_grid_rules_but_added_taps_get_radius(monkeypatch):
     monkeypatch.setattr(taps, "sink_sites", lambda P, tn, control=True: [(20., 20., 1.)])
     with pytest.raises(ValueError, match="radius="):
         taps.grid_explicit_taps(plan([dict(name=f"clk_t{n}", xy=[60., 60.])], tap_radius_um=10.), "src")
+
+
+def test_added_tap_small_radius_overrun_is_a_target(monkeypatch, capsys):
+    # KW-FIX-28: up to 10% over the radius reports and goes on; beyond that still stops
+    n = n_grid()
+    monkeypatch.setattr(RT, "for_type", lambda P, tn: {"relays": []})
+    monkeypatch.setattr(taps, "sink_sites", lambda P, tn, control=True: [(60., 20., 1.)])
+    rows = taps.grid_explicit_taps(plan([dict(name=f"clk_t{n}", xy=[60., 60.])], tap_radius_um=38.), "src")
+    assert rows[n][0] == f"clk_t{n}" and "TAP-RADIUS-TARGET" in capsys.readouterr().err
+    with pytest.raises(ValueError, match="radius="):
+        taps.grid_explicit_taps(plan([dict(name=f"clk_t{n}", xy=[60., 60.])], tap_radius_um=30.), "src")
