@@ -1916,7 +1916,11 @@ def restage_waiters(AP, cfg, st, notices):
             # KW-FIX-27 11-07: the wait doubles with each move of the row (at most x8), so a row is not restarted every 30 min
             young = (time.time() - float(r.get("started") or 0)
                      < float(cfg.get("restage_min_wait_s", 1800)) * 2 ** min(3, int(r.get("restage_n") or 0)))
-            if multi and not young:
+            # KW-FIX-28 11-07: a spillable async PLACE client is already host-mobile: ot-run re-places it every 120 s and spills it
+            # to any host that admits.  Stopping it only redoes kit_rtl and gen on the target (181 of 267 moves on 11-07, none of
+            # which could help admission).  A move is for a waiter pinned to its gen host: an earlier stage, or a pinned client.
+            mobile = spill and svc0.get("launch") == "launched" and "--hosts" not in (svc0.get("argv") or [])
+            if multi and not young and not mobile:
                 best = pick_gen_host(cfg, die)
                 v = row(best) or {}
                 if best != g and (host_room(v) or cfg.get("load_hold") is False) and (
@@ -1939,6 +1943,9 @@ def restage_waiters(AP, cfg, st, notices):
             gb = wsize(row(g), mem)
             if v:
                 charge(v, gb)
+                # KW-FIX-28: the moved row's load counts now, so one tick's moves stop at the target's cap (host_room above)
+                if best != g:
+                    v["load"] = float(v.get("load", 0)) + int(opt(cfg, die, "place_threads"))
             if row(g):
                 uncharge(row(g), gb)
             # the move is not an attempt: keep the infra budget where it was (and give a spent one its move)

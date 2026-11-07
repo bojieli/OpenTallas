@@ -112,7 +112,7 @@ def test_score_counts_waiters():
 
 def test_restage_balances_waiters(tmp_path, monkeypatch):
     monkeypatch.setattr(K, "stop_reason", lambda *a, **k: None)
-    c = cfg(gen_host="epyc4", gen_hosts=["epyc4", "intel1", "intel2"], place_mem_gb=10)
+    c = cfg(gen_host="epyc4", gen_hosts=["epyc4", "intel1", "intel2"], place_mem_gb=10, place_threads=0)
     c["_hub"], c["_otrun_status"], c["restage_max_per_tick"] = "intel2", {h: dict(v) for h, v in STW.items()}, 200
     items = {}
     for k in range(131):
@@ -395,3 +395,30 @@ def test_timing_or_routing_fail_needs_a_named_redesign(tmp_path):
     c2 = cfg(); c2["dies"]["s81"]["gen_args"] = ["--form", "x"]                           # a changed flag is not named
     assert K.unchanged_fail(c2, {}, "s81", "t1", r)
     assert not K.unchanged_fail(c, {}, "s81", "t1", dict(r, q_class="INFRA"))
+
+
+def test_restage_leaves_spillable_place_waiter(tmp_path, monkeypatch):
+    # KW-FIX-28: ot-run re-places a spillable PLACE client itself; a move would only redo gen.  A pinned client still moves.
+    monkeypatch.setattr(K, "stop_reason", lambda *a, **k: None)
+    c = cfg(gen_hosts=["intel1", "epyc4"], place_mem_gb=48); c["_otrun_status"] = {h: dict(v) for h, v in ST.items()}
+    (tmp_path / "f").mkdir(); (tmp_path / "p").mkdir()
+    free = _rec(tmp_path / "f", "intel1", argv=["ot-run", "--mem", "48"])
+    assert K.restage_waiters(FakeAP(), c, {"items": {"a": free}}, {}) == 0 and free["status"] == "RUNNING"
+    pin = _rec(tmp_path / "p", "intel1", argv=["ot-run", "--hosts", "intel1"])
+    assert K.restage_waiters(FakeAP(), c, {"items": {"a": pin}}, {}) == 1 and pin["status"] == "RETRY-INFRA"
+    gen = _rec(tmp_path, "intel1")                                 # no PLACE client yet: pinned to its gen host, moves
+    assert K.restage_waiters(FakeAP(), c, {"items": {"a": gen}}, {}) == 1 and gen["restage_host"] == "epyc4"
+
+
+def test_restage_stops_at_target_load_cap(tmp_path, monkeypatch):
+    # KW-FIX-28: each move charges the target's load, so a burst stops at its cap
+    monkeypatch.setattr(K, "stop_reason", lambda *a, **k: None)
+    c = cfg(gen_hosts=["intel1", "epyc4"], place_mem_gb=48, place_threads=8)
+    c["_otrun_status"] = {"intel1": dict(ST["intel1"], load=390), "epyc4": {"admit": 676, "load": 380, "cores": 256, "run": 0}}
+    items = {}
+    for i in range(3):
+        d = tmp_path / f"m{i}"; d.mkdir()
+        (d / "spec.json").write_text(json.dumps({"gen_host": "intel1"}))
+        (d / "place.live.log").write_text("ot-run: -> intel1\n")
+        items[f"m{i}"] = {"die": "s81", "status": "RUNNING", "unit": f"u{i}", "dir": str(d), "attempt": 1, "item": f"t{i}"}
+    assert K.restage_waiters(FakeAP(), c, {"items": items}, {}) == 1
