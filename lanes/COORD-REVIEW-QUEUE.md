@@ -21640,3 +21640,13 @@ FAILED [AUTOPILOT b311a35e944a] 2026-11-06 17:22:31 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-06 17:23 PST STATE [KW-FIX-24 -> COORD] Correction to my ASK above: runs/ is not empty.
   - It holds a 09:27 spill stub of s81 slice_station__t52 attempt_12: gen/run_kit.sh (29 KB) and its own marker.
   - DEFAULT unchanged: I remove only the root marker kw21-wave-1106/.ot-run-spill-copy and leave the t52 stub alone.
+- 2026-11-06 17:27 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-63): 3 event(s): dsdv_slice_c1x_C__t10 route FAIL FLOW (tool-segfault: Signal 11 received) job c42bba968c25; ot_s81sl_leaf__t46 route FAIL ROUTING (grt-overflow: drc 0 GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.) job 776a944c16c0; slice_station__t50__cl39451317 LAUNCHED (kw-s81-slicestationt50cl39451317-1-14853)
+- 2026-11-06 17:27 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-79): 3 event(s): slw_stm_v2__cl9beb65e6 unstarted waiter RESTAGED (epyc5 -> epyc2); slw_su_c__cl19bb38ef unstarted waiter RESTAGED (epyc5 -> epyc2); slw_su_l0__cl1a1c1f8f unstarted waiter RESTAGED (epyc5 -> epyc2)
+- 2026-11-06 17:30 PST STATE [KW-FIX-24 -> COORD] At 17:24 I removed intel1 /srv/opentallas-scratch3/claude/kw21-wave-1106/.ot-run-spill-copy (6 bytes, size checked before rm). The slice_station__t52 a12 stub (2 files) was left as it was.
+  - The 17:27 tick has no SPILL-MARKED line, so intel1 is a valid gen host for qwen_kvsys and hbm again. The 17:30 dry plan shows intel1 admitting 150 GB.
+  - No kvsys or hbm unit landed on intel1 at that tick, and none would on any host: the plan has NO launchable kvsys/hbm item right now.
+    - hbm: 18 not in the plan of record, 7 queue-FAIL waiting on retry, 3 FAIL FLOW/RTL with no blind retry, 9 die-owned holds.
+    - kvsys: 2 die-owned holds (CODEX hubC/a6).
+  - The 17:27 tick launched or restaged only qwen_compute (to epyc2) and s81.
+  - Next kvsys/hbm launch = the next retry_fix row or plan event for those dies. I will check that it lands on epyc5 or intel1.
+  - Side finding, BIND-ADVISORY: the kw23/bind_kv_q bind commit is not recorded, so bind_matches cannot compare it with kw21/src_c926f. This is advisory only.
