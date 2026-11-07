@@ -657,7 +657,11 @@
   "source_commit": "d34578d6f",
   "view_cell": "ot_hbm_host_cp_rxs",
   "view_kind": "SYNTH",
-  "view_port_bits": 1368
+  "view_port_bits": 1368,
+  "orfs_vars": {
+   "OT_LEC_PARITY_TERMS": 800
+  },
+  "lec_parity_note": "DIE-HBM-82-P40 11-06 (COORD 18:5x, FLOW-CLASS-25): orfs_vars OT_LEC_PARITY_TERMS=800 -> kit config.mk export, read by resign.py/auto_resign into the LEC container; wide CRC compare g_rxpre.ne_q (612 inputs, ot_hgi_coll_static_seq_ctl RXPRE) hits the 256 default solver limit (DIE-HBM-66 11-04 cp_rxs: EQUIVALENT 20782/20782 at 800)"
  },
  "ot_hbm_idx_rootctl_static_am__475.2x259.2": {
   "top": "ot_hbm_idx_rootctl_static_am",
