@@ -9450,3 +9450,18 @@ Update 2026-11-06 23:45: merge lane parked; start a new ROOT-MERGE from the 23:5
 
 ## CODEX notes 2026-11-07 00:36 PST
 S81 bksel vF PLACE renders viewed: intel1:/srv/opentallas-scratch2/claude/s81-bksel-rf6/render/vF_place/{floorplan,density}.png; local /tmp/codex-watcher-1107/png/bksel_vF_*.png. 648x648 um, 32 macros; central horizontal corridor remains open, no visibly red density cells. SMELLS: (7) top/left external pins far from central/bottom logic; (3) narrow vertical slots between lower SRAM columns; these images do not show net paths or clock tree so balanced clock/PDN continuity remain unassessed. No new route release by Codex. Targeted vD/vE and already-running vF preserved.
+
+## CODEX takeover 2026-11-07 06:25:57 PST — all-lane coverage, widened scope
+Quick read/index of610 lane files (34.7MB) plus currenthandoff/currentqueue; historicalcompletedlanesremaininpriorindex. Latest per-file tails/statusdates/jobrefs: /tmp/codex-takeover-0615/lane_coverage_index.json. Activework iscovered asfollows; no merges/tags/PORchanges/deletions.
+
+|Scope|Owner/currentstep|Next action / failures|
+|---|---|---|
+|S81 cores+types|watch_s81 withENGRR/BKSEL/typehelpers; H/I andvG/VF active, T51ownM5-M6/120umPLACEpilot3fc5c84ff7|Collectrealresults; geometry+pin-cycleformfixes, RCKtapgroupfailure no batch|
+|QC cores+types|watch_qc+drain/clock/SUhelpers; vR4PLACE+LEC, NLclockvariantCTS/GRT|NKlegaldraincontractfix/privateparentcycleledger, NLclockdetournewspineform, SU0newstructuralforms; old3treeresetclass toflowowner|
+|KV cores+types|watch_kv+prompt/typehelpers; fo8EQ38190acceptedtagy20GBqualificationadmitted, H2PLACEviewed|H3descriptorprefetch+1PINcyclebench+mutantthenPLACE; promptnewJ2/coreabstractM5pilot|
+|HEAD types/integration|watch_head+collectors; n4alreadycounted, TXthirdECOstopped,wshim357slew|Newregisteredwriter/selectreplicationform+proofthenonePLACE; LEPmacro-wallgeometrynewform, existingrouteguard|
+|HBM allopenforms/types|watch_hbm+IDX/SU/gaphelpers, cached45opendesigns/39modulesavailable|rAphysicalpass+EQ13718currentresign, n12L/M/WBQnewformsactive; stopped-classnewforms notECOloops; benchincorrectopsaformpreserved/cancelpolicyexceptionrecorded|
+|Cross-die classflow/wave|wave_flow|93ECOcapalreadyLIVEincapturedadmissionbundles; 12oldQCcollectorFLOWrows identified but BATCHWITHHELD after actualpilotimageFAILED geometry; ownstart/resetreachredesign+onePLACEpilot, noTIMING/ROUTINGretries|
+|Fleet/admission|ram_release|Dockerreservationaccountingde99b935installedall6; originalwaitersuntouched, oneacceptedKVqualificationadmitted. E4scratch2fullrisk; useeligiblemounts. Cleanupcontrollerprotectivepause documented|
+|Token/native/trials/aux|watch_token|Actual8page955commandissuercomponent/defaultoffcompiler-markerrebookingcandidate; productionretirement/lifetimeunqualified, nofakefulltokenclaim|
+|Merge/count/coord/remaininghistoricalscope|root|CollectREADYbranch/sourceonly; no merges/tags. Existingcache05:26currently200design/typekeys vsheadline198unreconciled; do notclaimnewclosureuntilactualreceipt/counter. CacheopenHBMfiles /tmp/codex-takeover-0615/|
