@@ -3355,3 +3355,21 @@ CODEX: 2026-11-06 22:10 PST temporary takeover STOPPED; no new project changes/j
 - 2026-11-06 23:52 PST COORD hourly: count recount owed (192 partial vs 194 at 23:05: t46, t7__cl945bc067, hd_spn_wshim_tx records on epyc4). No GEOM renders viewed this hour. Train in, tag cut, KW-FIX-26 + CODEX-PRUNE-1 running detached.
 - 2026-11-07 00:05 PST COORD: count 192 is a scan artifact: release_tree_plan reports epyc4 unreachable ("SIGNED scan epyc4:" empty, cache unreachable_hosts), so its 3 records drop; dirs and SIGNED PROVENANCE checked on epyc4. Real count 195 until a full scan says otherwise. Next: find why the epyc4 scan fails; CODEX-PRUNE-1 control may STOP on the same incomplete scan (safe, needs a rerun).
 2026-11-07 00:25 PST COORD hourly: count recount owed (194 last full, 192 partial, epyc4 scan timeout); 11 successors started 00:20; intel2 root 61 GB; S81 col_h10_r1 render viewed: pin clumps on top and bottom edges, logic squeezed in the macro channels, clock sink 2104 um from its driver; KV hgi_v8 vA GRT5 congestion only at SRAM edges, not converged.
+
+CODEX: 2026-11-07 00:35 PST watcher takeover; all lane coverage indexed; collecting detached results, preserving running work. Fleet waiters all hosts; prune control running, epyc4 incomplete scan understood. QC v4 fw_v2 gen PASS; SU rows missing selected child views/lef, logged.
+
+CODEX: 2026-11-07 00:44 PST restored prune-damaged original KV bind inputs on intel1/intel2 (53/60 files), HEAD prep_l48ui on intel2 (68 files); no existing source replaced. Sweep304 records; diagnosed h9b LEC fail/n4 wrong top/injector pin mismatch. Jobs preserved.
+
+CODEX: 2026-11-07 00:54 PST cleanup counter control HELD194 baseline/current, no lost entries/allhostsreachable; detached prune chain continues. Existing COUNT-SCAN-1 fix13testsPASS selected for next control. Wave00:48 source inputs whole. Five die watchers collecting existing jobs; no design changes/merges.
+
+CODEX: 2026-11-07 01:08 PST HEAD collected all dh7* scopes and viewed4 placed/GRT images; restored future-route holds on conservative n4/spn_end for760/712um unstaged hops. TXvB DRT0, finalsignoff pending; n4ECOi2/SCvC-vD/spnvD alive. Full notes CODEX-LOG/S81-HEAD.
+
+CODEX: 2026-11-07 01:11 PST watcher progress all5dies: exp_x ECO exhausted TT-3.84/FF-292.19, sibling forms active; VP4vK1 GRT183 local M5overflow; KV vS strictbind30R8 gaps and io_ft half-cycle setup miss diagnosed; HEAD TXvB DRT0/ANT0 but DO_NOT_COUNT pending parent adoption. QC cached strict replay active, omitted prov_views repaired in owned prep, remaining capture-receipt blocker preserved. Main/source design unchanged; only existing QC wave safety config and operator recovery. epyc4 prune pass scratch112->157GB, full after-host control running.
+
+CODEX: 2026-11-07 01:19 PST cleared exact intel1 reservation waiterPID1716441 by documented2h-flat/noCPU rule, checkpoint preserved; current same-module kshare vK0 replacements healthy. No running physical job stopped.
+
+CODEX: 2026-11-07 01:41 PST BKSEL vF unchanged finish recovered after exact2h-flat unstarted-waiter stop; --crit32GB16T admittedintel1 unit869312-1794044433/container klegacy-dsdv_bksel_q_vF-872276; oldvE/ECOi2 preserved, no new timing yet. Log intel2 scratch2/claude/codex-watch-s81-1107/bksel_vF_finish_crit.log.
+
+CODEX: 2026-11-07 01:55 PST OWNER authorized immediate RAM admission release; factor0 live E4/E5/E6, code aaea3539 codex/ram-release-1107 (not merged),86selftests+1000default replays PASS. Actual conservative QC/S81 queued place jobs started;15s memory/earlyoom guards auto-restore factor1 at<64GB available, no kills. Exact perhost backups and rollback in CODEX-LOG.md.
+
+CODEX: 2026-11-07 03:02 PST explicit Claude reset: stopped new launches/probes, left healthy jobs and RAM/route guards running. Full handback CODEX-LOG Handoff to Claude 2026-11-07 03:02 PST and handoff/codex_watcher_checkpoint_20261107.md. Main02909 unchanged; cleanup STOP must remain pending retention fix.
