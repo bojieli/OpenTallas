@@ -1847,7 +1847,14 @@ def wf_plan(P):
                  "boundary epochs, hard-core resets) releases at  max(release[p], S + release[p])  clocks, S = the "
                  "die start pin's rising edge relative to rst_n deassert; i.e. the START offsets ARE the published "
                  "release offsets.  Hard partitions (prebuilt, no start pin) see the raw reset only.")
-    if pending:
+    receipt = getattr(P, "_native_reset_release_receipt", None)
+    if receipt is not None:
+        try:
+            import head_native_release
+            head_native_release.qualify(P, out, receipt)
+        except (ValueError, KeyError, OSError, TypeError) as ex:
+            raise ResetError("native reset release receipt refused: " + str(ex)) from ex
+    if pending and out["release_qualification"]["verdict"] == "PENDING":
         caution = ' Native-domain internal reset/START release remains PENDING; primary raw-pin arrival is PREP only.'
         out['note'] += caution
         if 'start' in out:
@@ -2484,6 +2491,8 @@ def check(P):
             if W.get('release_qualification', {}).get('verdict') == 'PENDING':
                 errs.append('reset wavefront: FULL native release qualification PENDING: ' +
                             str(W['release_qualification']['native_targets']))
+            if W.get("release_qualification", {}).get("verdict") == "QUALIFIED_CONDITIONAL":
+                warns.append("native PHY reset conditionally qualified in recovered-clock edges; no finite core-cycle deadline while PMA clock is stopped; no CDC or clock-period exception")
             if W["long_hops"] or W["unreachable"]:
                 errs.append(f"reset wavefront: {len(W['long_hops'])} partitions have no neighbour rst_o within "
                             f"{hop_um(P):g} um of their reset IN pin (attached to the nearest, hop um): "

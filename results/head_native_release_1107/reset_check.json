@@ -1,0 +1,81 @@
+{
+ "control_errors": [
+  "reset wavefront: FULL native release qualification PENDING: [{'part': 'lk_EN0', 'target': 'u_phy.u_link.u_dec.u_chn.rst_n', 'native_clock_root': 'pma_rck'}, {'part': 'lk_EN1', 'target': 'u_phy.u_link.u_dec.u_chn.rst_n', 'native_clock_root': 'pma_rck'}, {'part': 'lk_ES0', 'target': 'u_phy.u_link.u_dec.u_chn.rst_n', 'native_clock_root': 'pma_rck'}, {'part': 'lk_ES1', 'target': 'u_phy.u_link.u_dec.u_chn.rst_n', 'native_clock_root': 'pma_rck'}, {'part': 'lk_HOST0', 'target': 'u_phy.u_link.u_dec.u_chn.rst_n', 'native_clock_root': 'pma_rck'}, {'part': 'lk_HOST1', 'target': 'u_phy.u_link.u_dec.u_chn.rst_n', 'native_clock_root': 'pma_rck'}, {'part': 'lk_WN0', 'target': 'u_phy.u_link.u_dec.u_chn.rst_n', 'native_clock_root': 'pma_rck'}, {'part': 'lk_WN1', 'target': 'u_phy.u_link.u_dec.u_chn.rst_n', 'native_clock_root': 'pma_rck'}, {'part': 'lk_WN2', 'target': 'u_phy.u_link.u_dec.u_chn.rst_n', 'native_clock_root': 'pma_rck'}, {'part': 'lk_WN3', 'target': 'u_phy.u_link.u_dec.u_chn.rst_n', 'native_clock_root': 'pma_rck'}, {'part': 'lk_WS0', 'target': 'u_phy.u_link.u_dec.u_chn.rst_n', 'native_clock_root': 'pma_rck'}, {'part': 'lk_WS1', 'target': 'u_phy.u_link.u_dec.u_chn.rst_n', 'native_clock_root': 'pma_rck'}]"
+ ],
+ "candidate_errors": [],
+ "candidate_warnings": [
+  "native PHY reset conditionally qualified in recovered-clock edges; no finite core-cycle deadline while PMA clock is stopped; no CDC or clock-period exception"
+ ],
+ "release_qualification": {
+  "verdict": "QUALIFIED_CONDITIONAL",
+  "native_targets": [
+   {
+    "part": "lk_WN2",
+    "target": "u_phy.u_link.u_dec.u_chn.rst_n",
+    "native_clock_root": "pma_rck"
+   },
+   {
+    "part": "lk_WN1",
+    "target": "u_phy.u_link.u_dec.u_chn.rst_n",
+    "native_clock_root": "pma_rck"
+   },
+   {
+    "part": "lk_WN0",
+    "target": "u_phy.u_link.u_dec.u_chn.rst_n",
+    "native_clock_root": "pma_rck"
+   },
+   {
+    "part": "lk_WN3",
+    "target": "u_phy.u_link.u_dec.u_chn.rst_n",
+    "native_clock_root": "pma_rck"
+   },
+   {
+    "part": "lk_EN0",
+    "target": "u_phy.u_link.u_dec.u_chn.rst_n",
+    "native_clock_root": "pma_rck"
+   },
+   {
+    "part": "lk_EN1",
+    "target": "u_phy.u_link.u_dec.u_chn.rst_n",
+    "native_clock_root": "pma_rck"
+   },
+   {
+    "part": "lk_WS1",
+    "target": "u_phy.u_link.u_dec.u_chn.rst_n",
+    "native_clock_root": "pma_rck"
+   },
+   {
+    "part": "lk_WS0",
+    "target": "u_phy.u_link.u_dec.u_chn.rst_n",
+    "native_clock_root": "pma_rck"
+   },
+   {
+    "part": "lk_HOST0",
+    "target": "u_phy.u_link.u_dec.u_chn.rst_n",
+    "native_clock_root": "pma_rck"
+   },
+   {
+    "part": "lk_HOST1",
+    "target": "u_phy.u_link.u_dec.u_chn.rst_n",
+    "native_clock_root": "pma_rck"
+   },
+   {
+    "part": "lk_ES0",
+    "target": "u_phy.u_link.u_dec.u_chn.rst_n",
+    "native_clock_root": "pma_rck"
+   },
+   {
+    "part": "lk_ES1",
+    "target": "u_phy.u_link.u_dec.u_chn.rst_n",
+    "native_clock_root": "pma_rck"
+   }
+  ],
+  "receipt_sha256": "8bc14c2a22d67c145c5929eff6edf3fe4df04389ca7c40dc825f54039e9b9973",
+  "reason": "OWNER 11-02: local reset held >=64 recovered-clock edges after restart; no mission latency or core-cycle deadline inferred"
+ },
+ "limits": [
+  "no core-cycle deadline",
+  "no CDC or frequency waiver",
+  "frozen POR unchanged"
+ ]
+}
