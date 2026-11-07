@@ -1505,7 +1505,95 @@ def gen_hosts(cfg, die):
     # keeps the configured host and work_root_problem() turns the die's launches off with the reason
     marked = cfg.get("_spill_marked") or {}
     lane = lane_root(opt(cfg, die, "work_root"))
-    return [h for h in hs if lane not in marked.get(h, ())] or [d["gen_host"]]
+    bad = cfg.get("_src_incomplete") or {}
+    return ([h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {})]
+            or [h for h in hs if lane not in marked.get(h, ())] or [d["gen_host"]])
+
+
+# KW-FIX-24 11-06 (COORD 19:2x (5) stale-source class): a gen host whose copy of a die's src tree or plan dir is
+# incomplete (a prune removed 46k files of kw21/src_c926f on intel1 -> kit_rtl "can't open tools/die_plan/bind.py";
+# d44v35 cut to 3 files -> views FileNotFoundError; the KV plan dir cut to 2 files on the hub) is no gen host for
+# that die.  Per tick, one ssh per gen host counts the files of each input tree (src to SRC_PROBE_DEPTH, the plan dir
+# whole) and tests the required files; a host whose count is below SRC_MIN_FRAC of the best copy on any host, or
+# that lacks a required file, is dropped from the die's gen_hosts (logged SRC-INCOMPLETE).  An unreachable host is
+# unknown, never dropped.  Die or global option src_probe: false turns it off.
+SRC_PROBE_DEPTH = 3
+SRC_MIN_FRAC = 0.99
+SRC_REQUIRED = ("tools/die_plan/bind.py",)
+
+
+def src_inputs(cfg, die):
+    """([input tree dirs], [required files]) of a die: its src (to SRC_PROBE_DEPTH) and plan dir, the plan file and
+    the src tools every kit_rtl / bind step runs"""
+    d = cfg["dies"][die]
+    src, plan = str(d.get("src") or ""), str(d.get("plan") or "")
+    trees = [t for t in (src, os.path.dirname(plan)) if t]
+    files = ([plan] if plan else []) + [os.path.join(src, r) for r in SRC_REQUIRED if src]
+    return trees, files
+
+
+def _src_probe_cmd(trees, files):
+    q = shlex.quote
+    parts = []
+    for t in trees:
+        parts.append(f"echo T {q(t)} $(find {q(t.rstrip('/') + '/')} -maxdepth {SRC_PROBE_DEPTH} -type f 2>/dev/null "
+                     "| wc -l)")
+    parts += [f"test -e {q(f)} || echo M {q(f)}" for f in files]
+    return "; ".join(parts + ["true"])
+
+
+def src_incomplete(AP, cfg, run=None):
+    """{host: {die: why}} for the gen hosts whose input copies are incomplete (see SRC_MIN_FRAC); run(host, cmd) ->
+    (rc, out) defaults to ssh (the hub runs the probe locally)"""
+    if cfg.get("src_probe") is False:
+        return {}
+    hub = cfg.get("_hub") or getattr(AP, "HUB_NAME", "") or ""
+    if run is None:
+        def run(h, cmd):
+            if h in (hub, "localhost"):
+                rc, o, _ = AP.sh(["bash", "-c", cmd], timeout=120)
+            else:
+                rc, o, _ = AP.sh(["ssh", "-n", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o",
+                                  "ControlPath=none", h, cmd], timeout=120)
+            return rc, o
+    need = {}
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or d.get("src_probe") is False:
+            continue
+        for h in list(d.get("gen_hosts") or []) + [d.get("gen_host")]:
+            if h:
+                need.setdefault(h, set()).add(die)
+    counts, missing = {}, {}
+    for h, ds in sorted(need.items()):
+        trees = sorted({t for die in ds for t in src_inputs(cfg, die)[0]})
+        files = sorted({f for die in ds for f in src_inputs(cfg, die)[1]})
+        try:
+            rc, o = run(h, _src_probe_cmd(trees, files))
+        except Exception:
+            continue
+        if rc != 0:
+            continue                                   # unreachable / failed probe = unknown, never dropped
+        counts[h], missing[h] = {}, set()
+        for ln in (o or "").splitlines():
+            f = ln.split()
+            if len(f) == 3 and f[0] == "T" and f[2].isdigit():
+                counts[h][f[1]] = int(f[2])
+            elif len(f) == 2 and f[0] == "M":
+                missing[h].add(f[1])
+    best = {}
+    for h, c in counts.items():
+        for t, n in c.items():
+            best[t] = max(best.get(t, 0), n)
+    out = {}
+    for h in counts:
+        for die in sorted(need[h]):
+            trees, files = src_inputs(cfg, die)
+            why = [f"{t} {counts[h].get(t, 0)}/{best.get(t, 0)} files" for t in trees
+                   if best.get(t, 0) and counts[h].get(t, 0) < SRC_MIN_FRAC * best[t]]
+            why += [f"{f} missing" for f in files if f in missing[h]]
+            if why:
+                out.setdefault(h, {})[die] = "; ".join(why)
+    return out
 
 
 SPILL_MARK = ".ot-run-spill-copy"                  # ot-run SPILL copy marker (ot-run v14 mark_ancestors)
@@ -1551,6 +1639,10 @@ def work_root_problem(cfg, die, hub_isdir=os.path.isdir):
         return f"work_root {root}: {m.group(1)} is not on the hub, sync_hub cannot mkdir there; set work_root"
     marked = cfg.get("_spill_marked") or {}
     hs = [h for h in list(d.get("gen_hosts") or []) + [d.get("gen_host")] if h]
+    bad = cfg.get("_src_incomplete") or {}
+    if hs and all(die in bad.get(h, {}) for h in hs):
+        return ("src/plan inputs incomplete on every gen host (KW-FIX-24 SRC-INCOMPLETE): "
+                + "; ".join(f"{h}: {bad[h][die]}" for h in sorted(set(hs))) + "; sync the copies or set gen_hosts")
     if hs and all(lane in marked.get(h, ()) for h in hs):
         return (f"work_root lane {lane} carries {SPILL_MARK} on {' '.join(sorted(set(hs)))}: ot-run would say no host "
                 "qualifies for every kit; set work_root to an unmarked lane on the hub and these hosts")
@@ -2580,6 +2672,11 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     cfg["_spill_marked"] = spill_marked(AP, cfg)
                 except Exception as e:                  # a diagnostic probe never stops the plan
                     log(f"KIT-WAVE spill-mark probe skipped: {e}")
+            if "_src_incomplete" not in cfg:
+                try:
+                    cfg["_src_incomplete"] = src_incomplete(AP, cfg)
+                except Exception as e:                  # a diagnostic probe never stops the plan
+                    log(f"KIT-WAVE src probe skipped: {e}")
             bad = work_root_problem(cfg, die)
             if bad:
                 ok, why = False, bad
@@ -3286,6 +3383,13 @@ def _step(AP, ap_dir):
                        "not a gen host for those dies)")
     except Exception as e:                      # a diagnostic probe never stops the tick
         AP.log(f"KIT-WAVE spill-mark probe skipped: {e}")
+    try:                                        # KW-FIX-24 stale-source class
+        cfg["_src_incomplete"] = src_incomplete(AP, cfg)
+        for h, ds in sorted(cfg["_src_incomplete"].items()):
+            for die, why in sorted(ds.items()):
+                AP.log(f"KIT-WAVE SRC-INCOMPLETE {h} {die}: {why} (not a gen host for the die until its copy is whole)")
+    except Exception as e:                      # a diagnostic probe never stops the tick
+        AP.log(f"KIT-WAVE src probe skipped: {e}")
     restage_waiters(AP, cfg, st, notices)
     try:
         reap_orphan_waiters(AP, cfg)
