@@ -110,6 +110,13 @@ for {set mi 0} {$mi < 3} {incr mi} {
     if {!$k} continue
     set g [expr {$s/$k}]
     foreach x $mp { lassign $x it a
+      set lf [rb_em_lf_plan [[$it getInst] getName]]
+      if {[dict size $lf]} {
+        rb_em_lf_connect $it $lf $tgt
+        incr rb_em_lf_count
+        dict set rb_em_targets [[$it getInst] getName] [list $it $g $tgt $tap localface 0 0]
+        continue
+      }
       # an ETM child (OT_RT_ETM_MASTER_RE) is landed below by its own rule, not pin-matched to its regs
       if {[info exists ::env(OT_RT_ETM_MASTER_RE)] && $::env(OT_RT_ETM_MASTER_RE) ne "" && [regexp $::env(OT_RT_ETM_MASTER_RE) [[[$it getInst] getMaster] getName]]} continue
       set d [expr {$g - $a}]
@@ -172,8 +179,94 @@ if {[info exists ::env(OT_RT_ETM_MASTER_RE)] && $::env(OT_RT_ETM_MASTER_RE) ne "
     foreach y [$net getITerms] { if {[[$y getMTerm] getIoType] eq "OUTPUT"} { return $y } }
     return ""
   }
+# BKSEL RF8 localface candidate, default OFF.  The two formerly far BUF8 leaves
+# are placed by the actual bottom CLK faces. Three corridor BUF24 stages per
+# branch keep placement-RC wire/load within the reviewed branch-drive budget.
+# This is a physical topology, not a delay-padding loop: it never changes the
+# 160ps target or interface-register trees, and rejects an out-of-band landing.
+proc rb_em_lf_plan {nm} {
+  if {![info exists ::env(OT_RT_ETM_LOCALFACE)] || !$::env(OT_RT_ETM_LOCALFACE)} { return {} }
+  set plain [string map [list \\ ""] $nm]
+  switch -exact -- $plain {
+    {u_q.u_s.u_hc.g_bank[0].u_bank} {
+      return [dict create source ot_rt_h3_0 xy {{105.624 125.010} {105.624 61.290} {79.974 19.980}} leaf {36.180 19.980} extra_ps 179.0]
+    }
+    {u_q.u_s.u_hc.g_bank[2].u_bank} {
+      return [dict create source ot_rt_h3_0 xy {{185.004 160.110} {185.004 89.910} {185.328 55.080}} leaf {235.764 20.520} extra_ps 184.0]
+    }
+  }
+  return {}
+}
+proc rb_em_lf_io {i dir} {
+  foreach t [$i getITerms] {
+    set m [$t getMTerm]
+    if {[$m getSigType] ni {POWER GROUND} && [$m getIoType] eq $dir} { return $t }
+  }
+  error "OT_RT_ETM_LOCALFACE missing $dir pin on [$i getName]"
+}
+proc rb_em_lf_place {i xy} {
+  global rb_blk
+  set u [[ord::get_db_tech] getDbUnitsPerMicron]
+  lassign $xy x y; set x [expr {int(round($x*$u))}]; set y [expr {int(round($y*$u))}]
+  set row ""
+  foreach r [$rb_blk getRows] {
+    set bb [$r getBBox]
+    if {[$bb yMin] == $y && [$bb xMin] <= $x && $x+[[$i getMaster] getWidth] <= [$bb xMax]} { set row $r; break }
+  }
+  if {$row eq ""} { error "OT_RT_ETM_LOCALFACE no legal row at $xy" }
+  $i setOrient [$row getOrient]
+  $i setLocation $x $y
+  $i setPlacementStatus FIRM
+}
+proc rb_em_lf_connect {it plan tgt} {
+  global rb_blk rb_em_n
+  set src [$rb_blk findInst [dict get $plan source]]
+  if {$src eq "NULL" || $src eq "" || [[$src getMaster] getName] ne "BUFx24_ASAP7_75t_R"} {
+    error "OT_RT_ETM_LOCALFACE source missing or not reviewed BUF24"
+  }
+  set sp [rb_em_lf_io $src OUTPUT]; set prev [$sp getNet]
+  set a [rb_em_arr [$src getName] [[$sp getMTerm] getName]]
+  if {$a eq ""} {error "OT_RT_ETM_LOCALFACE source arrival unavailable"}
+  # Reviewed NLDM + calibrated wire-RC estimate includes source added load,
+  # all corridor stages, local BUF8, macro2.9406fF CLK load, and <=7um leaf wire.
+  # A source whose projected landing is late is rejected before modifying nets.
+  if {$a+[dict get $plan extra_ps] > $tgt+15.0} {
+    error "OT_RT_ETM_LOCALFACE source/driver budget too late: $a + [dict get $plan extra_ps] vs $tgt"
+  }
+  set old [$it getNet]; set seq 0
+  set shapes [concat [dict get $plan xy] [list [dict get $plan leaf]]]
+  foreach xy $shapes {
+    incr seq; set master [expr {$seq == 4 ? "BUFx8_ASAP7_75t_R" : "BUFx24_ASAP7_75t_R"}]
+    set dm [[ord::get_db] findMaster $master]
+    if {$dm eq "NULL" || $dm eq ""} {error "OT_RT_ETM_LOCALFACE missing $master"}
+    set nm "ot_rt_etm_lf[incr rb_em_n]"
+    set di [odb::dbInst_create $rb_blk $dm $nm]
+    set nx [odb::dbNet_create $rb_blk "${nm}_n"]; $nx setSigType CLOCK
+    [rb_em_lf_io $di INPUT] connect $prev; [rb_em_lf_io $di OUTPUT] connect $nx
+    rb_em_lf_place $di $xy
+    set_dont_touch [get_cells -quiet $nm]
+    set prev $nx
+  }
+  $it disconnect; $it connect $prev
+  # The old macro branch is now empty. Keep the upstream register tree intact.
+  set cur $old
+  while {1} {
+    set loads 0
+    foreach t [$cur getITerms] {if {[[$t getMTerm] getIoType] eq "INPUT"} {incr loads}}
+    if {$loads} break
+    set d [rb_em_driver $cur]; if {$d eq ""} break
+    set di [$d getInst]; set ip [rb_em_io $di INPUT]
+    if {$ip eq "" || [string match ot_rt_mtap* [$di getName]]} break
+    set up [$ip getNet]; odb::dbInst_destroy $di; odb::dbNet_destroy $cur; set cur $up
+  }
+  puts "OT_RT_ETM_LOCALFACE [[$it getInst] getName] source [$src getName] rise $a budget [dict get $plan extra_ps] target $tgt; 3 corridor BUF24 + macroface BUF8, no padding feedback"
+}
+
   set_propagated_clock [all_clocks]; estimate_parasitics -placement
-  set rb_em_targets {}; set rb_em_n 0
+  set rb_em_targets {}; set rb_em_n 0; set rb_em_lf_count 0
+  if {[info exists ::env(OT_RT_ETM_LOCALFACE)] && $::env(OT_RT_ETM_LOCALFACE) && $rb_em_x != 160.0} {
+    error "OT_RT_ETM_LOCALFACE requires unchanged 160ps ETM target"
+  }
   dict for {tap net} [rb_taps] {
     if {![string match ot_rt_mtap* $tap]} continue
     set s 0.0; set k 0; set mp {}
@@ -226,6 +319,9 @@ if {[info exists ::env(OT_RT_ETM_MASTER_RE)] && $::env(OT_RT_ETM_MASTER_RE) ne "
     }
   }
   detailed_placement
+  if {[info exists ::env(OT_RT_ETM_LOCALFACE)] && $::env(OT_RT_ETM_LOCALFACE) && $rb_em_lf_count != 2} {
+    error "OT_RT_ETM_LOCALFACE expected exactly two reviewed macro landings, got $rb_em_lf_count"
+  }
   # second pass: an over-early pin (node granularity, wire) gets BUFx2 pads, one estimate at a time; never above target
   for {set pp 0} {$pp < 2} {incr pp} {
     set_propagated_clock [all_clocks]; estimate_parasitics -placement
@@ -233,6 +329,18 @@ if {[info exists ::env(OT_RT_ETM_MASTER_RE)] && $::env(OT_RT_ETM_MASTER_RE) ne "
     dict for {nm v} $rb_em_targets { lassign $v it g tgt tap nn hops rm
       set a [rb_em_arr $nm [[$it getMTerm] getName]]
       puts "OT_RT_ETM pass$pp $nm clk [format %.0f $a] regs mean [format %.0f $g] target [format %.0f $tgt] ($tap, node $nn, $hops hops up, $rm old cells removed)"
+      if {[dict size [rb_em_lf_plan $nm]]} {
+        set ld [rb_em_driver [$it getNet]]
+        if {$ld eq "" || [[[$ld getInst] getMaster] getName] ne "BUFx8_ASAP7_75t_R"} {
+          error "OT_RT_ETM_LOCALFACE leaf missing or resized"
+        }
+        set lb [$ld getBBox]; set mb [$it getBBox]
+        set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
+        set leaf_reach [expr {(abs(([$lb xMin]+[$lb xMax])-([$mb xMin]+[$mb xMax]))+abs(([$lb yMin]+[$lb yMax])-([$mb yMin]+[$mb yMax])))/2.0/$dbu}]
+        if {$leaf_reach > 8.0} {error "OT_RT_ETM_LOCALFACE macroface output moved: $nm reach $leaf_reach um"}
+        if {abs($a-$tgt)>15.0} {error "OT_RT_ETM_LOCALFACE actual landing out of target band: $nm $a vs $tgt"}
+        continue
+      }
       if {$a >= $tgt - 15.0} continue
       set nb [expr {int(floor(($tgt - $a) / $rb_pad_ps))}]
       if {$nb < 1} continue

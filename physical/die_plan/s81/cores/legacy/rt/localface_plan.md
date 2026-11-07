@@ -1,0 +1,15 @@
+# BKSEL RF8 two-leaf structural landing candidate
+
+SOURCE ONLY; no place/CTS/route pilot launched. Default OFF (`OT_RT_ETM_LOCALFACE=1`). No RTL, PIN-cycle, clock-period, uncertainty, or160ps ETM-target change. Baseline RF8/vH remains live and untouched.
+
+Actual vH stable4CTS geometry has16 ETM BUF8 leaves,14 within30.41um of macro CLK and two output branches107.47/147.10um long. All300 negative native-bank FF input endpoints belong to those two banks (HC0,HC2). The original code deliberately placed BUF8 by the selected source driver. Those actual source drivers are BUF24, not weak pads.
+
+The candidate moves those2 BUF8 to their actual bottom CLK faces and uses existing `ot_rt_h3_0` with3 corridor BUF24 stages per branch. Each row slot is selected from actual4CTS rows/current standard-cell occupancy, snapped to .054um sites and .27um rows, outside macro-body+5um cell guard. Planned wire bends avoid macro bodies. New cells are FIRM/dont_touch. Other14 leaves retain RF8 behavior. Both new branches use the same source; the budget includes both additional source loads. Leaf output reaches are about6.5/5.7um. Maximum planned stage length84.51um, per-stage load11.14fF; a slew-aware RC/NLDM estimate gives stage sink slew<=32.3ps. These are planning estimates; actual stage routes/clock-pair skew and timing still require the normal gates.
+
+Exact read-only TT extraction (13pins, normal ot-run16GB2T, unit `oth-ubuntu-2483114-1794083839`) gives h3_0 arrival_max_rise482.270325ps. Exact kit TT8-library selector/SDC and placementRC used; no repair/P&R/live-kit writes. Rise targets are g-160: HC0~671,HC2~673ps. Falling arrival includes half-cycle phase and is not compared directly to rise targets.
+
+Exact TT INVBUF220122 input caps: BUF24=2.35026fF,BUF8=.852045fF; native macro CLK2.9406fF. Clock calibrated placement RC R=.0214161kOhm/um,C=.113298fF/um. Model uses NLDM interpolation (conservative clamp at smallest characterized load), source20ps slew assumption, extra existing-source load delay slope.25ps/fF and wire output slew sqrt(input_slew^2+(2.2*Elmore)^2). Estimated individual branch extras173.77/178.90ps plus other-branch source load2.78/2.73ps. Pinned candidate budgets179/184ps include rounding/pin-offset allowance, giving estimated661/666ps landings. This is not a measured new-form timing result.
+
+Prototype refuses wrong/absent source master, non160ps target, missing legal row, fewer/more than2 selected macros, displaced/resized macroface leaf, or actual post-placement landing outside target+/-15ps. It does not add corrective delay pads to these2 branches. The existing pin/interface clock trees remain unchanged. Rejected projections/physical slots must be redesigned; no unchanged P&R retry.
+
+Review before any pilot: inspect the candidate source, geometry overlay and exact loaded source-arrival receipt; select one form only. After that form's placement, review actual images before CTS/route. Preserve kit-generated leaf_affinity appendage when staging the canonical hook (it is not part of canonical source).
