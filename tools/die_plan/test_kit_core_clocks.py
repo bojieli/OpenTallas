@@ -114,6 +114,30 @@ class CoreClockKitTest(unittest.TestCase):
         self.assertEqual([r["mode"] for r in receipt], ["rtl", "physical_tap"])
         self.assertTrue(K.rtl_wired(receipt))
 
+    def test_one_bit_bus_pin_takes_base_connection(self):
+        # BIT0_PIN_1106: plan/LEF pin s1__clk[0], RTL connects .s1__clk(clk) (one-bit bus) -> the base connection is rewired
+        src = SOURCE.replace(".ck(clk)", ".s1__clk(clk)")
+        text, receipt = K.wire(src, "top", [("clk_c0", "u_bound.u_leaf", "s1__clk[0]", 0, 250)])
+        self.assertIn(".s1__clk(clk_c0)", text)
+        self.assertEqual(text.count("input wire clk_c0,"), 1)
+        self.assertEqual((receipt[0]["previous_net"], receipt[0]["mode"]), ("clk", "rtl"))
+        again, _ = K.wire(text, "top", [("clk_c0", "u_bound.u_leaf", "s1__clk[0]", 0, 250)])
+        self.assertEqual(again, text)
+
+    def test_one_bit_bus_fails_closed(self):
+        src = SOURCE.replace(".ck(clk)", ".s1__clk(clk)")
+        rows = [("clk_c0", "u_bound.u_leaf", "s1__clk[0]", 0, 250), ("clk_c1", "u_bound.u_leaf", "s1__clk[1]", 0, 250)]
+        with self.assertRaisesRegex(ValueError, "more than one planned bit"):
+            K.wire(src, "top", rows)
+        with self.assertRaisesRegex(ValueError, "expected one u_leaf.s1__clk\\[1\\] connection"):
+            K.wire(src, "top", [("clk_c0", "u_bound.u_leaf", "s1__clk[1]", 0, 250)])
+        with self.assertRaisesRegex(ValueError, "expected one u_leaf.s2__clk\\[0\\] connection"):
+            K.wire(src, "top", [("clk_c0", "u_bound.u_leaf", "s2__clk[0]", 0, 250)])
+        # an exact bit connection still wins over the base name
+        exact = SOURCE.replace(".ck(clk)", ".s1__clk[0](clk)")
+        text, _ = K.wire(exact, "top", [("clk_c0", "u_bound.u_leaf", "s1__clk[0]", 0, 250)])
+        self.assertIn(".s1__clk[0](clk_c0)", text)
+
     def test_physical_alias_retains_actual_corner_schedule(self):
         tp = dict(name="leaf.ck", insertion_ps=250, insertion_ff_ps=202.5)
         plan = SimpleNamespace(clock=dict(insertion_ps=250, insertion_ff_ps=202.5), types={"T": {"hard_cores": [
