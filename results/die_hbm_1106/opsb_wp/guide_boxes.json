@@ -1,0 +1,270 @@
+{
+ "schema": "hbm-form-split-14-opsb.reg_guide_boxes.v1",
+ "source": "results/die_hbm_1106/opsb_wp/guide_boxes.py",
+ "boxes": [
+  {
+   "name": "bk0",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[0]."
+   ],
+   "box_um": [
+    68.514,
+    11.772,
+    185.178,
+    77.182
+   ]
+  },
+  {
+   "name": "bk1",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[1]."
+   ],
+   "box_um": [
+    68.514,
+    77.282,
+    185.178,
+    140.35
+   ]
+  },
+  {
+   "name": "bk2",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[2]."
+   ],
+   "box_um": [
+    68.514,
+    140.45,
+    185.178,
+    203.542
+   ]
+  },
+  {
+   "name": "bk3",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[3]."
+   ],
+   "box_um": [
+    68.514,
+    203.642,
+    185.178,
+    269.076
+   ]
+  },
+  {
+   "name": "bk4",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[4]."
+   ],
+   "box_um": [
+    237.372,
+    11.772,
+    354.036,
+    77.182
+   ]
+  },
+  {
+   "name": "bk5",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[5]."
+   ],
+   "box_um": [
+    237.372,
+    77.282,
+    354.036,
+    140.35
+   ]
+  },
+  {
+   "name": "bk6",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[6]."
+   ],
+   "box_um": [
+    237.372,
+    140.45,
+    354.036,
+    203.542
+   ]
+  },
+  {
+   "name": "bk7",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[7]."
+   ],
+   "box_um": [
+    237.372,
+    203.642,
+    354.036,
+    269.076
+   ]
+  },
+  {
+   "name": "bk8",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[8]."
+   ],
+   "box_um": [
+    406.284,
+    11.772,
+    522.948,
+    77.182
+   ]
+  },
+  {
+   "name": "bk9",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[9]."
+   ],
+   "box_um": [
+    406.284,
+    77.282,
+    522.948,
+    140.35
+   ]
+  },
+  {
+   "name": "bk10",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[10]."
+   ],
+   "box_um": [
+    406.284,
+    140.45,
+    522.948,
+    203.542
+   ]
+  },
+  {
+   "name": "bk11",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[11]."
+   ],
+   "box_um": [
+    406.284,
+    203.642,
+    522.948,
+    269.076
+   ]
+  },
+  {
+   "name": "bk12",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[12]."
+   ],
+   "box_um": [
+    575.142,
+    11.772,
+    691.806,
+    77.182
+   ]
+  },
+  {
+   "name": "bk13",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[13]."
+   ],
+   "box_um": [
+    575.142,
+    77.282,
+    691.806,
+    140.35
+   ]
+  },
+  {
+   "name": "bk14",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[14]."
+   ],
+   "box_um": [
+    575.142,
+    140.45,
+    691.806,
+    203.542
+   ]
+  },
+  {
+   "name": "bk15",
+   "prefixes": [
+    "u_fcore.u_g.g_bank[15]."
+   ],
+   "box_um": [
+    575.142,
+    203.642,
+    691.806,
+    269.076
+   ]
+  },
+  {
+   "name": "col0",
+   "prefixes": [
+    "u_fcore.u_g.g_col[0]."
+   ],
+   "box_um": [
+    189.178,
+    60.94,
+    233.372,
+    219.86
+   ]
+  },
+  {
+   "name": "col1",
+   "prefixes": [
+    "u_fcore.u_g.g_col[1]."
+   ],
+   "box_um": [
+    358.036,
+    60.94,
+    402.284,
+    219.86
+   ]
+  },
+  {
+   "name": "col2",
+   "prefixes": [
+    "u_fcore.u_g.g_col[2]."
+   ],
+   "box_um": [
+    526.948,
+    60.94,
+    571.142,
+    219.86
+   ]
+  },
+  {
+   "name": "col3",
+   "prefixes": [
+    "u_fcore.u_g.g_col[3]."
+   ],
+   "box_um": [
+    695.806,
+    60.94,
+    750.0,
+    219.86
+   ]
+  },
+  {
+   "name": "fc",
+   "prefixes": [
+    "u_fcore.u_g.g_fc."
+   ],
+   "box_um": [
+    6.32,
+    5.32,
+    64.514,
+    60.0
+   ]
+  },
+  {
+   "name": "fq",
+   "prefixes": [
+    "u_fcore.u_g.g_fq."
+   ],
+   "box_um": [
+    6.32,
+    61.0,
+    64.514,
+    205.0
+   ]
+  }
+ ]
+}
