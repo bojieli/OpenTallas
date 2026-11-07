@@ -11,3 +11,5 @@ Westnotready: ft8/9 currentbandsarefarbelowactualpinY. Desiredpin-adjacentWchann
 Tracks are not the identified packinglimit: ft5M7pins669/144.816um/.064≈29.6%, ft6≈29.6%, W71/15.872umM6≈28.6%. InheritedM7signalpinsmeansnofullyconservativeM6claim. Exactpintrackphases unchanged.
 
 VIEWED plannedimage t12_sw_planning.png. Sourcefixture: defaultbytesidentity, exactSscope, changedsourcegeometryrefusal andTclsyntaxcompletenessPASS. No source/livekitmutation, CADprobe, kit, PLACE/CTS/GRT/batch launched for this candidate. Rootreviewrequired; pilot_readyfalse; S/Wcohortremainsheld.
+
+Rejected before source/kit: native LN5+41.088X/+37.248Y and LN2+17.472X model. At that X, fixed reset148 and landedFT11stage0 leave104.49um vertical room for114.48ummacro. The raisedLN5pose intersects213foreignlandedFTsites (targetCLANDft8–13 excluded); its realCLKlocal(29.133,.019) changes nearesttapfromoldclk_t35 toclk_t12. No Y-only tweak can clearbothfixedobstacles. LN2posealonehas0foreigncollisionsbutdoesnotopentheWchannel. ThusWneedscoordinatedfixed-bank/rootownershiporreplannedsmaller-footprintchannel; no furtherposeguessorCADlaunched. Source/physicalinputsinheritedunchanged.
