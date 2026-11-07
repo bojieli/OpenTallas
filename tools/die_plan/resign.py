@@ -301,6 +301,45 @@ def default_container_suffix(out):
     return '%s-%s' % (stem, digest)
 
 
+# FLOW-CLASS-25 11-06 (COORD 18:0x (3b), DIE-HBM-82 17:38 (4b)): the LEC container got only OT_LEC_SUPERSET_VEC, so a
+# kit proved EQUIVALENT with a wider parity budget (q3_edge_link g_rxpre.ne_q, a 612-input CRC compare: DIE-HBM-66 11-04,
+# OT_LEC_PARITY_TERMS=800) went UNPROVEN (cone timeout 600 s) on every later re-sign at the lec.py default 256.  These
+# lec.py solver knobs are now passed into the container when the caller's env sets them, else when the kit's config.mk
+# exports them (a recipe sets them there, e.g. through the generator's ORFS variables).  The caller's env wins.  Only the
+# proof budget changes; the verdict rules of lec.py and of this record are unchanged.
+LEC_ENV_PASS = ('OT_LEC_PARITY_TERMS',)
+_CFG_RE = re.compile(r'^\s*(?:override\s+)?(?:export\s+)?([A-Z0-9_]+)\s*[:?]?=\s*(.*?)\s*$')
+
+
+def kit_config_vars(kit, names=LEC_ENV_PASS):
+    """{VAR: value} of the named variables set in KIT/config.mk (last assignment wins; no config.mk = {})."""
+    out = {}
+    try:
+        text = open(os.path.join(kit, 'config.mk'), errors='replace').read()
+    except OSError:
+        return out
+    for line in text.splitlines():
+        m = _CFG_RE.match(line.split('#', 1)[0])
+        if m and m.group(1) in names and m.group(2):
+            out[m.group(1)] = m.group(2)
+    return out
+
+
+def lec_env_args(kit, environ=None):
+    """docker -e args for the LEC solver knobs set by the caller's env or by the kit's config.mk (env wins)."""
+    environ = os.environ if environ is None else environ
+    cfg = kit_config_vars(kit)
+    args = []
+    for k in LEC_ENV_PASS:
+        v = environ.get(k) or cfg.get(k)
+        if not v:
+            continue
+        if not re.fullmatch(r'[1-9][0-9]*', str(v).strip()):
+            raise ResignError('%s=%r (%s) is not a positive integer' % (k, v, 'env' if environ.get(k) else 'kit config.mk'))
+        args += ['-e', '%s=%s' % (k, str(v).strip())]
+    return args
+
+
 def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g', cpus=8, superset=False):
     """the two commands of one re-sign (same as the lane scripts resign3.sh / tag_signoff_lec.sh)."""
     kit, run_dir, tools, out = map(os.path.abspath, (kit, run_dir, tools, out))
@@ -324,7 +363,7 @@ def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g',
         solver_mount = ['-v', os.path.abspath(solver) + ':/lecsolver:ro',
                         '-e', 'LEC_SOLVER_PATH=/lecsolver']
     lec = ['docker', 'run', '--rm', '--name', 'resign-%s-lec' % name, '--memory=%s' % mem, '--cpus=%d' % cpus] + (
-           ['-e', 'OT_LEC_SUPERSET_VEC=1'] if superset else []) + [
+           ['-e', 'OT_LEC_SUPERSET_VEC=1'] if superset else []) + lec_env_args(kit) + [
            '-v', '%s:/work:ro' % kit, '-v', '%s:/eco' % out, '-v', '%s:/m:ro' % tools] + mounts + solver_mount + [
            image, 'bash', '-lc', 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; '
            'python3 -I /m/lec.py /work --netlist %s --out /eco/lec' % net_in]
