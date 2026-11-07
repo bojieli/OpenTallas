@@ -1,0 +1,298 @@
+{
+  "planning_only": true,
+  "basis": "exact TT INVBUF220122 NLDM, clock placement RC, 20ps source assumption, 2.2Elmore wire slew, current h3 source arrival482.270325ps",
+  "candidates": [
+    {
+      "bank": 0,
+      "extra_buffers": 0,
+      "source": "ot_rt_h3_0",
+      "source_rise_ps": 482.270325,
+      "wire_lengths_um": [
+        250.76
+      ],
+      "estimated_macro_ps": 646.9365545435215,
+      "max_input_slew_ps_estimate": 179.6151245352993,
+      "source_added_load_both_ff": 60.413300832,
+      "stages": [
+        {
+          "wire_um": 250.76,
+          "driver": 24,
+          "load_ff": 29.26265148,
+          "cell_delay_ps": 7.31566287,
+          "wire_elmore_ps": 80.86249586415441,
+          "sink_slew_ps_estimate": 179.6151245352993
+        }
+      ],
+      "leaf_delay_ps_estimate": 68.20012835395103
+    },
+    {
+      "bank": 0,
+      "extra_buffers": 1,
+      "source": "ot_rt_h3_0",
+      "source_rise_ps": 482.270325,
+      "wire_lengths_um": [
+        5.219999999999999,
+        248.24
+      ],
+      "estimated_macro_ps": 665.993799538665,
+      "max_input_slew_ps_estimate": 175.92831137164634,
+      "source_added_load_both_ff": 6.021801275999999,
+      "stages": [
+        {
+          "wire_um": 5.219999999999999,
+          "driver": 24,
+          "load_ff": 2.9416755599999997,
+          "cell_delay_ps": 0.7354188899999999,
+          "wire_elmore_ps": 0.2957981411924067,
+          "sink_slew_ps_estimate": 20.064566953470152
+        },
+        {
+          "wire_um": 248.24,
+          "driver": 24,
+          "load_ff": 28.97714052,
+          "cell_delay_ps": 34.43196263670632,
+          "wire_elmore_ps": 79.2909366602459,
+          "sink_slew_ps_estimate": 175.92831137164634
+        }
+      ],
+      "leaf_delay_ps_estimate": 67.69904666410429
+    },
+    {
+      "bank": 0,
+      "extra_buffers": 2,
+      "source": "ot_rt_h3_0",
+      "source_rise_ps": 482.270325,
+      "wire_lengths_um": [
+        5.219999999999999,
+        98.39,
+        149.85000000000002
+      ],
+      "estimated_macro_ps": 651.3867134091063,
+      "max_input_slew_ps_estimate": 68.99553267995857,
+      "source_added_load_both_ff": 6.021801275999999,
+      "stages": [
+        {
+          "wire_um": 5.219999999999999,
+          "driver": 24,
+          "load_ff": 2.9416755599999997,
+          "cell_delay_ps": 0.7354188899999999,
+          "wire_elmore_ps": 0.2957981411924067,
+          "sink_slew_ps_estimate": 20.064566953470152
+        },
+        {
+          "wire_um": 98.39,
+          "driver": 24,
+          "load_ff": 13.49765022,
+          "cell_delay_ps": 33.0984947018066,
+          "wire_elmore_ps": 16.696804156926753,
+          "sink_slew_ps_estimate": 41.698985101646294
+        },
+        {
+          "wire_um": 149.85000000000002,
+          "driver": 24,
+          "load_ff": 17.8297503,
+          "cell_delay_ps": 40.87466809796044,
+          "wire_elmore_ps": 29.97683288460043,
+          "sink_slew_ps_estimate": 68.99553267995857
+        }
+      ],
+      "leaf_delay_ps_estimate": 46.16805999020353
+    },
+    {
+      "bank": 0,
+      "extra_buffers": 3,
+      "source": "ot_rt_h3_0",
+      "source_rise_ps": 482.270325,
+      "wire_lengths_um": [
+        5.219999999999999,
+        73.28,
+        63.72,
+        111.24000000000001
+      ],
+      "estimated_macro_ps": 663.6685467401364,
+      "max_input_slew_ps_estimate": 42.444036800607776,
+      "source_added_load_both_ff": 6.021801275999999,
+      "stages": [
+        {
+          "wire_um": 5.219999999999999,
+          "driver": 24,
+          "load_ff": 2.9416755599999997,
+          "cell_delay_ps": 0.7354188899999999,
+          "wire_elmore_ps": 0.2957981411924067,
+          "sink_slew_ps_estimate": 20.064566953470152
+        },
+        {
+          "wire_um": 73.28,
+          "driver": 24,
+          "load_ff": 10.652737440000001,
+          "cell_delay_ps": 33.0984947018066,
+          "wire_elmore_ps": 10.203268800916087,
+          "sink_slew_ps_estimate": 29.88930806032799
+        },
+        {
+          "wire_um": 63.72,
+          "driver": 24,
+          "load_ff": 9.569608559999999,
+          "cell_delay_ps": 36.688749844485656,
+          "wire_elmore_ps": 8.133128312580618,
+          "sink_slew_ps_estimate": 26.810013399445506
+        },
+        {
+          "wire_um": 111.24000000000001,
+          "driver": 24,
+          "load_ff": 13.455314520000002,
+          "cell_delay_ps": 35.563483196559375,
+          "wire_elmore_ps": 17.042404184069053,
+          "sink_slew_ps_estimate": 42.444036800607776
+        }
+      ],
+      "leaf_delay_ps_estimate": 38.367164122110566
+    },
+    {
+      "bank": 2,
+      "extra_buffers": 0,
+      "source": "ot_rt_h3_0",
+      "source_rise_ps": 482.270325,
+      "wire_lengths_um": [
+        267.424
+      ],
+      "estimated_macro_ps": 660.9222474848011,
+      "max_input_slew_ps_estimate": 203.20104934699913,
+      "source_added_load_both_ff": 60.413300832,
+      "stages": [
+        {
+          "wire_um": 267.424,
+          "driver": 24,
+          "load_ff": 31.150649352,
+          "cell_delay_ps": 7.787662338,
+          "wire_elmore_ps": 91.64258154066677,
+          "sink_slew_ps_estimate": 203.20104934699913
+        }
+      ],
+      "leaf_delay_ps_estimate": 71.40573561871818
+    },
+    {
+      "bank": 2,
+      "extra_buffers": 1,
+      "source": "ot_rt_h3_0",
+      "source_rise_ps": 482.270325,
+      "wire_lengths_um": [
+        6.441999999999993,
+        263.682
+      ],
+      "estimated_macro_ps": 679.286283935729,
+      "max_input_slew_ps_estimate": 197.59137073229172,
+      "source_added_load_both_ff": 6.021801275999999,
+      "stages": [
+        {
+          "wire_um": 6.441999999999993,
+          "driver": 24,
+          "load_ff": 3.080125715999999,
+          "cell_delay_ps": 0.7700314289999998,
+          "wire_elmore_ps": 0.37459483865794885,
+          "sink_slew_ps_estimate": 20.07612882667954
+        },
+        {
+          "wire_um": 263.682,
+          "driver": 24,
+          "load_ff": 30.726688236,
+          "cell_delay_ps": 34.829133847791084,
+          "wire_elmore_ps": 89.16318613281793,
+          "sink_slew_ps_estimate": 197.59137073229172
+        }
+      ],
+      "leaf_delay_ps_estimate": 70.64331368004588
+    },
+    {
+      "bank": 2,
+      "extra_buffers": 2,
+      "source": "ot_rt_h3_0",
+      "source_rise_ps": 482.270325,
+      "wire_lengths_um": [
+        6.441999999999993,
+        134.028,
+        129.654
+      ],
+      "estimated_macro_ps": 658.7858995156088,
+      "max_input_slew_ps_estimate": 65.81548456395656,
+      "source_added_load_both_ff": 6.021801275999999,
+      "stages": [
+        {
+          "wire_um": 6.441999999999993,
+          "driver": 24,
+          "load_ff": 3.080125715999999,
+          "cell_delay_ps": 0.7700314289999998,
+          "wire_elmore_ps": 0.37459483865794885,
+          "sink_slew_ps_estimate": 20.07612882667954
+        },
+        {
+          "wire_um": 134.02799999999996,
+          "driver": 24,
+          "load_ff": 17.535364343999994,
+          "cell_delay_ps": 33.1027197571335,
+          "wire_elmore_ps": 28.539421022680248,
+          "sink_slew_ps_estimate": 65.81548456395656
+        },
+        {
+          "wire_um": 129.654,
+          "driver": 24,
+          "load_ff": 15.541583892,
+          "cell_delay_ps": 47.846627510017015,
+          "wire_elmore_ps": 22.75995556734896,
+          "sink_slew_ps_estimate": 54.42270022669989
+        }
+      ],
+      "leaf_delay_ps_estimate": 41.88652538335499
+    },
+    {
+      "bank": 2,
+      "extra_buffers": 3,
+      "source": "ot_rt_h3_0",
+      "source_rise_ps": 482.270325,
+      "wire_lengths_um": [
+        6.441999999999993,
+        108.91799999999999,
+        63.72,
+        91.044
+      ],
+      "estimated_macro_ps": 670.8654828510976,
+      "max_input_slew_ps_estimate": 47.97184801620037,
+      "source_added_load_both_ff": 6.021801275999999,
+      "stages": [
+        {
+          "wire_um": 6.441999999999993,
+          "driver": 24,
+          "load_ff": 3.080125715999999,
+          "cell_delay_ps": 0.7700314289999998,
+          "wire_elmore_ps": 0.37459483865794885,
+          "sink_slew_ps_estimate": 20.07612882667954
+        },
+        {
+          "wire_um": 108.91799999999999,
+          "driver": 24,
+          "load_ff": 14.690451564,
+          "cell_delay_ps": 33.1027197571335,
+          "wire_elmore_ps": 19.874571500555074,
+          "sink_slew_ps_estimate": 47.97184801620037
+        },
+        {
+          "wire_um": 63.72,
+          "driver": 24,
+          "load_ff": 9.569608559999999,
+          "cell_delay_ps": 42.688121402243446,
+          "wire_elmore_ps": 8.133128312580618,
+          "sink_slew_ps_estimate": 27.24655316348132
+        },
+        {
+          "wire_um": 91.04399999999998,
+          "driver": 24,
+          "load_ff": 11.167148111999998,
+          "cell_delay_ps": 35.723007922530975,
+          "wire_elmore_ps": 11.717555886383922,
+          "sink_slew_ps_estimate": 32.568289094714
+        }
+      ],
+      "leaf_delay_ps_estimate": 34.97572779459599
+    }
+  ]
+}
