@@ -258,3 +258,60 @@ def test_restage_young_waiter_stays(tmp_path, monkeypatch):
     c["restage_min_wait_s"] = 0
     y2 = dict(young, status="RUNNING", started=time.time())
     assert K.restage_waiters(FakeAP(), c, {"items": {"y": y2}}, {}) == 1
+
+
+# ------------------------------------------------------------------------------------------------ SCHED-1 11-07 load hold
+STL = {"epyc2": {"admit": 164, "load": 212, "cores": 128, "run": 68, "wait_n": 76, "wait_gb": 2900, "scratch_gb": 157},
+       "intel1": {"admit": 200, "load": 120, "cores": 112, "run": 60, "scratch_gb": 348},
+       "epyc5": {"admit": 300, "load": 62, "cores": 128, "run": 45, "scratch_gb": 63},
+       "epyc6": {"admit": 300, "load": 50, "cores": 128, "run": 36, "scratch_gb": 40}}
+
+
+def _loadcfg(hosts, **kw):
+    c = cfg(gen_host=hosts[0], gen_hosts=hosts, **kw)
+    c["_otrun_status"] = {h: dict(v) for h, v in STL.items()}
+    return c
+
+
+def test_over_cap_is_the_ot_heavy_rule():
+    assert K.over_load_cap({"load": 192, "cores": 128}) and K.over_load_cap({"load": 192.9, "cores": 128})
+    assert not K.over_load_cap({"load": 191.9, "cores": 128}) and not K.over_load_cap({"load": 900})
+    assert not K.host_room(None) and not K.host_room(dict(STL["epyc6"])) and K.host_room(dict(STL["epyc5"]))
+
+
+def test_hold_only_when_no_gen_host_has_room():
+    assert K.load_hold(_loadcfg(["epyc2"]), "s81").startswith("LOAD-HOLD")
+    assert K.load_hold(_loadcfg(["epyc2", "epyc6"]), "s81").startswith("LOAD-HOLD")   # epyc6 is under the disk floor
+    assert K.load_hold(_loadcfg(["epyc2", "intel1"]), "s81") == ""
+    c = cfg(gen_host="epyc2", gen_hosts=["epyc2"])                                    # no status: unchanged
+    assert K.load_hold(c, "s81") == ""
+    c = _loadcfg(["epyc2"]); c["load_hold"] = False
+    assert K.load_hold(c, "s81") == ""
+    c = _loadcfg(["epyc2"]); c["_near_count"] = {("s81", "a")}                        # launches --crit: no hold
+    assert K.load_hold(c, "s81", "a") == "" and K.load_hold(c, "s81", "b") != ""
+
+
+def test_pick_least_loaded_host_with_room():
+    assert K.pick_gen_host(_loadcfg(["epyc2", "intel1", "epyc5"]), "s81", take=48) == "epyc5"
+    assert K.pick_gen_host(_loadcfg(["epyc2", "intel1"]), "s81", take=48) == "intel1"
+    assert K.pick_gen_host(_loadcfg(["epyc2", "epyc6"]), "s81") == "epyc2"            # no room anywhere: old score order
+
+
+def test_burst_stops_at_cap():
+    c = _loadcfg(["epyc2", "intel1"])
+    n = 0
+    while not K.load_hold(c, "s81") and n < 50:
+        assert K.pick_gen_host(c, "s81", take=48, threads=8) == "intel1"
+        n += 1
+    assert n == 6                                                                      # 120 + 6 x 8 = 168 = 1.5 x 112
+
+
+def test_order_unlocks_blocked_parents_first():
+    d = {"_prov_deps": {"p1": ["m_b", "m_a"], "p2": ["m_b"], "p3": ["m_b", "m_c"]}}
+    assert K.blocked_parents(d) == {"m_b": 3, "m_a": 1, "m_c": 1}
+    assert K.blocked_parents({"_plan_deps": {"p": ["x"]}}) == {"x": 1} and K.blocked_parents({}) == {}
+    rows = [dict(die="s81", item=i, kind="core", state="NEEDS-KIT", owner="KIT-WAVE", live_job="none", last_activity="",
+                 replicas=r) for i, r in (("m_a", "9"), ("m_b", "1"), ("m_c", "2"))]
+    c = {"dies": {"s81": dict(d, event="e1", plan="/p", src="/s", gen_host="epyc5", pilot_gate=False, kinds=["core", "type"])}}
+    picked, _ = K.select(rows, c, "s81", {"items": {}})
+    assert [r["item"] for r in picked] == ["m_b", "m_a", "m_c"]
