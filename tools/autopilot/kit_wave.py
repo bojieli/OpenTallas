@@ -1529,6 +1529,16 @@ def src_inputs(cfg, die):
     src, plan = str(d.get("src") or ""), str(d.get("plan") or "")
     trees = [t for t in (src, os.path.dirname(plan)) if t]
     files = ([plan] if plan else []) + [os.path.join(src, r) for r in SRC_REQUIRED if src]
+    # the kit-RTL inputs: asbuilt / script, and every HDL source the strict bind of record names (bind_out/bind.f,
+    # read on the hub; KV 19:16 kit_rtl "preferred HDL source missing" = bind sources in a pruned src copy)
+    kr = d.get("kit_rtl") if isinstance(d.get("kit_rtl"), dict) else {}
+    files += [str(kr[k]) for k in ("asbuilt", "script") if str(kr.get(k) or "").startswith("/")]
+    if str(kr.get("bind_out") or "").startswith("/"):
+        try:
+            with open(os.path.join(str(kr["bind_out"]), "bind.f")) as f:
+                files += [ln.strip() for ln in f if ln.strip().startswith("/") and " " not in ln.strip()]
+        except OSError:
+            pass
     return trees, files
 
 
