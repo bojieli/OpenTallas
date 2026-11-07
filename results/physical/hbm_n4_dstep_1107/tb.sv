@@ -1,0 +1,1 @@
+module tb;reg[6:0]a;wire[6:0]g,n,m;integer i,bad=0,mut=0;gold g0(a,g);lut n0(a,n);mutant m0(a,m);initial begin for(i=0;i<128;i=i+1)begin a=i;#1;if(g!==n)bad=bad+1;if(g!==m)mut=mut+1;end $display("DSTEP128 bad=%0d mutant=%0d",bad,mut);if(bad||mut!=1)$fatal;end endmodule

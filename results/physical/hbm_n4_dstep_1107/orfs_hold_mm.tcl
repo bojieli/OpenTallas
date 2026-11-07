@@ -1,0 +1,950 @@
+# OpenTallas FLOW-HOLD (2026-10-07): multi-mode route-time hold repair.  SS setup + FF hold are BOTH active when ORFS
+# repairs timing at CTS and after global route (repair_timing_helper), each corner under its own constraints.
+#
+# Why: the closure loop repaired hold at the primary (SS) corner only (OT_ROUTE_HOLD_CORNERS=primary), because the one
+# route SDC carries an SS-insertion IO model that is fake at FF.  A hold requirement is an ABSOLUTE time (25 ps hold
+# uncertainty + the die IO hold term + t_hold), while cell delay at FF is ~0.55-0.6x SS, so a path repaired to +10 at SS
+# lands ~-30..-45 at FF: the band of every Qwen master.  Routes that kept WC,BC (S81) shared the SS IO model at FF.
+#
+# Session (active when OT_HOLD_MM=1 in the ORFS config; patched into load.tcl / util.tcl by tools/orfs_hold_mm.py):
+#   scene WC = mode ss : the stage SDC exactly as ORFS / the recipe hooks maintain it (setup at SS; written back by
+#                        write_sdc, so 6_final.sdc and sign-off see no change); its hold checks are DISABLED only while a
+#                        repair runs (reset afterwards): SS hold is not a sign-off check and the shared-session IO hooks
+#                        measure min arrivals over both scenes (fake WC hold).
+#   scene BC = mode ff : refreshed from the ss SDC right before every repair, then the FF sign-off SDCs (OT_MM_FF_SDC:
+#                        the job's sign-off post-SDCs / boundary file, read after set_propagated_clock as corner_sta reads
+#                        them), setup disabled.  HOLD_SLACK_MARGIN therefore applies at FF only.
+# repair_timing's -setup_margin guard sees the real SS setup when it places each FF hold cell (rev 3 hold-ECO "mm").
+proc ot_mm_on {} { expr {[info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1"} }
+proc ot_mm_libs {c} {
+  # OWNER OPTION B (2026-10-07): the setup scene (named WC) reads the libraries of OT_MM_SETUP_CORNER (TC under option B)
+  if {$c eq "WC" && [info exists ::env(OT_MM_SETUP_CORNER)] && $::env(OT_MM_SETUP_CORNER) ne ""} { set c $::env(OT_MM_SETUP_CORNER) }
+  set k "[string toupper $c]_LIB_FILES"
+  if {![info exists ::env($k)]} { error "OT_HOLD_MM: $k missing (route with --hold-corners WC,BC)" }
+  return $::env($k)
+}
+proc ot_mm_sc {} { expr {[info exists ::env(OT_MM_SETUP_CORNER)] && $::env(OT_MM_SETUP_CORNER) ne "" ? $::env(OT_MM_SETUP_CORNER) : "WC"} }
+# FROZEN-CLOCK-RC: default-off original CLOCK RC after every native GLOBAL estimate.
+# Caller supplies a prequalified CLOCK-ONLY SPEF per exact native dataset name,
+# and the immutable clk_dump identity of that SPEF's original clock graph. It
+# must arm the existing clock freeze BEFORE routing/estimation. No old DATA RC
+# is replayed, no coupling is transformed, and a changed clock is never qualified.
+# OT_MM_FROZEN_CLOCK_SPEFS = Tcl dict, e.g. {tc /work/clock_only.spef BC /work/clock_only.spef}
+# OT_MM_FROZEN_CLOCK_IDENTITY = original clk_dump TSV; OT_MM_FROZEN_CLOCK_DIFF
+# optionally names the existing clk_geom_diff.py when it is not beside tools/.
+set ::ot_mm_frozen_clock_dir [file dirname [file normalize [info script]]]
+proc ::ot_mm_frozen_clock_rc_on {} {
+  expr {[info exists ::env(OT_MM_FROZEN_CLOCK_SPEFS)] && $::env(OT_MM_FROZEN_CLOCK_SPEFS) ne ""}
+}
+proc ::ot_mm_frozen_clock_rc_restore {tag} {
+  if {![::ot_mm_frozen_clock_rc_on]} { return }
+  if {![info exists ::ot_mm_stage] || $::ot_mm_stage ne "4_cts.sdc"} {
+    error "OT_MM_FROZEN_CLOCK_RC: explicit restore requires the native global-route stage"
+  }
+  set maps $::env(OT_MM_FROZEN_CLOCK_SPEFS)
+  if {[catch {dict size $maps}]} { error "OT_MM_FROZEN_CLOCK_RC: malformed exact-corner SPEF map" }
+  if {[lsort [dict keys $maps]] ne [lsort [list [::ot_mm_sc] BC]]} {
+    error "OT_MM_FROZEN_CLOCK_RC: SPEF map must name exactly [::ot_mm_sc] and BC (case-sensitive)"
+  }
+  set guard [expr {[info exists ::env(OT_MM_FROZEN_CLOCK_GUARD)] ? $::env(OT_MM_FROZEN_CLOCK_GUARD) : [file join $::ot_mm_frozen_clock_dir die_plan frozen_clock_rc.tcl]}]
+  if {![file readable $guard]} {error "OT_MM_FROZEN_CLOCK_RC: stage shared guard or set OT_MM_FROZEN_CLOCK_GUARD: $guard"}
+  source $guard
+  set baseline [expr {[info exists ::env(OT_MM_FROZEN_CLOCK_IDENTITY)] ? $::env(OT_MM_FROZEN_CLOCK_IDENTITY) : ""}]
+  set checker [expr {[info exists ::env(OT_MM_FROZEN_CLOCK_DIFF)] ? $::env(OT_MM_FROZEN_CLOCK_DIFF) : [file join $::ot_mm_frozen_clock_dir die_plan clk_geom_diff.py]}]
+  ::ot_clock_rc_restore_checked $maps $baseline $checker [file join $::env(RESULTS_DIR) ot_mm_frozen_clock] $tag
+  puts "OT_MM_FROZEN_CLOCK_RC $tag restored exact datasets [dict keys $maps]; native DATA retained"
+}
+# Install only for explicit opt-in: default native command and placement RC are
+# byte-identical. Central interception also covers the initial native GRT call,
+# both MM refreshes and both calibrated-hold refreshes before any timing gate.
+if {[::ot_mm_frozen_clock_rc_on] && ![llength [info commands ::ot_mm_frozen_native_estimate]]} {
+  if {![llength [info commands ::estimate_parasitics]]} {error "OT_MM_FROZEN_CLOCK_RC: native estimator absent"}
+  rename ::estimate_parasitics ::ot_mm_frozen_native_estimate
+  proc ::estimate_parasitics {args} {
+    set result [uplevel 1 [list ::ot_mm_frozen_native_estimate {*}$args]]
+    if {"-global_routing" in $args && ![info exists ::ot_mm_stage]} {error "OT_MM_FROZEN_CLOCK_RC: global estimator has no selected stage context"}
+    if {"-global_routing" in $args && $::ot_mm_stage eq "4_cts.sdc"} {
+      ::ot_mm_frozen_clock_rc_restore after_native_global
+    }
+    return $result
+  }
+}
+# END FROZEN-CLOCK-RC
+
+proc ot_mm_read_libs {} {
+  foreach c [list [ot_mm_sc] BC] { foreach l [ot_mm_libs $c] { log_cmd read_liberty $l } }
+}
+proc ot_mm_read_sdc {sdc} {
+  # Scene creation clears the mode's external pin/wire loads and fanout.
+  # Establish both scenes before evaluating the original SDC once per mode.
+  set_mode ss
+  set_mode ff
+  define_scene [ot_mm_sc] -mode ss -liberty [ot_mm_libs [ot_mm_sc]]
+  define_scene BC -mode ff -liberty [ot_mm_libs BC]
+  log_cmd read_sdc -mode ss $sdc
+  log_cmd read_sdc -mode ff $sdc
+  # ff mode never checks setup; before CTS (ideal clocks) it checks nothing either, so placement repairs exactly as a
+  # WC-only flow did.  Only the CTS (3_place.sdc) and global-route (4_cts.sdc) stages sync it before their repair.
+  set_mode ff
+  set_false_path -setup -from [all_clocks]
+  set ::ot_mm_stage [file tail $sdc]
+  if {$::ot_mm_stage ni {3_place.sdc 4_cts.sdc}} { set_false_path -hold -from [all_clocks] }
+  set_mode ss
+  set ::ot_mm_active 1
+  puts "OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from $sdc"
+}
+# MMFF-INSERTION 2026-10-08: the FF SDCs read into mode ff measure clock arrivals / latencies (io_ref_routed.sdc,
+# vclk_corner_true.sdc, io_ref_skew.sdc, signoff/*.sdc ...).  In this TWO-scene STA `get_property <pin> arrival_*` is the
+# extreme over BOTH scenes (arrival_max_rise = the WC TT/SS arrival: hbm_vm8_nws_s2_hm25 vclk 455.7 in the FF scene vs
+# FF 380.2) and report_clock_latency may mix scenes.  While those SDCs are read: ::ot_ioref_scene = BC (io_ref_routed.sdc
+# reads per-scene arrivals itself), get_property arrival_<max|min>_<rise|fall> of a pin is answered from scene BC
+# (report_arrival -scene BC), and report_clock_latency without -scenes gets -scenes BC.  Restored right after.
+proc ot_mm_arrival_bc {obj prop} {
+  regexp {^arrival_(max|min)_(rise|fall)$} $prop -> mm rf
+  sta::redirect_string_begin
+  catch {report_arrival -scene BC -digits 4 $obj}
+  set r [sta::redirect_string_end]
+  set v ""; set k [string index $rf 0]
+  foreach {- lo hi} [regexp -all -inline "\\s$k\\s+(\\S+):(\\S+)" $r] {
+    set x [expr {$mm eq "max" ? $hi : $lo}]
+    if {![string is double -strict $x]} continue
+    if {$v eq "" || ($mm eq "max" ? $x > $v : $x < $v)} { set v $x }
+  }
+  return $v
+}
+proc ot_mm_scene_shim {on} {
+  if {$on} {
+    set ::ot_ioref_scene BC
+    if {[llength [info commands ::ot_mm_orig_get_property]] || ![llength [info commands ::get_property]]} return
+    if {![llength [info commands ::report_clock_latency]]} return
+    rename ::get_property ::ot_mm_orig_get_property
+    proc ::get_property {args} {
+      set prop [lindex $args end]
+      set ot_a $args
+      if {[lindex $ot_a 0] eq "-object_type" && [lindex $ot_a 1] in {pin port}} { set ot_a [lrange $ot_a 2 end] }
+      if {[regexp {^arrival_(max|min)_(rise|fall)$} $prop] && [llength $ot_a] == 2} {
+        set o [lindex $ot_a 0]; set pl {}
+        if {[string match {*_p_Pin} $o] || [string match {*_p_Port} $o]} { set pl [list $o] } elseif {[llength $o] == 1} {
+          if {[catch {get_pins -quiet $o} pl] || [llength $pl] != 1} { if {[catch {get_ports -quiet $o} pl]} { set pl {} } }
+        }
+        if {[llength $pl] == 1} { return [ot_mm_arrival_bc [lindex $pl 0] $prop] }
+      }
+      return [uplevel 1 [list ::ot_mm_orig_get_property {*}$args]]
+    }
+    rename ::report_clock_latency ::ot_mm_orig_report_clock_latency
+    proc ::report_clock_latency {args} {
+      if {[lsearch -exact $args -scenes] < 0} { lappend args -scenes BC }
+      return [uplevel 1 [list ::ot_mm_orig_report_clock_latency {*}$args]]
+    }
+  } else {
+    catch {unset ::ot_ioref_scene}
+    if {![llength [info commands ::ot_mm_orig_get_property]]} return
+    rename ::get_property {}; rename ::ot_mm_orig_get_property ::get_property
+    rename ::report_clock_latency {}; rename ::ot_mm_orig_report_clock_latency ::report_clock_latency
+  }
+}
+# FF sign-off SDCs can recreate a real root at the sign-off period after the
+# copied route SDC created its link-budget virtual clock at the route period.
+# These virtual clocks represent that exact root, so keep their periods equal.
+# Recreating the existing clock updates its waveform in place; IO constraints,
+# latency and uncertainty remain attached. Other virtual/window clocks stay put.
+proc ot_mm_sync_link_periods {} {
+  if {[llength [info commands ot_single_clock_check]]} { ot_single_clock_check }
+  foreach c [all_clocks] {
+    set vn [get_full_name $c]
+    if {![regexp {^ot_lb_v_(.+)$} $vn -> rn] || [llength [get_property $c sources]]} continue
+    set rc [get_clocks -quiet $rn]
+    if {[llength $rc] != 1 || ![llength [get_property $rc sources]]} continue
+    set vt [get_property $c period]
+    set rt [get_property $rc period]
+    if {abs($vt - $rt) > 0.000001} {
+      set wave [lmap edge [$c waveform] {expr {$edge / [$c period] * $rt}}]
+      create_clock -name $vn -period $rt -waveform $wave
+      puts "OT_HOLD_MM virtual period: $vn $vt -> $rt (reference $rn)"
+    }
+  }
+}
+proc ot_mm_sync {} {
+  if {![info exists ::ot_mm_active] || $::ot_mm_stage ni {3_place.sdc 4_cts.sdc}} { return }
+  set f $::env(RESULTS_DIR)/ot_mm_ss_[clock clicks].sdc
+  set_mode ss
+  write_sdc -no_timestamp $f
+  set_mode ff
+  read_sdc $f
+  file delete $f
+  set_propagated_clock [all_clocks]
+  # MMFF-PARASITICS (el1011-q-kvd 2026-10-12): the FF SDCs below MEASURE BC clock arrivals (QDM reference pin, io_ref
+  # pin flops) and turn them into the input-min / output-min delays.  Until now the BC scene was estimated only at the
+  # END of this proc, so a tree built in the stage (clock spine, CTS) was measured WITHOUT wire parasitics:
+  # qkd_d2d_ref (ot_qkvd_kv_end, 1.56 ns TT spine) read BC 745.7 ps at the reference flop, the estimated BC tree is
+  # 1,180-1,242 ps, and 2,143 input pins got a 500 ps fake hold hole (FF hold -501.9, flat over 2,000 repair
+  # iterations: EARLY_FAIL_HOLD).  Estimate first so the reference and the hold check see the same tree.
+  estimate_parasitics [expr {$::ot_mm_stage eq "4_cts.sdc" ? "-global_routing" : "-placement"}]
+  set ot_mm_ioref_read 0
+  ot_mm_scene_shim 1
+  if {[info exists ::env(OT_MM_FF_SDC)]} {
+    foreach s $::env(OT_MM_FF_SDC) {
+      if {![file exists $s]} { puts "OT_HOLD_MM WARNING: FF SDC $s missing: ff mode keeps the route SDC for it"; continue }
+      if {[file tail $s] eq "io_ref_routed.sdc"} { set ot_mm_ioref_read 1 }
+      puts "OT_HOLD_MM: ff mode reads $s"; read_sdc $s
+    }
+  }
+  # MMFF-IOREF 2026-10-08: the closure loop drops {SRC}/.ot_mm/ff_ioref_last.sdc (a copy of io_ref_routed.sdc; absent
+  # when the spec opts out with route_ff_ioref: false).  It is read LAST, whatever OT_MM_FF_SDC the route command itself
+  # exported: an inline `export OT_MM_FF_SDC=...` in a job's route cmd overrode the loop's appended io_ref_routed.sdc,
+  # so the FF scene timed vclk at the assumed insertion (hbm_quant_ts0spl_tt: vclk FF 373 vs measured 546 -> fake
+  # 4_1_cts hold -334 on 32k endpoints).  Skipped when the list already read an io_ref_routed.sdc.
+  set ot_mm_ioref_file [expr {[info exists ::env(OT_MM_IOREF_FILE)] ? $::env(OT_MM_IOREF_FILE) : "/src/.ot_mm/ff_ioref_last.sdc"}]
+  if {!$ot_mm_ioref_read && [file exists $ot_mm_ioref_file]} {
+    puts "OT_HOLD_MM: ff mode reads $ot_mm_ioref_file (loop default, appended last)"; read_sdc $ot_mm_ioref_file
+  }
+  # Opt-in measured FF boundary frame; mode ss keeps its TT constraints.
+  # Run while the BC arrival shim is active and BEFORE either repair.
+  if {$::ot_mm_stage eq "4_cts.sdc" && [info exists ::env(OT_MM_MEASURED_HOLD)] && $::env(OT_MM_MEASURED_HOLD) eq "1"} {
+    set vmh [file join [file dirname $::env(OT_MM_FF_SDC)] vclk_measured_hold.tcl]
+    if {![file isfile $vmh]} { error "OT_HOLD_MM: missing measured FF hook $vmh" }
+    source $vmh
+    ot_vclk_measured_bind
+  }
+  ot_mm_sync_link_periods
+  ot_mm_scene_shim 0
+  set_false_path -setup -from [all_clocks]
+  set_mode ss
+  set_false_path -hold -from [all_clocks]
+  set ::ot_mm_synced 1
+  # parasitics of the refreshed mode (the stage estimated them before calling the repair)
+  estimate_parasitics [expr {$::ot_mm_stage eq "4_cts.sdc" ? "-global_routing" : "-placement"}]
+  puts [format "OT_HOLD_MM sync: SS setup ws %.2f / FF hold ws %.2f ps" \
+    [ot_mm_ws max [ot_mm_sc]] [ot_mm_ws min BC]]
+}
+proc ot_mm_unsync {} {
+  if {![info exists ::ot_mm_synced]} { return }
+  set_mode ss
+  unset_path_exceptions -hold -from [all_clocks]
+  unset ::ot_mm_synced
+  puts [format "OT_HOLD_MM after repair: SS setup ws %.2f / FF hold ws %.2f ps" \
+    [ot_mm_ws max [ot_mm_sc]] [ot_mm_ws min BC]]
+}
+proc ot_mm_ws {check scene} {
+  set w 1e6
+  foreach p [find_timing_paths -path_delay $check -scenes $scene -group_path_count 1] {
+    set s [get_property $p slack]; if {$s ne "INF" && $s < $w} { set w $s }
+  }
+  return $w
+}
+
+# RC-CAL (ROOT-RST 2026-10-19, s81lk_kp4_dec-p1-e86bf8cae): route-time HOLD repair times the clock trees on the
+# RCX-calibrated upper-layer RC, not on the platform setRC.tcl values.  setRC.tcl (asap7) prices M6 / M7 wire at
+# 0.187 / 0.163 fF/um; OpenRCX extracts an isolated clock trunk on those layers at 0.096-0.108 fF/um and 13.1-14.9
+# ohm/um (kp4_dec BUFx24 spine trunks N147_r1 / N73_r1 / N73_r2 / N73 / N36, smhq spine M6 / M7 medians).  The spine's
+# wire-dominated BUFx24 trunk was therefore estimated ~90 ps LATE at GRT-FF (pin flops p_d__ot_q median 506.8 GRT vs
+# 415.0 routed) while the cell-dominated pad chain to the hard child u_syn tracked (299.9 vs 275.4): the GRT hold repair
+# saw +30 on parent pin flop -> u_syn/p_d paths that signed off at -64.76.  Measured on the same 5_1_grt.odb with these
+# values: p_d__ot_q 440.0 / u_syn 286.7 (pair error 67 -> 14 ps); a TritonCTS block (hcoll_kqs_leaf, no M6 / M7
+# clock) is unchanged.  Scope: ONLY the hold part of repair_timing_helper (setup repair, GRT, and every other stage keep
+# the platform RC; restored right after).  GRT stage (global routes present): set_layer_rc M6 / M7.  CTS stage (placement
+# parasitics): set_wire_rc -clock, and only when a clock spine was built in this session (a TritonCTS tree's low-layer
+# clock wiring is NOT over-estimated: the clock-wide value moved hcoll -16 ps the wrong way).  Data wires on M6 / M7
+# also get the lower C, which only makes them faster under a min-delay check (conservative for hold).
+# Knobs: OT_RC_CAL=0 off; OT_RC_CAL_R / OT_RC_CAL_C in setRC.tcl units (defaults 1.40E-02 = 14 ohm/um, 1.05E-01 fF/um),
+# OT_RC_CAL_LAYERS (default "M6 M7").  asap7 only.  The spine balancing (clock_spine.tcl) uses the same procs.
+proc ot_rc_cal_on {} {
+  expr {(![info exists ::env(OT_RC_CAL)] || $::env(OT_RC_CAL) ne "0") &&
+        [info exists ::env(PLATFORM)] && $::env(PLATFORM) eq "asap7"}
+}
+proc ot_rc_cal_rc {} {
+  set r [expr {[info exists ::env(OT_RC_CAL_R)] && [string is double -strict $::env(OT_RC_CAL_R)] ? $::env(OT_RC_CAL_R) : 1.40E-02}]
+  set c [expr {[info exists ::env(OT_RC_CAL_C)] && [string is double -strict $::env(OT_RC_CAL_C)] ? $::env(OT_RC_CAL_C) : 1.05E-01}]
+  return [list $r $c]
+}
+proc ot_rc_cal_mode {} {
+  # the parasitics the stage estimates: global routes present -> -global_routing, else -placement
+  if {![catch {grt::have_routes} h] && $h} { return "-global_routing" }
+  return "-placement"
+}
+proc ot_rc_cal_spine {} {
+  expr {([info exists ::ot_sp_all_insts] && [llength $::ot_sp_all_insts]) ||
+        ([info exists ::ot_sp_insts] && [llength $::ot_sp_insts])}
+}
+# set the calibrated RC for KIND (hold | spine); returns 1 when anything was changed (the caller re-estimates and later
+# calls ot_rc_cal_restore)
+proc ot_rc_cal_apply {kind} {
+  if {![ot_rc_cal_on]} { return 0 }
+  lassign [ot_rc_cal_rc] r c
+  set mode [ot_rc_cal_mode]
+  if {$mode eq "-global_routing"} {
+    set ls [expr {[info exists ::env(OT_RC_CAL_LAYERS)] ? $::env(OT_RC_CAL_LAYERS) : "M6 M7"}]
+    foreach l $ls { set_layer_rc -layer $l -resistance $r -capacitance $c }
+    puts "OT_RC_CAL $kind: $mode layers $ls R $r C $c (RCX-calibrated upper-layer RC; platform setRC restored after)"
+    return 1
+  }
+  if {$kind ne "spine" && ![ot_rc_cal_spine]} { return 0 }
+  set_wire_rc -clock -resistance $r -capacitance $c
+  puts "OT_RC_CAL $kind: $mode clock wire R $r C $c (spine clock; platform setRC restored after)"
+  return 1
+}
+proc ot_rc_cal_restore {} {
+  # Restore the kit's selected baseline, which may itself be RCX calibrated.
+  # Falling back to platform RC here changes every subsequent timing report.
+  if {[info exists ::env(LAYER_PARASITICS_FILE)] && $::env(LAYER_PARASITICS_FILE) ne ""} {
+    set baseline $::env(LAYER_PARASITICS_FILE)
+    if {![file isfile $baseline]} {error "OT_RC_CAL missing selected RC baseline $baseline"}
+  } else {
+    set baseline $::env(PLATFORM_DIR)/setRC.tcl
+  }
+  source $baseline
+  puts "OT_RC_CAL restored selected RC baseline $baseline"
+}
+# Run BODY with calibrated hold RC. Numeric FF I/O references must be measured
+# with that same RC, and measured again after restoring platform RC. Unsync FIRST:
+# writing the SS SDC while its temporary hold exception is active would copy that
+# exception to FF and hide real hold paths. Never refresh a scene that was not
+# already synced by the caller; non-MM and setup-only behavior stays unchanged.
+proc ot_rc_cal_hold {body} {
+  set on [ot_rc_cal_apply hold]
+  set refresh [expr {$on && [info exists ::ot_mm_synced]}]
+  try {
+    if {$on} {
+      estimate_parasitics [ot_rc_cal_mode]
+      if {$refresh} { ot_mm_unsync; ot_mm_sync }
+    }
+    return [uplevel 1 $body]
+  } finally {
+    if {$on} {
+      ot_rc_cal_restore
+      estimate_parasitics [ot_rc_cal_mode]
+      if {$refresh} { ot_mm_unsync; ot_mm_sync }
+    }
+  }
+}
+
+# HOLD-STALL GUARD (unstick 2026-10-08).  repair_timing's hold repair has no progress limit: 138 loop jobs sat 4-25 h in
+# CTS / GRT hold repair (it 10k-65k, ~2 buffers per iteration, WNS frozen for thousands of iterations; BF: 48k endpoints at
+# -200 ps).  A window that wide is an RTL / constraint problem (missing pin register, wrong input-min / H1 SDC), not a
+# buffering problem.  ot_repair_timing (called by the patched repair_timing_helper) keeps a setup-only or hold-only call
+# unchanged; a combined call runs setup exactly as before, then hold in chunks of OT_HOLD_CHUNK iterations (default 1000)
+# and stops when a chunk improves hold TNS by < OT_HOLD_MIN_GAIN_PCT % (default 2) and WNS by < 1 ps, when hold is
+# already >= 0 and a chunk gains < 1 ps (chasing the margin only), or after OT_HOLD_MAX_HOURS (default 3) of hold repair.
+# After an HM-AUTO flood reduction the hold repair first runs at HM 0 and stops once real hold is met (MET-FIRST below).
+# A stall with hold < 0 writes REPORTS_DIR/ot_hold_stall_<stage>.rpt (path classes, pin groups) and logs OT_HOLD_STALL:
+# the closure loop reports it as NEEDS_RTL with that window instead of crawling.  OT_HOLD_GUARD=0 restores the old call.
+proc ot_hold_guard_on {} { expr {![info exists ::env(OT_HOLD_GUARD)] || $::env(OT_HOLD_GUARD) ne "0"} }
+proc ot_env_num {k d} { expr {[info exists ::env($k)] && [string is double -strict $::env($k)] ? $::env($k) : $d} }
+proc ot_hold_paths {{limit 1000000}} {
+  set sc {}
+  if {[info exists ::ot_mm_synced]} { set sc [list -scenes BC] }
+  return [find_timing_paths -path_delay min {*}$sc -group_path_count $limit -endpoint_path_count 1 -slack_max 0]
+}
+proc ot_hold_stats {} {
+  # {worst hold slack, hold TNS, violating endpoints} in ps (FF scene in an mm session)
+  set sc {}
+  if {[info exists ::ot_mm_synced]} { set sc [list -scenes BC] }
+  set w 1e6
+  foreach p [find_timing_paths -path_delay min {*}$sc -group_path_count 1] {
+    set s [get_property $p slack]; if {$s ne "INF" && $s < $w} { set w $s }
+  }
+  set tns 0.0; set n 0
+  if {$w < 0} {
+    foreach p [ot_hold_paths] { set s [get_property $p slack]; if {$s ne "INF" && $s < 0} { set tns [expr {$tns + $s}]; incr n } }
+  }
+  return [list $w $tns $n]
+}
+proc ot_pin_class {name} { expr {[string first "/" $name] < 0 ? "port" : "reg"} }
+proc ot_hold_window_report {why hist} {
+  set stage [expr {[info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/4_1_cts.odb] ? "grt" : "cts"}]
+  set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hold_stall_${stage}.rpt" : "ot_hold_stall_${stage}.rpt"}]
+  array set cls {}; array set cw {}; array set grp {}; array set gw {}; array set ex {}
+  foreach p [ot_hold_paths 200000] {
+    set s [get_property $p slack]; if {$s eq "INF"} { continue }
+    set sp [get_full_name [get_property $p startpoint]]; set ep [get_full_name [get_property $p endpoint]]
+    set c "[expr {[ot_pin_class $sp] eq "port" ? "I" : "R"}]2[expr {[ot_pin_class $ep] eq "port" ? "O" : "R"}]"
+    incr cls($c); if {![info exists cw($c)] || $s < $cw($c)} { set cw($c) $s; set ex($c) "$sp -> $ep" }
+    set g "$c [regsub -all {\[[0-9]+\]} $sp {[*]}] -> [regsub -all {\[[0-9]+\]} $ep {[*]}]"
+    incr grp($g); if {![info exists gw($g)] || $s < $gw($g)} { set gw($g) $s }
+  }
+  set fh [open $f w]
+  puts $fh "OT_HOLD_STALL NEEDS_RTL stage=$stage reason=$why"
+  puts $fh "chunks (wns_ps tns_ps viol_endpoints): $hist"
+  puts $fh "class  endpoints  worst_ps  worst_path   (I=input port, O=output port, R=register)"
+  foreach c [lsort [array names cls]] { puts $fh [format "%-5s %10d %9.1f  %s" $c $cls($c) $cw($c) $ex($c)] }
+  puts $fh "top pin groups (class start -> end, bus indices folded):"
+  set rows {}
+  foreach g [array names grp] { lappend rows [list $g $grp($g) $gw($g)] }
+  foreach r [lrange [lsort -integer -decreasing -index 1 $rows] 0 29] { puts $fh [format "%7d %9.1f  %s" [lindex $r 1] [lindex $r 2] [lindex $r 0]] }
+  close $fh
+  set sum {}
+  foreach c [lsort [array names cls]] { lappend sum "$c=$cls($c)@[format %.0f $cw($c)]" }
+  puts "OT_HOLD_STALL NEEDS_RTL ($why): [join $sum { }] -> $f"
+}
+# HM-GUARD (hm-guard 2026-10-08).  HM 50 is a design margin, acceptance is FF hold >= 0 (post-route hold ECO as before).
+# A block whose REAL FF hold already passes can still have tens of thousands of back-to-back flop pairs inside the 50 ps
+# margin; repair_timing pads every one: S81 PQ root CAM 17.2k endpoints -> 21.7k buffers (85.8 -> 95.7%), HBM VM8 ~102k
+# buffers, Qwen link rx128 72.5k endpoints -> 146k buffers (80.7 -> 97.2%, 6h53m) -- all DPL-0033.  Before a hold repair
+# ot_hm_guard counts the FF endpoints inside the margin and projects the buffer area (ceil(deficit / OT_HM_BUF_PS) buffers
+# of OT_HM_BUF_AREA_UM2 each over the core area).  Over OT_HM_GUARD_MAX_EP endpoints (10k) or OT_HM_GUARD_MAX_UTIL_PTS
+# (8 points) the margin of THIS run drops to max(floor, worst real violation + floor), floor OT_HM_GUARD_FLOOR_PS (10),
+# never above the asked margin; it logs "OT_HM_AUTO" and writes REPORTS_DIR/ot_hm_auto_<stage>.rpt (the closure loop
+# turns it into a job event).  OT_HM_GUARD=0 disables it.  Margins in the library unit (ps on asap7).
+proc ot_hm_buffers {slacks hm buf_ps} {
+  # projected hold buffers: one per buf_ps of deficit below the margin, per endpoint
+  set n 0
+  foreach s $slacks { if {$s < $hm} { incr n [expr {int(ceil(($hm - $s) / double($buf_ps)))}] } }
+  return $n
+}
+proc ot_hm_decide {hm worst n_in buffers core_um2 buf_area max_ep max_pts floor} {
+  # -> {new_margin util_pts reason}; new_margin == hm when no reduction
+  set pts [expr {$core_um2 > 0 ? 100.0 * $buffers * $buf_area / $core_um2 : 0.0}]
+  if {$hm <= $floor} { return [list $hm $pts "margin $hm <= floor $floor"] }
+  set why {}
+  if {$n_in > $max_ep} { lappend why "$n_in endpoints in margin > $max_ep" }
+  if {$pts > $max_pts} { lappend why [format "projected +%.1f util points > %g" $pts $max_pts] }
+  if {![llength $why]} { return [list $hm $pts "within limits"] }
+  set viol [expr {$worst < 0 ? -$worst : 0.0}]
+  set new [expr {max($floor, $viol + $floor)}]
+  set new [expr {min($hm, ceil($new * 10.0) / 10.0)}]
+  return [list $new $pts [join $why "; "]]
+}
+proc ot_hm_core_um2 {} {
+  if {[catch {
+    set blk [ord::get_db_block]; set r [$blk getCoreArea]
+    set u [$blk getDbUnitsPerMicron]
+    set a [expr {double([$r dx]) * [$r dy] / ($u * $u)}]
+  }]} { return 0.0 }
+  return $a
+}
+proc ot_hm_guard {rt_args} {
+  if {[info exists ::env(OT_HM_GUARD)] && $::env(OT_HM_GUARD) eq "0"} { return $rt_args }
+  set i [lsearch -exact $rt_args -hold_margin]; if {$i < 0} { return $rt_args }
+  set hm [lindex $rt_args [expr {$i + 1}]]
+  set floor [ot_env_num OT_HM_GUARD_FLOOR_PS 10.0]
+  if {![string is double -strict $hm] || $hm <= $floor} { return $rt_args }
+  if {[catch {
+    set sc {}; if {[info exists ::ot_mm_synced]} { set sc [list -scenes BC] }
+    set slacks {}; set worst 1e6
+    foreach p [find_timing_paths -path_delay min {*}$sc -group_path_count 1000000 -endpoint_path_count 1 -slack_max $hm] {
+      set s [get_property $p slack]; if {$s eq "INF"} { continue }
+      lappend slacks $s; if {$s < $worst} { set worst $s }
+    }
+    if {![llength $slacks]} { set worst [lindex [ot_hold_stats] 0] }
+  } msg]} { puts "OT_HM_GUARD: endpoint count unavailable ($msg); margin $hm kept"; return $rt_args }
+  set n [llength $slacks]
+  set buf_area [ot_env_num OT_HM_BUF_AREA_UM2 0.08]
+  set nb [ot_hm_buffers $slacks $hm [ot_env_num OT_HM_BUF_PS 20.0]]
+  set core [ot_hm_core_um2]
+  lassign [ot_hm_decide $hm $worst $n $nb $core $buf_area [ot_env_num OT_HM_GUARD_MAX_EP 10000] \
+             [ot_env_num OT_HM_GUARD_MAX_UTIL_PTS 8.0] $floor] new pts why
+  set line [format "HM auto-reduced %g->%g: %d endpoints in margin (worst FF hold %.2f, ~%d buffers, +%.1f util pts of %.0f um2 core; %s)" \
+    $hm $new $n $worst $nb $pts $core $why]
+  if {$new >= $hm} {
+    puts [format "OT_HM_GUARD: margin %g kept: %d endpoints in margin, ~%d buffers, +%.1f util pts (%s)" $hm $n $nb $pts $why]
+    return $rt_args
+  }
+  puts "OT_HM_AUTO $line"
+  set stage [expr {[info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/4_1_cts.odb] ? "grt" : "cts"}]
+  catch {
+    set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hm_auto_${stage}.rpt" : "ot_hm_auto_${stage}.rpt"}]
+    set fh [open $f w]; puts $fh "OT_HM_AUTO stage=$stage $line"; close $fh
+  }
+  return [lreplace $rt_args [expr {$i + 1}] [expr {$i + 1}] $new]
+}
+# HOLD-STOP (drive-resume 2026-10-09, coordinator APPROVED).  A hold repair that stalls already within a small margin
+# (stuckscan: real FF hold WNS >= -15 ps, setup not hopeless) is NOT early-failed: the route continues and the
+# post-route hold ECO repairs the residue.  repair_timing cannot be interrupted, so the closure loop stops the stage and
+# resumes it from its checkpoint with OT_HOLD_STOP = "<stage>:<buffers> ..." (stage cts | grt).  For that stage the hold
+# repair runs once with -max_buffer_percent set to <buffers> over the instance count -- the stalled run's buffer count
+# when it reached its final WNS, so the converging part replays and the flat tail is cut -- and <buffers> = 0 skips the
+# hold repair.  Setup repair is unchanged.  The cap ends the call with RSZ-0060; the stage continues on the repaired
+# design ("OT_HOLD_MM after repair" lets tolerate_flow_errors zero that one error).
+proc ot_hold_stage {} {
+  expr {[info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/4_1_cts.odb] ? "grt" : "cts"}
+}
+proc ot_hold_stop_cap {stage} {
+  # -> "" (no stop for this stage) or the buffer cap (0 = skip the hold repair)
+  if {![info exists ::env(OT_HOLD_STOP)]} { return "" }
+  foreach e [split $::env(OT_HOLD_STOP) " ,;"] {
+    if {[regexp {^(cts|grt):([0-9]+)$} $e -> s n] && $s eq $stage} { return $n }
+  }
+  return ""
+}
+proc ot_hold_stop_args {rt_args pct} {
+  set i [lsearch -exact $rt_args -max_buffer_percent]
+  if {$i >= 0} { return [lreplace $rt_args [expr {$i + 1}] [expr {$i + 1}] $pct] }
+  return [concat $rt_args [list -max_buffer_percent $pct]]
+}
+proc ot_hold_stop {rt_args} {
+  # 1 when OT_HOLD_STOP handled this stage's hold repair (skipped or capped), else 0
+  set stage [ot_hold_stage]
+  set n [ot_hold_stop_cap $stage]
+  if {$n eq ""} { return 0 }
+  if {$n == 0} {
+    puts "OT_HOLD_STOP stage=$stage: hold repair skipped (near-miss stall; the post-route hold ECO repairs the residue)"
+    return 1
+  }
+  set inst 0
+  catch { set inst [llength [[ord::get_db_block] getInsts]] }
+  if {$inst <= 0} { puts "OT_HOLD_STOP stage=$stage: instance count unavailable; hold repair skipped"; return 1 }
+  set pct [format %.6f [expr {100.0 * $n / $inst}]]
+  puts "OT_HOLD_STOP stage=$stage: hold repair capped at $n buffers (-max_buffer_percent $pct of $inst instances)"
+  if {[catch {log_cmd repair_timing {*}[ot_hold_stop_args $rt_args $pct] -hold} err]} {
+    if {![regexp {RSZ-0060|Max buffer count} $err]} { error $err }
+    puts "OT_HOLD_MM after repair: OT_HOLD_STOP cap of $n buffers reached (RSZ-0060); continuing to route"
+  }
+  catch { lassign [ot_hold_stats] w t v; puts [format "OT_HOLD_STOP stage=%s done: hold ws %.2f tns %.1f viol %d" $stage $w $t $v] }
+  return 1
+}
+# FLOW-SHARED-5 2026-10-27 (COORD S81-R24 ruling): PLANNED input-hold demand is counted apart from real structural
+# failures.  An FF hold failure whose startpoint is a primary INPUT port is the pin-register input path timed against
+# the declared input-hold budget (set_input_delay -min, e.g. vclk in_min -40): one delay chain per input bit, which
+# repair_timing -hold closes by design (S81 hrow: 1909 of 2096 failing endpoints).  Rule:
+#   internal (reg->reg / anything not starting at an input port): ws >= -100 ps AND endpoints <= 2000  (unchanged);
+#   planned input:  ws >= -100 ps AND endpoints <= input-port bits (one pin register per bit; more = not a planned
+#                   pin-register path, i.e. structural).
+# Worst slack keeps the -100 ps limit for BOTH classes.  OT_HOLD_PLANNED_INPUT=0 restores the single combined count.
+proc ot_hold_input_ports {} {
+  set s [dict create]
+  if {[catch {set ports [get_ports -quiet *]}]} { return $s }
+  foreach p $ports {
+    if {[catch {get_property $p direction} d] || $d ne "input"} continue
+    dict set s [get_full_name $p] 1
+  }
+  return $s
+}
+proc ot_hold_split {} {
+  # -> {worst_internal n_internal worst_input n_input n_input_ports} over true failures (slack < 0) in the FF scene
+  set in [ot_hold_input_ports]
+  set wi 1e6; set ni 0; set wp 1e6; set np 0
+  foreach p [ot_hold_paths] {
+    set s [get_property $p slack]
+    if {$s eq "INF" || $s >= 0} continue
+    set sp ""; catch { set sp [get_full_name [get_property $p startpoint]] }
+    if {$sp ne "" && [dict exists $in $sp]} { incr np; if {$s < $wp} { set wp $s } } else { incr ni; if {$s < $wi} { set wi $s } }
+  }
+  return [list $wi $ni $wp $np [dict size $in]]
+}
+# Owner 2026-10-25: structural FF hold failures must stop BEFORE repair_timing. Its
+# -max_iterations bounds inner passes, not the endpoint sweep, so the stall guard
+# cannot interrupt a single call that adds hundreds of thousands of buffers.
+# Count true negative-slack endpoints (ot_hold_stats), never the repair margin.
+# IO-HOLD-PAD (S81-CORES-R24, COORD ruling 10-27 (d); OWNER: data hold buffers OK; METHODOLOGY 12.8 plan-computed sizing).
+# Opt-in OT_IO_HOLD_PAD=1 (default OFF: no change for any kit).  The kit IO-hold contract (set_input_delay -min vs vclk,
+# e.g. legacy -insertion_tol = -40 ps) is PLANNED hold demand on every zero-logic input-port -> pin-register path, not a
+# structural failure.  Before the CTS structural hold gate counts endpoints, pad exactly those paths with HB4xp67 data
+# hold buffers sized per bit from the synchronized FF (BC) hold slack: n = ceil((-slack + OT_IO_HOLD_PAD_MARGIN_PS) /
+# OT_IO_HOLD_PAD_HB4_PS), placed at the register.  Only paths whose startpoint is a non-clock INPUT PORT and whose
+# endpoint is a register DATA pin (async pins excluded) are touched; register-to-register and output paths are left to
+# the gate (they stay structural).  Clock network, constraints, margins and corners unchanged.  Fail closed: a bit
+# needing more than OT_IO_HOLD_PAD_MAX_CELLS (4) cells, or any insert error, stops the stage.  Runs once per process.
+# OT_IO_HOLD_PAD_STAGE (FLOW-CLOCK-R6 10-29, default cts = unchanged): the stage whose FF hold repair the pad precedes.
+# Kits whose CTS step repairs setup only (SKIP_CTS_REPAIR_TIMING=1 + post_cts_setup.tcl: every KV kit, HBM-CORES-R11 form)
+# first time FF hold in the GRT step, so the CTS-only pad never ran there (E0 e0_ff15: 1,300 input-port -> face-register
+# endpoints left to BUF-only GRT repair, flat at -38.91 for 10k iterations).  grt pads in that step on the synchronized FF
+# scene; the GRT step's own post-repair detailed_placement + incremental GRT legalize and route the cells (no DPL here).
+proc ot_io_hold_pad {} {
+  if {![info exists ::env(OT_IO_HOLD_PAD)] || $::env(OT_IO_HOLD_PAD) ne "1"} { return }
+  if {[info exists ::ot_io_hold_pad_done]} { return }
+  set ::ot_io_hold_pad_done 1
+  set want [expr {[info exists ::env(OT_IO_HOLD_PAD_STAGE)] && $::env(OT_IO_HOLD_PAD_STAGE) ne "" ? $::env(OT_IO_HOLD_PAD_STAGE) : "cts"}]
+  if {$want ni {cts grt}} { error "OT_IO_HOLD_PAD_STAGE=$want: want cts or grt" }
+  if {[ot_hold_stage] ne $want} { puts "OT_IO_HOLD_PAD skip: stage [ot_hold_stage] (pad stage $want)"; return }
+  set hb_ps [ot_env_num OT_IO_HOLD_PAD_HB4_PS 37.0]
+  set mg [ot_env_num OT_IO_HOLD_PAD_MARGIN_PS 5.0]
+  set maxc [expr {int([ot_env_num OT_IO_HOLD_PAD_MAX_CELLS 4])}]
+  set cells [get_lib_cells -quiet */HB4xp67_ASAP7_75t_R]
+  if {![llength $cells]} { error "OT_IO_HOLD_PAD: HB4xp67_ASAP7_75t_R not in the libraries" }
+  set ck {}
+  foreach c [all_clocks] { foreach s [get_property $c sources] { dict set ck [get_full_name $s] 1 } }
+  set async {}
+  foreach p [all_registers -async_pins] { dict set async [get_full_name $p] 1 }
+  set data {}
+  foreach p [all_registers -data_pins] { set n [get_full_name $p]; if {![dict exists $async $n]} { dict set data $n 1 } }
+  set plan {}
+  foreach p [ot_hold_paths 200000] {
+    set s [get_property $p slack]; if {$s eq "INF" || $s >= 0} { continue }
+    set sp [get_full_name [get_property $p startpoint]]; set ep [get_full_name [get_property $p endpoint]]
+    if {[ot_pin_class $sp] ne "port" || [dict exists $ck $sp]} { continue }
+    if {![dict exists $data $ep]} { continue }
+    set n [expr {int(ceil((-$s + $mg) / $hb_ps))}]
+    if {$n > $maxc} { error "OT_IO_HOLD_PAD: $sp -> $ep slack [format %.1f $s] ps needs $n HB4 > $maxc (not contract demand; revise plan/boundary)" }
+    dict set plan $ep [list $n [get_property $p endpoint]]
+  }
+  if {![dict size $plan]} { puts "OT_IO_HOLD_PAD: no input-port -> pin-register hold demand"; return }
+  unset_dont_use $cells
+  set block [ord::get_db_block]; set tot 0; set k 0
+  set rc [catch {
+    dict for {ep v} $plan {
+      lassign $v n pin
+      set dbi [sta::sta_to_db_inst [$pin instance]]
+      if {$dbi eq "" || $dbi eq "NULL"} { error "no db instance for $ep" }
+      set loc [$dbi getLocation]
+      set xy [list [ord::dbu_to_microns [lindex $loc 0]] [ord::dbu_to_microns [lindex $loc 1]]]
+      for {set j 0} {$j < $n} {incr j} {
+        insert_buffer -buffer_cell HB4xp67_ASAP7_75t_R -load_pins [list $pin] -location $xy -buffer_name ot_iohp_${k}_$j
+        incr tot
+      }
+      incr k
+    }
+  } msg]
+  set_dont_use $cells
+  if {$rc} { error "OT_IO_HOLD_PAD: insert failed after $tot cells: $msg" }
+  if {$want eq "cts"} {
+    log_cmd detailed_placement
+    log_cmd check_placement -verbose
+    catch {estimate_parasitics -placement}
+  } else {
+    catch {estimate_parasitics [ot_rc_cal_mode]}
+  }
+  puts [format "OT_IO_HOLD_PAD bits %d HB4 %d (hb4 %.1f ps, margin %.1f ps, max %d/bit)" [dict size $plan] $tot $hb_ps $mg $maxc]
+}
+# COORD 11-01 05:1x / OWNER 12.28b (closure first): the post-CTS / pre-repair FF hold check is INFO; the one hard stop
+# is FF hold WNS worse than OT_HOLD_STOP_PS = -200 ps (structural, not repairable by hold padding).  Hold is judged
+# at the routed sign-off (FF hold >= 0 ps on real views, OWNER 11-02).  Same constant in tools/die_plan/hold_gate.tcl,
+# tools/orfs_hold_mm.tcl and physical/die_plan/hbm_arch_cores/hold_gate.tcl (test_hold_structural_gate pins it).
+# COORD 11-05 07:36: default stop -200 (was -150): GRT hold repair closed 9 of 11 kits from -109 to -172 (DIE-HBM-70 07:04); routed sign-off still decides.
+set ::OT_HOLD_STOP_PS -200.0
+# KW-FIX-17 11-05 (COORD 16:2x class fix, default-on): the structural stop counts REGISTER-TO-REGISTER FF hold only,
+# the same scope as the post-CTS check (physical/die_plan/hbm_arch_cores/hold_gate.tcl reg2reg).  In/out-port hold
+# paths (port startpoint or endpoint, timed against the kit's boundary vclk contract) are an ADVISORY report line: die
+# STA checks them against the parent's measured arrivals (owner 11-03 NEEDS_PARENT + insertion band -> die STA).
+# Trigger: HBM kshare stopped at GRT on FF -150.89 / 4243 endpoints where reg-to-reg was -53.29 / 507 and the port paths
+# -443.35 / 3724 (insertion 494.7 vs the 202.5 vclk band).  OT_HOLD_STOP_SCOPE=all restores the all-path stop.
+# -> {worst reg->reg FF hold slack (1e6 when none fails), failing reg->reg endpoints}; {} when unavailable (fail closed).
+proc ot_hold_rr_stats {} {
+  set sc {}
+  if {[info exists ::ot_mm_synced]} { set sc [list -scenes BC] }
+  set w 1e6; set n 0; set ps {}
+  if {[catch {
+    set ck [all_registers -clock_pins]; set d [all_registers -data_pins]
+    if {[llength $ck] && [llength $d]} {
+      set ps [find_timing_paths -path_delay min {*}$sc -from $ck -to $d -group_path_count 1000000 -endpoint_path_count 1 -slack_max 0]
+    }
+  } err]} {
+    puts "OT_HOLD_PORT: register-to-register split unavailable ($err); the stop counts all paths"
+    return {}
+  }
+  foreach p $ps { set s [get_property $p slack]; if {$s ne "INF" && $s < 0} { incr n; if {$s < $w} { set w $s } } }
+  return [list $w $n]
+}
+proc ot_hold_structural_gate {} {
+  # ot_mm_sync creates/times the real FF BC scene with its own FF boundary SDC.
+  # A primary-corner min path is not evidence of FF hold: fail closed without it.
+  if {![info exists ::ot_mm_active] || !$::ot_mm_active ||
+      ![info exists ::ot_mm_synced] || !$::ot_mm_synced} {
+    return -code error -errorcode {OPENTALLAS HOLD_FF_UNAVAILABLE} "OT_HOLD_STRUCTURAL: synchronized FF scene BC unavailable; enable multi-mode FF timing before hold repair"
+  }
+  ot_io_hold_pad
+  lassign [ot_hold_stats] w t n
+  if {$w >= -100.0 && $n <= 2000} { return }
+  set stage [ot_hold_stage]
+  set planned [expr {![info exists ::env(OT_HOLD_PLANNED_INPUT)] || $::env(OT_HOLD_PLANNED_INPUT) ne "0"}]
+  if {$planned && $w >= -100.0} {
+    # only the endpoint count tripped: split planned input-hold demand from internal failures
+    lassign [ot_hold_split] wi ni wp np nports
+    set swi -; set swp -
+    if {$ni} { set swi [format %.2f $wi] }; if {$np} { set swp [format %.2f $wp] }
+    set line [format "internal %d endpoints (ws %s), planned input %d endpoints (ws %s) of %d input-port bits" $ni $swi $np $swp $nports]
+    if {$ni <= 2000 && $np <= $nports} {
+      puts "OT_HOLD_PLANNED_INPUT stage=$stage: $line; total $n > 2000 is planned input-hold demand -> repair proceeds"
+      return
+    }
+    set msg [format "OT_HOLD_STRUCTURAL stage=%s: FF hold ws %.2f ps, %d true failing endpoints: %s (limits: ws >= -100 ps, internal endpoints <= 2000, planned input endpoints <= input-port bits); revise plan/RTL/boundary before repair" $stage $w $n $line]
+  } else {
+    set msg [format "OT_HOLD_STRUCTURAL stage=%s: FF hold ws %.2f ps, %d true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair" $stage $w $n]
+  }
+  # KIT-TRIAGE-1/G5 11-01 (COORD 11-01 05:1x / OWNER 12.28b): the limits above are a PRE-REPAIR SCREEN, reported, not a
+  # stop -- the chunked OT_HOLD_GUARD bounds a runaway repair and FF hold on the routed real views is the gate.  Stop only
+  # below ::OT_HOLD_STOP_PS (-200 ps, structural), or with OT_HOLD_PREROUTE_STOP=1.
+  set stop [expr {[info exists ::env(OT_HOLD_PREROUTE_STOP)] && $::env(OT_HOLD_PREROUTE_STOP) eq "1"}]
+  set wstop $w
+  if {!$stop && $w < $::OT_HOLD_STOP_PS && (![info exists ::env(OT_HOLD_STOP_SCOPE)] || $::env(OT_HOLD_STOP_SCOPE) ne "all")} {
+    set rr [ot_hold_rr_stats]
+    if {[llength $rr]} {
+      lassign $rr wrr nrr
+      set wstop $wrr
+      set srr -; if {$nrr} { set srr [format %.2f $wrr] }
+      set adv [format "OT_HOLD_PORT ADVISORY stage=%s: FF hold ws %.2f ps over %d endpoints includes in/out-port paths; register-to-register ws %s over %d endpoints; the structural stop counts register-to-register only (port hold -> die STA against parent arrivals)" $stage $w $n $srr $nrr]
+      puts $adv
+      catch {
+        set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hold_port_advisory_${stage}.rpt" : "ot_hold_port_advisory_${stage}.rpt"}]
+        set fh [open $f w]; puts $fh $adv; close $fh
+      }
+      append msg [format "; register-to-register ws %s, %d endpoints" $srr $nrr]
+    }
+  }
+  if {!$stop && $wstop >= $::OT_HOLD_STOP_PS} {
+    set info [string map {"OT_HOLD_STRUCTURAL " "OT_HOLD_PREREPAIR INFO " "; revise plan/RTL/boundary before repair" ""} $msg]
+    puts "$info -> information only, repair proceeds (routed FF hold sign-off decides)"
+    return
+  }
+  if {$wstop < $::OT_HOLD_STOP_PS} { append msg [format " (beyond the structural stop OT_HOLD_STOP_PS %.0f ps)" $::OT_HOLD_STOP_PS] }
+  puts $msg
+  catch {
+    set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hold_structural_${stage}.rpt" : "ot_hold_structural_${stage}.rpt"}]
+    set fh [open $f w]; puts $fh $msg; close $fh
+  }
+  return -code error -errorcode {OPENTALLAS HOLD_STRUCTURAL} $msg
+}
+# HOLD-REPAIR-SCOPE: opt-in FF repair scope. Legacy reg2reg excludes input starts and output endpoints.
+# nonport excludes input-port starts only, retaining register-to-output and macro/internal paths (OWNER 11-07).
+# This is an optimization scope only: TT setup is untouched, FF constraints replay at full precision in finally,
+# and the original current mode is restored even on a repair error. Default remains the original all-path repair.
+proc ot_hold_scope_read {path} {
+  set fh [open $path r]
+  try { return [read $fh] } finally { close $fh }
+}
+set ::ot_hold_scope_supported_modes {reg2reg nonport}
+proc ot_hold_repair_scope {body} {
+  if {![info exists ::env(OT_HOLD_REPAIR_SCOPE)] || $::env(OT_HOLD_REPAIR_SCOPE) ni {reg2reg nonport} ||
+      ![info exists ::ot_mm_synced] || ![info exists ::ot_mm_stage] || $::ot_mm_stage ne "4_cts.sdc"} {
+    return [uplevel 1 $body]
+  }
+  set scope $::env(OT_HOLD_REPAIR_SCOPE)
+  set entry [sta::cmd_mode_name]
+  set dir [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : [pwd]}]
+  set stem [file join $dir ot_hold_scope_[pid]_[clock clicks]]
+  set before ${stem}_before.sdc
+  set after ${stem}_after.sdc
+  try {
+    set_mode ff
+    # write_sdc defaults to four digits; that is insufficient for exact restoration of a measured boundary frame.
+    write_sdc -mode ff -digits 17 -no_timestamp $before
+    # A real clock source port is not a parent data-hold endpoint. Keep it out of the repair exception explicitly.
+    set clock_sources [dict create]
+    foreach clock [all_clocks] {
+      foreach source [get_property $clock sources] { dict set clock_sources [get_full_name $source] 1 }
+    }
+    set inputs {}
+    foreach port [all_inputs] {
+      if {![dict exists $clock_sources [get_full_name $port]]} { lappend inputs $port }
+    }
+    set outputs {}
+    if {$scope eq "reg2reg"} { set outputs [all_outputs] }
+    puts "OT_HOLD_SCOPE begin scope=$scope full_ff=[ot_hold_stats] input_ports=[llength $inputs] excluded_output_ports=[llength $outputs]"
+    try {
+      if {[llength $inputs]} { set_false_path -hold -from $inputs }
+      if {[llength $outputs]} { set_false_path -hold -to $outputs }
+      puts "OT_HOLD_SCOPE repair_ff=[ot_hold_stats] scope=$scope (nonport retains register-to-output and macro/internal paths)"
+      set_mode $entry
+      return [uplevel 1 $body]
+    } finally {
+      set_mode ff
+      if {[llength $inputs]} { unset_path_exceptions -hold -from $inputs }
+      if {[llength $outputs]} { unset_path_exceptions -hold -to $outputs }
+      # Removing the temporary port exceptions can also split an overlapping original exception. Replaying the
+      # complete original mode restores those, all clock/input/output delays, and every other original SDC command.
+      read_sdc -mode ff $before
+      write_sdc -mode ff -digits 17 -no_timestamp $after
+      if {[ot_hold_scope_read $before] ne [ot_hold_scope_read $after]} {
+        error "OT_HOLD_SCOPE restore differs: retained $before $after"
+      }
+      puts "OT_HOLD_SCOPE restored exact FF SDC; full_ff=[ot_hold_stats] (port hold remains visible)"
+      if {![info exists ::env(OT_HOLD_SCOPE_KEEP_SDC)] || $::env(OT_HOLD_SCOPE_KEEP_SDC) ne "1"} {
+        file delete $before $after
+      }
+    }
+  } finally {
+    set_mode $entry
+  }
+}
+
+proc ot_repair_timing {rt_args} {
+  set setup [expr {[lsearch -exact $rt_args -setup] >= 0}]
+  set hold [expr {[lsearch -exact $rt_args -hold] >= 0}]
+  if {$setup && !$hold} { return [log_cmd repair_timing {*}$rt_args] }
+  if {$hold && !$setup} {
+    return [ot_rc_cal_hold {
+      ot_hold_structural_gate
+      ot_hold_repair_scope { log_cmd repair_timing {*}[ot_hm_guard $rt_args] }
+    }]
+  }
+  # Explicit -setup -hold and the no-flag form both request combined repair.
+  # Keep setup on normal RC, then gate/repair hold on calibrated FF clock RC.
+  set args {}
+  foreach arg $rt_args { if {$arg ni {-setup -hold}} { lappend args $arg } }
+  set rt_args $args
+  log_cmd repair_timing {*}$rt_args -setup
+  if {![ot_hold_guard_on]} {
+    return [ot_rc_cal_hold {
+      ot_hold_structural_gate
+      ot_hold_repair_scope { log_cmd repair_timing {*}[ot_hm_guard $rt_args] -hold }
+    }]
+  }
+  return [ot_rc_cal_hold { ot_hold_repair_scope { ot_repair_hold_guarded $rt_args } }]
+}
+proc ot_repair_hold_guarded {rt_args} {
+  set hm 0.0
+  set i [lsearch -exact $rt_args -hold_margin]; if {$i >= 0} { set hm [lindex $rt_args [expr {$i + 1}]] }
+  set chunk [expr {int([ot_env_num OT_HOLD_CHUNK 1000])}]
+  set mingain [ot_env_num OT_HOLD_MIN_GAIN_PCT 2.0]
+  set maxs [expr {[ot_env_num OT_HOLD_MAX_HOURS 3.0] * 3600}]
+  ot_hold_structural_gate
+  set hm_asked $hm
+  set rt_args [ot_hm_guard $rt_args]
+  if {[ot_hold_stop $rt_args]} { return }
+  set i [lsearch -exact $rt_args -hold_margin]; if {$i >= 0} { set hm [lindex $rt_args [expr {$i + 1}]] }
+  if {[catch {set prev [ot_hold_stats]} msg]} {
+    puts "OT_HOLD_GUARD: hold stats unavailable ($msg); unguarded hold repair"
+    return [log_cmd repair_timing {*}$rt_args -hold]
+  }
+  # MET-FIRST on a margin flood (drive-2155 2026-10-08, OWNER: the hold margin is a design target, HM 0 allowed; a route
+  # whose real FF hold is met stops repairing).  repair_timing's hold pass visits EVERY endpoint inside the margin in one
+  # call (-max_iterations does not bound it), so after an HM-AUTO flood reduction (worst + floor) the call still pads all
+  # of them: hbm_su_ctlh vf-lvt met real hold at 7.7k buffers, then spent 2.3 h / 58k more buffers on 60k endpoints for
+  # +4.4 ps.  When the guard flagged a flood, repair at HM 0 (real violations only) and stop once met.  Disable with
+  # OT_HOLD_FLOOD_MET_FIRST=0.
+  if {$hm < $hm_asked && [ot_env_num OT_HOLD_FLOOD_MET_FIRST 1] != 0 && $i >= 0} {
+    if {[lindex $prev 0] < 0} {
+      puts "OT_HOLD_GUARD start: hold ws [format %.2f [lindex $prev 0]] tns [format %.1f [lindex $prev 1]] viol [lindex $prev 2] (met-first at HM 0 after a margin flood; asked $hm_asked, auto $hm)"
+      log_cmd repair_timing {*}[lreplace $rt_args [expr {$i + 1}] [expr {$i + 1}] 0.0] -hold
+      set prev [ot_hold_stats]
+    }
+    if {[lindex $prev 0] >= 0} {
+      puts [format "OT_HOLD_GUARD: hold met (ws %.2f >= 0) at HM 0 after a margin flood (asked %g, auto %g); margin chase skipped, stop" [lindex $prev 0] $hm_asked $hm]
+      return
+    }
+  }
+  # CHUNK BUFFER BOUND (FLOW-CLOCK-R5 2026-10-29, measured: KV E0 e0_ff15 GRT hold sat at FF ws -38.91 / TNS -30814.6
+  # from it ~1750 to >7780 of ONE "-max_iterations 1000" call, +10.8k buffers with zero TNS gain, so the stall test
+  # below never ran).  -max_iterations does not bound a hold pass; -max_buffer_percent does (RSZ-0060, as OT_HOLD_STOP).
+  # Each chunk is therefore also capped at max(OT_HOLD_CHUNK_BUF_PCT (default 1.0) % of the instance count at guard
+  # start, OT_HOLD_CHUNK_BUF_MIN (default 2000) buffers) -- small blocks keep one effectively unbounded chunk -- never
+  # past the call's own total budget (its -max_buffer_percent, else the OpenROAD default 20 %).  A chunk that hits its
+  # cap continues on the grown design; reaching the TOTAL budget re-raises RSZ-0060 exactly as one uncapped call
+  # did.  OT_HOLD_CHUNK_BUF_PCT=0 restores the unbounded chunk.  Margins, corners, stall/time limits and stats unchanged.
+  set cbp [ot_env_num OT_HOLD_CHUNK_BUF_PCT 1.0]
+  set cbmin [ot_env_num OT_HOLD_CHUNK_BUF_MIN 2000]
+  set inst0 0
+  if {$cbp > 0} { catch { set inst0 [llength [[ord::get_db_block] getInsts]] } }
+  set tot_pct 20.0
+  set j [lsearch -exact $rt_args -max_buffer_percent]; if {$j >= 0} { set tot_pct [lindex $rt_args [expr {$j + 1}]] }
+  set capped 0
+  set t0 [clock seconds]; set hist [list [lmap x $prev {format %.1f $x}]]
+  puts "OT_HOLD_GUARD start: hold ws [format %.2f [lindex $prev 0]] tns [format %.1f [lindex $prev 1]] viol [lindex $prev 2] (margin $hm, chunk $chunk it[expr {$inst0 > 0 ? [format ", <= %.0f buffers of %d instances" [expr {max($cbp * $inst0 / 100.0, $cbmin)}] $inst0] : ""}])"
+  for {set k 1} {1} {incr k} {
+    if {[lindex $prev 0] >= $hm} { break }
+    if {$inst0 > 0} {
+      set inst [llength [[ord::get_db_block] getInsts]]
+      set left [expr {$tot_pct * $inst0 / 100.0 - ($inst - $inst0)}]
+      set nb [expr {min(max($cbp * $inst0 / 100.0, $cbmin), $left)}]
+      set last [expr {$nb >= $left}]
+      if {$nb < 1} { set nb 1 }
+      set pct [format %.6f [expr {100.0 * $nb / $inst}]]
+      if {[catch {log_cmd repair_timing {*}[ot_hold_stop_args $rt_args $pct] -hold -max_iterations $chunk} err opts]} {
+        if {$last || ![regexp {RSZ-0060|Max buffer count} $err]} { return -options $opts $err }
+        set capped 1
+        puts [format "OT_HOLD_GUARD chunk %d: buffer cap %.0f reached (RSZ-0060), continuing" $k $nb]
+      }
+    } else {
+      log_cmd repair_timing {*}$rt_args -hold -max_iterations $chunk
+    }
+    set cur [ot_hold_stats]
+    lappend hist [lmap x $cur {format %.1f $x}]
+    lassign $prev w0 t0n n0; lassign $cur w1 t1n n1
+    set dw [expr {$w1 - $w0}]
+    set gain [expr {$t0n < 0 ? 100.0 * ($t1n - $t0n) / abs($t0n) : 0.0}]
+    puts [format "OT_HOLD_GUARD chunk %d: hold ws %.2f (%+.2f) tns %.1f (%+.1f%%) viol %d, %d s" $k $w1 $dw $t1n $gain $n1 [expr {[clock seconds] - $t0}]]
+    if {$w1 >= $hm} { break }
+    if {$w1 >= 0 && $dw < 1.0} { puts "OT_HOLD_GUARD: hold met (ws [format %.2f $w1] >= 0); margin chase stalled, stop"; break }
+    if {$dw < 1.0 && $gain < $mingain} { ot_hold_window_report "stalled: chunk $k gained [format %.2f $dw] ps / [format %.1f $gain]% TNS" $hist; break }
+    if {[clock seconds] - $t0 > $maxs} { ot_hold_window_report "hold repair over [expr {$maxs / 3600.0}] h" $hist; break }
+    set prev $cur
+  }
+  # tolerate_flow_errors zeroes the chunk-cap RSZ-0060 errors only when this line follows the last one
+  if {$capped} { puts "OT_HOLD_MM after repair: OT_HOLD_GUARD chunk buffer caps reached (RSZ-0060); continuing" }
+}
+
+# BEGIN GRT-CLK-LOCK
+# GRT-CLK-LOCK (FLOW-CLOCK-R8 2026-10-29).  After the GRT-stage repair (hold buffers placed on top of the cells at the
+# D pins) ORFS global_route.tcl legalizes (detailed_placement) and re-routes every net with a moved pin
+# (global_route -end_incremental), and no hold check follows.  On HBM qwdec_k22pad_m10 the legalization moved 636
+# clock-net instances (max 4 um), 333 / 1788 clock nets were re-routed in the hold-buffer congestion, and the FF hold the
+# repair measured (+4.39) read -6.16 in the pre-route gate on the written 5_1_grt.odb; the same two-mode session
+# rebuilt on that odb also reads -6.16 (so corner, RC, CPPR and vclk frames agree; the design changed after repair).
+# The clock tree is final at GRT: in the GRT stage of a two-mode session, every clock-net instance (buffers + sinks)
+# is FIRM during detailed_placement, so the clock routes stay the ones the repair timed.  OT_GRT_CLK_LOCK=0 disables.
+proc ot_grt_clk_lock_on {} {
+  expr {[info exists ::ot_mm_stage] && $::ot_mm_stage eq "4_cts.sdc" &&
+        (![info exists ::env(OT_GRT_CLK_LOCK)] || $::env(OT_GRT_CLK_LOCK) ne "0")}
+}
+proc ot_grt_clk_insts {} {
+  set out [dict create]
+  foreach n [[ord::get_db_block] getNets] {
+    if {[$n getSigType] ne "CLOCK"} continue
+    foreach it [$n getITerms] {
+      set i [$it getInst]
+      if {[$i getPlacementStatus] eq "PLACED"} { dict set out [$i getName] $i }
+    }
+  }
+  return [dict values $out]
+}
+# FLOW-6 10-30 (HEAD LEP VB/VB2 5_1_grt DPL-0033: 29 overlaps, all flop-flop, under 31269 locked clock-net
+# instances): the GRT hold repair resizes clock SINKS in place (DFFHQNx1 -> x2), so a sink can overlap its neighbour;
+# with both FIRM, detailed_placement cannot legalize them.  A clock-net instance that overlaps another locked or
+# already fixed (FIRM/LOCKED) standard cell stays PLACED: legalization moves only those, and global_route
+# -end_incremental re-routes only their clock pins.  A lock set without overlaps is locked exactly as before.
+proc ot_grt_clk_overlapped {locked} {
+  set lk [dict create]; foreach i $locked { dict set lk $i 1 }
+  set rows [dict create]
+  foreach i [[ord::get_db_block] getInsts] {
+    set mine [dict exists $lk $i]
+    if {!$mine && [$i getPlacementStatus] ni {FIRM LOCKED}} continue
+    set blk 0; catch { set blk [[$i getMaster] isBlock] }
+    if {$blk} continue
+    set b [$i getBBox]
+    dict lappend rows [$b yMin] [list [$b xMin] [$b xMax] $i $mine]
+  }
+  set ov [dict create]
+  dict for {y cells} $rows {
+    set ux {}; set uo {}
+    foreach c [lsort -integer -index 0 $cells] {
+      lassign $c x0 x1 i mine
+      if {$ux ne {} && $x0 < $ux} {
+        if {$mine} { dict set ov $i 1 }
+        if {[lindex $uo 1]} { dict set ov [lindex $uo 0] 1 }
+      }
+      if {$ux eq {} || $x1 > $ux} { set ux $x1; set uo [list $i $mine] }
+    }
+  }
+  return [dict keys $ov]
+}
+if {[info commands ::ot_grt_dpl_orig] eq "" && [info commands ::detailed_placement] ne ""} {
+  rename ::detailed_placement ::ot_grt_dpl_orig
+  proc ::detailed_placement {args} {
+    # FLOW 10-30: global_route's post-repair call is bare detailed_placement, unlike 3_5 which passes ORFS args.
+    # Honor only the existing opt-in diamond selection here, without changing the default or clock-lock policy.
+    if {[info exists ::env(DETAIL_PLACEMENT_ARGS)] &&
+        "-use_diamond_legalizer" in $::env(DETAIL_PLACEMENT_ARGS) &&
+        "-use_diamond_legalizer" ni $args} {
+      lappend args -use_diamond_legalizer
+    }
+    if {![ot_grt_clk_lock_on]} { return [uplevel 1 [list ::ot_grt_dpl_orig {*}$args]] }
+    set locked [ot_grt_clk_insts]
+    set free [ot_grt_clk_overlapped $locked]
+    if {[llength $free]} {
+      set fd [dict create]; foreach i $free { dict set fd $i 1 }
+      set locked [lmap i $locked { if {[dict exists $fd $i]} continue; set i }]
+    }
+    foreach i $locked { $i setPlacementStatus FIRM }
+    puts "OT_GRT_CLK_LOCK: [llength $locked] clock-net instances FIRM during detailed_placement"
+    if {[llength $free]} {
+      puts "OT_GRT_CLK_LOCK: [llength $free] overlapping clock-net instances left PLACED for legalization (in-place resized sinks): [lrange [lmap i $free {$i getName}] 0 9][expr {[llength $free] > 10 ? " ..." : ""}]"
+    }
+    try {
+      return [uplevel 1 [list ::ot_grt_dpl_orig {*}$args]]
+    } finally {
+      foreach i $locked { $i setPlacementStatus PLACED }
+    }
+  }
+}
+# END GRT-CLK-LOCK
+
+# MACRO-CLK (2026-10-10): this helper is sourced in every ORFS stage of every run_abi3_physical / hbm_accel_smh route, so
+# it carries the flow-default macro clock clustering (clock_tree_synthesis wrapper; physical/common_flow/
+# macro_cts_cluster.tcl, which the closure loop ships into older snapshots next to this file).
+if {[info commands ot_mcc_cts_orig] eq ""} {
+  set ot_mcc_dir [file dirname [file normalize [info script]]]
+  set ot_mcc_file [file join $ot_mcc_dir macro_cts_cluster.tcl]
+  if {![file isfile $ot_mcc_file]} {
+    set ot_mcc_file [file join [file dirname $ot_mcc_dir] physical common_flow macro_cts_cluster.tcl]
+  }
+  if {[file isfile $ot_mcc_file]} { source $ot_mcc_file } else { puts "OT_MACRO_CTS unavailable: $ot_mcc_file missing" }
+}

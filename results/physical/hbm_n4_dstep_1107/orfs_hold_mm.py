@@ -1,0 +1,387 @@
+#!/usr/bin/env python3
+"""FLOW-HOLD (2026-10-07): patch a DISPOSABLE ORFS flow container's load.tcl / util.tcl so that, when the ORFS config
+exports OT_HOLD_MM=1, every stage loads a multi-mode session (scene WC = SS setup, scene BC = FF hold, each under its own
+constraints) and repair_timing_helper repairs SS setup and FF hold together (tools/orfs_hold_mm.tcl).  Without
+OT_HOLD_MM=1 the multi-mode changes are inert. Detailed placement preserves explicitly selected RC and receives ordinary final legalization after
+DPO/mirroring and before its unchanged placement check. Applied like tools/orfs_allcorner_spef.py: inside a new
+--rm container only; images, work dirs and evidence are never modified.
+   orfs_hold_mm.py <ORFS scripts dir> [<helper tcl, default /src/tools/orfs_hold_mm.tcl>]"""
+import hashlib
+import json
+import os
+import sys
+from pathlib import Path
+
+LIB = "  source $::env(SCRIPTS_DIR)/read_liberty.tcl"
+SDC = "  log_cmd read_sdc $::env(RESULTS_DIR)/$sdc_file"
+RTH = "  log_cmd repair_timing {*}$additional_args\n}"
+# unstick 2026-10-08: the hold-stall guard (ot_repair_timing in orfs_hold_mm.tcl), when the helper defines it
+GUARD_CALL = ("  if {[llength [info commands ot_repair_timing]]} {\n"
+              "    set ot_rc [catch {ot_repair_timing $additional_args} ot_msg ot_opts]\n"
+              "  } else {\n"
+              "    set ot_rc [catch {log_cmd repair_timing {*}$additional_args} ot_msg ot_opts]\n"
+              "  }\n")
+
+
+def patch(scripts: Path, helper: str) -> dict:
+    load, util = scripts / "load.tcl", scripts / "util.tcl"
+    lt, ut = load.read_text(), util.read_text()
+    out = {"helper": helper}
+    if "ot_mm_on" in lt and "ot_repair_timing" in ut:
+        return {**out, "status": "already patched"}
+    old_catch = "  set ot_rc [catch {log_cmd repair_timing {*}$additional_args} ot_msg ot_opts]\n"
+    if "ot_mm_on" in lt and "ot_mm_sync" in ut and ut.count(old_catch) == 1:   # earlier generation: add the hold guard
+        util.write_text(ut.replace(old_catch, GUARD_CALL, 1))
+        return {**out, "status": "upgraded (hold-stall guard)"}
+    for name, text, anchor in (("load.tcl", lt, LIB), ("load.tcl", lt, SDC), ("util.tcl", ut, RTH)):
+        if text.count(anchor) != 1:
+            raise SystemExit(f"orfs_hold_mm: anchor {anchor!r} not found exactly once in {name}; refusing")
+    lt = lt.replace(LIB, f"  source {helper}\n  if {{[ot_mm_on]}} {{ ot_mm_read_libs }} else {{\n{LIB}\n  }}", 1)
+    lt = lt.replace(SDC, f"  if {{[ot_mm_on]}} {{ ot_mm_read_sdc $::env(RESULTS_DIR)/$sdc_file }} else {{\n{SDC}\n  }}", 1)
+    # repair_timing_helper is the CTS / post-GRT (and placement) repair: refresh the FF mode before, restore after
+    ut = ut.replace(RTH, "  if {[llength [info commands ot_mm_sync]]} { ot_mm_sync }\n"
+                         "  if {[llength [info commands ot_repair_timing]]} {\n"
+                         "    set ot_rc [catch {ot_repair_timing $additional_args} ot_msg ot_opts]\n"
+                         "  } else {\n"
+                         "    set ot_rc [catch {log_cmd repair_timing {*}$additional_args} ot_msg ot_opts]\n"
+                         "  }\n"
+                         "  if {[llength [info commands ot_mm_unsync]]} { ot_mm_unsync }\n"
+                         # flow-triage 2026-10-08: an mm repair that exhausts repair_timing's buffer budget (RSZ-0060)
+                         # throws AFTER inserting its buffers, killing the stage (no 4_1_cts.odb) although the design is
+                         # whole; continue in mm mode only (tolerate_flow_errors then zeroes the count) so the sign-off
+                         # STA, not a dead stage, reports the residual FF hold.
+                         "  if {$ot_rc && [info exists ::ot_mm_active] && [regexp {RSZ-0060|Max buffer count} $ot_msg]} {\n"
+                         "    puts \"OT_HOLD_MM: repair hit the buffer cap (RSZ-0060); continuing on the repaired design, sign-off decides\"\n"
+                         "    return\n  }\n"
+                         "  if {$ot_rc} { return -options $ot_opts $ot_msg }\n}", 1)
+    sha = lambda s: hashlib.sha256(s.encode()).hexdigest()  # noqa: E731
+    out.update(load_before=sha(load.read_text()), util_before=sha(util.read_text()))
+    load.write_text(lt)
+    util.write_text(ut)
+    out.update(status="patched", load_after=sha(lt), util_after=sha(ut))
+    return out
+
+
+METRICS_POWER_START = '  report_puts "\\n=========================================================================="\n  report_puts "$when report_power"\n'
+METRICS_POWER_END = '\n  # TODO these only work to stdout, whereas we want to append to the $filename'
+METRICS_POWER_MARKER = "OT_INTERMEDIATE_POWER_SKIPPED"
+
+
+def patch_intermediate_power(scripts: Path) -> str:
+    """Skip only speculative power in intermediate report_metrics calls.
+
+    Stages 1..5 retain every timing/physical report. Stage 6, unknown/custom
+    stages, and all dedicated report_power/IR/sign-off commands retain power.
+    No power values are fabricated for skipped stages.
+    """
+    target = scripts / "report_metrics.tcl"
+    text = target.read_text()
+    if METRICS_POWER_MARKER in text:
+        if text.count(METRICS_POWER_MARKER) != 1:
+            raise SystemExit("orfs_hold_mm: duplicate intermediate power marker; refusing")
+        return "already patched"
+    if text.count(METRICS_POWER_START) != 1 or text.count(METRICS_POWER_END) != 1:
+        raise SystemExit("orfs_hold_mm: report_metrics power anchors not found exactly once; refusing")
+    start, end = text.index(METRICS_POWER_START), text.index(METRICS_POWER_END)
+    if end <= start:
+        raise SystemExit("orfs_hold_mm: report_metrics power anchors out of order; refusing")
+    power = text[start:end]
+    if power.count("report_power_metric") != 2 or power.count("report_power >>") != 1:
+        raise SystemExit("orfs_hold_mm: unrecognized report_metrics power body; refusing")
+    replacement = ('  if {$stage in {1 2 3 4 5}} {\n'
+                   '    puts "OT_INTERMEDIATE_POWER_SKIPPED stage $stage: power not measured; final reporting unchanged"\n'
+                   '    report_puts "$when power: NOT MEASURED (intermediate stage; final power/IR unchanged)"\n'
+                   '  } else {\n' + "".join("  " + ln + "\n" for ln in power.splitlines()) + '  }\n')
+    target.write_text(text[:start] + replacement + text[end:])
+    return "patched"
+
+
+# The detailed optimizer can create off-site cells after ordinary legalization
+# (Q-TILE45 r5: NK33/NL3 cells, almost all one DBU before a fence edge).
+# Run ordinary legalization after the final optimizer/mirroring mutation, before
+# the original mandatory placement check. No errors or checks are suppressed.
+FINAL_DPL_ANCHOR = ('  log_cmd optimize_mirroring\n\n'
+                    '  utl::info FLW 12 "Placement violations [check_placement -verbose]."')
+FINAL_DPL_BLOCK = ('  log_cmd optimize_mirroring\n\n'
+                   '  puts "OT_FINAL_DPL: ordinary legalization after final optimizer/mirroring"\n'
+                   '  log_cmd detailed_placement {*}$dpl_args\n\n'
+                   '  utl::info FLW 12 "Placement violations [check_placement -verbose]."')
+
+
+def patch_final_dpl(scripts: Path) -> str:
+    """Fail closed unless the final mutation/check sequence is exactly recognized."""
+    target = scripts / "detail_place.tcl"
+    text = target.read_text()
+    if (text.count(FINAL_DPL_BLOCK) == 1 and text.count("OT_FINAL_DPL") == 1
+            and FINAL_DPL_ANCHOR not in text):
+        return "already patched"
+    if "OT_FINAL_DPL" in text or text.count(FINAL_DPL_ANCHOR) != 1:
+        raise SystemExit("orfs_hold_mm: final legalization anchor not found exactly once in detail_place.tcl; refusing")
+    target.write_text(text.replace(FINAL_DPL_ANCHOR, FINAL_DPL_BLOCK, 1))
+    return "patched"
+
+
+STAGE_LOGS = {"cts": ["4_1_cts.log"], "globalroute": ["5_1_grt.log"]}
+
+
+def tolerate_flow_errors(errors: dict, logs_dir) -> dict:
+    """An mm repair that runs out of buffer budget (RSZ-0060) inside a recipe's own multi-pass wrapper
+    (qwen_die_masters/repair_budget.tcl continues on the grown design) logs one [ERROR] although the stage then
+    completes: such a count is zeroed ONLY when every [ERROR line of the stage log is RSZ-0060, their number equals the
+    count, and an "OT_HOLD_MM after repair" line follows the last one. The spine may also
+    recover DPL-0033 through its ordinary legalization and mandatory clean recheck;
+    each counted error must have that exact ordered recovery. Anything else stays an error."""
+    out = dict(errors)
+    for key, val in errors.items():
+        stage = key.split("__", 1)[0]
+        if not int(val) or stage not in STAGE_LOGS:
+            continue
+        lines = []
+        for name in STAGE_LOGS[stage]:
+            f = Path(logs_dir) / name
+            if f.is_file():
+                lines += f.read_text(errors="replace").splitlines()
+        errs = [i for i, ln in enumerate(lines) if ln.startswith("[ERROR")]
+        # check_placement logs DPL-0033 before throwing.  The spine's existing
+        # catch then legalizes and rechecks; OpenROAD retains the first error in
+        # its cumulative metrics even when that mandatory second check is clean.
+        # Recognize only the complete, ordered recovery for every counted error.
+        spine_recovered = bool(errs) and len(errs) == int(val) and stage == "cts"
+        for n, i in enumerate(errs):
+            end = errs[n + 1] if n + 1 < len(errs) else len(lines)
+            tail = lines[i + 1:end]
+            warning = "OT_SPINE WARNING: check_placement failed after spine insertion (DPL-0033); legalising movable cells around the spine"
+            clean = "OT_SPINE legal: check_placement clean after detailed_placement"
+            if (lines[i] != "[ERROR DPL-0033] detailed placement checks failed during check placement."
+                    or warning not in tail or clean not in tail
+                    or tail.index(warning) >= tail.index(clean)):
+                spine_recovered = False
+        if spine_recovered:
+            out[key] = 0
+            print(f"orfs_hold_mm: {key}={val} recovered by mandatory spine legalization and clean placement recheck")
+            continue
+        if (errs and len(errs) == int(val) and all("RSZ-0060" in lines[i] for i in errs)
+                and any("OT_HOLD_MM after repair" in ln for ln in lines[errs[-1]:])):
+            out[key] = 0
+            print(f"orfs_hold_mm: {key}={val} tolerated (RSZ-0060 inside a completed multi-pass mm repair)")
+    return out
+
+
+# MM-STAGE-SDC (FLOW-9 2026-10-30, DIE-KV-44 finding): a POST hook that calls ot_mm_sync (pv_native_post, kit ECO
+# hooks) leaves mode ss with 'set_false_path -hold -from [all_clocks]' when ORFS writes the stage SDC, so 5_1_grt /
+# 5_route / 6_final.sdc carried a hold-blind constraint and any ECO restarted from them skipped hold repair.  Every
+# stage SDC write restores the route-SDC state first (ot_mm_unsync) and re-syncs afterwards, so the session the stage
+# continues in is unchanged; inert when no FF mode is synced.
+WSDC_ANCHOR = "proc orfs_write_sdc { output_file } {\n"
+WSDC_WRITE = "  log_cmd write_sdc -no_timestamp $output_file\n"
+WSDC_BLOCK = ("  set ot_mm_resync [expr {[llength [info commands ot_mm_unsync]] && [info exists ::ot_mm_synced]}]\n"
+              "  if {$ot_mm_resync} { puts \"OT_HOLD_MM: stage SDC $output_file written from the route-SDC state\"; ot_mm_unsync }\n"
+              + WSDC_WRITE +
+              "  if {$ot_mm_resync} { ot_mm_sync }\n")
+
+
+def patch_stage_sdc(scripts: Path) -> str:
+    """Fail closed unless orfs_write_sdc has exactly one recognized write_sdc."""
+    util = scripts / "util.tcl"
+    ut = util.read_text()
+    i = ut.find(WSDC_ANCHOR)
+    body = ut[i:ut.find("\n}\n", i) + 3] if i >= 0 else ""
+    if ut.count(WSDC_ANCHOR) == 1 and body.count(WSDC_BLOCK) == 1 and ut.count("ot_mm_resync") == WSDC_BLOCK.count("ot_mm_resync"):
+        return "already patched"
+    if (ut.count(WSDC_ANCHOR) != 1 or body.count(WSDC_WRITE) != 1 or "ot_mm_resync" in ut
+            or ut.count(WSDC_WRITE) != 1):
+        raise SystemExit("orfs_hold_mm: orfs_write_sdc write_sdc anchor not found exactly once in util.tcl; refusing")
+    util.write_text(ut.replace(WSDC_WRITE, WSDC_BLOCK, 1))
+    return "patched"
+
+
+# FP-LINT (owner 2026-10-08): the floorplan margin lint runs at the start of ORFS global placement (after the block's own
+# PRE_GLOBAL_PLACE hook), on 3_2_place_iop.odb.  Inert unless the container env has OT_FP_LINT=1 (the closure loop's docker
+# shim passes it); tools/fp_margin_lint.tcl stops the flow with FLOORPLAN_MARGIN on a failing floorplan.
+FPL_ANCHOR = 'proc source_step_tcl { hook_type step_name } {\n  set env_var "${hook_type}_${step_name}_TCL"\n  source_env_var_if_exists $env_var\n'
+FPL_CODE = ('  if {$hook_type eq "PRE" && $step_name eq "GLOBAL_PLACE" && [info exists ::env(OT_FP_LINT)] && '
+            '$::env(OT_FP_LINT) ni {"" 0 false}} {\n'
+            '    set ot_fpl [expr {[info exists ::env(OT_FP_LINT_TCL)] ? $::env(OT_FP_LINT_TCL) : "/src/tools/fp_margin_lint.tcl"}]\n'
+            '    if {[file exists $ot_fpl]} { source $ot_fpl; ot_fp_lint_flow } else { puts "OT_FP_LINT: $ot_fpl missing: lint skipped" }\n'
+            '  }\n')
+
+
+def patch_fp_lint(scripts: Path) -> str:
+    util = scripts / "util.tcl"
+    ut = util.read_text()
+    if "ot_fp_lint_flow" in ut:
+        return "already patched"
+    if ut.count(FPL_ANCHOR) != 1:
+        return "anchor not found: fp lint unavailable in this image"
+    util.write_text(ut.replace(FPL_ANCHOR, FPL_ANCHOR + FPL_CODE, 1))
+    return "patched"
+
+
+# SLIVER-BLOCK (LOOP-AUTO 2026-10-10, auto-react class d): with OT_SLIVER_BLOCK=1 in the container env, ORFS PRE
+# GLOBAL_PLACE (after the block's own hook, BEFORE the floorplan lint) sources the common sliver hooks: a hard placement
+# blockage over every macro-to-macro gap and every macro-to-core-edge gap narrower than 12 um (OT_EDGE_SLIVER_UM).
+# Placement only; routing and constraints untouched.  Inserted right after the anchor, so it precedes the lint code.
+SLV_CODE = ('  if {$hook_type eq "PRE" && $step_name eq "GLOBAL_PLACE" && [info exists ::env(OT_SLIVER_BLOCK)] && '
+            '$::env(OT_SLIVER_BLOCK) ni {"" 0 false}} {\n'
+            '    foreach ot_slv {/src/physical/common_flow/macro_sliver_block.tcl /src/physical/common_flow/edge_sliver_block.tcl} {\n'
+            '      if {[file exists $ot_slv]} { source $ot_slv } else { puts "OT_SLIVER_BLOCK: $ot_slv missing" }\n'
+            '    }\n'
+            '  }\n')
+
+
+def patch_sliver_block(scripts: Path) -> str:
+    util = scripts / "util.tcl"
+    ut = util.read_text()
+    if "OT_SLIVER_BLOCK" in ut:
+        return "already patched"
+    if ut.count(FPL_ANCHOR) != 1:
+        return "anchor not found: sliver block unavailable in this image"
+    util.write_text(ut.replace(FPL_ANCHOR, FPL_ANCHOR + SLV_CODE, 1))
+    return "patched"
+
+
+# PREROUTE-GATE (owner 2026-10-08): the pre-route timing gate runs at the end of ORFS detailed placement (POST DETAIL_PLACE,
+# after the block's own POST_DETAIL_PLACE hook: resizer + detailed placement done, placement parasitics estimated, timing
+# already updated by report_metrics).  Inert unless the container env has OT_PREROUTE_GATE=1 (the closure loop's docker
+# shim passes it only when the gate is enabled); tools/preroute_gate.tcl stops the flow with PREROUTE_MARGIN.
+PRG_CODE = ('  if {$hook_type eq "POST" && $step_name eq "DETAIL_PLACE" && [info exists ::env(OT_PREROUTE_GATE)] && '
+            '$::env(OT_PREROUTE_GATE) ni {"" 0 false}} {\n'
+            '    set ot_prg [expr {[info exists ::env(OT_PREROUTE_GATE_TCL)] ? $::env(OT_PREROUTE_GATE_TCL) : "/src/tools/preroute_gate.tcl"}]\n'
+            '    if {[file exists $ot_prg]} { source $ot_prg; ot_preroute_gate_flow } else { puts "OT_PREROUTE_GATE: $ot_prg missing: gate skipped" }\n'
+            '  }\n')
+
+
+def patch_preroute_gate(scripts: Path) -> str:
+    util = scripts / "util.tcl"
+    ut = util.read_text()
+    if "ot_preroute_gate_flow" in ut:
+        return "already patched"
+    if ut.count(FPL_ANCHOR) != 1:
+        return "anchor not found: pre-route gate unavailable in this image"
+    util.write_text(ut.replace(FPL_ANCHOR, FPL_ANCHOR + PRG_CODE, 1))
+    return "patched"
+
+
+def patch_abc_no_dch(scripts: Path, env=None) -> str:
+    """ABC-NODCH (drive-2155 2026-10-08): yosys-abc's &dch asserts on some netlists (aigDup.c:602 Aig_ManDupDfs,
+    'ABC failed with status 86'; dsfd_wfc_vmx: 253k ANDs, &get -n; &st; &dch alone reproduces it, abc_area too).  With
+    OT_ABC_NO_DCH=1 in the container env the disposable container's abc_speed / abc_area scripts run &synch2 (synthesis
+    with structural choices, already in the script) in place of &dch.  Without the variable nothing changes."""
+    env = os.environ if env is None else env
+    if env.get("OT_ABC_NO_DCH") != "1":
+        return "off"
+    out = []
+    for name in ("abc_speed.script", "abc_area.script"):
+        f = scripts / name
+        if not f.is_file():
+            continue
+        lines = f.read_text().splitlines()
+        new = ["&synch2" if ln.strip() in ("&dch", "&dch -f") else ln for ln in lines]
+        if new != lines:
+            f.write_text("\n".join(new) + "\n")
+            out.append(f"{name}: {sum(a != b for a, b in zip(lines, new))} x &dch -> &synch2")
+    return "; ".join(out) or "no &dch found"
+
+
+GRT_BUDGET_ANCHOR = '    set cong_iters "-congestion_iterations 30"'
+GRT_BUDGET_BLOCK = '''    # OT_GRT_BUDGET: respect the caller's normal FastRoute iteration budget.
+    set ot_grt_budget 30
+    if {[info exists ::env(GRT_OVERFLOW_ITERS)]} {
+      set ot_grt_budget $::env(GRT_OVERFLOW_ITERS)
+      if {![string is integer -strict $ot_grt_budget] || $ot_grt_budget < 1} {
+        error "GRT_OVERFLOW_ITERS must be a positive integer: $ot_grt_budget"
+      }
+    }
+    set cong_iters "-congestion_iterations $ot_grt_budget"
+    # Q15 (FLOW-21 11-01, xfin relief probe ran "-congestion_iterations 30 -congestion_iterations 50"): global_route's
+    # parse_key_args keeps the LAST value, so an explicit budget in GLOBAL_ROUTE_ARGS already wins; drop the default
+    # so the command names the budget once
+    if {[info exists ::env(GLOBAL_ROUTE_ARGS)] && [lsearch -exact $::env(GLOBAL_ROUTE_ARGS) -congestion_iterations] >= 0} {
+      set cong_iters ""
+    }'''
+
+
+def patch_grt_budget(scripts: Path) -> str:
+    """Honor an explicit budget in disposable flow scripts; keep CUGR's own policy."""
+    target = scripts / "global_route.tcl"
+    if not target.is_file():
+        return "global_route.tcl absent"
+    text = target.read_text()
+    if GRT_BUDGET_BLOCK in text:
+        return "already patched"
+    if text.count(GRT_BUDGET_ANCHOR) != 1:
+        return "unrecognized global-route budget anchor; unchanged"
+    target.write_text(text.replace(GRT_BUDGET_ANCHOR, GRT_BUDGET_BLOCK, 1))
+    return "patched"
+
+
+DPL_RC_ANCHOR = "source $::env(PLATFORM_DIR)/setRC.tcl"
+DPL_RC_BLOCK = '''# OT_DPL_SELECTED_RC: preserve the same declared RC used by load_design.
+if {[info exists ::env(SET_RC_TCL)] && $::env(SET_RC_TCL) ne ""} {
+  source $::env(SET_RC_TCL)
+} elseif {[info exists ::env(LAYER_PARASITICS_FILE)] && $::env(LAYER_PARASITICS_FILE) ne ""} {
+  source $::env(LAYER_PARASITICS_FILE)
+} else {
+  source $::env(PLATFORM_DIR)/setRC.tcl
+}'''
+
+
+def patch_dpl_selected_rc(scripts: Path) -> str:
+    """Keep declared RC through DPL optimization and its metrics in a disposable flow."""
+    target = Path(scripts) / "detail_place.tcl"
+    if not target.is_file():
+        return "detail_place.tcl absent"
+    text = target.read_text()
+    if DPL_RC_BLOCK in text:
+        return "already patched"
+    if text.count(DPL_RC_ANCHOR) != 1:
+        return "unrecognized detailed-place RC anchor; unchanged"
+    target.write_text(text.replace(DPL_RC_ANCHOR, DPL_RC_BLOCK, 1))
+    return "patched"
+
+
+FINAL_GUIDE_ANCHOR = "  source_step_tcl POST GLOBAL_ROUTE\n  orfs_write_db $::env(RESULTS_DIR)/5_1_grt.odb"
+FINAL_GUIDE_REPLACEMENT = "  source_step_tcl POST GLOBAL_ROUTE\n  # OT_FINAL_ROUTE_GUIDES: serialize the final post-hook DB guides.\n  write_guides $::env(RESULTS_DIR)/route.guide\n  orfs_write_db $::env(RESULTS_DIR)/5_1_grt.odb"
+
+
+def patch_final_guides(scripts):
+    target = Path(scripts) / "global_route.tcl"
+    text = target.read_text()
+    if "OT_FINAL_ROUTE_GUIDES" in text:
+        return "already patched"
+    if text.count(FINAL_GUIDE_ANCHOR) != 1:
+        return "unrecognized post-global-route guide anchor; unchanged"
+    target.write_text(text.replace(FINAL_GUIDE_ANCHOR, FINAL_GUIDE_REPLACEMENT, 1))
+    return "patched"
+
+
+if __name__ == "__main__":
+    print("orfs_hold_mm: DPL selected RC", patch_dpl_selected_rc(Path(sys.argv[1])))
+    print("orfs_hold_mm: final guides", patch_final_guides(Path(sys.argv[1])))
+    print("orfs_hold_mm: GRT budget", patch_grt_budget(Path(sys.argv[1])))
+    if len(sys.argv) > 2 and sys.argv[2] == "--metrics-only":
+        print("orfs_hold_mm: intermediate power", patch_intermediate_power(Path(sys.argv[1])))
+        sys.exit(0)
+    try:
+        print("orfs_hold_mm: intermediate power", patch_intermediate_power(Path(sys.argv[1])))
+    except SystemExit as ex:
+        print("orfs_hold_mm: intermediate power unchanged:", ex)
+    print("orfs_hold_mm: final legalization", patch_final_dpl(Path(sys.argv[1])))
+    print("orfs_hold_mm: stage SDC", patch_stage_sdc(Path(sys.argv[1])))
+    print("orfs_hold_mm:", json.dumps(patch(Path(sys.argv[1]), sys.argv[2] if len(sys.argv) > 2 else "/src/tools/orfs_hold_mm.tcl")))
+    try:
+        print("orfs_hold_mm: abc no-dch", patch_abc_no_dch(Path(sys.argv[1])))
+    except Exception as ex:  # noqa: BLE001
+        print(f"orfs_hold_mm: abc no-dch not applied ({ex})")
+    try:
+        print("orfs_hold_mm: fp lint hook", patch_fp_lint(Path(sys.argv[1])))
+    except Exception as ex:  # noqa: BLE001 - the lint hook must never break a flow
+        print(f"orfs_hold_mm: fp lint hook not installed ({ex})")
+    try:
+        print("orfs_hold_mm: sliver block hook", patch_sliver_block(Path(sys.argv[1])))
+    except Exception as ex:  # noqa: BLE001 - the sliver hook must never break a flow
+        print(f"orfs_hold_mm: sliver block hook not installed ({ex})")
+    try:
+        print("orfs_hold_mm: pre-route gate hook", patch_preroute_gate(Path(sys.argv[1])))
+    except Exception as ex:  # noqa: BLE001 - the gate hook must never break a flow
+        print(f"orfs_hold_mm: pre-route gate hook not installed ({ex})")
