@@ -5,7 +5,8 @@
 `define TB_PINC 0
 `endif
 `timescale 1ns/1ps
-// QC-NLNK-RF2 11-06 vR bench: ref RSTP 0 vs dut RSTP `TB_RSTP (same LQR); t_out delta must be 0 and every sink-side reset edge exactly +RSTP.
+// QC-NLNK-RF2 vR/PINC bench: ref RSTP 0 vs dut RSTP `TB_RSTP (same LQR).
+// t_out shifts by TB_PINC, n_y by 2*TB_PINC; sink reset edges shift by RSTP.
 // derived from: QC-A0C-B5 11-06 vB bench (tools/qwen_romleaf/a0core/lqr/): qfd_tile_<t>_a0c LQR=0 (ref) vs LQR=`TB_LQR (dut), both with the
 // kit's top parameters, same stimulus (tb_a0_icg pattern: 5 commands over all banks, x line / n data toggling every cycle,
 // node traffic windows, an idle reset pulse, back-to-back go while busy).  LQR adds cycles, so t_out is compared as a
@@ -119,6 +120,9 @@ initial begin
     end
     na[513:512] = {(cyc == 6205), ((cyc >= 600 && cyc < 900) || (cyc >= 6000 && cyc < 6400)) && (cyc % 11 == 0)};
     nb[513:512] = na[513:512];
+    // Isolated fault-only activity after both engines have drained: unlike the
+    // 11-edge valid trains, this exercises opening the gate from closed idle.
+    if (cyc == 11500) begin na[513] = 1; nb[513] = 1; end
     if (cyc == 6300) nb[512] = 1;                         // one misaligned leg (node sticky fault)
     if (cyc == 7000) rs = 0;                              // reset pulse while idle (no busy reset: a run cut by
     if (cyc == 7005) rs = 1;                              // reset legitimately ends at a different word with LQR)

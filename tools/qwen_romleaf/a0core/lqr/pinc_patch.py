@@ -10,7 +10,7 @@ mis_q/fy_q read the delayed legs.  ICG: the face activity term covers the extra 
 body captures the last delayed word.  Reset gating stays on both stages of the output sideband.
 
 Bench-only `OT_PINC_MUT (must FAIL): 1 = n_b skips its stage (legs misaligned), 2 = t_out valid skips its stage (valid leads
-data), 3 = the ICG activity term not extended.
+data), 3 = the ICG activity term one edge late.
 usage: pinc_patch.py RTL_DIR
 """
 import sys
@@ -125,4 +125,17 @@ sub(T, """        wire act = ((mut == 5) ? 1'b0 : !rst_e) | go_act | ((mut == 2)
 `endif
         wire act = ((mut == 5) ? 1'b0 : !rst_e) | go_act | ((mut == 2) ? 1'b0 : !me_idle) | ((mut == 4) ? 1'b0 : nv_act);
 """)
+# The ungated node has one input register plus eight valid-delay registers.
+# Keep the gated output face clocking through the falling-valid edge. PINC
+# adds one gated output stage; its delayed activity also moves the drain origin.
+# This floor is derived only for the ICG=1, ICG_IREG=1, ICG_EREG=1 class used by vR4.
+sub(T, "    wire ck_rp0;", """    localparam integer ICG_NODE_DRAIN_MIN = 9 + (PINC != 0);
+    localparam integer ICG_EFFECTIVE_DRAIN = (ICG == 1 && ICG_IREG != 0 && ICG_EREG != 0 && ICG_DRAIN < ICG_NODE_DRAIN_MIN)
+                                            ? ICG_NODE_DRAIN_MIN : ICG_DRAIN;
+    wire ck_rp0;""")
+sub(T, "8'(ICG_DRAIN)", "8'(ICG_EFFECTIVE_DRAIN)", 4)
+sub(T, "8'(ICG_DRAIN - ((mut == 16) ? 0 : 1))", "8'(ICG_EFFECTIVE_DRAIN - ((mut == 16) ? 0 : 1))")
+
+sub(T, "ICG_DRAIN < 2", "ICG_EFFECTIVE_DRAIN < 2")
+sub(T, "ICG_DRAIN >= 2", "effective ICG drain >= 2")
 print("PINC_PATCH_OK")
