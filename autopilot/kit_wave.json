@@ -205,7 +205,13 @@
     "kv3_hub_Eo@10",
     "kv3_pv_v12@13",
     "kv3_pv_v7@9",
-    "kv3_io_ft_v1@7"
+    "kv3_io_ft_v1@7",
+    "kv3_hgi_v8@15",
+    "kv3_hub_Eo@13",
+    "kv3_pv_v12@16",
+    "kv3_pv_v6n@9",
+    "kv3_pv_v6@10",
+    "kv3_pv_v7@12"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -559,7 +565,8 @@
     "intel1"
    ],
    "gen_hosts": [
-    "epyc5"
+    "epyc5",
+    "intel1"
    ],
    "place_prefer": [
     "epyc4",
@@ -2933,7 +2940,8 @@
    },
    "gen_hosts": [
     "epyc5",
-    "epyc2"
+    "epyc2",
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": false,
@@ -3980,7 +3988,8 @@
    },
    "gen_hosts": [
     "epyc5",
-    "epyc2"
+    "epyc2",
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
@@ -4782,7 +4791,8 @@
     "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch"
    },
    "gen_hosts": [
-    "epyc5"
+    "epyc5",
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "retry_fix": {
@@ -4969,5 +4979,5 @@
  },
  "note_kw24_no_resume": "KW-FIX-24 COORD 17:5x: kits homed on epyc6 move to the hub at their next autopilot submit (claude/kw-fix-24-evac-1106 e3d732d2cf7; inert before that merge). Drop the epyc6 entry when epyc6 scratch2 >= 80 GB.",
  "note_kw24_queue_push": "KW-FIX-24 11-06 18:48 COORD 18:5x QUEUE PUSH: place hosts + place_prefer epyc4, epyc2 first (scratch3 362/401 GB; kw17 watcher not running), epyc5, intel1; epyc6 stays out (no_resume_hosts); max_launch_per_tick 40 -> 60; retry += infra casualties (5) + HBM queue-rejected (7)",
- "note_kw24_intel1_src": "KW-FIX-24 11-06 19:04: intel1 out of gen_hosts until its copies of kw21/src_c926f + kw23/src_e9eda are complete (46k files pruned there: tools/die_plan/bind.py missing -> 6 KV kit_rtl FAIL 18:46); restore + relaunch those rows after the resync"
+ "note_kw24_intel1_src": "KW-FIX-24 11-06 19:06: intel1 src copies kw21/src_c926f + kw23/src_e9eda resynced from epyc5 (46.1k + 46.8k pruned files restored, tools/die_plan/bind.py present); intel1 back in gen_hosts; the 6 KV kit_rtl 'tool input file missing' rows retried"
 }
