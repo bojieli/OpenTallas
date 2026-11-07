@@ -155,7 +155,8 @@ table.jt{width:100%;border-collapse:collapse;font:11.5px var(--mono);font-varian
 .rb b{color:var(--ink);text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
 .hosts{display:grid;gap:12px}
 .hosts.big{grid-template-columns:repeat(2,minmax(0,1fr))}
-.hosts.big .host.wide{grid-column:1/-1}
+.hosts.big .host.wide{grid-column:1/-1;order:1}
+.hosts.small:empty{display:none}
 .host.wide .hn::after{content:attr(data-wide);margin-left:8px;font:600 10.5px var(--mono);color:var(--accent);letter-spacing:.06em}
 .hosts.small{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .smallc{padding:9px 11px}
@@ -381,7 +382,7 @@ function card(h, i) {
     <div class="hm"><span>RAM <b class="mu"></b></span><span class="mp"></span></div><div class="bar"><i></i></div>
     <div class="hm"><span>load <b class="ld"></b></span><span>containers <b class="dk"></b></span><span>loop routes <b class="rt"></b></span></div><div class="hsum" title="every job on this host (Fleet jobs table): closure-loop routes, other ot-heavy/ot-run jobs and containers, ot-heavy waiters in the admission queue"></div><div class="gpu" hidden></div>`;
   el.classList.add(/EPYC|Xeon/.test(h.kind) ? 'bigc' : 'smallc');
-  $(/EPYC|Xeon/.test(h.kind) ? 'hostsBig' : 'hostsSmall').appendChild(el);
+  $('hostsBig').appendChild(el);   // one grid: a smaller host fills the odd cell, wide hosts stay last
   c = {el, cv: el.querySelector('canvas'), cur: [], tgt: [], n: 0};
   el.querySelector('.nm').textContent = h.label;
   const hc = HOSTCOL[i % HOSTCOL.length];
