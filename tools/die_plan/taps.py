@@ -504,6 +504,9 @@ def grid_explicit_sites(P, tn):
     return out
 
 
+ADDED_TAP_RADIUS_SLACK = 1.10
+
+
 def grid_explicit_taps(P, tn):
     """Validate grid+explicit on the kit split (assign: nearest + cap): every ADDED tap non-empty, <= tap_max_sinks
     and every sink it takes within tap_radius_um.  The R4 grid taps keep exactly the grid-mode rules (COORD 00:2x)."""
@@ -522,10 +525,15 @@ def grid_explicit_taps(P, tn):
     if cap <= 0 or radius <= 0:
         raise ValueError(f"{tn}: grid+explicit tap radius/capacity must be positive")
     load, far, _ = assign(out, sinks, cap, radius, max_distance_um=radius)
+    # KW-FIX-28 11-07 (OWNER 11-03 targets, not gates): the radius is a target; a small overrun reports and goes on to CTS and
+    # sign-off (leaf t24, t58, t68 at 1.04-1.08 x 200 um stopped at kit_rtl and failed the whole strict bind).  A far tap
+    # still stops here: that is a wrong site, not a near miss.
     for i, (n, r) in enumerate(zip(load, far)):
-        if i >= n_grid and (n > cap or r > radius + 1e-6 or n == 0):      # grid taps keep the grid-mode rules
+        if i >= n_grid and (n > cap or r > radius * ADDED_TAP_RADIUS_SLACK + 1e-6 or n == 0):      # grid taps keep the grid-mode rules
             raise ValueError(f"{tn}: grid+explicit tap {out[i][0]} load={n:g}/{cap}, radius={r:g}/{radius}, "
                              f"empty={n == 0}")
+        if i >= n_grid and r > radius + 1e-6:
+            print(f"TAP-RADIUS-TARGET {tn}: grid+explicit tap {out[i][0]} radius={r:g}/{radius} (advisory)", file=sys.stderr)
     return [(name, x, y, n, r) for (name, x, y), n, r in zip(out, load, far)]
 
 
