@@ -21,7 +21,10 @@
 //   * reset tree: one ot_reset_sync pair per landing bank (same release edge).
 //   PIN CYCLES vs B8: landing write / complete / bank fault +1 stream_clk per packet (packets 2 cycles apart),
 //   credits (cr) follow the later pops.
-module ot_svgr_b12_fifo #(parameter integer W = 285, parameter integer SL = 9, parameter integer MUT = 0) (
+// DIE-HBM-82-SVGR 11-06: keep_hierarchy (attribute only, no function change) so every FIFO cell, the abc read/enable
+// mux included, keeps the u_response name prefix and the M5 landing guide box beside the in_data face holds the whole FIFO
+// (unguided runs placed ~40% of the storage flops west of the macro column).
+(* keep_hierarchy = 1 *) module ot_svgr_b12_fifo #(parameter integer W = 285, parameter integer SL = 9, parameter integer MUT = 0) (
   input  wire          wclk, wrst_n, input wire we, input wire [W-1:0] wdata, output wire full,
   output wire [2:0]    rd_freed,
   input  wire          rclk, rrst_n, input wire re, output wire [W-1:0] rdata, output wire empty
