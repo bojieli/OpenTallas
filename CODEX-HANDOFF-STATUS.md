@@ -1,6 +1,6 @@
 # OpenTallas — Claude -> Codex standby handoff
 
-Updated by Claude COORD at 2026-11-06 21:3x PST. **Claude is running now. This file is only used if Claude hits a usage limit.** If you are reading it because the auto-switch started you, Claude's lanes have all stopped too (same account), so you own every scope below until told Claude is back.
+Updated by Claude COORD at 2026-11-06 21:19 PST. **Claude is running now. This file is only used if Claude hits a usage limit.** If you are reading it because the auto-switch started you, Claude's lanes have all stopped too (same account), so you own every scope below until told Claude is back.
 
 Read first: CODEX-ROLE.md, AGENTS.md, ~/coord/METHODOLOGY.md, then the tail of `lanes/COORD-REVIEW-QUEUE.md` from 19:00 PST 11-06 (every RULING line there is binding).
 
