@@ -3752,6 +3752,8 @@
    "gen_args": [
     "--hold-ff-margin",
     "0",
+    "--max-wire-um",
+    "120",
     "--clock-landing",
     "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/sidecar.json"
    ],
@@ -4784,7 +4786,14 @@
     "sle_cland_w517_n_200",
     "sle_cland_w765_e_200",
     "sle_cland_w767_e_200"
-   ]
+   ],
+   "gen_args_prev_kw28_mw": [
+    "--hold-ff-margin",
+    "0",
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/sidecar.json"
+   ],
+   "note_kw28_mw": "KW-FIX-28 11-07 08:3x: QC new launches --max-wire-um 120 (DQ89-TYPES: coll_ftn a5 1318 slew pins, 83% of worst nets over 120 um on M3, 0 slew at GRT, appears only after route; S81 already runs 100). Unproven on QC: pilot coll_ftn vW has no result yet. gen_args apply at launch only; running rows keep their kit."
   },
   "hbm": {
    "enabled": true,
