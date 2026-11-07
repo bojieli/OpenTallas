@@ -25,8 +25,8 @@
       },
       "plan": "/srv/opentallas-scratch2/claude/kw24/kv_plan_7da_ad/plan_of_record/plan_c.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw27/src_fb119",
-      "src_sha": "fb1191142e49a7666573c212ac8ab8ea551a3ce1",
+      "src": "/srv/opentallas-scratch2/claude/kw30/src_06088",
+      "src_sha": "06088f407f19b248cbf592448c5dc6e52123e943",
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch2/claude/kw23/asbuilt_kv_7da.json",
@@ -920,7 +920,11 @@
       "src_prev_kw29": "/srv/opentallas-scratch2/claude/kw27/src_cf08e",
       "src_sha_prev_kw29": "cf08ef4533c556035846088f9529b757ac0fe8c5",
       "queue_src_prev_kw29": "main@cf08ef4533c556035846088f9529b757ac0fe8c5",
-      "flow_tag_kw29": "flow-20261107-cp-kv"
+      "flow_tag_kw29": "flow-20261107-cp-kv",
+      "src_prev_kw30": "/srv/opentallas-scratch2/claude/kw27/src_fb119",
+      "src_sha_prev_kw30": "fb1191142e49a7666573c212ac8ab8ea551a3ce1",
+      "flow_tag_kw30": "flow-20261107-cs-kv",
+      "note_src_kw30": "KW-FIX-30 2026-11-07 14:2x (ROOT-MERGE-49 13:44 tags (b) on 06088f407f1 = hold-margin 711bad61, writer opt-in, export idem, PRD scope, final DPL, KW-FIX-30 work_root/BESIDE-PROOF; hold-margin canary PASS 14:1x): src kw30/src_06088 = kw27/src_fb119lf hardlinks + 154 git files (epyc6: src_fb119 + 156), 319270 tracked, 0 missing, blob_bad 0 on epyc5/epyc2/intel1/epyc4/epyc6 (intel2 not staged, SRC-INCOMPLETE as before). New attempts only. Revert: src/src_sha <- *_prev_kw30."
     },
     "s81": {
       "enabled": true,
@@ -3429,8 +3433,8 @@
       },
       "plan": "/srv/opentallas-scratch3/claude/kw23/prep_l48ui/source_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw27/src_fb119",
-      "src_sha": "fb1191142e49a7666573c212ac8ab8ea551a3ce1",
+      "src": "/srv/opentallas-scratch2/claude/kw30/src_06088",
+      "src_sha": "06088f407f19b248cbf592448c5dc6e52123e943",
       "kit_rtl": {
         "mode": "script",
         "script": "/srv/opentallas-scratch2/claude/kw23/src_e9eda/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
@@ -3992,7 +3996,11 @@
       "src_prev_kw29": "/srv/opentallas-scratch2/claude/kw27/src_cf08e",
       "src_sha_prev_kw29": "cf08ef4533c556035846088f9529b757ac0fe8c5",
       "queue_src_prev_kw29": "main@cf08ef4533c556035846088f9529b757ac0fe8c5",
-      "flow_tag_kw29": "flow-20261107-ct-head"
+      "flow_tag_kw29": "flow-20261107-ct-head",
+      "src_prev_kw30": "/srv/opentallas-scratch2/claude/kw27/src_fb119",
+      "src_sha_prev_kw30": "fb1191142e49a7666573c212ac8ab8ea551a3ce1",
+      "flow_tag_kw30": "flow-20261107-cw-head",
+      "note_src_kw30": "KW-FIX-30 2026-11-07 14:2x (ROOT-MERGE-49 13:44 tags (b) on 06088f407f1 = hold-margin 711bad61, writer opt-in, export idem, PRD scope, final DPL, KW-FIX-30 work_root/BESIDE-PROOF; hold-margin canary PASS 14:1x): src kw30/src_06088 = kw27/src_fb119lf hardlinks + 154 git files (epyc6: src_fb119 + 156), 319270 tracked, 0 missing, blob_bad 0 on epyc5/epyc2/intel1/epyc4/epyc6 (intel2 not staged, SRC-INCOMPLETE as before). New attempts only. Revert: src/src_sha <- *_prev_kw30."
     },
     "qwen_compute": {
       "enabled": true,
@@ -4006,8 +4014,8 @@
       },
       "plan": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/plan_of_record/plan_qc53_candidate_v4.json",
       "gen_host": "epyc2",
-      "src": "/srv/opentallas-scratch2/claude/kw27/src_fb119",
-      "src_sha": "fb1191142e49a7666573c212ac8ab8ea551a3ce1",
+      "src": "/srv/opentallas-scratch2/claude/kw30/src_06088",
+      "src_sha": "06088f407f19b248cbf592448c5dc6e52123e943",
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt.json",
@@ -5086,7 +5094,11 @@
         "epyc2",
         "epyc5"
       ],
-      "note_gen_hosts_kw30": "KW-FIX-30 2026-11-07 13:5x (COORD 13:21 ruling): + epyc4, intel1 as gen hosts for new rows (epyc5 scratch2 and epyc2 root REFUSED). Closure checked on both: kw30_clo2 s81 385 / qc 199 paths, 0 missing; src_fb119/src_fb119lf/src_02909_qc4 c92647a2155 with .stagedone; bind inputs (s81_emitted_v2 bind rtl, s81_ready_v3, kvov, src_28fc7 7 files, bind_strict, bind_qc4, src_7281a 9 files) copied from epyc5. epyc6 stays out (root 53 GB < 100). Revert: gen_hosts <- gen_hosts_prev_kw30."
+      "note_gen_hosts_kw30": "KW-FIX-30 2026-11-07 13:5x (COORD 13:21 ruling): + epyc4, intel1 as gen hosts for new rows (epyc5 scratch2 and epyc2 root REFUSED). Closure checked on both: kw30_clo2 s81 385 / qc 199 paths, 0 missing; src_fb119/src_fb119lf/src_02909_qc4 c92647a2155 with .stagedone; bind inputs (s81_emitted_v2 bind rtl, s81_ready_v3, kvov, src_28fc7 7 files, bind_strict, bind_qc4, src_7281a 9 files) copied from epyc5. epyc6 stays out (root 53 GB < 100). Revert: gen_hosts <- gen_hosts_prev_kw30.",
+      "src_prev_kw30": "/srv/opentallas-scratch2/claude/kw27/src_fb119",
+      "src_sha_prev_kw30": "fb1191142e49a7666573c212ac8ab8ea551a3ce1",
+      "flow_tag_kw30": "flow-20261107-dc-qc",
+      "note_src_kw30": "KW-FIX-30 2026-11-07 14:2x (ROOT-MERGE-49 13:44 tags (b) on 06088f407f1 = hold-margin 711bad61, writer opt-in, export idem, PRD scope, final DPL, KW-FIX-30 work_root/BESIDE-PROOF; hold-margin canary PASS 14:1x): src kw30/src_06088 = kw27/src_fb119lf hardlinks + 154 git files (epyc6: src_fb119 + 156), 319270 tracked, 0 missing, blob_bad 0 on epyc5/epyc2/intel1/epyc4/epyc6 (intel2 not staged, SRC-INCOMPLETE as before). New attempts only. Revert: src/src_sha <- *_prev_kw30."
     },
     "hbm": {
       "enabled": true,
@@ -5196,8 +5208,8 @@
       "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
       "plan": "/srv/opentallas-scratch2/claude/kw27/hbm_d44v_02909/die_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw27/src_fb119",
-      "src_sha": "fb1191142e49a7666573c212ac8ab8ea551a3ce1",
+      "src": "/srv/opentallas-scratch2/claude/kw30/src_06088",
+      "src_sha": "06088f407f19b248cbf592448c5dc6e52123e943",
       "gate": {
         "g0c": "PASS",
         "bind": "PASS",
@@ -6046,7 +6058,11 @@
       "src_prev_kw29": "/srv/opentallas-scratch2/claude/kw27/src_cf08e",
       "src_sha_prev_kw29": "cf08ef4533c556035846088f9529b757ac0fe8c5",
       "queue_src_prev_kw29": "main@cf08ef4533c556035846088f9529b757ac0fe8c5",
-      "flow_tag_kw29": "flow-20261107-dx-hbm"
+      "flow_tag_kw29": "flow-20261107-dx-hbm",
+      "src_prev_kw30": "/srv/opentallas-scratch2/claude/kw27/src_fb119",
+      "src_sha_prev_kw30": "fb1191142e49a7666573c212ac8ab8ea551a3ce1",
+      "flow_tag_kw30": "flow-20261107-ea-hbm",
+      "note_src_kw30": "KW-FIX-30 2026-11-07 14:2x (ROOT-MERGE-49 13:44 tags (b) on 06088f407f1 = hold-margin 711bad61, writer opt-in, export idem, PRD scope, final DPL, KW-FIX-30 work_root/BESIDE-PROOF; hold-margin canary PASS 14:1x): src kw30/src_06088 = kw27/src_fb119lf hardlinks + 154 git files (epyc6: src_fb119 + 156), 319270 tracked, 0 missing, blob_bad 0 on epyc5/epyc2/intel1/epyc4/epyc6 (intel2 not staged, SRC-INCOMPLETE as before). New attempts only. Revert: src/src_sha <- *_prev_kw30."
     }
   },
   "place_prefer": [
