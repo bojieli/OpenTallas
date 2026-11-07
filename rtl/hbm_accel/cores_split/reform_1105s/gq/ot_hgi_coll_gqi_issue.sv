@@ -191,6 +191,52 @@ module ot_hgi_coll_gqi_issue #(
     endfunction
     function automatic is_code(input [10:0] i); is_code = !g_qbg || i < {3'b0, g_bs}; endfunction
     function automatic [15:0] sec_add(input [15:0] s, input [12:0] a); sec_add = {s[15:13], s[12:0] + a}; endfunction
+    // DIE-HBM-82-COLL vA 11-06 (routed vB2 TT -135 ps: 1.3k endpoints behind the bank-select / mode decode of g_src, g_r2,
+    // ev_k fanning out to 2,560 bits of 8:1 read muxes): the aq_x and p_d bank selects, the p_d source mode and the
+    // exponent-byte write enables are REGISTERED one edge early from the next state of the gather registers
+    // (fire ? rc : g_*) and of the event pipeline (ev_k[s-1] -> ev_k[s], ev_v[s-1] -> ev_v[s], same reset); the 512-bit
+    // clear of ex on fire becomes a 1-bit flag ex_z applied on read.  Exact retiming, 0 added cycles (lock-step bench
+    // vs the unchanged original with mutants).
+    wire [2:0] g_src_n3 = fire ? rc[39:37] : g_src[2:0];
+    wire       g_r2_n   = fire ? rc[1] : g_r2;
+    wire       g_qbg_n  = fire ? rc[0] : g_qbg;
+    wire [9:0] g_f_n    = fire ? rc[28:19] : g_f;
+    wire [7:0] g_bs_n   = fire ? rc[36:29] : g_bs;
+    function automatic [10:0] flit_n(input [9:0] k, input integer r, input r2); flit_n = r2 ? {k, 1'(r)} : (r == 0 ? {1'b0, k} : 11'h7ff); endfunction
+    function automatic fv_n(input [9:0] k, input integer r, input r2, input [9:0] f);
+        reg [10:0] i; i = flit_n(k, r, r2); fv_n = (r == 0 || r2) && i < {1'b0, f};
+    endfunction
+    function automatic code_n(input [10:0] i, input qbg, input [7:0] bs); code_n = !qbg || i < {3'b0, bs}; endfunction
+    reg [63:0] aq_sel;                                 // (r*4+w)*8 + bank: one-hot bank of aq_x word (r, w)
+    reg [15:0] pd_sel;                                 // r*8 + bank: one-hot bank of the p_d read word
+    reg [3:0]  pd_m;                                   // r*2: p_d source 0 rdw, 1 aq_q, 2 ex_n[255:0], 3 ex_n[511:256]
+    reg [127:0] ex_we;                                 // r*64 + byte: exponent byte written this edge
+    reg ex_z;                                          // ex reads as zero (cleared by fire)
+    always @(posedge clk) begin : nb_pre
+        for (integer r = 0; r < 2; r = r + 1) begin : nb_pre_r
+            reg [10:0] i; reg [2:0] s;
+            i = flit_n(ev_k[S_QCAP-1], r, g_r2_n);
+            for (integer w = 0; w < 4; w = w + 1) begin
+                s = g_src_n3 + {i[0], 2'(w)};
+                aq_sel[(r*4+w)*8 +: 8] <= 8'd1 << s;
+            end
+            i = flit_n(ev_k[S_P-2], r, g_r2_n);
+            s = g_src_n3 + i[2:0];
+            pd_sel[r*8 +: 8] <= 8'd1 << s;
+            pd_m[r*2 +: 2] <= !g_qbg_n ? 2'd0 : code_n(i, g_qbg_n, g_bs_n) ? 2'd1 : (i == {3'b0, g_bs_n}) ? 2'd2 : 2'd3;
+        end
+    end
+    always @(posedge clk or negedge rn)
+        if (!rn) ex_we <= '0;
+        else for (integer r = 0; r < 2; r = r + 1) begin : nb_pre_we
+            // DIE-HBM-83-COLL 11-06 (post-CTS TT -105 ps, 96 endpoints, all ex_we: cur -> rf[cur] -> tl compare -> fire ->
+            // g_f_n -> 11-bit compare): ev_v[S_P-2] and a fire on the same edge cannot both hold on a legal program, because
+            // a fire with work in flight is the busy fault, so the current g_* equal g_*_n whenever the write enable can be
+            // set. Using g_* takes fire out of this cone; 0 cycles.
+            reg [10:0] i; i = flit_i(ev_k[S_P-2], r);
+            ex_we[r*64 +: 64] <= (ev_v[S_P-2] && g_qbg && fv(ev_k[S_P-2], r) && is_code(i))
+                                 ? (64'd1 << i[5:0]) : 64'd0;
+        end
     // ------------------------------------------------------------------ VM reads (issue) + response check
     reg [7:0] rd_exp; reg [7:0] rd_exp_q;
     always @(posedge clk or negedge rn) begin
@@ -243,11 +289,10 @@ module ot_hgi_coll_gqi_issue #(
             aq_v[r] = ev_v[S_QCAP] && g_qbg && fv(ev_k[S_QCAP], r) && is_code(i);
         end
     always @* for (integer r = 0; r < 2; r = r + 1) begin : nb_4
-        reg [10:0] i; reg [15:0] s;
-        i = flit_i(ev_k[S_QCAP], r);
-        for (integer w = 0; w < 4; w = w + 1) begin
-            s = sec_add(g_src, 13'({i, 2'b00} + w));
-            aq_x[r*1024 + w*256 +: 256] = rdw(s[2:0]);
+        for (integer w = 0; w < 4; w = w + 1) begin : nb_4w
+            reg [255:0] x; x = 256'd0;
+            for (integer j = 0; j < 8; j = j + 1) x = x | ({256{aq_sel[(r*4+w)*8+j]}} & rr_q[j*257 +: 256]);
+            aq_x[r*1024 + w*256 +: 256] = x;
         end
     end
     wire [511:0] aq_q_q = {aq1_q, aq0_q}; wire [19:0] aq_e_q = {aq1_e, aq0_e};
@@ -256,26 +301,27 @@ module ot_hgi_coll_gqi_issue #(
     reg [511:0] ex_n;                                  // with this edge's blocks merged (forwarding)
     wire [9:0] kp = ev_k[S_P-1];
     always @* begin : nb_5
-        ex_n = ex;
-        for (integer r = 0; r < 2; r = r + 1) begin : nb_6
-            reg [10:0] i; i = flit_i(kp, r);
-            if (ev_v[S_P-1] && g_qbg && fv(kp, r) && is_code(i))
-                for (integer j = 0; j < 64; j = j + 1) if (i[5:0] == 6'(j)) ex_n[j*8 +: 8] = 8'(aq_e_q[r*10 +: 10] + ((MUT == 2) ? 10'sd126 : 10'sd127));
-        end
+        ex_n = ex_z ? 512'd0 : ex;
+        for (integer r = 0; r < 2; r = r + 1)
+            for (integer j = 0; j < 64; j = j + 1) if (ex_we[r*64+j]) ex_n[j*8 +: 8] = 8'(aq_e_q[r*10 +: 10] + ((MUT == 2) ? 10'sd126 : 10'sd127));
     end
     reg [1:0] p_v; reg [1:0] p_tag_k; reg [9:0] p_k; reg [255:0] p_d [0:1]; reg [10:0] p_i [0:1];
     always @(posedge clk or negedge rn)
         if (!rn) p_v <= 2'd0;
         else for (integer r = 0; r < 2; r = r + 1) p_v[r] <= ev_v[S_P-1] && fv(kp, r);
     always @(posedge clk) begin
-        if (fire) ex <= '0; else ex <= ex_n;
+        ex <= ex_n; ex_z <= fire;
         p_k <= kp;
         for (integer r = 0; r < 2; r = r + 1) begin : nb_7
-            reg [10:0] i; reg [15:0] s; i = flit_i(kp, r); p_i[r] <= i;
-            s = sec_add(g_src, 13'(i));
-            if (!g_qbg) p_d[r] <= rdw(s[2:0]);
-            else if (is_code(i)) p_d[r] <= aq_q_q[r*256 +: 256];
-            else p_d[r] <= (i == {3'b0, g_bs}) ? ex_n[255:0] : ex_n[511:256];
+            reg [10:0] i; reg [255:0] x; i = flit_i(kp, r); p_i[r] <= i;
+            x = 256'd0;
+            for (integer j = 0; j < 8; j = j + 1) x = x | ({256{pd_sel[r*8+j]}} & rr_q[j*257 +: 256]);
+            case (pd_m[r*2 +: 2])
+                2'd0: p_d[r] <= x;
+                2'd1: p_d[r] <= aq_q_q[r*256 +: 256];
+                2'd2: p_d[r] <= ex_n[255:0];
+                default: p_d[r] <= ex_n[511:256];
+            endcase
         end
     end
     // ------------------------------------------------------------------ ring B commands (lp @24, read @25, inject @27, rx @27+2h)
