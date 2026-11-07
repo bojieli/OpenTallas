@@ -18,6 +18,6 @@
   }
  },
  "sidecars": "none changed: core_conns are by pin name; the clock tap / clock_entries point is the unchanged core centre",
- "pin_cycles": "corelat/cycles_q3arg_fpipe_1106.tsv: fault +1 (HBM-GAPS-9 form, recipe ot_hfd_coll_q3_edge_arg__fpipe, define OT_Q3ARG_FAULT_PIPE, claude/hbm-gaps-9-q3fp-1106@6305fade5a); out_v / out_flit exact",
+ "pin_cycles": "corelat/cycles_q3arg_fpipe_1106.tsv: fault +1 (HBM-GAPS-9 form, recipe ot_hfd_coll_q3_edge_arg__fpipe2, define OT_Q3ARG_FAULT_PIPE2, claude/hbm-gaps-9-q3fp-1106@bc7615918d (v2, main I221)); out_v / out_flit exact",
  "replay": "results/die_hbm_1106/q3arg_repin_p40/replay_p40.sh"
 }
