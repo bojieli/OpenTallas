@@ -17,3 +17,10 @@
 4.8	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t40__cl1ea9de02	attempt_5 intel2/epyc2 DONE-STRUCTURAL
 4.8	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t42__clcf44e680	attempt_5 intel2/epyc4 DONE-STRUCTURAL;attempt_6 epyc4/epyc2 DONE-STRUCTURAL
 4.8	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t42__cl4bd1432c	attempt_7 intel2/epyc2 DONE-STRUCTURAL;attempt_8 epyc4/epyc2 DONE-STRUCTURAL
+# AUTOCLEAN-5 13:4x epyc2 moved-1105 delete under COORD 13:2x ASK 2: unsigned, 0 PROVENANCE/.keep/git/routed DB/hard links, idle since <=11-05, no state, protected, fleet or queue reference; lane mentions are 11-01/11-02 logs and prune manifests only.
+2.7	epyc2	/srv/opentallas-scratch3/claude/moved-1105/die-hbm-57
+2.4	epyc2	/srv/opentallas-scratch3/claude/moved-1105/codex-kv-hhp-place-2042
+0.6	epyc2	/srv/opentallas-scratch3/claude/moved-1105/dq68-red
+0.6	epyc2	/srv/opentallas-scratch3/claude/moved-1105/flow-23
+# AUTOCLEAN-5 epyc6 root delete, owner DIE-QC-90 13:20 cleared (COORD 11:04 held it unless QC cleared): wt d319ab16c9 on main, porcelain 0; symlink scratch2/claude/qc-setup-rf1 replaced by qc-setup-rf1.DELETED note.
+6.8	epyc6	/srv/opentallas-scratch3/claude/relocated-1106b/qc-setup-rf1
