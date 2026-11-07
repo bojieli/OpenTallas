@@ -3406,3 +3406,4 @@ CODEX: 2026-11-07 13:03 PST explicitresetHBM parked; source da1b6d91d4 F512zero-
 2026-11-07 13:13 PST COORD: owner said continue; Codex handed back; 14 fresh lanes from lanes/_RESTART_1107.md second section. Count 211. READY rulings 13:0x posted. Next forced scan about 13:24.
 2026-11-07 13:27 PST COORD: owner said continue; Codex handed back; 13 fresh lanes from lanes/_RESTART_1107.md second section, DIE-HBM-86 alive. Count 211. READY rulings 13:0x posted. Next forced scan 13:24.
 2026-11-07 13:46 PST COORD: count 212 (forced 13:45, QC coll_ftn). main 06088f407f1, new tags cw/dc/cs/dd/ea. epyc6 root 53 GB from S81 route spills: KW-FIX-30 moving spills off root and trimming finished rows. 15 lanes live.
+- 2026-11-07 14:24 PST COORD: 14:2x gap check: tags dd-qc/ct-kv/de-s81/eb-hbm approved on 8b2bb9ed1ce after canary PASS; epyc6 root 70 GB after 66 GB trim; successors DIE-S81-77, S81-RCK-7, DIE-KV-90, AUTOCLEAN-6 + new LEC-IQN-1 (inverted-flop LEC class).
