@@ -1,0 +1,36 @@
+{
+  "legacy35_bytes_unchanged": true,
+  "cases": [
+    {
+      "explicit47_gaps": false,
+      "words": 394,
+      "slots": 47,
+      "roundtrip": true,
+      "old_prefix_rejected": true,
+      "mutants_rejected": [
+        "missing_attribute",
+        "bad_copy",
+        "wrong_return",
+        "nonuniform_gap",
+        "duplicate_encoded_slot",
+        "wrong_valid_copy_map"
+      ]
+    },
+    {
+      "explicit47_gaps": true,
+      "words": 440,
+      "slots": 47,
+      "roundtrip": true,
+      "old_prefix_rejected": true,
+      "mutants_rejected": [
+        "missing_attribute",
+        "bad_copy",
+        "wrong_return",
+        "nonuniform_gap",
+        "duplicate_encoded_slot",
+        "wrong_valid_copy_map"
+      ]
+    }
+  ],
+  "scope": "CSR encoding/decoding only; explicit nonproduction fixture maps; no HWIN RTL/global booking qualification"
+}

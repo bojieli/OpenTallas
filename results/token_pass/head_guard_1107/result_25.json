@@ -1,0 +1,42 @@
+{
+  "verdict": "TT25_CLEAR_FF4_LOWER_GUARD_FAIL",
+  "corners": {
+    "TT": {
+      "reader_count0_fs": 229701746,
+      "writer_count0_fs": 250342585,
+      "K": 26,
+      "period_fs": 833000,
+      "effective_word_lag_fs": 1017161,
+      "minimum_opposite_edge_lag_fs": 416500,
+      "lower_guard_margin_fs": 600661,
+      "clear": 25,
+      "failed": []
+    },
+    "FF": {
+      "reader_count0_fs": 228407675,
+      "writer_count0_fs": 249810593,
+      "K": 26,
+      "period_fs": 833000,
+      "effective_word_lag_fs": 255082,
+      "minimum_opposite_edge_lag_fs": 416500,
+      "lower_guard_margin_fs": -161418,
+      "clear": 21,
+      "failed": [
+        "sp0__ad_i",
+        "sp0__bd_i",
+        "sp0__hd_i",
+        "sp0__x_i"
+      ]
+    }
+  },
+  "group": "CTL to SP0 a_tx_o/b7_tx_o/h_tx_o/x_o; SP0 ad_i/bd_i/hd_i/x_i",
+  "diagnosis": "FF armed rv1/lap1/glo0/ghi1, timeout40; insufficient lower word-lag window, not invalid-data or ready timeout",
+  "nominal_unit": "intel2:oth-ubuntu-3001753-1794063064",
+  "observer_unit": "intel2:oth-ubuntu-3300559-1794063526",
+  "observer_scope": "read-only link against unchanged owned model archive; no RTL rebuild, no signal writes",
+  "observer_infra_failure": "first attempt unit3235387 wrong include prefix missing verilated.h; failed log preserved, corrected include path only",
+  "historical_TT_c401_explained": false,
+  "physical_timing_signoff": false,
+  "clocks_K_resets_changed": false,
+  "production_enabled": false
+}

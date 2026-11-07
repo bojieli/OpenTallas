@@ -1,0 +1,44 @@
+{
+  "verdict": "PASS_FINITE_ISSUER_COMPONENT",
+  "actual_pages": 8,
+  "commands": 955,
+  "controller_exit": 93,
+  "controller_error": "collector expected only code8; literal issuer prioritizes unsolicited completion6 over badtag8; original failure preserved",
+  "positive_exit": 0,
+  "stale_tag_control": "CAUGHT code6 page0 t7158",
+  "base_source": "93c061c396c",
+  "DUT": "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv",
+  "DUT_sha256": "6c77b4c5d7f2e84da15089bc5e0f94abedc5b7a4f772cc911a8193aee80d0a3f",
+  "unit": "intel2:oth-ubuntu-2003926-1794061415",
+  "memory_GB": 4,
+  "threads_requested": 2,
+  "compiler_threads_actual": 1,
+  "clock_ps": 833,
+  "hardware_pin_cycles_added": 0,
+  "whole_die_RTL": false,
+  "production_enabled": false,
+  "lifetime_qualified": false,
+  "latency_effect": {
+    "KIT_delay": [
+      17,
+      7045,
+      6366,
+      6799,
+      6904,
+      7078,
+      7080,
+      3369
+    ],
+    "END_delay": [
+      17,
+      7045,
+      6366,
+      6799,
+      6904,
+      7079,
+      7080,
+      3369
+    ],
+    "effect": "source completion/reload waits increase by these deltas; consumer lifetime and global resource book remain unbound"
+  }
+}

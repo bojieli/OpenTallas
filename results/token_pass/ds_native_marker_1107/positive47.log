@@ -1,0 +1,13 @@
+WRAP_PASS 46 commands5657 returns47
+WRAP_PASS 93 commands11261 returns94
+WRAP_PASS 140 commands16865 returns141
+WRAP_PASS 187 commands22469 returns188
+WRAP_PASS 234 commands28073 returns235
+WRAP_PASS 281 commands33677 returns282
+WRAP_PASS 328 commands39281 returns329
+WRAP_PASS 375 commands44885 returns376
+PASS actual8 pages over47slots starts376 returns376 commands44885 oldtag_mut0
+- tb47.sv:97: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5ms; walltime 28.954 s; speed 176.985 us/s
+- Verilator: cpu 28.937 s on 1 threads; allocated 7 MB

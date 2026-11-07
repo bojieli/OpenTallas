@@ -1,0 +1,14 @@
+FIRST_GUARD_FAULT b_i c394 ready0
+FIRST_GUARD_FAULT h_rx_i c394 ready0
+FIRST_GUARD_FAULT a_rx_i c394 ready0
+FIRST_GUARD_FAULT b7_rx_i c394 ready0
+FIRST_GUARD_FAULT lepk_i0 c394 ready0
+GUARD_FINAL a_rx_i ready0 fault1
+GUARD_FINAL b7_rx_i ready0 fault1
+GUARD_FINAL b_i ready0 fault1
+GUARD_FINAL h_rx_i ready0 fault1
+GUARD_FINAL lepk_i0 ready0 fault1
+- tb.sv:12089: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 666ns; walltime 3.127 s; speed 213.093 ns/s
+- Verilator: cpu 3.127 s on 1 threads; allocated 12 MB
