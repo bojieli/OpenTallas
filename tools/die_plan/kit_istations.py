@@ -726,7 +726,7 @@ def relay_sites_only_tcl(tn, t):
     rs = relay_sites_lines(tn, t)
     if not rs:
         return None
-    return "\n".join([TCL_HEAD] + rs + ["close $is_fh\nputs \"OT_ISTATIONS placed $is_n flops FIRM (missing: [llength $is_miss] $is_miss)\""]) + "\n"
+    return "\n".join([TCL_HEAD] + rs + macro_cross_lines(tn, t) + ["close $is_fh\nputs \"OT_ISTATIONS placed $is_n flops FIRM (missing: [llength $is_miss] $is_miss)\""]) + "\n"
 
 
 def soft_plan_cells(tn, t):
