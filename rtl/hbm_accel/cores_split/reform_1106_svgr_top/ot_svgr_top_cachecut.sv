@@ -11,7 +11,10 @@ module ot_svgr_top_cachecut #(parameter integer LBANKS=4,parameter integer LB=(L
  parameter integer CACHE_RW_SRAM=0, parameter integer ATT_MARK=0,  // HBM-PV-ATTMARK: feed programme word [119] attention mark (default 0 = unchanged)
  // HBM-GAPS-8 SVGR_TOP P1 (default 0 = unchanged): issuer MPIPE, producer OREG (sector word registered after the rotate,
  // cache open delayed one more edge to match), cache WPIPE (registered row commit).  Internal edges only; no pin moves.
- parameter integer P1=0)(
+ parameter integer P1=0,
+ // DIE-HBM-87 vL7 (default 0 = unchanged): cache WDECOUPLE (staging-word write enable without the sector compare) and
+ // GSEL / GREP (registered one-hot gather selects, GREP kept replicas per lane).  Zero added edges; ports unchanged.
+ parameter integer CACHE_WDEC=0,parameter integer CACHE_GSEL=0,parameter integer CACHE_GREP=1)(
  // strap identity: id_stack = HBM stack / quadrant (SW0 SE1 NW2 NE3), id_sm = SM index k (PCs 4k..4k+3)
  input wire[1:0]id_stack,input wire[2:0]id_sm,
  input wire stream_clk,stream_rst_n,hbm_rst_n,
@@ -42,7 +45,8 @@ module ot_svgr_top_cachecut #(parameter integer LBANKS=4,parameter integer LB=(L
   .start_v(start_v),.start_bank(start_bank),.start_epoch(start_epoch),.program_start_v(program_start_v),
   .program_start_base(program_start_base),.program_start_limit(program_start_limit),.program_start_loops(program_start_loops),
   .program_start_ctx(program_start_ctx),.program_done(program_done));
- ot_svgr_feed_cachecut #(.LBANKS(LBANKS),.PAW(PAW),.PREL(PREL),.XSLOT(XSLOT),.OPEN_IL(OPEN_IL),.ATT_MARK(ATT_MARK),.CACHE_RW_SRAM(CACHE_RW_SRAM),.P1(P1)) feed(
+ ot_svgr_feed_cachecut #(.LBANKS(LBANKS),.PAW(PAW),.PREL(PREL),.XSLOT(XSLOT),.OPEN_IL(OPEN_IL),.ATT_MARK(ATT_MARK),.CACHE_RW_SRAM(CACHE_RW_SRAM),.P1(P1),
+  .CACHE_WDEC(CACHE_WDEC),.CACHE_GSEL(CACHE_GSEL),.CACHE_GREP(CACHE_GREP)) feed(
   .id_stack(id_stack),.id_sm(id_sm),
   .stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_rst_n(hbm_rst_n),
   .seam_res_v(seam_res_v),.seam_res_word(seam_res_word),.seam_s_fault(seam_s_fault),.seam_h_fault(seam_h_fault),
@@ -65,7 +69,8 @@ module ot_svgr_feed_cachecut #(
  parameter integer XSLOT=0,parameter integer CTXW=(XSLOT!=0)?53:46,
  parameter integer OPEN_IL=0,  // HBM-SMXL: producer open interlock (ot_hbm_svc_sm4pc_cdc_rel_id OPEN_IL)
  parameter integer CACHE_RW_SRAM=0, parameter integer ATT_MARK=0,  // HBM-PV-ATTMARK: programme word [119] = attention word (S1 copy issue rule exempt)
- parameter integer P1=0
+ parameter integer P1=0,
+ parameter integer CACHE_WDEC=0,parameter integer CACHE_GSEL=0,parameter integer CACHE_GREP=1   // DIE-HBM-87 vL7, see top
 )(
  input wire [1:0] id_stack,input wire [2:0] id_sm,
  input wire stream_clk,stream_rst_n,hbm_rst_n,
@@ -210,7 +215,7 @@ module ot_svgr_feed_cachecut #(
  assign programme_v=programme_v_q;
  assign programme_observe=programme;
  assign sm_command=programme[82:0];
- ot_svgr_cache136_native #(.PACKED136(1),.RW_SRAM(CACHE_RW_SRAM),.WPIPE(P1)) rows(
+ ot_svgr_cache136_native #(.PACKED136(1),.RW_SRAM(CACHE_RW_SRAM),.WPIPE(P1),.WDECOUPLE(CACHE_WDEC),.GSEL(CACHE_GSEL),.GREP(CACHE_GREP)) rows(
   .clk(stream_clk),.rst_n(stream_rst_n),.open_v(od_v[OPEN_DLY-1]),.open_bank(od_bank[OPEN_DLY-1]),.open_epoch(od_epoch[OPEN_DLY-1]),.open_count(od_count[OPEN_DLY-1]),.open_tag_base(od_tag[OPEN_DLY-1]),
   .sector_v(out_v?out_mask:4'b0),.sector_index(indices),.sector_epoch(epochs),.sector_data(out_data),
   .read_v(programme_v&&programme[83]),.read_bank(programme[84]),.read_epoch(programme[100:85]),.read_row(programme[106:101]),.read_tag(programme[116:107]),
