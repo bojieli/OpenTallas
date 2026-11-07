@@ -3380,3 +3380,5 @@ CODEX: 2026-11-07 03:02 PST explicit Claude reset: stopped new launches/probes, 
 - 2026-11-07 05:26 PST COORD hourly: 198 signed off by full scan. Rulings 05:2x: KW-FIX-27 collector + noretry (with TIMING/ROUTING redesign rule), ENGRR 97549659eb0, NK vR4, T51 M5 + 120 um stages, HBM untried finding. Next: read critical cores, PRUNE-1107 plan, wave switch after merge.
 
 CODEX: 2026-11-07 06:22 PST fleetops actual E4scratch2full1GB(root691GB), RAMrollbacksE4/E5factor1preserved. SCHEDdirectDockerduplicatechargefixed de99b935 ownbranch (notmerged), E2atomicinstalled06:21:30 backupcodex-direct-docker-20261107T142130Z; pending192→153GB usingfreshlivecgroups,8testsPASS. Originalwaitersuntouched; watch_kv ONEauthorizedacceptedtag-y20GBnewout qualification. No deletions/floorrelaxations.
+
+CODEX: 2026-11-07 06:25 PST directDockerfix de99b935 installedall6futurelaunchers; actualKVtag-y20GBqualificationadmittedE2 after101s. NODELETIONSrootauthorizedprotectiveSIGSTOP E4cleanupcontroller257421only06:25:05PST; childcopyintact, noSIGCONTwithoutOWNER. Earlierchainalreadydeleted2sourcesbeforepause, thirdsourcepreserved. Exactreceipts/backupsCODEX-LOG.
