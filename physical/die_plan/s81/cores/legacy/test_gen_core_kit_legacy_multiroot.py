@@ -167,6 +167,9 @@ def test_multi_root_postcts_preserves_virtual_selector_and_all_roots(tmp_path):
     assert "set ot_pg_propagate [get_clocks {clk clk_cr_s clk_xk}]" in t   # postcts_gate 91538db4d1f anchor (RF-A 11-03)
     assert "foreach ot_rc [get_clocks {clk clk_cr_s clk_xk}]" in t
     assert "set_propagated_clock [get_clocks vclk]" not in t
+    # the boundary register set is the union over every declared root (t51 native E: clk owns no face FF)
+    assert "foreach ot_rn {clk clk_cr_s clk_xk} { set ot_pg_set [dict merge $ot_pg_set [ot_pinreg_set_for_clock $ot_rn]] }" in t
+    assert "dict for {i p} $ot_pg_set {" in t and "[ot_pinreg_set]" not in t
 
 
 def test_multi_root_postcts_rejects_missing_virtual_selector(tmp_path):
