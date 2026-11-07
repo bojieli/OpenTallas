@@ -1938,7 +1938,10 @@
     "ot_s81sl_leaf__t42@6",
     "ot_s81sl_leaf__t50@6",
     "ot_s81sl_leaf__t53__cl958451dd@8",
-    "ot_s81sl_leaf__t72@6"
+    "ot_s81sl_leaf__t72@6",
+    "col_h10_r2__t1__clac068e56@13",
+    "dsdv_slice_iq_C__t1@7",
+    "dsdv_slice_kv512_C__t1@7"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -2841,7 +2844,10 @@
     "ot_s81sl_leaf__t67@2": "S81-SSTN-HOLD-3 class batch: kit_istations fix 54cce59 (form B, no plan stations; pilots col_h9_r0_p3 cl8ce97bcb + leaf t32 PLACE_RC 0)",
     "ot_s81sl_leaf__t69@2": "S81-SSTN-HOLD-3 class batch: kit_istations fix 54cce59 (form B, no plan stations; pilots col_h9_r0_p3 cl8ce97bcb + leaf t32 PLACE_RC 0)",
     "ot_s81sl_leaf__t70@2": "S81-SSTN-HOLD-3 class batch: kit_istations fix 54cce59 (form B, no plan stations; pilots col_h9_r0_p3 cl8ce97bcb + leaf t32 PLACE_RC 0)",
-    "ot_s81sl_leaf__t72@6": "S81-SSTN-HOLD-3 class batch: kit_istations fix 54cce59 (form B, no plan stations; pilots col_h9_r0_p3 cl8ce97bcb + leaf t32 PLACE_RC 0)"
+    "ot_s81sl_leaf__t72@6": "S81-SSTN-HOLD-3 class batch: kit_istations fix 54cce59 (form B, no plan stations; pilots col_h9_r0_p3 cl8ce97bcb + leaf t32 PLACE_RC 0)",
+    "col_h10_r2__t1__clac068e56@13": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
+    "dsdv_slice_iq_C__t1@7": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
+    "dsdv_slice_kv512_C__t1@7": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -3595,8 +3601,8 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/plan_of_record/plan_qc53_candidate_v4.json",
    "gen_host": "epyc2",
-   "src": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4",
-   "src_sha": "ee1cea45f1431ceb7e76fb03b172059ecc5111ce",
+   "src": "/srv/opentallas-scratch2/claude/kw27/src_b44ba_qc4",
+   "src_sha": "b44ba663aaba01ef4c5e48521ed5f1a3f695ca35",
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt.json",
@@ -3943,9 +3949,23 @@
     "slw_stm_v3@6",
     "sle_hc0__cl05696ed1@3",
     "slw_hc0__cl4f54b7a3@2",
-    "slw_stm_v1__cl05fc43f7__cl2086fa2c@4"
+    "slw_stm_v1__cl05fc43f7__cl2086fa2c@4",
+    "cbf_q00__cl1b5a6458@8",
+    "cbf_q00_s2@9",
+    "cbf_q11@7",
+    "cbn_q00__cl622f65d2@8",
+    "cbn_q00__cld7bf7197@8",
+    "cbn_q00__cldbcda913@11",
+    "cbn_q11__cl5cc92dfe@4",
+    "sle_ctl__cl67434795@5",
+    "sle_fe_v2@3",
+    "sle_fw_v3@27",
+    "sle_hc1__cl7d360508@9",
+    "sle_sc_v1__cl115da35f@6",
+    "slw_fe_v1__clfe325744__cldb4efe33@6",
+    "slw_fe_v2__cle312294d@6"
    ],
-   "queue_src": "claude/dq85-qc54-1106@ee1cea45f1431ceb7e76fb03b172059ecc5111ce",
+   "queue_src": "claude/kw-fix-27-qc4-1107@b44ba663aaba",
    "type_args": {
     "sle_fw_v2__cl69f5e854": [
      "--gpl-plain",
@@ -4382,7 +4402,20 @@
     "slw_stm_v3@5": "KW-FIX-21 05:1x (COORD 04:40/04:43): src kw21/src_c926 @c92647a2155 (main: 8dc1 ot_run capture, e6ce finite Slang gen_env, busfit 7d0631b1015; delta from codex D3 src_d3c267 = 4 tool files; results/qc",
     "sle_hc1__cl22c1ff36@12": "KW-FIX-21 05:3x: src -> kw21/src_c926f @c92647a2155 = FULL tree (Codex src_2c705 base + git delta 846 files); the 05:17 batch failed kit_rtl on the sparse D3-based src_c926 (bind: preferred HDL source",
     "slw_stm_v1__cl05fc43f7__cl389df4e9@10": "KW-FIX-21 05:3x: src -> kw21/src_c926f @c92647a2155 = FULL tree (Codex src_2c705 base + git delta 846 files); the 05:17 batch failed kit_rtl on the sparse D3-based src_c926 (bind: preferred HDL source",
-    "slw_stm_v3@6": "KW-FIX-21 05:3x: src -> kw21/src_c926f @c92647a2155 = FULL tree (Codex src_2c705 base + git delta 846 files); the 05:17 batch failed kit_rtl on the sparse D3-based src_c926 (bind: preferred HDL source"
+    "slw_stm_v3@6": "KW-FIX-21 05:3x: src -> kw21/src_c926f @c92647a2155 = FULL tree (Codex src_2c705 base + git delta 846 files); the 05:17 batch failed kit_rtl on the sparse D3-based src_c926 (bind: preferred HDL source",
+    "cbf_q00__cl1b5a6458@8": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
+    "cbf_q00_s2@9": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
+    "cbf_q11@7": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
+    "cbn_q00__cl622f65d2@8": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
+    "cbn_q00__cld7bf7197@8": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
+    "cbn_q00__cldbcda913@11": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
+    "sle_ctl__cl67434795@5": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
+    "sle_fe_v2@3": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
+    "sle_fw_v3@27": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
+    "sle_hc1__cl7d360508@9": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
+    "sle_sc_v1__cl115da35f@6": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
+    "slw_fe_v1__clfe325744__cldb4efe33@6": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
+    "slw_fe_v2__cle312294d@6": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59"
    },
    "gen_hosts": [
     "epyc2",
@@ -4558,7 +4591,10 @@
    "note_kw25_rehome": "KW-FIX-25 22:5x: OWNER 22:5x reversed the drain (COORD 22:52): epyc5/epyc6 back, first in place_prefer and gen_hosts; gen_disk_low still ranks them last while their scratch2 is under the floor. KV/HBM/HEAD new attempts stay on scratch2 kw25-wave-1106.",
    "note_codex_qc_preserve_1107": "CODEX QC watcher: COORD23:45/00:14 approved QCv4 release after strict0; disable cancellation BEFORE plan repoint so all live old QC rows finish. Current plan/source unchanged at this first step.",
    "note_codex_qc4_release": "Existing COORD23:45/00:14 QCv4 release condition strict0 met. Actual v4 plan render viewed PASS-COND01:26; type place/GRT/route reviews remain required. Retained event/gates/typeargs/holds and cancel_superseded=false; healthy old attempts preserved. Eight DIE-QC-85 predecessor-owned SU/FE/fw types excluded from bulk wave to preserve private manual attempts; no unfixed FAIL rows explicitly retried. All new QC4 type/module names auto-resign-held for premerge source qualification; physical progress continues.",
-   "note_codex_source_hold": "RESOLVED: E2 logical src_02909_qc4 atomically repointed to distinct regular /srv/opentallas-scratch3/claude/codex-watch-qc-1107/src_02909_qc4_independent (inode73543650), old shared root/paths preserved. Exact02909 251delta+12493RTL/tools/commonflow+84buildsource and10ee1overlay blobs audited,10overlay+marker detached. Strict asbuilt/plan/sourcebytes unchanged; existing strictRC0 retained, no replay needed. Existing cbf depth9vs7 failure preserved/noretry; all private re-sign holds retained. Original sharedbase10additions deferred until no activeusers."
+   "note_codex_source_hold": "RESOLVED: E2 logical src_02909_qc4 atomically repointed to distinct regular /srv/opentallas-scratch3/claude/codex-watch-qc-1107/src_02909_qc4_independent (inode73543650), old shared root/paths preserved. Exact02909 251delta+12493RTL/tools/commonflow+84buildsource and10ee1overlay blobs audited,10overlay+marker detached. Strict asbuilt/plan/sourcebytes unchanged; existing strictRC0 retained, no replay needed. Existing cbf depth9vs7 failure preserved/noretry; all private re-sign holds retained. Original sharedbase10additions deferred until no activeusers.",
+   "src_prev_kw27c": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4",
+   "src_sha_prev_kw27c": "ee1cea45f1431ceb7e76fb03b172059ecc5111ce",
+   "queue_src_prev_kw27c": "claude/dq85-qc54-1106@ee1cea45f1431ceb7e76fb03b172059ecc5111ce"
   },
   "hbm": {
    "enabled": true,
@@ -5711,5 +5747,29 @@
   "ot_s81sl_leaf__t70",
   "ot_s81sl_leaf__t72",
   "ot_s81sl_leaf__t8"
- ]
+ ],
+ "retry_kw27c": {
+  "s81": [
+   "col_h10_r2__t1__clac068e56@13",
+   "dsdv_slice_iq_C__t1@7",
+   "dsdv_slice_kv512_C__t1@7"
+  ],
+  "qwen_compute": [
+   "cbf_q00__cl1b5a6458@8",
+   "cbf_q00_s2@9",
+   "cbf_q11@7",
+   "cbn_q00__cl622f65d2@8",
+   "cbn_q00__cld7bf7197@8",
+   "cbn_q00__cldbcda913@11",
+   "cbn_q11__cl5cc92dfe@4",
+   "sle_ctl__cl67434795@5",
+   "sle_fe_v2@3",
+   "sle_fw_v3@27",
+   "sle_hc1__cl7d360508@9",
+   "sle_sc_v1__cl115da35f@6",
+   "slw_fe_v1__clfe325744__cldb4efe33@6",
+   "slw_fe_v2__cle312294d@6"
+  ]
+ },
+ "note_kw27c": "KW-FIX-27 11-07: S81 src kw27/src_54cce, QC src kw27/src_54cce_qc4 (collector event + restage + kit_istations); branch heads, re-sign after merge"
 }
