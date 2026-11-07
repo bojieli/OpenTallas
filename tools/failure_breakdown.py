@@ -111,7 +111,7 @@ def main():
             lab = next((c for d, p, c in ovr if d == die and base.startswith(p)), None)
             if lab is None:
                 r = last.get((die, m)) or last.get((die, base))
-                lab = label(r) if r else 'not tried'
+                lab = label(r) if r else 'no kit-wave row'  # COORD 11-07: says only that the wave has no row; kits may exist outside it
             cc[lab] += 1
             cn[lab].append(short(base))
         ntypes = plan['types'] if isinstance(plan['types'], int) else len(plan['types'])
