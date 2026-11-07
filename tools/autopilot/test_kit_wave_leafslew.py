@@ -137,6 +137,31 @@ class Release(unittest.TestCase):
         self.tick()
         self.assertEqual(self.cfg["dies"]["hbm"].get("retry") or [], [])
 
+    def test_plan_owned_tree_no_retry_goes_to_plan(self):            # KW-FIX-25, COORD 22:1x (5)
+        ap, n = self.tick((0, POS + "KW_LEAF_OPTOUT\nKW_LEAFSLEW_READ\n", ""))
+        self.assertIn("OT_CLK_LEAF_REPEAT", ap.calls[0][2])
+        self.assertIn("/k/config.mk", ap.calls[0][2])
+        self.assertEqual(self.cfg["dies"]["hbm"]["retry"], [])
+        self.assertEqual(self.st.get("leafslew"), {})
+        self.assertIn("PLAN FIX", n["hbm"][0])
+        rec = self.st["items"][self.key]
+        self.assertEqual(rec["q_class"], "PLAN")
+        # a later re-read of the same queue row keeps the route; another status or an unrouted row is untouched
+        self.assertEqual(KW.leafslew_plan_route(rec, "FAIL", "TIMING", "x")[0], "PLAN")
+        self.assertEqual(KW.leafslew_plan_route(rec, "SIGNED", "", "x"), ("", "x"))
+        self.assertEqual(KW.leafslew_plan_route({}, "FAIL", "TIMING", "x"), ("TIMING", "x"))
+        ap2, n2 = self.tick()                                        # judged once
+        self.assertEqual((ap2.calls, n2), ([], {}))
+
+    def test_optout_pattern_on_real_config_lines(self):
+        with tempfile.TemporaryDirectory() as td:
+            cm = Path(td) / "config.mk"
+            for line, hit in (("export OT_CLK_LEAF_REPEAT = 0", 0), ("  override export OT_CLK_LEAF_REPEAT := 0 # plan", 0),
+                              ("export OT_CLK_LEAF_REPEAT = 1", 1), ("export OT_CLK_LEAF_REPEAT = 01", 1),
+                              ("# export OT_CLK_LEAF_REPEAT = 0", 1), ("export OT_CLK_LEAF_GRT = 0", 1)):
+                cm.write_text(line + "\n")
+                self.assertEqual(subprocess.run(["grep", "-Eqs", KW.LEAF_OPTOUT_RE, str(cm)]).returncode, hit, line)
+
     def test_negative_no_release(self):
         _, n = self.tick((0, NEG + "KW_LEAFSLEW_READ\n", ""))
         self.assertEqual(self.cfg["dies"]["hbm"]["retry"], [])
