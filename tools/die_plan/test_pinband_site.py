@@ -82,6 +82,23 @@ class TestPinbandSite(unittest.TestCase):
         rep = PB.site(kids, PDN, tight, lambda m: L, others=[below], move=True)
         self.assertEqual((rep["moved"], len(rep["refused"]), kids[0]["y"]), ([], 1, y))
 
+    def test_unclearable_rows_partial_min_bad(self):
+        # two M6 band sets per pitch + two edge rows 26.35 apart (M4 pin -> 2.16 step): no move within 4.32 clears
+        # both; take the legal move that leaves 1 row and report it as partial
+        pdn = PDN + "add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {4.32} -offset {0.0}\n"
+        bands = [(CORE[1] + o, p, b) for o, p, b in PB.stripes(pdn)]
+        nbad = lambda yy: sum(PB.row_bad(a, b, bands) for a, b, e in PB.abs_rows(rows, h, "R0", yy))
+        h = 26.35 + 0.084
+        L = lef("hc", h, [(0.0, 0.084), (26.35, h)], m4=True)
+        rows = PB.pin_rows(PB.macro_body(L))[2]
+        y = CORE[1] + 20 * 4.32 + 0.1
+        self.assertEqual(nbad(y), 2)
+        kids = [dict(inst="u_h", master="hc", orient="R0", x=50.0, y=y)]
+        rep = PB.site(kids, pdn, CORE, lambda m: L, move=True)
+        self.assertEqual((len(rep["moved"]), rep["moved"][0]["rows_left"], rep["partial"]), (1, 1, ["u_h"]))
+        self.assertAlmostEqual(abs(rep["moved"][0]["dy"]), 2.16)
+        self.assertEqual(nbad(kids[0]["y"]), 1)
+
     def test_env_off_is_check_only(self):
         L = lef("leaf", 30.0, [(10.0, 10.3)])
         y = CORE[1] + 1.968 + 5 * 4.32 - 10.0 + 0.2

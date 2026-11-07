@@ -9,7 +9,8 @@ Check (same numbers as QC-A0C-B6 pinband.py): a signal M5 pin row (y0, y1) is BA
 every band (+-MARG) is shorter than min(VIA, y1 - y0).  Edge rows count too: NK's 50 VSS shorts were the 0.084-tall
 edge pin row of R180/MX rawleafs under a band (QC-A0C-B6 17:35), so an in-plane M5 exit does not save it.
 
-Fix: the smallest y move of the child that clears every interior row.  The step keeps the child on its grids: a
+Fix: the smallest y move of the child that clears every pin row (when no grid-keeping move clears all of them, the
+legal move that leaves the fewest bad rows, reported as partial).  The step keeps the child on its grids: a
 multiple of the 0.27 um placement row and of the y pitch of each horizontal layer that carries one of its signal pins
 (M4 0.048, M6 0.064, M8 0.08; M2 rows 0.27), so an M4-track-snapped site stays snapped.  A move must keep the child
 inside the core and its gap to every other child / macro >= min(original gap, MIN_GAP).  No legal move = the child
@@ -152,20 +153,27 @@ def site(children, pdn_text, core, lef_text, others=(), move=None):
         for k in range(1, int(MAX_DY / s) + 1):
             for dy in (k * s, -k * s):
                 r2 = abs_rows(rows, h, c["orient"], c["y"] + dy)
-                if any(row_bad(a, b, bands) for a, b, e in r2):
+                nb = sum(1 for a, b, e in r2 if row_bad(a, b, bands))
+                if nb >= nint:
                     continue
                 bx = box(c, dy)
                 if bx[1] < core[1] - 1e-6 or bx[3] > core[3] + 1e-6:
                     continue
                 if any(_gap(bx, box(d) if isinstance(d, dict) else d) < min(g, MIN_GAP) - 1e-9 for g, d in g0):
                     continue
-                cand.append((abs(dy), -dy, dy))
+                cand.append((nb, abs(dy), -dy, dy))
         row = dict(inst=c["inst"], master=c["master"], orient=c["orient"], x=c["x"], y=c["y"], rows=nint, step=s)
         if not cand:
             rep["refused"].append(dict(row, why=f"no legal {s:g}-um-multiple move within {MAX_DY:g} um"))
             continue
-        dy = round(min(cand)[2], 4)
-        row.update(dy=dy, y_new=round(c["y"] + dy, 4))
+        nb, _, _, dy = min(cand)
+        dy = round(dy, 4)
+        row.update(dy=dy, y_new=round(c["y"] + dy, 4), rows_left=nb)
+        if nb:
+            # rows at spacings no grid-keeping step can clear together (e.g. two edge rows 2.16 apart mod 4.32 with
+            # a 2.16 M4/row step): take the legal move with the fewest rows left and report the rest
+            row["partial"] = f"{nb} row(s) stay under a band: no {s:g}-um-multiple move within {MAX_DY:g} um clears all"
+            rep.setdefault("partial", []).append(row["inst"])
         if move:
             c["y"] = row["y_new"]
             rep["moved"].append(row)
