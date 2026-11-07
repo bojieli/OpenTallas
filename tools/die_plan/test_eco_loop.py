@@ -143,11 +143,93 @@ def test_stop_rules():
     assert not E.improved(p, E.metrics(rec(-10, -5, slew=11)))
 
 
-def test_pass_on_second_iteration(tmp_path):
+@pytest.fixture
+def three_iter(monkeypatch):
+    """the iteration machinery stays testable; the live limit is test_one_iteration_is_the_limit"""
+    monkeypatch.setattr(E, "MAX_ITER", 3)
+    return dict(max_iter=3)
+
+
+def test_one_iteration_is_the_limit(tmp_path, capsys, monkeypatch):
+    assert E.MAX_ITER == 1
+    k = kit(tmp_path)
+    b = base_rec(k, rec(-12, -13))
+    f = Fake([rec(-4, -6), rec(1, 2)])
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2)
+    assert r["verdict"] == "EXHAUSTED" and len(r["iterations"]) == 1 and r["max_iter"] == 1 and "REDESIGN" in r["reason"]
+    with pytest.raises(ValueError, match="refused"):
+        E.run_loop(k, b, run=f, max_iter=2)
+    monkeypatch.setattr(sys, "argv", ["eco_loop.py", "run", "--kit", str(k), "--max-iter", "2"])
+    assert E.main() == 2
+    assert "--max-iter 2 refused" in capsys.readouterr().err
+
+
+def far(**kw):
+    r = rec(**{k: v for k, v in kw.items() if k in ("tt", "ff", "slew", "drc")})
+    for gate, n in (("setup_tt", "tt_n"), ("hold_ff", "ff_n")):
+        r["checks"][gate]["violators"] = kw.get(n, 0)
+    return r
+
+
+@pytest.mark.parametrize("kw,near,word", [
+    (dict(tt=-30, ff=-30, tt_n=100, ff_n=100, slew=0, drc=49), True, ""),
+    (dict(tt=-30.1, ff=5), False, "setup WNS"),
+    (dict(tt=5, ff=-31), False, "hold WNS"),
+    (dict(tt=-5, ff=5, tt_n=101), False, "setup 101 endpoints"),
+    (dict(tt=5, ff=-5, ff_n=101), False, "hold 101 endpoints"),
+    (dict(tt=-5, ff=5, drc=50), False, "DRC 50"),
+])
+def test_near_miss_numbers(kw, near, word):
+    ok, beyond, _ = E.near_miss(far(**kw))
+    assert ok == near and (not word or word in "; ".join(beyond))
+
+
+def test_large_miss_stops_before_any_pnr_unless_owner_override(tmp_path):
+    k = kit(tmp_path)
+    b = base_rec(k, far(tt=-45, ff=-3, tt_n=5, ff_n=500))
+    f = Fake([rec(1, 2)])
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2)
+    assert r["verdict"] == "NOT_NEAR_MISS" and not f.calls and not Path(r["root"]).exists()
+    assert "setup WNS -45" in r["reason"] and "hold 500 endpoints" in r["reason"] and "not a near miss" in E.summary(r)
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2, owner_override=True)
+    assert r["verdict"] == "PASS" and f.calls and r["near_miss"]["owner_override"]
+
+
+def test_slew_counts_nets_and_pins_are_advisory(tmp_path, capsys):
+    r = far(tt=-5, ff=5, slew=166)
+    ok, beyond, warn = E.near_miss(r)
+    assert ok and not beyond and "166 slew pins" in warn[0]
+    r["checks"]["drv"]["by_corner"]["tt"]["slew_nets"] = 11
+    assert E.near_miss(r)[0] and not E.near_miss(r)[2]
+    r["checks"]["drv"]["by_corner"]["tt"]["slew_nets"] = 21
+    assert "21 slew nets" in E.near_miss(r)[1][0]
+    k = kit(tmp_path)
+    assert E.run_loop(k, base_rec(k, far(tt=-5, ff=5, slew=166)), run=Fake([rec(1, 2)]), mem=8, cpus=2)["verdict"] == "PASS"
+    assert "166 slew pins" in capsys.readouterr().out
+
+
+def test_port_only_hold_does_not_count(tmp_path):
+    k = kit(tmp_path)
+    r = far(tt=5, ff=-120, ff_n=2000, slew=3)
+    b = base_rec(k, r)
+    assert not E.near_miss(r, b)[0]                                        # no FF census: a plain large hold miss
+    (k / "signoff/ff").mkdir()
+    census = dict(std_nviol_min=2000, std_min_start=dict(port=2000, other=0, reg=0, trunc=0, err=0, ports=["a"]))
+    (k / "signoff/ff/corner.json").write_text(json.dumps(census))
+    ok, beyond, warn = E.near_miss(r, b)
+    assert ok and not beyond and "port-only" in warn[0]
+    census["std_min_start"].update(other=1, port=1999)
+    (k / "signoff/ff/corner.json").write_text(json.dumps(census))
+    assert not E.near_miss(r, b)[0]
+    r["checks"]["hold_ff"]["verdict"] = "PASS"                             # current record: local PASS, the parent's obligation
+    assert E.near_miss(r, b)[0]
+
+
+def test_pass_on_second_iteration(tmp_path, three_iter):
     k = kit(tmp_path)
     b = base_rec(k, rec(-12, -13, slew=72))
     f = Fake([rec(-4, -6, slew=10), rec(1, 2)])
-    r = E.run_loop(k, b, run=f, mem=8, cpus=2)
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2, **three_iter)
     assert r["verdict"] == "PASS" and len(r["iterations"]) == 2
     assert r["best"]["n"] == 2 and Path(r["best"]["signoff"]).is_file()
     assert r["kind"] == "eco" and r["base_routed_db"] == "/x/base/6_final.odb" and r["flow"]["tools_sha256"]
@@ -167,11 +249,11 @@ def test_pass_on_second_iteration(tmp_path):
     assert env["OT_PRD_FROM"] == "route" and env["OT_PRD_POST"] == "0"
 
 
-def test_no_improvement_stops_and_keeps_best(tmp_path):
+def test_no_improvement_stops_and_keeps_best(tmp_path, three_iter):
     k = kit(tmp_path, mm=False)
     b = base_rec(k, rec(10, -8, slew=40))
     f = Fake([rec(10, -3, slew=5), rec(10, -2.6, slew=6), rec(10, 1)])
-    r = E.run_loop(k, b, run=f, mem=8, cpus=2)
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2, **three_iter)
     assert r["verdict"] == "EXHAUSTED" and len(r["iterations"]) == 2 and "no improvement" in r["reason"]
     assert r["best"]["n"] == 2                                                 # -2.6 is better than -3
     assert r["iterations"][0]["variant"] == "t0+b0"                          # TT slew + FF hold: both passes
@@ -179,13 +261,13 @@ def test_no_improvement_stops_and_keeps_best(tmp_path):
     assert s.startswith("late-ECO exhausted (2 it") and "FF -8->-2.6" in s
 
 
-def test_max_iterations(tmp_path):
+def test_max_iterations(tmp_path, three_iter):
     k = kit(tmp_path)
     b = base_rec(k, rec(-30, -20))
     f = Fake([rec(-20, -20), rec(-10, -20), rec(-5, -20), rec(5, 5)])
-    r = E.run_loop(k, b, run=f, mem=8, cpus=2)
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2, **three_iter)
     assert r["verdict"] == "EXHAUSTED" and len(r["iterations"]) == E.MAX_ITER and r["best"]["n"] == 3
-    assert "3 iterations" in r["reason"]
+    assert "3 iteration(s)" in r["reason"]
 
 
 def test_error_iteration_and_drc_mode(tmp_path):
@@ -366,7 +448,7 @@ class Sig11(Fake):
 def test_flexpa_sig11_retried_once_with_placement_repair_rc(tmp_path):
     k = kit(tmp_path)
     f = Sig11([rec(5, 5)])
-    res = E.run_loop(k, base_rec(k, rec(-80, 2, slew=7)), tmp_path / "eco", run=f, tools=Path(E.HERE))
+    res = E.run_loop(k, base_rec(k, rec(-20, 2, slew=7)), tmp_path / "eco", run=f, tools=Path(E.HERE))
     assert res["verdict"] == "PASS"
     assert [i["status"] for i in res["iterations"]] == ["ERROR", "SIGNED"]
     assert res["iterations"][0]["flexpa_sig11"] and res["iterations"][1]["dir"].endswith("/i1r")
@@ -376,7 +458,7 @@ def test_flexpa_sig11_retried_once_with_placement_repair_rc(tmp_path):
 
 def test_non_sig11_route_failure_not_retried(tmp_path):
     k = kit(tmp_path)
-    res = E.run_loop(k, base_rec(k, rec(-80, 2)), tmp_path / "eco", run=Fake([None]), tools=Path(E.HERE))
+    res = E.run_loop(k, base_rec(k, rec(-20, 2)), tmp_path / "eco", run=Fake([None]), tools=Path(E.HERE))
     assert res["verdict"] == "ERROR" and len(res["iterations"]) == 1 and "repair_rc_retry" not in res
 
 
@@ -399,7 +481,7 @@ class Stale(Fake):
 def test_stage_mismatch_retried_once_from_final(tmp_path):
     k = kit(tmp_path)
     f = Stale([rec(5, 5)])
-    res = E.run_loop(k, base_rec(k, rec(-80, 2)), tmp_path / "eco", run=f, tools=Path(E.HERE))
+    res = E.run_loop(k, base_rec(k, rec(-20, 2)), tmp_path / "eco", run=f, tools=Path(E.HERE))
     assert res["verdict"] == "PASS" and "stage_retry" in res
     assert [i["status"] for i in res["iterations"]] == ["ERROR", "SIGNED"]
     assert res["iterations"][0]["stage_mismatch"] and res["iterations"][1]["dir"].endswith("/i1f")
@@ -409,7 +491,7 @@ def test_stage_mismatch_retried_once_from_final(tmp_path):
 
 def test_stage_mismatch_on_grt_mode_not_retried(tmp_path):
     k = kit(tmp_path)
-    res = E.run_loop(k, base_rec(k, rec(-80, 2, drc=3)), tmp_path / "eco", run=Stale([rec(5, 5)]),
+    res = E.run_loop(k, base_rec(k, rec(-20, 2, drc=3)), tmp_path / "eco", run=Stale([rec(5, 5)]),
                      tools=Path(E.HERE))
     assert res["verdict"] == "ERROR" and len(res["iterations"]) == 1 and "stage_retry" not in res
 
@@ -445,12 +527,12 @@ class OdbFake(Fake):
         return rc
 
 
-def test_superseded_pass_odbs_trimmed_when_next_pass_staged(tmp_path, monkeypatch):
+def test_superseded_pass_odbs_trimmed_when_next_pass_staged(tmp_path, monkeypatch, three_iter):
     monkeypatch.delenv("OT_ECO_KEEP_ROUTED", raising=False)
     k = kit(tmp_path, mm=False)
     b = base_rec(k, rec(-6, -2, slew=0))
     f = OdbFake([rec(-3, -1), rec(-1, -1), rec(1, 2)])
-    r = E.run_loop(k, b, run=f, mem=8, cpus=2)
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2, **three_iter)
     assert r["verdict"] == "PASS" and len(r["iterations"]) == 3
     trimmed = [x for it in r["iterations"] for x in it.get("trimmed", [])]
     by = {}
@@ -463,7 +545,7 @@ def test_superseded_pass_odbs_trimmed_when_next_pass_staged(tmp_path, monkeypatc
     assert "6_final.odb" in names and not names & {"5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb"}
     # keep (debug runs) keeps everything
     k2 = kit(tmp_path / "k2", mm=False)
-    r2 = E.run_loop(k2, base_rec(k2, rec(-6, -2, slew=0)), run=OdbFake([rec(-3, -1), rec(1, 2)]), mem=8, cpus=2, keep=True)
+    r2 = E.run_loop(k2, base_rec(k2, rec(-6, -2, slew=0)), run=OdbFake([rec(-3, -1), rec(1, 2)]), mem=8, cpus=2, keep=True, **three_iter)
     assert not any(it.get("trimmed") for it in r2["iterations"])
     assert (Path(r2["root"]) / "i1t/run/results/asap7/n/base/5_route.odb").exists()
 
@@ -664,7 +746,7 @@ def test_grt_hang_stops_container_and_retries_full_route(tmp_path, monkeypatch):
     monkeypatch.setattr(E, "stop_eco_container", stop)
     k = kit(tmp_path)
     f = Hang([rec(5, 5)], stopped)
-    res = E.run_loop(k, base_rec(k, rec(-80, 2)), tmp_path / "eco", run=f, tools=Path(E.HERE))
+    res = E.run_loop(k, base_rec(k, rec(-20, 2)), tmp_path / "eco", run=f, tools=Path(E.HERE))
     assert res["verdict"] == "PASS" and "grt_hang_retry" in res
     assert [i["status"] for i in res["iterations"]] == ["ERROR", "SIGNED"]
     h = res["iterations"][0]["grt_hang"]
@@ -725,7 +807,7 @@ class Odbs(Fake):
 def test_best_dir_drops_superseded_route_odbs(tmp_path, monkeypatch):
     monkeypatch.delenv("OT_ECO_KEEP_ROUTED", raising=False)
     k = kit(tmp_path)
-    res = E.run_loop(k, base_rec(k, rec(-80, 2)), tmp_path / "eco", run=Odbs([rec(5, 5)]), tools=Path(E.HERE))
+    res = E.run_loop(k, base_rec(k, rec(-20, 2)), tmp_path / "eco", run=Odbs([rec(5, 5)]), tools=Path(E.HERE))
     assert res["verdict"] == "PASS" and res["best_trimmed"] == 3
     b = Path(res["best"]["dir"]) / "run/results/asap7/n/base"
     assert sorted(p.name for p in b.iterdir()) == ["5_2_route.odb", "6_final.odb", "6_final.spef"]

@@ -7,7 +7,12 @@ being rebuilt from gen.  Every step is an existing, proven shared tool; this fil
 to stop.  Sign-off and LEC are unchanged (no gate, corner, derate or margin is touched), so a PASS here is an ordinary
 sign-off of a new routed DB.
 
-One iteration (at most MAX_ITER = 3), from the previous iteration's routed DB (iteration 1: the kit's):
+OWNER 11-07 05:3x: "real near misses should still use late stage fixes, but do not use multiple iterations of late stage
+fixes and do not use it to fix large misses".  So MAX_ITER = 1, --max-iter above 1 is refused, and a base record beyond
+the near-miss numbers (near_miss()) stops before any P&R as verdict NOT_NEAR_MISS unless --owner-override.  A form that
+does not sign off after its one iteration goes to GEOMETRY + REDESIGN, pin cycles first.
+
+The iteration, from the kit's routed DB:
   1. prd_mk.sh SRC D <m|b|t><hold margin> SO   (tools/die_plan/post_route_drv; two-mode kit: m<N>; single-mode kit:
      t<N> (TT setup + DRV, no hold) when TT fails, then b<N> (FF hold + DRV) from it when FF fails; OT_PRD_FROM=route when the DB has no DRC,
      else grt = one full detailed route from the pre-DRT GRT DB, the FLOW-SHARED-10 form that clears small DRC counts;
@@ -22,14 +27,14 @@ One iteration (at most MAX_ITER = 3), from the previous iteration's routed DB (i
      run_kit.sh calls it (--run-dir D/run --kit D --corners tt,ff --image IMAGE).
 Stop rules: sign-off SIGNED (or LOCAL_PASS_NEEDS_PARENT with local SIGNED) -> PASS; no improvement vs the previous
 result (negative-WNS sum gain < 1 ps and neither the DRV nor the DRC count falling) -> EXHAUSTED; an iteration that
-cannot route / finish / sign off -> stop with the best result so far; MAX_ITER reached -> EXHAUSTED.
+cannot route / finish / sign off -> stop with the best result so far; MAX_ITER (1) reached -> EXHAUSTED.
 
 The post-route LEC is the caller's (signoff_chain.py runs its usual routed LEC on the PASS netlist; the CLI runs the
 kit's lec.py with --lec).  Result: ROOT/eco_loop.json {schema opentallas.eco_loop.v1, kind eco, verdict, base routed
 DB, iterations [commands, metrics, wall], best, flow sha}.
 
-    eco_loop.py run --kit K [--runner R] [--out ROOT] [--max-iter 3] [--hold-margin 0] [--mem 48] [--cpus 8] [--lec]
-    eco_loop.py check SIGNOFF.json        eligibility of a sign-off record (prints the class decision)
+    eco_loop.py run --kit K [--runner R] [--out ROOT] [--hold-margin 0] [--mem 48] [--cpus 8] [--lec] [--owner-override]
+    eco_loop.py check SIGNOFF.json        eligibility + near-miss decision of a sign-off record
 Heavy: run through ot-run (--mem = honest peak, the ECO session + DRT + sign-off STA), never on localhost.
     The ECO docker cap is max(--mem, ceil(1.5 x the kit's measured OpenROAD peak)) (ECO-OOM-1); a step killed for memory
     (OOM / kill text in its log) ends the loop as verdict ECO_OOM ("late-ECO OOM ... at <cap> GB"), re-run at a larger --mem.
@@ -54,11 +59,16 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 PRD = HERE / "post_route_drv"
 SCHEMA = "opentallas.eco_loop.v1"
-MAX_ITER = 3
+MAX_ITER = 1                  # OWNER 11-07 05:3x: one late-stage iteration per routed form; was 3
 HOLD_MARGIN_PS = 0            # OWNER 11-02 (FLOW-22): no +10 ps hold margin; every hold gate is FF hold slack >= 0 (25 ps FF hold uncertainty stays); was 10 (12.19)
 MIN_WNS_GAIN_PS = 1.0         # stop rule: < 1 ps gain and DRV/DRC not falling = no improvement
 DRC_SMALL = 50                # = autopilot NEAR_DRC_MAX: above it the route is a ROUTING problem, not an ECO
 ECO_FAILS = {"setup_tt", "hold_ff", "drv", "drc", "fanout"}
+# COORD 11-07 05:37 working numbers for a near miss; beyond them = large miss, NOT_NEAR_MISS (--owner-override only)
+NEAR_WNS_PS = 30.0            # setup / hold no worse than this
+NEAR_ENDPOINTS = 100          # on no more than this many endpoints
+NEAR_SLEW_NETS = 20           # slew violations by NET (COORD 05:41); a record with pin counts only: advisory
+NEAR_DRC = 50                 # DRC under this
 IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
 # ECO machinery staged from the current tools (prd_mk.sh copies these from SO/tools/die_plan)
 ECO_TOOL_FILES = ("clk_freeze.tcl", "clk_dump_db.tcl", "clk_geom_diff.py", "clk_freeze_check.sh",
@@ -200,6 +210,51 @@ def eligible(rec):
     if m["drc"] > DRC_SMALL:
         return False, f"DRC {m['drc']} > {DRC_SMALL} (ROUTING class)"
     return True, "ECO class: " + ",".join(m["fails"])
+
+
+def port_only_hold(signoff_path):
+    """signoff.port_only_hold on the record's FF corner: every hold violator starts at an input port (parent's)"""
+    import importlib.util
+    try:
+        corner = json.loads((Path(signoff_path).parent / "ff" / "corner.json").read_text())
+        spec = importlib.util.spec_from_file_location("ot_signoff_for_eco", HERE / "signoff.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return bool(mod.port_only_hold(corner))
+    except (OSError, ValueError, ImportError, AttributeError):
+        return False
+
+
+def near_miss(rec, signoff_path=None):
+    """-> (near, [what is beyond the numbers], [advisories]).  Only FAIL gates count: port-only hold is PASS in a current
+    record, and an older record's FF census gives the same answer; it goes to the parent, not to an ECO."""
+    c = rec.get("checks") or {}
+    far, warn = [], []
+    for key, name in (("setup_tt", "setup"), ("hold_ff", "hold")):
+        g = c.get(key) or {}
+        if g.get("verdict") != "FAIL":
+            continue
+        if key == "hold_ff" and signoff_path and port_only_hold(signoff_path):
+            warn.append("hold is port-only: the parent's, no ECO for it")
+            continue
+        w, n = g.get("wns_ps"), g.get("violators") or 0
+        if w is not None and w < -NEAR_WNS_PS:
+            far.append(f"{name} WNS {w} ps worse than -{NEAR_WNS_PS:g}")
+        if n > NEAR_ENDPOINTS:
+            far.append(f"{name} {int(n)} endpoints > {NEAR_ENDPOINTS}")
+    by = (c.get("drv") or {}).get("by_corner") or {}
+    corners = [v for v in by.values() if isinstance(v, dict)]
+    nets = [v["slew_nets"] for v in corners if v.get("slew_nets") is not None]
+    pins = max([float(v.get("slew") or 0) for v in corners] or [0])
+    if nets:
+        if max(nets) > NEAR_SLEW_NETS:
+            far.append(f"{int(max(nets))} slew nets > {NEAR_SLEW_NETS}")
+    elif pins > NEAR_SLEW_NETS:
+        warn.append(f"{int(pins)} slew pins, nets not in the record: count the nets (near miss = at most {NEAR_SLEW_NETS}, one family, local cause)")
+    drc = int((c.get("drc") or {}).get("count") or 0)
+    if drc >= NEAR_DRC:
+        far.append(f"DRC {drc} not under {NEAR_DRC}")
+    return not far, far, warn
 
 
 def neg_sum(m):
@@ -633,8 +688,11 @@ def prune(it, intermediate_only=False):
 
 # ------------------------------------------------------------------------------------------------ the loop
 def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
-             cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc="", from_mode=""):
-    """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE"""
+             cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc="", from_mode="",
+             owner_override=False):
+    """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE | NOT_NEAR_MISS"""
+    if max_iter > MAX_ITER:
+        raise ValueError(max_iter_refusal(max_iter))
     kit = Path(kit).resolve()
     t0 = time.time()
     base_signoff = Path(base_signoff).resolve()
@@ -658,11 +716,18 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
 
     if not ok:
         return done("NOT_ELIGIBLE", why)
+    near, far, warn = near_miss(base_rec, base_signoff)
+    res["near_miss"] = dict(near=near, beyond=far, advisory=warn, owner_override=bool(owner_override))
+    for w in warn:
+        print("ECO_LOOP advisory: " + w, flush=True)
+    if not near and not owner_override:
+        return done("NOT_NEAR_MISS", "; ".join(far) + f" (near miss: setup/hold no worse than {NEAR_WNS_PS:g} ps on at most "
+                    f"{NEAR_ENDPOINTS} endpoints, at most {NEAR_SLEW_NETS} slew nets, DRC under {NEAR_DRC}): GEOMETRY + REDESIGN, no ECO")
     root.mkdir(parents=True, exist_ok=False)
     so = stage_so(kit, root, tools)
     src, prev = kit, res["base_metrics"]
     best = None
-    verdict, stop = "EXHAUSTED", f"{max_iter} iterations, still not signed"
+    verdict, stop = "EXHAUSTED", f"{max_iter} iteration(s), still not signed: GEOMETRY + REDESIGN, no second ECO"
     for n in range(1, max_iter + 1):
         # --from wins over OT_ECO_FROM=route|grt: owner-chosen seed (DIE-HEAD-59: a DRC tied to one pin + a GRT-session RSZ-0074, route-keep)
         mode = from_mode or os.environ.get("OT_ECO_FROM") or ("route" if prev["drc"] == 0 else "grt")
@@ -728,6 +793,11 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
     return done(verdict, stop)
 
 
+def max_iter_refusal(n):
+    return (f"eco_loop: --max-iter {n} refused: one late-stage iteration per routed form, at most {MAX_ITER} (OWNER 11-07 05:3x). "
+            "If it does not sign off: GEOMETRY + REDESIGN, pin cycles first.")
+
+
 def summary(res):
     """one-line evidence for FAIL reasons / class tables"""
     if not res:
@@ -737,6 +807,8 @@ def summary(res):
     its = len(res.get("iterations") or [])
     if res.get("verdict") == "NOT_ELIGIBLE":
         return f"late-ECO not eligible: {res.get('reason')}"
+    if res.get("verdict") == "NOT_NEAR_MISS":
+        return f"late-ECO not a near miss: {res.get('reason')}"
     tag = {"PASS": "late-ECO PASS", "ECO_OOM": "late-ECO OOM", "ABORTED": "late-ECO ABORTED"}.get(res.get("verdict"), "late-ECO exhausted")
     return (f"{tag} ({its} it, {res.get('wall_s')} s): TT {m0.get('tt')}->{b.get('tt')} FF {m0.get('ff')}->{b.get('ff')} "
             f"drv {m0.get('drv')}->{b.get('drv')} drc {m0.get('drc')}->{b.get('drc')}; {res.get('reason')}")
@@ -773,6 +845,7 @@ def main():
     r.add_argument("--keep", action="store_true", help="keep the run data of superseded iterations")
     r.add_argument("--lec", action="store_true", help="run the kit's post-route LEC on a PASS (into BEST/lec)")
     r.add_argument("--lec-tool")
+    r.add_argument("--owner-override", action="store_true", help="run although the base record is beyond the near-miss numbers")
     # DIE-KV-67/CL 11-04: a small-DRC kit whose full DRT took many hours (ZH rfB: 13.7 h) can keep its wires instead
     r.add_argument("--from", dest="from_mode", choices=["route", "grt"], default="",
                    help="seed of every iteration (default: route when the DB has no DRC, else grt)")
@@ -782,15 +855,23 @@ def main():
     c.add_argument("record")
     a = ap.parse_args()
     if a.cmd == "check":
-        ok, why = eligible(load(a.record))
+        rec = load(a.record)
+        ok, why = eligible(rec)
         print(("ECO_ELIGIBLE " if ok else "ECO_NOT_ELIGIBLE ") + why)
-        return 0 if ok else 1
+        if not ok:
+            return 1
+        near, far, warn = near_miss(rec, a.record)
+        print(("ECO_NEAR_MISS" if near else "ECO_NOT_NEAR_MISS " + "; ".join(far)) + ("" if not warn else " | advisory: " + "; ".join(warn)))
+        return 0 if near else 1
+    if a.max_iter > MAX_ITER:
+        print(max_iter_refusal(a.max_iter), file=sys.stderr)
+        return 2
     base = Path(a.signoff) if a.signoff else newest_signoff(a.kit)
     if not base:
         print("ECO_LOOP FAIL: no sign-off record in the kit")
         return 3
     res = run_loop(a.kit, base, a.out, a.runner, a.max_iter, a.hold_margin, a.mem, a.cpus, keep=a.keep,
-                   repair_rc=a.repair_rc, from_mode=a.from_mode)
+                   repair_rc=a.repair_rc, from_mode=a.from_mode, owner_override=a.owner_override)
     if res["verdict"] == "PASS" and a.lec and not run_lec(a.kit, res, a.mem, a.cpus, a.lec_tool):
         res["verdict"] = "LEC_FAIL"
     print("ECO_LOOP " + res["verdict"] + ": " + summary(res))

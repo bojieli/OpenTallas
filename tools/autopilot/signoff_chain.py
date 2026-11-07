@@ -129,7 +129,7 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
     records = [p for p in kit.glob("signoff*/signoff.json")
                if proof_only or prior.get(str(p)) != (p.stat().st_mtime_ns, p.stat().st_size)]
     # KW-ECO-1 (OWNER 11-01 20:0x): a routed sign-off that fails only TIMING / DRV / small DRC is repaired on its own
-    # routed DB (<= 3 ECO iterations, eco_loop.py) BEFORE it is reported as a failure; sign-off + routed LEC unchanged.
+    # routed DB (one ECO iteration on a real near miss, OWNER 11-07; eco_loop.py) BEFORE it is reported as a failure; sign-off + routed LEC unchanged.
     if records and not proof_only and rc in (0, 1) and late_eco_enabled(kit, late):
         latest = max(records, key=lambda p: p.stat().st_mtime)
         if load(latest).get("verdict") not in ("SIGNED", "LOCAL_PASS_NEEDS_PARENT"):

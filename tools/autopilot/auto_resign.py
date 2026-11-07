@@ -35,12 +35,10 @@ retracted tag (gone from origin) makes a RECORDED item a candidate again on the 
 
 NEAR-MISS ECO (item 2, default on; off: "auto_eco": false or "late_eco": false in kit_wave.json, KIT/late_eco.off).
 A registered dir whose newest record does not count enters the existing late-ECO loop (tools/die_plan/eco_loop.py at the
-tag) when it is in the owner-approved class: fails only setup_tt / hold_ff / drv / drc / fanout (eco_loop.eligible), TT and
-FF within the autopilot's NEAR-MISS bound, DRC <= 50, and no hold row.  A wave run needs none of this: its chain already
-runs the loop.  One loop per routed DB.  One second chained loop (COORD 11-04 06:51, the cxport class): a record that is a
-loop's output (ROOT/eco_loop.json above it), or a DB a loop already started from, or this tick's own finished loop, goes
-on from that loop's best record when the loop ended with TT and FF both >= -5 ps or DRV-only, and it improved on its base.
-A loop that was already chained on another stays for a lane: no third.  A PASS goes to the re-sign above on the loop's best
+tag) when it is in the owner-approved class: fails only setup_tt / hold_ff / drv / drc / fanout (eco_loop.eligible), each
+failing TT / FF gate within the autopilot's NEAR-MISS bound on <= 100 endpoints, DRC < 50, and no hold row.  A wave run needs none of this: its chain already
+runs the loop.  One loop per routed form, one iteration (OWNER 11-07 05:3x): no second loop on a loop's output or on a DB a
+loop already started from; that stays for a lane, GEOMETRY + REDESIGN.  A PASS goes to the re-sign above on the loop's best
 dir; anything else says so in the queue with the best numbers.  No gate moves: the loop's sign-off is the kit's own, and
 resign.py --auto runs sign-off + routed LEC again at the tag.
 
@@ -78,8 +76,7 @@ HERE = Path(__file__).resolve().parent
 DRIVER = HERE / "die_plan" / "resign.py" if (HERE / "die_plan" / "resign.py").is_file() else HERE.parent / "die_plan" / "resign.py"
 WAVE_STATUS = ("WAIT-PARENT", "SIGNED-UNVERSIONED")
 ECO_FAILS = {"setup_tt", "hold_ff", "drv", "drc", "fanout"}   # = eco_loop.ECO_FAILS
-SECOND_LOOP_WNS = -5.0                                # COORD 11-04 06:51
-DRV_ONLY = {"drv", "fanout"}
+NEAR_ENDPOINTS = 100                                  # COORD 11-07 05:37, = eco_loop.NEAR_ENDPOINTS
 ECO_MEM_GB = 64
 ECO_DISK_GB = 40
 MAX_ECO_INFLIGHT = 4
@@ -294,27 +291,6 @@ def judge(c, p, ctx, it):
     return "LAUNCH", dict(tag=tag, key=key, build_commit=bc)
 
 
-def loop_gain(base, best):
-    """eco_loop.better without the signed key: a smaller negative-WNS sum, then fewer DRV, then fewer DRC"""
-    def key(m):
-        return (sum(min(float(m[k]), 0.0) for k in ("tt", "ff") if m.get(k) is not None), -int(m.get("drv") or 0), -int(m.get("drc") or 0))
-    return bool(base) and bool(best) and key(best) > key(base)
-
-
-def second_loop_refusal(lp):
-    """'' when the finished loop lp earns the one approved second loop, else why not"""
-    if lp.get("chained"):
-        return "this loop already followed another, no third"
-    best = lp.get("best") or {}
-    tt, ff, fails = best.get("tt"), best.get("ff"), set(best.get("fails") or [])
-    near = tt is not None and ff is not None and tt >= SECOND_LOOP_WNS and ff >= SECOND_LOOP_WNS
-    if not near and not (fails and fails <= DRV_ONLY):
-        return "loop ended outside TT and FF >= %g ps and not DRV-only" % SECOND_LOOP_WNS
-    if not loop_gain(lp.get("base"), best):
-        return "loop did not improve on its base"
-    return ""
-
-
 def judge_eco(c, e, it, holds, near_wns, near_drc):
     """(action, why) for a registered dir with no counting record.  LAUNCH | WAIT | SKIP | LANE"""
     if e.get("error"):
@@ -331,7 +307,8 @@ def judge_eco(c, e, it, holds, near_wns, near_drc):
         return "WAIT", "no FAIL gate (%s), not an ECO case" % e.get("verdict")
     if fails - ECO_FAILS:
         return "SKIP", "not an ECO class: " + nums
-    if any(w is not None and w < near_wns for w in (e.get("tt"), e.get("ff"))) or (e.get("drc") or 0) > near_drc:
+    timing = [(e.get(k), e.get(k + "_n")) for k, g in (("tt", "setup_tt"), ("ff", "hold_ff")) if g in fails]   # port-only hold is not a FAIL
+    if any((w is not None and w < near_wns) or (n or 0) > NEAR_ENDPOINTS for w, n in timing) or (e.get("drc") or 0) >= near_drc:
         return "SKIP", "outside the near-miss bound: " + nums
     if e.get("late_eco_off"):
         return "SKIP", "KIT/late_eco.off"
@@ -342,13 +319,8 @@ def judge_eco(c, e, it, holds, near_wns, near_drc):
         return "LANE", "late-ECO already ran on this DB: " + nums
     if e.get("loop_bad"):
         return "LANE", "a loop ran here but its record or best record is not readable: %s, %s" % (e["loop_bad"], nums)
-    if len(done) >= 2:
-        return "LANE", "two loops already ran on this item, no third: " + nums
-    if e.get("loop"):
-        why = second_loop_refusal(e["loop"])
-        if why:
-            return "LANE", "no second loop, %s: %s" % (why, nums)
-        return "LAUNCH", "second loop: " + nums
+    if done or e.get("loop"):
+        return "LANE", "one late-stage iteration per routed form, no second loop, GEOMETRY + REDESIGN: " + nums
     return "LAUNCH", nums
 
 
@@ -492,8 +464,7 @@ try:
         if lj:
             try:
                 L = json.load(open(lj)); b = L.get("best") or {}; k = L.get("kit") or ""
-                out["loop"] = dict(file=lj, verdict=L.get("verdict"), base=L.get("base_metrics"), best=b.get("metrics"),
-                                   chained=os.path.exists(os.path.join(os.path.dirname(k), "eco_loop.json")))
+                out["loop"] = dict(file=lj, verdict=L.get("verdict"), base=L.get("base_metrics"), best=b.get("metrics"))
                 off = off or os.path.exists(os.path.join(k, "late_eco.off"))
                 if b.get("signoff") != p:
                     p, d = b["signoff"], json.load(open(b["signoff"]))
@@ -503,6 +474,7 @@ try:
         out.update(record=p, verdict=d.get("verdict"), name=d.get("name"), top=fg.get("top") if isinstance(fg, dict) else None,
                    fails=sorted(k for k, v in c.items() if isinstance(v, dict) and v.get("verdict") == "FAIL"),
                    tt=(c.get("setup_tt") or {}).get("wns_ps"), ff=(c.get("hold_ff") or {}).get("wns_ps"),
+                   tt_n=(c.get("setup_tt") or {}).get("violators"), ff_n=(c.get("hold_ff") or {}).get("violators"),
                    drc=(c.get("drc") or {}).get("count"), odb=inp.get("odb"), kit=inp.get("kit"))
         kit, odb = inp.get("kit") or "", inp.get("odb") or ""
         out["late_eco_off"] = off or os.path.exists(os.path.join(kit, "late_eco.off"))
@@ -761,7 +733,7 @@ def poll_eco_row(AP, cid, it, notices):
     if v == "PASS" and r.get("best_signoff"):
         it.update(status="WAIT", why="late-ECO PASS, re-sign next", eco_record=r["best_signoff"])
         msg = "%s/%s late-ECO PASS %s, %s:%s; re-sign follows" % (it["die"], it["name"], nums, it["host"], r.get("best_dir"))
-    elif r.get("best_signoff"):                  # the next tick's judge_eco rules on the one approved second loop
+    elif r.get("best_signoff"):                  # the next tick's judge_eco sends it to a lane: no second loop
         it.update(status="WAIT", why="late-ECO %s, best %s, %s" % (v, nums, r.get("reason") or "client exit %s" % client.get("exit")), eco_next=r["best_signoff"])
         msg = "%s/%s %s; dir %s:%s" % (it["die"], it["name"], it["why"], it["host"], it["eco_out"])
     else:
