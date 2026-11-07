@@ -1,0 +1,106 @@
+{
+ "source_commit": "AT_GENERATION_HEAD",
+ "clock_ports": [
+  "ck"
+ ],
+ "reset_ports": [
+  "rst"
+ ],
+ "pin_placement_policy": "DECLARED_CLOCK_RESET_POINTS",
+ "port_inventory": {
+  "top": "codex_svc_sml_native",
+  "source_file": "results/physical/codex_svc_hardening_1209/native_sml/rtl/codex_svc_sml_native.sv",
+  "source_sha256": "76dcae1325fc2e15051488a61de5d312e789cb3359586294ac7fa59be285f7b6",
+  "ports": [
+   [
+    "ck",
+    "input",
+    1
+   ],
+   [
+    "rst",
+    "input",
+    1
+   ],
+   [
+    "sk_en",
+    "input",
+    1
+   ],
+   [
+    "i_cv",
+    "input",
+    1
+   ],
+   [
+    "i_nv",
+    "input",
+    7
+   ],
+   [
+    "i_scale",
+    "input",
+    32
+   ],
+   [
+    "i_sink",
+    "input",
+    32
+   ],
+   [
+    "i_sv",
+    "input",
+    1
+   ],
+   [
+    "i_s",
+    "input",
+    32
+   ],
+   [
+    "i_mv",
+    "input",
+    1
+   ],
+   [
+    "i_nmb",
+    "input",
+    32
+   ],
+   [
+    "o_mxv",
+    "output",
+    1
+   ],
+   [
+    "o_mx",
+    "output",
+    32
+   ],
+   [
+    "o_ev",
+    "output",
+    1
+   ],
+   [
+    "o_es",
+    "output",
+    1
+   ],
+   [
+    "o_el",
+    "output",
+    1
+   ],
+   [
+    "o_e",
+    "output",
+    32
+   ]
+  ]
+ },
+ "added_pin_cycles": 0,
+ "added_reset_cycles": 0,
+ "release_eligible": false,
+ "qualification": "PRIVATE_CHILD_PILOT"
+}
