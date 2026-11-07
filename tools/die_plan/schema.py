@@ -580,6 +580,11 @@ SCHEMA = {
                             "properties": {"port": _name, "tap_um": _xy,
                                            "period_mult": {"type": "integer", "minimum": 1},
                                            "source": {"type": "string"}, "note": {"type": "string"},
+                                           # DIE-KV-84 11-06 (COORD 16:2x(b), opt-in): an edge clock asynchronous
+                                           # to the core clock by design, crossing only through synchronised
+                                           # FIFOs / synchronisers (gen_phys.edge_cdc; default: synchronous)
+                                           "cdc": {"enum": ["synchronized"]},
+                                           "cdc_evidence": {"type": "string", "minLength": 1},
                                            # DIE-HEAD-21 (opt-in): measured arrival of the sender's forwarded clock
                                            # AT this port (sender export + wire; the receiver's own tree is
                                            # propagated by the tool), per corner, as an early/late range.  Emitted

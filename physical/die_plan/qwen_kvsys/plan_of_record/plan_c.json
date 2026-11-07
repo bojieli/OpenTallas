@@ -1708086,7 +1708086,9 @@
       ],
       "period_mult": 1,
       "source": "hub_C pll.pll_phy (asbuilt sources: pll_phy -> domain clk_phy; bound-top spine clk_clk_phy)",
-      "note": "KV-022 COORD 10-29 14:37 (DIE-KV-35): x6 PHY clock -> serdes .clk_phy (u_fdi_cdc phy side 5259 FF + macro clk pin (1866.24,354.0)); E-rim interior M7 pin at the macro clk pin row; kit clock at the die period (PLL model 1043 ps: 833 is tighter, not relaxed), synchronous with clk per schema (QC clk_serdes form)"
+      "note": "KV-022 COORD 10-29 14:37 (DIE-KV-35): x6 PHY clock -> serdes .clk_phy (u_fdi_cdc phy side 5259 FF + macro clk pin (1866.24,354.0)); E-rim interior M7 pin at the macro clk pin row; kit clock at the die period (PLL model 1043 ps: 833 is tighter, not relaxed), synchronous with clk per schema (QC clk_serdes form)",
+      "cdc": "synchronized",
+      "cdc_evidence": "rtl/physical/ot_fdi_phy_cdc.sv header (TOK-QK/C 10-24): clk and clk_phy (PLL pll_phy, 1043 ps) are asynchronous; the only clk <-> clk_phy arcs are inside the two ot_async_fifo instances (Gray pointers, 2-flop synchronisers, storage read in the read domain) and the tx_up / reset synchronisers"
      }
     ],
     "landing_contract": {
@@ -1708725,7 +1708727,14 @@
       1900.8,
       1036.8
      ]
-    ]
+    ],
+    "landing_ring_wreg": {
+     "buses": [
+      "i_host_fdi",
+      "i_host_link_rst_n"
+     ],
+     "dsrep": 1
+    }
    },
    "reset": {
     "tap_um": [
@@ -1708809,7 +1708818,8 @@
      1876.5,
      496.97
     ]
-   }
+   },
+   "landing_control_status_copy": true
   },
   "kv3_sys_SD_v1": {
    "module": "kv3_sys_SD_v1_part",
@@ -1708883,7 +1708893,9 @@
       ],
       "period_mult": 1,
       "source": "hub_C pll.pll_phy (asbuilt sources: pll_phy -> domain clk_phy; bound-top spine clk_clk_phy)",
-      "note": "KV-022 COORD 10-29 14:37 (DIE-KV-35): x6 PHY clock -> serdes .clk_phy (u_fdi_cdc phy side 5259 FF + macro clk pin (1866.24,354.0)); E-rim interior M7 pin at the macro clk pin row; kit clock at the die period (PLL model 1043 ps: 833 is tighter, not relaxed), synchronous with clk per schema (QC clk_serdes form)"
+      "note": "KV-022 COORD 10-29 14:37 (DIE-KV-35): x6 PHY clock -> serdes .clk_phy (u_fdi_cdc phy side 5259 FF + macro clk pin (1866.24,354.0)); E-rim interior M7 pin at the macro clk pin row; kit clock at the die period (PLL model 1043 ps: 833 is tighter, not relaxed), synchronous with clk per schema (QC clk_serdes form)",
+      "cdc": "synchronized",
+      "cdc_evidence": "rtl/physical/ot_fdi_phy_cdc.sv header (TOK-QK/C 10-24): clk and clk_phy (PLL pll_phy, 1043 ps) are asynchronous; the only clk <-> clk_phy arcs are inside the two ot_async_fifo instances (Gray pointers, 2-flop synchronisers, storage read in the read domain) and the tx_up / reset synchronisers"
      }
     ],
     "landing_contract": {
@@ -1709522,7 +1709534,14 @@
       1900.8,
       1036.8
      ]
-    ]
+    ],
+    "landing_ring_wreg": {
+     "buses": [
+      "i_host_fdi",
+      "i_host_link_rst_n"
+     ],
+     "dsrep": 1
+    }
    },
    "reset": {
     "tap_um": [
@@ -1709606,7 +1709625,8 @@
      1876.5,
      496.97
     ]
-   }
+   },
+   "landing_control_status_copy": true
   },
   "kv3_sys_c": {
    "module": "kv3_sys_c_part",

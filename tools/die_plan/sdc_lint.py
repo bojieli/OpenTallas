@@ -371,7 +371,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
          ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None, ring_clock_ports=None,
          landed_clock_inputs=None, edge_clock_latency_ps=None, pad_clock_inputs=None, pad_clock_outputs=None,
-         pad_clock_cdc=None, pad_clock_data_inputs=None, pad_clock_data_outputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None, source_sync_inputs=None):
+         pad_clock_cdc=None, edge_clock_cdc=None, pad_clock_data_inputs=None, pad_clock_data_outputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None, source_sync_inputs=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -508,12 +508,31 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     pad_l, pad_fp = list(reset_pad_pins or []), []
     root_fp = 0
     cdc_ex = {}                       # (max|hold, from clock, to clock) -> ps (hold: 0) : declared pad cdc exceptions
+    edge_cdc = dict(edge_clock_cdc or {})   # DIE-KV-84 11-06 (COORD 16:2x(b)): edge clock port -> max delay ps (peer clk)
+    edge_ex = {}
     cdc_form = (re.compile(r"set_max_delay -ignore_clock_latency (\S+) -from \[get_clocks (\S+)\] -to \[get_clocks (\S+)\]"),
                 re.compile(r"set_false_path -hold -from \[get_clocks (\S+)\] -to \[get_clocks (\S+)\]"))
     for cmd in _split_cmds(text):
         try:
             w = _words(cmd)
             c = w[0]
+            if edge_cdc and c in ("set_max_delay", "set_false_path"):
+                m = (cdc_form[0] if c == "set_max_delay" else cdc_form[1]).fullmatch(" ".join(w))
+                ecl = {clk_src[p_]: p_ for p_ in edge_cdc if p_ in clk_src}
+                if m and (m.group(m.lastindex - 1) in ecl or m.group(m.lastindex) in ecl):
+                    a_, b_ = m.group(m.lastindex - 1), m.group(m.lastindex)
+                    kind = "max" if c == "set_max_delay" else "hold"
+                    e_ = a_ if a_ in ecl else b_
+                    if {a_, b_} != {e_, "clk"}:
+                        err.append(f"edge cdc: exception {a_}->{b_} is not between a declared edge clock and clk: {cmd}")
+                        continue
+                    v = _num(m.group(1), "delay") * u if kind == "max" else 0.0
+                    if kind == "max" and abs(v - float(edge_cdc[ecl[e_]])) > EPS:
+                        err.append(f"edge cdc: max delay {a_}->{b_} = {v:g} ps, not the declared {edge_cdc[ecl[e_]]:g} ps")
+                    if (kind, a_, b_) in edge_ex:
+                        err.append(f"edge cdc: {kind} exception {a_}->{b_} given twice")
+                    edge_ex[(kind, a_, b_)] = v
+                    continue
             if pad_cdc and c in ("set_max_delay", "set_false_path"):
                 m = (cdc_form[0] if c == "set_max_delay" else cdc_form[1]).fullmatch(" ".join(w))
                 cdc_clk = {clk_src[p_]: p_ for p_ in pad_cdc if p_ in clk_src}
@@ -844,6 +863,14 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                            for kk, a2, b2 in land_ex):
                     err.append(f"landing: landed clock {n} has no set_{k}_delay -ignore_clock_latency "
                                f"{'from' if a_ else 'to'} a core clock {core}")
+    for p_ in edge_cdc:
+        n = clk_src.get(p_)
+        if n is None:
+            continue                  # reported as 'clock tap port has no create_clock'
+        for k in ("max", "hold"):
+            for a_, b_ in ((n, "clk"), ("clk", n)):
+                if (k, a_, b_) not in edge_ex:
+                    err.append(f"edge cdc: declared {n} has no {'set_max_delay' if k == 'max' else 'set_false_path -hold'} {a_}->{b_}")
     for p_ in pad_cdc:
         n = clk_src.get(p_)
         if n is None:
@@ -1079,6 +1106,7 @@ def kit_context(P, tn):
                 port_period_mult=edge,
                 **(dict(pad_clock_inputs=pad_in, pad_clock_outputs=pad_out) if pad_pins else {}),
                 **({"pad_clock_cdc": pad_cdc} if pad_cdc else {}),
+                **({"edge_clock_cdc": gen_phys.edge_cdc(P, tn)} if gen_phys.edge_cdc(P, tn) else {}),
                 **({"pad_clock_data_inputs": {
                     row['port']: dict(clock=pin['name'], max_ps=row['max_ps'], min_ps=row['min_ps'],
                                       **{k: row[k] for k in ('capture', 'eye_hold_extra_ps') if k in row})

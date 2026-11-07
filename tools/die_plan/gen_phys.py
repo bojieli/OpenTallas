@@ -826,6 +826,41 @@ EDGE_SPLIT_DIES = {"qwen_compute", "qwen_kvsys"}  # KV-SYSSD-2 11-06 (COORD appr
 EDGE_SPLIT_MACRO_PIN_DIES = {"qwen_kvsys"}
 
 
+# DIE-KV-84 11-06 (COORD 16:2x(b)): an edge clock the plan declares "cdc": "synchronized" + "cdc_evidence" is
+# asynchronous to the core clock clk by design (KV clk_clk_phy: PLL clk_phy 1043 ps; its only crossings are inside
+# ot_fdi_phy_cdc's two async FIFOs and 2-flop synchronisers).  Those arcs get a max delay of half the die period with
+# latency ignored, which covers both bounds of the module's SDC intent (Gray-bus skew 0.5 T, storage read T - 60).
+# They get no hold check and never a clock group.  Only the edge clock <-> clk pair is excepted; default plans are
+# byte-same.
+EDGE_CDC_CORE_CLOCK = "clk"
+
+
+def edge_cdc(P, tn):
+    """{edge clock port: max delay ps} of the declared synchronized edge clocks of type tn (peer: clk)."""
+    out = {}
+    for e in P.types[tn].get("clock", {}).get("edge_clocks", []):
+        if e.get("cdc") is None:
+            continue
+        if e["cdc"] != "synchronized" or not str(e.get("cdc_evidence", "")).strip():
+            raise ValueError(f"{tn}.{e['port']}: edge clock cdc must be 'synchronized' with a cdc_evidence")
+        if int(e.get("period_mult", 1)) != 1 or e.get("source_latency_ps") or e["port"].startswith("fclk_in"):
+            raise ValueError(f"{tn}.{e['port']}: edge clock cdc only on a plain die-period edge clock")
+        out[e["port"]] = 0.5 * float(P.die["period_ps"])
+    return out
+
+
+def edge_cdc_sdc(P, tn):
+    out = ""
+    for n, mx in edge_cdc(P, tn).items():
+        c, v = EDGE_CDC_CORE_CLOCK, t_lib(mx)
+        out += (f"# DIE-KV-84 COORD 16:2x(b): {n} asynchronous to {c} (plan cdc synchronized; evidence in plan cdc_evidence)\n"
+                f"set_max_delay -ignore_clock_latency {v:.4f} -from [get_clocks {n}] -to [get_clocks {c}]\n"
+                f"set_max_delay -ignore_clock_latency {v:.4f} -from [get_clocks {c}] -to [get_clocks {n}]\n"
+                f"set_false_path -hold -from [get_clocks {n}] -to [get_clocks {c}]\n"
+                f"set_false_path -hold -from [get_clocks {c}] -to [get_clocks {n}]\n")
+    return out
+
+
 def edge_split_ports(P, tn):
     if P.die.get("name") not in EDGE_SPLIT_DIES:
         return []
@@ -2185,6 +2220,7 @@ def sdc(P, tn, pins):
                 f"set_false_path -from [get_ports {{{' '.join(ids)}}}]\n")
     out += (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
             "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
+    out += edge_cdc_sdc(P, tn)
     if P.types[tn].get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         out = LC.sdc(P, tn, out)
