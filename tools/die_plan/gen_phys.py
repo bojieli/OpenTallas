@@ -158,6 +158,124 @@ def _cland_pinslot_dense(budgets, tn):
     on = list(budgets.get("cland_pinslot_dense_types") or [])
     return tn in on or tn.split("__")[0] in on
 
+# KW-FIX-24/CONSKIT 11-06 (OWNER standing rule, COORD 21:5x): a type row that failed congestion or setup gets a
+# conservative re-kit in the next batch relaunch.  Opt-in per row through the kit wave item_env (gen.py phys env),
+# OFF by default: without OT_CONS_KIT=1 the kit (config.mk and every file) is byte-identical.
+#   OT_CONS_KIT=1            enable
+#   OT_CONS_UTIL=U           PLACE_DENSITY = min(kit value, U)            (default 0.35)
+#   OT_CONS_MAX_LAYER=Mk     signal routing ceiling                       (default M6)
+#   OT_CONS_PIN_LAYER_ADJ=A  GRT capacity cut on the layers kept above Mk only for pin access (default 0.9)
+# The ceiling never drops below the highest layer the type's own pins use (io.tcl place_pin: face buses, clock /
+# reset pins on partition_signal_max, face_layers M8, bump pins; signal pins of staged hard-macro LEFs): GRT stops
+# with "Pin .. does not have geometries below the max routing layer" otherwise.  Those pin-only layers stay in
+# MAX_ROUTING_LAYER and get set_global_routing_layer_adjustment A in the PRE_GLOBAL_ROUTE hook (cons_grt_pre.tcl), so
+# GRT/DRT use them for the pin stub, not for the net.  The density cap is floored at GPL's own lower bound + 0.01
+# (cons_gpl_pre.tcl): a target below the cell area (fixed plan outline) is a GPL-0302 stop, not a conservative form.
+# Registered faces need no switch: every port is registered at both pins by construction (schema.py conventions,
+# face_flops.tcl FIRM at the pin); an extra stage per face is a plan event (lane fixed_cycles / bus pads).
+CONS_KIT_UTIL = 0.35
+CONS_KIT_MAX_LAYER = "M6"
+CONS_KIT_PIN_LAYER_ADJ = 0.9
+_CONS_PLACE_PIN_LAYER = re.compile(r"^\s*place_pin\b[^\n]*?\s-layer\s+(M\d+)\b", re.M)
+
+
+def cons_kit_settings(env=None):
+    """OT_CONS_* env -> dict(util, max_layer, pin_layer_adj), or None when OT_CONS_KIT is unset / 0."""
+    env = os.environ if env is None else env
+    on = str(env.get("OT_CONS_KIT", "")).strip()
+    if on in ("", "0"):
+        return None
+    if on != "1":
+        raise ValueError(f"OT_CONS_KIT={on!r}: 1 enables the conservative kit, 0/unset leaves it off")
+    util = float(env.get("OT_CONS_UTIL") or CONS_KIT_UTIL)
+    if not 0.0 < util <= 1.0:
+        raise ValueError(f"OT_CONS_UTIL={util}: must be in (0, 1]")
+    layer = str(env.get("OT_CONS_MAX_LAYER") or CONS_KIT_MAX_LAYER)
+    if not re.fullmatch(r"M[2-9]", layer):
+        raise ValueError(f"OT_CONS_MAX_LAYER={layer!r}: a routing layer M2..M9")
+    adj = float(env.get("OT_CONS_PIN_LAYER_ADJ") or CONS_KIT_PIN_LAYER_ADJ)
+    if not 0.0 <= adj < 1.0:
+        raise ValueError(f"OT_CONS_PIN_LAYER_ADJ={adj}: in [0, 1) (1 leaves no track for the pin access itself)")
+    return dict(util=util, max_layer=layer, pin_layer_adj=adj)
+
+
+def _lef_signal_pin_layers(path):
+    """metal layers of the non-PG PIN shapes of a LEF (macro signal / clock pins)."""
+    out, pin, pg, cur = set(), None, False, set()
+    for line in Path(path).read_text(errors="replace").splitlines():
+        tok = line.replace(";", " ").split()
+        if not tok:
+            continue
+        if pin is None:
+            if tok[0] == "PIN" and len(tok) > 1:
+                pin, pg, cur = tok[1], False, set()
+            continue
+        if tok[0] == "END" and len(tok) > 1 and tok[1] == pin:
+            if not pg:
+                out |= cur
+            pin = None
+        elif tok[0] == "USE" and len(tok) > 1 and tok[1].upper() in ("POWER", "GROUND"):
+            pg = True
+        elif tok[0] == "LAYER" and len(tok) > 1 and re.fullmatch(r"M\d+", tok[1]):
+            cur.add(tok[1])
+    return out
+
+
+def _lnum(ln):
+    return int(ln[1:])
+
+
+def cons_kit_apply(cfg, kd, cons, io_text, top, mlef=()):
+    """rewrite the kit config lines in place for the conservative form; write cons_kit.json + the two hook wrappers."""
+    pins = {}
+    for ln in _CONS_PLACE_PIN_LAYER.findall(io_text):
+        pins.setdefault(ln, "io.tcl place_pin")
+    for p in mlef:
+        f = Path(kd) / "macros" / Path(p).name
+        if f.is_file():
+            for ln in _lef_signal_pin_layers(f):
+                pins.setdefault(ln, f"macro LEF {f.name}")
+    floor = max(pins, key=_lnum) if pins else "M2"
+    want = cons["max_layer"]
+    new_max = max(want, floor, key=_lnum)
+    if _lnum(new_max) > _lnum(top):        # the cap only lowers; a ceiling above the kit top is the kit top
+        new_max = top
+    access = [f"M{k}" for k in range(_lnum(want) + 1, _lnum(new_max) + 1)]
+    i_max = cfg.index(f"export MAX_ROUTING_LAYER = {top}")
+    cfg[i_max] = f"export MAX_ROUTING_LAYER = {new_max}"
+    i_pd = next(k for k, c in enumerate(cfg) if c.startswith("export PLACE_DENSITY = "))
+    pd0 = float(cfg[i_pd].split("=", 1)[1])
+    pd = min(pd0, cons["util"])
+    cfg[i_pd] = f"export PLACE_DENSITY = {pd:g}"
+    gpl = "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl"
+    cfg[cfg.index(gpl)] = "export PRE_GLOBAL_PLACE_TCL = /work/cons_gpl_pre.tcl"
+    shutil.copyfile(Path(__file__).with_name("cons_gpl_pre.tcl"), Path(kd) / "cons_gpl_pre.tcl")
+    cfg += ["# KW-FIX-24/CONSKIT: conservative re-kit (OT_CONS_KIT=1 at generation; cons_kit.json)",
+            "export OT_CONS_KIT = 1", f"export OT_CONS_UTIL = {cons['util']:g}",
+            f"export OT_CONS_SIGNAL_MAX = {want}"]
+    grt = None
+    if access:
+        grt = next(c for c in cfg if c.startswith("export PRE_GLOBAL_ROUTE_TCL = "))
+        cfg[cfg.index(grt)] = "export PRE_GLOBAL_ROUTE_TCL = /work/cons_grt_pre.tcl"
+        cfg += [f"export OT_CONS_BASE_PRE_GRT = {grt.split('=', 1)[1].strip()}",
+                f"export OT_CONS_PIN_LAYERS = {' '.join(access)}",
+                f"export OT_CONS_PIN_LAYER_ADJ = {cons['pin_layer_adj']:g}"]
+        shutil.copyfile(Path(__file__).with_name("cons_grt_pre.tcl"), Path(kd) / "cons_grt_pre.tcl")
+    rec = {"schema": "opentallas.cons_kit.v1", "enabled": True, "source": "OT_CONS_KIT=1 (gen.py phys env)",
+           "place_density": {"kit": pd0, "cap": cons["util"], "used": pd,
+                             "floor": "GPL uniform-density lower bound + 0.01 (cons_gpl_pre.tcl, logged OT_CONS_KIT)"},
+           "signal_max_layer": {"requested": want, "kit_top": top, "pin_floor": floor,
+                                "pin_layers": {k: pins[k] for k in sorted(pins, key=_lnum)},
+                                "max_routing_layer": new_max, "pin_access_layers": access,
+                                "pin_access_adjustment": cons["pin_layer_adj"] if access else None},
+           "registered_faces": "by construction: every port has a boundary flop at both pins (schema.py), placed FIRM "
+                               "at its pin by face_flops.tcl; an extra stage per face is a plan event (lane "
+                               "fixed_cycles / bus pads), not a kit switch",
+           "pre_global_route_base": grt.split("=", 1)[1].strip() if grt else None}
+    (Path(kd) / "cons_kit.json").write_text(json.dumps(rec, indent=1) + "\n")
+    return rec
+
+
 def _cland_fit_mode(budgets, tn=None):
     """landing_placement fit footprint for CLAND cells -> OT_CLAND_FIT_RESERVE value or None.
     DEFAULT 'resize' since AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 b): FLOW-6 widest-drive-variant footprint, so an in-place
@@ -3934,6 +4052,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += rck_band_exports(P, tn)
     import pad_clock as PC
     PC.write_contract(P, tn, kd)
+    cons = cons_kit_settings()
+    if cons:
+        cons_kit_apply(cfg, kd, cons, io_text, top, mlef)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)
