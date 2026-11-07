@@ -58,7 +58,15 @@ def ring_write_reg(plan, tn, bus):
     write_chunk = cfg.get("write_chunk", 64)
     if isinstance(write_chunk, bool) or not isinstance(write_chunk, int) or write_chunk not in (1, 2, 4, 8, 16, 32, 64):
         raise ValueError(f"{tn}: landing_ring_wreg.write_chunk must divide 64")
-    return dict(depth=1 + int(freg), dsrep=dsrep, freg=freg, write_chunk=write_chunk)
+    numeric = cfg.get("freg_numeric_order", False)
+    if not isinstance(numeric, bool) or (numeric and not freg):
+        raise ValueError(f"{tn}: freg_numeric_order requires boolean true and freg=true")
+    out = dict(depth=1 + int(freg), dsrep=dsrep, freg=freg)
+    if write_chunk != 64:
+        out["write_chunk"] = write_chunk
+    if numeric:
+        out["freg_numeric_order"] = True
+    return out
 
 
 
@@ -1140,9 +1148,13 @@ class Landings:
                 if wreg:
                     if not cat.get("straps"):
                         raise LandingError(f"{tn}.{b}: landing_ring_wreg needs the count-aligned strap form")
-                    ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']})" + (f", .WRITE_CHUNK({wreg['write_chunk']})" if wreg["write_chunk"] != 64 else "") + (", .FREG(1))" if wreg["freg"] else ")")
-                    self.reset_placements[tn][b].update(ring_wreg=1, ring_dsrep=wreg["dsrep"], ring_freg=int(wreg["freg"]), ring_write_chunk=wreg["write_chunk"],
+                    ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']})" + (f", .WRITE_CHUNK({wreg.get('write_chunk', 64)})" if wreg.get("write_chunk", 64) != 64 else "") + (", .FREG(1))" if wreg["freg"] else ")")
+                    self.reset_placements[tn][b].update(ring_wreg=1, ring_dsrep=wreg["dsrep"], ring_freg=int(wreg["freg"]),
                                                         strap_k_delta=wreg["depth"])
+                    if wreg.get("write_chunk", 64) != 64:
+                        self.reset_placements[tn][b]["ring_write_chunk"] = wreg["write_chunk"]
+                    if wreg.get("freg_numeric_order"):
+                        self.reset_placements[tn][b]["ring_freg_numeric_order"] = 1
                 self.reset_placements[tn][b].update(ring_rst_n=reader_start, origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring

@@ -239,19 +239,23 @@ def _native_role_config(tn, typ):
 
 
 def _local_chunk_config(typ):
-    """Only the new explicit local-WREG form changes control flop placement."""
+    """Only explicitly selected writer chunks or FREG ordering change placement."""
     clock = (typ or {}).get('clock', {})
     cfg = clock.get('landing_ring_wreg') or {}
     wc = cfg.get('write_chunk', 64)
-    if wc == 64:
+    numeric = cfg.get('freg_numeric_order', False) is True
+    if wc == 64 and not numeric:
         return ''
     rc = 64 // cfg.get('dsrep', 1)
     rows = []
     for bus in cfg.get('buses', []):
         band = clock.get('landing_contract', {}).get('bands', {}).get(bus, {})
         prefix = band.get('instance', 'u_cland_' + bus)
-        rows.append('dict set ::cland_local_chunks {' + prefix + '} {write ' + str(wc) + ' read ' + str(rc) + '}')
-    return 'set ::cland_local_chunks {}\n' + '\n'.join(rows) + '\n'
+        if wc != 64:
+            rows.append('dict set ::cland_local_chunks {' + prefix + '} {write ' + str(wc) + ' read ' + str(rc) + '}')
+        if numeric:
+            rows.append('dict set ::cland_numeric_freg_banks {' + prefix + '.g_freg.u_face} 1')
+    return 'set ::cland_local_chunks {}\nset ::cland_numeric_freg_banks {}\n' + '\n'.join(rows) + '\n'
 
 
 def _placement_source(active):
