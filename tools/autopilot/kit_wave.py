@@ -534,6 +534,8 @@ def select(rows, cfg, die, state, plan_types=None):
             pass        # KW-PROV-1: a gen-time WAIT-DEP stop (child view missing) relaunches on provisional child views
         elif rec and f"{r['item']}@{rec.get('attempt')}" not in retry:
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
+        elif rec and cfg.get("hold_unchanged") and unchanged_fail(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
+            why = HOLD_UNCHANGED
         elif r["live_job"] not in ("", "none") and not _own_wave_unit(r):
             why = "live job (another lane)"
         elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m \
@@ -572,6 +574,11 @@ def select(rows, cfg, die, state, plan_types=None):
                     or f"{c}@{its[item_key(die, ev, c, blk(c))].get('attempt')}" in retry
                     or (is_wait_dep(its[item_key(die, ev, c, blk(c))]) and not its[item_key(die, ev, c, blk(c))].get("provisional")
                         and prov_item(d, c)))]
+            if cfg.get("hold_unchanged"):
+                same = [c for c in todo if unchanged_fail(cfg, state, die, c, its.get(item_key(die, ev, c, blk(c))), r["item"], r.get("kind"))]
+                if same:
+                    skip.setdefault(HOLD_UNCHANGED, []).extend(same)
+                    todo = [c for c in todo if c not in same]
             if not cls and blocked:
                 continue
             if not cls:
@@ -1779,6 +1786,92 @@ def counted_now(cfg, st, die, item, block=None):
     if not block:
         return True
     return st.setdefault("counted_blocks", {}).setdefault(f"{die}|{item}", block) == block
+
+
+# OWNER 11-07 05:1x "never use more place and route retries" (KW-FIX-27): a design FAIL relaunches only when the row's
+# inputs changed.  Not inputs: where and how large it runs (host, memory, paths), and resume data.  src_sha is the whole
+# source tree, so a new source counts as a change for every row of the die.
+INPUT_SKIP = {"die", "item", "kind", "event", "gen_host", "work", "root", "hosts", "hub", "place_prefer", "place_mem_gb",
+              "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "bind_mem_gb", "ot_run", "crit",
+              "start_delay_s", "resume_from", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
+              "prov_views", "geom_advisory", "place_spill"}
+
+
+def input_hash(sp, prov_key=None):
+    src = str(sp.get("src") or "")
+
+    def clean(v):
+        if isinstance(v, dict):
+            return {k: c for k, c in ((k, clean(x)) for k, x in v.items() if k != "note") if c not in (None, "", {}, [])}
+        if isinstance(v, (list, tuple)):
+            return [clean(x) for x in v]
+        return v.replace(src, "<SRC>") if isinstance(v, str) and src else v
+    body = {k: c for k, c in ((k, clean(v)) for k, v in sp.items() if k not in INPUT_SKIP) if c not in (None, "", {}, [])}
+    form = sp.get("leafslew_form")
+    if form:
+        body["leafslew"] = clean(form.get("env") or {})
+    if prov_key:
+        body["prov_key"] = prov_key
+    return hashlib.sha256(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()
+
+
+def unchanged_fail(cfg, st, die, item, rec, parent=None, kind="type"):
+    """True: a design FAIL whose relaunch would build the same inputs.  INFRA and unreadable records are never held.
+    COORD 11-07 05:24: after a TIMING or ROUTING FAIL a new source alone is no change: the retry entry's retry_fix text must
+    name a redesign (REDESIGN: changed RTL, pin cycles, macros, outline or clock).  Other spec differences do not count:
+    on 11-07 flow flags and paths differed on 144 of 147 such rows, none of them a redesign."""
+    if not rec or not (rec.get("status") == "FAIL" or (rec.get("status") == "ENQUEUED" and rec.get("q_status") == "FAIL")):
+        return False
+    cls = str((rec.get("q_class") if rec.get("q_status") == "FAIL" else "") or rec.get("class") or "")
+    if cls == "INFRA":
+        return False
+    if cls in ("TIMING", "ROUTING"):
+        rf = ((cfg.get("dies") or {}).get(die) or {}).get("retry_fix")
+        return "REDESIGN:" not in str((rf.get(f"{item}@{rec.get('attempt')}") if isinstance(rf, dict) else "") or "")
+    try:
+        old = json.loads((Path(rec["dir"]) / "spec.json").read_text())
+        cand = spec_for(dict(cfg, _otrun_status={}), die, item, cfg.get("_hub") or "", parent or rec.get("parent_item"),
+                        kind=kind or rec.get("kind") or "type")
+        attempt = int(rec.get("attempt") or 0) + 1
+        key, form = leafslew_launch(cfg, st, die, item, rec, attempt)
+        if key:                                       # released by the LEAFSLEW signature: the form changes
+            return False
+        if form:
+            cand["leafslew_form"] = form
+        d = cfg["dies"][die]
+        return input_hash(old, rec.get("prov_key")) == input_hash(cand, (d.get("_prov_keys") or {}).get(item) or rec.get("prov_key"))
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+
+
+HOLD_UNCHANGED = "no input change since this FAIL: redesign list, no P&R retry (OWNER 11-07)"
+REDESIGN_FILE = "kit_wave_redesign.tsv"
+
+
+def redesign_rows(cfg, st):
+    """current-plan design FAIL rows of the wave's state whose relaunch would build the same inputs; released = a retry entry
+    names the attempt, so without the hold it would relaunch"""
+    out = []
+    for key, rec in sorted((st.get("items") or {}).items()):
+        die = rec.get("die")
+        d = (cfg.get("dies") or {}).get(die)
+        if not d or rec.get("event") != d.get("event") or not unchanged_fail(cfg, st, die, rec.get("item"), rec):
+            continue
+        ia = f"{rec.get('item')}@{rec.get('attempt')}"
+        q = rec.get("q_status") == "FAIL"
+        out.append(dict(die=die, item=rec.get("item"), attempt=rec.get("attempt"),
+                        cls=(rec.get("q_class") if q else "") or rec.get("class") or "",
+                        stage=(rec.get("q_stage") if q else "") or rec.get("stage") or "",
+                        released="yes" if ia in (d.get("retry") or []) else "no",
+                        reason=re.sub(r"\s+", " ", str((rec.get("q_reason") if q else "") or rec.get("reason") or ""))[:200], key=key))
+    return out
+
+
+def write_redesign(cfg, st, ap_dir):
+    rows = redesign_rows(cfg, st)
+    cols = ["die", "item", "attempt", "cls", "stage", "released", "reason"]
+    (Path(ap_dir) / REDESIGN_FILE).write_text("\n".join(["\t".join(cols)] + ["\t".join(str(x[c]) for c in cols) for x in rows]) + "\n")
+    return rows
 
 
 def restage_waiters(AP, cfg, st, notices):
@@ -3552,6 +3645,11 @@ def _step(AP, ap_dir):
         save_state(st, ap_dir)
     owners = parse_owners((Path(ap_dir) / "OWNERS.tsv").read_text() if (Path(ap_dir) / "OWNERS.tsv").exists() else "")
     res, todo = plan_dies(AP, cfg, st, owners, status, AP.HUB_NAME)
+    if cfg.get("hold_unchanged"):
+        try:
+            write_redesign(cfg, st, ap_dir)
+        except Exception as e:                  # a report never stops the tick
+            AP.log(f"KIT-WAVE redesign list skipped: {e}")
     for die, ok, why, picks, skip in res:
         n = sum(len(its) for w, its in skip.items() if w.startswith("LOAD-HOLD"))
         if n:
@@ -4365,6 +4463,9 @@ def main(argv=None):
     p.add_argument("--owners")
     p.add_argument("--probe", action="store_true", help="read the plan of record on gen_host (ssh) to filter items")
     sub.add_parser("status")
+    un = sub.add_parser("unchanged", help="dry run of hold_unchanged: FAIL rows a relaunch would build on the same inputs")
+    un.add_argument("--config")
+    un.add_argument("--out", help="write the TSV here instead of only counting")
     s_ = sub.add_parser("step", help="one wave pass outside the autopilot tick (canary; AP_DIR names its state dir)")
     s_.add_argument("--config", help="kit_wave.json file instead of coord/state autopilot/kit_wave.json")
     s_.add_argument("--owners", help="OWNERS.tsv to select from (default AP_DIR/OWNERS.tsv)")
@@ -4400,6 +4501,20 @@ def main(argv=None):
             out.write_text(json.dumps({"verdict": "FAIL", "stage": "pipeline", "tail": f"Traceback (most recent call "
                                        f"last) {type(e).__name__}: {e}"}))
             raise
+    if a.cmd == "unchanged":
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import autopilot as AP
+        cfg = load_config(Path(a.config).read_text() if a.config else AP.read_coord("autopilot/kit_wave.json"))
+        cfg["_hub"] = AP.HUB_NAME
+        rows = redesign_rows(cfg, load_state())
+        import collections as _c
+        print("unchanged design FAIL rows", len(rows), "released (would relaunch without the hold)",
+              sum(x["released"] == "yes" for x in rows))
+        print(sorted(_c.Counter((x["die"], x["released"]) for x in rows).items()))
+        if a.out:
+            cols = ["die", "item", "attempt", "cls", "stage", "released", "reason"]
+            Path(a.out).write_text("\n".join(["\t".join(cols)] + ["\t".join(str(x[c]) for c in cols) for x in rows]) + "\n")
+        return 0
     if a.cmd == "status":
         st = load_state()
         for k, rec in sorted(st.get("items", {}).items()):
