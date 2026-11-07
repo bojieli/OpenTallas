@@ -2051,6 +2051,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # Hints are untrusted correspondences: lec.py proves every relation by induction.
     if rec.get("lec_hints"):
         (kd / "lec_hints.json").write_text(json.dumps(rec["lec_hints"], indent=1) + "\n")
+    sys.path.insert(0, str(TOOL)); import lec_gray_twin   # KW-FIX-24: GRAY-MSB TWIN hints by default (rx_bm3_rest)
+    lec_gray_twin.stage(kd, module)
     rst_in = [r for r in rsts if dirs.get(base(r)) != "output"]   # RECIPES2: a reset-named OUTPUT (remainder relay
     if rst_in != rsts:                                               # output) is a data output, never an input delay
         rsts = rst_in
