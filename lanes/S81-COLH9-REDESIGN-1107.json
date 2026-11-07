@@ -1,0 +1,5 @@
+{"schema":"s81_colh9_redesign_1107","lane":"DIE-S81-76",
+ "needs_src":"main at or after 48d25f386e8 (OT_MACRO_MOVES); unset key = no change",
+ "retry_fix_text":"REDESIGN: macros moved, not a retry. ROM e1 and e3 east 17.28 um widen the only ROM-row gap from 24.84 to 42.12 um; u_cf and u_t0 move with them to keep clear. Fixes measured GRT overflow 142567 (M6 98355) on a11: 1121 nets cross the ROM row (555 u_t2, 536 u_t2_payload, the rest not itemized), ROM OBS covers M1-M7. macro_place.tcl only; plan, pins, taps, RTL and pin cycles unchanged. lanes/S81-COLH9-REDESIGN-1107.json",
+ "rows":{"col_h9_r0_p1__t1":{"role":"pilot, read through GRT before any sibling","item_env_add":{"OT_MACRO_MOVES":"u_r0.u_e1:596.16:216.0,u_r0.u_e3:596.16:604.8,u_r0.u_cf:1149.12:604.8,u_r0.u_t0:1157.76:250.56"}}},
+ "siblings_after_pilot":"col_h9_r0 p2 cl0045af7b cl9f71e63d, p3 cl0cd90c0e cl31d0dc4b cl8ce97bcb, p4 cl8ef405e8 clcb2fbfe8, p5, p6: same sites read from their macro_place.tcl; not released"}
