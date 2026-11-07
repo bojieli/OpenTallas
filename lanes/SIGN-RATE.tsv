@@ -358,3 +358,4 @@ time	die	signed_types	signed_cores
 2026-11-06 22:32	190	s81=54+9t head=4+14t qc=24 kv=30+1t hbm=54	hourly
 2026-11-06 23:05 194 s81=57+9t head=4+14t qc=24 kv=30+1t hbm=55 auto
 2026-11-06 23:52 192 s81=57+7t head=4+13t qc=24 kv=30+1t hbm=56 hourly-partial (plan timed out at 280 s; epyc4 unreachable in the 23:38 scan)
+2026-11-07 00:25 192 s81=57+7t head=4+13t qc=24 kv=30+1t hbm=56 hourly-partial (epyc4 scan timeout; COUNT-SCAN-1 full scan running; last full 194 at 23:05)
