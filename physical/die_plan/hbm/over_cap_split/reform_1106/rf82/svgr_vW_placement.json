@@ -1,0 +1,86 @@
+{
+ "note": "DIE-HBM-82-RF 11-06 vW (wider channels than vP, 70 um between columns, >=29 um between rows): all 9 macros in the N half (lowest edge y 238 W / 288 E); >=22 um channels, >=28 um from W pin face; S half macro-free for the E seam_read_data + S sm_packet pin faces. No pins, no cycles, no RTL.",
+ "proposed_macro_placement": [
+  {
+   "instance": "u_core.feed.programme_leaf.g_m2.u_program_hi",
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "origin_um": [
+    63.83,
+    548.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_core.feed.programme_leaf.g_m2.u_program_lo",
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "origin_um": [
+    63.83,
+    452.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_core.feed.rows.g_on.g_cache[4].g_rw.u_payload",
+   "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+   "origin_um": [
+    24.0,
+    395.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "instance": "u_core.feed.rows.g_on.g_cache[3].g_rw.u_payload",
+   "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+   "origin_um": [
+    186.0,
+    395.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "instance": "u_core.feed.rows.g_on.g_cache[2].g_rw.u_payload",
+   "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+   "origin_um": [
+    24.0,
+    335.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "instance": "u_core.feed.rows.g_on.g_cache[1].g_rw.u_payload",
+   "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+   "origin_um": [
+    186.0,
+    335.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "instance": "u_core.feed.rows.g_on.g_cache[0].g_rw.u_payload",
+   "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
+   "origin_um": [
+    24.0,
+    275.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "instance": "u_core.issuer.g_t2.u_desc_hi",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    183.0,
+    262.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "instance": "u_core.issuer.g_t2.u_desc_lo",
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    24.0,
+    205.0
+   ],
+   "orient": "R0"
+  }
+ ]
+}
