@@ -18,9 +18,19 @@
 //           rotate into the face register; the select is delayed with it (same latency as RREG 2: sr_d_q).
 //   g_fc: control copy (sector-read request, lane-write valid and the collision terms) for the fault and the response
 //           valid / select registers, at the flt / sr_* face.
+//   WP = 3 (vH, 11-06 vG routed: q_la (W / E face) -> lane decode -> W1 -238 ps, smell 1+7): stage W0 (g_w0r, kept)
+//           relays lw / lane bank+row fields / sr_* into the centre box next to W1, so the face -> centre haul is
+//           register-to-register; W1 then also resolves the per-bank lane priority (q_oh holds the WINNING lane one-hot,
+//           bank side = one 16:1 AND-OR, COL -> BANK was 12 levels -238/-36 ps); lwd takes two kept delay registers
+//           (g_wd, unboxed: the placer keeps them on the E-face -> column path).
+//           W1 also registers the pair collision term AND both lanes writing, so the g_fc fault is one OR tree
+//           (vF g_fc wcoll -159 ps / vG -38 ps).
+//   g_fq select (all WP, smell 5: one select bit drove ~256 mux inputs through 6 buffers, FQ -> sr_d -59 ps): a kept
+//           one-hot select register per output word (16 x 16), fanout 32 each.
 // Latency vs part 41 (RREG 0): sr_d / sr_rv + (2 + WP) edges; flt + WP edges.  rd is unused in opsb_output (not built).
 // MUT (bench mutants only, default 0): 1 bank 5 write data bypasses its column copy; 2 sr_rv one edge early; 3 g_fq
 // select not delayed; 4 flt one edge early; 5 bank 9 read word bypasses q_rd; 6 lane pair (0, 5) collision dropped (lane 0 is the only lane with any bank, so only (0, k) pairs collide with legal lanes).
+// 7 (WP 3 only) bank 3 W1 winner = the LOWEST writing lane.
 `timescale 1ns/1ps
 `default_nettype none
 module ot_hgi_su_lgroup2_wp #(
@@ -40,41 +50,75 @@ module ot_hgi_su_lgroup2_wp #(
 );
     localparam integer N = 16, LN = 4, RB = 11, LWB = 15, AW = 24, NS = 2, NP = 120;
     // lane fields of the write record
+    // ---- stage W0 (WP >= 3): kept relay of the lane-write valid, bank / row fields and the sector-read request
+    wire [N-1:0] r_lw; wire [N*(LN+RB)-1:0] r_la; wire [1:0] r_sv; wire [29:0] r_sa;
+    wire [N*(LN+RB)-1:0] i_la;
+    for (genvar g = 0; g < N; g = g + 1) begin : g_la assign i_la[g*(LN+RB) +: LN+RB] = lwa[g*AW +: LN+RB]; end
+    if (WP >= 3) begin : g_w0r
+        (* keep *) reg [N-1:0] q_lw; (* keep *) reg [N*(LN+RB)-1:0] q_la; (* keep *) reg [1:0] q_sv; (* keep *) reg [29:0] q_sa;
+        always @(posedge clk) begin q_lw <= lw; q_la <= i_la; q_sv <= sr_v; q_sa <= sr_addr; end
+        assign r_lw = q_lw; assign r_la = q_la; assign r_sv = q_sv; assign r_sa = q_sa;
+    end else begin : g_w0n
+        assign r_lw = lw; assign r_la = i_la; assign r_sv = sr_v; assign r_sa = sr_addr;
+    end
     wire [LN-1:0] i_bk [0:N-1]; wire [RB-1:0] i_rw [0:N-1];
     for (genvar g = 0; g < N; g = g + 1) begin : g_lf
-        assign i_bk[g] = lwa[g*AW +: LN]; assign i_rw[g] = lwa[g*AW + LN +: RB];
+        assign i_bk[g] = r_la[g*(LN+RB) +: LN]; assign i_rw[g] = r_la[g*(LN+RB) + LN +: RB];
     end
     // pairwise collision term of lanes i < j (same bank, different rows) and the bad-lane term (lane l > 0 off its
     // only candidate bank l: NROT = N / M = 1); same function as lw_cb / lw_bad of ot_hgi_su_lgroup2_lf, ORed over banks
     function automatic integer pidx(input integer i, input integer j);   // i < j
         pidx = i * N - (i * (i + 1)) / 2 + (j - i - 1);
     endfunction
-    wire [NP-1:0] i_ne; wire [N-1:0] i_bad;
+    wire [NP-1:0] i_ne; wire [NP-1:0] i_nel; wire [N-1:0] i_bad;   // i_nel: pair term AND both lanes writing (WP 3)
     for (genvar gi = 0; gi < N; gi = gi + 1) begin : g_pi
-        assign i_bad[gi] = lw[gi] && (gi != 0) && (i_bk[gi] != LN'(gi));
+        assign i_bad[gi] = r_lw[gi] && (gi != 0) && (i_bk[gi] != LN'(gi));
         for (genvar gj = gi + 1; gj < N; gj = gj + 1) begin : g_pj
             assign i_ne[pidx(gi, gj)] = (i_bk[gi] == i_bk[gj]) && (i_rw[gi] != i_rw[gj]);
+            assign i_nel[pidx(gi, gj)] = r_lw[gi] && r_lw[gj] && i_ne[pidx(gi, gj)];
         end
     end
     // ---- stage W1 (WP = 2): the decoded write record + the sector-read request, one register stage
     wire [N-1:0] a_lw; wire [N*N-1:0] a_oh; wire [N*LN-1:0] a_bk; wire [N*RB-1:0] a_rw; wire [511:0] a_d;
     wire [NP-1:0] a_ne; wire [N-1:0] a_bad; wire [1:0] a_sv; wire [29:0] a_sa;
-    wire [N*N-1:0] i_oh; wire [N*LN-1:0] i_bkv; wire [N*RB-1:0] i_rwv;
+    wire [511:0] d_wd;   // lwd after the two g_wd delay registers (WP >= 3)
+    wire [N*N-1:0] i_oh; wire [N*N-1:0] i_win; wire [N*LN-1:0] i_bkv; wire [N*RB-1:0] i_rwv;
     for (genvar g = 0; g < N; g = g + 1) begin : g_iv
         for (genvar gb = 0; gb < N; gb = gb + 1) begin : g_ib assign i_oh[g*N + gb] = (i_bk[g] == LN'(gb)); end
         assign i_bkv[g*LN +: LN] = i_bk[g]; assign i_rwv[g*RB +: RB] = i_rw[g];
     end
+    // WP >= 3: winning lane per bank (the HIGHEST writing lane on the bank), same layout as i_oh (lane * N + bank)
+    for (genvar gb = 0; gb < N; gb = gb + 1) begin : g_wn
+        wire [N-1:0] hb;
+        for (genvar g = 0; g < N; g = g + 1) begin : g_h assign hb[g] = r_lw[g] && i_oh[g*N + gb]; end
+        for (genvar g = 0; g < N; g = g + 1) begin : g_w
+            if (MUT == 7 && gb == 3 && g == 0) begin : g_m0 assign i_win[g*N + gb] = hb[g]; end
+            else if (MUT == 7 && gb == 3) begin : g_m assign i_win[g*N + gb] = hb[g] && !(|hb[g-1:0]); end
+            else if (g == N - 1) begin : g_t assign i_win[g*N + gb] = hb[g]; end
+            else begin : g_n assign i_win[g*N + gb] = hb[g] && !(|hb[N-1:g+1]); end
+        end
+    end
     if (WP >= 2) begin : g_w1
-        (* keep *) reg [N-1:0] q_lw; (* keep *) reg [N*N-1:0] q_oh; (* keep *) reg [N*RB-1:0] q_rw; (* keep *) reg [511:0] q_d;
+        (* keep *) reg [N-1:0] q_lw; (* keep *) reg [N*N-1:0] q_oh; (* keep *) reg [N*RB-1:0] q_rw;
         (* keep *) reg [NP-1:0] q_ne; (* keep *) reg [N-1:0] q_bad; (* keep *) reg [1:0] q_sv; (* keep *) reg [29:0] q_sa;
         always @(posedge clk) begin
-            q_lw <= lw; q_oh <= i_oh; q_rw <= i_rwv; q_d <= lwd; q_ne <= i_ne; q_bad <= i_bad; q_sv <= sr_v; q_sa <= sr_addr;
+            q_lw <= r_lw; q_oh <= (WP >= 3) ? i_win : i_oh; q_rw <= i_rwv; q_ne <= (WP >= 3) ? i_nel : i_ne; q_bad <= i_bad; q_sv <= r_sv; q_sa <= r_sa;
         end
-        assign a_lw = q_lw; assign a_oh = q_oh; assign a_bk = {N*LN{1'b0}}; assign a_rw = q_rw; assign a_d = q_d;
+        assign a_lw = q_lw; assign a_oh = q_oh; assign a_bk = {N*LN{1'b0}}; assign a_rw = q_rw;
         assign a_ne = q_ne; assign a_bad = q_bad; assign a_sv = q_sv; assign a_sa = q_sa;
+        if (WP >= 3) begin : g_d3 assign a_d = d_wd; end
+        else begin : g_d2 (* keep *) reg [511:0] q_d; always @(posedge clk) q_d <= lwd; assign a_d = q_d; end
     end else begin : g_w0
         assign a_lw = lw; assign a_oh = {N*N{1'b0}}; assign a_bk = i_bkv; assign a_rw = i_rwv; assign a_d = lwd;
         assign a_ne = {NP{1'b0}}; assign a_bad = {N{1'b0}}; assign a_sv = sr_v; assign a_sa = sr_addr;
+    end
+    // lwd delay for WP >= 3 (two kept registers, outside the W0 / W1 boxes)
+    if (WP >= 3) begin : g_wd
+        (* keep *) reg [511:0] q_d0; (* keep *) reg [511:0] q_d1;
+        always @(posedge clk) begin q_d0 <= lwd; q_d1 <= q_d0; end
+        assign d_wd = q_d1;
+    end else begin : g_wdn
+        assign d_wd = {512{1'b0}};
     end
     // ---- g_col[c]: per-column kept copy (register-to-register haul, no logic); WP 2 copies the column's 4 one-hot
     // bank bits per lane, WP 1 the raw 4-bit lane bank (decoded after the copy)
@@ -102,7 +146,7 @@ module ot_hgi_su_lgroup2_wp #(
         for (genvar gl = 0; gl < N; gl = gl + 1) begin : g_h
             if (WP >= 2) begin : g_o assign h[gl] = c_lw[C][gl] && c_x[C][gl*4 + J]; end
             else begin : g_b assign h[gl] = c_lw[C][gl] && (c_x[C][gl*4 +: 4] == LN'(gb)); end
-            if (gl == N - 1) begin : g_ot assign oh[gl] = h[gl]; end
+            if (gl == N - 1 || WP >= 3) begin : g_ot assign oh[gl] = h[gl]; end   // WP 3: the copy holds winners
             else begin : g_on assign oh[gl] = h[gl] && !(|h[N-1:gl+1]); end
         end
         reg [RB-1:0] wrow; reg [31:0] wdat;
@@ -143,7 +187,7 @@ module ot_hgi_su_lgroup2_wp #(
     end
     // ---- g_fc: control copy at the flt / sr_* face: faults, response valid, sector selects
     reg [NS-1:0] srv1, srv2, srv_r1, srv_r2;
-    reg [LN-1:0] sr_lo [0:NS-1]; reg [LN-1:0] sr_lo2 [0:NS-1]; reg [LN-1:0] sr_s_q [0:NS-1]; reg [LN-1:0] sr_s_q2 [0:NS-1];
+    reg [LN-1:0] sr_lo [0:NS-1]; reg [LN-1:0] sr_lo2 [0:NS-1]; reg [LN-1:0] sr_s_q [0:NS-1];
     reg srv_q, wcoll_q; reg [1:0] fq;
     if (1) begin : g_fc
         (* keep *) reg [1:0] q_sv; (* keep *) reg [29:0] q_sa; (* keep *) reg [N-1:0] q_lw;
@@ -170,7 +214,7 @@ module ot_hgi_su_lgroup2_wp #(
             wc = |bad;
             for (i_ = 0; i_ < N; i_ = i_ + 1)
                 for (j_ = i_ + 1; j_ < N; j_ = j_ + 1)
-                    if (q_lw[i_] && q_lw[j_] && ne[pidx(i_, j_)] && !(MUT == 6 && i_ == 0 && j_ == 5)) wc = 1'b1;
+                    if ((WP >= 3 || (q_lw[i_] && q_lw[j_])) && ne[pidx(i_, j_)] && !(MUT == 6 && i_ == 0 && j_ == 5)) wc = 1'b1;
         end
         // src: two sector lanes hit one bank with different rows (= |sr_cb of lgroup2_lf)
         reg sc;
@@ -190,7 +234,7 @@ module ot_hgi_su_lgroup2_wp #(
             srv_q <= sc; wcoll_q <= wc; fq <= {wcoll_q, srv_q};
             for (s_ = 0; s_ < NS; s_ = s_ + 1) begin
                 if (q_sv[s_]) sr_lo[s_] <= q_sa[s_*LWB +: LN];
-                sr_lo2[s_] <= sr_lo[s_]; sr_s_q[s_] <= sr_lo2[s_]; sr_s_q2[s_] <= sr_s_q[s_];
+                sr_lo2[s_] <= sr_lo[s_]; sr_s_q[s_] <= sr_lo2[s_];
             end
         end
         always @(posedge clk or negedge rst_n) if (!rst_n) srv1 <= {NS{1'b0}}; else srv1 <= q_sv;
@@ -208,11 +252,19 @@ module ot_hgi_su_lgroup2_wp #(
         (* keep *) reg [N*32-1:0] q_rd;
         integer b_;
         always @(posedge clk) for (b_ = 0; b_ < N; b_ = b_ + 1) q_rd[32*b_ +: 32] <= b_q[b_];
+        // kept one-hot word select per output word (= the bank sr_s_q2 + gj names), fanout 32 each
         for (genvar gk = 0; gk < NS; gk = gk + 1) begin : g_srl
-            wire [LN-1:0] sel = (MUT == 3) ? sr_s_q[gk] : sr_s_q2[gk];
+            wire [LN-1:0] sel_n = (MUT == 3) ? sr_lo2[gk] : sr_s_q[gk];   // registered once more below (= sr_s_q2)
             for (genvar gj = 0; gj < 8; gj = gj + 1) begin : g_sr
-                wire [LN-1:0] bj = sel + gj;
-                assign sr_d[256*gk + 32*gj +: 32] = q_rd[32*bj +: 32];
+                (* keep *) reg [N-1:0] q_bs;
+                always @(posedge clk) q_bs <= N'(1) << (LN'(sel_n + gj));
+                reg [31:0] w;
+                always @* begin : wm
+                    integer b2_;
+                    w = 32'd0;
+                    for (b2_ = 0; b2_ < N; b2_ = b2_ + 1) w = w | ({32{q_bs[b2_]}} & q_rd[32*b2_ +: 32]);
+                end
+                assign sr_d[256*gk + 32*gj +: 32] = w;
             end
         end
     end

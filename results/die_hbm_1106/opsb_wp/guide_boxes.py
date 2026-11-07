@@ -8,11 +8,14 @@ bank b = column b // 4, row b % 4).
            and the next column's), centre rows.
   fc / fq: control copy (u_g.g_fc.*) and the sr_d-face read-word copy (u_g.g_fq.*) in the west channel by the
            sr_* / flt / sr_d pins (W face, y 1..198).
-usage: guide_boxes.py MACRO_PLACEMENT_KIT_JSON OUT_JSON"""
+  w      : (third argument wp3) W0 relay + W1 decode (u_g.g_w0r.*, u_g.g_w1.*) in the centre channel, upper half, so every
+           face -> centre and centre -> column haul is <= ~380 um reg->reg; col1 takes the lower half of that channel.
+usage: guide_boxes.py MACRO_PLACEMENT_KIT_JSON OUT_JSON [wp3]"""
 import json, sys
 W_, H_ = 92.664, 43.752                     # ot_sram_1r1w_2048x32_m8_r0c0_g32 LEF size
 CORE = (4.32, 4.32, 756.0, 276.48)
 GROW, P = 12.0, "u_fcore.u_g."
+WP3 = len(sys.argv) > 3 and sys.argv[3] == "wp3"
 mp = {m["k"]: m for m in json.load(open(sys.argv[1]))["macro_placement"]}
 assert sorted(mp) == list(range(16)) and all(m["orient"] == "R0" for m in mp.values())
 rect = {k: (m["origin_um"][0], m["origin_um"][1], m["origin_um"][0] + W_, m["origin_um"][1] + H_) for k, m in mp.items()}
@@ -34,7 +37,9 @@ ymid0, ymid1 = rect[1][1] - 26.0, rect[2][3] + 26.0          # centre rows band
 for c in range(4):
     xa = rect[4 * c][2] + GROW + 4.0
     xb = (rect[4 * (c + 1)][0] - GROW - 4.0) if c < 3 else CORE[2] - 6.0
-    boxes.append(dict(name=f"col{c}", prefixes=[f"{P}g_col[{c}]."], box_um=[xa, ymid0, xb, ymid1]))
+    y1c = 136.0 if (c == 1 and WP3) else ymid1
+    boxes.append(dict(name=f"col{c}", prefixes=[f"{P}g_col[{c}]."], box_um=[xa, ymid0, xb, y1c]))
+    if c == 1 and WP3: boxes.append(dict(name="w", prefixes=[f"{P}g_w0r.", f"{P}g_w1."], box_um=[xa, 140.0, xb, 255.0]))
 xw1 = rect[0][0] - GROW - 4.0
 boxes.append(dict(name="fc", prefixes=[f"{P}g_fc."], box_um=[CORE[0] + 2.0, CORE[1] + 1.0, xw1, 60.0]))
 boxes.append(dict(name="fq", prefixes=[f"{P}g_fq."], box_um=[CORE[0] + 2.0, 61.0, xw1, 205.0]))
