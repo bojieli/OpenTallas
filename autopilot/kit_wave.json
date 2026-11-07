@@ -233,7 +233,9 @@
     "kv3_sys_SD_v1@5",
     "kv3_hub_Ei@10",
     "kv3_io_ft_v1@12",
-    "kv3_sys_SD_v1@7"
+    "kv3_sys_SD_v1@7",
+    "kv3_hub_Wo@11",
+    "kv3_pc_v1__cl7f648944@10"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -512,7 +514,9 @@
     "kv3_sys_SD_v1@5": "KW-FIX-26 23:5x one batch: new src 0290971a0fd (ROOT-MERGE-46 train: leafrep+leafopt, subtree_balance/ft_spread, type-safe-3, pose_spread, macrogap, FLOW-CLASS-25); failed on an older src",
     "kv3_hub_Ei@10": "CODEX KV watcher 11-07: restore10 missing indirect preferred HDL inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change",
     "kv3_io_ft_v1@12": "CODEX KV watcher 11-07: restore10 missing indirect preferred HDL inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change",
-    "kv3_sys_SD_v1@7": "CODEX KV watcher 11-07: restore10 missing indirect preferred HDL inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change"
+    "kv3_sys_SD_v1@7": "CODEX KV watcher 11-07: restore10 missing indirect preferred HDL inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change",
+    "kv3_hub_Wo@11": "CODEX KV watcher 11-07: restore10 missing indirect preferred HDL inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change",
+    "kv3_pc_v1__cl7f648944@10": "CODEX KV watcher 11-07: restore10 missing indirect preferred HDL inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change"
    },
    "only_items": [
     "kv3_astk",
