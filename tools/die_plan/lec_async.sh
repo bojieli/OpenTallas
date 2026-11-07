@@ -32,13 +32,17 @@ identity() {
 import hashlib,glob,re,shlex,sys,os,json
 from pathlib import Path
 k=Path(sys.argv[1]);h=hashlib.sha256();cfg=(k/'config.mk').read_text() if (k/'config.mk').exists() else ''
+# Typed reset/clock classification is proof input, including optional-file presence.
+for name in ('core.json','constraint.sdc','straps.json','sdc_lint.json'):
+ f=k/name;h.update(('typed-metadata:'+name+('=present' if f.is_file() else '=absent')).encode())
+ if f.is_file():h.update(f.read_bytes())
 paths=[k/'lec.py']+[k/n for n in ('lec_options.json','lec_hints.json','reset_contract.json') if (k/n).is_file()]
 try:
  receipt=json.loads((k/'reset_contract.json').read_text()).get('proof',{}).get('receipt')
  if receipt:paths.append(k/receipt[6:] if receipt.startswith('/work/') else k/receipt)
 except (OSError,ValueError,AttributeError):pass
 for key in sorted(os.environ):
- if key.startswith('OT_LEC_') and key not in ('OT_LEC_ASYNC','OT_LEC_ASYNC_POLL','OT_LEC_MEM_GB'):
+ if key.startswith('OT_LEC_') and key not in ('OT_LEC_ASYNC','OT_LEC_ASYNC_POLL','OT_LEC_MEM_GB','OT_LEC_HANDOFF'):
   h.update((key+'='+os.environ[key]).encode())
 for line in cfg.splitlines():
  if (re.match(r'^(?:override )?export (?:DESIGN_NAME|VERILOG_FILES|VERILOG_DEFINES|SYNTH_HDL_FRONTEND|ADDITIONAL_LIBS)\s*=',line) or
@@ -294,13 +298,31 @@ watch)
 ); r=\$?; echo \$r > /work/lec_async.unit_rc; chown -R $(id -u):$(id -g) /work/lec /work/lec_run.log /work/lec_async.unit_rc 2>/dev/null; exit \$r" \
       >> "$K/lec_async.log" 2>&1 < /dev/null &
     UP=$!
+    # LEC-HANDOFF v1: opt-in only; old watchers have no protocol receipt and reject requests.
+    HANDOFF=0
+    if [ "${OT_LEC_HANDOFF:-0}" = 1 ]; then
+      python3 "$(dirname "$0")/lec_pending_handoff.py" register "$K" "$$" "$UP" "$NAME" "$IMAGE" "$LMEM" "$LCPUS" || true
+    fi
     trap '$DK stop -t 10 "$UN" > /dev/null 2>&1; kill $UP 2>/dev/null; exit 143' TERM INT HUP
     while kill -0 $UP 2>/dev/null; do
+      if [ "${OT_LEC_HANDOFF:-0}" = 1 ] && [ -f "$K/lec_async.handoff.request.json" ]; then
+        if python3 "$(dirname "$0")/lec_pending_handoff.py" accept "$K" "$$" "$UP"; then
+          wait "$UP" 2>/dev/null || true
+          echo "LEC_ASYNC pending unit exported; original watcher $$ awaits its bound result"
+          while :; do
+            if REMOTE_RC=$(python3 "$(dirname "$0")/lec_pending_handoff.py" result-rc "$K" 2>/dev/null); then break; fi
+            [ ! -f "$K/lec_async.abort" ] || break
+            sleep "${OT_LEC_ASYNC_POLL:-5}"
+          done
+          HANDOFF=1
+          break
+        fi
+      fi
       # the flow stopped before a place checkpoint (wait) or never needs this proof (finish): end the unit
       if [ -f "$K/lec_async.abort" ]; then $DK stop -t 10 "$UN" > /dev/null 2>&1; kill $UP 2>/dev/null; break; fi
       sleep "${OT_LEC_ASYNC_POLL:-5}"
     done
-    wait $UP 2>/dev/null; lr=$?
+    if [ "$HANDOFF" = 1 ]; then lr=${REMOTE_RC:-143}; else wait $UP 2>/dev/null; lr=$?; fi
     trap 'exit 143' TERM INT HUP
     if [ -f "$K/lec_async.unit_rc" ]; then lr=$(cat "$K/lec_async.unit_rc"); else NOV=1; fi
     [ ! -f "$K/lec_async.abort" ] || $DK rm -f "$UN" > /dev/null 2>&1
