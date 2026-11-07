@@ -1,0 +1,24 @@
+#!/bin/bash
+# DIE-HBM-82-SVGR d44v part 53 (plan-owner approved DIE-HBM-82 (A)): ot_svgr_bk 259.2 -> 302.4 x 207.36 (+43.2 core-local E, the FIFO
+# strip), 16 instances in q_hub_nw/ne; streets to ot_svgr_top / ot_svgr_own 17.28 each (no neighbour moves); station chains the
+# grow touched re-planned (station_resite.py via ../wbq_swmv/hyb.py, then ft_nudge.py); plan-time G0/G0C + GEOM base vs new.
+# Run from the repo root on a tree whose d44v holds every earlier part:  RR=<scratch dir> [PACK=1] bash run_p53.sh
+set -e
+RR=${RR:?scratch dir}; D=physical/die_plan/hbm/plan_of_record/d44v; F=results/die_hbm_1106/svgr_bk_grow_p53
+export PYTHONDONTWRITEBYTECODE=1
+rm -rf $RR; mkdir -p $RR/g0 $RR/geom; cp -r $D $RR/base; find $RR/base -name '*.gz' -exec gunzip -f {} +
+cp -r $RR/base $RR/p
+python3 -I $F/mk_p53.py $RR/p | tee $RR/mk.log
+PYTHONPATH=tools/die_plan:tools python3 tools/die_plan/station_resite.py $RR/p $RR/rs --types q_hub_nw,q_hub_ne --jobs ${JOBS:-16} > $RR/resite.log 2>&1; tail -3 $RR/resite.log
+python3 -I results/die_hbm_1106/wbq_swmv/hyb.py $RR/p/die_plan.json $RR/rs/die_plan.json $RR/base/die_plan.json $RR/hy.json | tee $RR/hyb.log
+PYTHONPATH=tools/die_plan:tools python3 tools/die_plan/ft_nudge.py $RR/hy.json $RR/new.json $RR/part53_ft_nudge_ledger.json | tee $RR/nudge.log | tail -3
+cp $RR/new.json $RR/p/die_plan.json
+export PYTHONPATH=tools/die_plan:tools/autopilot
+for N in base p; do
+ ( timeout 2400 python3 tools/die_plan/check.py $RR/$N/die_plan.json --out $RR/g0/$N --completeness --core-conns $RR/$N/core_conns.json --core-macros $RR/$N/core_macros.json --plan-geom report > $RR/g0/$N.log 2>&1; echo G0 $N rc $? ) &
+ ( timeout 2400 python3 tools/die_plan/plan_geom.py $RR/$N/die_plan.json --json $RR/geom/plan_geom_$N.json > $RR/geom/geom_$N.log 2>&1; echo GEOM $N rc $? ) &
+done; wait
+python3 -I results/die_hbm_1103/reform/g0cmp.py $RR/g0/base/g0_report.json $RR/g0/p/g0_report.json 2>&1 | cut -c1-300 | head -14 | tee $RR/g0.txt
+python3 -I results/die_hbm_1103/reform/geomcmp.py $RR/geom/plan_geom_base.json $RR/geom/plan_geom_p.json 2>&1 | cut -c1-300 | head -12 | tee $RR/geom.txt
+if [ "${PACK:-0}" = 1 ]; then cp $RR/part53_ft_nudge_ledger.json $D/; python3 -I $F/write_p53.py $RR; fi
+echo REPLAY DONE

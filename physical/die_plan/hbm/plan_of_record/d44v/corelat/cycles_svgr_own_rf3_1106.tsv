@@ -1,0 +1,2 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+ot_svgr_own		bk_in_v,bk_in_data	port	1	DIE-HBM-82-SVGR RF3 (plan-owner approved DIE-HBM-82): each lane mux output registered, bk_in_v delayed to match; recipe ot_svgr_own__rf3 at 4058c765b2 (RF1+RF2+RF3); smb_unit bench rf3/rf3n PASS 20/20 ops 29/29 go 81 results, MUT15/MUT16 caught; receiver ot_svgr_bk landing is credit-based (no schedule change)
