@@ -4783,8 +4783,7 @@
    },
    "gen_hosts": [
     "epyc2",
-    "epyc5",
-    "epyc6"
+    "epyc5"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
@@ -5005,7 +5004,13 @@
    "src_prev_kw29": "/srv/opentallas-scratch2/claude/kw27/src_cf08e",
    "src_sha_prev_kw29": "cf08ef4533c556035846088f9529b757ac0fe8c5",
    "queue_src_prev_kw29": "main@cf08ef4533c556035846088f9529b757ac0fe8c5",
-   "flow_tag_kw29": "flow-20261107-cz-qc"
+   "flow_tag_kw29": "flow-20261107-cz-qc",
+   "gen_hosts_prev_kw29_ep6": [
+    "epyc2",
+    "epyc5",
+    "epyc6"
+   ],
+   "note_kw29_ep6": "KW-FIX-29 COORD 11:4x: QC work_root scratch3/claude/kw26-wave-1106 is on root (md0) on epyc6, 94 GB against floor 100; GEN-DISK-LOW reads ot-run scratch = scratch2 and missed it. epyc6 out of QC gen_hosts until root >100; gen_hosts_prev_kw29_ep6 restores. Running rows untouched."
   },
   "hbm": {
    "enabled": true,
