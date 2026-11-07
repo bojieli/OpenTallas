@@ -16,7 +16,7 @@ module ot_async_fifo #(
     // for a wide FIFO whose entries spread over a long placement.  1 = payload registered once on wr_clk, then written
     // into per-chunk storage (SEL_CHUNK bits) by a per-chunk REGISTERED one-hot write enable; the read mux of every
     // chunk is driven by a per-chunk REGISTERED one-hot read select (onehot(rd_bin), loaded from rd_bin_next, so the
-    // read side adds no latency).  Every select copy is a distinct kept flop (ot_async_fifo_sel_q), so no select net
+    // read side adds no latency).  Every select copy is a distinct (* keep *) flop (ot_keep_regs.tcl), so no select net
     // fans out past one chunk.  The write pointer reaches the read domain one wr_clk later (sp_pub_q), on the same edge
     // the entry commits, so an entry is never visible before it is written; fullness / emptiness / online logic are
     // unchanged.  Effect: +1 wr_clk of write-to-read visibility (asynchronous FIFO: not cycle-observable).
@@ -182,11 +182,16 @@ module ot_async_fifo #(
         for (genvar pc = 0; pc < NCH; pc = pc + 1) begin : g_c
             localparam integer LO = pc * SEL_CHUNK;
             localparam integer CW = (WIDTH - LO < SEL_CHUNK) ? WIDTH - LO : SEL_CHUNK;
-            wire [DEPTH-1:0] wsel, rsel;
-            ot_async_fifo_sel_q #(.W(DEPTH), .ID(pc), .RESET_ONE(0)) u_ws (
-                .clk(wr_clk), .rst_n(wr_domain_rst_n), .d(sp_wsel_d), .q(wsel));
-            ot_async_fifo_sel_q #(.W(DEPTH), .ID(1000 + pc), .RESET_ONE(1)) u_rs (
-                .clk(rd_clk), .rst_n(rd_domain_rst_n), .d(sp_rsel_d), .q(rsel));
+            // one kept copy per chunk and domain: physical/common_flow/ot_keep_regs.tcl (SYNTH_CANONICALIZE_TCL in
+            // every gen.py kit) keeps each declared (* keep *) copy a real flop, so no select net fans out past a chunk
+            (* keep = 1 *) reg [DEPTH-1:0] wsel;
+            (* keep = 1 *) reg [DEPTH-1:0] rsel;
+            always @(posedge wr_clk or negedge wr_domain_rst_n)
+                if (!wr_domain_rst_n) wsel <= {DEPTH{1'b0}};
+                else wsel <= sp_wsel_d;
+            always @(posedge rd_clk or negedge rd_domain_rst_n)
+                if (!rd_domain_rst_n) rsel <= {{(DEPTH-1){1'b0}}, 1'b1};
+                else rsel <= sp_rsel_d;
             reg [CW-1:0] smem [0:DEPTH-1];
             always @(posedge wr_clk) begin : p_w
                 integer e;
@@ -329,18 +334,3 @@ module ot_async_fifo_select_copy #(parameter integer W=16,ID=0,RESET_ONE=0)
         else q<=dq;
 endmodule
 `endif
-
-// SEL_PIPE select copy (KV-FDICDC-1): one real kept register per chunk and domain.  keep_hierarchy + a distinct ID per
-// copy keep synthesis from merging the identical copies back into one high-fanout select (ot_keep_regs.tcl note).
-(* keep_hierarchy = "yes" *)
-module ot_async_fifo_sel_q #(parameter integer W = 8, parameter integer ID = 0, parameter integer RESET_ONE = 0) (
-    input  wire         clk,
-    input  wire         rst_n,
-    input  wire [W-1:0] d,
-    output reg  [W-1:0] q
-);
-    (* keep = 1 *) wire [W-1:0] dq = d;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) q <= RESET_ONE ? {{(W-1){1'b0}}, 1'b1} : {W{1'b0}};
-        else q <= dq;
-endmodule
