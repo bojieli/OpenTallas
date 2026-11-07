@@ -8295,95 +8295,95 @@
    "macros": [
     {
      "name": "u_fcore.g_lane[0].u_payload",
-     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
       15.12,
       8.64,
-      109.944,
-      49.68
+      106.92,
+      36.216
      ]
     },
     {
      "name": "u_fcore.g_lane[1].u_payload",
-     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
       120.96,
       8.64,
-      215.784,
-      49.68
+      212.76,
+      36.216
      ]
     },
     {
      "name": "u_fcore.g_lane[2].u_payload",
-     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
       226.8,
       8.64,
-      321.624,
-      49.68
+      318.6,
+      36.216
      ]
     },
     {
      "name": "u_fcore.g_lane[3].u_payload",
-     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
       332.64,
       8.64,
-      427.464,
-      49.68
+      424.44,
+      36.216
      ]
     },
     {
      "name": "u_fcore.g_lane[4].u_payload",
-     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
       15.12,
       73.44,
-      109.944,
-      114.48
+      106.92,
+      101.016
      ]
     },
     {
      "name": "u_fcore.g_lane[5].u_payload",
-     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
       120.96,
       73.44,
-      215.784,
-      114.48
+      212.76,
+      101.016
      ]
     },
     {
      "name": "u_fcore.g_lane[6].u_payload",
-     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
       226.8,
       73.44,
-      321.624,
-      114.48
+      318.6,
+      101.016
      ]
     },
     {
      "name": "u_fcore.g_lane[7].u_payload",
-     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "master": "ot_sram_1r1w_128x256_m1_r0c0_g256",
      "orient": "R0",
      "rect_um": [
       332.64,
       73.44,
-      427.464,
-      114.48
+      424.44,
+      101.016
      ]
     }
    ],
    "channel_rule_um": 10.8,
-   "basis": "DIE-HBM-61/SPLIT d44v part 6"
+   "basis": "DIE-HBM-61/SPLIT d44v part 6; d44v part 48 (DIE-HBM-82-EP6): payload master -> ot_sram_1r1w_128x256_m1_r0c0_g256 (OT_WBQ_N1M), same origins"
   },
   "ot_hgi_sfu_opsb_group": {
    "status": "KNOWN",
