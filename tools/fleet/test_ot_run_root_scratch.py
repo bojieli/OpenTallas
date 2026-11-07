@@ -1,6 +1,6 @@
 """ROOTSCR_1101 (OWNER 2026-11-01 19:0x): epyc2's root disk is a SECOND scratch root (/srv/opentallas-scratch3, a bind
 mount of /home/ubuntu/scratch-root).  It takes OT_SCRATCH and new run dirs only when every separate scratch disk is
-below SCRATCH_DISK_FLOOR_GB, or when a build pins it (OT_RUN_SCRATCH_ROOT), and keeps ROOT_SCRATCH_FLOOR_GB (500 GB)
+below SCRATCH_DISK_FLOOR_GB, or when a build pins it (OT_RUN_SCRATCH_ROOT), and keeps ROOT_SCRATCH_FLOOR_GB (150 GB, OWNER 11-06)
 free on the root fs.  Other root-fs roots stay excluded (v13)."""
 import base64
 import contextlib
@@ -76,12 +76,12 @@ class ProbeRows(unittest.TestCase):
 
 
 class PerHostFloor(unittest.TestCase):
-    """ROOTSCR-INTEL 11-05 (OWNER 18:5x): intel1/intel2 (= localhost) roots keep 150 GB; epyc2/epyc4 keep 500."""
+    """ROOTSCR-INTEL 11-05 (OWNER 18:5x): intel1/intel2 (= localhost) roots keep 150 GB; epyc2/epyc4 too since OWNER 11-06 22:4x (were 500)."""
     D = '/srv/opentallas-scratch2/claude/lane/run'
 
     def test_default_table(self):
         self.assertEqual([m.root_floor(h) for h in ('intel1', 'localhost', 'intel2', 'epyc2', 'epyc4', None)],
-                         [150, 150, 150, 500, 500, 500])
+                         [150, 150, 150, 150, 150, 150])
 
     def test_env_overrides_table(self):
         env = dict(_env, OT_RUN_ROOT_SCRATCH_FLOOR_GB_HOSTS='intel1=200, epyc2=600', OT_RUN_ROOT_SCRATCH_FLOOR_GB='700')
@@ -94,8 +94,8 @@ class PerHostFloor(unittest.TestCase):
         self.assertEqual((row['scratch_disk'], row['scratch_disk_gb'], row['disk_gb']), (S3, 192, 192))
         self.assertEqual(m.host_refusal(row), '')
 
-    def test_same_probe_on_epyc_keeps_500_and_refuses(self):
-        row = m.scratch_disk({'disk_gb': 35}, self.D, probe_out(35, 342, 24), 'epyc2')
+    def test_epyc_refuses_when_root_is_near_150(self):
+        row = m.scratch_disk({'disk_gb': 35}, self.D, probe_out(35, 160, 24), 'epyc2')
         self.assertEqual(row['scratch_disk'], '/srv/opentallas-scratch2')
         self.assertIn('floor', m.host_refusal(row))
 
@@ -111,7 +111,7 @@ class PerHostFloor(unittest.TestCase):
 
     def test_place_snippet_floor_per_host(self):
         self.assertIn('OT_RUN_PLACE_RFLOOR=150', m.scratch_place_sh('/x', ['true'], host='intel1'))
-        self.assertIn('OT_RUN_PLACE_RFLOOR=500', m.scratch_place_sh('/x', ['true'], host='epyc4'))
+        self.assertIn('OT_RUN_PLACE_RFLOOR=150', m.scratch_place_sh('/x', ['true'], host='epyc4'))
 
 
 class RemoteShell(unittest.TestCase):
@@ -174,8 +174,8 @@ class SecondFloor(unittest.TestCase):
         self.assertNotIn('scratch_second', row)
         self.assertIn('scratch disk', m.host_refusal(row))
 
-    def test_epyc4_root_under_500_stays_refused(self):
-        row = m.scratch_disk({'disk_gb': 33}, self.D2, probe_out(33, 215), host='epyc4')
+    def test_epyc4_root_near_150_stays_refused(self):
+        row = m.scratch_disk({'disk_gb': 33}, self.D2, probe_out(33, 160), host='epyc4')
         self.assertIn('scratch disk', m.host_refusal(row))
 
     def test_dir_on_the_full_disk_is_spill_source_only(self):
@@ -269,7 +269,7 @@ class Placement(unittest.TestCase):
 class Client(unittest.TestCase):
     def test_place_snippet_passes_roots_floor_and_pin(self):
         sh = m.scratch_place_sh('/srv/opentallas-scratch2/claude/l', ['true'])
-        for k in ('OT_RUN_PLACE_ROOTS=', S3, 'OT_RUN_PLACE_RFLOOR=500', 'OT_RUN_PLACE_PIN='):
+        for k in ('OT_RUN_PLACE_ROOTS=', S3, 'OT_RUN_PLACE_RFLOOR=150', 'OT_RUN_PLACE_PIN='):
             self.assertIn(k, sh)
         self.assertIn(S3, m.SCRATCH_FREE_SH)
 
