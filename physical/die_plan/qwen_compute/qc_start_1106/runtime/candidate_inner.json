@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.qwen.head_record_inner_candidate.v1",
+  "scope": "SOURCE_CANDIDATE; append to current manifest land_r8_extra only in approved ONE-QC event",
+  "members": [
+    {
+      "id": "INNER:glue:sys_face.prog_witness_slot<-d2d_rom.prog_witness_slot@4",
+      "kind": "intra",
+      "sink": "sys_face",
+      "sink_port": "prog_witness_slot",
+      "source": "d2d_rom",
+      "source_port": "prog_witness_slot",
+      "asbuilt": 4,
+      "bound": 4,
+      "landed": 8,
+      "pad": 4,
+      "sink_part": "glue",
+      "src_part": "glue",
+      "sink_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "source_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "lane": "INNER:glue"
+    }
+  ]
+}
