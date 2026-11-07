@@ -1,0 +1,9 @@
+base ot_hbm_idx_qctl_static ot_hbm_idx_qctl_static@7bf7f6ba3842 MISMATCH {'moved': ['clk_program', 'clk_program_mem']} {'clk_program': (('M5', 99384, 64800), ('M5', 191736, 240)), 'clk_program_mem': (('M5', 99480, 64800), ('M5', 192648, 240))}
+base ot_hbm_static_cfg_collar_idx256r ot_hbm_static_cfg_collar_idx256r@59da331444a5 MISMATCH {'match': ['clk'], 'moved': ['clk_in']} {'clk': (('M5', 43224, 43200), ('M5', 43224, 43200)), 'clk_in': (('M5', 43320, 43200), ('M5', 44664, 43200))}
+base ot_pdie_serdes_rx_bm3_rest ot_pdie_serdes_rx_bm3_rest@7826e3baf53d MISMATCH {'match': ['clk'], 'moved': ['rck_clk']} {'clk': (('M5', 42312, 263520), ('M5', 42360, 263520)), 'rck_clk': (('M5', 42408, 263520), ('M5', 42936, 263520))}
+new ot_hbm_idx_qctl_static ot_hbm_idx_qctl_static@acce8536fea1 MATCH {'match': ['clk_program', 'clk_program_mem']} {'clk_program': (('M5', 99384, 64800), ('M5', 99384, 64800)), 'clk_program_mem': (('M5', 99480, 64800), ('M5', 99480, 64800))}
+new ot_hbm_static_cfg_collar_idx256r ot_hbm_static_cfg_collar_idx256r@59da331444a5 MATCH {'match': ['clk', 'clk_in']} {'clk': (('M5', 43224, 43200), ('M5', 43224, 43200)), 'clk_in': (('M5', 44664, 43200), ('M5', 44664, 43200))}
+new ot_pdie_serdes_rx_bm3_rest ot_pdie_serdes_rx_bm3_rest@7826e3baf53d MATCH {'match': ['clk', 'rck_clk']} {'clk': (('M5', 42360, 263520), ('M5', 42360, 263520)), 'rck_clk': (('M5', 42936, 263520), ('M5', 42936, 263520))}
+io.tcl base->new ot_hbm_idx_qctl_static pins 337 337 differ []
+io.tcl base->new ot_hbm_static_cfg_collar_idx256r pins 1559 1559 differ ['clk_in']
+io.tcl base->new ot_pdie_serdes_rx_bm3_rest pins 3209 3209 differ ['clk', 'rck_clk']
