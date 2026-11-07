@@ -90,3 +90,9 @@ OWNER verbatim: "use pin cycles on the hard cores. never use more place and rout
 - NO RETRIES. No new place-and-route run of a form whose RTL, pin cycles, macros, outline or clock structure are unchanged: no seeds, knobs, density tweaks or repeat runs. Every new build's post names what changed and which measured problem it fixes. Running builds finish and are read.
 - LATE ECO stays only for a real near miss: small, understood, local misses (a few endpoints, a few ps, a small slew count). A large or failing-again ECO is a redesign case.
 - NO CONSERVATIVE FORM RUNNING, OR IT FAILED: render place, clock, congestion and route, Read the images, name the geometry problem, and redesign (pins, macro positions, outline/fold/split, clock root and spine, RTL stages). Post "GEOMETRY:" and "REDESIGN:" lines. Do not rebuild before that.
+
+## OWNER 11-07 05:3x: late-stage fixes, one iteration, near misses only (ALL LANES)
+OWNER, verbatim: "real near misses should still use late stage fixes, but do not use multiple iterations of late stage fixes and do not use it to fix large misses"
+- One late-stage ECO iteration per routed form. If it does not sign off, no second iteration: GEOMETRY + REDESIGN, pin cycles first.
+- Near miss, COORD's working numbers: setup/hold worse by no more than 30 ps on no more than 100 endpoints, no more than 20 slew violations and worst slew under 200 ps at the limit-relative report, DRC under 50, and the cause understood and local. Above that = large miss: no ECO. Port-only hold needs no ECO; it goes to the parent.
+- An iteration already running finishes and is read. Nothing starts after it.
