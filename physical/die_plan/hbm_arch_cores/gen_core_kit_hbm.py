@@ -213,6 +213,16 @@ def clock_entry_pin(p, w, h, m5):
     return round(cx, 4), round(float(p["y"]), 4), (round(max(sx, 2 * (w - cx)), 4), sy), f
 
 
+def entry_clock_pins(pins, clks):
+    """DIE-HBM-82 11-06 (FLOW class, DIE-HBM-82 ruling (A)): the clock pins the plan clock entry may move = the clock pins
+    whose pin-table row is on M5.  The entry form (clock_entry_pin, clock_pin_sites_um) is an M5 track form; a non-M5
+    clock pin (sm_vm_wr_q_t_lanes4: 6 M4 E-face clocks) was moved to the M5 spread around the entry and then placed as an
+    M4 face pin on the face nearest that point (W, (0.24, 108)), matching neither the table nor the entry.  Non-M5 clock
+    pins keep their table position (placed as every other face pin); M5-only modules are unchanged."""
+    lay = {p["name"]: p.get("layer") for p in pins}
+    return [n for n in clks if lay.get(n) == "M5"]
+
+
 def plan_clock_entries(entries_path, module, clks, w, h, m5):
     """DIE-HBM-48 10-31 (METHODOLOGY 12.8a "kits must place the clock pin exactly there"; KIT-WAVE d44f qw_dec /
     q2n2_vm clock_reach FAIL): the plan's per-module clock entry (PLANDIR/clock_entries.json, core frame; port +
@@ -1938,7 +1948,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         centry = dict(names=set(clks), m5=(float(L5["offset_um"]), float(L5["pitch_um"])))
         # DIE-HBM-48 (12.8a): the plan clock entry, not the pin table's face point, is the clock pin location
         moved, centry_rec = ({}, None) if declared_native else plan_clock_entries(
-            pdir / "clock_entries.json", module, clks, w, h, centry["m5"])
+            pdir / "clock_entries.json", module, entry_clock_pins(pins, clks), w, h, centry["m5"])
         moved = {p_["name"]: moved[p_["name"]] for p_ in pins if p_["name"] in moved
                  and (abs(p_["x"] - moved[p_["name"]][0]) > 1e-4 or abs(p_["y"] - moved[p_["name"]][1]) > 1e-4)}
         centry_rec = dict(centry_rec, moved=sorted(moved)) if moved else None   # table already at the entry: unchanged
