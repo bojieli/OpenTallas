@@ -15,7 +15,7 @@ OVR = os.path.join(COORD, 'lanes/CORE-CLASS.tsv')
 TREE = os.path.join(COORD, 'RELEASE_TREE.md')
 BEGIN, END = '<!-- BREAKDOWN BEGIN -->', '<!-- BREAKDOWN END -->'
 DIES = [('s81', 'S81'), ('s81_head', 'HEAD'), ('qwen_compute', 'QC'), ('qwen_kvsys', 'KV'), ('hbm', 'HBM')]
-PLAN_DIE = {'s81': 's81', 'results': 's81_head', 'qwen_compute': 'qwen_compute',
+PLAN_DIE = {'s81': 's81', 's81_head': 's81_head', 'results': 's81_head', 'qwen_compute': 'qwen_compute',
             'qwen_kvsys': 'qwen_kvsys', 'hbm': 'hbm'}
 
 # (pattern on class+reason, short label); first match wins
