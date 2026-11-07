@@ -7,3 +7,5 @@ REDESIGN: group0 vC keeps RTL/pins/macros/outline/clock unchanged, existing read
 Channel estimate: conservative S1->S2 cut upper bound3456 signal nets(2048data+1024onehot+384controls). Actual ODB pitches M3=.036,M5=.048um. Old96um cut4480raw tracks/2240at50%;292um cut13626raw/6813at50%. Middle read-stage cells occupy part of corridor;50% is explicit conservative allocation, not routed evidence. Bank haul upper bound1408 signals across16banks; eachside8banks704, vertical aperture94um gives~3360horizontaltracks at50%(M2/M4/M6). Guides reviewed PASS for ONE PLACE pilot; route requires actual-place review.
 
 No POR adoption/merge/tag/deletion. Own isolated branch; old failures retained. Both launches PLACE only.
+
+06:39 collection: vH2 synth LEC EQUIVALENT,9125/9125 points,69.4s. Group0 low global fill is imposed by unchanged760um parent slot and native macro placement/pins; the pilot addresses measured central congestion without enlarging outline or replacing the parent plan.

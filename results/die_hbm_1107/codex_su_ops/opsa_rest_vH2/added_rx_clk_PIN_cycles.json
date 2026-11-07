@@ -1,0 +1,36 @@
+{
+  "baseline": "part27r vD face shell",
+  "added_rx_clk_PIN_cycles": {
+    "group_fault_01": 1,
+    "scalar_data23": 1,
+    "u_core_u_vm_scalar_addr_pipe_78": 1,
+    "u_core_u_engine_u_arithmetic_u_grid_rd_re": 1,
+    "u_core_u_engine_u_arithmetic_u_grid_rd_src": 1,
+    "u_core_u_engine_u_memory_group_fault": 1,
+    "u_core_u_engine_u_memory_stage_v": 1,
+    "u_core_u_engine_u_memory_scalar_load": 1,
+    "u_core_u_engine_u_arithmetic_u_grid_vm_waddr": 1,
+    "u_core_u_engine_u_arithmetic_u_grid_rd_addr": 1,
+    "u_core_u_engine_u_arithmetic_u_grid_vm_we": 1,
+    "u_core_u_vm_g_lg_0_meta_78": 1,
+    "u_core_u_vm_g_lg_1_meta_78": 1,
+    "u_core_u_vm_g_lg_2_meta_78": 1,
+    "u_core_u_vm_g_lg_3_meta_78": 1,
+    "u_core_io_r": 1
+  },
+  "output_latency_delta": {
+    "rd_q23": 1,
+    "u_core_u_engine_u_memory_g_operand_2_req": 1,
+    "u_core_u_engine_u_memory_g_operand_3_req": 1,
+    "u_core_u_engine_u_memory_g_operand_2_sw": 1,
+    "u_core_u_engine_u_memory_g_operand_3_sw": 1,
+    "u_core_u_engine_u_memory_fault": 1
+  },
+  "parent_return_latency_delta": {
+    "u_core_u_engine_u_memory_g_operand_2_data": 1,
+    "u_core_u_engine_u_memory_g_operand_3_data": 1
+  },
+  "reset_release_delta_vs_vH1": 1,
+  "reset_assert_delta": 0,
+  "proof": "60000 cycles each default/seeds1/2/3 bad0; original vH1 negative control bad2; synth LEC EQUIVALENT9125/9125"
+}
