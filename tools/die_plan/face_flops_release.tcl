@@ -53,3 +53,18 @@ if {[file exists $ff_f]} {
   close $fh
   puts "OT_CORE_OUT_LAND released $ff_m landing flops for DPL"
 }
+# S81-T51-RECUT 11-06: native_ff_pose.tcl source FFs stay LOCKED through GPL (the reviewed pose anchors the stages);
+# released to PLACED here so DPL legalises a resizer-grown FF next to its pose (LOCKED x2 on x1 sites -> DPL-0033).
+# No ot_native_pose.txt (every kit without recipe native_ff_pose) = nothing changes.
+set ff_f $::env(RESULTS_DIR)/ot_native_pose.txt
+if {[file exists $ff_f]} {
+  set ff_m 0
+  set fh [open $ff_f r]
+  foreach n [split [read $fh] "\n"] {
+    if {$n eq ""} continue
+    set i [$ff_blk findInst $n]
+    if {$i ne "NULL" && $i ne "" && [$i getPlacementStatus] eq "LOCKED"} { $i setPlacementStatus PLACED; incr ff_m }
+  }
+  close $fh
+  puts "OT_NATIVE_POSE released $ff_m posed FFs for DPL"
+}
