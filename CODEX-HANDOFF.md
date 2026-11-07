@@ -79,6 +79,10 @@ Die gates (BIND/GRT/STA/CLK) are not yet passed on any die. ETAs: non-HBM cores 
    - Not signed off: delete, keeping only the newest resume DB of a block still being worked on.
    - Lanes: CODEX-PRUNE-1 (backlog), AUTOCLEAN-1 (after each job).
 5d. **Limit expected about 23:45 PST 11-06** (OWNER 23:2x: "please queue all the jobs that can be run and make sure it can fill the hosts while you are rate limited."). All lanes were told at 23:2x to queue everything detached and post a final STATE. Latest state is in the queue tail from 23:25 on. If you take over: keep waiters on every host, watch disks (epyc5/6 scratch, intel2 root), and collect CODEX-PRUNE-1 and ARCHIVE-1106C detached deletes by their manifest paths in their last post. AUTOCLEAN-1 may not be installed: read its last STATE. Retention (OWNER 23:2x, all runs): closed block = small stub on the host, the rest to AGIdock; open block = newest resume database only; everything else deleted.
+5e. **Codex covers Claude limits in WATCHER MODE ONLY** (OWNER 23:34 agreed; weekly limits are covered by other accounts, so this applies to every limit unless the owner says otherwise). This overrides "you own every scope" at the top.
+   - DO: watch disks and prune by the 5c rules; restart a crashed kit wave or autopilot; collect finished results and re-sign them (resign.py) so they count; run lanes' detached chains and read their logs; relaunch FAIL rows whose class fix already exists; one bounded eco_loop on a routed near miss; keep waiters on every host; log what you did in CODEX-LOG.md.
+   - DO NOT: write new forms, RTL, plan events or flow fixes; merge or cut tags; start new design lanes; stop other lanes' jobs (only a job hung by the 2-h rule, by exact name, and log it); make any owner-level decision. Note a problem in the log instead.
+   - Handback: when Claude returns, stop new launches, append a short `## Handoff to Claude` with what ran and what finished, and leave jobs running. Claude does not wait long for it.
 
 ## main and merge train
 
@@ -168,7 +172,7 @@ Each lane posts to lanes/COORD-REVIEW-QUEUE.md; its last STATE line there has pa
   - run `python3 -I tools/failure_breakdown.py` and paste it into the RELEASE_TREE.md BREAKDOWN block, plus line 3;
   - view 2 GEOM renders;
   - add a HANDOFF.md line;
-  - commit with `timeout 280 ~/coord/bin/coord-commit.sh "msg" files` after `git fetch -q origin coord/state && git reset -q --keep origin/coord/state`.
+  - commit with `timeout 280 ~/coord/bin/coord-commit.sh "msg" files` (never run `git reset` in shared ~/coord; it dropped 9 commits on 11-06).
 - Relaunch FAIL rows older than the last class fix at once, from the branch head if it is not merged yet.
 
 ## Never
