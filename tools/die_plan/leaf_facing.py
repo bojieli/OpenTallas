@@ -2,7 +2,8 @@
 """S81-TYPES-2 leaf vs/ve_m facing form, per row (from TYPE-CONS-5 leafmv.py, pilot t27/t42 vM).
 Rule: vs pin edge faces ve_m pin edge, same mirror state, vs_x = ve_m_x -40 (R0/MX) or +40 (MY/R180), gap >= 17.28.
 Opposite mirror: flip vs in x.  No site at the ideal x: slide d um and require gap >= 0.21*d + 4 (5.3 pins/um, 25.5 M6 tr/um).
-vn_a/b within 24 um of a VP macro: shift vn away to 41 um (t27 vN).  usage: leaf_facing.py PLAN TYPE -> one JSON line"""
+vn_a/b within 24 um of a VP macro: shift vn away to 41 um (t27 vN).  With TAPS.json, moved cores also stay off the plan's clock and core taps (costs 8 rows their site, so not used by the 11-07 batch).
+usage: leaf_facing.py PLAN TYPE [TAPS.json: {type: {grid, core, clear}}] -> one JSON line"""
 import json, re, sys
 G = 8.64; EDGE = 4.32; MGAP = 8.64
 plan = json.load(open(sys.argv[1])); T = sys.argv[2]; t = plan['partition_types'][T]; W, H = t['outline_um']
@@ -14,6 +15,9 @@ for s in t.get('ft_slots', []):
         for p in st:
             sites.add((int(p[0] // G), int(p[1] // G)))
 sites = [(a * G, b * G, (a + 1) * G, (b + 1) * G) for a, b in sites]
+if len(sys.argv) > 3:
+    tp = json.load(open(sys.argv[3]))[T]; cl = tp['clear']
+    sites += [(x - cl, y - cl, x + cl, y + cl) for _, x, y in tp['grid'] + tp['core']]
 def rect(o, s): return (o[0], o[1], o[0] + s[0], o[1] + s[1])
 def inter(a, b, g=0): return a[0] < b[2] + g and b[0] < a[2] + g and a[1] < b[3] + g and b[1] < a[3] + g
 def free(n, o, pos):
