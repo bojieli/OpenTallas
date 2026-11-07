@@ -33,3 +33,18 @@ Builds (intel1, ot-run; epyc6 refused, scratch below floor): kits
 GEOM (vA 3_place, viewed): sul0_place_vA.png.  The replica blocks sit at the channel mouths (x 182-188).  The D-trunk
   buffers of l2/l3 stay in the west strip (x < 190).  Nets with pins on both sides of lane2: 568 -> 18 (17 are the
   pre-existing u_bout_x_su_c_p1_o output bus, 1 clk).
+GRT results (11-06, intel1, both builds identical in shape):
+  vA (PD 0.50): GRT-0116 after 30 iterations, overflow 131132 -> 1880 (M3 only, Max V 1).  It lists the same 4 reset
+    relay nets (u_rrl_35 x 404.1, u_rrl_39 x 389.3, u_rrl_26 x 409.3, u_srl_26 x 351.1), 470 gcells each.
+  vB (PD 0.40): GRT-0116 after 30 iterations, but overflow 131132 -> 1880 (M3 only, Max V 1).  The congestion report
+    lists only 4 nets, each 470 gcells = one full lane height in one column:
+      u_rrl_35 x 405.8 over lane0, u_rrl_39 x 395.6 over lane1, u_rrl_26 x 399.0 and u_srl_26 x 355.1 over lane3.
+    These are reset relays (reset_tree.tcl rtr_place).  Tap relays sit in the lane gaps INSIDE the lane x-span
+    (rst_n_t11 397.3/30.3, rst_n_t12 381.5/349.9, rst_rl_26 375.8/1317.6), so each relay net is a straight vertical
+    across one macro.  The baseline already had them (u_rrl_26 / u_srl_26 / u_rrl_39 in its congestion.rpt).
+    Not a bus net: zero c_i/c_p1 nets overflow.
+    Probe (sul0probe/grtprobe1*.tcl): one such net alone still gives 470 capacity-0 gcells, even with only M6-M7,
+    with the PDN swires removed and with the lane M5/M6 OBS removed.  So it is a single-column relay-net shape
+    problem, not demand.
+    Next form (reset_tree class, not part of this patch): site reset relays/taps outside the lane x-span (west strip
+    x < 190 or east of x 605), or route the relay hop around the lane.
