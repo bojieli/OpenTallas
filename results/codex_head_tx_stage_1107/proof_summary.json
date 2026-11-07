@@ -1,0 +1,18 @@
+{
+  "baseline": "93c061c396c",
+  "default_off": "PASS same-cycle, 10 reset phases x6400cycles, 63540 valid words,0diff",
+  "CH_STAGE1": "PASS old outputs delayed1cycle,10resetphases x6400cycles,63540validwords,0diff",
+  "throughput": "II1 unchanged",
+  "mutants": {
+    "1_f0_mid_bypassed": "CAUGHT634diff",
+    "2_fv_mid_bypassed": "CAUGHT635diff",
+    "3_par_load_mid_bypassed": "CAUGHT635diff",
+    "4_header_mid_bypassed": "EQUIVALENT ON TESTED FRAME PROTOCOL:0diff,10resetphases/63540words; not claimed caught",
+    "5_valid_delay_bypassed": "CAUGHT3diff each of10resetphases",
+    "6_chunk_bit_flipped": "CAUGHT635diff each of10resetphases"
+  },
+  "scope": "one full encoder, production widths; missingbeats/reset/seqwrap; no fullparent",
+  "kit_LEC": "NOT_RUN yet",
+  "P&R": "NOT_RUN yet",
+  "status": "CANDIDATE DO_NOT_COUNT"
+}

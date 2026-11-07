@@ -1,7 +1,13 @@
 `timescale 1ns/1ps
 // DIE-HEAD-76-SERDESRF 2026-11-06: the two hard sub-core types of the hd_serdes SC form (parent: ot_s81hd_serdes_sc.sv).
 // Own file so each child kit reads only its own closure (ot_s81_kp4_common/bm or enc_la + pma model).
-module ot_s81hd_sc_tx (
+module ot_s81hd_sc_tx #(
+`ifdef OT_HEAD_TX_CH_STAGE
+    parameter integer CH_STAGE = 1
+`else
+    parameter integer CH_STAGE = 0
+`endif
+) (
     input  wire          clk,
     input  wire          rst,
     input  wire [511:0]  tx,
@@ -12,7 +18,7 @@ module ot_s81hd_sc_tx (
     always @(posedge clk or negedge rst) if (!rst) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
     wire rn_t = rs_t[1];
     wire e_v; wire [543:0] e_d;
-    ot_s81_kp4_enc_la #(.MUT(0), .LA(2), .FF(1)) u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d),
+    ot_s81_kp4_enc_la #(.MUT(0), .LA(2), .FF(1), .CH_STAGE(CH_STAGE)) u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d),
         .fault(e_flt));
     ot_s81_pma_bm #(.W(544), .LAT(4)) u_ptx (.clk(clk), .d_v(e_v), .d(e_d), .q(pma_tx));
 endmodule

@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.pin_cycles.candidate.v1",
+  "module": "ot_s81hd_sc_tx",
+  "form": "vC_CH_STAGE1",
+  "baseline": "93c061c396c / vB LA2 FF1",
+  "enable": "OT_HEAD_TX_CH_STAGE or top parameter CH_STAGE=1",
+  "added_cycles": {
+    "inputs": {
+      "tx": 0,
+      "rst": 0
+    },
+    "outputs": {
+      "pma_tx": 1,
+      "e_flt": 1
+    }
+  },
+  "encoder_outputs": {
+    "p_d": 1,
+    "p_v": 1,
+    "fault": 1
+  },
+  "steady_state_input_beat_interval": 1,
+  "steady_state_output_word_interval": 1,
+  "clock_ps": 833,
+  "model_status": "CANDIDATE ONLY: compiler/token +1 pending explicit adoption; no POR change",
+  "notes": "Only payload/valid/fault outputs delayed; reset is consumed at original time; output-visible reset effects delayed consistently by1. Headers and parity move with payload."
+}

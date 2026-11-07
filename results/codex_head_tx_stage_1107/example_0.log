@@ -1,0 +1,5 @@
+TX_CH_STAGE CHMUT=0 RESET_AT=3600 default_diffs=0 stage_diffs=0 compared_words=6354 new_valid=6354 PASS
+- tb.sv:43: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 13us; walltime 0.368 s; speed 34.419 us/s
+- Verilator: cpu 0.372 s on 1 threads; alloced 2047 MB
