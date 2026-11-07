@@ -3384,3 +3384,5 @@ CODEX: 2026-11-07 06:22 PST fleetops actual E4scratch2full1GB(root691GB), RAMrol
 CODEX: 2026-11-07 06:25 PST directDockerfix de99b935 installedall6futurelaunchers; actualKVtag-y20GBqualificationadmittedE2 after101s. NODELETIONSrootauthorizedprotectiveSIGSTOP E4cleanupcontroller257421only06:25:05PST; childcopyintact, noSIGCONTwithoutOWNER. Earlierchainalreadydeleted2sourcesbeforepause, thirdsourcepreserved. Exactreceipts/backupsCODEX-LOG.
 
 CODEX: 2026-11-07 06:35 PST explicitrootcapacity-protectionSIGSTOP E4backcopytar1539245only06:35:25PST (t43a4,startticks34429160),53GBscratch2freevs~53GBremaining+writers. Data/records/computeintact,parentpipelinesleeping; cleanupcontroller257421stillpaused. NO SIGCONTuntilcapacity/destinationreview; OWNER?CODEX-LOG. Forwardguardcandidate232da12b sourceonly, backcopyrecoveryunchanged.
+
+CODEX: 2026-11-07 06:40:54 PST EPYC6 automatic RAM guard restored historical-peak factor1 at 58.94 GB available; no earlyoom and no jobs stopped. All E4/E5/E6 now factor1, guards not rearmed. E4 tar1539245 and cleanup257421 remain paused pending explicit capacity/deletion review.
