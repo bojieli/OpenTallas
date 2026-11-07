@@ -1,0 +1,28 @@
+{
+ "base": "/srv/opentallas-scratch2/claude/dh76/pairclk/kit_vE/run/results/asap7/hbc_ot_s81hd_lep_pair/base/ot_s81hd_lep_pair.lef",
+ "base_sha256": "200a7bb52c124c0ef4f7098c54fdb49573b9a0aeab2d64bb98b2b8cf22c1aa54",
+ "detail": "view2/detail_b1.lef",
+ "out": "view2/ot_s81hd_lep_pair.lef",
+ "out_sha256": "a9cbd03f367f485ac35a74721281b25c10f49e266b3b28f9a81cc90253548aa5",
+ "layers_detailed": [
+  "M6",
+  "M7"
+ ],
+ "rects": {
+  "M6": 38960,
+  "M7": 12526
+ },
+ "pin_clear_um": null,
+ "pin_clear": null,
+ "pg_pin_layers": {
+  "VSS": [
+   "M5"
+  ],
+  "VDD": [
+   "M5"
+  ]
+ },
+ "detail_pins_equal_base": true,
+ "check_ok": true,
+ "problems": []
+}
