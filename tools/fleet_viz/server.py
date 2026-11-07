@@ -21,10 +21,12 @@ headers) or from a non-loopback address are always served share-safe.
 import collections, datetime, json, os, signal, pathlib, re, subprocess, sys, threading, time
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-import recorder, elements, explorer, coverage, landing, elem_shell, layout_service, native_provenance
+import recorder, elements, explorer, coverage, landing, elem_shell, layout_service, native_provenance, fleet_discover, kit_verdicts
 
 HERE = pathlib.Path(__file__).resolve().parent
 CFG = json.loads(pathlib.Path(os.environ.get('FLEET_VIZ_HOSTS', HERE / 'fleet_hosts.json')).read_text())
+HOSTS_DISCOVER = 'FLEET_VIZ_HOSTS' not in os.environ   # a test host table stays exactly as given
+if HOSTS_DISCOVER: CFG['hosts'] = fleet_discover.load_hosts(CFG['hosts'])   # + hosts found in the ot-run HOSTS list (host_watch)
 AGENT = (HERE / 'agent.py').read_text()
 POLL = float(os.environ.get('FLEET_VIZ_POLL', '5'))
 BIND = os.environ.get('FLEET_VIZ_BIND', '127.0.0.1')
@@ -39,7 +41,7 @@ JOBS = pathlib.Path(os.environ.get('FLEET_VIZ_JOBS', os.path.expanduser('~/.loca
 CTL = pathlib.Path(os.environ.get('XDG_RUNTIME_DIR', '/tmp')) / 'fleet-viz-ssh'
 START = time.time()
 # freshness limits (s): a source older than this, or one whose last read failed, is flagged in every payload's 'fresh'
-FRESH = dict(host=120, loop_status=180, jobs=60, elements=600, explorer=300)
+FRESH = dict(host=120, loop_status=180, jobs=60, elements=600, explorer=300, kit_verdicts=3600)
 
 def log(msg):
     line = '%s %s' % (datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S'), msg)
@@ -194,6 +196,7 @@ class Closures:
     def __init__(self):
         self.cache = {}; self.data = {}; self.active = []; self.verdicts = []; self.vver = 0
         self.lmt = None; self.lrows = []; self.lock = threading.Lock(); self.scan_t = None; self.err = None
+        self.kit = kit_verdicts.KitVerdicts()   # current verdicts: the closure-loop ledger stopped on 10-29
         threading.Thread(target=self.run, daemon=True, name='closures').start()
 
     def scan(self):
@@ -222,17 +225,26 @@ class Closures:
         for j in closed:
             k = 23 - (hour0 - (int(j['updated']) // 3600) * 3600) // 3600
             if 0 <= k < 24: bins[j['cat']][k] += 1
-        self.scan_verdicts(now)
+        kit_rows = self.kit.scan()
+        kit_closed = [v for v in kit_rows if v['kind'] == 'closed']
+        for v in kit_closed:
+            k = 23 - (hour0 - (int(v['t']) // 3600) * 3600) // 3600
+            if 0 <= k < 24: bins[v['cat']][k] += 1
+        self.scan_verdicts(now, kit_rows)
         active = sorted((j for j in jobs if j['status'] in ACTIVE), key=lambda j: (j['host'] or '~', j['name']))
+        recent = sorted(closed[-30:] + [dict(updated=v['t'], cat=v['cat'], host=v['host'], block=v['block'], name=v['name'], setup=v['setup'], setup_corner=v['corner'],
+                                             hold=v['hold'], drc=v['drc'], target=v['target'], into='') for v in kit_closed], key=lambda j: -j['updated'])[:30]
         with self.lock:
             self.active = active
-            self.data = dict(counts=dict(counts), running_by_host=dict(running), running_by_cat=dict(run_cat),
-                             closed_today=len({j['block'] for j in today}), closed_today_jobs=len(today),
-                             closed_24h_by_cat=dict(collections.Counter(j['cat'] for j in closed if j['updated'] >= day_ago)),
-                             closed_total=len(closed), recent=closed[-30:][::-1],
+            self.data = dict(counts=dict(counts), running_by_host=dict(running), running_by_cat=dict(run_cat + collections.Counter(self.kit.running)),
+                             kit_running=sum(self.kit.running.values()),
+                             closed_today=len({j['block'] for j in today} | {v['block'] for v in kit_closed if v['t'] >= midnight}),
+                             closed_today_jobs=len(today) + sum(v['t'] >= midnight for v in kit_closed),
+                             closed_24h_by_cat=dict(collections.Counter(j['cat'] for j in closed if j['updated'] >= day_ago) + collections.Counter(v['cat'] for v in kit_closed if v['t'] >= day_ago)),
+                             closed_total=len(closed), recent=recent,
                              closed_hourly=dict(start=hour0 - 23 * 3600, bins={k: v for k, v in bins.items() if any(v)}))
 
-    def scan_verdicts(self, now):
+    def scan_verdicts(self, now, kit_rows=()):
         try: mt = LEDGER.stat().st_mtime
         except OSError: mt = None
         if mt != self.lmt:   # (t, name, block, status, text, host, detail) from the ledger verdict lines
@@ -257,6 +269,7 @@ class Closures:
             if j['status'] in VERDICT_ST and (j['name'], j['status']) not in seen:
                 out.append(verdict(j['updated'], j['name'], j['block'], j['status'],
                                    j['status'] + ': ' + (j['reason'] or ''), j['host'] or '', '', j))
+        out.extend(kit_rows)
         out.sort(key=lambda v: -v['t'])
         day = now - 86400
         out = [v for i, v in enumerate(out) if i < 200 or v['t'] >= day][:600]
@@ -310,6 +323,8 @@ def fresh_block(safe, now=None, explorer=False, coverage=None):
     src['loop_status'] = _src(mt, FRESH['loop_status'], now, e, 'closure-loop status file')
     src['jobs'] = _src(CLOSURES.scan_t, FRESH['jobs'], now, CLOSURES.err and ('scan failed' if safe else 'scan failed: ' + CLOSURES.err),
                        'closure-loop jobs scan', warm)
+    kv = CLOSURES.kit
+    src['kit_verdicts'] = _src(kv.t, FRESH['kit_verdicts'], now, kv.err and ('verdict feed failed' if safe else 'verdict feed failed: ' + kv.err), 'kit-wave verdict feed', warm)
     et = ELEMENTS.data.get('t') or None; ee = getattr(ELEMENTS, 'err', None)
     src['elements'] = _src(et, FRESH['elements'], now, ee and ('element scan failed' if safe else 'element scan failed: ' + ee),
                            'element registry', warm or now - START < 180)
@@ -489,7 +504,7 @@ def build(safe):
     now = time.time()
     return dict(t=now, generated_at=now, fresh=fresh_block(safe, now), poll=POLL, safe=safe, regions=CFG['regions'], hosts=hosts,
                 totals=dict(tot, busy=round(tot['busy'], 1), mem_total=round(tot['mem_total'], 1), mem_used=round(tot['mem_used'], 1)),
-                loop=dict(running=counts.get('RUNNING', 0), queued=counts.get('QUEUED', 0) + counts.get('READY', 0),
+                loop=dict(running=counts.get('RUNNING', 0) + cl.get('kit_running', 0), queued=counts.get('QUEUED', 0) + counts.get('READY', 0),
                           closed_today=cl.get('closed_today', 0), closed_today_jobs=cl.get('closed_today_jobs', 0),
                           closed_total=cl.get('closed_total', 0), running_by_cat=cl.get('running_by_cat', {}),
                           closed_24h_by_cat=cl.get('closed_24h_by_cat', {}),
@@ -575,7 +590,48 @@ def ticker():
         except Exception as e:
             log('snapshot: %s' % e)
 
+def host_watch():
+    """A host added to the ot-run HOSTS list joins the monitor without an edit: it goes to the auto file, then this process
+    exits and systemd (Restart=always) starts it again with the new table (host threads and history columns are fixed at start)."""
+    time.sleep(30)
+    while True:
+        try: new = fleet_discover.discover(CFG['hosts'])
+        except Exception as e: log('host watch: %s' % e); new = []
+        if new:
+            log('host watch: new fleet hosts %s, restarting' % ','.join(new)); os._exit(0)
+        time.sleep(300)
+
 # ---------------------------------------------------------------- http
+# /release: the shared Claude+Codex release tree (RELEASE-TREE lane, owner 10-18 0hb/0hc). The source of truth is
+# ~/claude-takeover-20261007/RELEASE_TREE.md; tools/release_tree_render.py writes RELEASE_TREE.html (hourly timer
+# release-tree-render.timer). When the .md (or the renderer) is newer than the .html, a page load starts one background
+# re-render and serves the current page; the next load shows the new render.
+RELEASE_DIR = pathlib.Path(os.environ.get('OT_RELEASE_TREE_DIR', str(pathlib.Path.home() / 'claude-takeover-20261007')))
+_release_lock = threading.Lock(); _release_proc = [None]
+
+
+def release_page(h):
+    md, out, tool = RELEASE_DIR / 'RELEASE_TREE.md', RELEASE_DIR / 'RELEASE_TREE.html', RELEASE_DIR / 'tools/release_tree_render.py'
+    try:
+        stale = not out.exists() or max(md.stat().st_mtime, tool.stat().st_mtime) > out.stat().st_mtime
+    except OSError:
+        stale = False
+    if stale:
+        with _release_lock:
+            p = _release_proc[0]
+            if p is None or p.poll() is not None:
+                try:
+                    _release_proc[0] = subprocess.Popen([sys.executable, str(tool)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                                                        cwd=str(RELEASE_DIR), start_new_session=True)
+                except OSError:
+                    pass
+    try:
+        body = out.read_bytes()
+    except OSError as e:
+        return h.send(503, ('release tree not rendered yet (%s); run %s' % (e, tool)).encode(), 'text/plain; charset=utf-8')
+    return h.send(200, body, 'text/html; charset=utf-8', extra=[('Cache-Control', 'no-cache'), ('X-Release-Tree-Stale', '1' if stale else '0')])
+
+
 STATIC = {'/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'),
           '/replay': ('index.html', 'text/html; charset=utf-8'), '/explorer': ('explorer.html', 'text/html; charset=utf-8'),
           '/explorer.html': ('explorer.html', 'text/html; charset=utf-8'),
@@ -754,6 +810,8 @@ class H(BaseHTTPRequestHandler):
 
     def do_GET(self):
         u = urlparse(self.path); q = parse_qs(u.query); safe = self.safe(q)
+        if u.path in ('/release', '/release/'):
+            return release_page(self)
         if u.path in STATIC:
             name, ctype = STATIC[u.path]
             return self.send(200, (HERE / name).read_bytes(), ctype)
@@ -789,7 +847,16 @@ class H(BaseHTTPRequestHandler):
             rows = [dict(v, host=lab.get(v['host'], v['host'])) for v in vs]
             return self.send(200, json.dumps(stamp(dict(v=ver, verdicts=rows), safe), separators=(',', ':')).encode(), 'application/json')
         if u.path == '/api/elements':
-            return self.send(200, json.dumps(stamp(ELEMENTS.snapshot(safe), safe), separators=(',', ':')).encode(), 'application/json')
+            return self.send(200, json.dumps(stamp(ELEMENTS.snapshot(safe, legacy=bool(q.get('legacy'))), safe), separators=(',', ':')).encode(), 'application/json')
+        if u.path == '/api/plan_now':   # WEBVIEW-1 11-03: current die plans + element routing/timing (plan_now.py, cron 30 min)
+            if safe: return self.send(403, b'{"safe":true,"error":"private"}', 'application/json')
+            f = pathlib.Path(os.environ.get('FLEET_VIZ_STATE', os.path.expanduser('~/.local/state/fleet-viz'))) / 'plan_now.json'
+            try: return self.send(200, f.read_bytes(), 'application/json')
+            except OSError as e: return self.send(404, json.dumps(dict(error=str(e))).encode(), 'application/json')
+        if u.path == '/api/die_elements' and not q.get('legacy'):
+            import plan_rows
+            o = plan_rows.die_elements()
+            if o is not None: return self.send(200, json.dumps(o, separators=(',', ':')).encode(), 'application/json')
         if u.path == '/api/die_elements':
             # authoritative per-die element table (gaps/die_element_table.py, re-run every drive); served as written
             f = pathlib.Path(os.environ.get('OT_DIE_ELEMENT_TABLE', str(pathlib.Path.home() / 'claude-takeover-20261007/gaps/die_element_table.json')))
@@ -984,6 +1051,7 @@ if __name__ == '__main__':
     CTL.mkdir(mode=0o700, parents=True, exist_ok=True)
     threading.Thread(target=ticker, daemon=True, name='ticker').start()
     log('fleet-viz serving http://%s:%d (%d hosts, poll %gs)' % (BIND, PORT, len(HOSTS), POLL))
+    if HOSTS_DISCOVER: threading.Thread(target=host_watch, daemon=True, name='host-watch').start()
     def _stop(*_):
         if RECORDER: RECORDER.close()   # finish the gzip member cleanly
         os._exit(0)

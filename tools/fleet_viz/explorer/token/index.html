@@ -19,6 +19,9 @@
   main,#app { flex:1;min-height:0;display:flex;flex-direction:column; }
   #err { color:#e66767;font:13px ui-monospace,Menlo,monospace;white-space:pre-wrap; }
   #err:empty { display:none; }
+  #now { flex:none;border-bottom:1px solid #1b2540;background:#0a1020;padding:6px 16px;font-size:12px;color:#c9d4ee;max-height:38vh;overflow:auto; }
+  #now summary { cursor:pointer;color:#fbbf24;font-weight:700; }
+  #now li { margin:2px 0; } #now code { color:#5ee7ff; } #now .dim { color:#8a97b8; }
   @media(max-width:760px) { header { padding:8px 10px;gap:6px 10px; } header p { display:none; } header h1 { font-size:16px;flex:1 1 100%; } }
 </style>
 </head>
@@ -28,6 +31,7 @@
   <p>One token, from stage to operator · critical path, timing and hardware evidence</p>
   <a href="/explorer">← Chip Explorer</a> <a href="/explorer/coverage/">Coverage →</a>
 </header>
+<details id="now"><summary>Current token-pass state (loading…)</summary><div id="nowBody"></div></details>
 <main><div id="app"></div><div id="err"></div></main>
 <script type="module">
 import { mountTokenExplorer, DESIGNS, canonDesign } from './token.js';
@@ -51,6 +55,22 @@ window.addEventListener('hashchange', () => {
   const md = q.mode === 'mtp' ? 'mtp' : 'ar';
   if (api && q.design && (q.design !== api.state.design || (q.group || null) !== api.state.group || md !== api.state.mode)) api.show(q.design, q.group || null, md);
 });
+</script>
+<script>
+// WEBVIEW-1 11-03: the token-path models below are analytic records (dated); today's token-pass state comes from
+// RELEASE_TREE.md (TOK.* lines) and results/token_pass on origin/main via /api/plan_now (plan_now.py, every 30 min).
+(async () => {
+  const esc = (x) => String(x ?? '').replace(/[&<>"']/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+  const day = (t) => t ? new Date(t * 1000).toLocaleString('en-US', {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false}) : '?';
+  try {
+    const d = await fetch('/api/plan_now', {cache: 'no-store'}).then((r) => r.json()); const t = d.token || {};
+    const old = (t.models || []).map((m) => m.mtime); const newest = old.length ? Math.max(...old) : 0;
+    document.querySelector('#now summary').textContent = `Current token-pass state · release tree ${day(t.release_mtime)} · trunk ${d.repo && d.repo.origin_main} — the token-path model below is the analytic record of ${day(newest)}, not a token pass`;
+    document.getElementById('nowBody').innerHTML = '<ul>' + (t.release_lines || []).map((l) => `<li>${esc(l)}</li>`).join('') + '</ul>' +
+      '<div class="dim">Newest results/token_pass records on origin/main:</div><ul>' +
+      (t.token_pass || []).slice(0, 12).map((r) => `<li><code>${esc(r.dir.replace('results/token_pass/', ''))}</code> <span class="dim">${esc(r.date.slice(0, 16))} ${esc(r.commit)}</span> ${esc(r.readme || '')}</li>`).join('') + '</ul>';
+  } catch (e) { document.querySelector('#now summary').textContent = 'Current token-pass state: unavailable (' + e.message + ')'; }
+})();
 </script>
 </body>
 </html>
