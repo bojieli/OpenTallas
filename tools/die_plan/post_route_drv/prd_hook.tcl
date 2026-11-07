@@ -25,15 +25,88 @@ set _here [file dirname [info script]]
 # changes.  OT_PRD_ROUTED_SPEF=0 = the old single read (A/B only).
 proc ot_prd_spef_read {why} {
   set f $::ot_prd_spef
+  set rf $f
+  set note ""
+  if {[info exists ::ot_prd_conn_ref]} {
+    set ch [ot_prd_conn_changed]
+    if {[dict size $ch]} {
+      lassign [ot_prd_spef_without $f $ch] rf nskip
+      set note ", [dict size $ch] ECO-changed nets keep the estimate ($nskip routed SPEF nets skipped)"
+    }
+  }
   set scs {}
   if {[info exists ::ot_mm_active] && $::ot_mm_active && [llength [info commands ot_mm_sc]]} {
     set scs [list [ot_mm_sc] BC]
-    foreach sc $scs { read_spef -corner $sc $f }
+    foreach sc $scs { read_spef -corner $sc $rf }
   } else {
-    read_spef $f
+    read_spef $rf
   }
+  if {$rf ne $f} { file delete $rf }
   incr ::ot_prd_spef_reads
-  puts "OT_PRD_SPEF $why: read_spef [expr {[llength $scs] ? "-corner {$scs} " : ""}][file tail $f] (read $::ot_prd_spef_reads)"
+  puts "OT_PRD_SPEF $why: read_spef [expr {[llength $scs] ? "-corner {$scs} " : ""}][file tail $f] (read $::ot_prd_spef_reads$note)"
+}
+# FLOW-CLASS-25 11-06 (COORD 18:0x (3a), DIE-HBM-82-Q3EL 15:46): the re-read put the routed SPEF back onto nets whose
+# connectivity the ECO had changed.  q3_edge_link eco4: repair_design split 55 nets with 38 buffers, the next re-read gave
+# 1001 STA-1651 "not connected" on 35 of them, the split nets lost their routed wire delay in the session (D-side wire of
+# bank dq[*] -> SRAM wd_in), the session showed a false FF hold -33.19 (sign-off on the same DB: about 0), and the guarded
+# hold repair put 1900 buffers on 1899 near-zero endpoints.  Now the connectivity of every signal net is recorded when the
+# SPEF is armed (instance terminals + ports, as prd_route_keep.tcl judges it), and each later re-read skips the SPEF
+# section of every net whose connectivity changed since: such a net keeps the estimate the native estimate_parasitics
+# just gave it, like the nets the ECO created.  Unchanged nets get the routed SPEF exactly as before.  Sign-off
+# re-extracts the routed result, so no check, margin or corner changes.  OT_PRD_SPEF_CHANGED=reread = the old re-read.
+proc ot_prd_conn_sig {n} {
+  set l {}
+  foreach t [$n getITerms] { lappend l [$t getId] }
+  foreach t [$n getBTerms] { lappend l b[$t getId] }
+  return [lsort $l]
+}
+proc ot_prd_conn_snapshot {} {
+  set d [dict create]
+  foreach n [[ord::get_db_block] getNets] {
+    if {[$n getSigType] in {POWER GROUND}} continue
+    dict set d [$n getName] [ot_prd_conn_sig $n]
+  }
+  return $d
+}
+# -> dict {name -> 1} of the armed nets that are gone or whose connectivity changed; names without escapes (SPEF and
+# OpenDB escape differently, see ot_prd_stage_check)
+proc ot_prd_conn_changed {} {
+  set block [ord::get_db_block]
+  set ch [dict create]
+  dict for {k sig} $::ot_prd_conn_ref {
+    set n [$block findNet $k]
+    if {$n eq "NULL" || $n eq "" || [ot_prd_conn_sig $n] ne $sig} { dict set ch [string map {\\ {}} $k] 1 }
+  }
+  return $ch
+}
+# copy of SPEF f without the *D_NET sections of the nets in changed (name map resolved) -> {file skipped}
+proc ot_prd_spef_without {f changed} {
+  set out [file join [file dirname $f] ot_prd_eco_[pid]_[clock clicks].spef]
+  set in [open $f r]; set fo [open $out w]
+  fconfigure $in -buffersize 1048576; fconfigure $fo -buffersize 1048576
+  set map [dict create]; set inmap 0; set skip 0; set nskip 0
+  while {[gets $in ln] >= 0} {
+    if {$skip} {
+      if {[string trim $ln] eq "*END"} { set skip 0 }
+      continue
+    }
+    if {[string index $ln 0] eq "*"} {
+      if {[string match {\*D_NET*} $ln]} {
+        set inmap 0
+        if {[regexp {^\*D_NET\s+(\S+)} $ln -> nm]} {
+          if {[dict exists $map $nm]} { set nm [dict get $map $nm] }
+          if {[dict exists $changed [string map {\\ {}} $nm]]} { set skip 1; incr nskip; continue }
+        }
+      } elseif {[string match {\*NAME_MAP*} $ln]} {
+        set inmap 1
+      } elseif {$inmap} {
+        if {[regexp {^(\*[0-9]+)\s+(\S+)} $ln -> idx nm]} { dict set map $idx $nm } else { set inmap 0 }
+      }
+    }
+    puts $fo $ln
+  }
+  close $in; close $fo
+  return [list $out $nskip]
 }
 proc ot_prd_spef_arm {f} {
   if {[info exists ::env(OT_PRD_ROUTED_SPEF)] && $::env(OT_PRD_ROUTED_SPEF) eq "0"} {
@@ -43,7 +116,14 @@ proc ot_prd_spef_arm {f} {
   }
   set ::ot_prd_spef $f
   set ::ot_prd_spef_reads 0
+  unset -nocomplain ::ot_prd_conn_ref
   ot_prd_spef_read entry
+  if {[info exists ::env(OT_PRD_SPEF_CHANGED)] && $::env(OT_PRD_SPEF_CHANGED) eq "reread"} {
+    puts "OT_PRD_SPEF changed nets: re-read like every other net (OT_PRD_SPEF_CHANGED=reread)"
+  } elseif {[llength [info commands ::ord::get_db_block]]} {
+    set ::ot_prd_conn_ref [ot_prd_conn_snapshot]
+    puts "OT_PRD_SPEF connectivity of [dict size $::ot_prd_conn_ref] signal nets recorded: a net the ECO changes keeps its estimate"
+  }
   if {[llength [info commands ::ot_prd_native_estimate]]} { return }
   # no native estimator in this interpreter (tclsh harnesses, sessions without RSZ): nothing to re-read after
   if {![llength [info commands ::estimate_parasitics]]} { return }
