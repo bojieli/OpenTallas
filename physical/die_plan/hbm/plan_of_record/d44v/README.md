@@ -483,3 +483,5 @@ Event part 44 (DIE-HBM-82-B128 11-06, plan-owner approved DIE-HBM-82): ot_hgi_sf
 Event part 45 (DIE-HBM-82 11-06, p35 clock-site class): clock_entries.json gets clock_pin_sites_um = the current pin-table clock pin positions for kshare v8e478a / v700685, xload ctlx, svgr_bk, wbq_root, wbq_sw (part 35 moved one clock pin per table but not the entries, so --clock-pin-entry kits missed their tables); entry xy, tables and die_plan unchanged; no pin cycles; part45_event.json; replay results/die_hbm_1106/clkpin_sites_p45.
 
 Event part 46 (DIE-HBM-82 11-06, plan-owner approved): ot_hgi_sm_xload_cl2_ctlx pin table back to pre-p35 (clk_cal 194.808 -> 194.52, the signed DB's site, as part 44 did for fr); its part-45 clock_pin_sites_um follow (clk 194.424, clk_cal 194.52); no pin cycles; part46_event.json; replay results/die_hbm_1106/ctlx_clkpin_p46.
+
+Event part 47 (DIE-HBM-82-G0C 11-06, G0C class A ft reach): one ft_s0_resite.py pass over the 57 types with a 'stations' row: 429 slots re-sited, 129 with added stations (+166 station cycles), 99 lanes' latency.lanes changed (PIN CYCLES, ledger_p47.json), 182 slots kept (no chain fits); part47_event.json.
