@@ -1547,7 +1547,12 @@ def gen_hosts(cfg, die):
     marked = cfg.get("_spill_marked") or {}
     lane = lane_root(opt(cfg, die, "work_root"))
     bad = cfg.get("_src_incomplete") or {}
-    return ([h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {})]
+    # KW-FIX-30 11-07 (COORD 13:21): a host whose disk under the die's work_root is under the gen floor
+    # (workroot_low) is no gen host for the die while another host stays; with none left the list is as before and
+    # load_hold() holds the die's new rows
+    low = cfg.get("_workroot_low") or {}
+    return ([h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {}) and die not in low.get(h, {})]
+            or [h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {})]
             or [h for h in hs if lane not in marked.get(h, ())] or [d["gen_host"]])
 
 
@@ -1647,6 +1652,54 @@ def src_incomplete(AP, cfg, run=None):
     return out
 
 
+def workroot_low(AP, cfg, run=None):
+    """KW-FIX-30 11-07 (COORD 13:21): {host: {die: free GB}} for the gen hosts where the disk that really holds the
+    die's work_root has less than gen_disk_min_gb free.  GEN-DISK-LOW reads ot-run's scratch disk (scratch2), but the
+    S81/QC lane root /srv/opentallas-scratch3/claude/kw26-wave-1106 is the ROOT disk on most hosts (epyc6 root 94 GB
+    gave gens while scratch2 looked fine).  One ssh per host: df of the lane root, or of its nearest existing parent.
+    An unreachable host or unreadable df is unknown, never low.  Global or die option workroot_probe: false = off."""
+    floor = int(cfg.get("gen_disk_min_gb", GEN_DISK_MIN_GB))
+    if cfg.get("workroot_probe") is False or floor <= 0:
+        return {}
+    hub = cfg.get("_hub") or getattr(AP, "HUB_NAME", "") or ""
+    if run is None:
+        def run(h, cmd):
+            if h in (hub, "localhost"):
+                rc, o, _ = AP.sh(["bash", "-c", cmd], timeout=120)
+            else:
+                rc, o, _ = AP.sh(["ssh", "-n", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o",
+                                  "ControlPath=none", h, cmd], timeout=120)
+            return rc, o
+    need = {}
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or d.get("enabled") is False or d.get("workroot_probe") is False:
+            continue
+        lane = lane_root(opt(cfg, die, "work_root"))
+        if not lane.startswith("/"):
+            continue
+        for h in list(d.get("gen_hosts") or []) + [d.get("gen_host")]:
+            if h:
+                need.setdefault(h, {}).setdefault(lane, set()).add(die)
+    q = shlex.quote
+    out = {}
+    for h, lanes in sorted(need.items()):
+        cmd = "; ".join(f"d={q(l)}; while [ ! -e \"$d\" ] && [ \"$d\" != / ]; do d=$(dirname \"$d\"); done; "
+                        f"echo W {q(l)} $(df -BG --output=avail \"$d/\" 2>/dev/null | tail -1 | tr -dc 0-9)"
+                        for l in sorted(lanes))
+        try:
+            rc, o = run(h, cmd + "; true")
+        except Exception:
+            continue
+        if rc != 0:
+            continue
+        for ln in (o or "").splitlines():
+            f = ln.split()
+            if len(f) == 3 and f[0] == "W" and f[2].isdigit() and int(f[2]) < floor and f[1] in lanes:
+                for die in lanes[f[1]]:
+                    out.setdefault(h, {})[die] = int(f[2])
+    return out
+
+
 SPILL_MARK = ".ot-run-spill-copy"                  # ot-run SPILL copy marker (ot-run v14 mark_ancestors)
 LANE_RE = re.compile(r"^(/srv/opentallas-scratch[^/]*/claude/[^/]+)(/|$)")
 
@@ -1718,11 +1771,13 @@ def load_hold(cfg, die, *names):
     stt, hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
     if cfg.get("load_hold") is False or not stt or near_count_hit(cfg.get("_near_count") or set(), die, *names):
         return ""
+    low = cfg.get("_workroot_low") or {}
     rows = [(h, stt.get("localhost" if h == hub else h)) for h in gen_hosts(cfg, die)]
-    if any(host_room(v) for _, v in rows):
+    if any(host_room(v) and die not in low.get(h, {}) for h, v in rows):
         return ""
     return "LOAD-HOLD no gen host with room: " + " ".join(
-        f"{h} {'absent' if not v else 'load %d/%d' % (v.get('load', 0), v.get('cores', 0))}" for h, v in rows)
+        f"{h} {'absent' if not v else 'load %d/%d' % (v.get('load', 0), v.get('cores', 0))}"
+        + (f" work_root {low[h][die]} GB" if die in low.get(h, {}) else "") for h, v in rows)
 
 
 def pick_gen_host(cfg, die, take=0, threads=0):
@@ -1735,10 +1790,11 @@ def pick_gen_host(cfg, die, take=0, threads=0):
         return cfg["dies"][die]["gen_host"]
     key = lambda h: stt.get("localhost" if h == hub else h)
     if len(hs) < 2:
-        best = cfg["dies"][die]["gen_host"]
+        best = hs[0] if hs else cfg["dies"][die]["gen_host"]      # KW-FIX-30: the one host gen_hosts left
     else:
         on = cfg.get("load_hold") is not False
-        room = [h for h in hs if host_room(key(h))] if on else []
+        low = cfg.get("_workroot_low") or {}
+        room = [h for h in hs if host_room(key(h)) and die not in low.get(h, {})] if on else []
         fits = [h for h in room if host_score(key(h)) >= max(take, 1)]
         frac = lambda h: round(float(key(h).get("load", 0)) / max(1, int(key(h).get("cores") or 1)), 1)
         best = (min(fits, key=lambda h: (frac(h), -host_score(key(h)), hs.index(h))) if fits
@@ -3612,6 +3668,13 @@ def _step(AP, ap_dir):
         txt = " ".join("%s=%s" % (h, status[h]["scratch_gb"]) for h in low)
         AP.log(f"KIT-WAVE GEN-DISK-LOW {txt} GB < {GEN_DISK_MIN_GB}: new/restaged attempts go to gen hosts with room "
                "(KW-FIX-24)")
+    try:                                        # KW-FIX-30: the disk under each die's work_root
+        cfg["_workroot_low"] = workroot_low(AP, cfg)
+        for h, ds in sorted(cfg["_workroot_low"].items()):
+            AP.log(f"KIT-WAVE GEN-DISK-LOW work_root {h}: " + " ".join(f"{d}={g}" for d, g in sorted(ds.items()))
+                   + f" GB < {GEN_DISK_MIN_GB} (not a gen host for those dies while another has room; KW-FIX-30)")
+    except Exception as e:                      # a diagnostic probe never stops the tick
+        AP.log(f"KIT-WAVE work_root disk probe skipped: {e}")
     try:
         cfg["_spill_marked"] = spill_marked(AP, cfg)
         for h, rs in cfg["_spill_marked"].items():

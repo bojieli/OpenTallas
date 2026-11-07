@@ -400,6 +400,11 @@ out["fail_marks"] = [f for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS") if os.path.exi
 lm = [os.path.getmtime(p) for p in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*")) +
       glob.glob(os.path.join(K, "*.log"))]
 out["log_age_s"] = time.time() - max(lm) if lm else None
+# KW-FIX-30 11-07: the flow's own logs only; the kit's pre-route LEC writes K/lec*.log all along its run, so with
+# log_age_s alone a route beside a running proof (BESIDE-PROOF) was always held as "logs recent"
+lf = [m for m, p in zip(lm, glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*")) + glob.glob(os.path.join(K, "*.log")))
+      if not os.path.basename(p).startswith("lec")]
+out["flow_log_age_s"] = time.time() - max(lf) if lf else None
 # Physical goals may finish while their original admitted proof owner keeps running.
 # Receipts are immutable per invocation; never infer completion from an ODB alone.
 import hashlib
@@ -461,23 +466,34 @@ try:
                                     if any(m.get("Source", "").rstrip("/") == K.rstrip("/")
                                            for m in c.get("Mounts", []))]
         out["started"] = sorted(x for x in st if x)
-        # FLOW-TIME-1 11-07: only the kit's pre-route LEC is alive: its own unit (<owner>-lec) and/or the owner container
-        # that already published its place result and now only waits for the exec-form proof.  The kit's lec_async.sh can
-        # reuse that live proof for the next stage, and sign-off still waits for the verdict (lec_async.sh finish).
-        owner, names = _async_read("owner"), out.get("active_containers") or []
+    # FLOW-TIME-1 11-07: only the kit's pre-route LEC is alive: its own unit (<owner>-lec) and/or the owner container
+    # that already published its place result and now only waits for the exec-form proof.  The kit's lec_async.sh can
+    # reuse that live proof for the next stage, and sign-off still waits for the verdict (lec_async.sh finish).
+    owner, names = _async_read("owner"), out.get("active_containers") or []
+    try:
+        reuse = "LEC_ASYNC reuse proof" in open(os.path.join(K, "lec_async.sh"), errors="replace").read()
+    except OSError:
+        reuse = False
+    def _phase_ok(n):
         try:
-            reuse = "LEC_ASYNC reuse proof" in open(os.path.join(K, "lec_async.sh"), errors="replace").read()
-        except OSError:
-            reuse = False
-        def _phase_ok(n):
-            try:
-                return json.load(open(os.path.join(K, "physical_completion", n + ".json"))).get("rc") == 0
-            except (OSError, ValueError, AttributeError):
-                return False
-        out["proof_only"] = bool(busy and owner and names and reuse and os.path.exists(os.path.join(K, "lec_async.ready"))
-                                 and _async_read("identity") and not out["async_proof"]["done"]
-                                 and not out["async_proof"]["rc"] and not os.path.exists(os.path.join(K, "lec_async.stop"))
-                                 and all(n == owner + "-lec" or (n == owner and _phase_ok(n)) for n in names))
+            return json.load(open(os.path.join(K, "physical_completion", n + ".json"))).get("rc") == 0
+        except (OSError, ValueError, AttributeError):
+            return False
+    # KW-FIX-30 11-07: or NO container at all while the proof's own unit still waits for memory (ot-heavy queue):
+    # the owner published a place receipt rc 0 and the watcher that will run the proof is alive on this host
+    def _watcher_alive():
+        try:
+            os.kill(int(_async_read("pid")), 0)
+            return True
+        except PermissionError:
+            return True
+        except (OSError, ValueError):
+            return False
+    out["proof_only"] = bool(owner and reuse and os.path.exists(os.path.join(K, "lec_async.ready"))
+                             and _async_read("identity") and not out["async_proof"]["done"]
+                             and not out["async_proof"]["rc"] and not os.path.exists(os.path.join(K, "lec_async.stop"))
+                             and all(n == owner + "-lec" or (n == owner and _phase_ok(n)) for n in names)
+                             and ((busy and names) or (not names and _phase_ok(owner) and _watcher_alive())))
     out["busy"] = busy
 except Exception as e:
     out["busy"] = "docker check failed: %s" % e
@@ -1133,6 +1149,20 @@ def hub_procs(path):
                 and not f[2].startswith(("ssh ", "python3 -I -")) and process_uses_kit(f[2], path):
             res.append((int(f[0]), int(f[1])))
     return res
+
+
+def proc_args(pid):
+    """the command line of a hub process, '' when it is gone"""
+    try:
+        return Path(f"/proc/{int(pid)}/cmdline").read_bytes().replace(b"\0", b" ").decode(errors="replace").strip()
+    except (OSError, ValueError):
+        return ""
+
+
+def place_client(pid, path):
+    """KW-FIX-30: the hub process pid runs this kit's runner with goal place (the ot-run client of the kit's PLACE,
+    which only waits for the pre-route proof once the place receipt is out)"""
+    return bool(re.search(r"run_kit[^\s/]*\.sh\s+" + re.escape(path.rstrip("/")) + r"/?\s+place(\s|$)", proc_args(pid)))
 
 
 def iso_epoch(s):
@@ -2229,7 +2259,14 @@ def admit_new(st, rows, only_new=False, budget=None):
         if r["mode"] == "adopt":
             why = "kit dir missing" if not p["exists"] else "no config.mk" if not p.get("config") else ""
         beside_proof = p.get("proof_only") is True and os.environ.get("AP_ROUTE_BESIDE_PROOF", "1") != "0"
-        busy = (p.get("busy") is not False and not beside_proof) or (la is not None and la < 900) or bool(hub_procs(r["path"]))
+        procs = hub_procs(r["path"])
+        if beside_proof:
+            # KW-FIX-30 11-07 (BESIDE-PROOF never fired, 0 lines 10:59-13:2x): the PLACE client of this kit stays alive
+            # on the hub inside run_kit.sh's "lec_async.sh finish" until the proof ends, and the running proof keeps
+            # K/lec*.log fresh; neither is a flow job.  Any other hub process, or a fresh flow log, still holds.
+            la = p.get("flow_log_age_s", la)
+            procs = [x for x in procs if not place_client(x[0], r["path"])]
+        busy = (p.get("busy") is not False and not beside_proof) or (la is not None and la < 900) or bool(procs)
         if not why and busy and r["mode"] != "adopt":
             log(f"HOLD {rid} {r['die']}/{r['type']}: kit busy (container: {p.get('busy')}, logs "
                 f"{'none' if la is None else f'{la / 60:.0f} min old'}); retry next tick")
