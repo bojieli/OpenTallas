@@ -1,0 +1,7 @@
+{"by": "DIE-HBM-82-SVGR 11-06: M5 form, landing FIFO of bank g beside the in_data face (east strip x 220.5-254.8, east of the plan macro column 43.2-216.0 + 4.32 halo) so in_data never crosses the macro column; only the 136-bit west wd_in half + w_addr cross",
+ "boxes": [
+  {"name": "resp0", "prefixes": ["u_fcore.u[0].u_bank.u_response"], "box_um": [220.5, 4.4, 254.8, 50.0]},
+  {"name": "resp1", "prefixes": ["u_fcore.u[1].u_bank.u_response"], "box_um": [220.5, 50.0, 254.8, 100.0]},
+  {"name": "resp2", "prefixes": ["u_fcore.u[2].u_bank.u_response"], "box_um": [220.5, 100.0, 254.8, 150.0]},
+  {"name": "resp3", "prefixes": ["u_fcore.u[3].u_bank.u_response"], "box_um": [220.5, 150.0, 254.8, 203.0]}
+ ]}

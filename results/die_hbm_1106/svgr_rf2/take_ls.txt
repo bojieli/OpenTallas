@@ -1,0 +1,6 @@
+TAKE_LS MUT=0 SEED=1 cycles=200000 takes=401093 mismatches=0 PASS
+TAKE_LS MUT=0 SEED=2 cycles=200000 takes=400134 mismatches=0 PASS
+TAKE_LS MUT=14 SEED=1 cycles=200000 takes=401093 mismatches=395778 FAIL
+TAKE_LS MUT=14 SEED=2 cycles=200000 takes=400134 mismatches=395544 FAIL
+TAKE_LS MUT=7 SEED=1 cycles=200000 takes=300991 mismatches=82802 FAIL
+TAKE_LS MUT=7 SEED=2 cycles=200000 takes=300327 mismatches=82811 FAIL
