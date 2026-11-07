@@ -2,7 +2,7 @@
 """HBM-FORM-SPLIT-14-OPSB: GPL guide boxes (gen_core_kit_hbm.py --reg-guide-boxes) for ot_hgi_sfu_opsb_output in the
 ot_hgi_su_lgroup2_wp form, derived from the part 41 kit macro placement (16 x ot_sram_1r1w_2048x32_m8_r0c0_g32, 4 x 4,
 bank b = column b // 4, row b % 4).
-  bk<b>  : bank b's input regs + read reg (u_g.g_bank[b].*) around its macro: macro bbox + GROW um in x and at the outer
+  bk<b>  : bank b's input regs + read reg (u_g.g_bank[b].*, u_g.b_q[b][*]) around its macro: macro bbox + GROW um in x and at the outer
            rows, half the 19.4 um row gap between rows (disjoint by construction).
   col<c> : column c's kept copy (u_g.g_col[c].*) in the channel east of the column (between the column's bank boxes
            and the next column's), centre rows.
@@ -27,7 +27,8 @@ for k in range(16):
     x0, y0, x1, y1 = rect[k]
     lo = GROW if r == 0 else (y0 - rect[k - 1][3]) / 2 - 0.05
     hi = GROW if r == 3 else (rect[k + 1][1] - y1) / 2 - 0.05
-    boxes.append(dict(name=f"bk{k}", prefixes=[f"{P}g_bank[{k}]."],
+    # the bank read register q_rd is named after the wire it drives (b_q[k][bit]) in the flat Yosys netlist
+    boxes.append(dict(name=f"bk{k}", prefixes=[f"{P}g_bank[{k}].", f"{P}b_q[{k}]["],
                       box_um=[max(CORE[0], x0 - GROW), max(CORE[1], y0 - lo), min(CORE[2], x1 + GROW), min(CORE[3], y1 + hi)]))
 ymid0, ymid1 = rect[1][1] - 26.0, rect[2][3] + 26.0          # centre rows band
 for c in range(4):
