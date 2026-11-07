@@ -3369,3 +3369,5 @@ CODEX: 2026-11-07 01:11 PST watcher progress all5dies: exp_x ECO exhausted TT-3.
 CODEX: 2026-11-07 01:19 PST cleared exact intel1 reservation waiterPID1716441 by documented2h-flat/noCPU rule, checkpoint preserved; current same-module kshare vK0 replacements healthy. No running physical job stopped.
 
 CODEX: 2026-11-07 01:41 PST BKSEL vF unchanged finish recovered after exact2h-flat unstarted-waiter stop; --crit32GB16T admittedintel1 unit869312-1794044433/container klegacy-dsdv_bksel_q_vF-872276; oldvE/ECOi2 preserved, no new timing yet. Log intel2 scratch2/claude/codex-watch-s81-1107/bksel_vF_finish_crit.log.
+
+CODEX: 2026-11-07 01:55 PST OWNER authorized immediate RAM admission release; factor0 live E4/E5/E6, code aaea3539 codex/ram-release-1107 (not merged),86selftests+1000default replays PASS. Actual conservative QC/S81 queued place jobs started;15s memory/earlyoom guards auto-restore factor1 at<64GB available, no kills. Exact perhost backups and rollback in CODEX-LOG.md.
