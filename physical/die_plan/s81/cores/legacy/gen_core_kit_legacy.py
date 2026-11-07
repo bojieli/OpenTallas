@@ -1342,7 +1342,14 @@ def multi_root_tcl_patches(kd, mr):
         prop_new = prop.replace("[get_clocks clk]", f"[get_clocks {{{real}}}]")
         rp = [(prop, prop_new),
               ("  set a [ot_pinreg_arr $p [get_clocks clk]]\n",
-               f"  set a \"\"\n  foreach ot_rc [get_clocks {{{real}}}] {{ if {{$a eq \"\"}} {{ set a [ot_pinreg_arr $p $ot_rc] }} }}\n")]
+               f"  set a \"\"\n  foreach ot_rc [get_clocks {{{real}}}] {{ if {{$a eq \"\"}} {{ set a [ot_pinreg_arr $p $ot_rc] }} }}\n"),
+              # S81-T51-RECUT 11-06: the boundary register SET is the union over every declared root, not clk alone.
+              # t51 native E: root clk drives 502 interior FFs and no face register -> pinreg_n 0 -> "no measurement"
+              # FAIL although all 13255 face CKs were timed (W passed only because its clk root owns 515 face FFs)
+              ("dict for {i p} [ot_pinreg_set] {\n",
+               "set ot_pg_set {}\n"
+               f"foreach ot_rn {{{real}}} {{ set ot_pg_set [dict merge $ot_pg_set [ot_pinreg_set_for_clock $ot_rn]] }}\n"
+               "dict for {i p} $ot_pg_set {\n")]
         if rp[0][0] not in t and t.count("set ot_pg_propagate [get_clocks clk]\n") == 1:
             # postcts_gate 91538db4d1f/43e49c51f11: the primary-only profile names clk in ot_pg_propagate; a multi-root
             # core propagates every declared real root there instead (same result as the old set_propagated_clock patch)
