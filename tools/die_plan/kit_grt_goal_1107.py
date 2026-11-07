@@ -9,7 +9,7 @@ assert s.count('case "$GOAL" in place|cts|route)')==1
 s=s.replace('case "$GOAL" in place|cts|route)','case "$GOAL" in place|cts|grt|route)',1)
 i=s.index(r'  if [ \$rc = 0 ] && { [ $GOAL = cts ]')
 j=s.index(r'  if [ \$rc = 0 ] && [ -f /work/core_infra_post.v ]',i)
-body=s[i:j];n=body.count('[ $GOAL = route ]');assert n==6, n
+body=s[i:j];n=body.count('[ $GOAL = route ]');assert n==5, n
 body=body.replace('[ $GOAL = route ]','{ [ $GOAL = route ] || [ $GOAL = grt ]; }')
 s=s[:i]+body+s[j:]
 # Final finish/abstract/signoff conditions intentionally remain route/finish only.
