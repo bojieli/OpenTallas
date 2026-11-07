@@ -5620,6 +5620,16 @@
     "relay_avoid_cores": {
      "type": "boolean"
     },
+    "relay_resite_crossing": {
+     "type": "boolean"
+    },
+    "relay_resite_skip_types": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
     "start_port": {
      "type": "string",
      "minLength": 1
