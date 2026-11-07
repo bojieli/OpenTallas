@@ -4868,7 +4868,45 @@ LECA=
 if { [ "${OT_LEC_ASYNC:-1}" != 0 ] || [ -f "$K/lec_async.on" ] || [ -f "$K/lec_async.identity" ]; } && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then
   LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS" docker "$GOAL" || exit $?
 fi
-docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
+# KW-FIX-30 11-07 (COORD 15:01 (b), FLOW-CHILD-ETM-CONTEXT from DIE-HBM-87): the GRT clock gate counts a composed child
+# ETM only with the parent's flow tag (OT_FLOW_TAG) and the child's signed record (signoff.json, PROVENANCE.json, lec.json at
+# the host-absolute paths its view provenance names).  The container saw neither, so such parents could not pass without
+# hand edits.  Pass the tag (host env, else K/flow_tag written at gen) and mount each signed child record read-only at its
+# own path (KWCHILD).  No provenance sidecar in K/macros = no mount; an unset tag stays unset (the gate says so).
+FT=${OT_FLOW_TAG:-$(head -1 "$K/flow_tag" 2>/dev/null)}
+CHILD_RO=()
+while IFS= read -r p; do [ -n "$p" ] && CHILD_RO+=(-v "$p:$p:ro"); done < <(python3 -I - "$K" <<'KWCHILD'
+import json, os, sys
+from pathlib import Path
+K = Path(sys.argv[1]); out = set()
+for pf in sorted((K / 'macros').glob('*.provenance.json')):
+    try:
+        prov = json.loads(pf.read_text())
+    except (OSError, ValueError):
+        continue
+    so = (prov.get('export') or {}).get('signoff')
+    if not so:
+        continue
+    if not os.path.isabs(so):
+        so = str((pf.parent / so).resolve())
+    rec = Path(so).parent.parent
+    if rec.is_dir():
+        out.add(str(rec))
+    try:
+        lec = json.loads((rec / 'PROVENANCE.json').read_text()).get('lec')
+    except (OSError, ValueError, AttributeError):
+        lec = None
+    if lec and os.path.isabs(lec) and Path(lec).exists():
+        out.add(str(Path(lec).parent))
+k = os.path.realpath(K)
+for p in sorted(out):
+    r = os.path.realpath(p)
+    if r != k and not r.startswith(k + '/') and ':' not in p:
+        print(p)
+KWCHILD
+)
+[ ${#CHILD_RO[@]} = 0 ] || echo "KWCHILD read-only child records: ${CHILD_RO[*]}"
+docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work "${CHILD_RO[@]}" -e OT_FLOW_TAG="$FT" \
   -e HUID=$(id -u) -e HGID=$(id -g) -e OT_KIT_IR=${OT_KIT_IR:-defer} -e OT_LEC_HINTS_PRESEED="${OT_LEC_HINTS_PRESEED:-0}" -e OT_LEC_EARLY_COMPARE="${OT_LEC_EARLY_COMPARE:-0}" -e OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; ${KWRS_F}${KWRS_M}${KWRS_G}rc=0; if [ -f /work/orfs_hold_mm.py ] && grep -q 'def patch_intermediate_power' /work/orfs_hold_mm.py; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts --metrics-only > /work/orfs_metrics.log 2>&1 || { cat /work/orfs_metrics.log; echo 'INTERMEDIATE_POWER optimization unavailable: full power reporting retained'; }; fi; \
   python3 -I /work/native_bb.py /OpenROAD-flow-scripts/flow/scripts/synth_preamble.tcl --physical-synth /OpenROAD-flow-scripts/flow/scripts/synth.tcl || exit 9; \
@@ -5524,6 +5562,11 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         if tn in macro_paths:
             (Path(kits[-1]) / BMP.RECEIPT).write_text(json.dumps(macro_paths[tn], indent=1) + "\n")
     (out / "run_kit.sh").write_text(RUN_KIT)
+    ft = os.environ.get("OT_FLOW_TAG", "")      # KW-FIX-30: the wave's die flow tag -> K/flow_tag (run_kit.sh passes it)
+    if ft:
+        if not re.fullmatch(r"[A-Za-z0-9_.+-]+", ft):
+            raise ValueError(f"OT_FLOW_TAG {ft!r}: not a tag name")
+        (out / "flow_tag").write_text(ft + "\n")
     (out / "run_kit.sh").chmod(0o755)
     return kits
 
