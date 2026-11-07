@@ -9465,3 +9465,18 @@ Quick read/index of610 lane files (34.7MB) plus currenthandoff/currentqueue; his
 |Fleet/admission|ram_release|Dockerreservationaccountingde99b935installedall6; originalwaitersuntouched, oneacceptedKVqualificationadmitted. E4scratch2fullrisk; useeligiblemounts. Cleanupcontrollerprotectivepause documented|
 |Token/native/trials/aux|watch_token|Actual8page955commandissuercomponent/defaultoffcompiler-markerrebookingcandidate; productionretirement/lifetimeunqualified, nofakefulltokenclaim|
 |Merge/count/coord/remaininghistoricalscope|root|CollectREADYbranch/sourceonly; no merges/tags. Existingcache05:26currently200design/typekeys vsheadline198unreconciled; do notclaimnewclosureuntilactualreceipt/counter. CacheopenHBMfiles /tmp/codex-takeover-0615/|
+
+## CODEX 2026-11-07 12:12 PST — 12:09 all-lane takeover
+Fullread/index620lanes: /tmp/codex-takeover-1209/lane_coverage_index.json. Historical610scope continues;10newfiles included. Currentjobs/results/failures collectedbytheseowners fromlatestClaude successors, not08:02stalehandoff.
+
+|Scope|Currentstep / failure / next|Owner|
+|---|---|---|
+|S81allcores/types/RCK/T51|CollectvJ48659EQ/GRT,vHbankGRT,newleafbatch; T51hotspotredesign beforeGRT|watch_s81|
+|QCallcores/types|NLcurrentSIGNED/routedproof;NKvR5/vR6+lec2;SU/edgeclockclasses|watch_qc|
+|KVallcores/types/Wi|OnepromptECO+proof;ioftlargeinternalhold/DRVrequiresnewform;PV/abstracts|watch_kv|
+|HEADalltypes/integration|Currentl48unaccepted450frame;collectTX/CTL/SPN/mesh/tile;pendingl48uoNOTmerged|watch_head|
+|HBMallcores/types|Current64designs;collectalllive/privateforms;6waveSIGNEDpendingidentity;noexceptionECO|watch_hbm|
+|Sharedwave/flow/LEC/FLOW-TIME|RecovercompleteQCcollectorGENoneligiblehost;ONEPLACE;shadowonlyGRTstop|wave_flow|
+|Token/programme/model|Current427rings/n4witnessand+15calendar;phaseorigin/faultdiagnosis|watch_token|
+|Fleet/ops/pruneaudit|GuardedI2/E6room;actualmaintenancepauseaudit;NOdeletion/memoryrulechanges|ram_release|
+|ROOT-MERGE/release|CollectREADYonly,nomainmerge/tag/PORinwatcher;cached211update/noforcedscan|root|
