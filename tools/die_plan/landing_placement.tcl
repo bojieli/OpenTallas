@@ -1014,7 +1014,43 @@ proc cland_band_fit {prefix rect tag} {
 # took (t21 rst_n_t8 in ft5_i).  A collector cell with no site in its window takes the window grown about the same
 # centre x2, x4, x8 (<= +-17.28 um; a reset status hop, far below the 405 um relay reach); still none fails closed as
 # before.  Rings, status, start relays and every collector that fits its window are unchanged.
-proc cland_put_collector {i rect tag} { cland_put_grow $i $rect $tag collector }
+# S81-TYPES-4 11-07 (S81 leaf macro-facing batch: t7 t10 t56 t67 place FAIL, relay window inside a moved macro, deeper
+# than the x32 window reaches; t10 rst_rl_148 is 73.8 um inside u_vsw): OT_MACRO_MOVES edits macro_place.tcl only, so the
+# plan's relay xy stands inside the moved macro (the relay flop itself is legalized out later; its pre-DPL site is still
+# under the macro, so following it does not help: t56 pilot).  On kits holding macro_moves.json a collector with no site
+# about its plan xy takes the same window law just outside the nearest edge of the macro that covers that xy, nearest
+# edge first.  No macro_moves.json, a window that fits, or an xy under no macro: unchanged.  Still no site: fails closed.
+proc cland_macro_exits {cx cy hx hy} {
+ set out {}
+ foreach m [$::ff_blk getInsts] {
+  if {![[$m getMaster] isBlock]} continue
+  set b [$m getBBox]
+  set x0 [expr {[$b xMin]/double($::ff_dbu)}]; set y0 [expr {[$b yMin]/double($::ff_dbu)}]
+  set x1 [expr {[$b xMax]/double($::ff_dbu)}]; set y1 [expr {[$b yMax]/double($::ff_dbu)}]
+  if {$cx <= $x0 || $cx >= $x1 || $cy <= $y0 || $cy >= $y1} continue
+  set g [expr {2.0*max($hx,$hy)}]
+  foreach {d nx ny} [list [expr {$cx-$x0}] [expr {$x0-$g}] $cy [expr {$x1-$cx}] [expr {$x1+$g}] $cy \
+                          [expr {$cy-$y0}] $cx [expr {$y0-$g}] [expr {$y1-$cy}] $cx [expr {$y1+$g}]] {
+   lappend out [list $d $nx $ny [$m getName]]
+  }
+ }
+ return [lsort -real -index 0 $out]
+}
+proc cland_put_collector {i rect tag} {
+ if {![catch {cland_put_grow $i $rect $tag collector} err opts]} { return }
+ if {![string match {OT_CLAND no legal*} $err] || ![file exists /work/macro_moves.json]} { return -options $opts $err }
+ lassign $rect ax ay bx by
+ set cx [expr {($ax+$bx)/2.0}]; set cy [expr {($ay+$by)/2.0}]; set hx [expr {($bx-$ax)/2.0}]; set hy [expr {($by-$ay)/2.0}]
+ foreach e [cland_macro_exits $cx $cy $hx $hy] {
+  lassign $e d nx ny mn
+  if {![catch {cland_put_grow $i [list [expr {$nx-$hx}] [expr {$ny-$hy}] [expr {$nx+$hx}] [expr {$ny+$hy}]] $tag collector} err2 opts2]} {
+   puts "OT_CLAND collector exits macro [$i getName] ($tag): plan xy [format {%.2f %.2f} $cx $cy] under $mn, window at [format {%.2f %.2f} $nx $ny] ([format %.2f $d] um to the edge)"
+   return
+  }
+  if {![string match {OT_CLAND no legal*} $err2]} { return -options $opts2 $err2 }
+ }
+ return -options $opts $err
+}
 # BEGIN NATIVE_ROLE_BANKS
 # Opt-in native clock/data-role banks. All membership checks finish before any bank moves.
 proc cland_role_lib_clocks {i} {

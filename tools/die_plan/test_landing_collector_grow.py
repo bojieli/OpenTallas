@@ -17,8 +17,9 @@ def _procs():
     put = re.search(r"proc cland_put \{i rect tag \{sp \{\}\} \{cur 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     occ = re.search(r"proc cland_occupy \{x y w h\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     grow = re.search(r"proc cland_put_grow \{i rect tag kind\} \{\n.*?\n\}\n", TCL, re.S).group(0)
-    coll = re.search(r"proc cland_put_collector \{i rect tag\} \{[^\n]*\}\n", TCL).group(0)
-    return occ + put + grow + coll
+    coll = re.search(r"proc cland_put_collector \{i rect tag\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    exits = re.search(r"proc cland_macro_exits \{cx cy hx hy\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    return occ + put + grow + exits + coll
 
 
 # 40 rows x 40000 dbu core (40 x 10.8 um), site 54, row 270; collector window +-2.16 um about (20, 5.4) um
@@ -111,3 +112,53 @@ def test_optional_group_cells_take_the_grow_path():
     body = TCL.split("foreach spec $cland_optional_groups {", 1)[1].split("\n}\n", 1)[0]
     assert "cland_put_grow $i $rect $tag raw-copy" in body
     assert "\n  cland_put $i" not in body
+
+
+
+EXITS = r"""
+rename file _file
+proc file {op args} { if {$op eq "exists" && [lindex $args 0] eq "/work/macro_moves.json"} { return %(MOVES)d }; return [_file $op {*}$args] }
+proc mm {op args} { switch $op { isBlock { return 1 } } }
+proc bb {op args} { switch $op { xMin { return %(MX0)d } yMin { return 0 } xMax { return %(MX1)d } yMax { return 10800 } } }
+proc mac {op args} { switch $op { getMaster { return mm } getBBox { return bb } getName { return u_vsw } } }
+proc blk {op args} { switch $op { getInsts { return {mac} } } }
+set ::ff_blk blk
+"""
+
+
+def _run_exits(moves, ol, ou, mx0, mx1, core=40000):
+    mock = (MOCK % dict(OL=ol, OU=ou)).replace("set ff_x1 40000", f"set ff_x1 {core}")
+    head = EXITS % dict(MOVES=moves, MX0=mx0, MX1=mx1)
+    out = subprocess.run(["tclsh"], input=_procs() + head + mock, capture_output=True, text=True)
+    assert out.returncode == 0, out.stderr
+    return out.stdout
+
+
+@needs_tcl
+def test_no_macro_moves_fails_closed_as_before():
+    out = _run_exits(0, 0, 150000, 0, 150000, core=200000)
+    assert "ERR OT_CLAND no legal" in out and "exits macro" not in out
+
+
+@needs_tcl
+def test_macro_moves_exits_the_covering_macro_nearest_edge():
+    # macro (and its occupancy) x 0..150 um in every row; plan window at x=20 um: x32 reaches 89 um, no site;
+    # nearest edge is x0=0 (outside the core), next x1=150: the collector lands just right of 150
+    out = _run_exits(1, 0, 150000, 0, 150000, core=200000)
+    assert "exits macro" in out, out
+    x = int(re.search(r"LOC (\d+) (\d+)", out).group(1))
+    assert 150000 <= x <= 165000
+
+
+@needs_tcl
+def test_macro_moves_xy_under_no_macro_fails_closed():
+    out = _run_exits(1, 0, 150000, 160000, 190000, core=200000)
+    assert "ERR OT_CLAND no legal" in out and "exits macro" not in out
+
+
+@needs_tcl
+def test_macro_moves_window_that_fits_ignores_macros():
+    out = _run_exits(1, 0, 0, 0, 150000)
+    assert "exits macro" not in out
+    x = int(re.search(r"LOC (\d+) (\d+)", out).group(1))
+    assert 17840 <= x <= 22160 - 108
