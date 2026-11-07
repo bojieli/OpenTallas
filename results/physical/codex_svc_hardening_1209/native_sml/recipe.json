@@ -140,12 +140,12 @@
  ],
  "params": {},
  "defines": [
-  "-DSYNTHESIS",
-  "-DOT_SVC_ALLQ",
-  "-DSU_SMU_T",
-  "-DOT_ATTN_HCORE",
-  "-DOT_S81C_HCORE_CTLA",
-  "-DOT_S81C_HCORE_RST_TIMED"
+  "SYNTHESIS",
+  "OT_SVC_ALLQ",
+  "SU_SMU_T",
+  "OT_ATTN_HCORE",
+  "OT_S81C_HCORE_CTLA",
+  "OT_S81C_HCORE_RST_TIMED"
  ],
  "macros": [],
  "synth_memory_max_bits": 16384
