@@ -107,7 +107,16 @@ def runtime_mm_patch_step():
     return MM_PATCH_STEP.replace("\\$", "$")
 
 
-FF_GRT_STEP = ("HM=\\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk); "
+# Actual Make evaluation preserves override/export precedence; blank retains the absent-margin path.
+HOLD_MARGIN_READ = (
+    'HM=; if [ \\$rc = 0 ]; then HMR=\\$(\\$M print-OT_HOLD_FF_MARGIN 2> /work/hold_margin_read.log); hmr=\\$?; '
+    "if [ \\$hmr != 0 ]; then cat /work/hold_margin_read.log; echo 'FAIL_POSTCTS hold margin Make read' | tee -a /work/FAIL_POSTCTS; rc=9; "
+    'else HM=\\$(printf \'%s\\\\n\' \\"\\$HMR\\" | sed -nE \'s/^OT_HOLD_FF_MARGIN[[:space:]]*[:=][[:space:]]*//p\'); '
+    'if [ -n \\"\\$HM\\" ] && ! python3 -c \'import math,re,sys; s=sys.argv[1].strip(); valid=re.fullmatch(r\\"[+-]?(?:[0-9]+(?:[.][0-9]*)?|[.][0-9]+)(?:[eE][+-]?[0-9]+)?\\",s); x=float(s) if valid else float(\\"nan\\"); sys.exit(not math.isfinite(x))\' \\"\\$HM\\" > /work/hold_margin_value.log 2>&1; then '
+    'echo \\"FAIL_POSTCTS invalid OT_HOLD_FF_MARGIN [\\$HM]: expected a finite number\\" | tee -a /work/FAIL_POSTCTS; rc=9; fi; fi; fi; '
+)
+
+FF_GRT_STEP = (HOLD_MARGIN_READ +
                "VF=\\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk); "
                "MM=\\$(grep -c '^override export OT_HOLD_MM = 1' /work/config.mk); "
                "if [ \\$rc = 0 ] && [ -n \\\"\\$HM\\\" ] && [ -n \\\"\\$VF\\\" ] && { [ $GOAL = finish ] || [ $GOAL = route ] || [ $GOAL = grt ]; }; "
