@@ -282,6 +282,28 @@ def test_restage_wait_doubles_per_move(tmp_path, monkeypatch):
     assert K.restage_waiters(FakeAP(), c, {"items": {"y": r2}}, {}) == 1
 
 
+def test_counted_now_follows_counter_and_plan_block(tmp_path):
+    p = tmp_path / "cache.json"
+    p.write_text(json.dumps({"plans": {"x": {"die": "s81", "signed_types": {"t1": []}, "signed_designs": {"c1": []}}}}))
+    c = cfg(); c["counter_cache"] = str(p); K.load_counter_signed(c); st = {}
+    assert K.counted_now(c, st, "s81", "t1", "b1") and K.counted_now(c, st, "s81", "c1")
+    assert not K.counted_now(c, st, "s81", "other", "b1") and not K.counted_now(c, st, "hbm", "t1", "b1")
+    assert K.counted_now(c, st, "s81", "t1", "b1") and not K.counted_now(c, st, "s81", "t1", "b2")   # the plan changed it
+    c["dies"]["s81"]["rebuild_counted"] = ["c1"]
+    assert not K.counted_now(c, st, "s81", "c1")
+    c2 = cfg(); c2["counter_cache"] = str(tmp_path / "absent.json"); K.load_counter_signed(c2)
+    assert not K.counted_now(c2, {}, "s81", "t1", "b1")                  # no cache: as before
+
+
+def test_restage_stops_counted_waiter_without_moving_it(tmp_path, monkeypatch):
+    monkeypatch.setattr(K, "stop_reason", lambda *a, **k: None)
+    c = cfg(gen_hosts=["intel1", "epyc4"], place_mem_gb=48); c["_otrun_status"] = {h: dict(v) for h, v in ST.items()}
+    r = _rec(tmp_path, "intel1"); r["started"] = time.time() - 60
+    c["_counter_signed"] = {r["die"]: {r["item"]}}
+    assert K.restage_waiters(FakeAP(), c, {"items": {"y": r}}, {}) == 1
+    assert r["status"] == "RETRY-INFRA" and r["restage_host"] == "intel1" and "counted" in r["reason"]
+
+
 # ------------------------------------------------------------------------------------------------ SCHED-1 11-07 load hold
 STL = {"epyc2": {"admit": 164, "load": 212, "cores": 128, "run": 68, "wait_n": 76, "wait_gb": 2900, "scratch_gb": 157},
        "intel1": {"admit": 200, "load": 120, "cores": 112, "run": 60, "scratch_gb": 348},
