@@ -6,6 +6,9 @@ Raw lane costs use die_plan.schema.Plan.lane_latency, including its R8 pads.
 Each CA port contributes its declared added_cycles once to its containing lane.
 The HEAD transport estimate follows DIE-HEAD-27 a1_price.py: longest spine
 round trip plus twice the worst gather leg. HOST and LEP legs stay separate.
+A landed plan takes --landed-sidecar: only the cycles its sidecar declares above
+the plan's own clock_landing are added, so an event carried only by the sidecar
+(l48ui n4 FREG) reaches the schedule and nothing is charged twice.
 """
 import argparse
 from collections import defaultdict
@@ -46,6 +49,40 @@ def ca_lane_cycles(raw, table):
     return dict(additions), rows
 
 
+def landed_sidecar_cycles(raw, plan, sidecar):
+    """Per-lane cycles the sidecar declares above the landed plan's clock_landing.
+
+    count_aligned sched_lat is the bind's count (K + 1 + N_dst - N_src) and wins over
+    a stale ports[].added_cycles row; each such row is returned, never hidden.
+    """
+    ports = {p['id']: p for p in raw['ports']}
+    lanes = {l['id']: set(l['ports']) for l in raw['lanes']}
+    declared, seen, stale = defaultdict(int), set(), []
+    for row in sidecar['ports']:
+        port, lane, cycles = row['port'], row['lane'], row['added_cycles']
+        if port in seen or port not in ports or lane not in lanes or port not in lanes[lane]:
+            raise ValueError('duplicate or mismatched sidecar port/lane: ' + str(port))
+        if type(cycles) is not int or cycles < 0:
+            raise ValueError('sidecar added_cycles must be an explicit nonnegative integer: ' + port)
+        actual = ports[port]
+        if row['src'] != actual['src']['part'] or row['dst'] != actual['dst']['part']:
+            raise ValueError('sidecar endpoints differ from the selected plan: ' + port)
+        configured = sidecar['count_aligned']['ports'].get(port)
+        if configured is not None and configured['sched_lat'] != cycles:
+            stale.append(dict(port=port, lane=lane, added_cycles=cycles, sched_lat=configured['sched_lat']))
+            cycles = configured['sched_lat']
+        seen.add(port)
+        declared[lane] += cycles
+    extra = {}
+    for lane in plan.lanes:
+        above = declared.get(lane, 0) - plan.lane_latency(lane).get('clock_landing', 0)
+        if above < 0:
+            raise ValueError(f'sidecar declares fewer landing cycles than the plan: {lane} {above}')
+        if above:
+            extra[lane] = above
+    return extra, stale
+
+
 def head_transport(latencies):
     indices = sorted(int(m.group(1)) for lane in latencies
                      if (m := re.fullmatch(r'sp_x(\d+)', lane)))
@@ -73,11 +110,17 @@ def head_transport(latencies):
                 formula='longest_spine_round_trip + 2 * worst_gather_leg')
 
 
-def generate(raw, ca=None):
+def generate(raw, ca=None, landed_sidecar=None):
     plan = Plan(raw)
     if plan.name != 's81_head':
         raise ValueError('s81_head raw plan required')
+    if ca is not None and landed_sidecar is not None:
+        raise ValueError('CA table and landed sidecar are alternatives; both would double charge')
     extra, crossings = ca_lane_cycles(raw, ca)
+    if landed_sidecar is not None:
+        if not raw.get('clock', {}).get('landing_network'):
+            raise ValueError('landed sidecar requires a landed plan; use --ca on a raw plan')
+        extra, stale_rows = landed_sidecar_cycles(raw, plan, landed_sidecar)
     lanes = {}
     for lane in sorted(plan.lanes):
         components = plan.lane_latency(lane)
@@ -88,12 +131,16 @@ def generate(raw, ca=None):
     landed = {name: row['cycles'] for name, row in lanes.items()}
     separate = {name: lanes[name] for name in lanes
                 if name in ('host_tx', 'host_rx') or name.startswith('head_lep_')}
-    return dict(schema='opentallas.s81_head.schedule_constants.v1',
+    result = dict(schema='opentallas.s81_head.schedule_constants.v1',
                 status='PLAN_DERIVED_SOURCE_SCHEDULE', lanes=lanes,
                 ca_ports=crossings, ca_applied=ca is not None,
                 raw_transport=head_transport(raw_lats), transport=head_transport(landed),
                 separate_legs=separate, start_dates=None, token_rate=None,
                 physical_qualified=False, programme_installable=False)
+    if landed_sidecar is not None:
+        result['landed_sidecar_extra'] = dict(sorted(extra.items()))
+        result['sidecar_rows_below_sched_lat'] = stale_rows
+    return result
 
 
 def delta(baseline, candidate):
@@ -129,6 +176,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--plan', type=Path, required=True)
     parser.add_argument('--ca', type=Path)
+    parser.add_argument('--landed-sidecar', type=Path,
+                        help='landed plan only: add the cycles this sidecar declares above the plan')
     parser.add_argument('--compare-plan', type=Path,
                         help='candidate raw plan; same CA table applied to both')
     parser.add_argument('--out-json', type=Path, required=True)
@@ -136,9 +185,15 @@ def main():
     args = parser.parse_args()
     raw = json.loads(args.plan.read_text())
     ca = json.loads(args.ca.read_text()) if args.ca else None
-    result = generate(raw, ca)
+    landed = json.loads(args.landed_sidecar.read_text()) if args.landed_sidecar else None
+    if landed is not None and args.compare_plan:
+        raise ValueError('--compare-plan applies a CA table, not a landed sidecar')
+    result = generate(raw, ca, landed)
     result['inputs'] = dict(plan=str(args.plan), plan_sha256=hashlib.sha256(args.plan.read_bytes()).hexdigest(),
                             ca=str(args.ca) if args.ca else None)
+    if landed is not None:
+        result['inputs']['landed_sidecar_sha256'] = hashlib.sha256(args.landed_sidecar.read_bytes()).hexdigest()
+        result['plan_delta'] = delta(generate(raw), result)
     if args.compare_plan:
         candidate = generate(json.loads(args.compare_plan.read_text()), ca)
         result['candidate'] = candidate
