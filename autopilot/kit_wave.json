@@ -205,7 +205,13 @@
     "kv3_hub_Eo@10",
     "kv3_pv_v12@13",
     "kv3_pv_v7@9",
-    "kv3_io_ft_v1@7"
+    "kv3_io_ft_v1@7",
+    "kv3_hgi_v8@15",
+    "kv3_hub_Eo@13",
+    "kv3_pv_v12@16",
+    "kv3_pv_v6n@9",
+    "kv3_pv_v6@10",
+    "kv3_pv_v7@12"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -2825,7 +2831,8 @@
     "hd_tile@4",
     "hd_spn_wshim_rx@9",
     "hd_ctl@2",
-    "hd_tile@5"
+    "hd_tile@5",
+    "hd_ctl_n@8"
    ],
    "pilot_max": 2,
    "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -4972,5 +4979,6 @@
   "epyc6": 80
  },
  "note_kw24_no_resume": "KW-FIX-24 COORD 17:5x: kits homed on epyc6 move to the hub at their next autopilot submit (claude/kw-fix-24-evac-1106 e3d732d2cf7; inert before that merge). Drop the epyc6 entry when epyc6 scratch2 >= 80 GB.",
- "note_kw24_queue_push": "KW-FIX-24 11-06 18:48 COORD 18:5x QUEUE PUSH: place hosts + place_prefer epyc4, epyc2 first (scratch3 362/401 GB; kw17 watcher not running), epyc5, intel1; epyc6 stays out (no_resume_hosts); max_launch_per_tick 40 -> 60; retry += infra casualties (5) + HBM queue-rejected (7)"
+ "note_kw24_queue_push": "KW-FIX-24 11-06 18:48 COORD 18:5x QUEUE PUSH: place hosts + place_prefer epyc4, epyc2 first (scratch3 362/401 GB; kw17 watcher not running), epyc5, intel1; epyc6 stays out (no_resume_hosts); max_launch_per_tick 40 -> 60; retry += infra casualties (5) + HBM queue-rejected (7)",
+ "note_kw24_intel1_src": "KW-FIX-24 11-06 19:06: intel1 src copies kw21/src_c926f + kw23/src_e9eda resynced from epyc5 (46.1k + 46.8k pruned files restored, tools/die_plan/bind.py present); intel1 back in gen_hosts; the 6 KV kit_rtl 'tool input file missing' rows retried"
 }
