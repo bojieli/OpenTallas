@@ -2,7 +2,7 @@
 """DIE-HEAD-76-SERDESRF plan event (candidate): hd_serdes SC form = four more hard children in the existing slot.
 
 Copies a HEAD plan whose hd_serdes already holds u_chn (ot_s81_kp4_dchn) and the two SRAM macros, and adds
-  u_phy.u_link.u_tx                    ot_s81hd_sc_tx   388.8 x 120.96 at (1797.12, 25.92)  (above the coll_i0 window)
+  u_phy.u_link.u_tx                    ot_s81hd_sc_tx   486.0 x 120.96 at (2160.00, 25.92)  (east of the coll_i0 + pma_tx pin windows, DIE-HEAD-77-SERDES)
   u_phy.u_link.u_dec.u_syn.u_bm0..2    ot_s81hd_sc_bmq   95.04 x 103.68 at x 596.16 / 717.12 / 838.08, y 25.92
                                                           (west of u_chn, whose W face takes the key-equation result)
 from the supplied child views (--views: {tx: {lef, lib, pins_file}, bmq: {...}}), the opt-in define
@@ -18,7 +18,7 @@ from pathlib import Path
 
 STRIP_Y = 150.0
 CHILDREN = [
-    ("tx", "u_phy.u_link.u_tx", "ot_s81hd_sc_tx", [1797.12, 25.92], [388.8, 120.96]),
+    ("tx", "u_phy.u_link.u_tx", "ot_s81hd_sc_tx", [2160.00, 25.92], [486.0, 120.96]),
     ("bmq", "u_phy.u_link.u_dec.u_syn.u_bm0", "ot_s81hd_sc_bmq", [596.16, 25.92], [95.04, 103.68]),
     ("bmq", "u_phy.u_link.u_dec.u_syn.u_bm1", "ot_s81hd_sc_bmq", [717.12, 25.92], [95.04, 103.68]),
     ("bmq", "u_phy.u_link.u_dec.u_syn.u_bm2", "ot_s81hd_sc_bmq", [838.08, 25.92], [95.04, 103.68]),

@@ -19,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 L, T, H = "rtl/dsrom_sys/s81_link", "rtl/dsrom_sys/s81_head", "rtl/hbm_accel/cores_split/reform_1104b"
 CHILD = {
-    "tx": dict(module="ot_s81hd_sc_tx", outline=[388.8, 120.96], inst=["u_phy.u_link.u_tx"],
+    "tx": dict(module="ot_s81hd_sc_tx", outline=[486.0, 120.96], inst=["u_phy.u_link.u_tx"],
                ports={"S": [("tx", 512), ("e_flt", 1), ("pma_tx", 544)]}, clk="clk", rst="rst",
                files=[f"{T}/ot_s81hd_serdes_sc_cores.sv", f"{H}/ot_s81_kp4_enc_la.sv", f"{L}/ot_s81_kp4_common.sv",
                       f"{L}/ot_pdie_serdes.sv", f"{L}/ot_s81_gf1024.svh", f"{L}/ot_s81_kp4_enc_mat.svh",
