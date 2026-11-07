@@ -49,11 +49,19 @@ module ot_wbq_root #(parameter integer CRED=4, parameter integer MUT=0)(
   ot_hbm_accel_cdc_fifo #(.W(288),.AW(2)) u_fifo(
    .wclk(fifo_clk),.wrst_n(srst),.we(fifo_we[g]),.wdata({sector,mem_data[g]}),.full(fifo_full[g]),.rd_freed(),
    .rclk(hbm_clk),.rrst_n(hrst),.re(fifo_re[g]),.rdata(fifo_head[g]),.empty(fifo_empty[g]));
+`ifdef OT_WBQ_N1M   // DIE-HBM-82-EP6 11-06 opt-in: same 128 x 256 payload in the one-mask-pin, no-repair master (530 pins, 91.8 x 27.576;
+                     // the r2c2 form has 819 pins: a 256-bit mask tied to ones and repair ports tied 0). Same word, same contract.
+  ot_sram_1r1w_128x256_m1_r0c0_g256 u_payload(
+   .clk(fifo_clk),.r_ce_in(mem_read[g]),.r_addr_in({copy_bank,row[5:0]}),.rd_out(mem_data[g]),
+   .w_ce_in(filling&&!s_stop&&ordinal+g<total[fill_bank]&&ordinal[4:3]==root_id&&wd_v[g]),
+   .w_addr_in({fill_bank,ordinal[10:5]}),.wd_in(wd[g]),.w_mask_in(1'b1));
+`else
   ot_sram_1r1w_128x256_m1_r2c2 u_payload(
    .clk(fifo_clk),.r_ce_in(mem_read[g]),.r_addr_in({copy_bank,row[5:0]}),.rd_out(mem_data[g]),
    .w_ce_in(filling&&!s_stop&&ordinal+g<total[fill_bank]&&ordinal[4:3]==root_id&&wd_v[g]),
    .w_addr_in({fill_bank,ordinal[10:5]}),.wd_in(wd[g]),.w_mask_in({256{1'b1}}),
    .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
+`endif
  end endgenerate
  integer s;
  always @(posedge fifo_clk or negedge srst)begin
