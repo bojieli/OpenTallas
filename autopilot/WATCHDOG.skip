@@ -9,3 +9,5 @@ dpkit-slw_st_b_v2-1874607
 # WATCHDOG-1 ASK 2026-10-30 18:51 default (12.22 item 4: QC blocks pending the QC freeze; 4-day DRTs at ~7000 violations):
 stop-only /srv/opentallas-scratch2/claude/qc-su-lat-r6/btab_r6
 stop-only /srv/opentallas-scratch2/claude/qc-plan-f4a-1026/kits/qfd_dv_s8x_vmr_f4a
+# KW-FIX-25 11-06 22:3x interim until the lecsafe branch is on main: LEC jobs are report-only (a CPU-busy LEC with a flat log was stopped 16 times since 11-04); remove this line after the merge
+/lec
