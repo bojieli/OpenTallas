@@ -3,3 +3,17 @@
 4.0	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/ot_s81sl_kv_leaf__t5	no job row; release cache names only epyc4 and epyc6 copies (signoff.json under plandir, 0 such file in this copy)
 3.3	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t25	rows gen epyc4/epyc4 and a2 epyc4/ran intel1, source intel2 neither
 # 13:13 result: 3 of 3 deleted, root 133 -> 142.
+# AUTOCLEAN-5 13:2x intel2 clone remove, COORD 11:04 (S81-TYPES-3 inheriting) and S81-TYPES-4 13:17 (4) free.
+35	intel2	/srv/opentallas-scratch3/claude/s81-types-2/repo	git clone; all 3 local branch tips on hub, porcelain 0 (only __pycache__ ignored), stash 0, no process/mount, no .keep, not in union
+# AUTOCLEAN-5 13:2x batch 2 under COORD 13:2x ASK 1: terminal right-host row only, later attempts exist.
+3.1	epyc6	/srv/opentallas-scratch3/claude/from-epyc6-1107/codex-wave-1105/runs/s81/kit-wave/s81/bf1e2233ce05/items/ot_s81sl_leaf__t40__cl86ea32b3	attempt_5 epyc6/intel1 DONE-STRUCTURAL
+4.6	epyc6	/srv/opentallas-scratch3/claude/from-epyc6-1107/codex-wave-1105/runs/s81/kit-wave/s81/bf1e2233ce05/items/dsdv_slice_c1x_C__t10	attempt_4 epyc6/epyc5 DONE-CRASH
+3.8	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/s81-wave-1105f2/kit-wave/s81/bf1e2233ce05/items/ot_s81sl_leaf__t53__clb66fa5cb	gen epyc4/localhost DONE-STRUCTURAL
+2.9	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/s81-wave-1105f2/kit-wave/s81/bf1e2233ce05/items/ot_s81sl_leaf__t44__clf4ea6d4b	gen epyc4/localhost DONE-CRASH
+4.0	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/slice_station__t24__cl66b71008	attempt_3 epyc6/localhost DONE-CRASH
+3.8	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/slice_station__t7__cl503f4913	attempt_12 epyc6/localhost DONE-CRASH
+3.7	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/slice_station__t30__clcedefe91	attempt_11 epyc6/localhost DONE-CRASH
+2.9	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h9_r2__t1__cl774acf45	attempt_5 epyc6/localhost DONE-STRUCTURAL
+4.8	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t40__cl1ea9de02	attempt_5 intel2/epyc2 DONE-STRUCTURAL
+4.8	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t42__clcf44e680	attempt_5 intel2/epyc4 DONE-STRUCTURAL;attempt_6 epyc4/epyc2 DONE-STRUCTURAL
+4.8	intel2	/srv/opentallas-scratch3/claude/from-intel2-1107/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t42__cl4bd1432c	attempt_7 intel2/epyc2 DONE-STRUCTURAL;attempt_8 epyc4/epyc2 DONE-STRUCTURAL

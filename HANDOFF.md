@@ -3404,3 +3404,4 @@ CODEX: 2026-11-07 12:34 PST QCcoll_ftnvW now currentCZ SIGNED+routedEQ/local+48.
 
 CODEX: 2026-11-07 13:03 PST explicitresetHBM parked; source da1b6d91d4 F512zero-cyclepredecode normalPLACEI2; fullxDNTclassGRT/KSHproofs/H4DRT/RestJfinalnativegateshealthy. T1GPLfailedanddiagnosed; VP4factoryr3preflightonly; q_spb2SIGNEDchildbytequalificationrecovered/noDRTretry. Fullhandback handoff/codex_hbm_reset_20261107_1302.md; no merges/tags/POR/deletions.
 2026-11-07 13:13 PST COORD: owner said continue; Codex handed back; 14 fresh lanes from lanes/_RESTART_1107.md second section. Count 211. READY rulings 13:0x posted. Next forced scan about 13:24.
+2026-11-07 13:27 PST COORD: owner said continue; Codex handed back; 13 fresh lanes from lanes/_RESTART_1107.md second section, DIE-HBM-86 alive. Count 211. READY rulings 13:0x posted. Next forced scan 13:24.
