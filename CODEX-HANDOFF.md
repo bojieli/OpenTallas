@@ -1,6 +1,6 @@
-# Codex handoff document (generated 2026-11-06 22:53 PST)
+# Codex handoff document (generated 2026-11-07 00:34 PST)
 
-Standby: Claude is running; this is used only if Claude hits a usage limit.
+Claude hit its usage limit (resets 3am (America/Los_Angeles)); expected back at 2026-11-07 03:02 PST.
 
 Read ~/coord/CODEX-ROLE.md first: your role, the binding rules, and how to cover every task.
 
@@ -81,7 +81,8 @@ Die gates (BIND/GRT/STA/CLK) are not yet passed on any die. ETAs: non-HBM cores 
 5d. **Limit expected about 23:45 PST 11-06** (OWNER 23:2x: "please queue all the jobs that can be run and make sure it can fill the hosts while you are rate limited."). All lanes were told at 23:2x to queue everything detached and post a final STATE. Latest state is in the queue tail from 23:25 on. If you take over: keep waiters on every host, watch disks (epyc5/6 scratch, intel2 root), and collect CODEX-PRUNE-1 and ARCHIVE-1106C detached deletes by their manifest paths in their last post. AUTOCLEAN-1 may not be installed: read its last STATE. Retention (OWNER 23:2x, all runs): closed block = small stub on the host, the rest to AGIdock; open block = newest resume database only; everything else deleted.
 5e. **Codex covers Claude limits in WATCHER MODE ONLY** (OWNER 23:34 agreed; weekly limits are covered by other accounts, so this applies to every limit unless the owner says otherwise). This overrides "you own every scope" at the top.
    - DO: watch disks and prune by the 5c rules; restart a crashed kit wave or autopilot; collect finished results and re-sign them (resign.py) so they count; run lanes' detached chains and read their logs; relaunch FAIL rows whose class fix already exists; one bounded eco_loop on a routed near miss; keep waiters on every host; log what you did in CODEX-LOG.md.
-   - DO NOT: write new forms, RTL, plan events or flow fixes; merge or cut tags; start new design lanes; stop other lanes' jobs (only a job hung by the 2-h rule, by exact name, and log it); make any owner-level decision. Note a problem in the log instead.
+   - ALSO DO (OWNER 11-07 03:2x): write class fixes and new safe forms on your own branches and rebuild from the branch head at once. Follow lanes/_CORE_LANE_RULES.md, pilot one row through PLACE before any batch release, view renders. Post READY for the merge lane.
+   - DO NOT: merge or cut tags; change plans of record; delete or restart a deletion chain; stop other lanes' jobs (only a job hung by the 2-h rule, by exact name, and log it); make any owner-level decision. Note a problem in the log instead.
    - Handback: when Claude returns, stop new launches, append a short `## Handoff to Claude` with what ran and what finished, and leave jobs running. Claude does not wait long for it.
 
 ## main and merge train
@@ -193,14 +194,14 @@ When told Claude is back:
 
 ## Latest handoff milestones
 
-- 2026-11-06 17:41 PST COORD hourly: count 187 (+1 HBM TX FF); 3 re-signs pending count; main idle since 16:01 -> ROOT-MERGE-46 told to land 8 approvals; RULINGS 17:4x (S81 ft re-site class, QC pin-under-PG class, HBM svgr M6 obs conditional); epyc6 21 GB REFUSED, move running.
-- 2026-11-06 18:44 PST COORD hourly: count 189 (+2); OWNER rules 18:5x (types safe by construction all 5 dies -> TYPE-SAFE-1; archive closed to AGIdock + delete non-closed -> ARCHIVE-1106/PRUNE-1125; safe forms now on far-off cores); ETA table in RELEASE_TREE line 3; fleet 2/3 loaded -> KW-FIX-24 ba
-- 2026-11-06 19:40 PST COORD hourly: count 190 (+1 HBM pipe_1c). rom_q hw half local SIGNED, re-sign ~21:05. TYPE-SAFE-1 step 1 in (clump not corridor; hold = tap window, midpoint latch). Rulings 19:0x/19:2x posted. Fleet underloaded on epyc4/5/6 -> KW-FIX-24 relaunch. GEOM: opsb p41 macro grid clea
-- 2026-11-06 20:40 PST COORD hourly: count 190 flat. S81 station rows stale (pre-TAPWIN-PORT) -> rebuild batch + all-die stale sweep; DIE-S81-72 + TYPE-SAFE-2 started; KV land_r8 restore; failure label SETUP-AT-GRT live. GEOM: QC sul1 child landing kits sane (opposite-face pins); QC su2 channel lane
 - 2026-11-06 21:40 PST COORD hourly: count 190 flat (main b37de6e708; merge train has not landed). OWNER rules: 21:2x rebuild from branch heads without waiting for merges; 21:5x conservative versions in parallel + visual check; 22:0x 10-smell checklist (all in CODEX-HANDOFF-STATUS + lanes/_CORE_LANE
 
 CODEX: 2026-11-06 22:10 PST temporary takeover STOPPED; no new project changes/jobs/merges. Five new temporary worktrees removed per user; live fleet/source preserved. Full handback in CODEX-LOG.md. Main239726a28ca unchanged.
 2026-11-06 22:32 COORD hourly: count 190 flat; lanes restarted after limit (lanes/_RESTART_1106.md); OWNER 22:3x drain epyc5+epyc6, terminate about 06:37 11-07, RETIRE-EPYC56 copies closed records.
+- 2026-11-06 23:26 PST COORD: owner warned of limit in 20 min. All lanes told to queue everything detached and post final STATE; handoff 5d + _RESTART_1106.md updated. Approved hubgen, type-safe-3, lep. Monitor order + verdict feed live.
+- 2026-11-06 23:52 PST COORD hourly: count recount owed (192 partial vs 194 at 23:05: t46, t7__cl945bc067, hd_spn_wshim_tx records on epyc4). No GEOM renders viewed this hour. Train in, tag cut, KW-FIX-26 + CODEX-PRUNE-1 running detached.
+- 2026-11-07 00:05 PST COORD: count 192 is a scan artifact: release_tree_plan reports epyc4 unreachable ("SIGNED scan epyc4:" empty, cache unreachable_hosts), so its 3 records drop; dirs and SIGNED PROVENANCE checked on epyc4. Real count 195 until a full scan says otherwise. Next: find why the epyc4
+2026-11-07 00:25 PST COORD hourly: count recount owed (194 last full, 192 partial, epyc4 scan timeout); 11 successors started 00:20; intel2 root 61 GB; S81 col_h10_r1 render viewed: pin clumps on top and bottom edges, logic squeezed in the macro channels, clock sink 2104 um from its driver; KV hgi_v
 
 For live jobs and new results, read the active lane files and lanes/COORD-REVIEW-QUEUE.md on intel2. Historical lane contents are intentionally omitted from this handoff.
 
