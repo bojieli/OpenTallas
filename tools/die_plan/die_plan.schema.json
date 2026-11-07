@@ -1819,6 +1819,15 @@
           "note": {
            "type": "string"
           },
+          "cdc": {
+           "enum": [
+            "synchronized"
+           ]
+          },
+          "cdc_evidence": {
+           "type": "string",
+           "minLength": 1
+          },
           "source_latency_ps": {
            "type": "object",
            "required": [
