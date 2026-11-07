@@ -110,13 +110,6 @@ for {set mi 0} {$mi < 3} {incr mi} {
     if {!$k} continue
     set g [expr {$s/$k}]
     foreach x $mp { lassign $x it a
-      set lf [rb_em_lf_plan [[$it getInst] getName]]
-      if {[dict size $lf]} {
-        rb_em_lf_connect $it $lf $tgt
-        incr rb_em_lf_count
-        dict set rb_em_targets [[$it getInst] getName] [list $it $g $tgt $tap localface 0 0]
-        continue
-      }
       # an ETM child (OT_RT_ETM_MASTER_RE) is landed below by its own rule, not pin-matched to its regs
       if {[info exists ::env(OT_RT_ETM_MASTER_RE)] && $::env(OT_RT_ETM_MASTER_RE) ne "" && [regexp $::env(OT_RT_ETM_MASTER_RE) [[[$it getInst] getMaster] getName]]} continue
       set d [expr {$g - $a}]
@@ -246,7 +239,11 @@ proc rb_em_lf_connect {it plan tgt} {
     set nm "ot_rt_etm_lf[incr rb_em_n]"
     set di [odb::dbInst_create $rb_blk $dm $nm]
     set nx [odb::dbNet_create $rb_blk "${nm}_n"]; $nx setSigType CLOCK
+    # the source net is the protected spine at seq 1: open it for this one connect, as the F3 and ETM paths do
+    set pn [$prev getName]
+    if {[info exists ::env(OT_RT_PROTECT_SPINE)] && $::env(OT_RT_PROTECT_SPINE)} { unset_dont_touch [get_nets -quiet $pn] }
     [rb_em_lf_io $di INPUT] connect $prev; [rb_em_lf_io $di OUTPUT] connect $nx
+    if {[info exists ::env(OT_RT_PROTECT_SPINE)] && $::env(OT_RT_PROTECT_SPINE)} { set_dont_touch [get_nets -quiet $pn] }
     rb_em_lf_place $di $xy
     set_dont_touch [get_cells -quiet $nm]
     set prev $nx
@@ -284,6 +281,13 @@ proc rb_em_lf_connect {it plan tgt} {
     if {!$k || ![llength $mp]} continue
     set g [expr {$s/$k}]; set tgt [expr {$g - $rb_em_x}]
     foreach x $mp { lassign $x it a
+      set lf [rb_em_lf_plan [[$it getInst] getName]]
+      if {[dict size $lf]} {
+        rb_em_lf_connect $it $lf $tgt
+        incr rb_em_lf_count
+        dict set rb_em_targets [[$it getInst] getName] [list $it $g $tgt $tap localface 0 0]
+        continue
+      }
       # walk up from the macro tap input to the first node early enough for node + isolation buffer
       set n [[rb_em_io [$rb_blk findInst $tap] INPUT] getNet]
       set drvi ""; set hops 0
