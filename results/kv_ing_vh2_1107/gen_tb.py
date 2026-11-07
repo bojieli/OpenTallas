@@ -24,8 +24,10 @@ t = rep(t, """    if (W.fi_n != 2'd0 || W.fd_n != 2'd0 || W.busy) if (!w_busy) b
 t = rep(t, "  integer g_last = 0, w_last = 0;\n", "  integer g_last = 0, w_last = 0, minw = 200, carry_ra = 0, carry_row = 0;\n  reg pw_v = 0, pw_r = 0; reg [31:0] pw_a = 0; reg [255:0] pw_d = 0;\n")
 # boundary stimulus: 16-bit carries of the RAW address and of st_row
 t = rep(t, "        add(0, {256'd0, dsc});\n        for (b = 0; b < nbt; b = b + 1) add(1, rbeat(2));\n      end else if (mode <= 6) begin", "        if (({rr()} % 3) == 0) begin dsc[31:16] = 16'hffff - ({rr()} % 16'd24); dsc[39:32] = {rr()} % 256; end\n        add(0, {256'd0, dsc});\n        for (b = 0; b < nbt; b = b + 1) add(1, rbeat(2));\n      end else if (mode <= 6) begin")
-t = rep(t, "        f0 = {rr()} % 200; dsc[167:144] = f0;", "        f0 = {rr()} % 200; if (({rr()} % 3) == 0) f0 = 65535 - ({rr()} % 30); dsc[167:144] = f0;")
-t = rep(t, "f0 = 16 * ({rr()} % 300);\n", "f0 = 16 * ({rr()} % 300); if (({rr()} % 3) == 0) f0 = 65536 - 16 * (1 + {rr()} % 3);\n")
+t = rep(t, "        f0 = {rr()} % 200; dsc[167:144] = f0;", "        f0 = {rr()} % 200; if (({rr()} % 3) == 0) f0 = (({rr()} % 3) == 0) ? 65535 : 65535 - ({rr()} % 30); if (({rr()} % 4) == 0) f0 = f0 + (({rr()} % 256) << 16); dsc[167:144] = f0;")
+t = rep(t, "f0 = 16 * ({rr()} % 300);\n", "f0 = 16 * ({rr()} % 300); if (({rr()} % 3) == 0) f0 = 65536 - 16 * (1 + {rr()} % 3); if (({rr()} % 4) == 0) f0 = f0 + (({rr()} % 256) << 16); if (({rr()} % 2) == 0) dsc[18:16] = {rr()} % 8;\n")
+# long write stalls: a stream done pending while the next descriptor could already reach the face
+t = rep(t, "else if (({rr()} % 150) == 0) wst = 20 + {rr()} % 60;", "else if (({rr()} % 150) == 0) wst = (({rr()} % 8) == 0) ? 250 : 20 + {rr()} % 60;")
 t = rep(t, 'if (!$value$plusargs("full=%d", full)) full = 0;', 'if (!$value$plusargs("full=%d", full)) full = 0;\n    if (!$value$plusargs("minw=%d", minw)) minw = 200;')
 t = rep(t, '''    if (bad == 0) $display("PASS"); else $display("FAIL");''', '''    if (wwn < minw) begin bad = bad + 1; $display("LOW COVERAGE writes=%0d < %0d", wwn, minw); end
     if (bad == 0) $display("PASS"); else $display("FAIL");''')

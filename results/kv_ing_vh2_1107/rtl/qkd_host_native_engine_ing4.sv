@@ -55,7 +55,8 @@
 // 23 Exact     per-slice sl_raw, sl_sc, sl_p0, mb_q from next state.
 // 24 Exact     RAW address ra_lo/ra_hi counter.
 // 25 Exact     st_row = {row_hi, row_lo}, registered low-all-ones flag; st_left 24 bits.
-// TOK-VERIFY on top of r3: port -> engine +1 (in, d), engine -> w port +1, done/n_sectors +1 more, stream done after the face drains; rates kept.
+// 26 V/R safe  sec_q, e2_*: read registers -> mid stage -> output FIFO (distance budget: macro block at the top edge, FIFO at the w pins at the bottom).  +1 edge QKV read to FIFO.
+// TOK-VERIFY on top of r3: QKV read -> FIFO +1, port -> engine +1 (in, d), engine -> w port +1, done/n_sectors +1 more, stream done after the face drains; rates kept.
 `define ROW_STEP begin row_lo <= row_lo + 16'd1; row_lf <= row_lo == 16'hfffe; if (row_lf) row_hi <= row_hi + 16'd1; st_left <= st_left - 24'd1; end
 module qkd_host_native_engine_ing4 (
     input  wire         clk,
@@ -339,7 +340,11 @@ module qkd_host_native_engine_ing4 (
     reg  [3:0]   fq_n;
     reg          qk_wv;                         // fq_n != 0 (cut 12)
     wire         fq_pop = qk_wv && er_m;
-    wire [3:0]   fq_n_n = fq_n + (e1_v ? 4'd1 : 4'd0) - (fq_pop ? 4'd1 : 4'd0);
+    reg          e2_v, e2_last;
+    reg  [7:0]   e2_tag;
+    reg  [22:0]  e2_a;
+    reg  [255:0] sec_q;
+    wire [3:0]   fq_n_n = fq_n + (e2_v ? 4'd1 : 4'd0) - (fq_pop ? 4'd1 : 4'd0);
     wire         fq_ne_n = fq_n_n != 4'd0;
     wire [2047:0] fd_all = {fq_d[7], fq_d[6], fq_d[5], fq_d[4], fq_d[3], fq_d[2], fq_d[1], fq_d[0]};
     wire [183:0] fa_all = {fq_a[7], fq_a[6], fq_a[5], fq_a[4], fq_a[3], fq_a[2], fq_a[1], fq_a[0]};
@@ -373,11 +378,13 @@ module qkd_host_native_engine_ing4 (
     wire [31:0]  qp_wa = {8'd0, fa[22:14], 1'b0, fa[13:0]};
     assign       e_last = qk_s[34] && ft[8];
     assign       e_tag = ft[7:0];
-    always @(posedge clk) if (e1_v) begin fq_d[fq_wp] <= sec; fq_a[fq_wp] <= e1_a; fq_t[fq_wp] <= {e1_last, e1_tag}; end
+    always @(posedge clk) begin sec_q <= sec; e2_a <= e1_a; e2_last <= e1_last; e2_tag <= e1_tag; end
+    always @(posedge clk) if (e2_v) begin fq_d[fq_wp] <= sec_q; fq_a[fq_wp] <= e2_a; fq_t[fq_wp] <= {e2_last, e2_tag}; end
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin fq_wp <= 3'd0; fq_n <= 4'd0; qk_wv <= 1'b0; qk_s <= 35'd0; cred <= 4'd0; end
+        if (!rst_n) begin fq_wp <= 3'd0; fq_n <= 4'd0; qk_wv <= 1'b0; qk_s <= 35'd0; cred <= 4'd0; e2_v <= 1'b0; end
         else begin
-            if (e1_v) fq_wp <= fq_wp + 3'd1;
+            e2_v <= e1_v;
+            if (e2_v) fq_wp <= fq_wp + 3'd1;
             fq_n <= fq_n_n; qk_wv <= fq_ne_n; qk_s <= {35{fq_ne_n}};
             cred <= cred + ((q_iss && in_lane) ? 4'd1 : 4'd0) - (fq_pop ? 4'd1 : 4'd0);
         end

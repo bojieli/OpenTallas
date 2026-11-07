@@ -89,6 +89,17 @@ case $CASE in
  m_rowlf) sub $E "if (row_lf) row_hi <= row_hi + 16'd1;" ";";;
  m_rowfl) sub $E "row_lf <= (dh_mode != M_RAW) && dh[159:144] == 16'hffff;" "row_lf <= 1'b0;";;
  m_rowhi) sub $E "row_hi <= (dh_mode == M_RAW) ? 16'd0 : {8'd0, dh[167:160]};" "row_hi <= 16'd0;";;
+ m_slraw0) sub $E "sl_raw <= {34{raw_n}};" "sl_raw <= {34{1'b0}};";;
+ m_slsc0) sub $E "sl_sc <= {32{sc_n}};" "sl_sc <= {32{1'b0}};";;
+ m_slp0i) sub $E "sl_p0 <= {32{st_ph_n[0]}};" "sl_p0 <= {32{!st_ph_n[0]}};";;
+ m_mbqle) sub $E "(5'(mb) < take_n[4:0])" "(5'(mb) <= take_n[4:0])";;
+ m_slone) sub $E "sl_sc <= {32{sc_n}};" "sl_sc <= {{31{sc_n}}, 1'b0};";;
+ m_kshi) sub $E "wire [28:0]  ks_hi1 = ap_kscal[31:3] + 29'd1;" "wire [28:0]  ks_hi1 = ap_kscal[31:3];";;
+ m_kslo) sub $E "{3'd0, st_ph == 3'd4}" "{3'd0, st_ph == 3'd3}";;
+ m_e2d) sub $E "fq_d[fq_wp] <= sec_q;" "fq_d[fq_wp] <= sec;";;
+ m_e2a) sub $E "fq_a[fq_wp] <= e2_a;" "fq_a[fq_wp] <= e1_a;";;
+ m_e2t) sub $E "fq_t[fq_wp] <= {e2_last, e2_tag};" "fq_t[fq_wp] <= {e1_last, e1_tag};";;
+ m_e2n) sub $E "fq_n + (e2_v ? 4'd1 : 4'd0)" "fq_n + (e1_v ? 4'd1 : 4'd0)";;
  *) echo "unknown $CASE"; exit 2;;
 esac
 SRC="$W/tb_ing4.sv $E $T $Q rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv tools/qwen_kv_die/spipe6_native_qual_2000/ot_sram_1r1w_32x128_m1.v"

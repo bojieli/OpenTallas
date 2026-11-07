@@ -10,6 +10,7 @@ Cuts on r3+19 (classes as in the engine header; bench/tb_ing4.sv is the lock-ste
               n_sectors and done reach the top-left pins through one mid hop (+1 edge), same relation done <-> count as the source.
  23 Exact     write mux selects: per-slice registered copies from the next state of st_mode / st_ph / take (was one decode net with 256 loads).
  24 Exact     RAW write address: counter loaded at dispatch instead of base + st_row.
+ 26 V/R safe  sec_q, e2_*: one stage between the macro read registers and the output FIFO (rule 2 distance budget), +1 edge.
  25 Exact     st_row in two halves with a registered low-all-ones flag; st_left 24 bits (it is loaded with 24 bits and only counts down)."""
 from pathlib import Path
 S = Path("results/kv_ing_rf3_1105/rtl/qkd_hr_ingest_eng"); O = Path("results/kv_ing_vh2_1107/rtl"); O.mkdir(parents=True, exist_ok=True)
@@ -178,6 +179,12 @@ t = rep(t, """    wire [255:0] m_byte;                        // ROWS: bytes bel
 t = rep(t, "            take_r <= is_rows ? k_take : ik_low ? 6'd32 : st_ph == 3'd2 ? 6'd4 : 6'd0;\n", "            take_r <= take_n;\n")
 # ---- ports
 t = rep(t, "    assign w_v    = qk_wv || st_wv;\n", "    assign e_wv   = qk_wv || st_wv;\n")
+# ---- cut 26: a stage between the macro read registers (top) and the output FIFO (bottom)
+t = rep(t, "    wire [3:0]   fq_n_n = fq_n + (e1_v ? 4'd1 : 4'd0) - (fq_pop ? 4'd1 : 4'd0);\n", "    reg          e2_v, e2_last;\n    reg  [7:0]   e2_tag;\n    reg  [22:0]  e2_a;\n    reg  [255:0] sec_q;\n    wire [3:0]   fq_n_n = fq_n + (e2_v ? 4'd1 : 4'd0) - (fq_pop ? 4'd1 : 4'd0);\n")
+t = rep(t, "    always @(posedge clk) if (e1_v) begin fq_d[fq_wp] <= sec; fq_a[fq_wp] <= e1_a; fq_t[fq_wp] <= {e1_last, e1_tag}; end\n", "    always @(posedge clk) begin sec_q <= sec; e2_a <= e1_a; e2_last <= e1_last; e2_tag <= e1_tag; end\n    always @(posedge clk) if (e2_v) begin fq_d[fq_wp] <= sec_q; fq_a[fq_wp] <= e2_a; fq_t[fq_wp] <= {e2_last, e2_tag}; end\n")
+t = rep(t, "if (!rst_n) begin fq_wp <= 3'd0; fq_n <= 4'd0; qk_wv <= 1'b0; qk_s <= 35'd0; cred <= 4'd0; end", "if (!rst_n) begin fq_wp <= 3'd0; fq_n <= 4'd0; qk_wv <= 1'b0; qk_s <= 35'd0; cred <= 4'd0; e2_v <= 1'b0; end")
+t = rep(t, "            if (e1_v) fq_wp <= fq_wp + 3'd1;\n", "            e2_v <= e1_v;\n            if (e2_v) fq_wp <= fq_wp + 3'd1;\n")
+t = rep(t, "// TOK-VERIFY on top of r3: port -> engine +1 (in, d), engine -> w port +1,", "// 26 V/R safe  sec_q, e2_*: read registers -> mid stage -> output FIFO (distance budget: macro block at the top edge, FIFO at the w pins at the bottom).  +1 edge QKV read to FIFO.\n// TOK-VERIFY on top of r3: QKV read -> FIFO +1, port -> engine +1 (in, d), engine -> w port +1,")
 (O / "qkd_host_native_engine_ing4.sv").write_text(t)
 (O / "ot_hdc_ingest_fp8q_s.sv").write_text((S / "ot_hdc_ingest_fp8q_s.sv").read_text())
 w = r"""`timescale 1ns/1ps

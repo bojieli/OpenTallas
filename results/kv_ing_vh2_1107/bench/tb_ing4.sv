@@ -64,7 +64,7 @@ module tb;
     ggap = ({rr()} % 4) == 0; wgap = ({rr()} % 3) == 0;
     grdy = ({rr()} % 5) != 0; wrdy = ({rr()} % 2) != 0;
     if (({rr()} % 400) == 0) begin grdy = 0; wrdy = 0; end
-    if (wst != 0) begin wst = wst - 1; wrdy = 0; end else if (({rr()} % 150) == 0) wst = 20 + {rr()} % 60;
+    if (wst != 0) begin wst = wst - 1; wrdy = 0; end else if (({rr()} % 150) == 0) wst = (({rr()} % 8) == 0) ? 250 : 20 + {rr()} % 60;
     end
     for (k = 0; k < 16; k = k + 1) junk[32*k +: 32] = rr();
   end
@@ -133,7 +133,7 @@ module tb;
         ldie = {rr()} % 3; die = {rr()} % (1 << ldie); lns = {rr()} % 3;
         if (ring != 0) begin ldie = 0; die = 0; lns = 0; end
         dsc[3:0] = 2; dsc[79:48] = 32'h0010_0000; dsc[84:80] = pitch; dsc[143:112] = ring;
-        f0 = {rr()} % 200; if (({rr()} % 3) == 0) f0 = 65535 - ({rr()} % 30); dsc[167:144] = f0; dsc[183:168] = rb; dsc[199:184] = n;
+        f0 = {rr()} % 200; if (({rr()} % 3) == 0) f0 = (({rr()} % 3) == 0) ? 65535 : 65535 - ({rr()} % 30); if (({rr()} % 4) == 0) f0 = f0 + (({rr()} % 256) << 16); dsc[167:144] = f0; dsc[183:168] = rb; dsc[199:184] = n;
         dsc[217:216] = ldie; dsc[231:224] = die; dsc[233:232] = lns;
         nbt = (n * rb + 63) / 64; dsc[255:240] = nbt;
         add(0, {256'd0, dsc});
@@ -141,7 +141,7 @@ module tb;
       end else begin                             // IKEY, whole 16-key groups
         n = 16 * (1 + {rr()} % 4);
         ldie = {rr()} % 3; die = {rr()} % (1 << ldie); lns = {rr()} % 3;
-        dsc[3:0] = 3; dsc[79:48] = 32'h0010_0000; f0 = 16 * ({rr()} % 300); if (({rr()} % 3) == 0) f0 = 65536 - 16 * (1 + {rr()} % 3);
+        dsc[3:0] = 3; dsc[79:48] = 32'h0010_0000; f0 = 16 * ({rr()} % 300); if (({rr()} % 3) == 0) f0 = 65536 - 16 * (1 + {rr()} % 3); if (({rr()} % 4) == 0) f0 = f0 + (({rr()} % 256) << 16); if (({rr()} % 2) == 0) dsc[18:16] = {rr()} % 8;
         dsc[167:144] = f0; dsc[199:184] = n; dsc[217:216] = ldie; dsc[231:224] = die; dsc[233:232] = lns;
         nbt = (n * 68 + 63) / 64; dsc[255:240] = nbt;
         add(0, {256'd0, dsc});
