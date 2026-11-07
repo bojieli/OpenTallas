@@ -17,7 +17,11 @@ mkdir -p "$OUT/models"
 for m in ot_rom_4096x266_m8 ot_sram_1r1w_128x256_m1_r2c2; do
   git show origin/main:physical/asap7_memory_macros/$m/$m.v > "$OUT/models/$m.v"
 done
-DEF=(+define+OT_QWEN_LSL_FP1 +define+OT_ROM_CONST0_KV +define+TB_LQR=$LQR +define+TB_RSTP=$RSTP +define+TB_FSHIFT=0 +define+OT_LQR_FINJ=${FINJ:-1650.2})
+PINC=${PINC:-0}
+DEF=(+define+OT_QWEN_LSL_FP1 +define+OT_ROM_CONST0_KV +define+TB_LQR=$LQR +define+TB_RSTP=$RSTP +define+TB_FSHIFT=$PINC +define+OT_LQR_FINJ=${FINJ:-1650.2} +define+TB_PINC=$PINC)
+[[ -n ${DRAIN:-} ]] && DEF+=(+define+TB_DRAIN=$DRAIN)
+[[ $PINC != 0 ]] && DEF+=(+define+TB_PINC_ON)
+[[ -n ${PMUT:-} ]] && DEF+=(+define+OT_PINC_MUT=$PMUT)
 [[ $RSTP != 0 ]] && DEF+=(+define+TB_RSTP_ON)
 [[ $TILE == nl ]] && DEF+=(+define+TB_NL)
 [[ $TILE == nk ]] && DEF+=(+define+OT_A0_LOCAL_OUT_RESET)

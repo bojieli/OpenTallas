@@ -1,3 +1,9 @@
+`ifndef TB_DRAIN
+`define TB_DRAIN 64
+`endif
+`ifndef TB_PINC
+`define TB_PINC 0
+`endif
 `timescale 1ns/1ps
 // QC-NLNK-RF2 11-06 vR bench: ref RSTP 0 vs dut RSTP `TB_RSTP (same LQR); t_out delta must be 0 and every sink-side reset edge exactly +RSTP.
 // derived from: QC-A0C-B5 11-06 vB bench (tools/qwen_romleaf/a0core/lqr/): qfd_tile_<t>_a0c LQR=0 (ref) vs LQR=`TB_LQR (dut), both with the
@@ -39,11 +45,11 @@ qfd_tile_nl_a0c #(.G4_ROOTS(1), .REGROOT_MODE(3), .ICG(1), .ICG_RRST(1), .NKP(15
 assign rn = 0; assign dn = 0;
 localparam TILE = "nl";
 `else
-`REF_NK #(.G4_ROOTS(1), .REGROOT_MODE(3), .ICG(1), .ICG_EREG(1), .ICG_IREG(1), .ICG_RRST(1), .NKP(15), .ICG_IDLE_RT(1),
+`REF_NK #(.G4_ROOTS(1), .REGROOT_MODE(3), .ICG(1), .ICG_EREG(1), .ICG_IREG(1), .ICG_RRST(1), .NKP(15), .ICG_IDLE_RT(1), .ICG_DRAIN(`TB_DRAIN),
   `REF_RSTP .LQR(`TB_LQR), .ROM_TILE(48)) u_ref
   (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(rhi), .tie_lo(rlo), .tap(tap), .t_out(rt), .n_a(na), .n_b(nb), .n_y(rn));
-qfd_tile_nk_a0c #(.G4_ROOTS(1), .REGROOT_MODE(3), .ICG(1), .ICG_EREG(1), .ICG_IREG(1), .ICG_RRST(1), .NKP(15), .ICG_IDLE_RT(1),
-  .LQR(`TB_LQR), .RSTP(`TB_RSTP), .ROM_TILE(48)) u_dut
+qfd_tile_nk_a0c #(.G4_ROOTS(1), .REGROOT_MODE(3), .ICG(1), .ICG_EREG(1), .ICG_IREG(1), .ICG_RRST(1), .NKP(15), .ICG_IDLE_RT(1), .ICG_DRAIN(`TB_DRAIN),
+  .LQR(`TB_LQR), .RSTP(`TB_RSTP), `ifdef TB_PINC_ON .PINC(`TB_PINC), `endif .ROM_TILE(48)) u_dut
   (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(dhi), .tie_lo(dlo), .tap(tap), .t_out(dt), .n_a(na), .n_b(nb), .n_y(dn));
 localparam TILE = "nk";
 `endif
@@ -99,6 +105,7 @@ integer cyc, cmds = 0, nerr = 0, nfirst = -1, tnz = 0, rfault = 0, dfault = 0, k
 integer hist [0:15];
 integer rfc [0:65535]; integer dfc [0:65535]; integer nrf = 0, ndf = 0, ferr = 0;
 integer nstrict = 0, nval = 0, nmis = 0, rstwin = 0;
+reg [513:0] rnd [0:4]; reg [513:0] rnp [0:4]; reg [513:0] rnc;
 initial begin
   for (k = 0; k < 16; k = k + 1) hist[k] = 0;
   repeat (8) @(negedge ck); rs = 1;
@@ -124,13 +131,15 @@ initial begin
     // free-running node data, which the root ICG holds for different idle stretches once LQR lengthens a run)
     // vR: the only allowed n_y difference is the sticky fault bit [513] clearing exactly RSTP edges later at the reset
     // assert (7000 pulse, ref clears at 7002). Same valid, same ties, dut still 1, ref already 0, only inside that window.
-    if (rn[513:512] !== dn[513:512] || (rn[512] && rn[511:0] !== dn[511:0]) || rhi !== dhi || rlo !== dlo) begin
-      if (nmis < 8) begin $display("A0RSTP_NY cyc %0d ref[513:512]=%b dut[513:512]=%b ties %b/%b %b/%b", cyc, rn[513:512], dn[513:512], rhi, dhi, rlo, dlo); nmis = nmis + 1; end
-      if (cyc >= 7002 && cyc < 7002 + `TB_RSTP && rn[513] === 1'b0 && dn[513] === 1'b1 && rn[512] === dn[512] && !rn[512] && rhi === dhi && rlo === dlo) rstwin = rstwin + 1;
+    rnd[0] = rn; for (integer q = 1; q <= 2*`TB_PINC; q = q + 1) if (q <= 2*`TB_PINC) rnd[q] = rnp[q-1]; for (integer q = 0; q <= 2*`TB_PINC; q = q + 1) rnp[q] = rnd[q];
+    rnc = rnd[2*`TB_PINC];
+    if (rnc[513:512] !== dn[513:512] || (rnc[512] && rnc[511:0] !== dn[511:0]) || rhi !== dhi || rlo !== dlo) begin
+      if (nmis < 8) begin $display("A0RSTP_NY cyc %0d ref[513:512]=%b dut[513:512]=%b ties %b/%b %b/%b", cyc, rnc[513:512], dn[513:512], rhi, dhi, rlo, dlo); nmis = nmis + 1; end
+      if (cyc >= 7002 + 2*`TB_PINC - `TB_PINC && cyc < 7002 + 2*`TB_PINC + `TB_RSTP && rnc[513] !== dn[513] && rnc[512] === dn[512] && !rnc[512] && rhi === dhi && rlo === dlo) rstwin = rstwin + 1;
       else begin nerr = nerr + 1; if (nfirst < 0) nfirst = cyc; end
     end
-    if (rn !== dn) nstrict = nstrict + 1;
-    if (rn[512]) nval = nval + 1;
+    if (rnc !== dn) nstrict = nstrict + 1;
+    if (rnc[512]) nval = nval + 1;
   end
   for (k = 0; k < nr && k < nd; k = k + 1) begin
     if (rq[k] !== dq[k]) begin derr = derr + 1; if (dfirst < 0) dfirst = k;
@@ -151,7 +160,7 @@ initial begin
     TILE, `TB_LQR, MUT, cmds, nr, nd, tnz, rfault, dfault);
   $display("A0RSTP_NODE n_y valid words=%0d qualified_mismatch_edges=%0d strict_mismatch_edges=%0d (info)", nval, nerr, nstrict);
   $display("A0RSTP_SHIFT t_out delta min=%0d max=%0d hist d0=%0d d1=%0d d2=%0d d3=%0d d4=%0d", dmin, dmax, hist[0], hist[1], hist[2], hist[3], hist[4]);
-  if (nr == 0 || tnz == 0 || (TILE == "nk" && nval == 0) || nr != nd || derr != 0 || nerr != 0 || rfault != dfault || ferr != 0 || (FINJ != 0 && nrf == 0) || dmin != 0 || dmax != 0 || rstchk != 0 || copyerr != 0 || (TILE == "nk" && rstwin != `TB_RSTP))
+  if (nr == 0 || tnz == 0 || (TILE == "nk" && nval == 0) || nr != nd || derr != 0 || nerr != 0 || rfault != dfault || ferr != 0 || (FINJ != 0 && nrf == 0) || dmin != `TB_PINC || dmax != `TB_PINC || rstchk != 0 || copyerr != 0 || (TILE == "nk" && rstwin != `TB_RSTP - 2*`TB_PINC))
     $display("A0RSTP_FAIL tile=%s RSTP=`TB_RSTP LQR=%0d MUT=%0d word_mismatch=%0d (first word %0d) count ref=%0d dut=%0d n_y/tie_mismatch_edges=%0d (first %0d) delta %0d..%0d",
       TILE, `TB_LQR, MUT, derr, dfirst, nr, nd, nerr, nfirst, dmin, dmax);
   else
