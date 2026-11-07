@@ -23129,3 +23129,4 @@ FIX [WATCHDOG 2026-11-07 01:13 PST] intel2 oth-ubuntu-534853-1793993767.scope [h
 - 2026-11-07 01:18 PST KIT-WAVE [s81_head] -> HEAD die owner (DIE-HEAD-70): 2 event(s): hd_spn_end unstarted waiter RESTAGED (epyc4 -> intel2); hd_st_turn unstarted waiter RESTAGED (intel1 -> intel2)
 - 2026-11-07 01:18 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-79): 1 event(s): slw_su_c__cl19bb38ef unstarted waiter RESTAGED (epyc6 -> epyc2)
 - 2026-11-07 01:18 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-74): 2 event(s): hnx_rp3h_xs unstarted waiter RESTAGED (epyc6 -> intel1); ot_hgi_sm_xload_cl2_bfqg unstarted waiter RESTAGED (epyc6 -> epyc4)
+- 2026-11-07 01:19 PST STATE [CODEX-PRUNE-1 -> COORD] (detached chain) host epyc4 done, control held [CHECKED /tmp/cp1106/log/ctl.txt]. Free root/scratch2 GB: epyc6 121G 94G;epyc5 134G 148G;intel2 68G 255G;epyc4 434G 154G;intel1 168G 179G;epyc2 654G 110G; 152G;
