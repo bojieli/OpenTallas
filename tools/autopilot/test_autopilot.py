@@ -783,6 +783,75 @@ class TestAdopt(TickBase):
         self.assertEqual(self.f.launched, [])
 
 
+class TestAdmitAfterWave(TickBase):
+    """FLOW-TIME-1 11-07: a row the wave step enqueues is admitted in the same tick"""
+
+    def wave_enqueues(self, *rows):
+        self.ap.KW = type("KW", (), {"step": staticmethod(lambda AP: self.queue(*rows))})
+        self.addCleanup(setattr, self.ap, "KW", self.real_kw)
+
+    def setUp(self):
+        super().setUp()
+        self.real_kw = self.ap.KW
+        os.environ.pop("AP_ADMIT_AFTER_WAVE", None)
+        self.addCleanup(os.environ.pop, "AP_ADMIT_AFTER_WAVE", None)
+
+    def test_row_enqueued_by_the_wave_submits_in_the_same_tick(self):
+        self.queue()
+        self.wave_enqueues(ROW)
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "RUNNING")
+        self.assertEqual(len(self.f.launched), 1)
+
+    def test_off_switch_waits_for_the_next_tick(self):
+        os.environ["AP_ADMIT_AFTER_WAVE"] = "0"
+        self.queue()
+        self.wave_enqueues(ROW)
+        self.assertEqual(self.tick(), {})
+        self.assertEqual(self.f.launched, [])
+        self.assertEqual(len(self.tick()), 1)
+        self.assertEqual(len(self.f.launched), 1)
+
+    def test_all_gates_still_apply(self):
+        self.ap.canary_wave_gate = lambda row: (False, "canary failed")
+        self.queue()
+        self.wave_enqueues(ROW)
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "WAIT-CANARY")
+        self.assertEqual(self.f.launched, [])
+        self.ap.canary_wave_gate = lambda row: (True, "ok")
+        self.f.kits[ROW[2].split(":")[-1]] = {"busy": True}
+        self.wave_enqueues(ROW)                            # held row is re-judged by the normal pass only
+        calls = len(self.f.calls)
+        self.tick()
+        self.assertEqual(len([c for c in self.f.calls[calls:] if c[1] == self.ap.PROBE_KIT[:40]]), 1)
+        self.assertEqual(self.f.launched, [])
+
+    def test_held_row_is_not_probed_twice(self):
+        self.f.kits[ROW[2].split(":")[-1]] = {"busy": True}
+        self.queue(ROW)
+        self.wave_enqueues(ROW)
+        self.tick()
+        self.assertEqual(len([c for c in self.f.calls if c[1] == self.ap.PROBE_KIT[:40]]), 1)
+
+    def test_shared_submit_budget(self):
+        rows = lambda n: [ROW[:1] + [f"slice_station__t{i}", KIT.replace("t5", f"t{i}")] + ROW[3:] for i in range(n)]
+        self.ap.MAX_SUBMIT_PER_TICK = 2
+        self.addCleanup(setattr, self.ap, "MAX_SUBMIT_PER_TICK", 12)
+        self.queue(*rows(1))
+        self.wave_enqueues(*rows(5))
+        self.tick()
+        self.assertEqual(len(self.f.launched), 2)
+
+    def test_a_queue_row_gone_after_the_wave_is_not_withdrawn_by_this_pass(self):
+        self.ap.canary_wave_gate = lambda row: (False, "canary failed")
+        self.queue(ROW)
+        other = ROW[:1] + ["slice_station__t6", KIT.replace("t5", "t6")] + ROW[3:]
+        self.wave_enqueues(other)
+        jobs = self.tick()
+        self.assertEqual(sorted(j["status"] for j in jobs.values()), ["WAIT-CANARY", "WAIT-CANARY"])
+
+
 class TestGeomAutoSubmit(TickBase):
     def geom(self, text):
         (Path(self.tmp.name) / "coord" / "lanes" / "GEOM-REVIEW.md").write_text(text)
@@ -1045,6 +1114,98 @@ class TestProbeKitRouted(unittest.TestCase):
                                      "6_1_fill.odb", "6_final.odb"]),
                          ["5_2_route.odb", "5_3_fillcell.odb", "6_1_fill.odb", "6_final.odb"])
         self.assertEqual(self.probe(["5_route.odb"]), ["5_route.odb"])
+
+
+class TestProofOnly(unittest.TestCase):
+    """FLOW-TIME-1 11-07: a kit whose only live container is its pre-route LEC is not a busy flow"""
+    OWNER = "dpkit-t-1"
+
+    def probe(self, names, files=None, rc=0):
+        import subprocess
+        with tempfile.TemporaryDirectory() as d:
+            kit = Path(d) / "kit"
+            (kit / "physical_completion").mkdir(parents=True)
+            base = {"config.mk": "", "lec_async.owner": self.OWNER, "lec_async.ready": "1\ncmd", "lec_async.identity": "abc",
+                    "lec_async.sh": "echo LEC_ASYNC reuse proof", f"physical_completion/{self.OWNER}.json": json.dumps({"rc": rc})}
+            base.update(files or {})
+            for n, t in base.items():
+                if t is not None:
+                    (kit / n).write_text(t)
+            bin_ = Path(d) / "bin"
+            bin_.mkdir()
+            info = [{"Name": "/" + n, "State": {"StartedAt": "x"}, "Mounts": [{"Source": str(kit)}]} for n in names]
+            (Path(d) / "inspect.json").write_text(json.dumps(info))
+            (bin_ / "docker").write_text("#!/bin/sh\nif [ \"$1\" = ps ]; then echo id1; else cat %s/inspect.json; fi\n" % d)
+            (bin_ / "docker").chmod(0o755)
+            import autopilot as ap
+            o = subprocess.run([sys.executable, "-c", ap.PROBE_KIT, json.dumps({"kit": str(kit), "runner": ""})],
+                               capture_output=True, text=True, env={"PATH": f"{bin_}:/bin:/usr/bin"}, timeout=60).stdout
+            return json.loads(o.split("AP_JSON ", 1)[1])
+
+    def test_lec_unit_alone(self):
+        p = self.probe([self.OWNER + "-lec"])
+        self.assertIs(p["busy"], True)
+        self.assertIs(p["proof_only"], True)
+
+    def test_exec_form_owner_waiting_after_published_place(self):
+        self.assertIs(self.probe([self.OWNER])["proof_only"], True)
+
+    def test_owner_still_running_its_flow(self):
+        self.assertIs(self.probe([self.OWNER], {f"physical_completion/{self.OWNER}.json": None})["proof_only"], False)
+
+    def test_failed_phase_or_other_container(self):
+        self.assertIs(self.probe([self.OWNER], rc=1)["proof_only"], False)
+        self.assertIs(self.probe([self.OWNER + "-lec", "dpkit-t-2"])["proof_only"], False)
+
+    def test_no_reuse_path_in_kit_or_verdict_or_stop(self):
+        lec = [self.OWNER + "-lec"]
+        self.assertIs(self.probe(lec, {"lec_async.sh": "old"})["proof_only"], False)
+        self.assertIs(self.probe(lec, {"lec_async.ready": None})["proof_only"], False)
+        self.assertIs(self.probe(lec, {"lec_async.identity": None})["proof_only"], False)
+        self.assertIs(self.probe(lec, {"lec_async.done": ""})["proof_only"], False)
+        self.assertIs(self.probe(lec, {"lec_async.rc": "1"})["proof_only"], False)
+        self.assertIs(self.probe(lec, {"lec_async.stop": ""})["proof_only"], False)
+
+
+class TestRouteBesideProof(TickBase):
+    def setUp(self):
+        super().setUp()
+        self.addCleanup(os.environ.pop, "AP_ROUTE_BESIDE_PROOF", None)
+        real = self.f.rpy
+
+        def rpy(host, code, args, timeout=600):
+            p = real(host, code, args, timeout)
+            if code is self.ap.PROBE_KIT:
+                p.update(busy=True, proof_only=self.proof_only)
+            return p
+        self.ap.rpy = rpy
+
+    def test_only_the_proof_alive_submits(self):
+        self.proof_only = True
+        self.queue(ROW)
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "RUNNING")
+        self.assertIn("BESIDE-PROOF", (Path(self.tmp.name) / "log.txt").read_text())
+
+    def test_any_other_container_holds(self):
+        self.proof_only = False
+        self.queue(ROW)
+        self.tick()
+        self.assertEqual(self.f.launched, [])
+
+    def test_off_switch_holds(self):
+        os.environ["AP_ROUTE_BESIDE_PROOF"] = "0"
+        self.proof_only = True
+        self.queue(ROW)
+        self.tick()
+        self.assertEqual(self.f.launched, [])
+
+    def test_recent_logs_still_hold(self):
+        self.proof_only = True
+        self.f.kits[ROW[2].split(":")[-1]] = {"log_age_s": 60}
+        self.queue(ROW)
+        self.tick()
+        self.assertEqual(self.f.launched, [])
 
 
 class TestRender(unittest.TestCase):

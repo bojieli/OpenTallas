@@ -461,6 +461,23 @@ try:
                                     if any(m.get("Source", "").rstrip("/") == K.rstrip("/")
                                            for m in c.get("Mounts", []))]
         out["started"] = sorted(x for x in st if x)
+        # FLOW-TIME-1 11-07: only the kit's pre-route LEC is alive: its own unit (<owner>-lec) and/or the owner container
+        # that already published its place result and now only waits for the exec-form proof.  The kit's lec_async.sh can
+        # reuse that live proof for the next stage, and sign-off still waits for the verdict (lec_async.sh finish).
+        owner, names = _async_read("owner"), out.get("active_containers") or []
+        try:
+            reuse = "LEC_ASYNC reuse proof" in open(os.path.join(K, "lec_async.sh"), errors="replace").read()
+        except OSError:
+            reuse = False
+        def _phase_ok(n):
+            try:
+                return json.load(open(os.path.join(K, "physical_completion", n + ".json"))).get("rc") == 0
+            except (OSError, ValueError, AttributeError):
+                return False
+        out["proof_only"] = bool(busy and owner and names and reuse and os.path.exists(os.path.join(K, "lec_async.ready"))
+                                 and _async_read("identity") and not out["async_proof"]["done"]
+                                 and not out["async_proof"]["rc"] and not os.path.exists(os.path.join(K, "lec_async.stop"))
+                                 and all(n == owner + "-lec" or (n == owner and _phase_ok(n)) for n in names))
     out["busy"] = busy
 except Exception as e:
     out["busy"] = "docker check failed: %s" % e
@@ -2104,11 +2121,17 @@ def die_priority(die):
     return DIE_PRIORITY.index(d) if d in DIE_PRIORITY else len(DIE_PRIORITY)
 
 
-def admit_new(st, rows):
+def admit_new(st, rows, only_new=False, budget=None):
+    """-> rows submitted.  only_new: the pass after the wave step, rows no earlier tick or pass has seen; budget: submits
+    left this tick (default MAX_SUBMIT_PER_TICK)."""
     submitted = 0
-    withdraw_unqueued(st, rows)
+    budget = MAX_SUBMIT_PER_TICK if budget is None else budget
+    if not only_new:
+        withdraw_unqueued(st, rows)
     for rid, r in sorted(rows.items(), key=lambda kv: (die_priority(kv[1].get("die")), kv[1]["line"])):
         j = st["jobs"].get(rid)
+        if only_new and j is not None:
+            continue
         if not r["error"] and r.get("mode") == "withdraw":
             # Append-only withdrawal is queue control, never a cancellation or a
             # replacement of an existing physical verdict.
@@ -2183,7 +2206,7 @@ def admit_new(st, rows):
             continue
         if r.get("canary_fix"):
             log(f"CORRECTIVE {rid} {r['die']}/{r['type']}: {canary_why}")
-        if submitted >= MAX_SUBMIT_PER_TICK:
+        if submitted >= budget:
             break
         p = rpy(r["host"], PROBE_KIT, {"kit": r["path"], "runner": r["runner"]}, timeout=120)
         j = st["jobs"].setdefault(rid, {})
@@ -2205,7 +2228,8 @@ def admit_new(st, rows):
                    "stage the whole bundle: tools/die_plan/signoff.py copy_signoff_bundle(kit)")
         if r["mode"] == "adopt":
             why = "kit dir missing" if not p["exists"] else "no config.mk" if not p.get("config") else ""
-        busy = p.get("busy") is not False or (la is not None and la < 900) or bool(hub_procs(r["path"]))
+        beside_proof = p.get("proof_only") is True and os.environ.get("AP_ROUTE_BESIDE_PROOF", "1") != "0"
+        busy = (p.get("busy") is not False and not beside_proof) or (la is not None and la < 900) or bool(hub_procs(r["path"]))
         if not why and busy and r["mode"] != "adopt":
             log(f"HOLD {rid} {r['die']}/{r['type']}: kit busy (container: {p.get('busy')}, logs "
                 f"{'none' if la is None else f'{la / 60:.0f} min old'}); retry next tick")
@@ -2231,8 +2255,30 @@ def admit_new(st, rows):
         if j.get("mode") == "adopt":
             adopt(st, j, p)
             continue
+        if beside_proof:
+            log(f"BESIDE-PROOF {rid} {r['die']}/{r['type']}: only the pre-route LEC is alive on this kit; route starts, "
+                "sign-off still waits for its verdict")
         submit(st, j)
         submitted += 1
+    return submitted
+
+
+def admit_after_wave(st, budget):
+    """FLOW-TIME-1 11-07: KW.step runs after admit_new, so a kit the wave enqueues waited a whole tick (p50 992 s over 617
+    wave kits) for the next admit_new although nothing else stood in its way.  Admit such rows in the tick that enqueued
+    them.  Same checks as admit_new; only rows with no job yet, so held rows are not probed twice.  AP_ADMIT_AFTER_WAVE=0
+    turns it off."""
+    if os.environ.get("AP_ADMIT_AFTER_WAVE", "1") == "0" or budget <= 0:
+        return 0
+    rows = parse_queue(read_queue_text())
+    if not any(rid not in st["jobs"] for rid in rows):
+        return 0
+    resolve_geom(rows, GEOM_TEXT)
+    AG.prepare(sys.modules[__name__], st, rows)
+    resolve_geom(rows, GEOM_TEXT)
+    n = admit_new(st, rows, only_new=True, budget=budget)
+    save_state(st)
+    return n
 
 
 def probe_job(j):
@@ -2676,13 +2722,17 @@ def tick(args):
     poll_reviews(st)
     retry_pending(st)
     retry_unversioned(st)
-    admit_new(st, rows)
+    submitted = admit_new(st, rows)
     save_state(st)
     if os.environ.get("AP_KIT_WAVE", "1") != "0":      # KIT-WAVE-1 (owner 10-30 (A)); inert without autopilot/kit_wave.json
         try:
             KW.step(sys.modules[__name__])
         except Exception as e:                         # the wave must never stop the chain
             log(f"KIT-WAVE failed: {type(e).__name__}: {e}")
+        try:
+            admit_after_wave(st, MAX_SUBMIT_PER_TICK - submitted)
+        except Exception as e:                         # the next tick admits these rows anyway
+            log(f"ADMIT-AFTER-WAVE failed: {type(e).__name__}: {e}")
     if os.environ.get("AP_AUTO_RESIGN", "1") != "0":   # FLOW-29 owner 11-04: signed runs re-signed on the newest tag, no agent
         try:
             AR.step(sys.modules[__name__])
