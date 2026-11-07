@@ -1,0 +1,6 @@
+dsdv_bksel_q vG, S81-BKSEL-RF7 2026-11-07. Kit-local conservative form on top of the vD kit (whose vC/vD RTL edits were kit-local until now).
+rtl/  full files carrying OT_BKQ_GBREG, GBREG2, BSTG, FO8. kit/  config.mk, macro_place.tcl, bank_regs.tcl of the kit. proof/  scripts and result.
+PIN CYCLES: t_s[864:0] +2 against vD/vE/vF, so +3 against vC. t_o, lane, f_c, f_cr, rst unchanged.
+Form: every hist_bank input two edges later as one block (row copy, then one flop at the pin); t_s control bits two more stages; fanout replicas.
+Proof: yosys equiv of reference (vD + plain 2-edge delay on all bank inputs and t_s control bits, real bank RTL, SRAM black box) vs vG. Mutants caught.
+Not proven by the tool: reference vs vD itself rests on the bank being a time-invariant function of its inputs; the 3 -> 6 g_b1c copies share D and enable and agree from the first read on (reference carries the same 6 copies).
