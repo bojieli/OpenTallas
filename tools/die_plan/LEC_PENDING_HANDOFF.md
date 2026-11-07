@@ -15,7 +15,10 @@ The exported packet binds source host, watcher/child PID start times, owner,
 unique session, destination host/path, proof environment, source/proof
 identities, exact netlist, tool bytes and Docker image ID. Both identities
 and the packet cover presence/bytes of core.json, constraint.sdc, straps.json
-and sdc_lint.json, used by typed reset/clock classification.
+and sdc_lint.json, used by typed reset/clock classification. Existing pins,
+native-stub metadata/helper, frozen runtime readset and declared kit-local
+RTL/library files are also fingerprinted. External aliases or unresolved
+non-platform proof paths require explicit closure and are refused.
 
 The controller stages the **complete kit** using the existing approved
 stage/copy mechanism. No raw PID, ready, identity or verdict marker may be

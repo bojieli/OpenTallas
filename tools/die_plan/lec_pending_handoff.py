@@ -68,13 +68,26 @@ def snapshot(k, env):
     # A complete staged cohort is mandatory; reject external file aliases.
     names=('lec.py','lec_async.sh','lec_pending_handoff.py','config.mk','freeze.json',
            'lec_options.json','lec_hints.json','reset_contract.json','lec_async.ready',
-           'core.json','constraint.sdc','straps.json','sdc_lint.json')
+           'core.json','constraint.sdc','straps.json','sdc_lint.json','pins.json',
+           'lec_native_stub_metadata.json','native_stub_metadata.py')
     paths=[k/n for n in names if (k/n).is_file()]
     paths += [p for p in (k/'rtl').rglob('*') if p.is_file()]
     metadata={n:sha(k/n) if (k/n).is_file() else None for n in
-              ('core.json','constraint.sdc','straps.json','sdc_lint.json')}
+              ('core.json','constraint.sdc','straps.json','sdc_lint.json','pins.json',
+           'lec_native_stub_metadata.json','native_stub_metadata.py')}
     if any((k/n).is_symlink() for n in metadata):raise ValueError('typed metadata alias needs explicit closure')
-    import shlex
+    import shlex, re
+    freeze=read(k/'freeze.json')
+    for row in freeze.get('runtime_files',[]): paths.append(k/row['destination'])
+    for line in (k/'config.mk').read_text().splitlines():
+        if re.match(r'^(?:override )?export (?:VERILOG_FILES|ADDITIONAL_LIBS|TC_LIB_FILES)\s*=',line):
+            for value in shlex.split(line.split('=',1)[1]):
+                if value=='$(TC_NLDM_LIB_FILES)':continue # standard cells are image-owned
+                if '$' in value:raise ValueError('explicit proof file requires resolved closure: '+value)
+                if value.startswith('/OpenROAD-flow-scripts/'):continue # covered by exact image ID
+                if value.startswith('/work/'):paths.append(k/value[6:])
+                elif not Path(value).is_absolute():paths.append(k/value)
+                else:raise ValueError('external proof file requires explicit closure: '+value)
     cmd = shlex.split('\n'.join((k/'lec_async.ready').read_text().splitlines()[1:]))
     net = cmd[cmd.index('--netlist')+1]
     if not net.startswith('/work/'): raise ValueError('netlist is not kit-local')
