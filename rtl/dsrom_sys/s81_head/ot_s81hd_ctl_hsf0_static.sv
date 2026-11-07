@@ -4,7 +4,7 @@
 // Issue authority is compiled START dates; physical codecs are in ot_s81hd_ctl_core.
 // The current spine root already merges north/south; feeding both comparison inputs the same
 // root record preserves that record exactly and retains the established two-edge pick latency.
-module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT_STATIC=0, parameter integer MUT_DRAFT_EARLY=0, parameter integer ING_STAGE=0, parameter integer SEQ_WB=0, parameter integer SEQ_FAN=0, parameter integer SEQ_RST=0) (
+module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT_STATIC=0, parameter integer MUT_DRAFT_EARLY=0, parameter integer ING_STAGE=0, parameter integer SEQ_WB=0, parameter integer SEQ_FAN=0, parameter integer SEQ_RST=0, parameter integer SRAM_RAW_CAPTURE=0) (
     input wire start_i, input wire adapter_fault,
     output wire job_active_o,
     input  wire              ck,
@@ -176,6 +176,13 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     assign mu_c = {muc_d, muc_v};
     // x store write port (P2) and message fill
     reg busy;
+    // Optional SRAM capture pipeline: drain protects the final captured word,
+    // while the original issue counter/read count remains unchanged.
+    reg sram_drain;
+    always @(posedge ck or negedge rr[2])
+        if (!rr[2]) sram_drain <= 1'b0;
+        else sram_drain <= SRAM_RAW_CAPTURE != 0 && busy && n == 14'(NEND - 1);
+    wire stream_busy = busy || (SRAM_RAW_CAPTURE != 0 && sram_drain);
     reg mt_v; reg [30:0] mt_tag;                                       // message tag {user, pos}, tag valid
     wire wa_xa = wa2 < 7'd64;
     wire [1:0] mf_c;                                                   // first beat of a message (kept copies, P2)
@@ -196,7 +203,7 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     ot_s81hd_static_issue #(.MUT_MODE(MUT_STATIC)) u_issue(
       .ck(ck),.rn(rr[1]),.start_i(start_i),.run_i(c_run),
       .issue_offset(c_iss_off),.issue_period(c_iss_per),.merge_deadline(c_merge_dl),
-      .loaded_ready(xrdy),.replay_busy(busy),.token_retire(token_retire),.merged_valid(mg4),
+      .loaded_ready(xrdy),.replay_busy(stream_busy),.token_retire(token_retire),.merged_valid(mg4),
       .issue_o(start),.job_active_o(job_active_o),.due_o(due),.fault_o(schedule_fault));
     always @(posedge ck or negedge rr[1])
         if (!rr[1]) nbeat <= 7'd0;
@@ -247,23 +254,51 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     always @(posedge ck or negedge rr[2])
         if (!rr[2]) begin go1 <= 1'b0; xv1 <= 1'b0; go2 <= 1'b0; xv2 <= 1'b0; end
         else begin go1 <= go0; xv1 <= xv0; go2 <= go1; xv2 <= xv1; end
+    // SRAM_RAW_CAPTURE adds one N/S output PIN cycle. Raw banks must be
+    // placed at their SRAM output edges; the following mux has its own cycle.
+    wire [511:0] ra0_c, ra1_c, rb0_c, rb1_c;
+    wire [31:0] sa_mux, sb_mux;
+    generate if (SRAM_RAW_CAPTURE != 0) begin : g_raw_capture
+        (* keep = "true" *) reg [511:0] ra0_q, ra1_q, rb0_q, rb1_q;
+        always @(posedge ck) begin
+            ra0_q <= ra0; ra1_q <= ra1; rb0_q <= rb0; rb1_q <= rb1;
+        end
+        assign ra0_c = ra0_q; assign ra1_c = ra1_q;
+        assign rb0_c = rb0_q; assign rb1_c = rb1_q;
+        for (genvar z = 0; z < 32; z = z + 1) begin : g_select
+            ot_s81hd_kf u_a (.ck(ck), .d(sa_c[z]), .q(sa_mux[z]));
+            ot_s81hd_kf u_b (.ck(ck), .d(sb_c[z]), .q(sb_mux[z]));
+        end
+    end else begin : g_no_raw_capture
+        assign ra0_c = ra0; assign ra1_c = ra1;
+        assign rb0_c = rb0; assign rb1_c = rb1;
+        assign sa_mux = sa_c; assign sb_mux = sb_c;
+    end endgenerate
+    reg go3, xv3, ctlf_d;
+    always @(posedge ck or negedge rr[2])
+        if (!rr[2]) begin go3 <= 1'b0; xv3 <= 1'b0; end
+        else begin go3 <= go2; xv3 <= xv2; end
+    always @(posedge ck) ctlf_d <= ctlf_q;
+    wire go_out = SRAM_RAW_CAPTURE != 0 ? go3 : go2;
+    wire xv_out = SRAM_RAW_CAPTURE != 0 ? xv3 : xv2;
+    wire fault_out = SRAM_RAW_CAPTURE != 0 ? ctlf_d : ctlf_q;
     reg [255:0] xa2, xb2;
     always @(posedge ck)
         for (i = 0; i < 256; i = i + 1) begin
-            xa2[i] <= (sa_c[4*(i/32)+0] & ra0[i]) | (sa_c[4*(i/32)+1] & ra0[256+i]) |
-                      (sa_c[4*(i/32)+2] & ra1[i]) | (sa_c[4*(i/32)+3] & ra1[256+i]);
-            xb2[i] <= (sb_c[4*(i/32)+0] & rb0[i]) | (sb_c[4*(i/32)+1] & rb0[256+i]) |
-                      (sb_c[4*(i/32)+2] & rb1[i]) | (sb_c[4*(i/32)+3] & rb1[256+i]);
+            xa2[i] <= (sa_mux[4*(i/32)+0] & ra0_c[i]) | (sa_mux[4*(i/32)+1] & ra0_c[256+i]) |
+                      (sa_mux[4*(i/32)+2] & ra1_c[i]) | (sa_mux[4*(i/32)+3] & ra1_c[256+i]);
+            xb2[i] <= (sb_mux[4*(i/32)+0] & rb0_c[i]) | (sb_mux[4*(i/32)+1] & rb0_c[256+i]) |
+                      (sb_mux[4*(i/32)+2] & rb1_c[i]) | (sb_mux[4*(i/32)+3] & rb1_c[256+i]);
         end
     // go copies (one per spine output) for the null-best fields
     wire gon, gos;
-    ot_s81hd_kf u_gon (.ck(ck), .d(go1), .q(gon));
-    ot_s81hd_kf u_gos (.ck(ck), .d(go1), .q(gos));
+    ot_s81hd_kf u_gon (.ck(ck), .d(SRAM_RAW_CAPTURE != 0 ? go2 : go1), .q(gon));
+    ot_s81hd_kf u_gos (.ck(ck), .d(SRAM_RAW_CAPTURE != 0 ? go2 : go1), .q(gos));
     reg ctlf_q;
     reg [564:0] sno_q, sso_q;
     always @(posedge ck) begin
-        sno_q <= {ctlf_q, gon, {8{gon}}, 23'd0, {17{gon}}, go2, xv2, go2, xb2, xa2};
-        sso_q <= {ctlf_q, gos, {8{gos}}, 23'd0, {17{gos}}, go2, xv2, go2, xb2, xa2};
+        sno_q <= {fault_out, gon, {8{gon}}, 23'd0, {17{gon}}, go_out, xv_out, go_out, xb2, xa2};
+        sso_q <= {fault_out, gos, {8{gos}}, 23'd0, {17{gos}}, go_out, xv_out, go_out, xb2, xa2};
     end
     assign sn_o = sno_q;
     assign ss_o = sso_q;
@@ -608,7 +643,7 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     // ================================================================== MU landing replay (mu_rc)
     reg lw_v; reg [9:0] lw_u; reg [6:0] lcnt; reg lpend; reg [9:0] luser; reg rc_v; reg [9:0] rc_u;
     always @(posedge ck) begin lw_u <= lw[10:1]; if (lw_v && lcnt == 7'd0) luser <= lw_u; rc_u <= luser; end
-    wire rc_go = lpend && !busy && nbeat == 7'd0 && !wv2;
+    wire rc_go = lpend && !stream_busy && nbeat == 7'd0 && !wv2;
     always @(posedge ck or negedge rr[21])
         if (!rr[21]) begin lw_v <= 1'b0; lcnt <= 7'd0; lpend <= 1'b0; rc_v <= 1'b0; end
         else begin
@@ -626,7 +661,7 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     always @(posedge ck) begin lepf_q <= lep_f; end
     always @(*) begin
         fset = 17'd0;
-        fset[0]  = (wv2 && busy) || (wv2 && xrdy);                     // x store written while streaming / overfilled
+        fset[0]  = (wv2 && stream_busy) || (wv2 && xrdy);                     // x store written while streaming / overfilled
         fset[1]  = p1_xw && p1_gx >= 8'd80;                            // gidx out of range
         fset[2]  = wv2 && nbeat != 7'd0 && (t2[31] != mt_v || t2[30:0] != mt_tag);   // tag changes inside a message
         fset[3]  = bv && (isnan(n_bits) || isnan(s_bits)) || (mg1 && mchk_nan);
