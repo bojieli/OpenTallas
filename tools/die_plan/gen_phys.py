@@ -3687,6 +3687,48 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=()
     return out
 
 
+# S81-TYPES-2 11-07: kit-local hard core moves, opt-in per row through wave item_env, default off (byte-identical kits).
+# OT_MACRO_MOVES = inst:x:y[:orient],... in the type frame; orient given = mirror the core and take the track offset of
+# that orient.  No plan, pin or RTL change: the same type frame, a core site inside the slot (leaf vs/ve_m facing form).
+_CORE_TRACK_OFFSET = {"R0": (0.108, 0.012), "MY": (0.132, 0.012), "MX": (0.108, 0.036), "R180": (0.132, 0.036)}
+
+
+def apply_macro_moves(t, tn, env=None):
+    """Apply OT_MACRO_MOVES to the type hard_cores in place; returns the applied list (empty when the key is unset)."""
+    raw = (os.environ if env is None else env).get("OT_MACRO_MOVES", "")
+    out = []
+    if not raw:
+        return out
+    cores = {c.get("inst"): c for c in t.get("hard_cores", []) or []}
+    w, h = t["outline_um"]
+    for e in raw.split(","):
+        f = e.split(":")
+        if len(f) not in (3, 4) or f[0] not in cores:
+            raise ValueError(f"type {tn}: OT_MACRO_MOVES entry {e!r}: not inst:x:y[:orient] of a hard core")
+        c = cores[f[0]]
+        x, y = float(f[1]), float(f[2])
+        cw, ch = c["outline_um"]
+        if x < 0 or y < 0 or x + cw > w or y + ch > h:
+            raise ValueError(f"type {tn}: OT_MACRO_MOVES {f[0]} at {x},{y} leaves the outline")
+        rec = {"inst": f[0], "from": list(c["origin_um"]), "to": [x, y], "orient_from": c.get("orient", "R0")}
+        c["origin_um"] = [x, y]
+        if len(f) == 4:
+            if f[3] not in _CORE_TRACK_OFFSET:
+                raise ValueError(f"type {tn}: OT_MACRO_MOVES {f[0]} orient {f[3]!r}")
+            c["orient"] = f[3]
+            c["track_offset_um"] = list(_CORE_TRACK_OFFSET[f[3]])
+        rec["orient"] = c.get("orient", "R0")
+        out.append(rec)
+    names = sorted(cores)
+    for i, a in enumerate(names):
+        for b in names[i + 1:]:
+            ax, ay = cores[a]["origin_um"]; aw, ah = cores[a]["outline_um"]
+            bx, by = cores[b]["origin_um"]; bw, bh = cores[b]["outline_um"]
+            if ax < bx + bw and bx < ax + aw and ay < by + bh and by < ay + ah:
+                raise ValueError(f"type {tn}: OT_MACRO_MOVES overlap {a} / {b}")
+    return out
+
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
@@ -3695,6 +3737,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
+    macro_moves = apply_macro_moves(t, tn)
     if gpl_plain and not t.get("ft_slots"):
         raise ValueError(f"type {tn}: --gpl-plain is for pure-FT corridor kits; the type has no ft_slots")
     import core_clock_groups as CG
@@ -4055,6 +4098,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else [])]
     if macros:
         (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
+        if macro_moves:
+            (kd / "macro_moves.json").write_text(json.dumps(macro_moves, indent=1) + "\n")
     # Explicit full fixed-macro contract: use the standard stage pre-hook,
     # preserving the native placement deck and all following ORFS stages.
     import fully_fixed_macros as FFM
