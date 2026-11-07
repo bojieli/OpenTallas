@@ -214,6 +214,7 @@ def test_native_clock_drt_stage(tmp_path):
     assert audit.index("dbObstruction_destroy") < audit.index("foreach net [[ord::get_db_block] getNets]")
     pre = (tmp_path / "native_clock_drt.tcl").read_text()
     assert "set ot_ncd_pad [$ot_ncd_m7 getSpacing]" in pre
+    assert pre.index("set ::ot_ncd_range") < pre.index("set_routing_layers") and "setMaxRoutingLayer $ot_ncd_hi" in audit
     assert "dbObstruction_create $ot_ncd_blk $ot_ncd_m7" in pre and '-signal "$::env(MIN_ROUTING_LAYER)-M7"' in pre
 
 

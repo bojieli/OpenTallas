@@ -668,6 +668,8 @@ for {set k 0} {$k < [llength $ot_ncd_ys] - 1} {incr k} {
   }
   if {$x < $ot_ncd_X1} { lappend ::ot_ncd_obs [odb::dbObstruction_create $ot_ncd_blk $ot_ncd_m7 $x $y0 $ot_ncd_X1 $y1] }
 }
+# restored by native_clock_drt_audit.tcl: M7 stays out of the saved DB ranges (a later ECO GRT must not see it)
+set ::ot_ncd_range [list [$ot_ncd_blk getMinRoutingLayer] [$ot_ncd_blk getMaxRoutingLayer] [$ot_ncd_blk getMinLayerForClock] [$ot_ncd_blk getMaxLayerForClock]]
 set_routing_layers -signal "$::env(MIN_ROUTING_LAYER)-M7" -clock "$::env(MIN_CLK_ROUTING_LAYER)-M7"
 puts "OT_NATIVE_CLOCK_DRT DRT maze $::env(MIN_ROUTING_LAYER)-M7; M7 open only in [llength $ot_ncd_win] root-pin windows ([llength $::ot_ncd_obs] temporary M7 obstructions); audit data<=M6 clock<=M7; 0 added cycles"
 """
@@ -682,6 +684,11 @@ if {![info exists ::ot_ncd_obs]} {error "OT_NATIVE_CLOCK_DRT_AUDIT: native_clock
 foreach o $::ot_ncd_obs { odb::dbObstruction_destroy $o }
 puts "OT_NATIVE_CLOCK_DRT removed [llength $::ot_ncd_obs] temporary M7 obstructions"
 set ::ot_ncd_obs {}
+lassign $::ot_ncd_range ot_ncd_lo ot_ncd_hi ot_ncd_clo ot_ncd_chi
+set ot_ncd_b [ord::get_db_block]
+$ot_ncd_b setMinRoutingLayer $ot_ncd_lo; $ot_ncd_b setMaxRoutingLayer $ot_ncd_hi
+$ot_ncd_b setMinLayerForClock $ot_ncd_clo; $ot_ncd_b setMaxLayerForClock $ot_ncd_chi
+puts "OT_NATIVE_CLOCK_DRT restored DB routing ranges signal $ot_ncd_lo-$ot_ncd_hi clock $ot_ncd_clo-$ot_ncd_chi"
 set ot_ncd_bad {}; set ot_ncd_m7 0; set ot_ncd_routed 0
 foreach net [[ord::get_db_block] getNets] {
   set type [$net getSigType]
