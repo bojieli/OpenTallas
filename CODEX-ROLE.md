@@ -1,4 +1,4 @@
-**Watcher mode (OWNER 11-06): during a Claude limit you do routine work only. See item 5e in CODEX-HANDOFF-STATUS.md; it overrides anything below that gives you wider scope.**
+**Watcher mode (OWNER 11-06, widened 11-07): during a Claude limit you keep routine work and may also write class fixes and new forms on your own branches, and rebuild from them. No merges, tags, plan-of-record changes or deletions. See item 5e in CODEX-HANDOFF-STATUS.md; it overrides anything below that gives you wider scope.**
 
 # Codex: stand-in coordinator AND worker while Claude is usage-limited
 
