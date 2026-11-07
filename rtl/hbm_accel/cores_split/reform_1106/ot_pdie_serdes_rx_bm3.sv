@@ -229,10 +229,21 @@ module ot_pdie_serdes_rx_bm3_rest #(parameter integer PMA_LAT = 4, parameter int
     wire q_v, q_first, q_unc, lock; wire [511:0] q_d; wire [4:0] q_nerr; wire [7:0] q_seq; wire [31:0] n_rl;
     ot_s81_kp4_dsyn_bm3_rest #(.MUT(DMUT), .BMTHC(BMTHC)) u_syn (.clk(rck_clk), .rst_n(rn_r), .p_v(rn_r), .p_d(r_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo),
         .k_L(k_L), .k_any(k_any), .lock(lock), .n_relock(n_rl), .bm_S(bm_S), .bm_ld(bm_ld), .bm_rs_n(bm_rs_n), .bm_lam(bm_lam), .bm_om(bm_om), .bm_L(bm_L), .bm_any(bm_any), .bm_done(bm_done));
-`ifdef OT_RXBM3_SRAM_SPLIT
+`ifdef OT_RXBM3_FLOPDLY
+    // DIE-HBM-82-RF 11-06: no-macro form; both fixed-distance delays as shift registers (ot_s81_kp4_sp.sv)
+    ot_s81_kp4_ddly_sr #(.DD(55 + SEAM)) u_dly (.clk(rck_clk), .rst_n(rn_r), .w_d(x_q), .r_d(d_q));
+    ot_s81_kp4_dout_sr u_out (.clk(rck_clk), .rst_n(rn_r), .d_q(d_q), .cw(cw_q), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs),
+        .q_v(q_v), .q_d(q_d), .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq));
+`elsif OT_RXBM3_SRAM_SPLIT
     ot_s81_kp4_ddly_sp #(.DD(55 + SEAM)) u_dly (.clk(rck_clk), .rst_n(rn_r), .w_d(x_q), .r_d(d_q));
+`ifdef OT_RXBM3_FLOPC
+    // DIE-HBM-82-RF 11-06: correction delay as a 10-stage shift register, word delay stays the SRAM-split form
+    ot_s81_kp4_dout_sr u_out (.clk(rck_clk), .rst_n(rn_r), .d_q(d_q), .cw(cw_q), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs),
+        .q_v(q_v), .q_d(q_d), .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq));
+`else
     ot_s81_kp4_dout_sp u_out (.clk(rck_clk), .rst_n(rn_r), .d_q(d_q), .cw(cw_q), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs),
         .q_v(q_v), .q_d(q_d), .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq));
+`endif
 `else
     ot_s81_kp4_ddly #(.DD(55 + SEAM)) u_dly (.clk(rck_clk), .rst_n(rn_r), .w_d(x_q), .r_d(d_q));
     ot_s81_kp4_dout u_out (.clk(rck_clk), .rst_n(rn_r), .d_q(d_q), .cw(cw_q), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs),

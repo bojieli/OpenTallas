@@ -100,3 +100,83 @@ module ot_s81_kp4_dout_sp (
             if (os[0][0]) begin q_unc <= o_unc; q_nerr <= o_ne; q_seq <= cwo[531:524]; end
         end
 endmodule
+// ---------------------------------------------------------------------------------------------------------------
+// DIE-HBM-82-RF 11-06: RX BM3 residual NO-MACRO delay forms (opt-in).  Both memories of the residual are fixed-
+// distance delays on a free-running pointer (write every cycle at ptr, registered read at ptr - D, D mod 2^AW != 0),
+// so each is exactly a (D+1)-stage shift register: macro rd_out at t+1 = word written at t - D.  No macro, no macro
+// pin faces, every net 2-pin and local (the GRT overflow of vB2/vC sat at the macro faces and over the macros).
+//   `define OT_RXBM3_FLOPDLY : u_dly = ot_s81_kp4_ddly_sr (DD+1 stages) and u_out = ot_s81_kp4_dout_sr (DC+1 stages).
+//   `define OT_RXBM3_FLOPC   (with OT_RXBM3_SRAM_SPLIT): u_dly stays the SRAM-split form, u_out = ot_s81_kp4_dout_sr.
+// Datapath stages carry no reset (as the macro contents).  Cycle behaviour at every port is unchanged.
+// ---------------------------------------------------------------------------------------------------------------
+module ot_s81_kp4_ddly_sr #(parameter integer DD = 55) (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire [543:0]  w_d,
+    output wire [543:0]  r_d
+);
+    reg [543:0] sr [0:DD];
+    integer k;
+    always @(posedge clk) begin
+        sr[0] <= w_d;
+        for (k = 1; k <= DD; k = k + 1) sr[k] <= sr[k-1];
+    end
+    assign r_d = sr[DD];
+endmodule
+module ot_s81_kp4_dout_sr (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire [543:0]  d_q,
+    input  wire [543:0]  cw,
+    input  wire [7:0]    apply,
+    input  wire          o_unc,
+    input  wire [4:0]    o_ne,
+    input  wire          fs,
+    output reg           q_v,
+    output reg  [511:0]  q_d,
+    output reg           q_first,
+    output reg           q_unc,
+    output reg  [4:0]    q_nerr,
+    output reg  [7:0]    q_seq
+);
+    localparam integer NRO = 16;         // beat select copies (32 bits each)
+    localparam integer DC = 9;           // corr delay (was the 32-entry SRAM at fixed distance DC)
+    wire [0:0] rs_n;
+    ot_s81_kp4_rst #(.NL(1)) u_rst (.clk(clk), .rst_n(rst_n), .rs_n(rs_n));
+    integer i;
+    genvar gk, gb;
+    reg  [543:0] csr [0:DC];             // c_rd at t+1 = cw at t-DC, as the macro read port
+    always @(posedge clk) begin
+        csr[0] <= cw;
+        for (i = 1; i <= DC; i = i + 1) csr[i] <= csr[i-1];
+    end
+    wire [543:0] c_rd = csr[DC];
+    (* keep *) reg [9:0] os [0:NRO-1];   // one-hot beat index: os[*][k] at T + 57 + k
+    always @(posedge clk)
+        if (!rs_n[0]) for (i = 0; i < NRO; i = i + 1) os[i] <= 10'd0;
+        else for (i = 0; i < NRO; i = i + 1) os[i] <= {os[i][8:0], fs};
+    reg  [543:0] cwo, cwp;
+    generate for (gb = 0; gb < 544; gb = gb + 1) begin : g_cor
+        always @(posedge clk) cwo[gb] <= d_q[gb] ^ (apply[gb / 68] & c_rd[gb]);
+    end endgenerate
+    always @(posedge clk) cwp <= cwo;
+    wire [1087:0] w2 = {cwp, cwo};
+    wire [511:0]  bsrc [0:9];
+    generate for (gk = 0; gk < 10; gk = gk + 1) begin : g_bsrc
+        assign bsrc[gk] = w2[523 + 32 * gk -: 512];
+    end endgenerate
+    generate for (gb = 0; gb < 512; gb = gb + 1) begin : g_bm_o
+        wire [9:0] s;
+        for (gk = 0; gk < 10; gk = gk + 1) begin : g_s
+            assign s[gk] = bsrc[gk][gb];
+        end
+        always @(posedge clk) q_d[gb] <= |(s & os[gb / 32]);
+    end endgenerate
+    always @(posedge clk)
+        if (!rs_n[0]) begin q_v <= 1'b0; q_first <= 1'b0; q_unc <= 1'b0; q_nerr <= 0; q_seq <= 0; end
+        else begin
+            q_v <= |os[0];
+            q_first <= os[0][0];
+            if (os[0][0]) begin q_unc <= o_unc; q_nerr <= o_ne; q_seq <= cwo[531:524]; end
+        end
+endmodule
