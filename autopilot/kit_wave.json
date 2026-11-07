@@ -5764,11 +5764,17 @@
     "ot_hnx_idxn_keybuf_slice",
     "ot_pdie_serdes_rx_bm_native",
     "ot_pdie_serdes_tx",
-    "ot_s81_kp4_dchn"
+    "ot_s81_kp4_dchn",
+    "ot_hbm_idx_tail_native__v9496b22d4b49",
+    "ot_hgi_coll_gq_land__v25778639ea1b",
+    "ot_hgi_coll_gq_land__vac72b8c34f86",
+    "ot_hbm_hc_bank128_pair_core__v7d149b37532c",
+    "ot_hbm_hc_bank128_pair_core__v9bf80cdae38d"
    ],
    "src_prev_kw28b": "/srv/opentallas-scratch2/claude/kw27/src_93c06",
    "src_sha_prev_kw28b": "93c061c396c7bd38c04eaf958b30d465f087fe58",
-   "src_prev_kw28c": "/srv/opentallas-scratch2/claude/kw27/src_b1485"
+   "src_prev_kw28c": "/srv/opentallas-scratch2/claude/kw27/src_b1485",
+   "note_kw29_counted": "KW-FIX-29 11-07 10:3x: DIE-HBM-86 09:14 list: 5 old __v rows (10-31, 11-03) whose plan designs are counted; relabel only (write_stages), no build. 6th (__vf56d) already SIGNED."
   }
  },
  "place_prefer": [
@@ -6080,5 +6086,7 @@
   "slw_st_a_v2__cl9f076a5c@9",
   "slw_st_a_v2__clf4365a62@9"
  ],
- "note_kw28_restage": "KW-FIX-28 09:4x: restage 12 restored, 3e5e25a19d84 on hub: spillable PLACE waiters no longer moved, target load charged per move"
+ "note_kw28_restage": "KW-FIX-28 09:4x: restage 12 restored, 3e5e25a19d84 on hub: spillable PLACE waiters no longer moved, target load charged per move",
+ "geom_grt_wall_s": 600,
+ "note_kw29_grtwall": "KW-FIX-29 11-07 COORD 10:38: AUTO-GEOM GRT probe wall 1800 -> 600 s, advisory probe, new attempts only (FLOW-TIME-1: 9 kits in 600-1500 s become grt NA); not in the input hash. Revert: drop this key."
 }
