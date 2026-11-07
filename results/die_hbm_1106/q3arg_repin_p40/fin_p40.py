@@ -9,18 +9,18 @@ NEW = "cores/ot_hfd_coll_q3_edge_arg__276.48x43.2__d44v_repin_hg8.json"
 CYC = "corelat/cycles_q3arg_fpipe_1106.tsv"
 sha = lambda b: hashlib.sha256(b).hexdigest()
 
-# declared pin cycles of the HBM-GAPS-9 pin-cycle form (claude/hbm-gaps-9-q3fp-1106@6305fade5a)
+# declared pin cycles of the HBM-GAPS-9 pin-cycle form (claude/hbm-gaps-9-q3fp-1106@bc7615918d (v2, main I221))
 (D / CYC).write_text(
     "core\tsub_block\tport_or_bus\tdir\tadded_cycles\tnote\n"
-    "ot_hfd_coll_q3_edge_arg\t\tfault\tport\t1\tHBM-GAPS-9 pin-cycle form, part 40: recipe ot_hfd_coll_q3_edge_arg__fpipe "
-    "(define OT_Q3ARG_FAULT_PIPE, two-stage duplicate check ot_hgi_coll_argmax_static_fp); fault-only (not priced); "
+    "ot_hfd_coll_q3_edge_arg\t\tfault\tport\t1\tHBM-GAPS-9 pin-cycle form, part 40: recipe ot_hfd_coll_q3_edge_arg__fpipe2 "
+    "(define OT_Q3ARG_FAULT_PIPE2, two-stage duplicate check ot_hgi_coll_argmax_static_fp); fault-only (not priced); "
     "equiv_induct 7357/7357 + lock-step bench 200k cycles, mutants caught (over_cap_split/reform_1106/q3_edge_arg_repin/fault_pipe)\n"
     "ot_hfd_coll_q3_edge_arg\t\tout_v,out_flit\tport\t0\tpart 40: exact (all other outputs unchanged)\n")
 cd = D / "compiler_core_delta.json"
 K = json.loads(cd.read_text())
 K["pending_not_folded"]["HBM-GAPS-9 q3_edge_arg fault pipe (part 40)"] = (
     "ot_hfd_coll_q3_edge_arg fault +1 (corelat/cycles_q3arg_fpipe_1106.tsv): fault-only flag, no data-path or tok/s change; "
-    "applies when the __fpipe form (OT_Q3ARG_FAULT_PIPE) is the built form; fold at the next ext_census regen")
+    "applies when the __fpipe2 form (OT_Q3ARG_FAULT_PIPE2) is the built form; fold at the next ext_census regen")
 cd.write_text(json.dumps(K, indent=1) + "\n")
 
 ev = {"schema": "opentallas.hbm_plan_event.part40",
@@ -35,8 +35,8 @@ ev = {"schema": "opentallas.hbm_plan_event.part40",
           "made_by": "physical/die_plan/hbm/over_cap_split/reform_1106/q3_edge_arg_repin/repin_q3_edge_arg.py (HBM-GAPS-8 6edc0ba242, deterministic)",
           "gate_kit": "epyc5 /srv/opentallas-scratch2/claude/hbm-gaps-8/q3/ot_hfd_coll_q3_edge_arg_vA/ot_hfd_coll_q3_edge_arg_9ae65807400d (ROUTED, GRT0, DRC 0, ant 0)"}},
       "sidecars": "none changed: core_conns are by pin name; the clock tap / clock_entries point is the unchanged core centre",
-      "pin_cycles": CYC + ": fault +1 (HBM-GAPS-9 form, recipe ot_hfd_coll_q3_edge_arg__fpipe, define OT_Q3ARG_FAULT_PIPE, "
-                    "claude/hbm-gaps-9-q3fp-1106@6305fade5a); out_v / out_flit exact",
+      "pin_cycles": CYC + ": fault +1 (HBM-GAPS-9 form, recipe ot_hfd_coll_q3_edge_arg__fpipe2, define OT_Q3ARG_FAULT_PIPE2, "
+                    "claude/hbm-gaps-9-q3fp-1106@bc7615918d (v2, main I221)); out_v / out_flit exact",
       "replay": "results/die_hbm_1106/q3arg_repin_p40/replay_p40.sh"}
 (D / "part40_event.json").write_text(json.dumps(ev, indent=1) + "\n")
 
@@ -45,7 +45,7 @@ rd.write_text(rd.read_text().rstrip("\n") + "\n\nEvent part 40 (DIE-HBM-82 11-06
               "ot_hfd_coll_q3_edge_arg (q_hub_nw u_hb_coll_Q_edge__q0__arg) takes the HBM-GAPS-8 same-slot re-pin table "
               "(cores/ot_hfd_coll_q3_edge_arg__276.48x43.2__d44v_repin_hg8.json, sha 9ae65807400d, byte for byte): S-face M5 pins spread "
               "in x only; outline, origin, E pins and clock entry unchanged; no sidecar change. PIN CYCLES fault +1 for the HBM-GAPS-9 "
-              "__fpipe form (corelat/cycles_q3arg_fpipe_1106.tsv); part40_event.json; replay results/die_hbm_1106/q3arg_repin_p40.\n")
+              "__fpipe2 form (corelat/cycles_q3arg_fpipe_1106.tsv); part40_event.json; replay results/die_hbm_1106/q3arg_repin_p40.\n")
 
 # SHA256SUMS: update changed rows, add new files
 S = D / "SHA256SUMS"
