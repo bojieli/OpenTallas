@@ -157,6 +157,17 @@ HOSTS = ['local', 'epyc2', 'intel1', 'intel2', 'epyc4', 'epyc5', 'epyc6']   # ON
 # SIGNOFF-SPRINT-22 11-02: + epyc2 root scratch (OWNER 11-01: /home/ubuntu/scratch-root/claude = 2nd scratch root); KV
 # qkd_ectlk_q2 q-kv re-sign (DIE-KV-62) and the S81-48/49 ECO/kits live there and were never scanned.
 SCAN_ROOTS = '/srv/opentallas-scratch /srv/opentallas-scratch2 /srv/opentallas-scratch3 /home/ubuntu/scratch-root'
+# COUNT-SCAN-1 11-07: a walk over 300 s lost epyc4 (counter 194 -> 192 with no data lost).  scratch3 is a bind mount of
+# scratch-root on all 6 hosts, so that tree was walked twice: scan_cmd walks one root per dev:inode, first name wins.  The
+# walk has a budget on the host itself (a killed ssh used to leave the remote find running); when it is cut, the records of
+# the last cache are still read by path, so credit only moves on what was really read.  ionice -c3 changes nothing on the
+# fleet nvme (scheduler none) and could starve on another scheduler, hence best-effort lowest.
+SCAN_WALK_S = 900
+SCAN_SSH_S = SCAN_WALK_S + 180   # + reading the records; count_hourly gives the whole refresh 25 min
+# Directories never holding a sign-off record, by exact name.  epyc4 census 11-07: rtl, tools, arch and uarch of repo copies are
+# about 29 of 53 M directory entries; 0 of the 57,620 + 44,946 records in the 11-06 21:30 and 11-07 01:53 caches sit below any of
+# these names.  Not 'specs': physical/die_plan/s81/cores/legacy/specs/*/views holds records.  Check before adding a name.
+SCAN_PRUNE = ('.git', '__pycache__', 'rtl', 'tools', 'arch', 'uarch', 'logs', 'reports', 'tests')
 # RETIRED sign-offs (HEAD-CORE-R13 2026-10-27): a SIGNED record of a superseded build (older RTL / flow) that must not
 # count for the current design. One line per record: '<scan_host>:<path>\t<date>\t<lane>\t<reason>' ('#' = comment).
 # Matching records are dropped from signed_records / signed_* and listed in retired_records (visible, not deleted).
@@ -408,8 +419,18 @@ SCAN_PY = r'''
 import json, os, sys
 ''' + PROV_PY + r'''
 out = []
+walk_rc, seen = None, set()
 for p in sys.stdin.read().split():
+    if p.startswith('OT_WALK_RC='):
+        walk_rc = p[len('OT_WALK_RC='):]
+        continue
     try:
+        # one record per directory, under the first name given: walk names come first, a known path naming the same dir
+        # through a bind mount or symlink adds nothing.  A directory, because a signoff.json may be hard-linked into
+        # another kit, whose PROVENANCE differs.
+        st = os.stat(os.path.dirname(p))
+        if (st.st_dev, st.st_ino, os.path.basename(p)) in seen: continue
+        seen.add((st.st_dev, st.st_ino, os.path.basename(p)))
         if os.path.getsize(p) > 8 << 20: continue
         d = json.load(open(p))
     except Exception: continue
@@ -425,6 +446,7 @@ for p in sys.stdin.read().split():
         r['pins_path'] = os.path.join(os.path.dirname(os.path.dirname(p)), 'pins.json')
     r['versioned'] = bool(r.get('src_commit') and r.get('flow_tag'))
     out.append(r)
+print('OT_WALK_RC=%s' % walk_rc)
 print(json.dumps(out))
 '''
 
@@ -436,9 +458,10 @@ def sh(cmd, timeout, **kw):
 SSH_RETRY_BACKOFF_S = (5, 15, 45)   # FLOW-21 COORD 11-01 09:2x: sshd resets under load (intel1 load 545) are not a down host
 
 
-def sh_ssh(cmd, timeout, **kw):
+def sh_ssh(cmd, timeout, retry_timeout=True, **kw):
     """sh() for an ssh command: an ssh transport failure (rc 255, or a timeout, with no output: kex reset / banner
-    timeout) is retried 3 times with backoff before the caller may mark the host unreachable."""
+    timeout) is retried 3 times with backoff before the caller may mark the host unreachable.  retry_timeout=False: a
+    timeout raises at once (a scan that used its whole budget would use it again, 4 x 300 s on epyc4)."""
     import time
     for i, wait in enumerate((0,) + SSH_RETRY_BACKOFF_S):
         if wait:
@@ -447,7 +470,7 @@ def sh_ssh(cmd, timeout, **kw):
         try:
             r = sh(cmd, timeout, **kw)
         except subprocess.TimeoutExpired:
-            if i == len(SSH_RETRY_BACKOFF_S): raise
+            if not retry_timeout or i == len(SSH_RETRY_BACKOFF_S): raise
             continue
         if r.returncode != 255 or r.stdout.strip():
             return r
@@ -457,19 +480,48 @@ def sh_ssh(cmd, timeout, **kw):
 UNREACHABLE = set()   # hosts whose SIGNED scan or pins fetch failed in this refresh (SIGNOFF-SPRINT-17, COORD 11-01 09:2x)
 
 
-def scan_host(h):
-    find = "nice -n 15 ionice -c3 find %s -xdev \\( -name signoff.json -o -name '*.signoff.json' \\) -size -8M 2>/dev/null" % SCAN_ROOTS
+PARTIAL = set()       # hosts whose walk hit SCAN_WALK_S in this refresh: known records read, new ones wait for the next walk
+
+
+def scan_cmd(roots=None, walk_s=None, prune=None):
+    """shell pipeline: known paths on stdin, plus the walk of each distinct root, into SCAN_PY"""
+    roots = SCAN_ROOTS if roots is None else roots
+    prune = SCAN_PRUNE if prune is None else prune
+    distinct = "for r in %s; do stat -c '%%d:%%i %%n' \"$r\" 2>/dev/null; done | awk '!s[$1]++ {print $2}'" % roots
+    skip = '\\( %s \\) -prune -o ' % ' -o '.join("-name '%s'" % n for n in prune) if prune else ''
+    find = ("timeout -k 10 %d nice -n 15 ionice -c2 -n7 find $R -xdev %s\\( -name signoff.json -o -name '*.signoff.json' \\) "
+            "-size -8M -print 2>/dev/null" % (SCAN_WALK_S if walk_s is None else walk_s, skip))
+    return 'R=$(%s); { [ -n "$R" ] && %s; echo OT_WALK_RC=$?; cat; } | python3 -c %s' % (distinct, find, shlex_quote(SCAN_PY))
+
+
+def scan_host(h, known=()):
+    cmd = scan_cmd()
     if h == 'local':
-        cmd = ['bash', '-c', find + ' | python3 -c %s' % shlex_quote(SCAN_PY)]
+        cmd = ['bash', '-c', cmd]
     else:
-        cmd = ['ssh', '-o', 'ConnectTimeout=10', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h,
-               find + ' | python3 -c %s' % shlex_quote(SCAN_PY)]
-    r = sh_ssh(cmd, 300) if h != 'local' else sh(cmd, 300)
+        cmd = ['ssh', '-o', 'ConnectTimeout=10', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, cmd]
+    stdin = ''.join(p + '\n' for p in known)
+    r = sh_ssh(cmd, SCAN_SSH_S, retry_timeout=False, input=stdin) if h != 'local' else sh(cmd, SCAN_SSH_S, input=stdin)
     if r.returncode != 0 and not r.stdout.strip():
         raise RuntimeError('%s: rc %d %s' % (h, r.returncode, r.stderr.strip()[-200:]))
-    recs = json.loads(r.stdout.strip().splitlines()[-1])
+    lines = r.stdout.strip().splitlines()
+    recs = json.loads(lines[-1])
+    if any(l in ('OT_WALK_RC=124', 'OT_WALK_RC=137') for l in lines):
+        PARTIAL.add(h)
     for x in recs: x['scan_host'] = h
     return recs
+
+
+def known_paths(old, h):
+    """record paths of host h in the last cache: its records, and the refs of a credit carried while the host was down"""
+    ps = {r_['path'] for r_ in (old or {}).get('signed_records') or [] if r_.get('scan_host') == h and r_.get('path')}
+    for ent in ((old or {}).get('plans') or {}).values():
+        for a in ('signed_types', 'signed_cores', 'signed_designs'):
+            for refs in (ent.get(a) or {}).values():
+                for ref in refs:
+                    rh, hp = _ref_host_path(ref)
+                    if rh == h: ps.add(hp.split(':', 1)[1])
+    return sorted(ps)
 
 
 def shlex_quote(s):
@@ -1163,11 +1215,11 @@ def keep_g0c_report(label, rep):
         pass
 
 
-def refresh(log=lambda *a: None):
+def refresh(log=lambda *a: None, old=None):
     errs = []
     for g in sweep_stale_tmp():
         log('removed stale scratch dir %s' % g)
-    UNREACHABLE.clear()
+    UNREACHABLE.clear(); PARTIAL.clear()
     res = dict(generated=time.time(), errors=errs, dies={}, plans={}, provenance_rule='v1')
     sha = None
     r = sh(['git', '-C', str(REPO), 'fetch', '-q', 'origin', 'main'], 180)
@@ -1185,7 +1237,7 @@ def refresh(log=lambda *a: None):
         design_rows = {}
         # SIGNED records: fleet scan in parallel while the G0C checks run here
         with cf.ThreadPoolExecutor(len(HOSTS)) as ex:
-            futs = {ex.submit(scan_host, h): h for h in HOSTS}
+            futs = {ex.submit(scan_host, h, known_paths(old, h)): h for h in HOSTS}
             g0c_ex, g0c_jobs = cf.ThreadPoolExecutor(len(PLANS)), []
             for key, pdir, src, ovl in PLANS:
                 d = plan_label(src)
@@ -1227,9 +1279,12 @@ def refresh(log=lambda *a: None):
             scanned = ['origin/main']
             for f, h in futs.items():
                 try:
-                    recs += f.result(timeout=600); scanned.append(h)
+                    recs += f.result(timeout=SCAN_SSH_S + 60); scanned.append(h)
                 except Exception as e:
-                    UNREACHABLE.add(h); errs.append('SIGNED scan %s: %s' % (h, e))
+                    # the bare futures timeout has empty text; TimeoutExpired text is the whole scan script
+                    UNREACHABLE.add(h); errs.append('SIGNED scan %s: %s' % (h, ('%s %s' % (type(e).__name__, e))[:300]))
+            for h in sorted(PARTIAL):
+                errs.append('SIGNED scan %s: walk cut at %d s; known records re-read, new records wait for the next walk' % (h, SCAN_WALK_S))
         cutoff = first_flow_tag_ts(); res['first_flow_tag_ts'] = cutoff
         for r_ in recs:
             check_resign_tag(r_)
@@ -1244,6 +1299,7 @@ def refresh(log=lambda *a: None):
         for d, ent in res['plans'].items():
             if 'types' not in ent: continue
             tm = ent.pop('type_modules')
+            ent['plan_types'] = tm   # carry_unreachable: a carried type must still be in the plan
             st, sc, ut, uc = {}, {}, {}, {}
             core_recs = {}
             for r_ in recs:
@@ -1286,7 +1342,7 @@ def refresh(log=lambda *a: None):
         if old_term is not None:
             import signal
             signal.signal(signal.SIGTERM, old_term)
-    res['unreachable_hosts'] = sorted(UNREACHABLE)
+    res['unreachable_hosts'] = sorted(UNREACHABLE); res['partial_hosts'] = sorted(PARTIAL)
     return res
 
 
@@ -1301,36 +1357,57 @@ def _ref_host_path(ref):
 
 def carry_unreachable(new, old, retired=None, names=None):
     """OWNER rule 'an older pass still counts' (COORD 11-01 09:2x): when a host could not be read in this refresh (sshd
-    reset / timeout under load), a design whose last verified SIGNED credit rests only on records of that host keeps
-    that credit, tagged '[host-unreachable, last verified <time>]'.  A design is dropped only on a real change seen on a
-    reachable host (verdict change / missing file -> the host was read and the record is gone) or a RETIRED line
-    (path line for that record, or a name line for that die/module dated after the last verification)."""
+    reset / timeout under load), a design or partition type whose last verified SIGNED credit rests only on records of
+    that host keeps that credit, tagged '[host-unreachable, last verified <time>]'.  It is dropped only on a real change
+    seen on a reachable host (verdict change / missing file -> the host was read and the record is gone) or a RETIRED
+    line (path line for that record, or a name line for that die/module dated after the last verification).
+    COUNT-SCAN-1 11-07: types were never carried; epyc4's timeout took 3 types off the count (194 -> 192)."""
     down = set(new.get('unreachable_hosts') or [])
     if not old or not down: return new
     retired = retired_refs() if retired is None else retired
     names = retired_names() if names is None else names
     when = time.strftime('%Y-%m-%d %H:%M %Z', time.localtime(old.get('generated') or 0))
     carried = new.setdefault('carried_unreachable', [])
+
+    def keep_refs(refs, die, mods):
+        """the tagged refs when this credit may be carried, else None"""
+        hosts = {_ref_host_path(r)[0] for r in refs}
+        if not hosts or not hosts <= down: return None
+        if any(_ref_host_path(r)[1] in retired for r in refs): return None
+        for m in mods:
+            cut = (names.get((die, m)) or (None, ''))[0] if names else None
+            if cut is not None and cut > (old.get('generated') or 0): return None
+            if revoked_module(m, revoked_rows()): return None
+        return [r if UNREACH_TAG in r else r + UNREACH_TAG + when + ']' for r in refs]
+
+    def row(d, kind, name, keep):
+        return {'plan': d, kind: name, 'hosts': sorted({_ref_host_path(r)[0] for r in keep}),
+                'last_verified': keep[0].split(UNREACH_TAG, 1)[1].rstrip(']')}
+
     for d, ent in (new.get('plans') or {}).items():
         o = (old.get('plans') or {}).get(d) or {}
+        die = o.get('die') or ent.get('die')
+        st, T = ent.get('signed_types'), ent.get('plan_types') or {}
+        for k, refs in (o.get('signed_types') or {}).items() if st is not None else ():
+            if k in st or k not in T: continue
+            keep = keep_refs(refs, die, (k, T[k]))
+            if keep is None: continue
+            st[k] = keep
+            (ent.get('unversioned_types') or {}).pop(k, None)
+            carried.append(row(d, 'type', k, keep))
         osd, sd = o.get('signed_designs') or {}, ent.get('signed_designs')
         if sd is None or not osd: continue
         D = ent.get('designs') or {}
         for did, refs in osd.items():
             if did in sd or did not in D: continue
-            hosts = {_ref_host_path(r)[0] for r in refs}
-            if not hosts or not hosts <= down: continue
-            if any(_ref_host_path(r)[1] in retired for r in refs): continue
             m = D[did].get('module')
-            cut = (names.get((o.get('die') or ent.get('die'), m)) or (None, ''))[0] if names else None
-            if cut is not None and cut > (old.get('generated') or 0): continue
-            if revoked_module(m, revoked_rows()): continue
-            keep = [r if UNREACH_TAG in r else r + UNREACH_TAG + when + ']' for r in refs]
+            keep = keep_refs(refs, die, (m,))
+            if keep is None: continue
             sd[did] = keep
             (ent.get('design_unmatched') or {}).pop(m, None)
             if m and m not in (ent.get('signed_cores') or {}):
                 ent.setdefault('signed_cores', {})[m] = keep
-            carried.append(dict(plan=d, design=did, hosts=sorted(hosts), last_verified=keep[0].split(UNREACH_TAG, 1)[1].rstrip(']')))
+            carried.append(row(d, 'design', did, keep))
         if ent.get('designs') is not None:
             ent['replica_sample'] = replica_sample(ent['designs'], sd)
     return new
@@ -1363,7 +1440,7 @@ def load(force=False, log=lambda *a: None, refresh_stale=True):
     if not force and not refresh_stale:
         return old, ('plan layer cache stale; scheduled refresh pending' if old else 'plan layer not cached; run with --refresh-plan')
     try:
-        new = merge_with_cache(carry_unreachable(refresh(log), old), old)
+        new = merge_with_cache(carry_unreachable(refresh(log, old), old), old)
         CACHE.parent.mkdir(parents=True, exist_ok=True)
         tmp = CACHE.with_suffix('.tmp'); tmp.write_text(json.dumps(new, indent=1)); os.replace(tmp, CACHE)
         return new, ('; '.join(new['errors']) or None)
