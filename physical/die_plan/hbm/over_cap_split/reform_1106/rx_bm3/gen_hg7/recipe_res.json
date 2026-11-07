@@ -1,0 +1,34 @@
+{
+ "ot_pdie_serdes_rx_bm3_rest": {
+  "top": "ot_pdie_serdes_rx_bm3_rest",
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1104b/ot_pdie_serdes_split.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+   "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh",
+   "rtl/hbm_accel/cores_split/reform_1106/ot_pdie_serdes_rx_bm3.sv"
+  ],
+  "defines": [],
+  "params": {
+   "BMTHC": 1,
+   "SEAM": 6
+  },
+  "macros": [
+   "ot_sram_1r1w2c_64x546_m1",
+   "ot_sram_1r1w_32x546_m1"
+  ],
+  "source": "HBM-GAPS-7 11-06 private RX BM3 safe form from Codex d727c112224 (58e1b7b1825); face shell registered seams; not plan-adopted; residual SEAM 6 (BM round trip +4)",
+  "source_commit": "d727c1122244e484d0d2d0a0fb72f6fc9ae51e42",
+  "read_at_commit": true,
+  "util": 0.4
+ }
+}

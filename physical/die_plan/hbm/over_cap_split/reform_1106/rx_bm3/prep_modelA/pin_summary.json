@@ -1,0 +1,111 @@
+{
+  "source": "58e1b7b1825",
+  "status": "MODEL_PIN_PREP_ONLY_NO_GEN",
+  "parent_outline_um": [
+    302.4,
+    345.6
+  ],
+  "BM_outline_um": [
+    95.904,
+    106.56
+  ],
+  "BM_origins_um": [
+    [
+      0,
+      4.32
+    ],
+    [
+      0,
+      119.52
+    ],
+    [
+      0,
+      234.72
+    ]
+  ],
+  "residual_outline_um": [
+    197.856,
+    345.6
+  ],
+  "residual_origin_um": [
+    104.544,
+    0
+  ],
+  "P37_raw_pin_sha256": "fd611656b1c7ab4b37f233dc9185edc19118514ea9e1b052b8f2259ebed53850",
+  "P37_old_actual_clock_mismatch": "oldi2rck147.0 differs currentcanonical147.480; sourceclockcanonicalretained",
+  "residual_canonical_clocks": {
+    "clk": [
+      42.36,
+      263.52
+    ],
+    "rck_clk": [
+      42.936,
+      263.52
+    ]
+  },
+  "BM_clk_local": [
+    47.928,
+    53.28
+  ],
+  "timed_sync_controls": [
+    "BM.rs_n",
+    "residual.bm_rs_n"
+  ],
+  "global_async_POR": [
+    "residual.rst"
+  ],
+  "counts": {
+    "BM": 626,
+    "residual": 3209,
+    "BM_E": 625,
+    "residual_W": 1818,
+    "residual_N": 514,
+    "residual_S": 874,
+    "residual_E": 1,
+    "residual_interior_clock": 2
+  },
+  "BM_E_10um_peak": 60,
+  "residual_W_10um_peak": 59,
+  "source_flags": [
+    "--face-shell off (existingF1alreadyinresidual)",
+    "--clock-pin-entry on",
+    "pin_placement_policy DECLARED_CLOCK_RESET_POINTS",
+    "--sigmax M5",
+    "--pg-top-layer M5"
+  ],
+  "helper_replication": "one identical BM master3instances;2uniqueGEN images cover4children",
+  "physical_holds": [
+    "parent model/image and native reset declaration acceptance",
+    "M6 PMA parent FT and M7 shared S/control FT reservations plus separate PG/clock tracks",
+    "actual generated image/clock/grid/macroPG review before P&R",
+    "no POR4 exception, no helper synchronous-control falsepath"
+  ],
+  "pin_interleave": "S/load/regionalcontrol inputs and registered returns interleaved over fullBMheight tospread M6nativebranches",
+  "track_reservations": "parent_track_reservations.json",
+  "actual_SRAM_sizes_um": [
+    [
+      178.632,
+      81
+    ],
+    [
+      177.768,
+      81
+    ]
+  ],
+  "macro_origins_residual_local_um": [
+    [
+      9.624,
+      54.012
+    ],
+    [
+      9.624,
+      205.212
+    ]
+  ],
+  "macro_halo_um": 4.32,
+  "BM_postcore_stdutil": 0.3418145065885265,
+  "residual_posthalo_stdutil": 0.38512742634248626,
+  "source_phase": "CLK/RCK exactcanonicalP37 coordinates preserved; helper clocks retain source rck roles; no extraedges",
+  "clock_macro_review": "Fixed canonical M5 clocks lie above second SRAM bbox atY263.52. Actual frozen LEFs have OBS onlyM1-M4, noM5OBS; actualPG5/clockaccess and bufferescape must be reviewed before physical. Do not move clockpoints silently.",
+  "handoff": "CLAUDE RESET: no GEN launched; parentfit/image/nativePORalias and PG/FT implementation remaingates. Viewed modelA.png is analyticalprep, not actualgeneratedimage."
+}

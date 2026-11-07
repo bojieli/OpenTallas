@@ -80,6 +80,28 @@ class EcoKit(unittest.TestCase):
         self.assertIsNone(d["sdc_lint_ctx"])
         self.assertNotIn("kit_ctx_parent", d)
 
+    # DIE-S81-72 11-06: face_guard kit context of a pruned ECO pass dir (t7 land_slots shared 584 artefact)
+    def test_pruned_eco_dir_face_context_from_parent(self):
+        (self.eco / "config_eco.mk").write_text("export X = 1\n")
+        (self.kit / "land_slots.json").write_text("{}\n")
+        (self.kit / "ft_stations.txt").write_text("\n")
+        (self.kit / "dead_inputs.json").write_text("{}\n")
+        disc = dict(kit=str(self.eco))
+        self.assertEqual(S.kit_ctx_file(disc, "land_slots.json"), self.kit.resolve() / "land_slots.json")
+        self.assertEqual(S.kit_ctx_file(disc, "ft_stations.txt"), self.kit.resolve() / "ft_stations.txt")
+        self.assertEqual(S.kit_ctx_dir(disc, "dead_inputs.json"), self.kit.resolve())
+        # absent everywhere -> the pass dir itself (readers then see no file, as before)
+        self.assertEqual(S.kit_ctx_file(disc, "freeze.json"), self.eco / "freeze.json")
+        self.assertIsNone(S.kit_ctx_dir(dict(kit=None), "x.json"))
+
+    def test_eco_dir_own_face_context_wins(self):
+        (self.eco / "config_eco.mk").write_text("export X = 1\n")
+        for d in (self.kit, self.eco):
+            (d / "land_slots.json").write_text("{}\n")
+        disc = dict(kit=str(self.eco))
+        self.assertEqual(S.kit_ctx_file(disc, "land_slots.json"), self.eco / "land_slots.json")
+        self.assertEqual(S.kit_ctx_dir(dict(kit=str(self.kit)), "land_slots.json"), self.kit)
+
 
 if __name__ == "__main__":
     unittest.main()

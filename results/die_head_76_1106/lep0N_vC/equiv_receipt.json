@@ -1,0 +1,8 @@
+{"schema":"opentallas.head.lep-split-equiv.v1","lane":"DIE-HEAD-76 hd_lep0N_vC",
+ "gold":"ot_s81hd_lep0N_noidx_core PAIR=1 (kit l48uh hd_lep0N attempt_9 rtl, ot_s81hd_lep_nr.sv cmp-identical to repo)",
+ "gate":"ot_s81hd_lep0N_split_core LOCAL_RST=0 = ot_s81hd_lep0N_hub_core + 4 x ot_s81hd_lep0N_region_core",
+ "method":"yosys 0.68 flatten+memory+async2sync, SRAM and pair black boxes cut to ports (expose -evert), equiv_make by name (gate region names mapped), equiv_simple -seq 6, equiv_induct -undef -seq 6",
+ "blacklist":"27 internal txext lo*_v/_d/_r nets (driven 0, unread)",
+ "result":"EQUIVALENT 155378/155378 $equiv proven (induction holds at step 2)",
+ "log":"epyc5:/srv/opentallas-scratch2/claude/dh76/lep0N_vC/equiv/run5/equiv6.log",
+ "added_cycles":0}

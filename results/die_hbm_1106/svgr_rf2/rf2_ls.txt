@@ -1,0 +1,6 @@
+OWNER_LS MUT=0 SEED=1 cycles=200000 blocks=11203 issued=24072 resp_beats=52447 mismatches=0 PASS
+OWNER_LS MUT=0 SEED=2 cycles=200000 blocks=11170 issued=24139 resp_beats=52434 mismatches=0 PASS
+OWNER_LS MUT=12 SEED=1 cycles=200000 blocks=11203 issued=24072 resp_beats=52447 mismatches=46458 FAIL
+OWNER_LS MUT=12 SEED=2 cycles=200000 blocks=11170 issued=24139 resp_beats=52434 mismatches=66489 FAIL
+OWNER_LS MUT=13 SEED=1 cycles=200000 blocks=11203 issued=24072 resp_beats=52447 mismatches=199118 FAIL
+OWNER_LS MUT=13 SEED=2 cycles=200000 blocks=11170 issued=24139 resp_beats=52434 mismatches=199014 FAIL

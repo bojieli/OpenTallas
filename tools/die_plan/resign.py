@@ -151,8 +151,25 @@ def load(path):
         return json.load(f)
 
 
-def kit_build_commit(kit):
-    """the original build commit from the kit's own records (lec kit_provenance, autopilot, freeze)."""
+ABBREV_RE = re.compile(r'^[0-9a-f]{7,39}$')
+
+
+def full_commit(repo, v):
+    """an abbreviated commit (freeze.json repo_rev is written short, e.g. faecd095101) -> the full 40-hex commit in repo;
+    None when repo is not a git checkout (a tag manifest) or does not hold exactly that commit."""
+    if not repo or not ABBREV_RE.match(v) or not os.path.isdir(repo):
+        return None
+    try:
+        out = git(repo, 'rev-parse', '--verify', '--quiet', '%s^{commit}' % v).decode().strip()
+    except ResignError:
+        return None
+    return out if SHA_RE.match(out) and out.startswith(v) else None
+
+
+def kit_build_commit(kit, repo=None):
+    """the original build commit from the kit's own records (lec kit_provenance, autopilot, freeze).  freeze.json carries it
+    as repo_rev (gen_phys, often abbreviated): read too, resolved to the full commit through repo (S81-COLLE-4 11-06: a
+    resign.py run --auto finished sign-off + LEC but wrote no record because only repo_rev named the commit)."""
     for n in ('PROVENANCE.json', 'AUTOPILOT.json', 'freeze.json', 'kit_provenance.json'):
         p = os.path.join(kit, n)
         try:
@@ -162,9 +179,11 @@ def kit_build_commit(kit):
         if not isinstance(x, dict) or x.get('kind') == 'resign':
             continue
         for v in (x.get('build_commit'), x.get('src_commit'), (x.get('provenance') or {}).get('commit')
-                  if isinstance(x.get('provenance'), dict) else None, x.get('source_commit')):
+                  if isinstance(x.get('provenance'), dict) else None, x.get('source_commit'), x.get('repo_rev')):
             if isinstance(v, str) and SHA_RE.match(v):
                 return v
+            if isinstance(v, str) and full_commit(repo, v):
+                return full_commit(repo, v)
     return None
 
 
@@ -234,7 +253,7 @@ def build_record(d, kit, tag, repo=REPO, tools=None, build_commit=None, routed_d
     if not os.path.isfile(read_db):
         raise ResignError('routed DB %s missing' % read_db)
     tool_sha = check_tools(repo, tag, tools) if tools else None
-    bc = build_commit or kit_build_commit(kit)
+    bc = build_commit or kit_build_commit(kit, repo if manifest(repo) is None else None)
     if not bc:
         raise ResignError('build_commit unknown: pass --build-commit (no commit in %s records)' % kit)
     rec = dict(schema='opentallas.resign_qualification.v1', kind='resign', verdict='SIGNED',
@@ -282,6 +301,45 @@ def default_container_suffix(out):
     return '%s-%s' % (stem, digest)
 
 
+# FLOW-CLASS-25 11-06 (COORD 18:0x (3b), DIE-HBM-82 17:38 (4b)): the LEC container got only OT_LEC_SUPERSET_VEC, so a
+# kit proved EQUIVALENT with a wider parity budget (q3_edge_link g_rxpre.ne_q, a 612-input CRC compare: DIE-HBM-66 11-04,
+# OT_LEC_PARITY_TERMS=800) went UNPROVEN (cone timeout 600 s) on every later re-sign at the lec.py default 256.  These
+# lec.py solver knobs are now passed into the container when the caller's env sets them, else when the kit's config.mk
+# exports them (a recipe sets them there, e.g. through the generator's ORFS variables).  The caller's env wins.  Only the
+# proof budget changes; the verdict rules of lec.py and of this record are unchanged.
+LEC_ENV_PASS = ('OT_LEC_PARITY_TERMS',)
+_CFG_RE = re.compile(r'^\s*(?:override\s+)?(?:export\s+)?([A-Z0-9_]+)\s*[:?]?=\s*(.*?)\s*$')
+
+
+def kit_config_vars(kit, names=LEC_ENV_PASS):
+    """{VAR: value} of the named variables set in KIT/config.mk (last assignment wins; no config.mk = {})."""
+    out = {}
+    try:
+        text = open(os.path.join(kit, 'config.mk'), errors='replace').read()
+    except OSError:
+        return out
+    for line in text.splitlines():
+        m = _CFG_RE.match(line.split('#', 1)[0])
+        if m and m.group(1) in names and m.group(2):
+            out[m.group(1)] = m.group(2)
+    return out
+
+
+def lec_env_args(kit, environ=None):
+    """docker -e args for the LEC solver knobs set by the caller's env or by the kit's config.mk (env wins)."""
+    environ = os.environ if environ is None else environ
+    cfg = kit_config_vars(kit)
+    args = []
+    for k in LEC_ENV_PASS:
+        v = environ.get(k) or cfg.get(k)
+        if not v:
+            continue
+        if not re.fullmatch(r'[1-9][0-9]*', str(v).strip()):
+            raise ResignError('%s=%r (%s) is not a positive integer' % (k, v, 'env' if environ.get(k) else 'kit config.mk'))
+        args += ['-e', '%s=%s' % (k, str(v).strip())]
+    return args
+
+
 def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g', cpus=8, superset=False):
     """the two commands of one re-sign (same as the lane scripts resign3.sh / tag_signoff_lec.sh)."""
     kit, run_dir, tools, out = map(os.path.abspath, (kit, run_dir, tools, out))
@@ -305,7 +363,7 @@ def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g',
         solver_mount = ['-v', os.path.abspath(solver) + ':/lecsolver:ro',
                         '-e', 'LEC_SOLVER_PATH=/lecsolver']
     lec = ['docker', 'run', '--rm', '--name', 'resign-%s-lec' % name, '--memory=%s' % mem, '--cpus=%d' % cpus] + (
-           ['-e', 'OT_LEC_SUPERSET_VEC=1'] if superset else []) + [
+           ['-e', 'OT_LEC_SUPERSET_VEC=1'] if superset else []) + lec_env_args(kit) + [
            '-v', '%s:/work:ro' % kit, '-v', '%s:/eco' % out, '-v', '%s:/m:ro' % tools] + mounts + solver_mount + [
            image, 'bash', '-lc', 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; '
            'python3 -I /m/lec.py /work --netlist %s --out /eco/lec' % net_in]

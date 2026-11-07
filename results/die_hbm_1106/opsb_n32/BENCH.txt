@@ -1,0 +1,9 @@
+HBM-FORM-SPLIT-13-OPSB 2026-11-06 13:47 PST opsb_output OT_OPSB_N32 lock-step (bench_n32.sh, verilator 5.050, CYC 40000, reset every 400 cycles, every output every cycle with !==)
+m0: N32 LOCKSTEP PASS errs=0 (sr_d 0) sr_rv=18887 known_valid_reads=18887 flt_cycles=31644 of 40000
+m1: N32 LOCKSTEP FAIL errs=39737 (sr_d 39737) sr_rv=18887 known_valid_reads=18887 flt_cycles=31644 of 40000
+m2: N32 LOCKSTEP FAIL errs=39410 (sr_d 39410) sr_rv=18887 known_valid_reads=18887 flt_cycles=31644 of 40000
+m3: N32 LOCKSTEP FAIL errs=39334 (sr_d 39334) sr_rv=18887 known_valid_reads=18887 flt_cycles=31644 of 40000
+m4: N32 LOCKSTEP FAIL errs=35725 (sr_d 35725) sr_rv=18887 known_valid_reads=18887 flt_cycles=31644 of 40000
+m0 +verilator+seed+7: N32 LOCKSTEP PASS errs=0 (sr_d 0) sr_rv=18383 known_valid_reads=18383 flt_cycles=30760 of 40000
+m0 +verilator+seed+1234: N32 LOCKSTEP PASS errs=0 (sr_d 0) sr_rv=19044 known_valid_reads=19044 flt_cycles=32102 of 40000
+m1 read addr bit0 flipped / m2 w_mask_in 0 / m3 write addr [2:0]<->[10:8] / m4 r_ce tied 1: all FAIL as required

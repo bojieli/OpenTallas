@@ -137,6 +137,11 @@ dict for {m g} $grp { foreach r $g { dict set ingrp $r $m } ; puts "OT_RT macro 
 set rt_split [expr {[info exists ::env(OT_RT_SPLIT)] ? $::env(OT_RT_SPLIT) : "geom"}]
 set rt_pts {}
 foreach it $regs { if {[dict exists $ingrp [[$it getInst] getName]]} continue; lappend rt_pts [rt_ctr [$it getInst]] }
+# OT_RT_MACRO_CUT macro walls (empty = off): {xMin xMax yMin yMax} um per macro
+set rt_mbox {}
+if {[info exists ::env(OT_RT_MACRO_CUT)] && $::env(OT_RT_MACRO_CUT)} {
+  foreach i [$rt_blk getInsts] { if {[rt_is_macro $i]} { set bb [$i getBBox]; lappend rt_mbox [list [expr {[$bb xMin]/double($rt_dbu)}] [expr {[$bb xMax]/double($rt_dbu)}] [expr {[$bb yMin]/double($rt_dbu)}] [expr {[$bb yMax]/double($rt_dbu)}]] } }
+}
 proc rt_cut {a b c d byx} {
   global rt_pts rt_split
   set lo [expr {$byx ? $a : $c}]; set hi [expr {$byx ? $b : $d}]
@@ -147,7 +152,23 @@ proc rt_cut {a b c d byx} {
   if {[llength $v] < 2} { return $g }
   set v [lsort -real $v]; set m [lindex $v [expr {[llength $v] / 2}]]
   set q [expr {($hi - $lo) / 4.0}]
-  return [expr {min(max($m, $lo + $q), $hi - $q)}]
+  set r [expr {min(max($m, $lo + $q), $hi - $q)}]
+  # OT_RT_MACRO_CUT=1 (opt-in, default off; S81-ENGRR-B4/B5 11-06, eng_rr_e vB_rt16m): with OT_RT_SPLIT=count, a macro
+  # that spans >= half of the box across the cut is a wall no tap tree should cross (rt16 GRT-0183: a 4x4 tap tree
+  # straddled the 174-um u_win.u_h wall). When such a wall has an edge inside the allowed cut range (middle half of the
+  # span), cut on the edge nearest the median instead, so every region sits on one side of it. Unset/0 = unchanged.
+  global rt_mbox
+  if {[llength $rt_mbox]} {
+    set best ""; set bd 1e9
+    foreach mb $rt_mbox { lassign $mb mx0 mx1 my0 my1
+      if {$byx} { set ov [expr {min($d,$my1)-max($c,$my0)}]; set span [expr {$d-$c}]; set e0 $mx0; set e1 $mx1 } else {
+                   set ov [expr {min($b,$mx1)-max($a,$mx0)}]; set span [expr {$b-$a}]; set e0 $my0; set e1 $my1 }
+      if {$ov < 0.5*$span} continue
+      foreach e [list $e0 $e1] { if {$e >= $lo+$q && $e <= $hi-$q && abs($e-$r) < $bd} { set bd [expr {abs($e-$r)}]; set best $e } }
+    }
+    if {$best ne ""} { puts "OT_RT_MACRO_CUT [expr {$byx?{x}:{y}}] [format %.1f $r] -> [format %.1f $best] in box [format %.0f-%.0f,%.0f-%.0f $a $b $c $d]"; set r $best }
+  }
+  return $r
 }
 set W [expr {$cx1-$cx0}]; set H [expr {$cy1-$cy0}]
 set rw [expr {$W/$rt_nx}]; set rh [expr {$H/$rt_ny}]
@@ -193,7 +214,7 @@ proc rt_region {x y} {
 }
 # macro taps hang off their region's leaf node: buffer at the macro clk pin (outside the macro, W/E edge nearest the pin)
 # one tap per macro clock PIN (2-clock SRAMs have two): name by a running index, not by the per-macro dict size
-set mtap {}; set rt_mi 0
+set mtap {}; set mloc {}; set rt_mi 0
 foreach mit $macs {
   incr rt_mi
   set m [$mit getInst]
@@ -208,16 +229,28 @@ foreach mit $macs {
   set tn [rt_buf "mtap$rt_mi" $bx $my $e]
   $mit disconnect; $mit connect $tn
   dict set mtap [$m getName] $tn
+  dict set mloc [$m getName] [list $bx $my]
   puts "OT_RT macro tap [$m getName] at ([format %.1f $bx],[format %.1f $my]) from region $r node ([format %.1f $nx],[format %.1f $ny])"
 }
+# OT_RT_MGRP_MAXUM (um, Manhattan; opt-in, unset/0 = off; S81-ENGRR-B4/B5 11-06): a macro-group interface register
+# placed farther than this from its macro tap joins its own region tap instead (eng_rr_e: one far reg stretched mtap3
+# to a 313 ps routed spread).
+set rt_mgmax [expr {[info exists ::env(OT_RT_MGRP_MAXUM)] ? double($::env(OT_RT_MGRP_MAXUM)) : 0.0}]
+set rt_nfar 0
 set cnt {}
 foreach it $regs {
   set i [$it getInst]; set nm [$i getName]
-  if {[dict exists $ingrp $nm]} { set tn [dict get $mtap [dict get $ingrp $nm]] } else {
+  set rt_far 0
+  if {$rt_mgmax > 0 && [dict exists $ingrp $nm]} {
+    lassign [rt_ctr $i] x y; lassign [dict get $mloc [dict get $ingrp $nm]] mx2 my2
+    if {abs($x-$mx2)+abs($y-$my2) > $rt_mgmax} { set rt_far 1; incr rt_nfar }
+  }
+  if {[dict exists $ingrp $nm] && !$rt_far} { set tn [dict get $mtap [dict get $ingrp $nm]] } else {
     lassign [rt_ctr $i] x y; set r [rt_region $x $y]; set tn [lindex [dict get $tapnet $r] 2]; dict incr cnt $r }
   $it disconnect; $it connect $tn
 }
 puts "OT_RT tap loads: $cnt; macro groups [dict size $mtap]"
+if {$rt_mgmax > 0} { puts "OT_RT_MGRP_MAXUM $rt_mgmax: $rt_nfar far macro-group registers moved to their region tap" }
 # ---- ICG pass-through (tool form, default-on; S81-CORES-KITS-8/9, first user ROM qxpq_w10_gb CGR0 rti). No-op when no ICG
 # master sits on the root net. An ICG on the root = pass-through node of the regional tree (industry form: one ICG
 # clone per leaf region, same ENA/SE, hung from the leaf node INPUT net like a macro tap = same stage count; one ICG

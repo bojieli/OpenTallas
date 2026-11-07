@@ -91,6 +91,18 @@ foreach net [$rt_blk getNets] {
     dict set rt_named_nets $i $net
   } elseif {[regexp {(^|[/.])rst_n$} $name]} { lappend rt_zero_aliases $net }
 }
+# DIE-KV-83 11-06 (KV kv3_sys_c CTS rc 6): a child's own gated reset (u_bound.u_d2d_kv.u_core.u_kvn.rst_n = AND2 of the
+# reset and a region-family enable) also ends in .rst_n.  Yosys had dropped the partition alias, so that child net was the
+# only .rst_n name, the shallowest rule below took it as the alias and OT_RESET_LEAF stopped CTS ('no unambiguous reset
+# terminal').  The partition's alias sits at the hierarchy depth of the partition's own rst_n_t<i> names; deeper ones are
+# child nets.  Without any rst_n_t<i> name the shallowest rule below is unchanged.
+if {[llength $rt_zero_aliases] && [dict size $rt_named_nets]} {
+  set rt_tap_depth [tcl::mathfunc::min {*}[lmap rt_n [dict values $rt_named_nets] {regexp -all {[./]} [$rt_n getName]}]]
+  set rt_zero_aliases [lmap rt_a $rt_zero_aliases {
+    if {[regexp -all {[./]} [$rt_a getName]] != $rt_tap_depth} continue
+    set rt_a
+  }]
+}
 # DIE-QC-73 11-05 (QC st_a): nets of child instances also end in .rst_n, so the partition's own alias was not unique and
 # never bound to its tap after placement. Only the shallowest name(s) are the partition's alias.
 if {[llength $rt_zero_aliases] > 1} {

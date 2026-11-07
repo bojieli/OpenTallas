@@ -1,0 +1,11 @@
+read_json /w/gold_flat.json
+rename ot_hgi_sfu_split3_ctl_core gold
+read_json /w/gate_strip.json
+equiv_make gold gate eq
+hierarchy -top eq
+async2sync
+equiv_struct
+equiv_simple
+equiv_induct
+equiv_status
+equiv_status -assert

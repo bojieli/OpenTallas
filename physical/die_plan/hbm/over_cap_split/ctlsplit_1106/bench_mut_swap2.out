@@ -1,0 +1,15 @@
+MISMATCH cyc 95 u_core_u_engine_scalar_data
+MISMATCH cyc 102 u_core_u_engine_scalar_data
+MISMATCH cyc 104 u_core_u_engine_scalar_data
+MISMATCH cyc 129 u_core_u_engine_scalar_data
+MISMATCH cyc 140 u_core_u_engine_scalar_data
+MISMATCH cyc 160 u_core_u_engine_scalar_data
+MISMATCH cyc 183 u_core_u_engine_scalar_data
+MISMATCH cyc 201 u_core_u_engine_scalar_data
+MISMATCH cyc 228 u_core_u_engine_scalar_data
+BENCH_DONE cycles 800 errors 38
+ctlsplit/bench/tb.v:85: $finish called at 1610500 (1ps)
+
+real	4m47.057s
+user	4m46.912s
+sys	0m0.129s

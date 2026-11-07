@@ -2,9 +2,14 @@
 // tile. The output face of ingest and the input face of store are the two opt-in writer stages we0/wa0/wd0 and we1/wa1/wd1, so the seam adds no flop over that form.
 // HBM-REFORM-B9: PD=3 form. ingest: compact tree registered at subtree sizes 8, 32 and 64 (ot_hbm_idx_compact_tree_p), the
 // controls delayed to match; store: clear/emit/emit_group/rank/gbase delayed PD so the pair is the part 30 form delayed PD at every output.
+// HBM-FORM-SPLIT-13-TOPK (11-06) WPIPE=1: one register stage on the ingest write side (packed records, per-bank one-hot
+// selects, bank addresses, gated write enables), cutting the fill/count -> nf -> 64-way select fanout -> wd path (CTS -438 ps,
+// place -1002 ps). The store delays its controls PD+1 to match, so the pair is the WPIPE=0 form with tx_v/tx +1 edge;
+// fault/selected_count unchanged. WPIPE=0 = the old form bit for bit. Mutants: ingest MUT 5 (piped we ignores clear),
+// MUT 6 (piped selects rotated one bank).
 `timescale 1ns/1ps
 `default_nettype none
-module ot_hbm_idx_topk_ingest #(parameter integer MUT=0, FILL_GROUPS=0)(
+module ot_hbm_idx_topk_ingest #(parameter integer MUT=0, FILL_GROUPS=0, WPIPE=0)(
  input wire clk,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,
  input wire flush,emit_v,input wire[7:0]rank,gbase,
@@ -70,10 +75,17 @@ module ot_hbm_idx_topk_ingest #(parameter integer MUT=0, FILL_GROUPS=0)(
                               (MUT==8&&g==2)?fill:n[2:0];
     end
    end
-   wire[4607:0]shifted=({512'd0,compacted} << {fill_local,6'b0});
-   // The selected bits are disjoint; dead shift columns are removed normally.
+   // Shift only this record-column plane.  Projecting an integer-record
+   // shift commutes exactly with this 8-bit column projection.  Keeping the
+   // plane explicit also avoids eight full-width gold-frontend intermediates.
+   wire[575:0]column_words;
+   for(genvar r=0;r<64;r=r+1)begin:input_column
+    assign column_words[r*8+:8]=compacted[r*64+g*8+:8];
+   end
+   assign column_words[575:512]=64'd0;
+   wire[575:0]shifted=column_words << {fill_local,3'b0};
    for(genvar r=0;r<72;r=r+1)begin:record_column
-    assign packed_next[r*64+g*8+:8]=shifted[r*64+g*8+:8] |
+    assign packed_next[r*64+g*8+:8]=shifted[r*8+:8] |
                                       live_carry_padded[r*64+g*8+:8];
    end
   end
@@ -88,25 +100,51 @@ module ot_hbm_idx_topk_ingest #(parameter integer MUT=0, FILL_GROUPS=0)(
    for(integer r=0;r<7;r=r+1)carry_next[r*64+:64]=packed_next[(f*8+r)*64+:64];
  end
  always @(posedge clk)if(ingest_p)carry<=carry_next;
+ // WPIPE=1: the write side reads the records registered one edge after packed_next.
+ wire[4095:0]wsrc;
  wire[511:0]write_flit[0:7];
  for(genvar j=0;j<8;j=j+1)begin:flit_pack
   for(genvar r=0;r<8;r=r+1)begin:record_pack
-   assign write_flit[j][r*32+:32]=packed_next[(j*8+r)*64+:32];
-   assign write_flit[j][256+r*32+:32]=packed_next[(j*8+r)*64+32+:32];
+   assign write_flit[j][r*32+:32]=wsrc[(j*8+r)*64+:32];
+   assign write_flit[j][256+r*32+:32]=wsrc[(j*8+r)*64+32+:32];
   end
  end
- reg[7:0]we;reg[47:0]wa;reg[4095:0]wd;
+ reg[7:0]we;reg[47:0]wa;reg[63:0]wsel;
  always @*begin
-  we=0;wa=0;wd=0;
+  we=0;wa=0;wsel=0;
   // Constant bank destinations also remove eight dynamic 512-bit writes.
+  // At most one j hits bank b ((flits+j)%8==b), so the select is one-hot per bank.
   for(integer b=0;b<8;b=b+1)for(integer j=0;j<8;j=j+1)
    if(j<int'(nf)&&((int'(flits)+j)%8)==b)begin
-    we[b]=1;wa[b*6+:6]=6'((int'(flits)+j)/8);wd[b*512+:512]=write_flit[j];
+    we[b]=1;wa[b*6+:6]=6'((int'(flits)+j)/8);wsel[b*8+j]=1;
    end
  end
-
- assign wo_we=(rst_core_n&&!clear_p)?we:8'd0;
- assign wo_wa=wa;assign wo_wd=wd;
+ wire[7:0]we_g=(rst_core_n&&!(clear_p&&MUT!=5))?we:8'd0;
+ wire[63:0]sel;reg[4095:0]wd;
+ always @*begin
+  wd=0;
+  for(integer b=0;b<8;b=b+1)for(integer j=0;j<8;j=j+1)
+   if(sel[b*8+j])wd[b*512+:512]=wd[b*512+:512]|write_flit[j];
+ end
+ generate if(WPIPE==0)begin:g_wdirect
+  assign wsrc=packed_next[4095:0];
+  assign sel=wsel;
+  assign wo_we=(rst_core_n&&!clear_p)?we:8'd0;
+  assign wo_wa=wa;
+ end else begin:g_wpipe
+  // Write stage: records, one-hot selects and bank addresses carry no reset (datapath); the gated enables reset to 0.
+  reg[4095:0]pq;reg[63:0]sel_q;reg[47:0]wa_q;reg[7:0]we_q;
+  always @(posedge clk)begin
+   pq<=packed_next[4095:0];wa_q<=wa;
+   sel_q<=(MUT==6)?{wsel[55:0],wsel[63:56]}:wsel;
+  end
+  always @(posedge clk or negedge rst_core_n)if(!rst_core_n)we_q<=0;else we_q<=we_g;
+  assign wsrc=pq;
+  assign sel=sel_q;
+  assign wo_we=we_q;
+  assign wo_wa=wa_q;
+ end endgenerate
+ assign wo_wd=wd;
  always @(posedge clk or negedge rst_core_n)begin
   if(!rst_core_n)begin fill<=0;flits<=0;total<=0;c_fault<=0;end
   else begin
@@ -121,7 +159,7 @@ module ot_hbm_idx_topk_ingest #(parameter integer MUT=0, FILL_GROUPS=0)(
   end
  end
 endmodule
-module ot_hbm_idx_topk_store #(parameter integer MUT=0)(
+module ot_hbm_idx_topk_store #(parameter integer MUT=0, WPIPE=0)(
  input wire clk,input wire[7:0]clk_mem,input wire rst_n,
  input wire clear,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
  input wire[7:0]wi_we,input wire[47:0]wi_wa,input wire[4095:0]wi_wd,
@@ -132,7 +170,7 @@ module ot_hbm_idx_topk_store #(parameter integer MUT=0)(
  wire rst_core_n=rst_sync[1];
  (* keep *) reg clear_r,clear_d,emit_r;(* keep *) reg[3:0]group_r;(* keep *) reg[7:0]rank_r,gbase_r;
  reg[3:0]c_tx_v;wire[2179:0]c_tx;
- localparam integer PD=3;
+ localparam integer PD=3+WPIPE;
  reg[PD-1:0]clear_s,emit_s;reg[3:0]group_s[0:PD-1];reg[7:0]rank_s[0:PD-1],gbase_s[0:PD-1];
  always @(posedge clk or negedge rst_core_n)if(!rst_core_n)begin clear_s<=0;emit_s<=0;end
   else begin clear_s<={clear_s[PD-2:0],clear};emit_s<={emit_s[PD-2:0],emit_v};end

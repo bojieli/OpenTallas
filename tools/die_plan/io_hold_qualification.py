@@ -63,6 +63,26 @@ def kit_policy(inputs):
                 provisional_views_allowed=True)
 
 
+def port_hold_policy(record, ports):
+    """KW-FIX-24 (COORD 11-06 13:2x item 4): the io_hold_parent obligation for a kit whose every FF hold violator
+    starts at an input port.  Same record shape as kit_policy; an existing option-A policy (record io_hold or the
+    kit's sdc_lint_ctx) is kept and widened by the port-start ports."""
+    inputs = record.get('inputs') or {}
+    base = record.get('io_hold') or kit_policy(inputs)
+    if base:
+        base = dict(base)
+        base['input_ports'] = sorted(set(base.get('input_ports') or ()) | set(ports))
+        base.setdefault('port_start_hold_ports', sorted(set(ports)))
+        return base
+    budget = Path(inputs.get('kit') or '')/'budget.json'
+    meta = json.loads(budget.read_text()) if budget.is_file() else {}
+    return dict(mode='sender_min', die=meta.get('die'), receiver_type=meta.get('type'),
+                input_ports=sorted(set(ports)), plan_sha256=(meta.get('io_hold') or {}).get('plan_sha256'),
+                requirement='real parent FF hold and TT/FF related-pair CPPR',
+                provisional_views_allowed=True, basis='ff_hold_port_start_only',
+                port_start_hold_ports=sorted(set(ports)))
+
+
 def apply_obligation(record):
     policy = record.get('io_hold') or kit_policy(record.get('inputs') or {})
     if not policy: return record

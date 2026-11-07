@@ -107,11 +107,21 @@ REVIEWED = {
         # FLOW-GEN-1 review 2026-10-28 of 7a3df9c5 (e1ce93172): simulation-only `ifndef SYNTHESIS Gray-history arming;
         # synthesized logic Yosys-equivalent to 22c5e15f (equiv_induct, 0 unproven)
         sha256=('22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc',
-                '7a3df9c5491bddcdef321105b931c4d0e2f5c973b3ea01c3ba50ff350bc784da'),
-        chains=(('wptr', 'wr_gray', ('wr_gray_r1', 'wr_gray_r2'), 'w2r'),
+                '7a3df9c5491bddcdef321105b931c4d0e2f5c973b3ea01c3ba50ff350bc784da',
+                # KV-FDICDC-1 review 2026-11-06 of e8a3103f (DIE-KV-84 ruling): opt-in SEL_PIPE (default 0) only
+                # re-registers the storage write enables + write data (write domain) and the read selects (read domain)
+                # inside their own domain; wr_gray/rd_gray, the async_reg 2-flop synchronisers and the online flags are
+                # unchanged and no crossing is added.  SEL_PIPE=1 publishes sp_pub_q <= wr_gray (write-domain register,
+                # one Gray bit per edge) on the edge the entry commits, so a word is stable before its pointer is
+                # visible.  SEL_PIPE=0 is Yosys equiv-proven to 7a3df9c5 (32x4, 64x8 EXT_RST, RESET_ACK, FCC_PIPE
+                # FIFO_PIPE 0/1; 0 unproven) and lock-step cycle exact (tools/qwen_layerbench/kv_dieslice/fdicdc_sp).
+                'e8a3103f8d47a1b8f11649fdb9cf98fec9a8ce2405c31fb229ea93365cd20cfa'),
+        chains=(('wptr', ('wr_gray', 'g_sp.sp_pub_q'), ('wr_gray_r1', 'wr_gray_r2'), 'w2r'),
                 ('rptr', 'rd_gray', ('rd_gray_w1', 'rd_gray_w2'), 'r2w'),
                 ('wonl', 'wr_online', ('wr_online_r1', 'wr_online_r2'), 'w2r'),
                 ('ronl', 'rd_online', ('rd_online_w1', 'rd_online_w2'), 'r2w')),
+        # SEL_PIPE storage: per-chunk g_sp.g_c[k].smem[e] (writer side, written by the registered write enables)
+        storage=re.compile(r'(?:g_sp\.g_c\[\d+\]\.s)?mem\[\d+\](?:\[\d+\])?'),
         valid='conditioned', read_stage=None),
     # ROOT-0330-CDC review 2026-10-18: binary wbin/rbin, Gray wgray/rgray registered from the next binary value on
     # the pointer's own edge; async_reg 2-flop synchronisers wgray -> wg_r1 -> wg_r2 (read side), rgray -> rg_w1 ->
@@ -1101,7 +1111,20 @@ def _lint(spec, root):
         fid = f'f{len(fifos)}'
         chains = []
         for cname, src_reg, stages, direction in r['chains']:
+            # (primary, copy): the reviewed source may publish a one-flop copy of the Gray register (ot_async_fifo
+            # SEL_PIPE sp_pub_q <= wr_gray).  When the copy exists every bit must be a posedge flop of the primary's
+            # domain whose D is that primary bit (a delayed Gray value, still one bit change per edge); it is then the
+            # synchroniser source.  Absent copy = the primary form, unchanged.
+            src_reg, pub_reg = src_reg if isinstance(src_reg, tuple) else (src_reg, None)
             src = bits_of(scope, src_reg, evmode)
+            pub = bits_of(scope, pub_reg, evmode) if pub_reg else []
+            if pub:
+                if len(pub) != len(src) or any(
+                        b not in net.flops or a not in net.flops or net.flops[b]['d'] != a or not net.flops[b]['pos']
+                        or net.domain(b) != net.domain(a) for a, b in zip(src, pub)):
+                    raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} ({base}) {cname} publication copy '
+                                        f'{pub_reg} is not a direct same-domain flop of {src_reg}')
+                src_reg, src = pub_reg, pub
             if isinstance(stages, str):
                 names, k = [], 0
                 while bits_of(scope, stages.format(k=k), evmode):
@@ -1160,7 +1183,7 @@ def _lint(spec, root):
                     tag(q, ('sync1' if j == 0 else 'stage', fid, cname, i))
         prefix = scope + '.' if scope else ''
         storage = sorted({b for k, b in ((k, net.bit_of[k]) for k in keys_with(prefix)) if
-                          STORAGE.fullmatch(k[len(prefix):]) and b in net.flops})
+                          r.get('storage', STORAGE).fullmatch(k[len(prefix):]) and b in net.flops})
         for q in storage:
             if net.domain(q) != writer:
                 raise GrayFifoError(f'reviewed_gray_fifos storage {net.key(q)} is not on the writer side {writer}')

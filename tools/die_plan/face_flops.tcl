@@ -187,6 +187,7 @@ set ff_n 0; set ff_miss 0
 set ff_interior_dbu [expr {round(([info exists ::env(OT_FF_INTERIOR_UM)] ? $::env(OT_FF_INTERIOR_UM) : 10.0) * $ff_dbu)}]
 set ff_interior {}
 set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]
+set ff_chain_f [open $::env(RESULTS_DIR)/ot_face_chain.txt w]; set ff_nchain 0
 # inputs first: a 1-station ft slot's only flop registers its input face
 foreach pass {INPUT OUTPUT} {
   foreach bt [$ff_blk getBTerms] {
@@ -254,6 +255,26 @@ foreach pass {INPUT OUTPUT} {
     $f setPlacementStatus FIRM
     puts $ff_out "[$f getName]\t$face\t[expr {$cx / double($ff_dbu)}]\t[expr {$cy / double($ff_dbu)}]\t$nm"
     incr ff_n
+    # HBM-GAPS-8 11-06 (opt-in OT_FF_CHAIN_PIN=1, default off = unchanged): the pure BUF/INV cells between an OUT face
+    # flop and its port (the QN inverter of the face register) go FIRM right next to the flop, on the same row; GPL had
+    # dragged them up to ~600 um away (SVGR_TOP lt0[134]: flop at its pin, INV at x 191 y 7 -> ~700 ps of wire, 249
+    # out-face endpoints at TT -406 ps).  face_flops_release.tcl releases them with the flops before DPL.
+    if {$pass eq "OUTPUT" && [info exists ::env(OT_FF_CHAIN_PIN)] && $::env(OT_FF_CHAIN_PIN) eq "1"} {
+      set ff_ch [lrange [ff_chain_out [$bt getNet] 0] 0 end-1]
+      set ff_xx [expr {$face eq "E" ? $cx : $cx + $w}]
+      foreach ci [lreverse $ff_ch] {
+        if {[ff_is_ff $ci] || [$ci getPlacementStatus] eq "FIRM"} continue
+        set iw [[$ci getMaster] getWidth]
+        if {$face eq "E"} { set ff_xx [expr {$ff_xx - $iw}] }
+        set ff_xx [expr {$ff_x0 + (($ff_xx - $ff_x0) / $ff_sw) * $ff_sw}]
+        if {[dict exists $ff_orient $cy]} { $ci setOrient [dict get $ff_orient $cy] }
+        $ci setLocation $ff_xx $cy
+        $ci setPlacementStatus FIRM
+        puts $ff_chain_f [$ci getName]
+        incr ff_nchain
+        if {$face ne "E"} { set ff_xx [expr {$ff_xx + $iw}] }
+      }
+    }
   }
 }
 # ---- ft stations j >= 1 (R3)
@@ -304,7 +325,7 @@ proc ff_lands_ring {net} {
 }
 # the flop driving a flop's D pin through pure BUF/INV cells ("" at logic, a port or a cycle)
 proc ff_d_driver {f} {
-  set net ""
+  set net ""; set lat 0
   foreach it [$f getITerms] { if {[[$it getMTerm] getName] eq "D"} { set net [$it getNet] } }
   set seen {}
   while {$net ne "" && $net ne "NULL" && ![dict exists $seen $net]} {
@@ -315,10 +336,42 @@ proc ff_d_driver {f} {
       if {[$mt getIoType] ne "OUTPUT" || [$mt getSigType] eq "CLOCK"} continue
       set i [$it getInst]
       if {[ff_is_ff $i]} { return $i }
+      # TYPE-SAFE-1 11-06: one ft hop lockup latch u_fl_* (bind/gen ft_hop_lockup) between two stations: trace on
+      # through its D (the station before it is the driver)
+      if {[ff_is_hop_latch $i] && !$lat} { set lat 1; dict set ::ff_hl_seen [$i getName] $i; set nxt [ff_pin_net $i D]; continue }
       if {![ff_is_buf $i]} { return "" }
       foreach n [ff_sig_iterms $i in] { if {[[$n getMTerm] getSigType] ne "CLOCK"} { set nxt [$n getNet] } }
     }
     set net $nxt
+  }
+  return ""
+}
+# TYPE-SAFE-1 11-06: an ft hop lockup latch (gen_rtl.ft_hop_lockup: instances u_fl_*, ASAP7 DLL / DHL cells)
+proc ff_is_hop_latch {inst} { return [expr {[ff_is_latch $inst] && [regexp {(^|[./])u_fl_} [$inst getName]]}] }
+# the next station after station flop f: through BUF/INV (ff_from_in), or through BUF/INV -> ONE hop latch (D) -> BUF/INV
+proc ff_next_station {f} {
+  foreach o [ff_sig_iterms $f out] {
+    set q [ff_from_in [$o getNet] 0]
+    if {$q ne ""} { return $q }
+  }
+  foreach o [ff_sig_iterms $f out] {
+    set lat [ff_hop_latch_from [$o getNet]]
+    if {$lat ne ""} { return [ff_from_in [ff_pin_net $lat Q] 0] }
+  }
+  return ""
+}
+proc ff_hop_latch_from {net} {
+  set todo [list $net]; set seen {}
+  while {[llength $todo]} {
+    set net [lindex $todo 0]; set todo [lrange $todo 1 end]
+    if {$net eq "NULL" || $net eq "" || [dict exists $seen $net]} continue
+    dict set seen $net 1
+    foreach it [$net getITerms] {
+      set i [$it getInst]; set mt [$it getMTerm]
+      if {[$mt getIoType] ne "INPUT" || [$mt getSigType] eq "CLOCK"} continue
+      if {[ff_is_hop_latch $i] && [$mt getName] eq "D"} { dict set ::ff_hl_seen [$i getName] $i; return $i }
+      if {[ff_is_buf $i]} { foreach o [ff_sig_iterms $i out] { lappend todo [$o getNet] } }
+    }
   }
   return ""
 }
@@ -532,8 +585,7 @@ foreach bt [$ff_blk getBTerms] {
   set L 0
   for {set i 0} {$i + 3 < [llength $pts]} {incr i 2} { set L [expr {$L + abs([lindex $pts $i] - [lindex $pts $i+2]) + abs([lindex $pts $i+1] - [lindex $pts $i+3])}] }
   for {set j 1} {$j < $k} {incr j} {
-    set q ""
-    foreach o [ff_sig_iterms $f out] { set q [ff_from_in [$o getNet] 0]; if {$q ne ""} break }
+    set q [ff_next_station $f]
     if {$q eq "" || [dict exists $ff_done [$q getName]]} { incr ff_st_miss; break }
     set f $q
     dict set ff_done [$f getName] 1
@@ -548,7 +600,24 @@ foreach bt [$ff_blk getBTerms] {
     incr ff_st
   }
 }
+# TYPE-SAFE-1 11-06: every ft hop lockup latch FIRM at the MIDPOINT of its two stations (launch station = D driver,
+# capture station = Q load): the latch -> capture half hop must fit T/2 - W of setup (gen_rtl.ft_hop_lockup).  A latch
+# whose stations are not both found stays to GPL (counted).  The latches are the ones the station walks above passed
+# (::ff_hl_seen), so a design without hop latches does no extra work.
+set ff_hl 0; set ff_hl_miss 0
+if {![info exists ::ff_hl_seen]} { set ::ff_hl_seen {} }
+foreach i [dict values $::ff_hl_seen] {
+  set a [ff_d_driver $i]; set b [ff_from_in [ff_pin_net $i Q] 0]
+  if {$a eq "" || $b eq ""} { incr ff_hl_miss; continue }
+  lassign [$a getLocation] ax ay; lassign [$b getLocation] bx by
+  set got [ff_put_near $i [expr {($ax + $bx) / 2}] [expr {($ay + $by) / 2}]]
+  if {$got eq ""} { incr ff_hl_miss; continue }
+  puts $ff_out "[$i getName]\thl\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t[$a getName]"
+  incr ff_hl
+}
+if {$ff_hl || $ff_hl_miss} { puts "OT_FACE_FLOPS hop latches: $ff_hl ft hop lockup latches FIRM at their hop midpoints ($ff_hl_miss without both stations)" }
 close $ff_out
+close $ff_chain_f; if {$ff_nchain} { puts "OT_FACE_CHAIN pinned $ff_nchain face-chain cells" }
 puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers; $ff_ndup cells duplicated for output ports sharing a merged flop); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
 if {$ff_lst} { puts "OT_FACE_FLOPS landed ft slots: $ff_lst stations s0..s<k-1> FIRM after their landing rings at L*(j+1)/k" }
 # KV-G3 10-24: FIRM plan internal stations + plan-cell sites of a bound kit (tools/die_plan/kit_istations.py)

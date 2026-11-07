@@ -115,7 +115,7 @@ def validation_bootstrap(face_text):
     mutating face-placement hook to obtain these helpers.
     """
     # face-latch helpers (LATCH-FACE / FLOW-LATCH-1) exist only in kits generated after 11-03: copied when present
-    latch = ('ff_is_latch', 'ff_pin_net', 'ff_clk_root', 'ff_latch_ok')
+    latch = ('ff_is_latch', 'ff_pin_net', 'ff_clk_root', 'ff_latch_ok', 'ff_is_hop_latch')  # hop latch: TYPE-SAFE-1 11-06
     names = ('ff_slot_of', 'ff_is_ff') + tuple(n for n in latch if re.search(r'^proc ' + n + r'\s', face_text, re.M)) + \
         ('ff_is_buf', 'ff_sig_iterms', 'ff_from_in', 'ff_chain_out', 'ff_from_out', 'ff_in_ring',
          'ff_lands_ring', 'ff_d_driver', 'ff_landed_stations')

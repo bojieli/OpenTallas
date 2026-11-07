@@ -1,0 +1,15 @@
+a_m0_s1 BENCH aborts=14 var=0 mut=0 seed=1 phases=60 writes=11754 completes=175 fault_phases=27 exact_samples=166970 errors=0 SVGR_BK_B12_BENCH PASS 
+a_m0_s2 BENCH aborts=7 var=0 mut=0 seed=2 phases=60 writes=12823 completes=198 fault_phases=29 exact_samples=166931 errors=0 SVGR_BK_B12_BENCH PASS 
+a_m0_s3 BENCH aborts=6 var=0 mut=0 seed=3 phases=60 writes=12529 completes=200 fault_phases=29 exact_samples=167012 errors=0 SVGR_BK_B12_BENCH PASS 
+a_m0_s4x BENCH aborts=10 var=0 mut=0 seed=4 phases=60 writes=13424 completes=197 fault_phases=24 exact_samples=204799 errors=0 SVGR_BK_B12_BENCH PASS 
+a_m1 BENCH aborts=14 var=0 mut=1 seed=1 phases=60 writes=11754 completes=175 fault_phases=27 exact_samples=166970 errors=106336 SVGR_BK_B12_BENCH FAIL 
+a_m2 BENCH aborts=14 var=0 mut=2 seed=1 phases=60 writes=11754 completes=175 fault_phases=27 exact_samples=166970 errors=8093 SVGR_BK_B12_BENCH FAIL 
+a_m3 BENCH aborts=14 var=0 mut=3 seed=1 phases=60 writes=6962 completes=175 fault_phases=27 exact_samples=167360 errors=195783 SVGR_BK_B12_BENCH FAIL 
+b_m0_s1 BENCH aborts=9 var=1 mut=0 seed=1 phases=60 writes=13207 completes=215 fault_phases=17 exact_samples=0 errors=0 SVGR_BK_B12_BENCH PASS 
+b_m0_s2 BENCH aborts=7 var=1 mut=0 seed=2 phases=60 writes=8904 completes=204 fault_phases=24 exact_samples=0 errors=0 SVGR_BK_B12_BENCH PASS 
+b_m0_s3 BENCH aborts=10 var=1 mut=0 seed=3 phases=60 writes=8438 completes=184 fault_phases=26 exact_samples=0 errors=0 SVGR_BK_B12_BENCH PASS 
+b_m0_s4x BENCH aborts=5 var=1 mut=0 seed=4 phases=60 writes=15576 completes=213 fault_phases=19 exact_samples=0 errors=0 SVGR_BK_B12_BENCH PASS 
+b_m1 BENCH aborts=9 var=1 mut=1 seed=1 phases=60 writes=13207 completes=215 fault_phases=17 exact_samples=0 errors=4359 SVGR_BK_B12_BENCH FAIL 
+b_m2 BENCH aborts=9 var=1 mut=2 seed=1 phases=60 writes=13207 completes=215 fault_phases=17 exact_samples=0 errors=7 SVGR_BK_B12_BENCH FAIL 
+b_m3 BENCH aborts=9 var=1 mut=3 seed=1 phases=60 writes=13207 completes=215 fault_phases=17 exact_samples=0 errors=1 SVGR_BK_B12_BENCH FAIL 
+MATRIX_DONE

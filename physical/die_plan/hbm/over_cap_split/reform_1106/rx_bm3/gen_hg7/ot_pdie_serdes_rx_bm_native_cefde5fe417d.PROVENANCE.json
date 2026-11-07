@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.kit_provenance.v1",
+ "provenance": {
+  "commit": "d934bc8e09c3ea4370fd40b086b60337e58461e4",
+  "dirty": false,
+  "source": "git"
+ },
+ "kit_hash": "0a03902c2d70a112",
+ "files": {
+  "config.mk": "27015017c9581162e53aac873bf3c731f56fc5558ba05a68c9a8fb6ae4acb655",
+  "freeze.json": "b79ddba9147fed642d4d46430d3bb94c62126305c5bee8ec4b1a748a6a11459b",
+  "lec.py": "61dafc864b9b8a8aa17200ab0530692a7686d13da39ee429a7a602874b3cf6ba",
+  "core.json": "955a5163a967a15d7be0ec637da97ef793d29829cf8a978ad19a83e07de35e93",
+  "pins.json": "ba0b7fb747b55e74a3b2aab0a3e8fac6339df27a26319b10145b5c49b6377ac6",
+  "rtl/ot_hbm_face_reg.sv": "a437f658d71924d6d6d5bf9626735dcfd20737825838bdd3e60c0b40f92bc6f5",
+  "rtl/ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+  "rtl/ot_pdie_serdes_rx_bm3.sv": "9060a82e3b6649586fc16abc20c972bf3bbe85af642280a4cdf928884d359440",
+  "rtl/ot_pdie_serdes_rx_bm_native__fshell.sv": "2171013f131863d5ae8e65f310821613be0403194d57eb02305431e79af66996",
+  "rtl/ot_pdie_serdes_split.sv": "73677f701b46c9de9590afd1a459305cd11879115ee0765b6c1bf7aaa7efc139",
+  "rtl/ot_s81_gf1024.svh": "0c1d1e94f6a2a360da1f1b23b1cd7847958450c3b642b9978b0c13faead4b855",
+  "rtl/ot_s81_kp4_bm.sv": "b040035c591b77a4ba5d17f2a5232a0fd1da040711018a4835fd5690a1cc5a10",
+  "rtl/ot_s81_kp4_common.sv": "261a00d6db06bab0c3add28489c8f3e1bc6ddf3a0a6b8af1b4158068c05a1afb",
+  "rtl/ot_s81_kp4_dchn.sv": "f3fc520eec927e2fb57418417a41ee12f87d66658e31df0dfe700c9ec4bec91c",
+  "rtl/ot_s81_kp4_ddly.sv": "fb1160f86a33901a1ba0328dc296329fa53812145930817b633695fcb2e63b93",
+  "rtl/ot_s81_kp4_dec.sv": "69d23bb69dc1b2f4921afa17ceeab38f9cfbc897b8c15dfc841b7a6c94fc82bf",
+  "rtl/ot_s81_kp4_dout.sv": "198059532724f05fc47dafbfc122e5c6aaf42e14bec1866bc59c36251c4fc1bf",
+  "rtl/ot_s81_kp4_dsyn.sv": "29a9396e129a6486c58cda9ce4979da96e3084b344db7031213caba92f1e872d",
+  "rtl/ot_s81_kp4_enc.sv": "0caaa3a8048bce76f6dbe902824e570e563e9c39a006ca34d07d4f648419c1fd",
+  "rtl/ot_s81_kp4_enc_mat.svh": "f35e2b018bbc00ac7da81ecbd7b2b9a114a3aa4edcc43a7f1effb23aaedc2f70",
+  "rtl/ot_s81_kp4_syn_mat.svh": "5f8c6c1718cb04488bb34a074571736bca6299d2fec487bf9534696a9d10068e",
+  "rtl/portlist.txt": "90a8f3f6c4fa113fe0739ce4031c9b812b7e53426883f70d1ad2ac76da9229f1"
+ }
+}

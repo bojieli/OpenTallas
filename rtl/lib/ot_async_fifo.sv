@@ -11,7 +11,17 @@ module ot_async_fifo #(
     // conditioned resets (each the output of that domain's reset synchroniser + registered tree, both synchronisers
     // cleared by the SAME asynchronous source, so an assertion still flushes both sides together).  No conditioner is
     // built here and no flop of one domain reaches a reset pin of the other: every recovery / removal arc is same-clock.
-    parameter integer EXT_RST = 0
+    parameter integer EXT_RST = 0,
+    // SEL_PIPE (KV-FDICDC-1 11-06, OWNER safe form; default 0 = the form above, unchanged): registered-select storage
+    // for a wide FIFO whose entries spread over a long placement.  1 = payload registered once on wr_clk, then written
+    // into per-chunk storage (SEL_CHUNK bits) by a per-chunk REGISTERED one-hot write enable; the read mux of every
+    // chunk is driven by a per-chunk REGISTERED one-hot read select (onehot(rd_bin), loaded from rd_bin_next, so the
+    // read side adds no latency).  Every select copy is a distinct (* keep *) flop (ot_keep_regs.tcl), so no select net
+    // fans out past one chunk.  The write pointer reaches the read domain one wr_clk later (sp_pub_q), on the same edge
+    // the entry commits, so an entry is never visible before it is written; fullness / emptiness / online logic are
+    // unchanged.  Effect: +1 wr_clk of write-to-read visibility (asynchronous FIFO: not cycle-observable).
+    parameter integer SEL_PIPE = 0,
+    parameter integer SEL_CHUNK = 64
 `ifdef OT_VMFE_FCC_PIPE
     , parameter integer FIFO_PIPE = 0, parameter integer PIPE_CHUNK = 128
 `endif
@@ -35,6 +45,14 @@ module ot_async_fifo #(
     initial begin
         if (DEPTH < 4 || (DEPTH & (DEPTH-1)) != 0)
             $error("ot_async_fifo DEPTH must be a power of two >= 4");
+        if (SEL_PIPE != 0 && SEL_CHUNK < 1)
+            $error("ot_async_fifo SEL_CHUNK must be >= 1");
+`ifdef OT_VMFE_FCC_PIPE
+        if (SEL_PIPE != 0) $error("ot_async_fifo SEL_PIPE is not combined with OT_VMFE_FCC_PIPE");
+`endif
+`ifdef OT_S81_HOST_PHASESAFE
+        if (SEL_PIPE != 0) $error("ot_async_fifo SEL_PIPE is not combined with OT_S81_HOST_PHASESAFE");
+`endif
     end
 
     localparam integer ADDR_W = $clog2(DEPTH);
@@ -146,12 +164,69 @@ module ot_async_fifo #(
         always @(posedge wr_clk) if(wr_domain_rst_n && wr_fire) mem[wr_bin[ADDR_W-1:0]] <= wr_data;
     end endgenerate
 `else
+    // SEL_PIPE (see the parameter): the registered-select storage; SEL_PIPE 0 builds nothing here.
+    wire [WIDTH-1:0] sp_rd_data;
+    wire [PTR_W-1:0] sp_pub;
+    wire [PTR_W-1:0] wr_gray_rsrc = (SEL_PIPE != 0) ? sp_pub : wr_gray_seam;
+    generate if (SEL_PIPE != 0) begin : g_sp
+        localparam integer NCH = (WIDTH + SEL_CHUNK - 1) / SEL_CHUNK;
+        reg [WIDTH-1:0] sp_wd;
+        reg [PTR_W-1:0] sp_pub_q;
+        wire [DEPTH-1:0] sp_wsel_d = {DEPTH{wr_fire}} & ({{(DEPTH-1){1'b0}},1'b1} << wr_bin[ADDR_W-1:0]);
+        wire [DEPTH-1:0] sp_rsel_d = {{(DEPTH-1){1'b0}},1'b1} << rd_bin_next[ADDR_W-1:0];
+        always @(posedge wr_clk) sp_wd <= wr_data;          // payload: reset-free, one load per bit
+        always @(posedge wr_clk or negedge wr_domain_rst_n)
+            if (!wr_domain_rst_n) sp_pub_q <= {PTR_W{1'b0}};
+            else sp_pub_q <= wr_gray;                       // visible on the edge the accepted entry commits
+        assign sp_pub = sp_pub_q;
+        for (genvar pc = 0; pc < NCH; pc = pc + 1) begin : g_c
+            localparam integer LO = pc * SEL_CHUNK;
+            localparam integer CW = (WIDTH - LO < SEL_CHUNK) ? WIDTH - LO : SEL_CHUNK;
+            // one kept copy per chunk and domain: physical/common_flow/ot_keep_regs.tcl (SYNTH_CANONICALIZE_TCL in
+            // every gen.py kit) keeps each declared (* keep *) copy a real flop, so no select net fans out past a chunk
+            (* keep = 1 *) reg [DEPTH-1:0] wsel;
+            (* keep = 1 *) reg [DEPTH-1:0] rsel;
+            always @(posedge wr_clk or negedge wr_domain_rst_n)
+                if (!wr_domain_rst_n) wsel <= {DEPTH{1'b0}};
+                else wsel <= sp_wsel_d;
+            always @(posedge rd_clk or negedge rd_domain_rst_n)
+                if (!rd_domain_rst_n) rsel <= {{(DEPTH-1){1'b0}}, 1'b1};
+                else rsel <= sp_rsel_d;
+            reg [CW-1:0] smem [0:DEPTH-1];
+            always @(posedge wr_clk) begin : p_w
+                integer e;
+                for (e = 0; e < DEPTH; e = e + 1)
+`ifdef OT_SP_MUT_WSEL
+                    if (wsel[(e + (pc == 0 ? 1 : 0)) % DEPTH]) smem[e] <= sp_wd[LO +: CW];   // mutant: chunk 0 wrong entry
+`elsif OT_SP_MUT_WDATA
+                    if (wsel[e]) smem[e] <= (pc == 1) ? wr_data[LO +: CW] : sp_wd[LO +: CW];  // mutant: chunk 1 unregistered
+`else
+                    if (wsel[e]) smem[e] <= sp_wd[LO +: CW];
+`endif
+            end
+            reg [CW-1:0] row;
+            always @* begin : p_r
+                integer e;
+                row = {CW{1'b0}};
+                for (e = 0; e < DEPTH; e = e + 1)
+`ifdef OT_SP_MUT_RSEL
+                    row = row | (smem[e] & {CW{(pc == NCH - 1) ? sp_rsel_d[e] : rsel[e]}});  // mutant: last chunk early select
+`else
+                    row = row | (smem[e] & {CW{rsel[e]}});
+`endif
+            end
+            assign sp_rd_data[LO +: CW] = row;
+        end
+    end else begin : g_sp0
+        assign sp_rd_data = {WIDTH{1'b0}};
+        assign sp_pub = {PTR_W{1'b0}};
+    end endgenerate
 `ifdef OT_S81_HOST_PHASESAFE
     reg [WIDTH-1:0] head_seam;
     always @* if (rd_clk) head_seam=mem[rd_bin[ADDR_W-1:0]];
     assign rd_data=head_seam;
 `else
-    assign rd_data = mem[rd_bin[ADDR_W-1:0]];
+    assign rd_data = (SEL_PIPE != 0) ? sp_rd_data : mem[rd_bin[ADDR_W-1:0]];
 `endif
 `endif
 
@@ -200,8 +275,10 @@ module ot_async_fifo #(
             wr_online_r2 <= wr_online_r1;
 `ifdef OT_VMFE_FCC_PIPE
             wr_gray_r1 <= wr_gray_visible;
+`elsif OT_SP_MUT_PUB
+            wr_gray_r1 <= wr_gray_seam;                     // mutant: publish before the entry commits
 `else
-            wr_gray_r1 <= wr_gray_seam;
+            wr_gray_r1 <= wr_gray_rsrc;
 `endif
             wr_gray_r2 <= wr_gray_r1;
             // Ready may legally remain asserted while valid is low.

@@ -1819,6 +1819,15 @@
           "note": {
            "type": "string"
           },
+          "cdc": {
+           "enum": [
+            "synchronized"
+           ]
+          },
+          "cdc_evidence": {
+           "type": "string",
+           "minLength": 1
+          },
           "source_latency_ps": {
            "type": "object",
            "required": [
@@ -2464,6 +2473,15 @@
                "evidence": {
                 "type": "string",
                 "minLength": 1
+               },
+               "capture": {
+                "enum": [
+                 "same_edge"
+                ]
+               },
+               "eye_hold_extra_ps": {
+                "type": "number",
+                "exclusiveMinimum": 0
                }
               }
              }
@@ -4546,6 +4564,9 @@
      "realize_internal_stations": {
       "type": "boolean"
      },
+     "ft_spread": {
+      "type": "boolean"
+     },
      "landing_base_type": {
       "type": "string"
      },
@@ -5414,6 +5435,30 @@
     "landing_network": {
      "type": "object"
     },
+    "ft_hop_lockup": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "all": {
+       "type": "boolean"
+      },
+      "except": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "types": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "note": {
+       "type": "string"
+      }
+     }
+    },
     "cohort": {
      "type": "object",
      "required": [
@@ -5601,6 +5646,16 @@
     },
     "relay_avoid_cores": {
      "type": "boolean"
+    },
+    "relay_resite_crossing": {
+     "type": "boolean"
+    },
+    "relay_resite_skip_types": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
     },
     "start_port": {
      "type": "string",

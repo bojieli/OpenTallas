@@ -2480,6 +2480,16 @@ def renamed(L, log, words=4, packed=frozenset()):
         # one surviving gate bit of a narrowed vector (hcp nout_r = 24: gate nout_r[1] is the RTL's bit 4): no second bit
         # to compare, so a lone disagreeing name with RTL bits the gate lacks is not trusted, packed or not.  Re-keying
         # only proposes: every compare point is still proved, and the by-name pair stays a candidate at the fixpoint.
+        # The same lone bit when its RTL namesake only ever loads a constant (HBM q3 body_ctl target_q = match ? 52 : 0:
+        # gold bits 0/1/3/6/7 load 0, bits 2/4/5 the match; synthesis kept ONE flop for 2/4/5 and named it target_q[1]).
+        # The constant gold D was excluded above as uninformative, so the by-name pair gold[1] (constant 0) == gate[1]
+        # (the match) stayed matched and differed, leaving gold [2] 'removed although not constant' (2016 points).
+        # A gate D that is not constant cannot be a constant-loaded RTL register of its own name; re-keyed it is paired
+        # by function like any renamed bit (only a proposal: every pairing is still proved).
+        if not bad and len(ks) == 1:
+            k = ks[0]
+            if sv("gold", k) in (0, mask) and sv("gate", k) not in (0, mask):
+                bad = [k]
         if len(bad) == 1 == len(ks) and any(IDX.match(g) and IDX.match(g).group(1) == b for g in L.gonly):
             hit.append(b)
             log.append(f"renamed: {b} (its only gate bit {bad[0]} disagrees and the gate lacks the other RTL bits)")

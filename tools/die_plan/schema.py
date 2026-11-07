@@ -580,6 +580,11 @@ SCHEMA = {
                             "properties": {"port": _name, "tap_um": _xy,
                                            "period_mult": {"type": "integer", "minimum": 1},
                                            "source": {"type": "string"}, "note": {"type": "string"},
+                                           # DIE-KV-84 11-06 (COORD 16:2x(b), opt-in): an edge clock asynchronous
+                                           # to the core clock by design, crossing only through synchronised
+                                           # FIFOs / synchronisers (gen_phys.edge_cdc; default: synchronous)
+                                           "cdc": {"enum": ["synchronized"]},
+                                           "cdc_evidence": {"type": "string", "minLength": 1},
                                            # DIE-HEAD-21 (opt-in): measured arrival of the sender's forwarded clock
                                            # AT this port (sender export + wire; the receiver's own tree is
                                            # propagated by the tool), per corner, as an early/late range.  Emitted
@@ -1058,6 +1063,11 @@ SCHEMA = {
             # ALL hard cores / macro leaves of the type, not only outside the walls (G2 kv3_pc: rrl_13 -> rrl_14
             # through kvpc0 gave 1272 M3 overflow)
             "relay_avoid_cores": {"type": "boolean"},
+            # DQ85-SUL0 11-06 (default TRUE, COORD 19:2x; false = pre-11-06 trees): a relay hop with no L route outside
+            # every grown blockage moves the free relays of its chain onto an obstacle-avoiding route
+            # (reset_tree.resite_crossing).  relay_resite_skip_types: types kept byte-identical (signed off).
+            "relay_resite_crossing": {"type": "boolean"},
+            "relay_resite_skip_types": {"type": "array", "items": _name},
             # raw binder: the FUNCTIONAL top input that carries the mission START level to the sources' declared
             # mission-admission inputs (e.g. KV host mission_start); every such sink binds to its partition's local
             # registered START tap start_t<k> (bootstrap types only).  Unset: such a top port stays a die IO.
@@ -1130,6 +1140,11 @@ SCHEMA = {
 # status hops are checked by landing_contract.py; default plans are unchanged.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
 SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
+# TYPE-SAFE-1/-2 11-06: ft station hop lockup latch (gen_rtl.ft_hop_lockup; absent = off)
+SCHEMA["properties"]["clock"]["properties"]["ft_hop_lockup"] = {
+    "type": "object", "additionalProperties": False,
+    "properties": {"all": {"type": "boolean"}, "except": {"type": "array", "items": {"type": "string"}},
+                   "types": {"type": "array", "items": {"type": "string"}}, "note": {"type": "string"}}}
 # DIE-KV-61/pc 11-02 (COORD ruling): authoritative die clock cohort record (e.g. KV tree_kv58); clock.mesh stays as
 # historical metadata when the cohort says mesh_status "historical".
 SCHEMA["properties"]["clock"]["properties"]["cohort"] = {"type": "object", "required": ["id", "authority", "source"]}
@@ -1149,11 +1164,15 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                     "required": ["module", "pin"], "properties": {"module": _name, "pin": _name}}}}}}}}
 # Opt-in: realize the already priced internal stations in logical and physical source alike.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["realize_internal_stations"] = {"type": "boolean"}
+# TYPE-SAFE-2 11-06: gen-time ft station spread opt-out (ft_spread.py; absent = on)
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["ft_spread"] = {"type": "boolean"}
 # Explicit source-synchronous data pads retain declared budgets on their actual PHY clock.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["data_inputs"] = {
     "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
         "required": ["port", "max_ps", "min_ps", "evidence"], "properties": {
-            "port": _name, "max_ps": {"type": "number"}, "min_ps": {"type": "number"}, "evidence": _name}}}
+            "port": _name, "max_ps": {"type": "number"}, "min_ps": {"type": "number"}, "evidence": _name,
+            # DIE-HEAD-74 11-06: optional same-edge eye capture (capture tree near one pad period).
+            "capture": {"enum": ["same_edge"]}, "eye_hold_extra_ps": {"type": "number", "exclusiveMinimum": 0}}}}
 # Output pad data uses the real exported PHY clock, retaining explicit budgets.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["data_outputs"] = {
     "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,

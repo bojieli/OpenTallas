@@ -251,3 +251,47 @@ def test_native_pad_data_refuses_untyped_or_ambiguous_association(fault):
     if fault == 'budget': row['min_ps'] = 200
     if fault == 'evidence': row['evidence'] = ''
     with pytest.raises(ValueError): PC.pins(p, 'mid')
+
+
+def _same_edge_plan(**extra):
+    p = plan(); p.types['mid']['pads'].append(dict(name='pma_rx', width=544, dir='in'))
+    row = dict(port='pma_rx', max_ps=166.6, min_ps=-90, evidence='actual peer TX and RX use recovered clock')
+    row.update(extra)
+    p.types['mid']['clock']['pad_clock']['pins'][0]['data_inputs'] = [row]
+    return p
+
+
+def test_same_edge_capture_emits_exact_relation_and_lowered_min():
+    p = _same_edge_plan(capture='same_edge', eye_hold_extra_ps=175)
+    text = GP.sdc(p, 'mid', GP.type_pins(p, 'mid'))
+    ctx = SL.kit_context(p, 'mid')
+    assert not SL.lint(text, **ctx)
+    assert 'set_multicycle_path 0 -setup -from [get_ports {pma_rx[*]}]' in text
+    assert 'set_input_delay -max 166.6000 -clock pma_rck [get_ports {pma_rx[*]}]' in text
+    assert 'set_input_delay -min -265.0000 -clock pma_rck [get_ports {pma_rx[*]}]' in text
+    # the relation is required, exact and only on the declared port
+    assert any('no set_multicycle_path' in e for e in SL.lint(text.replace(
+        'set_multicycle_path 0 -setup -from [get_ports {pma_rx[*]}]\n', ''), **ctx))
+    assert SL.lint(text.replace('set_multicycle_path 0 -setup', 'set_multicycle_path 1 -setup'), **ctx)
+    assert SL.lint(text + 'set_multicycle_path 0 -setup -from [get_ports {pma_rck}]\n', **ctx)
+    # the declared min budget cannot be restored (the TT eye edge stays covered by the FF hold check)
+    assert any('declared -265' in e for e in SL.lint(text.replace(
+        'set_input_delay -min -265.0000', 'set_input_delay -min -90.0000'), **ctx))
+
+
+def test_same_edge_absent_keeps_bytes_and_other_rows_refuse_multicycle():
+    a = _same_edge_plan()
+    text = GP.sdc(a, 'mid', GP.type_pins(a, 'mid'))
+    assert 'set_multicycle_path' not in text and 'set_input_delay -min -90.0000 -clock pma_rck' in text
+    ctx = SL.kit_context(a, 'mid')
+    assert SL.lint(text + 'set_multicycle_path 0 -setup -from [get_ports {pma_rx[*]}]\n', **ctx)
+
+
+@pytest.mark.parametrize('extra', [dict(capture='same_edge'), dict(eye_hold_extra_ps=100),
+                                   dict(capture='next_edge', eye_hold_extra_ps=100),
+                                   dict(capture='same_edge', eye_hold_extra_ps=0),
+                                   dict(capture='same_edge', eye_hold_extra_ps=5000),
+                                   dict(capture='same_edge', eye_hold_extra_ps=True)])
+def test_same_edge_declaration_fails_closed(extra):
+    with pytest.raises(ValueError):
+        PC.pins(_same_edge_plan(**extra), 'mid')

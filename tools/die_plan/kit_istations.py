@@ -414,6 +414,38 @@ def _glob(path):
     return "*" + path.replace(".", "?").replace("[", "\\[").replace("]", "\\]") + "[./]*"
 
 
+# DIE-S81-70 11-06 (spec s81_istations_native_spec_1106, form A1): the S81 native binds are FLAT (ot_s81sl_leaf /
+# ot_s81sl_vp / ot_s81sl_cst dissolved): the leaf's station chains are bound at the depths the slice instance sets
+# (LF_CS_*), as registers named after the flattened path (u_lf.u_vp.g_ln[9].u_cst_hi.gd.s[0].u -> ..u_vp_g_ln_9_u_cst_hi_
+# gd_s_0_u..).  Native mode: no re-parameterisation (the depths are bound), the bound depth per class is COUNTED from
+# the stage registers and must equal the plan's (fail closed), and the sites use flat-name globs.
+NATIVE_MARK = re.compile(r"\bw_u_vp_g_ln_\d+_u_cst_h[io]_")
+
+
+def _flat(path):
+    """leaf-relative inst path -> the bind's flattened name stem (u_lf. prefix dropped, [n] -> _n, . -> _)."""
+    path = path[len(LEAF_INST) + 1:] if path.startswith(LEAF_INST + ".") else path
+    return re.sub(r"\[(\d+)\]", r"_\1", path).replace(".", "_")
+
+
+def native_params(txt):
+    """bound CS_* of a flat native kv_leaf bind, counted from the stage registers (d stages = s_0..s_{d-1})."""
+    def stages(rx):
+        return len({int(j) for j in re.findall(rx + r"_gd_s_(\d+)_u_", txt)})
+    have = {}
+    for c in {c for c, _, _ in CORE_CLASSES if c != "cs"}:
+        if c in H_CLASSES:
+            shared = stages(rf"\bg_u_vp_g_{c[0]}{c[1]}g_\d+_u_cst")
+            lane = max((stages(rf"\bg_u_vp_g_ln_{l}_u_cst_{c}") for l in range(16)), default=0)
+            have[CLASS_PARAM[c]] = shared + lane
+            have[f"CS_{c.upper()}_GS"] = shared
+        else:
+            have[CLASS_PARAM[c]] = stages(rf"\bg_u_cst_{c}")
+    groups = {int(g) for g in re.findall(r"\bg_u_vp_g_h[io]g_(\d+)_u_cst_gd_s_", txt)}
+    have["CS_H_G"] = 16 // len(groups) if groups else 4
+    return have
+
+
 def leaf_params(txt):
     m = re.search(rf"\bot_s81sl_leaf\b\s*(#\((?P<p>(?:[^()]|\([^()]*\))*)\))?\s*{LEAF_INST}\s*\(", txt)
     if not m:
@@ -421,11 +453,76 @@ def leaf_params(txt):
     return m, {k: int(v) for k, v in re.findall(r"\.(CS_\w+)\s*\(\s*(\d+)\s*\)", m.group("p") or "")}
 
 
+# DIE-S81-71 11-06 (spec s81_istations_native_spec_1106 "col st -> t0", COORD 17:0x option A1): the col_h9/h10 r0 status
+# hop u_r<i>.u_s<k>.st -> u_r<i>.u_t<k'> (core<->core, 657-856 um) is realised IN the col plan_kit RTL as a reset register
+# chain cst_st_s0..s<D-1> in front of u_t0.c0 (rtl/dsrom_sys/s81_dv/frame_lp/plan/col_h*_l4_lp_plan_kit.sv).  The bound
+# depth is COUNTED from the bound text and must equal the plan's (fail closed); stage j is FIRM at regs_um[j].
+COL_ST = re.compile(r"^u_r\d+\.u_s\d+\.st\|u_r\d+\.u_t\d+(\.c[01])?$")
+
+
+def _col_key(e):
+    a, c = e["conn"].split("|")[0], e["conn"].split("|")[-1]
+    return f"{e.get('launch', a.replace('core:', ''))}|{e.get('capture', c.replace('core:', ''))}"
+
+
+def _col_chain(txt, launch, capture):
+    """reg names of the station chain launch(st) -> capture.c0 in a bound text, launch side first; None = no instance"""
+    # the bind may dissolve the leading hierarchy (r0_nx types: u_u_t0 / w_u_s0_st, no u_r0_): match the longest suffix
+    cp, lp = capture.split("."), launch.split(".")
+    for d in range(min(len(cp), len(lp))):
+        ci = "_".join(cp[d:])
+        m = re.search(r"\b\w*" + re.escape(ci) + r"\s*\((.*?)\n\s*\);", txt, re.S)
+        if m:
+            launch = ".".join(lp[d:])
+            break
+    else:
+        return None
+    c0 = re.search(r"\.c0\(\s*([\w$]+)", m.group(1))
+    if not c0:
+        return None
+    net, regs, lw = c0.group(1), [], launch.replace(".", "_")
+    for _ in range(16):
+        if lw in net:
+            return regs[::-1]
+        am = re.search(r"\bassign\s+" + re.escape(net) + r"\s*=\s*(\w+)\s*;", txt)
+        q = am.group(1) if am else net
+        dm = re.search(r"\belse\s+" + re.escape(q) + r"\s*<=\s*([\w$]+)", txt)
+        if not dm:
+            return []
+        regs.append(q)
+        net = dm.group(1)
+    return []
+
+
+def col_st_stations(t, txt, tcl, rep):
+    """col st -> t0 entries of this type (realised by the col RTL); returns them so core_stations skips them."""
+    es = [e for e in t.get("internal_stations", []) if not e.get("conn", "").startswith("bus:") and COL_ST.match(_col_key(e))]
+    if not es:
+        return []
+    ns = sorted({len(e["regs_um"]) for e in es})
+    regs = sorted({tuple(tuple(r) for r in e["regs_um"]) for e in es})
+    if len(ns) != 1 or len(regs) != 1:
+        raise SystemExit(f"kit_istations: col st stations: entries disagree (depths {ns}, {len(regs)} site lists; fail closed)")
+    k = _col_key(es[0]).split("|")
+    chain = _col_chain(txt, k[0].rsplit(".", 1)[0] + "_st" if k[0].endswith(".st") else k[0], k[1].split(".c")[0])
+    if chain is None:
+        have = sorted({int(j) for j in re.findall(r"cst_st_s(\d+)(?!\d)", txt)})
+        chain = [f"cst_st_s{j}" for j in have] if have == list(range(len(have))) else []
+    if len(chain) != ns[0]:
+        raise SystemExit(f"kit_istations: col st stations: bound RTL stages {chain} but the plan has {ns[0]} "
+                         "(fail closed; the col plan_kit RTL carries cst_st_s*: re-bind on it)")
+    for q, (x, y) in zip(chain, regs[0]):
+        tcl.append(f"is_place {{*{q}*}} {x} {y} cst:st")
+    rep.append(dict(col_st=dict(stages=ns[0], entries=len(es), regs=chain, sites=[list(r) for r in regs[0]])))
+    return es
+
+
 def core_stations(t, txt, apply, htree, tcl, rep):
     """Map core<->core entries onto the leaf's station chains; returns the (maybe re-parameterised) bound text."""
     groups = {}
+    col = col_st_stations(t, txt, tcl, rep)
     for e in t.get("internal_stations", []):
-        if e.get("conn", "").startswith("bus:"):
+        if e.get("conn", "").startswith("bus:") or any(e is c for c in col):
             continue
         c, fwd, lane = core_class(e)
         if c is None:
@@ -449,15 +546,26 @@ def core_stations(t, txt, apply, htree, tcl, rep):
             raise SystemExit(f"kit_istations: class {c}: lanes carry unequal stage counts {depth[c]} / {ns[0]} "
                              "(every lane must see one depth: static schedule)")
         depth[c] = ns[0]
+    h_lanes = {}
     if "hi" in depth or "ho" in depth:
+        # DIE-S81-69 11-06: the leaf RTL applies CS_HI_D / CS_HO_D to all 16 lanes (one depth per class: the static
+        # schedule holds whatever lanes the plan sited).  The planner sites a lane's stations only where that lane's
+        # hop exceeds reach, so hi and ho may be sited on different lanes (kv_leaf t1/t3/t4/t5).  A lane without a
+        # sited entry for a class gets its stage(s) placed by GPL, exactly like the lanes sited in neither class;
+        # the unequal-depth checks above still fail closed.  Reported (h_lanes), not failed.
         lanes = {lane for (c, lane) in groups if c in H_CLASSES}
         for c in H_CLASSES:
-            if c in depth and {l for (cc, l) in groups if cc == c} != lanes:
-                raise SystemExit(f"kit_istations: class {c}: planned on a subset of the lanes (fail closed)")
-    m, have = leaf_params(txt)
+            if c in depth:
+                sited = sorted(l for (cc, l) in groups if cc == c)
+                h_lanes[c] = dict(sited=sited, unsited_of_planned=sorted(lanes - set(sited)))
+    native = not re.search(rf"\bot_s81sl_leaf\b[^;]*?\b{LEAF_INST}\s*\(", txt) and bool(NATIVE_MARK.search(txt))
+    if native:
+        m, have = None, native_params(txt)
+    else:
+        m, have = leaf_params(txt)
     want = {CLASS_PARAM[c]: d for c, d in depth.items() if c != "cs"}
     G, GSI, GSO = htree
-    if apply:
+    if apply and not native:
         want.update(CS_H_G=G, CS_HI_GS=min(GSI, want.get("CS_HI_D", 0)), CS_HO_GS=min(GSO, want.get("CS_HO_D", 0)))
         merged = dict(have)
         merged.update(want)
@@ -469,7 +577,12 @@ def core_stations(t, txt, apply, htree, tcl, rep):
     for k, v in sorted(want.items()):
         if k.endswith("_D") and have.get(k, 0) != v:
             raise SystemExit(f"kit_istations: leaf RTL {k} = {have.get(k, 0)} but the plan stations {v} stage(s) "
-                             "(fail closed; --apply sets the plan's depths)")
+                             + ("(fail closed; flat native bind: set the slice LF_CS_* depths and re-bind)" if native
+                                else "(fail closed; --apply sets the plan's depths)"))
+    if native:
+        extra = {k: v for k, v in have.items() if k.endswith("_D") and v and k not in want}
+        if extra:
+            raise SystemExit(f"kit_istations: flat native bind carries stations the plan does not: {extra} (fail closed)")
     G, GSI, GSO = have.get("CS_H_G", 4), have.get("CS_HI_GS", 0), have.get("CS_HO_GS", 0)
 
     def centroid(es, j):
@@ -485,6 +598,8 @@ def core_stations(t, txt, apply, htree, tcl, rep):
                 if shared:
                     for g in range(16 // G):
                         es = [x for l in range(G * g, G * g + G) for x in groups.get((c, l), [])]
+                        if not es:
+                            continue                # no sited lane in this group: GPL places the shared stage
                         jj = j if c == "hi" else j - (d - gs)
                         sites.append((f"{LEAF_INST}.u_vp.g_{c}g[{g}].u_cst.gd.s[{jj}].u", centroid(es, j), c))
                 else:
@@ -495,11 +610,12 @@ def core_stations(t, txt, apply, htree, tcl, rep):
             for j in range(d):
                 sites.append((f"{LEAF_INST}.u_cst_{c}.gd.s[{j}].u", centroid(groups[(c, None)], j), c))
     for nm, (x, y), c in sites:
-        tcl.append(f"is_place {{{_glob(nm)}}} {x} {y} cst:{c}")
+        tcl.append(f"is_place {{{'*' + _flat(nm) + '_*' if native else _glob(nm)}}} {x} {y} cst:{c}")
     rep.append(dict(core_classes={c: dict(param=CLASS_PARAM.get(c), stages=d,
                                           entries=sum(len(v) for (cc, _), v in groups.items() if cc == c))
                                   for c, d in sorted(depth.items())},
-                    h_tree=dict(G=G, GS_IN=GSI, GS_OUT=GSO), placed_stages=len(sites)))
+                    h_tree=dict(G=G, GS_IN=GSI, GS_OUT=GSO), h_lanes=h_lanes, placed_stages=len(sites),
+                    bind="native_flat" if native else "leaf_instance"))
     return txt
 
 

@@ -583,6 +583,22 @@ def test_eco_oom_relaunches_once_at_more_memory(ap, tmp_path, monkeypatch):
     assert len(ap.launched) == 2 and only_item(ap)["status"] == "LANE"
 
 
+
+def test_eco_aborted_relaunches_once_at_same_memory(ap, tmp_path, monkeypatch):
+    """KW-FIX-24 11-06: a loop stopped from outside (docker stop, no OOM line) is infra: one relaunch, --mem kept"""
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    register(ap, eco_kit(tmp_path))
+    AR.step(ap)
+    mem0 = ap.launched[0][1][ap.launched[0][1].index("--mem") + 1]
+    _eco_result(ap, dict(verdict="ABORTED", reason="ECO m0 session stopped from outside (rc 137)", metrics={}))
+    AR.step(ap)
+    assert len(ap.launched) == 2                                   # relaunched (was: LANE, no relaunch)
+    assert ap.launched[1][1][ap.launched[1][1].index("--mem") + 1] == mem0
+    AR.step(ap)
+    assert len(ap.launched) == 2 and only_item(ap)["status"] == "LANE"
+
+
 def test_eco_cap(ap, tmp_path, monkeypatch):
     roots_ok(monkeypatch, tmp_path)
     monkeypatch.setattr(AR, "ECO_DISK_GB", 0)

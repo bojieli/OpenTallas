@@ -1,0 +1,7 @@
+read_verilog -sv /w/ot_hgi_sfu_split3_ctl_core.sv
+hierarchy -top ot_hgi_sfu_split3_ctl_core
+proc
+flatten
+opt_clean
+stat
+write_json /w/pre.json

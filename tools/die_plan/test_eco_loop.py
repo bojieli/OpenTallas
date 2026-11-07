@@ -2,6 +2,7 @@
 OpenROAD): eligibility, stop rules (PASS / no improvement / max iterations / error), best pick + pruning, record."""
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -309,7 +310,7 @@ class OomFake(Fake):
 def test_prd_run_rc137_is_eco_oom(tmp_path):
     k = kit(tmp_path)
     b = base_rec(k, rec(41.71, -9.29))
-    r = E.run_loop(k, b, run=OomFake(137), mem=24, cpus=2)
+    r = E.run_loop(k, b, run=OomFake(137, log="make: *** [do-route] Error 137\n"), mem=24, cpus=2)
     it = r["iterations"][0]
     assert r["verdict"] == "ECO_OOM" and it["status"] == "ECO_OOM"
     assert "OOM-killed at 24 GB docker cap (rc 137)" in it["reason"]
@@ -340,7 +341,7 @@ def test_measured_peak_floors_eco_mem(tmp_path):
     assert E.eco_mem(k, 64)[0] == 64                                          # never below the request
     assert E.eco_mem(kit(tmp_path / "e"), 24) == (24, 0.0)                    # no logs: request unchanged
     b = base_rec(k, rec(41.71, -9.29))
-    f = OomFake(137)
+    f = OomFake(137, log="Killed\n")
     r = E.run_loop(k, b, run=f, mem=24, cpus=2)
     prd = [c for c, _ in f.calls if c[0] == "bash" and c[1].endswith("prd_run.sh")][0]
     assert prd[4] == "33" and r["mem_gb"] == 33 and r["mem_requested_gb"] == 24 and r["kit_peak_gb"] > 21
@@ -455,9 +456,11 @@ def test_superseded_pass_odbs_trimmed_when_next_pass_staged(tmp_path, monkeypatc
     by = {}
     for x in trimmed:
         by.setdefault(Path(x).parents[5].name, set()).add(Path(x).name)
-    assert by == {d: {"5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb"} for d in ("i1t", "i1", "i2t", "i2", "i3t")}
+    # KW-FIX-24: the best (final) dir i3 also drops them once its 6_final.odb exists (trim_best)
+    assert by == {d: {"5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb"} for d in ("i1t", "i1", "i2t", "i2", "i3t", "i3")}
     last = Path(r["root"]) / "i3" / "run/results/asap7/n/base"
-    assert {p.name for p in last.iterdir()} >= {"5_route.odb", "6_1_fill.odb", "6_final.odb"}
+    names = {p.name for p in last.iterdir()}
+    assert "6_final.odb" in names and not names & {"5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb"}
     # keep (debug runs) keeps everything
     k2 = kit(tmp_path / "k2", mm=False)
     r2 = E.run_loop(k2, base_rec(k2, rec(-6, -2, slew=0)), run=OdbFake([rec(-3, -1), rec(1, 2)]), mem=8, cpus=2, keep=True)
@@ -526,3 +529,219 @@ def test_terminal_abstract_failure_keeps_routed_recovery_pass(tmp_path, monkeypa
         assert (Path(name) / 'run/results').is_dir()
         assert (Path(name) / 'run/objects').is_dir()
     assert r['iterations'][-1]['retained_for_recovery']
+
+
+# KW-FIX-24 11-06 (S81-ENGRR-B5): rc 137 is OOM only with OOM evidence; a docker stop / external signal is ABORTED
+@pytest.mark.parametrize("rc,log,verdict", [
+    (137, None, "ABORTED"),                                          # docker stop SIGKILL, no log line
+    (137, "[INFO GRT-0001] reading\n", "ABORTED"),
+    (-9, None, "ABORTED"),
+    (143, None, "ABORTED"),                                          # docker stop SIGTERM
+    (-15, "", "ABORTED"),
+    (137, "[INFO] read_spef\nKilled\n", "ECO_OOM"),                 # memory evidence in the step log
+    (137, "OOMKilled true\n", "ECO_OOM"),
+    (143, "terminate called after std::bad_alloc\n", "ECO_OOM"),
+    (1, None, "ERROR"),                                              # a real tool failure: unchanged
+    (139, None, "ERROR"),                                            # SIGSEGV is the tool's own crash, not a stop
+])
+def test_eco_rc_mapping(tmp_path, rc, log, verdict):
+    k = kit(tmp_path)
+    b = base_rec(k, rec(5, -3))
+    r = E.run_loop(k, b, run=OomFake(rc, log=log), mem=24, cpus=2)
+    it = r["iterations"][0]
+    assert r["verdict"] == verdict and it["status"] == verdict, (r["verdict"], it.get("reason"))
+    assert json.loads((Path(r["root"]) / "eco_loop.json").read_text())["verdict"] == verdict
+    if verdict == "ABORTED":
+        assert f"stopped from outside (rc {rc}" in it["reason"]
+        assert E.summary(r).startswith("late-ECO ABORTED")
+    if verdict == "ERROR":
+        assert "route / clock-freeze check / finish failed" in it["reason"]
+
+
+def test_oom_evidence_needs_a_memory_line(tmp_path):
+    p = tmp_path / "run.log"
+    assert not E.oom_evidence(137) and not E.oom_evidence(-9)
+    p.write_text("all fine\n")
+    assert not E.oom_evidence(137, p)
+    p.write_text("make: *** [do-route] Error 137\n")
+    assert E.oom_evidence(2, p)
+
+
+def _tools_copy(tmp_path, with_common_flow=True):
+    """a standalone tools copy as lanes make it (tools/die_plan files, optionally physical/common_flow beside it)"""
+    from common_flow_src import common_flow_file
+    src = tmp_path / "tools_copy"
+    dp = src / "tools" / "die_plan"
+    dp.mkdir(parents=True)
+    for p in E.HERE.iterdir():
+        if p.is_file() and p.name != "clock_family.tcl":
+            shutil.copy2(p, dp / p.name)
+    if with_common_flow:
+        cf = src / "physical" / "common_flow"
+        cf.mkdir(parents=True)
+        for name in E.COMMON_FLOW_BUNDLE:
+            shutil.copy2(common_flow_file(name, E.HERE.parents[1]), cf / name)
+    return dp
+
+
+def test_stage_so_stages_common_flow_beside_die_plan(tmp_path):
+    """KW-FIX-24: the staged SO tree carries physical/common_flow next to tools/die_plan, so its own signoff.py bundle
+    (prd_mk.sh, every pass) resolves clock_family.tcl / macro_cts_cluster.tcl (formerly 'incomplete tool bundle')."""
+    tools = _tools_copy(tmp_path)
+    k = tmp_path / "kit"
+    k.mkdir()
+    (k / "config.mk").write_text("export DESIGN_NAME = x\n")
+    so = E.stage_so(k, tmp_path / "eco", tools)
+    cf = so / "physical" / "common_flow"
+    for name in E.COMMON_FLOW_BUNDLE:
+        assert (cf / name).read_bytes() == (tools.parents[1] / "physical/common_flow" / name).read_bytes()
+    # prd_mk.sh: SO/tools/die_plan/signoff.py bundle OUT on a two-mode pass dir (orfs_hold_mm.tcl needs macro_cts_cluster)
+    out = tmp_path / "pass"
+    out.mkdir()
+    (out / "orfs_hold_mm.tcl").write_text("# kit two-mode hook\n")
+    r = subprocess.run([sys.executable, "-I", str(so / "tools/die_plan/signoff.py"), "bundle", str(out)],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    assert (out / "macro_cts_cluster.tcl").read_bytes() == (cf / "macro_cts_cluster.tcl").read_bytes()
+    assert (out / "clock_family.tcl").read_bytes() == (cf / "clock_family.tcl").read_bytes()
+
+
+def test_stage_so_without_common_flow_names_the_gap(tmp_path):
+    tools = _tools_copy(tmp_path, with_common_flow=False)
+    k = tmp_path / "kit"
+    k.mkdir()
+    with pytest.raises(ValueError, match="physical/common_flow/clock_family.tcl"):
+        E.stage_so(k, tmp_path / "eco", tools)
+
+
+class Hang(Fake):
+    """KW-FIX-24: the first prd_run sits in the route-keep incremental GRT (rip line, no restore, flat log) until the
+    watchdog stops it (rc 137 as docker stop gives); the retry passes"""
+
+    def __init__(self, results, stopped):
+        super().__init__(results)
+        self.hit, self.stopped = False, stopped
+
+    def __call__(self, cmd, **kw):
+        if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh") and not self.hit:
+            self.calls.append((cmd, kw.get("env") or {}))
+            self.hit = True
+            log = Path(cmd[2], "run_prd.log")
+            log.write_text("OT_PRD_ROUTE_KEEP ripped 2412 nets (2412 selected: new 10, connectivity 2, ...)\n"
+                           "[INFO GRT-0001] ...\n")
+            os.utime(log, (1, 1))
+            assert self.stopped.wait(10), "watchdog never stopped the hung pass"
+            return 137
+        return super().__call__(cmd, **kw)
+
+
+def test_grt_hang_detection(tmp_path):
+    log = tmp_path / "run_prd.log"
+    assert E.grt_hang(log, 10) is None                                       # no log
+    log.write_text("OT_PRD_ROUTE_KEEP ripped 37 nets (x)\n")
+    assert E.grt_hang(log, 10) is None                                       # fresh log: still working
+    os.utime(log, (1, 1))
+    assert E.grt_hang(log, 10) == 37                                         # flat inside the incremental GRT
+    log.write_text("OT_PRD_ROUTE_KEEP ripped 37 nets (x)\nOT_PRD_ROUTE_KEEP restore: re-attached 9\n")
+    os.utime(log, (1, 1))
+    assert E.grt_hang(log, 10) is None                                       # past the GRT: DRT may be long, not this class
+    log.write_text("[INFO DRT] flat in detailed route, OT_PRD_FROM=grt\n")
+    os.utime(log, (1, 1))
+    assert E.grt_hang(log, 10) is None                                       # no route-keep: not this class
+
+
+def test_grt_hang_stops_container_and_retries_full_route(tmp_path, monkeypatch):
+    import threading
+    monkeypatch.setattr(E, "GRT_FLAT_S", 5)
+    monkeypatch.setattr(E, "WATCH_POLL_S", 0.05)
+    stopped, seen = threading.Event(), []
+
+    def stop(pd):
+        seen.append(str(pd))
+        stopped.set()
+        return ["prd-eco-i1-123"]
+
+    monkeypatch.setattr(E, "stop_eco_container", stop)
+    k = kit(tmp_path)
+    f = Hang([rec(5, 5)], stopped)
+    res = E.run_loop(k, base_rec(k, rec(-80, 2)), tmp_path / "eco", run=f, tools=Path(E.HERE))
+    assert res["verdict"] == "PASS" and "grt_hang_retry" in res
+    assert [i["status"] for i in res["iterations"]] == ["ERROR", "SIGNED"]
+    h = res["iterations"][0]["grt_hang"]
+    assert h["rip"] == 2412 and h["stopped"] == ["prd-eco-i1-123"] and seen == [res["iterations"][0]["dir"]]
+    assert "hung" in res["iterations"][0]["reason"] and res["iterations"][1]["dir"].endswith("/i1g")
+    runs = [env for cmd, env in f.calls if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh")]
+    assert runs[0]["OT_PRD_FROM"] == "route" and runs[1]["OT_PRD_FROM"] == "grt"
+
+
+def test_iterate_keep_route_false_never_route_keeps(tmp_path, monkeypatch):
+    k = kit(tmp_path)
+    monkeypatch.setattr(E, "passes", lambda kit, prev, hm: ["t0", "b0"])
+    f = Fake([rec(5, 5)])
+    so = E.stage_so(k, tmp_path / "so")
+    E.iterate(1, k, tmp_path / "eco", k, None, so, "grt", 0, 8, 2, f, keep_route=False)
+    runs = [env["OT_PRD_FROM"] for cmd, env in f.calls if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh")]
+    assert runs == ["grt", "grt"]
+
+
+def test_stop_eco_container_stops_only_this_pass(tmp_path, monkeypatch):
+    pd = tmp_path / "eco/i1"
+    pd.mkdir(parents=True)
+    (tmp_path / "link").symlink_to(tmp_path / "eco")
+    calls = []
+
+    class R:
+        def __init__(self, out=""):
+            self.stdout = out
+
+    def run(cmd, **kw):
+        calls.append(cmd)
+        if cmd[1] == "ps":
+            return R("aaa\nbbb\n")
+        if cmd[1] == "inspect":
+            src = tmp_path / "link/i1" if cmd[-1] == "aaa" else tmp_path / "eco/i2"
+            return R(f"/prd-eco-i1-{cmd[-1]}\t{src}|/work /x|/y \n")
+        return R()
+
+    monkeypatch.setattr(E, "docker", lambda: "docker")
+    monkeypatch.setattr(E.subprocess, "run", run)
+    assert E.stop_eco_container(pd) == ["prd-eco-i1-aaa"]
+    assert [c for c in calls if c[1] == "stop"] == [["docker", "stop", "-t", "30", "aaa"]]
+
+
+class Odbs(Fake):
+    """prd_mk / finish leave the ORFS route odbs in each pass dir (as a real ECO route does)"""
+
+    def __call__(self, cmd, **kw):
+        rc = super().__call__(cmd, **kw)
+        if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh") and rc == 0:
+            b = Path(cmd[2]) / "run/results/asap7/n/base"
+            b.mkdir(parents=True, exist_ok=True)
+            for n in ("5_2_route.odb", "5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb", "6_final.odb", "6_final.spef"):
+                (b / n).write_text("odb\n")
+        return rc
+
+
+def test_best_dir_drops_superseded_route_odbs(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_ECO_KEEP_ROUTED", raising=False)
+    k = kit(tmp_path)
+    res = E.run_loop(k, base_rec(k, rec(-80, 2)), tmp_path / "eco", run=Odbs([rec(5, 5)]), tools=Path(E.HERE))
+    assert res["verdict"] == "PASS" and res["best_trimmed"] == 3
+    b = Path(res["best"]["dir"]) / "run/results/asap7/n/base"
+    assert sorted(p.name for p in b.iterdir()) == ["5_2_route.odb", "6_final.odb", "6_final.spef"]
+
+
+def test_best_dir_trim_needs_final_and_honours_keep(tmp_path, monkeypatch):
+    b = tmp_path / "i1/run/results/asap7/n/base"
+    b.mkdir(parents=True)
+    for n in ("5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb"):
+        (b / n).write_text("odb\n")
+    it = {"dir": str(tmp_path / "i1")}
+    assert E.trim_best(it) == []                                   # no 6_final.odb: the route DB is the routed DB
+    (b / "6_final.odb").write_text("")
+    assert E.trim_best(it) == []                                   # empty 6_final: not a DB
+    (b / "6_final.odb").write_text("odb\n")
+    monkeypatch.setenv("OT_ECO_KEEP_ROUTED", "1")
+    assert E.trim_best(it) == []
+    monkeypatch.delenv("OT_ECO_KEEP_ROUTED")
+    assert len(E.trim_best(it)) == 3 and sorted(p.name for p in b.iterdir()) == ["6_final.odb"]

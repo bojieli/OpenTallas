@@ -820,7 +820,45 @@ def edge_clock_pins(P, tn):
 # count, so a small domain is left alone.  Types without such a port generate byte-identical kits.
 # Opt-in per die (COORD 11-05): QC only.  KV kv3_sys_SD (clk_clk_phy) has the same port shape; its owner adds the die after
 # its own estimate.
-EDGE_SPLIT_DIES = {"qwen_compute"}
+EDGE_SPLIT_DIES = {"qwen_compute", "qwen_kvsys"}  # KV-SYSSD-2 11-06 (COORD approved): KV kv3_sys_SD/_v1 clk_clk_phy 5250 sinks
+# DIE-KV-84 11-06 (COORD 14:4x hold rule): macro sinks keyed on their clock pin, roots kept out of the macro; opt-in
+# per die so QC kits stay byte-same.
+EDGE_SPLIT_MACRO_PIN_DIES = {"qwen_kvsys"}
+
+
+# DIE-KV-84 11-06 (COORD 16:2x(b)): an edge clock the plan declares "cdc": "synchronized" + "cdc_evidence" is
+# asynchronous to the core clock clk by design (KV clk_clk_phy: PLL clk_phy 1043 ps; its only crossings are inside
+# ot_fdi_phy_cdc's two async FIFOs and 2-flop synchronisers).  Those arcs get a max delay of half the die period with
+# latency ignored, which covers both bounds of the module's SDC intent (Gray-bus skew 0.5 T, storage read T - 60).
+# They get no hold check and never a clock group.  Only the edge clock <-> clk pair is excepted; default plans are
+# byte-same.
+EDGE_CDC_CORE_CLOCK = "clk"
+
+
+def edge_cdc(P, tn):
+    """{edge clock port: max delay ps} of the declared synchronized edge clocks of type tn (peer: clk)."""
+    out = {}
+    for e in P.types[tn].get("clock", {}).get("edge_clocks", []):
+        if e.get("cdc") is None:
+            continue
+        if e["cdc"] != "synchronized" or not str(e.get("cdc_evidence", "")).strip():
+            raise ValueError(f"{tn}.{e['port']}: edge clock cdc must be 'synchronized' with a cdc_evidence")
+        if int(e.get("period_mult", 1)) != 1 or e.get("source_latency_ps") or e["port"].startswith("fclk_in"):
+            raise ValueError(f"{tn}.{e['port']}: edge clock cdc only on a plain die-period edge clock")
+        out[e["port"]] = 0.5 * float(P.die["period_ps"])
+    return out
+
+
+def edge_cdc_sdc(P, tn):
+    out = ""
+    for n, mx in edge_cdc(P, tn).items():
+        c, v = EDGE_CDC_CORE_CLOCK, t_lib(mx)
+        out += (f"# DIE-KV-84 COORD 16:2x(b): {n} asynchronous to {c} (plan cdc synchronized; evidence in plan cdc_evidence)\n"
+                f"set_max_delay -ignore_clock_latency {v:.4f} -from [get_clocks {n}] -to [get_clocks {c}]\n"
+                f"set_max_delay -ignore_clock_latency {v:.4f} -from [get_clocks {c}] -to [get_clocks {n}]\n"
+                f"set_false_path -hold -from [get_clocks {n}] -to [get_clocks {c}]\n"
+                f"set_false_path -hold -from [get_clocks {c}] -to [get_clocks {n}]\n")
+    return out
 
 
 def edge_split_ports(P, tn):
@@ -2182,6 +2220,7 @@ def sdc(P, tn, pins):
                 f"set_false_path -from [get_ports {{{' '.join(ids)}}}]\n")
     out += (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
             "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
+    out += edge_cdc_sdc(P, tn)
     if P.types[tn].get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         out = LC.sdc(P, tn, out)
@@ -3699,6 +3738,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
            f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
            *([f"export OT_EDGE_SPLIT_PORTS = {' '.join(edge_split_ports(P, tn))}"] if edge_split_ports(P, tn) else []),
+           *(["export OT_EDGE_SPLIT_MACRO_PIN = 1"] if edge_split_ports(P, tn) and P.die.get("name") in EDGE_SPLIT_MACRO_PIN_DIES else []),
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread), then
            # FLOW 10-25 F4: zero-logic register pairs onto one leaf (leaf_affinity.tcl; OT_LEAF_AFFINITY=0 = off)
            "export POST_CTS_TCL = /work/cts_post.tcl",
@@ -3810,7 +3850,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         macro_ff_repair_stage(kd, macros, mlib)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_chain_affinity.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
-              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl",
+              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
               "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
@@ -4002,7 +4042,21 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                   f"{regs}".rstrip())
     (kd / "ft_stations.txt").write_text("\n".join(ft) + "\n")
     from ft_bit_sites import table as ft_bit_sites_table
-    (kd / "ft_bit_sites.tcl").write_text(ft_bit_sites_table(t.get("ft_slots", [])))
+    # TYPE-SAFE-2 11-06 (OWNER 18:5x, COORD 19:2x (4a)): gen-time ft station spread (ft_spread.py docstring): a slot
+    # with station points but no per-bit sites gets a bit column across its bundle at each planned station instead of
+    # the ff_put_near clump; stations, hops, RTL and LEC unchanged.  Default on; partition_types.<t>.ft_spread false
+    # = the plan sites only.  ft_track_use.json: advisory track-use report (never a gate).
+    import ft_spread
+    try:
+        ft_kit_slots, ft_spread_ledger = ft_spread.spread_type(P, tn, t)
+    except Exception as ex:                  # the spread is a form improvement, never a gen failure: plan sites only
+        ft_kit_slots = list(t.get("ft_slots", []) or [])
+        ft_spread_ledger = [dict(form="clump", reason=f"ft_spread error {type(ex).__name__}: {ex}")]
+        print(f"[gen] {tn}: FT_SPREAD ADVISORY {type(ex).__name__}: {ex} (plan sites only)")
+    (kd / "ft_bit_sites.tcl").write_text(ft_bit_sites_table(ft_kit_slots))
+    if ft_kit_slots:
+        (kd / "ft_track_use.json").write_text(json.dumps(dict(ft_spread.track_use(ft_kit_slots, ft_spread_ledger),
+                                                              type=tn, spread=ft_spread_ledger), indent=1) + "\n")
     ff_core_taps = {r[0]: r for r in core_tap_rows(P, tn, "FF")}
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
@@ -4234,14 +4288,18 @@ if [ -f "$K/resume.json" ]; then  # KWRS
 RS=$1; shift; prog=$1; shift; vars=(); tg=(); out=()
 for a in "$@"; do case "$a" in *=*) vars+=("$a");; *) tg+=("$a");; esac; done
 D=${KWRS_DONE:-/work/.kwrs_done.$PPID}; touch "$D"
+# KW-FIX-22 11-06 (S81-RCK-2): a stage target runs every not-reused step up to it, as plain make would through its
+# dependencies (start floorplan + goal route called only '$M cts' -> do-cts without do-floorplan/do-place, 3_place.odb
+# missing).  Steps already run in this runner are skipped through the done list.
+up() { local n=$1 s; local st=(x do-floorplan do-place do-cts do-grt); for s in 1 2 3 4; do [ "$s" -le "$n" ] && [ "$s" -ge "$RS" ] && echo "${st[$s]}"; done; true; }
 for t in "${tg[@]}"; do
   case "$t" in
     synth) m=;;
-    floorplan) m=$([ "$RS" -le 1 ] && echo do-floorplan);;
-    place) m=$([ "$RS" -le 1 ] && echo do-floorplan do-place || { [ "$RS" -le 2 ] && echo do-place; });;
-    cts) m=$([ "$RS" -le 3 ] && echo do-cts);;
-    grt) m=$([ "$RS" -le 4 ] && echo do-grt);;
-    route) m="do-5_2_route do-5_3_fillcell do-5_route do-5_route.sdc";;
+    floorplan) m=$(up 1);;
+    place) m=$(up 2);;
+    cts) m=$(up 3);;
+    grt) m=$(up 4);;
+    route) m="$(up 3) do-5_2_route do-5_3_fillcell do-5_route do-5_route.sdc";;
     run) m=run; [ "$RS" -ge 4 ] && printf '%s\n' "${vars[@]}" | grep -q '^RUN_SCRIPT=.*tapbal_grt.tcl$' && m=;;
     do-*|print-*) m=$t;;
     *) echo "STAGE_RESUME make target $t unsupported on a resumed kit" >&2; exit 10;;

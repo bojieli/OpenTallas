@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "part": 41,
+ "plan": "d44v",
+ "lane": "HBM-FORM-SPLIT-13-OPSB",
+ "date": "2026-11-06",
+ "what": "ot_hgi_sfu_opsb_output (q_b113 / q_b113__physical_v1 u_sfucore_Q_opstore_b__o, MX, slot 760.32x280.8 at (656.64, 388.8)): bank macros 16 x ot_sram_1r1w_256x256_m2_r2c2 (823 pins) -> 16 x ot_sram_1r1w_2048x32_m8_r0c0_g32 (90 signal pins), RTL define OT_OPSB_N32 (recipe ot_hgi_sfu_opsb_output)",
+ "why": "the 256-bit-row bank macros GRT-overflow on every placement in the slot (B11 4 columns 143,100; vA 3 columns 506); the ruled 2 x 8-bank split in the same slot repeats the B11 4-column geometry (estimate est_split.txt, ASK 13:29 default)",
+ "unchanged": [
+  "die_plan.json (slot, outline, orient, pins table 3379bbf2f6a7)",
+  "core_conns",
+  "clock_entries",
+  "stations",
+  "reset_contract",
+  "PIN CYCLES 0 (same latency, lock-step bench every output every cycle)"
+ ],
+ "core_macros": {
+  "module": "ot_hgi_sfu_opsb_output",
+  "old_masters": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "new_masters": [
+   "ot_sram_1r1w_2048x32_m8_r0c0_g32"
+  ],
+  "old_macro_area_um2": 113549.5,
+  "new_macro_area_um2": 64867.8,
+  "placement": "results/die_hbm_1106/opsb_n32/macro_placement_n32_kit.json (kit-snapped; input macro_placement_n32.json)"
+ },
+ "rtl": {
+  "files": [
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lbank_n32.sv",
+   "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv (ifdef only)"
+  ],
+  "bench": "results/die_hbm_1106/opsb_n32/BENCH.txt",
+  "macro_gen": "results/die_hbm_1106/opsb_n32/macro_gen.py"
+ },
+ "recipes": {
+  "ot_hgi_sfu_opsb_output": "OT_OPSB_N32 form",
+  "ot_hgi_sfu_opsb_output__row256": "old form (fallback)"
+ }
+}

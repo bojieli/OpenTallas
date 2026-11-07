@@ -1013,6 +1013,33 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         lmemo[net] = frozenset(acc)
         return lmemo[net]
 
+    def _shift_class(net, clk, limit=16):
+        """(root, depth, parity) of a net: back through single-driver BUF/INV cells and plain rising D flops on clock
+        root `clk` (only D + clock inputs).  Two nets with equal (root, depth) carry the same value (xor parity) every
+        cycle once `depth` cycles have passed: same-cycle reset relay copies (ot_dp_rrelay chains) of one reset root
+        (DIE-QC-84 11-06, START relay face copy on its own local reset leaf).  Anything else stops the walk."""
+        cur, depth, par, seen = net, 0, 0, set()
+        while depth <= limit and cur not in seen:
+            seen.add(cur)
+            d = _single_drv(cur)
+            if d is None or cur in roots_ports or cur.startswith("CONST_"):
+                break
+            m, _, pp = F.cells[d[0]]
+            ins = {k: v for k, (dd_, v) in pp.items() if dd_ == "in"}
+            if is_buf(m) and len(ins) == 1 and all(len(v) == 1 for v in ins.values()):
+                if m.upper().startswith(("INV", "$_NOT_")):
+                    par ^= 1
+                cur = F.find(next(iter(ins.values()))[0])
+                continue
+            cp = clk_pin(pp)
+            if not (is_rise_ff(m) and cp is not None and clk_root(cp) == clk and set(ins) == {"D", next(
+                    k for k in ("CLK", "C") if k in ins)} and len(ins["D"]) == 1):
+                break
+            if d[1].upper() == "QN":
+                par ^= 1
+            cur, depth = F.find(ins["D"][0]), depth + 1
+        return cur, depth, par
+
     def _ev(net, asg, memo):
         if net in asg:
             return asg[net]
@@ -1566,11 +1593,20 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                     if a == z:
                         continue
                     leaves = sorted(x for x in (_leaves(a) | _leaves(z)) if not x.startswith("CONST_"))
-                    if len(leaves) > 13:
+                    # leaves that are equal-depth shift copies of one root (same-cycle reset relay leaves) share
+                    # one variable; every other leaf stays free
+                    sclk = clk_root(clk_pin(spp)) if clk_pin(spp) else None
+                    cls = {}
+                    for x in leaves:
+                        r0, dep, par = _shift_class(x, sclk) if sclk else (x, 0, 0)
+                        cls[x] = ((r0, dep) if dep > 0 else (x, 0), par if dep > 0 else 0)
+                    groups = sorted({g for g, _ in cls.values()})
+                    if len(groups) > 13:
                         return f"relay copy {parent}: {pin} cone too wide to prove", None
                     try:
-                        for vals in itertools.product((False, True), repeat=len(leaves)):
-                            assignment = dict(zip(leaves, vals))
+                        for vals in itertools.product((False, True), repeat=len(groups)):
+                            gv = dict(zip(groups, vals))
+                            assignment = {x: gv[g] ^ bool(par) for x, (g, par) in cls.items()}
                             if _ev(a, assignment, {}) != _ev(z, assignment, {}):
                                 return f"relay copy {parent}: {pin} function differs from origin", None
                     except KeyError as e:

@@ -1319,6 +1319,29 @@ def test_lone_surviving_bit_of_narrowed_vector_is_rekeyed(tmp_path):
     assert L.tonly == [] and "ff:u_dut.nout_r[1]" in L.matched
 
 
+def test_lone_live_gate_bit_named_after_a_constant_rtl_bit_is_rekeyed(tmp_path):
+    # HBM q3 body_ctl target_q = match ? 8'h34 : 0: gold bit 1 loads 0, bit 2 the match; synthesis keeps one flop
+    # for the match and names it target_q[1].  Gold D constant, gate D live: the name cannot be trusted.
+    def side(name, nx, bits):
+        p = tmp_path / (name + ".aig")
+        p.write_bytes(f"aig {1 + len(bits)} 1 {len(bits)} 0 0\n".encode() + "".join(f"{x}\n" for x in nx).encode())
+        mp = {"input": {0: [("a", 0)]}, "output": {},
+              "latch": {i: [(f"u_dut.target_q[{b}]$_DFF_P_.lecq", 0)] for i, b in enumerate(bits)}}
+        return lec.read_aig(p), mp
+    def rekeyed(gold_nx, gate_nx):
+        g, gm = side("gold", gold_nx, [1, 2])
+        t, tm = side("gate", [gate_nx], [1])
+        L = lec.Lec(g, gm, t, tm)
+        lec.renamed(L, [])
+        return L
+    L = rekeyed([0, 2], 2)                 # gold [1] loads 0, [2] loads a; gate [1] loads a: re-keyed
+    assert L.tonly == ["ff:u_dut.target_q#t[1]"] and "ff:u_dut.target_q[1]" in L.gonly
+    L = rekeyed([0, 2], 0)                 # gate [1] also loads 0: its own name, nothing moves
+    assert L.tonly == [] and "ff:u_dut.target_q[1]" in L.matched
+    L = rekeyed([0, 2], 1)                 # both constant (gate a mutant 1): no rename, the compare point fails
+    assert L.tonly == [] and "ff:u_dut.target_q[1]" in L.matched
+
+
 def test_nowiden_retry_only_after_a_widened_failure(tmp_path, monkeypatch):
     monkeypatch.delenv("OT_LEC_GOLD_NOWIDEN", raising=False)
     seen = []

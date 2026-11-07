@@ -1712,7 +1712,11 @@
       "ot_sram_1r1w_64x512_m1_r2c2"
     ],
     "source": "DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE): q3 five-core cohort (83f10270495, TOK-HBM q3_producer_native = body+edge+vm+q2 reduce+q2 ring_ag) edge cut (3 link_e_pr + argmax_m_tp192_pr); closure = yosys hierarchy -check; LLR replay SRAM leaf = ot_sram_1r1w_64x512_m1_r2c2 macro; plan pin table has one clk: hand wrapper wrappers/<module>.sv drives every RTL clock port, RTL top renamed rename_top in the kit copy",
-    "rename_top": "ot_hfd_coll_q3_edge_core__mc"
+    "rename_top": "ot_hfd_coll_q3_edge_core__mc",
+    "orfs_vars": {
+      "OT_LEC_PARITY_TERMS": 800
+    },
+    "lec_parity_note": "DIE-HBM-82-P40 11-06 (COORD 18:5x, FLOW-CLASS-25): orfs_vars OT_LEC_PARITY_TERMS=800 -> kit config.mk export, read by resign.py/auto_resign into the LEC container; wide CRC compare g_rxpre.ne_q (612 inputs, ot_hgi_coll_static_seq_ctl RXPRE) hits the 256 default solver limit (DIE-HBM-66 11-04 cp_rxs: EQUIVALENT 20782/20782 at 800)"
   },
   "ot_hfd_coll_q3_body_core": {
     "top": "ot_hfd_coll_q3_body_core",
@@ -3089,20 +3093,23 @@
     "macros": []
   },
   "ot_hgi_sfu_opsb_output": {
-    "defines": [],
+    "defines": [
+      "OT_OPSB_N32"
+    ],
     "params": {},
     "files": [
       "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
       "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
-      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv"
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lbank_n32.sv"
     ],
     "macros": [
-      "ot_sram_1r1w_256x256_m2_r2c2"
+      "ot_sram_1r1w_2048x32_m8_r0c0_g32"
     ],
-    "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B11 ev74 RE-FORM: IREG + lgroup2_lf (log lane-write / sector-read selects) + BREG + FREG, sr_d/sr_rv/flt +2; bench results/die_hbm_1105/reform_b11/opsb_output",
+    "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B11 ev74 RE-FORM: IREG + lgroup2_lf (log lane-write / sector-read selects) + BREG + FREG, sr_d/sr_rv/flt +2; bench results/die_hbm_1105/reform_b11/opsb_output; HBM-FORM-SPLIT-13-OPSB d44v part 41: OT_OPSB_N32 narrow-macro banks (16 x ot_sram_1r1w_2048x32_m8_r0c0_g32, 90 signal pins each, was 823), lock-step bench results/die_hbm_1106/opsb_n32 (0 errors, 4/4 mutants FAIL), PIN CYCLES 0",
     "top": "ot_hgi_sfu_opsb_output",
     "util": 0.45,
-    "source_commit": "729bf4dbae",
+    "source_commit": "422257f31e",
     "read_at_commit": true
   },
   "ot_hgi_sfu_opsa_group1": {
@@ -3400,6 +3407,26 @@
     "source_commit": "30d2553b62",
     "read_at_commit": true
   },
+  "ot_hbm_idx_topk_link_static__ev74_pd3w": {
+    "defines": [],
+    "params": {
+      "FILL_GROUPS": 8,
+      "WPIPE": 1
+    },
+    "util": 0.45,
+    "source": "HBM-FORM-SPLIT-13-TOPK 11-06: ev74_pd3 + Codex column-plane fill (FILL_GROUPS 8) + WPIPE write stage (ingest write side registered, store PD+1); PIN CYCLES tx_v/tx +1 (outputs tx +4, fault/selected_count +3 vs WRITE_PIPE_STAGES=2); bench results/die_hbm_1105/form_split/p30/RESULTS_WPIPE.txt; hand macro placements results/die_hbm_1106/topk_wpipe/{vA,vB}_macro_placement.tcl",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_link_pd3.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_tiles.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
+    ],
+    "top": "ot_hbm_idx_topk_link_pd3",
+    "macros": [
+      "ot_sram_1r1w_64x512_m1_r2c2"
+    ],
+    "source_commit": "0a5be559a7",
+    "read_at_commit": true
+  },
   "hfd_hgi_vms_gnw_cw": {
     "top": "hfd_hgi_vms_gnw_cw",
     "files": [
@@ -3466,7 +3493,11 @@
     ],
     "core_macros": "auto",
     "util": 0.45,
-    "source": "HBM-GAPS-4-Q3SPLIT d44v part 34 (vB, safe form): tile of ot_hfd_coll_q3_edge_core (member boundary, 0 added cycles); lock-step bench physical/die_plan/hbm/over_cap_split/reform_1103/bench/q3_edge/run.sh (XDEFS=OT_COLL_LINK_RXPRE RXSTIM=1); member RTL files and defines as the uncut core recipe; CODEX 11-05: adopt existing right-width 141b replay macro, same read-before-write and forwarding ages, 0 pin cycles; store miter 11991 checks + mutant caught"
+    "source": "HBM-GAPS-4-Q3SPLIT d44v part 34 (vB, safe form): tile of ot_hfd_coll_q3_edge_core (member boundary, 0 added cycles); lock-step bench physical/die_plan/hbm/over_cap_split/reform_1103/bench/q3_edge/run.sh (XDEFS=OT_COLL_LINK_RXPRE RXSTIM=1); member RTL files and defines as the uncut core recipe; CODEX 11-05: adopt existing right-width 141b replay macro, same read-before-write and forwarding ages, 0 pin cycles; store miter 11991 checks + mutant caught",
+    "orfs_vars": {
+      "OT_LEC_PARITY_TERMS": 800
+    },
+    "lec_parity_note": "DIE-HBM-82-P40 11-06 (COORD 18:5x, FLOW-CLASS-25): orfs_vars OT_LEC_PARITY_TERMS=800 -> kit config.mk export, read by resign.py/auto_resign into the LEC container; wide CRC compare g_rxpre.ne_q (612 inputs, ot_hgi_coll_static_seq_ctl RXPRE) hits the 256 default solver limit (DIE-HBM-66 11-04 cp_rxs: EQUIVALENT 20782/20782 at 800)"
   },
   "ot_hfd_coll_q3_edge_arg": {
     "top": "ot_hfd_coll_q3_edge_arg",
@@ -3489,6 +3520,52 @@
     "macros": [],
     "util": 0.45,
     "source": "HBM-GAPS-4-Q3SPLIT d44v part 34 (vB, safe form): tile of ot_hfd_coll_q3_edge_core (member boundary, 0 added cycles); lock-step bench physical/die_plan/hbm/over_cap_split/reform_1103/bench/q3_edge/run.sh (XDEFS=OT_COLL_LINK_RXPRE RXSTIM=1); member RTL files and defines as the uncut core recipe"
+  },
+  "ot_hfd_coll_q3_edge_arg__fpipe": {
+    "top": "ot_hfd_coll_q3_edge_arg",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1103/ot_hfd_coll_q3_edge_core/ot_hfd_coll_q3_edge_arg.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_edge_pr.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+      "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv",
+      "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+      "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
+    ],
+    "defines": [
+      "OT_COLL_ISSUER256_NATIVE32",
+      "OT_COLL_LINK_RXPRE",
+      "OT_Q3ARG_FAULT_PIPE"
+    ],
+    "params": {},
+    "macros": [],
+    "util": 0.45,
+    "source": "HBM-GAPS-9 11-06 (DIE-HBM-81 13:37 ruling, d44v PART 40): q3_edge_arg pin-cycle form = recipe ot_hfd_coll_q3_edge_arg + define OT_Q3ARG_FAULT_PIPE (two-stage duplicate check in ot_hgi_coll_argmax_static_fp). PIN CYCLES: fault +1 edge, every other output exact. Proof: yosys equiv_induct (gold fault delayed 1 edge vs gate) 7357/7357 proven, mutant MUT_FP=1 1 unproven; lock-step iverilog bench 200k cycles 0 mismatches, mutant caught (physical/die_plan/hbm/over_cap_split/reform_1106/q3_edge_arg_repin/fault_pipe)"
+  },
+  "ot_hfd_coll_q3_edge_arg__fpipe2": {
+    "top": "ot_hfd_coll_q3_edge_arg",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1103/ot_hfd_coll_q3_edge_core/ot_hfd_coll_q3_edge_arg.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_edge_pr.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+      "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv",
+      "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+      "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
+    ],
+    "defines": [
+      "OT_COLL_ISSUER256_NATIVE32",
+      "OT_COLL_LINK_RXPRE",
+      "OT_Q3ARG_FAULT_PIPE2"
+    ],
+    "params": {},
+    "macros": [],
+    "util": 0.45,
+    "source": "HBM-GAPS-9 11-06 (DIE-HBM-81 13:37 ruling, d44v PART 40): q3_edge_arg pin-cycle form = recipe ot_hfd_coll_q3_edge_arg + define OT_Q3ARG_FAULT_PIPE2 (two-stage duplicate check in ot_hgi_coll_argmax_static_fp, SEEN_DEFER=1: seen updated from the stage-1 registers; routed __fpipe vD had -35 ps on meta->seen D). PIN CYCLES: fault +1 edge, every other output exact. Proof: yosys equiv_induct (gold fault delayed 1 edge vs gate) 7357/7357 proven, mutant MUT_FP=1 1 unproven; v2 vs v1 (v1.seen_q == v2.seen) 7588/7588 proven, mutant 1 unproven; lock-step iverilog bench 200k cycles 0 mismatches, mutant caught (physical/die_plan/hbm/over_cap_split/reform_1106/q3_edge_arg_repin/fault_pipe)"
   },
   "ot_hbm_su_pg_lane1p_core__ldcs2": {
     "top": "ot_hbm_su_pg_lane1p_core",
@@ -3674,5 +3751,355 @@
       "ot_sram_1r1w_256x256_m2_r2c2",
       "ot_sram_1rw_256x64_m4_r2c2"
     ]
+  },
+  "ot_q2nf_qout__slkeep": {
+    "top": "ot_q2nf_qout",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105b/ot_q2nf_split.sv"
+    ],
+    "macros": [],
+    "defines": [
+      "OT_Q2NF_SLKEEP"
+    ],
+    "params": {},
+    "source": "HBM-REFORM-B5 d44v part 33 tile of ot_hfd_coll_q2n2_body_core; bench results/die_hbm_1104/reform_b/split_p33/; HBM-FORM-TIMING-11-QOUT 11-06: opt-in per-slice sink_select copies (OT_Q2NF_SLKEEP), proof results/die_hbm_1104/reform_b/split_p33/slkeep_1106",
+    "source_commit": "34ad1326099584eecd251aa8e23c0a52ba48a1b0",
+    "read_at_commit": true,
+    "util": 0.45
+  },
+  "ot_pdie_serdes_rx_bm_native": {
+    "top": "ot_pdie_serdes_rx_bm_native",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1104b/ot_pdie_serdes_split.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+      "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh",
+      "rtl/hbm_accel/cores_split/reform_1106/ot_pdie_serdes_rx_bm3.sv"
+    ],
+    "defines": [],
+    "params": {
+      "BMTHC": 1
+    },
+    "macros": [],
+    "source": "DIE-HBM-81 d44v part 37 (plan-adopted): HBM-GAPS-7 11-06 RX BM3 vB safe form from Codex d727c112224 (58e1b7b1825), GEN claude/hbm-gaps-7-rxbm3-1106@992171836f; BM child x3; kit --face-in-stage ^(S|ld|rs_n)$=1 (vB BM input relay)",
+    "source_commit": "d727c1122244e484d0d2d0a0fb72f6fc9ae51e42",
+    "read_at_commit": true,
+    "util": 0.4
+  },
+  "ot_pdie_serdes_rx_bm3_rest": {
+    "top": "ot_pdie_serdes_rx_bm3_rest",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1104b/ot_pdie_serdes_split.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+      "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh",
+      "rtl/hbm_accel/cores_split/reform_1106/ot_pdie_serdes_rx_bm3.sv"
+    ],
+    "defines": [],
+    "params": {
+      "BMTHC": 1,
+      "SEAM": 7
+    },
+    "macros": [
+      "ot_sram_1r1w2c_64x546_m1",
+      "ot_sram_1r1w_32x546_m1"
+    ],
+    "source": "DIE-HBM-81 d44v part 37 (plan-adopted): HBM-GAPS-7 11-06 RX BM3 vB safe form from Codex d727c112224 (58e1b7b1825), GEN claude/hbm-gaps-7-rxbm3-1106@992171836f; residual SEAM 7 (BM round trip with the vB BM input relay)",
+    "source_commit": "d727c1122244e484d0d2d0a0fb72f6fc9ae51e42",
+    "read_at_commit": true,
+    "util": 0.4
+  },
+  "ot_hgi_sfu_opsb_output__row256": {
+    "defines": [],
+    "params": {},
+    "files": [
+      "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv"
+    ],
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B11 ev74 RE-FORM: IREG + lgroup2_lf (log lane-write / sector-read selects) + BREG + FREG, sr_d/sr_rv/flt +2; bench results/die_hbm_1105/reform_b11/opsb_output; kept as the fallback row-macro form by d44v part 41",
+    "top": "ot_hgi_sfu_opsb_output",
+    "util": 0.45,
+    "source_commit": "729bf4dbae",
+    "read_at_commit": true
+  },
+  "ot_svgr_bk__vA": {
+    "top": "ot_svgr_bk",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_bk_b12.sv",
+      "rtl/lib/ot_reset_sync.sv"
+    ],
+    "params": {
+      "VARIANT": 0
+    },
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "defines": [],
+    "source": "HBM-B12-SVGRBK vA targeted: head data enable without identity_ok, one-hot replicated FIFO read select, mem write without reset; 0 pin cycles, outputs cycle-identical to B8; (B12 commit fd2b93da03 cherry-picked as 5a59ad0940, DIE-HBM-82-SVGR 11-06) bench results/die_hbm_1105/reform_b12/svgr_bk/; replaces the B8 head-register form (ot_svgr_bk, TT -72.95)",
+    "source_commit": "5a59ad09400282a513c92684f7c8f49ca6c37c5c",
+    "read_at_commit": true,
+    "util": 0.45
+  },
+  "ot_svgr_bk__vB": {
+    "top": "ot_svgr_bk",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_bk_b12.sv",
+      "rtl/lib/ot_reset_sync.sv"
+    ],
+    "params": {
+      "VARIANT": 1
+    },
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "defines": [],
+    "source": "HBM-B12-SVGRBK vB safe by construction: registered identity check (one packet per 2 stream cycles per landing bank), one-hot FIFO read select, reset sync per landing bank; PIN CYCLES +1 stream_clk on landing write/complete/fault vs B8; (B12 commit fd2b93da03 cherry-picked as 5a59ad0940, DIE-HBM-82-SVGR 11-06) bench results/die_hbm_1105/reform_b12/svgr_bk/; replaces the B8 head-register form (ot_svgr_bk, TT -72.95)",
+    "source_commit": "5a59ad09400282a513c92684f7c8f49ca6c37c5c",
+    "read_at_commit": true,
+    "util": 0.45
+  },
+  "ot_svgr_bk__vC": {
+    "top": "ot_svgr_bk",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_bk_b12.sv",
+      "rtl/lib/ot_reset_sync.sv"
+    ],
+    "params": {
+      "VARIANT": 1
+    },
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "defines": [],
+    "source": "HBM-B12-SVGRBK vB RTL unchanged + IO-HOLD A (no in-core input hold padding); HBM-B12-SVGRBK vB safe by construction: registered identity check (one packet per 2 stream cycles per landing bank), one-hot FIFO read select, reset sync per landing bank; PIN CYCLES +1 stream_clk on landing write/complete/fault vs B8; (B12 commit fd2b93da03 cherry-picked as 5a59ad0940, DIE-HBM-82-SVGR 11-06) bench results/die_hbm_1105/reform_b12/svgr_bk/; replaces the B8 head-register form (ot_svgr_bk, TT -72.95)",
+    "source_commit": "5a59ad09400282a513c92684f7c8f49ca6c37c5c",
+    "read_at_commit": true,
+    "util": 0.45,
+    "io_hold": "sender_min",
+    "io_hold_ports": [
+      "in_v",
+      "in_data",
+      "res_v",
+      "res_bank",
+      "res_epoch",
+      "res_total",
+      "stop",
+      "read_v",
+      "read_bank",
+      "read_row"
+    ],
+    "io_hold_note": "DIE-HBM-82-SVGR 11-06: IO-HOLD A parent obligation (lanes/IO-HOLD-HBM.md svgr_bk row): every data input bus takes the registered sender min (+12.5 ps after vclk; senders = ot_svgr_own / ot_svgr_top face-shell output flops); clocks, resets and bk_hi keep the flat -insertion_tol. Root cause (B12 vB eco i1 on epyc5): 1468 io hold endpoints -> 3948 HB4xp67 pads piled at the in_data face -> slew 436/320 (87 pins) + 7 DRT shorts at x248-250 y49-61."
+  },
+  "ot_svgr_own__rf2": {
+    "top": "ot_svgr_own",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105b/ot_svgr_split.sv",
+      "rtl/lib/ot_reset_sync.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+      "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+      "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv"
+    ],
+    "params": {},
+    "macros": [],
+    "defines": [
+      "OT_SVGR_OWN_RF1",
+      "OT_SVGR_OWN_RF2"
+    ],
+    "source": "DIE-HBM-82-SVGR 11-06 RF2 (on RF1): registered per-pc heads + registered grant/lane valid (bk_in AND-OR of registers), registered owner selected/lane/words, one-hot response lookup, registered accept before take; PIN CYCLES bk_in +1 hbm_clk, bank free +1 hbm_clk, first K request per block +1 hbm_pc_clk; smb_unit stall bench PASS 20 ops 29/29 go 81 results (mutants: see READY). Prior: HBM-REFORM-B4 d44v part 26 tile of ot_hbm_svc_sm_group_rel_id; bench results/die_hbm_1104/reform_b/split_p26/; HBM-GAPS-5 RF1 registered owner, +1 descriptor/Kresponse/bank-free edges; four smoke controls PASS,7mutants caught",
+    "source_commit": "df883a6b41f09ed6a5f48ddcfc51544eaad8dcb3",
+    "read_at_commit": true,
+    "util": 0.45,
+    "io_hold": "sender_min",
+    "io_hold_ports": [
+      "seam_res_v",
+      "seam_res_word",
+      "seam_s_fault",
+      "bk_cr",
+      "k_rdy",
+      "k_wr_done",
+      "kr_v",
+      "kr_tag",
+      "kr_beat",
+      "kr_data"
+    ],
+    "io_hold_note": "DIE-HBM-82-SVGR 11-06: IO-HOLD A parent obligation (lanes/IO-HOLD-HBM.md svgr_own row): data input buses take the registered sender min (+12.5 ps after vclk; senders = face-shell output flops of ot_svgr_bk / svgr_top / the K-path cores); clocks, resets, id_stack/id_sm keep the flat -insertion_tol. Root cause (Codex RF1 vA routed, epyc5): 3830 HB4xp67 input hold pads (kr_data 1024 b) -> slew 690/cap 26 and the pad pile."
+  },
+  "ot_hgi_sfu_opsb_output__rreg2": {
+    "defines": [
+      "OT_OPSB_N32",
+      "OT_OPSB_RREG=2"
+    ],
+    "params": {},
+    "files": [
+      "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lbank_n32.sv"
+    ],
+    "macros": [
+      "ot_sram_1r1w_2048x32_m8_r0c0_g32"
+    ],
+    "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B11 ev74 RE-FORM: IREG + lgroup2_lf (log lane-write / sector-read selects) + BREG + FREG, sr_d/sr_rv/flt +2; bench results/die_hbm_1105/reform_b11/opsb_output; HBM-FORM-SPLIT-13-OPSB d44v part 41: OT_OPSB_N32 narrow-macro banks (16 x ot_sram_1r1w_2048x32_m8_r0c0_g32, 90 signal pins each, was 823), lock-step bench results/die_hbm_1106/opsb_n32 (0 errors, 4/4 mutants FAIL), PIN CYCLES 0; HBM-FORM-SPLIT-13-OPSB RE-FORM (vB/vC TT -483/-452: SRAM rd_out -> 16:1 select -> 700 um haul in one cycle; CTS-0033 10 macro-tree delay buffers ~229 ps): OT_OPSB_RREG=2 bank-local read register + registered read-network output, CTS -delay_buffer_derate 0 (HBM-SFUHW2 10-18 precedent); PIN CYCLES sr_d/sr_rv +2; lock-step bench results/die_hbm_1106/opsb_rreg",
+    "top": "ot_hgi_sfu_opsb_output",
+    "util": 0.45,
+    "source_commit": "9b89cf214515822484bd34987365e8b908ac69be",
+    "read_at_commit": true,
+    "cts_delay_buffer_derate": 0
+  },
+  "ot_hgi_sfu_opsb_output__rreg1": {
+    "defines": [
+      "OT_OPSB_N32",
+      "OT_OPSB_RREG=1"
+    ],
+    "params": {},
+    "files": [
+      "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lbank_n32.sv"
+    ],
+    "macros": [
+      "ot_sram_1r1w_2048x32_m8_r0c0_g32"
+    ],
+    "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B11 ev74 RE-FORM: IREG + lgroup2_lf (log lane-write / sector-read selects) + BREG + FREG, sr_d/sr_rv/flt +2; bench results/die_hbm_1105/reform_b11/opsb_output; HBM-FORM-SPLIT-13-OPSB d44v part 41: OT_OPSB_N32 narrow-macro banks (16 x ot_sram_1r1w_2048x32_m8_r0c0_g32, 90 signal pins each, was 823), lock-step bench results/die_hbm_1106/opsb_n32 (0 errors, 4/4 mutants FAIL), PIN CYCLES 0; HBM-FORM-SPLIT-13-OPSB RE-FORM (vB/vC TT -483/-452: SRAM rd_out -> 16:1 select -> 700 um haul in one cycle; CTS-0033 10 macro-tree delay buffers ~229 ps): OT_OPSB_RREG=1 bank-local read register, CTS -delay_buffer_derate 0 (HBM-SFUHW2 10-18 precedent); PIN CYCLES sr_d/sr_rv +1; lock-step bench results/die_hbm_1106/opsb_rreg",
+    "top": "ot_hgi_sfu_opsb_output",
+    "util": 0.45,
+    "source_commit": "9b89cf214515822484bd34987365e8b908ac69be",
+    "read_at_commit": true,
+    "cts_delay_buffer_derate": 0
+  },
+  "ot_hgi_sfu_split3_ctl_rest_1c": {
+    "defines": [],
+    "params": {},
+    "util": 0.45,
+    "macros": [],
+    "functional_type": "sfu_ctl",
+    "source": "HBM-FORM-TIMING-11 d44v part 37: sub-core of ot_hgi_sfu_core_split3__ctl (I205 delay-line cut of HBM-FORM-TIMING-10, 0 cycles; lock-step bench + mutants results/die_hbm_1106/ctlsplit_p37/BENCH.txt); rest = ctl oneclk wrapper around ot_hgi_sfu_split3_ctl_rest_core + seam_d/seam_q",
+    "top": "ot_hgi_sfu_split3_ctl_rest_1c",
+    "files": [
+      "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_rest_core.sv",
+      "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_rest_1c.sv"
+    ]
+  },
+  "ot_hgi_sfu_split3_ctl_pipe_1c": {
+    "defines": [],
+    "params": {},
+    "util": 0.45,
+    "macros": [],
+    "functional_type": "sfu_ctl",
+    "source": "HBM-FORM-TIMING-11 d44v part 37: sub-core of ot_hgi_sfu_core_split3__ctl (I205 delay-line cut of HBM-FORM-TIMING-10, 0 cycles; lock-step bench + mutants results/die_hbm_1106/ctlsplit_p37/BENCH.txt); pipe = 21,816 delay-line flops + a local copy of the ctl reset sync (rst_n -> 2 flops -> relay)",
+    "top": "ot_hgi_sfu_split3_ctl_pipe_1c",
+    "files": [
+      "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_pipe_core.sv",
+      "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_pipe_1c.sv"
+    ]
+  },
+  "ot_hgi_sfu_opsb_output__wp1": {
+    "defines": [
+      "OT_OPSB_N32",
+      "OT_OPSB_WP=1"
+    ],
+    "params": {},
+    "files": [
+      "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lbank_n32.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_wp.sv"
+    ],
+    "macros": [
+      "ot_sram_1r1w_2048x32_m8_r0c0_g32"
+    ],
+    "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B11 ev74 RE-FORM: IREG + lgroup2_lf (log lane-write / sector-read selects) + BREG + FREG, sr_d/sr_rv/flt +2; bench results/die_hbm_1105/reform_b11/opsb_output; HBM-FORM-SPLIT-13-OPSB d44v part 41: OT_OPSB_N32 narrow-macro banks (16 x ot_sram_1r1w_2048x32_m8_r0c0_g32, 90 signal pins each, was 823), lock-step bench results/die_hbm_1106/opsb_n32 (0 errors, 4/4 mutants FAIL), PIN CYCLES 0; HBM-FORM-SPLIT-14-OPSB RE-FORM (vD/vE routed TT -310/-308: lane-write decode + broadcast in one cycle across 760 um, bank read regs placed at the sr_d face): OT_OPSB_WP=1 ot_hgi_su_lgroup2_wp (4 kept per-column copies, bank-local regs, sr_d-face read copy); PIN CYCLES sr_d/sr_rv +3, flt +1; lock-step bench results/die_hbm_1106/opsb_wp",
+    "top": "ot_hgi_sfu_opsb_output",
+    "util": 0.45,
+    "source_commit": "22fe73fb66047561ec0433bf8f4a5cf9a03acab7",
+    "read_at_commit": true,
+    "cts_delay_buffer_derate": 0
+  },
+  "ot_hgi_sfu_opsb_output__wp2": {
+    "defines": [
+      "OT_OPSB_N32",
+      "OT_OPSB_WP=2"
+    ],
+    "params": {},
+    "files": [
+      "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lbank_n32.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_wp.sv"
+    ],
+    "macros": [
+      "ot_sram_1r1w_2048x32_m8_r0c0_g32"
+    ],
+    "source": "HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B11 ev74 RE-FORM: IREG + lgroup2_lf (log lane-write / sector-read selects) + BREG + FREG, sr_d/sr_rv/flt +2; bench results/die_hbm_1105/reform_b11/opsb_output; HBM-FORM-SPLIT-13-OPSB d44v part 41: OT_OPSB_N32 narrow-macro banks (16 x ot_sram_1r1w_2048x32_m8_r0c0_g32, 90 signal pins each, was 823), lock-step bench results/die_hbm_1106/opsb_n32 (0 errors, 4/4 mutants FAIL), PIN CYCLES 0; HBM-FORM-SPLIT-14-OPSB RE-FORM (vD/vE routed TT -310/-308: lane-write decode + broadcast in one cycle across 760 um, bank read regs placed at the sr_d face): OT_OPSB_WP=2 ot_hgi_su_lgroup2_wp (registered decoded write record + 4 kept per-column copies, bank-local regs, sr_d-face read copy); PIN CYCLES sr_d/sr_rv +4, flt +2; lock-step bench results/die_hbm_1106/opsb_wp",
+    "top": "ot_hgi_sfu_opsb_output",
+    "util": 0.45,
+    "source_commit": "22fe73fb66047561ec0433bf8f4a5cf9a03acab7",
+    "read_at_commit": true,
+    "cts_delay_buffer_derate": 0
+  },
+  "ot_wbq_root_g0": {
+    "top": "ot_wbq_root_g0",
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r0c0_g256"
+    ],
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_split.sv",
+      "rtl/lib/ot_reset_sync.sv",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv"
+    ],
+    "defines": [],
+    "params": {},
+    "source": "DIE-HBM-82-EP6 d44v part 51 (plan-owner approved DIE-HBM-82 11-06 19:1x): lane group 0 of ot_wbq_root (lanes 0-3, 4 x ot_sram_1r1w_128x256_m1_r0c0_g256); slot glue ot_wbq_root_g2 = ot_wbq_root (OT_WBQ_N1M) cycle-exact: results/die_hbm_1106/wbq_g2/eq_g2.sh (yosys induction) + bench_g2.sh (lock-step)",
+    "source_commit": "75ed2b0eaa5ccd30d227f3e88ca86cb595db50fe",
+    "read_at_commit": true,
+    "util": 0.45
+  },
+  "ot_wbq_root_g1": {
+    "top": "ot_wbq_root_g1",
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r0c0_g256"
+    ],
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_split.sv",
+      "rtl/lib/ot_reset_sync.sv",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv"
+    ],
+    "defines": [],
+    "params": {},
+    "source": "DIE-HBM-82-EP6 d44v part 51 (plan-owner approved DIE-HBM-82 11-06 19:1x): lane group 1 of ot_wbq_root (lanes 4-7, 4 x ot_sram_1r1w_128x256_m1_r0c0_g256); slot glue ot_wbq_root_g2 = ot_wbq_root (OT_WBQ_N1M) cycle-exact: results/die_hbm_1106/wbq_g2/eq_g2.sh (yosys induction) + bench_g2.sh (lock-step)",
+    "source_commit": "75ed2b0eaa5ccd30d227f3e88ca86cb595db50fe",
+    "read_at_commit": true,
+    "util": 0.45
   }
 }

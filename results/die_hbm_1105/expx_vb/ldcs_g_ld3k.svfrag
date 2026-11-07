@@ -1,0 +1,56 @@
+    end else begin : g_ld3k
+        // the same three cycles on keep-prefix adders: a group's (at most 4) masked terms in a two-level tree
+        reg          ldp_v, ldq_v, ldp_bank, ldq_bank;
+        always @(posedge clk_stage[0] or negedge rst_n) begin
+            if (!rst_n) begin ldp_v <= 1'b0; ldq_v <= 1'b0; end
+            else begin ldp_v <= ld_e; ldq_v <= ldp_v; end
+        end
+        always @(posedge clk_stage[0]) begin
+            if (ld_e) ldp_bank <= ldbank_e;
+            if (ldp_v) ldq_bank <= ldp_bank;
+        end
+        genvar ss, jj, kk;
+        wire [5*AW-1:0] s_bus;                         // stream ss's offset, at the third cycle
+        integer s;
+        always @(posedge clk_stage[0])
+            if (ldq_v)
+                for (s = 0; s < 5; s = s + 1)
+                    if (ldq_bank) off1[s] <= s_bus[s*AW +: AW]; else off0[s] <= s_bus[s*AW +: AW];
+        // LDCS 1 (HBM-FORM-TIMING 11-05): the same three cycles in carry-save. Cycle 1 keeps a sum and a carry per group,
+        // cycle 2 compresses the six rows to two, cycle 3 is the one carry add. Same value modulo 2^AW, same edges.
+        for (ss = 0; ss < 5; ss = ss + 1) begin : g_s
+            wire [6*AW-1:0] cs1;
+            for (jj = 0; jj < 3; jj = jj + 1) begin : g_j
+                localparam integer LO = (jj == 0) ? 0 : (jj == 1) ? G1 : G2;
+                localparam integer HI = (jj == 0) ? G1 : (jj == 1) ? G2 : LN;
+                wire [4*AW-1:0] t;
+                for (kk = 0; kk < 4; kk = kk + 1) begin : g_t
+                    if (LO + kk < HI) begin : g_on
+                        assign t[kk*AW +: AW] = lane_id[LO + kk] ? ldc_e[(ss*LN + LO + kk)*AW +: AW] : {AW{1'b0}};
+                    end else begin : g_off
+                        assign t[kk*AW +: AW] = {AW{1'b0}};
+                    end
+                end
+                wire [AW-1:0] t0 = t[0 +: AW], t1 = t[AW +: AW], t2 = t[2*AW +: AW], t3 = t[3*AW +: AW];
+                wire [AW-1:0] s1 = t0 ^ t1 ^ t2;
+                wire [AW-1:0] c1 = ((t0 & t1) | (t0 & t2) | (t1 & t2)) << 1;
+                assign cs1[2*jj*AW +: AW] = s1 ^ c1 ^ t3;
+                assign cs1[(2*jj+1)*AW +: AW] = ((s1 & c1) | (s1 & t3) | (c1 & t3)) << 1;
+            end
+            reg [6*AW-1:0] p;
+            wire [AW-1:0] r0 = p[0 +: AW], r1 = p[AW +: AW], r2 = p[2*AW +: AW], r3 = p[3*AW +: AW], r4 = p[4*AW +: AW], r5 = p[5*AW +: AW];
+            wire [AW-1:0] sa = r0 ^ r1 ^ r2, ca = ((r0 & r1) | (r0 & r2) | (r1 & r2)) << 1;
+            wire [AW-1:0] sb = r3 ^ r4 ^ r5, cb = ((r3 & r4) | (r3 & r5) | (r4 & r5)) << 1;
+            wire [AW-1:0] sc = sa ^ ca ^ sb, cc = ((sa & ca) | (sa & sb) | (ca & sb)) << 1;
+            wire [AW-1:0] sd = sc ^ cc ^ cb, cd = ((sc & cc) | (sc & cb) | (cc & cb)) << 1;
+            reg  [AW-1:0] q_s, q_c;
+            wire [AW-1:0] s_all;
+            wire unused_co;
+            ot_hdc_kadd #(.W(AW), .K(1)) u_o (.a(q_s), .b(q_c), .cin(1'b0), .s(s_all), .cout(unused_co));
+            assign s_bus[ss*AW +: AW] = s_all;
+            always @(posedge clk_stage[0]) begin
+                if (ld_e) p <= cs1;
+                if (ldp_v) begin q_s <= sd; q_c <= cd; end
+            end
+        end
+    end endgenerate

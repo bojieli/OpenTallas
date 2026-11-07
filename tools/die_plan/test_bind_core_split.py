@@ -102,3 +102,18 @@ def test_view_drop_and_parts():
 def test_view_fit_refuses_bad_spec(kw):
     with pytest.raises(S.CoreSplitError):
         S.apply(binder(leaf()), [spec(**kw)])
+
+
+def test_emitted_and_derived_ifaces_agree_and_hide_view_drop():
+    # KW-FIX-24: bind_verify stubs the split leaves (no source); both interface paths are the apply transform
+    s = spec(view_drop=["ck"])
+    b = binder(leaf())
+    S.apply(b, [s])
+    em = S.emitted_ifaces(b.F.cells, [s])
+    assert em == {"pcc": {"params": [], "ports": {"g_c": ["input", 2], "r": ["input", 2], "x": ["output", 2]}},
+                  "pcf": {"params": [], "ports": {"ck": ["input", 1], "g_f": ["input", 1], "r": ["input", 1],
+                                                  "x": ["input", 2]}}}
+    src = {"g": ("input", 3), "ck": ("input", 1), "r": ("input", 2)}
+    assert S.derived_ifaces([s], {"pc": src}.get) == em
+    with pytest.raises(S.CoreSplitError):
+        S.derived_ifaces([s], {}.get)

@@ -168,6 +168,32 @@ def test_core_unequal_counts_fail(tmp_path):
     assert r.returncode != 0 and "unequal" in r.stderr
 
 
+def test_core_h_classes_on_different_lane_subsets_pass(tmp_path):
+    """DIE-S81-69 11-06 (kv_leaf t1/t3/t4/t5): hi sited on lanes {0,5,7,9}, ho on {0,5,7,8,9}; one depth per class
+    on all lanes, sited lanes FIRM, the rest GPL; reported in h_lanes, no fail."""
+    p = _core_plan(hi=1, ho=1)
+    hi_l, ho_l = {0, 5, 7, 9}, {0, 5, 7, 8, 9}
+    keep = []
+    for e in p["partition_types"]["t"]["internal_stations"]:
+        if "g_ln[" not in e["conn"]:
+            keep.append(e)
+            continue
+        lane = int(e["conn"].split("g_ln[")[1].split("]")[0])
+        if (".hq_d|" in e["conn"] and lane in hi_l) or (".hw_d|" in e["conn"] and lane in ho_l):
+            keep.append(e)
+    p["partition_types"]["t"]["internal_stations"] = keep
+    r, kd = _run_core(tmp_path, p, "--apply", "--h-tree", "4,1,0")
+    assert r.returncode == 0, r.stderr
+    sv = (kd / "t_leaf_bound.sv").read_text()
+    assert ".CS_HI_D(1)" in sv and ".CS_HO_D(1)" in sv
+    tcl = (kd / "istations.tcl").read_text()
+    assert "g_ln\\[8\\]?u_cst_ho" in tcl and "g_ln\\[8\\]?u_cst_hi" not in tcl
+    # shared hi stage (GS_IN 1): groups 0 (0..3), 1 (4..7), 2 (8..11) sited; group 3 (12..15) has no lane -> GPL
+    assert "g_hig\\[1\\]" in tcl and "g_hig\\[3\\]" not in tcl
+    r, _ = _run_core(tmp_path, p)
+    assert r.returncode == 0, r.stderr
+
+
 def test_core_unmapped_and_cs_fail(tmp_path):
     bad = dict(conn="core:u_lf.u_vq.xf|core:u_lf.u_vsw", launch="core:u_lf.u_vq.xf", capture="u_lf.u_vsw", bits=1,
                regs_um=[[1.0, 1.0]])
@@ -251,3 +277,129 @@ def test_relay_sites_ring_keys_post_landing():
     assert KI.relay_sites_post_tcl("t", {"relay_sites": {"u_slg.xe0[0]": [1, 2]}}) is None
     only_ring = KI.relay_sites_only_tcl("t", {"relay_sites": {"u_cland_a/y[0]": [1, 2]}})
     assert "proc rs_place_all" in only_ring and "rs_place_all [dict" not in only_ring
+
+
+# ---- DIE-S81-70 11-06: flat native kv_leaf binds (stations bound at the slice LF_CS_* depths, counted, flat globs)
+def _flat_bound(hi=1, ho=1, y=1, extra=""):
+    regs = []
+    for l in range(16):
+        regs.append(f"    wire [1:0] w_u_vp_g_ln_{l}_u_cst_hi_0_Y;")
+        regs.append(f"    wire [1:0] w_u_vp_g_ln_{l}_u_cst_ho_0_Y;")
+        for j in range(hi):
+            regs.append(f"    always @(posedge clk) g_u_vp_g_ln_{l}_u_cst_hi_gd_s_{j}_u_q <= 1'b0;")
+        for j in range(ho):
+            regs.append(f"    always @(posedge clk) g_u_vp_g_ln_{l}_u_cst_ho_gd_s_{j}_u_q <= 1'b0;")
+    for j in range(y):
+        regs.append(f"    always @(posedge clk) g_u_cst_y_gd_s_{j}_u_q <= 1'b0;")
+    return "module t_leaf_bound (input wire clk, input wire rst_n);\n" + "\n".join(regs) + extra + "\nendmodule\n"
+
+
+def _run_native(tmp_path, plan, bound, *opts):
+    kd = tmp_path / "kit"
+    kd.mkdir(exist_ok=True)
+    (kd / "t_leaf_bound.sv").write_text(bound)
+    (kd / "kit_rtl.json").write_text(json.dumps(dict(bound_module="t_leaf_bound", files=[str(kd / "t_leaf_bound.sv")])))
+    return _run_core(tmp_path, plan, *opts)
+
+
+def test_native_flat_bind_depths_match_and_flat_sites(tmp_path):
+    bound = _flat_bound(hi=1, ho=1, y=1)
+    r, kd = _run_native(tmp_path, _core_plan(hi=1, ho=1), bound, "--apply")
+    assert r.returncode == 0, r.stderr
+    assert (kd / "t_leaf_bound.sv").read_text() == bound          # native: never re-parameterised
+    tcl = (kd / "istations.tcl").read_text()
+    assert "is_place {*u_vp_g_ln_9_u_cst_hi_gd_s_0_u_*} 109.0 10.0 cst:hi" in tcl
+    assert "is_place {*u_vp_g_ln_9_u_cst_ho_gd_s_0_u_*} 209.0 5.0 cst:ho" in tcl
+    assert "is_place {*u_cst_y_gd_s_0_u_*} 50.015 60.015 cst:y" in tcl
+    rep = json.loads((kd / "kit_rtl.json").read_text())["kit_istations"]
+    assert any(x.get("bind") == "native_flat" for x in rep)
+
+
+def test_native_flat_bind_depth_differs_fails_closed(tmp_path):
+    r, _ = _run_native(tmp_path, _core_plan(hi=2, ho=1), _flat_bound(hi=1, ho=1, y=1), "--apply")
+    assert r.returncode != 0 and "CS_HI_D" in r.stderr and "LF_CS_" in r.stderr
+
+
+def test_native_flat_bind_unplanned_station_fails_closed(tmp_path):
+    bound = _flat_bound(hi=1, ho=1, y=1, extra="\n    always @(posedge clk) g_u_cst_sw_gd_s_0_u_q <= 1'b0;")
+    r, _ = _run_native(tmp_path, _core_plan(hi=1, ho=1), bound)
+    assert r.returncode != 0 and "CS_SW_D" in r.stderr
+
+
+# DIE-S81-71 11-06: col_h9/h10 st -> t0 stations (A1) are realised by the col RTL (cst_st_s* reset chain) and only
+# counted + sited here; a bound text without the chain (or with another depth) fails closed.
+COL_BOUND = """module col_part_bound (input wire ck_r0, input wire lpr_c_u_t0, input wire [1:0] st, output wire [1:0] so);
+    reg [1:0] u_r0_cst_st_s0; always @(posedge ck_r0 or negedge lpr_c_u_t0) if (!lpr_c_u_t0) u_r0_cst_st_s0 <= 2'b00; else u_r0_cst_st_s0 <= st;
+    reg [1:0] u_r0_cst_st_s1; always @(posedge ck_r0 or negedge lpr_c_u_t0) if (!lpr_c_u_t0) u_r0_cst_st_s1 <= 2'b00; else u_r0_cst_st_s1 <= u_r0_cst_st_s0;
+    assign so = u_r0_cst_st_s1;
+endmodule
+"""
+
+
+def _col_run(tmp_path, depth, bound):
+    regs = [[648.108, 172.812], [933.228, 172.812]][:depth]
+    ent = [dict(conn="core:u_r0.u_s0.st|core:u_r0.u_t0", launch="u_r0.u_s0.st", capture=cap, regs_um=regs,
+                from_um=[362.988, 172.812], to_um=[1140.588, 250.572]) for cap in ("u_r0.u_t0", "u_r0.u_t0.c0")]
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(dict(partition_types=dict(col=dict(buses=[], internal_stations=ent)))))
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    (kd / "col_part_bound.sv").write_text(bound)
+    (kd / "kit_rtl.json").write_text(json.dumps(dict(bound_module="col_part_bound", files=[str(kd / "col_part_bound.sv")])))
+    return kd, subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "col", str(kd)],
+                              capture_output=True, text=True)
+
+
+def test_col_st_stations_counted_and_sited(tmp_path):
+    kd, r = _col_run(tmp_path, 2, COL_BOUND)
+    assert r.returncode == 0, r.stderr
+    tcl = (kd / "istations.tcl").read_text()
+    assert "is_place {*cst_st_s0*} 648.108 172.812 cst:st" in tcl
+    assert "is_place {*cst_st_s1*} 933.228 172.812 cst:st" in tcl
+    rep = json.loads((kd / "kit_rtl.json").read_text())["kit_istations"]
+    assert rep == [dict(col_st=dict(stages=2, entries=2, regs=["cst_st_s0", "cst_st_s1"],
+                                  sites=[[648.108, 172.812], [933.228, 172.812]]))]
+    assert (kd / "col_part_bound.sv").read_text() == COL_BOUND
+
+
+def test_col_st_stations_depth_differs_fails_closed(tmp_path):
+    kd, r = _col_run(tmp_path, 1, COL_BOUND)
+    assert r.returncode != 0 and "col st stations" in r.stderr
+
+
+def test_col_st_stations_missing_rtl_fails_closed(tmp_path):
+    kd, r = _col_run(tmp_path, 2, COL_BOUND.replace("cst_st_s", "xx_s"))
+    assert r.returncode != 0 and "bound RTL stages []" in r.stderr
+
+
+# As bound: the bind re-expresses the stages as src-hash regs; the depth is counted along the chain into u_t0.c0.
+COL_BOUND_B = """module col_part_bound (input wire ck, input wire rs, input wire [1:0] w_u_r0_u_s0_st, output wire [1:0] so);
+    wire [1:0] w_u_r0_src_bbb_Q;
+    wire [1:0] w_u_r0_src_aaa_Q;
+    reg [1:0] g_u_r0_src_aaa_q;
+    assign w_u_r0_src_aaa_Q = g_u_r0_src_aaa_q;
+    always @(posedge ck or negedge rs)
+        if (!rs) g_u_r0_src_aaa_q <= {2{1'b0}}; else g_u_r0_src_aaa_q <= w_u_r0_src_bbb_Q[1:0];  // x.sv:2.302
+    reg [1:0] g_u_r0_src_bbb_q;
+    assign w_u_r0_src_bbb_Q = g_u_r0_src_bbb_q;
+    always @(posedge ck or negedge rs)
+        if (!rs) g_u_r0_src_bbb_q <= {2{1'b0}}; else g_u_r0_src_bbb_q <= w_u_r0_u_s0_st[1:0];  // x.sv:2.162
+    ot_s81_sstn_base566 u_u_r0_u_t0 (
+        .c0(w_u_r0_src_aaa_Q[1:0]),
+        .so(so)
+    );
+endmodule
+"""
+
+
+def test_col_st_stations_bound_chain(tmp_path):
+    kd, r = _col_run(tmp_path, 2, COL_BOUND_B)
+    assert r.returncode == 0, r.stderr
+    tcl = (kd / "istations.tcl").read_text()
+    assert "is_place {*g_u_r0_src_bbb_q*} 648.108 172.812 cst:st" in tcl
+    assert "is_place {*g_u_r0_src_aaa_q*} 933.228 172.812 cst:st" in tcl
+
+
+def test_col_st_stations_bound_chain_depth_differs_fails_closed(tmp_path):
+    kd, r = _col_run(tmp_path, 1, COL_BOUND_B)
+    assert r.returncode != 0 and "col st stations" in r.stderr

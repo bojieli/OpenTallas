@@ -40,7 +40,8 @@ module ot_v41_rom_elem_q_qxpq_w10_gb_split #(
     parameter integer CGR = 0,
     parameter integer OLAT = 0,
     parameter integer IFN = 1,
-    parameter INSTANCE = ""
+    parameter INSTANCE = "",
+    parameter integer INPUT_REGPAIR = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -70,18 +71,41 @@ module ot_v41_rom_elem_q_qxpq_w10_gb_split #(
     output wire         busy,
     output wire         fault
 );
+    // Optional complete605-bit last input-stage replicas, one per hard half.
+    // Equal positive-edge D/CLK and age preserve mixed receiver-edge semantics.
+    wire [604:0] input_face={rst_n,cfg_v,cfg_a,cfg_d,go,go_tag,xs_v,xs_p,xs_b,xs_q0,xs_e0,xs_q1,xs_e1,xs_pos};
+    wire [604:0] input_w,input_e;
+    if (INPUT_REGPAIR != 0) begin : g_input_pair
+        (* keep = 1, dont_touch = 1 *) reg [604:0] w_q,e_q;
+        initial if (INPUT_REGPAIR != 1) $fatal(1,"ROMQ input pair requires literal0/1");
+        always @(posedge clk) w_q<=input_face;
+`ifdef OT_ROMQ_PAIR_MUT_E_AGE
+        always @(posedge clk) e_q<=w_q;
+`elsif OT_ROMQ_PAIR_MUT_E_NEG
+        always @(negedge clk) e_q<=input_face;
+`elsif OT_ROMQ_PAIR_MUT_E_TAG
+        always @(posedge clk) e_q<=input_face ^ (605'b1 << 547);
+`else
+        always @(posedge clk) e_q<=input_face;
+`endif
+        assign input_w=w_q;
+        assign input_e=e_q;
+    end else begin : g_input_shared
+        assign input_w=input_face;
+        assign input_e=input_face;
+    end
     wire w_fault, e_fault;
     /* verilator lint_off PINCONNECTEMPTY */
     ot_v41_rom_elem_q_qxpq_w10_gb_hw #(.MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .FRONT_PAR(FRONT_PAR), .QTIMING_FIX(QTIMING_FIX), .QPIPE(QPIPE), .QP_XS(QP_XS), .QP_CAP(QP_CAP), .QP_P1(QP_P1), .QP_CSAM(QP_CSAM), .QZ(QZ), .QZ_NS(QZ_NS), .QZ_NE(QZ_NE), .QY(QY), .QX(QX), .PQ(PQ), .QW(QW), .QM(QM), .QS(QS), .GO_BOUNDARY(GO_BOUNDARY), .RSTP(RSTP), .CGR(CGR), .OLAT(OLAT), .IFN(IFN), .INSTANCE(INSTANCE)) u_w (
-        .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go), .go_tag(go_tag),
+        .clk(clk), .rst_n(input_w[604]), .cfg_v(input_w[603]), .cfg_a(input_w[602:598]), .cfg_d(input_w[597:550]), .go(input_w[549]), .go_tag(input_w[548:547]),
         .walking(walking), .bank_free(bank_free), .sh_free(sh_free),
-        .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1), .xs_pos(xs_pos),
+        .xs_v(input_w[546]), .xs_p(input_w[545:538]), .xs_b(input_w[537:535]), .xs_q0(input_w[534:279]), .xs_e0(input_w[278:269]), .xs_q1(input_w[268:13]), .xs_e1(input_w[12:3]), .xs_pos(input_w[2:0]),
         .pv(pv[0]), .pval(pval[31:0]), .prow(prow[15:0]), .pseg(pseg[4:0]), .pnseg(pnseg[4:0]), .perr(perr[0]), .ppos(ppos[2:0]),
         .busy(busy), .fault(w_fault));
     ot_v41_rom_elem_q_qxpq_w10_gb_he #(.MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .FRONT_PAR(FRONT_PAR), .QTIMING_FIX(QTIMING_FIX), .QPIPE(QPIPE), .QP_XS(QP_XS), .QP_CAP(QP_CAP), .QP_P1(QP_P1), .QP_CSAM(QP_CSAM), .QZ(QZ), .QZ_NS(QZ_NS), .QZ_NE(QZ_NE), .QY(QY), .QX(QX), .PQ(PQ), .QW(QW), .QM(QM), .QS(QS), .GO_BOUNDARY(GO_BOUNDARY), .RSTP(RSTP), .CGR(CGR), .OLAT(OLAT), .IFN(IFN), .INSTANCE(INSTANCE)) u_e (
-        .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go), .go_tag(go_tag),
+        .clk(clk), .rst_n(input_e[604]), .cfg_v(input_e[603]), .cfg_a(input_e[602:598]), .cfg_d(input_e[597:550]), .go(input_e[549]), .go_tag(input_e[548:547]),
         .walking(), .bank_free(), .sh_free(),
-        .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1), .xs_e1(xs_e1), .xs_pos(xs_pos),
+        .xs_v(input_e[546]), .xs_p(input_e[545:538]), .xs_b(input_e[537:535]), .xs_q0(input_e[534:279]), .xs_e0(input_e[278:269]), .xs_q1(input_e[268:13]), .xs_e1(input_e[12:3]), .xs_pos(input_e[2:0]),
         .pv(pv[1]), .pval(pval[63:32]), .prow(prow[31:16]), .pseg(pseg[9:5]), .pnseg(pnseg[9:5]), .perr(perr[1]), .ppos(ppos[5:3]),
         .busy(), .fault(e_fault));
     /* verilator lint_on PINCONNECTEMPTY */

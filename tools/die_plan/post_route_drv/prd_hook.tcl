@@ -25,15 +25,91 @@ set _here [file dirname [info script]]
 # changes.  OT_PRD_ROUTED_SPEF=0 = the old single read (A/B only).
 proc ot_prd_spef_read {why} {
   set f $::ot_prd_spef
+  set rf $f
+  set note ""
+  if {[info exists ::ot_prd_conn_ref]} {
+    set ch [ot_prd_conn_changed]
+    if {[dict size $ch]} {
+      lassign [ot_prd_spef_without $f $ch] rf nskip
+      set note ", [dict size $ch] ECO-changed nets keep the estimate ($nskip routed SPEF nets skipped)"
+    }
+  }
   set scs {}
-  if {[info exists ::ot_mm_active] && $::ot_mm_active && [llength [info commands ot_mm_sc]]} {
-    set scs [list [ot_mm_sc] BC]
-    foreach sc $scs { read_spef -corner $sc $f }
-  } else {
-    read_spef $f
+  try {
+    if {[info exists ::ot_mm_active] && $::ot_mm_active && [llength [info commands ot_mm_sc]]} {
+      set scs [list [ot_mm_sc] BC]
+      foreach sc $scs { read_spef -corner $sc $rf }
+    } else {
+      read_spef $rf
+    }
+  } finally {
+    if {$rf ne $f} { file delete $rf }
   }
   incr ::ot_prd_spef_reads
-  puts "OT_PRD_SPEF $why: read_spef [expr {[llength $scs] ? "-corner {$scs} " : ""}][file tail $f] (read $::ot_prd_spef_reads)"
+  puts "OT_PRD_SPEF $why: read_spef [expr {[llength $scs] ? "-corner {$scs} " : ""}][file tail $f] (read $::ot_prd_spef_reads$note)"
+}
+# FLOW-CLASS-25 11-06 (COORD 18:0x (3a), DIE-HBM-82-Q3EL 15:46): the re-read put the routed SPEF back onto nets whose
+# connectivity the ECO had changed.  q3_edge_link eco4: repair_design split 55 nets with 38 buffers, the next re-read gave
+# 1001 STA-1651 "not connected" on 35 of them, the split nets lost their routed wire delay in the session (D-side wire of
+# bank dq[*] -> SRAM wd_in), the session showed a false FF hold -33.19 (sign-off on the same DB: about 0), and the guarded
+# hold repair put 1900 buffers on 1899 near-zero endpoints.  Now the connectivity of every signal net is recorded when the
+# SPEF is armed (instance terminals + ports, as prd_route_keep.tcl judges it), and each later re-read skips the SPEF
+# section of every net whose connectivity changed since: such a net keeps the estimate the native estimate_parasitics
+# just gave it, like the nets the ECO created.  Unchanged nets get the routed SPEF exactly as before.  Sign-off
+# re-extracts the routed result, so no check, margin or corner changes.  OT_PRD_SPEF_CHANGED=reread = the old re-read.
+proc ot_prd_conn_sig {n} {
+  set l {}
+  foreach t [$n getITerms] { lappend l [$t getId] }
+  foreach t [$n getBTerms] { lappend l b[$t getId] }
+  return [lsort $l]
+}
+proc ot_prd_conn_snapshot {} {
+  set d [dict create]
+  foreach n [[ord::get_db_block] getNets] {
+    if {[$n getSigType] in {POWER GROUND}} continue
+    dict set d [$n getName] [ot_prd_conn_sig $n]
+  }
+  return $d
+}
+# -> dict {name -> 1} of the armed nets that are gone or whose connectivity changed; names without escapes (SPEF and
+# OpenDB escape differently, see ot_prd_stage_check)
+proc ot_prd_conn_changed {} {
+  set block [ord::get_db_block]
+  set ch [dict create]
+  dict for {k sig} $::ot_prd_conn_ref {
+    set n [$block findNet $k]
+    if {$n eq "NULL" || $n eq "" || [ot_prd_conn_sig $n] ne $sig} { dict set ch [string map {\\ {}} $k] 1 }
+  }
+  return $ch
+}
+# copy of SPEF f without the *D_NET sections of the nets in changed (name map resolved) -> {file skipped}
+proc ot_prd_spef_without {f changed} {
+  set out [file join [file dirname $f] ot_prd_eco_[pid]_[clock clicks].spef]
+  set in [open $f r]; set fo [open $out w]
+  fconfigure $in -buffersize 1048576; fconfigure $fo -buffersize 1048576
+  set map [dict create]; set inmap 0; set skip 0; set nskip 0
+  while {[gets $in ln] >= 0} {
+    if {$skip} {
+      if {[string trim $ln] eq "*END"} { set skip 0 }
+      continue
+    }
+    if {[string index $ln 0] eq "*"} {
+      if {[string match {\*D_NET*} $ln]} {
+        set inmap 0
+        if {[regexp {^\*D_NET\s+(\S+)} $ln -> nm]} {
+          if {[dict exists $map $nm]} { set nm [dict get $map $nm] }
+          if {[dict exists $changed [string map {\\ {}} $nm]]} { set skip 1; incr nskip; continue }
+        }
+      } elseif {[string match {\*NAME_MAP*} $ln]} {
+        set inmap 1
+      } elseif {$inmap} {
+        if {[regexp {^(\*[0-9]+)\s+(\S+)} $ln -> idx nm]} { dict set map $idx $nm } else { set inmap 0 }
+      }
+    }
+    puts $fo $ln
+  }
+  close $in; close $fo
+  return [list $out $nskip]
 }
 proc ot_prd_spef_arm {f} {
   if {[info exists ::env(OT_PRD_ROUTED_SPEF)] && $::env(OT_PRD_ROUTED_SPEF) eq "0"} {
@@ -43,7 +119,14 @@ proc ot_prd_spef_arm {f} {
   }
   set ::ot_prd_spef $f
   set ::ot_prd_spef_reads 0
+  unset -nocomplain ::ot_prd_conn_ref
   ot_prd_spef_read entry
+  if {[info exists ::env(OT_PRD_SPEF_CHANGED)] && $::env(OT_PRD_SPEF_CHANGED) eq "reread"} {
+    puts "OT_PRD_SPEF changed nets: re-read like every other net (OT_PRD_SPEF_CHANGED=reread)"
+  } elseif {[llength [info commands ::ord::get_db_block]]} {
+    set ::ot_prd_conn_ref [ot_prd_conn_snapshot]
+    puts "OT_PRD_SPEF connectivity of [dict size $::ot_prd_conn_ref] signal nets recorded: a net the ECO changes keeps its estimate"
+  }
   if {[llength [info commands ::ot_prd_native_estimate]]} { return }
   # no native estimator in this interpreter (tclsh harnesses, sessions without RSZ): nothing to re-read after
   if {![llength [info commands ::estimate_parasitics]]} { return }
@@ -76,7 +159,11 @@ proc ot_prd_stage_check {list} {
     if {$name eq ""} continue
     incr n
     set found 0
-    foreach cand [list $name [regsub -all {\\([^\[\]])} $name {\1}] [string map {\\ {}} $name]] {
+    # HBM-FORM-SPLIT-12 11-06: yosys merged-register names hold a literal backslash (u_x._1_[0]$\u_x._1_[1]$dff[0]).
+    # SPEF writes u_x\._1_\[0\]\$\\u_x..., OpenDB keeps u_x._1_\[0\]$\\u_x... (brackets and the backslash stay escaped,
+    # . and $ do not), so the third candidate unescapes \X but keeps a \\ pair (Q2NF: 2322 of 12396 false misses -> 0)
+    foreach cand [list $name [regsub -all {\\([^\[\]])} $name {\1}] [regsub -all {\\([^\[\]\\])|(\\\\)} $name {\1\2}] \
+        [string map {\\ {}} $name]] {
       set i [$block findInst $cand]
       if {$i ne "NULL" && $i ne ""} { set found 1; break }
     }
@@ -355,6 +442,54 @@ if {$::env(OT_SETUP_MARGIN) ne ""} {
   puts "OT_PRD pass $_pass repair_timing $_st_args"
   repair_timing {*}$_st_args
 }
+# KW-FIX-24 11-06 (COORD 13:2x item 4): OT_HOLD_REPAIR_SCOPE=reg2reg (HOLD-REPAIR-SCOPE, orfs_hold_mm.tcl
+# ot_hold_repair_scope) now also scopes this post-route hold repair: port hold is the parent's (io_hold_parent), so no
+# buffer budget is spent on the standalone IO frame.  Two-mode session (kit_modes_eco.tcl synced, stage 4_cts.sdc): the
+# shared ot_hold_repair_scope itself.  Single-mode session (no orfs_hold_mm): the same temporary -hold false paths from
+# the non-clock inputs / to the outputs around the repair, then the exact SDC replay + write-back compare of that proc.
+# Env unset (or any other value): the body runs exactly as before.
+proc ot_prd_hold_scope {body} {
+  if {![info exists ::env(OT_HOLD_REPAIR_SCOPE)] || $::env(OT_HOLD_REPAIR_SCOPE) ne "reg2reg"} {
+    return [uplevel 1 $body]
+  }
+  if {[llength [info commands ot_hold_repair_scope]] && [info exists ::ot_mm_active] && $::ot_mm_active} {
+    puts "OT_PRD hold scope reg2reg: shared ot_hold_repair_scope (orfs_hold_mm.tcl)"
+    return [uplevel 1 [list ot_hold_repair_scope $body]]
+  }
+  set dir [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : [pwd]}]
+  set stem [file join $dir ot_prd_hold_scope_[pid]_[clock clicks]]
+  set before ${stem}_before.sdc
+  set after ${stem}_after.sdc
+  write_sdc -digits 17 -no_timestamp $before
+  set clock_sources [dict create]
+  foreach clock [all_clocks] {
+    foreach source [get_property $clock sources] { dict set clock_sources [get_full_name $source] 1 }
+  }
+  set inputs {}
+  foreach port [all_inputs] {
+    if {![dict exists $clock_sources [get_full_name $port]]} { lappend inputs $port }
+  }
+  set outputs [all_outputs]
+  puts "OT_HOLD_SCOPE begin (post-route single-mode) input_ports=[llength $inputs] output_ports=[llength $outputs]"
+  try {
+    if {[llength $inputs]} { set_false_path -hold -from $inputs }
+    if {[llength $outputs]} { set_false_path -hold -to $outputs }
+    puts "OT_HOLD_SCOPE repair (register-to-register only)"
+    return [uplevel 1 $body]
+  } finally {
+    if {[llength $inputs]} { unset_path_exceptions -hold -from $inputs }
+    if {[llength $outputs]} { unset_path_exceptions -hold -to $outputs }
+    read_sdc $before
+    write_sdc -digits 17 -no_timestamp $after
+    set fb [open $before r]; set tb [read $fb]; close $fb
+    set fa [open $after r]; set ta [read $fa]; close $fa
+    if {$tb ne $ta} { error "OT_HOLD_SCOPE restore differs: retained $before $after" }
+    puts "OT_HOLD_SCOPE restored exact SDC (port hold remains visible)"
+    if {![info exists ::env(OT_HOLD_SCOPE_KEEP_SDC)] || $::env(OT_HOLD_SCOPE_KEEP_SDC) ne "1"} {
+      file delete $before $after
+    }
+  }
+}
 set args [list -hold_margin $::env(OT_HOLD_MARGIN) -max_buffer_percent $::env(OT_HOLD_MAXBUF)]
 if {$::env(OT_HOLD_ALLOW_SETUP) == 1} { lappend args -allow_setup_violations }
 # two-mode kits: the SHARED guarded hold repair of orfs_hold_mm.tcl (R5 chunk buffer cap inside the same total budget,
@@ -365,10 +500,10 @@ if {[info exists ::env(OT_PRD_NO_HOLD)] && $::env(OT_PRD_NO_HOLD) eq "1"} {
   puts "OT_PRD pass $_pass hold: skipped (OT_PRD_NO_HOLD=1, TT-only pass)"
 } elseif {[llength [info commands ot_repair_hold_guarded]] && [ot_hold_guard_on]} {
   puts "OT_PRD pass $_pass hold: shared guarded repair (orfs_hold_mm.tcl) $args"
-  ot_rc_cal_hold { ot_repair_hold_guarded $args }
+  ot_rc_cal_hold { ot_prd_hold_scope { ot_repair_hold_guarded $args } }
 } else {
   puts "OT_PRD pass $_pass repair_timing -hold $args"
-  repair_timing -hold {*}$args
+  ot_prd_hold_scope { repair_timing -hold {*}$args }
 }
 
 # fail-safe: any clock-net instance whose master changed is put back (LOCKED cells are never legalized, so a grown

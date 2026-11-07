@@ -1,0 +1,17 @@
+write gold_r rc=0
+write new_r rc=0
+write mut_r rc=0
+write gold_x rc=0
+write new_x rc=0
+eq gold_r__new_r rc=0
+  Of those cells 16125 are proven and 0 are unproven.
+eq gold_r__mut_r rc=1
+  Of those cells 16093 are proven and 32 are unproven.
+gold_r__new_r: 84153:  Of those cells 16125 are proven and 0 are unproven.
+gold_r__new_r: 84158:  Of those cells 16125 are proven and 0 are unproven.
+gold_r__mut_r: 89176:  Of those cells 16093 are proven and 32 are unproven.
+gold_r__mut_r: 89213:  Of those cells 16093 are proven and 32 are unproven.
+gold_r__mut_r: 89247:ERROR: Found 32 unproven $equiv cells in 'equiv_status -assert'.
+484262ce751ab81b19eebec0fb11809be02ac07f5576045fbebb39cb46f5b531  gold/ot_hbm_r14_stream_pc_strap_h9.sv
+5b0ffb7f620fbb847e1b7bbb541738d0414eafdb970dbf366e38ed89888892aa  new/ot_hbm_r14_stream_pc_strap_h9.sv
+66853a04b83b66ec246ee0ad3415feb3a76dcd135dc713d968caa4ebe1e47531  kitsrc/rtl/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv

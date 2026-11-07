@@ -213,6 +213,16 @@ def clock_entry_pin(p, w, h, m5):
     return round(cx, 4), round(float(p["y"]), 4), (round(max(sx, 2 * (w - cx)), 4), sy), f
 
 
+def entry_clock_pins(pins, clks):
+    """DIE-HBM-82 11-06 (FLOW class, DIE-HBM-82 ruling (A)): the clock pins the plan clock entry may move = the clock pins
+    whose pin-table row is on M5.  The entry form (clock_entry_pin, clock_pin_sites_um) is an M5 track form; a non-M5
+    clock pin (sm_vm_wr_q_t_lanes4: 6 M4 E-face clocks) was moved to the M5 spread around the entry and then placed as an
+    M4 face pin on the face nearest that point (W, (0.24, 108)), matching neither the table nor the entry.  Non-M5 clock
+    pins keep their table position (placed as every other face pin); M5-only modules are unchanged."""
+    lay = {p["name"]: p.get("layer") for p in pins}
+    return [n for n in clks if lay.get(n) == "M5"]
+
+
 def plan_clock_entries(entries_path, module, clks, w, h, m5):
     """DIE-HBM-48 10-31 (METHODOLOGY 12.8a "kits must place the clock pin exactly there"; KIT-WAVE d44f qw_dec /
     q2n2_vm clock_reach FAIL): the plan's per-module clock entry (PLANDIR/clock_entries.json, core frame; port +
@@ -539,6 +549,44 @@ def snap_macro_placement(placements, tracks_tcl, lef_text_of, outline_um):
             p_ = dict(p_, xy_um=[round(nx / 1000.0, 3), round(ny / 1000.0, 3)])
         out.append(p_)
     return out, moves
+
+
+def macro_gap_blockages(placements, lef_pins_of, halo_um, gmax_um=30.0):
+    """DIE-HBM-82-EP6 class fix (vms_bank_q0 vecd4ae GRT-0116 in the u_a/u_b bank gap, COORD/DIE-HBM-82 18:0x): a hard
+    placement keep-out (rows cut) over every gap between two static macros whose FACING edges carry no signal pin, when the gap is
+    wider than both halos (std-cell rows survive there) and <= gmax_um.  Such a gap is a routing channel, not a pin channel:
+    cells placed in it take the only M2/M4 (stacked) or M3 (side by side) tracks that cross the macro field.  Pin-edge
+    gaps are never blocked (their cells drive / capture the macro pins).  The box spans the facing overlap + one halo on
+    each end.  lef_pins_of(master) -> (w nm, h nm, rects) as lef_signal_pins.  Returns [(x0, y0, x1, y1) um]."""
+    boxes = []
+    for p_ in placements:
+        w, h, rects = lef_pins_of(p_["macro"])
+        o = p_.get("orient", "R0")
+        x, y = (float(c) for c in p_["xy_um"])
+        edges = set()
+        for r in rects:
+            a0, b0, a1, b1 = _oriented(r[1:], o, w, h)
+            if b0 <= 500: edges.add("S")
+            if b1 >= h - 500: edges.add("N")
+            if a0 <= 500: edges.add("W")
+            if a1 >= w - 500: edges.add("E")
+        boxes.append((x, y, x + w / 1000.0, y + h / 1000.0, edges))
+    out = []
+    for i, A in enumerate(boxes):
+        for B in boxes:
+            if B is A:
+                continue
+            ox0, ox1 = max(A[0], B[0]), min(A[2], B[2])
+            g = B[1] - A[3]
+            if ox1 - ox0 > 0 and 2 * halo_um < g <= gmax_um and "N" not in A[4] and "S" not in B[4]:
+                if not any(C is not A and C is not B and C[0] < ox1 and C[2] > ox0 and C[1] < B[1] and C[3] > A[3] for C in boxes):
+                    out.append((round(ox0 - halo_um, 3), round(A[3], 3), round(ox1 + halo_um, 3), round(B[1], 3)))
+            oy0, oy1 = max(A[1], B[1]), min(A[3], B[3])
+            g = B[0] - A[2]
+            if oy1 - oy0 > 0 and 2 * halo_um < g <= gmax_um and "E" not in A[4] and "W" not in B[4]:
+                if not any(C is not A and C is not B and C[1] < oy1 and C[3] > oy0 and C[0] < B[0] and C[2] > A[2] for C in boxes):
+                    out.append((round(A[2], 3), round(oy0 - halo_um, 3), round(B[0], 3), round(oy1 + halo_um, 3)))
+    return out
 
 
 def macro_reg_guide_spec(placements, lef_size_of, scope, grow_um, core_box):
@@ -1396,6 +1444,23 @@ def stamp_generation_inputs(kit, repo=REPO):
     return True
 
 
+# FLOW-CLASS-25 11-06 (COORD 18:0x (3c), HBM-FORM-TIMING-13 17:56): OT_FINAL_FF_HOLD in config.mk was only a label,
+# because the generated core_grt_post.tcl called ot_final_ff_hold unconditionally.  The call is now gated on the env:
+# unset or any value but 0 = the pass runs exactly as before (the generator writes OT_FINAL_FF_HOLD = 1); 0 = skipped.
+FINAL_FF_HOLD_CALL = ("if {![info exists ::env(OT_FINAL_FF_HOLD)] || $::env(OT_FINAL_FF_HOLD) ne \"0\"} {\n"
+                      "  uplevel #0 [list source /work/final_ff_hold.tcl]\n"
+                      "  ot_final_ff_hold\n"
+                      "} else { puts \"OT_FINAL_FF_HOLD skipped (OT_FINAL_FF_HOLD=0)\" }\n")
+
+
+def final_ff_hold_post(text):
+    """core_grt_post.tcl text -> the same with the env-gated final FF hold pass before the PG connect."""
+    anchor = "uplevel #0 [list source /work/pg_connect.tcl]"
+    if text.count(anchor) != 1:
+        raise SystemExit("core_grt_post.tcl: no single pg_connect anchor for the final FF hold pass")
+    return text.replace(anchor, FINAL_FF_HOLD_CALL + anchor)
+
+
 def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--views", required=True)
@@ -1440,8 +1505,15 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                     help="opt-in (FLOW-23, AUTO-GEOM class D r2r): tools/die_plan/region_guide.py plan spec of the "
                          "kit's last AUTO-GEOM; per bit-slice INCLUSIVE GPL regions for the failing launch/capture "
                          "registers, released before DPL (soft guide); default off = kit unchanged")
+    ap.add_argument("--cts-delaybuf-strip", action="store_true",
+                    help="opt-in (HBM-FORM-SPLIT-14-OPSB 11-06): POST_CTS removes the TritonCTS CTS-0033 latency-balancing "
+                         "delay buffers delaybuf_* (cts_delaybuf_strip.tcl) before the kit's own POST_CTS hooks; default "
+                         "off = kit unchanged")
     ap.add_argument("--macro-reg-guide-um", type=float, default=15.0,
                     help="guide box = macro bbox grown by this many um on every side (clipped to the core area)")
+    ap.add_argument("--macro-gap-block", default="on", choices=["on", "off"],
+                    help="DIE-HBM-82-EP6 class fix: no std-cell rows (hard keep-out) over gaps (> 2 halos, <= 30 um) between static "
+                         "macros whose facing edges have no signal pin (routing channels); off = the old kit")
     ap.add_argument("--macro-grid-snap", default="on", choices=["on", "off"],
                     help="HBM-CORES-REBAL-9: snap --macro-placement origins to the kit pin-layer track grid "
                          "(kit preflight macro_pin_grid); 'off' keeps the table verbatim (that kit fails preflight)")
@@ -1876,7 +1948,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         centry = dict(names=set(clks), m5=(float(L5["offset_um"]), float(L5["pitch_um"])))
         # DIE-HBM-48 (12.8a): the plan clock entry, not the pin table's face point, is the clock pin location
         moved, centry_rec = ({}, None) if declared_native else plan_clock_entries(
-            pdir / "clock_entries.json", module, clks, w, h, centry["m5"])
+            pdir / "clock_entries.json", module, entry_clock_pins(pins, clks), w, h, centry["m5"])
         moved = {p_["name"]: moved[p_["name"]] for p_ in pins if p_["name"] in moved
                  and (abs(p_["x"] - moved[p_["name"]][0]) > 1e-4 or abs(p_["y"] - moved[p_["name"]][1]) > 1e-4)}
         centry_rec = dict(centry_rec, moved=sorted(moved)) if moved else None   # table already at the entry: unchanged
@@ -2016,11 +2088,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         for name in ("final_ff_hold.tcl", "clk_freeze.tcl", "clk_geom_diff.py"):
             shutil.copyfile(TOOL / name, kd / name)
         post = kd / "core_grt_post.tcl"
-        text = post.read_text()
-        text = text.replace("uplevel #0 [list source /work/pg_connect.tcl]",
-                            "uplevel #0 [list source /work/final_ff_hold.tcl]\not_final_ff_hold\n"
-                            "uplevel #0 [list source /work/pg_connect.tcl]")
-        post.write_text(text)
+        post.write_text(final_ff_hold_post(post.read_text()))
     # Keep the standalone runtime complete, including sender-min qualification and clock helpers.
     subprocess.run([sys.executable, "-I", str(TOOL / "signoff.py"), "bundle", str(kd)], check=True)
     # HBM-KITS-B2 10-25: replicated (* keep *) registers (ot_rst_relay region copies, ...) need the ORFS
@@ -2220,6 +2288,31 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             rows.append(f"  {{{inst}}} {placement['macro']} {_um(x)} {_um(y)} {orient}")
         lines = (["foreach {inst master x y orient} {"] + rows +
                  ["} {", "  place_macro -macro_name $inst -location [list $x $y] -orientation $orient -exact", "}"])
+        if a.macro_gap_block == "on":
+            gaps = macro_gap_blockages(rec["macro_placement"],
+                                       lambda m_: lef_signal_pins((kd / "macros" / f"{m_}.lef").read_text(), m_),
+                                       float(rec.get("macro_place_halo_um", 4.32)))
+            if gaps:
+                rec["macro_gap_block"] = [list(b) for b in gaps]
+                # rows are cut (not a dbBlockage): tapcell runs after this file and would drop taps into a blockage
+                # (DPL-0033 overlap); with no row there, tapcell/endcaps follow the cut as they do at macro halos.
+                lines += ["# DIE-HBM-82-EP6 class fix (--macro-gap-block on): no std-cell rows in no-pin macro gaps",
+                          "proc ot_mgb_cut {x0 y0 x1 y1} {",
+                          "  set blk [ord::get_db_block]; set d [$blk getDefUnits]",
+                          "  set X0 [expr round($x0*$d)]; set Y0 [expr round($y0*$d)]; set X1 [expr round($x1*$d)]; set Y1 [expr round($y1*$d)]",
+                          "  foreach row [$blk getRows] {",
+                          "    set bb [$row getBBox]",
+                          "    if {[$bb yMax] <= $Y0 || [$bb yMin] >= $Y1 || [$bb xMax] <= $X0 || [$bb xMin] >= $X1} continue",
+                          "    set site [$row getSite]; set sp [$row getSpacing]; set o [$row getOrigin]; set ox [lindex $o 0]; set oy [lindex $o 1]",
+                          "    set n [$row getSiteCount]; set nm [$row getName]; set ori [$row getOrient]; set dir [$row getDirection]",
+                          "    odb::dbRow_destroy $row",
+                          "    set nl [expr ($X0 - $ox) / $sp]",
+                          "    if {$nl > 0} { odb::dbRow_create $blk ${nm}_mgbL $site $ox $oy $ori $dir [expr min($nl, $n)] $sp }",
+                          "    set k [expr ($X1 - $ox + $sp - 1) / $sp]",
+                          "    if {$k < $n} { odb::dbRow_create $blk ${nm}_mgbR $site [expr $ox + $k * $sp] $oy $ori $dir [expr $n - $k] $sp }",
+                          "  }",
+                          "}"]
+                lines += [f"ot_mgb_cut {_um(b[0])} {_um(b[1])} {_um(b[2])} {_um(b[3])}" for b in gaps]
         (kd / "macro_placement.tcl").write_text("\n".join(lines) + "\n")
         cfg.append("export MACRO_PLACEMENT_TCL = /work/macro_placement.tcl")
     if a.macro_reg_guide:
@@ -2340,6 +2433,16 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # HBM-CORES-R13 (RM36 hold): every kit-own CTS hook is installed BEFORE the shared plan-tree hook, so
     # core_infra.kit_cts_hook sees the final POST_CTS chain (incl. post_cts_setup.tcl and what it sources) when it
     # adds the report-only tap/leaf lines and refuses clock editors; nothing edits cfg after it.
+    if a.cts_delaybuf_strip:
+        # HBM-FORM-SPLIT-14-OPSB: strip the CTS-0033 delay-buffer chain on the macro clock root first, then the kit's
+        # previous POST_CTS chain (leaf / tap balance); post_cts_setup.tcl chains on this hook as usual.
+        prev_ = _effective_hook(cfg, "POST_CTS_TCL")
+        shutil.copyfile(HERE / "cts_delaybuf_strip.tcl", kd / "cts_delaybuf_strip.tcl")
+        (kd / "cts_delaybuf_strip_chain.tcl").write_text(
+            "# GENERATED by gen_core_kit_hbm.py --cts-delaybuf-strip (HBM-FORM-SPLIT-14-OPSB). Do not edit.\n"
+            "source /work/cts_delaybuf_strip.tcl\n" + (f"source {{{prev_}}}\n" if prev_ else ""))
+        cfg += ["override export POST_CTS_TCL = /work/cts_delaybuf_strip_chain.tcl"]
+        flow["cts_delaybuf_strip"] = dict(previous_post_cts=prev_)
     if not a.no_cts_setup:
         flow["cts_setup_tt"] = post_cts_setup_hook(kd, cfg)
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)

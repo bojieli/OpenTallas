@@ -41,8 +41,13 @@ source [file join $tg_dir tap_balance.tcl]
 puts "OT_TAP_GRT_PRE rebalance: $::tb_added delay cells on GRT RC (target $::tb_target ps TT)"
 # PROTOTYPE (OT_PINREG_PAD=1): pad only the pin-register leaf groups to the bound pin-register insertion
 if {[info exists ::env(OT_PINREG_PAD)] && $::env(OT_PINREG_PAD)} { source [file join $tg_dir pinreg_pad.tcl] }
+# TYPE-SAFE-1 11-06: subtree latency balance of every tap tree on the same GRT RC (routed late tail; hard-core macro
+# subtrees fixed: their internal latency is the tap pass's job).  OT_STB=0 in config.mk opts out.
+if {![info exists ::env(OT_STB_BLOCK_SINKS)]} { set ::env(OT_STB_BLOCK_SINKS) fixed }
+set ::env(OT_STB_EST) grt
+source [file join $tg_dir subtree_balance.tcl]
 # measure again on the GRT estimate of the edited tree (report only), so the log shows the residual the gate will see
-if {$::tb_added > 0} {
+if {$::tb_added > 0 || $::stb::added > 0} {
   estimate_parasitics -global_routing
   set ::env(OT_TAP_REPORT_ONLY) 1
   source [file join $tg_dir tap_balance.tcl]
