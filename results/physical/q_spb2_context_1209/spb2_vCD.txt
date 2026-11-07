@@ -1,0 +1,28 @@
+q_spb2_vC True /srv/opentallas-scratch3/claude/die-hbm-82-spb/q_spb2_vC
+LASTLOG /srv/opentallas-scratch3/claude/die-hbm-82-spb/q_spb2_vC/gen/q_spb2/run/logs/asap7/dp_q_spb2/base/5_1_grt.log 1794060860.9548686 4.875 | u_bound.u_ft_L1278x3_o_0/q[1468]$_DFF_P_/D
+     2730 |       0 |     303 |            0 |    +0.0% | -218.443 | -1021174.875 | u_bound.u_ft_L1278x3_o_0/q[1468]$_DFF_P_/D
+     2740 |       0 |     306 |            0 |    +0.0% | -218.443 | -1020912.938 | u_bound.u_ft_L1278x3_o_0/q[1468]$_DFF_P_/D
+     2750 |       0 |     311 |            0 |    +0.0% | -218.443 | -1020649.312 | u_bound.u_ft_L1278x3_o_0/q[1468]$_DFF_P_/D
+[ERROR GRT-0183] Net net119072: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages.
+OT_HB4PAD: after hold repair the design holds 1900 HB4xp67 cells
+OT_GRT183_RESUME_REFUSED helper=repair_timing_helper: GRT-0183 again after one fresh-process resume; not retried
+Error: global_route.tcl, 193 GRT-0183
+Elapsed time: 3:23:57.82[h:]min:sec. CPU time: user 14298.20 sys 182.04 (118%). Peak memory: 34544892KB.
+
+q_spb2_vD True /srv/opentallas-scratch3/claude/die-hbm-82-spb/q_spb2_vD
+LASTLOG /srv/opentallas-scratch3/claude/die-hbm-82-spb/q_spb2_vD/gen/q_spb2/run/logs/asap7/dp_q_spb2/base/5_1_grt.log 1794053495.6397097 Design area 133743 um^2 5% utilization.
+[INFO FLW-0007] clock clk period 833.000000
+[WARNING FLW-0010] more than one clock found. Skipping sdc update.
+[INFO FLW-0011] Path endpoint path count 46458
+source /work/grt_post.tcl
+OT_VCLK_BIND corner tt clock vclk source_latency 250.0000
+OT_PG_CONNECT grt_post rules=2 protected_rebound=0
+OT_PG_BOUND grt_post pg_terms=649400 open=0
+Took 8 seconds: source /work/grt_post.tcl
+write_db /work/run/results/asap7/dp_q_spb2/base/5_1_grt.odb
+write_sdc -no_timestamp /work/run/results/asap7/dp_q_spb2/base/5_1_grt.sdc
+Elapsed time: 5:48:12.85[h:]min:sec. CPU time: user 23355.64 sys 660.12 (114%). Peak memory: 34592664KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_1_grt                   .odb        20892          33781 73874a0a11f05344ea53
+5_1_grt                   .sdc                             84fe577f0420028cca31
+

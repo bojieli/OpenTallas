@@ -1,0 +1,13 @@
+B True /srv/opentallas-scratch2/claude/type-safe-2/canary/hbm/q_spb2_vB
+LASTLOG /srv/opentallas-scratch2/claude/type-safe-2/canary/hbm/q_spb2_vB/run/logs/asap7/dp_q_spb2/base/5_1_grt.log 1794053927.449369  0 |       0 |            0 |    +0.0% | -226.489 | -1227458.000 | u_bound.u_ft_L720x2_o_0/q[627]$_DFF_P_/D
+     5120 |       0 |       0 |            0 |    +0.0% | -226.489 | -1227458.000 | u_bound.u_ft_L720x2_o_0/q[627]$_DFF_P_/D
+     5130 |       0 |       0 |            0 |    +0.0% | -226.489 | -1227458.000 | u_bound.u_ft_L720x2_o_0/q[627]$_DFF_P_/D
+     5140 |       0 |       0 |            0 |    +0.0% | -226.489 | -1227458.000 | u_bound.u_ft_L720x2_o_0/q[627]$_DFF_P_/D
+     5150 |       0 |      26 |            0 |    +0.0% | -226.489 | -1226189.000 | u_bound.u_ft_L720x2_o_0/q[627]$_DFF_P_/D
+     5160 |       0 |      50 |            0 |    +0.0% | -226.489 | -1224977.125 | u_bound.u_ft_L720x2_o_0/q[627]$_DFF_P_/D
+[ERROR GRT-0183] Net net35786: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages.
+OT_HB4PAD: after hold repair the design holds 2020 HB4xp67 cells
+OT_GRT183_RESUME_REFUSED helper=repair_timing_helper: GRT-0183 again after one fresh-process resume; not retried
+Error: global_route.tcl, 193 GRT-0183
+Elapsed time: 3:48:53.98[h:]min:sec. CPU time: user 16128.88 sys 343.19 (119%). Peak memory: 34397992KB.
+

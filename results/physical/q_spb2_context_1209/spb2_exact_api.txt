@@ -1,0 +1,85 @@
+# only when ALL of this holds, else the coverage stays UNEXPANDED_CHILD_ETM / NOT RUN (fail closed):
+#   * the consumed Liberty sits next to the child's signed-view provenance (tools/autopilot/export_view.py):
+#     <libdir>/<master>.provenance.json, <libdir>/<master>/provenance.json or <libdir>/provenance.json (type = master;
+#     the Liberty's real path is searched too, so a kit symlink into the view dir works);
+#   * that provenance is a complete signed view (views_status 'signoff') whose files_sha256[<lib name>] is the sha256
+#     of the consumed Liberty (the ETM is the one exported from that child's sign-off);
+#   * its signoff.json exists, has the recorded sha256 and verdict SIGNED;
+#   * the child is signed at the SAME flow tag as this sign-off (OT_FLOW_TAG / --flow-tag, set by resign.py): the
+#     child's kind:resign PROVENANCE.json next to its signoff/ dir (else the view's own flow_tag), and its post-route
+#     LEC is EQUIVALENT.
+FLOW_TAG_ENV = 'OT_FLOW_TAG'
+
+
+def _sha_file(path):
+    h = hashlib.sha256()
+    with open(path, 'rb') as stream:
+        for chunk in iter(lambda: stream.read(1 << 20), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _child_view_provenance(liberty, master):
+    seen = []
+    for d in dict.fromkeys([Path(liberty).parent, Path(os.path.realpath(liberty)).parent]):
+        for f in (d / f'{master}.provenance.json', d / master / 'provenance.json', d / 'provenance.json'):
+            if f in seen or not f.is_file():
+                continue
+            seen.append(f)
+            x = json.loads(f.read_text())
+            if f.name == 'provenance.json' and f.parent == d and (x.get('type') or (x.get('kit') or {}).get('module')
+                                                                  or master) != master:
+                continue
+            return f, x
+    raise ValueError(f'no signed child view provenance next to {liberty}')
+
+
+def signed_child_etm(model, flow_tag):
+    """Evidence that one unexpanded child ETM is its SIGNED child's own export at this flow tag; raises ValueError."""
+    master, lib = model['master'], Path(model['liberty'])
+    if not flow_tag:
+        raise ValueError(f'parent flow tag unknown ({FLOW_TAG_ENV} / --flow-tag unset)')
+    pf, prov = _child_view_provenance(lib, master)
+    if prov.get('views_status') != 'signoff':
+        raise ValueError(f'{pf}: view status {prov.get("views_status")!r}, not a complete signed view')
+    ex = prov.get('export') or {}
+    files = ex.get('files_sha256') or prov.get('files_sha256') or {}
+    names = [k for k in files if Path(k).name == lib.name]
+    if not names or files[names[0]] != model['liberty_sha256']:
+        raise ValueError(f'{lib.name}: sha256 differs from the signed view export {pf}')
+    so = ex.get('signoff')
+    if so and not Path(so).is_absolute():
+        so = str((pf.parent / so).resolve())
+    if not so or not Path(so).is_file():
+        raise ValueError(f'{pf}: child signoff.json {so} unavailable')
+    if ex.get('signoff_sha256') and _sha_file(so) != ex['signoff_sha256']:
+        raise ValueError(f'{so}: sha256 differs from the view export record')
+    sd = json.loads(Path(so).read_text())
+    if sd.get('verdict') != 'SIGNED':
+        raise ValueError(f'{so}: child verdict {sd.get("verdict")!r}')
+    rp = Path(so).parent.parent / 'PROVENANCE.json'
+    rec = json.loads(rp.read_text()) if rp.is_file() else {}
+    if rec.get('kind') == 'resign' and rec.get('verdict') in (None, 'SIGNED'):
+        tag, lec = rec.get('flow_tag'), rec.get('lec')
+        lec = lec if not lec or os.path.isabs(lec) else str(rp.parent / lec)
+        lv = json.loads(Path(lec).read_text()).get('verdict') if lec and Path(lec).is_file() else rec.get('lec_verdict')
+        basis = str(rp)
+    else:
+        tag, lv, basis = prov.get('flow_tag') or sd.get('flow_tag'), (prov.get('chain') or {}).get('lec_verdict'), str(pf)
+    if not tag:   # COORD 11-06 05:2x: the child counts at its OWN signed tag (libs = its export, routed LEC EQ)
+        raise ValueError(f'{pf}: child signed flow tag unknown')
+    if lv != 'EQUIVALENT':
+        raise ValueError(f'child post-route LEC {lv!r}')
+    return dict(view_provenance=str(pf), signoff=str(so), flow_tag=tag, parent_flow_tag=flow_tag, flow_basis=basis,
+                lec_verdict=lv)
+
+
+def apply_signed_child_etms(result, flow_tag):
+    """UNEXPANDED_CHILD_ETM -> SIGNED_CHILD_ETM (PASS) when every model is a signed child ETM at this flow tag."""
+    if result.get('status') != 'UNEXPANDED_CHILD_ETM':
+PARENT_TOOL signoff.py 4919941b4815382014e257aa21efa5e2f9947e7f8c6b2add08b27ce5bcd21590
+PARENT_TOOL legacy_gate.py 968e664785360d4e0baaf41a0d9777e1d984ea89d5a3fa22fceb352aadb5b59d
+PARENT_TOOL clock_family.tcl 4d035237e7a3b21187387463d91034f019e312e82c4cfaf135ec6830dd2d7c71
+MODELFILE ot_hbm_svc_sm_xcal_rel_t_tt.lib 382298
+MODELFILE ot_hbm_svc_sm_xcal_rel_t.lef 676906
+MODELFILE ot_hbm_svc_sm_xcal_rel_t_ff.lib 381909

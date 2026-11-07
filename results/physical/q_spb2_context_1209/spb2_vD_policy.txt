@@ -1,0 +1,29 @@
+grt_policy.json FAIL None
+FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'setup_wns_ps': -241.59, 'hold_wns_ps': -241.87, 'clock': 'NOT RUN (data failure stopped redundant pair census)'}
+FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json)
+
+run_route.log NTERMEDIATE_POWER_SKIPPED stage 5: power not measured; final reporting unchanged
+
+==========================================================================
+global route report_design_area
+--------------------------------------------------------------------------
+Design area 133743 um^2 5% utilization.
+[INFO FLW-0007] clock clk period 833.000000
+[WARNING FLW-0010] more than one clock found. Skipping sdc update.
+[INFO FLW-0011] Path endpoint path count 46458
+source /work/grt_post.tcl
+OT_VCLK_BIND corner tt clock vclk source_latency 250.0000
+OT_PG_CONNECT grt_post rules=2 protected_rebound=0
+OT_PG_BOUND grt_post pg_terms=649400 open=0
+Took 8 seconds: source /work/grt_post.tcl
+write_db /work/run/results/asap7/dp_q_spb2/base/5_1_grt.odb
+write_sdc -no_timestamp /work/run/results/asap7/dp_q_spb2/base/5_1_grt.sdc
+Elapsed time: 5:48:12.85[h:]min:sec. CPU time: user 23355.64 sys 660.12 (114%). Peak memory: 34592664KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_1_grt                   .odb        20892          33781 73874a0a11f05344ea53
+5_1_grt                   .sdc                             84fe577f0420028cca31
+OT_POSTCTS_GATE TT (global_routing) pinreg n 12384 mean 265.97 bound 250.00 dev 15.97 tol 20.0 setup_est -241.59 hold_est -257.84 PASS
+OT_POSTCTS_GATE FF (global_routing) pinreg n 12384 mean 215.63 bound 202.50 dev 13.13 tol 20.0 setup_est 9.70 hold_est -246.12 PASS
+OT_LEGACY_GATE grt FAIL: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'setup_wns_ps': -241.59, 'hold_wns_ps': -241.87, 'clock': 'NOT RUN (data failure stopped redundant pair census)'}
+FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json)
+
