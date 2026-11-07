@@ -404,6 +404,13 @@ def main(argv=None):
         if a.cmd == 'run':
             os.makedirs(a.out, exist_ok=True)
             tag_commit(a.repo, a.tag)
+            # A wave candidate supplies its SUBMIT source via auto_resign.build_commit_of.
+            # Standalone copied kits may have no source metadata: refuse before RCX/LEC,
+            # rather than spending both runs and discovering this at record time.
+            if not a.build_commit:
+                a.build_commit = kit_build_commit(a.kit, a.repo if manifest(a.repo) is None else None)
+            if not a.build_commit:
+                raise ResignError('build_commit unknown: pass --build-commit (no commit in %s records)' % a.kit)
             check_tools(a.repo, a.tag, a.tools)  # fail before spending an RCX run on the wrong tools
             print('clock_family.tcl from %s: %s' % (a.tag, export_clock_family(a.repo, a.tag, a.tools)), file=sys.stderr)
             name = a.name or default_container_suffix(a.out)
