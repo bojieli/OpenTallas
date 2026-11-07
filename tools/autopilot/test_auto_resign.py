@@ -429,43 +429,25 @@ def _hand_loop(kit, base, best=None, loop_kit=None):
 NEAR = dict(tt=5.0, ff=-1.5, drv=0, drc=0, fails=["hold_ff"])
 
 
-@pytest.mark.parametrize("base,best,launch,word", [
-    (dict(tt=5.0, ff=-9.0, drv=0, drc=0), NEAR, True, "second loop"),                                   # the rule
-    (dict(tt=5.0, ff=0.0, drv=9, drc=0), dict(tt=5.0, ff=0.0, drv=3, drc=0, fails=["drv"]), True, "second loop"),      # DRV-only
-    (dict(tt=None, ff=None, drv=9, drc=0), dict(tt=None, ff=None, drv=3, drc=0, fails=["drv"]), True, "second loop"),  # DRV-only, no timing read
-    (dict(tt=5.0, ff=-1.5, drv=0, drc=0), NEAR, False, "did not improve"),
-    (dict(tt=5.0, ff=-0.5, drv=0, drc=0), NEAR, False, "did not improve"),
-    (dict(tt=5.0, ff=-9.0, drv=0, drc=0), dict(tt=5.0, ff=-5.5, drv=0, drc=0, fails=["hold_ff"]), False, "outside"),
-    (dict(tt=5.0, ff=-9.0, drv=0, drc=0), dict(tt=5.0, ff=-5.5, drv=2, drc=0, fails=["hold_ff", "drv"]), False, "outside"),
+@pytest.mark.parametrize("base,best", [
+    (dict(tt=5.0, ff=-9.0, drv=0, drc=0), NEAR),                                                        # ended near, improved
+    (dict(tt=5.0, ff=0.0, drv=9, drc=0), dict(tt=5.0, ff=0.0, drv=3, drc=0, fails=["drv"])),            # DRV-only
+    (dict(tt=5.0, ff=-1.5, drv=0, drc=0), NEAR),                                                        # no gain
 ])
-def test_second_loop_rule_on_a_hand_loop(ap, tmp_path, monkeypatch, base, best, launch, word):
+def test_no_second_loop_on_a_hand_loop(ap, tmp_path, monkeypatch, base, best):
+    """OWNER 11-07 05:3x: one late-stage iteration per routed form"""
     roots_ok(monkeypatch, tmp_path)
     monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
     kit = eco_kit(tmp_path)
     _hand_loop(kit, base, best)
     register(ap, kit)
-    ap.unit_active = lambda u: True
     AR.step(ap)
     it = only_item(ap)
-    assert it["status"] == ("ECO" if launch else "LANE") and word in it["why"] and bool(ap.launched) == launch
-    if not launch:
-        assert any(word in x for x in ap.lines)
+    assert it["status"] == "LANE" and "no second loop" in it["why"] and "REDESIGN" in it["why"] and not ap.launched
+    assert any("no second loop" in x for x in ap.lines)
 
 
-def test_no_third_loop_after_a_chained_hand_loop(ap, tmp_path, monkeypatch):
-    roots_ok(monkeypatch, tmp_path)
-    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
-    first = tmp_path / "first" / "i3"
-    first.mkdir(parents=True)
-    (first.parent / "eco_loop.json").write_text("{}")
-    kit = eco_kit(tmp_path)
-    _hand_loop(kit, dict(tt=5.0, ff=-9.0, drv=0, drc=0), NEAR, loop_kit=first)
-    register(ap, kit)
-    AR.step(ap)
-    assert only_item(ap)["status"] == "LANE" and "no third" in only_item(ap)["why"] and not ap.launched
-
-
-def test_loop_that_started_from_this_db_goes_on_from_its_best(ap, tmp_path, monkeypatch):
+def test_loop_that_started_from_this_db_stays_for_a_lane(ap, tmp_path, monkeypatch):
     roots_ok(monkeypatch, tmp_path)
     monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
     kit = eco_kit(tmp_path)
@@ -477,11 +459,8 @@ def test_loop_that_started_from_this_db_goes_on_from_its_best(ap, tmp_path, monk
     (kit / "eco_1" / "eco_loop.json").write_text(json.dumps(dict(kit=str(kit), base_routed_db=str(odb), base_metrics=dict(tt=5.0, ff=-1.5, drv=0, drc=0),
                                                                  best=dict(signoff=str(rec), metrics=dict(tt=5.0, ff=-0.5, drv=0, drc=0, fails=["hold_ff"])))))
     register(ap, kit)
-    ap.unit_active = lambda u: True
     AR.step(ap)
-    assert only_item(ap)["status"] == "ECO"
-    argv = ap.launched[0][1]
-    assert argv[argv.index("--signoff") + 1] == str(rec) and argv[argv.index("--kit") + 1] == json.loads(rec.read_text())["inputs"]["kit"]
+    assert only_item(ap)["status"] == "LANE" and "no second loop" in only_item(ap)["why"] and not ap.launched
 
 
 @pytest.mark.parametrize("how", ["empty", "garbled"])
@@ -505,7 +484,7 @@ def test_held_design_gets_no_second_loop(ap, tmp_path, monkeypatch):
     assert "HELD" in only_item(ap)["why"] and not ap.launched
 
 
-def test_own_loop_gets_one_second_loop_then_stops(ap, tmp_path, monkeypatch):
+def test_own_loop_runs_once_then_goes_to_a_lane(ap, tmp_path, monkeypatch):
     roots_ok(monkeypatch, tmp_path)
     monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
     register(ap, eco_kit(tmp_path, ff=-9.0))
@@ -518,21 +497,25 @@ def test_own_loop_gets_one_second_loop_then_stops(ap, tmp_path, monkeypatch):
     (i1.parent / "eco_loop.json").write_text(json.dumps(dict(kit="/none/k", base_metrics=dict(tt=5.0, ff=-9.0, drv=0, drc=0),
                                                              best=dict(signoff=str(i1 / "signoff" / "signoff.json"), metrics=NEAR))))
     _eco_result(ap, dict(verdict="EXHAUSTED", reason="no gain", best_signoff=str(i1 / "signoff" / "signoff.json"), best_dir=str(i1), metrics=dict(tt=5.0, ff=-1.5, drv=0, drc=0)))
-    AR.step(ap)                                      # poll reads the result, the same tick goes on
-    assert len(ap.launched) == 2 and only_item(ap)["status"] == "ECO"
-    argv = ap.launched[1][1]
-    assert argv[argv.index("--signoff") + 1] == str(i1 / "signoff" / "signoff.json")
-    assert argv[argv.index("--out") + 1] != ap.launched[0][1][ap.launched[0][1].index("--out") + 1]
-    out2 = tmp_path / "loop2"
-    out2.mkdir()
-    i2 = eco_kit(out2, ff=-0.5)
-    next(i2.rglob("6_final.odb")).write_bytes(b"odb after loop 2")
-    (i2.parent / "eco_loop.json").write_text(json.dumps(dict(kit=str(i1), base_metrics=NEAR,
-                                                             best=dict(signoff=str(i2 / "signoff" / "signoff.json"), metrics=dict(tt=5.0, ff=-0.5, drv=0, drc=0, fails=["hold_ff"])))))
-    _eco_result(ap, dict(verdict="EXHAUSTED", reason="no gain", best_signoff=str(i2 / "signoff" / "signoff.json"), best_dir=str(i2), metrics=dict(tt=5.0, ff=-0.5, drv=0, drc=0)))
     AR.step(ap)
-    assert len(ap.launched) == 2 and only_item(ap)["status"] == "LANE" and "no third" in only_item(ap)["why"]
-    assert any("no third" in x for x in ap.lines)
+    assert len(ap.launched) == 1 and only_item(ap)["status"] == "LANE" and "no second loop" in only_item(ap)["why"]
+
+
+@pytest.mark.parametrize("kw,launch", [(dict(ff=-9.0, ff_n=101.0), False), (dict(ff=-9.0, ff_n=100.0), True), (dict(drc=50, fails=("drc",)), False)])
+def test_near_miss_counts_endpoints_and_drc_under_50(ap, tmp_path, monkeypatch, kw, launch):
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    n = kw.pop("ff_n", None)
+    kit = eco_kit(tmp_path, **kw)
+    if n is not None:
+        rec = kit / "signoff" / "signoff.json"
+        d = json.loads(rec.read_text())
+        d["checks"]["hold_ff"]["violators"] = n
+        rec.write_text(json.dumps(d))
+    register(ap, kit)
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    assert bool(ap.launched) == launch and only_item(ap)["status"] == ("ECO" if launch else "SKIP")
 
 
 def _eco_result(ap, r):
