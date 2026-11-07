@@ -22,6 +22,6 @@ s81	bksel_q vG	intel1	/srv/opentallas-scratch2/claude/s81-bksel-rf7/dsdv_bksel_q
 s81	eng_rr_e vH	epyc2	/srv/opentallas-scratch3/claude/s81-engrr-b7/dsdv_eng_rr_e_vH	owner critical; spine fixed; CTS done	finish, sign-off, LEC	S81-ENGRR-B7	11-07 05:14
 s81	eng_rr_e vI	epyc2	/srv/opentallas-scratch3/claude/s81-engrr-b7/dsdv_eng_rr_e_vI	owner critical; sync reset + pin cycle form	build	S81-ENGRR-B7	11-07 05:14
 qwen_compute	NL vR3b + vR3c	epyc2	/srv/opentallas-scratch2/claude/dq87_vr3/qfd_tile_nl_a0c_vR3b and _vR3c	vR3 WNS -312 me_idle retap miss; insertion 811	running from CTS; b = retap fix, c = + clock structure; read and pick	DIE-QC-87	11-07 05:20
-qwen_kvsys	qkd_hr_core_prompt vI ECO	epyc2	/srv/opentallas-scratch3/claude/kv-prm-b8/qkd_hr_core_prompt_vI	owner critical; TT -6.73 FF -2.94 slew 166/146	eco_loop --lec, no port padding	KV-PRM-B8	11-07 05:14
-qwen_kvsys	qkd_hr_core_prompt vJ	epyc4	-	owner critical	owner adds the path	KV-PRM-B8	11-07 05:14
+qwen_kvsys	qkd_hr_core_prompt vI ECO	epyc2	/srv/opentallas-scratch3/claude/kv-prm-b8/qkd_hr_core_prompt_vI	owner critical; TT -6.73 FF -2.94 slew 166/146	eco_loop --lec running direct, autofo on 11 fan-out nets, then re-sign flow-20261107-ci-kv	KV-PRM-B8	11-07 05:14
+qwen_kvsys	qkd_hr_core_prompt vJ	epyc2	/srv/opentallas-scratch3/claude/kv-prm-b8/qkd_hr_core_prompt_vJ	owner critical; +1 pin cycle + reset pipeline, first route	collect kit LEC, renders, sign-off	KV-PRM-B8	11-07 05:45
 qwen_kvsys	qkd_hr_ingest_eng vH2	intel1	/srv/opentallas-scratch2/claude/kving8/qkd_hr_ingest_eng_vH2	new form, place running; nothing measured	place, kit LEC, view renders, route	KV-ING-8	11-07 05:14
