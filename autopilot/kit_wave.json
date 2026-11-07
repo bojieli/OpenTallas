@@ -2910,6 +2910,8 @@
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
       "gen_hosts": [
+        "epyc4",
+        "intel1",
         "epyc5",
         "epyc2"
       ],
@@ -3404,7 +3406,12 @@
         "ot_s81sl_leaf__t25__cl431c660f": "KW-FIX-8 21:3x sweep: repair_design after GRT silent >3 h at 100%% core, flat; stopped under hung-job rule; no relaunch on same recipe",
         "ot_s81sl_leaf__t30": "KW-FIX-8 21:3x sweep: repair_design after GRT silent >3 h at 100%% core, flat; stopped under hung-job rule; no relaunch on same recipe"
       },
-      "note_codex_1209_packing": "Only55 FT names from S81-LEAF-BATCH-1107;4NOFT excluded, private slice_station__t36 outside list. hold_items filters future selection only; active downstream stages continue."
+      "note_codex_1209_packing": "Only55 FT names from S81-LEAF-BATCH-1107;4NOFT excluded, private slice_station__t36 outside list. hold_items filters future selection only; active downstream stages continue.",
+      "gen_hosts_prev_kw30": [
+        "epyc5",
+        "epyc2"
+      ],
+      "note_gen_hosts_kw30": "KW-FIX-30 2026-11-07 13:5x (COORD 13:21 ruling): + epyc4, intel1 as gen hosts for new rows (epyc5 scratch2 and epyc2 root REFUSED). Closure checked on both: kw30_clo2 s81 385 / qc 199 paths, 0 missing; src_fb119/src_fb119lf/src_02909_qc4 c92647a2155 with .stagedone; bind inputs (s81_emitted_v2 bind rtl, s81_ready_v3, kvov, src_28fc7 7 files, bind_strict, bind_qc4, src_7281a 9 files) copied from epyc5. epyc6 stays out (root 53 GB < 100). Revert: gen_hosts <- gen_hosts_prev_kw30."
     },
     "s81_head": {
       "enabled": true,
@@ -4032,7 +4039,7 @@
       "pilot_mode": "queue",
       "hold_items": {
         "sle_hc0__cl05696ed1": "KW-FIX-12 08:5x DIE-QC-76 stopped 08:45 per COORD, GRT rising; no resubmit of same form, DIE-QC-76 form lifts",
-        "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native\u2192collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry."
+        "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native→collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry."
       },
       "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave",
       "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -4839,6 +4846,8 @@
         "slw_st_a_v2__clf4365a62@9": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)"
       },
       "gen_hosts": [
+        "epyc4",
+        "intel1",
         "epyc2",
         "epyc5"
       ],
@@ -5067,7 +5076,12 @@
         "epyc5",
         "epyc6"
       ],
-      "note_kw29_ep6": "KW-FIX-29 COORD 11:4x: QC work_root scratch3/claude/kw26-wave-1106 is on root (md0) on epyc6, 94 GB against floor 100; GEN-DISK-LOW reads ot-run scratch = scratch2 and missed it. epyc6 out of QC gen_hosts until root >100; gen_hosts_prev_kw29_ep6 restores. Running rows untouched."
+      "note_kw29_ep6": "KW-FIX-29 COORD 11:4x: QC work_root scratch3/claude/kw26-wave-1106 is on root (md0) on epyc6, 94 GB against floor 100; GEN-DISK-LOW reads ot-run scratch = scratch2 and missed it. epyc6 out of QC gen_hosts until root >100; gen_hosts_prev_kw29_ep6 restores. Running rows untouched.",
+      "gen_hosts_prev_kw30": [
+        "epyc2",
+        "epyc5"
+      ],
+      "note_gen_hosts_kw30": "KW-FIX-30 2026-11-07 13:5x (COORD 13:21 ruling): + epyc4, intel1 as gen hosts for new rows (epyc5 scratch2 and epyc2 root REFUSED). Closure checked on both: kw30_clo2 s81 385 / qc 199 paths, 0 missing; src_fb119/src_fb119lf/src_02909_qc4 c92647a2155 with .stagedone; bind inputs (s81_emitted_v2 bind rtl, s81_ready_v3, kvov, src_28fc7 7 files, bind_strict, bind_qc4, src_7281a 9 files) copied from epyc5. epyc6 stays out (root 53 GB < 100). Revert: gen_hosts <- gen_hosts_prev_kw30."
     },
     "hbm": {
       "enabled": true,
