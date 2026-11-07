@@ -4271,8 +4271,11 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         print(f"[gen] {tn}: FT_SPREAD ADVISORY {type(ex).__name__}: {ex} (plan sites only)")
     (kd / "ft_bit_sites.tcl").write_text(ft_bit_sites_table(ft_kit_slots))
     if ft_kit_slots:
-        (kd / "ft_track_use.json").write_text(json.dumps(dict(ft_spread.track_use(ft_kit_slots, ft_spread_ledger),
-                                                              type=tn, spread=ft_spread_ledger), indent=1) + "\n")
+        try:                                 # advisory report only: never a gen failure
+            (kd / "ft_track_use.json").write_text(json.dumps(dict(ft_spread.track_use(ft_kit_slots, ft_spread_ledger),
+                                                                  type=tn, spread=ft_spread_ledger), indent=1) + "\n")
+        except Exception as ex:
+            print(f"[gen] {tn}: FT_TRACK_USE ADVISORY {type(ex).__name__}: {ex}")
     ff_core_taps = {r[0]: r for r in core_tap_rows(P, tn, "FF")}
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
