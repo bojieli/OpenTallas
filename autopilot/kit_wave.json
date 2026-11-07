@@ -5107,7 +5107,9 @@
     "ot_hgi_sm_xload_cl2_ctlx@2",
     "ot_hnx_fused_hub_n4ext@8",
     "ot_hnx_idxn_keybuf_slice@4",
-    "hfd_hgi_vms_glue_nw_t@7"
+    "hfd_hgi_vms_glue_nw_t@7",
+    "hnx_rp3h_xs@4",
+    "ot_hbm_idx_rootctl_static_am@14"
    ],
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -5236,7 +5238,9 @@
     "ot_hgi_sm_xload_cl2_ctlx@2": "KW-FIX-26 23:5x one batch: new src 0290971a0fd (ROOT-MERGE-46 train: leafrep+leafopt, subtree_balance/ft_spread, type-safe-3, pose_spread, macrogap, FLOW-CLASS-25); failed on an older src",
     "ot_hnx_fused_hub_n4ext@8": "KW-FIX-26 23:5x one batch: new src 0290971a0fd (ROOT-MERGE-46 train: leafrep+leafopt, subtree_balance/ft_spread, type-safe-3, pose_spread, macrogap, FLOW-CLASS-25); failed on an older src",
     "ot_hnx_idxn_keybuf_slice@4": "KW-FIX-26 23:5x one batch: new src 0290971a0fd (ROOT-MERGE-46 train: leafrep+leafopt, subtree_balance/ft_spread, type-safe-3, pose_spread, macrogap, FLOW-CLASS-25); failed on an older src",
-    "hfd_hgi_vms_glue_nw_t@7": "CODEX HBM watcher 11-07: restore20 exact missing historical Gitobjects for recipe6 files at d34578d6f / rcl at c2223a91d3 from intel2 central donor into original kw27/src_02909 .git/objects on all6hosts; read_at_commit unchanged; no plan/source/RTL change"
+    "hfd_hgi_vms_glue_nw_t@7": "CODEX HBM watcher 11-07: restore20 exact missing historical Gitobjects for recipe6 files at d34578d6f / rcl at c2223a91d3 from intel2 central donor into original kw27/src_02909 .git/objects on all6hosts; read_at_commit unchanged; no plan/source/RTL change",
+    "hnx_rp3h_xs@4": "KW-FIX-27 infra: dead git alternates on intel1/intel2 src_02909 repointed; pin table now present on hosts",
+    "ot_hbm_idx_rootctl_static_am@14": "KW-FIX-27 infra: dead git alternates on intel1/intel2 src_02909 repointed; pin table now present on hosts"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
@@ -5504,5 +5508,9 @@
    "hd_st_n4@6"
   ]
  },
- "note_kw27": "KW-FIX-26 11-06 23:5x COORD: S81/KV/HBM/HEAD src -> kw27/src_02909 = main 0290971a0fd (hardlink kw24/src_7281a + 251 files, blob-checked on 6 hosts); HBM plan -> kw27/hbm_d44v_02909 (main d44v parts through 55, .gz unpacked). S81, KV, HEAD plans and all binds unchanged; QC untouched at this edit. REVERT: python3 -I /srv/opentallas-scratch3/claude/kw27/e_rel.py revert (restores src/src_sha/queue_src/plan from *_prev_kw27, drops retry_kw27 entries not yet launched); full config backup /srv/opentallas-scratch3/claude/kw27/kit_wave.json.before."
+ "note_kw27": "KW-FIX-26 11-06 23:5x COORD: S81/KV/HBM/HEAD src -> kw27/src_02909 = main 0290971a0fd (hardlink kw24/src_7281a + 251 files, blob-checked on 6 hosts); HBM plan -> kw27/hbm_d44v_02909 (main d44v parts through 55, .gz unpacked). S81, KV, HEAD plans and all binds unchanged; QC untouched at this edit. REVERT: python3 -I /srv/opentallas-scratch3/claude/kw27/e_rel.py revert (restores src/src_sha/queue_src/plan from *_prev_kw27, drops retry_kw27 entries not yet launched); full config backup /srv/opentallas-scratch3/claude/kw27/kit_wave.json.before.",
+ "retry_kw27h": [
+  "hnx_rp3h_xs@4",
+  "ot_hbm_idx_rootctl_static_am@14"
+ ]
 }
