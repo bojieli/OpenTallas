@@ -4974,6 +4974,14 @@ def _kit_inst_path(txt, inst, mod_re, owner_module=None):
     return None
 
 
+def _bound_reset_identity(tree):
+    """A reset tree without what gen adds later: physical_inst on core_resets is resolved before install, the bound receipt never has it."""
+    tree = json.loads(json.dumps(tree))
+    for c in (tree or {}).get("core_resets") or []:
+        c.pop("physical_inst", None)
+    return tree
+
+
 def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
     """Opt-in bound reset authority: verify the explicit tree against the ONE native hierarchy.
 
@@ -4998,7 +5006,7 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
                 solved = json.loads(json.dumps(RT.for_type(P, tn)))
             except Exception:
                 solved = None
-            if solved != json.loads(json.dumps(tree)):
+            if _bound_reset_identity(solved) != _bound_reset_identity(tree):
                 raise gen_rtl.GenError(f"type {tn}: physical collector_tree differs from captured bound reset identity; preserve original IDs/edges/coordinates")
             P.types[tn].setdefault("clock", {}).setdefault("landing_contract", {})["collector_tree"] = copy.deepcopy(tree)
             print(f"gen phys: NOTE type {tn}: published collector_tree is stale, the current solve equals the captured bound reset tree; using the captured tree", flush=True)

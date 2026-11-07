@@ -187,6 +187,15 @@ def test_stale_published_tree_accepted_only_when_solve_is_the_captured_tree(tmp_
     with pytest.raises(gen_rtl.GenError,match='differs from captured'):G.install_bound_native_reset(p,'t',[f],source_contract=rec)
 
 
+def test_reset_identity_ignores_only_physical_inst():
+    a=tree();a['core_resets']=[dict(inst='c',pin='rst_n',tap=0)]
+    b=tree();b['core_resets']=[dict(inst='c',pin='rst_n',tap=0,physical_inst='u_bound.u_c')]
+    assert G._bound_reset_identity(a)==G._bound_reset_identity(b)
+    b['core_resets'][0]['tap']=1
+    assert G._bound_reset_identity(a)!=G._bound_reset_identity(b)
+    assert G._bound_reset_identity(None) is None
+
+
 def test_out_copy_negedge_and_native_core_reset_preserved(tmp_path):
     import bound_reset_contract as B
     t=tree();t.update(relay_lockup='negedge',outs=[[25,25]],n_clock_taps=1,
