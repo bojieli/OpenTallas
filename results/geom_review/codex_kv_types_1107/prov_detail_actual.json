@@ -1,0 +1,42 @@
+[
+  {
+    "module": "qkd_kvs_pcc_h_head_p",
+    "bloat_factor": 0,
+    "record": {
+      "base_sha256": "00f3258c6e067f377c12b9102f5ec571cfe2f7e99d73348251552e14197efd23",
+      "out_sha256": "b049f28a9148b99af1865fa2aa9d6c546a56ca01898c49afe7306ee55abb5e70",
+      "bloat_factor": 0,
+      "layers_detailed": [
+        "M6",
+        "M7"
+      ],
+      "check_ok": true,
+      "detail_pins_equal_base": true,
+      "helper_sha256": "c23261e65619336848dbc9ef4baacb51d6573529737bca740b2d2fdc04663f65"
+    },
+    "candidate_dir": "/srv/opentallas-scratch3/claude/codex-kv-types-1107/actual_detail/qkd_kvs_pcc_h_head_p",
+    "base_source": "/srv/opentallas-scratch2/claude/kv-parent-1/routed/qkd_kvs_pcc_h_head_p/c0/qkd_kvs_pcc_h_head_p.lef",
+    "existing_detail_export": "/srv/opentallas-scratch2/claude/dkv87/views/qkd_kvs_pcc_h_head_p/b0/detail.lef",
+    "same_as_existing_handfix": true
+  },
+  {
+    "module": "qkd_kvs_pcf",
+    "bloat_factor": 1,
+    "record": {
+      "base_sha256": "b81402f669eb093d8bff27067963957c4b2167e3e2e51cea6c3a0bef5e68c7b4",
+      "out_sha256": "3b16ea9b44c97fa5ea7cb6d387a743b5a7e8a299063c475290d83b7a4fe2406a",
+      "bloat_factor": 1,
+      "layers_detailed": [
+        "M6",
+        "M7"
+      ],
+      "check_ok": true,
+      "detail_pins_equal_base": true,
+      "helper_sha256": "c23261e65619336848dbc9ef4baacb51d6573529737bca740b2d2fdc04663f65"
+    },
+    "candidate_dir": "/srv/opentallas-scratch3/claude/codex-kv-types-1107/actual_detail/qkd_kvs_pcf",
+    "base_source": "/srv/opentallas-scratch2/claude/kv-parent-1/routed/qkd_kvs_pcf/c0/qkd_kvs_pcf.lef",
+    "existing_detail_export": "/srv/opentallas-scratch2/claude/dkv87/views/qkd_kvs_pcf/detail.lef",
+    "same_as_existing_handfix": true
+  }
+]

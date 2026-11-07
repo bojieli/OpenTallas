@@ -1235,6 +1235,8 @@ def prov_sources(jobs, die, modules, d=None, hub="intel2"):
     prov_view_sources {module: [{host, dir[, base]}]} (die owner pick: dir holds <m>_tt.lib, <m>_ff.lib, <m>.lef) first, then autopilot queue jobs of the die whose
     newest sign-off record has DRC 0 (routed; timing may still fail -- the abstract is provisional), newest first.
     candidate = {host, dir (sign-off dir holding <m>_tt.lib/_ff.lib/<m>.lef), base (routed results dir), job, ...}.
+    Optional candidate fields detailed_lef, detailed_receipt and detail_bloat_factor stage an already exported
+    precise abstract plus its hash/pin splice receipt; paths may be relative to dir. No hidden export or P&R.
     The files are checked against the plan pins on the gen host (prov_view.py make); a candidate that fails falls
     through to the next, then to the plan-contract abstract."""
     mods = set(modules)
@@ -1321,7 +1323,18 @@ def prov_stage(sp, run, remote, fail, out, rtl=""):
                     continue
                 srcf = f if c["host"] in ("localhost", hub) else f"{c['host']}:{f}"
                 subprocess.run(["rsync", "-a", "-e", SSH, srcf, str(dst) + "/"], capture_output=True, timeout=900)
-            (dst / "meta.json").write_text(json.dumps(c))
+            # Explicit already-exported precise abstract; no hidden OpenROAD work in the provisional stage.
+            # Fixed staging names avoid a detailed source named <module>.lef overwriting the captured base.
+            staged = dict(c)
+            for key, name in (("detailed_lef", "detail_view.lef"), ("detailed_receipt", "detail_receipt.json")):
+                if isinstance(c.get(key), str) and c[key]:
+                    f = c[key] if os.path.isabs(c[key]) else os.path.join(c["dir"], c[key])
+                    srcf = f if c["host"] in ("localhost", hub) else f"{c['host']}:{f}"
+                    subprocess.run(["rsync", "-a", "-e", SSH, srcf, str(dst / name)],
+                                   capture_output=True, timeout=900)
+                    staged["source_" + key] = c[key]
+                    staged[key] = name
+            (dst / "meta.json").write_text(json.dumps(staged))
             fetched += 1
     if fetched:
         rc, txt = run("prov_relay", ["rsync", "-a", "-e", SSH, str(relay) + "/",
