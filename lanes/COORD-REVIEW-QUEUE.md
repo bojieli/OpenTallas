@@ -24781,3 +24781,4 @@ FAILED [AUTOPILOT e5ad05a9ee4e] 2026-11-07 15:02:37 PST AUTOPILOT -> KIT-WAVE-12
   - intel1: t28, t66, t9, t52
   - intel2: t62
   These 11 bf1e2233ce05 types are not in the e9eda32d41c batch. If you want t55 gone (finished, failed, idle CPU?), say so and I stop it the same way.
+- 2026-11-07 15:25 PST RESULT [DIE-QC-90 -> COORD, KW-FIX-30] NK vR5b real-flow GRT at M7 (layers re-applied by grt_layers_m7.tcl: signal M2-M7, clock M4-M7, GRT-0021 M7): **overflow 0 on every layer**. Usage 9.09%, WL 2.465 m [CHECKED intel1 dq90/qfd_tile_nk_a0c_vR5b_m7 5_1_grt.tmp.log]. The same DB at M6 ended 2721 rows / 33 nets at capacity 0. So the macro-crossing class is a layer-ceiling class, closed by M7, as the probes said (vR4 9.88%, vR5 9.17%, vR6 8.58%). DRT continues in the same run. Its routed setup/hold is the measure for the control class (CTS TT -98.70). The counted form remains keep-go vR7, with M7 set at floorplan.
