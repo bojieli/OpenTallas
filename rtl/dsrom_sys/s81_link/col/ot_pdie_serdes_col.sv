@@ -43,6 +43,10 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     initial if (LOCKSAFE != 1 || HOLD_EDGES < 64)
         $error("RCK relay4 requires LOCKSAFE=1 and HOLD_EDGES>=64");
 `endif
+`ifdef OT_S81_SERDES_COL_PIN
+    initial if (LOCKSAFE != 1 || HOLD_EDGES < 64)
+        $error("TX PIN form requires LOCKSAFE=1 and HOLD_EDGES>=64");
+`endif
     // ---- S81.RESET warm-reset sequencer (LOCKSAFE=1 only; region syn, on pma_rck)
     wire rst_g;
     generate if (LOCKSAFE != 0) begin : g_locksafe
@@ -59,7 +63,16 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     wire rn_t = rs_t[1], rn_r = rs_r[1];
     // ---- transmit: FEC encoder (closed tile) -> TX lane relay rows (clk) -> PMA TX
     wire e_v; wire [543:0] e_d; wire e_flt;
+`ifdef OT_S81_SERDES_COL_PIN
+    // Private RCK successor: three coherent TX input PIN cycles.  Reset is
+    // registered by the same three edges, so the FEC frame calendar moves with
+    // data and valid.  TXL is independently priced in the private kit profile.
+    ot_s81_serdes_col_tx_pin #(.N(3)) u_tx_pin
+        (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx),
+         .p_v(e_v), .p_d(e_d), .fault(e_flt));
+`else
     ot_s81_kp4_enc u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
+`endif
     wire [544:0] l_q;
     ot_pl_pad #(.W(545), .N((MUT == 8) ? TXL - 1 : TXL)) u_txl (.ck(clk), .d({e_v, e_d}), .q(l_q));
     // ---- analog PMA: two abstracts side by side along the edge (rx W half beside the dsyn W channel, tx E half under the
@@ -96,6 +109,41 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     always @(posedge clk or negedge rn_t) if (!rn_t) st_q <= 2'b00; else st_q <= {lk_s[1], st_q[0] | uf_s[1] | rm_flt | e_flt};
     assign st = st_q;
 endmodule
+
+`ifdef OT_S81_SERDES_COL_PIN
+// One actual FEC encoder behind a coherent, fixed-latency input pipeline.
+// The existing LOCKSAFE/HOLD_EDGES>=64 parent contract supplies the reset
+// flush. Datapath stages have no reset; control/reset travel one edge per hop.
+// N is fixed to 3 in the physical form; the parameter supports a small bench
+// and seeded bypass mutant without changing the production encoder arithmetic.
+module ot_s81_serdes_col_tx_pin #(parameter integer N = 3) (
+    input wire clk,
+    input wire rst_n,
+    input wire tx_v,
+    input wire [511:0] tx_d,
+    output wire p_v,
+    output wire [543:0] p_d,
+    output wire fault
+);
+    initial if (N < 1) $error("TX PIN pipeline requires N>=1");
+    (* keep *) reg [511:0] pin_q [0:N-1];
+    reg [N-1:0] pin_v, pin_rst_n;
+    integer j;
+    always @(posedge clk) begin
+        pin_q[0] <= tx_d;
+        pin_v[0] <= tx_v;
+        pin_rst_n[0] <= rst_n;
+        for (j = 1; j < N; j = j + 1) begin
+            pin_q[j] <= pin_q[j-1];
+            pin_v[j] <= pin_v[j-1];
+            pin_rst_n[j] <= pin_rst_n[j-1];
+        end
+    end
+    ot_s81_kp4_enc u_enc
+        (.clk(clk), .rst_n(pin_rst_n[N-1]), .tx_v(pin_v[N-1]), .tx_d(pin_q[N-1]),
+         .p_v(p_v), .p_d(p_d), .fault(fault));
+endmodule
+`endif
 
 // ---------------------------------------------------------------------------------------------------------------
 // ot_s81_pma_txm / ot_s81_pma_rxm: the S81 SerDes ANALOG PMA as two hard abstracts (each ~125 x 2250 um, side by side in the
