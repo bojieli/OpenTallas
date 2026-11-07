@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "part": 52,
+ "plan": "d44v",
+ "lane": "DIE-HBM-82-SPB",
+ "date": "2026-11-06",
+ "approved": "plan-owner approved DIE-HBM-82 (q_spb2 RE-FORM brief: wiring safe form, fix-only; COORD 18:37 (1) types safe by construction)",
+ "what": [
+  "q_spb2 ft_slots L1278x3 (1483 b, 5 stations) and L1280x6 (746 b, 6 stations), both N->N turnarounds: internal stations moved from the N edge (regs y 1494.72, spiral clumps) to nested U corridors below the xcal hard-core row; explicit per-bit row-legal bit_sites_um (cell 1.404x0.27) at fraction j/k of each bit's own in->band->out Manhattan path; bands L1278x3 y 1065-1175 (M4+M6 track use 0.49), L1280x6 y 995-1055 (0.46); regs_um = in-window centre + one real bit site per station (ft_corridor convention)"
+ ],
+ "why": "q_spb2 vA GRT never converged (3 rounds x 30 extra iterations, 9 h): congestion-25.rpt 20000 capped gcells all at x 430-953 / y 1279-1502, i.e. ~2230 turnaround bits E-W in the 34-um strip between u_xc_Q2 (OBS M1-M5) and the N edge",
+ "evidence": {
+  "grt_probe_before": "same kit/deck (geom_grt.tcl M2-M7 adj 0.25 50 it) on the old 3_place.odb: still in extra iterations",
+  "grt_probe_after": "event sites in the same kit, re-placed: GRT 0/0/0 congestion after 12 extra iterations, total usage 5.04%"
+ },
+ "hops_um": {
+  "L1278x3": [
+   360.9,
+   363.1,
+   363.4,
+   363.2,
+   361.0
+  ],
+  "L1280x6": [
+   354.7,
+   355.6,
+   356.1,
+   356.9,
+   357.5,
+   354.6
+  ]
+ },
+ "check": "plan-time G0/G0C (check.py --completeness --plan-geom report) vs the d44v before this part: errors 971 = 971, NEW 0, GONE 0; one WARN value improves (q_spb2 geom_tap_sinks clk_t16 8239 -> 4394)",
+ "unchanged": [
+  "station counts / PIN CYCLES 0 / latency table",
+  "windows, pins, cores, outlines",
+  "every other slot and type",
+  "core_conns, core_macros, clock_entries, reset trees",
+  "netlist (kit LEC proof reusable)"
+ ],
+ "replay": "RR=<scratch> bash results/die_hbm_1106/spb2_uturn/run_p52.sh"
+}
