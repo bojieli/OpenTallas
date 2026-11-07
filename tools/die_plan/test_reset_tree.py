@@ -344,8 +344,23 @@ def test_resite_crossing_unresolvable_is_reported():
     assert moves == {} and unresolved == ["u_rrl_0"]
 
 
-def test_plan_trees_resite_default_on_opt_out():
-    """reset.relay_resite_crossing: default on; false keeps the pre-11-06 tree (schema accepts both)."""
-    raw = piped(TINY)
-    raw["reset"]["relay_resite_crossing"] = False
-    assert schema.validate(raw) == []
+def test_plan_trees_resite_opt_in():
+    """reset.relay_resite_crossing is OPT-IN (QC plan frozen fix-only): absent / false -> resite_type returns the
+    tree object untouched; true applies resite_crossing; the schema accepts both values."""
+    T = SUL0["tree"]
+
+    class _P:
+        def __init__(self, flag):
+            C = RT.CLEAR_UM
+            (w, h), (lw, lh) = SUL0["outline_um"], SUL0["lane_size_um"]
+            self.reset = {} if flag is None else {"relay_resite_crossing": flag}
+            self.types = {"su": {"outline_um": [w, h], "reset": {"obstacle_model": "lef_origin"},
+                                 "hard_cores": [{"origin_um": o, "outline_um": [lw, lh]} for o in SUL0["lanes_origin_um"]]}}
+    assert RT.resite_type(_P(None), "su", T) is T
+    assert RT.resite_type(_P(False), "su", T) is T
+    T2 = RT.resite_type(_P(True), "su", T)
+    assert T2 is not T and T2["resited_crossing"] >= 9 and _graph(T2) == _graph(T)
+    for flag in (False, True):
+        raw = piped(TINY)
+        raw["reset"]["relay_resite_crossing"] = flag
+        assert schema.validate(raw) == []
