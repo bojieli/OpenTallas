@@ -408,6 +408,213 @@ def walled_hops(nodes, root, walls):
     return out
 
 
+
+# ------------------------------------------------------------------- crossing-hop re-site (DQ85-SUL0 11-06, class rule)
+# QC su_l0 (slw_su_l0__cl76fb247e vA/vB, GRT-0116): after the lane bus was split, ALL 1880 overflow gcells were 4 reset
+# relay hops that ran straight over a lane macro (OBS M1-M6; only M7 open, not a wall()), 470 gcells each: u_rrl_35 /
+# u_rrl_39 / u_rrl_26 / u_srl_26.  One such net alone reproduces the 470 overflow (probe, PDN and M5/M6 OBS removed).
+# Rule: a relay hop with no L route outside every grown blockage moves the free relays of its chain (single-child,
+# not at a tap) onto an obstacle-avoiding rectilinear route from the fixed anchor above to the fixed node below.  The
+# graph, names, nets, depths and kinds stay; only xy changes; every hop stays <= plan reach.
+def _route(a, b, boxes, box_out, cap=250000, faces=None):
+    """shortest rectilinear path a -> b outside the interior of every box (Hanan grid of the box faces, `faces` when
+    given; ties: fewer bends), collinear points merged.  None when no path exists or the grid exceeds `cap` points."""
+    fb = boxes if faces is None else faces
+    xs = sorted({a[0], b[0]} | {v for bx in fb for v in (bx[0], bx[2])} | ({box_out[0], box_out[2]} if box_out else set()))
+    ys = sorted({a[1], b[1]} | {v for bx in fb for v in (bx[1], bx[3])} | ({box_out[1], box_out[3]} if box_out else set()))
+    if box_out:
+        xs = [x for x in xs if box_out[0] - 1e-9 <= x <= box_out[2] + 1e-9]
+        ys = [y for y in ys if box_out[1] - 1e-9 <= y <= box_out[3] + 1e-9]
+    if len(xs) * len(ys) > cap:
+        return None
+    xi, yi = {x: i for i, x in enumerate(xs)}, {y: j for j, y in enumerate(ys)}
+    if a[0] not in xi or a[1] not in yi or b[0] not in xi or b[1] not in yi:
+        return None
+    s0, t0 = (xi[a[0]], yi[a[1]]), (xi[b[0]], yi[b[1]])
+    dist = {(s0, -1): (0.0, 0)}
+    prev = {}
+    pq = [(0.0, 0, s0, -1)]
+    while pq:
+        d, nb, u, dr = heapq.heappop(pq)
+        if dist.get((u, dr), (1e30, 0)) < (d, nb):
+            continue
+        if u == t0:
+            path, k = [], (u, dr)
+            while k in prev or k[0] == s0:
+                path.append((xs[k[0][0]], ys[k[0][1]]))
+                if k not in prev:
+                    break
+                k = prev[k]
+            path = path[::-1]
+            out = [path[0]]
+            for k2, pt in enumerate(path[1:], 1):
+                if pt == out[-1]:
+                    continue
+                if (len(out) >= 2 and k2 < len(path) and
+                        ((out[-2][0] == out[-1][0] == pt[0]) or (out[-2][1] == out[-1][1] == pt[1]))):
+                    out[-1] = pt                         # collinear: extend the segment
+                else:
+                    out.append(pt)
+            return out
+        for nd, (di, dj) in enumerate(((1, 0), (-1, 0), (0, 1), (0, -1))):
+            v = (u[0] + di, u[1] + dj)
+            if not (0 <= v[0] < len(xs) and 0 <= v[1] < len(ys)):
+                continue
+            p, q = (xs[u[0]], ys[u[1]]), (xs[v[0]], ys[v[1]])
+            if _seg_hits(p, q, boxes):
+                continue
+            c = (d + _man(p, q), nb + (dr >= 0 and dr // 2 != nd // 2))
+            if c < dist.get((v, nd), (1e30, 0)):
+                dist[(v, nd)] = c
+                prev[(v, nd)] = (u, dr)
+                heapq.heappush(pq, (c[0], c[1], v, nd))
+    return None
+
+
+def _walk(path, s):
+    """the point at arc length s along polyline path, and the index of the segment holding it."""
+    for i in range(len(path) - 1):
+        L = _man(path[i], path[i + 1])
+        if s <= L + 1e-9:
+            f = 0.0 if L == 0 else s / L
+            return (path[i][0] + f * (path[i + 1][0] - path[i][0]), path[i][1] + f * (path[i + 1][1] - path[i][1])), i
+        s -= L
+    return path[-1], len(path) - 2
+
+
+def _place_on(path, n, reach):
+    """n relay sites on path (anchor path[0] -> fixed path[-1]) so that every one of the n+1 hops is a sub-path of
+    <= 1 bend (an L route the path proves free) and <= the smallest feasible per-hop length <= reach; None if the
+    path needs more than n+1 such hops."""
+    cum = [0.0]
+    for i in range(len(path) - 1):
+        cum.append(cum[-1] + _man(path[i], path[i + 1]))
+    L = cum[-1]
+
+    def greedy(r):
+        out, s = [], 0.0
+        while L - s > r + 1e-9:
+            _, i = _walk(path, s + 1e-9)
+            lim = cum[min(i + 2, len(path) - 1)]         # <= 1 bend: stay within the next two segments
+            s2 = min(s + r, lim)
+            if s2 <= s + 1e-9:
+                return None
+            out.append(s2)
+            s = s2
+        return out
+    lo, hi = L / (n + 1), float(reach)
+    g = greedy(hi)
+    if g is None or len(g) > n:
+        return None
+    for _ in range(40):                                 # smallest per-hop length that still fits n relays
+        mid = (lo + hi) / 2
+        gm = greedy(mid)
+        if gm is not None and len(gm) <= n:
+            hi, g = mid, gm
+        else:
+            lo = mid
+    pts = [tuple(round(c, 4) for c in _walk(path, s)[0]) for s in g]
+    while len(pts) < n:                                 # spare relays co-site at the fixed end (pads)
+        pts.append(tuple(path[-1]))
+    return pts
+
+
+def crossing_hops(T, boxes):
+    """relay names whose hop from its driver has no L route outside every box."""
+    xy = {r["q"]: r["xy"] for r in T["relays"]}
+    root = next((r["d"] for r in T["relays"] if r["d"].endswith("rst_root_n")), None)
+    if root is not None:
+        xy[root] = T["root"]
+    return [r["name"] for r in T["relays"] if r["d"] in xy and not _edge_ok(tuple(xy[r["d"]]), tuple(r["xy"]), boxes)]
+
+
+def resite_crossing(T, boxes, box_out=None, reach=None):
+    """the class rule above on an assigned tree T (in place on a copy).  Returns (T, moves {name: [old, new]},
+    unresolved [name]).  A tree without crossing hops comes back unchanged (byte-identical)."""
+    import copy
+    if not boxes:
+        return T, {}, []
+    # grown faces are legal (relays sit ON them); decimal faces differ by binary roundoff (997.932 vs 997.9319999)
+    faces = [tuple(round(v, 4) for v in bx) for bx in boxes]
+    boxes = [(a + 1e-6, b + 1e-6, c - 1e-6, d - 1e-6) for a, b, c, d in faces]
+    bad = crossing_hops(T, boxes)
+    if not bad:
+        return T, {}, []
+    T = copy.deepcopy(T)
+    reach = float(reach or T.get("plan_reach_um") or T.get("reach_um") or REACH_UM - MARGIN_UM)
+    by_q = {r["q"]: r for r in T["relays"]}
+    by_n = {r["name"]: r for r in T["relays"]}
+    kids = {}
+    for r in T["relays"]:
+        kids.setdefault(r["d"], []).append(r)
+
+    def movable(r):
+        return r.get("tap") is None and len(kids.get(r["q"], [])) == 1
+
+    moves, unresolved, done = {}, [], set()
+    for name in bad:
+        if name in done:
+            continue
+        r = by_n[name]
+        chain = []                                       # free relays between the anchor and the fixed node
+        up = by_q.get(r["d"])
+        while up is not None and movable(up):
+            chain.insert(0, up)
+            up = by_q.get(up["d"])
+        anchor = tuple(T["root"]) if up is None else tuple(up["xy"])
+        low = r
+        while movable(low):
+            chain.append(low)
+            low = kids[low["q"]][0]
+        fixed = tuple(low["xy"])
+        path = _route(anchor, fixed, boxes, box_out, faces=faces)
+        sites = _place_on(path, len(chain), reach) if path else None
+        if sites is None:
+            unresolved.append(name)
+            continue
+        for rr, xy in zip(chain, sites):
+            if tuple(rr["xy"]) != tuple(xy):
+                moves[rr["name"]] = [list(rr["xy"]), list(xy)]
+                rr["xy"] = list(xy)
+            done.add(rr["name"])
+        done.add(low["name"])
+    xy = {r["q"]: r["xy"] for r in T["relays"]}
+    root = next((r["d"] for r in T["relays"] if r["d"].endswith("rst_root_n")), None)
+    if root is not None:
+        xy[root] = T["root"]
+    T["max_hop_um"] = round(max(_man(xy[r["d"]], r["xy"]) for r in T["relays"] if r["d"] in xy), 1)
+    unresolved = sorted(set(unresolved) | set(crossing_hops(T, boxes)))
+    if moves:
+        T["resited_crossing"] = len(moves)
+    return T, moves, unresolved
+
+
+def native_resite_sites(tree, boxes, box_out=None, paths=None):
+    """the class rule for a CAPTURED native tree (bound_native_reset.json, gen_phys native contract): it is never
+    re-solved, so the rule is applied as a sites-only bound_reset_placement overlay (bound_reset_contract.placement):
+    {native instance: [x, y]} for every moved u_rrl_<k> and its run / raw copies (u_srl_<k>, u_rrl_<k>_r), filtered
+    to `paths` (the native instance IDs) when given.  Returns (sites, unresolved)."""
+    _, moves, unresolved = resite_crossing(tree, boxes, box_out)
+    sites = {}
+    for n, (_, xy) in moves.items():
+        for m in (n, n.replace("u_rrl", "u_srl", 1), n + "_r"):
+            if paths is None or m in paths:
+                sites[m] = [round(xy[0], 4), round(xy[1], 4)]
+    return sites, unresolved
+
+
+def resite_type(P, tn, T):
+    """plan hook: reset.relay_resite_crossing (default ON; false = byte-identical pre-11-06 trees)."""
+    if P.reset.get("relay_resite_crossing") is False:
+        return T
+    t = P.types[tn]
+    w, h = t["outline_um"]
+    T2, moves, unresolved = resite_crossing(T, blockages(t), (CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM))
+    if moves and T2["max_hop_um"] > T2.get("reach_um", REACH_UM) + 1e-6:
+        return T                                         # never trade a crossing for an over-reach hop
+    return T2
+
+
 # ----------------------------------------------------------------------------------------------- the tree
 def build(taps, root_xy, depth=None, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, prefix="", walls=(),
           avoid_cores=False):
@@ -826,6 +1033,7 @@ def _type_tree0(P, tn, depth, reach):
     T = assign(cache[("topo", tn, reach)], depth,
                pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
                box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn))
+    T = resite_type(P, tn, T)
     if t.get("reset", {}).get("local_taps_um"):
         T.update(n_clock_taps=len(_taps(P, tn)), n_reset_consumers=len(consumer_taps(P, tn)), local_reset_taps=True)
     return T
@@ -1528,6 +1736,7 @@ def _wf_type_tree(P, tn):
                         avoid_cores=bool(P.reset.get("relay_avoid_cores")))
         T = assign(topo, wavefront_min_depth(t), pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
                    box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn))
+        T = resite_type(P, tn, T)
         T.update(n_clock_taps=len(_taps(P, tn)), n_reset_consumers=len(taps),
                  local_reset_taps=bool(t.get("reset", {}).get("local_taps_um")), outs=[[x, y] for _, x, y in outs], core_resets=core_rst)
         cache[key] = T

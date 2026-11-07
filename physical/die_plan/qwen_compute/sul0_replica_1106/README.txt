@@ -48,3 +48,28 @@ GRT results (11-06, intel1, both builds identical in shape):
     problem, not demand.
     Next form (reset_tree class, not part of this patch): site reset relays/taps outside the lane x-span (west strip
     x < 190 or east of x 605), or route the relay hop around the lane.
+
+Reset relay form (11-06 follow-on, DIE-QC-85):
+  Kit-local vC (vA + re-site) and vD (vC + PD 0.40), built on intel1 from the start (synth -> GRT).  Placement only:
+  no RTL change and no cycle change.  rst_hopfix.py moves 9 relay sites (18 with the u_srl copies) so that every hop
+  has an L route outside the grown lanes.  Relay order, depth, kind, the lane tap sites (lane rst_n pins: lane0 397.3/34.7,
+  lane1 381.5/354.3 south face, in their own channel) and the reset_tree.tcl hop list are unchanged.
+    u_rrl_33 609.1/539.9 -> 609.1/300.0    u_rrl_34 470.8/306.7 -> 609.1/30.3    (lane0 tap u_rrl_35 from the south channel)
+    u_rrl_37 470.8/626.4 -> 609.1/600.0    u_rrl_38 470.8/626.4 -> 609.1/349.9   (lane1 tap u_rrl_39 along the lane1 south face)
+    u_rrl_25 470.8/1041.1 -> 185.8/1041.1  u_rrl_26 375.8/1317.6 -> 185.8/1317.6 (west mouth, then north strip to u_rrl_27)
+    u_rrl_28 565.8/1041.1 -> 609.1/1100.0  u_rrl_29 -> 609.1/1317.6  u_rrl_30 470.8/1317.6 -> 400.0/1317.6 (east strip, north strip)
+  Estimate: crossing hops 8 -> 0 (4 raw + 4 run nets), max hop 380.0 um (plan reach), no relay inside a grown lane box.
+  Plan image sul0_reset_vC.png (viewed): before (red = crossing) / after.
+Class rule (tools/die_plan/reset_tree.py resite_crossing / resite_type / native_resite_sites; plan
+  reset.relay_resite_crossing, default ON, false = pre-11-06 trees).  A hop with no L route outside every grown blockage
+  moves the free relays of its chain (single child, not at a tap) between the fixed anchor above and the fixed node
+  below.  They go onto the shortest obstacle-avoiding rectilinear route (Hanan grid of the grown faces), spaced so that each hop is
+  a <= 1-bend sub-path <= plan reach.  The graph is unchanged and a tree without crossings comes back byte-identical.
+  Unresolvable hops are left as they are and reported.
+  Captured native trees (bound_native_reset.json) are never re-solved.  native_resite_sites() gives the sites-only
+  bound_reset_placement overlay (bound_reset_contract.placement, needs a PASS image review).  On the captured
+  cl76fb247e tree it resolves all 4 crossings (moves u_rrl_24/25/26, 28/29/30, 32/33/34, 36/37/38, max hop 380).
+  QC census (die_plan.json, default ON): 5 of 65 non-hard types change reset sites: slw_su_l1 7, slw_su_c 6,
+  sle_su_l1 8, sle_su_c 4, native59 2.  The current plan su_l0 trees (30/31 relays, grid topology) have no crossing.
+  Tests: test_reset_tree.py (4 new) and every die_plan test that imports reset_tree: 452 passed.
+  test_check.py::test_run_keeps_plan_path_for_plan_relative_files fails on the base too (gen_phys S.Plan.rect).
