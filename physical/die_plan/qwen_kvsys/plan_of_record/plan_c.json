@@ -1708725,7 +1708725,14 @@
       1900.8,
       1036.8
      ]
-    ]
+    ],
+    "landing_ring_wreg": {
+     "buses": [
+      "i_host_fdi",
+      "i_host_link_rst_n"
+     ],
+     "dsrep": 1
+    }
    },
    "reset": {
     "tap_um": [
@@ -1708809,7 +1708816,8 @@
      1876.5,
      496.97
     ]
-   }
+   },
+   "landing_control_status_copy": true
   },
   "kv3_sys_SD_v1": {
    "module": "kv3_sys_SD_v1_part",
@@ -1709522,7 +1709530,14 @@
       1900.8,
       1036.8
      ]
-    ]
+    ],
+    "landing_ring_wreg": {
+     "buses": [
+      "i_host_fdi",
+      "i_host_link_rst_n"
+     ],
+     "dsrep": 1
+    }
    },
    "reset": {
     "tap_um": [
@@ -1709606,7 +1709621,8 @@
      1876.5,
      496.97
     ]
-   }
+   },
+   "landing_control_status_copy": true
   },
   "kv3_sys_c": {
    "module": "kv3_sys_c_part",
