@@ -1,0 +1,87 @@
+{
+ "netlist_stdcells": 175564,
+ "landing_cells_per_bit": 24.62,
+ "attribution": {
+  "lep_lane3_tx": 9855,
+  "lep_lane2_tx": 9808,
+  "lep_lane1_tx": 9175,
+  "lep_lane0_tx": 9215,
+  "mu_land": 4679,
+  "lep_shared": 23245,
+  "hub_io_fault_o0": 19,
+  "lep_lane1_rx": 3714,
+  "lep_lane3_rx": 3718,
+  "lep_lane2_rx": 3729,
+  "lep_lane0_rx": 3733,
+  "hub_io_lw_o": 49,
+  "hub_io_ctrl_o0": 116,
+  "hub_io_lepk_o0": 3325,
+  "hub_misc": 2943,
+  "lep_lo3": 1106,
+  "lep_lo2": 1106,
+  "lep_lo1": 1106,
+  "lep_lo0": 1106,
+  "pair": 11,
+  "coll_i0": 12729,
+  "coll_i1": 12729,
+  "coll_i2": 12729,
+  "coll_i3": 12729,
+  "hub_io_lepf_i0": 453,
+  "hub_io_lepk_i0": 26845,
+  "hub_io_unit_i0": 1484,
+  "coll_o0": 1027,
+  "coll_o1": 1027,
+  "coll_o2": 1027,
+  "coll_o3": 1027
+ },
+ "macros": {
+  "pair": 4,
+  "mu_land": 5,
+  "lep_lane0_rx": 5,
+  "lep_lane1_rx": 5,
+  "lep_lane2_rx": 5,
+  "lep_lane3_rx": 5,
+  "lep_lane0_tx": 5,
+  "lep_lane1_tx": 5,
+  "lep_lane2_tx": 5,
+  "lep_lane3_tx": 5
+ },
+ "forms": {
+  "D1_same_region": {
+   "hub": 124996,
+   "r0": 14870,
+   "r1": 14870,
+   "r2": 14870,
+   "r3": 14870,
+   "max_piece": 124996,
+   "cap_150k": true
+  },
+  "D1_own_region": {
+   "hub": 177716,
+   "r0": 28003,
+   "r1": 28003,
+   "r2": 28003,
+   "r3": 28003,
+   "max_piece": 177716,
+   "cap_150k": false
+  },
+  "D2_same_region": {
+   "hub": 82515,
+   "r0": 25190,
+   "r1": 25150,
+   "r2": 25783,
+   "r3": 25830,
+   "max_piece": 82515,
+   "cap_150k": true
+  },
+  "D2_own_region": {
+   "hub": 135235,
+   "r0": 38300,
+   "r1": 38260,
+   "r2": 38893,
+   "r3": 38940,
+   "max_piece": 135235,
+   "cap_150k": true
+  }
+ }
+}
