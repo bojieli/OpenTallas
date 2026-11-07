@@ -1902,7 +1902,7 @@
     "ot_s81sl_leaf__t50": "KW-FIX-22 11:0x: PLAN loop stop. Stale retry entries ot_s81sl_leaf__t50@2..@5 (KW-FIX-4/6 11-03/04) matched today's new attempts, so the wave relaunched it every tick (10:28 a4, 10:37 a5, 10:57 a6) into the same kit_topology fail-closed 'kit_istations: leafup_o0 stations already inserted'. Same kit_istations class as kv_leaf__t1/t3/t4/t5 (DIE-S81-69 owns, COORD 10:2x (3)); release with that plan fix"
    },
    "queue_src": "main@7281ac2667f0d31dd65579e31675f78dd18b75ec",
-   "work_root": "/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/s81/kit-wave",
+   "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave",
    "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
    "retry_fix": {
     "__batch_kwfix3_0450": "101 rows appended 04:5x = KW-FIX-3 S81 KIT_PREFLIGHT class fix, merged main 3fe3f58473f (b15ddb969a4 bound macro paths, 19e83948214, b213d81bfd7 clock_entry_clear/macro_channels), in wave src 84291033b77; tools gen_phys/kit_contract change every macro-bearing kit; the CANCELLED-VOLUME leaf rows are the same leaf class with the same macro inputs; the KW-RESUME nochange guard refuses any kit whose inputs did not change",
@@ -3368,7 +3368,7 @@
    "hold_items": {
     "sle_hc0__cl05696ed1": "KW-FIX-12 08:5x DIE-QC-76 stopped 08:45 per COORD, GRT rising; no resubmit of same form, DIE-QC-76 form lifts"
    },
-   "work_root": "/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/qwen_compute/kit-wave",
+   "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
    "retry": [
     "sle_st_a_v1__cl67389ecd@1",
@@ -5155,7 +5155,7 @@
  "note_otrun_kw22": "KW-FIX-22 11-06 10:1x COORD 10:0x (epyc2 admits 638 GB, 0 waiters; batches to epyc2): ot_run kw21 -> kw22 = same wrapper on fleet/kw22-230e562 (230e562aa5c + SPILL_DST_ROOT_FLOOR epyc2 500->200 per owner 11-05 all-disks-scratch, and a spill that writes only on the epyc2 root fs (scratch3 = root there, 452 GB) is no longer refused by the 51-GB scratch2 floor). Async PLACE (--stage, unpinned) waiters now spill to epyc2 via the intel2 relay. epyc2 NOT added to die hosts: the gen->host sync runs from the gen host and epyc5/6 cannot ssh epyc2. Revert: ot_run back to kw21/ot-run.",
  "note_otrun_kw23": "KW-FIX-23 13:5x COORD 13:2x/13:5x (epyc5 14-15 waiters ~800 GB while epyc4/epyc2/epyc6 admit): the kw22 wrapper forced OT_RUN_SCRATCH_DISK_FLOOR_GB=100 for every scratch dir, and only epyc5's scratch disk (139 GB) passes 100 (epyc2 67, epyc4 77, epyc6 71), so every spillable wave PLACE (--stage) re-placed onto epyc5. kw23/ot-run = kw22 with floor 40 for /srv/opentallas-scratch3 dirs (those kits write the root fs, which keeps its own ROOTSCR floor); scratch2 dirs keep 100. Waiting S81 PLACE clients stopped once (exact pids) -> INFRA relaunch. Revert: ot_run back to kw22/ot-run.",
  "note_kw24_epyc6_hold": "KW-FIX-24 COORD 16:3x URGENT: epyc6 scratch2 10-16 GB -> epyc6 out of hosts/place_prefer/gen_hosts (global + every die) so no new launch, restage or resume targets it until its scratch2 >= 80 GB; *_base lists keep epyc6 (restore = copy hosts/place_prefer/gen_hosts back from *_base). Running containers untouched.",
- "gen_disk_min_gb": 80,
+ "gen_disk_min_gb": 100,
  "note_kw24_gendisk": "KW-FIX-24 COORD 16:2x item (b): epyc6 scratch2 44 GB REFUSED -> intel1 added to gen_hosts of qwen_kvsys/hbm/s81_head/qwen_compute (inputs mirrored from epyc6 at the same paths: kw21/src_c926f, kw23/src_e9eda, kw23/bind_kv_q + asbuilt_kv_7da, kv plan_of_record, hbm d44v35/d44v8h/rf1 json, dh55 + kw23/prep_l48ui, kw22/bind_qc_g). ot-run gives a REFUSED host no row, so pick/restage already skip it; gen_disk_min_gb 80 (COORD 16:3x) needs claude/kw-fix-24-gendisk-1106. intel2 not added: its root fs (scratch3 work roots) has 35 GB above the 100-GB keep < the 40-GB scratch3 floor. Revert: drop intel1 from these gen_hosts",
  "note_kw24_no_resume": "KW-FIX-24 COORD 17:5x: kits homed on epyc6 move to the hub at their next autopilot submit (claude/kw-fix-24-evac-1106 e3d732d2cf7; inert before that merge). Drop the epyc6 entry when epyc6 scratch2 >= 80 GB.",
  "note_kw24_queue_push": "KW-FIX-24 11-06 18:48 COORD 18:5x QUEUE PUSH: place hosts + place_prefer epyc4, epyc2 first (scratch3 362/401 GB; kw17 watcher not running), epyc5, intel1; epyc6 stays out (no_resume_hosts); max_launch_per_tick 40 -> 60; retry += infra casualties (5) + HBM queue-rejected (7)",
@@ -5166,7 +5166,8 @@
  "note_kw24_stale": "KW-FIX-24 11-06 20:06 COORD 20:0x (3): S81 station rows stale on TAPWIN-PORT (I176 11-05 18:23) rebuilt on src_7281a (per-port SDC; ft_hop_lockup is not on main = OFF): 13 stations + t25 (bind) + leaf t22/t28; t14/t38 wait for ftcorr batch 1. Class sweep: type-kit timing FAIL rows started before I176 on HEAD (7) + KV (1); QC types ride the qcbatch re-bind (20:0x (2)). Hosts epyc5, intel2, epyc6 first (20:0x)",
  "note_kw24_genfix": "KW-FIX-24 20:2x: gen_hosts from a measured input check (plan, src bind.py, kit_rtl asbuilt/script, every bind.f source): KV whole only on epyc5/epyc6 (epyc4 lacks 60, intel2 60, intel1 53); S81 whole only on epyc5/epyc2 (kit_rtl script + codex-wave-bind asbuilt + wave_cg_frz plan); HEAD/QC/HBM whole on all 6",
  "restage_max_per_tick_prev_kw24": 60,
- "restage_max_per_tick": 0,
+ "restage_max_per_tick": 12,
  "note_kw24_norestage": "KW-FIX-24 20:4x RESTAGE ping-pong (49 moves 19-20 h, waiters moved every tick, never admitted): restage off (restage_max_per_tick 0) until claude/kw-fix-24-restagehyst-1106 (30-min min wait) merges; then restore restage_max_per_tick_prev_kw24",
- "note_kw24_fill56": "KW-FIX-24 21:2x COORD 21:1x/21:2x (epyc5/epyc6 ~31% load, 0 waiters): HEAD/HBM/QC new attempts gen + place on epyc5/epyc6 (inputs whole there, measured 20:1x); prev in gen_hosts_prev_kw24f"
+ "note_kw24_fill56": "KW-FIX-24 21:2x COORD 21:1x/21:2x (epyc5/epyc6 ~31% load, 0 waiters): HEAD/HBM/QC new attempts gen + place on epyc5/epyc6 (inputs whole there, measured 20:1x); prev in gen_hosts_prev_kw24f",
+ "note_rebal1": "REBAL-1 23:2x COORD 23:1x + OWNER 22:5x: S81+QC new attempts under kw26-wave-1106 (epyc5: symlink scratch3->scratch2, so its small root is spared; epyc2/epyc6 real scratch3); restage on at 12 per tick (30-min hysteresis on main); gen_disk_min_gb 100 = kw23 wrapper floor for scratch2 work roots, so a host the wrapper would park is not preferred. max_launch_per_tick left at 60 (epyc5 margin >100). Revert: work_root kw24-wave-1106, restage 0, gen_disk 80."
 }
