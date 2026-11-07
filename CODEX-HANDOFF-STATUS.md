@@ -1,52 +1,150 @@
-# OpenTallas — current handback to Claude
+# OpenTallas — Claude -> Codex standby handoff
 
-Updated 2026-11-06 04:38 PST. **Claude is back. Codex is parked and handing control back**, overriding the historical weekly-reset estimate. Healthy fleet jobs and the installed cleanup cron remain running.
+Updated by Claude COORD at 2026-11-06 21:3x PST. **Claude is running now. This file is only used if Claude hits a usage limit.** If you are reading it because the auto-switch started you, Claude's lanes have all stopped too (same account), so you own every scope below until told Claude is back.
 
-Read the final coordinator section in `CODEX-LOG.md` / `handoff/codex_to_claude_20261106_0433.md`, especially FINAL HANDOFF OVERRIDES. Detailed per-lane handbacks below are authoritative; do not use older running-stage notes.
+Read first: CODEX-ROLE.md, AGENTS.md, ~/coord/METHODOLOGY.md, then the tail of `lanes/COORD-REVIEW-QUEUE.md` from 19:00 PST 11-06 (every RULING line there is binding).
 
-## Progress
+## Progress (counter: `cd ~/coord && python3 -I tools/release_tree_plan.py --force && python3 -I tools/release_tree_render.py --summary`)
 
-Latest published census **2026-11-06 04:05 PST**, errors[]. Physical core designs mean module + outline + pin arrangement.
+190 counted items at 21:05 (flat since 19:05):
 
-| Die | Signed core views | Signed partition types |
+| Die | Cores | Types |
 |---|---:|---:|
-| S81 | 52/58 | 6/205 |
-| HEAD | 4/4 | 12/25 |
-| Qwen compute | 18/20 | 0/119 |
-| Qwen KV/system | 29/32 | 0/56 |
-| HBM | 46/102 | 0/81 |
+| S81 | 54/58 | 9/205 |
+| HEAD | 4/4 | 14/25 |
+| QC | 24/26 | 0/119 |
+| KV | 30/32 | 1/56 |
+| HBM | 54/104 | 0/81 |
 
-**149/216 core views +18/486 types =167 counted items.** OutsideHBM103/114 cores;11 remain. HBM separately48/94 signedMODULES; older48/102 mixedmetrics was wrong. Brmw/injmodulecredits alreadycounted but currentPORpinmatching unresolved; N4rsq componentoutsidewholePOR. No complete die/G5 released.
+Die gates (BIND/GRT/STA/CLK) are not yet passed on any die. ETAs: non-HBM cores ~11-07, types ~11-11..13, HBM cores ~11-11/12, HBM types ~11-18/21, die-level ~11-14..16 (HBM ~11-21/24).
 
-## Release and execution
+## OWNER rules added 11-06 (binding; older ones are in CODEX-ROLE / queue)
 
-- Main confirmed clean **d3c2675c51f720f54820b091e9e10bde2398ddfd == origin/main**; tags `flow-20261106-ar-head/aq-qc/an-kv/at-s81/bg-hbm`.
-- 833ps; setupTT0 uncertainty/holdFF25, old60setup INFO. No SS closure or clock relaxation. Review actual image before route; preserve failures; source/protocol/model and physical qualification are separate.
-- User accepts extra latency/stages; all changes must be exact and priced. No blind independent ready/valid FF insertion: WBK actual partner tests found corruption.
-- Hub=intel2; local `/home/ubuntu/OpenTallas` protected. Own narrow worktrees `--no-checkout` then sparse paths BEFORE checkout. Fullsourcecheckout artifacts caused50GBincident.
-- ActualFS device matters: intel1 andepyc2 scratch3 are ROOT-backed. No directOWNERheavy-root exception located; no newheavyROOTfallback. VerifiedE5/E6scratch2 distinctfromroot. Preservehealthyprogressingjobs, no age/patternkills.
+1. **"do not wait for them to merge before rebuild."** (21:2x) A READY fix is rebuilt AT ONCE from its branch head in its own flow tree on the least-loaded host (epyc5/epyc6 now). Signed results re-sign on the main flow tag after the merge (resign.py, PROVENANCE kind:resign) to count. Never hold relaunches for the merge train.
+2. **Keep the fleet loaded.** At 21:1x the fleet was at 49% with 0 ot-run waiters. Target is >=0.85 x cores and >=4 waiters on every host.
+3. **Types safe by construction, all 5 dies** (TYPE-SAFE). Wiring and hold are fixed in the generator, not by rounds of patches:
+   - track-budget corridors;
+   - clock follows data (per-port tap windows, the TAPWIN-PORT SDC);
+   - subtree_balance.tcl and ft_spread.py are default-on;
+   - midpoint lockup latch `clock.ft_hop_lockup` is used only where a per-port rebuild still fails.
+4. **Archive closed, delete non-closed** (ARCHIVE-1106 DONE). Signed results are archived to AGIdock `/archive/opentallas-signed-1106/<host>/<path>`, and a stub is kept on the host (signoff + PROVENANCE + final views + ARCHIVED.json). The key ~/.ssh/agidock_ot is on localhost only.
+   - Never delete a stub.
+   - Never delete kit_wave.json paths or asbuilt paths.
+5. Standing rules:
+   - safe forms, not retries;
+   - two strikes, then RE-FORM (<=150k cells, util <=0.45, registered faces);
+   - PIN CYCLES are cheap;
+   - vA/vB built in parallel, first to sign off wins;
+   - only sign-off blocks (TT setup >= 0, FF hold >= 0, DRV/DRC 0, LEC EQUIVALENT);
+   - io-only hold counts as NEEDS_PARENT;
+   - late-stage ECO is OK;
+   - batch fixes by class;
+   - owner questions in plain text with a default;
+   - say "signed off".
 
-## Cleanup completed and routine
+## main and merge train
 
-- Final **365.21GB accounted artifacts**,67unique receipts/26exactcleanup-rehome stops, baseslabelled notnetDFclaim. `tmp/codex-reclaim-1106/user-order-cleanup-rollup.json`.
-- Installed immutable `~/.local/lib/fleet/released-reaper-1106/ot-reaper.py` @4be4871f1c0/main489bcf: **15-minute explicitmanifestqueue cron**, no legacybroadstrip/noagekills. Alllive/qualified/source/neededcheckpoint guards; verifieddestinations/DPIheaders/Git/symlink protections. FirstrealRingA17ODB andSPNa4 receipts applied.
-- Latestuser authorized cleanup including selectivecreator-releasedgeneratedcache underemptyancestor.keep; unique source/views/runtime stillpreserved. Do not reask that resolved question.
-- Newadmissionmountguard0c742 deployedall6 atomically; oldcapturedwaiters unchanged. Futurecopyback230 stagedall6 at `~/.local/lib/fleet/230e562aa5c/ot-run`. TwoHEADjobs capturedoldbaseebd, do not edit them.
+main = `b37de6e7087` (19:54). Merge lane ROOT-MERGE-46 takes merges on intel2 central `/home/ubuntu/OpenTallas`, using the merge lock and a plain merge plus tests. Approved order, none landed yet:
 
-## Critical pending integration
+1. srcready b5710c267d
+2. qcbatch 9976373442 (27 QC types, relay_resite_crossing default ON)
+3. romqsplit c34808abe5 + framepairs 1152282347 (S81 rom_q halves count after this)
+4. colst aa27610ffa
+5. ftcorr f301811b71
+6. type-safe-2 e23c27ec97
+7. kv-fdicdc 82ac69b35d
+8. PART 51 5e5e75c6dd, PART 52 7f9bb27ea2
+9. centry-m5only 27427d7af5
+10. kv-iocor 26fc32ca, then kv-slgland d725b196f4
+11. KW-FIX-24 fixes:
+    - restagehyst 7adf9c470d
+    - lecunit 2ce49bbe04
+    - leafrep a8fae7f643
+    - pinband 1b7ce20e62 is HELD until its moves are confirmed on the 0.192 um grid
+12. fgctx cc852ad06c
+13. ONE flow-tag cut for all dies, then AUTO-RESIGN.
 
-1. **8dc1f257cb** NEWcapture cfg.ot_run override and **e6ce70c648f** gen_env finiteSlang32912 persistence are READY UNMERGED. Needed before sourcecadence/4C retries. D3source/historyclosedE5/E6 `codex-wave-1106/src_d3c267`; globalordinarywaves still2c705/p35, KVownfaecd. Holdresetidentity/unadoptedfamilies; no plan/POR changes inferred.
-2. **3b2dda053b4 +9e0ca4bb878** LOCALq_spb2 verifier/consumer READY UNMERGED; actualoriginalbody/27ports/UID/reset23d9/narrowproof/2signedBBassemblyPASS. GlobalFAIL1 remainsvisible. Fleet exactoverride E2 `codex-hbm-parent-1106/q_spb2_component_overrides_v1.json`; no prep/P&R active. Release→onefreshprep/census/render/LEC/PLACE; no route yet.
-3. Other READY refs are in per-lane handbacks: h9b9ad,SUa83,inj764,brmwf862,q3snap2d26,TX9629,HBCfcfb,PMAoutputs ea9,ROMQadapter945,loadbank243,START94f,DS95b550. Review exact dependencies; never merge broad candidate ancestry.
+Also pre-approved: the HBM rest_1c spipe1 plan event, on its READY.
 
-## Lane state and handbacks
+## Fleet
 
-- **S81 cores:** `lanes/CODEX-S81-CORES-HANDBACK-1106.md` supersedesallolderactiveclaims. BKSEL/ENGRR/IDX ALL EXITED1/1/2. BKSELTT-82.93/FF-69.55/DRC37secondaryclocktakeoffinsideOBS; ENGTT-95.15/FF-234.83DRC0/NEEDS_PARENT; IDXDRT0155M6guidevsM2-M5ceiling. No newrepair launched. COLL E/W firstlateECOTT35.66/FF-8.12,DRVremaining, healthyi2. ROMQHEAT ECO E5unit960081 preFF+.04; HWTT5.34/FF-11.28 plus3clock-slew nets needsclockrepair event. DirecttransparentROMQparentprep preserveshalves; no usablewrapperrows/currentgrowthcollides104instances.
-- **S81 types:** `lanes/CODEX-S81-TYPES.md`. n4WIP44bf69caa67 boundreset exact306source/current308reject, finalhardeningNOTtested; historicalT30authoritymissing. T25/T30actualplacementreaches714/792um, no route. t13poseunqualified, stage595inbandresetshared9cores. Station splitnotimplemented: x575balancedwholebundlecut, unsplit~266kafterrepairbuffers. B41E6unit2796654usefulFREGdiagnostic only.
-- **QC/HEAD:** `handoff/codex_qc_head_to_claude_20261106.md`, `handoff/codex_head_to_claude_20261106.md`. HC0fourAPchildrenSIGNED+EQ, freshAPGENPASS, parentrouterecipeREADY NOTLAUNCHED. NLredohealthyE4unit1115143RCX42%; NKTT-246.87/FF-17.89/50M6PGshorts,276INVlegtargetstaged. SCcontrollersecondtargetE4scope1852141DRThealthy;9ringsqualified. Seven-typefullnativePASS, no newtypecredit. HEAD4corescomplete;clockisland/PHYbudget/nativeclockaccess unresolved. Actualca0840+457.747psA/Y providerrecovered; noKchange. Twoexactstationvehicles failedSPNband/END7longpaths; noCTS. HBC/PMAoutsourceREADY, no HOST/G5authority.
-- **KV/TOK:** `handoff/codex_kv_to_claude_20261106_back.md`, `handoff/codex_kv_order_peer_20261106_0432.md`, `handoff/codex_ds_native_20261106_0432.md`. PEERA TT-4.35/1FF1.10/DRV; PROMPTC2EQbutTT-55.13FF-10.46; INGC2routed/PINPASS/existingTC-91.81 decodedbroadcast. PAD2strict160part/56typebindPASS actualPADW2/PAD2+8K/21902straps, newtopologyreceiptE5. Wi21childprivate; fourCDC16aprofilejoinWIPe95c, no raw-nativeequivalence. DSfullHOST E2unit3890763healthy440/575queued/391SEQexactfault0, KS/VO pending. QC/KVfunctionalpairconstruction stillBBmodels/namespace/phaseopen; noG5.
-- **HBM:** `handoff/CODEX-HBM-RETURN-20261106.md`, `handoff/codex_hbm_gaps_to_claude_20261106_0432.md`, `handoff/codex_wbq_body_to_claude_20261106.md`. BankPG6TT8.79FF-19.53/DRV, standardE6ECOunit953001live; h9bdiagnosticall25567PROVED/guardmutantcaught butofficialcertificationowed. P1/P6canonicalactualarith24/144PASS, currentdie/ownednotadopted. WBKliteralOUToldFAIL andsealedKshare4FFtuplebad10; reciprocal4peerKseams/elasticlinksNOTimplemented. SUdirect48/indirect54proofPASS/newphysical4152260. InjPLACE+LEC0scope897484inspectbeforeCTS. EXPF4GRT0183. TKMCTS1282900,+1pricedHBM45. BODYissuer346UNPROVEN, healthyGRT. VMS805471DRC35; q3A/B finishwaiters; pcol908921; q3a105836. Q2NFfb304NOTCONSUMABLE finalrenamebug, WIPb5dfixunconfirmed; best2hardstores+softcontrollerparent/mapqueued. Keeporiginalproofs.
+ot-run is on intel2: `~/.local/bin/ot-run --status`. Hosts: epyc2, epyc4 (256T), epyc5, epyc6, intel1, intel2 (= localhost in ot-run).
+
+At 21:1x:
+- epyc5 and epyc6 were ~30% loaded.
+- epyc6 scratch2 is tight (~110 GB free).
+- No heavy jobs on the owner laptop/localhost.
+- Kill exact PIDs only; never pkill -f.
+
+## Live lanes at handoff (Claude subagents; they stop with Claude — pick up their scope)
+
+Each lane posts to lanes/COORD-REVIEW-QUEUE.md; its last STATE line there has paths and the next step.
+
+- **ROOT-MERGE-46:** runs the merge train above (tests were at epyc4 /tmp/rm46_b15).
+- **KW-FIX-24:** kit-wave class fixes (above).
+  - At 21:1x it was told to run a pre-merge wave from the branch heads on epyc5/epyc6.
+  - QC 27 first, then KV slgland 35, then S81 grt-overflow/post-cts-hold rows.
+- **TYPE-SAFE-2:** structural type forms.
+  - Canaries: S81 t14/t26 tsA/tsB, HBM q_spb2 vB.
+  - Widen to ~77 grt-overflow/post-cts-hold rows on epyc5/epyc6.
+- **S81-SSTN-HOLD-1:** 14 slice_station FAILs were stale pre-TAPWIN-PORT kits.
+  - vP SDC-only re-kits count via resign on cl-s81.
+  - t14/t26 vP ECOs on output-port hold.
+- **DIE-S81-72 (S81 die owner):**
+  - 16 stale rows;
+  - leaf batch 2: t54 PIN CYCLES +1, t69 u_vs core move, t57 2-tap move;
+  - rom_q halves (hw re-signed at epyc5 /srv/opentallas-scratch2/claude/s81-romq-b5/hw_x8_resign_at).
+- **S81 core lanes:**
+  - S81-ENGRR-B6 eng_rr_e: vC and vE (vE −97.9 ps on u_xq.u_aq.s0_x); ECO line closed.
+  - S81-IDX-B5 idx_tx: vG/vH.
+  - S81-BKSEL-RF6 bksel: vD-ECO/vE.
+  - S81-RCK-3: serdes PHY pilots.
+  - S81-T51-RECUT: register re-cut, in DRT.
+- **DIE-QC-85 (QC die owner):**
+  - su_l0/SU2/FE/fw rebuild from qcbatch head (START4 fix);
+  - coll_ftm ECO pass 3 on epyc5 (pass 2: TT −13.73 ps, slew fail).
+- **QC-A0C-B6:** QC NL/NK forms and ECOs.
+- **DIE-KV-84 (KV die owner):**
+  - KV slgland/iocor/fdicdc rows from branch heads;
+  - KV die-kv-61 bind/ is lost and must be regenerated if needed.
+- **KV-ING-6:** ingest i2 DRV ECO (intel1 /srv/opentallas-scratch2/claude/kving4/vE_eco/i2 is protected).
+- **DIE-HEAD-76:** 7 stale rows relaunched at 20:47, hd_spn vC route.
+- **DIE-HBM-82 (HBM die owner):**
+  - 21 stale rows;
+  - svgr_bk (B) FIFO/bank split, plus probes vPW45/vPW60;
+  - svgr_own RF3 registered lane selects.
+- **HBM form lanes:**
+  - HBM-FORM-TIMING-13: rest_1c PIN CYCLES +1, vC/vD.
+  - HBM-FORM-SPLIT-14 (+ SUX, OPSB sub-lanes): split forms.
+  - Also live: B128 vA2 with LEAFSLEW, q3_edge_link, flc_eco1, epyc6 HBM core batch, d44v PART 40, rx_bm3_rest + svgr_top RE-FORM.
+
+## Hourly loop (what Claude runs; keep it running)
+
+- LOOP-GAP check at :00/:20/:40:
+  - rule on every READY/ASK older than 30 min that has no [COORD] reply;
+  - restart dead lanes whose scope is still open;
+  - grep the kit-wave log for 'KIT-WAVE failed';
+  - make sure ot-run has waiters on every host.
+- HOURLY:
+  - run the counter and add a lanes/SIGN-RATE.tsv row;
+  - run `python3 -I tools/failure_breakdown.py` and paste it into the RELEASE_TREE.md BREAKDOWN block, plus line 3;
+  - view 2 GEOM renders;
+  - add a HANDOFF.md line;
+  - commit with `timeout 280 ~/coord/bin/coord-commit.sh "msg" files` after `git fetch -q origin coord/state && git reset -q --keep origin/coord/state`.
+- Relaunch FAIL rows older than the last class fix at once, from the branch head if it is not merged yet.
+
+## Never
+
+- Never print keys.
+- Never touch ~/.claude, /home/ubuntu/closed_archive, existing /archive dirs (except new writes under opentallas-signed-1106), or owner VMs.
+- Never run git in localhost /home/ubuntu/OpenTallas.
+- Never use git add -A, force-push or stash.
+- Cherry API is read-only.
+- Deletions need a manifest first and the PROTECTED union. Skip .keep, live mounts, mtime <6 h and locked worktrees.
 
 ## Handback
 
-Root coordinator full section and FINAL OVERRIDES are in `CODEX-LOG.md` and `handoff/codex_to_claude_20261106_0433.md`. All owners were told to park/no new launches; healthyfleet/cleanupcroncontinue. Sourcecentralclean; no halfmerge. Current retainedsource/provider/clock artifacts listedinlanehandbacks mustnotbe treatedasunused.
+When told Claude is back:
+- park new launches and keep healthy jobs running;
+- append `## Handoff to Claude <date time>` in CODEX-LOG.md with per-lane state (paths, running units, next step);
+- reply HANDOFF DONE.
