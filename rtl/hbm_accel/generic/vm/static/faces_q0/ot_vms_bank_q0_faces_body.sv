@@ -30,6 +30,7 @@ module ot_vms_bank_q0_faces_body #(
     parameter integer RG = 2,
     parameter integer WG = 2,
     parameter integer EG_WIDE = 0, // strap6: 1 = egress payload from the wide leaves only (identical eg whenever eg_v)
+    parameter integer WRITE_PREDECODE = 0, // opt-in, zero new calendar edges
     parameter integer MUT = 0 // 1: wrong read owner; 2: write-sector permutation; 3: CE population fault; 4: write enable ignores the slot (any active source writes)
 ) (
     input wire clk, rst_n,
@@ -59,9 +60,13 @@ module ot_vms_bank_q0_faces_body #(
     output reg [17:0] status
 );
     // Pipeline identity fields retain the closed B2 4-bit encoding.
+    // Simulation-only bound check: Yosys read_verilog elaborates every module at its DEFAULT parameters (RG=2), where a
+    // constant-true $fatal in an initial block is an unresolvable task; the only instantiation (q0_faces_core) is RG=5/WG=2.
+`ifndef SYNTHESIS
     initial begin
         if (RG != 5 || WG != 2) $fatal(1, "static bank lane bounds");
     end
+`endif
     // ------------------------------------------------------------------ SECDED (39,32), same code as ot_hgi_vm_core
     function automatic [6:0] colv(input integer i);
         integer a, b, c, n; reg [6:0] v;
@@ -148,6 +153,16 @@ module ot_vms_bank_q0_faces_body #(
             for (integer g = 0; g < WG; g = g + 1) wq_v[g] <= wq[g*281 + 280];
             dq_v <= dq[280]; kq_v <= kq[280]; xq_v <= xq[275]; x2_v <= xq2[275]; pq_v <= pq[284];
         end
+    // Decode at the existing payload capture using same-edge raw packet and straps.
+    // This is the exact prior post-register decode, with no added cycle.
+    reg [WG*12-1:0] wq_predec;
+    reg [11:0] kq_predec, dq_predec;
+    always @(posedge clk) begin
+        for (integer g=0;g<WG;g=g+1)
+            wq_predec[g*12+:12] <= wq[g*281+280] ? dsec(wq[g*281+264+:16],bid,sid) : 12'd0;
+        kq_predec <= kq[280] ? dsec(kq[279:264],bid,sid) : 12'd0;
+        dq_predec <= dq[280] ? dsec(dq[279:264] ^ (MUT==2?16'h0008:16'h0000),bid,sid) : 12'd0;
+    end
     // output registers: control valid + payload
     reg eg_v; reg [274:0] eg_d; reg [RG-1:0] rr_v; reg [RG*256-1:0] rr_d; reg pr_v; reg [264:0] pr_d;
     assign eg = {eg_v, eg_d}; assign pr = {pr_v, pr_d};
@@ -176,9 +191,9 @@ module ot_vms_bank_q0_faces_body #(
     for (genvar wl=0; wl<WLEAVES; wl=wl+1) begin : g_write_leaf
         wire [275:0] source_payload;
         if (wl<WG) begin : g_wide
-            assign source_payload={dsec(wq_r[wl*281+264+:16],COMPILED_BID,COMPILED_SID),wq_r[wl*281+:264]};
+            assign source_payload={(WRITE_PREDECODE!=0 ? wq_predec[wl*12+:12] : dsec(wq_r[wl*281+264+:16],COMPILED_BID,COMPILED_SID)),wq_r[wl*281+:264]};
         end else if (wl==WG) begin : g_coll
-            assign source_payload={dsec(kq_r[279:264],COMPILED_BID,COMPILED_SID),kq_r[263:0]};
+            assign source_payload={(WRITE_PREDECODE!=0 ? kq_predec : dsec(kq_r[279:264],COMPILED_BID,COMPILED_SID)),kq_r[263:0]};
         end else if (wl==WG+1) begin : g_cw
             assign source_payload={1'b0,xq_r[274:0]};
         end else if (wl==WG+2) begin : g_packet
@@ -186,7 +201,7 @@ module ot_vms_bank_q0_faces_body #(
         end else if (wl==WG+3) begin : g_ccw
             assign source_payload={1'b0,x2_r[274:0]};
         end else if (wl==WG+4) begin : g_dma
-            assign source_payload={dsec(dq_r[279:264] ^ (MUT==2?16'h0008:16'h0000),COMPILED_BID,COMPILED_SID),dq_r[263:0]};
+            assign source_payload={(WRITE_PREDECODE!=0 ? dq_predec : dsec(dq_r[279:264] ^ (MUT==2?16'h0008:16'h0000),COMPILED_BID,COMPILED_SID)),dq_r[263:0]};
         end else begin : g_padding
             assign source_payload=276'd0;
         end
