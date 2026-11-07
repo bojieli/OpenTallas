@@ -30,7 +30,8 @@ module ot_v41_rom_elem_q_qxpq_w10_gb_shell #(
     parameter integer IOREG = 0,
     parameter integer OUTPUT_NEG = 1,
     parameter integer INPUT_STAGES = 1,
-    parameter integer OUTPUT_STAGES = 1
+    parameter integer OUTPUT_STAGES = 1,
+    parameter integer INPUT_PAIR = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -68,6 +69,8 @@ module ot_v41_rom_elem_q_qxpq_w10_gb_shell #(
     // Positive INPUT_STAGES/OUTPUT_STAGES stage EVERY bit at equal depth.
     // For falling output capture, interface delta is INPUT_STAGES+OUTPUT_STAGES
     // and child reset assertion/release delta is INPUT_STAGES rising edges.
+    // INPUT_PAIR=1 moves the last positive input stage into two equal-age
+    // complete605-bit replicas beside the halves; total INPUT_STAGES is unchanged.
     // Defaults retain the original one-input/one-output capture contract.
     // The complete output word includes status/fault and adds +1 further edge:
     // +2 interface cycles at rising-edge producers/consumers, no child RTL edit.
@@ -111,21 +114,22 @@ module ot_v41_rom_elem_q_qxpq_w10_gb_shell #(
         // instances may share logical input nets but require separate local flops.
         (* keep = 1, dont_touch = 1 *) reg [IW-1:0] input_q;
         (* keep = 1, dont_touch = 1 *) reg [OW-1:0] output_q;
+        localparam integer IN_PIPE_STAGES=INPUT_STAGES-(INPUT_PAIR != 0 ? 1 : 0);
         wire [IW-1:0] input_tail;
         wire [OW-1:0] output_tail;
         initial begin
-            if (INPUT_STAGES < 1 || OUTPUT_STAGES < 1)
+            if (IN_PIPE_STAGES < 1 || OUTPUT_STAGES < 1 || (INPUT_PAIR != 0 && INPUT_PAIR != 1))
                 $fatal(1, "ROMQ IOREG stages must be positive");
         end
         always @(posedge clk) input_q<=input_face;
-        if (INPUT_STAGES > 1) begin : g_input_pipeline
-            (* keep = 1, dont_touch = 1 *) reg [IW-1:0] q [0:INPUT_STAGES-2];
+        if (IN_PIPE_STAGES > 1) begin : g_input_pipeline
+            (* keep = 1, dont_touch = 1 *) reg [IW-1:0] q [0:IN_PIPE_STAGES-2];
             integer k;
             always @(posedge clk) begin
                 q[0] <= input_q;
-                for (k=1; k<INPUT_STAGES-1; k=k+1) q[k] <= q[k-1];
+                for (k=1; k<IN_PIPE_STAGES-1; k=k+1) q[k] <= q[k-1];
             end
-            assign input_tail=q[INPUT_STAGES-2];
+            assign input_tail=q[IN_PIPE_STAGES-2];
         end else begin : g_input_single
             assign input_tail=input_q;
         end
@@ -171,7 +175,7 @@ module ot_v41_rom_elem_q_qxpq_w10_gb_shell #(
         assign output_face=child_face;
     end
     ot_v41_rom_elem_q_qxpq_w10_gb_split #(
-        .MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .FRONT_PAR(FRONT_PAR), .QTIMING_FIX(QTIMING_FIX), .QPIPE(QPIPE), .QP_XS(QP_XS), .QP_CAP(QP_CAP), .QP_P1(QP_P1), .QP_CSAM(QP_CSAM), .QZ(QZ), .QZ_NS(QZ_NS), .QZ_NE(QZ_NE), .QY(QY), .QX(QX), .PQ(PQ), .QW(QW), .QM(QM), .QS(QS), .GO_BOUNDARY(GO_BOUNDARY), .RSTP(RSTP), .CGR(CGR), .OLAT(OLAT), .IFN(IFN), .INSTANCE(INSTANCE)
+        .MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .FRONT_PAR(FRONT_PAR), .QTIMING_FIX(QTIMING_FIX), .QPIPE(QPIPE), .QP_XS(QP_XS), .QP_CAP(QP_CAP), .QP_P1(QP_P1), .QP_CSAM(QP_CSAM), .QZ(QZ), .QZ_NS(QZ_NS), .QZ_NE(QZ_NE), .QY(QY), .QX(QX), .PQ(PQ), .QW(QW), .QM(QM), .QS(QS), .GO_BOUNDARY(GO_BOUNDARY), .RSTP(RSTP), .CGR(CGR), .OLAT(OLAT), .IFN(IFN), .INSTANCE(INSTANCE), .INPUT_REGPAIR(IOREG != 0 ? INPUT_PAIR : 0)
     ) u_split (
         .clk(clk), .rst_n(c_rst_n), .cfg_v(c_cfg_v), .cfg_a(c_cfg_a), .cfg_d(c_cfg_d), .go(c_go), .go_tag(c_go_tag), .walking(c_walking), .bank_free(c_bank_free), .sh_free(c_sh_free), .xs_v(c_xs_v), .xs_p(c_xs_p), .xs_b(c_xs_b), .xs_q0(c_xs_q0), .xs_e0(c_xs_e0), .xs_q1(c_xs_q1), .xs_e1(c_xs_e1), .xs_pos(c_xs_pos), .pv(c_pv), .pval(c_pval), .prow(c_prow), .pseg(c_pseg), .pnseg(c_pnseg), .perr(c_perr), .ppos(c_ppos), .busy(c_busy), .fault(c_fault)
     );
