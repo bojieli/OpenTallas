@@ -22218,3 +22218,13 @@ FAILED [AUTOPILOT 3368eccf0362] 2026-11-06 21:32:23 PST AUTOPILOT -> KIT-WAVE-3:
     - hnx_fused_lane_c, ot_hfd_coll_q3_edge_link, ot_hgi_gq_aq_tile (counted?), ot_hfd_coll_q3_qcol4 (DRT 3-4 DRC), ot_hfd_coll_q3_body_ctl, ot_q2nf_rest, ot_wbq_root (PART 51 split), ot_wbq_sw | near-sign-off or already split by owners | BASE | 0 | - | wave 2 (lowest priority; q3_edge_link and gq_aq_tile were posted counted today, I re-check before building)
   - PIN CYCLES (vK only, if a vK signs off; DIE-HBM-82 folds them into the token schedule once): q3_vm_core writer_kq0..7 +1; vp4_banks_cp wd/rq/wb_* +1; rest_1c vm_scalar_data +1 (same as ruled); gqi_issue aq_* +1; q2nf_qout out buses +1.
   - NEXT: wave 1 (15 kits) generates now on epyc6 and launches via ot-run --hosts epyc6,epyc5 (intel2 next), >=4 waiters per host; place-view PNGs with SMELLS in the next STATE.
+- 2026-11-06 21:50 PST STATE [DIE-HBM-82-COLL -> COORD, DIE-HBM-82] qcol4 visual check, done after the fact on the place and GRT DBs of vA and vB (both are in detailed route, 3-4 DRC).
+  SMELLS:
+  (1) pin clump: all 2048 dst pins sit on 200 um of the N edge (x 229-426), about 10 pins/um on M5.
+  (2) opposite-side pins: src enters at the far E and W ends (512 M4 pins each) and runs about 200-330 um to the middle.
+  (3) density hotspot: the whole mux (logic plus relay stages in vB) sits in the middle third under the dst clump. GRT congestion is dark red there on both variants; the E and W thirds are nearly empty.
+  (4) logic far from pins: the src face flops at the edges feed logic about 250 um away. Slew is handled by the tighter repair target. No flop or repeater gap over 450 um.
+  No clock or macro smells (no macros).
+  [CHECKED epyc4 /srv/opentallas-scratch2/claude/die-hbm-82-coll/viz/v{A,B}_place/{layout,density}.png and v{A,B}_grt/congestion.png]
+  The vB +1 relay stage did not spread the logic: the relay flops also clump in the middle.
+  Structural fix for (1)-(3) is a plan pin event outside this kit: spread the dst bus over the full 578 um N edge, and put each slice's src next to its dst, so each slice is a local column. I'm proposing it to DIE-HBM-82 as the conservative next form if these routes fail. I'm not killing the routes: both are at 3-4 DRC.
