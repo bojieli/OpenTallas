@@ -4271,8 +4271,11 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         print(f"[gen] {tn}: FT_SPREAD ADVISORY {type(ex).__name__}: {ex} (plan sites only)")
     (kd / "ft_bit_sites.tcl").write_text(ft_bit_sites_table(ft_kit_slots))
     if ft_kit_slots:
-        (kd / "ft_track_use.json").write_text(json.dumps(dict(ft_spread.track_use(ft_kit_slots, ft_spread_ledger),
-                                                              type=tn, spread=ft_spread_ledger), indent=1) + "\n")
+        try:                                 # advisory report only: never a gen failure
+            (kd / "ft_track_use.json").write_text(json.dumps(dict(ft_spread.track_use(ft_kit_slots, ft_spread_ledger),
+                                                                  type=tn, spread=ft_spread_ledger), indent=1) + "\n")
+        except Exception as ex:
+            print(f"[gen] {tn}: FT_TRACK_USE ADVISORY {type(ex).__name__}: {ex}")
     ff_core_taps = {r[0]: r for r in core_tap_rows(P, tn, "FF")}
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
@@ -4971,6 +4974,14 @@ def _kit_inst_path(txt, inst, mod_re, owner_module=None):
     return None
 
 
+def _bound_reset_identity(tree):
+    """A reset tree without what gen adds later: physical_inst on core_resets is resolved before install, the bound receipt never has it."""
+    tree = json.loads(json.dumps(tree))
+    for c in (tree or {}).get("core_resets") or []:
+        c.pop("physical_inst", None)
+    return tree
+
+
 def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
     """Opt-in bound reset authority: verify the explicit tree against the ONE native hierarchy.
 
@@ -4988,7 +4999,17 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
         BRC.validate(source_contract, tn)
         tree = copy.deepcopy(source_contract["tree"])
         if declared_tree is not None and any(tree.get(k) != v for k, v in declared_tree.items()):
-            raise gen_rtl.GenError(f"type {tn}: physical collector_tree differs from captured bound reset identity; preserve original IDs/edges/coordinates")
+            # The plan's published collector_tree is a snapshot; bind emits RT.for_type(plan). A snapshot older than the
+            # solve is provably stale when the current solve IS the captured tree: the RTL is right, use its tree and say so.
+            # Any other difference (bind from another plan, edited graph) still stops.
+            try:
+                solved = json.loads(json.dumps(RT.for_type(P, tn)))
+            except Exception:
+                solved = None
+            if _bound_reset_identity(solved) != _bound_reset_identity(tree):
+                raise gen_rtl.GenError(f"type {tn}: physical collector_tree differs from captured bound reset identity; preserve original IDs/edges/coordinates")
+            P.types[tn].setdefault("clock", {}).setdefault("landing_contract", {})["collector_tree"] = copy.deepcopy(tree)
+            print(f"gen phys: NOTE type {tn}: published collector_tree is stale, the current solve equals the captured bound reset tree; using the captured tree", flush=True)
     else:
         tree = copy.deepcopy(declared_tree)
     if not isinstance(tree, dict) or tree.get("entry") not in ("sync", "relayed"):

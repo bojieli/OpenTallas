@@ -168,6 +168,34 @@ def test_wrapper_tied_reset_and_recomputed_tree_rejected(tmp_path):
     with pytest.raises(gen_rtl.GenError,match='exact passthrough'):G.install_bound_native_reset(p,'t',[f])
 
 
+def test_stale_published_tree_accepted_only_when_solve_is_the_captured_tree(tmp_path,monkeypatch):
+    # the plan's collector_tree is an older snapshot; the RTL receipt equals the current solve (TYPE-SAFE-3 11-06 class)
+    import bound_reset_contract as B
+    p,f=fixture(tmp_path)
+    rec=B.emitted(f,'t',tree())
+    p.types['t']['clock']['landing_contract']['collector_tree']['relays'][0]['xy']=[30,30]
+    monkeypatch.setattr(R,'for_type',lambda P,tn,reach=None:tree())
+    c=G.install_bound_native_reset(p,'t',[f],source_contract=rec)
+    assert c['tree']['relays'][0]['xy']==[17.28,17.28]
+    assert p.types['t']['clock']['landing_contract']['collector_tree']['relays'][0]['xy']==[17.28,17.28]
+    # mutant: the solve differs from the receipt (bind from another plan): still stops
+    p,f=fixture(tmp_path)
+    rec=B.emitted(f,'t',tree())
+    p.types['t']['clock']['landing_contract']['collector_tree']['relays'][0]['xy']=[30,30]
+    moved=tree();moved['relays'][0]['xy']=[30,30]
+    monkeypatch.setattr(R,'for_type',lambda P,tn,reach=None:moved)
+    with pytest.raises(gen_rtl.GenError,match='differs from captured'):G.install_bound_native_reset(p,'t',[f],source_contract=rec)
+
+
+def test_reset_identity_ignores_only_physical_inst():
+    a=tree();a['core_resets']=[dict(inst='c',pin='rst_n',tap=0)]
+    b=tree();b['core_resets']=[dict(inst='c',pin='rst_n',tap=0,physical_inst='u_bound.u_c')]
+    assert G._bound_reset_identity(a)==G._bound_reset_identity(b)
+    b['core_resets'][0]['tap']=1
+    assert G._bound_reset_identity(a)!=G._bound_reset_identity(b)
+    assert G._bound_reset_identity(None) is None
+
+
 def test_out_copy_negedge_and_native_core_reset_preserved(tmp_path):
     import bound_reset_contract as B
     t=tree();t.update(relay_lockup='negedge',outs=[[25,25]],n_clock_taps=1,

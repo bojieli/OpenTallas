@@ -69,3 +69,19 @@ if __name__ == "__main__":
     for n, f in list(globals().items()):
         if n.startswith("test_"):
             f(); print("ok", n)
+
+
+def test_track_use_tolerates_slotless_ledger():
+    """gen_phys error path writes a ledger row without slot; the advisory report must not raise"""
+    s = dict(name="a", width=8, stations=2, in_face="W", out_face="E", regs_um=[[0, 0], [10, 0]])
+    r = FS.track_use([s], [dict(form="clump", reason="ft_spread error X")])
+    assert r["slots"][0]["form"] == "clump"
+
+
+def test_import_from_clean_path():
+    """gen.py phys imports ft_spread with tools/die_plan only on sys.path: tools.die_trial must resolve"""
+    import subprocess, sys as _s
+    here = Path(__file__).resolve().parent
+    code = "import sys; sys.path=[p for p in sys.path if p not in ('', %r)]; sys.path.insert(0, %r); import ft_spread; " \
+           "from tools.die_trial.legal_sites import RowAllocator" % (str(here.parents[1]), str(here))
+    subprocess.run([_s.executable, "-c", code], check=True, cwd="/")
