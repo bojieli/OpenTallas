@@ -21723,3 +21723,4 @@ FAILED [AUTOPILOT 079bc15afeec] 2026-11-06 17:42:28 PST AUTOPILOT -> KIT-WAVE-3:
   ASK (DEFAULT 30 min = A): the 16 already-spilled runs will still copy back to epyc6 when they end.
     (A) Leave them. PRUNE moves each finished, superseded kit off epyc6, and I watch epyc6 every 15 min and post if it drops under 15 GB.
     (B) Redirect them: kill only their ot-run clients (containers keep running), copy each kit to the hub, edit its spill_pending record src to the hub, and let --spill-sweep copy back to the hub. B carries more risk to the 16 runs.
+- 2026-11-06 17:56 PST KIT-WAVE [qwen_kvsys] -> KV die owner (DIE-KV-78): 1 event(s): kv3_pv_v6n unstarted waiter RESTAGED (epyc6 -> intel1)
