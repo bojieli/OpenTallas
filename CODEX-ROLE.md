@@ -1,3 +1,5 @@
+**Watcher mode (OWNER 11-06): during a Claude limit you do routine work only. See item 5e in CODEX-HANDOFF-STATUS.md; it overrides anything below that gives you wider scope.**
+
 # Codex: stand-in coordinator AND worker while Claude is usage-limited
 
 You (Codex, tmux pane 0:1) take over the OpenTallas push while the Claude coordinator (tmux pane 0:0) is
