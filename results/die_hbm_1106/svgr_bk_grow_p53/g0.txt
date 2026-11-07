@@ -1,0 +1,5 @@
+by check: {'clock': (15, 15), 'clock_entry_macro': (1, 1), 'complete': (39, 36), 'core_faces': (85, 85), 'cuts': (32, 32), 'die_io_plan': (1, 1), 'face_tracks': (8, 8), 'faces': (171, 171), 'ft_budget': (8, 8), 'geometry': (18, 18), 'hard_cores': (480, 480), 'hops': (123, 123), 'latency': (5, 5), 'layers': (84, 84), 'm89_signals': (41, 41), 'reach': (127, 127), 'reset': (1, 1), 'stations': (165, 1
+gone 4 new 1
+NEW core_faces type q_hub_nw: 90 core ports face away from their partners (85 more not listed)
+GONE core_faces type q_hub_nw: 93 core ports face away from their partners (88 more not listed)
+GONE complete [internal_station] type q_hub_nw: internal_stations bus:L40_i: a hop > 405 um

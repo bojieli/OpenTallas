@@ -1,0 +1,419 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "part": 53,
+ "plan": "d44v",
+ "lane": "DIE-HBM-82-SVGR",
+ "date": "2026-11-06",
+ "approved": "plan-owner DIE-HBM-82 (A): grow ot_svgr_bk 43.2 on its E (FIFO) face if all 16 sites have room; plan-time check first, stations by the station tool, G0/G0C NEW 0 -> next free d44v PART",
+ "what": [
+  "ot_svgr_bk (16 inst: q_hub_nw/ne u_svg_Q{0..3}__b{0,1}) 259.2x207.36 -> 302.4x207.36, +43.2 on the core-local E face; macros + W/N/S/interior pins keep their core-frame site, the 1148 E-face pins (in_data, in_v, cr) move +43.2; new table cores/ot_svgr_bk__302.4x207.36__d44v_p53.json (= GRT probe-W table, pins sha cf83c518e5c3)",
+  "placement: core-local W face 25.92 out (street to ot_svgr_top 43.2 -> 17.28), core-local E face 17.28 out (street to ot_svgr_own 34.56 -> 17.28); MX origin x -25.92, MY origin x -17.28 (8.64 lattice); no neighbour moves",
+  "clock taps: the 16 core taps follow their core-frame entry (MX x -25.92, MY x +25.92); clock_entries.json (core frame) unchanged",
+  "core_macros.json: ot_svgr_bk outline only (same 4 SRAMs, same rects)",
+  "internal stations: tools/die_plan/station_resite.py on q_hub_nw/ne, applied by results/die_hbm_1106/wbq_swmv/hyb.py only to chains the grow touched",
+  "ft_slots: tools/die_plan/ft_nudge.py (ledger part53_ft_nudge_ledger.json)"
+ ],
+ "why": "ot_svgr_bk vC..vO (DIE-HBM-82-SVGR): GRT vertical overflow over the SRAM column; the CDC FIFO storage (~6000 um2) does not fit the 43.2 east strip (guide-box capacity 0.97 on vN/vO); FIFO strip grown",
+ "instances": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q0__b0",
+   "orient": "MX",
+   "origin": [
+    [
+     1192.32,
+     2151.36
+    ],
+    [
+     1166.4,
+     2151.36
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q0__b1",
+   "orient": "MX",
+   "origin": [
+    [
+     1192.32,
+     1918.08
+    ],
+    [
+     1166.4,
+     1918.08
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q1__b0",
+   "orient": "MX",
+   "origin": [
+    [
+     6488.64,
+     3888.0
+    ],
+    [
+     6462.72,
+     3888.0
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q1__b1",
+   "orient": "MX",
+   "origin": [
+    [
+     6488.64,
+     3654.72
+    ],
+    [
+     6462.72,
+     3654.72
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q2__b0",
+   "orient": "MY",
+   "origin": [
+    [
+     561.6,
+     1226.88
+    ],
+    [
+     544.32,
+     1226.88
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q2__b1",
+   "orient": "MY",
+   "origin": [
+    [
+     561.6,
+     1460.16
+    ],
+    [
+     544.32,
+     1460.16
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q3__b0",
+   "orient": "MY",
+   "origin": [
+    [
+     5849.28,
+     120.96
+    ],
+    [
+     5832.0,
+     120.96
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_svg_Q3__b1",
+   "orient": "MY",
+   "origin": [
+    [
+     5849.28,
+     354.24
+    ],
+    [
+     5832.0,
+     354.24
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q0__b0",
+   "orient": "MX",
+   "origin": [
+    [
+     1192.32,
+     2151.36
+    ],
+    [
+     1166.4,
+     2151.36
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q0__b1",
+   "orient": "MX",
+   "origin": [
+    [
+     1192.32,
+     1918.08
+    ],
+    [
+     1166.4,
+     1918.08
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q1__b0",
+   "orient": "MX",
+   "origin": [
+    [
+     6488.64,
+     3888.0
+    ],
+    [
+     6462.72,
+     3888.0
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q1__b1",
+   "orient": "MX",
+   "origin": [
+    [
+     6488.64,
+     3654.72
+    ],
+    [
+     6462.72,
+     3654.72
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q2__b0",
+   "orient": "MY",
+   "origin": [
+    [
+     561.6,
+     1226.88
+    ],
+    [
+     544.32,
+     1226.88
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q2__b1",
+   "orient": "MY",
+   "origin": [
+    [
+     561.6,
+     1460.16
+    ],
+    [
+     544.32,
+     1460.16
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q3__b0",
+   "orient": "MY",
+   "origin": [
+    [
+     5849.28,
+     120.96
+    ],
+    [
+     5832.0,
+     120.96
+    ]
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_svg_Q3__b1",
+   "orient": "MY",
+   "origin": [
+    [
+     5849.28,
+     354.24
+    ],
+    [
+     5832.0,
+     354.24
+    ]
+   ]
+  }
+ ],
+ "taps": [
+  {
+   "type": "q_hub_nw",
+   "tap": "u_svg_Q0__b0",
+   "x": [
+    1213.92,
+    1188.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "tap": "u_svg_Q0__b1",
+   "x": [
+    1213.92,
+    1188.0
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "tap": "u_svg_Q1__b0",
+   "x": [
+    6510.24,
+    6484.32
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "tap": "u_svg_Q1__b1",
+   "x": [
+    6510.24,
+    6484.32
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "tap": "u_svg_Q2__b0",
+   "x": [
+    799.2,
+    825.12
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "tap": "u_svg_Q2__b1",
+   "x": [
+    799.2,
+    825.12
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "tap": "u_svg_Q3__b0",
+   "x": [
+    6086.88,
+    6112.8
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "tap": "u_svg_Q3__b1",
+   "x": [
+    6086.88,
+    6112.8
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_svg_Q0__b0",
+   "x": [
+    1213.92,
+    1188.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_svg_Q0__b1",
+   "x": [
+    1213.92,
+    1188.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_svg_Q1__b0",
+   "x": [
+    6510.24,
+    6484.32
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_svg_Q1__b1",
+   "x": [
+    6510.24,
+    6484.32
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_svg_Q2__b0",
+   "x": [
+    799.2,
+    825.12
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_svg_Q2__b1",
+   "x": [
+    799.2,
+    825.12
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_svg_Q3__b0",
+   "x": [
+    6086.88,
+    6112.8
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_svg_Q3__b1",
+   "x": [
+    6086.88,
+    6112.8
+   ]
+  }
+ ],
+ "resite_report": {
+  "q_hub_nw": {
+   "regs_total": 29216,
+   "regs_in_body_halo_before": 841,
+   "regs_in_body_halo_after": 0,
+   "chains_resited": 538,
+   "cycles_added_total": 2
+  },
+  "q_hub_ne": {
+   "regs_total": 29278,
+   "regs_in_body_halo_before": 974,
+   "regs_in_body_halo_after": 0,
+   "chains_resited": 549,
+   "cycles_added_total": 0
+  }
+ },
+ "hyb": [
+  "q_hub_nw moved ['u_svg_Q0__b0', 'u_svg_Q0__b1', 'u_svg_Q1__b0', 'u_svg_Q1__b1', 'u_svg_Q2__b0', 'u_svg_Q2__b1', 'u_svg_Q3__b0', 'u_svg_Q3__b1'] chains taken from station_resite 5 count changes []",
+  "q_hub_ne moved ['u_svg_Q0__b0', 'u_svg_Q0__b1', 'u_svg_Q1__b0', 'u_svg_Q1__b1', 'u_svg_Q2__b0', 'u_svg_Q2__b1', 'u_svg_Q3__b0', 'u_svg_Q3__b1'] chains taken from station_resite 2 count changes []"
+ ],
+ "check": "plan-time G0/G0C (check.py --completeness --plan-geom report) + plan_geom.py vs the d44v before this part: G0 ERROR set (paths normalised): NEW 0 substantive (only q_hub_nw core_faces count text 93 -> 90 ports facing away), GONE 3 (complete [internal_station] bus:L40_i hop > 405 x3); plan_geom FAIL 232 -> 232, NEW 0 GONE 0 WORSE 0",
+ "pin_cycles": "corelat/cycles_svgr_own_rf3_1106.tsv: ot_svgr_own bk_in_v,bk_in_data +1 hbm_clk (RF3, recipe ot_svgr_own__rf3); svgr_bk grow itself adds 0",
+ "unchanged": [
+  "core_conns",
+  "clock_entries",
+  "reset trees",
+  "every other module / type",
+  "register counts on applied chains"
+ ],
+ "replay": "RR=<scratch> bash results/die_hbm_1106/svgr_bk_grow_p53/run_p53.sh"
+}
