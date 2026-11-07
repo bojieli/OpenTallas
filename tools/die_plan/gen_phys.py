@@ -165,6 +165,7 @@ def _cland_pinslot_dense(budgets, tn):
 #   OT_CONS_UTIL=U           PLACE_DENSITY = min(kit value, U)            (default 0.35)
 #   OT_CONS_MAX_LAYER=Mk     signal routing ceiling                       (default M6)
 #   OT_CONS_PIN_LAYER_ADJ=A  GRT capacity cut on the layers kept above Mk only for pin access (default 0.9)
+#   OT_MIDFLOP_RE=re         POST_GLOBAL_PLACE hook cons_midflop.tcl: matching one-sink output flops move to the midpoint of their wire (no netlist change)
 # The ceiling never drops below the highest layer the type's own pins use (io.tcl place_pin: face buses, clock /
 # reset pins on partition_signal_max, face_layers M8, bump pins; signal pins of staged hard-macro LEFs): GRT stops
 # with "Pin .. does not have geometries below the max routing layer" otherwise.  Those pin-only layers stay in
@@ -249,6 +250,11 @@ def cons_kit_apply(cfg, kd, cons, io_text, top, mlef=()):
     cfg[i_pd] = f"export PLACE_DENSITY = {pd:g}"
     gpl = "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl"
     cfg[cfg.index(gpl)] = "export PRE_GLOBAL_PLACE_TCL = /work/cons_gpl_pre.tcl"
+    mf = os.environ.get("OT_MIDFLOP_RE")
+    if mf:  # TYPE-CONS-2: register at the midpoint of a one-cycle transport (kit-local placement, no netlist change)
+        assert not any(c.startswith("export POST_GLOBAL_PLACE_TCL") for c in cfg), "OT_MIDFLOP_RE: POST_GLOBAL_PLACE_TCL in use"
+        cfg += ["export POST_GLOBAL_PLACE_TCL = /work/cons_midflop.tcl", f"export OT_MIDFLOP_RE = {mf}"]
+        shutil.copyfile(Path(__file__).with_name("cons_midflop.tcl"), Path(kd) / "cons_midflop.tcl")
     shutil.copyfile(Path(__file__).with_name("cons_gpl_pre.tcl"), Path(kd) / "cons_gpl_pre.tcl")
     cfg += ["# KW-FIX-24/CONSKIT: conservative re-kit (OT_CONS_KIT=1 at generation; cons_kit.json)",
             "export OT_CONS_KIT = 1", f"export OT_CONS_UTIL = {cons['util']:g}",
