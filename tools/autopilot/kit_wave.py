@@ -1783,7 +1783,9 @@ def restage_waiters(AP, cfg, st, notices):
             # KW-FIX-24 20:3x RESTAGE ping-pong class: a host move needs the waiter to have waited restage_min_wait_s
             # (default 1800) since its launch; a fresh waiter moved every tick (epyc5 <-> epyc2, 24 moves/h, the gen
             # stage redone each time) never reaches admission
-            young = time.time() - float(r.get("started") or 0) < float(cfg.get("restage_min_wait_s", 1800))
+            # KW-FIX-27 11-07: the wait doubles with each move of the row (at most x8), so a row is not restarted every 30 min
+            young = (time.time() - float(r.get("started") or 0)
+                     < float(cfg.get("restage_min_wait_s", 1800)) * 2 ** min(3, int(r.get("restage_n") or 0)))
             if multi and not young:
                 best = pick_gen_host(cfg, die)
                 v = row(best) or {}
@@ -1814,6 +1816,7 @@ def restage_waiters(AP, cfg, st, notices):
                      reason=f"restaged: unstarted ot-run waiter ({why}) (KW-FIX-4)")
             # KW-FIX-27 11-07: the move binds.  spec_for reselects a host at launch, so a logged move could return to g
             r["restage_host"] = best
+            r["restage_n"] = int(r.get("restage_n") or 0) + 1
             notices.setdefault(die, []).append(f"{r['item']} unstarted waiter RESTAGED ({why})")
             AP.log(f"KIT-WAVE RESTAGE {die}/{r['item']} unit {r['unit']} ({why})")
             n += 1
@@ -2966,6 +2969,8 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         rec["leafslew_form"] = ls_form
         if ls_key:
             st["leafslew"][ls_key]["hooked_attempt"] = attempt
+    if prev.get("restage_n") and prev.get("class") == "INFRA":      # a design verdict in between starts the count again
+        rec["restage_n"] = prev["restage_n"]
     st["items"][key] = rec
     AP.log(f"KIT-WAVE LAUNCH {die}/{r['item']} ({r['kind']}, {r.get('replicas')} replicas) event {sp['event']} unit {unit}")
     return rec
