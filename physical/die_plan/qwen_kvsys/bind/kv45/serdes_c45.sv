@@ -5,12 +5,14 @@
 // along the PHY face strip (kv3_sys_SD / _v1 post-GRT: rd_bin -> p_tx_d / c_rx_d, enable decode -> mem, reset_pipe ->
 // up_s); SEL_PIPE 1 selects the ot_fdi_phy_cdc registered-select form.  The PHY is inside the hard core: no core pin
 // cycle changes.
-module ot_qfd_serdes_112g_x6_phy_c45 #(parameter W=522, parameter integer SEL_PIPE=1) (
+module ot_qfd_serdes_112g_x6_phy_c45 #(parameter W=522) (
  input wire clk, clk_phy, rst_n, tx_v,
  input wire [W-1:0] tx_flit,
  output wire tx_up, rx_v,
  output wire [W-1:0] rx_flit
 );
+ // body localparam, not a header parameter: the kit PHY specializer matches the literal #(.W(N)) instance
+ localparam integer SEL_PIPE = 1;
  wire p_rst_n, p_tx_v, p_rx_v, p_tx_up;
  wire [W-1:0] p_tx_d, p_rx_d;
  ot_fdi_phy_cdc #(.W(W), .DEPTH(8), .SEL_PIPE(SEL_PIPE)) u_fdi_cdc (
