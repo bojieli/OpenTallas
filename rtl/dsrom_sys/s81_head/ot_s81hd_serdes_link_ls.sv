@@ -36,9 +36,19 @@ module ot_s81hd_serdes_link_ls #(
     end endgenerate
     wire [511:0] rx;
     wire [1:0] st;
+`ifdef OT_S81HD_SERDES_SC
+    // DH81-SEQ 11-07: same sequencer on the opt-in SC form (ot_s81hd_serdes_sc.sv), same define and instance name as
+    // ot_s81hd_serdes_link, so the hard children u_tx, u_dec.u_syn.u_bm0..2, u_dec.u_chn keep their paths. core_rst_n
+    // reaches the rs_r/rs_t/rm_r/rm_l synchronisers and u_tx.rst; u_chn.rst_n stays rn_r = rs_r[1], edge 68.
+    ot_s81hd_pdie_sc #(.PMA_LAT(PMA_LAT)) u_link (
+        .clk(ck), .rst(core_rst_n), .tx(coll_i0), .rx(rx), .st(st),
+        .pma_tx(pma_tx), .pma_tck(pma_tck), .pma_rx(pma_rx), .pma_rck(pma_rck)
+    );
+`else
     ot_pdie_serdes #(.PMA_LAT(PMA_LAT)) u_link (
         .clk(ck), .rst(core_rst_n), .tx(coll_i0), .rx(rx), .st(st),
         .pma_tx(pma_tx), .pma_tck(pma_tck), .pma_rx(pma_rx), .pma_rck(pma_rck)
     );
+`endif
     assign coll_o0 = {st, rx};
 endmodule
