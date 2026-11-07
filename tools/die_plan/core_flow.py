@@ -17,6 +17,7 @@ Generators call binding() + apply(); their run scripts embed LINT_STEP first and
 goal (both are fragments of a `bash -lc "..."` string: $ and " are escaped as in gen_phys.RUN_KIT).
 """
 import json
+import re
 import shutil
 from pathlib import Path
 
@@ -169,6 +170,23 @@ def stage_grt183(kd):
     # clk_leaf_repeat.tcl itself) and in global_route.tcl after the first GRT parasitics estimate (long-branch pass).
     # Opt out per kit: 'export OT_CLK_LEAF_REPEAT = 0' (both) / 'export OT_CLK_LEAF_GRT = 0' (GRT pass) in config.mk.
     shutil.copyfile(_common_flow_file(LEAF_REPEAT_SRC, TOOL.parents[1]), Path(kd) / LEAF_REPEAT_KIT)
+
+
+# KW-FIX-24/LEAFOPT 11-06 (COORD 21:0x (1)): a kit whose plan owns the whole clock tree (S81 regional-tap kits, HBM /
+# S81 plan-built core trees with a planned spine; core_infra.kit_cts_hook) opts out of the default-on clk_leaf_repeat
+# through its generator.  Every other kit keeps the default.
+LEAF_REPEAT_OPTOUT = "export OT_CLK_LEAF_REPEAT = 0"
+_LEAF_REPEAT_SET = re.compile(r"^\s*(override\s+)?export\s+OT_CLK_LEAF_REPEAT\s*[:?]?=")
+
+
+def leaf_repeat_plan_optout(cfg, why):
+    """Append the clk_leaf_repeat opt-out (with a comment naming why) to config.mk lines cfg, in place, unless cfg
+    already sets OT_CLK_LEAF_REPEAT (a kit / recipe choice wins).  -> True when the line was added."""
+    if any(_LEAF_REPEAT_SET.match(str(ln)) for ln in cfg):
+        return False
+    cfg += [f"# KW-FIX-24/LEAFOPT (COORD 21:0x): {why}: the plan owns the whole clock tree -> no default clk_leaf_repeat",
+            LEAF_REPEAT_OPTOUT]
+    return True
 
 
 def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, grt_pre_extra=(),
