@@ -1470,3 +1470,15 @@ def test_kept_copy_takes_representatives_renamed_gate_flop(tmp_path):
         return L
     assert not lec.kept_registers(build(True), keep)[1]
     assert lec.kept_registers(build(False), keep)[1]      # no second gate flop: one kept bit stays missing
+
+
+def test_env_jobs_admitted_cpus_capped():
+    """LEC-PAR-2 11-07: OT_LEC_JOBS is whole admitted cpus, 1..4; unset or junk = 1 thread as before."""
+    assert lec.env_jobs({}) == 1
+    assert lec.env_jobs({"OT_LEC_JOBS": ""}) == 1
+    assert lec.env_jobs({"OT_LEC_JOBS": "2.5"}) == 2
+    assert lec.env_jobs({"OT_LEC_JOBS": "4"}) == 4
+    assert lec.env_jobs({"OT_LEC_JOBS": "16"}) == 4
+    assert lec.env_jobs({"OT_LEC_JOBS": "0"}) == 1
+    assert lec.env_jobs({"OT_LEC_JOBS": "x"}) == 1
+    assert lec.env_jobs({"OT_LEC_JOBS": "inf"}) == 1

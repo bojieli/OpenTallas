@@ -7609,6 +7609,17 @@ def commonshape_retry(r, out, run):
     return keep
 
 
+JOBS_ENV_CAP = 4     # LEC-PAR-2 11-07: of 2312 proofs, j=4 reaches 85% of the j=8 upper bound; each batch is one more ABC process
+
+
+def env_jobs(environ=os.environ):
+    """OT_LEC_JOBS (the admitted --cpus of the LEC container) -> SAT-cone batch threads: 1..JOBS_ENV_CAP; unset or junk = 1."""
+    try:
+        return min(JOBS_ENV_CAP, max(1, int(float(environ.get("OT_LEC_JOBS") or 1))))
+    except (ValueError, OverflowError):
+        return 1
+
+
 def main(argv=None):
     global PROVE_JOBS
     argv = list(sys.argv[1:] if argv is None else argv)
@@ -7626,7 +7637,10 @@ def main(argv=None):
     ap.add_argument("kit")
     ap.add_argument("--netlist", help="gate netlist (default: KIT/run/results/asap7/*/base/1_2_yosys.v)")
     ap.add_argument("--out", help="output dir (default KIT/lec)")
-    ap.add_argument("--jobs", type=int, default=1, help="parallel independent SAT-cone batches (admit matching threads/memory)")
+    # LEC-PAR-2 11-07: lec_async.sh passes OT_LEC_JOBS from the container's --cpus; the kit proof command and its identity stay
+    # byte-identical, and each cone re-reads the swept miter in its own ABC call, so the verdict does not depend on the job count.
+    ap.add_argument("--jobs", type=int, default=env_jobs(),
+                    help="parallel independent SAT-cone batches (admit matching threads/memory; default OT_LEC_JOBS, else 1)")
     ap.add_argument("--gold-frontend", choices=("verilog", "slang"),
                     help="default: the frontend synthesis did NOT use")
     ap.add_argument("--port-map", help="JSON {gate port bit: gold port bit} (renamed packed buses)")

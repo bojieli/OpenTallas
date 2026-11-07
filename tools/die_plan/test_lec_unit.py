@@ -120,6 +120,32 @@ def test_lec_mem_override_and_opt_out(tmp_path):
     assert not (k2 / "docker_run.args").exists() and not (k2 / "ot_heavy.args").exists()
 
 
+def test_cone_threads_follow_the_admitted_cpus(tmp_path):
+    """LEC-PAR-2 11-07: OT_LEC_JOBS = the LEC container's --cpus in both forms; never in the proof command or its identity."""
+    (tmp_path / "a").mkdir()
+    k, env = _kit(tmp_path / "a")
+    ready = "1\nexit 0\n"
+    (k / "lec_async.ready").write_text(ready)
+    assert _finish(k, env, 0) == "0"
+    run = (k / "docker_run.args").read_text()
+    assert "--cpus=2" in run and "-e OT_LEC_JOBS=2" in run and (k / "lec_async.ready").read_text() == ready
+    (tmp_path / "b").mkdir()
+    k2, env2 = _kit(tmp_path / "b", OT_LECUNIT_CPUS="3")
+    (k2 / "lec_async.ready").write_text(ready)
+    assert _finish(k2, env2, 0) == "0"
+    run2 = (k2 / "docker_run.args").read_text()
+    assert "--cpus=3" in run2 and "-e OT_LEC_JOBS=3" in run2
+    (tmp_path / "c").mkdir()
+    k3, env3 = _kit(tmp_path / "c", OT_LECUNIT="0")
+    (k3 / "lec_async.ready").write_text(ready)
+    assert _finish(k3, env3, 0) == "0"
+    assert "-e OT_LEC_JOBS=2" in (k3 / "docker_exec.args").read_text()
+    identity = lambda e: subprocess.run(["bash", str(TOOL), "identity", str(k)], check=True, env=e, capture_output=True,
+                                        text=True).stdout
+    assert identity(env) == identity(dict(env, OT_LEC_JOBS="16"))
+    assert identity(env) != identity(dict(env, OT_LEC_RESET_CYCLES="9"))     # the skip stays narrow
+
+
 def test_not_equivalent_stops_the_flow_container(tmp_path):
     k, env = _kit(tmp_path)
     (k / "lec_async.ready").write_text("1\necho 'LEC NOT EQUIVALENT' >> /work/lec_run.log; exit 1\n")

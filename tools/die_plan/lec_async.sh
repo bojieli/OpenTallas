@@ -38,7 +38,7 @@ try:
  if receipt:paths.append(k/receipt[6:] if receipt.startswith('/work/') else k/receipt)
 except (OSError,ValueError,AttributeError):pass
 for key in sorted(os.environ):
- if key.startswith('OT_LEC_') and key not in ('OT_LEC_ASYNC','OT_LEC_ASYNC_POLL','OT_LEC_MEM_GB'):
+ if key.startswith('OT_LEC_') and key not in ('OT_LEC_ASYNC','OT_LEC_ASYNC_POLL','OT_LEC_MEM_GB','OT_LEC_JOBS'):
   h.update((key+'='+os.environ[key]).encode())
 for line in cfg.splitlines():
  if (re.match(r'^(?:override )?export (?:DESIGN_NAME|VERILOG_FILES|VERILOG_DEFINES|SYNTH_HDL_FRONTEND|ADDITIONAL_LIBS)\s*=',line) or
@@ -132,7 +132,7 @@ try:
   if b'=' in item:
    a,b=item.split(b'=',1)
    if a.startswith(b'OT_LEC_'):env[a.decode()]=b.decode()
- skip={'OT_LEC_ASYNC','OT_LEC_ASYNC_POLL','OT_LEC_MEM_GB'}
+ skip={'OT_LEC_ASYNC','OT_LEC_ASYNC_POLL','OT_LEC_MEM_GB','OT_LEC_JOBS'}
  for key in (set(env)|{x for x in os.environ if x.startswith('OT_LEC_')})-skip:
   if env.get(key)!=os.environ.get(key):raise ValueError('proof policy environment differs: '+key)
  scope=Path(f'/proc/{pid}/cgroup').read_text().strip()
@@ -285,6 +285,8 @@ watch)
     [ ${#VOL[@]} -gt 0 ] || VOL=(-v "$K:/work")
     while IFS= read -r e; do case $e in ''|HOSTNAME=*) ;; *) ENVS+=(-e "$e");; esac; done < <($DK inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$NAME" 2>/dev/null)
     for v in OT_LEC_HINTS_PRESEED OT_LEC_EARLY_COMPARE OT_LEC_SUPERSET_VEC OT_LEC_RESET_CYCLES; do [ -z "${!v+x}" ] || ENVS+=(-e "$v=${!v}"); done
+    # LEC-PAR-2: cone batches follow this unit's own --cpus; the proof command and its identity stay unchanged
+    ENVS+=(-e "OT_LEC_JOBS=$LCPUS")
     # a stopped leftover of this kit's own earlier unit only (a recycled name of another kit is never removed)
     if $DK inspect -f '{{range .Mounts}}{{println .Source}}{{end}}' "$UN" 2>/dev/null | grep -Fqx -- "$K"; then $DK rm -f "$UN" > /dev/null 2>&1; fi
     rm -f "$K/lec_async.unit_rc"
@@ -306,7 +308,7 @@ watch)
     [ ! -f "$K/lec_async.abort" ] || $DK rm -f "$UN" > /dev/null 2>&1
   else
   $DK exec \
-    -e OT_LEC_HINTS_PRESEED -e OT_LEC_EARLY_COMPARE -e OT_LEC_SUPERSET_VEC -e OT_LEC_RESET_CYCLES \
+    -e OT_LEC_HINTS_PRESEED -e OT_LEC_EARLY_COMPARE -e OT_LEC_SUPERSET_VEC -e OT_LEC_RESET_CYCLES -e "OT_LEC_JOBS=$CPUS" \
     -w /OpenROAD-flow-scripts/flow "$NAME" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $RUN; r=\$?; chown -R $(id -u):$(id -g) /work/lec /work/lec_run.log 2>/dev/null; exit \$r" \
     >> "$K/lec_async.log" 2>&1
   lr=$?
