@@ -32,6 +32,8 @@ VERIFY_RULES = {
         {"module": "ot_dp_rrelay", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1},
         # CLK form #7 lockup relay: posedge state + negedge re-launch = still ONE cycle
         {"module": "ot_dp_rrelay_nl", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1},
+        # TYPE-SAFE-1 11-06 ft hop lockup latch (bind.ft_hop_lockup): transparent-low after a station flop = 0 cycles
+        {"module": "ot_dp_lk", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 0},
         # decision 13c consumer-tap relay: reset traced through d; the START (run) leg is checked by the lockstep tests
         {"module": "ot_dp_rgate", "map": {"q": "d"}, "drop_in": ["clk", "run"], "stages": 1},
     ],
