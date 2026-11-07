@@ -944,6 +944,12 @@ class Landings:
             raise LandingError(f"{tn}: landing_control_status_copy must be a boolean")
         if status_copy and not cat:
             raise LandingError(f"{tn}: landing_control_status_copy needs count-aligned rings")
+        # STATUS-REG-1 (KV-SLGLAND-2 11-07, opt-in): ring status crossings end at private per-slot flops; no data cycle
+        status_reg = self.types[key].get("landing_status_reg", False)
+        if not isinstance(status_reg, bool):
+            raise LandingError(f"{tn}: landing_status_reg must be a boolean")
+        if status_reg and not cat:
+            raise LandingError(f"{tn}: landing_status_reg needs count-aligned rings")
         if inst is not None:
             # MESO-STRAP-1 LEC reference: the parameter wrapper of ONE copy (ca_variants), ring DEPTH from `depth`
             # (the strap master's per-bus DEPTH) so the two forms differ only in parameters vs tied straps
@@ -1117,6 +1123,10 @@ class Landings:
                     ring_mod = ring_mod[:-1] + ", .CONTROL_STATUS_COPY(1))"
                     self.reset_placements[tn][b].update(control_status_copy=True,
                         status_copy_flops=2 * int(cat["rings"][b]["depth"]), status_copy_added_cycles=0)
+                if status_reg:
+                    ring_mod = ring_mod[:-1] + ", .STATUS_REG(1))"
+                    self.reset_placements[tn][b].update(status_reg=True, status_reg_added_data_cycles=0,
+                                                        status_reg_added_fault_cycles=1)
                 # HEAD-RINGHOLD-1 (COORD 10-31 14:4x (3), option A): write_edge "fall" -> the count-aligned writer
                 # (slots, count, tags, t_rst_n) on the falling fclk edge (ot_dp_clk_landing_ca/_cas WFALL, DIE-HEAD-48)
                 if ring_write_fall(self.plan, key) or ring_write_fall(self.plan, tn):
