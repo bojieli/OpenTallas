@@ -376,6 +376,40 @@ if {[llength $ct_taps] >= 2 && $ct_min > 0} {
 if {[info exists ::env(OT_TAP_CHAIN_AFFINITY)] && $::env(OT_TAP_CHAIN_AFFINITY) eq "1"} {
  ::ot_tap_chain::apply
 }
+# TYPE-SAFE-1 11-06 (OWNER 18:5x, clock follows data): every ft hop lockup latch u_fl_* (gen_rtl.ft_hop_lockup) is
+# clocked from the tap of the station flop that drives its D (the LAUNCH station), after every other assignment pass
+# above (nearest / group / cap / min-merge / chain affinity), so the station -> latch check shares the launch tap
+# (CRPR) and only the latch -> capture check crosses a port, with ~T/2 of hold margin.  No u_fl_ cell = no change.
+if {[llength $ct_taps] >= 2} {
+  set ct_hl 0; set ct_hlm 0; set ct_hlx 0
+  foreach ct_i [$ct_blk getInsts] {
+    if {![regexp {(^|[./])u_fl_} [$ct_i getName]]} continue
+    set ct_m [[$ct_i getMaster] getName]
+    if {![string match "DLLx*" $ct_m] && ![string match "DHLx*" $ct_m]} continue
+    set ct_cit [ct_clk_iterm $ct_i]
+    if {$ct_cit eq ""} { incr ct_hlx; continue }
+    set ct_net ""
+    foreach ct_it [$ct_i getITerms] { if {[[$ct_it getMTerm] getName] eq "D"} { set ct_net [$ct_it getNet] } }
+    set ct_drv ""; set ct_seen {}
+    while {$ct_net ne "" && $ct_net ne "NULL" && ![dict exists $ct_seen [$ct_net getName]] && $ct_drv eq ""} {
+      dict set ct_seen [$ct_net getName] 1
+      set ct_nx ""
+      foreach ct_it [$ct_net getITerms] {
+        if {[[$ct_it getMTerm] getIoType] ne "OUTPUT"} continue
+        set ct_d [$ct_it getInst]
+        if {[regexp {^(BUF|INV|HB)} [[$ct_d getMaster] getName]]} {
+          foreach ct_in [$ct_d getITerms] { if {[[$ct_in getMTerm] getIoType] eq "INPUT" && [$ct_in getNet] ne "NULL"} { set ct_nx [$ct_in getNet] } }
+        } elseif {[ct_clk_iterm $ct_d] ne ""} { set ct_drv $ct_d }
+      }
+      set ct_net $ct_nx
+    }
+    if {$ct_drv eq ""} { incr ct_hlx; continue }
+    set ct_tn [[ct_clk_iterm $ct_drv] getNet]
+    if {[$ct_cit getNet] ne $ct_tn} { $ct_cit disconnect; $ct_cit connect $ct_tn; incr ct_hlm }
+    incr ct_hl
+  }
+  if {$ct_hl || $ct_hlx} { puts "OT_CLOCK_TAPS hop latches: $ct_hl on their launch station's tap ($ct_hlm re-hung), $ct_hlx without a tapped launch flop" }
+}
 # COORD 10-23 (CP1 r9: 7 of 16 grid taps over macros / empty areas): per-tap sink counts after the cap pass, and
 # every tap that got NO sink is DROPPED: its port stays (plan pins unchanged) but carries no tree, and the die
 # assembly (gen.py assembly, views/<type>/ot_clock_taps.json) leaves it unconnected, so the spine makes no dead drop.
