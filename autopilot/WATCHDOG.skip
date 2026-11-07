@@ -11,3 +11,6 @@ stop-only /srv/opentallas-scratch2/claude/qc-su-lat-r6/btab_r6
 stop-only /srv/opentallas-scratch2/claude/qc-plan-f4a-1026/kits/qfd_dv_s8x_vmr_f4a
 # KW-FIX-25 11-06 22:3x interim until the lecsafe branch is on main: LEC jobs are report-only (a CPU-busy LEC with a flat log was stopped 16 times since 11-04); remove this line after the merge
 /lec
+
+# CODEX 2026-11-07T02:54:34.244337-08:00: exact N12 i3 report-only; OpenROAD PID2810466 CPU271% at02:53:16PST, so the no-CPU hung rule is unsatisfied despite flat log. Preserve running job; remove after owner collects terminal result.
+/srv/opentallas-scratch2/claude/die-hbm-66/eco/n12be2/run/i3
