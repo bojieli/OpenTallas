@@ -4,7 +4,7 @@
 // plesiochronous clock; B sends NB beats (IDLE every 256), A_r (RXQ) sends NB beats to B.  A_r and A_s get the SAME
 // pma_rx / pma_rck (B's stream with one random bit error in about every second PMA word) and the same coll_i0.
 // Checked on every A edge: A_s {st, rx} == A_r {st, rx}; A_s.pma_tx == A_r.pma_tx delayed by exactly 2 ck edges
-// (encoder LA 2 + FF 1); the SC u_rm read-side reset copy rs_m equals the RXQ rs_t on every edge.  At FE the encoder fault is forced in both: st[0] must rise on the same edge (e_flt unchanged).
+// (encoder LA 2 + FF 1); every SC u_rm read-side reset tree leaf rm_l equals the RXQ rs_t[1] on every edge.  At FE the encoder fault is forced in both: st[0] must rise on the same edge (e_flt unchanged).
 // Non-vacuous: B decodes >= NB - 400 of A_r's beats and A_r decodes >= NB - 400 of B's beats.
 module tb_s81hd_serdes_sc_lockstep;
     parameter integer NB = 6000, FE = 7600, NCYC = 8000;
@@ -40,7 +40,7 @@ module tb_s81hd_serdes_sc_lockstep;
         if (cyc == FE) begin force a_r.u_enc.flt = 1'b1; force a_s.u_tx.u_enc.flt = 1'b1; end
         if (s_rx !== r_rx || s_st !== r_st) begin mrx = mrx + 1; if (first < 0) first = cyc; end
         if (cyc > 2 && s_pa !== r_pa2) begin mtx = mtx + 1; if (first < 0) first = cyc; end
-        if (a_s.rs_m !== a_r.rs_t) begin mrx = mrx + 1; if (first < 0) first = cyc; end   // u_rm reset copy == rs_t
+        if (a_s.rm_l !== {17{a_r.rs_t[1]}} || a_s.rm_r !== {3{a_r.rs_t[0]}}) begin mrx = mrx + 1; if (first < 0) first = cyc; end   // u_rm reset tree == rs_t
         if (rf < 0 && r_st[0]) rf = cyc;
         if (sf < 0 && s_st[0]) sf = cyc;
         if (!(r_rx[1] && !r_rx[0]) && r_rx === beatb(gota)) gota = gota + 1;

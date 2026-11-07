@@ -13,7 +13,7 @@
 //                                  registers moved across the hierarchy, outputs leave the unit's own registers.
 //   u_phy.u_link.u_dec.u_chn       ot_s81_kp4_dchn (unchanged signed child, default MUT 0).
 // Everything else is ot_s81hd_serdes_rxq.sv (RXQ: RX +2 pma_rck edges, rate-match read +1 ck edge) byte for byte, plus
-// one more ck reset synchroniser copy for the u_rm read side (rs_m == rs_t on every edge).  Every child face is a
+// a registered ck reset tree for the u_rm read side (every leaf == rs_t[1] on every edge).  Every child face is a
 // register: tx -> d0, pma_tx <- u_ptx stage, e_flt <- flt; S_i -> S_b, ld_i -> ldq, lam/om/L/any/done <- RiBM registers.
 // Children are in ot_s81hd_serdes_sc_cores.sv.  Cycle contract vs ot_s81hd_pdie_q (RXQ): pma_tx +2 ck edges, nothing else moves (tb_s81hd_serdes_sc_lockstep.sv).
 // ---------------------------------------------------------------------------------------------------------------------
@@ -200,6 +200,64 @@ module ot_s81hd_kp4_dec_sc #(parameter integer MUT = 0) (
     ot_s81_kp4_dout u_out (.clk(clk), .rst_n(rst_n), .d_q(d_q), .cw(cw), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs),
         .q_v(q_v), .q_d(q_d), .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq));
 endmodule
+// DIE-HEAD-77-SERDES conservative reset form: ot_s81hd_rate_match_q with a local read-side reset tree.  rrst_l[g] resets
+// slice g (rsel copy g + r_d[32g+31:32g]); rrst_l[NRC] resets the read-side control.  Same behaviour when every leaf is equal.
+module ot_s81hd_rate_match_sc (
+    input  wire          wclk, wrst_n,
+    input  wire          w_v,
+    input  wire [511:0]  w_d,
+    input  wire          rclk,
+    input  wire [16:0]   rrst_l,
+    output reg  [511:0]  r_d,
+    output wire          fault
+);
+    reg  [511:0] mem [0:7];
+    reg  [3:0] wp, rp, wp_g, rp_g;
+    reg  [3:0] rp_g1, rp_g2, wp_g1, wp_g2;
+    function automatic [3:0] g2b(input [3:0] g); begin g2b = {g[3], g[3]^g[2], g[3]^g[2]^g[1], g[3]^g[2]^g[1]^g[0]}; end endfunction
+    always @(posedge wclk or negedge wrst_n) if (!wrst_n) begin rp_g1 <= 0; rp_g2 <= 0; end else begin rp_g1 <= rp_g; rp_g2 <= rp_g1; end
+    always @(posedge rclk or negedge rrst_l[16]) if (!rrst_l[16]) begin wp_g1 <= 0; wp_g2 <= 0; end else begin wp_g1 <= wp_g; wp_g2 <= wp_g1; end
+    reg  full, ge6;                       // RXQ: flops, one read-pointer edge older than the combinational form
+    wire idle = w_d[1] && !w_d[0];
+    wire push = w_v && !full && !(idle && ge6);
+    wire [3:0] wp_nx = wp + {3'd0, push};
+    wire [3:0] fill_nx = wp_nx - g2b(rp_g2);
+    reg flt;
+    always @(posedge wclk or negedge wrst_n)
+        if (!wrst_n) begin wp <= 0; wp_g <= 0; flt <= 1'b0; full <= 1'b0; ge6 <= 1'b0; end
+        else begin
+            full <= fill_nx == 4'd8; ge6 <= fill_nx >= 4'd6;
+            if (push) begin mem[wp[2:0]] <= w_d; wp <= wp + 1'b1; wp_g <= (wp + 1'b1) ^ ((wp + 1'b1) >> 1); end
+            if (w_v && full && !idle) flt <= 1'b1;
+        end
+    wire empty = g2b(wp_g2) == rp;
+    // RXQ read stage: the pop decision is registered as one-hot select copies (32 data bits per copy), the mem mux and r_d
+    // sit behind them: r_d one rclk edge later.  The popped slot stays valid for that edge: the writer sees the move of rp
+    // only after rp_g and its 2-flop synchroniser.
+    localparam integer NRC = 16;
+    (* keep *) reg [7:0] rsel [0:NRC-1];
+    (* keep *) reg       ridl;
+    always @(posedge rclk or negedge rrst_l[16])
+        if (!rrst_l[16]) begin rp <= 0; rp_g <= 0; ridl <= 1'b1; end
+        else begin
+            if (!empty) begin rp <= rp + 1'b1; rp_g <= (rp + 1'b1) ^ ((rp + 1'b1) >> 1); end
+            ridl <= empty;
+        end
+    genvar gs, gb;
+    generate for (gs = 0; gs < NRC; gs = gs + 1) begin : g_sl
+        always @(posedge rclk or negedge rrst_l[gs])
+            if (!rrst_l[gs]) rsel[gs] <= 8'd0;
+            else rsel[gs] <= empty ? 8'd0 : (8'd1 << rp[2:0]);
+        for (gb = 0; gb < 32; gb = gb + 1) begin : g_b
+            localparam integer cb = gs * 32 + gb;
+            always @(posedge rclk or negedge rrst_l[gs])
+                if (!rrst_l[gs]) r_d[cb] <= (cb == 1);   // reset value 512'd2
+                else r_d[cb] <= ((cb == 1) & ridl) | (|({mem[7][cb], mem[6][cb], mem[5][cb], mem[4][cb], mem[3][cb], mem[2][cb], mem[1][cb], mem[0][cb]} & rsel[gs]));
+        end
+    end endgenerate
+    reg f1, f2; always @(posedge rclk or negedge rrst_l[16]) if (!rrst_l[16]) begin f1 <= 0; f2 <= 0; end else begin f1 <= flt; f2 <= f1; end
+    assign fault = f2;
+endmodule
 module ot_s81hd_pdie_sc #(parameter integer PMA_LAT = 4, parameter integer DMUT = 0) (
     input  wire          clk,
     input  wire          rst,
@@ -213,13 +271,21 @@ module ot_s81hd_pdie_sc #(parameter integer PMA_LAT = 4, parameter integer DMUT 
     input  wire          pma_rck
 );
     // ---- resets: one synchroniser per clock domain
-    reg [1:0] rs_t, rs_r, rs_m;
+    reg [1:0] rs_t, rs_r;
     always @(posedge clk or negedge rst) if (!rst) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
-    // SC reset tree: u_rm read side gets its own ck synchroniser copy (rst is synchronous to ck, so rs_m == rs_t on every
-    // edge); the u_tx child has its own copy inside (ot_s81hd_sc_tx).
-    always @(posedge clk or negedge rst) if (!rst) rs_m <= 2'b00; else rs_m <= {rs_m[0], 1'b1};
+    // SC reset tree: the u_tx child has its own copy inside (ot_s81hd_sc_tx).  DIE-HEAD-77-SERDES conservative form: the
+    // u_rm read side has a two-level registered tree with the same 2-edge release as rs_t (rst is synchronous to ck, so
+    // every leaf == rs_t[1] on every edge, 0 added cycles): 3 root flops, fanout <= 6 each, 17 leaf flops, one per 32-bit
+    // r_d slice (40 flops) plus one for the read-side control.
+    (* keep *) reg [2:0]  rm_r;
+    (* keep *) reg [16:0] rm_l;
+    always @(posedge clk or negedge rst) if (!rst) rm_r <= 3'b000; else rm_r <= 3'b111;
+    genvar gl;
+    generate for (gl = 0; gl < 17; gl = gl + 1) begin : g_rml
+        always @(posedge clk or negedge rst) if (!rst) rm_l[gl] <= 1'b0; else rm_l[gl] <= rm_r[gl / 6];
+    end endgenerate
     always @(posedge pma_rck or negedge rst) if (!rst) rs_r <= 2'b00; else rs_r <= {rs_r[0], 1'b1};
-    wire rn_t = rs_t[1], rn_r = rs_r[1], rn_m = rs_m[1];
+    wire rn_t = rs_t[1], rn_r = rs_r[1];
     // ---- transmit: FEC encoder (ck) -> PMA TX model
     wire e_flt;
     ot_s81hd_sc_tx u_tx (.clk(clk), .rst(rst), .tx(tx), .pma_tx(pma_tx), .e_flt(e_flt));   // hard child, pma_tx +2 edges
@@ -233,7 +299,7 @@ module ot_s81hd_pdie_sc #(parameter integer PMA_LAT = 4, parameter integer DMUT 
         .n_relock(n_rl));
     reg unc_r; always @(posedge pma_rck or negedge rn_r) if (!rn_r) unc_r <= 1'b0; else if (q_v && q_first && q_unc) unc_r <= 1'b1;
     wire rm_flt;
-    ot_s81hd_rate_match_q u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk), .rrst_n(rn_m), .r_d(rx),
+    ot_s81hd_rate_match_sc u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk), .rrst_l(rm_l), .r_d(rx),
         .fault(rm_flt));
     // ---- status (ck)
     reg [1:0] lk_s, uf_s;
