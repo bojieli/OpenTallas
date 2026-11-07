@@ -566,6 +566,20 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
          f"set cland_m [[ord::get_db] findMaster {{{FWD_BUFFER_MASTER}}}]",
          'if {$cland_m eq "NULL"} { error "OT_CLAND_EXPORT forward buffer master missing" }',
          "set cland_ca [$cland_block getCoreArea]"]
+    # PLACE may already have materialized these exports before pre-CTS reloads
+    # the checkpoint. Reuse only the exact dedicated one-buffer topology.
+    out[1:1] = r"""proc ot_cland_existing {inst master src dst} {
+  set n [$inst getName]
+  if {[[$inst getMaster] getName] ne [$master getName]} {error "OT_CLAND_EXPORT $n existing master mismatch"}
+  set a [$inst findITerm A]; set y [$inst findITerm Y]
+  if {$a eq "NULL" || $y eq "NULL" || ![$a isInputSignal] || ![$y isOutputSignal]} {error "OT_CLAND_EXPORT $n existing pin shape mismatch"}
+  set yn [$y getNet]
+  if {[$a getNet] ne $src || $yn eq "NULL" || [$dst getNet] ne $yn} {error "OT_CLAND_EXPORT $n existing connectivity mismatch"}
+  if {[$yn getName] ne $n || [$src getSigType] ne "CLOCK" || [$yn getSigType] ne "CLOCK"} {error "OT_CLAND_EXPORT $n existing net shape mismatch"}
+  set ports [$yn getBTerms]; set terms [$yn getITerms]
+  if {[llength $ports] != 1 || [[lindex $ports 0] getName] ne [$dst getName]} {error "OT_CLAND_EXPORT $n existing export sharing mismatch"}
+  if {[llength $terms] != 1 || [[[lindex $terms 0] getInst] getName] ne $n || [[[lindex $terms 0] getMTerm] getName] ne "Y"} {error "OT_CLAND_EXPORT $n existing export loads mismatch"}
+}""".splitlines()
     for p in pins:
         if p["kind"]!="clock" or p["dir"]!="out":continue
         n,s=p["name"],p["source_clock_port"];fw="cland_fwd_"+n
@@ -575,7 +589,11 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
                 'if {$cland_dst eq "NULL" || $cland_src eq "NULL"} { error "clock landing export endpoint missing" }',
                 "set cland_net [$cland_src getNet]",
                 'if {$cland_net eq "NULL"} { error "clock landing source tap has no physical net" }',
-                f'if {{[$cland_block findInst {{{fw}}}] ne "NULL"}} {{ error "OT_CLAND_EXPORT {fw} exists" }}',
+                f"set cland_i [$cland_block findInst {{{fw}}}]",
+                'if {$cland_i ne "NULL"} {',
+                '  ot_cland_existing $cland_i $cland_m $cland_net $cland_dst',
+                f"  puts {{OT_CLAND_EXPORT_REUSE {n} <- {s} via {fw}}}",
+                '} else {',
                 "set cland_old [$cland_dst getNet]",
                 "$cland_dst disconnect",
                 'if {$cland_old ne "NULL" && $cland_old ne $cland_net} { ot_cland_drop_orphan $cland_old }',
@@ -590,7 +608,7 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
                 "[$cland_i findITerm Y] connect $cland_fn",
                 "$cland_dst connect $cland_fn",
                 "$cland_net setSigType CLOCK; $cland_fn setSigType CLOCK",
-                f"puts {{OT_CLAND_EXPORT {n} <- {s} via {fw} ({FWD_BUFFER_MASTER} at the source)}}"]
+                f"puts {{OT_CLAND_EXPORT {n} <- {s} via {fw} ({FWD_BUFFER_MASTER} at the source)}}", "}"]
     return "\n".join(out)+"\n"
 
 

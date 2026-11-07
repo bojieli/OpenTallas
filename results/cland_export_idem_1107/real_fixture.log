@@ -1,0 +1,13 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_CLAND_EXPORT_REUSE fclk_out_coll_o0 <- clk_t32 via cland_fwd_fclk_out_coll_o0
+OT_CLAND_EXPORT_REUSE fclk_out_ft0_o <- clk_t41 via cland_fwd_fclk_out_ft0_o
+OT_CLAND_EXPORT_REUSE fclk_out_ft1_o <- clk_t31 via cland_fwd_fclk_out_ft1_o
+OT_CLAND_EXPORT_REUSE fclk_out_cland_up <- clk_t7 via cland_fwd_fclk_out_cland_up
+OT_CLAND_EXPORT_REUSE fclk_out_coll_o0 <- clk_t32 via cland_fwd_fclk_out_coll_o0
+OT_CLAND_EXPORT_REUSE fclk_out_ft0_o <- clk_t41 via cland_fwd_fclk_out_ft0_o
+OT_CLAND_EXPORT_REUSE fclk_out_ft1_o <- clk_t31 via cland_fwd_fclk_out_ft1_o
+OT_CLAND_EXPORT_REUSE fclk_out_cland_up <- clk_t7 via cland_fwd_fclk_out_cland_up
+CLAND_EXPORT_REAL_FIXTURE PASS reuse_calls8 exports4 input_mismatch_caught1 destination_mismatch_caught1 master_mismatch_caught1 topology_geometry_unchanged1
