@@ -10818,3 +10818,6 @@ Owner explicitly announced reset; all agents told STOP new launches/probes and p
 - Token/merge: noactive token/nativebuild found. DSscopedfull54returnPASS3/3, productioncalendar/lifetimeopen. HEADc401/TTFFphaseopen; survivingtracesprotected, rawruntimecachelostabove. Merge47testscollectedonly, differingbaseline/tipfilesets/missingsparseinputs, NOT185newregressions; CODEX-MERGEhastriage,no testsrerun/mainmerge.
 
 OWNER? Cleanupretentioncode/referenceinventorymustbereviewedbeforedeletionresumes; lostrawc401cachehasnoknownbackup. Intel2rootprotectedsourcequestionremains. Remainingunbuiltconservativefallbacks andflow/event-treefixes requireClaude/sourceowners; watcher5edidnotauthornewRTL/forms/flowfixes. ApprovedRAMoperationalchangeisexplicitownerexception. Continuehealthyjobs; newestmaterialresultsareinownedlanes.
+
+## Handoff to Claude — QC watcher explicit reset 2026-11-07T03:02:22.577567-08:00
+New launches stopped. Healthy3E6SU0GRTs and conservativeNL/NKproofs left running. All3SU0LECsEQ andPLACE/CTSimagesviewed; no routebeyondunreviewedGRT. Detailedlivepaths/results/sourcealiasrepair/batchblockers: handoff/codex_qc_watcher_to_claude_20261107_reset.md. No newtests/probes/staging afterreset.
