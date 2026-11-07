@@ -213,7 +213,10 @@
     "kv3_pv_v6n@9",
     "kv3_pv_v6@10",
     "kv3_pv_v7@12",
-    "kv3_io_ft_v1@8"
+    "kv3_io_ft_v1@8",
+    "kv3_hgi_v8@16",
+    "kv3_hub_Eo@14",
+    "kv3_pv_v6n@10"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -569,8 +572,7 @@
    ],
    "gen_hosts": [
     "epyc5",
-    "intel2",
-    "intel1"
+    "epyc4"
    ],
    "place_prefer": [
     "epyc5",
@@ -5004,5 +5006,6 @@
  "note_kw24_queue_push": "KW-FIX-24 11-06 18:48 COORD 18:5x QUEUE PUSH: place hosts + place_prefer epyc4, epyc2 first (scratch3 362/401 GB; kw17 watcher not running), epyc5, intel1; epyc6 stays out (no_resume_hosts); max_launch_per_tick 40 -> 60; retry += infra casualties (5) + HBM queue-rejected (7)",
  "note_kw24_intel1_src": "KW-FIX-24 11-06 19:06: intel1 src copies kw21/src_c926f + kw23/src_e9eda resynced from epyc5 (46.1k + 46.8k pruned files restored, tools/die_plan/bind.py present); intel1 back in gen_hosts; the 6 KV kit_rtl 'tool input file missing' rows retried",
  "note_kw24_src7281": "KW-FIX-24 11-06 19:33 (COORD I226 'switch to these tags' + 18:5x PART 47/49 + 19:2x stale-source): all dies src -> kw24/src_7281a = main 7281ac2667f (tracked tree verified by blob hash on intel2/epyc5/epyc2/intel1/epyc4; flow tags 1106 cg/ch..; only HBM data after a0225f4348e); HBM plan -> kw24/hbm_d44v_7281a = main plan_of_record/d44v (parts through 49 + 38/40, .gz unpacked); KV plan -> kw24/kv_plan_7da_ad = byte copy of codex-wave-1105/src_7da_ad plan_of_record (pruned to 2 files on intel2, absent on epyc2); .keep in each",
- "note_kw24_pref2": "KW-FIX-24 11-06 19:33 COORD 19:2x: relaunch batch to epyc5 + intel2 first (epyc4 admits 14 GB, epyc6 low gen disk): place_prefer epyc5, intel2, epyc2; gen_hosts epyc5, intel2 + previous (src_7281a staged on intel2/epyc5/epyc2/intel1/epyc4)"
+ "note_kw24_pref2": "KW-FIX-24 11-06 19:33 COORD 19:2x: relaunch batch to epyc5 + intel2 first (epyc4 admits 14 GB, epyc6 low gen disk): place_prefer epyc5, intel2, epyc2; gen_hosts epyc5, intel2 + previous (src_7281a staged on intel2/epyc5/epyc2/intel1/epyc4)",
+ "note_kw24_kvgen": "KW-FIX-24 11-06 19:39: KV strict bind of record (kw23/bind_kv_q) names HDL in codex-wave-1105/src_7da_ad, whole only on epyc5/epyc4/epyc6 (0 rtl files on intel2/intel1) -> KV gen_hosts [epyc5, epyc4]; 3 bind-source FAIL rows retried; class fix claude/kw-fix-24-srcready-1106 READY"
 }
