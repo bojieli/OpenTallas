@@ -1766,11 +1766,37 @@ def run_sdc_lint(disc, ports, margin_policy=None):
                 sdc=disc["sdc"], sdc_source=disc["sdc_source"])
 
 
+def kit_ctx_dir(disc, *names):
+    """DIE-S81-72 11-06 (AUTO-RESIGN ECO-dir class, face_guard half): the directory a kit-context reader reads `names`
+    from.  discover() already reads constraint.sdc / sdc_lint.json / pins.json / ft_ports.json of a pruned post-route ECO
+    pass dir (eco_*/iN) from its parent kit; the face guard read land_slots.json, ft_stations.txt, freeze.json, straps,
+    dead / spare / timed / pad-clock sidecars and boundary_guard_context.json straight from the pass dir, so a pass dir
+    copied without them (s81 slice_station__t7__cl362204c4 eco_20261106_102759_1969707/i2 on epyc6: 93 of 203 files)
+    re-signed face_guard FAIL shared 584 (the hold_mux land slots were not seen) on a DB signed with face_guard PASS.
+    Same rule as discover.ctx: the pass dir itself wins when it holds any of `names`; else the kit_config parent kit
+    when that holds one; else the dir unchanged (a normal kit is unchanged)."""
+    if not disc.get("kit"):
+        return None
+    k = Path(disc["kit"])
+    if any((k / n).exists() for n in names):
+        return k
+    _cfg, parent = kit_config(k)
+    if parent is not None and Path(parent).resolve() != k.resolve() and any((Path(parent) / n).exists() for n in names):
+        return Path(parent).resolve()
+    return k
+
+
+def kit_ctx_file(disc, name):
+    """the kit-context file `name` by the kit_ctx_dir rule, or None without a kit."""
+    d = kit_ctx_dir(disc, name)
+    return d / name if d is not None else None
+
+
 def boundary_controls(disc):
     """Read a generated core's typed control contract; never exempt data pins."""
     if not disc.get("kit"):
         return [], None
-    manifest = Path(disc["kit"]) / "boundary_guard_context.json"
+    manifest = kit_ctx_file(disc, "boundary_guard_context.json")
     if not manifest.is_file():
         return [], None
     ctx = json.loads(manifest.read_text())
@@ -1802,7 +1828,7 @@ def hard_core_latency_contract(disc):
     partition-tap target (COORD 10-24)."""
     if not disc.get("kit"):
         return None
-    manifest = Path(disc["kit"]) / "boundary_guard_context.json"
+    manifest = kit_ctx_file(disc, "boundary_guard_context.json")
     if not manifest.is_file():
         return None
     ctx = json.loads(manifest.read_text())
@@ -1840,7 +1866,8 @@ def run_internal_core_face_guard(disc, fz, contract, mixed=False):
     face-register rule, which that contract does not claim.  Same netlist (1_synth.v), same skip set (clock + reset
     ports of freeze.json); fail closed when the census or its inputs are missing."""
     import importlib.util
-    src = internal_core_guard_source(disc["kit"])
+    kdir = kit_ctx_dir(disc, "freeze.json")   # the kit whose freeze.json declared the contract (ECO pass dir -> parent)
+    src = internal_core_guard_source(kdir)
     base = dict(netlist=disc["synth"], contract=contract, mode=("R2 native seam endpoints + ordinary exclusive external faces" if mixed else
                                           "INTERNAL_CORE endpoint census (kit face_guard_core rule)"))
     if src is None:
@@ -1852,7 +1879,7 @@ def run_internal_core_face_guard(disc, fz, contract, mixed=False):
         spec.loader.exec_module(icg)
         skip = "^(" + "|".join(re.escape(re.sub(r"\[\d+\]$", "", n)) for n in fz["clocks"] + fz["resets"]) + ")$"
         checker = icg.mixed_guard if mixed else icg.guard
-        r = checker(Path(disc["synth"]).read_text(errors="replace"), fz["design"], Path(disc["kit"]), fz, skip)
+        r = checker(Path(disc["synth"]).read_text(errors="replace"), fz["design"], kdir, fz, skip)
     except Exception as e:
         return dict(base, verdict="FAIL", reason=f"internal_core_guard error: {e}", fail_counts={"contract": 1},
                     guard=str(src))
@@ -1883,7 +1910,7 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
     import face_guard
     if not disc.get("synth"):
         return dict(verdict="NOT RUN", reason="no synthesized netlist (1_synth.v / 1_2_yosys.v) in the routed base")
-    fzp = Path(disc["kit"]) / "freeze.json" if disc.get("kit") else None
+    fzp = kit_ctx_file(disc, "freeze.json")
     if fzp is not None and fzp.is_file():
         fz = json.loads(fzp.read_text())
         contract = (fz.get("source_profile") or {}).get("endpoint_contract")
@@ -1915,7 +1942,7 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
             skip = sorted(set(skip) | {root})
     # 12.2a1 (COORD 10-26 12:55): declared die-timed ft ports (kit ft_ports.json) are not core IO, so not face registers;
     # their structure (port -> fixed BUF -> port) is checked by the kit's own ft gate (KV core_preflight island_ft)
-    ftp = Path(disc["kit"]) / "ft_ports.json" if disc.get("kit") else None
+    ftp = kit_ctx_file(disc, "ft_ports.json")
     if ftp is not None and ftp.is_file():
         skip = sorted(set(skip) | {p["name"] for p in json.loads(ftp.read_text()).get("ports", [])})
     # Keep the guard's canonical clock/reset contract (including registered wavefront rst_o_<k>
@@ -1923,21 +1950,21 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
     skip_re = r"(?:" + face_guard.SKIP_RE + r")|^(?:" + "|".join(re.escape(x) for x in skip) + r")$"
     if pins is not None:                      # the clock / reset pins are not face registers
         pins = [x for x in pins if not re.match(skip_re, str(x.get("bus")))]
-    ft_file = Path(disc["kit"]) / "ft_stations.txt" if disc.get("kit") else (
+    ft_file = kit_ctx_file(disc, "ft_stations.txt") if disc.get("kit") else (
         Path(disc["pins"]).with_name("ft_stations.txt") if disc.get("pins") else None)
     try:
         ft1 = face_guard.read_ft1(ft_file) if ft_file and ft_file.is_file() else set()
         # OWNER 10-25 option B: declared ID straps (kit straps.json / core.json id_strap) need no pin register
-        sl = face_guard.kit_strap_list(disc["kit"]) if disc.get("kit") else []
+        sl = face_guard.kit_strap_list(kit_ctx_dir(disc, "straps.json", "sdc_lint.json", "core.json")) if disc.get("kit") else []
         # QK-CORES-5 10-27: declared proven-dead inputs (kit dead_inputs.json + proof receipt), verified unloaded
-        dl = face_guard.kit_dead_list(disc["kit"]) if disc.get("kit") else []
+        dl = face_guard.kit_dead_list(kit_ctx_dir(disc, "dead_inputs.json")) if disc.get("kit") else []
         # DIE-S81-46 spare (tied) outputs + DIE-KV-61/hr declared timed-face buses, as the face_guard CLI reads them
-        spl = face_guard.kit_spare_list(disc["kit"]) if disc.get("kit") else []
-        tml = face_guard.kit_timed_list(disc["kit"]) if disc.get("kit") else []
+        spl = face_guard.kit_spare_list(kit_ctx_dir(disc, "spare_out.json")) if disc.get("kit") else []
+        tml = face_guard.kit_timed_list(kit_ctx_dir(disc, "timed_face.json")) if disc.get("kit") else []
         # S81-CORE-LAT-R21: declared landing-ring slots (kit land_slots.json), as the kit face_guard_core / CLI pass them
-        lf = Path(disc["kit"]) / "land_slots.json" if disc.get("kit") else None
+        lf = kit_ctx_file(disc, "land_slots.json")
         land = face_guard.kit_land(lf) if lf is not None and lf.is_file() else None
-        pad_clocks, native_clock_pins = face_guard.kit_pad_clocks(disc['kit'], library_receipt) if disc.get('kit') else ([], set())
+        pad_clocks, native_clock_pins = face_guard.kit_pad_clocks(kit_ctx_dir(disc, 'pad_clock.json'), library_receipt) if disc.get('kit') else ([], set())
         # DIE-KV-69 11-04: same SDC facts as the face_guard CLI / kit gate read, so a landing clock on a [0:0] bus and a
         # declared forwarded output are clock roles here too.  guard() still proves an export is buffers from its source.
         sdc_text = Path(disc['sdc']).read_text() if disc.get('sdc') else ""
