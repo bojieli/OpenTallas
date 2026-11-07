@@ -47,6 +47,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import threading
 import time
 from pathlib import Path
 
@@ -361,6 +362,91 @@ exit $rc
 '''
 
 
+# KW-FIX-24 11-06 (COORD 15:5x, S81-ENGRR-B6 15:23/15:56): the route-keep incremental GRT (OT_PRD_ROUTE_KEEP ripped ...
+# -> global_route -end_incremental -> ... restore) hung 3x on S81 eng_rr_e (B3, B4 eco1, B6 eco1r, epyc2): openroad at
+# 100% of one core, run_prd.log flat for 90+ min.  Class fix: while a pass runs, a watchdog reads run_prd.log; when the
+# last route-keep line is the rip (no restore after it) and the log has not grown for GRT_FLAT_S, it stops that pass's
+# ECO container (docker stop of the prd-* container whose /work mount is this pass dir, nothing else) and the iteration
+# ends grt_hang; run_loop reruns it ONCE as a full ECO route (OT_PRD_FROM=grt on every pass: incremental GRT from the
+# ECO's GRT seed + a full detailed route, no route-keep) in i<n>g.  No check, margin or corner changes.
+GRT_FLAT_S = int(os.environ.get("OT_ECO_GRT_FLAT_S", "2700"))   # 45 min
+WATCH_POLL_S = 60
+KEEP_RIP = re.compile(r"OT_PRD_ROUTE_KEEP ripped (\d+) nets")
+KEEP_RESTORE = "OT_PRD_ROUTE_KEEP restore"
+
+
+def grt_hang(log, flat_s=None, now=None):
+    """-> rip count (int) when run_prd.log sits in the route-keep incremental GRT (rip line, no restore after it) and
+    has not grown for flat_s seconds; else None"""
+    flat_s = GRT_FLAT_S if flat_s is None else flat_s
+    try:
+        st = os.stat(log)
+        t = Path(log).read_text(errors="replace")
+    except OSError:
+        return None
+    m = None
+    for m in KEEP_RIP.finditer(t):
+        pass
+    if m is None or KEEP_RESTORE in t[m.end():]:
+        return None
+    if (now or time.time()) - st.st_mtime < flat_s:
+        return None
+    return int(m.group(1))
+
+
+def stop_eco_container(pd):
+    """docker stop the prd-* ECO container(s) of pass dir pd (matched by the /work bind mount source) -> names stopped"""
+    dk = docker().split()
+    pd = str(Path(pd).resolve())
+    try:
+        ids = subprocess.run(dk + ["ps", "-q", "--filter", "name=prd-"], capture_output=True, text=True,
+                             timeout=60).stdout.split()
+    except (OSError, subprocess.SubprocessError):
+        return []
+    hit = []
+    for cid in ids:
+        try:
+            r = subprocess.run(dk + ["inspect", "-f", "{{.Name}}\t{{range .Mounts}}{{.Source}}|{{.Destination}} {{end}}",
+                                     cid], capture_output=True, text=True, timeout=60).stdout.strip()
+        except (OSError, subprocess.SubprocessError):
+            continue
+        name, _, mounts = r.partition("\t")
+        srcs = [m.rpartition("|")[0] for m in mounts.split() if m.endswith("|/work")]
+        if any(os.path.realpath(x) == pd for x in srcs):   # docker -v keeps the logical path; compare resolved
+            subprocess.run(dk + ["stop", "-t", "30", cid], capture_output=True, timeout=180)
+            hit.append(name.lstrip("/"))
+    return hit
+
+
+class GrtWatch:
+    """background watchdog over one ECO pass (see GRT_FLAT_S); .hung = None or dict(rip=, flat_s=, stopped=)"""
+
+    def __init__(self, pd, stop=None, flat_s=None, poll_s=None):
+        self.log = Path(pd) / "run_prd.log"
+        self.pd, self.stop_fn = pd, stop or stop_eco_container
+        self.flat_s = GRT_FLAT_S if flat_s is None else flat_s
+        self.poll_s = WATCH_POLL_S if poll_s is None else poll_s
+        self.hung, self._done = None, threading.Event()
+        self._t = threading.Thread(target=self._loop, daemon=True)
+
+    def _loop(self):
+        while not self._done.wait(self.poll_s):
+            rip = grt_hang(self.log, self.flat_s)
+            if rip is not None:
+                self.hung = dict(rip=rip, flat_s=self.flat_s, at=time.time())
+                self.hung["stopped"] = self.stop_fn(self.pd)
+                return
+
+    def __enter__(self):
+        self._t.start()
+        return self
+
+    def __exit__(self, *a):
+        self._done.set()
+        self._t.join(timeout=5)
+        return False
+
+
 # ------------------------------------------------------------------------------------------------ one iteration
 def flexpa_sig11(pd):
     """the ECO session died with SIGSEGV inside DRT pin access (FlexPA) -- the incremental-GRT dirty-route class"""
@@ -382,7 +468,7 @@ def stage_mismatch(pd):
 
 
 def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE, prev=None, tag="", repair_rc="",
-            trim=True):
+            trim=True, keep_route=True, watch_stop=None):
     """one ECO iteration from routed dir src into root/i<n><tag> (a single-mode kit's t<N> pass first into
     root/i<n><tag>t); repair_rc 'placement' = OT_PRD_REPAIR_RC (FlexPA SIG11 class); -> iteration record (metrics None
     when no sign-off)"""
@@ -414,7 +500,9 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
         pd = d if i == len(vs) - 1 else Path(root) / f"i{n}{tag}{v[0]}"
         it["pass_dirs"].append(str(pd))
         # the first pass of the iteration keeps / re-routes per the DRC count; a later one starts from a fresh ECO route
-        env = dict(os.environ, OT_PRD_FROM=mode if i == 0 else "route", OT_PRD_POST="0", OT_PRD_FINISH="1")
+        # keep_route=False (GRT-hang class retry): every pass is a full ECO route (OT_PRD_FROM=grt), never route-keep
+        env = dict(os.environ, OT_PRD_FROM=mode if i == 0 else ("route" if keep_route else "grt"), OT_PRD_POST="0",
+                   OT_PRD_FINISH="1")
         if (Path(kit) / "kwrs_busfit.py").is_file():  # KW-FIX-5: the kit's LEF-only pins (prd_run.sh busfit_prep)
             env["OT_BUSFIT_PY"] = str(Path(kit) / "kwrs_busfit.py")
         if repair_rc:
@@ -427,7 +515,12 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
             if gone:
                 it.setdefault("trimmed", []).extend(gone)
         it.setdefault("eco_vclk_ps", {})[v] = eco_vclk_frame(pd, v, prev)
-        rc = step("prd_run" + stag, ["bash", PRD / "prd_run.sh", pd, cpus, mem, 1], env=env)
+        with GrtWatch(pd, stop=watch_stop) as w:
+            rc = step("prd_run" + stag, ["bash", PRD / "prd_run.sh", pd, cpus, mem, 1], env=env)
+        if w.hung:
+            it["grt_hang"] = w.hung
+            return end("ERROR", f"ECO {v} route-keep incremental GRT hung (run_prd.log flat {w.hung['flat_s']} s after "
+                                f"ripping {w.hung['rip']} nets; stopped {','.join(w.hung['stopped']) or 'no container'})")
         if rc:
             hit = oom(rc, f"ECO {v} session", pd / "run_prd.log", pd / "run_prd_finish.log")
             if hit:
@@ -561,6 +654,12 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
             res["repair_rc_retry"] = f"iteration {n}: FlexPA SIG11 -> OT_PRD_REPAIR_RC=placement"
             it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
                          tag="r", repair_rc=repair_rc, trim=not keep)
+            res["iterations"].append(it)
+        if it.get("grt_hang") and "grt_hang_retry" not in res:
+            # KW-FIX-24 class retry (once per loop): the same iteration as a full ECO route, no route-keep
+            res["grt_hang_retry"] = f"iteration {n}: route-keep incremental GRT hang -> OT_PRD_FROM=grt, full detailed route"
+            it = iterate(n, src, root, kit, runner, so, "grt", hold_margin, mem, cpus, run, image, prev=prev,
+                         tag="g", repair_rc=repair_rc, trim=not keep, keep_route=False)
             res["iterations"].append(it)
         if it.get("stage_mismatch") and n == 1 and mode == "route":
             # class retry: the kit's routed seed predates its signed 6_final (post-route ECO kit) -> seed with 6_final
