@@ -541,6 +541,44 @@ def snap_macro_placement(placements, tracks_tcl, lef_text_of, outline_um):
     return out, moves
 
 
+def macro_gap_blockages(placements, lef_pins_of, halo_um, gmax_um=30.0):
+    """DIE-HBM-82-EP6 class fix (vms_bank_q0 vecd4ae GRT-0116 in the u_a/u_b bank gap, COORD/DIE-HBM-82 18:0x): a hard
+    placement keep-out (rows cut) over every gap between two static macros whose FACING edges carry no signal pin, when the gap is
+    wider than both halos (std-cell rows survive there) and <= gmax_um.  Such a gap is a routing channel, not a pin channel:
+    cells placed in it take the only M2/M4 (stacked) or M3 (side by side) tracks that cross the macro field.  Pin-edge
+    gaps are never blocked (their cells drive / capture the macro pins).  The box spans the facing overlap + one halo on
+    each end.  lef_pins_of(master) -> (w nm, h nm, rects) as lef_signal_pins.  Returns [(x0, y0, x1, y1) um]."""
+    boxes = []
+    for p_ in placements:
+        w, h, rects = lef_pins_of(p_["macro"])
+        o = p_.get("orient", "R0")
+        x, y = (float(c) for c in p_["xy_um"])
+        edges = set()
+        for r in rects:
+            a0, b0, a1, b1 = _oriented(r[1:], o, w, h)
+            if b0 <= 500: edges.add("S")
+            if b1 >= h - 500: edges.add("N")
+            if a0 <= 500: edges.add("W")
+            if a1 >= w - 500: edges.add("E")
+        boxes.append((x, y, x + w / 1000.0, y + h / 1000.0, edges))
+    out = []
+    for i, A in enumerate(boxes):
+        for B in boxes:
+            if B is A:
+                continue
+            ox0, ox1 = max(A[0], B[0]), min(A[2], B[2])
+            g = B[1] - A[3]
+            if ox1 - ox0 > 0 and 2 * halo_um < g <= gmax_um and "N" not in A[4] and "S" not in B[4]:
+                if not any(C is not A and C is not B and C[0] < ox1 and C[2] > ox0 and C[1] < B[1] and C[3] > A[3] for C in boxes):
+                    out.append((round(ox0 - halo_um, 3), round(A[3], 3), round(ox1 + halo_um, 3), round(B[1], 3)))
+            oy0, oy1 = max(A[1], B[1]), min(A[3], B[3])
+            g = B[0] - A[2]
+            if oy1 - oy0 > 0 and 2 * halo_um < g <= gmax_um and "E" not in A[4] and "W" not in B[4]:
+                if not any(C is not A and C is not B and C[1] < oy1 and C[3] > oy0 and C[0] < B[0] and C[2] > A[2] for C in boxes):
+                    out.append((round(A[2], 3), round(oy0 - halo_um, 3), round(B[0], 3), round(oy1 + halo_um, 3)))
+    return out
+
+
 def macro_reg_guide_spec(placements, lef_size_of, scope, grow_um, core_box):
     """HBM-CORES-REBAL-10 (opt-in --macro-reg-guide SCOPE): one GPL guide box per static macro <P>.<leaf>: the macro's
     placed bbox grown by grow_um on every side, clipped to core_box (x0, y0, x1, y1 um); members = the instances under
@@ -1463,6 +1501,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                          "off = kit unchanged")
     ap.add_argument("--macro-reg-guide-um", type=float, default=15.0,
                     help="guide box = macro bbox grown by this many um on every side (clipped to the core area)")
+    ap.add_argument("--macro-gap-block", default="on", choices=["on", "off"],
+                    help="DIE-HBM-82-EP6 class fix: no std-cell rows (hard keep-out) over gaps (> 2 halos, <= 30 um) between static "
+                         "macros whose facing edges have no signal pin (routing channels); off = the old kit")
     ap.add_argument("--macro-grid-snap", default="on", choices=["on", "off"],
                     help="HBM-CORES-REBAL-9: snap --macro-placement origins to the kit pin-layer track grid "
                          "(kit preflight macro_pin_grid); 'off' keeps the table verbatim (that kit fails preflight)")
@@ -2237,6 +2278,31 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             rows.append(f"  {{{inst}}} {placement['macro']} {_um(x)} {_um(y)} {orient}")
         lines = (["foreach {inst master x y orient} {"] + rows +
                  ["} {", "  place_macro -macro_name $inst -location [list $x $y] -orientation $orient -exact", "}"])
+        if a.macro_gap_block == "on":
+            gaps = macro_gap_blockages(rec["macro_placement"],
+                                       lambda m_: lef_signal_pins((kd / "macros" / f"{m_}.lef").read_text(), m_),
+                                       float(rec.get("macro_place_halo_um", 4.32)))
+            if gaps:
+                rec["macro_gap_block"] = [list(b) for b in gaps]
+                # rows are cut (not a dbBlockage): tapcell runs after this file and would drop taps into a blockage
+                # (DPL-0033 overlap); with no row there, tapcell/endcaps follow the cut as they do at macro halos.
+                lines += ["# DIE-HBM-82-EP6 class fix (--macro-gap-block on): no std-cell rows in no-pin macro gaps",
+                          "proc ot_mgb_cut {x0 y0 x1 y1} {",
+                          "  set blk [ord::get_db_block]; set d [$blk getDefUnits]",
+                          "  set X0 [expr round($x0*$d)]; set Y0 [expr round($y0*$d)]; set X1 [expr round($x1*$d)]; set Y1 [expr round($y1*$d)]",
+                          "  foreach row [$blk getRows] {",
+                          "    set bb [$row getBBox]",
+                          "    if {[$bb yMax] <= $Y0 || [$bb yMin] >= $Y1 || [$bb xMax] <= $X0 || [$bb xMin] >= $X1} continue",
+                          "    set site [$row getSite]; set sp [$row getSpacing]; set o [$row getOrigin]; set ox [lindex $o 0]; set oy [lindex $o 1]",
+                          "    set n [$row getSiteCount]; set nm [$row getName]; set ori [$row getOrient]; set dir [$row getDirection]",
+                          "    odb::dbRow_destroy $row",
+                          "    set nl [expr ($X0 - $ox) / $sp]",
+                          "    if {$nl > 0} { odb::dbRow_create $blk ${nm}_mgbL $site $ox $oy $ori $dir [expr min($nl, $n)] $sp }",
+                          "    set k [expr ($X1 - $ox + $sp - 1) / $sp]",
+                          "    if {$k < $n} { odb::dbRow_create $blk ${nm}_mgbR $site [expr $ox + $k * $sp] $oy $ori $dir [expr $n - $k] $sp }",
+                          "  }",
+                          "}"]
+                lines += [f"ot_mgb_cut {_um(b[0])} {_um(b[1])} {_um(b[2])} {_um(b[3])}" for b in gaps]
         (kd / "macro_placement.tcl").write_text("\n".join(lines) + "\n")
         cfg.append("export MACRO_PLACEMENT_TCL = /work/macro_placement.tcl")
     if a.macro_reg_guide:
