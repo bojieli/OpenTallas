@@ -23,6 +23,12 @@ No outline, pin, bus, macro, strap, clock or reset key changes; every other type
   the A2/A3 row and elemB (y 714 / 718, clear of every hard core + 8.64-um halo), the earlier ones evenly along the
   x_q -> band leg.  Existing RTL flops only (0 cycles), no BST / param / wrapper change; BST 2 = no-op.
 
+  l48ul (DIE-HEAD-79 11-07, hd_tile 3 ECOs exhausted TT -43 DRV 541): --xcross.  x_q (x 130-190) -> u_xo (x 510-570) crosses
+  elemB (x 216-501, y 734-1019).  143 of 278 TT slew rows are this hop, because repair buffers fell off the macro into the
+  y 731 / y 1021 channels.  --xcross squeezes both site columns against the macro halo (x_q 190-207, u_xo 510-527) and adds
+  macro_cross: one strong driver at the launch, no repair on the crossing net (kit_istations.py).  0 cycles.  With
+  --set ROW_HOP=2 (per-core static row0 hops, 0 data cycles) this removes the setup miss on the strap.
+
 usage: head_tile_hop_delta.py SRC_PREPARED_DIR OUT_DIR --republish TOOLS_ROOT [--event l48ug --set TEN_HOP=2 ...]
                               [--xrelay]
   without --set: the l48uf parameter set (the params must not be set yet); with --set: those keys only (may overwrite);
@@ -81,6 +87,26 @@ def x_relay(T, bst):
     return moved
 
 
+def x_cross(T):
+    """squeeze x_q / u_xo sites against elemB and declare the crossing (see module doc); returns the moved count"""
+    rs = T["relay_sites"]
+    n = 0
+    for k, v in rs.items():
+        if k.startswith("x_q["):
+            lo = 130.0
+        elif k.startswith("u_xo/q["):
+            lo = 510.0
+        else:
+            continue
+        assert lo <= v[0] <= lo + 60, ("site outside the expected column", k, v)
+        base = 190.0 if lo == 130.0 else 510.0
+        v[0] = round(base + (v[0] - lo) * 17.0 / 60.0, 3)
+        n += 1
+    assert n == 1024, n
+    T["macro_cross"] = [dict(sink_glob="u_core.u_xo/q*", sink_pin="D", cell="BUFx12f_ASAP7_75t_R")]
+    return n
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("src", type=Path); ap.add_argument("out", type=Path)
@@ -88,6 +114,7 @@ def main(argv=None):
     ap.add_argument("--event", default="l48uf-tilehop")
     ap.add_argument("--set", action="append", default=[], metavar="K=V", help="u_core param to set (repeatable)")
     ap.add_argument("--xrelay", action="store_true", help="u_x direct-lane relay sites follow BST (l48uh)")
+    ap.add_argument("--xcross", action="store_true", help="x_q / u_xo sites against elemB + macro_cross (l48ul)")
     a = ap.parse_args(argv)
     root = a.republish.resolve()
     sys.path[:0] = [str(root / "tools/s81_head")]
@@ -100,7 +127,7 @@ def main(argv=None):
     if a.set:
         params = dict(kv.split("=", 1) for kv in a.set)
         assert any(old.get(k) != v for k, v in params.items()), ("no change", old, params)
-    elif a.xrelay:
+    elif a.xrelay or a.xcross:
         params = {}
     else:
         params = PARAMS
@@ -108,6 +135,7 @@ def main(argv=None):
     core[0]["params"].update(params)
     xmoved = x_relay(T, int(core[0]["params"].get("BST", "2"))) if a.xrelay else {}
     assert not a.xrelay or xmoved, "--xrelay: BST < 3, nothing to move"
+    xcrossed = x_cross(T) if a.xcross else 0
     if a.out.exists():
         D.writable(a.out)
         shutil.rmtree(a.out)
@@ -121,6 +149,8 @@ def main(argv=None):
                                      "BST": "+1 on the tile own result, +1 once per lm-head position"})
     if a.xrelay:
         report.update(xrelay_sites=xmoved, xrelay_data_cycles_added=0)
+    if a.xcross:
+        report.update(xcross_sites_moved=xcrossed, xcross_data_cycles_added=0, macro_cross=T["macro_cross"])
     (a.out / "tilehop_report.json").write_text(json.dumps(report, indent=1) + "\n")
     print(json.dumps(report, indent=1))
 

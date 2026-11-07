@@ -40,6 +40,10 @@ module ot_s81hd_bundle #(
     // DIE-HEAD-70 11-05 (hd_tile row0_q -> u_ad1 -115 ps): 1 registers row_in = row0 + 32q per A core before the A input
     // copies.  row0 is the ID strap (static, rst_n held >= 64 clk), so the added edge costs 0 data cycles.
     parameter integer ROW_IN_REG = 0,
+    // DIE-HEAD-79 11-07 (hd_tile row0_q[5] -> g_a[3].g_rir.rir_q[12] -43 ps after 3 ECOs: pin-face strap, adder ~600 um away):
+    // N kept registers per A core between row0 and the row_in add, so the decode is local to its core.  row0 is the ID
+    // strap (static, rst_n held >= 64 clk): 0 data cycles.
+    parameter integer ROW_HOP = 0,
     // DIE-HEAD-70 11-05 (hd_tile flt_q[0] -> flt_h[0] -74 ps, eA0 fault pin ~1 mm from the OR): 1 = a third fault hop
     // (MERGE_HOP only).  The fault is sticky until the next go, so +1 is free like the first two.
     parameter integer FLT_XHOP = 0,
@@ -117,7 +121,18 @@ module ot_s81hd_bundle #(
     generate for (q = 0; q < 4; q = q + 1) begin : g_a
         wire ov, lv;
         wire [31:0] od, ld;
-        wire [16:0] row_in_c = row0 + 17'd32 * q;
+        wire [16:0] row0_l;
+        if (ROW_HOP != 0) begin : g_rhop
+            wire [16:0] rh [0:ROW_HOP];
+            assign rh[0] = row0;
+            for (genvar h = 0; h < ROW_HOP; h = h + 1) begin : g_h
+                ot_s81hd_kreg #(.W(17)) u_rh (.clk(clk), .d(rh[h]), .q(rh[h+1]));
+            end
+            assign row0_l = rh[ROW_HOP];
+        end else begin : g_rh0
+            assign row0_l = row0;
+        end
+        wire [16:0] row_in_c = row0_l + 17'd32 * q;
         wire [16:0] row_in;
         if (ROW_IN_REG != 0) begin : g_rir
             reg [16:0] rir_q;

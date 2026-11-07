@@ -57,6 +57,7 @@ module ot_s81hd_tile_native #(
     //   BST:        bundle x / go broadcast depth (2 = original); +1 = one more x / go stage before the skew line,
     //               +1 cycle on the tile's own result (once per position on the chain)
     parameter integer ROW_IN_REG = 0,
+    parameter integer ROW_HOP = 0,                // DIE-HEAD-79: bundle per-core static row0 hops (ot_s81hd_bundle), 0 data cycles
     parameter integer TEN_HOP = 0,
     parameter integer FLT_XHOP = 0,
     parameter integer BST = 2,
@@ -165,7 +166,7 @@ module ot_s81hd_tile_native #(
     wire [67:0]  nc_hr;
     ot_s81hd_bundle_native #(.INSTANCE(INSTANCE), .IOREG(IOREG), .SAFE(1), .CUT(CUT), .SPLIT9(SPLIT9), .FADD_L4(FADD_L4), .CV(CV),
                      .A_INPUT_STAGES(A_INPUT_STAGES), .MERGE_HOP(MERGE_HOP),
-                     .ROW_IN_REG(ROW_IN_REG), .FLT_XHOP(FLT_XHOP), .BST(BST)) u_b (
+                     .ROW_IN_REG(ROW_IN_REG), .ROW_HOP(ROW_HOP), .FLT_XHOP(FLT_XHOP), .BST(BST)) u_b (
         .hci0_ck0_i(hci0_ck0_i), .hci0_ck1_i(hci0_ck1_i), .hci0_mesh_i(hci0_mesh_i), .hci0_rst_i(hci0_rst_i), .hci0_ck0_o(hci0_ck0_o), .hci0_ck1_o(hci0_ck1_o), .hci0_mesh_o(hci0_mesh_o), .hci0_rst_o(hci0_rst_o), .hci1_ck0_i(hci1_ck0_i), .hci1_ck1_i(hci1_ck1_i), .hci1_mesh_i(hci1_mesh_i), .hci1_rst_i(hci1_rst_i), .hci1_ck0_o(hci1_ck0_o), .hci1_ck1_o(hci1_ck1_o), .hci1_mesh_o(hci1_mesh_o), .hci1_rst_o(hci1_rst_o), .hci2_ck0_i(hci2_ck0_i), .hci2_ck1_i(hci2_ck1_i), .hci2_mesh_i(hci2_mesh_i), .hci2_rst_i(hci2_rst_i), .hci2_ck0_o(hci2_ck0_o), .hci2_ck1_o(hci2_ck1_o), .hci2_mesh_o(hci2_mesh_o), .hci2_rst_o(hci2_rst_o), .hci3_ck0_i(hci3_ck0_i), .hci3_ck1_i(hci3_ck1_i), .hci3_mesh_i(hci3_mesh_i), .hci3_rst_i(hci3_rst_i), .hci3_ck0_o(hci3_ck0_o), .hci3_ck1_o(hci3_ck1_o), .hci3_mesh_o(hci3_mesh_o), .hci3_rst_o(hci3_rst_o), .hci4_ck0_i(hci4_ck0_i), .hci4_ck1_i(hci4_ck1_i), .hci4_mesh_i(hci4_mesh_i), .hci4_rst_i(hci4_rst_i), .hci4_ck0_o(hci4_ck0_o), .hci4_ck1_o(hci4_ck1_o), .hci4_mesh_o(hci4_mesh_o), .hci4_rst_o(hci4_rst_o),
         .clk(ck), .rst_n(rst_n),
 `ifdef OT_S81HD_MUT_TEN_IGNORED
