@@ -5649,8 +5649,6 @@
   "hnx_rp3h_xs@4",
   "ot_hbm_idx_rootctl_static_am@14"
  ],
- "restage_min_wait_s": 5400,
- "note_restage_kw27": "KW-FIX-27 04:3x interim until claude/kw-fix-27-restage-1107 is deployed: the deployed code does not bind the move, 35% of moves did not land where logged; default was 1800. Remove after deploy.",
  "hold_ss3_t50": "KW-FIX-22 11:0x: PLAN loop stop. Stale retry entries ot_s81sl_leaf__t50@2..@5 (KW-FIX-4/6 11-03/04) matched today's new attempts, so the wave relaunched it every tick (10:28 a4, 10:37 a5, 10:57 a6) into the same kit_topology fail-closed 'kit_istations: leafup_o0 stations already inserted'. Same kit_istations class as kv_leaf__t1/t3/t4/t5 (DIE-S81-69 owns, COORD 10:2x (3)); release with that plan fix",
  "retry_ss3": [
   "col_h10_r0_p1__t1__cl574cc59d@9",
@@ -5771,5 +5769,7 @@
    "slw_fe_v2__cle312294d@6"
   ]
  },
- "note_kw27c": "KW-FIX-27 11-07: S81 src kw27/src_54cce, QC src kw27/src_54cce_qc4 (collector event + restage + kit_istations); branch heads, re-sign after merge"
+ "note_kw27c": "KW-FIX-27 11-07: S81 src kw27/src_54cce, QC src kw27/src_54cce_qc4 (collector event + restage + kit_istations); branch heads, re-sign after merge",
+ "hold_unchanged": true,
+ "note_hold_unchanged": "KW-FIX-27 11-07, COORD 05:24, OWNER 05:1x no P&R retries: TIMING/ROUTING FAIL relaunches only with REDESIGN: in retry_fix for item@attempt; other classes hold when the row inputs are unchanged; list in kit_wave_redesign.tsv"
 }
