@@ -205,21 +205,6 @@ proc cland_put_column {i ax ay bx by tag sp cur fw} {
 }
 # DIE-HEAD-13 opt-in: sp = reserve spread given by the caller (else from the tag), cur = resume the row scan at the last
 # site this band placed (ordered fill: O(n) instead of the O(n^2) rescan from the band corner). Defaults unchanged.
-# DQ87 11-07 (QC slw_fe_v1 cl08d14f0d): a local same-cycle reset copy has a 4.32-um site window around its one consumer. On a
-# crowded face that window can be all FIRM face flops, which stopped PLACE with no legal site. The copy is a single flop with
-# a local load, so it may stand a little further off: grow the window, nearest first. A copy that fits is unchanged.
-proc cland_put_local_reset {i rect tag} {
- lassign $rect ax ay bx by
- foreach g {0 4.32 8.64 17.28 34.56} {
-  set r [list [expr {$ax-$g}] [expr {$ay-$g}] [expr {$bx+$g}] [expr {$by+$g}]]
-  if {![catch {cland_put $i $r $tag} err opts]} {
-   if {$g > 0} { puts "OT_CLAND local-reset [$i getName]: window grown by $g um" }
-   return
-  }
-  if {![string match {OT_CLAND no legal*} $err]} { return -options $opts $err }
- }
- error "OT_CLAND no legal nonoverlapping row/site in reserved band for [$i getName] ($tag, grown 34.56 um)"
-}
 proc cland_put {i rect tag {sp {}} {cur 0}} {
  global ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done cland_n cland_fh cland_cursor
  # multi-rect band (::cland_multi, called with its first rect): a cell with no site in the current rect goes to the
@@ -1201,7 +1186,8 @@ foreach spec $cland_groups {
   set nm [$i getName]
   if {[dict exists $cland_done $nm]} continue
   if {[[$i getMaster] isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
-  if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq "local-reset"} { cland_put_local_reset $i $rect $tag } else { cland_put $i $rect $tag };incr hit
+  # DQ87 11-07 (QC slw_fe_v1): a 4.32-um local reset window can be all FIRM face flops; this one-load flop may stand further off.
+  if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq "local-reset"} { cland_put_grow $i $rect $tag local-reset } else { cland_put $i $rect $tag };incr hit
  }
  if {!$hit} { error "OT_CLAND no mapped cells found under $prefix" }
 }
