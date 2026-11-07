@@ -1081,7 +1081,8 @@ SCHEMA = {
         "latency": {"type": "object", "additionalProperties": False, "properties": {
             "lanes": {"type": "object", "additionalProperties": {
                 "type": "object", "required": ["cycles"], "additionalProperties": False,
-                "properties": {"cycles": {"type": "integer", "minimum": 1}, "stations": {"type": "integer"},
+                # cycles 0 = registered "leaves" lane (the leaf flops are the stages, bind.py checks it adds 0)
+                "properties": {"cycles": {"type": "integer", "minimum": 0}, "stations": {"type": "integer"},
                                "faces": {"type": "integer"}, "fixed": {"type": "integer"},
                                "boundary": {"type": "integer"},
                                "natural": {"type": "integer"}, "pad": {"type": "integer", "minimum": 0},
