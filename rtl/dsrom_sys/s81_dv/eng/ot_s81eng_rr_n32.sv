@@ -665,8 +665,15 @@ module ot_s81eng_head_n32 #(
         rco[42:36] <= {tg_b, ai_b};
     end
     // response chain -> lookup
+`ifdef OT_S81ENG_SYNC_RST
+    // S81-ENGRR-B7 11-07: bare pin flop, reset gate after it with the reset sampled at the same edge (same value at every edge).
+    reg hr_v_pin, hr_v_en;
+    always @(posedge ck) begin hr_v_pin <= pci[0]; hr_v_en <= rst_n; end
+    always @* hr_v = hr_v_pin & hr_v_en;
+`else
     always @(posedge ck `OT_ARST(rst_n))
         if (!rst_n) hr_v <= 1'b0; else hr_v <= pci[0];
+`endif
     always @(posedge ck) begin hr_slot <= slot; hr_tag <= pci[11:9]; hr_idx <= pci[8:5]; hr_d <= pci[267:12]; end
 endmodule
 (* keep_hierarchy = 1 *)module ot_s81eng_rr_headword #(parameter integer W=11)(
