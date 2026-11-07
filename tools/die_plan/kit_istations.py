@@ -465,6 +465,35 @@ def _col_key(e):
     return f"{e.get('launch', a.replace('core:', ''))}|{e.get('capture', c.replace('core:', ''))}"
 
 
+def _col_chain(txt, launch, capture):
+    """reg names of the station chain launch(st) -> capture.c0 in a bound text, launch side first; None = no instance"""
+    # the bind may dissolve the leading hierarchy (r0_nx types: u_u_t0 / w_u_s0_st, no u_r0_): match the longest suffix
+    cp, lp = capture.split("."), launch.split(".")
+    for d in range(min(len(cp), len(lp))):
+        ci = "_".join(cp[d:])
+        m = re.search(r"\b\w*" + re.escape(ci) + r"\s*\((.*?)\n\s*\);", txt, re.S)
+        if m:
+            launch = ".".join(lp[d:])
+            break
+    else:
+        return None
+    c0 = re.search(r"\.c0\(\s*([\w$]+)", m.group(1))
+    if not c0:
+        return None
+    net, regs, lw = c0.group(1), [], launch.replace(".", "_")
+    for _ in range(16):
+        if lw in net:
+            return regs[::-1]
+        am = re.search(r"\bassign\s+" + re.escape(net) + r"\s*=\s*(\w+)\s*;", txt)
+        q = am.group(1) if am else net
+        dm = re.search(r"\belse\s+" + re.escape(q) + r"\s*<=\s*([\w$]+)", txt)
+        if not dm:
+            return []
+        regs.append(q)
+        net = dm.group(1)
+    return []
+
+
 def col_st_stations(t, txt, tcl, rep):
     """col st -> t0 entries of this type (realised by the col RTL); returns them so core_stations skips them."""
     es = [e for e in t.get("internal_stations", []) if not e.get("conn", "").startswith("bus:") and COL_ST.match(_col_key(e))]
@@ -474,13 +503,17 @@ def col_st_stations(t, txt, tcl, rep):
     regs = sorted({tuple(tuple(r) for r in e["regs_um"]) for e in es})
     if len(ns) != 1 or len(regs) != 1:
         raise SystemExit(f"kit_istations: col st stations: entries disagree (depths {ns}, {len(regs)} site lists; fail closed)")
-    have = sorted({int(j) for j in re.findall(r"cst_st_s(\d+)(?!\d)", txt)})
-    if have != list(range(ns[0])):
-        raise SystemExit(f"kit_istations: col st stations: bound RTL stages {have} but the plan has {ns[0]} "
+    k = _col_key(es[0]).split("|")
+    chain = _col_chain(txt, k[0].rsplit(".", 1)[0] + "_st" if k[0].endswith(".st") else k[0], k[1].split(".c")[0])
+    if chain is None:
+        have = sorted({int(j) for j in re.findall(r"cst_st_s(\d+)(?!\d)", txt)})
+        chain = [f"cst_st_s{j}" for j in have] if have == list(range(len(have))) else []
+    if len(chain) != ns[0]:
+        raise SystemExit(f"kit_istations: col st stations: bound RTL stages {chain} but the plan has {ns[0]} "
                          "(fail closed; the col plan_kit RTL carries cst_st_s*: re-bind on it)")
-    for j, (x, y) in enumerate(regs[0]):
-        tcl.append(f"is_place {{*cst_st_s{j}*}} {x} {y} cst:st")
-    rep.append(dict(col_st=dict(stages=ns[0], entries=len(es), sites=[list(r) for r in regs[0]])))
+    for q, (x, y) in zip(chain, regs[0]):
+        tcl.append(f"is_place {{*{q}*}} {x} {y} cst:st")
+    rep.append(dict(col_st=dict(stages=ns[0], entries=len(es), regs=chain, sites=[list(r) for r in regs[0]])))
     return es
 
 
