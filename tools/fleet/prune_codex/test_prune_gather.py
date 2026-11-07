@@ -77,11 +77,11 @@ def plan(root):
 class Classify(unittest.TestCase):
     TREE = {C + 'codex-top-1106': 0, C + 'codex-top-1106/kid': 1,
             C + 'codex-rel-1106': 0, C + 'codex-rel-1106/kid': 1,
-            C + 'codex-deep-1106': 0, C + 'codex-deep-1106/obs': 1,
+            C + 'codex-deep-1106': 0, C + 'codex-deep-1106/obs': 1, C + 'codex-deep-1106/obs/sibling': 2,
             C + 'codex-free-1106': 0}
     ROWS = [('Q', 'any', C + 'codex-top-1106', 'q:1'),
             ('QREL', 'any', 'codex-rel-1106', 'q:2'),
-            ('Q', 'any', C + 'codex-deep-1106/obs/below/scan/model.a', 'q:3')]
+            ('Q', 'any', C + 'codex-deep-1106/obs/model.a', 'q:3')]
 
     def test_cites_keep_their_trees(self):
         with tempfile.TemporaryDirectory() as r:
@@ -93,6 +93,8 @@ class Classify(unittest.TestCase):
                 self.assertNotIn(a.get(C + k, 'absent'), ('DELETE', 'GITRM'), (k, a))
             self.assertNotIn(a.get(C + 'codex-top-1106/kid', 'absent'), ('DELETE',), a)
             self.assertNotIn(a.get(C + 'codex-rel-1106/kid', 'absent'), ('DELETE',), a)
+            # a retained file keeps what sits beside it: "observer/model.a retained" needs the rest of observer
+            self.assertNotIn(a.get(C + 'codex-deep-1106/obs/sibling', 'absent'), ('DELETE',), a)
             self.assertEqual(a.get(C + 'codex-free-1106'), 'DELETE', a)
 
     def test_incomplete_scan_refused(self):
