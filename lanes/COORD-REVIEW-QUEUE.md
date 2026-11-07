@@ -22580,3 +22580,22 @@ FAILED [AUTOPILOT ff0be616bb51] 2026-11-06 22:32:27 PST AUTOPILOT -> KIT-WAVE-12
   (2) Lane REBAL-1 moves unstarted waiters from intel1, intel2 and epyc2 to epyc5/epyc6. New kits: epyc5/epyc6 first when they have disk. Their disk is the limit (scratch2 69 and 59 GB), so ARCHIVE-1106C and AUTOCLEAN-1 do epyc5/epyc6 right after epyc2.
   (3) RETIRE-EPYC56: stop copying and post what was copied. No deletes.
   (4) INV_HEADROOM_GB is 32 (was 64) on epyc4, epyc5, epyc6 in /etc/ot-heavy.conf, backup .bak-floor32-1106. Report any EARLYOOM or MEMCG-OOM kill on these hosts to COORD; 7-day counts before the change, on my first read: epyc4 1, epyc5 4, epyc6 3.
+- 2026-11-06 22:53 PST STATE [HBM-FORM-SPLIT-14 -> COORD, DIE-HBM-81, DIE-HBM-82, HBM-CONS-1] Nothing signed yet. Two near misses are in their targeted ECOs.
+  | item | host | state | next |
+  |---|---|---|---|
+  | full_x vC eco i2 | epyc2 | NOT SIGNED but very near: TT -3.4 on 2 (d_q -> g_ld3k p), R2R hold -0.21 on 6, slew TT 99 / FF 86, cap 4, DRC 0; the other 1854 FF violators are I2R port (NEEDS_PARENT class). eco_loop itself ended EXHAUSTED at 2 iterations. | targeted eco running from i2 (OT_PRD_TARGETED=1, eco_fullx_vC_t), then LEC + resign |
+  | exp_x vE eco i2 | epyc2 | NOT SIGNED: TT -15.9 on 32, one class wa_pin -> u_m/w_mask_in (wire 326 ps), R2R hold -7.75 on 5, slew TT 130 / FF 114, DRC 0. eco_loop EXHAUSTED. | targeted eco running (eco_expx_vE_t). SUX WCOPY structural form (per its READY) running in parallel, first to sign wins |
+  | exp_x vF eco i2 | epyc2 | EXHAUSTED, TT -93.4 on 51 | closed, vE path kept |
+  | opsa_rest vD | epyc2 | ROUTED, DRC 0 on the same netlist that stuck vA/vB in DRT. NOT SIGNED: TT -82.3 on 56 (R2R), FF all I2R port (3295, 0 R2R), slew TT 616 / FF 441 | eco_loop running (eco_opsa_vD_eco); structural form below if it fails |
+  | opsa_rest vC | epyc2 | in DRT, 44 violations at last look | collect |
+  | opsa_rest vA | epyc4 | STOPPED by exact container name: log flat since 20:48 (2-h rule), same 4 violations. Container was SPLIT-13's, inherited by this lane, as was vB. vD supersedes it. | closed |
+  | opsb vF (COORD form) | epyc2 | NOT SIGNED: TT -159.2 on 150, FF -344 on 968, slew TT 1631, DRC 1, 499k cells. Post-GRT TT was 0.00, so the loss is in route. Not a near miss. | OPSB sub-lane classifies and renders; conservative path = 2x8 split + HBM-CONS-1 vK |
+  | topk vA / vB | intel1 | GRT still congested at last look | collect; smells posted earlier |
+  opsa_rest result: lowering band density removed the DRT stall. Bins >0.7 at GRT: vB 335 (place-to-GRT max 1.23), vC 304 (max 1.12), vD 5 (max 0.84). This is one build each, so it shows the form works on this netlist, not a general rule. Setup moved the other way: vD TT -82 vs vB GRT 0.00 and vC GRT -28, so spreading likely cost wire delay; routed sign-off for vB does not exist to compare.
+  SMELLS: opsa_rest vD route view:
+  - (5/7) u_bin_u_core_io_r/q -> fp_term_q and _4606_ and g_operand_2_req: 14-18 cell paths with 272-297 ps wire on a 760-um-wide block. Suspected single control driver with far sinks; sink spread not measured yet. Fix if the ECO fails: replicate io_r or add one stage (PIN CYCLE, declared).
+  - (2/8) small E/W edge clusters at y ~25-35 um beside the side pins, still above 0.7 in places; DRC 0 there, no fix planned unless it shows in timing.
+  - N band hotspot: fixed.
+  [CHECKED epyc2 /srv/opentallas-scratch2/claude/hbm-form-split-14/viz/opsa_rest_vD_route/density.png, /srv/opentallas-scratch2/claude/hbm-form-split-14/viz/opsa_rest_vD_grt/density.png; classifier /srv/opentallas-scratch3/claude/hbm-form-split-13/est/h14rD/, h14fCi2/, h14xEi2/]
+  No GRT congestion map for opsa_rest: the congestion-5.rpt exists only for vC and vB and was not rendered, and vD has none; density views only so far. exp_x/full_x visual checks are with SUX and have not been posted by me.
+  READY-COUNT: none.
