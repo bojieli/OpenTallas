@@ -357,7 +357,8 @@ def test_col_st_stations_counted_and_sited(tmp_path):
     assert "is_place {*cst_st_s0*} 648.108 172.812 cst:st" in tcl
     assert "is_place {*cst_st_s1*} 933.228 172.812 cst:st" in tcl
     rep = json.loads((kd / "kit_rtl.json").read_text())["kit_istations"]
-    assert rep == [dict(col_st=dict(stages=2, entries=2, sites=[[648.108, 172.812], [933.228, 172.812]]))]
+    assert rep == [dict(col_st=dict(stages=2, entries=2, regs=["cst_st_s0", "cst_st_s1"],
+                                  sites=[[648.108, 172.812], [933.228, 172.812]]))]
     assert (kd / "col_part_bound.sv").read_text() == COL_BOUND
 
 
@@ -369,3 +370,36 @@ def test_col_st_stations_depth_differs_fails_closed(tmp_path):
 def test_col_st_stations_missing_rtl_fails_closed(tmp_path):
     kd, r = _col_run(tmp_path, 2, COL_BOUND.replace("cst_st_s", "xx_s"))
     assert r.returncode != 0 and "bound RTL stages []" in r.stderr
+
+
+# As bound: the bind re-expresses the stages as src-hash regs; the depth is counted along the chain into u_t0.c0.
+COL_BOUND_B = """module col_part_bound (input wire ck, input wire rs, input wire [1:0] w_u_r0_u_s0_st, output wire [1:0] so);
+    wire [1:0] w_u_r0_src_bbb_Q;
+    wire [1:0] w_u_r0_src_aaa_Q;
+    reg [1:0] g_u_r0_src_aaa_q;
+    assign w_u_r0_src_aaa_Q = g_u_r0_src_aaa_q;
+    always @(posedge ck or negedge rs)
+        if (!rs) g_u_r0_src_aaa_q <= {2{1'b0}}; else g_u_r0_src_aaa_q <= w_u_r0_src_bbb_Q[1:0];  // x.sv:2.302
+    reg [1:0] g_u_r0_src_bbb_q;
+    assign w_u_r0_src_bbb_Q = g_u_r0_src_bbb_q;
+    always @(posedge ck or negedge rs)
+        if (!rs) g_u_r0_src_bbb_q <= {2{1'b0}}; else g_u_r0_src_bbb_q <= w_u_r0_u_s0_st[1:0];  // x.sv:2.162
+    ot_s81_sstn_base566 u_u_r0_u_t0 (
+        .c0(w_u_r0_src_aaa_Q[1:0]),
+        .so(so)
+    );
+endmodule
+"""
+
+
+def test_col_st_stations_bound_chain(tmp_path):
+    kd, r = _col_run(tmp_path, 2, COL_BOUND_B)
+    assert r.returncode == 0, r.stderr
+    tcl = (kd / "istations.tcl").read_text()
+    assert "is_place {*g_u_r0_src_bbb_q*} 648.108 172.812 cst:st" in tcl
+    assert "is_place {*g_u_r0_src_aaa_q*} 933.228 172.812 cst:st" in tcl
+
+
+def test_col_st_stations_bound_chain_depth_differs_fails_closed(tmp_path):
+    kd, r = _col_run(tmp_path, 1, COL_BOUND_B)
+    assert r.returncode != 0 and "col st stations" in r.stderr
