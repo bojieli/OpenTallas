@@ -1,0 +1,17 @@
+DIE-HEAD-76 ot_s81hd_lep_pair vE (Sat Nov  7 03:50:37 UTC 2026): DO_NOT_COUNT.
+RE-FORM per COORD 15:0x "HEAD lep0N 2 strikes -> RE-FORM with the pair clk as an edge pin".
+Source: signed kit intel2:/srv/opentallas-scratch2/claude/die-head-46/lep_eco7_kit (5_1_grt.odb, same netlist, same CTS tree).
+Change: clk BTerm moved from the interior M5 (388.92,246.24) to the S face M5 (397.464,0.24) 0.048x0.48 (first free M5 track right of the
+k_lo/k_li S-face bus, x 2.04-395.40). The S face faces the hd_lep0N middle street for all 4 placements (MX/R0/MX/MY).
+Flow: late-stage resume (owner 11-01): load 5_1_grt.odb -> place_pin -> pin_access + full global_route (same args) -> 5_2_route
+-> fill -> finish -> abstract -> post (pin audit, corners, signoff). No new synthesis, placement or CTS; netlist unchanged.
+Pre-build probe: probe/ (old LEF DRT-0073 on 3 of 4 pairs, edge LEF pin_access + GRT + DRT 0 violations).
+SIGNOFF bundle from origin/main e6bfce0cf3 (signoff.py bundle)
+ATTEMPT a1 (Sat Nov  7 04:59:44 UTC 2026): full re-GRT -> DRT 0 violations, pin audit PASS, netlist byte-identical to signed; signoff NOT SIGNED
+  (hold_ff -2.94 ps 1 ep; DRV slew 174 TT / 97 FF on DATA nets: the full re-route changed data topology; signed had 0/0).
+  Kept in signoff_a1/ views_a1/ a1_logs/.
+ATTEMPT a2: guide_transplant.py keeps the signed GRT guides for every net except clk (clk guides from the re-GRT), then route/finish/post.
+RESULT a2 (Sat Nov  7 06:01:54 UTC 2026): DRT 0 violations; pin audit PASS 2142/2142; signoff/signoff.json SIGNED (all 12 checks PASS: setup_tt +68.72, hold_ff +3.68, DRV 0/0).
+  6_final.v byte-identical to the signed lep_eco7 netlist (sha256 bf0d63a5...). clk pinflop insertion TT mean 529.2 (signed 452.9, +76), FF 434.6 (366.3, +68); spread 51.5/46.6 (unchanged).
+  Parent view = view_detailed/ot_s81hd_lep_pair.lef (abstract_detail splice M6/M7, check_ok); probe/probe_b_vE2.log: pin_access + GRT + DRT 0 violations, clk routed to all 4 pairs.
+  Plain ORFS abstract (blanket M6/M7) still fails DRT-0073: the parent must use the detailed view.
