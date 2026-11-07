@@ -72,11 +72,22 @@ module dsdv_eng_rr_e #(
     wire [31:0] rl;
     ot_s81eng_reset3n32 #(.LEAVES(32)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl), .early_n());
     reg [52:0] ks; reg en_q, ly_q; reg [1:0] rk_q;
+`ifdef OT_S81ENG_SYNC_RST
+    // S81-ENGRR-B7 11-07: bare pin flop (face guard: no logic before it); the reset gate moves after the flop, with the
+    // reset sampled at the same edge, so ks_v equals the reset flop's value at every edge.
+    reg ks52_en;
+    always @(posedge ck) begin ks[52] <= f_ks[52]; ks52_en <= rl[0]; end
+`else
     always @(posedge ck `OT_ARST(rl[0])) if (!rl[0]) ks[52] <= 1'b0; else ks[52] <= f_ks[52];
+`endif
     always @(posedge ck) begin ks[51:0] <= f_ks[51:0]; en_q <= cfg_en; ly_q <= cfg_layer; rk_q <= cfg_rank; end
     wire win_v, wf; wire [2:0] win_slot; wire [67:0] win_ids;
     ot_s81eng_win_n32 u_win (.ck(ck), .rst_n(rl[2]), .rst_copy_n(rl[6:5]),
+`ifdef OT_S81ENG_SYNC_RST
+        .en(en_q), .ks_v(ks[52] & ks52_en), .ks_user(ks[51:42]), .ks_tok(ks[41:21]),
+`else
         .en(en_q), .ks_v(ks[52]), .ks_user(ks[51:42]), .ks_tok(ks[41:21]),
+`endif
         .ks_pos(ks[20:0]), .win_v(win_v), .win_slot(win_slot), .win_ids(win_ids), .fault(wf));
     wire hq_v, hr_v, o_v, st_v, st_bad, lf; wire [30:0] hq_atom; wire [2:0] hq_tag, hr_slot, hr_tag, o_beat, o_slot, st_slot;
     wire [3:0] hr_idx; wire [255:0] hr_d; wire [4:0] o_col; wire [263:0] o_d;
