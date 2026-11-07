@@ -4102,7 +4102,17 @@
     "sle_hc1__cl7d360508@9",
     "sle_sc_v1__cl115da35f@6",
     "slw_fe_v1__clfe325744__cldb4efe33@6",
-    "slw_fe_v2__cle312294d@6"
+    "slw_fe_v2__cle312294d@6",
+    "cbf_q01_s2@7",
+    "sle_fe_v1__cl1cbb7497@5",
+    "sle_fe_v1__cl8210183c@5",
+    "sle_st_a_v1__cl67389ecd@9",
+    "sle_stm_v2__cl7b3062fa@6",
+    "slw_fe_v1__cl95cd1d0c@15",
+    "slw_fw_v1__cl51d45468@7",
+    "slw_hc0__cl1bc59e1c@6",
+    "slw_st_a_v2__cl9f076a5c@9",
+    "slw_st_a_v2__clf4365a62@9"
    ],
    "queue_src": "main@93c061c396c7bd38c04eaf958b30d465f087fe58",
    "type_args": {
@@ -4554,7 +4564,17 @@
     "sle_hc1__cl7d360508@9": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
     "sle_sc_v1__cl115da35f@6": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
     "slw_fe_v1__clfe325744__cldb4efe33@6": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
-    "slw_fe_v2__cle312294d@6": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59"
+    "slw_fe_v2__cle312294d@6": "KW-FIX-27 class batch: collector placement from sidecar event d9d01b88ca6, packed delay b79dd1df771, kit-local bound copy 54cce59",
+    "cbf_q01_s2@7": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)",
+    "sle_fe_v1__cl1cbb7497@5": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)",
+    "sle_fe_v1__cl8210183c@5": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)",
+    "sle_st_a_v1__cl67389ecd@9": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)",
+    "sle_stm_v2__cl7b3062fa@6": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)",
+    "slw_fe_v1__cl95cd1d0c@15": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)",
+    "slw_fw_v1__cl51d45468@7": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)",
+    "slw_hc0__cl1bc59e1c@6": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)",
+    "slw_st_a_v2__cl9f076a5c@9": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)",
+    "slw_st_a_v2__clf4365a62@9": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)"
    },
    "gen_hosts": [
     "epyc2",
@@ -6010,5 +6030,17 @@
  "hold_unchanged": true,
  "note_hold_unchanged": "KW-FIX-27 11-07, COORD 05:24, OWNER 05:1x no P&R retries: TIMING/ROUTING FAIL relaunches only with REDESIGN: in retry_fix for item@attempt; other classes hold when the row inputs are unchanged; list in kit_wave_redesign.tsv",
  "restage_max_per_tick_prev_kw28": 12,
- "note_kw28": "KW-FIX-28 11-07 COORD 06:08: new launches on main 93c061c396c (tags cp-head cv-qc cl-kv cw-s81 dt-hbm), src kw27/src_93c06, staged and marker-checked on 6 hosts; running and counted rows not relaunched; *_prev_kw28 restore. restage off until the branch fix merges: 181 of 267 moves today killed a spillable PLACE waiter that ot-run re-places every 120 s, and redid gen. counted_items += counter cache names (selection guard is counted_now; this relabels stale FAIL rows)."
+ "note_kw28": "KW-FIX-28 11-07 COORD 06:08: new launches on main 93c061c396c (tags cp-head cv-qc cl-kv cw-s81 dt-hbm), src kw27/src_93c06, staged and marker-checked on 6 hosts; running and counted rows not relaunched; *_prev_kw28 restore. restage off until the branch fix merges: 181 of 267 moves today killed a spillable PLACE waiter that ot-run re-places every 120 s, and redid gen. counted_items += counter cache names (selection guard is counted_now; this relabels stale FAIL rows).",
+ "retry_kw28_cland": [
+  "cbf_q01_s2@7",
+  "sle_fe_v1__cl1cbb7497@5",
+  "sle_fe_v1__cl8210183c@5",
+  "sle_st_a_v1__cl67389ecd@9",
+  "sle_stm_v2__cl7b3062fa@6",
+  "slw_fe_v1__cl95cd1d0c@15",
+  "slw_fw_v1__cl51d45468@7",
+  "slw_hc0__cl1bc59e1c@6",
+  "slw_st_a_v2__cl9f076a5c@9",
+  "slw_st_a_v2__clf4365a62@9"
+ ]
 }
