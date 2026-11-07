@@ -4,6 +4,8 @@ import argparse,collections,hashlib,json,re
 from pathlib import Path
 
 def spread(text):
+    expected="9f8464ad519bfef73a240770c56a037d6458fccb87608639330802673b183cb5"
+    if hashlib.sha256(text.encode()).hexdigest()!=expected:raise ValueError("unreviewed native pose source")
     rx=re.compile(r'^( \{([^\n]+)\} \{)([0-9.]+) ([0-9.]+) ([0-9.]+) ([0-9.]+) (\S+) (\S+)(\} \\\n)',re.M)
     cells=[]
     for m in rx.finditer(text):
