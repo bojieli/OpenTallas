@@ -5512,5 +5512,7 @@
  "retry_kw27h": [
   "hnx_rp3h_xs@4",
   "ot_hbm_idx_rootctl_static_am@14"
- ]
+ ],
+ "restage_min_wait_s": 5400,
+ "note_restage_kw27": "KW-FIX-27 04:3x interim until claude/kw-fix-27-restage-1107 is deployed: the deployed code does not bind the move, 35% of moves did not land where logged; default was 1800. Remove after deploy."
 }
