@@ -76,9 +76,9 @@ always @(negedge ck) begin
 `ifndef TB_OLD
 `ifdef TB_RSTP_ON
   if (tick > 8) begin
-    if (u_dut.u_g.g_rst_native.g_rp.s1__ot_rl1v != {4{u_dut.u_g.g_rst_native.g_rp.s1__ot_rl1v[0]}}) copyerr = copyerr + 1;
-    if (u_dut.u_g.g_rst_native.g_rp.s2__ot_rl2v != {32{u_dut.u_g.g_rst_native.g_rp.s2__ot_rl2v[0]}}) copyerr = copyerr + 1;
-    if (u_dut.u_g.g_rst_native.g_rp.s3__ot_rl3v != {256{u_dut.u_g.g_rst_native.g_rp.s3__ot_rl3v[0]}}) copyerr = copyerr + 1;
+    if (u_dut.u_g.g_rst_native.g_rp.s1__ot_rl1v != {$bits(u_dut.u_g.g_rst_native.g_rp.s1__ot_rl1v){u_dut.u_g.g_rst_native.g_rp.s1__ot_rl1v[0]}}) copyerr = copyerr + 1;
+    if (u_dut.u_g.g_rst_native.g_rp.s2__ot_rl2v != {$bits(u_dut.u_g.g_rst_native.g_rp.s2__ot_rl2v){u_dut.u_g.g_rst_native.g_rp.s2__ot_rl2v[0]}}) copyerr = copyerr + 1;
+    if (u_dut.u_g.g_rst_native.g_rp.s3__ot_rl3v != {$bits(u_dut.u_g.g_rst_native.g_rp.s3__ot_rl3v){u_dut.u_g.g_rst_native.g_rp.s3__ot_rl3v[0]}}) copyerr = copyerr + 1;
   end
 `endif
 `endif
