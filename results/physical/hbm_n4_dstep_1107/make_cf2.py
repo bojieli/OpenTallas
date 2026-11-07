@@ -7,6 +7,7 @@ for p in b.iterdir():
 for n in ['rtl','macros','reset_contract']:
  if (b/n).exists():shutil.copytree(b/n,k/n)
 shutil.copy2(r/'rtl/hdc/v41x/ot_dsrom_divc.sv',k/'rtl/ot_dsrom_divc.sv')
+for n in ['lec.py','lec_async.sh','selrange_gate.py','rtl_lint.py']:shutil.copy2(r/'tools/die_plan'/n,k/n)
 for n in ['orfs_hold_mm.py','orfs_hold_mm.tcl']:shutil.copy2(d/n,k/n)
 p=k/'config.mk';p.write_text(p.read_text().replace('OT_HOLD_REPAIR_SCOPE = reg2reg','OT_HOLD_REPAIR_SCOPE = nonport'))
 (k/'FORM_CANDIDATE.json').write_text(json.dumps(dict(owner='CODEX-HBM-0615',form='n4_vCF2',base='vCF1',kind='NEW_RTL_REBUILD_NOT_ECO',changes=['exact128entryradix16dstep lookup,no cycles','nonportMM1369repair:excludeinputsONLY'],pin_cycles=0,qualification='DO_NOT_COUNT pending PLACE/route/proof/parentadoption'),indent=1)+'\n')
