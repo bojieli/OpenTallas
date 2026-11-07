@@ -683,19 +683,21 @@ proc ot_hold_structural_gate {} {
   }
   return -code error -errorcode {OPENTALLAS HOLD_STRUCTURAL} $msg
 }
-# HOLD-REPAIR-SCOPE (CODEX 11-06): opt-in internal-only FF data repair. Port hold stays visible at final timing and
-# belongs to the parent arrival contract; do not spend a buffer budget repairing the standalone IO frame. This is an
-# optimization scope only: TT setup is untouched, FF constraints are replayed at full round-trip precision in finally,
+# HOLD-REPAIR-SCOPE: opt-in FF repair scope. Legacy reg2reg excludes input starts and output endpoints.
+# nonport excludes input-port starts only, retaining register-to-output and macro/internal paths (OWNER 11-07).
+# This is an optimization scope only: TT setup is untouched, FF constraints replay at full precision in finally,
 # and the original current mode is restored even on a repair error. Default remains the original all-path repair.
 proc ot_hold_scope_read {path} {
   set fh [open $path r]
   try { return [read $fh] } finally { close $fh }
 }
+set ::ot_hold_scope_supported_modes {reg2reg nonport}
 proc ot_hold_repair_scope {body} {
-  if {![info exists ::env(OT_HOLD_REPAIR_SCOPE)] || $::env(OT_HOLD_REPAIR_SCOPE) ne "reg2reg" ||
+  if {![info exists ::env(OT_HOLD_REPAIR_SCOPE)] || $::env(OT_HOLD_REPAIR_SCOPE) ni {reg2reg nonport} ||
       ![info exists ::ot_mm_synced] || ![info exists ::ot_mm_stage] || $::ot_mm_stage ne "4_cts.sdc"} {
     return [uplevel 1 $body]
   }
+  set scope $::env(OT_HOLD_REPAIR_SCOPE)
   set entry [sta::cmd_mode_name]
   set dir [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : [pwd]}]
   set stem [file join $dir ot_hold_scope_[pid]_[clock clicks]]
@@ -714,12 +716,13 @@ proc ot_hold_repair_scope {body} {
     foreach port [all_inputs] {
       if {![dict exists $clock_sources [get_full_name $port]]} { lappend inputs $port }
     }
-    set outputs [all_outputs]
-    puts "OT_HOLD_SCOPE begin full_ff=[ot_hold_stats] input_ports=[llength $inputs] output_ports=[llength $outputs]"
+    set outputs {}
+    if {$scope eq "reg2reg"} { set outputs [all_outputs] }
+    puts "OT_HOLD_SCOPE begin scope=$scope full_ff=[ot_hold_stats] input_ports=[llength $inputs] excluded_output_ports=[llength $outputs]"
     try {
       if {[llength $inputs]} { set_false_path -hold -from $inputs }
       if {[llength $outputs]} { set_false_path -hold -to $outputs }
-      puts "OT_HOLD_SCOPE repair_ff=[ot_hold_stats] (register-to-register only)"
+      puts "OT_HOLD_SCOPE repair_ff=[ot_hold_stats] scope=$scope (nonport retains register-to-output and macro/internal paths)"
       set_mode $entry
       return [uplevel 1 $body]
     } finally {
