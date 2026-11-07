@@ -65,9 +65,11 @@ Die gates (BIND/GRT/STA/CLK) are not yet passed on any die. ETAs: non-HBM cores 
    - owner questions in plain text with a default;
    - say "signed off".
 
+5b. **epyc5 + epyc6 RETIRE** (OWNER 22:3x: "yes, drain them now and terminate them after 8 hours. only copy the closed records to agidock."). Held in ot-run since 22:30. At about 06:37 PST 11-07: confirm RETIRE-EPYC56's RESULT, verify then Cherry DELETE only 1055547 devoted-wren 185.189.45.167 (epyc5) and 1055546 eager-sunfish 88.216.197.41 (epyc6), drop both from ot-run/counter/autopilot hosts. Lane brief and successors: lanes/_RESTART_1106.md.
+
 ## main and merge train
 
-main = `b37de6e7087` (19:54). Merge lane ROOT-MERGE-46 takes merges on intel2 central `/home/ubuntu/OpenTallas`, using the merge lock and a plain merge plus tests. Approved order, none landed yet:
+main = `239726a28c` (21:41, re-read the queue for the train). Merge lane ROOT-MERGE-46 takes merges on intel2 central `/home/ubuntu/OpenTallas`, using the merge lock and a plain merge plus tests. Approved order, none landed yet:
 
 1. srcready b5710c267d
 2. qcbatch 9976373442 (27 QC types, relay_resite_crossing default ON)
