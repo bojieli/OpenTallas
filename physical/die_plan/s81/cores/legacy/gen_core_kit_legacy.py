@@ -1938,6 +1938,9 @@ def main():
             raise SystemExit(f"{mod}: lec_hints needs the modern kit (lec.py + legacy_gate.py)")
         json.loads((REPO / rec["lec_hints"]).read_text())
         shutil.copyfile(REPO / rec["lec_hints"], kd / "lec_hints.json")
+    if modern:                                    # KW-FIX-24: GRAY-MSB TWIN hints by default (kit lec.py reads them)
+        import lec_gray_twin
+        lec_gray_twin.stage(kd, mod)
     lec_env_cfg = []
     for k, v in sorted(rec.get("lec_env", {}).items()):
         if k not in ("OT_LEC_RAW_BASE_STEPS",) or not modern:
