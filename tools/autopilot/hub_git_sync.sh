@@ -7,6 +7,10 @@
 #                           (1) dirty APPEND-ONLY logs (HANDOFF.md, CODEX-LOG.md, CODEX-HANDOFF.md, lanes/*.md,
 #                               autopilot/queue.tsv, autopilot/resolved.tsv) are committed as they are (agents and
 #                               die_ci_cron.sh append lines in this checkout); any OTHER tracked edit -> FAIL, untouched;
+#                           (1b) GENERATED files (RELEASE_TREE.md, rewritten on the hub by release_tree_plan.py; the
+#                               coordinator commits it from its own checkout) never stall a sync: a local edit is
+#                               discarded and origin's copy wins a merge conflict (KW-FIX-25 11-06: 12 hub commits
+#                               and every intel2 post sat unpushed 22:22-23:0x on this one file);
 #                           (2) fetch + merge origin coord/state (never rebase, never stash, never reset);
 #                               conflicts in append-only logs are resolved by UNION (both sides' lines kept;
 #                               a doubled "DIE-CI LATEST:" line keeps the newest); any other conflict -> merge --abort, FAIL;
@@ -23,6 +27,7 @@ set -uo pipefail
 C=${HUB_SYNC_COORD:-$HOME/coord}; R=${HUB_SYNC_REPO:-$HOME/OpenTallas}; B=${HUB_SYNC_BRANCH:-coord/state}
 URL=git@github.com:bojieli/OpenTallas.git
 APPEND_RE='^(HANDOFF\.md|CODEX-LOG\.md|CODEX-HANDOFF\.md|lanes/[^/]+\.md|lanes/SIGN-RATE\.tsv|autopilot/(queue|resolved)\.tsv)$'
+GENERATED_RE='^RELEASE_TREE\.md$'
 say() { echo "hub-git-sync $1: $2"; }
 now() { date '+%Y-%m-%d %H:%M %Z'; }
 
@@ -51,6 +56,7 @@ ok() {
   say coord "$1"; exit 0
 }
 is_append() { printf '%s\n' "$1" | grep -Eq "$APPEND_RE"; }
+is_generated() { printf '%s\n' "$1" | grep -Eq "$GENERATED_RE"; }
 dedupe_latest() {   # HANDOFF.md: ONE "DIE-CI LATEST:" line (die_ci_cron.sh replaces it in place); $1 = the line to keep
   [ -f HANDOFF.md ] || return 0
   [ "$(grep -c 'DIE-CI LATEST:' HANDOFF.md)" -gt 1 ] || return 0
@@ -77,7 +83,9 @@ merge_union() {   # merge $1; union-resolve append-only conflicts; 0 = merged, 1
   local f bad="" t
   [ -f "$(git rev-parse --git-dir)/MERGE_HEAD" ] || { MERGE_ERR="merge refused (local untracked file in the way?)"; return 1; }
   for f in $(git diff --name-only --diff-filter=U); do
-    if is_append "$f"; then
+    if is_generated "$f"; then
+      git checkout -q --theirs -- "$f" && git add -- "$f" || bad="$bad $f"
+    elif is_append "$f"; then
       t=$(mktemp -d)
       git show ":1:$f" > "$t/base" 2>/dev/null || : > "$t/base"
       git show ":2:$f" > "$t/ours" 2>/dev/null || : > "$t/ours"
@@ -107,7 +115,10 @@ git remote get-url origin >/dev/null 2>&1 || git remote add origin "$URL"
 # (1) commit dirty append-only logs; refuse anything else
 DIRTY=$(git status --porcelain --untracked-files=no | sed 's/^...//; s/.* -> //')
 OTHER=""; APP=""
-for f in $DIRTY; do if is_append "$f"; then APP="$APP $f"; else OTHER="$OTHER $f"; fi; done
+for f in $DIRTY; do
+  if is_generated "$f"; then git checkout -q -- "$f" && say coord "discarded local edit of generated $f"
+  elif is_append "$f"; then APP="$APP $f"; else OTHER="$OTHER $f"; fi
+done
 [ -z "$OTHER" ] || fail "non-log local edits in the hub checkout, not touched:$OTHER"
 if [ -n "$APP" ]; then
   case " $APP " in *" HANDOFF.md "*) dedupe_latest;; esac
