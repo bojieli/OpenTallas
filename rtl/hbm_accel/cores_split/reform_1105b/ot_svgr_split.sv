@@ -499,6 +499,13 @@ endmodule
 // MUT (bench) in addition to RF1: 11 = bk_in data taken from the current heads (not registered with the grant),
 //  12 = owner issues on the first block edge from stale per-block registers, 13 = lookup one-hot one entry off,
 //  14 = take count from the current (not the registered) bank of the accepted head.
+// RF3 (opt-in define OT_SVGR_OWN_RF3 with RF2, DIE-HBM-82-SVGR 2026-11-06): routed RF2 vB (eco_loop 3 iterations
+// exhausted) keeps max slew 424/410 ps (limit 320): every head_q bit fans out to the 8 lane AND-OR selects placed
+// beside the bk_in face flops, a 140-um fo8 net per bit that post-route repair cannot fix.  RF3 registers each lane
+// select in the core (lane_d_q, lane_v_q2): the select sits with the heads and every long wire to the face has fanout
+// 1.  bk_in_v/bk_in_data leave one more hbm_clk later (PIN CYCLES +1 on the bk_in face, both together); credits are
+// still spent on the accept edge, so the landing FIFO still never overflows.  MUT 15 = bk_in_v not delayed with the
+// data, 16 = lane register loads from the live (unregistered) grant.
 module ot_svgr_owner_rf2 #(parameter integer OWNER_AW=5,parameter integer LB=1,parameter integer MUT=0)(
  input wire [4:0] pc_id,input wire clk,rst_n,descriptor_v,
  input wire block_active,input wire [29:0] block_base,input wire [19:0] block_pcs,
@@ -707,7 +714,13 @@ module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEP
  // A: per lane, a one-hot grant over the 4 PC skid heads from the rotating cursor. O: the grant and the heads are
  // registered; bk_in_v/bk_in_data leave one hbm_clk after the accept edge (PIN CYCLES +1 on the bk_in face).
  reg [1:0] arb_cursor[0:7];wire [31:0] lane_accept;wire [7:0] lane_v;reg [7:0] lane_v_q;reg [3:0] gnt_q[0:7];
+ `ifdef OT_SVGR_OWN_RF3
+ reg [7:0] lane_v_q2;
+ always @*bk_in_v=(MUT==15)?lane_v_q:lane_v_q2;
+ always @(posedge hbm_clk or negedge hrst)if(!hrst)lane_v_q2<=0;else lane_v_q2<=lane_v_q;
+ `else
  always @*bk_in_v=lane_v_q;
+ `endif
  generate for(g=0;g<8;g=g+1)begin:response_fairness
   wire [3:0] req;
   for(pc=0;pc<4;pc=pc+1)begin:rq assign req[pc]=response_ok[pc]&&response_ordinal[pc][2:0]==3'(g)&&fifo_wr_ready[g];end
@@ -720,7 +733,14 @@ module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEP
    if(!hrst)begin gnt_q[g]<=0;lane_v_q[g]<=0;end else begin gnt_q[g]<=gnt;lane_v_q[g]<=lane_v[g];end
   end
   wire [IW-1:0] h0=(MUT==11)?head_c[0]:head_q[0],h1=(MUT==11)?head_c[1]:head_q[1],h2=(MUT==11)?head_c[2]:head_q[2],h3=(MUT==11)?head_c[3]:head_q[3];
+  `ifdef OT_SVGR_OWN_RF3
+  wire [3:0] lg=(MUT==16)?gnt:gnt_q[g];
+  reg [IW-1:0] lane_d_q;
+  always @(posedge hbm_clk)lane_d_q<=({IW{lg[0]}}&h0)|({IW{lg[1]}}&h1)|({IW{lg[2]}}&h2)|({IW{lg[3]}}&h3);
+  assign bk_in_data[IW*g+:IW]=lane_d_q;
+  `else
   assign bk_in_data[IW*g+:IW]=({IW{gnt_q[g][0]}}&h0)|({IW{gnt_q[g][1]}}&h1)|({IW{gnt_q[g][2]}}&h2)|({IW{gnt_q[g][3]}}&h3);
+  `endif
   always @(posedge hbm_clk or negedge hrst)begin
    if(!hrst)arb_cursor[g]<=0;else if(lane_v[g])arb_cursor[g]<=sel+1'b1;
   end
