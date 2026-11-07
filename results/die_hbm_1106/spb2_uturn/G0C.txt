@@ -1,0 +1,9 @@
+DIE-HBM-82-SPB d44v PART 52 plan-time G0/G0C (tools/die_plan/check.py --completeness --plan-geom report), 2026-11-06 20:02 PST
+base = d44v before part 52 (origin/main 7281ac2667, POR materialized by street_p43/mat_por.py); new = base + this part
+base: G0C FAIL 971 errors, 64 pending-view, 1314 warnings (pre-existing, unchanged)
+new : G0C FAIL 971 errors, 64 pending-view, 1314 warnings
+finding diff (2349 vs 2349 findings): NEW 0 errors, GONE 0 errors; 1 WARN value changed (better):
+  q_spb2 geom_tap_sinks clk_t16 8239 -> 4394 (limit 1500, advisory)
+GRT probe (tools/autopilot/geom_grt.tcl, M2-M7, adj 0.25, 50 it, same kit, epyc5):
+  before: old 3_place.odb still in extra iterations (8 rounds seen), not converged
+  after : re-placed with part-52 sites, OT_FACE_FLOPS 24427 stations FIRM 0 missing, GRT 0/0/0 congestion, usage 5.04%, WL 11.13 m
