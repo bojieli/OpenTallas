@@ -117,7 +117,7 @@ def rg_inputs(k, ve):
     mp = [dict(k="u_core.u_pair", origin_um=[69.12, 8.64], orient="MX", macro=PAIR)]
     sites = [(483.84, 509.76), (665.28, 509.76), (483.84, 544.32), (665.28, 544.32), (302.4, 544.32)]
     for i, xy in enumerate(sites):
-        mp.append(dict(k=f"u_core.u_txl.g_safe_write.u_m.g_bank[{i}].u_m", origin_um=list(xy), orient="R0", macro=M_TX))
+        mp.append(dict(k=f"u_core.u_txl.g_tx[{k}].g_safe_write.u_m.g_bank[{i}].u_m", origin_um=list(xy), orient="R0", macro=M_TX))
     bb = ve / f"{PAIR}_bb.v"
     files = [MEM.format(M_TX), str(bb.relative_to(ROOT)), SPLIT] + COMMON
     return dict(module=f"ot_s81hd_lep0N_rg{k}", top="ot_s81hd_lep0N_region_core", w=w, h=h, pins=pins, mp=mp, files=files,
