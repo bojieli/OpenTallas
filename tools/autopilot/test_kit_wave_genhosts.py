@@ -368,7 +368,7 @@ def _failrec(tmp_path, cfgd, **over):
 
 
 def test_unchanged_fail_holds_same_inputs_only(tmp_path):
-    c = cfg(); r = _failrec(tmp_path, c)
+    c = cfg(); r = _failrec(tmp_path, c, **{"class": "FLOW"})
     assert K.unchanged_fail(c, {}, "s81", "t1", r)                                    # same inputs
     assert not K.unchanged_fail(c, {}, "s81", "t1", dict(r, **{"class": "INFRA"}))     # an infra failure is not a design retry
     assert not K.unchanged_fail(c, {}, "s81", "t1", dict(r, status="CANCELLED"))
@@ -382,3 +382,16 @@ def test_unchanged_fail_holds_same_inputs_only(tmp_path):
     assert not K.unchanged_fail(c4, {}, "s81", "t1", dict(r, prov_key="views1"))
     c5 = cfg(gen_hosts=["epyc4"], place_mem_gb=999)                                     # where it runs is no input
     assert K.unchanged_fail(c5, {}, "s81", "t1", r)
+
+
+def test_timing_or_routing_fail_needs_a_named_redesign(tmp_path):
+    c = cfg(); r = _failrec(tmp_path, c, status="ENQUEUED", q_status="FAIL", q_class="ROUTING")
+    c["dies"]["s81"]["src_sha"] = "new"
+    assert K.unchanged_fail(c, {}, "s81", "t1", r)                                      # a new source alone is no change
+    c["dies"]["s81"]["retry_fix"] = {"t1@1": "class batch, new flow tag"}
+    assert K.unchanged_fail(c, {}, "s81", "t1", r)
+    c["dies"]["s81"]["retry_fix"] = {"t1@1": "REDESIGN: +1 pin cycle on u_k_off"}
+    assert not K.unchanged_fail(c, {}, "s81", "t1", r)
+    c2 = cfg(); c2["dies"]["s81"]["gen_args"] = ["--form", "x"]                           # another input differs
+    assert not K.unchanged_fail(c2, {}, "s81", "t1", r)
+    assert not K.unchanged_fail(c, {}, "s81", "t1", dict(r, q_class="INFRA"))
