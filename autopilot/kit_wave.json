@@ -2769,7 +2769,13 @@
     "hd_tile",
     "hd_serdes",
     "hd_lep0N",
-    "hd_host"
+    "hd_host",
+    "hd_mesh_e",
+    "hd_st_n3_transit",
+    "hd_st_n3_turn",
+    "hd_st_str",
+    "hd_st_turn",
+    "hd_turn_a"
    ],
    "die_max_inflight": 60,
    "owner_lane": "HEAD die owner (DIE-HEAD-70)",
@@ -2922,8 +2928,7 @@
    ],
    "work_root": "/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/s81_head/kit-wave",
    "hold_items": {
-    "hd_spn": "CODEX HEAD owner01:59: future autosubmits held until reviewed prepared-source paid internal-station realization event; current plan prices registerchains but oldl48uh actualRTL has0u_ist stages. Existing spn@3 ifprogressing and private FSTART vA/vB remainowned/live; no sweep or blind same-unrealized-source retry.",
-    "hd_spn_end": "CODEX HEAD owner01:59: future autosubmits held until reviewed prepared-source paid internal-station realization event; current plan prices registerchains but oldl48uh actualRTL has0u_ist stages. Existing spn@3 ifprogressing and private FSTART vA/vB remainowned/live; no sweep or blind same-unrealized-source retry."
+    "hd_spn": "CODEX HEAD owner01:59: future autosubmits held until reviewed prepared-source paid internal-station realization event; current plan prices registerchains but oldl48uh actualRTL has0u_ist stages. Existing spn@3 ifprogressing and private FSTART vA/vB remainowned/live; no sweep or blind same-unrealized-source retry."
    },
    "retry_fix": {
     "hd_spn_eshim_tx@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
@@ -3170,7 +3175,8 @@
     "hd_tile"
    ],
    "hold_items_released": {
-    "hd_spn_eshim_rx": "KW-FIX-16 13:5x released on src_t (g2setup I140): G2 TT -5.7 now advisory"
+    "hd_spn_eshim_rx": "KW-FIX-16 13:5x released on src_t (g2setup I140): G2 TT -5.7 now advisory",
+    "hd_spn_end": "KW-FIX-24 11-06 20:41 COORD 20:4x: relaunch on current src (stale tap-window class); was: CODEX HEAD owner01:59: future autosubmits held until reviewed prepared-source paid internal-station realization event; current plan prices registerchains but oldl48uh actualRTL has0u_ist stages. Existing spn@3 ifprogressing and private FSTART vA/vB remainowned/live; no sweep or blind same-unrealized-source retry."
    },
    "hosts_base": [
     "epyc5",
@@ -3225,7 +3231,22 @@
    "note_hosts_kw23": "KW-FIX-23 12:5x COORD 12:4x (epyc6 admits 167 GB load 40/128, epyc2 476 GB 68/128; epyc4+epyc5 REFUSED): gen epyc6 (src/plan/bind present at the same paths); PLACE prefers epyc6 then epyc2 (spill via the intel2 relay, KW-FIX-22). Revert: place_prefer [epyc5, epyc6], gen_hosts [epyc5, epyc6]. | 14:1x epyc6 full (29 waiters), epyc5 13 GB admits: gen_hosts back to [epyc5, epyc6] so pick_gen_host/restage spread.",
    "note_gen_epyc2_kw24": "KW-FIX-24 14:5x COORD 14:0x(2)/14:2x (epyc6 24-33 pinned gen-stage waiters, admits -2; epyc2 admits 415 GB): gen-host stages (plan/gen/kit_rtl/bind/geom) are pinned to the attempt's gen host because they read the 47-GB src + plan + bind at the same paths (too big to --stage). Class fix: those inputs now exist on epyc2 at the same paths (hardlink rsync off the local src_28fc7 base, +7 GB: kw21/src_c926f, kw23/src_e9eda, kw22/src_3761, kw22/bind_qc_g, kw23/prep_l48ui, kw11/prep_uh, die-s81-70/wave_cg, codex-wave-bind-1106 s81_ready_v3/s81_emitted_v2) and epyc2 joins gen_hosts + hosts, so pick_gen_host/restage_waiters move unstarted waiters off epyc6. work_root -> fresh lane kw24-wave-1106 (epyc2's kw21-wave-1106 lane root carries the ot-run SPILL marker from PLACE spills, so gen_hosts() dropped epyc2). Revert: work_root kw21-wave-1106, drop epyc2.",
    "note_kw24_item10": "KW-FIX-24 COORD 14:3x item 10: gen_args --clock-landing kw11/prep_uh/source_sidecar.json -> kw23/prep_l48ui/source_sidecar.json (sha256 bbdd2f7b5ad1 byte-same, present on epyc5/epyc6/epyc2) so kw11 can retire. Revert: /srv/opentallas-scratch2/claude/kw11/prep_uh/source_sidecar.json",
-   "src_prev_kw24": "/srv/opentallas-scratch2/claude/kw23/src_e9eda"
+   "src_prev_kw24": "/srv/opentallas-scratch2/claude/kw23/src_e9eda",
+   "only_items_prev_kw24": [
+    "hd_ctl",
+    "hd_ctl_n",
+    "hd_spn",
+    "hd_spn_end",
+    "hd_spn_eshim_rx",
+    "hd_spn_wshim_rx",
+    "hd_spn_wshim_tx",
+    "hd_st_n4",
+    "hd_tile",
+    "hd_serdes",
+    "hd_lep0N",
+    "hd_host"
+   ],
+   "note_kw24_head7": "KW-FIX-24 COORD 20:4x: HEAD 7 stale tap-window FAIL rows relaunched on src_7281a (only_items + hd_spn_end hold released); retries from e_stale 393e37f3b2b"
   },
   "qwen_compute": {
    "enabled": true,
