@@ -1,0 +1,146 @@
+{
+ "schema": "opentallas.hbm_arch.core_face_shell.v1",
+ "module": "ot_hbm_idx_score_hcol_h0_ra",
+ "core": "ot_hbm_idx_score_hcol_h0_ra__fcore",
+ "core_def_file": "ot_hbm_idx_score_hcol_h0_rgn.sv",
+ "clock": "clk",
+ "passthrough": [
+  "clk",
+  "rst_col"
+ ],
+ "scalars": [
+  "cf_out",
+  "clk",
+  "prdy",
+  "qv_b",
+  "rst_col"
+ ],
+ "params": {},
+ "mutant": null,
+ "latency": {
+  "in_cycles": 1,
+  "out_cycles": 1,
+  "in_to_out_extra_cycles": 2,
+  "reset_delay_cycles": 0,
+  "note": "every signal input +1, every signal output +1; clock pins pass through; reset pins pass through"
+ },
+ "out_extra_stages": {},
+ "out_extra_stage_flops": 0,
+ "in_buses": 4,
+ "out_buses": 3,
+ "in_bits": 1129,
+ "out_bits": 34,
+ "face_flops": 1163,
+ "dropped": [],
+ "unread_kept": [],
+ "const_out": {},
+ "const_out_bits": 0,
+ "dup_out_groups": 0,
+ "dup_out_bits": 0,
+ "dup_out": [],
+ "feedthrough": [],
+ "feedthrough_bits": 0,
+ "widths": {
+  "clk": 1,
+  "rst_col": 1,
+  "qv_b": 1,
+  "q_b": 568,
+  "key": 544,
+  "hid2": 16,
+  "cs_out": 32,
+  "cf_out": 1,
+  "prdy": 1
+ },
+ "dirs": {
+  "clk": "input",
+  "rst_col": "input",
+  "qv_b": "input",
+  "q_b": "input",
+  "key": "input",
+  "hid2": "input",
+  "cs_out": "output",
+  "cf_out": "output",
+  "prdy": "output"
+ },
+ "keep": {
+  "clk": 1,
+  "rst_col": 1,
+  "qv_b": 1,
+  "q_b": 568,
+  "key": 544,
+  "hid2": 16,
+  "cs_out": 32,
+  "cf_out": 1,
+  "prdy": 1
+ },
+ "top_fanout_in": [
+  [
+   1,
+   "qv_b[0]"
+  ],
+  [
+   1,
+   "q_b[9]"
+  ],
+  [
+   1,
+   "q_b[99]"
+  ],
+  [
+   1,
+   "q_b[98]"
+  ],
+  [
+   1,
+   "q_b[97]"
+  ],
+  [
+   1,
+   "q_b[96]"
+  ],
+  [
+   1,
+   "q_b[95]"
+  ],
+  [
+   1,
+   "q_b[94]"
+  ],
+  [
+   1,
+   "q_b[93]"
+  ],
+  [
+   1,
+   "q_b[92]"
+  ],
+  [
+   1,
+   "q_b[91]"
+  ],
+  [
+   1,
+   "q_b[90]"
+  ],
+  [
+   1,
+   "q_b[8]"
+  ],
+  [
+   1,
+   "q_b[89]"
+  ],
+  [
+   1,
+   "q_b[88]"
+  ],
+  [
+   1,
+   "q_b[87]"
+  ]
+ ],
+ "files": [
+  "ot_hbm_idx_score_hcol_h0_ra__fshell.sv",
+  "ot_hbm_face_reg.sv"
+ ]
+}

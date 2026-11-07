@@ -1,0 +1,14 @@
+{
+ "schema": "opentallas.hbm_core_boundary.v1",
+ "source": "gen_core_kit_hbm.write_boundary_context",
+ "boundary_role": {
+  "clk": "clk",
+  "rst_col": "reset"
+ },
+ "clock_contract": {
+  "kind": "hard_core_latency",
+  "ruling": "COORD 10-24",
+  "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+  "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json; <module>_tt.lib max_clock_tree_path"
+ }
+}

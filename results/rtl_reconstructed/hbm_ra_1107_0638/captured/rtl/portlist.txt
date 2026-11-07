@@ -1,0 +1,10 @@
+module ot_hbm_idx_score_hcol_h0_ra
+input [0:0] clk
+input [0:0] rst_col
+input [0:0] qv_b
+input [567:0] q_b
+input [543:0] key
+input [15:0] hid2
+output [31:0] cs_out
+output [0:0] cf_out
+output [0:0] prdy
