@@ -1,0 +1,603 @@
+{
+ "schema": "opentallas.s81_head.schedule_constants.v1",
+ "status": "PLAN_DERIVED_SOURCE_SCHEDULE",
+ "lanes": {
+  "coll_EN0_d": {
+   "raw_cycles": 4,
+   "ca_cycles": 0,
+   "cycles": 4,
+   "raw_components": {
+    "cycles": 4,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "clock_landing": 2,
+    "natural": 4,
+    "pad": 0
+   }
+  },
+  "coll_EN0_u": {
+   "raw_cycles": 4,
+   "ca_cycles": 0,
+   "cycles": 4,
+   "raw_components": {
+    "cycles": 4,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "clock_landing": 2,
+    "natural": 4,
+    "pad": 0
+   }
+  },
+  "coll_EN1_d": {
+   "raw_cycles": 18,
+   "ca_cycles": 0,
+   "cycles": 18,
+   "raw_components": {
+    "cycles": 18,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "clock_landing": 6,
+    "natural": 18,
+    "pad": 0
+   }
+  },
+  "coll_EN1_u": {
+   "raw_cycles": 22,
+   "ca_cycles": 0,
+   "cycles": 22,
+   "raw_components": {
+    "cycles": 22,
+    "stations": 11,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "clock_landing": 9,
+    "natural": 22,
+    "pad": 0
+   }
+  },
+  "coll_ES0_d": {
+   "raw_cycles": 4,
+   "ca_cycles": 0,
+   "cycles": 4,
+   "raw_components": {
+    "cycles": 4,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "clock_landing": 2,
+    "natural": 4,
+    "pad": 0
+   }
+  },
+  "coll_ES0_u": {
+   "raw_cycles": 4,
+   "ca_cycles": 0,
+   "cycles": 4,
+   "raw_components": {
+    "cycles": 4,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "clock_landing": 2,
+    "natural": 4,
+    "pad": 0
+   }
+  },
+  "coll_ES1_d": {
+   "raw_cycles": 18,
+   "ca_cycles": 0,
+   "cycles": 18,
+   "raw_components": {
+    "cycles": 18,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "clock_landing": 6,
+    "natural": 18,
+    "pad": 0
+   }
+  },
+  "coll_ES1_u": {
+   "raw_cycles": 21,
+   "ca_cycles": 0,
+   "cycles": 21,
+   "raw_components": {
+    "cycles": 21,
+    "stations": 11,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "clock_landing": 8,
+    "natural": 21,
+    "pad": 0
+   }
+  },
+  "coll_HOST0_d": {
+   "raw_cycles": 10,
+   "ca_cycles": 0,
+   "cycles": 10,
+   "raw_components": {
+    "cycles": 10,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "clock_landing": 4,
+    "natural": 10,
+    "pad": 0
+   }
+  },
+  "coll_HOST0_u": {
+   "raw_cycles": 11,
+   "ca_cycles": 0,
+   "cycles": 11,
+   "raw_components": {
+    "cycles": 11,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "clock_landing": 5,
+    "natural": 11,
+    "pad": 0
+   }
+  },
+  "coll_HOST1_d": {
+   "raw_cycles": 4,
+   "ca_cycles": 0,
+   "cycles": 4,
+   "raw_components": {
+    "cycles": 4,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "clock_landing": 2,
+    "natural": 4,
+    "pad": 0
+   }
+  },
+  "coll_HOST1_u": {
+   "raw_cycles": 4,
+   "ca_cycles": 0,
+   "cycles": 4,
+   "raw_components": {
+    "cycles": 4,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "clock_landing": 2,
+    "natural": 4,
+    "pad": 0
+   }
+  },
+  "coll_WN0_d": {
+   "raw_cycles": 4,
+   "ca_cycles": 0,
+   "cycles": 4,
+   "raw_components": {
+    "cycles": 4,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "clock_landing": 2,
+    "natural": 4,
+    "pad": 0
+   }
+  },
+  "coll_WN0_u": {
+   "raw_cycles": 5,
+   "ca_cycles": 0,
+   "cycles": 5,
+   "raw_components": {
+    "cycles": 5,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "clock_landing": 3,
+    "natural": 5,
+    "pad": 0
+   }
+  },
+  "coll_WN1_d": {
+   "raw_cycles": 16,
+   "ca_cycles": 0,
+   "cycles": 16,
+   "raw_components": {
+    "cycles": 16,
+    "stations": 8,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "clock_landing": 6,
+    "natural": 16,
+    "pad": 0
+   }
+  },
+  "coll_WN1_u": {
+   "raw_cycles": 22,
+   "ca_cycles": 0,
+   "cycles": 22,
+   "raw_components": {
+    "cycles": 22,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "clock_landing": 10,
+    "natural": 22,
+    "pad": 0
+   }
+  },
+  "coll_WN2_d": {
+   "raw_cycles": 30,
+   "ca_cycles": 0,
+   "cycles": 30,
+   "raw_components": {
+    "cycles": 30,
+    "stations": 18,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "clock_landing": 10,
+    "natural": 30,
+    "pad": 0
+   }
+  },
+  "coll_WN2_u": {
+   "raw_cycles": 37,
+   "ca_cycles": 0,
+   "cycles": 37,
+   "raw_components": {
+    "cycles": 37,
+    "stations": 19,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "clock_landing": 16,
+    "natural": 37,
+    "pad": 0
+   }
+  },
+  "coll_WN3_d": {
+   "raw_cycles": 11,
+   "ca_cycles": 0,
+   "cycles": 11,
+   "raw_components": {
+    "cycles": 11,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "clock_landing": 4,
+    "natural": 11,
+    "pad": 0
+   }
+  },
+  "coll_WN3_u": {
+   "raw_cycles": 11,
+   "ca_cycles": 0,
+   "cycles": 11,
+   "raw_components": {
+    "cycles": 11,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "clock_landing": 4,
+    "natural": 11,
+    "pad": 0
+   }
+  },
+  "coll_WS0_d": {
+   "raw_cycles": 4,
+   "ca_cycles": 0,
+   "cycles": 4,
+   "raw_components": {
+    "cycles": 4,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "clock_landing": 2,
+    "natural": 4,
+    "pad": 0
+   }
+  },
+  "coll_WS0_u": {
+   "raw_cycles": 4,
+   "ca_cycles": 0,
+   "cycles": 4,
+   "raw_components": {
+    "cycles": 4,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "clock_landing": 2,
+    "natural": 4,
+    "pad": 0
+   }
+  },
+  "coll_WS1_d": {
+   "raw_cycles": 18,
+   "ca_cycles": 0,
+   "cycles": 18,
+   "raw_components": {
+    "cycles": 18,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "clock_landing": 6,
+    "natural": 18,
+    "pad": 0
+   }
+  },
+  "coll_WS1_u": {
+   "raw_cycles": 21,
+   "ca_cycles": 0,
+   "cycles": 21,
+   "raw_components": {
+    "cycles": 21,
+    "stations": 11,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "clock_landing": 8,
+    "natural": 21,
+    "pad": 0
+   }
+  }
+ },
+ "ca_ports": [],
+ "ca_applied": false,
+ "raw_transport": {
+  "spine": {
+   "cycles": 174,
+   "slice": 5,
+   "side": "W",
+   "lanes": [
+    "sp_x0",
+    "sp_b0",
+    "sp_x1",
+    "sp_b1",
+    "sp_x2",
+    "sp_b2",
+    "sp_x3",
+    "sp_b3",
+    "sp_x4",
+    "sp_b4",
+    "sp_x5",
+    "sp_b5",
+    "chW5_b0",
+    "chW5_b1",
+    "chW5_b2",
+    "chW5_b3",
+    "chW5_b4",
+    "chW5_b5",
+    "chW5_b6",
+    "chW5_b7",
+    "chW5_b8",
+    "chW5_b9",
+    "chW5_h",
+    "chW5_o0",
+    "chW5_o1",
+    "chW5_o2",
+    "chW5_o3",
+    "chW5_o4",
+    "chW5_o5",
+    "chW5_o6",
+    "chW5_o7",
+    "chW5_o8",
+    "chW5_o9",
+    "chW5_r",
+    "chW5_t"
+   ]
+  },
+  "gather_worst": {
+   "lane": "m0S_rx",
+   "cycles": 81
+  },
+  "total_cycles": 336,
+  "formula": "longest_spine_round_trip + 2 * worst_gather_leg"
+ },
+ "transport": {
+  "spine": {
+   "cycles": 174,
+   "slice": 5,
+   "side": "W",
+   "lanes": [
+    "sp_x0",
+    "sp_b0",
+    "sp_x1",
+    "sp_b1",
+    "sp_x2",
+    "sp_b2",
+    "sp_x3",
+    "sp_b3",
+    "sp_x4",
+    "sp_b4",
+    "sp_x5",
+    "sp_b5",
+    "chW5_b0",
+    "chW5_b1",
+    "chW5_b2",
+    "chW5_b3",
+    "chW5_b4",
+    "chW5_b5",
+    "chW5_b6",
+    "chW5_b7",
+    "chW5_b8",
+    "chW5_b9",
+    "chW5_h",
+    "chW5_o0",
+    "chW5_o1",
+    "chW5_o2",
+    "chW5_o3",
+    "chW5_o4",
+    "chW5_o5",
+    "chW5_o6",
+    "chW5_o7",
+    "chW5_o8",
+    "chW5_o9",
+    "chW5_r",
+    "chW5_t"
+   ]
+  },
+  "gather_worst": {
+   "lane": "m0S_rx",
+   "cycles": 81
+  },
+  "total_cycles": 336,
+  "formula": "longest_spine_round_trip + 2 * worst_gather_leg"
+ },
+ "separate_legs": {
+  "head_lep_fault_return": {
+   "raw_cycles": 6,
+   "ca_cycles": 0,
+   "cycles": 6,
+   "raw_components": {
+    "cycles": 6,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "clock_landing": 2,
+    "natural": 6,
+    "pad": 0
+   }
+  },
+  "head_lep_landing": {
+   "raw_cycles": 7,
+   "ca_cycles": 0,
+   "cycles": 7,
+   "raw_components": {
+    "cycles": 7,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "clock_landing": 2,
+    "natural": 7,
+    "pad": 0
+   }
+  },
+  "host_rx": {
+   "raw_cycles": 58,
+   "ca_cycles": 0,
+   "cycles": 58,
+   "raw_components": {
+    "cycles": 58,
+    "stations": 38,
+    "boundary": 2,
+    "faces": 8,
+    "fixed": 0,
+    "clock_landing": 18,
+    "natural": 58,
+    "pad": 0
+   }
+  },
+  "host_tx": {
+   "raw_cycles": 59,
+   "ca_cycles": 0,
+   "cycles": 59,
+   "raw_components": {
+    "cycles": 59,
+    "stations": 38,
+    "boundary": 2,
+    "faces": 8,
+    "fixed": 0,
+    "clock_landing": 19,
+    "natural": 59,
+    "pad": 0
+   }
+  }
+ },
+ "start_dates": null,
+ "token_rate": null,
+ "physical_qualified": false,
+ "programme_installable": false,
+ "landed_sidecar_extra": {},
+ "sidecar_rows_below_sched_lat": [
+  {
+   "port": "chW2_r__0",
+   "lane": "chW2_r",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "sp_x2__0",
+   "lane": "sp_x2",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "sp_b5__0",
+   "lane": "sp_b5",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "host_tx__2",
+   "lane": "host_tx",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "host_rx__1",
+   "lane": "host_rx",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "m0S_tx__2",
+   "lane": "m0S_tx",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "m0S_rx__4",
+   "lane": "m0S_rx",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "m7S_tx__2",
+   "lane": "m7S_tx",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "m7S_rx__3",
+   "lane": "m7S_rx",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "coll_WN1_u__2",
+   "lane": "coll_WN1_u",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "coll_WN2_u__4",
+   "lane": "coll_WN2_u",
+   "added_cycles": 3,
+   "sched_lat": 4
+  }
+ ]
+}

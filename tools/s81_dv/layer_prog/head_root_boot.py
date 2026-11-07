@@ -2,17 +2,17 @@
 import hashlib,json,re
 from pathlib import Path
 
-# HEAD l48un coherent source bundle, built by
-# results/token_pass/head_l48un_compiler_1107/make_bundle.py from plan_of_record/l48ui.
+# HEAD l48uo coherent source bundle, built by
+# results/token_pass/head_l48uo_compiler_1107/make_bundle.py from plan_of_record/l48uo.
 # A later event needs its own reviewed source selection; this bundle is not physically admitted.
 PINS={
- 'source_plan.json':'340743d8364e8553b687a5dc82879ac2cfbef0a6c34eac102dfc9c9c341f7890',
+ 'source_plan.json':'f140216c876ba3186afdf3271f0f9b3ceadf63df95b5e0416a06af6dffcb54f6',
  'source_sidecar.json':'90d006a48f17adc6795bbf55e3077ff308bb6b417604167248051501cda25d77',
  'start_stages.json':'255b2b4e27a2c8b1bb202038cb89d021b4a7ff82a5afac3e52b45e84bbacb5eb',
  'start_stages.sv':'e9ed25cdd21dab157624adf049b27889d2774dfa530f0331c1595bdfa30c4002',
  'root88_report.json':'0aebf3ae714564846871c845cc64a9a39e623dfc43e68426b45e75af2922f21f',
- 'boot88_account.json':'555d7c0ae6949f86e128d616eee575811fdbb02181849bffe91ce0e16f46db00'}
-MANIFEST_SHA256='d5db7f99d9c8041873d3c82a5dec01da3316d8af188ecea8058bd82674a796e1'
+ 'boot88_account.json':'02acbd5e1065093b15c42ba437f25395f5b314a457da8186cc331bf40c3cc477'}
+MANIFEST_SHA256='911ed1aea33fdf03e58c395603870647f62c0fd070849470006eb80dc1902347'
 # The l48ui n4 event: +1 data cycle on these links, in the sidecar and not in plan latency.lanes.
 N4_LINK_ADDED_CYCLES={'coll_WN1_u__1':4,'coll_WN2_u__3':4,'coll_WN1_d__0':2,'coll_WN2_d__0':2}
 
@@ -24,7 +24,7 @@ def read_witness(selection,root):
     if hashlib.sha256(manifest_path.read_bytes()).hexdigest()!=MANIFEST_SHA256:
         raise ValueError('current HEAD coherent source manifest differs')
     manifest=json.loads(manifest_path.read_text())
-    if manifest.get('schema')!='opentallas.head_current_source.l48un.v1' or manifest.get('frozen')is not False or manifest.get('physical_admission')is not False:
+    if manifest.get('schema')!='opentallas.head_current_source.l48uo.v1' or manifest.get('frozen')is not False or manifest.get('physical_admission')is not False:
         raise ValueError('actual HEAD bundle source-only qualification differs')
     for key,wanted in PINS.items():
         data=(bundle/key).read_bytes()
@@ -58,7 +58,7 @@ def read_witness(selection,root):
         raise ValueError('source-only HEAD bound unexpectedly advertises a physical date')
     if account['physical_clock_phase_qualified']is not False or account['actual_external_host_event_cycle']is not None or account['actual_physical_full_array_boot_receipt']is not None:
         raise ValueError('source-only HEAD accounting is not a global physical witness')
-    return dict(schema='opentallas.head.root88_compiler_boot.v1',status='SOURCE_WITNESS_ONLY',plan_event='l48un',
+    return dict(schema='opentallas.head.root88_compiler_boot.v1',status='SOURCE_WITNESS_ONLY',plan_event='l48uo',
         n4_link_added_cycles=dict(N4_LINK_ADDED_CYCLES),n4_data_cycles_added_per_link=1,
         source_plan_sha256=PINS['source_plan.json'],source_witness_sha256=dict(PINS),
         root=expected,root_settle_cycles=88,previous_settle_cycles=74,delta_boot_cycles=14,
