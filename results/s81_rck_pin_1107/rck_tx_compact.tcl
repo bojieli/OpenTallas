@@ -80,3 +80,14 @@ proc rck_tx_pin_positions {} {
   }
   puts "RCK_TX_COMPACT placed_BIN=$nq placed_encoder_pd=$np pd_last_y=$y (DPL must legalize; measure actual hops at PLACE)"
 }
+# S81-RCK-5 11-07: the fences shape global placement only.  Legalizing inside them left 2011 cells stuck on the fence edges (DPL-0033, t16 PLACE pilot);
+# released on a copy of that DB the legalizer finished in one pass, 2.3 um max displacement, checks clean.  Other regions (PHY PG keep-out) stay.
+proc rck_tx_release_regions {} {
+  set b [ord::get_db_block]
+  foreach g [$b getGroups] {
+    set n [$g getName]; if {![string match rck_tx_* $n]} continue
+    set c 0; foreach i [$g getInsts] {$g removeInst $i; incr c}
+    set r [$g getRegion]; odb::dbGroup_destroy $g; if {$r ne "NULL"} {odb::dbRegion_destroy $r}
+    puts "RCK_TX_COMPACT released fence $n cells=$c"
+  }
+}
