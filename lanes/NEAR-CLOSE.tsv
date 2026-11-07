@@ -1,0 +1,17 @@
+# NEAR-CLOSE (SCHED-1 2026-11-07, OWNER closure first). One bounded step from sign-off. New builds do not. Non-AUTO rows are the critical set for ot-run-direct --direct (immediate start); keep it small. Die owners own the fixes: edit next_step/owner/path, delete a row once counted. miss/updated are rewritten hourly from path/signoff/signoff.json by bin/near_close.py; AUTO rows are scan finds an owner has not confirmed.
+die	block	host	path	miss	next_step	owner	updated
+qwen_kvsys	qkd_hr_ingest_eng vE_fo8	epyc2	/srv/opentallas-scratch2/claude/kving7/vE_fo8/i1	physical SIGNED +10.96/+3.61; routed LEC running, no lec.json	collect LEC (do not duplicate), current-tag re-sign	KV-ING-8	11-07 03:45
+qwen_kvsys	qkd_hr_ingest_eng vE3	intel1	/srv/opentallas-scratch2/claude/kving7/vE3/eco/i1	fallback for fo8: slews with fanout 8 split, running	eco_loop 2 iter + LEC; stop if fo8 counts	KV-ING-8	11-07 03:45
+s81_head	hd_st_n4 i2	epyc2	/srv/opentallas-scratch2/claude/dh76/n4_eco/i2	DRV 0, clock freeze pass; sign-off due	collect, current-tag re-sign	DIE-HEAD-79	11-07 03:45
+s81_head	sc_tx i1	intel1	/srv/opentallas-scratch2/claude/dh77serdes/tx/ot_s81hd_sc_tx_vB/eco_dh77/i1	in DRT, private DO_NOT_COUNT	collect sign-off + LEC	DIE-HEAD-79	11-07 03:45
+hbm	bank128 weight_E	epyc2	/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1	was 3 TT slews on one net _009698_	exact ECO BUFx4, sign-off + LEC	DIE-HBM-85	11-07 03:45
+hbm	GQ	epyc2	/srv/opentallas-scratch3/claude/die-hbm-85/eco/gq_e1	was 6 internal hold residuals under -0.22 ps + 1028 ports	exact ECO, sign-off + LEC	DIE-HBM-85	11-07 03:45
+hbm	injector	epyc2	/srv/opentallas-scratch3/claude/die-hbm-85/eco/inj_e1	was i1 TT +114.99 FF -9.10, 23 internal, slew 8/6	exact ECO, sign-off + LEC	DIE-HBM-85	11-07 03:45
+hbm	full_x	epyc2	/srv/opentallas-scratch3/claude/die-hbm-85/eco/fullx_e1	exact ECO queued from hbm-form-split-14 eco_fullx_vC_t i2	exact ECO, sign-off + LEC	DIE-HBM-85	11-07 03:45
+qwen_compute	NL ecows	epyc6	/srv/opentallas-scratch2/claude/qc-a0c-b6/nl_vB2_ecows	was ecowp i2 TT +19.72 FF +17.15 slew 11/10	running; collect	DIE-QC-87	11-07 03:45
+qwen_compute	NK vB2h ECO	epyc6	/srv/opentallas-scratch2/claude/qc-a0c-b6/qfd_tile_nk_a0c_vB2h	final TT -152.68 FF -37.47 slew 629/310	running; collect; judge on port split	DIE-QC-87	11-07 03:45
+qwen_compute	NK vB2hp ECO	epyc6	/srv/opentallas-scratch2/claude/qc-a0c-b6/qfd_tile_nk_a0c_vB2hp	final TT -32.64 FF -17.03 slew 690/270	running; collect; judge on port split	DIE-QC-87	11-07 03:45
+qwen_compute	NL vR3 conservative + _lec	epyc2	/srv/opentallas-scratch2/claude/dq87_vr3/qfd_tile_nl_a0c_vR3	new form, owner critical	build, LEC kit proves	DIE-QC-87	11-07 03:45
+qwen_compute	NK vR3 conservative + _lec	intel1	/srv/opentallas-scratch2/claude/dq87_vr3/qfd_tile_nk_a0c_vR3	new form, owner critical	build, LEC kit proves	DIE-QC-87	11-07 03:45
+s81	bksel_q conservative	-	owner adds the path	new form, owner critical	build	S81-BKSEL-RF7	11-07 03:45
+s81	eng_rr_e conservative	-	owner adds the path	new form, owner critical	build	S81-ENGRR-B7	11-07 03:45
