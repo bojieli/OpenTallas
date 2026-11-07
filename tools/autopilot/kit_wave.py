@@ -1783,7 +1783,9 @@ def restage_waiters(AP, cfg, st, notices):
             # KW-FIX-24 20:3x RESTAGE ping-pong class: a host move needs the waiter to have waited restage_min_wait_s
             # (default 1800) since its launch; a fresh waiter moved every tick (epyc5 <-> epyc2, 24 moves/h, the gen
             # stage redone each time) never reaches admission
-            young = time.time() - float(r.get("started") or 0) < float(cfg.get("restage_min_wait_s", 1800))
+            # KW-FIX-27 11-07: the wait doubles with each move of the row (at most x8), so a row is not restarted every 30 min
+            young = (time.time() - float(r.get("started") or 0)
+                     < float(cfg.get("restage_min_wait_s", 1800)) * 2 ** min(3, int(r.get("restage_n") or 0)))
             if multi and not young:
                 best = pick_gen_host(cfg, die)
                 v = row(best) or {}
@@ -1812,6 +1814,9 @@ def restage_waiters(AP, cfg, st, notices):
             r["infra_base"] = int(r.get("infra_base") or 0) + max(1, infra_used(r) - infra_attempts(cfg, die) + 1)
             r.update(status="RETRY-INFRA", **{"class": "INFRA"}, updated=time.time(),
                      reason=f"restaged: unstarted ot-run waiter ({why}) (KW-FIX-4)")
+            # KW-FIX-27 11-07: the move binds.  spec_for reselects a host at launch, so a logged move could return to g
+            r["restage_host"] = best
+            r["restage_n"] = int(r.get("restage_n") or 0) + 1
             notices.setdefault(die, []).append(f"{r['item']} unstarted waiter RESTAGED ({why})")
             AP.log(f"KIT-WAVE RESTAGE {die}/{r['item']} unit {r['unit']} ({why})")
             n += 1
@@ -2855,6 +2860,13 @@ def resume_source(AP, prev):
     return out
 
 
+def bind_restage(cfg, die, prev, sp):
+    """the attempt after a RESTAGE runs on the host the move chose, while that host still holds the die's gen inputs"""
+    moved = prev.pop("restage_host", None)
+    if moved and moved in gen_hosts(cfg, die):
+        sp["gen_host"] = moved
+
+
 def launch_safe(AP, cfg, st, die, r, hub, delay_s=0.0):
     """KW-FIX-7 11-04: one row's launch error never ends the pass.  06:28 a merge changed kit_resume.py under a reload pass:
     launch raised, the pass died before save_state, and 5 units already launched were in no state record (a next pass would
@@ -2880,6 +2892,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     jd = Path(AP.AP_DIR) / "kit_wave" / re.sub(r"[^A-Za-z0-9_.-]", "_", key) / f"a{attempt}"
     sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"), kind=r.get("kind") or "type")
     sp["start_delay_s"] = round(float(delay_s), 1)
+    bind_restage(cfg, die, prev, sp)
     d = cfg["dies"][die]
     if (r.get("kind") or "type") == "type" and prov_item(d, r["item"]):
         # KW-PROV-1 (COORD 17:50 (C)): a type whose child views are unsigned launches on PROVISIONAL child views
@@ -2956,6 +2969,8 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         rec["leafslew_form"] = ls_form
         if ls_key:
             st["leafslew"][ls_key]["hooked_attempt"] = attempt
+    if prev.get("restage_n") and prev.get("class") == "INFRA":      # a design verdict in between starts the count again
+        rec["restage_n"] = prev["restage_n"]
     st["items"][key] = rec
     AP.log(f"KIT-WAVE LAUNCH {die}/{r['item']} ({r['kind']}, {r.get('replicas')} replicas) event {sp['event']} unit {unit}")
     return rec

@@ -59,6 +59,14 @@ def test_restage_multi_and_pinned(tmp_path, monkeypatch):
     assert st["items"]["c"]["status"] == "RUNNING"
     assert ["systemctl", "--user", "stop", "kw-u"] in ap.calls
     assert K.infra_relaunch_due(c, st["items"]["a"])
+    # KW-FIX-27: the move binds the relaunch, whatever spec_for reselected
+    assert st["items"]["a"]["restage_host"] == "epyc4"
+    sp = {"gen_host": "intel1"}
+    K.bind_restage(c, "s81", st["items"]["a"], sp)
+    assert sp["gen_host"] == "epyc4" and "restage_host" not in st["items"]["a"]
+    sp = {"gen_host": "intel1"}
+    K.bind_restage(c, "s81", {"restage_host": "gone"}, sp)
+    assert sp["gen_host"] == "intel1"
     # pinned async PLACE waiter of a single-gen-host die
     c3 = cfg(place_mem_gb=48)
     d = tmp_path / "pin"; d.mkdir()
@@ -258,6 +266,20 @@ def test_restage_young_waiter_stays(tmp_path, monkeypatch):
     c["restage_min_wait_s"] = 0
     y2 = dict(young, status="RUNNING", started=time.time())
     assert K.restage_waiters(FakeAP(), c, {"items": {"y": y2}}, {}) == 1
+
+
+def test_restage_wait_doubles_per_move(tmp_path, monkeypatch):
+    monkeypatch.setattr(K, "stop_reason", lambda *a, **k: None)
+    c = cfg(gen_hosts=["intel1", "epyc4"], place_mem_gb=48); c["_otrun_status"] = {h: dict(v) for h, v in ST.items()}
+    r = _rec(tmp_path, "intel1"); r["started"] = time.time() - 2400; r["restage_n"] = 1
+    st = {"items": {"y": r}}
+    assert K.restage_waiters(FakeAP(), c, st, {}) == 0 and r["status"] == "RUNNING"    # 40 min < 60 min after one move
+    r["started"] = time.time() - 3700
+    assert K.restage_waiters(FakeAP(), c, st, {}) == 1 and r["restage_n"] == 2
+    r2 = dict(r, status="RUNNING", started=time.time() - 3 * 3600, restage_n=9)        # the cap is x8 = 4 h
+    assert K.restage_waiters(FakeAP(), c, {"items": {"y": r2}}, {}) == 0
+    r2["started"] = time.time() - 4 * 3600 - 60
+    assert K.restage_waiters(FakeAP(), c, {"items": {"y": r2}}, {}) == 1
 
 
 # ------------------------------------------------------------------------------------------------ SCHED-1 11-07 load hold
