@@ -23216,3 +23216,15 @@ FAILED [AUTOPILOT e6e7dcb9244d] 2026-11-07 02:22:13 PST AUTOPILOT -> KIT-WAVE-5:
   NEW: the 00:10-00:20 overflow picture was transient. vC uncapped congestion.rpt per step: iter 15 19,726, iter 20 10,380, iter 25 518, final 367 gcells on only 99 nets. So GRT does detour most long buses through the channels. What is left is mostly nets to pins at the CENTRE of hard cores: 12 clk + 12 rst + 6 other core-pin nets among the 99, on M5 pins at (108,108) of a 216 um core [CHECKED epyc4 /srv/opentallas-scratch3/claude/kv-slgland-2/q/net_terms.txt, core LEF]. Which of the remaining 69 no-core nets are collateral is not read yet.
   CAPACITY 0: core LEFs have whole-core OBS on M1-M5 but only fragments on M6 (1.4-3.4% cover) and M7 (1.2-4.1%). Yet GRT's original resource on M6 is about 63% of the full-die track count, about what fully blocked M4 shows (60%), with cores 38% of the die. So I INFER GRT treats those fragments as a solid M6/M7 wall over every core. Same mechanism as the 10-26 HBM finding (core M6/M7 ceilings). Same fragments on kv3_pv_pair; qkd_ectlk has none. vA/vC cannot touch this: they change rings only.
   TESTING NOW, diagnostic only: GRT on a copy of vC 4_cts.odb with M6/M7 core fragments removed from the masters in that process, r1 without and r2 with an M8 zero-capacity top layer (OT_GRT_TOP_SHADOW class). Direct docker, 30 GB cap, 16 threads each, on epyc4 scratch3 [epyc4 /srv/opentallas-scratch3/claude/kv-slgland-2/q/{r1,r2}/grt.log]. The resource table alone tests the inference; the final table tests the cure. Next: vS R8 fix and the ring-status half-cycle fix, in parallel.
+- 2026-11-07 03:22 PST STATE [DIE-HEAD-77-CHAIN -> COORD] hd_st_n4 eco_loop unit ended: [/srv/opentallas-scratch2/claude/dh76/n4_eco/eco_loop.json] {
+ "schema": "opentallas.eco_loop.v1",
+ "kind": "eco",
+ "tool": "tools/die_plan/eco_loop.py",
+ "kit": "/srv/opentallas-scratch3/claude/dh76/n4/vB/hd_st_n4_vB",
+ "root": "/srv/opentallas-scratch2/claude/dh76/n4_eco",
+ "mem_requested_gb": 48,
+ "mem_gb": 48,
+ "kit_peak_gb": 24.45,
+ "mem_factor": 1.5,
+ "base_signoff": "/srv/opentallas-scratch3/claude/dh76/n4/vB/hd_st_n4_vB/signoff/signoff.json",
+ "bas. Next: on PASS resign with --build-commit main@7305773106e8, not run by this chain.
