@@ -1969,7 +1969,8 @@
         "ot_s81sl_leaf__t12@1",
         "ot_s81sl_leaf__t33@1",
         "ot_s81sl_leaf__t2@1",
-        "col_h9_r0_p1__t1@11"
+        "col_h9_r0_p1__t1@11",
+        "col_h9_r0_p1__t1@12"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -2884,7 +2885,8 @@
         "ot_s81sl_leaf__t33@1": "REDESIGN: macros moved, not a retry. vs pin edge faces ve_m at gap >= 17.28 um and vn/VP channel widened, per row, OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins and taps unchanged. Fixes the measured M6 overflow on the vs/ve_m bus: post-CTS GRT 0 on t27 vP and t42 vM (old M6 114216 and 159073). lanes/S81-LEAF-BATCH-1107.json",
         "ot_s81sl_leaf__t2@1": "REDESIGN: macros moved, not a retry. vs pin edge faces ve_m at gap >= 17.28 um and vn/VP channel widened, per row, OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins and taps unchanged. Fixes the measured M6 overflow on the vs/ve_m bus: post-CTS GRT 0 on t27 vP and t42 vM (old M6 114216 and 159073). lanes/S81-LEAF-BATCH-1107.json",
         "ot_s81sl_leaf__t74@3": "REDESIGN: macros moved, not a retry. vs pin edge faces ve_m at gap >= 17.28 um and vn/VP channel widened, per row, OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins and taps unchanged. Fixes the measured M6 overflow on the vs/ve_m bus: post-CTS GRT 0 on t27 vP and t42 vM (old M6 114216 and 159073). lanes/S81-LEAF-BATCH-1107.json",
-        "col_h9_r0_p1__t1@11": "REDESIGN: macros moved, not a retry. ROM e1 and e3 east 17.28 um widen the only ROM-row gap from 24.84 to 42.12 um; u_cf and u_t0 move with them to keep clear. Fixes measured GRT overflow 142567 (M6 98355) on a11: 1121 nets cross the ROM row (555 u_t2, 536 u_t2_payload, the rest not itemized), ROM OBS covers M1-M7. macro_place.tcl only; plan, pins, taps, RTL and pin cycles unchanged. lanes/S81-COLH9-REDESIGN-1107.json"
+        "col_h9_r0_p1__t1@11": "REDESIGN: macros moved, not a retry. ROM e1 and e3 east 17.28 um widen the only ROM-row gap from 24.84 to 42.12 um; u_cf and u_t0 move with them to keep clear. Fixes measured GRT overflow 142567 (M6 98355) on a11: 1121 nets cross the ROM row (555 u_t2, 536 u_t2_payload, the rest not itemized), ROM OBS covers M1-M7. macro_place.tcl only; plan, pins, taps, RTL and pin cycles unchanged. lanes/S81-COLH9-REDESIGN-1107.json",
+        "col_h9_r0_p1__t1@12": "REDESIGN: macros moved, not a retry. ROM e1 and e3 east 17.28 um widen the only ROM-row gap from 24.84 to 42.12 um; u_cf and u_t0 move with them to keep clear. Fixes measured GRT overflow 142567 (M6 98355) on a11: 1121 nets cross the ROM row (555 u_t2, 536 u_t2_payload, the rest not itemized), ROM OBS covers M1-M7. macro_place.tcl only; plan, pins, taps, RTL and pin cycles unchanged. lanes/S81-COLH9-REDESIGN-1107.json | KW-FIX-30 15:1x (COORD 15:0x (c)): a12 never built: INFRA kit_rtl on intel1, die-s81-70/kvov/bind/* are symlinks into codex-wave-bind-1106/s81_emitted_v2/bind, not staged there until 14:3x; now staged on intel1+epyc4 (4938 files, same md5 as epyc5), 0 dangling links. Same macro-move REDESIGN, first build."
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
