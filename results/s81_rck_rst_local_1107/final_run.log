@@ -1,0 +1,5 @@
+COL_RST_LOCAL_RESULT checks=4222 errors=0 mutant_phase_errors=12 mutant_io_errors=0 tx_changes=1863 epochs=3 mission_added=0 reset_edges_added=0
+- /srv/opentallas-scratch2/claude/codex-rck-rst-local-1209/final_payload/tb_col_rst_local.sv:39: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.885 s; speed 1.990 us/s
+- Verilator: cpu 0.885 s on 1 threads; allocated 15 MB
