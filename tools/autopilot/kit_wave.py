@@ -1812,7 +1812,7 @@ def counted_now(cfg, st, die, item, block=None):
 INPUT_SKIP = {"die", "item", "kind", "event", "gen_host", "work", "root", "hosts", "hub", "place_prefer", "place_mem_gb",
               "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "bind_mem_gb", "ot_run", "crit",
               "start_delay_s", "resume_from", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
-              "prov_views", "geom_advisory", "place_spill"}
+              "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items"}
 
 
 def input_hash(sp, prov_key=None):

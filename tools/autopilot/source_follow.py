@@ -160,7 +160,7 @@ def live_snapshot_refs(ap_dir, cfg, state):
     if items is None:
         return None                                      # unknown live set: retention must not run
     for v in items.values():
-        live = v.get("status") in ("RUNNING", "WAITING", "LAUNCHING") or v.get("enqueue_pending") or (
+        live = v.get("status") in ("RUNNING", "WAITING", "LAUNCHING", "ROUTE-HELD") or v.get("enqueue_pending") or (
             v.get("status") == "ENQUEUED" and v.get("q_status") != "FAIL")
         if not live:
             continue

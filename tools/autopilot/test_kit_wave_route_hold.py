@@ -76,6 +76,27 @@ class RouteHold(unittest.TestCase):
                 self.assertEqual(self.rec["status"], "ENQUEUED")
         self.assertEqual(len(self.calls), 2)
 
+    def test_holds_are_runtime_controls_not_row_inputs(self):
+        from test_kit_wave import cfg
+        c = cfg()
+        before = KW.spec_for(c, "qwen_kvsys", "kv3_pc", "intel2")
+        c["dies"]["qwen_kvsys"].update(hold_items={"kv3_pc": "new picks"},
+            route_hold_items={"kv3_pc": "route only"})
+        after = KW.spec_for(c, "qwen_kvsys", "kv3_pc", "intel2")
+        self.assertEqual(before, after)
+        self.assertEqual(KW.input_hash(before), KW.input_hash(after))
+        # Defensive skip if a future caller carries runtime controls in the spec.
+        self.assertEqual(KW.input_hash(before), KW.input_hash(dict(before,
+            hold_items={"kv3_pc": "held"}, route_hold_items={"kv3_pc": "held"})))
+
+    def test_source_snapshot_retention_includes_held_pinned_spec(self):
+        import source_follow
+        self.hold()
+        KW.collect(self.ap, self.cfg, self.st, self.notices)
+        (self.jd / "kit_wave_state.json").write_text(json.dumps(self.st))
+        refs = source_follow.live_snapshot_refs(self.jd, self.cfg, self.st)
+        self.assertIn(json.dumps(self.spec), refs)
+
     def test_transport_pending_is_held_before_resubmission(self):
         self.rec.update(status="PASS", enqueue_pending=1, kit=self.result["kit"], geom_dir=self.result["geom_dir"])
         self.hold()
