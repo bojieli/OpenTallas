@@ -172,7 +172,7 @@ Each lane posts to lanes/COORD-REVIEW-QUEUE.md; its last STATE line there has pa
   - run `python3 -I tools/failure_breakdown.py` and paste it into the RELEASE_TREE.md BREAKDOWN block, plus line 3;
   - view 2 GEOM renders;
   - add a HANDOFF.md line;
-  - commit with `timeout 280 ~/coord/bin/coord-commit.sh "msg" files` after `git fetch -q origin coord/state && git reset -q --keep origin/coord/state`.
+  - commit with `timeout 280 ~/coord/bin/coord-commit.sh "msg" files` (never run `git reset` in shared ~/coord; it dropped 9 commits on 11-06).
 - Relaunch FAIL rows older than the last class fix at once, from the branch head if it is not merged yet.
 
 ## Never
