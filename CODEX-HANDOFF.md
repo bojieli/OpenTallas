@@ -6,7 +6,7 @@ Read ~/coord/CODEX-ROLE.md first: your role, the binding rules, and how to cover
 
 # OpenTallas — Claude -> Codex standby handoff
 
-Updated by Claude COORD at 2026-11-06 21:19 PST. **Claude is running now. This file is only used if Claude hits a usage limit.** If you are reading it because the auto-switch started you, Claude's lanes have all stopped too (same account), so you own every scope below until told Claude is back.
+Updated by Claude COORD at 2026-11-06 23:26 PST. **Claude is running now. This file is only used if Claude hits a usage limit.** If you are reading it because the auto-switch started you, Claude's lanes have all stopped too (same account), so you own every scope below until told Claude is back.
 
 Read first: CODEX-ROLE.md, AGENTS.md, ~/coord/METHODOLOGY.md, then the tail of `lanes/COORD-REVIEW-QUEUE.md` from 19:00 PST 11-06 (every RULING line there is binding).
 
@@ -78,6 +78,7 @@ Die gates (BIND/GRT/STA/CLK) are not yet passed on any die. ETAs: non-HBM cores 
    - Signed-off run: archive to AGIdock `/archive/opentallas-signed-1106/<host>/<path>`, verify, then keep the stub (signoff, PROVENANCE, 6_final.odb, final views, ARCHIVED.json). Stage ODBs 1_*..5_* leave the host (OWNER 23:0x: "the stage result ODBs can be archived on the agidock"). The AGIdock key is on localhost only.
    - Not signed off: delete, keeping only the newest resume DB of a block still being worked on.
    - Lanes: CODEX-PRUNE-1 (backlog), AUTOCLEAN-1 (after each job).
+5d. **Limit expected about 23:45 PST 11-06** (OWNER 23:2x: "please queue all the jobs that can be run and make sure it can fill the hosts while you are rate limited."). All lanes were told at 23:2x to queue everything detached and post a final STATE. Latest state is in the queue tail from 23:25 on. If you take over: keep waiters on every host, watch disks (epyc5/6 scratch, intel2 root), and collect CODEX-PRUNE-1 and ARCHIVE-1106C detached deletes by their manifest paths in their last post. AUTOCLEAN-1 may not be installed: read its last STATE. Retention (OWNER 23:2x, all runs): closed block = small stub on the host, the rest to AGIdock; open block = newest resume database only; everything else deleted.
 
 ## main and merge train
 
