@@ -1140,6 +1140,11 @@ SCHEMA = {
 # status hops are checked by landing_contract.py; default plans are unchanged.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
 SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
+# TYPE-SAFE-1/-2 11-06: ft station hop lockup latch (gen_rtl.ft_hop_lockup; absent = off)
+SCHEMA["properties"]["clock"]["properties"]["ft_hop_lockup"] = {
+    "type": "object", "additionalProperties": False,
+    "properties": {"all": {"type": "boolean"}, "except": {"type": "array", "items": {"type": "string"}},
+                   "types": {"type": "array", "items": {"type": "string"}}, "note": {"type": "string"}}}
 # DIE-KV-61/pc 11-02 (COORD ruling): authoritative die clock cohort record (e.g. KV tree_kv58); clock.mesh stays as
 # historical metadata when the cohort says mesh_status "historical".
 SCHEMA["properties"]["clock"]["properties"]["cohort"] = {"type": "object", "required": ["id", "authority", "source"]}
@@ -1159,6 +1164,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                     "required": ["module", "pin"], "properties": {"module": _name, "pin": _name}}}}}}}}
 # Opt-in: realize the already priced internal stations in logical and physical source alike.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["realize_internal_stations"] = {"type": "boolean"}
+# TYPE-SAFE-2 11-06: gen-time ft station spread opt-out (ft_spread.py; absent = on)
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["ft_spread"] = {"type": "boolean"}
 # Explicit source-synchronous data pads retain declared budgets on their actual PHY clock.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["data_inputs"] = {
     "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
