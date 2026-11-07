@@ -453,11 +453,43 @@ def leaf_params(txt):
     return m, {k: int(v) for k, v in re.findall(r"\.(CS_\w+)\s*\(\s*(\d+)\s*\)", m.group("p") or "")}
 
 
+# DIE-S81-71 11-06 (spec s81_istations_native_spec_1106 "col st -> t0", COORD 17:0x option A1): the col_h9/h10 r0 status
+# hop u_r<i>.u_s<k>.st -> u_r<i>.u_t<k'> (core<->core, 657-856 um) is realised IN the col plan_kit RTL as a reset register
+# chain cst_st_s0..s<D-1> in front of u_t0.c0 (rtl/dsrom_sys/s81_dv/frame_lp/plan/col_h*_l4_lp_plan_kit.sv).  The bound
+# depth is COUNTED from the bound text and must equal the plan's (fail closed); stage j is FIRM at regs_um[j].
+COL_ST = re.compile(r"^u_r\d+\.u_s\d+\.st\|u_r\d+\.u_t\d+(\.c[01])?$")
+
+
+def _col_key(e):
+    a, c = e["conn"].split("|")[0], e["conn"].split("|")[-1]
+    return f"{e.get('launch', a.replace('core:', ''))}|{e.get('capture', c.replace('core:', ''))}"
+
+
+def col_st_stations(t, txt, tcl, rep):
+    """col st -> t0 entries of this type (realised by the col RTL); returns them so core_stations skips them."""
+    es = [e for e in t.get("internal_stations", []) if not e.get("conn", "").startswith("bus:") and COL_ST.match(_col_key(e))]
+    if not es:
+        return []
+    ns = sorted({len(e["regs_um"]) for e in es})
+    regs = sorted({tuple(tuple(r) for r in e["regs_um"]) for e in es})
+    if len(ns) != 1 or len(regs) != 1:
+        raise SystemExit(f"kit_istations: col st stations: entries disagree (depths {ns}, {len(regs)} site lists; fail closed)")
+    have = sorted({int(j) for j in re.findall(r"cst_st_s(\d+)(?!\d)", txt)})
+    if have != list(range(ns[0])):
+        raise SystemExit(f"kit_istations: col st stations: bound RTL stages {have} but the plan has {ns[0]} "
+                         "(fail closed; the col plan_kit RTL carries cst_st_s*: re-bind on it)")
+    for j, (x, y) in enumerate(regs[0]):
+        tcl.append(f"is_place {{*cst_st_s{j}*}} {x} {y} cst:st")
+    rep.append(dict(col_st=dict(stages=ns[0], entries=len(es), sites=[list(r) for r in regs[0]])))
+    return es
+
+
 def core_stations(t, txt, apply, htree, tcl, rep):
     """Map core<->core entries onto the leaf's station chains; returns the (maybe re-parameterised) bound text."""
     groups = {}
+    col = col_st_stations(t, txt, tcl, rep)
     for e in t.get("internal_stations", []):
-        if e.get("conn", "").startswith("bus:"):
+        if e.get("conn", "").startswith("bus:") or any(e is c for c in col):
             continue
         c, fwd, lane = core_class(e)
         if c is None:

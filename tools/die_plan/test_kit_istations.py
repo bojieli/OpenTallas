@@ -324,3 +324,48 @@ def test_native_flat_bind_unplanned_station_fails_closed(tmp_path):
     bound = _flat_bound(hi=1, ho=1, y=1, extra="\n    always @(posedge clk) g_u_cst_sw_gd_s_0_u_q <= 1'b0;")
     r, _ = _run_native(tmp_path, _core_plan(hi=1, ho=1), bound)
     assert r.returncode != 0 and "CS_SW_D" in r.stderr
+
+
+# DIE-S81-71 11-06: col_h9/h10 st -> t0 stations (A1) are realised by the col RTL (cst_st_s* reset chain) and only
+# counted + sited here; a bound text without the chain (or with another depth) fails closed.
+COL_BOUND = """module col_part_bound (input wire ck_r0, input wire lpr_c_u_t0, input wire [1:0] st, output wire [1:0] so);
+    reg [1:0] u_r0_cst_st_s0; always @(posedge ck_r0 or negedge lpr_c_u_t0) if (!lpr_c_u_t0) u_r0_cst_st_s0 <= 2'b00; else u_r0_cst_st_s0 <= st;
+    reg [1:0] u_r0_cst_st_s1; always @(posedge ck_r0 or negedge lpr_c_u_t0) if (!lpr_c_u_t0) u_r0_cst_st_s1 <= 2'b00; else u_r0_cst_st_s1 <= u_r0_cst_st_s0;
+    assign so = u_r0_cst_st_s1;
+endmodule
+"""
+
+
+def _col_run(tmp_path, depth, bound):
+    regs = [[648.108, 172.812], [933.228, 172.812]][:depth]
+    ent = [dict(conn="core:u_r0.u_s0.st|core:u_r0.u_t0", launch="u_r0.u_s0.st", capture=cap, regs_um=regs,
+                from_um=[362.988, 172.812], to_um=[1140.588, 250.572]) for cap in ("u_r0.u_t0", "u_r0.u_t0.c0")]
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(dict(partition_types=dict(col=dict(buses=[], internal_stations=ent)))))
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    (kd / "col_part_bound.sv").write_text(bound)
+    (kd / "kit_rtl.json").write_text(json.dumps(dict(bound_module="col_part_bound", files=[str(kd / "col_part_bound.sv")])))
+    return kd, subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "col", str(kd)],
+                              capture_output=True, text=True)
+
+
+def test_col_st_stations_counted_and_sited(tmp_path):
+    kd, r = _col_run(tmp_path, 2, COL_BOUND)
+    assert r.returncode == 0, r.stderr
+    tcl = (kd / "istations.tcl").read_text()
+    assert "is_place {*cst_st_s0*} 648.108 172.812 cst:st" in tcl
+    assert "is_place {*cst_st_s1*} 933.228 172.812 cst:st" in tcl
+    rep = json.loads((kd / "kit_rtl.json").read_text())["kit_istations"]
+    assert rep == [dict(col_st=dict(stages=2, entries=2, sites=[[648.108, 172.812], [933.228, 172.812]]))]
+    assert (kd / "col_part_bound.sv").read_text() == COL_BOUND
+
+
+def test_col_st_stations_depth_differs_fails_closed(tmp_path):
+    kd, r = _col_run(tmp_path, 1, COL_BOUND)
+    assert r.returncode != 0 and "col st stations" in r.stderr
+
+
+def test_col_st_stations_missing_rtl_fails_closed(tmp_path):
+    kd, r = _col_run(tmp_path, 2, COL_BOUND.replace("cst_st_s", "xx_s"))
+    assert r.returncode != 0 and "bound RTL stages []" in r.stderr
