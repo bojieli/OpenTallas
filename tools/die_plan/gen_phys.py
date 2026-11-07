@@ -4991,7 +4991,17 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
         BRC.validate(source_contract, tn)
         tree = copy.deepcopy(source_contract["tree"])
         if declared_tree is not None and any(tree.get(k) != v for k, v in declared_tree.items()):
-            raise gen_rtl.GenError(f"type {tn}: physical collector_tree differs from captured bound reset identity; preserve original IDs/edges/coordinates")
+            # The plan's published collector_tree is a snapshot; bind emits RT.for_type(plan). A snapshot older than the
+            # solve is provably stale when the current solve IS the captured tree: the RTL is right, use its tree and say so.
+            # Any other difference (bind from another plan, edited graph) still stops.
+            try:
+                solved = json.loads(json.dumps(RT.for_type(P, tn)))
+            except Exception:
+                solved = None
+            if solved != json.loads(json.dumps(tree)):
+                raise gen_rtl.GenError(f"type {tn}: physical collector_tree differs from captured bound reset identity; preserve original IDs/edges/coordinates")
+            P.types[tn].setdefault("clock", {}).setdefault("landing_contract", {})["collector_tree"] = copy.deepcopy(tree)
+            print(f"gen phys: NOTE type {tn}: published collector_tree is stale, the current solve equals the captured bound reset tree; using the captured tree", flush=True)
     else:
         tree = copy.deepcopy(declared_tree)
     if not isinstance(tree, dict) or tree.get("entry") not in ("sync", "relayed"):
