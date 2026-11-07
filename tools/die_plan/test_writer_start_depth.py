@@ -73,11 +73,14 @@ def test_schema():
     js = pytest.importorskip('jsonschema')
     sch = WS['landing_writer_start']
     js.validate(dict(depth=1, branches={'x': {'stages': [dict(xy_um=[1, 2], raw_reset='rst_rl_3')]}}), sch)
+    # KV-TYPES-2 11-07: optional FIRM origin home (4 numbers); other unknown keys stay rejected
+    js.validate(dict(depth=1, origin_rect_um=[0, 0, 1, 1], branches={'x': {'stages': [dict(xy_um=[1, 2], raw_reset='rst_rl_3')]}}), sch)
     for bad in (dict(depth=0, branches={'x': {'stages': [dict(xy_um=[1, 2], raw_reset='r')]}}),
                 dict(depth=1, branches={}),
                 dict(depth=1, branches={'x': {'stages': [dict(xy_um=[1], raw_reset='r')]}}),
                 dict(depth=1, branches={'x': {'stages': [dict(xy_um=[1, 2], raw_reset='1bad')]}}),
-                dict(depth=1, origin_rect_um=[0, 0, 1, 1], branches={'x': {'stages': [dict(xy_um=[1, 2], raw_reset='r')]}})):
+                dict(depth=1, origin_rect_um=[0, 0, 1], branches={'x': {'stages': [dict(xy_um=[1, 2], raw_reset='r')]}}),
+                dict(depth=1, origin_xy_um=[0, 0], branches={'x': {'stages': [dict(xy_um=[1, 2], raw_reset='r')]}})):
         with pytest.raises(js.ValidationError):
             js.validate(bad, sch)
 
