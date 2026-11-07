@@ -359,3 +359,26 @@ def test_order_unlocks_blocked_parents_first():
     c = {"dies": {"s81": dict(d, event="e1", plan="/p", src="/s", gen_host="epyc5", pilot_gate=False, kinds=["core", "type"])}}
     picked, _ = K.select(rows, c, "s81", {"items": {}})
     assert [r["item"] for r in picked] == ["m_b", "m_a", "m_c"]
+
+
+def _failrec(tmp_path, cfgd, **over):
+    d = tmp_path / "a1"; d.mkdir()
+    (d / "spec.json").write_text(json.dumps(K.spec_for(dict(cfgd, _otrun_status={}), "s81", "t1", "")))
+    return dict({"die": "s81", "item": "t1", "attempt": 1, "status": "FAIL", "class": "TIMING", "dir": str(d)}, **over)
+
+
+def test_unchanged_fail_holds_same_inputs_only(tmp_path):
+    c = cfg(); r = _failrec(tmp_path, c)
+    assert K.unchanged_fail(c, {}, "s81", "t1", r)                                    # same inputs
+    assert not K.unchanged_fail(c, {}, "s81", "t1", dict(r, **{"class": "INFRA"}))     # an infra failure is not a design retry
+    assert not K.unchanged_fail(c, {}, "s81", "t1", dict(r, status="CANCELLED"))
+    assert not K.unchanged_fail(c, {}, "s81", "t1", dict(r, dir=str(tmp_path / "gone")))
+    assert not K.unchanged_fail(c, {"leafslew": {"k": {"die": "s81", "item": "t1", "attempt": 1}}}, "s81", "t1", r)
+    c2 = cfg(); c2["dies"]["s81"]["src_sha"] = "new"                                    # new source
+    assert not K.unchanged_fail(c2, {}, "s81", "t1", r)
+    c3 = cfg(); c3["dies"]["s81"]["gen_args"] = ["--form", "x"]                         # new arguments
+    assert not K.unchanged_fail(c3, {}, "s81", "t1", r)
+    c4 = cfg(); c4["dies"]["s81"]["_prov_keys"] = {"t1": "views2"}                      # new child views
+    assert not K.unchanged_fail(c4, {}, "s81", "t1", dict(r, prov_key="views1"))
+    c5 = cfg(gen_hosts=["epyc4"], place_mem_gb=999)                                     # where it runs is no input
+    assert K.unchanged_fail(c5, {}, "s81", "t1", r)
