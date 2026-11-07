@@ -3388,6 +3388,34 @@ def plain_ring_land_slots(rtl_dir, buses):
     return out
 
 
+_CA_RING = re.compile(r"\bot_dp_clk_landing_cas?\s*#\s*\(((?:[^()]|\([^()]*\))*)\)\s*(u_cland_\w+)\s*\((.*?)\)\s*;", re.S)
+_CA_ORIGIN = re.compile(r"\bot_dp_landing_origin\w*\s*(?:#\s*\((?:[^()]|\([^()]*\))*\)\s*)?(u_cland_origin\w*)\s*\((.*?)\)\s*;", re.S)
+
+
+def ca_ring_land_slots(rtl_dir, buses, inputs=None):
+    """DIE-KV-88 11-07: count-aligned rings of a --kit-rtl type built WITHOUT the gen_clock_landings.json sidecar (native
+    kv3_hub_Wi: 84 ot_dp_clk_landing_cas rings, undeclared, so face_guard read 7755 landed bits as "shared").  Declares what
+    clock_landings.Landings.land_slots would: each ring whose .d is one planned bus {D: .DEPTH, form: hold_mux}, its .t_rst_n
+    {form: ring_start, ring}, and the origin's .p_start {form: origin_start, origin: <instance>}.  face_guard still proves
+    every declared bit.  Rings with another .d expression or no literal DEPTH stay undeclared."""
+    text = "\n".join(f.read_text(errors="replace") for f in sorted(Path(rtl_dir).glob("*.sv")))
+    out = {}
+    for m in _CA_RING.finditer(text):
+        dep = re.search(r"\.DEPTH\s*\(\s*(\d+)\s*\)", m.group(1))
+        d = re.search(r"\.d\s*\(\s*([A-Za-z_]\w*)\s*\)", m.group(3))
+        st = re.search(r"\.t_rst_n\s*\(\s*([A-Za-z_]\w*)\s*\)", m.group(3))
+        if not dep or not d or d.group(1) not in buses:
+            continue
+        out[d.group(1)] = {"D": int(dep.group(1)), "form": "hold_mux"}
+        if st:
+            out[st.group(1)] = {"form": "ring_start", "ring": d.group(1)}
+    for m in _CA_ORIGIN.finditer(text):
+        ps = re.search(r"\.p_start\s*\(\s*([A-Za-z_]\w*)\s*\)", m.group(2))
+        if ps and (inputs is None or ps.group(1) in inputs):
+            out[ps.group(1)] = {"form": "origin_start", "origin": m.group(1)}
+    return out
+
+
 def stage_includes(rtl_files, rtl_dir):
     """DIE-HEAD-7 / RISK-SWEEP-2 10-28: copy every `include "x" a staged source names (transitively) from the source's
     own directory into the kit rtl/ (yosys resolves includes next to the including file); the HEAD hd_serdes kit
@@ -4426,6 +4454,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     lc_in = {str(x["name"]) for x in P.types[tn].get("clock", {}).get("landing_contract", {}).get("pins", [])
              if x.get("dir") == "in" and x.get("kind") != "clock"}
     plain = plain_ring_land_slots(kd / "rtl", {b for b, *_ in pins} | lc_in) if plain_rings else {}
+    if plain_rings and land_slots is None:      # no count-aligned sidecar: declare the kit's own ca rings from its RTL
+        plain = {**ca_ring_land_slots(kd / "rtl", {b for b, *_ in pins} | lc_in), **plain}
     if plain:                                   # DIE-S81-26: plain forwarded-clock rings (S81 stations), merged
         from clock_landings import LAND_SLOTS_SCHEMA
         land_slots = dict(land_slots or {"schema": LAND_SLOTS_SCHEMA, "buses": {}})

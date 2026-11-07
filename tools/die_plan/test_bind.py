@@ -269,6 +269,23 @@ def test_reset_spine(tmp_path):
     assert verify(out)["verdict"] == "PASS"
 
 
+def test_reset_spine_out_relay(tmp_path):
+    """asbuilt.reset_spine_out_relay (COORD 11-07, default off): the spine source drives its output through one ot_dp_rrelay
+    per bit, no assign; the sink keeps ot_dp_rsync and the proof still holds"""
+    def edit(p):
+        p["ports"] = [x for x in p["ports"] if x["id"] != "a1f__0"]
+        p["lanes"] = [x for x in p["lanes"] if x["id"] != "a1f"]
+        p["asbuilt"]["reset_spines"] = [{"pin": r"p1\.u_b\.flt", "sync_stages": 2}]
+        p["asbuilt"]["reset_spine_out_relay"] = True
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    assert report(out)["n_errors"] == 0
+    rtl = "\n".join(f.read_text() for f in (out / "rtl").glob("*.sv"))
+    assert "ot_dp_rrelay u_rsout_" in rtl and "reset spine (async" not in rtl
+    assert "ot_dp_rsync #(.W(1), .S(2))" in rtl
+    assert verify(out)["verdict"] == "PASS"
+
+
 def test_land_align(tmp_path):
     """asbuilt.land_align = cell: snk.d0 is split over a 2-cycle lane (5 b) and a forwarded 5-cycle route (3 b); the
     5 early bits get 3 pad stages so the bus lands as built (all 8 bits at the same depth), and the proof holds"""

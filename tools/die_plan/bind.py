@@ -3049,6 +3049,8 @@ class Binder:
             if missing:
                 raise BindError(f"wavefront reset carriers lack bound partitions: {sorted(missing)[:10]}")
             (out.parent / "bind_reset.json").write_text(json.dumps(W, indent=1))
+        elif self.ab.get("reset_spine_out_relay"):
+            cells += "\n" + wavefront_cells_text()    # the spine relays use the canonical ot_dp_rrelay
         if (self.plan.get("clock") or {}).get("ft_hop_lockup"):
             cells += "\n" + ft_hop_lockup_cell()
         (out / "bind_cells.sv").write_text(cells)
@@ -3550,6 +3552,13 @@ class Binder:
             ports.append(f"    output wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'out')}")
             if L.get("spine"):
                 ports[-1] = f"    output wire [{W - 1}:0] {n}   // reset spine: {_bus_note(L, 'out')}"
+                if self.ab.get("reset_spine_out_relay"):
+                    # COORD 11-07 (opt-in): each spine output bit leaves through its own registered relay (+1 clock on
+                    # assert and release at the sink), so the pin passes face_guard: no port-to-port wire, no shared driver.
+                    for i, it in enumerate(L["items"]):
+                        body.append(f"    ot_dp_rrelay u_rsout_{n}_{i} (.clk(clk), .d({drv_w[(it[1], it[2])]}[{it[3]}]), .q({n}[{i}]));"
+                                    f"  // reset spine relay (landed by ot_dp_rsync in the sink)")
+                    continue
                 d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" for it in L["items"]])
                 body.append(f"    assign {n} = {d};  // reset spine (async; landed by ot_dp_rsync in the sink)")
                 continue
