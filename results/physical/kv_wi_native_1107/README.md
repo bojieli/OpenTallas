@@ -35,3 +35,21 @@ It runs the stock retained `native_gen_v3/run_kit.sh` with goal `place`.
 No timing closure, route, source-equivalence, POR adoption, or throughput
 qualification follows from this pilot. Post-PLACE counts and geometry must
 determine the next actual blocker.
+
+The first PLACE request never ran: it was canceled as an unstarted waiter
+when the retained ING abstract was found to blanket M6/M7. The supported
+`abstract_detail.py` exported exact routed shapes (explicit bloat factor0)
+from the same qualified 6_final.odb. E4 ordinary 12GB/2t unit
+`oth-ubuntu-3431500-1794064931` exited0. The corrected artifact lives at
+E4 `codex-wi-ing-abstract-b0-e4-1107/qkd_hr_ingest_eng.lef` under scratch3.
+`ing_splice.json` records only M6/M7 replacement, 19669/5826 shapes,
+`detail_pins_equal_base=true` and `check_ok=true`; M5 VDD/VSS, all signal
+pins, SIZE and lower obstructions are unchanged. There are no pin-clear
+cuts. The rendered actual `ing_upper_obs_review.png` was directly viewed.
+This is a private parent geometry input, not fresh child timing extraction.
+
+The fresh conditional PLACE successor is controller
+`codex-wi-native-place2-1107`, log `place2.client.log` beside the earlier
+controller log. It retains the same 32GB/8t caps and ordinary die priority.
+Only this request can produce the pilot's parent physical result; the
+original request and the abandoned export waiters are all NOT RUN.

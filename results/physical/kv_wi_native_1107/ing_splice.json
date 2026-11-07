@@ -1,0 +1,28 @@
+{
+ "base": "/srv/opentallas-scratch3/claude/codex-wi-ing-abstract-b0-e4-1107/source/views/qkd_hr_ingest_eng.lef",
+ "base_sha256": "60816c48814e97b1883ba3e0c18509722202f46bcc2e9394fe0b89f328725092",
+ "detail": "/srv/opentallas-scratch3/claude/codex-wi-ing-abstract-b0-e4-1107/detail.lef",
+ "out": "/srv/opentallas-scratch3/claude/codex-wi-ing-abstract-b0-e4-1107/qkd_hr_ingest_eng.lef",
+ "out_sha256": "6cccde0c277075c519d13e525c53867e7eadd5e48f774f6c8b232f2ffab2bc51",
+ "layers_detailed": [
+  "M6",
+  "M7"
+ ],
+ "rects": {
+  "M6": 19669,
+  "M7": 5826
+ },
+ "pin_clear_um": null,
+ "pin_clear": null,
+ "pg_pin_layers": {
+  "VSS": [
+   "M5"
+  ],
+  "VDD": [
+   "M5"
+  ]
+ },
+ "detail_pins_equal_base": true,
+ "check_ok": true,
+ "problems": []
+}
