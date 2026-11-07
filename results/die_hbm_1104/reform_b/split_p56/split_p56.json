@@ -1,0 +1,14 @@
+[
+ {
+  "core": "ot_hbm_svc_vm_kshare_splitstrap__v8e478a",
+  "sha": "p56",
+  "part": "p56",
+  "glue": "ot_hbm_svc_vm_kshare_splitstrap__v8e478a__p56glue.sv",
+  "conn": "ot_hbm_svc_vm_kshare_splitstrap__v8e478a.conn.json",
+  "subs": [{"module": "ot_hbm_svc_vmks_t0", "cells": 86000}, {"module": "ot_hbm_svc_vmks_t1", "cells": 79000}],
+  "added_cycles": "PIN CYCLES fill_* +1 and wbw_* +1 (cycles/kshare_v8.tsv); lanes 2,3 start a window +2 hbm edges later than lanes 0,1 and report norm +2 (variable latency, not a pin contract)",
+  "boundary_sub": "u_fcore.u_core.u_t0",
+  "hub_sub": "u_fcore.u_core.u_t0",
+  "layout": {"u_fcore.u_core.u_t0": {"xy": [0.0, 0.0], "wh": [221.184, 506.304]}, "u_fcore.u_core.u_t1": {"xy": [233.28, 0.0], "wh": [212.544, 506.304]}}
+ }
+]
