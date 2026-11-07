@@ -61,15 +61,20 @@ Reset relay form (11-06 follow-on, DIE-QC-85):
   Estimate: crossing hops 8 -> 0 (4 raw + 4 run nets), max hop 380.0 um (plan reach), no relay inside a grown lane box.
   Plan image sul0_reset_vC.png (viewed): before (red = crossing) / after.
 Class rule (tools/die_plan/reset_tree.py resite_crossing / resite_type / native_resite_sites; plan
-  reset.relay_resite_crossing, default ON, false = pre-11-06 trees).  A hop with no L route outside every grown blockage
-  moves the free relays of its chain (single child, not at a tap) between the fixed anchor above and the fixed node
-  below.  They go onto the shortest obstacle-avoiding rectilinear route (Hanan grid of the grown faces), spaced so that each hop is
-  a <= 1-bend sub-path <= plan reach.  The graph is unchanged and a tree without crossings comes back byte-identical.
-  Unresolvable hops are left as they are and reported.
-  Captured native trees (bound_native_reset.json) are never re-solved.  native_resite_sites() gives the sites-only
-  bound_reset_placement overlay (bound_reset_contract.placement, needs a PASS image review).  On the captured
-  cl76fb247e tree it resolves all 4 crossings (moves u_rrl_24/25/26, 28/29/30, 32/33/34, 36/37/38, max hop 380).
-  QC census (die_plan.json, default ON): 5 of 65 non-hard types change reset sites: slw_su_l1 7, slw_su_c 6,
-  sle_su_l1 8, sle_su_c 4, native59 2.  The current plan su_l0 trees (30/31 relays, grid topology) have no crossing.
-  Tests: test_reset_tree.py (4 new) and every die_plan test that imports reset_tree: 452 passed.
-  test_check.py::test_run_keeps_plan_path_for_plan_relative_files fails on the base too (gen_phys S.Plan.rect).
+  reset.relay_resite_crossing is OPT-IN, default false: absent or false gives the pre-11-06 trees.  DIE-QC-85 11-06:
+  the QC plan is frozen fix-only).  A hop with no L route outside every grown blockage moves the free relays of its
+  chain (single child, not at a tap) between the fixed anchor above and the fixed node below.  They go onto the
+  shortest obstacle-avoiding rectilinear route (Hanan grid of the grown faces), spaced so that each hop is a <= 1-bend
+  sub-path <= plan reach.  The graph is unchanged and a tree without crossings comes back identical.  Unresolvable
+  hops are left as they are and reported.
+  su_l0 use (the only enabled use): captured native trees are never re-solved.  native_resite_sites(tree, boxes,
+  box_out, paths) gives the sites-only bound_reset_placement overlay (bound_reset_contract.placement, needs a PASS
+  image review) for slw_su_l0__cl76fb247e / __cl1a1c1f8f / __cl1e5219ea.  On the captured cl76fb247e tree it resolves
+  all 4 crossings (moves u_rrl_24/25/26, 28/29/30, 32/33/34, 36/37/38, max hop 380).  The vC kit uses the
+  hand re-site above (same intent, fewer moves).
+  CANDIDATE FOR COORD RULING (not enabled): with relay_resite_crossing true on qwen_compute die_plan.json, 5 of 65
+  non-hard types would change reset sites: slw_su_l1 7, slw_su_c 6, sle_su_l1 8, sle_su_c 4, native59 2 relays.
+  The current plan su_l0 trees (30/31 relays, grid topology) have no crossing.
+  Tests: test_reset_tree.py (4 new: su_l0 resite, no-op + native overlay, unresolvable report, opt-in flag) and every
+  die_plan test that imports reset_tree: 452 passed.  test_check.py::test_run_keeps_plan_path_for_plan_relative_files
+  fails on the base too (gen_phys S.Plan.rect).
