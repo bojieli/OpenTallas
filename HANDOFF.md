@@ -3371,3 +3371,5 @@ CODEX: 2026-11-07 01:19 PST cleared exact intel1 reservation waiterPID1716441 by
 CODEX: 2026-11-07 01:41 PST BKSEL vF unchanged finish recovered after exact2h-flat unstarted-waiter stop; --crit32GB16T admittedintel1 unit869312-1794044433/container klegacy-dsdv_bksel_q_vF-872276; oldvE/ECOi2 preserved, no new timing yet. Log intel2 scratch2/claude/codex-watch-s81-1107/bksel_vF_finish_crit.log.
 
 CODEX: 2026-11-07 01:55 PST OWNER authorized immediate RAM admission release; factor0 live E4/E5/E6, code aaea3539 codex/ram-release-1107 (not merged),86selftests+1000default replays PASS. Actual conservative QC/S81 queued place jobs started;15s memory/earlyoom guards auto-restore factor1 at<64GB available, no kills. Exact perhost backups and rollback in CODEX-LOG.md.
+
+CODEX: 2026-11-07 03:02 PST explicit Claude reset: stopped new launches/probes, left healthy jobs and RAM/route guards running. Full handback CODEX-LOG Handoff to Claude 2026-11-07 03:02 PST and handoff/codex_watcher_checkpoint_20261107.md. Main02909 unchanged; cleanup STOP must remain pending retention fix.
