@@ -1,0 +1,41 @@
+{
+ "by": "DIE-HBM-82-SVGR 11-06 p53d: p53c top row was outside the core by 0.036 um after grid snap (MPL-0034, kit vPW45c never placed). Rows 52.38 apart, channels 11.316 um (>=10.8), top margin 0.50 um, clock entry y 103.68 mid-channel (97.776-109.092).",
+ "macro_placement": [
+  {
+   "k": 0,
+   "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+   "origin_um": [
+    43.2,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 1,
+   "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+   "origin_um": [
+    43.2,
+    56.7
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 2,
+   "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+   "origin_um": [
+    43.2,
+    109.08
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 3,
+   "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+   "origin_um": [
+    43.2,
+    161.46
+   ],
+   "orient": "R0"
+  }
+ ]
+}

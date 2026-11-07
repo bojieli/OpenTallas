@@ -21,7 +21,13 @@
 //   * reset tree: one ot_reset_sync pair per landing bank (same release edge).
 //   PIN CYCLES vs B8: landing write / complete / bank fault +1 stream_clk per packet (packets 2 cycles apart),
 //   credits (cr) follow the later pops.
-module ot_svgr_b12_fifo #(parameter integer W = 285, parameter integer SL = 9, parameter integer MUT = 0) (
+// VARIANT 2 (RF4, DIE-HBM-82-SVGR 11-06; vB plus, measured on routed vPW60 TT -202.8): two more registers.
+//   * stop_q per landing bank: the face flop no longer drives 4 x 285-bit enables through one tree.  PIN CYCLE +1 on
+//     stop.  stop is the sticky die fault (seam_stop=fault), so only the cycle in which a faulting die stops moves.
+//   * registered empty (EMPTYQ): rgray/wg_r2 compare no longer sits in fifo_pop.  Safe because vB never pops in
+//     consecutive cycles (pop -> head_v=1, chk=0 next cycle), so empty_q has seen rgray before the next pop can be
+//     taken; wg_r2 only advances, so a stale empty_q=1 is only late.  +1 stream_clk from push visibility to pop.
+module ot_svgr_b12_fifo #(parameter integer W = 285, parameter integer SL = 9, parameter integer MUT = 0, parameter integer EMPTYQ = 0) (
   input  wire          wclk, wrst_n, input wire we, input wire [W-1:0] wdata, output wire full,
   output wire [2:0]    rd_freed,
   input  wire          rclk, rrst_n, input wire re, output wire [W-1:0] rdata, output wire empty
@@ -37,7 +43,11 @@ module ot_svgr_b12_fifo #(parameter integer W = 285, parameter integer SL = 9, p
   wire wpush = we && !full;
   wire [AW:0] wbin_n = wbin + (wpush ? 1'b1 : 1'b0);
   assign full  = (wgray == {~rg_w2[AW:AW-1], rg_w2[AW-2:0]});
-  assign empty = (rgray == wg_r2);
+  wire empty_c = (rgray == wg_r2);
+  reg empty_q;
+  always @(posedge rclk or negedge rrst_n)
+    if (!rrst_n) empty_q <= 1'b1; else empty_q <= (MUT == 4) ? 1'b0 : empty_c;
+  assign empty = (EMPTYQ != 0) ? empty_q : empty_c;
   reg [AW:0] rsync_bin_q;
   wire [AW:0] rsync_bin = g2b(rg_w2);
   assign rd_freed = 3'(rsync_bin - rsync_bin_q);
@@ -82,12 +92,14 @@ module ot_svgr_b12_landing #(parameter integer LBANKS=4,parameter integer LB=2,p
   parameter integer VARIANT=0,parameter integer MUT=0)(
  input wire hbm_clk,hbm_rst_n,stream_clk,stream_rst_n,input wire [2:0] bank_id,
  input wire in_v,input wire [IW-1:0] in_data,output wire [1:0] freed,
- input wire reserve_v,input wire [LB-1:0] reserve_bank,input wire [15:0] reserve_epoch,input wire [11:0] reserve_total,input wire stop,
+ input wire reserve_v,input wire [LB-1:0] reserve_bank,input wire [15:0] reserve_epoch,input wire [11:0] reserve_total,input wire stop_in,
  output wire complete_v,output wire [LB-1:0] complete_bank,output wire fault,
  input wire read_v,input wire [LB-1:0] read_bank,input wire [5:0] read_row,output wire [255:0] read_data
 );
+ reg stop_q;wire stop=(VARIANT>=2)?((MUT==5)?1'b0:stop_q):stop_in;
+ always @(posedge stream_clk or negedge stream_rst_n)if(!stream_rst_n)stop_q<=0;else stop_q<=stop_in;
  wire packet_take,fifo_pop,full,empty;wire [IW-1:0] fifo_q;reg [IW-1:0] packet;reg head_v;wire [2:0] rf;reg ov;
- ot_svgr_b12_fifo #(.W(IW),.SL(9),.MUT(MUT==1?1:0)) u_response(.wclk(hbm_clk),.wrst_n(hbm_rst_n),.we(in_v),.wdata(in_data),.full(full),.rd_freed(rf),
+ ot_svgr_b12_fifo #(.W(IW),.SL(9),.MUT(MUT==1?1:(MUT==4?4:0)),.EMPTYQ(VARIANT>=2?1:0)) u_response(.wclk(hbm_clk),.wrst_n(hbm_rst_n),.we(in_v),.wdata(in_data),.full(full),.rd_freed(rf),
   .rclk(stream_clk),.rrst_n(stream_rst_n),.re(fifo_pop),.rdata(fifo_q),.empty(empty));
  assign freed=rf[1:0];
  reg [LBANKS-1:0] valid_q;reg [15:0] epoch_q[0:LBANKS-1];reg [6:0] count_q[0:LBANKS-1],received_q[0:LBANKS-1];
@@ -176,7 +188,7 @@ module ot_svgr_bk #(parameter integer LBANKS=4,parameter integer LB=2,parameter 
  wire [1:0] fr[0:3];reg [3:0] owe[0:3];
  generate for(g=0;g<4;g=g+1)begin:u
   ot_svgr_b12_landing #(.LBANKS(LBANKS),.LB(LB),.IW(IW),.VARIANT(VARIANT),.MUT(g==1?MUT:0)) u_bank(.hbm_clk(hbm_clk),.hbm_rst_n(hrst[g]),.stream_clk(stream_clk),.stream_rst_n(srst[g]),.bank_id({bk_hi,2'(g)}),
-   .in_v(in_v[g]),.in_data(in_data[IW*g+:IW]),.freed(fr[g]),.reserve_v(res_v),.reserve_bank(res_bank),.reserve_epoch(res_epoch),.reserve_total(res_total),.stop(stop),
+   .in_v(in_v[g]),.in_data(in_data[IW*g+:IW]),.freed(fr[g]),.reserve_v(res_v),.reserve_bank(res_bank),.reserve_epoch(res_epoch),.reserve_total(res_total),.stop_in(stop),
    .complete_v(complete[g]),.complete_bank(complete_bank[2*g+:2]),.fault(bfault[g]),.read_v(read_v[g]),.read_bank(read_bank),.read_row(read_row[6*g+:6]),.read_data(read_data[256*g+:256]));
   always @(posedge hbm_clk or negedge hrst[g])begin
    if(!hrst[g])begin owe[g]<=0;cr[g]<=0;end
