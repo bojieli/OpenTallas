@@ -2160,6 +2160,55 @@ def spill_handoff_cli(tag, goal="place", dry=False, say=print):
     return 0 if spill_handoff(src, dst, roots, kit, stamp, rec, say, snapshot=True) else 1
 
 
+def process_identity(pid):
+    """Read a local process incarnation, never infer cancellation from a reused PID."""
+    try:
+        with open(f"/proc/{pid}/stat") as f:
+            fields = f.read().rsplit(")", 1)[1].split()
+        with open("/proc/sys/kernel/random/boot_id") as f:
+            boot_id = f.read().strip()
+        return dict(pid=int(pid), boot_id=boot_id, start_ticks=fields[19], state=fields[0])
+    except (OSError, ValueError, IndexError):
+        return None
+
+
+def forward_owner_hold(owner, current, intent=None):
+    """Opt-in forward-copy hold reason. Hold reasons never imply semantic cancellation.
+
+    Back-copy recovery deliberately never calls this: dead clients are expected
+    there, and unique results still need recovery. Unknown legacy records are not
+    rewritten or globally held.
+    """
+    keys = ("pid", "boot_id", "start_ticks")
+    identity = lambda x: tuple(x.get(k) for k in keys) if x else None
+    expected = identity(owner)
+    if not owner or not all(owner.get(k) is not None for k in keys):
+        return "forward owner identity unavailable; review required"
+    if (intent and intent.get("intent") in ("STOP", "HOLD")
+            and identity(intent) == expected):
+        return "explicit forward " + intent["intent"] + "; records and data preserved"
+    if not current or identity(current) != expected:
+        return "forward owner identity no longer verified; review required (not cancellation)"
+    if current.get("state") in ("T", "t", "Z", "X"):
+        return "forward owner stopped/exited; review required (not cancellation)"
+    return ""
+
+
+def forward_owner_guard(owner):
+    if os.environ.get("OT_RUN_FORWARD_OWNER_GUARD") != "1":
+        return ""
+    intent = None
+    if os.environ.get("OT_RUN_FORWARD_HOLD_FILE"):
+        try:
+            with open(os.environ["OT_RUN_FORWARD_HOLD_FILE"]) as f:
+                intent = json.load(f)
+            if not isinstance(intent, dict):
+                raise ValueError("not an intent object")
+        except (OSError, ValueError):
+            return "forward hold intent unreadable; review required"
+    return forward_owner_hold(owner, process_identity(owner["pid"]) if owner else None, intent)
+
+
 SPILL_REFUSED_REAL = False   # the last forward copy was refused with OT_SPILL_REAL
 
 
@@ -2168,6 +2217,7 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
     when the copy failed or (QUEUE-BAL-1) dst did not admit it within REQUEUE_S (nothing ran; the caller places again).  v10: the forward copy is marked first, serialised per lane and retried; a
     pending record (~/.local/state/ot-run/spill_pending) survives a killed client, and `ot-run --spill-sweep` copies the
     outputs back once the unit has ended; a back-copy that keeps failing is retried and logged to spill_stuck.log."""
+    owner = process_identity(os.getpid())
     tag = "%d-%d" % (os.getpid(), int(time.time()))
     stamp = f"/tmp/ot-run-spill.{tag}"
     say(f"ot-run: SPILL: copying {', '.join(roots)} ({size_gb:.1f} GB) {src} -> {dst} (no host with --dir admits {mem} GB now)")
@@ -2188,7 +2238,7 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
         return None
     say(f"ot-run: SPILL: copied {r.sent} changed entries in {time.time() - t0:.0f} s; running on {dst}; written files go back to {src} after the run")
     log_signal(f"SPILL {roots} {src} -> {dst} pid {os.getpid()}: {' '.join(cmd)[:200]}")
-    rec = dict(tag=tag, pid=os.getpid(), src=src, dst=dst, roots=roots, stamp=stamp, unit=None, t=int(time.time()),
+    rec = dict(tag=tag, pid=os.getpid(), client_identity=owner, src=src, dst=dst, roots=roots, stamp=stamp, unit=None, t=int(time.time()),
                cmd=" ".join(cmd)[:300])
     pending_write(rec)
 
