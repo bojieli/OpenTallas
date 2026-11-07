@@ -173,6 +173,19 @@ def wire(bound, module, rows):
         original_body = bound[body_start:body_end]
         conn = re.compile(r"(\." + re.escape(pin) + r"\s*\()([^()]+)(\))")
         matches = list(conn.finditer(original_body))
+        # BIT0_PIN_1106 (KV-SLGLAND-1, kv3_pv*/kv3_hgi*/kv3_hg* early core taps): a hard core whose clock port is a
+        # one-bit bus names its LEF/lib pin `<base>[0]` (kv3_pv_pair s1__clk, bit_width 1), and that is what the plan
+        # tap and clock_taps.tcl use, but the bound RTL connects the port by its base name (`.s1__clk(clk)`).  With no
+        # `.<base>[0](` connection, the one `.<base>(` connection is the consumer.  Fails closed when the plan also taps
+        # another bit of that base on this instance (then the port is wider and a base-name swap would move every bit).
+        bit0 = re.fullmatch(r"(\w+)\[0\]", pin)
+        if not matches and bit0:
+            base = bit0.group(1)
+            other = [r for r in rows if r[1] == physical_inst and r[2] != pin and re.fullmatch(re.escape(base) + r"\[\d+\]", r[2])]
+            if other:
+                raise ValueError(f"core clock {port}: {local}.{base} has more than one planned bit, base-name wiring refused")
+            conn = re.compile(r"(\." + re.escape(base) + r"\s*\()([^()]+)(\))")
+            matches = list(conn.finditer(original_body))
         if len(matches) != 1:
             raise ValueError(f"core clock {port}: expected one {local}.{pin} connection")
         if (local, pin) in consumers:
