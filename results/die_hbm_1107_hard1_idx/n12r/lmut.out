@@ -1,0 +1,4 @@
+l1 RESULT rtx=4 seed=2 chk=20080 diff=2126 first=21 block_v=7470 fault_cycles=10076 legal_blocks_nofault=4318 legal_fault_c
+l2 RESULT rtx=4 seed=2 chk=20080 diff=4318 first=21 block_v=7470 fault_cycles=10076 legal_blocks_nofault=4318 legal_fault_c
+RESULT rtx=173 seed=5 chk=60756 diff=0 first=-1 block_v=22296 fault_cycles=30752 legal_blocks_nofault=12953 legal_fault_cycles=378
+tb_n12r.sv:70: $finish called at 123502000 (1ps)
