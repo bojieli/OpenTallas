@@ -1536,6 +1536,105 @@ class LateEcoProvenance(Base):
         self.assertTrue(self.ap.late_eco_on())
 
 
+
+class TestEvacNoResumeHost(Base):
+    """KW-FIX-24 COORD 17:5x: a kit homed on a kit_wave.json no_resume_hosts host moves to the hub inside its unit"""
+
+    def cfg(self, hosts):
+        (Path(self.tmp.name) / "kit_wave.json").write_text(json.dumps({"no_resume_hosts": hosts}))
+
+    def submit(self):
+        (j,) = self.ap.parse_queue("\t".join(ROW)).values()
+        j["id"] = "evac0001"
+        seen = []
+        self.ap.launch_unit = lambda unit, logfile, argv: seen.append(argv) or True
+        self.ap.submit({"jobs": {}}, j)
+        return j, seen[0]
+
+    def test_submit_wraps_only_listed_host(self):
+        j, argv = self.submit()
+        self.assertNotEqual(argv[:2], ["bash", "-c"])
+        self.assertNotIn("evac", j)
+        self.cfg({"epyc2": 80})
+        j, argv = self.submit()
+        self.assertEqual(argv[:2], ["bash", "-c"])
+        self.assertEqual(argv[3:5], ["ap-evac", "epyc2"])
+        cut = argv.index("--", 7)
+        self.assertEqual(argv[7:cut], [j["path"]])
+        self.assertEqual(argv[cut + 1], self.ap.OT_RUN)
+        self.assertEqual((j["evac"]["from"], j["evac"]["to"]), ("epyc2", self.ap.HUB_NAME))
+
+    def test_apply_evac_rehomes_on_ok_marker_only(self):
+        m1, m2 = Path(self.tmp.name) / "m1.json", Path(self.tmp.name) / "m2.json"
+        m1.write_text(json.dumps({"ok": True, "from": "epyc6", "bytes": 3e9}))
+        m2.write_text(json.dumps({"ok": False, "why": "hub disk"}))
+        st = {"jobs": {
+            "a": {"id": "a", "host": "epyc6", "kit": "epyc6:/srv/x/a", "path": "/srv/x/a", "probe": "epyc6",
+                  "evac": {"from": "epyc6", "mark": str(m1), "t": time.time()}},
+            "b": {"id": "b", "host": "epyc6", "kit": "epyc6:/srv/x/b", "path": "/srv/x/b",
+                  "evac": {"from": "epyc6", "mark": str(m2), "t": time.time()}},
+            "c": {"id": "c", "host": "epyc6", "kit": "epyc6:/srv/x/c", "path": "/srv/x/c",
+                  "evac": {"from": "epyc6", "mark": str(Path(self.tmp.name) / "none.json"), "t": time.time()}}}}
+        self.assertEqual(self.ap.apply_evac(st), 1)
+        a, b, c = st["jobs"]["a"], st["jobs"]["b"], st["jobs"]["c"]
+        self.assertEqual((a["host"], a["kit"], a["host_before_evac"]), (self.ap.HUB_NAME, f"{self.ap.HUB_NAME}:/srv/x/a", "epyc6"))
+        self.assertNotIn("probe", a)
+        self.assertEqual(b["host"], "epyc6")
+        self.assertTrue(b["evac"]["applied"].startswith("failed"))
+        self.assertNotIn("applied", c["evac"])          # unit still copying: retried next tick
+        self.assertEqual(self.ap.apply_evac(st), 0)     # applied once
+
+    def run_sh(self, roots, extra_env=None):
+        import subprocess
+        t = Path(self.tmp.name)
+        fake = t / "fakessh"
+        fake.write_text("#!/bin/bash\nwhile [[ $1 == -* ]]; do if [[ $1 == -o ]]; then shift 2; else shift; fi; done\n"
+                        "shift\nexec bash -c \"$*\"\n")
+        fake.chmod(0o755)
+        mark = t / "mark.json"
+        env = dict(os.environ, EVAC_SSH=str(fake), EVAC_DST_PREFIX=str(t / "dst"), EVAC_LANE=str(t / "src"))
+        env.update(extra_env or {})
+        r = subprocess.run(["bash", "-c", self.ap.EVAC_SH, "ap-evac", "epyc6", str(mark), "0"] + roots + ["--", "echo", "RAN"],
+                           capture_output=True, text=True, env=env, timeout=120)
+        return r, json.loads(mark.read_text())
+
+    def tree(self):
+        t = Path(self.tmp.name)
+        k = t / "src/claude/w/items/k/gen/k"
+        (k / "run/results").mkdir(parents=True)
+        (k / "run/results/4_cts.odb").write_bytes(b"x" * 5000)
+        (k / "config.mk").write_text("A=1\n")
+        os.link(k / "config.mk", k / "run/hard.mk")
+        runner = t / "src/claude/w/items/k/gen/run_kit.sh"
+        runner.write_text("#!/bin/sh\n")
+        return k, runner
+
+    def test_evac_sh_moves_verifies_and_removes_source(self):
+        k, runner = self.tree()
+        r, m = self.run_sh([str(k), str(runner)])
+        self.assertEqual(r.stdout.strip(), "RAN", r.stderr)
+        self.assertTrue(m["ok"], m)
+        d = Path(self.tmp.name) / "dst" / str(k).lstrip("/")
+        self.assertEqual((d / "run/results/4_cts.odb").stat().st_size, 5000)
+        self.assertEqual((d / "config.mk").stat().st_ino, (d / "run/hard.mk").stat().st_ino)   # -H kept hardlinks
+        self.assertTrue((Path(self.tmp.name) / "dst" / str(runner).lstrip("/")).is_file())
+        self.assertFalse(k.exists())
+        self.assertFalse(runner.exists())
+
+    def test_evac_sh_refuses_and_keeps_source(self):
+        k, runner = self.tree()
+        d = Path(self.tmp.name) / "dst" / str(k).lstrip("/")
+        d.mkdir(parents=True)
+        r, m = self.run_sh([str(k)])
+        self.assertEqual(r.stdout.strip(), "RAN")       # fail-open: the job still runs, as before
+        self.assertFalse(m["ok"])
+        self.assertIn("exists", m["why"])
+        self.assertTrue((k / "config.mk").is_file())
+        r, m = self.run_sh([str(k)], {"EVAC_LANE": "/nonexistent"})
+        self.assertFalse(m["ok"])
+        self.assertIn("outside", m["why"])
+        self.assertTrue((k / "config.mk").is_file())
+
 if __name__ == "__main__":
     unittest.main()
 

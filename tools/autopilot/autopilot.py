@@ -1399,6 +1399,96 @@ def stop_survivors(j):
             log(f"STOP-SURVIVOR {j['id']}: {h} not checked: {v['error']} (watchdog duplicate check is the net)")
 
 
+# KW-FIX-24 11-06 (COORD 17:5x ruling): no kit resumes on a disk-low host.  A spilled run copies everything it wrote
+# back onto the kit's home host (ot-run spill copy-back); epyc6 scratch2 hit 0 bytes from those copy-backs.  A kit whose
+# home host is listed in kit_wave.json "no_resume_hosts" ({host: free GB at which the entry is dropped by hand}) is
+# moved, inside its own launched unit (the tick never waits on a copy), to the same path on the hub: rsync pull, file
+# list + size check, source removed, marker jobs/<id>/evac.json; then ot-run runs with the hub as home (ot-run homes a
+# --dir on the host that holds it).  Any failure undoes the hub copy and the job runs as before (fail-open, logged).
+# The next tick (apply_evac) re-homes the job record (host/kit) from the marker.
+EVAC_KEEP_GB = 100
+EVAC_SH = r"""set -u
+h=$1; mark=$2; keep=$3; shift 3; roots=()
+while [ $# -gt 0 ] && [ "$1" != "--" ]; do roots+=("$1"); shift; done; shift
+SSH=${EVAC_SSH:-ssh}; P=${EVAC_DST_PREFIX:-}
+say() { printf '%s\n' "$1" > "$mark.tmp" && mv "$mark.tmp" "$mark"; echo "AP-EVAC: $1" >&2; }
+made=()
+undo() { for d in "${made[@]}"; do rm -rf -- "$d"; done; }
+lst() { cd / && if [ -d "$1" ]; then (cd "$1" && find . -type f -printf '%P %s\n' | LC_ALL=C sort | md5sum | cut -c1-32); else stat -c %s "$1" 2>/dev/null; fi; }
+run_cmd=("$@")
+case "${roots[0]}" in ${EVAC_LANE:-/srv/opentallas-scratch}*/claude/*/*/*) ;; *) undo; say '{"ok": false, "why": "kit path outside a scratch lane"}'; exec "${run_cmd[@]}";; esac
+need=$($SSH -n -o BatchMode=yes -o ControlPath=none "$h" "du -sb ${roots[*]} 2>/dev/null | awk '{s+=\$1} END {print s+0}'") || { undo; say '{"ok": false, "why": "size probe failed"}'; exec "${run_cmd[@]}"; }
+for r in "${roots[@]}"; do
+  d="$P$r"; a=$(dirname "$d"); while [ ! -d "$a" ]; do a=$(dirname "$a"); done
+  free=$(df -B1 --output=avail "$a" | tail -1 | tr -dc 0-9)
+  if [ $((free - need)) -lt $((keep * 1073741824)) ]; then undo; say "{\"ok\": false, \"why\": \"hub disk: $((free / 1073741824)) GB free < need + keep\"}"; exec "${run_cmd[@]}"; fi
+  [ -e "$d" ] && { undo; say '{"ok": false, "why": "target exists on the hub"}'; exec "${run_cmd[@]}"; }
+done
+for r in "${roots[@]}"; do
+  d="$P$r"; mkdir -p "$(dirname "$d")"; made+=("$d")
+  if $SSH -n -o BatchMode=yes -o ControlPath=none "$h" "test -d '$r'"; then
+    rsync -aH -e "$SSH -o BatchMode=yes -o ControlPath=none" "$h:$r/" "$d/" || { undo; say '{"ok": false, "why": "rsync failed"}'; exec "${run_cmd[@]}"; }
+  else
+    rsync -aH -e "$SSH -o BatchMode=yes -o ControlPath=none" "$h:$r" "$d" || { undo; say '{"ok": false, "why": "rsync failed"}'; exec "${run_cmd[@]}"; }
+  fi
+  a=$($SSH -n -o BatchMode=yes -o ControlPath=none "$h" "$(declare -f lst); lst '$r'"); b=$(lst "$d")
+  [ -n "$a" ] && [ "$a" = "$b" ] || { undo; say "{\"ok\": false, \"why\": \"verify mismatch on $r\"}"; exec "${run_cmd[@]}"; }
+done
+$SSH -n -o BatchMode=yes -o ControlPath=none "$h" "rm -rf -- ${roots[*]}" || echo "AP-EVAC: source remove failed on $h (copy kept on the hub)" >&2
+say "{\"ok\": true, \"from\": \"$h\", \"bytes\": $need}"
+exec "${run_cmd[@]}"
+"""
+
+
+def evac_hosts():
+    try:
+        v = json.loads((AP_DIR / "kit_wave.json").read_text()).get("no_resume_hosts") or {}
+    except (OSError, ValueError, AttributeError):
+        return {}
+    return dict(v) if isinstance(v, dict) else {str(h): 80 for h in v}
+
+
+def evac_wrap(j, argv):
+    """argv unchanged, or wrapped in the hub-side move of the kit off a no_resume host (records j['evac'])"""
+    h = j.get("host")
+    if not h or ssh_host(h) == "localhost" or h not in evac_hosts() or not j.get("path"):
+        return argv
+    roots = [j["path"]]
+    r = j.get("runner") or ""
+    if r and r != j["path"] and not r.startswith(j["path"] + "/"):
+        roots.append(r)
+    mark = AP_DIR / "jobs" / j["id"] / ("evac-a%d.json" % (j.get("attempts", 0) + 1))
+    j["evac"] = {"from": h, "to": HUB_NAME, "roots": roots, "mark": str(mark), "t": time.time()}
+    return ["bash", "-c", EVAC_SH, "ap-evac", h, str(mark), str(EVAC_KEEP_GB)] + roots + ["--"] + argv
+
+
+def apply_evac(st):
+    """re-home jobs whose launched unit moved the kit to the hub (marker ok) -> number re-homed"""
+    n = 0
+    for j in st["jobs"].values():
+        e = j.get("evac")
+        if not e or e.get("applied"):
+            continue
+        try:
+            m = json.loads(Path(e["mark"]).read_text())
+        except (OSError, ValueError):
+            if time.time() - e.get("t", 0) > 6 * 3600:
+                e["applied"] = "no marker"
+            continue
+        if m.get("ok"):
+            j["host_before_evac"] = j.get("host")
+            j.update(host=HUB_NAME, kit=f"{HUB_NAME}:{j['path']}")
+            j.pop("probe", None)
+            e["applied"] = "moved"
+            n += 1
+            log(f"EVAC {j['id']} {j.get('die')}/{j.get('type')}: kit moved {e['from']} -> {HUB_NAME} "
+                f"({int(m.get('bytes', 0)) / 1e9:.1f} GB, source removed); no copy-back to {e['from']}")
+        else:
+            e["applied"] = "failed: " + str(m.get("why"))[:200]
+            log(f"EVAC-FAIL {j['id']} {j.get('die')}/{j.get('type')}: {m.get('why')}; ran with home {e['from']} as before")
+    return n
+
+
 def submit(st, j, attempt_note=""):
     n = j.get("attempts", 0) + 1
     unit = f"ap-{j['id']}-a{n}"
@@ -1424,6 +1514,7 @@ def submit(st, j, attempt_note=""):
         j.update(chain_required=True, admission_tools_sha256=bundle["sha256"], chain_version=CHAIN_VERSION)
     else:
         argv += ["--", "bash", runner, kit, j["goal"], str(mem), str(thr)]
+    argv = evac_wrap(j, argv)
     if DRY:
         log(f"would SUBMIT {j['id']} {j['die']}/{j['type']} {attempt_note}: {' '.join(argv)}")
         return
@@ -2580,6 +2671,7 @@ def tick(args):
     AG.prepare(sys.modules[__name__], st, rows)
     resolve_geom(rows, geom_text)
     load_closure()
+    apply_evac(st)
     poll_running(st)
     poll_reviews(st)
     retry_pending(st)
