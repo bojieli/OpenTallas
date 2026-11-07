@@ -642,6 +642,61 @@ def _relay_dict(rs):
     return "rs_place_all [dict create " + " ".join(f"{{{k}}} {{{v[0]:g} {v[1]:g}}}" for k, v in sorted(rs.items())) + "]"
 
 
+MACRO_CROSS_TCL = r"""# DIE-HEAD-79 11-07 plan macro_cross (opt-in partition_types[].macro_cross): a registered hop that must cross a hard core.
+# Repair buffers cannot sit over the core, so legalisation dropped them in the channels beside it: the net detoured on low
+# metal (hd_tile R 9.8 kohm, slew up to 645 ps) where the straight M6/M7 crossing measured R 3.6 kohm, C 28 fF.  One strong
+# driver at the launch side, then the net stays untouched by every repair step.  A buffer only: function and cycles unchanged.
+proc mc_drive_all {sink_glob sink_pin cell} {
+  global ff_blk ff_dbu is_fh is_miss
+  set m [[ord::get_db] findMaster $cell]
+  if {$m eq "NULL"} { error "OT_MACRO_CROSS: no master $cell" }
+  set n 0
+  foreach i [$ff_blk getInsts] {
+    set nm [string map {\\ {}} [$i getName]]
+    if {![string match $sink_glob $nm]} continue
+    set d [$i findITerm $sink_pin]
+    set src [$d getNet]
+    if {$src eq "NULL"} { lappend is_miss "macro_cross:$nm"; continue }
+    set drv ""
+    foreach t [$src getITerms] { if {[$t isOutputSignal]} { set drv [$t getInst] } }
+    if {$drv eq ""} { lappend is_miss "macro_cross:$nm:nodrv"; continue }
+    # the logic cell behind a Q inverter is not placed yet: the launch site is the flop that feeds it
+    set at $drv
+    if {![string match "*DFF*" [[$at getMaster] getName]]} {
+      foreach t [$at getITerms] { if {[$t isInputSignal] && [$t getNet] ne "NULL"} {
+        foreach u [[$t getNet] getITerms] { if {[$u isOutputSignal] && [string match "*DFF*" [[[$u getInst] getMaster] getName]]} { set at [$u getInst] } } } }
+    }
+    set b [odb::dbInst_create $ff_blk $m "ot_mc_drv_$n"]
+    set w [odb::dbNet_create $ff_blk "ot_mc_x_$n"]
+    $w setSigType SIGNAL
+    $d disconnect; $d connect $w
+    foreach t [$b getITerms] {
+      if {[$t isInputSignal]} { $t connect $src } elseif {[$t isOutputSignal]} { $t connect $w }
+    }
+    lassign [$at getLocation] ax ay
+    set got [ff_put_near $b $ax $ay]
+    if {$got eq ""} { lappend is_miss "macro_cross:$nm:noplace"; continue }
+    puts $is_fh "[$b getName]\trelay\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t-"
+    $w setDoNotTouch 1; $b setDoNotTouch 1
+    incr n
+  }
+  puts "OT_MACRO_CROSS $sink_glob: $n drivers $cell, nets dont_touch"
+  if {!$n} { error "OT_MACRO_CROSS: no sink matched $sink_glob" }
+}
+"""
+
+
+def macro_cross_lines(tn, t):
+    """plan macro_cross -> istations.tcl lines; [] when absent.  Entries: {sink_glob, sink_pin, cell}"""
+    mc = t.get("macro_cross") or []
+    for e in mc:
+        if set(e) != {"sink_glob", "sink_pin", "cell"}:
+            raise SystemExit(f"kit_istations: {tn}: macro_cross entry {e}")
+    if not mc:
+        return []
+    return [MACRO_CROSS_TCL] + ["mc_drive_all {%s} %s %s" % (e["sink_glob"], e["sink_pin"], e["cell"]) for e in mc]
+
+
 def relay_sites_lines(tn, t):
     """plan relay_sites -> istations.tcl lines (RELAY_TCL + rs_place_all of the non-ring keys); [] when absent"""
     rs = t.get("relay_sites") or {}
@@ -865,6 +920,7 @@ def main(argv):
     if rs:
         tcl.extend(rs)
         man["kit_relay_sites"] = len(t["relay_sites"])       # not a station entry: receipts list stations only
+    tcl += macro_cross_lines(tn, t)
     tcl.append("close $is_fh\nputs \"OT_ISTATIONS placed $is_n flops FIRM (missing: [llength $is_miss] $is_miss)\"")
     from kit_epoch_observability import inspect as epoch_inspect
     epochs = {}
