@@ -1,0 +1,4 @@
+{"schema": "s81_bksel_rf7.pin_cycles.v1", "module": "dsdv_bksel_q", "form": "vG",
+ "model": {"added_rx_clk_PIN_cycles": {"t_s[864:0]": 3, "t_o": 0, "lane": 0, "f_c": 0, "f_cr": 0, "rst": 0}},
+ "basis": "against vC, the last form at plan latency: vD +1, vG +2 more",
+ "proof": "yosys equiv + mutants, profiles/rf7_bk_1107/proof; compiler and token rescheduling still owed by the die owner"}
