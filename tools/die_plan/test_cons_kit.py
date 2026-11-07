@@ -15,7 +15,7 @@ import gen_phys  # noqa: E402
 import schema  # noqa: E402
 
 TINY = json.loads((HERE / "examples" / "tiny_plan.json").read_text())
-CONS_KEYS = ("OT_CONS_KIT", "OT_CONS_UTIL", "OT_CONS_MAX_LAYER", "OT_CONS_PIN_LAYER_ADJ")
+CONS_KEYS = ("OT_CONS_KIT", "OT_CONS_UTIL", "OT_CONS_MAX_LAYER", "OT_CONS_PIN_LAYER_ADJ", "OT_MIDFLOP_RE")
 
 
 @pytest.fixture(autouse=True)
@@ -84,6 +84,16 @@ def test_caps_apply_and_pin_floor_holds():
         # nothing else in the config moved
         changed = {k for k in base if base[k] != cons.get(k)}
         assert changed <= {"PLACE_DENSITY", "MAX_ROUTING_LAYER", "PRE_GLOBAL_PLACE_TCL", "PRE_GLOBAL_ROUTE_TCL"}
+
+
+def test_midflop_hook_opt_in():
+    with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
+        off = _kit(a, OT_CONS_KIT="1")
+        assert "POST_GLOBAL_PLACE_TCL" not in _cfg(off) and not (off / "cons_midflop.tcl").exists()
+        kd = _kit(b, OT_CONS_KIT="1", OT_MIDFLOP_RE="u_u_xh[0-9].n_d")
+        c = _cfg(kd)
+        assert c["POST_GLOBAL_PLACE_TCL"] == "/work/cons_midflop.tcl" and c["OT_MIDFLOP_RE"] == "u_u_xh[0-9].n_d"
+        assert (kd / "cons_midflop.tcl").is_file()
 
 
 def test_density_cap_is_min_and_layer_override():
