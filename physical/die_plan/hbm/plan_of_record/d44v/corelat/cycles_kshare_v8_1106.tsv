@@ -1,0 +1,5 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+ot_hbm_svc_vm_kshare_splitstrap__v8e478a		fill_v,fill_bank,fill_slot,fill_epoch,fill_data	port	1	part 56 fill stage ahead of the fill CDC FIFO (COORD 11-04 15:36 fill_* +1); one-way, no credit
+ot_hbm_svc_vm_kshare_splitstrap__v8e478a		wbw_v,wbw_base,wbw_total	port	1	part 56 two-stage lane count; valid and data move together; one-way, lanes wait on w_k_rdy
+ot_hbm_svc_vm_kshare_splitstrap__v8e478a	u_t1	lanes 2,3 window start / norm	seam	2	part 56 seam, +1 out +1 in face flops: window start of lanes 2,3 +2 hbm edges, far norm +2 at control; variable latency (window start already waits on lane drain), not a pin contract
+ot_hbm_svc_vm_kshare_splitstrap__v8e478a		all other ports	port	0	same order and content per lane and class on the trace bench
