@@ -1,0 +1,157 @@
+{
+ "verdict": "PASS_L48UO_WITNESS_AND_SCHEDULE",
+ "witness": {
+  "schema": "opentallas.head.root88_compiler_boot.v1",
+  "status": "SOURCE_WITNESS_ONLY",
+  "plan_event": "l48uo",
+  "n4_link_added_cycles": {
+   "coll_WN1_u__1": 4,
+   "coll_WN2_u__3": 4,
+   "coll_WN1_d__0": 2,
+   "coll_WN2_d__0": 2
+  },
+  "n4_data_cycles_added_per_link": 1,
+  "source_plan_sha256": "f140216c876ba3186afdf3271f0f9b3ceadf63df95b5e0416a06af6dffcb54f6",
+  "source_witness_sha256": {
+   "source_plan.json": "f140216c876ba3186afdf3271f0f9b3ceadf63df95b5e0416a06af6dffcb54f6",
+   "source_sidecar.json": "90d006a48f17adc6795bbf55e3077ff308bb6b417604167248051501cda25d77",
+   "start_stages.json": "255b2b4e27a2c8b1bb202038cb89d021b4a7ff82a5afac3e52b45e84bbacb5eb",
+   "start_stages.sv": "e9ed25cdd21dab157624adf049b27889d2774dfa530f0331c1595bdfa30c4002",
+   "root88_report.json": "0aebf3ae714564846871c845cc64a9a39e623dfc43e68426b45e75af2922f21f",
+   "boot88_account.json": "02acbd5e1065093b15c42ba437f25395f5b314a457da8186cc331bf40c3cc477"
+  },
+  "root": {
+   "id": "b0",
+   "region": "st:h",
+   "module": "ot_dp_landing_root",
+   "settle": 88,
+   "clock_port": "t_st_b0__clk",
+   "reset_port": "wrst_sp3__rst_start_raw_22"
+  },
+  "root_settle_cycles": 88,
+  "previous_settle_cycles": 74,
+  "delta_boot_cycles": 14,
+  "delta_from_original64_boot_cycles": 24,
+  "added_steady_cycles": 0,
+  "source_bounds": {
+   "root_start_upper_cycle": 110,
+   "part_start_max_cycle": 382,
+   "control_ready_or_fault_upper_cycle": 5861
+  },
+  "bounds_scope": "conditional generated START/CA/status network READY_OR_FAULT; native PMA/PHY/external HOST/mission excluded",
+  "physical_START_qualified": false,
+  "actual_physical_START_cycle": null,
+  "admission": "actual registered root ready && !actual sticky fault && actual host boot_done",
+  "global_booking_qualified": false
+ },
+ "production_gaps": [
+  {
+   "cause": "HEAD_physical_START_HOST_PMA_authority_missing",
+   "actual_physical_START_cycle": null,
+   "root_ready_or_fault_bound_is_not_mission": true
+  }
+ ],
+ "controls_caught": {
+  "missing_witness": "rejected",
+  "10_30_plan_selected": "rejected",
+  "10_30_bundle": "rejected: current HEAD coherent source manifest differs",
+  "caller_START_date": "still blocked; no physical event inferred",
+  "sidecar_without_n4": "rejected: current HEAD ROOT88 source identity differs: source_sidecar.json",
+  "stale_settle_74": "rejected: current HEAD ROOT88 source identity differs: source_sidecar.json"
+ },
+ "selected_source": {
+  "schema": "opentallas.head.root88_source_selection.v1",
+  "bundle": "make_bundle.py output"
+ },
+ "schedule": {
+  "plan_only_transport": 336,
+  "n4_links_only_transport": 336,
+  "sidecar_rows_below_sched_lat": [
+   {
+    "port": "chW2_r__0",
+    "lane": "chW2_r",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "sp_x2__0",
+    "lane": "sp_x2",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "sp_b5__0",
+    "lane": "sp_b5",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "host_tx__2",
+    "lane": "host_tx",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "host_rx__1",
+    "lane": "host_rx",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "m0S_tx__2",
+    "lane": "m0S_tx",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "m0S_rx__4",
+    "lane": "m0S_rx",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "m7S_tx__2",
+    "lane": "m7S_tx",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "m7S_rx__3",
+    "lane": "m7S_rx",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "coll_WN1_u__2",
+    "lane": "coll_WN1_u",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "coll_WN2_u__4",
+    "lane": "coll_WN2_u",
+    "added_cycles": 3,
+    "sched_lat": 4
+   }
+  ],
+  "with_sidecar_transport": 336,
+  "spine": 174,
+  "spine_slice": 5,
+  "spine_side": "W",
+  "gather_worst": {
+   "lane": "m0S_rx",
+   "cycles": 81
+  },
+  "formula": "longest_spine_round_trip + 2 * worst_gather_leg",
+  "landed_sidecar_extra": {},
+  "delta": {
+   "lanes": {},
+   "lanes_changed": 0,
+   "aggregate_lane_cycles": 0,
+   "transport_delta": 0,
+   "raw_transport_delta": 0
+  }
+ },
+ "physical_START_qualified": false,
+ "full_token": false
+}
