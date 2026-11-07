@@ -182,6 +182,34 @@ class Spill(unittest.TestCase):
         self.assertFalse(os.path.exists(self.host("src") + "/" + self.m.SPILL_MARK))
         self.assertFalse(os.path.exists(st))
 
+    def test_retry_replaces_a_partial_the_dead_copy_left(self):
+        # AUTOCLEAN-3 11-07, t36 6_1_fill.odb: the partial is newer than its source, --keep-newer-files would skip it for good
+        st = self.stamp()
+        self.assertEqual(self.fwd("src", "dst", st).returncode, 0)
+        os.makedirs(self.host("dst") + "/out")
+        full = "x" * 5000
+        open(self.host("dst") + "/out/final.odb", "w").write(full)
+        os.makedirs(self.host("src") + "/out")
+        open(self.host("src") + "/out/final.odb", "w").write(full[:2000])
+        future = os.path.getmtime(self.host("dst") + "/out/final.odb") + 3600
+        os.utime(self.host("src") + "/out/final.odb", (future, future))
+        ok, err = self.m.spill_copy_back("src", "dst", [self.root], st)
+        self.assertTrue(ok, err)
+        self.assertEqual(open(self.host("src") + "/out/final.odb").read(), full)
+
+    def test_a_file_written_on_src_on_purpose_stays(self):
+        st = self.stamp()
+        self.assertEqual(self.fwd("src", "dst", st).returncode, 0)
+        os.makedirs(self.host("dst") + "/out")
+        open(self.host("dst") + "/out/r.txt", "w").write("old result, longer")
+        os.makedirs(self.host("src") + "/out")
+        open(self.host("src") + "/out/r.txt", "w").write("new")
+        future = os.path.getmtime(self.host("dst") + "/out/r.txt") + 3600
+        os.utime(self.host("src") + "/out/r.txt", (future, future))
+        ok, err = self.m.spill_copy_back("src", "dst", [self.root], st)
+        self.assertTrue(ok, err)
+        self.assertEqual(open(self.host("src") + "/out/r.txt").read(), "new")
+
     def test_sweep_copies_back_for_a_dead_client(self):
         """a client killed while its spilled run went on (session limit): the sweep copies the outputs back"""
         st = self.stamp()
