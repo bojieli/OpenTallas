@@ -70,3 +70,4 @@ At every visual check (place / GRT / route), look for each smell below. In your 
 9. Macros blocking the pin edge or the clock entry. Fix: move the macro so pins and the clock have a clear path.
 10. Feedthrough wires crossing the block with no repeater or flop within 450 um.
 Not on this list but obviously wrong? Fix it too.
+- NEVER run git reset in the shared ~/coord (KW-FIX-25 11-06): it drops other lanes' commits before they push; 9 commits, 20 queue lines lost on 11-06. Just append, then coord-commit.sh, which merges origin itself.
