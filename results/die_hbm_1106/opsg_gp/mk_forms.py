@@ -6,9 +6,9 @@ O=sys.argv[1]; W,H=760.32,233.28; MW,MH=92.664,43.752; M="ot_sram_1r1w_2048x32_m
 gy4=(H-2*8.64-4*MH)/3; R4=[8.64+r*(MH+gy4) for r in range(4)]
 gy3=(H-2*12.96-3*MH)/2; R3=[12.96+r*(MH+gy3) for r in range(3)]
 c22=[30.24,142.344,525.312,637.416]; c3=[21.6,125.064,228.528,439.128,542.592,646.056]
-F={ '22':([(x,y) for x in c22 for y in R4],(240.,520.)),
-    '332':([(x,R3[r]) for i,x in enumerate(c3) for r in ((0,2) if i in(2,3) else (0,1,2))],(324.,436.)),
-    '3el':([(x,y) for x in c22[:0]+[21.6,133.704,245.808] for y in R4]+[(x,y) for x in c22[2:] for y in R4[:2]],(345.,518.)) }
+F={ '22':([(x,y) for x in c22 for y in R4],(246.,514.)),
+    '332':([(x,R3[r]) for i,x in enumerate(c3) for r in ((0,2) if i in(2,3) else (0,1,2))],(332.,428.)),
+    '3el':([(x,y) for x in c22[:0]+[21.6,133.704,245.808] for y in R4]+[(x,y) for x in c22[2:] for y in R4[:2]],(349.,514.)) }
 for fn,(ML,hub) in F.items():
     assert len(ML)==16
     for i,a in enumerate(ML):
