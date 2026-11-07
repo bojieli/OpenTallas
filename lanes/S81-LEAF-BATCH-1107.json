@@ -1,0 +1,1147 @@
+{
+ "schema": "s81_leaf_batch_1107",
+ "lane": "S81-TYPES-3",
+ "retry_fix_text": "REDESIGN: macros moved, not a retry. vs pin edge faces ve_m at gap >= 17.28 um and vn/VP channel widened, per row, OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins and taps unchanged. Fixes the measured M6 overflow on the vs/ve_m bus: post-CTS GRT 0 on t27 vP and t42 vM (old M6 114216 and 159073). lanes/S81-LEAF-BATCH-1107.json",
+ "needs_src": "a wave src that holds claude/s81-leaf-facing-1107; without it the key does nothing and the row repeats the old form",
+ "rows": {
+  "ot_s81sl_leaf__t1": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:38",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t1@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:596.16:872.64,u_lf.u_vs:172.8:639.36:R0,u_lf.u_vn.u_a:596.16:691.2,u_lf.u_vq:354.24:656.64,u_lf.u_vsw:60.48:406.08"
+   },
+   "item_env_keep": null,
+   "flip": true,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 511
+  },
+  "ot_s81sl_leaf__t11": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:02",
+   "attempt": 14,
+   "retry_key": "ot_s81sl_leaf__t11@14",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:812.16:492.48,u_lf.u_vsw:1002.24:578.88"
+   },
+   "item_env_keep": {
+    "OT_GRT_ALLOW_CONGESTION": "1"
+   },
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 146
+  },
+  "ot_s81sl_leaf__t14": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:28",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t14@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:596.16:172.8,u_lf.u_vs:172.8:406.08:MX,u_lf.u_vn.u_a:596.16:362.88,u_lf.u_vq:354.24:423.36,u_lf.u_vsw:112.32:673.92"
+   },
+   "item_env_keep": null,
+   "flip": true,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 387
+  },
+  "ot_s81sl_leaf__t16": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:48",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t16@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:388.8:924.48,u_lf.u_vs:1062.72:639.36,u_lf.u_vn.u_a:388.8:691.2,u_lf.u_vq:881.28:656.64,u_lf.u_vsw:1036.8:406.08"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 242
+  },
+  "ot_s81sl_leaf__t17": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:02",
+   "attempt": 10,
+   "retry_key": "ot_s81sl_leaf__t17@10",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 220
+  },
+  "ot_s81sl_leaf__t21": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:02",
+   "attempt": 9,
+   "retry_key": "ot_s81sl_leaf__t21@9",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:146.88:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:328.32:596.16,u_lf.u_vsw:43.2:198.72"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 69.12,
+   "vn_shift": -17.28,
+   "ft": 198
+  },
+  "ot_s81sl_leaf__t26": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:02",
+   "attempt": 17,
+   "retry_key": "ot_s81sl_leaf__t26@17",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:639.36:648.0,u_lf.u_vsw:794.88:397.44"
+   },
+   "item_env_keep": {
+    "OT_GRT_ALLOW_CONGESTION": "1"
+   },
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 183
+  },
+  "ot_s81sl_leaf__t27": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:28",
+   "attempt": 6,
+   "retry_key": "ot_s81sl_leaf__t27@6",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08"
+   },
+   "item_env_keep": {
+    "OT_GRT_ALLOW_CONGESTION": "1"
+   },
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 0
+  },
+  "ot_s81sl_leaf__t29": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:13",
+   "attempt": 8,
+   "retry_key": "ot_s81sl_leaf__t29@8",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vsw:959.04:613.44,u_lf.u_vn.u_b:397.44:190.08,u_lf.u_vs:984.96:432.0:R180,u_lf.u_vn.u_a:397.44:380.16,u_lf.u_vq:803.52:449.28"
+   },
+   "item_env_keep": null,
+   "flip": true,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 119
+  },
+  "ot_s81sl_leaf__t31": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:02",
+   "attempt": 8,
+   "retry_key": "ot_s81sl_leaf__t31@8",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:898.56,u_lf.u_vs:103.68:648.0,u_lf.u_vn.u_a:604.8:717.12,u_lf.u_vq:285.12:665.28,u_lf.u_vsw:77.76:414.72"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 214
+  },
+  "ot_s81sl_leaf__t32": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:48",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t32@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:319.68:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28,u_lf.u_vsw:267.84:414.72"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": -60.48,
+   "gap": 17.28,
+   "vn_shift": -17.28,
+   "ft": 310
+  },
+  "ot_s81sl_leaf__t35": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:02",
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t35@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 88
+  },
+  "ot_s81sl_leaf__t37": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:28",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t37@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:691.2:527.04,u_lf.u_vsw:1054.08:604.8"
+   },
+   "item_env_keep": null,
+   "flip": true,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 155
+  },
+  "ot_s81sl_leaf__t38": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:58",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t38@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:181.44:371.52"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 222
+  },
+  "ot_s81sl_leaf__t39": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:13",
+   "attempt": 9,
+   "retry_key": "ot_s81sl_leaf__t39@9",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:224.64,u_lf.u_vs:155.52:440.64,u_lf.u_vn.u_a:613.44:414.72,u_lf.u_vq:570.24:587.52,u_lf.u_vsw:336.96:414.72"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 220
+  },
+  "ot_s81sl_leaf__t4": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:02",
+   "attempt": 4,
+   "retry_key": "ot_s81sl_leaf__t4@4",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:1054.08:414.72,u_lf.u_vsw:1010.88:656.64"
+   },
+   "item_env_keep": null,
+   "flip": true,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 196
+  },
+  "ot_s81sl_leaf__t40__cl86ea32b3": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:38",
+   "attempt": 6,
+   "retry_key": "ot_s81sl_leaf__t40__cl86ea32b3@6",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 37
+  },
+  "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:02",
+   "attempt": 4,
+   "retry_key": "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@4",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+   },
+   "item_env_keep": {
+    "OT_GRT_ALLOW_CONGESTION": "1"
+   },
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 37
+  },
+  "ot_s81sl_leaf__t40__clf8bbdae1": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:02",
+   "attempt": 8,
+   "retry_key": "ot_s81sl_leaf__t40__clf8bbdae1@8",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 37
+  },
+  "ot_s81sl_leaf__t41": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:24",
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t41@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:388.8:924.48,u_lf.u_vs:1062.72:639.36,u_lf.u_vn.u_a:388.8:691.2,u_lf.u_vq:881.28:656.64,u_lf.u_vsw:1036.8:406.08"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 211
+  },
+  "ot_s81sl_leaf__t42": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:02",
+   "attempt": 6,
+   "retry_key": "ot_s81sl_leaf__t42@6",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52"
+   },
+   "item_env_keep": {
+    "OT_GRT_ALLOW_CONGESTION": "1"
+   },
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 0
+  },
+  "ot_s81sl_leaf__t44__clf4ea6d4b": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:13",
+   "attempt": 4,
+   "retry_key": "ot_s81sl_leaf__t44__clf4ea6d4b@4",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:691.2:561.6,u_lf.u_vsw:1054.08:388.8"
+   },
+   "item_env_keep": {
+    "OT_GRT_ALLOW_CONGESTION": "1"
+   },
+   "flip": true,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 149
+  },
+  "ot_s81sl_leaf__t46": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:38",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t46@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:708.48"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 446
+  },
+  "ot_s81sl_leaf__t5": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:28",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t5@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:820.8:414.72,u_lf.u_vn.u_a:336.96:596.16,u_lf.u_vq:639.36:432.0,u_lf.u_vsw:794.88:596.16"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 91
+  },
+  "ot_s81sl_leaf__t50": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 11:07",
+   "attempt": 6,
+   "retry_key": "ot_s81sl_leaf__t50@6",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:838.08:622.08,u_lf.u_vn.u_a:354.24:457.92,u_lf.u_vq:656.64:639.36,u_lf.u_vsw:812.16:388.8"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 148
+  },
+  "ot_s81sl_leaf__t51": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:59",
+   "attempt": 4,
+   "retry_key": "ot_s81sl_leaf__t51@4",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:691.2:527.04,u_lf.u_vsw:1054.08:604.8"
+   },
+   "item_env_keep": null,
+   "flip": true,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 150
+  },
+  "ot_s81sl_leaf__t53__cl958451dd": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:02",
+   "attempt": 8,
+   "retry_key": "ot_s81sl_leaf__t53__cl958451dd@8",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:336.96:190.08,u_lf.u_vs:941.76:457.92:R180,u_lf.u_vn.u_a:336.96:380.16,u_lf.u_vq:760.32:475.2,u_lf.u_vsw:915.84:639.36"
+   },
+   "item_env_keep": {
+    "OT_GRT_ALLOW_CONGESTION": "1"
+   },
+   "flip": true,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 101
+  },
+  "ot_s81sl_leaf__t53__clb66fa5cb": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 14:37",
+   "attempt": 4,
+   "retry_key": "ot_s81sl_leaf__t53__clb66fa5cb@4",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:336.96:190.08,u_lf.u_vs:941.76:457.92:R180,u_lf.u_vn.u_a:336.96:380.16,u_lf.u_vq:760.32:475.2,u_lf.u_vsw:915.84:639.36"
+   },
+   "item_env_keep": {
+    "OT_GRT_ALLOW_CONGESTION": "1"
+   },
+   "flip": true,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 101
+  },
+  "ot_s81sl_leaf__t54__cl501e5681": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:28",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t54__cl501e5681@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 0
+  },
+  "ot_s81sl_leaf__t54__cl706d9749": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:38",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t54__cl706d9749@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 0
+  },
+  "ot_s81sl_leaf__t56": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:13",
+   "attempt": 7,
+   "retry_key": "ot_s81sl_leaf__t56@7",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:250.56:587.52,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:457.92:604.8,u_lf.u_vsw:190.08:233.28"
+   },
+   "item_env_keep": {
+    "OT_GRT_ALLOW_CONGESTION": "1"
+   },
+   "flip": false,
+   "dx": -17.28,
+   "gap": 25.92,
+   "vn_shift": -25.92,
+   "ft": 456
+  },
+  "ot_s81sl_leaf__t57": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:38",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t57@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:622.08"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 319
+  },
+  "ot_s81sl_leaf__t6": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:28",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t6@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:639.36:648.0,u_lf.u_vsw:794.88:397.44"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 347
+  },
+  "ot_s81sl_leaf__t65": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:48",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t65@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vsw:60.48:544.32,u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:302.4:578.88,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:483.84:596.16"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 34.56,
+   "gap": 34.56,
+   "vn_shift": -25.92,
+   "ft": 470
+  },
+  "ot_s81sl_leaf__t67": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:48",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t67@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:691.2:250.56,u_lf.u_vs:224.64:414.72,u_lf.u_vn.u_a:691.2:440.64,u_lf.u_vq:561.6:112.32,u_lf.u_vsw:406.08:397.44"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 528
+  },
+  "ot_s81sl_leaf__t69": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:38",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t69@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 66
+  },
+  "ot_s81sl_leaf__t70": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "PLAN",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-07 00:38",
+   "attempt": 2,
+   "retry_key": "ot_s81sl_leaf__t70@2",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vsw:829.44:397.44,u_lf.u_vn.u_b:345.6:1010.88,u_lf.u_vs:855.36:630.72,u_lf.u_vn.u_a:371.52:466.56,u_lf.u_vq:673.92:648.0"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 339
+  },
+  "ot_s81sl_leaf__t72": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:02",
+   "attempt": 6,
+   "retry_key": "ot_s81sl_leaf__t72@6",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": -95.04,
+   "gap": 25.92,
+   "vn_shift": -8.64,
+   "ft": 789
+  },
+  "ot_s81sl_leaf__t8": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "COORD 05:0x S81-SSTN-HOLD-3: leaf held u",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_topology",
+   "last_updated": "2026-11-06 23:13",
+   "attempt": 5,
+   "retry_key": "ot_s81sl_leaf__t8@5",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": -95.04,
+   "gap": 25.92,
+   "vn_shift": -8.64,
+   "ft": 785
+  },
+  "ot_s81sl_leaf__t24__cl2456157b": {
+   "group": "hold_ss3_leaf",
+   "hold_reason_prefix": "KW-FIX-28 08:3x: same leaf family as COO",
+   "last_status": "FAIL",
+   "last_class": "FLOW",
+   "last_stage": "kit_rtl",
+   "last_updated": "2026-11-06 23:13",
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t24__cl2456157b@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:423.36:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:77.76:440.64,u_lf.u_vsw:483.84:682.56"
+   },
+   "item_env_keep": null,
+   "flip": true,
+   "dx": 0.0,
+   "gap": 25.92,
+   "vn_shift": -25.92,
+   "ft": 283
+  },
+  "ot_s81sl_leaf__t36": {
+   "group": "kw8_grt_loop",
+   "hold_reason_prefix": "KW-FIX-8 18:5x COORD GRT loop ruling: st",
+   "last_status": null,
+   "last_class": null,
+   "last_stage": null,
+   "last_updated": null,
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:820.8:492.48,u_lf.u_vsw:1002.24:544.32"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 275
+  },
+  "ot_s81sl_leaf__t7": {
+   "group": "kw8_grt_loop",
+   "hold_reason_prefix": "KW-FIX-8 18:5x COORD GRT loop ruling: st",
+   "last_status": null,
+   "last_class": null,
+   "last_stage": null,
+   "last_updated": null,
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:1054.08:691.2,u_lf.u_vsw:1054.08:457.92"
+   },
+   "item_env_keep": null,
+   "flip": true,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 198
+  },
+  "ot_s81sl_leaf__t15": {
+   "group": "kw8_grt_loop",
+   "hold_reason_prefix": "KW-FIX-8 18:5x COORD GRT loop ruling: st",
+   "last_status": null,
+   "last_class": null,
+   "last_stage": null,
+   "last_updated": null,
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 57
+  },
+  "ot_s81sl_leaf__t13": {
+   "group": "kw8_grt_loop",
+   "hold_reason_prefix": "KW-FIX-8 18:5x COORD GRT loop ruling: st",
+   "last_status": null,
+   "last_class": null,
+   "last_stage": null,
+   "last_updated": null,
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:587.52:881.28,u_lf.u_vs:86.4:648.0,u_lf.u_vn.u_a:587.52:699.84,u_lf.u_vq:406.08:838.08,u_lf.u_vsw:267.84:604.8"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 260
+  },
+  "ot_s81sl_leaf__t59": {
+   "group": "kw8_grt_loop",
+   "hold_reason_prefix": "KW-FIX-8 18:5x COORD GRT loop ruling: st",
+   "last_status": null,
+   "last_class": null,
+   "last_stage": null,
+   "last_updated": null,
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 91
+  },
+  "ot_s81sl_leaf__t61": {
+   "group": "kw8_grt_loop",
+   "hold_reason_prefix": "KW-FIX-8 18:5x COORD GRT loop ruling: st",
+   "last_status": null,
+   "last_class": null,
+   "last_stage": null,
+   "last_updated": null,
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_m:630.72:794.88,u_lf.u_vsw:120.96:544.32,u_lf.u_vs:587.52:604.8:R0,u_lf.u_vn.u_b:743.04:423.36,u_lf.u_vn.u_a:717.12:86.4,u_lf.u_vq:406.08:648.0"
+   },
+   "item_env_keep": null,
+   "flip": true,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 330
+  },
+  "ot_s81sl_leaf__t10": {
+   "group": "kw8_grt_loop",
+   "hold_reason_prefix": "KW-FIX-8 18:5x COORD GRT loop ruling: st",
+   "last_status": null,
+   "last_class": null,
+   "last_stage": null,
+   "last_updated": null,
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:622.08:164.16,u_lf.u_vs:103.68:423.36,u_lf.u_vn.u_a:613.44:354.24,u_lf.u_vq:285.12:440.64,u_lf.u_vsw:77.76:708.48"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 226
+  },
+  "ot_s81sl_leaf__t34": {
+   "group": "kw8_grt_loop",
+   "hold_reason_prefix": "KW-FIX-8 18:5x COORD GRT loop ruling: st",
+   "last_status": null,
+   "last_class": null,
+   "last_stage": null,
+   "last_updated": null,
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:570.24:155.52,u_lf.u_vs:77.76:440.64,u_lf.u_vn.u_a:570.24:354.24,u_lf.u_vq:492.48:527.04,u_lf.u_vsw:259.2:423.36"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 198
+  },
+  "ot_s81sl_leaf__t24__cl81374cd8": {
+   "group": "kw8_grt_loop",
+   "hold_reason_prefix": "KW-FIX-8 18:5x COORD GRT loop ruling: st",
+   "last_status": null,
+   "last_class": null,
+   "last_stage": null,
+   "last_updated": null,
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:414.72:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:440.64:535.68,u_lf.u_ve.u_s:112.32:60.48,u_lf.u_vsw:25.92:432.0"
+   },
+   "item_env_keep": null,
+   "flip": true,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 162
+  },
+  "ot_s81sl_leaf__t43": {
+   "group": "kw8_grt_loop",
+   "hold_reason_prefix": "KW-FIX-8 18:5x COORD GRT loop ruling: st",
+   "last_status": null,
+   "last_class": null,
+   "last_stage": null,
+   "last_updated": null,
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:69.12,u_lf.u_vs:207.36:423.36:MX,u_lf.u_vn.u_a:622.08:259.2,u_lf.u_vq:432.0:276.48,u_lf.u_vsw:388.8:414.72"
+   },
+   "item_env_keep": null,
+   "flip": true,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -8.64,
+   "ft": 261
+  },
+  "ot_s81sl_leaf__t71": {
+   "group": "kw8_grt_loop",
+   "hold_reason_prefix": "KW-FIX-8 18:5x COORD GRT loop ruling: st",
+   "last_status": null,
+   "last_class": null,
+   "last_stage": null,
+   "last_updated": null,
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 176
+  },
+  "ot_s81sl_leaf__t23": {
+   "group": "kw8_grt_loop",
+   "hold_reason_prefix": "KW-FIX-8 18:5x COORD GRT loop ruling: st",
+   "last_status": null,
+   "last_class": null,
+   "last_stage": null,
+   "last_updated": null,
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:691.2:250.56,u_lf.u_vs:224.64:414.72,u_lf.u_vn.u_a:691.2:440.64,u_lf.u_vq:561.6:112.32,u_lf.u_vsw:406.08:397.44"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 368
+  },
+  "ot_s81sl_leaf__t3": {
+   "group": "kw8_grt_loop",
+   "hold_reason_prefix": "KW-FIX-8 18:5x COORD GRT loop ruling: st",
+   "last_status": null,
+   "last_class": null,
+   "last_stage": null,
+   "last_updated": null,
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:717.12:172.8,u_lf.u_vs:198.72:466.56,u_lf.u_vn.u_a:699.84:362.88,u_lf.u_vq:17.28:457.92,u_lf.u_vsw:380.16:432.0"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 51.84,
+   "vn_shift": -25.92,
+   "ft": 543
+  },
+  "ot_s81sl_leaf__t25__cl431c660f": {
+   "group": "kw8_repair_silent",
+   "hold_reason_prefix": "KW-FIX-8 21:3x sweep: repair_design afte",
+   "last_status": null,
+   "last_class": null,
+   "last_stage": null,
+   "last_updated": null,
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 61
+  },
+  "ot_s81sl_leaf__t30": {
+   "group": "kw8_repair_silent",
+   "hold_reason_prefix": "KW-FIX-8 21:3x sweep: repair_design afte",
+   "last_status": null,
+   "last_class": null,
+   "last_stage": null,
+   "last_updated": null,
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 25.92,
+   "ft": 17
+  },
+  "ot_s81sl_leaf__t12": {
+   "group": "queue_fail_routing",
+   "hold_reason_prefix": "",
+   "last_status": "FAIL",
+   "last_class": "ROUTING",
+   "last_stage": "route",
+   "last_updated": "2026-11-05 12:37",
+   "attempt": 1,
+   "retry_key": "ot_s81sl_leaf__t12@1",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vsw:708.48:604.8,u_lf.u_vn.u_b:362.88:846.72,u_lf.u_vs:941.76:648.0:MY,u_lf.u_vn.u_a:336.96:665.28,u_lf.u_vq:1123.2:665.28"
+   },
+   "item_env_keep": null,
+   "flip": true,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": 8.64,
+   "ft": 439
+  },
+  "ot_s81sl_leaf__t33": {
+   "group": "queue_fail_routing",
+   "hold_reason_prefix": "",
+   "last_status": "FAIL",
+   "last_class": "ROUTING",
+   "last_stage": "route",
+   "last_updated": "2026-11-05 18:22",
+   "attempt": 1,
+   "retry_key": "ot_s81sl_leaf__t33@1",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:69.12,u_lf.u_vs:449.28:397.44,u_lf.u_vn.u_a:751.68:587.52,u_lf.u_vq:630.72:414.72,u_lf.u_vsw:423.36:656.64"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 373
+  },
+  "ot_s81sl_leaf__t2": {
+   "group": "queue_fail_routing",
+   "hold_reason_prefix": "",
+   "last_status": "FAIL",
+   "last_class": "ROUTING",
+   "last_stage": "route",
+   "last_updated": "2026-11-05 19:03",
+   "attempt": 1,
+   "retry_key": "ot_s81sl_leaf__t2@1",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vsw:120.96:604.8,u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:354.24:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": -25.92,
+   "gap": 17.28,
+   "vn_shift": -17.28,
+   "ft": 323
+  },
+  "ot_s81sl_leaf__t74": {
+   "group": "queue_fail_routing",
+   "hold_reason_prefix": "",
+   "last_status": "FAIL",
+   "last_class": "ROUTING",
+   "last_stage": "route",
+   "last_updated": "2026-11-06 02:49",
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t74@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_b:622.08:164.16,u_lf.u_vs:103.68:423.36,u_lf.u_vn.u_a:613.44:354.24,u_lf.u_vq:285.12:440.64,u_lf.u_vsw:77.76:708.48"
+   },
+   "item_env_keep": null,
+   "flip": false,
+   "dx": 0.0,
+   "gap": 17.28,
+   "vn_shift": -25.92,
+   "ft": 226
+  }
+ }
+}
