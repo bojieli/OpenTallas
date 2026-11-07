@@ -902,6 +902,32 @@
       "type": "string",
       "minLength": 1
      },
+     "phy_pg_west_notch_um": {
+      "type": "number",
+      "minimum": 0
+     },
+     "phy_pg_south_notch_um": {
+      "type": "number",
+      "minimum": 0
+     },
+     "rck_band": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "inst"
+      ],
+      "properties": {
+       "inst": {
+        "type": "string",
+        "minLength": 1
+       },
+       "rows": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 8
+       }
+      }
+     },
      "infra_ports": {
       "type": "array",
       "items": {

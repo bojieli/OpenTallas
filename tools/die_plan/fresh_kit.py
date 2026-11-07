@@ -172,9 +172,19 @@ def prepare(source, profile, plan, output, *, type_name=None, core_spec=None, ov
                 step('reset', dp / 'kit_rsync.py', reset_plan, type_name, rtl)
                 # Native profiles use the full original context: an isolated
                 # extraction can change relay entry into a root synchronizer.
-                actual = read(rtl / 'kit_rtl.json')['kit_rsync']['reset_tree']
-                record['reset_context'] = dict(plan=str(reset_plan), actual=actual)
+                manifest = read(rtl / 'kit_rtl.json')
                 expected = overrides.get('reset_expected', {})
+                if 'kit_rsync' not in manifest and (rtl / 'bound_reset.json').is_file():
+                    # S81-RCK-3 11-06: kit_rsync preserved the verified bound native reset (a376b4bddb): it generates
+                    # no canonical tree, so there is nothing to compare; an expected tree cannot be honoured.
+                    if expected:
+                        raise ValueError('bound native reset preserved: no generated canonical reset tree for reset_expected')
+                    record['reset_context'] = dict(plan=str(reset_plan), actual='preserved_bound_native_reset')
+                    expected = {}
+                    actual = {}
+                else:
+                    actual = manifest['kit_rsync']['reset_tree']
+                    record['reset_context'] = dict(plan=str(reset_plan), actual=actual)
                 mismatch = {k: dict(expected=v, actual=actual.get(k)) for k, v in expected.items() if actual.get(k) != v}
                 if mismatch:
                     raise ValueError(f'canonical reset differs from selected native contract: {mismatch}')
