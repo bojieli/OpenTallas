@@ -1,0 +1,32 @@
+g0_s3 rc=0 GP LOCKSTEP PASS errs=0 (rd 0 flt 0) rd_nonzero=36674 flt_cycles=35711 write_cycles=27440 read_cycles=37928 scalar_en=2390 of 40000 
+b_s3 rc=0 GP LOCKSTEP PASS errs=0 (rd 0 flt 0) rd_nonzero=36924 flt_cycles=35165 write_cycles=27585 read_cycles=37906 scalar_en=0 of 40000 
+b_s1 rc=0 GP LOCKSTEP PASS errs=0 (rd 0 flt 0) rd_nonzero=37029 flt_cycles=35528 write_cycles=28441 read_cycles=37921 scalar_en=0 of 40000 
+g0_s1 rc=0 GP LOCKSTEP PASS errs=0 (rd 0 flt 0) rd_nonzero=36830 flt_cycles=34043 write_cycles=27062 read_cycles=37916 scalar_en=2380 of 40000 
+g1_s3 rc=0 GP LOCKSTEP PASS errs=0 (rd 0 flt 0) rd_nonzero=36611 flt_cycles=35711 write_cycles=27440 read_cycles=37928 scalar_en=2390 of 40000 
+g1_s2 rc=0 GP LOCKSTEP PASS errs=0 (rd 0 flt 0) rd_nonzero=36960 flt_cycles=35199 write_cycles=27568 read_cycles=37927 scalar_en=2361 of 40000 
+g1_s1 rc=0 GP LOCKSTEP PASS errs=0 (rd 0 flt 0) rd_nonzero=36827 flt_cycles=34041 write_cycles=27062 read_cycles=37916 scalar_en=2380 of 40000 
+g0_s2 rc=0 GP LOCKSTEP PASS errs=0 (rd 0 flt 0) rd_nonzero=36939 flt_cycles=35201 write_cycles=27568 read_cycles=37927 scalar_en=2361 of 40000 
+b_s2 rc=0 GP LOCKSTEP PASS errs=0 (rd 0 flt 0) rd_nonzero=36898 flt_cycles=33871 write_cycles=26963 read_cycles=37926 scalar_en=0 of 40000 
+g0_m8 rc=0 GP LOCKSTEP PASS errs=0 (rd 0 flt 0) rd_nonzero=36830 flt_cycles=34043 write_cycles=27062 read_cycles=37916 scalar_en=2380 of 40000 
+g0_m7 rc=0 GP LOCKSTEP FAIL errs=902 (rd 902 flt 0) rd_nonzero=36830 flt_cycles=34043 write_cycles=27062 read_cycles=37916 scalar_en=2380 of 40000 RD MISMATCH cyc=1021
+g0_m1 rc=0 GP LOCKSTEP FAIL errs=13950 (rd 13950 flt 0) rd_nonzero=36830 flt_cycles=34043 write_cycles=27062 read_cycles=37916 scalar_en=2380 of 40000 RD MISMATCH cyc=137
+g0_m2 rc=0 GP LOCKSTEP FAIL errs=28534 (rd 28534 flt 0) rd_nonzero=36830 flt_cycles=34043 write_cycles=27062 read_cycles=37916 scalar_en=2380 of 40000 RD MISMATCH cyc=55
+g0_m6 rc=0 GP LOCKSTEP PASS errs=0 (rd 0 flt 0) rd_nonzero=36830 flt_cycles=34043 write_cycles=27062 read_cycles=37916 scalar_en=2380 of 40000 
+g0_m4 rc=0 GP LOCKSTEP FAIL errs=25 (rd 0 flt 25) rd_nonzero=36830 flt_cycles=34043 write_cycles=27062 read_cycles=37916 scalar_en=2380 of 40000 FLT MISMATCH cyc=1653 old 0 new 1
+g0_m9 rc=0 GP LOCKSTEP FAIL errs=5920 (rd 5920 flt 0) rd_nonzero=36830 flt_cycles=34043 write_cycles=27062 read_cycles=37916 scalar_en=2380 of 40000 RD MISMATCH cyc=167
+g0_m5 rc=0 GP LOCKSTEP FAIL errs=5101 (rd 5101 flt 0) rd_nonzero=36830 flt_cycles=34043 write_cycles=27062 read_cycles=37916 scalar_en=2380 of 40000 RD MISMATCH cyc=126
+g0_m10 rc=0 GP LOCKSTEP FAIL errs=11416 (rd 11416 flt 0) rd_nonzero=36830 flt_cycles=34043 write_cycles=27062 read_cycles=37916 scalar_en=2380 of 40000 RD MISMATCH cyc=261
+g0_m3 rc=0 GP LOCKSTEP FAIL errs=6099 (rd 6099 flt 0) rd_nonzero=36830 flt_cycles=34043 write_cycles=27062 read_cycles=37916 scalar_en=2380 of 40000 RD MISMATCH cyc=78
+b_m1 rc=0 GP LOCKSTEP FAIL errs=14924 (rd 14924 flt 0) rd_nonzero=37029 flt_cycles=35528 write_cycles=28441 read_cycles=37921 scalar_en=0 of 40000 RD MISMATCH cyc=42
+b_m7 rc=0 GP LOCKSTEP FAIL errs=1123 (rd 1123 flt 0) rd_nonzero=37029 flt_cycles=35528 write_cycles=28441 read_cycles=37921 scalar_en=0 of 40000 RD MISMATCH cyc=2269
+b_m10 rc=0 GP LOCKSTEP FAIL errs=12235 (rd 12235 flt 0) rd_nonzero=37029 flt_cycles=35528 write_cycles=28441 read_cycles=37921 scalar_en=0 of 40000 RD MISMATCH cyc=41
+b_m9 rc=0 GP LOCKSTEP FAIL errs=7788 (rd 7788 flt 0) rd_nonzero=37029 flt_cycles=35528 write_cycles=28441 read_cycles=37921 scalar_en=0 of 40000 RD MISMATCH cyc=43
+b_m6 rc=0 GP LOCKSTEP PASS errs=0 (rd 0 flt 0) rd_nonzero=37029 flt_cycles=35528 write_cycles=28441 read_cycles=37921 scalar_en=0 of 40000 
+b_m8 rc=0 GP LOCKSTEP FAIL errs=1821 (rd 1821 flt 0) rd_nonzero=37029 flt_cycles=35528 write_cycles=28441 read_cycles=37921 scalar_en=0 of 40000 RD MISMATCH cyc=62
+b_m2 rc=0 GP LOCKSTEP FAIL errs=34948 (rd 34948 flt 0) rd_nonzero=37029 flt_cycles=35528 write_cycles=28441 read_cycles=37921 scalar_en=0 of 40000 RD MISMATCH cyc=41
+b_m4 rc=0 GP LOCKSTEP FAIL errs=18 (rd 0 flt 18) rd_nonzero=37029 flt_cycles=35528 write_cycles=28441 read_cycles=37921 scalar_en=0 of 40000 FLT MISMATCH cyc=903 old 0 new 1
+b_m3 rc=0 GP LOCKSTEP FAIL errs=6533 (rd 6533 flt 0) rd_nonzero=37029 flt_cycles=35528 write_cycles=28441 read_cycles=37921 scalar_en=0 of 40000 RD MISMATCH cyc=41
+b_m5 rc=0 GP LOCKSTEP FAIL errs=6924 (rd 6924 flt 0) rd_nonzero=37029 flt_cycles=35528 write_cycles=28441 read_cycles=37921 scalar_en=0 of 40000 RD MISMATCH cyc=43
+g0_s1 rc=0 GP LOCKSTEP PASS errs=0 (rd 0 flt 0) rd_nonzero=36830 flt_cycles=34043 write_cycles=27062 read_cycl
+g0_m6 rc=0 GP LOCKSTEP FAIL errs=10049 (rd 10049 flt 0) rd_nonzero=36830 flt_cycles=34043 write_cycles=27062 r
+b_m6 rc=0 GP LOCKSTEP FAIL errs=10607 (rd 10607 flt 0) rd_nonzero=37029 flt_cycles=35528 write_cycles=28441 re

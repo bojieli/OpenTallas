@@ -14,7 +14,7 @@
 // Latency vs ot_hgi_su_lgroup2_lf with the same inputs: rd + 5 edges (2 ops, q_rd, g_hc, q_out); flt + 0 (the checks read the
 // same terms from the same inputs one register stage from the decode).
 // MUT (bench mutants only, default 0): 1 bank 5 write data bypasses S2; 2 read select one edge early (lane network);
-// 3 bank 3 stage-lane priority = LOWEST lane; 4 flt one edge early; 5 bank 9 read word bypasses q_rd; 6 bank 7 write row
+// 3 bank 3 stage-lane priority = LOWEST lane; 4 flt one edge early; 5 bank 9 read word bypasses q_rd; 6 bank 2 write row
 // without the wrap increment; 7 lane 3 not gated by its candidate check; 8 mask ignored on (lane 2, word 3);
 // 9 bank 11 read op one edge earlier than the writes (S2 bypass, read/write order breaks);
 // 10 lane 0 read network takes lane-candidate select only (not any bank).
@@ -89,7 +89,7 @@ module ot_hgi_su_lgroup2_gp #(
             wire [LN-1:0] off = LN'(b) - a[LN-1:0];
             assign o3[s] = off[2:0];
             assign h[s] = sw_v[s] && off < LN'(8) && (sw_mask[s*8 + off[2:0]] || (MUT == 8 && s == 2 && off[2:0] == 3'd3));
-            assign rw[s] = (MUT == 6 && b == 7) ? a[LWB-1:LN] : a[LWB-1:LN] + RB'(LN'(b) < a[LN-1:0]);
+            assign rw[s] = (MUT == 6 && b == 2) ? a[LWB-1:LN] : a[LWB-1:LN] + RB'(LN'(b) < a[LN-1:0]);
             if (MUT == 3 && b == 3) begin : g_ml
                 if (s == 0) begin : g_o0 assign oh[s] = h[s]; end else begin : g_on assign oh[s] = h[s] && !(|h[s-1:0]); end
             end else if (s == NS - 1) begin : g_ot assign oh[s] = h[s]; end
