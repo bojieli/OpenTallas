@@ -76,6 +76,21 @@ def snapshot(k, env):
               ('core.json','constraint.sdc','straps.json','sdc_lint.json','pins.json',
            'lec_native_stub_metadata.json','native_stub_metadata.py')}
     if any((k/n).is_symlink() for n in metadata):raise ValueError('typed metadata alias needs explicit closure')
+    # Optional solver/contract mounts must be actual staged proof inputs too.
+    for key in ('OT_LEC_SOLVER','OT_LEC_RESET_CONTRACT'):
+        value=env.get(key)
+        if not value:continue
+        if not value.startswith('/work/'):raise ValueError(key+' requires kit-local /work closure')
+        dependency=k/value[6:]
+        dependency.resolve().relative_to(k.resolve())
+        if dependency.is_symlink():raise ValueError('proof dependency alias requires explicit closure')
+        if dependency.is_dir():paths += [p for p in dependency.rglob('*') if p.is_file()]
+        elif dependency.is_file():
+            paths.append(dependency)
+            if key=='OT_LEC_RESET_CONTRACT':
+                receipt=read(dependency).get('proof',{}).get('receipt')
+                if receipt:paths.append(k/(receipt[6:] if receipt.startswith('/work/') else receipt))
+        else:raise ValueError('missing staged proof dependency '+value)
     import shlex, re
     freeze=read(k/'freeze.json')
     for row in freeze.get('runtime_files',[]): paths.append(k/row['destination'])
@@ -170,10 +185,18 @@ def worker(k, packet_path):
     if (k/'lec/lec.json').exists(): raise ValueError('worker requires an unstarted proof')
     scope=Path('/proc/self/cgroup').read_text()
     if 'oth-' not in scope:raise ValueError('worker requires a normal admitted ot-heavy scope')
+    group=scope.strip().split(':',2)[-1].lstrip('/')
+    cap=(Path('/sys/fs/cgroup')/group/'memory.max').read_text().strip()
+    if cap=='max' or int(cap)<p['mem']*(1<<30):raise ValueError('admitted memory is below captured proof request')
+    if int(os.environ.get('OT_HEAVY_THREADS','0'))<p['cpus']:raise ValueError('admitted threads below captured proof request')
     cmd='\n'.join((k/'lec_async.ready').read_text().splitlines()[1:])
     envargs=[x for a,b in sorted(p['env'].items()) for x in ('-e',a+'='+b)]
+    readonly=[]
+    for key in ('OT_LEC_SOLVER','OT_LEC_RESET_CONTRACT'):
+        value=p['env'].get(key)
+        if value:readonly += ['-v',str(k/value[6:])+':'+value+':ro']
     run=['docker','run','--rm','--memory='+str(p['mem'])+'g','--memory-swap='+str(p['mem'])+'g',
-         '--cpus='+str(p['cpus']),'-v',str(k)+':/work']+envargs+['--entrypoint','bash',p['image_id'],'-lc',
+         '--cpus='+str(p['cpus']),'-v',str(k)+':/work']+readonly+envargs+['--entrypoint','bash',p['image_id'],'-lc',
          'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; ( '+cmd+' ); r=$?; chown -R '+str(os.getuid())+':'+str(os.getgid())+' /work/lec 2>/dev/null; exit $r']
     with open(k/'lec_handoff_worker.log','xb') as log:
         rc=subprocess.run(run,stdout=log,stderr=subprocess.STDOUT).returncode

@@ -133,3 +133,9 @@ def test_copied_netlist_change_rejected_before_worker(pending):
     net.write_text(net.read_text()+'\n// exact bytes changed\n')
     with pytest.raises(ValueError,match='identity changed'):H.worker(dest,dest/H.PACKET)
     assert not (dest/'lec_handoff_worker.log').exists()
+
+
+def test_external_solver_mount_requires_explicit_closure(tmp_path):
+    k=kit(tmp_path)
+    with pytest.raises(ValueError,match='OT_LEC_SOLVER requires kit-local'):
+        H.snapshot(k,{'OT_LEC_SOLVER':'/solver'})

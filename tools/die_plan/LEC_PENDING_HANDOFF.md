@@ -24,7 +24,9 @@ The controller stages the **complete kit** using the existing approved
 stage/copy mechanism. No raw PID, ready, identity or verdict marker may be
 edited manually. On the bound destination, run the worker through normal
 `ot-run` with the packet's memory/thread request. The worker also refuses
-execution outside an admitted ot-heavy scope:
+execution outside an admitted ot-heavy scope or below the captured memory/
+thread request. Optional solver/contract dependencies must be kit-local,
+fingerprinted and mounted read-only; external solver mounts are refused:
 
 ```
 python3 -I lec_pending_handoff.py request SOURCE_KIT CANONICAL_HOST DEST_KIT
