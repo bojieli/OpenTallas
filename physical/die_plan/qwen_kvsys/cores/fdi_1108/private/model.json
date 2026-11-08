@@ -32,19 +32,20 @@
  "queue_depth_change": 0,
  "credit_or_ready_RTT_change": "not applicable: no such ports",
  "outline_um": [
-  190.08,
-  190.08
+  198.72,
+  198.72
  ],
  "estimated_stdcell_area_um2": 13300,
- "estimated_fill": 0.36811099916108325,
+ "estimated_fill": 0.3367972090623145,
+ "usable_row_fill_after_4p32um_margin": 0.3681109991610834,
  "estimated_cells": 100000,
  "estimate_status": "pre-synthesis sizing; actual cells/area still required",
- "max_manhattan_um": 380.16,
+ "max_manhattan_um": 397.44,
  "reach_limit_um": 405,
  "pin_density_per_um": {
-  "W": 2.882495590828924,
-  "N": 2.876984126984127,
-  "E": 5.753968253968254
+  "W": 2.751473063973064,
+  "N": 2.7462121212121215,
+  "E": 5.492424242424243
  },
  "pin_layers": {
   "W": [
@@ -62,6 +63,6 @@
  },
  "clock_period_ps": 833,
  "TT_setup_FF_hold": "shared tool policy; no overrides",
- "unsigned_area_reason": "none: compact square, estimated fill0.368 at target0.40",
+ "unsigned_area_reason": "compact square:198.72um includes4.32um margin; estimated usable-row fill0.368 at target0.40",
  "throughput": "native accepts one half per input per cycle, emits one paired word per cycle when both queued; added input stage preserves sustained rate"
 }
