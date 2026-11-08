@@ -39,6 +39,10 @@ def field(x, lo, n):
 
 def decode(dump, H, rec, T, tile_of, entry_w=5, entry_e=11):
     passes = rec.get('passes') or [dict(k=0, heads=list(range(16)), pv_first=rec['pv_first'], pv_last=rec['pv_last'])]
+    # decode with the CONTRACT (pass k = global heads 8k..8k+7, lower_svc.pass_heads), never with the image's own
+    # declaration: a compiler mutant that relabels its passes must not relabel the decode
+    passes = [dict(p, heads=list(range(8 * i, 8 * i + 8)) if H == 8 else list(range(16)), declared=p['heads'])
+              for i, p in enumerate(passes)]
     LW = H * 132 + 20
     nsb = (T + 3) // 4
     out = dict(score={}, rt_order=[], p_beats=0, se={}, sm={}, so={}, pv={}, pv_order={}, gw={}, jd=[], flt=[],
@@ -115,6 +119,8 @@ def decode(dump, H, rec, T, tile_of, entry_w=5, entry_e=11):
                 pvc[s] = (field(d, 64, 8), field(d, 0, 64))
                 if H == 8:
                     out['pv_hdr_pass'].append((s, pk, field(d, 32, 1)))
+                    if field(d, 32, 1) != pk:
+                        out['errors'].append(f'PV header head base bit {field(d, 32, 1)} in pass {pk} at entry {s}')
             else:
                 if d >> 512 & 1:
                     out['errors'].append(f'PV data word with header flag entry {s} word {n}')
@@ -125,7 +131,7 @@ def decode(dump, H, rec, T, tile_of, entry_w=5, entry_e=11):
                     key = (g, dm)
                     if key in out['pv']:
                         out['errors'].append(f'PV head {g} dim {dm} twice')
-                    out['pv'][key] = (field(d, 32 * h, 32), field(fl, 16 * (wi - 1) + h, 1))
+                    out["pv"][key] = (field(d, 32 * h, 32), field(fl, H * (wi - 1) + h, 1))
                     out['pv_order'].setdefault(g, []).append(dm)
         elif tag == 'JD':
             out['jd'].append((int(f[1]), int(f[2]), int(f[3])))
