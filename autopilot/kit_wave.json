@@ -2163,7 +2163,10 @@
         "ot_s81sl_leaf__t43@1",
         "ot_s81sl_leaf__t56@8",
         "ot_s81sl_leaf__t61@1",
-        "ot_s81sl_leaf__t74@4"
+        "ot_s81sl_leaf__t74@4",
+        "ot_s81sl_leaf__t4@9",
+        "ot_s81sl_leaf__t50@8",
+        "ot_s81sl_leaf__t67@10"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -3075,7 +3078,10 @@
         "ot_s81sl_leaf__t33@2": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
         "ot_s81sl_leaf__t43@1": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
         "ot_s81sl_leaf__t56@8": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
-        "ot_s81sl_leaf__t61@1": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)"
+        "ot_s81sl_leaf__t61@1": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
+        "ot_s81sl_leaf__t4@9": "004a51fc collector form 2 (S81-TYPES-5 18:06, COORD 18:2x b); KW-FIX-32 2026-11-07 18:59 PST: the current-block record is the CANCELLED stale attempt, so the retry names it",
+        "ot_s81sl_leaf__t50@8": "004a51fc collector form 2 (S81-TYPES-5 18:06, COORD 18:2x b); KW-FIX-32 2026-11-07 18:59 PST: the current-block record is the CANCELLED stale attempt, so the retry names it",
+        "ot_s81sl_leaf__t67@10": "004a51fc collector form 2 (S81-TYPES-5 18:06, COORD 18:2x b); KW-FIX-32 2026-11-07 18:59 PST: the current-block record is the CANCELLED stale attempt, so the retry names it"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
