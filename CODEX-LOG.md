@@ -12341,3 +12341,5 @@ OWNER? 2026-11-08 02:27 PST HBM HARD: q3_vm vC large miss requires POR face/cloc
 OWNER? Role header cites setup uncertainty60ps, frozen METHODOLOGY6.1 cites newer OWNER12.24c setup0/hold25. Preserve existing pinned kit/tool policy; no constraint edits or policy relaxation during takeover.
 
 2026-11-08 02:28 PST KV Wi: own branch codex/kv-wisplit-0222; band main-base dry measurement/split active epyc6, no P&R. OWNER? Wi split reset-contract coverage for soft parts and generic cut +2 cycles remain pending; default private dry only.
+
+2026-11-08 02:33 PST HBM stale cores: N4RF1b FAIL TT-11.83/1 FF-8.07/43 slew40/19 DRC0 EQ57691; measured selector fanout -> SRAM wd_in. Own branch codex/hbm-n4-pb-local-0222@603b03287ac adds102 same-edge selectors<=8loads, PIN CYCLES0, SAT miter PASS/mutant FAIL. PLACE-only pilot I1 scratch2/claude/codex-hbm-stale-0222/n4_local_vA pending40GB16T; E4 initial own waiter cancelled unadmitted. lane_cM2 large miss TT-52.26/56 slew379 cap159 no ECO; topk/programme/glue/q2n2 healthy builds kept. Details lanes/CODEX-HBM-STALE-0222.md.
