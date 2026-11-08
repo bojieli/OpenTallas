@@ -1,0 +1,7 @@
+LEC_ASYNC watcher 2026-11-08 01:00:59 pid 2463166 waiting for the flow's LEC step
+LEC_ASYNC 2026-11-08 01:04:16 start (1): python3 -I /work/lec.py /work --netlist /work/run/results/asap7/hbc_codex_svc_merge_h4_pin/base/1_2_yosys.v --out /work/lec > /work/lec_run.log 2>&1
+LEC_ASYNC 2026-11-08 01:04:16 own unit: ot-heavy --mem 16 -- docker run --name hbmcore-codex_svc_merge_h4_pin_78de33117d85_-2463079-lec (not docker exec in hbmcore-codex_svc_merge_h4_pin_78de33117d85_-2463079)
+ot-heavy: waiting for memory on aware-parakeet: need 0.7 x 16 = 11 GB, admissible 3 GB: available 119 GB, growth charged 39 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 39 GB at x1), young 36 GB, floor 38 GB; invariant: committed 720 GB (in use 636, other 30, units max(now, peak) 652, + reserve 0 + fresh 38) vs physical - 32 = 723 GB -> headroom 3 GB
+ot-heavy: admitted on aware-parakeet as oth-ubuntu-2679389-1794099856 after 62 s
+LEC EQUIVALENT: codex_svc_merge_h4_pin cp=15759 proved=15759 differs=0 undecided=0 15759 compare points proved; 14350 key points matched by name, 1282 register pairs / merges and 100 constant registers proved inductively; 0 RTL and 75 gate registers unmatched and unobservable (proved as free inputs); 680 of them reach an RTL X (don't care: equal wherever the RTL is not X) (543.3 s)
+LEC_ASYNC 2026-11-08 01:14:26 LEC exit 0
