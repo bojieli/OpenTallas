@@ -4845,6 +4845,33 @@
        "minItems": 2,
        "maxItems": 2
       }
+     },
+     "ln_copies": {
+      "type": [
+       "boolean",
+       "object"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "cf": {
+        "type": "boolean"
+       },
+       "relay": {
+        "type": "boolean"
+       },
+       "mem": {
+        "type": "string",
+        "minLength": 1
+       },
+       "relay_inst": {
+        "type": "string",
+        "minLength": 1
+       },
+       "lane_re": {
+        "type": "string",
+        "minLength": 1
+       }
+      }
      }
     }
    }

@@ -5208,6 +5208,11 @@ def cmd_kit_rtl(a):
         btxt, kit_core_clock_rows = kit_core_clocks.wire(btxt, bmod, core_rows,
                                                          leaf_id=lambda inst: short_id("u_" + inst, 90),
                                                          core_masters=masters)
+        # S81-LNB-1 11-08 (opt-in plan partition_types[T].ln_copies, class LN-BROADCAST): per-lane kept copies of the vp
+        # coefficient words + per-lane reset relay bits, 0 added cycles (kit_ln_copies.py); absent = byte-identical
+        import kit_ln_copies
+        btxt, kit_ln_mods, kit_ln_rep = kit_ln_copies.apply(btxt, t.get("ln_copies"),
+                                                             [out / "rtl" / "native_glue", out / "native_glue"])
     except ValueError as exc:
         raise BindError(f"kit-rtl {tn}: {exc}") from exc
     bports = [(m.group(1), int(m.group(2)) + 1 if m.group(2) else 1, m.group(3)) for m in
@@ -5365,7 +5370,7 @@ def cmd_kit_rtl(a):
         spb_geometry = hbm_spb_native.kit_geometry(out, key, btxt, kd)
     except (ValueError, KeyError, OSError) as exc:
         raise BindError(f"kit-rtl HBM SPB {tn}: {exc}") from exc
-    if bmod == mod or kit_core_swaps or kit_core_adapters or kit_param_wraps or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
+    if bmod == mod or kit_core_swaps or kit_core_adapters or kit_param_wraps or kit_ln_rep or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
         nb = bmod + "_bound" if bmod == mod else bmod + "_coreclk"
         (kd / f"{nb}.sv").write_text(re.sub(rf"\b(module|endmodule\s*:)\s+{bmod}\b", rf"\1 {nb}", btxt))
         bfile, bmod = kd / f"{nb}.sv", nb
@@ -5441,6 +5446,11 @@ def cmd_kit_rtl(a):
     rs = Path(__file__).resolve().parent.parent.parent / "rtl" / "lib" / "ot_reset_sync.sv"
     kit_srcs = [kd / f"{mod}.sv"] + pkgs + [bfile, (out / "rtl" / "bind_cells.sv").resolve()] + \
         [f for f in files if f.name != "bind_cells.sv"]
+    if kit_ln_rep:      # S81-LNB-1: the generated copy modules + the receipt (cycles_changed 0)
+        (kd / "kit_ln_copies.sv").write_text(kit_ln_mods)
+        (kd / "kit_ln_copies.json").write_text(json.dumps(kit_ln_rep, indent=1) + "\n")
+        if kit_ln_mods:
+            kit_srcs.append(kd / "kit_ln_copies.sv")
     rs = kit_reset_sync(tn, rs, kit_srcs)
     fl = kit_dedupe(tn, kit_srcs[:len(pkgs) + 3] + ([rs] if rs else []) + kit_srcs[len(pkgs) + 3:])
     fl, incl = kit_inline_includes(fl, kd)
