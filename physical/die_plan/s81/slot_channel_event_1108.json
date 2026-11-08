@@ -5,7 +5,7 @@
  "base_plan": "comb3.json",
  "base_plan_sha256": "7875fb8b59336d079fc96f477e5ca1de792ca277f4e551c9a5d7b3bfc3e141c0",
  "plan_output": "s81_area3.json",
- "plan_output_sha256": "01a2ba6ffc5afa9ec1173788f902baf1dbd3d7ae50e86286950d0cf5d92ac93e",
+ "plan_output_sha256": "0dc1bccde885a0dd0b3594c806d3796356113aaa4f29fa337dca532981f9ad31",
  "layers": 4.0,
  "grid_um": 8.64,
  "skipped_types": [
@@ -88,112 +88,55 @@
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "col_h10_r0_p1__t1__cl574cc59d",
-   "channels": 164,
-   "deficit_um": 87.5,
-   "remaining_um": 75.4,
-   "resolved_um": 12.1,
-   "repack_only_remaining_um": 78.9,
-   "moved": true,
-   "flips": [
-    {
-     "core": "u_r0.u_bs4",
-     "module": "dsfd_qbank_S",
-     "orient": [
-      "R0",
-      "MX"
-     ],
-     "track_offset_um": [
-      [
-       0.108,
-       0.012
-      ],
-      [
-       0.108,
-       0.036
-      ]
-     ],
-     "off_track_pins": 0
-    }
-   ],
-   "tap_moves": []
-  },
-  {
-   "type": "col_h10_r0_p1__t1__cl911743eb",
-   "channels": 164,
-   "deficit_um": 87.5,
-   "remaining_um": 75.4,
-   "resolved_um": 12.1,
-   "repack_only_remaining_um": 78.9,
-   "moved": true,
-   "flips": [
-    {
-     "core": "u_r0.u_bs4",
-     "module": "dsfd_qbank_S",
-     "orient": [
-      "R0",
-      "MX"
-     ],
-     "track_offset_um": [
-      [
-       0.108,
-       0.012
-      ],
-      [
-       0.108,
-       0.036
-      ]
-     ],
-     "off_track_pins": 0
-    }
-   ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "col_h10_r0_p4__t1",
    "channels": 164,
    "deficit_um": 88.9,
-   "remaining_um": 49.8,
-   "resolved_um": 39.1,
+   "remaining_um": 49.7,
+   "resolved_um": 39.2,
    "repack_only_remaining_um": 49.8,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "col_h10_r1__t1__cl95b37463",
    "channels": 153,
    "deficit_um": 133.8,
-   "remaining_um": 131.0,
-   "resolved_um": 2.8,
+   "remaining_um": 130.9,
+   "resolved_um": 2.9,
    "repack_only_remaining_um": 131.0,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "col_h10_r1__t1__cld01bb4ae",
    "channels": 153,
    "deficit_um": 133.8,
-   "remaining_um": 131.0,
-   "resolved_um": 2.8,
+   "remaining_um": 130.9,
+   "resolved_um": 2.9,
    "repack_only_remaining_um": 131.0,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "col_h10_r2__t1__cl1f5d6c2a",
    "channels": 132,
    "deficit_um": 88.3,
-   "remaining_um": 49.8,
+   "remaining_um": 49.7,
    "resolved_um": 38.6,
    "repack_only_remaining_um": 49.8,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": [
     {
      "tap": "clk_t21",
@@ -224,10 +167,11 @@
    "channels": 132,
    "deficit_um": 88.3,
    "remaining_um": 50.3,
-   "resolved_um": 38.0,
+   "resolved_um": 38.1,
    "repack_only_remaining_um": 50.3,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -235,10 +179,11 @@
    "channels": 132,
    "deficit_um": 88.3,
    "remaining_um": 50.3,
-   "resolved_um": 38.0,
+   "resolved_um": 38.1,
    "repack_only_remaining_um": 50.3,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -246,10 +191,11 @@
    "channels": 132,
    "deficit_um": 88.3,
    "remaining_um": 50.3,
-   "resolved_um": 38.0,
+   "resolved_um": 38.1,
    "repack_only_remaining_um": 50.3,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -300,6 +246,7 @@
      "off_track_pins": 0
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -350,6 +297,7 @@
      "off_track_pins": 0
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -400,6 +348,7 @@
      "off_track_pins": 0
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -450,6 +399,7 @@
      "off_track_pins": 0
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -500,6 +450,7 @@
      "off_track_pins": 0
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -550,6 +501,7 @@
      "off_track_pins": 0
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -581,6 +533,7 @@
      "off_track_pins": 0
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -612,6 +565,7 @@
      "off_track_pins": 0
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -643,6 +597,7 @@
      "off_track_pins": 0
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -674,6 +629,7 @@
      "off_track_pins": 0
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -685,6 +641,7 @@
    "repack_only_remaining_um": 74.0,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -696,6 +653,7 @@
    "repack_only_remaining_um": 74.0,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -707,6 +665,7 @@
    "repack_only_remaining_um": 61.9,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -718,6 +677,7 @@
    "repack_only_remaining_um": 61.9,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -729,6 +689,7 @@
    "repack_only_remaining_um": 61.9,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -740,6 +701,7 @@
    "repack_only_remaining_um": 61.9,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -751,73 +713,7 @@
    "repack_only_remaining_um": 61.9,
    "moved": true,
    "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "dsdv_slice_c1x_C__t1",
-   "channels": 17,
-   "deficit_um": 23.0,
-   "remaining_um": 5.8,
-   "resolved_um": 17.3,
-   "repack_only_remaining_um": 5.8,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "dsdv_slice_c1x_C__t10",
-   "channels": 16,
-   "deficit_um": 23.0,
-   "remaining_um": 0.0,
-   "resolved_um": 23.0,
-   "repack_only_remaining_um": 0.0,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "dsdv_slice_c1x_C__t3",
-   "channels": 15,
-   "deficit_um": 23.0,
-   "remaining_um": 5.8,
-   "resolved_um": 17.3,
-   "repack_only_remaining_um": 5.8,
-   "moved": true,
-   "flips": [],
-   "tap_moves": [
-    {
-     "tap": "clk_t29",
-     "mapped": [
-      1425.6,
-      557.664
-     ],
-     "to": [
-      1429.92,
-      557.664
-     ]
-    },
-    {
-     "tap": "clk_t47",
-     "mapped": [
-      1423.44,
-      367.278
-     ],
-     "to": [
-      1432.08,
-      367.278
-     ]
-    }
-   ]
-  },
-  {
-   "type": "dsdv_slice_c1x_C__t4",
-   "channels": 16,
-   "deficit_um": 23.0,
-   "remaining_um": 0.0,
-   "resolved_um": 23.0,
-   "repack_only_remaining_um": 0.0,
-   "moved": true,
-   "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -829,6 +725,7 @@
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -840,6 +737,7 @@
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": [
     {
      "tap": "clk_t19",
@@ -896,6 +794,7 @@
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -907,6 +806,7 @@
    "repack_only_remaining_um": 5.8,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": [
     {
      "tap": "clk_t22",
@@ -930,74 +830,7 @@
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "dsdv_slice_c3x_C__t1",
-   "channels": 17,
-   "deficit_um": 12.0,
-   "remaining_um": 0.0,
-   "resolved_um": 12.0,
-   "repack_only_remaining_um": 0.0,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "dsdv_slice_iq_C__t1",
-   "channels": 16,
-   "deficit_um": 12.0,
-   "remaining_um": 0.0,
-   "resolved_um": 12.0,
-   "repack_only_remaining_um": 0.0,
-   "moved": true,
-   "flips": [],
-   "tap_moves": [
-    {
-     "tap": "clk_t38",
-     "mapped": [
-      764.32,
-      267.83
-     ],
-     "to": [
-      760.0,
-      267.83
-     ]
-    }
-   ]
-  },
-  {
-   "type": "dsdv_slice_kv512_C__t1",
-   "channels": 16,
-   "deficit_um": 23.0,
-   "remaining_um": 5.8,
-   "resolved_um": 17.3,
-   "repack_only_remaining_um": 5.8,
-   "moved": true,
-   "flips": [],
-   "tap_moves": [
-    {
-     "tap": "clk_t17",
-     "mapped": [
-      1425.6,
-      306.648
-     ],
-     "to": [
-      1429.92,
-      306.648
-     ]
-    }
-   ]
-  },
-  {
-   "type": "dsdv_slice_lepe_mu_C__t1",
-   "channels": 16,
-   "deficit_um": 23.0,
-   "remaining_um": 0.0,
-   "resolved_um": 23.0,
-   "repack_only_remaining_um": 0.0,
-   "moved": true,
-   "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1009,6 +842,7 @@
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1020,6 +854,7 @@
    "repack_only_remaining_um": 14.4,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1031,6 +866,7 @@
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1042,6 +878,7 @@
    "repack_only_remaining_um": 5.8,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": [
     {
      "tap": "clk_t33",
@@ -1076,41 +913,8 @@
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
-  },
-  {
-   "type": "dsdv_slice_lepw_mus_C__t1",
-   "channels": 17,
-   "deficit_um": 23.0,
-   "remaining_um": 0.0,
-   "resolved_um": 23.0,
-   "repack_only_remaining_um": 0.0,
-   "moved": true,
-   "flips": [],
-   "tap_moves": [
-    {
-     "tap": "clk_t25",
-     "mapped": [
-      1425.6,
-      859.32
-     ],
-     "to": [
-      1429.92,
-      859.32
-     ]
-    },
-    {
-     "tap": "clk_t43",
-     "mapped": [
-      1423.44,
-      367.278
-     ],
-     "to": [
-      1432.08,
-      367.278
-     ]
-    }
-   ]
   },
   {
    "type": "dsdv_slice_lepw_mus_LP__t2",
@@ -1121,17 +925,7 @@
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "eng__t1",
-   "channels": 5,
-   "deficit_um": 29.4,
-   "remaining_um": 0.0,
-   "resolved_um": 29.4,
-   "repack_only_remaining_um": 0.0,
-   "moved": true,
-   "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1143,6 +937,7 @@
    "repack_only_remaining_um": 76.4,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1154,28 +949,7 @@
    "repack_only_remaining_um": 6.2,
    "moved": true,
    "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_kv_leaf__t4",
-   "channels": 49,
-   "deficit_um": 5.2,
-   "remaining_um": 4.6,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 4.6,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_kv_leaf__t5",
-   "channels": 52,
-   "deficit_um": 14.0,
-   "remaining_um": 9.4,
-   "resolved_um": 4.6,
-   "repack_only_remaining_um": 9.4,
-   "moved": true,
-   "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1187,50 +961,7 @@
    "repack_only_remaining_um": 7.8,
    "moved": true,
    "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t11",
-   "channels": 59,
-   "deficit_um": 14.0,
-   "remaining_um": 9.4,
-   "resolved_um": 4.6,
-   "repack_only_remaining_um": 9.4,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t12",
-   "channels": 59,
-   "deficit_um": 4.6,
-   "remaining_um": 0.0,
-   "resolved_um": 4.6,
-   "repack_only_remaining_um": 0.0,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t13",
-   "channels": 55,
-   "deficit_um": 5.2,
-   "remaining_um": 4.6,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 4.6,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t15",
-   "channels": 60,
-   "deficit_um": 18.4,
-   "remaining_um": 13.8,
-   "resolved_um": 4.6,
-   "repack_only_remaining_um": 13.8,
-   "moved": true,
-   "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1242,61 +973,7 @@
    "repack_only_remaining_um": 9.4,
    "moved": true,
    "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t17",
-   "channels": 55,
-   "deficit_um": 3.2,
-   "remaining_um": 3.2,
-   "resolved_um": 0.0,
-   "repack_only_remaining_um": 3.2,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t2",
-   "channels": 55,
-   "deficit_um": 6.8,
-   "remaining_um": 6.2,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 6.2,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t21",
-   "channels": 55,
-   "deficit_um": 1.3,
-   "remaining_um": 1.3,
-   "resolved_um": 0.0,
-   "repack_only_remaining_um": 1.3,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t22",
-   "channels": 55,
-   "deficit_um": 6.8,
-   "remaining_um": 6.2,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 6.2,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t23",
-   "channels": 54,
-   "deficit_um": 8.4,
-   "remaining_um": 3.2,
-   "resolved_um": 5.2,
-   "repack_only_remaining_um": 3.2,
-   "moved": true,
-   "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1308,6 +985,7 @@
    "repack_only_remaining_um": 1.3,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1319,6 +997,7 @@
    "repack_only_remaining_um": 1.3,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1330,6 +1009,7 @@
    "repack_only_remaining_um": 13.8,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1341,6 +1021,7 @@
    "repack_only_remaining_um": 13.8,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1352,17 +1033,7 @@
    "repack_only_remaining_um": 9.4,
    "moved": true,
    "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t27",
-   "channels": 55,
-   "deficit_um": 5.2,
-   "remaining_um": 4.5,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 4.5,
-   "moved": true,
-   "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1374,62 +1045,7 @@
    "repack_only_remaining_um": 9.0,
    "moved": true,
    "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t3",
-   "channels": 56,
-   "deficit_um": 11.4,
-   "remaining_um": 6.7,
-   "resolved_um": 4.6,
-   "repack_only_remaining_um": 6.7,
-   "moved": true,
-   "flips": [],
-   "tap_moves": [
-    {
-     "tap": "clk_t64",
-     "mapped": [
-      1409.778,
-      137.262
-     ],
-     "to": [
-      1418.418,
-      137.262
-     ]
-    }
-   ]
-  },
-  {
-   "type": "ot_s81sl_leaf__t32",
-   "channels": 55,
-   "deficit_um": 6.8,
-   "remaining_um": 6.2,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 6.2,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t33",
-   "channels": 56,
-   "deficit_um": 9.8,
-   "remaining_um": 9.2,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 9.2,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t34",
-   "channels": 56,
-   "deficit_um": 5.2,
-   "remaining_um": 4.6,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 4.6,
-   "moved": true,
-   "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1441,28 +1057,7 @@
    "repack_only_remaining_um": 13.8,
    "moved": true,
    "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t38",
-   "channels": 55,
-   "deficit_um": 3.2,
-   "remaining_um": 3.2,
-   "resolved_um": 0.0,
-   "repack_only_remaining_um": 3.2,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t39",
-   "channels": 54,
-   "deficit_um": 8.4,
-   "remaining_um": 7.8,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 7.8,
-   "moved": true,
-   "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1474,6 +1069,7 @@
    "repack_only_remaining_um": 13.8,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1485,6 +1081,7 @@
    "repack_only_remaining_um": 13.8,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1496,6 +1093,7 @@
    "repack_only_remaining_um": 13.8,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1507,74 +1105,8 @@
    "repack_only_remaining_um": 9.4,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t42",
-   "channels": 55,
-   "deficit_um": 3.2,
-   "remaining_um": 3.2,
-   "resolved_um": 0.0,
-   "repack_only_remaining_um": 3.2,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t43",
-   "channels": 55,
-   "deficit_um": 5.2,
-   "remaining_um": 4.6,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 4.6,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t45",
-   "channels": 54,
-   "deficit_um": 5.2,
-   "remaining_um": 4.6,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 4.6,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t46",
-   "channels": 55,
-   "deficit_um": 15.9,
-   "remaining_um": 15.3,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 15.3,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t47",
-   "channels": 55,
-   "deficit_um": 5.2,
-   "remaining_um": 4.6,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 4.6,
-   "moved": true,
-   "flips": [],
-   "tap_moves": [
-    {
-     "tap": "clk_t34",
-     "mapped": [
-      242.4469,
-      415.9931
-     ],
-     "to": [
-      255.4069,
-      415.9931
-     ]
-    }
-   ]
   },
   {
    "type": "ot_s81sl_leaf__t50",
@@ -1585,28 +1117,7 @@
    "repack_only_remaining_um": 9.4,
    "moved": true,
    "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t52",
-   "channels": 56,
-   "deficit_um": 9.8,
-   "remaining_um": 9.2,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 9.2,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t54__cl706d9749",
-   "channels": 60,
-   "deficit_um": 18.4,
-   "remaining_um": 13.8,
-   "resolved_um": 4.6,
-   "repack_only_remaining_um": 13.8,
-   "moved": true,
-   "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1618,51 +1129,7 @@
    "repack_only_remaining_um": 9.4,
    "moved": true,
    "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t56",
-   "channels": 55,
-   "deficit_um": 9.7,
-   "remaining_um": 4.4,
-   "resolved_um": 5.2,
-   "repack_only_remaining_um": 4.4,
-   "moved": true,
-   "flips": [],
-   "tap_moves": [
-    {
-     "tap": "clk_t37",
-     "mapped": [
-      1237.8082,
-      672.8558
-     ],
-     "to": [
-      1237.8082,
-      664.2158
-     ]
-    }
-   ]
-  },
-  {
-   "type": "ot_s81sl_leaf__t57",
-   "channels": 55,
-   "deficit_um": 15.9,
-   "remaining_um": 15.3,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 15.3,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t58",
-   "channels": 54,
-   "deficit_um": 8.4,
-   "remaining_um": 3.2,
-   "resolved_um": 5.2,
-   "repack_only_remaining_um": 3.2,
-   "moved": true,
-   "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1674,139 +1141,7 @@
    "repack_only_remaining_um": 13.8,
    "moved": true,
    "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t6",
-   "channels": 59,
-   "deficit_um": 14.0,
-   "remaining_um": 9.4,
-   "resolved_um": 4.6,
-   "repack_only_remaining_um": 9.4,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t60",
-   "channels": 55,
-   "deficit_um": 1.3,
-   "remaining_um": 1.3,
-   "resolved_um": 0.0,
-   "repack_only_remaining_um": 1.3,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t61",
-   "channels": 56,
-   "deficit_um": 5.2,
-   "remaining_um": 0.0,
-   "resolved_um": 5.2,
-   "repack_only_remaining_um": 0.0,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t62",
-   "channels": 54,
-   "deficit_um": 8.4,
-   "remaining_um": 3.2,
-   "resolved_um": 5.2,
-   "repack_only_remaining_um": 3.2,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t65",
-   "channels": 55,
-   "deficit_um": 9.7,
-   "remaining_um": 4.4,
-   "resolved_um": 5.2,
-   "repack_only_remaining_um": 4.4,
-   "moved": true,
-   "flips": [],
-   "tap_moves": [
-    {
-     "tap": "clk_t36",
-     "mapped": [
-      1237.8082,
-      672.8558
-     ],
-     "to": [
-      1237.8082,
-      664.2158
-     ]
-    }
-   ]
-  },
-  {
-   "type": "ot_s81sl_leaf__t66",
-   "channels": 55,
-   "deficit_um": 15.9,
-   "remaining_um": 15.3,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 15.3,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t67",
-   "channels": 54,
-   "deficit_um": 8.4,
-   "remaining_um": 3.8,
-   "resolved_um": 4.6,
-   "repack_only_remaining_um": 3.8,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t68",
-   "channels": 56,
-   "deficit_um": 1.9,
-   "remaining_um": 1.3,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 1.3,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t70",
-   "channels": 60,
-   "deficit_um": 10.8,
-   "remaining_um": 6.2,
-   "resolved_um": 4.6,
-   "repack_only_remaining_um": 6.2,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t71",
-   "channels": 55,
-   "deficit_um": 5.2,
-   "remaining_um": 4.5,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 4.5,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t73",
-   "channels": 55,
-   "deficit_um": 6.8,
-   "remaining_um": 6.2,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 6.2,
-   "moved": true,
-   "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1818,50 +1153,19 @@
    "repack_only_remaining_um": 7.8,
    "moved": true,
    "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t75",
-   "channels": 56,
-   "deficit_um": 5.2,
-   "remaining_um": 4.6,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 4.6,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t8",
-   "channels": 54,
-   "deficit_um": 20.4,
-   "remaining_um": 15.1,
-   "resolved_um": 5.2,
-   "repack_only_remaining_um": 15.1,
-   "moved": true,
-   "flips": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t9",
-   "channels": 55,
-   "deficit_um": 6.8,
-   "remaining_um": 6.2,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 6.2,
-   "moved": true,
-   "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "svc_hi_dsdv_svc_pvso_entry__t1",
    "channels": 161,
    "deficit_um": 75.4,
-   "remaining_um": 13.3,
+   "remaining_um": 13.4,
    "resolved_um": 62.1,
    "repack_only_remaining_um": 13.3,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1873,17 +1177,37 @@
    "repack_only_remaining_um": 10.7,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "svc_hi_dsdv_svc_rs__t1",
    "channels": 161,
    "deficit_um": 75.4,
-   "remaining_um": 13.3,
-   "resolved_um": 62.1,
+   "remaining_um": 16.0,
+   "resolved_um": 59.4,
    "repack_only_remaining_um": 13.3,
    "moved": true,
    "flips": [],
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft2 bit 0 seg 12: 33.9 -> 42.5 um",
+      "ft ft2 bit 1 seg 12: 33.5 -> 42.2 um",
+      "ft ft2 bit 2 seg 12: 32.6 -> 41.3 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft2 bit 0 seg 12: 33.9 -> 42.5 um",
+      "ft ft2 bit 1 seg 12: 33.5 -> 42.2 um",
+      "ft ft2 bit 2 seg 12: 32.6 -> 41.3 um"
+     ]
+    }
+   ],
+   "variant": "y",
    "tap_moves": []
   },
   {
@@ -1895,6 +1219,7 @@
    "repack_only_remaining_um": 10.7,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1906,6 +1231,7 @@
    "repack_only_remaining_um": 10.7,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1917,6 +1243,7 @@
    "repack_only_remaining_um": 10.7,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1928,6 +1255,7 @@
    "repack_only_remaining_um": 10.7,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1939,17 +1267,37 @@
    "repack_only_remaining_um": 16.0,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "svc_lo_dsdv_svc_rs__t1",
    "channels": 161,
    "deficit_um": 75.4,
-   "remaining_um": 10.7,
-   "resolved_um": 64.7,
+   "remaining_um": 16.0,
+   "resolved_um": 59.4,
    "repack_only_remaining_um": 10.7,
    "moved": true,
    "flips": [],
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft0 bit 96 seg 5: 267.3 -> 267.6 um",
+      "ft ft0 bit 98 seg 5: 280.1 -> 281.2 um",
+      "ft ft0 bit 100 seg 5: 266.2 -> 268.2 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft0 bit 96 seg 5: 267.3 -> 267.6 um",
+      "ft ft0 bit 98 seg 5: 280.1 -> 281.2 um",
+      "ft ft0 bit 100 seg 5: 266.2 -> 268.2 um"
+     ]
+    }
+   ],
+   "variant": "y",
    "tap_moves": []
   },
   {
@@ -1961,6 +1309,7 @@
    "repack_only_remaining_um": 10.7,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1972,6 +1321,7 @@
    "repack_only_remaining_um": 10.7,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1983,6 +1333,7 @@
    "repack_only_remaining_um": 10.7,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -1994,6 +1345,7 @@
    "repack_only_remaining_um": 10.7,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -2005,6 +1357,7 @@
    "repack_only_remaining_um": 10.7,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -2016,6 +1369,7 @@
    "repack_only_remaining_um": 16.0,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -2027,6 +1381,7 @@
    "repack_only_remaining_um": 10.7,
    "moved": true,
    "flips": [],
+   "variant": "xy",
    "tap_moves": []
   }
  ],
@@ -2041,37 +1396,18 @@
    "moved": true,
    "flips": [],
    "open": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "col_h10_r0_p1__t1__cl574cc59d",
    "channels": 164,
    "deficit_um": 87.5,
-   "remaining_um": 75.4,
-   "resolved_um": 12.1,
+   "remaining_um": 87.5,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 78.9,
    "moved": true,
-   "flips": [
-    {
-     "core": "u_r0.u_bs4",
-     "module": "dsfd_qbank_S",
-     "orient": [
-      "R0",
-      "MX"
-     ],
-     "track_offset_um": [
-      [
-       0.108,
-       0.012
-      ],
-      [
-       0.108,
-       0.036
-      ]
-     ],
-     "off_track_pins": 0
-    }
-   ],
+   "flips": [],
    "open": [
     {
      "core": "u_r0.u_e1e.u_view.u_c",
@@ -2098,6 +1434,14 @@
      "short": 16.05
     },
     {
+     "core": "u_r0.u_bs4",
+     "face": "N",
+     "gap": 8.64,
+     "need": 20.76,
+     "new_gap": 8.64,
+     "short": 12.12
+    },
+    {
      "core": "u_r0.u_t0__payload",
      "face": "N",
      "gap": 17.28,
@@ -2114,12 +1458,12 @@
      "short": 7.23
     },
     {
-     "core": "u_r0.u_bs4",
+     "core": "u_r0.u_bs3",
      "face": "N",
-     "gap": 8.62,
+     "gap": 17.28,
      "need": 20.76,
-     "new_gap": 17.26,
-     "short": 3.5
+     "new_gap": 17.28,
+     "short": 3.48
     },
     {
      "core": "u_r0.u_cf",
@@ -2138,37 +1482,27 @@
      "short": 1.61
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft0 bit 0 seg 6: 255.0 -> 263.6 um",
+      "ft ft0 bit 1 seg 6: 255.2 -> 263.9 um",
+      "ft ft0 bit 2 seg 6: 255.9 -> 264.6 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "col_h10_r0_p1__t1__cl911743eb",
    "channels": 164,
    "deficit_um": 87.5,
-   "remaining_um": 75.4,
-   "resolved_um": 12.1,
+   "remaining_um": 87.5,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 78.9,
    "moved": true,
-   "flips": [
-    {
-     "core": "u_r0.u_bs4",
-     "module": "dsfd_qbank_S",
-     "orient": [
-      "R0",
-      "MX"
-     ],
-     "track_offset_um": [
-      [
-       0.108,
-       0.012
-      ],
-      [
-       0.108,
-       0.036
-      ]
-     ],
-     "off_track_pins": 0
-    }
-   ],
+   "flips": [],
    "open": [
     {
      "core": "u_r0.u_e1e.u_view.u_c",
@@ -2195,6 +1529,14 @@
      "short": 16.05
     },
     {
+     "core": "u_r0.u_bs4",
+     "face": "N",
+     "gap": 8.64,
+     "need": 20.76,
+     "new_gap": 8.64,
+     "short": 12.12
+    },
+    {
      "core": "u_r0.u_t0__payload",
      "face": "N",
      "gap": 17.28,
@@ -2211,12 +1553,12 @@
      "short": 7.23
     },
     {
-     "core": "u_r0.u_bs4",
+     "core": "u_r0.u_bs3",
      "face": "N",
-     "gap": 8.62,
+     "gap": 17.28,
      "need": 20.76,
-     "new_gap": 17.26,
-     "short": 3.5
+     "new_gap": 17.28,
+     "short": 3.48
     },
     {
      "core": "u_r0.u_cf",
@@ -2235,14 +1577,24 @@
      "short": 1.61
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft0 bit 0 seg 6: 255.0 -> 263.6 um",
+      "ft ft0 bit 1 seg 6: 255.2 -> 263.9 um",
+      "ft ft0 bit 2 seg 6: 255.9 -> 264.6 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "col_h10_r0_p4__t1",
    "channels": 164,
    "deficit_um": 88.9,
-   "remaining_um": 49.8,
-   "resolved_um": 39.1,
+   "remaining_um": 49.7,
+   "resolved_um": 39.2,
    "repack_only_remaining_um": 49.8,
    "moved": true,
    "flips": [],
@@ -2280,14 +1632,15 @@
      "short": 1.61
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "col_h10_r1__t1__cl95b37463",
    "channels": 153,
    "deficit_um": 133.8,
-   "remaining_um": 131.0,
-   "resolved_um": 2.8,
+   "remaining_um": 130.9,
+   "resolved_um": 2.9,
    "repack_only_remaining_um": 131.0,
    "moved": true,
    "flips": [],
@@ -2389,14 +1742,15 @@
      "short": 1.61
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "col_h10_r1__t1__cld01bb4ae",
    "channels": 153,
    "deficit_um": 133.8,
-   "remaining_um": 131.0,
-   "resolved_um": 2.8,
+   "remaining_um": 130.9,
+   "resolved_um": 2.9,
    "repack_only_remaining_um": 131.0,
    "moved": true,
    "flips": [],
@@ -2498,13 +1852,14 @@
      "short": 1.61
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "col_h10_r2__t1__cl1f5d6c2a",
    "channels": 132,
    "deficit_um": 88.3,
-   "remaining_um": 49.8,
+   "remaining_um": 49.7,
    "resolved_um": 38.6,
    "repack_only_remaining_um": 49.8,
    "moved": true,
@@ -2543,6 +1898,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy",
    "tap_moves": [
     {
      "tap": "clk_t21",
@@ -2573,7 +1929,7 @@
    "channels": 132,
    "deficit_um": 88.3,
    "remaining_um": 50.3,
-   "resolved_um": 38.0,
+   "resolved_um": 38.1,
    "repack_only_remaining_um": 50.3,
    "moved": true,
    "flips": [],
@@ -2619,6 +1975,7 @@
      "short": 0.54
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -2626,7 +1983,7 @@
    "channels": 132,
    "deficit_um": 88.3,
    "remaining_um": 50.3,
-   "resolved_um": 38.0,
+   "resolved_um": 38.1,
    "repack_only_remaining_um": 50.3,
    "moved": true,
    "flips": [],
@@ -2672,6 +2029,7 @@
      "short": 0.54
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -2679,7 +2037,7 @@
    "channels": 132,
    "deficit_um": 88.3,
    "remaining_um": 50.3,
-   "resolved_um": 38.0,
+   "resolved_um": 38.1,
    "repack_only_remaining_um": 50.3,
    "moved": true,
    "flips": [],
@@ -2725,6 +2083,7 @@
      "short": 0.54
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -2825,6 +2184,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -2925,6 +2285,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -3025,6 +2386,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -3125,6 +2487,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -3225,6 +2588,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -3325,6 +2689,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -3398,6 +2763,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -3471,6 +2837,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -3544,6 +2911,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -3617,6 +2985,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy+flips",
    "tap_moves": []
   },
   {
@@ -3678,6 +3047,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -3739,6 +3109,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -3792,6 +3163,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -3845,6 +3217,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -3898,6 +3271,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -3951,6 +3325,7 @@
      "short": 1.61
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -4004,14 +3379,15 @@
      "short": 1.61
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "dsdv_slice_c1x_C__t1",
    "channels": 17,
    "deficit_um": 23.0,
-   "remaining_um": 5.8,
-   "resolved_um": 17.3,
+   "remaining_um": 23.0,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 5.8,
    "moved": true,
    "flips": [],
@@ -4021,30 +3397,75 @@
      "face": "E",
      "gap": 17.28,
      "need": 40.32,
-     "new_gap": 34.56,
-     "short": 5.76
+     "new_gap": 17.28,
+     "short": 23.04
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft0 bit 0 seg 4: 351.8 -> 369.1 um",
+      "ft ft0 bit 1 seg 4: 351.5 -> 368.8 um",
+      "ft ft0 bit 2 seg 4: 351.6 -> 368.9 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft0 bit 0 seg 4: 351.8 -> 369.1 um",
+      "ft ft0 bit 1 seg 4: 351.5 -> 368.8 um",
+      "ft ft0 bit 2 seg 4: 351.6 -> 368.9 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "dsdv_slice_c1x_C__t10",
    "channels": 16,
    "deficit_um": 23.0,
-   "remaining_um": 0.0,
-   "resolved_um": 23.0,
+   "remaining_um": 23.0,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
-   "open": [],
-   "tap_moves": []
+   "open": [
+    {
+     "core": "u_c.u_cap",
+     "face": "E",
+     "gap": 17.28,
+     "need": 40.32,
+     "new_gap": 17.28,
+     "short": 23.04
+    }
+   ],
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft dn_s_2N_L0x1 bit 0 seg 2: 55.6 -> 81.6 um",
+      "ft dn_s_2N_L0x1 bit 1 seg 2: 55.8 -> 81.7 um",
+      "ft dn_s_2N_L0x1 bit 2 seg 2: 55.5 -> 81.4 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft dn_s_2N_L0x1 bit 0 seg 2: 55.6 -> 81.6 um",
+      "ft dn_s_2N_L0x1 bit 1 seg 2: 55.8 -> 81.7 um",
+      "ft dn_s_2N_L0x1 bit 2 seg 2: 55.5 -> 81.4 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "dsdv_slice_c1x_C__t3",
    "channels": 15,
    "deficit_um": 23.0,
-   "remaining_um": 5.8,
-   "resolved_um": 17.3,
+   "remaining_um": 23.0,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 5.8,
    "moved": true,
    "flips": [],
@@ -4054,46 +3475,68 @@
      "face": "E",
      "gap": 17.28,
      "need": 40.32,
-     "new_gap": 34.56,
-     "short": 5.76
+     "new_gap": 17.28,
+     "short": 23.04
     }
    ],
-   "tap_moves": [
+   "rejected": [
     {
-     "tap": "clk_t29",
-     "mapped": [
-      1425.6,
-      557.664
-     ],
-     "to": [
-      1429.92,
-      557.664
+     "variant": "xy+flips",
+     "why": [
+      "ft ft0 bit 0 seg 7: 289.9 -> 298.5 um",
+      "ft ft0 bit 1 seg 7: 289.6 -> 298.2 um",
+      "ft ft0 bit 2 seg 7: 289.7 -> 298.4 um"
      ]
     },
     {
-     "tap": "clk_t47",
-     "mapped": [
-      1423.44,
-      367.278
-     ],
-     "to": [
-      1432.08,
-      367.278
+     "variant": "x+flips",
+     "why": [
+      "ft ft0 bit 0 seg 7: 289.9 -> 298.5 um",
+      "ft ft0 bit 1 seg 7: 289.6 -> 298.2 um",
+      "ft ft0 bit 2 seg 7: 289.7 -> 298.4 um"
      ]
     }
-   ]
+   ],
+   "reverted": true
   },
   {
    "type": "dsdv_slice_c1x_C__t4",
    "channels": 16,
    "deficit_um": 23.0,
-   "remaining_um": 0.0,
-   "resolved_um": 23.0,
+   "remaining_um": 23.0,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
-   "open": [],
-   "tap_moves": []
+   "open": [
+    {
+     "core": "u_c.u_cap",
+     "face": "E",
+     "gap": 17.28,
+     "need": 40.32,
+     "new_gap": 17.28,
+     "short": 23.04
+    }
+   ],
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft0 bit 243 seg 9: 298.3 -> 300.3 um",
+      "ft ft0 bit 246 seg 9: 295.6 -> 298.2 um",
+      "ft ft0 bit 256 seg 9: 300.5 -> 302.9 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft0 bit 243 seg 9: 298.3 -> 300.3 um",
+      "ft ft0 bit 246 seg 9: 295.6 -> 298.2 um",
+      "ft ft0 bit 256 seg 9: 300.5 -> 302.9 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "dsdv_slice_c1x_C__t5",
@@ -4105,6 +3548,7 @@
    "moved": true,
    "flips": [],
    "open": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -4117,6 +3561,7 @@
    "moved": true,
    "flips": [],
    "open": [],
+   "variant": "xy",
    "tap_moves": [
     {
      "tap": "clk_t19",
@@ -4174,6 +3619,7 @@
    "moved": true,
    "flips": [],
    "open": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -4189,12 +3635,13 @@
     {
      "core": "u_c.u_cap",
      "face": "E",
-     "gap": 17.28,
+     "gap": 34.56,
      "need": 40.32,
      "new_gap": 34.56,
      "short": 5.76
     }
    ],
+   "variant": "xy",
    "tap_moves": [
     {
      "tap": "clk_t22",
@@ -4219,50 +3666,77 @@
    "moved": true,
    "flips": [],
    "open": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "dsdv_slice_c3x_C__t1",
    "channels": 17,
    "deficit_um": 12.0,
-   "remaining_um": 0.0,
-   "resolved_um": 12.0,
+   "remaining_um": 12.0,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
-   "open": [],
-   "tap_moves": []
+   "open": [
+    {
+     "core": "u_c.u_xr",
+     "face": "N",
+     "gap": 43.16,
+     "need": 55.15,
+     "new_gap": 43.16,
+     "short": 11.98
+    }
+   ],
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft0 bit 0 seg 5: 316.6 -> 333.9 um",
+      "ft ft0 bit 1 seg 5: 316.3 -> 333.6 um",
+      "ft ft1 bit 0 seg 5: 226.6 -> 243.9 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "dsdv_slice_iq_C__t1",
    "channels": 16,
    "deficit_um": 12.0,
-   "remaining_um": 0.0,
-   "resolved_um": 12.0,
+   "remaining_um": 12.0,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
-   "open": [],
-   "tap_moves": [
+   "open": [
     {
-     "tap": "clk_t38",
-     "mapped": [
-      764.32,
-      267.83
-     ],
-     "to": [
-      760.0,
-      267.83
+     "core": "u_c.u_xr",
+     "face": "N",
+     "gap": 43.16,
+     "need": 55.15,
+     "new_gap": 43.16,
+     "short": 11.98
+    }
+   ],
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft2 bit 0 seg 4: 329.3 -> 346.5 um",
+      "ft ft2 bit 1 seg 4: 329.2 -> 346.4 um",
+      "ft ft2 bit 2 seg 4: 329.1 -> 346.4 um"
      ]
     }
-   ]
+   ],
+   "reverted": true
   },
   {
    "type": "dsdv_slice_kv512_C__t1",
    "channels": 16,
    "deficit_um": 23.0,
-   "remaining_um": 5.8,
-   "resolved_um": 17.3,
+   "remaining_um": 23.0,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 5.8,
    "moved": true,
    "flips": [],
@@ -4272,35 +3746,68 @@
      "face": "E",
      "gap": 17.28,
      "need": 40.32,
-     "new_gap": 34.56,
-     "short": 5.76
+     "new_gap": 17.28,
+     "short": 23.04
     }
    ],
-   "tap_moves": [
+   "rejected": [
     {
-     "tap": "clk_t17",
-     "mapped": [
-      1425.6,
-      306.648
-     ],
-     "to": [
-      1429.92,
-      306.648
+     "variant": "xy+flips",
+     "why": [
+      "ft ft0 bit 0 seg 6: 271.3 -> 279.9 um",
+      "ft ft0 bit 1 seg 6: 271.5 -> 280.2 um",
+      "ft ft0 bit 2 seg 6: 270.5 -> 279.2 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft0 bit 0 seg 6: 271.3 -> 279.9 um",
+      "ft ft0 bit 1 seg 6: 271.5 -> 280.2 um",
+      "ft ft0 bit 2 seg 6: 270.5 -> 279.2 um"
      ]
     }
-   ]
+   ],
+   "reverted": true
   },
   {
    "type": "dsdv_slice_lepe_mu_C__t1",
    "channels": 16,
    "deficit_um": 23.0,
-   "remaining_um": 0.0,
-   "resolved_um": 23.0,
+   "remaining_um": 23.0,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
-   "open": [],
-   "tap_moves": []
+   "open": [
+    {
+     "core": "u_c.u_cap",
+     "face": "E",
+     "gap": 17.28,
+     "need": 40.32,
+     "new_gap": 17.28,
+     "short": 23.04
+    }
+   ],
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft0 bit 0 seg 7: 21.1 -> 21.8 um",
+      "ft ft0 bit 1 seg 7: 21.5 -> 22.0 um",
+      "ft ft0 bit 6 seg 7: 20.5 -> 22.4 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft0 bit 0 seg 7: 21.1 -> 21.8 um",
+      "ft ft0 bit 1 seg 7: 21.5 -> 22.0 um",
+      "ft ft0 bit 6 seg 7: 20.5 -> 22.4 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "dsdv_slice_lepe_mu_LP__t2",
@@ -4312,6 +3819,7 @@
    "moved": true,
    "flips": [],
    "open": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -4327,12 +3835,13 @@
     {
      "core": "u_c.u_cap",
      "face": "E",
-     "gap": 17.28,
+     "gap": 25.92,
      "need": 40.32,
      "new_gap": 25.92,
      "short": 14.4
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -4345,6 +3854,7 @@
    "moved": true,
    "flips": [],
    "open": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -4360,12 +3870,13 @@
     {
      "core": "u_c.u_cap",
      "face": "E",
-     "gap": 17.28,
+     "gap": 34.56,
      "need": 40.32,
      "new_gap": 34.56,
      "short": 5.76
     }
    ],
+   "variant": "xy",
    "tap_moves": [
     {
      "tap": "clk_t33",
@@ -4401,42 +3912,47 @@
    "moved": true,
    "flips": [],
    "open": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "dsdv_slice_lepw_mus_C__t1",
    "channels": 17,
    "deficit_um": 23.0,
-   "remaining_um": 0.0,
-   "resolved_um": 23.0,
+   "remaining_um": 23.0,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
-   "open": [],
-   "tap_moves": [
+   "open": [
     {
-     "tap": "clk_t25",
-     "mapped": [
-      1425.6,
-      859.32
-     ],
-     "to": [
-      1429.92,
-      859.32
+     "core": "u_c.u_cap",
+     "face": "E",
+     "gap": 17.28,
+     "need": 40.32,
+     "new_gap": 17.28,
+     "short": 23.04
+    }
+   ],
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft0 bit 0 seg 5: 64.9 -> 73.5 um",
+      "ft ft0 bit 1 seg 5: 65.7 -> 74.3 um",
+      "ft ft0 bit 2 seg 5: 64.5 -> 73.2 um"
      ]
     },
     {
-     "tap": "clk_t43",
-     "mapped": [
-      1423.44,
-      367.278
-     ],
-     "to": [
-      1432.08,
-      367.278
+     "variant": "x+flips",
+     "why": [
+      "ft ft0 bit 0 seg 5: 64.9 -> 73.5 um",
+      "ft ft0 bit 1 seg 5: 65.7 -> 74.3 um",
+      "ft ft0 bit 2 seg 5: 64.5 -> 73.2 um"
      ]
     }
-   ]
+   ],
+   "reverted": true
   },
   {
    "type": "dsdv_slice_lepw_mus_LP__t2",
@@ -4448,19 +3964,47 @@
    "moved": true,
    "flips": [],
    "open": [],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "eng__t1",
    "channels": 5,
    "deficit_um": 29.4,
-   "remaining_um": 0.0,
-   "resolved_um": 29.4,
+   "remaining_um": 29.4,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
-   "open": [],
-   "tap_moves": []
+   "open": [
+    {
+     "core": "u_eng.u_h0",
+     "face": "N",
+     "gap": 17.28,
+     "need": 31.99,
+     "new_gap": 17.28,
+     "short": 14.71
+    },
+    {
+     "core": "u_eng.u_h1",
+     "face": "N",
+     "gap": 17.28,
+     "need": 31.99,
+     "new_gap": 17.28,
+     "short": 14.71
+    }
+   ],
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft0 bit 0 seg 10: 157.3 -> 174.6 um",
+      "ft ft0 bit 1 seg 10: 157.0 -> 174.3 um",
+      "ft ft0 bit 2 seg 10: 157.1 -> 174.4 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "gunit__t1",
@@ -4505,6 +4049,7 @@
      "short": 0.95
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -4526,14 +4071,15 @@
      "short": 6.15
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "ot_s81sl_kv_leaf__t4",
    "channels": 49,
    "deficit_um": 5.2,
-   "remaining_um": 4.6,
-   "resolved_um": 0.6,
+   "remaining_um": 5.2,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 4.6,
    "moved": true,
    "flips": [],
@@ -4545,16 +4091,40 @@
      "need": 13.25,
      "new_gap": 8.64,
      "short": 4.61
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft3 bit 0 seg 0: 1.0 -> 9.6 um",
+      "ft ft3 bit 1 seg 0: 1.0 -> 9.7 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft3 bit 0 seg 0: 1.0 -> 9.6 um",
+      "ft ft3 bit 1 seg 0: 1.0 -> 9.7 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_kv_leaf__t5",
    "channels": 52,
    "deficit_um": 14.0,
-   "remaining_um": 9.4,
-   "resolved_um": 4.6,
+   "remaining_um": 14.0,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 9.4,
    "moved": true,
    "flips": [],
@@ -4568,6 +4138,14 @@
      "short": 6.15
     },
     {
+     "core": "u_lf.u_ve.u_s",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
+    },
+    {
      "core": "u_lf.u_ve.u_m",
      "face": "N",
      "gap": 17.28,
@@ -4576,7 +4154,23 @@
      "short": 3.22
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft2 bit 0 seg 0: 1.0 -> 9.6 um",
+      "ft ft2 bit 1 seg 0: 1.0 -> 9.7 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft2 bit 0 seg 0: 1.0 -> 9.6 um",
+      "ft ft2 bit 1 seg 0: 1.0 -> 9.7 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t10",
@@ -4605,14 +4199,15 @@
      "short": 3.22
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "ot_s81sl_leaf__t11",
    "channels": 59,
    "deficit_um": 14.0,
-   "remaining_um": 9.4,
-   "resolved_um": 4.6,
+   "remaining_um": 14.0,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 9.4,
    "moved": true,
    "flips": [],
@@ -4626,6 +4221,14 @@
      "short": 6.15
     },
     {
+     "core": "u_lf.u_ve.u_s",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
+    },
+    {
      "core": "u_lf.u_vsw",
      "face": "N",
      "gap": 17.28,
@@ -4634,27 +4237,33 @@
      "short": 3.22
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft2 bit 0 seg 4: 351.5 -> 360.2 um",
+      "ft ft2 bit 1 seg 4: 351.8 -> 360.4 um",
+      "ft ft2 bit 2 seg 4: 350.8 -> 359.4 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft2 bit 0 seg 4: 351.5 -> 360.2 um",
+      "ft ft2 bit 1 seg 4: 351.8 -> 360.4 um",
+      "ft ft2 bit 2 seg 4: 350.8 -> 359.4 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t12",
    "channels": 59,
    "deficit_um": 4.6,
-   "remaining_um": 0.0,
-   "resolved_um": 4.6,
-   "repack_only_remaining_um": 0.0,
-   "moved": true,
-   "flips": [],
-   "open": [],
-   "tap_moves": []
-  },
-  {
-   "type": "ot_s81sl_leaf__t13",
-   "channels": 55,
-   "deficit_um": 5.2,
    "remaining_um": 4.6,
-   "resolved_um": 0.6,
-   "repack_only_remaining_um": 4.6,
+   "resolved_um": 0.0,
+   "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
    "open": [
@@ -4667,7 +4276,80 @@
      "short": 4.61
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft6 bit 0 seg 7: 351.5 -> 360.2 um",
+      "ft ft6 bit 1 seg 7: 351.8 -> 360.4 um",
+      "ft ft6 bit 2 seg 7: 350.8 -> 359.4 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft6 bit 0 seg 7: 351.5 -> 360.2 um",
+      "ft ft6 bit 1 seg 7: 351.8 -> 360.4 um",
+      "ft ft6 bit 2 seg 7: 350.8 -> 359.4 um"
+     ]
+    }
+   ],
+   "reverted": true
+  },
+  {
+   "type": "ot_s81sl_leaf__t13",
+   "channels": 55,
+   "deficit_um": 5.2,
+   "remaining_um": 5.2,
+   "resolved_um": 0.0,
+   "repack_only_remaining_um": 4.6,
+   "moved": true,
+   "flips": [],
+   "open": [
+    {
+     "core": "u_lf.u_ve.u_m",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
+    }
+   ],
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t14",
@@ -4701,8 +4383,8 @@
    "type": "ot_s81sl_leaf__t15",
    "channels": 60,
    "deficit_um": 18.4,
-   "remaining_um": 13.8,
-   "resolved_um": 4.6,
+   "remaining_um": 18.4,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 13.8,
    "moved": true,
    "flips": [],
@@ -4714,6 +4396,14 @@
      "need": 23.43,
      "new_gap": 17.28,
      "short": 6.15
+    },
+    {
+     "core": "u_lf.u_ve.u_s",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
     },
     {
      "core": "u_lf.u_vq",
@@ -4732,7 +4422,25 @@
      "short": 3.22
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft2 bit 0 seg 6: 351.8 -> 360.4 um",
+      "ft ft2 bit 1 seg 6: 351.5 -> 360.2 um",
+      "ft ft2 bit 2 seg 6: 351.6 -> 360.2 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft2 bit 0 seg 6: 351.8 -> 360.4 um",
+      "ft ft2 bit 1 seg 6: 351.5 -> 360.2 um",
+      "ft ft2 bit 2 seg 6: 351.6 -> 360.2 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t16",
@@ -4761,6 +4469,7 @@
      "short": 3.22
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -4780,16 +4489,42 @@
      "need": 20.5,
      "new_gap": 17.28,
      "short": 3.22
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t2",
    "channels": 55,
    "deficit_um": 6.8,
-   "remaining_um": 6.2,
-   "resolved_um": 0.6,
+   "remaining_um": 6.8,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 6.2,
    "moved": true,
    "flips": [],
@@ -4801,9 +4536,43 @@
      "need": 23.43,
      "new_gap": 17.28,
      "short": 6.15
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t21",
@@ -4822,16 +4591,42 @@
      "need": 18.6,
      "new_gap": 17.28,
      "short": 1.32
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t22",
    "channels": 55,
    "deficit_um": 6.8,
-   "remaining_um": 6.2,
-   "resolved_um": 0.6,
+   "remaining_um": 6.8,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 6.2,
    "moved": true,
    "flips": [],
@@ -4843,20 +4638,62 @@
      "need": 23.43,
      "new_gap": 17.28,
      "short": 6.15
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t23",
    "channels": 54,
    "deficit_um": 8.4,
-   "remaining_um": 3.2,
-   "resolved_um": 5.2,
+   "remaining_um": 8.4,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 3.2,
    "moved": true,
    "flips": [],
    "open": [
+    {
+     "core": "u_lf.u_ve.u_m",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
+    },
     {
      "core": "u_lf.u_ve.u_m",
      "face": "N",
@@ -4864,9 +4701,43 @@
      "need": 20.5,
      "new_gap": 17.28,
      "short": 3.22
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t24__cl2456157b",
@@ -4887,6 +4758,7 @@
      "short": 1.32
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -4908,6 +4780,7 @@
      "short": 1.32
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -4945,6 +4818,7 @@
      "short": 3.22
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -4982,6 +4856,7 @@
      "short": 3.22
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -5011,14 +4886,15 @@
      "short": 3.22
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "ot_s81sl_leaf__t27",
    "channels": 55,
    "deficit_um": 5.2,
-   "remaining_um": 4.5,
-   "resolved_um": 0.6,
+   "remaining_um": 5.2,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 4.5,
    "moved": true,
    "flips": [],
@@ -5038,9 +4914,43 @@
      "need": 18.6,
      "new_gap": 17.28,
      "short": 1.32
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t28",
@@ -5077,14 +4987,15 @@
      "short": 1.32
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "ot_s81sl_leaf__t3",
    "channels": 56,
    "deficit_um": 11.4,
-   "remaining_um": 6.7,
-   "resolved_um": 4.6,
+   "remaining_um": 11.4,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 6.7,
    "moved": true,
    "flips": [],
@@ -5098,6 +5009,14 @@
      "short": 6.15
     },
     {
+     "core": "u_lf.u_ve.u_m",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
+    },
+    {
      "core": "u_lf.u_vn.u_a",
      "face": "E",
      "gap": 15.1,
@@ -5106,26 +5025,32 @@
      "short": 0.59
     }
    ],
-   "tap_moves": [
+   "rejected": [
     {
-     "tap": "clk_t64",
-     "mapped": [
-      1409.778,
-      137.262
-     ],
-     "to": [
-      1418.418,
-      137.262
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vsw.i_v -> core:u_lf.u_vs >= # um > # um with no internal_stations[] entry (R#-INTER",
+      "ft ft4 bit 0 seg 6: 355.0 -> 363.7 um",
+      "ft ft4 bit 1 seg 6: 354.8 -> 363.4 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vsw.i_v -> core:u_lf.u_vs >= # um > # um with no internal_stations[] entry (R#-INTER",
+      "ft ft4 bit 0 seg 6: 355.0 -> 363.7 um",
+      "ft ft4 bit 1 seg 6: 354.8 -> 363.4 um"
      ]
     }
-   ]
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t32",
    "channels": 55,
    "deficit_um": 6.8,
-   "remaining_um": 6.2,
-   "resolved_um": 0.6,
+   "remaining_um": 6.8,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 6.2,
    "moved": true,
    "flips": [],
@@ -5137,16 +5062,50 @@
      "need": 23.43,
      "new_gap": 17.28,
      "short": 6.15
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t33",
    "channels": 56,
    "deficit_um": 9.8,
-   "remaining_um": 9.2,
-   "resolved_um": 0.6,
+   "remaining_um": 9.8,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 9.2,
    "moved": true,
    "flips": [],
@@ -5174,16 +5133,50 @@
      "need": 18.6,
      "new_gap": 17.28,
      "short": 1.32
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations["
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations["
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t34",
    "channels": 56,
    "deficit_um": 5.2,
-   "remaining_um": 4.6,
-   "resolved_um": 0.6,
+   "remaining_um": 5.2,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 4.6,
    "moved": true,
    "flips": [],
@@ -5195,9 +5188,43 @@
      "need": 13.25,
      "new_gap": 8.64,
      "short": 4.61
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t35",
@@ -5234,6 +5261,7 @@
      "short": 3.22
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -5273,16 +5301,42 @@
      "need": 20.5,
      "new_gap": 17.28,
      "short": 3.22
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t39",
    "channels": 54,
    "deficit_um": 8.4,
-   "remaining_um": 7.8,
-   "resolved_um": 0.6,
+   "remaining_um": 8.4,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 7.8,
    "moved": true,
    "flips": [],
@@ -5302,9 +5356,43 @@
      "need": 20.5,
      "new_gap": 17.28,
      "short": 3.22
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hw_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hw_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hw_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hw_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hw_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hw_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t4",
@@ -5361,6 +5449,7 @@
      "short": 3.22
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -5398,6 +5487,7 @@
      "short": 3.22
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -5435,6 +5525,7 @@
      "short": 3.22
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -5464,6 +5555,7 @@
      "short": 3.22
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -5483,16 +5575,42 @@
      "need": 20.5,
      "new_gap": 17.28,
      "short": 3.22
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t43",
    "channels": 55,
    "deficit_um": 5.2,
-   "remaining_um": 4.6,
-   "resolved_um": 0.6,
+   "remaining_um": 5.2,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 4.6,
    "moved": true,
    "flips": [],
@@ -5504,9 +5622,43 @@
      "need": 13.25,
      "new_gap": 8.64,
      "short": 4.61
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations["
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations["
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t44__clf4ea6d4b",
@@ -5552,8 +5704,8 @@
    "type": "ot_s81sl_leaf__t45",
    "channels": 54,
    "deficit_um": 5.2,
-   "remaining_um": 4.6,
-   "resolved_um": 0.6,
+   "remaining_um": 5.2,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 4.6,
    "moved": true,
    "flips": [],
@@ -5565,16 +5717,50 @@
      "need": 13.25,
      "new_gap": 8.64,
      "short": 4.61
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t46",
    "channels": 55,
    "deficit_um": 15.9,
-   "remaining_um": 15.3,
-   "resolved_um": 0.6,
+   "remaining_um": 15.9,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 15.3,
    "moved": true,
    "flips": [],
@@ -5610,16 +5796,50 @@
      "need": 18.6,
      "new_gap": 17.28,
      "short": 1.32
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations["
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations["
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t47",
    "channels": 55,
    "deficit_um": 5.2,
-   "remaining_um": 4.6,
-   "resolved_um": 0.6,
+   "remaining_um": 5.2,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 4.6,
    "moved": true,
    "flips": [],
@@ -5631,21 +5851,43 @@
      "need": 13.25,
      "new_gap": 8.64,
      "short": 4.61
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": [
+   "rejected": [
     {
-     "tap": "clk_t34",
-     "mapped": [
-      242.4469,
-      415.9931
-     ],
-     "to": [
-      255.4069,
-      415.9931
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations["
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations["
      ]
     }
-   ]
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t50",
@@ -5674,6 +5916,7 @@
      "short": 3.22
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -5700,8 +5943,8 @@
    "type": "ot_s81sl_leaf__t52",
    "channels": 56,
    "deficit_um": 9.8,
-   "remaining_um": 9.2,
-   "resolved_um": 0.6,
+   "remaining_um": 9.8,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 9.2,
    "moved": true,
    "flips": [],
@@ -5729,16 +5972,50 @@
      "need": 18.6,
      "new_gap": 17.28,
      "short": 1.32
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations["
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations["
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t54__cl706d9749",
    "channels": 60,
    "deficit_um": 18.4,
-   "remaining_um": 13.8,
-   "resolved_um": 4.6,
+   "remaining_um": 18.4,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 13.8,
    "moved": true,
    "flips": [],
@@ -5750,6 +6027,14 @@
      "need": 23.43,
      "new_gap": 17.28,
      "short": 6.15
+    },
+    {
+     "core": "u_lf.u_ve.u_s",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
     },
     {
      "core": "u_lf.u_vq",
@@ -5768,7 +6053,25 @@
      "short": 3.22
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft dn_s_2N_L0x4 bit 0 seg 0: 288.9 -> 297.6 um",
+      "ft dn_s_2N_L0x4 bit 1 seg 0: 289.1 -> 297.7 um",
+      "ft dn_s_2N_L0x4 bit 2 seg 0: 288.7 -> 297.4 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft dn_s_2N_L0x4 bit 0 seg 0: 288.9 -> 297.6 um",
+      "ft dn_s_2N_L0x4 bit 1 seg 0: 289.1 -> 297.7 um",
+      "ft dn_s_2N_L0x4 bit 2 seg 0: 288.7 -> 297.4 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t55",
@@ -5797,18 +6100,27 @@
      "short": 3.22
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "ot_s81sl_leaf__t56",
    "channels": 55,
    "deficit_um": 9.7,
-   "remaining_um": 4.4,
-   "resolved_um": 5.2,
+   "remaining_um": 9.7,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 4.4,
    "moved": true,
    "flips": [],
    "open": [
+    {
+     "core": "u_lf.u_ve.u_m",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
+    },
     {
      "core": "u_lf.u_vs",
      "face": "N",
@@ -5816,28 +6128,50 @@
      "need": 21.72,
      "new_gap": 17.28,
      "short": 4.44
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": [
+   "rejected": [
     {
-     "tap": "clk_t37",
-     "mapped": [
-      1237.8082,
-      672.8558
-     ],
-     "to": [
-      1237.8082,
-      664.2158
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal_stations bus:leafdn_i#: a hop > # um",
+      "ft ft9 bit 0 seg 6: 352.7 -> 361.3 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal_stations bus:leafdn_i#: a hop > # um",
+      "ft ft9 bit 0 seg 6: 352.7 -> 361.3 um"
      ]
     }
-   ]
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t57",
    "channels": 55,
    "deficit_um": 15.9,
-   "remaining_um": 15.3,
-   "resolved_um": 0.6,
+   "remaining_um": 15.9,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 15.3,
    "moved": true,
    "flips": [],
@@ -5873,20 +6207,62 @@
      "need": 18.6,
      "new_gap": 17.28,
      "short": 1.32
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations["
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations["
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t58",
    "channels": 54,
    "deficit_um": 8.4,
-   "remaining_um": 3.2,
-   "resolved_um": 5.2,
+   "remaining_um": 8.4,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 3.2,
    "moved": true,
    "flips": [],
    "open": [
+    {
+     "core": "u_lf.u_ve.u_m",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
+    },
     {
      "core": "u_lf.u_ve.u_m",
      "face": "N",
@@ -5894,9 +6270,43 @@
      "need": 20.5,
      "new_gap": 17.28,
      "short": 3.22
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t59",
@@ -5933,14 +6343,15 @@
      "short": 3.22
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "ot_s81sl_leaf__t6",
    "channels": 59,
    "deficit_um": 14.0,
-   "remaining_um": 9.4,
-   "resolved_um": 4.6,
+   "remaining_um": 14.0,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 9.4,
    "moved": true,
    "flips": [],
@@ -5954,6 +6365,14 @@
      "short": 6.15
     },
     {
+     "core": "u_lf.u_ve.u_s",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
+    },
+    {
      "core": "u_lf.u_vsw",
      "face": "N",
      "gap": 17.28,
@@ -5962,7 +6381,25 @@
      "short": 3.22
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft3 bit 0 seg 5: 64.9 -> 73.5 um",
+      "ft ft3 bit 1 seg 5: 65.7 -> 74.3 um",
+      "ft ft3 bit 2 seg 5: 64.5 -> 73.2 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft3 bit 0 seg 5: 64.9 -> 73.5 um",
+      "ft ft3 bit 1 seg 5: 65.7 -> 74.3 um",
+      "ft ft3 bit 2 seg 5: 64.5 -> 73.2 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t60",
@@ -5981,32 +6418,109 @@
      "need": 18.6,
      "new_gap": 17.28,
      "short": 1.32
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t61",
    "channels": 56,
    "deficit_um": 5.2,
-   "remaining_um": 0.0,
-   "resolved_um": 5.2,
+   "remaining_um": 5.2,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 0.0,
    "moved": true,
    "flips": [],
-   "open": [],
-   "tap_moves": []
+   "open": [
+    {
+     "core": "u_lf.u_ve.u_s",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
+    }
+   ],
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft1 bit 0 seg 6: 276.4 -> 285.1 um",
+      "ft ft1 bit 1 seg 6: 276.7 -> 285.4 um",
+      "ft ft1 bit 2 seg 6: 275.7 -> 284.4 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft1 bit 0 seg 6: 276.4 -> 285.1 um",
+      "ft ft1 bit 1 seg 6: 276.7 -> 285.4 um",
+      "ft ft1 bit 2 seg 6: 275.7 -> 284.4 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t62",
    "channels": 54,
    "deficit_um": 8.4,
-   "remaining_um": 3.2,
-   "resolved_um": 5.2,
+   "remaining_um": 8.4,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 3.2,
    "moved": true,
    "flips": [],
    "open": [
+    {
+     "core": "u_lf.u_ve.u_m",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
+    },
     {
      "core": "u_lf.u_ve.u_m",
      "face": "N",
@@ -6014,20 +6528,62 @@
      "need": 20.5,
      "new_gap": 17.28,
      "short": 3.22
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hw_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t65",
    "channels": 55,
    "deficit_um": 9.7,
-   "remaining_um": 4.4,
-   "resolved_um": 5.2,
+   "remaining_um": 9.7,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 4.4,
    "moved": true,
    "flips": [],
    "open": [
+    {
+     "core": "u_lf.u_ve.u_m",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
+    },
     {
      "core": "u_lf.u_vs",
      "face": "N",
@@ -6035,28 +6591,50 @@
      "need": 21.72,
      "new_gap": 17.28,
      "short": 4.44
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": [
+   "rejected": [
     {
-     "tap": "clk_t36",
-     "mapped": [
-      1237.8082,
-      672.8558
-     ],
-     "to": [
-      1237.8082,
-      664.2158
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal_stations bus:leafdn_i#: a hop > # um",
+      "ft ft4 bit 432 seg 6: 212.6 -> 221.2 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal_stations bus:leafdn_i#: a hop > # um",
+      "ft ft4 bit 432 seg 6: 212.6 -> 221.2 um"
      ]
     }
-   ]
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t66",
    "channels": 55,
    "deficit_um": 15.9,
-   "remaining_um": 15.3,
-   "resolved_um": 0.6,
+   "remaining_um": 15.9,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 15.3,
    "moved": true,
    "flips": [],
@@ -6092,20 +6670,62 @@
      "need": 18.6,
      "new_gap": 17.28,
      "short": 1.32
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations["
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations["
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t67",
    "channels": 54,
    "deficit_um": 8.4,
-   "remaining_um": 3.8,
-   "resolved_um": 4.6,
+   "remaining_um": 8.4,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 3.8,
    "moved": true,
    "flips": [],
    "open": [
+    {
+     "core": "u_lf.u_ve.u_m",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
+    },
     {
      "core": "u_lf.u_ve.u_m",
      "face": "N",
@@ -6131,14 +6751,32 @@
      "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.n_go -> bus:leafdn_i# >= # um > # um with no internal_stations[] entry (R#-IN",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.n_pre -> bus:leafdn_i# >= # um > # um with no internal_stations[] entry (R#-I",
+      "ft ft5 bit 0 seg 5: 336.7 -> 345.4 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.n_go -> bus:leafdn_i# >= # um > # um with no internal_stations[] entry (R#-IN",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.n_pre -> bus:leafdn_i# >= # um > # um with no internal_stations[] entry (R#-I",
+      "ft ft5 bit 0 seg 5: 336.7 -> 345.4 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t68",
    "channels": 56,
    "deficit_um": 1.9,
-   "remaining_um": 1.3,
-   "resolved_um": 0.6,
+   "remaining_um": 1.9,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 1.3,
    "moved": true,
    "flips": [],
@@ -6150,9 +6788,35 @@
      "need": 18.6,
      "new_gap": 17.28,
      "short": 1.32
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "ft ft3 bit 0 seg 6: 207.2 -> 207.3 um",
+      "ft ft3 bit 1 seg 6: 206.9 -> 207.0 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_d -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "ft ft3 bit 0 seg 6: 207.2 -> 207.3 um",
+      "ft ft3 bit 1 seg 6: 206.9 -> 207.0 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t7",
@@ -6178,8 +6842,8 @@
    "type": "ot_s81sl_leaf__t70",
    "channels": 60,
    "deficit_um": 10.8,
-   "remaining_um": 6.2,
-   "resolved_um": 4.6,
+   "remaining_um": 10.8,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 6.2,
    "moved": true,
    "flips": [],
@@ -6191,16 +6855,40 @@
      "need": 23.43,
      "new_gap": 17.28,
      "short": 6.15
+    },
+    {
+     "core": "u_lf.u_ve.u_s",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft4 bit 0 seg 6: 354.4 -> 363.0 um",
+      "ft ft4 bit 1 seg 6: 354.2 -> 362.8 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft4 bit 0 seg 6: 354.4 -> 363.0 um",
+      "ft ft4 bit 1 seg 6: 354.2 -> 362.8 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t71",
    "channels": 55,
    "deficit_um": 5.2,
-   "remaining_um": 4.5,
-   "resolved_um": 0.6,
+   "remaining_um": 5.2,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 4.5,
    "moved": true,
    "flips": [],
@@ -6220,16 +6908,50 @@
      "need": 18.6,
      "new_gap": 17.28,
      "short": 1.32
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t73",
    "channels": 55,
    "deficit_um": 6.8,
-   "remaining_um": 6.2,
-   "resolved_um": 0.6,
+   "remaining_um": 6.8,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 6.2,
    "moved": true,
    "flips": [],
@@ -6241,9 +6963,43 @@
      "need": 23.43,
      "new_gap": 17.28,
      "short": 6.15
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t74",
@@ -6272,14 +7028,15 @@
      "short": 3.22
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "ot_s81sl_leaf__t75",
    "channels": 56,
    "deficit_um": 5.2,
-   "remaining_um": 4.6,
-   "resolved_um": 0.6,
+   "remaining_um": 5.2,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 4.6,
    "moved": true,
    "flips": [],
@@ -6291,16 +7048,50 @@
      "need": 13.25,
      "new_gap": 8.64,
      "short": 4.61
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_a.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t8",
    "channels": 54,
    "deficit_um": 20.4,
-   "remaining_um": 15.1,
-   "resolved_um": 5.2,
+   "remaining_um": 20.4,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 15.1,
    "moved": true,
    "flips": [],
@@ -6312,6 +7103,14 @@
      "need": 23.43,
      "new_gap": 17.28,
      "short": 6.15
+    },
+    {
+     "core": "u_lf.u_ve.u_m",
+     "face": "E",
+     "gap": 8.64,
+     "need": 13.25,
+     "new_gap": 8.64,
+     "short": 4.61
     },
     {
      "core": "u_lf.u_vn.u_a",
@@ -6336,16 +7135,50 @@
      "need": 18.6,
      "new_gap": 17.28,
      "short": 1.32
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal_stations bus:leafdn_i#: a hop > # um",
+      "ft ft2 bit 0 seg 6: 140.9 -> 158.2 um",
+      "ft ft2 bit 1 seg 6: 141.0 -> 158.3 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal_stations bus:leafdn_i#: a hop > # um",
+      "ft ft2 bit 0 seg 6: 140.9 -> 158.2 um",
+      "ft ft2 bit 1 seg 6: 141.0 -> 158.3 um"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "ot_s81sl_leaf__t9",
    "channels": 55,
    "deficit_um": 6.8,
-   "remaining_um": 6.2,
-   "resolved_um": 0.6,
+   "remaining_um": 6.8,
+   "resolved_um": 0.0,
    "repack_only_remaining_um": 6.2,
    "moved": true,
    "flips": [],
@@ -6357,15 +7190,49 @@
      "need": 23.43,
      "new_gap": 17.28,
      "short": 6.15
+    },
+    {
+     "core": "u_lf.u_vn.u_a",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.69,
+     "new_gap": 15.1,
+     "short": 0.59
+    },
+    {
+     "core": "u_lf.u_vn.u_b",
+     "face": "E",
+     "gap": 15.1,
+     "need": 15.12,
+     "new_gap": 15.1,
+     "short": 0.02
     }
    ],
-   "tap_moves": []
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hq_v -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_hf -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[",
+      "complete: [G#C] [internal_station] type ot_s#sl_leaf__t#: internal core bundle u_lf.u_vn.u_b.hr_j -> core:u_lf.u_vp.g_ln[#].u_l >= # um > # um with no internal_stations[]"
+     ]
+    }
+   ],
+   "reverted": true
   },
   {
    "type": "svc_hi_dsdv_svc_pvso_entry__t1",
    "channels": 161,
    "deficit_um": 75.4,
-   "remaining_um": 13.3,
+   "remaining_um": 13.4,
    "resolved_um": 62.1,
    "repack_only_remaining_um": 13.3,
    "moved": true,
@@ -6412,6 +7279,7 @@
      "short": 2.67
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -6457,20 +7325,29 @@
      "short": 2.67
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "svc_hi_dsdv_svc_rs__t1",
    "channels": 161,
    "deficit_um": 75.4,
-   "remaining_um": 13.3,
-   "resolved_um": 62.1,
+   "remaining_um": 16.0,
+   "resolved_um": 59.4,
    "repack_only_remaining_um": 13.3,
    "moved": true,
    "flips": [],
    "open": [
     {
      "core": "u_rsv.u_sx.g_r[0].g_h[1].u_hrow",
+     "face": "E",
+     "gap": 34.56,
+     "need": 37.23,
+     "new_gap": 34.56,
+     "short": 2.67
+    },
+    {
+     "core": "u_rsv.u_sx.g_r[1].g_h[0].u_hrow",
      "face": "E",
      "gap": 34.56,
      "need": 37.23,
@@ -6510,6 +7387,25 @@
      "short": 2.67
     }
    ],
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft2 bit 0 seg 12: 33.9 -> 42.5 um",
+      "ft ft2 bit 1 seg 12: 33.5 -> 42.2 um",
+      "ft ft2 bit 2 seg 12: 32.6 -> 41.3 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft2 bit 0 seg 12: 33.9 -> 42.5 um",
+      "ft ft2 bit 1 seg 12: 33.5 -> 42.2 um",
+      "ft ft2 bit 2 seg 12: 32.6 -> 41.3 um"
+     ]
+    }
+   ],
+   "variant": "y",
    "tap_moves": []
   },
   {
@@ -6555,6 +7451,7 @@
      "short": 2.67
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -6600,6 +7497,7 @@
      "short": 2.67
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -6645,6 +7543,7 @@
      "short": 2.67
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -6690,6 +7589,7 @@
      "short": 2.67
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -6751,20 +7651,37 @@
      "short": 2.67
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
    "type": "svc_lo_dsdv_svc_rs__t1",
    "channels": 161,
    "deficit_um": 75.4,
-   "remaining_um": 10.7,
-   "resolved_um": 64.7,
+   "remaining_um": 16.0,
+   "resolved_um": 59.4,
    "repack_only_remaining_um": 10.7,
    "moved": true,
    "flips": [],
    "open": [
     {
      "core": "u_rsv.u_sx.g_r[0].g_h[1].u_hrow",
+     "face": "E",
+     "gap": 34.56,
+     "need": 37.23,
+     "new_gap": 34.56,
+     "short": 2.67
+    },
+    {
+     "core": "u_rsv.u_sx.g_r[1].g_h[0].u_hrow",
+     "face": "E",
+     "gap": 34.56,
+     "need": 37.23,
+     "new_gap": 34.56,
+     "short": 2.67
+    },
+    {
+     "core": "u_rsv.u_sx.g_r[1].g_h[1].u_hrow",
      "face": "E",
      "gap": 34.56,
      "need": 37.23,
@@ -6796,6 +7713,25 @@
      "short": 2.67
     }
    ],
+   "rejected": [
+    {
+     "variant": "xy+flips",
+     "why": [
+      "ft ft0 bit 96 seg 5: 267.3 -> 267.6 um",
+      "ft ft0 bit 98 seg 5: 280.1 -> 281.2 um",
+      "ft ft0 bit 100 seg 5: 266.2 -> 268.2 um"
+     ]
+    },
+    {
+     "variant": "x+flips",
+     "why": [
+      "ft ft0 bit 96 seg 5: 267.3 -> 267.6 um",
+      "ft ft0 bit 98 seg 5: 280.1 -> 281.2 um",
+      "ft ft0 bit 100 seg 5: 266.2 -> 268.2 um"
+     ]
+    }
+   ],
+   "variant": "y",
    "tap_moves": []
   },
   {
@@ -6841,6 +7777,7 @@
      "short": 2.67
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -6886,6 +7823,7 @@
      "short": 2.67
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -6931,6 +7869,7 @@
      "short": 2.67
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -6976,6 +7915,7 @@
      "short": 2.67
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -7021,6 +7961,7 @@
      "short": 2.67
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -7082,6 +8023,7 @@
      "short": 2.67
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   },
   {
@@ -7127,18 +8069,19 @@
      "short": 2.67
     }
    ],
+   "variant": "xy",
    "tap_moves": []
   }
  ],
  "reverted": [],
  "totals": {
   "types_with_deficit": 132,
-  "types_moved": 125,
+  "types_moved": 71,
   "deficit_um": 4953.3,
-  "resolved_um": 2367.9,
-  "remaining_um": 2585.4,
-  "fully_resolved": 18,
-  "flips": 18,
+  "resolved_um": 2048.6,
+  "remaining_um": 2905.3,
+  "fully_resolved": 9,
+  "flips": 16,
   "repack_only_remaining_um": 2725.2
  }
 }

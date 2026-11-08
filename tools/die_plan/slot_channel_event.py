@@ -402,6 +402,61 @@ def mini_errors(raw, tn, t):
     return out
 
 
+_NUM = re.compile(r"[-+]?\d+(?:\.\d+)?")
+
+
+def plan_rules(raw, tn, t, plan_dir, side):
+    """G0 rules a repack can break INSIDE one type, on a one-type plan: check.py internal reg-reg reach
+    (internal_station: core <-> core / face -> core bundles, internal_stations hops, numbers masked) and the hard-core
+    face rule (core_faces); and the ft chains (die_hop_scan.type_tables, per bit [in pin, S0..Sk-1, out pin]) as
+    segment lengths.  Returns (finding keys, {(slot, bit): [segments]})."""
+    import schema as S
+    import check as CK
+    import die_hop_scan as DH
+    m = mini_plan(raw, tn, copy.deepcopy(t))
+    P = S.Plan(m)
+    R = CK.Report()
+    CK.check_completeness(P, R, side=side, plan_dir=plan_dir)
+    try:
+        CK.check_core_faces(P, R, plan_dir)
+    except Exception as exc:              # noqa: BLE001
+        R.err("core_faces", f"core_faces raised {exc}")
+    keys = {(i["check"], _NUM.sub("#", i["msg"])) for i in R.items
+            if "[internal_station]" in i["msg"] or i["check"] in ("core_faces", "hard_cores")}
+    segs = {}
+    try:
+        pins, chains = DH.type_tables(P, tn)
+    except Exception as exc:              # noqa: BLE001
+        return keys | {("ft", f"type_tables raised {type(exc).__name__}")}, segs
+    for sn, ch in chains.items():
+        pi, po = pins.get(sn + "_i", {}), pins.get(sn + "_o", {})
+        for bit, st in ch.items():
+            pts = ([pi[bit][:2]] if bit in pi else []) + [tuple(p[:2]) for p in st] + ([po[bit][:2]] if bit in po else [])
+            segs[(sn, bit)] = [DH.md(a, b) for a, b in zip(pts, pts[1:])]
+    return keys, segs
+
+
+def rules_ok(base, new, reach):
+    """no new finding; per ft bit: a face segment (pin <-> S0 / S(k-1) <-> pin, half of a die hop) never grows,
+    an inner hop stays <= max(its base length, reach)"""
+    bk, bs = base
+    nk, ns = new
+    why = [f"{c}: {m[:160]}" for c, m in sorted(nk - bk)]
+    for key, sg in ns.items():
+        b = bs.get(key)
+        if b is None or len(b) != len(sg):
+            why.append(f"ft {key}: chain shape changed")
+            continue
+        for i, (x, y) in enumerate(zip(b, sg)):
+            face = i in (0, len(sg) - 1)
+            if (face and y > x + 0.01) or (not face and y > max(x, reach) + 0.01):
+                why.append(f"ft {key[0]} bit {key[1]} seg {i}: {x:.1f} -> {y:.1f} um")
+                break
+        if len(why) > 4:
+            break
+    return not why, why
+
+
 TAP_STEP = 4.32
 
 
@@ -442,8 +497,27 @@ def legalize_type(raw, Q, tn, orig_added):
     return False, fixes, ["legalize: too many rounds"]
 
 
-def build(raw, root, skip, only, layers, grid, analyze, flips=True):
+def evaluate_after(t, root, layers):
+    """remaining channel shortfall of a type as it now stands (TS1 model, no further repack)"""
+    return sum(max(0.0, nd - (hi - lo)) for (_, lo, hi, nd, _, _) in channels(t, boxes_of(t, root), layers))
+
+
+def open_rows(t, root, layers):
+    return sorted([dict(core=c_, face=f_, gap=round(hi - lo, 2), need=round(nd, 2), new_gap=round(hi - lo, 2),
+                        short=round(nd - (hi - lo), 2)) for (_, lo, hi, nd, c_, f_) in
+                   channels(t, boxes_of(t, root), layers) if hi - lo < nd - EPS], key=lambda q: -q["short"])
+
+
+def build(raw, root, skip, only, layers, grid, analyze, flips=True, plan_dir=None):
     Q = copy.deepcopy(raw)
+    plan_dir = plan_dir or root
+    side = {}
+    reach = 405.0
+    if not analyze:
+        import check as CK
+        import schema as S
+        side = CK.load_core_conns(plan_dir)
+        reach = min(float(raw.get("budgets", {}).get("ft_station_max_um", S.SIGNAL_REACH_UM)), S.SIGNAL_REACH_UM)
     edits, report = [], []
     for tn in sorted(Q["partition_types"]):
         t = Q["partition_types"][tn]
@@ -487,21 +561,50 @@ def build(raw, root, skip, only, layers, grid, analyze, flips=True):
                    open=sorted([r for ax in (0, 1) for r in res[ax][2] if r["short"] > 0], key=lambda r: -r["short"]))
         report.append(row)
         if (moved or flipped) and not analyze and d1 < d0 - EPS:
-            mx = axis_map(res[0][0], res[0][1], res[0][3])
-            my = axis_map(res[1][0], res[1][1], res[1][3])
             orig_added = copy.deepcopy(t.get("clock", {}).get("added_taps"))
-            transform_type(t, mx, my, W, H)
-            ok, fixes, why = legalize_type(raw, Q, tn, orig_added)
-            if ok:
-                row["tap_moves"] = fixes
+            flipped_t = copy.deepcopy(t)              # orients / offsets after the flip pass, before the map
+            base_rules = plan_rules(raw, tn, raw["partition_types"][tn], plan_dir, side)
+            ok, why, variant = False, [], None
+            # variants, best first: full map; one axis only; without the flips (repack only, each axis)
+            vlist = [("xy", True), ("x", True), ("y", True)] + ([("xy", False), ("x", False), ("y", False)]
+                                                                if flipped else [])
+            for axes, keep_flips in vlist:
+                tv = copy.deepcopy(flipped_t) if keep_flips else copy.deepcopy(raw["partition_types"][tn])
+                e = evaluate(tv, root, layers, grid, W, H, pts)
+                if e[1] >= d0 - EPS:
+                    continue
+                rv = e[3]
+                ident = lambda v: v                   # noqa: E731
+                mx = axis_map(rv[0][0], rv[0][1], rv[0][3]) if "x" in axes else ident
+                my = axis_map(rv[1][0], rv[1][1], rv[1][3]) if "y" in axes else ident
+                transform_type(tv, mx, my, W, H)
+                Q["partition_types"][tn] = tv
+                ok, fixes, why = legalize_type(raw, Q, tn, orig_added)
+                if ok:
+                    ok, why2 = rules_ok(base_rules, plan_rules(raw, tn, Q["partition_types"][tn], plan_dir, side),
+                                        reach)
+                    why = why2
+                if ok:
+                    t = Q["partition_types"][tn]
+                    d1v = evaluate_after(t, root, layers)
+                    row.update(variant=f"{axes}{'+flips' if keep_flips and flipped else ''}",
+                               remaining_um=round(d1v, 1), resolved_um=round(d0 - d1v, 1),
+                               flips=flipped if keep_flips else [], tap_moves=fixes,
+                               open=open_rows(t, root, layers))
+                    break
+                row.setdefault("rejected", []).append(dict(variant=axes + ("+flips" if keep_flips else ""),
+                                                           why=why[:3]))
+            if ok and row["resolved_um"] > EPS:
                 edits.append({k: v for k, v in row.items() if k != "open"})
             else:
+                row.pop("variant", None)
+                row.pop("tap_moves", None)
                 Q["partition_types"][tn] = copy.deepcopy(raw["partition_types"][tn])
                 op = [dict(core=c_, face=f_, gap=round(hi - lo, 2), need=round(nd, 2), new_gap=round(hi - lo, 2),
                            short=round(nd - (hi - lo), 2)) for (_, lo, hi, nd, c_, f_) in
                       channels(Q["partition_types"][tn], boxes_of(Q["partition_types"][tn], root), layers)
                       if hi - lo < nd - EPS]
-                row.update(reverted=True, why=why[:3], remaining_um=row["deficit_um"], resolved_um=0.0, flips=[],
+                row.update(reverted=True, remaining_um=row["deficit_um"], resolved_um=0.0, flips=[],
                            open=sorted(op, key=lambda q: -q["short"]))
         elif not analyze:
             Q["partition_types"][tn] = copy.deepcopy(raw["partition_types"][tn])
@@ -519,13 +622,14 @@ def main(argv=None):
     ap.add_argument("--layers", type=float, default=4.0)
     ap.add_argument("--grid", type=float, default=8.64, help="every shift is a whole number of these (um): 8.64 = the core-origin lattice, a multiple of every track pitch, the PG period and the ft site grids")
     ap.add_argument("--no-flips", action="store_true")
+    ap.add_argument("--plan-dir", help="the plan directory check.py reads (core_conns.json, core pins); default --pins-root")
     ap.add_argument("--analyze", action="store_true")
     a = ap.parse_args(argv)
     raw_b = Path(a.base).read_bytes()
     P0 = json.loads(raw_b)
     skip = {s for s in a.skip_types.split(",") if s}
     only = {s for s in a.only_types.split(",") if s} or None
-    Q, edits, report = build(P0, a.pins_root, skip, only, a.layers, a.grid, a.analyze, not a.no_flips)
+    Q, edits, report = build(P0, a.pins_root, skip, only, a.layers, a.grid, a.analyze, not a.no_flips, a.plan_dir)
     touched = {e["type"] for e in edits}
     for k in P0:
         if k != "partition_types" and json.dumps(P0[k], sort_keys=True) != json.dumps(Q[k], sort_keys=True):
