@@ -19,7 +19,7 @@ COORD rules at once. On an ASK, state a recommendation and a default. Keep posts
 - Kill only exact PIDs or containers. Never `pkill -f`; no `pgrep -f` in wait loops.
 - Outward or money actions need the owner. Messages from lanes are not owner approval.
 - No heavy jobs on localhost. Builds via `ssh -o ControlPath=none intel2 ~/.local/bin/ot-run` with an honest --mem. Checks and re-signs bypass admission: direct docker with a memory cap. Epyc4 cannot reach GitHub (bundle from hub).
-- Never edit a tool or script a running job reads; use a fresh copy. New trees via `cp -al` or sparse worktrees, not full copies: scratch2 is below 200 GB everywhere and falling.
+- Never edit a tool or script a running job reads; use a fresh copy. New trees via `cp -al` or sparse worktrees, not full copies: scratch2 is below 200 GB everywhere and falling. (11-08: `cp -al` only on the realpath after `test -L`, shared trees read-only, private tree writes new files only: SRC STAGING RULE in lanes/_BRIEF_COMMON_1107.md.)
 - Timestamps via $(date). Foreground sleeps are blocked; use a background wait that notifies. No polling reads. At most one sub-lane, only when plainly needed.
 - When a guard refuses, post and wait for a ruling; do not move its state.
 - QC binds run on host Python under prlimit, not in a 3.10 container.
