@@ -1,0 +1,6 @@
+BM_TAIL zero_loads=46 tail_ones=380
+BM_TAIL checks=3754 frames=125 errors=0
+- /srv/opentallas-scratch2/claude/codex-s81-rck-1113/bm_tail_bundle/tb_zero.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.266 s; speed 12.559 us/s
+- Verilator: cpu 0.266 s on 1 threads; allocated 7 MB

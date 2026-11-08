@@ -22,7 +22,34 @@
   "rxb_read_register_external_delta": 0,
   "decoder_q_rck_delta": 1,
   "codeword_beat_period": 10,
-  "beats_per_cycle": 1
+  "beats_per_cycle": 1,
+  "output_rck_delta": {
+   "q_v": 1,
+   "q_d": 1,
+   "q_first": 1,
+   "q_unc": 1,
+   "q_nerr": 1,
+   "q_seq": 1,
+   "n_corr": 1,
+   "n_unc": 1,
+   "lock": 0,
+   "n_relock": 0
+  },
+  "rxs_output_rck_delta": {
+   "x_q": 0,
+   "k_v": 1,
+   "k_lo": 1,
+   "k_L": 1,
+   "k_any": 1,
+   "lock": 0,
+   "n_relock": 0
+  },
+  "rxb_path_delta": {
+   "from_x_q_to_q": 1,
+   "from_k_to_q": 0,
+   "read_register_retiming": 0,
+   "composition_note": "Parallel data/correction paths both align at +1 global rck; do not sum into +2."
+  }
  },
  "reset64": "unchanged",
  "adoption": "private draft; compiler dates and parent plan event required"
