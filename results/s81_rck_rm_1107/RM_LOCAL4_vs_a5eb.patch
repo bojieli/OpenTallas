@@ -1,12 +1,22 @@
-diff --git a/rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv b/rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv
-index b594b2f67c..a7973f7287 100644
 --- a/rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv
 +++ b/rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv
-@@ -143,13 +143,77 @@ module ot_s81_rate_match (
+@@ -142,14 +142,88 @@
+     reg  [3:0] wp, rp, wp_g, rp_g;
      reg  [3:0] rp_g1, rp_g2, wp_g1, wp_g2;
      function automatic [3:0] g2b(input [3:0] g); begin g2b = {g[3], g[3]^g[2], g[3]^g[2]^g[1], g[3]^g[2]^g[1]^g[0]}; end endfunction
-     always @(posedge wclk or negedge wrst_n) if (!wrst_n) begin rp_g1 <= 0; rp_g2 <= 0; end else begin rp_g1 <= rp_g; rp_g2 <= rp_g1; end
+-    always @(posedge wclk or negedge wrst_n) if (!wrst_n) begin rp_g1 <= 0; rp_g2 <= 0; end else begin rp_g1 <= rp_g; rp_g2 <= rp_g1; end
 -    always @(posedge rclk or negedge rrst_n) if (!rrst_n) begin wp_g1 <= 0; wp_g2 <= 0; end else begin wp_g1 <= wp_g; wp_g2 <= wp_g1; end
++`ifdef OT_S81_RM_LOCAL4
++    // Free credit follows actual r_m capture, not the preceding read select.
++    // +1 rclk CONTROL-publication edge, no additional data-output stage.
++    reg [3:0] rp_g_pub;
++    always @(posedge rclk or negedge rrst_n)
++        if (!rrst_n) rp_g_pub <= 4'd0; else rp_g_pub <= rp_g;
++    wire [3:0] rp_to_write = rp_g_pub;
++`else
++    wire [3:0] rp_to_write = rp_g;
++`endif
++    always @(posedge wclk or negedge wrst_n) if (!wrst_n) begin rp_g1 <= 0; rp_g2 <= 0; end else begin rp_g1 <= rp_to_write; rp_g2 <= rp_g1; end
 +`ifdef OT_S81_RM_LOCAL4
 +`ifndef OT_S81_RM_STAGED
 +    initial $error("RM_LOCAL4 requires the explicit RM_STAGED base profile");
@@ -81,7 +91,7 @@ index b594b2f67c..a7973f7287 100644
      // S81-RCK-4 11-07 OT_S81_RM_STAGED: rate matcher form for the 2.9-mm serdes types (class: one enable/select across
      // 4096 mem bits, one reset to 512 flops; TT rp->r_d -300..-872, rp_g2->mem -99..-239).
      //  write: push decided as before; data + per-slice one-hot write enables take one wclk stage, mem written one wclk
-@@ -188,6 +252,7 @@ module ot_s81_rate_match (
+@@ -188,6 +262,7 @@
          r_d <= r_m;
  `endif
      end

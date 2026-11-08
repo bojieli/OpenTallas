@@ -1,0 +1,6 @@
+RM_CREDIT_RESULT checks=1958 earlyfree_mutant=940 earlyfree_data=2
+RM_LOCAL4_RESULT checks=3895 errors=0 epochs=6 sel_mutant=927 data_mutant=925 pub_mutant=925 relay_mutant=1381
+- tb.sv:91: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.128 s; speed 15.962 us/s
+- Verilator: cpu 0.128 s on 1 threads; allocated 10 MB

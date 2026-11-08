@@ -1,0 +1,25 @@
+{
+  "note": "CONSERVATIVE summedclip area, includeswire+viaenclosures and doublecountsoverlap; upperboundnotunion/extractedcapacity. ActualCTS PGunchanged; no signal demand or PGcontinuity check. M1/M2 rails omitted.",
+  "reserved_fraction_upper_bounds": {
+    "write_capture": {
+      "M5": 0.063555,
+      "M6": 0.142283,
+      "M7": 0.071619
+    },
+    "read_core": {
+      "M5": 0.063926,
+      "M6": 0.140153,
+      "M7": 0.072488
+    },
+    "read_relay1": {
+      "M5": 0.066554,
+      "M6": 0.139056,
+      "M7": 0.070433
+    },
+    "read_relay2": {
+      "M5": 0.065665,
+      "M6": 0.139257,
+      "M7": 0.066336
+    }
+  }
+}

@@ -10,7 +10,13 @@ module rm_badrelay (
     reg  [3:0] wp, rp, wp_g, rp_g;
     reg  [3:0] rp_g1, rp_g2, wp_g1, wp_g2;
     function automatic [3:0] g2b(input [3:0] g); begin g2b = {g[3], g[3]^g[2], g[3]^g[2]^g[1], g[3]^g[2]^g[1]^g[0]}; end endfunction
-    always @(posedge wclk or negedge wrst_n) if (!wrst_n) begin rp_g1 <= 0; rp_g2 <= 0; end else begin rp_g1 <= rp_g; rp_g2 <= rp_g1; end
+    // Free credit follows actual r_m capture, not the preceding read select.
+    // +1 rclk CONTROL-publication edge, no additional data-output stage.
+    reg [3:0] rp_g_pub;
+    always @(posedge rclk or negedge rrst_n)
+        if (!rrst_n) rp_g_pub <= 4'd0; else rp_g_pub <= rp_g;
+    wire [3:0] rp_to_write = rp_g_pub;
+    always @(posedge wclk or negedge wrst_n) if (!wrst_n) begin rp_g1 <= 0; rp_g2 <= 0; end else begin rp_g1 <= rp_to_write; rp_g2 <= rp_g1; end
     // Publication follows the actual staged memory commit, not the pending
     // write. This adds one wclk producer PIN cycle versus RM_STAGED.
     reg [3:0] wp_g_pub;

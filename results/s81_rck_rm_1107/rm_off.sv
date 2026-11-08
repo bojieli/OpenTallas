@@ -10,7 +10,8 @@ module rm_off (
     reg  [3:0] wp, rp, wp_g, rp_g;
     reg  [3:0] rp_g1, rp_g2, wp_g1, wp_g2;
     function automatic [3:0] g2b(input [3:0] g); begin g2b = {g[3], g[3]^g[2], g[3]^g[2]^g[1], g[3]^g[2]^g[1]^g[0]}; end endfunction
-    always @(posedge wclk or negedge wrst_n) if (!wrst_n) begin rp_g1 <= 0; rp_g2 <= 0; end else begin rp_g1 <= rp_g; rp_g2 <= rp_g1; end
+    wire [3:0] rp_to_write = rp_g;
+    always @(posedge wclk or negedge wrst_n) if (!wrst_n) begin rp_g1 <= 0; rp_g2 <= 0; end else begin rp_g1 <= rp_to_write; rp_g2 <= rp_g1; end
     wire [3:0] wp_to_read = wp_g;
     always @(posedge rclk or negedge rrst_n) if (!rrst_n) begin wp_g1 <= 0; wp_g2 <= 0; end else begin wp_g1 <= wp_to_read; wp_g2 <= wp_g1; end
     wire [3:0] fill_w = wp - g2b(rp_g2);
