@@ -56,6 +56,13 @@ class LefOnly(unittest.TestCase):
         self.assertFalse(C.lef_only({"problems": [f"view file {m}_ff.lib not found"]}, m))
         self.assertFalse(C.lef_only({"problems": []}, m))
 
+    def test_needs_parent_verdict_only(self):
+        v = "signoff.json verdict 'LOCAL_PASS_NEEDS_PARENT' is not SIGNED"
+        self.assertTrue(C.needs_parent_only({"problems": [v]}))
+        self.assertFalse(C.needs_parent_only({"problems": [v, "stale sign-off record"]}))
+        self.assertFalse(C.needs_parent_only({"problems": ["signoff.json verdict 'FAIL' is not SIGNED"]}))
+        self.assertFalse(C.needs_parent_only(None))
+
 
 class Parse(unittest.TestCase):
     def test_one_line_and_indented(self):
