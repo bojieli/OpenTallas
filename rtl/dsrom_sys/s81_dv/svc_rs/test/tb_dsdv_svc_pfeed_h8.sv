@@ -15,7 +15,7 @@ module tb_dsdv_svc_pfeed_h8;
     localparam integer D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
     reg clk = 0; always #0.5 clk = ~clk;
     reg rst_n = 0;
-    integer T = 46, P0 = 40, cyc = 0;
+    integer T = 46, P0 = 40, cyc = 0, PSTRIDE = 1, trace_edges = 0;
     reg ej_v = 0, eq_v = 0, ekv_v = 0, ep_v = 0, sc_cr = 0, pv_cr = 0;
     wire ej_ready, eq_ready, kv_ready, ep_ready;
     wire sc_v; wire [15:0] sc_row; wire [NL-1:0] sc_m; wire [NL*H*32-1:0] sc_y; wire [NL*H-1:0] sc_f;
@@ -36,6 +36,8 @@ module tb_dsdv_svc_pfeed_h8;
     initial begin
         if ($value$plusargs("t=%d", T)) ;
         if ($value$plusargs("p0=%d", P0)) ;
+        if ($value$plusargs("pstride=%d", PSTRIDE)) ;
+        if ($value$plusargs("trace=%d", trace_edges)) ;
         nbeat = (T + 3) / 4; p_left = (T + R - 1) / R;
     end
     always @(posedge clk) begin
@@ -51,20 +53,23 @@ module tb_dsdv_svc_pfeed_h8;
         end
         if (ej_v && !ej_ready || eq_v && !eq_ready || ekv_v && !kv_ready) bad_rdy = bad_rdy + 1;
         // static p feed: one step a cycle from P0
-        if (rc >= P0 && p_left > 0) begin
+        if (rc >= P0 && p_left > 0 && ((rc-P0) % PSTRIDE == 0)) begin
             ep_v <= 1; ep_w <= {2*TD*16{1'b0}} | 1024'(rc);
             p_left = p_left - ((p_left >= 2) ? 2 : p_left);
         end
         if (ep_v && !ep_ready) begin refused = refused + 1; if (first_ref < 0) first_ref = rc - 1; end
-        if (sc_v) last_sc = rc;
+        if (sc_v) begin last_sc = rc; if (trace_edges) $display("SCEDGE T=%0d rc=%0d row=%0d",T,rc,sc_row); end
         // owner P.V drain: 5 words a beat, credit back with the last word
-        if (pv_v) begin pvq = pvq + 1; pv_n = pv_n + 1; end
+        if (pv_v) begin
+            if (trace_edges) $display("PVEDGE T=%0d rc=%0d c=%0d",T,rc,pv_c);
+            pvq = pvq + 1; pv_n = pv_n + 1;
+        end
         if (pvq > 0) begin
             if (p_i == 4) begin p_i = 0; pvq = pvq - 1; pv_cr <= 1; last_pv = rc; end else p_i = p_i + 1;
         end
         if (rc == 4000) begin
-            $display("PFEED T=%0d p0=%0d refused=%0d first_refused_rc=%0d last_score_rc=%0d pv_beats=%0d last_pv_word_rc=%0d prog_not_ready=%0d",
-                     T, P0, refused, first_ref, last_sc, pv_n, last_pv, bad_rdy);
+            $display("PFEED T=%0d p0=%0d stride=%0d refused=%0d first_refused_rc=%0d last_score_rc=%0d pv_beats=%0d last_pv_word_rc=%0d prog_not_ready=%0d",
+                     T, P0, PSTRIDE, refused, first_ref, last_sc, pv_n, last_pv, bad_rdy);
             $finish;
         end
     end

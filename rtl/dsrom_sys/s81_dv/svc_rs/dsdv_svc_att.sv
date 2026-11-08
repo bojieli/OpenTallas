@@ -515,7 +515,10 @@ module dsdv_svc_att #(
 `else
     wire pvown = tile[3:2] == st_r;
 `endif
-    wire ep_v = job_active && p_left != 0 && jc >= po;          // static: from PO, a step every cycle
+    // H8 packs 4 rows/word: two PWORDS load one 32-row block in 4 steps,
+    // while its fixed issue schedule takes DPT=8 cycles. Alternate-cycle feed
+    // preserves the bounded-ahead bank/skid budget without runtime backpressure.
+    wire ep_v = job_active && p_left != 0 && jc >= po && (!P2 || jc[0] == po[0]);
     wire ep_ready;
 `ifdef RTLGAP_MUT_ALLQ_NOP
     // RTL MUTANT (bench only): ALLQ drains every slice, but P stays gated to quarter ST -> 12 tiles of zero P.V
