@@ -1,0 +1,6 @@
+== RCKRF_MUT_SHORT
+RF_RESULT checks=12000 errors=11105 rx_live=11997 st_lock=11335 dec_q_v=11183
+[10078884000] %Fatal: tb_rf.sv:42: Assertion failed in tb: RF lockstep FAILED
+== RCKRF_MUT_TXSKEW
+RF_RESULT checks=12000 errors=11632 rx_live=11997 st_lock=11335 dec_q_v=11183
+[10078884000] %Fatal: tb_rf.sv:42: Assertion failed in tb: RF lockstep FAILED
