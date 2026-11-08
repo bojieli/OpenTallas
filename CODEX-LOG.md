@@ -12105,3 +12105,5 @@ PARKED per explicit reset. Own E6 codex/s81-svc-hardening-1551@450a4b50 (honest8
 
 ## OWNER? SVC canonical adoption
 After strict child qualification, should the private codex_svc_smd_native and codex_svc_merge_h4_pin be added to the canonical S81 64-low reset contract and parent hardening plan? H4 adds two data clocks and one reset-delivery clock; SMD adds none. Default: keep entries and all parent geometry/cycle changes PRIVATE, with no counter/POR activation. Component work continued independently until explicit reset.
+
+2026-11-07 17:04:56 PST EXPLICITRESET S81physicaltypes stooddown. c285WTREEsource+actualwrapperproof durablehub/GitHub, integration/residualhold parentowned. COLHvR3PLACE channelPASS-COND (.744→.601), othergate-outside-fanin/fanoutBOX classpending;348umNOTwire. E4exactROcensus8G2Treader session84794 UNSTARTEDmemorywait, inputs colh_compare; noCTSattached. T32two-existing-edge32bankmodelONLY/unreadytracks/upstreamclock/sourceconstructor, noP&R. Healthyjobsretained/no stops/deletions. Fullcurrenthandoff lanes/CODEX-S81-TYPES-1551.md.
