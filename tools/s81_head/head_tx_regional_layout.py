@@ -43,7 +43,7 @@ foreach inst [$b getInsts] {
   set xy {}
   if {[regexp {^u_enc\.(g_ch_region\.mid|g_ff\.cq)\[([0-3])\]\[([0-9]+)\]} $nm -> bank r bit]} {
     # Four parity regions; pair each retained capture with its own cq sink.
-    set x [expr {32 + 112*$r + 0.7*($bit%65)}]
+    set x [expr {32 + 112*$r + 1.15*($bit%65)}]
     set y [expr {24 + 9*int($bit/65) + ($bank eq "g_ff.cq" ? 0.54 : 0)}]
     set xy [list $x $y]
   } elseif {[regexp {^u_enc\.d([1-8])\[([0-9]+)\]} $nm -> stage bit]} {
