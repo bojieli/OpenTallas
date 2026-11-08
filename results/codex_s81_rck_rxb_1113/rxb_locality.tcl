@@ -8,7 +8,7 @@ proc rxb_locality_place {} {
  set ys [lsort -unique -integer $ys]
  set mac {};set rq {};set banks {};set maxw 0;set area 0
  foreach i [$b getInsts] {
-  set n [string map {\ {}} [$i getName]];set m [$i getMaster];set mn [$m getName]
+  set n [string map [list "\\" ""] [$i getName]];set m [$i getMaster];set mn [$m getName]
   if {$mn eq "ot_sram_1r1w2c_64x546_m1"} {lappend mac $i}
   if {![string match *DFF* $mn]} {continue}
   if {[string match *u_dly*g_rq*rq_d* $n]} {
@@ -37,7 +37,7 @@ proc rxb_locality_place {} {
   set target [expr {$py-$rh/2.0}];set best {};set bd 1e30
   foreach y $ys {set d [expr {abs($y-$target)}];if {$d<$bd} {set bd $d;set best $y}}
   set col [expr {$bit%$cols}];set x [expr {$right-($col+1)*$pitch}]
-  set x [expr {[$core xMin]+floor(($x-[$core xMin])/double($sx))*$sx}]
+  set x [expr {int([$core xMin]+floor(($x-[$core xMin])/double($sx))*$sx)}]
   if {[dict exists $occ "$x,$best"]} {error "RXB_LOCAL: capture occupancy collision bit$bit"}
   dict set occ "$x,$best" 1
   if {[$i getPlacementStatus] eq "FIRM"} {error "RXB_LOCAL: capture already FIRM $bit"}
