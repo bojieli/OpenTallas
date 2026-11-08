@@ -43,3 +43,12 @@ proof must select real PW/native-return/F16 sources and observe individual
 fault terms and first assertion. Existing TLOAD latency evidence remains
 valid locally; global ROOT/X/HEAD leases and fault-clean programme stay open.
 No rerun was performed to manufacture missing observations.
+
+QC/SU1 independently confirmed the corresponding readable-source path:
+head_static_rk unpacks ret94 into u_me_fault(:545), enabled one-edge
+u_su_me_fault(:540) feeds c_me_fault, connected to pi_me_fault(:444).
+rom_core_ctrl_static:1288 aliases me_fault=pi_me_fault; :1363..1365 captures
+the fault subject to reset/accepted-idle-start clear and enable conditions.
+This strengthens the structural cause diagnosis while retaining the exact
+first-fault observer limitation; gate/enable conditions prevent claiming an
+unobserved exact propagation edge.
