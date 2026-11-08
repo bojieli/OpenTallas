@@ -25,8 +25,8 @@
       },
       "plan": "/srv/opentallas-scratch2/claude/kw32/src_27db6/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw32/src_27db6",
-      "src_sha": "27db658adf1ceec83bd9abe9a6455265f54b0048",
+      "src": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
+      "src_sha": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch2/claude/kw32/kvbind_27db6/asbuilt_kv_27db6.json",
@@ -624,7 +624,7 @@
       ],
       "plan_items_from_allowlist": true,
       "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-      "queue_src": "main@27db658adf1c",
+      "queue_src": "main@d95ec5a45a60",
       "hold_items_released": {
         "kv3_pc": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
         "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -1060,7 +1060,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 2
       },
-      "flow_tag": "flow-20261107-dk-kv",
+      "flow_tag": "flow-20261108-do-kv",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -1212,7 +1212,12 @@
         "kv3_sys_SD": "CODEX parked old unstarted KW10 disk waiter; reviewed current-context recovery owned KV/wave; preserve all outputs/proofs. No design strike/no blind retry.",
         "kv3_sys_SD_v1": "KW-FIX-32 2026-11-07 22:10 PST: KV plan switch to main plan_c: KV-TYPES-3 relaunches it privately from main's plan (21:15); wave must not double-launch"
       },
-      "note_kvplan_kw32b": "KW-FIX-32 2026-11-08 00:09 PST: KV plan/asbuilt/bind_out/--clock-landing -> src_27db6 / kvbind_27db6 (same recipe as kvbind_a663d, base main 27db658adf1 so kit sources carry SEL_CHUNK); revert *_prev_kw32b"
+      "note_kvplan_kw32b": "KW-FIX-32 2026-11-08 00:09 PST: KV plan/asbuilt/bind_out/--clock-landing -> src_27db6 / kvbind_27db6 (same recipe as kvbind_a663d, base main 27db658adf1 so kit sources carry SEL_CHUNK); revert *_prev_kw32b",
+      "src_prev_kw33b": "/srv/opentallas-scratch2/claude/kw32/src_27db6",
+      "src_sha_prev_kw33b": "27db658adf1ceec83bd9abe9a6455265f54b0048",
+      "queue_src_prev_kw33b": "main@27db658adf1c",
+      "flow_tag_prev_kw33b": "flow-20261107-dk-kv",
+      "note_src_kw33b": "KW-FIX-33 2026-11-08 00:23 PST (ROOT-MERGE-50/51): src kw33/src_d95ec = main d95ec5a45a6 (qc53v4t tap-pair, phyclip, grtlock, tname2, atomic-collapse, schema) = kw32/src_27db6 + 122 files"
     },
     "s81": {
       "enabled": true,
@@ -1223,10 +1228,10 @@
         "clock": "PASS",
         "evidence": "DIE-S81-70 12:4x (COORD 12:1x ftkeep relaunch): plan = main e9eda32d41c plan_h2_2249 (ftcorr/ftkeep a80a1ab90cc, ctree, hcov) + claude/die-s81-70-t24tap-1106@4390efd070 (t24__cl2456157b clk_t20 y 632.88->667.44; strict bind error radius 216.3>200 -> 199.1, grid_explicit_taps PASS) sha256 1cbd9e04577052a4, hardlink sidecars of src_28fc7; vs old wave plan only 10 partition_types differ, no other key; G0C 64/1543 = base, 0 new/0 gone [CHECKED epyc5 die-s81-70/chk_t24]; strict bind on main plan: 1 error = that t24 tap (die-s81-70/kvb2) | prev: KIT-WAVE-12 04:1x PST: main e8cbe5f6c70 plan 381e75b001cd = DIE-S81-46 kva3 407b175146b (COORD 03:16 APPROVED, ROOT-MERGE-AL 03:51): G0C 18 = base, 0 new; die clock GRT 0 ov, TT +49.70, CA 0/2330; strict bind die-s81-46/bind_g3tag2 errors 0 unbound 0 (plan 1064f31a3d21 = 381e minus 22 SDC-only cdc keys, DIE-S81-47 CHECKED) | prev: KIT-WAVE-9 19:5x: main bfdc480ffc7 plan a6320661bc9e = bfe27b2c00be + serdes__t13/serdes__t4 lots (DIE-S81-44 bccb99bde74, G0C 18 = base, 0 new; COORD 16:5x/ROOT-MERGE-AL 17:24; DIE-S81-45 18:03 request); bind = bindm (strict 0) via bindm9 | KIT-WAVE-8 18:0x: main f1a8dcffa6e plan bfe27b2c00be = cb76a9754330 (DIE-S81-43 ring-hold stack 5a/rt4/ringfall, COORD 15:56 (2)) + S81-SERDES-PHY-3 eb964df6dd4 (8 serdes types only; G0C 19/1865 = main, 0 new; block-identity diff CHECKED: only those 8 blocks changed); strict bind bindm BIND_RC 0 (VERIFY died without RC, see lane) | COORD 10-31 08:46 APPROVED DIE-S81-42 claude/die-s81-42-band-1031@e6e75a4ea7e (plan bfa0a6902dd9 -> a83e52c0ae4e, sidecar db92d7423d2c): G0C 19 = base 19, 0 new; strict bind BIND_RC 0 errors 0 + VERIFY_RC 0 (DIE-S81-43 12:18 CHECKED); die clock GRT 0 ov, TT setup +9.22. Merged main 96420e84b92 (ROOT-MERGE-AK). | prev: COORD RULING 10-31 04:07: DIE-S81-39 variant A claude/die-s81-39-geom-1030@54dda45985a (grid+explicit taps, plan 84fc22ab807d -> 7515f32564e8 taps only) APPROVED: G0C 18=18 0 new, strict bind BIND_RC 0 errors 0 (intel1 die-s81-39/gbind), die clock ckclk3 GRT 0 ov, CA PASS; exceptions 1 (57 plan_geom residuals) + 2 (7 pre-existing neg TT setup pairs bk_sel__t2, NOT waived, DIE-S81-41) accepted; COORD 04:4x: S81 plan of record on main = 7515f32564e8 | COORD 10-31: DIE-S81-41 daaa48cc29b per-type station tap window on main 41b02d873, plan bfa0a6902dd9 strict bind BIND_RC 0 errors 0 (intel1 die-s81-41/sbind, DIE-S81-42 07:21). | CODEX1131/root approved composed1cd on mainb1: G0C0 errors, bind_ev2 strict0 11:40, clock GRT0 TT+49.70 CA0/2330 unchanged, 17 reset-safe bands independently rendered/reviewed. Provisional views remain provisional; normal kit physical gates retained."
       },
-      "plan": "/srv/opentallas-scratch3/claude/kw24/wave_cg_frz/physical/die_plan/s81/plan_h2_2249.json",
+      "plan": "/srv/opentallas-scratch3/claude/kw33/wave_cg_frz_pc/physical/die_plan/s81/plan_h2_2249.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw32/src_27db6",
-      "src_sha": "27db658adf1ceec83bd9abe9a6455265f54b0048",
+      "src": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
+      "src_sha": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
       "kit_rtl": {
         "mode": "script",
         "script": "/srv/opentallas-scratch3/claude/die-s81-70/kit_rtl_s81_ds70_kvov.sh",
@@ -2282,7 +2287,13 @@
         "ot_s81sl_leaf__t68@1",
         "bk_sel__t2@30",
         "slice_station__t22@10",
-        "slice_station__t29__clc7772371@11"
+        "slice_station__t29__clc7772371@11",
+        "ot_s81sl_leaf__t9@1",
+        "ot_s81sl_leaf__t22@1",
+        "ot_s81sl_leaf__t44__clf6cf8492@1",
+        "ot_s81sl_leaf__t60@1",
+        "ot_s81sl_leaf__t21@10",
+        "ot_s81sl_leaf__t57@3"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -2346,7 +2357,6 @@
         "dsdv_bk_g": "KW-FIX-8 23:2x I64: signed dsdv_bk_g, ruled not a stop, no rebuild (RM-31 22:03)",
         "ot_v41_bf16_half": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)",
         "ot_v41_bf_col3_c": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)",
-        "serdes__t15__cla3d02796": "KW-FIX-29 COORD 10:38: old wave a11 record cancelled, its LEC stopped; S81-RCK-5 carries this type in vF; release with REDESIGN: only",
         "ot_s81sl_leaf__t1": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t11": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t13": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
@@ -2355,7 +2365,6 @@
         "ot_s81sl_leaf__t16": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t17": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t2": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t21": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t23": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t24__cl2456157b": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t24__cl81374cd8": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
@@ -2381,7 +2390,6 @@
         "ot_s81sl_leaf__t51": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t53__cl958451dd": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t53__clb66fa5cb": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t57": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t59": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t6": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t65": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
@@ -2389,9 +2397,10 @@
         "ot_s81sl_leaf__t70": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t71": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t72": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t8": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim."
+        "ot_s81sl_leaf__t8": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "svc_*_dsdv_svc_rs__t*": "KW-FIX-33 2026-11-08 00:23 PST COORD 00:0x (3) G: SVC-RS FLAT 4M cells, REDESIGN split, S81-SVCRS-1"
       },
-      "queue_src": "main@27db658adf1c",
+      "queue_src": "main@d95ec5a45a60",
       "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave",
       "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
       "retry_fix": {
@@ -2447,7 +2456,7 @@
         "ot_s81sl_leaf__t54__cl706d9749@4": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t55@2": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t56@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
-        "ot_s81sl_leaf__t57@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
+        "ot_s81sl_leaf__t57@3": "KW-FIX-33 2026-11-08 00:23 PST: COORD 00:0x (3) J infra: intel2 hub disk ENOSPC 11-07 19:39; facing-form kit unchanged; CODEX 12:09 pilot hold dropped (pilot read)",
         "ot_s81sl_leaf__t58@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t59@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t5@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
@@ -2799,7 +2808,7 @@
         "ot_s81sl_leaf__t16@9": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
         "ot_s81sl_leaf__t17@11": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
         "ot_s81sl_leaf__t2@10": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
-        "ot_s81sl_leaf__t21@10": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
+        "ot_s81sl_leaf__t21@10": "KW-FIX-33 2026-11-08 00:23 PST: COORD 00:0x (3) J infra: intel2 hub disk ENOSPC 11-07 19:39; facing-form kit unchanged; CODEX 12:09 pilot hold dropped (pilot read)",
         "ot_s81sl_leaf__t22@8": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
         "ot_s81sl_leaf__t23@10": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
         "ot_s81sl_leaf__t24__cl2456157b@13": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
@@ -3208,7 +3217,11 @@
         "ot_s81sl_leaf__t68@1": "KW-FIX-32 2026-11-07 21:59 PST: S81-OTHERFAIL-1 21:51 class C TAP-RADIUS: class fix KW-FIX-28 044f3d479b75 (ADDED_TAP_RADIUS_SLACK 1.10, over-target advisory) on main; never relaunched since 11-06 13:07",
         "bk_sel__t2@30": "KW-FIX-32 2026-11-07 22:29 PST: S81-OTHERFAIL-1 21:51 class E HARD-CORE PIN ACCESS: detailed abstract LEF of the signed dsdv_bksel_c (7c69a10c21c), landed a6849cca0db; class batch (COORD 22:0x (1))",
         "slice_station__t22@10": "KW-FIX-32 2026-11-07 22:31 PST: S81-TYPES-5 22:29 slice_station hold class, CLASS FIX 2 (DRV): gen.py phys --slew-margin 50 --cap-margin 20 (existing opt-in, ELEM-S81 station405 routed RCX ~1.8x setRC slew) via s81 type_args; fresh kits on current main, no ECO",
-        "slice_station__t29__clc7772371@11": "KW-FIX-32 2026-11-07 22:31 PST: S81-TYPES-5 22:29 slice_station hold class, CLASS FIX 2 (DRV): gen.py phys --slew-margin 50 --cap-margin 20 (existing opt-in, ELEM-S81 station405 routed RCX ~1.8x setRC slew) via s81 type_args; fresh kits on current main, no ECO"
+        "slice_station__t29__clc7772371@11": "KW-FIX-32 2026-11-07 22:31 PST: S81-TYPES-5 22:29 slice_station hold class, CLASS FIX 2 (DRV): gen.py phys --slew-margin 50 --cap-margin 20 (existing opt-in, ELEM-S81 station405 routed RCX ~1.8x setRC slew) via s81 type_args; fresh kits on current main, no ECO",
+        "ot_s81sl_leaf__t9@1": "KW-FIX-33 2026-11-08 00:23 PST: REDESIGN: macros moved (OT_MACRO_MOVES). S81-OTHERFAIL-2 class H (COORD 00:0x (3) H): landed leaf facing form (leaf_facing.py) applied to the old-form GRT rows; macros moved, not a retry",
+        "ot_s81sl_leaf__t22@1": "KW-FIX-33 2026-11-08 00:23 PST: REDESIGN: macros moved (OT_MACRO_MOVES). S81-OTHERFAIL-2 class H (COORD 00:0x (3) H): landed leaf facing form (leaf_facing.py) applied to the old-form GRT rows; macros moved, not a retry",
+        "ot_s81sl_leaf__t44__clf6cf8492@1": "KW-FIX-33 2026-11-08 00:23 PST: REDESIGN: macros moved (OT_MACRO_MOVES). S81-OTHERFAIL-2 class H (COORD 00:0x (3) H): landed leaf facing form (leaf_facing.py) applied to the old-form GRT rows; macros moved, not a retry",
+        "ot_s81sl_leaf__t60@1": "KW-FIX-33 2026-11-08 00:23 PST: REDESIGN: macros moved (OT_MACRO_MOVES). S81-OTHERFAIL-2 class H (COORD 00:0x (3) H): landed leaf facing form (leaf_facing.py) applied to the old-form GRT rows; macros moved, not a retry"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -3495,6 +3508,18 @@
         },
         "col_h9_r0_p1__t1": {
           "OT_MACRO_MOVES": "u_r0.u_e1:596.16:216.0,u_r0.u_e3:596.16:604.8,u_r0.u_cf:1149.12:604.8,u_r0.u_t0:1157.76:250.56"
+        },
+        "ot_s81sl_leaf__t9": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:207.36,u_lf.u_vs:311.04:432.0,u_lf.u_vn.u_a:751.68:397.44,u_lf.u_vq:570.24:449.28,u_lf.u_vsw:77.76:414.72"
+        },
+        "ot_s81sl_leaf__t22": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:120.96:604.8,u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:354.24:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28"
+        },
+        "ot_s81sl_leaf__t44__clf6cf8492": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:691.2:561.6,u_lf.u_vsw:1054.08:388.8"
+        },
+        "ot_s81sl_leaf__t60": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:129.6:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:129.6:440.64,u_lf.u_vsw:466.56:319.68"
         }
       },
       "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
@@ -3782,7 +3807,7 @@
         "queue_src": "claude/kw-fix-29-s81-leaf-src-1107@abaf08160896",
         "die_max_inflight": 67
       },
-      "flow_tag": "flow-20261107-dv-s81",
+      "flow_tag": "flow-20261108-dz-s81",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "src_prev_kw32": "/srv/opentallas-scratch2/claude/kw31/src_66d55",
       "src_sha_prev_kw32": "66d55c026ade2245a494c3eeeea0e5ec0ab8ae0b",
@@ -3947,7 +3972,20 @@
       "src_sha_prev_kw32i": "a09cbc70ae57c53571239784e0ed6654f7bbe40d",
       "queue_src_prev_kw32i": "main@a09cbc70ae57",
       "flow_tag_prev_kw32i": "flow-20261107-du-s81",
-      "note_src_kw32i": "KW-FIX-32 2026-11-07 22:59 PST (ROOT-MERGE-50 22:5x): src kw32/src_27db6 = main 27db658adf1 (KV u_fdi_cdc SEL_CHUNK dff767a167) = kw32/src_a09cb + 5 files"
+      "note_src_kw32i": "KW-FIX-32 2026-11-07 22:59 PST (ROOT-MERGE-50 22:5x): src kw32/src_27db6 = main 27db658adf1 (KV u_fdi_cdc SEL_CHUNK dff767a167) = kw32/src_a09cb + 5 files",
+      "src_prev_kw33b": "/srv/opentallas-scratch2/claude/kw32/src_27db6",
+      "src_sha_prev_kw33b": "27db658adf1ceec83bd9abe9a6455265f54b0048",
+      "queue_src_prev_kw33b": "main@27db658adf1c",
+      "flow_tag_prev_kw33b": "flow-20261107-dv-s81",
+      "note_src_kw33b": "KW-FIX-33 2026-11-08 00:23 PST (ROOT-MERGE-50/51): src kw33/src_d95ec = main d95ec5a45a6 (qc53v4t tap-pair, phyclip, grtlock, tname2, atomic-collapse, schema) = kw32/src_27db6 + 122 files",
+      "hold_items_released_kw33": {
+        "ot_s81sl_leaf__t21": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t57": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "serdes__t15__cla3d02796": "KW-FIX-29 COORD 10:38: old wave a11 record cancelled, its LEC stopped; S81-RCK-5 carries this type in vF; release with REDESIGN: only"
+      },
+      "plan_prev_kw33c": "/srv/opentallas-scratch3/claude/kw24/wave_cg_frz/physical/die_plan/s81/plan_h2_2249.json",
+      "note_plan_kw33c": "KW-FIX-33 2026-11-08 00:31 PST (S81-TYPES-6 00:02, COORD 00:0x (1)): plan = kw24/wave_cg_frz hardlinks + S81-TYPES-6 wave plan bc5328dbe515 (frozen plan + phy_pg_clip_um 10 on the 11 serdes blocks; block_dryrun: only those 11 move); staged intel1/epyc4/epyc5/epyc6/epyc2; revert plan_prev_kw33c",
+      "note_serdes_kw33c": "KW-FIX-33 2026-11-08 00:31 PST: REDESIGN: S81-TYPES-6 phyclip 3587d5f9b45 + RCK-3 notch/rck_band + macro-ck-pin: PHY region clipped to PMA+10um (11 serdes types, new block keys)"
     },
     "s81_head": {
       "enabled": true,
@@ -3960,8 +3998,8 @@
       },
       "plan": "/srv/opentallas-scratch3/claude/kw23/prep_l48ui/source_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw32/src_27db6",
-      "src_sha": "27db658adf1ceec83bd9abe9a6455265f54b0048",
+      "src": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
+      "src_sha": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
       "kit_rtl": {
         "mode": "script",
         "script": "/srv/opentallas-scratch2/claude/kw23/src_e9eda/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
@@ -4212,7 +4250,7 @@
       ],
       "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
       "cancel_superseded": false,
-      "queue_src": "main@27db658adf1c",
+      "queue_src": "main@d95ec5a45a60",
       "item_env": {
         "hd_ctl": {
           "OT_IO_HOLD": "sender_min"
@@ -4531,7 +4569,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 1
       },
-      "flow_tag": "flow-20261107-do-head",
+      "flow_tag": "flow-20261108-ds-head",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -4628,7 +4666,12 @@
       "src_sha_prev_kw32i": "a09cbc70ae57c53571239784e0ed6654f7bbe40d",
       "queue_src_prev_kw32i": "main@a09cbc70ae57",
       "flow_tag_prev_kw32i": "flow-20261107-dn-head",
-      "note_src_kw32i": "KW-FIX-32 2026-11-07 22:59 PST (ROOT-MERGE-50 22:5x): src kw32/src_27db6 = main 27db658adf1 (KV u_fdi_cdc SEL_CHUNK dff767a167) = kw32/src_a09cb + 5 files"
+      "note_src_kw32i": "KW-FIX-32 2026-11-07 22:59 PST (ROOT-MERGE-50 22:5x): src kw32/src_27db6 = main 27db658adf1 (KV u_fdi_cdc SEL_CHUNK dff767a167) = kw32/src_a09cb + 5 files",
+      "src_prev_kw33b": "/srv/opentallas-scratch2/claude/kw32/src_27db6",
+      "src_sha_prev_kw33b": "27db658adf1ceec83bd9abe9a6455265f54b0048",
+      "queue_src_prev_kw33b": "main@27db658adf1c",
+      "flow_tag_prev_kw33b": "flow-20261107-do-head",
+      "note_src_kw33b": "KW-FIX-33 2026-11-08 00:23 PST (ROOT-MERGE-50/51): src kw33/src_d95ec = main d95ec5a45a6 (qc53v4t tap-pair, phyclip, grtlock, tname2, atomic-collapse, schema) = kw32/src_27db6 + 122 files"
     },
     "qwen_compute": {
       "enabled": true,
@@ -4640,10 +4683,10 @@
         "clock": "PASS",
         "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
       },
-      "plan": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/plan_of_record/plan_qc53_candidate_v4.json",
+      "plan": "/srv/opentallas-scratch2/claude/kw33/src_d95ec/physical/die_plan/qwen_compute/plan_of_record/plan_qc53v4t.json",
       "gen_host": "epyc2",
-      "src": "/srv/opentallas-scratch2/claude/kw32/src_27db6",
-      "src_sha": "27db658adf1ceec83bd9abe9a6455265f54b0048",
+      "src": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
+      "src_sha": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt.json",
@@ -4680,7 +4723,19 @@
       "pilot_mode": "queue",
       "hold_items": {
         "sle_hc0__cl05696ed1": "KW-FIX-12 08:5x DIE-QC-76 stopped 08:45 per COORD, GRT rising; no resubmit of same form, DIE-QC-76 form lifts",
-        "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native\u2192collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry."
+        "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native\u2192collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
+        "sle_hc1__cl22c1ff36": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "sle_hc1__cl7d360508": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "sle_hc0__cl929603c0__cl38badc56": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "sle_hc2__cl9c4c4509__cl3edce1b8": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "sle_hc2__cl9c4c4509__clf60c5152": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "sle_hc2__clcc5e3e61": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "slw_hc0__cl1bc59e1c": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "slw_hc1__cl3449ea95": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "slw_hc1__cl68f9248e__cl144ee7b3": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "slw_hc1__cl68f9248e__cle683a076": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "slw_hc2__cla3497502__cl16607c7a": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "slw_hc2__cla3497502__cldc737267": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now"
       },
       "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave",
       "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -5027,7 +5082,7 @@
         "slw_su_c__cl92142dac@18",
         "sle_stm_v3@8"
       ],
-      "queue_src": "main@27db658adf1c",
+      "queue_src": "main@d95ec5a45a60",
       "type_args": {
         "sle_fw_v2__cl69f5e854": [
           "--gpl-plain",
@@ -5737,7 +5792,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 13
       },
-      "flow_tag": "flow-20261107-du-qc",
+      "flow_tag": "flow-20261108-dy-qc",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "src_prev_kw32": "/srv/opentallas-scratch2/claude/kw31/src_66d55",
       "src_sha_prev_kw32": "66d55c026ade2245a494c3eeeea0e5ec0ab8ae0b",
@@ -5960,7 +6015,14 @@
       "src_sha_prev_kw32i": "a09cbc70ae57c53571239784e0ed6654f7bbe40d",
       "queue_src_prev_kw32i": "main@a09cbc70ae57",
       "flow_tag_prev_kw32i": "flow-20261107-dt-qc",
-      "note_src_kw32i": "KW-FIX-32 2026-11-07 22:59 PST (ROOT-MERGE-50 22:5x): src kw32/src_27db6 = main 27db658adf1 (KV u_fdi_cdc SEL_CHUNK dff767a167) = kw32/src_a09cb + 5 files"
+      "note_src_kw32i": "KW-FIX-32 2026-11-07 22:59 PST (ROOT-MERGE-50 22:5x): src kw32/src_27db6 = main 27db658adf1 (KV u_fdi_cdc SEL_CHUNK dff767a167) = kw32/src_a09cb + 5 files",
+      "src_prev_kw33b": "/srv/opentallas-scratch2/claude/kw32/src_27db6",
+      "src_sha_prev_kw33b": "27db658adf1ceec83bd9abe9a6455265f54b0048",
+      "queue_src_prev_kw33b": "main@27db658adf1c",
+      "flow_tag_prev_kw33b": "flow-20261107-du-qc",
+      "note_src_kw33b": "KW-FIX-33 2026-11-08 00:23 PST (ROOT-MERGE-50/51): src kw33/src_d95ec = main d95ec5a45a6 (qc53v4t tap-pair, phyclip, grtlock, tname2, atomic-collapse, schema) = kw32/src_27db6 + 122 files",
+      "plan_prev_kw33b": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/plan_of_record/plan_qc53_candidate_v4.json",
+      "note_plan_kw33b": "KW-FIX-33 2026-11-08 00:23 PST (QC-TYPES-6 00:04, COORD 00:2x (3)): plan -> main plan_qc53v4t.json (sha 18dc0ae20052): qc52t tap-pair event on the wave plan, 25 types; revert plan_prev_kw33b"
     },
     "hbm": {
       "enabled": true,
@@ -6076,7 +6138,24 @@
         "q_b001",
         "q_b001__physical_v1",
         "q_su31",
-        "q_su31__physical_v1"
+        "q_su31__physical_v1",
+        "q_su20",
+        "q_su20__physical_v1",
+        "q_su30",
+        "q_su30__physical_v1",
+        "q_b110",
+        "q_b110__physical_v1",
+        "q_b113",
+        "q_b113__physical_v1",
+        "q_su01",
+        "q_su01__physical_v1",
+        "q_su11",
+        "q_su11__physical_v1",
+        "q_su21",
+        "q_su21__physical_v1",
+        "q_b013",
+        "q_b013__physical_v1",
+        "q_sm3"
       ],
       "place_prefer": [
         "intel1",
@@ -6087,10 +6166,10 @@
       ],
       "note": "KW-FIX-21 05:3x: src -> kw21/src_c926f @c92647a2155 = FULL tree (Codex src_2c705 base + git delta 846 files); the 05:17 batch failed kit_rtl on the sparse D3-based src_c926 (bind: preferred HDL source missing physical/rom_host_ingest/rtl/dsfd_host.sv) and KV kit_topology (faecd src lacks tools/die_plan/kit_topology.py which the hub's canonical_topology_prepare specs need); relaunch the same rows | KW-FIX-21 05:1x (COORD 04:40/04:43): src kw21/src_c926 @c92647a2155 (main: 8dc1 ot_run capture, e6ce finite Slang gen_env, busfit 7d0631b1015; delta from codex D3 src_d3c267 = 4 tool files; results/qc_ringfall_1105 copied from src_2c705) on epyc5+epyc6; work_root -> root scratch3 lane kw21-wave-1106 (epyc5 scratch2 1 GB free); cfg ot_run = kw21 wrapper (kw10 wait logic) on fleet 230e562aa5c. INFRA relaunch: ENOSPC/ROOT-fs geom/no-dir kit_rtl/PLACE_LOST; native-C SIG11 rows @3 with OT_LEC_SLANG_UNROLL_LIMIT=32912 | KW-FIX-19 21:0x: src kw11/src_730 @7305773106e (main: I178 prdfo, I180 rootscr, I181 classretry, prdguard; kit diff vs 16b4 = prd_hook guard only); gen_hosts [epyc5, epyc6] (epyc4 scratch2 11 GB); GEN-HOST-DEPS relaunch 0 rows | KW-FIX-18 19:4x: tag flow-20261106-r-hbm 16b4ea85026 (I177 ev76 HBM d44v, I178 prdfo, I179 q3e RXPRE) -> src kw11/src_16b; referenced files byte-same (8/8 sha256) | KW-FIX-17 18:4x: tag flow-20261106-p-hbm e920ea3c22b (grtstall + leafitems + S81 TAPWIN-PORT plan ef4d951b60bf) -> src kw11/src_e92; referenced files byte-same except S81 plan_h2_2249.json (clock.tap_window per_port_ps only, COORD 18:20) | KW-FIX-17 18:2x: tag flow-20261106-o-hbm 77b4b069dc3 (holdgaterr + ev75 + romq + wbqhd) -> src kw11/src_77b; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:3x: tag flow-20261106-n-hbm 17dcf533a38 (resignlib + ev74f + provobs) -> src kw11/src_17d; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 16:5x: tag flow-20261106-m-hbm 76201bc074c (holdrr reg2reg hold stop, grtpost, placeretry) -> src kw11/src_m76; every referenced plan/sidecar/asbuilt/kit_rtl file byte-same (cmp CHECKED) | KW-FIX-17 16:4x: HBM tag flow-20261106-l-hbm c299a5dfc10 (B7..B10 forms, recipes_b2) -> src kw11/src_hbml | KW-FIX-17 16:2x: HBM tag flow-20261106-k-hbm 7040684e850 -> src kw11/src_x (scratch2); plan d44v11 + core_clock_regions unchanged (outside src); d44v/ev74 plan_of_record change in the tag is DIE-HBM-75's event, not adopted here | KW-FIX-8 21:4x I62: plan d44v11 = d44v10 + main d5f67b31226 plan_of_record/d44v, parts 13 8 14; src src_y (cp -al); cancel_superseded false so the stage stops no live row. | KW-FIX-6 05:5x COORD 05:42 (4): plan d44v10 = fold 80ac3f4decbd (main df511fc9ae6, flow-20261104-f-hbm), src hbmsrc2; cancel_superseded false so the fold stops no live row; 22 of 24 live rows keep their keys, hnx_fused_lane@9 + hnx_rp3lp3h_s@6 run on as old-key reads; hnx_rp3h_xs in only_items for the xs class fix. | KW-FIX-6 03:5x COORD 03:41: LEC + tkm root class batch, src kw-fix-6/hbmsrc = main 902085405d8; DIE-HBM-63 hand-flow items and clock-window resumes untouched | KW-FIX-5 01:1x HBM-STAGE: 3 recipe pin refs fetched into hbmsrc store; wr_q @4 retry; 7 stale names out of only_items; NO_RECIPE and PORT_MISMATCH held | KW-FIX-5: d44v9 lacked 74 PoR core files + macro views in sparse src (DIE-HBM /FLOW 00:1x); staged 00:20; tkm root held on /FLOW MAP_AMBIGUOUS | KW-FIX-5 00:0x (DIE-HBM-62 23:19 list, COORD 23:2x): plan d44v9 = d44v part 6+6a (die_plan 0b93e32e4ce8), src sparse kw-fix-5/hbmsrc = main 386f7a71f8a; 6 sub-cores RF1 recipe, 4 stale vms_bank, tkm_m root retry | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-hbmi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE); RF1 d35a67594c7 included | KW-FIX-4 19:5x HBM-RF1 (OWNER 18:57, COORD 19:04, DIE-HBM-61/RF1-BUILD): src kw-fix-4-hbmrf1 = d35a67594c7 (b07b52ff0c7 + q2_reduce oneclk / llr RW if-generate fixes, approved I6); RF1 item_args (util 0.40, face-reset-relay 2, regions rf1 69ed115a) on 6 not-in-flight items; the 6 in-flight RF1 items are launched by RF1-BUILD via ot-run (no double launch); old item_args in item_args_rf1prev | KW-FIX-4 19:0x I4 batch: src kw-fix-4-hbmi4 = main b07b52ff0c7 (hold/CLK-BAND 9855c866403: multiport density + hard_core_latency default-on) | KW-FIX-4 11-03 12:0x (COORD 10:4x item 2, DIE-HBM-61 11:4x d44v_por FROZEN 8/84): d44o -> d44v (prev d44o /srv/opentallas-scratch2/claude/kit-wave/hbm/d44o_cm/die_plan.json src 89eb1d03dba84a57aae71fa7c662ba005c8c6acc). KW-FIX-4-HBMV 2026-11-03 11:56 PST: d44o -> d44v (COORD 10:4x, DIE-HBM-61 11:0x). src claude/kw-fix-4-hbmv-1103@78e511e3a45 = main 5ef0158c8fa + gen_core_kit_hbm_rw.py (opt-in MEM recipe delta wrapper). RF1 item_args: --clock-regions 33 modules, --face-lockup '.*' 38 RF1 cores (census+regions), --rw-recipe-delta ['hfd_ep_static', 'ot_hbm_host_cp_rxs', 'ot_hnx_idxn_keybuf_slice'] (held until KNOWN RW rects: ['hfd_ep_static', 'ot_hbm_host_cp_rxs']), q3_edge on its current recipe. retry += 19 unchanged-key terminal records (move every row to d44v). | KW-FIX-3 2026-11-03 04:3x: retry += ot_hbm_idx_score_hcol_h1@1 (GEOM-111 class R member, pin_reg_max 156.3; fix merged 65396c58159, wave src rfh 53d3ca14368 carries the same face_flops change). The other 10 class R kits already run on rfh (KW-FIX-2 batch 00:0x), collected, not relaunched. | KW-FIX-2 11-03 00:0x (GEOM-111 class R, COORD 23:0x): src e96f241822a + reset-face-home (gen_core_kit_hbm skip set = clocks+straps; main branch claude/kw-fix-2-1102@d483825fd6e) = 53d3ca14368, locked sparse intel2 wt kit-wave-15-hbmtaps-rfh; 11 class-R holds released, batch retry item@last; retry q3_edge_core@2 / opstore_b@3 dropped (those attempts are RUNNING; kept they would HOLD at enqueue on the src change). | DIE-HBM-58/CORES 11-02 18:2x: take_states += REVIEW, KIT-PLACED so the 7 ccband CANCELLED-SOURCE rows (first_core, tailx_rest x2, lane_exp0_id, qcore_r13, xcal_rel_t, q2_reduce; OWNERS state REVIEW/KIT-PLACED) and never-waved bank128_pair_core / hcp_sys1 / tkm root relaunch on the fixed src (no-blind-retry guard still holds every other stored FAIL). | KIT-WAVE-15 18:3x ccband: src e5b857a7e34 (taps) + cherry-pick of ccband 0c1986bda = e96f241822a (branch pushed), new locked sparse intel2 wt kit-wave-15-hbmtaps (same cone as kit-wave-14-hbmtaps, which other procs still read). | KIT-WAVE-14 14:5x DIE-HBM-57 RULING (OWNER 12.23 fully automatic): the wave re-cuts the 21 lane-built single-root views on e5b857a7e34 whatever their OWNERS state: take_states += REVIEW/ROUTING/GEOM-REQ/KIT-PLACED/SIGNED-UNVERSIONED; the 13 other lan",
       "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
-      "plan": "/srv/opentallas-scratch2/claude/kw27/hbm_d44v_02909_ista/die_plan.json",
+      "plan": "/srv/opentallas-scratch2/claude/kw27/hbm_d44v_02909_g/die_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw32/src_27db6",
-      "src_sha": "27db658adf1ceec83bd9abe9a6455265f54b0048",
+      "src": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
+      "src_sha": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
       "gate": {
         "g0c": "PASS",
         "bind": "PASS",
@@ -6636,12 +6715,17 @@
         "q_b000@1",
         "q_b000__physical_v1@1",
         "q_b001@1",
-        "q_b001__physical_v1@1"
+        "q_b001__physical_v1@1",
+        "ot_hbm_su_static_qcore_r13@4",
+        "q_su31__physical_v1@1",
+        "q_su31__physical_v1@2",
+        "q_su31@1",
+        "q_su31@2"
       ],
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
       "pilot_mode": "queue",
-      "queue_src": "main@27db658adf1c",
+      "queue_src": "main@d95ec5a45a60",
       "hold_items": {
         "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
         "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
@@ -6775,7 +6859,12 @@
         "q_b000@1": "KW-FIX-32 2026-11-07 22:29 PST: class fix HBM die bind in git (DIE-HBM-89 f91b9f2eec3; gen 'bus L14_o/L14_i not bound' -> kit_rtl bind of record); one bound-type batch",
         "q_b000__physical_v1@1": "KW-FIX-32 2026-11-07 22:29 PST: class fix HBM die bind in git (DIE-HBM-89 f91b9f2eec3; gen 'bus L14_o/L14_i not bound' -> kit_rtl bind of record); one bound-type batch",
         "q_b001@1": "KW-FIX-32 2026-11-07 22:29 PST: class fix HBM die bind in git (DIE-HBM-89 f91b9f2eec3; gen 'bus L14_o/L14_i not bound' -> kit_rtl bind of record); one bound-type batch",
-        "q_b001__physical_v1@1": "KW-FIX-32 2026-11-07 22:29 PST: class fix HBM die bind in git (DIE-HBM-89 f91b9f2eec3; gen 'bus L14_o/L14_i not bound' -> kit_rtl bind of record); one bound-type batch"
+        "q_b001__physical_v1@1": "KW-FIX-32 2026-11-07 22:29 PST: class fix HBM die bind in git (DIE-HBM-89 f91b9f2eec3; gen 'bus L14_o/L14_i not bound' -> kit_rtl bind of record); one bound-type batch",
+        "ot_hbm_su_static_qcore_r13@4": "KW-FIX-33 2026-11-08 00:31 PST: class fix DIE-HBM-90 grtlock 811fcb064c4 on main d95ec5a45a6 (GRT-CLK-LOCK: off-row clock buffers stay PLACED; DPL-0033 class; real-DB proof on qcore_r13 a4), COORD 23:5x (2)",
+        "q_su31__physical_v1@1": "KW-FIX-33 2026-11-08 00:38 PST: REDESIGN: plan kw27g + bind_g + tname2 5681efe798c (kit_core_clocks native, kit_reset_sync) on main d95ec5a45a6; DIE-HBM-90-REBIND dry run gen rc0",
+        "q_su31__physical_v1@2": "KW-FIX-33 2026-11-08 00:38 PST: REDESIGN: plan kw27g + bind_g + tname2 5681efe798c (kit_core_clocks native, kit_reset_sync) on main d95ec5a45a6; DIE-HBM-90-REBIND dry run gen rc0",
+        "q_su31@1": "KW-FIX-33 2026-11-08 00:38 PST: REDESIGN: plan kw27g + bind_g + tname2 5681efe798c (kit_core_clocks native, kit_reset_sync) on main d95ec5a45a6; DIE-HBM-90-REBIND dry run gen rc0",
+        "q_su31@2": "KW-FIX-33 2026-11-08 00:38 PST: REDESIGN: plan kw27g + bind_g + tname2 5681efe798c (kit_core_clocks native, kit_reset_sync) on main d95ec5a45a6; DIE-HBM-90-REBIND dry run gen rc0"
       },
       "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
       "item_args_rf1prev": {
@@ -6964,7 +7053,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 2
       },
-      "flow_tag": "flow-20261107-es-hbm",
+      "flow_tag": "flow-20261108-ew-hbm",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -7389,8 +7478,8 @@
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-89/hbmbind/ab/asbuilt_t12.json",
-        "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out",
-        "note": "KW-FIX-32 2026-11-07 22:29 PST (DIE-HBM-89 READY 21:11 f91b9f2eec3 landed 45353bf990b; COORD 21:2x (2)/22:0x): the bind of record (strict, 0 errors, 90 parts/81 types/420 crossings) + its asbuilt_t12 + base tree hbm-bind-6/tip2 rsynced from epyc2 to intel1/epyc4/epyc6 at the same paths (tip2 29836 files, bind_report md5 3fbe08674f6c, asbuilt_t12 5587c16ac74f on every host). A re-bind from main with in-git asbuilt_t13 fails: main's elab renumbers \\$procdff primitives that compose_t9 names (missing primitive sfucore_NE.u_core.u_engine.u_memory.\\$procdff\\$66973; intel1 kw32/hbmbind_ec91a)."
+        "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-90-rebind/bind_g/out",
+        "note": "KW-FIX-33 2026-11-08 00:38 PST (DIE-HBM-90-REBIND 00:14 RESULT): bind_g = strict re-bind of kw27g (bind14 method, rc0, 0 errors, 90/81/420, bound .sv byte-identical to bind14); staged epyc4/intel1/epyc6/epyc5/epyc2/intel2 (report md5 5224fca50e39). Revert: kit_rtl_prev_kw33d. KW-FIX-32 2026-11-07 22:29 PST (DIE-HBM-89 READY 21:11 f91b9f2eec3 landed 45353bf990b; COORD 21:2x (2)/22:0x): the bind of record (strict, 0 errors, 90 parts/81 types/420 crossings) + its asbuilt_t12 + base tree hbm-bind-6/tip2 rsynced from epyc2 to intel1/epyc4/epyc6 at the same paths (tip2 29836 f"
       },
       "gen_hosts_prev_kw32g": [
         "intel1",
@@ -7513,7 +7602,20 @@
       "flow_tag_prev_kw32i": "flow-20261107-er-hbm",
       "note_src_kw32i": "KW-FIX-32 2026-11-07 22:59 PST (ROOT-MERGE-50 22:5x): src kw32/src_27db6 = main 27db658adf1 (KV u_fdi_cdc SEL_CHUNK dff767a167) = kw32/src_a09cb + 5 files",
       "plan_prev_kw33a": "/srv/opentallas-scratch2/claude/kw27/hbm_d44v_02909/die_plan.json",
-      "note_plan_kw33a": "KW-FIX-33 2026-11-07 23:04 PST (DIE-HBM-90 22:57): plan dir kw27/hbm_d44v_02909_ista = kw27 dir + istadrop_1107 (a661f1d7364 on main; die_plan sha256 ab61f47e7c3d, only internal_stations of 25 types, count dry run +0/-0), staged+sha-checked on epyc4/intel1/epyc6; event id d44v kept; revert plan_prev_kw33a"
+      "note_plan_kw33a": "KW-FIX-33 2026-11-07 23:04 PST (DIE-HBM-90 22:57): plan dir kw27/hbm_d44v_02909_ista = kw27 dir + istadrop_1107 (a661f1d7364 on main; die_plan sha256 ab61f47e7c3d, only internal_stations of 25 types, count dry run +0/-0), staged+sha-checked on epyc4/intel1/epyc6; event id d44v kept; revert plan_prev_kw33a",
+      "src_prev_kw33b": "/srv/opentallas-scratch2/claude/kw32/src_27db6",
+      "src_sha_prev_kw33b": "27db658adf1ceec83bd9abe9a6455265f54b0048",
+      "queue_src_prev_kw33b": "main@27db658adf1c",
+      "flow_tag_prev_kw33b": "flow-20261107-es-hbm",
+      "note_src_kw33b": "KW-FIX-33 2026-11-08 00:23 PST (ROOT-MERGE-50/51): src kw33/src_d95ec = main d95ec5a45a6 (qc53v4t tap-pair, phyclip, grtlock, tname2, atomic-collapse, schema) = kw32/src_27db6 + 122 files",
+      "plan_prev_kw33d": "/srv/opentallas-scratch2/claude/kw27/hbm_d44v_02909_ista/die_plan.json",
+      "kit_rtl_prev_kw33d": {
+        "mode": "bind",
+        "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-89/hbmbind/ab/asbuilt_t12.json",
+        "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out",
+        "note": "KW-FIX-32 2026-11-07 22:29 PST (DIE-HBM-89 READY 21:11 f91b9f2eec3 landed 45353bf990b; COORD 21:2x (2)/22:0x): the bind of record (strict, 0 errors, 90 parts/81 types/420 crossings) + its asbuilt_t12 + base tree hbm-bind-6/tip2 rsynced from epyc2 to intel1/epyc4/epyc6 at the same paths (tip2 29836 files, bind_report md5 3fbe08674f6c, asbuilt_t12 5587c16ac74f on every host). A re-bind from main with in-git asbuilt_t13 fails: main's elab renumbers \\$procdff primitives that compose_t9 names (missing primitive sfucore_NE.u_core.u_engine.u_memory.\\$procdff\\$66973; intel1 kw32/hbmbind_ec91a)."
+      },
+      "note_plan_kw33d": "KW-FIX-33 2026-11-08 00:38 PST: plan kw27g (istadrop+phypgfit+tname, sha 63000666491b, SHA256SUMS 280/280 on 6 hosts); src d95ec has tname2+grtlock; 19-type dry run kit-rtl/topo/gen rc0 (DIE-HBM-90-REBIND dry_g). Revert plan_prev_kw33d"
     }
   },
   "place_prefer": [
