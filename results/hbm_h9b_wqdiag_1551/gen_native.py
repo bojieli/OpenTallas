@@ -14,6 +14,8 @@ for side in ['off','on']:
   chunks.append(s)
  (out/(side+'.sv')).write_text('\n'.join(chunks))
 common=['rtl/lib/ot_rst_relay.sv','physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']
+mut=(out/'on.sv').read_text(); assert mut.count("~(WQ'(1) << ai)")==1
+(out/'on_mut.sv').write_text(mut.replace("~(WQ'(1) << ai)","~(WQ'(1) << ((ai+1)%WQ))"))
 (out/'common.sv').write_text('\n'.join(read(f) for f in common))
 s=read('rtl/hbm_accel/loader/service_native/tb_hbm_pc_h9b_txn.sv')
 s=s.replace('RMUT=0, NREQ=6000','RMUT=0, NREQ=2000').replace('always #512','always #416.5')
