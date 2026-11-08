@@ -67,7 +67,7 @@ def _native_summary(value, type_name):
                 metadata={k:v for k,v in value.items() if k not in ('types', 'ownership')})
 
 
-def _reset(text, type_name, metadata, errors, expected_taps):
+def _reset(text, type_name, metadata, errors, expected_taps, bound_core_resets=None):
     expected = metadata['types'][type_name]
     if expected.get('entry') != 'relayed' or expected.get('entry_stages') != 1:
         errors.append('component proof currently requires the recorded relayed wavefront entry')
@@ -103,7 +103,33 @@ def _reset(text, type_name, metadata, errors, expected_taps):
         net = match[1]
         if depths.get(net) != release:
             errors.append(f'reset consumer {net} bypasses recorded release {release}')
+    # DIE-HBM-89 11-07: bind_core_resets.json (written by the bind) names the leaf instance/pin that serves each plan
+    # core reset (sub_core_leaf parents, reset_from_master, aliases); the leaf must carry a recorded tap at the same
+    # depth. Absent file: the plan instance name, unchanged.
+    bound = {}
+    for b in (bound_core_resets or {}).get(type_name, []):
+        bound.setdefault(b['inst'], []).append(b)
     for row in expected.get('core_resets', []):
+        rec = bound.get(row['inst'])
+        if rec is not None:
+            if len(rec) != 1:
+                errors.append(f"{row['inst']}: bind records {len(rec)} reset leaves")
+                continue
+            rec = rec[0]
+            inst = rec['leaf']
+            hits = list(re.finditer(r'\b'+re.escape(inst)+r'\s*\(', _masked_rtl(text)))
+            if len(hits) != 1:
+                errors.append(f'{inst}: expected one native reset leaf')
+                continue
+            args,_ = parens(_masked_rtl(text), _masked_rtl(text).find('(', hits[0].start()))
+            connections = dict(re.findall(r'\.(\w+)\(([^()]*)\)', args))
+            want = 'rst_n_t'+str(row['tap'])
+            if (connections.get(rec['pin']) != rec['reset'] or not re.fullmatch(r'rst_n_t\d+', rec['reset'])
+                    or depths.get(rec['reset']) is None or depths.get(rec['reset']) != depths.get(want)):
+                errors.append(f"{inst}.{rec['pin']}: reset differs from recorded {want}")
+            consumers.append(dict(inst=inst, pin=rec['pin'], reset=connections.get(rec['pin']),
+                                  plan_inst=row['inst'], reference_internal_depth=row.get('internal_depth')))
+            continue
         inst = 'u_'+re.sub(r'[^A-Za-z0-9_$]', '_', row['inst'])
         # The reset metadata names a native leaf, not a guessed physical proxy.
         hits = list(re.finditer(r'\b'+re.escape(inst)+r'\s*\(', _masked_rtl(text)))
@@ -199,7 +225,9 @@ def inspect(reference_plan, bind_out, type_name, instance, *, prepared_plan, con
     reset_meta = read(bind_out/'bind_reset.json')
     reset_type = reset_meta['types'][type_name]
     expected_taps = len(S.tap_grid(physical,type_name))+len(reset_type.get('outs',[]))+len(reset_type.get('core_resets',[]))
-    reset = _reset(text,type_name,reset_meta,errors,expected_taps)
+    bcr = bind_out/'bind_core_resets.json'
+    reset = _reset(text,type_name,reset_meta,errors,expected_taps,
+                   read(bcr).get('types', {}) if bcr.is_file() else None)
     extras = {'clk','arst_n'} | set(reset['outputs'])
     if set(ports) != set(wanted)|extras: errors.append('unexpected/missing selected native header ports')
     for name in extras:

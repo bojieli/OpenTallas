@@ -3118,6 +3118,9 @@ class Binder:
                 prov = json.loads(prov_file.read_text()) if prov_file.is_file() else None
                 BRC.emitted(f, tn, self._emitted_reset_trees[tn], provenance=prov)
             files.append(f)
+        if getattr(self, "_bound_core_resets", None):
+            (out.parent / "bind_core_resets.json").write_text(
+                json.dumps(dict(schema="opentallas.bind_core_resets.v1", types=self._bound_core_resets), indent=1) + "\n")
         if getattr(self, "_reset_consumer_changes", None):
             (out.parent / "bind_reset_consumers.json").write_text(
                 json.dumps(self._reset_consumer_changes, indent=1) + "\n")
@@ -3366,6 +3369,9 @@ class Binder:
             body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({int(t.get('reset', {}).get('sync_stages', 2))})) "
                         f"u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
         core_reset = {}
+        # DIE-HBM-89 11-07: (leaf ci, leaf pin) -> plan core_resets insts it serves, written to bind_core_resets.json so
+        # the component proof reads the leaf instance the bind actually chose (sub_core_leaf, reset_from_master, alias).
+        core_reset_rows = {}
         localize_reset = bool(t.get("reset", {}).get("consumer_localization"))
         native_reset_roles = {}
         if rtree is not None:
@@ -3382,6 +3388,7 @@ class Binder:
                         if key in core_reset:
                             raise BindError("overlapping bound-group reset projection")
                         core_reset[key] = f"rst_n_t{target['tap']}"
+                        core_reset_rows.setdefault(key, []).append(target["inst"])
                     continue
                 rfm = next((h.get("reset_from_master") for h in t.get("hard_cores", []) if h["inst"] == target["inst"]), None)
                 if rfm is not None:
@@ -3395,6 +3402,7 @@ class Binder:
                                   f"{rfm.get('content')}.{mpin}: expected one unshared bound master leaf, found {len(candidates)}")
                         continue
                     core_reset[(candidates[0], mpin)] = f"rst_n_t{target['tap']}"
+                    core_reset_rows.setdefault((candidates[0], mpin), []).append(target["inst"])
                     continue
                 sub_hc = next((h for h in t.get("hard_cores", []) if h["inst"] == target["inst"]), None)
                 sub_leaf = self.sub_core_leaf_of(sub_hc) if sub_hc and getattr(self, "sub_core_leaf", None) else None
@@ -3402,7 +3410,10 @@ class Binder:
                     # One leaf reset port feeds all subs of the parent through its glue: one tap, same release edge.
                     # DIE-QC-76 11-05: hard core field sub_core_leaf_pin = the leaf's own port for this sub (absent: the sub's
                     # pin name), so each sub keeps its tap; sub_leaf may be the leaf's full as-built path.
-                    lpin = sub_hc.get("sub_core_leaf_pin", pin)
+                    # DIE-HBM-89 11-07: asbuilt.sub_core_leaf_pin {plan sub-core inst: leaf port} names the leaf's own
+                    # reset port when the plan core carries no sub_core_leaf_pin (exact table; the plan field wins).
+                    lpin = sub_hc.get("sub_core_leaf_pin",
+                                      (self.ab.get("sub_core_leaf_pin") or {}).get(target["inst"], pin))
                     found = [ci for ci in self.members[p] if lpin in F.cells[ci].ports and sub_leaf in (self.rel_of(ci), F.cells[ci].path)]
                     depth = {r["q"]: r["depth"] for r in rtree["relays"]}
                     roles = rtree.get("tap_roles", {})
@@ -3412,6 +3423,7 @@ class Binder:
                         continue
                     tap = target["tap"]
                     old = core_reset.setdefault((found[0], lpin), f"rst_n_t{tap}")
+                    core_reset_rows.setdefault((found[0], lpin), []).append(target["inst"])
                     first = int(old[len("rst_n_t"):])
                     if depth.get(old) != depth.get(f"rst_n_t{tap}") or \
                             roles.get(first, "mission") != roles.get(tap, "mission"):
@@ -3485,6 +3497,7 @@ class Binder:
                                   f"{F.cells[ci].path} rel {self.rel_of(ci)}" for ci in candidates[:3]) + ")")
                     continue
                 core_reset[(candidates[0], pin)] = f"rst_n_t{target['tap']}"
+                core_reset_rows.setdefault((candidates[0], pin), []).append(target["inst"])
         need_rst = False
         obus = sorted(self.out_bus[p], key=lambda L: L["oname"])
         ibus = sorted(self.in_bus[p], key=lambda L: L["iname"])
@@ -3849,6 +3862,11 @@ class Binder:
                 conns = [(pn, e) for pn, e in conns if pn not in hide]
             cs = ",\n".join(f"        .{pn}({e})" for pn, e in conns)
             insts.append(f"    // as-built {c.path}\n    {c.module}{pstr} {short_id('u_' + r, 90)} (\n{cs}\n    );")
+        if core_reset_rows:
+            self.__dict__.setdefault("_bound_core_resets", {})[tn] = [
+                dict(inst=i, leaf=short_id("u_" + self.rel_of(k[0]), 90), pin=k[1], reset=core_reset[k])
+                for k, rows in sorted(core_reset_rows.items(), key=lambda kv: (self.rel_of(kv[0][0]), kv[0][1]))
+                for i in rows]
         for L in obus_tree:
             n, W = L["oname"], L["width"]
             src = []
