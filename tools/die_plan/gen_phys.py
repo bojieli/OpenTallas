@@ -779,8 +779,10 @@ def core_tap_pins(P, tn):
     out = []
     for n, x, y, _ in taps:
         sx, sy = _snap_tap(P, x, y, pg_legal=pg)
-        if blocks and _pin_hits(P, tn, n, sx, sy, blocks):
-            sx, sy = _clear_core_tap(P, tn, n, x, y, (sx, sy), blocks, pg)
+        port_blocks = entry_block_boxes(P, tn, port=n, entry_xy=(sx, sy)) if any(
+            c.get("clock_entry_access") for c in P.types[tn].get("hard_cores", [])) else blocks
+        if port_blocks and _pin_hits(P, tn, n, sx, sy, port_blocks):
+            sx, sy = _clear_core_tap(P, tn, n, x, y, (sx, sy), port_blocks, pg)
         out.append((n, sx, sy))
     return out
 
@@ -793,7 +795,7 @@ def _lef_metal_top(lef_text):
     return max([int(v) for v in re.findall(r"\bLAYER\s+M(\d+)\b", lef_text)] or [0])
 
 
-def entry_block_boxes(P, tn, root=None):
+def entry_block_boxes(P, tn, root=None, port=None, entry_xy=None):
     """[(x0, y0, x1, y1)] type-frame boxes of the placed macros (type_macros) whose metal reaches the partition entry
     layer (layer_budget partition_signal_max) or the via layer below it: LEF OBS/PIN layers, else plan obs_max."""
     t = P.types[tn]
@@ -817,6 +819,15 @@ def entry_block_boxes(P, tn, root=None):
             mtop = None
         if mtop is None:
             mtop = int(om.group(1)) if om else top      # unknown view: treat as obstructing (fail closed)
+        access = c.get("clock_entry_access")
+        if access and port is not None:
+            matched = [(n, i, pin) for n, i, pin, _, _ in core_tap_rows(P, tn)
+                       if n == port and i == c["inst"] and pin == access["pin"]]
+            if matched:
+                from lef_clock_entry import validate_access
+                validate_access(f.read_text(), mod, access, top, (float(x), float(y), o),
+                                _pin_box(P, tn, port, *entry_xy))
+                continue  # only this named utility pin; every other port retains the solid macro
         if mtop < top - 1:
             continue
         w, h = map(float, c["outline_um"])
@@ -4409,6 +4420,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                core_latency=clat["rows"],
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
+    # Private explicit actual-LEF entry access. Default budget bytes remain unchanged.
+    for row in bud["clock"]["core_taps"]:
+        core = next((c for c in t.get("hard_cores", []) if c["inst"] == row["inst"]), None)
+        if core and core.get("clock_entry_access"):
+            if row["pin"] != core["clock_entry_access"]["pin"]:
+                raise ValueError("clock entry access pin differs from core tap")
+            row["clock_entry_access"] = core["clock_entry_access"]
     # FLOW-11 10-30 (DIE-KV-48-CLK (b)): the type's PHY-edge clock pins (plan clock.edge_clocks, snapped like taps,
     # placed by tap_pins) are plan clock pins too; kit_contract clock_pin_geometry checks them like taps_snapped.
     # No edge clock: no key (byte-identical budget.json).
