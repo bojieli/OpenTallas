@@ -12334,3 +12334,10 @@ Collected vR prompt + e6 GRT chains alive, e2 queued; no duplicate launches. KV 
 OWNER?
 KV kv3_phy macro-output capture proposal adds +1 cycle on o_phy_Q__sN_piN/_d2/_d3; specific plan event/latency approval remains pending. Default hold production plan and prepare dry fix.
 KV Wi split soft-part 16-edge reset contract and +2 generic-cut cycles remain pending policy decisions from DIE-KV-91 00:02. Default dry geometry work only; no production plan update/build.
+
+OWNER? 2026-11-08 02:27 PST HBM HARD: q3_vm vC large miss requires POR face/clock event P-Q3VM-1 (2048-bit rd_il from N to S, clock near N writer cluster; no core PIN CYCLES). Codex watcher cannot adopt plan changes; default keep plan event proposed, continue other builds. lane1p taller-outline proposal likewise needs die-owner adoption; no unchanged P&R retry.
+
+2026-11-08 02:27 PST: Shared TT-IO hard_core_latency fix published on codex/wave-hcl-tt-0222@1762cad3e01 (no merge/tag); focused gate69PASS. Existing GRT nonport repair helper already landed c52c3b7f6e4, so QC reuses it instead of duplicate fix. Existing S81 bksel vI finished route and RCX; final report running, no closure claimed. Canonical autopilot healthy.
+OWNER? Role header cites setup uncertainty60ps, frozen METHODOLOGY6.1 cites newer OWNER12.24c setup0/hold25. Preserve existing pinned kit/tool policy; no constraint edits or policy relaxation during takeover.
+
+2026-11-08 02:28 PST KV Wi: own branch codex/kv-wisplit-0222; band main-base dry measurement/split active epyc6, no P&R. OWNER? Wi split reset-contract coverage for soft parts and generic cut +2 cycles remain pending; default private dry only.
