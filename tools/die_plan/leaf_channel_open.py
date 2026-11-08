@@ -12,7 +12,7 @@ other touched channel rises above max(its old ratio, TARGET). Macro positions co
 pins and keepouts from the plan. Output: per-macro delta in um for macro_place.tcl.
 usage: channel_open.py PLAN TYPE MACRO_PLACE.tcl [--apply OUT.tcl] [--json OUT.json]"""
 import json, os, re, sys, itertools
-G = 8.64; EDGE = 4.32; MGAP = 8.64; TARGET = 0.6; CLR = 4.32; MAXSTEP = 12; BUSCAP = 0.10
+G = 8.64; EDGE = 4.32; MGAP = 8.64; TARGET = 0.6; CLR = 8.64;  # CLR = schema.TAP_CLEAR_UM (was 4.32: CTAP 11-08 found taps in the macro halo); MAXSTEP = 12; BUSCAP = 0.10
 TPU_V = (1 / 0.036 + 1 / 0.048 + 1 / 0.064) * 0.7   # M3 M5 M7 vertical tracks per um
 TPU_H = (1 / 0.039 + 1 / 0.048 + 1 / 0.064) * 0.7   # M2 M4 M6 horizontal tracks per um
 args = sys.argv[1:]
