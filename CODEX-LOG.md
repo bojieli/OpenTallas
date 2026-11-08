@@ -12727,3 +12727,6 @@ All nine scope leads active; 645 lanes indexed and coverage in lanes/CODEX.md pl
 OWNER? Existing protected hub cold-tree relocation requires coordinated reference rewrite; preserve by default. All current geometry/adoption holds remain until their stated receipts and owner decisions; no new constraint or plan policy adopted.
 
 CODEX fleet 11:20 PST: t50 re-sign tools/output safely resited E2S3→S2 with original tools retained; original ar frontend untouched. Gunitpair1.4GB copied intact to E5S3; S81 owns queued-only rehome. QC SU1 exact20GiB Docker OOM diagnosed, owner continuation32GiB onE5S3. No deletion/restart/policyedit. Full paths/receipts CODEX-FLEET-1113.md.
+
+### CODEX root clock source published 1113
+GitHub codex/clock-density-f4-1113@554a4f366f5: optional bounded stray/F4 regrouping preserves TARGET and capture-to-target medoid DMAX, default unchanged. Four focused Tcl checks PASS; no RTL/cycle/constraint delta. Source donor intel2:/srv/opentallas-scratch2/claude/codex-clock-density-1113. HBM owns actual map review and one private pilot; old healthy vD untouched. All645 lanes inventoried; scope owners S81/HEAD/QC/KV/HBM/wave/SVC-token/fleet/gaps, latest CODEX-*-1113 reports. TKM loaded-state class gaps; QC ESC_DOTTED general READY pending signed-width fix. No merges/tags/POR/deletions.
