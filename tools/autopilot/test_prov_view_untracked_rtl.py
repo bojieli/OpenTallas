@@ -69,7 +69,9 @@ class UntrackedRtl(unittest.TestCase):
             self.assertEqual(P.rtl_dirs("m", [self.td.name])[0], {"a": "input"})
             self.assertEqual(P.rtl_dirs("m_more", [self.td.name])[0], {"b": "output"})
             self.assertEqual(P.rtl_dirs("absent", [self.td.name]), ({}, None))
-            self.assertEqual(sum("grep" in c.args[0] for c in calls.call_args_list), 1)
+            # KW-FIX-35 KW-PROV-1: one fixed set of 3 git grep passes per root (tracked, rtl/ untracked incl. ignored,
+            # standard untracked), cached across modules
+            self.assertEqual(sum("grep" in c.args[0] for c in calls.call_args_list), 3)
         with tempfile.TemporaryDirectory() as staged:
             with open(os.path.join(staged, "staged.sv"), "w") as f:
                 f.write("module stage(input x); endmodule\nmodule stage2(output y); endmodule\n")
