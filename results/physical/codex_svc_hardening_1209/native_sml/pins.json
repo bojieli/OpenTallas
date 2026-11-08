@@ -1,0 +1,1467 @@
+{
+ "pins": [
+  {
+   "name": "sk_en",
+   "dir": "input",
+   "layer": "M5",
+   "x": 8.472,
+   "y": 0
+  },
+  {
+   "name": "i_cv",
+   "dir": "input",
+   "layer": "M5",
+   "x": 9.528,
+   "y": 0
+  },
+  {
+   "name": "i_nv[0]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 10.584,
+   "y": 0
+  },
+  {
+   "name": "i_nv[1]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 11.64,
+   "y": 0
+  },
+  {
+   "name": "i_nv[2]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 12.696,
+   "y": 0
+  },
+  {
+   "name": "i_nv[3]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 13.752,
+   "y": 0
+  },
+  {
+   "name": "i_nv[4]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 14.808,
+   "y": 0
+  },
+  {
+   "name": "i_nv[5]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 15.864,
+   "y": 0
+  },
+  {
+   "name": "i_nv[6]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 16.92,
+   "y": 0
+  },
+  {
+   "name": "i_scale[0]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 17.976,
+   "y": 0
+  },
+  {
+   "name": "i_scale[1]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 19.032,
+   "y": 0
+  },
+  {
+   "name": "i_scale[2]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 20.088,
+   "y": 0
+  },
+  {
+   "name": "i_scale[3]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 21.144,
+   "y": 0
+  },
+  {
+   "name": "i_scale[4]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 22.2,
+   "y": 0
+  },
+  {
+   "name": "i_scale[5]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 23.256,
+   "y": 0
+  },
+  {
+   "name": "i_scale[6]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 24.312,
+   "y": 0
+  },
+  {
+   "name": "i_scale[7]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 25.368,
+   "y": 0
+  },
+  {
+   "name": "i_scale[8]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 26.424,
+   "y": 0
+  },
+  {
+   "name": "i_scale[9]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 27.48,
+   "y": 0
+  },
+  {
+   "name": "i_scale[10]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 28.536,
+   "y": 0
+  },
+  {
+   "name": "i_scale[11]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 29.592,
+   "y": 0
+  },
+  {
+   "name": "i_scale[12]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 30.648,
+   "y": 0
+  },
+  {
+   "name": "i_scale[13]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 31.704,
+   "y": 0
+  },
+  {
+   "name": "i_scale[14]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 32.76,
+   "y": 0
+  },
+  {
+   "name": "i_scale[15]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 33.816,
+   "y": 0
+  },
+  {
+   "name": "i_scale[16]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 34.872,
+   "y": 0
+  },
+  {
+   "name": "i_scale[17]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 35.928,
+   "y": 0
+  },
+  {
+   "name": "i_scale[18]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 36.984,
+   "y": 0
+  },
+  {
+   "name": "i_scale[19]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 38.04,
+   "y": 0
+  },
+  {
+   "name": "i_scale[20]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 39.096,
+   "y": 0
+  },
+  {
+   "name": "i_scale[21]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 40.152,
+   "y": 0
+  },
+  {
+   "name": "i_scale[22]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 41.208,
+   "y": 0
+  },
+  {
+   "name": "i_scale[23]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 42.264,
+   "y": 0
+  },
+  {
+   "name": "i_scale[24]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 43.32,
+   "y": 0
+  },
+  {
+   "name": "i_scale[25]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 44.376,
+   "y": 0
+  },
+  {
+   "name": "i_scale[26]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 45.432,
+   "y": 0
+  },
+  {
+   "name": "i_scale[27]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 46.488,
+   "y": 0
+  },
+  {
+   "name": "i_scale[28]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 47.544,
+   "y": 0
+  },
+  {
+   "name": "i_scale[29]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 48.6,
+   "y": 0
+  },
+  {
+   "name": "i_scale[30]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 49.656,
+   "y": 0
+  },
+  {
+   "name": "i_scale[31]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 50.712,
+   "y": 0
+  },
+  {
+   "name": "i_sink[0]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 51.768,
+   "y": 0
+  },
+  {
+   "name": "i_sink[1]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 52.824,
+   "y": 0
+  },
+  {
+   "name": "i_sink[2]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 53.88,
+   "y": 0
+  },
+  {
+   "name": "i_sink[3]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 54.936,
+   "y": 0
+  },
+  {
+   "name": "i_sink[4]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 55.992,
+   "y": 0
+  },
+  {
+   "name": "i_sink[5]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 57.048,
+   "y": 0
+  },
+  {
+   "name": "i_sink[6]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 58.104,
+   "y": 0
+  },
+  {
+   "name": "i_sink[7]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 59.16,
+   "y": 0
+  },
+  {
+   "name": "i_sink[8]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 60.216,
+   "y": 0
+  },
+  {
+   "name": "i_sink[9]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 61.272,
+   "y": 0
+  },
+  {
+   "name": "i_sink[10]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 62.328,
+   "y": 0
+  },
+  {
+   "name": "i_sink[11]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 63.384,
+   "y": 0
+  },
+  {
+   "name": "i_sink[12]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 64.44,
+   "y": 0
+  },
+  {
+   "name": "i_sink[13]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 65.496,
+   "y": 0
+  },
+  {
+   "name": "i_sink[14]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 66.552,
+   "y": 0
+  },
+  {
+   "name": "i_sink[15]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 67.608,
+   "y": 0
+  },
+  {
+   "name": "i_sink[16]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 68.664,
+   "y": 0
+  },
+  {
+   "name": "i_sink[17]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 69.72,
+   "y": 0
+  },
+  {
+   "name": "i_sink[18]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 70.776,
+   "y": 0
+  },
+  {
+   "name": "i_sink[19]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 71.832,
+   "y": 0
+  },
+  {
+   "name": "i_sink[20]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 72.888,
+   "y": 0
+  },
+  {
+   "name": "i_sink[21]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 73.944,
+   "y": 0
+  },
+  {
+   "name": "i_sink[22]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 75.0,
+   "y": 0
+  },
+  {
+   "name": "i_sink[23]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 76.056,
+   "y": 0
+  },
+  {
+   "name": "i_sink[24]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 77.112,
+   "y": 0
+  },
+  {
+   "name": "i_sink[25]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 78.168,
+   "y": 0
+  },
+  {
+   "name": "i_sink[26]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 79.224,
+   "y": 0
+  },
+  {
+   "name": "i_sink[27]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 80.28,
+   "y": 0
+  },
+  {
+   "name": "i_sink[28]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 81.336,
+   "y": 0
+  },
+  {
+   "name": "i_sink[29]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 82.392,
+   "y": 0
+  },
+  {
+   "name": "i_sink[30]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 83.448,
+   "y": 0
+  },
+  {
+   "name": "i_sink[31]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 84.504,
+   "y": 0
+  },
+  {
+   "name": "i_sv",
+   "dir": "input",
+   "layer": "M5",
+   "x": 85.56,
+   "y": 0
+  },
+  {
+   "name": "i_s[0]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 86.616,
+   "y": 0
+  },
+  {
+   "name": "i_s[1]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 87.672,
+   "y": 0
+  },
+  {
+   "name": "i_s[2]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 88.728,
+   "y": 0
+  },
+  {
+   "name": "i_s[3]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 89.784,
+   "y": 0
+  },
+  {
+   "name": "i_s[4]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 90.84,
+   "y": 0
+  },
+  {
+   "name": "i_s[5]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 91.896,
+   "y": 0
+  },
+  {
+   "name": "i_s[6]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 92.952,
+   "y": 0
+  },
+  {
+   "name": "i_s[7]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 94.008,
+   "y": 0
+  },
+  {
+   "name": "i_s[8]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 95.064,
+   "y": 0
+  },
+  {
+   "name": "i_s[9]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 96.12,
+   "y": 0
+  },
+  {
+   "name": "i_s[10]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 97.176,
+   "y": 0
+  },
+  {
+   "name": "i_s[11]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 98.232,
+   "y": 0
+  },
+  {
+   "name": "i_s[12]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 99.288,
+   "y": 0
+  },
+  {
+   "name": "i_s[13]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 100.344,
+   "y": 0
+  },
+  {
+   "name": "i_s[14]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 101.4,
+   "y": 0
+  },
+  {
+   "name": "i_s[15]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 102.456,
+   "y": 0
+  },
+  {
+   "name": "i_s[16]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 103.512,
+   "y": 0
+  },
+  {
+   "name": "i_s[17]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 104.568,
+   "y": 0
+  },
+  {
+   "name": "i_s[18]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 105.624,
+   "y": 0
+  },
+  {
+   "name": "i_s[19]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 106.68,
+   "y": 0
+  },
+  {
+   "name": "i_s[20]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 107.736,
+   "y": 0
+  },
+  {
+   "name": "i_s[21]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 108.792,
+   "y": 0
+  },
+  {
+   "name": "i_s[22]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 109.848,
+   "y": 0
+  },
+  {
+   "name": "i_s[23]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 110.904,
+   "y": 0
+  },
+  {
+   "name": "i_s[24]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 111.96,
+   "y": 0
+  },
+  {
+   "name": "i_s[25]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 113.016,
+   "y": 0
+  },
+  {
+   "name": "i_s[26]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 114.072,
+   "y": 0
+  },
+  {
+   "name": "i_s[27]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 115.128,
+   "y": 0
+  },
+  {
+   "name": "i_s[28]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 116.184,
+   "y": 0
+  },
+  {
+   "name": "i_s[29]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 117.24,
+   "y": 0
+  },
+  {
+   "name": "i_s[30]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 118.296,
+   "y": 0
+  },
+  {
+   "name": "i_s[31]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 119.352,
+   "y": 0
+  },
+  {
+   "name": "o_ev",
+   "dir": "output",
+   "layer": "M5",
+   "x": 120.408,
+   "y": 0
+  },
+  {
+   "name": "o_es",
+   "dir": "output",
+   "layer": "M5",
+   "x": 121.464,
+   "y": 0
+  },
+  {
+   "name": "o_el",
+   "dir": "output",
+   "layer": "M5",
+   "x": 122.52,
+   "y": 0
+  },
+  {
+   "name": "o_e[0]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 123.576,
+   "y": 0
+  },
+  {
+   "name": "o_e[1]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 124.632,
+   "y": 0
+  },
+  {
+   "name": "o_e[2]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 125.688,
+   "y": 0
+  },
+  {
+   "name": "o_e[3]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 126.744,
+   "y": 0
+  },
+  {
+   "name": "o_e[4]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 127.8,
+   "y": 0
+  },
+  {
+   "name": "o_e[5]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 128.856,
+   "y": 0
+  },
+  {
+   "name": "o_e[6]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 129.912,
+   "y": 0
+  },
+  {
+   "name": "o_e[7]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 130.968,
+   "y": 0
+  },
+  {
+   "name": "o_e[8]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 132.024,
+   "y": 0
+  },
+  {
+   "name": "o_e[9]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 133.08,
+   "y": 0
+  },
+  {
+   "name": "o_e[10]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 134.136,
+   "y": 0
+  },
+  {
+   "name": "o_e[11]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 135.192,
+   "y": 0
+  },
+  {
+   "name": "o_e[12]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 136.248,
+   "y": 0
+  },
+  {
+   "name": "o_e[13]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 137.304,
+   "y": 0
+  },
+  {
+   "name": "o_e[14]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 138.36,
+   "y": 0
+  },
+  {
+   "name": "o_e[15]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 139.416,
+   "y": 0
+  },
+  {
+   "name": "o_e[16]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 140.472,
+   "y": 0
+  },
+  {
+   "name": "o_e[17]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 141.528,
+   "y": 0
+  },
+  {
+   "name": "o_e[18]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 142.584,
+   "y": 0
+  },
+  {
+   "name": "o_e[19]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 143.64,
+   "y": 0
+  },
+  {
+   "name": "o_e[20]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 144.696,
+   "y": 0
+  },
+  {
+   "name": "o_e[21]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 145.752,
+   "y": 0
+  },
+  {
+   "name": "o_e[22]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 146.808,
+   "y": 0
+  },
+  {
+   "name": "o_e[23]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 147.864,
+   "y": 0
+  },
+  {
+   "name": "o_e[24]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 148.92,
+   "y": 0
+  },
+  {
+   "name": "o_e[25]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 149.976,
+   "y": 0
+  },
+  {
+   "name": "o_e[26]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 151.032,
+   "y": 0
+  },
+  {
+   "name": "o_e[27]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 152.088,
+   "y": 0
+  },
+  {
+   "name": "o_e[28]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 153.144,
+   "y": 0
+  },
+  {
+   "name": "o_e[29]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 154.2,
+   "y": 0
+  },
+  {
+   "name": "o_e[30]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 155.256,
+   "y": 0
+  },
+  {
+   "name": "o_e[31]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 156.312,
+   "y": 0
+  },
+  {
+   "name": "i_mv",
+   "dir": "input",
+   "layer": "M5",
+   "x": 8.472,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[0]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 9.528,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[1]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 10.584,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[2]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 11.64,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[3]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 12.696,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[4]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 13.752,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[5]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 14.808,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[6]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 15.864,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[7]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 16.92,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[8]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 17.976,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[9]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 19.032,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[10]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 20.088,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[11]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 21.144,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[12]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 22.2,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[13]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 23.256,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[14]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 24.312,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[15]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 25.368,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[16]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 26.424,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[17]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 27.48,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[18]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 28.536,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[19]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 29.592,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[20]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 30.648,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[21]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 31.704,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[22]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 32.76,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[23]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 33.816,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[24]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 34.872,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[25]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 35.928,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[26]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 36.984,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[27]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 38.04,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[28]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 39.096,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[29]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 40.152,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[30]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 41.208,
+   "y": 174.96
+  },
+  {
+   "name": "i_nmb[31]",
+   "dir": "input",
+   "layer": "M5",
+   "x": 42.264,
+   "y": 174.96
+  },
+  {
+   "name": "o_mxv",
+   "dir": "output",
+   "layer": "M5",
+   "x": 43.32,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[0]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 44.376,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[1]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 45.432,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[2]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 46.488,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[3]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 47.544,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[4]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 48.6,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[5]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 49.656,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[6]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 50.712,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[7]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 51.768,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[8]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 52.824,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[9]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 53.88,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[10]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 54.936,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[11]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 55.992,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[12]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 57.048,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[13]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 58.104,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[14]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 59.16,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[15]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 60.216,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[16]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 61.272,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[17]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 62.328,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[18]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 63.384,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[19]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 64.44,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[20]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 65.496,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[21]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 66.552,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[22]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 67.608,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[23]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 68.664,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[24]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 69.72,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[25]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 70.776,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[26]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 71.832,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[27]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 72.888,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[28]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 73.944,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[29]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 75.0,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[30]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 76.056,
+   "y": 174.96
+  },
+  {
+   "name": "o_mx[31]",
+   "dir": "output",
+   "layer": "M5",
+   "x": 77.112,
+   "y": 174.96
+  },
+  {
+   "name": "ck",
+   "dir": "input",
+   "layer": "M5",
+   "x": 87.48,
+   "y": 87.48
+  },
+  {
+   "name": "rst",
+   "dir": "input",
+   "layer": "M5",
+   "x": 88.536,
+   "y": 87.48
+  }
+ ]
+}

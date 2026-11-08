@@ -1,0 +1,22 @@
+{
+ "plan": "/srv/opentallas-scratch2/claude/codex-svc-hardening-1209/source/results/physical/codex_svc_hardening_1209/native_sml/plan.json",
+ "view_list": [
+  {
+   "view": "codex_svc_sml_native@43652e29c252",
+   "module": "codex_svc_sml_native",
+   "outline_um": [
+    174.96,
+    174.96
+   ],
+   "pins_file": "pins.json",
+   "pins_sha256": "f6a29d0887371d5d8b8db55d4edd4db7b406dcac78be1dc22512abab0812433b",
+   "recipe_keys": [
+    "codex_svc_native_sml"
+   ],
+   "instances": [
+    "private_sml_child"
+   ],
+   "placed": 1
+  }
+ ]
+}

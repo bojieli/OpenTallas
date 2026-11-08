@@ -1,0 +1,5 @@
+SML_NATIVE_BOUNDARY checks=2456 validwords=144 bad=0 mutantdiff=16 cycles_added=0
+SML_HOLD_ALLCYCLE holdbad=120
+[2464000] %Fatal: tb.sv:47: Assertion failed in tb: SML_NATIVE_BOUNDARY FAIL
+%Error: tb.sv:47: Verilog $stop
+Aborting...
