@@ -11,3 +11,9 @@ if timeout 240 vvp mutant.vvp +SEED=1 > mutant.log 2>&1; then
   exit 8
 fi
 grep -q 'WQDIAG_EDGE' mutant.log
+iverilog -g2012 -s tb -Ptb.RELOAD=151 -o misaligned.vvp common.sv off.sv on.sv tb.sv
+if timeout 60 vvp misaligned.vvp +SEED=1 > misaligned.log 2>&1; then
+  echo "FAIL: illegal 833 row-phase calendar survived" >&2
+  exit 9
+fi
+grep -q 'WQDIAG_REFRESH_PHASE' misaligned.log
