@@ -1013,3 +1013,23 @@ def test_nonport_score_reads_census_or_falls_back(tmp_path, monkeypatch):
     p = dict(m, ff_np=-2.0, ff_np_n=3)
     assert not E.improved(p, m) and E.better(p, m)                              # scored on the non-port number
     assert "ff_np" not in E.metrics(rec(5, -9))                                 # no path: whole number
+
+
+def test_stage_so_read_only_tag_tools_with_kit_override(tmp_path):
+    """DIE-KV-93 11-08 FLOW class: eco_loop on a tag tools tree (all 0444) with a kit .tcl of the same name
+    (face_flops_release.tcl) failed EACCES in stage_so; the kit file must win and the staged tree stay writable."""
+    tools = _tools_copy(tmp_path)
+    (tools / "face_flops_release.tcl").write_text("# tag tool copy\n")
+    k = tmp_path / "kit"
+    k.mkdir()
+    (k / "config.mk").write_text("export DESIGN_NAME = x\n")
+    (k / "face_flops_release.tcl").write_text("# kit override\n")
+    for p in list(tools.iterdir()) + list((tools.parents[1] / "physical" / "common_flow").iterdir()):
+        if p.is_file():
+            p.chmod(0o444)
+    so = E.stage_so(k, tmp_path / "eco", tools)
+    dp = so / "tools" / "die_plan"
+    assert (dp / "face_flops_release.tcl").read_text() == "# kit override\n"
+    assert (tools / "face_flops_release.tcl").read_text() == "# tag tool copy\n"
+    assert all(os.access(p, os.W_OK) for p in dp.iterdir() if p.is_file())
+    E.stage_so(k, tmp_path / "eco", tools)          # re-staging over the existing tree works too

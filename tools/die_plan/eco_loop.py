@@ -381,6 +381,18 @@ COMMON_FLOW_BUNDLE = ("clock_family.tcl", "macro_cts_cluster.tcl")
 COMMON_FLOW_REQUIRED = ("clock_family.tcl",)
 
 
+def _copy_w(src, dst):
+    """copy2 into a staged tree that stays writable (DIE-KV-93 11-08 FLOW class): a read-only tag tools tree (0444)
+    used to stage 0444 copies, so a later kit file of the same name (kit .tcl override) or a re-copy hit EACCES.
+    The destination is replaced, never written through, and the staged copy gets u+w; the source is untouched."""
+    dst = Path(dst)
+    if dst.is_symlink() or dst.is_file():
+        dst.unlink()
+    shutil.copy2(src, dst)
+    os.chmod(dst, os.stat(dst).st_mode | 0o200)
+    return dst
+
+
 def stage_common_flow(so, tools=HERE):
     """so/physical/common_flow from the checkout of `tools`; returns the staged dir.  Raises ValueError when a required
     member (clock_family.tcl) has no source, naming the fix (stage physical/common_flow next to tools/die_plan)."""
@@ -390,7 +402,7 @@ def stage_common_flow(so, tools=HERE):
     src_dir = tools.parents[1] / "physical" / "common_flow"
     if src_dir.is_dir():
         shutil.copytree(src_dir, out, dirs_exist_ok=True,
-                        ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+                        ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"), copy_function=_copy_w)
     for name in COMMON_FLOW_BUNDLE:
         if (out / name).is_file():
             continue
@@ -406,7 +418,7 @@ def stage_common_flow(so, tools=HERE):
                 if sys.path and sys.path[0] == str(tools):
                     sys.path.pop(0)
         if Path(src).is_file():
-            shutil.copy2(src, out / name)
+            _copy_w(src, out / name)
     missing = [n for n in COMMON_FLOW_REQUIRED if not (out / n).is_file()]
     if missing:
         raise ValueError(f"eco_loop: incomplete tool bundle: physical/common_flow/{', '.join(missing)} not found for "
@@ -428,21 +440,21 @@ def stage_so(kit, root, tools=HERE):
     dp.mkdir(parents=True, exist_ok=True)
     for p in Path(tools).iterdir():
         if p.is_file():
-            shutil.copy2(p, dp / p.name)
+            _copy_w(p, dp / p.name)
     for p in Path(kit).iterdir():
         if p.is_file() and p.suffix in (".py", ".tcl", ".sh") and p.stat().st_size < (8 << 20):
             if p.suffix == ".py" and (Path(tools) / p.name).is_file():
                 continue
-            shutil.copy2(p, dp / p.name)
+            _copy_w(p, dp / p.name)
     stage_common_flow(so, tools)
     subprocess.run([sys.executable, "-I", str(Path(tools) / "signoff.py"), "bundle", str(dp)],
                    check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     for n in ECO_TOOL_FILES:
-        shutil.copy2(Path(tools) / n, dp / n)
+        _copy_w(Path(tools) / n, dp / n)
     for n in ("orfs_hold_mm.py", "orfs_hold_mm.tcl"):
         for src in (Path(kit) / n, Path(tools).parent / n):
             if src.is_file():
-                shutil.copy2(src, so / "tools" / n)
+                _copy_w(src, so / "tools" / n)
                 break
     return so
 
