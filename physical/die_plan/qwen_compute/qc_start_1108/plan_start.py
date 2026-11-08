@@ -46,6 +46,9 @@ def plan(base,side,rawdir):
         sv=rawdir/(t['module']+'__'+n+'.sv')
         sv=sv if sv.exists() else rawdir/(t['module']+'.sv')
         text=sv.read_text();rr=H.rrl_from_rtl(sv);graph,depth=relay_graph(text)
+        # QC-TYPES-7 11-08: a raw relay that drives a port (assign rst_o_N = rr_tK) is exported too; the QC wrappers do not
+        # use HEAD rst_start_raw* names, so H.rrl_from_rtl misses them (strict bind: writer START raw drives an output port).
+        rr=[(a,b,c,d,int(e or bool(re.search(r"\bassign\s+\w+\s*=\s*"+re.escape(a)+r"\s*;",text)))) for a,b,c,d,e in rr]
         origin_inst='u_cland_rstart_rx' if role=='relay' else 'u_cland_origin'
         m=re.search(r'\b'+origin_inst+r'\s*\(([^;]*?)\);',text,re.S);assert m,(n,origin_inst)
         old_reset=re.search(r'\.rst_raw_n\(\s*(\w+)\s*\)',m[1])[1];control_depth=depth(old_reset)
