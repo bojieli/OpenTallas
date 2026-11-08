@@ -1,0 +1,136 @@
+{
+ "schema": "opentallas.s81_lnb_proof.v1",
+ "lane": "S81-LNB-1",
+ "date": "2026-11-08",
+ "subject": "kit_ln_copies.py on ot_s81sl_leaf__t56 (bound module of kit intel1 scratch3/claude/s81-types-4/t56_follow, md5 1d56dc5d829b76555c154c31c3af553e)",
+ "method": "(1) text: new bound module == old outside the edits (kit_ln_copies_proof.text_check); (2) yosys 0.68 sat -tempinduct miter of native helper ot_bind_native_8623bff6f848089815f40aa4 (gold, 20 words) vs the 16 copy modules (gate), every consumer slice compared, equal initial state (-set-init-zero), free WR_ADDR/WR_DATA/WR_EN; (3) old ot_rst_relay REGIONS 4 bit 2 vs widened REGIONS 20 bits 4..19 (+ bits 0..3 unchanged). Mutants: cf_word (copy reads the next word), cf_drop (one write statement dropped), cf_order (two writes of one bit with different data swapped), relay_early (lane bit from sync_q).",
+ "run": "intel1 docker openroad/orfs:asap7lock yosys, /srv/opentallas-scratch2/claude/s81-lnb-1/proof_t56b/<case>/prove.log",
+ "text_check": {
+  "byte_identical_outside_edits": true,
+  "detail": "byte-identical outside the edits"
+ },
+ "cases": {
+  "cf_base": {
+   "verdict": "Induction step proven: SUCCESS!",
+   "log": "End of script. Logfile hash: a2ba4601a8, time: 380.38s, user",
+   "expect": "PROVE",
+   "pass_": true
+  },
+  "cf_cf_drop": {
+   "verdict": "SAT temporal induction proof finished - model found for base case: FAIL!",
+   "log": "End of script. Logfile hash: 1601e6e9ca, time: 111.51s, user",
+   "expect": "FAIL (mutant caught)",
+   "pass_": true
+  },
+  "cf_cf_order": {
+   "verdict": "SAT temporal induction proof finished - model found for base case: FAIL!",
+   "log": "End of script. Logfile hash: a63419794c, time: 124.21s, user",
+   "expect": "FAIL (mutant caught)",
+   "pass_": true
+  },
+  "cf_cf_word": {
+   "verdict": "SAT temporal induction proof finished - model found for base case: FAIL!",
+   "log": "End of script. Logfile hash: 5855ceb18a, time: 79.62s, user:",
+   "expect": "FAIL (mutant caught)",
+   "pass_": true
+  },
+  "relay_base": {
+   "verdict": "Induction step proven: SUCCESS!",
+   "log": "End of script. Logfile hash: 7bd0058999, time: 0.04s, user:",
+   "expect": "PROVE",
+   "pass_": true
+  },
+  "relay_relay_early": {
+   "verdict": "SAT temporal induction proof finished - model found for base case: FAIL!",
+   "log": "End of script. Logfile hash: a92693d5d5, time: 0.02s, user:",
+   "expect": "FAIL (mutant caught)",
+   "pass_": true
+  }
+ },
+ "all_pass": true,
+ "sweep_current_bind": {
+  "bind": "epyc2 /srv/opentallas-scratch3/claude/die-s81-70/kvov/bind/rtl (wave S81 kit_rtl script die-s81-70/kit_rtl_s81_ds70_kvov.sh)",
+  "n": 67,
+  "text_ok": 67,
+  "bits": [
+   2
+  ],
+  "readers": [
+   16
+  ],
+  "lanes": [
+   16
+  ],
+  "bad": [],
+  "types": [
+   "ot_s81sl_kv_leaf__t1",
+   "ot_s81sl_kv_leaf__t2",
+   "ot_s81sl_kv_leaf__t3",
+   "ot_s81sl_kv_leaf__t4",
+   "ot_s81sl_kv_leaf__t5",
+   "ot_s81sl_leaf__t1",
+   "ot_s81sl_leaf__t10",
+   "ot_s81sl_leaf__t11",
+   "ot_s81sl_leaf__t12",
+   "ot_s81sl_leaf__t13",
+   "ot_s81sl_leaf__t14",
+   "ot_s81sl_leaf__t15",
+   "ot_s81sl_leaf__t16",
+   "ot_s81sl_leaf__t17",
+   "ot_s81sl_leaf__t2",
+   "ot_s81sl_leaf__t21",
+   "ot_s81sl_leaf__t22",
+   "ot_s81sl_leaf__t23",
+   "ot_s81sl_leaf__t26",
+   "ot_s81sl_leaf__t27",
+   "ot_s81sl_leaf__t28",
+   "ot_s81sl_leaf__t29",
+   "ot_s81sl_leaf__t3",
+   "ot_s81sl_leaf__t30",
+   "ot_s81sl_leaf__t31",
+   "ot_s81sl_leaf__t32",
+   "ot_s81sl_leaf__t33",
+   "ot_s81sl_leaf__t34",
+   "ot_s81sl_leaf__t35",
+   "ot_s81sl_leaf__t36",
+   "ot_s81sl_leaf__t37",
+   "ot_s81sl_leaf__t38",
+   "ot_s81sl_leaf__t39",
+   "ot_s81sl_leaf__t4",
+   "ot_s81sl_leaf__t41",
+   "ot_s81sl_leaf__t42",
+   "ot_s81sl_leaf__t43",
+   "ot_s81sl_leaf__t45",
+   "ot_s81sl_leaf__t46",
+   "ot_s81sl_leaf__t47",
+   "ot_s81sl_leaf__t5",
+   "ot_s81sl_leaf__t50",
+   "ot_s81sl_leaf__t51",
+   "ot_s81sl_leaf__t52",
+   "ot_s81sl_leaf__t55",
+   "ot_s81sl_leaf__t56",
+   "ot_s81sl_leaf__t57",
+   "ot_s81sl_leaf__t58",
+   "ot_s81sl_leaf__t59",
+   "ot_s81sl_leaf__t6",
+   "ot_s81sl_leaf__t60",
+   "ot_s81sl_leaf__t61",
+   "ot_s81sl_leaf__t62",
+   "ot_s81sl_leaf__t65",
+   "ot_s81sl_leaf__t66",
+   "ot_s81sl_leaf__t67",
+   "ot_s81sl_leaf__t68",
+   "ot_s81sl_leaf__t69",
+   "ot_s81sl_leaf__t7",
+   "ot_s81sl_leaf__t70",
+   "ot_s81sl_leaf__t71",
+   "ot_s81sl_leaf__t72",
+   "ot_s81sl_leaf__t73",
+   "ot_s81sl_leaf__t74",
+   "ot_s81sl_leaf__t75",
+   "ot_s81sl_leaf__t8",
+   "ot_s81sl_leaf__t9"
+  ]
+ },
+ "lockstep_bench": "tools/die_plan/test_kit_ln_copies.py::test_lockstep_bench (iverilog, 4000 random cycles, base 0 mismatches, word + drop mutants caught)"
+}
