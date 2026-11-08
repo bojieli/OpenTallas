@@ -22,7 +22,7 @@
 // the receiver stays in hunt).  Every output leaves a flop.  Reset: regional synchronous tree, control only.
 // MUT 1: parity symbol 7 inverted (the receive side must see a nonzero syndrome) -- bench mutant.
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT = 0) (
+module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT = 0, parameter integer H0_SEQ_ONLY = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          tx_v,
@@ -42,13 +42,23 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT =
     (* keep = 1, dont_touch = 1 *) reg flt; // preserve the internal sticky state apart from its optional face copy
     reg  [3:0] ph;                       // index of the beat arriving at the port
     reg  [7:0] seq;
-    reg  [19:0] h0;                      // header of the frame whose beats are in flight (loaded with beat 0)
+    // H0_SEQ_ONLY=1 (S81-TYPES-7-RCK 11-08): only the seq byte of the header is a register; the constant 12'hA5C part
+    // is a wire.  The original form keeps 12 never-reset flops whose D is a constant; synthesis folds them while LEC
+    // treats their pre-load value as free (TX vC/vD: 24 differs on ch_q[448..471]).  h0 is only read when sk[*][0]
+    // marks a beat-0 chunk, i.e. after a load, so outputs are identical.  Default 0 = original RTL for all other users.
+    wire [19:0] h0;
+    reg  [19:0] h0_r;                    // header of the frame whose beats are in flight (loaded with beat 0)
+    reg  [7:0]  h0_s;
+    assign h0 = (H0_SEQ_ONLY != 0) ? {12'hA5C, h0_s} : h0_r;
     reg  [511:0] d0, d1, d2, d3, d4, d5;
     wire       st = tx_v || run;         // a beat enters d0 this cycle
     (* keep *) reg [9:0] sk [0:NRC-1];   // one-hot beat index of d0 (zero = no beat), NRC copies
     always @(posedge clk) begin
         d0 <= tx_d; d1 <= d0; d2 <= d1; d3 <= d2; d4 <= d3; d5 <= d4;
-        if (st && ph == 4'd0) h0 <= {12'hA5C, seq};
+        if (st && ph == 4'd0) begin
+            if (H0_SEQ_ONLY != 0) h0_s <= seq;
+            else h0_r <= {12'hA5C, seq};
+        end
     end
     integer i;
     always @(posedge clk)

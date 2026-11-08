@@ -1,0 +1,8 @@
+base seed 1 rc=0 H0_RESULT checks=5994 errors=0 valid_beats=5876
+base seed 2 rc=0 H0_RESULT checks=5994 errors=0 valid_beats=5876
+base seed 3 rc=0 H0_RESULT checks=5994 errors=0 valid_beats=5876
+base seed 7 rc=0 H0_RESULT checks=5994 errors=0 valid_beats=5876
+base seed 11 rc=0 H0_RESULT checks=5994 errors=0 valid_beats=5876
+MUT_H0_SEQ rc=1 H0_RESULT checks=5994 errors=108 valid_beats=5876
+MUT_CONST rc=1 H0_RESULT checks=5994 errors=1176 valid_beats=5876
+MUT_SEQ rc=1 H0_RESULT checks=5994 errors=1176 valid_beats=5876
