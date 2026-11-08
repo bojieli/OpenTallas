@@ -5,13 +5,19 @@
 // is checked at the date; a miss faults, never moves a date or stalls a ring.
 // This block adds zero datapath cycles. Retirement is matching token emission,
 // supplied by the caller; replay completion is deliberately not an input.
-module ot_s81hd_static_issue #(parameter integer MUT_MODE=0)(
+// DATE_SPLIT (DIE-HEAD-83 11-07, hd_ctl vF, 0 cycles; default 0 = unchanged): the next date is formed by two adders,
+// offset + period and next_date + period, with first selecting the sum, instead of selecting the addend before one
+// adder.  Same value every cycle (first ? a + p : b + p == (first ? a : b) + p); start_i / first then reach next_date
+// through one mux, not through the 32-bit carry chain (vE GRT u_rrl_75_g -> next_date[*] -33.4, 16 endpoints).
+module ot_s81hd_static_issue #(parameter integer MUT_MODE=0, parameter integer DATE_SPLIT=0)(
  input wire ck,rn,start_i,run_i,
  input wire[15:0]issue_offset,issue_period,merge_deadline,
  input wire loaded_ready,replay_busy,token_retire,merged_valid,
  output wire issue_o,output reg job_active_o,output wire due_o,output reg fault_o
 );
  reg started;reg[31:0]age,next_date;reg waiting_merge;reg[15:0]merge_left;
+ (* keep = "true" *) wire[31:0]nd_off={16'd0,issue_offset}+{16'd0,issue_period};
+ (* keep = "true" *) wire[31:0]nd_run=next_date+{16'd0,issue_period};
  wire first=start_i&&!started;
  wire due=run_i && ((first&&issue_offset==0)||(started&&age==next_date));
  assign due_o=due;
@@ -25,7 +31,8 @@ module ot_s81hd_static_issue #(parameter integer MUT_MODE=0)(
     if(!run_i||issue_period==0||merge_deadline==0)fault_o<=1;
    end else if(started)age<=age+1'b1;
    if(due)begin
-    next_date<=(first?{16'd0,issue_offset}:next_date)+{16'd0,issue_period};
+    if(DATE_SPLIT!=0)next_date<=first?nd_off:nd_run;
+    else next_date<=(first?{16'd0,issue_offset}:next_date)+{16'd0,issue_period};
     if(!loaded_ready||replay_busy||(job_active_o&&!token_retire)||issue_period==0)fault_o<=1;
    end
    if(token_retire)begin

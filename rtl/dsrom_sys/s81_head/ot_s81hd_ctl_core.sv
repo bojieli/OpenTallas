@@ -7,7 +7,7 @@ module ot_s81hd_ctl_core #(parameter integer SK=11,parameter integer MUT_DRAFT_E
  // u_ht's beat_tx hold too (HOLD_RST); 0 = the earlier no-reset form.  rq / sq are read only through send (rp || sp),
  // which a load sets, so the host lane is identical; their constant frame fields (type, zero fields, bit 552) no
  // longer power up X.  ctl_core is the hd_ctl configuration (ING_STAGE / SEQ_WB / SEQ_FAN = 1 here too).
- parameter integer DATA_RST=1)(
+ parameter integer DATA_RST=1, parameter integer SRAM_RAW_CAPTURE=0, parameter integer SRAM_PARTIAL_CAPTURE=0, parameter integer CTL_PRE=0)(
  input wire ck,rst_n,start_i,lep_fault_i, input wire[10:0]lw_i,
  input wire[1103:0]lepk_i0, output wire[1103:0]lepk_o0,
  output wire lepf_o0, output wire[44:0]unit_o0,input wire[31:0]ctrl_i0,
@@ -58,7 +58,7 @@ module ot_s81hd_ctl_core #(parameter integer SK=11,parameter integer MUT_DRAFT_E
  // Input kind7 carries HSF0 type in gidx[3:0] and its payload in flit512.
  wire dvalid=lepk_i0[0]&&lepk_i0[3:1]==7;
  wire[552:0]dframe={1'b1,24'd0,lepk_i0[532:21],12'd0,lepk_i0[16:13]};
- ot_s81hd_ctl_hsf0_static #(.SK(SK),.MUT_DRAFT_EARLY(MUT_DRAFT_EARLY),.ING_STAGE(ING_STAGE),.SEQ_WB(SEQ_WB),.SEQ_FAN(SEQ_FAN),.SEQ_RST(DATA_RST))u_logic(
+ ot_s81hd_ctl_hsf0_static #(.SK(SK),.MUT_DRAFT_EARLY(MUT_DRAFT_EARLY),.ING_STAGE(ING_STAGE),.SEQ_WB(SEQ_WB),.SEQ_FAN(SEQ_FAN),.SEQ_RST(DATA_RST),.SRAM_RAW_CAPTURE(SRAM_RAW_CAPTURE),.SRAM_PARTIAL_CAPTURE(SRAM_PARTIAL_CAPTURE),.CTL_PRE(CTL_PRE))u_logic(
   .ck(ck),.rst_n(rst_n),.start_i(start_i),.adapter_fault(adapter_fault),.job_active_o(job),
   .ri(lepk_i0),.mu_rt(ctrl_i0),.lw(lw_i),.lep_f(lep_fault_i),.ro(core_ro),.mu_c(muc),.mu_rc(murc),.ctl_f(lepf_o0),
   .sn_o(x_o),.ss_o(unused_duplicate),.sn_i(b_i),.ss_i(b_i),
