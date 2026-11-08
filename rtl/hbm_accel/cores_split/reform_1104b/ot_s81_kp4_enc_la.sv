@@ -39,7 +39,7 @@
 module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, parameter integer FF = 0,
     // Opt-in local chunk capture: +1 output data/valid/fault cycle, unchanged II=1.
     parameter integer CH_STAGE = 0, parameter integer CH_MUT = 0, parameter integer FOLD = 0,
-    parameter integer CH_REGION4 = 0) (
+    parameter integer CH_REGION4 = 0, parameter integer CH_RELAY1 = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          tx_v,
@@ -54,6 +54,10 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
     localparam integer FFS = (LA == 2 && FF != 0) ? 1 : 0;
     localparam integer CHS = (LA == 2 && FF != 0 && CH_STAGE != 0) ? 1 : 0;
     localparam integer FLD = (FFS != 0 && FOLD != 0) ? 1 : 0;
+    // Optional conservative +1 PIN CYCLE. The chunk data relay is accompanied
+    // by the same edge on all parity/word/header/valid/fault controls below.
+    // The canonical default remains unchanged; II stays one beat per cycle.
+    localparam integer REL = (CHS != 0 && CH_REGION4 != 0 && CH_RELAY1 != 0) ? 1 : 0;
     localparam integer NP = 30;
     localparam integer NRC = 4;          // chunk-select copies (130 window bits each)
     localparam integer NRO = 17;         // word-select copies (32 PMA bits each)
@@ -67,11 +71,11 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
     // part as no-reset flops read X before the first frame; synthesis folded them, kit LEC could not prove them).
     reg  [7:0]  h0s;                     // seq of the frame whose beats are in flight (loaded with beat 0)
     wire [19:0] h0 = {12'hA5C, h0s};
-    reg  [511:0] d0, d1, d2, d3, d4, d5, d6, d7, d8; // d6: LA2; d7: LA2+FF; unused stages fold away
+    reg  [511:0] d0, d1, d2, d3, d4, d5, d6, d7, d8, d9; // unused stages fold away
     wire       st = tx_v || run;         // a beat enters d0 this cycle
     (* keep *) reg [9:0] sk [0:NRC-1];   // one-hot beat index of d0 (zero = no beat), NRC copies
     always @(posedge clk) begin
-        d0 <= tx_d; d1 <= d0; d2 <= d1; d3 <= d2; d4 <= d3; d5 <= d4; d6 <= d5; d7 <= d6; d8 <= d7;
+        d0 <= tx_d; d1 <= d0; d2 <= d1; d3 <= d2; d4 <= d3; d5 <= d4; d6 <= d5; d7 <= d6; d8 <= d7; d9 <= d8;
         if (st && ph == 4'd0) h0s <= seq;
     end
     integer i;
@@ -102,13 +106,27 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
     // CH_STAGE: the 10-way chunk mux drives one local D bank, not four distant
     // cq copies. Keep the new state boundary; cq fanout remains four.
     wire [519:0] ch_feed [0:3];
+    wire [519:0] relay_feed [0:3];
+    generate if (REL) begin : g_ch_relay
+        // Each source-side relay owns one regional destination. These flops
+        // split the original broadcast flight into two clocked hops.
+        (* keep *) reg [519:0] q [0:3];
+        for (genvar rr = 0; rr < 4; rr = rr + 1) begin : g_q
+            always @(posedge clk) q[rr] <= ch_n;
+            assign relay_feed[rr] = (CH_MUT == 8 && rr == 0) ? ch_n : q[rr];
+        end
+    end else begin : g_no_ch_relay
+        for (genvar rr = 0; rr < 4; rr = rr + 1) begin : g_q
+            assign relay_feed[rr] = ch_n;
+        end
+    end endgenerate
     // Four physical capture banks keep the existing CH_STAGE edge. Each bank
     // feeds only its own parity region, replacing the long four-region star.
     generate if (CHS && CH_REGION4 != 0) begin : g_ch_region
         (* keep *) reg [519:0] mid [0:3];
         for (genvar cr = 0; cr < 4; cr = cr + 1) begin : g_mid
             always @(posedge clk)
-                mid[cr] <= ch_n ^ ((CH_MUT == 6 || (CH_MUT == 7 && cr == 0)) ? 520'b1 : 520'b0);
+                mid[cr] <= relay_feed[cr] ^ ((CH_MUT == 6 || (CH_MUT == 7 && cr == 0)) ? 520'b1 : 520'b0);
             assign ch_feed[cr] = mid[cr];
         end
     end else if (CHS) begin : g_ch_stage
@@ -158,7 +176,7 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
         if (FLD) begin : g_fold
             // ev[c][r]: the chunk in cq is even (first of a pair), one copy per (slice c, parity region r), captured
             // on the cq edge: CH_STAGE -> fe[0] (chunk in mid), else the d0 phase (chunk in ch_n).
-            wire evn = CHS ? fe[0] : (sk[0][0] | sk[0][2] | sk[0][4] | sk[0][6] | sk[0][8]);
+            wire evn = CHS ? fe[REL] : (sk[0][0] | sk[0][2] | sk[0][4] | sk[0][6] | sk[0][8]);
             (* keep *) reg [3:0] ev [0:7];
             wire [299:0] fb [0:7];
             wire [299:0] fa [0:7];
@@ -226,11 +244,13 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
             // mid has the old flag-bank semantics, including synchronous reset.
             // Final flags are pure one-edge delays, so reset edges shift too.
             (* keep *) reg [3:0] f0_mid, fv_mid;
+            reg [3:0] f0_relay, fv_relay;
             always @(posedge clk) begin
                 if (!rs_n[1]) begin fv_mid <= 4'd0; f0_mid <= 4'd0; end
                 else begin fv_mid <= {4{fe[3+FFS]}}; f0_mid <= {4{f0[3+FFS]}}; end
-                fv <= (CH_MUT == 2) ? {4{fe[3+FFS]}} : fv_mid;
-                f0v <= (CH_MUT == 1) ? {4{f0[3+FFS]}} : f0_mid;
+                fv_relay <= fv_mid; f0_relay <= f0_mid;
+                fv <= (CH_MUT == 2) ? {4{fe[3+FFS]}} : (REL ? fv_relay : fv_mid);
+                f0v <= (CH_MUT == 1) ? {4{f0[3+FFS]}} : (REL ? f0_relay : f0_mid);
             end
         end else begin : g_original_flags
             always @(posedge clk)
@@ -254,8 +274,10 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
     end endgenerate
     wire par_load_base = (LA == 2) ? f9[4+((MUT == 3) ? 0 : FFS)] : f9[3];
     reg par_load_mid;
+    reg par_load_relay;
     always @(posedge clk) par_load_mid <= par_load_base;
-    wire par_load = (CHS && CH_MUT != 3) ? par_load_mid : par_load_base;
+    always @(posedge clk) par_load_relay <= par_load_mid;
+    wire par_load = (CHS && CH_MUT != 3) ? (REL ? par_load_relay : par_load_mid) : par_load_base;
     always @(posedge clk) if (par_load) par <= rem_tx;
     // ---------------- PMA words: word w = {d5, d4} at a fixed offset (cycle t_w + 5; d5 = beat w, d4 = beat w + 1)
     reg  [9:0] so [0:6];                 // one-hot beat index delayed 1..7 (so[4]/[5]/[6] = d5/d6/d7)
@@ -264,14 +286,19 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
     wire [9:0] sw_use [0:NRO-1];
     generate if (CHS) begin : g_ch_out
         (* keep *) reg [9:0] sw_mid [0:NRO-1];
+        reg [9:0] sw_relay [0:NRO-1];
         reg pv_mid, fault_mid;
+        reg pv_relay, fault_relay;
         for (genvar r = 0; r < NRO; r = r + 1) begin : g_sw_mid
-            always @(posedge clk) sw_mid[r] <= sw[r];
-            assign sw_use[r] = sw_mid[r];
+            always @(posedge clk) begin sw_mid[r] <= sw[r]; sw_relay[r] <= sw_mid[r]; end
+            assign sw_use[r] = REL ? sw_relay[r] : sw_mid[r];
         end
-        always @(posedge clk) begin pv_mid <= p_v_internal; fault_mid <= flt; end
-        assign p_v = (CH_MUT == 5) ? p_v_internal : pv_mid;
-        assign fault = fault_mid;
+        always @(posedge clk) begin
+            pv_mid <= p_v_internal; fault_mid <= flt;
+            pv_relay <= pv_mid; fault_relay <= fault_mid;
+        end
+        assign p_v = (CH_MUT == 5) ? p_v_internal : (REL ? pv_relay : pv_mid);
+        assign fault = REL ? fault_relay : fault_mid;
     end else begin : g_original_out
         for (genvar r = 0; r < NRO; r = r + 1) begin : g_sw_orig
             assign sw_use[r] = sw[r];
@@ -291,11 +318,13 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
             p_v_internal <= o_v || ((LA == 2) ? so[5+FFS][0] : so[4][0]);
         end
     // LA1: {d5,d4}; LA2: {d6,d5}; LA2+FF: {d7,d6}. FF moves parity and the PMA phase together.
-    wire [511:0]  oa = CHS ? d8 : (FFS ? d7 : ((LA == 2) ? d6 : d5));
-    wire [511:0]  ob = CHS ? d7 : (FFS ? d6 : ((LA == 2) ? d5 : d4));
+    wire [511:0]  oa = CHS ? (REL ? d9 : d8) : (FFS ? d7 : ((LA == 2) ? d6 : d5));
+    wire [511:0]  ob = CHS ? (REL ? d8 : d7) : (FFS ? d6 : ((LA == 2) ? d5 : d4));
     reg [7:0] h0s_out_mid;
+    reg [7:0] h0s_out_relay;
     always @(posedge clk) h0s_out_mid <= h0s;
-    wire [19:0] h0_out = (CHS && CH_MUT != 4) ? {12'hA5C, h0s_out_mid} : h0;
+    always @(posedge clk) h0s_out_relay <= h0s_out_mid;
+    wire [19:0] h0_out = (CHS && CH_MUT != 4) ? {12'hA5C, (REL ? h0s_out_relay : h0s_out_mid)} : h0;
     wire [1023:0] wo = {oa, ob};
     wire [543:0]  wsrc [0:9];
     generate for (gk = 0; gk < 10; gk = gk + 1) begin : g_wsrc

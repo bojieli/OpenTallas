@@ -1,0 +1,100 @@
+{
+ "schema": "opentallas.private_form_estimate.v1",
+ "module": "ot_s81hd_sc_tx",
+ "feature": "CH_RELAY1",
+ "default": 0,
+ "adopted": false,
+ "prerequisites": [
+  "LA2",
+  "FF1",
+  "CH_STAGE1",
+  "CH_REGION4"
+ ],
+ "mechanism": "four registered relays before regional chunk-capture banks",
+ "macs_per_cycle": 0,
+ "producer_bits_per_cycle": 512,
+ "consumer_bits_per_cycle": 544,
+ "initiation_interval_cycles": 1,
+ "frame_input_beats": 10,
+ "frame_output_words": 10,
+ "pin_cycles_added": {
+  "pma_tx": 1,
+  "e_flt": 1
+ },
+ "internal_relay_bits": 2080,
+ "replicas": 4,
+ "relay_output_fanout_per_bit": 1,
+ "source_ch_n_fanout_per_bit": 4,
+ "added_register_bits": {
+  "chunk_relay": 2080,
+  "data_delay_d9": 512,
+  "pair_flags": 8,
+  "word_select": 170,
+  "valid_fault": 2,
+  "parity_load": 1,
+  "header": 8
+ },
+ "added_register_total": 2781,
+ "measured_reference_dff_area_um2": 0.2916,
+ "added_flop_area_estimate_um2": 810.9396,
+ "base_fold_synth_area_um2": 20433,
+ "regional_capture_added_register_bits": 1560,
+ "outline_um": [
+  486,
+  120.96
+ ],
+ "total_pre_cts_cell_area_estimate_um2": 21698.8356,
+ "cell_fill_estimate": 0.3691,
+ "area_excludes": "new clock and repair cells; actual mapped/placed read required",
+ "track_estimate": {
+  "signals_max_layer": "M5",
+  "relay_bank_bus_bits": 520,
+  "bank_width_um": 75,
+  "reference_track_pitch_um": 0.048,
+  "one_layer_track_use_estimate": 0.3328
+ },
+ "timing": {
+  "period_ps": 833,
+  "setup_corner": "TT",
+  "hold_corner": "FF",
+  "clock_reference": "preserve existing core contract; no new parent reference adopted",
+  "relay_placement": "price now; derive actual midpoint targets from current PLACE before any optional P&R",
+  "closure_claim": false
+ },
+ "alignment": [
+  "even-chunk selector samples fe[1]",
+  "f0/fv pair flags delayed one edge including reset epochs",
+  "parity load pulse delayed one edge",
+  "PMA word select delayed one edge",
+  "data window advances to d9/d8",
+  "header, valid and fault delayed one edge"
+ ],
+ "token_model_obligation": "If adopted, add one TX edge to every bound instance and reschedule its link slots; no canonical model/plan changed.",
+ "validation": {
+  "verdict": "PASS",
+  "bench": "tb_kp4_enc_fold,REG4=1,RELAY=1,CHS=1,LA2,FF1",
+  "continuous": {
+   "compared_words": 1577,
+   "parity_words": 157,
+   "mismatches": 0
+  },
+  "stall_reset": {
+   "compared_words": 1548,
+   "parity_words": 154,
+   "mismatches": 0
+  },
+  "mutant": {
+   "CMUT": 8,
+   "mechanism": "one region bypasses relay edge",
+   "mismatches": 37,
+   "compared_words": 377,
+   "caught": true
+  },
+  "host": "intel1 (run spilled epyc4)",
+  "unit": "oth-ubuntu-830549-1794136595",
+  "logs": "/srv/opentallas-scratch2/claude/codex-head-tx-relay1-0222/{continuous,stall_reset,mutant8}.log",
+  "routed_lec": "NOT RUN",
+  "signoff": "NOT RUN"
+ },
+ "physical_launch": "HOLD: no P&R until current regional PLACE image and reach read"
+}
