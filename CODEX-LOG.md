@@ -12372,3 +12372,24 @@ OWNER? HBM h9b count adoption: merged exact OT_H9B_WQDIAG source9ab510cfbfc plus
 2026-11-08 03:33 PST HEAD/CTL: diagnosed78fixed-capture overlaps, hub70a23d9b629 legalizesall78 by<=1.08um; actual0of1025target overlaps. Stopped exact owninvalidphysical4054742; separateLEC+watcher alive. Legal successor NOTRUN by intentionalSPILLcopyguard; fleetchecking support, defaultawaitEQ/canonicalcopyback. No bypass/ownerfork/newcount.
 
 CODEX HBM HARD source correction03:3x: local ownerrepo/E2main stale; authoritative explicit intel2 codex/hbm-hard-0222-current@3bfb279893 (parentmain289149dea5b), confirmedreadback. Oldbranch refsnotforintegration. P2/P2f PLACE+LECEQ but CTS-121/-105fltfeedback; groupedfault9reg zero-cycleP2g bench0errs/mutants9876,83caught, newPLACEonI2. NoE6newpilot/diskoverride; no merges/tags/POR edits.
+
+## KV updates 2026-11-08 03:38 PST
+Current ds-kv M5 e1 re-sign completed SIGNED with routed LEC EQUIVALENT (29,978 points); TT+33.28/FF+2.92, DRV/DRC/antenna0. E6 codex-kv-resign-0222/e1_ds/PROVENANCE.json. Replacement only, +0count. Prompt vR routed with TT+9.79 and no DRV/DRC; current-tool port/nonport qualification and routed LEC now being prepared without P&R retry. vS clock-only conservative experiment is bounded at GRT, no extra data cycles or batch. Corrected earlier raw-clock inference: actual vQ CLOCK was PASS/INFO under hard_core_latency, not a failed core gate.
+
+OWNER? update: withdraw the earlier proposed PHY +1/+2 capture-stage question. Exact current consumer tracing found all 32 fh/rh packed clock bits dead at PC consumers. A private zero-cycle dead-bit plan/bind event and proof are in progress; no new clock policy or pipeline approval is requested for that alternative. Production plan remains unchanged.
+OWNER? remains: real physical PLL boundary for Hub_C (behavioral five-delay oscillator is not a hardened provider). Default preserve the block and prepare the concrete boundary proposal; no tie-off or waiver. Wi reset-contract/generic-cut policy questions remain pending while the simpler FDI extraction reduces the split scope.
+
+### 2026-11-08 03:39 PST S81 type progress
+Shared source-preparation fix on hub codex/s81-reset-scope-0222@7c731625b9. Scoped/captured predicate, shell forwarding and item config guards passed focused tests; C1 real pipeline KIT_RTL/topology/GEN passed. I2 source361 and old_capsule supply independent ENG/station pilots; source/catalog/preference omissions were fixed without dropping guards. C1 private gen_lint active; no route release. t31 draft @7a882657cd widens west lane and VN seam with two FT station moves, no added stages; native binding and G0 are running in I2 S2/claude/codex-s81-types-0222/t31_capsule. Details: lanes/CODEX-S81-TYPES-0222.md.
+
+OWNER? 2026-11-08 03:39 PST: Inherited DIE-S81-78 gunit new/base bind.py verify parents 921630/945734 run outside ot-run and sweep all 205 types. E5 earlyoom killed svc_rs t4/t5/t6 Verilator children at 03:34, each 24–34 GB RSS; this is a measured resource failure, not RTL failure. May the two exact broad verification parents be stopped, retaining strict-bind PASS and equal G0 findings and replacing only necessary affected-type checks through ot-run? Default leave other lanes' healthy parents untouched, do not rerun the broad sweep, and continue real work on other hosts.
+
+- 2026-11-08 03:39 PST CODEX-FLEET: E5 earlyoom actually terminated inherited broad gunit-verify Verilator t4/t5/t6 at03:34; exact PIDs/RSS in lane. Outsideot-heavy parentsconfirmed. Root/S81 notified; no kill/guard change by Codex.
+
+## OWNER?
+
+2026-11-08 03:40 PST QC NK vR7 exact intel1 unit oth-ubuntu-2392441-1794111263 has added buffers for over5hours with WNS-40.092ps/TNS-25175.607ps unchanged; remaining worst starts at inputport and is parent hold class. It predates the now-landed nonport hold scope. May Codex stop this exact run and continue a fresh owned capsule from its earned4CTS checkpoint using the existing nonport repair class fix? Default: leave the active other-owner job untouched and continue other lanes; no stop/retry/clock or timing relaxation authorized by this question.
+
+## CODEX HBM Q2NF milestone 2026-11-08 03:42 PST
+Ordinary vA1 source LEC closed: intel1 codex-q2nf-0222/lec_crc EQUIVALENT102362/102362,reset64,KEEP6181/6181. Tool class canonical codex/hbm-q2nf-rep-0222@2975d43186 READY. Source failures diagnosed as exhausted replica pairing +wideCRC parity capacity, both controls pass.
+Geometry pilot: intel1 codex-q2nf-0222/kit_periphery_vC, unit1194928-1794136555, PLACE only/holds retained. DEPTH issuer_cfg identified; actual20assign/1615input miter+mutant proves0cycleCFG_CASE. Source branch canonical codex/hbm-q2nf-cfg-case-0222@94066c1df9d, I2 codex-q2nf-cfg-0222/kit_cfg_vA unit1080647-1794137786 synth+nativeLEC active. No physical count/signoff claim. Detailed lane CODEX-HBM-Q2NF-0222.md; no new OWNER?

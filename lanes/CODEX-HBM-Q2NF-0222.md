@@ -37,3 +37,33 @@ RESTJ delegated redraw/fix work to dedicated sublead `restj`, which reuses the c
 Actual synth145409cells incl19macros, total66612.9um2, macros44117.2um2, standard22495.7um2. Standard fill4.6% on786.24x622.08. Actual old-kit macro/pin review rendered/viewed `coord/tmp/codex-q2nf-0222/q2nf_plan.png`: central six-row issuer macro stack; all40 clock ports packed atE x~748,y311 far from W/central sink groups; CLASS SPARSE+CLOCK. No unchanged automatic launch after EQ.
 
 Compact analytic candidate414.72x362.88 reduces outline69%; free-area standardfill~21%, N3388pins8.17/um (~39% M5tracks), W2454pins6.76/um (~32% M4tracks). `compact_geometry.py` makes two issuer columns/three rows and clock entries in the channels, retaining6222pin identities, source/missioncycles unchanged. `q2nf_compact_candidate.png` viewed; macro halos/clock entries and unique half-track(.024+n*.048) pin centres checked. Candidate held: internal macro rows still need data+clock corridor demand and actual PLACE assessment; it is not a physical signoff or POR event, no route/STA authorized from this sketch. A periphery-memory alternative can remove remaining internal walls before a build. Artifacts `compact_geometry.json` and script retained in coord/tmp/codex-q2nf-0222.
+
+## Periphery candidate and ONE physical pilot
+
+Periphery source branch `codex/hbm-q2nf-periphery-0222@a37ffdae40` on GitHub + canonical intel2 hub. Published through own bare relay; no git command in central worktree. Full actual pin-map coverage corrected the earlier terminal-port parser omission:6712signals /4861distinct nets /602shared across19macros,0missing. Geometry+cut budget, actual viewed PNG, pilot factory and launch script at `results/geom_review/q2nf_periphery_0222/`.
+
+708.48x311.04um, issuer six SRAMs onN/S periphery with64.8um gaps, link SRAMs W/E, clear middle clock band; all6222pins and40clock entries preserved. Standard fill10.2%, outlinearea55% smaller than old kit. Signals throughM6 as the cut estimate requires. Local gap702safe tracks vs532worst opposing pins. Shared cuts6358capacity versus3432/3365tracks including allW/Eface traffic+40clocks; verticalM5cuts8856capacity vsworst7265. Nonshared logic local / N/S descend locally remains the actual-PLACE locality assumption to inspect.
+
+Parent explicitly released ONE PLACE-only diagnostic in parallel with ordinary LEC after actual saved final miter55722/55722 and tiny negative controls passed. Started intel1 `codex-q2nf-0222/kit_periphery_vC`, unit `oth-ubuntu-1194928-1794136555`, localclient3752317/container `codex-q2nf-periphery-place-0222`, log `coord/tmp/codex-q2nf-0222/periphery_place.otrun.log`. This reuses unchanged mapped source with dependency-free do-floorplan/do-place; no synthesis or proof duplication. HOLD_CTS/HOLD_ROUTE/DO_NOT_COUNT/PLACE_ONLY retained. Actual render hooks copied from main. Stop only this own pilot if a true LEC counterexample appears; no healthy other job touched.
+
+Staging diagnoses: vA failed before physical on scalar bit=None key normalization, fixed; vB superseded before launch by vC clock-entry metadata update. I2 capsule staging attempt used SSH-n with rsync and failed before bytes; original I1 waiter then admitted after48s, so no move/cancel/duplicate. Own worktree-add unexpectedly began a full checkout; interrupted exact own gitPID at12%, noothers touched; partial984MB retained and a correctly sparse clone used instead. No deletion chain started.
+
+Ordinary LEC still active:256 replay reached hyp26 with0failed;1024 replay at hyp8, refining initial automatic constants. Initial saved-AIG diagnostic all55722 PASS remains distinct from ordinary final receipt.
+
+## Actual cfg-depth source fix and build
+
+Healthy geometry pilot exposed pre-place wire-load TT -507.2ps /2757endpoints, worst `_55059_[17]` = embedded static-program issuer_cfg[17], while unbuffer/resize stays flat. This is the same /17 + modulo17 +1536-bit variable word-select DEPTH class as HBM-HARD-5 Q3_BODY_CTL. Not a near miss; no ECO or router retry. Geometry pilot stays diagnostic and held after PLACE.
+
+Extracted the actual native37-bit D cone:20assignments,2125names, all1615free input bits (step6,row8,assembly1536,metadata64,draining1),0unknown leaves. Actual kit cone and canonical main289149dea5 cone are byte-identical SHA c92ca2833d020358a3231f718a7233dee523c4cd3a011aa2a29f612ee973470c. Reused proven constant-select CFG_CASE function from HARD-5, renamed module only. Own production-shape SAT miter PASS, wrong-data-word mutant rejected (`proof.rc good0/mutant1`), I2 unit `oth-ubuntu-825325-1794137229` finished.
+
+Canonical hub+GitHub branch `codex/hbm-q2nf-cfg-case-0222@94066c1df9d`: opt-in/default-off OT_Q2NF_CFG_CASE replaces ONLY issuer_cfg D driver; registers/reset/clocks unchanged, PIN CYCLES0. Source and exact cone proof/mutant plus candidate builder committed. Source-only branch, no plan/default adoption or merges/tags.
+
+Immediate fresh native synth + native kit LEC running I2 `/srv/opentallas-scratch2/claude/codex-q2nf-cfg-0222/kit_cfg_vA`, unit `oth-ubuntu-1080647-1794137786`, remote controller1079425,32GB8T, log `.../native_synth.otrun.log`. Inputs staged from branch head (small archive) and old reviewed geometry input files only; no live run copied. Changed RTL gets fresh synthesis, no old mapped receipt retained. Current own class LEC tool2975d43186 plus existing hint plan and parity1024 used. No physical stage in this job.
+
+SOURCE staging error diagnosed/fixed before transfer: rsync needs its SSH stdin open, so omit -n only in rsync's transport; outer remote probes still use ssh-n. Corrected native capsule transfer succeeded. I1 geometry pilot is healthy, not duplicated.
+
+## 2026-11-08 03:42 PST ordinary source gate closed
+
+Complete ordinary LEC EQUIVALENT `lec_crc/lec.json`:102362/102362 compare points proved,0differs/0undecided,64edge reset contract,KEEP6181declared/6181in netlist,0missing. Runtime3533.4s. Source class2975d43186 READY in queue; preseed1021untrusted hints, all normal reset/KEEP/final checks retained. Saved-miter55722diagnostic is separate. Physical core NOT signed off yet.
+
+I1pilot PDN completed and actual PLACE now progressing. I2CFG_CASE synth at ABCmapping stage; source branch94066c1df9d canonical. Baseline256-proof still running, preserved. No new OWNER?
