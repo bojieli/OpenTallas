@@ -5127,7 +5127,11 @@ def kit_native_station_geometry(out, bound_type, bound_text, kit):
         raise BindError(f"kit-rtl {bound_type}: native station RTL requires {source}/istations.tcl and receipt.json")
     try:
         evidence = json.loads(receipt.read_text())
-        declared = [name for row in evidence["entries"] for name in row["stations"]]
+        # kit_istations also records fixed macro/cell sites in this list.
+        # They carry no RTL station; malformed station rows must still fail.
+        declared = [name for row in evidence["entries"]
+                    if not ("cell" in row and "site" in row and "stations" not in row)
+                    for name in row["stations"]]
     except (ValueError, KeyError, TypeError) as exc:
         raise BindError(f"kit-rtl {bound_type}: invalid native station placement receipt: {exc}") from exc
     if len(declared) != len(set(declared)) or set(declared) != stations:
