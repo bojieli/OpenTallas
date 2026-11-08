@@ -164,10 +164,10 @@
     }
   },
   "slot_reason": "Fixed HEAD partition slot and abutted pin coordinates; no outline growth",
-  "pin_proposal": "M7 non-clock signal pins to M3 at SAME XY; N/S data M3+M5, W data M4+M6. Clock M7 retained. Requires native privateplan/pins/freeze regeneration",
+  "pin_proposal": "Preserve coherent currentUO GPIO coordinates and layers. Native conservative requested M6 body retains M7 pin-access exception in cons_kit.json. M3 repin alternative superseded/unbuilt.",
   "remaining_gates": [
     "authoritative coherent UO prepared source/sidecar via native generator",
-    "native pin/freeze regen for M3 data + ceilingM6; no manual signatures",
+    "native unchanged-pin audit and cons_kit access-layer/route-layer reports; no manual signatures",
     "full newkit frontend+LEC",
     "one PLACE then actual reach/clock/density/congestion image review",
     "compiler/token K and cycle event still private/unadopted"
@@ -184,6 +184,14 @@
     "horizontal_raw_use_fraction": 0.28196571428571426,
     "reserve_fraction": 0.5,
     "note": "Fixed alternating boundary bundle order requires a crossing; staged banks separate it, M3/M5 vertical and M4/M6 horizontal provide capacity. Actual GRT overflow still required."
+  },
+  "physical_mode": {
+    "OT_CONS_KIT": 1,
+    "OT_CONS_UTIL": 0.35,
+    "OT_CONS_MAX_LAYER": "M6",
+    "pin_access_layer": "M7",
+    "pin_access_adjustment": 0.9,
+    "note": "M6 is the requested body ceiling, not a claim that every signal shape is below M7. Native audit/report required."
   },
   "clock": {
     "existing_root_taps": 10,

@@ -12,7 +12,7 @@ REDESIGN:
 - Conservative private source uses WREG1/FREG1, writer8/read32: input data +1 cycle and receiver K+2 on w3u_i/w3d_i.
 - FT w3u/w3d5->6 and unit_ft1->2: +1 output PIN cycle each. End-to-end change w3u/w3d+2, unit+1; rate stays1 word/cycle. Input and output obligations are separate.
 - +2758 FFs estimated: core1202, forwarded1556. Same1296x708.48 slot. Native currentUO generation is required; no oldUJ plan/sidecar reconstruction.
-- Proposed N/S data M7->M3 at unchanged XY, clock M7 retained, signal ceilingM6. This is a private interface proposal, not edited frozen hashes. Native pins/freeze regeneration is still required.
+- Preserve currentUO GPIO coordinates and layers. Use native OT_CONS_KIT=1, OT_CONS_UTIL=0.35, OT_CONS_MAX_LAYER=M6: gen_phys retains M7 pin access and records the exception in cons_kit.json. M6 is a requested body ceiling, not a claim that every signal shape is below M7. Audit native pins and actual routing-layer reports. The earlier M3 repin proposal is superseded and unbuilt, not active interface debt.
 - Explicit legal-site plan estimates w3u max289.008um and w3d281.903um registered hops. Unit registered hop351um requires explicit <=100um repeater segments. At the unavoidable fixed-boundary-order crossing, a100um corridor has1028 data wires versus3645.8 horizontal tracks on M4/M6 (28.2% raw use);50% reserve retained. M3/M5 handle vertical directions.
 - Existing HEAD450/342 clock reference retained. Actual PLACE/CTS sink census, clock insertion, related-pair timing, density and GRT overflow must be reviewed before route.
 
@@ -26,4 +26,4 @@ Minimum exactness:
 
 FF internal starts diagnosed read-only on original SPEF: lw statusrelay.ready->agg1.ready -27.24ps; lep_fault cland.ready->lepf statusrelay.ready -25.32ps; unit/lw statusrelay.ready->up_unit.ready -7.46ps. Current supported input-start-only nonport repair should repair these and leave port starts to the parent. Never pad the input-port hold paths.
 
-Next: coherent currentUO native generator with matched plan f140216c876b/sidecar90d006a48f17 and rederived START metadata ab676a5452ab; native private pin/freeze generation; source/placement metadata coupling; one PLACE with HOLD_ROUTE + DO_NOT_COUNT; actual images/full LEC; then CTS/GRT and final qualification/pricing. Old retained SYNTH/FP/PLACE/LEC footprint1.412GiB supports an8GB bounded PLACE disk request under unchanged guards.
+Next: coherent currentUO native generator with matched plan f140216c876b/sidecar90d006a48f17 and rederived START metadata ab676a5452ab; native unchanged-pin audit and conservative access-layer report; source/placement metadata coupling; one PLACE with HOLD_ROUTE + DO_NOT_COUNT; actual images/full LEC; then CTS/GRT and final qualification/pricing. Old retained SYNTH/FP/PLACE/LEC footprint1.412GiB supports an8GB bounded PLACE disk request under unchanged guards.
