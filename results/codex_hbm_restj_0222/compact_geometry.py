@@ -18,7 +18,7 @@ def make(pins,w=181.44,h=267.84):
             elif face=='N':p['y']=h
             else:p['y']=0.
     for p in out:
-        if p['bus']=='clk':p.update(x=90.72,y=133.824,layer='M5')
+        if p['bus']=='clk':p.update(x=90.744,y=133.824,entry=[90.744,133.824],layer='M5')
     uses={};overflow=[];duplicates=[]
     for face in ('E','W','N','S'):
         axis='y'if face in ('E','W')else'x';dim=h if axis=='y'else w
@@ -31,8 +31,8 @@ def make(pins,w=181.44,h=267.84):
             if dup:duplicates.append((face,layer,dup))
     report={'outline_um':[w,h],'core_fill_estimate':13079.4/((w-8.64)*(h-8.64)),
             'outline_fill_estimate':13079.4/(w*h),'pin_track20':uses,'overflow':overflow,'duplicates':duplicates,
-            'clock_xy_um':[90.72,133.824],'clock_anchor_origin_delta_um':[216-90.72,224.64-133.824],
-            'corner_euclidean_um':math.hypot(w,h),'corner_manhattan_um':w+h,'clock_entry_corner_euclidean_um':max(math.hypot(x-90.72,y-133.824)for x in(0,w)for y in(0,h)), 'actual_stage_reach':'REQUIRES_PLACEMENT_REVIEW',
+            'clock_xy_um':[90.744,133.824],'clock_anchor_origin_delta_um':[216.024-90.744,224.64-133.824],
+            'corner_euclidean_um':math.hypot(w,h),'corner_manhattan_um':w+h,'clock_entry_corner_euclidean_um':max(math.hypot(x-90.744,y-133.824)for x in(0,w)for y in(0,h)), 'actual_stage_reach':'REQUIRES_PLACEMENT_REVIEW',
             'PIN_CYCLES':0,'P&R':'NOT_RUN','STA':'NOT_RUN','parent_POR':'UNCHANGED'}
     report['geometry_verdict']='FEASIBLE'if not overflow and not duplicates and max(uses.values())<=.5 else'REVISE'
     return out,report

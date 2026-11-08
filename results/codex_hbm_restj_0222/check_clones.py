@@ -19,16 +19,22 @@ def check(old,new,report):
     oldbits|={x for n in a['netnames'].values()for x in n['bits']if isinstance(x,int)}
     cloneq={};sources=set();extras=set()
     for row in report:
-        src=a['cells'][row['source']];assert src['type']=='$_DFF_P_', src['type']
+        src=a['cells'][row['source']];assert src['type'] in {'$_DFF_P_','$_DFF_PN0_'}, src['type']
         assert src['connections']['Q']==[row['q']]
         sources.add(row['source'])
         assert b['cells'][row['source']]['connections']==src['connections'], 'source FF itself was rewired'
         for r in row['copies']:
             cn=r['cell'];extras.add(cn);cc=b['cells'][cn];q=cc['connections']['Q']
             assert len(q)==1 and q[0] not in oldbits and q[0] not in cloneq
-            expected=copy.deepcopy(src);expected['connections']['Q']=q;expected.setdefault('attributes',{})['keep']='1'
-            assert cc==expected, ('copy changed clock/D/function',cn)
             cloneq[q[0]]=row['q']
+    for row in report:
+        src=a['cells'][row['source']]
+        for r in row['copies']:
+            cn=r['cell'];cc=copy.deepcopy(b['cells'][cn]);q=cc['connections']['Q']
+            for port,bits in cc['connections'].items():
+                if port!='Q':cc['connections'][port]=[cloneq.get(bb,bb)for bb in bits]
+            expected=copy.deepcopy(src);expected['connections']['Q']=q;expected.setdefault('attributes',{})['keep']='1'
+            assert cc==expected, ('copy changed clock/D/function beyond its equal registered parent',cn)
     assert set(b['cells'])-set(a['cells'])==extras
     assert set(a['cells'])<=set(b['cells'])
     rewired=0
@@ -47,8 +53,8 @@ def check(old,new,report):
                 assert c['port_directions'][port]=='input'
                 assert cloneq.get(after)==before,('consumer not rewired to its source copy',n,port)
                 rewired+=1
-    return {'component_verdict':'STRUCTURALLY_EQUIVALENT_AFTER_ONE_SOURCE_EDGE','original_cells':len(a['cells']),
-            'added_ff':len(extras),'rewired_input_bits':rewired,'PIN_CYCLES':0,'routed_kit_lec':'NOT_RUN','base_contract':'existing64source-clock boot edges; copies converge after first edge'}
+    return {'component_verdict':'STRUCTURALLY_EQUIVALENT_UNDER_COPY_STATE_RELATION','original_cells':len(a['cells']),
+            'added_ff':len(extras),'rewired_input_bits':rewired,'PIN_CYCLES':0,'routed_kit_lec':'NOT_RUN','base_contract':'existing64source-clock boot edges; same-clock/D/R inductive copy relation; reset and existing64source-clock boot establish initial alignment'}
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('old',type=pathlib.Path);p.add_argument('new',type=pathlib.Path);p.add_argument('report',type=pathlib.Path);p.add_argument('--out',type=pathlib.Path,required=True);args=p.parse_args()
