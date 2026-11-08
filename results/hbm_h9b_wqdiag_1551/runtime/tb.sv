@@ -8,9 +8,9 @@
 // traffic; ring overflow/underflow is a fault class). Throughput: H9b must finish within 5% + 64 edges of H9 (owner per-unit ledger bound; measured 3.2% under 1/16 random consumer stalls).
 // +RMUT via parameter: 1 K ring slice skew, 2 KR ring slice skew, 3 k_rdy credit off by one.
 module tb;
-  parameter integer RMUT=0, NREQ=2000;
+  parameter integer RMUT=0, NREQ=2000, RELOAD=150;
   reg clk=0; always #416.5 clk=~clk;
-  reg rst_n=0; reg [4:0] pc_id=5'd9; reg [7:0] refresh_reload=8'd151;
+  reg rst_n=0; reg [4:0] pc_id=5'd9; reg [7:0] refresh_reload=8'(RELOAD);
   reg [29:0] ra[0:NREQ-1]; reg [3:0] rl[0:NREQ-1]; reg rw[0:NREQ-1]; reg [16:0] rt[0:NREQ-1];
   reg [255:0] rd[0:NREQ-1]; reg [31:0] rs[0:NREQ-1];
   reg [31:0] rng=32'h1d872b41; function [31:0] nx(input [31:0] r); nx={r[30:0],r[31]^r[21]^r[1]^r[0]}; endfunction
@@ -47,7 +47,7 @@ module tb;
       else dv[d]<=0;
       if(k_wr_done[d]) nwd[d]=nwd[d]+1;
       if(kr_v[d] && r_prev) begin beat_log[d][nb[d]]={kr_tag[d],kr_beat[d],kr_data[d]}; nb[d]=nb[d]+1; end
-      if(pc_fault[d]||(|of[d])) begin errors=errors+1; if(errors<5) $display("H9B_TXN_FAULT dut%0d of=%b edge%0d",d,of[d],now); end
+      if(pc_fault[d]||(|of[d])) $fatal(1,"WQDIAG_BASELINE_FAULT dut%0d of=%b edge%0d",d,of[d],now);
       if(idx[d]>=NREQ && done_at[d]==0 && rqr[d]==rqw[d] && !kr_v[d]) done_at[d]=now;
     end
     r_prev<=r_now;
@@ -73,6 +73,14 @@ module tb;
     if(pc_fault[0] !== pc_fault[1]) $fatal(1,"WQDIAG_EDGE pc_fault mismatch edge%0d",now);
     if(of[0] !== of[1]) $fatal(1,"WQDIAG_EDGE of mismatch edge%0d",now);
     if(idx[0] != idx[1]) $fatal(1,"WQDIAG_ACCEPT mismatch");
+  end end
+
+  integer refresh_checks=0;
+  always @(negedge clk) begin #1; if(rst_n && now>24 && a.controller.on.ref_due) begin
+    refresh_checks=refresh_checks+1;
+    if(refresh_checks<5) $display("WQDIAG_REFRESH edge%0d reload%0d phase%0d slot%0d fire%b op%0d",now,RELOAD,a.controller.on.phase,a.controller.slot_parity,a.controller.on.row_fire,a.controller.on.c_op);
+    if(a.controller.on.phase != 2*a.controller.slot_parity || !a.controller.on.row_fire || a.controller.on.c_op!=a.controller.on.REFPB)
+      $fatal(1,"WQDIAG_REFRESH_PHASE illegal actual row calendar");
   end end
   integer nrd=0;
   initial begin
