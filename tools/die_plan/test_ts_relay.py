@@ -77,3 +77,13 @@ def test_miter_fails_on_wrong_delta(tmp_path):
 def test_miter_fails_on_undeclared_change(tmp_path):
     rc, rec = _run(tmp_path, bound(1), bound(3).replace("4'h1", "4'h2"), 2)
     assert rc == 1 and rec["n_undeclared"] >= 1
+
+
+def test_station_sites_leave_core_keepouts():
+    import ts_relay_event as TE
+    t = dict(outline_um=[1000.0, 200.0], hard_cores=[dict(origin_um=[100.0, 0.0], outline_um=[300.0, 150.0])])
+    regs = TE.sites(t, (0.0, 50.0), (900.0, 50.0), 3)
+    for x, y in regs:
+        assert not (100.0 - TE.HALO < x < 400.0 + TE.HALO and 0.0 - TE.HALO < y < 150.0 + TE.HALO)
+        assert 0.0 <= x <= 1000.0 and 0.0 <= y <= 200.0
+    assert regs[1] == [450.0, 50.0]          # outside: unchanged

@@ -61,6 +61,41 @@ def on_L(a, b, n):
     return out
 
 
+HALO = 3.0
+
+
+def core_boxes(t):
+    """hard-core / macro keep-out boxes (x0, y0, x1, y1) of a type, outline + HALO"""
+    out = []
+    for hc in t.get("hard_cores", []):
+        (ox, oy), (w, h) = hc["origin_um"], hc["outline_um"]
+        out.append((ox - HALO, oy - HALO, ox + w + HALO, oy + h + HALO))
+    return out
+
+
+def snap_out(pt, boxes, outline):
+    """move a station site to the nearest point outside every keep-out box (FIRM sites must be placeable), kept inside
+    the type outline; a site already outside is unchanged"""
+    x, y = pt
+    W, H = outline
+    for _ in range(12):
+        hit = next((b for b in boxes if b[0] < x < b[2] and b[1] < y < b[3]), None)
+        if hit is None:
+            break
+        cands = [(x - hit[0], hit[0], y), (hit[2] - x, hit[2], y), (y - hit[1], x, hit[1]), (hit[3] - y, x, hit[3])]
+        cands = [c for c in sorted(cands) if 0.0 <= c[1] <= W and 0.0 <= c[2] <= H]
+        if not cands:
+            break
+        _, x, y = cands[0]
+    return [round(min(max(x, 0.0), W), 3), round(min(max(y, 0.0), H), 3)]
+
+
+def sites(t, a, b, n):
+    """n station sites on the L a -> b, each snapped out of the type's hard-core keep-outs"""
+    boxes = core_boxes(t)
+    return [snap_out(p, boxes, t["outline_um"]) for p in on_L(a, b, n)]
+
+
 _PINS = {}
 
 
@@ -146,12 +181,24 @@ def build(raw, bound, root, skip, only=None, native_base=()):
             continue
         conns = CCB.trace(raw, tn, Path(bpath).read_text())
         hcs = {hc["inst"]: hc for hc in t.get("hard_cores", [])}
-        pins = {ci: core_port_pins(hc, root) for ci, hc in hcs.items()}
+        pins, nopins = {}, []
+        for ci, hc in hcs.items():
+            try:
+                pins[ci] = core_port_pins(hc, root)
+            except FileNotFoundError:
+                nopins.append(ci)
+        for ci in nopins:
+            reported.append(dict(type=tn, core=ci, pins_file=hcs[ci].get("pins_file"),
+                                 action="REPORT: core pins_file not found under --pins-root (core not measured)"))
         buses = {b["name"]: b for b in t.get("buses", [])}
         have_ist = {e.get("conn") for e in t.get("internal_stations", [])}
         per_bus = defaultdict(lambda: dict(d=0.0, far=None, ports=set()))
+        nowin = set()
         for p in conns["paths"]:
             if "bus" not in p or p["bus"] not in buses:
+                continue
+            if "window_um" not in buses[p["bus"]] or "face" not in buses[p["bus"]]:
+                nowin.add((p["dir"], p["bus"]))
                 continue
             pp = pins.get(p["core"], {}).get(p["port"])
             if not pp:
@@ -163,6 +210,9 @@ def build(raw, bound, root, skip, only=None, native_base=()):
             if d > a["d"]:
                 cen = (sum(x for x, _ in pp) / len(pp), sum(y for _, y in pp) / len(pp))
                 a.update(d=d, far=cen, win=w)
+        for dirn, bus in sorted(nowin):
+            reported.append(dict(type=tn, bus=bus, dir=dirn,
+                                 action="REPORT: bus has no plan face/window_um (not measured)"))
         for (dirn, bus), a in sorted(per_bus.items()):
             n = max(0, math.ceil(a["d"] / STEP) - 1)
             row = dict(type=tn, bus=bus, dir=dirn, d_um=round(a["d"], 1), need=n, ports=sorted(a["ports"]))
@@ -176,6 +226,61 @@ def build(raw, bound, root, skip, only=None, native_base=()):
                 continue
             cand[(tn, dirn, bus)] = (n, row, a)
     native = set(native_base)
+    touched = []                                # (row, count, lanes)
+    # RE-ANCHOR (generalised from HBM q_hub_nw L100_o): an existing station chain whose face end no longer sits at the
+    # bus window (the window moved after the chain was planned) and that leaves a hop over reach.  Rebuild the chain on
+    # the L from the CURRENT window to its own core end; count = max(old, needed) over every entry of that bus (one
+    # latency per bus); lanes += count - old.  Exact bank / bit_route entries are reported, never rebuilt.
+    for tn in sorted(Q["partition_types"]):
+        t = Q["partition_types"][tn]
+        if tn in skip or (only and tn not in only) or t.get("hard"):
+            continue
+        bs = {b["name"]: b for b in t.get("buses", [])}
+        groups = defaultdict(list)
+        for e in t.get("internal_stations", []):
+            c = e.get("conn", "")
+            if c.startswith("bus:") and c[4:] in bs and e.get("from_um") and e.get("to_um"):
+                groups[c[4:]].append(e)
+        for bus, es in sorted(groups.items()):
+            b = bs[bus]
+            if "window_um" not in b or "face" not in b:
+                continue
+            w = window_pt(t, b)
+            plan_rows = []
+            for e in es:
+                fend = (e.get("r10") or {}).get("fend")
+                fe = fend if fend in ("from", "to") else min(("from", "to"), key=lambda k: man(w, e[k + "_um"]))
+                pts = [e["from_um"]] + e["regs_um"] + [e["to_um"]]
+                pts = [w] + pts[1:] if fe == "from" else pts[:-1] + [w]
+                worst = max(man(a2, c2) for a2, c2 in zip(pts, pts[1:]))
+                plan_rows.append((e, fe, man(w, e[fe + "_um"]), worst))
+            if not any(off > 50 and worst > REACH for _, _, off, worst in plan_rows):
+                continue
+            row = dict(type=tn, bus=bus, dir=b["dir"], kind="re-anchor",
+                       face_end_off_um=round(max(r[2] for r in plan_rows), 1),
+                       worst_hop_um=round(max(r[3] for r in plan_rows), 1))
+            if any(k in e for e in es for k in ("bit_sites_um", "face_bit_sites_um", "bit_route")):
+                reported.append(dict(row, action="REPORT: stale face end on an exact-bank / bit_route entry "
+                                                 "(owner's bank tool must re-site it)"))
+                continue
+            old_n = max(len(e["regs_um"]) for e in es)
+            need = max(max(0, math.ceil(man(w, e["to_um" if fe == "from" else "from_um"]) / STEP) - 1)
+                       for e, fe, _, _ in plan_rows)
+            count = max(old_n, need)
+            for e, fe, _, _ in plan_rows:
+                core = e["to_um"] if fe == "from" else e["from_um"]
+                regs = sites(t, w, core, count)
+                if fe == "from":
+                    e["from_um"], e["regs_um"] = [round(v, 3) for v in w], regs
+                else:
+                    e["to_um"], e["regs_um"] = [round(v, 3) for v in w], list(reversed(regs))
+                e["note"] = (e.get("note", "") + f" | TYPE-SAFE-2 11-08 re-anchor: face end moved "
+                             f"{round(max(r[2] for r in plan_rows))} um off, re-sited from the current window; "
+                             f"{count} stations (was {old_n})").lstrip(" |")
+            lns = [lid for lid, _ in lanes_of(Q, tn, bus, b["dir"])]
+            for lid in lns:
+                lane_by_id[lid]["fixed_cycles"] = int(lane_by_id[lid].get("fixed_cycles", 0)) + count - old_n
+            touched.append((dict(row, need=need, old_count=old_n), count, lns))
 
     def dest_need(lid):
         _, _, dp, db = _src_part(Q, lid)
@@ -193,7 +298,6 @@ def build(raw, bound, root, skip, only=None, native_base=()):
             return 0
         e = _entry(Q["partition_types"][st], sb)
         return len(e["regs_um"]) if e else 0
-    touched = []                                # (tn, dir, bus, n, row, count, lanes)
     for (tn, dirn, bus), (n, row, a) in sorted(cand.items(), key=lambda kv: kv[0][1] != "out"):
         t = Q["partition_types"][tn]
         lns = [lid for lid, _ in lanes_of(Q, tn, bus, dirn)]
@@ -203,7 +307,7 @@ def build(raw, bound, root, skip, only=None, native_base=()):
             for lid in lns:
                 lane_by_id[lid]["fixed_cycles"] = count + dest_need(lid)
             ent = dict(conn=f"bus:{bus}", from_um=[round(v, 3) for v in frm], to_um=[round(v, 3) for v in to],
-                       regs_um=on_L(frm, to, count), launch=sorted(a["ports"])[0], capture="face flop",
+                       regs_um=sites(t, frm, to, count), launch=sorted(a["ports"])[0], capture="face flop",
                        note=f"TYPE-SAFE-2 11-08 relay: {', '.join(sorted(a['ports'])[:3])} -> face {bus} "
                             f"{a['d']:.0f} um, {n} needed, {count} source stations (lane slack moved first)")
             native_out.add(tn)
@@ -215,7 +319,7 @@ def build(raw, bound, root, skip, only=None, native_base=()):
             # the receiver pad u_lpad_<bus> (D = count) is realised by the bind; kit_istations packed_input_delay
             # sites its registers on these planned sites (no new stage)
             ent = dict(conn=f"bus:{bus}", from_um=[round(v, 3) for v in frm], to_um=[round(v, 3) for v in to],
-                       regs_um=on_L(frm, to, count), launch="face flop", capture=sorted(a["ports"])[0],
+                       regs_um=sites(t, frm, to, count), launch="face flop", capture=sorted(a["ports"])[0],
                        note=f"TYPE-SAFE-2 11-08 relay: face {bus} -> {', '.join(sorted(a['ports'])[:3])} "
                             f"{a['d']:.0f} um, {n} needed, {count} receiver pad stages sited")
         t.setdefault("internal_stations", []).append(ent)
