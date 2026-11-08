@@ -40,3 +40,17 @@ def test_main_writes_event(tmp_path, monkeypatch):
     ev = json.loads((tmp_path / "ev.json").read_text())
     assert ev["types"] == ["b"] and ev["plan_output"] == "out.json"
     assert json.loads((tmp_path / "out.json").read_text())["partition_types"]["b"]["clock"]["tap_pair_affinity"] == {}
+
+
+def test_main_keeps_default_style(tmp_path, monkeypatch):
+    base = tmp_path / "base.json"; base.write_text(json.dumps(_plan()) + "\n")
+    monkeypatch.setattr(E, "TYPES", ["a"])
+    E.main(["x", str(base), str(tmp_path / "out.json"), str(tmp_path / "ev.json")])
+    out = (tmp_path / "out.json").read_text()
+    assert out == json.dumps(json.loads(out)) + "\n" and '"tap_pair_affinity": {}' in out
+
+
+def test_main_refuses_unknown_style(tmp_path):
+    base = tmp_path / "base.json"; base.write_text(json.dumps(_plan(), indent=2))
+    with pytest.raises(SystemExit):
+        E.main(["x", str(base), str(tmp_path / "out.json"), str(tmp_path / "ev.json")])
