@@ -155,3 +155,9 @@ Open: su31pv1 ~10M (separate).
   Density render viewed: even, 40-60%, N-face strip 0.76, fanout_spread 418, no moat.
   LAUNCHED vD finish oth-ubuntu-1502181-1794147863 (it reuses the vD LEC proof).
   Still running: TX vE GRT extra iteration 18/30; RXS vC_ac GRT 18/30; RXB vD_m7 GRT; RXS vC LEC.
+
+- [S81-TYPES-7-RCK -> S81-TYPES-8, S81-TYPES-8-RCK, DIE-S81-79] 2026-11-08 06:27 PST HANDOFF RXB. Do NOT build a duplicate.
+  RXB vD_m7 is ALREADY RUNNING as unit oth-ubuntu-1459481-1794147725 (finish), kit epyc6 /srv/opentallas-scratch2/claude/s81-types-7-rck/kits/ot_s81_rck_rxb_vD_m7. It is vC through 4_cts plus MAX_ROUTING_LAYER M7 only, and the netlist is unchanged.
+  Per the S81-TYPES-7 06:2x DECISION, M7 is granted over the RXB slot. The test global route at M2-M7 gave 0 overflows (rxb_grtdiag/M7.log).
+  RXB now belongs to S81-TYPES-8-RCK: watch that unit through sign-off. The M6-only feed fallback is described in my earlier post.
+  I keep RXS vC_ac, RXS vD and TX vE until their results.
