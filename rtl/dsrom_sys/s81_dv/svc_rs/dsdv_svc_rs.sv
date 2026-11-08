@@ -1,4 +1,12 @@
 `timescale 1ns/1ps
+`ifndef OT_SVC_HV
+// S81-SVCRS R5 (11-08): heads per svc engine pass; -DOT_SVC_H8 builds the half-width (8-head, two-pass) slice
+`ifdef OT_SVC_H8
+`define OT_SVC_HV 8
+`else
+`define OT_SVC_HV 16
+`endif
+`endif
 // ---------------------------------------------------------------------------------------------------------------------
 // S81U-SVC (2026-10-17, S81-DV p4h; S81U-SVC4: p4j): dsdv_svc_rs, the REGIONAL SERVICE SLICE (x16 on the 2 x 8 grid above
 // the regional controllers dsfd_ctrl_rg2; sid = rsv_NN = 2 column + row, row 1 upper).  One master core dsdv_svc_rs_c;
@@ -64,7 +72,11 @@ module dsdv_svc_rs_c #(
     // (tools/s81_dv/svc_rs/svc_rs_faces.py from the role ROMs).  A face whose bit is 0 has no flop, relay or logic in
     // this core (generate): its input is never read, its output is constant 0 and the port variant
     // (dsdv_svc_rs_fv.sv) does not carry it.  All ones (default) = the pre-mask slice, unchanged.
-    parameter logic [39:0] FM = {40{1'b1}}
+    parameter logic [39:0] FM = {40{1'b1}},
+    // S81-SVCRS R5 (11-08): heads per engine pass (dsdv_svc_att H).  16 = today's slice; 8 = the half-width slice
+    // (32 hcores, 8-head merges, gather lanes 1,076 b, two passes per 16-head op; dsdv_svc_att header).  The default
+    // comes from `OT_SVC_HV (-DOT_SVC_H8 = 8, else 16), so every port variant / wrapper builds either form unchanged.
+    parameter integer H = `OT_SVC_HV
 ) (
     input  wire              ck,
     input  wire              rst,
@@ -87,9 +99,9 @@ module dsdv_svc_rs_c #(
     output wire [4*514-1:0]  ro,
     // score lanes
     input  wire [3:0]        gi_v,
-    input  wire [4*2132-1:0] gi_d,
+    input  wire [4*(H*132+20)-1:0] gi_d,
     output wire [3:0]        go_v,
-    output wire [4*2132-1:0] go_d,
+    output wire [4*(H*132+20)-1:0] go_d,
     input  wire [3:0]        si_v,
     input  wire [4*1076-1:0] si_d,
     output wire [3:0]        so_v,
@@ -113,12 +125,14 @@ module dsdv_svc_rs_c #(
     output wire [11:0]       w_st              // {o_rjid 8, o_den, o_alive, o_fo, o_fu}
 `ifdef RS_OBS
     // bench observation only (hierarchical bench build: the slice is a hier block): {rt_v, rt_d, se_v, se_d, a_fc, lf}
-    , output wire [2678:0]   obs
+    , output wire [H*132+566:0] obs
 `endif
 );
 `include "dsdv_svc_rs_roles.svh"
 `include "dsdv_svc_rs_faces.svh"
     localparam integer DW = 805, UW = 16;
+    localparam integer LW = H * 132 + 20;             // score lane {row 16, mask 4, 4 x H FP32, 4 x H flags}: 2,132 at H 16
+    localparam bit P2 = H < 16;                       // R5 two-pass slice
     localparam logic [3:0] FM_DI = FM[3:0], FM_DO = FM[7:4], FM_UI = FM[11:8], FM_UO = FM[15:12], FM_RI = FM[19:16],
                            FM_RO = FM[23:20], FM_GI = FM[27:24], FM_GO = FM[31:28], FM_SI = FM[35:32], FM_SO = FM[39:36];
     reg [1:0] rs;
@@ -225,10 +239,10 @@ module dsdv_svc_rs_c #(
             .r_beat(r_beat[4*f +: 4]), .qrv(qrv[f]), .qr_data(qr_data[256*f +: 256]), .qr_tag(qr_tag[17*f +: 17]),
             .qr_beat(qr_beat[4*f +: 4]));
     end endgenerate
-    wire l_v; wire [2131:0] l_d; wire a_pv_v; wire [512:0] a_pv_d;
+    wire l_v; wire [LW-1:0] l_d; wire a_pv_v; wire [512:0] a_pv_d; wire a_hb;
     wire sm_st, sm_rv, sm_rp; wire [3:0] sm_kind; wire [7:0] sm_jid; wire [2:0] sm_rj; wire [511:0] sm_rd;
     wire go, done; wire [9:0] tjob; wire [7:0] tagj; wire [1:0] hcr, hack; wire a_f; wire [31:0] a_fc;
-    dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY)) u_att (
+    dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .H(H)) u_att (
         .clk(ck), .rst_n(rn), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(ENTRY),
         .q_v(cs[0]), .q_d(cs[512:1]), .hw_v(cs[513]), .hw_d(cs[DW-1:514]),
         .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat),
@@ -236,15 +250,15 @@ module dsdv_svc_rs_c #(
         .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd),
         .go_o(go), .tjob_o(tjob), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(a_f), .fault_code(a_fc),
 `ifdef OT_SVC_ALLQ
-        .pio_o(pio), .pvo_o(pvo_j), .jc_o(jcs), .st_o(a_st), .allq_o(a_allq));
+        .pio_o(pio), .pvo_o(pvo_j), .jc_o(jcs), .st_o(a_st), .allq_o(a_allq), .hb_o(a_hb));
 `else
-        .pio_o(pio), .pvo_o(pvo_j), .jc_o(jcs), .st_o(a_st));
+        .pio_o(pio), .pvo_o(pvo_j), .jc_o(jcs), .st_o(a_st), .hb_o(a_hb));
 `endif
 
     // ------------------------------------------------------------------ score exchange
-    wire rt_v, t_v, x_f; wire [2131:0] rt_d; wire [19:0] t_tag; wire [127:0] t_y; wire [3:0] t_f;
-    reg pl_v; reg [2131:0] pl_d;                     // P beat (registered), muxed onto the engine's score-beat port
-    dsdv_svc_sx #(.MUT(0), .FM_GI(FM_GI), .FM_GO(FM_GO), .FM_SI(FM_SI), .FM_SO(FM_SO)) u_sx (.ck(ck), .rst(rst), .sid(sid), .l_v(l_v || pl_v), .l_d(pl_v ? pl_d : l_d),
+    wire rt_v, t_v, x_f; wire [LW-1:0] rt_d; wire [19:0] t_tag; wire [127:0] t_y; wire [3:0] t_f;
+    reg pl_v; reg [LW-1:0] pl_d;                     // P beat (registered), muxed onto the engine's score-beat port
+    dsdv_svc_sx #(.MUT(0), .H(H), .FM_GI(FM_GI), .FM_GO(FM_GO), .FM_SI(FM_SI), .FM_SO(FM_SO)) u_sx (.ck(ck), .rst(rst), .sid(sid), .l_v(l_v || pl_v), .l_d(pl_v ? pl_d : l_d),
         .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d),
         .rt_v(rt_v), .rt_d(rt_d), .t_v(t_v), .t_tag(t_tag), .t_y(t_y), .t_f(t_f), .fault(x_f));
 
@@ -259,7 +273,8 @@ module dsdv_svc_rs_c #(
         for (int i = 0; i < 4; i++) if (t_m[i]) se_nxt[32 * (4 * t_row[3:2] + i) +: 32] = t_y[32*i +: 32];
             else se_nxt[32 * (4 * t_row[3:2] + i) +: 32] = 32'd0;
     end
-    wire t_vs = t_v && !pwin;                         // P-window tap beats are P, not scores
+    wire hsel = !P2 || tile[3] == a_hb;               // R5: this slice's SM head g = tile is in the running pass
+    wire t_vs = t_v && !pwin && hsel;                 // P-window tap beats are P, not scores
     always @(posedge ck) begin
         if (t_vs) se_acc <= t_last ? 512'd0 : se_nxt;
         if (t_vs && t_last) se_d <= se_nxt;
@@ -303,28 +318,30 @@ module dsdv_svc_rs_c #(
     // (2) P beats into the score exchange from PIO, one every 2 cycles (aligned like the engine's score beats: gd)
     reg [7:0] pk;
     wire [9:0] nbt = (tjob + 10'd3) >> 2;
-    wire pfire = pon && 10'(pk) < nbt && jcs == pio + {7'd0, pk, 1'b0};
+    wire pfire = pon && hsel && 10'(pk) < nbt && jcs == pio + {7'd0, pk, 1'b0};
     wire [9:0] prow = {pk, 2'b00};
     wire [255:0] prw = pbuf[pk[7:2]];
     always @(posedge ck) begin
         pl_d <= '0;
-        pl_d[2131:2116] <= 16'(prow);
+        pl_d[LW-1 -: 16] <= 16'(prow);
         for (int i = 0; i < 4; i++) if (32'(prow) + i < 32'(tjob)) begin
-            pl_d[2112 + i] <= 1'b1;
-            pl_d[64 + (16*i + 32'(tile))*32 +: 32] <= {prw[16*(4*pk[1:0] + i) +: 16], 16'h0000};
+            pl_d[LW-20 + i] <= 1'b1;
+            pl_d[4*H + (H*i + 32'(tile) % H)*32 +: 32] <= {prw[16*(4*pk[1:0] + i) +: 16], 16'h0000};
         end
     end
     // (3) fold root: rt P beats -> PV frame words (header, then A = rows 0 / 1, B = rows 2 / 3 of each beat)
-    function automatic [1023:0] pbeat(input [2131:0] b);
-        for (int jj = 0; jj < 4; jj++) for (int h = 0; h < 16; h++) pbeat[16*(16*jj + h) +: 16] = b[64 + 32*(16*jj + h) + 16 +: 16];
+    // pbeat: the beat's 4 rows x H heads BF16, row r head h at 16 (H r + h) (H 16: words A = rows 0 / 1, B = rows 2 / 3;
+    // H 8: ONE word = the engine's p word of R = 4 rows)
+    function automatic [64*H-1:0] pbeat(input [LW-1:0] b);
+        for (int jj = 0; jj < 4; jj++) for (int h = 0; h < H; h++) pbeat[16*(H*jj + h) +: 16] = b[4*H + 32*(H*jj + h) + 16 +: 16];
     endfunction
-    function automatic bad_beat(input [2131:0] b);
-        bad_beat = |b[63:0];
-        for (int l = 0; l < 64; l++) if (b[64 + 32*l +: 16] != 16'h0000) bad_beat = 1'b1;
+    function automatic bad_beat(input [LW-1:0] b);
+        bad_beat = |b[4*H-1:0];
+        for (int l = 0; l < 4*H; l++) if (b[4*H + 32*l +: 16] != 16'h0000) bad_beat = 1'b1;
     endfunction
-    wire [9:0] pn = (tjob + 10'd1) >> 1;              // words of the job's PV frame
+    wire [9:0] pn = P2 ? (tjob + 10'd3) >> 2 : (tjob + 10'd1) >> 1;   // words of the job's PV frame
     wire rtp = rt_v && pwin;
-    reg [1:0] pph; reg phd; reg [9:0] pwc; reg pp_v; reg [512:0] pp_d; reg [1023:0] phold;
+    reg [1:0] pph; reg phd; reg [9:0] pwc; reg pp_v; reg [512:0] pp_d; reg [64*H-1:0] phold;
     always @(posedge ck or negedge rn)
         if (!rn) begin sek <= 1'b0; pb_n <= 6'd0; pk <= 8'd0; pl_v <= 1'b0; pph <= 2'd0; phd <= 1'b0; pwc <= 10'd0; pp_v <= 1'b0; p_f <= 1'b0; end
         else begin
@@ -337,6 +354,15 @@ module dsdv_svc_rs_c #(
             if (pl_v && l_v) p_f <= 1'b1;                                           // a P beat on an engine score beat
             pp_v <= 1'b0;
             if (go) begin pph <= 2'd0; phd <= 1'b0; pwc <= 10'd0; end
+            else if (P2) begin
+                // R5 H 8: one PV word a beat, emitted the cycle after the beat (header on the first beat)
+                if (rtp) begin
+                    if (bad_beat(rt_d)) p_f <= 1'b1;
+                    if (!phd) begin pp_v <= 1'b1; phd <= 1'b1; pph <= 2'd1; end
+                    else if (pph == 2'd0) pph <= 2'd1;
+                    else p_f <= 1'b1;                                               // off the 2-cycle cadence
+                end else if (pph == 2'd1) begin pp_v <= pwc < pn; pwc <= pwc + 1'b1; pph <= 2'd0; end
+            end
             else if (rtp) begin
                 if (bad_beat(rt_d)) p_f <= 1'b1;                                    // a lane that is not an exact BF16
                 if (!phd) begin pp_v <= 1'b1; phd <= 1'b1; pph <= 2'd1; end         // header
@@ -349,8 +375,8 @@ module dsdv_svc_rs_c #(
     always @(posedge ck) begin
         if (rtp) phold <= pbeat(rt_d);
         if (rtp && !phd) pp_d <= {1'b0, 4'd5, 1'b0, 4'b0001, tagj, 3'd0, 12'(pn), 480'd0};
-        else if (pph == 2'd1) pp_d <= {1'b0, phold[511:0]};
-        else pp_d <= {1'b0, phold[1023:512]};
+        else if (pph == 2'd1 || P2) pp_d <= {1'b0, phold[511:0]};
+        else pp_d <= {1'b0, phold[64*H-1 -: 512]};
     end
 
     // ------------------------------------------------------------------ S81-SMWIRE: SO target, config source, gather words
@@ -512,27 +538,28 @@ endmodule
 // S81-SMWIRE (10-19): the SM face is internal (the SO target); w_* are bench observation ports (RS_OBS) only.  The
 // entry adds pv_x[47:0] (the 48 spare bits of the 562-b pv lane: the SO gather-word stamp).
 module dsdv_svc_rs_entry #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-                           parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+                           parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1,
+    parameter integer H = `OT_SVC_HV) (
     input  wire ck, rst, input wire [3:0] sid,
     input  wire [32:0] j, output wire [1:0] jd, input wire [514:0] q, input wire [291:0] hw, output wire [8:0] hc,
     output wire fault, output wire [1:0] st_rg,
     input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*16-1:0] up_i, output wire [4*16-1:0] up_o,
     input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,
-    input  wire [3:0] gi_v, input wire [4*2132-1:0] gi_d, output wire [3:0] go_v, output wire [4*2132-1:0] go_d,
+    input  wire [3:0] gi_v, input wire [4*(H*132+20)-1:0] gi_d, output wire [3:0] go_v, output wire [4*(H*132+20)-1:0] go_d,
     input  wire [3:0] si_v, input wire [4*1076-1:0] si_d, output wire [3:0] so_v, output wire [4*1076-1:0] so_d,
     output wire [2*341-1:0] rq, input wire [1:0] rk, wd, rv, input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag,
     input  wire [2*4-1:0] r_beat, input wire [1:0] hs,
     output wire pv_v, output wire [512:0] pv_d, output wire [47:0] pv_x
 `ifdef RS_OBS
     , output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d, output wire [11:0] w_st
-    , output wire [2678:0] obs
+    , output wire [H*132+566:0] obs
 `endif
 );
     /*verilator hier_block*/
 `ifndef RS_OBS
     wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;
 `endif
-    dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY)) u (.ck(ck),
+    dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY), .H(H)) u (.ck(ck),
         .rst(rst), .sid(sid), .j(j), .jd(jd), .q(q), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg), .dn_i(dn_i),
         .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d),
         .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data),
@@ -546,17 +573,18 @@ endmodule
 
 // the other 14 slices (incl. the chain roots rsv_07 / rsv_09: their P.V return lane toward the entry is `ro`)
 module dsdv_svc_rs #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-                     parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+                     parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1,
+    parameter integer H = `OT_SVC_HV) (
     input  wire ck, rst, input wire [3:0] sid,
     input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*16-1:0] up_i, output wire [4*16-1:0] up_o,
     input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,
-    input  wire [3:0] gi_v, input wire [4*2132-1:0] gi_d, output wire [3:0] go_v, output wire [4*2132-1:0] go_d,
+    input  wire [3:0] gi_v, input wire [4*(H*132+20)-1:0] gi_d, output wire [3:0] go_v, output wire [4*(H*132+20)-1:0] go_d,
     input  wire [3:0] si_v, input wire [4*1076-1:0] si_d, output wire [3:0] so_v, output wire [4*1076-1:0] so_d,
     output wire [2*341-1:0] rq, input wire [1:0] rk, wd, rv, input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag,
     input  wire [2*4-1:0] r_beat, input wire [1:0] hs
 `ifdef RS_OBS
     , output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d, output wire [11:0] w_st
-    , output wire [2678:0] obs
+    , output wire [H*132+566:0] obs
 `endif
 );
     /*verilator hier_block*/
@@ -564,7 +592,7 @@ module dsdv_svc_rs #(parameter integer MUT = 0, parameter integer DIE_ID = 0, pa
     wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;
 `endif
     wire [1:0] jd; wire [8:0] hc; wire fault; wire pv_v; wire [512:0] pv_d; wire [47:0] pv_x; wire [1:0] st_rg;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY)) u (.ck(ck),
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY), .H(H)) u (.ck(ck),
         .rst(rst), .sid(sid), .j(33'd0), .jd(jd), .q(515'd0), .hw(292'd0), .hc(hc), .fault(fault), .st_rg(st_rg),
         .dn_i(dn_i), .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v),
         .go_d(go_d), .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv),

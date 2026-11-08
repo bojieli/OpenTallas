@@ -95,6 +95,18 @@ def build(tree, nodepos):
     paths = [route(pos[ch], pos[par], xf) for (ch, par, _), xf in zip(edges, best)]
     return rootk, pos, edges, paths
 
+def heads8(res):
+    """S81-SVCRS R5 (11-08): the H 8 role ROM of a 16-tile tree.  At H 8 the 16 tiles share 8 heads: the leaf of tile t
+    taps local head t % 8 (role head; bit 0 = the owning parity half, unchanged), and a node whose left subtree has 8
+    leaves (the root) sends the SAME 8 heads to both children: its right split does not shift (shalf 0, the pair-node
+    code).  Every other field (sources, faces, timing) is the H 16 ROM's: the tree and its paths do not change."""
+    import copy
+    r = copy.deepcopy(res)
+    for ro in r['roles'].values():
+        ro['head'] = ro['head'] % 8
+        if ro.get('srh') == 8: ro['shalf'] = 0
+    return r
+
 def roles(tree, nodepos, nr, fx, link_extra=0):
     rootk, pos, edges, paths = build(tree, nodepos)
     T_IN = 1 + nr                                  # in pin flop + relays -> centre
@@ -187,13 +199,15 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--nr', type=int, default=1); ap.add_argument('--fx', type=int, default=5)
     ap.add_argument('--root', default=os.path.join(os.path.dirname(__file__), '..', '..', '..'))
     ap.add_argument('--link-extra', type=int, default=0)
+    ap.add_argument('--heads', type=int, default=16, choices=(16, 8))   # S81-SVCRS R5: 8 = the H 8 ROMs (*_h8.svh)
     a = ap.parse_args()
     base = roles(balanced(0, 15), NODE, a.nr, a.fx, a.link_extra)
     mnode = dict(NODE); mnode[(0, 2)] = mnode.pop((2, 3))
     mut = roles(mut_order(), mnode, a.nr, a.fx, a.link_extra)
+    if a.heads == 8: base, mut = heads8(base), heads8(mut)
     rd = os.path.join(a.root, 'rtl/dsrom_sys/s81_dv/svc_rs'); od = os.path.join(a.root, 'results/arch/s81_dv_1016/svc_rs')
     os.makedirs(rd, exist_ok=True); os.makedirs(od, exist_ok=True)
-    suffix = '_group72' if a.link_extra else ''
+    suffix = ('_group72' if a.link_extra else '') + ('_h8' if a.heads == 8 else '')
     open(os.path.join(rd, f'dsdv_svc_sx_roles{suffix}.svh'), 'w').write(svh(base, 'sx_role'))
     open(os.path.join(rd, f'dsdv_svc_sx_roles_mut_order{suffix}.svh'), 'w').write(svh(mut, 'sx_role'))
     loads = {}
