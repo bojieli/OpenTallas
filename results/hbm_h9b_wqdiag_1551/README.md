@@ -9,3 +9,5 @@ Existing full captured cfg evidence at e9bcf0f700 / physical/die_plan/hbm_arch_c
 Next: prove current selected cfg under the actual reset contract and source capsule, then an explicit source/recipe adoption packet. The historical recipe currently reads d34578d6f, so adding the define alone to that old source would not select this implementation. No physical rebuild or ECO is needed to test the captured routed function once source and proof-tool adoption are coherent.
 
 Current native witness correction: the historical txn fixture reload151 is illegal under TIMING_833 ROW_CADENCE2 for PC9. Both off/on controllers asserted refresh fault at edge163, then their sourcebench timed out; these are preserved fixture failures, not a WQDIAG mismatch. Source requires reload%4==2*(pc_id&1); period144 preserves alignment. The corrected fixture uses150, observes actual phase/row_fire/ref_due and retains151 as a failing calendar control.
+
+The first aligned-fixture job exited2 at elaboration because the monitor referenced REFPB under the generate block; it is a module-level localparam. No simulation ran; fixed exact hierarchical monitor path, controller source unchanged.

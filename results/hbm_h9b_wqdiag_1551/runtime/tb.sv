@@ -79,7 +79,7 @@ module tb;
   always @(negedge clk) begin #1; if(rst_n && now>24 && a.controller.on.ref_due) begin
     refresh_checks=refresh_checks+1;
     if(refresh_checks<5) $display("WQDIAG_REFRESH edge%0d reload%0d phase%0d slot%0d fire%b op%0d",now,RELOAD,a.controller.on.phase,a.controller.slot_parity,a.controller.on.row_fire,a.controller.on.c_op);
-    if(a.controller.on.phase != 2*a.controller.slot_parity || !a.controller.on.row_fire || a.controller.on.c_op!=a.controller.on.REFPB)
+    if(a.controller.on.phase != 2*a.controller.slot_parity || !a.controller.on.row_fire || a.controller.on.c_op!=a.controller.REFPB)
       $fatal(1,"WQDIAG_REFRESH_PHASE illegal actual row calendar");
   end end
   integer nrd=0;
