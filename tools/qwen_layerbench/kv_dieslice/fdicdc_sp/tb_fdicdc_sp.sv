@@ -6,6 +6,7 @@
 module tb_fdicdc_sp;
     parameter integer W = 522;
     parameter integer NWORDS = 3000;
+    parameter integer SC = 64;   // SEL_CHUNK of the SEL_PIPE 1 instance (KV-TYPES-3 11-07)
     real TC = 0.833, TP = 1.043;
     integer PTX = 60, PRX = 90;            // percent valid per cycle (writer pacing)
     reg clk = 0, clk_phy = 0;
@@ -27,7 +28,7 @@ module tb_fdicdc_sp;
     ot_fdi_phy_cdc #(.W(W), .DEPTH(8), .SEL_PIPE(0)) u_n0 (.clk(clk), .link_rst_n(link_rst_n), .c_tx_v(c_tx_v),
         .c_tx_d(c_tx_d), .c_rx_v(n0_crv), .c_rx_d(n0_crd), .c_tx_up(n0_up), .clk_phy(clk_phy), .p_rst_n(n0_prst),
         .p_tx_v(n0_ptv), .p_tx_d(n0_ptd), .p_rx_v(p_rx_v), .p_rx_d(p_rx_d), .p_tx_up(p_tx_up));
-    ot_fdi_phy_cdc #(.W(W), .DEPTH(8), .SEL_PIPE(1)) u_n1 (.clk(clk), .link_rst_n(link_rst_n), .c_tx_v(c_tx_v),
+    ot_fdi_phy_cdc #(.W(W), .DEPTH(8), .SEL_PIPE(1), .SEL_CHUNK(SC)) u_n1 (.clk(clk), .link_rst_n(link_rst_n), .c_tx_v(c_tx_v),
         .c_tx_d(c_tx_d), .c_rx_v(n1_crv), .c_rx_d(n1_crd), .c_tx_up(n1_up), .clk_phy(clk_phy), .p_rst_n(n1_prst),
         .p_tx_v(n1_ptv), .p_tx_d(n1_ptd), .p_rx_v(p_rx_v), .p_rx_d(p_rx_d), .p_tx_up(p_tx_up));
 
