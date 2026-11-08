@@ -1,0 +1,34 @@
+# QC HC/FACE-REACH takeover 2026-11-08 11:13 PST
+
+CODEX took over current HC0/1/2 FACE-REACH + HC3 read-select source class. COLLECT FIRST; no old resume assumptions or shared source/config edits. Main d28cf at handoff; current canonical QC config already points CTLM plan/source/bind, not composed CLAND/HC3. Parent owns shared wave coordination.
+
+## Collected
+- HC1 class-F a10R2 is already healthy DRT pin access, E5 unit249330-1794154953, Docker dpkit-sle_hc1__cl7d360508-3944098 plus independent LEC. Kit /srv/opentallas-scratch2/claude/kw35/ctsdpl/sle_hc1__cl7d360508_a10R2/gen/sle_hc1__cl7d360508, run_route.log. Existing corrected CTS continuation carries0affb6dec9a; no duplicate/relaunch.
+- HC2 vFR original private route is healthy at60% DRT with65002 intermediate violations; these are not signoff numbers. I1 /srv/opentallas-scratch2/claude/qct6s/hc2dc_vFR/gen/slw_hc2__cla3497502__cldc737267/run_route.log. No final signoff yet.
+- Current v4w FACE-REACH source event adds3 native stages on cw_n0/1/2 for16HCtypes, max338um, +3PINcycles on36lanes. Preserve its actual source/bind, do not substitute oldvFR private source.
+- HC3 actual dry ended GEN_LINT FAIL11:04:28 although wrapper unit returned0: ot_qfd_xs_leaf_fo32.sv:229 g_t[1].sv_n/el_n references fail Yosys under default_nettype none. These wires exist at153/154; prior Verilator proof does not establish this frontend elaboration. Memorybits issue is secondary to elaboration failure.
+
+## Active source fix
+Private E5 /srv/opentallas-scratch2/claude/codex-qc-hc3-1113/source/ot_qfd_xs_leaf_fo32.sv replaces only generated-scope wire references with explicit top-level tile next-state buses assigned inside g_t. No state/edge/port change,0PINcycles. Minimal original/fixed Yosys + HC3 exact bound wrapper lockstep/mutant launched via ot-run client2045708 onintel2, log /tmp/qc-hc3-flat-state-1113.log. Complete branch will include b9065f3dddc wrapper/asbuilt prerequisite; not assumed onmain. No fresh HC3 P&R until corrected source and actual geometry review.
+
+## Current HC wave rows (state snapshot, live logs authoritative)
+- sle_hc0__cl05696ed1 a1 RUNNING / place; unit kw-qwenco-slehc0cl05696ed1-1-50553; qid None; /home/ubuntu/coord/autopilot/kit_wave/qwen_compute_sle_hc0__cl05696ed1_b38d2decfd9e9/a1
+- sle_hc0__cl929603c0__cl38badc56 a19 ENQUEUED / geom; unit kw-qwenco-slehc0cl929603c0cl38badc56-19-52522; qid 0ae21bf86722; epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_hc0__cl929603c0__cl38badc56/attempt_19/gen/sle_hc0__cl929603c0__cl38badc56
+- sle_hc0__cl929603c0__cl4baa7c9c a1 FAIL / place; unit kw-qwenco-slehc0cl929603c0cl4baa7c9c-1-50554; qid None; /home/ubuntu/coord/autopilot/kit_wave/qwen_compute_sle_hc0__cl929603c0__cl4baa7c9c_b1938381d5a72/a1
+- sle_hc1__cl22c1ff36 a29 ENQUEUED / geom; unit kw-qwenco-slehc1cl22c1ff36-29-50554; qid 2a48df733b90; epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_hc1__cl22c1ff36/attempt_29/gen/sle_hc1__cl22c1ff36
+- sle_hc1__cl7d360508 a13 ENQUEUED / geom; unit kw-qwenco-slehc1cl7d360508-13-50555; qid 19a907851a51; epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_hc1__cl7d360508/attempt_13/gen/sle_hc1__cl7d360508
+- sle_hc2__cl9c4c4509__cl3edce1b8 a10 RUNNING / place; unit kw-qwenco-slehc2cl9c4c4509cl3edce1b8-10-52531; qid None; /home/ubuntu/coord/autopilot/kit_wave/qwen_compute_sle_hc2__cl9c4c4509__cl3edce1b8_bb89f3a01b3de/a10
+- sle_hc2__cl9c4c4509__clf60c5152 a6 ENQUEUED / geom; unit kw-qwenco-slehc2cl9c4c4509clf60c5152-6-52531; qid 424d333991e1; epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_hc2__cl9c4c4509__clf60c5152/attempt_6/gen/sle_hc2__cl9c4c4509__clf60c5152
+- sle_hc2__clcc5e3e61 a10 FAIL / place; unit kw-qwenco-slehc2clcc5e3e61-10-52532; qid None; /home/ubuntu/coord/autopilot/kit_wave/qwen_compute_sle_hc2__clcc5e3e61_bf3de58ed0207/a10
+- slw_hc0__cl1bc59e1c a10 FAIL / place; unit kw-qwenco-slwhc0cl1bc59e1c-10-50556; qid None; /home/ubuntu/coord/autopilot/kit_wave/qwen_compute_slw_hc0__cl1bc59e1c_b28a7d438c145/a10
+- slw_hc0__cl4f54b7a3 a1 ENQUEUED / geom; unit kw-qwenco-slwhc0cl4f54b7a3-1-50556; qid 98b2eb747071; epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_hc0__cl4f54b7a3/gen/slw_hc0__cl4f54b7a3
+- slw_hc1__cl3449ea95 a5 ENQUEUED / geom; unit kw-qwenco-slwhc1cl3449ea95-5-50556; qid 776fe2778437; epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_hc1__cl3449ea95/attempt_5/gen/slw_hc1__cl3449ea95
+- slw_hc1__cl68f9248e__cl144ee7b3 a14 ENQUEUED / geom; unit kw-qwenco-slwhc1cl68f9248ecl144ee7b3-14-43984; qid e65544c0944e; epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_hc1__cl68f9248e__cl144ee7b3/attempt_14/gen/slw_hc1__cl68f9248e__cl144ee7b3
+- slw_hc1__cl68f9248e__cle683a076 a13 FAIL / place; unit kw-qwenco-slwhc1cl68f9248ecle683a076-13-50557; qid None; /home/ubuntu/coord/autopilot/kit_wave/qwen_compute_slw_hc1__cl68f9248e__cle683a076_bc73303e7897d/a13
+- slw_hc2__cl6bcaba89 a11 ENQUEUED / geom; unit kw-qwenco-slwhc2cl6bcaba89-11-50557; qid 57f4863dcc98; epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_hc2__cl6bcaba89/attempt_11/gen/slw_hc2__cl6bcaba89
+- slw_hc2__cla3497502__cl16607c7a a14 FAIL / place; unit kw-qwenco-slwhc2cla3497502cl16607c7a-14-50558; qid None; /home/ubuntu/coord/autopilot/kit_wave/qwen_compute_slw_hc2__cla3497502__cl16607c7a_b6d4250bd31c9/a14
+- slw_hc2__cla3497502__cldc737267 a12 ENQUEUED / geom; unit kw-qwenco-slwhc2cla3497502cldc737267-12-44637; qid e8a677563d06; epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_hc2__cla3497502__cldc737267/attempt_12/gen/slw_hc2__cla3497502__cldc737267
+- slw_hc3__clccfc3e6b a7 ENQUEUED / geom; unit kw-qwenco-slwhc3clccfc3e6b-7-63613; qid 67e3868d0963; epyc4:/srv/opentallas-scratch2/claude/qc-wave-1104s2/kit-wave/qwen_compute/efdb36e864/items/slw_hc3__clccfc3e6b/attempt_7/gen/slw_hc3__clccfc3e6b
+- slw_hc3__cld86a7ad4 a8 ENQUEUED / geom; unit kw-qwenco-slwhc3cld86a7ad4-8-13658; qid b9d5978c3c39; epyc2:/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_hc3__cld86a7ad4/attempt_8/gen/slw_hc3__cld86a7ad4
+
+Next: finish HC3 portability source capsule and actual kit lint; diagnose exact sender of clustered v4w PLACE143 statuses; collect existing HC1 corrected CTS/GRT/route artifacts and remaining live HC0/1/2 rows. No kill, duplicate physical jobs, plan-of-record changes, merges, new tags or deletion chains.
