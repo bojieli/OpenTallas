@@ -1,0 +1,42 @@
+{
+  "scope": "bounded actual child numerical transport under explicit diagnostic provider calendar; not production calendar or positive fault qualification",
+  "source": "de09e7fc10e",
+  "host": "intel1",
+  "unit": "259541-1794096938",
+  "candidates": {
+    "1": {
+      "request_diffs": 0,
+      "data_diffs": 0
+    },
+    "2": {
+      "request_diffs": 0,
+      "data_diffs": 48
+    },
+    "3": {
+      "request_diffs": 0,
+      "data_diffs": 24
+    },
+    "4": {
+      "request_diffs": 0,
+      "data_diffs": 392
+    }
+  },
+  "counts": {
+    "0": 288,
+    "1": 128,
+    "2": 128,
+    "3": 160,
+    "4": 64,
+    "5": 96,
+    "6": 288,
+    "7": 0
+  },
+  "classes": {
+    "0": 32,
+    "1": 64,
+    "2": 64,
+    "3": 64,
+    "4": 64
+  },
+  "warm_leaks": 0
+}

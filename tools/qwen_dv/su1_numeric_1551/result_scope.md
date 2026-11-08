@@ -1,0 +1,5 @@
+# Run2 bounded transport result
+
+Source de09e7fc10e, I1 unit259541-1794096938, output ../codex-qc-su1-numeric-1551-run2. Actual lrly/head/threeSFUs: candidate request+4/result-write+9 matched all288 result words over5classes and64VM/96KV writes; WROM0, WROM2, unchangedML8 controls caught48/24/392 differences. Warm-reset held64 and flushed comparison200 edges, zero output leaks. No positive scheduled fault occurred; all-zero fault phase census does not prove status timing. External requested-memory phase1VM/4CROM and independent tagged WROM are a declared diagnostic calendar, not verified production provider.
+
+Current run3 reduces to reference+correct candidate, adds actual NaN operands through memory/broadcast to exercise scheduled SFU faults, and independent pure-BYP VM address-derived golden. Old controls are not repeated; failed first scalar frontend run and successful run2 retained. If baseline golden fails, production provider/join remains unresolved and must be diagnosed rather than calling whole-child EQ. No physical/POR/default changes.

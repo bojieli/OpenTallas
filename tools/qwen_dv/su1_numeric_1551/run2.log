@@ -1,0 +1,90 @@
+COUNT 0 288
+COUNT 1 128
+COUNT 2 128
+COUNT 3 160
+COUNT 4 64
+COUNT 5 96
+COUNT 6 288
+COUNT 7 0
+CLASS 0 32
+CLASS 1 64
+CLASS 2 64
+CLASS 3 64
+CLASS 4 64
+CANDIDATE 1 req_errors=0 data_errors=0
+FAULT 1 lag=0 errors=0
+FAULT 1 lag=1 errors=0
+FAULT 1 lag=2 errors=0
+FAULT 1 lag=3 errors=0
+FAULT 1 lag=4 errors=0
+FAULT 1 lag=5 errors=0
+FAULT 1 lag=6 errors=0
+FAULT 1 lag=7 errors=0
+FAULT 1 lag=8 errors=0
+FAULT 1 lag=9 errors=0
+FAULT 1 lag=10 errors=0
+FAULT 1 lag=11 errors=0
+FAULT 1 lag=12 errors=0
+FAULT 1 lag=13 errors=0
+FAULT 1 lag=14 errors=0
+FAULT 1 lag=15 errors=0
+FAULT 1 lag=16 errors=0
+CANDIDATE 2 req_errors=0 data_errors=48
+FAULT 2 lag=0 errors=0
+FAULT 2 lag=1 errors=0
+FAULT 2 lag=2 errors=0
+FAULT 2 lag=3 errors=0
+FAULT 2 lag=4 errors=0
+FAULT 2 lag=5 errors=0
+FAULT 2 lag=6 errors=0
+FAULT 2 lag=7 errors=0
+FAULT 2 lag=8 errors=0
+FAULT 2 lag=9 errors=0
+FAULT 2 lag=10 errors=0
+FAULT 2 lag=11 errors=0
+FAULT 2 lag=12 errors=0
+FAULT 2 lag=13 errors=0
+FAULT 2 lag=14 errors=0
+FAULT 2 lag=15 errors=0
+FAULT 2 lag=16 errors=0
+CANDIDATE 3 req_errors=0 data_errors=24
+FAULT 3 lag=0 errors=0
+FAULT 3 lag=1 errors=0
+FAULT 3 lag=2 errors=0
+FAULT 3 lag=3 errors=0
+FAULT 3 lag=4 errors=0
+FAULT 3 lag=5 errors=0
+FAULT 3 lag=6 errors=0
+FAULT 3 lag=7 errors=0
+FAULT 3 lag=8 errors=0
+FAULT 3 lag=9 errors=0
+FAULT 3 lag=10 errors=0
+FAULT 3 lag=11 errors=0
+FAULT 3 lag=12 errors=0
+FAULT 3 lag=13 errors=0
+FAULT 3 lag=14 errors=0
+FAULT 3 lag=15 errors=0
+FAULT 3 lag=16 errors=0
+CANDIDATE 4 req_errors=0 data_errors=392
+FAULT 4 lag=0 errors=0
+FAULT 4 lag=1 errors=0
+FAULT 4 lag=2 errors=0
+FAULT 4 lag=3 errors=0
+FAULT 4 lag=4 errors=0
+FAULT 4 lag=5 errors=0
+FAULT 4 lag=6 errors=0
+FAULT 4 lag=7 errors=0
+FAULT 4 lag=8 errors=0
+FAULT 4 lag=9 errors=0
+FAULT 4 lag=10 errors=0
+FAULT 4 lag=11 errors=0
+FAULT 4 lag=12 errors=0
+FAULT 4 lag=13 errors=0
+FAULT 4 lag=14 errors=0
+FAULT 4 lag=15 errors=0
+FAULT 4 lag=16 errors=0
+WARM_LEAK 0
+- tools/qwen_dv/su1_numeric_1551/tb_su1_numeric_1551.sv:86: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 2.424 s; speed 2.302 us/s
+- Verilator: cpu 2.422 s on 1 threads; allocated 15 MB
