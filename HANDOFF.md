@@ -3454,3 +3454,5 @@ CODEX: 2026-11-08 03:10 PST KV source-realization stale96/0 holds disproved(curr
 CODEX: 2026-11-08 03:12 PST HEAD CTL vG advanced from source-only to first private PLACE, hub codex/head-ctl-vg-0222@ff383026c2a. Fixed planned Tcl scope/FIRM relocation class; actual1025 anchors pass. Healthy intel2 scope oth-ubuntu-4054213-1794134844 + asyncLEC; HOLD_ROUTE/DO_NOT_COUNT. Fieldwise CTL raw-event price model ready token95452b008c; no count/POR/merge/tag.
 
 CODEX: 2026-11-08 03:20 PST RESTJ joined-source redesign: exact graph+FF miter/mutants pass,1996 local selector FF copies/PIN0;3815 legal M4/M6 pin moves reviewed. Branch codex/hbm-restj-local-0222@4759fecdcc3 on hub+GitHub. FIRST PLACE intel1 codex-restj-0222/kit_localA3 unit oth-ubuntu-1256316-1794136686; HOLD before CTS, DO_NOT_COUNT/POR unchanged.
+
+CODEX: 2026-11-08 03:24 PST SVCnativePVSOsourcec61ec07235+compiler e14f2f7b33 oncanonicalintel2:8192FP32/534SOwords exact,8controls caught; SM148numericchecks+44%actualareasaving, oneSMDPLACEpilotactive. NativeH8HCOREadapter/sizingnowrunning,64GiBnumericalcompileOOMcheckpointresumesI1. ParentR5notqualified; noPOR/merge/tag.
