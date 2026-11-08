@@ -5056,8 +5056,11 @@ tail -5 "$K/run_$GOAL.log"
 # Route success alone is not sign-off. Preserve previous failed verdicts.
 if [ $rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then
   SO="$K/signoff"; [ ! -e "$SO/signoff.json" ] || SO="$K/signoff_$(date +%Y%m%d_%H%M%S)_$$"
+  # KW-FIX-32 11-07 (COORD 19:0x, FLOW-CHILD-ETM-CONTEXT at sign-off, DIE-HBM-89 q_spb2 vE): signoff.py runs on the
+  # host and counts an unexpanded child ETM only with the parent flow tag; give it the GRT gate's FT (env, else
+  # K/flow_tag).  The child records are read at their host paths (no mount needed on the host).  Unset FT = as before.
   SIGNOFF_DOCKER=${SIGNOFF_DOCKER:-docker} python3 -I "$K/signoff.py" run --run-dir "$K/run" --kit "$K" \
-    --out "$SO" --image "$IMAGE" --corners tt,ff > "$SO.log" 2>&1
+    --out "$SO" --image "$IMAGE" --corners tt,ff ${FT:+--flow-tag "$FT"} > "$SO.log" 2>&1
   grep -E '^SIGNOFF|^  - ' "$SO.log" | head -12
 fi
 exit $rc

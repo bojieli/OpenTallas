@@ -94,8 +94,10 @@ tail -5 "$K/run_$GOAL.log"
 # standard boundary-hold overlay / DRV / unconstrained / pin-flop spread / sdc_lint / face_guard / DRC + antenna) in
 # KIT/signoff/signoff.json; a core is closed only when it says SIGNED (collect_core.py reads it).
 if [ $rc = 0 ] && { [ $GOAL = finish ] || [ $GOAL = route ] || [ $GOAL = post ]; } && [ -f "$K/signoff.py" ]; then
+  # KW-FIX-32 11-07 (FLOW-CHILD-ETM-CONTEXT at sign-off): parent flow tag for signed child ETMs (env, else K/flow_tag)
+  FT=${OT_FLOW_TAG:-$(head -1 "$K/flow_tag" 2>/dev/null)}
   SIGNOFF_DOCKER=${SIGNOFF_DOCKER:-$DK} python3 -I "$K/signoff.py" run --run-dir "$K/run" --kit "$K" \
-    --out "$K/signoff" --image "$IMAGE" > "$K/signoff.log" 2>&1
+    --out "$K/signoff" --image "$IMAGE" ${FT:+--flow-tag "$FT"} > "$K/signoff.log" 2>&1
   rc=$?
   grep -E '^SIGNOFF|^  - ' "$K/signoff.log" | head -12
 fi
