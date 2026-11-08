@@ -214,6 +214,31 @@ class TestClasses(Base):
             self.assertTrue(os.path.isdir(d), d)
             self.assertTrue(self.row(d)[4].startswith(why), (d, self.row(d)))
 
+    def test_a_superseded_xpath_and_any_host(self):
+        old = self.attempt("item_xp", 2, event="ev_old")      # older plan dir, state now runs attempt_5 elsewhere
+        newer = self.attempt("item_xn", 7, event="ev_old")    # NEWER number than the state's current: keep
+        other_act = self.attempt("item_oh", 1)                # active under another host name (ran_on copy)
+        other_keep = self.attempt("item_ok", 1)               # keep path listed under the hub "localhost" name
+        self.kw = {"attempts": {"localhost:" + other_act: {"active": True, "signed": False, "terminal": []}},
+                   "latest": {},
+                   "keep": ["localhost:" + os.path.join(other_keep, "gen")],
+                   "current_di": {"hbm|item_xp": 5, "hbm|item_xn": 5, "hbm|item_ok": 3}}
+        self.run_job()
+        self.assertFalse(os.path.exists(old))
+        self.assertIn("superseded-xpath", self.row(old)[4])
+        self.assertTrue(os.path.isdir(newer))
+        self.assertTrue(self.row(newer)[4].startswith("kit-wave unknown"), self.row(newer))
+        self.assertTrue(os.path.isdir(other_act))
+        self.assertTrue(self.row(other_act)[4].startswith("kit-wave active"), self.row(other_act))
+        self.assertTrue(os.path.isdir(other_keep))
+        self.assertTrue(self.row(other_keep)[4].startswith("kitwave-keep"), self.row(other_keep))
+
+    def test_reduce_current_di(self):
+        st = {"items": {"hbm|item_xp|s1": {"kit": "epyc4:/srv/x/kit-wave/hbm/ev_new/items/item_xp/attempt_5/gen/k",
+                                             "status": "FAIL"}}}
+        out = ac.reduce_kitwave(st, [])
+        self.assertEqual(out["current_di"], {"hbm|item_xp": 5})
+
     def test_a_disabled_without_kitwave(self):
         d = self.attempt("item_x", 1)
         self.run_job()
