@@ -19,6 +19,15 @@ def native_observations(raw):
         raise ValueError('native source proof failed')
 
 
+def hb_observations(path):
+    events=[]
+    for line in path.read_text().splitlines():
+        m=re.match(r'^(\d+) (CSR|CMD|LOC|ISSUE|ROMRAW|ROM|NAT|XPF|STAGE|CF|END|LANDED_LOCKSTEP)\b\s*(.*)',line)
+        if not m:raise ValueError('unknown existing log row '+line)
+        events.append(dict(observation_negedge_label=int(m[1]),kind=m[2],value=m[3]))
+    return events
+
+
 def decode(root):
     native = root / 'native_fixture_source.sv'
     hb = root / 'hb_fixture_source.sv'
@@ -37,12 +46,7 @@ def decode(root):
         raise ValueError('native finite producer changed')
     raw = (root/'native_compare_calr2.log').read_text()
     native_observations(raw)
-    events = []
-    for line in (root / 'log_m0_b0_TB_LANDED.txt').read_text().splitlines():
-        m = re.match(r'^(\d+) (CSR|CMD|LOC|ISSUE|ROMRAW|ROM|NAT|XPF|STAGE|CF|END|LANDED_LOCKSTEP)\b\s*(.*)', line)
-        if not m:
-            raise ValueError('unknown existing log row ' + line)
-        events.append(dict(observation_negedge_label=int(m[1]), kind=m[2], value=m[3]))
+    events=hb_observations(root/'log_m0_b0_TB_LANDED.txt')
     stimulus = []
     for line in (root / 'ev_m0_b0_TB_LANDED.txt').read_text().splitlines():
         edge, kind, word = line.split()
@@ -66,6 +70,10 @@ def decode(root):
         hb=dict(clock_origin='post-reset cyc counter; inputs applied previous negedge; observations at negedge cyc',
             profile=dict(NU=1,OPSEG=False,CTX=False,INIT=False,CALR=False,F16=False),
             production_ROOT_X_HEAD37_dates_qualified=False, observations=events, stimulus=stimulus),
+        hb_other_flavour=dict(name='fq_img0',production_ROOT_X_HEAD37_dates_qualified=False,
+            observations=hb_observations(root/'hb_img0/log_m0_b0_TB_LANDED.txt'),
+            log_sha256=digest(root/'hb_img0/log_m0_b0_TB_LANDED.txt'),
+            stimulus_sha256=digest(root/'hb_img0/ev_m0_b0_TB_LANDED.txt')),
         production_gaps=['selected current programme/image identity', 'ROOT write/commit publication',
                          'X/HEAD lease end and provider lifetimes', 'global clock/reset/START origin'])
 

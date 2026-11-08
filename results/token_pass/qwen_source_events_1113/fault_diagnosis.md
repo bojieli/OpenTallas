@@ -52,3 +52,8 @@ the fault subject to reset/accepted-idle-start clear and enable conditions.
 This strengthens the structural cause diagnosis while retaining the exact
 first-fault observer limitation; gate/enable conditions prevent claiming an
 unobserved exact propagation edge.
+
+The selected FQREG high-level HEAD_STAGE37=0 is another independent profile
+constraint: the old CALRDIR2 stimulus still issues stage37. That late feature
+cannot explain the cf1 already observed at warm1150, before any stage starts.
+It must not be silently treated as production HEAD37 coverage.
