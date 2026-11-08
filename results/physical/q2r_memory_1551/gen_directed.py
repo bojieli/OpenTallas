@@ -140,8 +140,8 @@ for k, (name, w) in enumerate(sites):
           f" if (first_merr < 0) first_merr = cyc; end"]
 for g in (0, 1):
     C = rf"b.u_x.\u_body.g_link[{g}].u_link.u_ctl.u"
-    L += [f"  integer dbg{g}_wv=0, dbg{g}_eb=0, dbg{g}_ab=0;",
-          f"  always @(posedge clk) if (rst_n) begin if ({C}.wr_v_pin  === 1'b1) dbg{g}_wv++; if ({C}.epoch_begin_pin  === 1'b1) dbg{g}_eb++; if ({C}.u_core.u_codec.epoch_abort  === 1'b1) dbg{g}_ab++; end"]
+    L += [f"  integer dbg{g}_wv=0, dbg{g}_eb=0, dbg{g}_ab=0, dbg{g}_ov=0, dbg{g}_miss=0, dbg{g}_extra=0, dbg{g}_pair=0;",
+          f"  always @(posedge clk) if (rst_n) begin if ({C}.wr_observed_v_pin === 1'b1) dbg{g}_ov++; if ({C}.wr_v_pin && !{C}.wr_observed_v_pin)dbg{g}_miss++; if (!{C}.wr_v_pin && {C}.wr_observed_v_pin)dbg{g}_extra++; if ({C}.wr_v_pin && {C}.wr_observed_v_pin)dbg{g}_pair++; if ({C}.wr_v_pin  === 1'b1) dbg{g}_wv++; if ({C}.epoch_begin_pin  === 1'b1) dbg{g}_eb++; if ({C}.u_core.u_codec.epoch_abort  === 1'b1) dbg{g}_ab++; end"]
 L += ["  // background inputs: random every cycle under 4 density modes (mode changes every 100 cycles); faults mostly 0",
       "  always @(negedge clk) begin",
       "    cyc <= cyc + 1;",
@@ -213,6 +213,8 @@ L.append("    $display(\"Q2NF_RW88 LOCKSTEP %s seed=%0d qid=%0d cycles=%0d out_e
          + " + ".join(f"s{k}_w" for k in lk) + ", " + " + ".join(f"s{k}_rb" for k in lk) + ", "
          + " + ".join(f"s{k}_w" for k in ik) + ", " + " + ".join(f"s{k}_r" for k in ik) + ", " + " + ".join(f"s{k}_rb" for k in ik)
          + ", prog_cfg, nprog, prog_fault, launches, dones, nz);")
+for g in (0,1):
+    L.append(f"    $display(\"LINK_PROTOCOL g={g} wr=%0d observed=%0d missing=%0d extra=%0d paired=%0d abort=%0d\",dbg{g}_wv,dbg{g}_ov,dbg{g}_miss,dbg{g}_extra,dbg{g}_pair,dbg{g}_ab);")
 coverage = " || ".join(f"s{k}_w==0 || s{k}_rb==0" for k in range(14))
 L += [f"    if(mutcase==0 && ({coverage})) $fatal(1,\"BASELINE_MEMORY_COVERAGE_INCOMPLETE\");",
       "    if(mutcase==0 && (errs||merrs))$fatal(1,\"BASELINE_MISMATCH\");",
