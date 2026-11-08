@@ -30,3 +30,15 @@ def test_capture_path_requires_selector_and_is_shell_literal():
     path='/tmp/captured plan/$(touch BAD)'
     prefix=K.topology_env_prefix(dict(gen_env=dict(OT_NATIVE_RESET_SCOPE='selected',OT_NATIVE_PRODUCER_CONTEXT=path)))
     assert shlex.split(prefix)==['OT_NATIVE_RESET_SCOPE=selected','OT_NATIVE_PRODUCER_CONTEXT='+path]
+
+
+def test_item_env_narrow_capture_path_support():
+    env=dict(OT_NATIVE_RESET_SCOPE='selected',OT_NATIVE_PRODUCER_CONTEXT='/srv/own/capture.json')
+    assert K.item_env(dict(item_env={'T':env}),'T')==env
+    for bad in (
+        dict(OT_NATIVE_PRODUCER_CONTEXT='/srv/own/capture.json'),
+        dict(OTHER='/srv/own/capture.json'),
+        dict(OT_OTHER='/srv/own/capture.json'),
+        dict(OT_NATIVE_RESET_SCOPE='selected',OT_NATIVE_PRODUCER_CONTEXT='/tmp/$(touch_BAD)'),
+    ):
+        with pytest.raises(ValueError): K.item_env(dict(item_env={'T':bad}),'T')

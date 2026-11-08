@@ -1228,8 +1228,12 @@ def item_env(d, item):
     """die item_env[item] -> {OT_*: value} (validated: OT_ names, shell-safe values; anything else raises)"""
     env = dict((d.get("item_env") or {}).get(item) or {})
     for k, v in env.items():
-        if not ENV_KEY_RE.fullmatch(str(k)) or not ENV_VAL_RE.fullmatch(str(v)):
-            raise ValueError(f"item_env {item}: {k}={v!r} (OT_* names, [A-Za-z0-9_.,:=+-] values)")
+        capture_path = (k == "OT_NATIVE_PRODUCER_CONTEXT" and isinstance(v, str)
+                        and re.fullmatch(r"/[A-Za-z0-9_./-]+", v))
+        if not ENV_KEY_RE.fullmatch(str(k)) or not (ENV_VAL_RE.fullmatch(str(v)) or capture_path):
+            raise ValueError(f"item_env {item}: {k}={v!r} (OT_* names, safe values; producer context may be an absolute path)")
+    if "OT_NATIVE_PRODUCER_CONTEXT" in env and env.get("OT_NATIVE_RESET_SCOPE") != "selected":
+        raise ValueError("producer context needs OT_NATIVE_RESET_SCOPE=selected")
     return {str(k): str(v) for k, v in sorted(env.items())}
 
 
