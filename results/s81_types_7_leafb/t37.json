@@ -1,0 +1,136 @@
+{
+ "type": "ot_s81sl_leaf__t37",
+ "target": 0.6,
+ "station_regs_under_macros": [
+  1,
+  1
+ ],
+ "before": {
+  "worst": 2.1,
+  "hot": 4,
+  "hot_list": [
+   "u_vs|u_vsw w=8.62 pins=814 r=2.10",
+   "u_vs|u_ve.u_m w=17.28 pins=1267 r=1.69",
+   "u_vsw|u_ve.u_s w=8.64 pins=322 r=0.86",
+   "u_vq|u_vn.u_a w=8.64 pins=299 r=0.80"
+  ]
+ },
+ "after": {
+  "worst": 0.56,
+  "hot": 0,
+  "hot_list": []
+ },
+ "bus_cost_rise_pct": 6.35,
+ "moves": {
+  "u_bound.u_u_ve_u_m": {
+   "inst": "u_ve.u_m",
+   "delta_um": [
+    0.0,
+    34.56
+   ],
+   "to": [
+    829.572,
+    872.652
+   ],
+   "orient": "MY"
+  },
+  "u_bound.u_u_ve_u_s": {
+   "inst": "u_ve.u_s",
+   "delta_um": [
+    0.0,
+    8.64
+   ],
+   "to": [
+    1028.292,
+    846.732
+   ],
+   "orient": "MY"
+  },
+  "u_bound.u_u_vsw": {
+   "inst": "u_vsw",
+   "delta_um": [
+    25.92,
+    0.0
+   ],
+   "to": [
+    1080.108,
+    604.812
+   ],
+   "orient": "R0"
+  },
+  "u_bound.u_u_vn_u_a": {
+   "inst": "u_vn.u_a",
+   "delta_um": [
+    0.0,
+    8.64
+   ],
+   "to": [
+    466.668,
+    673.932
+   ],
+   "orient": "R0"
+  }
+ },
+ "steps": [
+  {
+   "ch": "u_vs|u_vsw",
+   "axis": "x",
+   "width": 8.62,
+   "pins": 814,
+   "ratio": 2.1,
+   "move": "u_vsw",
+   "d_um": 17.28,
+   "chain": [
+    "u_vsw"
+   ]
+  },
+  {
+   "ch": "u_vs|u_ve.u_m",
+   "axis": "y",
+   "width": 17.28,
+   "pins": 1267,
+   "ratio": 1.69,
+   "move": "u_ve.u_m",
+   "d_um": 34.56,
+   "chain": [
+    "u_ve.u_m"
+   ]
+  },
+  {
+   "ch": "u_vsw|u_ve.u_s",
+   "axis": "y",
+   "width": 8.64,
+   "pins": 322,
+   "ratio": 0.86,
+   "move": "u_ve.u_s",
+   "d_um": 8.64,
+   "chain": [
+    "u_ve.u_s"
+   ]
+  },
+  {
+   "ch": "u_vq|u_vn.u_a",
+   "axis": "y",
+   "width": 8.64,
+   "pins": 299,
+   "ratio": 0.8,
+   "move": "u_vn.u_a",
+   "d_um": 8.64,
+   "chain": [
+    "u_vn.u_a"
+   ]
+  },
+  {
+   "ch": "u_vs|u_vsw",
+   "axis": "x",
+   "width": 25.9,
+   "pins": 814,
+   "ratio": 0.7,
+   "move": "u_vsw",
+   "d_um": 8.64,
+   "chain": [
+    "u_vsw"
+   ]
+  }
+ ]
+}

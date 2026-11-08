@@ -1,0 +1,214 @@
+{
+ "type": "ot_s81sl_leaf__t72",
+ "target": 0.6,
+ "station_regs_under_macros": [
+  2,
+  5
+ ],
+ "before": {
+  "worst": 2.1,
+  "hot": 7,
+  "hot_list": [
+   "u_vs|u_vq w=8.64 pins=814 r=2.10",
+   "u_ve.u_m|u_vs w=25.92 pins=1267 r=1.12",
+   "u_ve.u_m|u_ve.u_s w=8.64 pins=387 r=1.00",
+   "u_vn.u_a|u_vp.g_ln[10].u_l w=23.74 pins=819 r=0.77",
+   "u_vn.u_a|u_vp.g_ln[7].u_l w=23.74 pins=819 r=0.77",
+   "u_vn.u_b|u_vp.g_ln[11].u_l w=23.74 pins=786 r=0.74",
+   "u_vn.u_b|u_vp.g_ln[7].u_l w=23.74 pins=786 r=0.74"
+  ]
+ },
+ "after": {
+  "worst": 0.56,
+  "hot": 0,
+  "hot_list": []
+ },
+ "bus_cost_rise_pct": -11.88,
+ "moves": {
+  "u_bound.u_u_lf1_u_ve_u_m": {
+   "inst": "u_ve.u_m",
+   "delta_um": [
+    -8.64,
+    0.0
+   ],
+   "to": [
+    406.212,
+    51.876
+   ],
+   "orient": "R180"
+  },
+  "u_bound.u_u_lf1_u_vs": {
+   "inst": "u_vs",
+   "delta_um": [
+    0.0,
+    25.92
+   ],
+   "to": [
+    363.012,
+    449.316
+   ],
+   "orient": "R180"
+  },
+  "u_bound.u_u_lf1_u_vq": {
+   "inst": "u_vq",
+   "delta_um": [
+    25.92,
+    0.0
+   ],
+   "to": [
+    570.372,
+    440.676
+   ],
+   "orient": "R180"
+  },
+  "u_bound.u_u_lf1_u_vp_g_ln_10_u_l": {
+   "inst": "u_vp.g_ln[10].u_l",
+   "delta_um": [
+    8.64,
+    0.0
+   ],
+   "to": [
+    1166.508,
+    302.052
+   ],
+   "orient": "MX"
+  },
+  "u_bound.u_u_lf1_u_vp_g_ln_11_u_l": {
+   "inst": "u_vp.g_ln[11].u_l",
+   "delta_um": [
+    8.64,
+    0.0
+   ],
+   "to": [
+    1166.508,
+    42.852
+   ],
+   "orient": "MX"
+  },
+  "u_bound.u_u_lf1_u_vp_g_ln_12_u_l": {
+   "inst": "u_vp.g_ln[12].u_l",
+   "delta_um": [
+    8.64,
+    0.0
+   ],
+   "to": [
+    1296.108,
+    34.212
+   ],
+   "orient": "MX"
+  },
+  "u_bound.u_u_lf1_u_vp_g_ln_15_u_l": {
+   "inst": "u_vp.g_ln[15].u_l",
+   "delta_um": [
+    8.64,
+    0.0
+   ],
+   "to": [
+    1296.108,
+    302.052
+   ],
+   "orient": "MX"
+  },
+  "u_bound.u_u_lf1_u_vp_g_ln_7_u_l": {
+   "inst": "u_vp.g_ln[7].u_l",
+   "delta_um": [
+    8.64,
+    0.0
+   ],
+   "to": [
+    1166.508,
+    172.452
+   ],
+   "orient": "MX"
+  },
+  "u_bound.u_u_lf1_u_vp_g_ln_8_u_l": {
+   "inst": "u_vp.g_ln[8].u_l",
+   "delta_um": [
+    8.64,
+    0.0
+   ],
+   "to": [
+    1296.108,
+    172.452
+   ],
+   "orient": "MX"
+  }
+ },
+ "steps": [
+  {
+   "ch": "u_vs|u_vq",
+   "axis": "x",
+   "width": 8.64,
+   "pins": 814,
+   "ratio": 2.1,
+   "move": "u_vq",
+   "d_um": 25.92,
+   "chain": [
+    "u_vq"
+   ]
+  },
+  {
+   "ch": "u_ve.u_m|u_vs",
+   "axis": "y",
+   "width": 25.92,
+   "pins": 1267,
+   "ratio": 1.12,
+   "move": "u_vs",
+   "d_um": 25.92,
+   "chain": [
+    "u_vs"
+   ]
+  },
+  {
+   "ch": "u_ve.u_m|u_ve.u_s",
+   "axis": "x",
+   "width": 8.64,
+   "pins": 387,
+   "ratio": 1.0,
+   "move": "u_ve.u_m",
+   "d_um": -8.64,
+   "chain": [
+    "u_ve.u_m"
+   ]
+  },
+  {
+   "ch": "u_vn.u_a|u_vp.g_ln[10].u_l",
+   "axis": "x",
+   "width": 23.74,
+   "pins": 819,
+   "ratio": 0.77,
+   "move": "u_vp.g_ln[10].u_l",
+   "d_um": 8.64,
+   "chain": [
+    "u_vp.g_ln[10].u_l",
+    "u_vp.g_ln[15].u_l"
+   ]
+  },
+  {
+   "ch": "u_vn.u_a|u_vp.g_ln[7].u_l",
+   "axis": "x",
+   "width": 23.74,
+   "pins": 819,
+   "ratio": 0.77,
+   "move": "u_vp.g_ln[7].u_l",
+   "d_um": 8.64,
+   "chain": [
+    "u_vp.g_ln[7].u_l",
+    "u_vp.g_ln[8].u_l"
+   ]
+  },
+  {
+   "ch": "u_vn.u_b|u_vp.g_ln[11].u_l",
+   "axis": "x",
+   "width": 23.74,
+   "pins": 786,
+   "ratio": 0.74,
+   "move": "u_vp.g_ln[11].u_l",
+   "d_um": 8.64,
+   "chain": [
+    "u_vp.g_ln[11].u_l",
+    "u_vp.g_ln[12].u_l"
+   ]
+  }
+ ]
+}

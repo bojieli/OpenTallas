@@ -1,0 +1,151 @@
+{
+ "type": "ot_s81sl_leaf__t31",
+ "target": 0.6,
+ "station_regs_under_macros": [
+  8,
+  8
+ ],
+ "before": {
+  "worst": 3.37,
+  "hot": 5,
+  "hot_list": [
+   "u_vs|u_ve.u_s w=8.64 pins=1267 r=3.37",
+   "u_vs|u_vq w=8.64 pins=814 r=2.10",
+   "u_vs|u_ve.u_m w=17.28 pins=1267 r=1.69",
+   "u_ve.u_m|u_ve.u_s w=8.64 pins=387 r=1.00",
+   "u_vsw|u_vs w=8.64 pins=322 r=0.86"
+  ]
+ },
+ "after": {
+  "worst": 0.56,
+  "hot": 0,
+  "hot_list": []
+ },
+ "bus_cost_rise_pct": 8.98,
+ "moves": {
+  "u_bound.u_u_ve_u_s": {
+   "inst": "u_ve.u_s",
+   "delta_um": [
+    8.64,
+    25.92
+   ],
+   "to": [
+    250.692,
+    855.372
+   ],
+   "orient": "MY"
+  },
+  "u_bound.u_u_vsw": {
+   "inst": "u_vsw",
+   "delta_um": [
+    0.0,
+    -43.2
+   ],
+   "to": [
+    77.868,
+    371.532
+   ],
+   "orient": "R0"
+  },
+  "u_bound.u_u_vs": {
+   "inst": "u_vs",
+   "delta_um": [
+    0.0,
+    -34.56
+   ],
+   "to": [
+    103.812,
+    613.452
+   ],
+   "orient": "MY"
+  },
+  "u_bound.u_u_vq": {
+   "inst": "u_vq",
+   "delta_um": [
+    25.92,
+    0.0
+   ],
+   "to": [
+    311.172,
+    665.292
+   ],
+   "orient": "MY"
+  }
+ },
+ "steps": [
+  {
+   "ch": "u_vs|u_ve.u_s",
+   "axis": "y",
+   "width": 8.64,
+   "pins": 1267,
+   "ratio": 3.37,
+   "move": "u_ve.u_s",
+   "d_um": 25.92,
+   "chain": [
+    "u_ve.u_s"
+   ]
+  },
+  {
+   "ch": "u_vs|u_vq",
+   "axis": "x",
+   "width": 8.64,
+   "pins": 814,
+   "ratio": 2.1,
+   "move": "u_vq",
+   "d_um": 25.92,
+   "chain": [
+    "u_vq"
+   ]
+  },
+  {
+   "ch": "u_vs|u_ve.u_m",
+   "axis": "y",
+   "width": 17.28,
+   "pins": 1267,
+   "ratio": 1.69,
+   "move": "u_vs",
+   "d_um": -17.28,
+   "chain": [
+    "u_vs",
+    "u_vsw"
+   ]
+  },
+  {
+   "ch": "u_ve.u_m|u_ve.u_s",
+   "axis": "x",
+   "width": 8.64,
+   "pins": 387,
+   "ratio": 1.0,
+   "move": "u_ve.u_s",
+   "d_um": 8.64,
+   "chain": [
+    "u_ve.u_s"
+   ]
+  },
+  {
+   "ch": "u_vsw|u_vs",
+   "axis": "y",
+   "width": 8.64,
+   "pins": 322,
+   "ratio": 0.86,
+   "move": "u_vsw",
+   "d_um": -8.64,
+   "chain": [
+    "u_vsw"
+   ]
+  },
+  {
+   "ch": "u_vs|u_ve.u_m",
+   "axis": "y",
+   "width": 34.56,
+   "pins": 1267,
+   "ratio": 0.84,
+   "move": "u_vs",
+   "d_um": -17.28,
+   "chain": [
+    "u_vs",
+    "u_vsw"
+   ]
+  }
+ ]
+}

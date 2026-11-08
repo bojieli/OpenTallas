@@ -1,0 +1,154 @@
+{
+ "type": "ot_s81sl_leaf__t5",
+ "target": 0.6,
+ "station_regs_under_macros": [
+  6,
+  3
+ ],
+ "before": {
+  "worst": 2.1,
+  "hot": 6,
+  "hot_list": [
+   "u_vq|u_vs w=8.64 pins=814 r=2.10",
+   "u_ve.u_m|u_vs w=17.28 pins=1267 r=1.69",
+   "u_vp.g_ln[0].u_l|u_vn.u_b w=15.12 pins=786 r=1.16",
+   "u_ve.u_s|u_vs w=25.92 pins=1267 r=1.12",
+   "u_ve.u_s|u_ve.u_m w=8.64 pins=387 r=1.00",
+   "u_vs|u_vsw w=8.64 pins=322 r=0.86"
+  ]
+ },
+ "after": {
+  "worst": 1.0,
+  "hot": 2,
+  "hot_list": [
+   "u_ve.u_s|u_ve.u_m w=8.64 pins=387 r=1.00",
+   "u_ve.u_m|u_vs w=34.56 pins=1267 r=0.84"
+  ]
+ },
+ "bus_cost_rise_pct": 6.63,
+ "moves": {
+  "u_bound.u_u_lf4_u_ve_u_s": {
+   "inst": "u_ve.u_s",
+   "delta_um": [
+    0.0,
+    -8.64
+   ],
+   "to": [
+    682.668,
+    34.596
+   ],
+   "orient": "MX"
+  },
+  "u_bound.u_u_lf4_u_vsw": {
+   "inst": "u_vsw",
+   "delta_um": [
+    0.0,
+    25.92
+   ],
+   "to": [
+    794.988,
+    622.116
+   ],
+   "orient": "MX"
+  },
+  "u_bound.u_u_lf4_u_vs": {
+   "inst": "u_vs",
+   "delta_um": [
+    0.0,
+    17.28
+   ],
+   "to": [
+    820.908,
+    432.036
+   ],
+   "orient": "MX"
+  },
+  "u_bound.u_u_lf4_u_vq": {
+   "inst": "u_vq",
+   "delta_um": [
+    -25.92,
+    0.0
+   ],
+   "to": [
+    613.548,
+    432.036
+   ],
+   "orient": "MX"
+  },
+  "u_bound.u_u_lf4_u_vp_g_ln_0_u_l": {
+   "inst": "u_vp.g_ln[0].u_l",
+   "delta_um": [
+    -17.28,
+    0.0
+   ],
+   "to": [
+    164.268,
+    172.452
+   ],
+   "orient": "MX"
+  }
+ },
+ "steps": [
+  {
+   "ch": "u_vq|u_vs",
+   "axis": "x",
+   "width": 8.64,
+   "pins": 814,
+   "ratio": 2.1,
+   "move": "u_vq",
+   "d_um": -25.92,
+   "chain": [
+    "u_vq"
+   ]
+  },
+  {
+   "ch": "u_ve.u_m|u_vs",
+   "axis": "y",
+   "width": 17.28,
+   "pins": 1267,
+   "ratio": 1.69,
+   "move": "u_vs",
+   "d_um": 17.28,
+   "chain": [
+    "u_vs",
+    "u_vsw"
+   ]
+  },
+  {
+   "ch": "u_vp.g_ln[0].u_l|u_vn.u_b",
+   "axis": "x",
+   "width": 15.12,
+   "pins": 786,
+   "ratio": 1.16,
+   "move": "u_vp.g_ln[0].u_l",
+   "d_um": -17.28,
+   "chain": [
+    "u_vp.g_ln[0].u_l"
+   ]
+  },
+  {
+   "ch": "u_vs|u_vsw",
+   "axis": "y",
+   "width": 8.64,
+   "pins": 322,
+   "ratio": 0.86,
+   "move": "u_vsw",
+   "d_um": 8.64,
+   "chain": [
+    "u_vsw"
+   ]
+  },
+  {
+   "ch": "u_ve.u_s|u_vs",
+   "axis": "y",
+   "width": 43.2,
+   "pins": 1267,
+   "ratio": 0.67,
+   "move": "u_ve.u_s",
+   "d_um": -8.64,
+   "chain": [
+    "u_ve.u_s"
+   ]
+  }
+ ]
+}
