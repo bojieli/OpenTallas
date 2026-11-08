@@ -4,7 +4,7 @@
 // Issue authority is compiled START dates; physical codecs are in ot_s81hd_ctl_core.
 // The current spine root already merges north/south; feeding both comparison inputs the same
 // root record preserves that record exactly and retains the established two-edge pick latency.
-module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT_STATIC=0, parameter integer MUT_DRAFT_EARLY=0, parameter integer ING_STAGE=0, parameter integer SEQ_WB=0, parameter integer SEQ_FAN=0, parameter integer SEQ_RST=0, parameter integer SRAM_RAW_CAPTURE=0, parameter integer SRAM_PARTIAL_CAPTURE=0, parameter integer CTL_PRE=0) (
+module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT_STATIC=0, parameter integer MUT_DRAFT_EARLY=0, parameter integer ING_STAGE=0, parameter integer SEQ_WB=0, parameter integer SEQ_FAN=0, parameter integer SEQ_RST=0, parameter integer SRAM_RAW_CAPTURE=0, parameter integer SRAM_PARTIAL_CAPTURE=0, parameter integer CTL_PRE=0, parameter integer CTL_WINDOW_PRE=0) (
     input wire start_i, input wire adapter_fault,
     output wire job_active_o,
     input  wire              ck,
@@ -187,6 +187,19 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
             if (o3) wcnt <= 7'(NB);
             else if (sel_fx && wcnt != 7'd0) wcnt <= wcnt - 7'd1;
         end
+    // Optional exact nonzero-state projection of wcnt, updated beside it.
+    // Same cycles/reset/priority as wcnt; removes its reduction from START.
+    wire window_open;
+    generate if (CTL_WINDOW_PRE != 0) begin : g_window_pre
+        (* keep = "true" *) reg window_nz_q;
+        always @(posedge ck or negedge rr[1])
+            if (!rr[1]) window_nz_q <= 1'b0;
+            else if (o3) window_nz_q <= 1'b1;
+            else if (sel_fx && wcnt != 7'd0) window_nz_q <= wcnt != 7'd1;
+        assign window_open = window_nz_q;
+    end else begin : g_window_original
+        assign window_open = wcnt != 7'd0;
+    end endgenerate
     assign mu_c = {muc_d, muc_v};
     // x store write port (P2) and message fill
     reg busy;
@@ -610,7 +623,7 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
             cal <= (cal >= c_cper) ? 16'd0 : cal + 16'd1;
         end
     // ================================================================== RO stage (forward > token > host)
-    wire blk = (wcnt != 7'd0) || o2 || o3 || p1_op;                    // window open or about to open
+    wire blk = window_open || o2 || o3 || p1_op;                    // window open or about to open
     reg htv0_q;
     assign tk_pop = tk_hv && !f5v && !blk && !htv0_q;
     assign token_retire=tk_pop && tk_q[60:40]==job_identity[20:0] && {tk_q[152:151],tk_q[39:32]}==job_identity[30:21];
@@ -712,7 +725,7 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
         fset[13] = hf_l && hf_hv && !hf_pop;
         fset[14] = (dq_l && qpend && !q_cr) || (dw_l && wpend && !w_cr) || (|(dq_n & (dq_n - 1'd1))) || (|(dw_n & (dw_n - 1'd1)))
                    || (|dq_n && |dw_n);
-        fset[15] = (o3 && wcnt != 7'd0) || (lw_v && lpend);
+        fset[15] = (o3 && window_open) || (lw_v && lpend);
         fset[16] = (csr_input&&!csr_w) || schedule_fault || adapter_fault || (|dx_n) || (hrv_q[1] && hrd1_q[3:0] != T_CSRW) || (hrv_q[0] && hrd0_q[3:0] != T_HFWD)
                    || (|(mrv_q & ~sl_en[5:0]));
     end

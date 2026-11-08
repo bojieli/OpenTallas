@@ -15,6 +15,7 @@ p=argparse.ArgumentParser(description=__doc__)
 p.add_argument("--old-rtl",type=Path,required=True)
 p.add_argument("--sram-model",type=Path,required=True)
 p.add_argument("--out",type=Path,required=True)
+p.add_argument("--window-pre",action="store_true",help="exercise exact registered window-nonzero projection")
 p.add_argument("--partial",action="store_true",help="exercise optional partial capture at the same +1 PIN latency")
 a=p.parse_args()
 repo=Path(__file__).resolve().parents[2]
@@ -44,10 +45,16 @@ a.out.mkdir(parents=True,exist_ok=False)
 needle="else op_q1 <= ri_v && ri_q[3:1] == K_XB && rt_q[31] &&"
 assert new.count(needle)==1
 mut=new.replace(needle,"else op_q1 <= ri_v && ri_q[3:1] == K_XB && rt_q[31] || 1'b0 &&",1)
-(a.out/"mut_op.v").write_text(mut)
+(a.out/"mut_ownership.v").write_text(mut)
+if a.window_pre:
+ assert new.count("window_nz_q <= wcnt != 7'd1;")==1
+ (a.out/"mut_window.v").write_text(new.replace("window_nz_q <= wcnt != 7'd1;","window_nz_q <= wcnt != 7'd2;",1))
 tb=Path(__file__).with_name("head_ctl_pre_start_tb.sv").read_text()
 tb=tb.replace('mism=mism+1;if(mism<5)$display("MISMATCH cycle %0d",cyc);','$fatal(1,"MISMATCH cycle %0d",cyc);')
 tb=tb.replace('mism=mism+1;if(mism<5)$display("OP_INVARIANT cycle %0d",cyc);','$fatal(1,"OP_INVARIANT cycle %0d",cyc);')
+if a.window_pre:
+ tb=tb.replace(".CTL_PRE(1)",".CTL_PRE(1),.CTL_WINDOW_PRE(1)")
+ tb=tb.replace('if(u1.p1_op)nop=nop+1;', 'if(cyc>24 && u1.g_window_pre.window_nz_q!==(u1.wcnt!=0))$fatal(1,"WINDOW_INVARIANT");\n    if(u1.p1_op)nop=nop+1;')
 if a.partial:
  tb=tb.replace(".SRAM_RAW_CAPTURE(1),.CTL_PRE(1)",".SRAM_RAW_CAPTURE(0),.SRAM_PARTIAL_CAPTURE(1),.CTL_PRE(1)")
 tb=tb.replace("default_off=PASS","CTL_PRE_off=PASS")
@@ -56,14 +63,15 @@ shutil.copyfile(a.sram_model,a.out/"sram.v")
 (a.out/"run.sh").write_text("""#!/bin/bash
 set -euo pipefail
 cd "$(dirname "$0")"
-for k in positive mutant; do
- f=new.v; [ "$k" = positive ] || f=mut_op.v
+for k in positive ownership window; do
+ f=new.v; [ "$k" = positive ] || f=mut_$k.v
+ [ -f "$f" ] || continue
  iverilog -g2012 -DNEWMOD=ot_s81hd_ctl_hsf0_static -s tb_hsf -o sim_$k old.v "$f" sram.v tb.sv >build_$k.log 2>&1
  if vvp sim_$k >run_$k.log 2>&1; then
   [ "$k" = positive ] || { echo MUTANT_SURVIVED;exit 1; }
   grep -q HSF_START_PASS run_$k.log
  else
-  [ "$k" = mutant ] || { cat run_$k.log;exit 1; }
+  [ "$k" != positive ] || { cat run_$k.log;exit 1; }
   grep -qE 'FATAL|OP_INVARIANT|MISMATCH' run_$k.log
  fi
  tail -4 run_$k.log
