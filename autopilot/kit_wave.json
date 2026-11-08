@@ -8834,7 +8834,13 @@
             "--clock-regions",
             "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json"
           ]
-        }
+        },
+        "args": [
+          "--slew-margin",
+          "35",
+          "--orfs-var",
+          "OT_HOLD_REPAIR_SCOPE=reg2reg"
+        ]
       },
       "take_states": [
         "NEEDS-KIT",
@@ -11065,7 +11071,20 @@
       ],
       "hold_items_kw35e15_added": [
         "vsN5"
-      ]
+      ],
+      "gen_args_prev_kw35rcm": null,
+      "core_kit_args_prev_kw35rcm": null,
+      "gen_env_prev_kw35rcm": null,
+      "gen_args": [
+        "--slew-margin",
+        "35",
+        "--cap-margin",
+        "35"
+      ],
+      "gen_env": {
+        "OT_HOLD_REPAIR_SCOPE": "reg2reg"
+      },
+      "note_kw35rcm": "KW-FIX-35-RCM 2026-11-08 11:08 PST (COORD 10:41 ruling 2, class RC-MODEL from HBM-HARD-6 10:24): INTERIM HBM kit default SLEW/CAP margin 35 (type kits gen_args --slew-margin 35 --cap-margin 35; core kits core_kit.args --slew-margin 35) and OT_HOLD_REPAIR_SCOPE=reg2reg (core kits core_kit.args --orfs-var; type kits die gen_env, applied once kit_wave die gen_env + gen_phys OT_HOLD_REPAIR_SCOPE passthrough land from claude/kw-fix-35rcm-rccal-1108). New attempts only (spec captured at launch); running rows untouched. Revert gen_args <- gen_args_prev_kw35rcm, core_kit.args <- core_kit_args_prev_kw35rcm, gen_env <- gen_env_prev_kw35rcm (null = delete key)"
     }
   },
   "place_prefer": [
