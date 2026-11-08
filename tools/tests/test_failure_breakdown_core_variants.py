@@ -1,5 +1,5 @@
 import importlib.util, os, sys
-spec = importlib.util.spec_from_file_location('fb', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'failure_breakdown.py'))
+spec = importlib.util.spec_from_file_location('fb', os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'failure_breakdown.py'))
 fb = importlib.util.module_from_spec(spec); spec.loader.exec_module(fb)
 CORES = {'ot_hbm_hc_bank128_pair_core', 'ot_hgi_coll_gq_land', 'ot_hbm_idx_tail_native', 'hnx_vms_bank_q0_faces__vecd4ae'}
 
