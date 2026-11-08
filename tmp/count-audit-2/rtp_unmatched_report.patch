@@ -1,0 +1,27 @@
+--- /home/ubuntu/coord/tools/release_tree_plan.py	2026-11-07 19:12:46.843914953 -0800
++++ /tmp/ca2/t/release_tree_plan.py	2026-11-07 22:53:31.483452538 -0800
+@@ -1458,10 +1458,16 @@
+     D = ent.get('designs')
+     if D is None: return {}
+     sd = ent.get('signed_designs') or {}
++    # COUNT-AUDIT-2 11-07 (report only, no gate change): design_unmatched lists modules with records that miss the plan
++    # pins.  A module is reported NOT credited only while one of its plan designs has no credit; a fully credited module
++    # whose other records (older / flipped forms, legacy worktree copies) miss is listed apart, as unmatched_extra.
++    um = ent.get('design_unmatched') or {}
++    open_mods = {g['module'] for k, g in D.items() if k not in sd}
+     return dict(cores=len(D), signed_cores=len(sd), instances=sum(g['instances'] for g in D.values()),
+                 signed_instances=sum(D[k]['instances'] for k in sd if k in D),
+                 signed_list=sorted(ent.get('signed_types') or {}) + sorted(sd),
+-                design_unmatched=sorted(ent.get('design_unmatched') or {}))
++                design_unmatched=sorted(m for m in um if m in open_mods or m not in {g['module'] for g in D.values()}),
++                design_unmatched_extra=sorted(m for m in um if m not in open_mods and m in {g['module'] for g in D.values()}))
+ 
+ 
+ def g0c_split(rep, type_names):
+@@ -1519,4 +1525,5 @@
+                 print('%-13s %-14s G0C %s/%s clean (%s) [geom report: %s types] ; SIGNED types %d/%s ; SIGNED hard-core designs %d/%d (modules %d/%d, copies %s/%s)%s %s' % (
+                     key, r['plan'], r['clean'], r['types'], r['verdict'], r.get('geom_report_types'), r['signed_types'], r['types'], r['signed_cores'], r['cores'],
+                     r['signed_modules'], r['modules'], r.get('signed_instances', '?'), r.get('instances', '?'),
+-                    ' UNMATCHED %s' % r['design_unmatched'] if r.get('design_unmatched') else '', r['signed_list'][:8]))
++                    (' UNMATCHED %s' % r['design_unmatched'] if r.get('design_unmatched') else '') + (
++                        ' (counted; other records miss: %d modules)' % len(r['design_unmatched_extra']) if r.get('design_unmatched_extra') else ''), r['signed_list'][:8]))
