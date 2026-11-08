@@ -1658,14 +1658,14 @@ def gen_disk_low(v, floor=None):
     return bool(v) and floor > 0 and v.get("scratch_gb") is not None and int(v["scratch_gb"]) < floor
 
 
-def host_score(v):
+def host_score(v, disk_low=None):
     """ot-run --status row -> preference (higher first): free admits MINUS the GB already waiting there (KW-FIX-4 11-03,
     COORD 12:1x FLEET: raw admits sent every burst to epyc4 while 131 waiters / 1359 GB queued there and intel1 had 0),
     a positive score discounted 4x on a host already >= 0.9 x cores.  A host under the gen disk floor (gen_disk_low)
     ranks below every host with room (KW-FIX-24)."""
     if not v:
         return -1e9
-    if gen_disk_low(v):
+    if (gen_disk_low(v) if disk_low is None else disk_low):
         return -1e8 + int(v.get("scratch_gb") or 0)
     busy = float(v.get("load", 0)) >= 0.9 * max(1, int(v.get("cores") or 1))
     s = float(v.get("admit", 0)) - float(v.get("wait_gb", 0))
@@ -1799,6 +1799,11 @@ def workroot_low(AP, cfg, run=None):
     gave gens while scratch2 looked fine).  One ssh per host: df of the lane root, or of its nearest existing parent.
     An unreachable host or unreadable df is unknown, never low.  Global or die option workroot_probe: false = off."""
     floor = int(cfg.get("gen_disk_min_gb", GEN_DISK_MIN_GB))
+    # KW-FIX-35 11-08 (COORD 08:4x; OWNER 11-05 all disks are scratch, 11-06 root floor 150): a lane on the ROOT fs
+    # ('/') must keep root_floor_gb free beyond the gen room: low there below root_floor_gb + root_gen_room_gb
+    rfloor = int(cfg.get("root_floor_gb", 150)) + int(cfg.get("root_gen_room_gb", 40))
+    free_map = cfg.setdefault("_workroot_free", {}) if isinstance(cfg, dict) else {}
+    free_map.clear()
     if cfg.get("workroot_probe") is False or floor <= 0:
         return {}
     hub = cfg.get("_hub") or getattr(AP, "HUB_NAME", "") or ""
@@ -1824,7 +1829,8 @@ def workroot_low(AP, cfg, run=None):
     out = {}
     for h, lanes in sorted(need.items()):
         cmd = "; ".join(f"d={q(l)}; while [ ! -e \"$d\" ] && [ \"$d\" != / ]; do d=$(dirname \"$d\"); done; "
-                        f"echo W {q(l)} $(df -BG --output=avail \"$d/\" 2>/dev/null | tail -1 | tr -dc 0-9)"
+                        f"echo W {q(l)} $(df -BG --output=avail \"$d/\" 2>/dev/null | tail -1 | tr -dc 0-9) "
+                        f"$(df --output=target \"$d/\" 2>/dev/null | tail -1 | tr -d \" \")"
                         for l in sorted(lanes))
         try:
             rc, o = run(h, cmd + "; true")
@@ -1834,9 +1840,12 @@ def workroot_low(AP, cfg, run=None):
             continue
         for ln in (o or "").splitlines():
             f = ln.split()
-            if len(f) == 3 and f[0] == "W" and f[2].isdigit() and int(f[2]) < floor and f[1] in lanes:
+            if len(f) in (3, 4) and f[0] == "W" and f[2].isdigit() and f[1] in lanes:
+                lim = rfloor if len(f) == 4 and f[3] == "/" else floor
                 for die in lanes[f[1]]:
-                    out.setdefault(h, {})[die] = int(f[2])
+                    free_map.setdefault(h, {})[die] = int(f[2])
+                    if int(f[2]) < lim:
+                        out.setdefault(h, {})[die] = int(f[2])
     return out
 
 
@@ -1899,9 +1908,26 @@ def over_load_cap(v):
     return n > 0 and int(float(v.get("load", 0))) >= int(LOAD_CAP_FACTOR * n)
 
 
-def host_room(v):
-    """a status row that can take a new build now: under its load cap and over the gen disk floor"""
-    return bool(v) and not over_load_cap(v) and not gen_disk_low(v)
+def host_room(v, disk_low=None):
+    """a status row that can take a new build now: under its load cap and over the gen disk floor (disk_low: the
+    die-aware answer of die_disk_low, else ot-run's scratch2 figure)"""
+    return bool(v) and not over_load_cap(v) and not (gen_disk_low(v) if disk_low is None else disk_low)
+
+
+def die_disk_low(cfg, die, h, v):
+    """KW-FIX-35 11-08 (COORD 08:4x epyc6 wave room): is host h under the gen disk floor FOR THIS DIE?  When the
+    work_root probe measured the disk that really holds the die's lane on h (cfg _workroot_free), that measure decides:
+    S81/QC kw26 lanes live on the epyc6 ROOT disk (218 GB) while ot-run's 'scratch' figure is its scratch2 (60 GB), and
+    the global figure kept epyc6 out of every die's gen pick at load 22/128.  Unmeasured -> gen_disk_low(v) as before."""
+    free = (cfg.get("_workroot_free") or {}).get(h) or {}
+    if die in free:
+        return die in ((cfg.get("_workroot_low") or {}).get(h) or {})
+    return gen_disk_low(v)
+
+
+def die_score(cfg, die, h, v):
+    """host_score with the die-aware disk floor (die_disk_low)"""
+    return host_score(v, disk_low=die_disk_low(cfg, die, h, v) if v else None)
 
 
 def load_hold(cfg, die, *names):
@@ -1913,7 +1939,7 @@ def load_hold(cfg, die, *names):
         return ""
     low = cfg.get("_workroot_low") or {}
     rows = [(h, stt.get("localhost" if h == hub else h)) for h in gen_hosts(cfg, die)]
-    if any(host_room(v) and die not in low.get(h, {}) for h, v in rows):
+    if any(host_room(v, die_disk_low(cfg, die, h, v)) and die not in low.get(h, {}) for h, v in rows):
         return ""
     return "LOAD-HOLD no gen host with room: " + " ".join(
         f"{h} {'absent' if not v else 'load %d/%d' % (v.get('load', 0), v.get('cores', 0))}"
@@ -1934,11 +1960,12 @@ def pick_gen_host(cfg, die, take=0, threads=0):
     else:
         on = cfg.get("load_hold") is not False
         low = cfg.get("_workroot_low") or {}
-        room = [h for h in hs if host_room(key(h)) and die not in low.get(h, {})] if on else []
-        fits = [h for h in room if host_score(key(h)) >= max(take, 1)]
+        room = [h for h in hs if host_room(key(h), die_disk_low(cfg, die, h, key(h))) and die not in low.get(h, {})] if on else []
+        sc = lambda h: die_score(cfg, die, h, key(h))
+        fits = [h for h in room if sc(h) >= max(take, 1)]
         frac = lambda h: round(float(key(h).get("load", 0)) / max(1, int(key(h).get("cores") or 1)), 1)
-        best = (min(fits, key=lambda h: (frac(h), -host_score(key(h)), hs.index(h))) if fits
-                else max(room or hs, key=lambda h: (host_score(key(h)), -hs.index(h))))
+        best = (min(fits, key=lambda h: (frac(h), -sc(h), hs.index(h))) if fits
+                else max(room or hs, key=lambda h: (sc(h), -hs.index(h))))
     if key(best) is not None and len(hs) >= 2 and take:
         charge(key(best), take)
     if key(best) is not None and threads:
@@ -2137,8 +2164,9 @@ def restage_waiters(AP, cfg, st, notices):
             if multi and not young and not mobile:
                 best = pick_gen_host(cfg, die)
                 v = row(best) or {}
-                if best != g and (host_room(v) or cfg.get("load_hold") is False) and (
-                        host_score(v) - host_score(row(g)) >= wsize(row(g), mem)):
+                if best != g and (host_room(v, die_disk_low(cfg, die, best, v) if v else None)
+                                  or cfg.get("load_hold") is False) and (
+                        die_score(cfg, die, best, v) - die_score(cfg, die, g, row(g)) >= wsize(row(g), mem)):
                     why = f"{g} -> {best}"
             # an async PLACE client started pinned (--hosts G, before place_spill) can never move: relaunch it spillable
             if not why and spill and svc0.get("launch") == "launched" and "--hosts" in (svc0.get("argv") or []):

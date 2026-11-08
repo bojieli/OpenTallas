@@ -499,3 +499,52 @@ def test_restage_keeps_attempt_past_place(tmp_path, monkeypatch):
     assert K.restage_waiters(ap, c, st, {}) == 1
     assert done["status"] == "RUNNING" and adm["status"] == "RUNNING" and early["status"] == "RETRY-INFRA"
     assert ap.calls == [["systemctl", "--user", "stop", "kw-u"]]
+
+
+# ------------------------------------------------------------------------------------------------ KW-FIX-35 11-08 epyc6 root
+# COORD 08:4x: epyc6 root 218 GB holds the S81/QC kw26 lane, ot-run 'scratch' (scratch2) 60 GB: the global figure
+# kept epyc6 out of every gen pick at load 22/128
+def _e6cfg():
+    c = cfg(gen_host="epyc5", gen_hosts=["epyc5", "epyc6"], work_root=WR)
+    c["gen_disk_min_gb"] = 100
+    c["_otrun_status"] = {"epyc5": {"admit": 15, "load": 56, "cores": 128, "run": 60, "scratch_gb": 109,
+                                    "wait_n": 32, "wait_gb": 1728},
+                          "epyc6": {"admit": 516, "load": 22, "cores": 128, "run": 20, "scratch_gb": 60}}
+    return c
+
+
+def _df4(rows):
+    def run(h, cmd):
+        a, t = rows[h]
+        return 0, "W /srv/opentallas-scratch3/claude/kw26-wave-1106 %s %s\n" % (a, t)
+    return run
+
+
+def test_root_lane_measure_overrides_scratch2_figure():
+    c = _e6cfg()
+    c["_workroot_low"] = K.workroot_low(FakeAP(), c, run=_df4({"epyc5": (111, "/srv/opentallas-scratch2"),
+                                                               "epyc6": (218, "/")}))
+    assert c["_workroot_low"] == {} and c["_workroot_free"] == {"epyc5": {"s81": 111}, "epyc6": {"s81": 218}}
+    assert not K.die_disk_low(c, "s81", "epyc6", c["_otrun_status"]["epyc6"])
+    assert K.pick_gen_host(c, "s81", take=48) == "epyc6"
+    assert K.load_hold(c, "s81") == ""
+
+
+def test_root_lane_keeps_owner_floor():
+    c = _e6cfg()
+    c["_workroot_low"] = K.workroot_low(FakeAP(), c, run=_df4({"epyc5": (111, "/srv/opentallas-scratch2"),
+                                                               "epyc6": (185, "/")}))
+    assert c["_workroot_low"] == {"epyc6": {"s81": 185}}             # 185 < 150 floor + 40 gen room on '/'
+    assert K.pick_gen_host(c, "s81", take=48) == "epyc5"
+    c["root_floor_gb"], c["root_gen_room_gb"] = 100, 40
+    assert K.workroot_low(FakeAP(), c, run=_df4({"epyc5": (111, "/x"), "epyc6": (185, "/")})) == {}
+
+
+def test_unmeasured_die_keeps_scratch2_figure(monkeypatch):
+    monkeypatch.setattr(K, "GEN_DISK_MIN_GB", 100)        # the tick sets it from gen_disk_min_gb
+    c = _e6cfg()
+    c["_workroot_free"], c["_workroot_low"] = {}, {}
+    assert K.die_disk_low(c, "s81", "epyc6", c["_otrun_status"]["epyc6"])
+    assert K.pick_gen_host(c, "s81", take=48) == "epyc5"
+    c["_workroot_free"] = {"epyc6": {"qwen_compute": 218}}            # another die's measure: no effect
+    assert K.die_disk_low(c, "s81", "epyc6", c["_otrun_status"]["epyc6"])
