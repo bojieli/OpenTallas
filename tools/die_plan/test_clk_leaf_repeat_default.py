@@ -105,7 +105,7 @@ proc sta::db_net_to_sta {n} { return $n }
 proc get_property {p prop} { if {[info exists ::slew($p)]} { return $::slew($p) }; return 10.0 }
 proc insert_buffer {args} { L insert_buffer {*}$args
   foreach k [array names ::wl] { set ::wl($k) 10.0 }; foreach k [array names ::slew] { set ::slew($k) 10.0 } }
-proc detailed_placement {} { L dpl }
+proc detailed_placement {args} { L [string trim "dpl $args"] }
 proc check_placement {args} { L check_placement }
 proc global_route {args} { L global_route {*}$args }
 proc suppress_message {args} {}
@@ -265,14 +265,15 @@ FAIL_ONCE = ("set ::cp_fail %d\n"
 DPL_STEPS = ("dpl", "check_placement", "check_placement -verbose")
 
 
-def cts_dpl_tail(log):
-    i = next(k for k, x in enumerate(log) if x.startswith("insert_buffer"))
-    return [x for x in log[i:] if x in DPL_STEPS]
+def cts_dpl_tail(log, start="insert_buffer"):
+    i = next((k for k, x in enumerate(log) if x.startswith(start)), 0)
+    return [x for x in log[i:] if x in DPL_STEPS or x.startswith("dpl ")]
 
 
 def test_cts_residual_overlap_gets_one_more_legalization(tmp_path):
     out, log = tcl(tmp_path, FAIL_ONCE % 1 + DEFAULT, design=DESIGN)
-    assert cts_dpl_tail(log) == ["dpl", "check_placement", "dpl", "check_placement -verbose"], log
+    # KW-FIX-35-F2: the extra pass is the diamond legalizer, not a second stalled negotiation pass
+    assert cts_dpl_tail(log) == ["dpl", "check_placement", "dpl -use_diamond_legalizer", "check_placement -verbose"], log
     assert out.count("OT_DPL_RESIDUAL") == 1
 
 
@@ -280,3 +281,88 @@ def test_cts_clean_first_legalization_unchanged(tmp_path):
     out, log = tcl(tmp_path, FAIL_ONCE % 0 + DEFAULT, design=DESIGN)
     assert cts_dpl_tail(log) == ["dpl", "check_placement", "check_placement -verbose"], log
     assert "OT_DPL_RESIDUAL" not in out
+
+
+# KW-FIX-35-F2 11-08 (FLOW class F follow-up): CTS legalization uses the kit's 3_5 legalizer.  ORFS erases
+# DETAIL_PLACEMENT_ARGS outside the place stage, so grt183_make.sh captures it in cts.tcl before the erase
+# (::ot_kit_dpl_args); clk_leaf_repeat reads that (env as fallback).  QC sle_hc1__cl7d360508 a10R: negotiation 512 left
+# at CTS where 3_5 diamond was 100 % legal.
+KIT_DPL = "-use_diamond_legalizer -max_displacement {614 1340}"
+KIT_DIAMOND = "dpl -use_diamond_legalizer -max_displacement {614 1340}"
+
+
+@pytest.mark.parametrize("how", ["captured", "env"])
+def test_cts_diamond_kit_legalizes_with_kit_args(tmp_path, how):
+    pre = "set ::ot_kit_dpl_args {%s}\n" % KIT_DPL if how == "captured" else ""
+    env = {"DETAIL_PLACEMENT_ARGS": KIT_DPL} if how == "env" else None
+    out, log = tcl(tmp_path, FAIL_ONCE % 1 + pre + DEFAULT, design=DESIGN, env=env)
+    assert cts_dpl_tail(log) == [KIT_DIAMOND, "check_placement", KIT_DIAMOND, "check_placement -verbose"], log
+
+
+def test_cts_captured_args_win_over_erased_env(tmp_path):
+    # ORFS erased the env var (captured value set); a non-diamond capture leaves the first pass a bare call
+    out, log = tcl(tmp_path, FAIL_ONCE % 0 + "set ::ot_kit_dpl_args {}\n" + DEFAULT, design=DESIGN,
+                   env={"DETAIL_PLACEMENT_ARGS": KIT_DPL})
+    assert cts_dpl_tail(log) == ["dpl", "check_placement", "check_placement -verbose"], log
+
+
+def test_cts_no_repeater_residual_repaired_not_gated(tmp_path):
+    out, log = tcl(tmp_path, FAIL_ONCE % 1 + DEFAULT, design=DESIGN, slew=10.0)   # no net over the rule
+    assert not any(x.startswith("insert_buffer") for x in log)
+    assert cts_dpl_tail(log, "check_placement") == ["check_placement", "dpl -use_diamond_legalizer", "check_placement"], log
+    assert "CTS check after the extra legalization: PASS" in out and "check_placement -verbose" not in log
+
+
+def test_cts_no_repeater_clean_unchanged(tmp_path):
+    out, log = tcl(tmp_path, FAIL_ONCE % 0 + DEFAULT, design=DESIGN, slew=10.0)
+    assert cts_dpl_tail(log, "check_placement") == ["check_placement"], log
+    assert "OT_DPL_RESIDUAL" not in out
+
+
+CTS_ORFS = ("source $::env(SCRIPTS_DIR)/load.tcl\nerase_non_stage_variables cts\nload_design 3_place.odb 3_place.sdc\n"
+            "set result [catch { log_cmd detailed_placement } msg]\nsource_step_tcl POST CTS\n")
+
+
+def wrap_cts(tmp_path, cfg=""):
+    w, s = wrap_kit(tmp_path, cfg)
+    (s / "cts.tcl").write_text(CTS_ORFS)
+    return w, s
+
+
+def test_wrapper_captures_dpl_args_before_erase_once(tmp_path):
+    w, s = wrap_cts(tmp_path)
+    for _ in range(2):
+        p = run_wrap(w, s)
+        assert p.returncode == 0, p.stdout + p.stderr
+    c = (s / "cts.tcl").read_text().splitlines()
+    i = c.index("erase_non_stage_variables cts")
+    assert c[i - 1].startswith("set ::ot_kit_dpl_args ") and c[i - 1].endswith(";# OT_CTS_DPL_ARGS")
+    assert sum("OT_CTS_DPL_ARGS" in x for x in c) == 1
+
+
+def test_wrapper_cts_dpl_args_opt_out(tmp_path):
+    w, s = wrap_cts(tmp_path, "export OT_CTS_DPL_ARGS = 0\n")
+    assert run_wrap(w, s).returncode == 0
+    assert "OT_CTS_DPL_ARGS" not in (s / "cts.tcl").read_text()
+
+
+@pytest.mark.parametrize("kit", [KIT_DPL, "", "-disallow_one_site_gaps"])
+def test_cts_dpl_args_line_behaviour(tmp_path, kit):
+    if not shutil.which("tclsh"):
+        pytest.skip("tclsh unavailable")
+    w, s = wrap_cts(tmp_path)
+    assert run_wrap(w, s).returncode == 0
+    line = next(x for x in (s / "cts.tcl").read_text().splitlines() if "OT_CTS_DPL_ARGS" in x)
+    t = tmp_path / "l.tcl"
+    t.write_text("set ::log {}\nproc detailed_placement {args} { lappend ::log [string trim \"dpl $args\"] }\n" + line + "\n"
+                 "array unset ::env DETAIL_PLACEMENT_ARGS\n"            # ORFS erase after the capture
+                 "detailed_placement\ndetailed_placement -max_displacement {5 1}\nputs LOG=[join $::log |]\n")
+    e = {k: v for k, v in os.environ.items() if k != "DETAIL_PLACEMENT_ARGS"}
+    if kit:
+        e["DETAIL_PLACEMENT_ARGS"] = kit
+    p = subprocess.run(["tclsh", str(t)], env=e, capture_output=True, text=True)
+    assert p.returncode == 0, p.stdout + p.stderr
+    log = [x for x in p.stdout.splitlines() if x.startswith("LOG=")][0][4:].split("|")
+    first = "dpl " + kit if "diamond" in kit else "dpl"
+    assert log == [first, "dpl -max_displacement {5 1}"], log      # explicit args always pass through unchanged
+    assert ("OT_CTS_DPL_ARGS:" in p.stdout) == ("diamond" in kit)

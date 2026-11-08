@@ -84,6 +84,25 @@ proc clr_net {net} {
   if {$drv eq "" || ![clr_is_clkcell $drv] || [llength $loads] == 0} { return "" }
   return [list $drv $loads]
 }
+# KW-FIX-35-F2 11-08 (FLOW class F follow-up): CTS-stage legalization uses the kit's own 3_5 legalizer.  A bare
+# detailed_placement is the negotiation legalizer at +-500 sites / +-100 rows; 3_5 of a diamond opt-in kit (FLOW-7,
+# gen_phys DETAIL_PLACEMENT_ARGS) uses -use_diamond_legalizer over the whole outline.  QC sle_hc1__cl7d360508 a10
+# (8134 FIRM ring flops in an 11.6-um S-face strip): 3_5 diamond 100 % legal in 7 s; CTS negotiation 1143 s, 512 left,
+# leaf-repeat pass 505 left, retry 513 left (DPL-0033, 596 -> 604 overlaps: CTS clkbuf / clkload / wire repeaters vs
+# movable u_cland ring logic + reset relays, 0 FIRM-vs-FIRM in 3_place).  S81 dsdv_slice_c1x_C__t3 a16R: 3897 s, 306 left.
+# ORFS erases DETAIL_PLACEMENT_ARGS outside the place stage (variables.yaml stages: place; erase_non_stage_variables),
+# so grt183_make.sh captures it in cts.tcl BEFORE the erase as ::ot_kit_dpl_args (OT_CTS_DPL_ARGS line); the env is the
+# fallback (KEEP_VARS=1, or this file hooked elsewhere).
+# clr_dpl_args: the kit args when they select the diamond legalizer, else none (unchanged).  escalate=1 (the residual
+# retry): the diamond legalizer always (with the kit's -max_displacement when it has one), never the same stalled pass.
+proc clr_dpl_args {{escalate 0}} {
+  if {[info exists ::ot_kit_dpl_args]} { set a [string trim $::ot_kit_dpl_args]
+  } else { set a [expr {[info exists ::env(DETAIL_PLACEMENT_ARGS)] ? [string trim $::env(DETAIL_PLACEMENT_ARGS)] : ""}] }
+  if {[catch {llength $a}]} { set a "" }
+  if {"-use_diamond_legalizer" in $a} { return $a }
+  if {!$escalate} { return {} }
+  return {-use_diamond_legalizer}
+}
 proc clr_kit_hooked {} {
   # the kit runs this file itself at POST_CTS (explicit hook / kit-wave LEAFSLEW chain)
   if {[info exists ::env(OT_CLR_NEXT_TCL)]} { return 1 }
@@ -225,16 +244,22 @@ uplevel #0 {
     }
   }
   if {$clr_n_bufs} {
-    detailed_placement
-    # KW-FIX-35-F 11-08 (FLOW class F, COORD 04:5x): the same one extra ordinary legalization as the final-DPL fix
-    # 20cff21bab (orfs_hold_mm OT_DPL_RESIDUAL): the negotiation legalizer can stop with residual overlaps after the
-    # repeaters go in (S81 dsdv_slice_c1x_C__t3 a16, QC sle_hc1__cl7d360508: DPL-0033 at this check inside CTS).
-    # A clean first pass is unchanged; the mandatory check below still decides, nothing is waived.
+    detailed_placement {*}[clr_dpl_args]
+    # KW-FIX-35-F 11-08 (FLOW class F, COORD 04:5x): one extra legalization when the plain check fails (same rule as
+    # 20cff21bab, orfs_hold_mm OT_DPL_RESIDUAL).  KW-FIX-35-F2: that extra pass is the diamond legalizer (clr_dpl_args 1);
+    # an ordinary second negotiation pass did not converge either (QC a10R 596 -> 604).  The mandatory check decides.
     if {[catch {check_placement}]} {
-      puts "OT_DPL_RESIDUAL: CTS leaf-repeat check failed, ordinary legalization once more"
-      detailed_placement
+      puts "OT_DPL_RESIDUAL: CTS leaf-repeat check failed, legalization once more with [clr_dpl_args 1]"
+      detailed_placement {*}[clr_dpl_args 1]
     }
     check_placement -verbose
+  } elseif {[catch {check_placement}]} {
+    # KW-FIX-35-F2: no repeater, but the stock CTS legalization (no check of its own when SKIP_CTS_REPAIR_TIMING=1)
+    # left overlaps: repair them here, same diamond pass.  Repair only: the result is reported, the later stage checks
+    # decide as before (no new gate).
+    puts "OT_DPL_RESIDUAL: CTS check failed (no leaf repeater), legalization once more with [clr_dpl_args 1]"
+    detailed_placement {*}[clr_dpl_args 1]
+    puts "OT_DPL_RESIDUAL: CTS check after the extra legalization: [expr {[catch {check_placement}] ? "FAIL" : "PASS"}]"
   }
   puts [format "OT_CLK_LEAF_REPEAT done: %d nets repeated, %d repeaters, worst load distance %.1f -> %.1f um (%d nets over distance kept: est slew <= gate)" \
           $clr_n_nets $clr_n_bufs $clr_worst_before $clr_worst_after $clr_n_skip_slew]
