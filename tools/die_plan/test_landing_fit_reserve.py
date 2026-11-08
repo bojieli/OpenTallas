@@ -90,3 +90,16 @@ def test_gen_phys_emits_fit_reserve_only_on_plan_opt_in():
     sys.path.insert(0, str(HERE))
     import schema
     assert not schema.DEFAULT_BUDGETS.get("cland_fit_reserve")      # default: key absent -> kit config unchanged
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
+def test_resize_family_remains_reserved_for_the_next_firm_cell():
+    """LEP TXI: INVx1 -> INVx8 must not grow into its next FIRM neighbor."""
+    proc = re.search(r"proc cland_put \{i rect tag \{sp \{\}\} \{cur 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    occupy = re.search(r"proc cland_occupy \{x y w h\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    mock = MOCK.replace("set cland_occ [dict create 0 [list [list 216 324]]]", "set cland_occ {}")
+    mock = mock.replace("proc mst {m args}", "proc cland_family_w {m} {return 540}\nproc mst {m args}")
+    mock = mock.replace("cland_put ins {0 0 10 0.27} ring:x\nputs", "cland_put ins {0 0 10 0.27} stage:txi 1 1\nset cland_done {}\ncland_put ins {0 0 10 0.27} stage:txi 1 1\nputs")
+    result = subprocess.run(["tclsh"], input=occupy + proc + mock, capture_output=True, text=True,
+                            env=dict(os.environ, OT_CLAND_FIT_RESERVE="resize"), check=True)
+    assert "LOC 540 0" in result.stdout, result.stdout + result.stderr
