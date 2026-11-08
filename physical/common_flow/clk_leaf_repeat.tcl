@@ -226,6 +226,14 @@ uplevel #0 {
   }
   if {$clr_n_bufs} {
     detailed_placement
+    # KW-FIX-35-F 11-08 (FLOW class F, COORD 04:5x): the same one extra ordinary legalization as the final-DPL fix
+    # 20cff21bab (orfs_hold_mm OT_DPL_RESIDUAL): the negotiation legalizer can stop with residual overlaps after the
+    # repeaters go in (S81 dsdv_slice_c1x_C__t3 a16, QC sle_hc1__cl7d360508: DPL-0033 at this check inside CTS).
+    # A clean first pass is unchanged; the mandatory check below still decides, nothing is waived.
+    if {[catch {check_placement}]} {
+      puts "OT_DPL_RESIDUAL: CTS leaf-repeat check failed, ordinary legalization once more"
+      detailed_placement
+    }
     check_placement -verbose
   }
   puts [format "OT_CLK_LEAF_REPEAT done: %d nets repeated, %d repeaters, worst load distance %.1f -> %.1f um (%d nets over distance kept: est slew <= gate)" \
