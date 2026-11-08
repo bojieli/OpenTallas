@@ -7,3 +7,9 @@ REDESIGN: existing exact read-select DSREP8 (at most8payloadloads per kept local
 SMELLS to measure afterPLACE: storage/cell clumps, select copy physical locality, macro-edge corridor load, reset/clock spread. Proposal PASS forONEPLACE only; no route or count. Layout is targeted whole-type >300kcells with unchanged slot, while the existing native common-master a4 is the parallel <=150k form. No extra PIN CYCLE relative to existingRBL1: current TX+1 remains priced; RX0. Native a3 failed routed setup/DRV and LEC; a4 remains running unchanged.
 
 Builder tools/s81_head/head_mesh_collector_form.py uses published l48ve plan/sidecar, explicit privateparamsRBL1/BQ10, DSREP8, supported ring_band_spread7/bisect. Official generator +conservativeM6/.35+80um repeater class+15ps hold repair margin+supported hunt no-recode+canonical preCTS summary skip. All independent lint/geometry/LEC/timing/DRV/DRC gates retained. No POR adoption.
+
+Official generation PASS after completing the checkout readset (allRTL, relevant macroBBs, tools/mem_compiler); source329988038c5. Actual generated110macros/2250pins image collector_actual_kit.png VIEWED/PASS ONEPLACE, same bounded macro gaps. Actualconfig .35density, M6signals/M7pin-only stub floor, hunt no-recode, OT_MAXWIRE80, preCTS summaryskip. FirstPLACE queued E6scratch3, no batch.
+
+Selected DSREP8 mechanism exactness: current source ot_meso_dsel and ot_meso_dsel_sel,64bits/DEPTH4/REG1, SREP1 vs8,6-cycle arbitrarycontrols after initialalign: SAT PASS; payload bitswap mutant FAIL caught. First extraction lacked helpermodule (TOOLERROR, not RTL failure), corrected complete current source. Evidence dsrep8_proof. No additionalPINcycle.
+
+Viewed nativea4 GRT density:18bins>0.7/max0.773 concentrated in Wface strip x5..15/y330..525, macrointerior otherwise moderate/clear. Existing healthyDRT unchanged; no claim ofclosure. FutureDRIVE/WIRE form must address this Wface loading along with macro-to-GB_TX path.
