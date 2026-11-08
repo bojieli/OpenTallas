@@ -178,9 +178,13 @@ def parse_findmnt(text):
 def host_aliases():
     try:
         r = subprocess.run(["findmnt", "-rn", "-o", "TARGET,SOURCE"], capture_output=True, text=True, timeout=60)
-        return parse_findmnt(r.stdout) if r.returncode == 0 else []
+        out = parse_findmnt(r.stdout) if r.returncode == 0 else []
     except (OSError, subprocess.TimeoutExpired):
-        return []
+        out = []
+    for root in DEFAULT_ROOTS:   # symlinked roots are aliases of their target too
+        if os.path.islink(root):
+            out.append((os.path.normpath(root), os.path.realpath(root)))
+    return out
 
 
 class Paths:
@@ -569,7 +573,7 @@ def dedupe_roots(roots):
         if (st.st_dev, st.st_ino) in seen:
             continue
         seen.add((st.st_dev, st.st_ino))
-        out.append(os.path.normpath(r))
+        out.append(os.path.realpath(r))   # a symlinked root (epyc6 /srv/opentallas-scratch/claude -> scratch2) is scanned by its target
     return out
 
 
@@ -1091,7 +1095,7 @@ class Job:
             union = os.path.join(a.state, "protected-union.txt")
             self.write_union(union)
             cmd = [sys.executable, "-I", a.wt_reaper, "--protected-dbs", union, "--protected-dbs-repo", "",
-                   "--roots"] + self.roots + [os.path.join(HOME, "wt")] + (["--apply"] if a.apply else [])
+                   "--idle-h", str(a.wt_reaper_idle_h), "--roots"] + self.roots + [os.path.join(HOME, "wt")] + (["--apply"] if a.apply else [])
             try:
                 r = subprocess.run(cmd, capture_output=True, text=True, timeout=a.wt_reaper_timeout)
                 with open(os.path.join(a.state, "wt-reaper.log"), "a") as fh:
@@ -1473,6 +1477,7 @@ def main(argv=None):
     r.add_argument("--wt-reaper", default=os.path.join(os.path.dirname(os.path.abspath(SELF)), "wt-reaper.py"),
                    help="'' = skip the worktree reaper")
     r.add_argument("--wt-reaper-timeout", type=int, default=5400)
+    r.add_argument("--wt-reaper-idle-h", type=float, default=6.0, help="worktree idle hours before the reaper may remove it (fleet 6 h rule)")
     ls = sub.add_parser("list-signed")
     ls.add_argument("--roots", nargs="+", default=DEFAULT_ROOTS)
     ls.add_argument("--find-timeout", type=int, default=3600)

@@ -593,5 +593,16 @@ class TestArchiveDriver(Base):
         self.assertFalse(os.path.exists(os.path.join(unit, "ARCHIVED.json")))
 
 
+class SymlinkRootTest(unittest.TestCase):
+    def test_symlinked_root_scanned_by_target(self):
+        d = tempfile.mkdtemp()
+        try:
+            real = os.path.join(d, "scratch2", "claude"); os.makedirs(real)
+            link = os.path.join(d, "scratch", "claude"); os.makedirs(os.path.dirname(link)); os.symlink(real, link)
+            self.assertEqual(ac.dedupe_roots([link, real]), [os.path.realpath(real)])
+        finally:
+            shutil.rmtree(d)
+
+
 if __name__ == "__main__":
     unittest.main()
