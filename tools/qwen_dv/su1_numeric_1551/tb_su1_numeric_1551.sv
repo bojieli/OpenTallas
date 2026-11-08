@@ -42,7 +42,7 @@ accept=(cycle>=128&&step==0);if(cycle>=128&&step>=1)cls=kind;isfu=kind;if(cls==0
 if(!rst_n&&cycle>3508)for(n=0;n<2;n=n+1)if(co[n][247]||co[n][115]||co[n][81])warmleak=warmleak+1;
 if(cycle>256&&rst_n&&!(cycle>=3500&&cycle<3700))begin
 if(co[0][24])counts[0]=counts[0]+1;if(co[0][140])counts[1]=counts[1]+1;if(co[0][165])counts[2]=counts[2]+1;if(co[0][190])counts[3]=counts[3]+1;
-if(co[0][247])begin counts[4]=counts[4]+1;if(cls==0)begin tag=co[0][214:191]-4096;gold=fp(24'(tag),0);golden_checks=golden_checks+1;if(co[0][246:215]!==gold)begin golden_errors=golden_errors+1;if(golden_errors<5)$display("BASE_GOLD tag=%0d got=%h want=%h",tag,co[0][246:215],gold);end end endif(co[0][81])counts[5]=counts[5]+1;if(co[0][115])begin counts[6]=counts[6]+1;clcounts[cls]=clcounts[cls]+1;end if(co[0][82])counts[7]=counts[7]+1;
+if(co[0][247])begin counts[4]=counts[4]+1;if(cls==0)begin tag=co[0][214:191]-4096;gold=fp(24'(tag),0);golden_checks=golden_checks+1;if(co[0][246:215]!==gold)begin golden_errors=golden_errors+1;if(golden_errors<5)$display("BASE_GOLD tag=%0d got=%h want=%h",tag,co[0][246:215],gold);end end end if(co[0][81])counts[5]=counts[5]+1;if(co[0][115])begin counts[6]=counts[6]+1;clcounts[cls]=clcounts[cls]+1;end if(co[0][82])counts[7]=counts[7]+1;
 for(n=1;n<2;n=n+1)begin
 if(co[n][24]!==hist[3][24]||(co[n][24]&&co[n][23:0]!==hist[3][23:0]))reqerr[n]=reqerr[n]+1;
 if(co[n][140]!==hist[3][140]||(co[n][140]&&co[n][139:116]!==hist[3][139:116]))reqerr[n]=reqerr[n]+1;
