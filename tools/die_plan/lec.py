@@ -418,7 +418,59 @@ def module_port_dirs(text):
     return res
 
 
-def escaped_instance_blocks(text, modules, port_dirs=None):
+def module_port_widths(text):
+    """Static port widths for indexed-instance bridges. Unknown/parameterised types refuse rather than
+    guessing expression widths: an unsigned intermediate narrower than the formal would change signed extension.
+    Numeric packed vectors and scalar wire/reg/logic/bit ports are sufficient for the FIFO2 source ABI."""
+    text = re.sub(r"/\*.*?\*/|//[^\n]*", " ", text, flags=re.S)
+    res = {}
+    for mm in re.finditer(r"\bmodule\s+([A-Za-z_][\w$]*)(.*?)\bendmodule\b", text, flags=re.S):
+        body = mm[2]
+        widths = {}
+        def declarations(items):
+            cur = None
+            for item in _split_top(items):
+                item = item.split("=")[0].strip()
+                dm = re.match(r"(?:input|output|inout)\b(.*)", item, flags=re.S)
+                if dm:
+                    item = dm[1]
+                    dims = re.findall(r"\[([^\]]*)\]", item)
+                    cur = 1
+                    for dim in dims:
+                        m = re.fullmatch(r"\s*(\d+)\s*:\s*(\d+)\s*", dim)
+                        if not m:
+                            cur = None
+                            break
+                        cur *= abs(int(m[1]) - int(m[2])) + 1
+                    typ = re.sub(r"\[[^\]]*\]", " ", item)
+                    ids = re.findall(r"[A-Za-z_][\w$]*", typ)
+                    if any(t not in ("wire", "reg", "logic", "bit", "signed", "unsigned") for t in ids[:-1]):
+                        cur = None
+                # Unpacked arrays or complex declarators are outside this bounded bridge class.
+                m = re.search(r"([A-Za-z_][\w$]*)\s*$", item)
+                if m and cur is not None:
+                    widths[m[1]] = cur
+        h = body
+        hp = re.match(r"\s*#\s*\(", h)
+        if hp:
+            d, i = 0, hp.end() - 1
+            while i < len(h):
+                d += {"(": 1, ")": -1}.get(h[i], 0)
+                i += 1
+                if d == 0:
+                    break
+            h = h[i:]
+        m = re.match(r"\s*\((.*?)\)\s*;", h, flags=re.S)
+        if m:
+            declarations(m[1])
+            h = h[m.end():]
+        for dm in re.finditer(r"(?m)^\s*((?:input|output|inout)\b[^;]*);", h):
+            declarations(dm[1])
+        res[mm[1]] = widths
+    return res
+
+
+def escaped_instance_blocks(text, modules, port_dirs=None, port_widths=None):
     """FLOW-11 10-30 (QC tt_ctlm, FLOW-KITFAIL): yosys-slang --keep-hierarchy names each kept module after its
     instance path in Verilog-escaped form, so a netlist-form instance '\\u_gi.g_wtn.u_wtn ' of a module defined in
     the sources (synthesised RTL flattened into one module) gives the module name '...\\u_gi.g_wtn.u_wtn ' with a
@@ -435,7 +487,7 @@ def escaped_instance_blocks(text, modules, port_dirs=None):
     connection expressions may differ.  These are carried by per-port arrays declared at module level:
       - input:  assign arr[i] = expr_i;
       - output: assign expr_i = arr[i];
-    Each array is as wide as the largest $bits(expr_i).  The loop instance connects .p(arr[g]).
+    Each array has the exact static formal-port width, preserving signed extension on assignment.  The loop instance connects .p(arr[g]).
     Port directions come from `port_dirs` ({module: {port: dir}}).  The module is left unchanged when the rewrite
     cannot be made, so the LEC still fails rather than proving a different design.  That happens when:
       - the indices are not contiguous;
@@ -446,6 +498,7 @@ def escaped_instance_blocks(text, modules, port_dirs=None):
     Returns (text, moved instance count); text is unchanged when nothing is moved."""
     out, pos, moved = [], 0, 0
     port_dirs = port_dirs or {}
+    port_widths = module_port_widths(text) if port_widths is None else port_widths
     for mm in re.finditer(r"\bmodule\b.*?\bendmodule\b", text, flags=re.S):
         body, base = mm.group(0), mm.start()
         hits = []
@@ -520,10 +573,9 @@ def escaped_instance_blocks(text, modules, port_dirs=None):
                     if d not in ("input", "output") or any(not v.strip() for v in ex.values()):
                         raise Refuse
                     arr = fresh(p)
-                    bits = [f"$bits({v.strip()} )" for v in ex.values()]
-                    width = bits[0]
-                    for b in bits[1:]:
-                        width = f"(({width}) > ({b}) ? ({width}) : ({b}))"
+                    width = port_widths.get(mod, {}).get(p)
+                    if width is None:
+                        raise Refuse
                     lo, hi = min(ex), max(ex)
                     decls.append(f"  wire [({width})-1:0] {arr} [{lo}:{hi}];")
                     for i, v in sorted(ex.items()):
@@ -587,12 +639,13 @@ def escaped_instance_safe(files, blackboxes):
             texts[f] = Path(f).read_text(errors="replace")
         except OSError:
             texts[f] = None
-    mods, dirs = set(), {}
+    mods, dirs, widths = set(), {}, {}
     for t in texts.values():
         if t:
             mods.update(re.findall(r"(?m)^\s*module\s+([A-Za-z_][\w$]*)", t))
             if "module" in t:
                 dirs.update(module_port_dirs(t))
+                widths.update(module_port_widths(t))
     mods -= set(blackboxes)
     res = []
     for f in files:
@@ -600,7 +653,7 @@ def escaped_instance_safe(files, blackboxes):
         if not t or "\\" not in t:
             res.append(f)
             continue
-        nt, n = escaped_instance_blocks(t, mods, dirs)
+        nt, n = escaped_instance_blocks(t, mods, dirs, widths)
         if not n:
             res.append(f)
             continue

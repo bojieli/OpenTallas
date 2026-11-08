@@ -167,3 +167,31 @@ def test_indexed_rewrite_slang_names_and_equivalence_with_mutant(tmp_path):
     mut.write_text(t.replace(f"assign {m[0][0]}[0] =", "assign MUTX =").replace(f"assign {m[0][0]}[1] =", f"assign {m[0][0]}[0] =")
                    .replace("assign MUTX =", f"assign {m[0][0]}[1] ="))
     assert equiv(mut).returncode != 0
+
+
+@pytest.mark.skipif(not os.access(YOSYS, os.X_OK), reason="needs ORFS yosys-slang")
+def test_indexed_bridge_uses_formal_width_for_signed_narrow_inputs(tmp_path):
+    src = r"""module cell4(input signed [3:0] a, output [3:0] y); assign y=a; endmodule
+module top(output [7:0] y);
+  cell4 \u_g.g_f[0].u_x  (.a(1'sb1), .y(y[3:0]));
+  cell4 \u_g.g_f[1].u_x  (.a(1'sb0), .y(y[7:4]));
+endmodule
+"""
+    # The old expression-width bridge created unsigned1bit arrays and changed -1 into +1.
+    p = tmp_path / "signed.sv"
+    p.write_text(src)
+    f = lec.escaped_instance_safe([str(p)], [])[0]
+    assert f != str(p)
+    assert "wire [(4)-1:0]" in Path(f).read_text()
+    gold = tmp_path / "signed.il"
+    r = _yosys_ok(tmp_path, "signedgold", f"read_slang --top top {p}\nrename top gold\nwrite_rtlil {gold}\n")
+    assert r.returncode == 0, r.stdout+r.stderr
+    r = _yosys_ok(tmp_path, "signedgate", f"read_slang --keep-hierarchy --top top {f}\nhierarchy -top top\nflatten top\n"
+                  f"rename top gate\nread_rtlil {gold}\n"
+                  "miter -equiv -flatten -make_assert gold gate miter\nsat -verify -prove-asserts -show-ports miter\n")
+    assert r.returncode == 0, r.stdout+r.stderr
+
+
+def test_parameterised_port_width_refuses_instead_of_guessing():
+    src = NETX.replace("input [1:0] c", "input [WIDTH-1:0] c", 1)
+    assert lec.escaped_instance_blocks(src, {"cell2", "top"}, DIRS) == (src, 0)
