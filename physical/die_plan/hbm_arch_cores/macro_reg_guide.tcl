@@ -1,3 +1,6 @@
+# OT_MACRO_REG_GUIDE_EXACT=1 is opt-in for complete literal instance names,
+# emitted by atomic-clock groups with exact reviewed guides. Default remains
+# hierarchical prefix matching. Both modes retain fixed ownership/capacity gates.
 # HBM-CORES-REBAL-10 (opt-in gen_core_kit_hbm.py --macro-reg-guide SCOPE): per-macro register guides.
 # Sourced at PRE_GLOBAL_PLACE (end of face_flops.tcl).  ot_mrg_spec = {name {prefix ...} x0 y0 x1 y1 ...} (um, die coords) is
 # written by the generator from the frozen macro placement: one box per static macro <P>.u_m = the macro's placed bbox
@@ -16,15 +19,49 @@ set mrg_u [[ord::get_db_tech] getDbUnitsPerMicron]
 # flat Yosys names: strip the ODB bracket escapes once, then compare literal prefixes
 set mrg_names {}
 set mrg_all_names {}
+set mrg_exact [expr {[info exists ::env(OT_MACRO_REG_GUIDE_EXACT)] && $::env(OT_MACRO_REG_GUIDE_EXACT) eq "1"}]
+set mrg_exact_all {}; set mrg_exact_movable {}
+proc ot_mrg_exact_members {prefixes index} {
+  set out {}; set seen {}
+  foreach name $prefixes {
+    if {[dict exists $index $name] && ![dict exists $seen $name]} {
+      lappend out [dict get $index $name]; dict set seen $name 1
+    }
+  }
+  return $out
+}
 foreach i [$mrg_blk getInsts] {
   if {![[$i getMaster] isCore]} continue
   lappend mrg_all_names [string map {"\\" ""} [$i getName]] $i
+  if {$mrg_exact} {
+    set nm [string map {"\\" ""} [$i getName]]
+    if {[dict exists $mrg_exact_all $nm]} {error "OT_MACRO_REG_GUIDE ambiguous normalized exact name $nm"}
+    dict set mrg_exact_all $nm $i
+  }
   if {[$i getPlacementStatus] in {FIRM FIXED LOCKED COVER}} continue
   lappend mrg_names [string map {"\\" ""} [$i getName]] $i
+  if {$mrg_exact} {dict set mrg_exact_movable $nm $i}
+}
+# Placement status and fixed boxes do not change while these regions are
+# created. Cache their geometry once instead of rescanning every cell per box.
+set mrg_fixed_boxes {}
+foreach fi [$mrg_blk getInsts] {
+  if {[$fi getPlacementStatus] ni {FIRM FIXED LOCKED COVER}} continue
+  set bb [$fi getBBox]
+  lappend mrg_fixed_boxes [list [expr {double([$bb xMin])/$mrg_u}] [expr {double([$bb yMin])/$mrg_u}] [expr {double([$bb xMax])/$mrg_u}] [expr {double([$bb yMax])/$mrg_u}]]
 }
 set mrg_n 0; set mrg_cells 0
 foreach {mrg_nm mrg_pf zx0 zy0 zx1 zy1} $ot_mrg_spec {
   set mrg_insts {}; set mrg_area 0.0
+  if {$mrg_exact} {
+    foreach name $mrg_pf {
+      if {![dict exists $mrg_exact_all $name]} {error "OT_MACRO_REG_GUIDE missing exact member $name"}
+    }
+    set mrg_insts [ot_mrg_exact_members $mrg_pf $mrg_exact_movable]
+    foreach i $mrg_insts {
+      set mrg_area [expr {$mrg_area + double([[$i getMaster] getWidth]) * [[$i getMaster] getHeight] / $mrg_u / $mrg_u}]
+    }
+  } else {
   foreach {nm i} $mrg_names {
     foreach pf $mrg_pf {
       if {[string equal -length [string length $pf] $nm $pf]} {
@@ -34,12 +71,17 @@ foreach {mrg_nm mrg_pf zx0 zy0 zx1 zy1} $ot_mrg_spec {
       }
     }
   }
+  }
   if {[llength $mrg_insts] == 0} {
     set mrg_owned 0
+    if {$mrg_exact} {
+      set mrg_owned [llength [ot_mrg_exact_members $mrg_pf $mrg_exact_all]]
+    } else {
     foreach {nm i} $mrg_all_names {
       foreach pf $mrg_pf {
         if {[string equal -length [string length $pf] $nm $pf]} { incr mrg_owned; break }
       }
+    }
     }
     if {$mrg_owned} {
       puts "OT_MACRO_REG_GUIDE $mrg_nm skipped: $mrg_owned matched cells already FIRM/FIXED; existing placement retained"
@@ -48,11 +90,10 @@ foreach {mrg_nm mrg_pf zx0 zy0 zx1 zy1} $ot_mrg_spec {
     error "OT_MACRO_REG_GUIDE $mrg_nm: no instance under $mrg_pf"
   }
   set mrg_fixed 0.0
-  foreach fi [$mrg_blk getInsts] {
-    if {[$fi getPlacementStatus] ni {FIRM FIXED LOCKED COVER}} continue
-    set bb [$fi getBBox]
-    set ix0 [expr {max($zx0, double([$bb xMin])/$mrg_u)}]; set iy0 [expr {max($zy0, double([$bb yMin])/$mrg_u)}]
-    set ix1 [expr {min($zx1, double([$bb xMax])/$mrg_u)}]; set iy1 [expr {min($zy1, double([$bb yMax])/$mrg_u)}]
+  foreach fixed $mrg_fixed_boxes {
+    lassign $fixed fx0 fy0 fx1 fy1
+    set ix0 [expr {max($zx0, $fx0)}]; set iy0 [expr {max($zy0, $fy0)}]
+    set ix1 [expr {min($zx1, $fx1)}]; set iy1 [expr {min($zy1, $fy1)}]
     if {$ix1 > $ix0 && $iy1 > $iy0} { set mrg_fixed [expr {$mrg_fixed + ($ix1-$ix0)*($iy1-$iy0)}] }
   }
   set mrg_box [expr {($zx1-$zx0)*($zy1-$zy0)}]

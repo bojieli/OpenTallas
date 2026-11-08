@@ -6614,6 +6614,7 @@
   "serdes__t16": {
    "module": "s81p_serdes__t16",
    "phy_pg_south_notch_um": 4.32,
+   "phy_pg_clip_um": 10.0,
    "phy_pg_west_notch_um": 4.32,
    "rck_band": {"inst": "u_bound.u_core.u_prx"},
    "core_pg_connect": true,
@@ -10023,6 +10024,7 @@
   "serdes__t3": {
    "module": "s81p_serdes__t3",
    "phy_pg_south_notch_um": 4.32,
+   "phy_pg_clip_um": 10.0,
    "phy_pg_west_notch_um": 4.32,
    "rck_band": {"inst": "u_bound.u_core.u_prx"},
    "core_pg_connect": true,
@@ -13771,6 +13773,7 @@
   "serdes__t2": {
    "module": "s81p_serdes__t2",
    "phy_pg_south_notch_um": 4.32,
+   "phy_pg_clip_um": 10.0,
    "phy_pg_west_notch_um": 4.32,
    "rck_band": {"inst": "u_bound.u_core.u_prx"},
    "core_pg_connect": true,
@@ -15894,6 +15897,7 @@
   "serdes__t4": {
    "module": "s81p_serdes__t4",
    "phy_pg_south_notch_um": 4.32,
+   "phy_pg_clip_um": 10.0,
    "phy_pg_west_notch_um": 4.32,
    "rck_band": {"inst": "u_bound.u_core.u_prx"},
    "core_pg_connect": true,
@@ -18197,6 +18201,7 @@
   "serdes__t14": {
    "module": "s81p_serdes__t14",
    "phy_pg_south_notch_um": 4.32,
+   "phy_pg_clip_um": 10.0,
    "phy_pg_west_notch_um": 4.32,
    "rck_band": {"inst": "u_bound.u_core.u_prx"},
    "core_pg_connect": true,
@@ -20146,6 +20151,7 @@
   "serdes__t12": {
    "module": "s81p_serdes__t12",
    "phy_pg_south_notch_um": 4.32,
+   "phy_pg_clip_um": 10.0,
    "phy_pg_west_notch_um": 4.32,
    "rck_band": {"inst": "u_bound.u_core.u_prx"},
    "core_pg_connect": true,
@@ -20390,6 +20396,7 @@
   "serdes__t13": {
    "module": "s81p_serdes__t13",
    "phy_pg_south_notch_um": 4.32,
+   "phy_pg_clip_um": 10.0,
    "phy_pg_west_notch_um": 4.32,
    "rck_band": {"inst": "u_bound.u_core.u_prx"},
    "core_pg_connect": true,
@@ -94832,9 +94839,10 @@
        151.32,
        596.412
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_lnl0.ck_n",
@@ -94843,9 +94851,10 @@
        151.32,
        708.252
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_ln1",
@@ -94865,9 +94874,10 @@
        462.36,
        596.412
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_lnl1.ck_n",
@@ -94876,9 +94886,10 @@
        462.36,
        708.252
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_ln2",
@@ -94898,9 +94909,10 @@
        963.48,
        596.412
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_lnl2.ck_n",
@@ -94909,9 +94921,10 @@
        963.48,
        708.252
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_ln3",
@@ -94931,9 +94944,10 @@
        1274.52,
        596.412
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_lnl3.ck_n",
@@ -94942,9 +94956,10 @@
        1274.52,
        708.252
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      }
     ]
    },
@@ -95002,14 +95017,14 @@
    ],
    "note": "slice partition; 1 instance(s) (R0)",
    "hard_cores": [
-    {"inst":"u_bound.u_u_ln0","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[8.64,129.6],"outline_um":[295.92,444.96],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/h2_2249/coll_w/lane.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_lnl0","module":"ot_s81_mu72_lnland_nst","origin_um":[95.04,596.16],"outline_um":[112.32,112.32],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_ln1","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[319.68,129.6],"outline_um":[295.92,444.96],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/h2_2249/coll_w/lane.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_lnl1","module":"ot_s81_mu72_lnland_nst","origin_um":[406.08000000000004,596.16],"outline_um":[112.32,112.32],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_ln2","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[820.8,129.6],"outline_um":[295.92,444.96],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/h2_2249/coll_w/lane.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_lnl2","module":"ot_s81_mu72_lnland_nst","origin_um":[907.1999999999999,596.16],"outline_um":[112.32,112.32],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_ln3","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[1131.84,129.6],"outline_um":[295.92,444.96],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/h2_2249/coll_w/lane.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_lnl3","module":"ot_s81_mu72_lnland_nst","origin_um":[1218.24,596.16],"outline_um":[112.32,112.32],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"}
+    {"inst":"u_bound.u_u_ln0","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[8.64,129.6],"outline_um":[295.92,444.96],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf_tt.lib"},
+    {"inst":"u_bound.u_u_lnl0","module":"ot_s81_mu72_lnland_nst","origin_um":[95.04,596.16],"outline_um":[112.32,112.32],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst_tt.lib"},
+    {"inst":"u_bound.u_u_ln1","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[319.68,129.6],"outline_um":[295.92,444.96],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf_tt.lib"},
+    {"inst":"u_bound.u_u_lnl1","module":"ot_s81_mu72_lnland_nst","origin_um":[406.08000000000004,596.16],"outline_um":[112.32,112.32],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst_tt.lib"},
+    {"inst":"u_bound.u_u_ln2","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[820.8,129.6],"outline_um":[295.92,444.96],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf_tt.lib"},
+    {"inst":"u_bound.u_u_lnl2","module":"ot_s81_mu72_lnland_nst","origin_um":[907.1999999999999,596.16],"outline_um":[112.32,112.32],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst_tt.lib"},
+    {"inst":"u_bound.u_u_ln3","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[1131.84,129.6],"outline_um":[295.92,444.96],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf_tt.lib"},
+    {"inst":"u_bound.u_u_lnl3","module":"ot_s81_mu72_lnland_nst","origin_um":[1218.24,596.16],"outline_um":[112.32,112.32],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst_tt.lib"}
    ]
   },
   "slice_station__t8": {
@@ -123660,9 +123675,10 @@
        151.32,
        621.876
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_lnl0.ck_n",
@@ -123671,9 +123687,10 @@
        151.32,
        510.036
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_ln1",
@@ -123693,9 +123710,10 @@
        462.36,
        621.876
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_lnl1.ck_n",
@@ -123704,9 +123722,10 @@
        462.36,
        510.036
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_ln2",
@@ -123726,9 +123745,10 @@
        963.48,
        621.876
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_lnl2.ck_n",
@@ -123737,9 +123757,10 @@
        963.48,
        510.036
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_ln3",
@@ -123759,9 +123780,10 @@
        1274.52,
        621.876
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_lnl3.ck_n",
@@ -123770,9 +123792,10 @@
        1274.52,
        510.036
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      }
     ]
    },
@@ -123830,14 +123853,14 @@
    ],
    "note": "slice partition; 1 instance(s) (R0)",
    "hard_cores": [
-    {"inst":"u_bound.u_u_ln0","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[8.64,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/h2_2249/coll_w/lane.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_lnl0","module":"ot_s81_mu72_lnland_nst","origin_um":[95.04,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_ln1","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[319.68,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/h2_2249/coll_w/lane.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_lnl1","module":"ot_s81_mu72_lnland_nst","origin_um":[406.08000000000004,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_ln2","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[820.8,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/h2_2249/coll_w/lane.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_lnl2","module":"ot_s81_mu72_lnland_nst","origin_um":[907.1999999999999,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_ln3","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[1131.84,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/h2_2249/coll_w/lane.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_lnl3","module":"ot_s81_mu72_lnland_nst","origin_um":[1218.24,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"}
+    {"inst":"u_bound.u_u_ln0","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[8.64,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf_tt.lib"},
+    {"inst":"u_bound.u_u_lnl0","module":"ot_s81_mu72_lnland_nst","origin_um":[95.04,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst_tt.lib"},
+    {"inst":"u_bound.u_u_ln1","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[319.68,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf_tt.lib"},
+    {"inst":"u_bound.u_u_lnl1","module":"ot_s81_mu72_lnland_nst","origin_um":[406.08000000000004,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst_tt.lib"},
+    {"inst":"u_bound.u_u_ln2","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[820.8,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf_tt.lib"},
+    {"inst":"u_bound.u_u_lnl2","module":"ot_s81_mu72_lnland_nst","origin_um":[907.1999999999999,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst_tt.lib"},
+    {"inst":"u_bound.u_u_ln3","module":"dsfd_coll_lane_w_safe8_ntf","origin_um":[1131.84,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_w/plan_pins.json","lef":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf_tt.lib"},
+    {"inst":"u_bound.u_u_lnl3","module":"ot_s81_mu72_lnland_nst","origin_um":[1218.24,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst_tt.lib"}
    ]
   },
   "slice_station__t41": {
@@ -354176,6 +354199,7 @@
     1226.88
    ],
    "hard": false,
+   "ln_copies": true,
    "buses": [
     {
      "name": "leafdn_i0",
@@ -432727,9 +432751,10 @@
        151.32,
        596.412
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_lnl0.ck_n",
@@ -432738,9 +432763,10 @@
        151.32,
        708.252
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_ln1",
@@ -432760,9 +432786,10 @@
        462.36,
        596.412
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_lnl1.ck_n",
@@ -432771,9 +432798,10 @@
        462.36,
        708.252
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      }
     ],
     "tap_mode": "grid+explicit",
@@ -432938,10 +432966,10 @@
    ],
    "note": "slice partition; 1 instance(s) (MY)",
    "hard_cores": [
-    {"inst":"u_bound.u_u_ln0","module":"dsfd_coll_lane_e_safe8_ntf","origin_um":[8.64,129.6],"outline_um":[295.92,444.96],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"h2_2249/coll_e/plan_pins.json","lef":"physical/die_plan/s81/h2_2249/coll_e/lane.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_lnl0","module":"ot_s81_mu72_lnland_nst","origin_um":[95.04,596.16],"outline_um":[112.32,112.32],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_ln1","module":"dsfd_coll_lane_e_safe8_ntf","origin_um":[319.68,129.6],"outline_um":[295.92,444.96],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"h2_2249/coll_e/plan_pins.json","lef":"physical/die_plan/s81/h2_2249/coll_e/lane.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_lnl1","module":"ot_s81_mu72_lnland_nst","origin_um":[406.08000000000004,596.16],"outline_um":[112.32,112.32],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"}
+    {"inst":"u_bound.u_u_ln0","module":"dsfd_coll_lane_e_safe8_ntf","origin_um":[8.64,129.6],"outline_um":[295.92,444.96],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"h2_2249/coll_e/plan_pins.json","lef":"physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107/dsfd_coll_lane_e_safe8_ntf.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107/dsfd_coll_lane_e_safe8_ntf_tt.lib"},
+    {"inst":"u_bound.u_u_lnl0","module":"ot_s81_mu72_lnland_nst","origin_um":[95.04,596.16],"outline_um":[112.32,112.32],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst_tt.lib"},
+    {"inst":"u_bound.u_u_ln1","module":"dsfd_coll_lane_e_safe8_ntf","origin_um":[319.68,129.6],"outline_um":[295.92,444.96],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"h2_2249/coll_e/plan_pins.json","lef":"physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107/dsfd_coll_lane_e_safe8_ntf.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107/dsfd_coll_lane_e_safe8_ntf_tt.lib"},
+    {"inst":"u_bound.u_u_lnl1","module":"ot_s81_mu72_lnland_nst","origin_um":[406.08000000000004,596.16],"outline_um":[112.32,112.32],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst_tt.lib"}
    ]
   },
   "ot_s81sl_leaf__t70": {
@@ -460195,9 +460223,10 @@
        151.32,
        621.876
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.39,
+      "insertion_ff_ps": 201.81,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_lnl0.ck_n",
@@ -460206,9 +460235,10 @@
        151.32,
        510.036
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.39,
+      "insertion_ff_ps": 201.81,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_ln1",
@@ -460228,9 +460258,10 @@
        462.36,
        621.876
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.39,
+      "insertion_ff_ps": 201.81,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_lnl1.ck_n",
@@ -460239,9 +460270,10 @@
        462.36,
        510.036
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.39,
+      "insertion_ff_ps": 201.81,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_ln2",
@@ -460261,9 +460293,10 @@
        963.48,
        621.876
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_lnl2.ck_n",
@@ -460272,9 +460305,10 @@
        963.48,
        510.036
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_ln3",
@@ -460294,9 +460328,10 @@
        1274.52,
        621.876
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      },
      {
       "name": "u_bound.u_u_lnl3.ck_n",
@@ -460305,9 +460340,10 @@
        1274.52,
        510.036
       ],
-      "insertion_ps": 250,
-      "insertion_ff_ps": 202.5,
-      "note": "H2 same-parent-clock dual-input LN; measured view pending"
+      "insertion_ps": 260.54,
+      "insertion_ff_ps": 201.84,
+      "note": "H2 same-parent-clock dual-input LN; signed view insertion (S81-TYPES-5 11-07)",
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/insertion.json"
      }
     ]
    },
@@ -460365,14 +460401,14 @@
    ],
    "note": "slice partition; 1 instance(s) (MY)",
    "hard_cores": [
-    {"inst":"u_bound.u_u_ln0","module":"dsfd_coll_lane_e_safe8_ntf","origin_um":[8.64,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_e/plan_pins.json","lef":"physical/die_plan/s81/h2_2249/coll_e/lane.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_lnl0","module":"ot_s81_mu72_lnland","origin_um":[95.04,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland/pins.json","lef":"physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland/ot_s81_mu72_lnland.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_ln1","module":"dsfd_coll_lane_e_safe8_ntf","origin_um":[319.68,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_e/plan_pins.json","lef":"physical/die_plan/s81/h2_2249/coll_e/lane.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_lnl1","module":"ot_s81_mu72_lnland","origin_um":[406.08000000000004,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland/pins.json","lef":"physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland/ot_s81_mu72_lnland.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_ln2","module":"dsfd_coll_lane_e_safe8_ntf","origin_um":[820.8,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_e/plan_pins.json","lef":"physical/die_plan/s81/h2_2249/coll_e/lane.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_lnl2","module":"ot_s81_mu72_lnland_nst","origin_um":[907.1999999999999,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_ln3","module":"dsfd_coll_lane_e_safe8_ntf","origin_um":[1131.84,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_e/plan_pins.json","lef":"physical/die_plan/s81/h2_2249/coll_e/lane.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"},
-    {"inst":"u_bound.u_u_lnl3","module":"ot_s81_mu72_lnland_nst","origin_um":[1218.24,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"H2 LP existing module boundary; prospective view, no SIGNED/timing claim"}
+    {"inst":"u_bound.u_u_ln0","module":"dsfd_coll_lane_e_safe8_ntf","origin_um":[8.64,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_e/plan_pins.json","lef":"physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107/dsfd_coll_lane_e_safe8_ntf.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107/dsfd_coll_lane_e_safe8_ntf_tt.lib"},
+    {"inst":"u_bound.u_u_lnl0","module":"ot_s81_mu72_lnland","origin_um":[95.04,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland/pins.json","lef":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_signed_1107/ot_s81_mu72_lnland.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_signed_1107/ot_s81_mu72_lnland_tt.lib"},
+    {"inst":"u_bound.u_u_ln1","module":"dsfd_coll_lane_e_safe8_ntf","origin_um":[319.68,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_e/plan_pins.json","lef":"physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107/dsfd_coll_lane_e_safe8_ntf.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107/dsfd_coll_lane_e_safe8_ntf_tt.lib"},
+    {"inst":"u_bound.u_u_lnl1","module":"ot_s81_mu72_lnland","origin_um":[406.08000000000004,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland/pins.json","lef":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_signed_1107/ot_s81_mu72_lnland.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_signed_1107/ot_s81_mu72_lnland_tt.lib"},
+    {"inst":"u_bound.u_u_ln2","module":"dsfd_coll_lane_e_safe8_ntf","origin_um":[820.8,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_e/plan_pins.json","lef":"physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107/dsfd_coll_lane_e_safe8_ntf.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107/dsfd_coll_lane_e_safe8_ntf_tt.lib"},
+    {"inst":"u_bound.u_u_lnl2","module":"ot_s81_mu72_lnland_nst","origin_um":[907.1999999999999,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst_tt.lib"},
+    {"inst":"u_bound.u_u_ln3","module":"dsfd_coll_lane_e_safe8_ntf","origin_um":[1131.84,648.0],"outline_um":[295.92,444.96],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"h2_2249/coll_e/plan_pins.json","lef":"physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107/dsfd_coll_lane_e_safe8_ntf.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107/dsfd_coll_lane_e_safe8_ntf_tt.lib"},
+    {"inst":"u_bound.u_u_lnl3","module":"ot_s81_mu72_lnland_nst","origin_um":[1218.24,509.76],"outline_um":[112.32,112.32],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"cores/h2/ot_s81_mu72_lnland_nst/pins.json","lef":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst.lef","obs_max":"M5","note":"signed view physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107 (S81-TYPES-5 11-07; record PROVENANCE.json there)","lib":"physical/die_plan/s81/cores/views/ot_s81_mu72_lnland_nst_signed_1107/ot_s81_mu72_lnland_nst_tt.lib"}
    ]
   },
   "slice_station__t51": {
@@ -490150,6 +490186,7 @@
   "serdes__t15__cla2127225": {
    "module": "serdes__t15__cla2127225",
    "phy_pg_south_notch_um": 4.32,
+   "phy_pg_clip_um": 10.0,
    "phy_pg_west_notch_um": 4.32,
    "rck_band": {"inst": "u_bound.u_core.u_prx"},
    "core_pg_connect": true,
@@ -494012,6 +494049,7 @@
   "serdes__t15__cla3d02796": {
    "module": "serdes__t15__cla3d02796",
    "phy_pg_south_notch_um": 4.32,
+   "phy_pg_clip_um": 10.0,
    "phy_pg_west_notch_um": 4.32,
    "rck_band": {"inst": "u_bound.u_core.u_prx"},
    "core_pg_connect": true,
@@ -498439,6 +498477,7 @@
   "serdes__t1__clfe1f0815": {
    "module": "serdes__t1__clfe1f0815",
    "phy_pg_south_notch_um": 4.32,
+   "phy_pg_clip_um": 10.0,
    "phy_pg_west_notch_um": 4.32,
    "rck_band": {"inst": "u_bound.u_core.u_prx"},
    "core_pg_connect": true,
@@ -501614,6 +501653,7 @@
   "serdes__t1__clb45db5be": {
    "module": "serdes__t1__clb45db5be",
    "phy_pg_south_notch_um": 4.32,
+   "phy_pg_clip_um": 10.0,
    "phy_pg_west_notch_um": 4.32,
    "rck_band": {"inst": "u_bound.u_core.u_prx"},
    "core_pg_connect": true,

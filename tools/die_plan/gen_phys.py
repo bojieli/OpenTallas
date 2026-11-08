@@ -151,6 +151,32 @@ def _cland_pinslot(budgets, tn, extra=()):
 
 
 
+def _relay_mid_fit(budgets, tn):
+    """S81-TYPES-5 11-07 CHANNEL class (relay_mid.tcl FIT), opt-in three ways, absent = unchanged kits: plan-wide
+    budgets.relay_mid_fit, per type budgets.relay_mid_fit_types (types or unsplit base names), or per kit-wave row
+    through item_env (GEN env OT_RELAY_MID_FIT=1), so a pilot or a class batch needs no plan event."""
+    if os.environ.get("OT_RELAY_MID_FIT") == "1" or budgets.get("relay_mid_fit"):
+        return True
+    on = list(budgets.get("relay_mid_fit_types") or [])
+    return tn is not None and (tn in on or tn.split("__")[0] in on)
+
+
+def _gutter_block_um(budgets, tn):
+    """S81-TYPES-5 11-07 NARROW-GUTTER class (gutter_block.tcl + gutter_release.tcl): the gap threshold in um, or None.
+    GEN env OT_GUTTER_BLOCK_UM (kit-wave item_env) wins; else budgets.gutter_block_um, for every macro type, or only
+    for budgets.gutter_block_types when that list is given."""
+    v = os.environ.get("OT_GUTTER_BLOCK_UM")
+    if v:
+        return float(v) if float(v) > 0 else None
+    v = budgets.get("gutter_block_um")
+    if not v:
+        return None
+    on = budgets.get("gutter_block_types")
+    if on is not None and not (tn is not None and (tn in on or tn.split("__")[0] in on)):
+        return None
+    return v
+
+
 def _cland_pinslot_dense(budgets, tn):
     """DIE-KV-62/stations 11-02 opt-in: budgets.cland_pinslot_dense_types names the types (or unsplit base names) whose
     y-column pinslot rows pack the ring slot flops body to body (OT_CLAND_PINSLOT_DENSE=1, landing_placement.tcl);
@@ -778,9 +804,24 @@ def core_tap_pins(P, tn):
     blocks = entry_block_boxes(P, tn) if taps else []
     out = []
     for n, x, y, _ in taps:
-        sx, sy = _snap_tap(P, x, y, pg_legal=pg)
-        if blocks and _pin_hits(P, tn, n, sx, sy, blocks):
-            sx, sy = _clear_core_tap(P, tn, n, x, y, (sx, sy), blocks, pg)
+        explicit = any(c.get("clock_entry_access") and any(
+            q == n and i == c["inst"] and pin == c["clock_entry_access"]["pin"]
+            for q, i, pin, _, _ in core_tap_rows(P, tn)) for c in P.types[tn].get("hard_cores", []))
+        if explicit:
+            # An interior real-pin stack must not be shifted away by generic PG
+            # avoidance. Its exact target M6/M7 PG cuts are emitted below.
+            sx, sy = float(x), float(y)
+            layer = P.layers[P.layer_budget["partition_signal_max"]]
+            axis = sx if layer["dir"] == "V" else sy
+            k = (axis - layer["offset_um"]) / layer["pitch_um"]
+            if abs(k - round(k)) > 1e-6:
+                raise ValueError(f"{tn}.{n}: explicit entry off preferred routing track")
+        else:
+            sx, sy = _snap_tap(P, x, y, pg_legal=pg)
+        port_blocks = entry_block_boxes(P, tn, port=n, entry_xy=(sx, sy)) if any(
+            c.get("clock_entry_access") for c in P.types[tn].get("hard_cores", [])) else blocks
+        if port_blocks and _pin_hits(P, tn, n, sx, sy, port_blocks):
+            sx, sy = _clear_core_tap(P, tn, n, x, y, (sx, sy), port_blocks, pg)
         out.append((n, sx, sy))
     return out
 
@@ -793,7 +834,7 @@ def _lef_metal_top(lef_text):
     return max([int(v) for v in re.findall(r"\bLAYER\s+M(\d+)\b", lef_text)] or [0])
 
 
-def entry_block_boxes(P, tn, root=None):
+def entry_block_boxes(P, tn, root=None, port=None, entry_xy=None):
     """[(x0, y0, x1, y1)] type-frame boxes of the placed macros (type_macros) whose metal reaches the partition entry
     layer (layer_budget partition_signal_max) or the via layer below it: LEF OBS/PIN layers, else plan obs_max."""
     t = P.types[tn]
@@ -817,6 +858,15 @@ def entry_block_boxes(P, tn, root=None):
             mtop = None
         if mtop is None:
             mtop = int(om.group(1)) if om else top      # unknown view: treat as obstructing (fail closed)
+        access = c.get("clock_entry_access")
+        if access and port is not None:
+            matched = [(n, i, pin) for n, i, pin, _, _ in core_tap_rows(P, tn)
+                       if n == port and i == c["inst"] and pin == access["pin"]]
+            if matched:
+                from lef_clock_entry import validate_access
+                validate_access(f.read_text(), mod, access, top, (float(x), float(y), o),
+                                _pin_box(P, tn, port, *entry_xy))
+                continue  # only this named utility pin; every other port retains the solid macro
         if mtop < top - 1:
             continue
         w, h = map(float, c["outline_um"])
@@ -1436,16 +1486,37 @@ def pg_island_cuts(P, tn, root=None):
     pin of a placed hard core, grown by PG_CUT_MARGIN_UM in x and PG_CUT_SPACE_UM in y.  Which straps it hits is
     decided on the actual pdngen geometry (pg_island_cut_tcl), not re-derived here.  [] when not opted in."""
     t = P.types[tn]
-    if not t.get("pg_island_cut"):
+    selected = {(c.get("physical_inst") or c["inst"]): c["clock_entry_access"]["pin"]
+                for c in t.get("hard_cores", []) if c.get("clock_entry_access")}
+    if not t.get("pg_island_cut") and not selected:
         return []
     import cores as C
     cuts = []
     for inst, _mod, lef, _lib, ox, oy, o in type_macros(P, tn):
+        if not t.get("pg_island_cut") and inst not in selected:
+            continue
         pins, (w, h) = lef_interior_pins(C.resolve(lef, root))
+        if not t.get("pg_island_cut"):
+            pins = [(pin, r) for pin, r in pins if pin == selected[inst]]
+            if not pins:
+                raise ValueError(f"{tn}.{inst}: actual clock entry has no interior M5 target pin")
         for pin, r in pins:
             x0, y0, x1, y1 = _orient_rect_r(r, w, h, o)
             cuts.append((inst, pin, (round(x0 + ox - PG_CUT_MARGIN_UM, 4), round(y0 + oy - PG_CUT_SPACE_UM, 4),
                                      round(x1 + ox + PG_CUT_MARGIN_UM, 4), round(y1 + oy + PG_CUT_SPACE_UM, 4))))
+    return cuts
+
+
+def clock_entry_pg_cuts(P, tn):
+    """Targeted actual M7 utility windows; other macros/clock pins stay unchanged."""
+    cuts=[]
+    for core in P.types[tn].get("hard_cores", []):
+        access=core.get("clock_entry_access")
+        if access:
+            for rect in access["footprints_um"]["M7"]:
+                cuts.append(dict(inst=core.get("physical_inst") or core["inst"], pin=access["pin"], layer="M7",
+                    rect_um=[round(rect[0]-.072,6),round(rect[1]-.072,6),
+                             round(rect[2]+.072,6),round(rect[3]+.072,6)]))
     return cuts
 
 
@@ -2279,6 +2350,34 @@ def tap_chain_affinity_exports(t):
             f"export OT_TAP_CHAIN_MAX_GROUP = {limit}"]
 
 
+def tap_pair_affinity_exports(t):
+    """QC-TYPES-6 11-07: default-off pre-CTS short-pair tap affinity (clock_taps.tcl -> tap_pair_affinity.tcl).
+    Clock pins only; radius and group bounded by the declared tap radius and capacity."""
+    clock = t.get("clock", {})
+    if "tap_pair_affinity" not in clock:
+        return []
+    spec = clock["tap_pair_affinity"]
+    tap_r = float(clock.get("tap_radius_um", 200.))
+    radius = float(spec.get("radius_um", tap_r))
+    group = int(spec.get("max_group", 64))
+    merge = int(spec.get("merge_max", 128))
+    pair_um = float(spec.get("pair_um", 60.))
+    depth = int(spec.get("depth", 2))
+    cap = min(1200, _tap_cap(t))
+    if not 0 < radius <= tap_r:
+        raise ValueError("tap_pair_affinity radius must fit the declared tap radius")
+    if not 2 <= group <= cap or not (merge == 0 or 2 <= merge <= cap):
+        raise ValueError("tap_pair_affinity group/merge must fit the declared tap capacity")
+    if not 0 < pair_um <= 200 or not 0 <= depth <= 4:
+        raise ValueError("tap_pair_affinity pair_um/depth out of range")
+    return ["export OT_TAP_PAIR_AFFINITY = 1",
+            f"export OT_TAP_PAIR_RADIUS_UM = {radius:g}",
+            f"export OT_TAP_PAIR_GROUP = {group}",
+            f"export OT_TAP_PAIR_MERGE = {merge}",
+            f"export OT_TAP_PAIR_UM = {pair_um:g}",
+            f"export OT_TAP_PAIR_DEPTH = {depth}"]
+
+
 def _tap_cap(t):
     """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 3000 (COORD 10-23; applies to grid and added taps);
     density taps default to 1500 (decision 5: ~1000-1500 sinks a tap)."""
@@ -2533,6 +2632,48 @@ def phy_pg_west_notch(t, tn, name, rt, mac_x0, mac_y0=()):
     return rt
 
 
+def pg_placed_blocks(t):
+    """The placed blocks a PHY PG domain is judged by (phy_pg_domains; tools/die_plan/fit_phy_pg_domains.py).
+
+    S81-SERDES-PHY-1 10-31: a content with physical_parts is judged by its placed parts, not its logical lot.
+    DIE-HBM-90-TSTRAP 11-07: a content that is the parent of SPLIT sub-cores (hard_cores with physical_inst
+    <inst>.u_fcore.<...> or sub_core_parent <inst>; HBM-BIND-3 / DIE-QC-75, the parent design is wires-only glue around
+    its subs) is judged by those hard sub-cores, which are in hard_cores themselves; the glue has no macro view of its
+    own (HBM ot_pdie_serdes u_lk_* over chn/rx/tx).  A content without such sub-cores is unchanged.
+    """
+    hard = t.get("hard_cores", []) or []
+    parents = {h["sub_core_parent"] for h in hard if h.get("sub_core_parent")}
+    parents |= {str(h.get("physical_inst")).split(".u_fcore.")[0] for h in hard if ".u_fcore." in str(h.get("physical_inst") or "")}
+    placed = []
+    glue = [c for c in t.get("contents", []) if c.get("inst") in parents and not c.get("lef")]
+    for c in t.get("contents", []) + hard:
+        if any(c is g for g in glue):
+            continue
+        placed += ([dict(q, inst=q["physical_inst"]) for q in c["physical_parts"]]
+                   if c.get("physical_parts") else [c])
+    return placed
+
+
+def phy_pg_clip(t, tn, name, rt, mac_box):
+    """S81-TYPES-6 11-07 (COORD 23:0x (2) choice (a), class PHY-REGION-CLOCK-ENTRY; opt-in type key phy_pg_clip_um =
+    PG landing margin): for a PHY domain modelled with macros, the hard placement blockage and the voltage region are
+    clipped to the bounding box of the domain's PHY macros grown by the margin (snapped outward to the site / row grid)
+    on all four sides, inside the die domain rect.  The VDDPHY M6/M7 straps (and the M7 pins the die M8/M9 VDDPHY mesh
+    lands on) stay over the macros; core rows and the clock leaf then reach the macro clock/data pins from every side
+    instead of from below a region that spans the partition.  Composes with the west/south notch keys (the tighter edge
+    wins).  Key absent, or a domain without macros (phy_pg_offmodel) = unchanged."""
+    m = t.get("phy_pg_clip_um")
+    if m is None or not mac_box:
+        return list(rt)
+    m = float(m)
+    st, rw = PHY_PG_NOTCH_SITE_UM, PHY_PG_NOTCH_ROW_UM
+    x0 = round(math.floor(round((min(b[0] for b in mac_box) - m) / st, 6)) * st, 4) + 0.0
+    y0 = round(math.floor(round((min(b[1] for b in mac_box) - m) / rw, 6)) * rw, 4) + 0.0
+    x1 = round(math.ceil(round((max(b[2] for b in mac_box) + m) / st, 6)) * st, 4) + 0.0
+    y1 = round(math.ceil(round((max(b[3] for b in mac_box) + m) / rw, 6)) * rw, 4) + 0.0
+    return [max(rt[0], x0), max(rt[1], y0), min(rt[2], x1), min(rt[3], y1)]
+
+
 def phy_pg_domains(P, tn):
     """PATH-KV-SYSC 10-25 (OWNER decision 7, PHY PG hook): the die.pg.domains that fall inside partition type tn, as
     [(name, power_net, ground_net, rect_type_um, [macro inst fully inside])].  Identical for every instance (a hardened
@@ -2559,12 +2700,8 @@ def phy_pg_domains(P, tn):
             # failed the per-instance identity below on the sign of zero alone)
             rt = [round(min(u[0], v[0]), 4) + 0.0, round(min(u[1], v[1]), 4) + 0.0, round(max(u[0], v[0]), 4) + 0.0,
                   round(max(u[1], v[1]), 4) + 0.0]
-            mac, mac_x0, mac_y0 = [], [], []
-            # S81-SERDES-PHY-1 10-31: a content with physical_parts is judged by its placed parts, not its logical lot
-            placed = []
-            for c in t.get("contents", []) + t.get("hard_cores", []):
-                placed += ([dict(q, inst=q["physical_inst"]) for q in c["physical_parts"]]
-                           if c.get("physical_parts") else [c])
+            mac, mac_x0, mac_y0, mac_box = [], [], [], []
+            placed = pg_placed_blocks(t)
             for c in placed:
                 if "origin_um" not in c or "outline_um" not in c:
                     continue
@@ -2581,9 +2718,11 @@ def phy_pg_domains(P, tn):
                 mac.append(content_physical_identity(c)[0] if "physical_inst" in c or "physical_master" in c else c["inst"])
                 mac_x0.append(box[0])
                 mac_y0.append(box[1])
+                mac_box.append(box)
             if not mac and not t.get("phy_pg_offmodel"):
                 raise ValueError(f"type {tn}: PG domain {d['name']} holds no macro (a PHY domain powers its PHY macro)")
             rt = phy_pg_west_notch(t, tn, d["name"], rt, mac_x0, mac_y0)
+            rt = phy_pg_clip(t, tn, d["name"], rt, mac_box)
             got.append((d["name"], d["nets"][0], d["nets"][1], rt, sorted(mac)))
         per.append(got)
     # DIE-HEAD-5: compare supply/geometry/macros, not the per-instance domain name (die.pg.domains names one per window)
@@ -3855,6 +3994,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if ft_reservation is not None:
         (kd / "partition_ft_reservation.json").write_text(json.dumps(ft_reservation, indent=1) + "\n")
         pdn += partition_ft_reserve.tcl(ft_reservation)
+        pdn += partition_ft_reserve.row_bridge_tcl(ft_reservation, w)
     phy_doms = phy_pg_domains(P, tn)
     if phy_doms:
         # PATH-KV-SYSC 10-25 PHY PG hook: separate VDDPHY region(s) of die.pg.domains inside this type
@@ -3877,6 +4017,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if pg_cuts:
         (kd / "pg_island_cut.tcl").write_text(pg_island_cut_tcl(pg_cuts))
     post_pdn = ["/work/pg_island_cut.tcl"] if pg_cuts else []
+    entry_pg = clock_entry_pg_cuts(P, tn)
+    if entry_pg:
+        from clock_entry_pg import render as render_entry_pg
+        (kd / "clock_entry_pg_cut.json").write_text(json.dumps(
+            dict(schema="opentallas.clock_entry_pg_cuts.v1", cuts=entry_pg), indent=2) + "\n")
+        (kd / "clock_entry_pg_cut.tcl").write_text(render_entry_pg(entry_pg))
+        post_pdn.append("/work/clock_entry_pg_cut.tcl")
     if pg_pub:      # PG-CORECONN-3: M7-top macro PG straps -> tile pins (after any island cut)
         (kd / "pg_publish.tcl").write_text(core_pg_publish_tcl(pg_pub))
         post_pdn.append("/work/pg_publish.tcl")
@@ -4085,6 +4232,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)",
               "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if not macros else []),
            *([f"export OT_RELAY_MID_RE = {P.budgets.get('relay_mid_re', RELAY_MID_RE)}"] if macros else []),
+           # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
+           # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
+           *(["export OT_RELAY_MID_FIT = 1"] if macros and _relay_mid_fit(P.budgets, tn) else []),
+           *([f"export OT_GUTTER_BLOCK_UM = {_gutter_block_um(P.budgets, tn)}"] if macros and _gutter_block_um(P.budgets, tn) else []),
            # DIE-HEAD-69 11-05: core_out_land.tcl opt-in (GEN env OT_CORE_OUT_LAND=1 via wave item_env, or plan budgets list)
            *(["export OT_CORE_OUT_LAND = 1"] if macros and (os.environ.get("OT_CORE_OUT_LAND") == "1"
                                                        or tn in (P.budgets.get("core_out_land_types") or ())) else []),
@@ -4150,6 +4301,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # HEAD-TILE-PREGRT-HOLD (DH59-TILE 11-03, opt-in clock.pregrt_ff_hold): pregrt_ff_hold.py, run_kit.sh step below
         cfg.append("export OT_PREGRT_FF_HOLD = 1")
     cfg += tap_chain_affinity_exports(t)
+    cfg += tap_pair_affinity_exports(t)
     cfg += rck_band_exports(P, tn)
     import pad_clock as PC
     PC.write_contract(P, tn, kd)
@@ -4160,7 +4312,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
-              "clock_taps.tcl", "tap_chain_affinity.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
+              "clock_taps.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
               "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
@@ -4357,6 +4509,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name("reset_pair_place.tcl"), kd / "reset_pair_place.tcl")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
+        if _gutter_block_um(P.budgets, tn):     # S81-TYPES-5 11-07 NARROW-GUTTER class (opt-in)
+            shutil.copyfile(Path(__file__).with_name("gutter_block.tcl"), kd / "gutter_block.tcl")
+            shutil.copyfile(Path(__file__).with_name("gutter_release.tcl"), kd / "gutter_release.tcl")
         # DIE-HEAD-69 11-05 (COORD ruling (1), hd_tile flt_q): core-output landing flops at their pins (core_out_land.tcl)
         shutil.copyfile(Path(__file__).with_name("core_out_land.tcl"), kd / "core_out_land.tcl")
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
@@ -4409,6 +4564,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                core_latency=clat["rows"],
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
+    # Private explicit actual-LEF entry access. Default budget bytes remain unchanged.
+    for row in bud["clock"]["core_taps"]:
+        core = next((c for c in t.get("hard_cores", []) if c["inst"] == row["inst"]), None)
+        if core and core.get("clock_entry_access"):
+            if row["pin"] != core["clock_entry_access"]["pin"]:
+                raise ValueError("clock entry access pin differs from core tap")
+            row["clock_entry_access"] = core["clock_entry_access"]
     # FLOW-11 10-30 (DIE-KV-48-CLK (b)): the type's PHY-edge clock pins (plan clock.edge_clocks, snapped like taps,
     # placed by tap_pins) are plan clock pins too; kit_contract clock_pin_geometry checks them like taps_snapped.
     # No edge clock: no key (byte-identical budget.json).
@@ -4459,6 +4621,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # FLOW-21 / COORD 11-01: the pre-route LEC runs beside place/CTS/route (lec_async.sh, OT_LEC_ASYNC=0 = inline)
     shutil.copyfile(Path(__file__).with_name("lec_async.sh"), kd / "lec_async.sh")
     shutil.copyfile(Path(__file__).with_name("lec_completed_transfer.py"), kd / "lec_completed_transfer.py")
+    shutil.copyfile(Path(__file__).with_name("lec_completed_reference.py"), kd / "lec_completed_reference.py")
     import core_flow; core_flow.stage_grt183(kd)   # FLOW-28 11-04: GRT-0183 fresh-process re-run (run_kit.sh)
     shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
@@ -4572,6 +4735,7 @@ def type_verilog_defines(t, kit_defines=None):
 RUN_KIT = r"""#!/bin/bash
 # GENERATED by gen.py phys. Pre-floorplan gates fail closed. CTS is measured at
 # FF before hold repair; structural failures return before global/detail route.
+# grt is a measurement screen through standard GRT repair/policy, never DRT, abstract or signoff.
 # Heavy: run_kit.sh KITDIR [GOAL=route] [MEM_GB=16] [CPUS=8] through ot-run.
 # Kit IR (CRASH-TRIAGE 10-25): 6_report PDNSim is deferred (partition_ir.py; IR NOT_RUN in the kit, run it with
 # partition_ir.py sidecar KIT --mem-gb 64 --threads 8).  OT_KIT_IR=inline restores the in-route analysis.
@@ -4591,6 +4755,22 @@ RUN_KIT = r"""#!/bin/bash
 # The FF structural hold gate (OT_HOLD_GATE, rc 4) is unchanged.
 set -uo pipefail
 K=$(cd "$1" && pwd); GOAL=${2:-route}; MEM=${3:-16}; CPUS=${4:-8}
+# RESYNTH-GUARD block: a refusal check only, no physical step, so it stays outside the resume runner fingerprint  # KWRS-BEGIN
+# KW-FIX-32 RESYNTH-GUARD (COORD 20:2x, DIE-QC-91 20:15): a kit assembled by copying stage checkpoints (cp -p keeps the
+# old mtimes) re-synthesises under a make-chain goal when config.mk / sdc / rtl are newer than the restored results, so
+# the proved netlist silently changes inside the same kit.  Kits that restored results and have no stage-resume plan
+# (resume.json = the do-* path) refuse instead; fresh kits (no results yet) and GOAL=synth are unchanged.
+if [ "$GOAL" != synth ] && [ "${OT_ALLOW_RESYNTH:-0}" != 1 ] && [ ! -f "$K/resume.json" ]; then
+  RG_O=$(ls -tr "$K"/run/results/asap7/*/base/1_*.v "$K"/run/results/asap7/*/base/[2-5]_*.odb 2>/dev/null | head -1)
+  if [ -n "$RG_O" ]; then
+    RG_N=$(find "$K/config.mk" "$K"/*.sdc "$K/rtl" -type f -newer "$RG_O" 2>/dev/null | head -3 | tr '\n' ' ')
+    if [ -n "$RG_N" ]; then
+      echo "RESYNTH-GUARD: make goal $GOAL would rebuild from synth: ${RG_N}newer than the restored $(basename "$RG_O"); drive this kit with do-* targets (or OT_ALLOW_RESYNTH=1 to rebuild it)" >&2
+      exit 12
+    fi
+  fi
+fi
+# KWRS-END
 if [ -f "$K/signed_parent_source.json" ]; then
   if [ "$GOAL" = synth ] && [ "${OT_SIGNED_PARENT_PREP_SYNTH:-0}" = 1 ]; then
     [ -f "$K/signed_parent_synth_prep.sh" ] || { echo 'HELD: missing explicit SYNTH-only PREP helper'; exit 78; }
@@ -4609,7 +4789,7 @@ NAME=dpkit-$(basename "$K")-$$
 RS=0; KWRS_M=  # KWRS
 if [ -f "$K/resume.json" ]; then  # KWRS
   RS=$(python3 -I -c 'import json,sys; print({"floorplan":1,"place":2,"cts":3,"grt":4,"route":5}[json.load(open(sys.argv[1]))["start"]])' "$K/resume.json") || { echo 'FAIL_PREFLOOR stage resume: resume.json unreadable' | tee -a "$K/FAIL_PREFLOOR"; exit 10; }  # KWRS
-  case "$GOAL" in floorplan|place|cts|route) ;; *) echo "FAIL_PREFLOOR stage resume: goal $GOAL unsupported" | tee -a "$K/FAIL_PREFLOOR"; exit 10;; esac  # KWRS
+  case "$GOAL" in floorplan|place|cts|grt|route) ;; *) echo "FAIL_PREFLOOR stage resume: goal $GOAL unsupported" | tee -a "$K/FAIL_PREFLOOR"; exit 10;; esac  # KWRS
   cat > "$K/kwrs_make.sh" <<'KWRS_MAKE'  # KWRS-BEGIN
 #!/bin/bash
 # kwrs_make.sh RS make VAR=.. TARGET..: stage-resume make filter (generated by run_kit.sh from K/resume.json)
@@ -4847,8 +5027,34 @@ LEC_SUPERSET_DEFAULT=0
 if [ -f "$K/lec_options.json" ]; then
   LEC_SUPERSET_DEFAULT=$(python3 -I -c 'import json,sys; d=json.load(open(sys.argv[1])); assert set(d)=={"superset_vec"} and type(d["superset_vec"]) is bool; print(int(d["superset_vec"]))' "$K/lec_options.json") || { echo 'FAIL_PREFLOOR lec_options' | tee -a "$K/FAIL_PREFLOOR"; exit 10; }
 fi
+# LEC-IQN proof option forwarding: env wins over the kit's explicit 0/1 selections.
+LEC_MATCH_ENV=$(python3 -I - "$K/config.mk" <<'LEC_MATCH_CONFIG'
+import os,re,sys
+cfg={}
+lines=open(sys.argv[1],errors='replace') if os.path.isfile(sys.argv[1]) else ()
+for line in lines:
+    m=re.match(r'^\s*(?:override\s+)?(?:export\s+)?([A-Z0-9_]+)\s*[:?]?=\s*(.*?)\s*$',line.split('#',1)[0])
+    if m:cfg[m[1]]=m[2]
+for key in ('OT_LEC_REPLICA_MATCH','OT_LEC_MEM_LANES','OT_LEC_ENABLE_FILL_GUARD'):
+    value=os.environ.get(key) or cfg.get(key)
+    if not value:continue
+    value=value.strip()
+    if value not in ('0','1'):raise SystemExit('LEC CONFIG ERROR '+key+' must be 0 or 1')
+    print(key+'='+value)
+LEC_MATCH_CONFIG
+) || { echo 'FAIL_PREFLOOR lec_match_config: OT_LEC_REPLICA_MATCH/OT_LEC_MEM_LANES/OT_LEC_ENABLE_FILL_GUARD must be 0 or 1 (env or config.mk)' | tee -a "$K/FAIL_PREFLOOR"; exit 10; }
+LEC_MATCH_DOCKER=()
+while IFS= read -r setting; do
+  [ -n "$setting" ] || continue
+  export "$setting"
+  LEC_MATCH_DOCKER+=(-e "$setting")
+done <<< "$LEC_MATCH_ENV"
+# End LEC-IQN proof option forwarding.
 # Explicit proof methods must be implemented by the copied driver, not silently ignored.
 LEC_REQUIRED=()
+[ "${OT_LEC_REPLICA_MATCH:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_REPLICA_MATCH)
+[ "${OT_LEC_MEM_LANES:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_MEM_LANES)
+[ "${OT_LEC_ENABLE_FILL_GUARD:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_ENABLE_FILL_GUARD)
 [ "${OT_LEC_HINTS_PRESEED:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_HINTS_PRESEED)
 [ "${OT_LEC_EARLY_COMPARE:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_EARLY_COMPARE)
 [ "${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" = 1 ] && LEC_REQUIRED+=(OT_LEC_SUPERSET_VEC)
@@ -4907,18 +5113,18 @@ KWCHILD
 )
 [ ${#CHILD_RO[@]} = 0 ] || echo "KWCHILD read-only child records: ${CHILD_RO[*]}"
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work "${CHILD_RO[@]}" -e OT_FLOW_TAG="$FT" \
-  -e HUID=$(id -u) -e HGID=$(id -g) -e OT_KIT_IR=${OT_KIT_IR:-defer} -e OT_LEC_HINTS_PRESEED="${OT_LEC_HINTS_PRESEED:-0}" -e OT_LEC_EARLY_COMPARE="${OT_LEC_EARLY_COMPARE:-0}" -e OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
+  -e HUID=$(id -u) -e HGID=$(id -g) "${LEC_MATCH_DOCKER[@]}" -e OT_KIT_IR=${OT_KIT_IR:-defer} -e OT_LEC_HINTS_PRESEED="${OT_LEC_HINTS_PRESEED:-0}" -e OT_LEC_EARLY_COMPARE="${OT_LEC_EARLY_COMPARE:-0}" -e OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; ${KWRS_F}${KWRS_M}${KWRS_G}rc=0; if [ -f /work/orfs_hold_mm.py ] && grep -q 'def patch_intermediate_power' /work/orfs_hold_mm.py; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts --metrics-only > /work/orfs_metrics.log 2>&1 || { cat /work/orfs_metrics.log; echo 'INTERMEDIATE_POWER optimization unavailable: full power reporting retained'; }; fi; \
   python3 -I /work/native_bb.py /OpenROAD-flow-scripts/flow/scripts/synth_preamble.tcl --physical-synth /OpenROAD-flow-scripts/flow/scripts/synth.tcl || exit 9; \
   if [ -f /work/partition_ir.py ] && [ \"\$OT_KIT_IR\" = defer ]; then python3 -I /work/partition_ir.py patch /OpenROAD-flow-scripts/flow/scripts && export OT_DEFER_PARTITION_IR=1 || echo 'PARTITION_IR WARNING: patch refused, kit IR runs inline in 6_report'; fi; \
   python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
   if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; \
-  if [ \$rc = 0 ]; then python3 -I /work/rtl_lint.py /work; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR rtl_lint (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=8; fi; fi; \\\
+  if [ \$rc = 0 ]; then python3 -I /work/rtl_lint.py /work; rc=\$?; if [ \$rc = 75 ]; then echo 'FAIL_PREFLOOR rtl_lint KILLED (yosys signal, host memory; not a design result)' | tee -a /work/FAIL_PREFLOOR; rc=8; elif [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR rtl_lint (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=8; fi; fi; \\\
   SRP=; if [ \$rc = 0 ]; then (python3 -I /work/selrange_gate.py /work > /work/selrange.log 2>&1; echo \$? > /work/selrange.rc) & SRP=\$!; fi; \
   if [ \$rc = 0 ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py gen --platform-dir /OpenROAD-flow-scripts/flow/platforms/asap7 --out /work/adder_map_dontuse.v --report /work/adder_map_dontuse.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR adder_map_dontuse' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py check --platform-dir /OpenROAD-flow-scripts/flow/platforms/asap7 --netlist \$(ls /work/run/results/asap7/*/base/1_2_yosys.v | tail -1) --report /work/dont_use_check.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR dont_use_check' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
-  if [ -n \"\$SRP\" ]; then wait \$SRP; S=\$(cat /work/selrange.rc 2>/dev/null || echo 2); tail -3 /work/selrange.log; if [ \"\$S\" != 0 ]; then echo 'FAIL_PREFLOOR selrange (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
+  if [ -n \"\$SRP\" ]; then wait \$SRP; S=\$(cat /work/selrange.rc 2>/dev/null || echo 2); tail -3 /work/selrange.log; if [ \"\$S\" = 75 ]; then echo 'FAIL_PREFLOOR selrange KILLED (yosys signal, host memory; not a design result)' | tee -a /work/FAIL_PREFLOOR; rc=3; elif [ \"\$S\" != 0 ]; then echo 'FAIL_PREFLOOR selrange (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then python3 -I /work/port_bind_gate.py \"\$N\" /work > /work/port_bind.log 2>&1; rc=\$?; tail -2 /work/port_bind.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR port_bind' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then python3 -I /work/face_guard.py \$N --pins /work/pins.json --out /work/face_guard.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR face_guard' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
@@ -4931,7 +5137,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && [ -f /work/lec.py ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; } && [ ! -f /work/lec_async.ready ]; then printf '1\\npython3 -I /work/lec.py /work --netlist %s --out /work/lec > /work/lec_run.log 2>&1\\n' \$N > /work/lec_async.ready; echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; \
   if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ ! -f /work/lec_async.on ] && [ ! -f /work/lec_async.identity ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
-  if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
+  if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     \$M cts SKIP_CTS_REPAIR_TIMING=1; rc=\$?; \
     if [ \$rc = 0 ] && grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1' /work/config.mk; then TB=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); [ -z \"\$TB\" ] || cp -p \"\$TB\" /work/4_cts_pretapbal.odb; \
       \$M run RUN_SCRIPT=/work/tapbal_grt.tcl RUN_LOG_NAME_STEM=4_2_tapbal_grt CORNER=TC CORNERS=tc; rc=\$?; \
@@ -4949,7 +5155,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
         LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; rc=\$?; tail -3 /work/hold_gate.log; \
       if [ \$rc != 0 ]; then { grep -h 'OT_HOLD_GATE FAIL' /work/hold_gate.log || echo 'NOT RUN (no OT_HOLD_GATE verdict, see hold_gate.log)'; } | sed 's/^/FAIL_POSTCTS FF structural hold gate: /' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
-  if [ \$rc = 0 ] && [ $GOAL = route ] && grep -q '^export OT_PREGRT_FF_HOLD = 1' /work/config.mk; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
+  if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = grt ]; } && grep -q '^export OT_PREGRT_FF_HOLD = 1' /work/config.mk; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
     PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
       OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \
       OT_HOLD_IN_MIN=\$(sed -n 's/^export OT_HOLD_IN_MIN = //p' /work/config.mk) OT_HOLD_OUT_MIN=\$(sed -n 's/^export OT_HOLD_OUT_MIN = //p' /work/config.mk) \
@@ -4962,25 +5168,25 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     else HM=\$(printf '%s\\n' \"\$HMR\" | sed -nE 's/^OT_HOLD_FF_MARGIN[[:space:]]*[:=][[:space:]]*//p'); \
       if [ -n \"\$HM\" ] && ! python3 -c 'import math,re,sys; s=sys.argv[1].strip(); valid=re.fullmatch(r\"[+-]?(?:[0-9]+(?:[.][0-9]*)?|[.][0-9]+)(?:[eE][+-]?[0-9]+)?\",s); x=float(s) if valid else float(\"nan\"); sys.exit(not math.isfinite(x))' \"\$HM\" > /work/hold_margin_value.log 2>&1; then \
         echo \"FAIL_POSTCTS invalid OT_HOLD_FF_MARGIN [\$HM]: expected a finite number\" | tee -a /work/FAIL_POSTCTS; rc=9; fi; fi; fi; \
-  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then MF=\$M; if [ -f /work/macro_ff_repair.mk ]; then MF=\"\$M DESIGN_CONFIG=/work/macro_ff_repair.mk\"; fi; OT_VCLK_CORNER=ff \$MF grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
-  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \
+  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = grt ]; }; then MF=\$M; if [ -f /work/macro_ff_repair.mk ]; then MF=\"\$M DESIGN_CONFIG=/work/macro_ff_repair.mk\"; fi; OT_VCLK_CORNER=ff \$MF grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = grt ]; }; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \
     BG=\$(grep -c '^export OT_POSTCTS_BAND_GATE = 1' /work/config.mk); rm -f /work/postcts_advisory.log; \
     for c in TT FF; do OT_POSTCTS_BAND_GATE=\$BG OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \
       grep -h OT_POSTCTS_GATE /work/postcts_gate_\$c.log || echo \"OT_POSTCTS_GATE \$c no result FAIL\" | tee -a /work/postcts_gate_\$c.log; done; \
     if grep -hq 'OT_POSTCTS_GATE.*FAIL' /work/postcts_gate_TT.log /work/postcts_gate_FF.log; then \
       if [ \$BG != 0 ]; then grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/FAIL_POSTCTS pre-route insertion gate: /' >> /work/FAIL_POSTCTS; rc=6; \
       else grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/OT_POSTCTS_ADVISORY pre-route insertion gate (not a stop, OWNER 11-03 19:12; signoff.json insertion_band): /' | tee -a /work/postcts_advisory.log; fi; fi; fi; \
-  if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
+  if [ \$rc = 0 ] && { [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     if [ -z \"\$HM\" ] || [ $GOAL = finish ]; then \$M grt; rc=\$?; fi; \
     if [ \$rc = 0 ]; then python3 -I /work/legacy_gate.py /work grt; rc=\$?; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; fi; \
-  if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ $GOAL != grt ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -f /work/core_infra_post.v ] && [ -f /work/lec.py ]; then python3 -I /work/lec.py /work --netlist /work/core_infra_post.v --out /work/lec_post > /work/lec_post.log 2>&1; lr=\$?; tail -1 /work/lec_post.log; \
     if [ \$lr != 0 ]; then echo \"FAIL_POSTPLACE clock-gate copy LEC exit \$lr (lec_post/lec.json): copies not proved equivalent\" | tee -a /work/FAIL_POSTCTS; rc=5; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
-  if [ \$rc = 0 ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/audit_pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ $GOAL != grt ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/audit_pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; rc=\$?; fi; \
   if { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
 [ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 5 "$NAME" "$GOAL")
@@ -4989,8 +5195,11 @@ tail -5 "$K/run_$GOAL.log"
 # Route success alone is not sign-off. Preserve previous failed verdicts.
 if [ $rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then
   SO="$K/signoff"; [ ! -e "$SO/signoff.json" ] || SO="$K/signoff_$(date +%Y%m%d_%H%M%S)_$$"
+  # KW-FIX-32 11-07 (COORD 19:0x, FLOW-CHILD-ETM-CONTEXT at sign-off, DIE-HBM-89 q_spb2 vE): signoff.py runs on the
+  # host and counts an unexpanded child ETM only with the parent flow tag; give it the GRT gate's FT (env, else
+  # K/flow_tag).  The child records are read at their host paths (no mount needed on the host).  Unset FT = as before.
   SIGNOFF_DOCKER=${SIGNOFF_DOCKER:-docker} python3 -I "$K/signoff.py" run --run-dir "$K/run" --kit "$K" \
-    --out "$SO" --image "$IMAGE" --corners tt,ff > "$SO.log" 2>&1
+    --out "$SO" --image "$IMAGE" --corners tt,ff ${FT:+--flow-tag "$FT"} > "$SO.log" 2>&1
   grep -E '^SIGNOFF|^  - ' "$SO.log" | head -12
 fi
 exit $rc
@@ -5102,6 +5311,11 @@ def _kit_rooted_rtl(text, top):
         visiting.add(name)
         body = definitions[name][0][2]
         for cell in call.finditer(body):
+            # DIE-HBM-91-KCLS 11-08 (class k2): a module that instantiates ITSELF is a generate-terminated recursive
+            # tree (ot_hdc_v41x_addtree #(.N(N/2)) u_l/u_r under `else begin : g_rec`); its one definition is already
+            # being selected, so the self-cell adds nothing.  Mutual recursion (A -> B -> A) still fails closed.
+            if cell[1] == name:
+                continue
             if cell[1] in definitions:
                 visit(cell[1])
         visiting.remove(name)
@@ -5366,18 +5580,28 @@ def bound_parent_id_plan(raw, kit_rtl):
     port is accepted, and the caller's plan is never changed.
     """
     import copy
-    from parent_id_straps import type_parent_id_straps
+    from parent_id_straps import type_parent_id_straps, with_sub_core_id_leaves
     from bind import short_id
     from bound_r8_straps import project
     raw = project(raw, kit_rtl)
     result = raw
     for tn, filelist in (kit_rtl or {}).items():
         t = raw["partition_types"][tn]
-        declarations = type_parent_id_straps(t)
-        if not declarations:
+        if not type_parent_id_straps(t):
             continue
         kj = Path(filelist).with_name("kit_rtl.json")
         kr = json.loads(kj.read_text())
+        # DIE-HBM-90-TSTRAP 11-07: the bind promotes a sub-core's declared ID on the as-built leaf that holds it
+        # (exact asbuilt.sub_core_leaf table, Binder.__init__ sets parent_id_leaf), e.g. plan hard core
+        # u_sfucore_Q_lane14__fr (physical_inst u_sfucore_Q_lane14.u_fcore.u_core.u_fr) -> bound leaf
+        # u_sfucore_Q_lane14.map_lane_j.  Resolve the declarations with the same table from the producer manifest
+        # the kit records, so the manifest row and the plan declaration name the same leaf.  Width, name and the
+        # actual kit input are still checked exactly below; no table = unchanged behaviour.
+        sub_core_leaf = {}
+        if kr.get("asbuilt_manifest"):
+            sub_core_leaf = json.loads(Path(kr["asbuilt_manifest"]).read_text()).get("sub_core_leaf") or {}
+        t = with_sub_core_id_leaves(t, sub_core_leaf)
+        declarations = type_parent_id_straps(t)
         mf = Path(kr["bind_out"]) / "bind_parent_id_straps.json"
         rows = json.loads(mf.read_text()).get("types", {}).get(kr.get("bound_type", tn), {})
         actual = {r["port"]: (r["dir"], r["width"]) for r in kr.get("bound_only_pins", [])}

@@ -1,0 +1,246 @@
+{
+ "summary": {
+  "rev": "28e22ca63b",
+  "cache_generated": 1794098401.3750575,
+  "designs": [
+   26,
+   26
+  ],
+  "signed": [
+   24,
+   25
+  ],
+  "gained": [
+   "qfd_tile_nl_a0c"
+  ],
+  "lost": [],
+  "signed_types": [
+   1,
+   1
+  ],
+  "types_lost": [],
+  "g0c": [
+   {
+    "verdict": "FAIL",
+    "errors": 20,
+    "clean": 116,
+    "types": 119,
+    "bad": [
+     "coll_core",
+     "slw_su_l1__cla2a78701",
+     "slw_su_l1__clcc9d0155"
+    ],
+    "die_level": {},
+    "s": 275.8
+   },
+   {
+    "verdict": "FAIL",
+    "errors": 20,
+    "clean": 116,
+    "types": 119,
+    "bad": [
+     "coll_core",
+     "slw_su_l1__cla2a78701",
+     "slw_su_l1__clcc9d0155"
+    ],
+    "die_level": {},
+    "s": 282.3
+   }
+  ],
+  "g0c_findings_identical": true,
+  "how": "python3 -I tools/qwen_dv/qc_nl_clock_adoption_1551/count_dryrun.py <tree> 28e22ca63b on localhost: counter functions (plan_designs, fetch_rec_pins, credit_designs, check.py G0C) on qc52 vs qc52n, SIGNED records from the counter cache of 16:40 PST"
+ },
+ "detail": {
+  "plan_qc52.json": {
+   "designs": [
+    "ot_coll_fold_slice",
+    "qfd_dv_s5_red2_leaf",
+    "qfd_dv_s5_sc2_leaf",
+    "qfd_dv_s5_sc2_leaf_dn0",
+    "qfd_dv_s5_sc2_leaf_up0",
+    "qfd_dv_s5_su8_rst3",
+    "qfd_dv_s8_crh_rp1",
+    "qfd_dv_s8x_btab",
+    "qfd_dv_s8x_prog",
+    "qfd_dv_s8x_vmr",
+    "qfd_qc_su_lane_w_l0",
+    "qfd_qc_su_lane_w_l1",
+    "qfd_qc_su_lane_w_l2",
+    "qfd_qc_su_lane_w_l3",
+    "qfd_qc_su_lane_w_l4",
+    "qfd_qc_su_lane_w_l5",
+    "qfd_qc_su_lane_w_l6",
+    "qfd_qc_su_lane_w_l7",
+    "qfd_tile_nk_a0c",
+    "qfd_tile_nl_a0c",
+    "sle_cland_w2_e_200",
+    "sle_cland_w515_s_200",
+    "sle_cland_w515_s_201",
+    "sle_cland_w517_n_200",
+    "sle_cland_w765_e_200",
+    "sle_cland_w767_e_200"
+   ],
+   "signed": [
+    "ot_coll_fold_slice",
+    "qfd_dv_s5_red2_leaf",
+    "qfd_dv_s5_sc2_leaf",
+    "qfd_dv_s5_sc2_leaf_dn0",
+    "qfd_dv_s5_sc2_leaf_up0",
+    "qfd_dv_s5_su8_rst3",
+    "qfd_dv_s8_crh_rp1",
+    "qfd_dv_s8x_btab",
+    "qfd_dv_s8x_prog",
+    "qfd_dv_s8x_vmr",
+    "qfd_qc_su_lane_w_l0",
+    "qfd_qc_su_lane_w_l1",
+    "qfd_qc_su_lane_w_l2",
+    "qfd_qc_su_lane_w_l3",
+    "qfd_qc_su_lane_w_l4",
+    "qfd_qc_su_lane_w_l5",
+    "qfd_qc_su_lane_w_l6",
+    "qfd_qc_su_lane_w_l7",
+    "sle_cland_w2_e_200",
+    "sle_cland_w515_s_200",
+    "sle_cland_w515_s_201",
+    "sle_cland_w517_n_200",
+    "sle_cland_w765_e_200",
+    "sle_cland_w767_e_200"
+   ],
+   "unmatched": {
+    "qfd_tile_nl_a0c": [
+     "epyc2:/srv/opentallas-scratch3/claude/dq90_nl/resign_idleuck/signoff/signoff.json (pins match no plan design: 1/1042 pins: moved pin 1 e.g. ck ('M5', 228972, 578880) vs plan ('M4', 457824, 668076))"
+    ]
+   },
+   "signed_types": [
+    "coll_ftn"
+   ],
+   "g0c": {
+    "verdict": "FAIL",
+    "errors": 20,
+    "clean": 116,
+    "types": 119,
+    "bad": [
+     "coll_core",
+     "slw_su_l1__cla2a78701",
+     "slw_su_l1__clcc9d0155"
+    ],
+    "die_level": {},
+    "s": 275.8
+   },
+   "nl_design": {
+    "module": "qfd_tile_nl_a0c",
+    "outline_um": [
+     457.92,
+     1157.76
+    ],
+    "pins_sha": "2a2a1ea05bdb92cc",
+    "pins_files": [
+     "cores/a0_nl_pins.json"
+    ],
+    "entries": 2,
+    "instances": 48,
+    "types": [
+     "cbx_q10__cl94a12200",
+     "cbx_q10__cl89936551"
+    ],
+    "orients": [
+     "MY"
+    ]
+   }
+  },
+  "plan_qc52n.json": {
+   "designs": [
+    "ot_coll_fold_slice",
+    "qfd_dv_s5_red2_leaf",
+    "qfd_dv_s5_sc2_leaf",
+    "qfd_dv_s5_sc2_leaf_dn0",
+    "qfd_dv_s5_sc2_leaf_up0",
+    "qfd_dv_s5_su8_rst3",
+    "qfd_dv_s8_crh_rp1",
+    "qfd_dv_s8x_btab",
+    "qfd_dv_s8x_prog",
+    "qfd_dv_s8x_vmr",
+    "qfd_qc_su_lane_w_l0",
+    "qfd_qc_su_lane_w_l1",
+    "qfd_qc_su_lane_w_l2",
+    "qfd_qc_su_lane_w_l3",
+    "qfd_qc_su_lane_w_l4",
+    "qfd_qc_su_lane_w_l5",
+    "qfd_qc_su_lane_w_l6",
+    "qfd_qc_su_lane_w_l7",
+    "qfd_tile_nk_a0c",
+    "qfd_tile_nl_a0c",
+    "sle_cland_w2_e_200",
+    "sle_cland_w515_s_200",
+    "sle_cland_w515_s_201",
+    "sle_cland_w517_n_200",
+    "sle_cland_w765_e_200",
+    "sle_cland_w767_e_200"
+   ],
+   "signed": [
+    "ot_coll_fold_slice",
+    "qfd_dv_s5_red2_leaf",
+    "qfd_dv_s5_sc2_leaf",
+    "qfd_dv_s5_sc2_leaf_dn0",
+    "qfd_dv_s5_sc2_leaf_up0",
+    "qfd_dv_s5_su8_rst3",
+    "qfd_dv_s8_crh_rp1",
+    "qfd_dv_s8x_btab",
+    "qfd_dv_s8x_prog",
+    "qfd_dv_s8x_vmr",
+    "qfd_qc_su_lane_w_l0",
+    "qfd_qc_su_lane_w_l1",
+    "qfd_qc_su_lane_w_l2",
+    "qfd_qc_su_lane_w_l3",
+    "qfd_qc_su_lane_w_l4",
+    "qfd_qc_su_lane_w_l5",
+    "qfd_qc_su_lane_w_l6",
+    "qfd_qc_su_lane_w_l7",
+    "qfd_tile_nl_a0c",
+    "sle_cland_w2_e_200",
+    "sle_cland_w515_s_200",
+    "sle_cland_w515_s_201",
+    "sle_cland_w517_n_200",
+    "sle_cland_w765_e_200",
+    "sle_cland_w767_e_200"
+   ],
+   "unmatched": {},
+   "signed_types": [
+    "coll_ftn"
+   ],
+   "g0c": {
+    "verdict": "FAIL",
+    "errors": 20,
+    "clean": 116,
+    "types": 119,
+    "bad": [
+     "coll_core",
+     "slw_su_l1__cla2a78701",
+     "slw_su_l1__clcc9d0155"
+    ],
+    "die_level": {},
+    "s": 282.3
+   },
+   "nl_design": {
+    "module": "qfd_tile_nl_a0c",
+    "outline_um": [
+     457.92,
+     1157.76
+    ],
+    "pins_sha": "b4bb19a7266ddc10",
+    "pins_files": [
+     "cores/a0_nl_pins_ck1107.json"
+    ],
+    "entries": 2,
+    "instances": 48,
+    "types": [
+     "cbx_q10__cl94a12200",
+     "cbx_q10__cl89936551"
+    ],
+    "orients": [
+     "MY"
+    ]
+   }
+  }
+ }
+}

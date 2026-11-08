@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the OpenTallas auto-cleanup host job hourly (at :30, after the localhost driver's :05 snapshot push)
+
+[Timer]
+OnCalendar=*-*-* *:30:00
+RandomizedDelaySec=300
+Persistent=true
+
+[Install]
+WantedBy=timers.target

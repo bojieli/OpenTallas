@@ -1,0 +1,7 @@
+{
+ "status": "PASS",
+ "log": "SMD_FAULT_COVER faultcycles=792 faultmutdiff=792\nSMD_NATIVE_BOUNDARY checks=2416 words=512 bad=0 mutantdiff=512 added_data_cycles=0 added_reset_cycles=0\nSMD_NATIVE_BOUNDARY PASS\n- /srv/opentallas-scratch2/claude/codex-svc-hardening-1551/smd_native2/tb.sv:40: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 3us; walltime 0.170 s; speed 17.175 us/s\n- Verilator: cpu 0.170 s on 1 threads; allocated 9 MB\n",
+ "seconds": 237.47357487678528,
+ "added_data_cycles": 0,
+ "added_reset_cycles": 0
+}

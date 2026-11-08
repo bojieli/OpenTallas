@@ -1,0 +1,114 @@
+{
+ "source_commit": "AT_GENERATION_HEAD",
+ "clock_ports": [
+  "ck"
+ ],
+ "reset_ports": [
+  "rst"
+ ],
+ "pin_placement_policy": "DECLARED_CLOCK_RESET_POINTS",
+ "port_inventory": {
+  "top": "codex_svc_sml_native",
+  "source_file": "results/physical/codex_svc_hardening_1209/native_sml/rtl/codex_svc_sml_native.sv",
+  "source_sha256": "43652e29c252b62acc31234cdc6ca9da9916e6cb3b62588fc6e7a9a34afebf14",
+  "ports": [
+   [
+    "ck",
+    "input",
+    1
+   ],
+   [
+    "rst",
+    "input",
+    1
+   ],
+   [
+    "sk_en",
+    "input",
+    1
+   ],
+   [
+    "i_cv",
+    "input",
+    1
+   ],
+   [
+    "i_nv",
+    "input",
+    7
+   ],
+   [
+    "i_scale",
+    "input",
+    32
+   ],
+   [
+    "i_sink",
+    "input",
+    32
+   ],
+   [
+    "i_sv",
+    "input",
+    1
+   ],
+   [
+    "i_s",
+    "input",
+    32
+   ],
+   [
+    "i_mv",
+    "input",
+    1
+   ],
+   [
+    "i_nmb",
+    "input",
+    32
+   ],
+   [
+    "o_mxv",
+    "output",
+    1
+   ],
+   [
+    "o_mx",
+    "output",
+    32
+   ],
+   [
+    "o_ev",
+    "output",
+    1
+   ],
+   [
+    "o_es",
+    "output",
+    1
+   ],
+   [
+    "o_el",
+    "output",
+    1
+   ],
+   [
+    "o_e",
+    "output",
+    32
+   ]
+  ]
+ },
+ "added_pin_cycles": 0,
+ "added_reset_cycles": 0,
+ "release_eligible": false,
+ "qualification": "ISOLATED_STATE_MITER_RUNNING_NO_PHYSICAL_KIT",
+ "component_proof_reset_cycles": 4,
+ "state_duplication": {
+  "signal": "o_mx",
+  "bits": 32,
+  "added_data_cycles": 0,
+  "added_reset_cycles": 0,
+  "feedback": "internal mx_local, dedicated output Q"
+ }
+}

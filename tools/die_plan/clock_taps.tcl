@@ -376,6 +376,12 @@ if {[llength $ct_taps] >= 2 && $ct_min > 0} {
 if {[info exists ::env(OT_TAP_CHAIN_AFFINITY)] && $::env(OT_TAP_CHAIN_AFFINITY) eq "1"} {
  ::ot_tap_chain::apply
 }
+# QC-TYPES-6 11-07 TAP-PAIR AFFINITY (default off, clock.tap_pair_affinity -> OT_TAP_PAIR_AFFINITY=1): short
+# reg-to-reg pairs split across taps pay the tap window on hold; whole pair components move onto one tap, never cutting
+# a same-tap pair.  Clock pins only; no data/reset/cell change.  Before the hop-latch pass so latches follow it.
+if {[info exists ::env(OT_TAP_PAIR_AFFINITY)] && $::env(OT_TAP_PAIR_AFFINITY) eq "1"} {
+ source [file join [file dirname [info script]] tap_pair_affinity.tcl]
+}
 # TYPE-SAFE-1 11-06 (OWNER 18:5x, clock follows data): every ft hop lockup latch u_fl_* (gen_rtl.ft_hop_lockup) is
 # clocked from the tap of the station flop that drives its D (the LAUNCH station), after every other assignment pass
 # above (nearest / group / cap / min-merge / chain affinity), so the station -> latch check shares the launch tap

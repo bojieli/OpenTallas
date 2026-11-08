@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "efbdb61c3b53e172dad36c9d95840c3678aa4cde",
+ "flow_tag": "flow-20261106-bh-hbm",
+ "routed_db": "/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert_input1/run/results/asap7/kl_dsfd_coll_lane_e_safe8_ntf_compact_m6_pg6_vB/base/6_final.odb",
+ "build_commit": "faecd095101b0b673d0cc87586e7f33ac8da7d6b",
+ "lec": "/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert_input1",
+ "original_signoff": "/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert_input1/signoff/signoff.json",
+ "name": "kl_dsfd_coll_lane_e_safe8_ntf_compact_m6_pg6_vB",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "eager-sunfish",
+ "created": "2026-11-06 17:50 UTC",
+ "routed_db_sha256": "78b18bc6b81dcc6200728590678dce9ba782d5ece66059a2fff925c7146831ff",
+ "verdict_basis": "LOCAL_PASS_NEEDS_PARENT (local SIGNED, only io_hold_parent open) counts SIGNED per COORD 2026-11-03 18:48 ruling / OWNER 18:49; io_hold_parent receipt moves to die STA FF",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch2/claude/codex-bank128-wface/release_bh/tools/die_plan",
+  "sha256": {
+   "signoff.py": "4919941b4815382014e257aa21efa5e2f9947e7f8c6b2add08b27ce5bcd21590",
+   "lec.py": "8aff8b09a3f44ba6fdb230ad01c7c98f7d56e0fc58d6b4c455a03f1be369994b"
+  },
+  "checked": "byte-identical to flow-20261106-bh-hbm"
+ },
+ "lane": "S81-COLLE-4 (cert by CODEX-BANK128)",
+ "as_run_note": "Exact four near-D noninverting hold buffers; own E/W pins and clock. Original source SDC restored byte-exact before standard MM abstraction; no RTL/clock/constraint changes. Clock geometry PASS; parent NEEDS_PARENT explicit; normal routedEQ. build_commit = cert kit freeze.json repo_rev (resign.py kit_build_commit does not read repo_rev); record written by resign.build_record(auto=True)+write_record+mark_keep on the finished run --auto outputs.",
+ "pincmp": "actual final ODB PASS 2143/2143; released DIE-S81-62 native rectangle retains logical clock anchor"
+}

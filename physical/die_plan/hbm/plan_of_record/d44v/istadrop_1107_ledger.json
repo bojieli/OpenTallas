@@ -1,0 +1,8065 @@
+{
+ "buses": 164,
+ "entries": 1255,
+ "schema": "opentallas.drop_dead_istations.v1",
+ "types": {
+  "NE_io": {
+   "after": 14,
+   "before": 22,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_NE_io.sv",
+   "buses": {
+    "L106_i": [
+     {
+      "bits": 11,
+      "capture": "u_ep_N2.fault_cause",
+      "launch": "face bus L106_i",
+      "stages": 10
+     },
+     {
+      "bits": 2,
+      "capture": "u_ep_N2.rx_block_ready",
+      "launch": "face bus L106_i",
+      "stages": 10
+     }
+    ],
+    "L125_o": [
+     {
+      "bits": 11,
+      "capture": "u_ep_N2.fault_cause",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 2,
+      "capture": "u_ep_N2.rx_block_ready",
+      "launch": "face bus L125_o",
+      "stages": 9
+     }
+    ],
+    "L48_o": [
+     {
+      "bits": 11,
+      "capture": "u_ep_N2.fault_cause",
+      "launch": "face bus L48_o",
+      "stages": 6
+     },
+     {
+      "bits": 2,
+      "capture": "u_ep_N2.rx_block_ready",
+      "launch": "face bus L48_o",
+      "stages": 6
+     }
+    ],
+    "L53_i": [
+     {
+      "bits": 11,
+      "capture": "u_ep_N2.fault_cause",
+      "launch": "face bus L53_i",
+      "stages": 7
+     },
+     {
+      "bits": 2,
+      "capture": "u_ep_N2.rx_block_ready",
+      "launch": "face bus L53_i",
+      "stages": 6
+     }
+    ]
+   },
+   "dropped": 8
+  },
+  "NW_io": {
+   "after": 57,
+   "before": 129,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_NW_io.sv",
+   "buses": {
+    "L106_i": [
+     {
+      "bits": 11,
+      "capture": "u_ep_N0.fault_cause",
+      "launch": "face bus L106_i",
+      "stages": 10
+     },
+     {
+      "bits": 2,
+      "capture": "u_ep_N0.rx_block_ready",
+      "launch": "face bus L106_i",
+      "stages": 10
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.fault",
+      "launch": "face bus L106_i",
+      "stages": 9
+     },
+     {
+      "bits": 11,
+      "capture": "u_host_ep.fault_cause",
+      "launch": "face bus L106_i",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.phy_up",
+      "launch": "face bus L106_i",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_arm_bank",
+      "launch": "face bus L106_i",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_arm_v",
+      "launch": "face bus L106_i",
+      "stages": 9
+     },
+     {
+      "bits": 2,
+      "capture": "u_host_ep.rx_block_ready",
+      "launch": "face bus L106_i",
+      "stages": 9
+     },
+     {
+      "bits": 7,
+      "capture": "u_host_ep.rx_block_words",
+      "launch": "face bus L106_i",
+      "stages": 9
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_ep.rx_pin_flit",
+      "launch": "face bus L106_i",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_pin_v",
+      "launch": "face bus L106_i",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_release_bank",
+      "launch": "face bus L106_i",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_release_v",
+      "launch": "face bus L106_i",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_slot_bank",
+      "launch": "face bus L106_i",
+      "stages": 9
+     },
+     {
+      "bits": 6,
+      "capture": "u_host_ep.rx_slot_index",
+      "launch": "face bus L106_i",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_slot_v",
+      "launch": "face bus L106_i",
+      "stages": 9
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_ep.tx_frame",
+      "launch": "face bus L106_i",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.tx_v",
+      "launch": "face bus L106_i",
+      "stages": 9
+     }
+    ],
+    "L125_o": [
+     {
+      "bits": 11,
+      "capture": "u_ep_N0.fault_cause",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 2,
+      "capture": "u_ep_N0.rx_block_ready",
+      "launch": "face bus L125_o",
+      "stages": 10
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.fault",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 11,
+      "capture": "u_host_ep.fault_cause",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.phy_up",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_arm_bank",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_arm_v",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 2,
+      "capture": "u_host_ep.rx_block_ready",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 7,
+      "capture": "u_host_ep.rx_block_words",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_ep.rx_pin_flit",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_pin_v",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_release_bank",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_release_v",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_slot_bank",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 6,
+      "capture": "u_host_ep.rx_slot_index",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_slot_v",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_ep.tx_frame",
+      "launch": "face bus L125_o",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.tx_v",
+      "launch": "face bus L125_o",
+      "stages": 9
+     }
+    ],
+    "L48_o": [
+     {
+      "bits": 11,
+      "capture": "u_ep_N0.fault_cause",
+      "launch": "face bus L48_o",
+      "stages": 6
+     },
+     {
+      "bits": 2,
+      "capture": "u_ep_N0.rx_block_ready",
+      "launch": "face bus L48_o",
+      "stages": 6
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.fault",
+      "launch": "face bus L48_o",
+      "stages": 8
+     },
+     {
+      "bits": 11,
+      "capture": "u_host_ep.fault_cause",
+      "launch": "face bus L48_o",
+      "stages": 8
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.phy_up",
+      "launch": "face bus L48_o",
+      "stages": 8
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_arm_bank",
+      "launch": "face bus L48_o",
+      "stages": 8
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_arm_v",
+      "launch": "face bus L48_o",
+      "stages": 8
+     },
+     {
+      "bits": 2,
+      "capture": "u_host_ep.rx_block_ready",
+      "launch": "face bus L48_o",
+      "stages": 8
+     },
+     {
+      "bits": 7,
+      "capture": "u_host_ep.rx_block_words",
+      "launch": "face bus L48_o",
+      "stages": 8
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_ep.rx_pin_flit",
+      "launch": "face bus L48_o",
+      "stages": 8
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_pin_v",
+      "launch": "face bus L48_o",
+      "stages": 8
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_release_bank",
+      "launch": "face bus L48_o",
+      "stages": 8
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_release_v",
+      "launch": "face bus L48_o",
+      "stages": 8
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_slot_bank",
+      "launch": "face bus L48_o",
+      "stages": 8
+     },
+     {
+      "bits": 6,
+      "capture": "u_host_ep.rx_slot_index",
+      "launch": "face bus L48_o",
+      "stages": 8
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_slot_v",
+      "launch": "face bus L48_o",
+      "stages": 8
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_ep.tx_frame",
+      "launch": "face bus L48_o",
+      "stages": 7
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.tx_v",
+      "launch": "face bus L48_o",
+      "stages": 8
+     }
+    ],
+    "L53_i": [
+     {
+      "bits": 11,
+      "capture": "u_ep_N0.fault_cause",
+      "launch": "face bus L53_i",
+      "stages": 7
+     },
+     {
+      "bits": 2,
+      "capture": "u_ep_N0.rx_block_ready",
+      "launch": "face bus L53_i",
+      "stages": 6
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.fault",
+      "launch": "face bus L53_i",
+      "stages": 7
+     },
+     {
+      "bits": 11,
+      "capture": "u_host_ep.fault_cause",
+      "launch": "face bus L53_i",
+      "stages": 7
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.phy_up",
+      "launch": "face bus L53_i",
+      "stages": 7
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_arm_bank",
+      "launch": "face bus L53_i",
+      "stages": 7
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_arm_v",
+      "launch": "face bus L53_i",
+      "stages": 7
+     },
+     {
+      "bits": 2,
+      "capture": "u_host_ep.rx_block_ready",
+      "launch": "face bus L53_i",
+      "stages": 7
+     },
+     {
+      "bits": 7,
+      "capture": "u_host_ep.rx_block_words",
+      "launch": "face bus L53_i",
+      "stages": 7
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_ep.rx_pin_flit",
+      "launch": "face bus L53_i",
+      "stages": 8
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_pin_v",
+      "launch": "face bus L53_i",
+      "stages": 7
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_release_bank",
+      "launch": "face bus L53_i",
+      "stages": 7
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_release_v",
+      "launch": "face bus L53_i",
+      "stages": 7
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_slot_bank",
+      "launch": "face bus L53_i",
+      "stages": 7
+     },
+     {
+      "bits": 6,
+      "capture": "u_host_ep.rx_slot_index",
+      "launch": "face bus L53_i",
+      "stages": 7
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.rx_slot_v",
+      "launch": "face bus L53_i",
+      "stages": 7
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_ep.tx_frame",
+      "launch": "face bus L53_i",
+      "stages": 8
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_ep.tx_v",
+      "launch": "face bus L53_i",
+      "stages": 7
+     }
+    ]
+   },
+   "dropped": 72
+  },
+  "q_b110": {
+   "after": 0,
+   "before": 53,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_b110.sv",
+   "buses": {
+    "L23_o": [
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane1__fr.sfu_vi_q",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane1__bk.sfu_kv_waddr",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane1__bk.sfu_kv_wdata",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane1__bk.sfu_kv_we",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane1__fr.sfu_vi_addr",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane1__fr.sfu_vi_re",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane2__fr.sfu_vi_q",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane2__bk.sfu_kv_waddr",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane2__bk.sfu_kv_wdata",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane2__bk.sfu_kv_we",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane2__fr.sfu_vi_addr",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane2__fr.sfu_vi_re",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_q",
+      "launch": "face bus L23_o",
+      "stages": 4
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_waddr",
+      "launch": "face bus L23_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_wdata",
+      "launch": "face bus L23_o",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_we",
+      "launch": "face bus L23_o",
+      "stages": 4
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_addr",
+      "launch": "face bus L23_o",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_re",
+      "launch": "face bus L23_o",
+      "stages": 4
+     }
+    ],
+    "L5_i": [
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane0__fr.sfu_vi_q",
+      "launch": "face bus L5_i",
+      "stages": 4
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane0__bk.sfu_kv_waddr",
+      "launch": "face bus L5_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane0__bk.sfu_kv_wdata",
+      "launch": "face bus L5_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane0__bk.sfu_kv_we",
+      "launch": "face bus L5_i",
+      "stages": 4
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane0__fr.sfu_vi_addr",
+      "launch": "face bus L5_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane0__fr.sfu_vi_re",
+      "launch": "face bus L5_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_q",
+      "launch": "face bus L5_i",
+      "stages": 2
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_waddr",
+      "launch": "face bus L5_i",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_wdata",
+      "launch": "face bus L5_i",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_we",
+      "launch": "face bus L5_i",
+      "stages": 2
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_addr",
+      "launch": "face bus L5_i",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_re",
+      "launch": "face bus L5_i",
+      "stages": 2
+     }
+    ],
+    "L81_o": [
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane0__fr.sfu_vi_q",
+      "launch": "face bus L81_o",
+      "stages": 1
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane0__bk.sfu_kv_waddr",
+      "launch": "face bus L81_o",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane0__bk.sfu_kv_we",
+      "launch": "face bus L81_o",
+      "stages": 2
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane0__fr.sfu_vi_addr",
+      "launch": "face bus L81_o",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane0__fr.sfu_vi_re",
+      "launch": "face bus L81_o",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane1__fr.sfu_vi_q",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane1__bk.sfu_kv_waddr",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane1__bk.sfu_kv_wdata",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane1__bk.sfu_kv_we",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane1__fr.sfu_vi_addr",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane1__fr.sfu_vi_re",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane2__fr.sfu_vi_q",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane2__bk.sfu_kv_waddr",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane2__bk.sfu_kv_wdata",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane2__bk.sfu_kv_we",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane2__fr.sfu_vi_addr",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane2__fr.sfu_vi_re",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_q",
+      "launch": "face bus L81_o",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_waddr",
+      "launch": "face bus L81_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_wdata",
+      "launch": "face bus L81_o",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_we",
+      "launch": "face bus L81_o",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_addr",
+      "launch": "face bus L81_o",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_re",
+      "launch": "face bus L81_o",
+      "stages": 5
+     }
+    ]
+   },
+   "dropped": 53
+  },
+  "q_b110__physical_v1": {
+   "after": 0,
+   "before": 53,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_b110__physical_v1.sv",
+   "buses": {
+    "L23_o": [
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane1__fr.sfu_vi_q",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane1__bk.sfu_kv_waddr",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane1__bk.sfu_kv_wdata",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane1__bk.sfu_kv_we",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane1__fr.sfu_vi_addr",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane1__fr.sfu_vi_re",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane2__fr.sfu_vi_q",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane2__bk.sfu_kv_waddr",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane2__bk.sfu_kv_wdata",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane2__bk.sfu_kv_we",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane2__fr.sfu_vi_addr",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane2__fr.sfu_vi_re",
+      "launch": "face bus L23_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_q",
+      "launch": "face bus L23_o",
+      "stages": 4
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_waddr",
+      "launch": "face bus L23_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_wdata",
+      "launch": "face bus L23_o",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_we",
+      "launch": "face bus L23_o",
+      "stages": 4
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_addr",
+      "launch": "face bus L23_o",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_re",
+      "launch": "face bus L23_o",
+      "stages": 4
+     }
+    ],
+    "L5_i": [
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane0__fr.sfu_vi_q",
+      "launch": "face bus L5_i",
+      "stages": 4
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane0__bk.sfu_kv_waddr",
+      "launch": "face bus L5_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane0__bk.sfu_kv_wdata",
+      "launch": "face bus L5_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane0__bk.sfu_kv_we",
+      "launch": "face bus L5_i",
+      "stages": 4
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane0__fr.sfu_vi_addr",
+      "launch": "face bus L5_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane0__fr.sfu_vi_re",
+      "launch": "face bus L5_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_q",
+      "launch": "face bus L5_i",
+      "stages": 2
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_waddr",
+      "launch": "face bus L5_i",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_wdata",
+      "launch": "face bus L5_i",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_we",
+      "launch": "face bus L5_i",
+      "stages": 2
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_addr",
+      "launch": "face bus L5_i",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_re",
+      "launch": "face bus L5_i",
+      "stages": 2
+     }
+    ],
+    "L81_o": [
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane0__fr.sfu_vi_q",
+      "launch": "face bus L81_o",
+      "stages": 1
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane0__bk.sfu_kv_waddr",
+      "launch": "face bus L81_o",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane0__bk.sfu_kv_we",
+      "launch": "face bus L81_o",
+      "stages": 2
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane0__fr.sfu_vi_addr",
+      "launch": "face bus L81_o",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane0__fr.sfu_vi_re",
+      "launch": "face bus L81_o",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane1__fr.sfu_vi_q",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane1__bk.sfu_kv_waddr",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane1__bk.sfu_kv_wdata",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane1__bk.sfu_kv_we",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane1__fr.sfu_vi_addr",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane1__fr.sfu_vi_re",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane2__fr.sfu_vi_q",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane2__bk.sfu_kv_waddr",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane2__bk.sfu_kv_wdata",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane2__bk.sfu_kv_we",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane2__fr.sfu_vi_addr",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane2__fr.sfu_vi_re",
+      "launch": "face bus L81_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_q",
+      "launch": "face bus L81_o",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_waddr",
+      "launch": "face bus L81_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_wdata",
+      "launch": "face bus L81_o",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane3__bk.sfu_kv_we",
+      "launch": "face bus L81_o",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_addr",
+      "launch": "face bus L81_o",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfucore_Q_lane3__fr.sfu_vi_re",
+      "launch": "face bus L81_o",
+      "stages": 5
+     }
+    ]
+   },
+   "dropped": 53
+  },
+  "q_b113": {
+   "after": 48,
+   "before": 60,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_b113.sv",
+   "buses": {
+    "L127_i": [
+     {
+      "bits": 2056,
+      "capture": "u_sfucore_Q_ctl__rest.local_rr",
+      "launch": "face bus L127_i",
+      "stages": 6
+     },
+     {
+      "bits": 8,
+      "capture": "u_sfucore_Q_ctl__rest.local_w_done",
+      "launch": "face bus L127_i",
+      "stages": 6
+     },
+     {
+      "bits": 136,
+      "capture": "u_sfucore_Q_ctl__rest.local_rq",
+      "launch": "face bus L127_i",
+      "stages": 5
+     },
+     {
+      "bits": 2248,
+      "capture": "u_sfucore_Q_ctl__rest.local_wq",
+      "launch": "face bus L127_i",
+      "stages": 7
+     }
+    ],
+    "L47_o": [
+     {
+      "bits": 2056,
+      "capture": "u_sfucore_Q_ctl__rest.local_rr",
+      "launch": "face bus L47_o",
+      "stages": 6
+     },
+     {
+      "bits": 8,
+      "capture": "u_sfucore_Q_ctl__rest.local_w_done",
+      "launch": "face bus L47_o",
+      "stages": 5
+     },
+     {
+      "bits": 136,
+      "capture": "u_sfucore_Q_ctl__rest.local_rq",
+      "launch": "face bus L47_o",
+      "stages": 5
+     },
+     {
+      "bits": 2248,
+      "capture": "u_sfucore_Q_ctl__rest.local_wq",
+      "launch": "face bus L47_o",
+      "stages": 6
+     }
+    ],
+    "L54_i": [
+     {
+      "bits": 2056,
+      "capture": "u_sfucore_Q_ctl__rest.local_rr",
+      "launch": "face bus L54_i",
+      "stages": 6
+     },
+     {
+      "bits": 8,
+      "capture": "u_sfucore_Q_ctl__rest.local_w_done",
+      "launch": "face bus L54_i",
+      "stages": 6
+     },
+     {
+      "bits": 136,
+      "capture": "u_sfucore_Q_ctl__rest.local_rq",
+      "launch": "face bus L54_i",
+      "stages": 5
+     },
+     {
+      "bits": 2248,
+      "capture": "u_sfucore_Q_ctl__rest.local_wq",
+      "launch": "face bus L54_i",
+      "stages": 7
+     }
+    ]
+   },
+   "dropped": 12
+  },
+  "q_b113__physical_v1": {
+   "after": 48,
+   "before": 60,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_b113__physical_v1.sv",
+   "buses": {
+    "L127_i": [
+     {
+      "bits": 2056,
+      "capture": "u_sfucore_Q_ctl__rest.local_rr",
+      "launch": "face bus L127_i",
+      "stages": 6
+     },
+     {
+      "bits": 8,
+      "capture": "u_sfucore_Q_ctl__rest.local_w_done",
+      "launch": "face bus L127_i",
+      "stages": 6
+     },
+     {
+      "bits": 136,
+      "capture": "u_sfucore_Q_ctl__rest.local_rq",
+      "launch": "face bus L127_i",
+      "stages": 5
+     },
+     {
+      "bits": 2248,
+      "capture": "u_sfucore_Q_ctl__rest.local_wq",
+      "launch": "face bus L127_i",
+      "stages": 7
+     }
+    ],
+    "L47_o": [
+     {
+      "bits": 2056,
+      "capture": "u_sfucore_Q_ctl__rest.local_rr",
+      "launch": "face bus L47_o",
+      "stages": 6
+     },
+     {
+      "bits": 8,
+      "capture": "u_sfucore_Q_ctl__rest.local_w_done",
+      "launch": "face bus L47_o",
+      "stages": 5
+     },
+     {
+      "bits": 136,
+      "capture": "u_sfucore_Q_ctl__rest.local_rq",
+      "launch": "face bus L47_o",
+      "stages": 5
+     },
+     {
+      "bits": 2248,
+      "capture": "u_sfucore_Q_ctl__rest.local_wq",
+      "launch": "face bus L47_o",
+      "stages": 6
+     }
+    ],
+    "L54_i": [
+     {
+      "bits": 2056,
+      "capture": "u_sfucore_Q_ctl__rest.local_rr",
+      "launch": "face bus L54_i",
+      "stages": 6
+     },
+     {
+      "bits": 8,
+      "capture": "u_sfucore_Q_ctl__rest.local_w_done",
+      "launch": "face bus L54_i",
+      "stages": 6
+     },
+     {
+      "bits": 136,
+      "capture": "u_sfucore_Q_ctl__rest.local_rq",
+      "launch": "face bus L54_i",
+      "stages": 5
+     },
+     {
+      "bits": 2248,
+      "capture": "u_sfucore_Q_ctl__rest.local_wq",
+      "launch": "face bus L54_i",
+      "stages": 7
+     }
+    ]
+   },
+   "dropped": 12
+  },
+  "q_hub_ne": {
+   "after": 2597,
+   "before": 2908,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_hub__q_hub_ne.sv",
+   "buses": {
+    "L0_o": [
+     {
+      "bits": 2470,
+      "capture": "u_pgp_Q.command",
+      "launch": "face bus L0_o",
+      "stages": 13
+     },
+     {
+      "bits": 13,
+      "capture": "u_sucore_Q.rf_dsec",
+      "launch": "face bus L0_o",
+      "stages": 25
+     },
+     {
+      "bits": 86,
+      "capture": "u_vmb_Q0.rr0",
+      "launch": "face bus L0_o",
+      "stages": 29
+     },
+     {
+      "bits": 1,
+      "capture": "u_vmb_Q0.wq_done0",
+      "launch": "face bus L0_o",
+      "stages": 29
+     },
+     {
+      "bits": 86,
+      "capture": "u_vmb_Q1.rr0",
+      "launch": "face bus L0_o",
+      "stages": 29
+     },
+     {
+      "bits": 1,
+      "capture": "u_vmb_Q1.wq_done0",
+      "launch": "face bus L0_o",
+      "stages": 29
+     }
+    ],
+    "L102_o": [
+     {
+      "bits": 21,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_0_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L102_o",
+      "stages": 13
+     }
+    ],
+    "L103_o": [
+     {
+      "bits": 16,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_6_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L103_o",
+      "stages": 24
+     },
+     {
+      "bits": 5,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_7_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L103_o",
+      "stages": 23
+     }
+    ],
+    "L104_o": [
+     {
+      "bits": 21,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_0_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L104_o",
+      "stages": 6
+     }
+    ],
+    "L105_o": [
+     {
+      "bits": 22,
+      "capture": "u_vmb_Q6.rr0",
+      "launch": "face bus L105_o",
+      "stages": 5
+     }
+    ],
+    "L110_o": [
+     {
+      "bits": 16,
+      "capture": "u_sucore_Q.rf_bcmd",
+      "launch": "face bus L110_o",
+      "stages": 17
+     }
+    ],
+    "L111_o": [
+     {
+      "bits": 17,
+      "capture": "u_vmb_Q3.rr0",
+      "launch": "face bus L111_o",
+      "stages": 14
+     }
+    ],
+    "L112_o": [
+     {
+      "bits": 16,
+      "capture": "u_sucore_Q.rf_bcmd",
+      "launch": "face bus L112_o",
+      "stages": 7
+     }
+    ],
+    "L113_o": [
+     {
+      "bits": 16,
+      "capture": "u_sucore_Q.rf_dsec",
+      "launch": "face bus L113_o",
+      "stages": 7
+     }
+    ],
+    "L114_i": [
+     {
+      "bits": 1,
+      "capture": "u_ctl_Q_p04.dram_rvalid",
+      "launch": "face bus L114_i",
+      "stages": 22
+     },
+     {
+      "bits": 1,
+      "capture": "u_ctl_Q_p05.dram_rvalid",
+      "launch": "face bus L114_i",
+      "stages": 26
+     },
+     {
+      "bits": 1,
+      "capture": "u_ctl_Q_p00.dram_rvalid",
+      "launch": "face bus L114_i",
+      "stages": 21
+     },
+     {
+      "bits": 1,
+      "capture": "u_ctl_Q_p01.dram_rvalid",
+      "launch": "face bus L114_i",
+      "stages": 32
+     },
+     {
+      "bits": 1,
+      "capture": "u_ctl_Q_p02.dram_rvalid",
+      "launch": "face bus L114_i",
+      "stages": 16
+     },
+     {
+      "bits": 1,
+      "capture": "u_ctl_Q_p03.dram_rvalid",
+      "launch": "face bus L114_i",
+      "stages": 15
+     }
+    ],
+    "L12_i": [
+     {
+      "bits": 132,
+      "capture": "u_cij_Q.idx_tx_h",
+      "launch": "face bus L12_i",
+      "stages": 10
+     },
+     {
+      "bits": 132,
+      "capture": "u_cij_Q.idx_tx_h_r1",
+      "launch": "face bus L12_i",
+      "stages": 10
+     },
+     {
+      "bits": 1024,
+      "capture": "u_cij_Q.idx_tx_r0",
+      "launch": "face bus L12_i",
+      "stages": 11
+     },
+     {
+      "bits": 1024,
+      "capture": "u_cij_Q.idx_tx_r1",
+      "launch": "face bus L12_i",
+      "stages": 11
+     },
+     {
+      "bits": 4,
+      "capture": "u_cij_Q.idx_tx_v",
+      "launch": "face bus L12_i",
+      "stages": 10
+     },
+     {
+      "bits": 4,
+      "capture": "u_cij_Q.idx_tx_v_r1",
+      "launch": "face bus L12_i",
+      "stages": 10
+     },
+     {
+      "bits": 12,
+      "capture": "u_hb_idx__qctl_Q.length",
+      "launch": "face bus L12_i",
+      "stages": 5
+     },
+     {
+      "bits": 14,
+      "capture": "u_hb_idx__qctl_Q.nkeys",
+      "launch": "face bus L12_i",
+      "stages": 5
+     },
+     {
+      "bits": 8,
+      "capture": "u_hb_idx__qctl_Q.program_addr",
+      "launch": "face bus L12_i",
+      "stages": 5
+     },
+     {
+      "bits": 256,
+      "capture": "u_hb_idx__qctl_Q.program_data",
+      "launch": "face bus L12_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_hb_idx__qctl_Q.program_we",
+      "launch": "face bus L12_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_hb_idx__qctl_Q.start",
+      "launch": "face bus L12_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_0.valid_in",
+      "launch": "face bus L12_i",
+      "stages": 18
+     },
+     {
+      "bits": 1,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_1.valid_in",
+      "launch": "face bus L12_i",
+      "stages": 20
+     },
+     {
+      "bits": 1,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_2.valid_in",
+      "launch": "face bus L12_i",
+      "stages": 11
+     },
+     {
+      "bits": 1,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.valid_in",
+      "launch": "face bus L12_i",
+      "stages": 21
+     },
+     {
+      "bits": 12,
+      "capture": "u_hcollgi_Q.cfg_addr",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 256,
+      "capture": "u_hcollgi_Q.cfg_data",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 8,
+      "capture": "u_hcollgi_Q.cfg_target",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 1,
+      "capture": "u_hcollgi_Q.cfg_v",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 12,
+      "capture": "u_hcollgi_Q.desc_base",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 13,
+      "capture": "u_hcollgi_Q.desc_limit",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 16,
+      "capture": "u_hcollgi_Q.desc_loops",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 1,
+      "capture": "u_hcollgi_Q.desc_v",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 1,
+      "capture": "u_hcollgi_Q.launch_v",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 16,
+      "capture": "u_pgp_Q.cfg_bank",
+      "launch": "face bus L12_i",
+      "stages": 14
+     },
+     {
+      "bits": 256,
+      "capture": "u_pgp_Q.cfg_data",
+      "launch": "face bus L12_i",
+      "stages": 16
+     },
+     {
+      "bits": 7,
+      "capture": "u_pgp_Q.cfg_row",
+      "launch": "face bus L12_i",
+      "stages": 14
+     },
+     {
+      "bits": 1,
+      "capture": "u_pgp_Q.cfg_we",
+      "launch": "face bus L12_i",
+      "stages": 14
+     },
+     {
+      "bits": 16,
+      "capture": "u_pgp_Q.length",
+      "launch": "face bus L12_i",
+      "stages": 15
+     },
+     {
+      "bits": 1,
+      "capture": "u_pgp_Q.start",
+      "launch": "face bus L12_i",
+      "stages": 14
+     },
+     {
+      "bits": 18,
+      "capture": "u_svg_Q0__t.ids",
+      "launch": "face bus L12_i",
+      "stages": 19
+     },
+     {
+      "bits": 6,
+      "capture": "u_svg_Q0__t.ids_cohort",
+      "launch": "face bus L12_i",
+      "stages": 19
+     },
+     {
+      "bits": 3,
+      "capture": "u_svg_Q0__t.ids_layer",
+      "launch": "face bus L12_i",
+      "stages": 19
+     },
+     {
+      "bits": 1,
+      "capture": "u_svg_Q0__t.ids_v",
+      "launch": "face bus L12_i",
+      "stages": 19
+     },
+     {
+      "bits": 54,
+      "capture": "u_svg_Q1__t.ids",
+      "launch": "face bus L12_i",
+      "stages": 12
+     },
+     {
+      "bits": 16,
+      "capture": "u_svg_Q1__t.ids_cohort",
+      "launch": "face bus L12_i",
+      "stages": 12
+     },
+     {
+      "bits": 8,
+      "capture": "u_svg_Q1__t.ids_layer",
+      "launch": "face bus L12_i",
+      "stages": 12
+     },
+     {
+      "bits": 1,
+      "capture": "u_svg_Q1__t.ids_v",
+      "launch": "face bus L12_i",
+      "stages": 12
+     },
+     {
+      "bits": 18,
+      "capture": "u_svg_Q2__t.ids",
+      "launch": "face bus L12_i",
+      "stages": 19
+     },
+     {
+      "bits": 6,
+      "capture": "u_svg_Q2__t.ids_cohort",
+      "launch": "face bus L12_i",
+      "stages": 19
+     },
+     {
+      "bits": 3,
+      "capture": "u_svg_Q2__t.ids_layer",
+      "launch": "face bus L12_i",
+      "stages": 19
+     },
+     {
+      "bits": 1,
+      "capture": "u_svg_Q2__t.ids_v",
+      "launch": "face bus L12_i",
+      "stages": 19
+     },
+     {
+      "bits": 54,
+      "capture": "u_svg_Q3__t.ids",
+      "launch": "face bus L12_i",
+      "stages": 5
+     },
+     {
+      "bits": 16,
+      "capture": "u_svg_Q3__t.ids_cohort",
+      "launch": "face bus L12_i",
+      "stages": 5
+     },
+     {
+      "bits": 8,
+      "capture": "u_svg_Q3__t.ids_layer",
+      "launch": "face bus L12_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_svg_Q3__t.ids_v",
+      "launch": "face bus L12_i",
+      "stages": 5
+     },
+     {
+      "bits": 6,
+      "capture": "u_vmb_Q0.rq4",
+      "launch": "face bus L12_i",
+      "stages": 14
+     },
+     {
+      "bits": 6,
+      "capture": "u_vmb_Q1.rq4",
+      "launch": "face bus L12_i",
+      "stages": 18
+     },
+     {
+      "bits": 6,
+      "capture": "u_vmb_Q2.rq4",
+      "launch": "face bus L12_i",
+      "stages": 11
+     },
+     {
+      "bits": 6,
+      "capture": "u_vmb_Q3.rq4",
+      "launch": "face bus L12_i",
+      "stages": 25
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q4.rq4",
+      "launch": "face bus L12_i",
+      "stages": 5
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q5.rq4",
+      "launch": "face bus L12_i",
+      "stages": 7
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q6.rq4",
+      "launch": "face bus L12_i",
+      "stages": 6
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q7.rq4",
+      "launch": "face bus L12_i",
+      "stages": 10
+     }
+    ],
+    "L131_i": [
+     {
+      "bits": 5,
+      "capture": "u_vmb_Q6.wq0",
+      "launch": "face bus L131_i",
+      "stages": 8
+     }
+    ],
+    "L134_i": [
+     {
+      "bits": 3,
+      "capture": "u_cxij_Q_q.inj_q0",
+      "launch": "face bus L134_i",
+      "stages": 7
+     }
+    ],
+    "L135_i": [
+     {
+      "bits": 3,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_7_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L135_i",
+      "stages": 23
+     }
+    ],
+    "L136_i": [
+     {
+      "bits": 3,
+      "capture": "u_cxij_Q_q.inj_q2",
+      "launch": "face bus L136_i",
+      "stages": 7
+     }
+    ],
+    "L137_i": [
+     {
+      "bits": 1,
+      "capture": "u_hb_idx__qctl_Q.scf",
+      "launch": "face bus L137_i",
+      "stages": 9
+     }
+    ],
+    "L1_o": [
+     {
+      "bits": 25,
+      "capture": "u_calendar_Q.lg_local_read",
+      "launch": "face bus L1_o",
+      "stages": 16
+     },
+     {
+      "bits": 25,
+      "capture": "u_calendar_Q.lg_local_write",
+      "launch": "face bus L1_o",
+      "stages": 16
+     },
+     {
+      "bits": 2317,
+      "capture": "u_pgp_Q.command",
+      "launch": "face bus L1_o",
+      "stages": 13
+     },
+     {
+      "bits": 36,
+      "capture": "u_sucore_Q.rf_bcmd",
+      "launch": "face bus L1_o",
+      "stages": 25
+     },
+     {
+      "bits": 128,
+      "capture": "u_sucore_Q.rf_bword",
+      "launch": "face bus L1_o",
+      "stages": 25
+     },
+     {
+      "bits": 227,
+      "capture": "u_sucore_Q.rf_dsec",
+      "launch": "face bus L1_o",
+      "stages": 26
+     },
+     {
+      "bits": 1,
+      "capture": "u_vmb_Q2.wq_done0",
+      "launch": "face bus L1_o",
+      "stages": 25
+     },
+     {
+      "bits": 242,
+      "capture": "u_vmb_Q3.rr0",
+      "launch": "face bus L1_o",
+      "stages": 15
+     },
+     {
+      "bits": 2,
+      "capture": "u_vmb_Q3.wq_done0",
+      "launch": "face bus L1_o",
+      "stages": 15
+     }
+    ],
+    "L23_i": [
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l00_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l00_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l00_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l00_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l00_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l01_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l01_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l01_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l01_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l01_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l02_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l02_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l02_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l02_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l02_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l03_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l03_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l03_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l03_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l03_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l04_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l04_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l04_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l04_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l04_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l05_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l05_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l05_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l05_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l05_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l06_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l06_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l06_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l06_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l06_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l07_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l07_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l07_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l07_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l07_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l08_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l08_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l08_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l08_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l08_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l09_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l09_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l09_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l09_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l09_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l10_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l10_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l10_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l10_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l10_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l11_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l11_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l11_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l11_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l11_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l12_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l12_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l12_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l12_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l12_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l13_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l13_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l13_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l13_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l13_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l14_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l14_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l14_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l14_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l14_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l15_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l15_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l15_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l15_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l15_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     }
+    ],
+    "L24_i": [
+     {
+      "bits": 1024,
+      "capture": "u_cxij_Q_q.inj_q0",
+      "launch": "face bus L24_i",
+      "stages": 5
+     },
+     {
+      "bits": 99,
+      "capture": "u_sucore_Q.slice_x",
+      "launch": "face bus L24_i",
+      "stages": 18
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q0.rq0",
+      "launch": "face bus L24_i",
+      "stages": 29
+     },
+     {
+      "bits": 283,
+      "capture": "u_vmb_Q0.wq0",
+      "launch": "face bus L24_i",
+      "stages": 30
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q1.rq0",
+      "launch": "face bus L24_i",
+      "stages": 29
+     },
+     {
+      "bits": 283,
+      "capture": "u_vmb_Q1.wq0",
+      "launch": "face bus L24_i",
+      "stages": 30
+     }
+    ],
+    "L25_i": [
+     {
+      "bits": 1024,
+      "capture": "u_cxij_Q_q.inj_q1",
+      "launch": "face bus L25_i",
+      "stages": 20
+     },
+     {
+      "bits": 268,
+      "capture": "u_sucore_Q.slice_t",
+      "launch": "face bus L25_i",
+      "stages": 27
+     },
+     {
+      "bits": 128,
+      "capture": "u_sucore_Q.slice_x",
+      "launch": "face bus L25_i",
+      "stages": 27
+     },
+     {
+      "bits": 1,
+      "capture": "u_vmb_Q2.wq0",
+      "launch": "face bus L25_i",
+      "stages": 24
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q3.rq0",
+      "launch": "face bus L25_i",
+      "stages": 16
+     },
+     {
+      "bits": 283,
+      "capture": "u_vmb_Q3.wq0",
+      "launch": "face bus L25_i",
+      "stages": 16
+     }
+    ],
+    "L26_i": [
+     {
+      "bits": 1024,
+      "capture": "u_cxij_Q_q.inj_q2",
+      "launch": "face bus L26_i",
+      "stages": 7
+     },
+     {
+      "bits": 99,
+      "capture": "u_sucore_Q.slice_x",
+      "launch": "face bus L26_i",
+      "stages": 7
+     },
+     {
+      "bits": 6,
+      "capture": "u_vmb_Q4.rq0",
+      "launch": "face bus L26_i",
+      "stages": 18
+     },
+     {
+      "bits": 95,
+      "capture": "u_vmb_Q4.wq0",
+      "launch": "face bus L26_i",
+      "stages": 18
+     },
+     {
+      "bits": 6,
+      "capture": "u_vmb_Q5.rq0",
+      "launch": "face bus L26_i",
+      "stages": 22
+     },
+     {
+      "bits": 95,
+      "capture": "u_vmb_Q5.wq0",
+      "launch": "face bus L26_i",
+      "stages": 22
+     }
+    ],
+    "L27_i": [
+     {
+      "bits": 1024,
+      "capture": "u_cxij_Q_q.inj_q3",
+      "launch": "face bus L27_i",
+      "stages": 13
+     },
+     {
+      "bits": 268,
+      "capture": "u_sucore_Q.slice_t",
+      "launch": "face bus L27_i",
+      "stages": 8
+     },
+     {
+      "bits": 128,
+      "capture": "u_sucore_Q.slice_x",
+      "launch": "face bus L27_i",
+      "stages": 8
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q6.rq0",
+      "launch": "face bus L27_i",
+      "stages": 15
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q7.rq0",
+      "launch": "face bus L27_i",
+      "stages": 15
+     },
+     {
+      "bits": 267,
+      "capture": "u_vmb_Q7.wq0",
+      "launch": "face bus L27_i",
+      "stages": 15
+     }
+    ],
+    "L2_o": [
+     {
+      "bits": 2063,
+      "capture": "u_pgp_Q.command",
+      "launch": "face bus L2_o",
+      "stages": 8
+     },
+     {
+      "bits": 36,
+      "capture": "u_sucore_Q.rf_bcmd",
+      "launch": "face bus L2_o",
+      "stages": 8
+     },
+     {
+      "bits": 128,
+      "capture": "u_sucore_Q.rf_bword",
+      "launch": "face bus L2_o",
+      "stages": 8
+     },
+     {
+      "bits": 256,
+      "capture": "u_sucore_Q.rf_dsec",
+      "launch": "face bus L2_o",
+      "stages": 8
+     },
+     {
+      "bits": 86,
+      "capture": "u_vmb_Q4.rr0",
+      "launch": "face bus L2_o",
+      "stages": 15
+     },
+     {
+      "bits": 1,
+      "capture": "u_vmb_Q4.wq_done0",
+      "launch": "face bus L2_o",
+      "stages": 14
+     },
+     {
+      "bits": 86,
+      "capture": "u_vmb_Q5.rr0",
+      "launch": "face bus L2_o",
+      "stages": 18
+     },
+     {
+      "bits": 1,
+      "capture": "u_vmb_Q5.wq_done0",
+      "launch": "face bus L2_o",
+      "stages": 18
+     }
+    ],
+    "L36_o": [
+     {
+      "bits": 65,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_2_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L36_o",
+      "stages": 8
+     },
+     {
+      "bits": 96,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_3_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L36_o",
+      "stages": 8
+     },
+     {
+      "bits": 96,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_4_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L36_o",
+      "stages": 8
+     },
+     {
+      "bits": 96,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_5_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L36_o",
+      "stages": 8
+     },
+     {
+      "bits": 91,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_6_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L36_o",
+      "stages": 8
+     }
+    ],
+    "L37_o": [
+     {
+      "bits": 160,
+      "capture": "u_hb_coll_Q_body_n2.hgi_del_obase",
+      "launch": "face bus L37_o",
+      "stages": 21
+     },
+     {
+      "bits": 56,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_16_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L37_o",
+      "stages": 22
+     },
+     {
+      "bits": 280,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_7_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L37_o",
+      "stages": 24
+     },
+     {
+      "bits": 288,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_8_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L37_o",
+      "stages": 24
+     },
+     {
+      "bits": 288,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_9_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L37_o",
+      "stages": 24
+     },
+     {
+      "bits": 86,
+      "capture": "u_vmb_Q2.rr0",
+      "launch": "face bus L37_o",
+      "stages": 17
+     }
+    ],
+    "L38_o": [
+     {
+      "bits": 246,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_0_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L38_o",
+      "stages": 6
+     },
+     {
+      "bits": 288,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_10_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L38_o",
+      "stages": 4
+     },
+     {
+      "bits": 288,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_11_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L38_o",
+      "stages": 6
+     },
+     {
+      "bits": 288,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_12_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L38_o",
+      "stages": 3
+     },
+     {
+      "bits": 219,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_13_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L38_o",
+      "stages": 5
+     }
+    ],
+    "L39_o": [
+     {
+      "bits": 25,
+      "capture": "u_calendar_Q.lg_local_read",
+      "launch": "face bus L39_o",
+      "stages": 14
+     },
+     {
+      "bits": 25,
+      "capture": "u_calendar_Q.lg_local_write",
+      "launch": "face bus L39_o",
+      "stages": 14
+     },
+     {
+      "bits": 765,
+      "capture": "u_pgp_Q.command",
+      "launch": "face bus L39_o",
+      "stages": 14
+     },
+     {
+      "bits": 258,
+      "capture": "u_vmb_Q6.rr0",
+      "launch": "face bus L39_o",
+      "stages": 5
+     },
+     {
+      "bits": 2,
+      "capture": "u_vmb_Q6.wq_done0",
+      "launch": "face bus L39_o",
+      "stages": 5
+     },
+     {
+      "bits": 258,
+      "capture": "u_vmb_Q7.rr0",
+      "launch": "face bus L39_o",
+      "stages": 7
+     },
+     {
+      "bits": 2,
+      "capture": "u_vmb_Q7.wq_done0",
+      "launch": "face bus L39_o",
+      "stages": 7
+     }
+    ],
+    "L3_o": [
+     {
+      "bits": 25,
+      "capture": "u_calendar_Q.lg_local_read",
+      "launch": "face bus L3_o",
+      "stages": 12
+     },
+     {
+      "bits": 25,
+      "capture": "u_calendar_Q.lg_local_write",
+      "launch": "face bus L3_o",
+      "stages": 12
+     },
+     {
+      "bits": 2470,
+      "capture": "u_pgp_Q.command",
+      "launch": "face bus L3_o",
+      "stages": 5
+     },
+     {
+      "bits": 36,
+      "capture": "u_sucore_Q.rf_bcmd",
+      "launch": "face bus L3_o",
+      "stages": 7
+     },
+     {
+      "bits": 128,
+      "capture": "u_sucore_Q.rf_bword",
+      "launch": "face bus L3_o",
+      "stages": 8
+     },
+     {
+      "bits": 256,
+      "capture": "u_sucore_Q.rf_dsec",
+      "launch": "face bus L3_o",
+      "stages": 8
+     },
+     {
+      "bits": 62,
+      "capture": "u_vmb_Q7.rr0",
+      "launch": "face bus L3_o",
+      "stages": 15
+     }
+    ],
+    "L55_i": [
+     {
+      "bits": 69,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_13_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L55_i",
+      "stages": 14
+     },
+     {
+      "bits": 288,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_14_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L55_i",
+      "stages": 12
+     },
+     {
+      "bits": 157,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_15_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L55_i",
+      "stages": 12
+     }
+    ],
+    "L57_i": [
+     {
+      "bits": 9,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_0_g2_w_o_u_out_u_dst_v",
+      "launch": "face bus L57_i",
+      "stages": 25
+     },
+     {
+      "bits": 104,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_16_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L57_i",
+      "stages": 22
+     },
+     {
+      "bits": 5,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_17_g2_n_o_u_out_u_dst_d",
+      "launch": "face bus L57_i",
+      "stages": 22
+     },
+     {
+      "bits": 98,
+      "capture": "u_sucore_Q.slice_t",
+      "launch": "face bus L57_i",
+      "stages": 26
+     },
+     {
+      "bits": 6,
+      "capture": "u_vmb_Q2.rq0",
+      "launch": "face bus L57_i",
+      "stages": 19
+     },
+     {
+      "bits": 95,
+      "capture": "u_vmb_Q2.wq0",
+      "launch": "face bus L57_i",
+      "stages": 19
+     }
+    ],
+    "L59_i": [
+     {
+      "bits": 131,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_15_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L59_i",
+      "stages": 5
+     },
+     {
+      "bits": 288,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_1_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L59_i",
+      "stages": 4
+     },
+     {
+      "bits": 95,
+      "capture": "u_hb_coll_Q_body_n2.u_body_g_qout_2_g2_w_o_u_out_u_dst_d",
+      "launch": "face bus L59_i",
+      "stages": 5
+     }
+    ],
+    "L5_o": [
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l00_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l01_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l02_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l03_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l04_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l05_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l06_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l07_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l08_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l09_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l10_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l11_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l12_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l13_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l14_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l15_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 5
+     }
+    ],
+    "L61_i": [
+     {
+      "bits": 279,
+      "capture": "u_vmb_Q6.wq0",
+      "launch": "face bus L61_i",
+      "stages": 8
+     },
+     {
+      "bits": 238,
+      "capture": "u_vmb_Q7.wq0",
+      "launch": "face bus L61_i",
+      "stages": 7
+     }
+    ],
+    "L6_o": [
+     {
+      "bits": 458,
+      "capture": "u_hb_idx__q_Q.ql_codes",
+      "launch": "face bus L6_o",
+      "stages": 6
+     },
+     {
+      "bits": 8,
+      "capture": "u_hb_idx__q_Q.ql_head",
+      "launch": "face bus L6_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_hb_idx__q_Q.ql_sc",
+      "launch": "face bus L6_o",
+      "stages": 6
+     },
+     {
+      "bits": 1,
+      "capture": "u_hb_idx__q_Q.ql_v",
+      "launch": "face bus L6_o",
+      "stages": 6
+     },
+     {
+      "bits": 16,
+      "capture": "u_hb_idx__q_Q.ql_w",
+      "launch": "face bus L6_o",
+      "stages": 6
+     },
+     {
+      "bits": 1099,
+      "capture": "u_svg_Q0__t.sm_packet",
+      "launch": "face bus L6_o",
+      "stages": 14
+     },
+     {
+      "bits": 870,
+      "capture": "u_svg_Q3__t.sm_packet",
+      "launch": "face bus L6_o",
+      "stages": 5
+     }
+    ],
+    "L74_o": [
+     {
+      "bits": 136,
+      "capture": "u_hb_idx__op_Q.vm_rq",
+      "launch": "face bus L74_o",
+      "stages": 5
+     },
+     {
+      "bits": 20,
+      "capture": "u_hb_vms_Q.vmstat",
+      "launch": "face bus L74_o",
+      "stages": 8
+     },
+     {
+      "bits": 11,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_0.node_fault",
+      "launch": "face bus L74_o",
+      "stages": 22
+     },
+     {
+      "bits": 11,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_0.sum",
+      "launch": "face bus L74_o",
+      "stages": 22
+     },
+     {
+      "bits": 1,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_0.valid_out",
+      "launch": "face bus L74_o",
+      "stages": 22
+     },
+     {
+      "bits": 11,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_1.node_fault",
+      "launch": "face bus L74_o",
+      "stages": 23
+     },
+     {
+      "bits": 11,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_1.sum",
+      "launch": "face bus L74_o",
+      "stages": 23
+     },
+     {
+      "bits": 31,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_2.node_fault",
+      "launch": "face bus L74_o",
+      "stages": 14
+     },
+     {
+      "bits": 32,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_2.sum",
+      "launch": "face bus L74_o",
+      "stages": 14
+     },
+     {
+      "bits": 1,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_2.valid_out",
+      "launch": "face bus L74_o",
+      "stages": 14
+     },
+     {
+      "bits": 11,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.node_fault",
+      "launch": "face bus L74_o",
+      "stages": 24
+     },
+     {
+      "bits": 11,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.sum",
+      "launch": "face bus L74_o",
+      "stages": 25
+     },
+     {
+      "bits": 1,
+      "capture": "u_hcollgi_Q.active",
+      "launch": "face bus L74_o",
+      "stages": 21
+     },
+     {
+      "bits": 1,
+      "capture": "u_hcollgi_Q.configured",
+      "launch": "face bus L74_o",
+      "stages": 21
+     },
+     {
+      "bits": 1,
+      "capture": "u_hcollgi_Q.fault",
+      "launch": "face bus L74_o",
+      "stages": 21
+     },
+     {
+      "bits": 1,
+      "capture": "u_hcollgi_Q.tgt_fault",
+      "launch": "face bus L74_o",
+      "stages": 21
+     },
+     {
+      "bits": 1,
+      "capture": "u_hcollgl_Q.fault",
+      "launch": "face bus L74_o",
+      "stages": 17
+     },
+     {
+      "bits": 1,
+      "capture": "u_pgp_Q.busy",
+      "launch": "face bus L74_o",
+      "stages": 18
+     },
+     {
+      "bits": 1,
+      "capture": "u_pgp_Q.done",
+      "launch": "face bus L74_o",
+      "stages": 24
+     },
+     {
+      "bits": 1,
+      "capture": "u_pgp_Q.fault",
+      "launch": "face bus L74_o",
+      "stages": 24
+     },
+     {
+      "bits": 1,
+      "capture": "u_pgp_Q.valid",
+      "launch": "face bus L74_o",
+      "stages": 24
+     },
+     {
+      "bits": 86,
+      "capture": "u_vmb_Q0.rr4",
+      "launch": "face bus L74_o",
+      "stages": 17
+     },
+     {
+      "bits": 86,
+      "capture": "u_vmb_Q1.rr4",
+      "launch": "face bus L74_o",
+      "stages": 21
+     },
+     {
+      "bits": 86,
+      "capture": "u_vmb_Q2.rr4",
+      "launch": "face bus L74_o",
+      "stages": 15
+     },
+     {
+      "bits": 86,
+      "capture": "u_vmb_Q3.rr4",
+      "launch": "face bus L74_o",
+      "stages": 29
+     },
+     {
+      "bits": 258,
+      "capture": "u_vmb_Q4.rr4",
+      "launch": "face bus L74_o",
+      "stages": 9
+     },
+     {
+      "bits": 258,
+      "capture": "u_vmb_Q5.rr4",
+      "launch": "face bus L74_o",
+      "stages": 9
+     },
+     {
+      "bits": 258,
+      "capture": "u_vmb_Q6.rr4",
+      "launch": "face bus L74_o",
+      "stages": 7
+     },
+     {
+      "bits": 258,
+      "capture": "u_vmb_Q7.rr4",
+      "launch": "face bus L74_o",
+      "stages": 7
+     }
+    ],
+    "L7_o": [
+     {
+      "bits": 8,
+      "capture": "u_hb_idx__qctl_Q.key_index",
+      "launch": "face bus L7_o",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_hb_idx__qctl_Q.key_slot",
+      "launch": "face bus L7_o",
+      "stages": 9
+     },
+     {
+      "bits": 12,
+      "capture": "u_hb_idx__qctl_Q.nq",
+      "launch": "face bus L7_o",
+      "stages": 9
+     },
+     {
+      "bits": 89,
+      "capture": "u_svg_Q0__t.sm_packet",
+      "launch": "face bus L7_o",
+      "stages": 16
+     },
+     {
+      "bits": 1099,
+      "capture": "u_svg_Q1__t.sm_packet",
+      "launch": "face bus L7_o",
+      "stages": 15
+     },
+     {
+      "bits": 1099,
+      "capture": "u_svg_Q3__t.sm_packet",
+      "launch": "face bus L7_o",
+      "stages": 3
+     }
+    ],
+    "L81_i": [
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l05_kv_wdata",
+      "launch": "face bus L81_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l06_kv_wdata",
+      "launch": "face bus L81_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l07_kv_wdata",
+      "launch": "face bus L81_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l08_kv_wdata",
+      "launch": "face bus L81_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l09_kv_wdata",
+      "launch": "face bus L81_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l15_kv_wdata",
+      "launch": "face bus L81_i",
+      "stages": 4
+     }
+    ],
+    "L91_o": [
+     {
+      "bits": 54,
+      "capture": "u_hb_idx__q_Q.ql_codes",
+      "launch": "face bus L91_o",
+      "stages": 4
+     }
+    ]
+   },
+   "dropped": 311
+  },
+  "q_hub_nw": {
+   "after": 2708,
+   "before": 2962,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_hub__q_hub_nw.sv",
+   "buses": {
+    "L0_o": [
+     {
+      "bits": 14,
+      "capture": "u_calendar_Q.lg_local_read",
+      "launch": "face bus L0_o",
+      "stages": 11
+     },
+     {
+      "bits": 2470,
+      "capture": "u_pgp_Q.command",
+      "launch": "face bus L0_o",
+      "stages": 21
+     },
+     {
+      "bits": 86,
+      "capture": "u_vmb_Q0.rr0",
+      "launch": "face bus L0_o",
+      "stages": 29
+     },
+     {
+      "bits": 1,
+      "capture": "u_vmb_Q0.wq_done0",
+      "launch": "face bus L0_o",
+      "stages": 29
+     },
+     {
+      "bits": 86,
+      "capture": "u_vmb_Q1.rr0",
+      "launch": "face bus L0_o",
+      "stages": 28
+     },
+     {
+      "bits": 1,
+      "capture": "u_vmb_Q1.wq_done0",
+      "launch": "face bus L0_o",
+      "stages": 28
+     }
+    ],
+    "L102_o": [
+     {
+      "bits": 160,
+      "capture": "u_hb_coll_Q_body_core.hgi_del_obase",
+      "launch": "face bus L102_o",
+      "stages": 13
+     },
+     {
+      "bits": 21,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_11_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L102_o",
+      "stages": 13
+     },
+     {
+      "bits": 384,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_16_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L102_o",
+      "stages": 10
+     },
+     {
+      "bits": 12,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_17_g3_n_o_u_out_u_dst_d",
+      "launch": "face bus L102_o",
+      "stages": 10
+     }
+    ],
+    "L103_o": [
+     {
+      "bits": 21,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_14_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L103_o",
+      "stages": 21
+     }
+    ],
+    "L104_o": [
+     {
+      "bits": 21,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_0_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L104_o",
+      "stages": 5
+     },
+     {
+      "bits": 16,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_0_g3_w_o_u_out_u_dst_v",
+      "launch": "face bus L104_o",
+      "stages": 6
+     },
+     {
+      "bits": 232,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_4_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L104_o",
+      "stages": 3
+     },
+     {
+      "bits": 512,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_5_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L104_o",
+      "stages": 3
+     },
+     {
+      "bits": 512,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_6_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L104_o",
+      "stages": 5
+     },
+     {
+      "bits": 512,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_7_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L104_o",
+      "stages": 5
+     },
+     {
+      "bits": 512,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_8_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L104_o",
+      "stages": 5
+     },
+     {
+      "bits": 512,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_9_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L104_o",
+      "stages": 5
+     }
+    ],
+    "L105_o": [
+     {
+      "bits": 21,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_1_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L105_o",
+      "stages": 16
+     }
+    ],
+    "L110_o": [
+     {
+      "bits": 16,
+      "capture": "u_sucore_Q.rf_bcmd",
+      "launch": "face bus L110_o",
+      "stages": 15
+     }
+    ],
+    "L111_o": [
+     {
+      "bits": 6,
+      "capture": "u_vmb_Q2.rr0",
+      "launch": "face bus L111_o",
+      "stages": 26
+     }
+    ],
+    "L112_o": [
+     {
+      "bits": 16,
+      "capture": "u_sucore_Q.rf_bcmd",
+      "launch": "face bus L112_o",
+      "stages": 10
+     }
+    ],
+    "L113_o": [
+     {
+      "bits": 17,
+      "capture": "u_vmb_Q6.rr0",
+      "launch": "face bus L113_o",
+      "stages": 17
+     }
+    ],
+    "L114_i": [
+     {
+      "bits": 1,
+      "capture": "u_ctl_Q_p12.dram_rvalid",
+      "launch": "face bus L114_i",
+      "stages": 21
+     },
+     {
+      "bits": 1,
+      "capture": "u_ctl_Q_p14.dram_rvalid",
+      "launch": "face bus L114_i",
+      "stages": 30
+     },
+     {
+      "bits": 1,
+      "capture": "u_ctl_Q_p10.dram_rvalid",
+      "launch": "face bus L114_i",
+      "stages": 24
+     },
+     {
+      "bits": 1,
+      "capture": "u_ctl_Q_p11.dram_rvalid",
+      "launch": "face bus L114_i",
+      "stages": 7
+     },
+     {
+      "bits": 1,
+      "capture": "u_ctl_Q_p13.dram_rvalid",
+      "launch": "face bus L114_i",
+      "stages": 19
+     },
+     {
+      "bits": 1,
+      "capture": "u_ctl_Q_p15.dram_rvalid",
+      "launch": "face bus L114_i",
+      "stages": 12
+     }
+    ],
+    "L12_i": [
+     {
+      "bits": 104,
+      "capture": "u_cij_Q.idx_tx_h",
+      "launch": "face bus L12_i",
+      "stages": 10
+     },
+     {
+      "bits": 1024,
+      "capture": "u_cij_Q.idx_tx_r0",
+      "launch": "face bus L12_i",
+      "stages": 11
+     },
+     {
+      "bits": 1024,
+      "capture": "u_cij_Q.idx_tx_r1",
+      "launch": "face bus L12_i",
+      "stages": 11
+     },
+     {
+      "bits": 256,
+      "capture": "u_hb_idx__qctl_Q.program_data",
+      "launch": "face bus L12_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_0.valid_in",
+      "launch": "face bus L12_i",
+      "stages": 13
+     },
+     {
+      "bits": 1,
+      "capture": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.valid_in",
+      "launch": "face bus L12_i",
+      "stages": 21
+     },
+     {
+      "bits": 12,
+      "capture": "u_hcollgi_Q.cfg_addr",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 256,
+      "capture": "u_hcollgi_Q.cfg_data",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 8,
+      "capture": "u_hcollgi_Q.cfg_target",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 1,
+      "capture": "u_hcollgi_Q.cfg_v",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 12,
+      "capture": "u_hcollgi_Q.desc_base",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 13,
+      "capture": "u_hcollgi_Q.desc_limit",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 16,
+      "capture": "u_hcollgi_Q.desc_loops",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 1,
+      "capture": "u_hcollgi_Q.desc_v",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 1,
+      "capture": "u_hcollgi_Q.launch_v",
+      "launch": "face bus L12_i",
+      "stages": 17
+     },
+     {
+      "bits": 16,
+      "capture": "u_pgp_Q.cfg_bank",
+      "launch": "face bus L12_i",
+      "stages": 14
+     },
+     {
+      "bits": 256,
+      "capture": "u_pgp_Q.cfg_data",
+      "launch": "face bus L12_i",
+      "stages": 16
+     },
+     {
+      "bits": 7,
+      "capture": "u_pgp_Q.cfg_row",
+      "launch": "face bus L12_i",
+      "stages": 14
+     },
+     {
+      "bits": 1,
+      "capture": "u_pgp_Q.cfg_we",
+      "launch": "face bus L12_i",
+      "stages": 14
+     },
+     {
+      "bits": 16,
+      "capture": "u_pgp_Q.length",
+      "launch": "face bus L12_i",
+      "stages": 15
+     },
+     {
+      "bits": 1,
+      "capture": "u_pgp_Q.start",
+      "launch": "face bus L12_i",
+      "stages": 14
+     },
+     {
+      "bits": 18,
+      "capture": "u_svg_Q0__t.ids",
+      "launch": "face bus L12_i",
+      "stages": 19
+     },
+     {
+      "bits": 6,
+      "capture": "u_svg_Q0__t.ids_cohort",
+      "launch": "face bus L12_i",
+      "stages": 19
+     },
+     {
+      "bits": 3,
+      "capture": "u_svg_Q0__t.ids_layer",
+      "launch": "face bus L12_i",
+      "stages": 19
+     },
+     {
+      "bits": 1,
+      "capture": "u_svg_Q0__t.ids_v",
+      "launch": "face bus L12_i",
+      "stages": 19
+     },
+     {
+      "bits": 54,
+      "capture": "u_svg_Q1__t.ids",
+      "launch": "face bus L12_i",
+      "stages": 12
+     },
+     {
+      "bits": 16,
+      "capture": "u_svg_Q1__t.ids_cohort",
+      "launch": "face bus L12_i",
+      "stages": 12
+     },
+     {
+      "bits": 8,
+      "capture": "u_svg_Q1__t.ids_layer",
+      "launch": "face bus L12_i",
+      "stages": 12
+     },
+     {
+      "bits": 1,
+      "capture": "u_svg_Q1__t.ids_v",
+      "launch": "face bus L12_i",
+      "stages": 12
+     },
+     {
+      "bits": 6,
+      "capture": "u_vmb_Q1.rq4",
+      "launch": "face bus L12_i",
+      "stages": 18
+     },
+     {
+      "bits": 6,
+      "capture": "u_vmb_Q3.rq4",
+      "launch": "face bus L12_i",
+      "stages": 23
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q4.rq4",
+      "launch": "face bus L12_i",
+      "stages": 8
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q5.rq4",
+      "launch": "face bus L12_i",
+      "stages": 7
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q6.rq4",
+      "launch": "face bus L12_i",
+      "stages": 9
+     }
+    ],
+    "L131_i": [
+     {
+      "bits": 5,
+      "capture": "u_vmb_Q6.wq0",
+      "launch": "face bus L131_i",
+      "stages": 10
+     }
+    ],
+    "L134_i": [
+     {
+      "bits": 3,
+      "capture": "u_cxij_Q_q.inj_q0",
+      "launch": "face bus L134_i",
+      "stages": 9
+     }
+    ],
+    "L135_i": [
+     {
+      "bits": 2,
+      "capture": "u_vmb_Q2.wq0",
+      "launch": "face bus L135_i",
+      "stages": 21
+     }
+    ],
+    "L136_i": [
+     {
+      "bits": 3,
+      "capture": "u_cxij_Q_q.inj_q2",
+      "launch": "face bus L136_i",
+      "stages": 7
+     }
+    ],
+    "L137_i": [
+     {
+      "bits": 1,
+      "capture": "u_hb_idx__qctl_Q.scf",
+      "launch": "face bus L137_i",
+      "stages": 9
+     }
+    ],
+    "L1_o": [
+     {
+      "bits": 25,
+      "capture": "u_calendar_Q.lg_local_read",
+      "launch": "face bus L1_o",
+      "stages": 9
+     },
+     {
+      "bits": 25,
+      "capture": "u_calendar_Q.lg_local_write",
+      "launch": "face bus L1_o",
+      "stages": 9
+     },
+     {
+      "bits": 2451,
+      "capture": "u_pgp_Q.command",
+      "launch": "face bus L1_o",
+      "stages": 16
+     },
+     {
+      "bits": 81,
+      "capture": "u_vmb_Q2.rr0",
+      "launch": "face bus L1_o",
+      "stages": 25
+     },
+     {
+      "bits": 1,
+      "capture": "u_vmb_Q2.wq_done0",
+      "launch": "face bus L1_o",
+      "stages": 25
+     },
+     {
+      "bits": 258,
+      "capture": "u_vmb_Q3.rr0",
+      "launch": "face bus L1_o",
+      "stages": 15
+     },
+     {
+      "bits": 2,
+      "capture": "u_vmb_Q3.wq_done0",
+      "launch": "face bus L1_o",
+      "stages": 15
+     }
+    ],
+    "L23_i": [
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l00_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l00_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l00_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l00_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l00_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l01_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l01_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l01_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 3
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l01_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l01_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l02_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l02_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l02_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l02_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l02_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l03_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l03_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l03_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l03_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l03_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l04_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l04_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l04_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l04_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l04_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l05_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l05_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l05_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l05_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l05_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l06_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l06_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l06_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l06_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l06_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l07_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l07_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l07_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l07_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l07_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l08_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l08_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l08_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l08_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l08_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l09_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l09_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l09_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l09_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l09_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l10_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l10_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l10_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l10_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l10_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l11_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l11_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l11_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l11_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l11_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l12_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l12_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l12_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l12_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l12_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l13_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l13_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l13_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l13_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l13_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l14_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l14_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l14_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l14_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l14_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l15_kv_waddr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l15_kv_wdata",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l15_kv_we",
+      "launch": "face bus L23_i",
+      "stages": 5
+     },
+     {
+      "bits": 24,
+      "capture": "u_sfus_Q.l15_vi_addr",
+      "launch": "face bus L23_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l15_vi_re",
+      "launch": "face bus L23_i",
+      "stages": 5
+     }
+    ],
+    "L24_i": [
+     {
+      "bits": 1024,
+      "capture": "u_cxij_Q_q.inj_q0",
+      "launch": "face bus L24_i",
+      "stages": 7
+     },
+     {
+      "bits": 99,
+      "capture": "u_sucore_Q.slice_x",
+      "launch": "face bus L24_i",
+      "stages": 16
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q0.rq0",
+      "launch": "face bus L24_i",
+      "stages": 29
+     },
+     {
+      "bits": 283,
+      "capture": "u_vmb_Q0.wq0",
+      "launch": "face bus L24_i",
+      "stages": 30
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q1.rq0",
+      "launch": "face bus L24_i",
+      "stages": 28
+     },
+     {
+      "bits": 283,
+      "capture": "u_vmb_Q1.wq0",
+      "launch": "face bus L24_i",
+      "stages": 28
+     }
+    ],
+    "L25_i": [
+     {
+      "bits": 1024,
+      "capture": "u_cxij_Q_q.inj_q1",
+      "launch": "face bus L25_i",
+      "stages": 19
+     },
+     {
+      "bits": 268,
+      "capture": "u_sucore_Q.slice_t",
+      "launch": "face bus L25_i",
+      "stages": 16
+     },
+     {
+      "bits": 128,
+      "capture": "u_sucore_Q.slice_x",
+      "launch": "face bus L25_i",
+      "stages": 19
+     },
+     {
+      "bits": 1,
+      "capture": "u_vmb_Q2.wq0",
+      "launch": "face bus L25_i",
+      "stages": 24
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q3.rq0",
+      "launch": "face bus L25_i",
+      "stages": 16
+     },
+     {
+      "bits": 283,
+      "capture": "u_vmb_Q3.wq0",
+      "launch": "face bus L25_i",
+      "stages": 16
+     }
+    ],
+    "L26_i": [
+     {
+      "bits": 1024,
+      "capture": "u_cxij_Q_q.inj_q2",
+      "launch": "face bus L26_i",
+      "stages": 7
+     },
+     {
+      "bits": 99,
+      "capture": "u_sucore_Q.slice_x",
+      "launch": "face bus L26_i",
+      "stages": 10
+     },
+     {
+      "bits": 6,
+      "capture": "u_vmb_Q4.rq0",
+      "launch": "face bus L26_i",
+      "stages": 19
+     },
+     {
+      "bits": 95,
+      "capture": "u_vmb_Q4.wq0",
+      "launch": "face bus L26_i",
+      "stages": 19
+     },
+     {
+      "bits": 6,
+      "capture": "u_vmb_Q5.rq0",
+      "launch": "face bus L26_i",
+      "stages": 23
+     },
+     {
+      "bits": 95,
+      "capture": "u_vmb_Q5.wq0",
+      "launch": "face bus L26_i",
+      "stages": 23
+     }
+    ],
+    "L27_i": [
+     {
+      "bits": 1024,
+      "capture": "u_cxij_Q_q.inj_q3",
+      "launch": "face bus L27_i",
+      "stages": 13
+     },
+     {
+      "bits": 268,
+      "capture": "u_sucore_Q.slice_t",
+      "launch": "face bus L27_i",
+      "stages": 8
+     },
+     {
+      "bits": 128,
+      "capture": "u_sucore_Q.slice_x",
+      "launch": "face bus L27_i",
+      "stages": 8
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q6.rq0",
+      "launch": "face bus L27_i",
+      "stages": 15
+     },
+     {
+      "bits": 18,
+      "capture": "u_vmb_Q7.rq0",
+      "launch": "face bus L27_i",
+      "stages": 16
+     },
+     {
+      "bits": 267,
+      "capture": "u_vmb_Q7.wq0",
+      "launch": "face bus L27_i",
+      "stages": 16
+     }
+    ],
+    "L2_o": [
+     {
+      "bits": 25,
+      "capture": "u_calendar_Q.lg_local_read",
+      "launch": "face bus L2_o",
+      "stages": 10
+     },
+     {
+      "bits": 25,
+      "capture": "u_calendar_Q.lg_local_write",
+      "launch": "face bus L2_o",
+      "stages": 10
+     },
+     {
+      "bits": 2015,
+      "capture": "u_pgp_Q.command",
+      "launch": "face bus L2_o",
+      "stages": 8
+     },
+     {
+      "bits": 36,
+      "capture": "u_sucore_Q.rf_bcmd",
+      "launch": "face bus L2_o",
+      "stages": 7
+     },
+     {
+      "bits": 128,
+      "capture": "u_sucore_Q.rf_bword",
+      "launch": "face bus L2_o",
+      "stages": 7
+     },
+     {
+      "bits": 256,
+      "capture": "u_sucore_Q.rf_dsec",
+      "launch": "face bus L2_o",
+      "stages": 8
+     },
+     {
+      "bits": 86,
+      "capture": "u_vmb_Q4.rr0",
+      "launch": "face bus L2_o",
+      "stages": 15
+     },
+     {
+      "bits": 1,
+      "capture": "u_vmb_Q4.wq_done0",
+      "launch": "face bus L2_o",
+      "stages": 14
+     },
+     {
+      "bits": 86,
+      "capture": "u_vmb_Q5.rr0",
+      "launch": "face bus L2_o",
+      "stages": 18
+     },
+     {
+      "bits": 1,
+      "capture": "u_vmb_Q5.wq_done0",
+      "launch": "face bus L2_o",
+      "stages": 18
+     }
+    ],
+    "L36_o": [
+     {
+      "bits": 55,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_11_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L36_o",
+      "stages": 9
+     },
+     {
+      "bits": 171,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_12_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L36_o",
+      "stages": 4
+     },
+     {
+      "bits": 171,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_13_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L36_o",
+      "stages": 6
+     },
+     {
+      "bits": 47,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_14_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L36_o",
+      "stages": 7
+     }
+    ],
+    "L37_o": [
+     {
+      "bits": 351,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_14_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L37_o",
+      "stages": 22
+     },
+     {
+      "bits": 512,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_15_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L37_o",
+      "stages": 22
+     },
+     {
+      "bits": 466,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_1_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L37_o",
+      "stages": 25
+     }
+    ],
+    "L38_o": [
+     {
+      "bits": 491,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_0_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L38_o",
+      "stages": 5
+     },
+     {
+      "bits": 512,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_10_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L38_o",
+      "stages": 4
+     },
+     {
+      "bits": 326,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_11_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L38_o",
+      "stages": 4
+     }
+    ],
+    "L39_o": [
+     {
+      "bits": 25,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_1_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L39_o",
+      "stages": 19
+     },
+     {
+      "bits": 512,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_2_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L39_o",
+      "stages": 19
+     },
+     {
+      "bits": 512,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_3_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L39_o",
+      "stages": 19
+     },
+     {
+      "bits": 280,
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_4_g3_w_o_u_out_u_dst_d",
+      "launch": "face bus L39_o",
+      "stages": 20
+     }
+    ],
+    "L3_o": [
+     {
+      "bits": 25,
+      "capture": "u_calendar_Q.lg_local_read",
+      "launch": "face bus L3_o",
+      "stages": 7
+     },
+     {
+      "bits": 25,
+      "capture": "u_calendar_Q.lg_local_write",
+      "launch": "face bus L3_o",
+      "stages": 7
+     },
+     {
+      "bits": 2451,
+      "capture": "u_pgp_Q.command",
+      "launch": "face bus L3_o",
+      "stages": 5
+     },
+     {
+      "bits": 242,
+      "capture": "u_vmb_Q6.rr0",
+      "launch": "face bus L3_o",
+      "stages": 16
+     },
+     {
+      "bits": 2,
+      "capture": "u_vmb_Q6.wq_done0",
+      "launch": "face bus L3_o",
+      "stages": 16
+     },
+     {
+      "bits": 258,
+      "capture": "u_vmb_Q7.rr0",
+      "launch": "face bus L3_o",
+      "stages": 15
+     },
+     {
+      "bits": 2,
+      "capture": "u_vmb_Q7.wq_done0",
+      "launch": "face bus L3_o",
+      "stages": 15
+     }
+    ],
+    "L55_i": [
+     {
+      "bits": 514,
+      "capture": "u_cxij_Q_q.inj_q0",
+      "launch": "face bus L55_i",
+      "stages": 7
+     }
+    ],
+    "L57_i": [
+     {
+      "bits": 216,
+      "capture": "u_sucore_Q.slice_t",
+      "launch": "face bus L57_i",
+      "stages": 22
+     },
+     {
+      "bits": 6,
+      "capture": "u_vmb_Q2.rq0",
+      "launch": "face bus L57_i",
+      "stages": 20
+     },
+     {
+      "bits": 95,
+      "capture": "u_vmb_Q2.wq0",
+      "launch": "face bus L57_i",
+      "stages": 21
+     }
+    ],
+    "L59_i": [
+     {
+      "bits": 514,
+      "capture": "u_cxij_Q_q.inj_q2",
+      "launch": "face bus L59_i",
+      "stages": 7
+     }
+    ],
+    "L5_o": [
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l00_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l01_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l02_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l03_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l04_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l05_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l06_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l07_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l08_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l09_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l10_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l11_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l12_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l13_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l14_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l15_vi_q",
+      "launch": "face bus L5_o",
+      "stages": 4
+     }
+    ],
+    "L61_i": [
+     {
+      "bits": 279,
+      "capture": "u_vmb_Q6.wq0",
+      "launch": "face bus L61_i",
+      "stages": 10
+     },
+     {
+      "bits": 238,
+      "capture": "u_vmb_Q7.wq0",
+      "launch": "face bus L61_i",
+      "stages": 7
+     }
+    ],
+    "L6_o": [
+     {
+      "bits": 512,
+      "capture": "u_hb_idx__q_Q.ql_codes",
+      "launch": "face bus L6_o",
+      "stages": 6
+     },
+     {
+      "bits": 8,
+      "capture": "u_hb_idx__q_Q.ql_head",
+      "launch": "face bus L6_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_hb_idx__q_Q.ql_sc",
+      "launch": "face bus L6_o",
+      "stages": 6
+     },
+     {
+      "bits": 1,
+      "capture": "u_hb_idx__q_Q.ql_v",
+      "launch": "face bus L6_o",
+      "stages": 6
+     },
+     {
+      "bits": 16,
+      "capture": "u_hb_idx__q_Q.ql_w",
+      "launch": "face bus L6_o",
+      "stages": 6
+     },
+     {
+      "bits": 1099,
+      "capture": "u_svg_Q0__t.sm_packet",
+      "launch": "face bus L6_o",
+      "stages": 12
+     },
+     {
+      "bits": 816,
+      "capture": "u_svg_Q3__t.sm_packet",
+      "launch": "face bus L6_o",
+      "stages": 4
+     }
+    ],
+    "L7_o": [
+     {
+      "bits": 8,
+      "capture": "u_hb_idx__qctl_Q.key_index",
+      "launch": "face bus L7_o",
+      "stages": 9
+     },
+     {
+      "bits": 1,
+      "capture": "u_hb_idx__qctl_Q.key_slot",
+      "launch": "face bus L7_o",
+      "stages": 9
+     },
+     {
+      "bits": 12,
+      "capture": "u_hb_idx__qctl_Q.nq",
+      "launch": "face bus L7_o",
+      "stages": 9
+     },
+     {
+      "bits": 89,
+      "capture": "u_svg_Q0__t.sm_packet",
+      "launch": "face bus L7_o",
+      "stages": 16
+     },
+     {
+      "bits": 1099,
+      "capture": "u_svg_Q1__t.sm_packet",
+      "launch": "face bus L7_o",
+      "stages": 15
+     },
+     {
+      "bits": 1099,
+      "capture": "u_svg_Q3__t.sm_packet",
+      "launch": "face bus L7_o",
+      "stages": 3
+     }
+    ],
+    "L81_i": [
+     {
+      "bits": 1,
+      "capture": "u_sfus_Q.l05_kv_wdata",
+      "launch": "face bus L81_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l06_kv_wdata",
+      "launch": "face bus L81_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l07_kv_wdata",
+      "launch": "face bus L81_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l08_kv_wdata",
+      "launch": "face bus L81_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l09_kv_wdata",
+      "launch": "face bus L81_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_sfus_Q.l15_kv_wdata",
+      "launch": "face bus L81_i",
+      "stages": 4
+     }
+    ],
+    "L91_o": [
+     {
+      "bits": 54,
+      "capture": "u_hb_idx__q_Q.ql_codes",
+      "launch": "face bus L91_o",
+      "stages": 5
+     }
+    ]
+   },
+   "dropped": 254
+  },
+  "q_su00": {
+   "after": 0,
+   "before": 48,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su00.sv",
+   "buses": {
+    "L102_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp0__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 11
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp2__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp4__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp6__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 11
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp8__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp10__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp12__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 9
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp14__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 6
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain0_3__p0.bank0_read_data",
+      "launch": "face bus L102_i",
+      "stages": 10
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain8_11__p0.bank0_read_data",
+      "launch": "face bus L102_i",
+      "stages": 3
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q0_pretree.tree_cmd",
+      "launch": "face bus L102_i",
+      "stages": 11
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q0_pretree.tree_o",
+      "launch": "face bus L102_i",
+      "stages": 12
+     }
+    ],
+    "L134_o": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp0__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp2__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp4__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp6__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp8__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp10__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp12__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp14__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 7
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain0_3__p0.bank0_read_data",
+      "launch": "face bus L134_o",
+      "stages": 9
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain8_11__p0.bank0_read_data",
+      "launch": "face bus L134_o",
+      "stages": 4
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q0_pretree.tree_cmd",
+      "launch": "face bus L134_o",
+      "stages": 10
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q0_pretree.tree_o",
+      "launch": "face bus L134_o",
+      "stages": 11
+     }
+    ],
+    "L36_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp0__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 7
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp2__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp4__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp6__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp8__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 9
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp10__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 7
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp12__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp14__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 10
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain0_3__p0.bank0_read_data",
+      "launch": "face bus L36_i",
+      "stages": 7
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain8_11__p0.bank0_read_data",
+      "launch": "face bus L36_i",
+      "stages": 7
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q0_pretree.tree_cmd",
+      "launch": "face bus L36_i",
+      "stages": 8
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q0_pretree.tree_o",
+      "launch": "face bus L36_i",
+      "stages": 8
+     }
+    ],
+    "L55_o": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp0__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp2__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp4__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp6__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp8__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp10__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp12__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp14__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 7
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain0_3__p0.bank0_read_data",
+      "launch": "face bus L55_o",
+      "stages": 9
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain8_11__p0.bank0_read_data",
+      "launch": "face bus L55_o",
+      "stages": 4
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q0_pretree.tree_cmd",
+      "launch": "face bus L55_o",
+      "stages": 10
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q0_pretree.tree_o",
+      "launch": "face bus L55_o",
+      "stages": 11
+     }
+    ]
+   },
+   "dropped": 48
+  },
+  "q_su00__physical_v1": {
+   "after": 0,
+   "before": 48,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su00__physical_v1.sv",
+   "buses": {
+    "L102_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp0__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 11
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp2__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp4__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp6__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 11
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp8__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp10__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp12__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 9
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp14__l.bank_read_data",
+      "launch": "face bus L102_i",
+      "stages": 6
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain0_3__p0.bank0_read_data",
+      "launch": "face bus L102_i",
+      "stages": 10
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain8_11__p0.bank0_read_data",
+      "launch": "face bus L102_i",
+      "stages": 3
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q0_pretree.tree_cmd",
+      "launch": "face bus L102_i",
+      "stages": 11
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q0_pretree.tree_o",
+      "launch": "face bus L102_i",
+      "stages": 12
+     }
+    ],
+    "L134_o": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp0__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp2__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp4__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp6__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp8__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp10__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp12__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp14__l.bank_read_data",
+      "launch": "face bus L134_o",
+      "stages": 7
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain0_3__p0.bank0_read_data",
+      "launch": "face bus L134_o",
+      "stages": 9
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain8_11__p0.bank0_read_data",
+      "launch": "face bus L134_o",
+      "stages": 4
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q0_pretree.tree_cmd",
+      "launch": "face bus L134_o",
+      "stages": 10
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q0_pretree.tree_o",
+      "launch": "face bus L134_o",
+      "stages": 11
+     }
+    ],
+    "L36_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp0__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 7
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp2__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp4__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp6__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp8__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 9
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp10__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 7
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp12__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp14__l.bank_read_data",
+      "launch": "face bus L36_i",
+      "stages": 10
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain0_3__p0.bank0_read_data",
+      "launch": "face bus L36_i",
+      "stages": 7
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain8_11__p0.bank0_read_data",
+      "launch": "face bus L36_i",
+      "stages": 7
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q0_pretree.tree_cmd",
+      "launch": "face bus L36_i",
+      "stages": 8
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q0_pretree.tree_o",
+      "launch": "face bus L36_i",
+      "stages": 8
+     }
+    ],
+    "L55_o": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp0__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp2__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp4__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp6__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp8__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp10__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp12__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp14__l.bank_read_data",
+      "launch": "face bus L55_o",
+      "stages": 7
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain0_3__p0.bank0_read_data",
+      "launch": "face bus L55_o",
+      "stages": 9
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain8_11__p0.bank0_read_data",
+      "launch": "face bus L55_o",
+      "stages": 4
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q0_pretree.tree_cmd",
+      "launch": "face bus L55_o",
+      "stages": 10
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q0_pretree.tree_o",
+      "launch": "face bus L55_o",
+      "stages": 11
+     }
+    ]
+   },
+   "dropped": 48
+  },
+  "q_su01": {
+   "after": 0,
+   "before": 30,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su01.sv",
+   "buses": {
+    "L0_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp1__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp3__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp5__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp7__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp9__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp11__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp13__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp_l__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain4_7__p0.bank0_read_data",
+      "launch": "face bus L0_i",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain12_15__p0.bank0_read_data",
+      "launch": "face bus L0_i",
+      "stages": 3
+     }
+    ],
+    "L110_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp1__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp3__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 9
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp5__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 7
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp7__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 9
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp9__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 9
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp11__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 7
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp13__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp_l__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 8
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain4_7__p0.bank0_read_data",
+      "launch": "face bus L110_i",
+      "stages": 8
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain12_15__p0.bank0_read_data",
+      "launch": "face bus L110_i",
+      "stages": 6
+     }
+    ],
+    "L24_o": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp1__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp3__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp5__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 7
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp7__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp9__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp11__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 7
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp13__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp_l__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 8
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain4_7__p0.bank0_read_data",
+      "launch": "face bus L24_o",
+      "stages": 8
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain12_15__p0.bank0_read_data",
+      "launch": "face bus L24_o",
+      "stages": 6
+     }
+    ]
+   },
+   "dropped": 30
+  },
+  "q_su01__physical_v1": {
+   "after": 0,
+   "before": 30,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su01__physical_v1.sv",
+   "buses": {
+    "L0_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp1__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp3__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp5__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp7__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp9__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp11__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp13__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp_l__l.bank_read_data",
+      "launch": "face bus L0_i",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain4_7__p0.bank0_read_data",
+      "launch": "face bus L0_i",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain12_15__p0.bank0_read_data",
+      "launch": "face bus L0_i",
+      "stages": 3
+     }
+    ],
+    "L110_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp1__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp3__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 9
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp5__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 7
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp7__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 9
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp9__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 9
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp11__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 7
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp13__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp_l__l.bank_read_data",
+      "launch": "face bus L110_i",
+      "stages": 8
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain4_7__p0.bank0_read_data",
+      "launch": "face bus L110_i",
+      "stages": 8
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain12_15__p0.bank0_read_data",
+      "launch": "face bus L110_i",
+      "stages": 6
+     }
+    ],
+    "L24_o": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp1__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp3__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp5__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 7
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp7__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp9__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 8
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp11__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 7
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp13__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 10
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q0_lane_exp_l__l.bank_read_data",
+      "launch": "face bus L24_o",
+      "stages": 8
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain4_7__p0.bank0_read_data",
+      "launch": "face bus L24_o",
+      "stages": 8
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q0_lanes_plain12_15__p0.bank0_read_data",
+      "launch": "face bus L24_o",
+      "stages": 6
+     }
+    ]
+   },
+   "dropped": 30
+  },
+  "q_su10": {
+   "after": 0,
+   "before": 32,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su10.sv",
+   "buses": {
+    "L111_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp0__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp2__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp4__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp6__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp8__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp10__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp12__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp14__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 6
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain8_11__p0.bank0_read_data",
+      "launch": "face bus L111_i",
+      "stages": 2
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q1_pretree.tree_cmd",
+      "launch": "face bus L111_i",
+      "stages": 3
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q1_pretree.tree_o",
+      "launch": "face bus L111_i",
+      "stages": 4
+     }
+    ],
+    "L1_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp0__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp2__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp4__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp6__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp8__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp10__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp12__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp14__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 5
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q1_pretree.tree_cmd",
+      "launch": "face bus L1_i",
+      "stages": 3
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q1_pretree.tree_o",
+      "launch": "face bus L1_i",
+      "stages": 3
+     }
+    ],
+    "L25_o": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp0__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp2__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp4__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp6__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp8__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp10__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp12__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp14__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain0_3__p0.bank0_read_data",
+      "launch": "face bus L25_o",
+      "stages": 2
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q1_pretree.tree_cmd",
+      "launch": "face bus L25_o",
+      "stages": 1
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q1_pretree.tree_o",
+      "launch": "face bus L25_o",
+      "stages": 2
+     }
+    ]
+   },
+   "dropped": 32
+  },
+  "q_su10__physical_v1": {
+   "after": 0,
+   "before": 32,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su10__physical_v1.sv",
+   "buses": {
+    "L111_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp0__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp2__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp4__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp6__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp8__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp10__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp12__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp14__l.bank_read_data",
+      "launch": "face bus L111_i",
+      "stages": 6
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain8_11__p0.bank0_read_data",
+      "launch": "face bus L111_i",
+      "stages": 2
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q1_pretree.tree_cmd",
+      "launch": "face bus L111_i",
+      "stages": 3
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q1_pretree.tree_o",
+      "launch": "face bus L111_i",
+      "stages": 4
+     }
+    ],
+    "L1_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp0__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp2__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp4__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp6__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp8__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp10__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp12__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp14__l.bank_read_data",
+      "launch": "face bus L1_i",
+      "stages": 5
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q1_pretree.tree_cmd",
+      "launch": "face bus L1_i",
+      "stages": 3
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q1_pretree.tree_o",
+      "launch": "face bus L1_i",
+      "stages": 3
+     }
+    ],
+    "L25_o": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp0__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp2__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp4__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp6__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp8__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp10__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp12__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp14__l.bank_read_data",
+      "launch": "face bus L25_o",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain0_3__p0.bank0_read_data",
+      "launch": "face bus L25_o",
+      "stages": 2
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q1_pretree.tree_cmd",
+      "launch": "face bus L25_o",
+      "stages": 1
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q1_pretree.tree_o",
+      "launch": "face bus L25_o",
+      "stages": 2
+     }
+    ]
+   },
+   "dropped": 32
+  },
+  "q_su11": {
+   "after": 255,
+   "before": 289,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su11.sv",
+   "buses": {
+    "L103_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp1__l.bank_read_data",
+      "launch": "face bus L103_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp5__l.bank_read_data",
+      "launch": "face bus L103_i",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp7__l.bank_read_data",
+      "launch": "face bus L103_i",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp9__l.bank_read_data",
+      "launch": "face bus L103_i",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp13__l.bank_read_data",
+      "launch": "face bus L103_i",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp_l__l.bank_read_data",
+      "launch": "face bus L103_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain12_15__p0.bank0_read_data",
+      "launch": "face bus L103_i",
+      "stages": 5
+     }
+    ],
+    "L135_o": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp1__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp3__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp5__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp7__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp9__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp11__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp13__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp_l__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain4_7__p0.bank0_read_data",
+      "launch": "face bus L135_o",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain12_15__p0.bank0_read_data",
+      "launch": "face bus L135_o",
+      "stages": 2
+     }
+    ],
+    "L37_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp1__l.bank_read_data",
+      "launch": "face bus L37_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp5__l.bank_read_data",
+      "launch": "face bus L37_i",
+      "stages": 1
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp7__l.bank_read_data",
+      "launch": "face bus L37_i",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp9__l.bank_read_data",
+      "launch": "face bus L37_i",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp_l__l.bank_read_data",
+      "launch": "face bus L37_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain4_7__p0.bank0_read_data",
+      "launch": "face bus L37_i",
+      "stages": 2
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain12_15__p0.bank0_read_data",
+      "launch": "face bus L37_i",
+      "stages": 5
+     }
+    ],
+    "L57_o": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp1__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp3__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp5__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp7__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp9__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp11__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp13__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp_l__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain4_7__p0.bank0_read_data",
+      "launch": "face bus L57_o",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain12_15__p0.bank0_read_data",
+      "launch": "face bus L57_o",
+      "stages": 2
+     }
+    ]
+   },
+   "dropped": 34
+  },
+  "q_su11__physical_v1": {
+   "after": 255,
+   "before": 289,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su11__physical_v1.sv",
+   "buses": {
+    "L103_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp1__l.bank_read_data",
+      "launch": "face bus L103_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp5__l.bank_read_data",
+      "launch": "face bus L103_i",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp7__l.bank_read_data",
+      "launch": "face bus L103_i",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp9__l.bank_read_data",
+      "launch": "face bus L103_i",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp13__l.bank_read_data",
+      "launch": "face bus L103_i",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp_l__l.bank_read_data",
+      "launch": "face bus L103_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain12_15__p0.bank0_read_data",
+      "launch": "face bus L103_i",
+      "stages": 5
+     }
+    ],
+    "L135_o": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp1__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp3__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp5__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp7__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp9__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp11__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp13__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp_l__l.bank_read_data",
+      "launch": "face bus L135_o",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain4_7__p0.bank0_read_data",
+      "launch": "face bus L135_o",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain12_15__p0.bank0_read_data",
+      "launch": "face bus L135_o",
+      "stages": 2
+     }
+    ],
+    "L37_i": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp1__l.bank_read_data",
+      "launch": "face bus L37_i",
+      "stages": 3
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp5__l.bank_read_data",
+      "launch": "face bus L37_i",
+      "stages": 1
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp7__l.bank_read_data",
+      "launch": "face bus L37_i",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp9__l.bank_read_data",
+      "launch": "face bus L37_i",
+      "stages": 2
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp_l__l.bank_read_data",
+      "launch": "face bus L37_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain4_7__p0.bank0_read_data",
+      "launch": "face bus L37_i",
+      "stages": 2
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain12_15__p0.bank0_read_data",
+      "launch": "face bus L37_i",
+      "stages": 5
+     }
+    ],
+    "L57_o": [
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp1__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 6
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp3__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp5__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp7__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp9__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp11__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 4
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp13__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 5
+     },
+     {
+      "bits": 32,
+      "capture": "u_su_Q1_lane_exp_l__l.bank_read_data",
+      "launch": "face bus L57_o",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain4_7__p0.bank0_read_data",
+      "launch": "face bus L57_o",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q1_lanes_plain12_15__p0.bank0_read_data",
+      "launch": "face bus L57_o",
+      "stages": 2
+     }
+    ]
+   },
+   "dropped": 34
+  },
+  "q_su20": {
+   "after": 0,
+   "before": 20,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su20.sv",
+   "buses": {
+    "L104_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes0_3__p0.bank0_read_data",
+      "launch": "face bus L104_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes8_11__p3.bank0_read_data",
+      "launch": "face bus L104_i",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes24_27__p0.bank0_read_data",
+      "launch": "face bus L104_i",
+      "stages": 3
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q2_pretree.tree_cmd",
+      "launch": "face bus L104_i",
+      "stages": 6
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q2_pretree.tree_o",
+      "launch": "face bus L104_i",
+      "stages": 5
+     }
+    ],
+    "L136_o": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes8_11__p3.bank0_read_data",
+      "launch": "face bus L136_o",
+      "stages": 7
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes16_19__p0.bank0_read_data",
+      "launch": "face bus L136_o",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes24_27__p0.bank0_read_data",
+      "launch": "face bus L136_o",
+      "stages": 5
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q2_pretree.tree_cmd",
+      "launch": "face bus L136_o",
+      "stages": 8
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q2_pretree.tree_o",
+      "launch": "face bus L136_o",
+      "stages": 8
+     }
+    ],
+    "L38_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes0_3__p0.bank0_read_data",
+      "launch": "face bus L38_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes8_11__p3.bank0_read_data",
+      "launch": "face bus L38_i",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes24_27__p0.bank0_read_data",
+      "launch": "face bus L38_i",
+      "stages": 3
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q2_pretree.tree_cmd",
+      "launch": "face bus L38_i",
+      "stages": 6
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q2_pretree.tree_o",
+      "launch": "face bus L38_i",
+      "stages": 6
+     }
+    ],
+    "L59_o": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes8_11__p3.bank0_read_data",
+      "launch": "face bus L59_o",
+      "stages": 7
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes16_19__p0.bank0_read_data",
+      "launch": "face bus L59_o",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes24_27__p0.bank0_read_data",
+      "launch": "face bus L59_o",
+      "stages": 5
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q2_pretree.tree_cmd",
+      "launch": "face bus L59_o",
+      "stages": 8
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q2_pretree.tree_o",
+      "launch": "face bus L59_o",
+      "stages": 8
+     }
+    ]
+   },
+   "dropped": 20
+  },
+  "q_su20__physical_v1": {
+   "after": 0,
+   "before": 20,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su20__physical_v1.sv",
+   "buses": {
+    "L104_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes0_3__p0.bank0_read_data",
+      "launch": "face bus L104_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes8_11__p3.bank0_read_data",
+      "launch": "face bus L104_i",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes24_27__p0.bank0_read_data",
+      "launch": "face bus L104_i",
+      "stages": 3
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q2_pretree.tree_cmd",
+      "launch": "face bus L104_i",
+      "stages": 6
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q2_pretree.tree_o",
+      "launch": "face bus L104_i",
+      "stages": 5
+     }
+    ],
+    "L136_o": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes8_11__p3.bank0_read_data",
+      "launch": "face bus L136_o",
+      "stages": 7
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes16_19__p0.bank0_read_data",
+      "launch": "face bus L136_o",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes24_27__p0.bank0_read_data",
+      "launch": "face bus L136_o",
+      "stages": 5
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q2_pretree.tree_cmd",
+      "launch": "face bus L136_o",
+      "stages": 8
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q2_pretree.tree_o",
+      "launch": "face bus L136_o",
+      "stages": 8
+     }
+    ],
+    "L38_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes0_3__p0.bank0_read_data",
+      "launch": "face bus L38_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes8_11__p3.bank0_read_data",
+      "launch": "face bus L38_i",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes24_27__p0.bank0_read_data",
+      "launch": "face bus L38_i",
+      "stages": 3
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q2_pretree.tree_cmd",
+      "launch": "face bus L38_i",
+      "stages": 6
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q2_pretree.tree_o",
+      "launch": "face bus L38_i",
+      "stages": 6
+     }
+    ],
+    "L59_o": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes8_11__p3.bank0_read_data",
+      "launch": "face bus L59_o",
+      "stages": 7
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes16_19__p0.bank0_read_data",
+      "launch": "face bus L59_o",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes24_27__p0.bank0_read_data",
+      "launch": "face bus L59_o",
+      "stages": 5
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q2_pretree.tree_cmd",
+      "launch": "face bus L59_o",
+      "stages": 8
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q2_pretree.tree_o",
+      "launch": "face bus L59_o",
+      "stages": 8
+     }
+    ]
+   },
+   "dropped": 20
+  },
+  "q_su21": {
+   "after": 0,
+   "before": 10,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su21.sv",
+   "buses": {
+    "L112_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes12_15__p0.bank0_read_data",
+      "launch": "face bus L112_i",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes20_23__p0.bank0_read_data",
+      "launch": "face bus L112_i",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes28_31__p0.bank0_read_data",
+      "launch": "face bus L112_i",
+      "stages": 7
+     }
+    ],
+    "L26_o": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes12_15__p0.bank0_read_data",
+      "launch": "face bus L26_o",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes20_23__p0.bank0_read_data",
+      "launch": "face bus L26_o",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes28_31__p0.bank0_read_data",
+      "launch": "face bus L26_o",
+      "stages": 8
+     }
+    ],
+    "L2_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes4_7__p0.bank0_read_data",
+      "launch": "face bus L2_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes12_15__p0.bank0_read_data",
+      "launch": "face bus L2_i",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes20_23__p0.bank0_read_data",
+      "launch": "face bus L2_i",
+      "stages": 2
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes28_31__p0.bank0_read_data",
+      "launch": "face bus L2_i",
+      "stages": 7
+     }
+    ]
+   },
+   "dropped": 10
+  },
+  "q_su21__physical_v1": {
+   "after": 0,
+   "before": 10,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su21__physical_v1.sv",
+   "buses": {
+    "L112_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes12_15__p0.bank0_read_data",
+      "launch": "face bus L112_i",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes20_23__p0.bank0_read_data",
+      "launch": "face bus L112_i",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes28_31__p0.bank0_read_data",
+      "launch": "face bus L112_i",
+      "stages": 7
+     }
+    ],
+    "L26_o": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes12_15__p0.bank0_read_data",
+      "launch": "face bus L26_o",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes20_23__p0.bank0_read_data",
+      "launch": "face bus L26_o",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes28_31__p0.bank0_read_data",
+      "launch": "face bus L26_o",
+      "stages": 8
+     }
+    ],
+    "L2_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes4_7__p0.bank0_read_data",
+      "launch": "face bus L2_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes12_15__p0.bank0_read_data",
+      "launch": "face bus L2_i",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes20_23__p0.bank0_read_data",
+      "launch": "face bus L2_i",
+      "stages": 2
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q2_lanes28_31__p0.bank0_read_data",
+      "launch": "face bus L2_i",
+      "stages": 7
+     }
+    ]
+   },
+   "dropped": 10
+  },
+  "q_su30": {
+   "after": 0,
+   "before": 15,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su30.sv",
+   "buses": {
+    "L113_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes0_3__p0.bank0_read_data",
+      "launch": "face bus L113_i",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes8_11__p3.bank0_read_data",
+      "launch": "face bus L113_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes16_19__p0.bank0_read_data",
+      "launch": "face bus L113_i",
+      "stages": 6
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes24_27__p0.bank0_read_data",
+      "launch": "face bus L113_i",
+      "stages": 8
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q3_pretree.tree_o",
+      "launch": "face bus L113_i",
+      "stages": 2
+     }
+    ],
+    "L27_o": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes0_3__p0.bank0_read_data",
+      "launch": "face bus L27_o",
+      "stages": 2
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes8_11__p3.bank0_read_data",
+      "launch": "face bus L27_o",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes16_19__p0.bank0_read_data",
+      "launch": "face bus L27_o",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes24_27__p0.bank0_read_data",
+      "launch": "face bus L27_o",
+      "stages": 7
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q3_pretree.tree_cmd",
+      "launch": "face bus L27_o",
+      "stages": 2
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q3_pretree.tree_o",
+      "launch": "face bus L27_o",
+      "stages": 3
+     }
+    ],
+    "L3_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes0_3__p0.bank0_read_data",
+      "launch": "face bus L3_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes8_11__p3.bank0_read_data",
+      "launch": "face bus L3_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes16_19__p0.bank0_read_data",
+      "launch": "face bus L3_i",
+      "stages": 6
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes24_27__p0.bank0_read_data",
+      "launch": "face bus L3_i",
+      "stages": 7
+     }
+    ]
+   },
+   "dropped": 15
+  },
+  "q_su30__physical_v1": {
+   "after": 0,
+   "before": 15,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su30__physical_v1.sv",
+   "buses": {
+    "L113_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes0_3__p0.bank0_read_data",
+      "launch": "face bus L113_i",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes8_11__p3.bank0_read_data",
+      "launch": "face bus L113_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes16_19__p0.bank0_read_data",
+      "launch": "face bus L113_i",
+      "stages": 6
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes24_27__p0.bank0_read_data",
+      "launch": "face bus L113_i",
+      "stages": 8
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q3_pretree.tree_o",
+      "launch": "face bus L113_i",
+      "stages": 2
+     }
+    ],
+    "L27_o": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes0_3__p0.bank0_read_data",
+      "launch": "face bus L27_o",
+      "stages": 2
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes8_11__p3.bank0_read_data",
+      "launch": "face bus L27_o",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes16_19__p0.bank0_read_data",
+      "launch": "face bus L27_o",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes24_27__p0.bank0_read_data",
+      "launch": "face bus L27_o",
+      "stages": 7
+     },
+     {
+      "bits": 12,
+      "capture": "u_su_Q3_pretree.tree_cmd",
+      "launch": "face bus L27_o",
+      "stages": 2
+     },
+     {
+      "bits": 67,
+      "capture": "u_su_Q3_pretree.tree_o",
+      "launch": "face bus L27_o",
+      "stages": 3
+     }
+    ],
+    "L3_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes0_3__p0.bank0_read_data",
+      "launch": "face bus L3_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes8_11__p3.bank0_read_data",
+      "launch": "face bus L3_i",
+      "stages": 3
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes16_19__p0.bank0_read_data",
+      "launch": "face bus L3_i",
+      "stages": 6
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes24_27__p0.bank0_read_data",
+      "launch": "face bus L3_i",
+      "stages": 7
+     }
+    ]
+   },
+   "dropped": 15
+  },
+  "q_su31": {
+   "after": 0,
+   "before": 16,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su31.sv",
+   "buses": {
+    "L105_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes4_7__p0.bank0_read_data",
+      "launch": "face bus L105_i",
+      "stages": 7
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes12_15__p0.bank0_read_data",
+      "launch": "face bus L105_i",
+      "stages": 8
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes20_23__p0.bank0_read_data",
+      "launch": "face bus L105_i",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes28_31__p0.bank0_read_data",
+      "launch": "face bus L105_i",
+      "stages": 4
+     }
+    ],
+    "L131_o": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes4_7__p0.bank0_read_data",
+      "launch": "face bus L131_o",
+      "stages": 10
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes12_15__p0.bank0_read_data",
+      "launch": "face bus L131_o",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes20_23__p0.bank0_read_data",
+      "launch": "face bus L131_o",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes28_31__p0.bank0_read_data",
+      "launch": "face bus L131_o",
+      "stages": 5
+     }
+    ],
+    "L39_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes4_7__p0.bank0_read_data",
+      "launch": "face bus L39_i",
+      "stages": 6
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes12_15__p0.bank0_read_data",
+      "launch": "face bus L39_i",
+      "stages": 8
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes20_23__p0.bank0_read_data",
+      "launch": "face bus L39_i",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes28_31__p0.bank0_read_data",
+      "launch": "face bus L39_i",
+      "stages": 4
+     }
+    ],
+    "L61_o": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes4_7__p0.bank0_read_data",
+      "launch": "face bus L61_o",
+      "stages": 10
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes12_15__p0.bank0_read_data",
+      "launch": "face bus L61_o",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes20_23__p0.bank0_read_data",
+      "launch": "face bus L61_o",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes28_31__p0.bank0_read_data",
+      "launch": "face bus L61_o",
+      "stages": 5
+     }
+    ]
+   },
+   "dropped": 16
+  },
+  "q_su31__physical_v1": {
+   "after": 0,
+   "before": 16,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_q_su31__physical_v1.sv",
+   "buses": {
+    "L105_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes4_7__p0.bank0_read_data",
+      "launch": "face bus L105_i",
+      "stages": 7
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes12_15__p0.bank0_read_data",
+      "launch": "face bus L105_i",
+      "stages": 8
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes20_23__p0.bank0_read_data",
+      "launch": "face bus L105_i",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes28_31__p0.bank0_read_data",
+      "launch": "face bus L105_i",
+      "stages": 4
+     }
+    ],
+    "L131_o": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes4_7__p0.bank0_read_data",
+      "launch": "face bus L131_o",
+      "stages": 10
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes12_15__p0.bank0_read_data",
+      "launch": "face bus L131_o",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes20_23__p0.bank0_read_data",
+      "launch": "face bus L131_o",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes28_31__p0.bank0_read_data",
+      "launch": "face bus L131_o",
+      "stages": 5
+     }
+    ],
+    "L39_i": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes4_7__p0.bank0_read_data",
+      "launch": "face bus L39_i",
+      "stages": 6
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes12_15__p0.bank0_read_data",
+      "launch": "face bus L39_i",
+      "stages": 8
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes20_23__p0.bank0_read_data",
+      "launch": "face bus L39_i",
+      "stages": 4
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes28_31__p0.bank0_read_data",
+      "launch": "face bus L39_i",
+      "stages": 4
+     }
+    ],
+    "L61_o": [
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes4_7__p0.bank0_read_data",
+      "launch": "face bus L61_o",
+      "stages": 10
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes12_15__p0.bank0_read_data",
+      "launch": "face bus L61_o",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes20_23__p0.bank0_read_data",
+      "launch": "face bus L61_o",
+      "stages": 5
+     },
+     {
+      "bits": 128,
+      "capture": "u_su_Q3_lanes28_31__p0.bank0_read_data",
+      "launch": "face bus L61_o",
+      "stages": 5
+     }
+    ]
+   },
+   "dropped": 16
+  },
+  "root": {
+   "after": 81,
+   "before": 151,
+   "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_root.sv",
+   "buses": {
+    "L106_o": [
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_phy_up",
+      "launch": "face bus L106_o",
+      "stages": 15
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_arm_bank",
+      "launch": "face bus L106_o",
+      "stages": 15
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_arm_v",
+      "launch": "face bus L106_o",
+      "stages": 15
+     },
+     {
+      "bits": 2,
+      "capture": "u_host_cp_rxs.ep_rx_block_ready",
+      "launch": "face bus L106_o",
+      "stages": 15
+     },
+     {
+      "bits": 7,
+      "capture": "u_host_cp_rxs.ep_rx_block_words",
+      "launch": "face bus L106_o",
+      "stages": 15
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_cp_rxs.ep_rx_pin_flit",
+      "launch": "face bus L106_o",
+      "stages": 16
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_pin_v",
+      "launch": "face bus L106_o",
+      "stages": 15
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_release_bank",
+      "launch": "face bus L106_o",
+      "stages": 15
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_release_v",
+      "launch": "face bus L106_o",
+      "stages": 15
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_slot_bank",
+      "launch": "face bus L106_o",
+      "stages": 15
+     },
+     {
+      "bits": 6,
+      "capture": "u_host_cp_rxs.ep_rx_slot_index",
+      "launch": "face bus L106_o",
+      "stages": 15
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_slot_v",
+      "launch": "face bus L106_o",
+      "stages": 15
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_cp_rxs.ep_tx_frame",
+      "launch": "face bus L106_o",
+      "stages": 16
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_tx_v",
+      "launch": "face bus L106_o",
+      "stages": 15
+     }
+    ],
+    "L124_o": [
+     {
+      "bits": 769,
+      "capture": "u_col_idx.prm",
+      "launch": "face bus L124_o",
+      "stages": 5
+     }
+    ],
+    "L124m_o": [
+     {
+      "bits": 769,
+      "capture": "u_col_idx.prm",
+      "launch": "face bus L124m_o",
+      "stages": 5
+     }
+    ],
+    "L125_i": [
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_phy_up",
+      "launch": "face bus L125_i",
+      "stages": 16
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_arm_bank",
+      "launch": "face bus L125_i",
+      "stages": 16
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_arm_v",
+      "launch": "face bus L125_i",
+      "stages": 16
+     },
+     {
+      "bits": 2,
+      "capture": "u_host_cp_rxs.ep_rx_block_ready",
+      "launch": "face bus L125_i",
+      "stages": 16
+     },
+     {
+      "bits": 7,
+      "capture": "u_host_cp_rxs.ep_rx_block_words",
+      "launch": "face bus L125_i",
+      "stages": 16
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_cp_rxs.ep_rx_pin_flit",
+      "launch": "face bus L125_i",
+      "stages": 16
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_pin_v",
+      "launch": "face bus L125_i",
+      "stages": 16
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_release_bank",
+      "launch": "face bus L125_i",
+      "stages": 16
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_release_v",
+      "launch": "face bus L125_i",
+      "stages": 16
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_slot_bank",
+      "launch": "face bus L125_i",
+      "stages": 16
+     },
+     {
+      "bits": 6,
+      "capture": "u_host_cp_rxs.ep_rx_slot_index",
+      "launch": "face bus L125_i",
+      "stages": 16
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_slot_v",
+      "launch": "face bus L125_i",
+      "stages": 16
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_cp_rxs.ep_tx_frame",
+      "launch": "face bus L125_i",
+      "stages": 17
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_tx_v",
+      "launch": "face bus L125_i",
+      "stages": 16
+     }
+    ],
+    "L12_o": [
+     {
+      "bits": 2180,
+      "capture": "u_hb_idx__link.tx",
+      "launch": "u_hb_idx__link.tx",
+      "stages": 3
+     }
+    ],
+    "L12m_o": [
+     {
+      "bits": 2180,
+      "capture": "u_hb_idx__link.tx",
+      "launch": "u_hb_idx__link.tx",
+      "stages": 6
+     }
+    ],
+    "L48_i": [
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_phy_up",
+      "launch": "face bus L48_i",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_arm_bank",
+      "launch": "face bus L48_i",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_arm_v",
+      "launch": "face bus L48_i",
+      "stages": 2
+     },
+     {
+      "bits": 2,
+      "capture": "u_host_cp_rxs.ep_rx_block_ready",
+      "launch": "face bus L48_i",
+      "stages": 2
+     },
+     {
+      "bits": 7,
+      "capture": "u_host_cp_rxs.ep_rx_block_words",
+      "launch": "face bus L48_i",
+      "stages": 2
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_cp_rxs.ep_rx_pin_flit",
+      "launch": "face bus L48_i",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_pin_v",
+      "launch": "face bus L48_i",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_release_bank",
+      "launch": "face bus L48_i",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_release_v",
+      "launch": "face bus L48_i",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_slot_bank",
+      "launch": "face bus L48_i",
+      "stages": 2
+     },
+     {
+      "bits": 6,
+      "capture": "u_host_cp_rxs.ep_rx_slot_index",
+      "launch": "face bus L48_i",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_slot_v",
+      "launch": "face bus L48_i",
+      "stages": 2
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_cp_rxs.ep_tx_frame",
+      "launch": "face bus L48_i",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_tx_v",
+      "launch": "face bus L48_i",
+      "stages": 2
+     }
+    ],
+    "L53_o": [
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_phy_up",
+      "launch": "face bus L53_o",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_arm_bank",
+      "launch": "face bus L53_o",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_arm_v",
+      "launch": "face bus L53_o",
+      "stages": 2
+     },
+     {
+      "bits": 2,
+      "capture": "u_host_cp_rxs.ep_rx_block_ready",
+      "launch": "face bus L53_o",
+      "stages": 2
+     },
+     {
+      "bits": 7,
+      "capture": "u_host_cp_rxs.ep_rx_block_words",
+      "launch": "face bus L53_o",
+      "stages": 2
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_cp_rxs.ep_rx_pin_flit",
+      "launch": "face bus L53_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_pin_v",
+      "launch": "face bus L53_o",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_release_bank",
+      "launch": "face bus L53_o",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_release_v",
+      "launch": "face bus L53_o",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_slot_bank",
+      "launch": "face bus L53_o",
+      "stages": 2
+     },
+     {
+      "bits": 6,
+      "capture": "u_host_cp_rxs.ep_rx_slot_index",
+      "launch": "face bus L53_o",
+      "stages": 2
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_rx_slot_v",
+      "launch": "face bus L53_o",
+      "stages": 2
+     },
+     {
+      "bits": 612,
+      "capture": "u_host_cp_rxs.ep_tx_frame",
+      "launch": "face bus L53_o",
+      "stages": 3
+     },
+     {
+      "bits": 1,
+      "capture": "u_host_cp_rxs.ep_tx_v",
+      "launch": "face bus L53_o",
+      "stages": 2
+     }
+    ],
+    "L64_i": [
+     {
+      "bits": 769,
+      "capture": "u_col_idx.prm",
+      "launch": "face bus L64_i",
+      "stages": 6
+     }
+    ],
+    "L64m_i": [
+     {
+      "bits": 769,
+      "capture": "u_col_idx.prm",
+      "launch": "face bus L64m_i",
+      "stages": 5
+     }
+    ],
+    "L74m_i": [
+     {
+      "bits": 12,
+      "capture": "u_col_idx.cfg_addr",
+      "launch": "face bus L74m_i",
+      "stages": 4
+     },
+     {
+      "bits": 256,
+      "capture": "u_col_idx.cfg_data",
+      "launch": "face bus L74m_i",
+      "stages": 3
+     },
+     {
+      "bits": 8,
+      "capture": "u_col_idx.cfg_target",
+      "launch": "face bus L74m_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_col_idx.cfg_v",
+      "launch": "face bus L74m_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_col_idx.desc_v",
+      "launch": "face bus L74m_i",
+      "stages": 4
+     },
+     {
+      "bits": 1,
+      "capture": "u_col_idx.launch_v",
+      "launch": "face bus L74m_i",
+      "stages": 4
+     }
+    ],
+    "L80_o": [
+     {
+      "bits": 769,
+      "capture": "u_col_idx.prm",
+      "launch": "face bus L80_o",
+      "stages": 5
+     }
+    ],
+    "L80m_o": [
+     {
+      "bits": 769,
+      "capture": "u_col_idx.prm",
+      "launch": "face bus L80m_o",
+      "stages": 5
+     }
+    ]
+   },
+   "dropped": 70
+  }
+ }
+}

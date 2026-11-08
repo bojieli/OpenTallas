@@ -629,6 +629,8 @@ if {[file exists /work/reset_taps.tcl]} { source /work/reset_taps.tcl }
 }
 # S81-P8 10-23: soft relay stations on their source-sink lines (kits with hard cores; gen_phys copies relay_mid.tcl)
 if {[file exists /work/relay_mid.tcl] && [info exists ::env(OT_RELAY_MID_RE)]} { source /work/relay_mid.tcl }
+# S81-TYPES-5 11-07 NARROW-GUTTER class: hard placement blockages over macro gaps < OT_GUTTER_BLOCK_UM (opt-in, gutter_block.tcl)
+if {[file exists /work/gutter_block.tcl] && [info exists ::env(OT_GUTTER_BLOCK_UM)]} { source /work/gutter_block.tcl }
 # DIE-HEAD-69 11-05: core-output landing flops at their hard-core pins (kits with hard cores; gen_phys copies it)
 if {[file exists /work/core_out_land.tcl]} { source /work/core_out_land.tcl }
 # OT_GPL_GUARD begin -- KIT-TRIAGE-1/G4 11-01 (FLOW, default-on class fix for GPL-0305, every kit whose PRE_GLOBAL_PLACE

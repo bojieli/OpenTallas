@@ -1,0 +1,102 @@
+{
+ "source_commit": "AT_GENERATION_HEAD",
+ "clock_ports": [
+  "ck"
+ ],
+ "reset_ports": [
+  "rst"
+ ],
+ "pin_placement_policy": "DECLARED_CLOCK_RESET_POINTS",
+ "port_inventory": {
+  "top": "codex_svc_smd_native",
+  "source_file": "results/physical/codex_svc_hardening_1551/native_smd_c/rtl/codex_svc_smd_native.sv",
+  "source_sha256": "db6548e0b69f17a13646428e4b1a8d1008c62b6ccd311654038c0bebbd5441f0",
+  "ports": [
+   [
+    "ck",
+    "input",
+    1
+   ],
+   [
+    "rst",
+    "input",
+    1
+   ],
+   [
+    "cfg_p",
+    "input",
+    3
+   ],
+   [
+    "i_pv",
+    "input",
+    1
+   ],
+   [
+    "i_pa",
+    "input",
+    64
+   ],
+   [
+    "i_dv",
+    "input",
+    1
+   ],
+   [
+    "i_den",
+    "input",
+    32
+   ],
+   [
+    "i_csv",
+    "input",
+    1
+   ],
+   [
+    "i_csi",
+    "input",
+    5
+   ],
+   [
+    "i_csd",
+    "input",
+    64
+   ],
+   [
+    "o_ov",
+    "output",
+    1
+   ],
+   [
+    "o_o",
+    "output",
+    32
+   ],
+   [
+    "o_f",
+    "output",
+    1
+   ]
+  ]
+ },
+ "private_reset_contract_file": "results/physical/codex_svc_hardening_1551/private_reset/reset_contract.json",
+ "private_reset_contract_sha256": "a1f0b8a7d0ccb4948f8bd8f784f75b5ab60f78b769d4498cb4b8a2166fc11267",
+ "release_eligible": false,
+ "qualification": "FORM_C = FORM_B RTL (bench + kit LEC64 EQUIVALENT 8919/8919 in form B) + OT_F4_PAIR=1 leaf co-location of zero-logic shift pairs",
+ "added_rx_clk_PIN_cycles": 0,
+ "added_reset_cycles": 0,
+ "native_internal_reset_release_cycles": 2,
+ "reset_pin_shape_policy": "M5_VERTICAL",
+ "reset_copies": {
+  "source": "rr0",
+  "copies": 3,
+  "groups": [
+   "control",
+   "g_rp[0]",
+   "g_rp[1]"
+  ],
+  "added_reset_cycles": 0,
+  "kept": true
+ },
+ "form_c_reason": "form B routed: FF hold -6.62 ps on 143 endpoints, all reg-start zero/near-zero-logic shift pairs (fdiv r_e/qin pipelines 97, delay lines u_o0d/u_ul/u_urd 32); same class SML form C cut 158->60 with OT_F4_PAIR"
+}

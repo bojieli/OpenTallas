@@ -1,0 +1,14 @@
+[Unit]
+Description=OpenTallas standing auto-cleanup, host job (tools/fleet/ot-autoclean.py run; AUTOCLEAN-7, OWNER 11-07 18:1x)
+# Deletes only kit-wave finished/superseded attempts, ODB-trim and intermediate-ODB files, after every protection
+# check; reads the snapshot the localhost driver (ot-autoclean-drive) pushes, refuses one older than 3 h.
+# Dry run unless OT_AUTOCLEAN_ARGS holds --apply.  Off switch: touch ~/.config/ot-autoclean-auto/OFF.
+
+[Service]
+Type=oneshot
+Environment=OT_AUTOCLEAN_ARGS=
+EnvironmentFile=-%h/.config/ot-autoclean-auto/env
+ExecStart=/usr/bin/python3 -I %h/.local/share/ot-autoclean-auto/ot-autoclean.py run $OT_AUTOCLEAN_ARGS
+TimeoutStartSec=3h
+Nice=15
+IOSchedulingClass=idle

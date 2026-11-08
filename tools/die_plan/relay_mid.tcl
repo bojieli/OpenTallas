@@ -8,6 +8,12 @@
 # (a chain: stage j of n between the head's fixed sources and the tail's fixed sinks).  Groups whose endpoints are not
 # all fixed, or whose span is < OT_RELAY_MID_MIN_UM (200), are left to GPL.  Each group is placed FIRM as one compact
 # cluster outside every hard-core halo; face_flops_release.tcl releases them (ot_relay_mid.txt) before DPL.
+# FIT (S81-TYPES-5 11-07, COORD COLH10 e10 channel; opt-in OT_RELAY_MID_FIT=1, default off = byte-identical behaviour):
+# the old fallback took the NEAREST free point to a blocked midpoint, which is often a narrow macro channel (COLH10 vR:
+# 1085 lpl_15/16/17 relay flops packed into the two 40-um e10 side channels at density .6-.7).  With FIT a station takes
+# the spot on its source-sink line (nearest to the j/(n+1) point) where the WHOLE cluster footprint plus
+# OT_RELAY_MID_CHAN_UM (default 20) clears every macro halo, with both legs (previous / next point of the chain)
+# <= OT_RELAY_MID_MAX_HOP_UM (default 405); then the same on rings around the midpoint; else the old fallback (logged).
 uplevel #0 {
 set rm_blk [ord::get_db_block]
 set rm_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
@@ -126,6 +132,7 @@ proc rm_cent {pts} {
 }
 # chains: head = fixed sources only; follow the unique successor group (whose unique predecessor is this group)
 set rm_station {}
+set rm_seg {}
 dict for {g inf} $rm_info {
   lassign $inf sp sg kp kg soft
   # a few soft endpoints (<= 2% of the fixed ones: status / debug taps) do not move the station
@@ -149,6 +156,7 @@ dict for {g inf} $rm_info {
   foreach c $chain {
     incr j
     dict set rm_station $c [list [expr {int($ax + ($bx - $ax) * $j / ($n + 1.0))}] [expr {int($ay + ($by - $ay) * $j / ($n + 1.0))}]]
+    dict set rm_seg $c [list $ax $ay $bx $by $j $n]
   }
 }
 # place: nearest point outside every halo (rings of 2.16 um), compact cluster, clusters at one spot stack upward
@@ -163,9 +171,74 @@ set rm_log [open $::env(RESULTS_DIR)/ot_relay_mid_stations.txt w]
 set rm_stack {}
 set rm_n 0
 set rm_step [expr {int(2.16 * $rm_dbu)}]
+set rm_fit [expr {[info exists ::env(OT_RELAY_MID_FIT)] && $::env(OT_RELAY_MID_FIT) eq "1"}]
+set rm_chan [expr {int(([info exists ::env(OT_RELAY_MID_CHAN_UM)] ? $::env(OT_RELAY_MID_CHAN_UM) : 20.0) * $rm_dbu)}]
+set rm_chan0 $rm_chan
+set rm_hop [expr {([info exists ::env(OT_RELAY_MID_MAX_HOP_UM)] ? $::env(OT_RELAY_MID_MAX_HOP_UM) : 405.0) * $rm_dbu}]
+# footprint {x0 y0 x1 y1} of a cluster centred on x, bottom at y, clear of every halo by rm_chan and inside the core
+proc rm_fits {x y w h} {
+  global rm_mac rm_x0 rm_y0 rm_x1 rm_y1 rm_chan
+  set fx0 [expr {$x - $w / 2}]; set fx1 [expr {$x + $w / 2}]; set fy0 $y; set fy1 [expr {$y + $h}]
+  if {$fx0 < $rm_x0 || $fy0 < $rm_y0 || $fx1 > $rm_x1 || $fy1 > $rm_y1} { return 0 }
+  foreach m $rm_mac {
+    lassign $m a b c d
+    if {$fx1 > $a - $rm_chan && $fx0 < $c + $rm_chan && $fy1 > $b - $rm_chan && $fy0 < $d + $rm_chan} { return 0 }
+  }
+  return 1
+}
+set rm_nfit 0; set rm_nold 0
 dict for {g st} $rm_station {
   lassign $st x y
-  if {![rm_free $x $y]} {
+  set rm_done 0
+  if {$rm_fit && [dict exists $rm_seg $g]} {
+    lassign [dict get $rm_seg $g] ax ay bx by j n
+    set nc0 [llength [dict get $rm_grp $g]]
+    set ncol0 [expr {max(1, int(ceil(sqrt($nc0 * 4.0))))}]
+    set fw [expr {$ncol0 * $rm_sw * 24}]
+    set fh [expr {int(ceil(double($nc0) / $ncol0)) * $rm_rh}]
+    # previous / next point of the chain on the line (source and sink for a single stage)
+    set px [expr {$ax + ($bx - $ax) * ($j - 1) / ($n + 1.0)}]; set py [expr {$ay + ($by - $ay) * ($j - 1) / ($n + 1.0)}]
+    set qx [expr {$ax + ($bx - $ax) * ($j + 1) / ($n + 1.0)}]; set qy [expr {$ay + ($by - $ay) * ($j + 1) / ($n + 1.0)}]
+    set f0 [expr {$j / ($n + 1.0)}]
+    set len [expr {abs($bx - $ax) + abs($by - $ay)}]
+    set steps [expr {max(1, int($len / $rm_step))}]
+    set best {}; set bestd {}
+    # graded margins: the full channel margin first, then half, then a quarter (never 0: a cluster narrower than a channel
+    # would fit back into it; COLH10 vS: margin 20 alone left 11 of 13 stations on the old fallback)
+    foreach rm_chan_try [list $rm_chan0 [expr {$rm_chan0 / 2}] [expr {$rm_chan0 / 4}]] {
+    if {$best ne {}} break
+    set rm_chan $rm_chan_try
+    for {set s 0} {$s <= $steps} {incr s} {
+      set f [expr {double($s) / $steps}]
+      set cx [expr {int($ax + ($bx - $ax) * $f)}]; set cy [expr {int($ay + ($by - $ay) * $f)}]
+      set by0 [expr {$cy - $fh / 2}]
+      if {abs($cx - $px) + abs($cy - $py) > $rm_hop || abs($cx - $qx) + abs($cy - $qy) > $rm_hop} continue
+      if {![rm_fits $cx $by0 $fw $fh]} continue
+      set dd [expr {abs($f - $f0)}]
+      if {$bestd eq {} || $dd < $bestd} { set best [list $cx $by0 line]; set bestd $dd }
+    }
+    if {$best eq {}} {
+      for {set r 1} {$r < 400 && $best eq {}} {incr r} {
+        set d [expr {$r * $rm_step}]
+        foreach {dx dy} [list 0 $d 0 -$d $d 0 -$d 0 $d $d -$d $d $d -$d -$d -$d] {
+          set cx [expr {$x + $dx}]; set cy [expr {$y + $dy}]
+          if {abs($cx - $px) + abs($cy - $py) > $rm_hop || abs($cx - $qx) + abs($cy - $qy) > $rm_hop} continue
+          if {[rm_fits $cx [expr {$cy - $fh / 2}] $fw $fh]} { set best [list $cx [expr {$cy - $fh / 2}] ring]; break }
+        }
+      }
+    }
+    }
+    set rm_used $rm_chan; set rm_chan $rm_chan0
+    if {$best ne {}} {
+      lassign $best x y how
+      set rm_done 1; incr rm_nfit
+      puts "OT_RELAY_MID_FIT $g $how [expr {$x / double($rm_dbu)}] [expr {$y / double($rm_dbu)}] footprint [expr {$fw / double($rm_dbu)}]x[expr {$fh / double($rm_dbu)}] um margin [expr {$rm_used / double($rm_dbu)}] um"
+    } else {
+      incr rm_nold
+      puts "OT_RELAY_MID_FIT $g NOFIT (old nearest-free fallback)"
+    }
+  }
+  if {!$rm_done && ![rm_free $x $y]} {
     set best {}
     for {set r 1} {$r < 400 && $best eq {}} {incr r} {
       set d [expr {$r * $rm_step}]
@@ -199,5 +272,6 @@ dict for {g st} $rm_station {
   puts $rm_log "$g\t[expr {$x / double($rm_dbu)}]\t[expr {$y / double($rm_dbu)}]\t$nc"
 }
 close $rm_out; close $rm_log
+if {$rm_fit} { puts "OT_RELAY_MID_FIT fitted $rm_nfit stations, $rm_nold on the old fallback (chan [expr {$rm_chan / double($rm_dbu)}] um, hop [expr {$rm_hop / double($rm_dbu)}] um)" }
 puts "OT_RELAY_MID placed $rm_n relay flops of [dict size $rm_station] stations ([dict size $rm_grp] relay groups) FIRM on their source-sink lines"
 }

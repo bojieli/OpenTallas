@@ -397,6 +397,14 @@ ROUTED = re.compile(r"^(?:5_route|5_2_route|5_3_fillcell|6_[0-9A-Za-z_]+)\.odb$"
 out["routed"] = sorted({os.path.basename(p) for p in glob.glob(os.path.join(B, "*.odb"))
                         if ROUTED.match(os.path.basename(p))})
 out["fail_marks"] = [f for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS") if os.path.exists(os.path.join(K, f))]
+# S81-OTHERFAIL-1 11-07: the marker's own text (e.g. a late async 'LEC NOT EQUIVALENT') goes into the REJECT reason
+def _mark_text(f):
+    try:
+        with open(os.path.join(K, f), errors="replace") as fh:
+            return " | ".join(ln.strip() for ln in fh.read().splitlines() if ln.strip())[:240]
+    except Exception:
+        return ""
+out["fail_text"] = {f: _mark_text(f) for f in out["fail_marks"]}
 lm = [os.path.getmtime(p) for p in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*")) +
       glob.glob(os.path.join(K, "*.log"))]
 out["log_age_s"] = time.time() - max(lm) if lm else None
@@ -1049,6 +1057,14 @@ def parse_client_log(text):
     if "ot-run: NOT RUN" in text and "ran_on" not in o:
         o["not_run"] = True
         o["msg"] = [l for l in text.splitlines() if "NOT RUN" in l][-1][:300]
+    # A shell parse error in the local ot-run frontend occurs before it can emit
+    # NOT RUN. Treat only that exact pre-admission signature as infrastructure;
+    # HDL/flow syntax errors and errors after a payload ran remain design failures.
+    shell_error = re.search(r"^(?:/[^\n:]+/)?ot-run: line \d+: syntax error[^\n]*$", text, re.M)
+    if shell_error and "ran_on" not in o and "ot-heavy: admitted on" not in text:
+        o["frontend_shell_fail"] = shell_error[0]
+        o["not_run"] = True
+        o["msg"] = "frontend shell syntax, payload not run: " + shell_error[0][:240]
     if "ot-run: NOT COMPLETED" in text:
         o["not_completed"] = True
         o["msg"] = [l for l in text.splitlines() if "NOT COMPLETED" in l][-1][:300]
@@ -2252,6 +2268,7 @@ def admit_new(st, rows, only_new=False, budget=None):
                f"kit already routed / signed off ({', '.join(p.get('routed', []) + p.get('signoff_dirs', []))}); "
                "enqueue a fresh kit" if p.get("routed") or p.get("signoff_dirs") else
                f"kit carries {'+'.join(p['fail_marks'])} from an earlier run; enqueue a fresh kit"
+               + "".join(f" [{t}]" for t in (p.get("fail_text") or {}).values() if t)
                if p.get("fail_marks") else "no run_kit*.sh runner found" if not p.get("runner") else "")
         if not why and p.get("signoff_missing") and r.get("goal") not in ("cts", "grt"):
             why = (f"kit signoff.py lacks {', '.join(p['signoff_missing'])} (sign-off would crash after the route); "

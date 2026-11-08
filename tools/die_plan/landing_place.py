@@ -246,13 +246,14 @@ def _local_chunk_config(typ):
     numeric = cfg.get('freg_numeric_order', False) is True
     if wc == 64 and not numeric:
         return ''
-    rc = 64 // cfg.get('dsrep', 1)
+    rc = cfg.get('read_chunk') or 64 // cfg.get('dsrep', 1)
+    tail = ' tail 1' if cfg.get('write_tail') else ''
     rows = []
     for bus in cfg.get('buses', []):
         band = clock.get('landing_contract', {}).get('bands', {}).get(bus, {})
         prefix = band.get('instance', 'u_cland_' + bus)
         if wc != 64:
-            rows.append('dict set ::cland_local_chunks {' + prefix + '} {write ' + str(wc) + ' read ' + str(rc) + '}')
+            rows.append('dict set ::cland_local_chunks {' + prefix + '} {write ' + str(wc) + ' read ' + str(rc) + tail + '}')
         if numeric:
             rows.append('dict set ::cland_numeric_freg_banks {' + prefix + '.g_freg.u_face} 1')
     return 'set ::cland_local_chunks {}\nset ::cland_numeric_freg_banks {}\n' + '\n'.join(rows) + '\n'

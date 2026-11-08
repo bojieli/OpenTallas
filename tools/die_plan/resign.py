@@ -166,9 +166,41 @@ def full_commit(repo, v):
     return out if SHA_RE.match(out) and out.startswith(v) else None
 
 
+def commit_repos(repo):
+    """git checkouts that can expand a short commit for repo: repo itself, or for a tag manifest (no repo on the host)
+    the checkout the manifest names ('repo' / 'source_repo') and this tool's own checkout (KW-FIX-32 11-07, DIE-S81-78
+    18:31: an --auto re-sign on a manifest finished sign-off + LEC, then stopped at 'build_commit unknown' because the
+    kit's freeze.json repo_rev was short).  Read-only; a dir that is not a checkout simply resolves nothing."""
+    if not repo:
+        return []
+    m = manifest(repo)
+    if m is None:
+        return [repo]
+    out = []
+    for r in (m.get('repo'), m.get('source_repo'), REPO):
+        if isinstance(r, str) and os.path.isdir(r) and r not in out:
+            out.append(r)
+    return out
+
+
+def expand_commit(repo, v):
+    """short commit -> full 40-hex through commit_repos(repo); a manifest's own commit counts when v is its prefix.
+    None when no checkout holds it, or when two disagree (ambiguous: fail closed)."""
+    if not isinstance(v, str) or not ABBREV_RE.match(v):
+        return None
+    m = manifest(repo) if repo else None
+    hits = {m['commit']} if m is not None and m['commit'].startswith(v) else set()
+    for r in commit_repos(repo):
+        f = full_commit(r, v)
+        if f:
+            hits.add(f)
+    return hits.pop() if len(hits) == 1 else None
+
+
 def kit_build_commit(kit, repo=None):
     """the original build commit from the kit's own records (lec kit_provenance, autopilot, freeze).  freeze.json carries it
-    as repo_rev (gen_phys, often abbreviated): read too, resolved to the full commit through repo (S81-COLLE-4 11-06: a
+    as repo_rev (gen_phys, often abbreviated): read too, resolved to the full commit through repo, or for a tag manifest
+    through commit_repos (S81-COLLE-4 11-06: a
     resign.py run --auto finished sign-off + LEC but wrote no record because only repo_rev named the commit)."""
     for n in ('PROVENANCE.json', 'AUTOPILOT.json', 'freeze.json', 'kit_provenance.json'):
         p = os.path.join(kit, n)
@@ -182,8 +214,9 @@ def kit_build_commit(kit, repo=None):
                   if isinstance(x.get('provenance'), dict) else None, x.get('source_commit'), x.get('repo_rev')):
             if isinstance(v, str) and SHA_RE.match(v):
                 return v
-            if isinstance(v, str) and full_commit(repo, v):
-                return full_commit(repo, v)
+            f = expand_commit(repo, v)
+            if f:
+                return f
     return None
 
 
@@ -253,7 +286,7 @@ def build_record(d, kit, tag, repo=REPO, tools=None, build_commit=None, routed_d
     if not os.path.isfile(read_db):
         raise ResignError('routed DB %s missing' % read_db)
     tool_sha = check_tools(repo, tag, tools) if tools else None
-    bc = build_commit or kit_build_commit(kit, repo if manifest(repo) is None else None)
+    bc = build_commit or kit_build_commit(kit, repo)
     if not bc:
         raise ResignError('build_commit unknown: pass --build-commit (no commit in %s records)' % kit)
     rec = dict(schema='opentallas.resign_qualification.v1', kind='resign', verdict='SIGNED',
@@ -307,7 +340,8 @@ def default_container_suffix(out):
 # lec.py solver knobs are now passed into the container when the caller's env sets them, else when the kit's config.mk
 # exports them (a recipe sets them there, e.g. through the generator's ORFS variables).  The caller's env wins.  Only the
 # proof budget changes; the verdict rules of lec.py and of this record are unchanged.
-LEC_ENV_PASS = ('OT_LEC_PARITY_TERMS',)
+LEC_BOOL_PASS = ('OT_LEC_REPLICA_MATCH', 'OT_LEC_MEM_LANES', 'OT_LEC_ENABLE_FILL_GUARD')
+LEC_ENV_PASS = ('OT_LEC_PARITY_TERMS',) + LEC_BOOL_PASS
 _CFG_RE = re.compile(r'^\s*(?:override\s+)?(?:export\s+)?([A-Z0-9_]+)\s*[:?]?=\s*(.*?)\s*$')
 
 
@@ -334,15 +368,35 @@ def lec_env_args(kit, environ=None):
         v = environ.get(k) or cfg.get(k)
         if not v:
             continue
-        if not re.fullmatch(r'[1-9][0-9]*', str(v).strip()):
+        if k in LEC_BOOL_PASS:
+            if str(v).strip() not in ('0', '1'):
+                raise ResignError('%s=%r must be 0 or 1' % (k, v))
+        elif not re.fullmatch(r'[1-9][0-9]*', str(v).strip()):
             raise ResignError('%s=%r (%s) is not a positive integer' % (k, v, 'env' if environ.get(k) else 'kit config.mk'))
         args += ['-e', '%s=%s' % (k, str(v).strip())]
     return args
 
 
+def lec_kit(kit, up=3):
+    """S81-TYPES-5 11-07 RESIGN-PASSDIR class: a late-ECO pass dir (K/eco_*/iN) is a run dir, not a kit: it has no
+    config.mk, so lec.py stopped with FileNotFoundError /work/config.mk (slice_station t8 dg-s81, t17 cw-s81 re-signs).
+    LEC mounts the nearest kit at or above it that has config.mk (at most `up` levels; the pass dir's 6_final.v stays
+    inside it); a kit with config.mk is returned unchanged."""
+    k = os.path.abspath(kit)
+    for _ in range(up + 1):
+        if os.path.exists(os.path.join(k, 'config.mk')):
+            return k
+        parent = os.path.dirname(k)
+        if parent == k:
+            break
+        k = parent
+    return os.path.abspath(kit)
+
+
 def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g', cpus=8, superset=False):
     """the two commands of one re-sign (same as the lane scripts resign3.sh / tag_signoff_lec.sh)."""
     kit, run_dir, tools, out = map(os.path.abspath, (kit, run_dir, tools, out))
+    lkit = lec_kit(kit)
     so = [sys.executable, '-I', os.path.join(tools, 'signoff.py'), 'run', '--run-dir', run_dir, '--kit', kit,
           '--corners', 'tt,ff', '--ff-vclk', 'auto', '--out', os.path.join(out, 'signoff'), '--image', image]
     if lec_netlist:
@@ -353,9 +407,9 @@ def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g',
         vs = sorted(glob.glob(os.path.join(run_dir, 'results', 'asap7', '*', 'base', '6_final.v')))
         if not vs:
             raise ResignError('no 6_final.v under %s/results/asap7/*/base' % run_dir)
-        if not vs[0].startswith(kit + os.sep):
-            raise ResignError('6_final.v %s is outside the kit %s (LEC mounts the kit)' % (vs[0], kit))
-        mounts, net_in = [], '/work/' + os.path.relpath(vs[0], kit)
+        if not vs[0].startswith(lkit + os.sep):
+            raise ResignError('6_final.v %s is outside the kit %s (LEC mounts the kit)' % (vs[0], lkit))
+        mounts, net_in = [], '/work/' + os.path.relpath(vs[0], lkit)
     # Existing optional XOR backend; keep the wheel and bundled libraries together.
     solver = os.environ.get('OT_LEC_SOLVER', '')
     solver_mount = []
@@ -363,8 +417,8 @@ def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g',
         solver_mount = ['-v', os.path.abspath(solver) + ':/lecsolver:ro',
                         '-e', 'LEC_SOLVER_PATH=/lecsolver']
     lec = ['docker', 'run', '--rm', '--name', 'resign-%s-lec' % name, '--memory=%s' % mem, '--cpus=%d' % cpus] + (
-           ['-e', 'OT_LEC_SUPERSET_VEC=1'] if superset else []) + lec_env_args(kit) + [
-           '-v', '%s:/work:ro' % kit, '-v', '%s:/eco' % out, '-v', '%s:/m:ro' % tools] + mounts + solver_mount + [
+           ['-e', 'OT_LEC_SUPERSET_VEC=1'] if superset else []) + lec_env_args(lkit) + [
+           '-v', '%s:/work:ro' % lkit, '-v', '%s:/eco' % out, '-v', '%s:/m:ro' % tools] + mounts + solver_mount + [
            image, 'bash', '-lc', 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; '
            'python3 -I /m/lec.py /work --netlist %s --out /eco/lec' % net_in]
     return so, lec
@@ -404,6 +458,17 @@ def main(argv=None):
         if a.cmd == 'run':
             os.makedirs(a.out, exist_ok=True)
             tag_commit(a.repo, a.tag)
+            # A wave candidate supplies its SUBMIT source via auto_resign.build_commit_of.
+            # Standalone copied kits may have no source metadata: refuse before RCX/LEC,
+            # rather than spending both runs and discovering this at record time.
+            if not a.build_commit:
+                a.build_commit = kit_build_commit(a.kit, a.repo)
+            if not a.build_commit:
+                why = 'build_commit unknown: pass --build-commit (no commit in %s records)' % a.kit
+                if not a.dry_run:
+                    raise ResignError(why)
+                # dry run: show that a real run would refuse, then keep printing the commands
+                print('RESIGN NOT RECORDED: %s' % why, file=sys.stderr)
             check_tools(a.repo, a.tag, a.tools)  # fail before spending an RCX run on the wrong tools
             print('clock_family.tcl from %s: %s' % (a.tag, export_clock_family(a.repo, a.tag, a.tools)), file=sys.stderr)
             name = a.name or default_container_suffix(a.out)

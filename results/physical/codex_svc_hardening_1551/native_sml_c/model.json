@@ -1,0 +1,22 @@
+{
+ "status": "PRIVATE_FORM_C",
+ "outline_um": [
+  164.16,
+  164.16
+ ],
+ "kit8p_area_um2": 9638,
+ "fill_est": 0.358,
+ "rst_pin_x": 83.112,
+ "rst_pin_phase_mod_4p32": 1.032,
+ "changes": [
+  "Changes vs kit8p (codex_svc_sml_native@43652e29c252), each tied to a measured kit8p problem:",
+  "  1. outline 174.96 -> 164.16 (fill ~31% -> ~36%); pins keep their face and order, 1.056 um pitch.",
+  "  2. reset pad M5_VERTICAL 0.024x0.192 (kit8p DRC 5 came from the horizontal M5 reset pad, RECTONLY/EOL).",
+  "  3. rr1 (883 async-reset loads, bbox 328.5 um) -> 8 same-edge kept copies of rr1, each feeding one",
+  "     placement-local group (exp Horner pairs, valid lines, input datapath, control). D of every copy is rr0,",
+  "     so every copy equals rr1 on every edge: +0 reset cycles, +0 data cycles, 64-low width unchanged.",
+  "  4. kit opts in OT_F4_PAIR=1 (existing supported F4 option): each zero-logic capture shares its launch flop's",
+  "     clock leaf (kit8p: 158 internal FF holds -6.40 ps, all zero-logic shift pairs, 26 ps pair skew)."
+ ],
+ "parent_adoption": "NO_POR_NO_PARENT_REBUILD"
+}

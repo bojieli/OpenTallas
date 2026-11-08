@@ -166,7 +166,9 @@ module ot_dp_clk_landing_cas #(
     // Data q and ready are cycle-identical in the window; a rv/lap fault is seen one clk later; guard faults unchanged.
     // Default 0 = identical logic.
     parameter bit STATUS_REG = 0,
-    parameter int WRITE_CHUNK = 64 // appended for positional compatibility; local write-enable fanout bound
+    parameter int WRITE_CHUNK = 64, // appended for positional compatibility; local write-enable fanout bound
+    parameter bit WRITE_TAIL = 0, // optional bounded partial final write chunk; same cycles
+    parameter int READ_CHUNK = 0 // optional bounded arbitrary-width read chunks; 0 preserves legacy64/divisibility
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -236,7 +238,7 @@ module ot_dp_clk_landing_cas #(
         end
     end
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
-                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG)) u_ring (
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK)) u_ring (
         .tclk(wclk), .wen_clk(WFALL ? fclk : wclk), .t_rst_n(t_rst_w), .t_d({{(RW-W){1'b0}}, d_w}), .rclk(clk), .r_rst_n(rst_n), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -277,7 +279,9 @@ module ot_meso_ring_ca #(
     // The guards sample the same falling edge into per-slot flops, select at the next rising edge: glo1/ghi1 values and
     // cycles unchanged; oh -> guard becomes a full period instead of T/2. Data path untouched.
     parameter bit STATUS_REG = 0,
-    parameter int WRITE_CHUNK = 64 // appended for positional compatibility; local write-enable fanout bound
+    parameter int WRITE_CHUNK = 64, // appended for positional compatibility; local write-enable fanout bound
+    parameter bit WRITE_TAIL = 0, // optional bounded partial final write chunk; same cycles
+    parameter int READ_CHUNK = 0 // optional bounded arbitrary-width read chunks; 0 preserves legacy64/divisibility
 ) (
     input  logic         tclk,
     input  logic         wen_clk,    // WREG write-enable clock: tclk, or the raw fclk with WEN_NEG; unused when !WREG
@@ -318,8 +322,8 @@ module ot_meso_ring_ca #(
     // WREG 1: t_go = t_rst_n one wclk edge late (fs_q), and wen[i, c] = t_go && tc[slot] == i is precomputed one edge
     // early from the port (fs_q ? tc + 1 : 0 is tc at the next edge), one kept flop per (slot, 64-bit chunk).
     // Exactly the WREG 0 ring fed by t_rst_n through one flop (proof: results/dh58_turnb_1103/wreg_equiv).
-    localparam int WNC = (WRITE_CHUNK > 0 && W % WRITE_CHUNK == 0) ? W / WRITE_CHUNK : 1;
-    localparam int WWC = W / WNC;
+    localparam int WNC = (WRITE_TAIL && WRITE_CHUNK > 0) ? (W + WRITE_CHUNK - 1) / WRITE_CHUNK : ((WRITE_CHUNK > 0 && W % WRITE_CHUNK == 0) ? W / WRITE_CHUNK : 1);
+    localparam int WWC = (WRITE_TAIL && WRITE_CHUNK > 0) ? WRITE_CHUNK : W / WNC;
     wire t_go;
     wire [DEPTH*WNC-1:0] wen;
     if (WREG) begin : g_wreg
@@ -351,14 +355,22 @@ module ot_meso_ring_ca #(
             if (!CONTROL_STATUS_COPY) s_lap[tc[AW-1:0]] <= tc[AW];
             if (!WREG) s_d[tc[AW-1:0]] <= t_d;
         end
-        if (WREG)
-            for (int i = 0; i < DEPTH; i++)
-                for (int c = 0; c < WNC; c++)
+    end
+    // Static, disjoint vector slices preserve the declared data flops and
+    // avoid an out-of-range final slice when a word has a constant/status tail.
+    if (WREG) begin : g_write_chunks
+        for (genvar wi = 0; wi < DEPTH; wi++) begin : sl
+            for (genvar wc = 0; wc < WNC; wc++) begin : ch
+                localparam int CW = W - wc * WWC < WWC ? W - wc * WWC : WWC;
+                always_ff @(posedge tclk)
 `ifdef OT_MESO_CA_MUTANT_WREG
-                    if (wen[i * WNC + c] && !(i == 0 && c == 0)) s_d[i][c * WWC +: WWC] <= t_d[c * WWC +: WWC]; // MUTANT
+                    if (wen[wi * WNC + wc] && !(wi == 0 && wc == 0))
 `else
-                    if (wen[i * WNC + c]) s_d[i][c * WWC +: WWC] <= t_d[c * WWC +: WWC];
+                    if (wen[wi * WNC + wc])
 `endif
+                        s_d[wi][wc * WWC +: CW] <= t_d[wc * WWC +: CW];
+            end
+        end
     end
 
     // Private valid/lap status drivers separate their control decode from the
@@ -414,16 +426,17 @@ module ot_meso_ring_ca #(
     wire [NS-1:0] pos_v   = {st_w & st_lap, st_w & ~st_lap};
     wire [NS-1:0] pos_lap = {st_lap, ~st_lap} | {~st_w, ~st_w};   // not yet written since start: no lap verdict
     // data: per-64-bit chunk registered one-hot select (ot_meso_dsel, REG=1), placed at reset, rotating every cycle
-    localparam int NCH = (W % 64 == 0) ? W / 64 : 1;
-    localparam int WCH = W / NCH;
+    localparam int NCH = READ_CHUNK > 0 ? (W + READ_CHUNK - 1) / READ_CHUNK : ((W % 64 == 0) ? W / 64 : 1);
+    localparam int RSTEP = READ_CHUNK > 0 ? READ_CHUNK : W / NCH;
     logic [W-1:0] rd_q;
     for (genvar c = 0; c < NCH; c++) begin : dch
+        localparam int WCH = W - c * RSTEP < RSTEP ? W - c * RSTEP : RSTEP;
         logic [DEPTH*WCH-1:0] sd_c;
         for (genvar i = 0; i < DEPTH; i++) begin : sl
-            assign sd_c[i*WCH +: WCH] = s_d[i][c*WCH +: WCH];
+            assign sd_c[i*WCH +: WCH] = s_d[i][c*RSTEP +: WCH];
         end
         ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(1), .SPLIT(0), .SREP(DSREP)) u_dsel (.clk(rclk), .align(!r_rst_n), .on(r_rst_n),
-            .place(RP0[AW-1:0]), .sd(sd_c), .y(rd_q[c*WCH +: WCH]));
+            .place(RP0[AW-1:0]), .sd(sd_c), .y(rd_q[c*RSTEP +: WCH]));
     end
     logic r_v_c, r_lap_c, r_lap1_c;
     ot_meso_ohor #(.N(NS)) u_v   (.sel(st_oh), .x(pos_v),   .y(r_v_c));

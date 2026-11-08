@@ -232,3 +232,26 @@ def test_grt_slew_gate_and_short_nets_keep_design(tmp_path):
 def test_grt_pass_opt_out(tmp_path):
     out, log = tcl(tmp_path, GRT_RUN, env={"OT_CLK_LEAF_GRT": "0"}, design=DESIGN)
     assert "OT_CLK_LEAF_REPEAT" not in out and not log
+
+
+# MACRO-CK-PIN (S81-TYPES-5 11-07, serdes__t2): a clock load on a 2000-um macro is located at its PIN, not the macro
+# centre; drv at (0,0), macro 2000x100 um at (100,1000) um with ck 10 um from its left edge -> repeater half way to
+# the pin (55, 500), not to the centre (1100, 1050) um.
+MACRO_CK = r"""
+inst drv BUFx4_ASAP7_75t_R 0 0
+inst pma SRAM 100000 1000000 2000000 100000
+iterm d_o drv Y 1; iterm pma_ck pma ck 0
+box pb 110000 1000000 110000 1000000; dict set ::obj(pma_ck) getBBox pb
+net clknet_pma CLOCK {d_o pma_ck}
+set ::slew(pma/ck) 5000.0
+set ::nets {clknet_pma}; set ::insts {drv pma}
+"""
+
+
+def test_cts_macro_clock_load_located_at_pin(tmp_path):
+    out, log = tcl(tmp_path, DEFAULT, design=MACRO_CK)
+    ins = [x for x in log if x.startswith("insert_buffer")]
+    assert ins and "-load_pins pma/ck" in ins[0], out
+    loc = ins[0].split("-location ")[1].split(" -buffer_name")[0]
+    x, y = (float(v) for v in loc.strip("{}").split())
+    assert abs(x - 55.0) < 1 and abs(y - 500.0) < 1, loc

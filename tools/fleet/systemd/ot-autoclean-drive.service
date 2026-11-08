@@ -1,0 +1,12 @@
+[Unit]
+Description=OpenTallas auto-cleanup localhost driver (tools/fleet/ot-autoclean.py drive: snapshot push, AGIdock archive, manifest collect)
+# Runs on localhost only (the AGIdock key and ~/coord live there).  Dry unless OT_AUTOCLEAN_DRIVE_ARGS holds --apply;
+# --no-run leaves the deletes to each host's ot-autoclean.timer; --commit commits the collected manifests.
+
+[Service]
+Type=oneshot
+Environment=OT_AUTOCLEAN_DRIVE_ARGS=--no-run
+EnvironmentFile=-%h/.config/ot-autoclean-auto/drive.env
+ExecStart=/usr/bin/python3 -I %h/.local/share/ot-autoclean-auto/ot-autoclean.py drive $OT_AUTOCLEAN_DRIVE_ARGS
+TimeoutStartSec=6h
+Nice=10

@@ -164,8 +164,33 @@ def eco_vclk_frame(pass_dir, variant, prev):
     return ps
 
 
-def metrics(rec):
-    """sign-off record -> {verdict, signed, tt, ff, drv, drc, fails}"""
+def hold_scope():
+    """the ECO's hold repair scope (prd_hook.tcl / orfs_hold_mm.tcl read the same OT_HOLD_REPAIR_SCOPE)"""
+    return (os.environ.get("OT_HOLD_REPAIR_SCOPE") or "").strip().lower()
+
+
+def nonport_score(signoff_path):
+    """KW-FIX-32 11-07 (COORD 21:4x (3), DIE-KV-91 M5 e1): (wns_ps, endpoints) the loop scores hold on when the repair
+    scope is nonport: the FF census non-port split.  A clean census with no non-port violator scores (0.0, 0) (signoff
+    prints STD_MIN_NONPORT only when there is one).  None when the split cannot be read: the whole number is scored."""
+    try:
+        s = json.loads((Path(signoff_path).parent / "ff" / "corner.json").read_text()).get("std_min_start")
+    except (OSError, ValueError, AttributeError, TypeError):
+        return None
+    if not isinstance(s, dict) or s.get("err") != 0 or s.get("trunc") != 0:
+        return None
+    if s.get("nonport_n") is None:
+        return (0.0, 0) if s.get("other") == 0 and s.get("reg") == 0 else None
+    n = int(s["nonport_n"])
+    if n == 0:
+        return 0.0, 0
+    return (None, n) if s.get("nonport_wns") is None else (float(s["nonport_wns"]), n)
+
+
+def metrics(rec, signoff_path=None):
+    """sign-off record -> {verdict, signed, tt, ff, drv, drc, fails}; with OT_HOLD_REPAIR_SCOPE=nonport and a readable
+    FF census next to signoff_path also ff_np / ff_np_n (the non-port hold the ECO repairs), which the stop rule and the
+    best pick score instead of ff.  Default scope: byte-identical metrics."""
     c = rec.get("checks") or {}
     by = {}
     for k, v in ((c.get("drv") or {}).get("by_corner") or {}).items():
@@ -175,11 +200,16 @@ def metrics(rec):
     fails = sorted(k for k, v in c.items() if isinstance(v, dict) and v.get("verdict") == "FAIL")
     verdict = rec.get("verdict")
     signed = verdict == "SIGNED" or (verdict == "LOCAL_PASS_NEEDS_PARENT" and rec.get("local_verdict") == "SIGNED")
-    return dict(verdict=verdict, signed=bool(signed), tt=(c.get("setup_tt") or {}).get("wns_ps"),
+    out = dict(verdict=verdict, signed=bool(signed), tt=(c.get("setup_tt") or {}).get("wns_ps"),
                 ff=(c.get("hold_ff") or {}).get("wns_ps"), drv=int(drv), drc=int((c.get("drc") or {}).get("count") or 0),
                 drv_tt=int(by.get("tt", 0)), drv_ff=int(by.get("ff", 0)), fails=fails,
                 vclk_tt=measured_vclk((c.get("setup_tt") or {}).get("vclk_reference")),
                 vclk_ff=measured_vclk((c.get("hold_ff") or {}).get("ff_vclk_reference")))
+    if signoff_path and hold_scope() == "nonport":
+        np_ = nonport_score(signoff_path)
+        if np_ and np_[0] is not None:
+            out["ff_np"], out["ff_np_n"] = np_
+    return out
 
 
 def passes(kit, prev, hm):
@@ -277,20 +307,30 @@ def near_miss(rec, signoff_path=None):
     return not far, far, warn
 
 
-def neg_sum(m):
-    return sum(min(float(w), 0.0) for w in (m.get("tt"), m.get("ff")) if w is not None)
+def neg_sum(m, nonport=False):
+    ff = m.get("ff_np") if nonport else m.get("ff")
+    return sum(min(float(w), 0.0) for w in (m.get("tt"), ff) if w is not None)
+
+
+def _np(a, b):
+    """both sides carry the non-port hold score (nonport scope, readable census on both): compare on it"""
+    return "ff_np" in a and "ff_np" in b
 
 
 def improved(prev, cur):
-    """stop rule: True when cur is better than prev by >= 1 ps negative-WNS sum, or fewer DRV, or fewer DRC"""
-    gain = neg_sum(cur) - neg_sum(prev)
-    return gain >= MIN_WNS_GAIN_PS or cur["drv"] < prev["drv"] or cur["drc"] < prev["drc"]
+    """stop rule: True when cur is better than prev by >= 1 ps negative-WNS sum, or fewer DRV, or fewer DRC; nonport
+    scope (both scored): hold is the non-port WNS, and fewer non-port hold endpoints also count"""
+    np_ = _np(prev, cur)
+    gain = neg_sum(cur, np_) - neg_sum(prev, np_)
+    fewer = np_ and cur["ff_np_n"] < prev["ff_np_n"]
+    return gain >= MIN_WNS_GAIN_PS or fewer or cur["drv"] < prev["drv"] or cur["drc"] < prev["drc"]
 
 
 def better(a, b):
     """is metrics a strictly better than b (signed first, then neg-WNS sum, DRV, DRC)"""
-    ka = (a["signed"], neg_sum(a), -a["drv"], -a["drc"])
-    kb = (b["signed"], neg_sum(b), -b["drv"], -b["drc"])
+    np_ = _np(a, b)
+    ka = (a["signed"], neg_sum(a, np_), -a["drv"], -a["drc"])
+    kb = (b["signed"], neg_sum(b, np_), -b["drv"], -b["drc"])
     return ka > kb
 
 
@@ -612,6 +652,12 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
             shutil.copy2(pd / "config.mk", pd / "config_eco.mk")
         shutil.copy2(Path(kit) / "config.mk", pd / "config.mk")
         s = pd
+    if trim and len(it["pass_dirs"]) > 1 and os.environ.get("OT_ECO_KEEP_ROUTED") != "1":
+        # KW-FIX-32 11-07 (COORD 21:0x: 13 S81 slice_station loops held 165 GB on epyc6 root, ~8 GB per t<N> copy):
+        # the final pass is routed from its own full copy, so the intermediate pass's ORFS run data goes now
+        gone = prune_dirs(it["pass_dirs"][:-1])
+        if gone:
+            it["intermediate_pruned"] = gone
     ts = time.time()
     pr = post_runner(d, runner)
     if pr:
@@ -636,7 +682,7 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
     it["signoff"] = str(so_rec)
     rec = load(so_rec)
     it["base"] = (rec.get("inputs") or {}).get("base")
-    it["metrics"] = metrics(rec)
+    it["metrics"] = metrics(rec, so_rec)
     return end("SIGNED" if it["metrics"]["signed"] else "NOT_SIGNED")
 
 
@@ -691,17 +737,26 @@ def trim_best(it):
     return gone
 
 
+def prune_dirs(dirs):
+    """remove run/results + run/objects (the full ORFS copy) under each pass dir; config, logs, reports, PRD.json,
+    prd_result.json and signoff/ stay as evidence.  -> [removed paths]"""
+    gone = []
+    for d in map(Path, dirs):
+        for sub in ("run/results", "run/objects"):
+            p = d / sub
+            if p.is_dir() and not p.is_symlink() and str(p.resolve()).startswith(str(d.resolve()) + os.sep):
+                shutil.rmtree(p, ignore_errors=True)
+                gone.append(str(p))
+    return gone
+
+
 def prune(it, intermediate_only=False):
     """drop the heavy ORFS run data of a superseded iteration (json / logs / sign-off stay as evidence); the best
     iteration keeps its final dir and drops only its intermediate t<N> pass"""
     dirs = [Path(p) for p in it.get("pass_dirs") or [] if p != it["dir"]]
     if not intermediate_only:
         dirs.append(Path(it["dir"]))
-    for d in dirs:
-        for sub in ("run/results", "run/objects"):
-            p = d / sub
-            if p.is_dir() and str(p.resolve()).startswith(str(d.resolve()) + os.sep):
-                shutil.rmtree(p, ignore_errors=True)
+    prune_dirs(dirs)
     if not intermediate_only:
         it["pruned"] = True
 
@@ -709,10 +764,12 @@ def prune(it, intermediate_only=False):
 # ------------------------------------------------------------------------------------------------ the loop
 def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
              cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc="", from_mode="",
-             owner_override=False):
+             owner_override=False, strict_one_pass=False):
     """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE | NOT_NEAR_MISS"""
     if max_iter > MAX_ITER:
         raise ValueError(max_iter_refusal(max_iter))
+    if strict_one_pass and max_iter != 1:
+        raise ValueError("strict-one-pass requires max_iter=1")
     kit = Path(kit).resolve()
     t0 = time.time()
     base_signoff = Path(base_signoff).resolve()
@@ -723,8 +780,24 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
     res = dict(schema=SCHEMA, kind="eco", tool="tools/die_plan/eco_loop.py", kit=str(kit), root=str(root),
                mem_requested_gb=mem_in, mem_gb=mem, kit_peak_gb=peak, mem_factor=ECO_MEM_FACTOR,
                base_signoff=str(base_signoff), base_routed_db=(base_rec.get("inputs") or {}).get("odb"),
-               base_metrics=metrics(base_rec) if base_rec else None, max_iter=max_iter, hold_margin_ps=hold_margin,
+               base_metrics=metrics(base_rec, base_signoff) if base_rec else None, max_iter=max_iter, hold_margin_ps=hold_margin,
                started=t0, iterations=[], flow=flow_sha(tools), host=os.uname().nodename)
+    if strict_one_pass:
+        budget = dict(limit=1, dispatched=0, blocked=[])
+        res["strict_one_pass"] = True
+        res["physical_dispatch_budget"] = budget
+        original_run = run
+
+        def run(cmd, **kwargs):
+            # The common physical entry point also covers split t<N>/b<N>
+            # passes and any future recovery path, not just today's retries.
+            if len(cmd) > 1 and cmd[0] == "bash" and Path(cmd[1]).name == "prd_run.sh":
+                if budget["dispatched"] >= budget["limit"]:
+                    budget["blocked"].append(list(map(str, cmd)))
+                    print("ECO_STRICT_ONE_PASS: refused additional physical dispatch", flush=True)
+                    return 73
+                budget["dispatched"] += 1
+            return original_run(cmd, **kwargs)
     ok, why = eligible(base_rec)
     res["eligibility"] = why
 
@@ -754,20 +827,20 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
         it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
                      repair_rc=repair_rc, trim=not keep)
         res["iterations"].append(it)
-        if it.get("flexpa_sig11") and not repair_rc:
+        if it.get("flexpa_sig11") and not repair_rc and not strict_one_pass:
             # class retry (once per loop): the same iteration with placement-estimated ECO nets in a new dir
             repair_rc = "placement"
             res["repair_rc_retry"] = f"iteration {n}: FlexPA SIG11 -> OT_PRD_REPAIR_RC=placement"
             it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
                          tag="r", repair_rc=repair_rc, trim=not keep)
             res["iterations"].append(it)
-        if it.get("grt_hang") and "grt_hang_retry" not in res:
+        if it.get("grt_hang") and "grt_hang_retry" not in res and not strict_one_pass:
             # KW-FIX-24 class retry (once per loop): the same iteration as a full ECO route, no route-keep
             res["grt_hang_retry"] = f"iteration {n}: route-keep incremental GRT hang -> OT_PRD_FROM=grt, full detailed route"
             it = iterate(n, src, root, kit, runner, so, "grt", hold_margin, mem, cpus, run, image, prev=prev,
                          tag="g", repair_rc=repair_rc, trim=not keep, keep_route=False)
             res["iterations"].append(it)
-        if it.get("stage_mismatch") and n == 1 and mode == "route":
+        if it.get("stage_mismatch") and n == 1 and mode == "route" and not strict_one_pass:
             # class retry: the kit's routed seed predates its signed 6_final (post-route ECO kit) -> seed with 6_final
             res["stage_retry"] = "iteration 1: OT_PRD STAGE_MISMATCH -> OT_PRD_FROM=final"
             it = iterate(n, src, root, kit, runner, so, "final", hold_margin, mem, cpus, run, image, prev=prev,
@@ -780,7 +853,11 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
                 verdict = it["status"]
             break
         if best is None or better(m, best["metrics"]):
-            best = it
+            old, best = best, it
+            if old is not None and not keep and os.environ.get("OT_ECO_KEEP_ROUTED") != "1":
+                # KW-FIX-32 11-07 (COORD 21:0x): iteration n is adopted over the previous best, whose full ORFS copy
+                # (already staged into iteration n by prd_mk) goes now instead of at loop end; its sign-off stays
+                prune(old)
         if m["signed"]:
             best, verdict, stop = it, "PASS", f"signed off after {n} ECO iteration(s)"
             break
@@ -831,7 +908,8 @@ def summary(res):
         return f"late-ECO not a near miss: {res.get('reason')}"
     tag = {"PASS": "late-ECO PASS", "ECO_OOM": "late-ECO OOM", "ABORTED": "late-ECO ABORTED"}.get(res.get("verdict"), "late-ECO exhausted")
     return (f"{tag} ({its} it, {res.get('wall_s')} s): TT {m0.get('tt')}->{b.get('tt')} FF {m0.get('ff')}->{b.get('ff')} "
-            f"drv {m0.get('drv')}->{b.get('drv')} drc {m0.get('drc')}->{b.get('drc')}; {res.get('reason')}")
+            + (f"(non-port {m0.get('ff_np')}/{m0.get('ff_np_n')}->{b.get('ff_np')}/{b.get('ff_np_n')}) " if "ff_np" in b else "")
+            + f"drv {m0.get('drv')}->{b.get('drv')} drc {m0.get('drc')}->{b.get('drc')}; {res.get('reason')}")
 
 
 def run_lec(kit, res, mem, cpus, lec_tool=None, run=subprocess.call):
@@ -863,6 +941,8 @@ def main():
     r.add_argument("--mem", type=int, default=48)
     r.add_argument("--cpus", type=int, default=8)
     r.add_argument("--keep", action="store_true", help="keep the run data of superseded iterations")
+    r.add_argument("--strict-one-pass", action="store_true",
+                   help="one physical prd_run dispatch total; disable recovery retries (default unchanged)")
     r.add_argument("--lec", action="store_true", help="run the kit's post-route LEC on a PASS (into BEST/lec)")
     r.add_argument("--lec-tool")
     r.add_argument("--owner-override", action="store_true", help="run although the base record is beyond the near-miss numbers")
@@ -891,7 +971,8 @@ def main():
         print("ECO_LOOP FAIL: no sign-off record in the kit")
         return 3
     res = run_loop(a.kit, base, a.out, a.runner, a.max_iter, a.hold_margin, a.mem, a.cpus, keep=a.keep,
-                   repair_rc=a.repair_rc, from_mode=a.from_mode, owner_override=a.owner_override)
+                   repair_rc=a.repair_rc, from_mode=a.from_mode, owner_override=a.owner_override,
+                   strict_one_pass=a.strict_one_pass)
     if res["verdict"] == "PASS" and a.lec and not run_lec(a.kit, res, a.mem, a.cpus, a.lec_tool):
         res["verdict"] = "LEC_FAIL"
     print("ECO_LOOP " + res["verdict"] + ": " + summary(res))

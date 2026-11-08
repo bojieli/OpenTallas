@@ -787,10 +787,9 @@ class Binder:
     def sub_core_leaf_of(self, hc):
         """The bound leaf holding plan sub-core hc, or None (not a sub-core, or not in asbuilt.sub_core_leaf)."""
         # DIE-QC-75 11-05: a hard core nested in a leaf at a path without u_fcore names its parent exactly.
-        if hc.get("sub_core_parent"):
-            return self.sub_core_leaf.get(hc["sub_core_parent"])
-        path = hc.get("physical_inst") or ""
-        return self.sub_core_leaf.get(path.split(".u_fcore.")[0]) if ".u_fcore." in path else None
+        # DIE-HBM-90-TSTRAP 11-07: one shared rule (parent_id_straps.sub_core_bound_leaf) so gen_phys resolves the same leaf.
+        from parent_id_straps import sub_core_bound_leaf
+        return sub_core_bound_leaf(hc, self.sub_core_leaf)
 
     def __init__(self, plan, yjs, plan_dir, base=None):
         self.plan = plan
@@ -3118,6 +3117,9 @@ class Binder:
                 prov = json.loads(prov_file.read_text()) if prov_file.is_file() else None
                 BRC.emitted(f, tn, self._emitted_reset_trees[tn], provenance=prov)
             files.append(f)
+        if getattr(self, "_bound_core_resets", None):
+            (out.parent / "bind_core_resets.json").write_text(
+                json.dumps(dict(schema="opentallas.bind_core_resets.v1", types=self._bound_core_resets), indent=1) + "\n")
         if getattr(self, "_reset_consumer_changes", None):
             (out.parent / "bind_reset_consumers.json").write_text(
                 json.dumps(self._reset_consumer_changes, indent=1) + "\n")
@@ -3366,6 +3368,9 @@ class Binder:
             body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({int(t.get('reset', {}).get('sync_stages', 2))})) "
                         f"u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
         core_reset = {}
+        # DIE-HBM-89 11-07: (leaf ci, leaf pin) -> plan core_resets insts it serves, written to bind_core_resets.json so
+        # the component proof reads the leaf instance the bind actually chose (sub_core_leaf, reset_from_master, alias).
+        core_reset_rows = {}
         localize_reset = bool(t.get("reset", {}).get("consumer_localization"))
         native_reset_roles = {}
         if rtree is not None:
@@ -3382,6 +3387,7 @@ class Binder:
                         if key in core_reset:
                             raise BindError("overlapping bound-group reset projection")
                         core_reset[key] = f"rst_n_t{target['tap']}"
+                        core_reset_rows.setdefault(key, []).append(target["inst"])
                     continue
                 rfm = next((h.get("reset_from_master") for h in t.get("hard_cores", []) if h["inst"] == target["inst"]), None)
                 if rfm is not None:
@@ -3395,6 +3401,7 @@ class Binder:
                                   f"{rfm.get('content')}.{mpin}: expected one unshared bound master leaf, found {len(candidates)}")
                         continue
                     core_reset[(candidates[0], mpin)] = f"rst_n_t{target['tap']}"
+                    core_reset_rows.setdefault((candidates[0], mpin), []).append(target["inst"])
                     continue
                 sub_hc = next((h for h in t.get("hard_cores", []) if h["inst"] == target["inst"]), None)
                 sub_leaf = self.sub_core_leaf_of(sub_hc) if sub_hc and getattr(self, "sub_core_leaf", None) else None
@@ -3402,7 +3409,10 @@ class Binder:
                     # One leaf reset port feeds all subs of the parent through its glue: one tap, same release edge.
                     # DIE-QC-76 11-05: hard core field sub_core_leaf_pin = the leaf's own port for this sub (absent: the sub's
                     # pin name), so each sub keeps its tap; sub_leaf may be the leaf's full as-built path.
-                    lpin = sub_hc.get("sub_core_leaf_pin", pin)
+                    # DIE-HBM-89 11-07: asbuilt.sub_core_leaf_pin {plan sub-core inst: leaf port} names the leaf's own
+                    # reset port when the plan core carries no sub_core_leaf_pin (exact table; the plan field wins).
+                    lpin = sub_hc.get("sub_core_leaf_pin",
+                                      (self.ab.get("sub_core_leaf_pin") or {}).get(target["inst"], pin))
                     found = [ci for ci in self.members[p] if lpin in F.cells[ci].ports and sub_leaf in (self.rel_of(ci), F.cells[ci].path)]
                     depth = {r["q"]: r["depth"] for r in rtree["relays"]}
                     roles = rtree.get("tap_roles", {})
@@ -3412,6 +3422,7 @@ class Binder:
                         continue
                     tap = target["tap"]
                     old = core_reset.setdefault((found[0], lpin), f"rst_n_t{tap}")
+                    core_reset_rows.setdefault((found[0], lpin), []).append(target["inst"])
                     first = int(old[len("rst_n_t"):])
                     if depth.get(old) != depth.get(f"rst_n_t{tap}") or \
                             roles.get(first, "mission") != roles.get(tap, "mission"):
@@ -3485,6 +3496,7 @@ class Binder:
                                   f"{F.cells[ci].path} rel {self.rel_of(ci)}" for ci in candidates[:3]) + ")")
                     continue
                 core_reset[(candidates[0], pin)] = f"rst_n_t{target['tap']}"
+                core_reset_rows.setdefault((candidates[0], pin), []).append(target["inst"])
         need_rst = False
         obus = sorted(self.out_bus[p], key=lambda L: L["oname"])
         ibus = sorted(self.in_bus[p], key=lambda L: L["iname"])
@@ -3849,6 +3861,11 @@ class Binder:
                 conns = [(pn, e) for pn, e in conns if pn not in hide]
             cs = ",\n".join(f"        .{pn}({e})" for pn, e in conns)
             insts.append(f"    // as-built {c.path}\n    {c.module}{pstr} {short_id('u_' + r, 90)} (\n{cs}\n    );")
+        if core_reset_rows:
+            self.__dict__.setdefault("_bound_core_resets", {})[tn] = [
+                dict(inst=i, leaf=short_id("u_" + self.rel_of(k[0]), 90), pin=k[1], reset=core_reset[k])
+                for k, rows in sorted(core_reset_rows.items(), key=lambda kv: (self.rel_of(kv[0][0]), kv[0][1]))
+                for i in rows]
         for L in obus_tree:
             n, W = L["oname"], L["width"]
             src = []
@@ -4961,6 +4978,70 @@ def bindf_prefer(out, base):
     return res
 
 
+RESET_SYNC = "ot_reset_sync"
+_PARAM_DECL = re.compile(r"\bparameter\s+(?:(?:integer|int|logic|bit|signed|unsigned)\s+)*(?:\[[^\]]*\]\s*)?(\w+)\s*=")
+
+
+def _module_text(text, name):
+    m = re.search(r"^\s*(?:\(\*[^\n]*?\*\)\s*)?module\s+" + re.escape(name) + r"\b(.*?)^\s*endmodule\b", text, re.S | re.M)
+    return m.group(1) if m else None
+
+
+def _reset_sync_params(texts):
+    """{param} named by every `ot_reset_sync #(...)` instance in the texts; a positional override raises."""
+    used = set()
+    for text in texts:
+        for m in re.finditer(r"\b" + RESET_SYNC + r"\s*#\s*\(", text):
+            if re.search(r"\bmodule\s+$", text[max(0, m.start() - 40):m.start()]):
+                continue                     # the module's own parameter header, not an instance
+            i, depth = m.end(), 1
+            while depth and i < len(text):
+                depth += {"(": 1, ")": -1}.get(text[i], 0)
+                i += 1
+            args = text[m.end():i - 1]
+            names = re.findall(r"\.(\w+)\s*\(", args)
+            if args.strip() and not names:
+                raise ValueError(f"positional {RESET_SYNC} parameter override #({args.strip()[:40]})")
+            used.update(names)
+    return used
+
+
+def kit_reset_sync(tn, rs, sources):
+    """-> the tool's rtl/lib/ot_reset_sync.sv to append, or None when the bind's own closure already defines the module.
+
+    DIE-HBM-90-TNAME 11-07 (class (f), HBM q_hub_nw kit_rtl "different source files named ot_reset_sync.sv": main
+    rtl/lib vs hbm-bind-6/tip2 r18h5_bundle/rtl/lib): the bundle's leaves (ot_hbm_svc_async_fifo, _stack_fault,
+    _sm4pc_cdc_rel_id, _wb_cutthrough_cdc) instantiate ot_reset_sync and the closure picks the bundle copy, an older
+    version of the same module (main adds OUTPUT_COPIES/TREE, defaults = the old body).  The kit always appended the
+    tool copy as well, so two definitions met.  The bind of record's copy is the one its leaves were bound with: it
+    stays, and the tool copy is added only when no closure source defines the module.  The kept copy must declare every
+    parameter any kit source sets on an ot_reset_sync instance (bind.py's u_rst_sync uses ASYNC_STAGES), else this
+    fails closed; a positional override fails closed too."""
+    rs = Path(rs).resolve()
+    rs_bytes = rs.read_bytes() if rs.is_file() else None
+    own = []
+    for f in sources:
+        f = Path(f)
+        if f.resolve() == rs or not f.is_file() or f.read_bytes() == rs_bytes:
+            continue                         # a byte-identical copy collapses in kit_dedupe as before
+        body = _module_text(E._strip(f.read_text(errors="replace")), RESET_SYNC)
+        if body is not None:
+            own.append((f, body))
+    if not own:
+        return rs
+    try:
+        used = _reset_sync_params([E._strip(Path(f).read_text(errors="replace")) for f in sources if Path(f).is_file()])
+    except ValueError as exc:
+        raise BindError(f"kit-rtl {tn}: {exc}") from exc
+    for f, body in own:
+        missing = sorted(used - set(_PARAM_DECL.findall(body)))
+        if missing:
+            raise BindError(f"kit-rtl {tn}: the bound closure's {RESET_SYNC} ({f}) lacks parameter(s) {missing} that "
+                            f"kit sources set; the tool copy {rs} would be a second definition")
+    print(f"kit-rtl {tn}: {RESET_SYNC} from the bound closure ({own[0][0]}); tool copy {rs} not added", file=sys.stderr)
+    return None
+
+
 def kit_dedupe(tn, fl):
     """Flatten kit sources; identical copies collapse, disjoint module-only collisions get byte-exact aliases."""
     from kit_assembly import dedupe_sources
@@ -5119,7 +5200,19 @@ def cmd_kit_rtl(a):
         # DIE-QC-69: a hard core nested in a bound leaf (QC RED u_u_red.u_core) declares its physical_inst in the plan
         phys = {c["inst"]: c["physical_inst"] for c in t.get("hard_cores", []) or [] if c.get("physical_inst")}
         core_rows = [(r[0], phys.get(r[1], r[1])) + tuple(r[2:]) for r in (gen_phys.core_tap_rows(P, tn) if P else [])]
-        btxt, kit_core_clock_rows = kit_core_clocks.wire(btxt, bmod, core_rows)
+        # DIE-HBM-90-TNAME 11-07: the plan masters of each tapped core, so a native-body leaf maps its clock entries
+        masters = {}
+        for c in t.get("hard_cores", []) or []:
+            masters.setdefault(phys.get(c["inst"], c["inst"]), set()).update(
+                m for m in (c.get("module"), c.get("physical_master")) if m)
+        btxt, kit_core_clock_rows = kit_core_clocks.wire(btxt, bmod, core_rows,
+                                                         leaf_id=lambda inst: short_id("u_" + inst, 90),
+                                                         core_masters=masters)
+        # S81-LNB-1 11-08 (opt-in plan partition_types[T].ln_copies, class LN-BROADCAST): per-lane kept copies of the vp
+        # coefficient words + per-lane reset relay bits, 0 added cycles (kit_ln_copies.py); absent = byte-identical
+        import kit_ln_copies
+        btxt, kit_ln_mods, kit_ln_rep = kit_ln_copies.apply(btxt, t.get("ln_copies"),
+                                                             [out / "rtl" / "native_glue", out / "native_glue"])
     except ValueError as exc:
         raise BindError(f"kit-rtl {tn}: {exc}") from exc
     bports = [(m.group(1), int(m.group(2)) + 1 if m.group(2) else 1, m.group(3)) for m in
@@ -5277,7 +5370,7 @@ def cmd_kit_rtl(a):
         spb_geometry = hbm_spb_native.kit_geometry(out, key, btxt, kd)
     except (ValueError, KeyError, OSError) as exc:
         raise BindError(f"kit-rtl HBM SPB {tn}: {exc}") from exc
-    if bmod == mod or kit_core_swaps or kit_core_adapters or kit_param_wraps or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
+    if bmod == mod or kit_core_swaps or kit_core_adapters or kit_param_wraps or kit_ln_rep or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
         nb = bmod + "_bound" if bmod == mod else bmod + "_coreclk"
         (kd / f"{nb}.sv").write_text(re.sub(rf"\b(module|endmodule\s*:)\s+{bmod}\b", rf"\1 {nb}", btxt))
         bfile, bmod = kd / f"{nb}.sv", nb
@@ -5351,8 +5444,15 @@ def cmd_kit_rtl(a):
         files.append(Path(spb_geometry['rtl']).resolve())
     pkgs = kit_packages(files + [bfile], ab0.get("rtl_roots", ["rtl"]), base)
     rs = Path(__file__).resolve().parent.parent.parent / "rtl" / "lib" / "ot_reset_sync.sv"
-    fl = kit_dedupe(tn, [kd / f"{mod}.sv"] + pkgs + [bfile, (out / "rtl" / "bind_cells.sv").resolve(), rs] +
-                    [f for f in files if f.name != "bind_cells.sv"])
+    kit_srcs = [kd / f"{mod}.sv"] + pkgs + [bfile, (out / "rtl" / "bind_cells.sv").resolve()] + \
+        [f for f in files if f.name != "bind_cells.sv"]
+    if kit_ln_rep:      # S81-LNB-1: the generated copy modules + the receipt (cycles_changed 0)
+        (kd / "kit_ln_copies.sv").write_text(kit_ln_mods)
+        (kd / "kit_ln_copies.json").write_text(json.dumps(kit_ln_rep, indent=1) + "\n")
+        if kit_ln_mods:
+            kit_srcs.append(kd / "kit_ln_copies.sv")
+    rs = kit_reset_sync(tn, rs, kit_srcs)
+    fl = kit_dedupe(tn, kit_srcs[:len(pkgs) + 3] + ([rs] if rs else []) + kit_srcs[len(pkgs) + 3:])
     fl, incl = kit_inline_includes(fl, kd)
     fl, inlined = kit_inline_imports(fl, kd)
     fl, deduped = kit_strip_dups(fl, kd, picks)

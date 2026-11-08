@@ -1,0 +1,510 @@
+{
+  "schema": "opentallas.clock_access.native_candidate.v1",
+  "status": "NATIVE_CLEAR_CANDIDATE",
+  "reference_db": "/input/6_final.odb",
+  "dbu": 1000,
+  "orientation": "MY",
+  "origin_um": [
+    699.84,
+    77.76
+  ],
+  "track_offset_um": [
+    0,
+    0.012
+  ],
+  "actual_pin_M5_child_um": [
+    228.948,
+    578.64,
+    228.996,
+    579.12
+  ],
+  "actual_pin_M5_parent_um": [
+    928.764,
+    656.412,
+    928.812,
+    656.892
+  ],
+  "via56_parent_xy_um": [
+    928.776,
+    656.672
+  ],
+  "via67_parent_xy_um": [
+    928.8,
+    656.672
+  ],
+  "utility_parent_bbox_um": [
+    928.784,
+    656.268,
+    928.816,
+    657.036
+  ],
+  "m6_overlap_nm": [
+    26,
+    32
+  ],
+  "clearance": {
+    "M5": {
+      "footprint_child_um": [
+        228.972,
+        578.873,
+        228.996,
+        578.927
+      ],
+      "footprint_parent_um": [
+        928.764,
+        656.645,
+        928.788,
+        656.699
+      ],
+      "base_spacing_nm": 24,
+      "nearest_non_ck": [
+        {
+          "gap_linf_nm": 304,
+          "gap_xy_nm": [
+            108,
+            304
+          ],
+          "shape": {
+            "layer": "M5",
+            "bbox": [
+              229104,
+              578512,
+              229128,
+              578569
+            ],
+            "net": "delaynet_3_clk",
+            "signal": "CLOCK",
+            "kind": "wire-RECT"
+          }
+        },
+        {
+          "gap_linf_nm": 334,
+          "gap_xy_nm": [
+            108,
+            334
+          ],
+          "shape": {
+            "layer": "M5",
+            "bbox": [
+              229104,
+              578485,
+              229128,
+              578539
+            ],
+            "net": "delaynet_3_clk",
+            "signal": "CLOCK",
+            "kind": "wire-via",
+            "via": "VIA56",
+            "origin": [
+              229116,
+              578512
+            ]
+          }
+        },
+        {
+          "gap_linf_nm": 342,
+          "gap_xy_nm": [
+            108,
+            342
+          ],
+          "shape": {
+            "layer": "M5",
+            "bbox": [
+              229104,
+              578485,
+              229128,
+              578531
+            ],
+            "net": "delaynet_3_clk",
+            "signal": "CLOCK",
+            "kind": "wire-via",
+            "via": "VIA45",
+            "origin": [
+              229116,
+              578508
+            ]
+          }
+        }
+      ]
+    },
+    "M6": {
+      "footprint_child_um": [
+        228.933,
+        578.884,
+        229.007,
+        578.916
+      ],
+      "footprint_parent_um": [
+        928.753,
+        656.656,
+        928.827,
+        656.688
+      ],
+      "base_spacing_nm": 32,
+      "nearest_non_ck": [
+        {
+          "gap_linf_nm": 356,
+          "gap_xy_nm": [
+            86,
+            356
+          ],
+          "shape": {
+            "layer": "M6",
+            "bbox": [
+              229093,
+              578496,
+              229139,
+              578528
+            ],
+            "net": "delaynet_3_clk",
+            "signal": "CLOCK",
+            "kind": "wire-via",
+            "via": "VIA56",
+            "origin": [
+              229116,
+              578512
+            ]
+          }
+        },
+        {
+          "gap_linf_nm": 356,
+          "gap_xy_nm": [
+            93,
+            356
+          ],
+          "shape": {
+            "layer": "M6",
+            "bbox": [
+              229100,
+              578496,
+              230716,
+              578528
+            ],
+            "net": "delaynet_3_clk",
+            "signal": "CLOCK",
+            "kind": "wire"
+          }
+        },
+        {
+          "gap_linf_nm": 804,
+          "gap_xy_nm": [
+            130,
+            804
+          ],
+          "shape": {
+            "layer": "M6",
+            "bbox": [
+              228757,
+              578048,
+              228803,
+              578080
+            ],
+            "net": "ck_de_regs",
+            "signal": "CLOCK",
+            "kind": "wire-via",
+            "via": "VIA56",
+            "origin": [
+              228780,
+              578064
+            ]
+          }
+        }
+      ]
+    },
+    "V5": {
+      "footprint_child_um": [
+        228.972,
+        578.884,
+        228.996,
+        578.916
+      ],
+      "footprint_parent_um": [
+        928.764,
+        656.656,
+        928.788,
+        656.688
+      ],
+      "base_spacing_nm": 0,
+      "nearest_non_ck": [
+        {
+          "gap_linf_nm": 356,
+          "gap_xy_nm": [
+            108,
+            356
+          ],
+          "shape": {
+            "layer": "V5",
+            "bbox": [
+              229104,
+              578496,
+              229128,
+              578528
+            ],
+            "net": "delaynet_3_clk",
+            "signal": "CLOCK",
+            "kind": "wire-via",
+            "via": "VIA56",
+            "origin": [
+              229116,
+              578512
+            ]
+          }
+        },
+        {
+          "gap_linf_nm": 804,
+          "gap_xy_nm": [
+            180,
+            804
+          ],
+          "shape": {
+            "layer": "V5",
+            "bbox": [
+              228768,
+              578048,
+              228792,
+              578080
+            ],
+            "net": "ck_de_regs",
+            "signal": "CLOCK",
+            "kind": "wire-via",
+            "via": "VIA56",
+            "origin": [
+              228780,
+              578064
+            ]
+          }
+        },
+        {
+          "gap_linf_nm": 1628,
+          "gap_xy_nm": [
+            636,
+            1628
+          ],
+          "shape": {
+            "layer": "V5",
+            "bbox": [
+              229632,
+              580544,
+              229656,
+              580576
+            ],
+            "net": "ck_de",
+            "signal": "CLOCK",
+            "kind": "wire-via",
+            "via": "VIA56",
+            "origin": [
+              229644,
+              580560
+            ]
+          }
+        }
+      ]
+    },
+    "M7": {
+      "footprint_child_um": [
+        228.944,
+        578.496,
+        228.976,
+        579.264
+      ],
+      "footprint_parent_um": [
+        928.784,
+        656.268,
+        928.816,
+        657.036
+      ],
+      "base_spacing_nm": 32,
+      "nearest_non_ck": [
+        {
+          "gap_linf_nm": 432,
+          "gap_xy_nm": [
+            432,
+            0
+          ],
+          "shape": {
+            "layer": "M7",
+            "bbox": [
+              228480,
+              578048,
+              228512,
+              583264
+            ],
+            "net": "ck_de_regs",
+            "signal": "CLOCK",
+            "kind": "wire"
+          }
+        },
+        {
+          "gap_linf_nm": 432,
+          "gap_xy_nm": [
+            432,
+            405
+          ],
+          "shape": {
+            "layer": "M7",
+            "bbox": [
+              228480,
+              578037,
+              228512,
+              578091
+            ],
+            "net": "ck_de_regs",
+            "signal": "CLOCK",
+            "kind": "wire-via",
+            "via": "VIA67",
+            "origin": [
+              228496,
+              578064
+            ]
+          }
+        },
+        {
+          "gap_linf_nm": 656,
+          "gap_xy_nm": [
+            656,
+            0
+          ],
+          "shape": {
+            "layer": "M7",
+            "bbox": [
+              229632,
+              523712,
+              229664,
+              582752
+            ],
+            "net": "clknet_0_ck_de",
+            "signal": "CLOCK",
+            "kind": "wire"
+          }
+        }
+      ]
+    },
+    "V6": {
+      "footprint_child_um": [
+        228.944,
+        578.884,
+        228.976,
+        578.916
+      ],
+      "footprint_parent_um": [
+        928.784,
+        656.656,
+        928.816,
+        656.688
+      ],
+      "base_spacing_nm": 0,
+      "nearest_non_ck": [
+        {
+          "gap_linf_nm": 804,
+          "gap_xy_nm": [
+            432,
+            804
+          ],
+          "shape": {
+            "layer": "V6",
+            "bbox": [
+              228480,
+              578048,
+              228512,
+              578080
+            ],
+            "net": "ck_de_regs",
+            "signal": "CLOCK",
+            "kind": "wire-via",
+            "via": "VIA67",
+            "origin": [
+              228496,
+              578064
+            ]
+          }
+        },
+        {
+          "gap_linf_nm": 1628,
+          "gap_xy_nm": [
+            1552,
+            1628
+          ],
+          "shape": {
+            "layer": "V6",
+            "bbox": [
+              230528,
+              580544,
+              230560,
+              580576
+            ],
+            "net": "ck_de",
+            "signal": "CLOCK",
+            "kind": "wire-via",
+            "via": "VIA67",
+            "origin": [
+              230544,
+              580560
+            ]
+          }
+        },
+        {
+          "gap_linf_nm": 3612,
+          "gap_xy_nm": [
+            1552,
+            3612
+          ],
+          "shape": {
+            "layer": "V6",
+            "bbox": [
+              230528,
+              582528,
+              230560,
+              582560
+            ],
+            "net": "ck_de",
+            "signal": "CLOCK",
+            "kind": "wire-via",
+            "via": "VIA67",
+            "origin": [
+              230544,
+              582544
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "abstract_windows": {
+    "M6": {
+      "child_um": [
+        228.869,
+        578.82,
+        229.071,
+        578.98
+      ],
+      "parent_um": [
+        928.689,
+        656.592,
+        928.891,
+        656.752
+      ],
+      "guard_nm": 64
+    },
+    "M7": {
+      "child_um": [
+        228.88,
+        578.432,
+        229.04,
+        579.328
+      ],
+      "parent_um": [
+        928.72,
+        656.204,
+        928.88,
+        657.1
+      ],
+      "guard_nm": 64
+    }
+  },
+  "obligations": [
+    "Parent utility metal/vias must be constructed; child has no M7 clock PORT.",
+    "Parent M6 PG island/cut and die-clock pre-route must respect this access stack.",
+    "Check actual generated parent BTerm is32nm by768nm (4*PIN_LEN_UM=.192) and matches these tracks.",
+    "Parent DRC/route and timing remain required; this native geometric census is not sign-off."
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "form": "TX CH_STAGE1",
+  "RTL_commit": "cafcf5a50ce",
+  "baseline": "93c061c396c",
+  "kit": "intel2:/srv/opentallas-scratch2/claude/codex-head-tx-stage-1107/kit/ot_s81hd_sc_tx_vC_stage_a5",
+  "recipe": "93c061c396c:physical/die_plan/hbm_arch_cores/run_kit_hbm.sh KIT place 8 4",
+  "PLACE": "COMPLETE; controller waits for existing LEC",
+  "place_controller_unit": "oth-ubuntu-411970-1794065826",
+  "LEC": "PENDING, own unit oth-ubuntu-459342-1794065900",
+  "area_um2": 18565,
+  "utilization_percent": 35,
+  "flops": 17042,
+  "added_flops_vs_base": 1221,
+  "physical_instances": 117755,
+  "macros": 0,
+  "pins": 1059,
+  "max_approx15um_density": 0.47671423599025614,
+  "density_bins_above_07": 0,
+  "all_target_data_leg_range_um": [
+    43.794,
+    90.234
+  ],
+  "target_control_leg_range_um": [
+    69.822,
+    106.326
+  ],
+  "geometry_verdict": "PASS-COND FOR CTS SCREEN ONLY",
+  "remaining_target_overshoot": "First control leg up to106.3um vs100um target; four loads and two real stages replace old170um shared reach. No slew closure claim from placement.",
+  "clock_tree": "NOT_BUILT; actual insertion/related-pair spread to review after CTS",
+  "GRT_congestion": "NOT_RUN",
+  "STA_signoff": "NOT_RUN",
+  "PIN_cycles": "PMA data and fault+1; PRIVATE/UNBOUND, no registry/POR claim",
+  "METH_policy": "6.1: TT setup0ps/FFhold25ps,833ps; inherited SDC unchanged",
+  "old_third_ECO": "eco_dh80 REMAINS STOPPED; no exception"
+}

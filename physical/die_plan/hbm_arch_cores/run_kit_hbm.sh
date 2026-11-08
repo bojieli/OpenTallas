@@ -23,6 +23,20 @@ set -uo pipefail
 # FAIL_POSTCTS and the kit routes on to sign-off; signoff.py records the band as signoff.json insertion_band.
 # 'export OT_POSTCTS_BAND_GATE = 1' in config.mk restores the old stop (rc 6).  OT_HOLD_GATE above is unchanged.
 K=$(cd "$1" && pwd -P); GOAL=${2:-finish}; MEM=${3:-32}; CPUS=${4:-16}
+# KW-FIX-32 RESYNTH-GUARD (COORD 20:2x, DIE-QC-91 20:15): a kit assembled by copying stage checkpoints (cp -p keeps the
+# old mtimes) re-synthesises under a make-chain goal when config.mk / sdc / rtl are newer than the restored results, so
+# the proved netlist silently changes inside the same kit.  Kits that restored results and have no stage-resume plan
+# (resume.json = the do-* path) refuse instead; fresh kits (no results yet) and GOAL=synth are unchanged.
+if [ "$GOAL" != synth ] && [ "${OT_ALLOW_RESYNTH:-0}" != 1 ] && [ ! -f "$K/resume.json" ]; then
+  RG_O=$(ls -tr "$K"/run/results/asap7/*/base/1_*.v "$K"/run/results/asap7/*/base/[2-5]_*.odb 2>/dev/null | head -1)
+  if [ -n "$RG_O" ]; then
+    RG_N=$(find "$K/config.mk" "$K"/*.sdc "$K/rtl" -type f -newer "$RG_O" 2>/dev/null | head -3 | tr '\n' ' ')
+    if [ -n "$RG_N" ]; then
+      echo "RESYNTH-GUARD: make goal $GOAL would rebuild from synth: ${RG_N}newer than the restored $(basename "$RG_O"); drive this kit with do-* targets (or OT_ALLOW_RESYNTH=1 to rebuild it)" >&2
+      exit 12
+    fi
+  fi
+fi
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
 # Optional existing XOR SAT backend; async LEC uses docker exec in this same container.
@@ -134,6 +148,8 @@ tail -5 "$K/run_$GOAL.log"
 if { [ "$GOAL" = finish ] || [ "$GOAL" = route ] || [ "$GOAL" = post ]; } && [ $((rc % 100)) = 0 ] && ls "$K"/run/results/asap7/*/base/6_final.odb >/dev/null 2>&1; then
   SO="$K/signoff"
   [ ! -e "$SO/signoff.json" ] || SO="$K/signoff_$(date +%Y%m%d_%H%M%S)"
-  python3 "$K/signoff.py" run --run-dir "$K/run" --kit "$K" --corners tt,ff --out "$SO" --docker "$DK" || rc=1
+  # KW-FIX-32 11-07 (FLOW-CHILD-ETM-CONTEXT at sign-off): parent flow tag for signed child ETMs (env, else K/flow_tag)
+  FT=${OT_FLOW_TAG:-$(head -1 "$K/flow_tag" 2>/dev/null)}
+  python3 "$K/signoff.py" run --run-dir "$K/run" --kit "$K" --corners tt,ff --out "$SO" --docker "$DK" ${FT:+--flow-tag "$FT"} || rc=1
 fi
 exit $rc

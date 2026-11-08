@@ -32,6 +32,11 @@ Per tick (autopilot.py tick calls step() after admit_new; off unless the config 
      One grouped line per die per tick goes to lanes/COORD-REVIEW-QUEUE.md (for the die's owner lane); OWNERS.tsv
      rows of wave items carry owner KIT-WAVE-1, the live unit and the class + evidence (overlay_owners()).
 
+     Optional per-die route_hold_items maps item glob patterns to nonempty reasons, e.g.
+     {"cbf_q01*": "native reset redesign pending"}. It holds only a completed geometry PASS before enqueue,
+     retains the kit/review, and resumes enqueue on a later tick when removed. Default empty; admitted jobs
+     are never cancelled. Existing hold_items still gates new builds independently.
+
   7. past GEOM (AUTOBUILD-PIPE-1, OWNER 12.23): follow_queue() joins each enqueued kit with its autopilot job (kit
      runner CTS -> route, signoff_chain sign-off + post-route LEC, archive + PROVENANCE flow tag -> credit_designs
      count) and kit_wave_stages.tsv carries stage/status/class TIMING | ROUTING | PLAN | FLOW | INFRA to the count.
@@ -174,7 +179,11 @@ DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6,
             "stage_resume": True,
             # KW-FIX-17 (COORD 11-05 16:4x): a sign-off FAIL with the LEAFSLEW signature relaunches once with the
             # clk_leaf_repeat post-CTS hook; die/global "leafslew_auto": false opts out
-            "leafslew_auto": True}
+            "leafslew_auto": True,
+            # KW-FIX-33 (COORD 11-07 22:53, OWNER 11-07 HBM type builds allowed): a die-wide census label in OWNERS.tsv
+            # (HBM-PLAN owns every HBM type row with a fresh last_activity) is not a lane claim on a type row; a specific
+            # per-item owner still claims.  Die/global "generic_owner_labels" overrides; [] restores the old behaviour.
+            "generic_owner_labels": ["HBM-PLAN"]}
 # AUTOBUILD-PIPE-1 10-30: an ssh transport drop before the command ran (sshd MaxStartups on the gen host when a tick
 # launches 16 items at once) is retried inside the item, never charged to the design: up to SSH_RETRIES more tries
 SSH_RETRIES = 3
@@ -220,6 +229,16 @@ def opt(cfg, die, key):
     return cfg.get(key, DEFAULTS.get(key))
 
 
+def place_mem_gb(cfg, die, item):
+    """PLACE memory (GB) of one item: the first fnmatch pattern of place_mem_gb_by_item (die > global, in insertion
+    order) that matches the item, else the die's place_mem_gb.  QC-TYPES-6 11-08: the hc tap-pair kits need >= 96 GB
+    for their kit LEC (rc137 OOM at 32 and 48 GB) without raising every kit's budget."""
+    for pat, gb in (opt(cfg, die, "place_mem_gb_by_item") or {}).items():
+        if fnmatch.fnmatchcase(str(item), pat):
+            return int(gb)
+    return int(opt(cfg, die, "place_mem_gb"))
+
+
 def stop_reason(cfg, die, ap_dir=None):
     ap_dir = Path(ap_dir or AP_DIR)
     if cfg.get("error"):
@@ -262,7 +281,12 @@ def gate(cfg, die, descends=None):
     g = d.get("gate") or {}
     bad = [k for k in GATE_KEYS if str(g.get(k, "")).upper() != "PASS"]
     d.pop("_cores_only", None)
-    if bad == ["clock"] and d.get("core_kit"):
+    if bad == ["clock"] and d.get("types_before_die_clock"):
+        # KW-FIX-32 11-07 (OWNER 17:4x "allow type builds for all dies, including HBM"): die option
+        # types_before_die_clock true -> a die whose ONLY non-PASS plan gate is the die clock builds every kind (types
+        # too), not just cores; g0c/bind must still PASS.  Default off = the 12.22 item 4 cores-only behaviour below.
+        pass
+    elif bad == ["clock"] and d.get("core_kit"):
         # AUTOBUILD-PIPE-2 (COORD 10-30 23:5x, owner 12.22 item 4): a hard core does not depend on the die clock (its
         # boundary is the plan pin table + common core latency), so a core-kit die builds its kind=core items before
         # the die clock PASSes; partition types still wait for it (select() skips them)
@@ -330,11 +354,29 @@ def prov_item(d, item):
     return prov_on(d) and (f == "noview" or (f == "planned" and not d.get("planned_core_flat")))
 
 
-def plan_entry_block(d, item):
+def kit_rtl_mode(d):
+    """the die's kit-RTL mode (bind / script): the type kit takes the bound partition RTL; None = plan wrapper"""
+    kr = d.get("kit_rtl") if isinstance(d.get("kit_rtl"), dict) else {}
+    return kr.get("mode") if kr.get("mode") in ("bind", "script") else None
+
+
+NEEDS_BIND = ("NEEDS-BIND: plan type has buses with no leaf binding and the die has no kit_rtl (bound partition RTL); "
+              "gen would fail 'bus ... is not bound to any leaf port'")
+
+
+def plan_entry_block(d, item, kind=None):
     """plan-entry kit preflight from the plan probe flags; hard_wrappers opt a hard type back in"""
     if item in (d.get("_identity_holds") or {}):
         return "plan block identity held: " + d["_identity_holds"][item]
     f = (d.get("_plan_flags") or {}).get(item)
+    # DIE-HBM-89-TGEN 11-07 (HBM q_b000/q_b001 + __physical_v1 FAIL @gen 19:0x): a type kit without kit_rtl is the
+    # plan wrapper, which binds a bus only via buses[].leaf / contents[].bind.  A type with unbound buses fails gen
+    # with certainty, so it is not launched (no FAIL row, no gen slot) until the die config gives it bound RTL
+    # (kit_rtl mode bind/script).  Die opt-out: unbound_launch true (old behaviour).  kind=core items (core_kit) and
+    # hard types never go through the plan wrapper.
+    ub = (d.get("_plan_unbound") or {}).get(item)
+    if ub and kind != "core" and f != "hard" and not kit_rtl_mode(d) and not d.get("unbound_launch"):
+        return f"{NEEDS_BIND} ({len(ub)} bus(es), e.g. {','.join(ub[:3])})"
     if f == "hard" and item in (d.get("hard_wrappers") or []):
         return None
     if f == "planned" and d.get("planned_core_flat"):
@@ -459,6 +501,7 @@ def select(rows, cfg, die, state, plan_types=None):
     states = set(opt(cfg, die, "take_states"))
     kinds = set(opt(cfg, die, "kinds"))
     claim_m = float(opt(cfg, die, "live_claim_h")) * 60
+    generic = set(opt(cfg, die, "generic_owner_labels") or [])
     retry = set(d.get("retry") or [])                 # "item@attempt": COORD released that failed attempt
     skip = {}
     picked = []
@@ -515,7 +558,7 @@ def select(rows, cfg, die, state, plan_types=None):
             why = f"kind {r['kind']} not in wave"
         elif d.get("_cores_only") and r["kind"] != "core":
             why = "die clock not PASS: cores only (core_kit, 12.22 item 4)"
-        elif rec and rec.get("status") in ("RUNNING", "LAUNCHING"):
+        elif rec and rec.get("status") in ("RUNNING", "LAUNCHING", "ROUTE-HELD"):
             why = "wave item in flight"
         elif prov_predecessor(d, die, state, r["item"], rec):
             why = ("PROV-RESIGN: the PROVISIONAL kit of this type re-signs (STA only, no re-route) on the signed child "
@@ -539,7 +582,8 @@ def select(rows, cfg, die, state, plan_types=None):
         elif r["live_job"] not in ("", "none") and not _own_wave_unit(r):
             why = "live job (another lane)"
         elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m \
-                and not str(r["owner"]).startswith("KIT-WAVE"):
+                and not str(r["owner"]).startswith("KIT-WAVE") \
+                and not (r["kind"] == "type" and r["owner"] in generic):
             # a recent coord line by another lane naming the item is a claim; the wave's own notices never count
             # (any KIT-WAVE-<n> runner lane: the wave's lane name changes with each successor)
             why = f"lane activity < {claim_m / 60:g} h ({r['owner']})"
@@ -552,9 +596,9 @@ def select(rows, cfg, die, state, plan_types=None):
             else:
                 cls = sorted(t for t in plan_types if t.startswith(r["item"] + "__"))
             its = state.get("items") or {}
-            blocked = [c for c in cls if plan_entry_block(d, c)]
+            blocked = [c for c in cls if plan_entry_block(d, c, r.get("kind"))]
             for c in blocked:
-                skip.setdefault(plan_entry_block(d, c), []).append(c)
+                skip.setdefault(plan_entry_block(d, c, r.get("kind")), []).append(c)
             for c in cls:                    # DIE-QC-63/KITS 11-02: hold_items naming a class hold that class
                 hc = next((w for pat, w in (d.get("hold_items") or {}).items() if fnmatch.fnmatchcase(c, pat)), None)
                 if hc and c not in blocked:
@@ -589,7 +633,7 @@ def select(rows, cfg, die, state, plan_types=None):
                 picked += [dict(r, item=c, parent_item=r["item"], block_sha=blk(c)) for c in todo]
                 continue
         if not why:
-            why = plan_entry_block(d, r["item"])
+            why = plan_entry_block(d, r["item"], r.get("kind"))
         if why:
             skip.setdefault(why, []).append(r["item"])
             continue
@@ -750,7 +794,10 @@ RULES = [
     ("PLAN", r"^place$", r"\[ERROR MPL-0034\]", "plan macro position outside the core"),
     ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
-                    r"yosys elaboration failed rc[ =]+137\b", "infra"),
+                    r"yosys elaboration failed rc[ =]+137\b|"
+                    # S81-OTHERFAIL-1 11-07: host earlyoom SIGTERMs yosys (epyc2 16:01/16:09 PST, mem 3%): the synth make
+                    # reports 'Error 241' (256-15), selrange 'yosys exit -15', rtl_lint/selrange the KILLED marker
+                    r"\] Error 241\b|yosys exit -15\b|FAIL_PREFLOOR \w+ KILLED \(yosys signal", "infra"),
     # transport only: an ssh drop BEFORE the command ran.  When ot-run reports 'RAN on <host>' the command ran and its
     # own error decides the class (a probe of another host that failed is not the item's failure)
     ("INFRA-SSH", None, r"ssh: connect to host|Connection (?:reset|refused|closed)|kex_exchange_identification|"
@@ -813,6 +860,10 @@ RULES = [
     ("PLAN", r"^bind$", r".", "plan of record not cleanly bound (strict bind)"),
     ("PLAN", r"^cells$", r".", "cell count above the kit run cap"),
     ("PLAN", None, r"GEN_NO_KIT", "gen wrote no kit (hard / skipped type in the plan)"),
+    # DIE-HBM-89-TGEN 11-07 (HBM q_b000/q_b001 @gen 'unclassified'): the plan-wrapper gen found a plan bus with no
+    # buses[].leaf / contents[].bind; the plan of record binds leaves only in the die bind (kit_rtl), not in the plan
+    ("PLAN", r"^gen$", r"is not bound to any leaf port",
+     "plan type has unbound buses and the kit took the plan wrapper: the die needs kit_rtl (bound partition RTL)"),
     # KIT-TRIAGE-1/G26 11-01 (QC cbf_q00/cbf_q11/cbn_q11): instances that differ ONLY in ID parameters (tile_id ...) are
     # one kit once the plan declares those leaf ports parent_id_straps (OWNER 10-25 option B: strap_* pins tied at the
     # parent, bind.py emit_type promotes them); any other parameter difference stays the die kit-recipe case below
@@ -1179,7 +1230,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
     return {"die": die, "item": item, "kind": kind, "event": d["event"], "plan": d["plan"],
-            "gen_host": pick_gen_host(cfg, die, take=int(opt(cfg, die, "place_mem_gb")),
+            "gen_host": pick_gen_host(cfg, die, take=place_mem_gb(cfg, die, item),
                                       threads=int(opt(cfg, die, "place_threads"))),
             "src": d["src"], "src_sha": d.get("src_sha", ""), "queue_src": d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": d.get("kit_rtl") or {},
@@ -1206,7 +1257,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # (gen phys --cland-pinslot; a kit without ring bands is unchanged).  Die opt-out: cland_pinslot false.
             "cland_pinslot": cland_pinslot_arg(d),
             "hosts": [h for h in opt(cfg, die, "hosts")], "hub": hub, "place_prefer": list(opt(cfg, die, "place_prefer") or []),
-            "place_mem_gb": int(opt(cfg, die, "place_mem_gb")), "place_threads": int(opt(cfg, die, "place_threads")),
+            "place_mem_gb": place_mem_gb(cfg, die, item), "place_threads": int(opt(cfg, die, "place_threads")),
             "geom_mem_gb": int(opt(cfg, die, "geom_mem_gb")), "geom_grt_wall_s": int(opt(cfg, die, "geom_grt_wall_s")), "gen_mem_gb": int(opt(cfg, die, "gen_mem_gb")),
             # A measured large elaboration can override its own lint container
             # and matching ot-run admission without raising every kit's budget.
@@ -1865,7 +1916,7 @@ def counted_now(cfg, st, die, item, block=None):
 INPUT_SKIP = {"die", "item", "kind", "event", "gen_host", "work", "root", "hosts", "hub", "place_prefer", "place_mem_gb",
               "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "bind_mem_gb", "ot_run", "crit",
               "start_delay_s", "resume_from", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
-              "prov_views", "geom_advisory", "place_spill"}
+              "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items"}
 
 
 def input_hash(sp, prov_key=None):
@@ -1877,7 +1928,12 @@ def input_hash(sp, prov_key=None):
         if isinstance(v, (list, tuple)):
             return [clean(x) for x in v]
         return v.replace(src, "<SRC>") if isinstance(v, str) and src else v
-    body = {k: c for k, c in ((k, clean(v)) for k, v in sp.items() if k not in INPUT_SKIP) if c not in (None, "", {}, [])}
+    # OT_FLOW_TAG selects the released sign-off tools/child context, not design inputs. Normalize
+    # both stored and candidate specs; changing only this metadata must never release a failed row.
+    compared = dict(sp)
+    if isinstance(compared.get("gen_env"), dict):
+        compared["gen_env"] = {k: v for k, v in compared["gen_env"].items() if k != "OT_FLOW_TAG"}
+    body = {k: c for k, c in ((k, clean(v)) for k, v in compared.items() if k not in INPUT_SKIP) if c not in (None, "", {}, [])}
     form = sp.get("leafslew_form")
     if form:
         body["leafslew"] = clean(form.get("env") or {})
@@ -2778,8 +2834,9 @@ def _descends(AP):
     return f
 
 
-PROBE_V = 4   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
+PROBE_V = 5   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
 #              4 = KW-PROV-1 prov_deps (every planned + noview child of a type) + bound (signed lef/lib per module)
+#              5 = DIE-HBM-89-TGEN unbound (plan buses with no leaf binding: the plan-wrapper gen cannot bind them)
 PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + f"\nPROBE_V = {PROBE_V}\n" + r'''
 import hashlib, json, os, re, sys
 a = json.loads(sys.argv[1]); out = {}
@@ -2803,7 +2860,7 @@ try:
     if mode != "raw" and a.get("identity_baseline_plan"):
         baseline_path = a["identity_baseline_plan"]
         baseline = identities(json.loads(Path(baseline_path).read_text()), baseline_path, mode)
-    flags, deps, lint, pdeps, bound, pkeys = {}, {}, {}, {}, {}, {}
+    flags, deps, lint, pdeps, bound, pkeys, unbound = {}, {}, {}, {}, {}, {}, {}
     cmax = int(a.get("cells_max") or 150000)
     for t, v in pt.items():
         if not isinstance(v, dict):
@@ -2853,6 +2910,16 @@ try:
         for c in (v.get("hard_cores") or []) + (v.get("contents") or []):
             if isinstance(c, dict) and c.get("lef") and c.get("lib"):
                 bound.setdefault(str(c.get("module") or c.get("inst")), {"lef": c["lef"], "lib": c["lib"]})
+        # DIE-HBM-89-TGEN 11-07: the plan-wrapper gen (gen_rtl.write_rtl, no --kit-rtl) binds a bus only through
+        # buses[].leaf or a contents[].bind "bus:<name>"; any other bus is 'not bound to any leaf port' at gen.  A die
+        # whose plan carries no leaf bindings (HBM d44v: 0 of 81 types) needs kit_rtl (the bound partition RTL)
+        if not v.get("hard"):
+            bb = {k for c in (v.get("contents") or []) if isinstance(c, dict)
+                  for k in (c.get("bind") or {}).values() if isinstance(k, str)}
+            ub = [str(b.get("name")) for b in (v.get("buses") or []) if isinstance(b, dict)
+                  and not b.get("leaf") and f"bus:{b.get('name')}" not in bb]
+            if ub:
+                unbound[t] = ub
         if v.get("hard"):
             flags[t] = "hard"
         elif noview:
@@ -2867,7 +2934,8 @@ try:
             flags[t] = "contract"
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
            "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps, "lint": lint, "probe_v": PROBE_V,
-           "prov_deps": pdeps, "prov_keys": pkeys, "bound": bound, "plan_dir": os.path.dirname(os.path.abspath(a["plan"]))}
+           "prov_deps": pdeps, "prov_keys": pkeys, "bound": bound, "plan_dir": os.path.dirname(os.path.abspath(a["plan"])),
+           "unbound": unbound}
     if a.get("core_views"):
         # AUTOBUILD-PIPE-2: pin tables per hard-core module (sha256[:12] of the plan pins_file = views_b2r2 view key)
         cv = {}
@@ -2919,6 +2987,7 @@ def ensure_plan_view(AP, st, d):
         return False
     d["_plan_sha"] = pn.get("plan_sha")
     d["_plan_flags"] = pn.get("flags") or {}
+    d["_plan_unbound"] = pn.get("unbound") or {}
     d["_plan_deps"] = pn.get("deps") or {}
     d["_prov_deps"] = pn.get("prov_deps") or {}
     d["_prov_keys"] = pn.get("prov_keys") or {}
@@ -2974,6 +3043,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     names = dict(pn.get("blocks") or {}) or (set(pn.get("types") or []) | set(pn.get("cores") or []))
                     d["_plan_sha"] = pn.get("plan_sha")
                     d["_plan_flags"] = pn.get("flags") or {}
+                    d["_plan_unbound"] = pn.get("unbound") or {}
                     d["_plan_deps"] = pn.get("deps") or {}
                     d["_plan_lint"] = pn.get("lint") or {}
                     d["_prov_deps"] = pn.get("prov_deps") or {}
@@ -3265,7 +3335,26 @@ def infra_relaunch_due(cfg, rec):
             and ((cfg.get("dies") or {}).get(rec["die"]) or {}).get("event") == rec.get("event"))
 
 
+def route_hold_reason(cfg, rec):
+    """An optional die-owned hold on new ROUTE submissions, never on an admitted unit."""
+    d = (cfg.get("dies") or {}).get(rec["die"]) or {}
+    return next((str(why) for pat, why in (d.get("route_hold_items") or {}).items()
+                 if why and fnmatch.fnmatchcase(rec["item"], pat)), None)
+
+
 def enqueue_pass(AP, cfg, st, rec, notices):
+    # An already submitted row is immutable here, even if a hold is added later.
+    if rec.get("status") == "ENQUEUED":
+        return
+    why = route_hold_reason(cfg, rec)
+    if why:
+        if rec.get("status") != "ROUTE-HELD" or rec.get("route_hold") != why:
+            notices.setdefault(rec["die"], []).append(f"{rec['item']} AUTO-GEOM PASS, ROUTE held: {why}")
+            AP.log(f"KIT-WAVE ROUTE-HOLD {rec['die']}/{rec['item']}: {why}")
+        rec.update(status="ROUTE-HELD", route_hold=why, reason=f"ROUTE hold: {why}", updated=time.time())
+        return
+    if rec.pop("route_hold", None):
+        rec.update(status="PASS", reason="", updated=time.time())
     d = cfg["dies"][rec["die"]]
     # The result belongs to its immutable launch spec, even if the config
     # changes while PLACE runs. Never relabel an old physical result.
@@ -3287,7 +3376,7 @@ def enqueue_pass(AP, cfg, st, rec, notices):
     cells = rec.get("cells") or 0
     argv = ["python3", str(Path(__file__).resolve().parent / "enqueue.py"), "--die", rec["die"], "--type", rec["item"],
             "--kit", rec["kit"], "--src", src, "--geom", rec.get("geom_verdict") or "PASS", "--geom-ref", ref,
-            "--mem", str(opt(cfg, rec["die"], "place_mem_gb")), "--cells", str(min(int(cells * 1.3), CELL_CAP_MAX) if cells else 200000),
+            "--mem", str(place_mem_gb(cfg, rec["die"], rec["item"])), "--cells", str(min(int(cells * 1.3), CELL_CAP_MAX) if cells else 200000),
             "--lane", d.get("lane", LANE)]
     if AP.DRY:
         AP.log("KIT-WAVE would enqueue: " + " ".join(argv))
@@ -3331,11 +3420,13 @@ def enqueue_pass(AP, cfg, st, rec, notices):
 def retry_enqueue(AP, cfg, st, notices):
     """send the kits enqueue_pass() kept PASS on a transport failure. Only records it marked: old FAIL FLOW rows whose
     reason reads NOT SUBMITTED stay with the operator (some hold kits older than a class fix). A die stop or a
-    hold_items match waits; a block that left the current plan is closed, not sent."""
+    hold_items match waits; a block that left the current plan is closed, not sent. ROUTE-HELD records resume
+    here without regenerating, replacing or repeating the completed geometry review."""
     import fnmatch
     n = 0
     for rec in (st.get("items") or {}).values():
-        if rec.get("status") != "PASS" or not rec.get("enqueue_pending") or not rec.get("kit"):
+        if not rec.get("kit") or not (rec.get("status") == "ROUTE-HELD" or
+                (rec.get("status") == "PASS" and rec.get("enqueue_pending"))):
             continue
         d = (cfg.get("dies") or {}).get(rec.get("die"))
         if not isinstance(d, dict) or stop_reason(cfg, rec["die"], cfg.get("_ap_dir") or AP.AP_DIR):
@@ -3381,7 +3472,12 @@ def queue_class(j):
     if stt in ("RUNNING", "") or stt.startswith("WAIT-") or stt in ("ORPHAN", "TRIAL-SIGNED", "WITHDRAWN", "CANCELLED"):
         return ("route" if stt == "RUNNING" else "queue"), (stt or "QUEUED"), "", str((j.get("history") or [[0, 0, ""]])[-1][-1])[:200]
     if stt == "REJECTED":
-        return "queue", "FAIL", "FLOW", "queue row rejected: " + str(j.get("error") or why)[:200]
+        # S81-OTHERFAIL-1 11-07: autopilot keeps the reject reason only in history (c1x_C t6/t7 showed an empty
+        # reason): fall back to the last history entry; a kit that carries an LEC FAIL_PREFLOOR is an RTL verdict
+        last = str((j.get("history") or [[0, 0, ""]])[-1][-1] or "")
+        msg = str(j.get("error") or why or last)[:200]
+        return "queue", "FAIL", ("RTL" if re.search(r"LEC NOT EQUIVALENT|KEEP FAIL", msg) else "FLOW"), \
+            "queue row rejected: " + msg
     if stt == "DONE-CRASH":
         return "route", "FAIL", ("INFRA" if kind.startswith("infra") else "FLOW"), f"{kind}: {why}"
     if stt.startswith("DONE-"):
@@ -3395,6 +3491,8 @@ def queue_class(j):
         stage = "signoff" if so else "route"
         if kind == "pg-unbound" or (fails & FLOW_FAILS):
             return stage, "FAIL", "FLOW", f"{kind}: {why}"
+        if kind == "preflight" and re.search(r"KILLED \(yosys signal", why):
+            return stage, "FAIL", "INFRA", f"{kind}: {why}"          # S81-OTHERFAIL-1: host OOM kill, not a verdict
         if kind in ("preflight", "cell-cap", "diagnostic-overrun"):
             return stage, "FAIL", ("FLOW" if kind == "diagnostic-overrun" else "PLAN"), f"{kind}: {why}"
         if kind == "grt-overflow" or (fails & ROUTING_FAILS) or drc:
@@ -3789,7 +3887,7 @@ def _config_paths(v, key=""):
 
 
 def source_paths(cfg, st, ap_dir):
-    """sorted absolute src / plan / queue_src paths the wave reads: every die config + every RUN item's pinned spec,
+    """sorted absolute paths the wave reads: die configs + active/held kits and their pinned source specs,
     plus (FLOW-19) every other absolute path of a die config (kit_rtl script, asbuilt, prep_cmd, core_kit args)"""
     out = set()
     for d in (cfg.get("dies") or {}).values():
@@ -3799,8 +3897,16 @@ def source_paths(cfg, st, ap_dir):
         if isinstance(d, dict):
             out |= _config_paths(d)
     for rec in (st.get("items") or {}).values():
-        if rec.get("status") != "RUN" or not rec.get("dir"):
+        active = (rec.get("status") in ("RUN", "RUNNING", "ROUTE-HELD") or
+                  (rec.get("status") == "PASS" and rec.get("enqueue_pending")) or
+                  (rec.get("status") == "ENQUEUED" and rec.get("q_status") not in ("SIGNED", "FAIL")))
+        if not active or not rec.get("dir"):
             continue
+        # A held/released kit and its pinned source survive config/source advancement.
+        if isinstance(rec.get("kit"), str):
+            kp = rec["kit"].split(":", 1)[-1]
+            if kp.startswith("/"):
+                out.add(kp)
         try:
             sp = json.loads((Path(rec["dir"]) / "spec.json").read_text())
         except (OSError, ValueError):
@@ -4275,6 +4381,24 @@ def auto_rejudge(AP, cfg, st, notices, log=None):
 # entry was first seen by the scheduler (st["retry_seen"]); an entry that names an attempt launched later is stale and
 # is dropped from this tick's in-memory retry set (kit_wave.json is never written).  Entries added in-tick (pending
 # rows, LEAFSLEW) and COORD releases of an already failed / running attempt keep working unchanged.
+# KW-FIX-33 (COORD 11-07 22:53): the first-seen key carries the die's event ("<die>|<event>|<item>@<N>"; retry_seen_key).
+# Without it a COORD release of item@N on a NEW event inherited the first-seen time of the same string on an older event,
+# and the new event's attempt N (launched after that) dropped it as stale (S81 ot_s81sl_leaf__t12@2/@3, 11-07 21:56).
+# One-time migration: a legacy "<die>|<item>@<N>" time moves to the CURRENT event's key (and the legacy key is removed),
+# so the rollout re-arms nothing; a later event change starts its entries fresh.  retry_stale_logged uses the same keys.
+def retry_seen_key(die, event, ia):
+    return f"{die}|{event}|{ia}" if event else f"{die}|{ia}"
+
+
+def _retry_key_migrate(tab, die, event, ia):
+    """-> the event key of die/ia in tab (retry_seen / retry_stale_logged), moving a legacy key's value onto it once"""
+    k = retry_seen_key(die, event, ia)
+    legacy = f"{die}|{ia}"
+    if k != legacy and k not in tab and legacy in tab:
+        tab[k] = tab.pop(legacy)
+    return k
+
+
 def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
     # KW-FIX-23 14:0x hot-fix: epoch seconds on both sides (now_s() is a display string; 13:57 TypeError)
     now = time.time() if now is None else float(now)
@@ -4292,11 +4416,13 @@ def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
         if not isinstance(d, dict) or not d.get("retry"):
             continue
         keep = []
+        ev = d.get("event") or ""
         for ia in d["retry"]:
+            sk = _retry_key_migrate(seen, die, ev, ia)
             try:
-                first = float(seen.setdefault(f"{die}|{ia}", now))
+                first = float(seen.setdefault(sk, now))
             except (TypeError, ValueError):
-                first = seen[f"{die}|{ia}"] = now      # unparsable (old string) -> first seen now
+                first = seen[sk] = now      # unparsable (old string) -> first seen now
             item, _, n = str(ia).rpartition("@")
             started = latest.get((die, item, n), 0.0)
             if started and started > first:
@@ -4306,9 +4432,10 @@ def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
         d["retry"] = keep
     logged = st.setdefault("retry_stale_logged", {})
     for die, xs in dropped.items():
-        new = [x for x in xs if f"{die}|{x}" not in logged]
+        ev = ((cfg.get("dies") or {}).get(die) or {}).get("event") or ""
+        new = [x for x in xs if _retry_key_migrate(logged, die, ev, x) not in logged]
         for x in new:
-            logged[f"{die}|{x}"] = now
+            logged[retry_seen_key(die, ev, x)] = now
         if new and log:
             log(f"KIT-WAVE retry stale {die}: {len(new)} entries name an attempt launched after the entry "
                 f"(KW-FIX-23 retry epoch; not released): {' '.join(new[:12])}")

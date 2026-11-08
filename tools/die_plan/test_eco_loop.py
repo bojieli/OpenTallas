@@ -13,6 +13,53 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import eco_loop as E  # noqa: E402
 
 
+@pytest.mark.parametrize("failure", ["flexpa", "grt_hang", "stage_mismatch"])
+def test_strict_one_pass_disables_each_recovery_dispatch(tmp_path, monkeypatch, failure):
+    import threading
+    stopped = threading.Event()
+    monkeypatch.setattr(E, "GRT_FLAT_S", 5)
+    monkeypatch.setattr(E, "WATCH_POLL_S", 0.01)
+    monkeypatch.setattr(E, "stop_eco_container", lambda pd: (stopped.set() or ["fixture-own-pass"]))
+    fake = {"flexpa": lambda: Sig11([rec(5, 5)]),
+            "grt_hang": lambda: Hang([rec(5, 5)], stopped),
+            "stage_mismatch": lambda: Stale([rec(5, 5)])}[failure]()
+    k = kit(tmp_path)
+    result = E.run_loop(k, base_rec(k, rec(-20, 2)), tmp_path / "eco", run=fake,
+                        strict_one_pass=True, keep=True)
+    runs = [cmd for cmd, _ in fake.calls if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh")]
+    assert len(runs) == 1
+    assert len(result["iterations"]) == 1 and result["verdict"] != "PASS"
+    assert result["physical_dispatch_budget"] == dict(limit=1, dispatched=1, blocked=[])
+    assert not any(key in result for key in ("repair_rc_retry", "grt_hang_retry", "stage_retry"))
+    assert json.loads((Path(result["root"]) / "eco_loop.json").read_text())["strict_one_pass"] is True
+
+
+def test_strict_one_pass_budget_blocks_split_mode_second_physical_call(tmp_path, monkeypatch):
+    k = kit(tmp_path, mm=False)
+    monkeypatch.setattr(E, "passes", lambda *a: ["t0", "b0"])
+    fake = Fake([rec(5, 5)])
+    result = E.run_loop(k, base_rec(k, rec(-5, -2)), tmp_path / "eco", run=fake,
+                        strict_one_pass=True, keep=True)
+    runs = [cmd for cmd, _ in fake.calls if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh")]
+    assert len(runs) == 1 and result["verdict"] != "PASS"
+    assert result["physical_dispatch_budget"]["dispatched"] == 1
+    assert len(result["physical_dispatch_budget"]["blocked"]) == 1
+
+
+def test_strict_one_pass_cli_is_opt_in(tmp_path, monkeypatch):
+    seen = []
+    def capture(*args, **kwargs):
+        seen.append(kwargs["strict_one_pass"])
+        return dict(verdict="ERROR", reason="fixture", root=str(tmp_path))
+    monkeypatch.setattr(E, "run_loop", capture)
+    monkeypatch.setattr(E, "summary", lambda r: "fixture")
+    for extra, expected in (([], False), (["--strict-one-pass"], True)):
+        monkeypatch.setattr(sys, "argv", ["eco_loop.py", "run", "--kit", str(tmp_path),
+                                          "--signoff", str(tmp_path / "signoff.json")] + extra)
+        assert E.main() != 0
+        assert seen[-1] is expected
+
+
 def test_stage_so_keeps_selected_tool_cohort_and_kit_hooks(tmp_path):
     k = tmp_path / "old_kit"
     k.mkdir()
@@ -858,3 +905,111 @@ def test_mixed_hold_no_split_scores_whole_number(tmp_path, census):
     r, b = _mixed_hold_record(tmp_path, census)
     ok, beyond, _ = E.near_miss(r, b)
     assert not ok and "hold WNS -84.65" in beyond[0] and "1425 endpoints" in beyond[1]
+
+
+def test_superseded_full_copies_pruned_during_the_loop(tmp_path, monkeypatch, three_iter):
+    """KW-FIX-32 11-07 (COORD 21:0x, epyc6 root: 13 S81 slice_station loops 165 GB): the t<N> pass's full ORFS copy
+    goes once the iteration's final pass is routed (before its sign-off), and an iteration's final copy goes once a
+    later iteration is adopted as best -- not only at loop end; the adopted copy, logs and every sign-off stay"""
+    monkeypatch.delenv("OT_ECO_KEEP_ROUTED", raising=False)
+    k = kit(tmp_path, mm=False)
+    b = base_rec(k, rec(-6, -2, slew=0))
+    seen = []
+
+    class Spy(Fake):
+        def __call__(self, cmd, **kw):
+            if cmd[0] == "bash" and cmd[1].endswith("prd_mk.sh") or "--out" in cmd:
+                root = Path(cmd[3]).parent if cmd[0] == "bash" else Path(cmd[cmd.index("--kit") + 1]).parent
+                seen.append((Path(cmd[3]).name if cmd[0] == "bash" else "signoff:" + Path(cmd[cmd.index("--kit") + 1]).name,
+                             sorted(d.name for d in root.glob("i*") if (d / "run/results").is_dir())))
+            return super().__call__(cmd, **kw)
+
+    r = E.run_loop(k, b, run=Spy([rec(-3, -1), rec(-1, -1), rec(1, 2)]), mem=8, cpus=2, **three_iter)
+    assert r["verdict"] == "PASS" and r["best"]["n"] == 3
+    at = dict(seen)
+    assert at["signoff:i1"] == ["i1"]                 # i1t gone before i1's sign-off
+    assert at["i2t"] == ["i1"]                        # i1 is the seed of iteration 2 and the best so far: kept
+    assert at["signoff:i2"] == ["i1", "i2"]
+    assert at["i3t"] == ["i2"]                        # i2 adopted over i1: i1's full copy went at once
+    root = Path(r["root"])
+    assert sorted(d.name for d in root.glob("i*") if (d / "run/results").is_dir()) == ["i3"]
+    for n in ("i1", "i2", "i3"):
+        assert (root / n / "signoff/signoff.json").is_file() and (root / n / "config_eco.mk").is_file()
+    assert r["iterations"][0]["intermediate_pruned"] == [str(root / "i1t/run/results"), str(root / "i1t/run/objects")]
+    # OT_ECO_KEEP_ROUTED=1 keeps every copy, as the end-of-loop prune does
+    monkeypatch.setenv("OT_ECO_KEEP_ROUTED", "1")
+    k2 = kit(tmp_path / "k2", mm=False)
+    r2 = E.run_loop(k2, base_rec(k2, rec(-6, -2, slew=0)), run=Fake([rec(-3, -1), rec(1, 2)]), mem=8, cpus=2, keep=True,
+                    **three_iter)
+    assert (Path(r2["root"]) / "i1t/run/results").is_dir() and (Path(r2["root"]) / "i1/run/results").is_dir()
+
+
+def _census_out(out, np_n, np_wns, port=100.0):
+    """write the FF corner census the sign-off leaves next to signoff.json"""
+    (out / "ff").mkdir(parents=True, exist_ok=True)
+    sms = dict(port=port, other=float(np_n), reg=float(np_n), trunc=0.0, err=0.0, ports=["cr_i"])
+    if np_n:
+        sms.update(nonport_n=float(np_n), nonport_wns=float(np_wns))
+    (out / "ff" / "corner.json").write_text(json.dumps(dict(std_min_start=sms)))
+
+
+class FakeNP(Fake):
+    """Fake whose sign-offs also leave an FF census: census[i] = (non-port endpoints, non-port WNS) of iteration i+1"""
+
+    def __init__(self, results, census):
+        super().__init__(results)
+        self.census = list(census)
+
+    def __call__(self, cmd, **kw):
+        if "run" in cmd and "--out" in cmd:
+            n, w = self.census[self.n]
+            rc = super().__call__(cmd, **kw)
+            _census_out(Path(cmd[cmd.index("--out") + 1]), n, w)
+            return rc
+        return super().__call__(cmd, **kw)
+
+
+def test_nonport_scope_scores_nonport_hold(tmp_path, monkeypatch, three_iter):
+    """KW-FIX-32 11-07 (COORD 21:4x (3), DIE-KV-91 M5 e1): with OT_HOLD_REPAIR_SCOPE=nonport a repair of the non-port
+    hold (81 endpoints at -7.98 -> 1 at -0.05) is an improvement although the whole FF WNS (port starts, the parent's)
+    barely moves; default scope keeps the whole-number rule."""
+    k = kit(tmp_path, mm=False)
+    b = base_rec(k, rec(33.7, -7.98))
+    _census_out(k / "signoff", 81, -7.98)
+    results = lambda: [rec(33.7, -7.10), rec(33.7, -7.05), rec(33.7, 1)]
+    census = [(1, -0.05), (0, 0), (0, 0)]
+    monkeypatch.setenv("OT_HOLD_REPAIR_SCOPE", "nonport")
+    r = E.run_loop(k, b, run=FakeNP(results(), census), mem=8, cpus=2, root=tmp_path / "np", **three_iter)
+    assert r["base_metrics"]["ff_np"] == -7.98 and r["base_metrics"]["ff_np_n"] == 81
+    assert r["iterations"][0]["metrics"]["ff_np"] == -0.05 and r["iterations"][0]["metrics"]["ff_np_n"] == 1
+    assert "no improvement at iteration 1" not in r["reason"] and len(r["iterations"]) >= 2
+    assert r["iterations"][1]["metrics"]["ff_np"] == 0.0 and r["iterations"][1]["metrics"]["ff_np_n"] == 0
+    assert "non-port -7.98/81->" in E.summary(r)
+    monkeypatch.delenv("OT_HOLD_REPAIR_SCOPE")
+    k2 = kit(tmp_path / "d", mm=False)
+    b2 = base_rec(k2, rec(33.7, -7.98))
+    _census_out(k2 / "signoff", 81, -7.98)
+    r2 = E.run_loop(k2, b2, run=FakeNP(results(), census), mem=8, cpus=2, root=tmp_path / "dflt", **three_iter)
+    assert "ff_np" not in r2["base_metrics"] and "ff_np" not in r2["iterations"][0]["metrics"]
+    assert r2["verdict"] == "EXHAUSTED" and "no improvement at iteration 1" in r2["reason"]   # -7.98 -> -7.10 < 1 ps
+
+
+def test_nonport_score_reads_census_or_falls_back(tmp_path, monkeypatch):
+    so = tmp_path / "signoff.json"
+    so.write_text("{}")
+    assert E.nonport_score(so) is None                                          # no census
+    _census_out(tmp_path, 3, -2.5)
+    assert E.nonport_score(so) == (-2.5, 3)
+    _census_out(tmp_path, 0, 0)
+    assert E.nonport_score(so) == (0.0, 0)                                      # all port starts
+    c = json.loads((tmp_path / "ff/corner.json").read_text())
+    c["std_min_start"]["trunc"] = 1.0
+    (tmp_path / "ff/corner.json").write_text(json.dumps(c))
+    assert E.nonport_score(so) is None                                          # truncated census: whole number
+    monkeypatch.setenv("OT_HOLD_REPAIR_SCOPE", "nonport")
+    _census_out(tmp_path, 3, -2.5)
+    m = E.metrics(rec(5, -9), so)
+    assert m["ff"] == -9 and m["ff_np"] == -2.5 and m["ff_np_n"] == 3
+    p = dict(m, ff_np=-2.0, ff_np_n=3)
+    assert not E.improved(p, m) and E.better(p, m)                              # scored on the non-port number
+    assert "ff_np" not in E.metrics(rec(5, -9))                                 # no path: whole number

@@ -1,0 +1,32 @@
+{
+ "module": "ot_s81_mu72_lnland_nst",
+ "plan_type": "dsdv_slice_lepw_mus_LP__t2",
+ "boundary_role": {
+  "ck_k": "clk",
+  "ck_n": "clk",
+  "rs_k": "reset",
+  "rs_n": "reset"
+ },
+ "clock_contract": {
+  "kind": "hard_core_latency",
+  "ruling": "COORD 10-24",
+  "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+  "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json"
+ },
+ "clock_latency_measured": {
+  "tt": {
+   "n": 5574,
+   "min": 243.35,
+   "mean": 260.54,
+   "max": 278.72,
+   "spread": 35.37
+  },
+  "ff": {
+   "n": 5574,
+   "min": 186.7,
+   "mean": 201.84,
+   "max": 219.07,
+   "spread": 32.37
+  }
+ }
+}

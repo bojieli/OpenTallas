@@ -375,6 +375,20 @@ def test_hard_core_track_offset_and_taps():
     assert errs(core([0.012, 0.012]), "hard_cores") == []
     assert any("pin a[0] M4" in m for m in errs(core([0.012, 0.012], "MX"), "hard_cores"))   # MX flips the phase
     assert errs(core([0.012, -0.012], "MX"), "hard_cores") == []
+
+    # DIE-QC-91: an off-track pin passes only through its declared clock_entry_access footprint on the pin layer
+    def access(fx, pin="c"):
+        def m(p):
+            core([0.012, 0.012])(p)
+            hc = p["partition_types"]["src"]["hard_cores"][0]
+            hc["pins"].append(dict(name="c", layer="M5", xy=[0.024, 10.0]))      # type-frame x 8.676: off the M5 track
+            hc["clock_entry_access"] = dict(pin=pin, footprints_um=dict(
+                M5=[[fx - 0.012, 18.6, fx + 0.012, 18.7]], M6=[[8.6, 18.636, 8.7, 18.668]], M7=[[8.784, 18.3, 8.816, 19.0]]))
+        return m
+    assert any("pin c M5" in m for m in errs(access(8.664, pin="other"), "hard_cores"))   # other pin named: no credit
+    assert errs(access(8.664), "hard_cores") == []                                       # footprint on track, 12 nm away
+    assert any("pin c M5" in m for m in errs(access(8.676), "hard_cores"))               # footprint itself off track
+    assert any("pin c M5" in m for m in errs(access(8.712), "hard_cores"))               # on track but 36 nm away
     tap = lambda xy: lambda p: p["partition_types"]["src"].setdefault("clock", {}).__setitem__(  # noqa: E731
         "taps", [dict(name="u_core.ck", kind="core", xy=xy, insertion_ps=250)])
     assert errs(tap([10.0, 10.0]), "clock") == []

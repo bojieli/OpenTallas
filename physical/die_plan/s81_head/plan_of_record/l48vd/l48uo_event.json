@@ -1,0 +1,169 @@
+{
+ "event": "l48uo",
+ "tool": "tools/s81_head/head_l48uo_event.py",
+ "base_plan": "source_plan_l48un.json",
+ "base_plan_sha256": "340743d8364e8553b687a5dc82879ac2cfbef0a6c34eac102dfc9c9c341f7890",
+ "plan_sha256": "f140216c876ba3186afdf3271f0f9b3ceadf63df95b5e0416a06af6dffcb54f6",
+ "sidecar_sha256": "90d006a48f17adc6795bbf55e3077ff308bb6b417604167248051501cda25d77",
+ "sidecar_changed": false,
+ "sink_bins_file": {
+  "hd_tile": "physical/die_plan/s81_head/plan_of_record/l48uo/assets/sink_bins_0.json",
+  "hd_turn_a": "physical/die_plan/s81_head/plan_of_record/l48uo/assets/sink_bins_1.json",
+  "hd_turn_b": "physical/die_plan/s81_head/plan_of_record/l48uo/assets/sink_bins_2.json",
+  "hd_st_str": "physical/die_plan/s81_head/plan_of_record/l48uo/assets/sink_bins_3.json",
+  "hd_ctl": "physical/die_plan/s81_head/plan_of_record/l48uo/assets/sink_bins_4.json",
+  "hd_spn_wshim_rx": "physical/die_plan/s81_head/plan_of_record/l48uo/assets/sink_bins_5.json",
+  "hd_spn_wshim_tx": "physical/die_plan/s81_head/plan_of_record/l48uo/assets/sink_bins_6.json",
+  "hd_spn_eshim_rx": "physical/die_plan/s81_head/plan_of_record/l48uo/assets/sink_bins_7.json",
+  "hd_spn_eshim_tx": "physical/die_plan/s81_head/plan_of_record/l48uo/assets/sink_bins_8.json"
+ },
+ "ports_sched_lat": [
+  {
+   "port": "chW2_r__0",
+   "lane": "chW2_r",
+   "old": 3,
+   "new": 4
+  },
+  {
+   "port": "coll_WN1_d__0",
+   "lane": "coll_WN1_d",
+   "old": 1,
+   "new": 2
+  },
+  {
+   "port": "coll_WN1_u__1",
+   "lane": "coll_WN1_u",
+   "old": 3,
+   "new": 4
+  },
+  {
+   "port": "coll_WN1_u__2",
+   "lane": "coll_WN1_u",
+   "old": 3,
+   "new": 4
+  },
+  {
+   "port": "coll_WN2_d__0",
+   "lane": "coll_WN2_d",
+   "old": 1,
+   "new": 2
+  },
+  {
+   "port": "coll_WN2_u__3",
+   "lane": "coll_WN2_u",
+   "old": 3,
+   "new": 4
+  },
+  {
+   "port": "coll_WN2_u__4",
+   "lane": "coll_WN2_u",
+   "old": 3,
+   "new": 4
+  },
+  {
+   "port": "host_rx__1",
+   "lane": "host_rx",
+   "old": 3,
+   "new": 4
+  },
+  {
+   "port": "host_tx__2",
+   "lane": "host_tx",
+   "old": 3,
+   "new": 4
+  },
+  {
+   "port": "m0S_rx__4",
+   "lane": "m0S_rx",
+   "old": 3,
+   "new": 4
+  },
+  {
+   "port": "m0S_tx__2",
+   "lane": "m0S_tx",
+   "old": 3,
+   "new": 4
+  },
+  {
+   "port": "m7S_rx__3",
+   "lane": "m7S_rx",
+   "old": 3,
+   "new": 4
+  },
+  {
+   "port": "m7S_tx__2",
+   "lane": "m7S_tx",
+   "old": 3,
+   "new": 4
+  },
+  {
+   "port": "sp_b5__0",
+   "lane": "sp_b5",
+   "old": 3,
+   "new": 4
+  },
+  {
+   "port": "sp_x2__0",
+   "lane": "sp_x2",
+   "old": 3,
+   "new": 4
+  }
+ ],
+ "lanes_moved": {
+  "chW2_r": [
+   8,
+   9
+  ],
+  "coll_WN1_d": [
+   15,
+   16
+  ],
+  "coll_WN1_u": [
+   20,
+   22
+  ],
+  "coll_WN2_d": [
+   29,
+   30
+  ],
+  "coll_WN2_u": [
+   35,
+   37
+  ],
+  "host_rx": [
+   57,
+   58
+  ],
+  "host_tx": [
+   58,
+   59
+  ],
+  "m0S_rx": [
+   80,
+   81
+  ],
+  "m0S_tx": [
+   76,
+   77
+  ],
+  "m7S_rx": [
+   73,
+   74
+  ],
+  "m7S_tx": [
+   71,
+   72
+  ],
+  "sp_b5": [
+   5,
+   6
+  ],
+  "sp_x2": [
+   5,
+   6
+  ]
+ },
+ "lane_cycles_added": 15,
+ "sequencer": "l48uo_seq",
+ "k_changed": false
+}

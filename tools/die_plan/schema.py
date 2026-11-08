@@ -388,6 +388,9 @@ SCHEMA = {
                     "phy_pg_west_notch_um": {"type": "number", "minimum": 0},
                     # S81-RCK-3 11-06: same for the south edge (lowest macro edge minus this halo, row grid)
                     "phy_pg_south_notch_um": {"type": "number", "minimum": 0},
+                    # S81-TYPES-6 11-07 (gen_phys.phy_pg_clip, COORD 23:0x (a)): PHY PG region + hard blockage clipped to
+                    # the PHY macro bounding box grown by this PG landing margin (um) on all four sides
+                    "phy_pg_clip_um": {"type": "number", "minimum": 0},
                     # S81-RCK-3 11-06 (rck_band.tcl): first-stage capture flops of this receiver macro FIRM on the rows
                     # right under its PHY PG region, at the x of the macro output pin
                     "rck_band": {"type": "object", "additionalProperties": False, "required": ["inst"],
@@ -618,6 +621,13 @@ SCHEMA = {
                         "tap_chain_affinity": {"type": "object", "additionalProperties": False,
                             "properties": {"radius_um": _pos,
                                            "max_group": {"type": "integer", "minimum": 2, "maximum": 1200}}},
+                        # Default-off: short reg-to-reg pair tap affinity before CTS (QC-TYPES-6 11-07).
+                        "tap_pair_affinity": {"type": "object", "additionalProperties": False,
+                            "properties": {"radius_um": _pos,
+                                           "max_group": {"type": "integer", "minimum": 2, "maximum": 1200},
+                                           "merge_max": {"type": "integer", "minimum": 0, "maximum": 1200},
+                                           "pair_um": _pos,
+                                           "depth": {"type": "integer", "minimum": 0, "maximum": 4}}},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
                         "tap_target_sinks": {"type": "integer", "minimum": 1},
                         "tap_min_sinks": {"type": "integer", "minimum": 1},
@@ -1249,6 +1259,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                    "dsrep": {"type": "integer", "enum": [1, 2, 4, 8, 16]},
                    "freg": {"type": "boolean"},
                    "write_chunk": {"type": "integer", "enum": [1, 2, 4, 8, 16, 32, 64]},
+                   "read_chunk": {"type": "integer", "minimum": 0, "maximum": 64},
+                   "write_tail": {"type": "boolean"},
                    "freg_numeric_order": {"type": "boolean"}}}
 # Legacy free-running landing input capture: one extra payload cycle on each
 # listed bus. Clock_landings validates bus membership, sidecar pricing and mode.
@@ -1396,6 +1408,23 @@ SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["cl
 # DIE-HEAD-79 11-07: registered hops that cross a hard core: one strong driver, no repair on the net (kit_istations.py)
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["macro_cross"] = {"type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["sink_glob", "sink_pin", "cell"], "properties": {"sink_glob": {"type": "string"}, "sink_pin": {"type": "string"}, "cell": {"type": "string"}}}}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_sites"] = {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}}
+# S81-LNB-1 11-08 (opt-in, class LN-BROADCAST): per-lane kept copies of the S81 vp coefficient words and per-lane reset
+# relay bits in the private kit copy of the bound module (bind.py kit-rtl -> kit_ln_copies.py; 0 added cycles)
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["ln_copies"] = {
+    "type": ["boolean", "object"], "additionalProperties": False, "properties": {
+        "cf": {"type": "boolean"}, "relay": {"type": "boolean"}, "mem": {"type": "string", "minLength": 1},
+        "relay_inst": {"type": "string", "minLength": 1}, "lane_re": {"type": "string", "minLength": 1}}}
+
+
+# Private opt-in actual-LEF entry geometry. No default OBS exemption.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["clock_entry_access"] = {
+    "type":"object", "additionalProperties":False, "required":["pin","footprints_um"],
+    "properties":{"pin":{"type":"string","minLength":1},
+                  "footprints_um":{"type":"object","additionalProperties":False,
+                    "required":["M5","M6","M7"],"properties":{
+                        layer:{"type":"array","minItems":1,"items":{
+                            "type":"array","minItems":4,"maxItems":4,"items":{"type":"number"}}}
+                        for layer in ("M5","M6","M7")}}}}
 
 
 def _check(v, s, path, errs):

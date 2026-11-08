@@ -452,8 +452,14 @@ def run(kit, yosys='yosys'):
                       command=[yosys, '-q', '-s', str(ys)])
     except (OSError, ValueError, KeyError, TypeError, ImportError) as error:
         record = dict(verdict='NOT RUN', rc=2, errors=[str(error)])
+    if isinstance(record.get('rc'), int) and record['rc'] < 0:
+        # S81-OTHERFAIL-1 11-07: yosys killed by a signal (host earlyoom SIGTERM at 3% memory) is not a lint verdict
+        record.update(verdict='KILLED', signal=-record['rc'])
     out.write_text(json.dumps(record, indent=1) + '\n')
     print('RTL_LINT', record['verdict'], 'errors', len(record['errors']))
+    if record['verdict'] == 'KILLED':
+        print(f"RTL_LINT KILLED yosys signal {record['signal']} (host memory; not a design result)")
+        return 75
     return 0 if record['verdict'] == 'PASS' else 1
 
 

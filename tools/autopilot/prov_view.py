@@ -131,7 +131,13 @@ def plan_pins(entry, plan_dir):
     if not f:
         return None
     p = f if os.path.isabs(f) else os.path.join(plan_dir, f)
-    j = json.load(open(p))
+    if not os.path.isfile(p) and os.path.isfile(p + ".gz"):
+        # DIE-HBM-91-KCLS 11-08 (class k1): the plan of record keeps large pin tables only as <pins_file>.gz
+        # (d44v cores/ot_pdie_serdes_tx__285.12x207.36__d44v_split.json.gz); read the same table compressed.
+        import gzip
+        j = json.load(gzip.open(p + ".gz", "rt"))
+    else:
+        j = json.load(open(p))
     pins = j.get("pins") if isinstance(j, dict) else j
     # PROV-PINS-BUS (DIE-QC-81 11-05): plan pin tables come in two forms, {name,...} rows and {bus, bit,...} rows
     # (clock_entry_pins.pname). Bus/bit rows were dropped, so the QC su_c contract views (red2_leaf, su8_rst3, crh_rp1,
@@ -281,7 +287,12 @@ def rtl_dirs(module, roots):
             continue
         p = None
         try:
-            p = subprocess.run(["git", "-C", r, "grep", "-l", "-E", r"^\s*module\s+" + re.escape(module) + r"\b",
+            # DIE-HBM-91-KCLS 11-08 (class k1): --untracked. A staged wave src (kw33/src_d95ec) is an rsync of a newer
+            # tree over an old .git (HEAD c92647a215, 11-06 index), so the RX BM3 / TX split RTL added since
+            # (rtl/hbm_accel/cores_split/reform_1106/ot_pdie_serdes_rx_bm3.sv) is untracked there: plain git grep
+            # found no definition (rc 1, no walk fallback) and every pin of the child had no direction.
+            p = subprocess.run(["git", "-C", r, "grep", "--untracked", "-l", "-E",
+                                r"^\s*module\s+" + re.escape(module) + r"\b",
                                 "--", "*.sv", "*.v", "*.svh"], capture_output=True, text=True, timeout=300)
         except (OSError, subprocess.SubprocessError):
             pass
@@ -312,6 +323,51 @@ def rtl_dirs(module, roots):
             first = first or f
     _RTL_CACHE[key] = (dirs, first)
     return dirs, first
+
+
+# DIE-HBM-91-KCLS 11-08: hard-core port tables of the core flow (source-relative), for plan modules without RTL of
+# their own: the exact cut port table (rows [name, dir, width, lsb]) and the core recipe's RTL top
+CORE_PORT_TABLES = ("physical/die_plan/hbm/cores/ports/ports_cut.json",)
+CORE_RECIPES = ("physical/die_plan/hbm_arch_cores/recipes_b2.json", "physical/die_plan/hbm/cores/harden/recipes_split.json",
+                "physical/die_plan/hbm/cores/harden/recipes_other.json", "physical/die_plan/hbm/cores/harden/recipes.json")
+
+
+def core_table_dirs(module, roots):
+    """{port: input|output|inout}, [sources] of `module` from the core port tables, then the RTL of its recipe top (a
+    recipe keyed by the module or '<module>__<outline>'; one distinct top only).  Fills only pins RTL did not."""
+    dirs, srcs = {}, []
+    for r in roots:
+        for rel in CORE_PORT_TABLES:
+            f = os.path.join(r or "", rel)
+            try:
+                j = json.load(open(f))
+            except (OSError, ValueError):
+                continue
+            ent = j.get(module) if isinstance(j, dict) else None
+            rows = (ent.get(module) if isinstance(ent, dict) else None) or []
+            got = {row[0]: row[1] for row in rows if isinstance(row, list) and len(row) >= 2 and row[1] in DIRS}
+            if got:
+                for n, d in got.items():
+                    dirs.setdefault(n, d)
+                srcs.append(f"port table {rel}")
+    tops = set()
+    for r in roots:
+        for rel in CORE_RECIPES:
+            try:
+                j = json.load(open(os.path.join(r or "", rel)))
+            except (OSError, ValueError):
+                continue
+            for k, v in (j.items() if isinstance(j, dict) else ()):
+                if (k == module or k.startswith(module + "__")) and isinstance(v, dict) and v.get("top"):
+                    tops.add(v["top"])
+    if len(tops) == 1:
+        top = next(iter(tops))
+        rp, rf = rtl_dirs(top, roots)
+        if rp:
+            for n, d in rp.items():
+                dirs.setdefault(n, d)
+            srcs.append(f"recipe top {top}")
+    return dirs, srcs
 
 
 # plan-added pins (feedthroughs ft_*_i/_o, face ports) that no RTL header declares: the direction from the name suffix
@@ -669,6 +725,17 @@ def make(a):
                     d = rp.get(b) or (rp.get(sp_.group(1)) if sp_ else None)
                     if d:
                         dirs[n] = DIRS[d]
+                missing = [p["name"] for p in ppins if p["name"] not in dirs]
+            if missing:
+                # DIE-HBM-91-KCLS 11-08: a hard-core cut / recipe view whose plan module has no RTL of its own
+                # (HBM root ot_hbm_hc_root_static__hcp_sys1, __tailx_sk_fsr): the core flow's exact port tables
+                cp, csrc = core_table_dirs(m, roots)
+                for n in missing:
+                    d = cp.get(split_bit(n)[0])
+                    if d:
+                        dirs[n] = DIRS[d]
+                if csrc and len(missing) != len([p for p in ppins if p["name"] not in dirs]):
+                    dsrc += csrc
                 missing = [p["name"] for p in ppins if p["name"] not in dirs]
             if missing:
                 guessed = {n: name_dir(n) for n in missing if name_dir(n)}

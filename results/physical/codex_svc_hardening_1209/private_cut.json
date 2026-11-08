@@ -1,0 +1,99 @@
+{
+  "schema": "opentallas.svc.private_hardening_cut.v1",
+  "status": "PRIVATE_COMPONENT_PREPARATION_NOT_POR",
+  "source_base": "b938e04f41219afda10a518608174a75f146da8e; source probe is new files only",
+  "parent": {
+    "type": "svc_hi_dsdv_svc_rs__t4",
+    "outline_um": [
+      1442.88,
+      2747.52
+    ],
+    "synth_cells": 4176168,
+    "local_cells": 3993012
+  },
+  "other_parent": {
+    "type": "svc_hi_dsdv_svc_rs__t2",
+    "synth_cells": 4142657,
+    "local_cells": 3996119
+  },
+  "cuts": [
+    {
+      "master": "dsfd_su_t_sml",
+      "instances_per_rs": 16,
+      "port_bits": 209,
+      "input_bits": 141,
+      "output_bits": 68,
+      "clock": "ck",
+      "reset": "rst",
+      "generic_ff_bits": 10523,
+      "mapped_named_ff_range": [
+        10369,
+        10524
+      ],
+      "added_native_data_cycles": 0,
+      "added_native_reset_cycles": 0
+    },
+    {
+      "master": "dsfd_su_t_smd",
+      "instances_per_rs": 8,
+      "port_bits": 207,
+      "input_bits": 173,
+      "output_bits": 34,
+      "clock": "ck",
+      "reset": "rst",
+      "generic_ff_bits": 9282,
+      "mapped_named_ff_range": [
+        6245,
+        6939
+      ],
+      "added_native_data_cycles": 0,
+      "added_native_reset_cycles": 0
+    }
+  ],
+  "attention": [
+    {
+      "master": "ot_hdc_v41x_attn_merge_x",
+      "instances_current": 4,
+      "generic_ff_bits_each": 62760,
+      "port_bits": 1066,
+      "proposed": "H=4 groups x4 replacing each H=16, retain exact DPT/MLEV/FPL/F12; independently prove shared controls and all 16 heads before adoption",
+      "instances_proposed": 16,
+      "added_cycles_proposed": 0
+    },
+    {
+      "master": "ot_hdc_v41x_attn_tr_x",
+      "instances_current": 4,
+      "generic_ff_bits_each": 10404,
+      "port_bits_each": 2814,
+      "proposed": "Keep native exact transpose dimensions; source/memory implementation study remains"
+    }
+  ],
+  "one_sml_probe": {
+    "top": "codex_svc_sml_native",
+    "native": "dsfd_su_t_sml",
+    "outline_um": [
+      174.96,
+      174.96
+    ],
+    "candidate_parent_box_um": [
+      1261.44,
+      2566.08,
+      174.96,
+      174.96
+    ],
+    "macro_halo_um": 4.32,
+    "parent_macros_joined": 117,
+    "legacy_area_proxy_um2": 10949,
+    "estimated_free_core_util": 0.395808852398559,
+    "warning": "Hard-macro-only parent slot legality, soft parent not placed; current mapped SML size/proof pending; does not establish all24 SM slots fit"
+  },
+  "obligations": [
+    "Do not resynthesize the4.18M parent",
+    "Map only the production SML child before proposing PLACE",
+    "Keep native209-bit ABI and0 added edges; do not reuse legacy+2 pin wrapper",
+    "Prove wrapper/native miter and drop-score-valid mutant",
+    "Review child outline/pins and actual parent data/reset/clock reach before PLACE",
+    "SM cuts alone are not sufficient until remaining attention/parent-glue mapped size is measured",
+    "No P&R release, POR event, current-tag qualification or counter credit claimed"
+  ]
+}

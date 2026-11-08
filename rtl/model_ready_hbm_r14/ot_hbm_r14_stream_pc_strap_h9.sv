@@ -477,7 +477,15 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
       if (PHYS_WACT != 0) begin
         wcand = |wq_act_physical;
         for (ai = 0; ai < WQ; ai = ai + 1)
+`ifdef OT_H9B_WQDIAG
+          // A slot's diagonal age bit is written zero on its push, before
+          // that slot can be eligible. It is intentionally not reset.
+          // This opt-in expresses the same reachable winner function without
+          // asking synthesis/LEC to relate an unused power-up age bit.
+          pwin[ai] = wq_act_physical[ai] && !(|(wq_older[ai*WQ +: WQ] & wq_act_physical & ~(WQ'(1) << ai)));
+`else
           pwin[ai] = wq_act_physical[ai] && !(|(wq_older[ai*WQ +: WQ] & wq_act_physical));
+`endif
         for (ai = 0; ai < WQ; ai = ai + 1) begin
           wab_n = wab_n | ({5{pwin[ai]}} & wq_bank[ai]);
           wab_oh_n = wab_oh_n | ({32{pwin[ai]}} & wq_boh[ai]);

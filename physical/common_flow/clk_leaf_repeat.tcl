@@ -56,6 +56,19 @@ proc clr_xy {inst} {
   set b [$inst getBBox]
   return [list [expr {([$b xMin] + [$b xMax]) / 2}] [expr {([$b yMin] + [$b yMax]) / 2}]]
 }
+# MACRO-CK-PIN class (S81-TYPES-5 11-07, serdes__t2 FAIL_POSTCTS FF -9932 ps on 3016 endpoints): a load on a hard macro
+# was located at the macro's bbox centre.  The PMA TX macro is 2246 um wide and its ck pin sits 11 um from its left
+# edge, so every repeater chased the centre 1100 um away and the last wire (repeater -> ck) stayed ~1950 um long:
+# 7.3 ns wire delay + 2.2 ns library hold extrapolated from the slew at u_ptx/ck.  A load pin on a block master is
+# now located at the pin itself (iterm bbox centre); standard-cell loads are unchanged (cell bbox centre).
+proc clr_lxy {it} {
+  set i [$it getInst]
+  if {[[$i getMaster] isBlock]} {
+    set b [$it getBBox]
+    return [list [expr {([$b xMin] + [$b xMax]) / 2}] [expr {([$b yMin] + [$b yMax]) / 2}]]
+  }
+  return [clr_xy $i]
+}
 proc clr_is_clock_net {net} {
   if {[$net getSigType] eq "CLOCK"} { return 1 }
   return [string match "clknet*" [$net getName]]
@@ -124,7 +137,7 @@ uplevel #0 {
       lassign [clr_xy $drv] dx dy
       set far {}; set all_clk 1
       foreach it $loads {
-        lassign [clr_xy [$it getInst]] lx ly
+        lassign [clr_lxy $it] lx ly
         set d [expr {double(abs($lx - $dx) + abs($ly - $dy)) / $clr_dbu}]
         if {$d > $clr_worst} { set clr_worst $d }
         if {$d > $clr_max_um} { lappend far [list $it $lx $ly $d] }
@@ -147,7 +160,7 @@ uplevel #0 {
         # balanced siblings: every load of the net goes behind a repeater
         set far {}
         foreach it $loads {
-          lassign [clr_xy [$it getInst]] lx ly
+          lassign [clr_lxy $it] lx ly
           lappend far [list $it $lx $ly [expr {double(abs($lx - $dx) + abs($ly - $dy)) / $clr_dbu}]]
         }
         puts [format "OT_CLK_LEAF_REPEAT pass %d net %s est slew %.1f ps > %.0f, %d loads" $clr_pass [$net getName] $ms $clr_slew_ps [llength $loads]]
@@ -165,7 +178,7 @@ uplevel #0 {
       lassign [clr_xy $drv] dx dy
       # load groups: far loads (distance rule), else (fanout rule only) every load, farthest first
       if {![llength $far]} {
-        foreach it $loads { lassign [clr_xy [$it getInst]] lx ly; lappend far [list $it $lx $ly [expr {double(abs($lx-$dx)+abs($ly-$dy))/$clr_dbu}]] }
+        foreach it $loads { lassign [clr_lxy $it] lx ly; lappend far [list $it $lx $ly [expr {double(abs($lx-$dx)+abs($ly-$dy))/$clr_dbu}]] }
       }
       set far [lsort -real -decreasing -index 3 $far]
       set cap [expr {$clr_fo > 0 ? $clr_fo : 1000000}]
@@ -307,7 +320,7 @@ uplevel #0 {
       lassign $clr_g_job clr_g_net clr_g_drv clr_g_loads
       lassign [clr_xy $clr_g_drv] clr_g_dx clr_g_dy
       set clr_g_far {}
-      foreach clr_g_it $clr_g_loads { lassign [clr_xy [$clr_g_it getInst]] clr_g_lx clr_g_ly; lappend clr_g_far [list $clr_g_it $clr_g_lx $clr_g_ly [expr {double(abs($clr_g_lx-$clr_g_dx)+abs($clr_g_ly-$clr_g_dy))/$clr_dbu}]] }
+      foreach clr_g_it $clr_g_loads { lassign [clr_lxy $clr_g_it] clr_g_lx clr_g_ly; lappend clr_g_far [list $clr_g_it $clr_g_lx $clr_g_ly [expr {double(abs($clr_g_lx-$clr_g_dx)+abs($clr_g_ly-$clr_g_dy))/$clr_dbu}]] }
       set clr_g_far [lsort -real -decreasing -index 3 $clr_g_far]
       set clr_g_cap [expr {$clr_fo > 0 ? $clr_fo : 1000000}]
       set clr_g_groups {}

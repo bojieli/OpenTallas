@@ -126,7 +126,42 @@ def adapt_core_ports(bound, hard_cores):
     return bound, receipt
 
 
-def wire(bound, module, rows):
+# DIE-HBM-90-TNAME 11-07 (class (h): HBM q_su00/10/20/30 (+pv1) and q_hub_ne kit_rtl "core clock clk_c0: expected one
+# u_u_su_Q0_pretree.clk_ctl connection" / "clk_c6: expected one u_u_hb_vms_Q_q0.clk connection"): the plan tap names the
+# clock pin of the PLAN master (ot_hbm_su_static_pgslice_lg__pretree.clk_ctl, hfd_hgi_vms_glue_nw_t.clk), but the bind of
+# record keeps the NATIVE body as the leaf (ot_hnx_su_pretree__rst .pretree_clk(clk); hfd_hgi_vms_static_SE_glue
+# .clk_hub(clk) .clk_replay(clk) .clk_ring({clk, clk})).  The plan master is wiring around that body with ONE clock (the
+# vms tile tops merge clk_hub/clk_ring/clk_replay into clk, hfd_hgi_vms_glue_tiles.sv; the pretree wrapper wires clk_ctl to
+# the body's one clock), so on the native leaf the plan pin is the set of the leaf's clock entries.  Taken only when
+# (1) the leaf master is not a plan master of that core, (2) the leaf has no connection of the plan pin, (3) the plan taps
+# no other pin of that core, (4) every clock-named pin of the leaf is connected only to the type clock net, and at least
+# one is.  Anything else fails closed as before.  Same clock net, same cycles.
+CLOCK_PIN_RE = re.compile(r"(?:^|_)(?:clk|ck)(?:_|$|\d)")
+
+
+def native_clock_entries(body, clock_net):
+    """-> [(match, pin)] of the clock-named connections of a native leaf body; each must be on `clock_net` only."""
+    out, other = [], []
+    for m in re.finditer(r"(\.(\w+)\s*\()([^()]*)(\))", body):
+        pin, expr = m.group(2), m.group(3).strip()
+        if not CLOCK_PIN_RE.search(pin):
+            continue
+        nets = [x.strip() for x in expr.strip("{}").split(",")] if expr.startswith("{") and expr.endswith("}") else [expr]
+        if expr and all(n == clock_net for n in nets):
+            out.append((m, pin))
+        else:
+            other.append(f"{pin}({expr})")
+    if other:
+        raise ValueError(f"native clock pins not on {clock_net}: {other[:4]}")
+    return out
+
+
+def wire(bound, module, rows, leaf_id=None, core_masters=None, clock_net="clk"):
+    """leaf_id: the binder's own leaf-instance naming (bind.py passes short_id("u_" + inst, 90)).  DIE-HBM-90-ISTA 11-07
+    (HBM q_hub_nw kit_rtl "core clock clk_c1: expected one bound leaf u_hb_coll_Q_ring_ag__q0, got 0"): the bind emits
+    the plan core u_hb_coll_Q_ring_ag__q0 as leaf u_u_hb_coll_Q_ring_ag_q0 (sv_id folds "__" to "_"), so neither the plan
+    name nor u_<plan name> is in the bound text.  That exact name is one more candidate; one match is still required.
+    core_masters: {row instance: {plan module, physical_master}} (bind.py) enables the native clock entries rule above."""
     ports = {}
     receipt = []
     consumers = set()
@@ -142,6 +177,8 @@ def wire(bound, module, rows):
         # otherwise the binder's native leaf instances have their standard u_ prefix.
         candidates = ([physical_inst[len("u_bound."):]] if physical_inst.startswith("u_bound.")
                       else [physical_inst, "u_" + physical_inst])
+        if leaf_id and "." not in physical_inst and leaf_id(physical_inst) not in candidates:
+            candidates.append(leaf_id(physical_inst))
         if all("." in c for c in candidates):
             # NESTED_LEAF_1101 (FLOW-21, KIT-WAVE-14: S81 kit_rtl failed on every type whose core clock reaches a leaf
             # inside a bound child, e.g. u_r2.u_e10 / u_lf.u_ve.u_m).  The pin sits in a child module shared with other
@@ -153,7 +190,7 @@ def wire(bound, module, rows):
         for local in candidates:
             if "." in local:
                 continue
-            pat = re.compile(r"^[ \t]+\w+(?:[ \t]+#\([^\n]*\))?[ \t]+" +
+            pat = re.compile(r"^[ \t]+(\w+)(?:[ \t]+#\([^\n]*\))?[ \t]+" +
                              re.escape(local) + r"[ \t]*\(", re.M)
             found.extend((local, h) for h in pat.finditer(bound))
         if len(found) != 1:
@@ -186,6 +223,33 @@ def wire(bound, module, rows):
                 raise ValueError(f"core clock {port}: {local}.{base} has more than one planned bit, base-name wiring refused")
             conn = re.compile(r"(\." + re.escape(base) + r"\s*\()([^()]+)(\))")
             matches = list(conn.finditer(original_body))
+        masters = (core_masters or {}).get(physical_inst)
+        if not matches and masters and h.group(1) not in masters:
+            others = {r[2] for r in rows if r[1] == physical_inst and r[2] != pin}
+            if others:
+                raise ValueError(f"core clock {port}: {local} ({h.group(1)}) is the native body of {sorted(masters)} and "
+                                 f"the plan taps more than one pin of it {sorted(others | {pin})}: no native mapping")
+            try:
+                entries = native_clock_entries(original_body, clock_net)
+            except ValueError as exc:
+                raise ValueError(f"core clock {port}: {local} ({h.group(1)}): {exc}") from exc
+            if not entries:
+                raise ValueError(f"core clock {port}: expected one {local}.{pin} connection")
+            if any((local, p) in consumers for _m, p in entries):
+                raise ValueError(f"core clock {port}: duplicate consumer {local}")
+            if port in ports and ports[port] != "input":
+                raise ValueError(f"core clock {port}: conflicting port")
+            ports[port] = "input"
+            body = original_body
+            for m, p in reversed(entries):
+                new = re.sub(r"\b" + re.escape(clock_net) + r"\b", port, m.group(3))
+                body = body[:m.start(3)] + new + body[m.end(3):]
+                consumers.add((local, p))
+            bound = bound[:body_start] + body + bound[body_end:]
+            receipt.extend(dict(port=port, instance=local, pin=p, previous_net=m.group(3).strip(), mode="rtl",
+                                plan_pin=pin, native_master=h.group(1), plan_masters=sorted(masters),
+                                rule="native_clock_entries") for m, p in entries)
+            continue
         if len(matches) != 1:
             raise ValueError(f"core clock {port}: expected one {local}.{pin} connection")
         if (local, pin) in consumers:

@@ -1,0 +1,15 @@
+{
+ "verdict": "PRIVATE_CHILD_OUTLINE_PIN_REVIEW_PASS",
+ "image": "results/physical/codex_svc_hardening_1209/sml_native_generated_review.png",
+ "kit": "sml_physical6/codex_svc_sml_native_76dcae1325fc",
+ "findings": [
+  "209 real generated pins; M5 only; track-aligned;1.056um pitch gives low local pin density",
+  "S tap/config/exp face141 pins; N root-max66 pins; central ck/reset entry",
+  "174.96 square,4.32 edge inset,no internal hard macros;9245um2 measured area gives33.4percent free-core fill",
+  "No macro walls or internal relay need at175um reach; central clock permits balanced sink topology; M5 PDN continuity must be checked after floorplan",
+  "Full parent soft-logic fit/all24SM bays/parent pin alignment not qualified",
+  "PLACE requires actual native face_guard and port_bind PASS; no cycle waiver; physical reset proof remains open"
+ ],
+ "reviewer": "Codex visually inspected actual image before PLACE",
+ "release_eligible": false
+}

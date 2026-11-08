@@ -1,0 +1,7 @@
+WQDIAG_REFRESH edge159 reload150 phase2 slot1 fire1 op6
+WQDIAG_REFRESH edge303 reload150 phase2 slot1 fire1 op6
+WQDIAG_REFRESH edge447 reload150 phase2 slot1 fire1 op6
+WQDIAG_REFRESH edge591 reload150 phase2 slot1 fire1 op6
+WQDIAG_PROGRESS edge1000 accepted90/90 writes13 reads155
+H9B_TXN PASS reqs=128 beats=271 wcols=18 wdone=18 edges_h9=1694 edges_h9b=1694
+tb.sv:108: $finish called at 1577702000 (1fs)

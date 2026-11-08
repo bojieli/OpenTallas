@@ -39,7 +39,7 @@ import gen_rtl  # noqa: E402
 
 
 def bound_bus_width(tn, bus, txt, manifest):
-    """Size stations to the real face register; narrow inputs need the bind proof."""
+    """Size stations to the real face register; narrow inputs need the bind proof, narrow outputs the spare-out tie."""
     name, planned = bus['name'], bus['width']
     widths = re.findall(rf'\bot_dp_ste?\s+#\(\.W\((\d+)\)\)\s+'
                         rf'u_b(?:in|out)_{re.escape(gen_rtl.sv_id(name))}\s*\(', txt)
@@ -49,6 +49,17 @@ def bound_bus_width(tn, bus, txt, manifest):
     if actual == planned:
         return actual
     narrow = dict(port=name, plan=planned, bound=actual)
+    if bus['dir'] == 'out':
+        # DIE-HBM-90-TSTRAP 11-07: a narrow OUTPUT is the bind's declared spare-out form (DIE-S81-46, COORD 10-30
+        # 14:0x (2)(b)): the kit-rtl wrapper ties plan bits [plan-1:bound] to 0 (kit_rtl.json spare_out_bits, the
+        # same bits gen_phys.kit_spare_out_bits hands face_guard), so stations carry the real face register only.
+        # Exact: the narrow mapping AND a spare_out_bits row of exactly plan-bound bits, else fail as before.
+        spare = [e for e in manifest.get('spare_out_bits', []) if e.get('port') == name]
+        if (0 < actual < planned and narrow in manifest.get('narrow_buses', [])
+                and len(spare) == 1 and int(spare[0].get('bits', -1)) == planned - actual):
+            return actual
+        raise SystemExit(f'kit_istations: {tn} {name}: plan width {planned} != face width {actual}; '
+                         'matching narrow-output mapping and spare_out_bits (tied plan bits) required')
     dead = manifest.get('dead_inputs', {})
     omitted = {f'{name}[{bit}]' for bit in range(actual, planned)}
     if (bus['dir'] != 'in' or not 0 < actual < planned

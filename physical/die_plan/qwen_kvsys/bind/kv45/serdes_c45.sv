@@ -13,9 +13,12 @@ module ot_qfd_serdes_112g_x6_phy_c45 #(parameter W=522) (
 );
  // body localparam, not a header parameter: the kit PHY specializer matches the literal #(.W(N)) instance
  localparam integer SEL_PIPE = 1;
+ // KV-TYPES-3 11-07 (COORD 22:0x (3)): 8-bit select chunks (66 copies per FIFO) instead of 64: SD_v1 PLACE worst
+ // path was one 64-bit chunk write select spread over ~450 um of the S strip (8 buffer levels, -177.7 ps).
+ localparam integer SEL_CHUNK = 8;
  wire p_rst_n, p_tx_v, p_rx_v, p_tx_up;
  wire [W-1:0] p_tx_d, p_rx_d;
- ot_fdi_phy_cdc #(.W(W), .DEPTH(8), .SEL_PIPE(SEL_PIPE)) u_fdi_cdc (
+ ot_fdi_phy_cdc #(.W(W), .DEPTH(8), .SEL_PIPE(SEL_PIPE), .SEL_CHUNK(SEL_CHUNK)) u_fdi_cdc (
   .clk(clk), .link_rst_n(rst_n), .c_tx_v(tx_v), .c_tx_d(tx_flit),
   .c_rx_v(rx_v), .c_rx_d(rx_flit), .c_tx_up(tx_up), .clk_phy(clk_phy),
   .p_rst_n(p_rst_n), .p_tx_v(p_tx_v), .p_tx_d(p_tx_d),

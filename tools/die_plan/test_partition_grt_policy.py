@@ -38,10 +38,11 @@ def test_actual_partition_descriptor_uses_declared_partition_references(tmp_path
 def test_exported_runner_checks_final_policy_before_drt(tmp_path,goal,margin,code):
     kit=tmp_path/'kit';kit.mkdir();bin=tmp_path/'bin';bin.mkdir()
     flow=tmp_path/'flow';flow.mkdir();(flow/'env.sh').write_text('')
+    # config.mk before the results: a newer config.mk is the RESYNTH-GUARD refusal case (KW-FIX-32)
+    (kit/'config.mk').write_text('' if margin is None else f'export OT_HOLD_FF_MARGIN = {margin}\n')
     result=kit/'run/results/asap7/fixture/base';result.mkdir(parents=True)
     for name in ('1_synth.odb','1_2_yosys.v','4_cts.odb','4_cts.sdc','5_1_grt.odb','6_final.odb'):
         (result/name).touch()
-    (kit/'config.mk').write_text('' if margin is None else f'export OT_HOLD_FF_MARGIN = {margin}\n')
     def exe(name,text):
         p=bin/name;p.write_text(text);p.chmod(0o755)
     exe('python3',r'''#!/usr/bin/python3

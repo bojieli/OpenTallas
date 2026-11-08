@@ -1,0 +1,149 @@
+{
+  "status": "PRIVATE_SOURCE_WITNESS_ONLY",
+  "default_activation": false,
+  "source_base": "66d55c026ad",
+  "params": {
+    "IDLE_UCK": 1
+  },
+  "types": [
+    "cbx_q10__cl94a12200",
+    "cbx_q10__cl89936551"
+  ],
+  "instances": [
+    "c_W5_bf_10",
+    "c_W5_bn_10",
+    "c_W5_tn_10",
+    "c_W5_tf_10",
+    "c_W4_bf_10",
+    "c_W4_bn_10",
+    "c_W4_tn_10",
+    "c_W4_tf_10",
+    "c_W3_bf_10",
+    "c_W3_bn_10",
+    "c_W3_tn_10",
+    "c_W3_tf_10",
+    "c_W2_bf_10",
+    "c_W2_bn_10",
+    "c_W2_tn_10",
+    "c_W2_tf_10",
+    "c_W1_bf_10",
+    "c_W1_bn_10",
+    "c_W1_tn_10",
+    "c_W1_tf_10",
+    "c_W0_bf_10",
+    "c_W0_bn_10",
+    "c_W0_tn_10",
+    "c_W0_tf_10",
+    "c_E0_bf_10",
+    "c_E0_bn_10",
+    "c_E0_tn_10",
+    "c_E0_tf_10",
+    "c_E1_bf_10",
+    "c_E1_bn_10",
+    "c_E1_tn_10",
+    "c_E1_tf_10",
+    "c_E2_bf_10",
+    "c_E2_bn_10",
+    "c_E2_tn_10",
+    "c_E2_tf_10",
+    "c_E3_bf_10",
+    "c_E3_bn_10",
+    "c_E3_tn_10",
+    "c_E3_tf_10",
+    "c_E4_bf_10",
+    "c_E4_bn_10",
+    "c_E4_tn_10",
+    "c_E4_tf_10",
+    "c_E5_bf_10",
+    "c_E5_bn_10",
+    "c_E5_tn_10",
+    "c_E5_tf_10"
+  ],
+  "original_lef_sha256": "c324040b27a9452c9467eb6e4aa6a6c9fc6fe65fda74ad8c69e2c22d24b9a954",
+  "access_lef_sha256": "5321f5cf556af481ce86b51cc878e06bfbcb0b1e4165fc4b84856f2ca920999d",
+  "clock_pin": {
+    "name": "ck",
+    "layer": "M5",
+    "native_rect": [
+      228.948,
+      578.64,
+      228.996,
+      579.12
+    ]
+  },
+  "native_obs_windows": {
+    "6": [
+      228.869,
+      578.82,
+      229.071,
+      578.98
+    ],
+    "7": [
+      228.88,
+      578.432,
+      229.04,
+      579.328
+    ]
+  },
+  "parent_site": [
+    699.84,
+    77.772,
+    "MY"
+  ],
+  "parent_conductor_footprints": {
+    "5": [
+      [
+        928.764,
+        656.645,
+        928.788,
+        656.699
+      ]
+    ],
+    "6": [
+      [
+        928.753,
+        656.656,
+        928.827,
+        656.688
+      ]
+    ],
+    "7": [
+      [
+        928.784,
+        656.268,
+        928.816,
+        657.036
+      ]
+    ]
+  },
+  "clock_tap_old": [
+    699.936,
+    745.848
+  ],
+  "clock_tap_new": [
+    928.8,
+    656.652
+  ],
+  "delta_from_old": [
+    228.864,
+    -89.196
+  ],
+  "data_cycle_delta": 0,
+  "native_evidence": "I1 codex-qc-nl-adoption-1551/access_roi/native_roi.json; measured ALL foreign native ROI shapes incl PG/fill",
+  "signed_mean_clock_ps": {
+    "TT": 774.38,
+    "FF": 610.59
+  },
+  "obligations": [
+    "emit and verify actual parent VIA56/M6 bridge/VIA67/M7 entry",
+    "protect real M5 pin and parent PG clearance; no child DB or PIN change",
+    "source-only entry mechanism plus actual-state kit guard before physical pilot",
+    "parent clock route/STA/DRC/supply and strict bind with explicit IDLE_UCK=1",
+    "owner adoption of both parent types and affected instances; no POR activation here"
+  ],
+  "activation_blockers": [
+    "private access LEF must be paired with unchanged accepted Liberty using an honest derived-view receipt; current view_lef may select the original blanket export",
+    "parent PG cut and exact native-access-window review; no source or current plan mutation"
+  ],
+  "patch_semantics": "private proposed event only; budget uses actual accepted signed means, no synthesized max-clock-path substitution"
+}

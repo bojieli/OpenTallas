@@ -85,3 +85,38 @@ def test_session_tcl_carries_census():
     i, j = t.index("so_timing STD\n"), t.index("so STD_MIN_START port")
     assert i < j < t.index("# ---- DRV ----")
     assert "-from $so_hs_regs" in t and "is_top_level_port" in t
+
+
+def rec_with_oports(census, ports="", oports="ft0_o", **kw):
+    r = record(**kw)
+    t = session_text(**{k: v for k, v in kw.items() if k == "ff_hold"})["ff"]
+    t += f"\nSO STD_MIN_START {census}\nSO STD_MIN_START_PORTS {ports}\nSO STD_MIN_START_OPORTS {oports}"
+    ff = signoff.corner_result(signoff.parse_session(t))
+    ff.update(corner="ff", macro_missing=[])
+    r["corners"]["ff"] = ff
+    return r
+
+
+def test_output_port_only_hold_needs_parent():
+    # S81-TYPES-5 11-07 slice_station t47: one violator, register -> output port ft0_o against out_min
+    r = signoff.evaluate(rec_with_oports("port 0 other 0 reg 0 trunc 0 err 0 oport 1", ff_hold=-4.09))
+    assert r["verdict"] == "LOCAL_PASS_NEEDS_PARENT", r["reasons"]
+    h = r["checks"]["hold_ff"]
+    assert h["port_only_needs_parent"] and h["output_port_hold_ports"] == ["ft0_o"] and h["port_start_ports"] == []
+    assert r["io_hold"]["output_port_hold_ports"] == ["ft0_o"]
+    assert resign.needs_parent_only(r)
+
+
+def test_mixed_input_output_port_hold_needs_parent():
+    r = signoff.evaluate(rec_with_oports("port 1 other 0 reg 0 trunc 0 err 0 oport 1", ports="ft6_i", ff_hold=-4.0))
+    assert r["verdict"] == "LOCAL_PASS_NEEDS_PARENT" and r["io_hold"]["input_ports"] == ["ft6_i"]
+
+
+def test_output_port_with_register_violator_stays_fail():
+    r = signoff.evaluate(rec_with_oports("port 0 other 0 reg 1 trunc 0 err 0 oport 1", ff_hold=-4.0))
+    assert r["verdict"] == "NOT SIGNED" and r["checks"]["hold_ff"]["verdict"] == "FAIL"
+
+
+def test_session_tcl_census_counts_output_ports():
+    t = signoff.session_tcl("ff", [], True)
+    assert "so_hs_oport" in t and "STD_MIN_START_OPORTS" in t and "-group_path_count 100000 -endpoint_path_count 1" in t

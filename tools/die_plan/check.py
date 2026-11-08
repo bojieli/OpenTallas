@@ -1296,6 +1296,11 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
                 except ValueError as e:
                     R.err("hard_cores", f"type {tn} core {hc['inst']}: {e}", type=tn)
             insts = [n for n, p_ in P.parts.items() if p_["type"] == tn]
+            # DIE-QC-91 11-07 (QC NL clock event): the one pin a hard core names in clock_entry_access is reached by
+            # that declared via stack (GEN validate_access + kit guard), not by a parent wire on the pin centre.  Its
+            # track proof is the declared footprint on the pin layer: footprint centre on the plan track and within
+            # half a pitch of the pin centre.  Every other pin (and an access without such a footprint) is unchanged.
+            acc = hc.get("clock_entry_access") or {}
             bad = 0
             for nm, ln, x, y in pins:
                 out["core_pins"] += 1
@@ -1304,6 +1309,15 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
                     continue
                 tx, ty = _orient_pt(o, cw, chh, x, y)
                 tx, ty = X0 + tx, Y0 + ty
+                if acc and nm == acc.get("pin"):
+                    for r_ in (acc.get("footprints_um") or {}).get(ln, []):
+                        fx, fy = (r_[0] + r_[2]) / 2, (r_[1] + r_[3]) / 2
+                        near = abs((fx - tx) if L["dir"] == "V" else (fy - ty)) <= L["pitch_um"] / 2 + EPS
+                        inside = (r_[1] - EPS <= ty <= r_[3] + EPS) if L["dir"] == "V" else (r_[0] - EPS <= tx <= r_[2] + EPS)
+                        if near and inside and on_track(fx if L["dir"] == "V" else fy, L):
+                            out["core_pins_access_footprint"] = out.get("core_pins_access_footprint", 0) + 1
+                            tx, ty = fx, fy
+                            break
                 # M2/M3 keep the platform cell-access tracks: checked in the type frame and unmirrored instances
                 # only (a mirrored instance's die frame is not their lattice; CORE-KS false M3 errors)
                 frames = [("type", tx, ty)] + [(pi, *P.to_die(pi, (tx, ty))) for pi in insts

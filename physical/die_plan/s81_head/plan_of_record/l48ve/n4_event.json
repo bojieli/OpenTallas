@@ -1,0 +1,35 @@
+{
+ "schema": "opentallas.head_plan_event.v1",
+ "event": "l48ui",
+ "base": "l48uh",
+ "changed_types": [
+  "hd_st_n4"
+ ],
+ "mechanism": "existing WREG=1, DSREP=8, FREG=1 on four FT inputs",
+ "pins_outlines_stations_changed": false,
+ "data_cycles_added_per_link": 1,
+ "strap_K_adjustment": 2,
+ "model": "source_sidecar ports[].added_cycles and count_aligned.ports[].sched_lat +1; raw K unchanged because strap_ties applies WREG/FREG +2",
+ "geometry": "results/geom_review/codex_head_1105/n4_review.txt",
+ "proof": "results/codex_head_1105/n4_freg/result.json",
+ "physical_trial": "epyc6:/srv/opentallas-scratch2/claude/codex-head-1105/gen_n4/hd_st_n4 (running; no sign-off claimed)",
+ "parent_top_strap_delta": {
+  "strap_ca_k_d1_i": {
+   "old": 39,
+   "new": 41
+  },
+  "strap_ca_k_d2_i": {
+   "old": 39,
+   "new": 41
+  },
+  "strap_ca_k_u1_i": {
+   "old": 11,
+   "new": 13
+  },
+  "strap_ca_k_u2_i": {
+   "old": 11,
+   "new": 13
+  }
+ },
+ "parent_bind": "NOT RUN; copied base portbind receipts describe historical l48uh only, not this top"
+}

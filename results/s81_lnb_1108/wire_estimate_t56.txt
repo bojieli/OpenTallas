@@ -1,0 +1,10 @@
+Q 640 N 847
+word bits 640 lanes per bit Counter({4: 640})
+before Q nets: spread>100: 640  total MST um 503095  mean spread 706
+D-side input nets 845  with >2 sinks 205  spread>100: 205  MST 102515
+lane pin centroids {0: (1146, 926), 1: (1284, 797), 2: (1293, 667), 3: (1155, 797), 4: (1146, 537), 5: (1276, 399), 6: (1155, 667), 7: (1146, 408), 8: (1155, 1185), 9: (1284, 1185), 10: (1284, 261), 11: (1276, 926), 12: (1146, 261), 13: (1155, 1056), 14: (1293, 537), 15: (1310, 1056)}
+D-side multi-sink nets: sinks histogram [(7, 158), (256, 47)]  source centroid (894,783)
+AFTER estimate: word nets local 65005 um (copy at lane pin centroid); D side 148 nets (32 data + 5 enables per K) MST 174123 um
+BEFORE: 640 word nets MST 503095 + 205 D-side nets MST 102152 = 605247 um; nets >100um spread: 845
+AFTER : 239127 um; nets >100um: 148
+K-group lane MST {0: 406, 1: 406, 2: 1071, 3: 1115}

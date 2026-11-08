@@ -234,7 +234,8 @@ class Verification:
     def reset_tree(self,tn):
         """The reset tree a landing stage of type tn walks: the collector tree (active types), else the type's plan reset
         tree as the bind emits it (RT.for_type on the plan); None (-> FAIL at the caller) if neither exists."""
-        tree=self.collector['types'][tn]['tree']
+        import landing_collector as LC
+        tree=LC.effective_tree(self.raw['partition_types'].get(tn),self.collector['types'][tn]['tree'])  # S81-OTHERFAIL-1
         if tree is not None:return tree
         if tn not in self._plan_trees:
             try:
@@ -349,7 +350,9 @@ class Verification:
                         faced.append(self.output(path,'q'))
                     r,f=faced
                 sources.append(dict(node=child['node'],ready=r,fault=f))
-            tree=info['tree'];root=info['collector_root_node'];adj=defaultdict(list)
+            import landing_collector as LC
+            tree=LC.effective_tree(self.raw['partition_types'].get(p['type']),info['tree'])  # S81-OTHERFAIL-1: one tree
+            root=info['collector_root_node'];adj=defaultdict(list)
             for row in tree['relays']:adj[row['q']].append(row['d']);adj[row['d']].append(row['q'])
             parent={root:None};todo=[root]
             while todo:

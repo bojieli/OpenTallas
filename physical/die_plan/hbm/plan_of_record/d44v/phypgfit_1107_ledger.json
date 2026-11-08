@@ -1,0 +1,209 @@
+{
+ "changed": 5,
+ "domains": [
+  {
+   "changed": true,
+   "name": "phy_NW_io_u_lk_N0",
+   "neighbours_uncovered": [
+    {
+     "part": "NW_b013",
+     "type": "q_b013__physical_v1"
+    },
+    {
+     "part": "NW_su21",
+     "type": "q_su21"
+    }
+   ],
+   "part": "NW_io",
+   "rect_after": [
+    0.0,
+    6065.28,
+    648.0,
+    7153.92
+   ],
+   "rect_before": [
+    0.0,
+    6001.64,
+    698.248,
+    7178.92
+   ],
+   "steps": [
+    {
+     "cut": "partition",
+     "part": "NW_io",
+     "part_rect": [
+      0.0,
+      6065.28,
+      648.0,
+      10385.28
+     ]
+    },
+    {
+     "block": [
+      112.32,
+      7153.92,
+      540.0,
+      7400.16
+     ],
+     "cut": "block",
+     "inst": "u_ep_N0"
+    }
+   ]
+  },
+  {
+   "changed": true,
+   "name": "phy_NW_spb0_u_lk_S0",
+   "neighbours_uncovered": [],
+   "part": "NW_spb0",
+   "rect_after": [
+    5846.12,
+    0.0,
+    6573.448,
+    1088.64
+   ],
+   "rect_before": [
+    5846.12,
+    0.0,
+    6573.448,
+    1113.64
+   ],
+   "steps": [
+    {
+     "block": [
+      5987.52,
+      1088.64,
+      6415.2,
+      1334.88
+     ],
+     "cut": "block",
+     "inst": "u_ep_S0"
+    }
+   ]
+  },
+  {
+   "changed": true,
+   "name": "phy_vsN0_u_lk_S1",
+   "neighbours_uncovered": [
+    {
+     "part": "NW_sm3",
+     "type": "q_sm3"
+    }
+   ],
+   "part": "vsN0",
+   "rect_after": [
+    13357.44,
+    0.0,
+    14055.688,
+    1088.64
+   ],
+   "rect_before": [
+    13328.36,
+    0.0,
+    14055.688,
+    1113.64
+   ],
+   "steps": [
+    {
+     "cut": "partition",
+     "part": "vsN0",
+     "part_rect": [
+      13357.44,
+      0.0,
+      15042.24,
+      1503.36
+     ]
+    },
+    {
+     "block": [
+      13573.44,
+      1088.64,
+      14001.12,
+      1334.88
+     ],
+     "cut": "block",
+     "inst": "u_ep_S1"
+    }
+   ]
+  },
+  {
+   "changed": true,
+   "name": "phy_NE_io_u_lk_N2",
+   "neighbours_uncovered": [
+    {
+     "part": "NE_b013",
+     "type": "q_b013"
+    },
+    {
+     "part": "NE_su21",
+     "type": "q_su21__physical_v1"
+    }
+   ],
+   "part": "NE_io",
+   "rect_after": [
+    27751.68,
+    6065.28,
+    28399.68,
+    7153.92
+   ],
+   "rect_before": [
+    27701.432,
+    6001.64,
+    28399.68,
+    7178.92
+   ],
+   "steps": [
+    {
+     "cut": "partition",
+     "part": "NE_io",
+     "part_rect": [
+      27751.68,
+      6065.28,
+      28399.68,
+      10385.28
+     ]
+    },
+    {
+     "block": [
+      27864.0,
+      7153.92,
+      28291.68,
+      7400.16
+     ],
+     "cut": "block",
+     "inst": "u_ep_N2"
+    }
+   ]
+  },
+  {
+   "changed": true,
+   "name": "phy_NE_spb0_u_lk_S0",
+   "neighbours_uncovered": [],
+   "part": "NE_spb0",
+   "rect_after": [
+    21826.232,
+    0.0,
+    22553.56,
+    1088.64
+   ],
+   "rect_before": [
+    21826.232,
+    0.0,
+    22553.56,
+    1113.64
+   ],
+   "steps": [
+    {
+     "block": [
+      21984.48,
+      1088.64,
+      22412.16,
+      1334.88
+     ],
+     "cut": "block",
+     "inst": "u_ep_S0"
+    }
+   ]
+  }
+ ],
+ "schema": "opentallas.fit_phy_pg_domains.v1"
+}

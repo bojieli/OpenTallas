@@ -1,0 +1,10 @@
+{
+ "schema": "opentallas.view_abstract_note.v1",
+ "lef": "dsdv_bksel_c.lef",
+ "kind": "detailed abstract (OpenROAD write_abstract_lef, default options: real OBS shapes, no -bloat_occupied_layers)",
+ "from_routed_db": "/srv/opentallas-scratch2/claude/ss29/resign/kit_bksel_c/run/results/asap7/kl_dsdv_bksel_c_rfd6/base/6_final.odb (dear-crayfish)",
+ "routed_db_sha256": "11f32154a3702de62b26f106d0d699aa23f926ba256e0c77d618653047684c89",
+ "replaces_lef_sha256": "30d472575082edf355f9f2f1e4abde2b39295ec789457fd2c284e91afb0a3a0b",
+ "pins": "5515 of 5515 byte-identical (name, direction, use, layer, rect); SIZE 388.8 x 129.6, CLASS BLOCK and OBS max layer M6 unchanged",
+ "why": "S81-OTHERFAIL-1 2026-11-07: bk_sel__t2 GRT pin_access DRT-0073 'No access point for u_bound.u_core.u_sel.u_c/ck[0]'. The old blanket M1-M6 OBS over the whole block left ck[0] (M5, 48 x 480 nm at the N edge) no access point, reproduced with one macro and one net and no PDN; the detailed abstract gives ck[0] 5 via access points, 0 pins without one. Same class as DIE-HEAD-76 lep_pair vE (11-06): detailed view, not the blanket-OBS abstract. The signed DB, timing views and LEC are unchanged."
+}

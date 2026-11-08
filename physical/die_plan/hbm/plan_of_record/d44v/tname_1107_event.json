@@ -1,0 +1,34 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "tname_1107",
+ "plan": "d44v",
+ "lane": "DIE-HBM-90-TNAME (under DIE-HBM-90)",
+ "date": "2026-11-07",
+ "approved": "DIE-HBM-90 brief 11-07 21:5x (naming class (i), one batch with the kit tool fixes (f)(h)); fix-only, no new cycle",
+ "what": [
+  "type root hard core u_mu_fused_program (ot_hnx_fused_host_program): declare physical_inst u_mu_fused_programme, physical_master ot_hnx_fused_host_program (tools/die_plan/declare_physical_inst.py)"
+ ],
+ "why": "bind.py kit-rtl stops root with 'core clock clk_c12: expected one bound leaf u_mu_fused_program, got 0'. The as-built RTL of record (bind inputs t11_top.sv: ot_hnx_fused_host_program u_mu_fused_programme) and the bind map (t5_map.json parts: u_mu_fused_programme -> root u_mu_fused_programme) name the instance u_mu_fused_programme, so the bound leaf is u_u_mu_fused_programme; the C25b plan rows used a shorter name.",
+ "why_physical_inst": "the plan's field for a bound leaf named differently from the plan inst (DIE-QC-69, gen_phys.content_physical_identity). A rename of the clock tap would change every type's native bind receipt (kit_topology.native_contract digests the clock taps) and force a new die bind; the logical inst, contents[], tap name and core_conns.json stay",
+ "proof": "declare_physical_inst.py fails closed unless the row exists once without a physical identity, the bound RTL of root (DIE-HBM-89-HBMBIND bind14, strict bind 0 errors) has exactly one leaf u_NEW whose master is the row's module, and no leaf u_OLD",
+ "bound_rtl": {
+  "root": {
+   "file": "hbm_arch_root.sv",
+   "sha256": "61a8bfe03676b8054d14377145282066fd972ff69db688d75569504afd8c4662"
+  }
+ },
+ "plan_fields": [
+  "partition_types.root.hard_cores.81.physical_inst",
+  "partition_types.root.hard_cores.81.physical_master"
+ ],
+ "unchanged": [
+  "module, origin, outline, pins file, contents[], clock tap name/position/latency, core_conns.json",
+  "every other type, lanes, ports, latency; PIN CYCLES 0, no logic change",
+  "native bind receipt (kit_topology.bind_matches True for every type against bind14)"
+ ],
+ "sha256": {
+  "die_plan.json.before": "29e1c03ff6f0e151148e45c6815ff0708526a2e76e0817d20b7bbb3bdd242cb0",
+  "die_plan.json": "d09c35af1f72132e81b107709b7680f860684f4519a8606110b144153cbfa5ff"
+ },
+ "replay": "python3 -I tools/die_plan/declare_physical_inst.py d44v/die_plan.json.gz OUT/die_plan.json.gz OUT/tname_1107_ledger.json --type root --old u_mu_fused_program --new u_mu_fused_programme --bound-rtl <bind of record>/out/rtl"
+}

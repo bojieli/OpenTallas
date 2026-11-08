@@ -1,0 +1,396 @@
+[
+  {
+    "name": "$paramod$311129fd854b9adc9a80d7177083ee006a0153ee\\ot_hdc_v41x_attn_merge_x",
+    "instances": 4,
+    "ffbits": 62760,
+    "total_ffbits": 251040,
+    "portbits": 1066,
+    "ports": [
+      {
+        "name": "\\clk",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\rst_n",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\iv",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\ifin",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\iblk",
+        "direction": "input",
+        "width": 5
+      },
+      {
+        "name": "\\iy",
+        "direction": "input",
+        "width": 512
+      },
+      {
+        "name": "\\if_",
+        "direction": "input",
+        "width": 16
+      },
+      {
+        "name": "\\ov",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "\\oy",
+        "direction": "output",
+        "width": 512
+      },
+      {
+        "name": "\\of_",
+        "direction": "output",
+        "width": 16
+      }
+    ]
+  },
+  {
+    "name": "$paramod$e2ac76d10bb3e5ee0729d1f4773517c2bdedf17f\\ot_hdc_v41x_attn_tr_x",
+    "instances": 1,
+    "ffbits": 10404,
+    "total_ffbits": 10404,
+    "portbits": 2814,
+    "ports": [
+      {
+        "name": "\\clk",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\rst_n",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\w_en_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\w_half_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\w_cnt_i",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "\\w_pad_i",
+        "direction": "input",
+        "width": 4
+      },
+      {
+        "name": "\\w_g",
+        "direction": "input",
+        "width": 1060
+      },
+      {
+        "name": "\\r_half_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\r_c_i",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "\\sel_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\qk_ib",
+        "direction": "input",
+        "width": 576
+      },
+      {
+        "name": "\\col",
+        "direction": "output",
+        "width": 576
+      },
+      {
+        "name": "\\eib",
+        "direction": "output",
+        "width": 576
+      }
+    ]
+  },
+  {
+    "name": "$paramod$846085df52db0cf71e8ba3dade3f0782d73a1b60\\ot_hdc_v41x_attn_tr_x",
+    "instances": 1,
+    "ffbits": 10404,
+    "total_ffbits": 10404,
+    "portbits": 2814,
+    "ports": [
+      {
+        "name": "\\clk",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\rst_n",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\w_en_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\w_half_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\w_cnt_i",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "\\w_pad_i",
+        "direction": "input",
+        "width": 4
+      },
+      {
+        "name": "\\w_g",
+        "direction": "input",
+        "width": 1060
+      },
+      {
+        "name": "\\r_half_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\r_c_i",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "\\sel_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\qk_ib",
+        "direction": "input",
+        "width": 576
+      },
+      {
+        "name": "\\col",
+        "direction": "output",
+        "width": 576
+      },
+      {
+        "name": "\\eib",
+        "direction": "output",
+        "width": 576
+      }
+    ]
+  },
+  {
+    "name": "$paramod$cc473d76f57311cfabc9673541de31c9b2826a46\\ot_hdc_v41x_attn_tr_x",
+    "instances": 1,
+    "ffbits": 10404,
+    "total_ffbits": 10404,
+    "portbits": 2814,
+    "ports": [
+      {
+        "name": "\\clk",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\rst_n",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\w_en_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\w_half_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\w_cnt_i",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "\\w_pad_i",
+        "direction": "input",
+        "width": 4
+      },
+      {
+        "name": "\\w_g",
+        "direction": "input",
+        "width": 1060
+      },
+      {
+        "name": "\\r_half_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\r_c_i",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "\\sel_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\qk_ib",
+        "direction": "input",
+        "width": 576
+      },
+      {
+        "name": "\\col",
+        "direction": "output",
+        "width": 576
+      },
+      {
+        "name": "\\eib",
+        "direction": "output",
+        "width": 576
+      }
+    ]
+  },
+  {
+    "name": "$paramod$7e55a74db9602f2e1327f771d129b0e94b363acc\\ot_hdc_v41x_attn_tr_x",
+    "instances": 1,
+    "ffbits": 10404,
+    "total_ffbits": 10404,
+    "portbits": 2814,
+    "ports": [
+      {
+        "name": "\\clk",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\rst_n",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\w_en_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\w_half_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\w_cnt_i",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "\\w_pad_i",
+        "direction": "input",
+        "width": 4
+      },
+      {
+        "name": "\\w_g",
+        "direction": "input",
+        "width": 1060
+      },
+      {
+        "name": "\\r_half_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\r_c_i",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "\\sel_i",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\qk_ib",
+        "direction": "input",
+        "width": 576
+      },
+      {
+        "name": "\\col",
+        "direction": "output",
+        "width": 576
+      },
+      {
+        "name": "\\eib",
+        "direction": "output",
+        "width": 576
+      }
+    ]
+  },
+  {
+    "name": "$paramod$e8c6f970d877846b329f2b639845d3ace2ffd256\\ot_hdc_v41x_attn_staging_fit",
+    "instances": 2,
+    "ffbits": 0,
+    "total_ffbits": 0,
+    "portbits": 2141,
+    "ports": [
+      {
+        "name": "\\clk",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\wr_en",
+        "direction": "input",
+        "width": 4
+      },
+      {
+        "name": "\\wr_addr",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "\\wr_data",
+        "direction": "input",
+        "width": 1060
+      },
+      {
+        "name": "\\rd_addr",
+        "direction": "input",
+        "width": 8
+      },
+      {
+        "name": "\\rd_data",
+        "direction": "output",
+        "width": 1060
+      }
+    ]
+  }
+]

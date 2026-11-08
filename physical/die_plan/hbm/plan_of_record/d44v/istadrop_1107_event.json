@@ -1,0 +1,127 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "istadrop_1107",
+ "plan": "d44v",
+ "lane": "DIE-HBM-90-ISTA (under DIE-HBM-90)",
+ "date": "2026-11-07",
+ "approved": "DIE-HBM-90 brief 11-07 21:1x (class fix, one batch for all 25 types); fix-only, no new cycle",
+ "what": [
+  "drop 1255 type internal_stations entries on 164 type buses that no longer exist, in 25 types (tools/die_plan/drop_dead_istations.py; per-type counts in istadrop_1107_ledger.json)"
+ ],
+ "why": "kit_istations.py stops these types with 'internal station on unknown bus <B>' (DIE-HBM-89-HBMBIND dry run q_su31 L105_i, q_b113 L127_i). The die_hbm_1029 lane re-route events (results/die_hbm_1029/hbm2{2,3,8}/replan_event*.py, lane_add.Builder) removed the lanes, ports and endpoint buses but kept type internal_stations by name.",
+ "proof_dead": "every dropped bus is (1) not a bus or ft-slot port of the type, (2) not named by any die port on a partition of the type, (3) not an identifier (port, _q/_eq net, pad or station stage, u_bin_/u_bout_) in the bound RTL of record of the type (DIE-HBM-89-HBMBIND bind14, strict bind 0 errors); the tool fails closed otherwise",
+ "not_remapped": "the current buses of these types are priced without these stations (e.g. q_su31 L5032 latency cycles 2, stations 0) and the bound RTL has no pad stage for them, so moving the old 4-10 stage chains onto them would add unpriced cycles",
+ "bound_rtl": {
+  "NE_io": {
+   "file": "hbm_arch_NE_io.sv",
+   "sha256": "7fa3765ac195d5f915b474cbaf84379bc1568a78aabe0359e0ea1535e23a0671"
+  },
+  "NW_io": {
+   "file": "hbm_arch_NW_io.sv",
+   "sha256": "e281719cb2aa91ce800ecf1bca21fad27f5fb284939c023a6298a3977cf73959"
+  },
+  "q_b110": {
+   "file": "hbm_arch_q_b110.sv",
+   "sha256": "004cb9e7eee638e331afca1a04e62214ac1be0acbf545a49e3453843141a1922"
+  },
+  "q_b110__physical_v1": {
+   "file": "hbm_arch_q_b110__physical_v1.sv",
+   "sha256": "ae4be05dcaa0be77fd9bf2c7432cd2609a60daad69769ad0eace82a851ba9195"
+  },
+  "q_b113": {
+   "file": "hbm_arch_q_b113.sv",
+   "sha256": "6e7449a6bb75f807a41346cef7d8bcd041f6285a4b8e42177e4db43f5bc100d2"
+  },
+  "q_b113__physical_v1": {
+   "file": "hbm_arch_q_b113__physical_v1.sv",
+   "sha256": "b69fd9a656fb3d11b6c4cbc0d5f29fa423b228ef56186c1c77d774228ded4a3f"
+  },
+  "q_hub_ne": {
+   "file": "hbm_arch_q_hub__q_hub_ne.sv",
+   "sha256": "6ed4c14994987e85de012e3ebedfd86340baf139cb449a7848e056c1c83f6b59"
+  },
+  "q_hub_nw": {
+   "file": "hbm_arch_q_hub__q_hub_nw.sv",
+   "sha256": "f7e9303738ebbf09ef3a363444d0168ca644cd458b8348930d53c0d1d41d9b2e"
+  },
+  "q_su00": {
+   "file": "hbm_arch_q_su00.sv",
+   "sha256": "cda77d9ed23ca0331ad729cb08f0830fa84ea1cf9da1ac4d90ca72ab560a97e6"
+  },
+  "q_su00__physical_v1": {
+   "file": "hbm_arch_q_su00__physical_v1.sv",
+   "sha256": "14001fa5f4df1515efb402183294f7b94de103bfb931fde9a3e3326660e1d462"
+  },
+  "q_su01": {
+   "file": "hbm_arch_q_su01.sv",
+   "sha256": "e28972d534ceab4d76d1c48ba02ca29de964e0359201814a89137a465e94a000"
+  },
+  "q_su01__physical_v1": {
+   "file": "hbm_arch_q_su01__physical_v1.sv",
+   "sha256": "e030f60eff52aa7e2e8fae7b56a94a4cbaed0ae4fe23b08469a489ae4ce50b74"
+  },
+  "q_su10": {
+   "file": "hbm_arch_q_su10.sv",
+   "sha256": "97f878117c9b735c301e0a09923d728afc473840129c6360294e9d27d07a77b5"
+  },
+  "q_su10__physical_v1": {
+   "file": "hbm_arch_q_su10__physical_v1.sv",
+   "sha256": "11f9872b92be2afab1015866c06b6452c2f071211e066f71560ea0bfdeadf8ae"
+  },
+  "q_su11": {
+   "file": "hbm_arch_q_su11.sv",
+   "sha256": "8dc9f8e43ba006e5bd473f86a9827b80fa712c4f0d92427cc0976cd05ff7335c"
+  },
+  "q_su11__physical_v1": {
+   "file": "hbm_arch_q_su11__physical_v1.sv",
+   "sha256": "f6a0fb65fddacf531c2640bba23c3fe462b45c4b6912dccf488f913b91b18643"
+  },
+  "q_su20": {
+   "file": "hbm_arch_q_su20.sv",
+   "sha256": "1b525bae9aaeb5174a3e61c80e7b61eab3a7326c1b31c7a0a0ef107925520905"
+  },
+  "q_su20__physical_v1": {
+   "file": "hbm_arch_q_su20__physical_v1.sv",
+   "sha256": "96d724c40ee0188d77c3a33a3da215b0ac2aae9c6e7b328a0a0f67f44968e827"
+  },
+  "q_su21": {
+   "file": "hbm_arch_q_su21.sv",
+   "sha256": "e511771420d3473c9b5b8462768d504fbd9d26f6a401ab794395510962a6ba52"
+  },
+  "q_su21__physical_v1": {
+   "file": "hbm_arch_q_su21__physical_v1.sv",
+   "sha256": "207f695b33c82446ff6d5ead7c3ec7188dda45b10e840de5e0cdc81e8e6f9e63"
+  },
+  "q_su30": {
+   "file": "hbm_arch_q_su30.sv",
+   "sha256": "ad7392bbf66c44d2bb6db6d8a86ebdb3e1ea658a76b0a331bb2342b8efc40eaf"
+  },
+  "q_su30__physical_v1": {
+   "file": "hbm_arch_q_su30__physical_v1.sv",
+   "sha256": "aa206968cc518e9d876a0aa8a504f61666e0f11af22aab7ab76322bb01390e46"
+  },
+  "q_su31": {
+   "file": "hbm_arch_q_su31.sv",
+   "sha256": "176f269bee8f149515ca4841d9257a0d59582bb5cbf6deafe7c0697f541ec93f"
+  },
+  "q_su31__physical_v1": {
+   "file": "hbm_arch_q_su31__physical_v1.sv",
+   "sha256": "f96c0ee130c9ed29109c84eaadbf5f8818b4d183cd08338de50e905a98b3f378"
+  },
+  "root": {
+   "file": "hbm_arch_root.sv",
+   "sha256": "61a8bfe03676b8054d14377145282066fd972ff69db688d75569504afd8c4662"
+  }
+ },
+ "unchanged": [
+  "every live internal_stations entry (byte for byte), every core<->core entry",
+  "buses, ft slots, lanes, ports, latency table, PIN CYCLES 0",
+  "outlines, cores, pins, clock, reset, every other type",
+  "core_conns.json (its stale bus:<B> targets are skipped by check.py; no kit tool reads it)"
+ ],
+ "sha256": {
+  "die_plan.json.before": "ac65cc2ebec9f10244ecf62529c3c47994e0a7d4bb9fff9919e9aa171b885414",
+  "die_plan.json": "67425d6cb91453971ec55deda2578d714d5df3ed50ca63e4d8acf41d9752a45c"
+ },
+ "replay": "python3 -I tools/die_plan/drop_dead_istations.py d44v/die_plan.json OUT/die_plan.json OUT/istadrop_1107_ledger.json --bound-rtl <bind of record>/out/rtl"
+}
