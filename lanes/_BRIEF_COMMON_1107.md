@@ -13,3 +13,9 @@ Codex covered as watcher and handed back. Read `handoff/codex_watcher_checkpoint
 
 # Addendum 03:2x, OWNER rulings
 (1) Limit warnings: keep working until the limit actually hits. Detached jobs survive it, so do not park early. Keep posting units and next steps as you go. (2) Closure first: near-close work and LEC use `ot-run --crit`; near-close means one bounded step from sign-off (one net, a few slews, a re-sign, routed LEC). New builds do not use --crit. (3) Codex may write fixes on its own branches during a limit; read its branches before you repeat a fix.
+
+# Addendum 2026-11-08 08:12 PST, SRC STAGING RULE (KW-FIX-35-P, COORD 07:2x; 4 shared-src write incidents on 11-08)
+Kit-wave and lane src trees are staged as hard-link copies. On several hosts a src path is a SYMLINK (e.g. scratch2/claude/kw33/src_d95ec -> scratch3/claude/kw33src/src_d95ec), so `cp -al <link> <new>` copies only the link and every later write lands in the SHARED tree (05:38-07:0x: 25 QC attempts built with false src provenance, now COUNT-REVOKED). Rule:
+- Before `cp -al`, run `test -L <src>`; always copy the REALPATH: `R=$(readlink -f <src>); cp -al "$R" <new>` (or `cp -al "$R/." <new>/`), never a symlink. Check that <new> itself and no path component of it is a link before the first write.
+- Shared src trees are READ-ONLY after staging: `chmod -R a-w <tree>`. Never write into one; a permission error is the guard working, not a bug to chmod away.
+- A private tree = `cp -al <realpath> <new>` then `find <new> -type d -exec chmod u+w {} +`. Files stay hard links to the shared inodes (still read-only), so write NEW files only: `rm -f <new>/<f>` then write/copy the new file (never edit or `>`/`cp` over a linked file in place).
