@@ -1,0 +1,19 @@
+# AUTOCLEAN-7 epyc5 scratch2 archive-closed pass (OWNER 18:1x, COORD 18:1x). 2026-11-07 18:23 PST. Each row: superseded attempt holding a SIGNED/LOCAL_PASS/NEEDS_PARENT signoff, older than the state row's attempt. Step 1 whole dir -> agidock /archive/opentallas-signed-1106/epyc5/<abs path>, verify files+bytes+sha256(signoff.json, PROVENANCE.json, 6_final.odb) both ends; step 2 ARCHIVED.json; step 3 stub: delete [1-5]_*.odb, 6_N_*.odb, non-final spef/def, *.guide, ORFS objects/; keep signoff, PROVENANCE, 6_final.*, logs, reports, everything else.
+# host	status	class	bytes	attempt_dir
+epyc5	ARCHIVE_THEN_STUB	superseded-xpath	2191008968	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h10_r2__t1__cl1f5d6c2a/attempt_13
+epyc5	ARCHIVE_THEN_STUB	superseded-xpath	2396333183	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h10_r0_p4__t1/attempt_10
+epyc5	ARCHIVE_THEN_STUB	superseded	2362282313	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h9_r0_p4__t1__clcb2fbfe8/attempt_10
+epyc5	ARCHIVE_THEN_STUB	superseded-xpath	2196774836	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h10_r2__t1__cl8b686b3e/attempt_12
+epyc5	ARCHIVE_THEN_STUB	superseded-xpath	2191639031	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h10_r2__t1__cl99efd374/attempt_10
+epyc5	ARCHIVE_THEN_STUB	superseded-xpath	2191614453	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h10_r2__t1__clac068e56/attempt_10
+epyc5	ARCHIVE_THEN_STUB	superseded-xpath	3580443069	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h9_r2__t1__clce45cab5/attempt_10
+epyc5	ARCHIVE_THEN_STUB	superseded-xpath	572226206	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/slice_station__t21/attempt_9
+epyc5	ARCHIVE_THEN_STUB	superseded-xpath	4145832542	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h9_r0_p2__t1__cl9f71e63d/attempt_9
+epyc5	ARCHIVE_THEN_STUB	superseded-xpath	2234224251	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h9_r0_p6__t1/attempt_10
+epyc5	ARCHIVE_THEN_STUB	superseded-xpath	4367913056	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h9_r0_p3__t1__cl31d0dc4b/attempt_9
+epyc5	ARCHIVE_THEN_STUB	superseded-xpath	4971142741	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/slice_station__t28/attempt_6
+epyc5	ARCHIVE_THEN_STUB	superseded-xpath	2478397558	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h9_r0_p5__t1/attempt_13
+epyc5	ARCHIVE_THEN_STUB	superseded-xpath	5294596210	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/slice_station__t8/attempt_4
+epyc5	ARCHIVE_THEN_STUB	superseded-xpath	1937253061	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h9_r2__t1__clc9ad8f7e/attempt_5
+epyc5	ARCHIVE_THEN_STUB	superseded	2576949715	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h9_r0_p3__t1__cl8ce97bcb/attempt_8
+epyc5	ARCHIVE_THEN_STUB	superseded	3268222838	/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/col_h9_r0_p1__t1/attempt_10
