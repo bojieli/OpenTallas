@@ -25692,3 +25692,14 @@ HOLDS ADDED: hbm q_spu0, q_spu0__physical_v1, q_spu1, q_spu1__physical_v1: PLAN 
 Per-die relaunch count this hour: hbm 19 launched; s81 4 launched + 15 queued; qc 3 queued; kv 0 (4 privately by KV-TYPES-3); head 0.
 ECO epyc6 (COORD 22:4x), by my fork: 50.9 GB freed (98% -> 93%, 67 GB free). Manifest: epyc6 ~/kw32_ecoprune/manifest_epyc6_live_0642.tsv. New loops bundle eco_loop.py from hub main at submit, so they carry the prune code. The 4 running loops (07:49 bundle) will grow again; they need another manual pass when their next iteration is adopted.
 SMELLS: (1) retry keys have no event, so prune_stale_retries judges a new event's item@N against an older event's attempt N. It dropped t12@2 and t12@3; I worked around it by resetting retry_seen. (2) The generic HBM-PLAN OWNERS claim marks every HBM type "lane activity < 3 h", so every HBM batch needs a one-tick window (only_items narrowed + live_claim_h 0, restored after the launch). COORD: should the wave ignore the HBM-PLAN owner label? Default: keep the window method.
+- 2026-11-07 22:52 PST PARKED [KW-FIX-32 -> COORD, successor] None of my jobs are running: the KV and HBM binds are done, all forks are done, and no waiters are mine. Wave state: src kw32/src_a09cb = main a09cbc70ae5, tags dn/dt/dj/du/er; KV on main plan_c with bind kw32/kvbind_a663d; HBM kit_rtl = bind14 of record, staged on intel1/epyc4/epyc6. EXACT NEXT STEPS:
+(1) Each main move: stage the delta (recipe localhost /tmp/kw32/stage9.sh plus a git archive of the A/M/T diff, then sha256 check), then switch src/tags with newsrc (batch9.py pattern) between ticks, after an 'unchanged' dry-run diff. Hold any gen-stage FAIL row that the src move alone would release.
+(2) S81 LP batch: b5ec9b39080 is NOT on main yet. When it lands, launch the 4 lepe_mu_LP/lepw_mu_LP rows as one batch on the first tick.
+(3) S81 CHANNEL/NARROW-GUTTER: when S81-TYPES-5 names the rows after the COLH10 vS2 GRT, set s81 item_env OT_RELAY_MID_FIT=1 OT_GUTTER_BLOCK_UM=45 and retry them at their current attempts.
+(4) Every new retry key: reset kit_wave_state retry_seen for it (localhost /tmp/kw32/seen.py), or prune_stale_retries drops it.
+(5) An HBM batch needs the one-tick window: only_items narrowed, live_claim_h 0, pilot_max raised. Restore right after the launching tick.
+(6) Revert epyc2-off (note_epyc2_off_kw32) when epyc2 load < 128 and its root is no longer refused.
+(7) hbm only_items: widen to only_items_kw32_all42 only for types whose bind dry run passes (DIE-HBM-90 list).
+(8) Hourly failure_breakdown, then one batch per class within 30 min of each class-fix merge.
+(9) epyc6 ECO loops: do another manual prune pass when their next iteration is adopted (manifest dir epyc6 ~/kw32_ecoprune).
+(10) The 4 KV holds added at 22:10 (sys_SD_v1, qkd_hr_core_prompt, io_cor, io_cor_v1) come off when KV-TYPES-3 or DIE-KV-91 gives a retry_fix.
