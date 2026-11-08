@@ -67,11 +67,15 @@ def tcl(receipt):
     lines=['# Exact partition complement of the die-owned FT tracks.',
            'set ot_ft_blk [ord::get_db_block]',
            'set ot_ft_dbu [$ot_ft_blk getDbUnitsPerMicron]']
-    for row in receipt['rectangles_um']:
-        lines.append(f'set ot_ft_layer [[ord::get_db_tech] findLayer {row["layer"]}]')
+    rows=obstruction_rows(receipt)
+    for layer,rect in rows:
+        lines.append(f'set ot_ft_layer [[ord::get_db_tech] findLayer {layer}]')
         lines.append('odb::dbObstruction_create $ot_ft_blk $ot_ft_layer '+' '.join(
-            f'[expr {{round({v:.3f}*$ot_ft_dbu)}}]' for v in row['rect']))
-    lines.append(f'puts "OT_PARTITION_FT_RESERVE rectangles={len(receipt["rectangles_um"])}"')
+            f'[expr {{round({v:.3f}*$ot_ft_dbu)}}]' for v in rect))
+    wins=pdn_windows(receipt)
+    if wins:
+        lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows={len(wins)}"')
+    lines.append(f'puts "OT_PARTITION_FT_RESERVE rectangles={len(rows)}"')
     return '\n'.join(lines)+'\n'
 
 
@@ -84,6 +88,75 @@ def tcl(receipt):
 # bridge metal stays outside the reservation (probed: 0 PDN shapes inside an obstruction, PDNGEN OK on q_spu0).
 BRIDGE_M3 = dict(width=0.09, spacing=0.072, pitch=4.32, offset=1.08)     # ASAP7 M3 legal width 0.09
 BRIDGE_M4 = dict(width=0.12, spacing=0.072, pitch=4.32, offset=2.16)     # ASAP7 M4 legal width 0.12; pitch < min gap
+
+
+# DIE-HBM-91 11-08 (HBM q_b013 / q_b013__physical_v1 PDN-0179 with the row bridge on): over y 943.9-2912.2 the die
+# reserves ALL of M6 (one full-width rect), and each 103.68-um street between two stacked
+# ot_hbm_hc_bank128_pair_core (OBS M1-M5) also has ALL of M4 reserved.  The street is then a PDN island: its M3 bridge
+# straps and M5 straps are cut by the cores above and below, M4 has no gap and M6 has no gap, so no via stack reaches
+# M6/M7 (base: 5 PDN-0178 M3 channels, one per street, then PDN-0179; M4 windows only: 103 M5 channels).  A TALL
+# full-width band (> PDN_WIN_MIN) on a PDN layer keeps one window at every PDN_WIN_EVERY-th strap position of that
+# layer's PDN stripe (M4: the row-bridge strap, M6: the PG_M6 strap), where the strap lands.  The die FT router sees
+# the strap in the abstract and routes around it: ~0.6 um of every 21.6 um of M4 and ~1.0 um of every 21.6 um of M6
+# in such a band (3-5 %).  Bands no taller than PDN_WIN_MIN (q_spu0: 2.7 um) are unchanged.
+PDN_WIN_MIN = 8.64
+PDN_WIN_EVERY = 5
+PDN_WIN_MARGIN = 0.15                         # > the stripe spacing (0.072 M4, 0.096 M6) on each side of the pair
+PDN_WIN_STRIPES = {'M4': (2.16, 0.12, 0.072, 4.32),      # offset, width, spacing, pitch = BRIDGE_M4
+                   'M6': (1.968, 0.288, 0.096, 4.32)}    # = gen_phys PG_M6 / the top-grid M6 stripe
+
+
+def _full(row, width):
+    x0, y0, x1, y1 = row['rect']
+    return row['layer'] in PDN_WIN_STRIPES and x0 <= 1e-6 and x1 >= width - 1e-6
+
+
+def _width(receipt, width):
+    return width if width is not None else max((r['rect'][2] for r in receipt['rectangles_um']), default=0.0)
+
+
+def pdn_windows(receipt, width=None, core_y0=4.32):
+    """[(layer, y0, y1)] PDN strap windows cut out of tall full-width M4/M6 bands (see PDN_WIN_MIN)."""
+    if receipt is None:
+        return []
+    width = _width(receipt, width)
+    out = []
+    for r in receipt['rectangles_um']:
+        if not _full(r, width):
+            continue
+        y0, y1 = r['rect'][1], r['rect'][3]
+        if y1 - y0 <= PDN_WIN_MIN:
+            continue
+        off, wd, sp, pitch = PDN_WIN_STRIPES[r['layer']]
+        step = PDN_WIN_EVERY * pitch
+        k = max(0, int((y0 - core_y0 - off) // step))
+        while True:
+            s = core_y0 + off + k * step
+            k += 1
+            lo, hi = s - PDN_WIN_MARGIN, s + 2 * wd + sp + PDN_WIN_MARGIN
+            if lo < y0 + pitch:
+                continue
+            if hi > y1 - pitch:
+                break
+            out.append((r['layer'], round(lo, 3), round(hi, 3)))
+    return out
+
+
+def obstruction_rows(receipt, width=None, core_y0=4.32):
+    """[(layer, rect)] the obstructions to create: the receipt rectangles, tall full-width M4/M6 bands split at
+    pdn_windows."""
+    width = _width(receipt, width)
+    wins = pdn_windows(receipt, width, core_y0)
+    out = []
+    for r in receipt['rectangles_um']:
+        x0, y0, x1, y1 = r['rect']
+        mine = sorted((a, b) for L, a, b in wins if L == r['layer'] and y0 < a and b < y1) if _full(r, width) else []
+        cur = y0
+        for a, b in mine:
+            out.append((r['layer'], [x0, cur, x1, a]))
+            cur = b
+        out.append((r['layer'], [x0, cur, x1, y1]))
+    return out
 
 
 def blocks_rows(receipt, width):
