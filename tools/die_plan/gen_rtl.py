@@ -337,6 +337,13 @@ def phy_tx_buses(P, tn):
     return out
 
 
+def transit_placeholder(c, bd):
+    """A plan contents[] row that only declares a transit-only type (HBM d44v q_mca/q_spb1/q_spt*/q_spu*/vsN*:
+    module hbm_arch_ft_<T>, status new, cells 0, no bind, no params, no hard view): no leaf exists to instance."""
+    return (c.get("cells") == 0 and not bd and not c.get("params") and c.get("status") == "new"
+            and not any(c.get(k) for k in ("lef", "lib", "view", "physical_inst", "sources", "src")))
+
+
 def wrapper(P, tn, epochs, rtl_root=None):
     t = P.types[tn]
     mod = t["module"]
@@ -604,6 +611,14 @@ def wrapper(P, tn, epochs, rtl_root=None):
     hdrs = leaf_headers(t, rtl_root) if rtl_root and t.get("sources") else None
     for c in t.get("contents", []):
         bd = binds[c["inst"]]
+        if transit_placeholder(c, bd):
+            # DIE-HBM-90 11-07 (HBM q_spu0/1__physical_v1 GEN_LINT "hbm_arch_ft_<T> is not part of the design"): a
+            # transit-only type's contents[] row (cells 0, no bind, no params) only DECLARES that the type holds ft
+            # stations + pin registers, which this wrapper already emits.  It names no RTL source and has no port, so
+            # the instance would be an empty, undefined module; emit a comment instead.
+            body.append(f"    // {c['inst']} ({c['module']}): transit-only contents placeholder, no instance "
+                        f"(ft stations + pin registers are above)")
+            continue
         if hdrs is not None:
             lp = parse_leaf_ports(hdrs, c["module"])
             if lp is None:
