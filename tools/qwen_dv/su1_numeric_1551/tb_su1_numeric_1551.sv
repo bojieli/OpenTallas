@@ -38,7 +38,7 @@ cycle=cycle+1;rst_n=(cycle>64)&&!(cycle>=3500&&cycle<3564);
 ep=(cycle-128)/640;step=(cycle-128)%640;live=(cycle>=128&&ep<10&&step>=192&&step<224);emit0=live;i=live?(step-192):0;ilast=live&&(i==31);fin_th=32;
 cura=cycle;curb=64+cycle*3;curc=128+cycle*5;curd=4096+cycle;rrow=32+cycle;asi=1;bsi=1;csi=1;dsi=1;asrc=(cycle/768)%2;bsrc=(cycle/256)%2;csrc=!bsrc;mc=(((cycle/1024)%2)==0&&((cycle/512)%2)==0)?0:1;md=(((cycle/1024)%2)==0&&((cycle/512)%2)==0)?0:(cycle/512)%2;red=0;dst=(cycle/256)%3;ad=((cycle/512)%2)?2:0;ma=(cycle/1024)%2;mb=0;
 case(ep)0,5:kind=0;1,9:kind=1;2,8:kind=2;3,7:kind=3;default:kind=4;endcase
-accept=(cycle>=128&&step==0);if(cycle>=128&&step>=1)cls=kind;isfu=kind;if(cls==0)dst=0;redsq=0;imm1=32'h3f800000;imm2=0;
+accept=(cycle>=128&&step==0);if(cycle>=128&&step>=1)cls=kind;isfu=kind;if(cls==0)dst=1;redsq=0;imm1=32'h3f800000;imm2=0;
 if(!rst_n&&cycle>3508)for(n=0;n<2;n=n+1)if(co[n][247]||co[n][115]||co[n][81])warmleak=warmleak+1;
 if(cycle>256&&rst_n&&!(cycle>=3500&&cycle<3700))begin
 if(co[0][24])counts[0]=counts[0]+1;if(co[0][140])counts[1]=counts[1]+1;if(co[0][165])counts[2]=counts[2]+1;if(co[0][190])counts[3]=counts[3]+1;
