@@ -1,0 +1,59 @@
+{
+ "verdict": "DIAGNOSTIC_NOT_RELEASE_READY",
+ "image": "r5_candidate_unqualified.png",
+ "viewed": true,
+ "growth_um": 0,
+ "source": "claude/s81-svc-4-r5-1108@9d8833f51b",
+ "geometry_reference": "SVC5 exact extracted plan_h2_2249 SVC type geometry; no current global bind claim",
+ "preserved": [
+  "32 retained RT2 rectangles per type",
+  "8 SX rectangles per type",
+  "all45 hi/66 lo SRAM rectangles",
+  "central clock bay725.76,1226.88",
+  "current outlines1442.88x2747.52 hi /1442.88x2773.44 lo"
+ ],
+ "findings": [
+  "Four freed bands y311.04/864/1598.4/2151.36 each259.2 high accept a body-only rectangular proposal at dY0.",
+  "Hi/lo H4 low/high boxes separated near their head groups; provider face alignments remain unresolved.",
+  "Lo bands nearly full;8.64 gaps alone do not establish pin escape or vertical bus track capacity. Streets/relay faces must be budgeted before physical release.",
+  "SRAM cap top/right bounds and halos must be checked against complete source plan; drawn outlines alone are not a halo proof.",
+  "No parent leaf clock tree exists. Existing RT2 actual signed insertion is TT346.34..376ps/mean363.99 and FF274.56..302.59/mean291.65, not the old IO reference.",
+  "SML/SMD/H4 boxes retain predecessor narrow widths purely to expose the proposed packing; these are unqualified density assumptions. IRG and GLUE dimensions/counts await native post-memory sizing.",
+  "Native H8 memory-closed source bound, provider pins/reset/stage contracts, channel/reach and full H8 proof/calibration are open. No P&R launch."
+ ],
+ "body_area_util": {
+  "SML": {
+   "mapped_std_area_um2": 11268.96948,
+   "outline_um": [
+    120.96,
+    259.2
+   ],
+   "inner_margin_um": 4.32,
+   "raw_inner_fill": 0.40041963693633953,
+   "fill_after_15percent_space_reserve": 0.4710819258074583,
+   "qualification": "UNPLACED_SHAPE_TARGET_NOT_PHYSICAL_GATE"
+  },
+  "SMD": {
+   "mapped_std_area_um2": 6834.84156,
+   "outline_um": [
+    69.12,
+    259.2
+   ],
+   "inner_margin_um": 4.32,
+   "raw_inner_fill": 0.4510294796798029,
+   "fill_after_15percent_space_reserve": 0.5306229172703564,
+   "qualification": "UNPLACED_SHAPE_TARGET_NOT_PHYSICAL_GATE"
+  },
+  "H4": {
+   "mapped_std_area_um2": 10669.19202,
+   "outline_um": [
+    103.68,
+    259.2
+   ],
+   "inner_margin_um": 4.32,
+   "raw_inner_fill": 0.4480364664968652,
+   "fill_after_15percent_space_reserve": 0.5271017252904296,
+   "qualification": "UNPLACED_SHAPE_TARGET_NOT_PHYSICAL_GATE"
+  }
+ }
+}
