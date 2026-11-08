@@ -1,4 +1,5 @@
 # Private CTL vG: source after original raw-bank placement.
+global cm_blk cm_dbu cm_core cm_x0 cm_y0 cm_rows cm_sw cm_rh cm_orient cm_ff cm_out
 set cm_blk [ord::get_db_block]
 set cm_dbu [$cm_blk getDbUnitsPerMicron]
 set cm_core [$cm_blk getCoreArea]
@@ -25,6 +26,7 @@ proc cm_site {n x y} {
  set xx [expr {$::cm_x0+round(($x*$::cm_dbu-$w/2.0-$::cm_x0)/$::cm_sw)*$::cm_sw}]
  set yy [expr {$::cm_y0+round(($y*$::cm_dbu-$h/2.0-$::cm_y0)/$::cm_rh)*$::cm_rh}]
  if {![dict exists $::cm_orient $yy]} { error "CTL_MUX no row $yy" }
+ $c setPlacementStatus PLACED
  $c setOrient [dict get $::cm_orient $yy]
  $c setLocation [expr {int($xx)}] [expr {int($yy)}]
  $c setPlacementStatus FIRM
