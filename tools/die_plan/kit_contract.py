@@ -1165,7 +1165,37 @@ def _clock_entry_access(kd, plan_dir, row, site, src, name, x, y, top):
     views=[f.read_text() for f in files if re.search(r"^\s*MACRO\s+"+re.escape(master)+r"\s*$",f.read_text(),re.M)]
     if len(views)!=1:
         raise ValueError("entry requires one exact staged LEF master")
-    return validate_access(views[0],master,access,int(top[1:]),(sx,sy,orient),shapes[0])
+    validate_access(views[0],master,access,int(top[1:]),(sx,sy,orient),shapes[0])
+    # The explicit entry can occupy a previously PG-blocked track only when the
+    # exact default-off parent PG clearance steps are staged AND configured.
+    from clock_entry_pg import render as render_pg
+    from lef_clock_entry import geometry
+    pg_json=Path(kd)/"clock_entry_pg_cut.json"
+    pg_tcl=Path(kd)/"clock_entry_pg_cut.tcl"
+    pg6=Path(kd)/"pg_island_cut.tcl"
+    if not pg_json.is_file() or not pg_tcl.is_file() or not pg6.is_file():
+        raise ValueError("explicit entry missing actual parent PG clearance inputs")
+    pg=json.loads(pg_json.read_text())
+    if pg.get("schema")!="opentallas.clock_entry_pg_cuts.v1":
+        raise ValueError("invalid parent PG clearance schema")
+    expected=[dict(inst=core.get("physical_inst") or core["inst"],pin=access["pin"],layer="M7",
+                   rect_um=[round(r[0]-.072,6),round(r[1]-.072,6),round(r[2]+.072,6),round(r[3]+.072,6)])
+              for r in access["footprints_um"]["M7"]]
+    if any(c not in pg.get("cuts",[]) for c in expected) or pg_tcl.read_text()!=render_pg(pg["cuts"]):
+        raise ValueError("parent PG clearance differs from exact entry footprint/source")
+    _,target,_=geometry(views[0],master,access["pin"],int(top[1:]),(sx,sy,orient))
+    for layer,r in target:
+        if layer==5:
+            line=f"pgc_window {r[0]-.6:.4f} {r[1]-.072:.4f} {r[2]+.6:.4f} {r[3]+.072:.4f}"
+            if line not in pg6.read_text():
+                raise ValueError("parent M6 PG clearance differs from actual M5 pin")
+    hook=_mk(kd).get("POST_PDN_TCL","")
+    hookfile=_kfile(kd,hook)
+    hooktext=hookfile.read_text() if hookfile and hookfile.is_file() else ""
+    if not all(hook=="/work/"+n or "source /work/"+n in hooktext
+               for n in ("pg_island_cut.tcl","clock_entry_pg_cut.tcl")):
+        raise ValueError("parent PG clearance files not configured after pdngen")
+    return True
 
 
 def clock_entry_clear(kd, plan_dir=None, entries=None):

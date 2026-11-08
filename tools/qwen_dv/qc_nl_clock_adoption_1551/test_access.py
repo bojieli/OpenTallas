@@ -10,6 +10,7 @@ from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[3]/"tools/die_plan"))
 import kit_contract as K
 import gen_phys as GP
+import clock_entry_pg
 
 p=Path(__file__).with_name('prepare_access.py')
 s=importlib.util.spec_from_file_location('prepare_access',p)
@@ -78,9 +79,19 @@ class KitEntry(unittest.TestCase):
             row={'port':'clk_c0','inst':'u_core','pin':'ck','clock_entry_access':access}
             budget={'schema':'opentallas.die_plan.partition_budget.v1','type':'type','signal_max':'M7','clock':{'core_taps':[row]}}
             (kd/'budget.json').write_text(json.dumps(budget))
+            cuts=GP.clock_entry_pg_cuts(SimpleNamespace(types={'type':{'hard_cores':[core]}}),'type')
+            (kd/'clock_entry_pg_cut.json').write_text(json.dumps({'schema':'opentallas.clock_entry_pg_cuts.v1','cuts':cuts}))
+            (kd/'clock_entry_pg_cut.tcl').write_text(clock_entry_pg.render(cuts))
+            (kd/'pg_island_cut.tcl').write_text(GP.pg_island_cut_tcl([('u_core','ck',(4.3,4.628,5.7,5.372))]))
+            (kd/'post_pdn.tcl').write_text('source /work/pg_island_cut.tcl\nsource /work/clock_entry_pg_cut.tcl\n')
+            with (kd/'config.mk').open('a') as f: f.write('export POST_PDN_TCL = /work/post_pdn.tcl\n')
             entries=[('io.tcl','clk_c0',5.,5.)]
             errors,_=K.clock_entry_clear(kd,kd,entries)
             self.assertEqual(errors,[])
+            config=(kd/'config.mk').read_text()
+            (kd/'config.mk').write_text(config.replace('export POST_PDN_TCL','export UNUSED_POST_PDN_TCL'))
+            self.assertTrue(K.clock_entry_clear(kd,kd,entries)[0])
+            (kd/'config.mk').write_text(config)
             # Default stays solid even though the LEF contains a real opening.
             row.pop('clock_entry_access')
             (kd/'budget.json').write_text(json.dumps(budget))
@@ -101,7 +112,17 @@ class GeneratorEntry(unittest.TestCase):
             with patch.object(GP,'type_macros',return_value=[macro]), patch.object(GP,'core_tap_rows',return_value=[('clk_c0','u_core','ck',0,0)]):
                 self.assertEqual(GP.entry_block_boxes(p,'type',root=td,port='clk_c0',entry_xy=(5,5)),[])
                 self.assertEqual(GP.entry_block_boxes(p,'type',root=td,port='other',entry_xy=(5,5)),[(0.,0.,10.,10.)])
+                self.assertEqual(GP.pg_island_cuts(p,'type',root=td),[('u_core','ck',(4.3,4.628,5.7,5.372))])
                 core.pop('clock_entry_access')
+                self.assertEqual(GP.pg_island_cuts(p,'type',root=td),[])
                 self.assertEqual(GP.entry_block_boxes(p,'type',root=td,port='clk_c0',entry_xy=(5,5)),[(0.,0.,10.,10.)])
+                # A legal named interior entry must not get moved away by the
+                # default PG-safe snapping heuristic; targeted PG cuts own it.
+                shifted={f'M{k}':[[r[0]+.024,r[1],r[2]+.024,r[3]] for r in boxes]
+                         for k,boxes in Access.footprints.items()}
+                core['clock_entry_access']={'pin':'ck','footprints_um':shifted}
+                p.layers['M7'].update(offset_um=.032,pitch_um=.064)
+                with patch.object(GP.S,'core_taps',return_value=[('clk_c0',5.024,5.,{})]), patch.object(GP,'_snap_tap',side_effect=AssertionError('must not move explicit target')):
+                    self.assertEqual(GP.core_tap_pins(p,'type'),[('clk_c0',5.024,5.)])
 
 if __name__=='__main__': unittest.main()
