@@ -4,14 +4,27 @@
 Copies a source-only base kit; never copies implementation or verdict files.
 Optional M4/M6 E/W pin alternation is a candidate interface, not a POR update.
 """
-import argparse,hashlib,importlib.util,json,pathlib,re,shutil
+import argparse,hashlib,json,pathlib,re,shutil
 
 def sha(p):return hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()
-def name(p):return p['bus'] if p.get('bit') is None else f"{p['bus']}[{p['bit']}]"
+def name(p):return p['name'] if 'name' in p else p['bus'] if p.get('bit') is None else f"{p['bus']}[{p['bit']}]"
+
+def pins_hash(doc,outline):
+    # Exact GATE-PINS-2 canonicalization from die_sta_related.py@289149dea5.
+    keys=('direction','dir','layer','w','h','width','height','size','clock_entry','is_clock_entry')
+    nm=lambda v:int(round(float(v)*1000))
+    pins={}
+    for p in doc['pins']:
+        rest=tuple((k,nm(p[k]) if isinstance(p[k],(int,float)) and not isinstance(p[k],bool) else p[k])for k in keys if k in p)
+        pins[name(p)]=(nm(p['x']) if 'x' in p else None,nm(p['y']) if 'y' in p else None)+rest
+    body=json.dumps(dict(outline=tuple(nm(v)for v in outline),pins=sorted([n]+list(v)for n,v in pins.items())),sort_keys=True,separators=(',',':'),default=list)
+    return hashlib.sha256(body.encode()).hexdigest()
 
 def build(a):
     assert not a.out.exists(), 'choose a fresh output; preserve previous results'
     shutil.copytree(a.base,a.out)
+    (a.out/'DO_NOT_COUNT').write_text('Source/geometry prototype, never a released view.\n')
+    (a.out/'HOLD_ROUTE').write_text('PLACE only; source proof and actual placed view required before CTS.\n')
     old=a.out/'rtl/ot_hgi_sfu_split3_ctl_rest_core.sv';text=old.read_text()
     first=re.search(r'(?m)^module ot_hgi_sfu_split3_ctl_rest\s*\(',text)
     second=re.search(r'(?m)^module ot_hgi_sfu_split3_ctl_rest_core\s*\(',text)
@@ -47,8 +60,7 @@ def build(a):
         (a.out/'io.tcl').write_text('\n'.join(lines)+'\n')
         cfg=(a.out/'config.mk').read_text().replace('export MAX_ROUTING_LAYER = M5','export MAX_ROUTING_LAYER = M6')
         (a.out/'config.mk').write_text(cfg)
-        spec=importlib.util.spec_from_file_location('KC',a.kit_contract);kc=importlib.util.module_from_spec(spec);spec.loader.exec_module(kc)
-        f=json.loads((a.out/'freeze.json').read_text());f['pins_sha256']=sha(a.out/'plan_pins.json');f['pins_canon_sha256']=kc._canon(doc,f['outline_um'])
+        f=json.loads((a.out/'freeze.json').read_text());f['pins_sha256']=sha(a.out/'plan_pins.json');f['pins_canon_sha256']=pins_hash(doc,f['outline_um'])
         f['candidate_pin_delta']='own M4/M6 prototype; parent plan unchanged; do not count'
         (a.out/'freeze.json').write_text(json.dumps(f,indent=1)+'\n')
         receipt['pin_delta']=[{'pin':n,**m}for n,m in sorted(moves.items())]
