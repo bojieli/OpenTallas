@@ -284,14 +284,26 @@ def rtl_module_files(root):
     if root in _RTL_ROOT_INDEX:
         return _RTL_ROOT_INDEX[root]
     index = {}
-    result = None
-    try:
-        result = subprocess.run(["git", "-C", root, "grep", "--untracked", "--null", "-n", "-E",
-                                 r"^\s*module\s+[A-Za-z_][A-Za-z_0-9]*", "--", "*.sv", "*.v", "*.svh"],
-                                capture_output=True, text=True, timeout=300)
-    except (OSError, subprocess.SubprocessError):
-        pass
-    if result is not None and result.returncode in (0, 1) and "not a git repository" not in (result.stderr or ""):
+    # KW-FIX-35 11-08 (KW-PROV-1): a single `git grep --untracked` pass found NOTHING in a wave src whose .gitignore
+    # is `*` (kw33/src_d95ec, kw35/src_0b72a: staged trees ignore everything; git then skips tracked files too), so
+    # every contract child lost its RTL pin directions (QC cbf_q00 a10, slw_su_c a13; HBM q_su01/q_su11 prov_views).
+    # Union of: tracked files (the pre-index behaviour), untracked RTL under rtl/ even when ignored, standard untracked.
+    passes = (([], ["*.sv", "*.v", "*.svh"]),
+              (["--untracked", "--no-exclude-standard"], [":(glob)rtl/**/*.sv", ":(glob)rtl/**/*.v", ":(glob)rtl/**/*.svh"]),
+              (["--untracked"], ["*.sv", "*.v", "*.svh"]))
+    git_ok = False
+    for extra, spec in passes:
+        try:
+            result = subprocess.run(["git", "-C", root, "grep", *extra, "--null", "-n", "-E",
+                                     r"^\s*module\s+[A-Za-z_][A-Za-z_0-9]*", "--", *spec],
+                                    capture_output=True, text=True, timeout=300)
+        except (OSError, subprocess.SubprocessError):
+            continue
+        if "not a git repository" in (result.stderr or ""):
+            break                                  # a staged non-git root: one probe, then the shallow walk
+        if result.returncode not in (0, 1):
+            continue
+        git_ok = True
         for record in result.stdout.splitlines():
             fields = record.split("\0", 2)  # git grep -z -n: filename, line number, declaration
             if len(fields) != 3:
@@ -302,6 +314,8 @@ def rtl_module_files(root):
                 path = os.path.join(root, fields[0])
                 if path not in files:
                     files.append(path)
+    if git_ok:
+        pass
     else:
         for dp, dn, fs in os.walk(root):
             # Preserve the staged, non-git root's shallow walk and exclusions.
@@ -485,8 +499,20 @@ def contract_obs(w, h, pins, obs_top):
     return out
 
 
-def contract_lef(module, w, h, pins, dirs, obs_top):
-    """blackbox LEF: plan pins (centre x/y, layer) with plan directions, OBS M1..obs_top, VDD/VSS M5/M4 stripes"""
+def merged_clock_pins(t, inst):
+    """pins a merged core clock tap of the type names for inst (tap `<inst>.<base>` + merged_clock_ports)"""
+    out = set()
+    for tp in ((t.get("clock") or {}).get("taps") or []):
+        if isinstance(tp, dict) and tp.get("kind") == "core" and str(tp.get("name", "")).startswith(inst + "."):
+            out.update(tp.get("merged_clock_ports") or [])
+    return out
+
+
+def contract_lef(module, w, h, pins, dirs, obs_top, clock_pins=()):
+    """blackbox LEF: plan pins (centre x/y, layer) with plan directions, OBS M1..obs_top, VDD/VSS M5/M4 stripes.
+    DIE-HBM-92-GEN 11-08 (HBM q_b100..q_b103 gen phys "clk_pair[0]: actual LEF input clock required"): the pins of a
+    merged core clock tap (clock_pins, merged_clock_pins) are USE CLOCK, as the contract lib already marks them
+    clock : true and merged_core_clocks.pins requires; every other pin stays USE SIGNAL (other abstracts unchanged)."""
     L = ["VERSION 5.8 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {module}", "  CLASS BLOCK ;",
          "  ORIGIN 0 0 ;", f"  FOREIGN {module} 0 0 ;", f"  SIZE {w:.4f} BY {h:.4f} ;", "  SYMMETRY X Y ;"]
     for p in pins:
@@ -495,7 +521,8 @@ def contract_lef(module, w, h, pins, dirs, obs_top):
         x0 = min(max(float(p["x"]) - rw / 2, 0.0), w - rw)
         y0 = min(max(float(p["y"]) - rh / 2, 0.0), h - rh)
         d = dirs.get(p["name"]) or dirs.get(split_bit(p["name"])[0])
-        L += [f"  PIN {p['name']}", f"    DIRECTION {d} ;", "    USE SIGNAL ;", "    PORT", f"      LAYER {lay} ;",
+        use = "CLOCK" if p["name"] in clock_pins else "SIGNAL"
+        L += [f"  PIN {p['name']}", f"    DIRECTION {d} ;", f"    USE {use} ;", "    PORT", f"      LAYER {lay} ;",
               f"        RECT {x0:.4f} {y0:.4f} {x0 + rw:.4f} {y0 + rh:.4f} ;", "    END", f"  END {p['name']}"]
     # PG: vertical M5 stripes (M4 horizontal when the plan caps the core below M5), 4 per net, inside the outline
     vert = obs_top >= 5
@@ -810,7 +837,8 @@ def make(a):
             # = the S81 pgobs class of 11-03). A plan obs_max still overrides; a child signed above it re-routes (resign exit 4).
             obs = contract_obs_top(entry)
             if not plan_lef:
-                open(os.path.join(vd, m + ".lef"), "w").write(contract_lef(m, ow[0], ow[1], ppins, dirs, obs))
+                open(os.path.join(vd, m + ".lef"), "w").write(contract_lef(m, ow[0], ow[1], ppins, dirs, obs,
+                                                                             merged_clock_pins(t, entry.get("inst", ""))))
             clocks = core_insertion(t, entry.get("inst", ""), {p["name"] for p in ppins})
             for p in ppins:
                 if is_clock(p["name"]) and dirs.get(p["name"]) == "INPUT" and p["name"] not in clocks:

@@ -240,7 +240,11 @@ module ot_s81sl_rstopt_xo #(
             ofv_c[k] <= ofv_p && sp[1]; ofs_c[k] <= ofs_p && sp[2]; civ_c[k] <= cv_p && sp[3];
         end
         for (k = 0; k < NGVX; k = k + 1) begin vxE_c[k] <= vE_p && sp[4]; vxW_c[k] <= vW_p && sp[5]; end
-        for (k = 0; k < 3 * NGV; k = k + 1) vtc_c[k] <= vtc_p && sp[(k / 30 + 0) % NSP];
+        // S81-TYPES-7-LEC J3: the train capture enables are also 1 while the leaf is in reset (sp = 0), so vts reloads
+        // ci_q every reset edge.  vts is read only under vph_c (0 in reset, set by a vt_go after release), so reads are
+        // unchanged; a vts bit whose ci_b source is tied in the parent is then a constant proved in the reset window
+        // (was: free power-up value until the first train, folded by synthesis -> gold_only, NOT EQUIVALENT).
+        for (k = 0; k < 3 * NGV; k = k + 1) vtc_c[k] <= vtc_p || !sp[(k / 30 + 0) % NSP];
         for (k = 0; k < NGV; k = k + 1) begin                       // train phases: 1 on the edge after the ci edge
             vph_c[k] <= vt_go && sp[(k / 30 + 3) % NSP];
             vph_c[NGV + k] <= vph_c[k];
