@@ -640,7 +640,7 @@ module ot_svgr_rf2_skid #(parameter integer W=285, parameter integer MUT=0)(
   end
  end
 endmodule
-module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEPTH=8,parameter integer LBANKS=4,parameter integer LB=2,parameter integer MUT=0)(
+module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEPTH=8,parameter integer LBANKS=4,parameter integer LB=2,parameter integer MUT=0,parameter integer HEAD_REPL=0)(
  input wire [1:0] id_stack,input wire [2:0] id_sm,input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,input wire [3:0] hbm_pc_clk,
  input wire seam_res_v,input wire[96:0]seam_res_word,input wire seam_s_fault,output wire seam_h_fault,
  output reg [7:0] bk_in_v,output wire [2279:0] bk_in_data,input wire [7:0] bk_cr,
@@ -732,7 +732,22 @@ module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEP
   always @(posedge hbm_clk or negedge hrst)begin
    if(!hrst)begin gnt_q[g]<=0;lane_v_q[g]<=0;end else begin gnt_q[g]<=gnt;lane_v_q[g]<=lane_v[g];end
   end
-  wire [IW-1:0] h0=(MUT==11)?head_c[0]:head_q[0],h1=(MUT==11)?head_c[1]:head_q[1],h2=(MUT==11)?head_c[2]:head_q[2],h3=(MUT==11)?head_c[3]:head_q[3];
+  // HEAD_REPL is a source-preparation candidate, default off. Each lane captures
+  // the SAME PC head at the SAME existing edge. It removes the shared head-Q
+  // fanout from the eight lane muxes; physical regions/clock cost remain owed.
+  wire [IW-1:0] lane_head[0:3];
+  if(HEAD_REPL!=0)begin:g_head_rep
+   for(genvar hp=0;hp<4;hp=hp+1)begin:g_pc
+    (* keep *) reg [IW-1:0] q;
+    always @(posedge hbm_clk)q<=head_c[hp];
+    assign lane_head[hp]=q;
+   end
+  end else begin:g_head_shared
+   for(genvar hp=0;hp<4;hp=hp+1)begin:g_pc
+    assign lane_head[hp]=head_q[hp];
+   end
+  end
+  wire [IW-1:0] h0=(MUT==11)?head_c[0]:lane_head[0],h1=(MUT==11)?head_c[1]:lane_head[1],h2=(MUT==11)?head_c[2]:lane_head[2],h3=(MUT==11)?head_c[3]:lane_head[3];
   `ifdef OT_SVGR_OWN_RF3
   wire [3:0] lg=(MUT==16)?gnt:gnt_q[g];
   reg [IW-1:0] lane_d_q;
