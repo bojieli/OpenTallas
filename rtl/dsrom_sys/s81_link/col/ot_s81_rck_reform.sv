@@ -14,6 +14,13 @@
 // port 'ck' (ck_dly): equal to the lp decoder whenever ck_syn = ck_dly = ck_chn = ck_out (the only use).
 // Requires OT_S81_RCK_RELAY4 + OT_S81_KP4_AM_FACE3 + OT_S81_KP4_SYN_LOCAL (+ OT_S81_SERDES_COL_PIN for the TX core).
 // Lock-step proof vs the vJ column: results/s81_rck_11_reform_1108.
+// S81-TYPES-9-RCK 11-08 opt-in core forms (COORD 10:4x ruling; defaults unchanged):
+//   OT_S81_RCK_TX_PPCYC   TX vG : encoder PPCYC = +1 pin cycle ch_q -> pp (4 registered partial products); p_v/p_d +1 clk.
+//   OT_S81_RCK_RXS_THC    RXS   : RiBM THC = 1 (theta_45 reachable form; the HBM serdes_rx LEC class, 33 differs on th[45]).
+//   OT_S81_RCK_RX_SPCYC   RXS+RXB: dsyn SPCYC = +1 pin cycle sc_q -> sp; k_* +1 rck; ddly DD +1 (words wait one more), so
+//                         the decoder q_* output is +1 rck.  Both RX-SYN and RX-BACK kits (and the parent) carry it.
+//   OT_S81_RCK_RXB_DQREG  RXB vE: ddly RQ = 1, a register at the dmem read port with a one-word-earlier read: 0 cycles.
+//   Evidence: results/s81_types_9_rck_1108.
 // ---------------------------------------------------------------------------------------------------------------
 `ifdef OT_S81_RCK_REFORM
 `ifndef OT_S81_RCK_RELAY4
@@ -103,7 +110,14 @@ module ot_s81_rck_rxs (
     wire [543:0] p_d; wire p_v; wire [8:0] am;
     ot_pl_pad #(.W(554), .N(1)) u_face_in (.ck(ck), .d({i_am, i_v, i_d}), .q({am, p_v, p_d}));
     wire native_lock; wire [31:0] native_n_relock;
-    ot_s81_kp4_dsyn #(.PIN_X(1)) u_syn (.clk(ck), .rst_n(rst_n), .p_v(p_v), .p_d(p_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo), .k_L(k_L),
+    ot_s81_kp4_dsyn #(.PIN_X(1)
+`ifdef OT_S81_RCK_RXS_THC
+        , .BMTHC(1)
+`endif
+`ifdef OT_S81_RCK_RX_SPCYC
+        , .SPCYC(1)
+`endif
+        ) u_syn (.clk(ck), .rst_n(rst_n), .p_v(p_v), .p_d(p_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo), .k_L(k_L),
         .k_any(k_any), .lock(native_lock), .n_relock(native_n_relock), .am_face3(am));
 `ifdef RCKRF_MUT_LKFACE_SHORT
     assign lock = native_lock;
@@ -201,7 +215,13 @@ module ot_s81_rck_rxb #(
     wire lpr_c_u_dly;  ot_pl_pad #(.W(1), .N(3)) u_lprc_u_dly (.ck(ck), .d(lpr_dly), .q(lpr_c_u_dly));   // t(u_dly) = 3
     wire lpr_c_u_chn;  ot_pl_pad #(.W(1), .N(3)) u_lprc_u_chn (.ck(ck), .d(lpr_chn), .q(lpr_c_u_chn));   // t(u_chn) = 3
     wire lpr_c_u_out;  ot_pl_pad #(.W(1), .N(6)) u_lprc_u_out (.ck(ck), .d(lpr_out), .q(lpr_c_u_out));   // t(u_out) = 6
-    ot_s81_kp4_ddly u_dly (.clk(ck), .rst_n(lpr_c_u_dly), .w_d(x_q__l_dly), .r_d(d_q));   // region dly, t = 3
+    ot_s81_kp4_ddly #(
+`ifdef OT_S81_RCK_RXB_DQREG
+        .RQ(1)
+`else
+        .RQ(0)
+`endif
+        ) u_dly (.clk(ck), .rst_n(lpr_c_u_dly), .w_d(x_q__l_dly), .r_d(d_q));   // region dly, t = 3
     ot_s81_kp4_dchn u_chn (.clk(ck), .rst_n(lpr_c_u_chn), .k_v(k_v__l_chn), .k_lo(k_lo__l_chn), .k_L(k_L__l_chn), .k_any(k_any__l_chn), .cw_q(cw), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs), .n_corr(face_n_corr), .n_unc(face_n_unc));   // region chn, t = 3
     ot_s81_kp4_dout u_out (.clk(ck), .rst_n(lpr_c_u_out), .d_q(d_q__l_out), .cw(cw__l_out), .apply(apply__l_out), .o_unc(o_unc__l_out), .o_ne(o_ne__l_out), .fs(fs__l_out), .q_v(face_q_v), .q_d(face_q_d), .q_first(face_q_first), .q_unc(face_q_unc), .q_nerr(face_q_nerr), .q_seq(face_q_seq));   // region out, t = 6
     ot_pl_pad #(.W(1), .N(1)) u_face_q_v (.ck(ck), .d(face_q_v), .q(q_v));   // region out, t = 6

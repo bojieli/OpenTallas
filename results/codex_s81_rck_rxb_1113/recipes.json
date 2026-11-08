@@ -1,0 +1,15 @@
+{
+ "ot_s81_rck_rxb": {
+  "ref_tile": "results/codex_s81_rck_rxb_1113",
+  "rtl_dirs": true,
+  "util": 0.4,
+  "suffix": "vE_rq_local",
+  "route_m6": true,
+  "orfs_vars": {
+   "OT_SKIP_PRECTS_METRICS": 1,
+   "MAX_ROUTING_LAYER": "M7",
+   "PRE_GLOBAL_PLACE_TCL": "/work/rxb_locality_pre_gpl.tcl",
+   "PRE_DETAIL_PLACE_TCL": "/work/rxb_locality_pre_dpl.tcl"
+  }
+ }
+}

@@ -9,8 +9,14 @@
 //   ot_s81_kp4_dchn).  T = the cycle word 0 of a frame sits in x1.  Regional synchronous reset, no datapath reset.
 // MUT 3: the syndrome loop is not restarted at chunk 0 (stale syndromes) -- bench mutant of this tile.
 // BMTHC (opt-in, default 0): ot_s81_kp4_bm THC (theta_45 reachable form) in the RiBM units.
+// SPCYC (opt-in, default 0; S81-TYPES-9-RCK 11-08, COORD +1 pin cycle on the sc_q -> sp tree): the two syndrome window
+//   matrices are computed as FOUR registered partial products sq0..3 (ot_s81_kp4_syn_mat_q4.svh = the exact mask split of
+//   ot_s81_kp4_syn_mat.svh, cut at the 138-bit sc_q select copies) and sp0 = sq0 ^ sq1, sp1 = sq2 ^ sq3 one stage later.
+//   The S final stage, the RiBM load and the k_* results move one cycle (k_* +1 rck); x_q, lock and n_relock are
+//   unchanged.  The word delay tile must wait one more word: ot_s81_kp4_ddly DD +1 under OT_S81_RCK_RX_SPCYC.
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, parameter integer BMTHC = 0, parameter integer PIN_X = 0) (
+module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, parameter integer BMTHC = 0, parameter integer PIN_X = 0,
+    parameter integer SPCYC = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          p_v,
@@ -95,8 +101,23 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
     wire [299:0] s_ar, s_p0, s_p1;
     reg  [299:0] S_q, sp0, sp1;
 `include "ot_s81_kp4_syn_mat.svh"
-    always @(posedge clk) begin sp0 <= s_p0; sp1 <= s_p1; end
-    reg  [2:0] g0, g9;                   // chunk-0 / chunk-9 flags: [0] sc stage (T + c + 1), [1] sp stage, [2] S final
+    generate if (SPCYC != 0) begin : g_spc
+        // +1 pin cycle: four registered partial products, one per 138-bit sc_q select copy
+        wire [299:0] s_q0, s_q1, s_q2, s_q3;
+`include "ot_s81_kp4_syn_mat_q4.svh"
+        reg  [299:0] sq0, sq1, sq2, sq3;
+        always @(posedge clk) begin
+            sq0 <= s_q0; sq1 <= s_q1; sq2 <= s_q2; sq3 <= s_q3;
+`ifdef RCKRF_MUT_SPCYC
+            sp0 <= sq0 ^ sq1; sp1 <= sq2;        // bench mutant: partial 3 dropped
+`else
+            sp0 <= sq0 ^ sq1; sp1 <= sq2 ^ sq3;
+`endif
+        end
+    end else begin : g_sp
+        always @(posedge clk) begin sp0 <= s_p0; sp1 <= s_p1; end
+    end endgenerate
+    reg  [3:0] g0, g9;                   // chunk-0 / chunk-9 flags: [0] sc stage (T + c + 1), [1+P] sp stage, [2+P] S final
     (* keep *) reg [3:0] g0s;            // chunk-0 flag at the sp stage, 4 copies (75 S bits each)
     reg  [NBM-1:0] bsel;                 // round robin: the unit that takes the next frame
 `ifdef OT_S81_KP4_SYN_LOCAL
@@ -123,11 +144,11 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
             g0 <= 0; g9 <= 0; g0s <= 0; bsel <= {{(NBM-1){1'b0}}, 1'b1};
             for (i = 0; i < NBM; i = i + 1) ldr[i] <= {NGB{1'b0}};
         end else begin
-            g0 <= {g0[1:0], xs[0][0]};
-            g9 <= {g9[1:0], xs[0][9]};
-            g0s <= {4{g0[0]}};
-            for (i = 0; i < NBM; i = i + 1) ldr[i] <= {NGB{g9[1] && bsel[i]}};     // ld at T + 12 (S final)
-            if (g9[1]) bsel <= {bsel[NBM-2:0], bsel[NBM-1]};
+            g0 <= {g0[2:0], xs[0][0]};
+            g9 <= {g9[2:0], xs[0][9]};
+            g0s <= {4{g0[SPCYC]}};
+            for (i = 0; i < NBM; i = i + 1) ldr[i] <= {NGB{g9[1 + SPCYC] && bsel[i]}};     // ld at T + 12 (+SPCYC) (S final)
+            if (g9[1 + SPCYC]) bsel <= {bsel[NBM-2:0], bsel[NBM-1]};
         end
     generate for (gb = 0; gb < 300; gb = gb + 1) begin : g_S
         always @(posedge clk) S_q[gb] <= ((MUT != 3 && g0s[gb / 75]) ? 1'b0 : s_ar[gb]) ^ sp0[gb] ^ sp1[gb];  // MUT 3: no restart
@@ -145,7 +166,7 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
     always @(posedge clk)
         if (!rs_n[1]) for (i = 0; i < NBM; i = i + 1) ld2[i] <= {NGB{1'b0}};
 `ifdef SYNL_MUT_LD
-        else for (i = 0; i < NBM; i = i + 1) ld2[i] <= (i == 1) ? {NGB{g9[1] && bsel[i]}} : ldr[i];  // MUTANT: unit 1 loads a cycle early
+        else for (i = 0; i < NBM; i = i + 1) ld2[i] <= (i == 1) ? {NGB{g9[1 + SPCYC] && bsel[i]}} : ldr[i];  // MUTANT: unit 1 loads a cycle early
 `else
         else for (i = 0; i < NBM; i = i + 1) ld2[i] <= ldr[i];
 `endif

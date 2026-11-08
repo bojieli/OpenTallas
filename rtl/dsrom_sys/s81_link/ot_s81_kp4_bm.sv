@@ -37,7 +37,10 @@ module ot_s81_kp4_bm #(parameter integer NG = 4, parameter integer NCD = 4, para
 );
     localparam integer NPE = 46, GS = (NPE + NG - 1) / NG;   // 12 at NG 4 (unchanged); 6 at NG 8 (S81-RCK-10 vJ)
     reg  [9:0] d  [0:NPE-1];
-    reg  [9:0] th [0:NPE-1];
+    reg  [9:0] th [0:((THC != 0) ? NPE-2 : NPE-1)];
+    // Reachable theta45 stores only bit0: upper bits are always zero after the first load.
+    // No never-reset constant-D tail flops exist in this opt-in form.
+    reg th_last;
     (* keep *) reg [9:0] gm [0:NG-1];      // gamma copies
     (* keep *) reg [9:0] dz [0:NG-1];      // delta_0 copies
     (* keep *) reg [5:0] kc [0:NG-1];      // k copies (two's complement)
@@ -61,15 +64,22 @@ module ot_s81_kp4_bm #(parameter integer NG = 4, parameter integer NCD = 4, para
         end
         for (gi = gg * GS; gi < ((gg == NG - 1) ? NPE : (gg + 1) * GS); gi = gi + 1) begin : g_pe
             wire [9:0] Dn = ld[gg] ? dinit(gi + 1) : ((gi + 1 < NPE) ? d[(gi + 1 < NPE) ? gi + 1 : 0] : 10'd0);
-            wire [9:0] thq = (THC != 0 && gi == NPE - 1) ? {9'd0, th[gi][0]} : th[gi];   // THC: theta_45 in {0, 1}
+            wire [9:0] thq;
+            if (THC != 0 && gi == NPE-1) begin:g_tail_read
+                assign thq={9'd0,th_last};
+            end else begin:g_normal_read
+                assign thq=th[gi];
+            end
             wire [9:0] Th = ld[gg] ? dinit(gi) : thq;
             wire [9:0] pa, pb;
             ot_s81_kp4_vmul u_a (.a(G),  .b(Dn), .y(pa));
             ot_s81_kp4_vmul u_b (.a(D0), .b(Th), .y(pb));
             assign nd[gi] = pa ^ pb;
-            always @(posedge clk) begin
-                d[gi]  <= nd[gi];
-                th[gi] <= upd[gg] ? Dn : Th;
+            always @(posedge clk) d[gi] <= nd[gi];
+            if (THC != 0 && gi == NPE-1) begin:g_tail_write
+                always @(posedge clk) th_last <= upd[gg] ? Dn[0] : Th[0];
+            end else begin:g_normal_write
+                always @(posedge clk) th[gi] <= upd[gg] ? Dn : Th;
             end
         end
     end endgenerate
