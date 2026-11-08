@@ -2113,6 +2113,19 @@ def check_r8(P, R, plan_dir=None, groups=None, landing=None):
     if groups is None:
         if pd is None:
             return dict(checked=False)
+        # DIE-HBM-92-LCHK: a bind output beside the plan that adds stages to as-built 0-stage crossings makes a
+        # missing bus_groups.json an ERROR (the HBM wave never ran R8; 303 torn groups passed as a WARN)
+        lat = next((q for d in (pd, pd / "r8", pd / "bind") for q in (d / "bind_latency.json", d / "bind_latency.json.gz")
+                    if q.exists()), None)
+        if lat is not None:
+            import gzip
+            with (gzip.open(lat, "rt") if lat.suffix == ".gz" else open(lat)) as f:
+                buses = json.load(f).get("buses", [])
+            adds = [b for b in buses if b.get("delta", 0) > 0 and min(b.get("asbuilt_stages") or [0]) == 0]
+            if adds:
+                R.err("r8", f"R8 not checked: {lat} shows the bind adds stages to {len(adds)} as-built 0-stage crossing "
+                      "buses but no bus_groups.json is beside it (pass --groups; bind.py writes it)")
+                return dict(checked=False, bind_latency=str(lat), adds=len(adds))
         R.warn("r8", "R8 not checked: no as-built bus groups (BINDER2 bind.py bus_groups.json; pass --groups)")
         return dict(checked=False)
     bg = json.loads(Path(groups).read_text())
