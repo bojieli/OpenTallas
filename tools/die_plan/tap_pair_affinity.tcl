@@ -32,6 +32,8 @@ namespace eval ::ot_tap_pair {
     if {![$it isInputSignal]} continue
     set inst [$it getInst]; set m [$inst getMaster]
     if {[$m isBlock] || ![string match {DFF*} [$m getName]] || [[$it getMTerm] getName] ni {CLK CLKN}} continue
+    # reset relays / synchronisers belong to their tap (reset_taps.tcl): never move them
+    if {[regexp {(^|[/.])(u_rsync_t[0-9]+|u_rst_root|u_rst_in|u_run_root|u_run_in|u_[rs]rl_[0-9]+(_[rgb])?)[/.]} [$inst getName]]} continue
     # A named-chain form owns those clocks, including long coherent runs that
     # this short-pair graph does not enumerate.  Never tear its separate cohort.
     if {[info exists ::env(OT_TAP_CHAIN_AFFINITY)] && $::env(OT_TAP_CHAIN_AFFINITY) eq "1" &&
@@ -54,13 +56,9 @@ namespace eval ::ot_tap_pair {
     foreach net $front {
      if {[dict exists $seen [$net getName]]} continue
      dict set seen [$net getName] 1
-     # v2: a register's own Q net with more than 64 loads (a reset relay) still pairs with the
-     # registers whose RESETN/SETN it drives (vPAC: rrl_165 -> q_bad was same-tap -2.9 ps, cut to -70.67).
-     set big [expr {[llength [$net getITerms]] > 64}]
-     if {$big && $d > 0} continue
+     if {[llength [$net getITerms]] > 64} continue
      foreach s [$net getITerms] {
       if {![$s isInputSignal]} continue
-      if {$big && [[$s getMTerm] getName] ni {RESETN SETN}} continue
       set si [$s getInst]; set sm [$si getMaster]
       if {[$sm isBlock]} continue
       if {[$sm isSequential]} {
