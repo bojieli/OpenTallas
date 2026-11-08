@@ -220,3 +220,9 @@ def test_split_projection_preserves_explicit_master_and_subpath(tmp_path):
     placed = gen_phys.pg_placed_blocks(projected["partition_types"]["T"])
     assert len(placed) == 1 and placed[0]["inst"] == c["inst"]
     assert placed[0]["sub_core_parent"] == "u_lk_N2"
+    kd = tmp_path / "physical_kit"
+    kd.mkdir()
+    (kd / BMP.RECEIPT).write_text(json.dumps(receipts["T"]))
+    entries = {c["physical_inst"]: dict(c, inst=c["physical_inst"])}
+    over = BMP.overlay(kd, entries)
+    assert over["u_bound.u_u_lk_N2.u_fcore.u_core.u_rx.u_bm0"]["module"] == c["physical_master"]

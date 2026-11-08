@@ -219,7 +219,7 @@ def overlay(kd, entries):
     if not p.is_file():
         return entries
     for r in json.loads(p.read_text()).get("rows", []):
-        e = entries.get(r["inst"])
+        e = entries.get(r["inst"]) or entries.get(r.get("source_physical_inst"))
         if e is not None and r["physical_inst"] not in entries:
             entries[r["physical_inst"]] = dict(e, inst=r["physical_inst"], module=r["physical_master"])
     return entries
