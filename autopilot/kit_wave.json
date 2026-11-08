@@ -8632,7 +8632,8 @@
         "vsN2@1",
         "q_su01@3",
         "q_su01__physical_v1@3",
-        "q_su11@3"
+        "q_su11@3",
+        "q_b013__physical_v1@2"
       ],
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -8660,7 +8661,6 @@
         "ot_hgi_sfu_core_split3__opstore_b": "KW-FIX-11 07:0x COORD 07:01: stopped 06:51 by ruling, part 27 replaces (HBM-FORM-SPLIT 06:51); autopilot revived it on exit 137; no relaunch",
         "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch",
         "q_b013": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013 (intel1 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013_a3R); release after it ends or after ROOT-MERGE-52 lands the fix",
-        "q_b013__physical_v1": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013pv1 (epyc4 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013__physical_v1_a2R); release after it ends or after ROOT-MERGE-52 lands the fix",
         "NW_io": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for hfd_ep_static_vc2 + hfd_ep_host_vc (HBM-HARD-6-EP) and ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)",
         "NE_io": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)",
         "q_spb0": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)",
@@ -8824,7 +8824,8 @@
         "vsN2@1": "KW-FIX-35-B 2026-11-08 06:54 PST: REDESIGN: plan event plan_hbm_1108c (a337411c3a25: EP-MOD-1108 NW_io, FTLK v2 FT hop latches, RLK reset hop latches) on claude/die-hbm-92-int-1108@cad9c038fb (+RLK bind path 14aca37706) + providx 9ba1e6f86e2, bind_c strict rc0; DIE-HBM-92 GO 06:40, wave-order dry rc0 (epyc6 die-hbm-92/dry_c, die-hbm-92-rlk/dry_c); fresh kit",
         "q_su01@3": "KW-FIX-35-B 2026-11-08 07:08 PST: KW-PROV-1 class fix claude/kw-fix-35-providx-1108@9ba1e6f86e2 (prov_view git grep under .gitignore '*': contract pin directions) now in HBM src kw35/src_cad9p; a3 ran on src_0b72p without it; fresh kit",
         "q_su01__physical_v1@3": "KW-FIX-35-B 2026-11-08 07:08 PST: KW-PROV-1 class fix claude/kw-fix-35-providx-1108@9ba1e6f86e2 (prov_view git grep under .gitignore '*': contract pin directions) now in HBM src kw35/src_cad9p; a3 ran on src_0b72p without it; fresh kit",
-        "q_su11@3": "KW-FIX-35-B 2026-11-08 07:08 PST: KW-PROV-1 class fix claude/kw-fix-35-providx-1108@9ba1e6f86e2 (prov_view git grep under .gitignore '*': contract pin directions) now in HBM src kw35/src_cad9p; a3 ran on src_0b72p without it; fresh kit"
+        "q_su11@3": "KW-FIX-35-B 2026-11-08 07:08 PST: KW-PROV-1 class fix claude/kw-fix-35-providx-1108@9ba1e6f86e2 (prov_view git grep under .gitignore '*': contract pin directions) now in HBM src kw35/src_cad9p; a3 ran on src_0b72p without it; fresh kit",
+        "q_b013__physical_v1@2": "KW-FIX-35 2026-11-08 07:53 PST: BB-PORT-FOLD class proven: private resume kw35L-lec-qb013pv1 LEC EQUIVALENT 120617/120617 with lec.py d25a79da9f; it then hit the final-DPL residual (2 overlaps, DPL-0033 @3_5) because the copied a2 kit predates 20cff21bab. Fresh kit on src_cad9p (has d25a79da9f + 20cff21bab)"
       },
       "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
       "item_args_rf1prev": {
@@ -9968,7 +9969,10 @@
         "q_spb0",
         "q_spb0__physical_v1",
         "vsN0"
-      ]
+      ],
+      "hold_items_prev_kw35h8": {
+        "q_b013__physical_v1": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013pv1 (epyc4 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013__physical_v1_a2R); release after it ends or after ROOT-MERGE-52 lands the fix"
+      }
     }
   },
   "place_prefer": [
