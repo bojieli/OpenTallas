@@ -10,3 +10,5 @@ Actual installed OpenROAD 26Q3-1510-g6cb3f2b704 probes, originals mounted read-o
 - t51 E5 /srv/opentallas-scratch3/claude/codex-eco-prerouted-1113/probe.log: full pin_access COMPLETE past prior DRT-0415; 121148 originals restored. This exposed legitimate transient wire creation by FlexPA; initial diagnostic rejected it AFTER restoration. Corrected helper discards transient objects and preserves originals; focused test covers this case. A reduced actual offending-clk vehicle is queued under E5 .../a2 (normal admission), so its original failed diagnostic remains intact.
 
 No ECO has been launched by this lane. S81 owns t51's unused one-ECO allowance; HBM owns vecd's. No override, rerun of a healthy proof, merge/tag/POR edit or live source mutation.
+
+Corrected native t51 reduced actual-clk probe PASS: E5 .../a2/probe.log, pin_access1s,754MB, original clk dbWire and raw opcode/data tokens exact; one FlexPA transient wire discarded. This closes the pending confirmation noted above.
