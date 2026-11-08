@@ -28,6 +28,14 @@ python3 -I "$HERE/image_params.py" image "$OV" "$PLAN" "$TYPE" > "$OUT/image_par
 INST=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["instance"] or "")' "$OUT/image_params.json")
 python3 -I tools/die_plan/bind.py kit-rtl "$PLAN" --out "$OV" --asbuilt "$ASBUILT" --type "$TYPE" --kit "$OUT" \
     ${INST:+--instance "$INST"}
+# S81-TYPES-9-LEC 11-08: the leaf closure above reads the S81_ASBUILT manifest's own (frozen) source tree, so a leaf-file
+# class fix on main never reached a kit (class J2/J3 relaunches carried the old xs_ctl / xs4 / rstopt_xo).  Opt-in
+# S81_LEAF_FOLLOW = space-separated repo-relative leaf files taken from this wave source instead (same module names,
+# fail closed; recorded in kit_rtl.json leaf_follow).  Unset = unchanged.
+if [ -n "${S81_LEAF_FOLLOW:-}" ]; then
+    # shellcheck disable=SC2086
+    python3 -I "$HERE/image_params.py" follow "$OUT" "$PWD" $S81_LEAF_FOLLOW
+fi
 # COORD 07:34 (5), S81 svc plan event (delta_svc_band_1104): every svc type closes its native memories to the MEM v2
 # macros the plan places (T7 class port + idx fit, tools/die_plan/s81_svc_memory_closure.py); other types do not apply.
 case "$TYPE" in

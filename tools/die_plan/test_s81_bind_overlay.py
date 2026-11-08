@@ -42,5 +42,53 @@ class Overlay(unittest.TestCase):
                 IP.overlay(new, root, ov)
 
 
+class Follow(unittest.TestCase):
+    """S81-TYPES-9-LEC 11-08: S81_LEAF_FOLLOW takes a listed leaf file from the wave source, nothing else."""
+
+    def setup(self, root, new_text="module m (input a); endmodule\n"):
+        base, src, out = root / "base", root / "src", root / "out"
+        for d in (base / "rtl", src / "rtl", out):
+            d.mkdir(parents=True)
+        (base / "rtl" / "x.sv").write_text("module m (input a); /* old */ endmodule\n")
+        (base / "rtl" / "y.sv").write_text("module n; endmodule\n")
+        (src / "rtl" / "x.sv").write_text(new_text)
+        (src / "rtl" / "y.sv").write_text("module n; /* newer, not listed */ endmodule\n")
+        files = [str(base / "rtl" / "x.sv"), str(base / "rtl" / "y.sv")]
+        (out / "kit_rtl.f").write_text("\n".join(files) + "\n")
+        (out / "kit_rtl_sim.f").write_text("\n".join(files) + "\n")
+        (out / "kit_rtl.json").write_text(json.dumps({"unindexed_sources": {"m": files[0], "n": files[1]}}))
+        return base, src, out
+
+    def test_listed_file_follows_the_wave_source(self):
+        with tempfile.TemporaryDirectory() as td:
+            base, src, out = self.setup(Path(td))
+            res = IP.follow(out, src, ["rtl/x.sv", "rtl/not_in_this_type.sv"])
+            self.assertEqual(res["followed"], 1)
+            for fl in ("kit_rtl.f", "kit_rtl_sim.f"):
+                self.assertEqual((out / fl).read_text().split(),
+                                 [str((src / "rtl" / "x.sv").resolve()), str(base / "rtl" / "y.sv")])
+            r = json.loads((out / "kit_rtl.json").read_text())
+            self.assertEqual(r["unindexed_sources"]["m"], str((src / "rtl" / "x.sv").resolve()))
+            self.assertEqual(r["unindexed_sources"]["n"], str(base / "rtl" / "y.sv"))
+            (row,) = r["leaf_follow"]["files"]
+            self.assertEqual((row["file"], row["was"]), ("rtl/x.sv", str(base / "rtl" / "x.sv")))
+            self.assertNotEqual(row["was_sha256"], row["now_sha256"])
+
+    def test_module_set_change_fails_closed(self):
+        with tempfile.TemporaryDirectory() as td:
+            base, src, out = self.setup(Path(td), new_text="module m2 (input a); endmodule\n")
+            before = (out / "kit_rtl.f").read_text()
+            with self.assertRaisesRegex(IP.KitError, "defines"):
+                IP.follow(out, src, ["rtl/x.sv"])
+            self.assertEqual((out / "kit_rtl.f").read_text(), before)
+
+    def test_missing_in_wave_source_fails_closed(self):
+        with tempfile.TemporaryDirectory() as td:
+            base, src, out = self.setup(Path(td))
+            (src / "rtl" / "x.sv").unlink()
+            with self.assertRaisesRegex(IP.KitError, "not in"):
+                IP.follow(out, src, ["rtl/x.sv"])
+
+
 if __name__ == "__main__":
     unittest.main()

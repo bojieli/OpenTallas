@@ -15,6 +15,14 @@ overlay BIND_OUT SRC OV     -> OV = BIND_OUT entries (symlinks) + bind.f and bin
     preferred sources (bindf_prefer, extra_lib) are the files the bind listed: without it bind.f entries are
     silently dropped and a dead extra_lib entry stops kit-rtl.  A rewritten path
     missing in SRC fails closed.  Paths that exist are kept byte-for-byte.
+
+follow  OUT SRC REL...      -> S81-TYPES-9-LEC 11-08 (class J relaunch): kit-rtl closes the leaf RTL in the asbuilt
+    manifest's own source tree (S81_ASBUILT base = the frozen native source), so a leaf-file class fix landed on main
+    never reached the kits (J2 ot_s81sl_xs_ctl.sv b28dc6669c0, J3 ot_s81sl_xs4.sv / ot_s81sl_rstopt_xo.sv 4a80ce2d3c7:
+    the relaunched kits carried the old bytes and failed LEC again).  Each listed repo-relative leaf file that the
+    type's OUT/kit_rtl.f (and kit_rtl_sim.f) names is taken from SRC (the wave source checkout) instead; the module
+    names it defines must be identical in both files (else fail closed).  A listed file the type does not use is not
+    touched.  Recorded in OUT/kit_rtl.json leaf_follow (was / now path + sha256).
 """
 import hashlib
 import json
@@ -149,9 +157,55 @@ def overlay(out, src, ov):
     return dict(bind_out=str(out), overlay=str(ov), entries=len(lines), rewritten=len(rew))
 
 
+MODULE_RE = re.compile(r"^\s*(?:\(\*.*?\*\)\s*)?module\s+(\w+)", re.M)
+
+
+def follow(out, src, rels):
+    out, src = Path(out), Path(src).resolve()
+    rels = [r.strip("/") for r in rels if r.strip("/")]
+
+    def mods(p):
+        return sorted(set(MODULE_RE.findall(Path(p).read_text(errors="replace"))))
+
+    def sha(p):
+        return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+    rows, moved = [], {}
+    for fl in ("kit_rtl.f", "kit_rtl_sim.f"):
+        f = out / fl
+        if not f.is_file():
+            continue
+        new = []
+        for ln in f.read_text().splitlines():
+            x = ln.strip()
+            rel = next((r for r in rels if x == r or x.endswith("/" + r)), None)
+            if rel is None or Path(x).resolve() == (src / rel).resolve():
+                new.append(ln)
+                continue
+            now = src / rel
+            if not now.is_file():
+                raise KitError(f"follow: {rel} is not in {src}")
+            if mods(x) != mods(now):
+                raise KitError(f"follow: {rel} defines {mods(now)} in {src} but {mods(x)} in {x}")
+            if x not in moved:
+                moved[x] = str(now)
+                rows.append(dict(file=rel, was=x, now=str(now), was_sha256=sha(x), now_sha256=sha(now)))
+            new.append(str(now))
+        f.write_text("\n".join(new) + ("\n" if new else ""))
+    kj = out / "kit_rtl.json"
+    r = json.loads(kj.read_text())
+    if isinstance(r.get("unindexed_sources"), dict):
+        r["unindexed_sources"] = {k: moved.get(v, v) for k, v in r["unindexed_sources"].items()}
+    r["leaf_follow"] = dict(rule="S81-TYPES-9-LEC 11-08: listed leaf files from the wave source (S81_LEAF_FOLLOW)",
+                            src=str(src), listed=rels, files=rows)
+    kj.write_text(json.dumps(r, indent=1))
+    return dict(src=str(src), listed=len(rels), followed=len(rows))
+
+
 def main(argv):
     try:
-        if len(argv) == 4 and argv[0] == "image":
+        if len(argv) >= 3 and argv[0] == "follow":
+            print(json.dumps(follow(argv[1], argv[2], argv[3:])))
+        elif len(argv) == 4 and argv[0] == "image":
             print(json.dumps(image_choice(*argv[1:])))
         elif len(argv) == 4 and argv[0] == "overlay":
             print(json.dumps(overlay(*argv[1:])))
