@@ -8154,8 +8154,8 @@
       "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
       "plan": "/srv/opentallas-scratch2/claude/die-hbm-92/plan_hbm_1108d/die_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_cad9su2",
-      "src_sha": "1efcca6ba356344e9296a69d4c6a419898261a10",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_cad9su4",
+      "src_sha": "3dee975eb6c82c837d3eec1d28731f35eb610a23",
       "gate": {
         "g0c": "PASS",
         "bind": "PASS",
@@ -8760,7 +8760,15 @@
         "q_su30@2",
         "q_su30__physical_v1@2",
         "q_su31@4",
-        "q_su31__physical_v1@4"
+        "q_su31__physical_v1@4",
+        "q_b000@3",
+        "q_b000__physical_v1@3",
+        "q_b001@3",
+        "q_b001__physical_v1@3",
+        "q_su01@4",
+        "q_su01__physical_v1@4",
+        "q_su11@4",
+        "q_su11__physical_v1@2"
       ],
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -8961,7 +8969,15 @@
         "q_su30@2": "REDESIGN: KW-FIX-35-B 2026-11-08 08:31 PST: SU SPLIT NOT BOUND AS SPLIT class fix (DIE-HBM-92-SU compose_split, asbuilt_p37su) on plan_hbm_1108d; fresh kit",
         "q_su30__physical_v1@2": "REDESIGN: KW-FIX-35-B 2026-11-08 08:31 PST: SU SPLIT NOT BOUND AS SPLIT class fix (DIE-HBM-92-SU compose_split, asbuilt_p37su) on plan_hbm_1108d; fresh kit",
         "q_su31@4": "REDESIGN: KW-FIX-35-B 2026-11-08 08:31 PST: SU SPLIT NOT BOUND AS SPLIT class fix (DIE-HBM-92-SU compose_split, asbuilt_p37su) on plan_hbm_1108d; fresh kit",
-        "q_su31__physical_v1@4": "REDESIGN: KW-FIX-35-B 2026-11-08 08:31 PST: SU SPLIT NOT BOUND AS SPLIT class fix (DIE-HBM-92-SU compose_split, asbuilt_p37su) on plan_hbm_1108d; fresh kit"
+        "q_su31__physical_v1@4": "REDESIGN: KW-FIX-35-B 2026-11-08 08:31 PST: SU SPLIT NOT BOUND AS SPLIT class fix (DIE-HBM-92-SU compose_split, asbuilt_p37su) on plan_hbm_1108d; fresh kit",
+        "q_b000@3": "REDESIGN: KW-FIX-35-B 2026-11-08 08:56 PST: SU split / pre-split hb_idx bound-child class fix (DIE-HBM-92-SU compose_split, asbuilt_p37su4 + bind_x) on plan_hbm_1108d; fresh kit",
+        "q_b000__physical_v1@3": "REDESIGN: KW-FIX-35-B 2026-11-08 08:56 PST: SU split / pre-split hb_idx bound-child class fix (DIE-HBM-92-SU compose_split, asbuilt_p37su4 + bind_x) on plan_hbm_1108d; fresh kit",
+        "q_b001@3": "REDESIGN: KW-FIX-35-B 2026-11-08 08:56 PST: SU split / pre-split hb_idx bound-child class fix (DIE-HBM-92-SU compose_split, asbuilt_p37su4 + bind_x) on plan_hbm_1108d; fresh kit",
+        "q_b001__physical_v1@3": "REDESIGN: KW-FIX-35-B 2026-11-08 08:56 PST: SU split / pre-split hb_idx bound-child class fix (DIE-HBM-92-SU compose_split, asbuilt_p37su4 + bind_x) on plan_hbm_1108d; fresh kit",
+        "q_su01@4": "REDESIGN: KW-FIX-35-B 2026-11-08 08:56 PST: SU split / pre-split hb_idx bound-child class fix (DIE-HBM-92-SU compose_split, asbuilt_p37su4 + bind_x) on plan_hbm_1108d; fresh kit",
+        "q_su01__physical_v1@4": "REDESIGN: KW-FIX-35-B 2026-11-08 08:56 PST: SU split / pre-split hb_idx bound-child class fix (DIE-HBM-92-SU compose_split, asbuilt_p37su4 + bind_x) on plan_hbm_1108d; fresh kit",
+        "q_su11@4": "REDESIGN: KW-FIX-35-B 2026-11-08 08:56 PST: SU split / pre-split hb_idx bound-child class fix (DIE-HBM-92-SU compose_split, asbuilt_p37su4 + bind_x) on plan_hbm_1108d; fresh kit",
+        "q_su11__physical_v1@2": "REDESIGN: KW-FIX-35-B 2026-11-08 08:56 PST: SU split / pre-split hb_idx bound-child class fix (DIE-HBM-92-SU compose_split, asbuilt_p37su4 + bind_x) on plan_hbm_1108d; fresh kit"
       },
       "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
       "item_args_rf1prev": {
@@ -9574,9 +9590,9 @@
       "kit_rtl_prev_kw32": null,
       "kit_rtl": {
         "mode": "bind",
-        "asbuilt": "/srv/opentallas-scratch2/claude/die-hbm-92-su/ab/asbuilt_p37su.json",
-        "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-92-su/bind_d",
-        "note": "KW-FIX-35-B 2026-11-08 08:31 PST: DIE-HBM-92-SU 08:25 READY+LAUNCH (DIE-HBM-92 approved): plan_hbm_1108d (2215e1f59a33) + bind die-hbm-92-su/bind_d (= 1108d bind + SU split; bind_report 19d96bfc09ec, staged epyc4/5/6 intel1 epyc2, NOT intel2; gen_hosts intel1/epyc4/epyc6) + asbuilt_p37su (cfe0bb6f1b4c); src kw35/src_cad9su2 = src_cad9p (cad9c038fb + providx 9ba1e6f86e2) + claude/die-hbm-92-su-1108@1efcca6ba3 (7 files, read-only tree); revert = *_prev_kw35h"
+        "asbuilt": "/srv/opentallas-scratch2/claude/die-hbm-92-su/ab/asbuilt_p37su4.json",
+        "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-92-su/exp/bind_x",
+        "note": "KW-FIX-35-B 2026-11-08 08:56 PST: DIE-HBM-92-SU families 2 (hb_idx h0) + SU Q0/Q1 lane_exp READY (DIE-HBM-92 approved): plan_hbm_1108d unchanged; kit_rtl -> die-hbm-92-su/exp/bind_x (bcedb678ba21; q_b000/001 + q_su2x/3x .sv = bind_d3; staged epyc4/5/6 intel1 epyc2, NOT intel2) + asbuilt_p37su4 (b5f571c95d69, superset of p37su/p37su3); src kw35/src_cad9su4 = src_cad9p (cad9c038fb + providx 9ba1e6f86e2) + claude/die-hbm-92-su-exp-1108@3dee975eb6 (17 files, read-only); running q_su2x/3x rows keep their bind_d spec (same plan blocks, no supersede); q_su00/q_su10 not retried (wait on plan event); revert = *_prev_kw35i"
       },
       "gen_hosts_prev_kw32g": [
         "intel1",
@@ -10131,6 +10147,26 @@
       ],
       "hold_items_added_kw35h": [
         "ot_hfd_coll_q3_vm_core"
+      ],
+      "plan_prev_kw35i": "/srv/opentallas-scratch2/claude/die-hbm-92/plan_hbm_1108d/die_plan.json",
+      "src_prev_kw35i": "/srv/opentallas-scratch2/claude/kw35/src_cad9su2",
+      "src_sha_prev_kw35i": "1efcca6ba356344e9296a69d4c6a419898261a10",
+      "kit_rtl_prev_kw35i": {
+        "mode": "bind",
+        "asbuilt": "/srv/opentallas-scratch2/claude/die-hbm-92-su/ab/asbuilt_p37su.json",
+        "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-92-su/bind_d",
+        "note": "KW-FIX-35-B 2026-11-08 08:31 PST: DIE-HBM-92-SU 08:25 READY+LAUNCH (DIE-HBM-92 approved): plan_hbm_1108d (2215e1f59a33) + bind die-hbm-92-su/bind_d (= 1108d bind + SU split; bind_report 19d96bfc09ec, staged epyc4/5/6 intel1 epyc2, NOT intel2; gen_hosts intel1/epyc4/epyc6) + asbuilt_p37su (cfe0bb6f1b4c); src kw35/src_cad9su2 = src_cad9p (cad9c038fb + providx 9ba1e6f86e2) + claude/die-hbm-92-su-1108@1efcca6ba3 (7 files, read-only tree); revert = *_prev_kw35h"
+      },
+      "note_src_kw35i": "KW-FIX-35-B 2026-11-08 08:56 PST: DIE-HBM-92-SU families 2 (hb_idx h0) + SU Q0/Q1 lane_exp READY (DIE-HBM-92 approved): plan_hbm_1108d unchanged; kit_rtl -> die-hbm-92-su/exp/bind_x (bcedb678ba21; q_b000/001 + q_su2x/3x .sv = bind_d3; staged epyc4/5/6 intel1 epyc2, NOT intel2) + asbuilt_p37su4 (b5f571c95d69, superset of p37su/p37su3); src kw35/src_cad9su4 = src_cad9p (cad9c038fb + providx 9ba1e6f86e2) + claude/die-hbm-92-su-exp-1108@3dee975eb6 (17 files, read-only); running q_su2x/3x rows keep their bind_d spec (same plan blocks, no supersede); q_su00/q_su10 not retried (wait on plan event); revert = *_prev_kw35i",
+      "retry_prev_kw35i_added": [
+        "q_b000@3",
+        "q_b000__physical_v1@3",
+        "q_b001@3",
+        "q_b001__physical_v1@3",
+        "q_su01@4",
+        "q_su01__physical_v1@4",
+        "q_su11@4",
+        "q_su11__physical_v1@2"
       ]
     }
   },
