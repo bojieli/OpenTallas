@@ -6453,7 +6453,9 @@
         "tailx_sk_step0": "KW-FIX-8 23:2x DIE-HBM-66: Sinkhorn A event, do not requeue",
         "tailx_sk_steady": "KW-FIX-8 23:2x DIE-HBM-66: Sinkhorn A event, do not requeue",
         "ot_hgi_sfu_core_split3__opstore_b": "KW-FIX-11 07:0x COORD 07:01: stopped 06:51 by ruling, part 27 replaces (HBM-FORM-SPLIT 06:51); autopilot revived it on exit 137; no relaunch",
-        "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch"
+        "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch",
+        "q_spu0__physical_v1": "KW-FIX-32 2026-11-07 20:40 PST: GEN_LINT RTL FAIL a1 on src_cc346 (rtl_check: Module not found); the src move to a663d alone would relaunch it (gen-stage FAIL inputs carry src); held for DIE-HBM-90 / the HBM bind lane, no blind retry",
+        "q_spu1__physical_v1": "KW-FIX-32 2026-11-07 20:40 PST: GEN_LINT RTL FAIL a1 on src_cc346 (rtl_check: Module not found); the src move to a663d alone would relaunch it (gen-stage FAIL inputs carry src); held for DIE-HBM-90 / the HBM bind lane, no blind retry"
       },
       "gen_hosts": [
         "epyc4",
