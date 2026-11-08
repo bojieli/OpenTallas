@@ -311,7 +311,7 @@ watch)
     while IFS= read -r b; do [ -z "$b" ] || VOL+=(-v "$b"); done < <($DK inspect -f '{{range .HostConfig.Binds}}{{println .}}{{end}}' "$NAME" 2>/dev/null)
     [ ${#VOL[@]} -gt 0 ] || VOL=(-v "$K:/work")
     while IFS= read -r e; do case $e in ''|HOSTNAME=*) ;; *) ENVS+=(-e "$e");; esac; done < <($DK inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$NAME" 2>/dev/null)
-    for v in OT_LEC_HINTS_PRESEED OT_LEC_EARLY_COMPARE OT_LEC_SUPERSET_VEC OT_LEC_RESET_CYCLES OT_LEC_REPLICA_MATCH OT_LEC_MEM_LANES OT_LEC_ENABLE_FILL_GUARD; do [ -z "${!v+x}" ] || ENVS+=(-e "$v=${!v}"); done
+    for v in OT_LEC_HINTS_PRESEED OT_LEC_EARLY_COMPARE OT_LEC_SUPERSET_VEC OT_LEC_RESET_CYCLES OT_LEC_REPLICA_MATCH OT_LEC_MEM_LANES OT_LEC_ENABLE_FILL_GUARD OT_LEC_PARITY_TERMS; do [ -z "${!v+x}" ] || ENVS+=(-e "$v=${!v}"); done
     # a stopped leftover of this kit's own earlier unit only (a recycled name of another kit is never removed)
     if $DK inspect -f '{{range .Mounts}}{{println .Source}}{{end}}' "$UN" 2>/dev/null | grep -Fqx -- "$K"; then $DK rm -f "$UN" > /dev/null 2>&1; fi
     rm -f "$K/lec_async.unit_rc"
@@ -332,8 +332,11 @@ watch)
     if [ -f "$K/lec_async.unit_rc" ]; then lr=$(cat "$K/lec_async.unit_rc"); else NOV=1; fi
     [ ! -f "$K/lec_async.abort" ] || $DK rm -f "$UN" > /dev/null 2>&1
   else
+  PARITY_ENV=()
+  [ -z "${OT_LEC_PARITY_TERMS+x}" ] || PARITY_ENV=(-e "OT_LEC_PARITY_TERMS=$OT_LEC_PARITY_TERMS")
   $DK exec \
     -e OT_LEC_HINTS_PRESEED -e OT_LEC_EARLY_COMPARE -e OT_LEC_SUPERSET_VEC -e OT_LEC_RESET_CYCLES \
+    "${PARITY_ENV[@]}" \
     -w /OpenROAD-flow-scripts/flow "$NAME" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $RUN; r=\$?; chown -R $(id -u):$(id -g) /work/lec /work/lec_run.log 2>/dev/null; exit \$r" \
     >> "$K/lec_async.log" 2>&1
   lr=$?
