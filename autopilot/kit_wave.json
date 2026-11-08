@@ -2361,7 +2361,16 @@
         "slice_station__t22@11",
         "dsdv_slice_iq_C__t1@8",
         "dsdv_slice_kv512_C__t1@12",
-        "eng__t1@5"
+        "eng__t1@5",
+        "col_h10_r0_p1__t1__cl574cc59d@14",
+        "col_h9_r0_p4__t1__clcb2fbfe8@16",
+        "slice_station__t24__cleece78ec@13",
+        "slice_station__t29__clc7772371@13",
+        "dsdv_slice_c1x_C__t6@19",
+        "slice_station__t14@12",
+        "bk_sel__t2@33",
+        "dsdv_slice_c1x_C__t7@14",
+        "slice_station__t44@7"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -2952,7 +2961,7 @@
         "col_h10_r1__t1__cld01bb4ae@10": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
         "col_h10_r2__t1__cl1f5d6c2a@11": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
         "col_h10_r2__t1__cl8b686b3e@10": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
-        "col_h10_r2__t1__cl99efd374@17": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+        "col_h10_r2__t1__cl99efd374@17": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a17 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:24 PST: S81-TYPES-7 CLASS A: reset-scope selected (7c731625b9); a16 launched 05:09 on the old config before the item_env landed (KW-FIX-35-S retry_seen reset race) and stopped at kit_topology, no CAD",
         "col_h10_r2__t1__clac068e56@8": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
         "col_h9_r0_p2__t1__cl0045af7b@11": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
         "col_h9_r0_p3__t1__cl0cd90c0e@21": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
@@ -3330,7 +3339,16 @@
         "slice_station__t22@11": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
         "dsdv_slice_iq_C__t1@8": "KW-FIX-35-S 2026-11-08 06:04 PST: REDESIGN: S81-TYPES-7 CLASS J2 LEC fix claude/s81-types-7-lec-1108@36d3dddec54 (b28dc6669c0: xs_ctl data regs load every edge + S81 64-edge reset contract), on main 0b72abe93ac; fresh kit; the kit LEC is the proof, no waiver",
         "dsdv_slice_kv512_C__t1@12": "KW-FIX-35-S 2026-11-08 06:04 PST: REDESIGN: S81-TYPES-7 CLASS J2 LEC fix claude/s81-types-7-lec-1108@36d3dddec54 (b28dc6669c0: xs_ctl data regs load every edge + S81 64-edge reset contract), on main 0b72abe93ac; fresh kit; the kit LEC is the proof, no waiver",
-        "eng__t1@5": "KW-FIX-35-S 2026-11-08 06:04 PST: KW-FIX-35-V views relaunch (relaunch_rows.tsv): kit_istations width fix on main 0b72abe93ac (tag ef-s81); fresh kit"
+        "eng__t1@5": "KW-FIX-35-S 2026-11-08 06:04 PST: KW-FIX-35-V views relaunch (relaunch_rows.tsv): kit_istations width fix on main 0b72abe93ac (tag ef-s81); fresh kit",
+        "col_h10_r0_p1__t1__cl574cc59d@14": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a14 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
+        "col_h9_r0_p4__t1__clcb2fbfe8@16": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a16 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
+        "slice_station__t24__cleece78ec@13": "REDESIGN: KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a13 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: REDESIGN: S81-TYPES-7 CLASS I: station DRV margin form (--slew-margin 50 --cap-margin 20); reset-scope selected",
+        "slice_station__t29__clc7772371@13": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a13 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
+        "dsdv_slice_c1x_C__t6@19": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a19 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 CLASS H: fresh kit (old kit carried a stale FAIL_PREFLOOR); reset-scope selected so it does not stop at the CLASS A topology check",
+        "slice_station__t14@12": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a12 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
+        "bk_sel__t2@33": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a33 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
+        "dsdv_slice_c1x_C__t7@14": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a14 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 CLASS H: fresh kit (old kit carried a stale FAIL_PREFLOOR); reset-scope selected so it does not stop at the CLASS A topology check",
+        "slice_station__t44@7": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a7 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -5081,6 +5099,17 @@
         "dsdv_slice_iq_C__t1@8",
         "dsdv_slice_kv512_C__t1@12",
         "eng__t1@5"
+      ],
+      "retry_prev_kw35s5_added": [
+        "col_h10_r0_p1__t1__cl574cc59d@14",
+        "col_h9_r0_p4__t1__clcb2fbfe8@16",
+        "slice_station__t24__cleece78ec@13",
+        "slice_station__t29__clc7772371@13",
+        "dsdv_slice_c1x_C__t6@19",
+        "slice_station__t14@12",
+        "bk_sel__t2@33",
+        "dsdv_slice_c1x_C__t7@14",
+        "slice_station__t44@7"
       ]
     },
     "s81_head": {
