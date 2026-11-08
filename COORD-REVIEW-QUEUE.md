@@ -161,3 +161,5 @@ Open: su31pv1 ~10M (separate).
   Per the S81-TYPES-7 06:2x DECISION, M7 is granted over the RXB slot. The test global route at M2-M7 gave 0 overflows (rxb_grtdiag/M7.log).
   RXB now belongs to S81-TYPES-8-RCK: watch that unit through sign-off. The M6-only feed fallback is described in my earlier post.
   I keep RXS vC_ac, RXS vD and TX vE until their results.
+
+- 2026-11-08 08:10 PST [KW-FIX-35] LAUNCHED hbm/q_b013__physical_v1 a3 unit kw-hbm-qb013physicalv1-3-54171 on src_cad9p (config 280d918eb4; hold lifted, revert key hold_items_prev_kw35h8). Evidence: private resume kw35L-lec-qb013pv1 LEC EQUIVALENT 120617/120617 (BB-PORT-FOLD class d25a79da9f proven); its DPL-0033 @3_5 came from a stale a2 kit copy lacking 20cff21bab. q_b013 (non-pv1) stays held until intel1 kw35L-lec-qb013 finishes. NEW sub-lane KW-FIX-35-RC owns the COORD 08:0x S81 reset_contract receipt class (generator stages receipt.txt + lec.py loud refusal + 64-edge LEC sweep, with a count to follow). O: 0 real orphans on any die; t25 a25 resumed from GRT (job 7191bc739314); t17 left under its CODEX hold; READY claude/kw-fix-35o-dead-resume-1108@6af855f6828.
