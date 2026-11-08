@@ -166,6 +166,10 @@ set dt_med [concat $dt_med $dt_atomic_med]
 if {[llength $dt_atomic_sets]} {puts "OT_DTAP_ATOMIC groups [llength $dt_atomic_sets] pinned [dict size $dt_atomic_pinned]"}
 # stray sinks (the robust split ignores the outer 2%): a sink farther than DMAX from its own tap joins the nearest tap
 set dt_moved 0
+# DIE-HEAD-86: the stray/planned-split pass reads the atomic pin set and the regular tap count; defaults when
+# no atomic plan ran (the block is also sourced stand-alone by test_planned_group_caps)
+if {![info exists dt_atomic_pinned]} {set dt_atomic_pinned {}}
+if {![info exists dt_regular_count]} {set dt_regular_count [llength $dt_sets]}
 array unset dt_asg
 for {set k 0} {$k < [llength $dt_sets]} {incr k} { set dt_asg($k) {} }
 set k 0
@@ -176,7 +180,7 @@ foreach S $dt_sets {
     # Planned groups already use nearest anchors and explicit load splitting.
     # Reassigning distant members would collapse co-located split groups onto
     # their first anchor, defeating the planned sink cap (hfd:1942 vs1250).
-    if {![dict exists $dt_atomic_pinned [[[lindex $p 2] getInst] getName]] && !$dt_planned_active && abs([lindex $p 0] - $mx) + abs([lindex $p 1] - $my) > $dt_dmax} {
+    if {!$dt_planned_active && abs([lindex $p 0] - $mx) + abs([lindex $p 1] - $my) > $dt_dmax && !([dict size $dt_atomic_pinned] && [dict exists $dt_atomic_pinned [[[lindex $p 2] getInst] getName]])} {
       set bd 1e30
       for {set j 0} {$j < $dt_regular_count} {incr j} {
         lassign [lindex $dt_med $j] qx qy
