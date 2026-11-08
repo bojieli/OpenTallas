@@ -4788,19 +4788,7 @@
       "pilot_mode": "queue",
       "hold_items": {
         "sle_hc0__cl05696ed1": "KW-FIX-12 08:5x DIE-QC-76 stopped 08:45 per COORD, GRT rising; no resubmit of same form, DIE-QC-76 form lifts",
-        "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native\u2192collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
-        "sle_hc1__cl22c1ff36": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
-        "sle_hc1__cl7d360508": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
-        "sle_hc0__cl929603c0__cl38badc56": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
-        "sle_hc2__cl9c4c4509__cl3edce1b8": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
-        "sle_hc2__cl9c4c4509__clf60c5152": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
-        "sle_hc2__clcc5e3e61": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
-        "slw_hc0__cl1bc59e1c": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
-        "slw_hc1__cl3449ea95": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
-        "slw_hc1__cl68f9248e__cl144ee7b3": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
-        "slw_hc1__cl68f9248e__cle683a076": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
-        "slw_hc2__cla3497502__cl16607c7a": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
-        "slw_hc2__cla3497502__cldc737267": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now"
+        "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native\u2192collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry."
       },
       "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave",
       "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -6087,7 +6075,27 @@
       "flow_tag_prev_kw33b": "flow-20261107-du-qc",
       "note_src_kw33b": "KW-FIX-33 2026-11-08 00:23 PST (ROOT-MERGE-50/51): src kw33/src_d95ec = main d95ec5a45a6 (qc53v4t tap-pair, phyclip, grtlock, tname2, atomic-collapse, schema) = kw32/src_27db6 + 122 files",
       "plan_prev_kw33b": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/plan_of_record/plan_qc53_candidate_v4.json",
-      "note_plan_kw33b": "KW-FIX-33 2026-11-08 00:23 PST (QC-TYPES-6 00:04, COORD 00:2x (3)): plan -> main plan_qc53v4t.json (sha 18dc0ae20052): qc52t tap-pair event on the wave plan, 25 types; revert plan_prev_kw33b"
+      "note_plan_kw33b": "KW-FIX-33 2026-11-08 00:23 PST (QC-TYPES-6 00:04, COORD 00:2x (3)): plan -> main plan_qc53v4t.json (sha 18dc0ae20052): qc52t tap-pair event on the wave plan, 25 types; revert plan_prev_kw33b",
+      "place_mem_gb_by_item_prev_kw34b": null,
+      "place_mem_gb_by_item": {
+        "sle_hc*": 112,
+        "slw_hc*": 112
+      },
+      "hold_items_released_kw34b": {
+        "sle_hc1__cl22c1ff36": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "sle_hc1__cl7d360508": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "sle_hc0__cl929603c0__cl38badc56": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "sle_hc2__cl9c4c4509__cl3edce1b8": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "sle_hc2__cl9c4c4509__clf60c5152": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "sle_hc2__clcc5e3e61": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "slw_hc0__cl1bc59e1c": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "slw_hc1__cl3449ea95": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "slw_hc1__cl68f9248e__cl144ee7b3": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "slw_hc1__cl68f9248e__cle683a076": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "slw_hc2__cla3497502__cl16607c7a": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
+        "slw_hc2__cla3497502__cldc737267": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now"
+      },
+      "note_kw34b": "KW-FIX-34 2026-11-08 01:26 PST: main 068496ca437 (item-mem 3a518b128a, ROOT-MERGE-51) -> place_mem_gb_by_item sle_hc*/slw_hc* 112 GB (kit LEC rc137 OOM at 32/48, needs >=96; LEC unit books the PLACE mem); 12 hc LEC-mem holds lifted (COORD 01:09 (1)). Revert: place_mem_gb_by_item=place_mem_gb_by_item_prev_kw34b, hold_items += hold_items_released_kw34b"
     },
     "hbm": {
       "enabled": true,
