@@ -19,7 +19,7 @@ Two halves, one file (the localhost driver copies this file to every host):
     RETIRED-PROTECTION-EXTRAS.tsv, parent or child, under every bind-mount alias), counted (a path a SIGNED
     signoff.json / PROVENANCE.json on this host names, parent or child below lane level), kit-wave keep set,
     git alternates target, ot-run spill_pending record, wt-reaper protect.d line, named by a queue post of the
-    last 25 h (path, or a row-specific dir name), live (/proc cmdline / cwd / open fd, docker mounts incl. stopped
+    last 25 h (path, or a row-specific dir name; with --queuename-skip-trim-c a bare name no longer blocks class c), live (/proc cmdline / cwd / open fd, docker mounts incl. stopped
     containers), hard link, git-locked worktree, .keep in the tree or an ancestor, tok-* / kv-fn-* lanes, *tool*
     trees, newer than 6 h.  Every check is repeated right before each rm; a protected / counted / kit-wave-keep
     hit at that recheck is an ALERT: ALERT file, exit 3, no further deletes (the ALERT file is sticky: later runs
@@ -814,7 +814,7 @@ class Job:
                     return f"{name}: {h}"
         return None
 
-    def common_why(self, k, files):
+    def common_why(self, k, files, qn_ok=False):
         lane = self.lane(k)
         if lane.startswith(("tok-", "kv-fn-")) or "/tok-" in k or "/kv-fn-" in k:
             return "lane " + lane
@@ -833,7 +833,7 @@ class Job:
         for i, n in enumerate(rest):
             if i >= 2 and rest[i - 2] == "kit-wave":   # kit-wave/<die>/<plan event>: the plan dir names a whole wave
                 continue
-            if not generic_name(n) and n in self.qwords and not getattr(self, "_qn_skip", False):
+            if not generic_name(n) and n in self.qwords and not getattr(self, "_qn_skip", False) and not qn_ok:
                 return "queuename: " + n
         w = self.live.why(self.paths.forms(k))
         if w:
@@ -886,7 +886,11 @@ class Job:
         for p in [os.path.join(d, anchors[0])] + files:
             if self.now - os.lstat(p).st_mtime < AGE_S:
                 return "lt6h " + os.path.basename(p), kit, files
-        return self.common_why(kit, files), kit, files
+        # --queuename-skip-trim-c (AUTOCLEAN-9 11-08): a bare queue NAME (mostly a design type name, posted daily)
+        # does not stop the class c trim of 2_x / 3_x stage intermediates; an exact queue PATH and every other check
+        # still do.  Class b and class a are unchanged.
+        qn_ok = cls == "c" and bool(getattr(self.a, "queuename_skip_trim_c", False))
+        return self.common_why(kit, files, qn_ok=qn_ok), kit, files
 
     def eval_attempt(self, d):
         if self.kitwave is None:
@@ -1559,6 +1563,9 @@ def main(argv=None):
     r.add_argument("--wt-reaper-timeout", type=int, default=5400)
     r.add_argument("--queuename-skip-superseded", action="store_true",
                    help="class a: a queue-named item name does not protect superseded (older) attempts; COORD ruling")
+    r.add_argument("--queuename-skip-trim-c", action="store_true",
+                   help="class c only: a bare queue-post name does not block the 2_x/3_x intermediate trim (a queue PATH "
+                        "still does); COORD ruling")
     r.add_argument("--wt-reaper-idle-h", type=float, default=6.0, help="worktree idle hours before the reaper may remove it (fleet 6 h rule)")
     ls = sub.add_parser("list-signed")
     ls.add_argument("--roots", nargs="+", default=DEFAULT_ROOTS)
