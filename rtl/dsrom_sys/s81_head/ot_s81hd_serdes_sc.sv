@@ -202,7 +202,12 @@ module ot_s81hd_kp4_dec_sc #(parameter integer MUT = 0) (
 endmodule
 // DIE-HEAD-77-SERDES conservative reset form: ot_s81hd_rate_match_q with a local read-side reset tree.  rrst_l[g] resets
 // slice g (rsel copy g + r_d[32g+31:32g]); rrst_l[NRC] resets the read-side control.  Same behaviour when every leaf is equal.
-module ot_s81hd_rate_match_sc (
+// HEAD-FORMS-1 11-07 WSTAGE=1 (opt-in, default 0 = unchanged): one registered write stage, +1 pma_rck edge.  The push
+// decision, wp, full, ge6 and flt are unchanged; the write itself happens one wclk edge later from wd_r through registered
+// one-hot selects (one copy per 32-bit slice, as rsel on the read side), and wp_g is published to the reader one edge later,
+// so the reader never sees a slot before it is written.  Fixes measured SC vE PLACE: q_d -> u_rm.mem 2332 endpoints, -293 ps,
+// 20 levels: idle/push decode from q_d[1:0] fanned out to 4096 enables.
+module ot_s81hd_rate_match_sc #(parameter integer WSTAGE = 0) (
     input  wire          wclk, wrst_n,
     input  wire          w_v,
     input  wire [511:0]  w_d,
@@ -216,7 +221,10 @@ module ot_s81hd_rate_match_sc (
     reg  [3:0] rp_g1, rp_g2, wp_g1, wp_g2;
     function automatic [3:0] g2b(input [3:0] g); begin g2b = {g[3], g[3]^g[2], g[3]^g[2]^g[1], g[3]^g[2]^g[1]^g[0]}; end endfunction
     always @(posedge wclk or negedge wrst_n) if (!wrst_n) begin rp_g1 <= 0; rp_g2 <= 0; end else begin rp_g1 <= rp_g; rp_g2 <= rp_g1; end
-    always @(posedge rclk or negedge rrst_l[16]) if (!rrst_l[16]) begin wp_g1 <= 0; wp_g2 <= 0; end else begin wp_g1 <= wp_g; wp_g2 <= wp_g1; end
+    reg  [3:0] wp_gq;
+    wire [3:0] wp_gs = (WSTAGE != 0) ? wp_gq : wp_g;
+    always @(posedge wclk or negedge wrst_n) if (!wrst_n) wp_gq <= 0; else wp_gq <= wp_g;
+    always @(posedge rclk or negedge rrst_l[16]) if (!rrst_l[16]) begin wp_g1 <= 0; wp_g2 <= 0; end else begin wp_g1 <= wp_gs; wp_g2 <= wp_g1; end
     reg  full, ge6;                       // RXQ: flops, one read-pointer edge older than the combinational form
     wire idle = w_d[1] && !w_d[0];
     wire push = w_v && !full && !(idle && ge6);
@@ -227,9 +235,23 @@ module ot_s81hd_rate_match_sc (
         if (!wrst_n) begin wp <= 0; wp_g <= 0; flt <= 1'b0; full <= 1'b0; ge6 <= 1'b0; end
         else begin
             full <= fill_nx == 4'd8; ge6 <= fill_nx >= 4'd6;
-            if (push) begin mem[wp[2:0]] <= w_d; wp <= wp + 1'b1; wp_g <= (wp + 1'b1) ^ ((wp + 1'b1) >> 1); end
+            if (push) begin if (WSTAGE == 0) mem[wp[2:0]] <= w_d; wp <= wp + 1'b1; wp_g <= (wp + 1'b1) ^ ((wp + 1'b1) >> 1); end
             if (w_v && full && !idle) flt <= 1'b1;
         end
+    genvar ws, wk;
+    generate if (WSTAGE != 0) begin : g_wstage
+        reg [511:0] wd_r;
+        (* keep *) reg [7:0] wsel [0:15];
+        always @(posedge wclk) wd_r <= w_d;
+        for (ws = 0; ws < 16; ws = ws + 1) begin : g_ws
+            always @(posedge wclk or negedge wrst_n)
+                if (!wrst_n) wsel[ws] <= 8'd0;
+                else wsel[ws] <= push ? (8'd1 << wp[2:0]) : 8'd0;
+            for (wk = 0; wk < 8; wk = wk + 1) begin : g_wk
+                always @(posedge wclk) if (wsel[ws][wk]) mem[wk][ws * 32 +: 32] <= wd_r[ws * 32 +: 32];
+            end
+        end
+    end endgenerate
     wire empty = g2b(wp_g2) == rp;
     // RXQ read stage: the pop decision is registered as one-hot select copies (32 data bits per copy), the mem mux and r_d
     // sit behind them: r_d one rclk edge later.  The popped slot stays valid for that edge: the writer sees the move of rp
@@ -299,7 +321,11 @@ module ot_s81hd_pdie_sc #(parameter integer PMA_LAT = 4, parameter integer DMUT 
         .n_relock(n_rl));
     reg unc_r; always @(posedge pma_rck or negedge rn_r) if (!rn_r) unc_r <= 1'b0; else if (q_v && q_first && q_unc) unc_r <= 1'b1;
     wire rm_flt;
-    ot_s81hd_rate_match_sc u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk), .rrst_l(rm_l), .r_d(rx),
+`ifdef OT_S81HD_SC_RM_WSTAGE
+    ot_s81hd_rate_match_sc #(.WSTAGE(1)) u_rm (.wclk(pma_rck),
+`else
+    ot_s81hd_rate_match_sc u_rm (.wclk(pma_rck),
+`endif .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk), .rrst_l(rm_l), .r_d(rx),
         .fault(rm_flt));
     // ---- status (ck)
     reg [1:0] lk_s, uf_s;
