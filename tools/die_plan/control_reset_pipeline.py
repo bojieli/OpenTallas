@@ -72,6 +72,12 @@ def apply(text, declaration, *, type_name, hard, outline, blocked_boxes=()):
             nodes[q] = (dep + 1, point); names.add(name); pending.remove(row); progressed = True
         if not progressed:
             raise ControlResetError('missing or cyclic reset predecessor')
+    # The physical contract consumes these summaries as well as the graph.
+    # Derive them from the validated graph, never trust a stale caller count.
+    tree['n_tree'] = len(rows)
+    tree['n_pad'] = 0
+    tree['own_depth'] = tree['depth']
+    tree['max_hop_um'] = max(sum(abs(a-b) for a,b in zip(row['xy'], nodes[row['d']][1])) for row in rows)
     for i, tap in enumerate(taps):
         if nodes.get(f'rst_n_t{i}') != (tree['depth'], xy(tap)):
             raise ControlResetError('tap coordinate or equal release depth differs')

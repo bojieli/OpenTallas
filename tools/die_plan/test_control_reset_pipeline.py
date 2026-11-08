@@ -32,6 +32,17 @@ class Guards(unittest.TestCase):
         out,tree,rec=apply();before=RC._calls(TEXT)['u_epoch']['ports'];after=RC._calls(out)['u_epoch']['ports']
         self.assertEqual({k:v[0] for k,v in before.items() if k!='rst_n'}, {k:v[0] for k,v in after.items() if k!='rst_n'})
         self.assertIn('assign native_reset = arst_n;',out);self.assertEqual(rec['extra_reset_cycles'],3)
+    def test_bound_receipt_and_placement_roundtrip(self):
+        import bound_reset_contract as BRC
+        out,tree,_=apply()
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td)/'kv3_phy_v1_part.sv';p.write_text(out)
+            rec=BRC.emitted(p,'kv3_phy_v1',tree)
+            BRC.validate(json.loads(p.with_suffix('.reset_tree.json').read_text()),'kv3_phy_v1')
+            tcl=p.with_suffix('.reset_tree.tcl').read_text()
+            self.assertIn('u_cr_tap',tcl)
+            self.assertNotIn('OT_RESET_CORE_KEPT',tcl)
+            self.assertEqual(rec['tree']['max_hop_um'],225)
     def test_bad_contract(self):
         for key,value in [('extra_reset_cycles',2),('steady_data_cycles',1),('start_guard_cycles',3),('source_witness','')]:
             d=copy.deepcopy(DECL);d['cycle_contract'][key]=value
