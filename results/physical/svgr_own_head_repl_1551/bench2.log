@@ -1,0 +1,6 @@
+HEAD_CLASS MUT=0 cycles=10000 active_grants=9998 output_mismatch_edges=0
+tb.sv:14: $finish called at 100006 (1s)
+HEAD_CLASS MUT=1 cycles=10000 active_grants=9998 output_mismatch_edges=4926
+tb.sv:14: $finish called at 100006 (1s)
+HEAD_CLASS MUT=2 cycles=10000 active_grants=9998 output_mismatch_edges=9998
+tb.sv:14: $finish called at 100006 (1s)
