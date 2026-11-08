@@ -5,8 +5,8 @@ M4 face pins every second M4 track (0.096 um), centred on the face; clk M5 0.024
 import sys
 W = H = 194.4
 OFF_Y, OFF_X = 0.012, 0.108
-ins = [("rst_n", 1), ("i_ing", 1), ("i0_last", 1), ("c2_v", 1), ("c2_fl", 1), ("i1_s_d", 16), ("c3_sel_d", 16),
-       ("i0_lane", 592), ("c2_p", 592)]
+ins = [("rst_n", 1), ("i_ingc", 6), ("i_flc", 6), ("c2_vc", 6), ("c2_flc", 6), ("i1_s_dc", 288), ("c3_sel_dc", 288),
+       ("i0_lane", 592), ("c2_p", 592)]   # PINCOPY: one pin per P capture flop
 outs = [("pi_vp", 6), ("pi_fl", 1), ("pi_bv", 1), ("pi_lv", 16), ("ps_vp", 6), ("ps_fl", 1), ("ps_bv", 1), ("ps_lv", 16),
         ("pi_line", 592), ("ps_line", 592)]
 def bits(lst):

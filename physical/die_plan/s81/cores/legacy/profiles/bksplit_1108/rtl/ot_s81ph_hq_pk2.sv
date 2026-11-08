@@ -15,13 +15,15 @@ module ot_s81ph_hq_pk2 #(
     input  wire            clk,
     input  wire            rst_n,
     input  wire [W*EW-1:0] i0_lane,
-    input  wire [W-1:0]    i1_s_d,
-    input  wire            i_ing,
-    input  wire            i0_last,
+    // PINCOPY (face_guard: one pin per capture flop, as OT_HB_PINCOPY on the hist banks): the slice multicasts each
+    // select/valid D to one pin per kept copy (0 cycles); copy k of plane p = bits [W*(3*p+k)] (k 0 s / 1 sg / 2 sh)
+    input  wire [3*NP*W-1:0] i1_s_dc,
+    input  wire [NP-1:0]   i_ingc,
+    input  wire [NP-1:0]   i_flc,       // = i_ing && i0_last, formed in the slice (no logic before a P face flop)
     input  wire [W*EW-1:0] c2_p,
-    input  wire [W-1:0]    c3_sel_d,
-    input  wire            c2_v,
-    input  wire            c2_fl,
+    input  wire [3*NP*W-1:0] c3_sel_dc,
+    input  wire [NP-1:0]   c2_vc,
+    input  wire [NP-1:0]   c2_flc,
     output wire [NP-1:0]   pi_vp,
     output wire [W-1:0]    pi_lv,
     output wire [W*EW-1:0] pi_line,
@@ -43,23 +45,23 @@ module ot_s81ph_hq_pk2 #(
             (* keep = "true" *) reg [W-1:0] s, sg, sh;
             (* keep = "true" *) reg v, f;
 `ifdef OT_PK2_MUT_B   // bench mutant: plane 2 ingest prefix select copy takes the sweep select
-            always @(posedge clk) begin s <= (gg == 2) ? c3_sel_d : i1_s_d; sg <= i1_s_d; sh <= i1_s_d; end
+            always @(posedge clk) begin s <= (gg == 2) ? c3_sel_dc[W*(3*gg) +: W] : i1_s_dc[W*(3*gg) +: W]; sg <= i1_s_dc[W*(3*gg+1) +: W]; sh <= i1_s_dc[W*(3*gg+2) +: W]; end
 `else
-            always @(posedge clk) begin s <= i1_s_d; sg <= i1_s_d; sh <= i1_s_d; end
+            always @(posedge clk) begin s <= i1_s_dc[W*(3*gg) +: W]; sg <= i1_s_dc[W*(3*gg+1) +: W]; sh <= i1_s_dc[W*(3*gg+2) +: W]; end
 `endif
             always @(posedge clk or negedge rst_n)
-                if (!rst_n) begin v <= 1'b0; f <= 1'b0; end else begin v <= i_ing; f <= i_ing && i0_last; end
+                if (!rst_n) begin v <= 1'b0; f <= 1'b0; end else begin v <= i_ingc[gg]; f <= i_flc[gg]; end
             assign i1_s_pl[W*gg +: W] = s; assign i1_s_plg[W*gg +: W] = sg; assign i1_s_plh[W*gg +: W] = sh; assign i1_v_pl[gg] = v; assign i1_fl_pl[gg] = f;
         end
         for (gg = 0; gg < NP; gg = gg + 1) begin : g_c3c
             (* keep = "true" *) reg [W-1:0] s, sg, sh;
             (* keep = "true" *) reg v, f;
-            always @(posedge clk) begin s <= c3_sel_d; sg <= c3_sel_d; sh <= c3_sel_d; end
+            always @(posedge clk) begin s <= c3_sel_dc[W*(3*gg) +: W]; sg <= c3_sel_dc[W*(3*gg+1) +: W]; sh <= c3_sel_dc[W*(3*gg+2) +: W]; end
             always @(posedge clk or negedge rst_n)
 `ifdef OT_PK2_MUT_A   // bench mutant: plane 0 sweep flush copy takes c2_v instead of c2_fl
-                if (!rst_n) begin v <= 1'b0; f <= 1'b0; end else begin v <= c2_v; f <= (gg == 0) ? c2_v : c2_fl; end
+                if (!rst_n) begin v <= 1'b0; f <= 1'b0; end else begin v <= c2_vc[gg]; f <= (gg == 0) ? c2_vc[gg] : c2_flc[gg]; end
 `else
-                if (!rst_n) begin v <= 1'b0; f <= 1'b0; end else begin v <= c2_v; f <= c2_fl; end
+                if (!rst_n) begin v <= 1'b0; f <= 1'b0; end else begin v <= c2_vc[gg]; f <= c2_flc[gg]; end
 `endif
             assign c3_sel_pl[W*gg +: W] = s; assign c3_sel_plg[W*gg +: W] = sg; assign c3_sel_plh[W*gg +: W] = sh; assign c3_v_pl[gg] = v; assign c3_fl_pl[gg] = f;
         end

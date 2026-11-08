@@ -45,12 +45,12 @@
  "pins": {
   "W": [
    "rst_n",
-   "i_ing",
-   "i0_last",
-   "c2_v",
-   "c2_fl",
-   "i1_s_d",
-   "c3_sel_d",
+   "i_ingc",
+   "i_flc",
+   "c2_vc",
+   "c2_flc",
+   "i1_s_dc",
+   "c3_sel_dc",
    "i0_lane",
    "c2_p"
   ],
@@ -72,7 +72,7 @@
  },
  "pin_regs": {
   "enable": false,
-  "reason": "DIE-S81-80 bksel SPLIT: every data input lands in an existing flop of the moved logic (i1_p, c3_p, g_i1c/g_c3c kept copies); every output is an ot_s81ph_native_sel_pack output register. No double pin stages."
+  "reason": "DIE-S81-80 bksel SPLIT: every data input lands in an existing flop of the moved logic (i1_p, c3_p, g_i1c/g_c3c kept copies); every output is an ot_s81ph_native_sel_pack output register. No double pin stages. PINCOPY (face_guard class, as OT_HB_PINCOPY): one input pin per capture flop; the slice multicasts (0 cycles) and forms i_flc = i_ing && i0_last."
  },
  "reset_landing": {
   "enable": false,

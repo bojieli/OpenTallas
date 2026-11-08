@@ -449,8 +449,8 @@ module ot_s81ph_hq_slice #(
 `else
     ot_s81ph_hq_pk2 #(.W(W), .EW(EW), .NP(NP)) u_pk (
 `endif
-        .clk(clk), .rst_n(rst_n), .i0_lane(i0_lane), .i1_s_d(i1_s_d), .i_ing(i_ing), .i0_last(i0_last),
-        .c2_p(c2_p), .c3_sel_d(c3_sel_d), .c2_v(c2_v), .c2_fl(c2_fl),
+        .clk(clk), .rst_n(rst_n), .i0_lane(i0_lane), .i1_s_dc({3*NP{i1_s_d}}), .i_ingc({NP{i_ing}}),
+        .i_flc({NP{i_ing && i0_last}}), .c2_p(c2_p), .c3_sel_dc({3*NP{c3_sel_d}}), .c2_vc({NP{c2_v}}), .c2_flc({NP{c2_fl}}),
         .pi_vp(pi_vp), .pi_lv(pi_lv), .pi_line(pi_line), .pi_bv(pi_bv), .pi_fl(pi_fl),
         .ps_vp(ps_vp), .ps_lv(ps_lv), .ps_line(ps_line), .ps_bv(ps_bv), .ps_fl(ps_fl));
 `else
