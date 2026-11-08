@@ -1,0 +1,36 @@
+{
+  "scope": "native memory transpose/static windows/private config/job gate, no arithmetic or parent qualification",
+  "period_ps": 833,
+  "native_unit": "epyc4 oth-ubuntu-675275-1794136210",
+  "program_unit": "epyc4 oth-ubuntu-692234-1794136252",
+  "result": "PASS",
+  "passes": 2,
+  "heads_per_pass": 8,
+  "total_heads": 16,
+  "numeric_fp32_values": 8192,
+  "generated_q_words": 534,
+  "first_to_last_q_cycles": 1083,
+  "order": "0,8,1,9,...,7,15",
+  "so_head_first_header_after_so_header": 45,
+  "so_operand_row_interval": 2,
+  "header_pass_field": 32,
+  "srams": 136,
+  "input_data_words": 1024,
+  "mutants": {
+    "wrong_global_head_payload": "CAUGHT512wordmismatches",
+    "high256_nonzero": "CAUGHTfc200",
+    "second_pass_drop": "CAUGHTfc080",
+    "booked_window_overlap": "CAUGHTjoin",
+    "bad_second_pass_stamp": "CAUGHTjoin",
+    "private_owner_position_transport_fault": "CAUGHT3controls"
+  },
+  "h16_source": "original modules unmodified",
+  "first_driver_failure": "native positive passed; pass-stamp mutant correctly tripped join, driver expected numeric output instead; corrected to wrong-head payload with valid stamp",
+  "qualification_open": [
+    "native H8hardcore adapter+proof",
+    "whole source window/provider/epoch dates",
+    "actual hard-clock timing",
+    "physical parent views"
+  ],
+  "note": "R2 mut1 log also prints positive line after Verilator finish; 512 mismatches are actual negative detection; source driver now uses mutually exclusive final labels"
+}

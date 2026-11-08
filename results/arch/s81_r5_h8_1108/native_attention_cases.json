@@ -1,0 +1,92 @@
+{
+  "scope": "conditional area-model sensitivity, not placement or parent release",
+  "actual_H16_head": {
+    "cells": 201265,
+    "std_area_um2": 23262.4629
+  },
+  "actual_H8_head": {
+    "cells": 200970,
+    "std_area_um2": 23207.29218
+  },
+  "MACs_per_head": 32,
+  "core_count_H16": 64,
+  "core_count_H8": 32,
+  "attention_H8_over_H16_std_area_ratio": 0.4988141685547836,
+  "original_signed_slot_um": [
+    157.68,
+    259.2
+  ],
+  "attention_halo_accounting": "old model reclaims body only; separate new-halo case is conservative sensitivity; actual existing channel/row capacity still must be read from current plan",
+  "other_cores": "SML172.8,actualSMD155.52,H4172.8,halos4.32,clock/channel15%,unchangedroot/glue/IRG prior model",
+  "cases": [
+    {
+      "case": "existing_SIGNED_RT2_reuse_body",
+      "new_head_footprint_um2": 40870.656,
+      "attention_reclaim_body_um2": 1307860.992,
+      "bounds": {
+        "scaled1564k": {
+          "die_growth_um": 77.76,
+          "reticle_spare_um": 463.84,
+          "estimate_fits": true
+        },
+        "upper2101k": {
+          "die_growth_um": 224.64,
+          "reticle_spare_um": 316.96,
+          "estimate_fits": true
+        }
+      }
+    },
+    {
+      "case": "native_RT4_util040_body_min",
+      "new_head_footprint_um2": 58018.230449999995,
+      "attention_reclaim_body_um2": 759138.6096000003,
+      "bounds": {
+        "scaled1564k": {
+          "die_growth_um": 535.68,
+          "reticle_spare_um": 5.92,
+          "estimate_fits": true
+        },
+        "upper2101k": {
+          "die_growth_um": 682.56,
+          "reticle_spare_um": -140.96,
+          "estimate_fits": false
+        }
+      }
+    },
+    {
+      "case": "native_RT4_util040_aspect_snapped",
+      "new_head_footprint_um2": 59122.48320000001,
+      "attention_reclaim_body_um2": 723802.5215999999,
+      "bounds": {
+        "scaled1564k": {
+          "die_growth_um": 561.6,
+          "reticle_spare_um": -20.0,
+          "estimate_fits": false
+        },
+        "upper2101k": {
+          "die_growth_um": 717.12,
+          "reticle_spare_um": -175.52,
+          "estimate_fits": false
+        }
+      }
+    },
+    {
+      "case": "native_RT4_util040_new_halo",
+      "new_head_footprint_um2": 63526.80960000001,
+      "attention_reclaim_body_um2": 582864.0767999999,
+      "bounds": {
+        "scaled1564k": {
+          "die_growth_um": 734.4,
+          "reticle_spare_um": -192.8,
+          "estimate_fits": false
+        },
+        "upper2101k": {
+          "die_growth_um": 881.28,
+          "reticle_spare_um": -339.68,
+          "estimate_fits": false
+        }
+      }
+    }
+  ],
+  "decision": "NativeR4 conservative150k target NOT MET. Do not launch parent from oldhalf-outlineassumption; evaluate exact current channel/row room, RT2reuse shim, or conservative core cut."
+}

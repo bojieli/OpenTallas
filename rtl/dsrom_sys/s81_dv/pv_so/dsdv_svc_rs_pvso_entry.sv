@@ -7,6 +7,15 @@
 `endif
 `endif
 // Existing service entry ABI plus static all-quarter SO source assembly.
+`ifdef OT_SVC_H8
+`define OT_RS_PVSO_PROGRAM_T dsdv_pv_so_program_h8
+`define OT_RS_PVSO_JOIN_T dsdv_pv_half_join_h8
+`define OT_RS_PVSO_INGRESS_T dsdv_pv_so_ingress_h8
+`else
+`define OT_RS_PVSO_PROGRAM_T dsdv_pv_so_program
+`define OT_RS_PVSO_JOIN_T dsdv_pv_half_join
+`define OT_RS_PVSO_INGRESS_T dsdv_pv_so_ingress
+`endif
 module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
                            parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1,
                            parameter logic [39:0] FM = {40{1'b1}},
@@ -36,10 +45,17 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
     wire so_cfg_v,so_param_v,so_launch,program_fault;
     wire[19:0]so_owner,so_param_owner;wire[20:0]so_position,so_param_position;
     wire[7:0]so_se_jid,so_jid;wire[15:0]so_local_first,so_peer_first;
+`ifdef OT_SVC_H8
+    wire[15:0]so_local_first1,so_peer_first1;
+`endif
     wire[2:0]so_param_row;wire[511:0]so_param_d;wire[514:0]q_filtered;
-    dsdv_pv_so_program #(.ENABLE(PVSO_ENABLE)) u_program(.clk(ck),.rst_n(rst),.q(q),.q_pass(q_filtered),
+    `OT_RS_PVSO_PROGRAM_T #(.ENABLE(PVSO_ENABLE)) u_program(.clk(ck),.rst_n(rst),.q(q),.q_pass(q_filtered),
       .cfg_v(so_cfg_v),.owner(so_owner),.position(so_position),.se_jid(so_se_jid),.so_jid(so_jid),
-      .local_first(so_local_first),.peer_first(so_peer_first),.param_v(so_param_v),.param_row(so_param_row),
+      .local_first(so_local_first),.peer_first(so_peer_first),
+`ifdef OT_SVC_H8
+      .local_first1(so_local_first1),.peer_first1(so_peer_first1),
+`endif
+      .param_v(so_param_v),.param_row(so_param_row),
       .param_owner(so_param_owner),.param_position(so_param_position),.param_d(so_param_d),.launch(so_launch),.fault(program_fault));
     wire generated_v,ingress_fault,join_fault,entry_fault;
     wire[511:0]generated_d;wire[514:0]q_entry;
@@ -49,13 +65,17 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
     assign q_entry=generated_v?{2'd0,generated_d,1'b1}:q_filtered;
     assign fault=entry_fault|ingress_fault|join_fault|collision|program_fault;
     generate if(PVSO_ENABLE!=0)begin:g_join
-      dsdv_pv_half_join u_join(.clk(ck),.rst_n(rst),.cfg_v(so_cfg_v),
-       .local_first(so_local_first),.peer_first(so_peer_first),.local_pv(local_pv_landed),.peer_pv(peer_pv),
+      `OT_RS_PVSO_JOIN_T u_join(.clk(ck),.rst_n(rst),.cfg_v(so_cfg_v),
+       .local_first(so_local_first),.peer_first(so_peer_first),
+`ifdef OT_SVC_H8
+       .local_first1(so_local_first1),.peer_first1(so_peer_first1),
+`endif
+       .local_pv(local_pv_landed),.peer_pv(peer_pv),
        .pv_v(joined_v),.pv_quarter(joined_quarter),.pv_d(joined_d),.fault(join_fault));
     end else begin:g_nojoin
       assign joined_v=0;assign joined_quarter=0;assign joined_d=0;assign join_fault=0;
     end endgenerate
-    dsdv_pv_so_ingress #(.ENABLE(PVSO_ENABLE),.HEADER_DEN(1)) u_ingress(.clk(ck),.rst_n(rst),
+    `OT_RS_PVSO_INGRESS_T #(.ENABLE(PVSO_ENABLE),.HEADER_DEN(1)) u_ingress(.clk(ck),.rst_n(rst),
       .cfg_v(so_cfg_v),.cfg_owner(so_owner),.cfg_position(so_position),.cfg_se_jid(so_se_jid),.cfg_so_jid(so_jid),
       .pv_v(joined_v),.pv_quarter(joined_quarter),.pv_d(joined_d),
       .param_v(so_param_v),.param_row(so_param_row),.param_owner(so_param_owner),.param_position(so_param_position),.param_d(so_param_d),
@@ -72,3 +92,7 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
 `endif
         );
 endmodule
+
+`undef OT_RS_PVSO_PROGRAM_T
+`undef OT_RS_PVSO_JOIN_T
+`undef OT_RS_PVSO_INGRESS_T
