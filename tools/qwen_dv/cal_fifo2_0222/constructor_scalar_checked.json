@@ -1,0 +1,46 @@
+{
+  "source_sha256": "5d45a822fe5a7550e98e274ebb7d19f4c27ac1f3e3352daefa0258b9a29b5b04",
+  "out_sha256": "94cf1369da1d0b733e5d46303dced65d4e7af2c757eddc8451c01d976ad667c2",
+  "changed_master_tokens": 4,
+  "other_bytes_identical": true,
+  "added_cycles": 0,
+  "qualified_contract": "addresses0/1, repair ports0, no OT_MEM_FAULTS",
+  "instances": [
+    {
+      "inst": "\\u_gi.u_cal.g_fifo[0].u_fifo",
+      "read_address": "{1'b0,1'b0,1'b0,1'b0,1'b0,n_39803}",
+      "write_address": "{1'b0,1'b0,1'b0,1'b0,1'b0,n_8848}",
+      "repair_literal_zero": true,
+      "scalar_address_nets_verified": true,
+      "old_master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "new_master": "ot_qc_cal_fifo2_512"
+    },
+    {
+      "inst": "\\u_gi.u_cal.g_fifo[1].u_fifo",
+      "read_address": "{1'b0,1'b0,1'b0,1'b0,1'b0,n_42925}",
+      "write_address": "{1'b0,1'b0,1'b0,1'b0,1'b0,n_10146}",
+      "repair_literal_zero": true,
+      "scalar_address_nets_verified": true,
+      "old_master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "new_master": "ot_qc_cal_fifo2_512"
+    },
+    {
+      "inst": "\\u_gi.u_cal.g_fifo[2].u_fifo",
+      "read_address": "{1'b0,1'b0,1'b0,1'b0,1'b0,n_46047}",
+      "write_address": "{1'b0,1'b0,1'b0,1'b0,1'b0,n_11444}",
+      "repair_literal_zero": true,
+      "scalar_address_nets_verified": true,
+      "old_master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "new_master": "ot_qc_cal_fifo2_512"
+    },
+    {
+      "inst": "\\u_gi.u_cal.g_fifo[3].u_fifo",
+      "read_address": "{1'b0,1'b0,1'b0,1'b0,1'b0,n_49169}",
+      "write_address": "{1'b0,1'b0,1'b0,1'b0,1'b0,n_12766}",
+      "repair_literal_zero": true,
+      "scalar_address_nets_verified": true,
+      "old_master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "new_master": "ot_qc_cal_fifo2_512"
+    }
+  ]
+}
