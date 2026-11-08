@@ -112,6 +112,8 @@ proc f4::run {} {
       set s [f4::drv $a]; if {$s eq ""} continue
     }
     if {![f4::is_ff $s] || $s eq $i} continue
+    if {[info exists ::ot_atomic_clock_pinned] &&
+        ([dict exists $::ot_atomic_clock_pinned [$i getName]] || [dict exists $::ot_atomic_clock_pinned [$s getName]])} continue
     set pred([$i getName]) [$s getName]
   }
   # chains: follow pred to the head
