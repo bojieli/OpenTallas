@@ -66,3 +66,54 @@ Native zero-edit setup-resizer loops diagnosed by gaps on exact installed OpenRO
 04:13 PST bounded portable native packet audit: UNSUPPORTED by an existing generic repo builder. Types confirms old_capsule came from E4 reset_scope/capture_old_bind.py + later capture_preferences.py, not a product API. bind.f+extra_lib closure alone omits global asbuilt.prefer/files (391 exact entries restored), and does not cover tool-checkout-relative tools/mem_compiler/rom_declared_logic.json +556 proof JSONs. image_params.overlay only remaps missing dead-wt bind.f/extra_lib; manifest_paths.required_prefer_files gates literal preferred sources but does not capture them. Safe future packet must explicitly distinguish exact producer/asbuilt root, bind input closure, and runtime source checkout; retain original manifest/native receipt bytes and resolve sidecars by recorded source-root mapping, not silently rebase globals. No narrow existing-builder fix found; no duplicate source farm or fingerprint waiver added. Frozen known-good source361/old_capsule remain unchanged and actual ENG GEN/topology/lint/preflight PASS.
 
 04:20 PST coll_ftc earnedCTS terminalPASS (4_1_cts.odb,27exports0dead,1785s/5.9GB); GRTnowpinaccess. Tapbalance58delaycells,means206..271ps, advisorymax-tree319 requiresactualGRTreview notlivechanges. ENG a3PLACEadmittedI2unit2077283-1794139797, GPLcurrent; allstationspresent, ft0landing6929flops asks3rows butbandfits2, flaggedforactualdensityreview. No detailedroute released. NativeGEN6d82dfe0f6 READY actualGEN/lint/preflight/PLACEPASS+imagesviewed; separateexperimentalq_spb1formheld.
+
+
+## HANDBACK — Claude reset, no new launches
+
+Own edits parked on published branches; no merges/tags/POR changes. Healthy jobs left running. No further checks or launches after reset instruction.
+
+Shared branch pointers (canonical intel2 hub):
+- codex/wave-hcl-tt-0222@1762cad3e01d45f7b61c864fbf79ff9fa83b3a2f: original approved KW34 TT IO mean insertion fix,69 tests. HBM has no eligible TTIO-only finished candidate; do not re-sign hold/slew-failed kits as solved.
+- codex/core-pin-audit-0222: source-only pin resolver12525aaf1d; later evidence artifacts7078c1f9548 and4462a266ab4. Handles shallow /work import, no provenance fabrication.
+- codex/prects-metrics-0222@5ad4d7602b: future opt-in OT_SKIP_PRECTS_METRICS=1 only stage2/3; stages4+ and all gates/reports retained.3 tests + actual OpenROAD probe PASS. Legacy core-only patch intel1:/tmp/codex-prects-core-only-0222.patch; types patch /tmp/codex-prects-types-0222.patch. RCK applied core patchad00a6a008 to future forms only.
+- codex/admission-transfer-0222: isolated code45b881ddf0 prephysical SSH/tar retry3, invalidbundle fatal/no physicalretry;3 embeddedbootstrap tests. Tipf4a67c52e7 additionally records Ei guard+hashmanifest under results/geom_review/codex_kv_ei_route_hold_0222.
+- codex/runner-lint-continuation-0222@97c91d3446: one-line rawtemplate continuation3backslashes->1 afterRTLlint; old Bashsnippet commandnotfound/newclean. Futurekits only. Exactpatch intel1:/tmp/codex-runner-lint-0222.patch.
+- Gaps shared nativeGEN optimization READY codex/native-kit-skip-dietop-0222@6d82dfe0f6:105selectedfiles byteidentical, actualGEN/lint/preflight/PLACE and image reviewPASS. Separate q_spb1 experimental geometry94b8b7bc6f remains held; no broader adoption by me.
+
+Live private QC coll_ftc conservative approved v4s pilot:
+- intel2 kit /srv/opentallas-scratch2/claude/codex-wave-0222/qc/coll_ftc/gen/coll_ftc; runner parent gen/run_kit.sh.
+- AP ownlogs ~/coord/autopilot/codex-wave-0222/coll_ftc/; current grt_i2.log.
+- Current service codex-qc-v4s-collftc-grt-0222, unit oth-ubuntu-1353654-1794138335, container dpkit-coll_ftc-1353753. Earned CTS/GRT only, no detailedroute.
+- PLACE PASS, actual density/layout viewed; initial span/clock-centroid concerns resolved by QCtypes tracing real terminal paths all<350um and nearest-clock-tap reassignment. Actual review7c9017f46d.
+- LEC EQ51736/51736 reused exactproof f0c8326a37862b6dea0b346d3ba4c641a55a6572ddc73175435e058d21059957.
+- CTS terminalPASS:4_1_cts.odb written,27forwardedexports0dead,1785s/5.9GB; legalizer0violations. Tapbalance58delaycells, mean206..271ps, advisorytree max319ps/pitch<=399um; retain for actualGRT review.
+- Last observed GRT healthy pin-access group20000+, no failure. Next: collect actualGRT result/images, assess timing and geometry, only then authorize detailedroute. No other v4s batch launched by me.
+
+Live private S81 ENG a3:
+- AP ~/coord/autopilot/codex-wave-0222/eng/a3/{unit.log,place.live.log,spec.json,result.json}; work /srv/opentallas-scratch2/claude/codex-wave-0222/eng/a3; kit gen/eng__t1.
+- PLACE frontend kwp-ada851ee5ea5089d3445, I2 unit oth-ubuntu-2077283-1794139797,48GB/8T. Pipeline stops afterPLACE+geom, no canonicalenqueue/route.
+- KITRTL, real counted dsdv_eng_rr_e provider, selected captured topology, GEN, futureLECpackage, GENLINT, preflight allPASS; source skew differ[]. CurrentGPL healthy:1430resized,28830buffers then pinrepairprogress. No failmarker observed.
+- Exactcountedprovider staged from E5 codex-s81-0222/engrr_provider/routed/dsdv_eng_rr_e/c0, existing verdict_needs_parent rule; no childrebuild/stamp. Old43/39narrow output problem already fixed currenttool.
+- Frozen source I2 codex-s81-types-0222/source361@3610c3bb90acb936c31a261091dce9415e99bda6; packet old_capsule sameparent; actualmanifest physical/die_plan/s81/bind/asbuilt_b178_coll_h2_2249.json; producer_context.json originalbytes. OT_NATIVE_RESET_SCOPE=selected + OT_NATIVE_PRODUCER_CONTEXT exactcapture, no receiptstamping.
+- a1 failed missing packet preferredsources; a2 passedtopology but failedoldabsolute clock-landing path. Both retained. a3 remaps only byteidentical sidecarSHAae3316a2004db8a29fd3c642a19edf89f2b456cbe4e1f4e68b96b45a671d8ce0; no broadsource edits.
+- Actualpreplan reviewed/committed4462a266ab4. Review actualPLACE density: ft0_i landing6929flops requested3rows but bandfits2. Allstations present; no live mutation. Next collectPLACE+asyncLEC and images; holdroute until review.
+
+Ei a16 future-route hold, root-explicit authority:
+- intel1 kit /srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hub_Ei/attempt_16/gen/kv3_hub_Ei.
+- Existing oldrunner had NO HOLD_ROUTE/ROUTE_STOP consumer. Added guard only kit grt183_make.sh next exactroute token invocation; reasoned HOLD_ROUTE marker. All other goals/settings unchanged. Nextwrapperroute probe exited75 BEFOREexec. CurrentGRT/STA process never signaled/restarted.
+- Original preserved run/diagnostics/codex-ei-route-hold-0222/grt183_make.original.sh; guard.txt+intervention.json samefolder. OriginalSHA32c885a77b03d234c9c3948c0216417a349f8c64ee827f1c232790e4bac661ce ->patched62a6b3ac31efffb3f12941e6f00b7dac91b8cff0358dc6def7a887aca5b47cc7.
+- Last process legacy_gate.py grt -> grt_policy_tt.tcl in dpkit-kv3_hub_Ei-1018253, scope oth-ubuntu-1012877-1794089760. GRTsaved0congestion, insertionbandPASS but actual13registerpaths>405um/worst1236um geometryFAIL is independent. No routecompletion claimed. KV lead/types informed; preserve exit75 asreviewHOLD, no unchangeddesignretry.
+
+Station resites:
+- Six ORIGINAL I1 frontends preserved, exactattempt dirs atomically exchanged for samepath symlinks S3->S2; originals retained .pre-resite-0222, no cancellation/retry/deletion/specchange.
+- Under kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items: t22a11,t29__clc7772371a12,t44a6,t14a11,t18a14,t52a18. I1S2 codex-wave-0222/station_resite_manifest.json and station_resite_more_manifest.json.
+- First4 hit real defaulttopology stale preCAD afterKITRTL PASS; station/types owns scoped recovery, no duplicate fromme. t18/t52 progressed toPLACE; requests ~/coord/autopilot/kit_wave/s81_slice_station__t18_b3184daef5047/a14 and s81_slice_station__t52_b0d40370ccba1/a18. Station agent owns collection.
+- t45/t36 and stationDRV/oldFLAT newforms all stationlead owned; no duplicate launch by me.
+
+Other diagnosed failures / parked tasks:
+- QC FWv3 a29 admissionbundle failure was transientprepayloadSSH/tar;1492nonpyc files now exact E2/I2, physicalrunner neverstarted. However ACTUALPLACE geometryHOLD: RSTART firsthop676um / E-W/S~1226um only2stages. Do not resumeCTS unchanged. Gaps now owns countedSTARTdepth/nativecontract/model/miter; QC keepsgeometryreview. EarnedPLACE andfailedAPrecord preserved.
+- Portablepacket bounded audit: no existinggenericrepo builder; old_capsule manually captured bind.f+extra_lib then391manifestpreferred/files. Runtime tools/mem_compiler+556proofJSONs are separatecheckoutdeps. Existingimage_params.overlay is onlydeadwt remap, not completecapture. No narrowexistingbuilderfix or duplicateQCsourcefarm added; detailed04:13 note above.
+- KV FDI newcore owner received authoritative QC optional core_flow.apply(grt_nonport_hold=True), codex/qc-parent-hold-src-0222@7f6b7773d8. Stages landedhelper lastafterHB4, onlyFFinputDATA excluded duringrepair, SDCexactrestore/signoffallpaths preserved. No livejobpatch by me.
+- QCtypes owns CTS configuredDPL dc11fafd06, SUc finer tap grid; otherQCclasses remain withlead. Gaps exactinstalledOpenROADzero-edit resizerdiagnosis found endpointcursoradvances, so no unsafeTclno-gain cutoff.
+
+Local own partial clone /srv/opentallas-scratch/claude/codex-wave-0222 is parked on97c91d3446. Its sparse/incompleteworktree lists thousandsunstagedD frominitialclone; NEVER stage-all/reset/delete. Only exactfiles werecommitted. No moreworkafterresetinstruction.
