@@ -472,3 +472,30 @@ def test_shell_probe_runs(tmp_path):
                                                                              text=True))
     got = K.workroot_low(FakeAP(), c, run=run)
     assert list(got) == ["h1"] and got["h1"]["s81"] > 0
+
+
+def test_restage_keeps_attempt_past_place(tmp_path, monkeypatch):
+    # KW-FIX-35-H 11-08: HEAD hd_lep0N a13 was restaged at 05:08 after PLACE RC 0 (geom in a disk wait) and relaunched from
+    # mkdir.  An attempt whose place finished or was admitted keeps its host; one still before place moves as before.
+    monkeypatch.setattr(K, "stop_reason", lambda *a, **k: None)
+    c = cfg(gen_hosts=["intel1", "epyc4"], place_mem_gb=48); c["_otrun_status"] = {h: dict(v) for h, v in ST.items()}
+    done = _rec(tmp_path, "intel1")
+    d = Path(done["dir"])
+    (d / "place.live.log").unlink()
+    (d / "unit.log").write_text("KW_STAGE place x\nKW_STAGE_RC place 0 (physical receipt r)\nKW_STAGE geom y\n")
+    (d / "geom.live.log").write_text("KW12_DISK_WAIT 04:07:26 ot-run: refused: no host qualifies\n")
+    b = tmp_path / "b"; b.mkdir()
+    adm = _rec(b, "intel1")
+    (Path(adm["dir"]) / "place.live.log").write_text("ot-heavy: admitted on intel1\n")
+    (Path(adm["dir"]) / "gen.live.log").write_text("ot-run: -> intel1 (will queue)\n")
+    import os; os.utime(Path(adm["dir"]) / "place.live.log", (1, 1))       # current stage = gen, unadmitted
+    cc = tmp_path / "c"; cc.mkdir()
+    early = _rec(cc, "intel1")
+    (Path(early["dir"]) / "unit.log").write_text("KW_STAGE kit_rtl x\nKW_STAGE_RC kit_rtl 0\nKW_STAGE gen y\n")
+    st = {"items": {"a": done, "b": adm, "c": early}}
+    ap = FakeAP()
+    assert K.heavy_progress(done) == "place" and K.heavy_progress(adm) == "place" and K.heavy_progress(early) == ""
+    assert not K.volume_started(done)                     # the old check alone would have moved it
+    assert K.restage_waiters(ap, c, st, {}) == 1
+    assert done["status"] == "RUNNING" and adm["status"] == "RUNNING" and early["status"] == "RETRY-INFRA"
+    assert ap.calls == [["systemctl", "--user", "stop", "kw-u"]]

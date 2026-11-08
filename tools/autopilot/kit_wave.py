@@ -2147,6 +2147,10 @@ def restage_waiters(AP, cfg, st, notices):
                 why, best = "counted by the sign-off counter", g      # the INFRA path below ends it instead of relaunching
             if not why or volume_started(r):
                 continue
+            # KW-FIX-35-H 11-08: a host move never stops an attempt whose PLACE already ran or was admitted (only the
+            # counted end above may); it waits on its host instead of being relaunched from mkdir
+            if not why.startswith("counted") and heavy_progress(r):
+                continue
             if not AP.DRY:
                 AP.sh(["systemctl", "--user", "stop", r["unit"]], timeout=180)
                 try:
@@ -3698,6 +3702,29 @@ def volume_started(rec):
         return True                                     # unreadable -> treat as running (never cancel blind)
 
 
+KEEP_STAGES = ("place",)        # KW-FIX-35-H 11-08: an attempt past one of these keeps its host (restage / volume cancel)
+
+
+def heavy_progress(rec):
+    """KW-FIX-35-H 11-08: the first P&R stage of KEEP_STAGES this attempt finished (unit.log KW_STAGE_RC <s> 0) or that
+    was admitted on its host (its live log says ADMITTED), else ''.  volume_started only reads the CURRENT stage, so
+    restage_waiters stopped attempts whose PLACE had already run (HEAD hd_lep0N a13 11-07 05:08: place RC 0 after
+    1.5 h, geom in a disk wait) and the relaunch started again from mkdir; HEAD hd_host/hd_lep0N/hd_serdes were
+    restaged 30 times 11-06/07.  Such an attempt waits where it is; unreadable logs count as progress (never stop blind)."""
+    try:
+        d = Path(rec["dir"])
+        log = (d / "unit.log").read_text(errors="replace") if (d / "unit.log").exists() else ""
+        for s in KEEP_STAGES:
+            if re.search(rf"^KW_STAGE_RC {re.escape(s)} 0\b", log, re.M):
+                return s
+            lv = d / f"{s}.live.log"
+            if lv.exists() and ADMITTED in lv.read_text(errors="replace"):
+                return s
+    except (OSError, KeyError, TypeError):
+        return "unreadable"
+    return ""
+
+
 def cancel_class_volume(AP, cfg, st, notices):
     """OWNER 11-01 (COORD 05:3x (1)): when a pilot of an unproven die x kit class fails on a design/flow class after
     volume of that class was queued, stop that volume while it still WAITS (its current ot-run stage not admitted);
@@ -3713,7 +3740,7 @@ def cancel_class_volume(AP, cfg, st, notices):
             c = r.get("volume")
             if r.get("die") != die or r.get("status") != "RUNNING" or not c or c in signed:
                 continue
-            if fail_t.get(c, 0.0) <= float(r.get("started") or 0) or volume_started(r):
+            if fail_t.get(c, 0.0) <= float(r.get("started") or 0) or volume_started(r) or heavy_progress(r):
                 continue
             if not AP.DRY:
                 AP.sh(["systemctl", "--user", "stop", r["unit"]], timeout=180)
