@@ -5179,7 +5179,18 @@
         "slw_hc2__cla3497502__cl16607c7a@12",
         "slw_hc2__cla3497502__cldc737267@10",
         "slw_su_c__cl92142dac@20",
-        "sle_ctl__cl67434795@6"
+        "sle_ctl__cl67434795@6",
+        "cbf_q11@8",
+        "slw_su_c__cl92142dac@21",
+        "sle_fw_v3@29",
+        "cbf_q00__cl1b5a6458@9",
+        "sle_fw_v2__cl6740750e@5",
+        "sle_fw_v1__cl9d029624@6",
+        "slw_fw_v1__clf51c11d8__clc7ddab13@7",
+        "slw_stm_v1__cl05fc43f7__cl389df4e9@15",
+        "cbn_q00__cldbcda913@14",
+        "cbn_q00__cl622f65d2@9",
+        "sle_stm_v2__cl55be2264@7"
       ],
       "queue_src": "main@d95ec5a45a60",
       "type_args": {
@@ -5392,6 +5403,10 @@
         "sle_sc_v3": [
           "--dpl-diamond",
           "sle_sc_v3"
+        ],
+        "sle_stm_v2__cl55be2264": [
+          "--gpl-plain",
+          "sle_stm_v2__cl55be2264"
         ]
       },
       "retry_fix": {
@@ -5665,7 +5680,18 @@
         "slw_hc2__cla3497502__cldc737267@10": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
         "slw_su_c__cl92142dac@20": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
         "sle_ctl__cl67434795@6": "KW-FIX-35 2026-11-08 04:37 PST: REDESIGN: QC-TYPES-8 02:15 (1): RE-FORM conservative kit OT_CONS_KIT=1 (ring strip 3 rows) for the CLAND band DPL-0033 at CTS legalize (COORD 02:17)",
-        "sle_st_a_v1__cl989804f6__cl18eece69@8": "KW-FIX-35 2026-11-08 04:37 PST: REDESIGN: QC-TYPES-8 02:15 (2): GRT near miss overflow 3 -> OT_GRT_ALLOW_CONGESTION=1, DRT/DRC still gates; one iteration (COORD 02:17)"
+        "sle_st_a_v1__cl989804f6__cl18eece69@8": "KW-FIX-35 2026-11-08 04:37 PST: REDESIGN: QC-TYPES-8 02:15 (2): GRT near miss overflow 3 -> OT_GRT_ALLOW_CONGESTION=1, DRT/DRC still gates; one iteration (COORD 02:17)",
+        "cbf_q11@8": "KW-FIX-35 2026-11-08 04:54 PST (OWNER 04:46 all class fixes; QC-TYPES-9 04:40 CLASS): REDESIGN: QC-TYPES-9 (2): RE-FORM conservative ring strip (OT_CONS_KIT=1, OT_CLAND_STRIP_ROWS 3, util 0.35) for the CLAND band DPL-0033 in CTS",
+        "slw_su_c__cl92142dac@21": "KW-FIX-35 2026-11-08 04:54 PST (OWNER 04:46 all class fixes; QC-TYPES-9 04:40 CLASS): REDESIGN: QC-TYPES-9 (2): RE-FORM conservative ring strip (OT_CONS_KIT=1, OT_CLAND_STRIP_ROWS 3, util 0.35) for the CLAND band DPL-0033 in CTS",
+        "sle_fw_v3@29": "KW-FIX-35 2026-11-08 04:54 PST (OWNER 04:46 all class fixes; QC-TYPES-9 04:40 CLASS): INFRA: QC-TYPES-9 (4): a29 never ran (ADMISSION_TOOLS transfer failed, runner not started); same OT_CONS_KIT=1 form as approved 01:59",
+        "cbf_q00__cl1b5a6458@9": "KW-FIX-35 2026-11-08 04:54 PST (OWNER 04:46 all class fixes; QC-TYPES-9 04:40 CLASS): REDESIGN: QC-TYPES-9 (3): GRT near miss (overflow <= 100) -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch",
+        "sle_fw_v2__cl6740750e@5": "KW-FIX-35 2026-11-08 04:54 PST (OWNER 04:46 all class fixes; QC-TYPES-9 04:40 CLASS): REDESIGN: QC-TYPES-9 (3): GRT near miss (overflow <= 100) -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch",
+        "sle_fw_v1__cl9d029624@6": "KW-FIX-35 2026-11-08 04:54 PST (OWNER 04:46 all class fixes; QC-TYPES-9 04:40 CLASS): INFRA: QC-TYPES-9 (4): epyc5 scratch floor NOT RUN 11-07 05:4x; never reached P&R",
+        "slw_fw_v1__clf51c11d8__clc7ddab13@7": "KW-FIX-35 2026-11-08 04:54 PST (OWNER 04:46 all class fixes; QC-TYPES-9 04:40 CLASS): INFRA: QC-TYPES-9 (4): epyc5 scratch floor NOT RUN 11-07 05:4x; never reached P&R",
+        "slw_stm_v1__cl05fc43f7__cl389df4e9@15": "KW-FIX-35 2026-11-08 04:54 PST (OWNER 04:46 all class fixes; QC-TYPES-9 04:40 CLASS): INFRA: QC-TYPES-9 (4): false FAIL (PLACE rc 0, LEC exit 0); stage_resume from its 3_place",
+        "cbn_q00__cldbcda913@14": "KW-FIX-35 2026-11-08 04:54 PST (OWNER 04:46 all class fixes; QC-TYPES-9 04:40 CLASS): REDESIGN: QC-TYPES-9 (5): missing ring-provider prov view fixed: 5 signed sle_cland_* views from codex-qct-providers-0222 resign_dy added to prov_view_sources",
+        "cbn_q00__cl622f65d2@9": "KW-FIX-35 2026-11-08 04:54 PST (OWNER 04:46 all class fixes; QC-TYPES-9 04:40 CLASS): REDESIGN: QC-TYPES-9 (5): missing ring-provider prov view fixed: 5 signed sle_cland_* views from codex-qct-providers-0222 resign_dy added to prov_view_sources",
+        "sle_stm_v2__cl55be2264@7": "KW-FIX-35 2026-11-08 04:54 PST (OWNER 04:46 all class fixes; QC-TYPES-9 04:40 CLASS): REDESIGN: QC-TYPES-9 (8) / QC-TYPES-7 (E): GPL class -> type_args --gpl-plain"
       },
       "gen_hosts": [
         "intel1",
@@ -5800,6 +5826,18 @@
           "OT_CONS_KIT": "1"
         },
         "sle_st_a_v1__cl989804f6__cl18eece69": {
+          "OT_GRT_ALLOW_CONGESTION": "1"
+        },
+        "cbf_q11": {
+          "OT_CONS_KIT": "1"
+        },
+        "slw_su_c__cl92142dac": {
+          "OT_CONS_KIT": "1"
+        },
+        "cbf_q00__cl1b5a6458": {
+          "OT_GRT_ALLOW_CONGESTION": "1"
+        },
+        "sle_fw_v2__cl6740750e": {
           "OT_GRT_ALLOW_CONGESTION": "1"
         }
       },
@@ -6077,6 +6115,41 @@
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/bdfed4461495/sle_cland_w767_e_200",
             "job": "COUNTED sle_cland_w767_e_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w767_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
           }
+        ],
+        "sle_cland_w515_n": [
+          {
+            "host": "epyc6",
+            "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w515_n",
+            "job": "COUNTED sle_cland_w515_n epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n/PROVENANCE.json (QC-TYPES-9)"
+          }
+        ],
+        "sle_cland_w515_n_300": [
+          {
+            "host": "epyc6",
+            "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w515_n_300",
+            "job": "COUNTED sle_cland_w515_n_300 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n_300/PROVENANCE.json (QC-TYPES-9)"
+          }
+        ],
+        "sle_cland_w515_n_301": [
+          {
+            "host": "epyc6",
+            "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w515_n_301",
+            "job": "COUNTED sle_cland_w515_n_301 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n_301/PROVENANCE.json (QC-TYPES-9)"
+          }
+        ],
+        "sle_cland_w517_s_300": [
+          {
+            "host": "epyc6",
+            "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w517_s_300",
+            "job": "COUNTED sle_cland_w517_s_300 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w517_s_300/PROVENANCE.json (QC-TYPES-9)"
+          }
+        ],
+        "sle_cland_w517_s_301": [
+          {
+            "host": "epyc6",
+            "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w517_s_301",
+            "job": "COUNTED sle_cland_w517_s_301 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w517_s_301/PROVENANCE.json (QC-TYPES-9)"
+          }
         ]
       },
       "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:06 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 19 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
@@ -6213,7 +6286,37 @@
       "retry_prev_kw35a_added": [
         "sle_ctl__cl67434795@6"
       ],
-      "note_kw35a": "KW-FIX-35 2026-11-08 04:37 PST: COORD 02:17 adopt qc53v4s (plan_qc53v4s.json sha 16f4b9ef4379 staged by KW-FIX-34 on intel1/epyc2/epyc4/epyc5/epyc6) + bind_v4s; CONS/ALLOW_CONG item_env; stm_v2 cl9beb hold; coll_ftc held for the private canary. Revert *_prev_kw35a"
+      "note_kw35a": "KW-FIX-35 2026-11-08 04:37 PST: COORD 02:17 adopt qc53v4s (plan_qc53v4s.json sha 16f4b9ef4379 staged by KW-FIX-34 on intel1/epyc2/epyc4/epyc5/epyc6) + bind_v4s; CONS/ALLOW_CONG item_env; stm_v2 cl9beb hold; coll_ftc held for the private canary. Revert *_prev_kw35a",
+      "prov_view_sources_prev_kw35b": {
+        "sle_cland_w515_n": null,
+        "sle_cland_w515_n_300": null,
+        "sle_cland_w515_n_301": null,
+        "sle_cland_w517_s_300": null,
+        "sle_cland_w517_s_301": null
+      },
+      "type_args_prev_kw35b": {
+        "sle_stm_v2__cl55be2264": null
+      },
+      "item_env_prev_kw35b": {
+        "cbf_q11": null,
+        "slw_su_c__cl92142dac": null,
+        "cbf_q00__cl1b5a6458": null,
+        "sle_fw_v2__cl6740750e": null
+      },
+      "retry_prev_kw35b_added": [
+        "cbf_q11@8",
+        "slw_su_c__cl92142dac@21",
+        "sle_fw_v3@29",
+        "cbf_q00__cl1b5a6458@9",
+        "sle_fw_v2__cl6740750e@5",
+        "sle_fw_v1__cl9d029624@6",
+        "slw_fw_v1__clf51c11d8__clc7ddab13@7",
+        "slw_stm_v1__cl05fc43f7__cl389df4e9@15",
+        "cbn_q00__cldbcda913@14",
+        "cbn_q00__cl622f65d2@9",
+        "sle_stm_v2__cl55be2264@7"
+      ],
+      "note_kw35b": "KW-FIX-35 2026-11-08 04:54 PST (OWNER 04:46 all class fixes; QC-TYPES-9 04:40 CLASS): QC CLASS batch: CONS x2 + ALLOW_CONG x2 + infra x4 + prov views (5 sle_cland providers) for cbn_q00 x2 + gpl-plain stm_v2 cl55be2264. Revert *_prev_kw35b"
     },
     "hbm": {
       "enabled": true,
