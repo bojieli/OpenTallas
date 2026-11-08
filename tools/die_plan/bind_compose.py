@@ -15,7 +15,7 @@ def ident(s):
     return s if re.fullmatch(r'[A-Za-z_][A-Za-z0-9_$]*', s) else '\\' + s + ' '
 
 
-def compose(F, rules, spec, Cell):
+def compose(F, rules, spec, Cell, split=None, base='.'):
     """Return (generated sources, receipt); atomically replace complete member sets.
 
     spec={cores:[{inst,module,members:[full path],ports:{name:{dir,
@@ -144,9 +144,20 @@ def compose(F, rules, spec, Cell):
                 if not constant or constant[0] not in ('0','1'):
                     raise CompositionError(f'{path}: original net has no preserved driver {b}')
                 assigns.append(f"    assign {wire[b]} = 1'b{constant[0]};")
+        # DIE-HBM-92-SU 11-08 (opt-in asbuilt.compose_split, absent = unchanged): members regrouped under hard sub-cores.
+        srule=next((r for r in (split or []) if re.fullmatch(r['inst'],path)),None)
+        sgroups=[]
+        if srule is not None:
+            import bind_compose_split as SP
+            try:
+                for sub in srule['subs']:
+                    sgroups += [(sub,k,roles) for k,roles in SP.groups(sub,cs)]
+            except SP.SplitError as exc: raise CompositionError(f'{path}: {exc}') from exc
+        grouped={c.path for _,_,roles in sgroups for c in roles.values()}
         body=[f'module {mod} (',',\n'.join(declarations),');']
         body += [f'    wire {w};' for w in wire.values()] + assigns
         terminal_record=[]
+        term_expr={}
         for ci,c in enumerate(cs):
             conns=[]; expressions={}
             for pn,bs in sorted(c.ports.items()):
@@ -155,6 +166,7 @@ def compose(F, rules, spec, Cell):
                     key=(c.path,pn,i)
                     e=(mapped[key] if key in mapped and c.dirs[pn]=='input' else f"1'b{b}" if isinstance(b,str) else wire[b])
                     expr.append(e)
+                    term_expr[key]=e
                     terminal_record.append([c.path,pn,i,c.dirs[pn],b,e])
                 # Empty RTLIL connections stay open; {} is not valid Verilog.
                 expression="{"+", ".join(reversed(expr))+"}" if expr else ""
@@ -168,10 +180,38 @@ def compose(F, rules, spec, Cell):
                 try: body.append(_glue(c,expressions,'compose_m'+str(ci)))
                 except BindError as exc: raise CompositionError(str(exc)) from exc
                 continue
+            if c.path in grouped:
+                continue
             ps=', '.join(f'.{ident(k)}({v})' for k,v in sorted({**c.params,**overrides.get(c.path,{})}.items()))
             body.append(f'    {ident(c.module)}'+(f' #({ps})' if ps else '')+f' m{ci} ('+', '.join(conns)+');')
-        body.append('endmodule\n')
-        text='\n'.join(body)
+        split_record=None
+        if srule is not None:
+            mods={}
+            term_net={k:v[0] for k,v in endpoints.items()}
+            nterms=defaultdict(set)
+            for k,(b,_) in endpoints.items():
+                if isinstance(b,int): nterms[b].add(k)
+            pnets=set(netports)
+            split_record=dict(rule=srule['inst'],levels=srule.get('levels',[]),subs=[])
+            try:
+                for sub,k,roles in sgroups:
+                    if sub['module'] not in mods: mods[sub['module']]=SP.load(sub,base)
+                    conn,rec=SP.bind_sub(sub,mods[sub['module']],roles,term_expr,term_net,nterms,pnets)
+                    name=sub['name'].format(k=k)
+                    cx=', '.join(f'.{ident(p)}('+'{'+', '.join(reversed(v))+'})' for p,v in sorted(conn.items()))
+                    body.append(f'    {ident(sub["module"])} {name} ({cx});')
+                    for w in rec.pop('tie0'):
+                        if not re.fullmatch(r'n\d+',w): raise CompositionError(f'{path}: dropped export {w} is not a cut wire')
+                        body.append(f"    assign {w} = 1'b0;  // dropped export of {name}: {sub.get('drop_reason','')}")
+                    split_record['subs'].append(dict(rec,inst='.'.join(srule.get('levels',[])+[name])))
+            except SP.SplitError as exc: raise CompositionError(f'{path}: {exc}') from exc
+            if len(grouped)!=sum(len(r) for _,_,r in sgroups): raise CompositionError(f'{path}: split member overlap')
+            mod=mod+srule['suffix']
+            parts=SP.emit(mod,declarations,body[3:],srule.get('levels',[]))
+            text='\n'.join(t for _,t in parts)
+        else:
+            body.append('endmodule\n')
+            text='\n'.join(body)
         # The terminal map is exhaustive and every generated expression resolves to
         # the identical original net/constant; no transport is collapsed here.
         expected={(c.path,p,i,d,b) for (cpath,p,i),(b,d) in endpoints.items() for c in [bypath[cpath]]}
@@ -183,6 +223,7 @@ def compose(F, rules, spec, Cell):
         module_sources[mod]=text
         replacements.append(Cell(path,mod,{},ports,dirs,'leaf',ytype=mod,yparams={}))
         extra={'member_params':{k:overrides[k] for k in sorted(overrides)}} if overrides else {}
+        if split_record: extra['split']=split_record
         records.append(dict(inst=path,module=mod,members=members,terminal_count=len(got),terminal_equality=True,**extra,
                             terminals=terminal_record,rtl_sha256=hashlib.sha256(text.encode()).hexdigest()))
         used |= ms
@@ -222,7 +263,16 @@ def apply(binder, spec_path):
     else:
         spec=json.loads(path.read_text())
     widths={c.path:{p:len(bs) for p,bs in c.ports.items()} for c in getattr(binder.F,'cells',None) or []}
-    sources,receipt=compose(binder.F,binder.R,spec,__import__('bind_elab').Cell)
+    split=(getattr(binder, "ab", None) or {}).get("compose_split")
+    kw=dict(split=split,base=binder.base) if split else {}   # no compose_split: the pre-split call, unchanged
+    sources,receipt=compose(binder.F,binder.R,spec,__import__('bind_elab').Cell,**kw)
+    if split:
+        # sub-core sources (the hard cores' own RTL) join the bind library so verify / kit-rtl resolve the masters
+        for r in split:
+            for sub in r['subs']:
+                for f in sub.get('sources',[]):
+                    p=f if Path(f).is_absolute() else str(Path(binder.base)/f)
+                    if p not in binder.extra_lib: binder.extra_lib.append(p)
     binder.composition_alias,binder.composition_cells=port_alias(spec,widths)
     # Keep source paths outside the repository tree, immutable content-addressed.
     out=path.parent/'composed_rtl';out.mkdir(exist_ok=True)
