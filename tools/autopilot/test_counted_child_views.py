@@ -48,6 +48,23 @@ class Order(unittest.TestCase):
         self.assertEqual([c["dir"] for c in C.order_candidates(cands[:2], [])], ["0", "1"])
 
 
+class LefOnly(unittest.TestCase):
+    def test_lef_only_problem_triggers_odb_abstract(self):
+        m = "ot_hbm_su_pcol_s"
+        self.assertTrue(C.lef_only({"problems": [f"view file {m}.lef not found in kit/views, base or signoff dir"]}, m))
+        self.assertFalse(C.lef_only({"problems": [f"view file {m}.lef not found", "stale sign-off record"]}, m))
+        self.assertFalse(C.lef_only({"problems": [f"view file {m}_ff.lib not found"]}, m))
+        self.assertFalse(C.lef_only({"problems": []}, m))
+
+
+class Parse(unittest.TestCase):
+    def test_one_line_and_indented(self):
+        self.assertEqual(C.parse_result('log\n{"module": "m", "complete": true}\n')["module"], "m")
+        r = C.parse_result('x {"a": 1}\n{\n "module": "m",\n "complete": false,\n "problems": ["p {q}"]\n}\n')
+        self.assertFalse(r["complete"])
+        self.assertIsNone(C.parse_result("no json"))
+
+
 class Dedup(unittest.TestCase):
     def test_same_view_in_several_worktrees_is_one_candidate(self):
         recs = {"m": [("m", dict(host="e2", signoff=f"/w{i}/signoff.json", kit="/k", base="/b", db="/b/6_final.odb",
