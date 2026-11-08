@@ -2370,6 +2370,10 @@ class Binder:
                     changed.append(dict(inst=path, param=k, asbuilt=old, bound=v))
                 c.params[k] = str(v)
         self.param_regen = dict(file=str(spec["file"]), changed=changed, record=r.get("record", {}))
+        # DIE-HBM-92-LCHK: the hook's declared fixed-latency contracts (latency_consumers.py checks every instance)
+        lc = r.get("latency_contracts") or getattr(mod, "LATENCY_CONTRACTS", None)
+        if lc:
+            self.param_regen["latency_contracts"] = list(lc)
 
     def bus_groups(self):
         """as-built timing groups for the planner (COORD R8): bits that must keep their as-built relative timing.
@@ -4459,6 +4463,14 @@ def cmd_bind(a):
     (out / "bind_sinks.json").write_text(json.dumps(sinks))
     bg = B.bus_groups()
     rep["bus_groups"] = bg["summary"]
+    # DIE-HBM-92-LCHK F4: R8 on every bind + declared fixed-latency contracts vs the landed deltas (bind correctness)
+    import latency_consumers as LC
+    lc = LC.check(LC.binder_leaves(B, yjs), bg, B.param_regen, B.ab, raw, LC.r8_options(B.ab, B.base))
+    (out / "bind_latency_consumers.json").write_text(json.dumps(lc, indent=1, default=str) + "\n")
+    rep["latency_consumers"] = dict(stats=lc["stats"], r8={k: v for k, v in lc["r8"].items() if k != "messages"},
+                                    advisory=[f"{x['module']} n={x['n']} {sorted(x['params'])}" for x in lc["advisory"]][:50])
+    B.errors.extend(lc["errors"])
+    rep["errors"], rep["n_errors"] = B.errors[:2000], len(B.errors)
     (out / "bus_groups.json").write_text(json.dumps(bg, indent=0))
     (out / "bind_report.json").write_text(json.dumps(rep, indent=1))
     if not B.errors:

@@ -54,6 +54,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve()
 REPO = HERE.parents[2]
+sys.path.insert(0, str(HERE.parent))
 SCHEMA = "opentallas.die_plan.regen_constants.v1"
 
 
@@ -154,6 +155,33 @@ class Bound:
                 ps = dict(re.findall(r"\.(\w+)\s*\(([^()]*)\)", m.group(2)))
                 out[m.group(3)] = dict(module=m.group(1), params=ps, file=f.name)
         return out
+
+    def leaves(self):
+        """DIE-HBM-92-LCHK F3: the as-built leaf map {as-built path: dict(module, params)} -- BIND_DIR/asbuilt.json (the
+        Yosys netlist the bind read; same paths as bus_groups sinks / sources), else the bound RTL `// as-built <path>`
+        leaf comments (module + #() overrides).  rtl_insts() keys by the bound instance name and needs "module #(", so a
+        leaf bound without #() or under a type-local name was invisible (HBM bind_d: BANK_CLIENT_RT PENDING, verdict
+        PASS).  None = neither source exists."""
+        if hasattr(self, "_leaves"):
+            return self._leaves
+        import latency_consumers as LC
+        y = _load(self.dir / "asbuilt.json")
+        self._leaves = None
+        if y and y.get("modules"):
+            self._leaves = LC.yosys_leaves(y)
+        elif (self.dir / "rtl").is_dir():
+            self._leaves = {}
+            pat = re.compile(r"//\s*as-built\s+(\S+)\s*\n\s*(\w+)\s*(#\s*\()?")
+            for f in sorted((self.dir / "rtl").glob("*.sv")) + sorted((self.dir / "rtl").glob("*.v")):
+                t = f.read_text(errors="replace")
+                for m in pat.finditer(t):
+                    ps = {}
+                    if m.group(3):
+                        body = _paren(t, m.end() - 1)[0]
+                        ps = {k: LC._int(v) if LC._int(v) is not None else v
+                              for k, v in re.findall(r"\.(\w+)\s*\(([^()]*)\)", body)}
+                    self._leaves[m.group(1)] = dict(module=m.group(2), params=ps)
+        return self._leaves
 
     def top_sha(self):
         h = hashlib.sha256()
@@ -1164,30 +1192,65 @@ def hbm_rules(o, src_root, hbm_tools):
     except ImportError as e:
         o.pending("BANK_CLIENT_RT", "rtl", f"d4g_bank_latency not importable: {e}", group="l12")
         return
-    banks = B.rtl_insts("|".join(BL.BANK_PIN))
-    clients = B.rtl_insts("|".join(re.escape(m) for m in BL.RULES))
-    res = {}
+    # DIE-HBM-92-LCHK F3 (fail closed): clients and banks come from the as-built leaf map (paths = bus_groups names),
+    # never from "module #(" in the bound RTL; a die whose as-built holds a RULES module is never PENDING.
+    import latency_consumers as LC
+    leaves = B.leaves()
+    if leaves is None:
+        txt = " ".join(f.read_text(errors="replace") for f in (B.dir / "rtl").glob("*.sv")) if (B.dir / "rtl").is_dir() else ""
+        hit = sorted(m for m in BL.RULES if re.search(rf"\b{re.escape(m)}\b", txt))
+        if hit:
+            o.error("BANK_CLIENT_RT", "rtl", f"bound RTL names d4g RULES modules {hit[:6]} but the bind dir has no as-built "
+                    "leaf map (asbuilt.json / '// as-built' comments): the round trips cannot be checked", group="l12")
+        else:
+            o.pending("BANK_CLIENT_RT", "rtl", "no as-built leaf map and no RULES module in the bound RTL", group="l12")
+        return
+    banks = {p: v for p, v in leaves.items() if v["module"] in BL.BANK_PIN}
+    clients = {p: v for p, v in leaves.items() if v["module"] in BL.RULES}
+    ap = B.applied()
+    res, bad, unres = {}, [], []
     for inst, c in sorted(clients.items()):
-        for port, kind, param, ref, ref_rt, bank_lat, why in BL.RULES[c["module"]]:
-            back = BL.READ.get(port) or BL.WRITE.get(port) or port.replace("q", "r")
+        # RULES rows: (request port, kind, param, RTL default, ref value, ref round trip, why)
+        for port, kind, param, dflt, ref, ref_rt, why in BL.RULES[c["module"]]:
+            back = (re.sub(r"wq(\d*)$", r"(w_done|wq_done)\1", port) + "|" + port + "_done") if kind == "wr" else \
+                re.sub(r"([rp])q(\d*)$", lambda x: ("rr" if x.group(1) == "r" else "pr") + x.group(2), port)
+            reqs = B.members(source=rf"^{re.escape(inst)}\.{port}\d*$")
+            if not reqs:
+                continue                        # request leg inside one partition: the as-built value holds
+            hook = (inst, param) in ap
+            have = ap[(inst, param)][1] if hook else c["params"].get(param, dflt)
+            other = sorted({m["sink"] for m in reqs if m["sink"] not in banks})
+            if other and not hook:
+                unres.append(f"{inst}.{param} ({c['module']}) request {port} lands on non-bank leaf {other[:3]}")
+                continue
             rts = {}
-            for m in B.members(source=rf"^{re.escape(inst)}\.{port}\d*$"):
+            for m in reqs:
                 bk = banks.get(m["sink"])
                 if not bk:
                     continue
-                rr = B.members(source=rf"^{re.escape(m['sink'])}\.", sink=rf"^{re.escape(inst)}$", port=rf"^{back}")
+                rr = B.members(source=rf"^{re.escape(m['sink'])}\.", sink=rf"^{re.escape(inst)}$", port=rf"^({back})$")
                 pin = BL.BANK_PIN.get(bk["module"], 0)
-                rts[m["sink"]] = bank_lat + pin + m["landed"] + (max(x["landed"] for x in rr) if rr else 0)
+                rts[m["sink"]] = (BL.BANK_WR if kind == "wr" else BL.BANK_RD) + pin + m["landed"] + \
+                    (max(x["landed"] for x in rr) if rr else 0)
             if not rts:
                 continue
-            rt = max(rts.values())
-            res[f"{inst}.{param}"] = dict(value=ref + rt - ref_rt, per_bank={b: ref + v - ref_rt for b, v in rts.items()},
-                                          equal=len(set(rts.values())) == 1, module=c["module"])
-    if not res:
-        o.pending("BANK_CLIENT_RT", "rtl", "no bank client / bank crossing found in the bound RTL", group="l12")
-    else:
-        o.add("BANK_CLIENT_RT", res, "rtl", "param = ref + RT - ref_rt; RT_b = BANK + PIN + D(rq->bank) + D(bank->rr) "
-              "(d4g_bank_latency.py l12 law; SCALAR = max over banks + pads, VECTOR = per bank)", group="l12")
+            want = ref + max(rts.values()) - ref_rt
+            row = dict(value=want, bound=have, hook=hook, per_bank={b: ref + v - ref_rt for b, v in rts.items()},
+                       equal=len(set(rts.values())) == 1, module=c["module"])
+            if (c["module"], param) not in BL.VECTOR_OK and LC._int(have) != want:
+                row["mismatch"] = f"bound {param}={have}, l12 law {want}"
+                bad.append(f"{inst}.{param} bound {have} != {want}")
+            res[f"{inst}.{param}"] = row
+    if unres:
+        o.error("BANK_CLIENT_UNRESOLVED", "rtl", f"{len(unres)} RULES client legs cross to a non-bank leaf and no param_regen "
+                f"hook regenerated them (the l12 law cannot derive them here; tools/die_plan/latency_consumers.py): "
+                + "; ".join(unres[:8]), group="l12")
+    r = o.add("BANK_CLIENT_RT", res, "rtl", "param = ref + RT - ref_rt; RT_b = BANK + PIN + D(rq->bank) + D(bank->rr) "
+              "(d4g_bank_latency.py l12 law; SCALAR = max over banks + pads, VECTOR = per bank); bound value = the hook's "
+              "or the as-built leaf's", group="l12", status="MISMATCH" if bad else "OK",
+              note=None if clients else "no d4g RULES client in the as-built leaf map")
+    if bad:
+        r["mismatch"] = f"{len(bad)} bound values differ from the l12 law: " + "; ".join(bad[:10])
 
 
 # ============================================================================================================ S81
