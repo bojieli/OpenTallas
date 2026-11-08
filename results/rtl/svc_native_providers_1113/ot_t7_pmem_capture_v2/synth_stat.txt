@@ -1,0 +1,56 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+21. Printing statistics.
+
+=== ot_t7_pmem_capture_v2 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    11188        -    11188        - wires
+    14273        -    14273        - wire bits
+     1043        -     1043        - public wires
+     4128        -     4128        - public wire bits
+       11        -       11        - ports
+     3096        -     3096        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+    12203 1.25E+03    12203 1.25E+03 cells
+     1027   89.842     1027   89.842   AND2x2_ASAP7_75t_R
+     1541  134.807     1541  134.807   AND3x1_ASAP7_75t_R
+        1    0.102        1    0.102   AND4x1_ASAP7_75t_R
+        2    0.233        2    0.233   AND5x1_ASAP7_75t_R
+     4099  358.581     4099  358.581   AO21x1_ASAP7_75t_R
+        1    0.117        1    0.117   AOI21x1_ASAP7_75t_R
+        2    0.525        2    0.525   BUFx12f_ASAP7_75t_R
+     1117   81.429     1117   81.429   BUFx2_ASAP7_75t_R
+       71    6.211       71    6.211   BUFx3_ASAP7_75t_R
+       30    3.499       30    3.499   BUFx4f_ASAP7_75t_R
+       31     4.52       31     4.52   BUFx6f_ASAP7_75t_R
+     1029  300.056     1029  300.056   DFFHQNx1_ASAP7_75t_R
+        2    0.262        2    0.262   HAxp5_ASAP7_75t_R
+      522   22.832      522   22.832   INVx1_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        2    0.175        2    0.175   NAND2x1_ASAP7_75t_R
+        1    0.146        1    0.146   NAND2x2_ASAP7_75t_R
+     2048  179.159     2048  179.159   NOR2x1_ASAP7_75t_R
+      516   52.663      516   52.663   OA21x2_ASAP7_75t_R
+        1    0.146        1    0.146   OAI22x1_ASAP7_75t_R
+       84    8.573       84    8.573   OR4x1_ASAP7_75t_R
+       64    7.465       64    7.465   OR5x1_ASAP7_75t_R
+        1    0.175        1    0.175   XNOR2x1_ASAP7_75t_R
+        1     0.16        1     0.16   XNOR2x2_ASAP7_75t_R
+        5    0.802        5    0.802   XOR2x2_ASAP7_75t_R
+        4        -        4        -   ot_sram_1r1w_256x256_m1_r0c0
+
+   Area for cell type \ot_sram_1r1w_256x256_m1_r0c0 is unknown!
+
+   Chip area for module '\ot_t7_pmem_capture_v2': 1252.538640
+     of which used for sequential elements: 300.056400 (23.96%)
+

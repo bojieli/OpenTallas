@@ -1,0 +1,32 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+21. Printing statistics.
+
+=== ot_svc_stage_v2_inventory ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        7        -        7        - wires
+     2142        -     2142        - wire bits
+        6        -        6        - public wires
+     2141        -     2141        - public wire bits
+        6        -        6        - ports
+     2141        -     2141        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        5    0.044        5    0.044 cells
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        4        -        4        -   ot_sram_1r1w_160x265_m1_r0c0
+
+   Area for cell type \ot_sram_1r1w_160x265_m1_r0c0 is unknown!
+
+   Chip area for module '\ot_svc_stage_v2_inventory': 0.043740
+     of which used for sequential elements: 0.000000 (0.00%)
+

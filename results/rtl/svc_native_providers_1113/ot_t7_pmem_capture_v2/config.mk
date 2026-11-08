@@ -1,0 +1,12 @@
+export DESIGN_NICKNAME = ot_t7_pmem_capture_v2
+export DESIGN_NAME = ot_t7_pmem_capture_v2
+export PLATFORM = asap7
+export VERILOG_FILES = /work/repo/results/rtl/s81_svc_memory_fit_1103/ot_t7_land_capture_v2.sv /work/repo/results/rtl/s81_svc_memory_fit_1103/ot_t7_pmem_capture_v2.sv /work/repo/results/rtl/s81_svc_memory_fit_1103/ot_t7_pvq_capture_v2.sv /work/repo/results/rtl/s81_svc_memory_fit_1103/ot_hdc_v41x_attn_staging_fit.sv /work/repo/rtl/hdc/v41x/ot_hdc_v41x_idx_hslice.sv /work/repo/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv /work/repo/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv /work/repo/rtl/hdc/ot_hdc_prefix.sv /work/repo/rtl/hdc/ot_hdc_fastfp.sv /work/repo/rtl/hdc/ot_hdc_fp32_add_lat.sv /work/repo/rtl/hdc/ot_hdc_delay.sv /work/repo/rtl/lib/ot_rst_relay.sv /work/repo/rtl/lib/ot_reset_sync.sv /work/repo/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv /work/repo/physical/asap7_memory_macros_v2/ot_sram_1r1w_160x256_m1_r0c0/ot_sram_1r1w_160x256_m1_r0c0_bb.v /work/repo/physical/asap7_memory_macros_v2/ot_sram_1r1w_160x265_m1_r0c0/ot_sram_1r1w_160x265_m1_r0c0_bb.v /work/repo/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m1_r0c0/ot_sram_1r1w_256x256_m1_r0c0_bb.v /work/repo/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_bb.v /work/repo/ot_svc_stage_v2_inventory.sv
+export VERILOG_DEFINES = -DSYNTHESIS
+export SDC_FILE = /work/sizing_r2/ot_t7_pmem_capture_v2/c.sdc
+export SYNTH_HIERARCHICAL = 0
+export SYNTH_REPEATABLE_BUILD = 1
+export SYNTH_MEMORY_MAX_BITS = 16384
+export CORNER = TC
+export CORNERS = tc
+export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)

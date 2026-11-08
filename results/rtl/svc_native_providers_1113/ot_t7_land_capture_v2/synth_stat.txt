@@ -1,0 +1,71 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+21. Printing statistics.
+
+=== ot_t7_land_capture_v2 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    16792        -    16792        - wires
+    21705        -    21705        - wire bits
+     3613        -     3613        - public wires
+     8526        -     8526        - public wire bits
+       10        -       10        - ports
+     4923        -     4923        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+    14781 1.64E+03    14781 1.64E+03 cells
+     2611   228.41     2611   228.41   AND2x2_ASAP7_75t_R
+       22    3.208       22    3.208   AND2x4_ASAP7_75t_R
+      185   16.184      185   16.184   AND3x1_ASAP7_75t_R
+       24    2.449       24    2.449   AND4x1_ASAP7_75t_R
+        1    0.117        1    0.117   AND5x1_ASAP7_75t_R
+        2    0.467        2    0.467   AO211x2_ASAP7_75t_R
+     2291  200.417     2291  200.417   AO21x1_ASAP7_75t_R
+        2    0.292        2    0.292   AO221x1_ASAP7_75t_R
+      642   84.243      642   84.243   AO22x1_ASAP7_75t_R
+      614   71.617      614   71.617   AO32x1_ASAP7_75t_R
+       57    8.311       57    8.311   AO33x2_ASAP7_75t_R
+      362   42.224      362   42.224   AOI21x1_ASAP7_75t_R
+      637   92.875      637   92.875   AOI22x1_ASAP7_75t_R
+     1624   118.39     1624   118.39   BUFx2_ASAP7_75t_R
+       79    6.911       79    6.911   BUFx3_ASAP7_75t_R
+        2    0.233        2    0.233   BUFx4f_ASAP7_75t_R
+        1    0.117        1    0.117   BUFx5_ASAP7_75t_R
+       11    1.604       11    1.604   BUFx6f_ASAP7_75t_R
+     1321  385.204     1321  385.204   DFFHQNx1_ASAP7_75t_R
+        1    0.131        1    0.131   HAxp5_ASAP7_75t_R
+      651   28.475      651   28.475   INVx1_ASAP7_75t_R
+        2    0.117        2    0.117   INVx2_ASAP7_75t_R
+     1628  142.417     1628  142.417   NAND2x1_ASAP7_75t_R
+       83    7.261       83    7.261   NOR2x1_ASAP7_75t_R
+        4    0.583        4    0.583   NOR2x2_ASAP7_75t_R
+        1     0.16        1     0.16   NOR3x1_ASAP7_75t_R
+     1031  120.256     1031  120.256   OA211x2_ASAP7_75t_R
+       45    4.593       45    4.593   OA21x2_ASAP7_75t_R
+        7    1.021        7    1.021   OA22x2_ASAP7_75t_R
+        4    0.875        4    0.875   OA31x2_ASAP7_75t_R
+       18      2.1       18      2.1   OAI21x1_ASAP7_75t_R
+       20     1.75       20     1.75   OR2x2_ASAP7_75t_R
+        1    0.175        1    0.175   OR2x6_ASAP7_75t_R
+      736   64.385      736   64.385   OR3x1_ASAP7_75t_R
+       28    2.858       28    2.858   OR4x1_ASAP7_75t_R
+        7    0.816        7    0.816   OR5x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.175        1    0.175   XNOR2x1_ASAP7_75t_R
+        9    1.443        9    1.443   XNOR2x2_ASAP7_75t_R
+        3    0.481        3    0.481   XOR2x2_ASAP7_75t_R
+       12        -       12        -   ot_sram_1r1w_160x256_m1_r0c0
+
+   Area for cell type \ot_sram_1r1w_160x256_m1_r0c0 is unknown!
+
+   Chip area for module '\ot_t7_land_capture_v2': 1643.384700
+     of which used for sequential elements: 385.203600 (23.44%)
+
