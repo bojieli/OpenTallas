@@ -1,0 +1,132 @@
+{
+ "source_commit": "AT_GENERATION_HEAD",
+ "clock_ports": [
+  "ck"
+ ],
+ "reset_ports": [
+  "rst"
+ ],
+ "pin_placement_policy": "DECLARED_CLOCK_RESET_POINTS",
+ "port_inventory": {
+  "top": "codex_svc_sml_native",
+  "source_file": "results/physical/codex_svc_hardening_1551/native_sml_c/rtl/codex_svc_sml_native.sv",
+  "source_sha256": "239c43cfc31ddc4477e832cb25e578de20cf003ebff88a9c9cb4cfb37afa3c63",
+  "ports": [
+   [
+    "ck",
+    "input",
+    1
+   ],
+   [
+    "rst",
+    "input",
+    1
+   ],
+   [
+    "sk_en",
+    "input",
+    1
+   ],
+   [
+    "i_cv",
+    "input",
+    1
+   ],
+   [
+    "i_nv",
+    "input",
+    7
+   ],
+   [
+    "i_scale",
+    "input",
+    32
+   ],
+   [
+    "i_sink",
+    "input",
+    32
+   ],
+   [
+    "i_sv",
+    "input",
+    1
+   ],
+   [
+    "i_s",
+    "input",
+    32
+   ],
+   [
+    "i_mv",
+    "input",
+    1
+   ],
+   [
+    "i_nmb",
+    "input",
+    32
+   ],
+   [
+    "o_mxv",
+    "output",
+    1
+   ],
+   [
+    "o_mx",
+    "output",
+    32
+   ],
+   [
+    "o_ev",
+    "output",
+    1
+   ],
+   [
+    "o_es",
+    "output",
+    1
+   ],
+   [
+    "o_el",
+    "output",
+    1
+   ],
+   [
+    "o_e",
+    "output",
+    32
+   ]
+  ]
+ },
+ "added_reset_cycles": 0,
+ "release_eligible": false,
+ "qualification": "FORM_C_MITER_PENDING",
+ "private_reset_contract_file": "results/physical/codex_svc_hardening_1551/private_reset_sml/reset_contract.json",
+ "private_reset_contract_sha256": "f6e7ef64725142543b6bdbee899422973ceb09cbfa23b41fe07a02c8a6344ce6",
+ "added_rx_clk_PIN_cycles": 0,
+ "native_internal_reset_release_cycles": 2,
+ "reset_pin_shape_policy": "M5_VERTICAL",
+ "reset_copies": {
+  "source": "rr0",
+  "copies": 8,
+  "groups": [
+   "exp core",
+   "g_h1-2",
+   "g_h3-4",
+   "g_h5-6",
+   "u_bv+u_bs",
+   "u_bl+u_inactive",
+   "input datapath",
+   "control"
+  ],
+  "added_reset_cycles": 0,
+  "kept": true
+ },
+ "state_duplication": {
+  "signal": "o_mx",
+  "bits": 32,
+  "added_data_cycles": 0,
+  "added_reset_cycles": 0
+ }
+}
