@@ -239,6 +239,28 @@ class TestClasses(Base):
         out = ac.reduce_kitwave(st, [])
         self.assertEqual(out["current_di"], {"hbm|item_xp": 5})
 
+    def test_queuename_ignores_plan_dir_and_mounts(self):
+        self.assertTrue(ac.generic_name("opentallas-scratch2"))
+        d = self.attempt("item_pq", 1, event="event28w_c")
+        self.qwords = ["event28w_c", "opentallas-scratch2"]
+        self.kw = {"attempts": {"hx:" + d: {"active": False, "signed": False, "terminal": ["FAIL/None"]}},
+                   "latest": {}, "keep": []}
+        self.run_job()
+        self.assertFalse(os.path.exists(d), self.row(d))
+
+    def test_queuename_skip_superseded_flag(self):
+        old = self.attempt("item_qsuper", 1, event="evq")
+        cur = self.attempt("item_qsuper", 4, event="evq")
+        self.qwords = ["item_qsuper"]
+        self.kw = {"attempts": {"hx:" + cur: {"active": False, "signed": False, "terminal": ["FAIL/None"]}},
+                   "latest": {"hx:" + os.path.dirname(cur): 4}, "keep": []}
+        self.run_job()
+        self.assertTrue(os.path.isdir(old)); self.assertTrue(os.path.isdir(cur))
+        self.run_job("--queuename-skip-superseded")
+        self.assertFalse(os.path.exists(old), self.row(old))
+        self.assertTrue(os.path.isdir(cur))
+        self.assertTrue(self.row(cur)[4].startswith("queuename"), self.row(cur))
+
     def test_a_disabled_without_kitwave(self):
         d = self.attempt("item_x", 1)
         self.run_job()
@@ -465,6 +487,24 @@ class TestSafety(Base):
         self.assertEqual(self.run_job(), 0)
         self.assertIn("OFF switch", self.out)
         self.assertTrue(os.path.exists(os.path.join(b, "5_route.odb")))
+
+    def test_docker_container_gone_between_ps_and_inspect(self):
+        k, b = self.kit_b("dkr/k")
+        with open(os.path.join(self.ddir, "ids"), "w") as f:
+            f.write("abc123\n")
+        gone = os.path.join(self.ddir, "gone")
+        with open(gone, "w") as f:
+            f.write('#!/bin/sh\ncase "$1" in ps) echo abc123;; inspect) echo "error: no such object: abc123" >&2; exit 1;; esac\n')
+        self.docker = "sh " + gone
+        self.assertEqual(self.run_job(), 0)
+        self.assertFalse(os.path.exists(os.path.join(b, "5_route.odb")))
+        bad = os.path.join(self.ddir, "bad")
+        with open(bad, "w") as f:
+            f.write('#!/bin/sh\ncase "$1" in ps) echo abc123;; inspect) echo "permission denied" >&2; exit 1;; esac\n')
+        k2, b2 = self.kit_b("dkr/k2")
+        self.docker = "sh " + bad
+        self.assertEqual(self.run_job(), 2)
+        self.assertTrue(os.path.exists(os.path.join(b2, "5_route.odb")))
 
     def test_never_names(self):
         job = ac.Job.__new__(ac.Job)

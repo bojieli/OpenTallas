@@ -314,7 +314,8 @@ def parse_queue(text, now, hours=25.0, tz="America/Los_Angeles"):
 
 def generic_name(n):
     return (len(n) < 8 or n in GENERIC_NAMES or n.startswith("attempt") or re.fullmatch(r"[0-9a-f]{10,}", n) is not None
-            or n.startswith("qwen_") or "wave-" in n or n == "flow-canary" or n.startswith("_ot_autoclean"))
+            or n.startswith("qwen_") or "wave-" in n or n == "flow-canary" or n.startswith("_ot_autoclean")
+            or n.startswith("opentallas-scratch") or n == "scratch-root")   # mount names inside nested paths
 
 
 # ------------------------------------------------------------------ kit-wave state reduction (runs on the hub)
@@ -491,7 +492,10 @@ class Live:
                 m = subprocess.run(dk + ["inspect", "-f", "{{range .Mounts}}{{.Source}} {{end}}"] + ids,
                                    capture_output=True, text=True, timeout=300)
                 if m.returncode:
-                    raise RuntimeError(f"docker inspect failed: {m.stderr.strip()[:200]}")
+                    # a container removed between ps and inspect has no mounts: only that error is tolerated
+                    errs = [ln for ln in m.stderr.splitlines() if ln.strip()]
+                    if not errs or any("no such object" not in ln.lower() for ln in errs):
+                        raise RuntimeError(f"docker inspect failed: {m.stderr.strip()[:200]}")
                 self.mounts = [os.path.normpath(x) for x in m.stdout.split()]
         return self
 
@@ -773,8 +777,10 @@ class Job:
         if h:
             return "queuepath: " + h
         rest = k.split("/claude/", 1)[1].split("/")[1:] if "/claude/" in k else []
-        for n in rest:
-            if not generic_name(n) and n in self.qwords:
+        for i, n in enumerate(rest):
+            if i >= 2 and rest[i - 2] == "kit-wave":   # kit-wave/<die>/<plan event>: the plan dir names a whole wave
+                continue
+            if not generic_name(n) and n in self.qwords and not getattr(self, "_qn_skip", False):
                 return "queuename: " + n
         w = self.live.why(self.paths.forms(k))
         if w:
@@ -866,7 +872,13 @@ class Job:
         if hl:
             return "hardlink " + hl, []
         self._attempt_note = verdict
-        return self.common_why(d, []), [d]
+        # --queuename-skip-superseded: a bare item NAME in a queue post protects the item's current attempt, not
+        # older attempts the state has superseded (an exact queue PATH still protects them)
+        self._qn_skip = bool(getattr(self.a, "queuename_skip_superseded", False)) and verdict.startswith("superseded")
+        try:
+            return self.common_why(d, []), [d]
+        finally:
+            self._qn_skip = False
 
     # ---- recheck + delete
     def recheck(self, cls, path, files):
@@ -1490,6 +1502,8 @@ def main(argv=None):
     r.add_argument("--wt-reaper", default=os.path.join(os.path.dirname(os.path.abspath(SELF)), "wt-reaper.py"),
                    help="'' = skip the worktree reaper")
     r.add_argument("--wt-reaper-timeout", type=int, default=5400)
+    r.add_argument("--queuename-skip-superseded", action="store_true",
+                   help="class a: a queue-named item name does not protect superseded (older) attempts; COORD ruling")
     r.add_argument("--wt-reaper-idle-h", type=float, default=6.0, help="worktree idle hours before the reaper may remove it (fleet 6 h rule)")
     ls = sub.add_parser("list-signed")
     ls.add_argument("--roots", nargs="+", default=DEFAULT_ROOTS)
