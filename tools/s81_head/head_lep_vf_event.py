@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Private LEP vF provider-parameter candidate; never changes die wire latency.
+"""Private LEP vF provider/placement/clock trial; die wire latency unchanged.
 
-This emits the plan part of the event, not an adoption. The physical constructor
-and programme-calendar receipts must be composed before a READY plan event.
+This composes the measured physical profile, explicit trial core taps and
+provider calendar. Generated kit, child/cohort and programme qualification
+are still required before a READY plan event.
 """
 import argparse
 import copy
@@ -48,8 +49,11 @@ def main():
                                                 check_external_lane_calendar_unchanged)
     data = args.plan.read_bytes()
     raw = json.loads(data)
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from head_lep_vf_physical import apply as apply_physical, load_profile
+    from head_lep_vf_clock import apply as apply_clock
     contract = provider_port_contract(raw)
-    out = apply(raw)
+    out = apply_clock(apply_physical(apply(raw), load_profile()))
     check_external_lane_calendar_unchanged(raw, out, contract)
     args.out.mkdir(parents=True, exist_ok=False)
     candidate = args.out / 'source_plan.json'
@@ -58,14 +62,17 @@ def main():
                   baseline_sha256=hashlib.sha256(data).hexdigest(),
                   candidate_sha256=hashlib.sha256(candidate.read_bytes()).hexdigest(),
                   native_parameters=PARAMS, external_lane_fixed_cycles_delta=0,
-                  bus_geometry_delta=0, macro_or_clock_or_reset_delta=0,
+                  bus_geometry_delta=0, native_sram_origin_updates=45, native_stage_pattern_groups=24,
+                  native_stage_rectangles=19, manual_pair_core_taps=4, reset_delta=0,
+                  pair_view_cohort="vE_1106_TRIAL_NOT_ADOPTED",
                   logical_stage_flop_bits=14023,
                   consumption='provider calendar consumed once; no added inter-partition wire delay',
                   model_entry='tools/uarch_model.py::s81_head_lep_vf_stage_calendar_model',
                   model_source='codex/svc-token-1113@48d092e2e0',
                   physical_form_source='codex/head-lep-reserve-form-0222@41a81fe176',
                   physical_native_proof='EQUIVALENT 107757/107757',
-                  pending=['constructor reproduces actual native SRAM sites and FIRM stage windows',
+                  pending=['child vE_1106 phase/cohort and parent clock adoption remain HOLD',
+                           'generated native placement hook must match measured profile',
                            'strict bind and count dry run on composed source',
                            'actual vF programme calendar and one-time compiler consumer',
                            'physical CTS/GRT/route signoff'])
