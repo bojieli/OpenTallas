@@ -14,8 +14,8 @@ This adds one compose_split rule per core kind (bind_compose_split, re-formed su
   emit_proof    the part18 XEQ bench (reference vs composition; MUT 0 PASS, mutants 1-5 FAIL) and its declared
                 added cycles (SFU_EXP/SIGM/SILU and S-chain fault +4), log shas
   same_net      bank_clk / bank_clk_macro / lane_clk_stage / lane_clk_insert one cut net (the wrapper merges them)
-and sub_core_leaf u_su_Q<q>_lane_exp<N> -> su_NE<q>.__cut_lane_exp<N> (variant su_NW<q>), replacing the base's
-identity rows (no as-built path of that name exists in the bound files).
+and sub_core_leaf_variants u_su_Q<q>_lane_exp<N> -> [su_NE<q>, su_NW<q>].__cut_lane_exp<N> (bound_macro_paths reads
+the bound file's as-built names); the base's local-name sub_core_leaf rows stay (bind.py resets / parent ID straps).
 """
 import argparse
 import copy
@@ -140,31 +140,33 @@ def candidate(plan, asbuilt, source, stage_dir):
     out = copy.deepcopy(asbuilt)
     scl = out.setdefault("sub_core_leaf", {})
     var = out.setdefault("sub_core_leaf_variants", {})
-    replaced = {}
+    # The base rows sub_core_leaf u_su_Q<q>_lane_exp<N> -> u_su_Q<q>_lane_exp<N> stay: bind.py matches them against the
+    # bound leaf's plan-local name (wavefront core resets, parent ID straps).  bound_macro_paths matches the bound
+    # file's "// as-built" names instead, so both quadrant cuts are added as sub_core_leaf_variants (additive only).
     excluded = sorted(p for p, q, n in parents if n in EXCLUDED)
     for parent, q, n in parents:
         if n in EXCLUDED:
             continue
-        a, b = QUAD[q]
-        leaf = f"{a}.__cut_lane_exp{n}"
-        if parent in scl and scl[parent] not in (parent, leaf):
-            raise ValueError(f"sub_core_leaf {parent} already maps to {scl[parent]}")
-        if scl.get(parent) == parent:
-            replaced[parent] = parent
-        scl[parent] = leaf
-        var[parent] = [f"{b}.__cut_lane_exp{n}"]
+        if scl.get(parent) != parent or parent in var:
+            raise ValueError(f"sub_core_leaf {parent}: base row {scl.get(parent)} / variants {var.get(parent)} unexpected")
+        var[parent] = [f"{x}.__cut_lane_exp{n}" for x in QUAD[q]]
     rules = []
     for kind, (ref, x, log, rx) in KINDS.items():
         k = kinds[kind]
         proof = dict(bench=f"{P18}/eq_x.sh (XEQ: reference uncut core in its kit shell vs u_l + u_s in face shells; "
                            "MUT 0 PASS, MUT 1-5 FAIL)", commit="d3f6c84c70", log=f"{P18}/{log}",
                      log_sha256=sha(k["log"]), split=f"{P18}/split_p18.json",
-                     added_cycles=sorted({v for v in added.values() if v}))
+                     added_cycles=added.get("ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691"))
         rules.append(dict(
             inst=r"su_N[EW][01]\.__cut_lane_exp" + rx, suffix="__p18split", levels=["u_fcore"],
             subs=[dict(name="u_core", module=ref, sources=[k["ref"]],
                        roles={"u_bank": r"\.g_bank\[(\d+)\]\.u_bank$", "u_lane": r"\.g_lane\[(\d+)\]\.g_pr\.u_lane$"},
                        param_diff_ok=["MLAT", "ALAT"], same_net=[CLOCKS],
+                       drop_exports={"u_bank.read_data": [128, 159], "u_lane.kv_waddr": [18, 23],
+                                     "u_lane.vm_waddr": [18, 23]},
+                       drop_reason="dead parent loads (ot_hbm_su_static_pgslice_s.sv: drain sel reads reader 5 "
+                                   "bank_q[..*192+5*32+:32] only, never reader 4 [159:128]; la[23:18] unused, write "
+                                   "address {la[17:16],la[13:7]}, id check la[6:0]/la[15:14]); the uncut core omits them",
                        emit_module=k["comp"], emit_sources=k["emit"] + staged[:3], emit_proof=proof)],
             reason=f"d44v p6/p18 split: u_core = {ref} re-formed as {x} + {SFU} (as-built members keep their own "
                    "parameters; MLAT/ALAT differences recorded, pin-cycle lever)"))
@@ -172,10 +174,10 @@ def candidate(plan, asbuilt, source, stage_dir):
     out["files"] = list(dict.fromkeys(out.get("files", []) + staged))
     out["prefer"] = list(dict.fromkeys(out.get("prefer", []) + staged))
     out["sub_core_leaf_note"] = ((out.get("sub_core_leaf_note") or "") +
-                                 f" | DIE-HBM-92-SU-EXP: {len(parents)} lane_exp parents -> su_NE<q>.__cut_lane_exp<N> "
-                                 f"(variant su_NW<q>); {len(replaced)} identity rows replaced; not bound: "
+                                 f" | DIE-HBM-92-SU-EXP: {len(parents) - len(excluded)} lane_exp parents keep their "
+                                 "local-name rows, variants su_NE<q>/su_NW<q>.__cut_lane_exp<N> added; not bound: "
                                  f"{excluded} ({EXCLUDED['0']})")
-    out["note"] = "DIE-HBM-92-SU p37su_exp: p37su + SU Q0/Q1 lane_exp p18 compose_split | " + out.get("note", "")
+    out["note"] = "DIE-HBM-92-SU p37su_exp: base + SU Q0/Q1 lane_exp p18 compose_split | " + out.get("note", "")
     return out
 
 
