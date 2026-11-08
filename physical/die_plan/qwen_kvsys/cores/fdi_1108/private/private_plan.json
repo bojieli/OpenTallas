@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.die_plan.v1",
+ "die": {
+  "name": "private_fdi_trial",
+  "period_ps": 833,
+  "grid_um": 8.64,
+  "outline_um": [
+   207.36,
+   207.36
+  ]
+ },
+ "clock": {
+  "common_latency_ps": 250,
+  "insertion_ps": 250,
+  "insertion_ff_ps": 202.5,
+  "insertion_tol_ps": 40
+ },
+ "partition_types": {
+  "fdi_trial": {
+   "module": "fdi_trial_part",
+   "outline_um": [
+    207.36,
+    207.36
+   ],
+   "hard_cores": [
+    {
+     "inst": "u_fdi",
+     "module": "ot_kv_fdi_join_rf",
+     "origin_um": [
+      8.64,
+      8.64
+     ],
+     "outline_um": [
+      190.08,
+      190.08
+     ],
+     "pins_file": "fdi_pins.json",
+     "cells": 100000,
+     "note": "Private isolated hardening form; no production die placement"
+    }
+   ],
+   "buses": []
+  }
+ },
+ "partitions": [
+  {
+   "name": "trial",
+   "type": "fdi_trial",
+   "origin_um": [
+    0,
+    0
+   ],
+   "orient": "R0"
+  }
+ ]
+}

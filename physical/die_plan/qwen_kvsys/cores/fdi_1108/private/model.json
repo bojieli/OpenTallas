@@ -1,0 +1,67 @@
+{
+ "source_module": "ot_fdi_join2",
+ "parameters": {
+  "WA": 522,
+  "WB": 521,
+  "DEPTH": 16
+ },
+ "interface_ports": [
+  "clk",
+  "rst_n",
+  "a_v",
+  "a_d",
+  "b_v",
+  "b_d",
+  "o_v",
+  "o_d"
+ ],
+ "handshake": "valid-only input streams, no ready/credits; ordered pair output-valid",
+ "storage_mapping": "unchanged flop arrays, no SRAM macro and no changed read latency",
+ "FIFO_data_bits": 16688,
+ "native_output_FF_bits": 1044,
+ "native_pointer_count_FF_bits": 26,
+ "added_input_FF_bits": 1045,
+ "total_sequential_bits": 18803,
+ "PIN_CYCLES": {
+  "a_v": 1,
+  "a_d": 1,
+  "b_v": 1,
+  "b_d": 1
+ },
+ "host_receive_latency_delta_cycles": 1,
+ "queue_depth_change": 0,
+ "credit_or_ready_RTT_change": "not applicable: no such ports",
+ "outline_um": [
+  190.08,
+  190.08
+ ],
+ "estimated_stdcell_area_um2": 13300,
+ "estimated_fill": 0.36811099916108325,
+ "estimated_cells": 100000,
+ "estimate_status": "pre-synthesis sizing; actual cells/area still required",
+ "max_manhattan_um": 380.16,
+ "reach_limit_um": 405,
+ "pin_density_per_um": {
+  "W": 2.882495590828924,
+  "N": 2.876984126984127,
+  "E": 5.753968253968254
+ },
+ "pin_layers": {
+  "W": [
+   "M4",
+   "M6"
+  ],
+  "N": [
+   "M5",
+   "M7"
+  ],
+  "E": [
+   "M4",
+   "M6"
+  ]
+ },
+ "clock_period_ps": 833,
+ "TT_setup_FF_hold": "shared tool policy; no overrides",
+ "unsigned_area_reason": "none: compact square, estimated fill0.368 at target0.40",
+ "throughput": "native accepts one half per input per cycle, emits one paired word per cycle when both queued; added input stage preserves sustained rate"
+}

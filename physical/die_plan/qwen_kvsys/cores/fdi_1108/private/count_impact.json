@@ -1,0 +1,18 @@
+{
+ "private_only": true,
+ "production_plan_changed": false,
+ "new_hard_core_designs": 1,
+ "signed_core_credit_now": 0,
+ "parent": "unsigned kv3_hub_Wi host logic, later split HB/HT",
+ "existing_21_HR_core_modules_or_outlines_changed": false,
+ "interface_impact": "new child boundary2091pins; both half streams+1cycle; output sequence+1cycle",
+ "regenerate": [
+  "native_parent RF source profile",
+  "strict bind and sub_core_leaf mapping",
+  "new core pin/clock/reset placement in actual parent",
+  "all affected parent kits",
+  "compiler/token ingress schedule"
+ ],
+ "production_count_rule": "no credit until SIGNED current-tag view and approved plan event",
+ "reset_contract": "new module needs explicit private16-edge qualification entry before adoption"
+}
