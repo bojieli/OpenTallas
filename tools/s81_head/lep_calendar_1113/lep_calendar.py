@@ -72,8 +72,11 @@ VF = Stages(ktx=0x0000, krx=0x1220, txi=0x1221, pin=2, pout=3, plw=3, col0=2)
 STRESS = Stages(ktx=0x3333, krx=0x4444, txi=0x4444, pin=4, pout=4, plw=4, col0=2)
 
 
-def require_matching_receipt(stages, receipt):
+def require_matching_receipt(stages, receipt, programme_sha256):
     """A measured handoff reservation qualifies only its exact stage tuple."""
+    if (len(programme_sha256) != 64 or any(c not in '0123456789abcdef' for c in programme_sha256)
+            or receipt.get('programme_sha256') != programme_sha256):
+        raise ValueError('handoff receipt programme differs from selected static programme')
     actual = {key: receipt['params'][key] for key in stages.params()}
     if actual != stages.params():
         raise ValueError('handoff receipt stage tuple differs from selected provider')
