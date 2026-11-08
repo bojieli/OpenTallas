@@ -1,4 +1,6 @@
 """Re-sign source metadata is resolved before any expensive sign-off or LEC."""
+from contextlib import redirect_stderr
+import io
 import json
 from pathlib import Path
 import sys
@@ -57,6 +59,33 @@ class ResignPreflightTest(unittest.TestCase):
              patch.object(resign, "run_cmds", return_value=(["signoff"], ["lec"])) as commands:
             self.assertEqual(resign.main(self.argv + ["--build-commit", "cd" * 20, "--dry-run"]), 0)
         commands.assert_called_once()
+
+    def test_dry_run_without_source_prints_refusal_and_exits_0(self):
+        err = io.StringIO()
+        with patch.object(resign, "tag_commit", return_value="aa" * 20), \
+             patch.object(resign, "check_tools"), \
+             patch.object(resign, "export_clock_family", return_value="clock"), \
+             patch.object(resign, "run_cmds", return_value=(["signoff"], ["lec"])) as commands, \
+             patch.object(resign.subprocess, "call") as run, \
+             redirect_stderr(err):
+            self.assertEqual(resign.main(self.argv + ["--dry-run"]), 0)
+        self.assertIn("RESIGN NOT RECORDED: build_commit unknown: pass --build-commit", err.getvalue())
+        commands.assert_called_once()
+        run.assert_not_called()
+        self.assertFalse((self.root / "out" / "PROVENANCE.json").exists())
+
+    def test_real_run_without_source_still_refuses_same_text(self):
+        err = io.StringIO()
+        with patch.object(resign, "tag_commit", return_value="aa" * 20), \
+             patch.object(resign, "check_tools") as tools, \
+             patch.object(resign, "run_cmds") as commands, \
+             patch.object(resign.subprocess, "call") as run, \
+             redirect_stderr(err):
+            self.assertEqual(resign.main(self.argv), 1)
+        self.assertIn("RESIGN NOT RECORDED: build_commit unknown: pass --build-commit", err.getvalue())
+        tools.assert_not_called()
+        commands.assert_not_called()
+        run.assert_not_called()
 
 
 if __name__ == "__main__":

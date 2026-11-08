@@ -410,7 +410,11 @@ def main(argv=None):
             if not a.build_commit:
                 a.build_commit = kit_build_commit(a.kit, a.repo if manifest(a.repo) is None else None)
             if not a.build_commit:
-                raise ResignError('build_commit unknown: pass --build-commit (no commit in %s records)' % a.kit)
+                why = 'build_commit unknown: pass --build-commit (no commit in %s records)' % a.kit
+                if not a.dry_run:
+                    raise ResignError(why)
+                # dry run: show that a real run would refuse, then keep printing the commands
+                print('RESIGN NOT RECORDED: %s' % why, file=sys.stderr)
             check_tools(a.repo, a.tag, a.tools)  # fail before spending an RCX run on the wrong tools
             print('clock_family.tcl from %s: %s' % (a.tag, export_clock_family(a.repo, a.tag, a.tools)), file=sys.stderr)
             name = a.name or default_container_suffix(a.out)
