@@ -4650,6 +4650,38 @@ def macro_views(base):
     return out
 
 
+def _balanced(text, i):
+    """text[i:] starts just after an opening parenthesis -> the text up to its matching close."""
+    j, depth = i, 1
+    while depth and j < len(text):
+        depth += {"(": 1, ")": -1}.get(text[j], 0)
+        j += 1
+    return text[i:j - 1]
+
+
+def _named_param_overrides(body, children):
+    """{child module: {parameter}} set by name (#(.P(v))) on the instances of `children` in a module body."""
+    out = {}
+    if not children:
+        return out
+    pat = re.compile(r"\b(" + "|".join(re.escape(c) for c in sorted(children)) + r")\s*#\s*\(")
+    for m in pat.finditer(body):
+        out.setdefault(m.group(1), set()).update(re.findall(r"\.(\w+)\s*\(", _balanced(body, m.end())))
+    return out
+
+
+def _declared_params(path, name):
+    """parameter names a module declares: its #( ... ) header list and its body parameter/localparam statements."""
+    t = E.module_body(path, name)
+    got = set()
+    h = re.match(r"\s*#\s*\(", t)
+    if h:
+        got |= set(re.findall(r"(\w+)\s*=(?!=)", _balanced(t, h.end())))
+    for st in re.findall(r"\b(?:parameter|localparam)\b([^;]*);", t):
+        got |= set(re.findall(r"(\w+)\s*=(?!=)", st))
+    return got
+
+
 def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=None, defines=None):
     """E.closure for a G3 kit (KV-P6 18:51 hub_Wi): (1) a module with a hardened view (macro dir <m>/<m>.lef) is a
     HARD MACRO: its black box (<m>_bb.v, else the model) goes in the list, its lef/libs in the manifest, no descent;
@@ -4668,6 +4700,7 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
     # -> a missing entry.  Names in neither index (types, keywords, cells) keep the old behaviour.
     wide = wide or {}
     widened = {} if widened is None else widened
+    need = {}                                    # module -> parameter names its instantiators set (KITPARAM)
     # FLOW-18 10-31: with `defines` (the kit defines, as-built manifest), a child named through an object-like macro
     # (`OT_SH_M257 u_mem(...)) is found too: the module body is also scanned with the file's active `define values
     # expanded (added to the plain scan, never replacing it).  defines=None keeps the old behaviour.
@@ -4710,6 +4743,18 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
                 continue
         elif nonsim and len(nonsim) < len(cands):
             sub[n] = nonsim
+        # DIE-HBM-91 11-08 (KITPARAM, HBM q_su31 GEN_LINT "Can't find object for defparam WCOPY"): with several
+        # definitions and no preference, E.pick takes the first rtl_root, here the r18h5_bundle copy of
+        # ot_hbm_su_static_replicated_bank (no WCOPY) while its instantiator ot_hbm_su_static_pinned_bank came from
+        # rtl/ and sets .WCOPY.  An ambiguous pick now keeps only the candidates that declare every parameter the
+        # already-picked instantiating bodies set by name; with none or all compatible the old order stands.
+        if need.get(n):
+            nc = list(sub.get(n, []))
+            if len(set(nc)) > 1 and not any(Path(c).resolve() == Path(q).resolve() for c in nc for q in prefer):
+                ok = [c for c in nc if need[n] <= _declared_params(c, n)]
+                if ok and len(ok) < len(nc):
+                    sub = dict(sub)
+                    sub[n] = ok
         f, _ = E.pick(sub, n, prefer)
         if f is None:
             missing.add(n)
@@ -4727,6 +4772,8 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
                 mdefs[f] = (kit_object_defines(E._strip(Path(f).read_text(errors="replace")), defines, func=fn), fn)
             vals, fn = mdefs[f]
             found |= E.instantiated(expand_object_macros(expand_function_macros(body, fn), vals), known)
+        for c, ps in _named_param_overrides(body, found).items():
+            need.setdefault(c, set()).update(ps)
         todo += sorted(found)
     return files, sorted(missing), macros
 
