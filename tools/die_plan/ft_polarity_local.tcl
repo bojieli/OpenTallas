@@ -10,21 +10,37 @@ set fpl_n 0
 set fpl_seen {}
 set fpl_out [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
 foreach fpl_ff [$fpl_blk getInsts] {
-  if {![regexp {^u_ft_.+_s[0-9]+/q\[} [$fpl_ff getName]]} {continue}
+  set fpl_name [string map {\\ {}} [$fpl_ff getName]]
+  if {![regexp {^u_ft_.+_s[0-9]+/q\[} $fpl_name]} {continue}
   if {![string match DFF* [[$fpl_ff getMaster] getName]]} {continue}
   if {[$fpl_ff getPlacementStatus] ni {FIRM PLACED}} {continue}
   foreach fpl_q [$fpl_ff getITerms] {
     if {![$fpl_q isOutputSignal] || [[$fpl_q getMTerm] getName] ne "QN"} {continue}
     set fpl_net [$fpl_q getNet]
     if {$fpl_net eq "NULL" || $fpl_net eq "" || [llength [$fpl_net getBTerms]]} {continue}
-    set fpl_loads {}
-    foreach fpl_it [$fpl_net getITerms] {
-      if {[$fpl_it isInputSignal]} {lappend fpl_loads $fpl_it}
+    set fpl_inv ""
+    # Earlier placement can already have inserted a unary buffer before INV.
+    # Follow only an exclusive short unary chain. Moving its inverter beside
+    # the FF also makes HPWL place those freely movable buffers beside it.
+    for {set fpl_hop 0} {$fpl_hop < 4} {incr fpl_hop} {
+      if {[llength [$fpl_net getBTerms]]} {break}
+      set fpl_loads {}
+      foreach fpl_it [$fpl_net getITerms] {
+        if {[$fpl_it isInputSignal]} {lappend fpl_loads $fpl_it}
+      }
+      if {[llength $fpl_loads] != 1} {break}
+      set fpl_it [lindex $fpl_loads 0]
+      set fpl_cell [$fpl_it getInst]
+      set fpl_master [[$fpl_cell getMaster] getName]
+      if {[[$fpl_it getMTerm] getName] ne "A"} {break}
+      if {[string match INV* $fpl_master]} {set fpl_inv $fpl_cell;break}
+      if {![string match BUF* $fpl_master]} {break}
+      set fpl_y [$fpl_cell findITerm Y]
+      if {$fpl_y eq "NULL" || $fpl_y eq ""} {break}
+      set fpl_net [$fpl_y getNet]
+      if {$fpl_net eq "NULL" || $fpl_net eq ""} {break}
     }
-    if {[llength $fpl_loads] != 1} {continue}
-    set fpl_it [lindex $fpl_loads 0]
-    set fpl_inv [$fpl_it getInst]
-    if {[[$fpl_it getMTerm] getName] ne "A" || ![string match INV* [[$fpl_inv getMaster] getName]]} {continue}
+    if {$fpl_inv eq ""} {continue}
     if {[$fpl_inv getPlacementStatus] in {FIRM LOCKED COVER} || [dict exists $fpl_seen [$fpl_inv getName]]} {continue}
     set fpl_bb [$fpl_ff getBBox]
     set fpl_w [[$fpl_inv getMaster] getWidth]
