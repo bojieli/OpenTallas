@@ -1,0 +1,21 @@
+# S81 types takeover 2026-11-08 11:13 PST
+
+CODEX took over S81-TYPES-9 / LEAFRF / COLH / LNB / XRT / type LEC. No merge, tag, POR change or deletion.
+
+## Current
+- Collected first, no launches or duplicate jobs. E4 S3/claude/s81-types-9-leafrf/kits/{t31_vRF,t54__cl501e5681_vRF}: both ADMITTED at11:04 via original wrappers; scopes1308246-1794164698(t31),1308241-1794164698(t54), PLACE active. t54 preflight EQUIVALENT25862/25862. Existing escape-open form reduces measured VN seam/outline bottlenecks with macro pushes and hard cell blockages; pins/RTL/outline unchanged. Next actual PLACE+GRT images and final outcomes, no delta batch before pilot.
+- I2 S2/claude/s81-types-7/leafb_build/kits/t69_vCHT: initial GRT0overflow, still active design/timing repair29000iterations. No duplicate.
+- S81 v3b plan48f8eba4984ab718: original I1 S2/claude/s81-types-9/src_v3b strict bind LIVE scope3283478-1794162158, cbind3b.out ELAB0 at10:58 thenBIND. G0 errors64 identical baseline, no new/gone. One-type bus correction preserves wave col_h10_r0_p4 windows; event includes CTAP, LEAFB, COLH and newer main FT/gunit/LNB/landing deltas. Next bind+verify, stagebind/dryGEN four representative rows before READY private source relaunch.
+- AREA already rebased by predecessor despite last queuepost: I1 S2/claude/type-safe-2-1108/area/abind3b.out START10:58 candidate87c5071b894a77c2, live ELAB. Old abind0dc1bccde885a0dd also BIND after ELAB0 at10:53; leave both healthy. Guarded repack was71/132types,41%shortfall reduction, no outlinegrowth. Collect actual3b report and compare before event adoption; no rewrite of live source.
+- Child /root/s81/types/lec collecting J2/J3/IQ65/VN_B exact follow vehicles. J2 kv512_C t1 follow now EQUIVALENT105865/105865,64-edge,3330.3s on E6; xs_ctl main bytes restored. IQfollow/J3follow/KVleaf5c64 healthy E6. Wave/source_stale owns shared die-agnostic leaf source follow (UNINDEXED-SRC-STALE); no bind.py edits here.
+
+## Collection 11:24 PST
+- Actual AREA3b checks: check_base3b and check_area3b each64errors/2017warnings. Error identity by lane/hop unchanged;24 distance strings differ because ALL24 existing failing hops improve8-9um. No new failing hop key. Preserve the live AREA3b bind, do not rebase/relaunch it.
+- Current LEAFB live/terminal census I2 leafb_build/kits: t31_vCH/t54cl_vCH/t69_vCH finalGRT0116 already diagnosed and RF/T successors live. t30_vCHT,t5_vCH,t5_vCHT,t69_vCHT each has initial congestion0overflow and continues repair (no signoff yet). t1extra11,t24cl245extra18,t29extra3,t36extra15,t36Textra22,t37extra6,t72extra7 are progressing. t40cl86T noGRTyet, collect CTS/route result separately. All unchanged live jobs left running.
+- LEC detail owned child: J2kv512follow EQUIVALENT105865; oldJ3lepe_mu64 control KEEP_FAIL32+806differ/0 matches stale xs4/rstopt class, followedvehicle stillrunning. J1 all4 originalfrontends admitted (E5t4/t5/t1 and I1t3); no longer assumedwaiters and no duplicate migration. IQfollow/J3follow/independentKVleaf5 healthyE6.
+
+## t15 recovery
+- Found unhandled t15_vBR infrastructure failure: original I2 s81t8lb-t15b admitted I1 scope3543052-1794152081 at07:39, exited8 because epyc2 alias could not resolve/authenticate from I1. No physical work ran; empty oldkit/logs retained. Original t40cl86 route sibling was successfully resited I1 and is healthy GRTextra22.
+- Streamed exact E2 failed t15 kit (excluding run) +1_synth.odb/netlist/SDC into OWN I1 S2/claude/codex-s81-types-1113/t15/source. Applied existing predecessor face-strip macro form (17 macros +34.56Y) AND its required omitted clock-entry moves clk_t23→(275.552,324),clk_t34→(1021.68,596.08). No RTL, synth, bus window, outline or payload-cycle change.
+- Reviewed actual failedGRT /tmp/codex-s81-types-1113/t15_grt.png and proposed macro plot t15_vBR.png. SMELLS: south pin choke underVN_B/LN2/LN12, west column local channel streets and long fanout. Form opens south strip30→64.5um, leaves remaining geometry advisory for actual PLACE review. I1 copies under own t15/.
+- Branch codex/s81-t15-face-strip-1113@0431b24579 on currentmain, review+exactpatches+launcher committed/pushedhub. ONE standard24GB8T PLACE-only continuation submitted via I2 systemd codex-s81-t15-place-1113; log ~/coord/autopilot/codex-s81-types-1113/t15_place.log. HOLD after PLACE, no automatic CTS/batch. No signed-off claim.
