@@ -1,0 +1,20 @@
+# AUTOCLEAN-7 epyc5 scratch2 'idle source tree' (COORD 22:2x YES), 2026-11-07 22:32 PST. Trees with physical/+tools/+tests/, newest non-.git file >12 h, no live, 0 snapshot refs after realpath, HEAD on hub main; plus the 11-01 condition: every realpath/symlink spelling grepped in host kit/run scripts, config.mk, spec.json, .otrun/.unit/.env, systemd user units, ot-run state, and hub autopilot jobs + kit_wave_state/stages: 0 hits for these rows. Kept on reference: kw27/src_b1485, kw11/src_16b, kw11/src_o (kit_wave_state.json). Excluded: hbm-gaps-6/wt. Control passed (planted alias-spelled config.mk blocks). Largest first. du counts hard links per tree; true reclaim of the set about 290 GB less the 3 kept.
+host	du_GB	tree
+epyc5	57.2	/srv/opentallas-scratch2/claude/qc-slectl-b/src
+epyc5	55.2	/srv/opentallas-scratch2/claude/kv-prm-b2/src
+epyc5	49.8	/srv/opentallas-scratch2/claude/kw27/src_54cce_qc4
+epyc5	49.8	/srv/opentallas-scratch2/claude/kw24/src_ts2_e23
+epyc5	49.8	/srv/opentallas-scratch2/claude/kw24/src_qcb_997
+epyc5	49.8	/srv/opentallas-scratch2/claude/kw24/src_kvsg_d72
+epyc5	49.8	/srv/opentallas-scratch2/claude/dh78/src_vd
+epyc5	49.7	/srv/opentallas-scratch2/claude/kw23/src_e9c49
+epyc5	49.7	/srv/opentallas-scratch2/claude/kw22/src_3761
+epyc5	49.7	/srv/opentallas-scratch2/claude/die-s81-72/src_ft
+epyc5	49.7	/srv/opentallas-scratch2/claude/die-s81-72/src_cs
+epyc5	33.4	/srv/opentallas-scratch2/claude/die-s81-59/wc1
+epyc5	31.6	/srv/opentallas-scratch2/claude/hbm-gaps-5-qcol4/repo
+epyc5	31.5	/srv/opentallas-scratch2/claude/dkv80/repo
+epyc5	23.9	/srv/opentallas-scratch2/claude/die-s81-62/src_r
+epyc5	1.9	/srv/opentallas-scratch2/claude/wt/codex-qc-slectl-1106
+epyc5	0.0	/srv/opentallas-scratch2/claude/s81-rck-4/src_vF
+epyc5	0.0	/srv/opentallas-scratch2/claude/codex-kv-pad2-context/unionbase
