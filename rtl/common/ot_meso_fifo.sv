@@ -397,6 +397,10 @@ module ot_meso_ring #(
                                      // (async_reg g1 g2 / n0 n1 n2) is unchanged.
     parameter bit ONV      = 0,      // per-chunk r_on / r_align copies (r_on_v / r_align_v) drive the readout selects
     parameter bit RSPLIT   = 0,      // RDREG: two half-select readout flops per bit, ORed after them (ot_meso_dsel SPLIT)
+    parameter bit WCHKC    = 0,      // S81-RCK-10: chunked write like WCHK, but each 64-bit chunk holds a registered COPY
+                                     // of the slot index (tcc <= tc + 1: equals tc's slot from the first edge) and decodes
+                                     // it locally; the slot write conditions stay a combinational decode of one register
+                                     // (face_guard hold_mux exclusivity), with no reset on the free-running ring.
     parameter bit TNEG     = 0       // S81-RINGHOLD-3 variant (a): the whole transmit side (slots, counter, Gray copy)
                                      // runs on the falling tclk edge: a static T/2 writer phase, which placement covers.
                                      // Source-synchronous inputs launched on rising tclk gain T/2 of write hold.
@@ -445,6 +449,17 @@ module ot_meso_ring #(
         for (genvar c = 0; c < NCW; c++) begin : wch
             logic [DEPTH*WCW-1:0] sd_c;
             ot_meso_wch #(.W(WCW), .DEPTH(DEPTH)) u_wch (.clk(tclk_w), .nxt(nxt), .d(t_d[c*WCW +: WCW]), .sd(sd_c));
+            for (genvar i = 0; i < DEPTH; i++) begin : sl
+                assign s_d[i][c*WCW +: WCW] = sd_c[i*WCW +: WCW];
+            end
+        end
+    end else if (WCHKC) begin : g_wcc
+        localparam int NCW = (W % 64 == 0) ? W / 64 : 1;
+        localparam int WCW = W / NCW;
+        wire [AW-1:0] nxt = tc[AW-1:0] + AW'(1);
+        for (genvar c = 0; c < NCW; c++) begin : wcc
+            logic [DEPTH*WCW-1:0] sd_c;
+            ot_meso_wcc #(.W(WCW), .DEPTH(DEPTH)) u_wcc (.clk(tclk_w), .v(t_v), .nxt(nxt), .d(t_d[c*WCW +: WCW]), .sd(sd_c));
             for (genvar i = 0; i < DEPTH; i++) begin : sl
                 assign s_d[i][c*WCW +: WCW] = sd_c[i*WCW +: WCW];
             end
@@ -681,6 +696,25 @@ module ot_meso_wch #(parameter int W = 64, parameter int DEPTH = 4) (
     always_ff @(posedge clk) we <= DEPTH'(1) << nxt;
     for (genvar i = 0; i < DEPTH; i++) begin : sl
         always_ff @(posedge clk) if (we[i]) m[i] <= d;
+        assign sd[i*W +: W] = m[i];
+    end
+endmodule
+
+// S81-RCK-10 WCHKC chunk: its own registered copy of the write slot index, decoded locally (kept hierarchy and kept
+// register so the per-chunk copies are not merged back into one bus-wide decode).
+(* keep_hierarchy *)
+module ot_meso_wcc #(parameter int W = 64, parameter int DEPTH = 4) (
+    input  logic                     clk,
+    input  logic                     v,
+    input  logic [$clog2(DEPTH)-1:0] nxt,
+    input  logic [W-1:0]             d,
+    output logic [DEPTH*W-1:0]       sd
+);
+    (* keep *) logic [$clog2(DEPTH)-1:0] tcc;
+    logic [W-1:0] m [DEPTH];
+    always_ff @(posedge clk) tcc <= nxt;
+    for (genvar i = 0; i < DEPTH; i++) begin : sl
+        always_ff @(posedge clk) if (v && tcc == i) m[i] <= d;
         assign sd[i*W +: W] = m[i];
     end
 endmodule
