@@ -25,8 +25,8 @@
       },
       "plan": "/srv/opentallas-scratch2/claude/kw24/kv_plan_7da_ad/plan_of_record/plan_c.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
-      "src_sha": "6a7e5c39dcce406da72b0fd2a9d1accf92bb45f6",
+      "src": "/srv/opentallas-scratch2/claude/kw32/src_18ed1",
+      "src_sha": "18ed159e6b84183504fb98579256e75a3fd18a10",
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch2/claude/kw23/asbuilt_kv_7da.json",
@@ -618,7 +618,7 @@
       ],
       "plan_items_from_allowlist": true,
       "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-      "queue_src": "main@6a7e5c39dcce",
+      "queue_src": "main@18ed159e6b84",
       "hold_items_released": {
         "kv3_pc": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
         "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -1054,7 +1054,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 2
       },
-      "flow_tag": "flow-20261107-cw-kv",
+      "flow_tag": "flow-20261107-cy-kv",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -1105,7 +1105,12 @@
           }
         ]
       },
-      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:06 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 18 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32"
+      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:06 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 18 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
+      "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
+      "src_sha_prev_kw32b": "6a7e5c39dcce406da72b0fd2a9d1accf92bb45f6",
+      "queue_src_prev_kw32b": "main@6a7e5c39dcce",
+      "flow_tag_prev_kw32b": "flow-20261107-cw-kv",
+      "note_src_kw32b": "KW-FIX-32 2026-11-07 18:47 PST (COORD 18:4x): src kw32/src_18ed1 = main 18ed159e6b8 (HBM type gate 6dfae880, S81 relay-fit/gutter, QC NL plan_qc52n file, qc-types-6s, resign-dryrun) = kw32/src_6a7e5 hardlinks + 242 files (228 added, 14 modified, 0 deleted; sha256 checked), staged epyc4/epyc5/epyc6/intel1/epyc2 (epyc2/epyc4 real tree scratch3/claude/kw32src); HBM recipe pins refs/pins/recipe-* carried (49 on epyc4/5/6); flow_tag flow-20261107-cy-kv. Revert: src/src_sha/queue_src/flow_tag <- *_prev_kw32b."
     },
     "s81": {
       "enabled": true,
@@ -1118,8 +1123,8 @@
       },
       "plan": "/srv/opentallas-scratch3/claude/kw24/wave_cg_frz/physical/die_plan/s81/plan_h2_2249.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
-      "src_sha": "6a7e5c39dcce406da72b0fd2a9d1accf92bb45f6",
+      "src": "/srv/opentallas-scratch2/claude/kw32/src_18ed1",
+      "src_sha": "18ed159e6b84183504fb98579256e75a3fd18a10",
       "kit_rtl": {
         "mode": "script",
         "script": "/srv/opentallas-scratch3/claude/die-s81-70/kit_rtl_s81_ds70_kvov.sh",
@@ -2270,7 +2275,7 @@
         "ot_s81sl_leaf__t72": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t8": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim."
       },
-      "queue_src": "main@6a7e5c39dcce",
+      "queue_src": "main@18ed159e6b84",
       "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave",
       "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
       "retry_fix": {
@@ -3632,7 +3637,7 @@
         "queue_src": "claude/kw-fix-29-s81-leaf-src-1107@abaf08160896",
         "die_max_inflight": 67
       },
-      "flow_tag": "flow-20261107-dh-s81",
+      "flow_tag": "flow-20261107-dj-s81",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "src_prev_kw32": "/srv/opentallas-scratch2/claude/kw31/src_66d55",
       "src_sha_prev_kw32": "66d55c026ade2245a494c3eeeea0e5ec0ab8ae0b",
@@ -3725,7 +3730,12 @@
           }
         ]
       },
-      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:19 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 4 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32"
+      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:19 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 4 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
+      "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
+      "src_sha_prev_kw32b": "6a7e5c39dcce406da72b0fd2a9d1accf92bb45f6",
+      "queue_src_prev_kw32b": "main@6a7e5c39dcce",
+      "flow_tag_prev_kw32b": "flow-20261107-dh-s81",
+      "note_src_kw32b": "KW-FIX-32 2026-11-07 18:47 PST (COORD 18:4x): src kw32/src_18ed1 = main 18ed159e6b8 (HBM type gate 6dfae880, S81 relay-fit/gutter, QC NL plan_qc52n file, qc-types-6s, resign-dryrun) = kw32/src_6a7e5 hardlinks + 242 files (228 added, 14 modified, 0 deleted; sha256 checked), staged epyc4/epyc5/epyc6/intel1/epyc2 (epyc2/epyc4 real tree scratch3/claude/kw32src); HBM recipe pins refs/pins/recipe-* carried (49 on epyc4/5/6); flow_tag flow-20261107-dj-s81. Revert: src/src_sha/queue_src/flow_tag <- *_prev_kw32b."
     },
     "s81_head": {
       "enabled": true,
@@ -3738,8 +3748,8 @@
       },
       "plan": "/srv/opentallas-scratch3/claude/kw23/prep_l48ui/source_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
-      "src_sha": "6a7e5c39dcce406da72b0fd2a9d1accf92bb45f6",
+      "src": "/srv/opentallas-scratch2/claude/kw32/src_18ed1",
+      "src_sha": "18ed159e6b84183504fb98579256e75a3fd18a10",
       "kit_rtl": {
         "mode": "script",
         "script": "/srv/opentallas-scratch2/claude/kw23/src_e9eda/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
@@ -3991,7 +4001,7 @@
       ],
       "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
       "cancel_superseded": false,
-      "queue_src": "main@6a7e5c39dcce",
+      "queue_src": "main@18ed159e6b84",
       "item_env": {
         "hd_ctl": {
           "OT_IO_HOLD": "sender_min"
@@ -4312,7 +4322,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 1
       },
-      "flow_tag": "flow-20261107-da-head",
+      "flow_tag": "flow-20261107-dc-head",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -4343,7 +4353,12 @@
         "epyc4",
         "epyc2"
       ],
-      "note_prefer_kw32": "KW-FIX-32 2026-11-07 18:08 PST COORD 18:0x (epyc2 load 247/128 + 114 waiters, epyc4 91/256 + 10): epyc4 first in place_prefer and gen_hosts; disk/admit checks unchanged (epyc4 only taken while it admits / has gen disk room). Revert: place_prefer <- place_prefer_prev_kw32, gen_hosts <- gen_hosts_prev_kw32c."
+      "note_prefer_kw32": "KW-FIX-32 2026-11-07 18:08 PST COORD 18:0x (epyc2 load 247/128 + 114 waiters, epyc4 91/256 + 10): epyc4 first in place_prefer and gen_hosts; disk/admit checks unchanged (epyc4 only taken while it admits / has gen disk room). Revert: place_prefer <- place_prefer_prev_kw32, gen_hosts <- gen_hosts_prev_kw32c.",
+      "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
+      "src_sha_prev_kw32b": "6a7e5c39dcce406da72b0fd2a9d1accf92bb45f6",
+      "queue_src_prev_kw32b": "main@6a7e5c39dcce",
+      "flow_tag_prev_kw32b": "flow-20261107-da-head",
+      "note_src_kw32b": "KW-FIX-32 2026-11-07 18:47 PST (COORD 18:4x): src kw32/src_18ed1 = main 18ed159e6b8 (HBM type gate 6dfae880, S81 relay-fit/gutter, QC NL plan_qc52n file, qc-types-6s, resign-dryrun) = kw32/src_6a7e5 hardlinks + 242 files (228 added, 14 modified, 0 deleted; sha256 checked), staged epyc4/epyc5/epyc6/intel1/epyc2 (epyc2/epyc4 real tree scratch3/claude/kw32src); HBM recipe pins refs/pins/recipe-* carried (49 on epyc4/5/6); flow_tag flow-20261107-dc-head. Revert: src/src_sha/queue_src/flow_tag <- *_prev_kw32b."
     },
     "qwen_compute": {
       "enabled": true,
@@ -4357,8 +4372,8 @@
       },
       "plan": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/plan_of_record/plan_qc53_candidate_v4.json",
       "gen_host": "epyc2",
-      "src": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
-      "src_sha": "6a7e5c39dcce406da72b0fd2a9d1accf92bb45f6",
+      "src": "/srv/opentallas-scratch2/claude/kw32/src_18ed1",
+      "src_sha": "18ed159e6b84183504fb98579256e75a3fd18a10",
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt.json",
@@ -4739,7 +4754,7 @@
         "glue@3",
         "native59@4"
       ],
-      "queue_src": "main@6a7e5c39dcce",
+      "queue_src": "main@18ed159e6b84",
       "type_args": {
         "sle_fw_v2__cl69f5e854": [
           "--gpl-plain",
@@ -5449,7 +5464,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 13
       },
-      "flow_tag": "flow-20261107-dg-qc",
+      "flow_tag": "flow-20261107-di-qc",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "src_prev_kw32": "/srv/opentallas-scratch2/claude/kw31/src_66d55",
       "src_sha_prev_kw32": "66d55c026ade2245a494c3eeeea0e5ec0ab8ae0b",
@@ -5607,7 +5622,12 @@
           }
         ]
       },
-      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:06 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 19 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32"
+      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:06 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 19 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
+      "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
+      "src_sha_prev_kw32b": "6a7e5c39dcce406da72b0fd2a9d1accf92bb45f6",
+      "queue_src_prev_kw32b": "main@6a7e5c39dcce",
+      "flow_tag_prev_kw32b": "flow-20261107-dg-qc",
+      "note_src_kw32b": "KW-FIX-32 2026-11-07 18:47 PST (COORD 18:4x): src kw32/src_18ed1 = main 18ed159e6b8 (HBM type gate 6dfae880, S81 relay-fit/gutter, QC NL plan_qc52n file, qc-types-6s, resign-dryrun) = kw32/src_6a7e5 hardlinks + 242 files (228 added, 14 modified, 0 deleted; sha256 checked), staged epyc4/epyc5/epyc6/intel1/epyc2 (epyc2/epyc4 real tree scratch3/claude/kw32src); HBM recipe pins refs/pins/recipe-* carried (49 on epyc4/5/6); flow_tag flow-20261107-di-qc. Revert: src/src_sha/queue_src/flow_tag <- *_prev_kw32b."
     },
     "hbm": {
       "enabled": true,
@@ -5704,7 +5724,49 @@
         "ot_hgi_sfu_split3_lane_core_bk",
         "ot_hgi_sfu_split3_lane_core_ex",
         "ot_hgi_sfu_split3_lane_core_fr",
-        "hnx_rp3h_xs"
+        "hnx_rp3h_xs",
+        "q_b000",
+        "q_b000__physical_v1",
+        "q_b001",
+        "q_b001__physical_v1",
+        "q_b002",
+        "q_b002__physical_v1",
+        "q_b003",
+        "q_b003__physical_v1",
+        "q_b010",
+        "q_b010__physical_v1",
+        "q_b011",
+        "q_b011__physical_v1",
+        "q_b012",
+        "q_b012__physical_v1",
+        "q_b013",
+        "q_b013__physical_v1",
+        "q_b100",
+        "q_b100__physical_v1",
+        "q_b101",
+        "q_b101_nw",
+        "q_b102",
+        "q_b102__physical_v1",
+        "q_b103",
+        "q_b103__physical_v1",
+        "q_b110",
+        "q_b110__physical_v1",
+        "q_b111",
+        "q_b111__physical_v1",
+        "q_b112",
+        "q_b112__physical_v1",
+        "q_spb2",
+        "q_spb2__physical_v1",
+        "q_spt0",
+        "q_spt0__physical_v1",
+        "q_su20",
+        "q_su20__physical_v1",
+        "q_su21",
+        "q_su21__physical_v1",
+        "q_su30",
+        "q_su30__physical_v1",
+        "q_su31",
+        "q_su31__physical_v1"
       ],
       "place_prefer": [
         "epyc4",
@@ -5718,8 +5780,8 @@
       "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
       "plan": "/srv/opentallas-scratch2/claude/kw27/hbm_d44v_02909/die_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
-      "src_sha": "6a7e5c39dcce406da72b0fd2a9d1accf92bb45f6",
+      "src": "/srv/opentallas-scratch2/claude/kw32/src_18ed1",
+      "src_sha": "18ed159e6b84183504fb98579256e75a3fd18a10",
       "gate": {
         "g0c": "PASS",
         "bind": "PASS",
@@ -6264,7 +6326,7 @@
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
       "pilot_mode": "queue",
-      "queue_src": "main@6a7e5c39dcce",
+      "queue_src": "main@18ed159e6b84",
       "hold_items": {
         "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
         "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
@@ -6578,7 +6640,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 2
       },
-      "flow_tag": "flow-20261107-ee-hbm",
+      "flow_tag": "flow-20261107-eg-hbm",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -6620,7 +6682,103 @@
         "epyc6",
         "intel1"
       ],
-      "note_gen_hosts_kw32d": "KW-FIX-32 2026-11-07 18:38 PST COORD 18:2x (c): HBM recipe read_at_commit/files_at pins (49 commits, e.g. d34578d6f) must be in the gen src .git; installed as refs/pins/recipe-* in kw32/src_6a7e5 on epyc4/epyc5/epyc6 (0 missing); intel1's src .git lacks almost all objects (dangling alternates, 305k of 312k missing), so intel1 is not an HBM gen host. Revert: gen_hosts <- gen_hosts_prev_kw32d."
+      "note_gen_hosts_kw32d": "KW-FIX-32 2026-11-07 18:38 PST COORD 18:2x (c): HBM recipe read_at_commit/files_at pins (49 commits, e.g. d34578d6f) must be in the gen src .git; installed as refs/pins/recipe-* in kw32/src_6a7e5 on epyc4/epyc5/epyc6 (0 missing); intel1's src .git lacks almost all objects (dangling alternates, 305k of 312k missing), so intel1 is not an HBM gen host. Revert: gen_hosts <- gen_hosts_prev_kw32d.",
+      "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
+      "src_sha_prev_kw32b": "6a7e5c39dcce406da72b0fd2a9d1accf92bb45f6",
+      "queue_src_prev_kw32b": "main@6a7e5c39dcce",
+      "flow_tag_prev_kw32b": "flow-20261107-ee-hbm",
+      "note_src_kw32b": "KW-FIX-32 2026-11-07 18:47 PST (COORD 18:4x): src kw32/src_18ed1 = main 18ed159e6b8 (HBM type gate 6dfae880, S81 relay-fit/gutter, QC NL plan_qc52n file, qc-types-6s, resign-dryrun) = kw32/src_6a7e5 hardlinks + 242 files (228 added, 14 modified, 0 deleted; sha256 checked), staged epyc4/epyc5/epyc6/intel1/epyc2 (epyc2/epyc4 real tree scratch3/claude/kw32src); HBM recipe pins refs/pins/recipe-* carried (49 on epyc4/5/6); flow_tag flow-20261107-eg-hbm. Revert: src/src_sha/queue_src/flow_tag <- *_prev_kw32b.",
+      "only_items_prev_kw32": [
+        "hfd_ep_static",
+        "hnx_rp3lp3h_n",
+        "hnx_rp3lp3h_s",
+        "hfd_hgi_vm_calendar_f20",
+        "hnx_fused_lane",
+        "ot_hbm_hc_bank128_pair_first_core",
+        "ot_hbm_hc_root_static__tailx_rest__v4f4566",
+        "ot_hbm_hc_root_static__tailx_rest__v6bc7f2",
+        "ot_hbm_hc_subtree32_core",
+        "ot_hbm_host_cp_rxs",
+        "ot_hbm_idx_query_static",
+        "ot_hbm_idx_rootctl_static_am",
+        "ot_hbm_idx_vm_query_static_n12",
+        "ot_hbm_sm_vm_wr_q_t_lanes4",
+        "ot_hbm_su_programme_pslice_c5",
+        "ot_hbm_su_static_cxport_ij_q",
+        "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+        "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+        "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+        "ot_hbm_su_static_qcore_r13",
+        "ot_hbm_su_static_sfustore_hw",
+        "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+        "ot_hbm_svc_vmdel_lane_n",
+        "ot_hbm_xp_aq_tree13_fmt",
+        "ot_hfd_coll_q2_hard_v8g__reduce",
+        "ot_hfd_coll_q2n2_vm_core",
+        "ot_hfd_coll_q3_body_core",
+        "ot_hfd_coll_q3_edge_core",
+        "ot_hfd_coll_q3_vm_core",
+        "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+        "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
+        "ot_hgi_qw_dec",
+        "ot_hgi_sm_xload_cl2_bdring",
+        "ot_hgi_sm_xload_cl2_bfqg",
+        "ot_hnx_idxn_keybuf_slice",
+        "hfd_hgi_vms_glue_nw_t",
+        "hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a",
+        "hnx_vms_bank_q0_faces__vecd4ae__v39c3624d7cc9",
+        "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16",
+        "hnx_vms_bank_q0_faces__vecd4ae__v5d4099d7f96c",
+        "hnx_vms_bank_q0_faces__vecd4ae__v796f3e53bd3f",
+        "hnx_vms_bank_q0_faces__vecd4ae__vb64bbf321780",
+        "ot_hbm_argmax_static_sw_vm_r2",
+        "ot_hbm_hc_bank128_pair_core__v7d149b37532c",
+        "ot_hbm_hc_bank128_pair_core__v9bf80cdae38d",
+        "ot_hbm_hc_root_static__hcp_sys1",
+        "ot_hbm_hc_root_static__tailx_sk_steady",
+        "ot_hbm_hc_root_static__tailx_sk_step0",
+        "ot_hbm_idx_qctl_static",
+        "ot_hbm_idx_score_hcol_h1",
+        "ot_hbm_idx_selector_static_sel",
+        "ot_hbm_idx_tail_native__v9496b22d4b49",
+        "ot_hbm_idx_tail_native__vf56d1f72f3f3",
+        "ot_hbm_idx_topk_link_static",
+        "ot_hbm_static_cfg_collar_idx256r",
+        "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+        "ot_hbm_su_static_pgslice_lg__pretree",
+        "ot_hbm_svc_sm_group_rel_id",
+        "ot_hbm_svc_sm_xcal_rel_t",
+        "ot_hbm_svc_vm_kshare_splitstrap__v700685",
+        "ot_hbm_svc_vm_kshare_splitstrap__v8e478a",
+        "ot_hbm_svc_wb_kport_q",
+        "ot_hfd_coll_q2_hard_v8g__ring_ag",
+        "ot_hfd_coll_q2n2_body_core",
+        "ot_hgi_coll_gq_issue__v42a705296525",
+        "ot_hgi_coll_gq_issue__v9a8014f3c0c7",
+        "ot_hgi_coll_gq_land__v25778639ea1b",
+        "ot_hgi_coll_gq_land__vac72b8c34f86",
+        "ot_hgi_coll_gq_land__vbfcd846691ef",
+        "ot_hgi_coll_inj_idx_join_rg",
+        "ot_hgi_coll_tkm_m_tp192__root",
+        "ot_hgi_dma_back_static_vp4_banks_cp",
+        "ot_hgi_sfu_core_split3__ctl",
+        "ot_hgi_sfu_core_split3__opstore_a",
+        "ot_hgi_sfu_core_split3__opstore_b",
+        "ot_hgi_sfu_programme_store_r10",
+        "ot_hgi_sm_xload_cl2_ctlx",
+        "ot_hnx_fused_host_program",
+        "ot_hnx_fused_hub_n4ext",
+        "ot_hnx_fused_tnode",
+        "ot_pdie_serdes",
+        "ot_hbm_idx_score_hcol_h0_ra",
+        "ot_hbm_idx_score_hcol_h0_rb",
+        "ot_hbm_su_pg_lane1_core",
+        "ot_hgi_sfu_split3_lane_core_bk",
+        "ot_hgi_sfu_split3_lane_core_ex",
+        "ot_hgi_sfu_split3_lane_core_fr",
+        "hnx_rp3h_xs"
+      ],
+      "note_only_items_kw32": "KW-FIX-32 2026-11-07 18:49 PST OWNER 17:4x 'allow type builds for all dies, including HBM' (COORD 17:4x: the 42 types whose children are all counted first): +42 types to only_items (probe d44v WAIT types with every child in the counter). Revert: only_items <- only_items_prev_kw32."
     }
   },
   "place_prefer": [
