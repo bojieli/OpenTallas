@@ -3428,6 +3428,27 @@
     "source_commit": "0a5be559a7",
     "read_at_commit": true
   },
+  "ot_hbm_idx_topk_link_static__ev74_pd3w_nq": {
+    "defines": [],
+    "params": {
+      "FILL_GROUPS": 8,
+      "WPIPE": 1,
+      "NQ": 1
+    },
+    "util": 0.45,
+    "source": "HBM-HARD-6-TOPK 11-08: ev74_pd3w + NQ=1 (ingest n = fill + count registered one edge early: the count -> add -> nf decode chain leaves the nf -> carry cycle; vD routed TT -122 ps, 440/608 ends from compact.count). Same ports and cycles as ev74_pd3w (PIN CYCLES tx_v/tx +1 as declared there, none new); bench results/die_hbm_1108/topk_vE/RESULTS_NQ.txt",
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_link_pd3.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/topk/ot_hbm_idx_topk_tiles.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
+    ],
+    "top": "ot_hbm_idx_topk_link_pd3",
+    "macros": [
+      "ot_sram_1r1w_64x512_m1_r2c2"
+    ],
+    "source_commit": "df890c3332",
+    "read_at_commit": true
+  },
   "hfd_hgi_vms_gnw_cw": {
     "top": "hfd_hgi_vms_gnw_cw",
     "files": [

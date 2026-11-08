@@ -7,9 +7,10 @@
 // The seam stage registers carry no reset (as the face shells they replace). MUT 1-4: bench mutants (as topk__comp.sv).
 // HBM-FORM-SPLIT-13-TOPK WPIPE=1: ingest write stage + store PD+1, tx_v/tx +1 edge (outputs +4 vs WRITE_PIPE_STAGES=2;
 // fault/selected_count stay +3). MUT 5/6: ingest write-stage mutants; MUT 9: store left at PD=3 (must FAIL).
+// HBM-HARD-6-TOPK NQ=1 (11-08): ingest n = fill + count registered one edge early (same ports, same cycles); MUT 10/11 its mutants.
 `timescale 1ns/1ps
 `default_nettype none
-module ot_hbm_idx_topk_link_pd3 #(parameter integer MUT = 0, FILL_GROUPS = 0, WPIPE = 0) (
+module ot_hbm_idx_topk_link_pd3 #(parameter integer MUT = 0, FILL_GROUPS = 0, WPIPE = 0, NQ = 0) (
  input wire clk,input wire[7:0]clk_mem,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
@@ -17,7 +18,7 @@ module ot_hbm_idx_topk_link_pd3 #(parameter integer MUT = 0, FILL_GROUPS = 0, WP
  output wire fault,output wire[9:0]selected_count
 );
  wire[7:0]c_we;wire[47:0]c_wa;wire[4095:0]c_wd;
- ot_hbm_idx_topk_ingest #(.MUT((MUT==5||MUT==6)?MUT:0),.FILL_GROUPS(FILL_GROUPS),.WPIPE(WPIPE)) u_ing(.clk(clk),.rst_n(rst_n),.clear(clear),.ingest_v(ingest_v),.selected_line(selected_line),
+ ot_hbm_idx_topk_ingest #(.MUT((MUT==5||MUT==6||MUT==10||MUT==11)?MUT:0),.FILL_GROUPS(FILL_GROUPS),.WPIPE(WPIPE),.NQ(NQ)) u_ing(.clk(clk),.rst_n(rst_n),.clear(clear),.ingest_v(ingest_v),.selected_line(selected_line),
   .flush(flush),.emit_v(emit_v),.rank(rank),.gbase(gbase),
   .fault(fault),.selected_count(selected_count),.wo_we(c_we),.wo_wa(c_wa),.wo_wd(c_wd));
  // write seam: ingest output stage, then store input stage (the two part 30 tile face stages)
