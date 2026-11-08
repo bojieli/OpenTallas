@@ -95,3 +95,24 @@ def check_rx_return(ledger, returned, descriptor):
     edge = returned.get('input_sampling_edge')
     return (type(edge) is int and ledger['RX_sampling_first'] <= edge <= ledger['RX_sampling_last'] and
             returned.get('user') == descriptor['user'] and returned.get('position') == descriptor['position'])
+
+
+def check_selected_consumer_copies(ledger, selected):
+    """Reject native tags that the exact selected endpoint cannot consume.
+
+    Static endpoint capability only; the separately required clock/landing and
+    sampled-event books are not established by this check.
+    """
+    if selected.get('schema') != 'opentallas.s81.current_bound_hwin_endpoints.v1':
+        raise ValueError('actual selected HWIN endpoint map required')
+    profiles={r['endpoint']:next(f for f in r['fields']if f['kind']==0)for r in selected['endpoint_routes']}
+    problems=[]
+    for event in ledger['events']:
+        if event['kind'] != 0:continue
+        endpoint=ENDPOINTS[event['endpoint']].removeprefix('s_').lower();p=profiles[endpoint]
+        if p.get('AB_EN') not in (0,1) or p.get('latency_user_copy_A_only') is not True or not p.get('consumer_source_sha256'):
+            raise ValueError('selected native LEP copy rule lacks actual source profile')
+        if event['ab'] and (not p['AB_EN'] or event['user']==0):
+            problems.append(dict(cause='native_HWIN_copy_not_supported_by_selected_consumer',event=event['event'],
+                                 endpoint=endpoint,user=event['user'],ab=event['ab'],consumer=p['consumer_module']))
+    return problems

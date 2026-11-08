@@ -213,8 +213,10 @@ def compile_pipeline(calendar, bookings, root, out):
     root = Path(root)
     out = Path(out); out.mkdir(parents=True, exist_ok=False)
     from layer_prog.native_mu_calendar import bind_contract,check_job
-    from layer_prog.native_hwin_calendar import event_ledger,check_consumer_book
+    from layer_prog.native_hwin_calendar import event_ledger,check_consumer_book,check_selected_consumer_copies
     mu_cache={}
+    hwin_profile_ref=bookings.get('native_hwin_bound_endpoint_profile')
+    hwin_profile=json.loads((root/hwin_profile_ref).read_text()) if hwin_profile_ref else None
     from layer_prog.head_root_boot import pipeline_guard
     head_boot,head_gaps=pipeline_guard(bookings,root)
     gaps.extend(head_gaps)
@@ -285,6 +287,12 @@ def compile_pipeline(calendar, bookings, root, out):
                 mu=mu_cache[cache_key]
                 gaps.extend(dict(p,job=index)for p in check_job(job,contract,mu,seq_ks))
                 hwin=event_ledger(mu,identity,seq_ks)
+                if hwin_profile is None:
+                    gaps.append(dict(job=index,cause='native_HWIN_selected_endpoint_source_map_missing'))
+                elif hwin_profile['source_top_sha256']!=contract.get('native_bound_top_sha256'):
+                    gaps.append(dict(job=index,cause='native_HWIN_endpoint_map_not_bound_to_current_native_top'))
+                else:
+                    gaps.extend(dict(p,job=index)for p in check_selected_consumer_copies(hwin,hwin_profile))
                 resource=(stage,slots[user]['copy'].get(stage,'A'),rank)
                 gaps.extend(dict(p,job=index)for p in check_consumer_book(hwin,booking.get('native_hwin_consumer_book'),resource))
             except (ValueError,KeyError,OSError,TypeError)as exc:

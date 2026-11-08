@@ -118,7 +118,11 @@
             "RX_SRAM": "1",
             "SRAM": "1"
           },
-          "consumer_port": "mu_c"
+          "consumer_port": "mu_c",
+          "AB_EN": 1,
+          "latency_user_copy_A_only": true,
+          "consumer_source_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lep.sv",
+          "consumer_source_sha256": "429141a0ee0f3d1f5c021b395e284e6b345c78e57b1edd80cbbbb026a83f6bd8"
         },
         {
           "kind": 1,
@@ -220,7 +224,11 @@
             "RX_SRAM": "1",
             "SRAM": "1"
           },
-          "consumer_port": "mu_c"
+          "consumer_port": "mu_c",
+          "AB_EN": 0,
+          "latency_user_copy_A_only": true,
+          "consumer_source_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lep.sv",
+          "consumer_source_sha256": "429141a0ee0f3d1f5c021b395e284e6b345c78e57b1edd80cbbbb026a83f6bd8"
         },
         {
           "kind": 1,
@@ -322,7 +330,11 @@
             "RX_SRAM": "1",
             "SRAM": "1"
           },
-          "consumer_port": "mu_c"
+          "consumer_port": "mu_c",
+          "AB_EN": 1,
+          "latency_user_copy_A_only": true,
+          "consumer_source_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lep.sv",
+          "consumer_source_sha256": "429141a0ee0f3d1f5c021b395e284e6b345c78e57b1edd80cbbbb026a83f6bd8"
         },
         {
           "kind": 1,
@@ -424,7 +436,11 @@
             "RX_SRAM": "1",
             "SRAM": "1"
           },
-          "consumer_port": "mu_c"
+          "consumer_port": "mu_c",
+          "AB_EN": 1,
+          "latency_user_copy_A_only": true,
+          "consumer_source_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lep.sv",
+          "consumer_source_sha256": "429141a0ee0f3d1f5c021b395e284e6b345c78e57b1edd80cbbbb026a83f6bd8"
         },
         {
           "kind": 1,
@@ -467,5 +483,8 @@
   ],
   "global_HOST_KS_reset_dates_booked": false,
   "clock_landing_phase_qualified": false,
-  "note": "Bound stages are actual emitted lane declarations, not measured global epochs. Native atomic raw reset pin is separate from published tap release; no first HOST/KS date is chosen."
+  "note": "Bound stages are actual emitted lane declarations, not measured global epochs. Native atomic raw reset pin is separate from published tap release; no first HOST/KS date is chosen.",
+  "consumer_source_root": "/srv/opentallas-scratch2/claude/kw35/src_c303p",
+  "consumer_selection_manifest": "/srv/opentallas-scratch3/claude/codex-wave-bind-1106/src_28fc7/physical/die_plan/s81/bind/asbuilt_b178_coll_h2_2249.json",
+  "consumer_selection_manifest_sha256": "f4bfd6546db4cafd55c62814c32fe10f15b7ee712b10bb50567c452968b80e5f"
 }

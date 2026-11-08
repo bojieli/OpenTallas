@@ -102,9 +102,40 @@ def extract(bind,mutate_source_bit=False):
         note='Bound stages are actual emitted lane declarations, not measured global epochs. Native atomic raw reset pin is separate from published tap release; no first HOST/KS date is chosen.')
 
 
+def consumer_capabilities(record,source_root,manifest):
+    root=Path(source_root);meta=json.loads(Path(manifest).read_text());cached={}
+    for rel in meta['prefer']:
+        if 'lep' in rel.lower():
+            path=root/rel
+            if path.exists():cached[rel]=path.read_text()
+    for route in record['endpoint_routes']:
+        field=next(f for f in route['fields']if f['kind']==0);name=field['consumer_module']
+        hits=[]
+        for rel,text in cached.items():
+            m=re.search(r'^\s*module\s+'+re.escape(name)+r'\b(.*?)^\s*endmodule',text,re.M|re.S)
+            if m:hits.append((rel,text,m[1]))
+        if len(hits)!=1:raise ValueError('selected native LEP source absent/ambiguous '+name)
+        rel,text,body=hits[0]
+        core=re.search(r'ot_s81sl_lep_core\s*#\((.*?)\)\s+\w+\s*\(',body,re.S)
+        if not core:raise ValueError('actual LEP does not expose selected core profile')
+        profile=named(core[1]);ab=profile.get('AB_EN')
+        if ab not in('0','1'):raise ValueError('selected copy-B capability is not a literal')
+        core_body=re.search(r'^\s*module\s+ot_s81sl_lep_core\b(.*?)^\s*endmodule',text,re.M|re.S)
+        if not core_body or "wireab_ok=(AB_EN!=0)&&mcu!=10'd0;"not in re.sub(r'\s+','',core_body[1]):
+            raise ValueError('actual native user0/copy-B rule changed')
+        field.update(AB_EN=int(ab),latency_user_copy_A_only=True,consumer_source_path=rel,
+                     consumer_source_sha256=hashlib.sha256(text.encode()).hexdigest())
+    record['consumer_source_root']=str(root)
+    record['consumer_selection_manifest']=str(manifest)
+    record['consumer_selection_manifest_sha256']=hashlib.sha256(Path(manifest).read_bytes()).hexdigest()
+    return record
+
+
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--bind',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--mutate-source-bit',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--bind',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--mutate-source-bit',action='store_true');p.add_argument('--source-root',type=Path);p.add_argument('--manifest',type=Path);a=p.parse_args()
     r=extract(a.bind,a.mutate_source_bit)
+    if bool(a.source_root)!=bool(a.manifest):raise ValueError('actual source root/manifest travel together')
+    if a.source_root:r=consumer_capabilities(r,a.source_root,a.manifest)
     if a.out.exists():raise ValueError('preserve earlier endpoint extraction')
     a.out.write_text(json.dumps(r,indent=2)+'\n')
     print('ACTUAL_HWIN_ENDPOINTS',len(r['endpoint_routes']),'180 exact source bits; global epoch held')
