@@ -191,14 +191,35 @@ def host_aliases():
 class Paths:
     """canonical form + all alias forms of paths"""
 
-    def __init__(self, aliases):
+    def __init__(self, aliases, resolve=True):
         self.aliases = list(aliases)
+        self.resolve = resolve
+        self._real = {}
 
-    def canon(self, p):
-        p = os.path.normpath(p)
+    def _alias(self, p):
         for a, c in self.aliases:
             if p == a or p.startswith(a + "/"):
                 return c + p[len(a):]
+        return p
+
+    def _realprefix(self, p):
+        """symlinks resolved on the longest existing prefix (lane dirs are symlinked between scratch disks:
+        11-07 INCIDENT, kit-wave keep paths named one side, the scan found the other)"""
+        head, tail = p, ""
+        while head not in self._real:
+            if os.path.lexists(head) or head == "/":
+                self._real[head] = os.path.realpath(head)
+                break
+            head, t = os.path.split(head)
+            tail = "/" + t + tail
+            if not head:
+                return p
+        return self._real[head] + tail
+
+    def canon(self, p):
+        p = self._alias(os.path.normpath(p))
+        if self.resolve and p.startswith("/"):
+            p = self._alias(os.path.normpath(self._realprefix(p)))
         return p
 
     def forms(self, p):

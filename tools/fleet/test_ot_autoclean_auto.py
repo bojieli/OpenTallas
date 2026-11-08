@@ -261,6 +261,24 @@ class TestClasses(Base):
         self.assertTrue(os.path.isdir(cur))
         self.assertTrue(self.row(cur)[4].startswith("queuename"), self.row(cur))
 
+    def test_symlinked_lane_keep_protects(self):
+        # INCIDENT 11-07: state names the attempt through a lane symlink, the scan finds the real path
+        real = self.attempt("item_symlinkd", 2, event="evs")
+        lane_real = real.split("/kit-wave/")[0]
+        link = lane_real + "-link"
+        os.symlink(lane_real, link)
+        alias = link + real[len(lane_real):]
+        self.kw = {"attempts": {"hx:" + alias: {"active": True, "signed": False, "terminal": []}},
+                   "latest": {}, "keep": ["hx:" + os.path.join(alias, "gen")],
+                   "current_di": {"hbm|item_symlinkd": 5}}
+        self.run_job("--queuename-skip-superseded")
+        self.assertTrue(os.path.isdir(real), self.row(real))
+        self.kw = {"attempts": {}, "latest": {}, "keep": ["hx:" + os.path.join(alias, "gen")],
+                   "current_di": {"hbm|item_symlinkd": 5}}
+        self.run_job("--queuename-skip-superseded")
+        self.assertTrue(os.path.isdir(real), self.row(real))
+        self.assertTrue(self.row(real)[4].startswith("kitwave-keep"), self.row(real))
+
     def test_a_disabled_without_kitwave(self):
         d = self.attempt("item_x", 1)
         self.run_job()
