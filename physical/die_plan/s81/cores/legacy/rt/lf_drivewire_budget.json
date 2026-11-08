@@ -1,0 +1,134 @@
+{
+  "form": "LF-drivewire GRT-only pilot",
+  "source_lf": "0732614e555",
+  "policy": {
+    "period_ps": 833,
+    "setup_uncertainty_ps": 0,
+    "hold_uncertainty_ps": 25
+  },
+  "macro_output_helper_source": "epyc6:s81-engrr-b8/dsdv_eng_rr_e_vJ/macro_out_buf.tcl",
+  "eligible_macro_output_buffers": 1069,
+  "skipped_macro_outputs": 5059,
+  "buf4_area_um2": 0.10206,
+  "new_macro_buffer_area_um2": 109.10213999999999,
+  "buf4_input_cap_ff": 0.538751,
+  "buf4_max_cap_ff": 184.32,
+  "max_wire_um": 90,
+  "tt_gap_ps_from_vH_flow_report": 42.3284,
+  "tt_projection": "Not a timing result: 90um sections reduce measured178\u2013198um weak-driver legs, and near-macro buffering removes46.43fF/110.85ps direct-output wire from the FIFO output pin. Existing83.59ps clock branch remains; exact GRT TT/FF must decide next step.",
+  "repeater_cell_estimate": [
+    1500,
+    4500
+  ],
+  "repeater_area_estimate_um2": [
+    150,
+    450
+  ],
+  "geometry_risk": "Validated helper initially targets2um, INSIDE4.32um halo; DPL must move buffers to legal rows. 4\u20136um bands budgeted here. Do not treat2um target as legal placement.",
+  "face_budgets": [
+    {
+      "macro": "u_q.u_mem.g_b[1].g_w[0].u_m",
+      "buffers": 256,
+      "west_4_to_6um_legal_row_um2": 135.19296000000512,
+      "existing_cell_um2": 0.7273800000001426,
+      "added_buf_area_um2": 26.12736,
+      "area_occupancy_estimate": 0.1986400771164351
+    },
+    {
+      "macro": "u_q.u_mem.g_b[1].g_w[1].u_m",
+      "buffers": 255,
+      "west_4_to_6um_legal_row_um2": 135.1929600000051,
+      "existing_cell_um2": 1.1340000000000257,
+      "added_buf_area_um2": 26.025299999999998,
+      "area_occupancy_estimate": 0.20089285714284977
+    },
+    {
+      "macro": "u_q.u_mem.g_b[1].g_w[2].u_m",
+      "buffers": 34,
+      "west_4_to_6um_legal_row_um2": 135.19296000000446,
+      "existing_cell_um2": 3.2873039999997644,
+      "added_buf_area_um2": 3.47004,
+      "area_occupancy_estimate": 0.04998295769246817
+    },
+    {
+      "macro": "u_q.u_s.u_fq.g_bank[0].u_m",
+      "buffers": 128,
+      "west_4_to_6um_legal_row_um2": 67.13279999999986,
+      "existing_cell_um2": 0.4147200000000029,
+      "added_buf_area_um2": 13.06368,
+      "area_occupancy_estimate": 0.20077220077220123
+    },
+    {
+      "macro": "u_q.u_s.u_fq.g_bank[1].u_m",
+      "buffers": 96,
+      "west_4_to_6um_legal_row_um2": 67.13280000000019,
+      "existing_cell_um2": 8.359200000000031,
+      "added_buf_area_um2": 9.79776,
+      "area_occupancy_estimate": 0.2704633204633202
+    },
+    {
+      "macro": "u_q.u_s.u_fq.g_bank[2].u_m",
+      "buffers": 112,
+      "west_4_to_6um_legal_row_um2": 67.13280000000019,
+      "existing_cell_um2": 14.042160000000028,
+      "added_buf_area_um2": 11.430719999999999,
+      "area_occupancy_estimate": 0.3794401544401537
+    },
+    {
+      "macro": "u_q.u_s.u_fq.g_bank[3].u_m",
+      "buffers": 43,
+      "west_4_to_6um_legal_row_um2": 67.13280000000019,
+      "existing_cell_um2": 12.094919999999876,
+      "added_buf_area_um2": 4.38858,
+      "area_occupancy_estimate": 0.24553571428571175
+    },
+    {
+      "macro": "u_q.u_s.u_fq.g_bank[4].u_m",
+      "buffers": 21,
+      "west_4_to_6um_legal_row_um2": 67.13279999999807,
+      "existing_cell_um2": 3.499199999999913,
+      "added_buf_area_um2": 2.14326,
+      "area_occupancy_estimate": 0.08404922779922891
+    },
+    {
+      "macro": "u_q.u_s.u_ofq.g_bank[0].u_m",
+      "buffers": 52,
+      "west_4_to_6um_legal_row_um2": 67.13279999999982,
+      "existing_cell_um2": 2.5433999999999575,
+      "added_buf_area_um2": 5.30712,
+      "area_occupancy_estimate": 0.11694015444015413
+    },
+    {
+      "macro": "u_q.u_s.u_ofq.g_bank[1].u_m",
+      "buffers": 29,
+      "west_4_to_6um_legal_row_um2": 67.13280000000022,
+      "existing_cell_um2": 9.658439999999985,
+      "added_buf_area_um2": 2.95974,
+      "area_occupancy_estimate": 0.18795849420849337
+    },
+    {
+      "macro": "u_q.u_s.u_ofq.g_bank[2].u_m",
+      "buffers": 16,
+      "west_4_to_6um_legal_row_um2": 67.13280000000022,
+      "existing_cell_um2": 16.460820000000286,
+      "added_buf_area_um2": 1.63296,
+      "area_occupancy_estimate": 0.2695222007722042
+    },
+    {
+      "macro": "u_q.u_s.u_ofq.g_bank[3].u_m",
+      "buffers": 14,
+      "west_4_to_6um_legal_row_um2": 67.13280000000022,
+      "existing_cell_um2": 16.768619999999746,
+      "added_buf_area_um2": 1.4288399999999999,
+      "area_occupancy_estimate": 0.2710666023165977
+    },
+    {
+      "macro": "u_q.u_s.u_ofq.g_bank[4].u_m",
+      "buffers": 13,
+      "west_4_to_6um_legal_row_um2": 67.13280000000249,
+      "existing_cell_um2": 6.267780000000146,
+      "added_buf_area_um2": 1.32678,
+      "area_occupancy_estimate": 0.1131274131274111
+    }
+  ]
+}
