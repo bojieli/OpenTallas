@@ -125,4 +125,14 @@ class GeneratorEntry(unittest.TestCase):
                 with patch.object(GP.S,'core_taps',return_value=[('clk_c0',5.024,5.,{})]), patch.object(GP,'_snap_tap',side_effect=AssertionError('must not move explicit target')):
                     self.assertEqual(GP.core_tap_pins(p,'type'),[('clk_c0',5.024,5.)])
 
+class ParentSource(unittest.TestCase):
+    def test_exact_one_leaf_param_event(self):
+        ps=importlib.util.spec_from_file_location('prepare_parent',Path(__file__).with_name('prepare_parent.py'))
+        P=importlib.util.module_from_spec(ps);ps.loader.exec_module(P)
+        text='module parent;\n qfd_tile_nl_a0c u_t30 (.ck(clk_c1));\n other u_t31 (.ck(clk_c3));\nendmodule\n'
+        result=P.explicit_idle(text)
+        self.assertEqual(result.replace(' #(.IDLE_UCK(1))',''),text)
+        for bad in (text.replace('u_t30','u_other'),text+text,result):
+            with self.assertRaises(ValueError): P.explicit_idle(bad)
+
 if __name__=='__main__': unittest.main()
