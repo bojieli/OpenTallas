@@ -1,0 +1,597 @@
+#!/usr/bin/env python3
+"""tests for ot-autoclean.py (AUTOCLEAN-7): each delete class, each skip reason, aliases, controls, the ALERT stop,
+the kit-wave reduction, the wt-reaper call and the localhost archive driver (local ssh shim)."""
+import importlib.util
+import io
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+import time
+import unittest
+from contextlib import redirect_stdout
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+SCRIPT = os.path.join(HERE, "ot-autoclean.py")
+spec = importlib.util.spec_from_file_location("ot_autoclean_auto", SCRIPT)
+ac = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(ac)
+
+OLD = time.time() - 10 * 3600
+
+
+def touch(p, n=4096, mtime=OLD):
+    os.makedirs(os.path.dirname(p), exist_ok=True)
+    with open(p, "wb") as f:
+        f.write(b"x" * n)
+    os.utime(p, (mtime, mtime))
+    return p
+
+
+def age_tree(d, mtime=OLD):
+    for dp, dns, fns in os.walk(d):
+        for n in fns + dns:
+            os.utime(os.path.join(dp, n), (mtime, mtime), follow_symlinks=False)
+    os.utime(d, (mtime, mtime))
+
+
+class Base(unittest.TestCase):
+    def setUp(self):
+        self.t = os.path.realpath(tempfile.mkdtemp(prefix="acx"))
+        os.environ["OT_AUTOCLEAN_OFF_FILES"] = os.path.join(self.t, "OFF")
+        ac.OFF_FILES = (os.path.join(self.t, "OFF"),)
+        self.root = os.path.join(self.t, "srv/scr/claude")
+        os.makedirs(self.root)
+        self.snap = os.path.join(self.t, "snap")
+        self.state = os.path.join(self.t, "state")
+        self.prot = [(f"/srv/none/claude/l{i}/k", "filler") for i in range(5)]
+        self.qpaths, self.qwords = [], []
+        self.kw = None
+        d = os.path.join(self.t, "docker")
+        os.makedirs(d)
+        open(os.path.join(d, "ids"), "w").close()
+        open(os.path.join(d, "mounts"), "w").close()
+        with open(os.path.join(d, "fake"), "w") as f:
+            f.write(f'#!/bin/sh\ncase "$1" in ps) cat {d}/ids;; inspect) cat {d}/mounts;; *) exit 1;; esac\n')
+        self.docker = f"sh {d}/fake"
+        self.ddir = d
+        self.aliases = os.path.join(self.t, "findmnt.txt")
+        # /srv/scr is the canonical bind target of <t>/home/scratch-root (like epyc5/6 scratch3)
+        with open(self.aliases, "w") as f:
+            f.write(f"/ /dev/sdz\n{self.t}/srv/scr /dev/sdz[{self.t}/home/scratch-root]\n")
+        self.procs = []
+
+    def tearDown(self):
+        for p in self.procs:
+            p.kill()
+            p.wait()
+        shutil.rmtree(self.t, ignore_errors=True)
+
+    def write_snap(self, age=0):
+        os.makedirs(self.snap, exist_ok=True)
+        with open(os.path.join(self.snap, "meta.json"), "w") as f:
+            json.dump({"created": time.time() - age}, f)
+        with open(os.path.join(self.snap, "protected.tsv"), "w") as f:
+            f.write("".join(f"{p}\t{w}\n" for p, w in self.prot))
+        with open(os.path.join(self.snap, "queue.json"), "w") as f:
+            json.dump({"paths": self.qpaths, "words": self.qwords}, f)
+        kp = os.path.join(self.snap, "kitwave.json")
+        if self.kw is not None:
+            with open(kp, "w") as f:
+                json.dump(self.kw, f)
+        elif os.path.exists(kp):
+            os.unlink(kp)
+
+    def run_job(self, *extra, apply=True, snap_age=0, wt=""):
+        self.write_snap(snap_age)
+        argv = ["run", "--host", "hx", "--state", self.state, "--snapshot", self.snap, "--min-protected", "1",
+                "--roots", self.root, "--docker", self.docker, "--aliases", self.aliases, "--wt-reaper", wt]
+        argv += (["--apply"] if apply else []) + list(extra)
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            rc = ac.main(argv)
+        self.out = buf.getvalue()
+        self.manifest = []
+        for ln in self.out.splitlines():
+            if ln.startswith("MANIFEST "):
+                with open(ln.split(" ", 1)[1]) as fh:
+                    rows = fh.read().splitlines()[1:]
+                self.manifest = [r.split("\t") for r in rows]
+        return rc
+
+    def row(self, path):
+        for r in self.manifest:
+            if r[5] == path:
+                return r
+        return None
+
+    def kit_b(self, rel, extra=()):
+        k = os.path.join(self.root, rel)
+        b = os.path.join(k, "run/results/asap7/d/base")
+        for n in ("6_final.odb", "6_final.spef", "5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb", "5_2_route.odb",
+                  "2_floorplan.odb") + tuple(extra):
+            touch(os.path.join(b, n))
+        touch(os.path.join(k, "run/logs/asap7/d/base/6_report.log"))
+        return k, b
+
+    def kit_c(self, rel, cts=True):
+        k = os.path.join(self.root, rel)
+        b = os.path.join(k, "run/results/asap7/d/base")
+        names = list(ac.TRIM_C) + ["2_floorplan.odb", "3_place.odb", "4_1_cts.odb"] + (["4_cts.odb"] if cts else [])
+        for n in names:
+            touch(os.path.join(b, n))
+        return k, b
+
+    def spawn(self, args, cwd=None, env=None):
+        p = subprocess.Popen(args, cwd=cwd, env=env)
+        self.procs.append(p)
+        time.sleep(0.4)
+        return p
+
+
+class TestClasses(Base):
+    def test_b_trim_apply_and_dry(self):
+        k, b = self.kit_b("lane1/kitA")
+        self.assertEqual(self.run_job(apply=False), 0)
+        self.assertIn("controls: positive PASS negative PASS", self.out)
+        self.assertEqual(self.row(b)[3], "WOULD")
+        self.assertTrue(os.path.exists(os.path.join(b, "5_route.odb")))
+        self.assertIn("PROTECTED/COUNTED HITS AT RECHECK: 0", self.out)
+        self.assertIn("TOTAL class b WOULD: 1 rows", self.out)
+        self.assertEqual(self.run_job(), 0)
+        self.assertEqual(self.row(b)[3], "DELETED")
+        left = sorted(os.listdir(b))
+        self.assertEqual(left, ["2_floorplan.odb", "5_2_route.odb", "6_final.odb", "6_final.spef"])
+
+    def test_b_needs_both_finals_and_age(self):
+        _, b1 = self.kit_b("lane1/nospef")
+        os.unlink(os.path.join(b1, "6_final.spef"))
+        _, b2 = self.kit_b("lane1/smallspef")
+        touch(os.path.join(b2, "6_final.spef"), n=100)
+        _, b3 = self.kit_b("lane1/young")
+        touch(os.path.join(b3, "6_final.odb"), mtime=time.time())
+        self.run_job()
+        for b in (b1, b2):
+            self.assertTrue(os.path.exists(os.path.join(b, "5_route.odb")))
+            self.assertIsNone(self.row(b))
+        self.assertTrue(self.row(b3)[4].startswith("lt6h"))
+        self.assertTrue(os.path.exists(os.path.join(b3, "5_route.odb")))
+
+    def test_c_intermediates(self):
+        _, b = self.kit_c("lane2/kitC")
+        _, b2 = self.kit_c("lane2/kitNoCts", cts=False)
+        self.run_job()
+        self.assertEqual(sorted(os.listdir(b)), ["2_floorplan.odb", "3_place.odb", "4_cts.odb"])
+        self.assertEqual(sorted(os.listdir(b2)), ["2_floorplan.odb", "3_place.odb", "4_1_cts.odb"])
+
+    def test_c_needs_3_place(self):
+        _, b = self.kit_c("lane2/small")
+        touch(os.path.join(b, "3_place.odb"), n=10)
+        self.run_job()
+        self.assertTrue(os.path.exists(os.path.join(b, "3_3_place_gp.odb")))
+
+    def attempt(self, item, n, event="ev1"):
+        d = os.path.join(self.root, f"kw-x/kit-wave/hbm/{event}/items/{item}/attempt_{n}")
+        touch(os.path.join(d, f"gen/{item}_abc/run/results/asap7/d/base/3_place.odb"))
+        touch(os.path.join(d, "geom/auto_geom.json"))
+        age_tree(d)
+        return d
+
+    def test_a_attempts(self):
+        fin = self.attempt("item_fin", 1)
+        sup = self.attempt("item_sup", 1)
+        act = self.attempt("item_act", 1)
+        sig = self.attempt("item_sig", 2)
+        unk = self.attempt("item_unk", 1)
+        kept = self.attempt("item_res", 1)
+        young = self.attempt("item_yng", 1)
+        touch(os.path.join(young, "new.log"), mtime=time.time())
+        gitd = self.attempt("item_git", 1)
+        touch(os.path.join(gitd, "src/.git"), n=10)
+        signedrec = self.attempt("item_rec", 1)
+        with open(os.path.join(signedrec, "signoff.json"), "w") as f:
+            json.dump({"verdict": "SIGNED"}, f)
+        age_tree(signedrec)
+        h = "hx:"
+        self.kw = {"attempts": {h + fin: {"active": False, "signed": False, "terminal": ["FAIL/None"]},
+                                h + act: {"active": True, "signed": False, "terminal": []},
+                                h + sig: {"active": False, "signed": True, "terminal": []},
+                                h + young: {"active": False, "signed": False, "terminal": ["FAIL/None"]},
+                                h + gitd: {"active": False, "signed": False, "terminal": ["FAIL/None"]},
+                                h + signedrec: {"active": False, "signed": False, "terminal": ["FAIL/None"]},
+                                h + kept: {"active": False, "signed": False, "terminal": ["CANCELLED/None"]}},
+                   "latest": {h + os.path.dirname(sup): 3},
+                   "keep": [h + os.path.join(kept, "gen/item_res_abc/run_kit.sh")]}
+        self.run_job()
+        self.assertFalse(os.path.exists(fin))
+        self.assertFalse(os.path.exists(sup))
+        self.assertEqual(self.row(sup)[3], "DELETED")
+        self.assertIn("superseded", self.row(sup)[4])
+        for d, why in ((act, "kit-wave active"), (sig, "kit-wave signed"), (unk, "kit-wave unknown"),
+                       (kept, "kitwave-keep"), (young, "lt6h"), (gitd, "git inside"), (signedrec, "signed")):
+            self.assertTrue(os.path.isdir(d), d)
+            self.assertTrue(self.row(d)[4].startswith(why), (d, self.row(d)))
+
+    def test_a_disabled_without_kitwave(self):
+        d = self.attempt("item_x", 1)
+        self.run_job()
+        self.assertTrue(os.path.isdir(d))
+        self.assertEqual(self.row(d)[4], "no kit-wave snapshot")
+
+
+class TestSkips(Base):
+    def assertSkip(self, b, why):
+        r = self.row(b)
+        self.assertIsNotNone(r, b)
+        self.assertEqual(r[3], "SKIP", r)
+        self.assertTrue(r[4].startswith(why), r)
+        self.assertTrue(os.path.exists(os.path.join(b, "5_route.odb")))
+
+    def test_protected_parent_child_and_alias(self):
+        k1, b1 = self.kit_b("lp/k1")
+        k2, b2 = self.kit_b("lp/k2")
+        k3, b3 = self.kit_b("lp/k3")
+        self.prot += [(k1 + "/run/results/asap7/d/base/6_final.odb", "child row"),
+                      (os.path.join(self.root, "lp"), "parent row"),
+                      ]
+        self.run_job()
+        self.assertSkip(b1, "protected")
+        self.assertSkip(b2, "protected")
+        self.assertSkip(b3, "protected")
+
+    def test_protected_alias_form_and_relative(self):
+        k1, b1 = self.kit_b("la/k1")
+        k2, b2 = self.kit_b("lb/k2")
+        alias = k1.replace(f"{self.t}/srv/scr", f"{self.t}/home/scratch-root")
+        self.prot += [(alias, "alias form")]
+        rows = ac.parse_protected("intel1 scratch3/claude/x/y kit\nh\t/srv/a/claude/b\tz\n", "f")
+        self.assertEqual([p for p, _ in rows], ["/srv/opentallas-scratch3/claude/x/y", "/srv/a/claude/b"])
+        self.run_job()
+        self.assertSkip(b1, "protected")
+        self.assertEqual(self.row(b2)[3], "DELETED")
+
+    def test_counted_by_signed_record(self):
+        k, b = self.kit_b("lc/k")
+        rs = os.path.join(self.root, "lc2/resign/signoff/signoff.json")
+        os.makedirs(os.path.dirname(rs))
+        with open(rs, "w") as f:
+            json.dump({"verdict": "SIGNED", "inputs": {"odb": b + "/6_final.odb"}}, f)
+        k2, b2 = self.kit_b("lc/notsigned")
+        rs2 = os.path.join(self.root, "lc2/fail/signoff/signoff.json")
+        os.makedirs(os.path.dirname(rs2))
+        with open(rs2, "w") as f:
+            json.dump({"verdict": "NOT SIGNED", "inputs": {"odb": b2 + "/6_final.odb"}}, f)
+        # a lane-root citation must not block the lane's other trees
+        k3, b3 = self.kit_b("lc3/k")
+        rs3 = os.path.join(self.root, "lc2/r3/PROVENANCE.json")
+        os.makedirs(os.path.dirname(rs3))
+        with open(rs3, "w") as f:
+            json.dump({"kind": "resign", "verdict": "SIGNED", "lane_dir": os.path.join(self.root, "lc3")}, f)
+        self.run_job()
+        self.assertSkip(b, "counted")
+        self.assertEqual(self.row(b2)[3], "DELETED")
+        self.assertEqual(self.row(b3)[3], "DELETED")
+
+    def test_queue_path_and_names(self):
+        k1, b1 = self.kit_b("lq/qpath")
+        k2, b2 = self.kit_b("lq/specific_dirname")
+        k3, b3 = self.kit_b("lq/0123456789abcdef")
+        k4, b4 = self.kit_b("lq/qwen_compute")
+        self.qpaths = [k1 + "/run/logs"]
+        self.qwords = ["specific_dirname", "0123456789abcdef", "qwen_compute", "lq"]
+        self.run_job()
+        self.assertSkip(b1, "queuepath")
+        self.assertSkip(b2, "queuename")
+        self.assertEqual(self.row(b3)[3], "DELETED")
+        self.assertEqual(self.row(b4)[3], "DELETED")
+
+    def test_parse_queue_window_and_continuation(self):
+        now = time.time()
+        recent = time.strftime("%Y-%m-%d %H:%M", time.localtime(now - 3600))
+        old = time.strftime("%Y-%m-%d %H:%M", time.localtime(now - 40 * 3600))
+        txt = (f"- {old} PST STATE [A] /srv/opentallas-scratch2/claude/old/kit\n  cont /srv/x/claude/oldcont\n"
+               f"- {recent} PST STATE [B] epyc6:/srv/opentallas-scratch2/claude/new/kit_dirname.\n"
+               f"  - continuation scratch3/claude/newcont/zz\n")
+        paths, words = ac.parse_queue(txt, now, 25, tz="")
+        self.assertIn("/srv/opentallas-scratch2/claude/new/kit_dirname", paths)
+        self.assertIn("/srv/opentallas-scratch3/claude/newcont/zz", paths)
+        self.assertNotIn("/srv/opentallas-scratch2/claude/old/kit", paths)
+        self.assertNotIn("/srv/x/claude/oldcont", paths)
+        self.assertIn("kit_dirname", words)
+
+    def test_live_cwd_cmdline_fd_docker(self):
+        k1, b1 = self.kit_b("lv/cwd")
+        k2, b2 = self.kit_b("lv/cmd")
+        k3, b3 = self.kit_b("lv/fd")
+        k4, b4 = self.kit_b("lv/dock")
+        k5, b5 = self.kit_b("lv/dockanc/inner")
+        self.spawn([sys.executable, "-c", "import time; time.sleep(60)"], cwd=k1)
+        self.spawn([sys.executable, "-c", "import time; time.sleep(60)", k2 + "/run"])
+        env = dict(os.environ, P=os.path.join(b3, "6_final.odb"))
+        self.spawn([sys.executable, "-c", "import os,time; f=open(os.environ['P']); time.sleep(60)"], env=env)
+        with open(os.path.join(self.ddir, "ids"), "w") as f:
+            f.write("c1\nc2\n")
+        with open(os.path.join(self.ddir, "mounts"), "w") as f:
+            f.write(f"{k4}/run {os.path.join(self.root, 'lv/dockanc')} \n")
+        self.run_job()
+        self.assertSkip(b1, "live cwd")
+        self.assertSkip(b2, "live cmdline")
+        self.assertSkip(b3, "live fd")
+        self.assertSkip(b4, "docker mount")
+        self.assertSkip(b5, "docker mount")
+
+    def test_hardlink_gitlocked_keep_lanes(self):
+        k1, b1 = self.kit_b("lh/hl")
+        os.link(os.path.join(b1, "5_route.odb"), os.path.join(self.t, "otherlink"))
+        k2, b2 = self.kit_b("lh/wt/kit")
+        gd = os.path.join(self.t, "gitadmin")
+        os.makedirs(gd)
+        touch(os.path.join(gd, "locked"), n=1)
+        with open(os.path.join(self.root, "lh/wt/.git"), "w") as f:
+            f.write(f"gitdir: {gd}\n")
+        k3, b3 = self.kit_b("lh/keepanc/kit")
+        touch(os.path.join(self.root, "lh/keepanc/.keep"), n=0)
+        k4, b4 = self.kit_b("lh/keepin")
+        touch(os.path.join(k4, "sub/.keep"), n=0)
+        k5, b5 = self.kit_b("tok-lane/kit")
+        k6, b6 = self.kit_b("kv-fn-9/kit")
+        k7, b7 = self.kit_b("lh/rtools/kit")
+        self.run_job()
+        self.assertSkip(b1, "hardlink")
+        self.assertSkip(b2, "gitlocked")
+        self.assertSkip(b3, "keep")
+        self.assertSkip(b4, "keep")
+        self.assertSkip(b5, "lane")
+        self.assertSkip(b6, "lane")
+        self.assertSkip(b7, "tool tree")
+
+    def test_alternates_target(self):
+        k, b = self.kit_b("lalt/objsrc")
+        repo = os.path.join(self.root, "lalt2/repo/.git/objects/info")
+        os.makedirs(repo)
+        with open(os.path.join(repo, "alternates"), "w") as f:
+            f.write(k + "/objects\n")
+        self.run_job()
+        self.assertSkip(b, "local keep")
+
+    def test_inode_dedupe_roots(self):
+        os.symlink(self.root, os.path.join(self.t, "rootalias"))
+        self.assertEqual(ac.dedupe_roots([self.root, os.path.join(self.t, "rootalias")]), [self.root])
+
+
+class TestAliases(unittest.TestCase):
+    def test_findmnt(self):
+        txt = ("/ /dev/md0\n/srv/opentallas-scratch3 /dev/md0[/home/ubuntu/scratch-root]\n"
+               "/var/lib/docker /dev/md1[/system/docker]\n/run/docker/netns/x nsfs[net:[4026539810]]\n"
+               "/srv/opentallas-scratch2 /dev/md1\n")
+        al = ac.parse_findmnt(txt)
+        self.assertIn(("/home/ubuntu/scratch-root", "/srv/opentallas-scratch3"), al)
+        self.assertIn(("/srv/opentallas-scratch2/system/docker", "/var/lib/docker"), al)
+        P = ac.Paths(al)
+        self.assertEqual(P.canon("/home/ubuntu/scratch-root/claude/a"), "/srv/opentallas-scratch3/claude/a")
+        self.assertIn("/home/ubuntu/scratch-root/claude/a", P.forms("/srv/opentallas-scratch3/claude/a"))
+        ps = ac.PathSet([("/home/ubuntu/scratch-root/claude/a/k", "row")], canon=P.canon)
+        self.assertTrue(ps.hit("/srv/opentallas-scratch3/claude/a/k/run"))
+        self.assertTrue(ps.hit("/srv/opentallas-scratch3/claude/a"))
+        self.assertIsNone(ps.hit("/srv/opentallas-scratch3/claude/b"))
+
+
+class TestSafety(Base):
+    def test_alert_stop_and_sticky(self):
+        k1, b1 = self.kit_b("lz/a1")
+        k2, b2 = self.kit_b("lz/a2")
+        orig = ac.Job.eval_trim
+        snapf = os.path.join(self.snap, "protected.tsv")
+
+        def sneaky(job, cls, d):
+            r = orig(job, cls, d)
+            if d == b1:                    # a protected row appears between the scan and the recheck
+                with open(snapf, "a") as f:
+                    f.write(f"{k1}\tlate row\n")
+            return r
+        ac.Job.eval_trim = sneaky
+        try:
+            rc = self.run_job()
+        finally:
+            ac.Job.eval_trim = orig
+        self.assertEqual(rc, 3)
+        self.assertEqual(self.row(b1)[3], "ALERT")
+        self.assertIsNone(self.row(b2))            # no further rows / deletes after the ALERT
+        self.assertTrue(os.path.exists(os.path.join(b1, "5_route.odb")))
+        self.assertTrue(os.path.exists(os.path.join(b2, "5_route.odb")))
+        self.assertTrue(os.path.exists(os.path.join(self.state, "ALERT")))
+        self.assertEqual(self.run_job(), 3)        # sticky
+        self.assertIn("sticky", self.out)
+
+    def test_positive_control_failure_aborts(self):
+        k, b = self.kit_b("lctl/k")
+        orig = ac.Job.delete
+        ac.Job.delete = lambda job, cls, files: 0
+        try:
+            rc = self.run_job()
+        finally:
+            ac.Job.delete = orig
+        self.assertEqual(rc, 4)
+        self.assertTrue(os.path.exists(os.path.join(b, "5_route.odb")))
+        self.assertFalse(os.path.exists(os.path.join(self.root, "_ot_autoclean_ctl")))
+
+    def test_negative_control_failure_aborts(self):
+        k, b = self.kit_b("lctl/k")
+        orig = ac.Job.guard_hits
+        ac.Job.guard_hits = lambda job, k: None
+        try:
+            rc = self.run_job()
+        finally:
+            ac.Job.guard_hits = orig
+        self.assertEqual(rc, 4)
+        self.assertTrue(os.path.exists(os.path.join(b, "5_route.odb")))
+
+    def test_fail_closed_inputs(self):
+        k, b = self.kit_b("lfc/k")
+        self.assertEqual(self.run_job(snap_age=4 * 3600), 2)
+        self.assertEqual(self.run_job("--min-protected", "1000"), 2)
+        self.docker = "/nonexistent/docker"
+        self.assertEqual(self.run_job(), 2)
+        self.assertTrue(os.path.exists(os.path.join(b, "5_route.odb")))
+        open(os.path.join(self.t, "OFF"), "w").close()
+        self.docker = "sh " + os.path.join(self.ddir, "fake")
+        self.assertEqual(self.run_job(), 0)
+        self.assertIn("OFF switch", self.out)
+        self.assertTrue(os.path.exists(os.path.join(b, "5_route.odb")))
+
+    def test_never_names(self):
+        job = ac.Job.__new__(ac.Job)
+        with self.assertRaises(OSError):
+            job.delete("b", [touch(os.path.join(self.t, "x/2_floorplan.odb"))])
+        for n in ("2_floorplan.odb", "3_place.odb", "4_cts.odb", "5_1_grt.odb", "5_2_route.odb", "6_final.odb"):
+            self.assertNotIn(n, ac.TRIM_B + ac.TRIM_C)
+
+    def test_wt_reaper_call(self):
+        self.kit_b("lw/k")
+        fake = os.path.join(self.t, "fake_reaper.py")
+        with open(fake, "w") as f:
+            f.write("import sys,json\nopen(sys.argv[0]+'.argv','w').write(json.dumps(sys.argv[1:]))\nprint('wt-reaper: ok')\n")
+        self.kw = {"attempts": {}, "latest": {}, "keep": ["hx:/srv/q/claude/src_tree"]}
+        self.prot += [("/srv/p/claude/prot_row", "x")]
+        self.run_job(wt=fake)
+        argv = ac.jl(fake + ".argv")
+        i = argv.index("--protected-dbs")
+        self.assertEqual(argv[argv.index("--protected-dbs-repo") + 1], "")
+        self.assertIn("--apply", argv)
+        union = ac.rd(argv[i + 1])
+        self.assertIn("hx\t/srv/q/claude/src_tree\tkitwave", union)
+        self.assertIn("hx\t/srv/p/claude/prot_row\tprotected", union)
+        self.assertIn("wt-reaper rc 0", self.out)
+
+
+class TestKitwave(unittest.TestCase):
+    def test_reduce(self):
+        A = "/srv/s2/claude/kit-wave/hbm/e1/items"
+        st = {"items": {
+            "1": {"status": "FAIL", "kit": f"epyc4:{A}/it/attempt_1/gen/k"},
+            "2": {"status": "RUNNING", "kit": f"epyc4:{A}/it/attempt_3/gen/k",
+                  "resume": {"changed": [["synth", "runner", f"{A}/it/attempt_2/gen/k/run_kit.sh"]]}, "dir": "/d2"},
+            "3": {"status": "CANCELLED", "q_status": "RUNNING", "kit": f"intel1:{A}/cq/attempt_1/gen/k"},
+            "4": {"status": "ENQUEUED", "q_status": "SIGNED", "kit": f"intel1:{A}/sg/attempt_2/gen/k"},
+            "5": {"status": "ENQUEUED", "q_status": "FAIL", "kit": f"intel1:{A}/ef/attempt_1/gen/k"},
+            "6": {"status": "WEIRD", "kit": f"intel1:{A}/wd/attempt_1/gen/k"},
+        }}
+        rows = [{"kit": f"epyc4:{A}/st/attempt_4/gen/k", "status": "SIGNED", "class": "COUNTED"},
+                {"kit": f"epyc4:{A}/st/attempt_2/gen/k", "status": "SUPERSEDED", "class": "SUPERSEDED"}]
+        out = ac.reduce_kitwave(st, rows, read_spec=lambda d: {"src": "/srv/s2/claude/kw/src_x", "host": "epyc4"} if d == "/d2" else {})
+        at = out["attempts"]
+        self.assertEqual(at[f"epyc4:{A}/it/attempt_1"]["terminal"], ["FAIL/None"])
+        self.assertTrue(at[f"epyc4:{A}/it/attempt_3"]["active"])
+        self.assertTrue(at[f"intel1:{A}/cq/attempt_1"]["active"])
+        self.assertTrue(at[f"intel1:{A}/sg/attempt_2"]["signed"])
+        self.assertFalse(at[f"intel1:{A}/ef/attempt_1"]["active"])
+        self.assertTrue(at[f"intel1:{A}/wd/attempt_1"]["active"])
+        self.assertTrue(at[f"epyc4:{A}/st/attempt_4"]["signed"])
+        self.assertEqual(at[f"epyc4:{A}/st/attempt_2"]["terminal"], ["stage:SUPERSEDED"])
+        self.assertEqual(out["latest"][f"epyc4:{A}/it"], 3)
+        self.assertIn(f"epyc4:{A}/it/attempt_2/gen/k/run_kit.sh", out["keep"])     # resume source of a running row
+        self.assertIn("epyc4:/srv/s2/claude/kw/src_x", out["keep"])
+
+
+class TestArchiveDriver(Base):
+    def test_drive_archive_and_run(self):
+        # a signed resign unit that cites a routed DB in a kit
+        k, b = self.kit_b("larc/kit")
+        unit = os.path.join(self.root, "larc/resign_x")
+        os.makedirs(os.path.join(unit, "signoff"))
+        os.makedirs(os.path.join(unit, "lec"))
+        touch(os.path.join(unit, "lec/lec.json"), n=50)
+        with open(os.path.join(unit, "signoff/signoff.json"), "w") as f:
+            json.dump({"verdict": "SIGNED", "odb": b + "/6_final.odb"}, f)
+        with open(os.path.join(unit, "PROVENANCE.json"), "w") as f:
+            json.dump({"kind": "resign", "verdict": "SIGNED", "routed_db": b + "/6_final.odb"}, f)
+        touch(os.path.join(b, "kit.lef"), n=77)
+        k2, b2 = self.kit_b("larc/plainkit")
+        coord = os.path.join(self.t, "coord")
+        os.makedirs(os.path.join(coord, "lanes"))
+        with open(os.path.join(coord, "lanes/PROTECTED-DBS.txt"), "w") as f:
+            f.write("# header\nhx\t/srv/none/claude/a/b\tkit_root\n")
+        with open(os.path.join(coord, "PROTECTED-DBS.txt"), "w") as f:
+            f.write("hx /srv/none/claude/c/d note words\n")
+        recent = time.strftime("%Y-%m-%d %H:%M")
+        with open(os.path.join(coord, "lanes/COORD-REVIEW-QUEUE.md"), "w") as f:
+            f.write(f"- {recent} PST STATE [X] nothing here /srv/none/claude/q/r\n")
+        kws = os.path.join(self.t, "kws.json")
+        with open(kws, "w") as f:
+            json.dump({"items": {}}, f)
+        shim = os.path.join(self.t, "shim.py")
+        with open(shim, "w") as f:
+            f.write("import subprocess,sys\nsys.exit(subprocess.run(['bash','-c',sys.argv[-1]]).returncode)\n")
+        tools, rstate, arch = (os.path.join(self.t, x) for x in ("tools", "rstate", "archive"))
+        base = ["drive", "--hosts", "hx", "--coord", coord, "--kitwave-state", kws, "--kitwave-stages", "/nonexistent",
+                "--ssh", f"{sys.executable} -I {shim}", "--agidock-ssh", f"{sys.executable} -I {shim} agidock",
+                "--agidock-python", f"{sys.executable} -I {tools}/ot-autoclean.py", "--archive-root", arch,
+                "--compress", "zstd" if shutil.which("zstd") else "none", "--roots", self.root, "--tools-dir", tools,
+                "--remote-state", rstate,
+                f"--run-args=--roots {self.root} --docker '{self.docker}' --aliases {self.aliases} --min-protected 1 --wt-reaper ''"]
+        env = dict(os.environ, OT_AUTOCLEAN_OFF_FILES=os.path.join(self.t, "OFF"))
+        r = subprocess.run([sys.executable, "-I", SCRIPT] + base, capture_output=True, text=True, env=env, timeout=600)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("WOULD-ARCHIVE hx:" + unit, r.stdout)
+        self.assertIn("hx: TOTAL class b WOULD", r.stdout)
+        self.assertFalse(os.path.exists(arch))
+        self.assertTrue(os.path.exists(os.path.join(b2, "5_route.odb")))
+        prune = os.listdir(os.path.join(coord, "lanes/prune"))
+        self.assertTrue(any(p.startswith("AUTOCLEAN-auto-hx-") for p in prune), prune)
+        # apply
+        r = subprocess.run([sys.executable, "-I", SCRIPT] + base[:1] + ["--apply"] + base[1:], capture_output=True,
+                           text=True, env=env, timeout=600)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("ARCHIVED hx:" + unit, r.stdout, r.stdout)
+        a = ac.jl(os.path.join(unit, "ARCHIVED.json"))
+        paths = {f["path"] for f in a["files"]}
+        for p in (unit + "/signoff/signoff.json", unit + "/PROVENANCE.json", unit + "/lec/lec.json",
+                  b + "/6_final.odb", b + "/6_final.spef", b + "/kit.lef"):
+            self.assertIn(p, paths)
+            self.assertTrue(os.path.isfile(arch + "/hx" + p), p)
+        self.assertNotIn(b + "/5_route.odb", paths)
+        self.assertTrue(a["verify"].startswith("OK files"))
+        # signed content untouched; the cited kit is counted (kept), the plain kit trimmed
+        self.assertTrue(os.path.exists(os.path.join(b, "5_route.odb")))
+        self.assertFalse(os.path.exists(os.path.join(b2, "5_route.odb")))
+        # second pass: nothing new to archive
+        r = subprocess.run([sys.executable, "-I", SCRIPT] + base[:1] + ["--apply", "--no-run"] + base[1:],
+                           capture_output=True, text=True, env=env, timeout=600)
+        self.assertIn("already archived 1, to archive 0", r.stdout)
+
+    def test_verify_mismatch_writes_no_marker(self):
+        unit = os.path.join(self.root, "lm/resign")
+        with open(touch(os.path.join(unit, "signoff/signoff.json"), n=1), "w") as f:
+            json.dump({"verdict": "SIGNED"}, f)
+        arch = os.path.join(self.t, "archive")
+        tools = os.path.join(self.t, "tools")
+        os.makedirs(tools)
+        shim = os.path.join(self.t, "shim.py")
+        with open(shim, "w") as f:
+            f.write("import subprocess,sys\nsys.exit(subprocess.run(['bash','-c',sys.argv[-1]]).returncode)\n")
+        # the 'agidock' end corrupts every file it unpacks
+        bad = os.path.join(self.t, "badshim.py")
+        with open(bad, "w") as f:
+            f.write("import subprocess,sys,os\nc=sys.argv[-1]\nr=subprocess.run(['bash','-c',c]).returncode\n"
+                    f"[open(os.path.join(d,x),'a').write('!') for d,_,fs in os.walk({arch!r}) for x in fs] if 'tar -C' in c else None\n"
+                    "sys.exit(r)\n")
+        shutil.copy(SCRIPT, os.path.join(tools, "ot-autoclean.py"))
+        ns = ac.argparse.Namespace(ssh=f"{sys.executable} -I {shim}", agidock_ssh=f"{sys.executable} -I {bad}",
+                                   timeout=300, tools_dir=tools, remote_state=os.path.join(self.t, "rs"),
+                                   roots=[self.root], find_timeout=300, archive_root=arch, apply=True, compress="none",
+                                   agidock_python=f"{sys.executable} -I {tools}/ot-autoclean.py")
+        d = ac.Driver(ns)
+        d.py = f"{sys.executable} -I {tools}/ot-autoclean.py"
+        rows = []
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            ok = d.archive("hx", rows)
+        self.assertFalse(ok, buf.getvalue())
+        self.assertIn("verify mismatch", rows[0][6])
+        self.assertFalse(os.path.exists(os.path.join(unit, "ARCHIVED.json")))
+
+
+if __name__ == "__main__":
+    unittest.main()
