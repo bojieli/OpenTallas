@@ -6328,7 +6328,10 @@
         "coll_ft__cla4a25d77@9",
         "sle_hc1__cl7d360508@12",
         "slw_hc2__cl6bcaba89@10",
-        "slw_hc1__cl68f9248e__cle683a076@12"
+        "slw_hc1__cl68f9248e__cle683a076@12",
+        "sle_hc2__cl9c4c4509__clf60c5152@5",
+        "sle_hc2__cl9c4c4509__cl3edce1b8@9",
+        "sle_hc2__clcc5e3e61@9"
       ],
       "queue_src": "claude/kw-fix-35-wave-c303a-1108@804f9e020b2",
       "type_args": {
@@ -6872,7 +6875,10 @@
         "sle_hc1__cl7d360508@12": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9/REACH hc FACE-REACH plan event qc53v4w (COORD GO 06:2x): fresh kit on v4w + bind_v4w + asbuilt_reach (private CTS resume kw35f-cts-slehc1cl7d keeps running)",
         "slw_hc0__cl4f54b7a3@2": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9/REACH hc FACE-REACH plan event qc53v4w (COORD GO 06:2x): fresh kit on v4w + bind_v4w + asbuilt_reach",
         "slw_hc2__cl6bcaba89@10": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9/REACH hc FACE-REACH plan event qc53v4w (COORD GO 06:2x): fresh kit on v4w + bind_v4w + asbuilt_reach",
-        "slw_hc1__cl68f9248e__cle683a076@12": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9/REACH hc FACE-REACH plan event qc53v4w (COORD GO 06:2x): fresh kit on v4w + bind_v4w + asbuilt_reach (a12 sat 2 h in kit_rtl intel1 disk wait, 5 s CPU; stopped by exact unit 06:59)"
+        "slw_hc1__cl68f9248e__cle683a076@12": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9/REACH hc FACE-REACH plan event qc53v4w (COORD GO 06:2x): fresh kit on v4w + bind_v4w + asbuilt_reach (a12 sat 2 h in kit_rtl intel1 disk wait, 5 s CPU; stopped by exact unit 06:59)",
+        "sle_hc2__cl9c4c4509__clf60c5152@5": "KW-FIX-35-T 2026-11-08 07:33 PST: REDESIGN: pin cycles + native cw_n2 stations (plan qc53v4w, QC-TYPES-9/REACH FACE-REACH). Old pre-v4w run stopped 07:18 by exact unit/job (KW-FIX-35 GO 07:1x: it could only repeat TT -112 ps u_xh2.n_d->u_bout_cw_n2 and blocked the v4w parent); fresh kit on v4w",
+        "sle_hc2__cl9c4c4509__cl3edce1b8@9": "KW-FIX-35-T 2026-11-08 07:33 PST: REDESIGN: pin cycles + native cw_n2 stations (plan qc53v4w, QC-TYPES-9/REACH FACE-REACH). Old pre-v4w run stopped 07:18 by exact unit/job (KW-FIX-35 GO 07:1x: it could only repeat TT -112 ps u_xh2.n_d->u_bout_cw_n2 and blocked the v4w parent); fresh kit on v4w",
+        "sle_hc2__clcc5e3e61@9": "KW-FIX-35-T 2026-11-08 07:33 PST: REDESIGN: pin cycles + native cw_n2 stations (plan qc53v4w, QC-TYPES-9/REACH FACE-REACH). Old pre-v4w run stopped 07:18 by exact unit/job (KW-FIX-35 GO 07:1x: it could only repeat TT -112 ps u_xh2.n_d->u_bout_cw_n2 and blocked the v4w parent); fresh kit on v4w"
       },
       "gen_hosts": [
         "intel1",
@@ -7872,6 +7878,11 @@
         "sle_hc1__cl7d360508@12",
         "slw_hc2__cl6bcaba89@10",
         "slw_hc1__cl68f9248e__cle683a076@12"
+      ],
+      "retry_prev_kw35t3_added": [
+        "sle_hc2__cl9c4c4509__clf60c5152@5",
+        "sle_hc2__cl9c4c4509__cl3edce1b8@9",
+        "sle_hc2__clcc5e3e61@9"
       ]
     },
     "hbm": {
