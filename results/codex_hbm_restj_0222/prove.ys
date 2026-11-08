@@ -1,4 +1,4 @@
-read_verilog -sv input/core.sv
+read_verilog -sv -D OT_REST1C_SCALAR_OPIPE_JOINED input/core.sv
 hierarchy -check -top ot_hgi_sfu_split3_ctl_rest
 proc
 flatten

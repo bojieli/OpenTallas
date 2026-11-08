@@ -10,6 +10,7 @@ import argparse, copy, json, pathlib
 def transform(data, fanout=8, all_ff=False):
     data=copy.deepcopy(data)
     mod=data['modules']['ot_hgi_sfu_split3_ctl_rest']
+    assert '__p56_ctl' in mod['ports'], 'lower with OT_REST1C_SCALAR_OPIPE_JOINED enabled'
     selected=set()
     for name,net in mod['netnames'].items():
         if '.drain_sector_q[16]' in name:
