@@ -63,7 +63,11 @@ def rewrite(source: str, style: str) -> tuple[str, dict]:
             'lassign $cs_v cs_x0 cs_y0 cs_x1 cs_y1; set cs_have 0',
             'foreach cs_b [$cs_blk getBlockages] { set cs_r [$cs_b getBBox]; if {[list [$cs_r xMin] [$cs_r yMin] [$cs_r xMax] [$cs_r yMax]] eq $cs_v} {set cs_have 1} }',
             'if {!$cs_have} {odb::dbBlockage_create $cs_blk $cs_x0 $cs_y0 $cs_x1 $cs_y1}',
-            'puts "OT_SC_SYNDROME_CORRIDOR hard placement reservation $cs_box; compact edge release does not remove it"',
+            'if {![llength [info commands ff_reserve_explicit]]} {error "SC_SYNDROME: station-grid reservation helper required"}',
+            'ff_reserve_explicit $cs_x0 $cs_y0 [expr {$cs_x1-$cs_x0}] [expr {$cs_y1-$cs_y0}]',
+            'set cs_die [$cs_blk getDieArea]; set cs_phy_y [expr {round(150*$cs_u)}]',
+            'ff_reserve_explicit [$cs_die xMin] $cs_phy_y [expr {[$cs_die xMax]-[$cs_die xMin]}] [expr {[$cs_die yMax]-$cs_phy_y}]',
+            'puts "OT_SC_SYNDROME_CORRIDOR hard placement and station-grid reservation $cs_box; VDDPHY y>=150 excluded"',
         ]
     lines.append('# CODEX_SC_SYNDROME_END')
     output = source.replace(ANCHOR, '\n'.join(lines) + '\n' + ANCHOR, 1)
@@ -75,7 +79,14 @@ def rewrite(source: str, style: str) -> tuple[str, dict]:
 # Reject a fixed face/landing site in the reserved channel before GPL.
 foreach cs_i [$cs_blk getInsts] {
  if {[$cs_i getPlacementStatus] ni {FIRM LOCKED} || [[$cs_i getMaster] isBlock]} continue
+ # Supply tap/filler cells already exist in the retained floorplan; the
+ # signal-routing corridor excludes functional fixed cells, not PG cells.
+ if {[regexp {^(TAPCELL|FILLER|DECAP)} [[$cs_i getMaster] getName]]} continue
  set cs_r [$cs_i getBBox]
+ set cs_nm [string map {\\ {}} [$cs_i getName]]
+ if {[string match "u_phy.u_link.u_dec.u_syn.*" $cs_nm] && [regexp {\.(sc_q|sp0|sp1|S_q)\[} $cs_nm] && [$cs_r yMax]>$cs_phy_y} {
+  error "SC_SYNDROME_POWER: selected register crosses VDDPHY boundary: [$cs_i getName]"
+ }
  if {[$cs_r xMin]<$cs_x1 && [$cs_r xMax]>$cs_x0 && [$cs_r yMin]<$cs_y1 && [$cs_r yMax]>$cs_y0} {
   error "SC_SYNDROME_CORRIDOR: fixed cell in reserved channel: [$cs_i getName]"
  }
