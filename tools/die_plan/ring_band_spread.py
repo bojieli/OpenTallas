@@ -15,7 +15,7 @@ ft2_i 320).  HEAD hd_ctl_n vC3 GRT-0183 (l48vd).  504 bands with ring_width >= 1
 default spread (~100 % reserve fill).
 
 usage (repo root): ring_band_spread.py PLAN_IN SIDECAR PLAN_OUT REPORT.json [--types a,b|all] [--min-ring 192]
-                   [--spread 7] [--die-tag TAG]
+                   [--spread 7] [--die-tag TAG] [--bisect]
 """
 import argparse
 import copy
@@ -35,7 +35,35 @@ def wide_bands(t, min_ring):
                   key=lambda k: (-int(b[k]["ring_width"]), k))
 
 
-def resize_type(plan, side, tn, min_ring, spread, tag, P=None):
+def _band_bisect(tt, bus, width, used, phy, resets, spread):
+    """--bisect (KV-TYPES-5 11-08, opt-in): same 0.05 spread grid as the sizer's linear step-down (spread, spread-0.05,
+    ... 1.0), but the first legal step is found by bisection (~8 sizer calls instead of up to 121).  Exact when legality
+    is monotone in the spread (a smaller band fits wherever a larger one does, the usual case); otherwise it may return
+    a smaller legal step than the linear scan.  Every returned band is a normal sizer result (same legality rules)."""
+    steps = [round(spread - 0.05 * k, 4) for k in range(int(round((spread - 1) / 0.05)) + 1)]
+    def at(k):
+        try:
+            return C._storage_band(tt, bus, width, used, phy=phy, resets=resets, _scale=steps[k])
+        except ValueError:
+            return None
+    b = at(0)
+    if b is not None:
+        return b
+    last = at(len(steps) - 1)
+    if last is None:
+        return C._storage_band(tt, bus, width, used, phy=phy, resets=resets, _scale=steps[-1])  # raises the sizer error
+    lo, hi, best = 0, len(steps) - 1, last  # steps[lo] illegal, steps[hi] legal
+    while hi - lo > 1:
+        mid = (lo + hi) // 2
+        r = at(mid)
+        if r is None:
+            lo = mid
+        else:
+            hi, best = mid, r
+    return best
+
+
+def resize_type(plan, side, tn, min_ring, spread, tag, P=None, bisect=False):
     t = plan["partition_types"][tn]
     lc = t["clock"]["landing_contract"]
     bands = lc["bands"]
@@ -54,7 +82,10 @@ def resize_type(plan, side, tn, min_ring, spread, tag, P=None):
             C.BAND_RESERVE, C.BAND_SPREAD, C.BAND_RING = "ring_ff", float(spread), old.get("ring_place", "ff") or "ff"
             used = [list(o["rect_um"]) for k, o in bands.items() if k != bus and o.get("rect_um")]
             try:
-                nb = C._storage_band(tt, bus, int(old["width"]), used, phy=phy, resets=resets)
+                if bisect:
+                    nb = _band_bisect(tt, bus, int(old["width"]), used, phy, resets, float(spread))
+                else:
+                    nb = C._storage_band(tt, bus, int(old["width"]), used, phy=phy, resets=resets)
             except ValueError as e:
                 rows.append(dict(type=tn, bus=bus, ring=int(old["ring_width"]), kept=list(old["rect_um"]), error=str(e)[:200]))
                 continue
@@ -100,6 +131,7 @@ def main(argv=None):
     ap.add_argument("--min-ring", type=int, default=192)
     ap.add_argument("--spread", type=float, default=7.0)
     ap.add_argument("--tag", default="KV-TYPES-4 11-08")
+    ap.add_argument("--bisect", action="store_true", help="find the sizer spread step by bisection (opt-in, faster)")
     a = ap.parse_args(argv)
     text = open(a.plan_in).read()
     plan = json.loads(text)
@@ -111,7 +143,7 @@ def main(argv=None):
     for tn in names:
         if not wide_bands(plan["partition_types"][tn], a.min_ring):
             continue
-        r = resize_type(plan, side, tn, a.min_ring, a.spread, a.tag, P)
+        r = resize_type(plan, side, tn, a.min_ring, a.spread, a.tag, P, bisect=a.bisect)
         rows += r
         if any("new_um" in x for x in r):
             changed.append(tn)
