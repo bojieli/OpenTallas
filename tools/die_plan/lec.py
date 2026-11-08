@@ -6664,7 +6664,7 @@ def auto_loaded(L, rec, work, conflicts, log):
                               refused=len(r.get("loaded_refused") or []), first=kept[:20])
 
 
-def scope_twin_proposals(L, log, cands_per_reg=4, words=16, seed=20261108):
+def scope_twin_proposals(L, log, cands_per_reg=4, words=16, seed=20261108, exclude=()):
     """LEC-SCOPE-TWIN (HBM-HARD-6-KSH 11-08, kshare v8e478a NOT EQUIVALENT 2/35744: lane[0].u_fill.rd_gray[2..3]).
     A gray-pointer FIFO keeps rd_bin and rd_gray, both loaded on rd_fire with rd_next / its gray code and both reset
     to 0, so rd_bin[msb] == rd_gray[msb] always and synthesis merges rd_bin[msb] into rd_gray[msb].  Each is a
@@ -6696,7 +6696,10 @@ def scope_twin_proposals(L, log, cands_per_reg=4, words=16, seed=20261108):
         cs = [c for c in closest(k, by_scope.get((k.rsplit(".", 1)[0], a.group(2) if a else ""), []))
               if not (rv(k) is not None and rv(c) is not None and rv(k) != rv(c))]
         if cs:
-            trials[k] = [(c, inv) for c in cs[:cands_per_reg] for inv in (0, 1)]
+            choices = [(c, inv) for c in cs[:cands_per_reg] for inv in (0, 1)
+                       if (k, c, inv) not in exclude]
+            if choices:
+                trials[k] = choices
     if not trials:
         return []
     found = {}
@@ -6725,22 +6728,35 @@ def scope_twin_proposals(L, log, cands_per_reg=4, words=16, seed=20261108):
 
 
 def auto_twins(L, rec, work, conflicts, log):
-    """Default-on (OT_LEC_AUTO_TWINS=0 disables): scope_twin_proposals -> apply_hints, after the kit hints and
-    before auto_loaded.  The hypothesis set before is restored when the refinement does not converge (never fewer
-    proved registers than without the proposals).  -> rec['auto_twins'] = dict(proposed, kept, first)."""
-    auto = scope_twin_proposals(L, log)
-    if not auto:
-        rec["auto_twins"] = dict(proposed=0)
-        return
-    keep_hyp, keep_cons = dict(L.hyp), list(L.cons)
-    r = apply_hints(L, auto, work, conflicts, log) or {}
-    kept = sorted(h[1] for h in auto if L.hyp.get(("gold", h[1])) == tuple(["eq"] + list(h[2][1:])))
-    if not r.get("kept"):
-        L.hyp.clear(); L.hyp.update(keep_hyp)
-        L.cons[:] = keep_cons
-        kept = []
-        log.append("auto scope twins: refinement did not converge; hypotheses restored")
-    rec["auto_twins"] = dict(proposed=len(auto), kept=len(kept), first=kept[:20])
+    """Refine same-scope twins until no fresh proposal remains (default on).
+
+    A rare-event false match can be rejected by induction even though it passed
+    discovery simulation. Re-run discovery after that cleanup, excluding every
+    attempted relation, so a valid alternate partner is not stranded. The finite
+    relation set supplies termination; no wall-time or guessed round cap is added.
+    Every proposal still passes ordinary apply_hints induction/reset checks.
+    """
+    attempted, proposals, passes = set(), [], 0
+    while True:
+        auto = scope_twin_proposals(L, log, exclude=attempted)
+        if not auto:
+            break
+        fresh = [h for h in auto if (h[1], h[2][2], h[2][3]) not in attempted]
+        if not fresh:
+            break
+        attempted.update((h[1], h[2][2], h[2][3]) for h in fresh)
+        proposals.extend(fresh)
+        passes += 1
+        keep_hyp, keep_cons = dict(L.hyp), list(L.cons)
+        r = apply_hints(L, fresh, work, conflicts, log) or {}
+        if not r.get("kept") and (keep_hyp or keep_cons):
+            L.hyp.clear(); L.hyp.update(keep_hyp)
+            L.cons[:] = keep_cons
+            log.append("auto scope twins: no surviving set; earlier hypotheses restored")
+            break
+    kept = sorted({h[1] for h in proposals
+                   if L.hyp.get(("gold", h[1])) == tuple(["eq"] + list(h[2][1:]))})
+    rec["auto_twins"] = dict(proposed=len(proposals), kept=len(kept), passes=passes, first=kept[:20])
 
 
 def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
