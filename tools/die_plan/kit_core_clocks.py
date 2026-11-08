@@ -165,7 +165,10 @@ def wire(bound, module, rows, leaf_id=None, core_masters=None, clock_net="clk"):
     ports = {}
     receipt = []
     consumers = set()
+    merged_done = set()                          # (instance, pin) wired by a MERGED_BUS_1108 base-name rewrite
     for port, physical_inst, pin, _early, _insertion in rows:
+        if (physical_inst, pin) in merged_done:
+            continue
         # LP_STAR_1104 (KW6-CLASS, S81 *_LP__t* kit_rtl): a plan tap `<inst>` with no pin takes every clock pin of the
         # core (gen_phys.core_tap_rows, clock_taps.tcl `port inst *`).  No single RTL connection names that, so the kit
         # source keeps the bind's clock connections and clock_taps.tcl hangs the pins on the wrapper port, as for a
@@ -215,12 +218,44 @@ def wire(bound, module, rows, leaf_id=None, core_masters=None, clock_net="clk"):
         # tap and clock_taps.tcl use, but the bound RTL connects the port by its base name (`.s1__clk(clk)`).  With no
         # `.<base>[0](` connection, the one `.<base>(` connection is the consumer.  Fails closed when the plan also taps
         # another bit of that base on this instance (then the port is wider and a base-name swap would move every bit).
-        bit0 = re.fullmatch(r"(\w+)\[0\]", pin)
+        bit0 = re.fullmatch(r"(\w+)\[(\d+)\]", pin)
+        if bit0 and bit0.group(2) != "0" and not any(r[0] == port and r[1] == physical_inst and r[2] == f"{bit0.group(1)}[0]"
+                                                     for r in rows):
+            bit0 = None                          # bit k > 0 alone: no base-name rule (MERGED_BUS_1108 needs bit 0 on the port)
         if not matches and bit0:
             base = bit0.group(1)
             other = [r for r in rows if r[1] == physical_inst and r[2] != pin and re.fullmatch(re.escape(base) + r"\[\d+\]", r[2])]
+            # MERGED_BUS_1108 (DIE-HBM-92-GEN 11-08, HBM q_b100..q_b103 / q_b101_nw kit_rtl: the merged tap clk_c0 of
+            # u_hb_idx__s_Q_r0c0_k0h1 takes clk_pair[0] AND clk_pair[1] of ot_hbm_idx_score_hcol_h1, bound as
+            # `.clk_pair({clk, clk})`).  When every planned bit of the base is on this SAME port, the bits are exactly
+            # 0..n-1 and the bound connection is n copies of the clock net only ({clk, clk} / {n{clk}}), each copy moves to
+            # the port: every bit keeps its own consumer pin on one net, nothing else changes.  Any other shape (bits on
+            # different ports, a gap, a non-clock term) still refuses.
             if other:
-                raise ValueError(f"core clock {port}: {local}.{base} has more than one planned bit, base-name wiring refused")
+                bits = sorted([int(bit0.group(2))] + [int(re.fullmatch(re.escape(base) + r"\[(\d+)\]", r[2]).group(1)) for r in other])
+                bm = list(re.compile(r"(\." + re.escape(base) + r"\s*\()([^()]+)(\))").finditer(original_body))
+                cn = re.escape(clock_net)
+                expr = bm[0].group(2).strip() if len(bm) == 1 else ""
+                rep_n = re.fullmatch(r"\{\s*(\d+)\s*\{\s*" + cn + r"\s*\}\s*\}", expr)
+                n = (int(rep_n.group(1)) if rep_n else
+                     len(expr[1:-1].split(",")) if re.fullmatch(r"\{\s*" + cn + r"(?:\s*,\s*" + cn + r")*\s*\}", expr) else 0)
+                if not (all(r[0] == port for r in other) and bits == list(range(len(bits))) and n == len(bits)):
+                    raise ValueError(f"core clock {port}: {local}.{base} has more than one planned bit, base-name wiring refused")
+                if any((local, f"{base}[{b}]") in consumers for b in bits):
+                    raise ValueError(f"core clock {port}: duplicate consumer {local}.{base}")
+                if port in ports and ports[port] != "input":
+                    raise ValueError(f"core clock {port}: conflicting port")
+                ports[port] = "input"
+                m = bm[0]
+                body = (original_body[:m.start(2)] + re.sub(r"\b" + cn + r"\b", port, m.group(2)) +
+                        original_body[m.end(2):])
+                bound = bound[:body_start] + body + bound[body_end:]
+                for b in bits:
+                    consumers.add((local, f"{base}[{b}]"))
+                    merged_done.add((physical_inst, f"{base}[{b}]"))
+                    receipt.append(dict(port=port, instance=local, pin=f"{base}[{b}]", previous_net=expr, mode="rtl",
+                                        rule="merged_bus_base"))
+                continue
             conn = re.compile(r"(\." + re.escape(base) + r"\s*\()([^()]+)(\))")
             matches = list(conn.finditer(original_body))
         masters = (core_masters or {}).get(physical_inst)

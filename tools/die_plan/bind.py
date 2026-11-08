@@ -4703,6 +4703,7 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
     wide = wide or {}
     widened = {} if widened is None else widened
     need = {}                                    # module -> parameter names its instantiators set (KITPARAM)
+    moved = set()                                # files the KITPARAM rule picked over another definition
     # FLOW-18 10-31: with `defines` (the kit defines, as-built manifest), a child named through an object-like macro
     # (`OT_SH_M257 u_mem(...)) is found too: the module body is also scanned with the file's active `define values
     # expanded (added to the plain scan, never replacing it).  defines=None keeps the old behaviour.
@@ -4765,6 +4766,7 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
                     sub = dict(sub)
                     sub[n] = ok
                     prefer_n = [q for q in prefer if str(Path(q).resolve()) not in bad]
+                    moved.add(str(Path(ok[0]).resolve()))
                     print(f"kit-rtl: {n} from {ok[0]} (declares {sorted(need[n])}); not from "
                           f"{sorted(bad)[:2]}", file=sys.stderr)
         f, _ = E.pick(sub, n, prefer_n)
@@ -4787,7 +4789,35 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
         for c, ps in _named_param_overrides(body, found).items():
             need.setdefault(c, set()).update(ps)
         todo += sorted(found)
+    _kitparam_same_file(files, picks, moved)
     return files, sorted(missing), macros
+
+
+def _module_src(path, name):
+    """whole `module name ... endmodule` of path, comments stripped, whitespace collapsed ('' if absent)"""
+    m = re.search(r"^\s*(?:\(\*[^\n]*?\*\)\s*)?module\s+" + re.escape(name) + r"\b.*?\bendmodule\b",
+                  E._strip(Path(path).read_text(errors="replace")), re.S | re.M)
+    return " ".join(m.group(0).split()) if m else ""
+
+
+def _kitparam_same_file(files, picks, moved):
+    """DIE-HBM-92-GEN 11-08 (HBM q_hub_ne kit_rtl "different source files named ot_hgi_coll_reduce_static.sv"): the
+    KITPARAM rule took ot_hgi_coll_reduce_static from rtl/ (declares LOCAL_CTRL) while its sibling
+    ot_hgi_coll_reduce_static_state_lane, reached first through other instantiators, was picked from the preferred
+    r18h5_bundle file of the same name; kit_dedupe then refused the two same-named files.  A file that shares its name
+    with a KITPARAM-picked file and supplies only modules that file defines BYTE-IDENTICALLY (comments/whitespace aside)
+    is dropped, those modules taken from the KITPARAM file.  Any differing definition keeps both (fails closed as
+    before); kits where the KITPARAM rule moved nothing are unchanged."""
+    for y in sorted(moved):
+        for x in [f for f in files if Path(f).name == Path(y).name and str(Path(f).resolve()) != y]:
+            mods = sorted(m for m, f in picks.items() if f == x)
+            if mods and all(_module_src(x, m) and _module_src(x, m) == _module_src(y, m) for m in mods):
+                yf = next((f for f in files if str(Path(f).resolve()) == y), y)
+                for m in mods:
+                    picks[m] = yf
+                files.remove(x)
+                print(f"kit-rtl: {', '.join(mods)} from {yf} (identical to {x}, same file as a KITPARAM pick)",
+                      file=sys.stderr)
 
 
 def kit_strip_dups(fl, kd, picks):
@@ -5214,7 +5244,10 @@ def cmd_kit_rtl(a):
     import schema as SC
     raw = load_plan(a.plan)
     try:
-        P = SC.Plan(raw)                       # full G0 plan: epochs + R4 tap pins as gen_rtl.wrapper emits them
+        # DIE-HBM-92-GEN 11-08: Plan.path = the plan file, as gen phys loads it.  merged_core_clocks.plan_pins resolves a
+        # merged-clock core's pins_file against the plan dir; without the path every such core (HBM q_b100..q_b103,
+        # q_b101_nw hcol taps) raised 'actual clock pin geometry required' here although its pins_file exists.
+        P = SC.Plan(raw, Path(a.plan))         # full G0 plan: epochs + R4 tap pins as gen_rtl.wrapper emits them
     except KeyError:
         P = None                               # a bind-only plan (no floorplan): data/ctl buses carry an epoch, no taps
     out = Path(a.out)

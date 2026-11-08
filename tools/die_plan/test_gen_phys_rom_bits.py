@@ -20,7 +20,14 @@ def test_instance_or_other_module_does_not_count(tmp_path):
 
 def test_largest_declared_table_wins(tmp_path):
     (tmp_path / "a.sv").write_text("module ot_s81_kp4_inv; endmodule\n  module ot_hdc_sk_recip_rom; endmodule\n")
-    assert gen_phys.declared_rom_bits(tmp_path) == 512 * 65
+    assert gen_phys.declared_rom_bits(tmp_path) == 512 * 69
+
+
+def test_sk_recip_seed_elab_width(tmp_path):
+    """DIE-HBM-92-GEN 11-08 (HBM root GEN_LINT memory_bits 512 x 69 = 35328 > 33280): the sk_recip_seed table is 512 x 65
+    after opt but the gen lint elaborates c0 33 + c1 23 + c2 13 = 69 bits per word"""
+    (tmp_path / "a.sv").write_text("module ot_hdc_sk_recip_rom (input wire [8:0] i); endmodule\n")
+    assert gen_phys.declared_rom_bits(tmp_path) == 512 * 69 == 35328
 
 
 def test_elab_width_covers_pre_opt_lint_width(tmp_path):

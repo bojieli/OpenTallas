@@ -32,6 +32,28 @@ class MacroParamBB(unittest.TestCase):
         top.write_text(f"module t2 #(parameter bit TS = 1)(input wire c); m_tx #({inst}) u_tx(.c(c)); endmodule\n")
         return top
 
+    def test_body_localparams_sizing_ports_are_carried(self):
+        # DIE-HBM-92-GEN 11-08 (HBM q_b002 ot_hbm_idx_tail_native_bb.v: NKT implicitly declared): port widths that use
+        # body localparams keep them in the blackbox; unrelated localparams stay out
+        (self.t / "src" / "m_tail.sv").write_text(
+            "module m_tail #(parameter integer DR=0) (\n input wire clk,\n input wire [NKT-1:0] a, // c\n"
+            " output reg [NKT*NCH*W-1:0] q\n);\n localparam integer NCH=4,NKT=4,FPL=7;\n localparam integer LV = 2;\n"
+            " localparam integer W = LV0 + 1;\n localparam integer LV0 = 31;\n reg r;\nendmodule\n")
+        top = self.t / "src" / "t3.sv"
+        top.write_text("module t3(input wire clk); m_tail #(.DR(1)) u_t(.clk(clk), .a(), .q()); endmodule\n")
+        out = G.macro_param_blackboxes([("u_t", "m_tail", "", "", 0, 0, "N")], [top], self.t / "kit", self.t / "root")
+        txt = out[0].read_text()
+        self.assertIn("localparam integer NCH=4,NKT=4,FPL=7;", txt)
+        self.assertIn("localparam integer W = LV0 + 1;", txt)
+        self.assertIn("localparam integer LV0 = 31;", txt)
+        self.assertNotIn("LV = 2", txt)
+        self.assertNotIn("reg r", txt)
+
+    def test_self_contained_header_bb_unchanged(self):
+        out = G.macro_param_blackboxes(self.macros, [self.top], self.t / "kit")
+        self.assertTrue(out[0].read_text().endswith(");\nendmodule\n"))
+        self.assertNotIn("localparam", out[0].read_text())
+
     def test_nonliteral_override_takes_built_spec_value(self):
         # FORM-IDX 11-05 bk_sel__t2: .SRAM_MACRO(TX_SRAM) said nothing, header stayed 0 against a view built with 1
         top = self._spec_kit(".V(V), .SRAM(TS)")
