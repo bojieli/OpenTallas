@@ -1,0 +1,8760 @@
+{
+  "core_um": [
+    1828,
+    98,
+    1972,
+    242
+  ],
+  "slice_um": [
+    18,
+    18
+  ],
+  "per_slice_bits": 8,
+  "source": "actual u_dec.u_face_q_d.q[bit], NOT intrinsic u_out.q_d",
+  "dest": "actual u_bout_coll_o0/q[bit]",
+  "anysite_margin_L1_um": 18,
+  "input_max_registered_hop": 340.35299999999995,
+  "output_max_registered_hop": 396.7673333333333,
+  "input_fail_bits": 0,
+  "output_fail_bits": 0,
+  "note": "planning only, straight-line L1 sites. Equal subdivisions need coherent placement/clock constraint and noobstruction. Exact cell-area/PG/routing/control budgets remainHOLD. No placedimage/kit.",
+  "bits": [
+    {
+      "bit": 0,
+      "actual_face_q_d": [
+        1567.674,
+        213.3
+      ],
+      "slice_center": [
+        1837,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        7.02
+      ],
+      "input_max_each_of2": 196.81300000000002,
+      "output_max_each_of3": 386.71733333333333
+    },
+    {
+      "bit": 1,
+      "actual_face_q_d": [
+        1494.72,
+        95.04
+      ],
+      "slice_center": [
+        1837,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        6.48
+      ],
+      "input_max_each_of2": 186.11999999999998,
+      "output_max_each_of3": 386.89733333333334
+    },
+    {
+      "bit": 2,
+      "actual_face_q_d": [
+        1483.434,
+        63.18
+      ],
+      "slice_center": [
+        1837,
+        107
+      ],
+      "actual_bout": [
+        2879.01,
+        7.29
+      ],
+      "input_max_each_of2": 207.693,
+      "output_max_each_of3": 386.57333333333344
+    },
+    {
+      "bit": 3,
+      "actual_face_q_d": [
+        1539.54,
+        197.37
+      ],
+      "slice_center": [
+        1837,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        6.75
+      ],
+      "input_max_each_of2": 202.91500000000002,
+      "output_max_each_of3": 386.80733333333336
+    },
+    {
+      "bit": 4,
+      "actual_face_q_d": [
+        1478.52,
+        40.77
+      ],
+      "slice_center": [
+        1837,
+        107
+      ],
+      "actual_bout": [
+        2880.252,
+        7.56
+      ],
+      "input_max_each_of2": 221.35500000000002,
+      "output_max_each_of3": 386.89733333333334
+    },
+    {
+      "bit": 5,
+      "actual_face_q_d": [
+        1421.118,
+        67.23
+      ],
+      "slice_center": [
+        1837,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        7.56
+      ],
+      "input_max_each_of2": 236.82600000000002,
+      "output_max_each_of3": 386.5373333333334
+    },
+    {
+      "bit": 6,
+      "actual_face_q_d": [
+        1526.58,
+        176.04
+      ],
+      "slice_center": [
+        1837,
+        107
+      ],
+      "actual_bout": [
+        2879.01,
+        8.1
+      ],
+      "input_max_each_of2": 198.73000000000002,
+      "output_max_each_of3": 386.30333333333346
+    },
+    {
+      "bit": 7,
+      "actual_face_q_d": [
+        1465.614,
+        80.46
+      ],
+      "slice_center": [
+        1837,
+        107
+      ],
+      "actual_bout": [
+        2879.064,
+        8.37
+      ],
+      "input_max_each_of2": 207.963,
+      "output_max_each_of3": 386.23133333333334
+    },
+    {
+      "bit": 8,
+      "actual_face_q_d": [
+        1502.982,
+        151.47
+      ],
+      "slice_center": [
+        1855,
+        107
+      ],
+      "actual_bout": [
+        2876.958,
+        8.1
+      ],
+      "input_max_each_of2": 207.24400000000003,
+      "output_max_each_of3": 379.6193333333334
+    },
+    {
+      "bit": 9,
+      "actual_face_q_d": [
+        1498.932,
+        85.86
+      ],
+      "slice_center": [
+        1855,
+        107
+      ],
+      "actual_bout": [
+        2876.958,
+        7.83
+      ],
+      "input_max_each_of2": 197.60399999999998,
+      "output_max_each_of3": 379.7093333333334
+    },
+    {
+      "bit": 10,
+      "actual_face_q_d": [
+        1488.618,
+        51.03
+      ],
+      "slice_center": [
+        1855,
+        107
+      ],
+      "actual_bout": [
+        2879.712,
+        8.64
+      ],
+      "input_max_each_of2": 220.17600000000004,
+      "output_max_each_of3": 380.3573333333333
+    },
+    {
+      "bit": 11,
+      "actual_face_q_d": [
+        1519.614,
+        183.6
+      ],
+      "slice_center": [
+        1855,
+        107
+      ],
+      "actual_bout": [
+        2879.064,
+        8.91
+      ],
+      "input_max_each_of2": 214.993,
+      "output_max_each_of3": 380.0513333333333
+    },
+    {
+      "bit": 12,
+      "actual_face_q_d": [
+        1501.794,
+        137.16
+      ],
+      "slice_center": [
+        1855,
+        107
+      ],
+      "actual_bout": [
+        2879.118,
+        9.18
+      ],
+      "input_max_each_of2": 200.68299999999994,
+      "output_max_each_of3": 379.9793333333333
+    },
+    {
+      "bit": 13,
+      "actual_face_q_d": [
+        1478.358,
+        51.3
+      ],
+      "slice_center": [
+        1855,
+        107
+      ],
+      "actual_bout": [
+        2878.956,
+        9.45
+      ],
+      "input_max_each_of2": 225.17100000000002,
+      "output_max_each_of3": 379.8353333333334
+    },
+    {
+      "bit": 14,
+      "actual_face_q_d": [
+        1429.92,
+        76.41
+      ],
+      "slice_center": [
+        1855,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        9.72
+      ],
+      "input_max_each_of2": 236.83499999999998,
+      "output_max_each_of3": 379.81733333333335
+    },
+    {
+      "bit": 15,
+      "actual_face_q_d": [
+        1502.658,
+        81.27
+      ],
+      "slice_center": [
+        1855,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        9.99
+      ],
+      "input_max_each_of2": 198.03600000000006,
+      "output_max_each_of3": 379.7273333333333
+    },
+    {
+      "bit": 16,
+      "actual_face_q_d": [
+        1472.796,
+        127.17
+      ],
+      "slice_center": [
+        1873,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        10.26
+      ],
+      "input_max_each_of2": 219.18699999999998,
+      "output_max_each_of3": 373.63733333333334
+    },
+    {
+      "bit": 17,
+      "actual_face_q_d": [
+        1490.724,
+        60.21
+      ],
+      "slice_center": [
+        1873,
+        107
+      ],
+      "actual_bout": [
+        2879.388,
+        10.53
+      ],
+      "input_max_each_of2": 223.53300000000004,
+      "output_max_each_of3": 373.6193333333333
+    },
+    {
+      "bit": 18,
+      "actual_face_q_d": [
+        1546.182,
+        219.51
+      ],
+      "slice_center": [
+        1873,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        10.8
+      ],
+      "input_max_each_of2": 228.664,
+      "output_max_each_of3": 373.45733333333334
+    },
+    {
+      "bit": 19,
+      "actual_face_q_d": [
+        1568.808,
+        249.75
+      ],
+      "slice_center": [
+        1873,
+        107
+      ],
+      "actual_bout": [
+        2878.956,
+        11.07
+      ],
+      "input_max_each_of2": 232.471,
+      "output_max_each_of3": 373.2953333333334
+    },
+    {
+      "bit": 20,
+      "actual_face_q_d": [
+        1476.36,
+        42.12
+      ],
+      "slice_center": [
+        1873,
+        107
+      ],
+      "actual_bout": [
+        2879.658,
+        11.34
+      ],
+      "input_max_each_of2": 239.76000000000005,
+      "output_max_each_of3": 373.4393333333333
+    },
+    {
+      "bit": 21,
+      "actual_face_q_d": [
+        1516.806,
+        124.74
+      ],
+      "slice_center": [
+        1873,
+        107
+      ],
+      "actual_bout": [
+        2877.012,
+        10.8
+      ],
+      "input_max_each_of2": 195.96699999999998,
+      "output_max_each_of3": 372.7373333333334
+    },
+    {
+      "bit": 22,
+      "actual_face_q_d": [
+        1486.728,
+        47.79
+      ],
+      "slice_center": [
+        1873,
+        107
+      ],
+      "actual_bout": [
+        2879.118,
+        11.61
+      ],
+      "input_max_each_of2": 231.74099999999996,
+      "output_max_each_of3": 373.1693333333333
+    },
+    {
+      "bit": 23,
+      "actual_face_q_d": [
+        1485.648,
+        69.93
+      ],
+      "slice_center": [
+        1873,
+        107
+      ],
+      "actual_bout": [
+        2880.198,
+        11.61
+      ],
+      "input_max_each_of2": 221.21100000000004,
+      "output_max_each_of3": 373.52933333333334
+    },
+    {
+      "bit": 24,
+      "actual_face_q_d": [
+        1481.976,
+        55.89
+      ],
+      "slice_center": [
+        1891,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        11.88
+      ],
+      "input_max_each_of2": 239.06699999999995,
+      "output_max_each_of3": 367.0973333333333
+    },
+    {
+      "bit": 25,
+      "actual_face_q_d": [
+        1486.458,
+        57.51
+      ],
+      "slice_center": [
+        1891,
+        107
+      ],
+      "actual_bout": [
+        2877.12,
+        11.61
+      ],
+      "input_max_each_of2": 236.01599999999996,
+      "output_max_each_of3": 366.50333333333333
+    },
+    {
+      "bit": 26,
+      "actual_face_q_d": [
+        1419.66,
+        98.01
+      ],
+      "slice_center": [
+        1891,
+        107
+      ],
+      "actual_bout": [
+        2879.604,
+        12.42
+      ],
+      "input_max_each_of2": 249.16499999999996,
+      "output_max_each_of3": 367.06133333333327
+    },
+    {
+      "bit": 27,
+      "actual_face_q_d": [
+        1470.312,
+        40.23
+      ],
+      "slice_center": [
+        1891,
+        107
+      ],
+      "actual_bout": [
+        2879.604,
+        12.69
+      ],
+      "input_max_each_of2": 252.72900000000004,
+      "output_max_each_of3": 366.97133333333323
+    },
+    {
+      "bit": 28,
+      "actual_face_q_d": [
+        1461.024,
+        65.88
+      ],
+      "slice_center": [
+        1891,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        12.96
+      ],
+      "input_max_each_of2": 244.54800000000006,
+      "output_max_each_of3": 366.7373333333333
+    },
+    {
+      "bit": 29,
+      "actual_face_q_d": [
+        1475.172,
+        64.8
+      ],
+      "slice_center": [
+        1891,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        13.23
+      ],
+      "input_max_each_of2": 238.01399999999998,
+      "output_max_each_of3": 366.64733333333334
+    },
+    {
+      "bit": 30,
+      "actual_face_q_d": [
+        1469.61,
+        64.53
+      ],
+      "slice_center": [
+        1891,
+        107
+      ],
+      "actual_bout": [
+        2879.064,
+        12.15
+      ],
+      "input_max_each_of2": 240.93000000000006,
+      "output_max_each_of3": 366.97133333333323
+    },
+    {
+      "bit": 31,
+      "actual_face_q_d": [
+        1414.206,
+        160.65
+      ],
+      "slice_center": [
+        1891,
+        107
+      ],
+      "actual_bout": [
+        2877.12,
+        12.96
+      ],
+      "input_max_each_of2": 274.22200000000004,
+      "output_max_each_of3": 366.0533333333333
+    },
+    {
+      "bit": 32,
+      "actual_face_q_d": [
+        1433.052,
+        83.97
+      ],
+      "slice_center": [
+        1909,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        13.77
+      ],
+      "input_max_each_of2": 258.48900000000003,
+      "output_max_each_of3": 360.46733333333333
+    },
+    {
+      "bit": 33,
+      "actual_face_q_d": [
+        1469.718,
+        61.29
+      ],
+      "slice_center": [
+        1909,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        14.04
+      ],
+      "input_max_each_of2": 251.49599999999995,
+      "output_max_each_of3": 360.37733333333335
+    },
+    {
+      "bit": 34,
+      "actual_face_q_d": [
+        1510.272,
+        166.59
+      ],
+      "slice_center": [
+        1909,
+        107
+      ],
+      "actual_bout": [
+        2879.064,
+        14.31
+      ],
+      "input_max_each_of2": 238.15900000000005,
+      "output_max_each_of3": 360.2513333333333
+    },
+    {
+      "bit": 35,
+      "actual_face_q_d": [
+        1453.626,
+        46.17
+      ],
+      "slice_center": [
+        1909,
+        107
+      ],
+      "actual_bout": [
+        2877.228,
+        13.77
+      ],
+      "input_max_each_of2": 267.10200000000003,
+      "output_max_each_of3": 359.81933333333336
+    },
+    {
+      "bit": 36,
+      "actual_face_q_d": [
+        1477.872,
+        88.29
+      ],
+      "slice_center": [
+        1909,
+        107
+      ],
+      "actual_bout": [
+        2879.496,
+        14.58
+      ],
+      "input_max_each_of2": 233.91899999999995,
+      "output_max_each_of3": 360.3053333333334
+    },
+    {
+      "bit": 37,
+      "actual_face_q_d": [
+        1469.016,
+        46.98
+      ],
+      "slice_center": [
+        1909,
+        107
+      ],
+      "actual_bout": [
+        2879.01,
+        14.85
+      ],
+      "input_max_each_of2": 259.00199999999995,
+      "output_max_each_of3": 360.05333333333346
+    },
+    {
+      "bit": 38,
+      "actual_face_q_d": [
+        1479.276,
+        58.59
+      ],
+      "slice_center": [
+        1909,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        15.12
+      ],
+      "input_max_each_of2": 248.06699999999995,
+      "output_max_each_of3": 360.0173333333334
+    },
+    {
+      "bit": 39,
+      "actual_face_q_d": [
+        1593.108,
+        326.43
+      ],
+      "slice_center": [
+        1909,
+        107
+      ],
+      "actual_bout": [
+        2879.82,
+        15.39
+      ],
+      "input_max_each_of2": 276.66100000000006,
+      "output_max_each_of3": 360.1433333333334
+    },
+    {
+      "bit": 40,
+      "actual_face_q_d": [
+        1476.684,
+        61.02
+      ],
+      "slice_center": [
+        1927,
+        107
+      ],
+      "actual_bout": [
+        2876.958,
+        14.58
+      ],
+      "input_max_each_of2": 257.148,
+      "output_max_each_of3": 353.4593333333334
+    },
+    {
+      "bit": 41,
+      "actual_face_q_d": [
+        1421.496,
+        106.92
+      ],
+      "slice_center": [
+        1927,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        15.66
+      ],
+      "input_max_each_of2": 261.7919999999999,
+      "output_max_each_of3": 353.83733333333333
+    },
+    {
+      "bit": 42,
+      "actual_face_q_d": [
+        1504.116,
+        146.34
+      ],
+      "slice_center": [
+        1927,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        15.93
+      ],
+      "input_max_each_of2": 240.11200000000002,
+      "output_max_each_of3": 353.7473333333333
+    },
+    {
+      "bit": 43,
+      "actual_face_q_d": [
+        1456.11,
+        68.85
+      ],
+      "slice_center": [
+        1927,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        16.2
+      ],
+      "input_max_each_of2": 263.52000000000004,
+      "output_max_each_of3": 353.6573333333333
+    },
+    {
+      "bit": 44,
+      "actual_face_q_d": [
+        1528.686,
+        187.92
+      ],
+      "slice_center": [
+        1927,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        16.47
+      ],
+      "input_max_each_of2": 248.61700000000002,
+      "output_max_each_of3": 353.56733333333335
+    },
+    {
+      "bit": 45,
+      "actual_face_q_d": [
+        1454.004,
+        96.39
+      ],
+      "slice_center": [
+        1927,
+        107
+      ],
+      "actual_bout": [
+        2876.958,
+        15.66
+      ],
+      "input_max_each_of2": 250.80300000000005,
+      "output_max_each_of3": 353.09933333333333
+    },
+    {
+      "bit": 46,
+      "actual_face_q_d": [
+        1465.56,
+        50.76
+      ],
+      "slice_center": [
+        1927,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        16.74
+      ],
+      "input_max_each_of2": 267.84000000000003,
+      "output_max_each_of3": 353.4773333333333
+    },
+    {
+      "bit": 47,
+      "actual_face_q_d": [
+        1469.988,
+        58.32
+      ],
+      "slice_center": [
+        1927,
+        107
+      ],
+      "actual_bout": [
+        2879.442,
+        17.01
+      ],
+      "input_max_each_of2": 261.846,
+      "output_max_each_of3": 353.4773333333333
+    },
+    {
+      "bit": 48,
+      "actual_face_q_d": [
+        1462.968,
+        63.45
+      ],
+      "slice_center": [
+        1945,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        17.28
+      ],
+      "input_max_each_of2": 271.79099999999994,
+      "output_max_each_of3": 347.29733333333337
+    },
+    {
+      "bit": 49,
+      "actual_face_q_d": [
+        1516.05,
+        149.85
+      ],
+      "slice_center": [
+        1945,
+        107
+      ],
+      "actual_bout": [
+        2879.658,
+        17.55
+      ],
+      "input_max_each_of2": 244.90000000000003,
+      "output_max_each_of3": 347.3693333333333
+    },
+    {
+      "bit": 50,
+      "actual_face_q_d": [
+        1508.328,
+        150.12
+      ],
+      "slice_center": [
+        1945,
+        107
+      ],
+      "actual_bout": [
+        2880.252,
+        17.82
+      ],
+      "input_max_each_of2": 248.89600000000002,
+      "output_max_each_of3": 347.4773333333333
+    },
+    {
+      "bit": 51,
+      "actual_face_q_d": [
+        1462.59,
+        85.59
+      ],
+      "slice_center": [
+        1945,
+        107
+      ],
+      "actual_bout": [
+        2877.174,
+        17.28
+      ],
+      "input_max_each_of2": 260.91,
+      "output_max_each_of3": 346.6313333333333
+    },
+    {
+      "bit": 52,
+      "actual_face_q_d": [
+        1477.116,
+        117.45
+      ],
+      "slice_center": [
+        1945,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        17.82
+      ],
+      "input_max_each_of2": 248.167,
+      "output_max_each_of3": 347.11733333333336
+    },
+    {
+      "bit": 53,
+      "actual_face_q_d": [
+        1445.256,
+        238.68
+      ],
+      "slice_center": [
+        1945,
+        107
+      ],
+      "actual_bout": [
+        2880.252,
+        18.36
+      ],
+      "input_max_each_of2": 324.712,
+      "output_max_each_of3": 347.29733333333326
+    },
+    {
+      "bit": 54,
+      "actual_face_q_d": [
+        1459.134,
+        42.12
+      ],
+      "slice_center": [
+        1945,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        18.36
+      ],
+      "input_max_each_of2": 284.373,
+      "output_max_each_of3": 346.9373333333333
+    },
+    {
+      "bit": 55,
+      "actual_face_q_d": [
+        1553.904,
+        213.03
+      ],
+      "slice_center": [
+        1945,
+        107
+      ],
+      "actual_bout": [
+        2879.226,
+        18.63
+      ],
+      "input_max_each_of2": 257.563,
+      "output_max_each_of3": 346.86533333333335
+    },
+    {
+      "bit": 56,
+      "actual_face_q_d": [
+        1470.312,
+        36.45
+      ],
+      "slice_center": [
+        1963,
+        107
+      ],
+      "actual_bout": [
+        2879.172,
+        18.9
+      ],
+      "input_max_each_of2": 290.619,
+      "output_max_each_of3": 340.75733333333335
+    },
+    {
+      "bit": 57,
+      "actual_face_q_d": [
+        1463.994,
+        41.58
+      ],
+      "slice_center": [
+        1963,
+        107
+      ],
+      "actual_bout": [
+        2877.066,
+        18.63
+      ],
+      "input_max_each_of2": 291.213,
+      "output_max_each_of3": 340.14533333333327
+    },
+    {
+      "bit": 58,
+      "actual_face_q_d": [
+        1467.936,
+        54.81
+      ],
+      "slice_center": [
+        1963,
+        107
+      ],
+      "actual_bout": [
+        2878.902,
+        19.17
+      ],
+      "input_max_each_of2": 282.62700000000007,
+      "output_max_each_of3": 340.57733333333334
+    },
+    {
+      "bit": 59,
+      "actual_face_q_d": [
+        1487.322,
+        118.8
+      ],
+      "slice_center": [
+        1963,
+        107
+      ],
+      "actual_bout": [
+        2877.822,
+        19.17
+      ],
+      "input_max_each_of2": 252.73900000000006,
+      "output_max_each_of3": 340.2173333333334
+    },
+    {
+      "bit": 60,
+      "actual_face_q_d": [
+        1493.532,
+        64.8
+      ],
+      "slice_center": [
+        1963,
+        107
+      ],
+      "actual_bout": [
+        2877.822,
+        19.98
+      ],
+      "input_max_each_of2": 264.83400000000006,
+      "output_max_each_of3": 339.94733333333335
+    },
+    {
+      "bit": 61,
+      "actual_face_q_d": [
+        1476.63,
+        45.9
+      ],
+      "slice_center": [
+        1963,
+        107
+      ],
+      "actual_bout": [
+        2877.174,
+        19.44
+      ],
+      "input_max_each_of2": 282.73499999999996,
+      "output_max_each_of3": 339.9113333333333
+    },
+    {
+      "bit": 62,
+      "actual_face_q_d": [
+        1462.212,
+        56.43
+      ],
+      "slice_center": [
+        1963,
+        107
+      ],
+      "actual_bout": [
+        2879.766,
+        19.98
+      ],
+      "input_max_each_of2": 284.67900000000003,
+      "output_max_each_of3": 340.5953333333334
+    },
+    {
+      "bit": 63,
+      "actual_face_q_d": [
+        1483.758,
+        137.97
+      ],
+      "slice_center": [
+        1963,
+        107
+      ],
+      "actual_bout": [
+        2879.01,
+        20.25
+      ],
+      "input_max_each_of2": 264.106,
+      "output_max_each_of3": 340.2533333333334
+    },
+    {
+      "bit": 64,
+      "actual_face_q_d": [
+        1511.73,
+        146.61
+      ],
+      "slice_center": [
+        1837,
+        125
+      ],
+      "actual_bout": [
+        2878.956,
+        19.44
+      ],
+      "input_max_each_of2": 182.44,
+      "output_max_each_of3": 388.50533333333334
+    },
+    {
+      "bit": 65,
+      "actual_face_q_d": [
+        1481.112,
+        55.62
+      ],
+      "slice_center": [
+        1837,
+        125
+      ],
+      "actual_bout": [
+        2879.28,
+        21.06
+      ],
+      "input_max_each_of2": 221.63399999999996,
+      "output_max_each_of3": 388.07333333333344
+    },
+    {
+      "bit": 66,
+      "actual_face_q_d": [
+        1588.572,
+        277.83
+      ],
+      "slice_center": [
+        1837,
+        125
+      ],
+      "actual_bout": [
+        2879.172,
+        19.71
+      ],
+      "input_max_each_of2": 209.62900000000005,
+      "output_max_each_of3": 388.4873333333333
+    },
+    {
+      "bit": 67,
+      "actual_face_q_d": [
+        1506.546,
+        79.38
+      ],
+      "slice_center": [
+        1837,
+        125
+      ],
+      "actual_bout": [
+        2876.85,
+        20.79
+      ],
+      "input_max_each_of2": 197.03699999999998,
+      "output_max_each_of3": 387.3533333333333
+    },
+    {
+      "bit": 68,
+      "actual_face_q_d": [
+        1584.9,
+        273.51
+      ],
+      "slice_center": [
+        1837,
+        125
+      ],
+      "actual_bout": [
+        2877.93,
+        20.25
+      ],
+      "input_max_each_of2": 209.30499999999995,
+      "output_max_each_of3": 387.89333333333326
+    },
+    {
+      "bit": 69,
+      "actual_face_q_d": [
+        1484.028,
+        55.35
+      ],
+      "slice_center": [
+        1837,
+        125
+      ],
+      "actual_bout": [
+        2878.47,
+        20.52
+      ],
+      "input_max_each_of2": 220.31099999999998,
+      "output_max_each_of3": 387.9833333333333
+    },
+    {
+      "bit": 70,
+      "actual_face_q_d": [
+        1485.864,
+        103.14
+      ],
+      "slice_center": [
+        1837,
+        125
+      ],
+      "actual_bout": [
+        2878.038,
+        21.33
+      ],
+      "input_max_each_of2": 195.498,
+      "output_max_each_of3": 387.56933333333336
+    },
+    {
+      "bit": 71,
+      "actual_face_q_d": [
+        1513.566,
+        168.48
+      ],
+      "slice_center": [
+        1837,
+        125
+      ],
+      "actual_bout": [
+        2877.012,
+        21.6
+      ],
+      "input_max_each_of2": 192.457,
+      "output_max_each_of3": 387.1373333333334
+    },
+    {
+      "bit": 72,
+      "actual_face_q_d": [
+        1529.766,
+        200.88
+      ],
+      "slice_center": [
+        1855,
+        125
+      ],
+      "actual_bout": [
+        2879.01,
+        22.41
+      ],
+      "input_max_each_of2": 209.55699999999996,
+      "output_max_each_of3": 381.53333333333336
+    },
+    {
+      "bit": 73,
+      "actual_face_q_d": [
+        1490.022,
+        62.1
+      ],
+      "slice_center": [
+        1855,
+        125
+      ],
+      "actual_bout": [
+        2878.578,
+        22.14
+      ],
+      "input_max_each_of2": 222.93900000000002,
+      "output_max_each_of3": 381.4793333333333
+    },
+    {
+      "bit": 74,
+      "actual_face_q_d": [
+        1594.242,
+        300.51
+      ],
+      "slice_center": [
+        1855,
+        125
+      ],
+      "actual_bout": [
+        2878.092,
+        21.6
+      ],
+      "input_max_each_of2": 227.13400000000001,
+      "output_max_each_of3": 381.4973333333334
+    },
+    {
+      "bit": 75,
+      "actual_face_q_d": [
+        1539.594,
+        184.41
+      ],
+      "slice_center": [
+        1855,
+        125
+      ],
+      "actual_bout": [
+        2877.822,
+        21.87
+      ],
+      "input_max_each_of2": 196.40799999999996,
+      "output_max_each_of3": 381.3173333333334
+    },
+    {
+      "bit": 76,
+      "actual_face_q_d": [
+        1582.578,
+        283.5
+      ],
+      "slice_center": [
+        1855,
+        125
+      ],
+      "actual_bout": [
+        2880.252,
+        25.38
+      ],
+      "input_max_each_of2": 224.461,
+      "output_max_each_of3": 380.9573333333333
+    },
+    {
+      "bit": 77,
+      "actual_face_q_d": [
+        1481.274,
+        57.78
+      ],
+      "slice_center": [
+        1855,
+        125
+      ],
+      "actual_bout": [
+        2876.904,
+        22.95
+      ],
+      "input_max_each_of2": 229.47300000000007,
+      "output_max_each_of3": 380.6513333333333
+    },
+    {
+      "bit": 78,
+      "actual_face_q_d": [
+        1478.952,
+        92.61
+      ],
+      "slice_center": [
+        1855,
+        125
+      ],
+      "actual_bout": [
+        2877.876,
+        24.03
+      ],
+      "input_max_each_of2": 213.219,
+      "output_max_each_of3": 380.6153333333334
+    },
+    {
+      "bit": 79,
+      "actual_face_q_d": [
+        1503.792,
+        160.65
+      ],
+      "slice_center": [
+        1855,
+        125
+      ],
+      "actual_bout": [
+        2880.252,
+        24.57
+      ],
+      "input_max_each_of2": 202.42900000000003,
+      "output_max_each_of3": 381.2273333333333
+    },
+    {
+      "bit": 80,
+      "actual_face_q_d": [
+        1486.134,
+        59.4
+      ],
+      "slice_center": [
+        1873,
+        125
+      ],
+      "actual_bout": [
+        2880.036,
+        26.46
+      ],
+      "input_max_each_of2": 235.233,
+      "output_max_each_of3": 374.5253333333333
+    },
+    {
+      "bit": 81,
+      "actual_face_q_d": [
+        1503.846,
+        140.13
+      ],
+      "slice_center": [
+        1873,
+        125
+      ],
+      "actual_bout": [
+        2877.12,
+        23.76
+      ],
+      "input_max_each_of2": 201.142,
+      "output_max_each_of3": 374.4533333333333
+    },
+    {
+      "bit": 82,
+      "actual_face_q_d": [
+        1552.554,
+        211.68
+      ],
+      "slice_center": [
+        1873,
+        125
+      ],
+      "actual_bout": [
+        2877.876,
+        28.62
+      ],
+      "input_max_each_of2": 212.56299999999996,
+      "output_max_each_of3": 373.08533333333344
+    },
+    {
+      "bit": 83,
+      "actual_face_q_d": [
+        1596.24,
+        312.39
+      ],
+      "slice_center": [
+        1873,
+        125
+      ],
+      "actual_bout": [
+        2879.604,
+        24.84
+      ],
+      "input_max_each_of2": 241.075,
+      "output_max_each_of3": 374.9213333333333
+    },
+    {
+      "bit": 84,
+      "actual_face_q_d": [
+        1516.644,
+        163.89
+      ],
+      "slice_center": [
+        1873,
+        125
+      ],
+      "actual_bout": [
+        2880.252,
+        26.19
+      ],
+      "input_max_each_of2": 206.623,
+      "output_max_each_of3": 374.6873333333333
+    },
+    {
+      "bit": 85,
+      "actual_face_q_d": [
+        1474.47,
+        44.01
+      ],
+      "slice_center": [
+        1873,
+        125
+      ],
+      "actual_bout": [
+        2879.712,
+        25.92
+      ],
+      "input_max_each_of2": 248.76,
+      "output_max_each_of3": 374.5973333333333
+    },
+    {
+      "bit": 86,
+      "actual_face_q_d": [
+        1582.794,
+        288.36
+      ],
+      "slice_center": [
+        1873,
+        125
+      ],
+      "actual_bout": [
+        2879.064,
+        25.11
+      ],
+      "input_max_each_of2": 235.78299999999996,
+      "output_max_each_of3": 374.6513333333333
+    },
+    {
+      "bit": 87,
+      "actual_face_q_d": [
+        1581.93,
+        261.36
+      ],
+      "slice_center": [
+        1873,
+        125
+      ],
+      "actual_bout": [
+        2876.796,
+        24.57
+      ],
+      "input_max_each_of2": 222.71499999999997,
+      "output_max_each_of3": 374.0753333333333
+    },
+    {
+      "bit": 88,
+      "actual_face_q_d": [
+        1463.886,
+        43.2
+      ],
+      "slice_center": [
+        1891,
+        125
+      ],
+      "actual_bout": [
+        2877.984,
+        27.81
+      ],
+      "input_max_each_of2": 263.457,
+      "output_max_each_of3": 367.3913333333333
+    },
+    {
+      "bit": 89,
+      "actual_face_q_d": [
+        1479.708,
+        41.04
+      ],
+      "slice_center": [
+        1891,
+        125
+      ],
+      "actual_bout": [
+        2880.252,
+        25.65
+      ],
+      "input_max_each_of2": 256.626,
+      "output_max_each_of3": 368.8673333333333
+    },
+    {
+      "bit": 90,
+      "actual_face_q_d": [
+        1481.76,
+        48.87
+      ],
+      "slice_center": [
+        1891,
+        125
+      ],
+      "actual_bout": [
+        2880.09,
+        27.27
+      ],
+      "input_max_each_of2": 251.685,
+      "output_max_each_of3": 368.27333333333337
+    },
+    {
+      "bit": 91,
+      "actual_face_q_d": [
+        1537.326,
+        191.16
+      ],
+      "slice_center": [
+        1891,
+        125
+      ],
+      "actual_bout": [
+        2880.198,
+        26.73
+      ],
+      "input_max_each_of2": 218.91699999999997,
+      "output_max_each_of3": 368.48933333333326
+    },
+    {
+      "bit": 92,
+      "actual_face_q_d": [
+        1476.576,
+        56.97
+      ],
+      "slice_center": [
+        1891,
+        125
+      ],
+      "actual_bout": [
+        2877.984,
+        28.08
+      ],
+      "input_max_each_of2": 250.22699999999998,
+      "output_max_each_of3": 367.30133333333333
+    },
+    {
+      "bit": 93,
+      "actual_face_q_d": [
+        1470.42,
+        36.18
+      ],
+      "slice_center": [
+        1891,
+        125
+      ],
+      "actual_bout": [
+        2876.85,
+        26.46
+      ],
+      "input_max_each_of2": 263.69999999999993,
+      "output_max_each_of3": 367.4633333333333
+    },
+    {
+      "bit": 94,
+      "actual_face_q_d": [
+        1476.144,
+        56.43
+      ],
+      "slice_center": [
+        1891,
+        125
+      ],
+      "actual_bout": [
+        2878.632,
+        27.0
+      ],
+      "input_max_each_of2": 250.713,
+      "output_max_each_of3": 367.87733333333335
+    },
+    {
+      "bit": 95,
+      "actual_face_q_d": [
+        1570.86,
+        259.2
+      ],
+      "slice_center": [
+        1891,
+        125
+      ],
+      "actual_bout": [
+        2878.47,
+        26.73
+      ],
+      "input_max_each_of2": 236.17000000000004,
+      "output_max_each_of3": 367.91333333333324
+    },
+    {
+      "bit": 96,
+      "actual_face_q_d": [
+        1504.062,
+        93.96
+      ],
+      "slice_center": [
+        1909,
+        125
+      ],
+      "actual_bout": [
+        2878.902,
+        27.27
+      ],
+      "input_max_each_of2": 226.98900000000006,
+      "output_max_each_of3": 361.87733333333335
+    },
+    {
+      "bit": 97,
+      "actual_face_q_d": [
+        1541.268,
+        171.72
+      ],
+      "slice_center": [
+        1909,
+        125
+      ],
+      "actual_bout": [
+        2876.958,
+        26.73
+      ],
+      "input_max_each_of2": 216.226,
+      "output_max_each_of3": 361.40933333333334
+    },
+    {
+      "bit": 98,
+      "actual_face_q_d": [
+        1564.542,
+        244.35
+      ],
+      "slice_center": [
+        1909,
+        125
+      ],
+      "actual_bout": [
+        2879.064,
+        28.08
+      ],
+      "input_max_each_of2": 240.90400000000005,
+      "output_max_each_of3": 361.6613333333333
+    },
+    {
+      "bit": 99,
+      "actual_face_q_d": [
+        1546.452,
+        207.09
+      ],
+      "slice_center": [
+        1909,
+        125
+      ],
+      "actual_bout": [
+        2876.904,
+        27.54
+      ],
+      "input_max_each_of2": 231.31900000000002,
+      "output_max_each_of3": 361.1213333333333
+    },
+    {
+      "bit": 100,
+      "actual_face_q_d": [
+        1483.272,
+        76.95
+      ],
+      "slice_center": [
+        1909,
+        125
+      ],
+      "actual_bout": [
+        2879.172,
+        28.62
+      ],
+      "input_max_each_of2": 245.88900000000004,
+      "output_max_each_of3": 361.5173333333334
+    },
+    {
+      "bit": 101,
+      "actual_face_q_d": [
+        1503.144,
+        132.03
+      ],
+      "slice_center": [
+        1909,
+        125
+      ],
+      "actual_bout": [
+        2879.982,
+        27.81
+      ],
+      "input_max_each_of2": 215.44299999999998,
+      "output_max_each_of3": 362.05733333333336
+    },
+    {
+      "bit": 102,
+      "actual_face_q_d": [
+        1573.614,
+        263.79
+      ],
+      "slice_center": [
+        1909,
+        125
+      ],
+      "actual_bout": [
+        2880.252,
+        28.62
+      ],
+      "input_max_each_of2": 246.088,
+      "output_max_each_of3": 361.87733333333335
+    },
+    {
+      "bit": 103,
+      "actual_face_q_d": [
+        1450.332,
+        49.68
+      ],
+      "slice_center": [
+        1909,
+        125
+      ],
+      "actual_bout": [
+        2879.928,
+        28.89
+      ],
+      "input_max_each_of2": 275.9939999999999,
+      "output_max_each_of3": 361.67933333333326
+    },
+    {
+      "bit": 104,
+      "actual_face_q_d": [
+        1474.686,
+        62.37
+      ],
+      "slice_center": [
+        1927,
+        125
+      ],
+      "actual_bout": [
+        2880.252,
+        29.16
+      ],
+      "input_max_each_of2": 266.47200000000004,
+      "output_max_each_of3": 355.6973333333333
+    },
+    {
+      "bit": 105,
+      "actual_face_q_d": [
+        1593.0,
+        299.16
+      ],
+      "slice_center": [
+        1927,
+        125
+      ],
+      "actual_bout": [
+        2879.172,
+        29.16
+      ],
+      "input_max_each_of2": 263.08000000000004,
+      "output_max_each_of3": 355.33733333333333
+    },
+    {
+      "bit": 106,
+      "actual_face_q_d": [
+        1586.466,
+        261.36
+      ],
+      "slice_center": [
+        1927,
+        125
+      ],
+      "actual_bout": [
+        2879.01,
+        29.43
+      ],
+      "input_max_each_of2": 247.44700000000006,
+      "output_max_each_of3": 355.1933333333334
+    },
+    {
+      "bit": 107,
+      "actual_face_q_d": [
+        1471.014,
+        99.36
+      ],
+      "slice_center": [
+        1927,
+        125
+      ],
+      "actual_bout": [
+        2876.958,
+        28.89
+      ],
+      "input_max_each_of2": 249.81300000000005,
+      "output_max_each_of3": 354.6893333333333
+    },
+    {
+      "bit": 108,
+      "actual_face_q_d": [
+        1594.404,
+        290.52
+      ],
+      "slice_center": [
+        1927,
+        125
+      ],
+      "actual_bout": [
+        2880.252,
+        29.7
+      ],
+      "input_max_each_of2": 258.058,
+      "output_max_each_of3": 355.5173333333333
+    },
+    {
+      "bit": 109,
+      "actual_face_q_d": [
+        1582.092,
+        272.97
+      ],
+      "slice_center": [
+        1927,
+        125
+      ],
+      "actual_bout": [
+        2879.01,
+        29.97
+      ],
+      "input_max_each_of2": 255.43899999999996,
+      "output_max_each_of3": 355.0133333333334
+    },
+    {
+      "bit": 110,
+      "actual_face_q_d": [
+        1471.446,
+        40.5
+      ],
+      "slice_center": [
+        1927,
+        125
+      ],
+      "actual_bout": [
+        2878.902,
+        30.51
+      ],
+      "input_max_each_of2": 279.02700000000004,
+      "output_max_each_of3": 354.79733333333337
+    },
+    {
+      "bit": 111,
+      "actual_face_q_d": [
+        1558.71,
+        255.96
+      ],
+      "slice_center": [
+        1927,
+        125
+      ],
+      "actual_bout": [
+        2878.956,
+        30.78
+      ],
+      "input_max_each_of2": 258.625,
+      "output_max_each_of3": 354.72533333333337
+    },
+    {
+      "bit": 112,
+      "actual_face_q_d": [
+        1471.284,
+        44.82
+      ],
+      "slice_center": [
+        1945,
+        125
+      ],
+      "actual_bout": [
+        2879.28,
+        31.05
+      ],
+      "input_max_each_of2": 285.948,
+      "output_max_each_of3": 348.7433333333334
+    },
+    {
+      "bit": 113,
+      "actual_face_q_d": [
+        1477.386,
+        52.38
+      ],
+      "slice_center": [
+        1945,
+        125
+      ],
+      "actual_bout": [
+        2876.958,
+        30.24
+      ],
+      "input_max_each_of2": 279.117,
+      "output_max_each_of3": 348.2393333333334
+    },
+    {
+      "bit": 114,
+      "actual_face_q_d": [
+        1559.25,
+        257.31
+      ],
+      "slice_center": [
+        1945,
+        125
+      ],
+      "actual_bout": [
+        2879.01,
+        31.59
+      ],
+      "input_max_each_of2": 268.03,
+      "output_max_each_of3": 348.4733333333334
+    },
+    {
+      "bit": 115,
+      "actual_face_q_d": [
+        1588.95,
+        293.22
+      ],
+      "slice_center": [
+        1945,
+        125
+      ],
+      "actual_bout": [
+        2878.902,
+        31.86
+      ],
+      "input_max_each_of2": 271.135,
+      "output_max_each_of3": 348.3473333333334
+    },
+    {
+      "bit": 116,
+      "actual_face_q_d": [
+        1480.626,
+        83.16
+      ],
+      "slice_center": [
+        1945,
+        125
+      ],
+      "actual_bout": [
+        2880.252,
+        31.86
+      ],
+      "input_max_each_of2": 262.107,
+      "output_max_each_of3": 348.79733333333337
+    },
+    {
+      "bit": 117,
+      "actual_face_q_d": [
+        1578.42,
+        275.67
+      ],
+      "slice_center": [
+        1945,
+        125
+      ],
+      "actual_bout": [
+        2876.958,
+        31.32
+      ],
+      "input_max_each_of2": 267.625,
+      "output_max_each_of3": 347.87933333333336
+    },
+    {
+      "bit": 118,
+      "actual_face_q_d": [
+        1487.754,
+        144.18
+      ],
+      "slice_center": [
+        1945,
+        125
+      ],
+      "actual_bout": [
+        2880.252,
+        32.13
+      ],
+      "input_max_each_of2": 247.21300000000005,
+      "output_max_each_of3": 348.7073333333333
+    },
+    {
+      "bit": 119,
+      "actual_face_q_d": [
+        1466.1,
+        97.74
+      ],
+      "slice_center": [
+        1945,
+        125
+      ],
+      "actual_bout": [
+        2880.252,
+        32.67
+      ],
+      "input_max_each_of2": 262.08000000000004,
+      "output_max_each_of3": 348.5273333333333
+    },
+    {
+      "bit": 120,
+      "actual_face_q_d": [
+        1474.794,
+        38.88
+      ],
+      "slice_center": [
+        1963,
+        125
+      ],
+      "actual_bout": [
+        2878.956,
+        32.4
+      ],
+      "input_max_each_of2": 296.16299999999995,
+      "output_max_each_of3": 342.18533333333335
+    },
+    {
+      "bit": 121,
+      "actual_face_q_d": [
+        1510.704,
+        148.23
+      ],
+      "slice_center": [
+        1963,
+        125
+      ],
+      "actual_bout": [
+        2880.252,
+        33.21
+      ],
+      "input_max_each_of2": 246.76300000000003,
+      "output_max_each_of3": 342.3473333333333
+    },
+    {
+      "bit": 122,
+      "actual_face_q_d": [
+        1577.178,
+        256.23
+      ],
+      "slice_center": [
+        1963,
+        125
+      ],
+      "actual_bout": [
+        2880.252,
+        32.94
+      ],
+      "input_max_each_of2": 267.52599999999995,
+      "output_max_each_of3": 342.4373333333333
+    },
+    {
+      "bit": 123,
+      "actual_face_q_d": [
+        1586.25,
+        279.72
+      ],
+      "slice_center": [
+        1963,
+        125
+      ],
+      "actual_bout": [
+        2876.958,
+        32.4
+      ],
+      "input_max_each_of2": 274.735,
+      "output_max_each_of3": 341.51933333333335
+    },
+    {
+      "bit": 124,
+      "actual_face_q_d": [
+        1503.792,
+        147.69
+      ],
+      "slice_center": [
+        1963,
+        125
+      ],
+      "actual_bout": [
+        2879.01,
+        33.21
+      ],
+      "input_max_each_of2": 249.94900000000004,
+      "output_max_each_of3": 341.9333333333334
+    },
+    {
+      "bit": 125,
+      "actual_face_q_d": [
+        1465.776,
+        42.66
+      ],
+      "slice_center": [
+        1963,
+        125
+      ],
+      "actual_bout": [
+        2880.252,
+        34.02
+      ],
+      "input_max_each_of2": 298.782,
+      "output_max_each_of3": 342.07733333333334
+    },
+    {
+      "bit": 126,
+      "actual_face_q_d": [
+        1582.794,
+        255.96
+      ],
+      "slice_center": [
+        1963,
+        125
+      ],
+      "actual_bout": [
+        2879.01,
+        34.29
+      ],
+      "input_max_each_of2": 264.58299999999997,
+      "output_max_each_of3": 341.57333333333344
+    },
+    {
+      "bit": 127,
+      "actual_face_q_d": [
+        1615.464,
+        317.25
+      ],
+      "slice_center": [
+        1963,
+        125
+      ],
+      "actual_bout": [
+        2880.252,
+        34.56
+      ],
+      "input_max_each_of2": 278.89300000000003,
+      "output_max_each_of3": 341.89733333333334
+    },
+    {
+      "bit": 128,
+      "actual_face_q_d": [
+        1593.81,
+        256.77
+      ],
+      "slice_center": [
+        1837,
+        143
+      ],
+      "actual_bout": [
+        2879.172,
+        34.83
+      ],
+      "input_max_each_of2": 187.48000000000002,
+      "output_max_each_of3": 389.44733333333335
+    },
+    {
+      "bit": 129,
+      "actual_face_q_d": [
+        1599.912,
+        309.15
+      ],
+      "slice_center": [
+        1837,
+        143
+      ],
+      "actual_bout": [
+        2876.958,
+        33.75
+      ],
+      "input_max_each_of2": 210.61899999999997,
+      "output_max_each_of3": 389.06933333333336
+    },
+    {
+      "bit": 130,
+      "actual_face_q_d": [
+        1629.612,
+        355.59
+      ],
+      "slice_center": [
+        1837,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        35.1
+      ],
+      "input_max_each_of2": 218.98899999999995,
+      "output_max_each_of3": 389.71733333333333
+    },
+    {
+      "bit": 131,
+      "actual_face_q_d": [
+        1601.1,
+        317.25
+      ],
+      "slice_center": [
+        1837,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        35.37
+      ],
+      "input_max_each_of2": 214.07500000000005,
+      "output_max_each_of3": 389.62733333333335
+    },
+    {
+      "bit": 132,
+      "actual_face_q_d": [
+        1616.868,
+        345.33
+      ],
+      "slice_center": [
+        1837,
+        143
+      ],
+      "actual_bout": [
+        2879.28,
+        35.64
+      ],
+      "input_max_each_of2": 220.23100000000002,
+      "output_max_each_of3": 389.21333333333337
+    },
+    {
+      "bit": 133,
+      "actual_face_q_d": [
+        1628.694,
+        339.66
+      ],
+      "slice_center": [
+        1837,
+        143
+      ],
+      "actual_bout": [
+        2876.958,
+        35.1
+      ],
+      "input_max_each_of2": 211.48300000000003,
+      "output_max_each_of3": 388.6193333333334
+    },
+    {
+      "bit": 134,
+      "actual_face_q_d": [
+        1599.912,
+        290.25
+      ],
+      "slice_center": [
+        1837,
+        143
+      ],
+      "actual_bout": [
+        2879.01,
+        35.91
+      ],
+      "input_max_each_of2": 201.16899999999998,
+      "output_max_each_of3": 389.03333333333336
+    },
+    {
+      "bit": 135,
+      "actual_face_q_d": [
+        1671.624,
+        343.44
+      ],
+      "slice_center": [
+        1837,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        35.91
+      ],
+      "input_max_each_of2": 191.908,
+      "output_max_each_of3": 389.4473333333333
+    },
+    {
+      "bit": 136,
+      "actual_face_q_d": [
+        1576.044,
+        256.23
+      ],
+      "slice_center": [
+        1855,
+        143
+      ],
+      "actual_bout": [
+        2879.172,
+        36.45
+      ],
+      "input_max_each_of2": 205.09299999999996,
+      "output_max_each_of3": 382.9073333333333
+    },
+    {
+      "bit": 137,
+      "actual_face_q_d": [
+        1638.792,
+        328.32
+      ],
+      "slice_center": [
+        1855,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        36.45
+      ],
+      "input_max_each_of2": 209.76400000000004,
+      "output_max_each_of3": 383.2673333333333
+    },
+    {
+      "bit": 138,
+      "actual_face_q_d": [
+        1623.132,
+        332.37
+      ],
+      "slice_center": [
+        1855,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        36.99
+      ],
+      "input_max_each_of2": 219.61899999999997,
+      "output_max_each_of3": 383.08733333333333
+    },
+    {
+      "bit": 139,
+      "actual_face_q_d": [
+        1603.044,
+        318.06
+      ],
+      "slice_center": [
+        1855,
+        143
+      ],
+      "actual_bout": [
+        2876.958,
+        35.91
+      ],
+      "input_max_each_of2": 222.50799999999995,
+      "output_max_each_of3": 382.34933333333333
+    },
+    {
+      "bit": 140,
+      "actual_face_q_d": [
+        1609.74,
+        337.23
+      ],
+      "slice_center": [
+        1855,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        36.72
+      ],
+      "input_max_each_of2": 228.745,
+      "output_max_each_of3": 383.1773333333333
+    },
+    {
+      "bit": 141,
+      "actual_face_q_d": [
+        1691.766,
+        337.77
+      ],
+      "slice_center": [
+        1855,
+        143
+      ],
+      "actual_bout": [
+        2879.01,
+        36.99
+      ],
+      "input_max_each_of2": 188.00199999999995,
+      "output_max_each_of3": 382.6733333333334
+    },
+    {
+      "bit": 142,
+      "actual_face_q_d": [
+        1619.622,
+        348.03
+      ],
+      "slice_center": [
+        1855,
+        143
+      ],
+      "actual_bout": [
+        2878.902,
+        37.26
+      ],
+      "input_max_each_of2": 229.20399999999995,
+      "output_max_each_of3": 382.54733333333337
+    },
+    {
+      "bit": 143,
+      "actual_face_q_d": [
+        1594.566,
+        303.21
+      ],
+      "slice_center": [
+        1855,
+        143
+      ],
+      "actual_bout": [
+        2876.958,
+        36.99
+      ],
+      "input_max_each_of2": 219.32199999999997,
+      "output_max_each_of3": 381.9893333333334
+    },
+    {
+      "bit": 144,
+      "actual_face_q_d": [
+        1607.364,
+        299.16
+      ],
+      "slice_center": [
+        1873,
+        143
+      ],
+      "actual_bout": [
+        2880.198,
+        38.07
+      ],
+      "input_max_each_of2": 219.898,
+      "output_max_each_of3": 376.7093333333333
+    },
+    {
+      "bit": 145,
+      "actual_face_q_d": [
+        1594.458,
+        321.84
+      ],
+      "slice_center": [
+        1873,
+        143
+      ],
+      "actual_bout": [
+        2879.334,
+        37.8
+      ],
+      "input_max_each_of2": 237.69099999999995,
+      "output_max_each_of3": 376.5113333333333
+    },
+    {
+      "bit": 146,
+      "actual_face_q_d": [
+        1595.268,
+        304.02
+      ],
+      "slice_center": [
+        1873,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        38.61
+      ],
+      "input_max_each_of2": 228.37599999999998,
+      "output_max_each_of3": 376.54733333333337
+    },
+    {
+      "bit": 147,
+      "actual_face_q_d": [
+        1633.068,
+        348.3
+      ],
+      "slice_center": [
+        1873,
+        143
+      ],
+      "actual_bout": [
+        2879.874,
+        38.34
+      ],
+      "input_max_each_of2": 231.616,
+      "output_max_each_of3": 376.5113333333333
+    },
+    {
+      "bit": 148,
+      "actual_face_q_d": [
+        1627.776,
+        344.25
+      ],
+      "slice_center": [
+        1873,
+        143
+      ],
+      "actual_bout": [
+        2878.74,
+        37.53
+      ],
+      "input_max_each_of2": 232.23699999999997,
+      "output_max_each_of3": 376.40333333333325
+    },
+    {
+      "bit": 149,
+      "actual_face_q_d": [
+        1589.166,
+        286.47
+      ],
+      "slice_center": [
+        1873,
+        143
+      ],
+      "actual_bout": [
+        2876.958,
+        38.07
+      ],
+      "input_max_each_of2": 222.65200000000004,
+      "output_max_each_of3": 375.62933333333336
+    },
+    {
+      "bit": 150,
+      "actual_face_q_d": [
+        1626.966,
+        351.81
+      ],
+      "slice_center": [
+        1873,
+        143
+      ],
+      "actual_bout": [
+        2879.01,
+        39.15
+      ],
+      "input_max_each_of2": 236.42200000000005,
+      "output_max_each_of3": 375.9533333333334
+    },
+    {
+      "bit": 151,
+      "actual_face_q_d": [
+        1598.238,
+        279.72
+      ],
+      "slice_center": [
+        1873,
+        143
+      ],
+      "actual_bout": [
+        2878.902,
+        39.42
+      ],
+      "input_max_each_of2": 214.74099999999999,
+      "output_max_each_of3": 375.82733333333334
+    },
+    {
+      "bit": 152,
+      "actual_face_q_d": [
+        1604.286,
+        312.39
+      ],
+      "slice_center": [
+        1891,
+        143
+      ],
+      "actual_bout": [
+        2879.01,
+        39.96
+      ],
+      "input_max_each_of2": 237.05199999999996,
+      "output_max_each_of3": 369.6833333333334
+    },
+    {
+      "bit": 153,
+      "actual_face_q_d": [
+        1589.22,
+        282.69
+      ],
+      "slice_center": [
+        1891,
+        143
+      ],
+      "actual_bout": [
+        2876.958,
+        39.15
+      ],
+      "input_max_each_of2": 229.73499999999999,
+      "output_max_each_of3": 369.26933333333335
+    },
+    {
+      "bit": 154,
+      "actual_face_q_d": [
+        1690.2,
+        334.53
+      ],
+      "slice_center": [
+        1891,
+        143
+      ],
+      "actual_bout": [
+        2878.956,
+        39.69
+      ],
+      "input_max_each_of2": 205.16499999999996,
+      "output_max_each_of3": 369.75533333333334
+    },
+    {
+      "bit": 155,
+      "actual_face_q_d": [
+        1575.342,
+        272.97
+      ],
+      "slice_center": [
+        1891,
+        143
+      ],
+      "actual_bout": [
+        2878.956,
+        40.5
+      ],
+      "input_max_each_of2": 231.81399999999996,
+      "output_max_each_of3": 369.48533333333336
+    },
+    {
+      "bit": 156,
+      "actual_face_q_d": [
+        1571.994,
+        265.68
+      ],
+      "slice_center": [
+        1891,
+        143
+      ],
+      "actual_bout": [
+        2879.01,
+        40.23
+      ],
+      "input_max_each_of2": 229.84300000000005,
+      "output_max_each_of3": 369.5933333333334
+    },
+    {
+      "bit": 157,
+      "actual_face_q_d": [
+        1702.188,
+        336.42
+      ],
+      "slice_center": [
+        1891,
+        143
+      ],
+      "actual_bout": [
+        2879.01,
+        41.04
+      ],
+      "input_max_each_of2": 200.11599999999996,
+      "output_max_each_of3": 369.32333333333344
+    },
+    {
+      "bit": 158,
+      "actual_face_q_d": [
+        1593.0,
+        295.38
+      ],
+      "slice_center": [
+        1891,
+        143
+      ],
+      "actual_bout": [
+        2879.496,
+        40.77
+      ],
+      "input_max_each_of2": 234.19,
+      "output_max_each_of3": 369.5753333333334
+    },
+    {
+      "bit": 159,
+      "actual_face_q_d": [
+        1631.988,
+        354.78
+      ],
+      "slice_center": [
+        1891,
+        143
+      ],
+      "actual_bout": [
+        2876.958,
+        40.23
+      ],
+      "input_max_each_of2": 244.39599999999996,
+      "output_max_each_of3": 368.90933333333334
+    },
+    {
+      "bit": 160,
+      "actual_face_q_d": [
+        1608.714,
+        320.22
+      ],
+      "slice_center": [
+        1909,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        41.04
+      ],
+      "input_max_each_of2": 247.75300000000004,
+      "output_max_each_of3": 363.7373333333333
+    },
+    {
+      "bit": 161,
+      "actual_face_q_d": [
+        1576.314,
+        279.72
+      ],
+      "slice_center": [
+        1909,
+        143
+      ],
+      "actual_bout": [
+        2879.01,
+        41.31
+      ],
+      "input_max_each_of2": 243.70299999999997,
+      "output_max_each_of3": 363.2333333333334
+    },
+    {
+      "bit": 162,
+      "actual_face_q_d": [
+        1604.394,
+        291.33
+      ],
+      "slice_center": [
+        1909,
+        143
+      ],
+      "actual_bout": [
+        2879.172,
+        41.58
+      ],
+      "input_max_each_of2": 235.468,
+      "output_max_each_of3": 363.19733333333335
+    },
+    {
+      "bit": 163,
+      "actual_face_q_d": [
+        1625.076,
+        350.46
+      ],
+      "slice_center": [
+        1909,
+        143
+      ],
+      "actual_bout": [
+        2879.172,
+        42.39
+      ],
+      "input_max_each_of2": 254.69199999999998,
+      "output_max_each_of3": 362.9273333333333
+    },
+    {
+      "bit": 164,
+      "actual_face_q_d": [
+        1591.704,
+        284.85
+      ],
+      "slice_center": [
+        1909,
+        143
+      ],
+      "actual_bout": [
+        2879.172,
+        42.66
+      ],
+      "input_max_each_of2": 238.57300000000004,
+      "output_max_each_of3": 362.83733333333333
+    },
+    {
+      "bit": 165,
+      "actual_face_q_d": [
+        1603.638,
+        328.59
+      ],
+      "slice_center": [
+        1909,
+        143
+      ],
+      "actual_bout": [
+        2876.958,
+        41.85
+      ],
+      "input_max_each_of2": 254.47600000000003,
+      "output_max_each_of3": 362.3693333333334
+    },
+    {
+      "bit": 166,
+      "actual_face_q_d": [
+        1637.82,
+        342.63
+      ],
+      "slice_center": [
+        1909,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        42.66
+      ],
+      "input_max_each_of2": 244.40500000000003,
+      "output_max_each_of3": 363.1973333333333
+    },
+    {
+      "bit": 167,
+      "actual_face_q_d": [
+        1609.254,
+        331.29
+      ],
+      "slice_center": [
+        1909,
+        143
+      ],
+      "actual_bout": [
+        2879.172,
+        42.93
+      ],
+      "input_max_each_of2": 253.01800000000006,
+      "output_max_each_of3": 362.7473333333333
+    },
+    {
+      "bit": 168,
+      "actual_face_q_d": [
+        1601.316,
+        295.65
+      ],
+      "slice_center": [
+        1927,
+        143
+      ],
+      "actual_bout": [
+        2880.036,
+        43.2
+      ],
+      "input_max_each_of2": 248.16699999999997,
+      "output_max_each_of3": 356.94533333333334
+    },
+    {
+      "bit": 169,
+      "actual_face_q_d": [
+        1644.138,
+        340.74
+      ],
+      "slice_center": [
+        1927,
+        143
+      ],
+      "actual_bout": [
+        2876.958,
+        42.66
+      ],
+      "input_max_each_of2": 249.30100000000004,
+      "output_max_each_of3": 356.09933333333333
+    },
+    {
+      "bit": 170,
+      "actual_face_q_d": [
+        1619.352,
+        345.06
+      ],
+      "slice_center": [
+        1927,
+        143
+      ],
+      "actual_bout": [
+        2879.172,
+        43.74
+      ],
+      "input_max_each_of2": 263.8539999999999,
+      "output_max_each_of3": 356.4773333333333
+    },
+    {
+      "bit": 171,
+      "actual_face_q_d": [
+        1585.386,
+        280.26
+      ],
+      "slice_center": [
+        1927,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        44.01
+      ],
+      "input_max_each_of2": 248.437,
+      "output_max_each_of3": 356.7473333333333
+    },
+    {
+      "bit": 172,
+      "actual_face_q_d": [
+        1622.754,
+        334.26
+      ],
+      "slice_center": [
+        1927,
+        143
+      ],
+      "actual_bout": [
+        2878.902,
+        44.28
+      ],
+      "input_max_each_of2": 256.75300000000004,
+      "output_max_each_of3": 356.20733333333334
+    },
+    {
+      "bit": 173,
+      "actual_face_q_d": [
+        1594.404,
+        323.19
+      ],
+      "slice_center": [
+        1927,
+        143
+      ],
+      "actual_bout": [
+        2878.902,
+        44.01
+      ],
+      "input_max_each_of2": 265.39300000000003,
+      "output_max_each_of3": 356.29733333333337
+    },
+    {
+      "bit": 174,
+      "actual_face_q_d": [
+        1597.59,
+        322.65
+      ],
+      "slice_center": [
+        1927,
+        143
+      ],
+      "actual_bout": [
+        2876.958,
+        43.74
+      ],
+      "input_max_each_of2": 263.53000000000003,
+      "output_max_each_of3": 355.7393333333334
+    },
+    {
+      "bit": 175,
+      "actual_face_q_d": [
+        1700.622,
+        345.87
+      ],
+      "slice_center": [
+        1927,
+        143
+      ],
+      "actual_bout": [
+        2879.01,
+        44.55
+      ],
+      "input_max_each_of2": 223.62399999999997,
+      "output_max_each_of3": 356.1533333333334
+    },
+    {
+      "bit": 176,
+      "actual_face_q_d": [
+        1677.618,
+        345.33
+      ],
+      "slice_center": [
+        1945,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        44.82
+      ],
+      "input_max_each_of2": 243.85600000000002,
+      "output_max_each_of3": 350.4773333333333
+    },
+    {
+      "bit": 177,
+      "actual_face_q_d": [
+        1584.738,
+        316.17
+      ],
+      "slice_center": [
+        1945,
+        143
+      ],
+      "actual_bout": [
+        2879.172,
+        44.82
+      ],
+      "input_max_each_of2": 275.716,
+      "output_max_each_of3": 350.11733333333336
+    },
+    {
+      "bit": 178,
+      "actual_face_q_d": [
+        1653.318,
+        354.51
+      ],
+      "slice_center": [
+        1945,
+        143
+      ],
+      "actual_bout": [
+        2879.496,
+        45.36
+      ],
+      "input_max_each_of2": 260.596,
+      "output_max_each_of3": 350.0453333333334
+    },
+    {
+      "bit": 179,
+      "actual_face_q_d": [
+        1625.292,
+        344.52
+      ],
+      "slice_center": [
+        1945,
+        143
+      ],
+      "actual_bout": [
+        2876.958,
+        44.82
+      ],
+      "input_max_each_of2": 269.61400000000003,
+      "output_max_each_of3": 349.37933333333336
+    },
+    {
+      "bit": 180,
+      "actual_face_q_d": [
+        1630.152,
+        341.82
+      ],
+      "slice_center": [
+        1945,
+        143
+      ],
+      "actual_bout": [
+        2879.766,
+        45.63
+      ],
+      "input_max_each_of2": 265.83399999999995,
+      "output_max_each_of3": 350.0453333333333
+    },
+    {
+      "bit": 181,
+      "actual_face_q_d": [
+        1650.456,
+        332.64
+      ],
+      "slice_center": [
+        1945,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        45.9
+      ],
+      "input_max_each_of2": 251.09200000000004,
+      "output_max_each_of3": 350.1173333333333
+    },
+    {
+      "bit": 182,
+      "actual_face_q_d": [
+        1595.322,
+        300.24
+      ],
+      "slice_center": [
+        1945,
+        143
+      ],
+      "actual_bout": [
+        2879.172,
+        46.44
+      ],
+      "input_max_each_of2": 262.45900000000006,
+      "output_max_each_of3": 349.57733333333334
+    },
+    {
+      "bit": 183,
+      "actual_face_q_d": [
+        1580.31,
+        260.82
+      ],
+      "slice_center": [
+        1945,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        46.71
+      ],
+      "input_max_each_of2": 250.25500000000002,
+      "output_max_each_of3": 349.8473333333333
+    },
+    {
+      "bit": 184,
+      "actual_face_q_d": [
+        1616.22,
+        321.57
+      ],
+      "slice_center": [
+        1963,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        46.44
+      ],
+      "input_max_each_of2": 271.67499999999995,
+      "output_max_each_of3": 343.9373333333333
+    },
+    {
+      "bit": 185,
+      "actual_face_q_d": [
+        1586.79,
+        278.91
+      ],
+      "slice_center": [
+        1963,
+        143
+      ],
+      "actual_bout": [
+        2876.958,
+        46.17
+      ],
+      "input_max_each_of2": 265.06000000000006,
+      "output_max_each_of3": 342.9293333333333
+    },
+    {
+      "bit": 186,
+      "actual_face_q_d": [
+        1664.388,
+        341.01
+      ],
+      "slice_center": [
+        1963,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        46.98
+      ],
+      "input_max_each_of2": 257.31100000000004,
+      "output_max_each_of3": 343.7573333333333
+    },
+    {
+      "bit": 187,
+      "actual_face_q_d": [
+        1613.898,
+        298.35
+      ],
+      "slice_center": [
+        1963,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        47.25
+      ],
+      "input_max_each_of2": 261.22600000000006,
+      "output_max_each_of3": 343.6673333333333
+    },
+    {
+      "bit": 188,
+      "actual_face_q_d": [
+        1605.798,
+        318.87
+      ],
+      "slice_center": [
+        1963,
+        143
+      ],
+      "actual_bout": [
+        2879.442,
+        47.52
+      ],
+      "input_max_each_of2": 275.536,
+      "output_max_each_of3": 343.30733333333336
+    },
+    {
+      "bit": 189,
+      "actual_face_q_d": [
+        1616.328,
+        339.66
+      ],
+      "slice_center": [
+        1963,
+        143
+      ],
+      "actual_bout": [
+        2876.958,
+        46.71
+      ],
+      "input_max_each_of2": 280.66600000000005,
+      "output_max_each_of3": 342.74933333333337
+    },
+    {
+      "bit": 190,
+      "actual_face_q_d": [
+        1593.54,
+        286.2
+      ],
+      "slice_center": [
+        1963,
+        143
+      ],
+      "actual_bout": [
+        2878.524,
+        47.79
+      ],
+      "input_max_each_of2": 265.33000000000004,
+      "output_max_each_of3": 342.9113333333333
+    },
+    {
+      "bit": 191,
+      "actual_face_q_d": [
+        1675.08,
+        348.03
+      ],
+      "slice_center": [
+        1963,
+        143
+      ],
+      "actual_bout": [
+        2880.252,
+        48.06
+      ],
+      "input_max_each_of2": 255.47500000000002,
+      "output_max_each_of3": 343.39733333333334
+    },
+    {
+      "bit": 192,
+      "actual_face_q_d": [
+        1596.672,
+        285.93
+      ],
+      "slice_center": [
+        1837,
+        161
+      ],
+      "actual_bout": [
+        2878.308,
+        48.33
+      ],
+      "input_max_each_of2": 191.629,
+      "output_max_each_of3": 390.65933333333334
+    },
+    {
+      "bit": 193,
+      "actual_face_q_d": [
+        1646.892,
+        346.95
+      ],
+      "slice_center": [
+        1837,
+        161
+      ],
+      "actual_bout": [
+        2878.632,
+        48.06
+      ],
+      "input_max_each_of2": 197.02899999999997,
+      "output_max_each_of3": 390.8573333333334
+    },
+    {
+      "bit": 194,
+      "actual_face_q_d": [
+        1599.912,
+        298.35
+      ],
+      "slice_center": [
+        1837,
+        161
+      ],
+      "actual_bout": [
+        2878.038,
+        49.41
+      ],
+      "input_max_each_of2": 196.219,
+      "output_max_each_of3": 390.2093333333333
+    },
+    {
+      "bit": 195,
+      "actual_face_q_d": [
+        1606.878,
+        328.86
+      ],
+      "slice_center": [
+        1837,
+        161
+      ],
+      "actual_bout": [
+        2876.958,
+        48.06
+      ],
+      "input_max_each_of2": 207.99100000000004,
+      "output_max_each_of3": 390.2993333333334
+    },
+    {
+      "bit": 196,
+      "actual_face_q_d": [
+        1625.076,
+        348.57
+      ],
+      "slice_center": [
+        1837,
+        161
+      ],
+      "actual_bout": [
+        2877.66,
+        48.87
+      ],
+      "input_max_each_of2": 208.74699999999999,
+      "output_max_each_of3": 390.2633333333333
+    },
+    {
+      "bit": 197,
+      "actual_face_q_d": [
+        1595.808,
+        294.57
+      ],
+      "slice_center": [
+        1837,
+        161
+      ],
+      "actual_bout": [
+        2879.172,
+        49.41
+      ],
+      "input_max_each_of2": 196.381,
+      "output_max_each_of3": 390.58733333333333
+    },
+    {
+      "bit": 198,
+      "actual_face_q_d": [
+        1621.242,
+        347.49
+      ],
+      "slice_center": [
+        1837,
+        161
+      ],
+      "actual_bout": [
+        2877.66,
+        49.95
+      ],
+      "input_max_each_of2": 210.12400000000002,
+      "output_max_each_of3": 389.90333333333325
+    },
+    {
+      "bit": 199,
+      "actual_face_q_d": [
+        1673.19,
+        341.01
+      ],
+      "slice_center": [
+        1837,
+        161
+      ],
+      "actual_bout": [
+        2878.2,
+        50.49
+      ],
+      "input_max_each_of2": 180.90999999999997,
+      "output_max_each_of3": 389.90333333333325
+    },
+    {
+      "bit": 200,
+      "actual_face_q_d": [
+        1580.85,
+        265.95
+      ],
+      "slice_center": [
+        1855,
+        161
+      ],
+      "actual_bout": [
+        2877.876,
+        50.76
+      ],
+      "input_max_each_of2": 198.55000000000004,
+      "output_max_each_of3": 383.7053333333334
+    },
+    {
+      "bit": 201,
+      "actual_face_q_d": [
+        1593.324,
+        303.21
+      ],
+      "slice_center": [
+        1855,
+        161
+      ],
+      "actual_bout": [
+        2876.958,
+        49.41
+      ],
+      "input_max_each_of2": 210.94299999999996,
+      "output_max_each_of3": 383.84933333333333
+    },
+    {
+      "bit": 202,
+      "actual_face_q_d": [
+        1631.826,
+        346.41
+      ],
+      "slice_center": [
+        1855,
+        161
+      ],
+      "actual_bout": [
+        2878.74,
+        49.95
+      ],
+      "input_max_each_of2": 213.292,
+      "output_max_each_of3": 384.26333333333326
+    },
+    {
+      "bit": 203,
+      "actual_face_q_d": [
+        1611.576,
+        307.8
+      ],
+      "slice_center": [
+        1855,
+        161
+      ],
+      "actual_bout": [
+        2877.876,
+        52.11
+      ],
+      "input_max_each_of2": 204.112,
+      "output_max_each_of3": 383.25533333333345
+    },
+    {
+      "bit": 204,
+      "actual_face_q_d": [
+        1555.362,
+        215.19
+      ],
+      "slice_center": [
+        1855,
+        161
+      ],
+      "actual_bout": [
+        2879.388,
+        50.22
+      ],
+      "input_max_each_of2": 185.91399999999996,
+      "output_max_each_of3": 384.3893333333333
+    },
+    {
+      "bit": 205,
+      "actual_face_q_d": [
+        1752.03,
+        320.22
+      ],
+      "slice_center": [
+        1855,
+        161
+      ],
+      "actual_bout": [
+        2876.958,
+        50.22
+      ],
+      "input_max_each_of2": 140.09500000000003,
+      "output_max_each_of3": 383.57933333333335
+    },
+    {
+      "bit": 206,
+      "actual_face_q_d": [
+        1609.47,
+        309.69
+      ],
+      "slice_center": [
+        1855,
+        161
+      ],
+      "actual_bout": [
+        2879.28,
+        50.49
+      ],
+      "input_max_each_of2": 206.10999999999999,
+      "output_max_each_of3": 384.2633333333334
+    },
+    {
+      "bit": 207,
+      "actual_face_q_d": [
+        1578.204,
+        255.96
+      ],
+      "slice_center": [
+        1855,
+        161
+      ],
+      "actual_bout": [
+        2879.118,
+        51.3
+      ],
+      "input_max_each_of2": 194.87800000000004,
+      "output_max_each_of3": 383.9393333333333
+    },
+    {
+      "bit": 208,
+      "actual_face_q_d": [
+        1593.486,
+        304.29
+      ],
+      "slice_center": [
+        1873,
+        161
+      ],
+      "actual_bout": [
+        2878.2,
+        51.57
+      ],
+      "input_max_each_of2": 220.40199999999996,
+      "output_max_each_of3": 377.5433333333333
+    },
+    {
+      "bit": 209,
+      "actual_face_q_d": [
+        1634.58,
+        335.88
+      ],
+      "slice_center": [
+        1873,
+        161
+      ],
+      "actual_bout": [
+        2878.47,
+        53.46
+      ],
+      "input_max_each_of2": 215.65000000000003,
+      "output_max_each_of3": 377.0033333333333
+    },
+    {
+      "bit": 210,
+      "actual_face_q_d": [
+        1594.188,
+        288.9
+      ],
+      "slice_center": [
+        1873,
+        161
+      ],
+      "actual_bout": [
+        2876.904,
+        51.84
+      ],
+      "input_max_each_of2": 212.35599999999994,
+      "output_max_each_of3": 377.02133333333336
+    },
+    {
+      "bit": 211,
+      "actual_face_q_d": [
+        1790.316,
+        307.26
+      ],
+      "slice_center": [
+        1873,
+        161
+      ],
+      "actual_bout": [
+        2878.956,
+        52.11
+      ],
+      "input_max_each_of2": 123.47199999999998,
+      "output_max_each_of3": 377.6153333333334
+    },
+    {
+      "bit": 212,
+      "actual_face_q_d": [
+        1592.082,
+        298.89
+      ],
+      "slice_center": [
+        1873,
+        161
+      ],
+      "actual_bout": [
+        2878.956,
+        52.65
+      ],
+      "input_max_each_of2": 218.40399999999994,
+      "output_max_each_of3": 377.43533333333335
+    },
+    {
+      "bit": 213,
+      "actual_face_q_d": [
+        1636.146,
+        352.08
+      ],
+      "slice_center": [
+        1873,
+        161
+      ],
+      "actual_bout": [
+        2878.47,
+        52.92
+      ],
+      "input_max_each_of2": 222.967,
+      "output_max_each_of3": 377.1833333333332
+    },
+    {
+      "bit": 214,
+      "actual_face_q_d": [
+        1621.566,
+        354.24
+      ],
+      "slice_center": [
+        1873,
+        161
+      ],
+      "actual_bout": [
+        2879.55,
+        53.46
+      ],
+      "input_max_each_of2": 231.337,
+      "output_max_each_of3": 377.3633333333334
+    },
+    {
+      "bit": 215,
+      "actual_face_q_d": [
+        1599.696,
+        319.95
+      ],
+      "slice_center": [
+        1873,
+        161
+      ],
+      "actual_bout": [
+        2876.958,
+        52.38
+      ],
+      "input_max_each_of2": 225.12700000000004,
+      "output_max_each_of3": 376.8593333333333
+    },
+    {
+      "bit": 216,
+      "actual_face_q_d": [
+        1659.474,
+        344.52
+      ],
+      "slice_center": [
+        1891,
+        161
+      ],
+      "actual_bout": [
+        2879.712,
+        53.19
+      ],
+      "input_max_each_of2": 216.52300000000002,
+      "output_max_each_of3": 371.5073333333333
+    },
+    {
+      "bit": 217,
+      "actual_face_q_d": [
+        1805.544,
+        321.03
+      ],
+      "slice_center": [
+        1891,
+        161
+      ],
+      "actual_bout": [
+        2878.632,
+        53.73
+      ],
+      "input_max_each_of2": 131.74299999999994,
+      "output_max_each_of3": 370.96733333333333
+    },
+    {
+      "bit": 218,
+      "actual_face_q_d": [
+        1581.768,
+        329.13
+      ],
+      "slice_center": [
+        1891,
+        161
+      ],
+      "actual_bout": [
+        2879.334,
+        54.0
+      ],
+      "input_max_each_of2": 247.68099999999998,
+      "output_max_each_of3": 371.1113333333333
+    },
+    {
+      "bit": 219,
+      "actual_face_q_d": [
+        1612.386,
+        343.44
+      ],
+      "slice_center": [
+        1891,
+        161
+      ],
+      "actual_bout": [
+        2878.092,
+        53.19
+      ],
+      "input_max_each_of2": 239.52700000000002,
+      "output_max_each_of3": 370.96733333333333
+    },
+    {
+      "bit": 220,
+      "actual_face_q_d": [
+        1587.006,
+        285.93
+      ],
+      "slice_center": [
+        1891,
+        161
+      ],
+      "actual_bout": [
+        2878.416,
+        54.54
+      ],
+      "input_max_each_of2": 223.46199999999996,
+      "output_max_each_of3": 370.6253333333334
+    },
+    {
+      "bit": 221,
+      "actual_face_q_d": [
+        1609.038,
+        338.04
+      ],
+      "slice_center": [
+        1891,
+        161
+      ],
+      "actual_bout": [
+        2876.958,
+        53.73
+      ],
+      "input_max_each_of2": 238.501,
+      "output_max_each_of3": 370.40933333333334
+    },
+    {
+      "bit": 222,
+      "actual_face_q_d": [
+        1599.858,
+        322.11
+      ],
+      "slice_center": [
+        1891,
+        161
+      ],
+      "actual_bout": [
+        2878.092,
+        54.81
+      ],
+      "input_max_each_of2": 235.12600000000003,
+      "output_max_each_of3": 370.42733333333337
+    },
+    {
+      "bit": 223,
+      "actual_face_q_d": [
+        1635.498,
+        316.98
+      ],
+      "slice_center": [
+        1891,
+        161
+      ],
+      "actual_bout": [
+        2878.794,
+        55.08
+      ],
+      "input_max_each_of2": 214.74099999999999,
+      "output_max_each_of3": 370.5713333333333
+    },
+    {
+      "bit": 224,
+      "actual_face_q_d": [
+        1674.702,
+        342.63
+      ],
+      "slice_center": [
+        1909,
+        161
+      ],
+      "actual_bout": [
+        2878.146,
+        55.62
+      ],
+      "input_max_each_of2": 216.964,
+      "output_max_each_of3": 364.1753333333334
+    },
+    {
+      "bit": 225,
+      "actual_face_q_d": [
+        1647.54,
+        334.53
+      ],
+      "slice_center": [
+        1909,
+        161
+      ],
+      "actual_bout": [
+        2877.336,
+        54.54
+      ],
+      "input_max_each_of2": 226.495,
+      "output_max_each_of3": 364.2653333333333
+    },
+    {
+      "bit": 226,
+      "actual_face_q_d": [
+        1654.614,
+        325.35
+      ],
+      "slice_center": [
+        1909,
+        161
+      ],
+      "actual_bout": [
+        2878.146,
+        55.35
+      ],
+      "input_max_each_of2": 218.368,
+      "output_max_each_of3": 364.26533333333344
+    },
+    {
+      "bit": 227,
+      "actual_face_q_d": [
+        1596.672,
+        318.87
+      ],
+      "slice_center": [
+        1909,
+        161
+      ],
+      "actual_bout": [
+        2879.226,
+        55.62
+      ],
+      "input_max_each_of2": 244.099,
+      "output_max_each_of3": 364.5353333333334
+    },
+    {
+      "bit": 228,
+      "actual_face_q_d": [
+        1628.532,
+        348.3
+      ],
+      "slice_center": [
+        1909,
+        161
+      ],
+      "actual_bout": [
+        2879.226,
+        55.89
+      ],
+      "input_max_each_of2": 242.88400000000004,
+      "output_max_each_of3": 364.44533333333334
+    },
+    {
+      "bit": 229,
+      "actual_face_q_d": [
+        1652.076,
+        325.89
+      ],
+      "slice_center": [
+        1909,
+        161
+      ],
+      "actual_bout": [
+        2879.172,
+        56.7
+      ],
+      "input_max_each_of2": 219.90699999999998,
+      "output_max_each_of3": 364.1573333333333
+    },
+    {
+      "bit": 230,
+      "actual_face_q_d": [
+        1641.924,
+        371.79
+      ],
+      "slice_center": [
+        1909,
+        161
+      ],
+      "actual_bout": [
+        2879.01,
+        56.97
+      ],
+      "input_max_each_of2": 247.93300000000002,
+      "output_max_each_of3": 364.0133333333334
+    },
+    {
+      "bit": 231,
+      "actual_face_q_d": [
+        1725.948,
+        327.78
+      ],
+      "slice_center": [
+        1909,
+        161
+      ],
+      "actual_bout": [
+        2877.012,
+        55.89
+      ],
+      "input_max_each_of2": 183.91599999999994,
+      "output_max_each_of3": 363.70733333333334
+    },
+    {
+      "bit": 232,
+      "actual_face_q_d": [
+        1703.43,
+        338.04
+      ],
+      "slice_center": [
+        1927,
+        161
+      ],
+      "actual_bout": [
+        2878.2,
+        57.24
+      ],
+      "input_max_each_of2": 209.30499999999998,
+      "output_max_each_of3": 357.65333333333325
+    },
+    {
+      "bit": 233,
+      "actual_face_q_d": [
+        1667.628,
+        337.23
+      ],
+      "slice_center": [
+        1927,
+        161
+      ],
+      "actual_bout": [
+        2879.388,
+        57.24
+      ],
+      "input_max_each_of2": 226.80100000000004,
+      "output_max_each_of3": 358.0493333333333
+    },
+    {
+      "bit": 234,
+      "actual_face_q_d": [
+        1624.266,
+        342.36
+      ],
+      "slice_center": [
+        1927,
+        161
+      ],
+      "actual_bout": [
+        2879.442,
+        57.78
+      ],
+      "input_max_each_of2": 251.04699999999997,
+      "output_max_each_of3": 357.88733333333334
+    },
+    {
+      "bit": 235,
+      "actual_face_q_d": [
+        1649.376,
+        346.68
+      ],
+      "slice_center": [
+        1927,
+        161
+      ],
+      "actual_bout": [
+        2878.902,
+        57.51
+      ],
+      "input_max_each_of2": 240.65200000000002,
+      "output_max_each_of3": 357.79733333333337
+    },
+    {
+      "bit": 236,
+      "actual_face_q_d": [
+        1604.772,
+        332.1
+      ],
+      "slice_center": [
+        1927,
+        161
+      ],
+      "actual_bout": [
+        2876.958,
+        56.97
+      ],
+      "input_max_each_of2": 255.66400000000004,
+      "output_max_each_of3": 357.32933333333335
+    },
+    {
+      "bit": 237,
+      "actual_face_q_d": [
+        1618.704,
+        333.45
+      ],
+      "slice_center": [
+        1927,
+        161
+      ],
+      "actual_bout": [
+        2879.334,
+        58.32
+      ],
+      "input_max_each_of2": 249.37300000000002,
+      "output_max_each_of3": 357.6713333333333
+    },
+    {
+      "bit": 238,
+      "actual_face_q_d": [
+        1631.556,
+        342.63
+      ],
+      "slice_center": [
+        1927,
+        161
+      ],
+      "actual_bout": [
+        2878.902,
+        58.05
+      ],
+      "input_max_each_of2": 247.53699999999998,
+      "output_max_each_of3": 357.61733333333336
+    },
+    {
+      "bit": 239,
+      "actual_face_q_d": [
+        1616.22,
+        326.16
+      ],
+      "slice_center": [
+        1927,
+        161
+      ],
+      "actual_bout": [
+        2879.172,
+        58.86
+      ],
+      "input_max_each_of2": 246.97,
+      "output_max_each_of3": 357.43733333333336
+    },
+    {
+      "bit": 240,
+      "actual_face_q_d": [
+        1675.998,
+        347.76
+      ],
+      "slice_center": [
+        1945,
+        161
+      ],
+      "actual_bout": [
+        2879.172,
+        58.59
+      ],
+      "input_max_each_of2": 236.88099999999997,
+      "output_max_each_of3": 351.5273333333334
+    },
+    {
+      "bit": 241,
+      "actual_face_q_d": [
+        1771.902,
+        306.99
+      ],
+      "slice_center": [
+        1945,
+        161
+      ],
+      "actual_bout": [
+        2876.958,
+        58.05
+      ],
+      "input_max_each_of2": 168.54399999999998,
+      "output_max_each_of3": 350.9693333333334
+    },
+    {
+      "bit": 242,
+      "actual_face_q_d": [
+        1659.636,
+        324.54
+      ],
+      "slice_center": [
+        1945,
+        161
+      ],
+      "actual_bout": [
+        2880.036,
+        59.13
+      ],
+      "input_max_each_of2": 233.45200000000003,
+      "output_max_each_of3": 351.63533333333334
+    },
+    {
+      "bit": 243,
+      "actual_face_q_d": [
+        1629.342,
+        345.06
+      ],
+      "slice_center": [
+        1945,
+        161
+      ],
+      "actual_bout": [
+        2879.388,
+        59.67
+      ],
+      "input_max_each_of2": 258.8589999999999,
+      "output_max_each_of3": 351.23933333333326
+    },
+    {
+      "bit": 244,
+      "actual_face_q_d": [
+        1597.914,
+        273.78
+      ],
+      "slice_center": [
+        1945,
+        161
+      ],
+      "actual_bout": [
+        2878.902,
+        59.4
+      ],
+      "input_max_each_of2": 238.933,
+      "output_max_each_of3": 351.1673333333333
+    },
+    {
+      "bit": 245,
+      "actual_face_q_d": [
+        1663.254,
+        326.16
+      ],
+      "slice_center": [
+        1945,
+        161
+      ],
+      "actual_bout": [
+        2878.308,
+        59.67
+      ],
+      "input_max_each_of2": 232.45300000000006,
+      "output_max_each_of3": 350.8793333333333
+    },
+    {
+      "bit": 246,
+      "actual_face_q_d": [
+        1625.994,
+        352.35
+      ],
+      "slice_center": [
+        1945,
+        161
+      ],
+      "actual_bout": [
+        2876.958,
+        59.13
+      ],
+      "input_max_each_of2": 264.17800000000005,
+      "output_max_each_of3": 350.6093333333333
+    },
+    {
+      "bit": 247,
+      "actual_face_q_d": [
+        1620.864,
+        343.71
+      ],
+      "slice_center": [
+        1945,
+        161
+      ],
+      "actual_bout": [
+        2879.226,
+        60.21
+      ],
+      "input_max_each_of2": 262.423,
+      "output_max_each_of3": 351.00533333333334
+    },
+    {
+      "bit": 248,
+      "actual_face_q_d": [
+        1609.848,
+        309.96
+      ],
+      "slice_center": [
+        1963,
+        161
+      ],
+      "actual_bout": [
+        2878.146,
+        60.21
+      ],
+      "input_max_each_of2": 260.05600000000004,
+      "output_max_each_of3": 344.6453333333334
+    },
+    {
+      "bit": 249,
+      "actual_face_q_d": [
+        1638.198,
+        340.2
+      ],
+      "slice_center": [
+        1963,
+        161
+      ],
+      "actual_bout": [
+        2879.226,
+        60.48
+      ],
+      "input_max_each_of2": 261.001,
+      "output_max_each_of3": 344.91533333333336
+    },
+    {
+      "bit": 250,
+      "actual_face_q_d": [
+        1801.278,
+        299.7
+      ],
+      "slice_center": [
+        1963,
+        161
+      ],
+      "actual_bout": [
+        2879.442,
+        60.75
+      ],
+      "input_max_each_of2": 159.21099999999998,
+      "output_max_each_of3": 344.89733333333334
+    },
+    {
+      "bit": 251,
+      "actual_face_q_d": [
+        1569.618,
+        270.0
+      ],
+      "slice_center": [
+        1963,
+        161
+      ],
+      "actual_bout": [
+        2876.958,
+        60.21
+      ],
+      "input_max_each_of2": 260.19100000000003,
+      "output_max_each_of3": 344.24933333333337
+    },
+    {
+      "bit": 252,
+      "actual_face_q_d": [
+        1648.134,
+        352.62
+      ],
+      "slice_center": [
+        1963,
+        161
+      ],
+      "actual_bout": [
+        2879.172,
+        61.29
+      ],
+      "input_max_each_of2": 262.243,
+      "output_max_each_of3": 344.62733333333335
+    },
+    {
+      "bit": 253,
+      "actual_face_q_d": [
+        1597.158,
+        295.11
+      ],
+      "slice_center": [
+        1963,
+        161
+      ],
+      "actual_bout": [
+        2879.496,
+        61.56
+      ],
+      "input_max_each_of2": 258.97600000000006,
+      "output_max_each_of3": 344.6453333333334
+    },
+    {
+      "bit": 254,
+      "actual_face_q_d": [
+        1641.114,
+        350.19
+      ],
+      "slice_center": [
+        1963,
+        161
+      ],
+      "actual_bout": [
+        2879.28,
+        61.83
+      ],
+      "input_max_each_of2": 264.538,
+      "output_max_each_of3": 344.4833333333334
+    },
+    {
+      "bit": 255,
+      "actual_face_q_d": [
+        1610.118,
+        330.21
+      ],
+      "slice_center": [
+        1963,
+        161
+      ],
+      "actual_bout": [
+        2880.252,
+        62.37
+      ],
+      "input_max_each_of2": 270.04600000000005,
+      "output_max_each_of3": 344.62733333333335
+    },
+    {
+      "bit": 256,
+      "actual_face_q_d": [
+        1545.48,
+        187.65
+      ],
+      "slice_center": [
+        1837,
+        179
+      ],
+      "actual_bout": [
+        2877.012,
+        61.29
+      ],
+      "input_max_each_of2": 159.08499999999998,
+      "output_max_each_of3": 391.9073333333334
+    },
+    {
+      "bit": 257,
+      "actual_face_q_d": [
+        1732.536,
+        376.65
+      ],
+      "slice_center": [
+        1837,
+        179
+      ],
+      "actual_bout": [
+        2879.28,
+        62.1
+      ],
+      "input_max_each_of2": 160.05699999999996,
+      "output_max_each_of3": 392.39333333333343
+    },
+    {
+      "bit": 258,
+      "actual_face_q_d": [
+        1511.892,
+        146.07
+      ],
+      "slice_center": [
+        1837,
+        179
+      ],
+      "actual_bout": [
+        2877.12,
+        62.1
+      ],
+      "input_max_each_of2": 188.01899999999998,
+      "output_max_each_of3": 391.67333333333335
+    },
+    {
+      "bit": 259,
+      "actual_face_q_d": [
+        1668.762,
+        336.42
+      ],
+      "slice_center": [
+        1837,
+        179
+      ],
+      "actual_bout": [
+        2878.956,
+        62.37
+      ],
+      "input_max_each_of2": 171.82900000000004,
+      "output_max_each_of3": 392.1953333333334
+    },
+    {
+      "bit": 260,
+      "actual_face_q_d": [
+        1581.066,
+        285.39
+      ],
+      "slice_center": [
+        1837,
+        179
+      ],
+      "actual_bout": [
+        2876.958,
+        61.83
+      ],
+      "input_max_each_of2": 190.16199999999998,
+      "output_max_each_of3": 391.7093333333334
+    },
+    {
+      "bit": 261,
+      "actual_face_q_d": [
+        1571.886,
+        272.97
+      ],
+      "slice_center": [
+        1837,
+        179
+      ],
+      "actual_bout": [
+        2879.172,
+        62.64
+      ],
+      "input_max_each_of2": 188.54200000000003,
+      "output_max_each_of3": 392.1773333333333
+    },
+    {
+      "bit": 262,
+      "actual_face_q_d": [
+        1589.328,
+        270.54
+      ],
+      "slice_center": [
+        1837,
+        179
+      ],
+      "actual_bout": [
+        2879.064,
+        62.91
+      ],
+      "input_max_each_of2": 178.60600000000002,
+      "output_max_each_of3": 392.0513333333333
+    },
+    {
+      "bit": 263,
+      "actual_face_q_d": [
+        1585.818,
+        291.6
+      ],
+      "slice_center": [
+        1837,
+        179
+      ],
+      "actual_bout": [
+        2879.01,
+        63.18
+      ],
+      "input_max_each_of2": 190.89100000000002,
+      "output_max_each_of3": 391.9433333333334
+    },
+    {
+      "bit": 264,
+      "actual_face_q_d": [
+        1776.438,
+        346.41
+      ],
+      "slice_center": [
+        1855,
+        179
+      ],
+      "actual_bout": [
+        2879.28,
+        63.45
+      ],
+      "input_max_each_of2": 131.98599999999996,
+      "output_max_each_of3": 385.9433333333334
+    },
+    {
+      "bit": 265,
+      "actual_face_q_d": [
+        1614.492,
+        343.98
+      ],
+      "slice_center": [
+        1855,
+        179
+      ],
+      "actual_bout": [
+        2879.442,
+        63.99
+      ],
+      "input_max_each_of2": 211.74400000000003,
+      "output_max_each_of3": 385.81733333333335
+    },
+    {
+      "bit": 266,
+      "actual_face_q_d": [
+        1569.942,
+        264.87
+      ],
+      "slice_center": [
+        1855,
+        179
+      ],
+      "actual_bout": [
+        2879.01,
+        64.53
+      ],
+      "input_max_each_of2": 194.464,
+      "output_max_each_of3": 385.4933333333334
+    },
+    {
+      "bit": 267,
+      "actual_face_q_d": [
+        1620.864,
+        333.72
+      ],
+      "slice_center": [
+        1855,
+        179
+      ],
+      "actual_bout": [
+        2878.902,
+        64.26
+      ],
+      "input_max_each_of2": 203.428,
+      "output_max_each_of3": 385.54733333333337
+    },
+    {
+      "bit": 268,
+      "actual_face_q_d": [
+        1577.88,
+        260.01
+      ],
+      "slice_center": [
+        1855,
+        179
+      ],
+      "actual_bout": [
+        2880.252,
+        64.53
+      ],
+      "input_max_each_of2": 188.06499999999994,
+      "output_max_each_of3": 385.9073333333333
+    },
+    {
+      "bit": 269,
+      "actual_face_q_d": [
+        1653.858,
+        354.24
+      ],
+      "slice_center": [
+        1855,
+        179
+      ],
+      "actual_bout": [
+        2879.82,
+        65.34
+      ],
+      "input_max_each_of2": 197.19100000000003,
+      "output_max_each_of3": 385.4933333333334
+    },
+    {
+      "bit": 270,
+      "actual_face_q_d": [
+        1614.168,
+        273.78
+      ],
+      "slice_center": [
+        1855,
+        179
+      ],
+      "actual_bout": [
+        2879.496,
+        65.07
+      ],
+      "input_max_each_of2": 176.80600000000004,
+      "output_max_each_of3": 385.47533333333337
+    },
+    {
+      "bit": 271,
+      "actual_face_q_d": [
+        1546.344,
+        203.04
+      ],
+      "slice_center": [
+        1855,
+        179
+      ],
+      "actual_bout": [
+        2876.958,
+        64.53
+      ],
+      "input_max_each_of2": 175.34799999999996,
+      "output_max_each_of3": 384.80933333333337
+    },
+    {
+      "bit": 272,
+      "actual_face_q_d": [
+        1560.762,
+        240.03
+      ],
+      "slice_center": [
+        1873,
+        179
+      ],
+      "actual_bout": [
+        2879.118,
+        65.88
+      ],
+      "input_max_each_of2": 195.63400000000001,
+      "output_max_each_of3": 379.0793333333333
+    },
+    {
+      "bit": 273,
+      "actual_face_q_d": [
+        1607.364,
+        335.34
+      ],
+      "slice_center": [
+        1873,
+        179
+      ],
+      "actual_bout": [
+        2878.902,
+        65.61
+      ],
+      "input_max_each_of2": 219.98799999999997,
+      "output_max_each_of3": 379.0973333333334
+    },
+    {
+      "bit": 274,
+      "actual_face_q_d": [
+        1562.922,
+        218.16
+      ],
+      "slice_center": [
+        1873,
+        179
+      ],
+      "actual_bout": [
+        2880.252,
+        65.88
+      ],
+      "input_max_each_of2": 183.61899999999997,
+      "output_max_each_of3": 379.4573333333333
+    },
+    {
+      "bit": 275,
+      "actual_face_q_d": [
+        1579.608,
+        279.18
+      ],
+      "slice_center": [
+        1873,
+        179
+      ],
+      "actual_bout": [
+        2879.388,
+        66.69
+      ],
+      "input_max_each_of2": 205.78600000000003,
+      "output_max_each_of3": 378.8993333333333
+    },
+    {
+      "bit": 276,
+      "actual_face_q_d": [
+        1641.006,
+        369.9
+      ],
+      "slice_center": [
+        1873,
+        179
+      ],
+      "actual_bout": [
+        2876.958,
+        65.61
+      ],
+      "input_max_each_of2": 220.44699999999995,
+      "output_max_each_of3": 378.4493333333334
+    },
+    {
+      "bit": 277,
+      "actual_face_q_d": [
+        1606.932,
+        332.1
+      ],
+      "slice_center": [
+        1873,
+        179
+      ],
+      "actual_bout": [
+        2878.902,
+        66.42
+      ],
+      "input_max_each_of2": 218.584,
+      "output_max_each_of3": 378.82733333333334
+    },
+    {
+      "bit": 278,
+      "actual_face_q_d": [
+        1650.942,
+        353.16
+      ],
+      "slice_center": [
+        1873,
+        179
+      ],
+      "actual_bout": [
+        2876.958,
+        65.88
+      ],
+      "input_max_each_of2": 207.109,
+      "output_max_each_of3": 378.3593333333333
+    },
+    {
+      "bit": 279,
+      "actual_face_q_d": [
+        1595.16,
+        312.12
+      ],
+      "slice_center": [
+        1873,
+        179
+      ],
+      "actual_bout": [
+        2878.902,
+        66.96
+      ],
+      "input_max_each_of2": 214.47999999999996,
+      "output_max_each_of3": 378.64733333333334
+    },
+    {
+      "bit": 280,
+      "actual_face_q_d": [
+        1594.35,
+        293.22
+      ],
+      "slice_center": [
+        1891,
+        179
+      ],
+      "actual_bout": [
+        2876.958,
+        66.15
+      ],
+      "input_max_each_of2": 214.43500000000006,
+      "output_max_each_of3": 372.26933333333335
+    },
+    {
+      "bit": 281,
+      "actual_face_q_d": [
+        1607.904,
+        347.49
+      ],
+      "slice_center": [
+        1891,
+        179
+      ],
+      "actual_bout": [
+        2879.172,
+        67.23
+      ],
+      "input_max_each_of2": 234.793,
+      "output_max_each_of3": 372.64733333333334
+    },
+    {
+      "bit": 282,
+      "actual_face_q_d": [
+        1608.66,
+        335.61
+      ],
+      "slice_center": [
+        1891,
+        179
+      ],
+      "actual_bout": [
+        2879.226,
+        67.5
+      ],
+      "input_max_each_of2": 228.47499999999997,
+      "output_max_each_of3": 372.5753333333334
+    },
+    {
+      "bit": 283,
+      "actual_face_q_d": [
+        1684.152,
+        336.42
+      ],
+      "slice_center": [
+        1891,
+        179
+      ],
+      "actual_bout": [
+        2879.28,
+        68.04
+      ],
+      "input_max_each_of2": 191.134,
+      "output_max_each_of3": 372.4133333333334
+    },
+    {
+      "bit": 284,
+      "actual_face_q_d": [
+        1605.312,
+        343.17
+      ],
+      "slice_center": [
+        1891,
+        179
+      ],
+      "actual_bout": [
+        2879.172,
+        67.77
+      ],
+      "input_max_each_of2": 233.92900000000006,
+      "output_max_each_of3": 372.46733333333333
+    },
+    {
+      "bit": 285,
+      "actual_face_q_d": [
+        1582.038,
+        266.22
+      ],
+      "slice_center": [
+        1891,
+        179
+      ],
+      "actual_bout": [
+        2879.172,
+        68.31
+      ],
+      "input_max_each_of2": 207.091,
+      "output_max_each_of3": 372.2873333333334
+    },
+    {
+      "bit": 286,
+      "actual_face_q_d": [
+        1600.668,
+        293.76
+      ],
+      "slice_center": [
+        1891,
+        179
+      ],
+      "actual_bout": [
+        2879.172,
+        68.58
+      ],
+      "input_max_each_of2": 211.54600000000005,
+      "output_max_each_of3": 372.19733333333335
+    },
+    {
+      "bit": 287,
+      "actual_face_q_d": [
+        1762.182,
+        312.66
+      ],
+      "slice_center": [
+        1891,
+        179
+      ],
+      "actual_bout": [
+        2879.01,
+        68.85
+      ],
+      "input_max_each_of2": 140.239,
+      "output_max_each_of3": 372.05333333333346
+    },
+    {
+      "bit": 288,
+      "actual_face_q_d": [
+        1565.622,
+        259.74
+      ],
+      "slice_center": [
+        1909,
+        179
+      ],
+      "actual_bout": [
+        2880.09,
+        69.12
+      ],
+      "input_max_each_of2": 221.05899999999997,
+      "output_max_each_of3": 366.32333333333344
+    },
+    {
+      "bit": 289,
+      "actual_face_q_d": [
+        1699.272,
+        339.12
+      ],
+      "slice_center": [
+        1909,
+        179
+      ],
+      "actual_bout": [
+        2879.01,
+        69.12
+      ],
+      "input_max_each_of2": 193.92400000000004,
+      "output_max_each_of3": 365.9633333333334
+    },
+    {
+      "bit": 290,
+      "actual_face_q_d": [
+        1559.358,
+        237.87
+      ],
+      "slice_center": [
+        1909,
+        179
+      ],
+      "actual_bout": [
+        2878.74,
+        69.66
+      ],
+      "input_max_each_of2": 213.25600000000003,
+      "output_max_each_of3": 365.6933333333332
+    },
+    {
+      "bit": 291,
+      "actual_face_q_d": [
+        1578.906,
+        256.23
+      ],
+      "slice_center": [
+        1909,
+        179
+      ],
+      "actual_bout": [
+        2876.958,
+        68.85
+      ],
+      "input_max_each_of2": 212.66200000000003,
+      "output_max_each_of3": 365.3693333333334
+    },
+    {
+      "bit": 292,
+      "actual_face_q_d": [
+        1628.586,
+        343.71
+      ],
+      "slice_center": [
+        1909,
+        179
+      ],
+      "actual_bout": [
+        2879.712,
+        69.93
+      ],
+      "input_max_each_of2": 231.56199999999998,
+      "output_max_each_of3": 365.9273333333333
+    },
+    {
+      "bit": 293,
+      "actual_face_q_d": [
+        1577.34,
+        291.87
+      ],
+      "slice_center": [
+        1909,
+        179
+      ],
+      "actual_bout": [
+        2879.172,
+        70.47
+      ],
+      "input_max_each_of2": 231.26500000000004,
+      "output_max_each_of3": 365.56733333333335
+    },
+    {
+      "bit": 294,
+      "actual_face_q_d": [
+        1801.224,
+        315.09
+      ],
+      "slice_center": [
+        1909,
+        179
+      ],
+      "actual_bout": [
+        2880.252,
+        70.2
+      ],
+      "input_max_each_of2": 130.93300000000002,
+      "output_max_each_of3": 366.0173333333333
+    },
+    {
+      "bit": 295,
+      "actual_face_q_d": [
+        1596.888,
+        317.25
+      ],
+      "slice_center": [
+        1909,
+        179
+      ],
+      "actual_bout": [
+        2879.172,
+        70.74
+      ],
+      "input_max_each_of2": 234.18100000000004,
+      "output_max_each_of3": 365.4773333333333
+    },
+    {
+      "bit": 296,
+      "actual_face_q_d": [
+        1595.646,
+        262.17
+      ],
+      "slice_center": [
+        1927,
+        179
+      ],
+      "actual_bout": [
+        2876.958,
+        70.2
+      ],
+      "input_max_each_of2": 216.26200000000003,
+      "output_max_each_of3": 358.9193333333333
+    },
+    {
+      "bit": 297,
+      "actual_face_q_d": [
+        1623.51,
+        349.38
+      ],
+      "slice_center": [
+        1927,
+        179
+      ],
+      "actual_bout": [
+        2880.252,
+        70.74
+      ],
+      "input_max_each_of2": 245.935,
+      "output_max_each_of3": 359.83733333333333
+    },
+    {
+      "bit": 298,
+      "actual_face_q_d": [
+        1581.12,
+        274.59
+      ],
+      "slice_center": [
+        1927,
+        179
+      ],
+      "actual_bout": [
+        2878.2,
+        70.2
+      ],
+      "input_max_each_of2": 229.73500000000004,
+      "output_max_each_of3": 359.33333333333326
+    },
+    {
+      "bit": 299,
+      "actual_face_q_d": [
+        1596.672,
+        285.39
+      ],
+      "slice_center": [
+        1927,
+        179
+      ],
+      "actual_bout": [
+        2880.252,
+        71.01
+      ],
+      "input_max_each_of2": 227.35899999999998,
+      "output_max_each_of3": 359.7473333333333
+    },
+    {
+      "bit": 300,
+      "actual_face_q_d": [
+        1504.494,
+        147.15
+      ],
+      "slice_center": [
+        1927,
+        179
+      ],
+      "actual_bout": [
+        2876.958,
+        71.01
+      ],
+      "input_max_each_of2": 236.17800000000005,
+      "output_max_each_of3": 358.64933333333335
+    },
+    {
+      "bit": 301,
+      "actual_face_q_d": [
+        1679.886,
+        309.15
+      ],
+      "slice_center": [
+        1927,
+        179
+      ],
+      "actual_bout": [
+        2879.172,
+        71.28
+      ],
+      "input_max_each_of2": 197.632,
+      "output_max_each_of3": 359.29733333333337
+    },
+    {
+      "bit": 302,
+      "actual_face_q_d": [
+        1522.098,
+        181.44
+      ],
+      "slice_center": [
+        1927,
+        179
+      ],
+      "actual_bout": [
+        2879.172,
+        71.82
+      ],
+      "input_max_each_of2": 212.67100000000002,
+      "output_max_each_of3": 359.11733333333336
+    },
+    {
+      "bit": 303,
+      "actual_face_q_d": [
+        1588.518,
+        281.61
+      ],
+      "slice_center": [
+        1927,
+        179
+      ],
+      "actual_bout": [
+        2880.252,
+        71.82
+      ],
+      "input_max_each_of2": 229.546,
+      "output_max_each_of3": 359.4773333333333
+    },
+    {
+      "bit": 304,
+      "actual_face_q_d": [
+        1510.056,
+        140.94
+      ],
+      "slice_center": [
+        1945,
+        179
+      ],
+      "actual_bout": [
+        2878.254,
+        72.09
+      ],
+      "input_max_each_of2": 245.50199999999998,
+      "output_max_each_of3": 352.72133333333335
+    },
+    {
+      "bit": 305,
+      "actual_face_q_d": [
+        1802.682,
+        340.74
+      ],
+      "slice_center": [
+        1945,
+        179
+      ],
+      "actual_bout": [
+        2879.496,
+        72.36
+      ],
+      "input_max_each_of2": 161.029,
+      "output_max_each_of3": 353.0453333333334
+    },
+    {
+      "bit": 306,
+      "actual_face_q_d": [
+        1513.944,
+        161.19
+      ],
+      "slice_center": [
+        1945,
+        179
+      ],
+      "actual_bout": [
+        2879.172,
+        72.63
+      ],
+      "input_max_each_of2": 233.43300000000002,
+      "output_max_each_of3": 352.8473333333333
+    },
+    {
+      "bit": 307,
+      "actual_face_q_d": [
+        1598.94,
+        326.7
+      ],
+      "slice_center": [
+        1945,
+        179
+      ],
+      "actual_bout": [
+        2878.902,
+        72.9
+      ],
+      "input_max_each_of2": 255.87999999999997,
+      "output_max_each_of3": 352.6673333333333
+    },
+    {
+      "bit": 308,
+      "actual_face_q_d": [
+        1672.164,
+        358.83
+      ],
+      "slice_center": [
+        1945,
+        179
+      ],
+      "actual_bout": [
+        2879.982,
+        73.71
+      ],
+      "input_max_each_of2": 235.333,
+      "output_max_each_of3": 352.7573333333333
+    },
+    {
+      "bit": 309,
+      "actual_face_q_d": [
+        1610.55,
+        318.06
+      ],
+      "slice_center": [
+        1945,
+        179
+      ],
+      "actual_bout": [
+        2879.604,
+        73.44
+      ],
+      "input_max_each_of2": 245.75500000000002,
+      "output_max_each_of3": 352.72133333333323
+    },
+    {
+      "bit": 310,
+      "actual_face_q_d": [
+        1624.806,
+        350.73
+      ],
+      "slice_center": [
+        1945,
+        179
+      ],
+      "actual_bout": [
+        2880.036,
+        74.25
+      ],
+      "input_max_each_of2": 254.962,
+      "output_max_each_of3": 352.5953333333334
+    },
+    {
+      "bit": 311,
+      "actual_face_q_d": [
+        1578.474,
+        285.93
+      ],
+      "slice_center": [
+        1945,
+        179
+      ],
+      "actual_bout": [
+        2879.55,
+        73.98
+      ],
+      "input_max_each_of2": 245.72800000000004,
+      "output_max_each_of3": 352.52333333333337
+    },
+    {
+      "bit": 312,
+      "actual_face_q_d": [
+        1569.294,
+        265.41
+      ],
+      "slice_center": [
+        1963,
+        179
+      ],
+      "actual_bout": [
+        2876.958,
+        73.44
+      ],
+      "input_max_each_of2": 249.05799999999996,
+      "output_max_each_of3": 345.83933333333334
+    },
+    {
+      "bit": 313,
+      "actual_face_q_d": [
+        1579.986,
+        269.46
+      ],
+      "slice_center": [
+        1963,
+        179
+      ],
+      "actual_bout": [
+        2878.794,
+        75.33
+      ],
+      "input_max_each_of2": 245.73699999999994,
+      "output_max_each_of3": 345.8213333333333
+    },
+    {
+      "bit": 314,
+      "actual_face_q_d": [
+        1633.122,
+        333.99
+      ],
+      "slice_center": [
+        1963,
+        179
+      ],
+      "actual_bout": [
+        2880.252,
+        75.06
+      ],
+      "input_max_each_of2": 251.43399999999997,
+      "output_max_each_of3": 346.39733333333334
+    },
+    {
+      "bit": 315,
+      "actual_face_q_d": [
+        1617.3,
+        343.17
+      ],
+      "slice_center": [
+        1963,
+        179
+      ],
+      "actual_bout": [
+        2879.982,
+        74.79
+      ],
+      "input_max_each_of2": 263.93500000000006,
+      "output_max_each_of3": 346.39733333333334
+    },
+    {
+      "bit": 316,
+      "actual_face_q_d": [
+        1609.254,
+        336.42
+      ],
+      "slice_center": [
+        1963,
+        179
+      ],
+      "actual_bout": [
+        2876.958,
+        74.25
+      ],
+      "input_max_each_of2": 264.5830000000001,
+      "output_max_each_of3": 345.56933333333336
+    },
+    {
+      "bit": 317,
+      "actual_face_q_d": [
+        1627.506,
+        351.27
+      ],
+      "slice_center": [
+        1963,
+        179
+      ],
+      "actual_bout": [
+        2877.822,
+        76.41
+      ],
+      "input_max_each_of2": 262.88199999999995,
+      "output_max_each_of3": 345.1373333333334
+    },
+    {
+      "bit": 318,
+      "actual_face_q_d": [
+        1584.468,
+        282.15
+      ],
+      "slice_center": [
+        1963,
+        179
+      ],
+      "actual_bout": [
+        2876.958,
+        74.79
+      ],
+      "input_max_each_of2": 249.84099999999995,
+      "output_max_each_of3": 345.38933333333335
+    },
+    {
+      "bit": 319,
+      "actual_face_q_d": [
+        1593.108,
+        281.88
+      ],
+      "slice_center": [
+        1963,
+        179
+      ],
+      "actual_bout": [
+        2878.956,
+        75.6
+      ],
+      "input_max_each_of2": 245.38600000000002,
+      "output_max_each_of3": 345.7853333333334
+    },
+    {
+      "bit": 320,
+      "actual_face_q_d": [
+        1569.186,
+        264.33
+      ],
+      "slice_center": [
+        1837,
+        197
+      ],
+      "actual_bout": [
+        2877.714,
+        75.33
+      ],
+      "input_max_each_of2": 176.57200000000003,
+      "output_max_each_of3": 393.46133333333336
+    },
+    {
+      "bit": 321,
+      "actual_face_q_d": [
+        1444.716,
+        95.04
+      ],
+      "slice_center": [
+        1837,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        75.6
+      ],
+      "input_max_each_of2": 256.12200000000007,
+      "output_max_each_of3": 394.21733333333333
+    },
+    {
+      "bit": 322,
+      "actual_face_q_d": [
+        1537.974,
+        180.36
+      ],
+      "slice_center": [
+        1837,
+        197
+      ],
+      "actual_bout": [
+        2879.442,
+        76.14
+      ],
+      "input_max_each_of2": 166.83300000000003,
+      "output_max_each_of3": 393.7673333333333
+    },
+    {
+      "bit": 323,
+      "actual_face_q_d": [
+        1475.928,
+        65.61
+      ],
+      "slice_center": [
+        1837,
+        197
+      ],
+      "actual_bout": [
+        2878.902,
+        76.41
+      ],
+      "input_max_each_of2": 255.23099999999994,
+      "output_max_each_of3": 393.4973333333333
+    },
+    {
+      "bit": 324,
+      "actual_face_q_d": [
+        1565.406,
+        226.26
+      ],
+      "slice_center": [
+        1837,
+        197
+      ],
+      "actual_bout": [
+        2879.172,
+        76.95
+      ],
+      "input_max_each_of2": 159.42700000000002,
+      "output_max_each_of3": 393.4073333333333
+    },
+    {
+      "bit": 325,
+      "actual_face_q_d": [
+        1395.252,
+        174.42
+      ],
+      "slice_center": [
+        1837,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        76.95
+      ],
+      "input_max_each_of2": 241.16400000000004,
+      "output_max_each_of3": 393.7673333333333
+    },
+    {
+      "bit": 326,
+      "actual_face_q_d": [
+        1601.316,
+        291.87
+      ],
+      "slice_center": [
+        1837,
+        197
+      ],
+      "actual_bout": [
+        2878.902,
+        77.49
+      ],
+      "input_max_each_of2": 174.277,
+      "output_max_each_of3": 393.13733333333334
+    },
+    {
+      "bit": 327,
+      "actual_face_q_d": [
+        1583.064,
+        295.92
+      ],
+      "slice_center": [
+        1837,
+        197
+      ],
+      "actual_bout": [
+        2878.902,
+        77.22
+      ],
+      "input_max_each_of2": 185.42799999999997,
+      "output_max_each_of3": 393.2273333333333
+    },
+    {
+      "bit": 328,
+      "actual_face_q_d": [
+        1507.518,
+        149.85
+      ],
+      "slice_center": [
+        1855,
+        197
+      ],
+      "actual_bout": [
+        2879.172,
+        78.03
+      ],
+      "input_max_each_of2": 206.31599999999997,
+      "output_max_each_of3": 387.04733333333337
+    },
+    {
+      "bit": 329,
+      "actual_face_q_d": [
+        1531.224,
+        180.36
+      ],
+      "slice_center": [
+        1855,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        78.03
+      ],
+      "input_max_each_of2": 179.20800000000003,
+      "output_max_each_of3": 387.4073333333333
+    },
+    {
+      "bit": 330,
+      "actual_face_q_d": [
+        1494.234,
+        91.26
+      ],
+      "slice_center": [
+        1855,
+        197
+      ],
+      "actual_bout": [
+        2879.172,
+        78.57
+      ],
+      "input_max_each_of2": 242.25300000000004,
+      "output_max_each_of3": 386.86733333333336
+    },
+    {
+      "bit": 331,
+      "actual_face_q_d": [
+        1516.482,
+        188.73
+      ],
+      "slice_center": [
+        1855,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        78.3
+      ],
+      "input_max_each_of2": 182.394,
+      "output_max_each_of3": 387.31733333333335
+    },
+    {
+      "bit": 332,
+      "actual_face_q_d": [
+        1635.066,
+        339.93
+      ],
+      "slice_center": [
+        1855,
+        197
+      ],
+      "actual_bout": [
+        2877.12,
+        77.76
+      ],
+      "input_max_each_of2": 190.432,
+      "output_max_each_of3": 386.4533333333333
+    },
+    {
+      "bit": 333,
+      "actual_face_q_d": [
+        1597.05,
+        311.31
+      ],
+      "slice_center": [
+        1855,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        78.57
+      ],
+      "input_max_each_of2": 195.13000000000002,
+      "output_max_each_of3": 387.2273333333333
+    },
+    {
+      "bit": 334,
+      "actual_face_q_d": [
+        1544.832,
+        218.16
+      ],
+      "slice_center": [
+        1855,
+        197
+      ],
+      "actual_bout": [
+        2879.28,
+        79.11
+      ],
+      "input_max_each_of2": 174.66399999999993,
+      "output_max_each_of3": 386.7233333333334
+    },
+    {
+      "bit": 335,
+      "actual_face_q_d": [
+        1399.842,
+        233.01
+      ],
+      "slice_center": [
+        1855,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        79.38
+      ],
+      "input_max_each_of2": 254.58399999999995,
+      "output_max_each_of3": 386.9573333333333
+    },
+    {
+      "bit": 336,
+      "actual_face_q_d": [
+        1506.33,
+        153.09
+      ],
+      "slice_center": [
+        1873,
+        197
+      ],
+      "actual_bout": [
+        2876.904,
+        78.03
+      ],
+      "input_max_each_of2": 214.29000000000002,
+      "output_max_each_of3": 380.29133333333334
+    },
+    {
+      "bit": 337,
+      "actual_face_q_d": [
+        1540.188,
+        217.62
+      ],
+      "slice_center": [
+        1873,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        79.92
+      ],
+      "input_max_each_of2": 185.71599999999995,
+      "output_max_each_of3": 380.7773333333333
+    },
+    {
+      "bit": 338,
+      "actual_face_q_d": [
+        1571.4,
+        259.47
+      ],
+      "slice_center": [
+        1873,
+        197
+      ],
+      "actual_bout": [
+        2876.958,
+        78.3
+      ],
+      "input_max_each_of2": 191.03499999999997,
+      "output_max_each_of3": 380.2193333333334
+    },
+    {
+      "bit": 339,
+      "actual_face_q_d": [
+        1569.078,
+        250.56
+      ],
+      "slice_center": [
+        1873,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        79.65
+      ],
+      "input_max_each_of2": 187.741,
+      "output_max_each_of3": 380.8673333333333
+    },
+    {
+      "bit": 340,
+      "actual_face_q_d": [
+        1507.95,
+        163.08
+      ],
+      "slice_center": [
+        1873,
+        197
+      ],
+      "actual_bout": [
+        2876.958,
+        79.11
+      ],
+      "input_max_each_of2": 208.48499999999996,
+      "output_max_each_of3": 379.9493333333334
+    },
+    {
+      "bit": 341,
+      "actual_face_q_d": [
+        1605.258,
+        324.81
+      ],
+      "slice_center": [
+        1873,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        80.19
+      ],
+      "input_max_each_of2": 206.77599999999998,
+      "output_max_each_of3": 380.6873333333333
+    },
+    {
+      "bit": 342,
+      "actual_face_q_d": [
+        1563.624,
+        203.85
+      ],
+      "slice_center": [
+        1873,
+        197
+      ],
+      "actual_bout": [
+        2878.902,
+        80.73
+      ],
+      "input_max_each_of2": 167.113,
+      "output_max_each_of3": 380.05733333333336
+    },
+    {
+      "bit": 343,
+      "actual_face_q_d": [
+        1585.008,
+        277.83
+      ],
+      "slice_center": [
+        1873,
+        197
+      ],
+      "actual_bout": [
+        2879.388,
+        80.46
+      ],
+      "input_max_each_of2": 193.41099999999997,
+      "output_max_each_of3": 380.3093333333333
+    },
+    {
+      "bit": 344,
+      "actual_face_q_d": [
+        1580.526,
+        141.21
+      ],
+      "slice_center": [
+        1891,
+        197
+      ],
+      "actual_bout": [
+        2879.172,
+        81.0
+      ],
+      "input_max_each_of2": 192.13199999999995,
+      "output_max_each_of3": 374.05733333333336
+    },
+    {
+      "bit": 345,
+      "actual_face_q_d": [
+        1417.122,
+        105.03
+      ],
+      "slice_center": [
+        1891,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        81.54
+      ],
+      "input_max_each_of2": 291.924,
+      "output_max_each_of3": 374.2373333333333
+    },
+    {
+      "bit": 346,
+      "actual_face_q_d": [
+        1454.436,
+        92.07
+      ],
+      "slice_center": [
+        1891,
+        197
+      ],
+      "actual_bout": [
+        2878.956,
+        81.27
+      ],
+      "input_max_each_of2": 279.74700000000007,
+      "output_max_each_of3": 373.8953333333334
+    },
+    {
+      "bit": 347,
+      "actual_face_q_d": [
+        1624.59,
+        327.78
+      ],
+      "slice_center": [
+        1891,
+        197
+      ],
+      "actual_bout": [
+        2880.09,
+        82.08
+      ],
+      "input_max_each_of2": 207.59500000000003,
+      "output_max_each_of3": 374.0033333333334
+    },
+    {
+      "bit": 348,
+      "actual_face_q_d": [
+        1408.86,
+        177.93
+      ],
+      "slice_center": [
+        1891,
+        197
+      ],
+      "actual_bout": [
+        2879.172,
+        81.81
+      ],
+      "input_max_each_of2": 259.605,
+      "output_max_each_of3": 373.7873333333334
+    },
+    {
+      "bit": 349,
+      "actual_face_q_d": [
+        1606.662,
+        342.63
+      ],
+      "slice_center": [
+        1891,
+        197
+      ],
+      "actual_bout": [
+        2879.01,
+        82.08
+      ],
+      "input_max_each_of2": 223.98399999999998,
+      "output_max_each_of3": 373.64333333333343
+    },
+    {
+      "bit": 350,
+      "actual_face_q_d": [
+        1646.676,
+        139.32
+      ],
+      "slice_center": [
+        1891,
+        197
+      ],
+      "actual_bout": [
+        2879.01,
+        82.35
+      ],
+      "input_max_each_of2": 160.00200000000004,
+      "output_max_each_of3": 373.55333333333346
+    },
+    {
+      "bit": 351,
+      "actual_face_q_d": [
+        1584.306,
+        253.26
+      ],
+      "slice_center": [
+        1891,
+        197
+      ],
+      "actual_bout": [
+        2879.01,
+        82.62
+      ],
+      "input_max_each_of2": 190.47699999999998,
+      "output_max_each_of3": 373.4633333333334
+    },
+    {
+      "bit": 352,
+      "actual_face_q_d": [
+        1575.882,
+        238.95
+      ],
+      "slice_center": [
+        1909,
+        197
+      ],
+      "actual_bout": [
+        2876.958,
+        82.62
+      ],
+      "input_max_each_of2": 196.53399999999996,
+      "output_max_each_of3": 366.7793333333334
+    },
+    {
+      "bit": 353,
+      "actual_face_q_d": [
+        1626.534,
+        333.18
+      ],
+      "slice_center": [
+        1909,
+        197
+      ],
+      "actual_bout": [
+        2879.01,
+        82.89
+      ],
+      "input_max_each_of2": 218.32299999999995,
+      "output_max_each_of3": 367.3733333333334
+    },
+    {
+      "bit": 354,
+      "actual_face_q_d": [
+        1537.704,
+        167.94
+      ],
+      "slice_center": [
+        1909,
+        197
+      ],
+      "actual_bout": [
+        2878.632,
+        83.16
+      ],
+      "input_max_each_of2": 209.17800000000003,
+      "output_max_each_of3": 367.1573333333333
+    },
+    {
+      "bit": 355,
+      "actual_face_q_d": [
+        1552.122,
+        227.34
+      ],
+      "slice_center": [
+        1909,
+        197
+      ],
+      "actual_bout": [
+        2879.01,
+        83.97
+      ],
+      "input_max_each_of2": 202.60899999999998,
+      "output_max_each_of3": 367.0133333333334
+    },
+    {
+      "bit": 356,
+      "actual_face_q_d": [
+        1424.736,
+        68.85
+      ],
+      "slice_center": [
+        1909,
+        197
+      ],
+      "actual_bout": [
+        2876.958,
+        82.89
+      ],
+      "input_max_each_of2": 315.20699999999994,
+      "output_max_each_of3": 366.6893333333333
+    },
+    {
+      "bit": 357,
+      "actual_face_q_d": [
+        1601.964,
+        272.97
+      ],
+      "slice_center": [
+        1909,
+        197
+      ],
+      "actual_bout": [
+        2879.172,
+        83.7
+      ],
+      "input_max_each_of2": 200.50300000000004,
+      "output_max_each_of3": 367.1573333333333
+    },
+    {
+      "bit": 358,
+      "actual_face_q_d": [
+        1614.978,
+        315.09
+      ],
+      "slice_center": [
+        1909,
+        197
+      ],
+      "actual_bout": [
+        2876.958,
+        83.16
+      ],
+      "input_max_each_of2": 215.05599999999995,
+      "output_max_each_of3": 366.59933333333333
+    },
+    {
+      "bit": 359,
+      "actual_face_q_d": [
+        1581.336,
+        290.79
+      ],
+      "slice_center": [
+        1909,
+        197
+      ],
+      "actual_bout": [
+        2879.01,
+        84.24
+      ],
+      "input_max_each_of2": 219.727,
+      "output_max_each_of3": 366.9233333333334
+    },
+    {
+      "bit": 360,
+      "actual_face_q_d": [
+        1469.664,
+        67.23
+      ],
+      "slice_center": [
+        1927,
+        197
+      ],
+      "actual_bout": [
+        2876.904,
+        83.43
+      ],
+      "input_max_each_of2": 302.553,
+      "output_max_each_of3": 360.49133333333333
+    },
+    {
+      "bit": 361,
+      "actual_face_q_d": [
+        1518.804,
+        114.75
+      ],
+      "slice_center": [
+        1927,
+        197
+      ],
+      "actual_bout": [
+        2880.09,
+        84.24
+      ],
+      "input_max_each_of2": 254.22299999999996,
+      "output_max_each_of3": 361.28333333333336
+    },
+    {
+      "bit": 362,
+      "actual_face_q_d": [
+        1591.488,
+        282.96
+      ],
+      "slice_center": [
+        1927,
+        197
+      ],
+      "actual_bout": [
+        2879.064,
+        84.51
+      ],
+      "input_max_each_of2": 219.73599999999996,
+      "output_max_each_of3": 360.8513333333333
+    },
+    {
+      "bit": 363,
+      "actual_face_q_d": [
+        1405.512,
+        242.46
+      ],
+      "slice_center": [
+        1927,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        84.51
+      ],
+      "input_max_each_of2": 292.47400000000005,
+      "output_max_each_of3": 361.2473333333333
+    },
+    {
+      "bit": 364,
+      "actual_face_q_d": [
+        1635.39,
+        358.29
+      ],
+      "slice_center": [
+        1927,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        85.05
+      ],
+      "input_max_each_of2": 235.44999999999996,
+      "output_max_each_of3": 361.06733333333335
+    },
+    {
+      "bit": 365,
+      "actual_face_q_d": [
+        1615.626,
+        256.23
+      ],
+      "slice_center": [
+        1927,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        85.32
+      ],
+      "input_max_each_of2": 194.30200000000002,
+      "output_max_each_of3": 360.9773333333333
+    },
+    {
+      "bit": 366,
+      "actual_face_q_d": [
+        1505.898,
+        131.22
+      ],
+      "slice_center": [
+        1927,
+        197
+      ],
+      "actual_bout": [
+        2879.874,
+        85.86
+      ],
+      "input_max_each_of2": 252.44100000000003,
+      "output_max_each_of3": 360.6713333333333
+    },
+    {
+      "bit": 367,
+      "actual_face_q_d": [
+        1540.512,
+        210.06
+      ],
+      "slice_center": [
+        1927,
+        197
+      ],
+      "actual_bout": [
+        2879.01,
+        86.4
+      ],
+      "input_max_each_of2": 208.77400000000003,
+      "output_max_each_of3": 360.2033333333334
+    },
+    {
+      "bit": 368,
+      "actual_face_q_d": [
+        1449.684,
+        267.3
+      ],
+      "slice_center": [
+        1945,
+        197
+      ],
+      "actual_bout": [
+        2879.118,
+        86.13
+      ],
+      "input_max_each_of2": 291.808,
+      "output_max_each_of3": 354.3293333333333
+    },
+    {
+      "bit": 369,
+      "actual_face_q_d": [
+        1584.414,
+        249.75
+      ],
+      "slice_center": [
+        1945,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        86.4
+      ],
+      "input_max_each_of2": 215.668,
+      "output_max_each_of3": 354.6173333333333
+    },
+    {
+      "bit": 370,
+      "actual_face_q_d": [
+        1586.088,
+        143.64
+      ],
+      "slice_center": [
+        1945,
+        197
+      ],
+      "actual_bout": [
+        2879.01,
+        86.67
+      ],
+      "input_max_each_of2": 215.13600000000002,
+      "output_max_each_of3": 354.1133333333334
+    },
+    {
+      "bit": 371,
+      "actual_face_q_d": [
+        1466.748,
+        70.47
+      ],
+      "slice_center": [
+        1945,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        86.94
+      ],
+      "input_max_each_of2": 311.39099999999996,
+      "output_max_each_of3": 354.4373333333333
+    },
+    {
+      "bit": 372,
+      "actual_face_q_d": [
+        1538.244,
+        147.42
+      ],
+      "slice_center": [
+        1945,
+        197
+      ],
+      "actual_bout": [
+        2876.958,
+        86.4
+      ],
+      "input_max_each_of2": 237.16800000000006,
+      "output_max_each_of3": 353.51933333333335
+    },
+    {
+      "bit": 373,
+      "actual_face_q_d": [
+        1632.258,
+        186.84
+      ],
+      "slice_center": [
+        1945,
+        197
+      ],
+      "actual_bout": [
+        2879.82,
+        87.48
+      ],
+      "input_max_each_of2": 170.45099999999996,
+      "output_max_each_of3": 354.1133333333334
+    },
+    {
+      "bit": 374,
+      "actual_face_q_d": [
+        1601.1,
+        331.02
+      ],
+      "slice_center": [
+        1945,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        88.02
+      ],
+      "input_max_each_of2": 247.96000000000004,
+      "output_max_each_of3": 354.07733333333334
+    },
+    {
+      "bit": 375,
+      "actual_face_q_d": [
+        1580.58,
+        303.75
+      ],
+      "slice_center": [
+        1945,
+        197
+      ],
+      "actual_bout": [
+        2879.172,
+        88.29
+      ],
+      "input_max_each_of2": 244.58500000000004,
+      "output_max_each_of3": 353.62733333333335
+    },
+    {
+      "bit": 376,
+      "actual_face_q_d": [
+        1594.674,
+        278.64
+      ],
+      "slice_center": [
+        1963,
+        197
+      ],
+      "actual_bout": [
+        2879.01,
+        88.02
+      ],
+      "input_max_each_of2": 233.983,
+      "output_max_each_of3": 347.6633333333334
+    },
+    {
+      "bit": 377,
+      "actual_face_q_d": [
+        1534.626,
+        159.57
+      ],
+      "slice_center": [
+        1963,
+        197
+      ],
+      "actual_bout": [
+        2880.252,
+        88.83
+      ],
+      "input_max_each_of2": 241.90200000000002,
+      "output_max_each_of3": 347.80733333333336
+    },
+    {
+      "bit": 378,
+      "actual_face_q_d": [
+        1580.256,
+        290.79
+      ],
+      "slice_center": [
+        1963,
+        197
+      ],
+      "actual_bout": [
+        2876.85,
+        87.75
+      ],
+      "input_max_each_of2": 247.26699999999997,
+      "output_max_each_of3": 347.0333333333333
+    },
+    {
+      "bit": 379,
+      "actual_face_q_d": [
+        1581.066,
+        291.06
+      ],
+      "slice_center": [
+        1963,
+        197
+      ],
+      "actual_bout": [
+        2879.064,
+        88.83
+      ],
+      "input_max_each_of2": 246.99699999999999,
+      "output_max_each_of3": 347.4113333333333
+    },
+    {
+      "bit": 380,
+      "actual_face_q_d": [
+        1515.078,
+        150.12
+      ],
+      "slice_center": [
+        1963,
+        197
+      ],
+      "actual_bout": [
+        2876.85,
+        88.02
+      ],
+      "input_max_each_of2": 256.401,
+      "output_max_each_of3": 346.9433333333333
+    },
+    {
+      "bit": 381,
+      "actual_face_q_d": [
+        1614.546,
+        334.8
+      ],
+      "slice_center": [
+        1963,
+        197
+      ],
+      "actual_bout": [
+        2880.036,
+        89.37
+      ],
+      "input_max_each_of2": 252.12699999999998,
+      "output_max_each_of3": 347.5553333333334
+    },
+    {
+      "bit": 382,
+      "actual_face_q_d": [
+        1611.036,
+        304.83
+      ],
+      "slice_center": [
+        1963,
+        197
+      ],
+      "actual_bout": [
+        2878.956,
+        89.37
+      ],
+      "input_max_each_of2": 238.89699999999996,
+      "output_max_each_of3": 347.1953333333334
+    },
+    {
+      "bit": 383,
+      "actual_face_q_d": [
+        1422.036,
+        99.36
+      ],
+      "slice_center": [
+        1963,
+        197
+      ],
+      "actual_bout": [
+        2879.172,
+        89.91
+      ],
+      "input_max_each_of2": 328.30199999999996,
+      "output_max_each_of3": 347.0873333333334
+    },
+    {
+      "bit": 384,
+      "actual_face_q_d": [
+        1596.78,
+        332.91
+      ],
+      "slice_center": [
+        1837,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        89.64
+      ],
+      "input_max_each_of2": 188.06500000000003,
+      "output_max_each_of3": 395.1233333333334
+    },
+    {
+      "bit": 385,
+      "actual_face_q_d": [
+        1504.98,
+        61.56
+      ],
+      "slice_center": [
+        1837,
+        215
+      ],
+      "actual_bout": [
+        2879.172,
+        90.45
+      ],
+      "input_max_each_of2": 251.73,
+      "output_max_each_of3": 394.9073333333333
+    },
+    {
+      "bit": 386,
+      "actual_face_q_d": [
+        1578.312,
+        252.99
+      ],
+      "slice_center": [
+        1837,
+        215
+      ],
+      "actual_bout": [
+        2879.496,
+        90.18
+      ],
+      "input_max_each_of2": 157.33900000000006,
+      "output_max_each_of3": 395.10533333333336
+    },
+    {
+      "bit": 387,
+      "actual_face_q_d": [
+        1615.356,
+        350.73
+      ],
+      "slice_center": [
+        1837,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        90.72
+      ],
+      "input_max_each_of2": 187.687,
+      "output_max_each_of3": 394.7633333333334
+    },
+    {
+      "bit": 388,
+      "actual_face_q_d": [
+        1521.504,
+        181.98
+      ],
+      "slice_center": [
+        1837,
+        215
+      ],
+      "actual_bout": [
+        2876.958,
+        89.91
+      ],
+      "input_max_each_of2": 183.25800000000004,
+      "output_max_each_of3": 394.34933333333333
+    },
+    {
+      "bit": 389,
+      "actual_face_q_d": [
+        1569.51,
+        219.51
+      ],
+      "slice_center": [
+        1837,
+        215
+      ],
+      "actual_bout": [
+        2880.09,
+        90.99
+      ],
+      "input_max_each_of2": 145.0,
+      "output_max_each_of3": 395.03333333333336
+    },
+    {
+      "bit": 390,
+      "actual_face_q_d": [
+        1519.884,
+        167.67
+      ],
+      "slice_center": [
+        1837,
+        215
+      ],
+      "actual_bout": [
+        2879.172,
+        91.53
+      ],
+      "input_max_each_of2": 191.223,
+      "output_max_each_of3": 394.54733333333337
+    },
+    {
+      "bit": 391,
+      "actual_face_q_d": [
+        1591.758,
+        288.9
+      ],
+      "slice_center": [
+        1837,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        91.26
+      ],
+      "input_max_each_of2": 168.57099999999997,
+      "output_max_each_of3": 394.5833333333334
+    },
+    {
+      "bit": 392,
+      "actual_face_q_d": [
+        1554.12,
+        216.27
+      ],
+      "slice_center": [
+        1855,
+        215
+      ],
+      "actual_bout": [
+        2877.93,
+        91.26
+      ],
+      "input_max_each_of2": 160.07500000000005,
+      "output_max_each_of3": 388.2233333333333
+    },
+    {
+      "bit": 393,
+      "actual_face_q_d": [
+        1584.414,
+        296.19
+      ],
+      "slice_center": [
+        1855,
+        215
+      ],
+      "actual_bout": [
+        2879.172,
+        92.07
+      ],
+      "input_max_each_of2": 184.888,
+      "output_max_each_of3": 388.36733333333336
+    },
+    {
+      "bit": 394,
+      "actual_face_q_d": [
+        1650.672,
+        340.47
+      ],
+      "slice_center": [
+        1855,
+        215
+      ],
+      "actual_bout": [
+        2879.28,
+        91.8
+      ],
+      "input_max_each_of2": 173.899,
+      "output_max_each_of3": 388.4933333333334
+    },
+    {
+      "bit": 395,
+      "actual_face_q_d": [
+        1447.902,
+        92.07
+      ],
+      "slice_center": [
+        1855,
+        215
+      ],
+      "actual_bout": [
+        2879.172,
+        92.61
+      ],
+      "input_max_each_of2": 274.014,
+      "output_max_each_of3": 388.18733333333336
+    },
+    {
+      "bit": 396,
+      "actual_face_q_d": [
+        1481.544,
+        94.77
+      ],
+      "slice_center": [
+        1855,
+        215
+      ],
+      "actual_bout": [
+        2878.092,
+        91.53
+      ],
+      "input_max_each_of2": 255.84299999999996,
+      "output_max_each_of3": 388.18733333333336
+    },
+    {
+      "bit": 397,
+      "actual_face_q_d": [
+        1688.418,
+        343.98
+      ],
+      "slice_center": [
+        1855,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        92.88
+      ],
+      "input_max_each_of2": 156.78100000000006,
+      "output_max_each_of3": 388.04333333333335
+    },
+    {
+      "bit": 398,
+      "actual_face_q_d": [
+        1788.318,
+        357.21
+      ],
+      "slice_center": [
+        1855,
+        215
+      ],
+      "actual_bout": [
+        2876.904,
+        92.34
+      ],
+      "input_max_each_of2": 113.446,
+      "output_max_each_of3": 387.52133333333336
+    },
+    {
+      "bit": 399,
+      "actual_face_q_d": [
+        1608.012,
+        269.73
+      ],
+      "slice_center": [
+        1855,
+        215
+      ],
+      "actual_bout": [
+        2880.252,
+        92.61
+      ],
+      "input_max_each_of2": 159.85900000000004,
+      "output_max_each_of3": 388.54733333333337
+    },
+    {
+      "bit": 400,
+      "actual_face_q_d": [
+        1589.058,
+        255.42
+      ],
+      "slice_center": [
+        1873,
+        215
+      ],
+      "actual_bout": [
+        2876.958,
+        92.61
+      ],
+      "input_max_each_of2": 171.18099999999998,
+      "output_max_each_of3": 381.4493333333334
+    },
+    {
+      "bit": 401,
+      "actual_face_q_d": [
+        1474.524,
+        93.69
+      ],
+      "slice_center": [
+        1873,
+        215
+      ],
+      "actual_bout": [
+        2880.252,
+        92.88
+      ],
+      "input_max_each_of2": 268.89300000000003,
+      "output_max_each_of3": 382.4573333333333
+    },
+    {
+      "bit": 402,
+      "actual_face_q_d": [
+        1538.73,
+        203.85
+      ],
+      "slice_center": [
+        1873,
+        215
+      ],
+      "actual_bout": [
+        2879.982,
+        93.69
+      ],
+      "input_max_each_of2": 181.70999999999998,
+      "output_max_each_of3": 382.0973333333333
+    },
+    {
+      "bit": 403,
+      "actual_face_q_d": [
+        1564.596,
+        237.33
+      ],
+      "slice_center": [
+        1873,
+        215
+      ],
+      "actual_bout": [
+        2880.252,
+        93.96
+      ],
+      "input_max_each_of2": 174.36700000000002,
+      "output_max_each_of3": 382.0973333333333
+    },
+    {
+      "bit": 404,
+      "actual_face_q_d": [
+        1608.606,
+        316.44
+      ],
+      "slice_center": [
+        1873,
+        215
+      ],
+      "actual_bout": [
+        2879.172,
+        94.23
+      ],
+      "input_max_each_of2": 191.917,
+      "output_max_each_of3": 381.64733333333334
+    },
+    {
+      "bit": 405,
+      "actual_face_q_d": [
+        1480.14,
+        205.2
+      ],
+      "slice_center": [
+        1873,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        93.96
+      ],
+      "input_max_each_of2": 210.32999999999996,
+      "output_max_each_of3": 381.6833333333334
+    },
+    {
+      "bit": 406,
+      "actual_face_q_d": [
+        1633.716,
+        203.85
+      ],
+      "slice_center": [
+        1873,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        94.5
+      ],
+      "input_max_each_of2": 134.21700000000004,
+      "output_max_each_of3": 381.5033333333334
+    },
+    {
+      "bit": 407,
+      "actual_face_q_d": [
+        1471.23,
+        94.23
+      ],
+      "slice_center": [
+        1873,
+        215
+      ],
+      "actual_bout": [
+        2880.252,
+        94.5
+      ],
+      "input_max_each_of2": 270.27,
+      "output_max_each_of3": 381.9173333333333
+    },
+    {
+      "bit": 408,
+      "actual_face_q_d": [
+        1599.912,
+        297.81
+      ],
+      "slice_center": [
+        1891,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        95.04
+      ],
+      "input_max_each_of2": 195.94899999999998,
+      "output_max_each_of3": 375.32333333333344
+    },
+    {
+      "bit": 409,
+      "actual_face_q_d": [
+        1625.346,
+        351.0
+      ],
+      "slice_center": [
+        1891,
+        215
+      ],
+      "actual_bout": [
+        2880.252,
+        95.04
+      ],
+      "input_max_each_of2": 209.827,
+      "output_max_each_of3": 375.7373333333333
+    },
+    {
+      "bit": 410,
+      "actual_face_q_d": [
+        1434.51,
+        84.51
+      ],
+      "slice_center": [
+        1891,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        95.31
+      ],
+      "input_max_each_of2": 302.49,
+      "output_max_each_of3": 375.2333333333334
+    },
+    {
+      "bit": 411,
+      "actual_face_q_d": [
+        1584.198,
+        304.83
+      ],
+      "slice_center": [
+        1891,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        95.58
+      ],
+      "input_max_each_of2": 207.31599999999995,
+      "output_max_each_of3": 375.14333333333343
+    },
+    {
+      "bit": 412,
+      "actual_face_q_d": [
+        1440.342,
+        126.63
+      ],
+      "slice_center": [
+        1891,
+        215
+      ],
+      "actual_bout": [
+        2878.902,
+        96.12
+      ],
+      "input_max_each_of2": 278.51399999999995,
+      "output_max_each_of3": 374.92733333333337
+    },
+    {
+      "bit": 413,
+      "actual_face_q_d": [
+        1460.214,
+        91.26
+      ],
+      "slice_center": [
+        1891,
+        215
+      ],
+      "actual_bout": [
+        2878.902,
+        96.39
+      ],
+      "input_max_each_of2": 286.26300000000003,
+      "output_max_each_of3": 374.83733333333333
+    },
+    {
+      "bit": 414,
+      "actual_face_q_d": [
+        1597.59,
+        136.62
+      ],
+      "slice_center": [
+        1891,
+        215
+      ],
+      "actual_bout": [
+        2876.958,
+        95.58
+      ],
+      "input_max_each_of2": 194.89500000000004,
+      "output_max_each_of3": 374.4593333333334
+    },
+    {
+      "bit": 415,
+      "actual_face_q_d": [
+        1599.912,
+        293.49
+      ],
+      "slice_center": [
+        1891,
+        215
+      ],
+      "actual_bout": [
+        2879.118,
+        96.66
+      ],
+      "input_max_each_of2": 193.789,
+      "output_max_each_of3": 374.8193333333333
+    },
+    {
+      "bit": 416,
+      "actual_face_q_d": [
+        1710.288,
+        229.5
+      ],
+      "slice_center": [
+        1909,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        96.93
+      ],
+      "input_max_each_of2": 115.606,
+      "output_max_each_of3": 368.6933333333334
+    },
+    {
+      "bit": 417,
+      "actual_face_q_d": [
+        1641.654,
+        340.47
+      ],
+      "slice_center": [
+        1909,
+        215
+      ],
+      "actual_bout": [
+        2880.252,
+        96.93
+      ],
+      "input_max_each_of2": 205.40800000000002,
+      "output_max_each_of3": 369.1073333333333
+    },
+    {
+      "bit": 418,
+      "actual_face_q_d": [
+        1471.446,
+        85.59
+      ],
+      "slice_center": [
+        1909,
+        215
+      ],
+      "actual_bout": [
+        2876.958,
+        96.12
+      ],
+      "input_max_each_of2": 292.482,
+      "output_max_each_of3": 368.2793333333334
+    },
+    {
+      "bit": 419,
+      "actual_face_q_d": [
+        1597.428,
+        338.04
+      ],
+      "slice_center": [
+        1909,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        97.2
+      ],
+      "input_max_each_of2": 226.30599999999995,
+      "output_max_each_of3": 368.6033333333334
+    },
+    {
+      "bit": 420,
+      "actual_face_q_d": [
+        1488.888,
+        110.97
+      ],
+      "slice_center": [
+        1909,
+        215
+      ],
+      "actual_bout": [
+        2876.958,
+        96.39
+      ],
+      "input_max_each_of2": 271.071,
+      "output_max_each_of3": 368.1893333333333
+    },
+    {
+      "bit": 421,
+      "actual_face_q_d": [
+        1432.296,
+        133.65
+      ],
+      "slice_center": [
+        1909,
+        215
+      ],
+      "actual_bout": [
+        2879.172,
+        97.47
+      ],
+      "input_max_each_of2": 288.027,
+      "output_max_each_of3": 368.56733333333335
+    },
+    {
+      "bit": 422,
+      "actual_face_q_d": [
+        1553.634,
+        255.42
+      ],
+      "slice_center": [
+        1909,
+        215
+      ],
+      "actual_bout": [
+        2878.902,
+        98.01
+      ],
+      "input_max_each_of2": 206.89299999999997,
+      "output_max_each_of3": 368.29733333333337
+    },
+    {
+      "bit": 423,
+      "actual_face_q_d": [
+        1599.912,
+        312.39
+      ],
+      "slice_center": [
+        1909,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        98.28
+      ],
+      "input_max_each_of2": 212.23899999999998,
+      "output_max_each_of3": 368.2433333333334
+    },
+    {
+      "bit": 424,
+      "actual_face_q_d": [
+        1493.748,
+        126.36
+      ],
+      "slice_center": [
+        1927,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        98.55
+      ],
+      "input_max_each_of2": 269.94599999999997,
+      "output_max_each_of3": 362.1533333333334
+    },
+    {
+      "bit": 425,
+      "actual_face_q_d": [
+        1586.844,
+        292.68
+      ],
+      "slice_center": [
+        1927,
+        215
+      ],
+      "actual_bout": [
+        2879.118,
+        98.82
+      ],
+      "input_max_each_of2": 217.91799999999998,
+      "output_max_each_of3": 362.09933333333333
+    },
+    {
+      "bit": 426,
+      "actual_face_q_d": [
+        1755.27,
+        317.52
+      ],
+      "slice_center": [
+        1927,
+        215
+      ],
+      "actual_bout": [
+        2880.252,
+        99.09
+      ],
+      "input_max_each_of2": 146.125,
+      "output_max_each_of3": 362.38733333333334
+    },
+    {
+      "bit": 427,
+      "actual_face_q_d": [
+        1550.016,
+        202.23
+      ],
+      "slice_center": [
+        1927,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        99.09
+      ],
+      "input_max_each_of2": 203.87699999999995,
+      "output_max_each_of3": 361.9733333333334
+    },
+    {
+      "bit": 428,
+      "actual_face_q_d": [
+        1511.568,
+        151.2
+      ],
+      "slice_center": [
+        1927,
+        215
+      ],
+      "actual_bout": [
+        2876.958,
+        98.55
+      ],
+      "input_max_each_of2": 248.616,
+      "output_max_each_of3": 361.4693333333334
+    },
+    {
+      "bit": 429,
+      "actual_face_q_d": [
+        1589.814,
+        324.27
+      ],
+      "slice_center": [
+        1927,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        99.63
+      ],
+      "input_max_each_of2": 232.22799999999995,
+      "output_max_each_of3": 361.79333333333335
+    },
+    {
+      "bit": 430,
+      "actual_face_q_d": [
+        1581.12,
+        257.85
+      ],
+      "slice_center": [
+        1927,
+        215
+      ],
+      "actual_bout": [
+        2879.172,
+        99.9
+      ],
+      "input_max_each_of2": 203.36500000000007,
+      "output_max_each_of3": 361.7573333333333
+    },
+    {
+      "bit": 431,
+      "actual_face_q_d": [
+        1493.964,
+        71.55
+      ],
+      "slice_center": [
+        1927,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        100.44
+      ],
+      "input_max_each_of2": 297.24300000000005,
+      "output_max_each_of3": 361.52333333333337
+    },
+    {
+      "bit": 432,
+      "actual_face_q_d": [
+        1523.07,
+        192.24
+      ],
+      "slice_center": [
+        1945,
+        215
+      ],
+      "actual_bout": [
+        2876.958,
+        99.36
+      ],
+      "input_max_each_of2": 231.34500000000003,
+      "output_max_each_of3": 355.1993333333334
+    },
+    {
+      "bit": 433,
+      "actual_face_q_d": [
+        1412.91,
+        247.86
+      ],
+      "slice_center": [
+        1945,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        100.17
+      ],
+      "input_max_each_of2": 291.47499999999997,
+      "output_max_each_of3": 355.6133333333334
+    },
+    {
+      "bit": 434,
+      "actual_face_q_d": [
+        1565.082,
+        242.46
+      ],
+      "slice_center": [
+        1945,
+        215
+      ],
+      "actual_bout": [
+        2880.252,
+        100.44
+      ],
+      "input_max_each_of2": 212.68899999999996,
+      "output_max_each_of3": 355.9373333333333
+    },
+    {
+      "bit": 435,
+      "actual_face_q_d": [
+        1586.25,
+        299.43
+      ],
+      "slice_center": [
+        1945,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        100.71
+      ],
+      "input_max_each_of2": 230.59,
+      "output_max_each_of3": 355.4333333333334
+    },
+    {
+      "bit": 436,
+      "actual_face_q_d": [
+        1550.016,
+        215.19
+      ],
+      "slice_center": [
+        1945,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        100.98
+      ],
+      "input_max_each_of2": 206.58699999999996,
+      "output_max_each_of3": 355.3433333333334
+    },
+    {
+      "bit": 437,
+      "actual_face_q_d": [
+        1560.87,
+        247.86
+      ],
+      "slice_center": [
+        1945,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        101.52
+      ],
+      "input_max_each_of2": 217.49500000000006,
+      "output_max_each_of3": 355.1633333333334
+    },
+    {
+      "bit": 438,
+      "actual_face_q_d": [
+        1558.44,
+        238.95
+      ],
+      "slice_center": [
+        1945,
+        215
+      ],
+      "actual_bout": [
+        2876.958,
+        100.44
+      ],
+      "input_max_each_of2": 214.25499999999997,
+      "output_max_each_of3": 354.83933333333334
+    },
+    {
+      "bit": 439,
+      "actual_face_q_d": [
+        1568.754,
+        240.84
+      ],
+      "slice_center": [
+        1945,
+        215
+      ],
+      "actual_bout": [
+        2880.252,
+        101.52
+      ],
+      "input_max_each_of2": 210.04300000000006,
+      "output_max_each_of3": 355.57733333333334
+    },
+    {
+      "bit": 440,
+      "actual_face_q_d": [
+        1444.284,
+        71.01
+      ],
+      "slice_center": [
+        1963,
+        215
+      ],
+      "actual_bout": [
+        2876.958,
+        100.71
+      ],
+      "input_max_each_of2": 340.35299999999995,
+      "output_max_each_of3": 348.74933333333337
+    },
+    {
+      "bit": 441,
+      "actual_face_q_d": [
+        1579.986,
+        269.19
+      ],
+      "slice_center": [
+        1963,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        101.79
+      ],
+      "input_max_each_of2": 227.60199999999995,
+      "output_max_each_of3": 349.07333333333344
+    },
+    {
+      "bit": 442,
+      "actual_face_q_d": [
+        1616.922,
+        320.22
+      ],
+      "slice_center": [
+        1963,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        102.06
+      ],
+      "input_max_each_of2": 234.649,
+      "output_max_each_of3": 348.9833333333334
+    },
+    {
+      "bit": 443,
+      "actual_face_q_d": [
+        1596.834,
+        264.06
+      ],
+      "slice_center": [
+        1963,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        102.33
+      ],
+      "input_max_each_of2": 216.61299999999997,
+      "output_max_each_of3": 348.89333333333343
+    },
+    {
+      "bit": 444,
+      "actual_face_q_d": [
+        1515.672,
+        162.54
+      ],
+      "slice_center": [
+        1963,
+        215
+      ],
+      "actual_bout": [
+        2880.09,
+        102.6
+      ],
+      "input_max_each_of2": 258.894,
+      "output_max_each_of3": 349.1633333333334
+    },
+    {
+      "bit": 445,
+      "actual_face_q_d": [
+        1474.902,
+        91.53
+      ],
+      "slice_center": [
+        1963,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        102.87
+      ],
+      "input_max_each_of2": 314.784,
+      "output_max_each_of3": 348.7133333333334
+    },
+    {
+      "bit": 446,
+      "actual_face_q_d": [
+        1524.69,
+        162.81
+      ],
+      "slice_center": [
+        1963,
+        215
+      ],
+      "actual_bout": [
+        2879.01,
+        103.14
+      ],
+      "input_max_each_of2": 254.24999999999997,
+      "output_max_each_of3": 348.6233333333334
+    },
+    {
+      "bit": 447,
+      "actual_face_q_d": [
+        1599.102,
+        308.07
+      ],
+      "slice_center": [
+        1963,
+        215
+      ],
+      "actual_bout": [
+        2878.902,
+        103.41
+      ],
+      "input_max_each_of2": 237.48399999999995,
+      "output_max_each_of3": 348.4973333333333
+    },
+    {
+      "bit": 448,
+      "actual_face_q_d": [
+        1531.224,
+        186.57
+      ],
+      "slice_center": [
+        1837,
+        233
+      ],
+      "actual_bout": [
+        2876.958,
+        102.87
+      ],
+      "input_max_each_of2": 185.10300000000004,
+      "output_max_each_of3": 396.0293333333334
+    },
+    {
+      "bit": 449,
+      "actual_face_q_d": [
+        1608.444,
+        322.11
+      ],
+      "slice_center": [
+        1837,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        103.95
+      ],
+      "input_max_each_of2": 167.83300000000003,
+      "output_max_each_of3": 396.3533333333334
+    },
+    {
+      "bit": 450,
+      "actual_face_q_d": [
+        1500.39,
+        111.24
+      ],
+      "slice_center": [
+        1837,
+        233
+      ],
+      "actual_bout": [
+        2880.252,
+        103.95
+      ],
+      "input_max_each_of2": 238.18499999999995,
+      "output_max_each_of3": 396.7673333333333
+    },
+    {
+      "bit": 451,
+      "actual_face_q_d": [
+        1609.308,
+        302.94
+      ],
+      "slice_center": [
+        1837,
+        233
+      ],
+      "actual_bout": [
+        2879.55,
+        104.22
+      ],
+      "input_max_each_of2": 157.816,
+      "output_max_each_of3": 396.4433333333334
+    },
+    {
+      "bit": 452,
+      "actual_face_q_d": [
+        1483.38,
+        132.57
+      ],
+      "slice_center": [
+        1837,
+        233
+      ],
+      "actual_bout": [
+        2880.252,
+        105.03
+      ],
+      "input_max_each_of2": 236.02499999999995,
+      "output_max_each_of3": 396.4073333333333
+    },
+    {
+      "bit": 453,
+      "actual_face_q_d": [
+        1494.666,
+        53.19
+      ],
+      "slice_center": [
+        1837,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        104.76
+      ],
+      "input_max_each_of2": 270.072,
+      "output_max_each_of3": 396.0833333333334
+    },
+    {
+      "bit": 454,
+      "actual_face_q_d": [
+        1564.434,
+        240.3
+      ],
+      "slice_center": [
+        1837,
+        233
+      ],
+      "actual_bout": [
+        2876.958,
+        104.22
+      ],
+      "input_max_each_of2": 148.93300000000002,
+      "output_max_each_of3": 395.57933333333335
+    },
+    {
+      "bit": 455,
+      "actual_face_q_d": [
+        1598.994,
+        274.05
+      ],
+      "slice_center": [
+        1837,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        105.3
+      ],
+      "input_max_each_of2": 148.52800000000005,
+      "output_max_each_of3": 395.9033333333334
+    },
+    {
+      "bit": 456,
+      "actual_face_q_d": [
+        1478.196,
+        71.28
+      ],
+      "slice_center": [
+        1855,
+        233
+      ],
+      "actual_bout": [
+        2880.09,
+        105.57
+      ],
+      "input_max_each_of2": 278.26200000000006,
+      "output_max_each_of3": 390.1733333333334
+    },
+    {
+      "bit": 457,
+      "actual_face_q_d": [
+        1604.502,
+        305.1
+      ],
+      "slice_center": [
+        1855,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        105.57
+      ],
+      "input_max_each_of2": 170.29900000000004,
+      "output_max_each_of3": 389.81333333333345
+    },
+    {
+      "bit": 458,
+      "actual_face_q_d": [
+        1589.112,
+        280.53
+      ],
+      "slice_center": [
+        1855,
+        233
+      ],
+      "actual_bout": [
+        2876.958,
+        105.03
+      ],
+      "input_max_each_of2": 165.70899999999995,
+      "output_max_each_of3": 389.30933333333337
+    },
+    {
+      "bit": 459,
+      "actual_face_q_d": [
+        1564.38,
+        271.08
+      ],
+      "slice_center": [
+        1855,
+        233
+      ],
+      "actual_bout": [
+        2879.28,
+        106.38
+      ],
+      "input_max_each_of2": 173.34999999999994,
+      "output_max_each_of3": 389.6333333333334
+    },
+    {
+      "bit": 460,
+      "actual_face_q_d": [
+        1606.23,
+        320.22
+      ],
+      "slice_center": [
+        1855,
+        233
+      ],
+      "actual_bout": [
+        2878.902,
+        106.11
+      ],
+      "input_max_each_of2": 176.995,
+      "output_max_each_of3": 389.5973333333334
+    },
+    {
+      "bit": 461,
+      "actual_face_q_d": [
+        1811.268,
+        297.0
+      ],
+      "slice_center": [
+        1855,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        106.65
+      ],
+      "input_max_each_of2": 62.865999999999985,
+      "output_max_each_of3": 389.4533333333334
+    },
+    {
+      "bit": 462,
+      "actual_face_q_d": [
+        1510.542,
+        152.55
+      ],
+      "slice_center": [
+        1855,
+        233
+      ],
+      "actual_bout": [
+        2880.252,
+        106.65
+      ],
+      "input_max_each_of2": 221.45400000000004,
+      "output_max_each_of3": 389.8673333333333
+    },
+    {
+      "bit": 463,
+      "actual_face_q_d": [
+        1501.686,
+        70.47
+      ],
+      "slice_center": [
+        1855,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        106.92
+      ],
+      "input_max_each_of2": 266.922,
+      "output_max_each_of3": 389.3633333333334
+    },
+    {
+      "bit": 464,
+      "actual_face_q_d": [
+        1620.702,
+        347.22
+      ],
+      "slice_center": [
+        1873,
+        233
+      ],
+      "actual_bout": [
+        2876.958,
+        106.38
+      ],
+      "input_max_each_of2": 192.25900000000001,
+      "output_max_each_of3": 382.8593333333333
+    },
+    {
+      "bit": 465,
+      "actual_face_q_d": [
+        1542.564,
+        201.96
+      ],
+      "slice_center": [
+        1873,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        107.19
+      ],
+      "input_max_each_of2": 189.73799999999994,
+      "output_max_each_of3": 383.27333333333337
+    },
+    {
+      "bit": 466,
+      "actual_face_q_d": [
+        1499.31,
+        67.5
+      ],
+      "slice_center": [
+        1873,
+        233
+      ],
+      "actual_bout": [
+        2880.252,
+        107.46
+      ],
+      "input_max_each_of2": 278.595,
+      "output_max_each_of3": 383.5973333333333
+    },
+    {
+      "bit": 467,
+      "actual_face_q_d": [
+        1599.912,
+        310.23
+      ],
+      "slice_center": [
+        1873,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        108.0
+      ],
+      "input_max_each_of2": 184.159,
+      "output_max_each_of3": 383.0033333333334
+    },
+    {
+      "bit": 468,
+      "actual_face_q_d": [
+        1572.102,
+        217.35
+      ],
+      "slice_center": [
+        1873,
+        233
+      ],
+      "actual_bout": [
+        2876.958,
+        107.46
+      ],
+      "input_max_each_of2": 167.27399999999994,
+      "output_max_each_of3": 382.49933333333337
+    },
+    {
+      "bit": 469,
+      "actual_face_q_d": [
+        1636.416,
+        361.8
+      ],
+      "slice_center": [
+        1873,
+        233
+      ],
+      "actual_bout": [
+        2880.252,
+        108.0
+      ],
+      "input_max_each_of2": 191.69200000000004,
+      "output_max_each_of3": 383.4173333333333
+    },
+    {
+      "bit": 470,
+      "actual_face_q_d": [
+        1776.33,
+        302.13
+      ],
+      "slice_center": [
+        1873,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        108.27
+      ],
+      "input_max_each_of2": 91.90000000000003,
+      "output_max_each_of3": 382.9133333333334
+    },
+    {
+      "bit": 471,
+      "actual_face_q_d": [
+        1565.352,
+        247.86
+      ],
+      "slice_center": [
+        1873,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        108.54
+      ],
+      "input_max_each_of2": 170.25399999999996,
+      "output_max_each_of3": 382.82333333333344
+    },
+    {
+      "bit": 472,
+      "actual_face_q_d": [
+        1518.48,
+        180.63
+      ],
+      "slice_center": [
+        1891,
+        233
+      ],
+      "actual_bout": [
+        2876.958,
+        108.0
+      ],
+      "input_max_each_of2": 221.445,
+      "output_max_each_of3": 376.31933333333336
+    },
+    {
+      "bit": 473,
+      "actual_face_q_d": [
+        1557.522,
+        229.23
+      ],
+      "slice_center": [
+        1891,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        108.81
+      ],
+      "input_max_each_of2": 177.62400000000002,
+      "output_max_each_of3": 376.7333333333334
+    },
+    {
+      "bit": 474,
+      "actual_face_q_d": [
+        1758.24,
+        329.94
+      ],
+      "slice_center": [
+        1891,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        109.08
+      ],
+      "input_max_each_of2": 123.85,
+      "output_max_each_of3": 376.64333333333343
+    },
+    {
+      "bit": 475,
+      "actual_face_q_d": [
+        1417.932,
+        74.25
+      ],
+      "slice_center": [
+        1891,
+        233
+      ],
+      "actual_bout": [
+        2880.252,
+        109.62
+      ],
+      "input_max_each_of2": 324.909,
+      "output_max_each_of3": 376.87733333333335
+    },
+    {
+      "bit": 476,
+      "actual_face_q_d": [
+        1574.964,
+        265.14
+      ],
+      "slice_center": [
+        1891,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        109.62
+      ],
+      "input_max_each_of2": 183.08800000000002,
+      "output_max_each_of3": 376.4633333333334
+    },
+    {
+      "bit": 477,
+      "actual_face_q_d": [
+        1590.732,
+        277.29
+      ],
+      "slice_center": [
+        1891,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        109.89
+      ],
+      "input_max_each_of2": 181.27900000000002,
+      "output_max_each_of3": 376.3733333333334
+    },
+    {
+      "bit": 478,
+      "actual_face_q_d": [
+        1540.674,
+        163.35
+      ],
+      "slice_center": [
+        1891,
+        233
+      ],
+      "actual_bout": [
+        2876.958,
+        109.08
+      ],
+      "input_max_each_of2": 218.988,
+      "output_max_each_of3": 375.9593333333334
+    },
+    {
+      "bit": 479,
+      "actual_face_q_d": [
+        1638.846,
+        354.24
+      ],
+      "slice_center": [
+        1891,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        110.43
+      ],
+      "input_max_each_of2": 195.697,
+      "output_max_each_of3": 376.1933333333334
+    },
+    {
+      "bit": 480,
+      "actual_face_q_d": [
+        1525.5,
+        147.69
+      ],
+      "slice_center": [
+        1909,
+        233
+      ],
+      "actual_bout": [
+        2876.958,
+        109.35
+      ],
+      "input_max_each_of2": 243.405,
+      "output_max_each_of3": 369.8693333333334
+    },
+    {
+      "bit": 481,
+      "actual_face_q_d": [
+        1602.342,
+        276.75
+      ],
+      "slice_center": [
+        1909,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        110.7
+      ],
+      "input_max_each_of2": 184.20399999999995,
+      "output_max_each_of3": 370.1033333333334
+    },
+    {
+      "bit": 482,
+      "actual_face_q_d": [
+        1626.534,
+        242.19
+      ],
+      "slice_center": [
+        1909,
+        233
+      ],
+      "actual_bout": [
+        2880.09,
+        110.7
+      ],
+      "input_max_each_of2": 154.82799999999995,
+      "output_max_each_of3": 370.46333333333337
+    },
+    {
+      "bit": 483,
+      "actual_face_q_d": [
+        1617.624,
+        281.88
+      ],
+      "slice_center": [
+        1909,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        110.97
+      ],
+      "input_max_each_of2": 179.128,
+      "output_max_each_of3": 370.0133333333334
+    },
+    {
+      "bit": 484,
+      "actual_face_q_d": [
+        1546.236,
+        201.15
+      ],
+      "slice_center": [
+        1909,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        111.78
+      ],
+      "input_max_each_of2": 206.30699999999996,
+      "output_max_each_of3": 369.7433333333334
+    },
+    {
+      "bit": 485,
+      "actual_face_q_d": [
+        1438.182,
+        99.36
+      ],
+      "slice_center": [
+        1909,
+        233
+      ],
+      "actual_bout": [
+        2879.172,
+        111.51
+      ],
+      "input_max_each_of2": 311.229,
+      "output_max_each_of3": 369.88733333333334
+    },
+    {
+      "bit": 486,
+      "actual_face_q_d": [
+        1565.244,
+        213.84
+      ],
+      "slice_center": [
+        1909,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        112.05
+      ],
+      "input_max_each_of2": 190.45800000000003,
+      "output_max_each_of3": 369.6533333333334
+    },
+    {
+      "bit": 487,
+      "actual_face_q_d": [
+        1511.568,
+        136.62
+      ],
+      "slice_center": [
+        1909,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        112.59
+      ],
+      "input_max_each_of2": 255.906,
+      "output_max_each_of3": 369.4733333333334
+    },
+    {
+      "bit": 488,
+      "actual_face_q_d": [
+        1606.824,
+        291.33
+      ],
+      "slice_center": [
+        1927,
+        233
+      ],
+      "actual_bout": [
+        2876.958,
+        111.51
+      ],
+      "input_max_each_of2": 198.25299999999996,
+      "output_max_each_of3": 363.14933333333335
+    },
+    {
+      "bit": 489,
+      "actual_face_q_d": [
+        1804.896,
+        315.09
+      ],
+      "slice_center": [
+        1927,
+        233
+      ],
+      "actual_bout": [
+        2879.118,
+        112.32
+      ],
+      "input_max_each_of2": 111.09700000000001,
+      "output_max_each_of3": 363.59933333333333
+    },
+    {
+      "bit": 490,
+      "actual_face_q_d": [
+        1573.884,
+        264.06
+      ],
+      "slice_center": [
+        1927,
+        233
+      ],
+      "actual_bout": [
+        2880.252,
+        112.59
+      ],
+      "input_max_each_of2": 201.088,
+      "output_max_each_of3": 363.88733333333334
+    },
+    {
+      "bit": 491,
+      "actual_face_q_d": [
+        1474.254,
+        51.03
+      ],
+      "slice_center": [
+        1927,
+        233
+      ],
+      "actual_bout": [
+        2879.01,
+        113.4
+      ],
+      "input_max_each_of2": 326.35800000000006,
+      "output_max_each_of3": 363.2033333333334
+    },
+    {
+      "bit": 492,
+      "actual_face_q_d": [
+        1706.832,
+        331.56
+      ],
+      "slice_center": [
+        1927,
+        233
+      ],
+      "actual_bout": [
+        2879.064,
+        113.13
+      ],
+      "input_max_each_of2": 168.36399999999995,
+      "output_max_each_of3": 363.31133333333327
+    },
+    {
+      "bit": 493,
+      "actual_face_q_d": [
+        1496.988,
+        73.44
+      ],
+      "slice_center": [
+        1927,
+        233
+      ],
+      "actual_bout": [
+        2880.252,
+        113.4
+      ],
+      "input_max_each_of2": 303.78599999999994,
+      "output_max_each_of3": 363.6173333333333
+    },
+    {
+      "bit": 494,
+      "actual_face_q_d": [
+        1514.268,
+        138.51
+      ],
+      "slice_center": [
+        1927,
+        233
+      ],
+      "actual_bout": [
+        2876.958,
+        112.86
+      ],
+      "input_max_each_of2": 262.611,
+      "output_max_each_of3": 362.6993333333334
+    },
+    {
+      "bit": 495,
+      "actual_face_q_d": [
+        1500.876,
+        131.22
+      ],
+      "slice_center": [
+        1927,
+        233
+      ],
+      "actual_bout": [
+        2879.172,
+        113.67
+      ],
+      "input_max_each_of2": 272.952,
+      "output_max_each_of3": 363.1673333333333
+    },
+    {
+      "bit": 496,
+      "actual_face_q_d": [
+        1537.65,
+        190.62
+      ],
+      "slice_center": [
+        1945,
+        233
+      ],
+      "actual_bout": [
+        2879.226,
+        113.94
+      ],
+      "input_max_each_of2": 233.86499999999995,
+      "output_max_each_of3": 357.0953333333334
+    },
+    {
+      "bit": 497,
+      "actual_face_q_d": [
+        1577.772,
+        252.45
+      ],
+      "slice_center": [
+        1945,
+        233
+      ],
+      "actual_bout": [
+        2879.172,
+        114.21
+      ],
+      "input_max_each_of2": 202.33900000000003,
+      "output_max_each_of3": 356.9873333333333
+    },
+    {
+      "bit": 498,
+      "actual_face_q_d": [
+        1602.072,
+        275.67
+      ],
+      "slice_center": [
+        1945,
+        233
+      ],
+      "actual_bout": [
+        2876.958,
+        113.67
+      ],
+      "input_max_each_of2": 201.79900000000006,
+      "output_max_each_of3": 356.4293333333333
+    },
+    {
+      "bit": 499,
+      "actual_face_q_d": [
+        1491.048,
+        157.41
+      ],
+      "slice_center": [
+        1945,
+        233
+      ],
+      "actual_bout": [
+        2879.172,
+        114.48
+      ],
+      "input_max_each_of2": 273.771,
+      "output_max_each_of3": 356.89733333333334
+    },
+    {
+      "bit": 500,
+      "actual_face_q_d": [
+        1558.71,
+        193.32
+      ],
+      "slice_center": [
+        1945,
+        233
+      ],
+      "actual_bout": [
+        2879.172,
+        114.75
+      ],
+      "input_max_each_of2": 221.98499999999999,
+      "output_max_each_of3": 356.80733333333336
+    },
+    {
+      "bit": 501,
+      "actual_face_q_d": [
+        1656.774,
+        336.42
+      ],
+      "slice_center": [
+        1945,
+        233
+      ],
+      "actual_bout": [
+        2879.766,
+        115.02
+      ],
+      "input_max_each_of2": 204.82300000000006,
+      "output_max_each_of3": 356.91533333333336
+    },
+    {
+      "bit": 502,
+      "actual_face_q_d": [
+        1626.318,
+        346.95
+      ],
+      "slice_center": [
+        1945,
+        233
+      ],
+      "actual_bout": [
+        2879.172,
+        115.29
+      ],
+      "input_max_each_of2": 225.316,
+      "output_max_each_of3": 356.62733333333335
+    },
+    {
+      "bit": 503,
+      "actual_face_q_d": [
+        1489.212,
+        51.84
+      ],
+      "slice_center": [
+        1945,
+        233
+      ],
+      "actual_bout": [
+        2879.604,
+        115.56
+      ],
+      "input_max_each_of2": 327.474,
+      "output_max_each_of3": 356.68133333333327
+    },
+    {
+      "bit": 504,
+      "actual_face_q_d": [
+        1516.212,
+        161.46
+      ],
+      "slice_center": [
+        1963,
+        233
+      ],
+      "actual_bout": [
+        2876.958,
+        115.02
+      ],
+      "input_max_each_of2": 268.164,
+      "output_max_each_of3": 349.9793333333334
+    },
+    {
+      "bit": 505,
+      "actual_face_q_d": [
+        1584.36,
+        285.66
+      ],
+      "slice_center": [
+        1963,
+        233
+      ],
+      "actual_bout": [
+        2879.172,
+        116.1
+      ],
+      "input_max_each_of2": 224.65000000000006,
+      "output_max_each_of3": 350.3573333333334
+    },
+    {
+      "bit": 506,
+      "actual_face_q_d": [
+        1791.936,
+        299.16
+      ],
+      "slice_center": [
+        1963,
+        233
+      ],
+      "actual_bout": [
+        2878.524,
+        116.37
+      ],
+      "input_max_each_of2": 127.61200000000005,
+      "output_max_each_of3": 350.05133333333333
+    },
+    {
+      "bit": 507,
+      "actual_face_q_d": [
+        1611.9,
+        254.88
+      ],
+      "slice_center": [
+        1963,
+        233
+      ],
+      "actual_bout": [
+        2879.496,
+        116.91
+      ],
+      "input_max_each_of2": 195.48999999999995,
+      "output_max_each_of3": 350.19533333333334
+    },
+    {
+      "bit": 508,
+      "actual_face_q_d": [
+        1476.306,
+        58.59
+      ],
+      "slice_center": [
+        1963,
+        233
+      ],
+      "actual_bout": [
+        2876.958,
+        115.83
+      ],
+      "input_max_each_of2": 339.55199999999996,
+      "output_max_each_of3": 349.7093333333334
+    },
+    {
+      "bit": 509,
+      "actual_face_q_d": [
+        1883.142,
+        270.54
+      ],
+      "slice_center": [
+        1963,
+        233
+      ],
+      "actual_bout": [
+        2879.118,
+        117.99
+      ],
+      "input_max_each_of2": 67.69899999999998,
+      "output_max_each_of3": 349.7093333333333
+    },
+    {
+      "bit": 510,
+      "actual_face_q_d": [
+        1629.828,
+        351.54
+      ],
+      "slice_center": [
+        1963,
+        233
+      ],
+      "actual_bout": [
+        2879.064,
+        117.72
+      ],
+      "input_max_each_of2": 234.85600000000002,
+      "output_max_each_of3": 349.7813333333333
+    },
+    {
+      "bit": 511,
+      "actual_face_q_d": [
+        1494.558,
+        95.31
+      ],
+      "slice_center": [
+        1963,
+        233
+      ],
+      "actual_bout": [
+        2879.442,
+        117.45
+      ],
+      "input_max_each_of2": 312.06600000000003,
+      "output_max_each_of3": 349.9973333333333
+    }
+  ],
+  "old_rectangular_output_444um": "FAIL:405um registered-hop limit,450um is electrical-repeater interval only",
+  "cycles_vs_H": {
+    "memory_commit_w": 0,
+    "publication_w": 1,
+    "read_pipeline_r": 2
+  },
+  "generic_preservation": {
+    "FF_bits": 7208,
+    "rsel_copies": 64,
+    "rsel_bits": 512,
+    "we_copies": 64,
+    "we_bits": 512,
+    "note": "generic proc/memory_map/opt only; no ASAP cell-area mapping/P&R"
+  },
+  "reset_bridge_PLANNING_ONLY": {
+    "own_625_separate_not_adopted": true,
+    "candidate_final_sync_copy_um": [
+      1800,
+      250
+    ],
+    "actual_reader_first_sync_um": [
+      1638.36,
+      361.53
+    ],
+    "actual_writer_first_sync_um": [
+      1647.54,
+      366.12
+    ],
+    "D_L1_reader_um": 273.17,
+    "D_L1_writer_um": 268.58,
+    "Q_to_core_rectangle_L1_max_um": 324,
+    "warning": "additional source/COL phase proof and fanout/C/recovery/resetclockcohort budget required; coords alone do not release held reset proposal"
+  }
+}
