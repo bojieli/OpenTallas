@@ -263,3 +263,71 @@ def test_freeze_repo_rev_unknown_commit_still_refused(env):
     assert resign.kit_build_commit(env['kit'], env['repo']) is None
     assert resign.main(args(env)) != 0
     assert not (Path(env['d']) / 'PROVENANCE.json').exists()
+
+
+# ---------------------------------------------------------------- KW-FIX-32 11-07: short repo_rev with a tag manifest
+def _build_commit_after_tag(env):
+    """a second commit (the kit's build commit) that is not the tag commit"""
+    repo = Path(env['repo'])
+    (repo / 'rtl.sv').write_text('module m; endmodule\n')
+    g(repo, '-c', 'user.name=t', '-c', 'user.email=t@t', 'add', 'rtl.sv')
+    g(repo, '-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-qm', 'build')
+    return g(repo, 'rev-parse', 'HEAD')
+
+
+def _short_rev_kit(env, rev):
+    kit = Path(env['kit'])
+    (kit / 'PROVENANCE.json').unlink()
+    (kit / 'freeze.json').write_text(json.dumps({'schema': 'partition_freeze', 'repo_rev': rev}))
+
+
+def _manifest_with(env, tmp_path, **extra):
+    m = json.loads(Path(_manifest(env, tmp_path)).read_text())
+    m.update(extra)
+    p = tmp_path / 'tag_manifest_x.json'
+    p.write_text(json.dumps(m))
+    return str(p)
+
+
+def test_manifest_expands_short_repo_rev_through_named_checkout(env, tmp_path):
+    bc = _build_commit_after_tag(env)
+    _short_rev_kit(env, bc[:11])
+    m = _manifest_with(env, tmp_path, repo=env['repo'])
+    assert resign.kit_build_commit(env['kit'], m) == bc
+    _auto_ready(env)
+    r = resign.build_record(env['d'], env['kit'], TAG, repo=m, tools=env['tools'], auto=True)
+    assert r['build_commit'] == bc and r['src_commit'] == env['commit']
+
+
+def test_manifest_short_rev_of_the_tag_commit_expands(env, tmp_path):
+    _short_rev_kit(env, env['commit'][:11])
+    m = _manifest(env, tmp_path)                       # no checkout named: the manifest's own commit is the match
+    assert resign.kit_build_commit(env['kit'], m) == env['commit']
+
+
+def test_manifest_unknown_short_rev_still_refused(env, tmp_path):
+    bc = _build_commit_after_tag(env)
+    _short_rev_kit(env, bc[:11])
+    assert resign.kit_build_commit(env['kit'], _manifest(env, tmp_path)) is None   # no checkout holds it
+    _short_rev_kit_again = Path(env['kit'], 'freeze.json')
+    _short_rev_kit_again.write_text(json.dumps({'repo_rev': 'deadbeef123'}))
+    m = _manifest_with(env, tmp_path, repo=env['repo'])
+    assert resign.kit_build_commit(env['kit'], m) is None
+    _auto_ready(env)
+    with pytest.raises(resign.ResignError):
+        resign.build_record(env['d'], env['kit'], TAG, repo=m, tools=env['tools'], auto=True)
+
+
+def test_manifest_ambiguous_short_rev_refused(env, tmp_path, monkeypatch):
+    other = tmp_path / 'other_checkout'
+    other.mkdir()
+    _short_rev_kit(env, 'abcdef12345')
+    m = _manifest_with(env, tmp_path, repo=env['repo'], source_repo=str(other))
+    monkeypatch.setattr(resign, 'full_commit', lambda r, v: ('abcdef12345' + ('1' if r == env['repo'] else '2') * 29))
+    assert resign.kit_build_commit(env['kit'], m) is None             # two checkouts disagree: fail closed
+
+
+def test_manifest_full_sha_passes_unchanged(env, tmp_path):
+    full = 'f' * 40
+    _short_rev_kit(env, full)
+    assert resign.kit_build_commit(env['kit'], _manifest(env, tmp_path)) == full
