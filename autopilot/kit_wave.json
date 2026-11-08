@@ -5161,8 +5161,8 @@
       },
       "plan": "/srv/opentallas-scratch3/claude/kw23/prep_l48ui/source_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
-      "src_sha": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_95df6h",
+      "src_sha": "95df6810481ecec08c774fcced6c223c8d408131",
       "kit_rtl": {
         "mode": "script",
         "script": "/srv/opentallas-scratch2/claude/kw23/src_e9eda/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
@@ -5295,7 +5295,10 @@
         "hd_lep0N@9",
         "hd_mesh@1",
         "hd_spn_wshim_tx@9",
-        "hd_st_n4@6"
+        "hd_st_n4@6",
+        "hd_host@11",
+        "hd_lep0N@14",
+        "hd_serdes@12"
       ],
       "pilot_max": 2,
       "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -5403,7 +5406,10 @@
         "hd_lep0N@9": "KW-FIX-26 23:5x one batch: new src 0290971a0fd (ROOT-MERGE-46 train: leafrep+leafopt, subtree_balance/ft_spread, type-safe-3, pose_spread, macrogap, FLOW-CLASS-25); failed on an older src",
         "hd_mesh@1": "KW-FIX-26 23:5x one batch: new src 0290971a0fd (ROOT-MERGE-46 train: leafrep+leafopt, subtree_balance/ft_spread, type-safe-3, pose_spread, macrogap, FLOW-CLASS-25); failed on an older src",
         "hd_spn_wshim_tx@9": "KW-FIX-26 23:5x one batch: new src 0290971a0fd (ROOT-MERGE-46 train: leafrep+leafopt, subtree_balance/ft_spread, type-safe-3, pose_spread, macrogap, FLOW-CLASS-25); failed on an older src",
-        "hd_st_n4@6": "KW-FIX-26 23:5x one batch: new src 0290971a0fd (ROOT-MERGE-46 train: leafrep+leafopt, subtree_balance/ft_spread, type-safe-3, pose_spread, macrogap, FLOW-CLASS-25); failed on an older src"
+        "hd_st_n4@6": "KW-FIX-26 23:5x one batch: new src 0290971a0fd (ROOT-MERGE-46 train: leafrep+leafopt, subtree_balance/ft_spread, type-safe-3, pose_spread, macrogap, FLOW-CLASS-25); failed on an older src",
+        "hd_host@11": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE",
+        "hd_lep0N@14": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE",
+        "hd_serdes@12": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE"
       },
       "gen_hosts": [
         "intel1",
@@ -5413,7 +5419,7 @@
       ],
       "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
       "cancel_superseded": false,
-      "queue_src": "main@d95ec5a45a60",
+      "queue_src": "claude/die-head-87-classfix-1108@95df6810481",
       "item_env": {
         "hd_ctl": {
           "OT_IO_HOLD": "sender_min"
@@ -5838,7 +5844,18 @@
       "pilot_gate_prev_kw35d": null,
       "pilot_gate": false,
       "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d",
-      "note_kw35t": "KW-FIX-35-T 2026-11-08 07:05 PST: s81_head src keys REVERTED to the pre-kw35t values (kw33/src_d95ec, ds-head): KW-FIX-35-H owns them, its claude/die-head-87-classfix-1108@95df6810481 is not an ancestor of c303af / the wave integration 804f9e020b2"
+      "note_kw35t": "KW-FIX-35-T 2026-11-08 07:05 PST: s81_head src keys REVERTED to the pre-kw35t values (kw33/src_d95ec, ds-head): KW-FIX-35-H owns them, its claude/die-head-87-classfix-1108@95df6810481 is not an ancestor of c303af / the wave integration 804f9e020b2",
+      "src_prev_kw35h": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
+      "src_sha_prev_kw35h": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
+      "queue_src_prev_kw35h": "main@d95ec5a45a60",
+      "restage_waiters_prev_kw35h": null,
+      "restage_waiters": false,
+      "retry_prev_kw35h_added": [
+        "hd_host@11",
+        "hd_lep0N@14",
+        "hd_serdes@12"
+      ],
+      "note_kw35h": "KW-FIX-35-H 2026-11-08 07:12 PST: s81_head src -> kw35/src_95df6h = claude/die-head-87-classfix-1108@95df6810481 (= kw33/src_d95ec hardlinks + 68 files, sha256-checked on intel1/epyc4/epyc5/epyc6); restage_waiters false (restage stopped 3 HEAD rows 30 times 11-06/07 and relaunched from mkdir, discarding done kit_rtl/gen/place); hd_host/hd_lep0N/hd_serdes fresh. Revert *_prev_kw35h"
     },
     "qwen_compute": {
       "enabled": true,
