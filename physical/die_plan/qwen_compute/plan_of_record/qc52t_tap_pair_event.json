@@ -1,0 +1,272 @@
+{
+ "schema": "opentallas.qc_por_event.v1",
+ "event": "QC tap-pair affinity on the HOLD-STRUCTURAL + hc/stm SETUP-AT-GRT types (COORD 11-07, QC-TYPES-6 ASK 21:42 READY BY INTENT)",
+ "base_plan": "plan_qc52n.json",
+ "base_plan_sha256": "f1b679394e1ad4d5695794d3dae330d3bd17858c6030eb8067a709b465acae15",
+ "plan_output": "plan_qc52t.json",
+ "plan_output_sha256": "f28b87812c9e4439a47a0df7f22eb18e206a30ebd046404bdc133574a3e9972d",
+ "change": "partition_types.<type>.clock.tap_pair_affinity = {} (defaults)",
+ "flow": "tools/die_plan/tap_pair_affinity.tcl + tap_pair_plan.tcl (TAP-PAIR v3 e756f627c0)",
+ "types_hold_structural": [
+  "cbf_q00_s2",
+  "cbn_q00__cld7bf7197",
+  "cbn_q00__cldbcda913",
+  "coll_ft__cl78c7b300",
+  "coll_ft__cla4a25d77",
+  "coll_s",
+  "sle_hc1__cl22c1ff36",
+  "sle_hc1__cl7d360508",
+  "sle_su_c",
+  "sle_su_l1__clc6d66f5b",
+  "slw_st_a_v2__cl9f076a5c",
+  "slw_su_c__cl92142dac"
+ ],
+ "types_setup_hc_stm": [
+  "sle_hc0__cl929603c0__cl38badc56",
+  "sle_hc1__cl7d360508",
+  "sle_hc2__cl9c4c4509__cl3edce1b8",
+  "sle_hc2__cl9c4c4509__clf60c5152",
+  "sle_hc2__clcc5e3e61",
+  "sle_stm_v1__clbe630b9c",
+  "slw_hc0__cl1bc59e1c",
+  "slw_hc1__cl3449ea95",
+  "slw_hc1__cl68f9248e__cl144ee7b3",
+  "slw_hc1__cl68f9248e__cle683a076",
+  "slw_hc2__cla3497502__cl16607c7a",
+  "slw_hc2__cla3497502__cldc737267",
+  "slw_stm_v1__cle34a73c3",
+  "slw_stm_v2__cl1ca9c415"
+ ],
+ "types": [
+  "cbf_q00_s2",
+  "cbn_q00__cld7bf7197",
+  "cbn_q00__cldbcda913",
+  "coll_ft__cl78c7b300",
+  "coll_ft__cla4a25d77",
+  "coll_s",
+  "sle_hc0__cl929603c0__cl38badc56",
+  "sle_hc1__cl22c1ff36",
+  "sle_hc1__cl7d360508",
+  "sle_hc2__cl9c4c4509__cl3edce1b8",
+  "sle_hc2__cl9c4c4509__clf60c5152",
+  "sle_hc2__clcc5e3e61",
+  "sle_stm_v1__clbe630b9c",
+  "sle_su_c",
+  "sle_su_l1__clc6d66f5b",
+  "slw_hc0__cl1bc59e1c",
+  "slw_hc1__cl3449ea95",
+  "slw_hc1__cl68f9248e__cl144ee7b3",
+  "slw_hc1__cl68f9248e__cle683a076",
+  "slw_hc2__cla3497502__cl16607c7a",
+  "slw_hc2__cla3497502__cldc737267",
+  "slw_st_a_v2__cl9f076a5c",
+  "slw_stm_v1__cle34a73c3",
+  "slw_stm_v2__cl1ca9c415",
+  "slw_su_c__cl92142dac"
+ ],
+ "exports": {
+  "cbf_q00_s2": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "cbn_q00__cld7bf7197": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "cbn_q00__cldbcda913": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "coll_ft__cl78c7b300": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "coll_ft__cla4a25d77": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "coll_s": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "sle_hc0__cl929603c0__cl38badc56": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "sle_hc1__cl22c1ff36": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "sle_hc1__cl7d360508": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "sle_hc2__cl9c4c4509__cl3edce1b8": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "sle_hc2__cl9c4c4509__clf60c5152": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "sle_hc2__clcc5e3e61": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "sle_stm_v1__clbe630b9c": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "sle_su_c": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "sle_su_l1__clc6d66f5b": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "slw_hc0__cl1bc59e1c": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "slw_hc1__cl3449ea95": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "slw_hc1__cl68f9248e__cl144ee7b3": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "slw_hc1__cl68f9248e__cle683a076": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "slw_hc2__cla3497502__cl16607c7a": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "slw_hc2__cla3497502__cldc737267": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "slw_st_a_v2__cl9f076a5c": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "slw_stm_v1__cle34a73c3": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "slw_stm_v2__cl1ca9c415": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ],
+  "slw_su_c__cl92142dac": [
+   "export OT_TAP_PAIR_AFFINITY = 1",
+   "export OT_TAP_PAIR_RADIUS_UM = 200",
+   "export OT_TAP_PAIR_GROUP = 64",
+   "export OT_TAP_PAIR_MERGE = 128",
+   "export OT_TAP_PAIR_UM = 60",
+   "export OT_TAP_PAIR_DEPTH = 2"
+  ]
+ },
+ "data_cycles": 0,
+ "pin_cycles": 0,
+ "preservation": "every other partition type and every top-level key byte-identical (checked by apply())"
+}
