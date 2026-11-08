@@ -2454,7 +2454,21 @@
         "dsdv_slice_c3x_C__t1": "KW-FIX-35-S 2026-11-08 05:09 PST: XRT3 view fix run off-wave as a GRT resume (intel2 unit kw35-xrtR2-c3x-C--t1, epyc2 scratch3/claude/kw35/xrt); no fresh wave kit",
         "dsdv_slice_c1x_C__t5": "KW-FIX-35-S 2026-11-08 05:09 PST: XRT1 view fix run off-wave as a GRT resume (intel2 unit kw35-xrtR2-c1x-C--t5, epyc2 scratch3/claude/kw35/xrt); no fresh wave kit",
         "dsdv_slice_c1x_C__t9": "KW-FIX-35-S 2026-11-08 05:09 PST: XRT1 view fix run off-wave as a GRT resume (intel2 unit kw35-xrtR-c1x-C--t9, epyc5 scratch3/claude/kw35/xrt); no fresh wave kit",
-        "dsdv_slice_c1x_C__t3": "KW-FIX-35-S 2026-11-08 05:09 PST: CLASS F CTS DPL-0033: KW-FIX-35-F resumes it at CTS off-wave; no fresh wave kit"
+        "dsdv_slice_c1x_C__t3": "KW-FIX-35-S 2026-11-08 05:09 PST: CLASS F CTS DPL-0033: KW-FIX-35-F resumes it at CTS off-wave; no fresh wave kit",
+        "slice_station__t14": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
+        "slice_station__t29__clc7772371": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
+        "slice_station__t44": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
+        "bk_sel__t2": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
+        "col_h10_r0_p1__t1__cl574cc59d": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
+        "col_h10_r2__t1__cl99efd374": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
+        "col_h9_r0_p3__t1__cl0cd90c0e": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
+        "col_h9_r0_p4__t1__clcb2fbfe8": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
+        "dsdv_slice_c1x_C__t6": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
+        "dsdv_slice_c1x_C__t7": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
+        "slice_station__t24__cleece78ec": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
+        "ot_s81sl_leaf__t4": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
+        "ot_s81sl_leaf__t50": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
+        "ot_s81sl_leaf__t67": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries"
       },
       "queue_src": "claude/kw-fix-35-s81src-1108@cf2697d7d0b",
       "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave",
@@ -4297,7 +4311,24 @@
       "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 05:20 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/s81.json on intel2, plan ba6292b0c502) FIRST in prov_view_sources for 1 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v",
       "retry_prev_kw35s2_added": [
         "col_h10_r2__t1__cl99efd374@16"
-      ]
+      ],
+      "hold_items_kw35s3_added": [
+        "slice_station__t14",
+        "slice_station__t29__clc7772371",
+        "slice_station__t44",
+        "bk_sel__t2",
+        "col_h10_r0_p1__t1__cl574cc59d",
+        "col_h10_r2__t1__cl99efd374",
+        "col_h9_r0_p3__t1__cl0cd90c0e",
+        "col_h9_r0_p4__t1__clcb2fbfe8",
+        "dsdv_slice_c1x_C__t6",
+        "dsdv_slice_c1x_C__t7",
+        "slice_station__t24__cleece78ec",
+        "ot_s81sl_leaf__t4",
+        "ot_s81sl_leaf__t50",
+        "ot_s81sl_leaf__t67"
+      ],
+      "note_kw35s3": "KW-FIX-35-S 05:4x: hold class A/H/I rows until S81 src = main 0b72abe93ac + rspacket f51e05a4f9e (+reset-scope) is built (cf269 lacks packet builder); revert = remove hold_items_kw35s3_added"
     },
     "s81_head": {
       "enabled": true,
