@@ -7297,6 +7297,14 @@ def reset_contract_gate(kit, top, environ=None):
         if top not in c.get("modules", []):
             return refuse(f"reset contract does not list {top}")
         if not rcpt.is_file() or hashlib.sha256(rcpt.read_bytes()).hexdigest() != pr.get("receipt_sha256"):
+            # KW-FIX-35-RC 11-08: the kit carries a contract that LISTS this top but lost (or changed) its receipt, e.g.
+            # a kit copy that took reset_contract.json and not reset_contract/receipt.txt (S81 bksel vJ/vK: 30 m_ra
+            # false differences at 4 edges).  That is a broken kit, not a design verdict: check() stops as a FLOW
+            # ERROR instead of proving at the 4-edge default.  Repair: kit_reset_contract.py repair KIT.
+            rep["flow_error"] = (f"FLOW reset contract receipt {'sha256 mismatch' if rcpt.is_file() else 'missing'}: "
+                                 f"{path} lists {top} ({int(c['edges'])} edges) but {pr['receipt']} "
+                                 f"{'differs' if rcpt.is_file() else 'is not'} beside it; refusing the 4-edge fallback "
+                                 f"(stage the receipt: tools/die_plan/kit_reset_contract.py repair KIT)")
             return refuse("reset contract receipt missing or sha256 mismatch")
         proven = min(int(c["edges"]), int(pr["assert_edges"]))
     except (OSError, ValueError, KeyError, TypeError) as e:
@@ -7320,6 +7328,9 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         env = parse_config(kit)
         top = env["DESIGN_NAME"]
         rec["reset_contract"] = reset_contract_gate(kit, top)
+        if rec["reset_contract"].get("flow_error"):
+            print("LEC FLOW ERROR: " + rec["reset_contract"]["flow_error"], file=sys.stderr)
+            raise LecError(rec["reset_contract"]["flow_error"])
         netlist = netlist or find_netlist(kit)
         gate_fe = env.get("SYNTH_HDL_FRONTEND", "") or "verilog"
         gold_fe = gold_frontend or ("verilog" if gate_fe == "slang" else "slang")
