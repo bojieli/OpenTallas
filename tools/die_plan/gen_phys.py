@@ -4111,6 +4111,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # the logged default list plus the flag.
            *(["export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -apply_ndr none"]
              if os.environ.get("OT_CTS_NO_NDR") == "1" else []),
+           # Opt-in for new forms: suppress redundant ORFS summaries before CTS only.
+           # Explicit synthesis/geometry/hold checks and stages 4+ reports are unchanged.
+           *(["export OT_SKIP_PRECTS_METRICS = 1"]
+             if os.environ.get("OT_SKIP_PRECTS_METRICS") == "1" else []),
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
            *_rtl_lint_dead_output_vars(),

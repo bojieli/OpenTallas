@@ -23,6 +23,24 @@ case " $* " in *" print-"*) exec "$@";; esac
 # 'estimate_parasitics -global_routing' (long-branch pass on GRT RC).  Opt-outs live in the Tcl (OT_CLK_LEAF_REPEAT=0,
 # OT_CLK_LEAF_GRT=0 from config.mk); without the kit file nothing is patched.
 SD=$(dirname "$S")
+# Optional pre-CTS summaries only.  Independent cell/geometry/hold/signoff gates and stages 4+ remain intact.
+# Enabled in a new kit's config, never by changing a running job or the ORFS image on the host.
+if [ -f "$SD/report_metrics.tcl" ] && grep -Eq '^export OT_SKIP_PRECTS_METRICS[[:space:]]*=[[:space:]]*1[[:space:]]*$' "$W/config.mk" 2>/dev/null; then
+  python3 - "$SD/report_metrics.tcl" <<'OT_PRECTS_PY'
+from pathlib import Path
+import sys
+p = Path(sys.argv[1])
+s = p.read_text()
+marker = '# OT_PRECTS_METRICS: summaries only, explicit gates unchanged'
+if marker not in s:
+    anchor = 'proc report_metrics { stage when { include_erc true } { include_clock_skew true } } {\n'
+    if s.count(anchor) != 1:
+        raise SystemExit('OT_PRECTS_METRICS: unsupported report_metrics signature; no patch applied')
+    guard = '  # OT_PRECTS_METRICS: summaries only, explicit gates unchanged\n  if { [info exists ::env(OT_SKIP_PRECTS_METRICS)] && $::env(OT_SKIP_PRECTS_METRICS) eq "1" && $stage in {2 3} } {\n    puts "OT_PRECTS_METRICS_SKIPPED stage=$stage when=$when"\n    return\n  }\n'
+    p.write_text(s.replace(anchor, anchor + guard))
+OT_PRECTS_PY
+  [ "$?" = 0 ] || exit 2
+fi
 if [ -f "$W/clk_leaf_repeat_default.tcl" ]; then
   CH="set ::ot_clr_default 1; source /work/clk_leaf_repeat_default.tcl; unset -nocomplain ::ot_clr_default ;# OT_CLK_LEAF_REPEAT default"
   if [ -f "$SD/cts.tcl" ] && ! grep -qF "OT_CLK_LEAF_REPEAT default" "$SD/cts.tcl"; then
