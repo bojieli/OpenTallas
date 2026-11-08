@@ -1,0 +1,7 @@
+SC core-only corridor reform 2026-11-08 11:3x PST.
+
+Corrects withdrawn private vK: existing pdn.tcl defines CORE VDD below150, VDDPHY region over fullwidth y150..1226.88, with hardblock. Rowextent alone does not permitcoreplacement there. vK own exactcontainer1173219 stopped beforeGPL/CTS; source/evidence preserved. No existing healthy job stopped.
+
+New core-two-bank source:1450existingFF, no RTL/SDC/clock/macro/PINcycle changes. Sixteen6.48umcolumns (8perbank), sc_q/sp0 interleaved2.16umrowpitch with1.08offset, sp1below; maxFFupperedge142.83 using actualfailedDBmaxDFFwidth1.188,height0.27. S_q remainswestnearBMconsumers. Hardreservation x1482.84..1504.44,y64.80..146.88,21.6umwide; insideCOREVDD. No northrowassumption or extra supplydomain. Actual7macros+4.32halo:0newFFfootprintconflicts;0non-SYNplannedfixedsites in corridor. Minimumcmemrightedgeclearance4.644um. All sourcecandidatecoordinates remain below150; tool rejects oldnorthwardstyles.
+
+ActualvJfailedDBrender+zoom and proposedcorecandidate viewed. SMELLS: originalcmemedge/gapcombclump; newexplicitsp0anchors and centralreservation forcecombdistributionaroundratherthanthroughgap. No capacityguarantee: originalgap~30%averagecellfill hidlocalcongestion; reserved21.6x82.08um costs1772.9um2 placementarea andGPLmayexposeotherclumps. Placefirst; inspectactualcongestion/corridor/PG beforeCTS. Parent/currentSCclocks+childadoption holdsremain. DO_NOT_COUNT/HOLD_ROUTE. ExistingLEC identityreused only because netlist/RTL unchanged.

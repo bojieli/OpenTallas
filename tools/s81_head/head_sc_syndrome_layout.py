@@ -18,25 +18,21 @@ MARKER = '# CODEX_SC_SYNDROME_BEGIN'
 
 
 def sites(style: str) -> dict[str, tuple[float, float]]:
-    if style not in ('pitch65', 'two-bank'):
-        raise ValueError(style)
+    if style != 'core-two-bank':
+        raise ValueError('old northward variants cross VDDPHY y>=150; use core-two-bank')
     out = {}
     for family, count in COUNTS.items():
         for bit in range(count):
             if family == 'S_q':
-                # Consumers are BM0/1/2 to the WEST. Preserve vJ's clock lane
-                # x1240..1269; do not move S_q east to the syndrome producer.
                 x, y = 1269 + (bit % 7) * 6.48, 8.64 + (bit // 7) * 1.08
-            elif style == 'pitch65':
-                x = 1438.56 + (bit % 18) * 6.48
-                origin = {'sp1': 8.64, 'sc_q': 69.12, 'sp0': 70.74}[family]
-                y = origin + (bit // 18) * 3.24
             else:
-                col, row = bit % 12, bit // 12
-                x = (1438.56 if col < 6 else 1514.16) + (col % 6) * 6.48
-                origin = {'sp1': 8.64, 'sc_q': 95.04, 'sp0': 96.66}[family]
-                y = origin + row * 3.24
+                col, row = bit % 16, bit // 16
+                x = (1435.32 if col < 8 else 1504.44) + (col % 8) * 6.48
+                origin = {'sp1': 8.64, 'sc_q': 69.12, 'sp0': 70.20}[family]
+                y = origin + row * 2.16
             out[f'{PREFIX}{family}[{bit}]'] = (round(x, 6), round(y, 6))
+    if max(y for x,y in out.values()) + 1.08 >= 150:
+        raise ValueError('core standard cells must remain below VDDPHY domain y=150')
     return out
 
 
@@ -58,11 +54,11 @@ def rewrite(source: str, style: str) -> tuple[str, dict]:
              '# Source proof and timing are separate; no RTL or SDC change.']
     for name, (x, y) in target.items():
         lines.append(f'dict set hf1_sites {{{name}}} {{{x:.6f} {y:.6f}}}')
-    if style == 'two-bank':
+    if style == 'core-two-bank':
         # Keep combinational logic out too; an FF-only gap is not a channel.
         lines += [
             'set cs_blk [ord::get_db_block]; set cs_u [[ord::get_db_tech] getDbUnitsPerMicron]',
-            'set cs_box {1472.04 90.72 1514.16 245.16}',
+            'set cs_box {1482.84 64.80 1504.44 146.88}',
             'set cs_v [lmap z $cs_box {expr {int(round($z*$cs_u))}}]',
             'lassign $cs_v cs_x0 cs_y0 cs_x1 cs_y1; set cs_have 0',
             'foreach cs_b [$cs_blk getBlockages] { set cs_r [$cs_b getBBox]; if {[list [$cs_r xMin] [$cs_r yMin] [$cs_r xMax] [$cs_r yMax]] eq $cs_v} {set cs_have 1} }',
@@ -71,7 +67,7 @@ def rewrite(source: str, style: str) -> tuple[str, dict]:
         ]
     lines.append('# CODEX_SC_SYNDROME_END')
     output = source.replace(ANCHOR, '\n'.join(lines) + '\n' + ANCHOR, 1)
-    if style == 'two-bank':
+    if style == 'core-two-bank':
         guard_anchor = 'puts "OT_HF1_SITES placed $hf1_n flops FIRM"'
         if output.count(guard_anchor) != 1:
             raise ValueError('missing unique post-site guard anchor')
@@ -97,10 +93,12 @@ foreach cs_i [$cs_blk getInsts] {
         'bounds_um': bounds, 'pin_cycles': 0, 'rtl_changed': False,
         'sdc_changed': False, 'macros_changed': False,
         'die_outline_um': [2885.76, 1226.88],
+        'core_vdd_y_limit_um': 150.0,
+        'phy_power_domain_avoided': True,
         'measured_rows_y_um': [4.32, 1222.56],
         'macro_gap_x_um': [1430.676, 1560.006],
-        'central_corridor_um': 42.12 if style == 'two-bank' else None,
-        'reserved_placement_blockage_um': [1472.04, 90.72, 1514.16, 245.16] if style == 'two-bank' else None,
+        'central_corridor_um': 21.60 if style == 'core-two-bank' else None,
+        'reserved_placement_blockage_um': [1482.84, 64.80, 1504.44, 146.88] if style == 'core-two-bank' else None,
         'held': ['READ_CURRENT_GRT', 'PLACE_REVIEW', 'CLOCK_HOLD', 'CHILD_ADOPTION', 'DO_NOT_COUNT', 'HOLD_ROUTE'],
         'note': 'Candidate geometry only. All 300 S_q bits broadcast to all three western BM children; their existing long consumer reach is not qualified by this change.'}
     return output, receipt
@@ -109,7 +107,7 @@ foreach cs_i [$cs_blk getInsts] {
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--face-flops', type=Path, required=True)
-    ap.add_argument('--style', choices=('pitch65','two-bank'), required=True)
+    ap.add_argument('--style', choices=('core-two-bank',), required=True)
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--receipt', type=Path, required=True)
     a = ap.parse_args()
