@@ -29,3 +29,6 @@ except ValueError:
     print('CAUGHT same-depth reservation imported from a different programme')
 else:
     raise AssertionError('wrong programme accepted')
+
+assert VF.state_bits()==14023
+print('PASS vF logical stage storage 14023 bits (no clock/reset/placement overhead claim)')

@@ -63,6 +63,19 @@ class Stages:
             result.append(row)
         return result
 
+    def state_bits(self):
+        """Logical stage FF bits; excludes reset delivery and cell/clock overhead.
+
+        Native LEP H=552, TX_NS=(H+8)//8=70, TX_NA=18. Each
+        TXI stage holds W=553 plus NG+1=19 valid/group-control bits.
+        """
+        lanes = range(4)
+        return (1150*self.pin + 1137*self.pout + 11*self.plw
+                + (514+512)*self.col0
+                + 555*sum(self.lane('ktx',i) for i in lanes)
+                + 559*sum(self.lane('krx',i) for i in lanes)
+                + 572*sum(self.lane('txi',i) for i in lanes))
+
     def params(self):
         return dict(CH_B="4'b1111", PAIR=1, KTX=f"16'h{self.ktx:04x}",
                     KRX=f"16'h{self.krx:04x}", TXI=f"16'h{self.txi:04x}",
