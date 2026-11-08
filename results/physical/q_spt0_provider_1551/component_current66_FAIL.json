@@ -1,0 +1,288 @@
+{
+  "schema": "opentallas.bind_component.v1",
+  "scope": "LOCAL_COMPONENT",
+  "verdict": "FAIL",
+  "source_preparation_only": true,
+  "global_bind": {
+    "status": "FAIL",
+    "n_errors": 1,
+    "errors": [
+      "EMIT wavefront core reset q_hub_nw/u_hb_coll_Q_body_core__q0__ctl.rst_n: expected one bound leaf, found 0 (partition NW_hub root ; e.g. )"
+    ]
+  },
+  "reference_plan": "/srv/opentallas-scratch2/claude/hbm-bind-9/m79fp/die_plan.json",
+  "context_plan": "/srv/opentallas-scratch2/claude/hbm-bind-9/m79fp/die_plan.json",
+  "prepared_plan": "/srv/opentallas-scratch2/claude/codex-hbm-types-1551/q_spt0_native/current66.json",
+  "bind_out": "/srv/opentallas-scratch2/claude/hbm-bind-9/g_t11m79f",
+  "type": "q_spt0",
+  "instance": "NW_spt0",
+  "asbuilt": "/srv/opentallas-scratch2/claude/hbm-bind-6/tip2/physical/die_plan/hbm/bind/d44v/asbuilt_t11.json",
+  "asbuilt_sha256": "861dd95dea2d514bcb27ac0a79c9f5907620540f757ca7399853b87a1eeed4b5",
+  "source": {
+    "path": "/srv/opentallas-scratch2/claude/hbm-bind-9/g_t11m79f/rtl/hbm_arch_q_spt0.sv",
+    "module": "hbm_arch_q_spt0",
+    "sha256": "5140a6e4cb3cd26e39de05779d0c0fc003d2155cf1094241b256a9e6fff31911"
+  },
+  "ports": {
+    "clk": {
+      "direction": "input",
+      "width": 1
+    },
+    "arst_n": {
+      "direction": "input",
+      "width": 1
+    },
+    "rst_o_0": {
+      "direction": "output",
+      "width": 1
+    },
+    "L50_i": {
+      "direction": "input",
+      "width": 619
+    },
+    "L84_i": {
+      "direction": "input",
+      "width": 29
+    },
+    "L1274_o": {
+      "direction": "output",
+      "width": 10
+    },
+    "L41_o": {
+      "direction": "output",
+      "width": 1065
+    },
+    "L77_o": {
+      "direction": "output",
+      "width": 174
+    },
+    "L78_o": {
+      "direction": "output",
+      "width": 174
+    },
+    "L88_o": {
+      "direction": "output",
+      "width": 69
+    },
+    "L114wx4_i": {
+      "direction": "input",
+      "width": 11
+    },
+    "L114wx4_o": {
+      "direction": "output",
+      "width": 11
+    },
+    "L1271x8_i": {
+      "direction": "input",
+      "width": 513
+    },
+    "L1271x8_o": {
+      "direction": "output",
+      "width": 513
+    },
+    "L1276x1_i": {
+      "direction": "input",
+      "width": 312
+    },
+    "L1276x1_o": {
+      "direction": "output",
+      "width": 312
+    },
+    "L21x4_i": {
+      "direction": "input",
+      "width": 2561
+    },
+    "L21x4_o": {
+      "direction": "output",
+      "width": 2561
+    },
+    "L63wx2_i": {
+      "direction": "input",
+      "width": 211
+    },
+    "L63wx2_o": {
+      "direction": "output",
+      "width": 211
+    },
+    "L66x2_i": {
+      "direction": "input",
+      "width": 269
+    },
+    "L66x2_o": {
+      "direction": "output",
+      "width": 269
+    },
+    "L79x2_i": {
+      "direction": "input",
+      "width": 155
+    },
+    "L79x2_o": {
+      "direction": "output",
+      "width": 155
+    },
+    "L82x3_i": {
+      "direction": "input",
+      "width": 141
+    },
+    "L82x3_o": {
+      "direction": "output",
+      "width": 141
+    },
+    "L8x2_i": {
+      "direction": "input",
+      "width": 3071
+    },
+    "L8x2_o": {
+      "direction": "output",
+      "width": 3071
+    }
+  },
+  "default_parameters": {
+    "S_u_cp_svg_Q0_tgt": {
+      "width": 8,
+      "literal": "8'b01010000",
+      "value": 80
+    },
+    "S_u_cp_svg_Q1_tgt": {
+      "width": 8,
+      "literal": "8'b01010001",
+      "value": 81
+    },
+    "S_u_xc_Q0_tgt": {
+      "width": 8,
+      "literal": "8'b11010000",
+      "value": 208
+    },
+    "S_u_xc_Q1_tgt": {
+      "width": 8,
+      "literal": "8'b11010001",
+      "value": 209
+    }
+  },
+  "parameter_binding": "UNIQUE_NATIVE_INSTANCE_DEFAULTS",
+  "native_contract": {
+    "type": "c4583d985090b3c84c9cb676f1922c7fab387ec884c1c5c3d53f4ddd71733a8e",
+    "metadata": {
+      "schema": "opentallas.native_topology.v2",
+      "clock_table_sha256": null,
+      "reset": "fef01d007917da1a81ca28f3a89491e2cb71047f74e185432b2470235b44018e",
+      "transport": "16cec1f47dd52bc1415586cfd3c4524f43ad21f28a2179ecf92b50ab0f6c1e90"
+    }
+  },
+  "prepared_contract": "37c345703365e1b244d1fa8e9eaaafe4351d06d0eb74f708c1b28e8137f421f5",
+  "reset": {
+    "entry": "relayed",
+    "depth": 8,
+    "release_after_pin": 9,
+    "tap_depths": {
+      "rst_n_t0": 9,
+      "rst_n_t1": 9,
+      "rst_n_t10": 9,
+      "rst_n_t11": 9,
+      "rst_n_t12": 9,
+      "rst_n_t13": 9,
+      "rst_n_t14": 9,
+      "rst_n_t15": 9,
+      "rst_n_t16": 9,
+      "rst_n_t17": 9,
+      "rst_n_t18": 9,
+      "rst_n_t19": 9,
+      "rst_n_t2": 9,
+      "rst_n_t20": 9,
+      "rst_n_t21": 9,
+      "rst_n_t22": 9,
+      "rst_n_t3": 9,
+      "rst_n_t4": 9,
+      "rst_n_t5": 9,
+      "rst_n_t6": 9,
+      "rst_n_t7": 9,
+      "rst_n_t8": 9,
+      "rst_n_t9": 9
+    },
+    "relay_edges": 95,
+    "outputs": {
+      "rst_o_0": 9
+    },
+    "consumers": [
+      {
+        "inst": "u_u_xc_Q0",
+        "pin": "rst_n",
+        "reset": "rst_n_t21",
+        "reference_internal_depth": 1
+      },
+      {
+        "inst": "u_u_xc_Q1",
+        "pin": "rst_n",
+        "reset": "rst_n_t22",
+        "reference_internal_depth": 1
+      }
+    ]
+  },
+  "ft_stages": [
+    {
+      "name": "L8x2",
+      "width": 3070,
+      "stages": 9
+    },
+    {
+      "name": "L21x4",
+      "width": 2560,
+      "stages": 9
+    },
+    {
+      "name": "L66x2",
+      "width": 268,
+      "stages": 7
+    },
+    {
+      "name": "L79x2",
+      "width": 172,
+      "stages": 8
+    },
+    {
+      "name": "L82x3",
+      "width": 140,
+      "stages": 5
+    },
+    {
+      "name": "L63wx2",
+      "width": 210,
+      "stages": 9
+    },
+    {
+      "name": "L114wx4",
+      "width": 10,
+      "stages": 9
+    },
+    {
+      "name": "L1271x8",
+      "width": 512,
+      "stages": 8
+    },
+    {
+      "name": "L1276x1",
+      "width": 311,
+      "stages": 1
+    }
+  ],
+  "narrow_buses": [],
+  "producer_context": {
+    "commit": null,
+    "dirty": null,
+    "source": "none",
+    "step": "bind",
+    "plan": "/srv/opentallas-scratch2/claude/hbm-bind-9/m79fp/die_plan.json",
+    "manifest": "physical/die_plan/hbm/bind/d44v/asbuilt_t11.json",
+    "external_paths_allowed": false,
+    "inputs": [
+      "/srv/opentallas-scratch2/claude/hbm-bind-9/m79fp/die_plan.json",
+      "physical/die_plan/hbm/bind/d44v/asbuilt_t11.json"
+    ]
+  },
+  "selected_errors": [
+    "selected native bus mismatch: L84_i",
+    "native FT port mismatch: L79x2_i",
+    "native FT port mismatch: L79x2_o",
+    "actual native FT stage census differs: L79x2"
+  ]
+}

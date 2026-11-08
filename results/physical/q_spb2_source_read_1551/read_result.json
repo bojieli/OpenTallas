@@ -1,0 +1,250 @@
+{
+  "scope": "READ_CAPTURED_NATIVE_SOURCE_AND_RECEIPTS_ONLY_NOT_NEW_PROOF_OR_SIGNOFF",
+  "plan_ref": "66d55c026ad",
+  "native_port_comparison": [
+    {
+      "port": "L40_o",
+      "plan_payload": 1064,
+      "native_width": 1065
+    },
+    {
+      "port": "L49_i",
+      "plan_payload": 618,
+      "native_width": 619
+    },
+    {
+      "port": "L75_o",
+      "plan_payload": 173,
+      "native_width": 174
+    },
+    {
+      "port": "L76_o",
+      "plan_payload": 173,
+      "native_width": 174
+    },
+    {
+      "port": "L83_i",
+      "plan_payload": 99,
+      "native_width": 29
+    },
+    {
+      "port": "L87_o",
+      "plan_payload": 68,
+      "native_width": 69
+    },
+    {
+      "port": "L33x2_i",
+      "plan_payload": 1615,
+      "native_width": 1616
+    },
+    {
+      "port": "L33x2_o",
+      "plan_payload": 1615,
+      "native_width": 1616
+    },
+    {
+      "port": "L720x2_i",
+      "plan_payload": 632,
+      "native_width": 633
+    },
+    {
+      "port": "L720x2_o",
+      "plan_payload": 632,
+      "native_width": 633
+    },
+    {
+      "port": "L722x2_i",
+      "plan_payload": 308,
+      "native_width": 309
+    },
+    {
+      "port": "L722x2_o",
+      "plan_payload": 308,
+      "native_width": 309
+    },
+    {
+      "port": "L723x2_i",
+      "plan_payload": 307,
+      "native_width": 308
+    },
+    {
+      "port": "L723x2_o",
+      "plan_payload": 307,
+      "native_width": 308
+    },
+    {
+      "port": "L1278x3_i",
+      "plan_payload": 1483,
+      "native_width": 1484
+    },
+    {
+      "port": "L1278x3_o",
+      "plan_payload": 1483,
+      "native_width": 1484
+    },
+    {
+      "port": "L1280x6_i",
+      "plan_payload": 746,
+      "native_width": 747
+    },
+    {
+      "port": "L1280x6_o",
+      "plan_payload": 746,
+      "native_width": 747
+    },
+    {
+      "port": "L3012x5_i",
+      "plan_payload": 27,
+      "native_width": 28
+    },
+    {
+      "port": "L3012x5_o",
+      "plan_payload": 27,
+      "native_width": 28
+    },
+    {
+      "port": "L8370x2_i",
+      "plan_payload": 11,
+      "native_width": 12
+    },
+    {
+      "port": "L8370x2_o",
+      "plan_payload": 11,
+      "native_width": 12
+    },
+    {
+      "port": "L8371x2_i",
+      "plan_payload": 2,
+      "native_width": 3
+    },
+    {
+      "port": "L8371x2_o",
+      "plan_payload": 2,
+      "native_width": 3
+    }
+  ],
+  "differences": [
+    {
+      "port": "L83_i",
+      "expected_with_epoch": 100,
+      "actual": 29,
+      "covered_existing_dead_inputs": true
+    }
+  ],
+  "existing_dead_input_wrapper_hash_matches_actual": true,
+  "actual_wrapper_sha256": "5a1816cd3cc2e0239c55d390e15f820a3ffd35539922ec03cd5e4224fe1dc89e",
+  "captured_component_scope": "LOCAL_COMPONENT",
+  "captured_assembly": {
+    "schema": "opentallas.kit_hierarchy.v1",
+    "top": "hbm_arch_q_spb2",
+    "expected": 2,
+    "matched": 2,
+    "problems": [],
+    "hard_instances": [
+      {
+        "instance": "u_bound.u_u_xc_Q2",
+        "master": "ot_hbm_svc_sm_xcal_rel_t"
+      },
+      {
+        "instance": "u_bound.u_u_xc_Q3",
+        "master": "ot_hbm_svc_sm_xcal_rel_t"
+      }
+    ],
+    "required_expected": 20,
+    "required_matched": 20,
+    "required_instances": [
+      {
+        "instance": "u_bound.u_ist_L49_i_0",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000001001101010"
+      },
+      {
+        "instance": "u_bound.u_ist_L49_i_1",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000001001101010"
+      },
+      {
+        "instance": "u_bound.u_ist_L49_i_2",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000001001101010"
+      },
+      {
+        "instance": "u_bound.u_ist_L83_i_0",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000000011100"
+      },
+      {
+        "instance": "u_bound.u_ist_L83_i_1",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000000011100"
+      },
+      {
+        "instance": "u_bound.u_ist_L83_i_2",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000000011100"
+      },
+      {
+        "instance": "u_bound.u_ist_L75_o_0",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+      },
+      {
+        "instance": "u_bound.u_ist_L75_o_1",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+      },
+      {
+        "instance": "u_bound.u_ist_L75_o_2",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+      },
+      {
+        "instance": "u_bound.u_ist_L75_o_3",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+      },
+      {
+        "instance": "u_bound.u_ist_L75_o_4",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+      },
+      {
+        "instance": "u_bound.u_ist_L75_o_5",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+      },
+      {
+        "instance": "u_bound.u_ist_L75_o_6",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+      },
+      {
+        "instance": "u_bound.u_ist_L75_o_7",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+      },
+      {
+        "instance": "u_bound.u_ist_L76_o_0",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+      },
+      {
+        "instance": "u_bound.u_ist_L76_o_1",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+      },
+      {
+        "instance": "u_bound.u_ist_L76_o_2",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+      },
+      {
+        "instance": "u_bound.u_ist_L76_o_3",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+      },
+      {
+        "instance": "u_bound.u_ist_L76_o_4",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+      },
+      {
+        "instance": "u_bound.u_ist_L87_o_0",
+        "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000001000100"
+      }
+    ]
+  },
+  "captured_port_bind": {
+    "verdict": "PASS",
+    "top": "hbm_arch_q_spb2",
+    "straps": [],
+    "bad_straps": [],
+    "plan_bits": 12505,
+    "netlist_bits": 12505,
+    "missing": 0,
+    "extra": 0,
+    "missing_examples": [],
+    "extra_examples": []
+  }
+}

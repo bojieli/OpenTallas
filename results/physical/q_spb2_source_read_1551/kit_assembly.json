@@ -1,0 +1,141 @@
+{
+  "schema": "opentallas.kit_assembly.v1",
+  "bindings": [
+    {
+      "master": "ot_hbm_svc_sm_xcal_rel_t",
+      "instance": "u_bound.u_u_xc_Q2",
+      "source": "hbm_arch_q_spb2_bound.sv",
+      "source_sha256": "280b35c71a7f58fa12fab508a7b7360fb321cb0d4bcb06e112cadeac808c372d",
+      "child_params": {
+        "DD": 256,
+        "PAW": 11,
+        "PREL": 1,
+        "XSLOT": 1
+      },
+      "blackbox": "ot_hbm_svc_sm_xcal_rel_t_bb.v",
+      "blackbox_sha256": "43930aac0aa9292fc7896d120160ab56217c7614d342a17dfea02caa3e5f45fd"
+    },
+    {
+      "master": "ot_hbm_svc_sm_xcal_rel_t",
+      "instance": "u_bound.u_u_xc_Q3",
+      "source": "hbm_arch_q_spb2_bound.sv",
+      "source_sha256": "280b35c71a7f58fa12fab508a7b7360fb321cb0d4bcb06e112cadeac808c372d",
+      "child_params": {
+        "DD": 256,
+        "PAW": 11,
+        "PREL": 1,
+        "XSLOT": 1
+      },
+      "blackbox": "ot_hbm_svc_sm_xcal_rel_t_bb.v",
+      "blackbox_sha256": "43930aac0aa9292fc7896d120160ab56217c7614d342a17dfea02caa3e5f45fd"
+    }
+  ],
+  "changed_sources": [
+    "hbm_arch_q_spb2_bound.sv"
+  ],
+  "cycles_changed": 0,
+  "elaborated_inventory": "NOT RUN",
+  "runtime_helper": "kit_assembly.py",
+  "required_instances": [
+    {
+      "inst": "u_ist_L49_i_0",
+      "master": "ot_dp_st",
+      "kind": "bus:L49_i"
+    },
+    {
+      "inst": "u_ist_L49_i_1",
+      "master": "ot_dp_st",
+      "kind": "bus:L49_i"
+    },
+    {
+      "inst": "u_ist_L49_i_2",
+      "master": "ot_dp_st",
+      "kind": "bus:L49_i"
+    },
+    {
+      "inst": "u_ist_L83_i_0",
+      "master": "ot_dp_st",
+      "kind": "bus:L83_i"
+    },
+    {
+      "inst": "u_ist_L83_i_1",
+      "master": "ot_dp_st",
+      "kind": "bus:L83_i"
+    },
+    {
+      "inst": "u_ist_L83_i_2",
+      "master": "ot_dp_st",
+      "kind": "bus:L83_i"
+    },
+    {
+      "inst": "u_ist_L75_o_0",
+      "master": "ot_dp_st",
+      "kind": "bus:L75_o"
+    },
+    {
+      "inst": "u_ist_L75_o_1",
+      "master": "ot_dp_st",
+      "kind": "bus:L75_o"
+    },
+    {
+      "inst": "u_ist_L75_o_2",
+      "master": "ot_dp_st",
+      "kind": "bus:L75_o"
+    },
+    {
+      "inst": "u_ist_L75_o_3",
+      "master": "ot_dp_st",
+      "kind": "bus:L75_o"
+    },
+    {
+      "inst": "u_ist_L75_o_4",
+      "master": "ot_dp_st",
+      "kind": "bus:L75_o"
+    },
+    {
+      "inst": "u_ist_L75_o_5",
+      "master": "ot_dp_st",
+      "kind": "bus:L75_o"
+    },
+    {
+      "inst": "u_ist_L75_o_6",
+      "master": "ot_dp_st",
+      "kind": "bus:L75_o"
+    },
+    {
+      "inst": "u_ist_L75_o_7",
+      "master": "ot_dp_st",
+      "kind": "bus:L75_o"
+    },
+    {
+      "inst": "u_ist_L76_o_0",
+      "master": "ot_dp_st",
+      "kind": "bus:L76_o"
+    },
+    {
+      "inst": "u_ist_L76_o_1",
+      "master": "ot_dp_st",
+      "kind": "bus:L76_o"
+    },
+    {
+      "inst": "u_ist_L76_o_2",
+      "master": "ot_dp_st",
+      "kind": "bus:L76_o"
+    },
+    {
+      "inst": "u_ist_L76_o_3",
+      "master": "ot_dp_st",
+      "kind": "bus:L76_o"
+    },
+    {
+      "inst": "u_ist_L76_o_4",
+      "master": "ot_dp_st",
+      "kind": "bus:L76_o"
+    },
+    {
+      "inst": "u_ist_L87_o_0",
+      "master": "ot_dp_st",
+      "kind": "bus:L87_o"
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+ "verdict": "PASS",
+ "rc": 0,
+ "mapped_cell_types": 0,
+ "top_params": [],
+ "kit_assembly": {
+  "schema": "opentallas.kit_hierarchy.v1",
+  "top": "hbm_arch_q_spb2",
+  "expected": 2,
+  "matched": 2,
+  "problems": [],
+  "hard_instances": [
+   {
+    "instance": "u_bound.u_u_xc_Q2",
+    "master": "ot_hbm_svc_sm_xcal_rel_t"
+   },
+   {
+    "instance": "u_bound.u_u_xc_Q3",
+    "master": "ot_hbm_svc_sm_xcal_rel_t"
+   }
+  ],
+  "required_expected": 20,
+  "required_matched": 20,
+  "required_instances": [
+   {
+    "instance": "u_bound.u_ist_L49_i_0",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000001001101010"
+   },
+   {
+    "instance": "u_bound.u_ist_L49_i_1",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000001001101010"
+   },
+   {
+    "instance": "u_bound.u_ist_L49_i_2",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000001001101010"
+   },
+   {
+    "instance": "u_bound.u_ist_L83_i_0",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000000011100"
+   },
+   {
+    "instance": "u_bound.u_ist_L83_i_1",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000000011100"
+   },
+   {
+    "instance": "u_bound.u_ist_L83_i_2",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000000011100"
+   },
+   {
+    "instance": "u_bound.u_ist_L75_o_0",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+   },
+   {
+    "instance": "u_bound.u_ist_L75_o_1",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+   },
+   {
+    "instance": "u_bound.u_ist_L75_o_2",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+   },
+   {
+    "instance": "u_bound.u_ist_L75_o_3",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+   },
+   {
+    "instance": "u_bound.u_ist_L75_o_4",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+   },
+   {
+    "instance": "u_bound.u_ist_L75_o_5",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+   },
+   {
+    "instance": "u_bound.u_ist_L75_o_6",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+   },
+   {
+    "instance": "u_bound.u_ist_L75_o_7",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+   },
+   {
+    "instance": "u_bound.u_ist_L76_o_0",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+   },
+   {
+    "instance": "u_bound.u_ist_L76_o_1",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+   },
+   {
+    "instance": "u_bound.u_ist_L76_o_2",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+   },
+   {
+    "instance": "u_bound.u_ist_L76_o_3",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+   },
+   {
+    "instance": "u_bound.u_ist_L76_o_4",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000010101101"
+   },
+   {
+    "instance": "u_bound.u_ist_L87_o_0",
+    "master": "$paramod\\ot_dp_st\\W=s32'00000000000000000000000001000100"
+   }
+  ]
+ },
+ "errors": [],
+ "yosys_cast": 0,
+ "command": [
+  "yosys",
+  "-q",
+  "-s",
+  "/work/rtl_lint.ys"
+ ]
+}

@@ -1,0 +1,121 @@
+{
+ "schema": "opentallas.kit_dead_inputs.v1",
+ "bits": [
+  "L83_i[28]",
+  "L83_i[29]",
+  "L83_i[30]",
+  "L83_i[31]",
+  "L83_i[32]",
+  "L83_i[33]",
+  "L83_i[34]",
+  "L83_i[35]",
+  "L83_i[36]",
+  "L83_i[37]",
+  "L83_i[38]",
+  "L83_i[39]",
+  "L83_i[40]",
+  "L83_i[41]",
+  "L83_i[42]",
+  "L83_i[43]",
+  "L83_i[44]",
+  "L83_i[45]",
+  "L83_i[46]",
+  "L83_i[47]",
+  "L83_i[48]",
+  "L83_i[49]",
+  "L83_i[50]",
+  "L83_i[51]",
+  "L83_i[52]",
+  "L83_i[53]",
+  "L83_i[54]",
+  "L83_i[55]",
+  "L83_i[56]",
+  "L83_i[57]",
+  "L83_i[58]",
+  "L83_i[59]",
+  "L83_i[60]",
+  "L83_i[61]",
+  "L83_i[62]",
+  "L83_i[63]",
+  "L83_i[64]",
+  "L83_i[65]",
+  "L83_i[66]",
+  "L83_i[67]",
+  "L83_i[68]",
+  "L83_i[69]",
+  "L83_i[70]",
+  "L83_i[71]",
+  "L83_i[72]",
+  "L83_i[73]",
+  "L83_i[74]",
+  "L83_i[75]",
+  "L83_i[76]",
+  "L83_i[77]",
+  "L83_i[78]",
+  "L83_i[79]",
+  "L83_i[80]",
+  "L83_i[81]",
+  "L83_i[82]",
+  "L83_i[83]",
+  "L83_i[84]",
+  "L83_i[85]",
+  "L83_i[86]",
+  "L83_i[87]",
+  "L83_i[88]",
+  "L83_i[89]",
+  "L83_i[90]",
+  "L83_i[91]",
+  "L83_i[92]",
+  "L83_i[93]",
+  "L83_i[94]",
+  "L83_i[95]",
+  "L83_i[96]",
+  "L83_i[97]",
+  "L83_i[98]"
+ ],
+ "proof": {
+  "verdict": "PASS",
+  "method": "bind.py kit-rtl: plan bits beyond the bound payload width are not connected in the generated wrapper",
+  "receipt": {
+   "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-parent-1106/prep2_epoch_reset/rtl/hbm_arch_q_spb2.sv",
+   "sha256": "5a1816cd3cc2e0239c55d390e15f820a3ffd35539922ec03cd5e4224fe1dc89e",
+   "narrow_buses": [
+    {
+     "port": "L83_i",
+     "plan": 99,
+     "bound": 28
+    }
+   ]
+  },
+  "transform_checks": [
+   {
+    "method": "literal wrapper input select audit",
+    "previous": {
+     "wrapper": "/srv/opentallas-scratch3/claude/die-hbm-79/q_spb2_prep1/rtl/hbm_arch_q_spb2.sv",
+     "sha256": "0bb2aafe94f2002e7838920ccd3b8ba441446299870c7cb6e55e427c84bbb768",
+     "narrow_buses": [
+      {
+       "port": "L83_i",
+       "plan": 99,
+       "bound": 28
+      }
+     ]
+    }
+   },
+   {
+    "method": "literal wrapper input select audit",
+    "previous": {
+     "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-parent-1106/prep1_continuation/rtl/hbm_arch_q_spb2.sv",
+     "sha256": "5c40482782e50e9296f755b7a8e21f816d9eaa5df186b8281ad32e0f13d6e178",
+     "narrow_buses": [
+      {
+       "port": "L83_i",
+       "plan": 99,
+       "bound": 28
+      }
+     ]
+    }
+   }
+  ]
+ }
+}
