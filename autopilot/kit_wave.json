@@ -2214,7 +2214,13 @@
         "slice_station__t18@13",
         "slice_station__t52@17",
         "dsdv_slice_c1x_C__t10@6",
-        "ot_s81sl_leaf__t32@3"
+        "ot_s81sl_leaf__t32@3",
+        "svc_hi_dsdv_svc_rs__t6@7",
+        "dsdv_slice_lepe_nh_mus_C__t1@8",
+        "dsdv_slice_lepw_mus_C__t1@17",
+        "dsdv_slice_lepw_mu_C__t1@9",
+        "ot_s81sl_leaf__t58@1",
+        "ot_s81sl_leaf__t68@1"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -3132,7 +3138,13 @@
         "slice_station__t18@13": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit",
         "slice_station__t52@17": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit",
         "dsdv_slice_c1x_C__t10@6": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit",
-        "ot_s81sl_leaf__t12@2": "KW-FIX-32 2026-11-07 21:28 PST (COORD 21:2x (2), AUTOCLEAN-7 INCIDENT 20:58): INFRA kit deleted by ot-autoclean (lane symlink scratch3->scratch2 not resolved; lanes/prune/AUTOCLEAN-7-INCIDENT-1107.tsv); ot-run NOT RUN no host qualifies; regenerate, full build (resume source gone)"
+        "ot_s81sl_leaf__t12@2": "KW-FIX-32 2026-11-07 21:28 PST (COORD 21:2x (2), AUTOCLEAN-7 INCIDENT 20:58): INFRA kit deleted by ot-autoclean (lane symlink scratch3->scratch2 not resolved; lanes/prune/AUTOCLEAN-7-INCIDENT-1107.tsv); ot-run NOT RUN no host qualifies; regenerate, full build (resume source gone)",
+        "svc_hi_dsdv_svc_rs__t6@7": "KW-FIX-32 2026-11-07 21:59 PST: S81-OTHERFAIL-1 21:51 class A+B HOST-KILL (epyc2 earlyoom SIGTERM to yosys 16:01/16:09, not a design result): infra batch",
+        "dsdv_slice_lepe_nh_mus_C__t1@8": "KW-FIX-32 2026-11-07 21:59 PST: S81-OTHERFAIL-1 21:51 class A+B HOST-KILL (epyc2 earlyoom SIGTERM to yosys 16:01/16:09, not a design result): infra batch",
+        "dsdv_slice_lepw_mus_C__t1@17": "KW-FIX-32 2026-11-07 21:59 PST: S81-OTHERFAIL-1 21:51 class A+B HOST-KILL (epyc2 earlyoom SIGTERM to yosys 16:01/16:09, not a design result): infra batch",
+        "dsdv_slice_lepw_mu_C__t1@9": "KW-FIX-32 2026-11-07 21:59 PST: S81-OTHERFAIL-1 21:51 class A+B HOST-KILL (epyc2 earlyoom SIGTERM to yosys 16:01/16:09, not a design result): infra batch",
+        "ot_s81sl_leaf__t58@1": "KW-FIX-32 2026-11-07 21:59 PST: S81-OTHERFAIL-1 21:51 class C TAP-RADIUS: class fix KW-FIX-28 044f3d479b75 (ADDED_TAP_RADIUS_SLACK 1.10, over-target advisory) on main; never relaunched since 11-06 13:07",
+        "ot_s81sl_leaf__t68@1": "KW-FIX-32 2026-11-07 21:59 PST: S81-OTHERFAIL-1 21:51 class C TAP-RADIUS: class fix KW-FIX-28 044f3d479b75 (ADDED_TAP_RADIUS_SLACK 1.10, over-target advisory) on main; never relaunched since 11-06 13:07"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
