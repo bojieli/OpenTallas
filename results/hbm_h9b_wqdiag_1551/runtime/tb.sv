@@ -82,6 +82,7 @@ module tb;
     if(a.controller.on.phase != 2*a.controller.slot_parity || !a.controller.on.row_fire || a.controller.on.c_op!=a.controller.REFPB)
       $fatal(1,"WQDIAG_REFRESH_PHASE illegal actual row calendar");
   end end
+  always @(negedge clk) if(now%1000==0) begin $display("WQDIAG_PROGRESS edge%0d accepted%0d/%0d writes%0d reads%0d",now,idx[0],idx[1],nw[0],nb[0]); $fflush(); end
   integer nrd=0;
   initial begin
     if(!$value$plusargs("SEED=%d",rng)) rng=32'h1d872b41;
@@ -93,14 +94,14 @@ module tb;
       ra[i]=a; rl[i]=l; rt[i]=17'(i); rng=nx(rng); rs[i]=rng; rd[i]={8{rng^32'h3c3c3c3c}}; if(!rw[i]) nrd=nrd+l;
     end
     rst_n=0; repeat(6)@(posedge clk); @(negedge clk); #1 rst_n=1;
-    while(!(done_at[0]!=0 && done_at[1]!=0) && now<400000) begin
+    while(!(done_at[0]!=0 && done_at[1]!=0) && now<(NREQ<512?20000:400000)) begin
       @(negedge clk); #1 rng=nx(rng); offer=(rng[2:0]!=0)&&now>24; rng=nx(rng); r_now=(rng[3:0]!=0);   // offers start after every reset region released
     end
     repeat(200)@(negedge clk);
     if(nb[0]!=nb[1]||nw[0]!=nw[1]||nwd[0]!=nwd[1]) begin errors=errors+1; $display("H9B_TXN_COUNT beats %0d/%0d wcols %0d/%0d wdone %0d/%0d",nb[0],nb[1],nw[0],nw[1],nwd[0],nwd[1]); end
     for(i=0;i<nb[0]&&i<nb[1];i=i+1) if(beat_log[0][i]!==beat_log[1][i]) begin errors=errors+1; if(errors<5) $display("H9B_TXN_BEAT_MISMATCH i%0d h9 tag%h beat%h d%h h9b tag%h beat%h d%h",i,beat_log[0][i][276:260],beat_log[0][i][259:256],beat_log[0][i][31:0],beat_log[1][i][276:260],beat_log[1][i][259:256],beat_log[1][i][31:0]); end
     for(i=0;i<nw[0]&&i<nw[1];i=i+1) if(wcol_log[0][i]!==wcol_log[1][i]) begin errors=errors+1; if(errors<5) $display("H9B_TXN_WCOL_MISMATCH i%0d",i); end
-    if(nb[0]<nrd/2 || nw[0]<100) begin errors=errors+1; $display("H9B_TXN_VACUOUS beats%0d wcols%0d",nb[0],nw[0]); end
+    if(nb[0]<nrd/2 || nw[0]<NREQ/16) begin errors=errors+1; $display("H9B_TXN_VACUOUS beats%0d wcols%0d",nb[0],nw[0]); end
     if(done_at[0]==0||done_at[1]==0||done_at[1]!=done_at[0]) begin errors=errors+1; $display("H9B_TXN_RATE h9 %0d h9b %0d",done_at[0],done_at[1]); end
     if(errors) $fatal(1,"H9B_TXN FAIL errors=%0d RMUT=%0d",errors,RMUT);
     $display("H9B_TXN PASS reqs=%0d beats=%0d wcols=%0d wdone=%0d edges_h9=%0d edges_h9b=%0d",NREQ,nb[1],nw[1],nwd[1],done_at[0],done_at[1]);
