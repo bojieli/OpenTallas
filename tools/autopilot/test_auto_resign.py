@@ -813,3 +813,51 @@ def test_raise_outside_the_rows_saves_state_and_notices(ap, tmp_path, monkeypatc
     with pytest.raises(ValueError):                  # the tick hook logs this one
         AR.step(ap)
     assert only_item(ap)["status"] == "RECORDED" and any("RECORDED" in x for x in ap.lines)
+
+
+# ---------------------------------------------------------------- KW-FIX-32 11-07: every die's newest tag staged on landing
+def test_prestage_exports_newest_tag_on_every_host_once(ap, tmp_path, monkeypatch):
+    root = tmp_path / "scr"
+    (root / "claude").mkdir(parents=True)
+    monkeypatch.setattr(AR, "ROOTS", (str(tmp_path / "missing"), str(root)))
+    staged = []
+    monkeypatch.setattr(AR, "stage_tools", lambda AP, host, r, tag, s: staged.append((host, r, tag)) or ("%s/t/%s" % (r, tag), ""))
+    status = "ot-run status: epyc2 REFUSED (ROOT FS 96%) | intel1 admits 257 GB load 76/112 | localhost admits 657 GB | next job -> intel1"
+    ap.sh = lambda cmd, timeout=300, input=None: (0, status, "") if "--status" in cmd else (0, "", "")
+    tags = {"qwen_kvsys": "flow-20261107-dh-kv", "s81": "flow-20261107-ds-s81"}
+    shas = {t: {"tools/die_plan/signoff.py": "0" * 64} for t in tags.values()}
+    ctx = dict(tag=lambda die: tags.get(die), tool_key=lambda t: "k", shas=shas)
+    st = {}
+    out = AR.prestage(ap, st, ctx)
+    assert sorted(staged) == sorted((h, str(root), t) for h in ("epyc2", "intel1", "localhost") for t in tags.values())
+    assert all(w.startswith(str(root)) for _, _, w in out) and len(st["prestaged"]) == 6
+    staged.clear()
+    assert AR.prestage(ap, st, ctx) == [] and staged == []                      # once per host and tag
+    tags["qwen_kvsys"] = "flow-20261107-dj-kv"                                  # a new tag lands
+    shas["flow-20261107-dj-kv"] = {"tools/die_plan/signoff.py": "1" * 64}
+    AR.prestage(ap, st, ctx)
+    assert sorted(staged) == sorted((h, str(root), "flow-20261107-dj-kv") for h in ("epyc2", "intel1", "localhost"))
+
+
+def test_prestage_budget_dry_off_and_no_root(ap, tmp_path, monkeypatch):
+    staged = []
+    monkeypatch.setattr(AR, "stage_tools", lambda AP, host, r, tag, s: staged.append(host) or ("/d", ""))
+    ctx = dict(tag=lambda die: "flow-20261107-dh-kv" if die == "qwen_kvsys" else None, tool_key=lambda t: "k",
+               shas={"flow-20261107-dh-kv": {"x": "0"}})
+    monkeypatch.setattr(AR, "ROOTS", ())
+    out = AR.prestage(ap, {}, ctx, hosts=["h1"])
+    assert staged == [] and "no scratch root" in out[0][2]                       # nothing with room: not staged
+    root = tmp_path / "scr"
+    (root / "claude").mkdir(parents=True)
+    monkeypatch.setattr(AR, "ROOTS", (str(root),))
+    monkeypatch.setattr(AR, "PRESTAGE_MAX_PER_TICK", 2)
+    st = {}
+    AR.prestage(ap, st, ctx, hosts=["h1", "h2", "h3"])
+    assert staged == ["h1", "h2"]                                                # budget: h3 next pass
+    AR.prestage(ap, st, ctx, hosts=["h1", "h2", "h3"])
+    assert staged == ["h1", "h2", "h3"]
+    ap.DRY = True
+    assert AR.prestage(ap, {}, ctx, hosts=["h9"]) == []
+    ap.DRY = False
+    monkeypatch.setenv("OT_AR_PRESTAGE", "0")
+    assert AR.prestage(ap, {}, ctx, hosts=["h9"]) == [] and "h9" not in staged
