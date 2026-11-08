@@ -1016,6 +1016,13 @@
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/1445a073fae9/qkd_kvs_pcf_h_head_p",
             "job": "COUNTED qkd_kvs_pcf_h_head_p epyc2:/srv/opentallas-scratch2/claude/ss29/resign/pcfh_k/signoff/signoff.json (KW-FIX-32 export_view)"
           }
+        ],
+        "qkd_hr_core_prompt": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/00b270bef61a/qkd_hr_core_prompt",
+            "job": "COUNTED qkd_hr_core_prompt intel1:/srv/opentallas-scratch2/claude/codex-kv-prompt-resign-0222/vR_eco_ds_dkv92/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
         ]
       },
       "place_spill": true,
@@ -1090,23 +1097,6 @@
         "epyc4"
       ],
       "note_prefer_kw32": "KW-FIX-32 2026-11-07 18:08 PST COORD 18:0x (epyc2 load 247/128 + 114 waiters, epyc4 91/256 + 10): epyc4 first in place_prefer and gen_hosts; disk/admit checks unchanged (epyc4 only taken while it admits / has gen disk room). Revert: place_prefer <- place_prefer_prev_kw32, gen_hosts <- gen_hosts_prev_kw32c.",
-      "prov_view_sources_prev_kw32": {
-        "qkd_ahub": [
-          {
-            "host": "intel2",
-            "dir": "/srv/opentallas-scratch2/claude/dkv71/ahub/h1/views",
-            "job": "SIGNED dkv73/ahub_l"
-          }
-        ],
-        "qkd_kvs_ctl": [
-          {
-            "host": "intel2",
-            "dir": "/srv/opentallas-scratch2/claude/ss32/resign/kit_kvctl/views",
-            "job": "SIGNED kvctl_u"
-          }
-        ]
-      },
-      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:06 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 18 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
       "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
       "src_sha_prev_kw32b": "6a7e5c39dcce406da72b0fd2a9d1accf92bb45f6",
       "queue_src_prev_kw32b": "main@6a7e5c39dcce",
@@ -1357,7 +1347,163 @@
         "epyc4",
         "epyc5"
       ],
-      "note_kw35k4": "KW-FIX-35-K 2026-11-08 10:47 PST (COORD 10:41 ruling 3): KV plan -> KV-TYPES-5 plan_kvr8 (md5 d5538a93, strict bind_kvr8 0 errors, 160/2545/429530; staged intel1/epyc4/5/6, NOT intel2 -> intel2 kept out of gen_hosts); kv3_pc* hold lifted; kv3_phy/_v1 stay held for +3 pin-cycle RE-FORM. Revert plan/kit_rtl/gen_hosts <- *_prev_kw35k4, hold_items kv3_pc* <- hold_items_prev_kw35k4"
+      "note_kw35k4": "KW-FIX-35-K 2026-11-08 10:47 PST (COORD 10:41 ruling 3): KV plan -> KV-TYPES-5 plan_kvr8 (md5 d5538a93, strict bind_kvr8 0 errors, 160/2545/429530; staged intel1/epyc4/5/6, NOT intel2 -> intel2 kept out of gen_hosts); kv3_pc* hold lifted; kv3_phy/_v1 stay held for +3 pin-cycle RE-FORM. Revert plan/kit_rtl/gen_hosts <- *_prev_kw35k4, hold_items kv3_pc* <- hold_items_prev_kw35k4",
+      "prov_view_sources_prev_kw35cv": {
+        "qkd_ahub": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/9626f46f7f86/qkd_ahub",
+            "job": "COUNTED qkd_ahub intel2:/srv/opentallas-scratch2/claude/dkv73/ahub_l/signoff/signoff.json (KW-FIX-32 export_view)"
+          },
+          {
+            "host": "intel2",
+            "dir": "/srv/opentallas-scratch2/claude/dkv71/ahub/h1/views",
+            "job": "SIGNED dkv73/ahub_l"
+          }
+        ],
+        "qkd_kvs_ctl": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/fce95bb0ff97/qkd_kvs_ctl",
+            "job": "COUNTED qkd_kvs_ctl intel2:/srv/opentallas-scratch2/claude/ss32/resign/kvctl_u/signoff/signoff.json (KW-FIX-32 export_view)"
+          },
+          {
+            "host": "intel2",
+            "dir": "/srv/opentallas-scratch2/claude/ss32/resign/kit_kvctl/views",
+            "job": "SIGNED kvctl_u"
+          }
+        ],
+        "kv3_astk": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/8fb9d4b1a33b/kv3_astk",
+            "job": "COUNTED kv3_astk epyc2:/srv/opentallas-scratch2/claude/ss29/resign/astk_k/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_cdc_ch": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/c0559bef7b65/qkd_hr_cdc_ch",
+            "job": "COUNTED qkd_hr_cdc_ch intel2:/srv/opentallas-scratch2/claude/kvhead-kits-3/cdc319/kit/kvhk3_tag/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_cdc_ci": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/9fa798d43466/qkd_hr_cdc_ci",
+            "job": "COUNTED qkd_hr_cdc_ci intel1:/srv/opentallas-scratch2/claude/dkv66/hr/resign/cci_x/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_cdc_hi": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/746b1b8de790/qkd_hr_cdc_hi",
+            "job": "COUNTED qkd_hr_cdc_hi epyc2:/srv/opentallas-scratch3/claude/ss24/kv_chi_s_kv/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_cdc_pc": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/9f7a60f1fffd/qkd_hr_cdc_pc",
+            "job": "COUNTED qkd_hr_cdc_pc epyc2:/srv/opentallas-scratch3/claude/ss24/kv_cpc_s_kv/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_core_guard": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/0b18b947f443/qkd_hr_core_guard",
+            "job": "COUNTED qkd_hr_core_guard epyc2:/srv/opentallas-scratch3/claude/ss24/kv_cg_s_kv/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_core_queue": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/c22a59e5769a/qkd_hr_core_queue",
+            "job": "COUNTED qkd_hr_core_queue epyc2:/srv/opentallas-scratch3/claude/ss24/kv_cq_s_kv/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_core_rx": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/0c2a245b707a/qkd_hr_core_rx",
+            "job": "COUNTED qkd_hr_core_rx intel1:/srv/opentallas-scratch2/claude/die-kv-49/rx_bkv/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_core_tx": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/daaff5e1f074/qkd_hr_core_tx",
+            "job": "COUNTED qkd_hr_core_tx intel2:/srv/opentallas-scratch2/claude/signoff-sprint-16/coretx/rsC_k/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_ingest_eng": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/d055c61c43ca/qkd_hr_ingest_eng",
+            "job": "COUNTED qkd_hr_ingest_eng epyc2:/srv/opentallas-scratch2/claude/codex-kv0615/fo8_y_qualification/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_phy_adp": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/3376ef747f1a/qkd_hr_phy_adp",
+            "job": "COUNTED qkd_hr_phy_adp intel1:/srv/opentallas-scratch2/claude/dkv67/hr/resign/adp_l/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_phy_pad": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/e8a53ad27862/qkd_hr_phy_pad",
+            "job": "COUNTED qkd_hr_phy_pad epyc2:/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB_flow-20261031-b-kv/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_kvs_pcc": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/a0e9f5c3fe3e/qkd_kvs_pcc",
+            "job": "COUNTED qkd_kvs_pcc epyc2:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc__flow-20261106-c-kv__c303603e/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_kvs_pcc_h_head_p": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/df3060246f1f/qkd_kvs_pcc_h_head_p",
+            "job": "COUNTED qkd_kvs_pcc_h_head_p epyc4:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc_h_head_p__flow-20261106-c-kv__2a7cab7f/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_kvs_pcf": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/388dc9658f5c/qkd_kvs_pcf",
+            "job": "COUNTED qkd_kvs_pcf epyc4:/srv/opentallas-scratch2/claude/ss25/resign/pcf_fmx_x/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_kvs_pcf_h_head_p": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/1445a073fae9/qkd_kvs_pcf_h_head_p",
+            "job": "COUNTED qkd_kvs_pcf_h_head_p epyc2:/srv/opentallas-scratch2/claude/ss29/resign/pcfh_k/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ]
+      },
+      "prov_view_sources_prev_kw32": {
+        "qkd_ahub": [
+          {
+            "host": "intel2",
+            "dir": "/srv/opentallas-scratch2/claude/dkv71/ahub/h1/views",
+            "job": "SIGNED dkv73/ahub_l"
+          }
+        ],
+        "qkd_kvs_ctl": [
+          {
+            "host": "intel2",
+            "dir": "/srv/opentallas-scratch2/claude/ss32/resign/kit_kvctl/views",
+            "job": "SIGNED kvctl_u"
+          }
+        ]
+      },
+      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:06 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 18 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
+      "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 10:52 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:37 PST) first in prov_view_sources; changed 1: qkd_hr_core_prompt. Revert: prov_view_sources <- prov_view_sources_prev_kw35cv"
     },
     "s81": {
       "enabled": true,
@@ -4577,7 +4723,6 @@
         "ot_s81sl_leaf__t67": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t74": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim."
       },
-      "prov_view_sources_prev_kw32": null,
       "prov_view_sources": {
         "dsdv_gunit_l2": [
           {
@@ -4643,7 +4788,6 @@
           }
         ]
       },
-      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:19 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 4 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
       "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
       "src_sha_prev_kw32b": "6a7e5c39dcce406da72b0fd2a9d1accf92bb45f6",
       "queue_src_prev_kw32b": "main@6a7e5c39dcce",
@@ -5290,7 +5434,75 @@
         "epyc4",
         "epyc5"
       ],
-      "note_kw35_e13": "KW-FIX-35 2026-11-08 10:29 PST: epyc6 back in s81 gen_hosts (RESTAGE-DEPS a61d5586223 live in main; epyc6 inputs staged by KW-FIX-35-RD). Revert: gen_hosts <- gen_hosts_prev_kw35e13."
+      "note_kw35_e13": "KW-FIX-35 2026-11-08 10:29 PST: epyc6 back in s81 gen_hosts (RESTAGE-DEPS a61d5586223 live in main; epyc6 inputs staged by KW-FIX-35-RD). Revert: gen_hosts <- gen_hosts_prev_kw35e13.",
+      "prov_view_sources_prev_kw35cv": {
+        "dsdv_gunit_l2": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/d45c7facaf7a/dsdv_gunit_l2",
+            "job": "COUNTED dsdv_gunit_l2 epyc2:/srv/opentallas-scratch2/claude/s81ck13x/kits/dsdv_gunit_l2_ccA_s6M_B10h_h-s81/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "dsdv_gunit_l5": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/a12637fd251d/dsdv_gunit_l5",
+            "job": "COUNTED dsdv_gunit_l5 intel2:/srv/opentallas-scratch2/claude/ss29/resign/gl5_l/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_s81_mu72_lnland": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/6cc02df7f1a9/ot_s81_mu72_lnland",
+            "job": "COUNTED ot_s81_mu72_lnland epyc4:/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_h2P/sign_t-s81_m0/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_s81_mu72_lnland_nst": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/47a57a72081f/ot_s81_mu72_lnland_nst",
+            "job": "COUNTED ot_s81_mu72_lnland_nst epyc4:/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_nst_h2P/sign_t-s81_m0/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "dsdv_gunit_l1c": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/f6024fdbe288/dsdv_gunit_l1c",
+            "job": "COUNTED dsdv_gunit_l1c epyc4:/srv/opentallas-scratch2/claude/die-s81-51/rfc-gu/kits/dsdv_gunit_l1c_rf1/sign_t-s81_m0b/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "dsdv_gunit_l4": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/926c0439bc1d/dsdv_gunit_l4",
+            "job": "COUNTED dsdv_gunit_l4 epyc4:/srv/opentallas-scratch2/claude/ss25/resign/gl4_x/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "dsfd_coll_lane_e_safe8_ntf": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/de834643996f/dsfd_coll_lane_e_safe8_ntf",
+            "job": "COUNTED dsfd_coll_lane_e_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "dsfd_coll_lane_w_safe8_ntf": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/4eaba3b86b89/dsfd_coll_lane_w_safe8_ntf",
+            "job": "COUNTED dsfd_coll_lane_w_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "dsdv_eng_rr_e": [
+          {
+            "host": "epyc5",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/fef25d6ea8be/dsdv_eng_rr_e",
+            "job": "COUNTED dsdv_eng_rr_e epyc5:/srv/opentallas-scratch3/claude/die-s81-78/engrr/resign_vJ_eco1_dg/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ]
+      },
+      "prov_view_sources_prev_kw32": null,
+      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:19 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 4 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
+      "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 10:52 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:37 PST) first in prov_view_sources; changed 0: . Revert: prov_view_sources <- prov_view_sources_prev_kw35cv"
     },
     "s81_head": {
       "enabled": true,
@@ -10230,6 +10442,41 @@
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/d2a951a399f5/ot_hbm_idx_score_hcol_h0_rb",
             "job": "COUNTED ot_hbm_idx_score_hcol_h0_rb epyc4:/srv/opentallas-scratch3/claude/die-hbm-85/eco/rb_e1_resign/signoff/signoff.json (KW-FIX-32 export_view)"
           }
+        ],
+        "ot_hbm_su_pg_lane_exp_x_core": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/0cf82fc12be8/ot_hbm_su_pg_lane_exp_x_core",
+            "job": "COUNTED ot_hbm_su_pg_lane_exp_x_core intel1:/srv/opentallas-scratch2/claude/die-hbm-89/expx/resign_ed/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hfd_coll_q3_qcol4": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/3ee982e867bc/ot_hfd_coll_q3_qcol4",
+            "job": "COUNTED ot_hfd_coll_q3_qcol4 epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/qcol4_e1_resign/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hgi_gq_aq_tile": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/68d94ad54960/ot_hgi_gq_aq_tile",
+            "job": "COUNTED ot_hgi_gq_aq_tile epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/gq_e1_resign_dq/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hgi_sfu_split3_ctl_rest_1c": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/f592d661abc6/ot_hgi_sfu_split3_ctl_rest_1c",
+            "job": "COUNTED ot_hgi_sfu_split3_ctl_rest_1c epyc4:/srv/opentallas-scratch3/claude/hbm-hard-3/resign/rest1c_e1_ea/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_svgr_bk": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/4009df45a278/ot_svgr_bk",
+            "job": "COUNTED ot_svgr_bk epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/svgrbk_e2_resign_dq/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
         ]
       },
       "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 05:33 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/hbm.json on intel2, plan 63000666491b) FIRST in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v",
@@ -10782,9 +11029,9 @@
           }
         ]
       },
+      "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 10:52 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:48 PST) first in prov_view_sources; changed 5: ot_hbm_su_pg_lane_exp_x_core ot_hfd_coll_q3_qcol4 ot_hgi_gq_aq_tile ot_hgi_sfu_split3_ctl_rest_1c ot_svgr_bk. Revert: prov_view_sources <- prov_view_sources_prev_kw35cv",
       "prov_view_sources_prev_kw32": null,
-      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-08 05:15 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
-      "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 10:39 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:19 PST) first in prov_view_sources; changed 2: ot_hbm_idx_score_hcol_h0_ra ot_hbm_idx_score_hcol_h0_rb. Revert: prov_view_sources <- prov_view_sources_prev_kw35cv"
+      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-08 05:15 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32"
     }
   },
   "place_prefer": [
