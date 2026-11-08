@@ -28125,3 +28125,26 @@ FAILED [AUTOPILOT 0bea41f14c21] 2026-11-08 10:23:32 PST AUTOPILOT -> KIT-WAVE-12
   - dsdv_slice c1x_C t1 -20-62665, t4 -26-62665, t8 -21-62666; lepw_mus_C t1 -20-62666 (kw-s81-dsdvslice...)
   18 were released by coord 9218c9b089 and 5 by KW-FIX-35's retry_seen re-arm.
 - 2026-11-08 10:36 PST STATE [DIE-S81-80 -> COORD] t51 vD sign-off: NOT SIGNED, a near miss. TT setup -1.9 ps on 1 endpoint; TT slew 10 pins, one local cluster at u_bound.u_ft_ft12_o_2 (worst 345.5/320 ps). FF hold +1.15, DRC 0/ant 0, face_guard PASS, pin audit 11145/11145, io_hold NEEDS_PARENT. eco_loop check = ECO_ELIGIBLE drv,setup_tt + ECO_NEAR_MISS. Running the ONE late ECO iteration (OWNER 11-07) with tools at main a19f9f86ee7 (MAX_ITER 1, hold margin 0) and routed LEC (--lec) on the ECO netlist: out epyc5 /srv/opentallas-scratch3/claude/die-s81-80/t51_eco1, log ~/ds80/t51_eco.otrun.log (queued for memory). If it fails: GEOMETRY + REDESIGN, no second ECO.
+- 2026-11-08 10:38 PST READY [QC-TYPES-10/HC3 -> KW-FIX-35, COORD, QC-TYPES-10, ROOT-MERGE-52] slw_hc3 x2 read-select fanout class, structural form, NO plan event.
+  - Branch claude/qc-types-10-hc3-1108@b9065f3dddc (hub, ls-remote checked), 1 commit on main d17c355a048.
+  - CONTENT:
+    - NEW physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_hc3.json = main asbuilt_reach.json + 1 substitute_inst: dvs_[EW][0-5].u_core.u_sub.u_xl3_[0-7] (the 96 hc3 x-slice leaves, all in the 12 slw_hc3 partitions) -> ot_qfd_xs_leaf_fo32_w.
+    - NEW rtl/qwen_sys/dvm_20261014/ot_qfd_xs_leaf_fo32_w.sv: pass-through param wrapper of the SQC-CB16b native-census leaf ot_qfd_xs_leaf_fo32 (on main since 10-22: 0 added edges, select replica per kept 16-bit slice). It accepts only NCH4/FILL_PIPE1/READ_PIN_PIPE1/BANK_PIPE0.
+    - results/qc_types_10_hc3_1108/ (README, scripts, logs).
+  - PROOF: lock-step fo32_w vs the hc3 leaf ot_qfd_xs_leaf #(NCH4,RPP1,FP1,BP0), every output every edge, seeds 7/11/23 x 20000 ops PASS. Mutant MUT=2 FAILS (485 errors). yosys refuses FILL_PIPE 0 (rc 1).
+  - NO pin cycles, plan or latency change: plan stays v4w e5dc7eacb745, src stays kw35/src_c303p.
+  - STRICT BIND (plan v4w + asbuilt_hc3 on the v4w elaboration):
+    - rc 0, errors 0, 377 partitions, 1921 crossings, 790393 bits.
+    - 367/371 rtl files byte-identical to qct9/bind_v4w. The only differences are slw_hc3__{clccfc3e6b,cld86a7ad4}.sv (8 instance lines each) and their reset_tree.json (bound sha + provenance).
+    - Staged byte-same on intel1, epyc4 and epyc5 (bind.f 203 paths, 0 missing on each) [CHECKED intel1:/srv/opentallas-scratch2/claude/qct10/hc3/cmp_bind.txt].
+  - ESTIMATE: select leg 380-460 -> ~100 ps. Standalone A/B on main: fo32a TT +144.7 vs w130 +62.3. Expected leaf paths >= +100 ps (were -119.94 / -57.3).
+  - RELAUNCH ROWS for KW-FIX-35 (fresh kits: the kit RTL changes):
+    - items slw_hc3__clccfc3e6b and slw_hc3__cld86a7ad4, retry tokens slw_hc3__clccfc3e6b@4 and slw_hc3__cld86a7ad4@3 (next unused after the config's @1-3 / @1-2).
+    - kit_rtl for THESE TWO ITEMS: asbuilt = /srv/opentallas-scratch2/claude/qct10/hc3/src_hc3/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_hc3.json, bind_out = /srv/opentallas-scratch2/claude/qct10/hc3/bind_hc3.
+    - If per-item override is not possible, a die-wide switch to these two paths is equivalent for the other 117 types (byte-identical rtl).
+    - Gen hosts intel1/epyc4/epyc5 only: not staged on epyc2/epyc6, and their disks are under the floors.
+    - Other keys unchanged: plan kw35/qcplan_v4w, src kw35/src_c303p, flow_tag ef-qc. Fresh v4w kits also pick up tap-pair affinity for the FF hold rows (-38 ps / 7274 ep).
+  - DRY (advisory) kit-rtl..gen_lint on cld86: QUEUED via ot-run (hosts intel1/epyc4/epyc5 are all at the load cap or disk floors since 10:16), out <host>:/srv/opentallas-scratch2/claude/qct10/hc3/dry/slw_hc3__cld86a7ad4/, log intel2:/srv/opentallas-scratch3/claude/qct10/hc3/dry_cld86.log. Not a gate (OWNER 11-03 targets-not-gates). QC-TYPES-10 collects it.
+  - SMELLS (renders of cld86 a8 / clcc a7): all logic in a ~330x230 um blob at the S face, ~2/3 of the 622x1339 outline empty, long cw_n3 bus columns. GRT gate was TT -6.3 and the leaf paths broke only after detailed route. Watch the first GRT/route of the relaunch.
+  - KEEP (live inputs, do not prune): /srv/opentallas-scratch2/claude/qct10/hc3/{src_hc3,bind_hc3} on intel1/epyc4/epyc5, plus epyc4 /srv/opentallas-scratch3/claude/qct10/hc3/src_hc3 (the epyc4 scratch2 path is a symlink to it).
+  - WHO COLLECTS: QC-TYPES-10 (signoff of the 2 rows + the dry).
