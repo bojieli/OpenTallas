@@ -32,7 +32,7 @@ for p in clocks:
  elif b=='clk_upipe':x,y=[125.28,285.12,423.36,580.608][k%4],[100.224,146.88,190.08,233.28][k//4]
  else:raise ValueError(b)
  # Independent ports share physical station only if distinct BPin tracks.
- p['x']=.024+round((x+clock_sites[x,y]*.192-.024)/.048)*.048;p['y']=y;clock_sites[x,y]+=1
+ p['x']=.024+round((x+clock_sites[x,y]*.192-.024)/.048)*.048;p['y']=y;p['entry']=[p['x'],p['y']];clock_sites[x,y]+=1
 seen=set()
 for p in d['pins']:
  q=(p['layer'],round(p['x'],3),round(p['y'],3));assert q not in seen,q;seen.add(q)
