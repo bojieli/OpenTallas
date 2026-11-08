@@ -8899,7 +8899,8 @@
         "q_spb0": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)",
         "q_spb0__physical_v1": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)",
         "vsN0": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)",
-        "ot_hfd_coll_q3_vm_core": "KW-FIX-35-B 2026-11-08 08:31 PST: held at the die-wide plan_hbm_1108d switch (SU batch) - 1108d re-picks this core outside the SU batch; release = delete this key when DIE-HBM-92 / HBM-HARD-6 wants it built on 1108d"
+        "ot_hfd_coll_q3_vm_core": "KW-FIX-35-B 2026-11-08 08:31 PST: held at the die-wide plan_hbm_1108d switch (SU batch) - 1108d re-picks this core outside the SU batch; release = delete this key when DIE-HBM-92 / HBM-HARD-6 wants it built on 1108d",
+        "vsN4": "KW-FIX-35 2026-11-08 10:25 PST DIE-HBM-92: hold until TYPE-SAFE-2 Fix A plan dir READY (matched taps + lockup latch >25 ps on LAT EQ-gated event); d44v sign-off FAIL structural FT-cross-tap hold FF -231.78 ps x16349 (70f074f8547e), no ECO, no d44v rerun; then a2 fresh kit from that dir"
       },
       "gen_hosts": [
         "epyc6",
@@ -10469,6 +10470,9 @@
         "q_b102__physical_v1@1",
         "q_b103@1",
         "q_b103__physical_v1@1"
+      ],
+      "hold_items_kw35e12_added": [
+        "vsN4"
       ]
     }
   },
