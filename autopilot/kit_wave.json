@@ -309,7 +309,7 @@
         "kv3_phy_v1": "KW-FIX-35-K 2026-11-08 07:57 PST: in flight on plan_r8fix a4 (kw-qwenkv-kv3phyv1-4-49184); same reason as kv3_phy",
         "kv3_hub_Eo": "KW-FIX-35-K 2026-11-08 07:57 PST: kvcls_1108 plan switch re-picks it with no class fix of its own (KV-TYPES-4 06:01: hub_Eo rides the plan when its holds/children clear); keeps pre-switch state"
       },
-      "work_root": "/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave",
+      "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_kvsys/kit-wave",
       "retry_fix": {
         "kv3_io_cor@2": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d; relaunched 07:03 as a3 (resume from a2)",
         "kv3_io_cor_v1@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
@@ -652,10 +652,10 @@
         "epyc4"
       ],
       "gen_hosts": [
+        "epyc6",
         "intel1",
         "epyc4",
-        "epyc5",
-        "epyc6"
+        "epyc5"
       ],
       "place_prefer": [
         "intel1",
@@ -1322,7 +1322,14 @@
         "kv3_io_cor@6",
         "kv3_io_cor_v1@7"
       ],
-      "note_kw35k2": "KW-FIX-35-K 2026-11-08 07:57 PST: ringdens batch: src kw35/src_e2rd = src_e210k + 5178ea7aa2 (6 new files); plan kv-types-4/ev/por/plan_c.json + bind_kvcls (asbuilt kvbind_27db6); holds ['kv3_io_cor', 'kv3_io_cor_v1'] dropped; retry ['kv3_hroot@10', 'kv3_io_ft_v1@17', 'kv3_io_cor@6', 'kv3_io_cor_v1@7']. kvcls plan does NOT carry the phy R8 prune (phy rows in flight keep their spec). Revert *_prev_kw35k2, pop hold_items_kw35k2_added, restore hold_items_prev_kw35k2_dropped, drop retry_prev_kw35k2_added"
+      "note_kw35k2": "KW-FIX-35-K 2026-11-08 07:57 PST: ringdens batch: src kw35/src_e2rd = src_e210k + 5178ea7aa2 (6 new files); plan kv-types-4/ev/por/plan_c.json + bind_kvcls (asbuilt kvbind_27db6); holds ['kv3_io_cor', 'kv3_io_cor_v1'] dropped; retry ['kv3_hroot@10', 'kv3_io_ft_v1@17', 'kv3_io_cor@6', 'kv3_io_cor_v1@7']. kvcls plan does NOT carry the phy R8 prune (phy rows in flight keep their spec). Revert *_prev_kw35k2, pop hold_items_kw35k2_added, restore hold_items_prev_kw35k2_dropped, drop retry_prev_kw35k2_added",
+      "work_root_prev_kw35e10": "/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave",
+      "gen_hosts_prev_kw35e10": [
+        "intel1",
+        "epyc4",
+        "epyc5",
+        "epyc6"
+      ]
     },
     "s81": {
       "enabled": true,
@@ -5406,7 +5413,7 @@
           "ref": "COORD 11-01 09:2x: aspect = plan slot shape, granted by exception (12.28b), no reshape; DIE-HEAD-53"
         }
       ],
-      "work_root": "/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/s81_head/kit-wave",
+      "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81_head/kit-wave",
       "hold_items": {
         "hd_spn": "CODEX HEAD owner01:59: future autosubmits held until reviewed prepared-source paid internal-station realization event; current plan prices registerchains but oldl48uh actualRTL has0u_ist stages. Existing spn@3 ifprogressing and private FSTART vA/vB remainowned/live; no sweep or blind same-unrealized-source retry."
       },
@@ -5467,10 +5474,10 @@
         "hd_serdes@12": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE"
       },
       "gen_hosts": [
+        "epyc6",
         "intel1",
         "epyc4",
-        "epyc5",
-        "epyc6"
+        "epyc5"
       ],
       "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
       "cancel_superseded": false,
@@ -5910,7 +5917,14 @@
         "hd_lep0N@14",
         "hd_serdes@12"
       ],
-      "note_kw35h": "KW-FIX-35-H 2026-11-08 07:12 PST: s81_head src -> kw35/src_95df6h = claude/die-head-87-classfix-1108@95df6810481 (= kw33/src_d95ec hardlinks + 68 files, sha256-checked on intel1/epyc4/epyc5/epyc6); restage_waiters false (restage stopped 3 HEAD rows 30 times 11-06/07 and relaunched from mkdir, discarding done kit_rtl/gen/place); hd_host/hd_lep0N/hd_serdes fresh. Revert *_prev_kw35h"
+      "note_kw35h": "KW-FIX-35-H 2026-11-08 07:12 PST: s81_head src -> kw35/src_95df6h = claude/die-head-87-classfix-1108@95df6810481 (= kw33/src_d95ec hardlinks + 68 files, sha256-checked on intel1/epyc4/epyc5/epyc6); restage_waiters false (restage stopped 3 HEAD rows 30 times 11-06/07 and relaunched from mkdir, discarding done kit_rtl/gen/place); hd_host/hd_lep0N/hd_serdes fresh. Revert *_prev_kw35h",
+      "work_root_prev_kw35e10": "/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/s81_head/kit-wave",
+      "gen_hosts_prev_kw35e10": [
+        "intel1",
+        "epyc4",
+        "epyc5",
+        "epyc6"
+      ]
     },
     "qwen_compute": {
       "enabled": true,
@@ -10501,6 +10515,8 @@
     "intel2"
   ],
   "root_floor_gb": 150,
-  "root_gen_room_gb": 40,
-  "note_kw35_e6root": "KW-FIX-35 2026-11-08 08:42 PST COORD 08:4x epyc6 wave room: epyc6 += s81/qwen_compute gen_hosts (their kw26 lane is on the epyc6 ROOT disk, 218 GB; src_probe drops it if inputs incomplete). The gen pick uses the work_root disk measure once claude/kw-fix-35-e6root-1108@54da643aa0d merges (inert before: the ot-run scratch2 figure of 60 GB ranks epyc6 last). root_floor_gb 150 (owner) + root_gen_room_gb 40 = gen floor on '/' lanes. kw23 ot-run wrapper epyc6 root floor 200 -> 150 (bak ot-run.bak-kw35-e6floor-1108). Revert: gen_hosts <- gen_hosts_prev_kw35e6, drop root_* keys."
+  "root_gen_room_gb": 20,
+  "note_kw35_e6root": "KW-FIX-35 2026-11-08 08:42 PST COORD 08:4x epyc6 wave room: epyc6 += s81/qwen_compute gen_hosts (their kw26 lane is on the epyc6 ROOT disk, 218 GB; src_probe drops it if inputs incomplete). The gen pick uses the work_root disk measure once claude/kw-fix-35-e6root-1108@54da643aa0d merges (inert before: the ot-run scratch2 figure of 60 GB ranks epyc6 last). root_floor_gb 150 (owner) + root_gen_room_gb 40 = gen floor on '/' lanes. kw23 ot-run wrapper epyc6 root floor 200 -> 150 (bak ot-run.bak-kw35-e6floor-1108). Revert: gen_hosts <- gen_hosts_prev_kw35e6, drop root_* keys.",
+  "root_gen_room_gb_prev_kw35e10": 40,
+  "note_kw35_e10": "KW-FIX-35 2026-11-08 09:27 PST COORD 09:2x (3): qwen_kvsys + s81_head new attempts on the ROOT lane kw26-wave-1106 (epyc6 root 217 GB; scratch2 69 GB). epyc6 first in gen_hosts. root_gen_room_gb 40 -> 20 (gen floor on '/' lanes = 150 owner + 20 = 170) so epyc4 root (178) also qualifies when epyc6 fills. Running rows keep their dirs. HBM moved by KW-FIX-35-B in its switch. Revert: work_root/gen_hosts <- *_prev_kw35e10, root_gen_room_gb <- root_gen_room_gb_prev_kw35e10."
 }
