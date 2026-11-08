@@ -1,0 +1,38 @@
+{
+  "verdict": "PASS_CONDITIONAL_PLACE_ONLY",
+  "image": "preplace_local.png",
+  "viewed": true,
+  "source_branch": "codex/svc-sm-local-0222",
+  "canonical_remote": "intel2:/home/ubuntu/OpenTallas",
+  "scope": "Fresh same-edge local control form; old PLACE FAIL preserved",
+  "model": {
+    "kind": "ONE_LEAF_PLACE_PILOT",
+    "outline_um": [
+      155.52,
+      155.52
+    ],
+    "core_margin_um": 4.32,
+    "estimated_cells": 63884,
+    "estimated_std_area_um2": 7134.84156,
+    "mapped_core_fill": 0.33071889306285335,
+    "cell_area_scope": "original measured SMD + conservative 1000 cells/300um2 local control budget; before 301 face flops",
+    "mission_added_cycles": 0,
+    "added_pin_cycles": {
+      "rx": 1,
+      "tx": 1
+    },
+    "signal_cap": "M6",
+    "qualification": "unqualified standalone candidate; no die plan adoption",
+    "measured_rtl_sha256": "7370c1e357ac93ebcc4e272440ff753a01436784374d561355bd469025ee12fd"
+  },
+  "findings": [
+    "Wide data buses stay on W/E faces with registered boundaries; den N and cosine S; no opposite side duplicate port.",
+    "303 pins at 0.576um pitch; low track use. No macros or macro walls; full unobstructed PDN and channels.",
+    "Clock and first reset stage at center. Seven root/reset FFs share small band; six reset consumer bands each <=92um W+H. These are control cells only and do not block arithmetic.",
+    "Local copies preserve original same edge and reset release. No new mission cycles. Standalone pilot face shell has +1 RX and +1 TX, not adopted to R5.",
+    "Sparse control bands at estimated33.1percent core fill leave substantial legal placement freedom; no exclusive multiregion GPL constraints."
+  ],
+  "held": [
+    "No CTS/GRT/route before actual new PLACE image review. Native service schedule/calibration remains separate."
+  ]
+}
