@@ -18,7 +18,7 @@ namespace eval ::ot_tap_pair {
   if {[lindex $a 1]!=[lindex $b 1]} {return [expr {[lindex $a 1]<[lindex $b 1] ? -1 : 1}]}
   return [string compare [lindex $a 2] [lindex $b 2]]
  }
- proc plan {regs pairs tapxy load cap radius limit maxpasses {mergelimit 0}} {
+ proc plan {regs pairs tapxy load cap radius limit maxpasses {mergelimit 0} {shift 0}} {
   if {$cap<1 || $radius<=0 || $limit<2 || $limit>$cap || $maxpasses<1} {
    error "OT_TAP_PAIR invalid capacity/radius/group/passes"
   }
@@ -161,6 +161,63 @@ namespace eval ::ot_tap_pair {
    }
    lappend passes [list merge $merged $mergemoves $cross]
    incr moves $mergemoves
+  }
+  # QC-TYPES-6 v4 SHIFT phase (shift>0, after merge): where a cut must stay (a chain inside a component too large to
+  # merge), put it on the LONGEST pair: a phase-1 group moves to a tap with exactly as many votes as its own (same
+  # cross count) only if the summed distance of its cross pairs grows, so the unavoidable tap boundary lands where
+  # the data path has the most wire to absorb the tap skew (vPAC3: xh2 lw_ctl[106] -> xl2_4 wctl[34], 2.7 um
+  # apart, -65.12 ps).  The total cross distance rises strictly, so the passes converge.
+  set shifts 0
+  if {$shift>0} {
+   set dist {}
+   foreach edge $pairs {
+    lassign $edge distance a b
+    if {$a eq $b} continue
+    dict lappend dist $a [list $b $distance];dict lappend dist $b [list $a $distance]
+   }
+   for {set sp 0} {$sp<$shift} {incr sp} {
+    set sm 0
+    dict for {r members} $groups {
+     set n [llength $members]
+     if {$n>$limit} continue
+     set old [lindex [dict get $regs [lindex $members 0]] 3]
+     set votes {};set ext {}
+     foreach v $members {
+      if {![dict exists $dist $v]} continue
+      foreach ud [dict get $dist $v] {
+       lassign $ud u d
+       if {[dict get $owner $u] eq $r} continue
+       set t [lindex [dict get $regs $u] 3]
+       dict incr votes $t;lappend ext [list $t $d]
+      }
+     }
+     set current [expr {[dict exists $votes $old] ? [dict get $votes $old] : 0}]
+     set s0 0;foreach e $ext {if {[lindex $e 0] ne $old} {set s0 [expr {$s0+[lindex $e 1]}]}}
+     set best {};set bs $s0
+     dict for {tap count} $votes {
+      if {$tap eq $old || $count!=$current || [dict get $load $tap]+$n>$cap} continue
+      set s 0;foreach e $ext {if {[lindex $e 0] ne $tap} {set s [expr {$s+[lindex $e 1]}]}}
+      if {$s<=$bs} continue
+      lassign [dict get $tapxy $tap] tx ty;set good 1
+      foreach v $members {
+       lassign [dict get $regs $v] it x y t
+       if {abs($x-$tx)+abs($y-$ty)>$radius} {set good 0;break}
+      }
+      if {$good} {set best $tap;set bs $s}
+     }
+     if {$best eq {}} continue
+     foreach v $members {set row [dict get $regs $v];lset row 3 $best;dict set regs $v $row}
+     dict incr load $old -$n;dict incr load $best $n;incr sm
+    }
+    incr shifts $sm
+    if {!$sm} break
+   }
+   set cross 0
+   foreach edge $pairs {
+    lassign $edge distance a b
+    if {[lindex [dict get $regs $a] 3] ne [lindex [dict get $regs $b] 3]} {incr cross}
+   }
+   lappend passes [list shift $shifts $shifts $cross]
   }
   # Fail before any physical connection changes if a promised invariant is lost.
   foreach edge $pairs {

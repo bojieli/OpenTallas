@@ -11,16 +11,16 @@ TCLSH = shutil.which('tclsh')
 pytestmark = pytest.mark.skipif(TCLSH is None, reason='tclsh not installed')
 
 
-def run(regs, pairs, taps, load=None, cap=100, radius=10**6, limit=64, passes=20, merge=0):
+def run(regs, pairs, taps, load=None, cap=100, radius=10**6, limit=64, passes=20, merge=0, shift=0):
     """regs {name: (x, y, tap)}; pairs [(a, b)]; taps {tap: (x, y)} -> ({name: tap}, passes)."""
     load = load or {k: sum(1 for r in regs.values() if r[2] == k) for k in taps}
     r = ' '.join(f'{{{n}}} {{opaque {x} {y} {tp}}}' for n, (x, y, tp) in regs.items())
-    p = ' '.join(f'{{1 {a} {b}}}' for a, b in pairs)
+    p = ' '.join(f'{{{e[2] if len(e) > 2 else 1} {e[0]} {e[1]}}}' for e in pairs)
     tx = ' '.join(f'{k} {{{x} {y}}}' for k, (x, y) in taps.items())
     ld = ' '.join(f'{k} {v}' for k, v in load.items())
     script = (f'source {{{PLAN}}}\n'
               f'set res [::ot_tap_pair::plan [dict create {r}] [list {p}] [dict create {tx}] [dict create {ld}] '
-              f'{cap} {radius} {limit} {passes} {merge}]\n'
+              f'{cap} {radius} {limit} {passes} {merge} {shift}]\n'
               'dict for {n row} [dict get $res regs] {puts "REG $n [lindex $row 3]"}\n'
               'puts "PASSES [dict get $res passes]"\n')
     res = subprocess.run([TCLSH], input=script, capture_output=True, text=True, check=True)
@@ -36,7 +36,7 @@ def run(regs, pairs, taps, load=None, cap=100, radius=10**6, limit=64, passes=20
 
 
 def cross(lab, pairs):
-    return sum(lab[a] != lab[b] for a, b in pairs)
+    return sum(lab[e[0]] != lab[e[1]] for e in pairs)
 
 
 CHAIN_TAPS = {'t0': (0, 0), 't1': (10, 0)}
@@ -97,3 +97,31 @@ def test_exports_are_opt_in_and_bounded():
     for spec in [{'radius_um': 201}, {'max_group': 1201}, {'merge_max': 1}, {'depth': 5}]:
         with pytest.raises(ValueError):
             tap_pair_affinity_exports({'clock': {'tap_radius_um': 200, 'tap_max_sinks': 1200, 'tap_pair_affinity': spec}})
+
+
+SHIFT_TAPS = {'t0': (0, 0), 't1': (4, 0), 't2': (3, 0)}
+
+
+def shift_case():
+    # frozen X (t0) - single s (own tap t2) - frozen Y (t1).  Label propagation sees a 1:1 tie and takes the nearer
+    # tap t1, leaving the unavoidable cut on the 1-um x2-s pair; the shift moves it onto the 10-um s-y0 pair.
+    regs = {f'x{i}': (i, 0, 't0') for i in range(3)}
+    regs.update({f'y{i}': (5 + i, 0, 't1') for i in range(3)})
+    regs['s'] = (3, 0, 't2')
+    pairs = [('x0', 'x1', 1), ('x1', 'x2', 1), ('x2', 's', 1), ('s', 'y0', 10), ('y0', 'y1', 1), ('y1', 'y2', 1)]
+    return regs, pairs
+
+
+def test_shift_moves_the_cut_to_the_longest_pair():
+    regs, pairs = shift_case()
+    lab, _ = run(regs, pairs, SHIFT_TAPS, limit=2, shift=0)
+    assert lab['s'] == 't1' and cross(lab, pairs) == 1
+    lab, passes = run(regs, pairs, SHIFT_TAPS, limit=2, shift=5)
+    assert lab['s'] == 't0' and cross(lab, pairs) == 1 and 'shift' in passes
+
+
+def test_shift_never_breaks_a_coherent_pair():
+    regs, pairs = shift_case()
+    regs['s'] = (3, 0, 't1')  # s-y0 same tap at the start: coherent, the cut must stay on x2-s
+    lab, _ = run(regs, pairs, SHIFT_TAPS, limit=2, shift=5)
+    assert lab['s'] == lab['y0'] and cross(lab, pairs) == 1
