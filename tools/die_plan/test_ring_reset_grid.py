@@ -42,10 +42,45 @@ def test_north_landing_uses_north_raw_reset_with_the_same_parent_depth():
     assert reset["extra_control_flops"] == 0
 
 
-def test_explicit_noncore_taps_and_unconfigured_types_are_unchanged():
+def test_grid_type_with_stale_explicit_taps_uses_the_reset_grid():
+    """S81-RINGTAP-1: t45 (tap_mode grid + a 14-entry clock.taps list) put its W-face ring on a far relay."""
+    p, _ = physical_vehicle()
+    grid = [(x, y) for _, x, y in RT._taps(S.Plan(p), "B")]
+    q = copy.deepcopy(p)
+    q["partition_types"]["B"]["clock"].update(tap_mode="grid",
+                                              taps=[dict(xy=[71, 82], name="clk"), dict(xy=[91, 102], name="clk_t1")])
+    assert [(x, y) for _, x, y in RT._taps(S.Plan(q), "B")] == grid     # the reset tree ignores the list
+    assert CL.ring_taps(q, "B") == grid
+
+
+def test_ring_reset_is_the_nearest_emitted_relay_with_a_stale_explicit_list():
+    p, t = physical_vehicle()
+    grid = [(x, y) for _, x, y in RT._taps(S.Plan(p), "B")]
+    # stale list: its index 0 sits at the N window, the grid's index 0 does not
+    p["partition_types"]["B"]["clock"].update(tap_mode="grid",
+                                              taps=[dict(xy=[1.5, 800], name="clk"), dict(xy=[700, 100], name="clk_t1")])
+    body = "module b_mod (\n input wire clk,\n input wire [4:0] y\n);\n"
+    for i in range(4):
+        body += (f"wire rst_n_t{i}, p{i};\n"
+                 f"ot_dp_rrelay u_rrl_{i} (.clk(clk), .d(p{i}), .q(rst_n_t{i}));\n")
+    body += "wire [4:0] y_q; assign y_q = y;\nendmodule\n"
+    c = CL.Landings(p, t)
+    out = c.type_rtl("B", body)
+    near = min(range(len(grid)), key=lambda i: abs(grid[i][0] - 1.5) + abs(grid[i][1] - 800))
+    assert near != 0 and f".rst_n(rst_n_t{near})" in out
+    assert c.reset_placements["B"]["y"]["net"] == f"rst_n_t{near}"
+
+
+def test_explicit_noncore_taps_other_modes_and_unconfigured_types_are_unchanged():
     p, _ = physical_vehicle()
     p["partition_types"]["B"]["clock"]["taps"] = [dict(xy=[71, 82]), dict(xy=[91, 102])]
-    assert CL.ring_taps(p, "B") == [(71, 82), (91, 102)]
+    assert CL.ring_taps(p, "B") == [(71, 82), (91, 102)]          # tap_um only, no mode: unchanged
+    dens = copy.deepcopy(p)
+    dens["partition_types"]["B"]["clock"]["tap_mode"] = "density"
+    assert CL.ring_taps(dens, "B") == [(71, 82), (91, 102)]       # QC glue/density lists: unchanged
     bare = copy.deepcopy(p)
     bare["partition_types"]["B"].pop("clock")
     assert CL.ring_taps(bare, "B") == []
+    geo = copy.deepcopy(p)
+    geo["partition_types"]["B"]["clock"] = dict(taps=[dict(xy=[71, 82]), dict(xy=[91, 102])])
+    assert CL.ring_taps(geo, "B") == [(71, 82), (91, 102)]
