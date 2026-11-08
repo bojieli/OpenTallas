@@ -3434,3 +3434,4 @@ CODEX: 2026-11-08 02:36 PST SVC compiler packinga8175d published/H16realL0identi
 CODEX: 2026-11-08 02:22 PST takeover; all five dies plus flow/token/fleet assigned, 646 lane inventory; collecting jobs and structural fixes. Canonical intel2; no merges/tags/POR changes. Checkpoint handoff/codex_takeover_20261108_0222_checkpoint.md.
 
 CODEX: 2026-11-08 02:29 PST branch fixes READY HCL1762cad3e01/QCdigest1aa8d5d7e5/QChold7f6b7773d8/SVCpacking a8175d573b; no merge/tag/POR. Bksel finalreport active; SVC rate mismatch calibration active; all five die scopes staffed.
+CODEX: 2026-11-08 02:39 PST HBM OPEN: s3 arithmetic CLOCK-LEAF locality PLACE pilot admitted intel1; SVGRown full285bit4group head form+numeric W pin proposal/proof committed f5eae6f002, own PLACE pilot on intel1; noPOR/no merges/tags, PIN CYCLES0. qout strictECO+svgr_topvM1 healthy, no duplicates. lanes/CODEX-HBM-OPEN-0222.md.
