@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.autopilot.gates.v1",
+ "id": "export-view:14f60b298816",
+ "die": "s81",
+ "type": "dsfd_coll_lane_e_safe8_ntf",
+ "src": "/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert_input1",
+ "geom": "n/a (view export of a signed run; geometry was reviewed at sign-off)",
+ "preflight": "PASS (kit_preflight before runner)",
+ "signoff": "LOCAL_PASS_NEEDS_PARENT",
+ "signoff_record": "/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/signoff/signoff.json",
+ "tt_wns_ps": 30.31,
+ "ff_wns_ps": 0.02,
+ "gates": {},
+ "routed_lec": "EQUIVALENT",
+ "routed_lec_all_shown": true,
+ "routed_lec_record": "/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/lec/lec.json",
+ "lec_tool": null,
+ "admission_tools_sha256": null,
+ "view_complete": false,
+ "view_problems": [
+  "signoff.json verdict 'LOCAL_PASS_NEEDS_PARENT' is not SIGNED"
+ ]
+}
