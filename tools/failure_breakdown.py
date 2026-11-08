@@ -21,6 +21,9 @@ PLAN_DIE = {'s81': 's81', 's81_head': 's81_head', 'results': 's81_head', 'qwen_c
 # (pattern on class+reason, short label); first match wins
 FAIL_MAP = [
     (r'signed off but no flow release tag', 're-sign (flow tag)'),
+    # KW-FIX-32 11-07 (COORD 17:42 (4), KV-TYPES-3 ASK 2): rows stopped from outside (ruling, operator, infra exit 137)
+    # are not design results; they were other flow error
+    (r'infra-stopped|exit 137|exit-137|[Ss]topped by ruling|Operator stopped|controller stopped|stopped from outside|stopped_by', 'stopped (ruling/infra)'),
     (r'insertion gate|band FAIL; fix the clock', 'clock window (resume)'),
     # KW-FIX-24 11-06 (COORD 19:2x (10)): the GRT-stage G2 setup gate rides the FAIL_POSTCTS marker (kit-wave class
     # post-cts-hold) but is a setup failure at global route, not a hold after CTS
