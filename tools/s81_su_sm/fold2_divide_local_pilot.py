@@ -136,6 +136,7 @@ close $lc_fp
     frozen['local_control_pose'] = dict(file='local_control_pose.tcl', sha256=gen.sha(kit / 'local_control_pose.tcl'), mission_added_cycles=0)
     frozen['kit_hash'] = gen.kit_hash(kit)
     (kit / 'freeze.json').write_text(json.dumps(frozen, indent=1)+'\n')
+    gen.stamp_generation_inputs(kit)
 
 
 if __name__ == '__main__':
