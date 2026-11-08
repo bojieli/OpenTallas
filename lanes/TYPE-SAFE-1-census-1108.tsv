@@ -1,0 +1,487 @@
+die	type	n_cores	masters	plan_istations	core_faces_gt70	measured_dump	core_core_noreg	worst_core_core_um	core_reg_gt405	worst_core_reg_um	xtap_setupcrit	lockup_cand	r2r_gt405_bundles	r2r_reset	r2r_ft	worst_r2r_um	glue_xtap_lockup	s81_grow_x2L	s81_grow_y2L	s81_fits2L	s81_grow_x4L	s81_grow_y4L	s81_fits4L	channels_under
+hbm	NE_io	7	ot_s81_kp4_dchnx1;ot_pdie_serdes_rx_bm3_restx1;ot_pdie_serdes_rx_bm_nativex3	14	0	no																		
+hbm	NW_io	8	ot_s81_kp4_dchnx1;ot_pdie_serdes_rx_bm3_restx1;ot_pdie_serdes_rx_bm_nativex3	57	0	no																		
+hbm	PHY_NC	0		0	0	no																		
+hbm	PHY_NE	0		0	0	no																		
+hbm	PHY_NW	0		0	0	no																		
+hbm	q_b000	19	ot_hbm_hc_bank128_pair_first_corex8;ot_hbm_idx_score_hcol_h0_rax4;ot_hbm_idx_score_hcol_h0_rbx4	99	8	no																		
+hbm	q_b000__physical_v1	19	ot_hbm_hc_bank128_pair_first_corex8;ot_hbm_idx_score_hcol_h0_rax4;ot_hbm_idx_score_hcol_h0_rbx4	99	8	no																		
+hbm	q_b001	48	ot_hbm_hc_bank128_pair_corex8;ot_hbm_idx_score_hcol_h1x14;ot_hbm_idx_score_hcol_h0_rax13	114	26	no																		
+hbm	q_b001__physical_v1	48	ot_hbm_hc_bank128_pair_corex8;ot_hbm_idx_score_hcol_h1x14;ot_hbm_idx_score_hcol_h0_rax13	114	26	no																		
+hbm	q_b002	11	ot_hbm_hc_bank128_pair_corex8;ot_hbm_idx_score_hcol_h1x1;ot_hbm_idx_tail_nativex2	104	0	no																		
+hbm	q_b002__physical_v1	11	ot_hbm_hc_bank128_pair_corex8;ot_hbm_idx_score_hcol_h1x1;ot_hbm_idx_tail_nativex2	104	0	no																		
+hbm	q_b003	8	ot_hbm_hc_bank128_pair_corex8	112	0	no																		
+hbm	q_b003__physical_v1	8	ot_hbm_hc_bank128_pair_corex8	112	0	no																		
+hbm	q_b010	41	ot_hbm_hc_bank128_pair_corex8;ot_hbm_idx_score_hcol_h1x11;ot_hbm_idx_score_hcol_h0_rax11	106	22	no																		
+hbm	q_b010__physical_v1	41	ot_hbm_hc_bank128_pair_corex8;ot_hbm_idx_score_hcol_h1x11;ot_hbm_idx_score_hcol_h0_rax11	106	22	no																		
+hbm	q_b011	19	ot_hbm_hc_bank128_pair_corex8;ot_hbm_idx_score_hcol_h0_rax4;ot_hbm_idx_score_hcol_h0_rbx4	100	8	no																		
+hbm	q_b011__physical_v1	19	ot_hbm_hc_bank128_pair_corex8;ot_hbm_idx_score_hcol_h0_rax4;ot_hbm_idx_score_hcol_h0_rbx4	100	8	no																		
+hbm	q_b012	8	ot_hbm_hc_bank128_pair_corex8	118	0	no																		
+hbm	q_b012__physical_v1	8	ot_hbm_hc_bank128_pair_corex8	118	0	no																		
+hbm	q_b013	8	ot_hbm_hc_bank128_pair_corex8	116	0	no																		
+hbm	q_b013__physical_v1	8	ot_hbm_hc_bank128_pair_corex8	116	0	no																		
+hbm	q_b100	24	ot_hbm_idx_score_hcol_h0_rax8;ot_hbm_idx_score_hcol_h0_rbx8;ot_hbm_idx_score_hcol_h1x8	1453	16	no																		
+hbm	q_b100__physical_v1	24	ot_hbm_idx_score_hcol_h0_rax8;ot_hbm_idx_score_hcol_h0_rbx8;ot_hbm_idx_score_hcol_h1x8	1453	16	no																		
+hbm	q_b101	25	ot_hbm_idx_score_hcol_h0_rax8;ot_hbm_idx_score_hcol_h0_rbx8;ot_hbm_idx_score_hcol_h1x8	1421	16	no																		
+hbm	q_b101_nw	25	ot_hbm_idx_score_hcol_h0_rax8;ot_hbm_idx_score_hcol_h0_rbx8;ot_hbm_idx_score_hcol_h1x8	1421	16	no																		
+hbm	q_b102	24	ot_hbm_idx_score_hcol_h1x8;ot_hbm_idx_score_hcol_h0_rax8;ot_hbm_idx_score_hcol_h0_rbx8	1426	16	no																		
+hbm	q_b102__physical_v1	24	ot_hbm_idx_score_hcol_h1x8;ot_hbm_idx_score_hcol_h0_rax8;ot_hbm_idx_score_hcol_h0_rbx8	1426	16	no																		
+hbm	q_b103	25	ot_hbm_idx_score_hcol_h1x8;ot_hbm_idx_score_hcol_h0_rax8;ot_hbm_idx_score_hcol_h0_rbx8	1353	16	no																		
+hbm	q_b103__physical_v1	25	ot_hbm_idx_score_hcol_h1x8;ot_hbm_idx_score_hcol_h0_rax8;ot_hbm_idx_score_hcol_h0_rbx8	1353	16	no																		
+hbm	q_b110	12	ot_hgi_sfu_split3_lane_core_bkx4;ot_hgi_sfu_split3_lane_core_exx4;ot_hgi_sfu_split3_lane_core_frx4	0	0	no																		
+hbm	q_b110__physical_v1	12	ot_hgi_sfu_split3_lane_core_bkx4;ot_hgi_sfu_split3_lane_core_exx4;ot_hgi_sfu_split3_lane_core_frx4	0	0	no																		
+hbm	q_b111	15	ot_hgi_sfu_split3_lane_core_bkx5;ot_hgi_sfu_split3_lane_core_exx5;ot_hgi_sfu_split3_lane_core_frx5	47	0	no																		
+hbm	q_b111__physical_v1	15	ot_hgi_sfu_split3_lane_core_bkx5;ot_hgi_sfu_split3_lane_core_exx5;ot_hgi_sfu_split3_lane_core_frx5	47	0	no																		
+hbm	q_b112	15	ot_hgi_sfu_split3_lane_core_bkx5;ot_hgi_sfu_split3_lane_core_exx5;ot_hgi_sfu_split3_lane_core_frx5	30	0	no																		
+hbm	q_b112__physical_v1	15	ot_hgi_sfu_split3_lane_core_bkx5;ot_hgi_sfu_split3_lane_core_exx5;ot_hgi_sfu_split3_lane_core_frx5	30	0	no																		
+hbm	q_b113	15	ot_hgi_sfu_split3_lane_core_bkx2;ot_hgi_sfu_split3_lane_core_exx2;ot_hgi_sfu_split3_lane_core_frx2	48	2	no																		
+hbm	q_b113__physical_v1	15	ot_hgi_sfu_split3_lane_core_bkx2;ot_hgi_sfu_split3_lane_core_exx2;ot_hgi_sfu_split3_lane_core_frx2	48	2	no																		
+hbm	q_hub_ne	256	ot_svgr_bkx8;ot_svgr_ownx4;ot_svgr_topx4	2597	2	no																		
+hbm	q_hub_nw	265	ot_svgr_bkx8;ot_svgr_ownx4;ot_svgr_topx4	2708	3	no																		
+hbm	q_mca	0		0	0	no																		
+hbm	q_mcb	0		0	0	no																		
+hbm	q_sm0	352	hnx_rp3h_gsx16;hnx_rp3h_lcx96;hnx_rp3h_tlx192	0	0	no																		
+hbm	q_sm1	352	hnx_rp3h_gsx16;hnx_rp3h_lcx96;hnx_rp3h_tlx192	0	0	no																		
+hbm	q_sm2	352	hnx_rp3h_gsx16;hnx_rp3h_lcx96;hnx_rp3h_tlx192	0	0	no																		
+hbm	q_sm3	352	hnx_rp3h_gsx16;hnx_rp3h_lcx96;hnx_rp3h_tlx192	0	0	no																		
+hbm	q_spb0	7	ot_s81_kp4_dchnx1;ot_pdie_serdes_rx_bm3_restx1;ot_pdie_serdes_rx_bm_nativex3	10	0	no																		
+hbm	q_spb0__physical_v1	7	ot_s81_kp4_dchnx1;ot_pdie_serdes_rx_bm3_restx1;ot_pdie_serdes_rx_bm_nativex3	10	0	no																		
+hbm	q_spb1	0		0	0	no																		
+hbm	q_spb2	2	ot_hbm_svc_sm_xcal_rel_tx2	44	0	no																		
+hbm	q_spb2__physical_v1	2	ot_hbm_svc_sm_xcal_rel_tx2	44	0	no																		
+hbm	q_spt0	2	ot_hbm_svc_sm_xcal_rel_tx2	56	0	no																		
+hbm	q_spt0__physical_v1	2	ot_hbm_svc_sm_xcal_rel_tx2	56	0	no																		
+hbm	q_spt1	0		0	0	no																		
+hbm	q_spt2	0		0	0	no																		
+hbm	q_spu0	0		0	0	no																		
+hbm	q_spu0__physical_v1	0		0	0	no																		
+hbm	q_spu1	0		0	0	no																		
+hbm	q_spu1__physical_v1	0		0	0	no																		
+hbm	q_su00	25	ot_hbm_su_pg_lane_full_x_corex1;ot_hbm_su_pg_sfu_s_corex8;ot_hbm_su_pg_lane_exp_x_corex7	0	0	no																		
+hbm	q_su00__physical_v1	25	ot_hbm_su_pg_lane_full_x_corex1;ot_hbm_su_pg_sfu_s_corex8;ot_hbm_su_pg_lane_exp_x_corex7	0	0	no																		
+hbm	q_su01	24	ot_hbm_su_pg_lane_exp_x_corex8;ot_hbm_su_pg_sfu_s_corex8;ot_hbm_su_pg_lane1p_corex8	0	0	no																		
+hbm	q_su01__physical_v1	24	ot_hbm_su_pg_lane_exp_x_corex8;ot_hbm_su_pg_sfu_s_corex8;ot_hbm_su_pg_lane1p_corex8	0	0	no																		
+hbm	q_su10	25	ot_hbm_su_pg_lane_full_x_corex1;ot_hbm_su_pg_sfu_s_corex8;ot_hbm_su_pg_lane_exp_x_corex7	0	0	no																		
+hbm	q_su10__physical_v1	25	ot_hbm_su_pg_lane_full_x_corex1;ot_hbm_su_pg_sfu_s_corex8;ot_hbm_su_pg_lane_exp_x_corex7	0	0	no																		
+hbm	q_su11	24	ot_hbm_su_pg_lane_exp_x_corex8;ot_hbm_su_pg_sfu_s_corex8;ot_hbm_su_pg_lane1p_corex8	255	0	no																		
+hbm	q_su11__physical_v1	24	ot_hbm_su_pg_lane_exp_x_corex8;ot_hbm_su_pg_sfu_s_corex8;ot_hbm_su_pg_lane1p_corex8	255	0	no																		
+hbm	q_su20	17	ot_hbm_su_pg_lane1_corex16;ot_hbm_su_static_pgslice_lg__pretreex1	0	0	no																		
+hbm	q_su20__physical_v1	17	ot_hbm_su_pg_lane1_corex16;ot_hbm_su_static_pgslice_lg__pretreex1	0	0	no																		
+hbm	q_su21	16	ot_hbm_su_pg_lane1_corex16	0	0	no																		
+hbm	q_su21__physical_v1	16	ot_hbm_su_pg_lane1_corex16	0	0	no																		
+hbm	q_su30	17	ot_hbm_su_pg_lane1_corex16;ot_hbm_su_static_pgslice_lg__pretreex1	0	0	no																		
+hbm	q_su30__physical_v1	17	ot_hbm_su_pg_lane1_corex16;ot_hbm_su_static_pgslice_lg__pretreex1	0	0	no																		
+hbm	q_su31	16	ot_hbm_su_pg_lane1_corex16	0	0	no																		
+hbm	q_su31__physical_v1	16	ot_hbm_su_pg_lane1_corex16	0	0	no																		
+hbm	root	82	ot_hgi_coll_tkm_tp192_htile_corex64;ot_hgi_coll_tkm_m_tp192__rootx1;ot_hbm_hc_root_static__tailx_sk_fsrx2	81	0	no																		
+hbm	vsN0	7	ot_s81_kp4_dchnx1;ot_pdie_serdes_rx_bm3_restx1;ot_pdie_serdes_rx_bm_nativex3	8	0	no																		
+hbm	vsN1	0		0	0	no																		
+hbm	vsN2	0		0	0	no																		
+hbm	vsN4	0		0	0	no																		
+hbm	vsN5	0		0	0	no																		
+hbm	vsN6	0		0	0	no																		
+qwen_compute	cbf_q00__cl1b5a6458	4	qfd_tile_nk_a0cx4	3	0	yes	0		2	684.9	19	12	94	19	0	3465.4	0							
+qwen_compute	cbf_q00__cl870de686	4	qfd_tile_nk_a0cx4	3	0	yes	0		1	669.4	532	12	94	19	0	3465.67	0							
+qwen_compute	cbf_q00_s2	4	qfd_tile_nk_a0cx4	3	0	yes	0		58	1802.3	178	15	1497	19	2	3595.24	0							
+qwen_compute	cbf_q01	4	qfd_tile_nk_a0cx4	2	0	yes	0		0		22	12	79	11	1	2194.99	0							
+qwen_compute	cbf_q01_s2	4	qfd_tile_nk_a0cx4	2	0	no																		
+qwen_compute	cbf_q11	4	qfd_tile_nk_a0cx4	2	0	yes	0		0		18	13	84	14	0	2381.89	0							
+qwen_compute	cbn_q00__cl622f65d2	9	qfd_tile_nk_a0cx4;sle_cland_w515_nx1;sle_cland_w515_n_300x1	3	0	yes	0		0		19	14	107	18	0	2989.49	0							
+qwen_compute	cbn_q00__cld7bf7197	4	qfd_tile_nk_a0cx4	3	0	yes	0		0		520	19	104	18	0	2988.63	0							
+qwen_compute	cbn_q00__cldbcda913	9	qfd_tile_nk_a0cx4;sle_cland_w515_nx1;sle_cland_w515_n_300x1	3	0	no																		
+qwen_compute	cbn_q01__clab6e67f2	4	qfd_tile_nk_a0cx4	2	0	no																		
+qwen_compute	cbn_q01__cld9ff4c40	4	qfd_tile_nk_a0cx4	2	0	yes	0		0		20	12	103	15	1	2286.31	0							
+qwen_compute	cbn_q01__cldd6ea846	4	qfd_tile_nk_a0cx4	2	0	yes	0		0		513	28	104	15	1	2286.79	0							
+qwen_compute	cbn_q11__cl49ae4555	4	qfd_tile_nk_a0cx4	2	0	yes	0		0		19	15	94	20	0	2955.26	0							
+qwen_compute	cbn_q11__cl5cc92dfe	4	qfd_tile_nk_a0cx4	2	0	yes	0		0		17	17	97	20	0	2955.15	0							
+qwen_compute	cbx_q10__cl89936551	4	qfd_tile_nk_a0cx3;qfd_tile_nl_a0cx1	1	0	yes	0		0		13	13	75	12	0	1778.87	0							
+qwen_compute	cbx_q10__cl94a12200	4	qfd_tile_nk_a0cx3;qfd_tile_nl_a0cx1	1	0	yes	0		0		13	13	76	14	0	1736.37	0							
+qwen_compute	coll_core	29	ot_sram_1r1w2c_64x546_m1x4;ot_sram_1r1w_32x546_m1x4;ot_sram_1r1w_64x512_m1_r2c2x8	0	0	yes	0		9	580.1	0	0	390	80	0	1696.79	0							
+qwen_compute	coll_ft__cl78c7b300	0		0	0	yes	0		0		0	0	63	4	0	869.08	0							
+qwen_compute	coll_ft__cla4a25d77	0		0	0	yes	0		0		0	0	76	8	0	1283.2	0							
+qwen_compute	coll_ftc	0		0	0	no																		
+qwen_compute	coll_ftm	0		0	0	yes	0		0		0	0	268	20	0	1736.15	0							
+qwen_compute	coll_ftn	0		0	0	no																		
+qwen_compute	coll_n	6	ot_sram_1r1w2c_64x546_m1x2;ot_sram_1r1w_64x512_m1_r2c2x4	0	0	yes	0		0		0	0	14	5	0	815.45	0							
+qwen_compute	coll_s	12	ot_sram_1r1w2c_64x546_m1x4;ot_sram_1r1w_64x512_m1_r2c2x8	0	0	yes	0		0		0	0	119	45	0	1186.0	0							
+qwen_compute	coll_ucie	0		0	0	yes	0		0		0	0	21	6	0	836.19	0							
+qwen_compute	glue	6	ot_sram_1r1w_64x512_m1_r2c2x1;ot_rom_4096x72_m8x1;d2d_sram_1r1w_64x137_m1_r2c2_p192x4	0	0	yes	0		0		0	0	1542	158	0	1835.68	0							
+qwen_compute	native59	0		0	0	yes	0		0		0	0	423	69	1	889.11	0							
+qwen_compute	phy_serdes	0		0	0	no																		
+qwen_compute	phy_serdes_b	0		0	0	no																		
+qwen_compute	phy_ucie_kv	0		0	0	no																		
+qwen_compute	sle_ctl__cl372cea1c	0		0	0	yes	0		0		0	0	7927	36	117	2342.3	0							
+qwen_compute	sle_ctl__cl503337ff	0		0	0	no																		
+qwen_compute	sle_ctl__cl67434795	0		0	0	yes	0		0		0	0	7628	36	117	2342.09	0							
+qwen_compute	sle_ctl__cla4f6f12f	0		0	0	yes	0		0		0	0	8294	42	117	2342.84	0							
+qwen_compute	sle_fe_v1__cl1cbb7497	0		0	0	yes	0		0		0	0	3301	26	568	1729.73	0							
+qwen_compute	sle_fe_v1__cl8210183c	0		0	0	yes	0		0		0	0	3289	155	543	1729.13	0							
+qwen_compute	sle_fe_v2	0		0	0	yes	0		0		0	0	3503	25	520	1734.32	0							
+qwen_compute	sle_fe_v3	0		0	0	no																		
+qwen_compute	sle_fw_v1__cl9d029624	0		0	0	yes	0		0		0	0	152	15	16	1716.61	0							
+qwen_compute	sle_fw_v1__clf58b4dfb	0		0	0	yes	0		0		0	0	124	83	4	1716.66	0							
+qwen_compute	sle_fw_v2__cl6740750e	0		0	0	yes	0		0		0	0	164	15	19	1694.09	0							
+qwen_compute	sle_fw_v2__cl69f5e854	0		0	0	yes	0		0		0	0	131	94	2	1694.47	0							
+qwen_compute	sle_fw_v3	0		0	0	no																		
+qwen_compute	sle_hc0__cl05696ed1	0		0	0	no																		
+qwen_compute	sle_hc0__cl929603c0__cl38badc56	0		0	0	no																		
+qwen_compute	sle_hc0__cl929603c0__cl4baa7c9c	0		0	0	no																		
+qwen_compute	sle_hc1__cl22c1ff36	0		0	0	yes	0		0		0	0	102	84	3	1515.78	0							
+qwen_compute	sle_hc1__cl7d360508	0		0	0	yes	0		0		0	0	83	76	2	1420.15	0							
+qwen_compute	sle_hc2__cl9c4c4509__cl3edce1b8	0		0	0	yes	0		0		0	0	110	83	0	1330.34	0							
+qwen_compute	sle_hc2__cl9c4c4509__clf60c5152	0		0	0	no																		
+qwen_compute	sle_hc2__clcc5e3e61	0		0	0	yes	0		0		0	0	115	87	0	1329.64	0							
+qwen_compute	sle_sc_v1__cl115da35f	1	qfd_dv_s5_sc2_leafx1	0	0	yes	0		1	457.9	16	42	161	18	0	1602.07	0							
+qwen_compute	sle_sc_v1__cl7479a5ec	1	qfd_dv_s5_sc2_leafx1	0	0	yes	0		1	456.9	16	93	125	122	0	1601.59	0							
+qwen_compute	sle_sc_v2	1	qfd_dv_s5_sc2_leafx1	0	0	no																		
+qwen_compute	sle_sc_v3	1	qfd_dv_s5_sc2_leaf_dn0x1	0	0	yes	0		1	591.9	21	86	134	15	0	1592.03	0							
+qwen_compute	sle_st_a_v1__cl67389ecd	24	ot_sram_1r1w_128x256_m1_r2c2x4;ot_sram_1r1w_32x64_m1x20	0	0	yes	0		0		0	0	486	90	2	1272.89	0							
+qwen_compute	sle_st_a_v1__cl989804f6__cl18eece69	24	ot_sram_1r1w_128x256_m1_r2c2x4;ot_sram_1r1w_32x64_m1x20	0	0	yes	0		0		0	0	447	10	14	1458.76	0							
+qwen_compute	sle_st_a_v1__cl989804f6__cled3c1d7b	24	ot_sram_1r1w_128x256_m1_r2c2x4;ot_sram_1r1w_32x64_m1x20	0	0	yes	0		0		0	0	483	89	2	1259.33	0							
+qwen_compute	sle_st_a_v2	24	ot_sram_1r1w_128x256_m1_r2c2x4;ot_sram_1r1w_32x64_m1x20	0	0	no																		
+qwen_compute	sle_st_b_v1	20	ot_sram_1r1w_32x64_m1x20	0	0	no																		
+qwen_compute	sle_st_b_v2__cl14c98df5	20	ot_sram_1r1w_32x64_m1x20	0	0	no																		
+qwen_compute	sle_st_b_v2__clfde1249e	20	ot_sram_1r1w_32x64_m1x20	0	0	no																		
+qwen_compute	sle_stm_v1__cl27746664	4	ot_rom_4096x266_m8x4	0	0	no																		
+qwen_compute	sle_stm_v1__clbe630b9c	4	ot_rom_4096x266_m8x4	0	0	yes	0		0		0	0	166	141	0	1728.76	0							
+qwen_compute	sle_stm_v2__cl55be2264	4	ot_rom_4096x266_m8x4	0	0	no																		
+qwen_compute	sle_stm_v2__cl7b3062fa	4	ot_rom_4096x266_m8x4	0	0	yes	0		0		0	0	193	34	0	1620.43	0							
+qwen_compute	sle_stm_v3	4	ot_rom_4096x266_m8x4	0	0	no																		
+qwen_compute	sle_su_c	9	qfd_dv_s8x_vmrx3;qfd_dv_s8_crh_rp1x2;qfd_dv_s8x_progx1	0	0	no																		
+qwen_compute	sle_su_l0__cl086d85ba	4	qfd_qc_su_lane_w_l0x1;qfd_qc_su_lane_w_l1x1;qfd_qc_su_lane_w_l2x1	0	0	yes	0		17	1216.5	29	5	72	26	12	1535.22	0							
+qwen_compute	sle_su_l0__cl7a55c676	4	qfd_qc_su_lane_w_l0x1;qfd_qc_su_lane_w_l1x1;qfd_qc_su_lane_w_l2x1	0	0	yes	0		16	1216.8	25	12	38	10	12	1532.25	0							
+qwen_compute	sle_su_l1__cl5ea486db	4	qfd_qc_su_lane_w_l4x1;qfd_qc_su_lane_w_l5x1;qfd_qc_su_lane_w_l6x1	0	0	yes	0		18	1215.2	27	15	83	5	13	1128.76	0							
+qwen_compute	sle_su_l1__clc6d66f5b	4	qfd_qc_su_lane_w_l4x1;qfd_qc_su_lane_w_l5x1;qfd_qc_su_lane_w_l6x1	0	0	yes	0		16	1216.0	27	16	81	9	12	1213.0	0							
+qwen_compute	slw_fe_v1__cl95cd1d0c	0		0	0	no																		
+qwen_compute	slw_fe_v1__clfe325744__cl08d14f0d	0		0	0	yes	0		0		0	0	2516	25	252	1728.11	0							
+qwen_compute	slw_fe_v1__clfe325744__cldb4efe33	0		0	0	no																		
+qwen_compute	slw_fe_v2__cle312294d	0		0	0	yes	0		0		0	0	3026	24	383	1727.08	0							
+qwen_compute	slw_fe_v2__clf110fab2	0		0	0	yes	0		0		0	0	2571	142	289	1727.08	0							
+qwen_compute	slw_fw_v1__cl51d45468	0		0	0	yes	0		0		0	0	145	98	10	1794.31	0							
+qwen_compute	slw_fw_v1__clf51c11d8__cl592e3d37	0		0	0	yes	0		0		0	0	180	22	26	1794.31	0							
+qwen_compute	slw_fw_v1__clf51c11d8__clc7ddab13	0		0	0	yes	0		0		0	0	144	96	10	1794.64	0							
+qwen_compute	slw_fw_v2__cl8537f156	0		0	0	no																		
+qwen_compute	slw_fw_v2__cl8f84514c	0		0	0	no																		
+qwen_compute	slw_fw_v3	0		0	0	yes	0		0		0	0	157	112	0	1377.05	0							
+qwen_compute	slw_hc0__cl1bc59e1c	0		0	0	yes	0		0		0	0	113	106	0	1822.5	0							
+qwen_compute	slw_hc0__cl4f54b7a3	0		0	0	no																		
+qwen_compute	slw_hc1__cl3449ea95	0		0	0	no																		
+qwen_compute	slw_hc1__cl68f9248e__cl144ee7b3	0		0	0	no																		
+qwen_compute	slw_hc1__cl68f9248e__cle683a076	0		0	0	yes	0		0		0	0	96	85	2	1420.42	0							
+qwen_compute	slw_hc2__cl6bcaba89	0		0	0	no																		
+qwen_compute	slw_hc2__cla3497502__cl16607c7a	0		0	0	yes	0		0		0	0	87	60	0	1319.54	0							
+qwen_compute	slw_hc2__cla3497502__cldc737267	0		0	0	yes	0		0		0	0	10	6	0	1341.2	0							
+qwen_compute	slw_hc3__clccfc3e6b	0		0	0	yes	0		0		0	0	90	81	0	1046.74	0							
+qwen_compute	slw_hc3__cld86a7ad4	0		0	0	yes	0		0		0	0	16	9	0	1509.68	0							
+qwen_compute	slw_sc_v1__cl63e5a7a2	1	qfd_dv_s5_sc2_leafx1	0	0	no																		
+qwen_compute	slw_sc_v1__cl64543eaf__cl4590432d	1	qfd_dv_s5_sc2_leafx1	0	0	yes	0		3	660.7	17	92	146	143	0	1533.76	0							
+qwen_compute	slw_sc_v1__cl64543eaf__cl5e017c6f	1	qfd_dv_s5_sc2_leafx1	0	0	yes	0		3	660.6	22	87	159	17	0	1533.82	0							
+qwen_compute	slw_sc_v2	1	qfd_dv_s5_sc2_leafx1	0	0	yes	0		0		0	0	676	203	0	1684.31	0							
+qwen_compute	slw_sc_v3	1	qfd_dv_s5_sc2_leaf_up0x1	0	0	no																		
+qwen_compute	slw_st_a_v1__clb036e152	24	ot_sram_1r1w_128x256_m1_r2c2x4;ot_sram_1r1w_32x64_m1x20	0	0	yes	0		0		0	0	443	11	14	1458.76	0							
+qwen_compute	slw_st_a_v1__clfc5867a6	24	ot_sram_1r1w_128x256_m1_r2c2x4;ot_sram_1r1w_32x64_m1x20	0	0	yes	0		0		0	0	509	89	2	1286.82	0							
+qwen_compute	slw_st_a_v2__cl9f076a5c	24	ot_sram_1r1w_128x256_m1_r2c2x4;ot_sram_1r1w_32x64_m1x20	0	0	yes	0		0		0	0	468	76	2	1345.52	0							
+qwen_compute	slw_st_a_v2__clf4365a62	24	ot_sram_1r1w_128x256_m1_r2c2x4;ot_sram_1r1w_32x64_m1x20	0	0	yes	0		0		0	0	475	75	2	1355.35	0							
+qwen_compute	slw_st_b_v1__cl6357f1cc	20	ot_sram_1r1w_32x64_m1x20	0	0	no																		
+qwen_compute	slw_st_b_v1__cle6023ec2	20	ot_sram_1r1w_32x64_m1x20	0	0	no																		
+qwen_compute	slw_st_b_v2	20	ot_sram_1r1w_32x64_m1x20	0	0	no																		
+qwen_compute	slw_stm_v1__cl05fc43f7__cl2086fa2c	4	ot_rom_4096x266_m8x4	0	0	no																		
+qwen_compute	slw_stm_v1__cl05fc43f7__cl389df4e9	4	ot_rom_4096x266_m8x4	0	0	no																		
+qwen_compute	slw_stm_v1__cle34a73c3	4	ot_rom_4096x266_m8x4	0	0	yes	0		0		0	0	190	47	0	1587.82	0							
+qwen_compute	slw_stm_v2__cl1ca9c415	4	ot_rom_4096x266_m8x4	0	0	no																		
+qwen_compute	slw_stm_v2__cl9beb65e6	4	ot_rom_4096x266_m8x4	0	0	no																		
+qwen_compute	slw_stm_v3	4	ot_rom_4096x266_m8x4	0	0	no																		
+qwen_compute	slw_su_c__cl19bb38ef	9	qfd_dv_s8x_vmrx3;qfd_dv_s8_crh_rp1x2;qfd_dv_s8x_progx1	0	0	no																		
+qwen_compute	slw_su_c__cl92142dac	9	qfd_dv_s8x_vmrx3;qfd_dv_s8_crh_rp1x2;qfd_dv_s8x_progx1	0	0	yes	1	69.1	25	1754.9	49	38	289	22	0	2253.42	0							
+qwen_compute	slw_su_l0__cl1a1c1f8f	4	qfd_qc_su_lane_w_l0x1;qfd_qc_su_lane_w_l1x1;qfd_qc_su_lane_w_l2x1	0	0	yes	0		16	1216.9	28	5	63	33	0	1427.27	0							
+qwen_compute	slw_su_l0__cl1e5219ea	4	qfd_qc_su_lane_w_l0x1;qfd_qc_su_lane_w_l1x1;qfd_qc_su_lane_w_l2x1	0	0	yes	0		16	1217.0	29	5	62	31	0	1427.81	0							
+qwen_compute	slw_su_l0__cl76fb247e	4	qfd_qc_su_lane_w_l0x1;qfd_qc_su_lane_w_l1x1;qfd_qc_su_lane_w_l2x1	0	0	no																		
+qwen_compute	slw_su_l1__cla2a78701	10	qfd_qc_su_lane_w_l4x1;qfd_qc_su_lane_w_l5x1;qfd_qc_su_lane_w_l6x1	0	0	yes	0		16	1213.8	27	16	74	9	1	1405.73	0							
+qwen_compute	slw_su_l1__clcc9d0155	10	qfd_qc_su_lane_w_l4x1;qfd_qc_su_lane_w_l5x1;qfd_qc_su_lane_w_l6x1	0	0	yes	0		16	1213.7	28	15	75	9	1	1405.51	0							
+qwen_compute	tt_ctlm	19	ot_sram_1r1w_64x512_m1_r2c2x8;ot_rom_4096x266_m8x2;ot_rom_4096x72_m8x3	0	0	no																		
+qwen_kvsys	kv3_hg	20	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	0	0	no																		
+qwen_kvsys	kv3_hg_v1	20	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	20	0	no																		
+qwen_kvsys	kv3_hg_v1p2	20	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	20	0	no																		
+qwen_kvsys	kv3_hg_v1p3	20	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	20	0	no																		
+qwen_kvsys	kv3_hg_v1p4	20	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	20	0	no																		
+qwen_kvsys	kv3_hg_v1p5	20	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	20	0	no																		
+qwen_kvsys	kv3_hg_v1p6	20	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	20	0	no																		
+qwen_kvsys	kv3_hg_v3	20	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	16	0	no																		
+qwen_kvsys	kv3_hgi	16	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	0	0	yes	22	872.6	21	1460.9	0	0	79	16	38	2163.83	0							
+qwen_kvsys	kv3_hgi_v1__cl141fc26e	16	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	0	0	no																		
+qwen_kvsys	kv3_hgi_v1__cl42bc8b12	16	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	0	0	no																		
+qwen_kvsys	kv3_hgi_v2__cl2862d491	16	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	0	0	no																		
+qwen_kvsys	kv3_hgi_v2__cle0015330	16	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	0	0	no																		
+qwen_kvsys	kv3_hgi_v3	16	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	0	0	yes	22	872.6	20	1433.4	0	0	336	24	295	2327.51	0							
+qwen_kvsys	kv3_hgi_v4	16	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	0	0	yes	22	872.6	24	1405.9	0	0	268	28	224	2426.92	0							
+qwen_kvsys	kv3_hgi_v5	16	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	0	0	yes	22	872.6	24	1400.0	0	0	347	27	297	2609.44	0							
+qwen_kvsys	kv3_hgi_v6	16	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	0	0	yes	22	872.6	21	1427.1	0	0	340	34	294	2342.25	0							
+qwen_kvsys	kv3_hgi_v7	16	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	0	0	yes	22	872.6	25	1382.9	0	0	277	34	230	2415.96	0							
+qwen_kvsys	kv3_hgi_v8	16	kv3_head_eighth_e0x2;kv3_head_eighth_e1x4;kv3_head_eighth_e2x2	0	0	no																		
+qwen_kvsys	kv3_hroot	0		4	0	yes	0		0		0	0	14	6	0	933.01	0							
+qwen_kvsys	kv3_hub_C	2	qkd_ahubx1;qkd_kvs_ctlx1	0	0	no																		
+qwen_kvsys	kv3_hub_Ei	0		2	0	yes	0		0		0	0	968	64	843	2755.03	0							
+qwen_kvsys	kv3_hub_Eo	2	kv3_astkx2	25	0	no																		
+qwen_kvsys	kv3_hub_Wi	21	qkd_hr_ingest_engx1;qkd_hr_core_orderx1;qkd_hr_cdc_chx1	0	0	no																		
+qwen_kvsys	kv3_hub_Wo	2	kv3_astkx2	25	0	no																		
+qwen_kvsys	kv3_io_cor	0		6	0	yes	0		0		0	0	9	4	5	720.79	0							
+qwen_kvsys	kv3_io_cor_v1	0		0	0	yes	0		0		0	0	3	0	3	456.68	0							
+qwen_kvsys	kv3_io_ft	0		0	0	yes	0		0		0	0	0	0	0	382.48	0							
+qwen_kvsys	kv3_io_ft_v1	0		0	0	yes	0		0		0	0	0	0	0	382.48	0							
+qwen_kvsys	kv3_pc__cl254f2e73	8	qkd_kvs_pcc_h_head_px1;qkd_kvs_pcf_h_head_px1;qkd_kvs_pccx3	0	0	no																		
+qwen_kvsys	kv3_pc__cl5a95b461	8	qkd_kvs_pcc_h_head_px1;qkd_kvs_pcf_h_head_px1;qkd_kvs_pccx3	0	0	no																		
+qwen_kvsys	kv3_pc_v1__cl23f6a148	8	qkd_kvs_pccx4;qkd_kvs_pcfx4	5	0	no																		
+qwen_kvsys	kv3_pc_v1__cl4ea58a5c	8	qkd_kvs_pccx4;qkd_kvs_pcfx4	5	0	no																		
+qwen_kvsys	kv3_pc_v1__cl7f648944	8	qkd_kvs_pccx4;qkd_kvs_pcfx4	5	0	no																		
+qwen_kvsys	kv3_pc_v3	8	qkd_kvs_pccx4;qkd_kvs_pcfx4	5	0	no																		
+qwen_kvsys	kv3_phy	0		1	0	yes	0		10	552.3	0	0	0	0	0	393.34	0							
+qwen_kvsys	kv3_phy_v1	0		0	0	yes	0		11	552.3	0	0	0	0	0	393.34	0							
+qwen_kvsys	kv3_pv	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	2	0	yes	16	371.5	6753	1970.3	0	0	303	34	72	3433.27	0							
+qwen_kvsys	kv3_pv_v1	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	18	0	yes	16	371.5	5347	2025.1	0	0	650	44	126	3173.44	0							
+qwen_kvsys	kv3_pv_v12	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	12	0	no																		
+qwen_kvsys	kv3_pv_v1n	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	18	0	yes	16	371.5	5240	1958.7	0	0	779	46	127	3397.84	0							
+qwen_kvsys	kv3_pv_v2	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	22	0	yes	16	371.5	6910	2004.9	0	0	529	38	227	3423.06	0							
+qwen_kvsys	kv3_pv_v2n	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	22	0	yes	16	371.5	6797	2003.3	0	0	631	39	290	3524.42	0							
+qwen_kvsys	kv3_pv_v3	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	23	0	yes	16	371.5	5108	2196.6	0	0	950	58	323	2813.94	0							
+qwen_kvsys	kv3_pv_v3n	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	23	0	yes	16	371.5	5363	1990.5	0	0	881	66	309	2745.85	0							
+qwen_kvsys	kv3_pv_v4	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	22	0	yes	16	371.5	6778	2006.6	0	0	824	36	560	3461.45	0							
+qwen_kvsys	kv3_pv_v4n	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	22	0	yes	16	371.5	6887	2006.6	0	0	903	37	570	3498.44	0							
+qwen_kvsys	kv3_pv_v5	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	23	0	no																		
+qwen_kvsys	kv3_pv_v5n	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	23	0	yes	16	371.5	5142	1991.6	0	0	1119	68	518	2716.31	0							
+qwen_kvsys	kv3_pv_v6	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	22	0	no																		
+qwen_kvsys	kv3_pv_v6n	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	22	0	no																		
+qwen_kvsys	kv3_pv_v7	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	12	0	no																		
+qwen_kvsys	kv3_pv_v8	20	kv3_pv_pairx16;ot_qwen_tp8_pv_join_tx4	2	0	yes	16	371.5	6593	1971.1	0	0	267	33	71	3182.27	0							
+qwen_kvsys	kv3_sys_SD	0		0	0	no																		
+qwen_kvsys	kv3_sys_SD_v1	0		0	0	yes	0		0		0	1	24	7	0	1621.62	0							
+qwen_kvsys	kv3_sys_c	0		2	0	no																		
+s81	bk_sel__t2	7	dsdv_bksel_qx4;dsdv_idx_tx_n32x1;dsdv_bksel_cx1	0	0	no												0.0	0.0	True	0.0	0.0	True	1
+s81	col_h10_r0_p1__t1__cl574cc59d	91	dsfd_qbank_Nx4;dsfd_qbank_Sx4;dsfd_cfifo_crs4x1	2	0	yes	37	656.6	58	1340.2	0	0	67	2	2	1393.04	0	32.1	5.3	False	16.0	0.0	False	14
+s81	col_h10_r0_p1__t1__cl911743eb	91	dsfd_qbank_Nx4;dsfd_qbank_Sx4;dsfd_cfifo_crs4x1	2	0	yes	45	656.6	61	1394.7	107	40	102	0	0	1259.66	0	32.1	5.3	False	16.0	0.0	False	14
+s81	col_h10_r0_p4__t1	91	dsfd_qbank_Nx4;dsfd_qbank_Sx4;dsfd_cfifo_crs4x1	7	0	yes	45	656.6	59	1250.1	0	0	157	70	0	1966.19	0	32.1	5.3	False	16.0	0.0	False	14
+s81	col_h10_r1__t1__cl95b37463	85	dsfd_qbank_Nx4;dsfd_qbank_Sx4;dsfd_bf_front_rootsx2	4	0	yes	51	518.4	58	1130.5	105	40	166	21	0	2170.1	0	137.1	32.9	False	49.6	12.1	False	19
+s81	col_h10_r1__t1__cld01bb4ae	85	dsfd_qbank_Nx4;dsfd_qbank_Sx4;dsfd_bf_front_rootsx2	4	0	yes	51	518.4	55	1192.2	96	37	162	21	0	2171.99	0	137.1	32.9	False	49.6	12.1	False	19
+s81	col_h10_r2__t1__cl1f5d6c2a	71	dsfd_qbank_Nx4;dsfd_qbank_Sx4;ot_v41_rom_elem_q_qxpq_w10_gbx4	0	0	yes	32	397.4	49	1258.0	75	23	70	17	0	1590.35	0	89.6	32.9	False	16.0	12.1	False	14
+s81	col_h10_r2__t1__cl8b686b3e	71	dsfd_qbank_Nx4;dsfd_qbank_Sx4;ot_v41_rom_elem_q_qxpq_w10_gbx4	0	0	yes	32	397.4	50	1315.4	0	0	85	27	0	2049.46	0	89.6	32.9	False	16.0	12.1	False	14
+s81	col_h10_r2__t1__cl99efd374	71	dsfd_qbank_Nx4;dsfd_qbank_Sx4;ot_v41_rom_elem_q_qxpq_w10_gbx4	0	0	yes	32	397.4	49	1331.9	76	20	82	27	0	1591.49	0	89.6	32.9	False	16.0	12.1	False	14
+s81	col_h10_r2__t1__clac068e56	71	dsfd_qbank_Nx4;dsfd_qbank_Sx4;ot_v41_rom_elem_q_qxpq_w10_gbx4	0	0	yes	32	397.4	49	1331.9	76	20	82	27	0	1591.49	0	89.6	32.9	False	16.0	12.1	False	14
+s81	col_h9_r0_p1__t1	80	dsfd_qbank_Nx4;dsfd_qbank_Sx4;dsfd_cfifo_crs4x1	3	0	yes	43	855.4	61	1345.9	0	0	148	83	2	1994.27	0	29.2	65.8	False	0.0	24.2	False	17
+s81	col_h9_r0_p2__t1__cl0045af7b	80	dsfd_qbank_Nx4;dsfd_qbank_Sx4;dsfd_cfifo_crs4x1	3	0	yes	43	855.4	64	1526.6	0	0	149	60	0	1994.22	0	29.2	65.8	False	0.0	24.2	False	17
+s81	col_h9_r0_p2__t1__cl9f71e63d	80	dsfd_qbank_Nx4;dsfd_qbank_Sx4;dsfd_cfifo_crs4x1	3	0	yes	43	855.4	67	1402.7	0	0	145	51	0	1994.38	0	29.2	65.8	False	0.0	24.2	False	17
+s81	col_h9_r0_p3__t1__cl0cd90c0e	80	dsfd_qbank_Nx4;dsfd_qbank_Sx4;dsfd_cfifo_crs4x1	3	0	yes	43	855.4	63	1235.5	0	0	116	49	2	1758.67	0	29.2	65.8	False	0.0	24.2	False	17
+s81	col_h9_r0_p3__t1__cl31d0dc4b	80	dsfd_qbank_Nx4;dsfd_qbank_Sx4;dsfd_cfifo_crs4x1	3	0	yes	43	855.4	60	1175.0	0	0	114	48	2	1759.21	0	29.2	65.8	False	0.0	24.2	False	17
+s81	col_h9_r0_p3__t1__cl8ce97bcb	80	dsfd_qbank_Nx4;dsfd_qbank_Sx4;dsfd_cfifo_crs4x1	3	0	yes	43	855.4	63	1150.4	0	0	117	48	2	1760.08	0	29.2	65.8	False	0.0	24.2	False	17
+s81	col_h9_r0_p4__t1__cl8ef405e8	80	dsfd_qbank_Nx4;dsfd_qbank_Sx4;dsfd_cfifo_crs4x1	7	0	yes	43	855.4	63	1576.1	0	0	165	94	0	2184.14	0	29.2	65.8	False	0.0	24.2	False	17
+s81	col_h9_r0_p4__t1__clcb2fbfe8	80	dsfd_qbank_Nx4;dsfd_qbank_Sx4;dsfd_cfifo_crs4x1	7	0	yes	43	855.4	61	1576.9	0	0	171	92	0	2184.08	0	29.2	65.8	False	0.0	24.2	False	17
+s81	col_h9_r0_p5__t1	80	dsfd_qbank_Nx4;dsfd_qbank_Sx4;dsfd_cfifo_crs4x1	7	0	yes	43	855.4	66	1378.9	0	0	121	46	0	1993.46	0	29.2	65.8	False	0.0	24.2	False	17
+s81	col_h9_r0_p6__t1	80	dsfd_qbank_Nx4;dsfd_qbank_Sx4;dsfd_cfifo_crs4x1	7	0	yes	43	855.4	55	1384.5	89	34	94	31	0	1544.62	0	29.2	65.8	False	0.0	24.2	False	17
+s81	col_h9_r1__t1__cl49d7a23e	77	dsfd_qbank_Nx4;dsfd_qbank_Sx4;ot_v41_rom_elem_q_qxpq_w10_gbx4	4	0	yes	38	535.7	53	1336.8	82	23	106	32	0	2329.21	0	32.1	32.9	False	16.0	12.1	False	15
+s81	col_h9_r1__t1__clf32cde8d	77	dsfd_qbank_Nx4;dsfd_qbank_Sx4;ot_v41_rom_elem_q_qxpq_w10_gbx4	4	0	yes	38	535.7	54	1394.7	85	25	104	27	0	2301.32	0	32.1	32.9	False	16.0	12.1	False	15
+s81	col_h9_r2__t1__cl774acf45	71	dsfd_qbank_Nx4;dsfd_qbank_Sx4;ot_v41_rom_elem_q_qxpq_w10_gbx4	0	0	yes	31	365.0	46	1163.6	0	0	80	27	0	1899.02	0	73.7	34.8	False	16.0	12.1	False	11
+s81	col_h9_r2__t1__cl87f3ff59	71	dsfd_qbank_Nx4;dsfd_qbank_Sx4;ot_v41_rom_elem_q_qxpq_w10_gbx4	0	0	yes	23	365.0	48	1240.5	0	0	63	0	0	1517.89	0	73.7	34.8	False	16.0	12.1	False	11
+s81	col_h9_r2__t1__clb8d86cd5	71	dsfd_qbank_Nx4;dsfd_qbank_Sx4;ot_v41_rom_elem_q_qxpq_w10_gbx4	0	0	yes	31	365.0	49	1200.6	65	18	75	29	0	1898.91	0	73.7	34.8	False	16.0	12.1	False	11
+s81	col_h9_r2__t1__clc9ad8f7e	71	dsfd_qbank_Nx4;dsfd_qbank_Sx4;ot_v41_rom_elem_q_qxpq_w10_gbx4	0	0	yes	31	365.0	50	1223.7	0	0	74	27	0	1591.52	0	73.7	34.8	False	16.0	12.1	False	11
+s81	col_h9_r2__t1__clce45cab5	71	dsfd_qbank_Nx4;dsfd_qbank_Sx4;ot_v41_rom_elem_q_qxpq_w10_gbx4	0	0	yes	31	365.0	48	1156.9	65	18	74	20	0	1898.48	0	73.7	34.8	False	16.0	12.1	False	11
+s81	dsdv_slice_c1x_C__t1	10	ot_s81sl_capc5rx1;ot_s81sl_xrt1x1;ot_s81sl_egnx2	0	0	no												0.0	0.0	True	0.0	0.0	True	1
+s81	dsdv_slice_c1x_C__t10	10	ot_s81sl_capc5rx1;ot_s81sl_xrt1x1;ot_s81sl_egnx2	0	0	yes	6	553.0	78	1705.9	0	0	223	36	3	1640.95	0	63.4	13.7	False	23.0	0.0	False	2
+s81	dsdv_slice_c1x_C__t3	10	ot_s81sl_capc5rx1;ot_s81sl_xrt1x1;ot_s81sl_egnx2	0	0	no												0.0	0.0	True	0.0	0.0	True	1
+s81	dsdv_slice_c1x_C__t4	10	ot_s81sl_capc5rx1;ot_s81sl_xrt1x1;ot_s81sl_egnx2	0	0	no												63.4	0.0	False	23.0	0.0	False	2
+s81	dsdv_slice_c1x_C__t5	10	ot_s81sl_capc5rx1;ot_s81sl_xrt1x1;ot_s81sl_egnx2	0	0	no												0.0	0.0	True	0.0	0.0	True	1
+s81	dsdv_slice_c1x_C__t6	10	ot_s81sl_capc5rx1;ot_s81sl_xrt1x1;ot_s81sl_egnx2	0	0	yes	6	553.0	74	1683.1	0	0	235	48	0	1376.08	0	63.4	13.7	False	23.0	0.0	False	2
+s81	dsdv_slice_c1x_C__t7	10	ot_s81sl_capc5rx1;ot_s81sl_xrt1x1;ot_s81sl_egnx2	0	0	yes	6	552.8	142	1810.4	0	0	651	128	0	2515.0	0	0.0	0.0	True	0.0	0.0	True	1
+s81	dsdv_slice_c1x_C__t8	10	ot_s81sl_capc5rx1;ot_s81sl_xrt1x1;ot_s81sl_egnx2	0	0	yes	6	1347.7	94	1862.7	0	0	442	115	2	1895.94	0	0.0	0.0	True	0.0	0.0	True	1
+s81	dsdv_slice_c1x_C__t9	10	ot_s81sl_capc5rx1;ot_s81sl_xrt1x1;ot_s81sl_egnx2	0	0	no												0.0	0.0	True	0.0	0.0	True	1
+s81	dsdv_slice_c3x_C__t1	10	ot_s81sl_capc5rx1;ot_s81sl_xrt3x1;ot_s81sl_egnx2	0	0	no												0.0	67.1	False	0.0	12.0	False	1
+s81	dsdv_slice_iq_C__t1	10	ot_s81sl_capc5rx1;ot_s81sl_xrt3x1;ot_s81sl_egnx2	0	0	yes	7	449.3	62	1535.8	0	0	240	48	1	1582.25	0	0.0	67.1	False	0.0	12.0	False	1
+s81	dsdv_slice_kv512_C__t1	10	ot_s81sl_capc5rx1;ot_s81sl_xrt1x1;ot_s81sl_egnx2	0	0	no												63.4	13.7	False	23.0	0.0	False	2
+s81	dsdv_slice_lepe_mu_C__t1	10	ot_s81sl_capc5rx1;ot_s81sl_xrt1x1;ot_s81sl_egnx2	0	0	yes	6	553.0	73	1159.7	0	0	235	43	0	1389.8	0	63.4	13.7	False	23.0	0.0	False	2
+s81	dsdv_slice_lepe_mu_LP__t2	8	dsfd_coll_lane_e_safe8_ntfx4;ot_s81_mu72_lnlandx2;ot_s81_mu72_lnland_nstx2	0	0	no												0.0	31.5	False	0.0	2.8	False	4
+s81	dsdv_slice_lepe_nh_mus_C__t1	10	ot_s81sl_capc5rx1;ot_s81sl_xrt1x1;ot_s81sl_egnx2	0	0	yes	6	552.8	127	1797.0	0	0	557	104	0	2456.3	0	0.0	0.0	True	0.0	0.0	True	1
+s81	dsdv_slice_lepe_nh_mus_LP__t1	4	dsfd_coll_lane_e_safe8_ntfx2;ot_s81_mu72_lnland_nstx2	0	0	no												0.0	35.7	False	0.0	7.1	False	2
+s81	dsdv_slice_lepw_mu_C__t1	10	ot_s81sl_capc5rx1;ot_s81sl_xrt1x1;ot_s81sl_egnx2	0	0	no												0.0	0.0	True	0.0	0.0	True	1
+s81	dsdv_slice_lepw_mu_LP__t2	8	dsfd_coll_lane_w_safe8_ntfx4;ot_s81_mu72_lnland_nstx4	0	0	no												0.0	31.4	False	0.0	2.7	False	4
+s81	dsdv_slice_lepw_mus_C__t1	10	ot_s81sl_capc5rx1;ot_s81sl_xrt1x1;ot_s81sl_egnx2	0	0	yes	6	552.8	61	1709.3	0	0	206	55	0	1710.61	0	0.0	0.0	True	0.0	0.0	True	1
+s81	dsdv_slice_lepw_mus_LP__t2	8	dsfd_coll_lane_w_safe8_ntfx4;ot_s81_mu72_lnland_nstx4	0	0	no												0.0	35.7	False	0.0	7.1	False	4
+s81	eng__t1	3	dsdv_eng_rr_ex1;dsdv_eng_rr_h0x1;dsdv_eng_rr_h1x1	2	0	no												0.0	46.7	False	0.0	14.7	False	2
+s81	gunit__t1	10	dsdv_gunit_l5x1;dsdv_gunit_l1x1;dsdv_gunit_l1cx1	3	0	no												0.0	119.6	False	0.0	29.6	False	6
+s81	iqf__t1	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	ot_s81sl_kv_leaf__t1	23	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	36	0	yes	9	213.8	4	769.2	0	0	43	3	2	926.21	0	7.6	15.1	False	0.0	0.0	True	2
+s81	ot_s81sl_kv_leaf__t2	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	ot_s81sl_kv_leaf__t3	23	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	60	0	yes	9	241.9	24	1242.4	0	0	495	42	5	2558.57	0	0.0	29.6	False	0.0	6.2	False	3
+s81	ot_s81sl_kv_leaf__t4	23	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	37	0	yes	9	250.6	4	801.3	0	0	39	6	3	889.81	0	17.9	0.0	False	4.6	0.0	False	3
+s81	ot_s81sl_kv_leaf__t5	23	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	70	0	yes	9	354.2	6	695.7	0	0	37	7	0	791.34	0	2.4	29.6	False	0.0	6.2	False	5
+s81	ot_s81sl_leaf__t1	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	99	0	yes	13	213.8	6	1053.6	0	0	32	1	0	832.25	0	7.6	56.2	False	0.0	19.4	False	5
+s81	ot_s81sl_leaf__t10	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	79	0	yes	13	190.1	9	1206.7	0	0	22	0	0	878.26	0	16.3	0.0	False	0.6	0.0	False	4
+s81	ot_s81sl_leaf__t11	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	164	0	yes	13	388.8	8	948.5	0	0	5	1	0	875.77	0	13.5	23.7	False	0.0	3.2	False	6
+s81	ot_s81sl_leaf__t12	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	130	0	yes	13	241.9	43	1127.6	0	0	53	3	0	1632.85	0	9.6	0.0	False	0.0	0.0	True	5
+s81	ot_s81sl_leaf__t13	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	88	0	yes	13	205.2	9	936.1	0	0	39	4	2	993.49	0	16.3	6.4	False	0.6	0.0	False	5
+s81	ot_s81sl_leaf__t14	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	106	0	yes	13	216.0	27	1230.2	0	0	64	18	4	1437.83	0	0.0	23.7	False	0.0	3.2	False	4
+s81	ot_s81sl_leaf__t15	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	160	0	yes	13	388.8	6	817.2	0	0	5	0	0	1056.4	0	6.3	29.6	False	0.0	6.2	False	8
+s81	ot_s81sl_leaf__t16	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	129	0	yes	13	291.6	15	1178.1	0	0	38	3	0	932.61	0	1.2	23.7	False	0.0	3.2	False	6
+s81	ot_s81sl_leaf__t17	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	117	0	yes	13	213.8	9	1155.0	0	0	30	3	0	1019.36	0	7.6	23.7	False	0.0	3.2	False	4
+s81	ot_s81sl_leaf__t2	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	111	0	yes	13	241.9	37	1149.1	0	0	74	20	0	1684.12	0	0.0	0.0	True	0.0	0.0	True	4
+s81	ot_s81sl_leaf__t21	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	93	0	yes	13	213.8	31	1076.9	0	0	41	7	0	1193.51	0	15.1	15.1	False	0.0	0.0	False	4
+s81	ot_s81sl_leaf__t22	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	111	0	yes	13	241.9	18	879.4	0	0	44	7	0	1662.07	0	0.0	0.0	True	0.0	0.0	True	4
+s81	ot_s81sl_leaf__t23	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	118	0	yes	13	216.0	11	1252.9	0	0	28	0	0	925.99	0	15.1	23.7	False	0.0	3.2	False	5
+s81	ot_s81sl_leaf__t24__cl2456157b	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	87	0	yes	13	216.0	51	977.0	0	0	45	2	0	1502.63	0	16.3	0.0	False	0.6	0.0	False	5
+s81	ot_s81sl_leaf__t24__cl81374cd8	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	87	0	yes	13	216.0	52	1014.8	0	0	31	2	0	1635.04	0	16.3	0.0	False	0.6	0.0	False	5
+s81	ot_s81sl_leaf__t25__cl431c660f	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	154	0	yes	13	388.8	9	975.9	0	0	13	0	0	727.81	0	6.3	29.6	False	0.0	6.2	False	8
+s81	ot_s81sl_leaf__t25__cl55642d17	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	154	0	no												6.3	29.6	False	0.0	6.2	False	8
+s81	ot_s81sl_leaf__t26	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	157	0	yes	13	388.8	10	1118.0	0	0	6	0	0	599.02	0	13.5	23.7	False	0.0	3.2	False	6
+s81	ot_s81sl_leaf__t27	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	89	0	no												16.3	23.7	False	0.6	3.2	False	4
+s81	ot_s81sl_leaf__t28	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	169	0	no												2.4	20.9	False	0.0	0.0	True	8
+s81	ot_s81sl_leaf__t29	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	125	0	yes	13	267.8	6	789.4	0	0	28	0	0	695.52	0	12.4	0.0	False	0.0	0.0	True	4
+s81	ot_s81sl_leaf__t3	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	115	0	yes	13	207.4	9	1209.7	0	0	25	0	0	939.65	0	16.3	29.6	False	0.6	6.2	False	5
+s81	ot_s81sl_leaf__t30	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	160	0	yes	13	388.8	10	1093.1	39	21	8	0	0	859.03	0	6.3	29.6	False	0.0	6.2	False	8
+s81	ot_s81sl_leaf__t31	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	85	0	yes	13	179.3	33	885.7	0	0	64	7	0	1551.47	0	16.3	8.2	False	0.6	0.0	False	4
+s81	ot_s81sl_leaf__t32	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	111	0	yes	13	241.9	16	735.8	0	0	54	15	2	1194.16	0	0.0	0.0	True	0.0	0.0	True	4
+s81	ot_s81sl_leaf__t33	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	151	0	yes	13	371.5	6	836.8	0	0	23	5	2	750.6	0	0.0	0.0	True	0.0	0.0	True	5
+s81	ot_s81sl_leaf__t34	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	76	0	yes	13	250.6	41	1003.0	0	0	50	6	0	1476.41	0	17.9	0.0	False	4.6	0.0	False	4
+s81	ot_s81sl_leaf__t35	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	153	0	yes	13	388.8	5	696.1	0	0	8	0	0	617.65	0	6.3	29.6	False	0.0	6.2	False	8
+s81	ot_s81sl_leaf__t36	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	164	0	yes	13	388.8	11	1169.1	0	0	9	0	1	908.93	0	13.5	23.7	False	0.0	3.2	False	6
+s81	ot_s81sl_leaf__t37	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	97	0	yes	13	300.2	7	1106.9	0	0	15	0	0	602.8	0	14.3	56.2	False	0.0	19.4	False	6
+s81	ot_s81sl_leaf__t38	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	119	0	yes	13	213.8	9	1085.9	0	0	26	4	0	961.25	0	7.6	23.7	False	0.0	3.2	False	4
+s81	ot_s81sl_leaf__t39	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	77	0	yes	13	233.3	14	1219.4	0	0	25	1	2	946.78	0	16.3	0.0	False	0.6	0.0	False	4
+s81	ot_s81sl_leaf__t4	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	97	0	yes	13	302.4	26	850.3	0	0	57	4	0	1452.44	0	14.3	56.2	False	0.0	19.4	False	6
+s81	ot_s81sl_leaf__t40__cl86ea32b3	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	160	0	no												6.3	29.6	False	0.0	6.2	False	8
+s81	ot_s81sl_leaf__t40__cl86ea32b3__sid5S	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	160	0	yes	13	388.8	9	1036.0	0	0	9	0	0	738.02	0	6.3	29.6	False	0.0	6.2	False	8
+s81	ot_s81sl_leaf__t40__clf8bbdae1	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	160	0	yes	13	388.8	7	816.8	0	0	11	0	0	912.98	0	6.3	29.6	False	0.0	6.2	False	8
+s81	ot_s81sl_leaf__t41	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	129	0	yes	13	291.6	14	1030.8	0	0	55	10	2	1305.94	0	1.2	23.7	False	0.0	3.2	False	6
+s81	ot_s81sl_leaf__t42	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	117	0	yes	13	213.8	25	1229.1	56	9	46	6	0	1276.4	0	7.6	23.7	False	0.0	3.2	False	4
+s81	ot_s81sl_leaf__t43	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	101	0	yes	13	276.5	11	1152.8	0	0	27	0	11	771.23	0	16.3	15.1	False	0.6	0.0	False	4
+s81	ot_s81sl_leaf__t44__clf4ea6d4b	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	97	0	yes	13	302.4	7	904.8	0	0	19	1	0	674.11	0	14.3	56.2	False	0.0	19.4	False	6
+s81	ot_s81sl_leaf__t44__clf6cf8492	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	97	0	yes	13	302.4	28	1043.0	0	0	68	9	9	1429.57	0	14.3	56.2	False	0.0	19.4	False	6
+s81	ot_s81sl_leaf__t45	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	79	0	yes	13	196.6	6	1093.5	0	0	17	0	0	814.16	0	16.4	15.1	False	0.6	0.0	False	5
+s81	ot_s81sl_leaf__t46	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	151	0	yes	13	369.4	9	879.2	0	0	16	0	0	1546.61	0	16.3	29.6	False	0.6	6.2	False	6
+s81	ot_s81sl_leaf__t47	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	101	0	no												16.3	15.1	False	0.6	0.0	False	4
+s81	ot_s81sl_leaf__t5	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	168	0	yes	13	388.8	9	1044.9	0	0	5	0	0	733.16	0	13.5	29.6	False	0.0	6.2	False	7
+s81	ot_s81sl_leaf__t50	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	160	0	yes	13	388.8	11	1169.8	0	0	8	0	0	685.69	0	2.4	23.7	False	0.0	3.2	False	7
+s81	ot_s81sl_leaf__t51	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	97	0	yes	13	300.2	4	805.9	0	0	20	0	0	696.92	0	14.3	56.2	False	0.0	19.4	False	6
+s81	ot_s81sl_leaf__t52	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	151	0	yes	13	371.5	11	1414.2	0	0	31	10	0	844.72	0	0.0	0.0	True	0.0	0.0	True	5
+s81	ot_s81sl_leaf__t53__cl958451dd	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	130	0	no												9.2	0.0	False	0.0	0.0	True	5
+s81	ot_s81sl_leaf__t53__clb66fa5cb	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	130	0	yes	13	241.9	10	872.3	0	0	29	1	9	738.86	0	9.2	0.0	False	0.0	0.0	True	5
+s81	ot_s81sl_leaf__t54__cl501e5681	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	161	0	no												6.3	29.6	False	0.0	6.2	False	8
+s81	ot_s81sl_leaf__t54__cl706d9749	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	161	0	yes	13	388.8	11	1153.4	0	0	23	0	10	930.64	0	6.3	29.6	False	0.0	6.2	False	8
+s81	ot_s81sl_leaf__t55	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	129	0	yes	13	291.6	7	797.3	0	0	22	1	0	800.6	0	1.2	23.7	False	0.0	3.2	False	6
+s81	ot_s81sl_leaf__t56	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	120	0	yes	13	233.3	8	982.3	0	0	21	4	0	618.35	0	3.2	26.2	False	0.0	4.4	False	5
+s81	ot_s81sl_leaf__t57	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	151	0	yes	13	369.4	9	1156.6	0	0	33	2	2	1800.63	0	16.3	29.6	False	0.6	6.2	False	6
+s81	ot_s81sl_leaf__t58	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	112	0	yes	13	224.6	16	1192.2	0	0	30	1	0	1181.41	0	15.1	23.7	False	0.0	3.2	False	5
+s81	ot_s81sl_leaf__t59	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	153	0	yes	13	388.8	6	693.6	0	0	6	0	2	698.49	0	6.3	29.6	False	0.0	6.2	False	8
+s81	ot_s81sl_leaf__t6	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	163	0	yes	13	388.8	11	1178.9	0	0	15	2	0	737.42	0	13.5	23.7	False	0.0	3.2	False	6
+s81	ot_s81sl_leaf__t60	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	93	0	yes	13	198.7	51	1077.6	0	0	34	2	0	1401.41	0	15.1	15.1	False	0.0	0.0	False	5
+s81	ot_s81sl_leaf__t61	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	154	0	yes	13	276.5	28	1256.8	0	0	22	3	2	1187.41	0	15.1	0.0	False	0.0	0.0	False	4
+s81	ot_s81sl_leaf__t62	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	118	0	yes	13	216.0	10	1255.0	0	0	24	1	0	970.92	0	15.1	23.7	False	0.0	3.2	False	5
+s81	ot_s81sl_leaf__t65	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	120	0	yes	13	233.3	8	992.2	0	0	17	2	0	805.3	0	3.2	26.2	False	0.0	4.4	False	5
+s81	ot_s81sl_leaf__t66	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	151	0	no												16.3	29.6	False	0.6	6.2	False	6
+s81	ot_s81sl_leaf__t67	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	118	0	yes	13	216.0	9	1252.6	0	0	36	2	0	928.37	0	15.1	23.7	False	0.0	3.2	False	5
+s81	ot_s81sl_leaf__t68	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	87	0	no												16.3	0.0	False	0.6	0.0	False	5
+s81	ot_s81sl_leaf__t69	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	154	0	yes	13	388.8	9	975.3	0	0	7	2	0	656.75	0	6.3	29.6	False	0.0	6.2	False	8
+s81	ot_s81sl_leaf__t7	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	97	0	yes	13	300.2	23	976.8	0	0	52	5	0	1230.71	0	14.3	56.2	False	0.0	19.4	False	6
+s81	ot_s81sl_leaf__t70	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	168	0	no												12.4	29.6	False	0.0	6.2	False	4
+s81	ot_s81sl_leaf__t71	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	89	0	yes	13	213.8	52	1083.1	0	0	68	16	4	1480.09	0	16.3	23.7	False	0.6	3.2	False	4
+s81	ot_s81sl_leaf__t72	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	166	0	yes	13	198.7	10	1370.3	0	0	23	0	1	788.78	0	16.3	29.6	False	0.6	6.2	False	7
+s81	ot_s81sl_leaf__t73	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	111	0	no												4.0	29.6	False	0.0	6.2	False	4
+s81	ot_s81sl_leaf__t74	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	79	0	yes	13	190.1	9	1205.3	0	0	13	0	0	877.99	0	16.3	0.0	False	0.6	0.0	False	4
+s81	ot_s81sl_leaf__t75	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	93	0	no												0.0	0.0	True	0.0	0.0	True	4
+s81	ot_s81sl_leaf__t8	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	166	0	yes	13	198.7	11	1371.4	0	0	24	0	1	782.89	0	16.3	29.6	False	0.6	6.2	False	7
+s81	ot_s81sl_leaf__t9	27	ot_s81sl_ve_mx1;ot_s81sl_ve_sx1;ot_s81sl_vswx1	111	0	no												4.0	29.6	False	0.0	6.2	False	4
+s81	phy__t1	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	seqhost__t1	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	serdes__t12	1	ot_s81_kp4_dchnx1	0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	serdes__t13	1	ot_s81_kp4_dchnx1	0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	serdes__t14	1	ot_s81_kp4_dchnx1	0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	serdes__t15__cla2127225	1	ot_s81_kp4_dchnx1	0	0	yes	0		2	787.7	0	0	39	0	0	1161.38	0	0.0	0.0	True	0.0	0.0	True	0
+s81	serdes__t15__cla3d02796	1	ot_s81_kp4_dchnx1	0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	serdes__t16	1	ot_s81_kp4_dchnx1	0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	serdes__t1__clb45db5be	1	ot_s81_kp4_dchnx1	0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	serdes__t1__clfe1f0815	1	ot_s81_kp4_dchnx1	0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	serdes__t2	1	ot_s81_kp4_dchnx1	0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	serdes__t3	1	ot_s81_kp4_dchnx1	0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	serdes__t4	1	ot_s81_kp4_dchnx1	0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t12	0		0	0	yes	0		0		0	0	0	0	0	380.94	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t14	0		0	0	yes	0		0		0	0	0	0	0	393.8	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t17	0		0	0	yes	0		0		0	0	0	0	0	382.59	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t18	0		0	0	yes	0		0		0	0	0	0	0	381.02	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t20	0		0	0	yes	0		0		0	0	0	0	0	381.29	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t21	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t22	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t23	0		0	0	yes	0		0		0	0	0	0	0	381.13	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t24__cl64811a5d	0		0	0	yes	0		0		0	0	0	0	0	383.4	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t24__cl66b71008	0		0	0	yes	0		0		0	0	0	0	0	381.46	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t24__cleece78ec	0		0	0	yes	0		0		0	0	0	0	0	385.02	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t25	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t26	0		0	0	yes	0		0		0	0	0	0	0	381.62	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t27	0		0	0	yes	0		0		0	0	4	1	3	447.2	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t28	0		0	0	yes	0		0		0	0	0	0	0	381.35	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t29__cl2e5c855a	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t29__clc7772371	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t30__cl1653104c	0		0	0	yes	0		0		0	0	0	0	0	379.84	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t30__cl6a190133	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t30__clcedefe91	0		0	0	yes	0		0		0	0	0	0	0	380.16	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t31	0		0	0	yes	0		0		0	0	0	0	0	385.07	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t36	0		0	0	yes	0		0		0	0	4	0	4	431.35	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t37	0		0	0	yes	0		0		0	0	5	2	3	445.63	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t38	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t40__cl1ea9de02	0		0	0	yes	0		0		0	0	0	0	0	379.73	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t40__clc8fb2c8c	0		0	0	yes	0		0		0	0	0	0	0	379.08	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t41	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t42__cl4bd1432c	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t42__clcf44e680	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t43	0		0	0	yes	0		0		0	0	3	0	3	447.8	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t44	0		0	0	yes	0		0		0	0	0	0	0	386.26	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t45	0		0	0	yes	0		0		0	0	24	24	0	1327.86	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t46	0		0	0	yes	0		0		0	0	0	0	0	378.76	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t47	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t48	0		0	0	yes	0		0		0	0	0	0	0	375.35	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t49	0		0	0	yes	0		0		0	0	0	0	0	382.1	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t50__cl39451317	0		0	0	yes	0		0		0	0	0	0	0	380.48	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t50__cld84c9e24	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t51	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t52	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t6__cl0755c26e	0		0	0	yes	0		0		0	0	3	0	3	445.04	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t6__cl54a9ceeb	0		0	0	no												0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t7__cl362204c4	0		0	0	yes	0		0		0	0	0	0	0	377.73	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t7__cl503f4913	0		0	0	yes	0		0		0	0	0	0	0	381.24	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t7__cl945bc067	0		0	0	yes	0		0		0	0	0	0	0	381.56	0	0.0	0.0	True	0.0	0.0	True	0
+s81	slice_station__t8	0		0	0	yes	0		0		0	0	1	0	1	407.11	0	0.0	0.0	True	0.0	0.0	True	0
+s81	svc_hi_dsdv_svc_pvso_entry__t1	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81	svc_hi_dsdv_svc_pvso_entry__t2	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81	svc_hi_dsdv_svc_rs__t1	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81	svc_hi_dsdv_svc_rs__t2	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81	svc_hi_dsdv_svc_rs__t3	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81	svc_hi_dsdv_svc_rs__t4	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81	svc_hi_dsdv_svc_rs__t5	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81	svc_hi_dsdv_svc_rs__t6	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81	svc_lo_dsdv_svc_rs__t1	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81	svc_lo_dsdv_svc_rs__t2	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81	svc_lo_dsdv_svc_rs__t3	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81	svc_lo_dsdv_svc_rs__t4	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81	svc_lo_dsdv_svc_rs__t5	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81	svc_lo_dsdv_svc_rs__t6	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81	svc_lo_dsdv_svc_rs__t7	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81	svc_lo_dsdv_svc_rs_w__t1	72	ot_s81c_attn_hcorex64;dsdv_svc_sx_hrowx8	0	0	no												256.2	10.8	False	0.0	0.0	True	127
+s81_head	hd_ctl	4	ot_sram_1r1w_64x512_m1_r2c2x4	0	0	yes	0		0		0	0	86	19	0	906.28	0							
+s81_head	hd_ctl_e	0		0	0	yes	0		0		0	0	0	0	0	402.25	0							
+s81_head	hd_ctl_n	0		0	0	yes	0		0		0	0	0	0	0	379.73	0							
+s81_head	hd_host	110	ot_sram_1r1w2c_256x64_m1x72;ot_sram_1r1w2c_32x64_m1x38	0	0	no																		
+s81_head	hd_host_n	0		0	0	yes	0		0		0	0	0	0	0	379.24	0							
+s81_head	hd_lep0N	49	ot_s81hd_lep_pairx4;ot_sram_1r1w_512x128_m4_r0c0x20;ot_sram_1r1w_32x128_m1_r0c0x20	0	0	yes	0		11	893.3	0	0	213	37	0	2618.16	0							
+s81_head	hd_mesh	110	ot_sram_1r1w2c_256x64_m1x72;ot_sram_1r1w2c_32x64_m1x38	0	0	no																		
+s81_head	hd_mesh_e	0		0	0	yes	0		0		0	0	0	0	0	404.3	0							
+s81_head	hd_serdes	3	ot_sram_1r1w2c_64x546_m1x1;ot_sram_1r1w_32x546_m1x1;ot_s81_kp4_dchnx1	0	0	yes	0		2	745.4	0	0	28	5	0	1328.78	0							
+s81_head	hd_spn	0		6	0	yes	0		0		0	0	30	19	0	1619.57	0							
+s81_head	hd_spn_end	0		4	0	yes	0		0		0	0	17	9	0	1451.47	0							
+s81_head	hd_spn_eshim_rx	0		0	0	yes	0		0		0	0	0	0	0	376.06	0							
+s81_head	hd_spn_eshim_tx	0		0	0	yes	0		0		0	0	0	0	0	364.23	0							
+s81_head	hd_spn_wshim_rx	0		0	0	yes	0		0		0	0	0	0	0	369.63	0							
+s81_head	hd_spn_wshim_tx	0		0	0	yes	0		0		0	0	0	0	0	359.15	0							
+s81_head	hd_st_k5	0		0	0	no																		
+s81_head	hd_st_m	0		0	0	no																		
+s81_head	hd_st_n3_transit	0		0	0	yes	0		0		0	0	0	0	0	381.4	0							
+s81_head	hd_st_n3_turn	0		0	0	yes	0		0		0	0	0	0	0	379.62	0							
+s81_head	hd_st_n4	0		0	0	yes	0		0		0	0	0	0	0	397.06	0							
+s81_head	hd_st_str	0		0	0	yes	0		0		0	0	0	0	0	391.34	0							
+s81_head	hd_st_turn	0		0	0	yes	0		0		0	0	0	0	0	382.97	0							
+s81_head	hd_tile	5	ot_s81hd_elemA_cvx4;ot_s81hd_elemB_cvx1	0	0	no																		
+s81_head	hd_turn_a	0		0	0	yes	0		0		0	0	0	0	0	386.4	0							
+s81_head	hd_turn_b	0		0	0	yes	0		0		0	0	0	0	0	362.88	0							
