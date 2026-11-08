@@ -17,6 +17,13 @@ wires to ONE net; every output bit has exactly one member driver; every bit priv
 leaves) is one cut net with no terminal outside the group and no cut port; every member terminal is covered.  Leaf
 modules and parameters must equal the sub-core source's (param_diff_ok differences are recorded, never hidden).
 Nothing else in the cut changes: glue, wires, assigns and the other members are emitted as before.
+
+Re-formed sub-cores (opt-in per sub, DIE-HBM-92-SU-EXP 11-08): "module" stays the REFERENCE the members are proven
+against (the uncut core over the as-built leaves, exact as above); "emit_module" + "emit_sources" name the re-formed
+composition instantiated in its place (HBM p18: lane_exp_core -> lane_exp_x_core + sfu_s_core).  The emitted module
+must have exactly the reference's ports (name, direction, range; check_emit), and "emit_proof" (the
+reference-vs-composition equivalence: bench, log, sha) is copied into the receipt.  "same_net": [[port, ...], ...]
+requires every bit of each listed port group on ONE cut net (clock replicas a one-clock wrapper merges).
 """
 import re
 from collections import defaultdict
@@ -289,7 +296,7 @@ def bind_sub(sub, mods, members, term_expr, term_net, net_terms, port_nets):
             for i, r in enumerate(roots):
                 cls[r].append((cell.path, p, i, cell.dirs[p]))
     T = mods[sub["module"]]["ports"]
-    conn = {}
+    conn, pnet = {}, {}
     port_roots = defaultdict(list)
     for (p, i), r in port_bits.items():
         port_roots[r].append((p, i))
@@ -303,6 +310,7 @@ def bind_sub(sub, mods, members, term_expr, term_net, net_terms, port_nets):
             nets = {term_net[t[:3]] for t in ts}
             if len(nets) != 1:
                 raise SplitError(f"{sub['module']}.{p}[{i}]: member terminals on {len(nets)} cut nets")
+            pnet[(p, i)] = next(iter(nets))
             drivers = [t for t in ts if t[3] == "output"]
             if d == "output":
                 if len(drivers) != 1:
@@ -312,6 +320,10 @@ def bind_sub(sub, mods, members, term_expr, term_net, net_terms, port_nets):
                 if drivers:
                     raise SplitError(f"{sub['module']}.{p}[{i}]: input driven inside the sub-core")
                 conn[p].append(term_expr[ts[0][:3]])
+    for grp in sub.get("same_net", []):
+        nets = {n for (p, i), n in pnet.items() if p in grp}
+        if any(p not in T for p in grp) or len(nets) != 1:
+            raise SplitError(f"{sub['module']}: same_net {grp} spans {len(nets)} cut nets")
     inside = {t[0] for t in sum(cls.values(), [])}
     private, seen_out = 0, defaultdict(list)
     for r, ts in cls.items():
@@ -349,6 +361,24 @@ def bind_sub(sub, mods, members, term_expr, term_net, net_terms, port_nets):
     return conn, dict(module=sub["module"], private_bits=private, param_diff=param_diff, open_ports=open_ports,
                       dropped_exports=len(ties), tie0=ties,
                       members={role: c.path for role, c in sorted(members.items())})
+
+
+def check_emit(sub, ref_mods, base):
+    """Receipt of a re-formed emit_module: its ports must equal the reference sub-core's exactly."""
+    em, found = sub["emit_module"], None
+    for f in sub.get("emit_sources", []):
+        text = (Path(f) if Path(f).is_absolute() else Path(base) / f).read_text(errors="replace")
+        if re.search(r"\bmodule\s+" + re.escape(em) + r"\b", text):
+            if found is not None:
+                raise SplitError(f"{em}: defined in two emit sources")
+            found = parse([text])[em]
+    if found is None:
+        raise SplitError(f"{em}: no emit source defines it")
+    ref = ref_mods[sub["module"]]["ports"]
+    if found["ports"] != ref:
+        diff = sorted(set(found["ports"].items()) ^ set(ref.items()))[:6]
+        raise SplitError(f"{em}: ports differ from the reference {sub['module']}: {diff}")
+    return dict(module=em, reference=sub["module"], ports=len(ref), proof=sub.get("emit_proof"))
 
 
 def load(rule, base):
