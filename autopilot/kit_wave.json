@@ -1,7 +1,7 @@
 {
   "enabled": true,
   "max_inflight": 300,
-  "max_launch_per_tick": 1,
+  "max_launch_per_tick": 60,
   "geom_sample": 5,
   "hosts": [
     "epyc5",
@@ -2011,7 +2011,15 @@
         "ot_s81sl_leaf__t33@1",
         "ot_s81sl_leaf__t2@1",
         "col_h9_r0_p1__t1@11",
-        "col_h9_r0_p1__t1@12"
+        "col_h9_r0_p1__t1@12",
+        "ot_s81sl_leaf__t4@5",
+        "ot_s81sl_leaf__t7@1",
+        "ot_s81sl_leaf__t10@1",
+        "ot_s81sl_leaf__t33@2",
+        "ot_s81sl_leaf__t43@1",
+        "ot_s81sl_leaf__t56@8",
+        "ot_s81sl_leaf__t61@1",
+        "ot_s81sl_leaf__t74@4"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -2078,7 +2086,6 @@
         "col_h10_r2__t1__cl99efd374": "KW-FIX-28 08:3x: S81-COLH10-1 05:4x asked no more old-window col_h10 starts until the vQ read; S81-TYPES-2 owns the read.",
         "serdes__t15__cla3d02796": "KW-FIX-29 COORD 10:38: old wave a11 record cancelled, its LEC stopped; S81-RCK-5 carries this type in vF; release with REDESIGN: only",
         "ot_s81sl_leaf__t1": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t10": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t11": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t12": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t13": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
@@ -2098,39 +2105,30 @@
         "ot_s81sl_leaf__t30": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t31": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t32": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t33": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t34": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t35": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t36": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t37": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t38": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t39": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t4": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t40__cl86ea32b3": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t40__clf8bbdae1": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t41": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t43": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t44__clf4ea6d4b": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t46": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t5": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t50": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t51": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t53__cl958451dd": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t53__clb66fa5cb": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t56": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t57": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t59": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t6": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t61": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t65": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t67": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t69": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t7": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t70": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t71": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t72": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t74": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t8": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim."
       },
       "queue_src": "main@6a7e5c39dcce",
@@ -2198,7 +2196,7 @@
         "ot_s81sl_leaf__t62@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t65@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t66@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
-        "ot_s81sl_leaf__t67@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
+        "ot_s81sl_leaf__t67@3": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
         "ot_s81sl_leaf__t69@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t6@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t70@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
@@ -2310,7 +2308,7 @@
         "ot_s81sl_leaf__t71@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
         "ot_s81sl_leaf__t72@5": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
         "ot_s81sl_leaf__t73@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
-        "ot_s81sl_leaf__t74@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
+        "ot_s81sl_leaf__t74@4": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
         "ot_s81sl_leaf__t75@5": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
         "ot_s81sl_leaf__t8@5": "REDESIGN: macros moved, not a retry. vs pin edge faces ve_m at gap >= 17.28 um and vn/VP channel widened, per row, OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins and taps unchanged. Fixes the measured M6 overflow on the vs/ve_m bus: post-CTS GRT 0 on t27 vP and t42 vM (old M6 114216 and 159073). lanes/S81-LEAF-BATCH-1107.json",
         "ot_s81sl_leaf__t9@5": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
@@ -2335,7 +2333,7 @@
         "ot_s81sl_leaf__t35@3": "REDESIGN: macros moved, not a retry. vs pin edge faces ve_m at gap >= 17.28 um and vn/VP channel widened, per row, OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins and taps unchanged. Fixes the measured M6 overflow on the vs/ve_m bus: post-CTS GRT 0 on t27 vP and t42 vM (old M6 114216 and 159073). lanes/S81-LEAF-BATCH-1107.json",
         "ot_s81sl_leaf__t36@4": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
         "ot_s81sl_leaf__t38@6": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
-        "ot_s81sl_leaf__t4@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
+        "ot_s81sl_leaf__t4@5": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
         "ot_s81sl_leaf__t40__cl86ea32b3@3": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
         "ot_s81sl_leaf__t41@3": "REDESIGN: macros moved, not a retry. vs pin edge faces ve_m at gap >= 17.28 um and vn/VP channel widened, per row, OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins and taps unchanged. Fixes the measured M6 overflow on the vs/ve_m bus: post-CTS GRT 0 on t27 vP and t42 vM (old M6 114216 and 159073). lanes/S81-LEAF-BATCH-1107.json",
         "ot_s81sl_leaf__t42@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
@@ -2567,7 +2565,7 @@
         "ot_s81sl_leaf__t44__clf4ea6d4b@12": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
         "ot_s81sl_leaf__t44__clf6cf8492@8": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
         "ot_s81sl_leaf__t47@7": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
-        "ot_s81sl_leaf__t50@7": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
+        "ot_s81sl_leaf__t50@7": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
         "ot_s81sl_leaf__t51@7": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
         "ot_s81sl_leaf__t52@9": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
         "ot_s81sl_leaf__t53__clb66fa5cb@12": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
@@ -2927,7 +2925,13 @@
         "ot_s81sl_leaf__t2@1": "REDESIGN: macros moved, not a retry. vs pin edge faces ve_m at gap >= 17.28 um and vn/VP channel widened, per row, OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins and taps unchanged. Fixes the measured M6 overflow on the vs/ve_m bus: post-CTS GRT 0 on t27 vP and t42 vM (old M6 114216 and 159073). lanes/S81-LEAF-BATCH-1107.json",
         "ot_s81sl_leaf__t74@3": "REDESIGN: macros moved, not a retry. vs pin edge faces ve_m at gap >= 17.28 um and vn/VP channel widened, per row, OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins and taps unchanged. Fixes the measured M6 overflow on the vs/ve_m bus: post-CTS GRT 0 on t27 vP and t42 vM (old M6 114216 and 159073). lanes/S81-LEAF-BATCH-1107.json",
         "col_h9_r0_p1__t1@11": "REDESIGN: macros moved, not a retry. ROM e1 and e3 east 17.28 um widen the only ROM-row gap from 24.84 to 42.12 um; u_cf and u_t0 move with them to keep clear. Fixes measured GRT overflow 142567 (M6 98355) on a11: 1121 nets cross the ROM row (555 u_t2, 536 u_t2_payload, the rest not itemized), ROM OBS covers M1-M7. macro_place.tcl only; plan, pins, taps, RTL and pin cycles unchanged. lanes/S81-COLH9-REDESIGN-1107.json",
-        "col_h9_r0_p1__t1@12": "REDESIGN: macros moved, not a retry. ROM e1 and e3 east 17.28 um widen the only ROM-row gap from 24.84 to 42.12 um; u_cf and u_t0 move with them to keep clear. Fixes measured GRT overflow 142567 (M6 98355) on a11: 1121 nets cross the ROM row (555 u_t2, 536 u_t2_payload, the rest not itemized), ROM OBS covers M1-M7. macro_place.tcl only; plan, pins, taps, RTL and pin cycles unchanged. lanes/S81-COLH9-REDESIGN-1107.json | KW-FIX-30 15:1x (COORD 15:0x (c)): a12 never built: INFRA kit_rtl on intel1, die-s81-70/kvov/bind/* are symlinks into codex-wave-bind-1106/s81_emitted_v2/bind, not staged there until 14:3x; now staged on intel1+epyc4 (4938 files, same md5 as epyc5), 0 dangling links. Same macro-move REDESIGN, first build."
+        "col_h9_r0_p1__t1@12": "REDESIGN: macros moved, not a retry. ROM e1 and e3 east 17.28 um widen the only ROM-row gap from 24.84 to 42.12 um; u_cf and u_t0 move with them to keep clear. Fixes measured GRT overflow 142567 (M6 98355) on a11: 1121 nets cross the ROM row (555 u_t2, 536 u_t2_payload, the rest not itemized), ROM OBS covers M1-M7. macro_place.tcl only; plan, pins, taps, RTL and pin cycles unchanged. lanes/S81-COLH9-REDESIGN-1107.json | KW-FIX-30 15:1x (COORD 15:0x (c)): a12 never built: INFRA kit_rtl on intel1, die-s81-70/kvov/bind/* are symlinks into codex-wave-bind-1106/s81_emitted_v2/bind, not staged there until 14:3x; now staged on intel1+epyc4 (4938 files, same md5 as epyc5), 0 dangling links. Same macro-move REDESIGN, first build.",
+        "ot_s81sl_leaf__t7@1": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
+        "ot_s81sl_leaf__t10@1": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
+        "ot_s81sl_leaf__t33@2": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
+        "ot_s81sl_leaf__t43@1": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
+        "ot_s81sl_leaf__t56@8": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
+        "ot_s81sl_leaf__t61@1": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -3241,7 +3245,17 @@
         "ot_s81sl_kv_leaf__t1": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched | was: DIE-S81-70 12:4x: plan hcov stations need the native LF_CS bind overlay (kvnative2 e39248210f); ready_v3 bind has depth 0 -> kit_istations fail-closed; release on overlay",
         "ot_s81sl_kv_leaf__t3": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched | was: DIE-S81-70 12:4x: plan hcov stations need the native LF_CS bind overlay (kvnative2 e39248210f); ready_v3 bind has depth 0 -> kit_istations fail-closed; release on overlay",
         "ot_s81sl_kv_leaf__t4": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched | was: DIE-S81-70 12:4x: plan hcov stations need the native LF_CS bind overlay (kvnative2 e39248210f); ready_v3 bind has depth 0 -> kit_istations fail-closed; release on overlay",
-        "ot_s81sl_kv_leaf__t5": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched | was: DIE-S81-70 12:4x: plan hcov stations need the native LF_CS bind overlay (kvnative2 e39248210f); ready_v3 bind has depth 0 -> kit_istations fail-closed; release on overlay"
+        "ot_s81sl_kv_leaf__t5": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched | was: DIE-S81-70 12:4x: plan hcov stations need the native LF_CS bind overlay (kvnative2 e39248210f); ready_v3 bind has depth 0 -> kit_istations fail-closed; release on overlay",
+        "ot_s81sl_leaf__t4": "KW-FIX-32 2026-11-07 18:08 PST: released, changed attempt (stale kit pre-004a51fc), 004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
+        "ot_s81sl_leaf__t7": "KW-FIX-32 2026-11-07 18:08 PST: released, changed attempt (stale kit pre-004a51fc), 004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
+        "ot_s81sl_leaf__t10": "KW-FIX-32 2026-11-07 18:08 PST: released, changed attempt (stale kit pre-004a51fc), 004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
+        "ot_s81sl_leaf__t33": "KW-FIX-32 2026-11-07 18:08 PST: released, changed attempt (stale kit pre-004a51fc), 004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
+        "ot_s81sl_leaf__t43": "KW-FIX-32 2026-11-07 18:08 PST: released, changed attempt (stale kit pre-004a51fc), 004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
+        "ot_s81sl_leaf__t50": "KW-FIX-32 2026-11-07 18:08 PST: released, changed attempt (stale kit pre-004a51fc), 004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
+        "ot_s81sl_leaf__t56": "KW-FIX-32 2026-11-07 18:08 PST: released, changed attempt (stale kit pre-004a51fc), 004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
+        "ot_s81sl_leaf__t61": "KW-FIX-32 2026-11-07 18:08 PST: released, changed attempt (stale kit pre-004a51fc), 004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
+        "ot_s81sl_leaf__t67": "KW-FIX-32 2026-11-07 18:08 PST: released, changed attempt (stale kit pre-004a51fc), 004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
+        "ot_s81sl_leaf__t74": "KW-FIX-32 2026-11-07 18:08 PST: released, changed attempt (stale kit pre-004a51fc), 004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)"
       },
       "hosts_base": [
         "epyc5",
@@ -3500,7 +3514,19 @@
         "epyc5",
         "epyc2"
       ],
-      "note_prefer_kw32": "KW-FIX-32 2026-11-07 18:08 PST COORD 18:0x (epyc2 load 247/128 + 114 waiters, epyc4 91/256 + 10): epyc4 first in place_prefer and gen_hosts; disk/admit checks unchanged (epyc4 only taken while it admits / has gen disk room). Revert: place_prefer <- place_prefer_prev_kw32, gen_hosts <- gen_hosts_prev_kw32c."
+      "note_prefer_kw32": "KW-FIX-32 2026-11-07 18:08 PST COORD 18:0x (epyc2 load 247/128 + 114 waiters, epyc4 91/256 + 10): epyc4 first in place_prefer and gen_hosts; disk/admit checks unchanged (epyc4 only taken while it admits / has gen disk room). Revert: place_prefer <- place_prefer_prev_kw32, gen_hosts <- gen_hosts_prev_kw32c.",
+      "hold_items_prev_kw32_cland": {
+        "ot_s81sl_leaf__t4": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t7": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t10": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t33": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t43": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t50": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t56": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t61": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t67": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t74": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim."
+      }
     },
     "s81_head": {
       "enabled": true,
@@ -6250,7 +6276,9 @@
         "intel1",
         "epyc4"
       ],
-      "note_prefer_kw32": "KW-FIX-32 2026-11-07 18:08 PST COORD 18:0x (epyc2 load 247/128 + 114 waiters, epyc4 91/256 + 10): epyc4 first in place_prefer and gen_hosts; disk/admit checks unchanged (epyc4 only taken while it admits / has gen disk room). Revert: place_prefer <- place_prefer_prev_kw32, gen_hosts <- gen_hosts_prev_kw32c."
+      "note_prefer_kw32": "KW-FIX-32 2026-11-07 18:08 PST COORD 18:0x (epyc2 load 247/128 + 114 waiters, epyc4 91/256 + 10): epyc4 first in place_prefer and gen_hosts; disk/admit checks unchanged (epyc4 only taken while it admits / has gen disk room). Revert: place_prefer <- place_prefer_prev_kw32, gen_hosts <- gen_hosts_prev_kw32c.",
+      "types_before_die_clock": true,
+      "note_types_before_clock_kw32": "KW-FIX-32 2026-11-07 18:08 PST: OWNER 17:4x 'allow type builds for all dies, including HBM' + COORD 17:54/18:1x: types_before_die_clock true (option in 6dfae880; inert until the running kit_wave.py has it); gate.clock stays UNMEASURED. Revert: drop the key."
     }
   },
   "place_prefer": [
@@ -6573,5 +6601,7 @@
     "intel1",
     "intel2",
     "epyc4"
-  ]
+  ],
+  "max_launch_per_tick_prev_kw32": 1,
+  "note_mlpt_kw32": "KW-FIX-32 2026-11-07 18:08 PST: COORD 18:1x (1) max_launch_per_tick 1 -> 60 now (prior 60 in release_control.json); unchanged-FAIL hold prevents blind retries. Revert: <- max_launch_per_tick_prev_kw32."
 }
