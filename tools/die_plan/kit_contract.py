@@ -1125,8 +1125,82 @@ def macro_channels(kd, plan_dir=None, min_um=MIN_CHANNEL_UM):
     return err, info
 
 
+def _clock_entry_access(kd, plan_dir, row, site, src, name, x, y, top):
+    """Read staged LEF and emitted pin again; never trust a free-space claim."""
+    from lef_clock_entry import validate_access
+    contents = _plan_contents(kd, plan_dir) or {}
+    core = contents.get(row["inst"])
+    access = row["clock_entry_access"]
+    if core is None or core.get("clock_entry_access") != access or row.get("pin") != access.get("pin"):
+        raise ValueError("entry opt-in differs from current plan/core pin")
+    master, sx, sy, orient = site
+    offset = core.get("track_offset_um", [0, 0])
+    origin = core["origin_um"]
+    if master != core["module"] or orient != core.get("orient", "R0") or any(
+            abs(a-b)>1e-6 for a,b in zip((sx,sy),(origin[0]+offset[0],origin[1]+offset[1]))):
+        return False  # this obstruction belongs to a different placed macro
+    source = Path(kd) / src
+    if not source.is_file():
+        raise ValueError("entry has no actual emitted Tcl")
+    shapes=[]
+    for line in source.read_text().splitlines():
+        m=re.match(r"^\s*place_pin\s+-pin_name\s+(\{[^}]*\}|\S+)(.*)$",line)
+        if not m or m.group(1).strip("{}") != name:
+            continue
+        lm=re.search(r"-layer\s+(\S+)",line)
+        xy=re.search(r"-location\s+\{\s*"+_NUM+r"\s+"+_NUM+r"\s*\}",line)
+        wh=re.search(r"-pin_size\s+\{\s*"+_NUM+r"\s+"+_NUM+r"\s*\}",line)
+        if not lm or lm.group(1)!=top or not xy or not wh:
+            raise ValueError("entry lacks exact static layer/location/size")
+        px,py=map(float,xy.groups()); w,h=map(float,wh.groups())
+        if abs(px-x)>1e-6 or abs(py-y)>1e-6:
+            raise ValueError("entry source location differs")
+        shapes.append((px-w/2,py-h/2,px+w/2,py+h/2))
+    if len(shapes)!=1:
+        raise ValueError("entry needs exactly one emitted utility pin")
+    files=list((Path(kd)/"macros").glob("*.lef"))
+    for word in _mk(kd).get("ADDITIONAL_LEFS", "").split():
+        f=_kfile(kd,word)
+        if f and f.is_file() and f not in files: files.append(f)
+    views=[f.read_text() for f in files if re.search(r"^\s*MACRO\s+"+re.escape(master)+r"\s*$",f.read_text(),re.M)]
+    if len(views)!=1:
+        raise ValueError("entry requires one exact staged LEF master")
+    validate_access(views[0],master,access,int(top[1:]),(sx,sy,orient),shapes[0])
+    # The explicit entry can occupy a previously PG-blocked track only when the
+    # exact default-off parent PG clearance steps are staged AND configured.
+    from clock_entry_pg import render as render_pg
+    from lef_clock_entry import geometry
+    pg_json=Path(kd)/"clock_entry_pg_cut.json"
+    pg_tcl=Path(kd)/"clock_entry_pg_cut.tcl"
+    pg6=Path(kd)/"pg_island_cut.tcl"
+    if not pg_json.is_file() or not pg_tcl.is_file() or not pg6.is_file():
+        raise ValueError("explicit entry missing actual parent PG clearance inputs")
+    pg=json.loads(pg_json.read_text())
+    if pg.get("schema")!="opentallas.clock_entry_pg_cuts.v1":
+        raise ValueError("invalid parent PG clearance schema")
+    expected=[dict(inst=core.get("physical_inst") or core["inst"],pin=access["pin"],layer="M7",
+                   rect_um=[round(r[0]-.072,6),round(r[1]-.072,6),round(r[2]+.072,6),round(r[3]+.072,6)])
+              for r in access["footprints_um"]["M7"]]
+    if any(c not in pg.get("cuts",[]) for c in expected) or pg_tcl.read_text()!=render_pg(pg["cuts"]):
+        raise ValueError("parent PG clearance differs from exact entry footprint/source")
+    _,target,_=geometry(views[0],master,access["pin"],int(top[1:]),(sx,sy,orient))
+    for layer,r in target:
+        if layer==5:
+            line=f"pgc_window {r[0]-.6:.4f} {r[1]-.072:.4f} {r[2]+.6:.4f} {r[3]+.072:.4f}"
+            if line not in pg6.read_text():
+                raise ValueError("parent M6 PG clearance differs from actual M5 pin")
+    hook=_mk(kd).get("POST_PDN_TCL","")
+    hookfile=_kfile(kd,hook)
+    hooktext=hookfile.read_text() if hookfile and hookfile.is_file() else ""
+    if not all(hook=="/work/"+n or "source /work/"+n in hooktext
+               for n in ("pg_island_cut.tcl","clock_entry_pg_cut.tcl")):
+        raise ValueError("parent PG clearance files not configured after pdngen")
+    return True
+
+
 def clock_entry_clear(kd, plan_dir=None, entries=None):
-    boxes, prob = macro_boxes(kd, plan_dir)
+    sites = []
+    boxes, prob = macro_boxes(kd, plan_dir, sites_out=sites)
     if boxes == [] and prob is None:
         return [], dict(applies=False, reason="no macros")
     if prob:
@@ -1151,11 +1225,20 @@ def clock_entry_clear(kd, plan_dir=None, entries=None):
     core_ports = {d.get("port") for d in ((bud.get("clock") or {}).get("core_taps") or []) if isinstance(d, dict)}
     top = str(bud.get("signal_max") or "")
     tops = _lef_metal_tops(kd, _mk(kd)) if core_ports and re.fullmatch(r"M\d+", top) else {}
+    access_rows = {r["port"]:r for r in ((bud.get("clock") or {}).get("core_taps") or [])
+                   if r.get("clock_entry_access")}
     err, through = [], []
     for src, name, x, y in pts:
-        for b in boxes:
+        for index, b in enumerate(boxes):
             if b[1] - 1e-6 <= x <= b[3] + 1e-6 and b[2] - 1e-6 <= y <= b[4] + 1e-6:
                 master = b[0].rsplit("#", 1)[0]
+                if name in access_rows:
+                    try:
+                        if _clock_entry_access(kd, plan_dir, access_rows[name], sites[index], src, name, x, y, top):
+                            through.append(f"{name} over {b[0]} (explicit actual LEF entry geometry; route/DRC still required)")
+                            continue
+                    except (ValueError, OSError, KeyError, TypeError, AttributeError, IndexError) as exc:
+                        err.append(f"{src}: clock entry {name} actual-LEF access rejected: {exc}")
                 if name in core_ports and master in tops and tops[master] < int(top[1:]) - 1:
                     through.append(f"{name} over {b[0]} (macro metal <= M{tops[master]}, entry {top})")
                     continue

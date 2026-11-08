@@ -778,9 +778,24 @@ def core_tap_pins(P, tn):
     blocks = entry_block_boxes(P, tn) if taps else []
     out = []
     for n, x, y, _ in taps:
-        sx, sy = _snap_tap(P, x, y, pg_legal=pg)
-        if blocks and _pin_hits(P, tn, n, sx, sy, blocks):
-            sx, sy = _clear_core_tap(P, tn, n, x, y, (sx, sy), blocks, pg)
+        explicit = any(c.get("clock_entry_access") and any(
+            q == n and i == c["inst"] and pin == c["clock_entry_access"]["pin"]
+            for q, i, pin, _, _ in core_tap_rows(P, tn)) for c in P.types[tn].get("hard_cores", []))
+        if explicit:
+            # An interior real-pin stack must not be shifted away by generic PG
+            # avoidance. Its exact target M6/M7 PG cuts are emitted below.
+            sx, sy = float(x), float(y)
+            layer = P.layers[P.layer_budget["partition_signal_max"]]
+            axis = sx if layer["dir"] == "V" else sy
+            k = (axis - layer["offset_um"]) / layer["pitch_um"]
+            if abs(k - round(k)) > 1e-6:
+                raise ValueError(f"{tn}.{n}: explicit entry off preferred routing track")
+        else:
+            sx, sy = _snap_tap(P, x, y, pg_legal=pg)
+        port_blocks = entry_block_boxes(P, tn, port=n, entry_xy=(sx, sy)) if any(
+            c.get("clock_entry_access") for c in P.types[tn].get("hard_cores", [])) else blocks
+        if port_blocks and _pin_hits(P, tn, n, sx, sy, port_blocks):
+            sx, sy = _clear_core_tap(P, tn, n, x, y, (sx, sy), port_blocks, pg)
         out.append((n, sx, sy))
     return out
 
@@ -793,7 +808,7 @@ def _lef_metal_top(lef_text):
     return max([int(v) for v in re.findall(r"\bLAYER\s+M(\d+)\b", lef_text)] or [0])
 
 
-def entry_block_boxes(P, tn, root=None):
+def entry_block_boxes(P, tn, root=None, port=None, entry_xy=None):
     """[(x0, y0, x1, y1)] type-frame boxes of the placed macros (type_macros) whose metal reaches the partition entry
     layer (layer_budget partition_signal_max) or the via layer below it: LEF OBS/PIN layers, else plan obs_max."""
     t = P.types[tn]
@@ -817,6 +832,15 @@ def entry_block_boxes(P, tn, root=None):
             mtop = None
         if mtop is None:
             mtop = int(om.group(1)) if om else top      # unknown view: treat as obstructing (fail closed)
+        access = c.get("clock_entry_access")
+        if access and port is not None:
+            matched = [(n, i, pin) for n, i, pin, _, _ in core_tap_rows(P, tn)
+                       if n == port and i == c["inst"] and pin == access["pin"]]
+            if matched:
+                from lef_clock_entry import validate_access
+                validate_access(f.read_text(), mod, access, top, (float(x), float(y), o),
+                                _pin_box(P, tn, port, *entry_xy))
+                continue  # only this named utility pin; every other port retains the solid macro
         if mtop < top - 1:
             continue
         w, h = map(float, c["outline_um"])
@@ -1436,16 +1460,37 @@ def pg_island_cuts(P, tn, root=None):
     pin of a placed hard core, grown by PG_CUT_MARGIN_UM in x and PG_CUT_SPACE_UM in y.  Which straps it hits is
     decided on the actual pdngen geometry (pg_island_cut_tcl), not re-derived here.  [] when not opted in."""
     t = P.types[tn]
-    if not t.get("pg_island_cut"):
+    selected = {(c.get("physical_inst") or c["inst"]): c["clock_entry_access"]["pin"]
+                for c in t.get("hard_cores", []) if c.get("clock_entry_access")}
+    if not t.get("pg_island_cut") and not selected:
         return []
     import cores as C
     cuts = []
     for inst, _mod, lef, _lib, ox, oy, o in type_macros(P, tn):
+        if not t.get("pg_island_cut") and inst not in selected:
+            continue
         pins, (w, h) = lef_interior_pins(C.resolve(lef, root))
+        if not t.get("pg_island_cut"):
+            pins = [(pin, r) for pin, r in pins if pin == selected[inst]]
+            if not pins:
+                raise ValueError(f"{tn}.{inst}: actual clock entry has no interior M5 target pin")
         for pin, r in pins:
             x0, y0, x1, y1 = _orient_rect_r(r, w, h, o)
             cuts.append((inst, pin, (round(x0 + ox - PG_CUT_MARGIN_UM, 4), round(y0 + oy - PG_CUT_SPACE_UM, 4),
                                      round(x1 + ox + PG_CUT_MARGIN_UM, 4), round(y1 + oy + PG_CUT_SPACE_UM, 4))))
+    return cuts
+
+
+def clock_entry_pg_cuts(P, tn):
+    """Targeted actual M7 utility windows; other macros/clock pins stay unchanged."""
+    cuts=[]
+    for core in P.types[tn].get("hard_cores", []):
+        access=core.get("clock_entry_access")
+        if access:
+            for rect in access["footprints_um"]["M7"]:
+                cuts.append(dict(inst=core.get("physical_inst") or core["inst"], pin=access["pin"], layer="M7",
+                    rect_um=[round(rect[0]-.072,6),round(rect[1]-.072,6),
+                             round(rect[2]+.072,6),round(rect[3]+.072,6)]))
     return cuts
 
 
@@ -3877,6 +3922,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if pg_cuts:
         (kd / "pg_island_cut.tcl").write_text(pg_island_cut_tcl(pg_cuts))
     post_pdn = ["/work/pg_island_cut.tcl"] if pg_cuts else []
+    entry_pg = clock_entry_pg_cuts(P, tn)
+    if entry_pg:
+        from clock_entry_pg import render as render_entry_pg
+        (kd / "clock_entry_pg_cut.json").write_text(json.dumps(
+            dict(schema="opentallas.clock_entry_pg_cuts.v1", cuts=entry_pg), indent=2) + "\n")
+        (kd / "clock_entry_pg_cut.tcl").write_text(render_entry_pg(entry_pg))
+        post_pdn.append("/work/clock_entry_pg_cut.tcl")
     if pg_pub:      # PG-CORECONN-3: M7-top macro PG straps -> tile pins (after any island cut)
         (kd / "pg_publish.tcl").write_text(core_pg_publish_tcl(pg_pub))
         post_pdn.append("/work/pg_publish.tcl")
@@ -4415,6 +4467,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                core_latency=clat["rows"],
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
+    # Private explicit actual-LEF entry access. Default budget bytes remain unchanged.
+    for row in bud["clock"]["core_taps"]:
+        core = next((c for c in t.get("hard_cores", []) if c["inst"] == row["inst"]), None)
+        if core and core.get("clock_entry_access"):
+            if row["pin"] != core["clock_entry_access"]["pin"]:
+                raise ValueError("clock entry access pin differs from core tap")
+            row["clock_entry_access"] = core["clock_entry_access"]
     # FLOW-11 10-30 (DIE-KV-48-CLK (b)): the type's PHY-edge clock pins (plan clock.edge_clocks, snapped like taps,
     # placed by tap_pins) are plan clock pins too; kit_contract clock_pin_geometry checks them like taps_snapped.
     # No edge clock: no key (byte-identical budget.json).
