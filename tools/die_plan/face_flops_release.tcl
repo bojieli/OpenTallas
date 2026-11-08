@@ -43,6 +43,8 @@ if {[file exists $ff_f]} {
   close $fh
   puts "OT_RELAY_MID released $ff_m relay flops for DPL"
 }
+# S81-TYPES-5 11-07 NARROW-GUTTER: gutter_block.tcl blockages steer GPL only, removed here before DPL
+if {[file exists /work/gutter_release.tcl]} { source /work/gutter_release.tcl }
 # DIE-HEAD-69 11-05: core_out_land.tcl landing flops
 set ff_f $::env(RESULTS_DIR)/ot_core_out_land.txt
 if {[file exists $ff_f]} {

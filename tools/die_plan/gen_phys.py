@@ -4363,6 +4363,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
         if P.budgets.get("gutter_block_um"):     # S81-TYPES-5 11-07 NARROW-GUTTER class (opt-in)
             shutil.copyfile(Path(__file__).with_name("gutter_block.tcl"), kd / "gutter_block.tcl")
+            shutil.copyfile(Path(__file__).with_name("gutter_release.tcl"), kd / "gutter_release.tcl")
         # DIE-HEAD-69 11-05 (COORD ruling (1), hd_tile flt_q): core-output landing flops at their pins (core_out_land.tcl)
         shutil.copyfile(Path(__file__).with_name("core_out_land.tcl"), kd / "core_out_land.tcl")
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
