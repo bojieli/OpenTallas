@@ -1,0 +1,16 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0221] 1000000 lines parsed!
+[INFO ODB-0221] 2000000 lines parsed!
+[INFO ODB-0221] 3000000 lines parsed!
+[INFO ODB-0221] 4000000 lines parsed!
+[INFO ODB-0227] LEF file: /out/qkd_kvs_pcc_h_head_p_EXACT1113.lef, created 1 library cells
+OLD_MASTER=qkd_kvs_pcc_h_head_p
+[WARNING PDN-0007] VSS on M5 is partially blocked (3.7%) by obstructions on M6, M7 for u_bound.u_kvpc0
+[WARNING PDN-0007] VDD on M5 is partially blocked (4.1%) by obstructions on M6, M7 for u_bound.u_kvpc0
+[INFO PDN-0001] Inserting grid: top
+[INFO PDN-0001] Inserting grid: target_M5 - u_bound.u_kvpc0
+[WARNING PDN-0110] No via inserted between M5 and M6 at (294.8040, 356.4480) - (294.8120, 356.7360) on VDD
+[INFO PDN-0500] Runtime: 56.59s

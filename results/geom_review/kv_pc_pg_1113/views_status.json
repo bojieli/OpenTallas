@@ -1,0 +1,62 @@
+{
+ "qkd_kvs_pcc": {
+  "view": "/srv/opentallas-scratch2/claude/codex-kv-types-1113/pc_pg/views/qkd_kvs_pcc",
+  "views_status": "signoff",
+  "exact_abstract": {
+   "rule": "explicit same final ODB; exact all PIN/SIZE identity; only native OBS geometry differs",
+   "signed_odb": "/srv/opentallas-scratch2/claude/codex-kv-types-1113/pc_pg/providers/qkd_kvs_pcc/native/6_final.odb",
+   "exported_from_odb": "/srv/opentallas-scratch2/claude/codex-kv-types-1113/pc_pg/providers/qkd_kvs_pcc/native/6_final.odb",
+   "odb_sha256": "c303603e63adf4eaa8b85a0fbf48b911d4fddcee89d74b54cfb9033bfc3820a9",
+   "original_lef": "/srv/opentallas-scratch2/claude/codex-kv-types-1113/pc_pg/providers/qkd_kvs_pcc/native/qkd_kvs_pcc.lef",
+   "original_lef_sha256": "48ffbd2baa9bb5d7b547cd0bfd67bf8d84763866454cfc8b5bf5568fbfeb45fe",
+   "abstract_lef": "/srv/opentallas-scratch2/claude/codex-kv-types-1113/pc_pg/providers/qkd_kvs_pcc/qkd_kvs_pcc.lef",
+   "abstract_lef_sha256": "46b3bec0f69de54229f8406a80db72361c172aaea3a0e6328219f370736c4755",
+   "pins": 4102
+  }
+ },
+ "qkd_kvs_pcf_h_head_p": {
+  "view": "/srv/opentallas-scratch2/claude/codex-kv-types-1113/pc_pg/views/qkd_kvs_pcf_h_head_p",
+  "views_status": "signoff",
+  "exact_abstract": {
+   "rule": "explicit same final ODB; exact all PIN/SIZE identity; only native OBS geometry differs",
+   "signed_odb": "/srv/opentallas-scratch2/claude/codex-kv-types-1113/pc_pg/providers/qkd_kvs_pcf_h_head_p/native/6_final.odb",
+   "exported_from_odb": "/srv/opentallas-scratch2/claude/codex-kv-types-1113/pc_pg/providers/qkd_kvs_pcf_h_head_p/native/6_final.odb",
+   "odb_sha256": "a5b1e197a4d5e2fc756ff4d1a9b38395f59dd2070ecd0344a99b2603a430659b",
+   "original_lef": "/srv/opentallas-scratch2/claude/codex-kv-types-1113/pc_pg/providers/qkd_kvs_pcf_h_head_p/native/qkd_kvs_pcf_h_head_p.lef",
+   "original_lef_sha256": "4811a794a8124bb6a62f07dae394f8ff80dd0c073f030783f8f4d895e1c071d5",
+   "abstract_lef": "/srv/opentallas-scratch2/claude/codex-kv-types-1113/pc_pg/providers/qkd_kvs_pcf_h_head_p/qkd_kvs_pcf_h_head_p.lef",
+   "abstract_lef_sha256": "d1b88f53eba88cc6eeddcc96c1d0507bb0254de6d1d99e2e3576ea7ba1535251",
+   "pins": 634
+  }
+ },
+ "qkd_kvs_pcc_h_head_p": {
+  "view": "/srv/opentallas-scratch2/claude/codex-kv-types-1113/pc_pg/views/qkd_kvs_pcc_h_head_p",
+  "views_status": "signoff",
+  "exact_abstract": {
+   "rule": "explicit same final ODB; exact all PIN/SIZE identity; only native OBS geometry differs",
+   "signed_odb": "/srv/opentallas-scratch3/claude/dkv78/hhp/k4u/i1/run/results/asap7/hc_qkd_kvs_pcc_h_head_p__293_76x267_84/base/6_final.odb",
+   "exported_from_odb": "/srv/opentallas-scratch3/claude/dkv78/hhp/k4u/i1/run/results/asap7/hc_qkd_kvs_pcc_h_head_p__293_76x267_84/base/6_final.odb",
+   "odb_sha256": "2a7cab7f30134288ed466eabdac2a8ab6575cdb9ed80876b5b93e1361e7c947f",
+   "original_lef": "/srv/opentallas-scratch3/claude/dkv78/hhp/k4u/i1/views/qkd_kvs_pcc_h_head_p.lef",
+   "original_lef_sha256": "00f3258c6e067f377c12b9102f5ec571cfe2f7e99d73348251552e14197efd23",
+   "abstract_lef": "/srv/opentallas-scratch2/claude/codex-kv-types-1113/pc_pg/qkd_kvs_pcc_h_head_p.lef",
+   "abstract_lef_sha256": "944f8b1492a96d4861b4456e5c24850f7e62c0bc37c23f29f3081e42c30bfd59",
+   "pins": 2960
+  }
+ },
+ "qkd_kvs_pcf": {
+  "view": "/srv/opentallas-scratch2/claude/codex-kv-types-1113/pc_pg/views/qkd_kvs_pcf",
+  "views_status": "signoff",
+  "exact_abstract": {
+   "rule": "explicit same final ODB; exact all PIN/SIZE identity; only native OBS geometry differs",
+   "signed_odb": "/srv/opentallas-scratch2/claude/dkv64-rfb/eco_pcf_fmxs/i2/run/results/asap7/hc_qkd_kvs_pcf__90_72x267_84_fMX/base/6_final.odb",
+   "exported_from_odb": "/srv/opentallas-scratch2/claude/dkv64-rfb/eco_pcf_fmxs/i2/run/results/asap7/hc_qkd_kvs_pcf__90_72x267_84_fMX/base/6_final.odb",
+   "odb_sha256": "bd980c62087255f6126ce03166b3ce85b22eea43ceb08d49d3eb782564449107",
+   "original_lef": "/srv/opentallas-scratch2/claude/dkv64-rfb/eco_pcf_fmxs/i2/views/qkd_kvs_pcf.lef",
+   "original_lef_sha256": "b81402f669eb093d8bff27067963957c4b2167e3e2e51cea6c3a0bef5e68c7b4",
+   "abstract_lef": "/srv/opentallas-scratch2/claude/codex-kv-types-1113/pc_pg/providers/qkd_kvs_pcf/qkd_kvs_pcf.lef",
+   "abstract_lef_sha256": "65f19391e083aef25824240b59a6681f4cbd2b62f010fceb7a4d759abe67e948",
+   "pins": 634
+  }
+ }
+}

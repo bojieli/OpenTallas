@@ -26,6 +26,7 @@ import datetime
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -42,6 +43,45 @@ def sha256(p):
         for b in iter(lambda: f.read(1 << 20), b""):
             h.update(b)
     return h.hexdigest()
+
+
+def exact_abstract_override(original_lef, signed_odb, candidate_lef, candidate_odb, module):
+    """Explicit same-final-ODB obstruction-only replacement; never edit the signed export."""
+    if not candidate_lef and not candidate_odb:
+        return None
+    if not candidate_lef or not candidate_odb:
+        raise ValueError("exact abstract requires both --abstract-lef and --abstract-odb")
+    paths = [Path(p) for p in (original_lef, signed_odb, candidate_lef, candidate_odb)]
+    if not all(p.is_file() for p in paths):
+        raise ValueError("exact abstract requires the original LEF and both actual final ODB inputs")
+    old, _signed, new, _candidate = paths
+    texts = [old.read_text(), new.read_text()]
+    pin_re = re.compile(r"(?ms)^[ \t]*PIN[ \t]+(\S+)[ \t]*\n(.*?)^[ \t]*END[ \t]+\1[ \t]*$")
+    def identity(text):
+        macros = re.findall(r"(?m)^\s*MACRO\s+(\S+)\s*$", text)
+        size = re.findall(r"(?m)^\s*SIZE\s+([^;]+);", text)
+        pins = [(match[1], " ".join(match[2].split())) for match in pin_re.finditer(text)]
+        if macros != [module] or len(size) != 1 or not pins or len({p[0] for p in pins}) != len(pins):
+            raise ValueError("exact abstract requires one matching macro, SIZE and unique actual pins")
+        return " ".join(size[0].split()), dict(pins)
+    before, after = map(identity, texts)
+    if before != after:
+        raise ValueError("exact abstract PIN/SIZE identity differs from the signed LEF")
+    def outside_obs(text):
+        text = re.sub(r"(?ms)^[ \t]*OBS[ \t]*\n.*?^[ \t]*END[ \t]*(?:\n|$)", "", text)
+        text = re.sub(r"(?m)^\s*#.*$", "", text)
+        return " ".join(text.split())
+    if outside_obs(texts[0]) != outside_obs(texts[1]):
+        raise ValueError("exact abstract changes content outside native OBS geometry")
+    signed_sha = sha256(signed_odb)
+    candidate_sha = signed_sha if paths[1].resolve() == paths[3].resolve() else sha256(candidate_odb)
+    if signed_sha != candidate_sha:
+        raise ValueError("exact abstract input ODB differs from the signed final ODB")
+    return dict(rule="explicit same final ODB; exact all PIN/SIZE identity; only native OBS geometry differs",
+                signed_odb=os.path.realpath(signed_odb), exported_from_odb=os.path.realpath(candidate_odb),
+                odb_sha256=signed_sha, original_lef=os.path.realpath(original_lef),
+                original_lef_sha256=sha256(original_lef), abstract_lef=os.path.realpath(candidate_lef),
+                abstract_lef_sha256=sha256(candidate_lef), pins=len(before[1]))
 
 
 def run_probe(code, args):
@@ -90,7 +130,7 @@ def lec_all_shown(lec_doc):
     return lec_doc.get("all_shown")
 
 
-def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, flow_tag=None, note=None, clock_witness_dir=None):
+def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, flow_tag=None, note=None, clock_witness_dir=None, abstract_lef=None, abstract_odb=None):
     kit = os.path.realpath(kit)
     sdoc, so = so_record(signoff)
     sdir = os.path.dirname(os.path.realpath(signoff))
@@ -119,6 +159,13 @@ def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, fl
             r.setdefault("files_sha256", {})[rel] = sha256(alt)
             lib_basis[rel] = f"base {mod}_{orfs}.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
     view, gates, problems = AP.view_payload(r, j, so)
+    original_lef = view["files"].get(f"{mod}.lef")
+    if (abstract_lef or abstract_odb) and not original_lef:
+        raise ValueError("exact abstract requires the original signed LEF export")
+    abstract_record = exact_abstract_override(original_lef, os.path.join(base, "6_final.odb"),
+                                              abstract_lef, abstract_odb, mod)
+    if abstract_record:
+        view["files"][f"{mod}.lef"] = os.path.realpath(abstract_lef)
     prov = view["provenance"]
     kitblk = prov["kit"]
     pf = os.path.join(kit, "pins.json")
@@ -145,6 +192,8 @@ def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, fl
                           signoff_generated=sdoc.get("generated"), odb=odb if os.path.isfile(odb) else None,
                           odb_not_newer_than_signoff=fresh, lec=lec, note=note, lib_basis=lib_basis or None,
                           files_sha256={k: sha256(v) for k, v in sorted(view["files"].items())})
+    if abstract_record:
+        prov["export"]["exact_abstract"] = abstract_record
     gates.update(view_complete=not problems, view_problems=problems)
     if not mod:
         raise SystemExit("no module found (kit freeze/core record or a single base LEF)")
@@ -175,8 +224,13 @@ def main(argv=None):
     ap.add_argument("--note")
     ap.add_argument("--clock-witness-dir", type=Path,
                     help="retain an exact separately measured native clock witness; copy only, no STA")
+    ap.add_argument("--abstract-lef", type=Path,
+                    help="explicit native exact-OBS LEF of the same signed final ODB; pin and SIZE identity required")
+    ap.add_argument("--abstract-odb", type=Path,
+                    help="actual ODB read by that native abstract export; hash must match signed base/6_final.odb")
     a = ap.parse_args(argv)
-    res = export(a.kit, a.signoff, a.out, a.die, a.base, a.lec, a.src_commit, a.flow_tag, a.note, a.clock_witness_dir)
+    res = export(a.kit, a.signoff, a.out, a.die, a.base, a.lec, a.src_commit, a.flow_tag, a.note,
+                 a.clock_witness_dir, a.abstract_lef, a.abstract_odb)
     print(json.dumps(res))
     if a.clock_witness_dir and (res.get("child_clock_witness") or {}).get("status") != "RETAINED":
         return 2
