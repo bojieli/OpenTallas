@@ -1,0 +1,14 @@
+{"guard": "OT_ZL_LOCKUP",
+ "note": "DIE-HEAD-86/SPN 11-08 hd_spn vG_LK: every zero-logic register hop that can cross a clock tap port (vF_U GRT FF np census)",
+ "hops": [
+  {"inst": "u_bin_(x|b)_i", "ports": ["d", "ea"]},
+  {"inst": "u_ist_\\w+_\\d+", "ports": ["d", "ea"]},
+  {"inst": "u_bout_(b|x|xw|xe)_o", "ports": ["d", "ea"]},
+  {"inst": "u_ft_\\w+_s[1-9]", "ports": ["d", "ea"]},
+  {"inst": "u_spo", "ports": ["i"]},
+  {"inst": "u_spr", "groups": [["i"], ["iw"], ["ie"]]},
+  {"inst": "u_(rrl|srl)_\\d+(_b)?", "types": ["ot_dp_rrelay", "ot_dp_rgate"], "groups": [["d"], ["run"]], "allow_missing": true},
+  {"inst": "u_cland_(lrst|rst)_\\w+", "types": ["ot_dp_rrelay"], "ports": ["d"]},
+  {"inst": "u_cland_(sin|agg|up)_\\w+", "types": ["ot_dp_landing_collect"], "groups": [["ready_i", "fault_i"], ["rst_n"]]},
+  {"inst": "u_cland_(reader_start|writer_start|fstart)_\\w+", "types": ["ot_dp_landing_relay"], "groups": [["d"], ["rst_raw_n"]]}
+ ]}
