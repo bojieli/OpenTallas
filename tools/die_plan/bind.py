@@ -5119,7 +5119,8 @@ def cmd_kit_rtl(a):
         # DIE-QC-69: a hard core nested in a bound leaf (QC RED u_u_red.u_core) declares its physical_inst in the plan
         phys = {c["inst"]: c["physical_inst"] for c in t.get("hard_cores", []) or [] if c.get("physical_inst")}
         core_rows = [(r[0], phys.get(r[1], r[1])) + tuple(r[2:]) for r in (gen_phys.core_tap_rows(P, tn) if P else [])]
-        btxt, kit_core_clock_rows = kit_core_clocks.wire(btxt, bmod, core_rows)
+        btxt, kit_core_clock_rows = kit_core_clocks.wire(btxt, bmod, core_rows,
+                                                         leaf_id=lambda inst: short_id("u_" + inst, 90))
     except ValueError as exc:
         raise BindError(f"kit-rtl {tn}: {exc}") from exc
     bports = [(m.group(1), int(m.group(2)) + 1 if m.group(2) else 1, m.group(3)) for m in
