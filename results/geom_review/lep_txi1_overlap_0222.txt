@@ -1,0 +1,4 @@
+LEP vE-b FAIL geometry, 2026-11-08 PST.
+Image: lep_txi1_overlap_0222.png; read from E5 3_5_place_dp-failed.odb, confirmed same boxes in3_4.
+Two FIRM INVx1 (width .162um) grew to INVx8 (.540um) at x939.600, while next FIRM cell starts940.032: .108um overlap at y592.92 and593.73. The placement had reserved .432um (original width/.4), below max family width. OT_CLAND_FIT_RESERVE=resize checks fit but normal row occupancy did not preserve that family width for next cell.
+Fix: normal row reserve = max(density reserve,family fit width); defaults without family fit unchanged. No RTL/cycles/plan change. Failed vE-b kept. Next: dry actual placement hook from original floorplan with new reserve, verify band capacity and render, then one revised PLACE.
