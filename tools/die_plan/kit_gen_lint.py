@@ -280,6 +280,13 @@ def lint(kd, plan_dir=None, yosys=True, image=IMAGE, mem_gb=8):
         checks[name] = dict(verdict="FAIL" if errors else ("PASS" if applies else "NA"), errors=errors[:40],
                             n_errors=len(errors))
 
+    # _rtl/ and other emission scratch dirs are not kits: every existing check
+    # can be NA there, which otherwise turns a wrong CLI target into a false PASS.
+    # freeze.json stays optional for core kits; config.mk is the physical kit input.
+    if not (kd / "config.mk").is_file():
+        detail = " (freeze.json is also absent)" if not (kd / "freeze.json").is_file() else ""
+        put("kit_vehicle", lambda: (["not a generated kit: missing config.mk" + detail +
+                                    "; pass the generated kit directory, not _rtl/"], True))
     put("pins_vs_plan", lambda: pins_vs_plan(kd, plan_dir))
     put("clock_export_form", lambda: clock_export_form(kd))
     put("macro_tcl", lambda: macro_tcl(kd))
