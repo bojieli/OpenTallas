@@ -5811,7 +5811,7 @@
         "clock": "PASS",
         "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
       },
-      "plan": "/srv/opentallas-scratch2/claude/qct9/plan_qc53v4u.json",
+      "plan": "/srv/opentallas-scratch2/claude/kw35/qcplan_v4u/plan_qc53v4u.json",
       "gen_host": "epyc2",
       "src": "/srv/opentallas-scratch2/claude/kw35/src_0b72a",
       "src_sha": "0b72abe93ac068bd6a4f6518c271439f9f557f70",
@@ -7724,7 +7724,9 @@
           }
         ]
       },
-      "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 06:10 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/qwen_compute.json on intel2, plan 16f4b9ef4379) FIRST in prov_view_sources for 7 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v"
+      "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 06:10 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/qwen_compute.json on intel2, plan 16f4b9ef4379) FIRST in prov_view_sources for 7 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v",
+      "plan_prev_kw35f": "/srv/opentallas-scratch2/claude/qct9/plan_qc53v4u.json",
+      "note_kw35f": "KW-FIX-35 2026-11-08 06:13 PST: SRC-INCOMPLETE class: src_probe counts the plan's whole dir (qct9 = QC-TYPES-9 work dir, 8380 files to depth 3 on epyc4 only), so epyc2/epyc5/intel1 were dropped as QC gen hosts at 06:02 and every QC gen pinned to epyc4. Same plan bytes (sha 9c8cefa48662) moved to a plan-only dir staged on epyc4/epyc5/intel1/epyc2/epyc6/intel2. Revert plan_prev_kw35f"
     },
     "hbm": {
       "enabled": true,
