@@ -139,6 +139,23 @@ if vg and vg[0] < VN_TRIG:
         for n in grp: q[n] = to(n)
         if all(free(n, q[n], q) for n in grp):
             p = q; vn_field = dict(dx=round(dx, 2), gap0=round(g1, 2), gap=round(g1 + k * G, 2), group=sorted(grp)); break
+    if vn_field == 'blocked':
+        # rigid group blocked (FT station sites / outline): move only the vn pair, relocate each core it hits to the
+        # nearest free site (spiral search above); kept only when the weighted bus cost does not rise
+        for k in ks:
+            dx = side * k * G
+            q = dict(p)
+            for n in vn: q[n] = [p[a1][0] + dx, p[n][1]]
+            hit = [m for m in hc if m not in vn and m not in vp and any(inter(rect(q[m], hc[m]['s']), rect(q[n], hc[n]['s']), MGAP - 0.01) for n in vn)]
+            ok = all(free(n, q[n], {m: v for m, v in q.items() if m not in hit}) for n in vn)
+            for m in sorted(hit, key=lambda m: -hc[m]['s'][0] * hc[m]['s'][1]):
+                if not ok: break
+                tmp = {x: v for x, v in q.items() if x not in hit or x == m}
+                r = relocate(m, tmp)
+                if not r: ok = False; break
+                q[m] = r
+            if ok and all(free(n, q[n], q) for n in q if n in vn or n in hit) and cost(q) <= cost(p) * 1.05:
+                p = q; vn_field = dict(dx=round(dx, 2), gap0=round(g1, 2), gap=round(g1 + k * G, 2), group=sorted(vn), relocated=sorted(hit)); break
 out = {}
 for k, v in p.items():
     dxx, dyy = v[0] - hc[k]['o'][0], v[1] - hc[k]['o'][1]
