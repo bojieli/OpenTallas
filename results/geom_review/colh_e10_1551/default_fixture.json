@@ -1,0 +1,26 @@
+{
+  "profile": "colh10_e10_balanced_channel_1551",
+  "enabled": false,
+  "move_um": [
+    0,
+    0
+  ],
+  "new_channels_um": {
+    "west": 25.032,
+    "east": 56.16
+  },
+  "bottom_e5_changed": false,
+  "bottom_reason": "n12 native collision prevents same move",
+  "pin_cycles_added": 0,
+  "rtl_changed": false,
+  "pins_changed": false,
+  "clock_hooks_changed": false,
+  "root_grid_nearest": "clk_t13 remains; clock-pin L1 130.748->146.300um",
+  "fixed_functional_cells_in_new_pose": 0,
+  "physical_tapcell_in_new_pose": 737,
+  "floorplan_must_regenerate": true,
+  "source_macro_sha256": "b0d6999965d5de59204a0d7de25453ec1c0f903c1219cdb35c586641df809b36",
+  "result_macro_sha256": "b0d6999965d5de59204a0d7de25453ec1c0f903c1219cdb35c586641df809b36",
+  "goal": "ONE PLACE pilot; view actual density/native/pin/clock geometry before any CTS/GRT/batch",
+  "baseline": "private vQ pin-window kit, not a canonical plan adoption"
+}
