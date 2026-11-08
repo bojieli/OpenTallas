@@ -226,3 +226,18 @@ def test_split_projection_preserves_explicit_master_and_subpath(tmp_path):
     entries = {c["physical_inst"]: dict(c, inst=c["physical_inst"])}
     over = BMP.overlay(kd, entries)
     assert over["u_bound.u_u_lk_N2.u_fcore.u_core.u_rx.u_bm0"]["module"] == c["physical_master"]
+
+
+def test_physical_variant_roots_through_bound_parent_name():
+    """DIE-HBM-92-PHY: q_spb0__physical_v1 binds plan u_lk_S0 from as-built lk_S3 (bound u_u_lk_S0)."""
+    c = dict(inst="u_lk_S0__tx", module="ot_pdie_serdes_tx", lef="k.lef",
+             physical_inst="u_lk_S0.u_fcore.u_core.u_tx", physical_master="ot_pdie_serdes_tx")
+    t = dict(hard_cores=[c])
+    text = "    // as-built lk_S3\n    ot_pdie_serdes__p37glue u_u_lk_S0 (\n"
+    table, alt = {"u_lk_S0": "lk_S0"}, {"u_lk_S0": ["lk_S3"]}
+    assert BMP.resolve_sub_cores(t, text, table) == []                # alternate leaf not declared: no row
+    rows = BMP.resolve_sub_cores(t, text, table, alt)
+    assert rows[0]["physical_inst"] == "u_bound.u_u_lk_S0.u_fcore.u_core.u_tx" and rows[0]["asbuilt"] == "lk_S3"
+    assert BMP.resolve_sub_cores(t, text, {}, alt) == []              # no producer table entry: no row
+    both = text + "    // as-built lk_S0\n    ot_pdie_serdes__p37glue u_u_lk_S0x (\n"
+    assert BMP.resolve_sub_cores(t, both, table, alt) == []           # two declared leaves present: no row

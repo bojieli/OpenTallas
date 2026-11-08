@@ -1,4 +1,4 @@
-"""Private HBM p37 split-PHY as-built candidate; never edits a plan or source manifest."""
+"""HBM p37 split-PHY as-built manifest from a base manifest; never edits a plan or source manifest."""
 import argparse
 import copy
 import json
@@ -7,6 +7,10 @@ from pathlib import Path
 
 PARENTS = {"u_lk_N0": "lk_N0", "u_lk_N2": "lk_N2", "u_lk_S0": "lk_S0",
            "u_lk_S1": "lk_S1"}
+# DIE-HBM-92-PHY 11-08: every as-built serdes leaf that binds one of these plan parents takes the split glue.
+# NE_spb0 (q_spb0__physical_v1, MY) binds plan u_lk_S0 from as-built lk_S3, so lk_S3 is split too.
+VARIANT_LEAVES = {"u_lk_S0": ["lk_S3"]}
+SPLIT_LEAVES = ("lk_N0", "lk_N2", "lk_S0", "lk_S1", "lk_S3")
 FILES = ["results/die_hbm_1106/rx_bm3_p37/ot_pdie_serdes__p37comp.sv",
          "rtl/hbm_accel/cores_split/reform_1104b/ot_pdie_serdes_split.sv",
          "rtl/hbm_accel/cores_split/reform_1106/ot_pdie_serdes_rx_bm3.sv"]
@@ -40,10 +44,11 @@ def candidate(plan, asbuilt, source, stage=None):
         files = [str(stage / Path(f).name) for f in files]
     out = copy.deepcopy(asbuilt)
     out.setdefault("sub_core_leaf", {}).update(PARENTS)
+    out.setdefault("sub_core_leaf_variants", {}).update(VARIANT_LEAVES)
     out.setdefault("substitute_inst", []).extend(
         dict(inst=leaf, module="ot_pdie_serdes__p37glue",
              reason="Real p37 split composition already named by this plan's hard-core paths; no new pin cycles")
-        for parent, leaf in sorted(PARENTS.items()))
+        for leaf in SPLIT_LEAVES)
     out["files"] = list(dict.fromkeys(out.get("files", []) + files))
     out["prefer"] = list(dict.fromkeys(out.get("prefer", []) + files))
     return out

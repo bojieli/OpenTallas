@@ -100,7 +100,7 @@ def resolve(t, bound_text):
     return rows
 
 
-def resolve_sub_cores(t, bound_text, sub_core_leaf):
+def resolve_sub_cores(t, bound_text, sub_core_leaf, variants=None):
     """Root explicit split-core paths through the producer's exact parent-to-leaf table.
 
     The remaining subpath and master are preserved for kit_preflight to validate;
@@ -114,9 +114,14 @@ def resolve_sub_cores(t, bound_text, sub_core_leaf):
             continue
         parent, tail = path.split(".u_fcore.", 1)
         leaf = sub_core_leaf.get(parent)
-        hit = ab.get(leaf) if leaf else None
-        if hit is None:
+        # DIE-HBM-92-PHY 11-08: a physical variant type binds the same plan content from another as-built leaf
+        # (HBM NE_spb0 = q_spb0__physical_v1: plan u_lk_S0 is as-built lk_S3).  The producer declares those
+        # alternates in asbuilt.sub_core_leaf_variants; exactly one declared leaf must be in this bound file.
+        found = [x for x in ([leaf] + list((variants or {}).get(parent, []))) if x and x in ab] if leaf else []
+        if len(found) != 1:
             continue
+        leaf = found[0]
+        hit = ab[leaf]
         rows.append(dict(inst=c["inst"], physical_inst="u_bound." + hit[0] + ".u_fcore." + tail,
                          physical_master=c["physical_master"], asbuilt=leaf, source_physical_inst=path,
                          source_parent=c.get("sub_core_parent", parent)))
@@ -190,10 +195,10 @@ def project(raw, kit_rtl):
         rows = resolve(t, bound_text)
         kr = json.loads(Path(fl).with_name("kit_rtl.json").read_text())
         manifest = kr.get("asbuilt_manifest")
-        sub_core_leaf = (json.loads(Path(manifest).read_text()).get("sub_core_leaf", {})
-                         if manifest and Path(manifest).is_file() and any(
-                             ".u_fcore." in c.get("physical_inst", "") for c in _macro_entries(t)) else {})
-        rows += resolve_sub_cores(t, bound_text, sub_core_leaf)
+        man = (json.loads(Path(manifest).read_text())
+               if manifest and Path(manifest).is_file() and any(
+                   ".u_fcore." in c.get("physical_inst", "") for c in _macro_entries(t)) else {})
+        rows += resolve_sub_cores(t, bound_text, man.get("sub_core_leaf", {}), man.get("sub_core_leaf_variants", {}))
         if not rows:
             continue
         if result is raw:
