@@ -24,7 +24,12 @@ LANE1_WRAP = "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hbm_su_pg_lane
 LANE1_MC = "rtl/hbm_accel/cores_split/reform_1103/ot_hbm_su_static_pgslice_lg__lanes8_11/ot_hbm_su_pg_lane1_core.sv"
 PRETREE_SRC = ["physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__pretree.sv",
                "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_pretree_core.sv"]
-QUAD = {"2": ("su_NE2", "su_NW2"), "3": ("su_NE3", "su_NW3")}
+QUAD = {q: ("su_NE" + q, "su_NW" + q) for q in "0123"}
+LANE1P = "ot_hbm_su_pg_lane1p_core"
+LANE1P_WRAP = "physical/die_plan/hbm_arch_cores/wrappers/oneclk/ot_hbm_su_pg_lane1p_core.sv"
+LANE1P_MC = "rtl/hbm_accel/cores_split/reform_1104a/lanes4/ot_hbm_su_pg_lane1p_core.sv"
+PLAIN = re.compile(r"(u_su_Q([01])_lanes_plain(\d+_\d+))\.u_fcore\.u_core\.u_p\d+")
+PRE01 = re.compile(r"u_su_Q([01])_pretree")
 LANES = re.compile(r"(u_su_Q([23])_lanes(\d+_\d+))\.u_fcore\.u_core\.u_p\d+")
 PRE = re.compile(r"u_su_Q([23])_pretree")
 
@@ -105,13 +110,79 @@ def candidate(plan, asbuilt, source, stage):
     return out
 
 
+def _stage_mc(src, rel, top, stage, why):
+    text = (Path(src) / rel).read_text()
+    if len(re.findall(r"\bmodule\s+" + top + r"\b", text)) != 1:
+        raise ValueError(f"{rel} must define exactly one {top}")
+    out = stage / (top + "__mc.sv")
+    out.write_text(f"// DIE-HBM-92-SU 11-08: {rel} with the core recipe's rename_top {top}__mc ({why}); "
+                   "otherwise byte-identical.\n" + re.sub(r"\bmodule\s+" + top + r"\b", "module " + top + "__mc", text))
+    return out
+
+
+def candidate_su2(plan, asbuilt, source, stage):
+    """p37su2 = p37su (kept verbatim) + SU Q0/Q1 lanes_plain -> ot_hbm_su_pg_lane1p_core and the Q0/Q1 pretrees."""
+    if not any(r.get("suffix") == "__l1split" for r in asbuilt.get("compose_split", [])):
+        raise ValueError("p37su2 must be built on p37su (no __l1split rule in the base)")
+    lanes, pretrees = set(), set()
+    for t in plan["partition_types"].values():
+        for h in t.get("hard_cores", []) or []:
+            m = PLAIN.fullmatch(h.get("physical_inst") or "")
+            if m and h.get("module") == LANE1P:
+                lanes.add(m.groups())
+            elif PRE01.fullmatch(h["inst"]) and h.get("module") == PRETREE and not h.get("physical_inst"):
+                pretrees.add(h["inst"])
+    if not lanes:
+        raise ValueError("plan names no SU Q0/Q1 lane1p split sub-cores")
+    stage = Path(stage).resolve()
+    stage.mkdir(parents=True, exist_ok=True)
+    wrap = stage / Path(LANE1P_WRAP).name
+    shutil.copy2(Path(source) / LANE1P_WRAP, wrap)
+    mc = _stage_mc(source, LANE1P_MC, LANE1P, stage, "recipes_b2.json ot_hbm_su_pg_lane1p_core, d44v part 17")
+    pre = [r for r in asbuilt["compose_split"] if r.get("suffix") == "__hcsplit"][0]["subs"][0]["sources"]
+    out = copy.deepcopy(asbuilt)
+    scl, var, hcl = out["sub_core_leaf"], out["sub_core_leaf_variants"], out["hard_core_leaf"]
+    for parent, q, rng in sorted(lanes):
+        a, b = QUAD[q]
+        if parent in scl and scl[parent] != f"{a}.__cut_lanes_plain{rng}":
+            raise ValueError(f"sub_core_leaf {parent} already maps to {scl[parent]}")
+        scl[parent] = f"{a}.__cut_lanes_plain{rng}"
+        var[parent] = [f"{b}.__cut_lanes_plain{rng}"]
+    for inst in sorted(pretrees):
+        hcl[inst] = dict(leaves=[f"{x}.__cut_pretree" for x in QUAD[PRE01.fullmatch(inst).group(1)]], inner="u_hc")
+    out["compose_split"] += [
+        dict(inst=r"su_N[EW][01]\.__cut_lanes_plain\d+_\d+", suffix="__l1psplit", levels=["u_fcore", "u_core"],
+             subs=[dict(name="u_p{k}", module=LANE1P, sources=[str(wrap), str(mc)], defines=[],
+                        roles={"u_core.u_bank0": r"\.g_bank\[(\d+)\]\.u_bank$",
+                               "u_core.u_lane0": r"\.g_lane\[(\d+)\]\.g_pr\.u_lane$"},
+                        param_diff_ok=["MLAT", "ALAT", "LDCS"],
+                        drop_exports={"u_core.u_bank0.read_data": [128, 159], "u_core.u_lane0.kv_waddr": [18, 23],
+                                      "u_core.u_lane0.vm_waddr": [18, 23]},
+                        drop_reason="dead parent loads (ot_hbm_su_static_pgslice_s.sv: drain sel reads reader 5 "
+                                    "bank_q[..*192+5*32+:32] only, never reader 4 [159:128]; la[23:18] unused); the "
+                                    "lane1p pins omit them")],
+             reason="d44v p17 split: u_p<k> = as-built bank k + plain lane k; signed lane1p = recipe defines [] "
+                    "(LDCS 1); as-built members keep their own parameters"),
+        dict(inst=r"su_N[EW][01]\.__cut_pretree", suffix="__hcsplit", levels=[],
+             subs=[dict(name="u_hc", module=PRETREE, sources=pre, roles={"u_core.u_pt": r"\.g_pretree\.u_pt$"})],
+             reason="plan hard core u_su_Q<q>_pretree (Q0/Q1) = the pretree split piece around the as-built red_pretree_s"),
+    ]
+    staged = [str(wrap), str(mc)]
+    out["files"] = list(dict.fromkeys(out["files"] + staged))
+    out["prefer"] = list(dict.fromkeys(out["prefer"] + staged))
+    out["note"] = "DIE-HBM-92-SU p37su2: p37su + SU Q0/Q1 lane1p/pretree compose_split | " + out.get("note", "")
+    return out
+
+
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--plan", required=True)
     p.add_argument("--asbuilt", required=True)
     p.add_argument("--source", required=True)
     p.add_argument("--out", required=True)
+    p.add_argument("--step", choices=["su", "su2"], default="su")
     a = p.parse_args()
-    result = candidate(json.loads(Path(a.plan).read_text()), json.loads(Path(a.asbuilt).read_text()), a.source,
-                       stage=Path(a.out).resolve().parent / "p37su_sources")
+    build = candidate if a.step == "su" else candidate_su2
+    result = build(json.loads(Path(a.plan).read_text()), json.loads(Path(a.asbuilt).read_text()), a.source,
+                       stage=Path(a.out).resolve().parent / ("p37su_sources" if a.step == "su" else "p37su2_sources"))
     Path(a.out).write_text(json.dumps(result, indent=2) + "\n")

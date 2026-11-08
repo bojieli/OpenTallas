@@ -174,6 +174,12 @@ def _resolve_scoped(members, ab):
     return rows
 
 
+def _sv_id(s):
+    """bind.sv_id: the bound netlist identifier of a plan name."""
+    s = re.sub(r"_+", "_", re.sub(r"[^A-Za-z0-9_]", "_", s)).strip("_")
+    return s if s and not s[0].isdigit() else "n" + s
+
+
 def _resolve_flat(t, bound_text):
     """DIE-QC-68/TYPES 11-04: a flat plan core name (QC u_lane0, u_t22, u_suvm_u_vm8q_u_bt) is one bound leaf `<inst>` or
     `u_<inst>` of that exact module, inside the kit wrapper's u_bound.  No exact unique leaf: no row (preflight reports)."""
@@ -182,7 +188,9 @@ def _resolve_flat(t, bound_text):
         inst = c["inst"]
         if "physical_inst" in c or "physical_master" in c or "." in inst:
             continue
-        hits = [name for name in (inst, "u_" + inst)
+        # DIE-HBM-92-SU-IDX 11-08: the bind names a leaf u_<sv_id(inst)> (runs of _ folded: HBM u_hb_idx__s_Q2_r0c0_k0h1
+        # -> u_u_hb_idx_s_Q2_r0c0_k0h1)
+        hits = [name for name in dict.fromkeys((inst, "u_" + inst, "u_" + _sv_id(inst)))
                 if re.search(r"(?m)^[ \t]+" + re.escape(c.get("module", inst)) + r"(?:[ \t]+#\(.*?\))?[ \t]+"
                              + re.escape(name) + r"[ \t]*\(", bound_text)]
         if len(hits) == 1:
