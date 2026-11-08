@@ -1,0 +1,339 @@
+{
+ "event": "l48vd",
+ "tool": "tools/s81_head/head_ctl_n_vd_event.py",
+ "base": "l48uo",
+ "base_plan_sha256": "f140216c876ba3186afdf3271f0f9b3ceadf63df95b5e0416a06af6dffcb54f6",
+ "plan_sha256": "2ee63c6b40d04a8c8fa5bddc13a8fa663a30f8d7bbce16bfece89522283439ae",
+ "sidecar_sha256": "90d006a48f17adc6795bbf55e3077ff308bb6b417604167248051501cda25d77",
+ "sidecar_changed": false,
+ "delta_sha256": "54905e58301fd6bc93d6f33862674a658848be124ade83cd24b3b379d9b160a9",
+ "sink_bins_file": {
+  "hd_tile": "physical/die_plan/s81_head/plan_of_record/l48vd/assets/sink_bins_0.json",
+  "hd_turn_a": "physical/die_plan/s81_head/plan_of_record/l48vd/assets/sink_bins_1.json",
+  "hd_turn_b": "physical/die_plan/s81_head/plan_of_record/l48vd/assets/sink_bins_2.json",
+  "hd_st_str": "physical/die_plan/s81_head/plan_of_record/l48vd/assets/sink_bins_3.json",
+  "hd_ctl": "physical/die_plan/s81_head/plan_of_record/l48vd/assets/sink_bins_4.json",
+  "hd_spn_wshim_rx": "physical/die_plan/s81_head/plan_of_record/l48vd/assets/sink_bins_5.json",
+  "hd_spn_wshim_tx": "physical/die_plan/s81_head/plan_of_record/l48vd/assets/sink_bins_6.json",
+  "hd_spn_eshim_rx": "physical/die_plan/s81_head/plan_of_record/l48vd/assets/sink_bins_7.json",
+  "hd_spn_eshim_tx": "physical/die_plan/s81_head/plan_of_record/l48vd/assets/sink_bins_8.json"
+ },
+ "input_pin_cycles": {
+  "coll_WN3_d__0": 1,
+  "coll_WN3_u__0": 1
+ },
+ "lanes_moved": {
+  "coll_WN3_d": [
+   11,
+   12
+  ],
+  "coll_WN3_u": [
+   11,
+   12
+  ],
+  "unit_lep": [
+   5,
+   6
+  ]
+ },
+ "landing_ring_wreg": {
+  "buses": [
+   "w3u_i",
+   "w3d_i"
+  ],
+  "dsrep": 1,
+  "freg": true,
+  "freg_numeric_order": true,
+  "read_chunk": 32,
+  "write_chunk": 8,
+  "write_tail": true
+ },
+ "ft_stations": {
+  "w3u": 6,
+  "w3d": 6,
+  "lepf_ft": 1,
+  "unit_ft": 2,
+  "ctrl_ft": 2,
+  "lep_fault_ft": 2,
+  "lw_ft": 3
+ },
+ "taps_kept": [
+  "clk",
+  "clk_t1",
+  "clk_t2",
+  "clk_t3",
+  "clk_t4",
+  "clk_t5",
+  "clk_t6",
+  "clk_t7",
+  "clk_t8",
+  "clk_t9"
+ ],
+ "taps_appended": [
+  "clk_t10",
+  "clk_t11",
+  "clk_t12",
+  "clk_t13"
+ ],
+ "taps": [
+  {
+   "name": "clk",
+   "xy": [
+    663.4,
+    126.8
+   ],
+   "load": 714,
+   "reach_um": 241.2
+  },
+  {
+   "name": "clk_t1",
+   "xy": [
+    17.3,
+    54.5
+   ],
+   "load": 561,
+   "reach_um": 93.5
+  },
+  {
+   "name": "clk_t2",
+   "xy": [
+    986.1,
+    105.2
+   ],
+   "load": 244,
+   "reach_um": 116.6
+  },
+  {
+   "name": "clk_t3",
+   "xy": [
+    331.7,
+    126.8
+   ],
+   "load": 1028,
+   "reach_um": 195.3
+  },
+  {
+   "name": "clk_t4",
+   "xy": [
+    82.2,
+    203.5
+   ],
+   "load": 91,
+   "reach_um": 112.2
+  },
+  {
+   "name": "clk_t5",
+   "xy": [
+    17.3,
+    322.3
+   ],
+   "load": 35,
+   "reach_um": 106.6
+  },
+  {
+   "name": "clk_t6",
+   "xy": [
+    1278.7,
+    358.5
+   ],
+   "load": 278,
+   "reach_um": 173.5
+  },
+  {
+   "name": "clk_t7",
+   "xy": [
+    1048.0,
+    374.9
+   ],
+   "load": 402,
+   "reach_um": 173.7
+  },
+  {
+   "name": "clk_t8",
+   "xy": [
+    17.3,
+    566.1
+   ],
+   "load": 26,
+   "reach_um": 200.4
+  },
+  {
+   "name": "clk_t9",
+   "xy": [
+    1179.9,
+    691.2
+   ],
+   "load": 515,
+   "reach_um": 117.9
+  },
+  {
+   "name": "clk_t10",
+   "xy": [
+    866.9,
+    193.2
+   ],
+   "load": 1068,
+   "reach_um": 214.6
+  },
+  {
+   "name": "clk_t11",
+   "xy": [
+    1138.0,
+    187.3
+   ],
+   "load": 545,
+   "reach_um": 116.7
+  },
+  {
+   "name": "clk_t12",
+   "xy": [
+    533.4,
+    27.0
+   ],
+   "load": 513,
+   "reach_um": 106.9
+  },
+  {
+   "name": "clk_t13",
+   "xy": [
+    886.4,
+    446.0
+   ],
+   "load": 348,
+   "reach_um": 116.2
+  }
+ ],
+ "ring_bands": [
+  {
+   "bus": "w3u_i",
+   "old_um": [
+    1072.72,
+    645.84,
+    1278.72,
+    691.2
+   ],
+   "new_um": [
+    1102.12,
+    485.2,
+    1257.64,
+    691.2
+   ],
+   "area_um2": 32037,
+   "spread": 7.0853,
+   "hop_um": 301.04
+  },
+  {
+   "bus": "w3d_i",
+   "old_um": [
+    17.28,
+    17.28,
+    97.2,
+    131.28
+   ],
+   "new_um": [
+    17.28,
+    17.28,
+    131.28,
+    295.92
+   ],
+   "area_um2": 31765,
+   "spread": 7.0251,
+   "hop_um": 367.409
+  }
+ ],
+ "reset_start_raw_exports": [
+  {
+   "port": "rst_start_raw_0",
+   "old": [
+    "u_rrl_0",
+    "rst_rl_0"
+   ],
+   "new": [
+    "u_rrl_0",
+    "rst_rl_0"
+   ],
+   "depth": 1,
+   "relay_moved_um": 0.0
+  },
+  {
+   "port": "rst_start_raw_1",
+   "old": [
+    "u_rrl_11",
+    "rst_rl_11"
+   ],
+   "new": [
+    "u_rrl_11",
+    "rst_rl_11"
+   ],
+   "depth": 3,
+   "relay_moved_um": 0.1
+  },
+  {
+   "port": "rst_start_raw_2",
+   "old": [
+    "u_rrl_16",
+    "rst_rl_16"
+   ],
+   "new": [
+    "u_rrl_4",
+    "rst_rl_4"
+   ],
+   "depth": 2,
+   "relay_moved_um": 27.5
+  },
+  {
+   "port": "rst_start_raw_3",
+   "old": [
+    "u_rrl_19",
+    "rst_rl_19"
+   ],
+   "new": [
+    "u_rrl_16",
+    "rst_rl_16"
+   ],
+   "depth": 1,
+   "relay_moved_um": 0.1
+  },
+  {
+   "port": "rst_start_raw_4",
+   "old": [
+    "u_rrl_26",
+    "rst_rl_26"
+   ],
+   "new": [
+    "u_rrl_35",
+    "rst_rl_35"
+   ],
+   "depth": 1,
+   "relay_moved_um": 0.0
+  },
+  {
+   "port": "rst_start_raw_5",
+   "old": [
+    "u_rrl_30",
+    "rst_rl_30"
+   ],
+   "new": [
+    "u_rrl_39",
+    "rst_rl_39"
+   ],
+   "depth": 1,
+   "relay_moved_um": 0.0
+  }
+ ],
+ "die_top_straps": [
+  [
+   "ctl_nstrip",
+   "strap_ca_k_w3d_i",
+   5,
+   7
+  ],
+  [
+   "ctl_nstrip",
+   "strap_ca_k_w3u_i",
+   8,
+   10
+  ]
+ ],
+ "published_wrapper_sha256": "fdeb5f84f0dc12d4a673ba488802f8cf167158586fb3206868a6800f0bb65571"
+}
