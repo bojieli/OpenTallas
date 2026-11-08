@@ -1,0 +1,29 @@
+{
+ "reference": "private872819503b RCK split",
+ "tx": {
+  "core_clk_delta": 1,
+  "encoder_cycles_before": 7,
+  "encoder_cycles_after": 8,
+  "core_cycles_before": 10,
+  "core_cycles_after": 11,
+  "txl_unchanged": 7,
+  "pma_unchanged": 4,
+  "column_cycles_before": 21,
+  "column_cycles_after": 22,
+  "fault_delta": 0
+ },
+ "rx": {
+  "k_rck_delta": 1,
+  "raw_x_q_delta": 0,
+  "lock_delta": 0,
+  "n_relock_delta": 0,
+  "dd_before": 57,
+  "dd_after": 58,
+  "rxb_read_register_external_delta": 0,
+  "decoder_q_rck_delta": 1,
+  "codeword_beat_period": 10,
+  "beats_per_cycle": 1
+ },
+ "reset64": "unchanged",
+ "adoption": "private draft; compiler dates and parent plan event required"
+}

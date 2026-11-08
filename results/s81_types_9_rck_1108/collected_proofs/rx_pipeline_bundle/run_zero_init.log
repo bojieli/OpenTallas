@@ -1,0 +1,6 @@
+RX_RESULT shift=1 checks=30040 errors=0 q_v=29080 corrected=7960 uncorrectable=8100 locked=29410 n_relock=2 n_corr=1625 n_unc=174
+RX lockstep PASS
+- /srv/opentallas-scratch2/claude/s81-types-9-rck/wt/results/s81_types_9_rck_1108/bench/tb_rx.sv:82: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 25us; walltime 5.233 s; speed 4.811 us/s
+- Verilator: cpu 5.232 s on 1 threads; allocated 13 MB
