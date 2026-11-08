@@ -25,8 +25,8 @@
       },
       "plan": "/srv/opentallas-scratch3/claude/codex-kv-phy-deadclock-0222/plan_r8fix/plan_c.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_e210k",
-      "src_sha": "e210d04c83f530a3141c7f799223bd2ff6f66711",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_c303p",
+      "src_sha": "804f9e020b210d3733cdfdb69d07a662e7fc0dc1",
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch3/claude/codex-kv-phy-deadclock-0222/plan_r8fix/asbuilt.json",
@@ -611,7 +611,7 @@
       ],
       "plan_items_from_allowlist": true,
       "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-      "queue_src": "codex/kv-phy-deadclock-0222@e210d04c83",
+      "queue_src": "claude/kw-fix-35-wave-c303a-1108@804f9e020b2",
       "hold_items_released": {
         "kv3_pc": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
         "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -1047,7 +1047,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 2
       },
-      "flow_tag": "flow-20261108-du-kv",
+      "flow_tag": "flow-20261108-dv-kv",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -1282,7 +1282,12 @@
       "retry_prev_kw35k_added": [
         "kv3_phy@6"
       ],
-      "note_kw35k": "KW-FIX-35-K 2026-11-08 06:38 PST: KV src kw35/src_e210k = kw35/src_0b72a + e210d04c83 delta (12 files, 3-way clean, sha-checked epyc4/epyc5/epyc6/intel1/epyc2); plan/asbuilt/bind_out = codex-kv-phy-deadclock-0222 plan_r8fix/bind_r8fix (byte copies staged same path); holds kv3_phy/kv3_phy_v1 dropped; retry ['kv3_phy@6']. Revert *_prev_kw35k, pop hold_items_kw35k_added, restore hold_items_prev_kw35k_dropped, drop retry_prev_kw35k_added"
+      "note_kw35k": "KW-FIX-35-K 2026-11-08 06:38 PST: KV src kw35/src_e210k = kw35/src_0b72a + e210d04c83 delta (12 files, 3-way clean, sha-checked epyc4/epyc5/epyc6/intel1/epyc2); plan/asbuilt/bind_out = codex-kv-phy-deadclock-0222 plan_r8fix/bind_r8fix (byte copies staged same path); holds kv3_phy/kv3_phy_v1 dropped; retry ['kv3_phy@6']. Revert *_prev_kw35k, pop hold_items_kw35k_added, restore hold_items_prev_kw35k_dropped, drop retry_prev_kw35k_added",
+      "src_prev_kw35t": "/srv/opentallas-scratch2/claude/kw35/src_e210k",
+      "src_sha_prev_kw35t": "e210d04c83f530a3141c7f799223bd2ff6f66711",
+      "queue_src_prev_kw35t": "codex/kv-phy-deadclock-0222@e210d04c83",
+      "flow_tag_prev_kw35t": "flow-20261108-du-kv",
+      "note_kw35t": "KW-FIX-35-T 2026-11-08 07:02 PST: wave src -> /srv/opentallas-scratch2/claude/kw35/src_c303p = integration claude/kw-fix-35-wave-c303a-1108@804f9e020b2 (main c303af45e5b ROOT-MERGE-52 trains S/T/U + providx 9ba1e6f86e2 KW-PROV-1 + qc-types-9-reach 5f5fee0303b); kw35/src_0b72a hardlinks + 98-file delta + 19 new files, sha256-checked on intel1/epyc2/epyc4/epyc5/epyc6, tree read-only (chmod -R a-w). Revert *_prev_kw35t"
     },
     "s81": {
       "enabled": true,
@@ -1295,8 +1300,8 @@
       },
       "plan": "/srv/opentallas-scratch3/claude/kw34/wave_cg_frz_xrt/physical/die_plan/s81/plan_h2_2249.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_9d13c",
-      "src_sha": "9d13c8cce9df19dbd554ef09ea5d24a0fbfc9e87",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_c303p",
+      "src_sha": "804f9e020b210d3733cdfdb69d07a662e7fc0dc1",
       "kit_rtl": {
         "mode": "script",
         "script": "/srv/opentallas-scratch3/claude/die-s81-70/kit_rtl_s81_ds70_kvov.sh",
@@ -2393,7 +2398,8 @@
         "slice_station__t14@12",
         "bk_sel__t2@33",
         "dsdv_slice_c1x_C__t7@14",
-        "slice_station__t44@7"
+        "slice_station__t44@7",
+        "dsdv_slice_lepe_mu_C__t1@15"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -2514,7 +2520,7 @@
         "ot_s81sl_kv_leaf__t4": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
         "ot_s81sl_kv_leaf__t5": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit"
       },
-      "queue_src": "claude/kw-fix-35-s81src2-1108@9d13c8cce9d",
+      "queue_src": "claude/kw-fix-35-wave-c303a-1108@804f9e020b2",
       "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave",
       "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
       "retry_fix": {
@@ -3371,7 +3377,8 @@
         "slice_station__t14@12": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a12 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
         "bk_sel__t2@33": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a33 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
         "dsdv_slice_c1x_C__t7@14": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a14 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 CLASS H: fresh kit (old kit carried a stale FAIL_PREFLOOR); reset-scope selected so it does not stop at the CLASS A topology check",
-        "slice_station__t44@7": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a7 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD"
+        "slice_station__t44@7": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a7 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
+        "dsdv_slice_lepe_mu_C__t1@15": "KW-FIX-35-T 2026-11-08 07:02 PST: S81-TYPES-7-LEC class J3 (xs4_ctl payload + rstopt_xo every-edge loads, re-sha 4a80ce2d3c7, landed c303af train T 9cf2a1ee354): fresh kit"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -4446,7 +4453,7 @@
         "queue_src": "claude/kw-fix-29-s81-leaf-src-1107@abaf08160896",
         "die_max_inflight": 67
       },
-      "flow_tag": "flow-20261108-ef-s81",
+      "flow_tag": "flow-20261108-eg-s81",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "src_prev_kw32": "/srv/opentallas-scratch2/claude/kw31/src_66d55",
       "src_sha_prev_kw32": "66d55c026ade2245a494c3eeeea0e5ec0ab8ae0b",
@@ -5133,6 +5140,14 @@
         "bk_sel__t2@33",
         "dsdv_slice_c1x_C__t7@14",
         "slice_station__t44@7"
+      ],
+      "src_prev_kw35t": "/srv/opentallas-scratch2/claude/kw35/src_9d13c",
+      "src_sha_prev_kw35t": "9d13c8cce9df19dbd554ef09ea5d24a0fbfc9e87",
+      "queue_src_prev_kw35t": "claude/kw-fix-35-s81src2-1108@9d13c8cce9d",
+      "flow_tag_prev_kw35t": "flow-20261108-ef-s81",
+      "note_kw35t": "KW-FIX-35-T 2026-11-08 07:02 PST: wave src -> /srv/opentallas-scratch2/claude/kw35/src_c303p = integration claude/kw-fix-35-wave-c303a-1108@804f9e020b2 (main c303af45e5b ROOT-MERGE-52 trains S/T/U + providx 9ba1e6f86e2 KW-PROV-1 + qc-types-9-reach 5f5fee0303b); kw35/src_0b72a hardlinks + 98-file delta + 19 new files, sha256-checked on intel1/epyc2/epyc4/epyc5/epyc6, tree read-only (chmod -R a-w). Revert *_prev_kw35t",
+      "retry_prev_kw35t_added": [
+        "dsdv_slice_lepe_mu_C__t1@15"
       ]
     },
     "s81_head": {
@@ -5822,7 +5837,8 @@
       "note_src_kw33b": "KW-FIX-33 2026-11-08 00:23 PST (ROOT-MERGE-50/51): src kw33/src_d95ec = main d95ec5a45a6 (qc53v4t tap-pair, phyclip, grtlock, tname2, atomic-collapse, schema) = kw32/src_27db6 + 122 files",
       "pilot_gate_prev_kw35d": null,
       "pilot_gate": false,
-      "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d"
+      "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d",
+      "note_kw35t": "KW-FIX-35-T 2026-11-08 07:05 PST: s81_head src keys REVERTED to the pre-kw35t values (kw33/src_d95ec, ds-head): KW-FIX-35-H owns them, its claude/die-head-87-classfix-1108@95df6810481 is not an ancestor of c303af / the wave integration 804f9e020b2"
     },
     "qwen_compute": {
       "enabled": true,
@@ -5834,14 +5850,14 @@
         "clock": "PASS",
         "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
       },
-      "plan": "/srv/opentallas-scratch2/claude/kw35/qcplan_v4u/plan_qc53v4u.json",
+      "plan": "/srv/opentallas-scratch2/claude/kw35/qcplan_v4w/plan_qc53v4w.json",
       "gen_host": "epyc2",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_0b72a",
-      "src_sha": "0b72abe93ac068bd6a4f6518c271439f9f557f70",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_c303p",
+      "src_sha": "804f9e020b210d3733cdfdb69d07a662e7fc0dc1",
       "kit_rtl": {
         "mode": "bind",
-        "asbuilt": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt.json",
-        "bind_out": "/srv/opentallas-scratch2/claude/qct9/bind_v4u",
+        "asbuilt": "/srv/opentallas-scratch2/claude/kw35/src_c303p/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_reach.json",
+        "bind_out": "/srv/opentallas-scratch2/claude/qct9/bind_v4w",
         "note": "KW-FIX-22 11:2x BIND_STALE class: bind_out bind_qc_g = canonical native re-bind (bind.py all --strict, src_3761 tools) of the SAME context as bind_qc_f (plan_qc52 b398e285 + results/qc_ringfall_1105/bind/final_asbuilt.json in src_c926f): bind errors 0 unbound 0, 377 partitions, 1921 crossings, native_topology.json written; kit_topology.bind_matches True for the 6 rows (False on bind_qc_f, no receipt). verify step advisory FAIL (glue_unmatched 24710, 3633 clock_landing strap_k notes, lint 768; bind_qc_f never ran verify). Same bytes on epyc5+epyc6 (md5 tree d27ccd18). | KW-FIX-16 13:1x I136 tag flow-20261106-f-qc (ringff I125 + ringfall I136 + coll_core fold I124): src_r main 79e52bd98b2; asbuilt/sidecar results/qc_ringfall_1105 (DIE-QC-78 chain78, copied into src_r, untracked), bind_out bind_qc_f = copy of dq78/bind, strict FINAL errors 0, 1921 crossings, inputs plan_qc52 b398e285 = src_r plan bytes. | KW-FIX-10 04:2x COORD: SC event I67+I68 src_c main cbb7cfda19b tag s-qc, bind_out sc_ev/pub. | KW-FIX-8 23:1x I66 collector batch: src_b main cb98b2e2324 tag q-qc; bind_tip_i57 unchanged, kit-rtl trial rc 0 on the new plan, no QC RTL moved. | KW-FIX-8 19:1x COORD I57 class relaunch: src_w main 62777284106 tag flow-20261105-h-qc, bind_tip_i57 = byte copy of dq71/bind_tip (DIE-QC-71: bind_tip stays bind_out), same path on epyc4 and intel1. KW-FIX-8 17:0x COORD 16:4x: bind_out dq71/bind_tip (main 3277e531772, BIND_RC 0, copy on epyc2). KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46 tag w-qc: src_s main c512ffc3a94, plan efdb36e864, bind_qs = DIE-QC-70 q70/bind9 strict rc 0 (W1+straps; coll_ucie field after it) | KW-FIX-8 fall tag: QC on src_q main bf1e2233ce0, strict bind_qq rc 0 | KW-FIX-8 I38 tag p-qc: QC event 5bcec8dc59 on src_p, plan_qc52, strict bind_qp | KW-FIX-6 05:1x: src kw-fix-6-qcd. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | QC approved immutable combined d90 strict119types/377parts/1921crossings/790393bits0errors;201-file closed readset event1131_fixed. Matching pre-D13 RTL/recipe retained; Q4 untrusted hints included; no fresh ELAB or old freeze mutation.",
         "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
       },
@@ -5873,7 +5889,6 @@
       "note": "KW-FIX-21 05:3x: src -> kw21/src_c926f @c92647a2155 = FULL tree (Codex src_2c705 base + git delta 846 files); the 05:17 batch failed kit_rtl on the sparse D3-based src_c926 (bind: preferred HDL source missing physical/rom_host_ingest/rtl/dsfd_host.sv) and KV kit_topology (faecd src lacks tools/die_plan/kit_topology.py which the hub's canonical_topology_prepare specs need); relaunch the same rows | KW-FIX-21 05:1x (COORD 04:40/04:43): src kw21/src_c926 @c92647a2155 (main: 8dc1 ot_run capture, e6ce finite Slang gen_env, busfit 7d0631b1015; delta from codex D3 src_d3c267 = 4 tool files; results/qc_ringfall_1105 copied from src_2c705) on epyc5+epyc6; work_root -> root scratch3 lane kw21-wave-1106 (epyc5 scratch2 1 GB free); cfg ot_run = kw21 wrapper (kw10 wait logic) on fleet 230e562aa5c. INFRA relaunch: ENOSPC/ROOT-fs geom/no-dir kit_rtl/PLACE_LOST; native-C SIG11 rows @3 with OT_LEC_SLANG_UNROLL_LIMIT=32912 | KW-FIX-19 21:0x: src kw11/src_730 @7305773106e (main: I178 prdfo, I180 rootscr, I181 classretry, prdguard; kit diff vs 16b4 = prd_hook guard only); gen_hosts [epyc5, epyc6] (epyc4 scratch2 11 GB); GEN-HOST-DEPS relaunch 53 rows | KW-FIX-18 19:4x: tag flow-20261106-m-qc 16b4ea85026 (I177 ev76 HBM d44v, I178 prdfo, I179 q3e RXPRE) -> src kw11/src_16b; referenced files byte-same (8/8 sha256) | KW-FIX-17 18:4x: tag flow-20261106-l-qc e920ea3c22b (grtstall + leafitems + S81 TAPWIN-PORT plan ef4d951b60bf) -> src kw11/src_e92; referenced files byte-same except S81 plan_h2_2249.json (clock.tap_window per_port_ps only, COORD 18:20) | KW-FIX-17 18:2x: tag flow-20261106-k-qc 77b4b069dc3 (holdgaterr + ev75 + romq + wbqhd) -> src kw11/src_77b; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:3x: tag flow-20261106-j-qc 17dcf533a38 (resignlib + ev74f + provobs) -> src kw11/src_17d; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:1x: tag flow-20261106-i-qc 556ee1c5557 (dplfb + leafslew) -> src kw11/src_556; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 16:5x: tag flow-20261106-h-qc 76201bc074c (holdrr reg2reg hold stop, grtpost, placeretry) -> src kw11/src_m76; every referenced plan/sidecar/asbuilt/kit_rtl file byte-same (cmp CHECKED) | KW-FIX-16 13:5x tags e-head/g-qc/g-s81 = main a201f608d85 (I139 ecotrim + I140 g2setup, tools only vs src_r): src_t; plan/sidecar/asbuilt bytes unchanged [CHECKED cmp]. | KW-FIX-12 08:4x hold stop 7f4f20064d5: src_k main 714dd1ea120 (S81/HEAD plan bytes same; QC I102 coll_ft 2 keys). | KW-FIX-8 19:1x I57 writer guard class relaunch, src_w on epyc4+intel1. KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 16:4x COORD stale bind: hold hc1-3, stm, coll_ftm, su until DIE-QC-71 tip bind passes; then bind_out in one change | KW-FIX-8 14:1x I46 tag w-qc: src_s, W1 + R8 straps + coll_ucie event efdb36e864; W1 list from q70/ws_report.json added to only_items | KW-FIX-8 10:0x: src wt-qc2 488b89796f3 (common_flow class fix); 3 rows outside the event now; 13 of the 22 + su_c at event tag (COORD 09:59) | KW-FIX-8 09:1x COORD I35: src kw-fix-8/wt-qc 1a4f626d4a8 = rtl + physical 46029291c7f, tools main d3001422956 + reset dot ccb4065691e (not on main yet). QC 19 prov batch. | KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-6 05:4x COORD 05:36 disk: place on epyc4 only; gen stays intel2 (plan + src there). | KW-FIX-6 05:1x COORD 05:07: src = rtl + physical of 46029291c7f + whole tools/ at main a4b44ffeac1 (I25, flow-20261104-d-qc), 28 type rows dq68-types-coreinst 780e4a72f74. | KW-FIX-5 01:2x COORD 01:20: overlay 66c713ed6a on src (46029291c7f); 12 SU + 14 CB holds lifted same tick; CB at gen is an honest class row | KW-FIX-5 00:1x: relay_bay 4 launched 23:58, one-tick allowlist removed | KW-FIX-5 23:5x: one-tick allowlist of the 4 relay_bay classes (parents ROUTING/REVIEW in OWNERS, outside take_states); restored after launch | KW-FIX-5: DPL class port f0ed37ff9a5 in fl-qc2, row predates it | KW-FIX-5: INFRA ENOSPC/no-host remainder (disks freed 20:54) | KW-FIX-5: relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub) | KW-FIX-4 20:3x: fl-qc2 d85db82cddb = + bo",
       "pilot_mode": "queue",
       "hold_items": {
-        "sle_hc0__cl05696ed1": "KW-FIX-12 08:5x DIE-QC-76 stopped 08:45 per COORD, GRT rising; no resubmit of same form, DIE-QC-76 form lifts",
         "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native\u2192collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
         "slw_stm_v2__cl9beb65e6": "KW-FIX-35 2026-11-08 04:37 PST (COORD 02:17, QC-TYPES-8 02:15 (3)): CORE SPREAD G2 TT -519 inside u_stream; held for a redesign (sibling cl1ca9c415 GRT decides the family); QC-TYPES-9",
         "coll_ftc": "KW-FIX-35 2026-11-08 04:37 PST: v4s coll_ftc is the CPU-active Codex private canary (intel2 codex-qc-v4s-collftc-grt-0222.service, kit intel2 /srv/opentallas-scratch2/claude/codex-wave-0222/qc/coll_ftc/gen/coll_ftc, CTS PASS, GRT running); no duplicate. KW-FIX-35 collects it; lift this hold only if it fails"
@@ -6277,9 +6292,28 @@
         "slw_stm_v2__cl1ca9c415@7",
         "sle_fw_v3@30",
         "sle_fe_v2@5",
-        "slw_su_c__cl19bb38ef@12"
+        "slw_su_c__cl19bb38ef@12",
+        "cbn_q00__cl622f65d2@11",
+        "cbn_q00__cldbcda913@16",
+        "cbn_q11__cl49ae4555@5",
+        "cbx_q10__cl89936551@13",
+        "sle_ctl__cl67434795@8",
+        "sle_fe_v3@4",
+        "sle_fw_v1__cl9d029624@8",
+        "sle_fw_v2__cl6740750e@7",
+        "sle_sc_v2@19",
+        "sle_stm_v1__clbe630b9c@12",
+        "sle_su_l0__cl7a55c676@11",
+        "cbf_q00__cl1b5a6458@10",
+        "slw_su_c__cl19bb38ef@13",
+        "native59@5",
+        "coll_ft__cl78c7b300@8",
+        "coll_ft__cla4a25d77@9",
+        "sle_hc1__cl7d360508@12",
+        "slw_hc2__cl6bcaba89@10",
+        "slw_hc1__cl68f9248e__cle683a076@12"
       ],
-      "queue_src": "main@0b72abe93ac0",
+      "queue_src": "claude/kw-fix-35-wave-c303a-1108@804f9e020b2",
       "type_args": {
         "sle_fw_v2__cl69f5e854": [
           "--gpl-plain",
@@ -6800,7 +6834,28 @@
         "slw_stm_v2__cl1ca9c415@7": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): INFRA: QC-TYPES-9 04:51 (D): sat in KW12_DISK_WAIT on intel1 since 01:28, never started; KW-FIX-35 stopped the 3 units; relaunch on bind_v4s",
         "sle_fw_v3@30": "KW-FIX-35 2026-11-08 05:55 PST: QC-TYPES-9 05:5x plan event qc53v4u: fresh kit on v4u (OT_CONS_KIT=1); a30 (v4s, pre-P&R) stopped by KW-FIX-35",
         "sle_fe_v2@5": "KW-FIX-35 2026-11-08 05:55 PST: QC-TYPES-9 05:5x plan event qc53v4u: type changed in v4u; fresh kit",
-        "slw_su_c__cl19bb38ef@12": "KW-FIX-35 2026-11-08 05:55 PST: QC-TYPES-9 05:5x plan event qc53v4u: type changed in v4u; fresh kit"
+        "slw_su_c__cl19bb38ef@12": "KW-FIX-35 2026-11-08 05:55 PST: QC-TYPES-9 05:5x plan event qc53v4u: type changed in v4u; fresh kit",
+        "cbn_q00__cl622f65d2@11": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9 06:41 class J: bind_v4u named the epyc4-only realpath kw33src/src_d95ec; same-path symlinks now on all QC hosts (bind.f 202/202 present); fresh kit_rtl on v4w/bind_v4w",
+        "cbn_q00__cldbcda913@16": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9 06:41 class J: bind_v4u named the epyc4-only realpath kw33src/src_d95ec; same-path symlinks now on all QC hosts (bind.f 202/202 present); fresh kit_rtl on v4w/bind_v4w",
+        "cbn_q11__cl49ae4555@5": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9 06:41 class J: bind_v4u named the epyc4-only realpath kw33src/src_d95ec; same-path symlinks now on all QC hosts (bind.f 202/202 present); fresh kit_rtl on v4w/bind_v4w",
+        "cbx_q10__cl89936551@13": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9 06:41 class J: bind_v4u named the epyc4-only realpath kw33src/src_d95ec; same-path symlinks now on all QC hosts (bind.f 202/202 present); fresh kit_rtl on v4w/bind_v4w",
+        "sle_ctl__cl67434795@8": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9 06:41 class J: bind_v4u named the epyc4-only realpath kw33src/src_d95ec; same-path symlinks now on all QC hosts (bind.f 202/202 present); fresh kit_rtl on v4w/bind_v4w",
+        "sle_fe_v3@4": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9 06:41 class J: bind_v4u named the epyc4-only realpath kw33src/src_d95ec; same-path symlinks now on all QC hosts (bind.f 202/202 present); fresh kit_rtl on v4w/bind_v4w",
+        "sle_fw_v1__cl9d029624@8": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9 06:41 class J: bind_v4u named the epyc4-only realpath kw33src/src_d95ec; same-path symlinks now on all QC hosts (bind.f 202/202 present); fresh kit_rtl on v4w/bind_v4w",
+        "sle_fw_v2__cl6740750e@7": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9 06:41 class J: bind_v4u named the epyc4-only realpath kw33src/src_d95ec; same-path symlinks now on all QC hosts (bind.f 202/202 present); fresh kit_rtl on v4w/bind_v4w",
+        "sle_sc_v2@19": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9 06:41 class J: bind_v4u named the epyc4-only realpath kw33src/src_d95ec; same-path symlinks now on all QC hosts (bind.f 202/202 present); fresh kit_rtl on v4w/bind_v4w",
+        "sle_stm_v1__clbe630b9c@12": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9 06:41 class J: bind_v4u named the epyc4-only realpath kw33src/src_d95ec; same-path symlinks now on all QC hosts (bind.f 202/202 present); fresh kit_rtl on v4w/bind_v4w",
+        "sle_su_l0__cl7a55c676@11": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9 06:41 class J: bind_v4u named the epyc4-only realpath kw33src/src_d95ec; same-path symlinks now on all QC hosts (bind.f 202/202 present); fresh kit_rtl on v4w/bind_v4w",
+        "cbf_q00__cl1b5a6458@10": "KW-FIX-35-T 2026-11-08 07:02 PST: KW-PROV-1 prov_view fix 9ba1e6f86e2 (git grep --untracked empty under .gitignore '*') in the wave src; relaunch from prov_views",
+        "slw_su_c__cl19bb38ef@13": "KW-FIX-35-T 2026-11-08 07:02 PST: KW-PROV-1 prov_view fix 9ba1e6f86e2 in the wave src; relaunch from prov_views",
+        "native59@5": "KW-FIX-35-T 2026-11-08 07:02 PST: REDESIGN: changed RTL. QC-TYPES-9/DEPTH native59 SEAT_HT fix 93b4a789 landed in c303af (train T 391939af452): fresh kit",
+        "coll_ft__cl78c7b300@8": "KW-FIX-35-T 2026-11-08 07:02 PST: REDESIGN: conservative re-form (TYPE-CONS-4 kit: CLAND strip rows 3, util 0.35, signals <=M6). QC-TYPES-9 05:53 class H CLAND-RING congestion (COORD 06:00 approved): OT_CONS_KIT=1 conservative kit",
+        "coll_ft__cla4a25d77@9": "KW-FIX-35-T 2026-11-08 07:02 PST: REDESIGN: conservative re-form (TYPE-CONS-4 kit: CLAND strip rows 3, util 0.35, signals <=M6). QC-TYPES-9 05:53 class H CLAND-RING congestion (COORD 06:00 approved): OT_CONS_KIT=1 conservative kit",
+        "sle_hc0__cl05696ed1@3": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9/REACH hc FACE-REACH plan event qc53v4w (COORD GO 06:2x): fresh kit on v4w + bind_v4w + asbuilt_reach (KW-FIX-12 hold dropped: v4w is the new form)",
+        "sle_hc1__cl7d360508@12": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9/REACH hc FACE-REACH plan event qc53v4w (COORD GO 06:2x): fresh kit on v4w + bind_v4w + asbuilt_reach (private CTS resume kw35f-cts-slehc1cl7d keeps running)",
+        "slw_hc0__cl4f54b7a3@2": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9/REACH hc FACE-REACH plan event qc53v4w (COORD GO 06:2x): fresh kit on v4w + bind_v4w + asbuilt_reach",
+        "slw_hc2__cl6bcaba89@10": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9/REACH hc FACE-REACH plan event qc53v4w (COORD GO 06:2x): fresh kit on v4w + bind_v4w + asbuilt_reach",
+        "slw_hc1__cl68f9248e__cle683a076@12": "KW-FIX-35-T 2026-11-08 07:02 PST: QC-TYPES-9/REACH hc FACE-REACH plan event qc53v4w (COORD GO 06:2x): fresh kit on v4w + bind_v4w + asbuilt_reach (a12 sat 2 h in kit_rtl intel1 disk wait, 5 s CPU; stopped by exact unit 06:59)"
       },
       "gen_hosts": [
         "intel1",
@@ -6924,7 +6979,10 @@
         "tt_ctlm",
         "slw_su_l0__cl1a1c1f8f",
         "slw_su_l0__cl1e5219ea",
-        "slw_su_l0__cl76fb247e"
+        "slw_su_l0__cl76fb247e",
+        "sle_hc0__cl05696ed1",
+        "sle_hc0__cl929603c0__cl4baa7c9c",
+        "slw_hc0__cl4f54b7a3"
       ],
       "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
       "item_env": {
@@ -6998,6 +7056,12 @@
           "OT_CONS_KIT": "1"
         },
         "coll_ftn": {
+          "OT_CONS_KIT": "1"
+        },
+        "coll_ft__cl78c7b300": {
+          "OT_CONS_KIT": "1"
+        },
+        "coll_ft__cla4a25d77": {
           "OT_CONS_KIT": "1"
         }
       },
@@ -7119,7 +7183,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 13
       },
-      "flow_tag": "flow-20261108-ee-qc",
+      "flow_tag": "flow-20261108-ef-qc",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "src_prev_kw32": "/srv/opentallas-scratch2/claude/kw31/src_66d55",
       "src_sha_prev_kw32": "66d55c026ade2245a494c3eeeea0e5ec0ab8ae0b",
@@ -7749,7 +7813,49 @@
       },
       "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 06:10 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/qwen_compute.json on intel2, plan 16f4b9ef4379) FIRST in prov_view_sources for 7 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v",
       "plan_prev_kw35f": "/srv/opentallas-scratch2/claude/qct9/plan_qc53v4u.json",
-      "note_kw35f": "KW-FIX-35 2026-11-08 06:13 PST: SRC-INCOMPLETE class: src_probe counts the plan's whole dir (qct9 = QC-TYPES-9 work dir, 8380 files to depth 3 on epyc4 only), so epyc2/epyc5/intel1 were dropped as QC gen hosts at 06:02 and every QC gen pinned to epyc4. Same plan bytes (sha 9c8cefa48662) moved to a plan-only dir staged on epyc4/epyc5/intel1/epyc2/epyc6/intel2. Revert plan_prev_kw35f"
+      "note_kw35f": "KW-FIX-35 2026-11-08 06:13 PST: SRC-INCOMPLETE class: src_probe counts the plan's whole dir (qct9 = QC-TYPES-9 work dir, 8380 files to depth 3 on epyc4 only), so epyc2/epyc5/intel1 were dropped as QC gen hosts at 06:02 and every QC gen pinned to epyc4. Same plan bytes (sha 9c8cefa48662) moved to a plan-only dir staged on epyc4/epyc5/intel1/epyc2/epyc6/intel2. Revert plan_prev_kw35f",
+      "src_prev_kw35t": "/srv/opentallas-scratch2/claude/kw35/src_0b72a",
+      "src_sha_prev_kw35t": "0b72abe93ac068bd6a4f6518c271439f9f557f70",
+      "queue_src_prev_kw35t": "main@0b72abe93ac0",
+      "flow_tag_prev_kw35t": "flow-20261108-ee-qc",
+      "note_kw35t": "KW-FIX-35-T 2026-11-08 07:02 PST: wave src -> /srv/opentallas-scratch2/claude/kw35/src_c303p = integration claude/kw-fix-35-wave-c303a-1108@804f9e020b2 (main c303af45e5b ROOT-MERGE-52 trains S/T/U + providx 9ba1e6f86e2 KW-PROV-1 + qc-types-9-reach 5f5fee0303b); kw35/src_0b72a hardlinks + 98-file delta + 19 new files, sha256-checked on intel1/epyc2/epyc4/epyc5/epyc6, tree read-only (chmod -R a-w). Revert *_prev_kw35t",
+      "plan_prev_kw35t": "/srv/opentallas-scratch2/claude/kw35/qcplan_v4u/plan_qc53v4u.json",
+      "kit_rtl_bind_out_prev_kw35t": "/srv/opentallas-scratch2/claude/qct9/bind_v4u",
+      "kit_rtl_asbuilt_prev_kw35t": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt.json",
+      "note_kw35t_plan": "KW-FIX-35-T 2026-11-08 07:02 PST: QC plan qc53v4w (sha e5dc7eacb745, = v4u + hc FACE-REACH 3 native cw_n stations, 36 lanes +3 pin cycles; QC-TYPES-9/REACH READY, COORD GO) in plan-only dir kw35/qcplan_v4w staged on epyc4/intel1/epyc2/epyc5/epyc6/intel2; bind_out qct9/bind_v4w (strict rc 0, bind.f 202 abs paths present on all 5 QC gen hosts); asbuilt_reach.json + r8_reach.json from 5f5fee0303b inside the wave src (base resolves to src). Dry kit-rtl sle_hc0__cl05696ed1 on epyc5: rc 0, unbound 0. Revert *_prev_kw35t",
+      "item_env_prev_kw35t_added": [
+        "coll_ft__cl78c7b300",
+        "coll_ft__cla4a25d77"
+      ],
+      "only_items_prev_kw35t_added": [
+        "sle_hc0__cl05696ed1",
+        "sle_hc0__cl929603c0__cl4baa7c9c",
+        "slw_hc0__cl4f54b7a3"
+      ],
+      "hold_items_prev_kw35t_dropped": {
+        "sle_hc0__cl05696ed1": "KW-FIX-12 08:5x DIE-QC-76 stopped 08:45 per COORD, GRT rising; no resubmit of same form, DIE-QC-76 form lifts"
+      },
+      "retry_prev_kw35t_added": [
+        "cbn_q00__cl622f65d2@11",
+        "cbn_q00__cldbcda913@16",
+        "cbn_q11__cl49ae4555@5",
+        "cbx_q10__cl89936551@13",
+        "sle_ctl__cl67434795@8",
+        "sle_fe_v3@4",
+        "sle_fw_v1__cl9d029624@8",
+        "sle_fw_v2__cl6740750e@7",
+        "sle_sc_v2@19",
+        "sle_stm_v1__clbe630b9c@12",
+        "sle_su_l0__cl7a55c676@11",
+        "cbf_q00__cl1b5a6458@10",
+        "slw_su_c__cl19bb38ef@13",
+        "native59@5",
+        "coll_ft__cl78c7b300@8",
+        "coll_ft__cla4a25d77@9",
+        "sle_hc1__cl7d360508@12",
+        "slw_hc2__cl6bcaba89@10",
+        "slw_hc1__cl68f9248e__cle683a076@12"
+      ]
     },
     "hbm": {
       "enabled": true,
@@ -8495,7 +8601,10 @@
         "q_mca@1",
         "q_spb1@1",
         "vsN1@1",
-        "vsN2@1"
+        "vsN2@1",
+        "q_su01@3",
+        "q_su01__physical_v1@3",
+        "q_su11@3"
       ],
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -8679,7 +8788,10 @@
         "q_mca@1": "KW-FIX-35-B 2026-11-08 06:54 PST: REDESIGN: plan event plan_hbm_1108c (a337411c3a25: EP-MOD-1108 NW_io, FTLK v2 FT hop latches, RLK reset hop latches) on claude/die-hbm-92-int-1108@cad9c038fb (+RLK bind path 14aca37706) + providx 9ba1e6f86e2, bind_c strict rc0; DIE-HBM-92 GO 06:40, wave-order dry rc0 (epyc6 die-hbm-92/dry_c, die-hbm-92-rlk/dry_c); fresh kit",
         "q_spb1@1": "KW-FIX-35-B 2026-11-08 06:54 PST: REDESIGN: plan event plan_hbm_1108c (a337411c3a25: EP-MOD-1108 NW_io, FTLK v2 FT hop latches, RLK reset hop latches) on claude/die-hbm-92-int-1108@cad9c038fb (+RLK bind path 14aca37706) + providx 9ba1e6f86e2, bind_c strict rc0; DIE-HBM-92 GO 06:40, wave-order dry rc0 (epyc6 die-hbm-92/dry_c, die-hbm-92-rlk/dry_c); fresh kit",
         "vsN1@1": "KW-FIX-35-B 2026-11-08 06:54 PST: REDESIGN: plan event plan_hbm_1108c (a337411c3a25: EP-MOD-1108 NW_io, FTLK v2 FT hop latches, RLK reset hop latches) on claude/die-hbm-92-int-1108@cad9c038fb (+RLK bind path 14aca37706) + providx 9ba1e6f86e2, bind_c strict rc0; DIE-HBM-92 GO 06:40, wave-order dry rc0 (epyc6 die-hbm-92/dry_c, die-hbm-92-rlk/dry_c); fresh kit",
-        "vsN2@1": "KW-FIX-35-B 2026-11-08 06:54 PST: REDESIGN: plan event plan_hbm_1108c (a337411c3a25: EP-MOD-1108 NW_io, FTLK v2 FT hop latches, RLK reset hop latches) on claude/die-hbm-92-int-1108@cad9c038fb (+RLK bind path 14aca37706) + providx 9ba1e6f86e2, bind_c strict rc0; DIE-HBM-92 GO 06:40, wave-order dry rc0 (epyc6 die-hbm-92/dry_c, die-hbm-92-rlk/dry_c); fresh kit"
+        "vsN2@1": "KW-FIX-35-B 2026-11-08 06:54 PST: REDESIGN: plan event plan_hbm_1108c (a337411c3a25: EP-MOD-1108 NW_io, FTLK v2 FT hop latches, RLK reset hop latches) on claude/die-hbm-92-int-1108@cad9c038fb (+RLK bind path 14aca37706) + providx 9ba1e6f86e2, bind_c strict rc0; DIE-HBM-92 GO 06:40, wave-order dry rc0 (epyc6 die-hbm-92/dry_c, die-hbm-92-rlk/dry_c); fresh kit",
+        "q_su01@3": "KW-FIX-35-B 2026-11-08 07:08 PST: KW-PROV-1 class fix claude/kw-fix-35-providx-1108@9ba1e6f86e2 (prov_view git grep under .gitignore '*': contract pin directions) now in HBM src kw35/src_cad9p; a3 ran on src_0b72p without it; fresh kit",
+        "q_su01__physical_v1@3": "KW-FIX-35-B 2026-11-08 07:08 PST: KW-PROV-1 class fix claude/kw-fix-35-providx-1108@9ba1e6f86e2 (prov_view git grep under .gitignore '*': contract pin directions) now in HBM src kw35/src_cad9p; a3 ran on src_0b72p without it; fresh kit",
+        "q_su11@3": "KW-FIX-35-B 2026-11-08 07:08 PST: KW-PROV-1 class fix claude/kw-fix-35-providx-1108@9ba1e6f86e2 (prov_view git grep under .gitignore '*': contract pin directions) now in HBM src kw35/src_cad9p; a3 ran on src_0b72p without it; fresh kit"
       },
       "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
       "item_args_rf1prev": {
@@ -9811,7 +9923,12 @@
         "vsN1@1",
         "vsN2@1"
       ],
-      "note_src_kw35f": "KW-FIX-35-B 2026-11-08 06:54 PST: HBM plan plan_hbm_1108c + src kw35/src_cad9p (= src_0b72p + 97 files, merge-tree fed97cef85e of cad9c038fb+9ba1e6f86e2, sha-checked intel1/epyc2/epyc4/epyc5/epyc6) + bind_c; NW_io hold lifted; batch NW_io/q_mca/q_spb1/vsN1/vsN2. Revert *_prev_kw35f, re-add hold_items_released_kw35f, drop retry_prev_kw35f_added"
+      "note_src_kw35f": "KW-FIX-35-B 2026-11-08 06:54 PST: HBM plan plan_hbm_1108c + src kw35/src_cad9p (= src_0b72p + 97 files, merge-tree fed97cef85e of cad9c038fb+9ba1e6f86e2, sha-checked intel1/epyc2/epyc4/epyc5/epyc6) + bind_c; NW_io hold lifted; batch NW_io/q_mca/q_spb1/vsN1/vsN2. Revert *_prev_kw35f, re-add hold_items_released_kw35f, drop retry_prev_kw35f_added",
+      "retry_prev_kw35g_added": [
+        "q_su01@3",
+        "q_su01__physical_v1@3",
+        "q_su11@3"
+      ]
     }
   },
   "place_prefer": [
