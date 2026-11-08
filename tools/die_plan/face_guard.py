@@ -448,16 +448,25 @@ def kit_land(path):
     return buses
 
 
+LAND_FORMS = ("icg", "hold_mux")
+
 # S81-GUNIT-FORM-1 11-07 "replica": a registered input whose bit lands, with no logic, in D kept replica flops (the
 # N32 fan-out copies of a pin register: dsdv_gunit_l1f_bf W face wqc x9 / adc x5 / cbc x32 ...): the D flops ARE the
 # bit's face registers (flop-to-flop crossing, no added cycle), as the ICG / hold_mux slots are.
-LAND_FORMS = ("icg", "hold_mux", "replica")
+# OPT-IN, KEYED BY THE PLAN (COORD 11-07 23:3x): the form is accepted only in a spec {"D", "form": "replica", "plan": P}
+# whose plan event P lists the guarded top module here; a replica spec without a listed plan raises (fails closed), and
+# no other kit can reach this form, so every other kit's guard result is byte-same (test_face_guard replica tests,
+# face_guard_byte_same.py corpus receipt).
+REPLICA_PLANS = {
+    "s81/delta_gunit_l1f_band_1107": ("dsdv_gunit_l1f_bf",),
+}
 
 
 def land_spec(v):
     """(D, form) of one declared landing bus: an int D = the ICG slot form (S81-CORE-LAT-R21); a dict
     {"D": n, "form": "hold_mux"} = the enable-mux slot form (COORD 10-28 06:30, DIE-HEAD-8 witness); a dict
-    {"D": n, "form": "replica"} = D kept replica pin registers (S81-GUNIT-FORM-1 11-07, replica_slot); a dict
+    {"D": n, "form": "replica", "plan": P} = D kept replica pin registers, opt-in for the tops plan event P lists in
+    REPLICA_PLANS (S81-GUNIT-FORM-1 11-07, replica_slot); a dict
     {"form": "ring_start", "ring": R} (DIE-HEAD-21, no D) = the count-aligned ring START input -> (0, "ring_start")
     (ring_spec gives R).  ValueError else."""
     if isinstance(v, dict) and v.get('form') == 'hard_child':
@@ -474,6 +483,11 @@ def land_spec(v):
     if isinstance(v, dict) and v.get("form") == "ring_start":
         ring_spec(v)
         return 0, "ring_start"
+    if isinstance(v, dict) and v.get("form") == "replica":
+        if set(v) != {"D", "form", "plan"} or v["plan"] not in REPLICA_PLANS or int(v["D"]) < 2:
+            raise ValueError(f"land_slots replica spec {v}: want exactly {{D >= 2, form: replica, plan in "
+                             f"{sorted(REPLICA_PLANS)}}} (opt-in keyed by the plan)")
+        return int(v["D"]), "replica"
     if isinstance(v, dict):
         if set(v) - {"D", "form"} or v.get("form", "icg") not in LAND_FORMS:
             raise ValueError(f"land_slots bus spec {v}: want {{D, form in {LAND_FORMS}}}")
@@ -933,6 +947,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     land = {}
     for x, v in land_raw.items():
         land[x], land_form[x] = land_spec(v)
+        if land_form[x] == "replica" and top not in REPLICA_PLANS[v["plan"]]:
+            raise ValueError(f"land_slots replica bus {x}: plan {v['plan']} does not list top {top}")
     for x, dd in land.items():                   # a declared landing bus: an input port, D >= 2
         if land_form[x] in ("ring_start", "origin_start"):
             if T.dirs.get(x) != "input":

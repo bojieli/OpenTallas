@@ -1389,14 +1389,43 @@ _REP_OK = (f"  BUFx2{_X} t0 (.A(a), .Y(b1));\n"
            f"  DFFHQNx1{_X} r2 (.CLK(clk), .D(b1), .QN(q2));\n")
 
 
-def test_land_replica_form():
-    assert face_guard.land_spec({"D": 3, "form": "replica"}) == (3, "replica")
+_RP = "s81/delta_gunit_l1f_band_1107"
+
+
+def _rep(d, plan=_RP):
+    return {"D": d, "form": "replica", "plan": plan}
+
+
+def test_land_replica_form(monkeypatch):
+    monkeypatch.setitem(face_guard.REPLICA_PLANS, _RP, ("top",))
+    assert face_guard.land_spec(_rep(3)) == (3, "replica")
     net = _rep_net(_REP_OK)
     assert face_guard.guard(net, "top")["verdict"] == "FAIL"                       # plain rule: shared
-    r = face_guard.guard(net, "top", land={"a": {"D": 3, "form": "replica"}})
+    r = face_guard.guard(net, "top", land={"a": _rep(3)})
     assert r["verdict"] == "PASS" and r["land_replica_bits"] == 1, r["fails"]
-    assert face_guard.guard(net, "top", land={"a": {"D": 2, "form": "replica"}})["verdict"] == "FAIL"
+    assert face_guard.guard(net, "top", land={"a": _rep(2)})["verdict"] == "FAIL"
     odd = _REP_OK.replace(f"BUFx2{_X} t0", f"INVx2{_X} t0")                          # odd inversion
-    assert face_guard.guard(_rep_net(odd), "top", land={"a": {"D": 3, "form": "replica"}})["verdict"] == "FAIL"
+    assert face_guard.guard(_rep_net(odd), "top", land={"a": _rep(3)})["verdict"] == "FAIL"
     logic = _REP_OK.replace(f"BUFx2{_X} t0 (.A(a), .Y(b1))", f"AND2x2{_X} t0 (.A(a), .B(clk), .Y(b1))")
-    assert face_guard.guard(_rep_net(logic), "top", land={"a": {"D": 3, "form": "replica"}})["verdict"] == "FAIL"
+    assert face_guard.guard(_rep_net(logic), "top", land={"a": _rep(3)})["verdict"] == "FAIL"
+
+
+def test_land_replica_opt_in_keyed_by_plan(monkeypatch):
+    """COORD 11-07 23:3x: replica is opt-in, keyed by the plan; anything else fails closed and no other form moves."""
+    assert "replica" not in face_guard.LAND_FORMS                                    # not a generic form
+    assert face_guard.REPLICA_PLANS == {_RP: ("dsdv_gunit_l1f_bf",)}
+    net = _rep_net(_REP_OK)
+    for bad in ({"D": 3, "form": "replica"}, _rep(3, "s81/other_plan"), dict(_rep(3), extra=1), _rep(1)):
+        with pytest.raises(ValueError):
+            face_guard.land_spec(bad)
+        with pytest.raises(ValueError):
+            face_guard.guard(net, "top", land={"a": bad})
+    with pytest.raises(ValueError, match="does not list top"):                    # listed plan, other top
+        face_guard.guard(net, "top", land={"a": _rep(3)})
+    monkeypatch.setitem(face_guard.REPLICA_PLANS, _RP, ("top",))
+    assert face_guard.guard(net, "top", land={"a": _rep(3)})["verdict"] == "PASS"
+    # the other land forms are unchanged
+    assert face_guard.land_spec(3) == (3, "icg")
+    assert face_guard.land_spec({"D": 2, "form": "hold_mux"}) == (2, "hold_mux")
+    with pytest.raises(ValueError):
+        face_guard.land_spec({"D": 2, "form": "hold_mux", "plan": _RP})
