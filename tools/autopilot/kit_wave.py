@@ -1207,12 +1207,21 @@ ENV_KEY_RE, ENV_VAL_RE = re.compile(r"OT_[A-Z0-9_]+"), re.compile(r"[A-Za-z0-9_.
 
 def topology_env_prefix(sp):
     """Forward the one opt-in native-topology selector, never arbitrary gen env."""
-    value = (sp.get("gen_env") or {}).get("OT_NATIVE_RESET_SCOPE")
+    env = sp.get("gen_env") or {}
+    value = env.get("OT_NATIVE_RESET_SCOPE")
+    capture = env.get("OT_NATIVE_PRODUCER_CONTEXT")
     if value is None:
+        if capture is not None:
+            raise ValueError("producer context needs OT_NATIVE_RESET_SCOPE=selected")
         return ""
     if value != "selected":
         raise ValueError("OT_NATIVE_RESET_SCOPE must be selected when provided")
-    return "OT_NATIVE_RESET_SCOPE=selected "
+    prefix = "OT_NATIVE_RESET_SCOPE=selected "
+    if capture is not None:
+        if not isinstance(capture, str) or not capture.startswith("/") or "\x00" in capture:
+            raise ValueError("producer context must be an absolute file path")
+        prefix += "OT_NATIVE_PRODUCER_CONTEXT=" + shlex.quote(capture) + " "
+    return prefix
 
 
 def item_env(d, item):

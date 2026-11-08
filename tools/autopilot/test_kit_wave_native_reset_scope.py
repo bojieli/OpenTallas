@@ -19,3 +19,14 @@ def test_only_exact_allowlisted_selector_is_forwarded():
 def test_invalid_selector_rejected(value):
     with pytest.raises(ValueError):
         K.topology_env_prefix(dict(gen_env=dict(OT_NATIVE_RESET_SCOPE=value)))
+
+
+def test_capture_path_requires_selector_and_is_shell_literal():
+    import shlex
+    with pytest.raises(ValueError):
+        K.topology_env_prefix(dict(gen_env=dict(OT_NATIVE_PRODUCER_CONTEXT='/tmp/capture.json')))
+    with pytest.raises(ValueError):
+        K.topology_env_prefix(dict(gen_env=dict(OT_NATIVE_RESET_SCOPE='selected',OT_NATIVE_PRODUCER_CONTEXT='relative.json')))
+    path='/tmp/captured plan/$(touch BAD)'
+    prefix=K.topology_env_prefix(dict(gen_env=dict(OT_NATIVE_RESET_SCOPE='selected',OT_NATIVE_PRODUCER_CONTEXT=path)))
+    assert shlex.split(prefix)==['OT_NATIVE_RESET_SCOPE=selected','OT_NATIVE_PRODUCER_CONTEXT='+path]

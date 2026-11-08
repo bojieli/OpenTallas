@@ -54,3 +54,18 @@ def test_scope_requires_unchanged_producer_context(tmp_path,monkeypatch):
     assert not K.bind_matches(raw,'selected',out,str(ab),plan)
     plan.unlink()
     assert not K.bind_matches(raw,'selected',out,str(ab),plan)
+
+
+def test_portable_exact_capture_and_full_producer_mutant(tmp_path,monkeypatch):
+    raw,plan,ab,out=fixture(tmp_path)
+    capture=tmp_path/'captured_producer.json'; capture.write_bytes(plan.read_bytes())
+    plan.unlink()
+    current=copy.deepcopy(raw); current['partition_types']['other']['clock']['taps'][0]['x']=99
+    monkeypatch.setenv('OT_NATIVE_RESET_SCOPE','selected')
+    assert not K.bind_matches(current,'selected',out,str(ab),plan)
+    monkeypatch.setenv('OT_NATIVE_PRODUCER_CONTEXT',str(capture))
+    assert K.bind_matches(current,'selected',out,str(ab),plan)
+    mutant=copy.deepcopy(raw)
+    mutant['partition_types']['other']['buses'].append(dict(name='wrong',dir='in',width=4,kind='data'))
+    capture.write_text(json.dumps(mutant))
+    assert not K.bind_matches(current,'selected',out,str(ab),plan)

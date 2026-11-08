@@ -98,14 +98,15 @@ def bind_matches(raw,tn,out,asbuilt=None,plan_path=None):
     provenance = Path(out)/'provenance_bind.json'
     if not provenance.is_file():
         return False
-    producer_path = Path(json.loads(provenance.read_text()).get('provenance',{}).get('plan',''))
+    producer_path = Path(os.environ.get('OT_NATIVE_PRODUCER_CONTEXT') or
+                         json.loads(provenance.read_text()).get('provenance',{}).get('plan',''))
     if not producer_path.is_absolute() or not producer_path.is_file():
         return False
     producer = json.loads(producer_path.read_text())
     reference = native_contract(producer, asbuilt, producer_path)
     if any(old.get(key) != reference.get(key) for key in ('reset','transport','clock_table_sha256')):
         return False
-    if old.get('types',{}).get(tn) != reference['types'].get(tn):
+    if old.get('types') != reference['types'] or old.get('ownership') != reference['ownership']:
         return False
     return selected_reset_context(producer, tn) == selected_reset_context(raw, tn)
 
