@@ -5,6 +5,7 @@ or physical release gate. Original bind directories are never rewritten.
 """
 import hashlib
 import json
+import os
 import re
 import shutil
 from pathlib import Path
@@ -86,7 +87,34 @@ def bind_matches(raw,tn,out,asbuilt=None,plan_path=None):
     if not path.is_file():return False
     old=json.loads(path.read_text());new=native_contract(raw,asbuilt,plan_path)
     if asbuilt and old.get('asbuilt_sha256')!=hashlib.sha256(Path(asbuilt).read_bytes()).hexdigest():return False
-    return old.get('reset')==new['reset'] and old.get('transport')==new['transport'] and old.get('types',{}).get(tn)==new['types'][tn]
+    if old.get('transport') != new['transport'] or old.get('types',{}).get(tn) != new['types'][tn]:
+        return False
+    if old.get('reset') == new['reset']:
+        return True
+    if os.environ.get('OT_NATIVE_RESET_SCOPE') != 'selected':
+        return False
+    # The canonical producer context must still reproduce its complete receipt.
+    # Never stamp an old bind or ignore changed selected/global native inputs.
+    provenance = Path(out)/'provenance_bind.json'
+    if not provenance.is_file():
+        return False
+    producer_path = Path(json.loads(provenance.read_text()).get('provenance',{}).get('plan',''))
+    if not producer_path.is_absolute() or not producer_path.is_file():
+        return False
+    producer = json.loads(producer_path.read_text())
+    reference = native_contract(producer, asbuilt, producer_path)
+    if any(old.get(key) != reference.get(key) for key in ('reset','transport','clock_table_sha256')):
+        return False
+    if old.get('types',{}).get(tn) != reference['types'].get(tn):
+        return False
+    return selected_reset_context(producer, tn) == selected_reset_context(raw, tn)
+
+
+def selected_reset_context(raw, tn):
+    """All global reset inputs and this type's native reset/clock inputs."""
+    typ = raw['partition_types'][tn]
+    return dict(global_reset=raw.get('reset'), reset=typ.get('reset'), hard=typ.get('hard'),
+                clock={k:v for k,v in typ.get('clock',{}).items() if not k.startswith('landing_')})
 
 
 def has_topology(raw,tn,asbuilt=None):
