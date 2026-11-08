@@ -48,6 +48,34 @@ proc f4::same_native_root {a b} {
   set ar [f4::native_root $a]; set br [f4::native_root $b]
   return [expr {$ar ne "" && $ar eq $br && [lsearch -exact $::env(OT_DTAP_PORTS) $ar] >= 0}]
 }
+# S81-RCK-9 11-07 OT_F4_XLEAF_HOLD_PS (opt-in, default off = unchanged): hold-safe shift form for the zero-logic
+# pairs that F4 PAIR could not co-leaf.  SVC SMD form C / SML form C routed with FF hold -5.58/36 and -3.88/60: the GRT
+# hold repair padded every pair to >= 0 on the estimated clock RC, and the routed leaf-to-leaf skew moved 35 of the 280
+# cross-leaf zero-logic captures within 10 ps below 0 (1 of 1864 same-leaf captures).  For each capture still on another
+# leaf than its launch, this sets a pin hold uncertainty of OT_F4_XLEAF_BASE_PS (the kit clock hold uncertainty, 25) +
+# OT_F4_XLEAF_HOLD_PS on its CLK pin, so the route-stage hold repair pads exactly those pairs for routed leaf drift.  The
+# guard is a repair target only: write_sdc carries it into the stage SDCs; sign-off reads its own golden SDC (gate
+# FF hold >= 0 unchanged, no margin there).
+proc f4::xleaf_guard {pairs} {
+  set g $::env(OT_F4_XLEAF_HOLD_PS)
+  set base [expr {[info exists ::env(OT_F4_XLEAF_BASE_PS)] ? $::env(OT_F4_XLEAF_BASE_PS) : 25}]
+  set b [ord::get_db_block]
+  set pins {}; set miss 0
+  foreach {c p} $pairs {
+    set ci [$b findInst $c]; set pi [$b findInst $p]
+    if {$ci eq "NULL" || $pi eq "NULL"} continue
+    set cc [f4::it $ci CLK]; set pc [f4::it $pi CLK]
+    if {$cc eq "" || $pc eq ""} continue
+    if {[$cc getNet] eq [$pc getNet]} continue
+    set nm [regsub -all {([\[\]])} "[string map {"\\" ""} $c]/CLK" {\\\1}]
+    set pin [get_pins -quiet $nm]
+    if {[llength $pin] != 1} { incr miss; continue }
+    lappend pins $pin
+  }
+  if {[llength $pins]} { set_clock_uncertainty -hold [expr {$base + $g}] $pins }
+  puts "OT_F4 XLEAF hold guard: [llength $pins] cross-leaf zero-logic captures at [expr {$base + $g}] ps hold uncertainty (+$g), unresolved $miss"
+  if {$miss} { error "OT_F4 XLEAF: $miss capture CLK pins did not resolve in STA" }
+}
 proc f4::run {} {
   variable roots; set roots [dict create]
   set b [ord::get_db_block]
@@ -100,6 +128,7 @@ proc f4::run {} {
     }
     set note ""; if {[info exists ::env(OT_DTAP_PORTS)]} {set note " cross_root_skipped $rootskip"}
     puts "OT_F4 PAIR pairs [array size pred] moved $moved skipped $skipped far $far leaves_touched [array size added]$note"
+    if {[info exists ::env(OT_F4_XLEAF_HOLD_PS)] && $::env(OT_F4_XLEAF_HOLD_PS) > 0} { f4::xleaf_guard [array get pred] }
     return
   }
   set dbu [[$b getTech] getDbUnitsPerMicron]
