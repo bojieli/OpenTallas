@@ -489,7 +489,7 @@ set cland_ff_fill 0.90
 set cland_cursor {}
 # DIE-HEAD-32 10-29: rev=1 (tag +ffr, an lsb_high bus) sorts the bit index DESCENDING (slots stay ascending), so the
 # band, filled from its low corner, holds the highest bit where the lsb_high pins put it; rev=0 is byte-identical.
-proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0} {wwc 0} {rwc 0}} {
+proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0} {wwc 0} {rwc 0} {tail_groups 0}} {
  if {[regexp {^([^\[]*)\[([0-9]+)\\?\]\\?\[([0-9]+)\\?\](.*)$} $nm -> b s i t]} {
   if {$rev} { set i [expr {999999999-$i}] }
   return [format {%s|%09d|%09d|%s} [string trimright $b \\] $i $s $t]
@@ -503,7 +503,17 @@ proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0} {wwc 0} {rwc 0}} {
  # at or above nbits (the band bus's port width, when known) are the ring's own status/tag bits: they keep the raw-name
  # key (band low corner, where the plan sites the status stages), as before.
  if {$wch > 0 && [regexp {^(.*[/.])dch\\?\[([0-9]+)\\?\]\.u_dsel/(y|di)\\?\[([0-9]+)\\?\](.*)$} $nm -> b c kind i t]} {
-  if {$kind eq "y"} { set bit [expr {$c*$wch+$i}]; set s 999999998 } else { set bit [expr {$c*$wch+$wch/2}]; set s [expr {999999990+$i}] }
+  if {$kind eq "y"} {
+   set bit [expr {$c*$wch+$i}]; set s 999999998
+  } else {
+   set bit [expr {$c*$wch+$wch/2}]; set s [expr {999999990+$i}]
+   # Optional bounded read chunks keep their selector at the payload group.
+   # The last chunk may contain fewer data bits plus constant/status tails.
+   if {$tail_groups && $rwc > 0} {
+    set s [expr {999999970+$i}]
+    if {$nbits > 0 && $c*$wch < $nbits} { set bit [expr {min($bit,$nbits-1)}] }
+   }
+  }
   if {$nbits > 0 && $bit >= $nbits} { return $nm }
   if {$rev} { set bit [expr {999999999-$bit}] }
   return [format {%s|%09d|%09d|%s} "${b}s_d" $bit $s $t]
@@ -513,6 +523,7 @@ proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0} {wwc 0} {rwc 0}} {
  # slot is below the legacy control-rekey range, so START packing cannot undo it.
  if {$wwc > 0 && [regexp {^(.*[/.])g_wreg\.sl\\?\[([0-9]+)\\?\]\.ch\\?\[([0-9]+)\\?\]\.u_wen/(.*)$} $nm -> b sl c tail]} {
   set bit [expr {$c*$wwc+$wwc/2}]
+  if {$tail_groups && $nbits > 0 && $c*$wwc < $nbits} { set bit [expr {min($bit,$nbits-1)}] }
   if {$nbits <= 0 || $bit < $nbits} {
    if {$rev} { set bit [expr {999999999-$bit}] }
    return [format {%s|%09d|%09d|%s} "${b}s_d" $bit [expr {999999980+$sl}] $tail]
@@ -849,12 +860,15 @@ proc cland_place_ff {prefix rect tag} {
  if {$wch && [regexp {^ring:([^@+]+)} $tag -> bus]} {
   foreach bt [$ff_blk getBTerms] { if {[regexp {^(.*)\[([0-9]+)\]$} [$bt getName] -> bn bi] && $bn eq $bus} { set nbits [expr {max($nbits,$bi+1)}] } }
  }
- set wwc 0; set rwc 0
+ set wwc 0; set rwc 0; set tail_groups 0
  if {[info exists ::cland_local_chunks] && [dict exists $::cland_local_chunks $prefix]} {
   set wwc [dict get $::cland_local_chunks $prefix write]
   set rwc [dict get $::cland_local_chunks $prefix read]
  }
- set ffs [lmap pr $ffs {list [cland_ffkey [lindex $pr 0] $rev $wch $nbits $wwc $rwc] [lindex $pr 1]}]
+ if {[info exists ::cland_local_chunks] && [dict exists $::cland_local_chunks $prefix tail]} {
+  set tail_groups [dict get $::cland_local_chunks $prefix tail]
+ }
+ set ffs [lmap pr $ffs {list [cland_ffkey [lindex $pr 0] $rev $wch $nbits $wwc $rwc $tail_groups] [lindex $pr 1]}]
  # DIE-HEAD-43 c3 (FLOW-11 shared): ring CONTROL registers (raw-name key: counters/ctl/oh/rp/tmo/ready/fault) and
  # status/s_tag keys are keyed right after the bus bit whose pin is nearest the ring's START pin (cland_fstart_in_<bus>)
  # instead of packing first at the band's low corner (HEAD wshim_rx origin->arm_cnt r2r 488 -> 378).  Bands without a
