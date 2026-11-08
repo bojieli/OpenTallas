@@ -5311,6 +5311,11 @@ def _kit_rooted_rtl(text, top):
         visiting.add(name)
         body = definitions[name][0][2]
         for cell in call.finditer(body):
+            # DIE-HBM-91-KCLS 11-08 (class k2): a module that instantiates ITSELF is a generate-terminated recursive
+            # tree (ot_hdc_v41x_addtree #(.N(N/2)) u_l/u_r under `else begin : g_rec`); its one definition is already
+            # being selected, so the self-cell adds nothing.  Mutual recursion (A -> B -> A) still fails closed.
+            if cell[1] == name:
+                continue
             if cell[1] in definitions:
                 visit(cell[1])
         visiting.remove(name)
