@@ -1,0 +1,22 @@
+BAD t=117037000 rx0 st1 pt0
+BAD t=2636862000 rx0 st1 pt0
+BAD t=2820955000 rx0 st1 pt0
+BAD t=2836782000 rx0 st1 pt0
+BAD t=5248317000 rx0 st1 pt0
+BAD t=5582350000 rx0 st1 pt0
+BAD t=5664817000 rx0 st1 pt0
+BAD t=6914317000 rx0 st1 pt0
+BAD t=6939307000 rx0 st1 pt0
+BAD t=7355807000 rx0 st1 pt0
+BAD t=7414117000 rx0 st1 pt0
+BAD t=7734822000 rx0 st1 pt0
+BAD t=8368735000 rx0 st1 pt0
+BAD t=8384562000 rx0 st1 pt0
+BAD t=8534502000 rx0 st1 pt0
+BAD t=8551162000 rx0 st1 pt0
+BAD t=8909352000 rx0 st1 pt0
+BAD t=8926012000 rx0 st1 pt0
+RF_RESULT checks=12000 errors=18 rx_live=11997 st_lock=11075 dec_q_v=10923
+[10078884000] %Fatal: tb_rf.sv:42: Assertion failed in tb: RF lockstep FAILED
+%Error: /srv/opentallas-scratch2/claude/codex-s81-rck-0222/work/results/s81_rck_11_reform_1108/column_faces/tb_rf.sv:42: Verilog $stop
+Aborting...

@@ -180,7 +180,8 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
         for (q = 0; q < NBM; q = q + 1) if (u_dn[q][0]) begin k_L_c = k_L_c | u_L[q]; k_any_c = k_any_c | u_any[q]; end
     end
     always @(posedge clk) begin k_lo_q <= lsel; k_L <= k_L_c; k_any <= k_any_c; end
-    always @(posedge clk) if (!rs_n[2]) k_v_q <= 4'd0; else k_v_q <= cl;
+    // Preserve the four identical output face flops at the CELL, without alias-wire KEEP.
+    (* keep = 1, dont_touch = 1, face_keep = 1 *) always @(posedge clk) if (!rs_n[2]) k_v_q <= 4'd0; else k_v_q <= cl;
     assign k_lo = k_lo_q;
     assign k_v  = k_v_q;
 `else
