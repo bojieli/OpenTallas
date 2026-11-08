@@ -1264,6 +1264,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                    "read_chunk": {"type": "integer", "minimum": 0, "maximum": 64},
                    "write_tail": {"type": "boolean"},
                    "freg_numeric_order": {"type": "boolean"}}}
+# Independent registered read-select replication, no write-register or K/cycle delta.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_ring_dsrep"] = {
+    "type": "object", "additionalProperties": False, "required": ["buses", "dsrep"],
+    "properties": {"buses": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}},
+                   "dsrep": {"type": "integer", "enum": [1, 2, 4, 8, 16, 32, 64]}}}
 # Legacy free-running landing input capture: one extra payload cycle on each
 # listed bus. Clock_landings validates bus membership, sidecar pricing and mode.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_input_freg"] = {
