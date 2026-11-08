@@ -309,6 +309,10 @@ def blackbox_formal_parameters(env, kit, masters):
 
 
 ESC_DOTTED = re.compile(r"^[A-Za-z_][\w$]*(?:\.[A-Za-z_][\w$]*)+$")
+# DIE-QC-93 11-08: a dotted escaped path whose inner segments may carry one decimal index ('g_fifo[0]'); the
+# last segment (the instance itself) stays a plain identifier.
+ESC_DOTTED_IDX = re.compile(r"^[A-Za-z_][\w$]*(?:\[\d+\])?(?:\.[A-Za-z_][\w$]*(?:\[\d+\])?)*\.[A-Za-z_][\w$]*$")
+_SEG_IDX = re.compile(r"^([A-Za-z_][\w$]*)\[(\d+)\]$")
 
 
 def _stmt_end(t, i):
@@ -330,7 +334,91 @@ def _stmt_end(t, i):
     return -1
 
 
-def escaped_instance_blocks(text, modules):
+def _split_top(s, sep=","):
+    """split s on `sep` at paren/brace/bracket depth 0, escaped identifiers kept whole."""
+    parts, d, cur, i = [], 0, [], 0
+    while i < len(s):
+        c = s[i]
+        if c == "\\":
+            j = i
+            while j < len(s) and not s[j].isspace():
+                j += 1
+            cur.append(s[i:j])
+            i = j
+            continue
+        if c in "([{":
+            d += 1
+        elif c in ")]}":
+            d -= 1
+        if c == sep and d == 0:
+            parts.append("".join(cur))
+            cur = []
+        else:
+            cur.append(c)
+        i += 1
+    parts.append("".join(cur))
+    return parts
+
+
+def _named_conns(rest):
+    """'(.a(x), .b())' + ';' -> [('a', 'x'), ('b', '')], or None (positional / unparsable)."""
+    r = rest.strip()
+    if not (r.startswith("(") and r.endswith(";")):
+        return None
+    r = r[:-1].rstrip()
+    if not r.endswith(")"):
+        return None
+    out = []
+    for p in _split_top(r[1:-1]):
+        p = p.strip()
+        if not p:
+            continue
+        m = re.fullmatch(r"\.([A-Za-z_][\w$]*)\s*\((.*)\)", p, flags=re.S)
+        if not m:
+            return None
+        out.append((m[1], m[2]))
+    return out
+
+
+def module_port_dirs(text):
+    """{module: {port: 'input'|'output'|'inout'}} from Verilog/SV source text (ANSI headers and non-ANSI body
+    declarations).  Only used to choose the assign direction of the escaped indexed-instance rewrite; a port it
+    cannot classify makes that rewrite refuse (fail closed)."""
+    res = {}
+    for mm in re.finditer(r"\bmodule\s+([A-Za-z_][\w$]*)(.*?)\bendmodule\b", text, flags=re.S):
+        name, body = mm[1], mm[2]
+        dirs = {}
+        h = body
+        hp = re.match(r"\s*#\s*\(", h)
+        if hp:                                            # skip the parameter port list
+            d, i = 0, hp.end() - 1
+            while i < len(h):
+                d += {"(": 1, ")": -1}.get(h[i], 0)
+                i += 1
+                if d == 0:
+                    break
+            h = h[i:]
+        m = re.match(r"\s*\((.*?)\)\s*;", h, flags=re.S)
+        if m:
+            cur = None
+            for item in _split_top(m[1]):
+                it = re.sub(r"\[[^\]]*\]", " ", item)
+                dm = re.match(r"\s*(input|output|inout)\b", it)
+                if dm:
+                    cur = dm[1]
+                ids = re.findall(r"[A-Za-z_][\w$]*", it)
+                if cur and ids and ids[-1] not in ("input", "output", "inout"):
+                    dirs[ids[-1]] = cur
+        for dm in re.finditer(r"(?m)^\s*(input|output|inout)\b([^;]*);", body):
+            for piece in _split_top(re.sub(r"\[[^\]]*\]", " ", dm[2])):
+                ids = re.findall(r"[A-Za-z_][\w$]*", piece.split("=")[0])
+                if ids:
+                    dirs[ids[-1]] = dm[1]
+        res[name] = dirs
+    return res
+
+
+def escaped_instance_blocks(text, modules, port_dirs=None):
     """FLOW-11 10-30 (QC tt_ctlm, FLOW-KITFAIL): yosys-slang --keep-hierarchy names each kept module after its
     instance path in Verilog-escaped form, so a netlist-form instance '\\u_gi.g_wtn.u_wtn ' of a module defined in
     the sources (synthesised RTL flattened into one module) gives the module name '...\\u_gi.g_wtn.u_wtn ' with a
@@ -339,45 +427,149 @@ def escaped_instance_blocks(text, modules):
     the instance and of everything under it is the same dotted path ('u_gi.g_wtn.u_wtn.<x>'), and the uniquified
     module name is legal.  Only dotted escaped names of instances of `modules` (defined in the sources, not black
     boxes) are moved; a module whose block names would clash with an identifier it already uses is left as it is.
+
+    DIE-QC-93 11-08: an inner segment with a decimal index ('\\u_gi.u_cal.g_fifo[0].u_fifo ', QC FIFO2) becomes a
+    generate loop 'for (genvar g = lo; g <= hi; g++) begin : g_fifo', so the path keeps the name 'g_fifo[0]'
+    (an if-block inside the loop would add 'genblk1').  The indices of one group must be exactly lo..hi.  Each
+    index must hold the same instance structure (module, parameters, instance and port names); only the
+    connection expressions may differ.  These are carried by per-port arrays declared at module level:
+      - input:  assign arr[i] = expr_i;
+      - output: assign expr_i = arr[i];
+    Each array is as wide as the largest $bits(expr_i).  The loop instance connects .p(arr[g]).
+    Port directions come from `port_dirs` ({module: {port: dir}}).  The module is left unchanged when the rewrite
+    cannot be made, so the LEC still fails rather than proving a different design.  That happens when:
+      - the indices are not contiguous;
+      - the structures differ;
+      - a connection is positional;
+      - a port is inout or of unknown direction;
+      - an index group is nested inside a loop.
     Returns (text, moved instance count); text is unchanged when nothing is moved."""
     out, pos, moved = [], 0, 0
+    port_dirs = port_dirs or {}
     for mm in re.finditer(r"\bmodule\b.*?\bendmodule\b", text, flags=re.S):
         body, base = mm.group(0), mm.start()
         hits = []
         for h in re.finditer(r"(?m)^(\s*)([A-Za-z_][\w$]*)(\s+(?:#\s*\([^;]*?\)\s*)?)\\(\S+)(\s)", body):
-            if h[2] not in modules or not ESC_DOTTED.match(h[4]):
+            if h[2] not in modules or not (ESC_DOTTED.match(h[4]) or ESC_DOTTED_IDX.match(h[4])):
                 continue
             e = _stmt_end(body, h.end())
             if e < 0:
                 hits = []
                 break
-            hits.append((h.start(), e, h[2] + h[3] + h[4].split(".")[-1] + h[5] + body[h.end():e], h[4].split(".")))
+            leaf = h[4].split(".")[-1]
+            hits.append((h.start(), e, h[2] + h[3] + leaf + h[5] + body[h.end():e], h[4].split("."),
+                         (h[2], h[3].strip(), leaf, body[h.end():e])))
         if not hits:
             continue
         paths = [tuple(x[3]) for x in hits]
         blocks = {pp[:k] for pp in paths for k in range(1, len(pp))}
         rest = body
-        for a, e, _, _ in reversed(hits):
+        for a, e, _, _, _ in reversed(hits):
             rest = rest[:a] + rest[e:]
         used = set(re.findall(r"(?<![\\\w$.])([A-Za-z_][\w$]*)", rest))
+        bases = {_SEG_IDX.sub(r"\1", b[0]) for b in blocks}
         if (len(set(paths)) != len(paths) or any(pp in blocks for pp in paths)
-                or any(b[0] in used for b in blocks)):
+                or any(b in used for b in bases)):
             continue
         tree = {}
-        for (_, _, stmt, pp) in hits:
+        for (_, _, stmt, pp, parts) in hits:
             node = tree
             for c in pp[:-1]:
                 node = node.setdefault(c, {})
-            node.setdefault(None, []).append(stmt)
+            node.setdefault(None, []).append((stmt, parts))
+
+        decls, ctr = [], [0]
+
+        class Refuse(Exception):
+            pass
+
+        def fresh(stem):
+            while True:
+                ctr[0] += 1
+                n = f"ot_esc{ctr[0]}_{stem}"
+                if n not in used:
+                    used.add(n)
+                    return n
+
+        def sig(node):
+            s = []
+            for st, (mod, par, inst, tail) in node.get(None, []):
+                cs = _named_conns(tail)
+                if cs is None:
+                    raise Refuse
+                s.append((mod, par, inst, tuple(p for p, _ in cs)))
+            return (tuple(sorted(s)), tuple(sorted((k, sig(v)) for k, v in node.items() if k is not None)))
+
+        def emit_loop_body(nodes, gv, ind):
+            """nodes: {index: node} of one index group, all with the same sig; returns the loop body lines."""
+            r = []
+            first = nodes[min(nodes)]
+            for st, (mod, par, inst, tail) in sorted(first.get(None, []), key=lambda x: x[1][2]):
+                per = {}
+                for i, nd in nodes.items():
+                    m = [x for x in nd.get(None, []) if x[1][2] == inst]
+                    per[i] = _named_conns(m[0][1][3])
+                dirs = port_dirs.get(mod)
+                conns = []
+                for k, (p, _) in enumerate(per[min(per)]):
+                    ex = {i: per[i][k][1] for i in per}
+                    if all(not v.strip() for v in ex.values()):
+                        conns.append(f".{p}()")
+                        continue
+                    d = (dirs or {}).get(p)
+                    if d not in ("input", "output") or any(not v.strip() for v in ex.values()):
+                        raise Refuse
+                    arr = fresh(p)
+                    bits = [f"$bits({v.strip()} )" for v in ex.values()]
+                    width = bits[0]
+                    for b in bits[1:]:
+                        width = f"(({width}) > ({b}) ? ({width}) : ({b}))"
+                    lo, hi = min(ex), max(ex)
+                    decls.append(f"  wire [({width})-1:0] {arr} [{lo}:{hi}];")
+                    for i, v in sorted(ex.items()):
+                        decls.append(f"  assign {arr}[{i}] = {v.strip()} ;" if d == "input" else f"  assign {v.strip()} = {arr}[{i}];")
+                    conns.append(f".{p}({arr}[{gv}])")
+                head = mod + (" " + par if par else "")
+                r.append(f"{ind}{head} {inst} ({', '.join(conns)});")
+            kids = {}
+            for k in first:
+                if k is None:
+                    continue
+                if _SEG_IDX.match(k):
+                    raise Refuse                          # index group nested inside a loop: not supported
+                kids[k] = {i: nd[k] for i, nd in nodes.items()}
+            for k in sorted(kids):
+                r += [f"{ind}if (1) begin : {k}"] + emit_loop_body(kids[k], gv, ind + "  ") + [f"{ind}end"]
+            return r
 
         def emit(node, ind):
-            r = [ind + st.strip() for st in node.get(None, [])]
-            for c in sorted(k for k in node if k is not None):
+            r = [ind + st.strip() for st, _ in node.get(None, [])]
+            plain = sorted(k for k in node if k is not None and not _SEG_IDX.match(k))
+            groups = {}
+            for k in node:
+                if k is not None and _SEG_IDX.match(k):
+                    m = _SEG_IDX.match(k)
+                    groups.setdefault(m[1], {})[int(m[2])] = node[k]
+            for c in plain:
+                if c in groups:
+                    raise Refuse
                 r += [f"{ind}if (1) begin : {c}"] + emit(node[c], ind + "  ") + [f"{ind}end"]
+            for b in sorted(groups):
+                g = groups[b]
+                idx = sorted(g)
+                if idx != list(range(idx[0], idx[-1] + 1)) or len({sig(v) for v in g.values()}) != 1:
+                    raise Refuse
+                gv = fresh("g")
+                r += [f"{ind}for (genvar {gv} = {idx[0]}; {gv} <= {idx[-1]}; {gv} = {gv} + 1) begin : {b}"]
+                r += emit_loop_body(g, gv, ind + "  ") + [f"{ind}end"]
             return r
+        try:
+            lines = emit(tree, "  ")
+        except Refuse:
+            continue
         end = rest.rstrip().rfind("endmodule")
         newbody = (rest[:end] + "  // FLOW-11 escaped dotted instances as named generate blocks (lec.py)\n"
-                   + "\n".join(emit(tree, "  ")) + "\n" + rest[end:])
+                   + "".join(x + "\n" for x in decls) + "\n".join(lines) + "\n" + rest[end:])
         out += [text[pos:base], newbody]
         pos = base + len(body)
         moved += len(hits)
@@ -395,10 +587,12 @@ def escaped_instance_safe(files, blackboxes):
             texts[f] = Path(f).read_text(errors="replace")
         except OSError:
             texts[f] = None
-    mods = set()
+    mods, dirs = set(), {}
     for t in texts.values():
         if t:
             mods.update(re.findall(r"(?m)^\s*module\s+([A-Za-z_][\w$]*)", t))
+            if "module" in t:
+                dirs.update(module_port_dirs(t))
     mods -= set(blackboxes)
     res = []
     for f in files:
@@ -406,7 +600,7 @@ def escaped_instance_safe(files, blackboxes):
         if not t or "\\" not in t:
             res.append(f)
             continue
-        nt, n = escaped_instance_blocks(t, mods)
+        nt, n = escaped_instance_blocks(t, mods, dirs)
         if not n:
             res.append(f)
             continue
