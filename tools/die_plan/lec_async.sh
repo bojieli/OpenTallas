@@ -284,7 +284,7 @@ watch)
     while IFS= read -r b; do [ -z "$b" ] || VOL+=(-v "$b"); done < <($DK inspect -f '{{range .HostConfig.Binds}}{{println .}}{{end}}' "$NAME" 2>/dev/null)
     [ ${#VOL[@]} -gt 0 ] || VOL=(-v "$K:/work")
     while IFS= read -r e; do case $e in ''|HOSTNAME=*) ;; *) ENVS+=(-e "$e");; esac; done < <($DK inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$NAME" 2>/dev/null)
-    for v in OT_LEC_HINTS_PRESEED OT_LEC_EARLY_COMPARE OT_LEC_SUPERSET_VEC OT_LEC_RESET_CYCLES; do [ -z "${!v+x}" ] || ENVS+=(-e "$v=${!v}"); done
+    for v in OT_LEC_HINTS_PRESEED OT_LEC_EARLY_COMPARE OT_LEC_SUPERSET_VEC OT_LEC_RESET_CYCLES OT_LEC_REPLICA_MATCH OT_LEC_MEM_LANES; do [ -z "${!v+x}" ] || ENVS+=(-e "$v=${!v}"); done
     # a stopped leftover of this kit's own earlier unit only (a recycled name of another kit is never removed)
     if $DK inspect -f '{{range .Mounts}}{{println .Source}}{{end}}' "$UN" 2>/dev/null | grep -Fqx -- "$K"; then $DK rm -f "$UN" > /dev/null 2>&1; fi
     rm -f "$K/lec_async.unit_rc"

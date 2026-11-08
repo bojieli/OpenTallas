@@ -4847,8 +4847,32 @@ LEC_SUPERSET_DEFAULT=0
 if [ -f "$K/lec_options.json" ]; then
   LEC_SUPERSET_DEFAULT=$(python3 -I -c 'import json,sys; d=json.load(open(sys.argv[1])); assert set(d)=={"superset_vec"} and type(d["superset_vec"]) is bool; print(int(d["superset_vec"]))' "$K/lec_options.json") || { echo 'FAIL_PREFLOOR lec_options' | tee -a "$K/FAIL_PREFLOOR"; exit 10; }
 fi
+# LEC-IQN proof option forwarding: env wins over the kit's explicit 0/1 selections.
+LEC_MATCH_ENV=$(python3 -I - "$K/config.mk" <<'LEC_MATCH_CONFIG'
+import os,re,sys
+cfg={}
+for line in open(sys.argv[1],errors='replace'):
+    m=re.match(r'^\s*(?:override\s+)?(?:export\s+)?([A-Z0-9_]+)\s*[:?]?=\s*(.*?)\s*$',line.split('#',1)[0])
+    if m:cfg[m[1]]=m[2]
+for key in ('OT_LEC_REPLICA_MATCH','OT_LEC_MEM_LANES'):
+    value=os.environ.get(key) or cfg.get(key)
+    if not value:continue
+    value=value.strip()
+    if value not in ('0','1'):raise SystemExit('LEC CONFIG ERROR '+key+' must be 0 or 1')
+    print(key+'='+value)
+LEC_MATCH_CONFIG
+) || exit 10
+LEC_MATCH_DOCKER=()
+while IFS= read -r setting; do
+  [ -n "$setting" ] || continue
+  export "$setting"
+  LEC_MATCH_DOCKER+=(-e "$setting")
+done <<< "$LEC_MATCH_ENV"
+# End LEC-IQN proof option forwarding.
 # Explicit proof methods must be implemented by the copied driver, not silently ignored.
 LEC_REQUIRED=()
+[ "${OT_LEC_REPLICA_MATCH:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_REPLICA_MATCH)
+[ "${OT_LEC_MEM_LANES:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_MEM_LANES)
 [ "${OT_LEC_HINTS_PRESEED:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_HINTS_PRESEED)
 [ "${OT_LEC_EARLY_COMPARE:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_EARLY_COMPARE)
 [ "${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" = 1 ] && LEC_REQUIRED+=(OT_LEC_SUPERSET_VEC)
@@ -4906,7 +4930,7 @@ for p in sorted(out):
 KWCHILD
 )
 [ ${#CHILD_RO[@]} = 0 ] || echo "KWCHILD read-only child records: ${CHILD_RO[*]}"
-docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work "${CHILD_RO[@]}" -e OT_FLOW_TAG="$FT" \
+docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work "${CHILD_RO[@]}" "${LEC_MATCH_DOCKER[@]}" -e OT_FLOW_TAG="$FT" \
   -e HUID=$(id -u) -e HGID=$(id -g) -e OT_KIT_IR=${OT_KIT_IR:-defer} -e OT_LEC_HINTS_PRESEED="${OT_LEC_HINTS_PRESEED:-0}" -e OT_LEC_EARLY_COMPARE="${OT_LEC_EARLY_COMPARE:-0}" -e OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; ${KWRS_F}${KWRS_M}${KWRS_G}rc=0; if [ -f /work/orfs_hold_mm.py ] && grep -q 'def patch_intermediate_power' /work/orfs_hold_mm.py; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts --metrics-only > /work/orfs_metrics.log 2>&1 || { cat /work/orfs_metrics.log; echo 'INTERMEDIATE_POWER optimization unavailable: full power reporting retained'; }; fi; \
   python3 -I /work/native_bb.py /OpenROAD-flow-scripts/flow/scripts/synth_preamble.tcl --physical-synth /OpenROAD-flow-scripts/flow/scripts/synth.tcl || exit 9; \
