@@ -1546,6 +1546,8 @@ def stage_reset_contract(kd, module, source=None):
     (kd / receipt).parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(source.parent / receipt, kd / receipt)
     shutil.copyfile(source, kd / "reset_contract.json")
+    import kit_reset_contract           # KW-FIX-35-RC: the kit copy itself must carry the receipt and grant the window
+    kit_reset_contract.verify_staged(kd, module, edges=report["used"])
     return dict(edges=report["used"], module=module,
                 contract_sha256=sha(source), receipt_sha256=sha(source.parent / receipt))
 

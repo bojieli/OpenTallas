@@ -58,3 +58,39 @@ def test_tampered_receipt_fails_closed(tmp_path):
     r.write_text("sat -tempinduct: FAIL\n")
     env = {}
     assert "refused" in lec.reset_contract_gate(tmp_path, "top_c", env) and env["OT_LEC_RESET_CYCLES"] == "4"
+
+
+def _kit(tmp_path, top="top_c"):
+    (tmp_path / "config.mk").write_text(f"export DESIGN_NAME = {top}\nexport VERILOG_FILES = rtl/x.v\n")
+    return tmp_path
+
+
+def test_listed_top_without_receipt_is_a_flow_error(tmp_path):
+    """KW-FIX-35-RC 11-08 (S81 bksel vJ/vK): a kit copy kept reset_contract.json and dropped reset_contract/receipt.txt;
+    LEC refused the contract and quietly proved at 4 edges (30 false m_ra differences).  The gate now flags it and check()
+    stops with a FLOW ERROR before any proof, never a 4-edge verdict."""
+    r = _contract(_kit(tmp_path))
+    r.unlink()
+    rep = lec.reset_contract_gate(tmp_path, "top_c", {})
+    assert rep["used"] == 4 and "receipt missing" in rep["flow_error"] and "top_c" in rep["flow_error"]
+    rec = lec.check(tmp_path, out=tmp_path / "lec")
+    assert rec["verdict"] == "ERROR" and "FLOW reset contract receipt missing" in rec["reason"]
+    assert "NOT EQUIVALENT" not in rec["reason"]          # kit_wave must not class it as an RTL verdict
+    assert rec["reset_contract"]["flow_error"]
+    assert json.loads((tmp_path / "lec/lec.json").read_text())["verdict"] == "ERROR"
+
+
+def test_listed_top_with_changed_receipt_is_a_flow_error(tmp_path):
+    r = _contract(_kit(tmp_path))
+    r.write_text("edited\n")
+    rec = lec.check(tmp_path, out=tmp_path / "lec")
+    assert rec["verdict"] == "ERROR" and "sha256 mismatch" in rec["reason"]
+
+
+def test_unlisted_top_or_no_contract_keeps_the_default_without_error(tmp_path):
+    r = _contract(tmp_path, modules=("other",))
+    r.unlink()
+    rep = lec.reset_contract_gate(tmp_path, "top_c", {})
+    assert rep["used"] == 4 and "flow_error" not in rep
+    (tmp_path / "reset_contract.json").unlink()
+    assert "flow_error" not in lec.reset_contract_gate(tmp_path, "top_c", {})
