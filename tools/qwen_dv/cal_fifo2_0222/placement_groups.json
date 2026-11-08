@@ -1,0 +1,490 @@
+{
+  "scope": "logical local groups for parent private placement; no coordinates or plan change",
+  "repeat_per_fifo": 4,
+  "groups_per_fifo": 32,
+  "flops_per_fifo": 1536,
+  "core_flops_four_fifos": 6144,
+  "groups": [
+    {
+      "relative_inst": "g_trunk[0].g_branch[0].g_group16[0]",
+      "word_bits": [
+        0,
+        15
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 0,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[0].g_branch[0].g_group16[1]",
+      "word_bits": [
+        16,
+        31
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 0,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[0].g_branch[1].g_group16[0]",
+      "word_bits": [
+        32,
+        47
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 0,
+      "control_branch": 1
+    },
+    {
+      "relative_inst": "g_trunk[0].g_branch[1].g_group16[1]",
+      "word_bits": [
+        48,
+        63
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 0,
+      "control_branch": 1
+    },
+    {
+      "relative_inst": "g_trunk[1].g_branch[0].g_group16[0]",
+      "word_bits": [
+        64,
+        79
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 1,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[1].g_branch[0].g_group16[1]",
+      "word_bits": [
+        80,
+        95
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 1,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[1].g_branch[1].g_group16[0]",
+      "word_bits": [
+        96,
+        111
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 1,
+      "control_branch": 1
+    },
+    {
+      "relative_inst": "g_trunk[1].g_branch[1].g_group16[1]",
+      "word_bits": [
+        112,
+        127
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 1,
+      "control_branch": 1
+    },
+    {
+      "relative_inst": "g_trunk[2].g_branch[0].g_group16[0]",
+      "word_bits": [
+        128,
+        143
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 2,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[2].g_branch[0].g_group16[1]",
+      "word_bits": [
+        144,
+        159
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 2,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[2].g_branch[1].g_group16[0]",
+      "word_bits": [
+        160,
+        175
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 2,
+      "control_branch": 1
+    },
+    {
+      "relative_inst": "g_trunk[2].g_branch[1].g_group16[1]",
+      "word_bits": [
+        176,
+        191
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 2,
+      "control_branch": 1
+    },
+    {
+      "relative_inst": "g_trunk[3].g_branch[0].g_group16[0]",
+      "word_bits": [
+        192,
+        207
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 3,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[3].g_branch[0].g_group16[1]",
+      "word_bits": [
+        208,
+        223
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 3,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[3].g_branch[1].g_group16[0]",
+      "word_bits": [
+        224,
+        239
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 3,
+      "control_branch": 1
+    },
+    {
+      "relative_inst": "g_trunk[3].g_branch[1].g_group16[1]",
+      "word_bits": [
+        240,
+        255
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 3,
+      "control_branch": 1
+    },
+    {
+      "relative_inst": "g_trunk[4].g_branch[0].g_group16[0]",
+      "word_bits": [
+        256,
+        271
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 4,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[4].g_branch[0].g_group16[1]",
+      "word_bits": [
+        272,
+        287
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 4,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[4].g_branch[1].g_group16[0]",
+      "word_bits": [
+        288,
+        303
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 4,
+      "control_branch": 1
+    },
+    {
+      "relative_inst": "g_trunk[4].g_branch[1].g_group16[1]",
+      "word_bits": [
+        304,
+        319
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 4,
+      "control_branch": 1
+    },
+    {
+      "relative_inst": "g_trunk[5].g_branch[0].g_group16[0]",
+      "word_bits": [
+        320,
+        335
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 5,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[5].g_branch[0].g_group16[1]",
+      "word_bits": [
+        336,
+        351
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 5,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[5].g_branch[1].g_group16[0]",
+      "word_bits": [
+        352,
+        367
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 5,
+      "control_branch": 1
+    },
+    {
+      "relative_inst": "g_trunk[5].g_branch[1].g_group16[1]",
+      "word_bits": [
+        368,
+        383
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 5,
+      "control_branch": 1
+    },
+    {
+      "relative_inst": "g_trunk[6].g_branch[0].g_group16[0]",
+      "word_bits": [
+        384,
+        399
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 6,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[6].g_branch[0].g_group16[1]",
+      "word_bits": [
+        400,
+        415
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 6,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[6].g_branch[1].g_group16[0]",
+      "word_bits": [
+        416,
+        431
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 6,
+      "control_branch": 1
+    },
+    {
+      "relative_inst": "g_trunk[6].g_branch[1].g_group16[1]",
+      "word_bits": [
+        432,
+        447
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 6,
+      "control_branch": 1
+    },
+    {
+      "relative_inst": "g_trunk[7].g_branch[0].g_group16[0]",
+      "word_bits": [
+        448,
+        463
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 7,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[7].g_branch[0].g_group16[1]",
+      "word_bits": [
+        464,
+        479
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 7,
+      "control_branch": 0
+    },
+    {
+      "relative_inst": "g_trunk[7].g_branch[1].g_group16[0]",
+      "word_bits": [
+        480,
+        495
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 7,
+      "control_branch": 1
+    },
+    {
+      "relative_inst": "g_trunk[7].g_branch[1].g_group16[1]",
+      "word_bits": [
+        496,
+        511
+      ],
+      "stored_bits": 32,
+      "registered_output_bits": 16,
+      "bank_halves": [
+        "g_half[0].u_bank",
+        "g_half[1].u_bank"
+      ],
+      "control_trunk": 7,
+      "control_branch": 1
+    }
+  ],
+  "instructions": "Place each 16-bit group compactly, keep both8-bit banks nearby, keep its branch decoders with their four banks; choose coordinates from actual core dataflow and density, not arbitrary distant slots"
+}
