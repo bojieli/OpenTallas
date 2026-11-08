@@ -3,10 +3,10 @@
  "decision": "coord lanes/PLAN-DELTA.md 2026-10-25 20:26 PDT OWNER DECISION D-ROM-2 = (a)",
  "tables": [
   {"id": "sk_recip_seed", "module": "ot_hdc_sk_recip_rom", "table": "c0/c1/c2 reciprocal seed case table",
-   "src": "ot_hdc_sk_recip_rom.sv", "words": 512, "width": 65,
+   "src": "ot_hdc_sk_recip_rom.sv", "words": 512, "width": 65, "elab_width": 69,
    "sha256": "3efba154d2af22d616209579a8568f15d531d74f678f286bee6594c182ba0a11",
    "users": "HBM ot_hbm_hc_root_static tail{0,1}_sk_{step0,steady} u_seed.u_rom (4 per core)",
-   "reason": "Sinkhorn 1/x quadratic seed: fixed math function, same content in every instance; std-cell 229 um2 vs 512x65 macro 464 um2 + 1 read cycle"},
+   "reason": "Sinkhorn 1/x quadratic seed: fixed math function, same content in every instance; std-cell 229 um2 vs 512x65 macro 464 um2 + 1 read cycle. elab_width 69 = pre-opt c0 33 + c1 23 + c2 13 the kit gen lint measures (DIE-HBM-92-GEN 11-08, HBM root GEN_LINT)"},
   {"id": "sk_sq_seed", "module": "ot_hdc_sk_sq_rom", "table": "square-term case table",
    "src": "ot_hdc_sk_recip_rom.sv", "words": 512, "width": 14,
    "sha256": "5632071bd8aaa50854c07908a8022762dfa1e146b21ef9298efd24ae8859187a",
