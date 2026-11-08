@@ -1,0 +1,47 @@
+{
+  "current": {
+    "sites": 1450,
+    "max_site_displacement_um": 0,
+    "site_top_um": 137.16,
+    "macro_halo_collisions": 0,
+    "estimated_gap_fill_same_cell_area": 0.2997274321503295,
+    "pin_cycles": 0
+  },
+  "pitch65": {
+    "sites": 1450,
+    "max_site_displacement_um": 172.0980000000001,
+    "site_top_um": 166.59,
+    "macro_halo_collisions": 0,
+    "estimated_gap_fill_same_cell_area": 0.2698788331985679,
+    "pin_cycles": 0
+  },
+  "two-bank": {
+    "sites": 1450,
+    "max_site_displacement_um": 223.7760000000001,
+    "site_top_um": 241.11,
+    "macro_halo_collisions": 0,
+    "estimated_gap_fill_same_cell_area": 0.1864672341360766,
+    "pin_cycles": 0
+  },
+  "notes": {
+    "actual_gap_um": 129.33,
+    "current_gap_cell_area_um2": 5814.562320000318,
+    "measured_row_y_um": [
+      4.32,
+      1222.56
+    ],
+    "physical_change": "1450 existing flops anchored; 300 sp0 newly receive explicit sites; no added cells/RTL/cycles",
+    "clock_hold": "NOT QUALIFIED: same pma_rck tree, current vJ GRT must finish; proposed placements need new CTS and FF hold",
+    "consumer_reach": "S_q remains west near BM0/1/2; broadcasts to all three children remain a long-wire obligation",
+    "north_tracks_estimate": "Above SRAM y148.512, candidate B has ~92um extra macro-free height. Raw added horizontal capacity M2/M4/M6 ~5900 tracks, ~4100 after 30% derating; advisory before actual GRT",
+    "pdn": "Rows exist; north-row PDN continuity must be checked in the future PLACE pilot",
+    "hold": [
+      "READ_CURRENT_GRT",
+      "PLACE_REVIEW",
+      "CLOCK_HOLD",
+      "CHILD_ADOPTION",
+      "DO_NOT_COUNT",
+      "HOLD_ROUTE"
+    ]
+  }
+}
