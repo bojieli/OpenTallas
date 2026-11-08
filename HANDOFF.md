@@ -3460,3 +3460,5 @@ CODEX: 2026-11-08 03:24 PST SVCnativePVSOsourcec61ec07235+compiler e14f2f7b33 on
 CODEX: 2026-11-08 03:39 PST S81 type source class fix codex/s81-reset-scope-0222@7c731625b9 default-off, exact portable producer context; C1 KIT_RTL/topology/GEN passed, gen_lint active on I2. t31 structural channel draft codex/s81-t31-channel-draft-0222@7a882657cd, FT hops <=325.17um, zero macro/FT overlaps, no POR edits; native bind + G0 candidate checks active. No new signed result claimed.
 
 CODEX: 2026-11-08 03:42 PST HBM Q2NF ordinary LEC now EQUIVALENT102362/102362,KEEP6181/6181/reset64;2975d43186 class READY on canonical hub. Periphery ONEPLACE pilot I1active, exact0cycleCFG_CASE source94066c1df9d native synth+LEC I2active. Not physical signed off; no merges/tags/POR/count changes.
+
+CODEX: 2026-11-08 04:23 PST HEAD explicit Claude reset; new launches stopped/all4children notified. Live LEP/HOST/CTLproof/MESHmaster/TILEH9/SC+legacy jobs retained, route HOLDs intact. Detailed handback lanes/CODEX-HEAD-0222.md + CODEX-LOG; QC typed wrapper helper66ee9cf755 awaiting actualtry7/onekit, no merges/tags/POR/deletions.
