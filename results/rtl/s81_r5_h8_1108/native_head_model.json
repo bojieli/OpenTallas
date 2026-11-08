@@ -1,0 +1,27 @@
+{
+  "status": "NATIVE_H8_CANDIDATE_BEFORE_BUILD",
+  "source_rule": "hgrp_s passes only TD to hdp_s; hdp_s instantiates TD bmul lanes per head, independent H/RT",
+  "H16": {
+    "tiles": 4,
+    "heads_per_tile": 16,
+    "TD": 32,
+    "multipliers": 2048,
+    "RT": 2,
+    "pcols_per_head_bits": 64
+  },
+  "H8": {
+    "tiles": 4,
+    "heads_per_tile": 8,
+    "TD": 32,
+    "multipliers": 1024,
+    "RT": 4,
+    "pcols_per_head_bits": 128
+  },
+  "delta": {
+    "total_MACs": -1024,
+    "head_P_input_bits": 64,
+    "added_pin_cycles": 0
+  },
+  "scope": "RT4 is wider load mapping/front-registers, not twice arithmetic; fresh native view required. Area/closure not yet measured; no plan adoption.",
+  "prior_engine_probe_scope": "Closing latency parameters with real behavioral TILE_S arithmetic, not OT_ATTN_HCORE native wrapper. Native CTLA timing calibration still open."
+}
