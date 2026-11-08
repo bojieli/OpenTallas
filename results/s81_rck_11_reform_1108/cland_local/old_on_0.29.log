@@ -1,0 +1,8 @@
+BAD local copies t=23000
+BAD payload t=26000
+BAD payload t=27000
+BAD payload t=28000
+CLON_RESULT W=515 WNEG=1 PH=0.290 checks=2895 errors=2900 epochs=5 fault_ref=0
+[2552000] %Fatal: tb_local.sv:26: Assertion failed in tb: CLON lockstep FAIL
+%Error: /srv/opentallas-scratch2/claude/codex-s81-rck-0222/work/results/s81_rck_11_reform_1108/cland_local/tb_local.sv:26: Verilog $stop
+Aborting...

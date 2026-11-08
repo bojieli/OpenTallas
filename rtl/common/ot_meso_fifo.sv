@@ -401,9 +401,10 @@ module ot_meso_ring #(
                                      // of the slot index (tcc <= tc + 1: equals tc's slot from the first edge) and decodes
                                      // it locally; the slot write conditions stay a combinational decode of one register
                                      // (face_guard hold_mux exclusivity), with no reset on the free-running ring.
-    parameter bit TNEG     = 0       // S81-RINGHOLD-3 variant (a): the whole transmit side (slots, counter, Gray copy)
+    parameter bit TNEG     = 0,      // S81-RINGHOLD-3 variant (a): the whole transmit side (slots, counter, Gray copy)
                                      // runs on the falling tclk edge: a static T/2 writer phase, which placement covers.
                                      // Source-synchronous inputs launched on rising tclk gain T/2 of write hold.
+    parameter int WCCB     = 64      // private conservative writer chunk width; appended for positional compatibility
 ) (
     input  logic         tclk,
     input  logic         t_v,
@@ -454,7 +455,7 @@ module ot_meso_ring #(
             end
         end
     end else if (WCHKC) begin : g_wcc
-        localparam int NCW = (W % 64 == 0) ? W / 64 : 1;
+        localparam int NCW = (W % WCCB == 0) ? W / WCCB : 1;
         localparam int WCW = W / NCW;
         wire [AW-1:0] nxt = tc[AW-1:0] + AW'(1);
         for (genvar c = 0; c < NCW; c++) begin : wcc
