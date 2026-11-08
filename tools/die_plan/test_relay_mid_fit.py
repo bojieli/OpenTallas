@@ -168,3 +168,22 @@ def test_enable_switches_env_types_and_plan(monkeypatch):
     monkeypatch.setenv("OT_RELAY_MID_FIT", "1")
     monkeypatch.setenv("OT_GUTTER_BLOCK_UM", "30")
     assert G._relay_mid_fit({}, "a__t1") and G._gutter_block_um({}, "a__t1") == 30.0
+
+
+def test_gutter_min_span_keeps_only_long_facing_gaps():
+    # S81-TYPES-7-COLH 11-08: the 200-um facing span passes a 150 floor and fails a 250 floor
+    out, pos, blk = _run({"OT_GUTTER_BLOCK_UM": "45", "OT_GUTTER_BLOCK_MIN_SPAN_UM": "150"})
+    assert blk == [(700.0, 600.0, 740.0, 800.0)], blk
+    out, pos, blk = _run({"OT_GUTTER_BLOCK_UM": "45", "OT_GUTTER_BLOCK_MIN_SPAN_UM": "250"})
+    assert blk == [] and "OT_GUTTER_BLOCK 0 gutter" in out
+
+
+def test_gutter_min_span_switch(monkeypatch):
+    import sys
+    sys.path.insert(0, str(HERE))
+    import gen_phys as G
+    monkeypatch.delenv("OT_GUTTER_BLOCK_MIN_SPAN_UM", raising=False)
+    assert G._gutter_block_min_span_um({}) is None
+    assert G._gutter_block_min_span_um({"gutter_block_min_span_um": 200}) == 200.0
+    monkeypatch.setenv("OT_GUTTER_BLOCK_MIN_SPAN_UM", "150")
+    assert G._gutter_block_min_span_um({"gutter_block_min_span_um": 200}) == 150.0

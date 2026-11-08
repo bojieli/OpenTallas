@@ -32,7 +32,7 @@
 //            -> stage-3 AND-OR; bank one-hot copies for the 4 stream ROMs.
 //   calendar native copy of ot_s81_pq_calendar_reader (PINREG): one-hot row pointers, 6 due copies (own pointer,
 //            age, active), registered row write enables.
-//   ctl      native copy of ot_s81sl_xs_ctl: config tag one-hot at the pin, hold-in-reset payload on regional
+//   ctl      native copy of ot_s81sl_xs_ctl: config tag one-hot at the pin, every-edge payload (S81-TYPES-7-LEC; was regional
 //            enables, bv copies for the lane word select.  Lane = dsfd_pq_lx (STATIC_X2) function with bv copies.
 //   reset    port -> 2 sync flops -> 4 early (capture valids, main's release edge) / 8 -> 54 regions / 8 -> 4-stage
 //            chain -> 39 controller regions; release = main's edge + 1 everywhere; payload reset-free.
@@ -332,7 +332,7 @@ endmodule
 module ot_s81sl_xs4_ctl (
     input  wire          clk,
     input  wire [3:0]    rc,
-    input  wire [31:0]   rh,
+    input  wire [31:0]   rh,       // S81-TYPES-7-LEC J3: payload no longer uses the hold leaves (kept for the port map)
     input  wire [2:0]    rb,
     input  wire [23:0]   rx,       // XG5: second hold-enable leaves (wide payload split to <= 16 bits per enable copy)
     input  wire          calendar_v,
@@ -415,7 +415,7 @@ module ot_s81sl_xs4_ctl (
     wire [47:0] hw = he[EW-1 -: 48];
     wire        h_fam = he[EW-67];
     wire [2:0]  h_pos = he[EW-70 -: 3];
-    // ---- stream head copies (x streamer read side), held in reset like he
+    // ---- stream head copies (x streamer read side), load every edge like he
     wire [33:0] hq_d = {r3_b0, r3_b1, r3_w[13:12]};
     wire [42:0] hb_d = {r3_hi, r3_w[7:1]};
     wire        qc_d = r3_v && r3_e[EW-48] && !r3_e[EW-67];
@@ -425,8 +425,8 @@ module ot_s81sl_xs4_ctl (
         (* keep = "true" *) reg [33:0] h;
         (* keep = "true" *) reg c;
         always @(posedge clk) begin
-            if (rh[20 + 2*gq]) h[16:0] <= hq_d[16:0];
-            if (rh[21 + 2*gq]) h[33:17] <= hq_d[33:17];
+            h[16:0] <= hq_d[16:0];
+            h[33:17] <= hq_d[33:17];
         end
         always @(posedge clk or negedge rc[3]) if (!rc[3]) c <= 1'b0; else c <= qc_d;
         assign hq_o[34*gq +: 34] = h;
@@ -435,14 +435,14 @@ module ot_s81sl_xs4_ctl (
     (* keep = "true" *) reg [42:0] hb_q;
     (* keep = "true" *) reg [42:7] hb_q1;   // ELEM-XFV: same D/enable/edge as hb_q[42:7]; drives lookup copy 1 only
     always @(posedge clk) begin
-        if (rh[30]) hb_q[10:0]  <= hb_d[10:0];
-        if (rx[18]) hb_q[21:11] <= hb_d[21:11];
-        if (rh[31]) hb_q[31:22] <= hb_d[31:22];
-        if (rx[19]) hb_q[42:32] <= hb_d[42:32];
-        if (rh[30]) hb_q1[10:7]  <= hb_d[10:7];
-        if (rx[22]) hb_q1[21:11] <= hb_d[21:11];   // spare same-release hold leaf (rx[18] reached 33 with both copies)
-        if (rh[31]) hb_q1[31:22] <= hb_d[31:22];
-        if (rx[23]) hb_q1[42:32] <= hb_d[42:32];   // spare same-release hold leaf (rx[19] reached 33 with both copies)
+        hb_q[10:0]  <= hb_d[10:0];
+        hb_q[21:11] <= hb_d[21:11];
+        hb_q[31:22] <= hb_d[31:22];
+        hb_q[42:32] <= hb_d[42:32];
+        hb_q1[10:7]  <= hb_d[10:7];
+        hb_q1[21:11] <= hb_d[21:11];
+        hb_q1[31:22] <= hb_d[31:22];
+        hb_q1[42:32] <= hb_d[42:32];
     end
     (* keep = "true" *) reg bc_c;
     always @(posedge clk or negedge rc[3]) if (!rc[3]) bc_c <= 1'b0; else bc_c <= bc_d;
@@ -553,55 +553,57 @@ module ot_s81sl_xs4_ctl (
             if (action[62]) for (ks = 0; ks < 4; ks = ks + 1) if (cfg_oh[ks]) si[ks] <= 1;
         end
     end
-    // payload that holds while main's rst_c is low (main: assigned in the reset block without a reset value)
+    // payload: loads every edge, also while main's rst_c is low (S81-TYPES-7-LEC J3, same as ot_s81sl_xs_ctl b28dc6669c0).
+    // Holding it under the rh/rx reset enables left no-reset bits that are constant only after the first load
+    // (blk0[3]=0, blk[15:13]=0): synthesis folds them but no reset window proves them (KEEP FAIL / NOT EQUIVALENT).
+    // Every consumer is qualified by the reset valid chain, so values seen outside reset are unchanged.
     always @(posedge clk) begin
-        if (rh[0]) begin
+        begin
             r0_a <= action[53:40]; r0_tag <= action[55:54]; r0_pos <= action[58:56];
             r0_fam <= action[59]; r0_lp <= action[60]; r0_lo <= action[61];
         end
-        if (rh[1]) begin
+        begin
             ra_tag <= r0_tag; ra_pos <= r0_pos; ra_fam <= r0_fam; ra_lp <= r0_lp; ra_lo <= r0_lo;
             r1_tag <= ra_tag; r1_pos <= ra_pos; r1_fam <= ra_fam; r1_lp <= ra_lp; r1_lo <= ra_lo;
             if (phase_pin_valid) s_pw0[phase_pin_tag] <= phase0_pin;
         end
-        if (rh[2]) r2_w[11:0] <= r1_w[11:0];
-        if (rx[0]) r2_w[23:12] <= r1_w[23:12];
-        if (rh[3]) r2_w[35:24] <= r1_w[35:24];
-        if (rx[1]) r2_w[47:36] <= r1_w[47:36];
-        if (rh[4]) begin
+        r2_w[11:0] <= r1_w[11:0];
+        r2_w[23:12] <= r1_w[23:12];
+        r2_w[35:24] <= r1_w[35:24];
+        r2_w[47:36] <= r1_w[47:36];
+        begin
             r2_tag <= r1_tag; r2_pos <= r1_pos; r2_fam <= r1_fam; r2_lp <= r1_lp; r2_lo <= r1_lo;
             r2_spar <= r1_spar; r2_nq <= r1_nq;
         end
-        if (rh[5]) r2_m01 <= r1_m01;
-        if (rx[2]) r2_m23 <= r1_m23;
-        if (rh[6]) r2_b0 <= r1_blk0;
-        if (rh[7]) r2_b1 <= r1_blk1;
-        if (rh[8]) r2_hi[8:0]   <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[15:8]};
-        if (rx[3]) r2_hi[17:9]  <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[23:16]};
-        if (rh[9]) r2_hi[26:18] <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[31:24]};
-        if (rx[4]) r2_hi[35:27] <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[39:32]};
-        if (rh[10]) r3_w[11:0] <= r2_w[11:0];
-        if (rx[5])  r3_w[23:12] <= r2_w[23:12];
-        if (rh[11]) r3_w[35:24] <= r2_w[35:24];
-        if (rx[6])  r3_w[47:36] <= r2_w[47:36];
-        if (rh[12]) begin
+        r2_m01 <= r1_m01;
+        r2_m23 <= r1_m23;
+        r2_b0 <= r1_blk0;
+        r2_b1 <= r1_blk1;
+        r2_hi[8:0]   <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[15:8]};
+        r2_hi[17:9]  <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[23:16]};
+        r2_hi[26:18] <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[31:24]};
+        r2_hi[35:27] <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[39:32]};
+        r3_w[11:0] <= r2_w[11:0];
+        r3_w[23:12] <= r2_w[23:12];
+        r3_w[35:24] <= r2_w[35:24];
+        r3_w[47:36] <= r2_w[47:36];
+        begin
             r3_tag <= r2_tag; r3_pos <= r2_pos; r3_fam <= r2_fam; r3_lp <= r2_lp; r3_lo <= r2_lo;
             r3_spar <= r2_spar; r3_nq <= r2_nq;
         end
-        if (rh[13]) r3_umax <= r2_m23 > r2_m01 ? r2_m23 : r2_m01;
-        if (rh[14]) r3_b0 <= r2_b0;
-        if (rh[15]) r3_b1 <= r2_b1;
-        if (rh[16]) r3_hi[8:0]   <= r2_hi[8:0];
-        if (rx[7])  r3_hi[17:9]  <= r2_hi[17:9];
-        if (rh[17]) r3_hi[26:18] <= r2_hi[26:18];
-        if (rx[8])  r3_hi[35:27] <= r2_hi[35:27];
-        if (rh[18]) he[EW-1 -: 12]  <= r3_e[EW-1 -: 12];
-        if (rx[9])  he[EW-13 -: 12] <= r3_e[EW-13 -: 12];
-        // he[EW-25:0] (116 b): rh[19] + rx[10..17], 13 b per enable copy
-        if (rh[19]) he[12:0] <= r3_e[12:0];
+        r3_umax <= r2_m23 > r2_m01 ? r2_m23 : r2_m01;
+        r3_b0 <= r2_b0;
+        r3_b1 <= r2_b1;
+        r3_hi[8:0]   <= r2_hi[8:0];
+        r3_hi[17:9]  <= r2_hi[17:9];
+        r3_hi[26:18] <= r2_hi[26:18];
+        r3_hi[35:27] <= r2_hi[35:27];
+        he[EW-1 -: 12]  <= r3_e[EW-1 -: 12];
+        he[EW-13 -: 12] <= r3_e[EW-13 -: 12];
+        he[12:0] <= r3_e[12:0];
         for (kd = 0; kd < 7; kd = kd + 1)
-            if (rx[10 + kd]) he[13 + 13*kd +: 13] <= r3_e[13 + 13*kd +: 13];   // [103:13]
-        if (rx[17]) he[EW-25:104] <= r3_e[EW-25:104];                           // [115:104]
+            he[13 + 13*kd +: 13] <= r3_e[13 + 13*kd +: 13];   // [103:13]
+        he[EW-25:104] <= r3_e[EW-25:104];                           // [115:104]
     end
 endmodule
 

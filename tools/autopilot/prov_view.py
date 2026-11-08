@@ -284,14 +284,26 @@ def rtl_module_files(root):
     if root in _RTL_ROOT_INDEX:
         return _RTL_ROOT_INDEX[root]
     index = {}
-    result = None
-    try:
-        result = subprocess.run(["git", "-C", root, "grep", "--untracked", "--null", "-n", "-E",
-                                 r"^\s*module\s+[A-Za-z_][A-Za-z_0-9]*", "--", "*.sv", "*.v", "*.svh"],
-                                capture_output=True, text=True, timeout=300)
-    except (OSError, subprocess.SubprocessError):
-        pass
-    if result is not None and result.returncode in (0, 1) and "not a git repository" not in (result.stderr or ""):
+    # KW-FIX-35 11-08 (KW-PROV-1): a single `git grep --untracked` pass found NOTHING in a wave src whose .gitignore
+    # is `*` (kw33/src_d95ec, kw35/src_0b72a: staged trees ignore everything; git then skips tracked files too), so
+    # every contract child lost its RTL pin directions (QC cbf_q00 a10, slw_su_c a13; HBM q_su01/q_su11 prov_views).
+    # Union of: tracked files (the pre-index behaviour), untracked RTL under rtl/ even when ignored, standard untracked.
+    passes = (([], ["*.sv", "*.v", "*.svh"]),
+              (["--untracked", "--no-exclude-standard"], [":(glob)rtl/**/*.sv", ":(glob)rtl/**/*.v", ":(glob)rtl/**/*.svh"]),
+              (["--untracked"], ["*.sv", "*.v", "*.svh"]))
+    git_ok = False
+    for extra, spec in passes:
+        try:
+            result = subprocess.run(["git", "-C", root, "grep", *extra, "--null", "-n", "-E",
+                                     r"^\s*module\s+[A-Za-z_][A-Za-z_0-9]*", "--", *spec],
+                                    capture_output=True, text=True, timeout=300)
+        except (OSError, subprocess.SubprocessError):
+            continue
+        if "not a git repository" in (result.stderr or ""):
+            break                                  # a staged non-git root: one probe, then the shallow walk
+        if result.returncode not in (0, 1):
+            continue
+        git_ok = True
         for record in result.stdout.splitlines():
             fields = record.split("\0", 2)  # git grep -z -n: filename, line number, declaration
             if len(fields) != 3:
@@ -302,6 +314,8 @@ def rtl_module_files(root):
                 path = os.path.join(root, fields[0])
                 if path not in files:
                     files.append(path)
+    if git_ok:
+        pass
     else:
         for dp, dn, fs in os.walk(root):
             # Preserve the staged, non-git root's shallow walk and exclusions.

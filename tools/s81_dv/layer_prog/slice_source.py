@@ -212,9 +212,14 @@ def resolve(die, slice_inst, source_root=None):
         #     distinct-slice/wrong-prefix controls are retained under
         #     results/rtl/s81_xs_image_prefix_2038. This does not qualify a
         #     BF profile, global source calendar or selected manifest.
+        #   2710712d = 0e49aefd with the xs4_ctl payload / stream-head copies loading every edge instead of under the
+        #     rh/rx reset-hold enables (S81-TYPES-7-LEC J3, LEC class constant-after-load).  No register added or
+        #     removed, capture stage unchanged: tools/s81_slice/xs4_equiv.sh (xs4 = main xs one edge later on every
+        #     output, in-flight reset included) 21/21 PASS, mutants caught; logs results/rtl/s81_xs4_everyedge_1108.
         known = {'974ec6f3e0ca8deb84d6690c03f10035213b6a3bc94ff178edeb9549f29b9ca9',
                  '50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808',
-                 '0e49aefdedcc41a1cb571c21cad73f247c2d97a7904799027af1373b16a920e1'}
+                 '0e49aefdedcc41a1cb571c21cad73f247c2d97a7904799027af1373b16a920e1',
+                 '2710712dd9d163b93f222e09db23ae89fb675e25454d2fc45981d149d97aa75c'}
         if sources[resolved_paths[streamer]] not in known:
             raise ValueError('changed XS4 source has no matching capture-stage receipt')
         added = 1
