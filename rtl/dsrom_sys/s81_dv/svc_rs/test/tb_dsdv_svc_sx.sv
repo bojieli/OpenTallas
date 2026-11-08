@@ -15,7 +15,12 @@ module tb_dsdv_svc_sx;
 `else
     localparam integer H = 16;
 `endif
-    localparam integer W = H*132+20, N = 4*H, NB = 600, FX = 5;
+    `ifdef SX_SMALL
+    localparam integer NB = 64;
+`else
+    localparam integer NB = 600;
+`endif
+    localparam integer W = H*132+20, N = 4*H, FX = 5;
 `ifdef DSDV_SX_MUT_ORDER
 `ifdef OT_SVC_H8
 `include "dsdv_svc_sx_roles_mut_order_h8.svh"
@@ -37,7 +42,7 @@ module tb_dsdv_svc_sx;
 `endif
     reg ck = 0, rst = 0;
     always #0.5 ck = ~ck;
-    integer seed = 1;
+    integer seed = 1, order_mut = 0;
     // ---------------- stimulus ----------------
     reg [W-1:0] beat [0:NB-1][0:15];
     integer slot_c [0:NB-1];
@@ -54,6 +59,7 @@ module tb_dsdv_svc_sx;
     initial begin
         integer b, t, i, c;
         if (!$value$plusargs("seed=%d", seed)) seed = 1;
+        void'($value$plusargs("order=%d", order_mut));
         void'($urandom(seed));
         c = 0;
         for (b = 0; b < NB; b++) begin
@@ -109,7 +115,11 @@ module tb_dsdv_svc_sx;
         dsdv_svc_sx #(.MUT(`MUT), .H(H), .FM_GI(FMS[27:24]), .FM_GO(FMS[31:28]), .FM_SI(FMS[35:32]), .FM_SO(FMS[39:36])) u (
             .ck(ck), .rst(rst), .sid(4'(s)), .l_v(l_v[s]), .l_d(l_d[s]),
 `else
+        `ifdef SX_PL
+        dsdv_svc_sx_pl u (.ck(ck), .rst(rst), .sid(4'(s)), .l_v(l_v[s]), .l_d(l_d[s]),
+`else
         dsdv_svc_sx #(.MUT(`MUT), .H(H)) u (.ck(ck), .rst(rst), .sid(4'(s)), .l_v(l_v[s]), .l_d(l_d[s]),
+`endif
 `endif
             .gi_v(gi_v[s]), .gi_d(gi_d[s]), .go_v(go_v[s]), .go_d(go_d[s]),
             .si_v(si_v[s]), .si_d(si_d[s]), .so_v(so_v[s]), .so_d(so_d[s]),
@@ -168,7 +178,7 @@ module tb_dsdv_svc_sx;
         for (b = 0; b < NB; b++) begin
             if (cyc == T0 + slot_c[b]) begin gv = 1'b1; for (s2 = 0; s2 < 16; s2++) gl[s2] = beat[b][s2]; end
             for (s2 = 0; s2 < 16; s2++)
-                if (cyc == T0 + slot_c[b] + sx_role_off(s2) + skew(s2)) begin l_v[s2] = 1'b1; l_d[s2] = beat[b][tile_of(s2)]; end
+                if (cyc == T0 + slot_c[b] + sx_role_off(s2) + skew(s2)) begin l_v[s2] = 1'b1; l_d[s2] = beat[b][(order_mut && tile_of(s2)==0)?2:(order_mut && tile_of(s2)==2)?0:tile_of(s2)]; end
         end
     end
 
@@ -178,15 +188,18 @@ module tb_dsdv_svc_sx;
     always @(posedge ck) begin
         for (int s3 = 0; s3 < 16; s3++) begin
             if (rt_v[s3]) begin
+                if (nr==0) $display("SX_EDGE first_root=%0d source_base=%0d declared_root_age=%0d",cyc,T0+slot_c[0],SX_ROLE_TROOT);
                 if (nr >= ng || rt_d[s3] !== gold[nr]) begin
                     err = err + 1;
                     if (err <= 5) $display("MISMATCH root beat %0d slice %0d", nr, s3);
+                    if(err<=2)$display("ROOT_DETAIL got_tag=%05x exp_tag=%05x got_flags=%08x exp_flags=%08x got_h0=%08x exp_h0=%08x got_h7=%08x exp_h7=%08x",rt_d[s3][W-1 -:20],gold[nr][W-1 -:20],rt_d[s3][N-1:0],gold[nr][N-1:0],rt_d[s3][N+:32],gold[nr][N+:32],rt_d[s3][N+32*7+:32],gold[nr][N+32*7+:32]);
                 end
                 nr = nr + 1;
             end
             if (t_v[s3]) begin
                 integer hh, bb; reg [131:0] e;
                 hh = tile_of(s3) % H; bb = nt[s3];
+                if(bb==0)$display("SX_EDGE tap_sid=%0d first=%0d source_base=%0d",s3,cyc,T0+slot_c[0]);
                 for (int r = 0; r < 4; r++) begin
                     e[32*r +: 32] = gold[bb][N + (r*H + hh)*32 +: 32]; e[128 + r] = gold[bb][r*H + hh];
                 end

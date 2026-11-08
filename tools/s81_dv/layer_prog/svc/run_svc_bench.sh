@@ -14,7 +14,7 @@ case "$PROFILE" in
  closing)
   ENGDEF=()
   RS_DEF+=(-DOT_SVC_ALLQ -DOT_ATTN_HCORE -DOT_S81C_HCORE_CTLA -DOT_S81C_HCORE_RST_TIMED)
-  RS_SRC+=(rtl/hdc/v41x/ot_s81c_attn_hcore.sv rtl/hdc/v41x/ot_s81c_attn_hcore_h8.sv)
+  RS_SRC+=(rtl/hdc/v41x/ot_s81c_attn_hcore.sv rtl/hdc/v41x/ot_s81c_attn_hcore_h8.sv rtl/hdc/v41x/ot_s81c_attn_h8_rt2.sv)
   ;;
  legacy_fg3) ENGDEF=(-DSVCQ_ENG_FG3);;
  *) echo "unknown SVC engine profile $PROFILE" >&2;exit 2;;

@@ -387,7 +387,12 @@ module ot_hdc_v41x_attn_tile_s #(
     begin : g_bad_hc
         initial $error("ot_hdc_v41x_attn_tile_s: OT_ATTN_HCORE needs the H8 S81 engine parameters");
     end endgenerate
-    ot_s81c_attn_tile_hc_h8 u_hc (.clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
+`ifdef OT_SVC_H8_REUSE_RT2
+    ot_s81c_attn_tile_hc_h8_rt2 u_hc (
+`else
+    ot_s81c_attn_tile_hc_h8 u_hc (
+`endif
+        .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
         .ld_grp(ld_grp), .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy), .oflt(oflt));
 `else
     // CORE-S81-SVC (10-23): the S81 tile as 16 one-head hard cores ot_s81c_attn_hcore (= hgrp_s at HG 1, PCOLP 1,
