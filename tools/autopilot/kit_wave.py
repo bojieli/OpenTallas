@@ -4371,6 +4371,24 @@ def auto_rejudge(AP, cfg, st, notices, log=None):
 # entry was first seen by the scheduler (st["retry_seen"]); an entry that names an attempt launched later is stale and
 # is dropped from this tick's in-memory retry set (kit_wave.json is never written).  Entries added in-tick (pending
 # rows, LEAFSLEW) and COORD releases of an already failed / running attempt keep working unchanged.
+# KW-FIX-33 (COORD 11-07 22:53): the first-seen key carries the die's event ("<die>|<event>|<item>@<N>"; retry_seen_key).
+# Without it a COORD release of item@N on a NEW event inherited the first-seen time of the same string on an older event,
+# and the new event's attempt N (launched after that) dropped it as stale (S81 ot_s81sl_leaf__t12@2/@3, 11-07 21:56).
+# One-time migration: a legacy "<die>|<item>@<N>" time moves to the CURRENT event's key (and the legacy key is removed),
+# so the rollout re-arms nothing; a later event change starts its entries fresh.  retry_stale_logged uses the same keys.
+def retry_seen_key(die, event, ia):
+    return f"{die}|{event}|{ia}" if event else f"{die}|{ia}"
+
+
+def _retry_key_migrate(tab, die, event, ia):
+    """-> the event key of die/ia in tab (retry_seen / retry_stale_logged), moving a legacy key's value onto it once"""
+    k = retry_seen_key(die, event, ia)
+    legacy = f"{die}|{ia}"
+    if k != legacy and k not in tab and legacy in tab:
+        tab[k] = tab.pop(legacy)
+    return k
+
+
 def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
     # KW-FIX-23 14:0x hot-fix: epoch seconds on both sides (now_s() is a display string; 13:57 TypeError)
     now = time.time() if now is None else float(now)
@@ -4388,11 +4406,13 @@ def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
         if not isinstance(d, dict) or not d.get("retry"):
             continue
         keep = []
+        ev = d.get("event") or ""
         for ia in d["retry"]:
+            sk = _retry_key_migrate(seen, die, ev, ia)
             try:
-                first = float(seen.setdefault(f"{die}|{ia}", now))
+                first = float(seen.setdefault(sk, now))
             except (TypeError, ValueError):
-                first = seen[f"{die}|{ia}"] = now      # unparsable (old string) -> first seen now
+                first = seen[sk] = now      # unparsable (old string) -> first seen now
             item, _, n = str(ia).rpartition("@")
             started = latest.get((die, item, n), 0.0)
             if started and started > first:
@@ -4402,9 +4422,10 @@ def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
         d["retry"] = keep
     logged = st.setdefault("retry_stale_logged", {})
     for die, xs in dropped.items():
-        new = [x for x in xs if f"{die}|{x}" not in logged]
+        ev = ((cfg.get("dies") or {}).get(die) or {}).get("event") or ""
+        new = [x for x in xs if _retry_key_migrate(logged, die, ev, x) not in logged]
         for x in new:
-            logged[f"{die}|{x}"] = now
+            logged[retry_seen_key(die, ev, x)] = now
         if new and log:
             log(f"KIT-WAVE retry stale {die}: {len(new)} entries name an attempt launched after the entry "
                 f"(KW-FIX-23 retry epoch; not released): {' '.join(new[:12])}")
