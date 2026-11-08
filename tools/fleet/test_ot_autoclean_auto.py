@@ -370,6 +370,25 @@ class TestSkips(Base):
         self.assertEqual(self.row(b3)[3], "DELETED")
         self.assertEqual(self.row(b4)[3], "DELETED")
 
+    def test_queuename_skip_trim_c_flag(self):
+        # AUTOCLEAN-9 11-08: a design type name in a post blocks old class c trims of that type in every lane
+        _, c1 = self.kit_c("lt/kv3_pv_v5n")
+        k2, c2 = self.kit_c("lt2/kv3_pv_v5n")
+        _, b3 = self.kit_b("lt3/kv3_pv_v5n")
+        self.qwords = ["kv3_pv_v5n"]
+        self.qpaths = [k2]
+        self.run_job()
+        self.assertEqual(self.row(c1)[3], "SKIP"); self.assertTrue(self.row(c1)[4].startswith("queuename"), self.row(c1))
+        self.assertTrue(os.path.exists(os.path.join(c1, "3_3_place_gp.odb")))
+        self.run_job("--queuename-skip-trim-c")
+        self.assertEqual(self.row(c1)[3], "DELETED", self.row(c1))
+        self.assertEqual(sorted(os.listdir(c1)), ["2_floorplan.odb", "3_place.odb", "4_cts.odb"])
+        self.assertEqual(self.row(c2)[3], "SKIP")             # an exact queue path still protects
+        self.assertTrue(self.row(c2)[4].startswith("queuepath"), self.row(c2))
+        self.assertTrue(os.path.exists(os.path.join(c2, "3_3_place_gp.odb")))
+        self.assertSkip(b3, "queuename")                      # class b unchanged
+        self.assertTrue(os.path.exists(os.path.join(b3, "5_route.odb")))
+
     def test_parse_queue_window_and_continuation(self):
         now = time.time()
         recent = time.strftime("%Y-%m-%d %H:%M", time.localtime(now - 3600))
