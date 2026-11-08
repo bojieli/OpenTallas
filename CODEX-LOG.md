@@ -11746,3 +11746,10 @@ All cached41open exactdesigns (105−64) assigned; no new scan/count. Coverage a
 OWNER? h9b WQDIAG source-adoption and restJ OPIPE source-adoption remain release obligations; candidates/proofs preserved. No blocking question.
 
 2026-11-07 16:00:25 PST fleet1551 checkpoint: /home/ubuntu/coord/handoff/codex_fleet_ops_20261107_1551.md. Firstall6snapshot/E5scratch43/E6root50, factors1/norearm/guardsunchanged. Rootapprovedcanaryretention-onlyatomicrepair15:56:20, timeractive/no--prune, exactbackuprecorded, source6dad6d69/3testsPASS. OldIntel1huntclosedby14:32KVintentionalwaitermove+14:54HEADclonecorrection. QCv6failureconfirmed24GiBMEMCGOOM, ownersnotified. No deletions/restart/signals or jobslaunchedbyfleetops.
+
+## KV takeover 2026-11-07 16:01 PST
+Current scope/status lanes/CODEX-KV-1551.md. Ingestrequiredcjclosed; e0freshproofcitationcorrected/currentcvqualificationownedm5; wrongE4stageddirnamecaughtbeforejob. PromptvMDRT/WivRLdPLACEhealthy, no duplicates. No merge/tag/POR/deletion.
+
+## KV types 2026-11-07 16:02 PST
+OWNER?
+The 14:28 HGI B ruling requests a tap-delay buffer at each core pin. Actual head-eighth clock pins are interior near (108,108) in 216x216 hard macros, and tap_balance.tcl::tb_outside intentionally chooses a legal site 2um beyond the nearest macro edge, creating the measured ~110um leg. A parent standard cell cannot be placed at the interior hard-macro pin. Which feasible B form is intended: a child pin/clock redesign, or a legal parent boundary strategy? Default: preserve pins/POR and keep progressing class D (qualified M5 core views); do not place cells inside the hard macro or release HGI before its full gate.
