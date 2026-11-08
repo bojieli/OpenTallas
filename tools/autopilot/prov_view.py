@@ -735,6 +735,12 @@ def make(a):
                     shutil.copyfile(selected_lef, os.path.join(vd, m + ".lef"))
                 rec = dict(source="routed", job=meta.get("job"), host=meta.get("host"), signoff=meta.get("signoff"),
                            drc=meta.get("drc"), tt_wns=meta.get("tt_wns"), ff_wns=meta.get("ff_wns"))
+                # KW-FIX-35-V 11-08 (COORD: signed child views missing in the wave): a candidate that IS the counted
+                # signed view of the child (kit_wave stages counted=True + its export gates.json) is the final view,
+                # not a provisional one: the type counts on its own sign-off, no STA re-sign owed.
+                sv = signed_view_ok(cdir, m, meta, plan_lef)
+                if sv:
+                    rec.update(source="signed", counted=sv, final=True)
                 if detail is not None:
                     rec["abstract_detail"] = detail
                 break
@@ -815,9 +821,13 @@ def make(a):
             rec = dict(source="contract", directions=dsrc, clocks=sorted(clocks), routed_tried=tried[:4])
         lef = plan_lef or os.path.join(vd, m + ".lef")
         tt, ff = os.path.join(vd, m + "_tt.lib"), os.path.join(vd, m + "_ff.lib")
+        final = bool(rec.get("final"))
         rec.update(kind=kind, inst=entry.get("inst"), lef=lef, lef_from_plan=bool(plan_lef), lef_sha256=sha256(lef),
                    tt=tt, tt_sha256=sha256(tt), ff=ff, ff_sha256=sha256(ff),
-                   kit_libs=[os.path.basename(tt), os.path.basename(ff)], final=False)
+                   kit_libs=[os.path.basename(tt), os.path.basename(ff)], final=final)
+        if final:   # = resign()'s FINAL record: the kit's macro libs must keep these exact bytes (autopilot classify)
+            rec.update(final_lef=lef, final_tt=tt, final_ff=ff,
+                       final_sha256={os.path.basename(tt): rec["tt_sha256"], os.path.basename(ff): rec["ff_sha256"]})
         children[m] = rec
     if errors:
         print("PROV_FAIL " + " | ".join(errors))
@@ -846,17 +856,43 @@ def make(a):
     op = os.path.join(pd, base)
     with open(op, "w") as f:
         json.dump(plan, f, indent=1)
-    marker = dict(schema=SCHEMA, status="PROVISIONAL", rule=RULE, type=tn, die=(plan.get("die") or {}).get("name"),
+    status = "FINAL" if children and all(v.get("final") for v in children.values()) else "PROVISIONAL"
+    marker = dict(schema=SCHEMA, status=status, rule=RULE, type=tn, die=(plan.get("die") or {}).get("name"),
                   plan=plan_path, plan_sha256=sha256(plan_path), overlay_plan=op, overlay_sha256=sha256(op),
                   generated=datetime.datetime.now().astimezone().isoformat(timespec="seconds"), children=children)
     with open(os.path.join(out, "provisional_views.json"), "w") as f:
         json.dump(marker, f, indent=1)
     print("PROV_JSON " + json.dumps(dict(ok=True, overlay_plan=op, marker=os.path.join(out, "provisional_views.json"),
-                                         children={k: v["source"] for k, v in children.items()})))
+                                         status=status, children={k: v["source"] for k, v in children.items()})))
     return 0
 
 
 # ------------------------------------------------------------------------------------------------------ resign
+SIGNED_VERDICTS = ("SIGNED", "LOCAL_PASS_NEEDS_PARENT")
+
+
+def signed_view_ok(cdir, module, meta, plan_lef=None):
+    """'' unless candidate dir cdir is the COUNTED signed view of module: kit_wave staged it with counted=True (a
+    prov_view_sources entry from counted_child_views.py / export_view.py of the counter's own sign-off record) and its
+    export gates.json says the module signed (SIGNED / LOCAL_PASS_NEEDS_PARENT, OWNER 11-03) with a complete view.  A
+    plan-named LEF (noview child) must be pin/OBS-compatible with the signed LEF.  -> the signed record path."""
+    if not meta.get("counted"):
+        return ""
+    try:
+        g = json.load(open(os.path.join(cdir, "gates.json")))
+    except (OSError, ValueError):
+        return ""
+    if g.get("type") not in (None, module) or (str(g.get("signoff") or "").split() or [""])[0] not in SIGNED_VERDICTS:
+        return ""
+    if g.get("view_complete") is not True:
+        return ""
+    if plan_lef:
+        sl = os.path.join(cdir, module + ".lef")
+        if not os.path.isfile(sl) or lef_compatible(plan_lef, sl, module):
+            return ""
+    return str(g.get("signoff_record") or meta.get("signoff") or meta.get("job") or "counted")
+
+
 def lef_compatible(prov_lef, signed_lef, module):
     """[] when the signed LEF can replace the provisional one under the same routed parent (pins, obs)"""
     _, _, pp, po = lef_info(prov_lef)

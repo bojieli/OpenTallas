@@ -413,6 +413,54 @@ PRELINT_HISTORY = (
 )
 
 
+COUNT_CACHE = Path.home() / ".local/state/fleet-viz/release_tree_plan_cache.json"
+_COUNT_SIGNED = {}
+
+
+def count_signed_modules(d, die):
+    """KW-FIX-35-V 11-08 (COORD: the prelint and the count drifted): the child modules the RELEASE COUNT has signed
+    for this die -- the same record source the count uses (release_tree_plan cache: plans[*].signed_cores, matched by
+    module name like the counter).  None when the cache is unreadable (no claim either way).  Die option count_cache
+    overrides the path."""
+    path = Path(d.get("count_cache") or COUNT_CACHE)
+    try:
+        mt = path.stat().st_mtime
+    except OSError:
+        return None
+    hit = _COUNT_SIGNED.get(str(path))
+    if not hit or hit[0] != mt:
+        try:
+            c = json.loads(path.read_text())
+        except (OSError, ValueError):
+            return None
+        by = {}
+        for k, p in (c.get("plans") or {}).items():
+            if not isinstance(p, dict):
+                continue
+            dn = p.get("die") or str(k).split("/", 1)[0]
+            for m, recs in (p.get("signed_cores") or {}).items():
+                if recs:                     # the count lists only signed records per module
+                    by.setdefault(dn, set()).add(m)
+        hit = _COUNT_SIGNED[str(path)] = (mt, by)
+    return hit[1].get(die, set())
+
+
+def count_view_note(d, deps, counted):
+    """'' or '; count: ...' -- per child: signed in the count AND a counted signed view in prov_view_sources (the kit
+    is built on it and is FINAL), signed in the count but NO wave view (export it: counted_child_views.py), unsigned"""
+    if counted is None or not deps:
+        return ""
+    pvs = d.get("prov_view_sources") or {}
+    has = lambda m: any(prov_counted(c) for c in (pvs.get(m) if isinstance(pvs.get(m), list) else [pvs.get(m)] if pvs.get(m) else []))
+    sv = [m for m in deps if m in counted and has(m)]
+    nv = [m for m in deps if m in counted and not has(m)]
+    un = [m for m in deps if m not in counted]
+    parts = ([f"signed+view {len(sv)}"] if sv else []) + (
+        [f"SIGNED IN COUNT BUT NO WAVE VIEW {len(nv)} ({','.join(nv[:4])})"] if nv else []) + (
+        [f"unsigned {len(un)} ({','.join(un[:4])})"] if un else [])
+    return "; count: " + ", ".join(parts)
+
+
 def lint_reason(issues):
     kinds = sorted({str(i).split(":", 1)[0] for i in issues})
     return f"LINT {'+'.join(kinds)}: gen-time lint before launch (no build), see kit_wave_stages.tsv LINT rows"
@@ -422,12 +470,14 @@ def prelint(d, die, names, state):
     """-> {item: [issue, ...]} for the current plan of record: probe (plan-static) issues + verdict history on the SAME
     plan block (key) that no named fix released.  names: {type: block_sha} (or a set)."""
     out = {t: list(v) for t, v in (d.get("_plan_lint") or {}).items()}
+    counted = count_signed_modules(d, die)
     for t, f in (d.get("_plan_flags") or {}).items():
         if f in ("planned", "noview") and not (f == "planned" and d.get("planned_core_flat")):
+            deps = (d.get('_plan_deps') or {}).get(t, [])
             out.setdefault(t, []).append(f"view: planned hard core without a signed view: "
-                                         f"{','.join((d.get('_plan_deps') or {}).get(t, [])[:4])} "
+                                         f"{','.join(deps[:4])} "
                                          + ("(launches on PROVISIONAL child views, KW-PROV-1)" if prov_on(d)
-                                            else "(waits, WAIT-DEP)"))
+                                            else "(waits, WAIT-DEP)") + count_view_note(d, deps, counted))
     fixed = set((d.get("retry_fix") or {}).keys()) if isinstance(d.get("retry_fix"), dict) else set()
     items = (state or {}).get("items") or {}
     blocks = names if isinstance(names, dict) else {}
@@ -1283,6 +1333,14 @@ def prov_job_module(j, mods):
     return m.group("module") if m and m.group("module") in mods else None
 
 
+def prov_counted(c):
+    """KW-FIX-35-V 11-08: a prov_view_sources candidate that is the COUNTED signed view of the child (exported by
+    counted_child_views.py / export_view.py from the counter's own sign-off record: job 'COUNTED <module> ...', or an
+    explicit counted: true).  prov_view.py make still checks pins / libs and the export gates.json before it marks the
+    child FINAL."""
+    return bool(c.get("counted")) or str(c.get("job") or "").startswith("COUNTED ")
+
+
 def prov_sources(jobs, die, modules, d=None, hub="intel2"):
     """{module: [candidate]} routed DRC-clean abstracts of each child module, best first: die option
     prov_view_sources {module: [{host, dir[, base]}]} (die owner pick: dir holds <m>_tt.lib, <m>_ff.lib, <m>.lef) first, then autopilot queue jobs of the die whose
@@ -1369,8 +1427,10 @@ def prov_stage(sp, run, remote, fail, out, rtl=""):
         for i, c in enumerate(cands):
             dst = relay / m / f"c{i}"
             dst.mkdir(parents=True, exist_ok=True)
+            counted = prov_counted(c)
             files = [f"{c['dir']}/{m}_tt.lib", f"{c['dir']}/{m}_ff.lib", f"{c['dir']}/{m}.lef"] + (
-                [f"{c['base']}/{m}.lef"] if c.get("base") else [])
+                [f"{c['base']}/{m}.lef"] if c.get("base") else []) + (
+                [f"{c['dir']}/gates.json", f"{c['dir']}/provenance.json"] if counted else [])
             for f in files:
                 if (dst / os.path.basename(f)).exists():
                     continue
@@ -1379,6 +1439,8 @@ def prov_stage(sp, run, remote, fail, out, rtl=""):
             # Explicit already-exported precise abstract; no hidden OpenROAD work in the provisional stage.
             # Fixed staging names avoid a detailed source named <module>.lef overwriting the captured base.
             staged = dict(c)
+            if counted:
+                staged["counted"] = True     # KW-FIX-35-V: prov_view.py make takes it as the FINAL signed view
             for key, name in (("detailed_lef", "detail_view.lef"), ("detailed_receipt", "detail_receipt.json")):
                 if isinstance(c.get(key), str) and c[key]:
                     f = c[key] if os.path.isabs(c[key]) else os.path.join(c["dir"], c[key])
@@ -1402,6 +1464,7 @@ def prov_stage(sp, run, remote, fail, out, rtl=""):
         return None, fail("prov_views", "PROVISIONAL view FAIL (KW-PROV-1): no provisional abstract for a child of "
                           f"{T}\n" + txt, f"{G}:{P}")
     out["provisional"] = js.get("children") or {}
+    out["prov_status"] = js.get("status") or "PROVISIONAL"
     return js["overlay_plan"], 0
 
 
@@ -2546,10 +2609,13 @@ def run_item(spec_path):
         # KW-PROV-1 marker: the kit carries provisional_views.json (autopilot classify turns its SIGNED into
         # LOCAL_PASS_NEEDS_PARENT = WAIT-PARENT until every child view is FINAL) and W/gen/PROVENANCE.json says
         # PROVISIONAL, so release_tree_plan never counts it as a versioned sign-off
-        pv = (f"cp {q(W)}/prov/provisional_views.json {q(K)}/provisional_views.json && python3 -c "
+        # KW-FIX-35-V: a marker FINAL (every child = its counted signed view) is a normal kit: no PROVISIONAL provenance
+        final = q("import json,sys; sys.exit(0 if json.load(open(sys.argv[1])).get('status') == 'FINAL' else 1)")
+        pv = (f"cp {q(W)}/prov/provisional_views.json {q(K)}/provisional_views.json && "
+              f"{{ python3 -I -c {final} {q(K)}/provisional_views.json || python3 -c "
               + q("import json,sys;json.dump({'schema':'opentallas.provisional_view.v1','verdict':'PROVISIONAL',"
                   "'note':'KW-PROV-1: built on provisional child views; STA-only re-sign on the signed child libs owed'},"
-                  "open(sys.argv[1],'w'))") + f" {q(W)}/gen/PROVENANCE.json")
+                  "open(sys.argv[1],'w'))") + f" {q(W)}/gen/PROVENANCE.json; }}")
         rc, txt = run("prov_mark", remote(pv), idempotent=True)
         if rc:
             return fail("prov_views", txt)
@@ -3282,8 +3348,12 @@ def collect(AP, cfg, st, notices):
         rec["evidence"] = res.get("evidence", "")
         rec["kit"] = res.get("kit", "")
         if res.get("provisional"):                      # KW-PROV-1: {child module: routed <job> | contract}
+            # KW-FIX-35-V: a child built on its counted signed view ('signed') is final, not owed a re-sign
             rec["provisional"] = {m: (v.get("source") if isinstance(v, dict) else v)
-                                  for m, v in res["provisional"].items()}
+                                  for m, v in res["provisional"].items()
+                                  if (v.get("source") if isinstance(v, dict) else v) != "signed"}
+            rec["prov_signed"] = sorted(m for m, v in res["provisional"].items()
+                                        if (v.get("source") if isinstance(v, dict) else v) == "signed")
         if res.get("verdict") == "PASS":
             for k in ("resume", "stage_fp"):
                 if res.get(k):
