@@ -1503,7 +1503,12 @@
         ]
       },
       "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:06 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 18 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
-      "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 10:52 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:37 PST) first in prov_view_sources; changed 1: qkd_hr_core_prompt. Revert: prov_view_sources <- prov_view_sources_prev_kw35cv"
+      "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 10:52 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:37 PST) first in prov_view_sources; changed 1: qkd_hr_core_prompt. Revert: prov_view_sources <- prov_view_sources_prev_kw35cv",
+      "route_hold_items": {
+        "kv3_io_cor": "Root 1113: geometry-only continuation; actual endpoint/structural review before route release",
+        "kv3_io_cor_v1": "Root 1113: geometry-only continuation; actual endpoint/structural review before route release",
+        "kv3_io_ft_v1": "Root 1113: geometry-only continuation; actual endpoint/structural review before route release"
+      }
     },
     "s81": {
       "enabled": true,
