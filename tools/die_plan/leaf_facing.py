@@ -2,7 +2,7 @@
 """S81-TYPES-2 leaf vs/ve_m facing form, per row (from TYPE-CONS-5 leafmv.py, pilot t27/t42 vM).
 Rule: vs pin edge faces ve_m pin edge, same mirror state, vs_x = ve_m_x -40 (R0/MX) or +40 (MY/R180), gap >= 17.28.
 Opposite mirror: flip vs in x.  No site at the ideal x: slide d um and require gap >= 0.21*d + 4 (5.3 pins/um, 25.5 M6 tr/um).
-vn_a/b within 24 um of a VP macro: shift vn away to 41 um (t27 vN).  With TAPS.json, moved cores also stay off the plan's clock and core taps (costs 8 rows their site, so not used by the 11-07 batch).
+vn_a/b within 24 um of a VP macro: shift vn away to 41 um (t27 vN); still < 24 um (blocked): shift the vn pair + the cores it hits east as a group to a >= 95-um field (S81-LEAF5-1 t5).  With TAPS.json, moved cores also stay off the plan's clock and core taps (costs 8 rows their site, so not used by the 11-07 batch).
 usage: leaf_facing.py PLAN TYPE [TAPS.json: {type: {grid, core, clear}}] -> one JSON line"""
 import json, re, sys
 G = 8.64; EDGE = 4.32; MGAP = 8.64
@@ -104,10 +104,45 @@ for a in vn:
         q = [p[a][0] + side * k * G, p[a][1]]
         if free(a, q, p):
             p = dict(p); p[a] = q; shift = side * k * G; break
+# S81-LEAF5-1 11-08 vn field (t5 a3: GRT overflow 17610, all of it in the vn_b / VP channel).  vn_b carries 786 of its
+# 919 signal pins on its W face (M4, OBS M1-M5) and the leaf pin bus climbs the same channel, so 15.1 um (~470 usable
+# vertical tracks) took ~2,000 nets.  When a vn core is still < VN_TRIG um from a VP macro after the step above (it was
+# blocked, e.g. by ve_u_s 15 um to the E), shift the vn pair away from the VP column as one group: every core the moved
+# group would hit joins it (closure), and vs joins when ve_m moves (keeps the facing gap).  Smallest k*G giving a field
+# >= VN_FIELD um wins (else the largest field >= VN_FIELD_MIN that fits); both vn land x-aligned on the hot one (the 398-wire vn bus stays straight); VP macros never move;
+# no site found = rule skipped (vn_field 'blocked').
+VN_TRIG = 24; VN_FIELD = 95; VN_FIELD_MIN = 60
+vn_field = None
+def vpgap():
+    gs = [(xgap(a, b), a, b) for a in vn for b in vp if "ln" in b]
+    gs = [x for x in gs if x[0] is not None and x[0] >= 0]
+    return min(gs) if gs else None
+vg = vpgap()
+if vg and vg[0] < VN_TRIG:
+    g1, a1, b1 = vg; side = 1 if p[b1][0] < p[a1][0] else -1; vn_field = 'blocked'
+    ks = []
+    for fld in (VN_FIELD, VN_FIELD_MIN):
+        k0 = max(1, -int(-(fld - g1) // G))
+        ks += [k for k in range(k0, k0 + 6) if k not in ks] if fld == VN_FIELD else [k for k in range(min(ks) - 1, k0 - 1, -1)]
+    for k in ks:
+        dx = side * k * G; grp = set(vn); grow = True
+        to = lambda n: [p[a1][0] + dx if n in vn else p[n][0] + dx, p[n][1]]
+        while grow:
+            grow = False
+            for m in hc:
+                if m in grp or m in vp: continue
+                r = rect(p[m], hc[m]['s'])
+                if any(inter(r, rect(to(n), hc[n]['s']), MGAP - 0.01) for n in grp):
+                    grp.add(m); grow = True
+            if M in grp and S not in grp: grp.add(S); grow = True
+        q = dict(p)
+        for n in grp: q[n] = to(n)
+        if all(free(n, q[n], q) for n in grp):
+            p = q; vn_field = dict(dx=round(dx, 2), gap0=round(g1, 2), gap=round(g1 + k * G, 2), group=sorted(grp)); break
 out = {}
 for k, v in p.items():
     dxx, dyy = v[0] - hc[k]['o'][0], v[1] - hc[k]['o'][1]
     if abs(dxx) > 1e-6 or abs(dyy) > 1e-6 or (k == S and flip):
         out[hc[k]['inst']] = [round(v[0], 3), round(v[1], 3)] + ([FLIP[rs]] if k == S and flip else [])
 env = ','.join(f"{i}:{v[0]}:{v[1]}" + (f":{v[2]}" if len(v) > 2 else '') for i, v in out.items())
-print(json.dumps(dict(type=T, mode=mode, flip=flip, dx=round(dx, 2), gap=g, block=block, vn_gap=g0 and round(g0, 2), vn_shift=round(shift, 2), cost0=round(cost({n: h['o'] for n, h in hc.items()})), cost=round(cost(p)), ft=len(sites), moves=out, env=env, pos={k: v for k, v in p.items()})))
+print(json.dumps(dict(type=T, mode=mode, flip=flip, dx=round(dx, 2), gap=g, block=block, vn_gap=g0 and round(g0, 2), vn_shift=round(shift, 2), vn_field=vn_field, cost0=round(cost({n: h['o'] for n, h in hc.items()})), cost=round(cost(p)), ft=len(sites), moves=out, env=env, pos={k: v for k, v in p.items()})))
