@@ -39,6 +39,7 @@
  "estimated_fill": 0.3367972090623145,
  "usable_row_fill_after_4p32um_margin": 0.3681109991610834,
  "estimated_cells": 100000,
+ "initial_buffer_fanout_target": 8,
  "estimate_status": "pre-synthesis sizing; actual cells/area still required",
  "max_manhattan_um": 397.44,
  "reach_limit_um": 405,
@@ -53,8 +54,7 @@
    "M6"
   ],
   "N": [
-   "M5",
-   "M7"
+   "M5"
   ],
   "E": [
    "M4",

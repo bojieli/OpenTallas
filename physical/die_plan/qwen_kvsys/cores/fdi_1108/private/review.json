@@ -1,0 +1,17 @@
+{
+ "picture": "physical/die_plan/qwen_kvsys/cores/fdi_1108/private/floorplan.png",
+ "viewed": true,
+ "verdict": "PASS-COND",
+ "stage": "pre-place model/pin review",
+ "release": "ONE PLACE pilot only; view actual density/clock/pins before CTS/GRT/route",
+ "findings": [
+  "A half+valid W, B half+valid N, pairedword+valid E; registered faces keep wide buses local",
+  "core198.72um square: maxL1span397.44um below405um; no macro walls or macro-channel pin blockages",
+  "clk centre99.384,99.36; singleclock833ps; no clock over macros",
+  "N signals M5 only, W/E M4/M6; signals <=M6",
+  "no macros: planned M2rails and M5stripes have continuous access",
+  "input face fanout target8 applies to this initial kit; placed control fanout and clock spread must be read",
+  "native storage16688bits remains flop arrays; no hidden SRAM/read-latency assumption"
+ ],
+ "smells": "none visible in pin/outline geometry; actual cell congestion/fanout not yet measured"
+}

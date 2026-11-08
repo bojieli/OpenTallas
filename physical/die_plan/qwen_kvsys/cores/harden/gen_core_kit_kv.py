@@ -1341,6 +1341,9 @@ def main():
         tid = f"{astk_strap_master.MASTER}__{w:g}x{h:g}"
     recs = json.load(open(a.recipes)) if Path(a.recipes).is_file() else {}
     rec = resolve_recipe(recs, mod)
+    max_fanout = int(rec.get("max_fanout", 64))
+    if max_fanout < 1:
+        raise SystemExit("max_fanout recipe must be positive")
     if not a.hard_children and rec.get("hard_children"):
         a.hard_children = str(REPO / rec["hard_children"])
     kd = Path(a.out) / tid
@@ -1870,8 +1873,8 @@ def main():
         # Match the sign-off fanout ceiling at every repair_design stage. A tighter cap of 24
         # split timing-critical decode broadcasts into serial weak-buffer chains (FLOW-FANOUT).
         # Keep the routed slew/cap margins; timing-driven repair chooses the buffer tree.
-        (kd / "max_fanout.tcl").write_text("# KV 10-25 core flow basis: fanout cap 64 for every repair_design (in-flow, not in the golden SDC)\n"
-                                           "set_max_fanout 64 [current_design]\nputs \"KVCORES max_fanout 64\"\n")
+        (kd / "max_fanout.tcl").write_text(f"# Initial design target, not a sign-off waiver: fanout cap {max_fanout}\n"
+                                           f"set_max_fanout {max_fanout} [current_design]\nputs \"KVCORES max_fanout {max_fanout}\"\n")
     mcmm = flow_basis and (not lefs or all(libs_ff))
     for f in ("corners.tcl", "run_kit_kv.sh", "core_preflight.py", "core_keep.tcl", "core_keep_release.tcl"):
         shutil.copyfile(HERE / f, kd / f)
