@@ -6,24 +6,30 @@ projection, nothing between) or the outline, need = pins on the facing faces x 0
 need - gap.  A die re-tile cannot grow S81 slots by the approved +349/+291 without breaking abutment (lattice
 stretch needs >= +443/+357, see the queue post), so this event works INSIDE the current outline:
 
-  per axis, the type's "free" lines are the x (y) intervals no hard core spans.  A deficit channel can only widen
-  where its gap holds free lines; slack is moved there from free lines whose every containing channel has surplus
-  (greedy transfer, never driving any channel below min(need, its old gap)).  The result is ONE monotone
-  piecewise-linear map per axis: slope 1 over every core span (cores move rigidly by a grid-snapped shift), free
-  intervals rescaled.  The map is applied to every type-local coordinate (hard_cores/contents origins, internal
-  station sites, ft bit sites, clock taps / relays / bands, ...) EXCEPT points on the two faces parallel to the axis
-  (face windows, ft in/out windows, chain face ends stay put: the slot's abutment and die ports are untouched).
-  Outline, buses, pins_file, track_offset, RTL: unchanged.  Remaining deficits are reported per core face (re-pin /
-  RE-FORM asks).
+  per axis, the type's "free" lines are the x (y) intervals no hard core spans (plus zero-length cuts at abutted
+  edges).  A deficit channel can only widen where its gap holds free lines; slack moves there from free lines whose
+  every containing channel has surplus (greedy, never driving a channel below min(need, its old gap)).
+  COORD 08:41 option (C) form (grid safe): every shift is a whole number of --grid steps (8.64 um = core-origin
+  lattice, a multiple of every M2-M9 pitch, the 4.32 PG period and the ft site grids); a widening opens at one cut
+  line, a narrowing removes one OBJECT-FREE band (no tap / site / content origin inside it), so cores move rigidly
+  and no point leaves its grid.  Face points (windows, ft in/out, chain ends) stay put: abutment and die ports are
+  untouched.  Then greedy core MIRROR flips (MY / MX) are kept only where the type shortfall drops: the
+  track_offset is re-fit for the new orient (S81 gen_plan_v4.core_track_offset rule, no more off-track pins than
+  before), and a core named anywhere else in the type (core clock taps, relays, landings) or with an orientation
+  specific pins file never flips.  Per type, the clock-site rules (tap_mode sites, core clock groups) run on the
+  result; an added tap the move put in a halo goes back to its base xy, else the nearest legal 4.32 site, else the
+  type keeps its base form.  Outline, buses, pins_file, RTL: unchanged.  Remaining deficits are reported per core
+  face (repin_asks.py).  No type grows (a type grows only on a real GRT fail: two strikes -> RE-FORM).
 
   python3 -I tools/die_plan/slot_channel_event.py BASE OUT EVENT --pins-root DIR [--skip-types a,b] [--only-types a,b]
-                                                  [--layers 4] [--analyze]
+                                                  [--layers 4] [--grid 8.64] [--no-flips] [--analyze]
 """
 import argparse
 import copy
 import hashlib
 import json
 import math
+import re
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -129,10 +135,12 @@ def free_intervals(boxes, ax, L):
     return sorted(out)
 
 
-def plan_axis(chs, fr, grid):
-    """greedy slack transfer -> new free-interval lengths; returns (new_lengths, rows)"""
+def plan_axis(chs, fr, grid, caps=None):
+    """greedy slack transfer in whole grid steps -> new free-interval lengths; returns (new_lengths, rows).
+    caps[k]: the most interval k may give (its widest object-free band, grid-floored)."""
     L = [b - a for a, b in fr]
     n = list(L)
+    caps = list(caps) if caps is not None else [math.floor(x / grid + EPS) * grid for x in L]
     mem = [[j for j, (a, b) in enumerate(fr) if a >= lo - EPS and b <= hi + EPS] for (_, lo, hi, _, _, _) in chs]
     gap = [hi - lo for (_, lo, hi, _, _, _) in chs]
     floor = [min(need, g) for (_, _, _, need, _, _), g in zip(chs, gap)]
@@ -149,23 +157,22 @@ def plan_axis(chs, fr, grid):
         if cur(i) >= need - EPS or not mem[i]:
             continue
         recv = max(mem[i], key=lambda j: L[j])
-        for k in sorted(range(len(fr)), key=lambda k: -n[k]):
+        for k in sorted(range(len(fr)), key=lambda k: -caps[k]):
             d = need - cur(i)
             if d <= EPS:
                 break
-            if k in mem[i]:
-                continue
-            cap = n[k] - 0.0
+            if k in mem[i] or n[k] > L[k] + EPS:
+                continue                      # never take from a receiver
+            cap = caps[k] - (L[k] - n[k])
             for i2 in in_ch[k]:
                 if recv in mem[i2]:
                     continue          # a channel holding both donor and receiver keeps its width
                 cap = min(cap, cur(i2) - floor[i2])
-            # receiver may sit in channels too: they only gain
-            cap = math.floor(max(0.0, min(cap, d)) / grid + EPS) * grid if grid else max(0.0, min(cap, d))
-            if cap <= EPS:
+            amt = min(math.floor(max(0.0, cap) / grid + EPS) * grid, math.ceil(d / grid - EPS) * grid)
+            if amt <= EPS:
                 continue
-            n[k] -= cap
-            n[recv] += cap
+            n[k] -= amt
+            n[recv] += amt
     rows = []
     for i, (ax, lo, hi, need, core, face) in enumerate(chs):
         g1 = cur(i)
@@ -175,24 +182,42 @@ def plan_axis(chs, fr, grid):
     return n, rows
 
 
-def axis_map(fr, n):
-    """monotone map x -> x' with slope 1 outside free intervals; free interval j scaled to n[j]"""
-    knots = []
-    acc = 0.0
-    for (a, b), nj in zip(fr, n):
-        knots.append((a, a + acc))
-        acc += nj - (b - a)
-        knots.append((b, b + acc))
+def free_bands(fr, pts):
+    """per free interval: the object-free sub-bands (u, v) between movable type points (sorted, widest first)"""
+    out = []
+    for a, b in fr:
+        cs = sorted({a, b} | {p for p in pts if a + EPS < p < b - EPS})
+        out.append(sorted(((u, v) for u, v in zip(cs, cs[1:])), key=lambda g: -(g[1] - g[0])) or [(a, b)])
+    return out
+
+
+def axis_map(fr, n, bands):
+    """grid-STEP monotone map (every shift is a whole number of grid steps, so all type grids survive): a growing
+    interval opens at the middle of its widest object-free band; a shrinking one removes a band from its widest
+    object-free band (no point lies inside a removed band)."""
+    ev = []                                   # (pos, delta, width): x > pos (+delta) / x >= pos + width (-width)
+    for (a, b), nj, bd in zip(fr, n, bands):
+        d = nj - (b - a)
+        u, v = bd[0]
+        if d > EPS:
+            ev.append(("g", (u + v) / 2, d))
+        elif d < -EPS:
+            if v - u < -d - EPS:
+                raise AssertionError(f"band {u}-{v} narrower than the removal {-d}")
+            c = u + (v - u + d) / 2
+            ev.append(("s", c, -d))
 
     def m(x):
-        prev = (0.0, 0.0)
-        for (k, v) in knots:
-            if x <= k + EPS:
-                if (k - prev[0]) <= EPS:
-                    return x + (v - k)
-                return prev[1] + (x - prev[0]) * (v - prev[1]) / (k - prev[0])
-            prev = (k, v)
-        return x + (prev[1] - prev[0])
+        y = x
+        for k, p, d in ev:
+            if k == "g" and x > p + EPS:
+                y += d
+            elif k == "s":
+                if x >= p + d - EPS:
+                    y -= d
+                elif x > p + EPS:
+                    y -= x - p
+        return y
     return m
 
 
@@ -242,7 +267,182 @@ def transform_type(t, mx, my, W, H):
     return t
 
 
-def build(raw, root, skip, only, layers, grid, analyze):
+def movable_points(t, W, H):
+    """x and y of every type-local point the map would move (everything but hard-core origins and face points)"""
+    xs, ys = set(), set()
+
+    def rx(x):
+        xs.add(round(x, 4))
+        return x
+
+    def ry(y):
+        ys.add(round(y, 4))
+        return y
+    tt = copy.deepcopy(t)
+    tt["hard_cores"] = []
+    transform_type(tt, rx, ry, W, H)
+    return xs, ys
+
+
+_LY = {}
+
+
+def layer_pins(hc, root):
+    """[(layer, x, y)] core-frame pin centres (pins[] + pins_file) for the track-offset proof"""
+    out = [(p.get("layer"), *p["xy"]) for p in hc.get("pins", [])]
+    pf = hc.get("pins_file")
+    if pf:
+        if pf not in _LY:
+            f = Path(root) / pf
+            js = json.loads(f.read_text()) if f.exists() else []
+            js = js.get("pins", js) if isinstance(js, dict) else js
+            _LY[pf] = [(q.get("layer"), q["x"], q["y"]) for q in js]
+        out += _LY[pf]
+    return out
+
+
+def track_fit(hc, root, o):
+    """S81 gen_plan_v4.core_track_offset for orient o: (dx, dy, off-track M2-M7 pins) on the 0.012 sub-grid"""
+    import schema as S
+    Ls = {x["name"]: x for x in S.ASAP7_LAYERS}
+    w, h = hc["outline_um"]
+    ox, oy = hc["origin_um"]
+
+    def pt(x, y):
+        return {"R0": (x, y), "MX": (x, h - y), "MY": (w - x, y), "R180": (w - x, h - y)}[o]
+
+    def off(c, l):
+        k = (c - l["offset_um"]) / l["pitch_um"]
+        return abs(k - round(k)) > 1e-4
+    pins = [(ln, x, y) for ln, x, y in layer_pins(hc, root) if ln in Ls and ln != "M1"]
+    V = [(pt(x, y)[0], Ls[ln]) for ln, x, y in pins if Ls[ln]["dir"] == "V"]
+    Hh = [(pt(x, y)[1], Ls[ln]) for ln, x, y in pins if Ls[ln]["dir"] == "H"]
+    cand = [round(0.012 * k, 3) for k in range(0, 24)]
+    c0 = hc.get("track_offset_um", [0.108, 0.012])
+
+    def best(P, c, base):
+        sc = {d: sum(off(base + d + q, l) for q, l in P) for d in cand}
+        m = min(sc.values())
+        c = round(c, 3)
+        return (c if sc.get(c) == m else min(d for d in cand if sc[d] == m)), m
+    dx, bx = best(V, c0[0], ox)
+    dy, by = best(Hh, c0[1], oy)
+    return dx, dy, bx + by
+
+
+FLIP = dict(MY={"R0": "MY", "MY": "R0", "MX": "R180", "R180": "MX"},
+            MX={"R0": "MX", "MX": "R0", "MY": "R180", "R180": "MY"})
+ORIENT_PINS = ("_MX", "_MY", "MX.", "MY.", "_f.", "_flip", "_mirror")
+
+
+def flip_ok(t, hc):
+    """a core may flip when nothing else in the type names it (core clock taps, relays, landings, access stacks)
+    and its pins file is not orientation-specific"""
+    pf = hc.get("pins_file") or ""
+    if any(k in pf for k in ORIENT_PINS) or hc.get("clock_entry_access") or hc.get("straps") \
+            or hc.get("parent_id_straps"):
+        return False
+    rest = json.dumps({k: v for k, v in t.items() if k != "hard_cores"})
+    return f'"{hc["inst"]}' not in rest and f'{hc["inst"]}.' not in rest and f'{hc["inst"]}/' not in rest
+
+
+def evaluate(t, root, layers, grid, W, H, pts):
+    bx = boxes_of(t, root)
+    chs = channels(t, bx, layers)
+    d0 = sum(max(0.0, need - (hi - lo)) for (_, lo, hi, need, _, _) in chs)
+    res = {}
+    for ax, Lx in ((0, W), (1, H)):
+        c = [ch for ch in chs if ch[0] == ax]
+        fr = free_intervals(bx, ax, Lx)
+        bands = free_bands(fr, pts[ax])
+        caps = [math.floor((bd[0][1] - bd[0][0]) / grid + EPS) * grid for bd in bands]
+        n, rows = plan_axis(c, fr, grid, caps)
+        res[ax] = (fr, n, rows, bands)
+    d1 = sum(r["short"] for ax in (0, 1) for r in res[ax][2])
+    return d0, d1, chs, res
+
+
+def boxes_clear(t, root, W, H):
+    bx = boxes_of(t, root)
+    for i, a in enumerate(bx):
+        if a[0] < -EPS or a[1] < -EPS or a[2] > W + EPS or a[3] > H + EPS:
+            return False
+        for b in bx[i + 1:]:
+            if min(a[2], b[2]) - max(a[0], b[0]) > EPS and min(a[3], b[3]) - max(a[1], b[1]) > EPS:
+                return False
+    return True
+
+
+def mini_plan(raw, tn, t):
+    m = {k: v for k, v in raw.items() if k not in ("partition_types", "partitions")}
+    m["partition_types"] = {tn: t}
+    m["partitions"] = [p for p in raw["partitions"] if p["type"] == tn]
+    return m
+
+
+def mini_errors(raw, tn, t):
+    """the per-type clock-site rules schema.validate runs (tap sites by tap_mode, core clock groups) on a one-type
+    plan (schema.Plan of the type and its partitions only: milliseconds, so every candidate is checked)"""
+    import schema as S
+    import taps as T
+    import core_clock_groups as CG
+    m = mini_plan(raw, tn, copy.deepcopy(t))
+    out = set()
+    try:
+        P = S.Plan(m)
+    except Exception as exc:              # noqa: BLE001  (any plan-construction error is a rule failure here)
+        return {f"plan: {exc}"}
+    mode = t.get("clock", {}).get("tap_mode")
+    for fn in ((T.grid_explicit_sites,) if mode == "grid+explicit" else (T.explicit_tap_sites,)
+               if mode == "explicit" else ()) + (CG.groups,):
+        try:
+            fn(P, tn)
+        except (ValueError, KeyError, TypeError) as exc:
+            out.add(str(exc))
+    return out
+
+
+TAP_STEP = 4.32
+
+
+def legalize_type(raw, Q, tn, orig_added):
+    """per-type plan rules on the repacked type (one-type plan through schema.validate, no new error vs the base type).
+    An added clock tap the map put inside a moved core halo / next to a re-cleared grid tap goes back to its base xy
+    when that is legal, else to the nearest legal site on the 4.32-um PG period within +-8 steps; else the type keeps
+    its base form (returns ok=False)."""
+    base = mini_errors(raw, tn, raw["partition_types"][tn])
+    t = Q["partition_types"][tn]
+    fixes = []
+    orig = {p["name"]: p["xy"] for p in (orig_added or [])}
+    for _ in range(64):
+        new = sorted(e for e in mini_errors(raw, tn, t) if e not in base)
+        if not new:
+            return True, fixes, []
+        m = re.search(r"added tap (clk_t\d+) violates", new[0])
+        if not m:
+            return False, fixes, new
+        nm = m.group(1)
+        tp = next((p for p in t.get("clock", {}).get("added_taps", []) if p["name"] == nm), None)
+        if tp is None or any(f["tap"] == nm for f in fixes):
+            return False, fixes, new
+        x0, y0 = tp["xy"]
+        cands = ([tuple(orig[nm])] if nm in orig else []) + sorted(
+            ((round(x0 + i * TAP_STEP, 4), round(y0 + j * TAP_STEP, 4)) for i in range(-8, 9) for j in range(-8, 9)
+             if i or j), key=lambda q: abs(q[0] - x0) + abs(q[1] - y0))
+        done = False
+        for c in cands:
+            tp["xy"] = [c[0], c[1]]
+            if not any(f"added tap {nm} violates" in e for e in mini_errors(raw, tn, t) if e not in base):
+                fixes.append(dict(tap=nm, mapped=[x0, y0], to=[c[0], c[1]]))
+                done = True
+                break
+        if not done:
+            tp["xy"] = [x0, y0]
+            return False, fixes, new
+    return False, fixes, ["legalize: too many rounds"]
+
+
+def build(raw, root, skip, only, layers, grid, analyze, flips=True):
     Q = copy.deepcopy(raw)
     edits, report = [], []
     for tn in sorted(Q["partition_types"]):
@@ -250,28 +450,61 @@ def build(raw, root, skip, only, layers, grid, analyze):
         if tn in skip or (only and tn not in only) or t.get("hard") or not t.get("hard_cores"):
             continue
         W, H = t["outline_um"]
-        bx = boxes_of(t, root)
-        chs = channels(t, bx, layers)
-        if not any(hi - lo < need - EPS for (_, lo, hi, need, _, _) in chs):
+        if not any(hi - lo < need - EPS for (_, lo, hi, need, _, _) in channels(t, boxes_of(t, root), layers)):
             continue
-        res = {}
-        for ax, Lx in ((0, W), (1, H)):
-            c = [ch for ch in chs if ch[0] == ax]
-            fr = free_intervals(bx, ax, Lx)
-            n, rows = plan_axis(c, fr, grid)
-            res[ax] = (fr, n, rows)
+        pts = movable_points(t, W, H)
+        d0, d1, chs, res = evaluate(t, root, layers, grid, W, H, pts)
+        base_d1 = d1
+        flipped = []
+        if flips:                              # greedy core mirror flips: keep one only if the shortfall drops
+            for _ in range(2):
+                better = False
+                for hc in t["hard_cores"]:
+                    if not flip_ok(t, hc):
+                        continue
+                    o0, to0 = hc.get("orient", "R0"), list(hc.get("track_offset_um", [0.108, 0.012]))
+                    bad0 = track_fit(hc, root, o0)[2]
+                    for kind in ("MY", "MX"):
+                        o1 = FLIP[kind][o0]
+                        dx, dy, bad1 = track_fit(hc, root, o1)
+                        if bad1 > bad0:
+                            continue
+                        hc["orient"], hc["track_offset_um"] = o1, [dx, dy]
+                        e = evaluate(t, root, layers, grid, W, H, pts) if boxes_clear(t, root, W, H) else None
+                        if e is not None and e[1] < d1 - 0.5:
+                            d1, res = e[1], e[3]
+                            flipped.append(dict(core=hc["inst"], module=hc.get("module"), orient=[o0, o1],
+                                                track_offset_um=[to0, [dx, dy]], off_track_pins=bad1))
+                            o0, to0, bad0, better = o1, [dx, dy], bad1, True
+                        else:
+                            hc["orient"], hc["track_offset_um"] = o0, to0
+                if not better:
+                    break
         moved = any(abs(a - b) > EPS for ax in (0, 1) for a, b in zip(res[ax][1], [r[1] - r[0] for r in res[ax][0]]))
-        d0 = sum(max(0.0, need - (hi - lo)) for (_, lo, hi, need, _, _) in chs)
-        d1 = sum(r["short"] for ax in (0, 1) for r in res[ax][2])
         row = dict(type=tn, channels=len(chs), deficit_um=round(d0, 1), remaining_um=round(d1, 1),
-                   resolved_um=round(d0 - d1, 1), moved=moved,
-                   open=sorted([r for ax in (0, 1) for r in res[ax][2] if r["short"] > 0], key=lambda r: -r["short"])[:8])
+                   resolved_um=round(d0 - d1, 1), repack_only_remaining_um=round(base_d1, 1), moved=moved,
+                   flips=flipped,
+                   open=sorted([r for ax in (0, 1) for r in res[ax][2] if r["short"] > 0], key=lambda r: -r["short"]))
         report.append(row)
-        if moved and not analyze:
-            mx = axis_map(res[0][0], res[0][1])
-            my = axis_map(res[1][0], res[1][1])
+        if (moved or flipped) and not analyze and d1 < d0 - EPS:
+            mx = axis_map(res[0][0], res[0][1], res[0][3])
+            my = axis_map(res[1][0], res[1][1], res[1][3])
+            orig_added = copy.deepcopy(t.get("clock", {}).get("added_taps"))
             transform_type(t, mx, my, W, H)
-            edits.append(row)
+            ok, fixes, why = legalize_type(raw, Q, tn, orig_added)
+            if ok:
+                row["tap_moves"] = fixes
+                edits.append({k: v for k, v in row.items() if k != "open"})
+            else:
+                Q["partition_types"][tn] = copy.deepcopy(raw["partition_types"][tn])
+                op = [dict(core=c_, face=f_, gap=round(hi - lo, 2), need=round(nd, 2), new_gap=round(hi - lo, 2),
+                           short=round(nd - (hi - lo), 2)) for (_, lo, hi, nd, c_, f_) in
+                      channels(Q["partition_types"][tn], boxes_of(Q["partition_types"][tn], root), layers)
+                      if hi - lo < nd - EPS]
+                row.update(reverted=True, why=why[:3], remaining_um=row["deficit_um"], resolved_um=0.0, flips=[],
+                           open=sorted(op, key=lambda q: -q["short"]))
+        elif not analyze:
+            Q["partition_types"][tn] = copy.deepcopy(raw["partition_types"][tn])
     return Q, edits, report
 
 
@@ -284,14 +517,15 @@ def main(argv=None):
     ap.add_argument("--skip-types", default="")
     ap.add_argument("--only-types", default="")
     ap.add_argument("--layers", type=float, default=4.0)
-    ap.add_argument("--grid", type=float, default=0.864, help="snap of every slack transfer (um)")
+    ap.add_argument("--grid", type=float, default=8.64, help="every shift is a whole number of these (um): 8.64 = the core-origin lattice, a multiple of every track pitch, the PG period and the ft site grids")
+    ap.add_argument("--no-flips", action="store_true")
     ap.add_argument("--analyze", action="store_true")
     a = ap.parse_args(argv)
     raw_b = Path(a.base).read_bytes()
     P0 = json.loads(raw_b)
     skip = {s for s in a.skip_types.split(",") if s}
     only = {s for s in a.only_types.split(",") if s} or None
-    Q, edits, report = build(P0, a.pins_root, skip, only, a.layers, a.grid, a.analyze)
+    Q, edits, report = build(P0, a.pins_root, skip, only, a.layers, a.grid, a.analyze, not a.no_flips)
     touched = {e["type"] for e in edits}
     for k in P0:
         if k != "partition_types" and json.dumps(P0[k], sort_keys=True) != json.dumps(Q[k], sort_keys=True):
@@ -300,15 +534,44 @@ def main(argv=None):
         v1 = Q["partition_types"][tn]
         if tn not in touched and json.dumps(v, sort_keys=True) != json.dumps(v1, sort_keys=True):
             raise AssertionError(f"type {tn} changed but is not listed")
-        for k in ("outline_um", "buses", "params", "module", "rtl"):
+        for k in ("outline_um", "buses", "params", "module", "rtl", "contents"):
+            if k == "contents":
+                strip = lambda cs: [{kk: vv for kk, vv in c.items() if kk not in ("origin_um", "physical_parts")}
+                                    for c in (cs or [])]
+                if json.dumps(strip(v.get(k)), sort_keys=True) != json.dumps(strip(v1.get(k)), sort_keys=True):
+                    raise AssertionError(f"type {tn}: contents changed beyond origins")
+                continue
             if json.dumps(v.get(k), sort_keys=True) != json.dumps(v1.get(k), sort_keys=True):
                 raise AssertionError(f"type {tn}: {k} changed")
     if not a.analyze:
         import schema as S
         base_errs = set(map(str, S.validate(copy.deepcopy(P0))))
-        errs = [e for e in map(str, S.validate(copy.deepcopy(Q))) if e not in base_errs]
-        if errs:
-            raise SystemExit("slot_channel_event: output fails schema validation: " + "; ".join(errs[:5]))
+        reverted = []
+        for _ in range(8):           # a type whose repack breaks a plan rule (tap halo/spacing, ...) keeps its base form
+            errs = [e for e in map(str, S.validate(copy.deepcopy(Q))) if e not in base_errs]
+            if not errs:
+                break
+            names = {e_["type"] for e_ in edits}
+            bad = {tn for tn in names if any(re.search(r"(?<![\w.])" + re.escape(tn) + r"(?![\w])", e) for e in errs)}
+            if not bad:
+                raise SystemExit("slot_channel_event: output fails schema validation: " + "; ".join(errs[:5]))
+            for tn in sorted(bad):
+                Q["partition_types"][tn] = copy.deepcopy(P0["partition_types"][tn])
+                why = [e for e in errs if tn in e][:2]
+                reverted.append(dict(type=tn, why=why))
+                print(f"revert {tn}: {why[0][:200]}", file=sys.stderr)
+            edits[:] = [e_ for e_ in edits if e_["type"] not in bad]
+            for r in report:
+                if r["type"] in bad:
+                    t0 = P0["partition_types"][r["type"]]
+                    op = [dict(core=c_, face=f_, gap=round(hi - lo, 2), need=round(nd, 2), new_gap=round(hi - lo, 2),
+                               short=round(nd - (hi - lo), 2))
+                          for (_, lo, hi, nd, c_, f_) in channels(t0, boxes_of(t0, a.pins_root), a.layers)
+                          if hi - lo < nd - EPS]
+                    r.update(reverted=True, remaining_um=r["deficit_um"], resolved_um=0.0, flips=[],
+                             open=sorted(op, key=lambda q: -q["short"]))
+        else:
+            raise SystemExit("slot_channel_event: schema still failing after 8 revert rounds")
         Path(a.out).write_text(json.dumps(Q, indent=1) + "\n")
     data = Path(a.out).read_bytes() if not a.analyze else b""
     rec = dict(schema="opentallas.slot_channel_event.v1", tool="tools/die_plan/slot_channel_event.py",
@@ -317,11 +580,14 @@ def main(argv=None):
                plan_output=None if a.analyze else str(a.out),
                plan_output_sha256=hashlib.sha256(data).hexdigest() if data else None,
                layers=a.layers, grid_um=a.grid, skipped_types=sorted(skip), edits=edits, report=report,
+               reverted=[] if a.analyze else reverted,
                totals=dict(types_with_deficit=len(report), types_moved=len(edits),
                            deficit_um=round(sum(r["deficit_um"] for r in report), 1),
                            resolved_um=round(sum(r["resolved_um"] for r in report), 1),
                            remaining_um=round(sum(r["remaining_um"] for r in report), 1),
-                           fully_resolved=sum(1 for r in report if r["remaining_um"] <= EPS)))
+                           fully_resolved=sum(1 for r in report if r["remaining_um"] <= EPS),
+                           flips=sum(len(r["flips"]) for r in report),
+                           repack_only_remaining_um=round(sum(r["repack_only_remaining_um"] for r in report), 1)))
     Path(a.event).write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps(rec["totals"]))
 

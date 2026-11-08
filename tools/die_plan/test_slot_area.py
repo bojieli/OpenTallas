@@ -9,13 +9,21 @@ sys.path.insert(0, str(HERE))
 import slot_channel_event as SC  # noqa: E402
 
 
-def test_axis_map_rigid_cores_and_scaled_gaps():
+def test_axis_map_grid_steps():
     fr = [[100.0, 200.0], [300.0, 300.0]]          # one free gap, one zero-length cut
-    m = SC.axis_map(fr, [60.0, 40.0])               # gap shrinks by 40, cut opens by 40
+    bands = SC.free_bands(fr, {120.0})              # an object at 120: the removal must avoid it
+    m = SC.axis_map(fr, [100.0 - 17.28, 17.28], bands)
     assert m(50.0) == 50.0                          # before: unchanged
-    assert abs(m(250.0) - 210.0) < 1e-9             # core between: rigid shift -40
+    assert abs(m(120.0) - 120.0) < 1e-9             # object left of the removed band: unchanged
+    assert abs(m(250.0) - (250.0 - 17.28)) < 1e-9   # core between: rigid shift of two 8.64 steps
     assert abs(m(350.0) - 350.0) < 1e-9             # after the opened cut: net 0
-    assert abs(m(150.0) - 130.0) < 1e-9             # inside the gap: scaled
+
+
+def test_plan_axis_whole_steps():
+    chs = [(0, 200.0, 205.0, 12.0, "b", "E")]       # gap 5, need 12 -> one 8.64 step
+    fr = [[0.0, 100.0], [200.0, 205.0]]
+    n, rows = SC.plan_axis(chs, fr, 8.64)
+    assert abs(n[1] - (5.0 + 8.64)) < 1e-9 and abs(n[0] - (100.0 - 8.64)) < 1e-9 and not rows[0]["short"]
 
 
 def test_free_intervals_find_abutment_cut():
@@ -27,12 +35,13 @@ def test_free_intervals_find_abutment_cut():
 def test_transform_keeps_face_points():
     t = dict(outline_um=[300.0, 100.0], hard_cores=[dict(origin_um=[110.0, 20.0], outline_um=[50.0, 50.0])],
              internal_stations=[dict(from_um=[150.0, 0.0], to_um=[150.0, 60.0], regs_um=[[150.0, 30.0]])])
-    m = SC.axis_map([[100.0, 100.0], [160.0, 300.0]], [20.0, 120.0])
+    fr = [[100.0, 100.0], [160.0, 300.0]]
+    m = SC.axis_map(fr, [20.0, 120.0], SC.free_bands(fr, {150.0}))
     SC.transform_type(t, m, lambda y: y, 300.0, 100.0)
     assert t["hard_cores"][0]["origin_um"] == [130.0, 20.0]
     e = t["internal_stations"][0]
     assert e["from_um"] == [150.0, 0.0]             # S-face end stays (abutment)
-    assert e["regs_um"][0][0] == 170.0              # interior site moves with the core
+    assert e["regs_um"][0][0] == 170.0              # interior site left of the opened cut moves with the core
 
 
 def test_lattice_cost(tmp_path):
