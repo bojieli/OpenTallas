@@ -1,0 +1,163 @@
+{
+ "schema": "opentallas.head_host_split_delta.v1",
+ "status": "RAW_RECOMPOSE_REQUIRED",
+ "types": {
+  "hd_host_w": {
+   "outline_um": [
+    648.0,
+    570.24
+   ],
+   "macros": 55,
+   "cells_estimate": 116002,
+   "buses": {
+    "coll_i0": [
+     "in",
+     514,
+     "W",
+     [
+      120.0,
+      326.0
+     ]
+    ],
+    "coll_o0": [
+     "out",
+     512,
+     "W",
+     [
+      342.0,
+      547.2
+     ]
+    ],
+    "h_tx_i": [
+     "in",
+     277,
+     "N",
+     [
+      400.298,
+      469.564
+     ]
+    ],
+    "h_rx_o": [
+     "out",
+     276,
+     "N",
+     [
+      323.048,
+      392.298
+     ]
+    ],
+    "l1_rx_i": [
+     "in",
+     558,
+     "E",
+     [
+      196.0,
+      376.0
+     ]
+    ],
+    "l1_tx_o": [
+     "out",
+     554,
+     "E",
+     [
+      384.0,
+      564.0
+     ]
+    ]
+   }
+  },
+  "hd_host_e": {
+   "outline_um": [
+    648.0,
+    570.24
+   ],
+   "macros": 55,
+   "cells_estimate": 84002,
+   "buses": {
+    "coll_i1": [
+     "in",
+     514,
+     "S",
+     [
+      428.88,
+      634.88
+     ]
+    ],
+    "coll_o1": [
+     "out",
+     512,
+     "S",
+     [
+      207.68,
+      412.88
+     ]
+    ],
+    "l1_rx_o": [
+     "out",
+     558,
+     "W",
+     [
+      196.0,
+      376.0
+     ]
+    ],
+    "l1_tx_i": [
+     "in",
+     554,
+     "W",
+     [
+      384.0,
+      564.0
+     ]
+    ]
+   }
+  }
+ },
+ "partitions": {
+  "host_w": [
+   8760.96,
+   1330.56
+  ],
+  "host_e": [
+   9408.96,
+   1330.56
+  ]
+ },
+ "repointed_ports": [
+  "coll_HOST1_u__0",
+  "coll_HOST1_d__0",
+  "coll_HOST0_u__1",
+  "coll_HOST0_d__0",
+  "host_tx__6__h5n",
+  "host_rx__0__h5n"
+ ],
+ "seam_ports": [
+  "host_l1rx__0",
+  "host_l1tx__0"
+ ],
+ "data_cycles_added": {
+  "E->W (host1 RX, lane1 fault)": 4,
+  "W->E (lane1 STATUS TX)": 4,
+  "HOST1 egress link (lane1 tx flits, co_m)": 1,
+  "HOST0 ingress (lane0 RX stage, HBC/HFWD/lane0 faults)": 1
+ },
+ "boot_dates": {
+  "BOOT_HEADER_EDGE": "unchanged at the HBC input; transport.peer_to_hbc_input +1 (lane0 stage)",
+  "BOOT_COMMIT_EDGE": "unchanged at the HBC input; launches 1 earlier",
+  "host1_csr": "transport.peer_to_host_frame +4, peer_to_ctl_csr_apply +4 (launch dates 4 earlier for the same apply dates)"
+ },
+ "required": [
+  "clock.landing_contract (per type; E needs its own landing origin/START + collector root on the seam)",
+  "clock.landing_network (die): host ends re-pointed by bus; seam collector/START edges for host_e missing",
+  "count_straps",
+  "reset_start_raw_exports",
+  "clock.start_capture_um (hd_host_e)",
+  "sidecar count_aligned / collector entries for host_w/host_e",
+  "reset.in_sites / reset wavefront offsets",
+  "latency lanes of the re-pointed host ports (gen.py latency)"
+ ],
+ "sidecar_stale": [
+  "count_aligned",
+  "collector"
+ ]
+}

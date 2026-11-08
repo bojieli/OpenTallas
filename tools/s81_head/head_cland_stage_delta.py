@@ -35,7 +35,7 @@ from pathlib import Path
 HMAX = 370.0          # planned hop (plan reach 405, 35 um left for placement scatter)
 PLAN_REACH = 405.0    # the reach HMAX leaves 35 um under: a snapped site may use some of it, the report names the hop
 COPY_REACH = 370.0    # raw -> local copy and copy -> consumer
-TYPES = ("hd_ctl_n", "hd_ctl_e", "hd_host_n", "hd_mesh", "hd_host")
+TYPES = ("hd_ctl_n", "hd_ctl_e", "hd_host_n", "hd_mesh", "hd_host", "hd_host_w", "hd_host_e")   # DIE-HEAD-84 HSPLIT halves
 CTL_E_SITE_X = (401.5, 801.0)   # hd_ctl_e n_tx_ft s1/s2 cell centres (hop <= 400 planned, 405 measured reach)
 
 # reset-tree raw relays (net, depth, x, y, exported) from the frozen 703c07481 GEN of prepared_mesh_y864
@@ -61,7 +61,8 @@ RRL = {
                   ("rr_t12", 4, 1434.7, 492.6, 0)],
 }
 # landing-control reset depth of the type (every ring reset relay u_cland_rst_<b> = rrelay(depth-3 / depth-1 tap) + 1)
-CTRL_DEPTH = {"hd_ctl_n": 4, "hd_ctl_e": 2, "hd_host_n": 4, "hd_mesh": 4, "hd_host": 4}
+CTRL_DEPTH = {"hd_ctl_n": 4, "hd_ctl_e": 2, "hd_host_n": 4, "hd_mesh": 4, "hd_host": 4,
+              "hd_host_w": 3, "hd_host_e": 3}   # HSPLIT halves: reset depth K 3 (reset_tree.for_type); copy = depth(raw) + 1
 # agg_1 plan point (inside reach of the near rings / face status flops; far rings get status relays)
 AGG1 = {"hd_ctl_n": (90.0, 300.0), "hd_ctl_e": (735.0, 74.0), "hd_host_n": (420.0, 290.0)}
 # DIE-HEAD-65 l48uc: hd_mesh / hd_host relay table and agg_1 point are read, not typed: --rrl-from T=<wave wrapper .sv> and
