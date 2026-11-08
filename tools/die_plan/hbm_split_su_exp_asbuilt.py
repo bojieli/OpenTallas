@@ -181,15 +181,49 @@ def candidate(plan, asbuilt, source, stage_dir):
     return out
 
 
+ALL_EXP = r"(?:\d+|_l)"
+
+
+def extend_exp0(plan, asbuilt):
+    """Lineage step after plan event EXP0-KIND1-1108 (the exp0 u_l is lane_exp_x_core, KIND 1 like every other lane):
+    the manifest's lane_exp rule also covers __cut_lane_exp0, and the exp0 parents get their variant rows.  Same
+    reference, emit module and sources; nothing else changes."""
+    parents = [x for x in plan_parents(plan) if x[2] == "0"]
+    mods = {h.get("module") for t in plan["partition_types"].values() for h in t.get("hard_cores", []) or []
+            if LANE_EXP.fullmatch(h.get("physical_inst") or "") and h["physical_inst"].endswith(".u_l")
+            and LANE_EXP.fullmatch(h["physical_inst"]).group(3) == "0"}
+    if not parents or mods != {KINDS["exp"][1]}:
+        raise ValueError(f"plan exp0 u_l masters {sorted(mods)}: needs the EXP0-KIND1-1108 event ({KINDS['exp'][1]})")
+    out = copy.deepcopy(asbuilt)
+    old = r"su_N[EW][01]\.__cut_lane_exp" + KINDS["exp"][3]
+    rules = [r for r in out.get("compose_split", []) if r.get("inst") == old and r.get("suffix") == "__p18split"]
+    if len(rules) != 1:
+        raise ValueError(f"base has {len(rules)} lane_exp p18 rules")
+    rules[0]["inst"] = r"su_N[EW][01]\.__cut_lane_exp" + ALL_EXP
+    rules[0]["reason"] += " | EXP0-KIND1-1108: lane_exp0 included (plan exp0 u_l = lane_exp_x_core, as-built KIND 1)"
+    scl, var = out["sub_core_leaf"], out.setdefault("sub_core_leaf_variants", {})
+    for parent, q, n in parents:
+        if scl.get(parent) != parent or parent in var:
+            raise ValueError(f"sub_core_leaf {parent}: base row {scl.get(parent)} / variants {var.get(parent)} unexpected")
+        var[parent] = [f"{x}.__cut_lane_exp{n}" for x in QUAD[q]]
+    out["sub_core_leaf_note"] += f" | EXP0-KIND1-1108: {len(parents)} exp0 parents added (variants)"
+    out["note"] = "DIE-HBM-92-SU p37su5: p37su4 + lane_exp0 (plan event EXP0-KIND1-1108) | " + out.get("note", "")
+    return out
+
+
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--plan", required=True)
     p.add_argument("--asbuilt", required=True)
-    p.add_argument("--source", required=True)
+    p.add_argument("--source")
     p.add_argument("--out", required=True)
+    p.add_argument("--extend-exp0", action="store_true", help="lineage step on a manifest that has the lane_exp rule")
     a = p.parse_args()
     if Path(a.out).exists():
         raise SystemExit(f"{a.out} exists: manifests are never edited in place")
-    result = candidate(json.loads(Path(a.plan).read_text()), json.loads(Path(a.asbuilt).read_text()), a.source,
-                       Path(a.out).resolve().parent / "p37su_exp_sources")
+    plan, ab = json.loads(Path(a.plan).read_text()), json.loads(Path(a.asbuilt).read_text())
+    if a.extend_exp0:
+        result = extend_exp0(plan, ab)
+    else:
+        result = candidate(plan, ab, a.source, Path(a.out).resolve().parent / "p37su_exp_sources")
     Path(a.out).write_text(json.dumps(result, indent=2) + "\n")
