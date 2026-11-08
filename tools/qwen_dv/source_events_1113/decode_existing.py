@@ -11,6 +11,14 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def native_observations(raw):
+    latency = re.findall(r'TLOAD_CHECK side=\s*(\w+) loads=(\d+) bad=(\d+) latency=(\d+)',raw)
+    if latency != [('flat','36','0','11'),('landed_np','36','0','11')]:
+        raise ValueError('actual TLOAD observations changed; rebind native law')
+    if 'TLOAD_PRODUCER PASS' not in raw or 'LP_LOCKSTEP PASS' not in raw:
+        raise ValueError('native source proof failed')
+
+
 def decode(root):
     native = root / 'native_fixture_source.sv'
     hb = root / 'hb_fixture_source.sv'
@@ -27,6 +35,8 @@ def decode(root):
     producer = json.loads((root / 'producer.json').read_text())
     if producer['loads_per_user'] != 36 or producer['verdict'] != 'PASS':
         raise ValueError('native finite producer changed')
+    raw = (root/'native_compare_calr2.log').read_text()
+    native_observations(raw)
     events = []
     for line in (root / 'log_m0_b0_TB_LANDED.txt').read_text().splitlines():
         m = re.match(r'^(\d+) (CSR|CMD|LOC|ISSUE|ROMRAW|ROM|NAT|XPF|STAGE|CF|END|LANDED_LOCKSTEP)\b\s*(.*)', line)
@@ -47,8 +57,12 @@ def decode(root):
             pw_install_source_negedges=[35,1058], dw_install_source_negedges=[1059,1066],
             stage_starts=[dict(stage=s,user=0,source_negedge=1315+6200*s) for s in range(38)],
             table_req_output_offset_landed_vs_flat=6,
-            observed_output_latency=None,
-            missing='retained PASS summary contains no TLOAD_CHECK latency; no output dates inferred'),
+            observed_output_latency=dict(flat=11,landed_normalized=11,landed=17),
+            table_request_observation_negedges=[dict(stage=s,user=0,flat=1315+6200*s+11,
+                landed=1315+6200*s+17) for s in range(1,37)],
+            warning='raw CALRDIR_STATE cf=1; TLOAD/image and lockstep PASS do not prove fault-free controller',
+            observed_fault_states=re.findall(r'CALRDIR_STATE warm=(\d+).*?cf=(\d+)',raw),
+            observed_source_log_sha256=digest(root/'native_compare_calr2.log')),
         hb=dict(clock_origin='post-reset cyc counter; inputs applied previous negedge; observations at negedge cyc',
             profile=dict(NU=1,OPSEG=False,CTX=False,INIT=False,CALR=False,F16=False),
             production_ROOT_X_HEAD37_dates_qualified=False, observations=events, stimulus=stimulus),

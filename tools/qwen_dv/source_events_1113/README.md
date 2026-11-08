@@ -21,9 +21,14 @@ is1ns; no833ps conversion is applied.
 
 Retained current-main `results/qc_types_10_ctlm_1108/logs/ncmp_fqreg_calr2.txt`
 records TLOAD_PRODUCER PASS and LP_LOCKSTEP PASS4,744,920/cycles237300.
-It omits the TLOAD_CHECK latency lines. The decoder consequently leaves
-actual table output dates unknown; the source's six-edge landed offset alone
-cannot determine them. Selected production programme identity, ROOT commit,
+The original summary omits latency. Retained raw intel1
+`qct10/ctlm/lk_fqreg/native_compare_calr2.log` supplies36loads/bad0 on
+each side, normalized latency11; landed observations are six later, at
+stage-source+17. The decoder binds all36 request observation labels.
+The same raw log reports cf1 at warm1150/1499/9000, so this remains
+a TLOAD/image/lockstep result and cannot establish fault-free controller
+operation. Actual retained `lk_fqreg_mut2` still passes TLOAD but fails
+lockstep with20907 mismatches; the source gate rejects it. Selected production programme identity, ROOT commit,
 X/HEAD leases and global START/reset/clock remain open. No RTL or calendar
 adoption is made here; CALREG1 fixture behavior does not silently replace the
 current zero-added-edge CALREG0 production source.

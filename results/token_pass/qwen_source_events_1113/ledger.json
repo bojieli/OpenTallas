@@ -212,8 +212,245 @@
       }
     ],
     "table_req_output_offset_landed_vs_flat": 6,
-    "observed_output_latency": null,
-    "missing": "retained PASS summary contains no TLOAD_CHECK latency; no output dates inferred"
+    "observed_output_latency": {
+      "flat": 11,
+      "landed_normalized": 11,
+      "landed": 17
+    },
+    "table_request_observation_negedges": [
+      {
+        "stage": 1,
+        "user": 0,
+        "flat": 7526,
+        "landed": 7532
+      },
+      {
+        "stage": 2,
+        "user": 0,
+        "flat": 13726,
+        "landed": 13732
+      },
+      {
+        "stage": 3,
+        "user": 0,
+        "flat": 19926,
+        "landed": 19932
+      },
+      {
+        "stage": 4,
+        "user": 0,
+        "flat": 26126,
+        "landed": 26132
+      },
+      {
+        "stage": 5,
+        "user": 0,
+        "flat": 32326,
+        "landed": 32332
+      },
+      {
+        "stage": 6,
+        "user": 0,
+        "flat": 38526,
+        "landed": 38532
+      },
+      {
+        "stage": 7,
+        "user": 0,
+        "flat": 44726,
+        "landed": 44732
+      },
+      {
+        "stage": 8,
+        "user": 0,
+        "flat": 50926,
+        "landed": 50932
+      },
+      {
+        "stage": 9,
+        "user": 0,
+        "flat": 57126,
+        "landed": 57132
+      },
+      {
+        "stage": 10,
+        "user": 0,
+        "flat": 63326,
+        "landed": 63332
+      },
+      {
+        "stage": 11,
+        "user": 0,
+        "flat": 69526,
+        "landed": 69532
+      },
+      {
+        "stage": 12,
+        "user": 0,
+        "flat": 75726,
+        "landed": 75732
+      },
+      {
+        "stage": 13,
+        "user": 0,
+        "flat": 81926,
+        "landed": 81932
+      },
+      {
+        "stage": 14,
+        "user": 0,
+        "flat": 88126,
+        "landed": 88132
+      },
+      {
+        "stage": 15,
+        "user": 0,
+        "flat": 94326,
+        "landed": 94332
+      },
+      {
+        "stage": 16,
+        "user": 0,
+        "flat": 100526,
+        "landed": 100532
+      },
+      {
+        "stage": 17,
+        "user": 0,
+        "flat": 106726,
+        "landed": 106732
+      },
+      {
+        "stage": 18,
+        "user": 0,
+        "flat": 112926,
+        "landed": 112932
+      },
+      {
+        "stage": 19,
+        "user": 0,
+        "flat": 119126,
+        "landed": 119132
+      },
+      {
+        "stage": 20,
+        "user": 0,
+        "flat": 125326,
+        "landed": 125332
+      },
+      {
+        "stage": 21,
+        "user": 0,
+        "flat": 131526,
+        "landed": 131532
+      },
+      {
+        "stage": 22,
+        "user": 0,
+        "flat": 137726,
+        "landed": 137732
+      },
+      {
+        "stage": 23,
+        "user": 0,
+        "flat": 143926,
+        "landed": 143932
+      },
+      {
+        "stage": 24,
+        "user": 0,
+        "flat": 150126,
+        "landed": 150132
+      },
+      {
+        "stage": 25,
+        "user": 0,
+        "flat": 156326,
+        "landed": 156332
+      },
+      {
+        "stage": 26,
+        "user": 0,
+        "flat": 162526,
+        "landed": 162532
+      },
+      {
+        "stage": 27,
+        "user": 0,
+        "flat": 168726,
+        "landed": 168732
+      },
+      {
+        "stage": 28,
+        "user": 0,
+        "flat": 174926,
+        "landed": 174932
+      },
+      {
+        "stage": 29,
+        "user": 0,
+        "flat": 181126,
+        "landed": 181132
+      },
+      {
+        "stage": 30,
+        "user": 0,
+        "flat": 187326,
+        "landed": 187332
+      },
+      {
+        "stage": 31,
+        "user": 0,
+        "flat": 193526,
+        "landed": 193532
+      },
+      {
+        "stage": 32,
+        "user": 0,
+        "flat": 199726,
+        "landed": 199732
+      },
+      {
+        "stage": 33,
+        "user": 0,
+        "flat": 205926,
+        "landed": 205932
+      },
+      {
+        "stage": 34,
+        "user": 0,
+        "flat": 212126,
+        "landed": 212132
+      },
+      {
+        "stage": 35,
+        "user": 0,
+        "flat": 218326,
+        "landed": 218332
+      },
+      {
+        "stage": 36,
+        "user": 0,
+        "flat": 224526,
+        "landed": 224532
+      }
+    ],
+    "warning": "raw CALRDIR_STATE cf=1; TLOAD/image and lockstep PASS do not prove fault-free controller",
+    "observed_fault_states": [
+      [
+        "1150",
+        "1"
+      ],
+      [
+        "1499",
+        "1"
+      ],
+      [
+        "9000",
+        "1"
+      ]
+    ],
+    "observed_source_log_sha256": "20718e36e24eedca1de2d9ca06ea685c3729b5a11ddb0465eab6e46c72fcb328"
   },
   "hb": {
     "clock_origin": "post-reset cyc counter; inputs applied previous negedge; observations at negedge cyc",
