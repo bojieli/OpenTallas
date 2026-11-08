@@ -248,6 +248,19 @@ class TestClasses(Base):
         self.run_job()
         self.assertFalse(os.path.exists(d), self.row(d))
 
+    def test_queuename_skip_superseded_flag(self):
+        old = self.attempt("item_qsuper", 1, event="evq")
+        cur = self.attempt("item_qsuper", 4, event="evq")
+        self.qwords = ["item_qsuper"]
+        self.kw = {"attempts": {"hx:" + cur: {"active": False, "signed": False, "terminal": ["FAIL/None"]}},
+                   "latest": {"hx:" + os.path.dirname(cur): 4}, "keep": []}
+        self.run_job()
+        self.assertTrue(os.path.isdir(old)); self.assertTrue(os.path.isdir(cur))
+        self.run_job("--queuename-skip-superseded")
+        self.assertFalse(os.path.exists(old), self.row(old))
+        self.assertTrue(os.path.isdir(cur))
+        self.assertTrue(self.row(cur)[4].startswith("queuename"), self.row(cur))
+
     def test_a_disabled_without_kitwave(self):
         d = self.attempt("item_x", 1)
         self.run_job()
