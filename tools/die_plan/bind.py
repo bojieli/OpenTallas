@@ -3102,6 +3102,16 @@ class Binder:
                 except reset_consumers.ResetConsumerError as exc:
                     raise BindError(f"control reset localization {tn}: {exc}") from exc
                 self.__dict__.setdefault("_reset_consumer_changes", {})[tn] = receipt
+            port_relays = t.get("reset", {}).get("port_relays")
+            if port_relays:
+                # KV-TYPES-5 11-08 (COORD 10:0x kv3_phy@7R): opt-in synchronous reset relays from the delivered reset
+                # to far face registers of a native hard wrapper (tools/die_plan/reset_port_relays.py)
+                import reset_port_relays
+                try:
+                    txt, receipt = reset_port_relays.apply(txt, port_relays)
+                except reset_port_relays.PortRelayError as exc:
+                    raise BindError(f"reset port relays {tn}: {exc}") from exc
+                self.__dict__.setdefault("_reset_port_relays", {})[tn] = receipt
             self.pnames[tn] = pnames
             f = out / f"{t['module']}.sv"
             f.write_text(txt)
