@@ -3431,3 +3431,6 @@ CODEX: 2026-11-07 17:04 PST explicit Claude reset, parked newwork/all9leads; hea
 CODEX: 2026-11-08 02:35 PST E5waiter t35a4 moved by completecopy-then-link to I2S2, samefrontend2249349 auto-rebalanced/admittedoth-ubuntu-3746226-1794134103; no newlauncher/signals/retry. E4pre-existingcleanup400.90GB collected/recheck0; source/runtimepoliciesunchanged.
 
 CODEX: 2026-11-08 02:36 PST SVC compiler packinga8175d published/H16realL0identityPASS; actualH8P-rate mismatch diagnosed (lag47/239) and foldedSM2cycle operand schedule21checksPASS. R5SMarithmetic2:1+H8engineproofs underway, not area/token-qualified. Token566d53dd96 explicitLEP/KVdates, nativeLEPbuildIntel1healthy after4GBOOM.
+CODEX: 2026-11-08 02:22 PST takeover; all five dies plus flow/token/fleet assigned, 646 lane inventory; collecting jobs and structural fixes. Canonical intel2; no merges/tags/POR changes. Checkpoint handoff/codex_takeover_20261108_0222_checkpoint.md.
+
+CODEX: 2026-11-08 02:29 PST branch fixes READY HCL1762cad3e01/QCdigest1aa8d5d7e5/QChold7f6b7773d8/SVCpacking a8175d573b; no merge/tag/POR. Bksel finalreport active; SVC rate mismatch calibration active; all five die scopes staffed.
