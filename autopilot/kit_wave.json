@@ -1251,7 +1251,10 @@
       "retry_prev_kw35c_added": [
         "kv3_hub_Wo@13"
       ],
-      "note_kw35c": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): KV-TYPES-4 04:51 ask: dropped 28 stale KW-FIX-25 holds (lanes gone), +9 only_items names, hub_Wo@13. Revert *_prev_kw35c"
+      "note_kw35c": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): KV-TYPES-4 04:51 ask: dropped 28 stale KW-FIX-25 holds (lanes gone), +9 only_items names, hub_Wo@13. Revert *_prev_kw35c",
+      "pilot_gate_prev_kw35d": null,
+      "pilot_gate": false,
+      "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d"
     },
     "s81": {
       "enabled": true,
@@ -4106,7 +4109,10 @@
       "type_args_prev_kw34g": {
         "slice_station__t14": null
       },
-      "note_kw34g": "KW-FIX-34 2026-11-08 02:10 PST: c1x_C t5@11 (DRT-0073 xrt1) on the kw34 xrt plan dir; station t14@10 DRV margins. Revert: drop both retries, type_args t14 from type_args_prev_kw34g"
+      "note_kw34g": "KW-FIX-34 2026-11-08 02:10 PST: c1x_C t5@11 (DRT-0073 xrt1) on the kw34 xrt plan dir; station t14@10 DRV margins. Revert: drop both retries, type_args t14 from type_args_prev_kw34g",
+      "pilot_gate_prev_kw35d": null,
+      "pilot_gate": false,
+      "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d"
     },
     "s81_head": {
       "enabled": true,
@@ -4792,7 +4798,10 @@
       "src_sha_prev_kw33b": "27db658adf1ceec83bd9abe9a6455265f54b0048",
       "queue_src_prev_kw33b": "main@27db658adf1c",
       "flow_tag_prev_kw33b": "flow-20261107-do-head",
-      "note_src_kw33b": "KW-FIX-33 2026-11-08 00:23 PST (ROOT-MERGE-50/51): src kw33/src_d95ec = main d95ec5a45a6 (qc53v4t tap-pair, phyclip, grtlock, tname2, atomic-collapse, schema) = kw32/src_27db6 + 122 files"
+      "note_src_kw33b": "KW-FIX-33 2026-11-08 00:23 PST (ROOT-MERGE-50/51): src kw33/src_d95ec = main d95ec5a45a6 (qc53v4t tap-pair, phyclip, grtlock, tname2, atomic-collapse, schema) = kw32/src_27db6 + 122 files",
+      "pilot_gate_prev_kw35d": null,
+      "pilot_gate": false,
+      "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d"
     },
     "qwen_compute": {
       "enabled": true,
@@ -6486,7 +6495,10 @@
         "slw_stm_v1__cle34a73c3@13",
         "slw_stm_v2__cl1ca9c415@7"
       ],
-      "note_kw35c": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): QC-TYPES-9 04:51 (D)/(F)/(G) conservative + infra batch. Revert *_prev_kw35c"
+      "note_kw35c": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): QC-TYPES-9 04:51 (D)/(F)/(G) conservative + infra batch. Revert *_prev_kw35c",
+      "pilot_gate_prev_kw35d": null,
+      "pilot_gate": false,
+      "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d"
     },
     "hbm": {
       "enabled": true,
@@ -8204,7 +8216,10 @@
         "q_su21@1",
         "q_su21__physical_v1@1"
       ],
-      "note_src_kw35b": "KW-FIX-35-B 2026-11-08 05:04 PST: HBM src kw35/src_812ee = main 812ee41cd03 (kitparam v2 + qc53v4s; = kw34/src_28914 hardlinks + 6 files, sha256-checked on intel1/epyc2/epyc4/epyc5/epyc6); released q_su20/21(+pv1); revert *_prev_kw35b, hold_items_released_kw35b, drop retry_prev_kw35b_added"
+      "note_src_kw35b": "KW-FIX-35-B 2026-11-08 05:04 PST: HBM src kw35/src_812ee = main 812ee41cd03 (kitparam v2 + qc53v4s; = kw34/src_28914 hardlinks + 6 files, sha256-checked on intel1/epyc2/epyc4/epyc5/epyc6); released q_su20/21(+pv1); revert *_prev_kw35b, hold_items_released_kw35b, drop retry_prev_kw35b_added",
+      "pilot_gate_prev_kw35d": null,
+      "pilot_gate": false,
+      "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d"
     }
   },
   "place_prefer": [
