@@ -21,7 +21,14 @@
     "site_top_um": 241.11,
     "macro_halo_collisions": 0,
     "estimated_gap_fill_same_cell_area": 0.1864672341360766,
-    "pin_cycles": 0
+    "pin_cycles": 0,
+    "reserved_placement_blockage_um": [
+      1472.04,
+      90.72,
+      1514.16,
+      245.16
+    ],
+    "estimated_fill_excluding_reserved_channel": 0.23072259184265073
   },
   "notes": {
     "actual_gap_um": 129.33,
@@ -42,6 +49,7 @@
       "CHILD_ADOPTION",
       "DO_NOT_COUNT",
       "HOLD_ROUTE"
-    ]
+    ],
+    "reservation_check": "Actual pre-GPL ot_face_flops list has zero non-syndrome fixed cells inside the reserved channel. Existing compact_blockage_release only removes x0..960/x2400.. edge blocks ending at y150, so this hard central reservation persists."
   }
 }
