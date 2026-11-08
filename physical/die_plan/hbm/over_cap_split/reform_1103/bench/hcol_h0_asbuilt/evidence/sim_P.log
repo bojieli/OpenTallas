@@ -1,0 +1,15 @@
+MISMATCH cyc=301 cs_out[17] ref=0 dut=1
+MISMATCH cyc=301 cs_out[22] ref=0 dut=1
+MISMATCH cyc=301 cs_out[24] ref=0 dut=1
+MISMATCH cyc=301 cs_out[25] ref=0 dut=1
+MISMATCH cyc=301 cs_out[26] ref=0 dut=1
+MISMATCH cyc=301 cs_out[27] ref=0 dut=1
+MISMATCH cyc=301 cs_out[28] ref=0 dut=1
+MISMATCH cyc=301 cs_out[29] ref=0 dut=1
+MISMATCH cyc=301 cs_out[30] ref=0 dut=1
+MISMATCH cyc=302 cs_out[3] ref=1 dut=0
+LOCKSTEP FAIL errs=34565 checks=17100 toggled_out_bits=33
+- tb.sv:53: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.156 s; speed 77.038 us/s
+- Verilator: cpu 0.156 s on 1 threads; allocated 9 MB

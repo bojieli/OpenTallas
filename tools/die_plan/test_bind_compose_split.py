@@ -175,3 +175,13 @@ def test_same_net_group_must_be_one_net(tmp_path):
     rule["subs"][0]["same_net"] = [["clk", "a"]]
     with pytest.raises(CompositionError, match="same_net"):
         compose(f, Rules(), spec, E.Cell, split=[rule])
+
+def test_preprocess_takes_recipe_branch():
+    from bind_compose_split import preprocess, SplitError
+    src = "module m #(\n`ifdef X\nparameter integer L = 2\n`else\nparameter integer L = 1\n`endif\n) ();\nendmodule\n"
+    assert "L = 1" in preprocess(src) and "L = 2" not in preprocess(src)
+    assert "L = 2" in preprocess(src, ["X"]) and "L = 1" not in preprocess(src, ["X"])
+    with pytest.raises(SplitError, match="unbalanced"):
+        preprocess("`ifdef X\n")
+    with pytest.raises(SplitError, match="macro use"):
+        preprocess("assign a = `W;\n")
