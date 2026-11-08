@@ -7,3 +7,5 @@ for phase in 0 1000 83000 208000 416500 625000 750000 832000; do
  ./obj/Vtb_landing_phase "$phase" > "phase_$phase.log" 2>&1
  cat "phase_$phase.log"
 done
+grep -Eq 'wrongedge_mismatches=[1-9][0-9]*' phase_83000.log
+grep -Eq 'wrongphase_mismatches=[1-9][0-9]*' phase_83000.log
