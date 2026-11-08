@@ -2442,7 +2442,25 @@
         "dsdv_slice_c1x_C__t7@14",
         "slice_station__t44@7",
         "dsdv_slice_lepe_mu_C__t1@15",
-        "slice_station__t45@11"
+        "slice_station__t45@11",
+        "col_h10_r2__t1__cl99efd374@18",
+        "dsdv_slice_c1x_C__t1@19",
+        "dsdv_slice_c1x_C__t4@25",
+        "dsdv_slice_c1x_C__t8@20",
+        "dsdv_slice_lepw_mus_C__t1@19",
+        "ot_s81sl_leaf__t10@3",
+        "ot_s81sl_leaf__t21@12",
+        "ot_s81sl_leaf__t42@9",
+        "ot_s81sl_leaf__t43@3",
+        "ot_s81sl_leaf__t57@5",
+        "ot_s81sl_leaf__t74@6",
+        "ot_s81sl_leaf__t9@4",
+        "serdes__t13@21",
+        "serdes__t14@10",
+        "serdes__t15__cla2127225@21",
+        "serdes__t15__cla3d02796@3",
+        "serdes__t16@11",
+        "serdes__t1__clb45db5be@12"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -5216,7 +5234,28 @@
         "epyc5",
         "epyc6"
       ],
-      "note_kw35_e11": "KW-FIX-35 2026-11-08 09:56 PST COORD 09:5x RESTAGE-DEPS: epyc6 out of s81 gen_hosts (also restage targets, which come from gen_hosts): kit_rtl needs /srv/opentallas-scratch3/claude/die-s81-70/kvov/bind/bind_report.json (die-s81-70 kvov bind overlay), absent on epyc6; 20 FAIL rows 11-08. Back when the KW-FIX-35-RD class fix lands. Revert: gen_hosts <- gen_hosts_prev_kw35e11."
+      "note_kw35_e11": "KW-FIX-35 2026-11-08 09:56 PST COORD 09:5x RESTAGE-DEPS: epyc6 out of s81 gen_hosts (also restage targets, which come from gen_hosts): kit_rtl needs /srv/opentallas-scratch3/claude/die-s81-70/kvov/bind/bind_report.json (die-s81-70 kvov bind overlay), absent on epyc6; 20 FAIL rows 11-08. Back when the KW-FIX-35-RD class fix lands. Revert: gen_hosts <- gen_hosts_prev_kw35e11.",
+      "retry_prev_kw35rd_added": [
+        "col_h10_r2__t1__cl99efd374@18",
+        "dsdv_slice_c1x_C__t1@19",
+        "dsdv_slice_c1x_C__t4@25",
+        "dsdv_slice_c1x_C__t8@20",
+        "dsdv_slice_lepw_mus_C__t1@19",
+        "ot_s81sl_leaf__t10@3",
+        "ot_s81sl_leaf__t21@12",
+        "ot_s81sl_leaf__t42@9",
+        "ot_s81sl_leaf__t43@3",
+        "ot_s81sl_leaf__t57@5",
+        "ot_s81sl_leaf__t74@6",
+        "ot_s81sl_leaf__t9@4",
+        "serdes__t13@21",
+        "serdes__t14@10",
+        "serdes__t15__cla2127225@21",
+        "serdes__t15__cla3d02796@3",
+        "serdes__t16@11",
+        "serdes__t1__clb45db5be@12"
+      ],
+      "note_kw35rd": "KW-FIX-35-RD 2026-11-08 10:04 PST RESTAGE-DEPS batch: 18 S81 rows FAILed @kit_rtl FileNotFoundError die-s81-70/kvov/bind/bind_report.json on epyc6 (kvov symlink targets codex-wave-bind-1106/s81_emitted_v2 + s81_ready_v3 absent there); relaunched in one batch (kit intact, nothing ran). epyc6 now staged byte-identical from intel1. 5 more (leaf t22@4 t33@4 t44__clf6cf8492@4 t54__cl706d9749@5 t60@4) already listed but stale under the KW-FIX-23 retry epoch (first seen 11-06 14:07). Revert: drop retry_prev_kw35rd_added from retry."
     },
     "s81_head": {
       "enabled": true,
