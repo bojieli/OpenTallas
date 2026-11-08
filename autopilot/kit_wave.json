@@ -2294,7 +2294,9 @@
         "ot_s81sl_leaf__t21@10",
         "ot_s81sl_leaf__t57@3",
         "slice_station__t44@5",
-        "dsdv_slice_c3x_C__t1@12"
+        "dsdv_slice_c3x_C__t1@12",
+        "dsdv_slice_c1x_C__t5@11",
+        "slice_station__t14@10"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -3225,7 +3227,9 @@
         "ot_s81sl_leaf__t44__clf6cf8492@1": "KW-FIX-33 2026-11-08 00:23 PST: REDESIGN: macros moved (OT_MACRO_MOVES). S81-OTHERFAIL-2 class H (COORD 00:0x (3) H): landed leaf facing form (leaf_facing.py) applied to the old-form GRT rows; macros moved, not a retry",
         "ot_s81sl_leaf__t60@1": "KW-FIX-33 2026-11-08 00:23 PST: REDESIGN: macros moved (OT_MACRO_MOVES). S81-OTHERFAIL-2 class H (COORD 00:0x (3) H): landed leaf facing form (leaf_facing.py) applied to the old-form GRT rows; macros moved, not a retry",
         "slice_station__t44@5": "KW-FIX-34 2026-11-08 01:15 PST: REDESIGN: COORD-approved station DRV class form (COORD 23:01 (3), 00:0x, 01:09 (5)): landing-ring write-enable fanout -> gen.py phys repair margins --slew-margin 50 --cap-margin 20 via s81 type_args (S81-STATION-1 00:1x); fresh kits, gates unchanged, no ECO",
-        "dsdv_slice_c3x_C__t1@12": "KW-FIX-34 2026-11-08 01:30 PST: REDESIGN: hard-core view LEF fixed (S81-XRT3-VIEW-1 166005e6c53: xrt_rfj_1104 xrt1/xrt3 exact M5/M6 OBS, pin_access PASS at the kit spot; DRT-0073 u_xr/clk class E); not a plain retry"
+        "dsdv_slice_c3x_C__t1@12": "KW-FIX-34 2026-11-08 01:30 PST: REDESIGN: hard-core view LEF fixed (S81-XRT3-VIEW-1 166005e6c53: xrt_rfj_1104 xrt1/xrt3 exact M5/M6 OBS, pin_access PASS at the kit spot; DRT-0073 u_xr/clk class E); not a plain retry",
+        "dsdv_slice_c1x_C__t5@11": "KW-FIX-34 2026-11-08 02:10 PST: REDESIGN: hard-core view LEF fixed (S81-XRT3-VIEW-1 166005e6c53: xrt_rfj_1104 xrt1/xrt3 exact M5/M6 OBS, pin_access PASS at the kit spot; DRT-0073 u_xr/clk class E); not a plain retry (COORD 02:0x)",
+        "slice_station__t14@10": "KW-FIX-34 2026-11-08 02:10 PST: REDESIGN: COORD-approved station DRV class form (landing-ring write-enable fanout, TT slew 338; S81-STATION-1 02:01): gen.py phys --slew-margin 50 --cap-margin 20 via s81 type_args, same as t22/t29cl/t44; fresh kit, no ECO"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -3291,6 +3295,12 @@
           "20"
         ],
         "slice_station__t44": [
+          "--slew-margin",
+          "50",
+          "--cap-margin",
+          "20"
+        ],
+        "slice_station__t14": [
           "--slew-margin",
           "50",
           "--cap-margin",
@@ -4058,7 +4068,11 @@
       "retry_prev_kw34e_dropped": [
         "svc_lo_dsdv_svc_rs_w__t1@1"
       ],
-      "note_kw34e": "KW-FIX-34 2026-11-08 01:53 PST: hold svc_lo_dsdv_svc_rs_w__t* (no 25-h flat synth) + dropped its @1 retry ['svc_lo_dsdv_svc_rs_w__t1@1']; revert: pop the hold, re-add retry_prev_kw34e_dropped"
+      "note_kw34e": "KW-FIX-34 2026-11-08 01:53 PST: hold svc_lo_dsdv_svc_rs_w__t* (no 25-h flat synth) + dropped its @1 retry ['svc_lo_dsdv_svc_rs_w__t1@1']; revert: pop the hold, re-add retry_prev_kw34e_dropped",
+      "type_args_prev_kw34g": {
+        "slice_station__t14": null
+      },
+      "note_kw34g": "KW-FIX-34 2026-11-08 02:10 PST: c1x_C t5@11 (DRT-0073 xrt1) on the kw34 xrt plan dir; station t14@10 DRV margins. Revert: drop both retries, type_args t14 from type_args_prev_kw34g"
     },
     "s81_head": {
       "enabled": true,
