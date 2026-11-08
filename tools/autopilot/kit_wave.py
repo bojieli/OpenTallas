@@ -519,19 +519,27 @@ def _own_wave_unit(r):
     lj = str(r.get("live_job", ""))
     if lj.startswith("kit-wave unit"):
         return True
-    # KW-FIX-12 11-05: the queue form 'ap-<id>-a<n> <id>[; ot-run pid N <dir tail>]' on a KIT-WAVE row is the wave's own
-    # routed kit of one sibling class; it blocked released retries of the other classes (QC 11-05: 26 parents, sle_su_l1).
-    m = re.match(r"ap-[0-9a-f]+-a\d+ [0-9a-f]+(?:; )?(.*)", lj)
-    if m:
-        if not m.group(1):
-            return True
-        lj = m.group(1)
+    # KW-FIX-12 11-05: the queue form 'ap-<id>-a<n> <id>' on a KIT-WAVE row is the wave's own routed kit of one sibling
+    # class; it blocked released retries of the other classes (QC 11-05: 26 parents, sle_su_l1).
+    # KW-FIX-35-P 11-08: ownership.py lists EVERY live job of the parent, '; '-joined, with ' (+N)' for jobs not shown
+    # ('ap-X-a1 X; ap-Y-a1 Y (+2)').  Only the first entry was read, so two of the wave's own route jobs looked like
+    # another lane's claim and held sle_stm_v2 / slw_su_l0 classes on 11-08.  Each listed entry must be the wave's own
+    # (ap- queue job, or an ot-run job dir of this item / its classes); one foreign entry keeps the claim.
+    lj = re.sub(r"\s*\(\+\d+\)\s*$", "", lj)
+    parts = [x.strip() for x in lj.split("; ") if x.strip()]
+    return bool(parts) and all(_own_wave_entry(x, r["item"]) for x in parts)
+
+
+def _own_wave_entry(lj, item):
+    """one live_job entry of a KIT-WAVE OWNERS row: the wave's own queue job or its own place/geom job of item"""
+    if re.fullmatch(r"ap-[0-9a-f]+-a\d+ [0-9a-f]+", lj):
+        return True
     # ownership.py form 'ot-run pid N <last 70 chars of the job dir>': the wave's own place/geom job of this item or
     # one of its classes (wave kit dirs end .../items/<class>/[attempt_n/]gen/<class>)
     if not lj.startswith("ot-run pid"):
         return False
     segs = re.split(r"[/\s]+", lj.split(None, 3)[-1]) if len(lj.split(None, 3)) == 4 else []
-    return ("gen" in segs or "items" in segs) and any(x == r["item"] or x.startswith(r["item"] + "_") for x in segs)
+    return ("gen" in segs or "items" in segs) and any(x == item or x.startswith(item + "_") for x in segs)
 
 
 def blocked_parents(d):
