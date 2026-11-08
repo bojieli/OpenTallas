@@ -5732,9 +5732,15 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         out.mkdir(parents=True, exist_ok=True)
         files = []
     else:
+        # A native physical kit with an explicit type selection consumes only
+        # those wrappers/cells. The whole-die top and its reset-open pad map
+        # are not inputs to any selected kit. Landed, bound/mixed and full-die
+        # callers retain their existing emission paths and validation.
+        native_selected_only = bool(types) and not kit_rtl and landing is None
         files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path,
                                   landing=None if land_decl_only else landing,
-                                  emit_die_top=not (land_decl_only and gtypes == []))
+                                  emit_die_top=not (native_selected_only or
+                                                    (land_decl_only and gtypes == [])))
     # Only the bound kit metadata receives promoted child inputs. The plan-only
     # die emitter retains its original parent declarations and tie values.
     P = S.Plan(bound_parent_id_plan(raw, kit_rtl), plan_path)
