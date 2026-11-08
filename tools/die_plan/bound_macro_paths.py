@@ -100,6 +100,34 @@ def resolve(t, bound_text):
     return rows
 
 
+def resolve_sub_cores(t, bound_text, sub_core_leaf, variants=None):
+    """Root explicit split-core paths through the producer's exact parent-to-leaf table.
+
+    The remaining subpath and master are preserved for kit_preflight to validate;
+    a table entry never makes a missing split implementation a legal macro.
+    """
+    ab = asbuilt_map(bound_text)
+    rows = []
+    for c in _macro_entries(t):
+        path = c.get("physical_inst", "")
+        if ".u_fcore." not in path or path.startswith("u_bound."):
+            continue
+        parent, tail = path.split(".u_fcore.", 1)
+        leaf = sub_core_leaf.get(parent)
+        # DIE-HBM-92-PHY 11-08: a physical variant type binds the same plan content from another as-built leaf
+        # (HBM NE_spb0 = q_spb0__physical_v1: plan u_lk_S0 is as-built lk_S3).  The producer declares those
+        # alternates in asbuilt.sub_core_leaf_variants; exactly one declared leaf must be in this bound file.
+        found = [x for x in ([leaf] + list((variants or {}).get(parent, []))) if x and x in ab] if leaf else []
+        if len(found) != 1:
+            continue
+        leaf = found[0]
+        hit = ab[leaf]
+        rows.append(dict(inst=c["inst"], physical_inst="u_bound." + hit[0] + ".u_fcore." + tail,
+                         physical_master=c["physical_master"], asbuilt=leaf, source_physical_inst=path,
+                         source_parent=c.get("sub_core_parent", parent)))
+    return rows
+
+
 def _strip_scope(prefix):
     """as-built prefix without its trailing generate blocks: u_s_3S.u_sl.g_c3 -> u_s_3S.u_sl."""
     parts = prefix.split(".")
@@ -163,7 +191,14 @@ def project(raw, kit_rtl):
         bf = _bound_file(fl) if t else None
         if bf is None:
             continue
-        rows = resolve(t, bf.read_text(errors="replace"))
+        bound_text = bf.read_text(errors="replace")
+        rows = resolve(t, bound_text)
+        kr = json.loads(Path(fl).with_name("kit_rtl.json").read_text())
+        manifest = kr.get("asbuilt_manifest")
+        man = (json.loads(Path(manifest).read_text())
+               if manifest and Path(manifest).is_file() and any(
+                   ".u_fcore." in c.get("physical_inst", "") for c in _macro_entries(t)) else {})
+        rows += resolve_sub_cores(t, bound_text, man.get("sub_core_leaf", {}), man.get("sub_core_leaf_variants", {}))
         if not rows:
             continue
         if result is raw:
@@ -172,8 +207,11 @@ def project(raw, kit_rtl):
         nt = result["partition_types"][tn]
         for c in nt.get("hard_cores", []) + nt.get("contents", []):
             r = by.get(c["inst"])
-            if r and c.get("lef") and "physical_inst" not in c:
+            if r and c.get("lef") and ("physical_inst" not in c or
+                    r.get("source_physical_inst") == c.get("physical_inst")):
                 c["physical_inst"], c["physical_master"] = r["physical_inst"], r["physical_master"]
+                if r.get("source_parent"):
+                    c.setdefault("sub_core_parent", r["source_parent"])
         receipts[tn] = dict(schema=SCHEMA, type=tn, bound_rtl=str(bf), rows=rows,
                             rule="plan macro path -> bound netlist path from the bind's as-built comments; "
                                  "logical identity, geometry, pins and clocks unchanged")
@@ -186,7 +224,7 @@ def overlay(kd, entries):
     if not p.is_file():
         return entries
     for r in json.loads(p.read_text()).get("rows", []):
-        e = entries.get(r["inst"])
+        e = entries.get(r["inst"]) or entries.get(r.get("source_physical_inst"))
         if e is not None and r["physical_inst"] not in entries:
             entries[r["physical_inst"]] = dict(e, inst=r["physical_inst"], module=r["physical_master"])
     return entries
