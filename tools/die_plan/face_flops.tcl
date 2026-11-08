@@ -735,3 +735,4 @@ if {[info commands ::ot_gpl_native] eq "" && [info commands ::global_placement] 
  interp alias {} ::global_placement {} ::ot_gpl_guarded
 }
 # OT_GPL_GUARD end
+if {[file exists /work/ft_polarity_local.tcl]} {source /work/ft_polarity_local.tcl}
