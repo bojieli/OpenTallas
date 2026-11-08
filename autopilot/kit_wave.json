@@ -8649,7 +8649,12 @@
         "ot_hgi_sfu_core_split3__opstore_b": "KW-FIX-11 07:0x COORD 07:01: stopped 06:51 by ruling, part 27 replaces (HBM-FORM-SPLIT 06:51); autopilot revived it on exit 137; no relaunch",
         "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch",
         "q_b013": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013 (intel1 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013_a3R); release after it ends or after ROOT-MERGE-52 lands the fix",
-        "q_b013__physical_v1": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013pv1 (epyc4 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013__physical_v1_a2R); release after it ends or after ROOT-MERGE-52 lands the fix"
+        "q_b013__physical_v1": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013pv1 (epyc4 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013__physical_v1_a2R); release after it ends or after ROOT-MERGE-52 lands the fix",
+        "NW_io": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for hfd_ep_static_vc2 + hfd_ep_host_vc (HBM-HARD-6-EP) and ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)",
+        "NE_io": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)",
+        "q_spb0": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)",
+        "q_spb0__physical_v1": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)",
+        "vsN0": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)"
       },
       "gen_hosts": [
         "intel1",
@@ -9945,6 +9950,13 @@
         "q_su01@3",
         "q_su01__physical_v1@3",
         "q_su11@3"
+      ],
+      "hold_items_kw35g_added": [
+        "NW_io",
+        "NE_io",
+        "q_spb0",
+        "q_spb0__physical_v1",
+        "vsN0"
       ]
     }
   },
