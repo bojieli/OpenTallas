@@ -2293,7 +2293,8 @@
         "ot_s81sl_leaf__t44__clf6cf8492@1",
         "ot_s81sl_leaf__t60@1",
         "ot_s81sl_leaf__t21@10",
-        "ot_s81sl_leaf__t57@3"
+        "ot_s81sl_leaf__t57@3",
+        "slice_station__t44@5"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -3216,12 +3217,13 @@
         "ot_s81sl_leaf__t58@1": "KW-FIX-32 2026-11-07 21:59 PST: S81-OTHERFAIL-1 21:51 class C TAP-RADIUS: class fix KW-FIX-28 044f3d479b75 (ADDED_TAP_RADIUS_SLACK 1.10, over-target advisory) on main; never relaunched since 11-06 13:07",
         "ot_s81sl_leaf__t68@1": "KW-FIX-32 2026-11-07 21:59 PST: S81-OTHERFAIL-1 21:51 class C TAP-RADIUS: class fix KW-FIX-28 044f3d479b75 (ADDED_TAP_RADIUS_SLACK 1.10, over-target advisory) on main; never relaunched since 11-06 13:07",
         "bk_sel__t2@30": "KW-FIX-32 2026-11-07 22:29 PST: S81-OTHERFAIL-1 21:51 class E HARD-CORE PIN ACCESS: detailed abstract LEF of the signed dsdv_bksel_c (7c69a10c21c), landed a6849cca0db; class batch (COORD 22:0x (1))",
-        "slice_station__t22@10": "KW-FIX-32 2026-11-07 22:31 PST: S81-TYPES-5 22:29 slice_station hold class, CLASS FIX 2 (DRV): gen.py phys --slew-margin 50 --cap-margin 20 (existing opt-in, ELEM-S81 station405 routed RCX ~1.8x setRC slew) via s81 type_args; fresh kits on current main, no ECO",
-        "slice_station__t29__clc7772371@11": "KW-FIX-32 2026-11-07 22:31 PST: S81-TYPES-5 22:29 slice_station hold class, CLASS FIX 2 (DRV): gen.py phys --slew-margin 50 --cap-margin 20 (existing opt-in, ELEM-S81 station405 routed RCX ~1.8x setRC slew) via s81 type_args; fresh kits on current main, no ECO",
+        "slice_station__t22@10": "KW-FIX-34 2026-11-08 01:15 PST: REDESIGN: COORD-approved station DRV class form (COORD 23:01 (3), 00:0x, 01:09 (5)): landing-ring write-enable fanout -> gen.py phys repair margins --slew-margin 50 --cap-margin 20 via s81 type_args (S81-STATION-1 00:1x); fresh kits, gates unchanged, no ECO",
+        "slice_station__t29__clc7772371@11": "KW-FIX-34 2026-11-08 01:15 PST: REDESIGN: COORD-approved station DRV class form (COORD 23:01 (3), 00:0x, 01:09 (5)): landing-ring write-enable fanout -> gen.py phys repair margins --slew-margin 50 --cap-margin 20 via s81 type_args (S81-STATION-1 00:1x); fresh kits, gates unchanged, no ECO",
         "ot_s81sl_leaf__t9@1": "KW-FIX-33 2026-11-08 00:23 PST: REDESIGN: macros moved (OT_MACRO_MOVES). S81-OTHERFAIL-2 class H (COORD 00:0x (3) H): landed leaf facing form (leaf_facing.py) applied to the old-form GRT rows; macros moved, not a retry",
         "ot_s81sl_leaf__t22@1": "KW-FIX-33 2026-11-08 00:23 PST: REDESIGN: macros moved (OT_MACRO_MOVES). S81-OTHERFAIL-2 class H (COORD 00:0x (3) H): landed leaf facing form (leaf_facing.py) applied to the old-form GRT rows; macros moved, not a retry",
         "ot_s81sl_leaf__t44__clf6cf8492@1": "KW-FIX-33 2026-11-08 00:23 PST: REDESIGN: macros moved (OT_MACRO_MOVES). S81-OTHERFAIL-2 class H (COORD 00:0x (3) H): landed leaf facing form (leaf_facing.py) applied to the old-form GRT rows; macros moved, not a retry",
-        "ot_s81sl_leaf__t60@1": "KW-FIX-33 2026-11-08 00:23 PST: REDESIGN: macros moved (OT_MACRO_MOVES). S81-OTHERFAIL-2 class H (COORD 00:0x (3) H): landed leaf facing form (leaf_facing.py) applied to the old-form GRT rows; macros moved, not a retry"
+        "ot_s81sl_leaf__t60@1": "KW-FIX-33 2026-11-08 00:23 PST: REDESIGN: macros moved (OT_MACRO_MOVES). S81-OTHERFAIL-2 class H (COORD 00:0x (3) H): landed leaf facing form (leaf_facing.py) applied to the old-form GRT rows; macros moved, not a retry",
+        "slice_station__t44@5": "KW-FIX-34 2026-11-08 01:15 PST: REDESIGN: COORD-approved station DRV class form (COORD 23:01 (3), 00:0x, 01:09 (5)): landing-ring write-enable fanout -> gen.py phys repair margins --slew-margin 50 --cap-margin 20 via s81 type_args (S81-STATION-1 00:1x); fresh kits, gates unchanged, no ECO"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -3281,6 +3283,12 @@
           "20"
         ],
         "slice_station__t29__clc7772371": [
+          "--slew-margin",
+          "50",
+          "--cap-margin",
+          "20"
+        ],
+        "slice_station__t44": [
           "--slew-margin",
           "50",
           "--cap-margin",
@@ -3987,7 +3995,62 @@
       "note_plan_kw33c": "KW-FIX-33 2026-11-08 00:31 PST (S81-TYPES-6 00:02, COORD 00:0x (1)): plan = kw24/wave_cg_frz hardlinks + S81-TYPES-6 wave plan bc5328dbe515 (frozen plan + phy_pg_clip_um 10 on the 11 serdes blocks; block_dryrun: only those 11 move); staged intel1/epyc4/epyc5/epyc6/epyc2; revert plan_prev_kw33c",
       "note_serdes_kw33c": "KW-FIX-33 2026-11-08 00:31 PST: REDESIGN: S81-TYPES-6 phyclip 3587d5f9b45 + RCK-3 notch/rck_band + macro-ck-pin: PHY region clipped to PMA+10um (11 serdes types, new block keys)",
       "plan_prev_kw33e": "/srv/opentallas-scratch3/claude/kw33/wave_cg_frz_pc/physical/die_plan/s81/plan_h2_2249.json",
-      "note_plan_kw33e": "KW-FIX-33 2026-11-08 00:56 PST: plan = wave_cg_frz_pc + b5ec9b39080 LP child views (its delta_lp_child_views_1107.py run on the wave plan: exactly the 4 LP types change, rows equal main's), views dir copied; staged intel1/epyc4/epyc5/epyc6/epyc2 sha ba6292b0c502; revert plan_prev_kw33e"
+      "note_plan_kw33e": "KW-FIX-33 2026-11-08 00:56 PST: plan = wave_cg_frz_pc + b5ec9b39080 LP child views (its delta_lp_child_views_1107.py run on the wave plan: exactly the 4 LP types change, rows equal main's), views dir copied; staged intel1/epyc4/epyc5/epyc6/epyc2 sha ba6292b0c502; revert plan_prev_kw33e",
+      "type_args_prev_kw34a": {
+        "serdes__t4": [
+          "--native-cell-cap",
+          "517000"
+        ],
+        "serdes__t12": [
+          "--native-cell-cap",
+          "517000"
+        ],
+        "serdes__t13": [
+          "--native-cell-cap",
+          "517000"
+        ],
+        "serdes__t14": [
+          "--native-cell-cap",
+          "517000"
+        ],
+        "serdes__t15": [
+          "--native-cell-cap",
+          "517000"
+        ],
+        "serdes__t15__cla2127225": [
+          "--native-cell-cap",
+          "517000"
+        ],
+        "serdes__t15__cla3d02796": [
+          "--native-cell-cap",
+          "517000"
+        ],
+        "serdes__t16": [
+          "--native-cell-cap",
+          "517000"
+        ],
+        "slice_station__t22": [
+          "--slew-margin",
+          "50",
+          "--cap-margin",
+          "20"
+        ],
+        "slice_station__t29__clc7772371": [
+          "--slew-margin",
+          "50",
+          "--cap-margin",
+          "20"
+        ]
+      },
+      "retry_fix_prev_kw34a": {
+        "slice_station__t22@10": "KW-FIX-32 2026-11-07 22:31 PST: S81-TYPES-5 22:29 slice_station hold class, CLASS FIX 2 (DRV): gen.py phys --slew-margin 50 --cap-margin 20 (existing opt-in, ELEM-S81 station405 routed RCX ~1.8x setRC slew) via s81 type_args; fresh kits on current main, no ECO",
+        "slice_station__t29__clc7772371@11": "KW-FIX-32 2026-11-07 22:31 PST: S81-TYPES-5 22:29 slice_station hold class, CLASS FIX 2 (DRV): gen.py phys --slew-margin 50 --cap-margin 20 (existing opt-in, ELEM-S81 station405 routed RCX ~1.8x setRC slew) via s81 type_args; fresh kits on current main, no ECO",
+        "slice_station__t44@5": null
+      },
+      "retry_prev_kw34a_added": [
+        "slice_station__t44@5"
+      ],
+      "note_kw34a": "KW-FIX-34 2026-11-08 01:15 PST: station DRV batch t22@10 t29__clc7772371@11 t44@5; retry_fix carries REDESIGN: so hold_unchanged releases them. Revert: type_args=type_args_prev_kw34a, retry_fix keys from retry_fix_prev_kw34a, drop retry_prev_kw34a_added from retry"
     },
     "s81_head": {
       "enabled": true,
