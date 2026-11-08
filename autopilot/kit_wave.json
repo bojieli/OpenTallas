@@ -7225,7 +7225,6 @@
         "epyc6"
       ],
       "note_hbm_transit_kw32": "KW-FIX-32 2026-11-07 21:28 PST: 13 transit types one batch (pilot_max 2 -> 13, revert pilot_max_prev_kw32 after the batch launches); intel1 HBM gen host again: the 701 objects the recipe pins read (438 commit:path pairs) installed as a self-contained pack in intel1 kw32/src_fcb50/.git, 0 missing, d34578d6f faces file sha 2a7d478da253 = epyc4",
-      "live_claim_h": null,
       "note_hbm_batch_kw32": "KW-FIX-32 2026-11-07 21:28 PST: ONE-TICK batch window for the 13 transit types: the generic HBM-PLAN OWNERS claim (activity minutes old on every HBM type) skipped 11 of 13; only_items narrowed to the 13 and live_claim_h 0 for one tick, then restored from only_items_prev_kw32h / live_claim_h_prev_kw32 / pilot_max_prev_kw32 | RESTORED 2026-11-07 21:37 PST after the 21:36 tick launched all 13"
     }
   },
