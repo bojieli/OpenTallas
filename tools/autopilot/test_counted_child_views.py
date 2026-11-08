@@ -48,6 +48,26 @@ class Order(unittest.TestCase):
         self.assertEqual([c["dir"] for c in C.order_candidates(cands[:2], [])], ["0", "1"])
 
 
+class Dedup(unittest.TestCase):
+    def test_same_view_in_several_worktrees_is_one_candidate(self):
+        recs = {"m": [("m", dict(host="e2", signoff=f"/w{i}/signoff.json", kit="/k", base="/b", db="/b/6_final.odb",
+                                 flow_tag=None)) for i in range(3)]}
+        calls = []
+
+        def fake(die, name, p, log):
+            calls.append(p["signoff"])
+            return dict(host="e2", dir=p["signoff"], job="j", pins_sha256="aa", pins_canon_sha256="bb", outline=None)
+        old_e, old_r, old_w = C.export_one, C.counter_records, C.wait_children
+        try:
+            C.export_one, C.counter_records = fake, lambda counter, die: recs
+            C.wait_children = lambda state, cfg, die: ({"m": ["t"]}, {})
+            man = C.build_manifest("qc", {}, {}, {}, log=lambda s: None)
+        finally:
+            C.export_one, C.counter_records, C.wait_children = old_e, old_r, old_w
+        self.assertEqual(len(calls), 3)
+        self.assertEqual([c["dir"] for c in man["modules"]["m"]["candidates"]], ["/w0/signoff.json"])
+
+
 class Apply(unittest.TestCase):
     def test_merge_first_keep_prev(self):
         cfg = {"dies": {"qc": {"prov_view_sources": {"m": [{"host": "h", "dir": "/old", "job": "die owner"}]}}}}

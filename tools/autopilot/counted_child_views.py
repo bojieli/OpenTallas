@@ -127,9 +127,13 @@ def order_candidates(cands, plan_hashes):
     return sorted(cands, key=lambda c: not c["plan_pin_match"])[:PROV_MAX]
 
 
-def run(argv, timeout=600):
-    r = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
-    return r.returncode, r.stdout, r.stderr
+def run(argv, timeout=600, tries=4):
+    """ssh rc 255 (connection reset under host load) is retried with a short back-off; any other rc is final"""
+    for i in range(tries):
+        r = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
+        if r.returncode != 255 or i == tries - 1:
+            return r.returncode, r.stdout, r.stderr
+        time.sleep(5 * (i + 1))
 
 
 def export_one(die, name, p, log):
@@ -194,6 +198,13 @@ def build_manifest(die, cfg, state, counter, export=True, log=print, only=None):
             c = export_one(die, name, p, log) if export else dict(host=p["host"], dir=None, counter_name=name)
             if c:
                 cands.append(c)
+        uniq, keys = [], set()
+        for c in cands:                      # the same signed view staged in several worktrees: one candidate
+            k = (c.get("pins_sha256"), c.get("pins_canon_sha256"), c.get("outline"))
+            if k not in keys:
+                keys.add(k)
+                uniq.append(c)
+        cands = uniq
         man["modules"][m] = dict(types=sorted(set(types)), plan_pin_hashes=cv.get(m) or [],
                                  candidates=order_candidates(cands, cv.get(m)))
     return man
