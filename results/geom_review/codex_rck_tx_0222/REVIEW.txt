@@ -1,0 +1,11 @@
+Pre-PLACE geometry review, 2026-11-08: compact TX split
+Image floorplan.png rendered by tools/ref_tile/layout_png.py and viewed.
+181.44 x 155.52 um outline; estimated 11k um2 / 28.2k = 39% fill; <=72k cells.
+514 input pins E, 546 output pins W, separated data direction E->W.
+M4 pin step .192 um = four .048 tracks: 25% local track use. No macros or narrow channels.
+Clock N edge at x90.732; farthest sink span <=239 um; root-to-centre 78um.
+No unregistered >450um hop can exist inside this outline. Three preserved TX input stages.
+Pin cycles: ZERO new relative to vJ. PDN is canonical generator M5 stripes continuous over no macros.
+SMELLS: none visible in this proposed pin-only view. Placement density, fanout and clock actuals remain unmeasured.
+Verdict: PASS for one PLACE pilot. No CTS or route until placed review.
+This is an isolated core draft contract, not a plan-of-record update or a signed-off view.
