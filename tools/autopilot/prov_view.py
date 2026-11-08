@@ -260,6 +260,9 @@ _DECL = re.compile(r"\b(input|output|inout)\b([^;()]*?)(?=[;)]|\b(?:input|output
 def module_ports(body):
     body = re.sub(r"/\*.*?\*/", "", re.sub(r"//[^\n]*", "", body), flags=re.S)
     body = re.sub(r"\(\*.*?\*\)", " ", body, flags=re.S)            # (* keep *) attributes
+    # Packed widths can contain parenthesized parameter arithmetic. Remove
+    # ranges before the declaration matcher treats parentheses as boundaries.
+    body = re.sub(r"\[[^\]]*\]", " ", body)
     out = {}
     for m in _DECL.finditer(body):
         rest = re.sub(r"\[[^\]]*\]", " ", m.group(2))
@@ -351,6 +354,7 @@ def core_table_dirs(module, roots):
                     dirs.setdefault(n, d)
                 srcs.append(f"port table {rel}")
     tops = set()
+    pinned = []
     for r in roots:
         for rel in CORE_RECIPES:
             try:
@@ -360,6 +364,8 @@ def core_table_dirs(module, roots):
             for k, v in (j.items() if isinstance(j, dict) else ()):
                 if (k == module or k.startswith(module + "__")) and isinstance(v, dict) and v.get("top"):
                     tops.add(v["top"])
+                    for path, rev in v.get("files_at", {}).items():
+                        pinned.append((r, v["top"], path, rev))
     if len(tops) == 1:
         top = next(iter(tops))
         rp, rf = rtl_dirs(top, roots)
@@ -367,6 +373,28 @@ def core_table_dirs(module, roots):
             for n, d in rp.items():
                 dirs.setdefault(n, d)
             srcs.append(f"recipe top {top}")
+        # Some recipe RTL is explicitly pinned to an older source commit and
+        # absent from the staged working tree. Read that exact module header.
+        pat = re.compile(r"\bmodule\s+" + re.escape(top) + r"\b")
+        for root, declared_top, path, rev in pinned:
+            if declared_top != top:
+                continue
+            try:
+                source = subprocess.run(["git", "-C", root, "show", f"{rev}:{path}"],
+                                        capture_output=True, text=True, timeout=30)
+            except (OSError, subprocess.SubprocessError):
+                continue
+            if source.returncode:
+                continue
+            for match in pat.finditer(source.stdout):
+                end = source.stdout.find("endmodule", match.start())
+                if end < 0:
+                    continue
+                got = module_ports(source.stdout[match.start():end])
+                if got:
+                    for n, d in got.items():
+                        dirs.setdefault(n, d)
+                    srcs.append(f"recipe file {path} at {rev}")
     return dirs, srcs
 
 

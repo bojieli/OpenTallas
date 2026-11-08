@@ -63,6 +63,17 @@ class UntrackedRtl(unittest.TestCase):
         self.assertEqual(P.rtl_dirs("ot_nowhere", [self.td.name]), ({}, None))
 
 
+class ParameterWidths(unittest.TestCase):
+    def test_parenthesized_packed_width_keeps_direction(self):
+        body = """module ring #(parameter PMAX=8) (
+            input wire [2*((PMAX*3152+2047)/2048)-1:0] bsel,
+            input wire [PMAX*8-1:0] lane_en_i,
+            output wire [(2048)-1:0] bq_d
+        ); endmodule"""
+        self.assertEqual(P.module_ports(body),
+                         {"bsel": "input", "lane_en_i": "input", "bq_d": "output"})
+
+
 class GzPins(unittest.TestCase):
     def test_gz_only_pins_file(self):
         with tempfile.TemporaryDirectory() as d:
@@ -113,6 +124,25 @@ class CoreTables(unittest.TestCase):
             dirs, src = P.core_table_dirs("m__sk", [d])
             self.assertEqual(dirs, {"clk": "input", "y": "output"})
             self.assertEqual(src, ["recipe top ot_sk_top"])
+
+    def test_recipe_pinned_file_without_working_copy(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._root(d)
+            _git(d, "init", "-q")
+            _git(d, "add", "rtl/sk.sv")
+            _git(d, "commit", "-q", "-m", "pinned source")
+            rev = subprocess.check_output(["git", "-C", d, "rev-parse", "HEAD"], text=True).strip()
+            os.unlink(os.path.join(d, "rtl", "sk.sv"))
+            recipe = {"m__sk": {"top": "ot_sk_top", "files_at": {"rtl/sk.sv": rev}}}
+            with open(os.path.join(d, "physical/die_plan/hbm_arch_cores/recipes_b2.json"), "w") as f:
+                json.dump(recipe, f)
+            dirs, src = P.core_table_dirs("m__sk", [d])
+            self.assertEqual(dirs, {"clk": "input", "y": "output"})
+            self.assertEqual(src, [f"recipe file rtl/sk.sv at {rev}"])
+            recipe["m__sk"]["top"] = "wrong_top"
+            with open(os.path.join(d, "physical/die_plan/hbm_arch_cores/recipes_b2.json"), "w") as f:
+                json.dump(recipe, f)
+            self.assertEqual(P.core_table_dirs("m__sk", [d]), ({}, []))
 
     def test_unknown_module_empty(self):
         with tempfile.TemporaryDirectory() as d:
