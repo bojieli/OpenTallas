@@ -6290,8 +6290,7 @@
       "gen_hosts": [
         "epyc4",
         "epyc5",
-        "epyc6",
-        "intel1"
+        "epyc6"
       ],
       "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
       "retry_fix": {
@@ -6614,7 +6613,14 @@
       ],
       "note_prefer_kw32": "KW-FIX-32 2026-11-07 18:08 PST COORD 18:0x (epyc2 load 247/128 + 114 waiters, epyc4 91/256 + 10): epyc4 first in place_prefer and gen_hosts; disk/admit checks unchanged (epyc4 only taken while it admits / has gen disk room). Revert: place_prefer <- place_prefer_prev_kw32, gen_hosts <- gen_hosts_prev_kw32c.",
       "types_before_die_clock": true,
-      "note_types_before_clock_kw32": "KW-FIX-32 2026-11-07 18:08 PST: OWNER 17:4x 'allow type builds for all dies, including HBM' + COORD 17:54/18:1x: types_before_die_clock true (option in 6dfae880; inert until the running kit_wave.py has it); gate.clock stays UNMEASURED. Revert: drop the key."
+      "note_types_before_clock_kw32": "KW-FIX-32 2026-11-07 18:08 PST: OWNER 17:4x 'allow type builds for all dies, including HBM' + COORD 17:54/18:1x: types_before_die_clock true (option in 6dfae880; inert until the running kit_wave.py has it); gate.clock stays UNMEASURED. Revert: drop the key.",
+      "gen_hosts_prev_kw32d": [
+        "epyc4",
+        "epyc5",
+        "epyc6",
+        "intel1"
+      ],
+      "note_gen_hosts_kw32d": "KW-FIX-32 2026-11-07 18:38 PST COORD 18:2x (c): HBM recipe read_at_commit/files_at pins (49 commits, e.g. d34578d6f) must be in the gen src .git; installed as refs/pins/recipe-* in kw32/src_6a7e5 on epyc4/epyc5/epyc6 (0 missing); intel1's src .git lacks almost all objects (dangling alternates, 305k of 312k missing), so intel1 is not an HBM gen host. Revert: gen_hosts <- gen_hosts_prev_kw32d."
     }
   },
   "place_prefer": [
