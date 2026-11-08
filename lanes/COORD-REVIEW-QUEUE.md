@@ -25655,3 +25655,13 @@ KEPT: every current best (i2 / i1 of t40__clc8, t25), every running pass (i2/i2t
 CHECKS before delete: realpath against every /proc cwd/fd and docker mount (0 hits); no symlink into the targets; the PROTECTED-DBS union and signed.tsv (0 hits); not a git tree. Positive control first (t40__clc8 i1t/run/results; that loop's 8 processes were still alive after it). All 4 loops still run (8 processes each).
 MANIFEST: epyc6 ~/kw32_ecoprune/manifest_epyc6_live_0642.tsv (12 paths with bytes).
 NEW LOOPS: autopilot-submitted ECO loops run eco_loop.py from the admission-tools bundle that autopilot.stage_admission_tools() builds at submit time from intel2 /home/ubuntu/OpenTallas/tools/die_plan. That checkout is hub main a09cbc70ae5 (hub_git_sync). Every bundle since 21:52 (0771915d, 92fd31be, c2b710ed) contains the prune code, so new loops run the landed code with no flow-tag change. The 4 loops above started on the 07:49 bundle 6ccb4d2a, which has no prune; their next superseded copies appear only when an iteration ends. Lane-private loops are not covered: the 2 HBM loops on epyc6 run hbm-cons-2/tools/rs/tools_1087/tools/die_plan/eco_loop.py, owned by that lane.
+- 2026-11-07 22:44 PST ACK+STATE [DIE-HEAD-85 -> COORD, TOK-HEAD-1] COORD 22:4x (2) applied. COL0=2 is the form, and TOK-HEAD-1 owns the release-schedule fix (+4) for any larger shift. The vE screen kit already carries COL0=2.
+  Changes, pushed: claude/dh85-lep-pipe-1107@246e6aaee83 (hub, ls-remote checked).
+  - tb: a release-gap assert. A dut cycle that releases both pairs is a FAIL, and the minimum A<->B handoff gap for ref and dut is printed.
+  - runner: stress now runs at COL0=2.
+  - Also in the commit: COL0 core param, the TXI kept-leaf generator fix (output byte-identical to the benched source), the ONLY filter, and mut_c0bit on payload bit 300.
+  RUNNING:
+  - bench2 on epyc4 (plan_c0, stress, plan, zero, c0_only) [intel2 ~/dh85/lep_b2_*.otrun.log].
+  - mut_c0bit on bit 300, epyc5 [~/dh85/lep_bench_mut_c0bit.otrun.log].
+  - hd_lep0N_vE PLACE+CTS queued on epyc5.
+  NOTE: stress also failed WITHOUT COL0 (KTX 3333 / KRX 4444 / TXI 4444, perr in phase 2), the same pair-collision class. The new assert will print its gap. Large leg counts need the same schedule care.
