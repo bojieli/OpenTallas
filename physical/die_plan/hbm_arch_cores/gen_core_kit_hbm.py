@@ -2159,6 +2159,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         (kd / "atomic_post_cts.tcl").write_text(
             "source /work/core_clock_atomic_groups.tcl\n"
             "set fh [open $::env(OT_DTAP_ATOMIC_GROUPS) r]; set groups [read $fh]; close $fh\n"
+            # DIE-HEAD-85 11-07 class fix: CTS splits each small atomic tap net across two sibling leaves; put
+            # every group back on one leaf before the receipt (OT_DTAP_ATOMIC_COLLAPSE=0 opts out).
+            "if {![info exists ::env(OT_DTAP_ATOMIC_COLLAPSE)] || $::env(OT_DTAP_ATOMIC_COLLAPSE) ne \"0\"} "
+            "{dt_atomic_collapse [ord::get_db_block] $groups}\n"
             "dt_atomic_check [ord::get_db_block] $groups $::env(OT_DTAP_ATOMIC_MAX_SINKS) "
             "[expr {$::env(OT_DTAP_ATOMIC_RADIUS_UM) * [[ord::get_db_block] getDbUnitsPerMicron]}] $::env(OT_DTAP_PORT)\n"
             "source /work/core_tap_align.tcl\n")

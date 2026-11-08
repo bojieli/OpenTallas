@@ -101,3 +101,79 @@ proc dt_atomic_check {block groups max_sinks max_radius native} {
   puts "OT_DTAP_ATOMIC_CTS checked_groups $checked common_leaf PASS"
   return $checked
 }
+
+# DIE-HEAD-84/85 11-07 (HEAD TX vE CTS, class fix): TritonCTS builds an H-tree under every atomic density-tap net, and a
+# 9-10 sink net gets a Level-1 split (two sibling leaf buffers + a dummy load), so every group lands on two leaves by
+# construction and dt_atomic_check can never pass ("split across actual CTS leaves", TX vE attempt 1).  Collapse: for a
+# group whose members sit on more than one leaf net, re-hang every member on the leaf net holding most of them; both
+# leaves must be BUF-driven siblings of one parent net.  An emptied sibling leaf buffer, its CTS dummy loads (no
+# connected output) and its net are deleted.  Fail-closed: a sibling that still drives a non-dummy load is an error,
+# never deleted.  dt_atomic_check runs afterwards and stays the receipt (sink cap, radius, native root).
+proc dt_atomic_ck {inst} {
+  set p [$inst findITerm CLK]
+  if {$p eq "NULL" || $p eq ""} {set p [$inst findITerm CK]}
+  if {$p eq "NULL" || $p eq ""} {error "ATOMIC_COLLAPSE no clock pin on [$inst getName]"}
+  return $p
+}
+proc dt_atomic_driver {net} {
+  foreach t [$net getITerms] {if {[$t isOutputSignal]} {return [$t getInst]}}
+  return ""
+}
+proc dt_atomic_buf_parent {inst what} {
+  if {$inst eq "" || ![string match BUF* [[$inst getMaster] getName]]} {error "ATOMIC_COLLAPSE $what not BUF-driven"}
+  set ins {}
+  foreach t [$inst getITerms] {if {[$t isInputSignal]} {lappend ins [$t getNet]}}
+  if {[llength $ins] != 1 || [lindex $ins 0] eq "NULL" || [lindex $ins 0] eq ""} {error "ATOMIC_COLLAPSE $what malformed buffer"}
+  return [[lindex $ins 0] getName]
+}
+proc dt_atomic_is_dummy {inst} {
+  if {[string match *DFF* [[$inst getMaster] getName]]} {return 0}
+  foreach t [$inst getITerms] {
+    if {[$t isOutputSignal]} {set n [$t getNet]; if {$n ne "NULL" && $n ne ""} {return 0}}
+  }
+  return 1
+}
+proc dt_atomic_collapse {block groups} {
+  set split 0; set moved 0; set del_buf 0; set del_dummy 0
+  foreach record $groups {
+    lassign $record id members
+    set cnt [dict create]; set order {}; set pins {}
+    foreach name $members {
+      set inst [$block findInst $name]
+      if {$inst eq "NULL" || $inst eq ""} {error "ATOMIC_COLLAPSE missing post-CTS register $name"}
+      set p [dt_atomic_ck $inst]; set n [$p getNet]
+      if {$n eq "NULL" || $n eq ""} {error "ATOMIC_COLLAPSE disconnected register $name"}
+      set nn [$n getName]
+      if {![dict exists $cnt $nn]} {lappend order $nn}
+      dict incr cnt $nn; lappend pins [list $p $nn]
+    }
+    if {[dict size $cnt] < 2} continue
+    incr split
+    set keep ""; set best -1
+    foreach nn $order {if {[dict get $cnt $nn] > $best} {set best [dict get $cnt $nn]; set keep $nn}}
+    set knet [$block findNet $keep]
+    set kpar [dt_atomic_buf_parent [dt_atomic_driver $knet] "$id keep leaf $keep"]
+    set others {}
+    foreach pn $pins {
+      lassign $pn p nn
+      if {$nn eq $keep} continue
+      if {![dict exists $others $nn]} {
+        set opar [dt_atomic_buf_parent [dt_atomic_driver [$block findNet $nn]] "$id sibling leaf $nn"]
+        if {$opar ne $kpar} {error "ATOMIC_COLLAPSE $id leaves $nn and $keep are not siblings ($opar vs $kpar)"}
+        dict set others $nn 1
+      }
+      $p disconnect; $p connect $knet; incr moved
+    }
+    foreach on [dict keys $others] {
+      set n [$block findNet $on]; set odrv [dt_atomic_driver $n]
+      set loads {}
+      foreach t [$n getITerms] {if {![$t isOutputSignal]} {lappend loads [$t getInst]}}
+      foreach li $loads {if {![dt_atomic_is_dummy $li]} {error "ATOMIC_COLLAPSE $id sibling $on still drives [$li getName]: not deleted"}}
+      foreach li $loads {odb::dbInst_destroy $li; incr del_dummy}
+      odb::dbInst_destroy $odrv; incr del_buf
+      odb::dbNet_destroy $n
+    }
+  }
+  puts "OT_ATOMIC_COLLAPSE groups_split $split members_moved $moved leaf_bufs_deleted $del_buf dummies_deleted $del_dummy"
+  return [list $split $moved $del_buf $del_dummy]
+}
