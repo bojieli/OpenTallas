@@ -1,0 +1,44 @@
+READY input_sample=82
+BASE source_sample=167 side=TX value=10
+BASE source_sample=168 side=RX value=11
+EPOCH input_sample=221 id=1
+FEEDBACK_EPOCH input_sample=222
+START source_sample=297 epoch=1 layer=63 seg=1 txbase=10 rxbase=11
+RF_START input_sample=298 epoch=1 layer=63 txbase=10 rxbase=11 last_cfg_gap=129
+FEEDBACK_START receiver_sample=299 epoch=1 layer=63
+BASE source_sample=1567 side=TX value=2
+BASE source_sample=1568 side=RX value=4
+START source_sample=1570 epoch=1 layer=0 seg=1 txbase=2 rxbase=4
+RF_START input_sample=1571 epoch=1 layer=0 txbase=2 rxbase=4 last_cfg_gap=2
+FEEDBACK_START receiver_sample=1572 epoch=1 layer=0
+EPOCH input_sample=2301 id=2
+FEEDBACK_EPOCH input_sample=2302
+BASE source_sample=2305 side=TX value=10
+BASE source_sample=2306 side=RX value=11
+START source_sample=2377 epoch=2 layer=63 seg=1 txbase=10 rxbase=11
+RF_START input_sample=2378 epoch=2 layer=63 txbase=10 rxbase=11 last_cfg_gap=71
+FEEDBACK_START receiver_sample=2379 epoch=2 layer=63
+BASE source_sample=3647 side=TX value=2
+BASE source_sample=3648 side=RX value=4
+START source_sample=3650 epoch=2 layer=0 seg=1 txbase=2 rxbase=4
+RF_START input_sample=3651 epoch=2 layer=0 txbase=2 rxbase=4 last_cfg_gap=2
+FEEDBACK_START receiver_sample=3652 epoch=2 layer=0
+BASE source_sample=4167 side=TX value=10
+BASE source_sample=4168 side=RX value=11
+EPOCH input_sample=4201 id=3
+FEEDBACK_EPOCH input_sample=4202
+START source_sample=4277 epoch=3 layer=63 seg=1 txbase=10 rxbase=11
+RF_START input_sample=4278 epoch=3 layer=63 txbase=10 rxbase=11 last_cfg_gap=109
+FEEDBACK_START receiver_sample=4279 epoch=3 layer=63
+BASE source_sample=5547 side=TX value=2
+BASE source_sample=5548 side=RX value=4
+START source_sample=5550 epoch=3 layer=0 seg=1 txbase=2 rxbase=4
+RF_START input_sample=5551 epoch=3 layer=0 txbase=2 rxbase=4 last_cfg_gap=2
+FEEDBACK_START receiver_sample=5552 epoch=3 layer=0
+RESULT cycles=6000 epochs=3 starts=6 errors=0 stale_differences=522 lost_base_errors=3 rf_errors=0 rf_min_cfg_gap=2 first_token=1570 stale_first=1400 early_by=170
+FEEDBACK_RESULT starts=6 first_token=1572 extra_vs_native=2
+BC4_EPOCH_PASS
+- tb.sv:75: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.019 s; speed 265.762 us/s
+- Verilator: cpu 0.019 s on 1 threads; allocated 7 MB

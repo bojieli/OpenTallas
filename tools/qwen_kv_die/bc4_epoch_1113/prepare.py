@@ -12,6 +12,9 @@ def prepare(root, selected_alias, out):
     import kv_dcal_profile as P
     image=root/'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_qc_pair.svh'
     profile=P.extract_sv(image.read_text())
+    sys.path.insert(0,str(Path(__file__).parent))
+    from epoch_calendar import bind_image_profile
+    bind_image_profile(profile,profile)
     out.mkdir(parents=True,exist_ok=False)
     for name,data in [('profile',profile),('stale',dict(profile,ADM_LEN=1100,FIRST_OFS=1176))]:
         rec=P.personalise(data,out/name,instance=name)
@@ -20,8 +23,7 @@ def prepare(root, selected_alias, out):
     # physical R8 composition selected the stale payload.
     try:
         stale=json.loads((out/'stale/stale.profile.json').read_text())
-        if stale != profile:
-            raise ValueError('selected image/profile mismatch')
+        bind_image_profile(profile,stale)
     except ValueError:
         (out/'stale_bind_control.txt').write_text('CAUGHT image/profile mismatch: ADM_LEN1100!=1270 FIRST1176!=1346\n')
     else:raise ValueError('stale profile unexpectedly accepted')

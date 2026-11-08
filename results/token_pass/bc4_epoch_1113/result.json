@@ -1,0 +1,152 @@
+{
+  "status": "NATIVE_BC4_PROFILE_EPOCH_PASS",
+  "clock_ps": 833,
+  "epochs": [
+    {
+      "epoch": 1,
+      "native": {
+        "original_forward_epoch_sampling_edge": 221,
+        "dcal_epoch_sampling_edge": 221,
+        "source_control_events": {
+          "admission": 297,
+          "token_base_tx": 1567,
+          "token_base_rx": 1568,
+          "first_token": 1570
+        },
+        "d2d_control_sampling_events": {
+          "admission": 297,
+          "token_base_tx": 1567,
+          "token_base_rx": 1568,
+          "first_token": 1570
+        },
+        "feedback_output_capture": 0,
+        "control_input_capture": 0,
+        "cfg_settle_edges": 2,
+        "global_package_epoch_bound": false,
+        "production_qualified": false
+      },
+      "rf": {
+        "original_forward_epoch_sampling_edge": 221,
+        "dcal_epoch_sampling_edge": 222,
+        "source_control_events": {
+          "admission": 298,
+          "token_base_tx": 1568,
+          "token_base_rx": 1569,
+          "first_token": 1571
+        },
+        "d2d_control_sampling_events": {
+          "admission": 299,
+          "token_base_tx": 1569,
+          "token_base_rx": 1570,
+          "first_token": 1572
+        },
+        "feedback_output_capture": 1,
+        "control_input_capture": 1,
+        "cfg_settle_edges": 2,
+        "global_package_epoch_bound": false,
+        "production_qualified": false
+      }
+    },
+    {
+      "epoch": 2,
+      "native": {
+        "original_forward_epoch_sampling_edge": 2301,
+        "dcal_epoch_sampling_edge": 2301,
+        "source_control_events": {
+          "admission": 2377,
+          "token_base_tx": 3647,
+          "token_base_rx": 3648,
+          "first_token": 3650
+        },
+        "d2d_control_sampling_events": {
+          "admission": 2377,
+          "token_base_tx": 3647,
+          "token_base_rx": 3648,
+          "first_token": 3650
+        },
+        "feedback_output_capture": 0,
+        "control_input_capture": 0,
+        "cfg_settle_edges": 2,
+        "global_package_epoch_bound": false,
+        "production_qualified": false
+      },
+      "rf": {
+        "original_forward_epoch_sampling_edge": 2301,
+        "dcal_epoch_sampling_edge": 2302,
+        "source_control_events": {
+          "admission": 2378,
+          "token_base_tx": 3648,
+          "token_base_rx": 3649,
+          "first_token": 3651
+        },
+        "d2d_control_sampling_events": {
+          "admission": 2379,
+          "token_base_tx": 3649,
+          "token_base_rx": 3650,
+          "first_token": 3652
+        },
+        "feedback_output_capture": 1,
+        "control_input_capture": 1,
+        "cfg_settle_edges": 2,
+        "global_package_epoch_bound": false,
+        "production_qualified": false
+      }
+    },
+    {
+      "epoch": 3,
+      "native": {
+        "original_forward_epoch_sampling_edge": 4201,
+        "dcal_epoch_sampling_edge": 4201,
+        "source_control_events": {
+          "admission": 4277,
+          "token_base_tx": 5547,
+          "token_base_rx": 5548,
+          "first_token": 5550
+        },
+        "d2d_control_sampling_events": {
+          "admission": 4277,
+          "token_base_tx": 5547,
+          "token_base_rx": 5548,
+          "first_token": 5550
+        },
+        "feedback_output_capture": 0,
+        "control_input_capture": 0,
+        "cfg_settle_edges": 2,
+        "global_package_epoch_bound": false,
+        "production_qualified": false
+      },
+      "rf": {
+        "original_forward_epoch_sampling_edge": 4201,
+        "dcal_epoch_sampling_edge": 4202,
+        "source_control_events": {
+          "admission": 4278,
+          "token_base_tx": 5548,
+          "token_base_rx": 5549,
+          "first_token": 5551
+        },
+        "d2d_control_sampling_events": {
+          "admission": 4279,
+          "token_base_tx": 5549,
+          "token_base_rx": 5550,
+          "first_token": 5552
+        },
+        "feedback_output_capture": 1,
+        "control_input_capture": 1,
+        "cfg_settle_edges": 2,
+        "global_package_epoch_bound": false,
+        "production_qualified": false
+      }
+    }
+  ],
+  "native_cycles": 6000,
+  "all53_public_literal_rom_differences": 0,
+  "stale_profile_differences": 522,
+  "stale_first_token_early_edges": 170,
+  "lost_runtime_base_errors": 3,
+  "cfg_settle_edges": 2,
+  "rf_added_from_original_forward_epoch_pin": 2,
+  "package_forward_epoch_phase_bound": false,
+  "cfg_dates": "source-derived from native counter law; admission/first-token and RF input epochs measured",
+  "G5_closed": false,
+  "production_adopted": false
+}
