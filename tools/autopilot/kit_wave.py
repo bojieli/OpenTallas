@@ -3809,8 +3809,14 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
     route job of an ENQUEUED kit -- and marked CANCELLED class SUPERSEDED.  The current block is a different key
     and launches on its own.  Only dies with a cached current-plan probe are judged; die option cancel_superseded
     false opts out; at most supersede_max_per_tick stops per tick (a mass stop is logged, not hidden).  The containers of a
-    stopped attempt are stopped on every fleet host too (WATCHDOG-1 11-03); watchdog.py is the net for a host missed here."""
+    stopped attempt are stopped on every fleet host too (WATCHDOG-1 11-03); watchdog.py is the net for a host missed here.
+    KW-FIX-35-K 11-08 (KV kv3_phy@7 in geom and kv3_phy_v1@4 in place were stopped 08:22 by a plan switch while both
+    items were in hold_items "in flight, do not re-pick"): an active row is KEPT, never stopped, when (a) its item matches
+    the die's hold_items -- an operator hold means the row's owner decides, the wave neither re-picks nor cancels it -- or
+    (b) its own plan block is unchanged (the record's block_sha equals the item's block in the current plan, so only the
+    event label or another item moved).  Each keep is logged once per row and reason (KIT-WAVE SUPERSEDED-KEEP)."""
     cur = current_keys(cfg, st)
+    cur_blocks = current_blocks(cfg, st)
     jobs = {}
     if ap_dir:
         try:
@@ -3825,6 +3831,17 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
         d = (cfg.get("dies") or {}).get(die)
         if die not in cur or key in cur[die] or not isinstance(d, dict) or d.get("cancel_superseded") is False:
             continue
+        if r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED"):
+            item = r.get("item") or ""
+            held = next((str(w) for pat, w in (d.get("hold_items") or {}).items() if fnmatch.fnmatchcase(item, pat)), None)
+            same = bool(r.get("block_sha")) and cur_blocks.get(die, {}).get(item) == r.get("block_sha")
+            if held is not None or same:
+                why = (f"hold_items: {held[:160]}" if held is not None else
+                       f"own plan block {str(r.get('block_sha'))[:12]} unchanged in the current plan")
+                if r.get("supersede_kept") != why:
+                    r["supersede_kept"] = why
+                    AP.log(f"KIT-WAVE SUPERSEDED-KEEP {die}/{item}@{r.get('attempt')} {r.get('status')}: {why}")
+                continue
         units = []
         if r.get("status") in ("RUNNING", "LAUNCHING"):
             units.append(r.get("unit"))
@@ -4105,6 +4122,19 @@ def protect_sources(AP, cfg, st, ap_dir):
 STAGES_FILE = "kit_wave_stages.tsv"
 STAGE_COLS = ("die", "item", "parent_item", "plan_sha", "block_sha", "event", "stage", "status", "class", "kit",
               "evidence", "updated", "plan_current", "reason")
+
+
+def current_blocks(cfg, st):
+    """KW-FIX-35-K 11-08: {die: {item: block sha}} of the current plan of record (the cached probe and names that
+    current_keys reads); a die without a cached probe is absent."""
+    out = {}
+    for die, d in ((cfg or {}).get("dies") or {}).items():
+        if not isinstance(d, dict) or not d.get("plan") or not d.get("event"):
+            continue
+        p = (st.get("plans") or {}).get(f"{d.get('gen_host')}:{d['plan']}|{d['event']}")
+        if p and p.get("blocks"):
+            out[die] = dict(core_view_names(dict(p["blocks"]), p.get("core_views")))
+    return out
 
 
 def current_keys(cfg, st):
