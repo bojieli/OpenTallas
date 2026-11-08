@@ -340,6 +340,28 @@ def _writer_start_groups(t):
     return groups
 
 
+def _origin_home_groups(t):
+    """KV-TYPES-3 11-07 (kv3_sys_SD_v1 TT -267.16: origin sf negedge -> s0 posedge, a half-cycle edge, placed 1168 um
+    apart because GPL pulled the origin flops toward three different pins). Optional clock.landing_origin_rect_um puts
+    the whole START origin (sf/s0/s1/s2/pd) FIRM in one rectangle next to its tstart pin, so the half-cycle capture is
+    local and only full-cycle START legs travel. No added cycles, no RTL change. Absent key = unchanged output."""
+    ck = (t or {}).get('clock', {})
+    rect = ck.get('landing_origin_rect_um')
+    if rect is None:
+        return []
+    for k in ('landing_reader_start', 'landing_writer_start'):
+        if 'origin_rect_um' in (ck.get(k) or {}):
+            raise ValueError(f'landing_origin_rect_um conflicts with {k}.origin_rect_um (one origin home only)')
+    if (not isinstance(rect, (list, tuple)) or len(rect) != 4
+            or any(type(v) not in (int, float) or not isfinite(v) for v in rect)):
+        raise ValueError('landing_origin_rect_um needs four finite numbers')
+    w, h = t['outline_um']
+    if not (0 <= rect[0] < rect[2] <= w and 0 <= rect[1] < rect[3] <= h):
+        raise ValueError('landing_origin_rect_um must be ordered and inside the type outline')
+    origin = 'u_cland_rstart_rx' if t.get('landing_relay_start_copy') else 'u_cland_origin'
+    return [(origin, list(rect), 'origin-home')]
+
+
 def _status_reset_groups(t):
     """DIE-HEAD-38 R1/R2 opt-in sites (absent = no group): status input relays, status stage anchors and
     same-cycle local reset copies, through the existing FIRM packing at +-2.16 um."""
@@ -403,7 +425,7 @@ def collector_instances(ev):
 def tcl(P,tn):
     c=P.types[tn].get('clock',{}).get('landing_contract',{})
     ev=collector_event(c)
-    groups=_reader_start_groups(P.types[tn])+_writer_start_groups(P.types[tn])+_status_reset_groups(P.types[tn]);status=[];tree=ev['tree'];root=ev['collector_root_node']
+    groups=_reader_start_groups(P.types[tn])+_writer_start_groups(P.types[tn])+_origin_home_groups(P.types[tn])+_status_reset_groups(P.types[tn]);status=[];tree=ev['tree'];root=ev['collector_root_node']
     def near(xy):
         x,y=xy;return [x-2.16,y-2.16,x+2.16,y+2.16]
     if c.get('monitor')=='dataflow' or (root and tree is None):
