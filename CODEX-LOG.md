@@ -12368,3 +12368,7 @@ OWNER? HBM h9b count adoption: merged exact OT_H9B_WQDIAG source9ab510cfbfc plus
 2026-11-08 03:12 PST HEAD/CTL: first private vG PLACE active I2 oth-ubuntu-4054213-1794134844; hub codex/head-ctl-vg-0222@ff383026c2a fixes planned-hook scope+FIRM reorientation (actual1025 targets passed). Source/meta pilot carries vE x_o[564:0]+1, epoch unchanged, vG+0; token calendar95452b008c prepared. All failures diagnosed/preserved in CODEX-HEAD-CTL-0222.md; no owner fork, no route release/count/POR/merge/tag.
 
 - 2026-11-08 03:17 PST CODEX-FLEET: SVC numerical failure confirmed exact64GiBMEMCG OOM (singlecc1plus~63.5GiB); completed interrupted checkpoint rsync to I1,0deletes, all2376files/2.671GB. Child owns96GiB/J1/O0 resume; no new Verilation/build by fleet. Exactkernel excerpt retained beside checkpoint.
+
+2026-11-08 03:33 PST HEAD/CTL: diagnosed78fixed-capture overlaps, hub70a23d9b629 legalizesall78 by<=1.08um; actual0of1025target overlaps. Stopped exact owninvalidphysical4054742; separateLEC+watcher alive. Legal successor NOTRUN by intentionalSPILLcopyguard; fleetchecking support, defaultawaitEQ/canonicalcopyback. No bypass/ownerfork/newcount.
+
+CODEX HBM HARD source correction03:3x: local ownerrepo/E2main stale; authoritative explicit intel2 codex/hbm-hard-0222-current@3bfb279893 (parentmain289149dea5b), confirmedreadback. Oldbranch refsnotforintegration. P2/P2f PLACE+LECEQ but CTS-121/-105fltfeedback; groupedfault9reg zero-cycleP2g bench0errs/mutants9876,83caught, newPLACEonI2. NoE6newpilot/diskoverride; no merges/tags/POR edits.
