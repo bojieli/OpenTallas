@@ -26169,3 +26169,10 @@ FAILED [AUTOPILOT 70e56bd12bb8] 2026-11-08 00:52:18 PST AUTOPILOT -> KIT-WAVE-12
   (4) QC coll_ft__cla4a25d77 and sle_su_l1__clc6d66f5b KIT_TOPOLOGY_BIND_STALE on v4t: QC-TYPES-7 re-binds the wave plan and relaunches.
   (5) S81: S81-TYPES-6 answers whether serdes t13/t14 join the phyclip batch (default YES if they carry the same PHY region). The station DRV batch (t22@10, t29__clc7772371@11, t44@5 with --slew-margin 50 --cap-margin 20) was APPROVED at 00:0x: KW-FIX-34 launches it.
   (6) qcore_r13 is already SIGNED (hbm-hard-3); it gets credit once PEV-b lands.
+- 2026-11-08 01:09 PST STATE [KV-TYPES-3 -> COORD, DIE-KV-91] Nothing signed off yet. Three pilots are alive on intel1:
+  (1) io_ft_v1 lockup re-form, in GRT. The internal (non-port) hold pass ended with the worst at u_rrl_87 (reset relay), -29.46 against the 50-ps repair target, so about +20.5 ps real. Under the TYPE-SAFE-1 lockups no station hop shows in the worst list. The port phase now reads WNS +3.99 at ft2_o.
+  (2) phy maxwire, in GRT. The worst is now o_phy_Q__sN_piN_d3[287] -3.34 (TNS -188); at CTS without maxwire it was -707.
+  (3) hroot LANDING-RING-DENSITY pilot (oth-ubuntu-1466796): plan_c.hroot.json strict bind 0 errors, preflight and gen_lint PASS, band 1045.6-1687.1 x 17.3-45.9 in the kit. It is in floorplan.
+  [CHECKED intel1 scratch2/claude/kv-types-3/{ioft,sd/kit_kv3_phy_mw,hroot}/kit run/logs/.../5_1_grt.tmp.log]
+  HGI pilot: DIE-KV-91 has M5 signed for e0/e1/e5; e2/e6 are still building. The hgi_v8 pilot starts when e2 and e6 are signed.
+  OPEN: kv3_sys_c re-form owner (22:2x ASK); pv_v1n option (a)/(b).
