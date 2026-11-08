@@ -2,7 +2,8 @@
 """Stage a source-identical, uncounted Q2NF placement candidate; never launches CAD.
 Usage: prepare_pilot.py SOURCE_KIT CANDIDATE_JSON NEW_KIT
 The source netlist/RTL is copied unchanged. do-floorplan/do-place can use the
-mapped checkpoint only after the separate ordinary source LEC is EQUIVALENT.
+mapped checkpoint after the full saved-AIG miter and negative controls pass;
+the ordinary source LEC receipt remains required for qualification.
 """
 from pathlib import Path
 import sys,json,shutil,re,hashlib
@@ -16,7 +17,7 @@ oldbase=source/'run/results/asap7/hbc_ot_q2nf_rest/base';base=out/'run/results/a
 files=['1_2_yosys.v','1_2_yosys.sdc','1_synth.v','1_synth.odb','1_synth.sdc','clock_period.txt','mem.json']
 for name in files:shutil.copy2(oldbase/name,base/name)
 config=(out/'config.mk').read_text()
-config+=f'\n# CODEX Q2NF PERIPHERY: new physical form, same mapped source, placement diagnostic ONLY.\noverride export DIE_AREA = 0 0 {W} {H}\noverride export CORE_AREA = 4.32 4.32 {W-4.32} {H-4.32}\noverride export PLACE_DENSITY = 0.40\n'
+config+=f'\n# CODEX Q2NF PERIPHERY: new physical form, same mapped source, placement diagnostic ONLY.\noverride export DIE_AREA = 0 0 {W} {H}\noverride export CORE_AREA = 4.32 4.32 {W-4.32} {H-4.32}\noverride export PLACE_DENSITY = 0.40\noverride export MAX_ROUTING_LAYER = M6\n'
 (out/'config.mk').write_text(config)
 new={(p['bus'],0 if p['bit'] is None else p['bit']):p for p in d['pins']};actual=[];lines=[]
 for line in (source/'io.tcl').read_text().splitlines():
