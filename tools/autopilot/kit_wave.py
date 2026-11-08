@@ -179,7 +179,11 @@ DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6,
             "stage_resume": True,
             # KW-FIX-17 (COORD 11-05 16:4x): a sign-off FAIL with the LEAFSLEW signature relaunches once with the
             # clk_leaf_repeat post-CTS hook; die/global "leafslew_auto": false opts out
-            "leafslew_auto": True}
+            "leafslew_auto": True,
+            # KW-FIX-33 (COORD 11-07 22:53, OWNER 11-07 HBM type builds allowed): a die-wide census label in OWNERS.tsv
+            # (HBM-PLAN owns every HBM type row with a fresh last_activity) is not a lane claim on a type row; a specific
+            # per-item owner still claims.  Die/global "generic_owner_labels" overrides; [] restores the old behaviour.
+            "generic_owner_labels": ["HBM-PLAN"]}
 # AUTOBUILD-PIPE-1 10-30: an ssh transport drop before the command ran (sshd MaxStartups on the gen host when a tick
 # launches 16 items at once) is retried inside the item, never charged to the design: up to SSH_RETRIES more tries
 SSH_RETRIES = 3
@@ -487,6 +491,7 @@ def select(rows, cfg, die, state, plan_types=None):
     states = set(opt(cfg, die, "take_states"))
     kinds = set(opt(cfg, die, "kinds"))
     claim_m = float(opt(cfg, die, "live_claim_h")) * 60
+    generic = set(opt(cfg, die, "generic_owner_labels") or [])
     retry = set(d.get("retry") or [])                 # "item@attempt": COORD released that failed attempt
     skip = {}
     picked = []
@@ -567,7 +572,8 @@ def select(rows, cfg, die, state, plan_types=None):
         elif r["live_job"] not in ("", "none") and not _own_wave_unit(r):
             why = "live job (another lane)"
         elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m \
-                and not str(r["owner"]).startswith("KIT-WAVE"):
+                and not str(r["owner"]).startswith("KIT-WAVE") \
+                and not (r["kind"] == "type" and r["owner"] in generic):
             # a recent coord line by another lane naming the item is a claim; the wave's own notices never count
             # (any KIT-WAVE-<n> runner lane: the wave's lane name changes with each successor)
             why = f"lane activity < {claim_m / 60:g} h ({r['owner']})"
