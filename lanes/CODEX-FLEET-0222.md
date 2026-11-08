@@ -86,3 +86,17 @@ Remaining pinned/raw E5 waiters: serdes t12a7 geometry PID252744/24GB; same kit 
 | QC sta1 a9 | 4061896 | 7d7668cfe3cd | oth-ubuntu-201558-1794135687 |
 
 All six admitted through the same original frontends and passed initial preflight with zero issues, reusing their completed own EQ proofs. No new attempt or frontend. Full copies and receipts remain protected under intel2 scratch2/claude/codex-fleet-0222/staged. No further bulk copy planned. Next: S81/QC leads collect stage geometry and results; fleet monitors E6’s approved single small KV CTS-only transfer (0.7GB input/~1GB growth, truthful5GB disk, unchanged50GB floor) and existing jobs.
+
+2026-11-08 03:06 PST: Additional finished retention subjects recorded without deletion: I1 codex-head-lep-0222/probe (~414MB, source3_2.odb and reserved.odb plus review evidence), tiny old E5 codex-head-lep-0222 probe/source tree. Both fresh<6h. Live successor I1 .../kit/hd_lep0N_vF_reserve scope572991 stays protected.
+
+Approved E6 one-screen case owned by KV hubs: /srv/opentallas-scratch2/claude/codex-kv-hubs-0222/capture-screen,617MB input via capture-pilot/input/3_place.odb, expected~1GB CTS output, --disk5 and unchanged50GB guard. Earlier E4 waiter failed before CTS on missing macro_cts_cluster.tcl; owner is fixing the full helper set before the E6 launch. No live old payload, no fleet retry or additional form.
+
+## Failure diagnosis 2026-11-08 03:09 PST
+
+SVC numerical miter compile, epyc6 scope oth-ubuntu-3156689-1794134077: confirmed MEMCG OOM at03:06:00 PST, not inferred from exit143. Kernel memory usage=limit67,108,864kB (64GiB), swap0, CONSTRAINT_MEMCG; victim cc1plus PID3634650, anon RSS66,556,880kB (~63.5GiB), total VM66,761,696kB. Unit result oom-kill03:06:05, peak64G. No earlyoom or watchdog action. One compiler process consumed almost the whole cap; reducing parallelism alone cannot solve that. Root and SVC owner informed; E4 checkpoint resume requires larger measured reservation or compiler/output splitting. Source and objects untouched.
+
+KV Eo screen E6 scope3680794-1794135983 exited before clock_tree_synthesis on missing RESULTS_DIR after the earlier missing macro_cts_cluster.tcl support issue. Owner retained logs, supplied screen_results, and handles same-form support-only requeue with unchanged guard/disk. Fleet requested a combined environment/transitive-helper check before the next call; no extra CTS attempt by fleet.
+
+## SVC checkpoint recovery — 2026-11-08 03:17 PST
+
+At RTL child’s request, completed the interrupted E6→I1 checkpoint transfer with sparse/compressed resumable rsync, no deletes. No old tar/rsync writer was active on the I1 target. Source E6 .../codex-svc-rtl-0222/miter2/obj stayed untouched. Destination I1 /srv/opentallas-scratch2/claude/codex-svc-rtl-0222/miter_resume/obj now has all2376 regular files,2,670,521,109 bytes;489 missing/incomplete files were transferred (733MB logical,39MB wire), exit0 at03:16:09. Explicit COPY COMPLETE sent to child before its own96GiB/J1/effective-O0 checkpoint compile; fleet started no build or Verilation. Exact10-line kernel+unit excerpt retained at destination infra_memory/epyc6_3156689_memcg_20261108_030600.log.
