@@ -1,5 +1,6 @@
 # Local reset consumers only: small legal-row control bands, no exclusive regions.
 # Six same-edge reset copies replace one global driver. See local source miter.
+global lc_b lc_u lc_used lc_done lc_log
 set lc_b [ord::get_db_block]
 set lc_u [$lc_b getDbUnitsPerMicron]
 proc lc_seq {i} {regexp -nocase {DFF|SDFF|DFFE} [[$i getMaster] getName]}
@@ -36,7 +37,15 @@ proc lc_pose {group cells box} {
  set rows [lsort -integer -index 0 $rows];set count 0
  foreach i [lsort -command {apply {{a b} {string compare [$a getName] [$b getName]}}} $cells] {
   set name [$i getName];if {[dict exists $lc_done $name]} continue
-  if {[$i getPlacementStatus] in {FIRM LOCKED}} {error "LOCAL_CONTROL reset consumer overlaps fixed face: $name"}
+  if {[$i getPlacementStatus] in {FIRM LOCKED}} {
+   lassign [$i getLocation] fx fy;set fm [$i getMaster]
+   if {$group eq "root" && $fx>=$x0 && $fx+[$fm getWidth]<=$x1 && $fy>=$y0 && $fy+[$fm getHeight]<=$y1} {
+    dict set lc_done $name 1
+    puts $lc_log "$group-fixed-face\t$name\t[expr {double($fx)/$lc_u}]\t[expr {double($fy)/$lc_u}]"
+    continue
+   }
+   error "LOCAL_CONTROL reset consumer overlaps fixed face: $name"
+  }
   set m [$i getMaster];set w [$m getWidth];set h [$m getHeight];set placed 0
   foreach rr $rows {
    lassign $rr y r;lassign [$r getOrigin] rx ry;set sw [[$r getSite] getWidth]
