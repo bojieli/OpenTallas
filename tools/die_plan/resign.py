@@ -340,7 +340,8 @@ def default_container_suffix(out):
 # lec.py solver knobs are now passed into the container when the caller's env sets them, else when the kit's config.mk
 # exports them (a recipe sets them there, e.g. through the generator's ORFS variables).  The caller's env wins.  Only the
 # proof budget changes; the verdict rules of lec.py and of this record are unchanged.
-LEC_ENV_PASS = ('OT_LEC_PARITY_TERMS',)
+LEC_BOOL_PASS = ('OT_LEC_REPLICA_MATCH', 'OT_LEC_MEM_LANES', 'OT_LEC_ENABLE_FILL_GUARD')
+LEC_ENV_PASS = ('OT_LEC_PARITY_TERMS',) + LEC_BOOL_PASS
 _CFG_RE = re.compile(r'^\s*(?:override\s+)?(?:export\s+)?([A-Z0-9_]+)\s*[:?]?=\s*(.*?)\s*$')
 
 
@@ -367,7 +368,10 @@ def lec_env_args(kit, environ=None):
         v = environ.get(k) or cfg.get(k)
         if not v:
             continue
-        if not re.fullmatch(r'[1-9][0-9]*', str(v).strip()):
+        if k in LEC_BOOL_PASS:
+            if str(v).strip() not in ('0', '1'):
+                raise ResignError('%s=%r must be 0 or 1' % (k, v))
+        elif not re.fullmatch(r'[1-9][0-9]*', str(v).strip()):
             raise ResignError('%s=%r (%s) is not a positive integer' % (k, v, 'env' if environ.get(k) else 'kit config.mk'))
         args += ['-e', '%s=%s' % (k, str(v).strip())]
     return args
