@@ -15,6 +15,8 @@ Two halves, one file (the localhost driver copies this file to every host):
     c  intermediates: results dirs holding 3_place.odb (> 1 KB, > 6 h): only 2_1..2_4 floorplan stage odbs and
        3_1..3_5 place stage odbs, plus 4_1_cts.odb where 4_cts.odb > 1 KB.  NEVER 2_floorplan.odb (kit_resume
        STEP_OUT), 3_place / 4_cts / 5_1_grt / 5_2_route / 6_final.*, signoff / LEC / spef / PROVENANCE / logs / reports.
+       Class c also never trims inside a kit-wave attempt < 24 h old whose row is FAIL (or unknown) and not
+       superseded: the kit wave resumes it from its last valid stage (COORD 11-08).
     Every candidate is refused when: protected (union of lanes/PROTECTED-DBS.txt + PROTECTED-DBS.txt +
     RETIRED-PROTECTION-EXTRAS.tsv, parent or child, under every bind-mount alias), counted (a path a SIGNED
     signoff.json / PROVENANCE.json on this host names, parent or child below lane level), kit-wave keep set,
@@ -84,6 +86,8 @@ ABS_RE = re.compile(r"(?<![\w.~/])/(?:srv|home|tmp)/[^\s'\"<>|;,()\[\]{}`*?$\\]+
 REL_RE = re.compile(r"(?<![\w./-])(scratch\d*/claude/[^\s'\"<>|;,()\[\]{}`*?$\\]+)")
 WORD_RE = re.compile(r"[A-Za-z0-9_.+-]{8,}")
 ATTEMPT_RE = re.compile(r"^(.*/items/[^/]+)/attempt_(\d+)(?=/|$)")
+ITEM_RE = re.compile(r"^(.*/items/[^/]+)(?=/|$)")
+RESUME_S = 24 * 3600   # COORD 11-08: FAIL rows resume from their last valid stage
 XPATH_RE = re.compile(r"/kit-wave/([^/]+)/[^/]+/items/([^/]+)/attempt_(\d+)$")   # die, item, N (plan dir ignored)
 STAMP_RE = re.compile(r"(20\d\d-\d\d-\d\d) (\d\d:\d\d)(?::(\d\d))?")
 ACTIVE_STATUS = {"RUN", "RUNNING", "ROUTE-HELD", "RETRY-INFRA", "PENDING-DEP", "QUEUED", "WAIT-PARENT", "PASS"}
@@ -889,8 +893,40 @@ class Job:
         # --queuename-skip-trim-c (AUTOCLEAN-9 11-08): a bare queue NAME (mostly a design type name, posted daily)
         # does not stop the class c trim of 2_x / 3_x stage intermediates; an exact queue PATH and every other check
         # still do.  Class b and class a are unchanged.
+        if cls == "c":
+            r = self.resume_hold(d)
+            if r:
+                return r, kit, files
         qn_ok = cls == "c" and bool(getattr(self.a, "queuename_skip_trim_c", False))
         return self.common_why(kit, files, qn_ok=qn_ok), kit, files
+
+    def resume_hold(self, d):
+        """COORD 11-08 04:4x: the kit wave resumes a FAIL row from its last valid stage, so class c never trims inside a
+        kit-wave attempt (.../items/<item>/attempt_N, or an item dir without attempt_N: its latest attempt) whose
+        newest file is < RESUME_S old and whose row is FAIL (or unknown to the state) and not superseded."""
+        c = self.paths.canon(d)
+        m = ATTEMPT_RE.match(c)
+        if m:
+            item, n, adir = m.group(1), int(m.group(2)), m.group(0)
+        else:
+            mi = ITEM_RE.match(c)
+            if not mi:
+                return None
+            item = adir = mi.group(1)
+            n = self.kw_latest.get(item, -1) if self.kitwave is not None else -1
+        if self.now - tree_info(adir)[0] >= RESUME_S:
+            return None
+        if self.kitwave is None:
+            return "resume-pending: kit-wave attempt < 24 h, no kit-wave snapshot"
+        st = self.kw_attempts.get(f"{item}/attempt_{n}") if n >= 0 else None
+        xm = XPATH_RE.search(f"{item}/attempt_{max(n, 0)}")
+        cur = self.kw_current_di.get(f"{xm.group(1)}|{xm.group(2)}", -1) if xm else -1
+        if n >= 0 and (self.kw_latest.get(item, -1) > n or cur > n):
+            return None                                  # superseded: a later attempt exists
+        term = ",".join(sorted(set(st["terminal"]))) if st else ""
+        if st and term and "FAIL" not in term:
+            return None                                  # finished without FAIL (CANCELLED / WITHDRAWN ...)
+        return f"resume-pending: attempt_{n} {term or 'unknown'} not superseded, < 24 h"
 
     def eval_attempt(self, d):
         if self.kitwave is None:
