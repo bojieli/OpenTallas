@@ -28217,3 +28217,30 @@ FAILED [AUTOPILOT c7b97f602ede] 2026-11-08 10:44:46 PST AUTOPILOT -> KIT-WAVE-12
   - ESTIMATES: t31 worst 1.25 -> 1.05 (left: LN[14]|LN[5] 15.12-um street 1.05, not a measured hotspot; vn column 1.25 -> 0.76), bus -0.0 %, station regs under macros 8 -> 13 (ff_put_near re-places), 7 blockages. t54cl worst 1.33 -> 0.97 (left: OUTLINE|LN[2] S strip 0.97, t69T passes at 1.04; vn_b strip 1.33 -> 0.72, column 0.97 -> 0.77), bus +7.6 %, regs 12 -> 16, 9 blockages.
   - PLAN DELTA (macro origin deltas vs v3b 48f8eba4984a, um): ot_s81sl_leaf__t31: u_ve.u_s (0,-8.64), u_vn.u_b (-17.28,0), u_vn.u_a (-25.92,0), u_vp.g_ln[12].u_l (+8.64,0), u_vp.g_ln[3].u_l (+8.64,0). ot_s81sl_leaf__t54__cl501e5681: u_ve.u_s (+8.64,0), u_vn.u_b (+8.64,+25.92), u_vp.g_ln[10].u_l (0,+8.64), u_vp.g_ln[12].u_l (0,+8.64), u_vp.g_ln[9].u_l (0,+8.64). No tap moves. Rule-e blockages are kit-local (rects in mp/<row>.json 'blockages'); the plan has no blockage field, so the gen must re-derive them (or the plan event records them as a note). Full JSON: epyc4 .../s81-types-9-leafrf/mp/{t31,t54__cl501e5681}.json. HOLD the delta until GRT confirms.
   - (3) BUILDS (resume floorplan on the failed vCH synth, same flow as leafb build.sh): epyc4 /srv/opentallas-scratch3/claude/s81-types-9-leafrf/kits/{t31_vRF,t54__cl501e5681_vRF} via build_rf.sh, ot-run --mem 24 --threads 8 --hosts epyc4 (intel2 scratch2 52 GB < floor; epyc4 scratch3 266 GB); QUEUED behind 33 waiters on epyc4 (localhost ot-run PIDs 2252734/2252735). Next: view place + GRT renders as they land.
+
+### KW-FIX-35-K LAUNCHED 2026-11-08 11:08 PST — KV wave on plan_kvr8 + bind_kvr8 (COORD 10:41 ruling 3)
+- Config commit 5ff75cf22c (origin coord/state readback OK). Edit script: /tmp/kw35/e_k4.py.
+  - plan: /srv/opentallas-scratch2/claude/kv-types-5/ev/plan_kvr8/plan_c.json (md5 d5538a93, the same bytes as the composed kvcomp plan, so every running row keeps its block key).
+  - asbuilt: plan_kvr8/asbuilt.json (6ded2aa5).
+  - bind_out: ev/bind_kvr8 (strict bind, 0 errors; 160 partitions, 2545 crossings, 429530 bits).
+  - Staged on epyc6, intel1, epyc4 and epyc5 (md5 checked on each). gen_hosts = [epyc6, intel1, epyc4, epyc5]; intel2 is kept out.
+  - Revert: the *_prev_kw35k4 keys.
+- Holds: the kv3_pc* hold is lifted. kv3_phy, kv3_phy_v1, kv3_hub_Eo, kv3_hg* and kv3_pv* stay held.
+- Dry pick diff showed only the 6 kv3_pc types and no cancels. Since 08:23 there has been no CANCEL-SUPERSEDED for qwen_kvsys.
+- Launched at 11:01 (11 units):
+  - kw-qwenkv-kv3pcv1cl23f6a148-16-64476 and -17-64479
+  - kw-qwenkv-kv3pcv1cl4ea58a5c-12-64477 and -13-64480
+  - kw-qwenkv-kv3pcv1cl7f648944-16-64477 and -17-64480
+  - kw-qwenkv-kv3pccl254f2e73-17-64477 and -18-64478
+  - kw-qwenkv-kv3pccl5a95b461-17-64478 and -18-64479
+  - kw-qwenkv-kv3pcv3-7-64478
+- NOTE: the 5 pc items with two units were each picked twice in the same tick.
+  - The second attempt has resume_from = the first attempt, and the state file tracks only the second.
+  - Both attempts are now in gen, in separate attempt dirs. They are left running and not killed.
+  - For KW-FIX-35 to judge: is this the intended fresh+resume twin, or a duplicate pick?
+- Still RUNNING: hroot a11, hub_Wo a14, io_cor a7, io_cor_v1 a8, io_ft_v1 a18.
+- Private phy resumes (KW-RESUME-1, started at CTS):
+  - kv3_phy@7R: FAIL_POSTCTS at GRT, TT -145.11.
+  - kv3_phy_v1@4R: FAIL_POSTCTS at GRT, TT -142.22, FF hold +1.88. Worst path: u_core -> u_bout_o_phy_Q__sN_piN_d3/q[14], the same macro->piN_d3 face class as phy. Next worst: arst_n -> u_ft_ft0_o_3/eq at -55.09.
+  - Both are kept for the +3 pin-cycle RE-FORM. Kit dirs: epyc5 /srv/opentallas-scratch2/claude/kw35k/phyR/.
+- Supersede-keep class fix: READY claude/kw-fix-35k-supersede-keep-1108@7fe4a970bb. The hub log has shown SUPERSEDED-KEEP lines since 10:19 (held kv3_pv*, kv3_phy and kv3_phy_v1 rows were kept).
