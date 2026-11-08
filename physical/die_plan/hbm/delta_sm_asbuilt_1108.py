@@ -509,6 +509,9 @@ def apply(plan, ce, ccr, cm, cc, hrt, ccd, hier_by_type, bounds, lef_dir):
                              note=f"{EVENT}: plan centre clock entry of the as-built core (12.8a, clock_entries.json)"))
         t["clock"]["taps"] = taps
         t["reset"] = {k: v for k, v in t["reset"].items() if k != "depth"}
+        # the hnx form was a pure assembly of hard cores (hard: true, gen skips it); the as-built form keeps
+        # ~266k yosys of SM own logic, so the type is an ordinary kit type with hard-core macros
+        t["hard"] = False
         soft = soft_estimate()
         t["cells"] = soft["yosys"]
         t["note"] = (f"{EVENT}: soft std cells = the as-built SM own logic outside the {len(new)} hard cores "
