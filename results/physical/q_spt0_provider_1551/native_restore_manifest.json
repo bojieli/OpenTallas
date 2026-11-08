@@ -1,0 +1,37 @@
+{
+  "scope": "COMPONENT_PROOF_ONLY_NOT_GEN_SOURCE_COHORT",
+  "donor": "epyc2",
+  "destination": "intel1",
+  "files": [
+    {
+      "flat": "reference_plan.json",
+      "path": "/srv/opentallas-scratch2/claude/hbm-bind-9/m79fp/die_plan.json",
+      "sha256": "38bbd8e85d616b50337aa1fc2bd445a1298c0c911d978748815f254b1ac34f3d"
+    },
+    {
+      "flat": "bind_report.json",
+      "path": "/srv/opentallas-scratch2/claude/hbm-bind-9/g_t11m79f/bind_report.json",
+      "sha256": "9aa789b3e540d1b76d46a3facdc607c25798ac24f353b94e20bf828215e798fd"
+    },
+    {
+      "flat": "provenance_bind.json",
+      "path": "/srv/opentallas-scratch2/claude/hbm-bind-9/g_t11m79f/provenance_bind.json",
+      "sha256": "38fda1c0cd990258e849a852d8cb01cdc15ed634266de14ae6583215a9386317"
+    },
+    {
+      "flat": "bind_reset.json",
+      "path": "/srv/opentallas-scratch2/claude/hbm-bind-9/g_t11m79f/bind_reset.json",
+      "sha256": "cfad9c6cf7cbbde47cd32e95cc1ac065015b5652263391ce25a7f08c3bcf8b49"
+    },
+    {
+      "flat": "hbm_arch_q_spt0.sv",
+      "path": "/srv/opentallas-scratch2/claude/hbm-bind-9/g_t11m79f/rtl/hbm_arch_q_spt0.sv",
+      "sha256": "5140a6e4cb3cd26e39de05779d0c0fc003d2155cf1094241b256a9e6fff31911"
+    },
+    {
+      "flat": "asbuilt_t11.json",
+      "path": "/srv/opentallas-scratch2/claude/hbm-bind-6/tip2/physical/die_plan/hbm/bind/d44v/asbuilt_t11.json",
+      "sha256": "861dd95dea2d514bcb27ac0a79c9f5907620540f757ca7399853b87a1eeed4b5"
+    }
+  ]
+}
