@@ -1,0 +1,455 @@
+{
+  "scope": "Exact dated native E-row replay through actual rs_c P producer/SX/fold/return/DN, with explicit ATT calendar/FIFO and SMS trace doubles. Not live SM/native PMEM engine or whole-slice qualification.",
+  "rtl_fix_commit": "b1275c27ba",
+  "replay_prefix_fix_commit": "5b8fab013d",
+  "host": "epyc5",
+  "path": "/srv/opentallas-scratch3/claude/codex-svc-rtl-1113/join_unique",
+  "unit": "oth-ubuntu-2771576-1794167869",
+  "verdict": "PASS",
+  "pin_cycles": 0,
+  "calendar": {
+    "pio": 297,
+    "po": 407,
+    "pvo": 517,
+    "go_header": [
+      1426,
+      2467
+    ],
+    "go_consumer_base": [
+      1448,
+      2489
+    ],
+    "go_anchor_kind": "source-derived and cross-checked, not live measured",
+    "go_formula": "header+6+5*role.depth+role.gd; relative base offset equals sx_role_off",
+    "global_anchors": [
+      "first root P at1798",
+      "old secondpass FIFO underflow flag at2897"
+    ]
+  },
+  "result": {
+    "nodes": 16,
+    "payload_words_per_node": 64,
+    "total_payload_words": 1024,
+    "errors": 0,
+    "underflows": 0,
+    "local_faults": 0,
+    "max_transport_from_pio": 77,
+    "first_relative_go_range": [
+      354,
+      374
+    ],
+    "last_relative_go_max": 436,
+    "final_consume_relative_go": 437,
+    "min_fifo_words": 2,
+    "min_fifo_derivation": "underflow0 proves >=2 at every paired consume; last arrival precedes final consume and32 received\u221230 consumed gives exactly2 at final check."
+  },
+  "rows": [
+    {
+      "sid": 0,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1827,
+        2868
+      ],
+      "last": [
+        1889,
+        2930
+      ],
+      "go_consumer_anchor": [
+        1453,
+        2494
+      ],
+      "first_relative_go": 374,
+      "last_relative_go": 436,
+      "transport_from_pio": 77,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 1
+    },
+    {
+      "sid": 1,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1822,
+        2863
+      ],
+      "last": [
+        1884,
+        2925
+      ],
+      "go_consumer_anchor": [
+        1458,
+        2499
+      ],
+      "first_relative_go": 364,
+      "last_relative_go": 426,
+      "transport_from_pio": 67,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 11
+    },
+    {
+      "sid": 2,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1822,
+        2863
+      ],
+      "last": [
+        1884,
+        2925
+      ],
+      "go_consumer_anchor": [
+        1458,
+        2499
+      ],
+      "first_relative_go": 364,
+      "last_relative_go": 426,
+      "transport_from_pio": 67,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 11
+    },
+    {
+      "sid": 3,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1817,
+        2858
+      ],
+      "last": [
+        1879,
+        2920
+      ],
+      "go_consumer_anchor": [
+        1453,
+        2494
+      ],
+      "first_relative_go": 364,
+      "last_relative_go": 426,
+      "transport_from_pio": 67,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 11
+    },
+    {
+      "sid": 4,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1817,
+        2858
+      ],
+      "last": [
+        1879,
+        2920
+      ],
+      "go_consumer_anchor": [
+        1453,
+        2494
+      ],
+      "first_relative_go": 364,
+      "last_relative_go": 426,
+      "transport_from_pio": 67,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 11
+    },
+    {
+      "sid": 5,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1812,
+        2853
+      ],
+      "last": [
+        1874,
+        2915
+      ],
+      "go_consumer_anchor": [
+        1448,
+        2489
+      ],
+      "first_relative_go": 364,
+      "last_relative_go": 426,
+      "transport_from_pio": 67,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 11
+    },
+    {
+      "sid": 6,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1822,
+        2863
+      ],
+      "last": [
+        1884,
+        2925
+      ],
+      "go_consumer_anchor": [
+        1448,
+        2489
+      ],
+      "first_relative_go": 374,
+      "last_relative_go": 436,
+      "transport_from_pio": 77,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 1
+    },
+    {
+      "sid": 7,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1817,
+        2858
+      ],
+      "last": [
+        1879,
+        2920
+      ],
+      "go_consumer_anchor": [
+        1453,
+        2494
+      ],
+      "first_relative_go": 364,
+      "last_relative_go": 426,
+      "transport_from_pio": 67,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 11
+    },
+    {
+      "sid": 8,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1817,
+        2858
+      ],
+      "last": [
+        1879,
+        2920
+      ],
+      "go_consumer_anchor": [
+        1463,
+        2504
+      ],
+      "first_relative_go": 354,
+      "last_relative_go": 416,
+      "transport_from_pio": 57,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 21
+    },
+    {
+      "sid": 9,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1812,
+        2853
+      ],
+      "last": [
+        1874,
+        2915
+      ],
+      "go_consumer_anchor": [
+        1458,
+        2499
+      ],
+      "first_relative_go": 354,
+      "last_relative_go": 416,
+      "transport_from_pio": 57,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 21
+    },
+    {
+      "sid": 10,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1812,
+        2853
+      ],
+      "last": [
+        1874,
+        2915
+      ],
+      "go_consumer_anchor": [
+        1458,
+        2499
+      ],
+      "first_relative_go": 354,
+      "last_relative_go": 416,
+      "transport_from_pio": 57,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 21
+    },
+    {
+      "sid": 11,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1807,
+        2848
+      ],
+      "last": [
+        1869,
+        2910
+      ],
+      "go_consumer_anchor": [
+        1453,
+        2494
+      ],
+      "first_relative_go": 354,
+      "last_relative_go": 416,
+      "transport_from_pio": 57,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 21
+    },
+    {
+      "sid": 12,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1817,
+        2858
+      ],
+      "last": [
+        1879,
+        2920
+      ],
+      "go_consumer_anchor": [
+        1463,
+        2504
+      ],
+      "first_relative_go": 354,
+      "last_relative_go": 416,
+      "transport_from_pio": 57,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 21
+    },
+    {
+      "sid": 13,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1812,
+        2853
+      ],
+      "last": [
+        1874,
+        2915
+      ],
+      "go_consumer_anchor": [
+        1458,
+        2499
+      ],
+      "first_relative_go": 354,
+      "last_relative_go": 416,
+      "transport_from_pio": 57,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 21
+    },
+    {
+      "sid": 14,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1822,
+        2863
+      ],
+      "last": [
+        1884,
+        2925
+      ],
+      "go_consumer_anchor": [
+        1458,
+        2499
+      ],
+      "first_relative_go": 364,
+      "last_relative_go": 426,
+      "transport_from_pio": 67,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 11
+    },
+    {
+      "sid": 15,
+      "words": 64,
+      "consumed": 64,
+      "errors": 0,
+      "underflow": 0,
+      "first": [
+        1817,
+        2858
+      ],
+      "last": [
+        1879,
+        2920
+      ],
+      "go_consumer_anchor": [
+        1453,
+        2494
+      ],
+      "first_relative_go": 364,
+      "last_relative_go": 426,
+      "transport_from_pio": 67,
+      "last_consume_relative_go": 437,
+      "last_payload_margin": 11
+    }
+  ],
+  "control": {
+    "kind": "actual E provider rows delayed120cycles",
+    "nodes_faulted": 16,
+    "payload_errors_per_node": 64,
+    "underflow": 0,
+    "arrival_dates_unchanged": true,
+    "verdict": "CAUGHT"
+  },
+  "failure_diagnosis": {
+    "old_units": [
+      "2487562-1794167283",
+      "2639983-1794167580",
+      "2719606-1794167759"
+    ],
+    "cause": "Both ENTRY parameter variants used the same generated C++ model prefix. Static linking selected ENTRY0 for both; RT64/RI66 arrived but DN injection was absent. Unique --prefix for each protected library fixes harness ABI collision.",
+    "invalid_cli": "E2unit748808 invalid-j4 beforeRTL, fixed to -j 4; subsequent E2 NOTRUN root96% diskguard, no override."
+  },
+  "remaining": [
+    "H8_CALIBRATED remains false",
+    "Native closed-bound PMEM/FIFO read latency and engine PVO/SO join not measured here",
+    "Earliest RT2 QK schedule corner",
+    "No physical fit/signoff or source-calendar adoption"
+  ]
+}
