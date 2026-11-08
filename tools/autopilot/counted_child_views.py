@@ -136,6 +136,58 @@ def run(argv, timeout=600, tries=4):
         time.sleep(5 * (i + 1))
 
 
+ORFS_IMAGE = "openroad/orfs:asap7lock"
+OPENROAD = "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad"
+
+
+def parse_result(so):
+    """last JSON object export_view.py printed (one line when complete, indented when not)"""
+    dec, res, i = json.JSONDecoder(), None, 0
+    while True:
+        i = so.find("{", i)
+        if i < 0:
+            return res
+        try:
+            obj, j = dec.raw_decode(so, i)
+        except ValueError:
+            i += 1
+            continue
+        if isinstance(obj, dict) and "module" in obj:
+            res = obj
+        i = j
+
+
+def lef_only(res, mod):
+    """the view misses only <mod>.lef (flows whose finish step wrote tt/ff ETMs to kit/views but no abstract)"""
+    pr = res.get("problems") or []
+    return bool(pr) and all(f"{mod}.lef not found" in str(x) for x in pr)
+
+
+def lef_from_odb(die, rid, p, mod, cmd, out, log):
+    """write_abstract_lef of the SIGNED 6_final.odb (read-only mount, ~40 s, docker --memory 16g) into a staged base
+    (symlinks to every base file + the lef), then export_view again on that base.  The kit/views ETMs must be newer
+    than the odb (written by the same finish), else the view is refused."""
+    stage = f"{VIEWS_ROOT}/{die}/_stage/{rid}"     # outside the view dir (the re-export clears that)
+    sh = (f"cd / && set -e; B={shlex.quote(p['base'])}; K={shlex.quote(p['kit'])}; S={shlex.quote(stage)}; "
+          f"M={shlex.quote(mod)}; for l in $K/views/${{M}}_tt.lib $K/views/${{M}}_ff.lib; do [ $l -nt $B/6_final.odb ] || "
+          f"{{ echo ETM_OLDER_THAN_ODB $l >&2; exit 3; }}; done; "
+          f"rm -rf $S && mkdir -p $S && for f in $B/*; do ln -s $f $S/; done; L=$M.lef; "
+          f"printf 'read_db /b/6_final.odb\nwrite_abstract_lef /o/%s\nputs OT_LEF_DONE\n' $L > $S/kw32_lef.tcl; "
+          f"timeout 600 docker run --rm --memory 16g --user $(id -u):$(id -g) -v $B:/b:ro -v $S:/o {ORFS_IMAGE} "
+          f"bash -lc '{OPENROAD} -no_init -exit /o/kw32_lef.tcl' > $S/kw32_lef.log 2>&1; "
+          f"grep -q OT_LEF_DONE $S/kw32_lef.log && rm -f $S/kw32_lef.tcl")
+    rc, so, se = run(SSH + [p["host"], sh], timeout=900)
+    if rc:
+        log(f"LEF-FROM-ODB-FAIL {die} {p['host']}:{p['base']} rc {rc}: {se[-200:]}")
+        return rc, so, se, None
+    cmd2 = cmd.replace(f"--base {shlex.quote(p['base'])}", f"--base {shlex.quote(stage)}")
+    rc, so, se = run(SSH + [p["host"], f"rm -rf {shlex.quote(out)} && " + cmd2])
+    res = parse_result(so)
+    if res is not None:
+        res["lef_from_odb"] = True
+    return rc, so, se, res
+
+
 def export_one(die, name, p, log):
     """export_view.py on the record's host -> candidate dict or None"""
     rid = rec_id(p)
@@ -149,13 +201,9 @@ def export_one(die, name, p, log):
            + (f" --flow-tag {shlex.quote(p['flow_tag'])}" if p.get("flow_tag") else ""))
     argv = ["bash", "-c", cmd] if on_hub else SSH + [host, cmd]
     rc, so, se = run(argv)
-    res = None
-    for line in so.splitlines():
-        if line.startswith("{"):
-            try:
-                res = json.loads(line)
-            except ValueError:
-                pass
+    res = parse_result(so)
+    if res and not res.get("complete") and lef_only(res, res.get("module")) and not on_hub:
+        rc, so, se, res = lef_from_odb(die, rid, p, res["module"], cmd, out, log)
     if rc or not res:
         log(f"EXPORT-FAIL {die} {name} {host}:{p['signoff']} rc {rc}: {(se or so)[-300:]}")
         return None
@@ -178,6 +226,7 @@ def export_one(die, name, p, log):
     return dict(host=host, dir=vdir, job=f"COUNTED {name} {p['host']}:{p['signoff']} (KW-FIX-32 export_view)",
                 module=mod, counter_name=name, outline=outline, counter_hash=chash, flow_tag=p.get("flow_tag"),
                 signoff=f"{p['host']}:{p['signoff']}", pins_sha256=res.get("pins_sha256"),
+                lef_from_odb=bool(res.get("lef_from_odb")),
                 pins_canon_sha256=res.get("pins_canon_sha256"))
 
 
