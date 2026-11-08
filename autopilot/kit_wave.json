@@ -3446,7 +3446,8 @@
       "gen_hosts": [
         "intel1",
         "epyc4",
-        "epyc5"
+        "epyc5",
+        "epyc6"
       ],
       "gen_hosts_note": "KW-FIX-4 20:4x: intel1 scratch2 2 GB free (restage epyc4->intel1 + INFRA churn: mkdir ENOSPC) -> S81 gen/restage epyc4 only until intel1 >300 GB | KW-FIX-4 11:1x (COORD 11:00 + FLEET-BAL-1): S81 gen inputs on epyc4 + intel2 at the same paths (wt/kw-fix-4-s81g17 d7a13f9fef6, wt/kit-wave-15-s81b, die-s81-47/bind_ev2/out, kit-wave/s81/{bind_kw15d,asbuilt_kw15d.json,kit_rtl_kw15d.sh}); intel1 added 11:4x (FLEET-BAL-1 STAGED intel1 11:46, worktree verified); epyc2 skipped (scratch2 96 GB free, root under the 500 GB floor). place_spill true; restage_waiters moves unstarted epyc4 waiters.",
       "note_gen_hosts_1103": "2026-11-03 16:36 KW-FIX-4 (COORD 16:3x: epyc4 0 waiters at load 78/256, localhost 19/858 GB, intel1 12): s81 gen_hosts [epyc4,intel1,intel2] -> [epyc4] (interim, new + restaged s81 attempts gen/stage/queue on epyc4) until epyc4 holds >=10 waiters; restore [epyc4,intel1,intel2] then (code fix host fill targets follows). | 16:46 place_spill false (interim): spillable PLACE waiters of epyc4-gen kits queued on intel2 (ot-run queues on the most planned-free host), so s81 PLACE is pinned to its gen host epyc4 until epyc4 holds >=10 waiters; restore place_spill true with gen_hosts. | 17:03 COORD 17:0x (epyc2 admits 154 GB, intel1 103 GB, 0 waiters): gen_hosts [intel1, epyc4, intel2] + place_spill true restored (PLACE spills to epyc2/intel1 when they admit). | 17:58 COORD 17:5x intel2 scratch2 95% (191 GB free): gen_hosts [epyc4, intel1] (no new intel2 gen/run dirs) until intel2 > 300 GB free.",
@@ -5255,7 +5256,13 @@
         "serdes__t16@11",
         "serdes__t1__clb45db5be@12"
       ],
-      "note_kw35rd": "KW-FIX-35-RD 2026-11-08 10:04 PST RESTAGE-DEPS batch: 18 S81 rows FAILed @kit_rtl FileNotFoundError die-s81-70/kvov/bind/bind_report.json on epyc6 (kvov symlink targets codex-wave-bind-1106/s81_emitted_v2 + s81_ready_v3 absent there); relaunched in one batch (kit intact, nothing ran). epyc6 now staged byte-identical from intel1. 5 more (leaf t22@4 t33@4 t44__clf6cf8492@4 t54__cl706d9749@5 t60@4) already listed but stale under the KW-FIX-23 retry epoch (first seen 11-06 14:07). Revert: drop retry_prev_kw35rd_added from retry."
+      "note_kw35rd": "KW-FIX-35-RD 2026-11-08 10:04 PST RESTAGE-DEPS batch: 18 S81 rows FAILed @kit_rtl FileNotFoundError die-s81-70/kvov/bind/bind_report.json on epyc6 (kvov symlink targets codex-wave-bind-1106/s81_emitted_v2 + s81_ready_v3 absent there); relaunched in one batch (kit intact, nothing ran). epyc6 now staged byte-identical from intel1. 5 more (leaf t22@4 t33@4 t44__clf6cf8492@4 t54__cl706d9749@5 t60@4) already listed but stale under the KW-FIX-23 retry epoch (first seen 11-06 14:07). Revert: drop retry_prev_kw35rd_added from retry.",
+      "gen_hosts_prev_kw35e13": [
+        "intel1",
+        "epyc4",
+        "epyc5"
+      ],
+      "note_kw35_e13": "KW-FIX-35 2026-11-08 10:29 PST: epyc6 back in s81 gen_hosts (RESTAGE-DEPS a61d5586223 live in main; epyc6 inputs staged by KW-FIX-35-RD). Revert: gen_hosts <- gen_hosts_prev_kw35e13."
     },
     "s81_head": {
       "enabled": true,
