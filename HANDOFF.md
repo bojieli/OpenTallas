@@ -3435,3 +3435,6 @@ CODEX: 2026-11-08 02:22 PST takeover; all five dies plus flow/token/fleet assign
 
 CODEX: 2026-11-08 02:29 PST branch fixes READY HCL1762cad3e01/QCdigest1aa8d5d7e5/QChold7f6b7773d8/SVCpacking a8175d573b; no merge/tag/POR. Bksel finalreport active; SVC rate mismatch calibration active; all five die scopes staffed.
 CODEX: 2026-11-08 02:39 PST HBM OPEN: s3 arithmetic CLOCK-LEAF locality PLACE pilot admitted intel1; SVGRown full285bit4group head form+numeric W pin proposal/proof committed f5eae6f002, own PLACE pilot on intel1; noPOR/no merges/tags, PIN CYCLES0. qout strictECO+svgr_topvM1 healthy, no duplicates. lanes/CODEX-HBM-OPEN-0222.md.
+
+CODEX: 2026-11-08 02:45 PST KV types: ioft lockup form omitted existing STATUS_REG; exact TT -50.83 diagnosed, combined private SR+lockup bind active E4. PV macro-aware private source draft 873374c71c solves 109 corridors (max 403.554 um), 0 cycle delta, +43 raw reset copies; private bind queued. No POR/main change or new signed-off count.
+CODEX: 2026-11-08 02:45 PST QC production-calendar SU1 diagnostic PASS (req+9/results+18,3mutantscaught, warm/goldenPASS; private source9580edf420),5actual CBN ring providers recovered capture+provePASS/privateGENactive, NL event replay onto ownv4s candidate a3b374d33d/strictbindE6active. No merges/tags/POR/config adoption; original NKvR7 healthy GRT retained.
