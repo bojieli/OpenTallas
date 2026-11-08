@@ -111,3 +111,99 @@ def test_sim_one_cycle_per_relay(tmp_path):
     subprocess.run(['iverilog', '-o', str(tmp_path / 'a.out'), str(src)], check=True)
     out = subprocess.run(['vvp', str(tmp_path / 'a.out')], capture_output=True, text=True, check=True).stdout
     assert 'SAME_CYCLE' in out and 'MISMATCH' not in out, out
+
+
+# ---- S81-STATION-1 11-07: reset.relay_lockup.taps (consumer-tap relays negedge too)
+def tree_taps():
+    t = tree(True)
+    t['relay_lockup_taps'] = True
+    return t
+
+
+def test_taps_form_leaf_taps_negedge_outs_and_entry_plain():
+    t = tree_taps()
+    nck = R.consumer_count(t)
+    leaf = [r for r in t['relays'] if r['q'].startswith('rst_n_t') and r.get('tap') not in range(nck, nck + len(t['outs']))]
+    assert leaf
+    assert all(R.relay_cell(t, r) == 'ot_dp_rrelay_nl' for r in t['relays'] if r in leaf or not r['q'].startswith('rst_n_t'))
+    rtl = '\n'.join(R.rtl_lines(t))
+    assert 'ot_dp_rrelay u_rst_in ' in rtl
+    assert re.search(r'ot_dp_rrelay \w+ \(\.clk\(clk\), \.d\(\w+\), \.q\(rst_o_0\)\)', rtl)      # out relay plain
+    for r in leaf:
+        assert f"ot_dp_rrelay_nl {r['name']} (" in rtl and f".q({r['q']}))" in rtl
+    # without taps the same tree keeps plain leaf relays (old CLK form #7 unchanged)
+    assert all(R.relay_cell(tree(True), r) == 'ot_dp_rrelay' for r in leaf)
+
+
+def test_taps_tcl_qnet_identity_skips_state_flop():
+    base, taps = tree(True), tree_taps()
+    for x in (base, taps):
+        x.setdefault('reach_um', 405.0)
+        for r in x['relays']:
+            r.setdefault('kind', 'tap'); r.setdefault('xy', [0.0, 0.0])
+        x.setdefault('root', [0.0, 0.0])
+    a, b = R.tcl_text(base), R.tcl_text(taps)
+    assert '[./]state*' not in a
+    assert b.count('if {[llength $qnets] == 1 && ![string match {*[./]state*} $nm]} {') == 1
+    assert a.replace('if {[llength $qnets] == 1} {', 'X') == b.replace(
+        'if {[llength $qnets] == 1 && ![string match {*[./]state*} $nm]} {', 'X')
+
+
+def test_taps_plan_option(monkeypatch):
+    monkeypatch.setattr(R, 'start_broadcast', lambda P: False)
+    on = {'relay_lockup': {'form': 'negedge', 'types': ['ta', 'tb'], 'taps': ['ta']}}
+    assert R.relay_lockup_taps(plan(on), 'ta') is True and R.relay_lockup_taps(plan(on), 'tb') is False
+    assert R.relay_lockup(plan(on), 'tb') is True                    # tb keeps the internal-hop-only form
+    assert R.relay_lockup_taps(plan({'relay_lockup': {'form': 'negedge', 'types': ['ta']}}), 'ta') is False
+    assert R.relay_lockup_taps(plan({}), 'ta') is False
+    for bad in (True, ['tb'], 'ta'):
+        with pytest.raises(R.ResetError):
+            R.relay_lockup(plan({'relay_lockup': {'form': 'negedge', 'types': ['ta'], 'taps': bad}}), 'ta')
+
+
+def test_taps_schema_is_a_type_list():
+    import schema
+    lk = schema.SCHEMA['properties']['reset']['properties']['relay_lockup']
+    assert lk['properties']['taps']['type'] == 'array'
+
+
+SIM_TAP = '''`timescale 1ns/1ps
+module tb;
+  reg clk = 0; always #5 clk = ~clk;
+  reg d = 0; wire a, b; reg ea = 1; reg qa, qb; integer i, ra, rb;
+  ot_dp_rrelay    p (.clk(clk), .d(d), .q(a));
+  ot_dp_rrelay_nl n (.clk(clk), .d(d), .q(b));
+  // the consumer: ot_dp_st epoch flop (async active-low reset)
+  always @(posedge clk or negedge a) if (!a) qa <= 0; else qa <= ea;
+  always @(posedge clk or negedge b) if (!b) qb <= 0; else qb <= ea;
+  initial begin
+    ra = -1; rb = -1;
+    #1; @(negedge clk); d = 1;
+    for (i = 0; i < 8; i = i + 1) begin
+      @(posedge clk); #1;
+      if (qa === 1'b1 && ra < 0) ra = i;
+      if (qb === 1'b1 && rb < 0) rb = i;
+    end
+    if (ra >= 0 && ra == rb) $display("SAME_RELEASE %0d", ra); else $display("DIFF %0d %0d", ra, rb);
+    $finish;
+  end
+endmodule
+'''
+
+
+@pytest.mark.skipif(not shutil.which('iverilog'), reason='iverilog not installed')
+def test_sim_tap_relay_negedge_same_consumer_release(tmp_path):
+    """an async-reset consumer behind the negedge tap relay leaves reset on the SAME rising edge as behind a plain one;
+    MUTANT control: a relay with no state flop (q on the falling edge directly from d) releases one edge early."""
+    cells = '`timescale 1ns/1ps\n' + re.search(r'\(\* keep_hierarchy, keep \*\)\nmodule ot_dp_rrelay \(.*?endmodule\n',
+                                              gen_rtl.CELLS, re.S).group(0)
+    def run(lock, name):
+        src = tmp_path / f'{name}.v'
+        src.write_text(cells + lock + SIM_TAP)
+        subprocess.run(['iverilog', '-o', str(tmp_path / f'{name}.out'), str(src)], check=True)
+        return subprocess.run(['vvp', str(tmp_path / f'{name}.out')], capture_output=True, text=True, check=True).stdout
+    out = run(gen_rtl.LOCKUP_CELLS, 'ok')
+    assert 'SAME_RELEASE' in out, out
+    mutant = ('module ot_dp_rrelay_nl (input wire clk, input wire d, output reg q);\n'
+              '    always @(negedge clk) q <= d;\nendmodule\n')
+    assert 'DIFF' in run(mutant, 'mut')

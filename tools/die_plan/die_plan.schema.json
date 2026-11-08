@@ -5836,6 +5836,13 @@
         "minLength": 1
        }
       },
+      "taps": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
       "note": {
        "type": "string"
       }

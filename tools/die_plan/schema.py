@@ -1083,6 +1083,8 @@ SCHEMA = {
             # types use ot_dp_rrelay_nl (posedge state flop + negedge re-launch, 1 cycle); absent = byte-identical
             "relay_lockup": {"type": "object", "additionalProperties": False, "required": ["form", "types"],
                              "properties": {"form": {"enum": ["negedge"]}, "types": {"type": "array", "items": _name},
+                                            # S81-STATION-1 11-07: listed types' consumer-tap relays negedge too
+                                            "taps": {"type": "array", "items": _name},
                                             "note": {"type": "string"}}},
             # KV-PLAN2 10-25 (opt-in, default false = main wall-only rule): every relay hop keeps one L route outside
             # ALL hard cores / macro leaves of the type, not only outside the walls (G2 kv3_pc: rrl_13 -> rrl_14

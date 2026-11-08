@@ -1071,6 +1071,8 @@ def for_type(P, tn, reach=None):
                  type=tn, start=start_broadcast(P), relay_driver=bool(P.reset.get("relay_driver")))
         if relay_lockup(P, tn):
             T["relay_lockup"] = "negedge"
+        if relay_lockup_taps(P, tn):
+            T["relay_lockup_taps"] = True
         if T["entry"] == "sync" and lock_stages(P):
             lk = pad_spec(P)["lock"]
             T["lock"] = dict(inst=lk["inst"], pin=lk["pin"], stable=int(lk.get("stable_cycles", 16)),
@@ -1110,6 +1112,8 @@ def for_type(P, tn, reach=None):
              relay_driver=bool(P.reset.get("relay_driver")))
     if relay_lockup(P, tn):
         T["relay_lockup"] = "negedge"
+        if relay_lockup_taps(P, tn):
+            T["relay_lockup_taps"] = True
     if T["relay_driver"]:
         T["relay_pair_boxes"] = blockages(P.types[tn])
     return T
@@ -2073,7 +2077,19 @@ def relay_cell(T, r, gated=False):
         return "ot_dp_rgate_drive" if driven else "ot_dp_rgate"
     if T.get("relay_lockup") and not driven and not str(r.get("q", "")).startswith("rst_n_t"):
         return "ot_dp_rrelay_nl"     # CLK form #7: internal relay->relay hop only (gen_rtl.LOCKUP_CELLS)
+    # S81-STATION-1 11-07 (opt-in reset.relay_lockup.taps): the consumer-tap relay (q = rst_n_t<i>, not an external out
+    # site) is ot_dp_rrelay_nl too, so every tap net launches on the falling edge: async RESETN removal and sync-reset
+    # hold get T/2 by construction (slice_station u_rrl_73 -> eq RESETN removal across two leaves); release cycle unchanged.
+    if T.get("relay_lockup_taps") and T.get("relay_lockup") and not driven and r.get("tap") not in external \
+            and str(r.get("q", "")).startswith("rst_n_t"):
+        return "ot_dp_rrelay_nl"
     return "ot_dp_rrelay_drive" if driven else "ot_dp_rrelay"
+
+
+def relay_lockup_taps(P, tn):
+    """S81-STATION-1 11-07 (opt-in): reset.relay_lockup.taps = [type, ...] (a subset of its types) -> those types'
+    consumer-tap relays are ot_dp_rrelay_nl as well (relay_cell).  Absent / not listed = today's trees."""
+    return bool(relay_lockup(P, tn) and tn in ((P.reset.get("relay_lockup") or {}).get("taps") or []))
 
 
 def relay_lockup(P, tn):
@@ -2087,6 +2103,9 @@ def relay_lockup(P, tn):
     bad = sorted(set(cfg["types"]) - set(P.types))
     if bad:
         raise ResetError(f"reset.relay_lockup names unknown types {bad[:5]}")
+    taps = cfg.get("taps", [])
+    if not isinstance(taps, list) or set(taps) - set(cfg["types"]):
+        raise ResetError("reset.relay_lockup.taps must be a list of types named in reset.relay_lockup.types")
     if tn not in cfg["types"]:
         return False
     if P.reset.get("relay_driver"):
@@ -2358,7 +2377,13 @@ def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None, unused_
         raise ResetError("native reset placement nodes require exact verified hierarchy paths")
     ent = "u_rst_root" if T["entry"] == "sync" else "u_rst_in"
     root_xy = (native_sites or {}).get(ent, T['root'])
-    t = [TCL_HEAD.replace("REACH", f"{T['reach_um']:g} um"),
+    head = TCL_HEAD.replace("REACH", f"{T['reach_um']:g} um")
+    if T.get("relay_lockup_taps"):
+        # an ot_dp_rrelay_nl tap relay holds two flops (state, q): the tap net identity is the q (negedge) flop's output
+        guard = "    if {[llength $qnets] == 1} {"
+        assert head.count(guard) == 1
+        head = head.replace(guard, "    if {[llength $qnets] == 1 && ![string match {*[./]state*} $nm]} {")
+    t = [head,
          f"rtr_place rst_root_n {{*{ent}[./]*}} {root_xy[0]:.3f} {root_xy[1]:.3f} rentry"]
     rel = start_relays(T) if T.get("start") else [dict(r, dlab=r["d"]) for r in T["relays"]]
     omitted = set(unused_bootstrap)
