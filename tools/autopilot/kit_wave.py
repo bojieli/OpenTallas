@@ -225,6 +225,16 @@ def opt(cfg, die, key):
     return cfg.get(key, DEFAULTS.get(key))
 
 
+def place_mem_gb(cfg, die, item):
+    """PLACE memory (GB) of one item: the first fnmatch pattern of place_mem_gb_by_item (die > global, in insertion
+    order) that matches the item, else the die's place_mem_gb.  QC-TYPES-6 11-08: the hc tap-pair kits need >= 96 GB
+    for their kit LEC (rc137 OOM at 32 and 48 GB) without raising every kit's budget."""
+    for pat, gb in (opt(cfg, die, "place_mem_gb_by_item") or {}).items():
+        if fnmatch.fnmatchcase(str(item), pat):
+            return int(gb)
+    return int(opt(cfg, die, "place_mem_gb"))
+
+
 def stop_reason(cfg, die, ap_dir=None):
     ap_dir = Path(ap_dir or AP_DIR)
     if cfg.get("error"):
@@ -1214,7 +1224,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
     return {"die": die, "item": item, "kind": kind, "event": d["event"], "plan": d["plan"],
-            "gen_host": pick_gen_host(cfg, die, take=int(opt(cfg, die, "place_mem_gb")),
+            "gen_host": pick_gen_host(cfg, die, take=place_mem_gb(cfg, die, item),
                                       threads=int(opt(cfg, die, "place_threads"))),
             "src": d["src"], "src_sha": d.get("src_sha", ""), "queue_src": d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": d.get("kit_rtl") or {},
@@ -1241,7 +1251,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # (gen phys --cland-pinslot; a kit without ring bands is unchanged).  Die opt-out: cland_pinslot false.
             "cland_pinslot": cland_pinslot_arg(d),
             "hosts": [h for h in opt(cfg, die, "hosts")], "hub": hub, "place_prefer": list(opt(cfg, die, "place_prefer") or []),
-            "place_mem_gb": int(opt(cfg, die, "place_mem_gb")), "place_threads": int(opt(cfg, die, "place_threads")),
+            "place_mem_gb": place_mem_gb(cfg, die, item), "place_threads": int(opt(cfg, die, "place_threads")),
             "geom_mem_gb": int(opt(cfg, die, "geom_mem_gb")), "geom_grt_wall_s": int(opt(cfg, die, "geom_grt_wall_s")), "gen_mem_gb": int(opt(cfg, die, "gen_mem_gb")),
             # A measured large elaboration can override its own lint container
             # and matching ot-run admission without raising every kit's budget.
@@ -3360,7 +3370,7 @@ def enqueue_pass(AP, cfg, st, rec, notices):
     cells = rec.get("cells") or 0
     argv = ["python3", str(Path(__file__).resolve().parent / "enqueue.py"), "--die", rec["die"], "--type", rec["item"],
             "--kit", rec["kit"], "--src", src, "--geom", rec.get("geom_verdict") or "PASS", "--geom-ref", ref,
-            "--mem", str(opt(cfg, rec["die"], "place_mem_gb")), "--cells", str(min(int(cells * 1.3), CELL_CAP_MAX) if cells else 200000),
+            "--mem", str(place_mem_gb(cfg, rec["die"], rec["item"])), "--cells", str(min(int(cells * 1.3), CELL_CAP_MAX) if cells else 200000),
             "--lane", d.get("lane", LANE)]
     if AP.DRY:
         AP.log("KIT-WAVE would enqueue: " + " ".join(argv))
