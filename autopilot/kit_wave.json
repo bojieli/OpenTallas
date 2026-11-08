@@ -7439,7 +7439,9 @@
         "tailx_sk_step0": "KW-FIX-8 23:2x DIE-HBM-66: Sinkhorn A event, do not requeue",
         "tailx_sk_steady": "KW-FIX-8 23:2x DIE-HBM-66: Sinkhorn A event, do not requeue",
         "ot_hgi_sfu_core_split3__opstore_b": "KW-FIX-11 07:0x COORD 07:01: stopped 06:51 by ruling, part 27 replaces (HBM-FORM-SPLIT 06:51); autopilot revived it on exit 137; no relaunch",
-        "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch"
+        "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch",
+        "q_b013": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013 (intel1 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013_a3R); release after it ends or after ROOT-MERGE-52 lands the fix",
+        "q_b013__physical_v1": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013pv1 (epyc4 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013__physical_v1_a2R); release after it ends or after ROOT-MERGE-52 lands the fix"
       },
       "gen_hosts": [
         "intel1",
@@ -8658,7 +8660,11 @@
         ]
       },
       "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-08 05:15 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
-      "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 05:33 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/hbm.json on intel2, plan 63000666491b) FIRST in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v"
+      "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 05:33 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/hbm.json on intel2, plan 63000666491b) FIRST in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v",
+      "hold_items_added_kw35l": [
+        "q_b013",
+        "q_b013__physical_v1"
+      ]
     }
   },
   "place_prefer": [
