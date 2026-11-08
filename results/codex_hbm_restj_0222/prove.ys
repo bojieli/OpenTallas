@@ -1,0 +1,25 @@
+read_verilog -sv input/core.sv
+hierarchy -check -top ot_hgi_sfu_split3_ctl_rest
+proc
+flatten
+opt
+async2sync
+opt_clean
+rename ot_hgi_sfu_split3_ctl_rest gold
+design -stash gold
+read_verilog -sv replicated_v2.sv
+hierarchy -check -top ot_hgi_sfu_split3_ctl_rest
+proc
+flatten
+opt
+async2sync
+opt_clean
+rename ot_hgi_sfu_split3_ctl_rest gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate equiv
+hierarchy -top equiv
+equiv_simple
+equiv_induct -seq 4
+equiv_status -assert
