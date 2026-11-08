@@ -46,6 +46,7 @@ module tb_dsdv_svc_sx;
     // ---------------- stimulus ----------------
     reg [W-1:0] beat [0:NB-1][0:15];
     integer slot_c [0:NB-1];
+    integer pdrop=0;
     function automatic [31:0] rfp(input integer sd);
         integer k; reg [31:0] v;
         k = $urandom % 100;
@@ -60,6 +61,7 @@ module tb_dsdv_svc_sx;
         integer b, t, i, c;
         if (!$value$plusargs("seed=%d", seed)) seed = 1;
         void'($value$plusargs("order=%d", order_mut));
+        void'($value$plusargs("pdrop=%d", pdrop));
         void'($urandom(seed));
         c = 0;
         for (b = 0; b < NB; b++) begin
@@ -69,8 +71,16 @@ module tb_dsdv_svc_sx;
                 beat[b][t][W-1 -: 16] = 16'(b);
                 beat[b][t][W-17 -: 4] = 4'(b * 7 + 3);
                 for (i = 0; i < N; i++) begin
+                    `ifdef SX_PASSES
+                    beat[b][t][N + 32*i +: 32] = ((t / 8 == b / (NB/2)) && (i % H == t % H)) ? {1'b0,8'd127,7'(t+i+b),16'd0} : 32'd0;
+`else
                     beat[b][t][N + 32*i +: 32] = rfp(0);
+`endif
+                    `ifdef SX_PASSES
+                    beat[b][t][i] = 0;
+`else
                     beat[b][t][i] = (($urandom % 50) == 0);
+`endif
                 end
             end
         end
@@ -190,7 +200,7 @@ module tb_dsdv_svc_sx;
         for (b = 0; b < NB; b++) begin
             if (cyc == T0 + slot_c[b]) begin gv = 1'b1; for (s2 = 0; s2 < 16; s2++) gl[s2] = beat[b][s2]; end
             for (s2 = 0; s2 < 16; s2++)
-                if (cyc == T0 + slot_c[b] + sx_role_off(s2) + skew(s2)) begin l_v[s2] = 1'b1; l_d[s2] = beat[b][(order_mut && tile_of(s2)==0)?2:(order_mut && tile_of(s2)==2)?0:tile_of(s2)]; end
+                if (cyc == T0 + slot_c[b] + sx_role_off(s2) + skew(s2)) begin l_v[s2] = !(pdrop && tile_of(s2)/8 != b/(NB/2)); l_d[s2] = beat[b][(order_mut && tile_of(s2)==0)?2:(order_mut && tile_of(s2)==2)?0:tile_of(s2)]; end
         end
     end
 

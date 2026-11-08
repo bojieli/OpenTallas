@@ -324,7 +324,9 @@ module dsdv_svc_rs_c #(
     // (2) P beats into the score exchange from PIO, one every 2 cycles (aligned like the engine's score beats: gd)
     reg [7:0] pk;
     wire [9:0] nbt = (tjob + 10'd3) >> 2;
-    wire pfire = pon && hsel && 10'(pk) < nbt && jcs == pio + {7'd0, pk, 1'b0};
+    // Every dimension tile supplies the static valid, including inactive SM heads.
+    // Inactive heads contribute zero; suppressing their valid drops pass 1 at the gather root.
+    wire pfire = pon && 10'(pk) < nbt && jcs == pio + {7'd0, pk, 1'b0};
     wire [9:0] prow = {pk, 2'b00};
     wire [255:0] prw = pbuf[pk[7:2]];
     always @(posedge ck) begin
@@ -332,7 +334,7 @@ module dsdv_svc_rs_c #(
         pl_d[LW-1 -: 16] <= 16'(prow);
         for (int i = 0; i < 4; i++) if (32'(prow) + i < 32'(tjob)) begin
             pl_d[LW-20 + i] <= 1'b1;
-            pl_d[4*H + (H*i + 32'(tile) % H)*32 +: 32] <= {prw[16*(4*pk[1:0] + i) +: 16], 16'h0000};
+            pl_d[4*H + (H*i + 32'(tile) % H)*32 +: 32] <= hsel ? {prw[16*(4*pk[1:0] + i) +: 16], 16'h0000} : 32'd0;
         end
     end
     // (3) fold root: rt P beats -> PV frame words (header, then A = rows 0 / 1, B = rows 2 / 3 of each beat)
@@ -356,7 +358,7 @@ module dsdv_svc_rs_c #(
             if (w_v && sek && pb_n == 6'd40) p_f <= 1'b1;                          // more e rows than pbuf holds
             pl_v <= pfire;
             if (go) pk <= 8'd0; else if (pfire) pk <= pk + 1'b1;
-            if (pfire && {2'b00, pb_n} <= {2'b00, pk[7:2]}) p_f <= 1'b1;             // the beat's e row is not in pbuf yet
+            if (pfire && hsel && {2'b00, pb_n} <= {2'b00, pk[7:2]}) p_f <= 1'b1;             // the beat's e row is not in pbuf yet
             if (pl_v && l_v) p_f <= 1'b1;                                           // a P beat on an engine score beat
             pp_v <= 1'b0;
             if (go) begin pph <= 2'd0; phd <= 1'b0; pwc <= 10'd0; end
