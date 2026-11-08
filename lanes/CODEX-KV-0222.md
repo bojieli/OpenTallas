@@ -1,0 +1,15 @@
+# CODEX KV takeover 2026-11-08 02:22 PST
+
+CODEX took over: all KV collection and next steps. Own branches only; no merges, tags, plan-of-record changes, or deletion chains.
+
+## CODEX notes
+
+- Prompt qkd_hr_core_prompt vR: LIVE epyc4 `/srv/opentallas-scratch3/claude/dkv91/qkd_hr_core_prompt_vR`, admitted unit `oth-ubuntu-2255623-1794131733`, GRT nonport repair progressing at 02:24. LEC exit 0. Existing chain owned by Claude; left running. Next: collect route/signoff; if near miss assess one ECO; otherwise view geometry and structurally fix on own branch. vP one ECO spent; vQ FAIL TT -3.86/2 endpoints, slew176 pins/8 nets; vR applies already launched design targets +20ps setup and 40% slew margin, no signoff-gate relaxation.
+- M5 e6: LIVE epyc5 `/srv/opentallas-scratch3/claude/dkv91/m5hs2/kv3_head_eighth_e6__216x216`, unit `oth-ubuntu-2658759-1794128820`, GRT hold repair progressing. LEC exit0. PLACE density/layout actually viewed in local `coord/tmp/codex-kv-0222/e6_{place,density}.png`. SMELLS: fanout spread412.8um flagged, no macros, regional density mostly40-60%, upper-left void; face flop line at east, bottom. Not a new approval to route: existing chain retained. Next GRT and route review, then signoff.
+- M5 e2: QUEUED on epyc5 `/srv/opentallas-scratch3/claude/dkv91/m5hs2/kv3_head_eighth_e2__216x216`, intel2 `~/dkv91/m5hs2_e2.otrun.log`. No duplicate launch. Same launched DRV-SAFE design target class as e6.
+- M5 e1: full SIGNED replacement already collected by Claude on flow-20261107-dd-kv, TT+33.28/FF+2.92, DRC0, routed EQ; no +1. e0/e5 also signed M5. Current-tag re-sign discovery shared with root.
+- e2/e6/ba0 owner ECO overrides: NOT granted; no override used. Current e2/e6 are existing fresh forms, not second ECOs.
+- KV-TYPES-3 scope delegated `/root/kv/types`: intel1 ioft finished FAIL GRT TT-50.83/FF-185.66; diagnosis active. hroot LIVE GRT, phy FAIL setup-65.23 (macro falling-edge capture, +1 pin-cycle proposal pending), pv_v1n macro-aware START geometry fix and sys_c outstanding. Details `CODEX-KV-TYPES-0222.md`.
+- Wi soft split delegated `/root/kv/wisplit`: epyc6 `/srv/opentallas-scratch2/claude/dkv91/wisplit`, current draft G0 adds62/64 errors. Dry structural geometry improvements only on own branch; no plan-of-record writes or builds. Details `CODEX-KV-WISPLIT-0222.md`.
+
+- 02:33 PST e1 current ds-kv re-sign QUEUED via ot-run mem32/8T/disk4 on epyc5, output `/srv/opentallas-scratch2/claude/codex-kv-resign-0222/e1_ds`; frontend intel2 `~/codex-kv-0222/resign_e1_ds.otrun.log`. Official manifest exported from own sparse branch `codex/kv-resign-0222` exact tag 289149dea5bc. Same already signed routed DB; no new P&R. Route congestion image actually viewed: two horizontal hot bands plus local fanout, no macros or blocked channels; existing DRC0/full TT+FF pass. Re-sign only preserves this qualified M5 view on current tag.
