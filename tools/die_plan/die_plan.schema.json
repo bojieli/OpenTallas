@@ -910,6 +910,10 @@
       "type": "number",
       "minimum": 0
      },
+     "phy_pg_clip_um": {
+      "type": "number",
+      "minimum": 0
+     },
      "rck_band": {
       "type": "object",
       "additionalProperties": false,
