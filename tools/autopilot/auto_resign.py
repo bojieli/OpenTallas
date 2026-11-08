@@ -597,6 +597,61 @@ def stage_tools(AP, host, root, tag, shas):
     return (d, "") if rc == 0 else (None, "READY on %s: %s" % (host, err.strip()[-200:]))
 
 
+# KW-FIX-32 11-07 (COORD 21:4x (3), DIE-KV-91: no dd-kv tools under auto-resign/tools when a lane re-signed by hand):
+# every die's newest flow tag is exported on every fleet host when it lands, not only when the first wave re-sign of
+# that die launches there.  Same export (stage_tools: tag bytes + sha manifest + driver, READY marker), same root rule
+# as a launch (first scratch root with a claude dir and PRESTAGE_FREE_GB free).  ~19 MB per tag and host.
+PRESTAGE_DIES = ("qwen_compute", "s81", "s81_head", "qwen_kvsys", "hbm")
+PRESTAGE_FREE_GB = 5
+PRESTAGE_MAX_PER_TICK = int(os.environ.get("OT_AR_PRESTAGE_MAX", "8"))     # exports per pass; the rest go next pass
+HOST_LINE_RE = re.compile(r"(?:^|[|]|ot-run status:)\s*([A-Za-z0-9_.-]+) (?:admits|REFUSED)\b", re.M)
+
+PROBE_ROOT = r'''
+import json, os, shutil, sys
+a = json.loads(sys.argv[1]); need = a.get("free_gb", 5) << 30
+roots = [r for r in a.get("roots") or [] if os.path.isdir(os.path.join(r, "claude")) and shutil.disk_usage(r).free > need]
+print("AP_JSON " + json.dumps(dict(root=roots[0] if roots else None)))
+'''
+
+
+def fleet_hosts(AP):
+    """host names ot-run --status lists (admitting or refused: a refused host can still hold a routed DB)"""
+    rc, out, _ = AP.sh([AP.OT_RUN, "--status"], timeout=120)
+    return sorted(set(HOST_LINE_RE.findall(out))) if rc == 0 else []
+
+
+def prestage(AP, st, ctx, hosts=None):
+    """export each die's newest tag on every host once; -> [(host, tag, dir or error)].  Off: OT_AR_PRESTAGE=0."""
+    if AP.DRY or os.environ.get("OT_AR_PRESTAGE", "1") == "0":
+        return []
+    done, out, budget = st.setdefault("prestaged", {}), [], PRESTAGE_MAX_PER_TICK
+    hosts = fleet_hosts(AP) if hosts is None else hosts
+    for die in PRESTAGE_DIES:
+        tag = ctx["tag"](die)
+        if not tag:
+            continue
+        ctx["tool_key"](tag)
+        shas = ctx["shas"].get(tag) or {}
+        if not shas:
+            continue
+        for host in hosts:
+            key = "%s|%s" % (host, tag)
+            if key in done or budget <= 0:
+                continue
+            r = AP.rpy(host, PROBE_ROOT, dict(roots=ROOTS, free_gb=PRESTAGE_FREE_GB), timeout=120)
+            if not r.get("root"):
+                out.append((host, tag, "no scratch root: %s" % (r.get("error") or "none with %d GB free" % PRESTAGE_FREE_GB)))
+                continue
+            budget -= 1
+            d, err = stage_tools(AP, host, r["root"], tag, shas)
+            if d:
+                done[key] = d
+            out.append((host, tag, d or err))
+    for host, tag, what in out:
+        AP.log("AUTO-RESIGN PRESTAGE %s %s: %s" % (host, tag, what))
+    return out
+
+
 def out_dir(root, c, tag, odb_sha, attempt):
     s = "%s/claude/auto-resign/%s/%s__%s__%s" % (root, c["die"], c["name"], tag, odb_sha[:8])
     return s if attempt <= 1 else "%s_a%d" % (s, attempt)
@@ -854,6 +909,10 @@ def _step(AP, ap_dir):
             else:
                 st.pop("blocked", None)
                 advance(AP, st, ctx, ap_dir, notices)
+                try:
+                    prestage(AP, st, ctx)
+                except Exception as e:                   # tool export is a convenience; it never stops the pass
+                    AP.log("AUTO-RESIGN PRESTAGE skipped: %s: %s" % (type(e).__name__, e))
     finally:                                         # a raise outside the rows still keeps what this pass started and collected
         save_state(ap_dir, st)
         if notices and not AP.DRY:
