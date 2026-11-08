@@ -6307,7 +6307,13 @@
         "q_su21__physical_v1",
         "q_b013",
         "q_b013__physical_v1",
-        "q_sm3"
+        "q_sm3",
+        "NE_io",
+        "NW_io",
+        "q_spb0",
+        "q_spb0__physical_v1",
+        "vsN0",
+        "root"
       ],
       "place_prefer": [
         "intel1",
@@ -6320,8 +6326,8 @@
       "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
       "plan": "/srv/opentallas-scratch2/claude/kw27/hbm_d44v_02909_g/die_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
-      "src_sha": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
+      "src": "/srv/opentallas-scratch2/claude/kw34/src_d6e90",
+      "src_sha": "d6e906593cc613ee0e34b07a73cae8a3e677cd39",
       "gate": {
         "g0c": "PASS",
         "bind": "PASS",
@@ -6881,7 +6887,7 @@
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
       "pilot_mode": "queue",
-      "queue_src": "main@d95ec5a45a60",
+      "queue_src": "main@d6e906593cc6",
       "hold_items": {
         "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
         "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
@@ -6902,7 +6908,11 @@
         "tailx_sk_step0": "KW-FIX-8 23:2x DIE-HBM-66: Sinkhorn A event, do not requeue",
         "tailx_sk_steady": "KW-FIX-8 23:2x DIE-HBM-66: Sinkhorn A event, do not requeue",
         "ot_hgi_sfu_core_split3__opstore_b": "KW-FIX-11 07:0x COORD 07:01: stopped 06:51 by ruling, part 27 replaces (HBM-FORM-SPLIT 06:51); autopilot revived it on exit 137; no relaunch",
-        "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch"
+        "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch",
+        "q_su20": "KW-FIX-34 2026-11-08 01:56 PST: CANCELLED VOLUME row released only by the src move; same WCOPY kitparam class as q_su31 (DIE-HBM-91 00:43: q_su20/21/30 pull ot_hbm_su_static_pinned_bank); release with the kitparam v2 batch",
+        "q_su20__physical_v1": "KW-FIX-34 2026-11-08 01:56 PST: CANCELLED VOLUME row released only by the src move; same WCOPY kitparam class as q_su31 (DIE-HBM-91 00:43: q_su20/21/30 pull ot_hbm_su_static_pinned_bank); release with the kitparam v2 batch",
+        "q_su21": "KW-FIX-34 2026-11-08 01:56 PST: CANCELLED VOLUME row released only by the src move; same WCOPY kitparam class as q_su31 (DIE-HBM-91 00:43: q_su20/21/30 pull ot_hbm_su_static_pinned_bank); release with the kitparam v2 batch",
+        "q_su21__physical_v1": "KW-FIX-34 2026-11-08 01:56 PST: CANCELLED VOLUME row released only by the src move; same WCOPY kitparam class as q_su31 (DIE-HBM-91 00:43: q_su20/21/30 pull ot_hbm_su_static_pinned_bank); release with the kitparam v2 batch"
       },
       "gen_hosts": [
         "intel1",
@@ -7209,7 +7219,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 2
       },
-      "flow_tag": "flow-20261108-ew-hbm",
+      "flow_tag": "flow-20261108-ez-hbm",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -7777,7 +7787,26 @@
         "q_spu0__physical_v1": "KW-FIX-32 2026-11-07 22:29 PST: PLAN FAIL a2 @place PDN-0179 'Unable to repair all channels' (21:36 transit batch); the src move alone would relaunch it (no blind retry); DIE-HBM-90 releases with a class fix",
         "q_spu1": "KW-FIX-32 2026-11-07 22:29 PST: PLAN FAIL a1 @place PDN-0179 'Unable to repair all channels' (21:36 transit batch); the src move alone would relaunch it (no blind retry); DIE-HBM-90 releases with a class fix",
         "q_spu1__physical_v1": "KW-FIX-32 2026-11-07 22:29 PST: PLAN FAIL a2 @place PDN-0179 'Unable to repair all channels' (21:36 transit batch); the src move alone would relaunch it (no blind retry); DIE-HBM-90 releases with a class fix"
-      }
+      },
+      "src_prev_kw34f": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
+      "src_sha_prev_kw34f": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
+      "queue_src_prev_kw34f": "main@d95ec5a45a60",
+      "flow_tag_prev_kw34f": "flow-20261108-ew-hbm",
+      "only_items_prev_kw34f_added": [
+        "NE_io",
+        "NW_io",
+        "q_spb0",
+        "q_spb0__physical_v1",
+        "vsN0",
+        "root"
+      ],
+      "note_src_kw34f": "KW-FIX-34 2026-11-08 01:56 PST (COORD 01:4x (3)): HBM src kw34/src_d6e90 = main d6e906593cc (kcls bfbad6461a4: k1 prov_view untracked RTL + .gz pins, k2 gen_phys self-recursive generate) = kw33/src_d95ec hardlinks + 59 files, sha256-checked on intel1/epyc4/epyc5/epyc6/epyc2; tag ez-hbm; k1/k2 rows added to only_items ['NE_io', 'NW_io', 'q_spb0', 'q_spb0__physical_v1', 'vsN0', 'root']. Revert: *_prev_kw34f, drop only_items_prev_kw34f_added",
+      "hold_items_kw34f_added": [
+        "q_su20",
+        "q_su20__physical_v1",
+        "q_su21",
+        "q_su21__physical_v1"
+      ]
     }
   },
   "place_prefer": [
