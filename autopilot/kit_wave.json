@@ -5988,14 +5988,14 @@
         "clock": "PASS",
         "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
       },
-      "plan": "/srv/opentallas-scratch2/claude/kw35/qcplan_v4w/plan_qc53v4w.json",
+      "plan": "/srv/opentallas-scratch2/claude/qct10/ctlm/plan/plan_qc53v4w_ctlmfq.json",
       "gen_host": "epyc2",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_c303p",
-      "src_sha": "804f9e020b210d3733cdfdb69d07a662e7fc0dc1",
+      "src": "/srv/opentallas-scratch2/claude/qct10/ctlm/src_ctlmfq",
+      "src_sha": "7e2f6c9af85ec33de031f45aea6fe6d103a3f61b",
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch2/claude/kw35/src_c303p/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_reach.json",
-        "bind_out": "/srv/opentallas-scratch2/claude/qct9/bind_v4w",
+        "bind_out": "/srv/opentallas-scratch2/claude/qct10/ctlm/bind_ctlmfq",
         "note": "KW-FIX-22 11:2x BIND_STALE class: bind_out bind_qc_g = canonical native re-bind (bind.py all --strict, src_3761 tools) of the SAME context as bind_qc_f (plan_qc52 b398e285 + results/qc_ringfall_1105/bind/final_asbuilt.json in src_c926f): bind errors 0 unbound 0, 377 partitions, 1921 crossings, native_topology.json written; kit_topology.bind_matches True for the 6 rows (False on bind_qc_f, no receipt). verify step advisory FAIL (glue_unmatched 24710, 3633 clock_landing strap_k notes, lint 768; bind_qc_f never ran verify). Same bytes on epyc5+epyc6 (md5 tree d27ccd18). | KW-FIX-16 13:1x I136 tag flow-20261106-f-qc (ringff I125 + ringfall I136 + coll_core fold I124): src_r main 79e52bd98b2; asbuilt/sidecar results/qc_ringfall_1105 (DIE-QC-78 chain78, copied into src_r, untracked), bind_out bind_qc_f = copy of dq78/bind, strict FINAL errors 0, 1921 crossings, inputs plan_qc52 b398e285 = src_r plan bytes. | KW-FIX-10 04:2x COORD: SC event I67+I68 src_c main cbb7cfda19b tag s-qc, bind_out sc_ev/pub. | KW-FIX-8 23:1x I66 collector batch: src_b main cb98b2e2324 tag q-qc; bind_tip_i57 unchanged, kit-rtl trial rc 0 on the new plan, no QC RTL moved. | KW-FIX-8 19:1x COORD I57 class relaunch: src_w main 62777284106 tag flow-20261105-h-qc, bind_tip_i57 = byte copy of dq71/bind_tip (DIE-QC-71: bind_tip stays bind_out), same path on epyc4 and intel1. KW-FIX-8 17:0x COORD 16:4x: bind_out dq71/bind_tip (main 3277e531772, BIND_RC 0, copy on epyc2). KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46 tag w-qc: src_s main c512ffc3a94, plan efdb36e864, bind_qs = DIE-QC-70 q70/bind9 strict rc 0 (W1+straps; coll_ucie field after it) | KW-FIX-8 fall tag: QC on src_q main bf1e2233ce0, strict bind_qq rc 0 | KW-FIX-8 I38 tag p-qc: QC event 5bcec8dc59 on src_p, plan_qc52, strict bind_qp | KW-FIX-6 05:1x: src kw-fix-6-qcd. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | QC approved immutable combined d90 strict119types/377parts/1921crossings/790393bits0errors;201-file closed readset event1131_fixed. Matching pre-D13 RTL/recipe retained; Q4 untrusted hints included; no fresh ELAB or old freeze mutation.",
         "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
       },
@@ -6475,9 +6475,10 @@
         "slw_su_c__cl92142dac@23",
         "slw_su_l0__cl1a1c1f8f@13",
         "slw_su_l0__cl1e5219ea@10",
-        "slw_su_l0__cl76fb247e@4"
+        "slw_su_l0__cl76fb247e@4",
+        "tt_ctlm@9"
       ],
-      "queue_src": "claude/kw-fix-35-wave-c303a-1108@804f9e020b2",
+      "queue_src": "claude/kw-fix-35p-wave-ctlm-1108@7e2f6c9af85",
       "type_args": {
         "sle_fw_v2__cl69f5e854": [
           "--gpl-plain",
@@ -7040,7 +7041,8 @@
         "slw_su_c__cl92142dac@23": "KW-FIX-35-P 2026-11-08 08:05 PST: SRC-POLLUTION (COORD 07:2x): attempt ran kit gen/preflight while shared kw33/src_d95ec held newer main tools (CTAP bind symlink write, epyc4 05:38-07:0x / epyc2 06:46-07:0x), src_sha claim false, COUNT-REVOKED DO_NOT_COUNT; live attempt stopped by exact unit; FRESH kit on current QC config (src_c303p, plan v4w, bind_v4w), stage_resume off for this batch",
         "slw_su_l0__cl1a1c1f8f@13": "KW-FIX-35-P 2026-11-08 08:05 PST: SRC-POLLUTION (COORD 07:2x): attempt ran kit gen/preflight while shared kw33/src_d95ec held newer main tools (CTAP bind symlink write, epyc4 05:38-07:0x / epyc2 06:46-07:0x), src_sha claim false, COUNT-REVOKED DO_NOT_COUNT; live attempt stopped by exact unit; FRESH kit on current QC config (src_c303p, plan v4w, bind_v4w), stage_resume off for this batch",
         "slw_su_l0__cl1e5219ea@10": "KW-FIX-35-P 2026-11-08 08:05 PST: SRC-POLLUTION (COORD 07:2x): attempt ran kit gen/preflight while shared kw33/src_d95ec held newer main tools (CTAP bind symlink write, epyc4 05:38-07:0x / epyc2 06:46-07:0x), src_sha claim false, COUNT-REVOKED DO_NOT_COUNT; live attempt stopped by exact unit; FRESH kit on current QC config (src_c303p, plan v4w, bind_v4w), stage_resume off for this batch",
-        "slw_su_l0__cl76fb247e@4": "KW-FIX-35-P 2026-11-08 08:05 PST: SRC-POLLUTION (COORD 07:2x): attempt ran kit gen/preflight while shared kw33/src_d95ec held newer main tools (CTAP bind symlink write, epyc4 05:38-07:0x / epyc2 06:46-07:0x), src_sha claim false, COUNT-REVOKED DO_NOT_COUNT; live attempt stopped by exact unit; FRESH kit on current QC config (src_c303p, plan v4w, bind_v4w), stage_resume off for this batch"
+        "slw_su_l0__cl76fb247e@4": "KW-FIX-35-P 2026-11-08 08:05 PST: SRC-POLLUTION (COORD 07:2x): attempt ran kit gen/preflight while shared kw33/src_d95ec held newer main tools (CTAP bind symlink write, epyc4 05:38-07:0x / epyc2 06:46-07:0x), src_sha claim false, COUNT-REVOKED DO_NOT_COUNT; live attempt stopped by exact unit; FRESH kit on current QC config (src_c303p, plan v4w, bind_v4w), stage_resume off for this batch",
+        "tt_ctlm@9": "KW-FIX-35-P 2026-11-08 10:33 PST: REDESIGN: changed RTL. QC-TYPES-10/CTLM 09:26 READY tt_ctlm DEPTH (G2 TT -278.65, FIFO SRAM rd_out -> FIREDQ 25 levels): u_gi.u_cal CALREG[0] FQREG ring + registered nx_q, claude/qc-types-10-ctlm-1108@220fd3ce9a0 (COORD 09:4x train ZE): fresh kit on plan_qc53v4w_ctlmfq + bind_ctlmfq"
       },
       "gen_hosts": [
         "intel1",
@@ -8079,6 +8081,15 @@
         "slw_hc0__cl1bc59e1c",
         "slw_hc1__cl68f9248e__cle683a076",
         "slw_hc2__cla3497502__cl16607c7a"
+      ],
+      "src_prev_kw35p3": "/srv/opentallas-scratch2/claude/kw35/src_c303p",
+      "src_sha_prev_kw35p3": "804f9e020b210d3733cdfdb69d07a662e7fc0dc1",
+      "queue_src_prev_kw35p3": "claude/kw-fix-35-wave-c303a-1108@804f9e020b2",
+      "plan_prev_kw35p3": "/srv/opentallas-scratch2/claude/kw35/qcplan_v4w/plan_qc53v4w.json",
+      "kit_rtl_bind_out_prev_kw35p3": "/srv/opentallas-scratch2/claude/qct9/bind_v4w",
+      "note_kw35p3": "KW-FIX-35-P 2026-11-08 10:33 PST (COORD 09:4x train ZE, KW-FIX-35 fallback: v4n READY not posted in 20 min): QC tt_ctlm CALREG FQREG depth form alone. plan plan_qc53v4w_ctlmfq.json sha 9c4334378129 (= v4w + tt_ctlm hard_cores/note only), bind_out qct10/ctlm/bind_ctlmfq (vs bind_v4w only qfd_qc_tt_ctlm_part.sv differs functionally; bind.f 202/202 paths on intel1/epyc4/epyc5/epyc6), src qct10/ctlm/src_ctlmfq = src_c303p + 5 files of 220fd3ce9a0 (= commit 7e2f6c9af85 on claude/kw-fix-35p-wave-ctlm-1108, blob hashes checked on 5 hosts, tree read-only). Tools = c303p (no CLAND tool, so v4w rows keep their gen). cancel_superseded false: running rows untouched. Revert *_prev_kw35p3",
+      "retry_prev_kw35p3_added": [
+        "tt_ctlm@9"
       ]
     },
     "hbm": {
