@@ -904,29 +904,37 @@ proc ot_grt_clk_overlapped {locked} {
       if {$ux eq {} || $x1 > $ux} { set ux $x1; set uo [list $i $mine] }
     }
   }
-  # DIE-HBM-90 11-07 (HBM qcore_r13 5_1_grt DPL-0033 "Placed in rows check failed (1): clkleafrepg_19303"): a clock-net
-  # instance inserted in the GRT stage (clk_leaf_repeat.tcl insert_buffer -location) can sit off the row/site grid
-  # without overlapping anything; FIRM, detailed_placement cannot legalize it.  A locked instance whose lower edge is on
-  # no row, or whose x is off that row's site pitch, also stays PLACED.  No rows readable -> overlap rule only.
+  # DIE-HBM-90 11-07 (HBM qcore_r13 5_1_grt DPL-0033 "Placed in rows check failed (1): clkleafrepg_19303" + "Padding
+  # check failed (1)"): a clock-net instance can end up outside every row segment without overlapping a locked cell
+  # (inserted in the GRT stage by clk_leaf_repeat.tcl insert_buffer -location, or resized in place by the GRT repair
+  # past a row end / into a macro's cut rows).  FIRM, detailed_placement cannot legalize it.  A locked instance whose
+  # box does not lie inside one row segment (lower edge on the row, x on its site pitch, x0..x1 within the row) also
+  # stays PLACED.  No rows readable -> overlap rule only.
   set rowy [dict create]
   if {![catch {
         foreach r [[ord::get_db_block] getRows] {
-          lassign [$r getOrigin] rx ry
+          set rb [$r getBBox]
           set sw [[$r getSite] getWidth]
-          if {![string is integer -strict $ry] || ![string is integer -strict $sw]} { error "not a row" }
-          dict set rowy $ry [list $rx $sw]
+          set ry [$rb yMin]; set rx0 [$rb xMin]; set rx1 [$rb xMax]
+          foreach v [list $ry $rx0 $rx1 $sw] { if {![string is integer -strict $v]} { error "not a row" } }
+          dict lappend rowy $ry [list $rx0 $rx1 $sw]
         }
       }] && [dict size $rowy]} {
-    set ::ot_grt_clk_offrow 0
+    set ::ot_grt_clk_offrow 0; set offn {}
     foreach i $locked {
       if {[dict exists $ov $i]} continue
       set b [$i getBBox]
-      set y [$b yMin]
-      if {![dict exists $rowy $y]} { dict set ov $i 1; incr ::ot_grt_clk_offrow; continue }
-      lassign [dict get $rowy $y] rx sw
-      if {$sw > 0 && (([$b xMin] - $rx) % $sw) != 0} { dict set ov $i 1; incr ::ot_grt_clk_offrow }
+      set y [$b yMin]; set x0 [$b xMin]; set x1 [$b xMax]
+      set in 0
+      if {[dict exists $rowy $y]} {
+        foreach seg [dict get $rowy $y] {
+          lassign $seg rx0 rx1 sw
+          if {$x0 >= $rx0 && $x1 <= $rx1 && ($sw <= 0 || (($x0 - $rx0) % $sw) == 0)} { set in 1; break }
+        }
+      }
+      if {!$in} { dict set ov $i 1; incr ::ot_grt_clk_offrow; lappend offn "[$i getName]@$x0,$y,$x1" }
     }
-    if {$::ot_grt_clk_offrow} { puts "OT_GRT_CLK_LOCK: $::ot_grt_clk_offrow off-row clock-net instances left PLACED for legalization" }
+    if {$::ot_grt_clk_offrow} { puts "OT_GRT_CLK_LOCK: $::ot_grt_clk_offrow off-row clock-net instances left PLACED for legalization: [lrange $offn 0 9]" }
   }
   return [dict keys $ov]
 }
