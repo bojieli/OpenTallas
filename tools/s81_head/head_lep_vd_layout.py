@@ -75,7 +75,7 @@ def legs(ms):
     add('COLL0 coll_i0: N pins -> pair0 W pins (PLAN EVENT, not adopted)', 514, max(P.manh((x, yN), p) for x in ci for p in p0), 2, 0)
     add('COLL0 coll_o0: pair0 W pins -> N pins (PLAN EVENT, not adopted)', 513, max(P.manh((x, yN), p) for x in co for p in p0), 2, 0)
     return L
-GAP_HI = 597.8; GAP_LO = 554.6; TOP_M = 649.5      # stage window centre y: gap R2/R3, gap R1/R2, top margin
+GAP_HI = 597.8; GAP_LO = 554.6; TOP_M = 650.5      # stage window centre y: gap R2/R3, gap R1/R2, top margin (+1 um: clear of land g_t[1], DIE-HEAD-86)
 def along(pts, f):
     """point at arclength fraction f of the Manhattan polyline pts"""
     seg = [(pts[i], pts[i + 1]) for i in range(len(pts) - 1)]
@@ -88,7 +88,7 @@ def along(pts, f):
     return pts[-1]
 def stage_rects():
     """stage j of a leg at arclength (j+1)/(N+1) of its routed path, in a free channel (gap between bank rows / top
-    margin / E strip); window 44 x 12 um (575 flops at 0.4), 64 x 12 for the 1.1k-bit port legs."""
+    margin / E strip); window 44 x 12 um, 90 x 12 for the 1.1k-bit port legs, then size_from_demand() widens each."""
     R = []
     ms = macros()
     def leg(prefix_fmt, n, pts, ych, tag, w=44, extra=()):
@@ -116,7 +116,34 @@ def stage_rects():
     fix = {'pin_s1': (1440.0, 591.8, 1530.0, 603.8), 'plw_s0': (1252.0, 548.6, 1280.0, 560.6), 'txi3_s0': (1272.0, 591.8, 1316.0, 603.8),
            'pin_s0': (1693.0, 627.5, 1757.0, 644.5), 'pout_s2': (1661.0, 225.0, 1671.5, 365.0), 'plw_s2': (1690.0, 856.0, 1740.0, 868.0)}
     R = [(p, fix.get(t, r), t) for (p, r, t) in R]
-    return R
+    return size_from_demand(R)
+# DIE-HEAD-86 11-08: the 44 x 12 windows were sized for flops only ("575 flops at 0.4"), but landing_placement reserves
+# ceil(w/0.4) sites for EVERY cell of the stage group (flops + the TXI kept-leaf logic).  Measured on the vE kit
+# (3_2_place_iop.odb, tools/s81_head/head_lep_stage_resize.py): one TXI stage = 1163 cells = 1845 um of row, but a
+# 44 x 12 window holds ~1600 um, so vE PLACE died "OT_CLAND no legal ... row/site in reserved band (stage:txi0_s0)".
+# Every window is now widened about its centre until it holds DEMAND_MARGIN x its reserve row length at
+# ROWS_PER_UM usable rows per um of width (36: 12-um windows between macro rows, edge rows cut), then windows that
+# share a channel are pushed apart east (1 um gap).  Measured reserve row length per stage (um):
+STAGE_DEMAND_UM = {'txi': 1845.0, 'krx': 1547.0, 'pin': 3168.0, 'pout': 3132.0, 'plw': 43.0}
+DEMAND_MARGIN, ROWS_PER_UM = 1.25, 36.0
+def size_from_demand(R):
+    win = {}
+    for (p, r, t) in R:
+        if t in win: continue
+        x0, y0, x1, y1 = r
+        if (y1 - y0) > (x1 - x0):                      # vertical E-strip column: keep (pout_s2 holds 1.7x)
+            win[t] = [x0, y0, x1, y1]; continue
+        need = STAGE_DEMAND_UM[t.rsplit('_s', 1)[0].rstrip('0123456789')] * DEMAND_MARGIN / ROWS_PER_UM
+        w = max(x1 - x0, 2.0 * math.ceil(need / 2.0)); cx = (x0 + x1) / 2
+        win[t] = [cx - w / 2, y0, cx + w / 2, y1]
+    for _ in range(20):
+        moved = False
+        items = sorted(win.items(), key=lambda kv: (round(kv[1][1], 1), kv[1][0]))
+        for (ta, ra), (tb, rb) in zip(items, items[1:]):
+            if abs(ra[1] - rb[1]) < 0.5 and rb[0] < ra[2] + 1.0:
+                d = ra[2] + 1.0 - rb[0]; rb[0] += d; rb[2] += d; moved = True
+        if not moved: break
+    return [(p, tuple(win[t]), t) for (p, r, t) in R]
 def cut_model(ms):
     cuts = list(range(100, 1700, 25)); out = []
     for xc in cuts:
