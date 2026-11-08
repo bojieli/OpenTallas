@@ -3084,6 +3084,24 @@ class Binder:
                         raise err from exc
                     self._gap(err)
                     continue
+            control_pipeline = t.get("reset", {}).get("control_pipeline")
+            if control_pipeline:
+                import control_reset_pipeline as CRP
+                try:
+                    txt, control_tree, control_receipt = CRP.apply(
+                        txt, control_pipeline, type_name=tn, hard=t.get("hard", False),
+                        outline=t["outline_um"],
+                        blocked_boxes=[[*c["origin_um"],
+                                        c["origin_um"][0] + c["outline_um"][0],
+                                        c["origin_um"][1] + c["outline_um"][1]]
+                                       for c in t.get("contents", [])
+                                       if c.get("physical_master") and c.get("origin_um") and c.get("outline_um")])
+                except CRP.ControlResetError as exc:
+                    raise BindError(f"control reset pipeline {tn}: {exc}") from exc
+                if tn in getattr(self, "_emitted_reset_trees", {}):
+                    raise BindError(f"control reset pipeline {tn}: an existing emitted tree already owns reset")
+                self.__dict__.setdefault("_emitted_reset_trees", {})[tn] = control_tree
+                self.__dict__.setdefault("_control_reset_pipelines", {})[tn] = control_receipt
             reset_localization = t.get("reset", {}).get("consumer_localization")
             if reset_localization:
                 import reset_consumers
@@ -3121,6 +3139,9 @@ class Binder:
         if getattr(self, "_reset_consumer_changes", None):
             (out.parent / "bind_reset_consumers.json").write_text(
                 json.dumps(self._reset_consumer_changes, indent=1) + "\n")
+        if getattr(self, "_control_reset_pipelines", None):
+            (out.parent / "bind_control_reset_pipelines.json").write_text(
+                json.dumps(self._control_reset_pipelines, indent=1) + "\n")
         if self._native_glue is not None:
             files.extend(self._native_glue.files)
         if getattr(self, "emit_gaps", None):
