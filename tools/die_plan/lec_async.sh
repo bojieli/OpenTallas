@@ -18,6 +18,8 @@
 #          the unit): a unit that never ran the command (not admitted, docker refused) or was killed is ABORTED, never a
 #          verdict.  OT_LECUNIT=0 (or no ot-heavy on the host) keeps the old docker exec form; the form is fixed at
 #          start in K/lec_async.mode.
+#   reference-completed ORIGINAL K HOST       explicit completed-proof reference, same canonical host.
+#          Reads the original receipt in place; copies no PID/verdict/physical completion. Rechecked at start/finish.
 #   wait   K                                inside the flow container: exec form, keep it alive until its LEC
 #          finishes; unit form, return once the physical result is published (finish on the host waits for the LEC).
 #   finish K RC [STOP_RC=5]                    host, after the flow container: waits for the LEC (aborts it if the
@@ -158,6 +160,9 @@ for f in ('config.mk','constraint.sdc','pins.json','core.json','budget.json','cl
  if q.is_file():h.update(f.encode());h.update(q.read_bytes())
 nets={}
 ready=Path(k)/'lec_async.ready'
+reference=Path(k)/'lec_async.completed_reference.json'
+if not ready.exists() and reference.exists():
+ ready=Path(json.loads(reference.read_text())['producer_kit'])/'lec_async.ready'
 if ready.exists():
  args=shlex.split('\n'.join(ready.read_text().splitlines()[1:]))
  if '--netlist' in args:
@@ -189,6 +194,14 @@ if checkpoint:
 r.update(proof_scope=owner_run.get('scope',''),proof_host=owner_run.get('host',''),schema='opentallas.physical_completion.v1',ended=time.time(),rc=int(rc),
  proof_id=rd('lec_async.identity'),proof_owner=rd('lec_async.owner'),proof_pid=rd('lec_async.pid'),
  proof_pending=not (k/'lec_async.done').exists())
+reference=k/'lec_async.completed_reference.json'
+if reference.exists():
+ ref=json.loads(reference.read_text())
+ if ref.get('schema')!='opentallas.lec_completed_reference.v1':raise ValueError('unsupported completed reference')
+ r.update(proof_pending=False,proof_pid='',proof_owner=ref['producer_owner'],proof_host=ref['producer_host'],
+          proof_scope=ref['producer_scope'],proof_reference=dict(path=reference.name,
+          producer_kit=ref['producer_kit'],proof_id=ref['captured_identities']['lec_async.identity'],
+          receipt_sha256=ref['producer_state_sha256']['lec/lec.json']))
 p=k/'physical_completion';p.mkdir(exist_ok=True);dest=p/(n+'.json');tmp=dest.with_suffix('.tmp')
 tmp.write_text(json.dumps(r)+'\n');os.replace(tmp,dest)
 PYPHASE
@@ -196,6 +209,12 @@ PYPHASE
 cmd=$1; shift
 case $cmd in
 identity) identity "$@"; exit 0 ;;
+reference-completed)
+  ORIGINAL=$1; K=$2; HOST=$3
+  exec 9> "$K/lec_async.lock"; flock 9
+  python3 "$(dirname "$0")/lec_completed_reference.py" register "$ORIGINAL" "$K" "$HOST"
+  exit $?
+  ;;
 import-completed)
   ORIGINAL=$1; K=$2
   exec 9> "$K/lec_async.lock"; flock 9
@@ -225,6 +244,14 @@ PYCHECK
 start)
   K=$1; NAME=$2; IMAGE=$3; MEM=$4; CPUS=$5; DK=${6:-docker}; GOAL=${7:-route}
   exec 9> "$K/lec_async.lock"; flock 9
+  if [ -f "$K/lec_async.completed_reference.json" ] || [ "$(cat "$K/lec_async.mode" 2>/dev/null)" = completed-reference ]; then
+    python3 "$(dirname "$0")/lec_completed_reference.py" validate "$K" || exit $?
+    identity "$K" source > "$K/lec_async.source_identity"
+    echo completed-reference > "$K/lec_async.mode"
+    touch "$K/lec_async.on"; run_start "$K" "$NAME" "$GOAL"
+    echo "LEC_ASYNC reuse completed external proof for $NAME ($GOAL)" >&2
+    exit 0
+  fi
   if [ -f "$K/lec_async.on" ] && [ ! -f "$K/lec_async.ready" ] && [ ! -f "$K/lec_async.done" ]; then
     P=$(cat "$K/lec_async.pid" 2>/dev/null || true)
     OLD=$(cat "$K/lec_async.source_identity" 2>/dev/null || true)
@@ -366,6 +393,7 @@ wait)
   # owner keeps its admitted container alive; later diagnostic scopes reuse it.
   K=$1; NAME=${2:-}; GOAL=${3:-route}; RC=${4:-0}
   [ -z "$NAME" ] || phase_done "$K" "$NAME" "$GOAL" "$RC"
+  if [ -f "$K/lec_async.completed_reference.json" ] || [ "$(cat "$K/lec_async.mode" 2>/dev/null)" = completed-reference ]; then exit 0; fi
   OWNER=$(cat "$K/lec_async.owner" 2>/dev/null || true)
   [ -z "$NAME" ] || [ "$NAME" = "$OWNER" ] || exit 0
   # A flow that stopped before it has a place checkpoint (plan stop: cell cap, MPL-0034) has nothing a later scope
@@ -385,6 +413,10 @@ wait)
   ;;
 finish)
   K=$1; RC=$2; SRC=${3:-5}; NAME=${4:-}; GOAL=${5:-route}
+  if [ -f "$K/lec_async.completed_reference.json" ] || [ "$(cat "$K/lec_async.mode" 2>/dev/null)" = completed-reference ]; then
+    if python3 "$(dirname "$0")/lec_completed_reference.py" validate "$K"; then echo "$RC"; else echo 11; fi
+    exit 0
+  fi
   OWNER=$(cat "$K/lec_async.owner" 2>/dev/null || true)
   if [ -n "$NAME" ] && [ "$NAME" != "$OWNER" ] && { [ "$GOAL" = place ] || [ "$GOAL" = cts ] || [ "$GOAL" = grt ]; }; then
     if [ -f "$K/lec_async.stop" ]; then echo "$SRC"; else echo "$RC"; fi
