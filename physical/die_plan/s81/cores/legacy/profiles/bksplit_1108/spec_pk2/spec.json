@@ -1,0 +1,93 @@
+{
+ "name": "s81dvbk_pk2_1108",
+ "top": "ot_s81ph_hq_pk2",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+  "physical/die_plan/s81/cores/legacy/profiles/bksplit_1108/rtl/ot_s81ph_hq_parts.sv",
+  "physical/die_plan/s81/cores/legacy/profiles/bksplit_1108/rtl/ot_s81ph_hq_pk2.sv"
+ ],
+ "params": {
+  "W": 16,
+  "EW": 37,
+  "NP": 6
+ },
+ "defines": [
+  "OT_S81PH_SEL_INDEXED13",
+  "OT_S81PH_FIFO_SRAM",
+  "OT_SRAM_P192",
+  "OT_S81PH_SEL_SUCC",
+  "OT_S81PH_SEL_FAN32",
+  "OT_S81PH_SEL_ACC32",
+  "OT_S81PH_SEL_HQ",
+  "OT_HARD_CHILDREN",
+  "OT_S81PH_HQ_INPUT_RAW",
+  "OT_HB_PINCOPY",
+  "OT_S81PH_PACK_Z0FOLD",
+  "OT_BKQ_FO8",
+  "OT_BKQ_SPLIT"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 194.4,
+  "h": 194.4
+ },
+ "layer_cap": "M5",
+ "clock": {
+  "period_ps": 833,
+  "uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25
+ },
+ "pins": {
+  "W": [
+   "rst_n",
+   "i_ing",
+   "i0_last",
+   "c2_v",
+   "c2_fl",
+   "i1_s_d",
+   "c3_sel_d",
+   "i0_lane",
+   "c2_p"
+  ],
+  "E": [
+   "pi_vp",
+   "pi_fl",
+   "pi_bv",
+   "pi_lv",
+   "ps_vp",
+   "ps_fl",
+   "ps_bv",
+   "ps_lv",
+   "pi_line",
+   "ps_line"
+  ],
+  "S": [
+   "clk"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "DIE-S81-80 bksel SPLIT: every data input lands in an existing flop of the moved logic (i1_p, c3_p, g_i1c/g_c3c kept copies); every output is an ot_s81ph_native_sel_pack output register. No double pin stages."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "rst_n is the slice's landed reset (dsfd_selt_q_hq relay copies), as for the hist_bank children."
+ },
+ "keep_pin_regs": true,
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [],
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "DIE-S81-80 11-08 bksel SPLIT (COORD approved 11-08): logic child P of dsdv_bksel_q = the two packers + their input registers and kept copies, moved verbatim (0 edges); lock-step proof profiles/bksplit_1108/proof (221,908/221,908 equiv).",
+ "why_floorplan": "~101k hier cells (hsyn 05:14: 2 x ot_s81ph_hq_pack 50.7k, std 6.4k um2 each) -> ~13k um2 std; 194.4 x 194.4 core 34.9k um2 inside the margin -> ~37-40 % density; max L1 ~380 um < 405; W inputs / E outputs centred, clk S centre."
+}

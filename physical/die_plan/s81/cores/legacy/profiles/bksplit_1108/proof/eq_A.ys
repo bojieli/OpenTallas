@@ -1,0 +1,12 @@
+read_rtlil /o/gold.il
+read_rtlil /o/gate_A.il
+cd gate
+script /o/ren_A.ys
+cd
+equiv_make gold gate eq
+hierarchy -top eq
+tee -o /o/eq_A_make.txt equiv_status
+equiv_simple -seq 2
+equiv_induct
+tee -o /o/eq_A_status.txt equiv_status
+equiv_status -assert
