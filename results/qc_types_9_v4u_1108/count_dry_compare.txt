@@ -1,0 +1,10 @@
+types same True 119
+type_modules same True
+plan_designs same True pin rows same True designs 31
+G0C FAIL 32 -> FAIL 29 clean 114 -> 114
+G0C findings identical False 584 581
+bad types same True
+GONE {"check": "hard_pinreg", "level": "ERROR", "msg": "type phy_serdes: registered_pins lib physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib not found", "type": "phy_serdes"}
+GONE {"check": "hard_pinreg", "level": "ERROR", "msg": "type phy_serdes_b: registered_pins lib physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib not found", "type": "phy_serdes_b"}
+GONE {"check": "hard_pinreg", "level": "ERROR", "msg": "type phy_ucie_kv: registered_pins lib physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib not found", "type": "phy_ucie_kv"}
+CMP rc 0
