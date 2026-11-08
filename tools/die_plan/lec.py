@@ -6664,6 +6664,85 @@ def auto_loaded(L, rec, work, conflicts, log):
                               refused=len(r.get("loaded_refused") or []), first=kept[:20])
 
 
+def scope_twin_proposals(L, log, cands_per_reg=4, words=16, seed=20261108):
+    """LEC-SCOPE-TWIN (HBM-HARD-6-KSH 11-08, kshare v8e478a NOT EQUIVALENT 2/35744: lane[0].u_fill.rd_gray[2..3]).
+    A gray-pointer FIFO keeps rd_bin and rd_gray, both loaded on rd_fire with rd_next / its gray code and both reset
+    to 0, so rd_bin[msb] == rd_gray[msb] always and synthesis merges rd_bin[msb] into rd_gray[msb].  Each is a
+    self-holding register (D = fire ? next : own Q), so its next-state signature differs from its twin's under
+    random state and the signature search pairs it only by luck: in kshare lanes 1-3 it was paired, lane 0 left the
+    gold-only rd_bin[3] a free input and rd_gray[2..3] 'differed' (lec_gray_twin.py stages hints only for the
+    P / P_g coding, not rd_bin / rd_gray through a shared next wire).  This pass runs after discovery and the kit
+    hints: every gold-only register still free is tried against the matched registers of its own instance scope
+    with the same bit index (closest name first, at most cands_per_reg): with the trial binding Q(k) := Q(c) ^ inv
+    applied, D(k) must simulate equal to D(c) ^ inv on every word, and the two reset values must not disagree.
+    The survivors are untrusted proposals: apply_hints proves them by the same simultaneous induction as every
+    hypothesis and drops any that fails (never a waiver).  -> hint list [["gold", k, ["eq", "gold", c, inv]]]."""
+    partners = anchored(L)
+    free = [k for k in L.gonly if k.startswith("ff:") and "__" not in k and ("gold", k) not in L.hyp
+            and k not in partners]
+    if not free:
+        return []
+    if not hasattr(L, "rst_val"):
+        noreset_classify(L)
+    rv = lambda k: L.rst_val.get(("gold", k), (None, None))[0]
+    by_scope = collections.defaultdict(list)
+    for c in L.matched:
+        if c.startswith("ff:") and "__" not in c and ("both", c) not in L.hyp:
+            a = IDX.match(c)
+            by_scope[(c.rsplit(".", 1)[0], a.group(2) if a else "")].append(c)
+    trials = {}
+    for k in free:
+        a = IDX.match(k)
+        cs = [c for c in closest(k, by_scope.get((k.rsplit(".", 1)[0], a.group(2) if a else ""), []))
+              if not (rv(k) is not None and rv(c) is not None and rv(k) != rv(c))]
+        if cs:
+            trials[k] = [(c, inv) for c in cs[:cands_per_reg] for inv in (0, 1)]
+    if not trials:
+        return []
+    found = {}
+    for t in range(max(len(v) for v in trials.values())):
+        batch = {k: v[t] for k, v in trials.items() if k not in found and t < len(v)}
+        if not batch:
+            continue
+        for k, (c, inv) in batch.items():
+            L.hyp[("gold", k)] = ("eq", "gold", c, inv)
+        try:
+            m, _ = L.build(with_compare=False, with_hyp=True)
+            val, mask = m.simulate(words, seed=seed + t)
+            for k, (c, inv) in batch.items():
+                dk, dc = L.dlit.get(("gold", k)), L.dlit.get(("gold", c))
+                if dk is not None and dc is not None and \
+                        lit_val(val, mask, dk) == lit_val(val, mask, dc ^ inv):
+                    found[k] = (c, inv)
+        finally:
+            for k in batch:
+                L.hyp.pop(("gold", k), None)
+    hints = [["gold", k, ["eq", "gold", c, inv]] for k, (c, inv) in sorted(found.items())]
+    if log is not None:
+        log.append(f"scope twins: {len(free)} free gold-only registers, {len(trials)} with same-scope candidates, "
+                   f"{len(hints)} proposed {[h[1] + '=' + h[2][2] for h in hints[:6]]}")
+    return hints
+
+
+def auto_twins(L, rec, work, conflicts, log):
+    """Default-on (OT_LEC_AUTO_TWINS=0 disables): scope_twin_proposals -> apply_hints, after the kit hints and
+    before auto_loaded.  The hypothesis set before is restored when the refinement does not converge (never fewer
+    proved registers than without the proposals).  -> rec['auto_twins'] = dict(proposed, kept, first)."""
+    auto = scope_twin_proposals(L, log)
+    if not auto:
+        rec["auto_twins"] = dict(proposed=0)
+        return
+    keep_hyp, keep_cons = dict(L.hyp), list(L.cons)
+    r = apply_hints(L, auto, work, conflicts, log) or {}
+    kept = sorted(h[1] for h in auto if L.hyp.get(("gold", h[1])) == tuple(["eq"] + list(h[2][1:])))
+    if not r.get("kept"):
+        L.hyp.clear(); L.hyp.update(keep_hyp)
+        L.cons[:] = keep_cons
+        kept = []
+        log.append("auto scope twins: refinement did not converge; hypotheses restored")
+    rec["auto_twins"] = dict(proposed=len(auto), kept=len(kept), first=kept[:20])
+
+
 def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
     """Untrusted correspondence hints (the commercial 'user match' / 'add mapped points'; PATH-KV-PC4 10-25):
     [[side, key, ['eq', oside, okey, inv] | ['const', c]], ...] for registers the signature search cannot pair
@@ -7481,6 +7560,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             rec["hints"]["dropped"] = dict(n=len(rec["hints"]["dropped"]), first=rec["hints"]["dropped"][:40])
         elif hints:
             raise LecError(f"hints file {hints} not found")
+        if os.environ.get("OT_LEC_AUTO_TWINS", "1") != "0":
+            auto_twins(L, rec, out, conflicts, log)
         if os.environ.get("OT_LEC_AUTO_LOADED", "1") != "0":
             auto_loaded(L, rec, out, conflicts, log)
         noreset_filter(L, log, collections.Counter(), out, conflicts)
