@@ -110,6 +110,16 @@ halves. The realcalendar lockstep above is the witness that catches it.
 - Every other key is identical: asserted in the script, and the text diff is 97 lines.
 - Schema validate PASS (logs/validate.txt).
 - Staged with cores/ at /srv/opentallas-scratch2/claude/qct10/ctlm/plan/ on epyc4, epyc2, epyc5, epyc6 and intel1.
-- Strict bind: bind_report.txt.
+- Strict bind of this plan from the FQREG source (run_bind_ctlmfq.sh, intel1, unit oth-ubuntu-212080-1794154196) is
+  clean: 377 partitions, 119 types, 1921 crossings, 790393 bits, errors 0, unbound 0, undriven 0 (bind_report.txt).
+  These are the same totals as v4w.
+- The tt_ctlm bound part differs from bind_v4w only in its reset relay forest: the same leaf taps and the same depth 3,
+  but 122 relays instead of 117 and 58 pad relays instead of 53. That follows from the 4 SRAM blockages being removed.
+  No tool-version control bind was run.
+- The bind dir is intel1:/srv/opentallas-scratch2/claude/qct10/ctlm/bind_ctlmfq. Its leaf sources are
+  /srv/opentallas-scratch2/claude/qct10/ctlm/src_ctlmfq, which exists with identical bytes on epyc4, epyc2, epyc5,
+  epyc6 and intel1.
+- Advisory dry path (run_dry.sh, the kit_wave.py stage commands): kit-rtl PASS (18 files, unbound 0), kit_topology PASS.
+  gen and gen_lint: see RESULT.
 
 Scope: no physical, closure or sign-off claim. The kit has to show the new timing.
