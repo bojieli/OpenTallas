@@ -397,9 +397,10 @@ module ot_meso_ring #(
                                      // (async_reg g1 g2 / n0 n1 n2) is unchanged.
     parameter bit ONV      = 0,      // per-chunk r_on / r_align copies (r_on_v / r_align_v) drive the readout selects
     parameter bit RSPLIT   = 0,      // RDREG: two half-select readout flops per bit, ORed after them (ot_meso_dsel SPLIT)
-    parameter bit TNEG     = 0       // S81-RINGHOLD-3 variant (a): the whole transmit side (slots, counter, Gray copy)
+    parameter bit TNEG     = 0,      // S81-RINGHOLD-3 variant (a): the whole transmit side (slots, counter, Gray copy)
                                      // runs on the falling tclk edge: a static T/2 writer phase, which placement covers.
                                      // Source-synchronous inputs launched on rising tclk gain T/2 of write hold.
+    parameter bit WCTREE   = 0       // appended: default-off bounded-fanout write calendar
 ) (
     input  logic         tclk,
     input  logic         t_v,
@@ -436,7 +437,30 @@ module ot_meso_ring #(
         tg <= tc ^ (tc >> 1);                    // Gray of the index written at this edge
         tc <= tc + 1'b1;
     end
-    if (WCHK) begin : g_wchk
+    if (WCTREE) begin : g_wctree
+        // tc free-runs across reader resets. Uniform register depth D predicts
+        // this edge's write slot from tc+D sampled D write edges earlier.
+        // Initial calendar fill is D edges, independently of reader reset.
+        localparam int NC = (W+7)/8;
+        localparam int D=(NC<=8)?1:($clog2(NC)+2)/3;
+        localparam int ROOT_CAP=1 << (3*(D-1));
+        localparam int NR=(NC+ROOT_CAP-1)/ROOT_CAP;
+`ifdef OT_MESO_MUTANT_WCT_LOOKAHEAD
+        wire [DEPTH-1:0] seed=DEPTH'(1) << (tc[AW-1:0]+AW'(D+1));
+`else
+        wire [DEPTH-1:0] seed=DEPTH'(1) << (tc[AW-1:0]+AW'(D));
+`endif
+        wire [NC*8-1:0] padded={{(NC*8-W){1'b0}},t_d};
+        for(genvar c=0;c<NR;c=c+1)begin : root
+            localparam int N=((NC-c*ROOT_CAP)<ROOT_CAP)?(NC-c*ROOT_CAP):ROOT_CAP;
+            wire [DEPTH*N*8-1:0] sd_c;
+            (* keep_hierarchy="yes", dont_touch="yes" *) ot_meso_wct_node #(.N(N),.LEVELS(D),.DEPTH(DEPTH)) u_node
+                (.clk(tclk_w),.sel(seed),.v(t_v),.d(padded[c*ROOT_CAP*8+:N*8]),.sd(sd_c));
+            for(genvar j=0;j<N*8;j=j+1)if(c*ROOT_CAP*8+j<W)begin: bit_out
+                for(genvar q=0;q<DEPTH;q=q+1)assign s_d[q][c*ROOT_CAP*8+j]=sd_c[q*N*8+j];
+            end
+        end
+    end else if (WCHK) begin : g_wchk
         // every slot write lands at the same edge as the unchunked form (slot tc[AW-1:0]); the chunk's slot register
         // is loaded one edge ahead with the next index, so it equals tc's slot from the first edge after power-up
         localparam int NCW = (W % 64 == 0) ? W / 64 : 1;
@@ -697,5 +721,34 @@ module ot_meso_dsel_sel #(parameter int DEPTH = 4) (
     always_ff @(posedge clk) begin
         if (align) di <= DEPTH'(1) << place;
         else if (on) di <= {di[DEPTH-2:0], di[DEPTH-1]};
+    end
+endmodule
+
+// Kept hierarchy makes equal calendar state physically local to served bits.
+// Every select Q drives <=8 next-node D pins, or exactly8 payload D enables.
+(* keep_hierarchy="yes" *) module ot_meso_wct_node #(
+    parameter integer N=1, LEVELS=1, DEPTH=4
+)(input wire clk, input wire [DEPTH-1:0] sel, input wire v,
+  input wire [N*8-1:0] d, output wire [DEPTH*N*8-1:0] sd);
+    (* keep="true", dont_touch="true" *) logic [DEPTH-1:0] sel_q;
+    always_ff @(posedge clk) sel_q<=sel;
+    if(LEVELS==1)begin: leaf
+        initial if(N!=1)$fatal(1,"calendar leaf must serve one8-bit chunk");
+        for(genvar q=0;q<DEPTH;q=q+1)begin: slot
+            logic [7:0] data_q;
+            always_ff @(posedge clk)if(v && sel_q[q])data_q<=d;
+            assign sd[q*8+:8]=data_q;
+        end
+    end else begin: branch
+        localparam integer CAP=1 << (3*(LEVELS-2));
+        localparam integer NB=(N+CAP-1)/CAP;
+        initial if(NB>8)$fatal(1,"calendar branch fanout exceeds8");
+        for(genvar b=0;b<NB;b=b+1)begin: child
+            localparam integer CN=((N-b*CAP)<CAP)?N-b*CAP:CAP;
+            wire [DEPTH*CN*8-1:0] child_sd;
+            (* keep_hierarchy="yes", dont_touch="yes" *) ot_meso_wct_node #(.N(CN),.LEVELS(LEVELS-1),.DEPTH(DEPTH)) u_node
+                (.clk(clk),.sel(sel_q),.v(v),.d(d[b*CAP*8+:CN*8]),.sd(child_sd));
+            for(genvar q=0;q<DEPTH;q=q+1)assign sd[q*N*8+b*CAP*8+:CN*8]=child_sd[q*CN*8+:CN*8];
+        end
     end
 endmodule

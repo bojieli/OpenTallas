@@ -1,0 +1,92 @@
+[
+  {
+    "W": 514,
+    "WNEG": 1,
+    "phase": 0,
+    "mutant": false,
+    "rc": 0,
+    "pass": true,
+    "output": "PASS actual_landing RDREG1 WNEG configured phase0 cycles1499 checks1399 warmresets5"
+  },
+  {
+    "W": 514,
+    "WNEG": 1,
+    "phase": 137,
+    "mutant": false,
+    "rc": 0,
+    "pass": true,
+    "output": "PASS actual_landing RDREG1 WNEG configured phase137 cycles1500 checks1401 warmresets5"
+  },
+  {
+    "W": 514,
+    "WNEG": 1,
+    "phase": 631,
+    "mutant": false,
+    "rc": 0,
+    "pass": true,
+    "output": "PASS actual_landing RDREG1 WNEG configured phase631 cycles1500 checks1401 warmresets5"
+  },
+  {
+    "W": 326,
+    "WNEG": 0,
+    "phase": 0,
+    "mutant": false,
+    "rc": 0,
+    "pass": true,
+    "output": "PASS actual_landing RDREG1 WNEG configured phase0 cycles1499 checks1399 warmresets5"
+  },
+  {
+    "W": 326,
+    "WNEG": 0,
+    "phase": 137,
+    "mutant": false,
+    "rc": 0,
+    "pass": true,
+    "output": "PASS actual_landing RDREG1 WNEG configured phase137 cycles1500 checks1401 warmresets5"
+  },
+  {
+    "W": 326,
+    "WNEG": 0,
+    "phase": 631,
+    "mutant": false,
+    "rc": 0,
+    "pass": true,
+    "output": "PASS actual_landing RDREG1 WNEG configured phase631 cycles1500 checks1401 warmresets5"
+  },
+  {
+    "W": 133,
+    "WNEG": 1,
+    "phase": 0,
+    "mutant": false,
+    "rc": 0,
+    "pass": true,
+    "output": "PASS actual_landing RDREG1 WNEG configured phase0 cycles1499 checks1399 warmresets5"
+  },
+  {
+    "W": 133,
+    "WNEG": 1,
+    "phase": 137,
+    "mutant": false,
+    "rc": 0,
+    "pass": true,
+    "output": "PASS actual_landing RDREG1 WNEG configured phase137 cycles1500 checks1401 warmresets5"
+  },
+  {
+    "W": 133,
+    "WNEG": 1,
+    "phase": 631,
+    "mutant": false,
+    "rc": 0,
+    "pass": true,
+    "output": "PASS actual_landing RDREG1 WNEG configured phase631 cycles1500 checks1401 warmresets5"
+  },
+  {
+    "W": 514,
+    "WNEG": 1,
+    "phase": 137,
+    "mutant": true,
+    "rc": 1,
+    "pass": true,
+    "output": "DATA_FAIL25"
+  }
+]
