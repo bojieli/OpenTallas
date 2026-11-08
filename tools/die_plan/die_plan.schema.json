@@ -3709,6 +3709,67 @@
         },
         "cells_basis": {
          "type": "string"
+        },
+        "clock_entry_access": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "pin",
+          "footprints_um"
+         ],
+         "properties": {
+          "pin": {
+           "type": "string",
+           "minLength": 1
+          },
+          "footprints_um": {
+           "type": "object",
+           "additionalProperties": false,
+           "required": [
+            "M5",
+            "M6",
+            "M7"
+           ],
+           "properties": {
+            "M5": {
+             "type": "array",
+             "minItems": 1,
+             "items": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+               "type": "number"
+              }
+             }
+            },
+            "M6": {
+             "type": "array",
+             "minItems": 1,
+             "items": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+               "type": "number"
+              }
+             }
+            },
+            "M7": {
+             "type": "array",
+             "minItems": 1,
+             "items": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+               "type": "number"
+              }
+             }
+            }
+           }
+          }
+         }
         }
        }
       }
