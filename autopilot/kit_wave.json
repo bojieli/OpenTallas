@@ -25,8 +25,8 @@
       },
       "plan": "/srv/opentallas-scratch2/claude/kw32/src_a663d/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw32/src_a6849",
-      "src_sha": "a6849cca0db99e2e83703bbd5b339eebcc498416",
+      "src": "/srv/opentallas-scratch2/claude/kw32/src_a09cb",
+      "src_sha": "a09cbc70ae57c53571239784e0ed6654f7bbe40d",
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch2/claude/kw32/kvbind_a663d/asbuilt_kv_a663d.json",
@@ -622,7 +622,7 @@
       ],
       "plan_items_from_allowlist": true,
       "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-      "queue_src": "main@a6849cca0db9",
+      "queue_src": "main@a09cbc70ae57",
       "hold_items_released": {
         "kv3_pc": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
         "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -1056,7 +1056,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 2
       },
-      "flow_tag": "flow-20261107-di-kv",
+      "flow_tag": "flow-20261107-dj-kv",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -1178,7 +1178,12 @@
       "src_sha_prev_kw32g": "fcb5094d74ab6013a76459389bdd33f296b8ffe4",
       "queue_src_prev_kw32g": "main@fcb5094d74ab",
       "flow_tag_prev_kw32g": "flow-20261107-dg-kv",
-      "note_src_kw32g": "KW-FIX-32 2026-11-07 22:29 PST (ROOT-MERGE-50 22:13, COORD 22:0x): src kw32/src_a6849 = main a6849cca0db (HBM bind in git 45353bf990b, eco iter prune, HBM istadrop a661f1d7364, S81 otherfail 7c69a10c21c, rck-9 opt-in, QC tap-pair default off) = kw32/src_fcb50 + ec91a + a6849 deltas"
+      "note_src_kw32g": "KW-FIX-32 2026-11-07 22:29 PST (ROOT-MERGE-50 22:13, COORD 22:0x): src kw32/src_a6849 = main a6849cca0db (HBM bind in git 45353bf990b, eco iter prune, HBM istadrop a661f1d7364, S81 otherfail 7c69a10c21c, rck-9 opt-in, QC tap-pair default off) = kw32/src_fcb50 + ec91a + a6849 deltas",
+      "src_prev_kw32h": "/srv/opentallas-scratch2/claude/kw32/src_a6849",
+      "src_sha_prev_kw32h": "a6849cca0db99e2e83703bbd5b339eebcc498416",
+      "queue_src_prev_kw32h": "main@a6849cca0db9",
+      "flow_tag_prev_kw32h": "flow-20261107-di-kv",
+      "note_src_kw32h": "KW-FIX-32 2026-11-07 22:51 PST (ROOT-MERGE-50 22:3x): src kw32/src_a09cb = main a09cbc70ae5 (eco nonport score d23288029c6, auto-resign prestage dd199b99c90, QC plan event qc52t file only) = kw32/src_a6849 + 8 files"
     },
     "s81": {
       "enabled": true,
@@ -1191,8 +1196,8 @@
       },
       "plan": "/srv/opentallas-scratch3/claude/kw24/wave_cg_frz/physical/die_plan/s81/plan_h2_2249.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw32/src_a6849",
-      "src_sha": "a6849cca0db99e2e83703bbd5b339eebcc498416",
+      "src": "/srv/opentallas-scratch2/claude/kw32/src_a09cb",
+      "src_sha": "a09cbc70ae57c53571239784e0ed6654f7bbe40d",
       "kit_rtl": {
         "mode": "script",
         "script": "/srv/opentallas-scratch3/claude/die-s81-70/kit_rtl_s81_ds70_kvov.sh",
@@ -2357,7 +2362,7 @@
         "ot_s81sl_leaf__t72": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t8": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim."
       },
-      "queue_src": "main@a6849cca0db9",
+      "queue_src": "main@a09cbc70ae57",
       "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave",
       "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
       "retry_fix": {
@@ -3748,7 +3753,7 @@
         "queue_src": "claude/kw-fix-29-s81-leaf-src-1107@abaf08160896",
         "die_max_inflight": 67
       },
-      "flow_tag": "flow-20261107-dt-s81",
+      "flow_tag": "flow-20261107-du-s81",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "src_prev_kw32": "/srv/opentallas-scratch2/claude/kw31/src_66d55",
       "src_sha_prev_kw32": "66d55c026ade2245a494c3eeeea0e5ec0ab8ae0b",
@@ -3903,7 +3908,12 @@
       "note_src_kw32g": "KW-FIX-32 2026-11-07 22:29 PST (ROOT-MERGE-50 22:13, COORD 22:0x): src kw32/src_a6849 = main a6849cca0db (HBM bind in git 45353bf990b, eco iter prune, HBM istadrop a661f1d7364, S81 otherfail 7c69a10c21c, rck-9 opt-in, QC tap-pair default off) = kw32/src_fcb50 + ec91a + a6849 deltas",
       "hold_items_prev_kw32_of": {
         "col_h10_r2__t1__cl99efd374": "KW-FIX-28 08:3x: S81-COLH10-1 05:4x asked no more old-window col_h10 starts until the vQ read; S81-TYPES-2 owns the read."
-      }
+      },
+      "src_prev_kw32h": "/srv/opentallas-scratch2/claude/kw32/src_a6849",
+      "src_sha_prev_kw32h": "a6849cca0db99e2e83703bbd5b339eebcc498416",
+      "queue_src_prev_kw32h": "main@a6849cca0db9",
+      "flow_tag_prev_kw32h": "flow-20261107-dt-s81",
+      "note_src_kw32h": "KW-FIX-32 2026-11-07 22:51 PST (ROOT-MERGE-50 22:3x): src kw32/src_a09cb = main a09cbc70ae5 (eco nonport score d23288029c6, auto-resign prestage dd199b99c90, QC plan event qc52t file only) = kw32/src_a6849 + 8 files"
     },
     "s81_head": {
       "enabled": true,
@@ -3916,8 +3926,8 @@
       },
       "plan": "/srv/opentallas-scratch3/claude/kw23/prep_l48ui/source_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw32/src_a6849",
-      "src_sha": "a6849cca0db99e2e83703bbd5b339eebcc498416",
+      "src": "/srv/opentallas-scratch2/claude/kw32/src_a09cb",
+      "src_sha": "a09cbc70ae57c53571239784e0ed6654f7bbe40d",
       "kit_rtl": {
         "mode": "script",
         "script": "/srv/opentallas-scratch2/claude/kw23/src_e9eda/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
@@ -4168,7 +4178,7 @@
       ],
       "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
       "cancel_superseded": false,
-      "queue_src": "main@a6849cca0db9",
+      "queue_src": "main@a09cbc70ae57",
       "item_env": {
         "hd_ctl": {
           "OT_IO_HOLD": "sender_min"
@@ -4487,7 +4497,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 1
       },
-      "flow_tag": "flow-20261107-dm-head",
+      "flow_tag": "flow-20261107-dn-head",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -4574,7 +4584,12 @@
       "src_sha_prev_kw32g": "fcb5094d74ab6013a76459389bdd33f296b8ffe4",
       "queue_src_prev_kw32g": "main@fcb5094d74ab",
       "flow_tag_prev_kw32g": "flow-20261107-dk-head",
-      "note_src_kw32g": "KW-FIX-32 2026-11-07 22:29 PST (ROOT-MERGE-50 22:13, COORD 22:0x): src kw32/src_a6849 = main a6849cca0db (HBM bind in git 45353bf990b, eco iter prune, HBM istadrop a661f1d7364, S81 otherfail 7c69a10c21c, rck-9 opt-in, QC tap-pair default off) = kw32/src_fcb50 + ec91a + a6849 deltas"
+      "note_src_kw32g": "KW-FIX-32 2026-11-07 22:29 PST (ROOT-MERGE-50 22:13, COORD 22:0x): src kw32/src_a6849 = main a6849cca0db (HBM bind in git 45353bf990b, eco iter prune, HBM istadrop a661f1d7364, S81 otherfail 7c69a10c21c, rck-9 opt-in, QC tap-pair default off) = kw32/src_fcb50 + ec91a + a6849 deltas",
+      "src_prev_kw32h": "/srv/opentallas-scratch2/claude/kw32/src_a6849",
+      "src_sha_prev_kw32h": "a6849cca0db99e2e83703bbd5b339eebcc498416",
+      "queue_src_prev_kw32h": "main@a6849cca0db9",
+      "flow_tag_prev_kw32h": "flow-20261107-dm-head",
+      "note_src_kw32h": "KW-FIX-32 2026-11-07 22:51 PST (ROOT-MERGE-50 22:3x): src kw32/src_a09cb = main a09cbc70ae5 (eco nonport score d23288029c6, auto-resign prestage dd199b99c90, QC plan event qc52t file only) = kw32/src_a6849 + 8 files"
     },
     "qwen_compute": {
       "enabled": true,
@@ -4588,8 +4603,8 @@
       },
       "plan": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/plan_of_record/plan_qc53_candidate_v4.json",
       "gen_host": "epyc2",
-      "src": "/srv/opentallas-scratch2/claude/kw32/src_a6849",
-      "src_sha": "a6849cca0db99e2e83703bbd5b339eebcc498416",
+      "src": "/srv/opentallas-scratch2/claude/kw32/src_a09cb",
+      "src_sha": "a09cbc70ae57c53571239784e0ed6654f7bbe40d",
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt.json",
@@ -4973,7 +4988,7 @@
         "slw_su_c__cl92142dac@18",
         "sle_stm_v3@8"
       ],
-      "queue_src": "main@a6849cca0db9",
+      "queue_src": "main@a09cbc70ae57",
       "type_args": {
         "sle_fw_v2__cl69f5e854": [
           "--gpl-plain",
@@ -5683,7 +5698,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 13
       },
-      "flow_tag": "flow-20261107-ds-qc",
+      "flow_tag": "flow-20261107-dt-qc",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "src_prev_kw32": "/srv/opentallas-scratch2/claude/kw31/src_66d55",
       "src_sha_prev_kw32": "66d55c026ade2245a494c3eeeea0e5ec0ab8ae0b",
@@ -5896,7 +5911,12 @@
       "src_sha_prev_kw32g": "fcb5094d74ab6013a76459389bdd33f296b8ffe4",
       "queue_src_prev_kw32g": "main@fcb5094d74ab",
       "flow_tag_prev_kw32g": "flow-20261107-dq-qc",
-      "note_src_kw32g": "KW-FIX-32 2026-11-07 22:29 PST (ROOT-MERGE-50 22:13, COORD 22:0x): src kw32/src_a6849 = main a6849cca0db (HBM bind in git 45353bf990b, eco iter prune, HBM istadrop a661f1d7364, S81 otherfail 7c69a10c21c, rck-9 opt-in, QC tap-pair default off) = kw32/src_fcb50 + ec91a + a6849 deltas"
+      "note_src_kw32g": "KW-FIX-32 2026-11-07 22:29 PST (ROOT-MERGE-50 22:13, COORD 22:0x): src kw32/src_a6849 = main a6849cca0db (HBM bind in git 45353bf990b, eco iter prune, HBM istadrop a661f1d7364, S81 otherfail 7c69a10c21c, rck-9 opt-in, QC tap-pair default off) = kw32/src_fcb50 + ec91a + a6849 deltas",
+      "src_prev_kw32h": "/srv/opentallas-scratch2/claude/kw32/src_a6849",
+      "src_sha_prev_kw32h": "a6849cca0db99e2e83703bbd5b339eebcc498416",
+      "queue_src_prev_kw32h": "main@a6849cca0db9",
+      "flow_tag_prev_kw32h": "flow-20261107-ds-qc",
+      "note_src_kw32h": "KW-FIX-32 2026-11-07 22:51 PST (ROOT-MERGE-50 22:3x): src kw32/src_a09cb = main a09cbc70ae5 (eco nonport score d23288029c6, auto-resign prestage dd199b99c90, QC plan event qc52t file only) = kw32/src_a6849 + 8 files"
     },
     "hbm": {
       "enabled": true,
@@ -6025,8 +6045,8 @@
       "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
       "plan": "/srv/opentallas-scratch2/claude/kw27/hbm_d44v_02909/die_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw32/src_a6849",
-      "src_sha": "a6849cca0db99e2e83703bbd5b339eebcc498416",
+      "src": "/srv/opentallas-scratch2/claude/kw32/src_a09cb",
+      "src_sha": "a09cbc70ae57c53571239784e0ed6654f7bbe40d",
       "gate": {
         "g0c": "PASS",
         "bind": "PASS",
@@ -6577,7 +6597,7 @@
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
       "pilot_mode": "queue",
-      "queue_src": "main@a6849cca0db9",
+      "queue_src": "main@a09cbc70ae57",
       "hold_items": {
         "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
         "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
@@ -6900,7 +6920,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 2
       },
-      "flow_tag": "flow-20261107-eq-hbm",
+      "flow_tag": "flow-20261107-er-hbm",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -7437,7 +7457,12 @@
         "vsN5",
         "vsN6"
       ],
-      "note_hbm_bound_kw32": "KW-FIX-32 2026-11-07 22:29 PST: bound-type batch q_b000/q_b001 (+pv1, gen FAIL on unbound bus only) and q_su31 (+pv1, released by istadrop a661f1d7364, DIE-HBM-90 21:47); q_spb2 excluded (DIE-HBM-89-SPB2F builds vF privately). pilot_max 2 -> 6 for this batch; revert pilot_max_prev_kw32b. ONE-TICK window: only_items = the 6 bound types and live_claim_h 0 (generic HBM-PLAN claim); restore only_items <- only_items_batch_kw32, delete live_claim_h, pilot_max <- pilot_max_prev_kw32b after launch. | RESTORED 2026-11-07 22:31 PST | window re-applied (restored too early, before any tick saw it) | RESTORED 22:39 after the 22:36 tick launched all 6"
+      "note_hbm_bound_kw32": "KW-FIX-32 2026-11-07 22:29 PST: bound-type batch q_b000/q_b001 (+pv1, gen FAIL on unbound bus only) and q_su31 (+pv1, released by istadrop a661f1d7364, DIE-HBM-90 21:47); q_spb2 excluded (DIE-HBM-89-SPB2F builds vF privately). pilot_max 2 -> 6 for this batch; revert pilot_max_prev_kw32b. ONE-TICK window: only_items = the 6 bound types and live_claim_h 0 (generic HBM-PLAN claim); restore only_items <- only_items_batch_kw32, delete live_claim_h, pilot_max <- pilot_max_prev_kw32b after launch. | RESTORED 2026-11-07 22:31 PST | window re-applied (restored too early, before any tick saw it) | RESTORED 22:39 after the 22:36 tick launched all 6",
+      "src_prev_kw32h": "/srv/opentallas-scratch2/claude/kw32/src_a6849",
+      "src_sha_prev_kw32h": "a6849cca0db99e2e83703bbd5b339eebcc498416",
+      "queue_src_prev_kw32h": "main@a6849cca0db9",
+      "flow_tag_prev_kw32h": "flow-20261107-eq-hbm",
+      "note_src_kw32h": "KW-FIX-32 2026-11-07 22:51 PST (ROOT-MERGE-50 22:3x): src kw32/src_a09cb = main a09cbc70ae5 (eco nonport score d23288029c6, auto-resign prestage dd199b99c90, QC plan event qc52t file only) = kw32/src_a6849 + 8 files"
     }
   },
   "place_prefer": [
