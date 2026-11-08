@@ -1,0 +1,151 @@
+{
+ "event": "l48ve",
+ "tool": "tools/s81_head/head_serdes_ve_event.py",
+ "base": "l48vd",
+ "base_plan_sha256": "2ee63c6b40d04a8c8fa5bddc13a8fa663a30f8d7bbce16bfece89522283439ae",
+ "plan_sha256": "26cb484d02505dcd5dc37c5ca5e0fcd3493dbc484f5842acb7c366362f5ecaa8",
+ "sidecar_sha256": "90d006a48f17adc6795bbf55e3077ff308bb6b417604167248051501cda25d77",
+ "sidecar_changed": false,
+ "sink_bins_file": {
+  "hd_tile": "physical/die_plan/s81_head/plan_of_record/l48ve/assets/sink_bins_0.json",
+  "hd_turn_a": "physical/die_plan/s81_head/plan_of_record/l48ve/assets/sink_bins_1.json",
+  "hd_turn_b": "physical/die_plan/s81_head/plan_of_record/l48ve/assets/sink_bins_2.json",
+  "hd_st_str": "physical/die_plan/s81_head/plan_of_record/l48ve/assets/sink_bins_3.json",
+  "hd_ctl": "physical/die_plan/s81_head/plan_of_record/l48ve/assets/sink_bins_4.json",
+  "hd_spn_wshim_rx": "physical/die_plan/s81_head/plan_of_record/l48ve/assets/sink_bins_5.json",
+  "hd_spn_wshim_tx": "physical/die_plan/s81_head/plan_of_record/l48ve/assets/sink_bins_6.json",
+  "hd_spn_eshim_rx": "physical/die_plan/s81_head/plan_of_record/l48ve/assets/sink_bins_7.json",
+  "hd_spn_eshim_tx": "physical/die_plan/s81_head/plan_of_record/l48ve/assets/sink_bins_8.json"
+ },
+ "taps_kept": [
+  "clk"
+ ],
+ "taps_added": [
+  "clk_t1",
+  "clk_t2"
+ ],
+ "core_tap_deferred": {
+  "name": "u_phy.u_link.u_tx",
+  "xy": [
+   2403.096,
+   86.4
+  ],
+  "kind": "core",
+  "insertion_ps": 471.07,
+  "port": "clk_c0",
+  "why": "no u_tx hard core in the l48vd hd_serdes"
+ },
+ "taps": [
+  {
+   "name": "clk",
+   "xy": [
+    1442.88,
+    77.76
+   ],
+   "load": 156,
+   "reach_um": 297.9
+  },
+  {
+   "name": "clk_t1",
+   "xy": [
+    1934.7,
+    31.1
+   ],
+   "load": 874,
+   "reach_um": 795.3
+  },
+  {
+   "name": "clk_t2",
+   "xy": [
+    540.0,
+    13.5
+   ],
+   "load": 2,
+   "reach_um": 364.5
+  }
+ ],
+ "control_sinks": true,
+ "tap_radius_um": 1000.0,
+ "tap_max_sinks": 3000,
+ "reset_start_raw_exports": [
+  {
+   "port": "rst_start_raw_0",
+   "old": [
+    "u_rrl_12",
+    "rst_rl_12"
+   ],
+   "new": [
+    "u_rrl_19",
+    "rst_rl_19"
+   ],
+   "depth": 6,
+   "relay_moved_um": 0.0
+  },
+  {
+   "port": "rst_start_raw_1",
+   "old": [
+    "u_rrl_10",
+    "rst_rl_10"
+   ],
+   "new": [
+    "u_rrl_17",
+    "rst_rl_17"
+   ],
+   "depth": 4,
+   "relay_moved_um": 0.0
+  },
+  {
+   "port": "rst_start_raw_2",
+   "old": [
+    "u_rrl_11",
+    "rst_rl_11"
+   ],
+   "new": [
+    "u_rrl_18",
+    "rst_rl_18"
+   ],
+   "depth": 5,
+   "relay_moved_um": 0.0
+  },
+  {
+   "port": "rst_start_raw_3",
+   "old": [
+    "u_rrl_14",
+    "rst_rl_14"
+   ],
+   "new": [
+    "u_rrl_21",
+    "rst_rl_21"
+   ],
+   "depth": 1,
+   "relay_moved_um": 1.0
+  },
+  {
+   "port": "rst_start_raw_4",
+   "old": [
+    "u_rrl_15",
+    "rst_rl_15"
+   ],
+   "new": [
+    "u_rrl_22",
+    "rst_rl_22"
+   ],
+   "depth": 2,
+   "relay_moved_um": 2.0
+  },
+  {
+   "port": "rst_start_raw_5",
+   "old": [
+    "u_rrl_16",
+    "rst_rl_16"
+   ],
+   "new": [
+    "u_rrl_23",
+    "rst_rl_23"
+   ],
+   "depth": 3,
+   "relay_moved_um": 3.0
+  }
+ ],
+ "published_wrapper_sha256": "c2635e94581a10813a535ad54da5a362696db2f36d74334b2f951837cabce2a1"
+}

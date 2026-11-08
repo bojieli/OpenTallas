@@ -1,0 +1,29 @@
+{
+ "event": "l48uo_seq",
+ "type": "hd_serdes",
+ "plan_sha256": "f140216c876ba3186afdf3271f0f9b3ceadf63df95b5e0416a06af6dffcb54f6",
+ "sidecar_sha256": "90d006a48f17adc6795bbf55e3077ff308bb6b417604167248051501cda25d77",
+ "base_plan_sha256": "d84ae2706733909e8bb07b0a4331b39e2a41acde98c1b0b87821fbe44552d79c",
+ "wrapper": {
+  "module": "ot_s81hd_serdes",
+  "sha256": "a22dcb348f60f4fcdff927551092cf941521c643a16d31aa9636683c8e243d0d"
+ },
+ "pad_site_um": [
+  1123.296,
+  148.32
+ ],
+ "die_ports": [
+  "lk_EN0_pma_lock",
+  "lk_EN1_pma_lock",
+  "lk_ES0_pma_lock",
+  "lk_ES1_pma_lock",
+  "lk_HOST0_pma_lock",
+  "lk_HOST1_pma_lock",
+  "lk_WN0_pma_lock",
+  "lk_WN1_pma_lock",
+  "lk_WN2_pma_lock",
+  "lk_WN3_pma_lock",
+  "lk_WS0_pma_lock",
+  "lk_WS1_pma_lock"
+ ]
+}
