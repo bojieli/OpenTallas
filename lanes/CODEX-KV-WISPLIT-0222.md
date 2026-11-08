@@ -19,3 +19,5 @@ Saved branch codex/kv-wisplit-0222@7d49a7841a on hub, no merges/tags/POR changes
 Measured rejection: whole fdi_join->HT (55,150 cells) increases HB/HT crossing7424->8468 bits; abandoned. Structural label grouping at depths7/9/10 does not reduce the7424-bit cut; this is a real connectivity problem. One remaining generator finding is HB|HT needs13.2 pins/um versus12.2: no P&R released.
 
 Current job: complete G0 on epyc6 own mirror_band1555b/qwen_kvsys/plan_of_record/plan_c.json, log g0_band1555b.log. No EDA job started.
+
+Actual review saved on hub branch8010063d2f: results/geom_review/codex_kv_wisplit_0222/{layout.png,review.json}, verdict FAIL. Current candidate all27 invariants PASS; three complete station clouds translated out of macros. P&R held. Next dry candidate band1555c moves host seam855.36->846.72 to provide8.64um halo at peer/tx south edges; adds crossing-source attribution to locate host cut drivers. No new stages in this geometry-only candidate.

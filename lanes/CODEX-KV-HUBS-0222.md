@@ -9,3 +9,11 @@
 - Private default-off helper being prepared, own epyc4 source `/srv/opentallas-scratch3/claude/codex-kv-capture-clock-0222`, branch `codex/kv-capture-clock-0222`: NEW capture_clock_branch.py/.tcl, no existing shared file edits, existing same source clock port only, explicit local buffers/exact captures. No clock/reset/interface/cycle contract change. Seven source guards pass; actual placed-DB inventory pending. SOURCE DRAFT, no physical launch or closure claim. Requires source+generated image review before one pilot.
 
 No merges/tags/POR mutations/deletions or failed-verdict replacement.
+
+## Local capture form progress
+
+Hub branch `codex/kv-capture-clock-0222@fad42a3d6b` is the initial SOURCE DRAFT, not READY. A follow-up corrects CTS isolation: local frozen subtree and a separate bulk CTS branch off the SAME port; a wrapper replaces only that ordinary CTS root and preserves all others. Forwarded-clock buffer inputs stay on their original source (not moved into bulk), preserving their clock-export graph. Eight source tests pass including CTS-root replacement.
+
+Actual old PLACE DB inventory: 572 ASTK_ES output captures, x1082.646..1195.02/y4.455..7.965. Proposed explicit local tree is 87 buffers plus1 bulk buffer, 7 buffer stages to every capture, fanout<=8, local legs<=100um, data cycles0. Free row sites are derived from actual placed obstacles. A generated image was viewed; tree stays south of the hard macro with >=2.16um gap. No pin/clock/reset/latency constraint changes. This fixes the previous 1338um clock detour structurally; actual TT/FF insertion still must be measured.
+
+Diagnostic failures preserved: transform1 missing landing_exports.tcl (input closure corrected); transform2 stopped by this lane's exact container name because repeated whole-die name scans caused avoidable diagnostic CPU cost (cached exact-name index and spatial inventory replace them); transform3 correctly rejected overlap with generated forwarded-clock export `o_host_host_rst_n`. Manifest now reserves the entire generated clk_t3 export column; transform4 checks the corrected form on a fresh in-memory old3_place DB. These are source/geometry diagnostic outcomes, not P&R attempts. No actual CTS/route launched yet.

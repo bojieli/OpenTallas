@@ -27,3 +27,17 @@ Inherited vJ LEC still has no final result; its hyp0_failed.txt alone is not fin
 ## Failure fallback analysis
 
 Read the actual RiBM RTL while TX synth runs: NBM=3 has no budget for a two-cycle recurrence (30 iterations, a new frame every10cycles, each unit reloaded every30cycles). Therefore the earlier suggestion "2-cycle step if NBM=3 permits" is infeasible at production throughput. If compact RX-SYN still fails its recurrence, the correct structural form needs NBM=6, 60-cycle RiBM service, +30 recovered cycles added to k_*/data delay, and separate small BM hard cores to keep each <=150k cells; it needs exact lockstep against a correspondingly delayed reference and compiler/model pricing. No such RTL change has been made, and no two-cycle recurrence has been assumed in the present pilot.
+
+## 2026-11-08 02:54 PST
+
+TX vA FAIL_PREFLOOR: RAW face guard 1058/1059; only failure fault sticky flop self-feedback. RTL lint PASS; synth71050cells/11137.65um2, matching72k/39% estimate. No placement spent. failed_vA raw verdict/stat/lint preserved in branch results.
+
+Fixed structurally, ZERO cycles: optional encoder PIN_FAULT=1 computes a separate kept face flop from the sticky NEXT state on the same edge; original sticky state remains internal. ot_keep_regs.tcl explicitly keeps both drivers before opt_merge. Small encoder lockstep with real valid gaps/warm reset:1994checks/0errors/7faultedges. Delay mutant caught4 errors; no-reset mutant caught60. Source/evidence332b1e8039, hub push in progress. TX vB new kit (separate from vA) generated and submitted through canonical intel2 ot-run,32GB/8T,PLACE-only. Log /home/ubuntu/codex-rck-0222-logs/tx_vB_place.otrun.log. No outer time limit on the heavy command.
+
+RX-BACK draft725.76x280.8 generated,3 native inherited macros,1461pins,20.088/21.6um gaps,99.372um clear north routing band,M6signal/PG grant. Native dchn has interior M5clock pin; review_v2 explicitly requires inspecting its leaf access. New aligned draft slots: RXS1296,483.84; RXB1071.36,181.44; TX2574.72,466.56. RXS/RXB x_q faces align, k_* offset<=4um around clock. TX moved near E landing; existing TXL relay rows still span the long PMA bus. Parent draft HOLD: taps inside cores, all relay placement, strict bind/clock/reach/count still required. No POR edit.
+
+## 2026-11-08 02:56 PST
+
+TX vB actually admitted intel1 unit oth-ubuntu-602540-1794135291. Pinned source332b1e8039 now pushed hub. Core layout/pins/clock unchanged; only dedicated same-edge fault face fixes vA RAW FAIL. Canonical intel2 ot-run used.
+
+RX-SYN class prevention in own tree: x_q=x1 also drives syndrome logic, so add optional PIN_X=1 dedicated same-edge x0->face copy (original x1 retained for internal uses); relocate the ALREADY-EXISTING outer lock/n_relock pads inside RX-SYN. This preserves every whole-column cycle while giving each core output its own launch flop. Full-column vs vJ lockstep + XFACE_DELAY/LKFACE_SHORT mutants admitted through canonical intel2 ot-run as intel1 unit oth-ubuntu-644685-1794135378,16GB/8T. Logs results/s81_rck_11_reform_1108/column_faces and /home/ubuntu/codex-rck-0222-logs/column_faces.otrun.log. Those RX-SYN source edits are not yet committed/pilot-built: proof running. No CTS/route launch.
