@@ -778,7 +778,10 @@ RULES = [
     ("PLAN", r"^place$", r"\[ERROR MPL-0034\]", "plan macro position outside the core"),
     ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
-                    r"yosys elaboration failed rc[ =]+137\b", "infra"),
+                    r"yosys elaboration failed rc[ =]+137\b|"
+                    # S81-OTHERFAIL-1 11-07: host earlyoom SIGTERMs yosys (epyc2 16:01/16:09 PST, mem 3%): the synth make
+                    # reports 'Error 241' (256-15), selrange 'yosys exit -15', rtl_lint/selrange the KILLED marker
+                    r"\] Error 241\b|yosys exit -15\b|FAIL_PREFLOOR \w+ KILLED \(yosys signal", "infra"),
     # transport only: an ssh drop BEFORE the command ran.  When ot-run reports 'RAN on <host>' the command ran and its
     # own error decides the class (a probe of another host that failed is not the item's failure)
     ("INFRA-SSH", None, r"ssh: connect to host|Connection (?:reset|refused|closed)|kex_exchange_identification|"
@@ -3453,7 +3456,12 @@ def queue_class(j):
     if stt in ("RUNNING", "") or stt.startswith("WAIT-") or stt in ("ORPHAN", "TRIAL-SIGNED", "WITHDRAWN", "CANCELLED"):
         return ("route" if stt == "RUNNING" else "queue"), (stt or "QUEUED"), "", str((j.get("history") or [[0, 0, ""]])[-1][-1])[:200]
     if stt == "REJECTED":
-        return "queue", "FAIL", "FLOW", "queue row rejected: " + str(j.get("error") or why)[:200]
+        # S81-OTHERFAIL-1 11-07: autopilot keeps the reject reason only in history (c1x_C t6/t7 showed an empty
+        # reason): fall back to the last history entry; a kit that carries an LEC FAIL_PREFLOOR is an RTL verdict
+        last = str((j.get("history") or [[0, 0, ""]])[-1][-1] or "")
+        msg = str(j.get("error") or why or last)[:200]
+        return "queue", "FAIL", ("RTL" if re.search(r"LEC NOT EQUIVALENT|KEEP FAIL", msg) else "FLOW"), \
+            "queue row rejected: " + msg
     if stt == "DONE-CRASH":
         return "route", "FAIL", ("INFRA" if kind.startswith("infra") else "FLOW"), f"{kind}: {why}"
     if stt.startswith("DONE-"):
@@ -3467,6 +3475,8 @@ def queue_class(j):
         stage = "signoff" if so else "route"
         if kind == "pg-unbound" or (fails & FLOW_FAILS):
             return stage, "FAIL", "FLOW", f"{kind}: {why}"
+        if kind == "preflight" and re.search(r"KILLED \(yosys signal", why):
+            return stage, "FAIL", "INFRA", f"{kind}: {why}"          # S81-OTHERFAIL-1: host OOM kill, not a verdict
         if kind in ("preflight", "cell-cap", "diagnostic-overrun"):
             return stage, "FAIL", ("FLOW" if kind == "diagnostic-overrun" else "PLAN"), f"{kind}: {why}"
         if kind == "grt-overflow" or (fails & ROUTING_FAILS) or drc:
