@@ -89,6 +89,25 @@ def test_latch_placement_at_hop_midpoint():
         R.tcl_text(t, native_paths={}, native_nodes=[])
 
 
+def test_latch_placement_on_native_contract():
+    """bind kit-rtl (native reset export): the verified latch hierarchy and the native relay sites drive placement."""
+    t = tree("latch")
+    nodes = [dict(r, xy=[r["xy"][0] + 1.0, r["xy"][1]]) for r in t["relays"]]
+    paths = {r["name"]: "u_bound." + r["name"] for r in t["relays"]}
+    paths.update({"u_rst_in": "u_bound.u_rst_in"})
+    with pytest.raises(R.ResetError):            # a hop latch without a verified hierarchy is refused
+        R.tcl_text(t, native_paths=dict(paths), native_nodes=nodes)
+    paths.update({R.lockup_latch_names(r["name"])[0]: "u_bound." + R.lockup_latch_names(r["name"])[0]
+                  for r in R.lockup_hops(t)})
+    tcl = R.tcl_text(t, native_paths=paths, native_nodes=nodes)
+    by_q = {r["q"]: r for r in nodes}
+    for r in R.lockup_hops(t):
+        li, lq = R.lockup_latch_names(r["name"])
+        a, b = by_q[r["d"]]["xy"], r["xy"][0] + 1.0
+        assert f"rtr_place_lk {lq} {{u_bound[./]{li}[./]*}} {(a[0] + b) / 2:.3f} {(a[1] + r['xy'][1]) / 2:.3f} " in tcl
+    assert "{*u_fl_rst" not in tcl
+
+
 def test_plan_option_accepts_latch(monkeypatch):
     monkeypatch.setattr(R, "start_broadcast", lambda P: bool(P.reset.get("start")))
     ok = {"relay_lockup": {"form": "latch", "types": ["ta"]}}

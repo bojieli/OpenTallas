@@ -5534,9 +5534,17 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
     expanded = RT.start_relays(tree) if tree.get("start") else relays
     physical_nodes = []
     output_relays = RT.out_relays(tree)
+    # RLK-1108 latch form (reset_tree.lockup_hops): the bound RTL carries one hop lockup latch ot_dp_lk in front of
+    # each internal hop's capture relay; verify it exactly (launch q -> latch -> relay d) and record its hierarchy so
+    # reset_tree.tcl places it at the hop midpoint.  No latch form = no lockup hops = unchanged checks.
+    lockup = {r["name"]: RT.lockup_latch_names(r["name"]) for r in RT.lockup_hops(tree)}
     for r in expanded:
         gated = r.get("role") == "gated"
         ports = {"clk": "clk", "d": r["d"], "q": r["q"]}
+        if r["name"] in lockup:
+            li, lq = lockup[r["name"]]
+            check(li, "ot_dp_lk", {"clk": "clk", "d": r["d"], "q": lq})
+            ports["d"] = lq
         if gated:
             ports["run"] = r["run"]
         output = output_relays.get(r["q"])
