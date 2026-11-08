@@ -1,0 +1,79 @@
+"""TYPE-SAFE-2 11-08: relay constructor pieces -- wiring-only core connectivity from a bound module, and the bound-RTL
+latency miter (only declared stages change, stage delta per lane == declared pin cycles)."""
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import core_conns_from_bind as CCB  # noqa: E402
+
+PLAN_T = dict(buses=[dict(name="i_a", dir="in", width=4), dict(name="o_b", dir="out", width=4)],
+              hard_cores=[dict(inst="u_c.u_x", module="cx"), dict(inst="u_c.u_y", module="cy")])
+
+
+def bound(D):
+    return f"""module t_bound (input wire clk, input wire rst_n, input wire [4:0] i_a, output wire [4:0] o_b);
+    wire [3:0] i_a_b; wire i_a_eb; wire [3:0] i_a_q; wire i_a_eq;
+    ot_dp_st #(.W(4)) u_bin_i_a (.clk(clk), .rst_n(rst_n), .d(i_a[3:0]), .ea(i_a[4]), .q(i_a_b), .eq(i_a_eb));
+    ot_dp_dly #(.W(5), .D({D})) u_lpad_i_a (.clk(clk), .d({{i_a_eb, i_a_b}}), .q({{i_a_eq, i_a_q}}));
+    wire [3:0] w_x_a;
+    assign w_x_a = {{i_a_q[1:0], i_a_q[3:2]}};
+    wire [3:0] w_x_z;
+    cx u_u_x (.ck(clk), .a(w_x_a), .z(w_x_z));
+    wire [3:0] w_y_m;
+    assign w_y_m = w_x_z ^ 4'h1;
+    cy u_u_y (.ck(clk), .m(w_y_m), .p(w_x_z));
+    ot_dp_st #(.W(4)) u_bout_o_b (.clk(clk), .rst_n(rst_n), .d(w_x_z), .ea(1'b1), .q(o_b[3:0]), .eq(o_b[4]));
+endmodule
+"""
+
+
+def test_trace_wiring_only():
+    res = CCB.trace(dict(partition_types=dict(t=PLAN_T)), "t", bound(3))
+    cc = res["core_conns"]["t"]
+    assert cc["u_c.u_x"]["a"] == ["bus:i_a"]
+    assert "bus:o_b" in cc["u_c.u_x"]["z"]
+    p = next(p for p in res["paths"] if p.get("bus") == "i_a")
+    assert p["stages_existing"] == 3 and p["dir"] == "in"
+    # u_y.p reads u_x.z by wiring -> core:core path; u_y.m goes through an XOR -> no wiring path
+    assert "core:u_c.u_x.z" in cc["u_c.u_y"]["p"]
+    assert "m" not in cc.get("u_c.u_y", {})
+
+
+def _plan():
+    return dict(
+        partitions=[dict(name="pa", type="s"), dict(name="pb", type="t")],
+        ports=[dict(id="p0", src=dict(part="pa", bus="o_q"), dst=dict(part="pb", bus="i_a"))],
+        lanes=[dict(id="L0", ports=["p0"], fixed_cycles=3)],
+        partition_types=dict(t=PLAN_T))
+
+
+def _run(tmp_path, old, new, delta):
+    od, nd = tmp_path / "old", tmp_path / "new"
+    od.mkdir()
+    nd.mkdir()
+    (od / "t.sv").write_text(old)
+    (nd / "t.sv").write_text(new)
+    pf, ef = tmp_path / "plan.json", tmp_path / "ev.json"
+    pf.write_text(json.dumps(_plan()))
+    ef.write_text(json.dumps(dict(edits=[dict(type="t", bus="i_a", lanes=dict(L0=dict(delta=delta)))])))
+    r = subprocess.run([sys.executable, str(HERE / "ts_relay_miter.py"), str(pf), str(ef), str(od), str(nd),
+                        str(tmp_path / "out.json")], capture_output=True, text=True)
+    return r.returncode, json.loads((tmp_path / "out.json").read_text())
+
+
+def test_miter_pass_on_declared_pad(tmp_path):
+    rc, rec = _run(tmp_path, bound(1), bound(3), 2)
+    assert rc == 0 and rec["verdict"] == "PASS", rec
+
+
+def test_miter_fails_on_wrong_delta(tmp_path):
+    rc, rec = _run(tmp_path, bound(1), bound(3), 1)
+    assert rc == 1 and rec["n_mismatch"] == 1
+
+
+def test_miter_fails_on_undeclared_change(tmp_path):
+    rc, rec = _run(tmp_path, bound(1), bound(3).replace("4'h1", "4'h2"), 2)
+    assert rc == 1 and rec["n_undeclared"] >= 1
