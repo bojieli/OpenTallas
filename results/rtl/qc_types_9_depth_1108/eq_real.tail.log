@@ -1,0 +1,40 @@
+  Trying to prove $equiv for \eb_d [4]:ezsat
+ success!
+  Trying to prove $equiv for \eb_d [5]:ezsat
+ success!
+  Trying to prove $equiv for \eb_d [6]:ezsat
+ success!
+  Trying to prove $equiv for \eb_d [7]:ezsat
+ success!
+  Trying to prove $equiv for \eb_d [8]:ezsat
+ success!
+  Trying to prove $equiv for \eb_d [9]:ezsat
+ success!
+  Trying to prove $equiv for \eb_d [10]:ezsat
+ success!
+  Trying to prove $equiv for \eb_d [11]:ezsat
+ success!
+  Trying to prove $equiv for \eb_d [12]:ezsat
+ success!
+  Trying to prove $equiv for \eb_d [13]:ezsat
+ success!
+  Trying to prove $equiv for \eb_d [14]:ezsat
+ success!
+  Trying to prove $equiv for \eb_d [15]:ezsat
+ success!
+Proved 9410 previously unproven $equiv cells.
+
+20. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+21. Executing EQUIV_STATUS pass.
+Found 9410 $equiv cells in equiv:
+  Of those cells 9410 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+Warnings: 5 unique messages, 5 total
+End of script. Logfile hash: 5bbe48951f, time: 1119.43s, user: 1117.56s, system: 2.19s, MEM: 732.00 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 97% 1x equiv_simple (1096 sec), 1% 2x chparam (12 sec), ...
+RC=0
