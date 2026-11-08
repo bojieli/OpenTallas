@@ -1411,13 +1411,17 @@
      "module": "ot_s81_rck_rxs",
      "origin_um": [
       1296.0,
-      483.84
+      457.92
      ],
      "outline_um": [
       216.0,
-      190.08
+      216.0
      ],
      "orient": "R0",
+     "track_offset_um": [
+      0.012,
+      0.012
+     ],
      "pins_file": "inputs/core_pins/rck_rxs_216x190_0222.json",
      "lef": "results/s81_rck_11_reform_1108/rxs_pilot/ot_s81_rck_rxs.lef"
     }

@@ -153,8 +153,9 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT =
     // the face copy drives only the port and has no feedback/shared load.
     // ot_keep_regs.tcl preserves both driving cells before opt_merge.
     generate if (PIN_FAULT != 0) begin : g_fault_face
-        (* keep = 1, dont_touch = 1, face_keep = 1 *) reg fault_q;
-        always @(posedge clk) begin
+        reg fault_q;
+        // Keep the CELL, not the aliased wire (wire KEEP retains a dead output BUF).
+        (* keep = 1, dont_touch = 1, face_keep = 1 *) always @(posedge clk) begin
 `ifdef RCKRF_MUT_FAULT_NORST
             if (rs_n[0]) fault_q <= flt | (run && !tx_v);
 `else

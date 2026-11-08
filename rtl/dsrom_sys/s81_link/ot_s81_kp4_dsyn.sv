@@ -10,7 +10,7 @@
 // MUT 3: the syndrome loop is not restarted at chunk 0 (stale syndromes) -- bench mutant of this tile.
 // BMTHC (opt-in, default 0): ot_s81_kp4_bm THC (theta_45 reachable form) in the RiBM units.
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, parameter integer BMTHC = 0) (
+module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, parameter integer BMTHC = 0, parameter integer PIN_X = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          p_v,
@@ -67,7 +67,8 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
             end
             wc <= (wc == 4'd9) ? 4'd0 : wc + 1'b1;
         end
-    reg  [543:0] x0, x1, x2;
+    reg  [543:0] x0, x2;
+    (* keep = 1, dont_touch = 1 *) reg [543:0] x1; // internal syndrome/word history apart from optional face copy
     (* keep *) reg [9:0] xs [0:NRS-1];   // one-hot index of the word in x1 (zero = none)
     always @(posedge clk) begin x0 <= p_d; x1 <= x0; x2 <= x1; end
     always @(posedge clk)
@@ -190,7 +191,20 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
         for (q = 0; q < NBM; q = q + 1) if (u_dn[q][0]) begin k_L = k_L | u_L[q]; k_any = k_any | u_any[q]; end
     end
 `endif
-    assign x_q = x1;
+    // RCK extraction: x1 also feeds x2/the syndrome cone. A separate copy of
+    // its NEXT data gives the output its own face flop, with ZERO added cycles.
+    generate if (PIN_X != 0) begin : g_x_face
+        reg [543:0] x_face;
+        (* keep = 1, dont_touch = 1, face_keep = 1 *) always @(posedge clk)
+`ifdef RCKRF_MUT_XFACE_DELAY
+            x_face <= x1;
+`else
+            x_face <= x0;
+`endif
+        assign x_q = x_face;
+    end else begin : g_x_plain
+        assign x_q = x1;
+    end endgenerate
 endmodule
 
 `ifdef OT_S81_KP4_AM_FACE3

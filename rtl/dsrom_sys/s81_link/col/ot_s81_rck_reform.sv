@@ -79,8 +79,9 @@ module ot_s81_rck_dec #(
     ot_s81_rck_rxb #(.MUT(MUT)) u_rxb (.ck(ck_dly), .lpr_syn(lpr_syn), .lpr_dly(lpr_dly), .lpr_chn(lpr_chn), .lpr_out(lpr_out),
         .x_q(x_q), .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any),
         .q_v(q_v), .q_d(q_d), .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq), .n_corr(n_corr), .n_unc(n_unc));
-    ot_pl_pad #(.W(1), .N(1)) u_face_lock (.ck(ck_syn), .d(face_lock), .q(lock));
-    ot_pl_pad #(.W(32), .N(1)) u_face_n_relock (.ck(ck_syn), .d(face_n_relock), .q(n_relock));
+    // Existing status face registers moved inside RX-SYN; top-level timing unchanged.
+    assign lock = face_lock;
+    assign n_relock = face_n_relock;
 endmodule
 
 // RX-SYN hard core: input face = the 4th transport stage (554 b, one flop per pin, no logic), dsyn behind it.
@@ -101,8 +102,16 @@ module ot_s81_rck_rxs (
 );
     wire [543:0] p_d; wire p_v; wire [8:0] am;
     ot_pl_pad #(.W(554), .N(1)) u_face_in (.ck(ck), .d({i_am, i_v, i_d}), .q({am, p_v, p_d}));
-    ot_s81_kp4_dsyn u_syn (.clk(ck), .rst_n(rst_n), .p_v(p_v), .p_d(p_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo), .k_L(k_L),
-        .k_any(k_any), .lock(lock), .n_relock(n_relock), .am_face3(am));
+    wire native_lock; wire [31:0] native_n_relock;
+    ot_s81_kp4_dsyn #(.PIN_X(1)) u_syn (.clk(ck), .rst_n(rst_n), .p_v(p_v), .p_d(p_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo), .k_L(k_L),
+        .k_any(k_any), .lock(native_lock), .n_relock(native_n_relock), .am_face3(am));
+`ifdef RCKRF_MUT_LKFACE_SHORT
+    assign lock = native_lock;
+    assign n_relock = native_n_relock;
+`else
+    ot_pl_pad #(.W(1), .N(1)) u_face_lock (.ck(ck), .d(native_lock), .q(lock));
+    ot_pl_pad #(.W(32), .N(1)) u_face_n_relock (.ck(ck), .d(native_n_relock), .q(n_relock));
+`endif
 endmodule
 
 // RX-BACK hard core: the landed decoder back end, verbatim from ot_s81_kp4_dec_native_flat_lp with ck_* -> ck.

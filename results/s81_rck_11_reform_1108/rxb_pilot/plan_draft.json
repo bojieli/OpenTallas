@@ -1411,13 +1411,17 @@
      "module": "ot_s81_rck_rxb",
      "origin_um": [
       1071.36,
-      181.44
+      155.52
      ],
      "outline_um": [
       725.76,
       280.8
      ],
      "orient": "R0",
+     "track_offset_um": [
+      0.012,
+      0.012
+     ],
      "pins_file": "inputs/core_pins/rck_rxb_725x280_0222.json",
      "lef": "results/s81_rck_11_reform_1108/rxb_pilot/ot_s81_rck_rxb.lef",
      "obs_max": "M6"

@@ -1,0 +1,7 @@
+Revision3: account for CORE_AREA margin, not only outer die area. All three new images were rendered and viewed before the next PLACE launch.
+TX:181.44x172.8um; inner172.8x164.16=28366.848um2. Measured std11137.65um2 =>39.26% inner fill at target0.40. Initial181x155 draft had44.2% inner fill and was too small; corrected before any placement.
+RX-SYN:216x216um; inner207.36x207.36=42998.17um2. DSYN hierarchy15.9k area with5% mapping allowance plus~330um2 face cells =>~17.0k/43.0k=39.6% inner fill. Includes dedicated same-edge x_q copy and relocated existing status pads. Actual measured synth still required.
+RX-BACK outline/macros unchanged. Parent drafts: TX2574.72,466.56; RXS1296,457.92; RXB1071.36,155.52. RXS north stays673.92 below681.372 shore keepout; core-to-core vertical channel21.6um.
+Explicit track_offset_um [.012,.012] maps kit M4/M5 phase.012 to parent.024 phase on the8.64-grid origins. x_q source/destination faces align; k_* reserves4um around clock.
+SMELLS: none visible in compact TX/RXS pin contract; RXB channels/child interior-clock access remain PLACE/CTS review conditions. Parent plan still HOLD until tap pruning/rebind/relays/strict bind/clock/reach/count.
+Verdict: PASS for TX vC PLACE; RX-SYN/RX-BACK pilots remain staged behind its placed review. No parent release, no POR edit, ZERO added whole-column cycles.

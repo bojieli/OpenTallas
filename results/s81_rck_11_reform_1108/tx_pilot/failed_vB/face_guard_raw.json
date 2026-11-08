@@ -1,0 +1,52 @@
+{
+ "top": "ot_s81_rck_tx",
+ "checked": 1059,
+ "ok": 1058,
+ "fails": {
+  "shared": [
+   "fault: net fault has 1 loads besides the port chain"
+  ]
+ },
+ "flops": {
+  "tx_v": "pin_v[0]$_DFF_P_",
+  "tx_d[511]": "pin_q[0][511]$_DFF_P_",
+  "tx_d[510]": "pin_q[0][510]$_DFF_P_",
+  "tx_d[509]": "pin_q[0][509]$_DFF_P_",
+  "tx_d[508]": "pin_q[0][508]$_DFF_P_",
+  "tx_d[507]": "pin_q[0][507]$_DFF_P_",
+  "tx_d[506]": "pin_q[0][506]$_DFF_P_",
+  "tx_d[505]": "pin_q[0][505]$_DFF_P_",
+  "tx_d[504]": "pin_q[0][504]$_DFF_P_",
+  "tx_d[503]": "pin_q[0][503]$_DFF_P_",
+  "tx_d[502]": "pin_q[0][502]$_DFF_P_",
+  "tx_d[501]": "pin_q[0][501]$_DFF_P_",
+  "tx_d[500]": "pin_q[0][500]$_DFF_P_",
+  "tx_d[499]": "pin_q[0][499]$_DFF_P_",
+  "tx_d[498]": "pin_q[0][498]$_DFF_P_",
+  "tx_d[497]": "pin_q[0][497]$_DFF_P_",
+  "tx_d[496]": "pin_q[0][496]$_DFF_P_",
+  "tx_d[495]": "pin_q[0][495]$_DFF_P_",
+  "tx_d[494]": "pin_q[0][494]$_DFF_P_",
+  "tx_d[493]": "pin_q[0][493]$_DFF_P_"
+ },
+ "straps_exempt": [],
+ "dead_declared": [],
+ "bumps_exempt": [],
+ "clock_exports": {},
+ "pairs_declared": [],
+ "fail_counts": {
+  "shared": 1
+ },
+ "verdict": "FAIL",
+ "planned_bits": 1059,
+ "missing_ports": [],
+ "extra_ports": [],
+ "missing_n": 0,
+ "extra_n": 0,
+ "self_loop_only": false,
+ "self_loops": [],
+ "non_self_loop_fails": [
+  "fault: net fault has 1 loads besides the port chain"
+ ],
+ "netlist": "/work/run/results/asap7/kl_ot_s81_rck_tx_vB/base/1_2_yosys.v"
+}

@@ -3,7 +3,7 @@ from pathlib import Path
 R=Path('/srv/opentallas-scratch2/claude/codex-s81-rck-0222/work')
 D=R/'results/s81_rck_11_reform_1108/tx_pilot';D.mkdir(parents=True,exist_ok=True)
 S=R/'physical/die_plan/s81'; P=S/'inputs/core_pins';P.mkdir(parents=True,exist_ok=True)
-M='ot_s81_rck_tx'; W,H=181.44,155.52
+M='ot_s81_rck_tx'; W,H=181.44,172.8
 pins=[];dirs={}
 for face,ports in [('E',[('rst_n',1,'INPUT'),('tx_v',1,'INPUT'),('tx_d',512,'INPUT')]),('W',[('p_v',1,'OUTPUT'),('p_d',544,'OUTPUT'),('fault',1,'OUTPUT')])]:
     ns=[(n if w==1 else f'{n}[{i}]',di) for n,w,di in ports for i in range(w)]
@@ -18,7 +18,7 @@ for p in pins:
     x,y=p['x'],p['y'];n=p['name'];dx,dy=(.012,.042) if p['layer']=='M5' else (.042,.012);lef += [f' PIN {n}',f'  DIRECTION {dirs[n]} ;',f'  USE {"CLOCK" if n=="clk" else "SIGNAL"} ;','  PORT',f'   LAYER {p["layer"]} ;',f'   RECT {x-dx:.3f} {y-dy:.3f} {x+dx:.3f} {y+dy:.3f} ;','  END',f' END {n}']
 lef += [f'END {M}','END LIBRARY'];(R/lp).write_text('\n'.join(lef)+'\n')
 base=json.loads((S/'die_plan.json').read_text())
-core=dict(inst='u_core.u_tx_pin',module=M,origin_um=[2574.72,466.56],outline_um=[W,H],orient='R0',pins_file=pp,lef=lp)
+core=dict(inst='u_core.u_tx_pin',module=M,origin_um=[2574.72,466.56],outline_um=[W,H],orient='R0',track_offset_um=[.012,.012],pins_file=pp,lef=lp)
 plan={k:base[k] for k in ['die','clock']};plan['partition_types']={'serdes__t16':dict(outline_um=[2885.76,1226.88],hard_cores=[core])}
 (D/'plan_draft.json').write_text(json.dumps(plan,indent=1)+'\n')
 b='rtl/dsrom_sys/s81_link/'
