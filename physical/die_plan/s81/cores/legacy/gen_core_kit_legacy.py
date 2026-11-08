@@ -2141,6 +2141,19 @@ def main():
     if rec.get("macro_if_flops", False):
         shutil.copyfile(S81 / "cores/split_clock/macro_if_flops.tcl", kd / "macro_if_flops.tcl")
         pre_place.append("source /work/macro_if_flops.tcl")
+    # S81-GUNIT-FORM-2 11-07 (COORD 23:3x (2), opt-in recipe macro_net_drive {max_wire_um, ff}): sized drivers and a
+    # buffered wire-length cap on the SRAM data nets at PRE_RESIZE (macro_net_drive.tcl after drv.tcl).  No key = kit
+    # unchanged (PRE_RESIZE_TCL stays drv.tcl, no file written).
+    mnd = rec.get("macro_net_drive")
+    if mnd is True:
+        mnd = {}
+    if mnd is not None and not isinstance(mnd, dict):
+        raise SystemExit(f"recipe macro_net_drive {mnd!r}: want true or {{max_wire_um, ff}}")
+    if mnd is not None:
+        if set(mnd) - {"max_wire_um", "ff"} or float(mnd.get("max_wire_um", 100)) <= 0:
+            raise SystemExit(f"recipe macro_net_drive {mnd!r}: keys max_wire_um (> 0), ff")
+        shutil.copyfile(S81 / "cores/split_clock/macro_net_drive.tcl", kd / "macro_net_drive.tcl")
+        (kd / "pre_resize.tcl").write_text("source /work/drv.tcl\nsource /work/macro_net_drive.tcl\n")
     # DIE-S81-69 11-06 (opt-in recipe native_ff_pose): reviewed exact whole-group source FF pose (t51 native split),
     # sourced LAST at PRE_GLOBAL_PLACE so it overrides the FIRM face/station placement; LOCKED (DEF FIXED) survives
     # face_flops_release.tcl's FIRM release; the pose lists its FFs in ot_native_pose.txt and the same PRE_DETAIL_PLACE
@@ -2190,7 +2203,9 @@ def main():
            "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)" + "".join(" " + l for l in libs),
            "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)" + "".join(" " + l.replace("_tt.lib", "_ff.lib") for l in libs),
            "export SLEW_MARGIN = 20", "export CAP_MARGIN = 20",
-           "export PRE_RESIZE_TCL = /work/drv.tcl", "export PRE_GLOBAL_ROUTE_TCL = /work/drv.tcl",
+           f"export PRE_RESIZE_TCL = /work/{'pre_resize.tcl' if mnd else 'drv.tcl'}", "export PRE_GLOBAL_ROUTE_TCL = /work/drv.tcl",
+           *([f"export OT_MND_MAX_WIRE_UM = {float(mnd.get('max_wire_um', 100)):g}",
+              f"export OT_MND_FF = {mnd.get('ff', 'DFFHQNx3_ASAP7_75t_R')}"] if mnd else []),
            "export POST_GLOBAL_ROUTE_TCL = /work/post_grt_drv.tcl",
            f"export CTS_ARGS = {cts}",
            *([f"export OT_TAP_TARGET_PS = {ins:g}", f"export OT_TAP_WINDOW_PS = {tol:g}", "export OT_TAP_PITCH_UM = 600",
