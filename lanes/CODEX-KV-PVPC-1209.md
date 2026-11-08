@@ -56,7 +56,7 @@ After current composition/render/release review, replaced only inherited E4 lega
 
 Same fresh sidecar/reset witness gives conservative running-clock START lower bounds: PV296periods (64root+116virtual×2), raw delivery83; PHY_EN_1/phy_EN_1 356periods (64+146virtual×2), raw delivery84 from pc_EN_1.rst_o_2. Actual top binds PHY arst_n=rstw_pc_EN_1_rst_o_2 atline34525, PC drives net at27668. PHY model lead272periods is evidence for parent's prospective+3 local control-reset investigation, not physical clock/START qualification. E4 ownscope/phy_en1_start_reset_witness.json retains paths and input hashes. No new RTsolve, global RTL, POR or sharedLEC edits.
 
-### Hub Eo/Wo class diagnosis — 16:39 PST
+### Hub Eo/Wo class diagnosis — 16:32 PST
 
 Parent delegated exact terminal hub clock diagnosis while PC/PV wait. Eo E5 scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hub_Eo/attempt_19/gen/kv3_hub_Eo and Wo E6 scratch2/claude/codex-wave-1105/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hub_Wo/attempt_9/gen/kv3_hub_Wo confirm FAIL_POSTCTS FF structural hold−498.92/20526 and−469.38/20875. Existing CTS final reports are TT: Eo worst shown internal reset-removal u_rrl22/Q→u_ist_o_kvs_emb_px_tok_d1_2/RESETN−145.48, clk_t6 launch462.90ps (plus120ps early-source window) vsclk_t7capture674.01ps; worst shownport arst_n→u_rst_in/Q−562.26. Wo u_rrl41/Q→u_ft_ft18_o_1/RESETN−126.99, clk_t2launch432.51(+100window) vsclk_t6capture724.75; worst shownport start_i[0]→u_run_in/Q−527.83. Do not equate those TT values to FF gate values.
 
