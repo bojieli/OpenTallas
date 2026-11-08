@@ -7,7 +7,7 @@ All changes are opt-in defines (default elaboration unchanged):
 | define | file | change | cycles |
 |---|---|---|---|
 | OT_S81_RM_WFULL8 | rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv | full/ge6 = rp_g2 == registered gray targets; 8 kept group copies | +1 wclk at RM input |
-| OT_S81_CLAND_WCHK | rtl/common/ot_dp_clk_landing.sv | ring WCHK=1 + local training-reset flop | ready/fault +1 clk, data 0 |
+| OT_S81_CLAND_WCHK | rtl/common/ot_dp_clk_landing.sv | ring WCHKC=1 (per-64-bit registered slot-index copy, local decode; new ot_meso_wcc) + local training-reset flop | ready/fault +1 clk, data 0 |
 | OT_S81_KP4_SYN_LOCAL | ot_s81_kp4_dsyn.sv, ot_s81_kp4_bm.sv, ot_s81_kp4_ddly.sv | per-unit S copy + load copies, NG 8, registered k_*; DD 57 | +2 rck decoder |
 | OT_S81_LPL_CHUNK | rtl/common/landed_parent/ot_pl_land.sv | <=24-bit local rings (ot_pl_land_local_w/r) | 0 |
 

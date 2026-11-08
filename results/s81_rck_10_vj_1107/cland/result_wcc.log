@@ -1,0 +1,12 @@
+CLAND_RESULT ph=0.050 checks=2895 errors=0 ready_epochs=5 fault_ref=0
+CLAND_RESULT ph=0.210 checks=2895 errors=0 ready_epochs=5 fault_ref=0
+CLAND_RESULT ph=0.290 checks=2895 errors=0 ready_epochs=5 fault_ref=0
+CLAND_RESULT ph=0.410 checks=2895 errors=0 ready_epochs=5 fault_ref=0
+CLAND_RESULT ph=0.620 checks=2895 errors=0 ready_epochs=5 fault_ref=0
+CLAND_RESULT ph=0.790 checks=2895 errors=0 ready_epochs=5 fault_ref=0
+== mutant wch
+[2552000] %Fatal: tb_cl.sv:28: Assertion failed in tb: CLAND lockstep FAILED
+== mutant offset
+[2552000] %Fatal: tb_cl.sv:28: Assertion failed in tb: CLAND lockstep FAILED
+== mutant norst
+[2552000] %Fatal: tb_cl.sv:28: Assertion failed in tb: CLAND lockstep FAILED

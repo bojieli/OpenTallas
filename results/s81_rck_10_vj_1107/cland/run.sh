@@ -9,7 +9,7 @@ ren(){ # suffix every module defined in file $1 with $2
 pp -DSYNTHESIS_OFF > $D/ref.sv; ren $D/ref.sv _r; sed -i 's/\bot_dp_clk_landing_r\b/cl_ref/' $D/ref.sv
 EXTRA=""
 case "$M" in
-  wch) sed -i 's/we <= DEPTH'"'"'(1) << nxt;/we <= DEPTH'"'"'(1) << (nxt - 1'"'"'b1);/' $D/meso.sv; grep -c 'nxt - 1' $D/meso.sv >&2;;
+  wch) sed -i 's/tcc <= nxt;/tcc <= nxt - 1'"'"'b1;/' $D/meso.sv; grep -c 'nxt - 1' $D/meso.sv >&2;;
   offset) EXTRA="-DOT_MESO_MUTANT_OFFSET";;
   norst) sed -i 's/wire rst_i = rst_l;/wire rst_i = rst_n;/' $D/land.sv;;
 esac
