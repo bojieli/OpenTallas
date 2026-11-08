@@ -131,7 +131,13 @@ def plan_pins(entry, plan_dir):
     if not f:
         return None
     p = f if os.path.isabs(f) else os.path.join(plan_dir, f)
-    j = json.load(open(p))
+    if not os.path.isfile(p) and os.path.isfile(p + ".gz"):
+        # DIE-HBM-91-KCLS 11-08 (class k1): the plan of record keeps large pin tables only as <pins_file>.gz
+        # (d44v cores/ot_pdie_serdes_tx__285.12x207.36__d44v_split.json.gz); read the same table compressed.
+        import gzip
+        j = json.load(gzip.open(p + ".gz", "rt"))
+    else:
+        j = json.load(open(p))
     pins = j.get("pins") if isinstance(j, dict) else j
     # PROV-PINS-BUS (DIE-QC-81 11-05): plan pin tables come in two forms, {name,...} rows and {bus, bit,...} rows
     # (clock_entry_pins.pname). Bus/bit rows were dropped, so the QC su_c contract views (red2_leaf, su8_rst3, crh_rp1,
@@ -281,7 +287,12 @@ def rtl_dirs(module, roots):
             continue
         p = None
         try:
-            p = subprocess.run(["git", "-C", r, "grep", "-l", "-E", r"^\s*module\s+" + re.escape(module) + r"\b",
+            # DIE-HBM-91-KCLS 11-08 (class k1): --untracked. A staged wave src (kw33/src_d95ec) is an rsync of a newer
+            # tree over an old .git (HEAD c92647a215, 11-06 index), so the RX BM3 / TX split RTL added since
+            # (rtl/hbm_accel/cores_split/reform_1106/ot_pdie_serdes_rx_bm3.sv) is untracked there: plain git grep
+            # found no definition (rc 1, no walk fallback) and every pin of the child had no direction.
+            p = subprocess.run(["git", "-C", r, "grep", "--untracked", "-l", "-E",
+                                r"^\s*module\s+" + re.escape(module) + r"\b",
                                 "--", "*.sv", "*.v", "*.svh"], capture_output=True, text=True, timeout=300)
         except (OSError, subprocess.SubprocessError):
             pass
