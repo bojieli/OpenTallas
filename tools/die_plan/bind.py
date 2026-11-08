@@ -2369,7 +2369,7 @@ class Binder:
         except Exception as e:      # the hook names the inconsistency (e.g. asymmetric relay legs)
             self.errors.append(f"PARAM_REGEN {f.name}: {e}")
             return
-        changed = []
+        changed, derived = [], []
         for path, ps in r["params"].items():
             ci = self.cell_index().get(path)
             if ci is None:
@@ -2382,10 +2382,12 @@ class Binder:
                     self.errors.append(f"PARAM_REGEN {path}.{k}: not a parameter of the leaf")
                     continue
                 old = str(c.params[k] if k in c.params else defaults[k]).strip('"')
+                row = dict(inst=path, param=k, asbuilt=old, bound=v)
+                derived.append(row)
                 if old != str(v):
-                    changed.append(dict(inst=path, param=k, asbuilt=old, bound=v))
+                    changed.append(row)
                 c.params[k] = str(v)
-        self.param_regen = dict(file=str(spec["file"]), changed=changed, record=r.get("record", {}))
+        self.param_regen = dict(file=str(spec["file"]), changed=changed, derived=derived, record=r.get("record", {}))
         # DIE-HBM-92-LCHK: the hook's declared fixed-latency contracts (latency_consumers.py checks every instance)
         lc = r.get("latency_contracts") or getattr(mod, "LATENCY_CONTRACTS", None)
         if lc:
