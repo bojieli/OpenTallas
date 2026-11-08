@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // STW-S81c-TOK4-BAND 10-22: lockstep shim for the banded gunit l1f.  Stands in for dsdv_gunit_l1f inside the dsdv_gunit
-// golden bench (run_l1f_band_lsw.sh renames the current RTL's module to dsdv_gunit_l1f_ref): the BANDED flat parent
-// dsdv_gunit_l1f_bp drives the outputs, the current RTL runs beside it on the same inputs, and every output is compared
+// golden bench (run_l1f_band_lsw.sh: S81-GUNIT-FORM-1 11-07, the banded dsdv_gunit_l1f is renamed dsdv_gunit_l1f_bp in a bench
+// copy): the BANDED flat parent drives the outputs, the flat reference dsdv_gunit_l1f_flat runs beside it on the same inputs, and every output is compared
 // on every edge after reset.  Prints "GUNIT_LSW <inst> checked N mismatches M" at the end; first mismatches are listed.
 module dsdv_gunit_l1f #(
     parameter integer MUT = 0
@@ -17,13 +17,13 @@ module dsdv_gunit_l1f #(
     output wire          o_v, output wire o_f, output wire o_l, output wire o_g, output wire [244:0] o_d,   // RTLC 10-24: L1f o_d packed (d[205] dropped)
     output wire          o_flt
 );
-    wire r_v, r_f, r_l, r_g, r_flt; wire [244:0] r_d; wire [245:0] b_d;
-    assign o_d = {b_d[245:206], b_d[204:0]};
+    wire r_v, r_f, r_l, r_g, r_flt; wire [244:0] r_d; wire [244:0] b_d;   // both packed (RTLC 10-24)
+    assign o_d = b_d;
     dsdv_gunit_l1f_bp #(.MUT(MUT)) u_b (.clk(clk), .rst_n(rst_n), .sa_r(sa_r), .sa_d(sa_d), .sb_r(sb_r), .sb_d(sb_d),
         .we(we), .c_go(c_go), .c_fw(c_fw), .c_l(c_l), .c_bn(c_bn), .c_lvn(c_lvn), .re(re), .ra(ra), .bw_e(bw_e),
         .bw_a(bw_a), .bw_d(bw_d), .g_go(g_go), .g_hit(g_hit), .g_a(g_a), .o_v(o_v), .o_f(o_f), .o_l(o_l), .o_g(o_g),
         .o_d(b_d), .o_flt(o_flt));
-    dsdv_gunit_l1f_ref #(.MUT(MUT)) u_r (.clk(clk), .rst_n(rst_n), .sa_r(sa_r), .sa_d(sa_d), .sb_r(sb_r), .sb_d(sb_d),
+    dsdv_gunit_l1f_flat #(.MUT(MUT)) u_r (.clk(clk), .rst_n(rst_n), .sa_r(sa_r), .sa_d(sa_d), .sb_r(sb_r), .sb_d(sb_d),
         .we(we), .c_go(c_go), .c_fw(c_fw), .c_l(c_l), .c_bn(c_bn), .c_lvn(c_lvn), .re(re), .ra(ra), .bw_e(bw_e),
         .bw_a(bw_a), .bw_d(bw_d), .g_go(g_go), .g_hit(g_hit), .g_a(g_a), .o_v(r_v), .o_f(r_f), .o_l(r_l), .o_g(r_g),
         .o_d(r_d), .o_flt(r_flt));
