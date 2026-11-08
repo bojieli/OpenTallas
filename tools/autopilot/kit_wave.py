@@ -32,6 +32,11 @@ Per tick (autopilot.py tick calls step() after admit_new; off unless the config 
      One grouped line per die per tick goes to lanes/COORD-REVIEW-QUEUE.md (for the die's owner lane); OWNERS.tsv
      rows of wave items carry owner KIT-WAVE-1, the live unit and the class + evidence (overlay_owners()).
 
+     Optional per-die route_hold_items maps item glob patterns to nonempty reasons, e.g.
+     {"cbf_q01*": "native reset redesign pending"}. It holds only a completed geometry PASS before enqueue,
+     retains the kit/review, and resumes enqueue on a later tick when removed. Default empty; admitted jobs
+     are never cancelled. Existing hold_items still gates new builds independently.
+
   7. past GEOM (AUTOBUILD-PIPE-1, OWNER 12.23): follow_queue() joins each enqueued kit with its autopilot job (kit
      runner CTS -> route, signoff_chain sign-off + post-route LEC, archive + PROVENANCE flow tag -> credit_designs
      count) and kit_wave_stages.tsv carries stage/status/class TIMING | ROUTING | PLAN | FLOW | INFRA to the count.
@@ -538,7 +543,7 @@ def select(rows, cfg, die, state, plan_types=None):
             why = f"kind {r['kind']} not in wave"
         elif d.get("_cores_only") and r["kind"] != "core":
             why = "die clock not PASS: cores only (core_kit, 12.22 item 4)"
-        elif rec and rec.get("status") in ("RUNNING", "LAUNCHING"):
+        elif rec and rec.get("status") in ("RUNNING", "LAUNCHING", "ROUTE-HELD"):
             why = "wave item in flight"
         elif prov_predecessor(d, die, state, r["item"], rec):
             why = ("PROV-RESIGN: the PROVISIONAL kit of this type re-signs (STA only, no re-route) on the signed child "
@@ -1892,7 +1897,7 @@ def counted_now(cfg, st, die, item, block=None):
 INPUT_SKIP = {"die", "item", "kind", "event", "gen_host", "work", "root", "hosts", "hub", "place_prefer", "place_mem_gb",
               "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "bind_mem_gb", "ot_run", "crit",
               "start_delay_s", "resume_from", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
-              "prov_views", "geom_advisory", "place_spill"}
+              "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items"}
 
 
 def input_hash(sp, prov_key=None):
@@ -3311,7 +3316,26 @@ def infra_relaunch_due(cfg, rec):
             and ((cfg.get("dies") or {}).get(rec["die"]) or {}).get("event") == rec.get("event"))
 
 
+def route_hold_reason(cfg, rec):
+    """An optional die-owned hold on new ROUTE submissions, never on an admitted unit."""
+    d = (cfg.get("dies") or {}).get(rec["die"]) or {}
+    return next((str(why) for pat, why in (d.get("route_hold_items") or {}).items()
+                 if why and fnmatch.fnmatchcase(rec["item"], pat)), None)
+
+
 def enqueue_pass(AP, cfg, st, rec, notices):
+    # An already submitted row is immutable here, even if a hold is added later.
+    if rec.get("status") == "ENQUEUED":
+        return
+    why = route_hold_reason(cfg, rec)
+    if why:
+        if rec.get("status") != "ROUTE-HELD" or rec.get("route_hold") != why:
+            notices.setdefault(rec["die"], []).append(f"{rec['item']} AUTO-GEOM PASS, ROUTE held: {why}")
+            AP.log(f"KIT-WAVE ROUTE-HOLD {rec['die']}/{rec['item']}: {why}")
+        rec.update(status="ROUTE-HELD", route_hold=why, reason=f"ROUTE hold: {why}", updated=time.time())
+        return
+    if rec.pop("route_hold", None):
+        rec.update(status="PASS", reason="", updated=time.time())
     d = cfg["dies"][rec["die"]]
     # The result belongs to its immutable launch spec, even if the config
     # changes while PLACE runs. Never relabel an old physical result.
@@ -3377,11 +3401,13 @@ def enqueue_pass(AP, cfg, st, rec, notices):
 def retry_enqueue(AP, cfg, st, notices):
     """send the kits enqueue_pass() kept PASS on a transport failure. Only records it marked: old FAIL FLOW rows whose
     reason reads NOT SUBMITTED stay with the operator (some hold kits older than a class fix). A die stop or a
-    hold_items match waits; a block that left the current plan is closed, not sent."""
+    hold_items match waits; a block that left the current plan is closed, not sent. ROUTE-HELD records resume
+    here without regenerating, replacing or repeating the completed geometry review."""
     import fnmatch
     n = 0
     for rec in (st.get("items") or {}).values():
-        if rec.get("status") != "PASS" or not rec.get("enqueue_pending") or not rec.get("kit"):
+        if not rec.get("kit") or not (rec.get("status") == "ROUTE-HELD" or
+                (rec.get("status") == "PASS" and rec.get("enqueue_pending"))):
             continue
         d = (cfg.get("dies") or {}).get(rec.get("die"))
         if not isinstance(d, dict) or stop_reason(cfg, rec["die"], cfg.get("_ap_dir") or AP.AP_DIR):
@@ -3835,7 +3861,7 @@ def _config_paths(v, key=""):
 
 
 def source_paths(cfg, st, ap_dir):
-    """sorted absolute src / plan / queue_src paths the wave reads: every die config + every RUN item's pinned spec,
+    """sorted absolute paths the wave reads: die configs + active/held kits and their pinned source specs,
     plus (FLOW-19) every other absolute path of a die config (kit_rtl script, asbuilt, prep_cmd, core_kit args)"""
     out = set()
     for d in (cfg.get("dies") or {}).values():
@@ -3845,8 +3871,16 @@ def source_paths(cfg, st, ap_dir):
         if isinstance(d, dict):
             out |= _config_paths(d)
     for rec in (st.get("items") or {}).values():
-        if rec.get("status") != "RUN" or not rec.get("dir"):
+        active = (rec.get("status") in ("RUN", "RUNNING", "ROUTE-HELD") or
+                  (rec.get("status") == "PASS" and rec.get("enqueue_pending")) or
+                  (rec.get("status") == "ENQUEUED" and rec.get("q_status") not in ("SIGNED", "FAIL")))
+        if not active or not rec.get("dir"):
             continue
+        # A held/released kit and its pinned source survive config/source advancement.
+        if isinstance(rec.get("kit"), str):
+            kp = rec["kit"].split(":", 1)[-1]
+            if kp.startswith("/"):
+                out.add(kp)
         try:
             sp = json.loads((Path(rec["dir"]) / "spec.json").read_text())
         except (OSError, ValueError):
