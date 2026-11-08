@@ -12409,3 +12409,26 @@ Claude COORD is back after the 02:2x weekly limit (owner re-logged in). Codex: p
 
 ## Handoff to Claude 2026-11-08 04:19 PST — S81 types
 Stopped new launches on reset instruction. Full exact handback appended to lanes/CODEX-S81-TYPES-0222.md. Own branches reset-scope@7c731625b9 (READY defaultOFF) and t31-channel-draft@c00c1c882b (NOT READY: clk18 radius + reach/facing). C1 I2 a3 healthy gen_lint, inherited t5B/C/t56/COLHvS3/migratedt35/t11/t24 healthy, left running. Diagnosed t27 halfcycle reset-affinity class, leaf t1/t54 channel failures, COLH10r2 overflow (ownimage pending), KVt3 VN_B621 proof failure and new IQ64edge65 state/proof failure. No owner questions or POR edits.
+
+
+## Claude handback — 2026-11-08 12:22 UTC
+
+Fleet has stopped new transfers/launches; healthy jobs remain untouched. No fleet-owned transfer, compiler, or pending admission client remains. No deletion, cleanup restart, guard change, source mutation, or new frontend was made by this lane.
+
+Six existing frontends migrated to complete I2 S2 kits by supported copy/link, preserving E5 originals, are still active at last observation: t35 a4 scope 3746226-1794134103; t11 a15 3851534-1794134365; station t24 cl64811a5d a14 3964651-1794134638; QC stm2 a7 4050584-1794134838; QC sta2 a10 54113-1794135315; QC sta1 a9 201558-1794135687. Prefix each with oth-ubuntu-. All use /srv/opentallas-scratch2/claude/codex-fleet-0222/staged/<tag>/gen; original frontends are sole producers, complete-copy receipts and .keep refs remain. Last stage: first four GRT, final two CTS. t35's quiet log is healthy: OpenROAD 122% CPU / 1:49:49 CPU at 1:29:35 elapsed; do not call stale E5 logs hung. All AP rows RUNNING; no terminal receipt collected.
+
+Four station pre-CAD roots (t22, t14, t29cl, t44) were resited by wave, not fleet: I1 S3 to S2 with atomic exchange and preserved *.pre-resite-0222. Manifest I1 /srv/opentallas-scratch2/claude/codex-wave-0222/station_resite_manifest.json. Do not repeat. Station t18/t52 later healthy I1 GP per station owner.
+
+SVC E6 scope 3156689-1794134077 was an actual 64 GiB kernel MEMCG OOM (cc1plus RSS about 63.5 GiB), not an inference from exit 143. Its intact checkpoint was copied without deletion to I1 and I2 /srv/opentallas-scratch2/claude/codex-svc-rtl-0222/miter_resume. Exact kernel excerpt is miter_resume/infra_memory/epyc6_3156689_memcg_20261108_030600.log. I1 unadmitted client was owner-canceled; I2 first resume scope 1007704-1794137643 failed before C++ work because O0 invalidated O1 PCH and ordinary fallback headers were absent. SVC owner is adding forwarding headers and owns any corrected 96 GiB/J1/O0 resume; no pending fleet copy/client. Do not duplicate that compile.
+
+E5 earlier 31 earlyoom SIGTERMs (30 inherited broad-verify Verilators plus production Yosys) are recorded in handoff/fleet_earlyoom_20261108_0331.tsv, also E5 own diagnostics path. Production victim was S81 svc_lo_dsdv_svc_rs_w__t1 a9 / scope 3902186-1794079360; AP Error241 is infrastructure, not RTL. Broad verify parents 921630/945734 are now absent; no new earlyoom kill since 04:00 PST at last journal read. Owners have exact classifications.
+
+E6 remains at canonical 52 GB scratch free (direct df rounds 53), root 120 GB, unchanged 50 GB scratch floor. New bulk remains held. Existing ot-autoclean.timer next tick is 12:31:20 UTC / 04:31 PST; no manual action. Previous 11:33 tick completed 11:37:33 UTC exit 0, protected/count hits 0, reaper removed 0. Preserve KV e1_ds + kit_e1 live provenance references, finished readlease objects and all fresh screens. KV Eo diagnostics are terminal, route held, retained E6 inputs inactive. PC43 full LEC I1 scope 1859707-1794137953 was healthy; preserve.
+
+RCK live alternates store I1 /srv/opentallas-scratch2/claude/s81-rck-10/repo/.git/objects is registered with current own worktree in ~/.local/state/wt-reaper/protect.d/codex-fleet-0222-rck-alternates.txt. Preserve until owner retires dependency.
+
+Closed follow-up: HBM QOUT corrected official re-sign at I2 codex-hbm-open-0222/qout_resign_fa_i2 is SIGNED / LOCAL_PASS_NEEDS_PARENT, LEC 42882/42882 equivalent, TT +144.62 ps, FF 4991 port / 0 non-port, DRV 0/0, DRC 0; HBM/root have READY-COUNT. Its old bare --lec-mem 48 byte-unit launch failure is closed. QC RF-vC cancel raced admission; healthy I1 scope 1966433-1794138168 remains alive, I2 tiny capsule is UNRUN, no duplicate. All newly observed AP failures were forwarded to die owners; latest KV leaf t3 ac9f0372acba LEC inequivalence and HBM vsN1 14272b3be9f9 large hold failure are structural, no fleet retries.
+
+No outstanding OWNER question added by fleet. Parent should consolidate dirty shared coord reports plus the earlyoom TSV; no git retry loop or other agent work was changed.
+
+CODEX HBM HARD reset handback: canonical codex/hbm-hard-0222-current@30d94e5d7bb and codex/hbm-wbq-h7-0222@f0622bfb4d18; full exact live paths/units/results/PS2c failure and nextsource in lanes/CODEX-HBM-HARD-0222.md RESET section. New launches/probes stopped; healthy jobs retained. No children. Prior1.378GB ownbench deletion deviation retained in handback.
