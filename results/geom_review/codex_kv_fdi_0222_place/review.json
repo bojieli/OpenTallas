@@ -1,0 +1,26 @@
+{
+ "verdict": "PASS-COND CTS/GRT screen only; stop before detailed route",
+ "actual_images_viewed": [
+  "layout.png",
+  "density.png"
+ ],
+ "source_kit": "intel1:/srv/opentallas-scratch2/claude/codex-kv-fdi-0222/kits/ot_kv_fdi_join_rf__198.72x198.72",
+ "PLACE_instances": 103908,
+ "logic_cells_excluding_taps": 100029,
+ "taps": 3879,
+ "FF": 18803,
+ "ORFS_area_um2": 12586,
+ "ORFS_utilization": 0.35,
+ "native_pointer_max_collapsed_fanout": 6342,
+ "native_pointer_spread_um": 291,
+ "reset_spread_um": 372.3,
+ "span_limit_um": 405,
+ "pin_track_use": 0.176,
+ "wrong_face_pins": 0,
+ "clock_entry_to_sink_centroid_um": 6.848,
+ "density_note": "cell-centre residual-edge-bin artifact diagnosed by exact rectangle intersections; full-die10um maximum0.422, no bin>0.7; tiny0.08um core-edge sliver0.865",
+ "TT_setup_preCTS_ws_ps": -95.6664,
+ "hold_preCTS_ws_ps": -189.869,
+ "not_signed": true,
+ "next": "source-built next-stage capsule with authoritative nonport hold helper; actual GRT review before route"
+}
