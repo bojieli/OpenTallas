@@ -50,3 +50,14 @@ def test_conflicting_writer_copy_count_is_rejected():
         landing_ring_wreg={'buses':['y'],'dsrep':2})
     with pytest.raises(LandingError,match='conflicting'):
         Landings(p,t).type_rtl('B',B_BODY)
+
+
+def test_dsrep_plan_schema_accepts_exact_option_and_rejects_bad_count():
+    import jsonschema
+    import schema
+    spec = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_ring_dsrep"]
+    jsonschema.validate({"buses": ["coll_ia"], "dsrep": 8}, spec)
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate({"buses": ["coll_ia"], "dsrep": 3}, spec)
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate({"buses": ["coll_ia"], "dsrep": 8, "freg": True}, spec)
