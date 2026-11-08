@@ -168,11 +168,22 @@ JD_NOPV = -6                 # the half without the quarter's P.V: jd done = pv_
 SVC_H = int(os.environ.get('OT_SVC_H', '16'))
 GO_MORE = 48                 # GO spec bit: another pass follows on the same landing (S81-SVCRS-3 interface v1 (3))
 H8_P_ROWS = 4                # H8 fold root PV frame: 4 rows a 512-b word (R = TD / H), local head h at bits 16 (8 r + h)
-FEED_ROWS = 4                # p feed rows a step (the engine's 4-row beat, both widths)
+H8_P_WORD_INTERVAL = 2      # H8 fold emits one 512-bit word every two P-beat cycles
+H8_P_WORDS_PER_CYCLE = 2    # engine P buffer consumes two words per P-feed cycle
 PASS_GAP = 16                # previous pass's last P.V word -> next pass's ATTN_Q / GO (margin)
 # H8 engine / P-path latencies: PLACEHOLDERS = the H16 values until the S81-SVCRS-3 H8 lock-step bench measures
 # PIO0 / P_ARR / P_PO_M / KPV / PV_LAT / GW_ARR / SOT_W_LAT at H8 (interface v1: "until then use the H16 values").
 H8_CALIBRATED = False
+
+
+def h8_p_feed_lag(npw):
+    # Body word j arrives at 2*j from the first word and is read at floor(j/2)
+    # from feed start. The final word maximizes arrival minus consumption.
+    # Transport/first-word offsets remain P_ARR + P_PO_M, separately calibrated.
+    if npw <= 0:
+        raise ValueError('P frame needs at least one body word')
+    last = npw - 1
+    return H8_P_WORD_INTERVAL * last - last // H8_P_WORDS_PER_CYCLE
 
 
 def pass_heads(j, hs=8):
@@ -655,14 +666,15 @@ class Job:
 
     def pass_go(self, k, go):
         """GO word + derived cycles of pass k (H8).  P: PIO as H16 (PLACEHOLDER until the H8 bench); the fold root PV
-        frame is npw = ceil(T / 4) words (4 rows a word) reaching the owners one a cycle from PIO + P_ARR, the p feed takes
-        FEED_ROWS = 4 rows a step, so the feed start waits for the frame only by the rows it outruns (0 at H8: 4 rows a
-        word = 4 rows a step); P.V: 8 ceil(T / 32) feed steps + KPV as H16; MORE = 1 but on the last pass."""
+        frame is npw = ceil(T / 4) words. The actual H8 fold emits one word every two cycles while the engine reads
+        two words each cycle, so start after the largest arrival-minus-consumption offset (47 edges for T128),
+        not the old zero-lag placeholder. P_ARR and engine KPV still need end-to-end H8 calibration.
+        P.V: 8 ceil(T / 32) feed steps + KPV as H16; MORE = 1 but on the last pass."""
         T = self.T
         npw = -(-T // H8_P_ROWS)
         pio = pio_for(self.timing["pio"], T) + self.pio_extra
         pvs = pio
-        lag = max(0, npw - -(-T // FEED_ROWS))
+        lag = h8_p_feed_lag(npw)
         po = pio + P_ARR + lag + P_PO_M
         if self.mutant == 'pio_early':
             pio -= PIO_EARLY
@@ -710,16 +722,19 @@ class Job:
             if name == 'IK_ROW':
                 t = max(t, self.t_ik)
             at[name] = t
-            fw[name] = [(t + i, x) for i, x in enumerate(ws)]
-            for i, x in enumerate(ws):
-                words.append((t + i, x))
+            # The folded SM accepts one SO operand row every two cycles.
+            # Header stays at t; payload row r is at t+1+2*r (valid bubbles).
+            stride = 2 if name.startswith('SMJ_OP') else 1
+            edges = [t] + [t + 1 + stride * (i - 1) for i in range(1, len(ws))]
+            fw[name] = list(zip(edges, ws))
+            words.extend(fw[name])
             if name == 'WIN_LOAD':
                 go_min = t + W_SLACK
             if name == 'SEL_IDS':
                 go_min = max(go_min, t + SEL_SCAN)
             if name in ('SEL_IDS', 'ROWS'):
                 go_min = max(go_min, t + len(ws) + ROWS_SLACK)
-            t += len(ws)
+            t += 1 + stride * (len(ws) - 1)
         j_pin = t_q0 - Q_ARM
         s_j = j_pin - max(j_age_w, j_age_e)
         p0, pl = self.passes[0], self.passes[-1]
@@ -955,7 +970,8 @@ def sot_booking_for(job, s):
     wr = {}
     for g in range(H):
         r0 = at[f'SMJ_OP{g}'] + 1
-        wr[g] = (r0 - pw1 + SOT_W_LAT - SOT_SLACK, r0 + 31 - pw1 + SOT_W_LAT + SOT_SLACK)
+        stride = 2 if getattr(job, 'hs', 16) == 8 else 1
+        wr[g] = (r0 - pw1 + SOT_W_LAT - SOT_SLACK, r0 + 31 * stride - pw1 + SOT_W_LAT + SOT_SLACK)
     heads, arr, done = {}, {}, {}
     for half in ('W', 'E'):
         hs = sorted(((t, d) for sd, (t, d, hf) in depth.items() if hf == half), key=lambda x: (wr[x[0]][1], x[0]))

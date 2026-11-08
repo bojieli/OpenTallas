@@ -187,7 +187,7 @@ def test_h8_pass0_matches_h16_up_to_go():
     # pass 0 sends one ATTN_Q frame (129 words) less before its SMJ / GO (GO bound by the q stream, not W_SLACK)
     assert sb['at']['SMJ'] == sa['at']['SMJ'] - 129 and sb['go'] == sa['go'] - 129
     assert sb['pvo'] - sb['po'] == sa['pvo'] - sa['po']
-    assert sb['passes'][0]['po'] == sa['po'] - -(-128 // 4)       # H8 feed: no wait for the frame (4 rows a word)
+    assert sb['passes'][0]['po'] == sa['po'] - -(-128 // 4) + 47  # H8 producer accumulation at actual 1-word/2-cycle rate
 
 
 def test_h8_sot_is_todays_booking_of_all_heads():
@@ -266,3 +266,33 @@ def test_h8_requires_on_die_p(monkeypatch):
         L.Job.__init__(j, '/nonexistent', heads=8)
     with pytest.raises(ValueError):
         L.Job.__init__(j, '/nonexistent', heads=4)
+
+
+@pytest.mark.parametrize('T', [1, 4, 5, 128, 130, 640])
+def test_h8_p_feed_never_reads_a_word_before_its_arrival(T):
+    npw = -(-T // 4)
+    lag = L.h8_p_feed_lag(npw)
+    assert all(lag + j // 2 >= 2 * j for j in range(npw))
+    if npw > 1:
+        assert any(lag - 1 + j // 2 < 2 * j for j in range(npw))
+    if T == 128:
+        assert lag == 47
+    j = synth(8, T=max(T, 128))
+    _, rec = j.pass_go(0, 0)
+    assert rec['po'] == rec['pio'] + L.P_ARR + L.h8_p_feed_lag(rec['npw']) + L.P_PO_M
+
+
+def test_h8_folded_sm_operand_rows_and_booking_follow_two_cycle_cadence():
+    b = synth(8)
+    s = run(b)
+    for g in range(16):
+        at = s['at'][f'SMJ_OP{g}']
+        fw = s['frame_words'][f'SMJ_OP{g}']
+        assert [c for c, _ in fw] == [at] + [at + 1 + 2*r for r in range(32)]
+        # The booking covers the last physical input row; a one-cycle-per-row
+        # window would close 31 cycles before the final row reached the target.
+        rec = s['sot']
+        assert rec['heads'][g]['last'] + rec['install_edge'] == fw[-1][0] + L.SOT_W_LAT + L.SOT_SLACK + L.SOT_INST
+    cyc = {c for c,_ in s['words']}
+    first = s['at']['SMJ_OP0']
+    assert first + 2 not in cyc
