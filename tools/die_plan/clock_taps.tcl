@@ -37,6 +37,12 @@ if {[info exists ::env(OT_CORE_TAPS)] && [file exists $::env(OT_CORE_TAPS)]} {
     set strict [expr {$exact eq "exact"}]
     set bt [$ct_blk findBTerm $port]
     set inst [$ct_blk findInst $iname]
+    # DIE-HEAD-87 11-08: OpenDB keeps generate-loop names with escaped brackets (u_core.u.g_pp\[0\].u_pair), so a
+    # plain core_taps.txt name missed and every LEP pair core tap was left empty (CTS then balanced the 56k-sink clk
+    # tree to the pair macros: 1240 ps insertion vs target 450, FF hold -1051).  Retry with the escaped form.
+    if {($inst eq "NULL" || $inst eq "") && [string first "\\" $iname] < 0 && [string first "\[" $iname] >= 0} {
+      set inst [$ct_blk findInst [string map {"\[" "\\\[" "\]" "\\\]"} $iname]]
+    }
     if {$bt eq "NULL" || $bt eq "" || $inst eq "NULL" || $inst eq ""} {
       if {$strict} { error "OT_CLOCK_TAPS exact endpoint missing $port $iname/$pin" }
       puts "OT_CLOCK_TAPS WARN core tap $port: port or core instance $iname missing"
