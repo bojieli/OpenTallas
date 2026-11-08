@@ -215,6 +215,11 @@ module ot_s81_rck_rxb #(
 endmodule
 
 // TX hard core: = ot_s81_serdes_col_tx_pin #(.N(3)) (3 coherent input PIN stages + the FEC encoder), unparameterised.
+`ifdef OT_S81_RCK_TX_PPCYC
+`define OT_S81_RCK_TX_PPCYC_V 1
+`else
+`define OT_S81_RCK_TX_PPCYC_V 0
+`endif
 (* keep_hierarchy *)
 module ot_s81_rck_tx (
     input wire clk,
@@ -234,9 +239,9 @@ module ot_s81_rck_tx (
     end
 `ifdef RCKRF_MUT_TXSKEW
     // bench mutant: data one PIN stage short while valid / reset keep 3
-    ot_s81_kp4_enc #(.PIN_FAULT(1), .H0_SEQ_ONLY(1)) u_enc (.clk(clk), .rst_n(pin_rst_n[2]), .tx_v(pin_v[2]), .tx_d(pin_q[1]), .p_v(p_v), .p_d(p_d), .fault(fault));
+    ot_s81_kp4_enc #(.PIN_FAULT(1), .H0_SEQ_ONLY(1), .PPCYC(`OT_S81_RCK_TX_PPCYC_V)) u_enc (.clk(clk), .rst_n(pin_rst_n[2]), .tx_v(pin_v[2]), .tx_d(pin_q[1]), .p_v(p_v), .p_d(p_d), .fault(fault));
 `else
-    ot_s81_kp4_enc #(.PIN_FAULT(1), .H0_SEQ_ONLY(1)) u_enc (.clk(clk), .rst_n(pin_rst_n[2]), .tx_v(pin_v[2]), .tx_d(pin_q[2]), .p_v(p_v), .p_d(p_d), .fault(fault));
+    ot_s81_kp4_enc #(.PIN_FAULT(1), .H0_SEQ_ONLY(1), .PPCYC(`OT_S81_RCK_TX_PPCYC_V)) u_enc (.clk(clk), .rst_n(pin_rst_n[2]), .tx_v(pin_v[2]), .tx_d(pin_q[2]), .p_v(p_v), .p_d(p_d), .fault(fault));
 `endif
 endmodule
 `endif

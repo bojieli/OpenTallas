@@ -1,0 +1,4 @@
+tx_vG seed=1 rc=0 TX_RESULT checks=15584 errors=0 live=15538 am_words=1557 fault_cycles=3984 TX lockstep PASS 
+tx_vG seed=2 rc=0 TX_RESULT checks=15584 errors=0 live=15538 am_words=1557 fault_cycles=4066 TX lockstep PASS 
+tx_vG seed=3 rc=0 TX_RESULT checks=15584 errors=0 live=15538 am_words=1559 fault_cycles=3830 TX lockstep PASS 
+tx_mut_ppcyc seed=1 rc=1 TX_RESULT checks=15584 errors=1548 live=15538 am_words=1557 fault_cycles=3984 [13136000] %Fatal: tb_tx.sv:59: Assertion failed in tb: TX lockstep FAILED 
