@@ -9480,3 +9480,21 @@ Fullread/index620lanes: /tmp/codex-takeover-1209/lane_coverage_index.json. Histo
 |Token/programme/model|Current427rings/n4witnessand+15calendar;phaseorigin/faultdiagnosis|watch_token|
 |Fleet/ops/pruneaudit|GuardedI2/E6room;actualmaintenancepauseaudit;NOdeletion/memoryrulechanges|ram_release|
 |ROOT-MERGE/release|CollectREADYonly,nomainmerge/tag/PORinwatcher;cached211update/noforcedscan|root|
+
+## CODEX takeover 2026-11-07 15:51 PST — all-lane coverage, 16:04 checkpoint
+
+All630 lane files indexed /tmp/codex-takeover-1551/lane_coverage_index.json. Current detailed checkpoint handoff/codex_takeover_20261107_1551_checkpoint.md; each lead owns historical lanes in its family as well as current tasks. No main merges/tags/POR edits/deletions.
+
+| Scope / active owner | Current work, running locations | Failure diagnosis / next action |
+|---|---|---|
+| S81 / watch_s81 | ENGRR I1 die-s81-77/vJ_eco; BKSEL I1; RCK E4; T51/stations | Restore exact missing CTS/GRT ECO inputs, no iteration spent; fix measured weak long buffer legs; structural T51 routing and RCK cohorts |
+| QC / watch_qc | NK real-M7 GRT and keep-go proof; vZ2 E6 qct5/sc3_vZ2 | NL accepted core requires actual clock-pin/IDLE_UCK parent adoption; collector MEMCG OOM needs supported continuation; SU numerical/pin model owned |
+| KV / watch_kv | E6 dkv90 promptvM DRT/Wi vRLd PLACE; E4 auto-resign e0 currentcv queued once | Required ingest cj signed; e0 replaces counted view; qualify real current tools then other M5 views; HGI legal outside clock access unresolved |
+| HEAD / watch_head | SC vF PLACE/LEC, meshpop/partial-capture proofs and new CTL source | CTL_n/TS3 large timing+DRV and TX GPL0304 retained; structural new forms only; 450/342 frame accepted |
+| HBM / watch_hbm | I1 die-hbm-88 SVGR/q3body; E2 q_spb2 DRT; RestJ re-sign | All41 open designs/all81types covered; RestJ ECO passed; h9b default-off source; H1 NaN/H5 resetpull/F512 tap/N4 exception holds |
+| Shared flow / wave_flow | Owned exact66 frozen AP runtime; live selector paused, admitted jobs continue | OT_FLOW_TAG-only retry bug guard dryrun440fail sets unchanged; atomic future wrapper then disabled tick then restore selector; inverted-flop/typed-reset LEC classes owned |
+| Fleet / ram_release | Canary timer retention repair live; exact all6 admission picture collected | E5 scratch43/E6 root50 prevent new unsuitable jobs; no guard rearm/deletes; private compact gunit actual master/PG/image review |
+| Programmes / watch_token | SC exact native-calendar result READY b71a1809be; LEP current path/event model | Writer+1 is variable reader clock projection; root5861 unchanged; bounded real64-row B12 producer/cache/issuer calendar next |
+| Native SVC / svc_hardening | I1 SML route2101537; SMD child result; I1 H4 units3986833/3986861 | SMD sticky-fault stimulus before qualification, no duplicate proof; no new hub work; conservative attention faces sized before P&R |
+
+Cached214 remains evidence, no forced scan. Owner questions plain CODEX-LOG OWNER?. Continue until explicit Claude-reset instruction; no assumed timer stop.
