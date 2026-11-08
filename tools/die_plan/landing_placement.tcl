@@ -360,7 +360,10 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
    # datapath mux/control cells and leaves room for clock/reset repair.
    # DIE-HEAD-12 opt-in band spread: tag ring:<bus>@<spread> widens the reserved footprint so the ring fills its band
    if {$sp eq {}} { set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp }
-   set rw [expr {int(ceil(double($w)/0.4*$sp/$ff_sw))*$ff_sw}]
+   # The resize-family fit must remain occupied for subsequent cells too.
+   # LEP TXI INVx1 (162 DBU) reserved 432 DBU, then grew in place to
+   # INVx8 (540 DBU), overlapping the next FIRM cell by 108 DBU.
+   set rw [expr {int(ceil(max(double($w)/0.4*$sp,$fw)/$ff_sw))*$ff_sw}]
    cland_occupy $x $y $rw $h
    if {$cur} { set cland_cursor [list $y [expr {$x+$rw}]] }
    dict set cland_done $name 1;incr cland_n

@@ -1019,3 +1019,80 @@ def test_kit_closure_wide_index_finds_helpers_outside_manifest(tmp_path):
     widened = {}
     files, missing, _ = bind.kit_closure(["leaf"], idx, [str(other / "d2.sv")], wide=wide, widened=widened)
     assert not missing and Path(widened["dup_h"]).name == "d2.sv"
+
+
+def test_kit_closure_ambiguous_pick_honours_named_parameters(tmp_path):
+    """DIE-HBM-91 KITPARAM (HBM q_su31 WCOPY): of two same-named definitions, the one declaring every parameter the
+    instantiator sets by name is picked; without overrides the first-root order is unchanged."""
+    old = tmp_path / "bundle" / "rb.sv"; new = tmp_path / "rtl" / "rb.sv"; top = tmp_path / "rtl" / "pb.sv"
+    for f in (old, new):
+        f.parent.mkdir(parents=True, exist_ok=True)
+    old.write_text("module rbank #(parameter integer READERS=6,RB=9)(input clk); endmodule\n")
+    new.write_text("module rbank #(parameter integer READERS=6,RB=9,WCOPY=0)(input clk); endmodule\n")
+    top.write_text("module pb(input clk);\n rbank #(.RB(9),.WCOPY(0)) u_d(.clk(clk));\nendmodule\n")
+    plain = tmp_path / "rtl" / "pp.sv"
+    plain.write_text("module pp(input clk);\n rbank u_d(.clk(clk));\nendmodule\n")
+    idx = {"rbank": [str(old), str(new)], "pb": [str(top)], "pp": [str(plain)]}
+    picks = {}
+    bind.kit_closure(["pb"], idx, [], picks)
+    assert picks["rbank"] == str(new)
+    picks = {}
+    bind.kit_closure(["pp"], idx, [], picks)
+    assert picks["rbank"] == str(old)
+
+
+def test_kit_closure_incompatible_preferred_definition_loses(tmp_path):
+    """DIE-HBM-91 KITPARAM (HBM q_b110 RING / q_su31 WCOPY): a preferred definition that lacks a parameter the
+    instantiator sets by name cannot elaborate; the compatible alternative is picked.  A compatible preferred one wins."""
+    old = tmp_path / "bundle" / "rb.sv"; new = tmp_path / "rtl" / "rb_c12.sv"; top = tmp_path / "rtl" / "pb.sv"
+    for f in (old, new):
+        f.parent.mkdir(parents=True, exist_ok=True)
+    old.write_text("module rbank #(parameter integer W=6)(input clk); endmodule\n")
+    new.write_text("module rbank #(\n parameter integer W=6,\n parameter integer RING = 0\n)(input clk); endmodule\n")
+    top.write_text("module pb(input clk);\n rbank #(.W(9), .RING(1)) u_d(.clk(clk));\nendmodule\n")
+    idx = {"rbank": [str(new)], "pb": [str(top)]}
+    picks = {}
+    bind.kit_closure(["pb"], idx, [str(old)], picks)
+    assert picks["rbank"] == str(new)
+    plain = tmp_path / "rtl" / "pp.sv"
+    plain.write_text("module pp(input clk);\n rbank #(.W(9)) u_d(.clk(clk));\nendmodule\n")
+    idx["pp"] = [str(plain)]
+    picks = {}
+    bind.kit_closure(["pp"], idx, [str(old)], picks)
+    assert picks["rbank"] == str(old)
+
+
+def test_kit_closure_kitparam_same_file_identical_sibling(tmp_path):
+    """DIE-HBM-92-GEN 11-08 (HBM q_hub_ne "different source files named ot_hgi_coll_reduce_static.sv"): the KITPARAM
+    rule takes red from rtl/ (declares LOCAL); its sibling lane, reached first through another instantiator, was picked
+    from the preferred bundle red.sv.  lane is byte-identical in both files -> taken from the rtl/ file, one red.sv in the
+    kit.  A differing lane keeps both files (kit_dedupe fails closed as before); a plain parent is unchanged."""
+    old = tmp_path / "bundle" / "red.sv"; new = tmp_path / "rtl" / "red.sv"; top = tmp_path / "rtl" / "top.sv"
+    lr = tmp_path / "rtl" / "lr.sv"
+    for f in (old, new):
+        f.parent.mkdir(parents=True, exist_ok=True)
+    lane = "module lane(input clk); // lane\nendmodule\n"
+    old.write_text("module red #(parameter integer MUT=0)(input clk);\n lane u_l(.clk(clk));\nendmodule\n" + lane)
+    new.write_text("module red #(parameter integer MUT=0, LOCAL=0)(input clk);\n lane u_l(.clk(clk));\nendmodule\n"
+                   + lane.replace("// lane", ""))
+    lr.write_text("module zlr(input clk);\n lane u_s(.clk(clk));\nendmodule\n")
+    top.write_text("module top(input clk);\n zlr u_z(.clk(clk));\n red #(.LOCAL(1)) u_r(.clk(clk));\nendmodule\n")
+    idx = {"red": [str(new)], "lane": [str(new)], "zlr": [str(lr)], "top": [str(top)]}
+    picks = {}
+    files, missing, _ = bind.kit_closure(["top"], idx, [str(old)], picks)
+    assert not missing
+    assert picks["red"] == str(new) and picks["lane"] == str(new)
+    assert [f for f in files if Path(f).name == "red.sv"] == [str(new)]
+    bind.kit_dedupe("top", [Path(f) for f in files])          # no "different source files named red.sv"
+    new.write_text(new.read_text().replace("module lane(input clk);", "module lane(input clk, input x);"))
+    picks = {}
+    files, _, _ = bind.kit_closure(["top"], idx, [str(old)], picks)
+    assert picks["lane"] == str(old) and len([f for f in files if Path(f).name == "red.sv"]) == 2
+    with pytest.raises(bind.BindError, match="different source files named red.sv"):
+        bind.kit_dedupe("top", [Path(f) for f in files])
+    plain = tmp_path / "rtl" / "pp.sv"
+    plain.write_text("module pp(input clk);\n red #(.MUT(1)) u_r(.clk(clk));\nendmodule\n")
+    idx["pp"] = [str(plain)]
+    picks = {}
+    bind.kit_closure(["pp"], idx, [str(old)], picks)
+    assert picks["red"] == str(old) and picks["lane"] == str(old)

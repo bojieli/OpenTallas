@@ -52,7 +52,7 @@ def source(bound,tn,bind_out,repo):
  if isinstance(tree,dict):
   tree=copy.deepcopy(tree)
   mode=doc.get('reset',{}).get('relay_lockup',{})
-  if mode.get('form')=='negedge' and tn in mode.get('types',[]):tree['relay_lockup']='negedge'
+  if mode.get('form') in ('negedge','latch') and tn in mode.get('types',[]):tree['relay_lockup']=mode['form']
  if not isinstance(tree,dict):
   raise ValueError('captured bind plan has no serialized reset tree; an emitted native receipt is required (no re-solve)')
  return dict(schema=SCHEMA,plan_type=tn,bound_module=bound.stem,tree=copy.deepcopy(tree),tree_sha256=digest(tree),

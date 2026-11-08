@@ -389,6 +389,37 @@ class TestSkips(Base):
         self.assertSkip(b3, "queuename")                      # class b unchanged
         self.assertTrue(os.path.exists(os.path.join(b3, "5_route.odb")))
 
+    def test_c_resume_pending_fail_attempt(self):
+        # COORD 11-08 04:4x: the kit wave resumes FAIL rows from their last valid stage; class c keeps their files
+        def att(item, n, young=True):
+            d = os.path.join(self.root, f"kw-r/kit-wave/hbm/ev1/items/{item}/attempt_{n}")
+            k, b = self.kit_c(os.path.relpath(os.path.join(d, f"gen/{item}"), self.root))
+            age_tree(d, mtime=OLD if young else time.time() - 30 * 3600)
+            if young:
+                touch(os.path.join(d, "gen/fail.log"), mtime=time.time() - 8 * 3600)   # attempt < 24 h, files > 6 h
+            return d, b
+        fail, bf = att("i_fail", 2)
+        sup, bs = att("i_sup", 1)
+        unk, bu = att("i_unk", 1)
+        canc, bc = att("i_canc", 1)
+        old, bo = att("i_old", 1, young=False)
+        _, bn = self.kit_c("kw-r/kit-wave/hbm/ev1/items/i_noatt/gen/i_noatt")     # item dir without attempt_N
+        touch(os.path.join(self.root, "kw-r/kit-wave/hbm/ev1/items/i_noatt/gen/x.log"), mtime=time.time() - 8 * 3600)
+        h = "hx:"
+        self.kw = {"attempts": {h + fail: {"active": False, "signed": False, "terminal": ["ENQUEUED/FAIL", "stage:FAIL"]},
+                                h + sup: {"active": False, "signed": False, "terminal": ["FAIL/None"]},
+                                h + canc: {"active": False, "signed": False, "terminal": ["CANCELLED/None"]},
+                                h + old: {"active": False, "signed": False, "terminal": ["FAIL/None"]}},
+                   "latest": {h + os.path.dirname(sup): 3, h + os.path.dirname(fail): 2}, "keep": []}
+        self.run_job("--queuename-skip-trim-c", "--classes", "c")   # class a would take whole finished attempts
+        for b in (bf, bu, bn):
+            self.assertEqual(self.row(b)[3], "SKIP", self.row(b))
+            self.assertTrue(self.row(b)[4].startswith("resume-pending"), self.row(b))
+            self.assertTrue(os.path.exists(os.path.join(b, "3_3_place_gp.odb")))
+        for b in (bs, bc, bo):
+            self.assertEqual(self.row(b)[3], "DELETED", self.row(b))
+            self.assertEqual(sorted(os.listdir(b)), ["2_floorplan.odb", "3_place.odb", "4_cts.odb"])
+
     def test_parse_queue_window_and_continuation(self):
         now = time.time()
         recent = time.strftime("%Y-%m-%d %H:%M", time.localtime(now - 3600))

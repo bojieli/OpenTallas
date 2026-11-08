@@ -23,6 +23,24 @@ case " $* " in *" print-"*) exec "$@";; esac
 # 'estimate_parasitics -global_routing' (long-branch pass on GRT RC).  Opt-outs live in the Tcl (OT_CLK_LEAF_REPEAT=0,
 # OT_CLK_LEAF_GRT=0 from config.mk); without the kit file nothing is patched.
 SD=$(dirname "$S")
+# Optional pre-CTS summaries only.  Independent cell/geometry/hold/signoff gates and stages 4+ remain intact.
+# Enabled in a new kit's config, never by changing a running job or the ORFS image on the host.
+if [ -f "$SD/report_metrics.tcl" ] && grep -Eq '^export OT_SKIP_PRECTS_METRICS[[:space:]]*=[[:space:]]*1[[:space:]]*$' "$W/config.mk" 2>/dev/null; then
+  python3 - "$SD/report_metrics.tcl" <<'OT_PRECTS_PY'
+from pathlib import Path
+import sys
+p = Path(sys.argv[1])
+s = p.read_text()
+marker = '# OT_PRECTS_METRICS: summaries only, explicit gates unchanged'
+if marker not in s:
+    anchor = 'proc report_metrics { stage when { include_erc true } { include_clock_skew true } } {\n'
+    if s.count(anchor) != 1:
+        raise SystemExit('OT_PRECTS_METRICS: unsupported report_metrics signature; no patch applied')
+    guard = '  # OT_PRECTS_METRICS: summaries only, explicit gates unchanged\n  if { [info exists ::env(OT_SKIP_PRECTS_METRICS)] && $::env(OT_SKIP_PRECTS_METRICS) eq "1" && $stage in {2 3} } {\n    puts "OT_PRECTS_METRICS_SKIPPED stage=$stage when=$when"\n    return\n  }\n'
+    p.write_text(s.replace(anchor, anchor + guard))
+OT_PRECTS_PY
+  [ "$?" = 0 ] || exit 2
+fi
 if [ -f "$W/clk_leaf_repeat_default.tcl" ]; then
   CH="set ::ot_clr_default 1; source /work/clk_leaf_repeat_default.tcl; unset -nocomplain ::ot_clr_default ;# OT_CLK_LEAF_REPEAT default"
   if [ -f "$SD/cts.tcl" ] && ! grep -qF "OT_CLK_LEAF_REPEAT default" "$SD/cts.tcl"; then
@@ -35,6 +53,34 @@ if [ -f "$W/clk_leaf_repeat_default.tcl" ]; then
       sed -i "0,\|^\( *\)log_cmd estimate_parasitics -global_routing.*|s||&\n\1$GH|" "$S"
     else echo "OT_CLK_LEAF_REPEAT grt inactive: no estimate_parasitics -global_routing in $S"; fi
   fi
+fi
+# KW-FIX-35-F2 11-08 (FLOW class F follow-up, CTS DPL-0033): CTS-stage legalization uses the kit's own 3_5 legalizer.
+# ORFS erases DETAIL_PLACEMENT_ARGS outside the place stage, so stock cts.tcl (and clk_leaf_repeat) call a bare
+# detailed_placement = the negotiation legalizer, which stalled with residual overlaps where 3_5's diamond pass was 100 %
+# legal (QC sle_hc1__cl7d360508 a10: 1143 s, 512 left; S81 dsdv_slice_c1x_C__t3 a16: 3897 s, 306 left).  The disposable
+# cts.tcl copy captures the args BEFORE the erase (::ot_kit_dpl_args, read by clk_leaf_repeat.tcl) and, only when they
+# select -use_diamond_legalizer (FLOW-7 opt-in), gives a bare detailed_placement in that process the same args.  Kits
+# without the opt-in: unchanged.  No gate, check or margin changes.  'export OT_CTS_DPL_ARGS = 0' in config.mk opts out.
+CT=$SD/cts.tcl
+if [ -f "$CT" ] && ! grep -qF "OT_CTS_DPL_ARGS" "$CT" && ! grep -Eq '^export OT_CTS_DPL_ARGS[[:space:]]*=[[:space:]]*0[[:space:]]*$' "$W/config.mk" 2>/dev/null; then
+  if grep -q '^ *erase_non_stage_variables cts' "$CT"; then
+    python3 - "$CT" <<'OT_CTS_DPL_PY'
+import re, sys
+from pathlib import Path
+p = Path(sys.argv[1])
+line = ('set ::ot_kit_dpl_args [expr {[info exists ::env(DETAIL_PLACEMENT_ARGS)] ? [string trim $::env(DETAIL_PLACEMENT_ARGS)] : ""}]; '
+        'if {[string first -use_diamond_legalizer $::ot_kit_dpl_args] >= 0 && [info commands ::ot_cts_dpl_orig] eq "" '
+        '&& [info commands ::detailed_placement] ne ""} { rename ::detailed_placement ::ot_cts_dpl_orig; '
+        'proc ::detailed_placement {args} { if {![llength $args]} { set args $::ot_kit_dpl_args }; '
+        'uplevel 1 [list ::ot_cts_dpl_orig {*}$args] }; '
+        'puts "OT_CTS_DPL_ARGS: CTS detailed_placement uses the kit 3_5 legalizer: $::ot_kit_dpl_args" } ;# OT_CTS_DPL_ARGS')
+s = p.read_text()
+s, n = re.subn(r'(?m)^( *)(erase_non_stage_variables cts)', lambda m: m.group(1) + line + '\n' + m.group(1) + m.group(2), s, count=1)
+assert n == 1
+p.write_text(s)
+OT_CTS_DPL_PY
+    [ "$?" = 0 ] || exit 2
+  else echo "OT_CTS_DPL_ARGS inactive: no erase_non_stage_variables cts in $CT"; fi
 fi
 # KW-FIX-25/AUTORENDER 11-06 (OWNER visual check + smell list): advisory PNGs + smells.json after place, GRT and route, when the
 # kit carries layout_render_hook.sh.  flow.sh (disposable container copy) gets an EXIT trap, so the hook runs right after each

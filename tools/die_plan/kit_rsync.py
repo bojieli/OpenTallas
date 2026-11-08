@@ -40,7 +40,8 @@ TAPSYNC = re.compile(r"^\s*(?:(?:\(\* keep = 1 \*\) )?wire rst_n_t\d+;|ot_dp_rsy
 TREE = re.compile(r"^\s*(?://\s*OWNER RESET RULE 10-24 (?:\+ DECISION 13c )?\(tools/die_plan/reset_tree\.py\).*|"
                   r"wire rst_root_n(?:, run_root)?;|wire (?:rn_)?(?:rst_rl_\d+|rr_t\d+);|"
                   r"ot_dp_rsync_s(\d)\s+u_(?:rst|run)_root\s*\(.*|ot_dp_r(?:relay|gate)(?:_drive|_nl)?\s+u_(?:rst_in|run_in|[rs]rl_\d+(?:_[rgt])?)\s*\(.*|"
-                  r"assign (?:rst|start)_o_\d+ = (?:rst_n_t|rr_t|rn_rr_t)\d+;.*)\s*$")
+                  r"assign (?:rst|start)_o_\d+ = (?:rst_n_t|rr_t|rn_rr_t)\d+;.*|"
+                  r"wire rst_lk_\d+(?:_[rgt])?;|ot_dp_lk #\(\.W\(1\)\) u_fl_rst_\d+(?:_[rgt])?\s*\(.*)\s*$")
 # reset wavefront outs (OWNER DECISION 13): port declarations / wrapper connections of an earlier conversion
 ROUT = re.compile(r"^\s*(?:output\s+wire\s+(?:rst|start)_o_\d+\s*,.*|\.(?:rst|start)_o_\d+\((?:rst|start)_o_\d+\)\s*,.*|"
                   r"input\s+wire\s+start_i\s*,.*|\.start_i\(start_i\)\s*,.*)$")
@@ -94,7 +95,9 @@ def cells_text(lock=False, driver=False, lockup=False):
     names = ("ot_dp_st", "ot_dp_ep", "ot_dp_ste", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_rrelay", "ot_dp_rgate")
     if driver:
         names += ("ot_dp_rrelay_drive", "ot_dp_rgate_drive")
-    if lockup:
+    if lockup == "latch":       # RLK-1108 hop lockup latches (reset_tree.lockup_hops)
+        names += ("ot_dp_lk",)
+    elif lockup:
         names += ("ot_dp_rrelay_nl",)
     for m in names + (("ot_dp_lockq",) if lock else ()):
         mm = re.search(rf"((?:\(\*[^\n]*\*\)\n)?module {m}\b.*?\nendmodule\n)", src, re.S)
@@ -274,11 +277,11 @@ def main(argv):
         nw.write_text("".join(wl))
         files[0] = nw
     (kd / "kit_cells.sv").write_text(cells_text(lock=bool(tree.get("lock")), driver=bool(tree.get("relay_driver")),
-                                                  lockup=bool(tree.get("relay_lockup"))))
+                                                  lockup=tree.get("relay_lockup") or False))
     if cfile is not None:
         bc = strip_module(cfile.read_text(), "ot_dp_st")
         # wavefront binds (10-25) also emit the reset cells; kit_cells.sv carries them (keep attributes), so drop the copies
-        for m in KIT_RESET_CELLS:
+        for m in KIT_RESET_CELLS + (("ot_dp_lk",) if tree.get("relay_lockup") == "latch" else ()):
             bc, n = re.subn(rf"(\(\*[^\n]*\*\)\n)?(//[^\n]*\n)*module {m}\b.*?\nendmodule\n", "", bc, flags=re.S)
             if n > 1:
                 raise SystemExit(f"kit_rsync: {n} modules {m} in bind_cells.sv")

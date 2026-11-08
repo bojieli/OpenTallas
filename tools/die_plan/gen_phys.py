@@ -177,6 +177,15 @@ def _gutter_block_um(budgets, tn):
     return v
 
 
+def _gutter_block_min_span_um(budgets):
+    """S81-TYPES-7-COLH 11-08 (class C ROM walls): only gaps whose facing span is >= this many um get a gutter
+    blockage (GEN env OT_GUTTER_BLOCK_MIN_SPAN_UM wins, else budgets.gutter_block_min_span_um); None = every gap
+    (the 11-07 behaviour).  A long span picks the gap between two 221-um ROM-element walls and leaves the short
+    ROM/relay gaps, whose logic must stay in place (COLH-1 vS2: blocking every gap < 45 um doubled the wire)."""
+    v = os.environ.get("OT_GUTTER_BLOCK_MIN_SPAN_UM") or budgets.get("gutter_block_min_span_um")
+    return float(v) if v and float(v) > 0 else None
+
+
 def _cland_pinslot_dense(budgets, tn):
     """DIE-KV-62/stations 11-02 opt-in: budgets.cland_pinslot_dense_types names the types (or unsplit base names) whose
     y-column pinslot rows pack the ring slot flops body to body (OT_CLAND_PINSLOT_DENSE=1, landing_placement.tcl);
@@ -3475,6 +3484,28 @@ def defines_landing_ring(rtl_dir):
     return any(_LANDING_MOD.search(f.read_text(errors="replace")) for f in sorted(Path(rtl_dir).glob("*.sv")))
 
 
+# DIE-HEAD-85/HSPLIT 11-07 (generator class fix, LEC): RTL state registers that yosys `fsm` re-encodes so the kit LEC
+# cannot pair them.  The s81 link gearbox RX hunt FSM (ot_s81ph_link_gbx* reg hunt[1:0], states 0/1/2) became gate
+# u_gb.hunt[0..2] one-hot (hunt[0] reset 1) in the HSPLIT kits hd_host_e/hd_host_w; lec.py refused the gold state
+# constraint ("allowed states do not cover the native ternary reset-base cube") and the f_rx_v cone stayed 78
+# differs (kitsF hd_host_e lec.json).  The S81 coll_e recipe of this same gearbox already pins OT_FSM_NONE_WIRES=hunt.
+# gen phys now exports it for every kit whose RTL defines such a module (ot_keep_regs.tcl: fsm_encoding "none" on
+# those wires; function unchanged, LEC pairs the RTL bits by name).  The per-item env opt-in still adds names.
+_FSM_NONE_BY_MODULE = ((re.compile(r"^\s*module\s+ot_s81ph_link_gbx\w*\b", re.M), ("hunt",)),)
+
+
+def fsm_none_wires(rtl_dir, extra=None):
+    """Wire base names for OT_FSM_NONE_WIRES: the _FSM_NONE_BY_MODULE wires of every module the kit RTL defines,
+    then the per-item env names (commas or spaces), de-duplicated in order."""
+    names = []
+    texts = [f.read_text(errors="replace") for f in sorted(Path(rtl_dir).glob("*.sv"))]
+    for rx, wires in _FSM_NONE_BY_MODULE:
+        if any(rx.search(t) for t in texts):
+            names.extend(wires)
+    names.extend((extra or "").replace(",", " ").split())
+    return list(dict.fromkeys(names))
+
+
 _LANDING_BODY = re.compile(r"^\s*module\s+ot_dp_clk_landing\b(.*?)^\s*endmodule\b", re.M | re.S)
 _RING_DEPTH = re.compile(r"\bot_meso_ring\s*#\s*\([^;]*?\.DEPTH\s*\(\s*(\d+)\s*\)", re.S)
 _PLAIN_RING = re.compile(r"\bot_dp_clk_landing\s*#\s*\((?:[^()]|\([^()]*\))*\)\s*(u_cland_\w+)\s*\((.*?)\)\s*;", re.S)
@@ -3606,6 +3637,41 @@ def _module_header(text, mod):
             return text[m.start():i + 1]
         i += 1
     return None
+
+
+def _header_localparams(text, mod, hdr):
+    """DIE-HBM-92-GEN 11-08 (HBM q_b002 GEN_LINT "Identifier NKT is implicitly declared" in ot_hbm_idx_tail_native_bb.v):
+    the module-scope `localparam ...;` statements of mod's body (text = its source) that the header's port list uses
+    (NKT/NCH of ot_hbm_idx_tail_native are body localparams sized into its ports), with the localparams they depend on,
+    in source order.  '' when the header uses none (the blackbox stays byte-identical)."""
+    text = re.sub(r"//[^\n]*|/\*[\s\S]*?\*/", "", text)
+    i = text.find(hdr)
+    if i < 0:
+        return ""
+    end = re.search(r"\bendmodule\b", text[i + len(hdr):])
+    body = text[i + len(hdr):i + len(hdr) + (end.start() if end else 0)]
+    decls = []
+    for m in re.finditer(r"\blocalparam\b([^;]*);", body):
+        rest = re.sub(r"^\s*(?:(?:integer|int|logic|bit|signed|unsigned|real)\b\s*|\[[^\]]*\]\s*)*", "", m.group(1))
+        names = {it.split("=", 1)[0].strip() for it in _top_items(rest) if "=" in it}
+        decls.append((m.group(0), names, set(re.findall(r"[A-Za-z_]\w*", m.group(1)))))
+    hm = re.match(r"\s*module\s+[A-Za-z_]\w*\s*(#\s*\()?", hdr)
+    ports = hdr
+    params = set()
+    if hm and hm.group(1):
+        j = _paren_end(hdr, hm.end() - 1)
+        params = {it.split("=", 1)[0].split()[-1] for it in _top_items(hdr[hm.end():j]) if "=" in it and it.split("=", 1)[0].split()}
+        ports = hdr[j + 1:]
+    need = set(re.findall(r"[A-Za-z_]\w*", ports)) - params
+    take, grew = set(), True
+    while grew:
+        grew = False
+        for k, (_, names, refs) in enumerate(decls):
+            if k not in take and names & need:
+                take.add(k)
+                need |= refs - params
+                grew = True
+    return "".join(f"    {decls[k][0].strip()}\n" for k in sorted(take))
 
 
 def _paren_end(text, i):
@@ -3785,8 +3851,9 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=()
         cands += [d / n for d in dirs for n in (f"{mod}.sv", f"{mod}.v")]
         if root:
             cands += sorted((Path(root) / "rtl").rglob(f"{mod}.sv")) + sorted((Path(root) / "rtl").rglob(f"{mod}.v"))
-        hdr = next((h for h in (_module_header(c.read_text(errors="replace"), mod) for c in cands if c.is_file())
-                    if h), None)
+        hit = next(((h, c) for h, c in ((_module_header(c.read_text(errors="replace"), mod), c) for c in cands
+                                        if c.is_file()) if h), None)
+        hdr = hit[0] if hit else None
         if hdr is None:
             raise ValueError(f"macro {mod} is instantiated with parameters but no RTL header was found for its "
                              f"blackbox (searched {len(cands)} files)")
@@ -3810,8 +3877,10 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=()
         if spec_id:
             note += "// signed identity from the core's kit spec: " + ", ".join(f"{k}={v}" for k, v in sorted(spec_id.items())) + "\n"
         dst = rtl_dir / f"{mod}_bb.v"
+        # body localparams the port list sizes with (NKT/NCH); '' for every header that is self-contained (unchanged bb)
+        lps = _header_localparams(hit[1].read_text(errors="replace"), mod, logical_header)
         dst.write_text(f"// GENERATED by gen_phys.macro_param_blackboxes: header-only view of hard macro {mod}\n"
-                       f"{note}(* blackbox *)\n{hdr}\nendmodule\n")
+                       f"{note}(* blackbox *)\n{hdr}\n{lps}endmodule\n")
         out.append(dst)
         # DIE-S81-47 11-01: one definition per module.  The ORFS / lint frontends read the header -lib -overwrite next
         # to a deferred RTL body, but LEC reads every VERILOG_FILES entry as its own read_verilog -defer (and slang
@@ -3958,6 +4027,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         srcs.append(f"/work/rtl/{f.name}")
     rom_bits = max(declared_rom_bits(kd / "rtl"), declared_flop_mem_bits(kd / "rtl"))   # + DIE-KV-60/hubeo flop FIFOs
     landing_ff = defines_landing_ring(kd / "rtl")
+    fsm_wires = fsm_none_wires(kd / "rtl", os.environ.get("OT_FSM_NONE_WIRES"))
     pins = type_pins(P, tn)
     bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
         if bump_ports else []
@@ -4111,6 +4181,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # the logged default list plus the flag.
            *(["export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -apply_ndr none"]
              if os.environ.get("OT_CTS_NO_NDR") == "1" else []),
+           # Opt-in for new forms: suppress redundant ORFS summaries before CTS only.
+           # Explicit synthesis/geometry/hold checks and stages 4+ reports are unchanged.
+           *(["export OT_SKIP_PRECTS_METRICS = 1"]
+             if os.environ.get("OT_SKIP_PRECTS_METRICS") == "1" else []),
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
            *_rtl_lint_dead_output_vars(),
@@ -4201,7 +4275,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export OT_VCLK_FF = {t_lib(ib['ff']):.4f}",
            # CLOCK-RESET IO-HOLD 10-25: the seam hold contract the post-CTS FF gate applies (hold_gate.tcl)
            # DIE-HEAD-59 11-03: opt-in per item (item_env, commas for spaces): keep these FSM wires in their RTL encoding
-           *([f"export OT_FSM_NONE_WIRES = {os.environ['OT_FSM_NONE_WIRES'].replace(',', ' ')}"] if os.environ.get("OT_FSM_NONE_WIRES") else []),
+           # DIE-HEAD-85/HSPLIT 11-07: plus the module-defined FSM wires (fsm_none_wires, e.g. the s81 gearbox hunt)
+           *([f"export OT_FSM_NONE_WIRES = {' '.join(fsm_wires)}"] if fsm_wires else []),
            # KW-FIX-13 11-05: opt-in per item (item_env, commas for spaces), e.g. -noshare where yosys share does not finish
            *([f"export SYNTH_ARGS = {os.environ['OT_SYNTH_ARGS'].replace(',', ' ')}"] if os.environ.get("OT_SYNTH_ARGS") else []),
            f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
@@ -4236,6 +4311,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
            *(["export OT_RELAY_MID_FIT = 1"] if macros and _relay_mid_fit(P.budgets, tn) else []),
            *([f"export OT_GUTTER_BLOCK_UM = {_gutter_block_um(P.budgets, tn)}"] if macros and _gutter_block_um(P.budgets, tn) else []),
+           *([f"export OT_GUTTER_BLOCK_MIN_SPAN_UM = {_gutter_block_min_span_um(P.budgets)}"]
+             if macros and _gutter_block_um(P.budgets, tn) and _gutter_block_min_span_um(P.budgets) else []),
            # DIE-HEAD-69 11-05: core_out_land.tcl opt-in (GEN env OT_CORE_OUT_LAND=1 via wave item_env, or plan budgets list)
            *(["export OT_CORE_OUT_LAND = 1"] if macros and (os.environ.get("OT_CORE_OUT_LAND") == "1"
                                                        or tn in (P.budgets.get("core_out_land_types") or ())) else []),
@@ -4311,7 +4388,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)
-    for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
+    for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
               "clock_taps.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
               "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl"):
@@ -5534,9 +5611,17 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
     expanded = RT.start_relays(tree) if tree.get("start") else relays
     physical_nodes = []
     output_relays = RT.out_relays(tree)
+    # RLK-1108 latch form (reset_tree.lockup_hops): the bound RTL carries one hop lockup latch ot_dp_lk in front of
+    # each internal hop's capture relay; verify it exactly (launch q -> latch -> relay d) and record its hierarchy so
+    # reset_tree.tcl places it at the hop midpoint.  No latch form = no lockup hops = unchanged checks.
+    lockup = {r["name"]: RT.lockup_latch_names(r["name"]) for r in RT.lockup_hops(tree)}
     for r in expanded:
         gated = r.get("role") == "gated"
         ports = {"clk": "clk", "d": r["d"], "q": r["q"]}
+        if r["name"] in lockup:
+            li, lq = lockup[r["name"]]
+            check(li, "ot_dp_lk", {"clk": "clk", "d": r["d"], "q": lq})
+            ports["d"] = lq
         if gated:
             ports["run"] = r["run"]
         output = output_relays.get(r["q"])
@@ -5717,9 +5802,15 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         out.mkdir(parents=True, exist_ok=True)
         files = []
     else:
+        # A native physical kit with an explicit type selection consumes only
+        # those wrappers/cells. The whole-die top and its reset-open pad map
+        # are not inputs to any selected kit. Landed, bound/mixed and full-die
+        # callers retain their existing emission paths and validation.
+        native_selected_only = bool(types) and not kit_rtl and landing is None
         files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path,
                                   landing=None if land_decl_only else landing,
-                                  emit_die_top=not (land_decl_only and gtypes == []))
+                                  emit_die_top=not (native_selected_only or
+                                                    (land_decl_only and gtypes == [])))
     # Only the bound kit metadata receives promoted child inputs. The plan-only
     # die emitter retains its original parent declarations and tie values.
     P = S.Plan(bound_parent_id_plan(raw, kit_rtl), plan_path)

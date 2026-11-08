@@ -1,0 +1,128 @@
+{
+ "schema": "opentallas.s81.delta_gunit_l1f_band.v1",
+ "id": "S81-GUNIT-FORM-1/PLAN 11-07 l1f band cores (delta_gunit_l1f_band_1107.py)",
+ "type": "gunit__t1",
+ "types_before": 205,
+ "types_after": 205,
+ "core_modules_before": 61,
+ "core_modules_after": 64,
+ "new_core_modules": [
+  "dsdv_gunit_l1f_ba0",
+  "dsdv_gunit_l1f_ba1",
+  "dsdv_gunit_l1f_bf"
+ ],
+ "removed_core_modules": [],
+ "new_core_instances": 12,
+ "removed_contents": [
+  "u_bound.u_u_gunit_g_l1f_0_u_l1f.g_m[0].u_b",
+  "u_bound.u_u_gunit_g_l1f_0_u_l1f.g_m[1].u_b",
+  "u_bound.u_u_gunit_g_l1f_1_u_l1f.g_m[0].u_b",
+  "u_bound.u_u_gunit_g_l1f_1_u_l1f.g_m[1].u_b",
+  "u_bound.u_u_gunit_g_l1f_2_u_l1f.g_m[0].u_b",
+  "u_bound.u_u_gunit_g_l1f_2_u_l1f.g_m[1].u_b",
+  "u_bound.u_u_gunit_g_l1f_3_u_l1f.g_m[0].u_b",
+  "u_bound.u_u_gunit_g_l1f_3_u_l1f.g_m[1].u_b"
+ ],
+ "taps_added": 12,
+ "cells": {
+  "dsdv_gunit_l1f_ba0": 82000,
+  "dsdv_gunit_l1f_bf": 77000,
+  "dsdv_gunit_l1f_ba1": 82000,
+  "parent_glue_est": 12000,
+  "basis": "ESTIMATE: kit-wave e9eda32d41c gunit__t1 attempt_12 1_2_yosys.v, l1f_0 cells attributed to the band cut by name / net, scaled to the 976,402 ODB count (worst case ~100k); <= 150k conservative form"
+ },
+ "count_effect": "+3 core units to sign (ba0, bf, ba1; each signed once, used 4x in gunit__t1); gunit__t1 stays 1 type with a new block; no other type or core changes",
+ "pins": {
+  "dsdv_gunit_l1f_ba0": 1221,
+  "dsdv_gunit_l1f_ba1": 1218,
+  "dsdv_gunit_l1f_bf": 2689
+ },
+ "stacks": [
+  {
+   "front": 0,
+   "origin_um": [
+    207.36,
+    17.28
+   ],
+   "size_um": [
+    432.0,
+    496.8
+   ]
+  },
+  {
+   "front": 1,
+   "origin_um": [
+    17.28,
+    682.56
+   ],
+   "size_um": [
+    432.0,
+    496.8
+   ]
+  },
+  {
+   "front": 2,
+   "origin_um": [
+    466.56,
+    682.56
+   ],
+   "size_um": [
+    432.0,
+    496.8
+   ]
+  },
+  {
+   "front": 3,
+   "origin_um": [
+    915.84,
+    682.56
+   ],
+   "size_um": [
+    432.0,
+    496.8
+   ]
+  }
+ ],
+ "step2": {
+  "added_tap_moves": {
+   "clk_t43": [
+    [
+     486.6384,
+     17.28
+    ],
+    [
+     486.6384,
+     8.64
+    ]
+   ],
+   "clk_t45": [
+    [
+     384.32,
+     289.32
+    ],
+    [
+     384.32,
+     181.32
+    ]
+   ]
+  },
+  "grid_explicit_taps": 56,
+  "relays": [
+   286,
+   290
+  ],
+  "local_source_taps": [
+   [
+    36,
+    36
+   ],
+   [
+    33,
+    33
+   ]
+  ],
+  "sidecar": true,
+  "note": "reset contract guard keys unchanged (asserted); relay sites re-solved around the band cores"
+ },
+ "other_types_changed": []
+}

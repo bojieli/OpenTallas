@@ -141,3 +141,55 @@ def test_type_kit_stages_untrusted_lec_hints_in_freeze(tmp_path):
     out = tmp_path / "lec_hints.json"
     assert json.loads(out.read_text()) == hints
     assert fz["lec_hints"] == dict(file="lec_hints.json", count=1, sha256=hashlib.sha256(out.read_bytes()).hexdigest())
+
+
+def test_stage_verifies_the_kit_copy_holds_the_receipt(tmp_path, monkeypatch):
+    """KW-FIX-35-RC: a stager whose copy drops the receipt fails generation instead of leaving a 4-edge kit."""
+    import shutil
+    src, kd = contract(tmp_path), tmp_path / "kit"
+    kd.mkdir()
+    real = shutil.copyfile
+    monkeypatch.setattr(K.shutil, "copyfile", lambda a, b: None if str(b).endswith("receipt.txt") else real(a, b))
+    with pytest.raises(SystemExit, match="does not verify"):
+        K.stage(kd, "listed_core", src)
+
+
+def _dropped_kit(tmp_path, top="listed_core"):
+    src, kd = contract(tmp_path), tmp_path / "kit"
+    kd.mkdir()
+    K.stage(kd, top, src)
+    (kd / "config.mk").write_text(f"export DESIGN_NAME = {top}\nexport VERILOG_FILES = rtl/x.v\n")
+    (kd / "reset_contract/receipt.txt").unlink()            # what the vJ/vK kit copy did
+    assert lec.reset_contract_gate(kd, top, environ={})["flow_error"]
+    return src, kd
+
+
+def test_repair_restages_the_dropped_receipt(tmp_path):
+    src, kd = _dropped_kit(tmp_path)
+    rep = K.repair(kd, src)
+    assert rep["copied"] and rep["used"] == 64 and rep["contract_byte_equal"]
+    g = lec.reset_contract_gate(kd, "listed_core", environ={})
+    assert g["used"] == 64 and "refused" not in g
+    assert K.repair(kd, src)["copied"] is False             # idempotent
+
+
+def test_repair_never_writes_through_a_hardlink(tmp_path):
+    import os
+    src, kd = _dropped_kit(tmp_path)
+    other = tmp_path / "original_receipt"
+    other.write_text("stale\n")
+    os.link(other, kd / "reset_contract/receipt.txt")       # cp -al private copy of a kit with a stale receipt
+    K.repair(kd, src)
+    assert other.read_text() == "stale\n"
+    assert lec.reset_contract_gate(kd, "listed_core", environ={})["used"] == 64
+
+
+def test_repair_refuses_a_source_with_another_receipt(tmp_path):
+    src, kd = _dropped_kit(tmp_path)
+    c = json.loads(src.read_text())
+    c["proof"]["receipt_sha256"] = "0" * 64
+    other = tmp_path / "other.json"
+    other.write_text(json.dumps(c))
+    with pytest.raises(SystemExit, match="receipt sha"):
+        K.repair(kd, other)
+    assert not (kd / "reset_contract/receipt.txt").exists()

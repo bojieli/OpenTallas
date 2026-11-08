@@ -633,6 +633,8 @@ if {[file exists /work/relay_mid.tcl] && [info exists ::env(OT_RELAY_MID_RE)]} {
 if {[file exists /work/gutter_block.tcl] && [info exists ::env(OT_GUTTER_BLOCK_UM)]} { source /work/gutter_block.tcl }
 # DIE-HEAD-69 11-05: core-output landing flops at their hard-core pins (kits with hard cores; gen_phys copies it)
 if {[file exists /work/core_out_land.tcl]} { source /work/core_out_land.tcl }
+# DIE-HBM-92 11-08: optional FT polarity placement (OT_FT_POLARITY_LOCAL=1); before the GPL guard, which stays last
+if {[file exists /work/ft_polarity_local.tcl]} {source /work/ft_polarity_local.tcl}
 # OT_GPL_GUARD begin -- KIT-TRIAGE-1/G4 11-01 (FLOW, default-on class fix for GPL-0305, every kit whose PRE_GLOBAL_PLACE
 # hook is this shared face_flops.tcl: gen_phys type kits AND the per-die core kit generators that copy it).  It runs
 # after every FIRM face / ring / station placement above and BEFORE ORFS global_place.tcl reads GPL_ROUTABILITY_DRIVEN /

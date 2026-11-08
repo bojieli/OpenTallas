@@ -48,7 +48,14 @@ fail() {   # loud: keep the FIRST failure time across consecutive failures
   printf 'since %s\n%s (last attempt %s, %s)\n' "$since" "$1" "$(now)" "$(git rev-parse --short=10 HEAD 2>/dev/null)" \
     > "$AP/.HUB-SYNC-FAILED.$$" && mv -f "$AP/.HUB-SYNC-FAILED.$$" "$AP/HUB-SYNC-FAILED"
   say coord "FAILED since $since: $1" >&2
+  alert "HUB-SYNC-FAILED since $since: $1"
   exit 1
+}
+alert() {   # KW-FIX-35 11-08: one ALERT line in the autopilot log (fail_watch / LOOP-GAP grep it); 2.5 h went unseen
+  local ab
+  ab=$(git rev-list --left-right --count "HEAD...origin/$B" 2>/dev/null | awk '{print "ahead "$1", behind "$2}')
+  printf '%s AUTOPILOT: ALERT %s (%s checkout %s; %s)\n' "$(date '+%Y-%m-%d %H:%M:%S %Z')" "$1" "$(hostname)" "$C" \
+    "${ab:-ahead/behind unknown}" >> "${HUB_SYNC_LOG:-$AP/log.txt}" 2>/dev/null || true
 }
 ok() {
   rm -f "$AP/HUB-SYNC-FAILED"
@@ -81,7 +88,23 @@ latest_of() { grep -m1 'DIE-CI LATEST:' "$1" 2>/dev/null || true; }
 merge_union() {   # merge $1; union-resolve append-only conflicts; 0 = merged, 1 = refused (aborted)
   git merge -q --no-edit -m "Merge origin/$B into hub $(hostname) checkout (hub-git-sync)" "$1" >/dev/null 2>&1 && return 0
   local f bad="" t
-  [ -f "$(git rev-parse --git-dir)/MERGE_HEAD" ] || { MERGE_ERR="merge refused (local untracked file in the way?)"; return 1; }
+  if [ ! -f "$(git rev-parse --git-dir)/MERGE_HEAD" ]; then
+    # KW-FIX-35 11-08: Codex wrote 3 handoff/*.md untracked here and committed them elsewhere; every merge was refused
+    # 04:32-06:58 (34 ahead / 256 behind).  Untracked copies byte-identical to the incoming file are moved aside (kept
+    # under autopilot/.hub-sync-untracked/) and the merge is retried once; a differing copy still refuses, by name.
+    local mb f moved="" differ=""
+    mb=$(git merge-base HEAD "$1")
+    for f in $(git diff --name-only --diff-filter=A "$mb" "$1"); do
+      [ -e "$f" ] && ! git ls-files --error-unmatch -- "$f" >/dev/null 2>&1 || continue
+      if git show "$1:$f" | cmp -s - "$f"; then
+        mkdir -p "$AP/.hub-sync-untracked/$(dirname "$f")" && mv -f -- "$f" "$AP/.hub-sync-untracked/$f" && moved="$moved $f"
+      else differ="$differ $f"; fi
+    done
+    [ -z "$differ" ] || { MERGE_ERR="merge refused: untracked local file(s) differ from origin:$differ"; return 1; }
+    [ -n "$moved" ] && say coord "moved identical untracked files aside:$moved" \
+      && git merge -q --no-edit -m "Merge origin/$B into hub $(hostname) checkout (hub-git-sync)" "$1" >/dev/null 2>&1 && return 0
+    [ -f "$(git rev-parse --git-dir)/MERGE_HEAD" ] || { MERGE_ERR="merge refused (local untracked file in the way?)"; return 1; }
+  fi
   for f in $(git diff --name-only --diff-filter=U); do
     if is_generated "$f"; then
       git checkout -q --theirs -- "$f" && git add -- "$f" || bad="$bad $f"
@@ -140,6 +163,8 @@ for i in 1 2 3 4 5; do
       git commit -q -m "hub $(hostname): one DIE-CI LATEST line after merge" -- HANDOFF.md || fail "dedupe commit failed"
     fi
   fi
+  BEHIND=$(git rev-list --count HEAD..FETCH_HEAD)
+  [ "$BEHIND" -le "${HUB_SYNC_MAX_BEHIND:-5}" ] || alert "hub checkout $BEHIND commits behind origin $B after merge"
   [ -n "$(git rev-list FETCH_HEAD..HEAD)" ] || ok "checkout at $(git rev-parse --short=10 HEAD) (= origin $B)"
   if git push -q origin "HEAD:$B" 2>/dev/null; then ok "pushed hub commits: $(git rev-parse --short=10 HEAD)"; fi
   MERGE_ERR="push to $B rejected"; sleep 3

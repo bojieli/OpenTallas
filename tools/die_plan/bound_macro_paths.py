@@ -100,6 +100,53 @@ def resolve(t, bound_text):
     return rows
 
 
+def resolve_sub_cores(t, bound_text, sub_core_leaf, variants=None):
+    """Root explicit split-core paths through the producer's exact parent-to-leaf table.
+
+    The remaining subpath and master are preserved for kit_preflight to validate;
+    a table entry never makes a missing split implementation a legal macro.
+    """
+    ab = asbuilt_map(bound_text)
+    rows = []
+    for c in _macro_entries(t):
+        path = c.get("physical_inst") or ""
+        if ".u_fcore." not in path or path.startswith("u_bound."):
+            continue
+        parent, tail = path.split(".u_fcore.", 1)
+        leaf = sub_core_leaf.get(parent)
+        # DIE-HBM-92-PHY 11-08: a physical variant type binds the same plan content from another as-built leaf
+        # (HBM NE_spb0 = q_spb0__physical_v1: plan u_lk_S0 is as-built lk_S3).  The producer declares those
+        # alternates in asbuilt.sub_core_leaf_variants; exactly one declared leaf must be in this bound file.
+        found = [x for x in ([leaf] + list((variants or {}).get(parent, []))) if x and x in ab] if leaf else []
+        if len(found) != 1:
+            continue
+        leaf = found[0]
+        hit = ab[leaf]
+        rows.append(dict(inst=c["inst"], physical_inst="u_bound." + hit[0] + ".u_fcore." + tail,
+                         physical_master=c["physical_master"], asbuilt=leaf, source_physical_inst=path,
+                         source_parent=c.get("sub_core_parent", parent)))
+    return rows
+
+
+def resolve_hard_core_leaf(t, bound_text, table):
+    """DIE-HBM-92-SU 11-08: a plan hard core without a physical path that the bind regroups inside one composed cut
+    (asbuilt.compose_split, e.g. HBM u_su_Q2_pretree = ot_hbm_su_static_pgslice_lg__pretree inside as-built
+    su_NE2.__cut_pretree).  Exact producer table {plan inst: {"leaves": [as-built cut, ...], "inner": instance in the
+    cut}}; exactly one listed leaf must be in this bound file.  kit_preflight still checks the path and the master."""
+    ab = asbuilt_map(bound_text)
+    rows = []
+    for c in _macro_entries(t):
+        e = (table or {}).get(c["inst"])
+        if not e or c.get("physical_inst"):
+            continue
+        found = [x for x in e.get("leaves", []) if x in ab]
+        if len(found) != 1:
+            continue
+        rows.append(dict(inst=c["inst"], physical_inst="u_bound." + ab[found[0]][0] + "." + e["inner"],
+                         physical_master=c["module"], asbuilt=found[0]))
+    return rows
+
+
 def _strip_scope(prefix):
     """as-built prefix without its trailing generate blocks: u_s_3S.u_sl.g_c3 -> u_s_3S.u_sl."""
     parts = prefix.split(".")
@@ -127,6 +174,12 @@ def _resolve_scoped(members, ab):
     return rows
 
 
+def _sv_id(s):
+    """bind.sv_id: the bound netlist identifier of a plan name."""
+    s = re.sub(r"_+", "_", re.sub(r"[^A-Za-z0-9_]", "_", s)).strip("_")
+    return s if s and not s[0].isdigit() else "n" + s
+
+
 def _resolve_flat(t, bound_text):
     """DIE-QC-68/TYPES 11-04: a flat plan core name (QC u_lane0, u_t22, u_suvm_u_vm8q_u_bt) is one bound leaf `<inst>` or
     `u_<inst>` of that exact module, inside the kit wrapper's u_bound.  No exact unique leaf: no row (preflight reports)."""
@@ -135,7 +188,9 @@ def _resolve_flat(t, bound_text):
         inst = c["inst"]
         if "physical_inst" in c or "physical_master" in c or "." in inst:
             continue
-        hits = [name for name in (inst, "u_" + inst)
+        # DIE-HBM-92-SU-IDX 11-08: the bind names a leaf u_<sv_id(inst)> (runs of _ folded: HBM u_hb_idx__s_Q2_r0c0_k0h1
+        # -> u_u_hb_idx_s_Q2_r0c0_k0h1)
+        hits = [name for name in dict.fromkeys((inst, "u_" + inst, "u_" + _sv_id(inst)))
                 if re.search(r"(?m)^[ \t]+" + re.escape(c.get("module", inst)) + r"(?:[ \t]+#\(.*?\))?[ \t]+"
                              + re.escape(name) + r"[ \t]*\(", bound_text)]
         if len(hits) == 1:
@@ -163,7 +218,16 @@ def project(raw, kit_rtl):
         bf = _bound_file(fl) if t else None
         if bf is None:
             continue
-        rows = resolve(t, bf.read_text(errors="replace"))
+        bound_text = bf.read_text(errors="replace")
+        rows = resolve(t, bound_text)
+        kr = json.loads(Path(fl).with_name("kit_rtl.json").read_text())
+        manifest = kr.get("asbuilt_manifest")
+        man = (json.loads(Path(manifest).read_text())
+               if manifest and Path(manifest).is_file() and any(
+                   ".u_fcore." in (c.get("physical_inst") or "") or not c.get("physical_inst")
+                   for c in _macro_entries(t)) else {})
+        rows += resolve_sub_cores(t, bound_text, man.get("sub_core_leaf", {}), man.get("sub_core_leaf_variants", {}))
+        rows += resolve_hard_core_leaf(t, bound_text, man.get("hard_core_leaf", {}))
         if not rows:
             continue
         if result is raw:
@@ -172,8 +236,11 @@ def project(raw, kit_rtl):
         nt = result["partition_types"][tn]
         for c in nt.get("hard_cores", []) + nt.get("contents", []):
             r = by.get(c["inst"])
-            if r and c.get("lef") and "physical_inst" not in c:
+            if r and c.get("lef") and ("physical_inst" not in c or
+                    r.get("source_physical_inst") == c.get("physical_inst")):
                 c["physical_inst"], c["physical_master"] = r["physical_inst"], r["physical_master"]
+                if r.get("source_parent"):
+                    c.setdefault("sub_core_parent", r["source_parent"])
         receipts[tn] = dict(schema=SCHEMA, type=tn, bound_rtl=str(bf), rows=rows,
                             rule="plan macro path -> bound netlist path from the bind's as-built comments; "
                                  "logical identity, geometry, pins and clocks unchanged")
@@ -186,7 +253,7 @@ def overlay(kd, entries):
     if not p.is_file():
         return entries
     for r in json.loads(p.read_text()).get("rows", []):
-        e = entries.get(r["inst"])
+        e = entries.get(r["inst"]) or entries.get(r.get("source_physical_inst"))
         if e is not None and r["physical_inst"] not in entries:
             entries[r["physical_inst"]] = dict(e, inst=r["physical_inst"], module=r["physical_master"])
     return entries

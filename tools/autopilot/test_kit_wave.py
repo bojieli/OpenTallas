@@ -169,6 +169,17 @@ class Select(unittest.TestCase):
         # KW-FIX-12 11-05: OWNERS folds hd_mesh_e under hd_mesh; its routed wave kit blocked hd_mesh on a new plan block
         self.assertTrue(kit_own_hd(KW))
 
+    def test_own_wave_unit_every_listed_job(self):
+        """KW-FIX-35-P 11-08: two (or more) of the wave's own route jobs on a parent are not a claim; one foreign is"""
+        own = lambda lj, owner="KIT-WAVE-12": KW._own_wave_unit({"owner": owner, "item": "slw_su_l0", "live_job": lj})
+        self.assertTrue(own("ap-0307dbcbc356-a1 0307dbcbc356; ap-5bf91438d5b4-a1 5bf91438d5b4"))
+        self.assertTrue(own("ap-16955edce096-a2 16955edce096; ap-4956a79e1387-a1 4956a79e1387 (+2)"))
+        self.assertTrue(own("ap-0307dbcbc356-a1 0307dbcbc356; "
+                            "ot-run pid 9 36e864/items/slw_su_l0__cl1a1c1f8f/attempt_13/gen/slw_su_l0__cl1a1c1f8f"))
+        self.assertFalse(own("ap-0307dbcbc356-a1 0307dbcbc356; ot-run pid 9 scratch/lane/run/other_dir"))
+        self.assertFalse(own("ap-0307dbcbc356-a1 0307dbcbc356; ap-5bf91438d5b4-a1 5bf91438d5b4", owner="DIE-QC-75"))
+        self.assertFalse(own(""))
+
     def test_own_wave_unit_on_parent_is_not_a_claim(self):
         # DIE-QC-63/KITS 11-02: overlay_owners puts a sibling class's own wave unit on the parent row; the other
         # classes (new or released retries) must still launch, the in-flight class must not relaunch

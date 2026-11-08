@@ -204,6 +204,26 @@ module ot_s81sl_xs_ctl (
         dg_act <= cv_q ? ca_q : 75'd0; dg_go <= go_q; dg_calv <= cv_q;
         for (kd = 0; kd < 4; kd = kd + 1) begin dg_sv[kd] <= sv[kd]; dg_sr[kd] <= sr[kd]; dg_si[kd] <= si[kd]; end
     end
+    // S81-TYPES-7-LEC 11-08 (class J2): the stream pipeline DATA registers (no reset) load on every edge, also while
+    // rst_c is asserted.  Before, they sat in the else-branch of the async-reset block, so they HELD during reset and
+    // kept their free power-up value until the first post-reset edge; synthesis folds the bits fixed by construction
+    // (r1_blk0[3] = 0, r1_blk1[3] = 1, blk1[12] = blk0[12]) and the kit LEC could not prove them in any reset window.
+    // Every consumer is qualified by the reset valid chain (r0_v .. r3_v, hv, qc_q / bc_q), so the function after
+    // reset release is unchanged; only the value of unqualified data during reset differs.
+    integer kh;
+    always @(posedge clk) begin
+        r0_a <= action[53:40]; r0_tag <= action[55:54]; r0_pos <= action[58:56];
+        r0_fam <= action[59]; r0_lp <= action[60]; r0_lo <= action[61];
+        ra_tag <= r0_tag; ra_pos <= r0_pos; ra_fam <= r0_fam; ra_lp <= r0_lp; ra_lo <= r0_lo;
+        r1_tag <= ra_tag; r1_pos <= ra_pos; r1_fam <= ra_fam; r1_lp <= ra_lp; r1_lo <= ra_lo;
+        r2_w <= r1_w; r2_tag <= r1_tag; r2_pos <= r1_pos; r2_fam <= r1_fam; r2_lp <= r1_lp; r2_lo <= r1_lo;
+        r2_spar <= r1_spar; r2_nq <= r1_nq; r2_m01 <= r1_m01; r2_m23 <= r1_m23; r2_b0 <= r1_blk0; r2_b1 <= r1_blk1;
+        for (kh = 0; kh < 4; kh = kh + 1) r2_hi[9*kh +: 9] <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[8+8*kh +: 8]};
+        r3_w <= r2_w; r3_tag <= r2_tag; r3_pos <= r2_pos; r3_fam <= r2_fam; r3_lp <= r2_lp; r3_lo <= r2_lo;
+        r3_spar <= r2_spar; r3_nq <= r2_nq; r3_umax <= r2_m23 > r2_m01 ? r2_m23 : r2_m01;
+        r3_b0 <= r2_b0; r3_b1 <= r2_b1; r3_hi <= r2_hi;
+        he <= r3_e;
+    end
     always @(posedge clk or negedge rst_c) begin
         if (!rst_c) begin
             fault <= 0;
@@ -227,18 +247,7 @@ module ot_s81sl_xs_ctl (
             p1_cfg <= action[62]; p1_go <= action[65];
             if (action[62]) begin p1_ph <= s_ph[config_tag]; p1_np <= s_np[config_tag]; si[config_tag] <= 1; end
             if (action[65]) begin p1_gobf <= s_pw0[launch_tag]; p1_tag <= launch_tag; end
-            r0_v <= action[39]; r0_a <= action[53:40]; r0_tag <= action[55:54]; r0_pos <= action[58:56];
-            r0_fam <= action[59]; r0_lp <= action[60]; r0_lo <= action[61];
-            ra_v <= r0_v; ra_tag <= r0_tag; ra_pos <= r0_pos; ra_fam <= r0_fam; ra_lp <= r0_lp; ra_lo <= r0_lo;
-            r1_v <= ra_v;
-            r1_tag <= ra_tag; r1_pos <= ra_pos; r1_fam <= ra_fam; r1_lp <= ra_lp; r1_lo <= ra_lo;
-            r2_v <= r1_v; r2_w <= r1_w; r2_tag <= r1_tag; r2_pos <= r1_pos; r2_fam <= r1_fam; r2_lp <= r1_lp; r2_lo <= r1_lo;
-            r2_spar <= r1_spar; r2_nq <= r1_nq; r2_m01 <= r1_m01; r2_m23 <= r1_m23; r2_b0 <= r1_blk0; r2_b1 <= r1_blk1;
-            for (kd = 0; kd < 4; kd = kd + 1) r2_hi[9*kd +: 9] <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[8+8*kd +: 8]};
-            r3_v <= r2_v; r3_w <= r2_w; r3_tag <= r2_tag; r3_pos <= r2_pos; r3_fam <= r2_fam; r3_lp <= r2_lp; r3_lo <= r2_lo;
-            r3_spar <= r2_spar; r3_nq <= r2_nq; r3_umax <= r2_m23 > r2_m01 ? r2_m23 : r2_m01;
-            r3_b0 <= r2_b0; r3_b1 <= r2_b1; r3_hi <= r2_hi;
-            he <= r3_e; hv <= r3_v;
+            r0_v <= action[39]; ra_v <= r0_v; r1_v <= ra_v; r2_v <= r1_v; r3_v <= r2_v; hv <= r3_v;
             p1_xs_v <= hv && hw[0] && !h_fam; p1_xb_v <= hv && hw[0] && h_fam;
             bt_xs_v <= p1_xs_v; bt_xb_v <= p1_xb_v;
             bt_go <= p1_go; bt_gobf <= p1_gobf; bt_cfg <= p1_cfg; bt_tag <= p1_tag; bt_ph <= p1_ph; bt_np <= p1_np;

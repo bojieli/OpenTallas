@@ -20,9 +20,21 @@ if {$ot_fc_ck eq "" || $ot_fc_ck eq "NULL"} { error "OT_FCAP: clock port $::env(
 set ot_fc_m [[ord::get_db] findMaster DFFHQNx1_ASAP7_75t_R]
 set ot_fc_n 0
 set ot_fc_bts {}
+# S81-GUNIT-FORM-1 11-07: the kit's declared proven-dead input bits (dead_inputs.json, face_guard.dead_input_list) get NO
+# capture flop: face_guard requires a declared dead bit to have no load in this netlist (and the raw Yosys netlist
+# already proves it unloaded); a capture flop would turn the declaration into a 'dead' failure
+set ot_fc_dead {}
+set ot_fc_df [file join [file dirname [file normalize [info script]]] dead_inputs.json]
+if {[file exists $ot_fc_df]} {
+  set fh [open $ot_fc_df r]; set ot_fc_dj [read $fh]; close $fh
+  if {![regexp {"bits"\s*:\s*\[((?:\s*"[^"]*"\s*,?)*)\s*\]} $ot_fc_dj -> ot_fc_dl]} { error "OT_FCAP: $ot_fc_df has no bits list" }
+  foreach {- b} [regexp -all -inline {"([^"]+)"} $ot_fc_dl] { lappend ot_fc_dead $b }
+  puts "OT_FCAP: [llength $ot_fc_dead] declared dead input bits get no capture flop"
+}
 foreach bt [$ot_fc_blk getBTerms] {
   if {[$bt getIoType] ne "INPUT"} continue
   if {[lsearch -exact $::env(OT_CORE_SKIP) [regsub {\[[0-9]+\]$} [$bt getName] ""]] >= 0} continue
+  if {[lsearch -exact $ot_fc_dead [$bt getName]] >= 0} continue
   lappend ot_fc_bts [list [$bt getName] $bt]
 }
 foreach pr [lsort -index 0 $ot_fc_bts] {

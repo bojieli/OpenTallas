@@ -732,7 +732,9 @@ def wavefront_cells_text(driver=False, lockup=False):
     names = ["ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"]
     if driver:
         names += ["ot_dp_rrelay_drive", "ot_dp_rgate_drive"]
-    if lockup:
+    if lockup == "latch":       # RLK-1108 hop lockup latches (reset_tree.lockup_hops)
+        names += ["ot_dp_lk"]
+    elif lockup:
         names += ["ot_dp_rrelay_nl"]
     out = []
     for name in names:
@@ -3042,13 +3044,13 @@ class Binder:
             # Use the same control-only reset cells as physical kits, not another
             # synchronizer implementation. Datapath registers remain reset-less.
             cells += "\n" + wavefront_cells_text(driver=bool(P.reset.get("relay_driver")),
-                                                 lockup=bool(P.reset.get("relay_lockup")))
+                                                 lockup=(P.reset.get("relay_lockup") or {}).get("form") or False)
             W = RT.wf_plan(P)
             missing = set(W["parts"]) - set(self.members)
             if missing:
                 raise BindError(f"wavefront reset carriers lack bound partitions: {sorted(missing)[:10]}")
             (out.parent / "bind_reset.json").write_text(json.dumps(W, indent=1))
-        if (self.plan.get("clock") or {}).get("ft_hop_lockup"):
+        if (self.plan.get("clock") or {}).get("ft_hop_lockup") and "module ot_dp_lk " not in cells:
             cells += "\n" + ft_hop_lockup_cell()
         (out / "bind_cells.sv").write_text(cells)
         files = [out / "bind_cells.sv"]
@@ -4650,6 +4652,38 @@ def macro_views(base):
     return out
 
 
+def _balanced(text, i):
+    """text[i:] starts just after an opening parenthesis -> the text up to its matching close."""
+    j, depth = i, 1
+    while depth and j < len(text):
+        depth += {"(": 1, ")": -1}.get(text[j], 0)
+        j += 1
+    return text[i:j - 1]
+
+
+def _named_param_overrides(body, children):
+    """{child module: {parameter}} set by name (#(.P(v))) on the instances of `children` in a module body."""
+    out = {}
+    if not children:
+        return out
+    pat = re.compile(r"\b(" + "|".join(re.escape(c) for c in sorted(children)) + r")\s*#\s*\(")
+    for m in pat.finditer(body):
+        out.setdefault(m.group(1), set()).update(re.findall(r"\.(\w+)\s*\(", _balanced(body, m.end())))
+    return out
+
+
+def _declared_params(path, name):
+    """parameter names a module declares: its #( ... ) header list and its body parameter/localparam statements."""
+    t = E.module_body(path, name)
+    got = set()
+    h = re.match(r"\s*#\s*\(", t)
+    if h:
+        got |= set(re.findall(r"(\w+)\s*=(?!=)", _balanced(t, h.end())))
+    for st in re.findall(r"\b(?:parameter|localparam)\b([^;]*);", t):
+        got |= set(re.findall(r"(\w+)\s*=(?!=)", st))
+    return got
+
+
 def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=None, defines=None):
     """E.closure for a G3 kit (KV-P6 18:51 hub_Wi): (1) a module with a hardened view (macro dir <m>/<m>.lef) is a
     HARD MACRO: its black box (<m>_bb.v, else the model) goes in the list, its lef/libs in the manifest, no descent;
@@ -4668,6 +4702,8 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
     # -> a missing entry.  Names in neither index (types, keywords, cells) keep the old behaviour.
     wide = wide or {}
     widened = {} if widened is None else widened
+    need = {}                                    # module -> parameter names its instantiators set (KITPARAM)
+    moved = set()                                # files the KITPARAM rule picked over another definition
     # FLOW-18 10-31: with `defines` (the kit defines, as-built manifest), a child named through an object-like macro
     # (`OT_SH_M257 u_mem(...)) is found too: the module body is also scanned with the file's active `define values
     # expanded (added to the plain scan, never replacing it).  defines=None keeps the old behaviour.
@@ -4710,7 +4746,30 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
                 continue
         elif nonsim and len(nonsim) < len(cands):
             sub[n] = nonsim
-        f, _ = E.pick(sub, n, prefer)
+        # DIE-HBM-91 11-08 (KITPARAM, HBM q_su31 "Can't find object for defparam WCOPY", q_b110 "defparam RING"):
+        # a PROVISIONAL child's RTL is closed with the die bind's preferences, which name an older copy of a module
+        # (r18h5_bundle ot_hbm_su_static_data_store.sv: replicated_bank without WCOPY; rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:
+        # ot_hdc_v41x_ins without RING) while the picked instantiator (rtl/ ot_hbm_su_static_pinned_bank.sv,
+        # ot_su12_sfu_sp2.sv) sets that parameter by name, so the kit can never elaborate.  When several definitions
+        # exist (index + preferred files) and some do not declare every parameter the picked instantiating bodies set
+        # by name, only the compatible ones stay candidates and the incompatible preferred files lose their preference
+        # for this module.  A pick that is compatible, or with no compatible alternative, is unchanged.
+        prefer_n = prefer
+        if need.get(n):
+            nc = list(dict.fromkeys(list(sub.get(n, [])) + [str(q) for q in prefer if Path(q).is_file()
+                                                           and Path(q).suffix.lower() in (".v", ".sv")
+                                                           and E.module_body(q, n)]))
+            if len({str(Path(c).resolve()) for c in nc}) > 1:
+                ok = [c for c in nc if need[n] <= _declared_params(c, n)]
+                if ok and len(ok) < len(nc):
+                    bad = {str(Path(c).resolve()) for c in nc if c not in ok}
+                    sub = dict(sub)
+                    sub[n] = ok
+                    prefer_n = [q for q in prefer if str(Path(q).resolve()) not in bad]
+                    moved.add(str(Path(ok[0]).resolve()))
+                    print(f"kit-rtl: {n} from {ok[0]} (declares {sorted(need[n])}); not from "
+                          f"{sorted(bad)[:2]}", file=sys.stderr)
+        f, _ = E.pick(sub, n, prefer_n)
         if f is None:
             missing.add(n)
             continue
@@ -4727,8 +4786,38 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
                 mdefs[f] = (kit_object_defines(E._strip(Path(f).read_text(errors="replace")), defines, func=fn), fn)
             vals, fn = mdefs[f]
             found |= E.instantiated(expand_object_macros(expand_function_macros(body, fn), vals), known)
+        for c, ps in _named_param_overrides(body, found).items():
+            need.setdefault(c, set()).update(ps)
         todo += sorted(found)
+    _kitparam_same_file(files, picks, moved)
     return files, sorted(missing), macros
+
+
+def _module_src(path, name):
+    """whole `module name ... endmodule` of path, comments stripped, whitespace collapsed ('' if absent)"""
+    m = re.search(r"^\s*(?:\(\*[^\n]*?\*\)\s*)?module\s+" + re.escape(name) + r"\b.*?\bendmodule\b",
+                  E._strip(Path(path).read_text(errors="replace")), re.S | re.M)
+    return " ".join(m.group(0).split()) if m else ""
+
+
+def _kitparam_same_file(files, picks, moved):
+    """DIE-HBM-92-GEN 11-08 (HBM q_hub_ne kit_rtl "different source files named ot_hgi_coll_reduce_static.sv"): the
+    KITPARAM rule took ot_hgi_coll_reduce_static from rtl/ (declares LOCAL_CTRL) while its sibling
+    ot_hgi_coll_reduce_static_state_lane, reached first through other instantiators, was picked from the preferred
+    r18h5_bundle file of the same name; kit_dedupe then refused the two same-named files.  A file that shares its name
+    with a KITPARAM-picked file and supplies only modules that file defines BYTE-IDENTICALLY (comments/whitespace aside)
+    is dropped, those modules taken from the KITPARAM file.  Any differing definition keeps both (fails closed as
+    before); kits where the KITPARAM rule moved nothing are unchanged."""
+    for y in sorted(moved):
+        for x in [f for f in files if Path(f).name == Path(y).name and str(Path(f).resolve()) != y]:
+            mods = sorted(m for m, f in picks.items() if f == x)
+            if mods and all(_module_src(x, m) and _module_src(x, m) == _module_src(y, m) for m in mods):
+                yf = next((f for f in files if str(Path(f).resolve()) == y), y)
+                for m in mods:
+                    picks[m] = yf
+                files.remove(x)
+                print(f"kit-rtl: {', '.join(mods)} from {yf} (identical to {x}, same file as a KITPARAM pick)",
+                      file=sys.stderr)
 
 
 def kit_strip_dups(fl, kd, picks):
@@ -5068,7 +5157,11 @@ def kit_native_station_geometry(out, bound_type, bound_text, kit):
         raise BindError(f"kit-rtl {bound_type}: native station RTL requires {source}/istations.tcl and receipt.json")
     try:
         evidence = json.loads(receipt.read_text())
-        declared = [name for row in evidence["entries"] for name in row["stations"]]
+        # kit_istations also records fixed macro/cell sites in this list.
+        # They carry no RTL station; malformed station rows must still fail.
+        declared = [name for row in evidence["entries"]
+                    if not ("cell" in row and "site" in row and "stations" not in row)
+                    for name in row["stations"]]
     except (ValueError, KeyError, TypeError) as exc:
         raise BindError(f"kit-rtl {bound_type}: invalid native station placement receipt: {exc}") from exc
     if len(declared) != len(set(declared)) or set(declared) != stations:
@@ -5151,7 +5244,10 @@ def cmd_kit_rtl(a):
     import schema as SC
     raw = load_plan(a.plan)
     try:
-        P = SC.Plan(raw)                       # full G0 plan: epochs + R4 tap pins as gen_rtl.wrapper emits them
+        # DIE-HBM-92-GEN 11-08: Plan.path = the plan file, as gen phys loads it.  merged_core_clocks.plan_pins resolves a
+        # merged-clock core's pins_file against the plan dir; without the path every such core (HBM q_b100..q_b103,
+        # q_b101_nw hcol taps) raised 'actual clock pin geometry required' here although its pins_file exists.
+        P = SC.Plan(raw, Path(a.plan))         # full G0 plan: epochs + R4 tap pins as gen_rtl.wrapper emits them
     except KeyError:
         P = None                               # a bind-only plan (no floorplan): data/ctl buses carry an epoch, no taps
     out = Path(a.out)

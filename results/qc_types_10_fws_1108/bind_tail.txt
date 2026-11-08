@@ -1,0 +1,4 @@
+{"partitions": 377, "types": 119, "crossings": 1921, "crossing_bits": 790393, "errors": 0, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 11568, "plan_driven": 0}
+BIND rc 0
+{"modules": 84, "full_files": 10, "lib_files": 39, "ambiguous": 2, "undefined": 290, "substituted": [{"orig": "qfd_dv_slice2", "module": "qfd_dv_s8_flat", "unconnected_inputs": ["treq_i"], "open_outputs": ["treq_o"], "orig_ports_unmapped": [], "reason": "plan slice regions = s8 landed-parent record 
+ELAB rc 0
