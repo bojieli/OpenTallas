@@ -71,11 +71,14 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
     // part as no-reset flops read X before the first frame; synthesis folded them, kit LEC could not prove them).
     reg  [7:0]  h0s;                     // seq of the frame whose beats are in flight (loaded with beat 0)
     wire [19:0] h0 = {12'hA5C, h0s};
-    reg  [511:0] d0, d1, d2, d3, d4, d5, d6, d7, d8, d9; // unused stages fold away
+    reg  [511:0] d0, d1, d2, d3, d4, d5, d6, d7, d8; // unused stages fold away
+    reg  [511:0] d_bridge;             // optional midpoint of the input-to-data-bank flight
     wire       st = tx_v || run;         // a beat enters d0 this cycle
     (* keep *) reg [9:0] sk [0:NRC-1];   // one-hot beat index of d0 (zero = no beat), NRC copies
     always @(posedge clk) begin
-        d0 <= tx_d; d1 <= d0; d2 <= d1; d3 <= d2; d4 <= d3; d5 <= d4; d6 <= d5; d7 <= d6; d8 <= d7; d9 <= d8;
+        d0 <= tx_d; d_bridge <= d0;
+        d1 <= REL ? d_bridge : d0;
+        d2 <= d1; d3 <= d2; d4 <= d3; d5 <= d4; d6 <= d5; d7 <= d6; d8 <= d7;
         if (st && ph == 4'd0) h0s <= seq;
     end
     integer i;
@@ -93,7 +96,9 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
             for (i = 0; i < NRC; i = i + 1) sk[i] <= st ? (10'd1 << ph) : 10'd0;
         end
     // ---------------- chunk window: chunk k = {d1, d0}[591 - 8k -: 520]; chunk 0 = {60'b0, h0, d0[511:72]}
-    wire [1023:0] wd = {d1, d0};
+    // With the bridge, it is the old d1 epoch. Keep the chunk window on those
+    // original consecutive beats while the PMA data path gains the extra edge.
+    wire [1023:0] wd = {REL ? d_bridge : d1, d0};
     wire [519:0]  src [0:9];
     genvar gk, gb;
     generate for (gk = 0; gk < 10; gk = gk + 1) begin : g_src
@@ -244,7 +249,7 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
             // mid has the old flag-bank semantics, including synchronous reset.
             // Final flags are pure one-edge delays, so reset edges shift too.
             (* keep *) reg [3:0] f0_mid, fv_mid;
-            reg [3:0] f0_relay, fv_relay;
+            (* keep *) reg [3:0] f0_relay, fv_relay;
             always @(posedge clk) begin
                 if (!rs_n[1]) begin fv_mid <= 4'd0; f0_mid <= 4'd0; end
                 else begin fv_mid <= {4{fe[3+FFS]}}; f0_mid <= {4{f0[3+FFS]}}; end
@@ -286,7 +291,7 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
     wire [9:0] sw_use [0:NRO-1];
     generate if (CHS) begin : g_ch_out
         (* keep *) reg [9:0] sw_mid [0:NRO-1];
-        reg [9:0] sw_relay [0:NRO-1];
+        (* keep *) reg [9:0] sw_relay [0:NRO-1];
         reg pv_mid, fault_mid;
         reg pv_relay, fault_relay;
         for (genvar r = 0; r < NRO; r = r + 1) begin : g_sw_mid
@@ -318,8 +323,8 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
             p_v_internal <= o_v || ((LA == 2) ? so[5+FFS][0] : so[4][0]);
         end
     // LA1: {d5,d4}; LA2: {d6,d5}; LA2+FF: {d7,d6}. FF moves parity and the PMA phase together.
-    wire [511:0]  oa = CHS ? (REL ? d9 : d8) : (FFS ? d7 : ((LA == 2) ? d6 : d5));
-    wire [511:0]  ob = CHS ? (REL ? d8 : d7) : (FFS ? d6 : ((LA == 2) ? d5 : d4));
+    wire [511:0]  oa = CHS ? d8 : (FFS ? d7 : ((LA == 2) ? d6 : d5));
+    wire [511:0]  ob = CHS ? d7 : (FFS ? d6 : ((LA == 2) ? d5 : d4));
     reg [7:0] h0s_out_mid;
     reg [7:0] h0s_out_relay;
     always @(posedge clk) h0s_out_mid <= h0s;

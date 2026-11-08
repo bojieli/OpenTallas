@@ -27,12 +27,12 @@
  "source_ch_n_fanout_per_bit": 4,
  "added_register_bits": {
   "chunk_relay": 2080,
-  "data_delay_d9": 512,
   "pair_flags": 8,
   "word_select": 170,
   "valid_fault": 2,
   "parity_load": 1,
-  "header": 8
+  "header": 8,
+  "input_data_bridge": 512
  },
  "added_register_total": 2781,
  "measured_reference_dff_area_um2": 0.2916,
@@ -66,7 +66,7 @@
   "f0/fv pair flags delayed one edge including reset epochs",
   "parity load pulse delayed one edge",
   "PMA word select delayed one edge",
-  "data window advances to d9/d8",
+  "D0-to-D1 bridge adds one data edge; chunk window uses bridge as the original D1 epoch",
   "header, valid and fault delayed one edge"
  ],
  "token_model_obligation": "If adopted, add one TX edge to every bound instance and reschedule its link slots; no canonical model/plan changed.",
@@ -90,11 +90,27 @@
    "compared_words": 377,
    "caught": true
   },
-  "host": "intel1 (run spilled epyc4)",
-  "unit": "oth-ubuntu-830549-1794136595",
-  "logs": "/srv/opentallas-scratch2/claude/codex-head-tx-relay1-0222/{continuous,stall_reset,mutant8}.log",
+  "host": "intel1",
+  "unit": "oth-ubuntu-1791952-1794137821",
+  "logs": "/srv/opentallas-scratch2/claude/codex-head-tx-relay1-bridge-0222/{continuous,stall_reset,mutant8}.log",
   "routed_lec": "NOT RUN",
   "signoff": "NOT RUN"
  },
- "physical_launch": "HOLD: no P&R until current regional PLACE image and reach read"
+ "physical_launch": "NOT RUN for +1 form; current zero-cycle GPL reviewed BLOCKED before CTS/GRT",
+ "existing_pin_cycles": {
+  "pma_tx": 1,
+  "e_flt": 1
+ },
+ "candidate_total_pin_cycles": {
+  "pma_tx": 2,
+  "e_flt": 2
+ },
+ "physical_requirements": [
+  "Midpoint chunk relay targets from actual current PLACE source-to-mid D-net drivers",
+  "D0-to-D1 midpoint bridge, so two data flights replace the observed ~150um hop",
+  "Spread data/PMA stage anchors; old contiguous-row bands hit0.817 density",
+  "Preserve local mid/cq pairs; current actual2080pairs max0.567um",
+  "Keep word-select and flag relay copies to avoid synthesis reconvergence",
+  "No canonical clock-reference/plan change; new P&R only after revised image review"
+ ]
 }

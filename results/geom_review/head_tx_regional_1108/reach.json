@@ -1,0 +1,189 @@
+{
+ "advisory_only": true,
+ "odb": "/db/3_3_place_gp.odb",
+ "weak_driver_nets_gt100um": 1364,
+ "by_driver": {
+  "DFFHQNx1_ASAP7_75t_R": 264,
+  "DFFHQNx2_ASAP7_75t_R": 6,
+  "OR5x1_ASAP7_75t_R": 33,
+  "INVx1_ASAP7_75t_R": 99,
+  "INVx2_ASAP7_75t_R": 22,
+  "BUFx3_ASAP7_75t_R": 940
+ },
+ "by_sink": {
+  "comb": 363,
+  "data": 393,
+  "cq": 133,
+  "mid": 460,
+  "p_d": 15
+ },
+ "regional_mid_drivers": 2080,
+ "regional_max_driver_net_hpwl_um": 122.733,
+ "regional_driver_nets_gt20um": 25,
+ "regional_paired_registers": 2080,
+ "regional_max_pair_distance_um": 0.567,
+ "regional_pairs_gt20um": 0,
+ "regional_missing_pairs": 0,
+ "worst": [
+  {
+   "net": "net8005",
+   "driver": "place8006",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 305.253,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net7987",
+   "driver": "place7988",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 301.23,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net7981",
+   "driver": "place7982",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 301.217,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net7999",
+   "driver": "place8000",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 301.192,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net7983",
+   "driver": "place7984",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 301.13,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net8003",
+   "driver": "place8004",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 300.975,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net7990",
+   "driver": "place7991",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 300.972,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net8009",
+   "driver": "place8010",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 300.97,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net7982",
+   "driver": "place7983",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 300.922,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net8001",
+   "driver": "place8002",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 300.917,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net7984",
+   "driver": "place7985",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 300.917,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net7991",
+   "driver": "place7992",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 300.869,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net7996",
+   "driver": "place7997",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 300.857,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net7976",
+   "driver": "place7977",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 300.829,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net8010",
+   "driver": "place8011",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 300.674,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net8080",
+   "driver": "place8081",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 300.62,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net7716",
+   "driver": "place7717",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 300.59,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net8000",
+   "driver": "place8001",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 300.584,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net7714",
+   "driver": "place7715",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 300.547,
+   "loads": 4,
+   "kind": "mid"
+  },
+  {
+   "net": "net7715",
+   "driver": "place7716",
+   "master": "BUFx3_ASAP7_75t_R",
+   "hpwl_um": 300.448,
+   "loads": 4,
+   "kind": "mid"
+  }
+ ]
+}
