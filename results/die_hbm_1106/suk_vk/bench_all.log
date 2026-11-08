@@ -1,0 +1,64 @@
+ok
+ok vC MLAT 6 ALAT 5
+ok vB(xd) MLAT 7 CUTS 23 ALAT 5 fullx
+ok vK MLAT 7 ALAT 6
+ins 49 outs 14 clks ['bank_clk', 'bank_clk_macro', 'lane_clk_stage', 'lane_clk_insert'] rsts ['bank_rst_n', 'lane_rst_n']
+ins 49 outs 14 clks ['bank_clk', 'bank_clk_macro', 'lane_clk_stage', 'lane_clk_insert'] rsts ['bank_rst_n', 'lane_rst_n']
+ins 49 outs 14 clks ['bank_clk', 'bank_clk_macro', 'lane_clk_stage', 'lane_clk_insert'] rsts ['bank_rst_n', 'lane_rst_n']
+ok
+ok
+exp oc_k MUT 1: XEQ FAIL checks=560000 errs=614 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_ro_x cyc=924 ep=0 kind=0
+MISMATCH lane_vm_wdata cyc=948 ep=0 kind=0
+MISMATCH lane_ro_x cyc=948 ep=0 kind=0
+exp oc_k MUT 4: XEQ FAIL checks=560000 errs=80858 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_rd_addr cyc=819 ep=0 kind=0
+MISMATCH bank_read_data cyc=819 ep=0 kind=0
+MISMATCH lane_rd_addr cyc=820 ep=0 kind=0
+full o MUT 1 SIDE_D 8: XEQ FAIL checks=640000 errs=715 writes=432 fault_cycles=793 coll_cycles=25 sfu_fault_ref=138 sfu_fault_dut=138 side_v=836
+MISMATCH lane_ro_x cyc=890 ep=0 kind=0
+MISMATCH lane_vm_wdata cyc=939 ep=0 kind=0
+MISMATCH lane_ro_x cyc=939 ep=0 kind=0
+exp oc_k MUT 0: XEQ PASS checks=560000 errs=0 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+exp oc_k MUT 5: XEQ FAIL checks=560000 errs=80858 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_rd_addr cyc=819 ep=0 kind=0
+MISMATCH bank_read_data cyc=819 ep=0 kind=0
+MISMATCH lane_rd_addr cyc=820 ep=0 kind=0
+exp oc_k MUT 2: XEQ FAIL checks=560000 errs=1975 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_kv_we cyc=924 ep=0 kind=0
+MISMATCH lane_ro_x cyc=924 ep=0 kind=0
+MISMATCH lane_vm_we cyc=930 ep=0 kind=0
+full o MUT 0 SIDE_D 8: XEQ PASS checks=640000 errs=0 writes=432 fault_cycles=793 coll_cycles=25 sfu_fault_ref=138 sfu_fault_dut=138 side_v=836
+full o MUT 3 SIDE_D 8: XEQ FAIL checks=640000 errs=3008 writes=432 fault_cycles=793 coll_cycles=25 sfu_fault_ref=138 sfu_fault_dut=134 side_v=836
+MISMATCH lane_coll cyc=919 ep=0 kind=0
+MISMATCH lane_fault cyc=925 ep=0 kind=0
+MISMATCH lane_ro_v cyc=936 ep=0 kind=0
+exp oc_k MUT 6: XEQ FAIL checks=560000 errs=421 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_fault cyc=973 ep=0 kind=0
+MISMATCH lane_fault cyc=974 ep=0 kind=0
+MISMATCH lane_fault cyc=1152 ep=0 kind=0
+exp oc_k MUT 3: XEQ FAIL checks=560000 errs=2476 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=200
+MISMATCH lane_vm_wdata cyc=930 ep=0 kind=0
+MISMATCH lane_ro_x cyc=930 ep=0 kind=0
+MISMATCH lane_ro_x cyc=1022 ep=0 kind=0
+full o MUT 0 SIDE_D 7: XEQ FAIL checks=640000 errs=1337 writes=432 fault_cycles=793 coll_cycles=25 sfu_fault_ref=138 sfu_fault_dut=138 side_v=836
+MISMATCH lane_vm_wdata cyc=3720 ep=2 kind=2
+MISMATCH lane_ro_x cyc=3720 ep=2 kind=2
+MISMATCH lane_kv_wdata cyc=3731 ep=2 kind=2
+full o MUT 6 SIDE_D 8: XEQ FAIL checks=640000 errs=374 writes=432 fault_cycles=793 coll_cycles=25 sfu_fault_ref=138 sfu_fault_dut=138 side_v=836
+MISMATCH lane_fault cyc=1117 ep=0 kind=0
+MISMATCH lane_fault cyc=1118 ep=0 kind=0
+MISMATCH lane_fault cyc=1235 ep=0 kind=0
+exp oc_t14 MUT 0: XEQ FAIL checks=560000 errs=10125 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH lane_kv_we cyc=923 ep=0 kind=0
+MISMATCH lane_kv_waddr cyc=923 ep=0 kind=0
+MISMATCH lane_kv_wdata cyc=923 ep=0 kind=0
+exp oc_s8 MUT 0: XEQ FAIL checks=560000 errs=374 writes=366 fault_cycles=907 coll_cycles=22 sfu_fault_ref=198 sfu_fault_dut=198
+MISMATCH f_sfu cyc=30342 ep=21 kind=5
+MISMATCH f_sfu cyc=30343 ep=21 kind=5
+MISMATCH f_sfu cyc=30344 ep=21 kind=5
+full o_s8 MUT 0 SIDE_D 8: XEQ FAIL checks=640000 errs=252 writes=432 fault_cycles=793 coll_cycles=25 sfu_fault_ref=138 sfu_fault_dut=138 side_v=836
+MISMATCH f_sfu cyc=30342 ep=21 kind=5
+MISMATCH f_sfu cyc=30343 ep=21 kind=5
+MISMATCH f_sfu cyc=30379 ep=21 kind=5
+BENCH_DONE Fri Nov 6 22:38:31 PST 2026
