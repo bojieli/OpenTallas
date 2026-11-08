@@ -7,6 +7,7 @@
 # flop pairs 212 ps apart).
 # env: OT_DTAP_TARGET (max sinks per tap, default 1250), OT_DTAP_DMAX_UM (max tap region side, robust 2-98%, default 80;
 #      ASAP7 placement-RC wire delay grows ~quadratically, so long strips are split), OT_DTAP_MIN (no split below 2x, default 150),
+#      OT_DTAP_BOUNDED_F4 (opt-in 1: preserve TARGET through stray/F4 moves and bound F4 capture-to-tap distance),
 #      OT_DTAP_CELL (default BUFx24_ASAP7_75t_R), OT_DTAP_PORT (default clk), OT_DTAP_OUT (optional report file)
 uplevel #0 {
 set dt_blk [ord::get_db_block]
@@ -166,6 +167,11 @@ set dt_med [concat $dt_med $dt_atomic_med]
 if {[llength $dt_atomic_sets]} {puts "OT_DTAP_ATOMIC groups [llength $dt_atomic_sets] pinned [dict size $dt_atomic_pinned]"}
 # stray sinks (the robust split ignores the outer 2%): a sink farther than DMAX from its own tap joins the nearest tap
 set dt_moved 0
+# Optional bounded form: preserve the original density partition budget during
+# reassignment as well as during splitting. Legacy/planned recipes stay pinned.
+set dt_bounded_f4 [expr {[info exists ::env(OT_DTAP_BOUNDED_F4)] && $::env(OT_DTAP_BOUNDED_F4)}]
+array unset dt_stray_load
+for {set k 0} {$k < [llength $dt_sets]} {incr k} {set dt_stray_load($k) [llength [lindex $dt_sets $k]]}
 # DIE-HEAD-86: the stray/planned-split pass reads the atomic pin set and the regular tap count; defaults when
 # no atomic plan ran (the block is also sourced stand-alone by test_planned_group_caps)
 if {![info exists dt_atomic_pinned]} {set dt_atomic_pinned {}}
@@ -185,9 +191,13 @@ foreach S $dt_sets {
       for {set j 0} {$j < $dt_regular_count} {incr j} {
         lassign [lindex $dt_med $j] qx qy
         set d [expr {abs([lindex $p 0] - $qx) + abs([lindex $p 1] - $qy)}]
+        if {$dt_bounded_f4 && $j != $k && $dt_stray_load($j) >= $dt_target} continue
         if {$d < $bd} { set bd $d; set t $j }
       }
-      if {$t != $k} { incr dt_moved }
+      if {$t != $k} {
+        incr dt_moved
+        incr dt_stray_load($k) -1; incr dt_stray_load($t)
+      }
     }
     lappend dt_asg($t) $p
   }
@@ -217,10 +227,16 @@ proc dt_d_sinks {net depth} {
 set dt_f4 0
 array unset dt_load
 for {set k 0} {$k < [llength $dt_sets]} {incr k} {set dt_load($k) [llength $dt_asg($k)]}
-proc dt_f4_group_move {mapping loads capture target cap planned} {
+proc dt_f4_group_move {mapping loads capture target cap planned {bounded 0} {capture_xy {}} {target_xy {}} {dmax 0}} {
   upvar 1 $mapping groups $loads count
   set prior [dict get $groups $capture]
-  if {$planned && $count($target) >= $cap} {return 0}
+  if {($planned || $bounded) && $count($target) >= $cap} {return 0}
+  # Pairwise proximity alone permits a chain to walk far from its tap. Check
+  # the final capture against the fixed target medoid before changing state.
+  if {$bounded} {
+    if {[llength $capture_xy] < 2 || [llength $target_xy] != 2 || $dmax <= 0} {error "bounded F4 needs capture, medoid and positive DMAX"}
+    if {abs([lindex $capture_xy 0]-[lindex $target_xy 0]) + abs([lindex $capture_xy 1]-[lindex $target_xy 1]) > $dmax} {return 0}
+  }
   dict set groups $capture $target
   incr count($prior) -1; incr count($target)
   return 1
@@ -236,7 +252,7 @@ dict for {nm p} $dt_pt {
       if {![dict exists $dt_tp $c] || [dict get $dt_tp $c] == $t} continue
       set q [dict get $dt_pt $c]
       if {abs([lindex $q 0] - [lindex $p 0]) + abs([lindex $q 1] - [lindex $p 1]) > $dt_dmax / 2} continue
-      if {[dt_f4_group_move dt_tp dt_load $c $t $dt_target $dt_planned_active]} {incr dt_f4}
+      if {[dt_f4_group_move dt_tp dt_load $c $t $dt_target $dt_planned_active $dt_bounded_f4 $q [lindex $dt_med $t] $dt_dmax]} {incr dt_f4}
     }
   }
 }
