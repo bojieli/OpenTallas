@@ -28,7 +28,7 @@ module ot_kv_fdi_join_rf #(
     end
     wire native_v;
     wire [WA+WB-1:0] native_d;
-    (* keep_hierarchy = "yes" *) ot_fdi_join2 #(.WA(WA), .WB(WB), .DEPTH(DEPTH)) u_native (
+    (* keep_hierarchy = "yes" *) ot_fdi_join2 #(.WA(WA), .WB(WB), .DEPTH(DEPTH), .RP_COPIES(16)) u_native (
         .clk(clk), .rst_n(rst_n), .a_v(a_v_q), .a_d(a_d_q),
         .b_v((MUT == 2) ? b_v : b_v_q), .b_d(b_d_q),
         .o_v(native_v), .o_d(native_d)
