@@ -1,0 +1,23 @@
+{
+ "die": {
+  "name": "SVC_SMD_PRIVATE_CHILD",
+  "outline_um": [
+   146.88,
+   146.88
+  ],
+  "reach_um": 405,
+  "period_ps": 833
+ },
+ "clock": {
+  "insertion_ps": 250,
+  "common_latency_ps": 250,
+  "insertion_tol_ps": 40
+ },
+ "master_plan": {
+  "required": false
+ },
+ "partition_types": {},
+ "partitions": [],
+ "ports": [],
+ "lanes": []
+}
