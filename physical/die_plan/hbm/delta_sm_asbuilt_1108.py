@@ -26,6 +26,12 @@ relays drive every core reset pin) are removed; compiler_core_delta S2.extra.SM 
 hnx split's; the as-built leaf has none).
 
 Pure functions + a main that writes a hardlinked copy of the plan dir with only the changed files rewritten.
+Re-appliable on any plan dir of the chain whose q_sm types still carry the hnx form:
+
+    delta_sm_asbuilt_1108.py event BASE_PLAN_DIR --hier H/hier_{t}.json --bound-rtl RTL --lef-dir LEF --out-dir OUT
+    delta_sm_asbuilt_1108.py contained EARLIER_DIR OUT     (every entry of EARLIER is in OUT unchanged, except the
+                                                            entries this event owns)
+    delta_sm_asbuilt_1108.py wrappers ... / manifest --asbuilt HEAD.json --rules R --out HEAD_sm.json
 """
 import argparse
 import collections
@@ -592,7 +598,8 @@ def _gz(path):
     gz = path.with_name(path.name + ".gz")
     if gz.exists() or gz.is_symlink():
         gz.unlink()
-        with open(path, "rb") as src, gzip.open(gz, "wb") as dst:
+        with open(path, "rb") as src, open(gz, "wb") as raw, \
+                gzip.GzipFile(filename="", mode="wb", fileobj=raw, mtime=0) as dst:   # deterministic re-apply
             shutil.copyfileobj(src, dst)
 
 
@@ -602,6 +609,10 @@ SIDE = ("clock_entries.json", "core_clock_regions.json", "core_macros.json", "co
 
 def main_event(a):
     src, dst = Path(a.plan_dir).resolve(), Path(a.out_dir)
+    if os.path.realpath(a.plan_dir) != str(src) or Path(a.plan_dir).is_symlink():
+        raise SystemExit("base must be a real directory path")
+    if any(q.is_symlink() for q in src.rglob("*")):
+        raise SystemExit("base contains symlinks: the hardlinked copy would share them, refusing")
     if dst.exists():
         raise SystemExit(f"{dst} exists")
     plan = json.loads((src / "die_plan.json").read_text())
@@ -688,10 +699,45 @@ def main_manifest(a):
     out["substitute_inst"] = out["substitute_inst"] + r["substitute_inst"]
     out["files"] = list(dict.fromkeys(out.get("files", []) + r["files"]))
     out["prefer"] = list(dict.fromkeys(out.get("prefer", []) + r["files"]))
-    out["note"] = (f"{LANE} p37su2_sm: p37su2 + {EVENT} BE parameter-set wrappers (substitute_inst) | " + out.get("note", ""))
+    head = Path(a.asbuilt).stem.replace("asbuilt_", "")
+    out["note"] = (f"{LANE} {head}_sm: {head} + {EVENT} BE parameter-set wrappers (substitute_inst) | " + out.get("note", ""))
     Path(a.out).write_text(json.dumps(out, indent=2) + "\n")
     print(f"manifest {a.out} substitute_inst {len(ab['substitute_inst'])} -> {len(out['substitute_inst'])}")
     return 0
+
+
+OWNED_ALLOWED = {"compiler_core_delta.json/basis/SM", "compiler_core_delta.json/S2/extra/SM"}
+
+
+def contained_diffs(a_dir, b_dir):
+    """entries of plan dir A missing or changed in B, skipping what this event owns (q_sm* / hnx_rp3h_* keys and the
+    compiler_core_delta SM rows)."""
+    bad = []
+
+    def walk(x, y, path):
+        if isinstance(x, dict) and isinstance(y, dict):
+            for k in x:
+                if str(k).startswith(("q_sm", "hnx_rp3h_")):
+                    continue
+                if k not in y:
+                    bad.append(f"{path}/{k} missing")
+                else:
+                    walk(x[k], y[k], f"{path}/{k}")
+        elif x != y:
+            bad.append(path)
+
+    for f in ("die_plan.json",) + SIDE:
+        walk(json.loads((a_dir / f).read_text()), json.loads((b_dir / f).read_text()), f)
+    bad = [b for b in bad if b not in OWNED_ALLOWED]
+    bad += [f"missing file {q.relative_to(a_dir)}" for q in a_dir.rglob("*")
+            if q.is_file() and not (b_dir / q.relative_to(a_dir)).exists()]
+    return bad
+
+
+def main_contained(a):
+    bad = contained_diffs(Path(a.earlier), Path(a.out))
+    print("CONTAINED" if not bad else f"NOT CONTAINED ({len(bad)}): {bad[:20]}")
+    return 1 if bad else 0
 
 
 def main(argv=None):
@@ -713,8 +759,11 @@ def main(argv=None):
     m.add_argument("--asbuilt", required=True)
     m.add_argument("--rules", required=True)
     m.add_argument("--out", required=True)
+    c = sub.add_parser("contained")
+    c.add_argument("earlier")
+    c.add_argument("out")
     a = ap.parse_args(argv)
-    return dict(event=main_event, wrappers=main_wrappers, manifest=main_manifest)[a.cmd](a)
+    return dict(event=main_event, wrappers=main_wrappers, manifest=main_manifest, contained=main_contained)[a.cmd](a)
 
 
 if __name__ == "__main__":
