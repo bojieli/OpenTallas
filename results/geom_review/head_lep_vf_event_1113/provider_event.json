@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.head_lep_vf_event.v1",
+ "status": "DRAFT_NOT_ADOPTED",
+ "baseline_sha256": "a2c18c19e08ce6c39d3a0bf8e575119c6ab792c28f3fa188df2aaea835d0d1ac",
+ "candidate_sha256": "7e82ec0a5aa15c256e1a8362462344200a0d549256c772a230637fcea0f15055",
+ "native_parameters": {
+  "KTX": "16'h0000",
+  "KRX": "16'h1220",
+  "TXI": "16'h1221",
+  "PIN": 2,
+  "POUT": 3,
+  "PLW": 3,
+  "COL0": 2
+ },
+ "external_lane_fixed_cycles_delta": 0,
+ "bus_geometry_delta": 0,
+ "macro_or_clock_or_reset_delta": 0,
+ "logical_stage_flop_bits": 14023,
+ "consumption": "provider calendar consumed once; no added inter-partition wire delay",
+ "model_entry": "tools/uarch_model.py::s81_head_lep_vf_stage_calendar_model",
+ "model_source": "codex/svc-token-1113@48d092e2e0",
+ "physical_form_source": "codex/head-lep-reserve-form-0222@41a81fe176",
+ "physical_native_proof": "EQUIVALENT 107757/107757",
+ "pending": [
+  "constructor reproduces actual native SRAM sites and FIRM stage windows",
+  "strict bind and count dry run on composed source",
+  "actual vF programme calendar and one-time compiler consumer",
+  "physical CTS/GRT/route signoff"
+ ]
+}
