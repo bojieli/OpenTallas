@@ -12719,3 +12719,11 @@ Latest HEAD mesh ref80c3c10de24 has actual reach FAIL afterPLACE (314paths>405um
 Fresh fleet collected in lanes/CODEX-FLEET-1113.md. I2 S2 46GB below50floor; E5 S2 49GB although canonical status says77; E6 S2 51GB. Existing cleanup services terminal success; no deletion/restart by Codex. Live hub read-only gate PID1693041 preserved. Wave lead asked to inspect supported future work_root offhub.
 
 OWNER? DISK-URGENT's remaining hub cold protected trees (die-head-48, flow-21, ss24, ss32, kw21/src_c926f, kw23/src_e9eda) cannot be relocated across hosts with working same-path symlinks; refs would need explicit coordinated rewrite. Default: preserve all protected trees, no relocation/deletion or guard bypass; advance supported new work staging offhub instead.
+
+CODEX KV 1113: resumed all KV scopes; latest core count32/32 supersedes 0222 retries. FDI RP16 routed and mapped EQ20153, final active; parallel WR16 route active. PC43 intermediate282 differs is built-in proof continuation, CPU95%, not terminal. Wave diagnoses11 PC units duplicate direct+OWNERS picks, leaves twins healthy. PHY +3 bind queued; all PHY/Eo/HG/PV holds retained. Fleet owns3IO diskwaits. Details lanes/CODEX-KV-1113.md.
+
+## CODEX 2026-11-08 11:13 PST takeover
+All nine scope leads active; 645 lanes indexed and coverage in lanes/CODEX.md plus CODEX-*-1113.md. Continue healthy jobs; no merges/tags/POR changes/deletions. Shared fixes assigned: wave PC-key duplicates/source/LEF/coretap/ECO; gaps TKM loaded state; QC ESC_DOTTED c7c76; HBM LAT and TYPE-SAFE-2. SVC H8 failure localized to absent second-pass Preturn, packing ruled out. Capacity consolidated toward SVC SM/token and KV types.
+OWNER? Existing protected hub cold-tree relocation requires coordinated reference rewrite; preserve by default. All current geometry/adoption holds remain until their stated receipts and owner decisions; no new constraint or plan policy adopted.
+
+CODEX fleet 11:20 PST: t50 re-sign tools/output safely resited E2S3→S2 with original tools retained; original ar frontend untouched. Gunitpair1.4GB copied intact to E5S3; S81 owns queued-only rehome. QC SU1 exact20GiB Docker OOM diagnosed, owner continuation32GiB onE5S3. No deletion/restart/policyedit. Full paths/receipts CODEX-FLEET-1113.md.
