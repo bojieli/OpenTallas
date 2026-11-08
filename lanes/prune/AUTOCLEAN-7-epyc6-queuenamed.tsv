@@ -1,0 +1,9 @@
+# AUTOCLEAN-7 epyc6 root: finished attempts protected only by being queue-named (COORD 19:2x (b) YES), 2026-11-07 19:28 PST. No signed record in any, so nothing to archive. BULK = current FAIL attempt: only *.odb/*.spef/*.def and objects/ deleted, logs/reports/geom kept as failure evidence. WHOLE = superseded. Skipped live: svc_lo_dsdv_svc_rs__t3/attempt_5 (8 cwd procs + docker mount).
+# host	mode	GB	path
+epyc6	BULK	1.40	/srv/opentallas-scratch3/claude/kw21-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/coll_ftc/attempt_4
+epyc6	BULK	0.00	/srv/opentallas-scratch3/claude/kw21-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/coll_ucie/attempt_8
+epyc6	BULK	1.39	/srv/opentallas-scratch3/claude/kw21-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_su_c/attempt_7
+epyc6	WHOLE	0.11	/srv/opentallas-scratch3/claude/kw21-wave-1106/runs/s81/kit-wave/s81/bf1e2233ce05/items/gunit__t1/attempt_7
+epyc6	BULK	5.36	/srv/opentallas-scratch3/claude/kw21-wave-1106/runs/s81_head/kit-wave/s81_head/l48ui/items/hd_tile/attempt_6
+epyc6	BULK	2.08	/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_hc1__cl22c1ff36/attempt_25
+epyc6	BULK	2.24	/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/tt_ctlm/attempt_9
