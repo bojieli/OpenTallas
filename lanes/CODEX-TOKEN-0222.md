@@ -1,0 +1,37 @@
+# CODEX token / model takeover 2026-11-08 02:22 PST
+
+## CODEX notes
+Collected latest TOK-VERIFY, TOK-HEAD, and previous Codex token handbacks. All identified prior token jobs terminal; no live job restarted or duplicated. All physical jobs belong to die leads.
+
+Current tasks by die:
+- S81: H8 SVC programme/compiler owned parent svc_token; DS 47-slot/eight-HWIN/global HOST-KS-reset production booking still open. Native marker/47 tracker component passed 376 returns / 44885 commands in prior run; no production adoption. Next materialize actual source events, not inferred heartbeat dates.
+- HEAD: current LEP COL0=2 leg form needs +4 static pair A-to-B release separation, +2 coll_WN0_u/d, ri +11. Existing stress failed on pair release collision, not arithmetic. Working on explicit compiler release calendar and schedule-driven bench; hd_lep0N_vE-b live epyc5 /srv/opentallas-scratch3/claude/dh85lep/kit/hd_lep0N_vE PLACE/CTS, owned head lead. Previous HEAD source timing transport336 vs raw332; 13 lane omissions/+15 aggregate need die-owner event. Full18 c401 rebuild prohibited by OWNER.
+- QC/KV: RES2->ROOT->HEAD/TG4 components passed; full production programme/phase/START/leases still unjoined. SU1 +4 request/+9 value/fault local proof is not full parent qualification. No actual dates invented. Await changed core cycle receipts from die leads.
+- HBM: B12 native coupled component passed, completion467->468/cache_ready559->560, fixedGO741/output749..875 unchanged, actual producer bankII4. Rest joined capture+read shift is +1 overall, not +2. S7 mixed-face public stop qualification and actual record/clock/row leases remain open, no blanket latency adoption.
+
+Own branch being prepared codex/token-0222 from current main289149dea5. No merge/tag/plan change/deletion. OWNER questions remain in CODEX-LOG, no dialogs.
+
+## 2026-11-08 02:31:08 PST — HEAD calendar fix
+Own codex/token-0222@159c0fb397 pushed hub. Explicit baseline RX intervals + source commands/beats compiler adds 2*COL0 to pair A and shifts whole subsequent source windows to avoid A/B collisions. Three focused checks PASS, gap-removed mutant caught. Default no stages preserves source dates. Native stress+COL0=2 candidate gap4 and same-ELF gap0 control running Intel1 /srv/opentallas-scratch2/claude/codex-token-0222/lep, unit oth-ubuntu-3957305-1794133817; intel2 controller .../codex-token-0222-controller/lep.mem12.log. Initial unit3917845 failed MEMCG-OOM at4GiB, diagnosed and retained build.mem4_failed.log; successor admitted12GiB. No P&R run. No canonical source/POR changed.
+
+SVC compiler parent corrected provisional +848cycle H8 span: INVALID release price because actual P-fold is one word/2cycles vs engine2words/cycle; needs about3T/8 extra wait. Native calibration owned svc_token, do not adopt provisional span.
+
+HBM reach collector: unadopted claude/die-hbm-91-reach-istareach-1108@178842a72a carries PIN CYCLES83 lanes/LAT delta85 incl L722/L722m R8+6/+7; ledger results/die_hbm_1108/istareach/lat_delta.tsv. Reader-only mixed-receipt fix codex/hbm-reach-receipt-1108@a4143b6aa7 adds0cycles; no token replay needed. Candidate reprice awaits actual plan adoption; no POR change by Codex.
+
+KV followthrough source hub566d53dd96: opt-in prompt_capture_calendar_0222 records six vP staged inputs, auth epoch/digest/footer held through later record compare, commit epoch/digest/v/witness availability+1; a conflicting next authority fails closed until source rescheduled. Three focused checks PASS. E6 dkv91/stage_vP.py and prove_vP.py read: prior full-module random lockstep compares old with six delayed inputs; it is not production auth-lifetime qualification. vQ/vR add0 beyond vP. Combined ioft SR+lockup data0, fault/status+1 per existing SR approval; no normal-token cycle charge. Actual selected programme dates/caller remain missing, so no canonical adoption.
+
+02:40 Qwen concrete lease measurement running E6 unit3248532-1794134366,8GB1thread normalotrun, .../codex-token-head-readlease-0222; observer-only minimum actual source slices0/11,user0,640numericwords. Logs actual SRAM m_rce/m_ra samples for VMreplicaA/B/C and production BF16stream dates at real833ps commandposedge. No DUTsource change or wholearray/die sim. Prior emission profile measured outputs70..110 but omitted operand lease endpoints; this fills that local gap. Exact retainedMIF0cohort only; current MIF1/newSU1transport does not inherit dates. Parent ROOTpublication/Xlastwrite/START still required.
+
+QC current source895234baeda (terminal result2a102b5c539): versus zero-transport directVM6/CROM9, ordinary request5/answer4→VM15/CROM18; private ingress4/out5 total request+9/results+18, fault+18. CorrectEXTRA9/WCOMP9 compensation changes req/data0 versus broken private form; unchanged478errors/WCOMP4 52/EXTRA4 406. No canonical source/model adoption or wholeparent qualification.
+
+## 2026-11-08 02:53:02 PST — actual operand lease milestone
+E6 unit3248532 exit0, two actual native shapes640goldenwords/10BF16beats PASS. Actual commandposedge→X SRAMread20..67(384words)/20..51(256words); RSTDrow25 sampled48/32times over same20..67/20..51. EarliestRSTDoverwrite68/52;82physical256bitrowleases captured. Streams70/78/86/94/102/110 and70/78/86/94 match retained emission profile. No repeatedoldcohort measurement planned. Current-source VMlaw implemented: source request→SRAMsample2+MIF; write→commit4+MIF; privateWT32/RT9 needs sourcegap26 vsnative3(+23),14-onlyfails. Real QCmutableboundary independentlyPASSgap17 (native3,+14), headEX9 makescompiled+23. Currentparentissue/epoch/publication/overwrite dates still required; no blanketMIF1/globaldate transfer. Actualresult branchcommit noted below.
+
+SVC newest calibration supersedes ALL provisionalprices:47/239lag and+848cycleprice INVALID. ActualPB8/DPT8 stride1 sustainedoverrun; T640 lateP0=800 failed37refused/0PV. Parent compiler82a282cec0 stride2 gives diagnosticlag32/160; actualend-to-endprice stilluncalibrated, no modeladoption.
+
+HBM candidateonly: codex/hbm-opsa-periphery-0222@dd21b09d45b, results/hbm_opsg_regional_0222, +1readoutputrelativeGP=current+5→candidate+6 vsoriginalrowbank, flt0;40kedge16bankgroup0errors/mutant823mismatches. PrivateRTLnotadopted/noP&R, do not altercurrentlatency.
+
+## 2026-11-08 03:01:01 PST — current source join and CTL event scope
+Hub codex/token-0222@95452b008c includes current QCactual4case source/log projection2087249eab. NegedgecycleN enters parentinputsampleordinalN+1: nativewritecommit261/read262→new, productioncommit280/read267→old, correctedread281→new, earlyread280sameedgecollision→old. All4native2lane finalvalues/fault0 agree. These samplerdates are SOURCE-DERIVED, not printed samplermeasurements. Nativeprovider from QCsourcea288556fc94/runtime12e27c9516c; no rerun. Currentproductionepoch/calendar remainsunjoined. Separate true2laneWROM nowPASS a70ed396e26, req/data0/fault+18, wrongreturn+1mutant14errors/lane; no wholeparent adoption.
+CTLprivatevG sourceff383026c2a read directly: rawcapture565payload/header/fault+1; epochbit565 fromreset ea/equnchanged, separateSTARTrunrelayunchanged. Newctl_raw_event_calendar model defaults0, exactsplitcandidateonly, blanket566shiftcontrolcaught. NativeFSTARTconsumerdatesnotinvented; no localwindowproofrerun.
+InitialE5LEPwaiter terminalNOTRUN/cancelledconfirmed; no E5duplicate. InitialI1mem4nativecompileFAILOOM retained; successorI1unit3957305mem12 healthy, nowC++group5. E6readleaseobjterminal; cleanupdelegatedfleet perparentnomannualdeleteinstruction.

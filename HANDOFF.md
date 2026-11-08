@@ -3428,6 +3428,25 @@ CODEX: 2026-11-07 17:04 PST explicit Claude reset, parked newwork/all9leads; hea
 - 11-08 01:47 COORD: hourly 01:2x, count 225 (+3: S81 t6/t8/t38-class stations, HEAD ctl_n). HBM +3 landed (main 85fc2d62471), rescan running. New lanes: KW-FIX-34, QC-TYPES-7, DIE-HBM-91, S81-SVCRS-2, S81-RCK-11, AUTOCLEAN-9. localhost root 585 GB free (AUTOCLEAN-8 done). Owner: e1 dropped; e2/e6/ba0 open.
 - 2026-11-08 02:11 PST COORD: forced rescan 229 (HBM 65->69: PEV exp_x, qcore_r13, OPSA opsa_rest, wbq_root_g0). HBM-HARD-4 parked -> HBM-HARD-5; contract-kit TT IO rebind class fix -> KW-FIX-34; QC-TYPES-8 replaces QC-TYPES-7.
 
+CODEX: 2026-11-08 02:35 PST E5waiter t35a4 moved by completecopy-then-link to I2S2, samefrontend2249349 auto-rebalanced/admittedoth-ubuntu-3746226-1794134103; no newlauncher/signals/retry. E4pre-existingcleanup400.90GB collected/recheck0; source/runtimepoliciesunchanged.
+
+CODEX: 2026-11-08 02:36 PST SVC compiler packinga8175d published/H16realL0identityPASS; actualH8P-rate mismatch diagnosed (lag47/239) and foldedSM2cycle operand schedule21checksPASS. R5SMarithmetic2:1+H8engineproofs underway, not area/token-qualified. Token566d53dd96 explicitLEP/KVdates, nativeLEPbuildIntel1healthy after4GBOOM.
 CODEX: 2026-11-08 02:22 PST takeover; all five dies plus flow/token/fleet assigned, 646 lane inventory; collecting jobs and structural fixes. Canonical intel2; no merges/tags/POR changes. Checkpoint handoff/codex_takeover_20261108_0222_checkpoint.md.
 
 CODEX: 2026-11-08 02:29 PST branch fixes READY HCL1762cad3e01/QCdigest1aa8d5d7e5/QChold7f6b7773d8/SVCpacking a8175d573b; no merge/tag/POR. Bksel finalreport active; SVC rate mismatch calibration active; all five die scopes staffed.
+CODEX: 2026-11-08 02:39 PST HBM OPEN: s3 arithmetic CLOCK-LEAF locality PLACE pilot admitted intel1; SVGRown full285bit4group head form+numeric W pin proposal/proof committed f5eae6f002, own PLACE pilot on intel1; noPOR/no merges/tags, PIN CYCLES0. qout strictECO+svgr_topvM1 healthy, no duplicates. lanes/CODEX-HBM-OPEN-0222.md.
+
+CODEX: 2026-11-08 02:45 PST KV types: ioft lockup form omitted existing STATUS_REG; exact TT -50.83 diagnosed, combined private SR+lockup bind active E4. PV macro-aware private source draft 873374c71c solves 109 corridors (max 403.554 um), 0 cycle delta, +43 raw reset copies; private bind queued. No POR/main change or new signed-off count.
+CODEX: 2026-11-08 02:45 PST QC production-calendar SU1 diagnostic PASS (req+9/results+18,3mutantscaught, warm/goldenPASS; private source9580edf420),5actual CBN ring providers recovered capture+provePASS/privateGENactive, NL event replay onto ownv4s candidate a3b374d33d/strictbindE6active. No merges/tags/POR/config adoption; original NKvR7 healthy GRT retained.
+
+CODEX: 2026-11-08 02:49 PST KV own prompt clock form bf0ac2d662 published+pilot; actual early macro-vs-register tree diagnosed and prototype TT pairskew50.34/49.79ps (not routed signoff). e1currentds re-sign SIGNED/LECpending; combined ioft/PV/hub clock/SYS_C/Wi fixes active, no merges/tags/POR changes.
+
+CODEX: 2026-11-08 02:55 PST HEAD all8open types covered; LEP FIRM resize-overlap class fixed3a182, actual32415cellhookPASS, own predecessorform41a81+reviewedPLACE admittedI1/572991. TXfullsignoff919TT/580FFslewnets=noECO; regionalformunderway. CTLvG1025anchorsfixed/PLACEactive, TILEH8EQ36191/PLACEactive, MESH2x~99kfunctional cut modeled. AllrouteHOLDs kept; no merges/tags/POR/newSIGNED.
+
+CODEX: 2026-11-08 02:55 PST five existing E5 waiters now admitted on I2 through complete copies and original frontends: S81t35/t11/t24 plus QCstm2/sta2. No extra launcher, retry, signal, source deletion or admission edit; full staged kits/receipts protected. E4 next-row copy exists but memory admission0, spill marker untouched.
+
+CODEX: 2026-11-08 02:56 PST KV e1 current ds-kv re-sign SIGNED+routedEQ29978, TT+33.28 FF+2.92 DRV/DRC/ANT0 (replacement+0), E6 codex-kv-resign-0222/e1_ds/PROVENANCE.json. BKSEL actualSTA FAIL TT-51.95/13, internalFF-27.96/332,44DRVnets; noECO, structuralformownedS81. Five existing E5waiters nowadmittedI2, fourstationgenrootsresitedI1scratch2 (t44KITRTLPASS). QC2laneWROM+mutableVM proofsPASS; concreteML12formnext. HBMreceipt standalone dc73be6fd9 preferred overa414 (latter includes unadoptedReachplan). No projectmerges/tags/PORchanges.
+
+CODEX: 2026-11-08 03:03 PST sixth existing E5 waiter QCsta1a9 admitted I2oth-ubuntu-201558-1794135687 via originalfrontend4061896. All6 migrations initialpreflightPASS/ownEQreused; no new launcher/retry/signals/deletions/policychange. Remaining pinned/raw E5queues current/memorybound, owners notified.
+
+CODEX: 2026-11-08 03:10 PST KV source-realization stale96/0 holds disproved(current SYS_C101/23, PHY W2D3); compact D2D implemented codex/kv-sysc-form-0222@40399b77ef, full53output lockstep1000+mutantPASS,0corecycles; E6 one PLACE pilot submitted, no parent/POR/route release.

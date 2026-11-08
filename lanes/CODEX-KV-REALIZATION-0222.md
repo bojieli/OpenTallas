@@ -1,0 +1,12 @@
+# KV source realization and SYS_C geometry, Codex takeover 2026-11-08
+
+## CODEX notes
+
+CURRENT source checks on intel1:
+
+- `kw32/src_27db6/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json`: kv3_sys_c 101 raw relay stages in 23 branches. `kw32/kvbind_27db6/bind_kv_q/rtl/kv3_sys_c_part.sv`: 101 `ot_dp_rrelay u_cland_raw_` instances. The actual KV-TYPES-3 `sd/kit_kv3_sys_c/rtl/kv3_sys_c_part_bound.sv` also has 101. Old 96-stage hold text is stale; no current source repair justified.
+- BasePHY actual `kv-types-3/sd/kit_kv3_phy/rtl/kv3_phy_part_bound.sv` contains `ot_dp_dly #(.W(2), .D(3)) u_lpad_i_host_hbm_rst_n`, realizing 3 reset and 3 epoch FFs, lane latency 53. Strict kw32 bind_report errors `[]`. Old zero-stage hold is stale. Current blocker is macro-output capture reach measured by KV-TYPES-3 at GRT (TT -65.23 after maxwire), owned by parent types agent.
+- Actual newer SYS_C PLACE (KV-TYPES-3 22:39 post) FAIL -2672.7 ps; macro wrap. `intel1:kv-types-3/sta_kv3_sys_c/worst.txt` recovery route u_reset_regions.rst_n[0] -> u_rec.epoch_begin_c[3] has 753 ps and 1212 ps wire buffers, total arrival 2745.9 ps. Main UCIe macro x691.2..1469, y60.48..838 blocks direct soft-logic paths. Placed layout PNG viewed `/tmp/codex-kv-realization-0222/sysc_layout.png` (source `intel1:kv-types-3/sd/kit_kv3_sys_c/gen/kv3_sys_c/run/layout_review/place/layout.png`). SMELLS: central macro wall, soft logic crossing/doubling back around macro, reset/clock fanout spread, distant W output capture. Private structural proposal: keep u_d2d_kv soft logic on W side next to its W output faces and its four SRAMs; no macro/POR movement. Actual-area read-only probe running at intel1 `/srv/opentallas-scratch2/claude/codex-kv-realization-0222/sysc`, container `codex-kv-sysc-area-0222` (12GB/2T). No P&R launched.
+- Hub_C canonical current bind `kw32/kvbind_27db6/bind_kv_q/rtl/kv3_hub_C_part.sv` instantiates `qkd_pll_analog_model u_pll` at line7402. Five oscillator blocks use procedural delay toggles (`core/hbm/host/ingest/phy`), producing five combinational loops under synthesis. Native reset qualifier actually uses `.locked(w_pll_locked)`, so removing or tying this signal would change boot behaviour. Plan lists contents `pll/qkd_pllm/PLL hard` but no PLL hard_core entry, and no Qwen PLL LEF/lib physical view found in current physical tree. Existing HBM/S81 analog PLL views are distinct modules/ports. Need physical native PLL boundary to close; no fabricated view or tieoff.
+
+No merges, tags, POR edits, new PHY retries, owner overrides or deletion chains.
