@@ -26,7 +26,7 @@ CAT=results/rtl/dsrom_recovery_20261004/immutable_fullcatalog
 MAC="physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v"
 # the reference: current main ot_s81sl_xs renamed, mutant defines renamed away
 mkdir -p $O/ref
-sed -e 's/OT_S81SL_XS_MUT_/OT_S81SL_XS_REFNOMUT_/g' -e 's/^module ot_s81sl_xs (/module ot_s81sl_xs_refm (/' $S/ot_s81sl_xs.sv > $O/ref/ot_s81sl_xs_refm.sv
+sed -e 's/OT_S81SL_XS_MUT_/OT_S81SL_XS_REFNOMUT_/g' -e 's/^module ot_s81sl_xs \([(#]\)/module ot_s81sl_xs_refm \1/' $S/ot_s81sl_xs.sv > $O/ref/ot_s81sl_xs_refm.sv
 grep -q '^module ot_s81sl_xs_refm' $O/ref/ot_s81sl_xs_refm.sv || { echo "ref rename failed"; echo "XS4_EQUIV_BENCH FAIL"; exit 3; }
 SRC="rtl/lib/ot_rst_relay.sv rtl/v41rom/ot_v41_kreg.sv rtl/common/ot_prefix.sv rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_stream_rom4_sel.sv rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv $MAC $S/ot_s81sl_xs_ctl.sv $O/ref/ot_s81sl_xs_refm.sv $S/ot_s81sl_xs4.sv $S/test/tb_s81sl_xs4_equiv.sv"
 $V --cc --exe --build -j ${J:-8} -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --x-assign 0 --x-initial 0 \
