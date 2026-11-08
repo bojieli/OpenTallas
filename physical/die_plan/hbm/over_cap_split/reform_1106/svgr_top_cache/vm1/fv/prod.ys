@@ -1,0 +1,12 @@
+# gold invariant (a) and gate invariant (b), each design alone, k-induction from the all-zero init (= reset state: srst flop 0)
+read_verilog -sv -formal ../rtl_ref/ot_reset_sync.sv prod_gold.sv
+chparam -set LBANKS 4 -set OPEN_IL 1 -set OREG 1 -set RRMIR 1 ot_svgr_prod_s_cachecut
+prep -flatten -top ot_svgr_prod_s_cachecut
+async2sync
+sat -tempinduct -prove-asserts -set-init-zero -maxsteps 12 -show-ports -verify
+design -reset
+read_verilog -sv -formal ../rtl_ref/ot_reset_sync.sv prod_gate.sv
+chparam -set LBANKS 4 -set OPEN_IL 1 -set OREG 1 -set RRMIR 1 -set ROT1H 1 ot_svgr_prod_s_cachecut
+prep -flatten -top ot_svgr_prod_s_cachecut
+async2sync
+sat -tempinduct -prove-asserts -set-init-zero -maxsteps 12 -verify

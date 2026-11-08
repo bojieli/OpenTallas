@@ -45,7 +45,14 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
  // computed from the next-state of those registers (exact, never stale); (b) a stage M between A and P holds the
  // descriptor + the selected id + the layer, so P only multiplies.  Reserve path +1 edge (elastic; go stays the fixed slot).
  // 0 (default) = unchanged.
- parameter integer MPIPE=0)(
+ parameter integer MPIPE=0,
+ // IDMUX 1 (DIE-HBM-91-OPEN vM1): a_id by a_sel==k compare mux (k=1..NID), not the (a_sel-1)*IDW shift index
+ parameter integer IDMUX=0,
+ // HEADQ 1 (DIE-HBM-91-OPEN vM1): start-queue head sh is a REGISTER sh_q loaded with the post-edge sq[sq_r] (pop advance
+ // + same-edge push bypass), so gq write data / start_bank / start_epoch / block_ready select start at a flop, not at the
+ // sq_r 4:1 mux.  Invariant sh_q == sq[sq_r] (FV).  Only difference: after reset, before the first push, sq[] is not reset
+ // (gold sh = stale/X) while sh_q = 0; start_v is 0 there (sq_n == 0), so only the don't-care start_bank/epoch differ.
+ parameter integer HEADQ=0)(
  input wire clk,rst_n,
  input wire desc_we,input wire[DAW-1:0]desc_addr,input wire[255:0]desc_data,
  input wire run_v,input wire[DAW-1:0]run_base,input wire[DAW:0]run_count,input wire[7:0]run_layer,
@@ -93,7 +100,10 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
  wire a_ids=a_sel==0||((MPIPE!=0)?match_q:(ids_ok_q&&ids_layer_q==layer_q));
  wire a_go=a_v&&!((MPIPE!=0)?m_v:p_v)&&a_ids;
  wire m_go=(MPIPE!=0)&&m_v&&!p_v;
- wire[IDW-1:0]a_id=(a_sel==0||MUT==2)?{IDW{1'b0}}:ids_q[(a_sel-4'd1)*IDW+:IDW];
+ wire[IDW-1:0]a_id_sh=(a_sel==0||MUT==2)?{IDW{1'b0}}:ids_q[(a_sel-4'd1)*IDW+:IDW];
+ reg[IDW-1:0]a_id_mx;integer ik;
+ always @*begin a_id_mx={IDW{1'b0}};for(ik=1;ik<=NID;ik=ik+1)if(a_sel==4'(ik))a_id_mx=ids_q[(ik-1)*IDW+:IDW];end
+ wire[IDW-1:0]a_id=(IDMUX!=0)?((MUT==2)?{IDW{1'b0}}:a_id_mx):a_id_sh;
  wire[25:0]s_blk={8'd0,p[46:32],p[9:7]}+{2'd0,p_lay}+{2'd0,p_id};
  wire s_go=p_v&&!st_v;
  assign rd_go=running&&n_rd!=0&&!a_v&&!rd_q;
@@ -107,7 +117,7 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
  localparam integer QW=7+7+12+10+24+16+12+11+16+LB;
  reg[QW-1:0]sq[0:QD-1],gq[0:QD-1];reg[2:0]sq_n,gq_n;reg[1:0]sq_r,sq_w,gq_r,gq_w;
  reg[QW-1:0]s_ent;
- wire[QW-1:0]sh=sq[sq_r],gh=gq[gq_r];
+ reg[QW-1:0]sh_q;wire[QW-1:0]sh=(HEADQ!=0)?sh_q:sq[sq_r];wire[QW-1:0]gh=gq[gq_r];
  wire[LB-1:0]sh_land=sh[LB-1:0];wire[LB-1:0]gh_land=gh[LB-1:0];
  assign start_v=sq_n!=0&&gq_n<QD&&block_ready[sh_land]&&!cache_owned[sh_land[0]];
  assign start_bank=sh_land;assign start_epoch=sh[LB+:16];
@@ -121,6 +131,9 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
  generate if(XSLOT!=0)begin:g_xs assign program_start_ctx={gh_xb,ctx46};end
  else begin:g_nx assign program_start_ctx=ctx46;end endgenerate
  wire push_s=reserve_v,pop_s=start_v,push_g=start_v,pop_g=program_start_v;
+ wire[1:0]sq_r_n=sq_r+(pop_s?2'd1:2'd0);
+ wire[QW-1:0]sh_n=(push_s&&sq_w==sq_r_n)?s_ent:sq[sq_r_n];
+ always @(posedge clk or negedge rst_n)if(!rst_n)sh_q<=0;else sh_q<=sh_n;
  wire[DAW-1:0]rd_id=rd[232+:DAW];
  wire run_acc=run_v&&!(running||run_count==0||{1'b0,run_base}+run_count>(DD));
  wire ids_acc=ids_v&&!(ID_COHORT!=0&&(!running||run_v||ids_ok_q||ids_layer!=layer_q||ids_cohort!=run_cohort_q));

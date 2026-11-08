@@ -1,0 +1,12 @@
+DIE-HBM-91-OPEN svgr_top vM1 source proof, 2026-11-08, intel1 (iverilog 12, yosys host). RTL params, default 0 = unchanged:
+  ot_svgr_top_cachecut VM1 -> producer ROT1H, cache WOH (ot_svgr_cache136_native), issuer IDMUX + HEADQ (ot_hbm_svc_sm_issuer_rel).
+  Kit: wrap u_core .VM1(1) on top of the vL7 params (.CACHE_WDEC(1) .CACHE_GSEL(1) .CACHE_GREP(2) .RRMIR(1) .CACHE_RW_SRAM(1) .P1(1)).
+  The cachecut here is the DIE-HBM-88 vL7 kit copy (RRMIR, hub commit 9cde4f3a8dc, not on GitHub) + this delta.
+FV (fv/, yosys sat -tempinduct / equiv_induct), all MEASURED:
+  prod: gold (vL7 producer) read_ordinal_q==o_ord && p_rq[d]==p_ord[d] SUCCESS; gate rsel==onehot(p_ord[DLY-1][2:0]) SUCCESS
+        -> rot_data identical, p_rq replica chain removable.
+  cache: wptr==onehot(received[3:0]) SUCCESS (1-inductive); mutant O5 (rot3 as 2) FAILS the proof.
+  issuer: IDMUX 1 vs vL7 issuer equiv_induct 3712/3712 proven; HEADQ invariant (after reset, from first push) sh_q==sq[sq_r] SUCCESS.
+  HEADQ only non-exact point: start_bank/start_epoch while start_v=0 between reset and the first push (sq[] has no reset).
+BENCH (bench/run_cache_vm1.sh, ref = vL7 kit cache same params): 15 runs x 200000 edges, 0 port mismatches (1105 bits/edge).
+MUTANTS (bench/run_mut_vm1.sh): O1 O2 O3 O6 caught; O4 (present term) unobservable like vL7 W3; O5 caught by FV.

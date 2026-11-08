@@ -1,0 +1,8 @@
+# HEADQ invariant: after reset, from the first push on, sh_q == sq[sq_r] (gate, kit params); free init, rst_n 0 at step 1
+read_verilog -sv -formal issuer_gate.sv
+read_verilog -sv -formal ../bench/sram_stub_fv2.v
+chparam -set LBANKS 4 -set NID 6 -set IDW 9 -set PAW 11 -set DD 256 -set ID_COHORT 1 -set XSLOT 1 -set MPIPE 1 -set IDMUX 1 -set HEADQ 1 ot_hbm_svc_sm_issuer_rel
+prep -flatten -top ot_hbm_svc_sm_issuer_rel
+memory_map
+async2sync
+sat -tempinduct -prove-asserts -set-at 1 rst_n 0 -maxsteps 8 -verify

@@ -1,0 +1,9 @@
+# gate invariant wptr == onehot(received[3:0]) (received%16), k-induction from all-zero init (rst_n is a free input: init-zero
+# regs ARE the async-reset values except wptr (1) -> the base step uses -set-at 1 rst_n 0, asserts checked from step 1)
+read_verilog -sv -formal cache_gate_O5.sv
+read_verilog -sv ../bench/sram_bb_fv.v
+chparam -set PACKED136 1 -set RW_SRAM 1 -set WPIPE 1 -set WDECOUPLE 1 -set GSEL 1 -set GREP 2 -set WOH 1 ot_svgr_cache136_native
+prep -flatten -top ot_svgr_cache136_native
+memory_map
+async2sync
+sat -tempinduct -prove-asserts -set-at 1 rst_n 0 -maxsteps 12 -verify

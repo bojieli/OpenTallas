@@ -1,0 +1,20 @@
+# issuer IDMUX: gold = vL7 kit issuer, gate = vM1 issuer IDMUX 1 (kit params); same registers, combinational change only
+read_verilog -sv ../rtl_ref/ot_hbm_svc_sm_issuer_rel.sv
+read_verilog -sv -lib ../bench/sram_bb_fv2.v
+chparam -set LBANKS 4 -set NID 6 -set IDW 9 -set PAW 11 -set DD 256 -set ID_COHORT 1 -set XSLOT 1 -set MPIPE 1 ot_hbm_svc_sm_issuer_rel
+rename ot_hbm_svc_sm_issuer_rel gold
+design -stash gold
+read_verilog -sv ../rtl_new/ot_hbm_svc_sm_issuer_rel.sv
+read_verilog -sv -lib ../bench/sram_bb_fv2.v
+chparam -set LBANKS 4 -set NID 6 -set IDW 9 -set PAW 11 -set DD 256 -set ID_COHORT 1 -set XSLOT 1 -set MPIPE 1 -set IDMUX 1 -set HEADQ 0 ot_hbm_svc_sm_issuer_rel
+rename ot_hbm_svc_sm_issuer_rel gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+proc; opt_clean; memory -nomap; opt_clean
+equiv_make gold gate equiv
+hierarchy -top equiv
+async2sync
+equiv_simple -undef -seq 2
+equiv_induct -undef -seq 2
+equiv_status -assert

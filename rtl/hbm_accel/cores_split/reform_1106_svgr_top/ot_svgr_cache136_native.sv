@@ -16,7 +16,11 @@
 //   by 4 or 5 with head); gather, complete and the present clear use them, no adder or decode in front of the mux.
 //   GREP = kept replicas per gather lane (each drives 256/GREP bits).  Cycle-exact.
 module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter integer RW_SRAM=0, parameter integer WPIPE=0,
- parameter integer WDECOUPLE=0,parameter integer GSEL=0,parameter integer GREP=1)(
+ parameter integer WDECOUPLE=0,parameter integer GSEL=0,parameter integer GREP=1,
+ // WOH 1 (DIE-HBM-91-OPEN vM1): wptr = registered one-hot of received%16 (reset / open_ok: 1, running && !sticky edge:
+ // rotate by expected_sectors with received); sector i writes words / tests present at rotl(wptr,i), no adder or decode
+ // in front of the 4096 staging-word enables.  Cycle-exact.
+ parameter integer WOH=0)(
  input wire clk,rst_n,
  input wire open_v,open_bank,input wire [15:0] open_epoch,input wire [6:0] open_count,input wire [9:0] open_tag_base,
  input wire [3:0] sector_v,input wire [95:0] sector_index,input wire [63:0] sector_epoch,input wire [1023:0] sector_data,
@@ -35,6 +39,8 @@ module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter intege
   reg [1:0] record_phase;reg [15:0] present;reg [255:0] words[0:15];
   reg [1279:0] gathered;reg complete;reg [2:0] expected_sectors;
   reg [1:0] ready;integer b,r,j,gk,gc;
+  reg [15:0] wptr;wire [15:0] wsel[0:3];integer wk;
+  genvar wi;for(wi=0;wi<4;wi=wi+1)begin:g_wsel assign wsel[wi]=(wptr<<wi)|(wptr>>(16-wi));end
   localparam integer GCW=256/GREP;wire [80*GREP-1:0] gsel;
   wire [255:0] cache_data[0:4];reg out_valid;reg [9:0] out_tag;
   wire [6:0] read_addr={read_bank,read_row};
@@ -84,7 +90,7 @@ module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter intege
    if(!rst_n)begin
     owned<=0;epoch[0]<=0;epoch[1]<=0;count[0]<=0;count[1]<=0;valid[0]<=0;valid[1]<=0;
     running<=0;load_bank<=0;sticky<=0;load_epoch<=0;load_rows<=0;emitted<=0;tag_base<=0;received<=0;total_sectors<=0;
-    head<=0;slot_phase<=0;elapsed<=0;record_phase<=0;present<=0;out_valid<=0;out_tag<=0;w_q<=0;
+    head<=0;slot_phase<=0;elapsed<=0;record_phase<=0;present<=0;out_valid<=0;out_tag<=0;w_q<=0;wptr<=16'd1;
     for(i=0;i<128;i=i+1)tags[i]<=0;
    end else begin
     out_valid<=read_ok;if(read_ok)out_tag<=tags[read_addr];
@@ -94,7 +100,7 @@ module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter intege
     if(open_ok)begin
      owned[open_bank]<=1;epoch[open_bank]<=open_epoch;count[open_bank]<=open_count;valid[open_bank]<=0;
      running<=1;load_bank<=open_bank;load_epoch<=open_epoch;load_rows<=open_count;emitted<=0;tag_base<=open_tag_base;
-     received<=0;total_sectors<=((open_count*136+127)/128)*4;head<=0;slot_phase<=0;elapsed<=0;record_phase<=0;present<=0;
+     received<=0;wptr<=16'd1;total_sectors<=((open_count*136+127)/128)*4;head<=0;slot_phase<=0;elapsed<=0;record_phase<=0;present<=0;
     end
     if(read_v&&!read_ok)sticky<=1;
     if(running&&!sticky)begin
@@ -102,12 +108,20 @@ module ot_svgr_cache136_native #(parameter integer PACKED136=0, parameter intege
      for(i=0;i<4;i=i+1)begin
       if(sector_v[i]!=(i<expected_sectors))sticky<=1;
       if(sector_v[i])begin
+       if(WOH!=0)begin
+        if(sector_epoch[i*16+:16]!=load_epoch||sector_index[i*24+:24]!=received+i||(|(present&wsel[i])))sticky<=1;
+        else if(WDECOUPLE==0)begin for(wk=0;wk<16;wk=wk+1)if(wsel[i][wk])begin words[wk]<=sector_data[i*256+:256];present[wk]<=1;end end
+        if(WDECOUPLE!=0)begin for(wk=0;wk<16;wk=wk+1)if(wsel[i][wk])begin words[wk]<=sector_data[i*256+:256];present[wk]<=1;end end
+       end else begin
        if(sector_epoch[i*16+:16]!=load_epoch||sector_index[i*24+:24]!=received+i||present[(received+i)%16])sticky<=1;
        else if(WDECOUPLE==0)begin words[(received+i)%16]<=sector_data[i*256+:256];present[(received+i)%16]<=1;end
        if(WDECOUPLE!=0)begin words[(received+i)%16]<=sector_data[i*256+:256];present[(received+i)%16]<=1;end
+       end
       end
      end
      received<=received+expected_sectors;
+     if(WOH!=0)case(expected_sectors)3'd1:wptr<={wptr[14:0],wptr[15]};3'd2:wptr<={wptr[13:0],wptr[15:14]};
+      3'd3:wptr<={wptr[12:0],wptr[15:13]};3'd4:wptr<={wptr[11:0],wptr[15:12]};default:;endcase
      if(row_slot)begin
       if(!complete)sticky<=1;
       else begin
