@@ -48,6 +48,9 @@ module tb_head_lepk_stages;
 `ifndef PLW_DUT
 `define PLW_DUT 3
 `endif
+`ifndef COL0_DUT
+`define COL0_DUT 0
+`endif
   reg ck = 0; always #1 ck = ~ck;
   reg rs = 0;
   reg [1103:0] ro; reg [44:0] unit; reg lepf;
@@ -57,7 +60,7 @@ module tb_head_lepk_stages;
     .coll_i0(ci_r[0]), .coll_i1(ci_r[1]), .coll_i2(ci_r[2]), .coll_i3(ci_r[3]),
     .coll_o0(co_r[0]), .coll_o1(co_r[1]), .coll_o2(co_r[2]), .coll_o3(co_r[3]),
     .lepk_i0(ro), .lepk_o0(ri_r), .lepf_i0(lepf), .unit_i0(unit), .ctrl_o0(rt_r), .fault_o0(f_r), .lw_o(lw_r));
-  ot_s81hd_lep0N_noidx_core #(.CH_B(4'b1111), .PAIR(0), .KTX(`KTX_DUT), .KRX(`KRX_DUT), .TXI(`TXI_DUT), .PIN(`PIN_DUT), .POUT(`POUT_DUT), .PLW(`PLW_DUT)) u_dut(
+  ot_s81hd_lep0N_noidx_core #(.CH_B(4'b1111), .PAIR(0), .KTX(`KTX_DUT), .KRX(`KRX_DUT), .TXI(`TXI_DUT), .PIN(`PIN_DUT), .POUT(`POUT_DUT), .PLW(`PLW_DUT), .COL0(`COL0_DUT)) u_dut(
     .ck(ck), .rst_n(rs),
     .coll_i0(ci_d[0]), .coll_i1(ci_d[1]), .coll_i2(ci_d[2]), .coll_i3(ci_d[3]),
     .coll_o0(co_d[0]), .coll_o1(co_d[1]), .coll_o2(co_d[2]), .coll_o3(co_d[3]),
@@ -85,6 +88,25 @@ module tb_head_lepk_stages;
       if (lw_d[0]) begin ev_lw_d[n_lw_d] <= lw_d; n_lw_d <= n_lw_d + 1; end
     end
   end
+  // ------------------------------------------------------------------ first-fault trace (which collector term, when)
+  integer phase = 0; reg ftr_r = 0, ftr_d = 0;
+`define LEPK_FT(T, P) \
+  $display("LEPK_FAULT %s cyc=%0d phase=%0d ovf=%b perr=%b herr=%b slq=%b lfq=%b lfbq=%b mferr=%b(terr=%b mcol=%b mlf=%b) ie=%b merr=%b", T, cyc, phase, \
+    P.ovf, P.perr, P.herr, P.slq, P.lfq, P.lfbq, P.mferr, P.terr, P.mcol_w, P.ml_f, P.ie, P.merr)
+  always @(posedge ck) begin
+    if (rs && !ftr_r && u_ref.u.u_lep.u.fault) begin ftr_r <= 1; `LEPK_FT("ref", u_ref.u.u_lep.u); end
+    if (rs && !ftr_d && u_dut.u.u_lep.u.fault) begin ftr_d <= 1; `LEPK_FT("dut", u_dut.u.u_lep.u); end
+  end
+  // the collector registers its terms one cycle late: show the terms on the cycle before too
+  always @(posedge ck) if (rs && !ftr_r && !u_ref.u.u_lep.u.fault && ((|u_ref.u.u_lep.u.ovf) || u_ref.u.u_lep.u.perr ||
+      u_ref.u.u_lep.u.herr || u_ref.u.u_lep.u.slq || (|u_ref.u.u_lep.u.lfq) || (|u_ref.u.u_lep.u.lfbq) || u_ref.u.u_lep.u.mferr ||
+      u_ref.u.u_lep.u.ie || u_ref.u.u_lep.u.merr)) `LEPK_FT("ref-pre", u_ref.u.u_lep.u);
+  // DIE-HEAD-85: a hang (e.g. the replay wait never satisfied) is a FAIL with its phase, not a 50-min timeout
+  always @(posedge ck) if (cyc > 60000) begin
+    $display("LEPK_STAGES FAIL hang at cyc=%0d phase=%0d ri ref=%0d dut=%0d lw ref=%0d dut=%0d landed=%0d", cyc, phase,
+      n_ri_r, n_ri_d, n_lw_r, n_lw_d, landed);
+    $fflush; $finish;
+  end
   // ------------------------------------------------------------------ stimulus
   localparam integer TG = 1045, NB = 80;
   integer sent = 0, landed = 0, i, w, k, seed = 7;
@@ -108,28 +130,71 @@ module tb_head_lepk_stages;
       idle(4);
     end
   endtask
+  // DIE-HEAD-85: back-to-back windows at the tightest legal spacing.  The next window's command enters on the SAME input
+  // cycle as the previous window's last beat (the core accepts that: `!(rov && wn == 1)`), so a mu_c that skips or adds
+  // input stages relative to ro (MUT_MUSKEW) opens the next window while beats of the previous one are still counted
+  // (tag error -> fault) or misses the first beat; with matched stages ref and dut stamp the same tags.
+  task automatic windows_b2b(input integer nw, input [9:0] user0);
+    integer x;
+    begin
+      ro = '0; unit[44:11] = {21'(sent), user0, 1'b0, 1'b0, 1'b1}; @(negedge ck); unit[44:11] = '0;
+      for (x = 0; x < nw; x = x + 1) begin
+        for (w = 0; w < NB; w = w + 1) begin
+          beat((w % 2) ? 3'd2 : 3'd1);
+          if (w == NB - 1 && x < nw - 1) unit[44:11] = {21'(sent), 10'(user0 + 2 * (x + 1)), 1'b0, 1'b0, 1'b1};   // same pair: alternating pairs b2b releases both pairs in one cycle (perr collision, ref too)
+          @(negedge ck); ro = '0; unit[44:11] = '0;
+          if (w < NB - 1 && $urandom(seed + 11 * w + x) % 3 == 0) @(negedge ck);
+        end
+      end
+      idle(4);
+    end
+  endtask
+  // DIE-HEAD-85 (COORD 22:4x): release-gap assert.  A pair release (relp[0] pair A, relp[1] pair B) that follows the
+  // other pair's last release must leave >= 1 idle cycle; both in one cycle is the collision perr.  The minimum A<->B
+  // handoff gap of ref and dut is printed so the schedule margin of the declared leg cycles is visible.
+  integer gl_r = -1, gl_d = -1, gp_r = -1, gp_d = -1, gmin_r = 1 << 30, gmin_d = 1 << 30, gcol_d = 0;
+  always @(posedge ck) if (rs) begin
+    if (u_ref.u.u_lep.u.relp == 2'b11) gmin_r <= -1;
+    else if (u_ref.u.u_lep.u.relp != 2'b00) begin
+      if (gp_r >= 0 && u_ref.u.u_lep.u.relp[1] != gp_r[0] && cyc - gl_r - 1 < gmin_r) gmin_r <= cyc - gl_r - 1;
+      gp_r <= u_ref.u.u_lep.u.relp[1]; gl_r <= cyc; end
+    if (u_dut.u.u_lep.u.relp == 2'b11) begin gmin_d <= -1; gcol_d <= gcol_d + 1; end
+    else if (u_dut.u.u_lep.u.relp != 2'b00) begin
+      if (gp_d >= 0 && u_dut.u.u_lep.u.relp[1] != gp_d[0] && cyc - gl_d - 1 < gmin_d) gmin_d <= cyc - gl_d - 1;
+      gp_d <= u_dut.u.u_lep.u.relp[1]; gl_d <= cyc; end
+  end
   integer err = 0, ri_exp;
   initial begin
     ro = '0; unit = '0; lepf = 0;
-    repeat (40) @(negedge ck); rs = 1;
+    repeat (40) @(negedge ck); rs = 1; phase = 0;
     repeat (3000) @(negedge ck);                       // link bring-up
+    phase = 1;
     // phase 1: plain ring beats (pair A), bursts at about 1/2 rate
     for (i = 0; i < 400; i = i + 1) begin
       beat(3'd0); @(negedge ck); ro = '0; if (i % 2 == 0) @(negedge ck);
     end
     idle(200);
+    phase = 2;
     // phase 2: MU windows on pair A and pair B (copy select), one landing window
     window(1'b0, 1'b0, 10'd3);
     window(1'b1, 1'b0, 10'd5);
     window(1'b1, 1'b0, 10'd9);
     window(1'b0, 1'b0, 10'd17);
+    phase = 5; windows_b2b(4, 10'd7); phase = 2;
     window(1'b1, 1'b1, 10'd21);
-    idle(50); unit[10:0] = {10'd21, 1'b1}; @(negedge ck); unit[10:0] = '0; idle(300);   // replay the landed window
+    // replay only after every landed beat is in the landing store (lw_o notification per beat on both cores): the land
+    // faults by design on a replay of an incomplete slot
+    phase = 3; idle(20); wait (n_lw_r >= landed && n_lw_d >= landed); idle(20);
+    unit[10:0] = {10'd21, 1'b1}; @(negedge ck); unit[10:0] = '0; idle(300);   // replay the landed window
+    phase = 4;
     // phase 3: back-to-back burst (TX FIFO absorbs; lanes drain at link rate)
     for (i = 0; i < 300; i = i + 1) begin beat(3'd0); @(negedge ck); end
     idle(1);
     repeat (6000) @(negedge ck);
     ri_exp = sent - landed;
+    $display("LEPK_STAGES COL0=%0d", `COL0_DUT);
+    $display("LEPK_STAGES release gap A<->B min ref=%0d dut=%0d (collisions dut %0d)", gmin_r, gmin_d, gcol_d);
+    if (gcol_d != 0) begin $display("FAIL release gap: %0d dut cycles release both pairs", gcol_d); err = err + 1; end
     $display("LEPK_STAGES KTX=%h KRX=%h TXI=%h PIN=%0d POUT=%0d PLW=%0d sent=%0d landed=%0d ri ref=%0d dut=%0d rt ref=%0d dut=%0d lw ref=%0d dut=%0d",
       16'(`KTX_DUT), 16'(`KRX_DUT), 16'(`TXI_DUT), `PIN_DUT, `POUT_DUT, `PLW_DUT, sent, landed, n_ri_r, n_ri_d, n_rt_r, n_rt_d, n_lw_r, n_lw_d);
     $display("LEPK_STAGES first ri ref=%0d dut=%0d (+%0d)  last ri ref=%0d dut=%0d (+%0d)", first_r, first_d, first_d - first_r,
@@ -151,5 +216,18 @@ module tb_head_lepk_stages;
     else $display("LEPK_STAGES FAIL errors=%0d", err);
     $finish;
   end
+`ifdef LEPK_DBG
+  // DIE-HEAD-85 debug: which perr condition fires first in the dut (relp collision, full RX FIFO, pair parity)
+  reg dbg_done = 0;
+  always @(posedge ck) if (rs && !dbg_done && (u_dut.u.u_lep.u.relp == 2'b11 || |u_dut.u.u_lep.u.rxf ||
+      (u_dut.u.u_lep.u.rel && u_dut.u.u_lep.u.h0[552] != u_dut.u.u_lep.u.h1[552]))) begin
+    dbg_done <= 1;
+    $display("LEPK_DBG cyc=%0d phase=%0d relp=%b rxf=%b rne=%b h0p=%b h1p=%b", cyc, phase, u_dut.u.u_lep.u.relp,
+      u_dut.u.u_lep.u.rxf, u_dut.u.u_lep.u.rne, u_dut.u.u_lep.u.h0[552], u_dut.u.u_lep.u.h1[552]);
+  end
+  integer dbg_n = 0;
+  always @(posedge ck) if (rs && dbg_n < 400 && cyc > 4700 && cyc < 4870) begin dbg_n <= dbg_n + 1;
+    $display("LEPK_TR cyc=%0d rne_dut=%b rne_ref=%b", cyc, u_dut.u.u_lep.u.rne, u_ref.u.u_lep.u.rne); end
+`endif
 endmodule
 `default_nettype wire

@@ -18,6 +18,9 @@
 //    never a lost or duplicated beat.
 //  TXI[4i+:4] = stages on lane i's TX FIFO ingress inside u_lep (generated ot_s81hd_lep_nr.sv g_tx[i].g_txi), so the
 //    lane FIFO can sit beside its pair; feed-forward, the same writes TXI cycles later.
+//  COL0 = DIE-HEAD-85 11-07: stages on BOTH coll0 legs (die pins on the N face -> lane 0 at pair0, ~1583 / 1361 um):
+//         coll_i0 {live, fault} are control (reset), data reset-free; coll_o0 all data.  The coll link is end-to-end
+//         credit based through the peer e-lane, so a stage adds link latency (2 x COL0 round trip), never a beat.
 //  PIN  = stages on every input leg {lepk_i0, unit_i0, lepf_i0} (one count: ro and mu_c keep the same relative timing;
 //         rc moves with them).  POUT = stages on every result leg {lepk_o0, ctrl_o0, fault_o0} (ri and mu_rt stay
 //         aligned).  PLW = stages after the lw_o notification register.
@@ -63,7 +66,7 @@ endmodule
 module ot_s81hd_lep0N_core #(
  parameter [3:0] CH_B=4'b1111, parameter integer IDX_EN=1, parameter integer PAIR=0,
  parameter [15:0] KTX=16'h0000, parameter [15:0] KRX=16'h0000, parameter [15:0] TXI=16'h0000,
- parameter integer PIN=0, parameter integer POUT=0, parameter integer PLW=0
+ parameter integer PIN=0, parameter integer POUT=0, parameter integer PLW=0, parameter integer COL0=0
 )(
  input wire ck,rst_n,
  input wire[513:0]coll_i0,coll_i1,coll_i2,coll_i3,
@@ -87,9 +90,19 @@ module ot_s81hd_lep0N_core #(
  wire[552:0]kd[0:3],kid[0:3],ld[0:3],lid[0:3];
  wire[2:0]kf[0:3],lf[0:3];
  wire[513:0]coll_i[0:3];wire[511:0]coll_o[0:3];
- assign coll_i[0]=coll_i0;assign coll_i[1]=coll_i1;
+ // coll0 legs (COL0 stages; 0 = the original wires)
+ wire[513:0]coll_i0x;
+ ot_s81hd_lep_pipe #(.W(514),.WC(2),.N(COL0))g_c0i(.ck(ck),.rst_n(rst_n),
+  .d({coll_i0[511:0],coll_i0[513:512]}),.q({coll_i0x[511:0],coll_i0x[513:512]}));
+`ifdef OT_S81HD_LEPK_MUT_C0BIT
+ localparam integer C0MB=300;                          // MUTANT: payload bit coll_o0[300] skips its stages (bit 5 is not exercised)
+`else
+ localparam integer C0MB=-1;
+`endif
+ ot_s81hd_lep_pipe #(.W(512),.WC(0),.N(COL0),.MUTBIT(C0MB))g_c0o(.ck(ck),.rst_n(rst_n),.d(coll_o[0]),.q(coll_o0));
+ assign coll_i[0]=coll_i0x;assign coll_i[1]=coll_i1;
  assign coll_i[2]=coll_i2;assign coll_i[3]=coll_i3;
- assign coll_o0=coll_o[0];assign coll_o1=coll_o[1];
+ assign coll_o1=coll_o[1];
  assign coll_o2=coll_o[2];assign coll_o3=coll_o[3];
  wire mwv,mrv,mf;wire[1103:0]mwd,mrd;
  // Actual LEP landing acceptance, same user field as dsdv_mu_land_head_nr.
@@ -170,7 +183,7 @@ endmodule
 // parameter-proven constant dead outputs. The generic provider default stays1.
 module ot_s81hd_lep0N_noidx_core #(parameter[3:0]CH_B=4'b1111,parameter integer PAIR=0,
  parameter[15:0]KTX=16'h0000,parameter[15:0]KRX=16'h0000,parameter[15:0]TXI=16'h0000,
- parameter integer PIN=0,parameter integer POUT=0,parameter integer PLW=0)(
+ parameter integer PIN=0,parameter integer POUT=0,parameter integer PLW=0,parameter integer COL0=0)(
  input wire ck,rst_n,
  input wire[513:0]coll_i0,coll_i1,coll_i2,coll_i3,
  output wire[511:0]coll_o0,coll_o1,coll_o2,coll_o3,
@@ -178,7 +191,7 @@ module ot_s81hd_lep0N_noidx_core #(parameter[3:0]CH_B=4'b1111,parameter integer 
  input wire lepf_i0,input wire[44:0]unit_i0,
  output wire[31:0]ctrl_o0,output wire fault_o0,output wire[10:0]lw_o
 );
- ot_s81hd_lep0N_core #(.CH_B(CH_B),.IDX_EN(0),.PAIR(PAIR),.KTX(KTX),.KRX(KRX),.TXI(TXI),.PIN(PIN),.POUT(POUT),.PLW(PLW))u(
+ ot_s81hd_lep0N_core #(.CH_B(CH_B),.IDX_EN(0),.PAIR(PAIR),.KTX(KTX),.KRX(KRX),.TXI(TXI),.PIN(PIN),.POUT(POUT),.PLW(PLW),.COL0(COL0))u(
  .ck(ck),.rst_n(rst_n),.coll_i0(coll_i0),.coll_i1(coll_i1),.coll_i2(coll_i2),.coll_i3(coll_i3),
  .coll_o0(coll_o0),.coll_o1(coll_o1),.coll_o2(coll_o2),.coll_o3(coll_o3),
  .lepk_i0(lepk_i0),.lepk_o0(lepk_o0),.lepf_i0(lepf_i0),.unit_i0(unit_i0),

@@ -75,11 +75,11 @@ def derive(root):
     // DIE-HEAD-84: N registered stages on a TX lane's ingress; the pushes clear on the lane reset, the word is reset-free
     wire [NG:0] v [0:N]; wire [W-1:0] d [0:N];
     assign v[0] = {pg_i, psh_i}; assign d[0] = wd_i;
+    // DIE-HEAD-85: each stage is a kept leaf (ot_s81hd_lep_txi_st, keep_hierarchy): lanes 0 / 1 share the push-group D
+    // and lanes 0 / 2 (1 / 3) the word D, so flattened (* keep *) regs were folded across lanes by opt_merge (vD kit LEC
+    // NOT EQUIVALENT 485 on lane 0's FIFO state: gate lane 0 read lane 1's g_txi.g_s[0].vq); a kept leaf cannot fold.
     for (genvar j = 0; j < N; j = j + 1) begin : g_s
-        (* keep = "true" *) reg [NG:0] vq; (* keep = "true" *) reg [W-1:0] dq;   // keep: lanes 0 / 2 (1 / 3) share D
-        always @(posedge clk or negedge rn) if (!rn) vq <= '0; else vq <= v[j];
-        always @(posedge clk) dq <= d[j];
-        assign v[j + 1] = vq; assign d[j + 1] = dq;
+        ot_s81hd_lep_txi_st #(.W(W), .NV(NG + 1)) u_st(.clk(clk), .rn(rn), .v_i(v[j]), .d_i(d[j]), .v_o(v[j + 1]), .d_o(d[j + 1]));
     end
     assign {pg_o, psh_o} = v[N];
 `ifdef OT_S81HD_LEPK_MUT_TXISKEW
@@ -87,6 +87,17 @@ def derive(root):
 `else
     assign wd_o = d[N];
 `endif
+endmodule
+
+(* keep_hierarchy, keep *)
+module ot_s81hd_lep_txi_st #(parameter integer W = 553, parameter integer NV = 19) (
+    input  wire          clk, rn,
+    input  wire [NV-1:0] v_i, input wire [W-1:0] d_i,
+    output reg  [NV-1:0] v_o, output reg  [W-1:0] d_o
+);
+    // one TXI stage: the pushes clear on the lane reset, the word is reset-free
+    always @(posedge clk or negedge rn) if (!rn) v_o <= '0; else v_o <= v_i;
+    always @(posedge clk) d_o <= d_i;
 endmodule"""
  land=module(src[2],'dsdv_mu_land').replace('module dsdv_mu_land','module dsdv_mu_land_head_nr',1)
  land=land.replace('ot_sram_1r1w_128x256_m1_r2c2 u_m','ot_sram_1r1w_128x256_m1_r0c0 u_m')
