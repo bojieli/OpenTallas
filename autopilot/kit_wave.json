@@ -2199,7 +2199,11 @@
         "ot_s81sl_leaf__t74@4",
         "ot_s81sl_leaf__t4@9",
         "ot_s81sl_leaf__t50@8",
-        "ot_s81sl_leaf__t67@10"
+        "ot_s81sl_leaf__t67@10",
+        "ot_s81sl_leaf__t42@7",
+        "slice_station__t18@13",
+        "slice_station__t52@17",
+        "dsdv_slice_c1x_C__t10@6"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -3114,7 +3118,11 @@
         "ot_s81sl_leaf__t61@1": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
         "ot_s81sl_leaf__t4@9": "004a51fc collector form 2 (S81-TYPES-5 18:06, COORD 18:2x b); KW-FIX-32 2026-11-07 18:59 PST: the current-block record is the CANCELLED stale attempt, so the retry names it",
         "ot_s81sl_leaf__t50@8": "004a51fc collector form 2 (S81-TYPES-5 18:06, COORD 18:2x b); KW-FIX-32 2026-11-07 18:59 PST: the current-block record is the CANCELLED stale attempt, so the retry names it",
-        "ot_s81sl_leaf__t67@10": "004a51fc collector form 2 (S81-TYPES-5 18:06, COORD 18:2x b); KW-FIX-32 2026-11-07 18:59 PST: the current-block record is the CANCELLED stale attempt, so the retry names it"
+        "ot_s81sl_leaf__t67@10": "004a51fc collector form 2 (S81-TYPES-5 18:06, COORD 18:2x b); KW-FIX-32 2026-11-07 18:59 PST: the current-block record is the CANCELLED stale attempt, so the retry names it",
+        "ot_s81sl_leaf__t42@7": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit",
+        "slice_station__t18@13": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit",
+        "slice_station__t52@17": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit",
+        "dsdv_slice_c1x_C__t10@6": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -4856,7 +4864,10 @@
         "slw_stm_v1__cl05fc43f7__cl389df4e9@14",
         "sle_fe_v2@4",
         "glue@3",
-        "native59@4"
+        "native59@4",
+        "coll_ftm@7",
+        "slw_su_c__cl92142dac@18",
+        "sle_stm_v3@8"
       ],
       "queue_src": "main@a663dc5bf301",
       "type_args": {
@@ -5318,7 +5329,10 @@
         "slw_fw_v1__cl51d45468@7": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)",
         "slw_hc0__cl1bc59e1c@6": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)",
         "slw_st_a_v2__cl9f076a5c@9": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)",
-        "slw_st_a_v2__clf4365a62@9": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)"
+        "slw_st_a_v2__clf4365a62@9": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)",
+        "coll_ftm@7": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit",
+        "slw_su_c__cl92142dac@18": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit",
+        "sle_stm_v3@8": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit"
       },
       "gen_hosts": [
         "intel1",
