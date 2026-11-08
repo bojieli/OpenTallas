@@ -5170,7 +5170,8 @@
       "enabled": true,
       "event": "d44v",
       "kinds": [
-        "core"
+        "core",
+        "type"
       ],
       "only_items": [
         "hfd_ep_static",
@@ -6144,7 +6145,11 @@
         "intel2",
         "epyc4"
       ],
-      "note_gen_hosts_kw32": "KW-FIX-32 2026-11-07 17:20 PST: intel2 (hub) dropped from gen_hosts: no source is staged there by rule (no new work on hub scratch2/root, KW-FIX-29), so it only logged SRC-INCOMPLETE each tick; gen_hosts() already skipped it. Revert: gen_hosts <- gen_hosts_prev_kw32."
+      "note_gen_hosts_kw32": "KW-FIX-32 2026-11-07 17:20 PST: intel2 (hub) dropped from gen_hosts: no source is staged there by rule (no new work on hub scratch2/root, KW-FIX-29), so it only logged SRC-INCOMPLETE each tick; gen_hosts() already skipped it. Revert: gen_hosts <- gen_hosts_prev_kw32.",
+      "kinds_prev_kw32": [
+        "core"
+      ],
+      "note_kinds_kw32": "KW-FIX-32 2026-11-07 17:40 PST: OWNER 11-07 17:4x verbatim 'allow type builds for all dies, including HBM' (COORD relay): kinds [core] -> [core,type]; supersedes the 11-02 no-HBM-type-pilots line. Types with planned child cores launch on provisional child views (KW-PROV-1). Revert: kinds <- kinds_prev_kw32."
     }
   },
   "place_prefer": [
