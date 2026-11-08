@@ -134,6 +134,8 @@ tail -5 "$K/run_$GOAL.log"
 if { [ "$GOAL" = finish ] || [ "$GOAL" = route ] || [ "$GOAL" = post ]; } && [ $((rc % 100)) = 0 ] && ls "$K"/run/results/asap7/*/base/6_final.odb >/dev/null 2>&1; then
   SO="$K/signoff"
   [ ! -e "$SO/signoff.json" ] || SO="$K/signoff_$(date +%Y%m%d_%H%M%S)"
-  python3 "$K/signoff.py" run --run-dir "$K/run" --kit "$K" --corners tt,ff --out "$SO" --docker "$DK" || rc=1
+  # KW-FIX-32 11-07 (FLOW-CHILD-ETM-CONTEXT at sign-off): parent flow tag for signed child ETMs (env, else K/flow_tag)
+  FT=${OT_FLOW_TAG:-$(head -1 "$K/flow_tag" 2>/dev/null)}
+  python3 "$K/signoff.py" run --run-dir "$K/run" --kit "$K" --corners tt,ff --out "$SO" --docker "$DK" ${FT:+--flow-tag "$FT"} || rc=1
 fi
 exit $rc
