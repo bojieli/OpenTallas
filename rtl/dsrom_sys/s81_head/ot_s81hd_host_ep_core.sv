@@ -63,7 +63,11 @@ module ot_s81hd_host_xgrid(
  output wire rv_o,output wire[552:0]rd_o,output wire[3:0]fl_o
 );
  localparam integer MUT=`OT_S81HD_HOST_XGRID_MUT;
- reg[552:0]tq0,tq1x,rq0,rq1;reg tv0,tv1x,rv0,rv1;reg[3:0]fl0,fl1;
+ // DIE-HEAD-84 11-07 form (B) vD: every lane-crossing stage is kept, so synthesis cannot merge lane1 tq0 with lane0
+ // u_t0.txd_p (same D, measured on vC: kit LEC KEEP FAIL) and each stage stays a distinct, anchorable flop.
+ // ot_keep_regs.tcl puts keep on the driving flops.  Function unchanged; tq1x/tv1x are bench-only (MUT=2), not kept.
+ (* keep *) reg[552:0]tq0,rq0,rq1;(* keep *) reg tv0,rv0,rv1;(* keep *) reg[3:0]fl0,fl1;
+ reg[552:0]tq1x;reg tv1x;
  always@(posedge ck)begin tq0<=td_i;tq1x<=tq0;rq0<=rd_i;rq1<=rq0;end
  always@(posedge ck or negedge rst_n)
   if(!rst_n)begin tv0<=0;tv1x<=0;rv0<=0;rv1<=0;fl0<=0;fl1<=0;end
