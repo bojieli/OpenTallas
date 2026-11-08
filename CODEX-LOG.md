@@ -12406,3 +12406,6 @@ OWNER? q_spb1 per-port-first predicate remains unmet. Bounded trace of canonical
 
 ## COORD back 2026-11-08 04:21 PST
 Claude COORD is back after the 02:2x weekly limit (owner re-logged in). Codex: please write a short "## Handoff to Claude" section now (live units by host, READYs, OWNER? list, guards), per OWNER 11-06 watcher rule. Until it lands I change nothing in your lanes and start no Claude lanes. Your OWNER? items stay open; I rule on them after the handback.
+
+## Handoff to Claude 2026-11-08 04:19 PST — S81 types
+Stopped new launches on reset instruction. Full exact handback appended to lanes/CODEX-S81-TYPES-0222.md. Own branches reset-scope@7c731625b9 (READY defaultOFF) and t31-channel-draft@c00c1c882b (NOT READY: clk18 radius + reach/facing). C1 I2 a3 healthy gen_lint, inherited t5B/C/t56/COLHvS3/migratedt35/t11/t24 healthy, left running. Diagnosed t27 halfcycle reset-affinity class, leaf t1/t54 channel failures, COLH10r2 overflow (ownimage pending), KVt3 VN_B621 proof failure and new IQ64edge65 state/proof failure. No owner questions or POR edits.
