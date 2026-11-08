@@ -709,10 +709,12 @@ def prune(it, intermediate_only=False):
 # ------------------------------------------------------------------------------------------------ the loop
 def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
              cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc="", from_mode="",
-             owner_override=False):
+             owner_override=False, strict_one_pass=False):
     """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE | NOT_NEAR_MISS"""
     if max_iter > MAX_ITER:
         raise ValueError(max_iter_refusal(max_iter))
+    if strict_one_pass and max_iter != 1:
+        raise ValueError("strict-one-pass requires max_iter=1")
     kit = Path(kit).resolve()
     t0 = time.time()
     base_signoff = Path(base_signoff).resolve()
@@ -725,6 +727,22 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
                base_signoff=str(base_signoff), base_routed_db=(base_rec.get("inputs") or {}).get("odb"),
                base_metrics=metrics(base_rec) if base_rec else None, max_iter=max_iter, hold_margin_ps=hold_margin,
                started=t0, iterations=[], flow=flow_sha(tools), host=os.uname().nodename)
+    if strict_one_pass:
+        budget = dict(limit=1, dispatched=0, blocked=[])
+        res["strict_one_pass"] = True
+        res["physical_dispatch_budget"] = budget
+        original_run = run
+
+        def run(cmd, **kwargs):
+            # The common physical entry point also covers split t<N>/b<N>
+            # passes and any future recovery path, not just today's retries.
+            if len(cmd) > 1 and cmd[0] == "bash" and Path(cmd[1]).name == "prd_run.sh":
+                if budget["dispatched"] >= budget["limit"]:
+                    budget["blocked"].append(list(map(str, cmd)))
+                    print("ECO_STRICT_ONE_PASS: refused additional physical dispatch", flush=True)
+                    return 73
+                budget["dispatched"] += 1
+            return original_run(cmd, **kwargs)
     ok, why = eligible(base_rec)
     res["eligibility"] = why
 
@@ -754,20 +772,20 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
         it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
                      repair_rc=repair_rc, trim=not keep)
         res["iterations"].append(it)
-        if it.get("flexpa_sig11") and not repair_rc:
+        if it.get("flexpa_sig11") and not repair_rc and not strict_one_pass:
             # class retry (once per loop): the same iteration with placement-estimated ECO nets in a new dir
             repair_rc = "placement"
             res["repair_rc_retry"] = f"iteration {n}: FlexPA SIG11 -> OT_PRD_REPAIR_RC=placement"
             it = iterate(n, src, root, kit, runner, so, mode, hold_margin, mem, cpus, run, image, prev=prev,
                          tag="r", repair_rc=repair_rc, trim=not keep)
             res["iterations"].append(it)
-        if it.get("grt_hang") and "grt_hang_retry" not in res:
+        if it.get("grt_hang") and "grt_hang_retry" not in res and not strict_one_pass:
             # KW-FIX-24 class retry (once per loop): the same iteration as a full ECO route, no route-keep
             res["grt_hang_retry"] = f"iteration {n}: route-keep incremental GRT hang -> OT_PRD_FROM=grt, full detailed route"
             it = iterate(n, src, root, kit, runner, so, "grt", hold_margin, mem, cpus, run, image, prev=prev,
                          tag="g", repair_rc=repair_rc, trim=not keep, keep_route=False)
             res["iterations"].append(it)
-        if it.get("stage_mismatch") and n == 1 and mode == "route":
+        if it.get("stage_mismatch") and n == 1 and mode == "route" and not strict_one_pass:
             # class retry: the kit's routed seed predates its signed 6_final (post-route ECO kit) -> seed with 6_final
             res["stage_retry"] = "iteration 1: OT_PRD STAGE_MISMATCH -> OT_PRD_FROM=final"
             it = iterate(n, src, root, kit, runner, so, "final", hold_margin, mem, cpus, run, image, prev=prev,
@@ -863,6 +881,8 @@ def main():
     r.add_argument("--mem", type=int, default=48)
     r.add_argument("--cpus", type=int, default=8)
     r.add_argument("--keep", action="store_true", help="keep the run data of superseded iterations")
+    r.add_argument("--strict-one-pass", action="store_true",
+                   help="one physical prd_run dispatch total; disable recovery retries (default unchanged)")
     r.add_argument("--lec", action="store_true", help="run the kit's post-route LEC on a PASS (into BEST/lec)")
     r.add_argument("--lec-tool")
     r.add_argument("--owner-override", action="store_true", help="run although the base record is beyond the near-miss numbers")
@@ -891,7 +911,8 @@ def main():
         print("ECO_LOOP FAIL: no sign-off record in the kit")
         return 3
     res = run_loop(a.kit, base, a.out, a.runner, a.max_iter, a.hold_margin, a.mem, a.cpus, keep=a.keep,
-                   repair_rc=a.repair_rc, from_mode=a.from_mode, owner_override=a.owner_override)
+                   repair_rc=a.repair_rc, from_mode=a.from_mode, owner_override=a.owner_override,
+                   strict_one_pass=a.strict_one_pass)
     if res["verdict"] == "PASS" and a.lec and not run_lec(a.kit, res, a.mem, a.cpus, a.lec_tool):
         res["verdict"] = "LEC_FAIL"
     print("ECO_LOOP " + res["verdict"] + ": " + summary(res))

@@ -13,6 +13,53 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import eco_loop as E  # noqa: E402
 
 
+@pytest.mark.parametrize("failure", ["flexpa", "grt_hang", "stage_mismatch"])
+def test_strict_one_pass_disables_each_recovery_dispatch(tmp_path, monkeypatch, failure):
+    import threading
+    stopped = threading.Event()
+    monkeypatch.setattr(E, "GRT_FLAT_S", 5)
+    monkeypatch.setattr(E, "WATCH_POLL_S", 0.01)
+    monkeypatch.setattr(E, "stop_eco_container", lambda pd: (stopped.set() or ["fixture-own-pass"]))
+    fake = {"flexpa": lambda: Sig11([rec(5, 5)]),
+            "grt_hang": lambda: Hang([rec(5, 5)], stopped),
+            "stage_mismatch": lambda: Stale([rec(5, 5)])}[failure]()
+    k = kit(tmp_path)
+    result = E.run_loop(k, base_rec(k, rec(-20, 2)), tmp_path / "eco", run=fake,
+                        strict_one_pass=True, keep=True)
+    runs = [cmd for cmd, _ in fake.calls if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh")]
+    assert len(runs) == 1
+    assert len(result["iterations"]) == 1 and result["verdict"] != "PASS"
+    assert result["physical_dispatch_budget"] == dict(limit=1, dispatched=1, blocked=[])
+    assert not any(key in result for key in ("repair_rc_retry", "grt_hang_retry", "stage_retry"))
+    assert json.loads((Path(result["root"]) / "eco_loop.json").read_text())["strict_one_pass"] is True
+
+
+def test_strict_one_pass_budget_blocks_split_mode_second_physical_call(tmp_path, monkeypatch):
+    k = kit(tmp_path, mm=False)
+    monkeypatch.setattr(E, "passes", lambda *a: ["t0", "b0"])
+    fake = Fake([rec(5, 5)])
+    result = E.run_loop(k, base_rec(k, rec(-5, -2)), tmp_path / "eco", run=fake,
+                        strict_one_pass=True, keep=True)
+    runs = [cmd for cmd, _ in fake.calls if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh")]
+    assert len(runs) == 1 and result["verdict"] != "PASS"
+    assert result["physical_dispatch_budget"]["dispatched"] == 1
+    assert len(result["physical_dispatch_budget"]["blocked"]) == 1
+
+
+def test_strict_one_pass_cli_is_opt_in(tmp_path, monkeypatch):
+    seen = []
+    def capture(*args, **kwargs):
+        seen.append(kwargs["strict_one_pass"])
+        return dict(verdict="ERROR", reason="fixture", root=str(tmp_path))
+    monkeypatch.setattr(E, "run_loop", capture)
+    monkeypatch.setattr(E, "summary", lambda r: "fixture")
+    for extra, expected in (([], False), (["--strict-one-pass"], True)):
+        monkeypatch.setattr(sys, "argv", ["eco_loop.py", "run", "--kit", str(tmp_path),
+                                          "--signoff", str(tmp_path / "signoff.json")] + extra)
+        assert E.main() != 0
+        assert seen[-1] is expected
+
+
 def test_stage_so_keeps_selected_tool_cohort_and_kit_hooks(tmp_path):
     k = tmp_path / "old_kit"
     k.mkdir()
