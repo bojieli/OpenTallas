@@ -4085,6 +4085,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)",
               "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if not macros else []),
            *([f"export OT_RELAY_MID_RE = {P.budgets.get('relay_mid_re', RELAY_MID_RE)}"] if macros else []),
+           # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
+           # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
+           *(["export OT_RELAY_MID_FIT = 1"] if macros and P.budgets.get("relay_mid_fit") else []),
+           *([f"export OT_GUTTER_BLOCK_UM = {P.budgets['gutter_block_um']}"] if macros and P.budgets.get("gutter_block_um") else []),
            # DIE-HEAD-69 11-05: core_out_land.tcl opt-in (GEN env OT_CORE_OUT_LAND=1 via wave item_env, or plan budgets list)
            *(["export OT_CORE_OUT_LAND = 1"] if macros and (os.environ.get("OT_CORE_OUT_LAND") == "1"
                                                        or tn in (P.budgets.get("core_out_land_types") or ())) else []),
@@ -4357,6 +4361,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name("reset_pair_place.tcl"), kd / "reset_pair_place.tcl")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
+        if P.budgets.get("gutter_block_um"):     # S81-TYPES-5 11-07 NARROW-GUTTER class (opt-in)
+            shutil.copyfile(Path(__file__).with_name("gutter_block.tcl"), kd / "gutter_block.tcl")
         # DIE-HEAD-69 11-05 (COORD ruling (1), hd_tile flt_q): core-output landing flops at their pins (core_out_land.tcl)
         shutil.copyfile(Path(__file__).with_name("core_out_land.tcl"), kd / "core_out_land.tcl")
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
