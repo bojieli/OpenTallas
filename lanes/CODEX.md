@@ -9498,3 +9498,6 @@ All630 lane files indexed /tmp/codex-takeover-1551/lane_coverage_index.json. Cur
 | Native SVC / svc_hardening | I1 SML route2101537; SMD child result; I1 H4 units3986833/3986861 | SMD sticky-fault stimulus before qualification, no duplicate proof; no new hub work; conservative attention faces sized before P&R |
 
 Cached214 remains evidence, no forced scan. Owner questions plain CODEX-LOG OWNER?. Continue until explicit Claude-reset instruction; no assumed timer stop.
+
+## CODEX takeover 2026-11-08 02:22 PST
+All lane file inventory: /home/ubuntu/coord/handoff/codex_all_lane_inventory_20261108_0222.txt; latest current-day states: /home/ubuntu/coord/handoff/codex_current_queue_lanes_20261108_0222.txt. Eight active scope leads: S81, HEAD, QC, KV, HBM, shared wave/flow, SVC/token/compiler, fleet/retention. Own codex branches only; no merges/tags/POR changes. Each lead collects live jobs before launching, diagnoses every failure, and maintains CODEX-*-0222.md.
