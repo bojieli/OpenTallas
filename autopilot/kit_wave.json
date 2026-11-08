@@ -23,15 +23,15 @@
         "clock": "PASS",
         "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
       },
-      "plan": "/srv/opentallas-scratch2/claude/kw35k/kvcomp/por/plan_c.json",
+      "plan": "/srv/opentallas-scratch2/claude/kv-types-5/ev/plan_kvr8/plan_c.json",
       "gen_host": "epyc5",
       "src": "/srv/opentallas-scratch2/claude/kw35/src_e2rd",
       "src_sha": "5178ea7aa2797689caf8c40e546e0c89fb7808e1",
       "kit_rtl": {
         "mode": "bind",
-        "asbuilt": "/srv/opentallas-scratch3/claude/codex-kv-phy-deadclock-0222/plan_r8fix/asbuilt.json",
+        "asbuilt": "/srv/opentallas-scratch2/claude/kv-types-5/ev/plan_kvr8/asbuilt.json",
         "note": "KW-FIX-24 14:5x (DIE-KV-84 14:4x answer): KV bind_out -> kw23/bind_kv_q (plan_c 7da_ad + asbuilt_kv_7da, bind.py all --strict: errors 0, 160 partitions, 56 types, 2545 crossings; on epyc6 + copied to epyc5). Its verify/bound.ys step fails only because verify/lib_stubs.sv does not stub the bind-made core_splits leaves (qkd_kvs_pcc/pcf) = bind.py verify bug (class item, KW-FIX-24); verify advisory as for QC bind_qc_g (KW-FIX-22). Was kw11/bind_kv_o + kw11/asbuilt_kv_o.json. One batch of the 4 BIND_STALE rows. | KW-FIX-16 12:5x I126 tag flow-20261106-b-kv: src_k -> src_o main f649a3eb9a3 (KV PV taps, 15 types), asbuilt_kv_o base src_o, strict --all-gaps bind_kv_o errors 0, 2545 crossings (KW-FIX-15 bind 12:16 PST). | KW-FIX-15 11-05 11:3x: KV src_h -> src_k main 714dd1ea120 (tag flow-20261106-a-kv), asbuilt_kv_k base src_k, strict --all-gaps bind_kv_k errors 0, 2545 crossings (KW-FIX-13 09:48); plan_c + eW_sidecar byte-equal to src_h. | KW-FIX-11 06:5x I93 hgi taps: src_h main 517c80a6704, asbuilt base src_h, strict --all-gaps bind_kv_h errors 0, 2545 crossings; kv37 pad table copied from src_e (untracked there). | KW-FIX-8 17:1x I52: src_v 86bdf758742; asbuilt_v base src_v reads the tag eW_sidecar; strict bind_v; kv3_pv_v8 pilot one row. KW-FIX-8 I46: src_s main c512ffc3a94, plan_c 76de518 astk on bind_o (DIE-KV-70: kit-rtl rc 0 on it) | KW-FIX-8 10:0x I36 tag o-kv: asbuilt_s6 base src_n, strict --all-gaps bind_o errors 0, 2545 crossings; vs bind_e2 rtl differs only PC family, hub_Wi, top | KW-FIX-6 05:4x: KV event, bind_e2 strict 0 errors (DIE-KV-66 05:18), inputs copied intel1 -> epyc4 same paths; kit-rtl kv3_pv_v8 rc 0 on epyc4. | 16:58 KW-FIX-4 (DIE-KV-64 pvname 08f0c9828bf on main 4b09653bef8, ROOT-MERGE-27 I2): src kw-fix-4-kv88 -> 4b09653bef8, strict bind bind_pv2 (PROTECTED), asbuilt pvrec unchanged | KW-FIX-4 13:5x (DIE-KV-64 + COORD 12:40): main 88f2e7ecac1 (ROOT-MERGE-26 H15 incl claude/die-kv-64-pvbind-1103@62b62298941: 256 kv3_pv_pair native composites + plan_c pv_pair physical_inst + bind.py r8 composite alias) as wave src kw-fix-4-kv88; recipe pvrec/asbuilt.json + strict bind bind_pv (intel1, errors 0, 160 parts/2545 crossings/430554 bits/0 unbound). | DIE-KV-61 11-02 19:3x: fresh KV ELAB + strict bind at claude/die-kv-61-rtobs-1102@54c3c7c9f (= main 1770163a8 + KV reset obstacle_model pin; COORD APPROVED 19:2x): errors 0, 160 parts/56 types/2545 crossings/430554 bits, 0 unbound [CHECKED READY.json]. Recipe = CODEX1131 asbuilt rebased (0 unrebased paths). Prev: CODEX1131 fresh actual efa ELAB + strict bind0/errors0; copyback589MB/117-source closure to identical Intel1 root complete. Read-only own bind_out avoids any old cached-elab prep. Native SerDes specialization, recovered HR inputs and complete SRAM package present; old source/bind/jobs retained.",
-        "bind_out": "/srv/opentallas-scratch2/claude/kw35k/kvcomp/bind_comp"
+        "bind_out": "/srv/opentallas-scratch2/claude/kv-types-5/ev/bind_kvr8"
       },
       "gen_args": [
         "--hold-ff-margin",
@@ -304,7 +304,6 @@
         "qkd_hr_core_prompt": "KW-FIX-32 2026-11-07 22:10 PST: KV plan switch to main plan_c: core LEC open (DIE-KV-91); the plan switch is not its class fix",
         "kv3_hg*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form",
         "kv3_pv*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): PV family: class C4 START-in-macro fix still owed (KV-TYPES-4; codex/kv-start-obstacles-0222 NOT READY) and C1 ring-band plan event pending; no blind launch (replaces the stale KW-FIX-25 holds)",
-        "kv3_pc*": "KW-FIX-35-K 2026-11-08 06:38 PST: plan switch to plan_r8fix (phy R8 prune only) would re-pick the kv3_pc* rows with no class fix (dry run: 0 picks before, 10 after); keeps the pre-switch state. Lift when a pc class fix/plan event is posted",
         "kv3_phy": "KW-FIX-35-K 2026-11-08 10:36 PST: private KW-RESUME-1 resume kw35k-phyR-a7 (intel2 ~/coord/autopilot/kw35/kw35k-phyR-a7.log) ended FAIL_POSTCTS GRT TT -145.11 (macro->piN_d3 face); KV-TYPES-5 owns the form; wave must not re-pick or cancel",
         "kv3_phy_v1": "KW-FIX-35-K 2026-11-08 10:36 PST: private KW-RESUME-1 resume kw35k-phyv1R-a4 running (intel2 ~/coord/autopilot/kw35/kw35k-phyv1R-a4.log); wave must not re-pick or cancel",
         "kv3_hub_Eo": "KW-FIX-35-K 2026-11-08 07:57 PST: kvcls_1108 plan switch re-picks it with no class fix of its own (KV-TYPES-4 06:01: hub_Eo rides the plan when its holds/children clear); keeps pre-switch state"
@@ -1017,6 +1016,13 @@
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/1445a073fae9/qkd_kvs_pcf_h_head_p",
             "job": "COUNTED qkd_kvs_pcf_h_head_p epyc2:/srv/opentallas-scratch2/claude/ss29/resign/pcfh_k/signoff/signoff.json (KW-FIX-32 export_view)"
           }
+        ],
+        "qkd_hr_core_prompt": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/00b270bef61a/qkd_hr_core_prompt",
+            "job": "COUNTED qkd_hr_core_prompt intel1:/srv/opentallas-scratch2/claude/codex-kv-prompt-resign-0222/vR_eco_ds_dkv92/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
         ]
       },
       "place_spill": true,
@@ -1091,23 +1097,6 @@
         "epyc4"
       ],
       "note_prefer_kw32": "KW-FIX-32 2026-11-07 18:08 PST COORD 18:0x (epyc2 load 247/128 + 114 waiters, epyc4 91/256 + 10): epyc4 first in place_prefer and gen_hosts; disk/admit checks unchanged (epyc4 only taken while it admits / has gen disk room). Revert: place_prefer <- place_prefer_prev_kw32, gen_hosts <- gen_hosts_prev_kw32c.",
-      "prov_view_sources_prev_kw32": {
-        "qkd_ahub": [
-          {
-            "host": "intel2",
-            "dir": "/srv/opentallas-scratch2/claude/dkv71/ahub/h1/views",
-            "job": "SIGNED dkv73/ahub_l"
-          }
-        ],
-        "qkd_kvs_ctl": [
-          {
-            "host": "intel2",
-            "dir": "/srv/opentallas-scratch2/claude/ss32/resign/kit_kvctl/views",
-            "job": "SIGNED kvctl_u"
-          }
-        ]
-      },
-      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:06 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 18 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
       "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
       "src_sha_prev_kw32b": "6a7e5c39dcce406da72b0fd2a9d1accf92bb45f6",
       "queue_src_prev_kw32b": "main@6a7e5c39dcce",
@@ -1341,7 +1330,180 @@
         "kv3_phy": "KW-FIX-35-K 2026-11-08 07:57 PST: in flight on plan_r8fix a7 (kw-qwenkv-kv3phy-7-49186); the kvcls_1108 plan lacks the R8 prune, so a re-pick there would double-launch. Lift when TYPE-SAFE-1/KV folds R8 prune + kvcls into one plan or a7 ends",
         "kv3_phy_v1": "KW-FIX-35-K 2026-11-08 07:57 PST: in flight on plan_r8fix a4 (kw-qwenkv-kv3phyv1-4-49184); same reason as kv3_phy"
       },
-      "note_kw35k3": "KW-FIX-35-K 2026-11-08 10:36 PST (COORD 08:4x): ONE KV plan = kvcls_1108 (886ab8db) + R8 PHY prune (codex event.transform re-applied; phy/phy_v1 blocks byte-equal plan_r8fix) -> kw35k/kvcomp/por/plan_c.json md5 d5538a93; bind_comp strict 0; asbuilt plan_r8fix (R8 clock rule + land_r8). ts1 not folded yet. Revert plan/kit_rtl <- *_prev_kw35k3, hold_items phy/phy_v1 <- hold_items_prev_kw35k3"
+      "note_kw35k3": "KW-FIX-35-K 2026-11-08 10:36 PST (COORD 08:4x): ONE KV plan = kvcls_1108 (886ab8db) + R8 PHY prune (codex event.transform re-applied; phy/phy_v1 blocks byte-equal plan_r8fix) -> kw35k/kvcomp/por/plan_c.json md5 d5538a93; bind_comp strict 0; asbuilt plan_r8fix (R8 clock rule + land_r8). ts1 not folded yet. Revert plan/kit_rtl <- *_prev_kw35k3, hold_items phy/phy_v1 <- hold_items_prev_kw35k3",
+      "plan_prev_kw35k4": "/srv/opentallas-scratch2/claude/kw35k/kvcomp/por/plan_c.json",
+      "kit_rtl_prev_kw35k4": {
+        "mode": "bind",
+        "asbuilt": "/srv/opentallas-scratch3/claude/codex-kv-phy-deadclock-0222/plan_r8fix/asbuilt.json",
+        "note": "KW-FIX-24 14:5x (DIE-KV-84 14:4x answer): KV bind_out -> kw23/bind_kv_q (plan_c 7da_ad + asbuilt_kv_7da, bind.py all --strict: errors 0, 160 partitions, 56 types, 2545 crossings; on epyc6 + copied to epyc5). Its verify/bound.ys step fails only because verify/lib_stubs.sv does not stub the bind-made core_splits leaves (qkd_kvs_pcc/pcf) = bind.py verify bug (class item, KW-FIX-24); verify advisory as for QC bind_qc_g (KW-FIX-22). Was kw11/bind_kv_o + kw11/asbuilt_kv_o.json. One batch of the 4 BIND_STALE rows. | KW-FIX-16 12:5x I126 tag flow-20261106-b-kv: src_k -> src_o main f649a3eb9a3 (KV PV taps, 15 types), asbuilt_kv_o base src_o, strict --all-gaps bind_kv_o errors 0, 2545 crossings (KW-FIX-15 bind 12:16 PST). | KW-FIX-15 11-05 11:3x: KV src_h -> src_k main 714dd1ea120 (tag flow-20261106-a-kv), asbuilt_kv_k base src_k, strict --all-gaps bind_kv_k errors 0, 2545 crossings (KW-FIX-13 09:48); plan_c + eW_sidecar byte-equal to src_h. | KW-FIX-11 06:5x I93 hgi taps: src_h main 517c80a6704, asbuilt base src_h, strict --all-gaps bind_kv_h errors 0, 2545 crossings; kv37 pad table copied from src_e (untracked there). | KW-FIX-8 17:1x I52: src_v 86bdf758742; asbuilt_v base src_v reads the tag eW_sidecar; strict bind_v; kv3_pv_v8 pilot one row. KW-FIX-8 I46: src_s main c512ffc3a94, plan_c 76de518 astk on bind_o (DIE-KV-70: kit-rtl rc 0 on it) | KW-FIX-8 10:0x I36 tag o-kv: asbuilt_s6 base src_n, strict --all-gaps bind_o errors 0, 2545 crossings; vs bind_e2 rtl differs only PC family, hub_Wi, top | KW-FIX-6 05:4x: KV event, bind_e2 strict 0 errors (DIE-KV-66 05:18), inputs copied intel1 -> epyc4 same paths; kit-rtl kv3_pv_v8 rc 0 on epyc4. | 16:58 KW-FIX-4 (DIE-KV-64 pvname 08f0c9828bf on main 4b09653bef8, ROOT-MERGE-27 I2): src kw-fix-4-kv88 -> 4b09653bef8, strict bind bind_pv2 (PROTECTED), asbuilt pvrec unchanged | KW-FIX-4 13:5x (DIE-KV-64 + COORD 12:40): main 88f2e7ecac1 (ROOT-MERGE-26 H15 incl claude/die-kv-64-pvbind-1103@62b62298941: 256 kv3_pv_pair native composites + plan_c pv_pair physical_inst + bind.py r8 composite alias) as wave src kw-fix-4-kv88; recipe pvrec/asbuilt.json + strict bind bind_pv (intel1, errors 0, 160 parts/2545 crossings/430554 bits/0 unbound). | DIE-KV-61 11-02 19:3x: fresh KV ELAB + strict bind at claude/die-kv-61-rtobs-1102@54c3c7c9f (= main 1770163a8 + KV reset obstacle_model pin; COORD APPROVED 19:2x): errors 0, 160 parts/56 types/2545 crossings/430554 bits, 0 unbound [CHECKED READY.json]. Recipe = CODEX1131 asbuilt rebased (0 unrebased paths). Prev: CODEX1131 fresh actual efa ELAB + strict bind0/errors0; copyback589MB/117-source closure to identical Intel1 root complete. Read-only own bind_out avoids any old cached-elab prep. Native SerDes specialization, recovered HR inputs and complete SRAM package present; old source/bind/jobs retained.",
+        "bind_out": "/srv/opentallas-scratch2/claude/kw35k/kvcomp/bind_comp"
+      },
+      "hold_items_prev_kw35k4": {
+        "kv3_pc*": "KW-FIX-35-K 2026-11-08 06:38 PST: plan switch to plan_r8fix (phy R8 prune only) would re-pick the kv3_pc* rows with no class fix (dry run: 0 picks before, 10 after); keeps the pre-switch state. Lift when a pc class fix/plan event is posted"
+      },
+      "gen_hosts_prev_kw35k4": [
+        "epyc6",
+        "intel1",
+        "epyc4",
+        "epyc5"
+      ],
+      "note_kw35k4": "KW-FIX-35-K 2026-11-08 10:47 PST (COORD 10:41 ruling 3): KV plan -> KV-TYPES-5 plan_kvr8 (md5 d5538a93, strict bind_kvr8 0 errors, 160/2545/429530; staged intel1/epyc4/5/6, NOT intel2 -> intel2 kept out of gen_hosts); kv3_pc* hold lifted; kv3_phy/_v1 stay held for +3 pin-cycle RE-FORM. Revert plan/kit_rtl/gen_hosts <- *_prev_kw35k4, hold_items kv3_pc* <- hold_items_prev_kw35k4",
+      "prov_view_sources_prev_kw35cv": {
+        "qkd_ahub": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/9626f46f7f86/qkd_ahub",
+            "job": "COUNTED qkd_ahub intel2:/srv/opentallas-scratch2/claude/dkv73/ahub_l/signoff/signoff.json (KW-FIX-32 export_view)"
+          },
+          {
+            "host": "intel2",
+            "dir": "/srv/opentallas-scratch2/claude/dkv71/ahub/h1/views",
+            "job": "SIGNED dkv73/ahub_l"
+          }
+        ],
+        "qkd_kvs_ctl": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/fce95bb0ff97/qkd_kvs_ctl",
+            "job": "COUNTED qkd_kvs_ctl intel2:/srv/opentallas-scratch2/claude/ss32/resign/kvctl_u/signoff/signoff.json (KW-FIX-32 export_view)"
+          },
+          {
+            "host": "intel2",
+            "dir": "/srv/opentallas-scratch2/claude/ss32/resign/kit_kvctl/views",
+            "job": "SIGNED kvctl_u"
+          }
+        ],
+        "kv3_astk": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/8fb9d4b1a33b/kv3_astk",
+            "job": "COUNTED kv3_astk epyc2:/srv/opentallas-scratch2/claude/ss29/resign/astk_k/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_cdc_ch": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/c0559bef7b65/qkd_hr_cdc_ch",
+            "job": "COUNTED qkd_hr_cdc_ch intel2:/srv/opentallas-scratch2/claude/kvhead-kits-3/cdc319/kit/kvhk3_tag/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_cdc_ci": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/9fa798d43466/qkd_hr_cdc_ci",
+            "job": "COUNTED qkd_hr_cdc_ci intel1:/srv/opentallas-scratch2/claude/dkv66/hr/resign/cci_x/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_cdc_hi": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/746b1b8de790/qkd_hr_cdc_hi",
+            "job": "COUNTED qkd_hr_cdc_hi epyc2:/srv/opentallas-scratch3/claude/ss24/kv_chi_s_kv/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_cdc_pc": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/9f7a60f1fffd/qkd_hr_cdc_pc",
+            "job": "COUNTED qkd_hr_cdc_pc epyc2:/srv/opentallas-scratch3/claude/ss24/kv_cpc_s_kv/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_core_guard": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/0b18b947f443/qkd_hr_core_guard",
+            "job": "COUNTED qkd_hr_core_guard epyc2:/srv/opentallas-scratch3/claude/ss24/kv_cg_s_kv/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_core_queue": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/c22a59e5769a/qkd_hr_core_queue",
+            "job": "COUNTED qkd_hr_core_queue epyc2:/srv/opentallas-scratch3/claude/ss24/kv_cq_s_kv/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_core_rx": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/0c2a245b707a/qkd_hr_core_rx",
+            "job": "COUNTED qkd_hr_core_rx intel1:/srv/opentallas-scratch2/claude/die-kv-49/rx_bkv/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_core_tx": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/daaff5e1f074/qkd_hr_core_tx",
+            "job": "COUNTED qkd_hr_core_tx intel2:/srv/opentallas-scratch2/claude/signoff-sprint-16/coretx/rsC_k/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_ingest_eng": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/d055c61c43ca/qkd_hr_ingest_eng",
+            "job": "COUNTED qkd_hr_ingest_eng epyc2:/srv/opentallas-scratch2/claude/codex-kv0615/fo8_y_qualification/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_phy_adp": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/3376ef747f1a/qkd_hr_phy_adp",
+            "job": "COUNTED qkd_hr_phy_adp intel1:/srv/opentallas-scratch2/claude/dkv67/hr/resign/adp_l/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_hr_phy_pad": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/e8a53ad27862/qkd_hr_phy_pad",
+            "job": "COUNTED qkd_hr_phy_pad epyc2:/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB_flow-20261031-b-kv/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_kvs_pcc": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/a0e9f5c3fe3e/qkd_kvs_pcc",
+            "job": "COUNTED qkd_kvs_pcc epyc2:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc__flow-20261106-c-kv__c303603e/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_kvs_pcc_h_head_p": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/df3060246f1f/qkd_kvs_pcc_h_head_p",
+            "job": "COUNTED qkd_kvs_pcc_h_head_p epyc4:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc_h_head_p__flow-20261106-c-kv__2a7cab7f/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_kvs_pcf": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/388dc9658f5c/qkd_kvs_pcf",
+            "job": "COUNTED qkd_kvs_pcf epyc4:/srv/opentallas-scratch2/claude/ss25/resign/pcf_fmx_x/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_kvs_pcf_h_head_p": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/1445a073fae9/qkd_kvs_pcf_h_head_p",
+            "job": "COUNTED qkd_kvs_pcf_h_head_p epyc2:/srv/opentallas-scratch2/claude/ss29/resign/pcfh_k/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ]
+      },
+      "prov_view_sources_prev_kw32": {
+        "qkd_ahub": [
+          {
+            "host": "intel2",
+            "dir": "/srv/opentallas-scratch2/claude/dkv71/ahub/h1/views",
+            "job": "SIGNED dkv73/ahub_l"
+          }
+        ],
+        "qkd_kvs_ctl": [
+          {
+            "host": "intel2",
+            "dir": "/srv/opentallas-scratch2/claude/ss32/resign/kit_kvctl/views",
+            "job": "SIGNED kvctl_u"
+          }
+        ]
+      },
+      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:06 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 18 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
+      "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 10:52 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:37 PST) first in prov_view_sources; changed 1: qkd_hr_core_prompt. Revert: prov_view_sources <- prov_view_sources_prev_kw35cv"
     },
     "s81": {
       "enabled": true,
@@ -4561,7 +4723,6 @@
         "ot_s81sl_leaf__t67": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t74": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim."
       },
-      "prov_view_sources_prev_kw32": null,
       "prov_view_sources": {
         "dsdv_gunit_l2": [
           {
@@ -4627,7 +4788,6 @@
           }
         ]
       },
-      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:19 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 4 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
       "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
       "src_sha_prev_kw32b": "6a7e5c39dcce406da72b0fd2a9d1accf92bb45f6",
       "queue_src_prev_kw32b": "main@6a7e5c39dcce",
@@ -5274,7 +5434,75 @@
         "epyc4",
         "epyc5"
       ],
-      "note_kw35_e13": "KW-FIX-35 2026-11-08 10:29 PST: epyc6 back in s81 gen_hosts (RESTAGE-DEPS a61d5586223 live in main; epyc6 inputs staged by KW-FIX-35-RD). Revert: gen_hosts <- gen_hosts_prev_kw35e13."
+      "note_kw35_e13": "KW-FIX-35 2026-11-08 10:29 PST: epyc6 back in s81 gen_hosts (RESTAGE-DEPS a61d5586223 live in main; epyc6 inputs staged by KW-FIX-35-RD). Revert: gen_hosts <- gen_hosts_prev_kw35e13.",
+      "prov_view_sources_prev_kw35cv": {
+        "dsdv_gunit_l2": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/d45c7facaf7a/dsdv_gunit_l2",
+            "job": "COUNTED dsdv_gunit_l2 epyc2:/srv/opentallas-scratch2/claude/s81ck13x/kits/dsdv_gunit_l2_ccA_s6M_B10h_h-s81/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "dsdv_gunit_l5": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/a12637fd251d/dsdv_gunit_l5",
+            "job": "COUNTED dsdv_gunit_l5 intel2:/srv/opentallas-scratch2/claude/ss29/resign/gl5_l/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_s81_mu72_lnland": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/6cc02df7f1a9/ot_s81_mu72_lnland",
+            "job": "COUNTED ot_s81_mu72_lnland epyc4:/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_h2P/sign_t-s81_m0/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_s81_mu72_lnland_nst": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/47a57a72081f/ot_s81_mu72_lnland_nst",
+            "job": "COUNTED ot_s81_mu72_lnland_nst epyc4:/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_nst_h2P/sign_t-s81_m0/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "dsdv_gunit_l1c": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/f6024fdbe288/dsdv_gunit_l1c",
+            "job": "COUNTED dsdv_gunit_l1c epyc4:/srv/opentallas-scratch2/claude/die-s81-51/rfc-gu/kits/dsdv_gunit_l1c_rf1/sign_t-s81_m0b/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "dsdv_gunit_l4": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/926c0439bc1d/dsdv_gunit_l4",
+            "job": "COUNTED dsdv_gunit_l4 epyc4:/srv/opentallas-scratch2/claude/ss25/resign/gl4_x/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "dsfd_coll_lane_e_safe8_ntf": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/de834643996f/dsfd_coll_lane_e_safe8_ntf",
+            "job": "COUNTED dsfd_coll_lane_e_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "dsfd_coll_lane_w_safe8_ntf": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/4eaba3b86b89/dsfd_coll_lane_w_safe8_ntf",
+            "job": "COUNTED dsfd_coll_lane_w_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "dsdv_eng_rr_e": [
+          {
+            "host": "epyc5",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/fef25d6ea8be/dsdv_eng_rr_e",
+            "job": "COUNTED dsdv_eng_rr_e epyc5:/srv/opentallas-scratch3/claude/die-s81-78/engrr/resign_vJ_eco1_dg/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ]
+      },
+      "prov_view_sources_prev_kw32": null,
+      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:19 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 4 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
+      "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 10:52 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:37 PST) first in prov_view_sources; changed 0: . Revert: prov_view_sources <- prov_view_sources_prev_kw35cv"
     },
     "s81_head": {
       "enabled": true,
@@ -10214,6 +10442,41 @@
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/d2a951a399f5/ot_hbm_idx_score_hcol_h0_rb",
             "job": "COUNTED ot_hbm_idx_score_hcol_h0_rb epyc4:/srv/opentallas-scratch3/claude/die-hbm-85/eco/rb_e1_resign/signoff/signoff.json (KW-FIX-32 export_view)"
           }
+        ],
+        "ot_hbm_su_pg_lane_exp_x_core": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/0cf82fc12be8/ot_hbm_su_pg_lane_exp_x_core",
+            "job": "COUNTED ot_hbm_su_pg_lane_exp_x_core intel1:/srv/opentallas-scratch2/claude/die-hbm-89/expx/resign_ed/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hfd_coll_q3_qcol4": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/3ee982e867bc/ot_hfd_coll_q3_qcol4",
+            "job": "COUNTED ot_hfd_coll_q3_qcol4 epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/qcol4_e1_resign/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hgi_gq_aq_tile": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/68d94ad54960/ot_hgi_gq_aq_tile",
+            "job": "COUNTED ot_hgi_gq_aq_tile epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/gq_e1_resign_dq/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hgi_sfu_split3_ctl_rest_1c": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/f592d661abc6/ot_hgi_sfu_split3_ctl_rest_1c",
+            "job": "COUNTED ot_hgi_sfu_split3_ctl_rest_1c epyc4:/srv/opentallas-scratch3/claude/hbm-hard-3/resign/rest1c_e1_ea/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_svgr_bk": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/4009df45a278/ot_svgr_bk",
+            "job": "COUNTED ot_svgr_bk epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/svgrbk_e2_resign_dq/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
         ]
       },
       "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 05:33 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/hbm.json on intel2, plan 63000666491b) FIRST in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v",
@@ -10766,9 +11029,9 @@
           }
         ]
       },
+      "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 10:52 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:48 PST) first in prov_view_sources; changed 5: ot_hbm_su_pg_lane_exp_x_core ot_hfd_coll_q3_qcol4 ot_hgi_gq_aq_tile ot_hgi_sfu_split3_ctl_rest_1c ot_svgr_bk. Revert: prov_view_sources <- prov_view_sources_prev_kw35cv",
       "prov_view_sources_prev_kw32": null,
-      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-08 05:15 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
-      "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 10:39 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:19 PST) first in prov_view_sources; changed 2: ot_hbm_idx_score_hcol_h0_ra ot_hbm_idx_score_hcol_h0_rb. Revert: prov_view_sources <- prov_view_sources_prev_kw35cv"
+      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-08 05:15 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32"
     }
   },
   "place_prefer": [
