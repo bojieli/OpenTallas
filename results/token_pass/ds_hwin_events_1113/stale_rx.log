@@ -1,0 +1,6 @@
+HWIN_EVENT_RESULT starts=94 tx=376 replay=188 errors=0 copy_mutant=188 enable_mutant=188 fault=01 stale_rx=1
+HWIN_STALE_RX_CAUGHT
+- tb_hwin_events.sv:64: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.445 s; speed 12.570 us/s
+- Verilator: cpu 0.436 s on 1 threads; allocated 7 MB

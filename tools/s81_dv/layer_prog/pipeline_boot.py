@@ -213,6 +213,7 @@ def compile_pipeline(calendar, bookings, root, out):
     root = Path(root)
     out = Path(out); out.mkdir(parents=True, exist_ok=False)
     from layer_prog.native_mu_calendar import bind_contract,check_job
+    from layer_prog.native_hwin_calendar import event_ledger,check_consumer_book
     mu_cache={}
     from layer_prog.head_root_boot import pipeline_guard
     head_boot,head_gaps=pipeline_guard(bookings,root)
@@ -274,7 +275,7 @@ def compile_pipeline(calendar, bookings, root, out):
                 raise ValueError('receiver source and clock/reset identity are explicit')
         ks_slots = booking['ks_slots']
         seq_ks = uint(ks_slots, 'receiver_edge') + 2
-        mu=None;mu_contract=contract.get('native_mu_return_calendar')
+        mu=None;hwin=None;mu_contract=contract.get('native_mu_return_calendar')
         if not mu_contract:
             gaps.append(dict(job=index,cause='selected_native_MU_return_calendar_missing',resource=[stage,slots[user]['copy'].get(stage,'A'),rank],native_KIT_issues=job['KIT_issues']))
         else:
@@ -283,6 +284,9 @@ def compile_pipeline(calendar, bookings, root, out):
                 if cache_key not in mu_cache:mu_cache[cache_key]=bind_contract(mu_contract,root)
                 mu=mu_cache[cache_key]
                 gaps.extend(dict(p,job=index)for p in check_job(job,contract,mu,seq_ks))
+                hwin=event_ledger(mu,identity,seq_ks)
+                resource=(stage,slots[user]['copy'].get(stage,'A'),rank)
+                gaps.extend(dict(p,job=index)for p in check_consumer_book(hwin,booking.get('native_hwin_consumer_book'),resource))
             except (ValueError,KeyError,OSError,TypeError)as exc:
                 gaps.append(dict(job=index,cause='selected_native_MU_return_calendar_unqualified',detail=str(exc)))
         first_cmd = seq_ks + D.SEQ['job_to_age0'] + job['first_command_issue']
@@ -360,6 +364,7 @@ def compile_pipeline(calendar, bookings, root, out):
             first_host_seq_capture=host_slots[0]['receiver_body_capture_edge']+4,
             last_host_seq_capture=last_host_capture,
             native_direct_reload_edges=job['reload_direct_edges'],
+            native_hwin_source_event_ledger=hwin,
             HBE_reload_seq_capture_span=last_host_capture-host_slots[0]['receiver_header_edge'],
             pipeline_window=window, receiver_contract=contract, receiver_capability=capability,native_mu_calendar=mu,
             native_mu_last_init_seq_capture=(host_slots[max(job['native_mu_initialization_indices'])]['receiver_body_capture_edge']+4 if job['native_mu_initialization_indices']else None),
