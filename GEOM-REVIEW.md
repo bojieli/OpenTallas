@@ -1,0 +1,4 @@
+
+- 2026-11-07 18:25 PST COORD VIEWED (hourly).
+  (1) HBM hnx_fused_lane_c vM1 6_final (localhost /tmp/dh89/lanec/vis/final_place_clock.png): two SRAMs on the S edge leave the S 45 um nearly empty (util <0.1 around and between the macros), while all logic sits in the N 55 um band at 0.5-0.8 with hot N-pin rows to 1.0. The W edge column x 0-10 is at util 1.0 with about 50 flops per 5 um bin (W face flops stacked). Clock leaves run long diagonals across the band. Agrees with DIE-HBM-89's vM2 (SRAMs to the corners, logic pulled into the S strip, fanout 16). ADD to vM2: spread the W face flops over the W edge height instead of the top 60 um.
+  (2) S81 SVC SMD compact PLACE (localhost /tmp/s81-rck-8/smd/layout.png): even fill over the whole outline, no channel or hotspot, only the FO marker near the centre (rr1 reset fanout 252, already in S81-RCK-8's same-edge reset-copy fix). No new smell.
