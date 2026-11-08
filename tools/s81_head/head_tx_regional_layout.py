@@ -43,16 +43,16 @@ foreach inst [$b getInsts] {
   set xy {}
   if {[regexp {^u_enc\.(g_ch_region\.mid|g_ff\.cq)\[([0-3])\]\[([0-9]+)\]} $nm -> bank r bit]} {
     # Four parity regions; pair each retained capture with its own cq sink.
-    set x [expr {32 + 112*$r + 1.15*($bit%65)}]
-    set y [expr {24 + 9*int($bit/65) + ($bank eq "g_ff.cq" ? 0.54 : 0)}]
+    set x [expr {32 + 100*$r + 1.15*($bit%65)}]
+    set y [expr {44 + 8*int($bit/65) + ($bank eq "g_ff.cq" ? 0.54 : 0)}]
     set xy [list $x $y]
   } elseif {[regexp {^u_enc\.d([1-8])\[([0-9]+)\]} $nm -> stage bit]} {
     # Input d0 stays on the input face. Internal delay chain follows its PMA slice.
-    set xy [list [expr {238.68 + .288*$bit}] [expr {10 + 4*($bit%4) + .27*($stage-1)}]]
+    set xy [list [expr {238.68 + .288*$bit}] [expr {10 + 8*($bit%4) + .27*($stage-1)}]]
   } elseif {[regexp {^u_enc\.p_d\[([0-9]+)\]} $nm -> bit]} {
-    set xy [list [expr {238.68 + .288*$bit}] [expr {10 + 4*($bit%4) + 8*.27}]]
+    set xy [list [expr {238.68 + .288*$bit}] [expr {10 + 8*($bit%4) + 8*.27}]]
   } elseif {[regexp {^u_ptx\.l\[([01])\]\[([0-9]+)\]} $nm -> stage bit]} {
-    set xy [list [expr {238.68 + .288*$bit}] [expr {10 + 4*($bit%4) + (9+$stage)*.27}]]
+    set xy [list [expr {238.68 + .288*$bit}] [expr {10 + 8*($bit%4) + (9+$stage)*.27}]]
   }
   if {![llength $xy] || ![string match "*DFF*" [[$inst getMaster] getName]]} continue
   set xx [expr {round(([lindex $xy 0]*$u-[$core xMin])/double($sw))*$sw+[$core xMin]}]
