@@ -14,9 +14,6 @@
   "enable": true,
   "stages": 2
  },
- "defines": [
-  "OT_S81_GUNIT_FWDOWN"
- ],
  "route": {
   "pd": 0.4,
   "threads": 8,
@@ -205,5 +202,6 @@
  "pin_regs": {
   "enable": false,
   "reason": "band of the banded gunit l1f: source-registered faces (every band input lands in a flop or a macro pin flop, every output leaves a flop; the merge fold / fault AND sit after the A bands' sort / adder flops exactly as in dsdv_gunit_l1f); a recipe pin stage adds an unpriced edge."
- }
+ },
+ "notes": ["S81-GUNIT-FORM-1 11-07: OT_S81_GUNIT_FWDOWN define dropped: the bound gunit__t1 front is the non-FWDOWN l1f (NW 9 / ND 5 / NR 13, kit-wave e9eda32d41c gunit__t1 VERILOG_DEFINES = -DSYNTHESIS); the gf1 core kits built with it were the wrong parameterisation"]
 }

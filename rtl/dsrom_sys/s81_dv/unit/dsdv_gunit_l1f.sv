@@ -413,15 +413,19 @@ module dsdv_gunit_l1f_acore #(
     wire [NL-1:0] s_lv = ctl[13:6];
     // 8 adds: operand register + LAT-4 ve adder = 5 (ot_s81sl_ve_qadd's adder, valid / error flops leave raw)
     wire [NL*32-1:0] y, y2;
+    // S81-GUNIT-FORM-1 11-07 FACE: every sv / ctl pin bit lands in exactly ONE flop (face_guard 'shared' on the 10-22
+    // band: pa / pa2 twins, pv beside dv / dd, dl2 beside dd).  Same edges: pa2 is pa, pv is the AND of the stage-0
+    // flops dv[0] (s_v) / dd[2 + l] (s_lv[l]) that hold exactly pv's old value, a_lv2 is a_lv (dl2 was dd's lv twin).
+    reg [LA*3-1:0] dv; reg [LA*(NL+3+2)-1:0] dd;
     generate
         for (l = 0; l < NL; l = l + 1) begin : g_add
             localparam integer GL = 8 * LH + l;                       // the lane of dsdv_gunit_l1f
-            reg pv;
-            (* keep *) reg [31:0] pa, pa2, pb, pb2;
-            always @(posedge clk or negedge rq[6 + GL / 4])
-                if (!rq[6 + GL / 4]) pv <= 1'b0; else pv <= s_v && s_lv[l];
+            wire pv = dv[0] && dd[2 + l];
+            reg [31:0] pa;
+            (* keep *) reg [31:0] pb, pb2;
+            wire [31:0] pa2 = pa;
             always @(posedge clk) begin
-                pa <= sv[32 * l +: 32]; pa2 <= sv[32 * l +: 32];
+                pa <= sv[32 * l +: 32];
                 pb <= s_bias[32 * l +: 32]; pb2 <= s_bias[32 * l +: 32];
             end
             wire vo; wire [1:0] er;
@@ -431,14 +435,13 @@ module dsdv_gunit_l1f_acore #(
         end
     endgenerate
     // select control delay lines (dsdv_gunit_l1f dv / dd / dl2, this half's lane valids)
-    reg [LA*3-1:0] dv; reg [LA*(NL+3+2)-1:0] dd; (* keep *) reg [LA*NL-1:0] dl2;
     always @(posedge clk or negedge rq[10])
         if (!rq[10]) dv <= {LA*3{1'b0}}; else dv <= {dv[3*(LA-1)-1:0], s_l, s_f, s_v};
-    always @(posedge clk) begin dd <= {dd[(NL+5)*(LA-1)-1:0], s_bn, s_lv, 2'b00}; dl2 <= {dl2[NL*(LA-1)-1:0], s_lv}; end
+    always @(posedge clk) dd <= {dd[(NL+5)*(LA-1)-1:0], s_bn, s_lv, 2'b00};
     wire [2:0] a_fl = dv[3*(LA-1) +: 3];
     wire [NL+4:0] a_dd = dd[(NL+5)*(LA-1) +: NL+5];
     wire [2:0] a_bn = a_dd[NL+4:NL+2]; wire [NL-1:0] a_lv = a_dd[NL+1:2];
-    wire [NL-1:0] a_lv2 = dl2[NL*(LA-1) +: NL];
+    wire [NL-1:0] a_lv2 = a_lv;
     // key register (ot_hdc_select's key map), copies A / B
     (* keep *) reg [NL*EW-1:0] kda, kdb;
     reg [2:0] kf;
@@ -474,8 +477,10 @@ module dsdv_gunit_l1f_ba1 #(parameter integer MUT = 0) (     // sort #1's flags 
     input  wire [255:0] bw_d, input wire [255:0] sv, input wire [13:0] ctl,
     output wire [327:0] qa, output wire [327:0] qb, output wire [23:0] vf);
     wire [2:0] fo_unused;
+    // FACE 11-07: s_f / s_l (ctl[2:1]) only feed this half's sort flags, which dsdv_gunit_l1f leaves unconnected: they
+    // are not wired inside (declared dead, kit recipe), so no flop of a dead cone survives a keep pass
     dsdv_gunit_l1f_acore #(.LH(1), .MUT(MUT)) u_a (.clk(clk), .rst_n(rst_n), .re(re), .ra(ra), .bw_e(bw_e), .bw_a(bw_a),
-        .bw_d(bw_d), .sv(sv), .ctl(ctl), .qa(qa), .qb(qb), .fo(fo_unused), .vf(vf));
+        .bw_d(bw_d), .sv(sv), .ctl({ctl[13:3], 2'b00, ctl[0]}), .qa(qa), .qb(qb), .fo(fo_unused), .vf(vf));
 endmodule
 
 // ===================================================================================================================== F
@@ -612,10 +617,14 @@ module dsdv_gunit_l1f_bf (
         end
     endgenerate
     reg s_v, s_f, s_l; reg [2:0] s_bn; reg [NL-1:0] s_lv; reg [NL*32-1:0] s_val;
+    // FACE 11-07: ctl_hi has its own kept copies of {s_bn, s_l, s_f, s_v} (one output flop per pin bit; the 10-22 band
+    // drove ctl_lo and ctl_hi from the same flops = face_guard feedthrough / shared); same D, same edge
+    (* keep *) reg s_vh, s_fh, s_lh; (* keep *) reg [2:0] s_bnh;
     always @(posedge clk or negedge rq[5])
-        if (!rq[5]) s_v <= 1'b0; else s_v <= cgo;
+        if (!rq[5]) begin s_v <= 1'b0; s_vh <= 1'b0; end else begin s_v <= cgo; s_vh <= cgo; end
     always @(posedge clk) begin
         s_f <= cfwc[0]; s_l <= cl; s_bn <= cbc[2:0];
+        s_fh <= cfwc[0]; s_lh <= cl; s_bnh <= cbc[2:0];
         for (k = 0; k < NL; k = k + 1) begin
             s_lv[k] <= k < clv;
             for (j = 0; j < 4; j = j + 1) s_val[32 * k + 8 * j +: 8] <= svn[32 * k + 8 * j +: 8];
@@ -623,14 +632,28 @@ module dsdv_gunit_l1f_bf (
     end
     assign sv_lo = s_val[255:0];  assign sv_hi = s_val[511:256];
     assign ctl_lo = {s_lv[7:0], s_bn, s_l, s_f, s_v};
-    assign ctl_hi = {s_lv[15:8], s_bn, s_l, s_f, s_v};
+    assign ctl_hi = {s_lv[15:8], s_bnh, s_lh, s_fh, s_vh};
     // ---------------------------------------------------------------- merge (fold of both sorts -> m1 -> cx8_2)
+    // FACE 11-07: the sort results land in F's own kept flops (l0a .. l1b, one per pin bit); the merge register m1 is
+    // retimed back across the fold onto them (fold + cx8_2 in one stage), so the merge still leaves on the same edge.
+    // The 10-22 band read s0a .. s1b through the fold (face_guard unregistered / shared).  Record bit 0 (ninf) of the A
+    // copies s0a / s1a is not read by the fold (dsdv_seln_fold_cx compares bits 40:1): declared dead in the kit recipe.
     wire [LW-1:0] c1, c3;
-    dsdv_seln_fold_cx #(.EW(EW)) u_m0 (.aa(s0a), .ab(s0b), .ba(s1a), .bb(s1b), .q(c1));
-    (* keep *) reg [LW-1:0] m1a, m1b; reg [2:0] mf;
+    (* keep *) reg [LW-1:0] l0b, l1b; (* keep *) reg [8*(EW-1)-1:0] l0r, l1r; reg [2:0] mf;
+    wire [LW-1:0] l0a, l1a;
+    generate
+        for (l = 0; l < 8; l = l + 1) begin : g_land
+            always @(posedge clk) begin
+                l0r[(EW-1) * l +: EW-1] <= s0a[EW * l + 1 +: EW-1]; l1r[(EW-1) * l +: EW-1] <= s1a[EW * l + 1 +: EW-1];
+            end
+            assign l0a[EW * l +: EW] = {l0r[(EW-1) * l +: EW-1], 1'b0};
+            assign l1a[EW * l +: EW] = {l1r[(EW-1) * l +: EW-1], 1'b0};
+        end
+    endgenerate
+    always @(posedge clk) begin l0b <= s0b; l1b <= s1b; end
+    dsdv_seln_fold_cx #(.EW(EW)) u_m0 (.aa(l0a), .ab(l0b), .ba(l1a), .bb(l1b), .q(c1));
     always @(posedge clk or negedge rq[12]) if (!rq[12]) mf <= 3'd0; else mf <= sf0;
-    always @(posedge clk) begin m1a <= c1; m1b <= c1; end
-    dsdv_seln_cx8_2 #(.EW(EW), .J1(2), .KB1(8), .J2(1), .KB2(8)) u_m1 (.da(m1a), .db(m1b), .q(c3));
+    dsdv_seln_cx8_2 #(.EW(EW), .J1(2), .KB1(8), .J2(1), .KB2(8)) u_m1 (.da(c1), .db(c1), .q(c3));
     // ---------------------------------------------------------------- gather + outputs (dsdv_gunit_l1f, unchanged)
     reg [6*NS-1:0] hs;
     (* keep *) reg [NQ-1:0] gq2;
@@ -647,20 +670,29 @@ module dsdv_gunit_l1f_bf (
                 if (hs[NS * j + i]) gd[32 * j +: 32] = gd[32 * j +: 32] | sc[32 * i +: 32];
     end
     // adder faults: ot_s81sl_ve_qadd's fault = valid_out && err != 0, formed here from the A bands' raw flops
+    // FACE 11-07: the adders' raw valid / error flops land in F (vfq, one flop per pin bit) before the fault OR.  The
+    // ONLY edge change of the hard form: an adder fault reaches o_flt one edge later (sticky fault flag; no data / valid
+    // / gather edge moves; the lockstep bench compares o_flt with the reference delayed one edge)
+    reg [47:0] vfq;
+    always @(posedge clk or negedge rq[12]) if (!rq[12]) vfq <= 48'd0; else vfq <= {vf_hi, vf_lo};
     wire [NL-1:0] yf;
     generate
         for (l = 0; l < NL; l = l + 1) begin : g_yf
             wire [2:0] x;
-            if (l < 8) begin : g_lo assign x = vf_lo[3 * l +: 3]; end
-            else begin : g_hi assign x = vf_hi[3 * (l - 8) +: 3]; end
+            if (l < 8) begin : g_lo assign x = vfq[3 * l +: 3]; end
+            else begin : g_hi assign x = vfq[24 + 3 * (l - 8) +: 3]; end
             assign yf[l] = x[0] && (x[2:1] != 2'd0);
         end
     endgenerate
+    // FACE 11-07: the sticky fault holds in its own kept flop flt_s; o_flt is a pure output copy of it (the 10-22 band
+    // fed o_flt back into its own D = face_guard shared / self-loop).  o_flt == flt_s on every edge.
+    (* keep *) reg flt_s;
     always @(posedge clk or negedge rq[12])
-        if (!rq[12]) begin o_v <= 1'b0; o_f <= 1'b0; o_l <= 1'b0; o_g <= 1'b0; o_flt <= 1'b0; end
+        if (!rq[12]) begin o_v <= 1'b0; o_f <= 1'b0; o_l <= 1'b0; o_g <= 1'b0; o_flt <= 1'b0; flt_s <= 1'b0; end
         else begin
             o_v <= mf[0]; o_f <= mf[1]; o_l <= mf[2]; o_g <= gq2[NQ - 1];
-            if (|yf || (gq2[NQ - 1] && mf[0])) o_flt <= 1'b1;
+            flt_s <= flt_s || (|yf) || (gq2[NQ - 1] && mf[0]);
+            o_flt <= flt_s || (|yf) || (gq2[NQ - 1] && mf[0]);
         end
     wire [245:0] onext = {54'd0, gd};
     always @(posedge clk)

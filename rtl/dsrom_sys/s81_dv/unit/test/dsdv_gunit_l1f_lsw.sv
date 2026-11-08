@@ -30,15 +30,19 @@ module dsdv_gunit_l1f #(
     // o_d is only defined where the reference defines it: compare it when the reference's o_v / o_g say it carries data
     integer n_chk = 0, n_bad = 0, n_live = 0;
     reg armed = 1'b0;
+    // S81-GUNIT-FORM-1 FACE 11-07: the hard bands land the adders' raw fault flops in F before the sticky OR, so an
+    // adder fault reaches o_flt exactly one edge after the flat reference: compare o_flt with r_flt delayed one edge
+    reg r_flt_d = 1'b0;
+    always @(posedge clk) r_flt_d <= rst_n ? r_flt : 1'b0;
     always @(posedge clk) begin
         if (rst_n) armed <= 1'b1;
         if (armed) begin
             n_chk = n_chk + 1;
             if (r_v || r_g) n_live = n_live + 1;
-            if ({o_v, o_f, o_l, o_g, o_flt} !== {r_v, r_f, r_l, r_g, r_flt} || ((r_v || r_g) && o_d !== r_d)) begin
+            if ({o_v, o_f, o_l, o_g, o_flt} !== {r_v, r_f, r_l, r_g, r_flt_d} || ((r_v || r_g) && o_d !== r_d)) begin
                 n_bad = n_bad + 1;
                 if (n_bad <= 4) $display("GUNIT_LSW %m MISMATCH edge %0d: band {v f l g flt}=%b ref=%b d_eq=%0d", n_chk,
-                                         {o_v, o_f, o_l, o_g, o_flt}, {r_v, r_f, r_l, r_g, r_flt}, o_d === r_d);
+                                         {o_v, o_f, o_l, o_g, o_flt}, {r_v, r_f, r_l, r_g, r_flt_d}, o_d === r_d);
             end
         end
     end
