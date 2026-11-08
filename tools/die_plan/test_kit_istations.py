@@ -480,12 +480,33 @@ def test_packed_delay_deeper_than_plan_pins_first_sites_only():
     assert K.packed_input_delay("T", bus, _packed_txt(8, 7), 8, 7)["depth"] == 7
 
 
-def test_packed_delay_shallower_than_plan_or_wrong_width_still_fails():
+def test_packed_delay_wrong_width_still_fails():
     import kit_istations as K
     bus = dict(name="a", dir="in", width=8)
-    for txt in (_packed_txt(8, 6), _packed_txt(9, 9)):
+    for txt in (_packed_txt(9, 9), _packed_txt(8, 0)):
         try:
             K.packed_input_delay("T", bus, txt, 8, 7)
         except ValueError:
             continue
         raise AssertionError("expected ValueError")
+
+
+def test_packed_delay_shallower_than_plan_is_the_bound_depth():
+    # DIE-HBM-91-KCLS 11-08 (class l): HBM q_hub L12s_i D12 vs 34 planned; the bound, priced depth wins
+    import kit_istations as K
+    bus = dict(name="a", dir="in", width=8)
+    got = K.packed_input_delay("T", bus, _packed_txt(8, 6), 8, 7)
+    assert got["depth"] == 6 and len(got["stage_registers"]) == 6
+
+
+def test_packed_sites_respread():
+    import kit_istations as K
+    regs = [[float(i), 0.0] for i in range(34)]
+    sites = K.packed_sites(regs, 12)
+    ks = [k for _, k in sites]
+    assert [j for j, _ in sites] == list(range(12))
+    assert ks == sorted(set(ks)) and 0 <= ks[0] and ks[-1] < 34      # strictly increasing, on planned sites
+    gaps = [b - a for a, b in zip([-1] + ks, ks + [34])]
+    assert max(gaps) - min(gaps) <= 1                                 # near-equal hop groups
+    assert K.packed_sites(regs[:7], 9) == [(j, j) for j in range(7)]  # deeper: first sites in order (KW-FIX-27)
+    assert K.packed_sites(regs[:8], 6) == [(0, 0), (1, 2), (2, 3), (3, 4), (4, 5), (5, 7)]
