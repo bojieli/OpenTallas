@@ -41,3 +41,25 @@ Geometry budget caught before PLACE: old DFF area0.2916um2 on0.27um rows =>1.08u
 Current ONE PLACE pilot, new corrected form, own intel1 /srv/opentallas-scratch2/claude/codex-head-tx-regional-0222/kit_vB. Unit oth-ubuntu-672842-1794135442 admitted immediately48GB8T. Log intel2 ~/codex-head-tx-0222/regional-place-vB.log. KIT_PREFLIGHT PASS, early synth stage; HOLD_ROUTE/DO_NOT_COUNT; never advance to CTS/GRT without new actual density/driver-distance image read. Current source hub codex/head-tx-regional-src-0222@cbca72f096; no merge/tag/PORchange.
 
 HSPLIT fixed w LEC hyp29 at lastread, healthy (original process retained), no EQ/FAIL receipt yet. e HOLD_ROUTE preserved.
+
+## Handoff to Claude 2026-11-08 04:25 PST
+
+New launches STOPPED. No +1 P&R pilot was launched. No merges/tags/PORchanges/deletions.
+
+Source refs published to canonical intel2:/home/ubuntu/OpenTallas, localhosthub and GitHub: codex/head-faceguard-0222@c462697287 (6targeted tests PASS); codex/head-tx-regional-src-0222@04b7931ba5 (current zero-cycle pilot uses geometrycbca72f096); codex/head-tx-relay1-0222@b586b8f2de (+1 input bridge/CHrelay RTL+model, qualified only by bench). Own source clone /home/ubuntu/codex-head-tx-regional-src-0222 is on relay1 branch. A final local draft checkpoint may follow b586; it changes planning helper/review text only, not qualified RTL.
+
+Healthy jobs left: intel1 /srv/opentallas-scratch2/claude/codex-head-tx-regional-0222/kit_vB, unit oth-ubuntu-672842-1794135442, GOALplace, async LEC unit oth-ubuntu-1164237-1794136491; log intel2 ~/codex-head-tx-0222/regional-place-vB.log. Actual3_5_place_dp.odb exists. HOLD_ROUTE/DO_NOT_COUNT retained. No CTS/GRT release. Existing HSPLIT w LEC remains intel2 /srv/opentallas-scratch2/claude/dh85hs/kitsG/hd_host_w, container dpkit-hd_host_w-1927812; lastread hyp31 healthy, no verdict collected. HSPLIT e GRT done earlier, route HOLD requires die-owner go; not launched.
+
+Old TX FOLD a2 fullsignoff: own intel1 .../codex-head-tx-0222/capsule/base_signoff_complete/signoff.json, NOTSIGNED TT+12.90,FF-32.15/140 (18internal/-10.30),DRC0; slew1740TT/917FF pins ->919TT/580FF unique nets. No ECO launched: large drive/wire miss. Original E4 .../dh85txf/kit/ot_s81hd_sc_tx_vH_fold_a2 preserved.
+
+Final zero-cycle regional PLACE image VIEWED hub /home/ubuntu/codex-head-tx-regional-packet-0222/review_vB_place/actual_place.png; remote intel1 .../codex-head-tx-regional-0222/review_vB_place/{reach.json,placed.csv,relay_seeds.json}. Geometry remains BLOCKED beforeCTS/GRT:1322weak-driver nets>100um by geometry,451into mid worst304.4um/FO4,369data,125CQ,14p_d,363comb. All2080mid/CQpairs local max3.996um,0missing. Densitymax0.77184,16bins>0.7 in data/PMA strips. These geometric counts are not STA violations and are not directly comparable to old919routed slew nets.
+
++1 bridge/relay smallest bench PASS:1577continuous/1548stallreset words,0mismatch vs reference delayed1edge; CMUT8 bypass caught37/377. Intel1 .../codex-head-tx-relay1-bridge-0222, unit oth-ubuntu-1791952-1794137821 exit0, log intel2 ~/codex-head-tx-0222/relay1-bridge-bench.log. Earlier +1 outputD9 version bench also passed but is superseded by input bridge. Model results/uarch/head_tx_relay1_1108.json:2781additionalregs/~810.94um2,II1,+1pma_tx/e_flt edge(existing1->candidate2), defaultoff/unadopted.
+
+Concrete proposed geometry snapshot hub /home/ubuntu/codex-head-tx-relay1-bridge-packet-0222/{relay_plan.json,relay_ownership.png} (VIEWED): measured mappeddata comb/buffer area952.089um2/11737cells. Owned4174.854um2 incl FF/control/fullchunkrelays+25%buffer+clockreserves in10607.92um2=39.36%. Planned chunkstagehop118.87um; newsource-starHPWL171.072 vs304old; dataBridgehop82.512um; bufferedsegmentbudget80um; atomicgroups1188,maxcentroidL1radius16.484um. Planned targets only: new source motion must be measured in its own PLACE.
+
+DRAFT GAP: tools/s81_head/head_tx_relay_plan.py is NOT READY TO APPLY. Its last extension needs reference status-register aliases u_enc.p_v/u_enc.fault resolved instead of g_ch_out.pv_mid/fault_mid. CLI deliberately disabled with a DRAFT error. Kit apply helper (dynamic mapped-comb ownership placement, actual-name clockgroups,80um buffer repair) still needs implementation. Do not launch from the draft. No +1 pilot exists. Future new kit may use source helper5ad4d7602b + OT_SKIP_PRECTS_METRICS=1; never edit current job for this.
+
+Exact next: collect currentB kitLEC; keepB held due observed geometry. Finish alias-safe planning/apply helper, render revised ownership/hops, then one new +1 PLACE pilot only if accepted. Collect existing HSPLITw LEC, GRT screen only on EQUIVALENT; keep e route hold. OWNER? none new.
+
+Final draft-only checkpoint: codex/head-tx-relay1-0222@d7bd984449, disabled planner/review wording only atop qualified RTL b586b8f2de. No additional job/check launched for handback.

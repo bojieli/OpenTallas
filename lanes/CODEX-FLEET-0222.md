@@ -100,3 +100,78 @@ KV Eo screen E6 scope3680794-1794135983 exited before clock_tree_synthesis on mi
 ## SVC checkpoint recovery — 2026-11-08 03:17 PST
 
 At RTL child’s request, completed the interrupted E6→I1 checkpoint transfer with sparse/compressed resumable rsync, no deletes. No old tar/rsync writer was active on the I1 target. Source E6 .../codex-svc-rtl-0222/miter2/obj stayed untouched. Destination I1 /srv/opentallas-scratch2/claude/codex-svc-rtl-0222/miter_resume/obj now has all2376 regular files,2,670,521,109 bytes;489 missing/incomplete files were transferred (733MB logical,39MB wire), exit0 at03:16:09. Explicit COPY COMPLETE sent to child before its own96GiB/J1/effective-O0 checkpoint compile; fleet started no build or Verilation. Exact10-line kernel+unit excerpt retained at destination infra_memory/epyc6_3156689_memcg_20261108_030600.log.
+
+## Continued support — 2026-11-08 03:31 PST
+
+RCK live alternates dependency registered on I1 through existing ~/.local/state/wt-reaper/protect.d/codex-fleet-0222-rck-alternates.txt: /srv/opentallas-scratch2/claude/s81-rck-10/repo/.git/objects and /srv/opentallas-scratch2/claude/codex-s81-rck-0222/work. Both retention tools read that registry; autoclean already guards alternates targets. No source/repository mutation or deletion. RCK owner informed.
+
+SVC child’s I1 96GB checkpoint resume was still queued while I2 had301GB admission/load75of112. At its request, staged the completed I1 miter_resume to the same path on I2, preserving I1. Target absent/no writer; rsync copied2379 regular files/2,670,523,220 bytes (100MB wire), exit0/0deletes at03:30:56. Explicit copy-complete sent; child checks original I1 admission before its own cancellation/rehome decision. Fleet started no compiler or Verilation and signaled no client.
+
+HBM Q2NF small pilot won admission on I1 while staging was considered; owner kept that healthy job and started no duplicate on I2. Its failed rsync SSH-n attempt transferred no bytes; empty own target dirs are fresh and retained.
+
+E6 KV screen executed CTS+legalization, then failed diagnostic capture-pin lookup beforeDBwrite; manual library glob also omitted uncompressedSEQ, so no valid timing result. Owner has held the form and started no further run pending root ruling. Output remained89MB, scratch55GB then53GB by03:24; newbulk stays held.
+
+2026-11-08 03:38 PST: E5 memory bypass confirmed for inherited gunit new/base all-type bind verifies: parents921630/945734 live in plain session-373696/373777 cgroups, outside ot-heavy. S81 reports~24GB each plus23–34GB svc_rs Verilator children. Healthy, not stopped; root/S81 informed and future continuations must use existing ot-run requirement. E5 MemAvailable44GB/admission−37GB at03:34, so this is material outside pressure.
+
+E6 automatic03:33 cleanup tick is running normally (PID3946260); scratch remained53GB at03:36. No manual cleanup/restart. New bulk remains held. HBM QOUT qualification requested a~1GB rehome from queued E4; advised I2 scratch244GB, with truthful current memory admission23GB at03:34 (fresh charge258.8GB), so stage complete input and re-check before owner cancellation, not claim immediate admission.
+
+HEAD CTL no-dir issue is intentional spill-copy protection, not an alias failure: marked copy on I2 stays ineligible to a new continuation while original spill client and separate proof are live. Owner preserves marker/proof, waits normal copyback, then resumes canonically on E4 with corrected guide. Fleet bypassed nothing.
+
+## E5 actual infrastructure kills — 2026-11-08 03:39 PST
+
+Earlyoom journal confirms SIGTERM at03:34:14 to Verilator1495101 (svc_rs t4,25,869MiB RSS),03:34:27 to1499743 (t5,24,017MiB),03:34:53 to1503080 (t6,33,531MiB), at3% memory threshold. These are inherited unadmitted gunit full-plan verify children under plain SSH-session parents, not RTL/geometry regressions and not kernel MEMCG kills. Root and S81 owner informed to classify the affected rows as infrastructure-stopped and avoid a fresh broad sweep. Parents may continue; no process or guard touched by fleet.
+
+2026-11-08 03:44 PST: Expanded E5 incident is31earlyoom SIGTERMs between03:31:02–03:34:53:30Verilator lint children plus1productionYosys. Compact exact list at handoff/fleet_earlyoom_20261108_0331.tsv (also E5 own diagnostics/earlyoom_20261108_0331.tsv). Yosys3905218/RSS21,992MiB maps to svc_lo_dsdv_svc_rs_w__t1 a9, E5scope3902186-1794079360/waveunitkw-s81-svclodsdvsvcrswt1-9-59306; journal exit-handler PWD proves identity. AP recorded INFRA/do-yosys Error241 at03:37:36. Old flat form remains held; no same-form relaunch. Root/S81/SVC notified; resource failure must not become RTL/geometry regression.
+
+Other new terminal rows forwarded to owning leads without relaunch: QC sle_su_c0418be8bcee1 flow-error; QC sle_fw_v3 e4c8e9719aae admission-tools transfer failure beforepayload (wave+QC); QC sle_hc1 cl7d3605083558fa55d4fe DPL0033; S81leaf t36 0d8b07e2bb49 GRT0116.
+
+## Later diagnoses — 2026-11-08 04:07 PST
+
+QC sle_su_c0418be8bcee1 failed CTS on a correct initial tap-capacity guard, not E5earlyoom: E2scope2171889-1794137038, preflightPASS/LECexit0,37930registers/32taps, then initialtapcapacityinvalid. QC owner measured real clk_t8=5540sinks versuscap1200; redistribution moved3540 but no capacity within200um. Owner develops a finer structural grid, no cap/radius waiver or skip.
+
+HBM q_mca7d5a0f529c66 final NOTSIGNED: TT+246.26ps, FF−48.71ps/31non-port endpoints,3slew, DRC0/ant0/LECexit0. HBM child has measured cause u_rrl558→559 from clk_t20early−160ps to clk_t7late0; images viewed, noECO. It develops co-root reset components where span permits, otherwise a phase-safe form; no relaxation/retry.
+
+HBM QOUT original E4 qualification had already admitted before rehome was considered, and failed beforeLEC on bare --lec-mem 48 meaning48 Docker bytes. Owner preserves that failed log and runs exactly one corrected I2 re-sign with --lec-mem 48g/newoutqout_resign_fa_i2/controller1373314; no old payload active or duplicated.
+
+KV RF-vC pilot wait was notFIFO: noncritical4T/16GB request subject to I1loadcap168 whileload171, despite later memoryheadroom; E4pickonly6GB so not eligible. Owner’s exact cancel raced I1admission after653s; tool explicitly left payload running in scope1966433-1794138168. Owner detected before any I2successor, preserved healthy synthesis, and collects native logs. I2capsule3.6MB remains unrun. No fleet signal.
+
+SVC I2checkpoint scope1007704-1794137643 admitted after309s but failed beforeC++work because effectiveO0 invalidated O1PCH and ordinary .fast/.slow fallback headers were absent. No newOOM. Owner preserves failure, adds forwarding headers to unchanged base PCH, and resumes same96GiB/J1/O0make checkpoint; noRTLchange/Verilation.
+
+
+## Fleet continuation — 2026-11-08 04:14 PST
+
+Canonical fleet status: E2 admits 30 GB / scratch 135 GB; I1 admits 85 GB / load 138 of 112 / scratch 272 GB; I2 admits 117 GB / load 110 of 112 / scratch 228 GB; E4 admits 72 GB / load 79 of 256 / scratch 657 GB; E5 admits 1 GB / scratch 208 GB; E6 admits 401 GB / scratch 52 GB. These are volatile admission observations. E6 new bulk remains held against its unchanged 50 GB floor; no deletion or cleanup restart requested.
+
+t35's quiet GRT log does not imply a hung build: container dpkit-ot_s81sl_leaf__t35-3748393 has OpenROAD PID 3949901 at 122% CPU, CPU time 1:49:49 versus elapsed 1:29:35. Parent and S81 lead informed. All six migrated AP rows still RUNNING, with no new terminal receipt in canonical state.
+
+Newly collected HBM vsN1 job 14272b3be9f9 is DONE-STRUCTURAL: final TT +23.45 ps, FF -155.56 ps on 2523 endpoints, TT 461 / FF 446 slew violations, DRC 0, antenna 0, NOT SIGNED. An earlier review sentence refers to different hold numbers; final signoff fields are the current evidence. HBM owner notified to cover the structural diagnosis; no late ECO or retry.
+
+KV Eo owner reports all I2 saved-DB timing diagnostic runs terminal with exit 0, while route remains held; exit 0 is not a SIGNED claim. Its E6 retained inputs/screens are inactive and receive no further staging. I1 PC43 full LEC scope 1859707-1794137953 remains healthy at about 29 minutes / one busy CPU / 1.6 GB; leave it running.
+
+
+2026-11-08 04:18 PST: HBM QOUT corrected official current-fa re-sign completed on I2 at /srv/opentallas-scratch2/claude/codex-hbm-open-0222/qout_resign_fa_i2. Owner reports PROVENANCE SIGNED / LOCAL_PASS_NEEDS_PARENT; LEC 42882/42882 EQUIVALENT, zero diff/undecided; TT +144.62 ps, FF 4991 port / zero non-port violations, DRV 0/0, DRC 0, face 10888 PASS. HBM/root have READY-COUNT. The previous bare --lec-mem 48 byte-unit infrastructure failure is closed by the corrected 48g qualification, not relabeled as OOM or RTL. Preserve capsule and completed unit.
+
+E5 inherited broad verify parents 921630/945734 are now absent; sudo earlyoom journal has no new kill since 04:00 PST, with 17.85% memory available at 04:13. Existing jobs untouched. All six migrated scopes remain active; fresh t24/QCstm GRT logs at 04:16, no terminal receipt.
+
+
+## Claude handback — 2026-11-08 12:22 UTC
+
+Fleet has stopped new transfers/launches; healthy jobs remain untouched. No fleet-owned transfer, compiler, or pending admission client remains. No deletion, cleanup restart, guard change, source mutation, or new frontend was made by this lane.
+
+Six existing frontends migrated to complete I2 S2 kits by supported copy/link, preserving E5 originals, are still active at last observation: t35 a4 scope 3746226-1794134103; t11 a15 3851534-1794134365; station t24 cl64811a5d a14 3964651-1794134638; QC stm2 a7 4050584-1794134838; QC sta2 a10 54113-1794135315; QC sta1 a9 201558-1794135687. Prefix each with oth-ubuntu-. All use /srv/opentallas-scratch2/claude/codex-fleet-0222/staged/<tag>/gen; original frontends are sole producers, complete-copy receipts and .keep refs remain. Last stage: first four GRT, final two CTS. t35's quiet log is healthy: OpenROAD 122% CPU / 1:49:49 CPU at 1:29:35 elapsed; do not call stale E5 logs hung. All AP rows RUNNING; no terminal receipt collected.
+
+Four station pre-CAD roots (t22, t14, t29cl, t44) were resited by wave, not fleet: I1 S3 to S2 with atomic exchange and preserved *.pre-resite-0222. Manifest I1 /srv/opentallas-scratch2/claude/codex-wave-0222/station_resite_manifest.json. Do not repeat. Station t18/t52 later healthy I1 GP per station owner.
+
+SVC E6 scope 3156689-1794134077 was an actual 64 GiB kernel MEMCG OOM (cc1plus RSS about 63.5 GiB), not an inference from exit 143. Its intact checkpoint was copied without deletion to I1 and I2 /srv/opentallas-scratch2/claude/codex-svc-rtl-0222/miter_resume. Exact kernel excerpt is miter_resume/infra_memory/epyc6_3156689_memcg_20261108_030600.log. I1 unadmitted client was owner-canceled; I2 first resume scope 1007704-1794137643 failed before C++ work because O0 invalidated O1 PCH and ordinary fallback headers were absent. SVC owner is adding forwarding headers and owns any corrected 96 GiB/J1/O0 resume; no pending fleet copy/client. Do not duplicate that compile.
+
+E5 earlier 31 earlyoom SIGTERMs (30 inherited broad-verify Verilators plus production Yosys) are recorded in handoff/fleet_earlyoom_20261108_0331.tsv, also E5 own diagnostics path. Production victim was S81 svc_lo_dsdv_svc_rs_w__t1 a9 / scope 3902186-1794079360; AP Error241 is infrastructure, not RTL. Broad verify parents 921630/945734 are now absent; no new earlyoom kill since 04:00 PST at last journal read. Owners have exact classifications.
+
+E6 remains at canonical 52 GB scratch free (direct df rounds 53), root 120 GB, unchanged 50 GB scratch floor. New bulk remains held. Existing ot-autoclean.timer next tick is 12:31:20 UTC / 04:31 PST; no manual action. Previous 11:33 tick completed 11:37:33 UTC exit 0, protected/count hits 0, reaper removed 0. Preserve KV e1_ds + kit_e1 live provenance references, finished readlease objects and all fresh screens. KV Eo diagnostics are terminal, route held, retained E6 inputs inactive. PC43 full LEC I1 scope 1859707-1794137953 was healthy; preserve.
+
+RCK live alternates store I1 /srv/opentallas-scratch2/claude/s81-rck-10/repo/.git/objects is registered with current own worktree in ~/.local/state/wt-reaper/protect.d/codex-fleet-0222-rck-alternates.txt. Preserve until owner retires dependency.
+
+Closed follow-up: HBM QOUT corrected official re-sign at I2 codex-hbm-open-0222/qout_resign_fa_i2 is SIGNED / LOCAL_PASS_NEEDS_PARENT, LEC 42882/42882 equivalent, TT +144.62 ps, FF 4991 port / 0 non-port, DRV 0/0, DRC 0; HBM/root have READY-COUNT. Its old bare --lec-mem 48 byte-unit launch failure is closed. QC RF-vC cancel raced admission; healthy I1 scope 1966433-1794138168 remains alive, I2 tiny capsule is UNRUN, no duplicate. All newly observed AP failures were forwarded to die owners; latest KV leaf t3 ac9f0372acba LEC inequivalence and HBM vsN1 14272b3be9f9 large hold failure are structural, no fleet retries.
+
+No outstanding OWNER question added by fleet. Parent should consolidate dirty shared coord reports plus the earlyoom TSV; no git retry loop or other agent work was changed.
+
+Handback addendum received directly from SVC owner: corrected I2 checkpoint scope oth-ubuntu-1793538-1794139284 completed exit 0, base H8_ENGINE PASS errs 0, three controls caught 576/288/576. No new OOM; O0 forwarding-header fallback succeeded preserving generated model and completed objects. Results: I2 /srv/opentallas-scratch2/claude/codex-svc-rtl-0222/miter_resume/launch_o0_header.log. No further copy or compiler pending.
