@@ -95,6 +95,14 @@ NEAR_WNS_PS = -30.0
 NEAR_DRC_MAX = 50
 RENDER_MEM_GB = 8
 ORPHAN_IDLE_S = 3 * 3600
+# KW-FIX-35-O 11-08 (COORD LOOP-GAP 07:2x): a job whose ot-run client is gone and that has NO live process and NO container
+# on ANY fleet host for DEAD_IDLE_S is DEAD: it resumes at once from its run dir (ORFS continues after its last finished
+# stage) instead of waiting ORPHAN_IDLE_S on kit-host log age.  Kit-host log age alone is wrong both ways: ot-run SPILL runs
+# write into a stage copy on another host (the kit host looks idle while the route runs), and a dead run looks "recent"
+# for 3 h.  Liveness is searched by the kit's path tail on every host, so a spill copy (other root, same tail) counts.
+DEAD_IDLE_S = int(os.environ.get("AP_DEAD_IDLE_S", str(30 * 60)))
+MAX_DEAD_RESUME = 2                                     # DEAD resumes per job (a third DEAD is a real failure to look at)
+FLEET_HOSTS = tuple(h for h in os.environ.get("AP_FLEET_HOSTS", "localhost,intel1,epyc2,epyc4,epyc5,epyc6").split(",") if h)
 CHAIN_VERSION = 2
 MAX_SUBMIT_PER_TICK = int(os.environ.get("AP_MAX_SUBMIT", "12"))
 MAX_NOTRUN = 3                                          # 'NOT RUN' (never admitted) resubmits
@@ -1039,7 +1047,7 @@ def classify(c, client):
     return "CRASH", "flow-error", c.get("orfs_error") or (c.get("runlog_tail") or "")[-300:] or f"exit {client.get('exit')}"
 
 
-INFRA_KINDS = ("infra-oom", "infra-lost", "infra-notrun", "infra-orphan")
+INFRA_KINDS = ("infra-oom", "infra-lost", "infra-notrun", "infra-orphan", "infra-dead")
 
 
 def parse_client_log(text):
@@ -2357,6 +2365,72 @@ def probe_job(j):
     return best
 
 
+PROBE_ALIVE = r'''
+import json, os, subprocess, sys
+a = json.loads(sys.argv[1]); tail = a["tail"]; me = str(os.getpid())
+out = {"procs": [], "containers": []}
+ps = subprocess.run(["ps", "-eo", "pid,ppid,args", "--no-headers", "-ww"], capture_output=True, text=True).stdout
+for line in ps.splitlines():
+    f = line.split(None, 2)
+    if len(f) == 3 and tail in f[2] and me not in (f[0], f[1]) and "PROBE_ALIVE" not in f[2]:
+        out["procs"].append(f[0])
+try:
+    names = subprocess.run(["docker", "ps", "--format", "{{.Names}}"], capture_output=True, text=True, timeout=60).stdout.split()
+    for n in names:
+        m = subprocess.run(["docker", "inspect", n, "--format", "{{range .Mounts}}{{.Source}}|{{end}}"],
+                           capture_output=True, text=True, timeout=60).stdout
+        if any(x.rstrip("/").endswith(tail) or (tail + "/") in x for x in m.split("|")):
+            out["containers"].append(n)
+except Exception as e:
+    out["error"] = "docker: %s" % e
+print("AP_JSON " + json.dumps(out))
+'''
+
+
+def kit_tail(path):
+    """the stable part of a kit path: the last 4 components (e.g. items/<type>/gen/<type> or <type>/attempt_N/gen/<type>);
+    an ot-run SPILL stage copy keeps it under another root"""
+    parts = [x for x in str(path or "").split("/") if x]
+    return "/".join(parts[-4:]) if len(parts) >= 4 else ""
+
+
+def fleet_alive(j, hosts=None):
+    """KW-FIX-35-O: True = a process or container of this kit lives on some fleet host; False = every host answered and
+    none has one; None = unknown (a host did not answer or no usable path): unknown never counts as dead"""
+    tail = kit_tail(j.get("path"))
+    if not tail:
+        return None
+    seen = set()
+    unknown = False
+    for h in hosts or (FLEET_HOSTS + tuple(x for x in (j.get("host"), j.get("ran_on")) if x)):
+        sh_ = ssh_host(h)
+        if sh_ in seen:
+            continue
+        seen.add(sh_)
+        # the marker is in argv so the probe skips its own ssh client and itself (both carry the tail in argv)
+        r = rpy(h, PROBE_ALIVE, {"tail": tail, "marker": "AP_PROBE_ALIVE"}, timeout=180)
+        if r.get("error") and not (r.get("procs") or r.get("containers")):
+            unknown = True
+            continue
+        if r.get("procs") or r.get("containers"):
+            j["alive_on"] = {"host": h, "procs": len(r.get("procs") or []), "containers": (r.get("containers") or [])[:3]}
+            return True
+    return None if unknown else False
+
+
+def dead_for(j, now=None):
+    """seconds this client-less job has been proven dead on every host; -1 = alive somewhere; 0 = unknown / first sight"""
+    now = time.time() if now is None else now
+    alive = fleet_alive(j)
+    if alive:
+        j.pop("dead_since", None)
+        return -1
+    if alive is None:
+        return 0
+    j.setdefault("dead_since", now)
+    return now - j["dead_since"]
+
+
 def poll_running(st):
     poll_pending_proofs(st)
     for j in list(st["jobs"].values()):
@@ -2401,19 +2475,30 @@ def poll_running(st):
                 finish(st, j, c, client)
                 continue
             idle = time.time() - max((c or {}).get("last_log_mtime", 0), j.get("started", 0))
-            if idle < ORPHAN_IDLE_S:
+            dead = dead_for(j)
+            if dead >= DEAD_IDLE_S:
+                client = {"orphan": True, "dead": True,
+                          "msg": f"DEAD: client gone, no process or container on any host for {dead / 60:.0f} min"}
+            elif idle < ORPHAN_IDLE_S or dead < 0:
                 if j["status"] != "ORPHAN":
                     log(f"ORPHAN {j['id']}: ot-run client ended without a result; watching the kit logs")
                     set_status(st, j, "ORPHAN", "client gone")
                 continue
-            client = {"orphan": True, "msg": f"client lost, kit logs idle {idle / 3600:.1f} h"}
+            else:
+                client = {"orphan": True, "msg": f"client lost, kit logs idle {idle / 3600:.1f} h"}
         if client.get("not_completed"):
             c = probe_job(j)
-            if c and not c.get("signoff") and time.time() - c.get("last_log_mtime", 0) < ORPHAN_IDLE_S:
-                if j["status"] != "ORPHAN":
-                    log(f"ORPHAN {j['id']}: {client['msg']}; remote job may still run, watching its logs")
-                    set_status(st, j, "ORPHAN", client["msg"])
-                continue
+            if c and not c.get("signoff"):
+                dead = dead_for(j)
+                if dead >= DEAD_IDLE_S:
+                    client.update(orphan=True, dead=True,
+                                  msg=f"DEAD: {client.get('msg', 'not completed')}; no process or container on any host "
+                                      f"for {dead / 60:.0f} min")
+                elif time.time() - c.get("last_log_mtime", 0) < ORPHAN_IDLE_S or dead < 0:
+                    if j["status"] != "ORPHAN":
+                        log(f"ORPHAN {j['id']}: {client['msg']}; remote job may still run, watching its logs")
+                        set_status(st, j, "ORPHAN", client["msg"])
+                    continue
         else:
             c = probe_job(j)
         if c is None:
@@ -2433,7 +2518,7 @@ def finish(st, j, c, client):
                 or chain.get("lec_exit") != 0 or (j.get("chain_version", 1) >= 2 and chain.get("lec_all_shown") is not True)):
             cls, kind, reasons = "STRUCTURAL", "routed-lec", "autopilot chain incomplete: " + str(chain.get("reason") or "missing current routed LEC")
     if client.get("orphan") and cls == "CRASH" and kind not in ("tool-segfault",):
-        kind, reasons = "infra-orphan", client["msg"]
+        kind, reasons = ("infra-dead" if client.get("dead") else "infra-orphan"), client["msg"]
     eco = ((c.get("chain") or {}).get("eco") or {}) if (c.get("chain") or {}).get("started", 0) >= j.get("started", 0) - 120 else {}
     if eco.get("summary") and cls not in ("SIGNED", "WAIT-PARENT"):
         # KW-ECO-1: the FAIL evidence carries the late-stage ECO result (kit_wave class table "late-ECO exhausted")
@@ -2452,6 +2537,13 @@ def finish(st, j, c, client):
             set_status(st, j, "CANCELLED", f"wave no longer wants it: {why[:200]}")
             return
         notrun = kind == "infra-notrun"
+        if kind == "infra-dead" and j.get("dead_resumes", 0) < MAX_DEAD_RESUME:
+            # KW-FIX-35-O: proven dead on every host for DEAD_IDLE_S -> resume the run dir (from its last finished stage)
+            j["dead_resumes"] = j.get("dead_resumes", 0) + 1
+            j.pop("dead_since", None)
+            submit(st, j, f"(resume: DEAD {j['dead_resumes']}/{MAX_DEAD_RESUME}, no process or container on any host; "
+                          f"resumes the run dir from its last finished stage; --mem {j['mem_gb']})")
+            return
         if notrun and j.get("notrun_retries", 0) < MAX_NOTRUN:
             j["notrun_retries"] = j.get("notrun_retries", 0) + 1
             submit(st, j, f"(resubmit: never admitted, {j['notrun_retries']}/{MAX_NOTRUN})")
