@@ -8,6 +8,12 @@ module ot_qkh_head_frontq_native #(
     // bits ({cr 16, c0, e 16, qb 6, hid 2}) fan out to all four ports (left to the flow's pin_reg_split in partition
     // kits).  0 cycles, identical outputs every edge (miter); +124 flops (4 x 233 vs 809, plus fault pin copy).  PORT_REGS=0 = original.
     parameter integer PORT_REGS=0,
+    // DIE-KV-93 11-08 (COORD 07:33 approved e6 form, +1 pin cycle): PORT_NRS = stages of the PORT_REGS=1 per-port
+    // relays (default 1 = NRS, unchanged).  e6 m5hs2: the S-face pin flop e2[k] (SW corner) drives four per-port stage-0
+    // flops on the E edge through one wire buffer (slew 339/338 ps > 320 on 2 pins, the one near-miss ECO changed
+    // nothing).  PORT_NRS=2 gives every port its own copy of the whole relay word one stage nearer the source: each
+    // f_t ports only (pack_fault unchanged), +1 edge on all 233 bits of every port, identical words (bench).
+    parameter integer PORT_NRS=1,
     // KV-KITS-8 10-28 (COORD ruling 06:26, KV-KITS-7 ASK): STRAP_SAMPLE=1 latches the hid ID strap at reset release
     // (hid2 = 0 while the front reset relay rp is low, = hid after) instead of a free-running copy.  hid is an OWNER
     // option-B strap (false-pathed from the port), so the plain hid2 copy had no timed fan-in (unconstrained endpoint in
@@ -137,9 +143,9 @@ module ot_qkh_head_frontq_native #(
     for(ft=0;ft<4;ft=ft+1) begin:g_ft
       wire [15:0]  pc;
       wire [216:0] pd;
-      (* keep_hierarchy *) ot_qkh_relay #(.W(4 + LTW), .D(NRS), .RST(1)) u_rsc (.clk(clk), .rst_n(rp),
+      (* keep_hierarchy *) ot_qkh_relay #(.W(4 + LTW), .D(PORT_NRS), .RST(1)) u_rsc (.clk(clk), .rst_n(rp),
                                                                              .d({c2[3:1], lt2, qv_send}), .q(pc));
-      (* keep_hierarchy *) ot_qkh_relay #(.W(217), .D(NRS)) u_rsd (.clk(clk), .rst_n(rp),
+      (* keep_hierarchy *) ot_qkh_relay #(.W(217), .D(PORT_NRS)) u_rsd (.clk(clk), .rst_n(rp),
 `ifdef KVG3_FRONTQ_PRMUT
           // bench mutant (must FAIL): port ft takes the neighbouring port's Q slice
           .d({c2[0], row2[64*ft +:64], e2, qb_send, qd_send[128*((ft+1)%4) +:128], hid2}), .q(pd));
