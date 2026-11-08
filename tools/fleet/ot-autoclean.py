@@ -84,6 +84,7 @@ ABS_RE = re.compile(r"(?<![\w.~/])/(?:srv|home|tmp)/[^\s'\"<>|;,()\[\]{}`*?$\\]+
 REL_RE = re.compile(r"(?<![\w./-])(scratch\d*/claude/[^\s'\"<>|;,()\[\]{}`*?$\\]+)")
 WORD_RE = re.compile(r"[A-Za-z0-9_.+-]{8,}")
 ATTEMPT_RE = re.compile(r"^(.*/items/[^/]+)/attempt_(\d+)(?=/|$)")
+XPATH_RE = re.compile(r"/kit-wave/([^/]+)/[^/]+/items/([^/]+)/attempt_(\d+)$")   # die, item, N (plan dir ignored)
 STAMP_RE = re.compile(r"(20\d\d-\d\d-\d\d) (\d\d:\d\d)(?::(\d\d))?")
 ACTIVE_STATUS = {"RUN", "RUNNING", "ROUTE-HELD", "RETRY-INFRA", "PENDING-DEP", "QUEUED", "WAIT-PARENT", "PASS"}
 TERMINAL_STATUS = {"FAIL", "CANCELLED", "SUPERSEDED", "WITHDRAWN"}
@@ -357,7 +358,7 @@ def rec_signed(r):
 def reduce_kitwave(state, stage_rows, read_spec=None):
     """compact snapshot: attempts {"host:dir": {"active","signed","terminal":[..]}}, latest {"host:items/x": N},
     keep ["host:path"] (every path of an active record + its spec.json src/plan/queue_src)."""
-    attempts, latest, keep = {}, {}, set()
+    attempts, latest, keep, current_di = {}, {}, set(), {}
 
     def att(hp):
         m = ATTEMPT_RE.match(hp[1])
@@ -386,6 +387,10 @@ def reduce_kitwave(state, stage_rows, read_spec=None):
                 att(hp)
         a = att(own) if own else None
         active, signed = rec_active(rec), rec_signed(rec)
+        xm = XPATH_RE.search(a.partition(":")[2]) if a else None
+        if xm:                                    # the state's current attempt of die|item, whatever plan dir
+            k = f"{xm.group(1)}|{xm.group(2)}"
+            current_di[k] = max(current_di.get(k, -1), int(xm.group(3)))
         if a:
             sl = slot(a)
             sl["active"] |= active
@@ -418,7 +423,7 @@ def reduce_kitwave(state, stage_rows, read_spec=None):
                 sl["terminal"].append(f"stage:{st}")
         if signed or active:
             keep.add(f"{hp[0]}:{hp[1]}")
-    return {"attempts": attempts, "latest": latest, "keep": sorted(keep)}
+    return {"attempts": attempts, "latest": latest, "keep": sorted(keep), "current_di": current_di}
 
 
 def kitwave_reduce_main(a):
@@ -662,18 +667,22 @@ class Job:
         if os.path.exists(kw):
             k = jl(kw)
             self.kitwave = k
+            # match on PATH, any host: a row's kit host may be "localhost" (= the hub) and ran_on copies share
+            # the path on another host; active / signed / keep from any host therefore protect it here too
             self.kw_attempts = {}
             for key, v in k["attempts"].items():
-                h, _, p = key.partition(":")
-                if h == self.host:
-                    self.kw_attempts[self.paths.canon(p)] = v
+                c = self.paths.canon(key.partition(":")[2])
+                o = self.kw_attempts.setdefault(c, {"active": False, "signed": False, "terminal": []})
+                o["active"] |= bool(v.get("active"))
+                o["signed"] |= bool(v.get("signed"))
+                o["terminal"] = o["terminal"] + list(v.get("terminal") or [])
             self.kw_latest = {}
             for key, n in k["latest"].items():
-                h, _, p = key.partition(":")
-                if h == self.host:
-                    self.kw_latest[self.paths.canon(p)] = n
-            self.kwkeep = PathSet([(key.partition(":")[2], "kit-wave active/resume/spec")
-                                   for key in k["keep"] if key.partition(":")[0] == self.host], canon=self.paths.canon)
+                c = self.paths.canon(key.partition(":")[2])
+                self.kw_latest[c] = max(self.kw_latest.get(c, -1), n)
+            self.kw_current_di = dict(k.get("current_di") or {})
+            self.kwkeep = PathSet([(key.partition(":")[2], "kit-wave active/resume/spec") for key in k["keep"]],
+                                  canon=self.paths.canon)
         else:
             self.kwkeep = PathSet()
 
@@ -835,10 +844,14 @@ class Job:
             return "kit-wave signed", []
         if st and st["active"]:
             return "kit-wave active", []
+        xm = XPATH_RE.search(c)
+        cur = self.kw_current_di.get(f"{xm.group(1)}|{xm.group(2)}", -1) if xm else -1
         if st and st["terminal"]:
             verdict = "finished " + ",".join(sorted(set(st["terminal"])))[:80]
         elif self.kw_latest.get(m.group(1), -1) > int(m.group(2)):
             verdict = f"superseded by attempt_{self.kw_latest[m.group(1)]}"
+        elif cur > int(m.group(2)):               # older attempt of a die|item now run from another plan dir
+            verdict = f"superseded-xpath by attempt_{cur}"
         else:
             return "kit-wave unknown", []
         h = self.signed_set.hit(c)
