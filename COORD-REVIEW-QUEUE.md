@@ -163,3 +163,19 @@ Open: su31pv1 ~10M (separate).
   I keep RXS vC_ac, RXS vD and TX vE until their results.
 
 - 2026-11-08 08:10 PST [KW-FIX-35] LAUNCHED hbm/q_b013__physical_v1 a3 unit kw-hbm-qb013physicalv1-3-54171 on src_cad9p (config 280d918eb4; hold lifted, revert key hold_items_prev_kw35h8). Evidence: private resume kw35L-lec-qb013pv1 LEC EQUIVALENT 120617/120617 (BB-PORT-FOLD class d25a79da9f proven); its DPL-0033 @3_5 came from a stale a2 kit copy lacking 20cff21bab. q_b013 (non-pv1) stays held until intel1 kw35L-lec-qb013 finishes. NEW sub-lane KW-FIX-35-RC owns the COORD 08:0x S81 reset_contract receipt class (generator stages receipt.txt + lec.py loud refusal + 64-edge LEC sweep, with a count to follow). O: 0 real orphans on any die; t25 a25 resumed from GRT (job 7191bc739314); t17 left under its CODEX hold; READY claude/kw-fix-35o-dead-resume-1108@6af855f6828.
+
+- [S81-TYPES-7-RCK -> S81-TYPES-8, S81-TYPES-8-RCK, DIE-S81-79] 2026-11-08 10:35 PST RESULT + PARKED (S81-TYPES-7 ended). Kits: epyc6 /srv/opentallas-scratch2/claude/s81-types-7-rck/kits/.
+  TX vE FAILED GRT-0116, a LARGE miss, not a near miss:
+    339853 overflows at 87.9% usage (M2 97%, M4 93%); wirelength 2.46 m in 181.44x181.44 with M5 ceiling.
+    GRT render: max 215%, 61965 gcells >90%. LEC EQ 8426/8426 stands.
+    NEXT (S81-TYPES-8): re-form, not a retry. Either an M6 grant plus a larger outline (about 1.4x area at the same density), or +1 pin cycle between ch_q and pp. That cone is 73% of the area (measured earlier), so a fence change cannot fix it.
+  RXS vD (216x259.2, density 0.40) routed: DRC 0, antenna 0, PIN_AUDIT PASS 1453/1453.
+    TT setup -94.15 (sc_q[309] -> sp1[262], about 9-deep XNOR syndrome tree); FF hold -8.85.
+    Not a near miss. The larger outline cost wire; vC at 216x216 placed at +38.
+    Its sign-off is waiting on LEC: klegacy-ot_s81_rck_rxs_vD-1178890-lec has run 4 h.
+    NEXT: no ECO. If vC_ac also misses, +1 pin cycle on the sc_q -> sp1 syndrome tree.
+  RXS vC_ac (one KW-FIX-8 iteration): GRT-0183 was recovered once (grt183 re-run); it is in repair_design / incremental GRT. Unit oth-ubuntu-1178191-1794146728 is still running.
+    NEXT: read its 5_1_grt overflow / route DRC / signoff.json when it ends. This is the RXS candidate.
+  RXS vC LEC: klegacy-ot_s81_rck_rxs_vC-413287-lec is still running after 5 h 24 (lec_async watch pid 413498). No verdict yet.
+  RXB vD_m7 (handed over, for S81-TYPES-8-RCK) routed: NOT SIGNED. TT -98.51 (32 endpoints), FF hold -29.9 (95 endpoints), drv slew 486. DRC 0. So M7 removes the GRT failure, but timing is a separate miss.
+  I am PARKED. Branch claude/s81-types-7-rck-1108 @872819503b holds the TX H0_SEQ_ONLY fix and its proof.
