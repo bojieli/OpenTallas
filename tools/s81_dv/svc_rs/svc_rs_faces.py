@@ -35,7 +35,8 @@ PORTS = {
     "DI": [("dn_i", "input", 805)], "DO": [("dn_o", "output", 805)],
     "UI": [("up_i", "input", 16)], "UO": [("up_o", "output", 16)],
     "RI": [("ri", "input", 514)], "RO": [("ro", "output", 514)],
-    "GI": [("gi_v", "input", 1), ("gi_d", "input", 2132)], "GO": [("go_v", "output", 1), ("go_d", "output", 2132)],
+    # S81-SVCRS R5 (11-08): the gather lane is H-dependent (132 H + 20 b: 2,132 at H 16, 1,076 at H 8): width "GW"
+    "GI": [("gi_v", "input", 1), ("gi_d", "input", "GW")], "GO": [("go_v", "output", 1), ("go_d", "output", "GW")],
     "SI": [("si_v", "input", 1), ("si_d", "input", 1076)], "SO": [("so_v", "output", 1), ("so_d", "output", 1076)],
 }
 ENTRIES = (5, 11)
@@ -124,7 +125,7 @@ ENTRY_IO = ("input wire [32:0] j, output wire [1:0] jd, input wire [512:0] q, in
             "    input wire [561:0] local_pv_landed, input wire [561:0] peer_pv,\n"
             "    output wire so_ready, output wire so_done, output wire [11:0] so_fault_code")
 OBS = ("`ifdef RS_OBS\n    , output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d,"
-       " output wire [11:0] w_st\n    , output wire [2678:0] obs\n`endif\n")
+       " output wire [11:0] w_st\n    , output wire [H*132+566:0] obs\n`endif\n")
 
 
 def module(kind_entry, m):
@@ -132,40 +133,46 @@ def module(kind_entry, m):
     fp = face_ports(m)
     ports = [COMMON_IN] + ([ENTRY_IO] if kind_entry else [])
     for np_, _cp, d, w, _f in fp:
-        ports.append(f"{d} wire [{w - 1}:0] {np_}" if w > 1 else f"{d} wire {np_}")
+        ports.append(f"{d} wire [H*132+19:0] {np_}" if w == "GW" else
+                     f"{d} wire [{w - 1}:0] {np_}" if w > 1 else f"{d} wire {np_}")
     hdr = (f"// slice role faces: " + ", ".join(f"{g} {''.join(FACES[f].upper() for f in range(4) if m[g] >> f & 1) or '-'}"
                                                  for g in GROUPS) + "\n")
     L = [hdr + f"module {name} #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,\n"
          f"    parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1"
-         + (", parameter integer PVSO_ENABLE = 0" if kind_entry else "") + ") (\n    "
+         + (", parameter integer PVSO_ENABLE = 0" if kind_entry else "") + ",\n    parameter integer H = `OT_SVC_HV) (\n    "
          + ",\n    ".join(ports) + "\n" + OBS + ");",
          "    /*verilator hier_block*/",
          "`ifndef RS_OBS",
          "    wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;",
-         "`endif"]
+         "`endif",
+         "    localparam integer GW = H * 132 + 20;   // gather lane (S81-SVCRS R5)"]
     # packed core-side buses: kept faces wired to the variant ports; dropped faces do not exist in the core (FM generate)
     # so the inputs below carry no logic and the outputs are not driven by any register
     conn = {}
     for g in GROUPS:
         for p, d, w in PORTS[g]:
             n = f"c_{p}"
-            L.append(f"    wire [{4 * w - 1}:0] {n};")
+            L.append(f"    wire [4*GW-1:0] {n};" if w == "GW" else f"    wire [{4 * w - 1}:0] {n};")
+            def sl_(f):
+                if w == "GW": return f"{n}[GW*{f} +: GW]"
+                return f"{n}[{w * f}]" if w == 1 else f"{n}[{w * f + w - 1}:{w * f}]"
             for f in range(4):
                 if m[g] >> f & 1:
-                    sl = f"{n}[{w * f}]" if w == 1 else f"{n}[{w * f + w - 1}:{w * f}]"
+                    sl = sl_(f)
                     if d == "input":
                         L.append(f"    assign {sl} = {p}_{FACES[f]};")
                     else:
                         L.append(f"    assign {p}_{FACES[f]} = {sl};")
                 elif d == "input":
-                    sl = f"{n}[{w * f}]" if w == 1 else f"{n}[{w * f + w - 1}:{w * f}]"
-                    L.append(f"    assign {sl} = {w}'d0;   // face not in FM: the core has no logic on it")
+                    sl = sl_(f)
+                    z = "{GW{1'b0}}" if w == "GW" else f"{w}'d0"
+                    L.append(f"    assign {sl} = {z};   // face not in FM: the core has no logic on it")
             conn[p] = n
     fmv = f"40'h{fm_hex(m)}"
     pc = ", ".join(f".{p}({n})" for p, n in conn.items())
     if kind_entry:
         L.append(f"    dsdv_svc_rs_pvso_entry #(.PVSO_ENABLE(PVSO_ENABLE), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), "
-                 f".SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .SMT(SMT), .FM({fmv})) u (\n"
+                 f".SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .SMT(SMT), .FM({fmv}), .H(H)) u (\n"
                  f"        .ck(ck), .rst(rst), .sid(sid), .j(j), .jd(jd), .q({{2'b00, q}}), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg),\n"
                  f"        {pc},\n"
                  f"        .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),\n"
@@ -176,7 +183,7 @@ def module(kind_entry, m):
         L.append("    wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc;"
                  " wire [1:0] st_rg_nc;")
         L.append(f"    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), "
-                 f".PV_IDENTITY(PV_IDENTITY), .FM({fmv})) u (\n"
+                 f".PV_IDENTITY(PV_IDENTITY), .FM({fmv}), .H(H)) u (\n"
                  f"        .ck(ck), .rst(rst), .sid(sid), .j(33'd0), .jd(jd_nc), .q(515'd0), .hw(292'd0), .hc(hc_nc), .fault(fault_nc),\n"
                  f"        .st_rg(st_rg_nc), {pc},\n"
                  f"        .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),\n"
@@ -188,6 +195,13 @@ def module(kind_entry, m):
 
 def sv(ms):
     out = ["`timescale 1ns/1ps",
+           "`ifndef OT_SVC_HV",
+           "`ifdef OT_SVC_H8",
+           "`define OT_SVC_HV 8",
+           "`else",
+           "`define OT_SVC_HV 16",
+           "`endif",
+           "`endif",
            "// generated by tools/s81_dv/svc_rs/svc_rs_faces.py (S81-P9-FACE 2026-10-23) -- do not edit.",
            "// Port variants of the regional service slice: one per distinct (kind, FM) of the 16 slices' role faces (the",
            "// role ROMs dsdv_svc_rs_roles.svh / dsdv_svc_sx_roles.svh).  A variant carries ONLY the faces its role uses, as",
@@ -211,8 +225,9 @@ def table(ms):
     rows = {}
     for s in range(16):
         m = ms[s]
-        kept = sum(w * bin(m[g]).count("1") for g in GROUPS for _p, _d, w in PORTS[g])
-        full = sum(w * 4 for g in GROUPS for _p, _d, w in PORTS[g])
+        wn = lambda w: 2132 if w == "GW" else w      # the table records the H 16 face bits (unchanged record)
+        kept = sum(wn(w) * bin(m[g]).count("1") for g in GROUPS for _p, _d, w in PORTS[g])
+        full = sum(wn(w) * 4 for g in GROUPS for _p, _d, w in PORTS[g])
         rows["rsv_%02d" % s] = dict(sid=s, entry=s in ENTRIES, fm="40'h" + fm_hex(m), variant=variant(s, m),
                                     faces={g: "".join(FACES[f].upper() for f in range(4) if m[g] >> f & 1) for g in GROUPS},
                                     face_bits_kept=kept, face_bits_dropped=full - kept,

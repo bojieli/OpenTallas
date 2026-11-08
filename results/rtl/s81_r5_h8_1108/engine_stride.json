@@ -1,0 +1,93 @@
+{
+  "status": "COMPONENT_PASS_NOT_SLICE_QUALIFICATION",
+  "host": "epyc6",
+  "unit": "oth-ubuntu-3245156-1794134350",
+  "path": "/srv/opentallas-scratch2/claude/codex-svc-rtl-0222/pfeed8_stride",
+  "engine_base": "c477959f3c",
+  "bench_source": "d75afdb10d",
+  "shape": {
+    "H": 8,
+    "D": 32,
+    "TD": 32,
+    "NL": 4,
+    "PWORDS": 2,
+    "FPL": 4,
+    "FML": 6,
+    "FPLX": 5,
+    "F12": 1,
+    "TILE_S": 1,
+    "MFAN": 1,
+    "TRX": 1,
+    "ILV": 1,
+    "REPL": 2,
+    "NSTAGE": 2,
+    "SC_CRED": 0,
+    "PV_CRED": 0
+  },
+  "reference": "probe rc0 = job command set; first P handshake at P0+1; pv edges sampled at posedge",
+  "results": [
+    {
+      "T": 128,
+      "P0": 800,
+      "stride": 1,
+      "refused": 0,
+      "pv_beats": 8,
+      "pv_edges": [
+        904,
+        905,
+        906,
+        907,
+        908,
+        909,
+        910,
+        911
+      ],
+      "last_pv_word": 943
+    },
+    {
+      "T": 128,
+      "P0": 800,
+      "stride": 2,
+      "refused": 0,
+      "pv_beats": 8,
+      "pv_edges": [
+        907,
+        908,
+        909,
+        910,
+        911,
+        912,
+        913,
+        914
+      ],
+      "last_pv_word": 946
+    },
+    {
+      "T": 640,
+      "P0": 800,
+      "stride": 1,
+      "refused": 37,
+      "first_refused": 818,
+      "pv_beats": 0
+    },
+    {
+      "T": 640,
+      "P0": 800,
+      "stride": 2,
+      "refused": 0,
+      "pv_beats": 8,
+      "pv_edges": [
+        1035,
+        1036,
+        1037,
+        1038,
+        1039,
+        1040,
+        1041,
+        1042
+      ],
+      "last_pv_word": 1074
+    }
+  ],
+  "conclusion": "Alternate-cycle static paired-word feed supports bounded-ahead loader at T128/T640. No P_ARR/PIO or owner-drain qualification. Keep existing closing KPV78; measured engine-only offset is74 after subtracting8ceil(T/32)."
+}

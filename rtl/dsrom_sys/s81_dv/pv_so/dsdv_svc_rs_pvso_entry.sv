@@ -1,14 +1,22 @@
 `timescale 1ns/1ps
+`ifndef OT_SVC_HV
+`ifdef OT_SVC_H8
+`define OT_SVC_HV 8
+`else
+`define OT_SVC_HV 16
+`endif
+`endif
 // Existing service entry ABI plus static all-quarter SO source assembly.
 module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
                            parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1,
-                           parameter logic [39:0] FM = {40{1'b1}}) (   // S81-P9-FACE face mask -> dsdv_svc_rs_c
+                           parameter logic [39:0] FM = {40{1'b1}},
+                           parameter integer H = `OT_SVC_HV) (   // S81-P9-FACE face mask / S81-SVCRS R5 heads per pass -> dsdv_svc_rs_c
     input  wire ck, rst, input wire [3:0] sid,
     input  wire [32:0] j, output wire [1:0] jd, input wire [514:0] q, input wire [291:0] hw, output wire [8:0] hc,
     output wire fault, output wire [1:0] st_rg,
     input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*16-1:0] up_i, output wire [4*16-1:0] up_o,
     input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,
-    input  wire [3:0] gi_v, input wire [4*2132-1:0] gi_d, output wire [3:0] go_v, output wire [4*2132-1:0] go_d,
+    input  wire [3:0] gi_v, input wire [4*(H*132+20)-1:0] gi_d, output wire [3:0] go_v, output wire [4*(H*132+20)-1:0] go_d,
     input  wire [3:0] si_v, input wire [4*1076-1:0] si_d, output wire [3:0] so_v, output wire [4*1076-1:0] so_d,
     output wire [2*341-1:0] rq, input wire [1:0] rk, wd, rv, input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag,
     input  wire [2*4-1:0] r_beat, input wire [1:0] hs,
@@ -18,7 +26,7 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
 
 `ifdef RS_OBS
     , output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d, output wire [11:0] w_st
-    , output wire [2678:0] obs
+    , output wire [H*132+566:0] obs
 `endif
 );
     /*verilator hier_block*/
@@ -53,7 +61,7 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
       .param_v(so_param_v),.param_row(so_param_row),.param_owner(so_param_owner),.param_position(so_param_position),.param_d(so_param_d),
       .den_v(1'b0),.den_mask(16'd0),.den_owner(20'd0),.den_jid(8'd0),.launch(so_launch),
       .q_v(generated_v),.q_d(generated_d),.ready(so_ready),.done(so_done),.fault(ingress_fault),.fault_code(so_fault_code));
-    dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PVSO_ENABLE!=0?1:PV_IDENTITY), .FM(FM)) u (.ck(ck),
+    dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PVSO_ENABLE!=0?1:PV_IDENTITY), .FM(FM), .H(H)) u (.ck(ck),
         .rst(rst), .sid(sid), .j(j), .jd(jd), .q(q_entry), .hw(hw), .hc(hc), .fault(entry_fault), .st_rg(st_rg), .dn_i(dn_i),
         .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d),
         .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data),
