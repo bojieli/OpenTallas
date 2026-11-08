@@ -1,0 +1,25 @@
+{
+ "event": "fifo2_cal_1108",
+ "lane": "DIE-QC-93",
+ "date": "2026-11-08",
+ "base_plan": "plan_of_record/plan_qc53v4x_fws.json (tt_ctlm guard also matches v4s, v4u)",
+ "changed_types": [
+  "tt_ctlm"
+ ],
+ "other_plan_keys_changed": [],
+ "data_cycles": 0,
+ "pin_cycles": 0,
+ "boot_cycles": 0,
+ "tt_ctlm_equals_reviewed_private_form": "dq92/fifo2_gen2/fifo2_form_a/plan_fifo2.json (except note)",
+ "kit_rtl_dry_run": {
+  "rc": 0,
+  "bind_dir": "codex-qc-nl-native-0222-run7/bind",
+  "asbuilt": "qc_start_1106/runtime/asbuilt.json + event",
+  "selected_source": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1_fifo2.sv",
+  "helper_in_closure": true,
+  "fileset_vs_reviewed_kit": "identical basenames; only qfd_qc_tt_ctlm_part_bound.sv differs (main bind CLAND relay-reuse fix, not FIFO2)"
+ },
+ "count": "type count unchanged (1 type content change: tt_ctlm needs a rebuild on adoption)",
+ "eq": "UNPROVEN: LEC tool class lec.py ESC_DOTTED rejects indexed segment g_fifo[0]; adoption EQ-gated",
+ "plan_out_sha256": "e4d05c366a5ec0d3fa248cf164f00183946e33f24a27bd17a1b7f1c766857512"
+}
