@@ -1,0 +1,1534 @@
+#!/usr/bin/env python3
+"""ot-autoclean: standing automatic disk cleanup for the fleet scratch disks (AUTOCLEAN-7, OWNER 2026-11-07 18:1x:
+"all hosts should automatically apply the cleanup rule: copy signed results to the AGIdock archive, then delete
+finished and superseded runs").
+
+Two halves, one file (the localhost driver copies this file to every host):
+
+  HOST  `run` (hourly timer per host; DRY RUN unless --apply).  Deletes ONLY these classes:
+    a  kit-wave attempt dirs  .../items/<item>/attempt_N  older than 6 h whose kit-wave state (snapshot) says
+       finished (FAIL / CANCELLED / SUPERSEDED / WITHDRAWN, ENQUEUED with a terminal queue status) or superseded
+       (a later attempt_M of the same item exists in the state); never one a running/queued/held row, a resume
+       source or a spec src/plan/queue_src points at, never one holding a signed record, a .git, a hard link.
+    b  ODB trim: results dirs holding 6_final.odb AND 6_final.spef (> 1 KB, 6_final.odb > 6 h old): only
+       5_3_fillcell.odb, 5_route.odb, 6_1_fill.odb.
+    c  intermediates: results dirs holding 3_place.odb (> 1 KB, > 6 h): only 2_1..2_4 floorplan stage odbs and
+       3_1..3_5 place stage odbs, plus 4_1_cts.odb where 4_cts.odb > 1 KB.  NEVER 2_floorplan.odb (kit_resume
+       STEP_OUT), 3_place / 4_cts / 5_1_grt / 5_2_route / 6_final.*, signoff / LEC / spef / PROVENANCE / logs / reports.
+    Every candidate is refused when: protected (union of lanes/PROTECTED-DBS.txt + PROTECTED-DBS.txt +
+    RETIRED-PROTECTION-EXTRAS.tsv, parent or child, under every bind-mount alias), counted (a path a SIGNED
+    signoff.json / PROVENANCE.json on this host names, parent or child below lane level), kit-wave keep set,
+    git alternates target, ot-run spill_pending record, wt-reaper protect.d line, named by a queue post of the
+    last 25 h (path, or a row-specific dir name), live (/proc cmdline / cwd / open fd, docker mounts incl. stopped
+    containers), hard link, git-locked worktree, .keep in the tree or an ancestor, tok-* / kv-fn-* lanes, *tool*
+    trees, newer than 6 h.  Every check is repeated right before each rm; a protected / counted / kit-wave-keep
+    hit at that recheck is an ALERT: ALERT file, exit 3, no further deletes (the ALERT file is sticky: later runs
+    refuse until a human removes it).  A positive control (fake row deleted) and a negative control (fake
+    protected row refused) run first; either failing aborts (exit 4).  Then tools/fleet/wt-reaper.py runs with the
+    generated protection union (--protected-dbs <union> --protected-dbs-repo '': no git fetch on the host).
+    Manifest: <state>/manifests/AUTOCLEAN-auto-<host>-<stamp>.tsv (printed as "MANIFEST <path>").
+
+  LOCALHOST  `drive` (the only place with ~/.ssh/agidock_ot and ~/coord):
+    1. snapshot: protection union + queue paths/names (last 25 h) from ~/coord, kit-wave state reduced on the
+       kit-wave hub (read only) -> pushed to every host's <state>/snapshot (hosts refuse a snapshot older than 3 h);
+    2. archive: per host `list-signed` (units = dirs of SIGNED / LOCAL_PASS* / resign signoff.json and
+       PROVENANCE.json with signoff/, lec, PROVENANCE and the 6_final.odb/spef/abstracts they cite), streamed
+       `tar | zstd -3` host -> localhost -> `unzstd | tar` on AGIdock under /archive/opentallas-signed-1106/<host>/<abs
+       path> (nothing lands on localhost), verified by file count + bytes + sha256 of EVERY file on both ends, then
+       ARCHIVED.json (sha list + archive path) written into the unit on the host.  Copy only: signed content is
+       never deleted by this tool.  Dry unless --apply;
+    3. runs `run` on each host (dry unless --apply) and collects each manifest into
+       <coord>/lanes/prune/AUTOCLEAN-auto-<host>-<stamp>.tsv; --commit commits them with coord-commit.sh.
+"""
+import argparse
+import fcntl
+import hashlib
+import json
+import os
+import re
+import shlex
+import shutil
+import socket
+import stat
+import subprocess
+import sys
+import tempfile
+import time
+
+HOME = os.path.expanduser("~")
+SELF = globals().get("__file__", "ot-autoclean.py")
+STATE = os.path.join(HOME, ".local/state/ot-autoclean-auto")      # not ~/.local/state/ot-autoclean (AUTOCLEAN-1 ot_autoclean.py)
+TOOLS_DIR = os.path.join(HOME, ".local/share/ot-autoclean-auto")
+OFF_FILES = tuple(os.environ.get("OT_AUTOCLEAN_OFF_FILES", f"{HOME}/.config/ot-autoclean/OFF:{HOME}/.config/ot-autoclean-auto/OFF").split(":"))
+DEFAULT_ROOTS = ["/srv/opentallas-scratch/claude", "/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch3/claude",
+                 os.path.join(HOME, "scratch-root/claude")]
+HOSTS = ["intel1", "intel2", "epyc2", "epyc4", "epyc5", "epyc6"]
+HOSTNAME_ALIAS = {"key-cardinal": "intel1", "tolerant-swine": "intel2", "dear-crayfish": "epyc2",
+                  "aware-parakeet": "epyc4", "devoted-wren": "epyc5", "eager-sunfish": "epyc6"}
+AGIDOCK_SSH = "ssh -o ControlPath=none -o BatchMode=yes -o ConnectTimeout=10 -i ~/.ssh/agidock_ot ubuntu@155.103.253.53"
+ARCHIVE_ROOT = "/archive/opentallas-signed-1106"
+AGE_S = 6 * 3600
+MIN_BYTES = 1024
+LANE_DEPTH = 4                     # /srv/<scratch>/claude/<lane>
+TRIM_B = ("5_3_fillcell.odb", "5_route.odb", "6_1_fill.odb")
+TRIM_C = ("2_1_floorplan.odb", "2_2_floorplan_macro.odb", "2_3_floorplan_tapcell.odb", "2_4_floorplan_pdn.odb",
+          "3_1_place_gp_skip_io.odb", "3_2_place_iop.odb", "3_3_place_gp.odb", "3_4_place_resized.odb",
+          "3_5_place_dp.odb")                                   # + 4_1_cts.odb when 4_cts.odb > 1 KB
+NEVER = {"2_floorplan.odb", "3_place.odb", "4_cts.odb", "5_1_grt.odb", "5_2_route.odb", "6_final.odb",
+         "6_final.spef", "6_final.v", "6_final.def", "6_final.sdc", "signoff.json", "PROVENANCE.json", "ARCHIVED.json"}
+RECORD_NAMES = ("signoff.json", "PROVENANCE.json")
+GENERIC_NAMES = {"kit", "run", "base", "results", "asap7", "src", "items", "work", "kits", "children", "child",
+                 "s81_head", "kit-wave", "relocated-1106", "relocated-1106b", "signoff", "objects", "logs", "reports"}
+HEAVY_DIRS = {"run", "objects", "results", "logs", "reports", "gen", "items", ".git"}
+ABS_RE = re.compile(r"(?<![\w.~/])/(?:srv|home|tmp)/[^\s'\"<>|;,()\[\]{}`*?$\\]+")
+REL_RE = re.compile(r"(?<![\w./-])(scratch\d*/claude/[^\s'\"<>|;,()\[\]{}`*?$\\]+)")
+WORD_RE = re.compile(r"[A-Za-z0-9_.+-]{8,}")
+ATTEMPT_RE = re.compile(r"^(.*/items/[^/]+)/attempt_(\d+)(?=/|$)")
+STAMP_RE = re.compile(r"(20\d\d-\d\d-\d\d) (\d\d:\d\d)(?::(\d\d))?")
+ACTIVE_STATUS = {"RUN", "RUNNING", "ROUTE-HELD", "RETRY-INFRA", "PENDING-DEP", "QUEUED", "WAIT-PARENT", "PASS"}
+TERMINAL_STATUS = {"FAIL", "CANCELLED", "SUPERSEDED", "WITHDRAWN"}
+ACTIVE_Q = {"RUNNING", "QUEUED", "WAIT-PARENT"}
+TERMINAL_Q = {"FAIL", "CANCELLED", "WITHDRAWN"}
+ALERT_HITS = ("protected", "counted", "kitwave-keep", "signed")
+
+
+def say(*a):
+    print(*a, flush=True)
+
+
+def now_s():
+    return time.time()
+
+
+def stamp():
+    return time.strftime("%Y%m%d-%H%M%S")
+
+
+def rd(p, errors="replace"):
+    with open(p, errors=errors) as fh:
+        return fh.read()
+
+
+def jl(p):
+    with open(p) as fh:
+        return json.load(fh)
+
+
+def depth(p):
+    return len([c for c in p.split("/") if c])
+
+
+def ancestors(p):
+    out = []
+    while True:
+        q = os.path.dirname(p)
+        if q == p or not q:
+            return out
+        out.append(q)
+        p = q
+
+
+def clean_path(p):
+    p = p.rstrip(".:,;'\")]}")
+    return os.path.normpath(p) if p.startswith("/") else None
+
+
+def text_paths(s):
+    """absolute /srv|/home paths and 'scratchN/claude/...' relative forms named in a text"""
+    out = set()
+    for m in ABS_RE.findall(s):
+        p = clean_path(m)
+        if p:
+            out.add(p)
+    for m in REL_RE.findall(s):
+        p = clean_path("/srv/opentallas-" + m)
+        if p:
+            out.add(p)
+    return out
+
+
+# ------------------------------------------------------------------ aliases (bind mounts with a [subpath])
+def parse_findmnt(text):
+    """[(alias_prefix, canonical_prefix)] for bind mounts: TARGET is canonical, <mountpoint of SOURCE dev> +
+    subpath is the alias (epyc5/6: /srv/opentallas-scratch3 = /dev/md0[/home/ubuntu/scratch-root], md0 on /)"""
+    rows = []
+    for ln in text.splitlines():
+        parts = ln.split(" ", 1)
+        if len(parts) != 2:
+            continue
+        t, src = parts[0].replace("\\x20", " "), parts[1].strip()
+        rows.append((t, src))
+    plain = {}
+    for t, src in rows:
+        if "[" not in src:
+            plain.setdefault(src, []).append(t)
+    out = []
+    for t, src in rows:
+        m = re.fullmatch(r"(/dev/[^\[]+)\[(/[^\]]*)\]", src)
+        if not m:
+            continue
+        dev, sub = m.groups()
+        for mp in plain.get(dev, []):
+            alias = os.path.normpath(mp.rstrip("/") + sub)
+            if alias != t:
+                out.append((alias, os.path.normpath(t)))
+    return out
+
+
+def host_aliases():
+    try:
+        r = subprocess.run(["findmnt", "-rn", "-o", "TARGET,SOURCE"], capture_output=True, text=True, timeout=60)
+        return parse_findmnt(r.stdout) if r.returncode == 0 else []
+    except (OSError, subprocess.TimeoutExpired):
+        return []
+
+
+class Paths:
+    """canonical form + all alias forms of paths"""
+
+    def __init__(self, aliases):
+        self.aliases = list(aliases)
+
+    def canon(self, p):
+        p = os.path.normpath(p)
+        for a, c in self.aliases:
+            if p == a or p.startswith(a + "/"):
+                return c + p[len(a):]
+        return p
+
+    def forms(self, p):
+        c = self.canon(p)
+        out = {c, os.path.normpath(p)}
+        for a, t in self.aliases:
+            if c == t or c.startswith(t + "/"):
+                out.add(a + c[len(t):])
+        return out
+
+
+class PathSet:
+    """members; hit(p): p equals a member, is an ancestor of one, or lies under a member for which deep(member)
+    holds (default: any member; citations / queue paths: only members below lane level)"""
+
+    def __init__(self, paths=(), deep=None, canon=lambda p: p):
+        self.canon = canon
+        self.deep = deep or (lambda p: True)
+        self.m = {}
+        self.anc = {}
+        for p, why in paths:
+            self.add(p, why)
+
+    def add(self, p, why=""):
+        c = self.canon(os.path.normpath(p))
+        if c in self.m:
+            return
+        self.m[c] = why
+        for a in ancestors(c):
+            self.anc.setdefault(a, c)
+
+    def hit(self, p):
+        c = self.canon(os.path.normpath(p))
+        if c in self.m:
+            return f"{c} ({self.m[c]})"
+        if c in self.anc:
+            q = self.anc[c]
+            return f"holds {q} ({self.m[q]})"
+        for a in ancestors(c):
+            if a in self.m and self.deep(a):
+                return f"inside {a} ({self.m[a]})"
+        return None
+
+    def __len__(self):
+        return len(self.m)
+
+
+# ------------------------------------------------------------------ protection union
+def parse_protected(text, source):
+    """rows of a PROTECTED-DBS style file: host<TAB|SPACE>path<...>; every path-like token is kept"""
+    out = []
+    for ln in text.splitlines():
+        s = ln.strip()
+        if not s or s.startswith("#"):
+            continue
+        for tok in re.split(r"[\t ]+", s):
+            tok = re.sub(r"^[\w.-]+:(?=/)", "", tok)        # host:/path
+            if tok.startswith("/"):
+                p = clean_path(tok)
+            elif re.match(r"scratch\d*/claude/", tok):
+                p = clean_path("/srv/opentallas-" + tok)
+            else:
+                continue
+            if p and depth(p) >= 2:
+                out.append((p, source))
+    return out
+
+
+def protected_sources(coord):
+    return [os.path.join(coord, "lanes/PROTECTED-DBS.txt"), os.path.join(coord, "PROTECTED-DBS.txt"),
+            os.path.join(coord, "lanes/RETIRED-PROTECTION-EXTRAS.tsv")]
+
+
+def build_protected_union(coord):
+    rows = []
+    for i, f in enumerate(protected_sources(coord)):
+        try:
+            rows += parse_protected(rd(f), os.path.relpath(f, coord))
+        except FileNotFoundError:
+            if i < 2:
+                raise
+    return rows
+
+
+# ------------------------------------------------------------------ queue posts
+def parse_queue(text, now, hours=25.0, tz="America/Los_Angeles"):
+    """(paths, words) named by posts whose header time is within the last `hours` (continuation lines included)"""
+    try:
+        from zoneinfo import ZoneInfo
+        zone = ZoneInfo(tz)
+    except Exception:
+        zone = None
+    import datetime
+    lo = now - hours * 3600
+    paths, words = set(), set()
+    cur = False
+    for ln in text.splitlines():
+        if ln[:1] and not ln[:1].isspace():
+            m = STAMP_RE.search(ln[:80])
+            if m:
+                try:
+                    dt = datetime.datetime.strptime(f"{m.group(1)} {m.group(2)}:{m.group(3) or '00'}", "%Y-%m-%d %H:%M:%S")
+                    t = dt.replace(tzinfo=zone).timestamp() if zone else time.mktime(dt.timetuple())
+                    cur = t >= lo
+                except ValueError:
+                    cur = True
+        if not cur:
+            continue
+        paths |= text_paths(ln)
+        words |= {w.rstrip(".") for w in WORD_RE.findall(ln)}
+    return paths, words
+
+
+def generic_name(n):
+    return (len(n) < 8 or n in GENERIC_NAMES or n.startswith("attempt") or re.fullmatch(r"[0-9a-f]{10,}", n) is not None
+            or n.startswith("qwen_") or "wave-" in n or n == "flow-canary" or n.startswith("_ot_autoclean"))
+
+
+# ------------------------------------------------------------------ kit-wave state reduction (runs on the hub)
+def _host_path(s, default_host=""):
+    if not isinstance(s, str):
+        return None
+    m = re.match(r"^([\w.-]+):(/.*)$", s)
+    if m:
+        return m.group(1), os.path.normpath(m.group(2))
+    if s.startswith("/"):
+        return default_host, os.path.normpath(s)
+    return None
+
+
+def _json_strings(v):
+    if isinstance(v, str):
+        yield v
+    elif isinstance(v, dict):
+        for x in v.values():
+            yield from _json_strings(x)
+    elif isinstance(v, list):
+        for x in v:
+            yield from _json_strings(x)
+
+
+def rec_active(r):
+    st, q = r.get("status"), r.get("q_status")
+    if q in ACTIVE_Q:
+        return True
+    if st in ACTIVE_STATUS or (st == "PASS" and r.get("enqueue_pending")):
+        return True
+    if st == "ENQUEUED":
+        return q not in TERMINAL_Q and q != "SIGNED"
+    return st not in TERMINAL_STATUS          # unknown status: keep (fail safe)
+
+
+def rec_signed(r):
+    return r.get("q_status") == "SIGNED" or r.get("status") == "SIGNED"
+
+
+def reduce_kitwave(state, stage_rows, read_spec=None):
+    """compact snapshot: attempts {"host:dir": {"active","signed","terminal":[..]}}, latest {"host:items/x": N},
+    keep ["host:path"] (every path of an active record + its spec.json src/plan/queue_src)."""
+    attempts, latest, keep = {}, {}, set()
+
+    def att(hp):
+        m = ATTEMPT_RE.match(hp[1])
+        if not m:
+            return None
+        key = f"{hp[0]}:{m.group(1)}"
+        latest[key] = max(latest.get(key, -1), int(m.group(2)))
+        return f"{hp[0]}:{m.group(1)}/attempt_{m.group(2)}"
+
+    def slot(a):
+        return attempts.setdefault(a, {"active": False, "signed": False, "terminal": []})
+
+    for rec in (state.get("items") or {}).values():
+        if not isinstance(rec, dict):
+            continue
+        own = None
+        for k in ("kit", "evidence", "geom_dir"):
+            hp = _host_path(rec.get(k))
+            if hp and hp[0]:
+                own = hp
+                break
+        host = own[0] if own else ""
+        for s in _json_strings(rec):              # register every attempt the record names (latest numbers)
+            hp = _host_path(s, host)
+            if hp and hp[0]:
+                att(hp)
+        a = att(own) if own else None
+        active, signed = rec_active(rec), rec_signed(rec)
+        if a:
+            sl = slot(a)
+            sl["active"] |= active
+            sl["signed"] |= signed
+            if not active and not signed:
+                sl["terminal"].append(f"{rec.get('status')}/{rec.get('q_status')}")
+        if active or signed:
+            for s in _json_strings(rec):
+                hp = _host_path(s, host)
+                if hp and hp[0]:
+                    keep.add(f"{hp[0]}:{hp[1]}")
+            spec = read_spec(rec.get("dir")) if read_spec and rec.get("dir") else {}
+            for f in ("src", "plan", "queue_src"):
+                hp = _host_path(spec.get(f), spec.get("host") or host) if isinstance(spec, dict) else None
+                if hp and hp[0]:
+                    keep.add(f"{hp[0]}:{hp[1]}")
+    for row in stage_rows:
+        hp = _host_path(row.get("kit"))
+        if not hp or not hp[0]:
+            continue
+        a = att(hp)
+        st, cl = row.get("status", ""), row.get("class", "")
+        signed = st == "SIGNED" or cl == "COUNTED"
+        active = not signed and st not in TERMINAL_STATUS
+        if a:
+            sl = slot(a)
+            sl["signed"] |= signed
+            sl["active"] |= active
+            if not signed and not active:
+                sl["terminal"].append(f"stage:{st}")
+        if signed or active:
+            keep.add(f"{hp[0]}:{hp[1]}")
+    return {"attempts": attempts, "latest": latest, "keep": sorted(keep)}
+
+
+def kitwave_reduce_main(a):
+    import csv
+    state = jl(a.state_json)
+    rows = []
+    try:
+        with open(a.stages_tsv, newline="") as fh:
+            rows = list(csv.DictReader(fh, delimiter="\t"))
+    except FileNotFoundError:
+        pass
+
+    def read_spec(d):
+        try:
+            return jl(os.path.join(d, "spec.json"))
+        except (OSError, ValueError):
+            return {}
+    out = reduce_kitwave(state, rows, read_spec)
+    out["created"] = now_s()
+    out["source"] = f"{socket.gethostname()}:{a.state_json} mtime {int(os.path.getmtime(a.state_json))}"
+    json.dump(out, sys.stdout)
+    return 0
+
+
+# ------------------------------------------------------------------ live use
+class Live:
+    def __init__(self, docker="docker", deep=lambda p: depth(p) > LANE_DEPTH):
+        self.docker = docker
+        self.deep = deep
+        self.refresh()
+
+    def refresh(self):
+        me = os.getpid()
+        self.cmds, self.cwds, self.fds, self.mounts = [], [], [], []
+        for d in os.listdir("/proc"):
+            if not d.isdigit() or int(d) == me:
+                continue
+            try:
+                with open(f"/proc/{d}/cmdline", "rb") as fh:
+                    self.cmds.append(fh.read().replace(b"\0", b" ").decode(errors="replace"))
+            except OSError:
+                pass
+            try:
+                self.cwds.append(os.readlink(f"/proc/{d}/cwd"))
+            except OSError:
+                pass
+            try:
+                for f in os.listdir(f"/proc/{d}/fd"):
+                    try:
+                        self.fds.append(os.readlink(f"/proc/{d}/fd/{f}"))
+                    except OSError:
+                        pass
+            except OSError:
+                pass
+        if self.docker:
+            dk = shlex.split(self.docker)
+            try:
+                q = subprocess.run(dk + ["ps", "-aq"], capture_output=True, text=True, timeout=120)
+            except (OSError, subprocess.TimeoutExpired) as e:
+                raise RuntimeError(f"docker ps failed: {e}")
+            if q.returncode:
+                raise RuntimeError(f"docker ps failed: {q.stderr.strip()[:200]}")
+            ids = q.stdout.split()
+            if ids:
+                m = subprocess.run(dk + ["inspect", "-f", "{{range .Mounts}}{{.Source}} {{end}}"] + ids,
+                                   capture_output=True, text=True, timeout=300)
+                if m.returncode:
+                    raise RuntimeError(f"docker inspect failed: {m.stderr.strip()[:200]}")
+                self.mounts = [os.path.normpath(x) for x in m.stdout.split()]
+        return self
+
+    def why(self, forms):
+        for k in forms:
+            pre = k + "/"
+            pat = re.compile(re.escape(k) + r"(?=$|[/\s'\";:,)=])")
+            for c in self.cmds:
+                if k in c and pat.search(c):
+                    return "live cmdline: " + c[:120]
+            for c in self.cwds:
+                c = c.split(" (deleted)")[0]
+                if c == k or c.startswith(pre) or (k.startswith(c + "/") and self.deep(c)):
+                    return "live cwd " + c
+            for f in self.fds:
+                if f == k or f.startswith(pre):
+                    return "live fd " + f
+            for m in self.mounts:
+                if m == k or m.startswith(pre) or (k.startswith(m + "/") and self.deep(m)):
+                    return "docker mount " + m
+        return None
+
+
+# ------------------------------------------------------------------ scan
+def scan_roots(roots, timeout=3600):
+    """one find per root: attempt dirs, results-dir anchors, records, .keep, .git entries.  None on failure."""
+    found = {"attempt": [], "spef": [], "place": [], "record": [], "keep": [], "git": [], "archived": []}
+    for r in roots:
+        cmd = ["nice", "-n", "15", "find", r, "-xdev",
+               "(", "-name", ".git", "-prune", "-printf", "g\t%p\n", ")", "-o",
+               "(", "-type", "d", "-name", "attempt_[0-9]*", "-printf", "a\t%p\n", ")", "-o",
+               "(", "-type", "f", "(", "-name", "6_final.spef", "-o", "-name", "3_place.odb", "-o", "-name", "signoff.json",
+               "-o", "-name", "*.signoff.json", "-o", "-name", "PROVENANCE.json", "-o", "-name", ".keep", "-o",
+               "-name", "ARCHIVED.json", ")", "-printf", "f\t%p\n", ")"]
+        try:
+            p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, errors="replace")
+        except subprocess.TimeoutExpired:
+            return None
+        if p.returncode not in (0, 1):
+            return None
+        for ln in p.stdout.splitlines():
+            k, _, path = ln.partition("\t")
+            b = os.path.basename(path)
+            if k == "g":
+                found["git"].append(path)
+            elif k == "a":
+                found["attempt"].append(path)
+            elif b == "6_final.spef":
+                found["spef"].append(path)
+            elif b == "3_place.odb":
+                found["place"].append(path)
+            elif b == ".keep":
+                found["keep"].append(path)
+            elif b == "ARCHIVED.json":
+                found["archived"].append(path)
+            else:
+                found["record"].append(path)
+    return found
+
+
+def read_record(p):
+    """(signed?, text) of a signoff.json / PROVENANCE.json; unreadable or unparsable counts as signed (fail safe)"""
+    try:
+        if os.path.getsize(p) > (8 << 20):
+            return True, ""
+        s = rd(p)
+        d = json.loads(s)
+    except (OSError, ValueError):
+        return True, ""
+    if not isinstance(d, dict):
+        return False, s
+    v = d.get("verdict")
+    signed = (isinstance(v, str) and (v == "SIGNED" or v.startswith("LOCAL_PASS"))) or d.get("kind") == "resign"
+    return signed, s
+
+
+def dedupe_roots(roots):
+    seen, out = set(), []
+    for r in roots:
+        try:
+            st = os.stat(r)
+        except OSError:
+            continue
+        if (st.st_dev, st.st_ino) in seen:
+            continue
+        seen.add((st.st_dev, st.st_ino))
+        out.append(os.path.normpath(r))
+    return out
+
+
+def alternates_targets(git_entries):
+    out = set()
+    for g in git_entries + [os.path.join(HOME, "OpenTallas/.git")]:
+        gd = g
+        if os.path.isfile(g):
+            try:
+                gd = rd(g).split("gitdir:", 1)[1].strip()
+                cd = os.path.join(gd, "commondir")
+                if os.path.isfile(cd):
+                    gd = os.path.normpath(os.path.join(gd, rd(cd).strip()))
+            except (OSError, IndexError):
+                continue
+        f = os.path.join(gd, "objects/info/alternates")
+        try:
+            for ln in rd(f).splitlines():
+                ln = ln.strip()
+                if ln.startswith("/"):
+                    t = os.path.normpath(ln)
+                    out.add(os.path.dirname(t) if t.endswith("/objects") else t)
+        except OSError:
+            pass
+    return out
+
+
+def git_locked(path, stop_depth=3):
+    a = path
+    while depth(a) > stop_depth:
+        g = os.path.join(a, ".git")
+        if os.path.isfile(g):
+            try:
+                gd = rd(g).split("gitdir:", 1)[1].strip()
+                if os.path.exists(os.path.join(gd, "locked")):
+                    return g
+            except (OSError, IndexError):
+                return g
+        a = os.path.dirname(a)
+    return None
+
+
+def tree_info(d):
+    """(newest mtime, bytes, nlink>1 file or None)"""
+    newest, size, hl = os.lstat(d).st_mtime, 0, None
+    for dp, dns, fns in os.walk(d):
+        for n in dns + fns:
+            try:
+                st = os.lstat(os.path.join(dp, n))
+            except OSError:
+                continue
+            newest = max(newest, st.st_mtime)
+            if stat.S_ISREG(st.st_mode):
+                size += st.st_blocks * 512
+                if st.st_nlink > 1 and hl is None:
+                    hl = os.path.join(dp, n)
+    return newest, size, hl
+
+
+# ------------------------------------------------------------------ the host job
+class Job:
+    def __init__(self, a):
+        self.a = a
+        self.host = a.host or HOSTNAME_ALIAS.get(socket.gethostname(), socket.gethostname())
+        self.paths = Paths(host_aliases() if a.aliases is None else parse_findmnt(rd(a.aliases)))
+        self.now = now_s()
+        self.rows = []
+        self.alerts = []
+        self.recheck_hits = 0
+
+    # ---- inputs
+    def load_snapshot(self):
+        a, snap = self.a, self.a.snapshot
+        meta = jl(os.path.join(snap, "meta.json"))
+        age = self.now - float(meta["created"])
+        if age > a.max_snapshot_age_h * 3600:
+            raise RuntimeError(f"snapshot {snap} is {age / 3600:.1f} h old (> {a.max_snapshot_age_h} h)")
+        self.snapshot_meta = meta
+        self.prot_file = os.path.join(snap, "protected.tsv")
+        self.load_protected()
+        q = jl(os.path.join(snap, "queue.json"))
+        self.queue = PathSet([(p, "queue post") for p in q["paths"]], deep=self.deep, canon=self.paths.canon)
+        self.qwords = set(q["words"])
+        kw = os.path.join(snap, "kitwave.json")
+        self.kitwave = None
+        if os.path.exists(kw):
+            k = jl(kw)
+            self.kitwave = k
+            self.kw_attempts = {}
+            for key, v in k["attempts"].items():
+                h, _, p = key.partition(":")
+                if h == self.host:
+                    self.kw_attempts[self.paths.canon(p)] = v
+            self.kw_latest = {}
+            for key, n in k["latest"].items():
+                h, _, p = key.partition(":")
+                if h == self.host:
+                    self.kw_latest[self.paths.canon(p)] = n
+            self.kwkeep = PathSet([(key.partition(":")[2], "kit-wave active/resume/spec")
+                                   for key in k["keep"] if key.partition(":")[0] == self.host], canon=self.paths.canon)
+        else:
+            self.kwkeep = PathSet()
+
+    def load_protected(self):
+        rows = []
+        for ln in rd(self.prot_file).splitlines():
+            p, _, src = ln.rstrip("\n").partition("\t")
+            if p.startswith("/"):
+                rows.append((p, src))
+        if len(rows) < self.a.min_protected:
+            raise RuntimeError(f"protection union has {len(rows)} rows (< {self.a.min_protected}); refusing")
+        self.protected = PathSet(rows, canon=self.paths.canon)
+
+    def load_local_keeps(self):
+        rows = []
+        for d in (os.path.join(HOME, ".local/state/wt-reaper/protect.d"),):
+            if os.path.isdir(d):
+                for f in sorted(os.listdir(d)):
+                    if f.endswith(".txt"):
+                        try:
+                            for p, _ in parse_protected(rd(os.path.join(d, f)), f):
+                                rows.append((p, "wt-reaper protect.d/" + f))
+                        except OSError:
+                            pass
+        sp = os.path.join(HOME, ".local/state/ot-run/spill_pending")
+        if os.path.isdir(sp):
+            for f in os.listdir(sp):
+                try:
+                    for p in text_paths(rd(os.path.join(sp, f))):
+                        rows.append((p, "ot-run spill_pending/" + f))
+                except OSError:
+                    pass
+        for t in alternates_targets(self.found["git"]):
+            rows.append((t, "git alternates target"))
+        self.localkeep = PathSet(rows, deep=self.deep, canon=self.paths.canon)
+
+    def load_counted(self):
+        rows, self.signed_records = [], []
+        for r in self.found["record"]:
+            signed, text = read_record(r)
+            if not signed:
+                continue
+            self.signed_records.append(self.paths.canon(r))
+            rows.append((os.path.dirname(r), "signed record dir " + r))
+            for p in text_paths(text):
+                rows.append((p, "named by signed " + r))
+        # lane-root (or shallower) citations never block whole trees: child match only below lane level
+        self.counted = PathSet(rows, deep=self.deep, canon=self.paths.canon)
+        self.signed_set = PathSet([(p, "signed record") for p in self.signed_records], canon=self.paths.canon)
+
+    # ---- checks
+    def deep(self, p):
+        """p lies below lane level (<root>/<lane>/...): lane-root or shallower paths never block whole trees"""
+        c = self.paths.canon(p)
+        lvl = LANE_DEPTH
+        for r in sorted(getattr(self, "roots", []), key=len, reverse=True):
+            r = self.paths.canon(r)
+            if c == r or c.startswith(r + "/"):
+                lvl = depth(r) + 1
+                break
+        return depth(c) > lvl
+
+    def lane(self, k):
+        return k.split("/claude/", 1)[1].split("/")[0] if "/claude/" in k else ""
+
+    def guard_hits(self, k):
+        """protected / counted / kit-wave keep: hits here at recheck time are ALERTs"""
+        for name, ps in (("protected", self.protected), ("counted", self.counted), ("kitwave-keep", self.kwkeep)):
+            for f in self.paths.forms(k):
+                h = ps.hit(f)
+                if h:
+                    return f"{name}: {h}"
+        return None
+
+    def common_why(self, k, files):
+        lane = self.lane(k)
+        if lane.startswith(("tok-", "kv-fn-")) or "/tok-" in k or "/kv-fn-" in k:
+            return "lane " + lane
+        if any("tool" in c for c in k.split("/")):
+            return "tool tree"
+        g = self.guard_hits(k)
+        if g:
+            return g
+        h = self.localkeep.hit(k)
+        if h:
+            return "local keep: " + h
+        h = self.queue.hit(k)
+        if h:
+            return "queuepath: " + h
+        rest = k.split("/claude/", 1)[1].split("/")[1:] if "/claude/" in k else []
+        for n in rest:
+            if not generic_name(n) and n in self.qwords:
+                return "queuename: " + n
+        w = self.live.why(self.paths.forms(k))
+        if w:
+            return w
+        for f in files:
+            try:
+                if os.stat(f).st_nlink > 1:
+                    return "hardlink " + f
+            except OSError:
+                return "gone " + f
+        g = git_locked(k)
+        if g:
+            return "gitlocked " + g
+        for a in [k] + ancestors(k):
+            if os.path.exists(os.path.join(a, ".keep")):
+                return "keep " + a
+        for kp in self.found["keep"]:
+            if kp.startswith(k + "/"):
+                return "keep " + kp
+        return None
+
+    def _reg(self, p, min_bytes=0):
+        try:
+            st = os.lstat(p)
+        except OSError:
+            return None
+        if not stat.S_ISREG(st.st_mode) or st.st_size < min_bytes:
+            return None
+        return st
+
+    def eval_trim(self, cls, d):
+        """class b / c on results dir d -> (why or None, kit, files)"""
+        kit = d.split("/results/")[0] if "/results/" in d else d
+        if kit.endswith("/run"):
+            kit = kit[:-4]
+        if cls == "b":
+            anchors = ["6_final.odb", "6_final.spef"]
+            names = list(TRIM_B)
+        else:
+            anchors = ["3_place.odb"]
+            names = list(TRIM_C)
+            if self._reg(os.path.join(d, "4_cts.odb"), MIN_BYTES + 1):
+                names.append("4_1_cts.odb")
+        for n in anchors:
+            if not self._reg(os.path.join(d, n), MIN_BYTES + 1):
+                return f"no {n} > 1 KB", kit, []
+        files = [os.path.join(d, n) for n in names if n not in NEVER and self._reg(os.path.join(d, n))]
+        if not files:
+            return "nothing", kit, []
+        for p in [os.path.join(d, anchors[0])] + files:
+            if self.now - os.lstat(p).st_mtime < AGE_S:
+                return "lt6h " + os.path.basename(p), kit, files
+        return self.common_why(kit, files), kit, files
+
+    def eval_attempt(self, d):
+        if self.kitwave is None:
+            return "no kit-wave snapshot", []
+        c = self.paths.canon(d)
+        m = ATTEMPT_RE.match(c)
+        if not m or m.group(0) != c:
+            return "not an attempt dir", []
+        st = self.kw_attempts.get(c)
+        h = self.kwkeep.hit(c)
+        if h:
+            return "kitwave-keep: " + h, []
+        if st and st["signed"]:
+            return "kit-wave signed", []
+        if st and st["active"]:
+            return "kit-wave active", []
+        if st and st["terminal"]:
+            verdict = "finished " + ",".join(sorted(set(st["terminal"])))[:80]
+        elif self.kw_latest.get(m.group(1), -1) > int(m.group(2)):
+            verdict = f"superseded by attempt_{self.kw_latest[m.group(1)]}"
+        else:
+            return "kit-wave unknown", []
+        h = self.signed_set.hit(c)
+        if h:
+            return "signed: " + h, []
+        for g in self.found["git"]:
+            if g.startswith(d + "/"):
+                return "git inside " + g, []
+        newest, size, hl = tree_info(d)
+        if self.now - newest < AGE_S:
+            return "lt6h", []
+        if hl:
+            return "hardlink " + hl, []
+        self._attempt_note = verdict
+        return self.common_why(d, []), [d]
+
+    # ---- recheck + delete
+    def recheck(self, cls, path, files):
+        self.load_protected()                      # re-read the union file: a row added meanwhile must stop us
+        k = path
+        g = self.guard_hits(k)
+        if not g and cls == "a":
+            g = self.signed_set.hit(self.paths.canon(k))
+            g = "signed: " + g if g else None
+        if not g:
+            for f in files:
+                g = self.guard_hits(f)
+                if g:
+                    break
+        if g:
+            return "ALERT", g
+        if self.a.apply:
+            self.live.refresh()
+            if cls == "a":
+                w, _ = self.eval_attempt(path)
+            else:
+                w, _, _ = self.eval_trim(cls, os.path.dirname(files[0]))
+            if w:
+                return "SKIP", "recheck: " + w
+        return None, None
+
+    def delete(self, cls, files):
+        freed = 0
+        for f in files:
+            if cls == "a":
+                _, size, _ = tree_info(f)
+                r = subprocess.run(["rm", "-rf", "--one-file-system", "--", f], capture_output=True, text=True,
+                                   timeout=7200)
+                if r.returncode:
+                    raise OSError(r.stderr.strip()[:200])
+                freed += size
+            else:
+                if os.path.basename(f) in NEVER:
+                    raise OSError("refusing never-delete name " + f)
+                st = os.lstat(f)
+                os.unlink(f)
+                freed += st.st_blocks * 512
+        return freed
+
+    def handle(self, cls, path, files, why, mtime):
+        size = 0
+        for f in files:
+            try:
+                size += (tree_info(f)[1] if cls == "a" else os.lstat(f).st_blocks * 512)
+            except OSError:
+                pass
+        verdict = "SKIP" if why else ("WOULD" if not self.a.apply else "DELETE")
+        reason = why or getattr(self, "_attempt_note", "") if cls == "a" else why or ""
+        if not why:
+            v, r = self.recheck(cls, path, files)
+            if v == "ALERT":
+                self.recheck_hits += 1
+                self.alerts.append(f"{cls}\t{path}\t{r}")
+                verdict, reason = "ALERT", r
+            elif v == "SKIP":
+                verdict, reason = "SKIP", r
+            elif self.a.apply:
+                try:
+                    size = self.delete(cls, files)
+                    verdict = "DELETED"
+                except OSError as e:
+                    verdict, reason = "ERROR", str(e)[:200]
+        self.rows.append([time.strftime("%F %T"), self.host, cls, verdict, " ".join(reason.split())[:300], path,
+                          ",".join(os.path.basename(f) for f in files) if cls != "a" else "<tree>", size, int(mtime)])
+        return verdict
+
+    # ---- controls
+    def controls(self):
+        base = os.path.join(self.roots[0], "_ot_autoclean_ctl", f"{os.getpid()}-{stamp()}")
+        d = os.path.join(base, "run/results/asap7/x/base")
+        try:
+            os.makedirs(d)
+            old = self.now - 10 * 3600
+            for n, sz in (("6_final.odb", 4096), ("6_final.spef", 4096), ("5_route.odb", 2048), ("2_floorplan.odb", 2048)):
+                with open(os.path.join(d, n), "wb") as fh:
+                    fh.write(os.urandom(sz))
+                os.utime(os.path.join(d, n), (old, old))
+            why, kit, files = self.eval_trim("b", d)
+            pos = (why is None and [os.path.basename(f) for f in files] == ["5_route.odb"]
+                   and self.recheck("b", kit, files) == (None, None))
+            if pos:
+                self.delete("b", files)
+                pos = not os.path.exists(os.path.join(d, "5_route.odb")) and all(
+                    os.path.exists(os.path.join(d, n)) for n in ("6_final.odb", "6_final.spef", "2_floorplan.odb"))
+            # negative: the same row again, now named by a fake protected row (under an alias form when one exists)
+            with open(os.path.join(d, "5_route.odb"), "wb") as fh:
+                fh.write(os.urandom(2048))
+            os.utime(os.path.join(d, "5_route.odb"), (old, old))
+            saved = self.protected
+            fake = sorted(self.paths.forms(base))[-1]
+            self.protected = PathSet(list((p, w) for p, w in saved.m.items()) + [(fake, "negative control")],
+                                     canon=self.paths.canon)
+            nwhy, _, nfiles = self.eval_trim("b", d)
+            g = self.guard_hits(kit)
+            self.protected = saved
+            neg = (nwhy or "").startswith("protected") and g is not None and os.path.exists(os.path.join(d, "5_route.odb"))
+            return pos, neg
+        finally:
+            shutil.rmtree(os.path.join(self.roots[0], "_ot_autoclean_ctl", os.path.basename(base)), ignore_errors=True)
+            try:
+                os.rmdir(os.path.join(self.roots[0], "_ot_autoclean_ctl"))
+            except OSError:
+                pass
+
+    # ---- main
+    def write_union(self, path):
+        """protection union for wt-reaper (host<TAB>path<TAB>source rows, every alias form)"""
+        rows = []
+        for name, ps in (("protected", self.protected), ("counted", self.counted), ("kitwave", self.kwkeep),
+                         ("localkeep", self.localkeep)):
+            for p, w in ps.m.items():
+                for f in sorted(self.paths.forms(p)):
+                    rows.append(f"{self.host}\t{f}\t{name}: {' '.join(str(w).split())[:120]}")
+        tmp = path + ".tmp"
+        with open(tmp, "w") as fh:
+            fh.write("# ot-autoclean generated protection union (do not edit)\n" + "\n".join(rows) + "\n")
+        os.replace(tmp, path)
+
+    def run(self):
+        a = self.a
+        os.makedirs(a.state, exist_ok=True)
+        with open(os.path.join(a.state, "lock"), "w") as lock:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except OSError:
+                say("ot-autoclean: another run holds the lock; exiting")
+                return 0
+            return self._run()
+
+    def _run(self):
+        a = self.a
+        off = [f for f in OFF_FILES if os.path.exists(f)]
+        if off or os.environ.get("OT_AUTOCLEAN") == "0":
+            say(f"ot-autoclean: OFF switch {off or 'OT_AUTOCLEAN=0'}; nothing done")
+            return 0
+        alert_f = os.path.join(a.state, "ALERT")
+        if os.path.exists(alert_f):
+            say(f"ot-autoclean: {alert_f} exists (sticky); no deletes until a human removes it")
+            return 3
+        self.roots = dedupe_roots(a.roots)
+        if not self.roots:
+            say("ot-autoclean: no roots")
+            return 0
+        self.load_snapshot()
+        self.live = Live(a.docker, self.deep)
+        self.found = scan_roots(self.roots, a.find_timeout)
+        if self.found is None:
+            raise RuntimeError("find scan failed or timed out")
+        self.load_counted()
+        self.load_local_keeps()
+        pos, neg = self.controls()
+        say(f"controls: positive {'PASS' if pos else 'FAIL'} negative {'PASS' if neg else 'FAIL'}")
+        if not (pos and neg):
+            say("ot-autoclean: control failed; abort, nothing deleted")
+            return 4
+        mode = "apply" if a.apply else "dry"
+        say(f"ot-autoclean {mode} host {self.host} roots {' '.join(self.roots)}; protected {len(self.protected)} "
+            f"counted {len(self.counted)} kit-wave keep {len(self.kwkeep)} local keep {len(self.localkeep)} "
+            f"signed records {len(self.signed_records)}; snapshot {self.snapshot_meta.get('created_h', '')}")
+        seen, gone = set(), []
+        classes = a.classes
+        stop = False
+
+        def once(p, cls):
+            try:
+                st = os.stat(p)
+            except OSError:
+                return False
+            if (cls, st.st_dev, st.st_ino) in seen:
+                return False
+            seen.add((cls, st.st_dev, st.st_ino))
+            return True
+        if "a" in classes:
+            for d in sorted(self.found["attempt"]):
+                if stop:
+                    break
+                if any(d.startswith(g + "/") for g in gone) or not once(d, "a"):
+                    continue
+                self._attempt_note = ""
+                why, files = self.eval_attempt(d)
+                if why in ("not an attempt dir",):
+                    continue
+                v = self.handle("a", d, files or [d], why, os.lstat(d).st_mtime)
+                if v in ("DELETED", "WOULD"):
+                    gone.append(d)
+                stop = v == "ALERT"
+        for cls, key in (("b", "spef"), ("c", "place")):
+            if cls not in classes or stop:
+                continue
+            for p in sorted(self.found[key]):
+                if stop:
+                    break
+                d = os.path.dirname(p)
+                if "/results/" not in d or any(d.startswith(g + "/") for g in gone) or not once(d, cls):
+                    continue
+                why, kit, files = self.eval_trim(cls, d)
+                if why in ("nothing",) or (why or "").startswith("no "):
+                    continue
+                try:
+                    mt = os.lstat(p).st_mtime
+                except OSError:
+                    continue
+                v = self.handle(cls, d, files, why, mt)
+                stop = v == "ALERT"
+        mdir = os.path.join(a.state, "manifests")
+        os.makedirs(mdir, exist_ok=True)
+        mf = os.path.join(mdir, f"AUTOCLEAN-auto-{self.host}-{stamp()}.tsv")
+        with open(mf, "w") as fh:
+            fh.write("time\thost\tclass\tverdict\treason\tpath\tfiles\tbytes\tmtime\n")
+            for r in self.rows:
+                fh.write("\t".join(str(x) for x in r) + "\n")
+        tot = {}
+        for r in self.rows:
+            k = (r[2], r[3])
+            n, b = tot.get(k, (0, 0))
+            tot[k] = (n + 1, b + int(r[7]))
+        for (cls, v), (n, b) in sorted(tot.items()):
+            say(f"TOTAL class {cls} {v}: {n} rows {b / 1e9:.2f} GB")
+        skips = {}
+        for r in self.rows:
+            if r[3] == "SKIP":
+                k = r[2] + " " + r[4].split(":")[0].split(" ")[0]
+                skips[k] = skips.get(k, 0) + 1
+        say("SKIPS " + " ".join(f"{k}={n}" for k, n in sorted(skips.items())))
+        say(f"PROTECTED/COUNTED HITS AT RECHECK: {self.recheck_hits} (must be 0)")
+        say(f"MANIFEST {mf}")
+        if self.alerts:
+            with open(alert_f, "w") as fh:
+                fh.write(f"{time.strftime('%F %T %Z')} ot-autoclean ALERT on {self.host}: a protected/counted path matched "
+                         f"a delete candidate at recheck; deletes stopped.\n" + "\n".join(self.alerts) + "\n")
+            say(f"ALERT written {alert_f}")
+            return 3
+        if a.wt_reaper:
+            union = os.path.join(a.state, "protected-union.txt")
+            self.write_union(union)
+            cmd = [sys.executable, "-I", a.wt_reaper, "--protected-dbs", union, "--protected-dbs-repo", "",
+                   "--roots"] + self.roots + [os.path.join(HOME, "wt")] + (["--apply"] if a.apply else [])
+            try:
+                r = subprocess.run(cmd, capture_output=True, text=True, timeout=a.wt_reaper_timeout)
+                with open(os.path.join(a.state, "wt-reaper.log"), "a") as fh:
+                    fh.write(f"=== {time.strftime('%F %T')} {' '.join(cmd)}\n{r.stdout}{r.stderr}")
+                last = (r.stdout.strip().splitlines() or [""])[-1]
+                say(f"wt-reaper rc {r.returncode}: {last[:300]}")
+            except subprocess.TimeoutExpired:
+                say("wt-reaper timed out")
+        return 0
+
+
+# ------------------------------------------------------------------ signed units (archive, host side)
+def unit_of(record):
+    d = os.path.dirname(record)
+    return os.path.dirname(d) if os.path.basename(d) == "signoff" else d
+
+
+def unit_files(unit, roots=None):
+    """[(path, size, mtime)] the archive copies for a signed unit: the unit tree minus heavy run trees, plus every
+    regular file its signed records cite, plus 6_final.* and *.lef/*.lib abstracts next to a cited 6_final.odb"""
+    out, cites = {}, set()
+    for dp, dns, fns in os.walk(unit):
+        dns[:] = [d for d in dns if d not in HEAVY_DIRS and not d.startswith("attempt_")
+                  and not os.path.islink(os.path.join(dp, d))]
+        for f in fns:
+            p = os.path.join(dp, f)
+            if f == "ARCHIVED.json" and dp == unit:
+                continue
+            out[p] = None
+            if f in RECORD_NAMES or f.endswith(".signoff.json"):
+                signed, text = read_record(p)
+                if signed:
+                    cites |= text_paths(text)
+    roots = [os.path.realpath(r) for r in (roots or DEFAULT_ROOTS)]
+    for c in sorted(cites):
+        if not any(os.path.realpath(c).startswith(r + "/") for r in roots):
+            continue                                  # only scratch-root files (not platform libs, not other trees)
+        if os.path.isfile(c) and not os.path.islink(c):
+            out[c] = None
+            if os.path.basename(c) == "6_final.odb":
+                d = os.path.dirname(c)
+                for f in os.listdir(d):
+                    if f.startswith("6_final.") or f.endswith((".lef", ".lib", ".lib.gz")):
+                        out[os.path.join(d, f)] = None
+    res = []
+    for p in sorted(out):
+        try:
+            st = os.lstat(p)
+        except OSError:
+            continue
+        if stat.S_ISREG(st.st_mode):
+            res.append((p, st.st_size, int(st.st_mtime)))
+    return res
+
+
+def archived_ok(unit, files):
+    try:
+        d = jl(os.path.join(unit, "ARCHIVED.json"))
+        rec = {f["path"]: (f["size"], f["mtime"]) for f in d["files"]}
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+    return len(rec) == len(files) and all(rec.get(p) == (s, m) for p, s, m in files)
+
+
+def list_signed_main(a):
+    roots = dedupe_roots(a.roots)
+    found = scan_roots(roots, a.find_timeout)
+    if found is None:
+        say(json.dumps({"error": "scan failed"}))
+        return 2
+    units = {}
+    for r in found["record"]:
+        signed, _ = read_record(r)
+        if signed:
+            units.setdefault(unit_of(r), []).append(r)
+    for u in sorted(units):
+        if any(u.startswith(v + "/") for v in units):          # nested unit: the outer one covers it
+            continue
+        files = unit_files(u, roots)
+        print(json.dumps({"unit": u, "archived": archived_ok(u, files), "files": files,
+                          "bytes": sum(s for _, s, _ in files)}), flush=True)
+    return 0
+
+
+def sha256(p):
+    h = hashlib.sha256()
+    with open(p, "rb") as fh:
+        for c in iter(lambda: fh.read(1 << 22), b""):
+            h.update(c)
+    return h.hexdigest()
+
+
+def hash_main(a):
+    """stdin: one path per line (paths relative to --base when given) -> JSON {path: [size, sha256]}"""
+    out = {}
+    for ln in sys.stdin.read().splitlines():
+        if not ln:
+            continue
+        p = os.path.join(a.base, ln.lstrip("/")) if a.base else ln
+        try:
+            st = os.lstat(p)
+            out[ln] = [st.st_size, sha256(p)] if stat.S_ISREG(st.st_mode) else None
+        except OSError:
+            out[ln] = None
+    json.dump(out, sys.stdout, sort_keys=True)
+    return 0
+
+
+def mark_archived_main(a):
+    """stdin: {"archive": path, "sha": {path: [size, sha]}, "verify": str}; writes <unit>/ARCHIVED.json when the
+    unit's current files still match the hashed list"""
+    d = json.load(sys.stdin)
+    files = unit_files(a.unit, dedupe_roots(a.roots))
+    sha = d["sha"]
+    if sorted(p for p, _, _ in files) != sorted(sha) or any(sha[p][0] != s for p, s, _ in files):
+        say(json.dumps({"ok": False, "error": "unit changed since hashing"}))
+        return 2
+    rec = {"schema": "opentallas.archived.v2", "writer": "tools/fleet/ot-autoclean.py", "lane": "AUTOCLEAN-7",
+           "rule": "OWNER 2026-11-07 18:1x: copy signed results to the AGIdock archive (copy only; never deleted here)",
+           "archive": d["archive"], "date": time.strftime("%F %T %Z"), "verify": d.get("verify", ""),
+           "nfiles": len(files), "bytes": sum(s for _, s, _ in files),
+           "files": [{"path": p, "size": s, "mtime": m, "sha256": sha[p][1]} for p, s, m in files]}
+    t = os.path.join(a.unit, ".ARCHIVED.json.tmp")
+    with open(t, "w") as fh:
+        json.dump(rec, fh, indent=1)
+    os.replace(t, os.path.join(a.unit, "ARCHIVED.json"))
+    say(json.dumps({"ok": True, "nfiles": len(files)}))
+    return 0
+
+
+# ------------------------------------------------------------------ localhost driver
+class Remote:
+    def __init__(self, ssh, agidock_ssh, timeout):
+        self.ssh = shlex.split(os.path.expanduser(ssh))
+        self.agi = shlex.split(os.path.expanduser(agidock_ssh))
+        self.timeout = timeout
+
+    def host(self, h, cmd, inp=None, timeout=None, binary=False):
+        argv = self.ssh + ([h] if h else []) + ["cd / && " + cmd]
+        return subprocess.run(argv, input=inp, capture_output=True, text=not binary,
+                              timeout=timeout or self.timeout)
+
+    def agidock(self, cmd, inp=None, timeout=None):
+        return subprocess.run(self.agi + ["cd / && " + cmd], input=inp, capture_output=True, text=True,
+                              timeout=timeout or self.timeout)
+
+
+def tar_stream(src_argv, src_cmd, dst_argv, dst_cmd, file_list, timeout):
+    """src: tar the listed files (stdin, NUL separated) -> stdout; dst: unpack stdin.  Both rc must be 0."""
+    p1 = subprocess.Popen(src_argv + ["cd / && " + src_cmd], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE)
+    p2 = subprocess.Popen(dst_argv + ["cd / && " + dst_cmd], stdin=p1.stdout, stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE)
+    p1.stdout.close()
+    p1.stdin.write(b"".join(p.lstrip("/").encode() + b"\0" for p in file_list))
+    p1.stdin.close()
+    try:
+        o2, e2 = p2.communicate(timeout=timeout)
+        p1.wait(timeout=60)
+    except subprocess.TimeoutExpired:
+        p1.kill()
+        p2.kill()
+        return False, "timeout"
+    e1 = p1.stderr.read().decode(errors="replace")
+    ok = p1.returncode == 0 and p2.returncode == 0
+    return ok, f"src rc {p1.returncode} {e1.strip()[:150]} dst rc {p2.returncode} {e2.decode(errors='replace').strip()[:150]}"
+
+
+class Driver:
+    def __init__(self, a):
+        self.a = a
+        self.r = Remote(a.ssh, a.agidock_ssh, a.timeout)
+        self.script = os.path.abspath(SELF)
+        self.tools = os.path.expanduser(a.tools_dir)
+        self.rstate = a.remote_state
+        self.py = f"python3 -I {shlex.quote(self.tools + '/ot-autoclean.py')}"
+
+    def build_snapshot(self, out):
+        a = self.a
+        os.makedirs(out, exist_ok=True)
+        rows = build_protected_union(a.coord)
+        with open(os.path.join(out, "protected.tsv"), "w") as fh:
+            fh.write("".join(f"{p}\t{w}\n" for p, w in rows))
+        qf = os.path.join(a.coord, "lanes/COORD-REVIEW-QUEUE.md")
+        paths, words = parse_queue(rd(qf), now_s(), a.queue_hours)
+        with open(os.path.join(out, "queue.json"), "w") as fh:
+            json.dump({"paths": sorted(paths), "words": sorted(words)}, fh)
+        kw = None
+        if a.kitwave_state:                          # local files (tests / a host with the state)
+            r = subprocess.run([sys.executable, "-I", self.script, "kitwave-reduce", "--state-json", a.kitwave_state,
+                                "--stages-tsv", a.kitwave_stages], capture_output=True, text=True, timeout=600)
+            kw = r.stdout if r.returncode == 0 else None
+        elif a.kitwave_host:
+            r = self.r.host(a.kitwave_host, "timeout 600 python3 -I - kitwave-reduce", inp=rd(self.script),
+                            timeout=900)
+            kw = r.stdout if r.returncode == 0 else None
+        if kw:
+            json.loads(kw)
+            with open(os.path.join(out, "kitwave.json"), "w") as fh:
+                fh.write(kw)
+        else:
+            say("snapshot: kit-wave state unavailable; hosts skip class a")
+        with open(os.path.join(out, "meta.json"), "w") as fh:
+            json.dump({"created": now_s(), "created_h": time.strftime("%F %T %Z"), "by": socket.gethostname(),
+                       "protected_rows": len(rows), "queue_paths": len(paths)}, fh)
+        say(f"snapshot {out}: protected {len(rows)} rows, queue paths {len(paths)} words {len(words)}, "
+            f"kit-wave {'yes' if kw else 'NO'}")
+        return out
+
+    def push(self, h, snap):
+        """tools + snapshot to the host (atomic dir swap)"""
+        here = os.path.dirname(self.script)
+        tb = tempfile.mkdtemp(prefix="ac7push")
+        try:
+            os.makedirs(os.path.join(tb, "tools"))
+            shutil.copy(self.script, os.path.join(tb, "tools/ot-autoclean.py"))
+            wr = os.path.join(here, "wt-reaper.py")
+            if os.path.exists(wr):
+                shutil.copy(wr, os.path.join(tb, "tools/wt-reaper.py"))
+            shutil.copytree(snap, os.path.join(tb, "snapshot"))
+            data = subprocess.run(["tar", "-C", tb, "-cf", "-", "tools", "snapshot"], capture_output=True).stdout
+        finally:
+            shutil.rmtree(tb, ignore_errors=True)
+        st, td = shlex.quote(self.rstate), shlex.quote(self.tools)
+        cmd = (f"set -e; mkdir -p {st} {td}; T=$(mktemp -d {st}/.push.XXXXXX); tar -C $T -xf -; "
+               f"cp $T/tools/* {td}/; rm -rf {st}/snapshot.old; if [ -d {st}/snapshot ]; then mv {st}/snapshot "
+               f"{st}/snapshot.old; fi; mv $T/snapshot {st}/snapshot; rm -rf $T {st}/snapshot.old")
+        r = self.r.host(h, cmd, inp=data, binary=True)
+        return r.returncode == 0, (r.stderr or b"").decode(errors="replace")[:200]
+
+    def archive(self, h, rows):
+        a = self.a
+        r = self.r.host(h, f"timeout {a.find_timeout + 600} {self.py} list-signed --roots {' '.join(map(shlex.quote, a.roots))}",
+                        timeout=a.find_timeout + 900)
+        if r.returncode:
+            say(f"{h}: list-signed failed rc {r.returncode} {r.stderr.strip()[:200]}")
+            return False
+        base = f"{a.archive_root.rstrip('/')}/{h}"
+        todo = [json.loads(ln) for ln in r.stdout.splitlines() if ln.startswith("{")]
+        new = [u for u in todo if not u.get("archived")]
+        say(f"{h}: signed units {len(todo)}, already archived {len(todo) - len(new)}, to archive {len(new)} "
+            f"({sum(u['bytes'] for u in new) / 1e9:.2f} GB)")
+        ok_all = True
+        for u in new:
+            files = [p for p, _, _ in u["files"]]
+            dest = base + u["unit"]
+            if not a.apply:
+                say(f"WOULD-ARCHIVE {h}:{u['unit']} files {len(files)} bytes {u['bytes']} -> {dest}")
+                rows.append([h, u["unit"], len(files), u["bytes"], dest, "-", "WOULD-ARCHIVE"])
+                continue
+            lst = "\n".join(files) + "\n"
+            hs = self.r.host(h, f"nice -n 10 {self.py} hash", inp=lst, timeout=a.timeout)
+            try:
+                src = json.loads(hs.stdout)
+            except ValueError:
+                src = None
+            comp, decomp = ("zstd -q -T8 -3 -c", "zstd -q -d -c") if a.compress == "zstd" else ("cat", "cat")
+            ok, msg = (False, "hash failed") if not src or None in src.values() else tar_stream(
+                self.r.ssh + [h], f"set -o pipefail; nice -n 10 tar -C / --null -T - -cf - | {comp}",
+                self.r.agi, f"set -o pipefail; mkdir -p {shlex.quote(base)} && {decomp} | tar -C {shlex.quote(base)} -xf -",
+                files, a.timeout)
+            verify = "-"
+            if ok:
+                ds = self.r.agidock(f"nice -n 10 {a.agidock_python} hash --base {shlex.quote(base)}", inp=lst)
+                try:
+                    dst = json.loads(ds.stdout)
+                except ValueError:
+                    dst = None
+                nb = sum(v[0] for v in src.values())
+                if dst == src:
+                    verify = f"OK files {len(src)} bytes {nb} sha256 all match"
+                else:
+                    ok, msg = False, "verify mismatch"
+            if ok:
+                m = self.r.host(h, f"{self.py} mark-archived --unit {shlex.quote(u['unit'])} --roots "
+                                   f"{' '.join(map(shlex.quote, a.roots))}",
+                                inp=json.dumps({"archive": dest, "sha": src, "verify": verify}))
+                ok = m.returncode == 0
+                msg = m.stdout.strip()[:200]
+            act = "ARCHIVED" if ok else f"FAIL {msg}"
+            ok_all &= ok
+            say(f"{act} {h}:{u['unit']} {verify}")
+            rows.append([h, u["unit"], len(files), u["bytes"], dest, verify, act])
+        return ok_all
+
+    def collect(self, h, prune):
+        """copy the host's manifests (its timer runs and this drive's run) not yet in <coord>/lanes/prune"""
+        md = shlex.quote(self.rstate + "/manifests")
+        r = self.r.host(h, f"ls -1 {md} 2>/dev/null | tail -n 48")
+        out = []
+        for name in r.stdout.split():
+            if not re.fullmatch(r"AUTOCLEAN-auto-[\w.-]+-\d{8}-\d{6}\.tsv", name):
+                continue
+            f = os.path.join(prune, name)
+            if os.path.exists(f):
+                continue
+            c = self.r.host(h, f"cat {md}/{name}")
+            if c.returncode == 0:
+                os.makedirs(prune, exist_ok=True)
+                with open(f + ".tmp", "w") as fh:
+                    fh.write(c.stdout)
+                os.replace(f + ".tmp", f)
+                out.append(f)
+        return out
+
+    def install_agidock(self):
+        r = self.r.agidock(f"mkdir -p {shlex.quote(self.tools)} && cat > {shlex.quote(self.tools)}/ot-autoclean.py.tmp && "
+                           f"mv {shlex.quote(self.tools)}/ot-autoclean.py.tmp {shlex.quote(self.tools)}/ot-autoclean.py",
+                           inp=rd(self.script))
+        return r.returncode == 0
+
+    def main(self):
+        a = self.a
+        st = stamp()
+        snapdir = tempfile.mkdtemp(prefix="ot-autoclean-snap-")
+        prune = os.path.join(a.coord, "lanes/prune")
+        written = []
+        try:
+            self.build_snapshot(snapdir)
+            if a.archive and a.apply and not self.install_agidock():
+                say("agidock: cannot install the verify helper; archive skipped")
+                a.archive = False
+            for h in a.hosts:
+                ok, msg = self.push(h, snapdir)
+                if not ok:
+                    say(f"{h}: push failed {msg}")
+                    continue
+                rows = []
+                if a.archive:
+                    self.archive(h, rows)
+                    if rows and a.collect:
+                        f = os.path.join(prune, f"AUTOCLEAN-archive-{h}-{st}.tsv")
+                        os.makedirs(prune, exist_ok=True)
+                        with open(f, "w") as fh:
+                            fh.write("host\tunit\tfiles\tbytes\tarchive_path\tverify\taction\n")
+                            fh.write("".join("\t".join(map(str, x)) + "\n" for x in rows))
+                        written.append(f)
+                if a.run:
+                    extra = " ".join(shlex.quote(x) for x in shlex.split(a.run_args))
+                    r = self.r.host(h, f"timeout {a.run_timeout} {self.py} run --host {h} --state {shlex.quote(self.rstate)} "
+                                       f"--snapshot {shlex.quote(self.rstate + '/snapshot')} "
+                                       f"--wt-reaper {shlex.quote(self.tools + '/wt-reaper.py')}"
+                                       f"{' --apply' if a.apply else ''} {extra}", timeout=a.run_timeout + 120)
+                    out = r.stdout
+                    for ln in out.splitlines():
+                        if ln.startswith(("TOTAL", "SKIPS", "PROTECTED", "controls", "ALERT", "wt-reaper")):
+                            say(f"{h}: {ln}")
+                    say(f"{h}: run rc {r.returncode}{' ' + r.stderr.strip()[-200:] if r.returncode else ''}")
+                if a.collect:
+                    written += self.collect(h, prune)
+            if written:
+                say("collected " + " ".join(written))
+            if a.commit and written:
+                rel = [os.path.relpath(f, a.coord) for f in written]
+                r = subprocess.run(["timeout", "280", os.path.join(a.coord, "bin/coord-commit.sh"),
+                                    f"AUTOCLEAN auto manifests {st}"] + rel, cwd=a.coord, capture_output=True, text=True)
+                say(f"coord-commit rc {r.returncode} {r.stdout.strip()[-200:]} {r.stderr.strip()[-200:]}")
+        finally:
+            shutil.rmtree(snapdir, ignore_errors=True)
+        return 0
+
+
+# ------------------------------------------------------------------ CLI
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    r = sub.add_parser("run", help="host job (dry unless --apply)")
+    r.add_argument("--apply", action="store_true")
+    r.add_argument("--host", default="")
+    r.add_argument("--state", default=STATE)
+    r.add_argument("--snapshot", default=os.path.join(STATE, "snapshot"))
+    r.add_argument("--max-snapshot-age-h", type=float, default=3.0)
+    r.add_argument("--min-protected", type=int, default=100, help="refuse a union smaller than this")
+    r.add_argument("--roots", nargs="+", default=DEFAULT_ROOTS)
+    r.add_argument("--classes", default="abc")
+    r.add_argument("--docker", default="docker", help="docker command ('' = no docker on this host)")
+    r.add_argument("--aliases", default=None, help="findmnt -rn -o TARGET,SOURCE text file (tests)")
+    r.add_argument("--find-timeout", type=int, default=3600)
+    r.add_argument("--wt-reaper", default=os.path.join(os.path.dirname(os.path.abspath(SELF)), "wt-reaper.py"),
+                   help="'' = skip the worktree reaper")
+    r.add_argument("--wt-reaper-timeout", type=int, default=5400)
+    ls = sub.add_parser("list-signed")
+    ls.add_argument("--roots", nargs="+", default=DEFAULT_ROOTS)
+    ls.add_argument("--find-timeout", type=int, default=3600)
+    hs = sub.add_parser("hash")
+    hs.add_argument("--base", default="")
+    ma = sub.add_parser("mark-archived")
+    ma.add_argument("--unit", required=True)
+    ma.add_argument("--roots", nargs="+", default=DEFAULT_ROOTS)
+    kr = sub.add_parser("kitwave-reduce")
+    kr.add_argument("--state-json", default=os.path.join(HOME, "coord/autopilot/kit_wave_state.json"))
+    kr.add_argument("--stages-tsv", default=os.path.join(HOME, "coord/autopilot/kit_wave_stages.tsv"))
+    dr = sub.add_parser("drive", help="localhost driver: snapshot -> push -> archive -> host runs -> collect")
+    dr.add_argument("--hosts", default=",".join(HOSTS))
+    dr.add_argument("--apply", action="store_true", help="really archive and pass --apply to the host runs")
+    dr.add_argument("--no-archive", dest="archive", action="store_false")
+    dr.add_argument("--no-run", dest="run", action="store_false")
+    dr.add_argument("--no-collect", dest="collect", action="store_false")
+    dr.add_argument("--commit", action="store_true", help="commit collected manifests with coord-commit.sh")
+    dr.add_argument("--coord", default=os.path.join(HOME, "coord"))
+    dr.add_argument("--queue-hours", type=float, default=25.0)
+    dr.add_argument("--kitwave-host", default="intel2")
+    dr.add_argument("--kitwave-state", default="", help="local kit_wave_state.json instead of the hub (tests)")
+    dr.add_argument("--kitwave-stages", default="")
+    dr.add_argument("--ssh", default="ssh -o ControlPath=none -o BatchMode=yes -o ConnectTimeout=10")
+    dr.add_argument("--agidock-ssh", default=AGIDOCK_SSH)
+    dr.add_argument("--agidock-python", default=f"python3 -I {TOOLS_DIR}/ot-autoclean.py")
+    dr.add_argument("--archive-root", default=ARCHIVE_ROOT)
+    dr.add_argument("--compress", default="zstd", choices=("zstd", "none"))
+    dr.add_argument("--roots", nargs="+", default=DEFAULT_ROOTS)
+    dr.add_argument("--find-timeout", type=int, default=3600)
+    dr.add_argument("--tools-dir", default=TOOLS_DIR)
+    dr.add_argument("--remote-state", default=STATE)
+    dr.add_argument("--timeout", type=int, default=21600)
+    dr.add_argument("--run-timeout", type=int, default=10800)
+    dr.add_argument("--run-args", default="", help="extra args for the host run, one string (--run-args='--classes b')")
+    a = ap.parse_args(argv)
+    if a.cmd == "run":
+        a.classes = set(a.classes)
+        try:
+            return Job(a).run()
+        except (RuntimeError, OSError, ValueError, KeyError) as e:
+            say(f"ot-autoclean: ABORT {e!r}; nothing deleted")
+            return 2
+    if a.cmd == "list-signed":
+        return list_signed_main(a)
+    if a.cmd == "hash":
+        return hash_main(a)
+    if a.cmd == "mark-archived":
+        return mark_archived_main(a)
+    if a.cmd == "kitwave-reduce":
+        return kitwave_reduce_main(a)
+    if a.cmd == "drive":
+        a.hosts = [h for h in a.hosts.split(",") if h]
+        return Driver(a).main()
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
