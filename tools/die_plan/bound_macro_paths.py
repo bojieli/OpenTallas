@@ -100,6 +100,28 @@ def resolve(t, bound_text):
     return rows
 
 
+def resolve_sub_cores(t, bound_text, sub_core_leaf):
+    """Root explicit split-core paths through the producer's exact parent-to-leaf table.
+
+    The remaining subpath and master are preserved for kit_preflight to validate;
+    a table entry never makes a missing split implementation a legal macro.
+    """
+    ab = asbuilt_map(bound_text)
+    rows = []
+    for c in _macro_entries(t):
+        path = c.get("physical_inst", "")
+        if ".u_fcore." not in path or path.startswith("u_bound."):
+            continue
+        parent, tail = path.split(".u_fcore.", 1)
+        leaf = sub_core_leaf.get(parent)
+        hit = ab.get(leaf) if leaf else None
+        if hit is None:
+            continue
+        rows.append(dict(inst=c["inst"], physical_inst="u_bound." + hit[0] + ".u_fcore." + tail,
+                         physical_master=c["physical_master"], asbuilt=leaf, source_physical_inst=path))
+    return rows
+
+
 def _strip_scope(prefix):
     """as-built prefix without its trailing generate blocks: u_s_3S.u_sl.g_c3 -> u_s_3S.u_sl."""
     parts = prefix.split(".")
@@ -163,7 +185,12 @@ def project(raw, kit_rtl):
         bf = _bound_file(fl) if t else None
         if bf is None:
             continue
-        rows = resolve(t, bf.read_text(errors="replace"))
+        bound_text = bf.read_text(errors="replace")
+        rows = resolve(t, bound_text)
+        kr = json.loads(Path(fl).with_name("kit_rtl.json").read_text())
+        manifest = kr.get("asbuilt_manifest")
+        sub_core_leaf = json.loads(Path(manifest).read_text()).get("sub_core_leaf", {}) if manifest else {}
+        rows += resolve_sub_cores(t, bound_text, sub_core_leaf)
         if not rows:
             continue
         if result is raw:
@@ -172,7 +199,8 @@ def project(raw, kit_rtl):
         nt = result["partition_types"][tn]
         for c in nt.get("hard_cores", []) + nt.get("contents", []):
             r = by.get(c["inst"])
-            if r and c.get("lef") and "physical_inst" not in c:
+            if r and c.get("lef") and ("physical_inst" not in c or
+                    r.get("source_physical_inst") == c.get("physical_inst")):
                 c["physical_inst"], c["physical_master"] = r["physical_inst"], r["physical_master"]
         receipts[tn] = dict(schema=SCHEMA, type=tn, bound_rtl=str(bf), rows=rows,
                             rule="plan macro path -> bound netlist path from the bind's as-built comments; "

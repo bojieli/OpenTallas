@@ -186,3 +186,33 @@ def test_plan_path_in_bound_instance_names():
     assert BMP.resolve(t, two) == []                                  # two leaves named u_core: no row
     t2 = {"contents": [], "hard_cores": [{"inst": "u_nope.u_dec.u_chn", "module": "ot_s81_kp4_dchn", "lef": "k.lef"}]}
     assert BMP.resolve(t2, bound) == []                               # no bound leaf of that name: no row
+
+
+def test_explicit_split_core_path_requires_producer_table():
+    c = dict(inst="u_lk_N2__chn", module="ot_s81_kp4_dchn", lef="k.lef",
+             physical_inst="u_lk_N2.u_fcore.u_core.u_chn", physical_master="ot_s81_kp4_dchn")
+    t = dict(hard_cores=[c])
+    text = "    // as-built lk_N2\n    ot_pdie_serdes__p37glue u_u_lk_N2 (\n"
+    assert BMP.resolve_sub_cores(t, text, {}) == []
+    assert BMP.resolve_sub_cores(t, text, {"u_lk_N2": "lk_N0"}) == []
+    rows = BMP.resolve_sub_cores(t, text, {"u_lk_N2": "lk_N2"})
+    assert rows[0]["physical_inst"] == "u_bound.u_u_lk_N2.u_fcore.u_core.u_chn"
+    assert rows[0]["physical_master"] == c["physical_master"]
+    assert c["physical_inst"] == "u_lk_N2.u_fcore.u_core.u_chn"
+
+
+def test_split_projection_preserves_explicit_master_and_subpath(tmp_path):
+    bound = tmp_path / "bound.sv"
+    bound.write_text("    // as-built lk_N2\n    ot_pdie_serdes__p37glue u_u_lk_N2 (\n")
+    fl = tmp_path / "kit_rtl.f"
+    fl.write_text(str(bound))
+    ab = tmp_path / "asbuilt.json"
+    ab.write_text(json.dumps(dict(sub_core_leaf={"u_lk_N2": "lk_N2"})))
+    fl.with_name("kit_rtl.json").write_text(json.dumps(dict(bound_module="bound", asbuilt_manifest=str(ab))))
+    c = dict(inst="u_lk_N2__rx__bm0", module="ot_pdie_serdes_rx_bm_native", lef="k.lef",
+             physical_inst="u_lk_N2.u_fcore.u_core.u_rx.u_bm0", physical_master="ot_pdie_serdes_rx_bm_native")
+    raw = dict(partition_types={"T": dict(hard_cores=[c])})
+    projected, receipts = BMP.project(raw, {"T": str(fl)})
+    assert projected["partition_types"]["T"]["hard_cores"][0]["physical_inst"] == "u_bound.u_u_lk_N2.u_fcore.u_core.u_rx.u_bm0"
+    assert raw["partition_types"]["T"]["hard_cores"][0] == c
+    assert receipts["T"]["rows"][0]["asbuilt"] == "lk_N2"
