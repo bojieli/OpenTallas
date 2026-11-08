@@ -11746,3 +11746,25 @@ All cached41open exactdesigns (105−64) assigned; no new scan/count. Coverage a
 OWNER? h9b WQDIAG source-adoption and restJ OPIPE source-adoption remain release obligations; candidates/proofs preserved. No blocking question.
 
 2026-11-07 16:00:25 PST fleet1551 checkpoint: /home/ubuntu/coord/handoff/codex_fleet_ops_20261107_1551.md. Firstall6snapshot/E5scratch43/E6root50, factors1/norearm/guardsunchanged. Rootapprovedcanaryretention-onlyatomicrepair15:56:20, timeractive/no--prune, exactbackuprecorded, source6dad6d69/3testsPASS. OldIntel1huntclosedby14:32KVintentionalwaitermove+14:54HEADclonecorrection. QCv6failureconfirmed24GiBMEMCGOOM, ownersnotified. No deletions/restart/signals or jobslaunchedbyfleetops.
+
+## KV takeover 2026-11-07 16:01 PST
+Current scope/status lanes/CODEX-KV-1551.md. Ingestrequiredcjclosed; e0freshproofcitationcorrected/currentcvqualificationownedm5; wrongE4stageddirnamecaughtbeforejob. PromptvMDRT/WivRLdPLACEhealthy, no duplicates. No merge/tag/POR/deletion.
+
+## KV types 2026-11-07 16:02 PST
+OWNER?
+The 14:28 HGI B ruling requests a tap-delay buffer at each core pin. Actual head-eighth clock pins are interior near (108,108) in 216x216 hard macros, and tap_balance.tcl::tb_outside intentionally chooses a legal site 2um beyond the nearest macro edge, creating the measured ~110um leg. A parent standard cell cannot be placed at the interior hard-macro pin. Which feasible B form is intended: a child pin/clock redesign, or a legal parent boundary strategy? Default: preserve pins/POR and keep progressing class D (qualified M5 core views); do not place cells inside the hard macro or release HGI before its full gate.
+
+2026-11-07 16:02 PST CODEX BKSEL collected H routed0DRC/0antenna, preliminary large DRIVE/WIRE failure1502slew/11cap and setup-42.33 (standard signoff pending). Viewed actual final and LF CTS images. Weak BUF3 single legs178–198um identified; no ECO/retry. LF measured CTS backup held pending H final; preparing existing maxwire/macro-output class proposal.
+
+## Codex takeover 2026-11-07 15:51 PST — active checkpoint 16:03
+
+All 630 lane files covered; nine leads resumed all current Claude work. Checkpoint handoff/codex_takeover_20261107_1551_checkpoint.md. Cached214 unchanged; NL exact clock-pin adoption and e0 replacement identity diagnosed, no count hacks. Temporary new-selector pause protects against tag-only failed retries; fixed owned runtime deployment in progress, admitted jobs intact. Canary retention-only no-prune fix installed with backup; no deletions/main merges/tags/POR edits. Continue until explicit reset.
+
+2026-11-07 16:05:49 PST HBM policy exception/correction: I misread strict hub no-new-work as checkout/wave-staging only and admitted own H9B native2GB1T proof on I2 unit1801534-1794096278, cohort /srv/opentallas-scratch2/claude/codex-hbm-h9b-1551. Root clarified ban includes ALL new I2compute/staging, even tinycohorts. Alreadyadmitted healthyunit retained perroot; no duplicate/cancel/cleanup. Propagated remotehost-only futurelaunch rule toall4children. Sourcebase33541 was stale Nov1 LOCALcentralmain (owncloneorigin localmirror), not currentmain66d55; correctedownoriginGitHub and fetchingexactcurrent refs for narrow source/dependency comparison. No claim READY until currentdelta understood; nootherworktreegitmutations.
+
+QC takeover 2026-11-07 16:06 PST: strict root ban propagated to BOTH QC helpers: ALL new I2 compute AND staging forbidden; I2 ot-run client may dispatch eligible remotehosts only. Existing coll_ftm_v6 memory recovery already admitted on I2/tolerant-swine unit1772914-1794096240 at48GB8T ordinary/disk60 BEFORE clarifiedban, same exactGRTcheckpoint/DRTonly, kepthealthy perroot; no stop/duplicate. No furtherI2launches. NL access inspection is ownedI1 scratch2, notI2. No deletions/merges/tags/PORedits.
+
+2026-11-07 16:07 PST hub-rule clarification: second _RESTART_1107 says "never new work on intel2 scratch2 (hub) or intel2 root." New SMD bench/synth and H9B bounded witness and QC v6 DRT recovery were already admitted on I2 scratch2 before reminder; leave healthy, no duplicate/cancellation/deletion. Leads reminded to dispatch future cohorts to guard-admissible remote scratch. Root wording "all I2 compute" means these prohibited destinations; no new resource/floor policy invented.
+
+2026-11-07 16:07 PST shared source correction: wave initially inferred old source from stale .stagedone, then checked ALL five d913→66 changed files on I1/E4 against exact Git blobs and found current66 bytes. Marker is stale metadata, no demonstrated runner mismatch; no full recopy or marker mutation under jobs. KV current-cv official capsule remains correct. Frozen guard runtime installed for future oneshot, waiting first disabled-selector tick then restore prior state.
+2026-11-07 16:06 PST coordinator-clock S81 types: private COLH10 top-only channel source53c9193037e hub+GitHub, reviewed ONE PLACE admitted Intel1unit4102322-1794096336 (24G8T; E6excluded). Existing vQ/t36/t42 healthy. t27 existing built-in GRT183 recovery active; boxed Y[85] diagnosis retained, no manual retry. Details lanes/CODEX-S81-TYPES-1551.md.

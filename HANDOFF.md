@@ -3412,3 +3412,5 @@ CODEX: 2026-11-07 13:03 PST explicitresetHBM parked; source da1b6d91d4 F512zero-
 - 2026-11-07 15:14 PST COORD: main d9134e481e5 (kwrs key, collector, vL7 opt-in); tags cy-head de-qc cu-kv df-s81 ec-hbm; kit wave moving onto them (KW-FIX-30).
 - 2026-11-07 15:20 PST COORD: KW-FIX-31 started (kit wave on d9134 tags, one-kit canary per die); flowtag-grtlayer 378f94422bd approved; S81 old-form leaf GRTs stop approved; S81 slice_station t24+t26 READY-COUNT.
 - 2026-11-07 15:47 PST COORD: hourly 15:47: 214 (+2 S81 slice_station t24/t26); QC NL + KV e0_M5 signed but not counted -> COUNT-AUDIT-2; main 66d55c026ad tags cz/df/cv/dg/ed; flow_tag guard ruled (no blind relaunch).
+
+CODEX: 2026-11-07 16:03 PST takeover1551/all630lanes covered; nine leads active. Cached214; NL actual clock-pin mismatch/e0 replacement identity diagnosed. Shared selector briefly paused for failed-input OT_FLOW_TAG guard; admitted jobs intact. Canary no-prune retention fix live/backed up. Checkpoint handoff/codex_takeover_20261107_1551_checkpoint.md.
