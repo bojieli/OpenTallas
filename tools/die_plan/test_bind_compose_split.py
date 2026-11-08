@@ -149,3 +149,40 @@ def test_preprocess_takes_recipe_branch():
         preprocess("`ifdef X\n")
     with pytest.raises(SplitError, match="macro use"):
         preprocess("assign a = `W;\n")
+
+
+EMIT = """
+module pair_core__x (input wire clk, input wire [1:0] a, output wire [1:0] y);
+    xl u_l (.clk(clk), .a(a), .y(y));
+endmodule
+"""
+
+
+def test_emit_module_replaces_reference(tmp_path):
+    f, spec, rule = fixture(tmp_path)
+    em = tmp_path / "emit.sv"
+    em.write_text(EMIT)
+    rule["subs"][0].update(emit_module="pair_core__x", emit_sources=[str(em)], emit_proof=dict(log="eq.log"),
+                           same_net=[["clk"]])
+    sources, rec = compose(f, Rules(), spec, E.Cell, split=[rule])
+    (mod, text), = sources
+    assert text.count("pair_core__x u_p") == 2 and "pair_core u_p" not in text
+    s = rec["cores"][0]["split"]["subs"][0]
+    assert s["module"] == "pair_core" and s["emit"] == dict(module="pair_core__x", reference="pair_core", ports=3,
+                                                            proof=dict(log="eq.log"))
+
+
+def test_emit_module_ports_must_equal(tmp_path):
+    f, spec, rule = fixture(tmp_path)
+    em = tmp_path / "emit.sv"
+    em.write_text(EMIT.replace("output wire [1:0] y", "output wire [2:0] y"))
+    rule["subs"][0].update(emit_module="pair_core__x", emit_sources=[str(em)])
+    with pytest.raises(CompositionError, match="ports differ"):
+        compose(f, Rules(), spec, E.Cell, split=[rule])
+
+
+def test_same_net_group_must_be_one_net(tmp_path):
+    f, spec, rule = fixture(tmp_path)
+    rule["subs"][0]["same_net"] = [["clk", "a"]]
+    with pytest.raises(CompositionError, match="same_net"):
+        compose(f, Rules(), spec, E.Cell, split=[rule])
