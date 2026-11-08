@@ -1,0 +1,59 @@
+{
+ "ref": "ot_hbm_idx_score_hcol_h0",
+ "dut": "ot_hbm_idx_score_hcol_h0__p6glue",
+ "ports": {
+  "cf_out": [
+   "output",
+   1
+  ],
+  "clk_pair": [
+   "input",
+   2
+  ],
+  "cs_out": [
+   "output",
+   32
+  ],
+  "hid4": [
+   "input",
+   32
+  ],
+  "key": [
+   "input",
+   544
+  ],
+  "prdy": [
+   "output",
+   2
+  ],
+  "q_b": [
+   "input",
+   568
+  ],
+  "qv_b": [
+   "input",
+   1
+  ],
+  "rst_col": [
+   "input",
+   1
+  ]
+ },
+ "clocks": [
+  "clk_pair"
+ ],
+ "resets": [
+  "rst_col"
+ ],
+ "reset_cycles": 8,
+ "warmup": 300,
+ "cycles": 6000,
+ "hold": {
+  "hid4": "{8'd3, 8'd2, 8'd1, 8'd0}"
+ },
+ "stim": {
+  "q_b": "{8'($urandom() % 5), 560'({$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom(),$urandom()})}",
+  "qv_b": "($urandom() % 3) != 0"
+ },
+ "shift": {}
+}
