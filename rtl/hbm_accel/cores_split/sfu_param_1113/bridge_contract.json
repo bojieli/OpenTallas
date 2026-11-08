@@ -1,0 +1,39 @@
+{
+  "read_k": 2,
+  "write_k": 2,
+  "paths": {
+    "local_rq": {
+      "bits": 136,
+      "boundary_port": "u_core_procdff_66916__Q",
+      "register": "g_compose_m21_q",
+      "retained_edges": 1
+    },
+    "local_wq": {
+      "bits": 2248,
+      "boundary_port": "u_core_procdff_66921__Q",
+      "register": "g_compose_m22_q",
+      "retained_edges": 1
+    },
+    "local_rr": {
+      "bits": 2056,
+      "boundary_port": "u_core_procdff_66926__D",
+      "register": "g_compose_m23_q",
+      "retained_edges": 1
+    },
+    "local_w_done": {
+      "bits": 8,
+      "boundary_port": "u_core_procdff_66931__D",
+      "register": "g_compose_m24_q",
+      "retained_edges": 1
+    }
+  },
+  "law": "bridge_return = external_tap_plus_cut_boundary_loop + intrinsic_k",
+  "source": "/home/ubuntu/codex-hbm-kcls-1113/results/hbm_ctl_native_intake_0440/closure_ot_hgi_sfu_core_split3__ctl.sv",
+  "source_sha256": "ff736f49006105d4f4cfd092302867f0615d045aafc19277b804e5dd47f52482",
+  "default_read_return": 145,
+  "default_write_return": 142,
+  "parameter_names": [
+    "SFU_READ_RETURN",
+    "SFU_WRITE_RETURN"
+  ]
+}

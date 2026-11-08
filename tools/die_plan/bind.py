@@ -863,6 +863,10 @@ class Binder:
         if self.ab.get("compose"):
             import bind_compose
             bind_compose.apply(self, self.ab["compose"])
+        if self.ab.get("substitute_composed_inst"):
+            # A native composition creates leaves absent from the elaboration.
+            # Exact full-ABI source variants run here, before graph/param_regen.
+            self.substitute_inst(self.base, self.ab["substitute_composed_inst"], full_abi=True)
         if self.ab.get("structural_bridges"):
             # Composition may create native cut leaves absent from the original
             # elaboration. Expand their exact full-ABI source bridges before
@@ -1037,7 +1041,7 @@ class Binder:
             st[cl + " dropped"] = dropped
         self.rewire_stats = dict(st)
 
-    def substitute_inst(self, base):
+    def substitute_inst(self, base, rules=None, *, full_abi=False):
         """asbuilt.substitute_inst [{"inst": regex on the flattened instance path, "module": variant, "reason": ...}]:
         a leaf instance takes a plan variant of its master (e.g. a chain-head form without the chain inputs).  The
         variant's ports must be a subset of the master's: dropped input bits are recorded (variant_removed_bits), never
@@ -1049,9 +1053,10 @@ class Binder:
         idx = E.module_index(ab.get("rtl_roots", ["rtl"]), ab.get("files", []), base)
         prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab.get("prefer", [])]
         iface = {}
-        self.variant_removed = defaultdict(int)
-        self.variant_required_constants = []
-        for r in ab["substitute_inst"]:
+        if not hasattr(self, "variant_removed"):
+            self.variant_removed = defaultdict(int)
+            self.variant_required_constants = []
+        for r in ab["substitute_inst"] if rules is None else rules:
             rx = re.compile(r["inst"])
             m = r["module"]
             if m not in iface:
@@ -1072,6 +1077,17 @@ class Binder:
                 if c.kind != "leaf" or not rx.fullmatch(c.path):
                     continue
                 n += 1
+                if full_abi:
+                    if not r.get("master") or c.module != r["master"]:
+                        self.errors.append(f"VARIANT_COMPOSE_MASTER {c.path}: expected {r.get('master')}, found {c.module}")
+                        continue
+                    try:
+                        if set(c.ports) != set(vm.ports) or any(c.dirs[p] != vm.ports[p][0] for p in c.ports):
+                            raise BindError("native cut port names/directions differ")
+                        variant_port_bits(c.ports, vm, c.params, {})
+                    except BindError as exc:
+                        self.errors.append(f"VARIANT_COMPOSE_ABI {c.path}: {exc}")
+                        continue
                 new_ports = [p for p in vm.ports if p not in c.ports]
                 outs_new = [p for p in new_ports if vm.ports[p][0] == "output"]
                 declared_bump_inputs = variant_bump_inputs(self.plan, self.R, c, vm)
