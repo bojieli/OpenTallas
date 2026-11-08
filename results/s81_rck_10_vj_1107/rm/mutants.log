@@ -1,0 +1,24 @@
+== RMW8_MUT_GE7
+rmw8/run.sh: line 9:   111 Aborted                 (core dumped) $D/obj/tb 2>&1
+       112 Done                    | grep -v '^- '
+       113 Done                    | tail -4
+%Error: rmw8/tb_w8.sv:36: Verilog $stop
+Aborting...
+== RMW8_MUT_STALEOH
+rmw8/run.sh: line 9:   111 Aborted                 (core dumped) $D/obj/tb 2>&1
+       112 Done                    | grep -v '^- '
+       113 Done                    | tail -4
+%Error: rmw8/tb_w8.sv:36: Verilog $stop
+Aborting...
+== RMW8_MUT_NOPIN
+rmw8/run.sh: line 9:   111 Aborted                 (core dumped) $D/obj/tb 2>&1
+       112 Done                    | grep -v '^- '
+       113 Done                    | tail -4
+%Error: rmw8/tb_w8.sv:36: Verilog $stop
+Aborting...
+== RMW8_MUT_FULLOFF
+rmw8/run.sh: line 9:   111 Aborted                 (core dumped) $D/obj/tb 2>&1
+       112 Done                    | grep -v '^- '
+       113 Done                    | tail -4
+%Error: rmw8/tb_w8.sv:36: Verilog $stop
+Aborting...

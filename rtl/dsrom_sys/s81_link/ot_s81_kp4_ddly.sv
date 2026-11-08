@@ -7,7 +7,17 @@
 // the same number of tile seams (dsyn -> ddly -> dout, dsyn -> dchn -> dout), so DD does not depend on the seam
 // latency.  The tile's pin registers register w_d and r_d; r_d is the macro read port itself.
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_kp4_ddly #(parameter integer DD = 55) (
+// S81-RCK-10 vJ: the syndrome tile's k_* results come 2 rck later (ot_s81_kp4_dsyn SYN_LOCAL): words wait 2 more.
+`ifdef OT_S81_KP4_SYN_LOCAL
+`ifdef SYNL_MUT_DD
+`define OT_S81_KP4_DD_DEFAULT 56
+`else
+`define OT_S81_KP4_DD_DEFAULT 57
+`endif
+`else
+`define OT_S81_KP4_DD_DEFAULT 55
+`endif
+module ot_s81_kp4_ddly #(parameter integer DD = `OT_S81_KP4_DD_DEFAULT) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [543:0]  w_d,

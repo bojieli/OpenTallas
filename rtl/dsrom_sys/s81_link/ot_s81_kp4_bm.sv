@@ -35,7 +35,7 @@ module ot_s81_kp4_bm #(parameter integer NG = 4, parameter integer NCD = 4, para
     output reg             any,        // a nonzero syndrome
     output reg  [NCD-1:0]  done        // NCD identical copies
 );
-    localparam integer NPE = 46, GS = 12;
+    localparam integer NPE = 46, GS = (NPE + NG - 1) / NG;   // 12 at NG 4 (unchanged); 6 at NG 8 (S81-RCK-10 vJ)
     reg  [9:0] d  [0:NPE-1];
     reg  [9:0] th [0:NPE-1];
     (* keep *) reg [9:0] gm [0:NG-1];      // gamma copies
