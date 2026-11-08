@@ -1,0 +1,44 @@
+{
+  "source_sha256": "1fcdd30c1328b2c459c9f8555fdf9bdabad49565ff2246b694adde63a0383e39",
+  "target_cohort": 1026,
+  "offsets_um": {
+    "u_bound.u_ft_ft11_o_2/": -17.28,
+    "u_bound.u_ft_ft12_o_2/": 8.64
+  },
+  "native_pose_collisions": 0,
+  "collisions": [],
+  "hops": {
+    "ft11_o:0": {
+      "bits": 512,
+      "max_center_span_um": 353.1329999999999
+    },
+    "ft11_o:1": {
+      "bits": 512,
+      "max_center_span_um": 322.62299999999993
+    },
+    "ft11_o:2": {
+      "bits": 512,
+      "max_center_span_um": 360.28800000000007
+    },
+    "ft11_o:3": {
+      "bits": 512,
+      "max_center_span_um": 329.5079999999999
+    },
+    "ft12_o:0": {
+      "bits": 512,
+      "max_center_span_um": 383.94000000000005
+    },
+    "ft12_o:1": {
+      "bits": 512,
+      "max_center_span_um": 401.4630000000001
+    },
+    "ft12_o:2": {
+      "bits": 512,
+      "max_center_span_um": 383.886
+    },
+    "ft12_o:3": {
+      "bits": 512,
+      "max_center_span_um": 378.27
+    }
+  }
+}
