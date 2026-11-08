@@ -67,6 +67,12 @@ def label(r):
     return 'other flow error'
 
 
+def is_core_row(item, r, core_mods):
+    base = item.split('#')[0]
+    return (base in core_mods or (r.get('parent_item') or '') in core_mods
+            or re.sub(r'__v[0-9a-f]{12}$', '', base) in core_mods)
+
+
 def short(name):
     return name.split('#')[0].replace('ot_', '').replace('hbm_', '')
 
@@ -119,7 +125,10 @@ def main():
         stset = set(plan.get('signed_types') or {})
         tc, tn = collections.Counter(), collections.defaultdict(list)
         for (d, item), r in last.items():
-            if d != die or item.split('#')[0] in core_mods:
+            # COUNT-AUDIT-3 11-07: kit-wave rows for a core outline variant carry '__v<hash>' (item
+            # ot_hbm_hc_bank128_pair_core__v7d149b37532c, parent_item ot_hbm_hc_bank128_pair_core); they are
+            # cores (counted in CORES via signed_designs), never types.
+            if d != die or is_core_row(item, r, core_mods):
                 continue
             lab = label(r)
             # COORD 11-06: a SIGNED row already in the official count is not "count pending".
