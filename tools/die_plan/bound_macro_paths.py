@@ -109,7 +109,7 @@ def resolve_sub_cores(t, bound_text, sub_core_leaf, variants=None):
     ab = asbuilt_map(bound_text)
     rows = []
     for c in _macro_entries(t):
-        path = c.get("physical_inst", "")
+        path = c.get("physical_inst") or ""
         if ".u_fcore." not in path or path.startswith("u_bound."):
             continue
         parent, tail = path.split(".u_fcore.", 1)
@@ -125,6 +125,25 @@ def resolve_sub_cores(t, bound_text, sub_core_leaf, variants=None):
         rows.append(dict(inst=c["inst"], physical_inst="u_bound." + hit[0] + ".u_fcore." + tail,
                          physical_master=c["physical_master"], asbuilt=leaf, source_physical_inst=path,
                          source_parent=c.get("sub_core_parent", parent)))
+    return rows
+
+
+def resolve_hard_core_leaf(t, bound_text, table):
+    """DIE-HBM-92-SU 11-08: a plan hard core without a physical path that the bind regroups inside one composed cut
+    (asbuilt.compose_split, e.g. HBM u_su_Q2_pretree = ot_hbm_su_static_pgslice_lg__pretree inside as-built
+    su_NE2.__cut_pretree).  Exact producer table {plan inst: {"leaves": [as-built cut, ...], "inner": instance in the
+    cut}}; exactly one listed leaf must be in this bound file.  kit_preflight still checks the path and the master."""
+    ab = asbuilt_map(bound_text)
+    rows = []
+    for c in _macro_entries(t):
+        e = (table or {}).get(c["inst"])
+        if not e or c.get("physical_inst"):
+            continue
+        found = [x for x in e.get("leaves", []) if x in ab]
+        if len(found) != 1:
+            continue
+        rows.append(dict(inst=c["inst"], physical_inst="u_bound." + ab[found[0]][0] + "." + e["inner"],
+                         physical_master=c["module"], asbuilt=found[0]))
     return rows
 
 
@@ -197,8 +216,10 @@ def project(raw, kit_rtl):
         manifest = kr.get("asbuilt_manifest")
         man = (json.loads(Path(manifest).read_text())
                if manifest and Path(manifest).is_file() and any(
-                   ".u_fcore." in c.get("physical_inst", "") for c in _macro_entries(t)) else {})
+                   ".u_fcore." in (c.get("physical_inst") or "") or not c.get("physical_inst")
+                   for c in _macro_entries(t)) else {})
         rows += resolve_sub_cores(t, bound_text, man.get("sub_core_leaf", {}), man.get("sub_core_leaf_variants", {}))
+        rows += resolve_hard_core_leaf(t, bound_text, man.get("hard_core_leaf", {}))
         if not rows:
             continue
         if result is raw:
