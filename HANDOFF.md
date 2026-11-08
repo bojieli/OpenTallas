@@ -3450,3 +3450,5 @@ CODEX: 2026-11-08 02:56 PST KV e1 current ds-kv re-sign SIGNED+routedEQ29978, TT
 CODEX: 2026-11-08 03:03 PST sixth existing E5 waiter QCsta1a9 admitted I2oth-ubuntu-201558-1794135687 via originalfrontend4061896. All6 migrations initialpreflightPASS/ownEQreused; no new launcher/retry/signals/deletions/policychange. Remaining pinned/raw E5queues current/memorybound, owners notified.
 
 CODEX: 2026-11-08 03:10 PST KV source-realization stale96/0 holds disproved(current SYS_C101/23, PHY W2D3); compact D2D implemented codex/kv-sysc-form-0222@40399b77ef, full53output lockstep1000+mutantPASS,0corecycles; E6 one PLACE pilot submitted, no parent/POR/route release.
+
+CODEX: 2026-11-08 03:12 PST HEAD CTL vG advanced from source-only to first private PLACE, hub codex/head-ctl-vg-0222@ff383026c2a. Fixed planned Tcl scope/FIRM relocation class; actual1025 anchors pass. Healthy intel2 scope oth-ubuntu-4054213-1794134844 + asyncLEC; HOLD_ROUTE/DO_NOT_COUNT. Fieldwise CTL raw-event price model ready token95452b008c; no count/POR/merge/tag.
