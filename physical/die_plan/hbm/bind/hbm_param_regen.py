@@ -161,6 +161,17 @@ def regen(ctx):
     params, rec, err = derive(Landed(rows), legs, spec.get("bridge"))
     if err:
         raise ValueError("; ".join(err[:6]))
+    # The exact native composed cut variant exposes its intrinsic boundary
+    # contract. Old nonparameterized cuts remain recorded, never guessed.
+    modules = {cell.path: cell.module for cell in ctx.F.cells}
+    for q in QS:
+        leaf = f"sfucore_{q}.__cut_ctl"
+        if modules.get(leaf) == "ot_hgi_sfu_sp2_ctl":
+            values = rec["variant_values"].get(leaf)
+            if values is None:
+                raise ValueError(f"{leaf}: explicit retained-edge bridge contract required")
+            params[leaf] = dict(SFU_READ_RETURN=values["READ_RETURN"],
+                                SFU_WRITE_RETURN=values["WRITE_RETURN"])
     return dict(params=params, record=dict(rule=__doc__.split("\n\n")[2], contract=contract.get("name"), **rec))
 
 
