@@ -335,11 +335,29 @@ def prov_item(d, item):
     return prov_on(d) and (f == "noview" or (f == "planned" and not d.get("planned_core_flat")))
 
 
-def plan_entry_block(d, item):
+def kit_rtl_mode(d):
+    """the die's kit-RTL mode (bind / script): the type kit takes the bound partition RTL; None = plan wrapper"""
+    kr = d.get("kit_rtl") if isinstance(d.get("kit_rtl"), dict) else {}
+    return kr.get("mode") if kr.get("mode") in ("bind", "script") else None
+
+
+NEEDS_BIND = ("NEEDS-BIND: plan type has buses with no leaf binding and the die has no kit_rtl (bound partition RTL); "
+              "gen would fail 'bus ... is not bound to any leaf port'")
+
+
+def plan_entry_block(d, item, kind=None):
     """plan-entry kit preflight from the plan probe flags; hard_wrappers opt a hard type back in"""
     if item in (d.get("_identity_holds") or {}):
         return "plan block identity held: " + d["_identity_holds"][item]
     f = (d.get("_plan_flags") or {}).get(item)
+    # DIE-HBM-89-TGEN 11-07 (HBM q_b000/q_b001 + __physical_v1 FAIL @gen 19:0x): a type kit without kit_rtl is the
+    # plan wrapper, which binds a bus only via buses[].leaf / contents[].bind.  A type with unbound buses fails gen
+    # with certainty, so it is not launched (no FAIL row, no gen slot) until the die config gives it bound RTL
+    # (kit_rtl mode bind/script).  Die opt-out: unbound_launch true (old behaviour).  kind=core items (core_kit) and
+    # hard types never go through the plan wrapper.
+    ub = (d.get("_plan_unbound") or {}).get(item)
+    if ub and kind != "core" and f != "hard" and not kit_rtl_mode(d) and not d.get("unbound_launch"):
+        return f"{NEEDS_BIND} ({len(ub)} bus(es), e.g. {','.join(ub[:3])})"
     if f == "hard" and item in (d.get("hard_wrappers") or []):
         return None
     if f == "planned" and d.get("planned_core_flat"):
@@ -557,9 +575,9 @@ def select(rows, cfg, die, state, plan_types=None):
             else:
                 cls = sorted(t for t in plan_types if t.startswith(r["item"] + "__"))
             its = state.get("items") or {}
-            blocked = [c for c in cls if plan_entry_block(d, c)]
+            blocked = [c for c in cls if plan_entry_block(d, c, r.get("kind"))]
             for c in blocked:
-                skip.setdefault(plan_entry_block(d, c), []).append(c)
+                skip.setdefault(plan_entry_block(d, c, r.get("kind")), []).append(c)
             for c in cls:                    # DIE-QC-63/KITS 11-02: hold_items naming a class hold that class
                 hc = next((w for pat, w in (d.get("hold_items") or {}).items() if fnmatch.fnmatchcase(c, pat)), None)
                 if hc and c not in blocked:
@@ -594,7 +612,7 @@ def select(rows, cfg, die, state, plan_types=None):
                 picked += [dict(r, item=c, parent_item=r["item"], block_sha=blk(c)) for c in todo]
                 continue
         if not why:
-            why = plan_entry_block(d, r["item"])
+            why = plan_entry_block(d, r["item"], r.get("kind"))
         if why:
             skip.setdefault(why, []).append(r["item"])
             continue
@@ -818,6 +836,10 @@ RULES = [
     ("PLAN", r"^bind$", r".", "plan of record not cleanly bound (strict bind)"),
     ("PLAN", r"^cells$", r".", "cell count above the kit run cap"),
     ("PLAN", None, r"GEN_NO_KIT", "gen wrote no kit (hard / skipped type in the plan)"),
+    # DIE-HBM-89-TGEN 11-07 (HBM q_b000/q_b001 @gen 'unclassified'): the plan-wrapper gen found a plan bus with no
+    # buses[].leaf / contents[].bind; the plan of record binds leaves only in the die bind (kit_rtl), not in the plan
+    ("PLAN", r"^gen$", r"is not bound to any leaf port",
+     "plan type has unbound buses and the kit took the plan wrapper: the die needs kit_rtl (bound partition RTL)"),
     # KIT-TRIAGE-1/G26 11-01 (QC cbf_q00/cbf_q11/cbn_q11): instances that differ ONLY in ID parameters (tile_id ...) are
     # one kit once the plan declares those leaf ports parent_id_straps (OWNER 10-25 option B: strap_* pins tied at the
     # parent, bind.py emit_type promotes them); any other parameter difference stays the die kit-recipe case below
@@ -2788,8 +2810,9 @@ def _descends(AP):
     return f
 
 
-PROBE_V = 4   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
+PROBE_V = 5   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
 #              4 = KW-PROV-1 prov_deps (every planned + noview child of a type) + bound (signed lef/lib per module)
+#              5 = DIE-HBM-89-TGEN unbound (plan buses with no leaf binding: the plan-wrapper gen cannot bind them)
 PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + f"\nPROBE_V = {PROBE_V}\n" + r'''
 import hashlib, json, os, re, sys
 a = json.loads(sys.argv[1]); out = {}
@@ -2813,7 +2836,7 @@ try:
     if mode != "raw" and a.get("identity_baseline_plan"):
         baseline_path = a["identity_baseline_plan"]
         baseline = identities(json.loads(Path(baseline_path).read_text()), baseline_path, mode)
-    flags, deps, lint, pdeps, bound, pkeys = {}, {}, {}, {}, {}, {}
+    flags, deps, lint, pdeps, bound, pkeys, unbound = {}, {}, {}, {}, {}, {}, {}
     cmax = int(a.get("cells_max") or 150000)
     for t, v in pt.items():
         if not isinstance(v, dict):
@@ -2863,6 +2886,16 @@ try:
         for c in (v.get("hard_cores") or []) + (v.get("contents") or []):
             if isinstance(c, dict) and c.get("lef") and c.get("lib"):
                 bound.setdefault(str(c.get("module") or c.get("inst")), {"lef": c["lef"], "lib": c["lib"]})
+        # DIE-HBM-89-TGEN 11-07: the plan-wrapper gen (gen_rtl.write_rtl, no --kit-rtl) binds a bus only through
+        # buses[].leaf or a contents[].bind "bus:<name>"; any other bus is 'not bound to any leaf port' at gen.  A die
+        # whose plan carries no leaf bindings (HBM d44v: 0 of 81 types) needs kit_rtl (the bound partition RTL)
+        if not v.get("hard"):
+            bb = {k for c in (v.get("contents") or []) if isinstance(c, dict)
+                  for k in (c.get("bind") or {}).values() if isinstance(k, str)}
+            ub = [str(b.get("name")) for b in (v.get("buses") or []) if isinstance(b, dict)
+                  and not b.get("leaf") and f"bus:{b.get('name')}" not in bb]
+            if ub:
+                unbound[t] = ub
         if v.get("hard"):
             flags[t] = "hard"
         elif noview:
@@ -2877,7 +2910,8 @@ try:
             flags[t] = "contract"
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
            "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps, "lint": lint, "probe_v": PROBE_V,
-           "prov_deps": pdeps, "prov_keys": pkeys, "bound": bound, "plan_dir": os.path.dirname(os.path.abspath(a["plan"]))}
+           "prov_deps": pdeps, "prov_keys": pkeys, "bound": bound, "plan_dir": os.path.dirname(os.path.abspath(a["plan"])),
+           "unbound": unbound}
     if a.get("core_views"):
         # AUTOBUILD-PIPE-2: pin tables per hard-core module (sha256[:12] of the plan pins_file = views_b2r2 view key)
         cv = {}
@@ -2929,6 +2963,7 @@ def ensure_plan_view(AP, st, d):
         return False
     d["_plan_sha"] = pn.get("plan_sha")
     d["_plan_flags"] = pn.get("flags") or {}
+    d["_plan_unbound"] = pn.get("unbound") or {}
     d["_plan_deps"] = pn.get("deps") or {}
     d["_prov_deps"] = pn.get("prov_deps") or {}
     d["_prov_keys"] = pn.get("prov_keys") or {}
@@ -2984,6 +3019,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     names = dict(pn.get("blocks") or {}) or (set(pn.get("types") or []) | set(pn.get("cores") or []))
                     d["_plan_sha"] = pn.get("plan_sha")
                     d["_plan_flags"] = pn.get("flags") or {}
+                    d["_plan_unbound"] = pn.get("unbound") or {}
                     d["_plan_deps"] = pn.get("deps") or {}
                     d["_plan_lint"] = pn.get("lint") or {}
                     d["_prov_deps"] = pn.get("prov_deps") or {}
