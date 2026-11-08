@@ -1,0 +1,11 @@
+{
+ "form": "macro_m4_ring + e_hv kept",
+ "by": "DIE-HBM-86",
+ "ruling": "COORD 08:27 (3), 08:41 (1) lane_c (A)",
+ "measured_problem": "lanec_e1 one M4 Metal Spacing DRC at the 128x256 W pin ring: V45 pad on M5 track x=38.904 ends 25 nm from M4 OBS; e_hv[3:1] missing from the plan pin set",
+ "changes": [
+  "M4 obstructions on between-pin tracks of the 72-nm macro ring",
+  "e_hv[3:1] kept as pins with unread face flops at the plan sites"
+ ],
+ "base": "die-hbm-85/src/lanec_i1"
+}

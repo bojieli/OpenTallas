@@ -1,0 +1,144 @@
+{
+ "schema": "opentallas.hbm_arch.core_freeze.v1",
+ "view": "hnx_fused_lane_c@3103964005d9",
+ "module": "hnx_fused_lane_c",
+ "design": "hnx_fused_lane_c",
+ "rtl_top": "hnx_fused_lane_c",
+ "recipe_key": "hnx_fused_lane_c",
+ "recipe_sha256": "dd0f0f46b66cff3d530e251a94044b37245066e498e7e5af7daab16ffa6ee9a9",
+ "canonical_type": null,
+ "wrapper": null,
+ "outline_um": [
+  345.6,
+  103.68
+ ],
+ "plan": "/srv/opentallas-scratch2/claude/die-hbm-62-big/plan/d44v13/die_plan.json",
+ "plan_sha256": "3f62f5cd459a3a77fd68d452ee213eda0500a4b7fd5e5104fda64499814decb4",
+ "pins_file": "plan_pins.json",
+ "pins_sha256": "15ff53cce893c452fed65c9722af3867c917784a2b1ae761e728c57b1c7c1b08",
+ "pins_canon_sha256": "280ae96a4ed1742387666ff64ae0da14b7e548482d7ea99ba868b0cec2835d89",
+ "pins": 2995,
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "period_ps": 833.0,
+ "common_latency_ps": 250.0,
+ "corner": "TC",
+ "plan_common_latency_ps": 250.0,
+ "core_clock_contract": null,
+ "orfs_var_overrides": [],
+ "sdc_lint": "PASS (gen)",
+ "macros": [
+  "ot_sram_1r1w_128x256_m1_r2c2"
+ ],
+ "face_shell": {
+  "core": "hnx_fused_lane_c__fcore",
+  "in_cycles": 1,
+  "out_cycles": 1,
+  "face_flops": 2993,
+  "dropped": 3,
+  "unread_kept": 0,
+  "const_out_bits": 0,
+  "dup_out_bits": 0,
+  "plan_pins": 2998,
+  "out_lockup": {
+   "form": "negedge_face_stage",
+   "cell": "ot_hbm_face_nreg",
+   "buses": [
+    "e_asb_i",
+    "e_asb_we",
+    "e_b",
+    "e_post",
+    "e_pre",
+    "e_rd",
+    "e_rh",
+    "e_v",
+    "e_wo",
+    "e_wv",
+    "e_xo",
+    "e_xov",
+    "e_xv",
+    "fin",
+    "flt",
+    "rq_s",
+    "rq_v",
+    "up_d",
+    "up_t",
+    "up_v",
+    "up_x",
+    "wq_d",
+    "wq_s",
+    "wq_v"
+   ],
+   "bits": 1529,
+   "latency_cycles": 0,
+   "note": "output launches on the falling edge: receiver hold +T/2, crossing setup T/2"
+  }
+ },
+ "kit_hash": "8e06b11980126ecb",
+ "plan_pins_source": "cores/hnx_fused_lane_c__345.6x103.68__d44v_split.json",
+ "plan_pins_source_sha256": "3103964005d9fb9bd1c03dea643ab73ced1d6da754b1bb96adf8d7cd48916c76",
+ "plan_pins_source_canon_sha256": "89bfd8511c86a3c2b8a8b8c7c979edd5bfee09a80a24c8cf6c2c192a669a6707",
+ "flow_defaults": {
+  "rc_cal": true,
+  "f1": {
+   "io_tt_ps": 250.0,
+   "io_ff_ps": 202.5,
+   "mechanism": "two-mode GRT (scene BC vclk_ff.sdc FF hold, scene tc TT setup) + gates",
+   "basis": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "f4": true,
+  "cts_setup_tt": {
+   "previous_post_cts": "/work/f4_chain_leaf.tcl",
+   "repair": "setup only (scene tc / vclk OT_VCLK_TT)",
+   "hold": "GRT step only"
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold",
+   "tt": 250.0,
+   "ff": 202.5,
+   "measured_hold_dropped": true
+  },
+  "rule": "FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)"
+ },
+ "clock_taps": {
+  "mode": "density",
+  "sinks": 5000,
+  "dmax_um": 80.0,
+  "sites_file": "clock_sites.tcl",
+  "sites_um": [
+   [
+    34.56,
+    51.84
+   ],
+   [
+    172.8,
+    51.84
+   ],
+   [
+    289.44,
+    30.24
+   ]
+  ],
+  "clock_regions": {
+   "entries": 3,
+   "unsited": 0,
+   "sinks": 14050,
+   "sinks_per_entry": 4684,
+   "file": "/srv/opentallas-scratch2/claude/die-hbm-62-big/plan/d44v13/core_clock_regions.json",
+   "sha256": "6b1ea2c64c353f30cadf51bebd06a6da811a592fb726b27b2d3041611e8a5c9b"
+  }
+ },
+ "reset_contract": {
+  "edges": 64,
+  "module": "hnx_fused_lane_c",
+  "die": "hbm",
+  "contract": "/srv/opentallas-scratch2/claude/wt/die-hbm-62-big/physical/die_plan/hbm/reset_contract.json",
+  "contract_sha256": "23604fe4581b14dd10c95c70c8cb12e197bfb771b2d5e4991d24f80660b772b5",
+  "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a"
+ },
+ "source_commit": "308530375d238514170641b7bdcbb0aa62978c9f"
+}

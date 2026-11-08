@@ -1,0 +1,8 @@
+{
+ "schema": "opentallas.hbm_core_boundary.v1",
+ "source": "gen_core_kit_hbm.write_boundary_context",
+ "boundary_role": {
+  "clk": "clk",
+  "rst_n": "reset"
+ }
+}

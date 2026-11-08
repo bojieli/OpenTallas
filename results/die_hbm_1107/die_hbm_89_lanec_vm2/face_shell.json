@@ -1,0 +1,303 @@
+{
+ "schema": "opentallas.hbm_arch.core_face_shell.v1",
+ "module": "hnx_fused_lane_c",
+ "core": "hnx_fused_lane_c__fcore",
+ "core_def_file": "hnx_fused_lane_split.sv",
+ "clock": "clk",
+ "passthrough": [
+  "clk",
+  "rst_n"
+ ],
+ "scalars": [
+  "clk",
+  "dn_v",
+  "e_asb_we",
+  "e_post",
+  "e_pre",
+  "e_v",
+  "e_wv",
+  "e_xov",
+  "e_xv",
+  "fin",
+  "flt",
+  "r_v",
+  "rq_v",
+  "rr_v",
+  "rst_n",
+  "up_t",
+  "up_v",
+  "wq_v"
+ ],
+ "params": {},
+ "mutant": null,
+ "latency": {
+  "in_cycles": 1,
+  "out_cycles": 1,
+  "in_to_out_extra_cycles": 2,
+  "reset_delay_cycles": 2,
+  "note": "every signal input +1, every signal output +1; clock pins pass through; reset pins through the face reset relay (release +N)"
+ },
+ "out_extra_stages": {},
+ "out_extra_stage_flops": 0,
+ "in_buses": 15,
+ "out_buses": 24,
+ "in_bits": 1467,
+ "out_bits": 1529,
+ "face_flops": 2993,
+ "dropped": [],
+ "unread_kept": [
+  "e_hv[1]",
+  "e_hv[2]",
+  "e_hv[3]"
+ ],
+ "const_out": {},
+ "const_out_bits": 0,
+ "dup_out_groups": 0,
+ "dup_out_bits": 0,
+ "dup_out": [],
+ "feedthrough": [],
+ "feedthrough_bits": 0,
+ "widths": {
+  "clk": 1,
+  "rst_n": 1,
+  "lid": 5,
+  "rq_v": 1,
+  "rq_s": 16,
+  "rr_v": 1,
+  "rr_d": 256,
+  "wq_v": 1,
+  "wq_s": 16,
+  "wq_d": 256,
+  "dn_v": 1,
+  "dn_op": 3,
+  "dn_x": 8,
+  "dn_d": 128,
+  "r_v": 1,
+  "r_d": 32,
+  "up_v": 1,
+  "up_t": 1,
+  "up_x": 10,
+  "up_d": 256,
+  "fin": 1,
+  "flt": 1,
+  "e_rd": 256,
+  "e_asb_we": 1,
+  "e_asb_i": 2,
+  "e_pre": 1,
+  "e_post": 1,
+  "e_v": 1,
+  "e_xv": 1,
+  "e_xov": 1,
+  "e_wv": 1,
+  "e_b": 160,
+  "e_xo": 256,
+  "e_rh": 32,
+  "e_wo": 256,
+  "e_hv": 4,
+  "e_flag": 4,
+  "e_ho": 256,
+  "e_xl": 256,
+  "e_sq": 256,
+  "e_qq": 256
+ },
+ "dirs": {
+  "clk": "input",
+  "rst_n": "input",
+  "lid": "input",
+  "rq_v": "output",
+  "rq_s": "output",
+  "rr_v": "input",
+  "rr_d": "input",
+  "wq_v": "output",
+  "wq_s": "output",
+  "wq_d": "output",
+  "dn_v": "input",
+  "dn_op": "input",
+  "dn_x": "input",
+  "dn_d": "input",
+  "r_v": "input",
+  "r_d": "input",
+  "up_v": "output",
+  "up_t": "output",
+  "up_x": "output",
+  "up_d": "output",
+  "fin": "output",
+  "flt": "output",
+  "e_rd": "output",
+  "e_asb_we": "output",
+  "e_asb_i": "output",
+  "e_pre": "output",
+  "e_post": "output",
+  "e_v": "output",
+  "e_xv": "output",
+  "e_xov": "output",
+  "e_wv": "output",
+  "e_b": "output",
+  "e_xo": "output",
+  "e_rh": "output",
+  "e_wo": "output",
+  "e_hv": "input",
+  "e_flag": "input",
+  "e_ho": "input",
+  "e_xl": "input",
+  "e_sq": "input",
+  "e_qq": "input"
+ },
+ "keep": {
+  "clk": 1,
+  "rst_n": 1,
+  "lid": 5,
+  "rq_v": 1,
+  "rq_s": 16,
+  "rr_v": 1,
+  "rr_d": 256,
+  "wq_v": 1,
+  "wq_s": 16,
+  "wq_d": 256,
+  "dn_v": 1,
+  "dn_op": 3,
+  "dn_x": 8,
+  "dn_d": 128,
+  "r_v": 1,
+  "r_d": 32,
+  "up_v": 1,
+  "up_t": 1,
+  "up_x": 10,
+  "up_d": 256,
+  "fin": 1,
+  "flt": 1,
+  "e_rd": 256,
+  "e_asb_we": 1,
+  "e_asb_i": 2,
+  "e_pre": 1,
+  "e_post": 1,
+  "e_v": 1,
+  "e_xv": 1,
+  "e_xov": 1,
+  "e_wv": 1,
+  "e_b": 160,
+  "e_xo": 256,
+  "e_rh": 32,
+  "e_wo": 256,
+  "e_hv": 1,
+  "e_flag": 4,
+  "e_ho": 256,
+  "e_xl": 256,
+  "e_sq": 256,
+  "e_qq": 256
+ },
+ "top_fanout_in": [
+  [
+   35,
+   "e_sq[255]"
+  ],
+  [
+   35,
+   "e_sq[254]"
+  ],
+  [
+   35,
+   "e_sq[253]"
+  ],
+  [
+   35,
+   "e_sq[252]"
+  ],
+  [
+   35,
+   "e_sq[251]"
+  ],
+  [
+   35,
+   "e_sq[250]"
+  ],
+  [
+   35,
+   "e_sq[249]"
+  ],
+  [
+   35,
+   "e_sq[248]"
+  ],
+  [
+   35,
+   "e_sq[247]"
+  ],
+  [
+   35,
+   "e_sq[246]"
+  ],
+  [
+   35,
+   "e_sq[245]"
+  ],
+  [
+   35,
+   "e_sq[244]"
+  ],
+  [
+   35,
+   "e_sq[243]"
+  ],
+  [
+   35,
+   "e_sq[242]"
+  ],
+  [
+   35,
+   "e_sq[241]"
+  ],
+  [
+   35,
+   "e_sq[240]"
+  ]
+ ],
+ "files": [
+  "hnx_fused_lane_c__fshell.sv",
+  "ot_hbm_face_reg.sv",
+  "ot_hbm_face_nreg.sv",
+  "ot_hbm_face_rst_relay.sv"
+ ],
+ "out_lockup": {
+  "form": "negedge_face_stage",
+  "cell": "ot_hbm_face_nreg",
+  "buses": [
+   "e_asb_i",
+   "e_asb_we",
+   "e_b",
+   "e_post",
+   "e_pre",
+   "e_rd",
+   "e_rh",
+   "e_v",
+   "e_wo",
+   "e_wv",
+   "e_xo",
+   "e_xov",
+   "e_xv",
+   "fin",
+   "flt",
+   "rq_s",
+   "rq_v",
+   "up_d",
+   "up_t",
+   "up_v",
+   "up_x",
+   "wq_d",
+   "wq_s",
+   "wq_v"
+  ],
+  "bits": 1529,
+  "latency_cycles": 0,
+  "note": "output launches on the falling edge: receiver hold +T/2, crossing setup T/2"
+ },
+ "reset_relay": {
+  "form": "async_assert_sync_release",
+  "cell": "ot_hbm_face_rst_relay",
+  "resets": {
+   "rst_n": 2
+  },
+  "landing_pins_per_bit": 1,
+  "note": "pin lands on the relay's first flop; core reset released N edges after the pin"
+ }
+}

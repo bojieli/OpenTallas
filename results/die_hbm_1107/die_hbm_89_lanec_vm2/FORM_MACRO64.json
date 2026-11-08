@@ -1,0 +1,31 @@
+{
+ "form": "macro_channels",
+ "by": "DIE-HBM-64/REFORM",
+ "date": "Wed Nov  4 15:16:14 2026",
+ "placements": [
+  [
+   "u_fcore.u_ctl.u_gb",
+   38.88,
+   4.32,
+   "R0"
+  ],
+  [
+   "u_fcore.u_ctl.u_xb",
+   211.896,
+   4.32,
+   "R0"
+  ]
+ ],
+ "note": "same RTL, same pins; plan core_macros rects owed by plan event",
+ "clock_sites_moved": {
+  "from": [
+   289.44,
+   30.24
+  ],
+  "to": [
+   289.44,
+   51.84
+  ],
+  "why": "site lay on macro u_fcore.u_ctl.u_xb in this form, by DIE-HBM-65"
+ }
+}
