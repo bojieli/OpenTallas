@@ -1381,7 +1381,6 @@
         "svc_hi_dsdv_svc_rs__t3@1",
         "svc_hi_dsdv_svc_rs__t4@1",
         "svc_lo_dsdv_svc_rs__t1@1",
-        "svc_lo_dsdv_svc_rs_w__t1@1",
         "svc_lo_dsdv_svc_rs__t2@2",
         "svc_lo_dsdv_svc_rs__t5@2",
         "ot_s81sl_leaf__t26@2",
@@ -2400,7 +2399,8 @@
         "ot_s81sl_leaf__t71": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t72": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t8": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "svc_*_dsdv_svc_rs__t*": "KW-FIX-33 2026-11-08 00:23 PST COORD 00:0x (3) G: SVC-RS FLAT 4M cells, REDESIGN split, S81-SVCRS-1"
+        "svc_*_dsdv_svc_rs__t*": "KW-FIX-33 2026-11-08 00:23 PST COORD 00:0x (3) G: SVC-RS FLAT 4M cells, REDESIGN split, S81-SVCRS-1",
+        "svc_lo_dsdv_svc_rs_w__t*": "KW-FIX-34 2026-11-08 01:53 PST (COORD 01:5x): SVC-RS FLAT 4M cells, REDESIGN R5, S81-SVCRS-2"
       },
       "queue_src": "main@d95ec5a45a60",
       "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave",
@@ -4054,7 +4054,11 @@
       ],
       "note_kw34a": "KW-FIX-34 2026-11-08 01:15 PST: station DRV batch t22@10 t29__clc7772371@11 t44@5; retry_fix carries REDESIGN: so hold_unchanged releases them. Revert: type_args=type_args_prev_kw34a, retry_fix keys from retry_fix_prev_kw34a, drop retry_prev_kw34a_added from retry",
       "plan_prev_kw34c": "/srv/opentallas-scratch3/claude/kw33/wave_cg_frz_lp/physical/die_plan/s81/plan_h2_2249.json",
-      "note_plan_kw34c": "KW-FIX-34 2026-11-08 01:30 PST: plan dir = kw33/wave_cg_frz_lp hardlinks + S81-XRT3-VIEW-1 claude/s81-xrt3-view-1-1107@166005e6c53 xrt_rfj_1104 ot_s81sl_xrt1/xrt3 LEF (exact M5/M6 OBS, md5 d4987d99/a9a9927b) + abstract_detail.json; plan JSON byte-identical; staged intel1/epyc4/epyc5/epyc6/epyc2 (OWNER no-merge-wait); revert plan_prev_kw34c"
+      "note_plan_kw34c": "KW-FIX-34 2026-11-08 01:30 PST: plan dir = kw33/wave_cg_frz_lp hardlinks + S81-XRT3-VIEW-1 claude/s81-xrt3-view-1-1107@166005e6c53 xrt_rfj_1104 ot_s81sl_xrt1/xrt3 LEF (exact M5/M6 OBS, md5 d4987d99/a9a9927b) + abstract_detail.json; plan JSON byte-identical; staged intel1/epyc4/epyc5/epyc6/epyc2 (OWNER no-merge-wait); revert plan_prev_kw34c",
+      "retry_prev_kw34e_dropped": [
+        "svc_lo_dsdv_svc_rs_w__t1@1"
+      ],
+      "note_kw34e": "KW-FIX-34 2026-11-08 01:53 PST: hold svc_lo_dsdv_svc_rs_w__t* (no 25-h flat synth) + dropped its @1 retry ['svc_lo_dsdv_svc_rs_w__t1@1']; revert: pop the hold, re-add retry_prev_kw34e_dropped"
     },
     "s81_head": {
       "enabled": true,
@@ -4759,7 +4763,7 @@
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt.json",
-        "bind_out": "/srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict",
+        "bind_out": "/srv/opentallas-scratch2/claude/qct7/bind_v4t",
         "note": "KW-FIX-22 11:2x BIND_STALE class: bind_out bind_qc_g = canonical native re-bind (bind.py all --strict, src_3761 tools) of the SAME context as bind_qc_f (plan_qc52 b398e285 + results/qc_ringfall_1105/bind/final_asbuilt.json in src_c926f): bind errors 0 unbound 0, 377 partitions, 1921 crossings, native_topology.json written; kit_topology.bind_matches True for the 6 rows (False on bind_qc_f, no receipt). verify step advisory FAIL (glue_unmatched 24710, 3633 clock_landing strap_k notes, lint 768; bind_qc_f never ran verify). Same bytes on epyc5+epyc6 (md5 tree d27ccd18). | KW-FIX-16 13:1x I136 tag flow-20261106-f-qc (ringff I125 + ringfall I136 + coll_core fold I124): src_r main 79e52bd98b2; asbuilt/sidecar results/qc_ringfall_1105 (DIE-QC-78 chain78, copied into src_r, untracked), bind_out bind_qc_f = copy of dq78/bind, strict FINAL errors 0, 1921 crossings, inputs plan_qc52 b398e285 = src_r plan bytes. | KW-FIX-10 04:2x COORD: SC event I67+I68 src_c main cbb7cfda19b tag s-qc, bind_out sc_ev/pub. | KW-FIX-8 23:1x I66 collector batch: src_b main cb98b2e2324 tag q-qc; bind_tip_i57 unchanged, kit-rtl trial rc 0 on the new plan, no QC RTL moved. | KW-FIX-8 19:1x COORD I57 class relaunch: src_w main 62777284106 tag flow-20261105-h-qc, bind_tip_i57 = byte copy of dq71/bind_tip (DIE-QC-71: bind_tip stays bind_out), same path on epyc4 and intel1. KW-FIX-8 17:0x COORD 16:4x: bind_out dq71/bind_tip (main 3277e531772, BIND_RC 0, copy on epyc2). KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46 tag w-qc: src_s main c512ffc3a94, plan efdb36e864, bind_qs = DIE-QC-70 q70/bind9 strict rc 0 (W1+straps; coll_ucie field after it) | KW-FIX-8 fall tag: QC on src_q main bf1e2233ce0, strict bind_qq rc 0 | KW-FIX-8 I38 tag p-qc: QC event 5bcec8dc59 on src_p, plan_qc52, strict bind_qp | KW-FIX-6 05:1x: src kw-fix-6-qcd. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | QC approved immutable combined d90 strict119types/377parts/1921crossings/790393bits0errors;201-file closed readset event1131_fixed. Matching pre-D13 RTL/recipe retained; Q4 untrusted hints included; no fresh ELAB or old freeze mutation.",
         "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
       },
@@ -5137,7 +5141,28 @@
         "native59@4",
         "coll_ftm@7",
         "slw_su_c__cl92142dac@18",
-        "sle_stm_v3@8"
+        "sle_stm_v3@8",
+        "cbf_q00_s2@11",
+        "cbn_q00__cld7bf7197@10",
+        "cbn_q00__cldbcda913@13",
+        "coll_ft__cla4a25d77@7",
+        "coll_s@5",
+        "sle_fw_v3@28",
+        "sle_hc0__cl929603c0__cl38badc56@15",
+        "sle_hc1__cl22c1ff36@26",
+        "sle_hc1__cl7d360508@11",
+        "sle_hc2__cl9c4c4509__cl3edce1b8@8",
+        "sle_hc2__cl9c4c4509__clf60c5152@3",
+        "sle_hc2__clcc5e3e61@8",
+        "sle_su_c@8",
+        "sle_su_l1__clc6d66f5b@11",
+        "slw_hc0__cl1bc59e1c@8",
+        "slw_hc1__cl3449ea95@3",
+        "slw_hc1__cl68f9248e__cl144ee7b3@12",
+        "slw_hc1__cl68f9248e__cle683a076@10",
+        "slw_hc2__cla3497502__cl16607c7a@12",
+        "slw_hc2__cla3497502__cldc737267@10",
+        "slw_su_c__cl92142dac@20"
       ],
       "queue_src": "main@d95ec5a45a60",
       "type_args": {
@@ -5369,7 +5394,7 @@
         "slw_st_b_v1__cle6023ec2@3": "I4 DPL class 42db137e7f2 (ported to QC src kw-fix-4-fl-qc2@f0ed37ff9a5); KW-FIX-4 19:1x one batch",
         "slw_st_b_v2@5": "I4 DPL class 42db137e7f2 (ported to QC src kw-fix-4-fl-qc2@f0ed37ff9a5); KW-FIX-4 19:1x one batch",
         "sle_hc2__clcc5e3e61@4": "LEC-EQCONST-RESTORE class (lecneq 298bfc55e92, main I8 34659669869, COORD 20:20): pre-route LEC NOT EQUIVALENT on synth-merged twins; one relaunch on fixed lec.py (KW-FIX-4 20:3x)",
-        "slw_hc1__cl3449ea95@3": "LEC-EQCONST-RESTORE class (lecneq 298bfc55e92, main I8 34659669869, COORD 20:20): pre-route LEC NOT EQUIVALENT on synth-merged twins; one relaunch on fixed lec.py (KW-FIX-4 20:3x)",
+        "slw_hc1__cl3449ea95@3": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
         "slw_hc2__cl6bcaba89@2": "LEC-EQCONST-RESTORE class (lecneq 298bfc55e92, main I8 34659669869, COORD 20:20): pre-route LEC NOT EQUIVALENT on synth-merged twins; one relaunch on fixed lec.py (KW-FIX-4 20:3x)",
         "slw_hc2__cla3497502__cldc737267@2": "LEC-EQCONST-RESTORE class (lecneq 298bfc55e92, main I8 34659669869, COORD 20:20): pre-route LEC NOT EQUIVALENT on synth-merged twins; one relaunch on fixed lec.py (KW-FIX-4 20:3x)",
         "coll_n@6": "QC DPL batch rerun: 20:20 gen ModuleNotFoundError bound_r8_straps = wave-src overlay miss (KW-FIX-4), fixed in d85db82cddb; same DPL class fix, not a strike",
@@ -5389,7 +5414,7 @@
         "slw_fw_v1__clf51c11d8__cl592e3d37@3": "relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub)",
         "slw_fw_v3@4": "gen on intel1 had no dq71/co, the source tree bind_tip_i57 names; gen_hosts epyc4 (KW-FIX-8 23:2x), no attempt judged",
         "slw_stm_v1__cle34a73c3@3": "grt_maxwire class: type_args --max-wire-um gives the kit the Tcl, relay_bay sets the pitch; tool fix claude/kw8-relaymw-1104@38a6a1b2bdf (COORD 22:1x)",
-        "sle_hc2__cl9c4c4509__clf60c5152@3": "INFRA ENOSPC/no-host remainder (disks freed 20:54)",
+        "sle_hc2__cl9c4c4509__clf60c5152@3": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
         "slw_hc1__cl68f9248e__cl144ee7b3@3": "CODEX current-hold recovery: SU pilot slw_su_ccl921@16 passedGPL/DPL22:44 andactiveCTS; HCpilot slw_hc3clccfc@7 spilledintel1 reachedroutedSIGNOFF pairskew77.9/72.6(no bigtapfailure), preserve itsECO; tt_ctlmPINDUP917f andFE3ringfall7c82 confirmedancestors2c. Onecurrentfixed-sourcevehicle; actualtiminggatesunchanged.",
         "slw_st_a_v2__cl9f076a5c@3": "INFRA ENOSPC/no-host remainder (disks freed 20:54)",
         "slw_st_b_v1__cl6357f1cc@5": "DPL class port f0ed37ff9a5 in fl-qc2, row predates it",
@@ -5602,7 +5627,26 @@
         "slw_st_a_v2__clf4365a62@9": "KW-FIX-28 OT_CLAND class: kit gen ee1cea45f predates collector event d9d01b88ca6, collector names absent from netlist; rebuild on main 93c061c396c (names from bound RTL)",
         "coll_ftm@7": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit",
         "slw_su_c__cl92142dac@18": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit",
-        "sle_stm_v3@8": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit"
+        "sle_stm_v3@8": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit",
+        "cbf_q00_s2@11": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "cbn_q00__cld7bf7197@10": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "cbn_q00__cldbcda913@13": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "coll_ft__cla4a25d77@7": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "coll_s@5": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "sle_fw_v3@28": "KW-FIX-34 2026-11-08 01:53 PST: REDESIGN: conservative kit form OT_CONS_KIT=1 (QC-TYPES-7 01:2x CLASS DPL-0033 landing-ring legalize at 4% util) on bind_v4t",
+        "sle_hc0__cl929603c0__cl38badc56@15": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "sle_hc1__cl22c1ff36@26": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "sle_hc1__cl7d360508@11": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "sle_hc2__cl9c4c4509__cl3edce1b8@8": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "sle_hc2__clcc5e3e61@8": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "sle_su_c@8": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "sle_su_l1__clc6d66f5b@11": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "slw_hc0__cl1bc59e1c@8": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "slw_hc1__cl68f9248e__cl144ee7b3@12": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "slw_hc1__cl68f9248e__cle683a076@10": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "slw_hc2__cla3497502__cl16607c7a@12": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "slw_hc2__cla3497502__cldc737267@10": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry",
+        "slw_su_c__cl92142dac@20": "KW-FIX-34 2026-11-08 01:53 PST: KIT_TOPOLOGY_BIND_STALE class fix: kit_rtl.bind_out -> qct7/bind_v4t (strict re-bind of plan_qc53v4t, 0 errors, .sv byte-identical to bind_strict; QC-TYPES-7 01:43); not a P&R retry"
       },
       "gen_hosts": [
         "intel1",
@@ -5729,6 +5773,9 @@
       "item_env": {
         "coll_ftm": {
           "OT_HOLD_STOP_PS": "-200"
+        },
+        "sle_fw_v3": {
+          "OT_CONS_KIT": "1"
         }
       },
       "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
@@ -6099,7 +6146,35 @@
         "slw_hc2__cla3497502__cl16607c7a": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now",
         "slw_hc2__cla3497502__cldc737267": "KW-FIX-33 2026-11-08 00:23 PST (COORD 00:2x (4b)): hc kit LEC needs >= 96 GB (rc137 OOM at 32/48, QC-TYPES-6 00:04); held until a wave LEC-mem knob lands; the 13 non-hc tap-pair types launch now"
       },
-      "note_kw34b": "KW-FIX-34 2026-11-08 01:26 PST: main 068496ca437 (item-mem 3a518b128a, ROOT-MERGE-51) -> place_mem_gb_by_item sle_hc*/slw_hc* 112 GB (kit LEC rc137 OOM at 32/48, needs >=96; LEC unit books the PLACE mem); 12 hc LEC-mem holds lifted (COORD 01:09 (1)). Revert: place_mem_gb_by_item=place_mem_gb_by_item_prev_kw34b, hold_items += hold_items_released_kw34b"
+      "note_kw34b": "KW-FIX-34 2026-11-08 01:26 PST: main 068496ca437 (item-mem 3a518b128a, ROOT-MERGE-51) -> place_mem_gb_by_item sle_hc*/slw_hc* 112 GB (kit LEC rc137 OOM at 32/48, needs >=96; LEC unit books the PLACE mem); 12 hc LEC-mem holds lifted (COORD 01:09 (1)). Revert: place_mem_gb_by_item=place_mem_gb_by_item_prev_kw34b, hold_items += hold_items_released_kw34b",
+      "kit_rtl_bind_out_prev_kw34d": "/srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict",
+      "item_env_prev_kw34d": {
+        "sle_fw_v3": null
+      },
+      "retry_prev_kw34d_added": [
+        "cbf_q00_s2@11",
+        "cbn_q00__cld7bf7197@10",
+        "cbn_q00__cldbcda913@13",
+        "coll_ft__cla4a25d77@7",
+        "coll_s@5",
+        "sle_fw_v3@28",
+        "sle_hc0__cl929603c0__cl38badc56@15",
+        "sle_hc1__cl22c1ff36@26",
+        "sle_hc1__cl7d360508@11",
+        "sle_hc2__cl9c4c4509__cl3edce1b8@8",
+        "sle_hc2__cl9c4c4509__clf60c5152@3",
+        "sle_hc2__clcc5e3e61@8",
+        "sle_su_c@8",
+        "sle_su_l1__clc6d66f5b@11",
+        "slw_hc0__cl1bc59e1c@8",
+        "slw_hc1__cl3449ea95@3",
+        "slw_hc1__cl68f9248e__cl144ee7b3@12",
+        "slw_hc1__cl68f9248e__cle683a076@10",
+        "slw_hc2__cla3497502__cl16607c7a@12",
+        "slw_hc2__cla3497502__cldc737267@10",
+        "slw_su_c__cl92142dac@20"
+      ],
+      "note_kw34d": "KW-FIX-34 2026-11-08 01:53 PST: QC v4t re-bind batch (24 v4t rows + sle_fw_v3 cons). Revert: kit_rtl.bind_out=kit_rtl_bind_out_prev_kw34d, item_env sle_fw_v3 from item_env_prev_kw34d, drop retry_prev_kw34d_added"
     },
     "hbm": {
       "enabled": true,
