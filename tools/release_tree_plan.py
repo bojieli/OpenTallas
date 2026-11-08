@@ -1203,10 +1203,15 @@ def _term_unwinds():
 G0C_KEEP = CACHE.parent / 'g0c_reports'   # last G0C report per plan (error classes for COORD / die owners)
 
 
+# DIE-KV-93 11-08: KV check.py took 886 s, then hit the 900 s cap every refresh; the G0C runs in parallel with the
+# fleet scan (SCAN_SSH_S), so the same budget adds no refresh time
+G0C_S = SCAN_SSH_S
+
+
 def _g0c_run(tmp, pj, out):
     t0 = time.time()
     sh([sys.executable, str(tmp / 'tools/die_plan/check.py'), str(pj), '--completeness', '--quiet', '--out', str(out)],
-       900, cwd=str(tmp))
+       G0C_S, cwd=str(tmp))
     return round(time.time() - t0, 1)
 
 
@@ -1417,6 +1422,10 @@ def carry_unreachable(new, old, retired=None, names=None):
     return new
 
 
+G0C_FIELDS = ('g0c_verdict', 'g0c_errors', 'g0c_clean', 'g0c_types', 'g0c_die_level', 'g0c_bad_types', 'geom_report',
+              'check_s')
+
+
 def merge_with_cache(new, old):
     """keep the last good per-plan values when this refresh failed for a plan or for the SIGNED scan"""
     if not old: return new
@@ -1424,6 +1433,14 @@ def merge_with_cache(new, old):
     for d, ent in (old.get('plans') or {}).items():
         if d not in cur: continue   # plan no longer of record (e.g. hbm_arch/B2n -> d41v): drop, never carry it forward
         n = new['plans'].get(d)
+        if n and 'types' in n and 'signed_cores' in n and 'g0c_clean' not in n and 'g0c_clean' in ent:
+            # DIE-KV-93 11-08 (COUNT-STALE-G0C): only the G0C check failed (KV check.py 886 s, then > the 900 s cap):
+            # the plan materialized and this refresh matched the SIGNED records, so keep them and carry ONLY the last
+            # good G0C values.  Carrying the whole old entry froze KV signed_cores at 06:40 (prompt vR re-sign lost).
+            n = dict(n, **{k: ent[k] for k in G0C_FIELDS if k in ent})
+            n['g0c_stale_since'] = ent.get('g0c_stale_since') or ent.get('stale_since') or old.get('generated')
+            new['plans'][d] = n
+            continue
         if (not n or 'g0c_clean' not in n) and 'g0c_clean' in ent:
             ent = dict(ent, stale_since=ent.get('stale_since') or old.get('generated'))
             if old.get('provenance_rule') not in (new.get('provenance_rule'), None):   # GRANDFATHER: pre-rule-3 (None) lists are SIGNED-LEGACY
