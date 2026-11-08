@@ -38,11 +38,54 @@ def _strip(text):
     return re.sub(r"//[^\n]*", "", re.sub(r"/\*.*?\*/", "", text, flags=re.S))
 
 
-def parse(texts):
+_PP = re.compile(r"^\s*`(ifdef|ifndef|elsif|else|endif|define|undef)\b\s*(\w*)")
+_PP_SKIP = re.compile(r"^\s*`(timescale|default_nettype|resetall|celldefine|endcelldefine)\b")
+
+
+def preprocess(text, defines=()):
+    """Conditional compilation against the recipe defines (fail closed on macro uses and unbalanced blocks)."""
+    defs, out, stack = set(defines), [], []          # stack entries: [taking, a branch was taken, parent taking]
+    for ln in _strip(text).split("\n"):
+        m = _PP.match(ln)
+        taking = all(t for t, _, _ in stack)
+        if m:
+            d, name = m.groups()
+            if d in ("ifdef", "ifndef"):
+                c = (name in defs) == (d == "ifdef")
+                stack.append([taking and c, c, taking])
+            elif d in ("elsif", "else", "endif") and not stack:
+                raise SplitError(f"`{d} without `ifdef")
+            elif d == "elsif":
+                t = stack[-1]
+                c = not t[1] and name in defs
+                t[0], t[1] = t[2] and c, t[1] or c
+            elif d == "else":
+                t = stack[-1]
+                t[0], t[1] = t[2] and not t[1], True
+            elif d == "endif":
+                stack.pop()
+            elif taking and d == "define":
+                defs.add(name)
+            elif taking and d == "undef":
+                defs.discard(name)
+            out.append("")
+            continue
+        if _PP_SKIP.match(ln):
+            out.append("")
+            continue
+        if taking and "`" in ln:
+            raise SplitError("macro use not supported in a split source: " + ln.strip()[:80])
+        out.append(ln if taking else "")
+    if stack:
+        raise SplitError("unbalanced `ifdef")
+    return "\n".join(out)
+
+
+def parse(texts, defines=()):
     """{module: dict(ports={name: (dir, lo, width)}, sig={name: (lo, width)}, params={k: v}, assigns, insts)}."""
     mods = {}
     for text in texts:
-        for m in _MOD.finditer(_strip(text)):
+        for m in _MOD.finditer(preprocess(text, defines)):
             name, ptxt, ports_txt, body = m.group(1), m.group(3) or "", m.group(4), m.group(5)
             ports, sig = {}, {}
             for d in _DECL.finditer(ports_txt + ";" + body):
@@ -313,7 +356,7 @@ def load(rule, base):
     for f in rule.get("sources", []):
         p = Path(f) if Path(f).is_absolute() else Path(base) / f
         texts.append(p.read_text(errors="replace"))
-    return parse(texts)
+    return parse(texts, rule.get("defines", []))
 
 
 def groups(rule_sub, cells):
