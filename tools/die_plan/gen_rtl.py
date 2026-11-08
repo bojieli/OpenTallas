@@ -226,8 +226,11 @@ def ft_hop_lockup(raw, tn):
     return tn in set(cfg.get("types") or [])
 
 
-def uses_relay_lockup(raw):
-    return bool((raw.get("reset") or {}).get("relay_lockup"))
+def uses_relay_lockup(raw, form=None):
+    """the plan opts in to reset.relay_lockup (of the given form: "negedge" needs LOCKUP_CELLS; the RLK-1108 "latch"
+    form uses ot_dp_lk, already in CELLS)."""
+    cfg = (raw.get("reset") or {}).get("relay_lockup")
+    return bool(cfg) and (form is None or (cfg.get("form") if isinstance(cfg, dict) else None) == form)
 
 
 
@@ -783,7 +786,7 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
                 L.validate_observer_native(lambda tn: leaf_headers(P.types[tn], rtl_root), parse_leaf_ports)
         except CL.LandingError as e:
             raise GenError(f"clock landing: {e}") from e
-    (out / "ot_dp_cells.sv").write_text(CELLS + (LOCKUP_CELLS if P.reset.get("relay_lockup") else ""))
+    (out / "ot_dp_cells.sv").write_text(CELLS + (LOCKUP_CELLS if uses_relay_lockup(P.raw, "negedge") else ""))
     files = [out / "ot_dp_cells.sv"]
     for tn, t in sorted(P.types.items()):
         if t.get("hard") or (types is not None and tn not in types):

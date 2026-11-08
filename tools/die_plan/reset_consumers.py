@@ -86,7 +86,16 @@ def localize(text, declarations, tree, native_roles=None):
             ps = c['ports']
             if any(k not in ps for k in ('clk', 'd', 'q')) or ps['clk'][0] != clock:
                 raise ResetConsumerError(f'{net}: reset clock domain mismatch')
-            if ps['q'][0] != net or ps['d'][0] != r.get('d'):
+            dnet = ps['d'][0]
+            if dnet != r.get('d'):
+                # RLK-1108 latch form: the relay's d is its hop lockup latch q (0 cycles), whose d is the published edge
+                import reset_tree
+                li, lq = reset_tree.lockup_latch_names(r.get('name', ''))
+                lc = calls.get(li)
+                if (dnet == lq and lc and lc['module'] == 'ot_dp_lk' and all(k in lc['ports'] for k in ('clk', 'd', 'q'))
+                        and lc['ports']['q'][0] == lq and lc['ports']['clk'][0] == clock):
+                    dnet = lc['ports']['d'][0]
+            if ps['q'][0] != net or dnet != r.get('d'):
                 raise ResetConsumerError(f'{net}: emitted/published reset edge mismatch')
             net, depth = r['d'], depth + 1
         pd = published[first].get('depth')
