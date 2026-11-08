@@ -1973,7 +1973,8 @@ def main():
     cfg += core_flow.apply(kd, ibind, mod, time_unit_ps=1.0, rc_cal=not a.stock_rc, hold_ff_margin=a.hold_ff_margin
                            if a.hold_ff_margin is not None else core_flow.HOLD_FF_MARGIN_DEFAULT,
                            grt_pre_extra=[v for k, v in own.items() if "PRE_" in k],
-                           grt_post_extra=[v for k, v in own.items() if "POST_" in k])
+                           grt_post_extra=[v for k, v in own.items() if "POST_" in k],
+                           grt_nonport_hold=bool(rec.get("grt_nonport_hold", False)))
     if a.astk_zone_fences:
         if not (mod == "kv3_astk" or mod.startswith("kv3_astk_")) or not a.astk_write_decode:
             raise SystemExit("--astk-zone-fences needs a kv3_astk core + --astk-write-decode")
