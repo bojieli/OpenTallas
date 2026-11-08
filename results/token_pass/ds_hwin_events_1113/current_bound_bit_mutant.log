@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-ds-epochs-1113/source_endpoints/extract_bound_endpoints.py", line 107, in <module>
+    r=extract(a.bind,a.mutate_source_bit)
+  File "/srv/opentallas-scratch2/claude/codex-ds-epochs-1113/source_endpoints/extract_bound_endpoints.py", line 68, in extract
+    bus=next(b for b in latency['buses']if b['src']=='seqhost'and
+             ['leaf','u_seqhost.u_seqhost','mu_c_'+endpoint,0]in b['source_bits'])
+StopIteration
