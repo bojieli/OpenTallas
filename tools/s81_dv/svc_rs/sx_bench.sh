@@ -10,6 +10,7 @@ DEF=()
 HEAD_DEF=()
 [[ ${SX_SAMPLES:-600} == 64 ]] && HEAD_DEF+=(-DSX_SMALL)
 [[ ${SVC_HEADS:-16} == 8 ]] && HEAD_DEF+=(-DOT_SVC_H8)
+[[ -n ${SX_DBG:-} ]] && HEAD_DEF+=(-DSX_DBG)
 case "$V" in
   base) ;; mut1) DEF=(-DMUT=1);; mut2) DEF=(-DMUT=2);; mutorder) DEF=(-DDSDV_SX_MUT_ORDER);;
   mutskew) DEF=(-DSX_MUT_SKEW);; selmut) DEF=(-DOT_HROW_SEL_MUT);;   # S81-KITS-HROW: one replicated select copy wrong
