@@ -239,6 +239,15 @@ class TestClasses(Base):
         out = ac.reduce_kitwave(st, [])
         self.assertEqual(out["current_di"], {"hbm|item_xp": 5})
 
+    def test_queuename_ignores_plan_dir_and_mounts(self):
+        self.assertTrue(ac.generic_name("opentallas-scratch2"))
+        d = self.attempt("item_pq", 1, event="event28w_c")
+        self.qwords = ["event28w_c", "opentallas-scratch2"]
+        self.kw = {"attempts": {"hx:" + d: {"active": False, "signed": False, "terminal": ["FAIL/None"]}},
+                   "latest": {}, "keep": []}
+        self.run_job()
+        self.assertFalse(os.path.exists(d), self.row(d))
+
     def test_a_disabled_without_kitwave(self):
         d = self.attempt("item_x", 1)
         self.run_job()

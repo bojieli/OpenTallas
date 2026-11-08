@@ -314,7 +314,8 @@ def parse_queue(text, now, hours=25.0, tz="America/Los_Angeles"):
 
 def generic_name(n):
     return (len(n) < 8 or n in GENERIC_NAMES or n.startswith("attempt") or re.fullmatch(r"[0-9a-f]{10,}", n) is not None
-            or n.startswith("qwen_") or "wave-" in n or n == "flow-canary" or n.startswith("_ot_autoclean"))
+            or n.startswith("qwen_") or "wave-" in n or n == "flow-canary" or n.startswith("_ot_autoclean")
+            or n.startswith("opentallas-scratch") or n == "scratch-root")   # mount names inside nested paths
 
 
 # ------------------------------------------------------------------ kit-wave state reduction (runs on the hub)
@@ -773,7 +774,9 @@ class Job:
         if h:
             return "queuepath: " + h
         rest = k.split("/claude/", 1)[1].split("/")[1:] if "/claude/" in k else []
-        for n in rest:
+        for i, n in enumerate(rest):
+            if i >= 2 and rest[i - 2] == "kit-wave":   # kit-wave/<die>/<plan event>: the plan dir names a whole wave
+                continue
             if not generic_name(n) and n in self.qwords:
                 return "queuename: " + n
         w = self.live.why(self.paths.forms(k))
