@@ -2343,7 +2343,8 @@
         "col_h9_r0_p4__t1__clcb2fbfe8@15",
         "dsdv_slice_c1x_C__t6@18",
         "dsdv_slice_c1x_C__t7@13",
-        "slice_station__t24__cleece78ec@12"
+        "slice_station__t24__cleece78ec@12",
+        "col_h10_r2__t1__cl99efd374@16"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -2624,7 +2625,7 @@
         "ot_s81sl_leaf__t62@5": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
         "ot_s81sl_leaf__t65@5": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
         "ot_s81sl_leaf__t66@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
-        "ot_s81sl_leaf__t67@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
+        "ot_s81sl_leaf__t67@4": "KW-FIX-35-S 2026-11-08 05:24 PST: REDESIGN: S81-TYPES-7-CLAND CLASS K: 004a51fc1b6 macro exit on the current src + reset-scope selected; a4 launched 05:09 on the old config before the item_env landed, stopped at kit_topology",
         "ot_s81sl_leaf__t68@3": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
         "ot_s81sl_leaf__t69@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
         "ot_s81sl_leaf__t6@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
@@ -2839,7 +2840,7 @@
         "ot_s81sl_leaf__t3@7": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
         "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@3": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
         "ot_s81sl_leaf__t45@6": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
-        "ot_s81sl_leaf__t4@6": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
+        "ot_s81sl_leaf__t4@6": "KW-FIX-35-S 2026-11-08 05:24 PST: REDESIGN: S81-TYPES-7-CLAND CLASS K: 004a51fc1b6 macro exit on the current src + reset-scope selected; a6 launched 05:09 on the old config before the item_env landed, stopped at kit_topology",
         "ot_s81sl_leaf__t52@6": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
         "ot_s81sl_leaf__t53__clb66fa5cb@10": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
         "ot_s81sl_leaf__t5@6": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
@@ -3257,7 +3258,7 @@
         "ot_s81sl_leaf__t56@8": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
         "ot_s81sl_leaf__t61@1": "004a51fc collector form 2, merged main 15:13, in wave src 6a7e5 (S81-TYPES-5 18:06 READY, KW-FIX-32 batch 2026-11-07 18:08 PST)",
         "ot_s81sl_leaf__t4@9": "004a51fc collector form 2 (S81-TYPES-5 18:06, COORD 18:2x b); KW-FIX-32 2026-11-07 18:59 PST: the current-block record is the CANCELLED stale attempt, so the retry names it",
-        "ot_s81sl_leaf__t50@8": "004a51fc collector form 2 (S81-TYPES-5 18:06, COORD 18:2x b); KW-FIX-32 2026-11-07 18:59 PST: the current-block record is the CANCELLED stale attempt, so the retry names it",
+        "ot_s81sl_leaf__t50@8": "KW-FIX-35-S 2026-11-08 05:24 PST: REDESIGN: S81-TYPES-7-CLAND CLASS K: 004a51fc1b6 macro exit on the current src + reset-scope selected; a8 launched 05:09 on the old config before the item_env landed, stopped at kit_topology",
         "ot_s81sl_leaf__t67@10": "004a51fc collector form 2 (S81-TYPES-5 18:06, COORD 18:2x b); KW-FIX-32 2026-11-07 18:59 PST: the current-block record is the CANCELLED stale attempt, so the retry names it",
         "ot_s81sl_leaf__t42@7": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit",
         "slice_station__t18@13": "KW-FIX-32 2026-11-07 20:58 PST (S81-TYPES-5 INFRA class): infra: kw10 ot-run wrapper syntax 14:57-15:06 (AP_RC=2, no tool ran); one infra batch, stage-resume from the unchanged kit",
@@ -3290,7 +3291,8 @@
         "col_h9_r0_p4__t1__clcb2fbfe8@15": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
         "dsdv_slice_c1x_C__t6@18": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 CLASS H: fresh kit (old kit carried a stale FAIL_PREFLOOR); reset-scope selected so it does not stop at the CLASS A topology check",
         "dsdv_slice_c1x_C__t7@13": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 CLASS H: fresh kit (old kit carried a stale FAIL_PREFLOOR); reset-scope selected so it does not stop at the CLASS A topology check",
-        "slice_station__t24__cleece78ec@12": "KW-FIX-35-S 2026-11-08 05:09 PST: REDESIGN: S81-TYPES-7 CLASS I: station DRV margin form (--slew-margin 50 --cap-margin 20); reset-scope selected"
+        "slice_station__t24__cleece78ec@12": "KW-FIX-35-S 2026-11-08 05:09 PST: REDESIGN: S81-TYPES-7 CLASS I: station DRV margin form (--slew-margin 50 --cap-margin 20); reset-scope selected",
+        "col_h10_r2__t1__cl99efd374@16": "KW-FIX-35-S 2026-11-08 05:24 PST: S81-TYPES-7 CLASS A: reset-scope selected (7c731625b9); a16 launched 05:09 on the old config before the item_env landed (KW-FIX-35-S retry_seen reset race) and stopped at kit_topology, no CAD"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -4292,7 +4294,10 @@
           }
         ]
       },
-      "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 05:20 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/s81.json on intel2, plan ba6292b0c502) FIRST in prov_view_sources for 1 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v"
+      "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 05:20 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/s81.json on intel2, plan ba6292b0c502) FIRST in prov_view_sources for 1 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v",
+      "retry_prev_kw35s2_added": [
+        "col_h10_r2__t1__cl99efd374@16"
+      ]
     },
     "s81_head": {
       "enabled": true,
