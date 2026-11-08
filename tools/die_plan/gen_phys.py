@@ -4851,7 +4851,8 @@ fi
 LEC_MATCH_ENV=$(python3 -I - "$K/config.mk" <<'LEC_MATCH_CONFIG'
 import os,re,sys
 cfg={}
-for line in open(sys.argv[1],errors='replace'):
+lines=open(sys.argv[1],errors='replace') if os.path.isfile(sys.argv[1]) else ()
+for line in lines:
     m=re.match(r'^\s*(?:override\s+)?(?:export\s+)?([A-Z0-9_]+)\s*[:?]?=\s*(.*?)\s*$',line.split('#',1)[0])
     if m:cfg[m[1]]=m[2]
 for key in ('OT_LEC_REPLICA_MATCH','OT_LEC_MEM_LANES','OT_LEC_ENABLE_FILL_GUARD'):
@@ -4861,7 +4862,7 @@ for key in ('OT_LEC_REPLICA_MATCH','OT_LEC_MEM_LANES','OT_LEC_ENABLE_FILL_GUARD'
     if value not in ('0','1'):raise SystemExit('LEC CONFIG ERROR '+key+' must be 0 or 1')
     print(key+'='+value)
 LEC_MATCH_CONFIG
-) || exit 10
+) || { echo 'FAIL_PREFLOOR lec_match_config: OT_LEC_REPLICA_MATCH/OT_LEC_MEM_LANES/OT_LEC_ENABLE_FILL_GUARD must be 0 or 1 (env or config.mk)' | tee -a "$K/FAIL_PREFLOOR"; exit 10; }
 LEC_MATCH_DOCKER=()
 while IFS= read -r setting; do
   [ -n "$setting" ] || continue
@@ -4931,8 +4932,8 @@ for p in sorted(out):
 KWCHILD
 )
 [ ${#CHILD_RO[@]} = 0 ] || echo "KWCHILD read-only child records: ${CHILD_RO[*]}"
-docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work "${CHILD_RO[@]}" "${LEC_MATCH_DOCKER[@]}" -e OT_FLOW_TAG="$FT" \
-  -e HUID=$(id -u) -e HGID=$(id -g) -e OT_KIT_IR=${OT_KIT_IR:-defer} -e OT_LEC_HINTS_PRESEED="${OT_LEC_HINTS_PRESEED:-0}" -e OT_LEC_EARLY_COMPARE="${OT_LEC_EARLY_COMPARE:-0}" -e OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
+docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work "${CHILD_RO[@]}" -e OT_FLOW_TAG="$FT" \
+  -e HUID=$(id -u) -e HGID=$(id -g) "${LEC_MATCH_DOCKER[@]}" -e OT_KIT_IR=${OT_KIT_IR:-defer} -e OT_LEC_HINTS_PRESEED="${OT_LEC_HINTS_PRESEED:-0}" -e OT_LEC_EARLY_COMPARE="${OT_LEC_EARLY_COMPARE:-0}" -e OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; ${KWRS_F}${KWRS_M}${KWRS_G}rc=0; if [ -f /work/orfs_hold_mm.py ] && grep -q 'def patch_intermediate_power' /work/orfs_hold_mm.py; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts --metrics-only > /work/orfs_metrics.log 2>&1 || { cat /work/orfs_metrics.log; echo 'INTERMEDIATE_POWER optimization unavailable: full power reporting retained'; }; fi; \
   python3 -I /work/native_bb.py /OpenROAD-flow-scripts/flow/scripts/synth_preamble.tcl --physical-synth /OpenROAD-flow-scripts/flow/scripts/synth.tcl || exit 9; \
   if [ -f /work/partition_ir.py ] && [ \"\$OT_KIT_IR\" = defer ]; then python3 -I /work/partition_ir.py patch /OpenROAD-flow-scripts/flow/scripts && export OT_DEFER_PARTITION_IR=1 || echo 'PARTITION_IR WARNING: patch refused, kit IR runs inline in 6_report'; fi; \

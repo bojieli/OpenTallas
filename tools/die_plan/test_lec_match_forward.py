@@ -54,6 +54,20 @@ def test_generated_runner_unset_and_invalid(tmp_path):
     assert r.returncode==0 and not r.stdout.strip()
     r=run_gen_block(tmp_path,'export OT_LEC_MEM_LANES = yes\n')
     assert r.returncode==10 and 'must be 0 or 1' in r.stderr
+    assert (tmp_path/'FAIL_PREFLOOR').read_text().startswith('FAIL_PREFLOOR lec_match_config')
+
+
+def test_generated_runner_without_config_mk(tmp_path):
+    marker='# LEC-IQN proof option forwarding:'
+    block=marker+gen_phys.RUN_KIT.split(marker,1)[1].split('# End LEC-IQN proof option forwarding.',1)[0]
+    script=block+'\nprintf "%s\\n" "${LEC_MATCH_DOCKER[@]}"\n'
+    env={k:v for k,v in os.environ.items() if k not in FLAGS};env['K']=str(tmp_path)
+    r=subprocess.run(['bash','-c',script],env=env,capture_output=True,text=True)
+    assert r.returncode==0 and not r.stdout.strip()
+    env['OT_LEC_MEM_LANES']='1'
+    r=subprocess.run(['bash','-c',script],env=env,capture_output=True,text=True)
+    assert r.returncode==0 and r.stdout.splitlines()==['-e','OT_LEC_MEM_LANES=1']
+    assert not (tmp_path/'FAIL_PREFLOOR').exists()
 
 @pytest.mark.parametrize('flag',FLAGS)
 def test_async_forwards_and_fingerprints_actual_option(tmp_path,flag):
