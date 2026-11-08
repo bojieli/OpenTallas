@@ -11755,3 +11755,7 @@ OWNER?
 The 14:28 HGI B ruling requests a tap-delay buffer at each core pin. Actual head-eighth clock pins are interior near (108,108) in 216x216 hard macros, and tap_balance.tcl::tb_outside intentionally chooses a legal site 2um beyond the nearest macro edge, creating the measured ~110um leg. A parent standard cell cannot be placed at the interior hard-macro pin. Which feasible B form is intended: a child pin/clock redesign, or a legal parent boundary strategy? Default: preserve pins/POR and keep progressing class D (qualified M5 core views); do not place cells inside the hard macro or release HGI before its full gate.
 
 2026-11-07 16:02 PST CODEX BKSEL collected H routed0DRC/0antenna, preliminary large DRIVE/WIRE failure1502slew/11cap and setup-42.33 (standard signoff pending). Viewed actual final and LF CTS images. Weak BUF3 single legs178–198um identified; no ECO/retry. LF measured CTS backup held pending H final; preparing existing maxwire/macro-output class proposal.
+
+## Codex takeover 2026-11-07 15:51 PST — active checkpoint 16:03
+
+All 630 lane files covered; nine leads resumed all current Claude work. Checkpoint handoff/codex_takeover_20261107_1551_checkpoint.md. Cached214 unchanged; NL exact clock-pin adoption and e0 replacement identity diagnosed, no count hacks. Temporary new-selector pause protects against tag-only failed retries; fixed owned runtime deployment in progress, admitted jobs intact. Canary retention-only no-prune fix installed with backup; no deletions/main merges/tags/POR edits. Continue until explicit reset.
