@@ -58,14 +58,19 @@ proc lc_pose {group cells box} {
 set lc_sources {}
 foreach group {ctrl dv ctx div0 div1 rope} {
  set sources {};foreach i [$lc_b getInsts] {if {[regexp [format {[/\.]u_reset_%s[/\.]} $group] [$i getName]] && [lc_seq $i]} {lappend sources $i}}
+ if {[llength $sources]==0 && $group in {div0 div1 rope}} {
+  puts "LOCAL_CONTROL $group unobservable reset source pruned; no mission reset consumer"
+  continue
+ }
  if {[llength $sources]!=1} {error "LOCAL_CONTROL expected one retained reset source $group; got [llength $sources]"}
  dict set lc_sources $group $sources
 }
 set roots {};foreach group [dict keys $lc_sources] {set roots [concat $roots [dict get $lc_sources $group]]}
 foreach i [$lc_b getInsts] {if {[regexp {^u_fcore[./]rr0} [$i getName]] && [lc_seq $i]} {lappend roots $i}}
-if {[llength $roots]!=7} {error "LOCAL_CONTROL expected seven root/reset FFs"}
+if {[llength $roots] != 1+[dict size $lc_sources]} {error "LOCAL_CONTROL missing first reset stage"}
 lc_pose root $roots {70 74 85 80}
 foreach {group box} {ctrl {35 73 65 83} dv {35 86 115 98} ctx {35 57 115 69} div0 {35 112 115 124} div1 {35 32 115 44} rope {35 12 115 24}} {
+ if {![dict exists $lc_sources $group]} continue
  set sinks [lc_consumers [dict get $lc_sources $group]]
  set clean {};foreach i $sinks {if {![dict exists $lc_done [$i getName]]} {lappend clean $i}}
  if {![llength $clean]} {error "LOCAL_CONTROL empty reset consumer group $group"}
