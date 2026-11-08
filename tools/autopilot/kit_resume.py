@@ -250,6 +250,10 @@ def classify(texts, files, config):
         if by_name else None
     named = {}                                          # src -> {rel named in its text}
     for src, txt in texts.items():
+        # QC-HC-KWRS 11-08: full-line Tcl comments describe other stages (e.g. face_keep's reset_taps note).
+        # They are not reads. Keep executable lines, inline comments and unknown files conservative.
+        if src.endswith(".tcl"):
+            txt = "\n".join(line for line in txt.splitlines() if not line.lstrip().startswith("#"))
         if txt and big is not None:
             named[src] = set().union(*[by_name[n] for n in set(big.findall(txt))]) if txt else set()
     gate_named = set()
