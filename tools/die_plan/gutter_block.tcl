@@ -13,6 +13,10 @@ if {[info exists ::env(OT_GUTTER_BLOCK_UM)] && $::env(OT_GUTTER_BLOCK_UM) > 0} {
   set gb_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
   set gb_g [expr {int($::env(OT_GUTTER_BLOCK_UM) * $gb_dbu)}]
   set gb_min [expr {int(0.27 * $gb_dbu)}]
+  # S81-TYPES-7-COLH 11-08: OT_GUTTER_BLOCK_MIN_SPAN_UM (opt-in) = only gaps facing over at least this span
+  if {[info exists ::env(OT_GUTTER_BLOCK_MIN_SPAN_UM)] && $::env(OT_GUTTER_BLOCK_MIN_SPAN_UM) > 0} {
+    set gb_min [expr {max($gb_min, int($::env(OT_GUTTER_BLOCK_MIN_SPAN_UM) * $gb_dbu))}]
+  }
   set gb_m {}
   foreach i [$gb_blk getInsts] {
     if {[[$i getMaster] isBlock]} { set b [$i getBBox]; lappend gb_m [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]] }

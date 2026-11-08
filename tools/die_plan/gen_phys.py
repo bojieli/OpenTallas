@@ -177,6 +177,15 @@ def _gutter_block_um(budgets, tn):
     return v
 
 
+def _gutter_block_min_span_um(budgets):
+    """S81-TYPES-7-COLH 11-08 (class C ROM walls): only gaps whose facing span is >= this many um get a gutter
+    blockage (GEN env OT_GUTTER_BLOCK_MIN_SPAN_UM wins, else budgets.gutter_block_min_span_um); None = every gap
+    (the 11-07 behaviour).  A long span picks the gap between two 221-um ROM-element walls and leaves the short
+    ROM/relay gaps, whose logic must stay in place (COLH-1 vS2: blocking every gap < 45 um doubled the wire)."""
+    v = os.environ.get("OT_GUTTER_BLOCK_MIN_SPAN_UM") or budgets.get("gutter_block_min_span_um")
+    return float(v) if v and float(v) > 0 else None
+
+
 def _cland_pinslot_dense(budgets, tn):
     """DIE-KV-62/stations 11-02 opt-in: budgets.cland_pinslot_dense_types names the types (or unsplit base names) whose
     y-column pinslot rows pack the ring slot flops body to body (OT_CLAND_PINSLOT_DENSE=1, landing_placement.tcl);
@@ -4236,6 +4245,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
            *(["export OT_RELAY_MID_FIT = 1"] if macros and _relay_mid_fit(P.budgets, tn) else []),
            *([f"export OT_GUTTER_BLOCK_UM = {_gutter_block_um(P.budgets, tn)}"] if macros and _gutter_block_um(P.budgets, tn) else []),
+           *([f"export OT_GUTTER_BLOCK_MIN_SPAN_UM = {_gutter_block_min_span_um(P.budgets)}"]
+             if macros and _gutter_block_um(P.budgets, tn) and _gutter_block_min_span_um(P.budgets) else []),
            # DIE-HEAD-69 11-05: core_out_land.tcl opt-in (GEN env OT_CORE_OUT_LAND=1 via wave item_env, or plan budgets list)
            *(["export OT_CORE_OUT_LAND = 1"] if macros and (os.environ.get("OT_CORE_OUT_LAND") == "1"
                                                        or tn in (P.budgets.get("core_out_land_types") or ())) else []),
