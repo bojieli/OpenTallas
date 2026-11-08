@@ -1205,6 +1205,16 @@ def core_kit_cmds(ck, src, plan, root, work, item):
 ENV_KEY_RE, ENV_VAL_RE = re.compile(r"OT_[A-Z0-9_]+"), re.compile(r"[A-Za-z0-9_.,:=+-]*")
 
 
+def topology_env_prefix(sp):
+    """Forward the one opt-in native-topology selector, never arbitrary gen env."""
+    value = (sp.get("gen_env") or {}).get("OT_NATIVE_RESET_SCOPE")
+    if value is None:
+        return ""
+    if value != "selected":
+        raise ValueError("OT_NATIVE_RESET_SCOPE must be selected when provided")
+    return "OT_NATIVE_RESET_SCOPE=selected "
+
+
 def item_env(d, item):
     """die item_env[item] -> {OT_*: value} (validated: OT_ names, shell-safe values; anything else raises)"""
     env = dict((d.get("item_env") or {}).get(item) or {})
@@ -1243,7 +1253,8 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "core_kit": dict(d.get("core_kit") or {}, args=list((d.get("core_kit") or {}).get("args") or [])
                              + list(((d.get("core_kit") or {}).get("item_args") or {}).get(core_module(item)) or []))
                         if d.get("core_kit") else {},
-            # die option item_env {item: {OT_*: value}}: generation environment of that item's gen.py phys only
+            # die option item_env {item: {OT_*: value}}: generation environment of that item's gen.py phys
+            # OT_NATIVE_RESET_SCOPE alone is also forwarded to canonical topology preparation.
             # (e.g. OT_IO_HOLD=sender_min, a die-owner input-hold contract ruling on one type; plan clock.io_hold wins)
             # KW-FIX-30 11-07 (COORD 15:01 (b)): die option flow_tag -> OT_FLOW_TAG in the gen env (gen.py phys writes K/flow_tag,
             # run_kit.sh passes it to the GRT clock gate); an item_env OT_FLOW_TAG wins.  Unset = as before.
@@ -2521,7 +2532,7 @@ def run_item(spec_path):
         # the actual typed overlay and before any physical generation.
         helper = f"{src}/tools/die_plan/kit_topology.py"
         context_args = f" --asbuilt {q(kr['asbuilt'])}" if kr.get("asbuilt") else ""
-        prep = (f"cd {q(src)} && python3 -I {q(helper)} prepare-stations {q(plan)} {q(T)} {q(W)}/rtl "
+        prep = (f"cd {q(src)} && {topology_env_prefix(sp)}python3 -I {q(helper)} prepare-stations {q(plan)} {q(T)} {q(W)}/rtl "
                 f"--native-plan {q(plan0)}{context_args}")
         rc, txt = run("kit_topology", otrun(8, 2, W, prep, gh))
         if rc:
