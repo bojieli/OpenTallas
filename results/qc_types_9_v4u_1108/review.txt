@@ -1,0 +1,19 @@
+QC wave plan event qc53v4u (QC-TYPES-9, 2026-11-08). Base: plan_qc53v4s (main). Plan file plan_of_record/plan_qc53v4u.json sha256 9c8cefa48662...
+Changed partition_types vs v4s: exactly three.
+ 1. sle_fw_v3: writer START W=3 on 14 exports (11 W + N rsf_o, rsn_o, x_ctl_o). Constructor mk_all.py = Codex
+    codex/qc-fw-start-0222@f2ff3b24cd make_candidate.py generalized (no W-face-only filter; a branch with no
+    phase-1 four-hop path is HELD, not an error). Hops <=324 um, raw-reset flights <=386.6 um (<=405), raw nodes =
+    bound_reset.json depth-1 relays of rst_root_n. Held (W=0, sign-off decides): cws0_o (752 um direct),
+    x_st_a_fe_o (820 um) on the S face; follow-up form = re-root the reset tree (sync stage relocation).
+    Pricing (Codex price.py, current binder): PASS 14 crossings; rsf/rsn/x_ctl -> sl_E5_st_a strap 23->26;
+    ag/ard 12->14; other W 11->14. Steady payload cycles +0; receiver K = K_logical + W - R + WREG.
+    Bench (mechanism.py, iverilog/vvp, real common RTL): START/reset PASS 314 cycles; start_bypass and
+    reset_wrong_phase mutants CAUGHT; real CA ring W0->W3 and W1->W3 PASS 440 payload cycles; badK mutants CAUGHT
+    (proof_v4u_c.log). Visual: form_v4u.png VIEWED.
+ 2. sle_fe_v2: START transport (plan_start.py qc_start_1108, sidecar qc_start_1106): entry hop 365, reader depth 3,
+    writer depth 3, boot +6 cycles, max hop 314 um (report_v4u2.json). Fixes G2 setup_tt -85.95 at post-CTS GRT gate
+    (START origin sf -> s0 half-cycle).
+ 3. slw_su_c__cl19bb38ef: tap_chain_affinity {max_group 128, radius_um 200} + tap_pair_affinity {} (same keys as v4t
+    tap-pair rows): FF hold -376.91 on 5993 cross-tap endpoints.
+Dry: schema validate PASS; G0C 29 errors vs 32 on v4s, 0 new (3 gone = PHY lib path lookups); count dry: types,
+type_modules, plan_designs, pin rows identical (119 types, 31 designs) -> 0 counted rows lost.

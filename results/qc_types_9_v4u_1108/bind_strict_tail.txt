@@ -1,0 +1,3 @@
+{"partitions": 377, "types": 119, "crossings": 1921, "crossing_bits": 790393, "errors": 0, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 11568, "plan_driven": 0}
+BIND rc 0
+bind_v4u tree hash (find|sort|sha256sum) 7a34c7d31e25f82c on epyc4/intel1/epyc2/epyc5/epyc6 /srv/opentallas-scratch2/claude/qct9/bind_v4u; RTL vs bind_v4s (comments stripped): only qfd_qc_sle_fe__sle_fe_v2.sv, qfd_qc_sle_fw.sv, qwen_compute_bound_top.sv (strap values only)

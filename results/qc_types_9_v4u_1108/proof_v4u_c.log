@@ -1,0 +1,14 @@
+start PASS PASS active START/reset 314 cycles
+/srv/opentallas-scratch2/claude/qct9/fw/proof_v4u_c/tb_start.sv:11: $finish called at 3200 (1s)
+start_bypass MUTANT CAUGHT FATAL: /srv/opentallas-scratch2/claude/qct9/fw/proof_v4u_c/tb_start.sv:7: START/reset mismatch cycle 22
+       Time: 226  Scope: tb
+reset_wrong_phase MUTANT CAUGHT FATAL: /srv/opentallas-scratch2/claude/qct9/fw/proof_v4u_c/tb_start.sv:7: START/reset mismatch cycle 82
+       Time: 826  Scope: tb
+ring_W0_priced PASS PASS real CA payload 440 cycles
+/srv/opentallas-scratch2/claude/qct9/fw/proof_v4u_c/tb_ring_0_0.sv:11: $finish called at 6400 (1s)
+ring_W0_badK MUTANT CAUGHT FATAL: /srv/opentallas-scratch2/claude/qct9/fw/proof_v4u_c/tb_ring_0_1.sv:11: no healthy payload comparison: 0
+       Time: 6400  Scope: tb
+ring_W1_priced PASS PASS real CA payload 440 cycles
+/srv/opentallas-scratch2/claude/qct9/fw/proof_v4u_c/tb_ring_1_0.sv:11: $finish called at 6400 (1s)
+ring_W1_badK MUTANT CAUGHT FATAL: /srv/opentallas-scratch2/claude/qct9/fw/proof_v4u_c/tb_ring_1_1.sv:11: no healthy payload comparison: 0
+       Time: 6400  Scope: tb
