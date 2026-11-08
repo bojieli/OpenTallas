@@ -187,7 +187,7 @@ def test_h8_pass0_matches_h16_up_to_go():
     # pass 0 sends one ATTN_Q frame (129 words) less before its SMJ / GO (GO bound by the q stream, not W_SLACK)
     assert sb['at']['SMJ'] == sa['at']['SMJ'] - 129 and sb['go'] == sa['go'] - 129
     assert sb['pvo'] - sb['po'] == sa['pvo'] - sa['po']
-    assert sb['passes'][0]['po'] == sa['po'] - -(-128 // 4) + 47  # H8 producer accumulation at actual 1-word/2-cycle rate
+    assert sb['passes'][0]['po'] == sa['po']  # H8 static feed every two cycles needs the same T128 frame lag
 
 
 def test_h8_sot_is_todays_booking_of_all_heads():
@@ -272,11 +272,11 @@ def test_h8_requires_on_die_p(monkeypatch):
 def test_h8_p_feed_never_reads_a_word_before_its_arrival(T):
     npw = -(-T // 4)
     lag = L.h8_p_feed_lag(npw)
-    assert all(lag + j // 2 >= 2 * j for j in range(npw))
+    assert all(lag + 2 * (j // 2) >= 2 * j for j in range(npw))
     if npw > 1:
-        assert any(lag - 1 + j // 2 < 2 * j for j in range(npw))
+        assert any(lag - 1 + 2 * (j // 2) < 2 * j for j in range(npw))
     if T == 128:
-        assert lag == 47
+        assert lag == 32
     j = synth(8, T=max(T, 128))
     _, rec = j.pass_go(0, 0)
     assert rec['po'] == rec['pio'] + L.P_ARR + L.h8_p_feed_lag(rec['npw']) + L.P_PO_M

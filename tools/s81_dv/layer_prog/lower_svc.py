@@ -76,6 +76,7 @@ BENCH = 'results/rtl/s81_layer_tput_1018/compiler/bench_svc'
 BENCH_P = 'results/rtl/s81_layer_tput_1018/compiler/bench_svc_p'   # TOK-S81-GAPS/SVCP: on-die P path (PPATH)
 BENCH_ALLQ = 'results/rtl/s81_rtlgap_so_1021/bench_allq'           # RTLGAP-SO: all-quarter P.V on one die (-DOT_SVC_ALLQ)
 BENCH_SO = 'results/rtl/s81_rtlgap_so_1021/bench_so'               # RTLGAP-SO: SO programme on the 16 real SM shares
+BENCH_H8 = 'results/rtl/s81_r5_h8_1108/bench_h8'  # H8 needs its own two-pass numerical receipt, never the H16 bench
 BENCH_CMP = 'results/rtl/s81_l14_cmp_1026/bench_cmp'               # TOK-DS-CMP: L14 T640 (128 window + 512 selected rows)
 UNIT = 'svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4'
 INSTS = [f'u_rsv_{i:02d}' for i in range(16)] + ['u_seqhost']
@@ -169,7 +170,8 @@ SVC_H = int(os.environ.get('OT_SVC_H', '16'))
 GO_MORE = 48                 # GO spec bit: another pass follows on the same landing (S81-SVCRS-3 interface v1 (3))
 H8_P_ROWS = 4                # H8 fold root PV frame: 4 rows a 512-b word (R = TD / H), local head h at bits 16 (8 r + h)
 H8_P_WORD_INTERVAL = 2      # H8 fold emits one 512-bit word every two P-beat cycles
-H8_P_WORDS_PER_CYCLE = 2    # engine P buffer consumes two words per P-feed cycle
+H8_P_WORDS_PER_CYCLE = 2    # engine P buffer consumes two words per P-feed step
+H8_FEED_INTERVAL = 2        # four H8 loads per DPT8 issue block; fixed cadence prevents bounded-ahead overrun
 PASS_GAP = 16                # previous pass's last P.V word -> next pass's ATTN_Q / GO (margin)
 # H8 engine / P-path latencies: PLACEHOLDERS = the H16 values until the S81-SVCRS-3 H8 lock-step bench measures
 # PIO0 / P_ARR / P_PO_M / KPV / PV_LAT / GW_ARR / SOT_W_LAT at H8 (interface v1: "until then use the H16 values").
@@ -177,13 +179,14 @@ H8_CALIBRATED = False
 
 
 def h8_p_feed_lag(npw):
-    # Body word j arrives at 2*j from the first word and is read at floor(j/2)
-    # from feed start. The final word maximizes arrival minus consumption.
+    # Body word j arrives at 2*j from the first word and is read at
+    # 2*floor(j/2) from feed start. Static H8 feed cadence matches four loads
+    # per eight compute issue cycles and avoids overrunning the bounded lookahead.
     # Transport/first-word offsets remain P_ARR + P_PO_M, separately calibrated.
     if npw <= 0:
         raise ValueError('P frame needs at least one body word')
-    last = npw - 1
-    return H8_P_WORD_INTERVAL * last - last // H8_P_WORDS_PER_CYCLE
+    return max(H8_P_WORD_INTERVAL * j - H8_FEED_INTERVAL * (j // H8_P_WORDS_PER_CYCLE)
+               for j in range(npw))
 
 
 def pass_heads(j, hs=8):
@@ -667,7 +670,7 @@ class Job:
     def pass_go(self, k, go):
         """GO word + derived cycles of pass k (H8).  P: PIO as H16 (PLACEHOLDER until the H8 bench); the fold root PV
         frame is npw = ceil(T / 4) words. The actual H8 fold emits one word every two cycles while the engine reads
-        two words each cycle, so start after the largest arrival-minus-consumption offset (47 edges for T128),
+        two words every two cycles, so start after the largest arrival-minus-consumption offset (32 edges for T128),
         not the old zero-lag placeholder. P_ARR and engine KPV still need end-to-end H8 calibration.
         P.V: 8 ceil(T / 32) feed steps + KPV as H16; MORE = 1 but on the last pass."""
         T = self.T
@@ -685,7 +688,7 @@ class Job:
         npv = 2 * NPVQ if self.allq else NPVQ
         pv_first = go + pvo + PV_LAT
         return w, dict(k=k, go=go, pio=pio, pvs=pvs, po=po, pvo=pvo, npw=npw, more=more, pv_first=pv_first,
-                       pv_last=pv_first + npv - 1, npv=npv)
+                       pv_last=pv_first + npv - 1, npv=npv, feed_interval=H8_FEED_INTERVAL)
 
     def _schedule_passes(self, t_q0, t_q, t_exp, j_age_w, j_age_e):
         """S81-SVCC-1: the static schedule of the H8 job.  Pass 0 = today's rules (GO >= WIN_LOAD + W_SLACK, SEL / ROWS
@@ -1084,7 +1087,7 @@ def bench_image(job, s, out, base=60):
                pv_last=s['pv_last'] + off, done_w=s['done_w'] + off, done_e=s['done_e'] + off, anchors=job.anchor, T=job.T, heads=[job.h0, job.h0 + H],
                st=ST, allq=job.allq, npv=s['npv'], so=job.so,
                **({} if job.npass == 1 else dict(slice_heads=job.hs, h8_calibrated=H8_CALIBRATED, passes=[
-                   dict(k=p['k'], heads=p['heads'], more=p['more'], go=p['go'] + off, pio=p['pio'], po=p['po'], pvo=p['pvo'],
+                   dict(k=p['k'], heads=p['heads'], more=p['more'], feed_interval=p['feed_interval'], go=p['go'] + off, pio=p['pio'], po=p['po'], pvo=p['pvo'],
                         npw=p['npw'], pv_first=p['pv_first'] + off, pv_last=p['pv_last'] + off,
                         ) for p in s['passes']])),
                sot=None if 'sot' not in s else dict(
@@ -1144,7 +1147,7 @@ def lower(die, op, ctx):
                               q_words=len(s['words']), q_image=f'prog/svc/{ctx.get("layer")}/qwd.hex',
                               **({} if job.npass == 1 else dict(
                                   slice_heads=job.hs, h8_calibrated=H8_CALIBRATED,
-                                  passes=[dict(k=p['k'], heads=p['heads'], more=p['more'], go=p['go'], pio=p['pio'],
+                                  passes=[dict(k=p['k'], heads=p['heads'], more=p['more'], feed_interval=p['feed_interval'], go=p['go'], pio=p['pio'],
                                                po=p['po'], pvo=p['pvo'], pv_first=p['pv_first'], pv_last=p['pv_last'])
                                         for p in s['passes']])),
                               tag_rule='q headers carry {issuer slot, calendar row index}: re-emit with the final row '
@@ -1237,6 +1240,8 @@ def lower(die, op, ctx):
     else:
         st = 'GAP'
         r['gap'] = dict(SO_INPUT_GAP)
+    if job.npass > 1:
+        r['bench'] = BENCH_H8
     return dict(r, status=st)
 
 
