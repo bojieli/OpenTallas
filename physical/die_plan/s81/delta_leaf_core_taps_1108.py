@@ -10,16 +10,22 @@ core's early tap drop is hundreds of um from its pin (t27: vn_b tap at 892,968, 
 "early core tap still late").
 
 Per ot_s81sl_leaf__* type:
-  1. --moves ITEM_ENV.json (kit_wave s81 item_env): the row's OT_MACRO_MOVES is baked into hard_cores (origin_um,
-     orient, track_offset_um per gen_phys._CORE_TRACK_OFFSET), so plan, die checks and kit agree; the env entry is then
-     a no-op (same position).  Rows in --skip-bake keep the plan positions (already composed by S81-TYPES-7-LEAFB).
+  1. --moves ITEM_ENV.json (kit_wave s81 item_env): the row's OT_MACRO_MOVES positions (origin_um, orient,
+     track_offset_um per gen_phys._CORE_TRACK_OFFSET) are applied to a COPY of the type; the core taps of steps 2-3
+     are sited on that copy (the geometry the kit places) and only clock goes back to the plan.  hard_cores stay as
+     planned and the env entry stays the kit's move.  --bake also writes the moves into hard_cores: on main that
+     exposed 2228 G0C errors (R3-INTERNAL bundles up to 1191 um, core_faces, ft stations under macros) and 9
+     tap-budget bind stops (11-08 14:1x UTC), the facing form's own class, so it is not the default.  Rows in
+     --skip-bake keep the plan positions (already composed by S81-TYPES-7-LEAFB) and get step 4.
   2. Existing core taps of a moved core are re-sited beside its moved clock pin (insertion/budget kept).
   3. early_core_taps.add(leg_ps=60, window_ps=20, merge=True): a clock pin gets its own early core tap (clk_c<k>,
      appended, existing port numbers kept) when TT lib max_clock_tree_path rise + 60 > 250 - 20; insertion_ps = that
      rise (the number tap_balance.tcl reads), insertion_ff_ps = the FF lib rise when an _ff.lib sits beside it.
-  4. A grid+explicit added tap (clock.added_taps) that a baked or composed move left inside a macro halo, outside the
+  4. (--bake or composed rows) A grid+explicit added tap (clock.added_taps) that a baked or composed move left inside a macro halo, outside the
      outline or within tap spacing (taps.grid_explicit_sites, the G0 schema rule) is re-sited to the nearest legal
-     point (schema.tap_clear, strict); legal added taps are not touched.
+     point (schema.tap_clear, strict); legal added taps are not touched.  If that point fails the bind budget
+     (taps.grid_explicit_taps: radius <= 1.10 x tap_radius_um, load <= cap, non-empty), or the baked moves made any
+     added tap fail it, the legal points on 2.16-um rings around that tap are tried nearest first (budget_fix).
 Asserted: nothing else in a type changes (hard_cores only origin/orient/track_offset of baked moves).
     python3 delta_leaf_core_taps_1108.py PLAN_IN PLAN_OUT REPORT.json [--moves item_env.json] [--skip-bake t1,t5 --ref PLAN0]
     (cwd = repo root)
@@ -110,16 +116,78 @@ def _legal(t, x, y, taken, boxes):
             and not any(a + eps < x < c - eps and b + eps < y < d - eps for a, b, c, d in boxes))
 
 
+def _budget_err(PL, tn):
+    """None when the bind budget passes, else the added tap name it stops on"""
+    import taps as TP
+    try:
+        TP.grid_explicit_taps(PL, tn)
+        return None
+    except ValueError as e:
+        m = re.search(r"grid\+explicit tap (\S+) load=", str(e))
+        if not m:
+            raise
+        return m.group(1)
+
+
+def budget_fix(PL, tn, t, ck, boxes, row, rounds=8, tries=300):
+    """An added tap the bind budget stops on (taps.grid_explicit_taps: radius > 1.10 x tap_radius_um, load > cap or
+    empty), because the baked moves changed the sink or macro geometry: try the legal points on 2.16-um rings around
+    it, nearest first, and keep the first that clears that tap without making another one fail first."""
+    for _ in range(rounds):
+        bad = _budget_err(PL, tn)
+        if bad is None:
+            return
+        p = next(q for q in ck["added_taps"] if q["name"] == bad)
+        grid = [(gx, gy) for _, gx, gy in schema._grid_taps(PL, tn)]
+        others = grid + [tuple(q["xy"]) for q in ck["added_taps"] if q is not p]
+        x0, y0 = p["xy"]
+        best, tried = None, 0
+        for _, cx, cy in _ring_points(x0, y0):
+            if tried >= tries:
+                break
+            if not _legal(t, cx, cy, others, boxes):
+                continue
+            tried += 1
+            p["xy"] = [round(cx, 4), round(cy, 4)]
+            e = _budget_err(PL, tn)
+            if e != bad:
+                best = p["xy"]
+                break
+        if best is None:
+            p["xy"] = [x0, y0]
+            row["budget_open"] = dict(tap=bad, note="no legal site within the bind budget; the row owner re-sites it")
+            return
+        row.setdefault("added_budget_resited", []).append(dict(name=bad, frm=[x0, y0], to=best, tried=tried))
+    if _budget_err(PL, tn) is not None:
+        row["budget_open"] = dict(tap=_budget_err(PL, tn), note="still over the bind budget after the search rounds")
+
+
+def _ring_points(x0, y0, rmax=216.0, step=2.16):
+    pts = []
+    n = int(rmax / step)
+    for i in range(-n, n + 1):
+        for j in range(-n, n + 1):
+            d = (i * i + j * j) ** 0.5 * step
+            if 0 < d <= rmax:
+                pts.append((d, x0 + i * step, y0 + j * step))
+    pts.sort()
+    return pts
+
+
 def fix_added(P, report):
     """step 4: the same legality walk as taps.grid_explicit_sites, re-siting only the illegal added taps"""
     from placement_obstacles import placement_boxes
     PL = schema.Plan(P)
-    n = 0
+    n, todo = 0, []
     for tn in sorted(report):
         t = P["partition_types"][tn]
         ck = t.get("clock", {})
         if ck.get("tap_mode") != "grid+explicit" or not ck.get("added_taps"):
             continue
+        if PL.types[tn] is not t:
+            # schema.Plan gives landing-pin types a separated copy: share the one added_taps list so the
+            # budget check reads the sites edited here
+            PL.types[tn].setdefault("clock", {})["added_taps"] = ck["added_taps"]
         boxes = list(placement_boxes(t, halo=schema.TAP_CLEAR_UM).values())
         taken = [(x, y) for _, x, y in schema._grid_taps(PL, tn)]
         for p in ck["added_taps"]:
@@ -133,6 +201,10 @@ def fix_added(P, report):
                 x, y = nx, ny
                 n += 1
             taken.append((x, y))
+        todo.append((tn, t, ck, boxes))
+    # second pass: the reset wavefront solve behind the budget reads every leaf type, so all sites are legal first
+    for tn, t, ck, boxes in todo:
+        budget_fix(PL, tn, t, ck, boxes, report[tn])
     return n
 
 
@@ -140,6 +212,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("src"); ap.add_argument("out"); ap.add_argument("rep")
     ap.add_argument("--moves"); ap.add_argument("--skip-bake", default="")
+    ap.add_argument("--bake", action="store_true", help="also write the OT_MACRO_MOVES positions into hard_cores "
+                    "(default: hard_cores unchanged, core taps sited for the moved kit positions only)")
     ap.add_argument("--ref", help="plan before an earlier composed move event (--skip-bake rows): cores whose origin/orient differ from it count as moved")
     a = ap.parse_args()
     P = json.loads(Path(a.src).read_text())
@@ -152,14 +226,17 @@ def main():
     for tn in sorted(P["partition_types"]):
         if not LEAF.match(tn):
             continue
-        t = P["partition_types"][tn]
-        t.setdefault("clock", {})
-        row = dict(baked=[], resited=[], added=[])
+        t0 = P["partition_types"][tn]
+        t0.setdefault("clock", {})
+        t = t0
+        row = dict(resited=[], added=[])
         mv = (env.get(tn) or {}).get("OT_MACRO_MOVES")
         if mv and tn not in skip:
-            row["baked"] = bake(t, tn, mv)
+            if not a.bake:
+                t = copy.deepcopy(t0)   # the kit geometry: sites are computed on it, only clock goes back
+            row["baked" if a.bake else "sited_for_moves"] = bake(t, tn, mv)
             baked += 1
-        moved = {b["inst"] for b in row["baked"]}
+        moved = {b["inst"] for b in row.get("baked") or row.get("sited_for_moves") or []}
         if tn in skip and tn in ref:
             rc = {c["inst"]: (c["origin_um"], c.get("orient", "R0")) for c in ref[tn].get("hard_cores", [])}
             moved |= {c["inst"] for c in t.get("hard_cores", [])
@@ -184,7 +261,7 @@ def main():
             x, y = pin_xy(t, c, pin)
             old = list(tp["xy"])
             tp["xy"] = list(tap_clear(t, x, y, others(tp), clear=4.32))
-            tp["note"] = (tp.get("note", "") + " | CORE-TAP-LATE 11-08: re-sited beside the baked macro move").strip(" |")
+            tp["note"] = (tp.get("note", "") + " | CORE-TAP-LATE 11-08: re-sited beside the kit (OT_MACRO_MOVES) macro position").strip(" |")
             row["resited"].append(dict(name=tp["name"], frm=old, to=tp["xy"]))
             resited += 1
         new = E.add(t, common_ps=COMMON_PS, leg_ps=LEG_PS, window_ps=WINDOW_PS, merge=True)
@@ -198,9 +275,11 @@ def main():
                           f"+ {LEG_PS:g} ps min grid leg > {COMMON_PS:g} - {WINDOW_PS:g}")
             row["added"].append(dict(name=tp["name"], module=c["module"], insertion_ps=tp["insertion_ps"],
                                      insertion_ff_ps=tp.get("insertion_ff_ps"), xy=tp["xy"]))
+        if t is not t0:
+            t0["clock"] = t["clock"]
         total += len(new)
         report[tn] = row
-    added_fixed = fix_added(P, report)
+    added_fixed = fix_added(P, {tn: r for tn, r in report.items() if r.get("baked") or r.get("composed_moved")})
     for tn, t in P["partition_types"].items():
         assert {k: v for k, v in t.items() if k not in ("clock", "hard_cores")} == keep[tn], tn
     Path(a.out).write_text(plan_text(P))
@@ -210,7 +289,9 @@ def main():
             mods[x["module"]] = mods.get(x["module"], 0) + 1
     summary = dict(leaf_types=len(report), types_with_new_taps=sum(1 for r in report.values() if r["added"]),
                    taps_added=total, types_baked=baked, core_taps_resited=resited,
-                   added_taps_resited=added_fixed, types_added_resited=sum(1 for r in report.values() if r.get("added_resited")), by_module=dict(sorted(mods.items())))
+                   added_taps_resited=added_fixed, types_added_resited=sum(1 for r in report.values() if r.get("added_resited")),
+                   added_taps_budget_resited=sum(len(r.get("added_budget_resited", [])) for r in report.values()),
+                   budget_open=sorted(tn for tn, r in report.items() if r.get("budget_open")), by_module=dict(sorted(mods.items())))
     Path(a.rep).write_text(json.dumps(dict(summary=summary, types=report), indent=1) + "\n")
     print(json.dumps(summary))
 
