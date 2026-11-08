@@ -84,5 +84,49 @@ class GzPins(unittest.TestCase):
                 P.plan_pins({"pins_file": "p.json"}, d)
 
 
+class CoreTables(unittest.TestCase):
+    """Root contract children without RTL of their own (ot_hbm_hc_root_static__hcp_sys1, __tailx_sk_fsr)."""
+
+    def _root(self, d):
+        os.makedirs(os.path.join(d, "physical/die_plan/hbm/cores/ports"))
+        os.makedirs(os.path.join(d, "physical/die_plan/hbm_arch_cores"))
+        os.makedirs(os.path.join(d, "rtl"))
+        json.dump({"m__cut": {"m__cut": [["u_core_pop", "input", 1, 0], ["u_core_o", "output", 32, 0], ["x", "bad", 1, 0]]}},
+                  open(os.path.join(d, "physical/die_plan/hbm/cores/ports/ports_cut.json"), "w"))
+        json.dump({"m__sk": {"files": ["rtl/sk.sv"], "top": "ot_sk_top"}},
+                  open(os.path.join(d, "physical/die_plan/hbm_arch_cores/recipes_b2.json"), "w"))
+        open(os.path.join(d, "rtl", "sk.sv"), "w").write("module ot_sk_top (input wire clk, output wire [3:0] y);\nendmodule\n")
+
+    def setUp(self):
+        P._RTL_CACHE.clear()
+
+    def test_cut_port_table(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._root(d)
+            dirs, src = P.core_table_dirs("m__cut", [d])
+            self.assertEqual(dirs, {"u_core_pop": "input", "u_core_o": "output"})
+            self.assertEqual(src, ["port table physical/die_plan/hbm/cores/ports/ports_cut.json"])
+
+    def test_recipe_top_rtl(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._root(d)
+            dirs, src = P.core_table_dirs("m__sk", [d])
+            self.assertEqual(dirs, {"clk": "input", "y": "output"})
+            self.assertEqual(src, ["recipe top ot_sk_top"])
+
+    def test_unknown_module_empty(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._root(d)
+            self.assertEqual(P.core_table_dirs("nope", [d]), ({}, []))
+
+    def test_two_recipe_tops_ambiguous(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._root(d)
+            os.makedirs(os.path.join(d, "physical/die_plan/hbm/cores/harden"))
+            json.dump({"m__sk__1x1": {"files": [], "top": "other_top"}},
+                      open(os.path.join(d, "physical/die_plan/hbm/cores/harden/recipes_split.json"), "w"))
+            self.assertEqual(P.core_table_dirs("m__sk", [d]), ({}, []))
+
+
 if __name__ == "__main__":
     unittest.main()

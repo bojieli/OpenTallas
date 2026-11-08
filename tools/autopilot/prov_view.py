@@ -325,6 +325,51 @@ def rtl_dirs(module, roots):
     return dirs, first
 
 
+# DIE-HBM-91-KCLS 11-08: hard-core port tables of the core flow (source-relative), for plan modules without RTL of
+# their own: the exact cut port table (rows [name, dir, width, lsb]) and the core recipe's RTL top
+CORE_PORT_TABLES = ("physical/die_plan/hbm/cores/ports/ports_cut.json",)
+CORE_RECIPES = ("physical/die_plan/hbm_arch_cores/recipes_b2.json", "physical/die_plan/hbm/cores/harden/recipes_split.json",
+                "physical/die_plan/hbm/cores/harden/recipes_other.json", "physical/die_plan/hbm/cores/harden/recipes.json")
+
+
+def core_table_dirs(module, roots):
+    """{port: input|output|inout}, [sources] of `module` from the core port tables, then the RTL of its recipe top (a
+    recipe keyed by the module or '<module>__<outline>'; one distinct top only).  Fills only pins RTL did not."""
+    dirs, srcs = {}, []
+    for r in roots:
+        for rel in CORE_PORT_TABLES:
+            f = os.path.join(r or "", rel)
+            try:
+                j = json.load(open(f))
+            except (OSError, ValueError):
+                continue
+            ent = j.get(module) if isinstance(j, dict) else None
+            rows = (ent.get(module) if isinstance(ent, dict) else None) or []
+            got = {row[0]: row[1] for row in rows if isinstance(row, list) and len(row) >= 2 and row[1] in DIRS}
+            if got:
+                for n, d in got.items():
+                    dirs.setdefault(n, d)
+                srcs.append(f"port table {rel}")
+    tops = set()
+    for r in roots:
+        for rel in CORE_RECIPES:
+            try:
+                j = json.load(open(os.path.join(r or "", rel)))
+            except (OSError, ValueError):
+                continue
+            for k, v in (j.items() if isinstance(j, dict) else ()):
+                if (k == module or k.startswith(module + "__")) and isinstance(v, dict) and v.get("top"):
+                    tops.add(v["top"])
+    if len(tops) == 1:
+        top = next(iter(tops))
+        rp, rf = rtl_dirs(top, roots)
+        if rp:
+            for n, d in rp.items():
+                dirs.setdefault(n, d)
+            srcs.append(f"recipe top {top}")
+    return dirs, srcs
+
+
 # plan-added pins (feedthroughs ft_*_i/_o, face ports) that no RTL header declares: the direction from the name suffix
 NAME_DIR = [(re.compile(r"(?:^|_)(?:i|in)(?:_\d+)?$"), "INPUT"), (re.compile(r"(?:^|_)(?:o|out)(?:_\d+)?$"), "OUTPUT"),
             (re.compile(r"^(?:i|in)_"), "INPUT"), (re.compile(r"^(?:o|out)_"), "OUTPUT")]
@@ -680,6 +725,17 @@ def make(a):
                     d = rp.get(b) or (rp.get(sp_.group(1)) if sp_ else None)
                     if d:
                         dirs[n] = DIRS[d]
+                missing = [p["name"] for p in ppins if p["name"] not in dirs]
+            if missing:
+                # DIE-HBM-91-KCLS 11-08: a hard-core cut / recipe view whose plan module has no RTL of its own
+                # (HBM root ot_hbm_hc_root_static__hcp_sys1, __tailx_sk_fsr): the core flow's exact port tables
+                cp, csrc = core_table_dirs(m, roots)
+                for n in missing:
+                    d = cp.get(split_bit(n)[0])
+                    if d:
+                        dirs[n] = DIRS[d]
+                if csrc and len(missing) != len([p for p in ppins if p["name"] not in dirs]):
+                    dsrc += csrc
                 missing = [p["name"] for p in ppins if p["name"] not in dirs]
             if missing:
                 guessed = {n: name_dir(n) for n in missing if name_dir(n)}
