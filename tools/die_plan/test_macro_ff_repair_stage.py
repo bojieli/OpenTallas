@@ -58,11 +58,12 @@ def test_exported_runner_expands_inner_stage_commands(tmp_path, macro_ff):
     kitdir.mkdir(); bindir.mkdir()
     flow = tmp_path / "fake_flow"
     flow.mkdir(); (flow / "env.sh").write_text("")
+    # config.mk before the results: a newer config.mk is the RESYNTH-GUARD refusal case (KW-FIX-32)
+    (kitdir / "config.mk").write_text("export OT_HOLD_FF_MARGIN = 10\n")
     result = kitdir / "run/results/asap7/fixture/base"
     result.mkdir(parents=True)
     for f in ("1_synth.odb", "1_2_yosys.v", "4_cts.odb", "4_cts.sdc", "5_1_grt.odb", "6_final.odb"):
         (result / f).write_text("")
-    (kitdir / "config.mk").write_text("export OT_HOLD_FF_MARGIN = 10\n")
     if macro_ff:
         (kitdir / "macro_ff_repair.mk").write_text("# fake stage marker, no CAD\n")
     def executable(name, body):
