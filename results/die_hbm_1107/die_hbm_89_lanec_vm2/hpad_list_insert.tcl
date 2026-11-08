@@ -16,7 +16,9 @@ proc ot_hpad_insert_list {fn} {
     set nn [odb::dbNet_create $blk "ot_hpad_n_$n"]
     $it disconnect; $it connect $nn
     [$b findITerm A] connect $net; [$b findITerm Y] connect $nn
-    $b setDoNotTouch 1
+    # pad OUTPUT net dont-touch only: an instance dont-touch blocks resizer buffering of the pad's INPUT net (vM2 try 1:
+    # GPL timing-driven repair_design RSZ-3006 on e_rd__fc[251], load ot_hpad_5824/A dont_touch)
+    $nn setDoNotTouch 1
     incr n
   }
   puts "OT_HPAD list [llength $names] padded $n missing $miss"

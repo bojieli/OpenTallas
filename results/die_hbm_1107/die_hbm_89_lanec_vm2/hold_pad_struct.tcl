@@ -5,7 +5,7 @@
 # Form: before global placement, every flop D pin whose worst min path is launched by a register and has an ideal-clock
 # hold slack below OT_HPAD_HOLD_PS (default 52 = every vM1 routed non-port violator, TT ideal 17.4-50.2) gets ONE fixed dont-touch HB4xp67 in front of D (FF ~37 ps), placed by GPL next to
 # the flop.  Only where the D pin's ideal setup slack is >= OT_HPAD_SETUP_PS (the pad is on every path into D).
-# Function-neutral (buffer); repair_timing/repair_design cannot remove or resize it (dbInst doNotTouch).
+# Function-neutral (buffer); its output net is dont-touch (hpad_list_insert.tcl).
 if {![info exists ::env(OT_HPAD_PROBE)]} { uplevel #0 [list source /work/face_flops.tcl] }
 if {![info exists ::env(OT_HPAD_PROBE)]} {
   source /work/hpad_list_insert.tcl
