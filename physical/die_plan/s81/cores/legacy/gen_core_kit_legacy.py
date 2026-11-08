@@ -387,7 +387,7 @@ def land_slot_contract(rec,buses_in):
     for bus,spec in land.items():
         try:depth,form=G.land_spec(spec)
         except (ValueError,KeyError,TypeError):bad.append(bus);continue
-        if bus not in buses_in or depth<2 or form not in G.LAND_FORMS:bad.append(bus)
+        if bus not in buses_in or depth<2 or form not in G.LAND_FORMS+("replica",):bad.append(bus)  # replica: land_spec checks its plan opt-in
     if bad:raise SystemExit(f"land_slots {sorted(bad)} are not plan input buses with D >= 2")
     payload=dict(schema="opentallas.core_land_slots.v1",
                  buses={b:land[b] if isinstance(land[b],dict) else int(land[b]) for b in sorted(land)},
