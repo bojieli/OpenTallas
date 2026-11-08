@@ -12,6 +12,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import prov_view as P
@@ -37,6 +38,7 @@ def _git(d, *a):
 class UntrackedRtl(unittest.TestCase):
     def setUp(self):
         P._RTL_CACHE.clear()
+        P._RTL_ROOT_INDEX.clear()
         self.td = tempfile.TemporaryDirectory()
         d = self.td.name
         os.makedirs(os.path.join(d, "rtl", "a", "b", "c"))
@@ -58,6 +60,23 @@ class UntrackedRtl(unittest.TestCase):
     def test_tracked_definition_unchanged(self):
         dirs, _ = P.rtl_dirs("ot_tracked", [self.td.name])
         self.assertEqual(dirs, {"clk": "input", "q": "output"})
+
+    def test_root_scan_cached_across_exact_modules_and_missing_lookup(self):
+        with open(os.path.join(self.td.name, "rtl", "many.sv"), "w") as f:
+            f.write("module m(input a); endmodule\nmodule m_more(output b); endmodule\n")
+        run = P.subprocess.run
+        with mock.patch.object(P.subprocess, "run", wraps=run) as calls:
+            self.assertEqual(P.rtl_dirs("m", [self.td.name])[0], {"a": "input"})
+            self.assertEqual(P.rtl_dirs("m_more", [self.td.name])[0], {"b": "output"})
+            self.assertEqual(P.rtl_dirs("absent", [self.td.name]), ({}, None))
+            self.assertEqual(sum("grep" in c.args[0] for c in calls.call_args_list), 1)
+        with tempfile.TemporaryDirectory() as staged:
+            with open(os.path.join(staged, "staged.sv"), "w") as f:
+                f.write("module stage(input x); endmodule\nmodule stage2(output y); endmodule\n")
+            with mock.patch.object(P.subprocess, "run", wraps=run) as calls:
+                self.assertEqual(P.rtl_dirs("stage", [staged])[0], {"x": "input"})
+                self.assertEqual(P.rtl_dirs("stage2", [staged])[0], {"y": "output"})
+                self.assertEqual(len(calls.call_args_list), 1)
 
     def test_absent_module_stays_empty(self):
         self.assertEqual(P.rtl_dirs("ot_nowhere", [self.td.name]), ({}, None))
@@ -110,6 +129,7 @@ class CoreTables(unittest.TestCase):
 
     def setUp(self):
         P._RTL_CACHE.clear()
+        P._RTL_ROOT_INDEX.clear()
 
     def test_cut_port_table(self):
         with tempfile.TemporaryDirectory() as d:

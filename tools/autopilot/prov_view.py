@@ -275,6 +275,53 @@ def module_ports(body):
 
 
 _RTL_CACHE = {}
+_RTL_ROOT_INDEX = {}
+_MODULE_DECL = re.compile(r"^\s*module\s+([A-Za-z_]\w*)\b")
+
+
+def rtl_module_files(root):
+    """Process-local module->files index; one declaration scan per fixed source root."""
+    if root in _RTL_ROOT_INDEX:
+        return _RTL_ROOT_INDEX[root]
+    index = {}
+    result = None
+    try:
+        result = subprocess.run(["git", "-C", root, "grep", "--untracked", "--null", "-n", "-E",
+                                 r"^\s*module\s+[A-Za-z_][A-Za-z_0-9]*", "--", "*.sv", "*.v", "*.svh"],
+                                capture_output=True, text=True, timeout=300)
+    except (OSError, subprocess.SubprocessError):
+        pass
+    if result is not None and result.returncode in (0, 1) and "not a git repository" not in (result.stderr or ""):
+        for record in result.stdout.splitlines():
+            fields = record.split("\0", 2)  # git grep -z -n: filename, line number, declaration
+            if len(fields) != 3:
+                continue
+            match = _MODULE_DECL.match(fields[2])
+            if match:
+                files = index.setdefault(match.group(1), [])
+                path = os.path.join(root, fields[0])
+                if path not in files:
+                    files.append(path)
+    else:
+        for dp, dn, fs in os.walk(root):
+            # Preserve the staged, non-git root's shallow walk and exclusions.
+            dn[:] = [x for x in dn if x not in (".git", "run", "results", "objects", "logs", "reports", "routed",
+                                               "views", "plan", "__pycache__") and dp.count(os.sep) - root.count(os.sep) < 3]
+            for filename in fs:
+                if not filename.endswith((".sv", ".v")):
+                    continue
+                path = os.path.join(dp, filename)
+                try:
+                    with open(path, errors="replace") as source:
+                        text = source.read()
+                except OSError:
+                    continue
+                for match in re.finditer(r"\bmodule\s+([A-Za-z_]\w*)\b", text):
+                    files = index.setdefault(match.group(1), [])
+                    if path not in files:
+                        files.append(path)
+    _RTL_ROOT_INDEX[root] = index
+    return index
 
 
 def rtl_dirs(module, roots):
@@ -288,31 +335,7 @@ def rtl_dirs(module, roots):
     for r in roots:
         if not r or not os.path.isdir(r):
             continue
-        p = None
-        try:
-            # DIE-HBM-91-KCLS 11-08 (class k1): --untracked. A staged wave src (kw33/src_d95ec) is an rsync of a newer
-            # tree over an old .git (HEAD c92647a215, 11-06 index), so the RX BM3 / TX split RTL added since
-            # (rtl/hbm_accel/cores_split/reform_1106/ot_pdie_serdes_rx_bm3.sv) is untracked there: plain git grep
-            # found no definition (rc 1, no walk fallback) and every pin of the child had no direction.
-            p = subprocess.run(["git", "-C", r, "grep", "--untracked", "-l", "-E",
-                                r"^\s*module\s+" + re.escape(module) + r"\b",
-                                "--", "*.sv", "*.v", "*.svh"], capture_output=True, text=True, timeout=300)
-        except (OSError, subprocess.SubprocessError):
-            pass
-        if p is not None and p.returncode in (0, 1) and "not a git repository" not in (p.stderr or ""):
-            files += [os.path.join(r, f) for f in p.stdout.split()]
-            continue
-        for dp, dn, fs in os.walk(r):
-            # a non-git root (a staged plan dir): skip build trees and stay shallow (RTL lives near the plan)
-            dn[:] = [x for x in dn if x not in (".git", "run", "results", "objects", "logs", "reports", "routed",
-                                                "views", "plan", "__pycache__") and dp.count(os.sep) - r.count(os.sep) < 3]
-            for f in fs:
-                if f.endswith((".sv", ".v")):
-                    try:
-                        if pat.search(open(os.path.join(dp, f), errors="replace").read()):
-                            files.append(os.path.join(dp, f))
-                    except OSError:
-                        pass
+        files.extend(rtl_module_files(r).get(module, []))
     dirs, first = {}, None
     for f in files:
         try:
