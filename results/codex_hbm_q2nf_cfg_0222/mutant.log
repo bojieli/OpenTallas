@@ -1,0 +1,588 @@
+
+-- Running command `read_verilog -sv actual_cfg_ref.sv mut_cfg_case.sv miter.sv; hierarchy -check -top q2nf_cfg_miter; proc; flatten; opt; sat -verify -prove ok 1 -show-inputs' --
+
+1. Executing Verilog-2005 frontend: actual_cfg_ref.sv
+Parsing SystemVerilog input from `actual_cfg_ref.sv' to AST representation.
+Generating RTLIL representation for module `\q2nf_cfg_ref'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: mut_cfg_case.sv
+Parsing SystemVerilog input from `mut_cfg_case.sv' to AST representation.
+Generating RTLIL representation for module `\ot_bodyctl_cfg_case'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: miter.sv
+Parsing SystemVerilog input from `miter.sv' to AST representation.
+Generating RTLIL representation for module `\q2nf_cfg_miter'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \q2nf_cfg_miter
+Used module:     \ot_bodyctl_cfg_case
+Used module:     \q2nf_cfg_ref
+
+4.2. Analyzing design hierarchy..
+Top module:  \q2nf_cfg_miter
+Used module:     \ot_bodyctl_cfg_case
+Used module:     \q2nf_cfg_ref
+Removed 0 unused modules.
+Mapping positional arguments of cell q2nf_cfg_miter.new_u (ot_bodyctl_cfg_case).
+Mapping positional arguments of cell q2nf_cfg_miter.ref_u (q2nf_cfg_ref).
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 54 switch rules as full_case in process $proc$mut_cfg_case.sv:18$22 in module ot_bodyctl_cfg_case.
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 2 assignments to connections.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~54 debug messages>
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_bodyctl_cfg_case.$proc$mut_cfg_case.sv:18$22'.
+     1/60: $54\y[36:0]
+     2/60: $53\y[36:0]
+     3/60: $52\y[36:0]
+     4/60: $51\y[36:0]
+     5/60: $50\y[36:0]
+     6/60: $49\y[36:0]
+     7/60: $48\y[36:0]
+     8/60: $47\y[36:0]
+     9/60: $46\y[36:0]
+    10/60: $45\y[36:0]
+    11/60: $44\y[36:0]
+    12/60: $43\y[36:0]
+    13/60: $42\y[36:0]
+    14/60: $41\y[36:0]
+    15/60: $40\y[36:0]
+    16/60: $39\y[36:0]
+    17/60: $38\y[36:0]
+    18/60: $37\y[36:0]
+    19/60: $36\y[36:0]
+    20/60: $35\y[36:0]
+    21/60: $34\y[36:0]
+    22/60: $33\y[36:0]
+    23/60: $32\y[36:0]
+    24/60: $31\y[36:0]
+    25/60: $30\y[36:0]
+    26/60: $29\y[36:0]
+    27/60: $28\y[36:0]
+    28/60: $27\y[36:0]
+    29/60: $26\y[36:0]
+    30/60: $25\y[36:0]
+    31/60: $24\y[36:0]
+    32/60: $23\y[36:0]
+    33/60: $22\y[36:0]
+    34/60: $21\y[36:0]
+    35/60: $20\y[36:0]
+    36/60: $19\y[36:0]
+    37/60: $18\y[36:0]
+    38/60: $17\y[36:0]
+    39/60: $16\y[36:0]
+    40/60: $15\y[36:0]
+    41/60: $14\y[36:0]
+    42/60: $13\y[36:0]
+    43/60: $12\y[36:0]
+    44/60: $11\y[36:0]
+    45/60: $10\y[36:0]
+    46/60: $9\y[36:0]
+    47/60: $8\y[36:0]
+    48/60: $7\y[36:0]
+    49/60: $6\y[36:0]
+    50/60: $6\k[31:0]
+    51/60: $5\y[36:0]
+    52/60: $5\k[31:0]
+    53/60: $4\y[36:0]
+    54/60: $4\k[31:0]
+    55/60: $3\y[36:0]
+    56/60: $3\k[31:0]
+    57/60: $2\y[36:0]
+    58/60: $2\k[31:0]
+    59/60: $1\k[31:0]
+    60/60: $1\y[36:0]
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_bodyctl_cfg_case.\y' from process `\ot_bodyctl_cfg_case.$proc$mut_cfg_case.sv:18$22'.
+Warning: Latch inferred for signal `\ot_bodyctl_cfg_case.\k [0]' from process `\ot_bodyctl_cfg_case.$proc$mut_cfg_case.sv:18$22': $auto$proc_dlatch.cc:545:proc_dlatch$1477
+Warning: Latch inferred for signal `\ot_bodyctl_cfg_case.\k [3:1]' from process `\ot_bodyctl_cfg_case.$proc$mut_cfg_case.sv:18$22': $auto$proc_dlatch.cc:543:proc_dlatch$1480
+Warning: Latch inferred for signal `\ot_bodyctl_cfg_case.\k [4]' from process `\ot_bodyctl_cfg_case.$proc$mut_cfg_case.sv:18$22': $auto$proc_dlatch.cc:545:proc_dlatch$1483
+Warning: Latch inferred for signal `\ot_bodyctl_cfg_case.\k [31:5]' from process `\ot_bodyctl_cfg_case.$proc$mut_cfg_case.sv:18$22': $auto$proc_dlatch.cc:543:proc_dlatch$1486
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 54 empty switches in `\ot_bodyctl_cfg_case.$proc$mut_cfg_case.sv:18$22'.
+Removing empty process `ot_bodyctl_cfg_case.$proc$mut_cfg_case.sv:18$22'.
+Cleaned up 54 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module q2nf_cfg_miter.
+Optimizing module ot_bodyctl_cfg_case.
+<suppressed ~130 debug messages>
+Optimizing module q2nf_cfg_ref.
+
+6. Executing FLATTEN pass (flatten design).
+Deleting now unused module ot_bodyctl_cfg_case.
+Deleting now unused module q2nf_cfg_ref.
+<suppressed ~2 debug messages>
+
+7. Executing OPT pass (performing simple optimizations).
+
+7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module q2nf_cfg_miter.
+<suppressed ~6 debug messages>
+
+7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\q2nf_cfg_miter'.
+Computing hashes of 491 cells of `\q2nf_cfg_miter'.
+Finding duplicate cells in `\q2nf_cfg_miter'.
+Computing hashes of 472 cells of `\q2nf_cfg_miter'.
+Finding duplicate cells in `\q2nf_cfg_miter'.
+<suppressed ~57 debug messages>
+Removed a total of 19 cells.
+
+7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \q2nf_cfg_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$98.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$101.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$104.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$107.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$110.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$112.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$119.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$122.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$125.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$128.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$131.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$133.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$140.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$143.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$146.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$149.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$152.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$154.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$161.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$164.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$167.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$170.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$173.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$175.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$182.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$185.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$188.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$191.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$194.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$196.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$203.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$206.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$209.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$212.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$215.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$217.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$224.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$227.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$230.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$233.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$236.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$238.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$245.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$248.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$251.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$254.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$257.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$259.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$266.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$269.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$272.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$275.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$278.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$280.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$287.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$290.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$293.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$296.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$299.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$301.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$308.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$311.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$314.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$317.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$320.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$322.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$329.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$332.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$335.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$338.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$341.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$343.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$350.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$353.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$356.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$359.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$362.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$364.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$371.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$374.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$377.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$380.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$383.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$385.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$392.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$395.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$398.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$401.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$404.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$406.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$413.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$416.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$419.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$422.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$425.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$427.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$434.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$437.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$440.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$443.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$446.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$448.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$455.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$458.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$461.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$464.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$467.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$469.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$476.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$479.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$482.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$485.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$488.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$490.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$497.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$500.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$503.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$506.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$509.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$511.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$518.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$521.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$524.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$527.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$530.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$532.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$539.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$542.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$545.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$548.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$551.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$553.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$560.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$563.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$566.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$569.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$572.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$574.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$581.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$584.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$587.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$590.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$593.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$595.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$602.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$605.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$608.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$611.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$614.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$616.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$623.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$626.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$629.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$632.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$635.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$637.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$644.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$647.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$650.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$653.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$656.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$658.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$665.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$668.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$671.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$674.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$677.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$679.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$686.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$689.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$692.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$695.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$698.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$700.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$707.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$710.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$713.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$716.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$719.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$721.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$728.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$731.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$734.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$737.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$740.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$742.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$749.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$752.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$755.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$758.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$761.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$763.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$770.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$773.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$776.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$779.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$782.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$784.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$791.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$794.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$797.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$800.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$803.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$805.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$812.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$815.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$818.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$821.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$824.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$826.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$833.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$836.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$839.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$842.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$845.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$847.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$854.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$857.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$860.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$863.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$866.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$868.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$875.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$878.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$881.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$884.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$887.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$889.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$896.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$899.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$902.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$905.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$908.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$910.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$917.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$920.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$923.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$926.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$929.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$931.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$938.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$941.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$944.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$947.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$950.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$952.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$959.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$962.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$965.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$968.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$971.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$973.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$980.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$983.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$986.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$989.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$992.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$994.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1001.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1004.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1007.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1010.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1013.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$1015.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1022.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1025.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1028.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1031.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1034.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$1036.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1043.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1046.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1049.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1052.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1055.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$1057.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1064.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1067.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1070.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1073.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1076.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$1078.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1085.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1088.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1091.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1094.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1097.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$1099.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1106.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1109.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1112.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1115.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$1117.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1142.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1145.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1148.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$1150.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1172.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1175.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$1177.
+    dead port 1/2 on $mux $flatten\new_u.$procmux$1196.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$1198.
+    dead port 2/2 on $mux $flatten\new_u.$procmux$1213.
+Removed 303 multiplexer ports.
+<suppressed ~364 debug messages>
+
+7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \q2nf_cfg_miter.
+Performed a total of 0 changes.
+
+7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\q2nf_cfg_miter'.
+Computing hashes of 169 cells of `\q2nf_cfg_miter'.
+Finding duplicate cells in `\q2nf_cfg_miter'.
+Removed a total of 0 cells.
+
+7.6. Executing OPT_DFF pass (perform DFF optimizations).
+Removing never-active async load on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1480 ($adlatch) from module q2nf_cfg_miter.
+Removing never-active async load on $flatten\new_u.$auto$proc_dlatch.cc:545:proc_dlatch$1483 ($adlatch) from module q2nf_cfg_miter.
+Removing never-active async load on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($adlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 0 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 1 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 2 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 3 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 4 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 5 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 6 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 7 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 8 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 9 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 10 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 11 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 12 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 13 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 14 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 15 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 16 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 17 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 18 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 19 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 20 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 21 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 22 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 23 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 24 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 25 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 26 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1486 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 1-bit at position 0 on $flatten\new_u.$auto$proc_dlatch.cc:545:proc_dlatch$1483 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 0 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1480 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 1 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1480 ($dlatch) from module q2nf_cfg_miter.
+Setting constant 0-bit at position 2 on $flatten\new_u.$auto$proc_dlatch.cc:543:proc_dlatch$1480 ($dlatch) from module q2nf_cfg_miter.
+
+7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \q2nf_cfg_miter..
+Removed 26 unused cells and 932 unused wires.
+<suppressed ~29 debug messages>
+
+7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module q2nf_cfg_miter.
+
+7.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \q2nf_cfg_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~61 debug messages>
+
+7.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \q2nf_cfg_miter.
+Performed a total of 0 changes.
+
+7.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\q2nf_cfg_miter'.
+Computing hashes of 138 cells of `\q2nf_cfg_miter'.
+Finding duplicate cells in `\q2nf_cfg_miter'.
+Removed a total of 0 cells.
+
+7.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \q2nf_cfg_miter..
+
+7.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module q2nf_cfg_miter.
+
+7.16. Finished fast OPT passes. (There is nothing left to do.)
+
+8. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 138 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+Import show expression: \draining
+Import show expression: \metadata
+Import show expression: \assembly
+Import show expression: \row
+Import show expression: \step
+
+Solving problem with 100184 variables and 288016 clauses..
+SAT proof finished - model found: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Signal Name             Dec       Hex                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Bin
+  --------------- ----------- ---------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  \assembly                --        --    000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  \draining                 1         1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1
+  \metadata                --        --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    0000000000000000000000000000000000000000000000000000000000000000
+  \row                      0         0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            00000000
+  \step                     2         2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              000010
+
+ERROR: Called with -verify and proof did fail!
