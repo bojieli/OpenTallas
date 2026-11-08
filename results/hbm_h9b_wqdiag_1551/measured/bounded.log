@@ -1,0 +1,45 @@
+Compiling VVP ...
+ ... VVP file version 12.0 (stable)
+Compile cleanup...
+ ... Linking
+ ... Removing symbol tables
+ ... Compiletf functions
+ ...    15188 functors (net_fun pool=1048576 bytes)
+               7840 logic
+                  0 bufif
+                  0 resolv
+               1050 signals
+ ...    14395 filters (net_fil pool=1835008 bytes)
+ ...    20329 opcodes (491520 bytes)
+ ...     2359 nets
+ ...    15206 vvp_nets (1048544 bytes)
+ ...       11 arrays (22 words)
+ ...       50 memories
+                 50 logic (122382 words)
+                  0 real (0 words)
+ ...      542 scopes
+ ... 0.200187 seconds, 26996.0/19204.0/6228.0 KBytes size/rss/shared
+Running ...
+ ...execute EndOfCompile callbacks
+ ...propagate initialization events
+ ...execute StartOfSim callbacks
+ ...run scheduler
+WQDIAG_REFRESH edge159 reload150 phase2 slot1 fire1 op6
+WQDIAG_REFRESH edge303 reload150 phase2 slot1 fire1 op6
+WQDIAG_REFRESH edge447 reload150 phase2 slot1 fire1 op6
+WQDIAG_REFRESH edge591 reload150 phase2 slot1 fire1 op6
+WQDIAG_PROGRESS edge1000 accepted90/90 writes13 reads155
+H9B_TXN PASS reqs=128 beats=271 wcols=18 wdone=18 edges_h9=1694 edges_h9b=1694
+tb.sv:108: $finish called at 1577702000 (1fs)
+ ...execute Postsim callbacks
+ ... 23.8902 seconds, 26996.0/19204.0/6228.0 KBytes size/rss/shared
+Event counts:
+        7578 time steps (pool=113)
+      371567 thread schedule events
+      930130 assign events
+             ...assign(vec4) pool=28086
+             ...assign(vec8) pool=204
+             ...assign(real) pool=256
+             ...assign(word) pool=128
+             ...assign(word/r) pool=204
+      740002 other events (pool=4096)
