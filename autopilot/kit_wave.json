@@ -5977,7 +5977,12 @@
       "hold_items": {
         "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native\u2192collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
         "slw_stm_v2__cl9beb65e6": "KW-FIX-35 2026-11-08 04:37 PST (COORD 02:17, QC-TYPES-8 02:15 (3)): CORE SPREAD G2 TT -519 inside u_stream; held for a redesign (sibling cl1ca9c415 GRT decides the family); QC-TYPES-9",
-        "coll_ftc": "KW-FIX-35 2026-11-08 04:37 PST: v4s coll_ftc is the CPU-active Codex private canary (intel2 codex-qc-v4s-collftc-grt-0222.service, kit intel2 /srv/opentallas-scratch2/claude/codex-wave-0222/qc/coll_ftc/gen/coll_ftc, CTS PASS, GRT running); no duplicate. KW-FIX-35 collects it; lift this hold only if it fails"
+        "coll_ftc": "KW-FIX-35 2026-11-08 04:37 PST: v4s coll_ftc is the CPU-active Codex private canary (intel2 codex-qc-v4s-collftc-grt-0222.service, kit intel2 /srv/opentallas-scratch2/claude/codex-wave-0222/qc/coll_ftc/gen/coll_ftc, CTS PASS, GRT running); no duplicate. KW-FIX-35 collects it; lift this hold only if it fails",
+        "sle_hc0__cl929603c0__cl4baa7c9c": "KW-FIX-35-E6 2026-11-08 09:45 PST: PLACE of this attempt resubmitted by hand (intel2 unit kwp-*-e6r, same kit + argv, spills to epyc6 root) after my 09:35 cancel; hold = no duplicate wave relaunch while it runs. Lifted with a retry item@attempt once the place receipt is back (resume from place). Not a design strike.",
+        "sle_hc2__clcc5e3e61": "KW-FIX-35-E6 2026-11-08 09:45 PST: PLACE of this attempt resubmitted by hand (intel2 unit kwp-*-e6r, same kit + argv, spills to epyc6 root) after my 09:35 cancel; hold = no duplicate wave relaunch while it runs. Lifted with a retry item@attempt once the place receipt is back (resume from place). Not a design strike.",
+        "slw_hc0__cl1bc59e1c": "KW-FIX-35-E6 2026-11-08 09:45 PST: PLACE of this attempt resubmitted by hand (intel2 unit kwp-*-e6r, same kit + argv, spills to epyc6 root) after my 09:35 cancel; hold = no duplicate wave relaunch while it runs. Lifted with a retry item@attempt once the place receipt is back (resume from place). Not a design strike.",
+        "slw_hc1__cl68f9248e__cle683a076": "KW-FIX-35-E6 2026-11-08 09:45 PST: PLACE of this attempt resubmitted by hand (intel2 unit kwp-*-e6r, same kit + argv, spills to epyc6 root) after my 09:35 cancel; hold = no duplicate wave relaunch while it runs. Lifted with a retry item@attempt once the place receipt is back (resume from place). Not a design strike.",
+        "slw_hc2__cla3497502__cl16607c7a": "KW-FIX-35-E6 2026-11-08 09:45 PST: PLACE of this attempt resubmitted by hand (intel2 unit kwp-*-e6r, same kit + argv, spills to epyc6 root) after my 09:35 cancel; hold = no duplicate wave relaunch while it runs. Lifted with a retry item@attempt once the place receipt is back (resume from place). Not a design strike."
       },
       "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave",
       "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -8015,6 +8020,13 @@
         "intel1",
         "epyc4",
         "epyc5"
+      ],
+      "hold_items_prev_kw35e6w_added": [
+        "sle_hc0__cl929603c0__cl4baa7c9c",
+        "sle_hc2__clcc5e3e61",
+        "slw_hc0__cl1bc59e1c",
+        "slw_hc1__cl68f9248e__cle683a076",
+        "slw_hc2__cla3497502__cl16607c7a"
       ]
     },
     "hbm": {
