@@ -1,0 +1,32 @@
+{
+ "base": "ot_s81sl_xrt1.lef (signed, blanket M1-M6 OBS)",
+ "base_sha256": "15666ff5d6859b533b7a9199e65502c08779104c15be4792bcc2c9d3ea64b9d6",
+ "detail": "write_abstract_lef -bloat_factor 0 of the signed 6_final.odb",
+ "out": "ot_s81sl_xrt1.lef",
+ "out_sha256": "88d1ce7311893435d1480c4a4fa27bf58dea5f3243ec12b36823f84137150dd8",
+ "layers_detailed": [
+  "M5",
+  "M6"
+ ],
+ "rects": {
+  "M5": 35353,
+  "M6": 11258
+ },
+ "pin_clear_um": null,
+ "pin_clear": null,
+ "pg_pin_layers": {
+  "VSS": [
+   "M5"
+  ],
+  "VDD": [
+   "M5"
+  ]
+ },
+ "detail_pins_equal_base": true,
+ "check_ok": true,
+ "problems": [],
+ "odb": "epyc2 /srv/opentallas-scratch2/claude/ss29/resign/kit_xrt1/run/results/asap7/kl_ot_s81sl_xrt1_rfj/base/6_final.odb (PROVENANCE.json routed_db)",
+ "odb_sha256": "6a1fb6f8764a4fcac3713bbbb03bf9819192715c3cb3775927eac44080a4ad56",
+ "why": "S81-XRT3-VIEW-1 2026-11-08: same class as ot_s81sl_xrt3 (dsdv_slice_c3x_C__t1 DRT-0073 on xr/clk). Kit-placement pin_access sweep (205 distinct placements of 34 macro views in current S81 kits): only xrt1 and xrt3 fail; xrt1 fails clk at the c1x_C kit spots 388.908 34.716 R0 and 388.908 1019.556 MX. This view: M5+M6 OBS exact (bloat 0), M1-M4 blanket kept, no pin clear; pin_access PASS on all 7563 signal pins at both spots.",
+ "not_modeled": "none (no pin clear)"
+}

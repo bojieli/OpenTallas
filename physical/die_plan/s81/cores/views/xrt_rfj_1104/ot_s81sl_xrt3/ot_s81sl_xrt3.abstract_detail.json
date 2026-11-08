@@ -1,0 +1,32 @@
+{
+ "base": "ot_s81sl_xrt3.lef (signed, blanket M1-M6 OBS)",
+ "base_sha256": "ce4412bd97e81f838b108b5d87ec205e0547661087d561a58a15eb15e38337d9",
+ "detail": "write_abstract_lef -bloat_factor 0 of the signed 6_final.odb",
+ "out": "ot_s81sl_xrt3.lef",
+ "out_sha256": "5e373c6a4a67ab2103dafc019c9958c86d4b3ba4fae93be2500cd745a4be59ed",
+ "layers_detailed": [
+  "M5",
+  "M6"
+ ],
+ "rects": {
+  "M5": 48836,
+  "M6": 13342
+ },
+ "pin_clear_um": null,
+ "pin_clear": null,
+ "pg_pin_layers": {
+  "VSS": [
+   "M5"
+  ],
+  "VDD": [
+   "M5"
+  ]
+ },
+ "detail_pins_equal_base": true,
+ "check_ok": true,
+ "problems": [],
+ "odb": "epyc2 /srv/opentallas-scratch2/claude/ss29/resign/kit_xrt3/run/results/asap7/kl_ot_s81sl_xrt3_rfj/base/6_final.odb (PROVENANCE.json routed_db)",
+ "odb_sha256": "8509377be625ac2fcc9c901082a9adf6bd3b6a4bfd2348cbcd1752c30c9075d9",
+ "why": "S81-XRT3-VIEW-1 2026-11-08: dsdv_slice_c3x_C__t1 attempt_12 GRT pin_access DRT-0073 No access point for u_xr/clk (M5 48x480 nm at the N edge). Reproduced with one macro at the kit spot (570.348 1019.556 MX), kit make_tracks, all 9122 signal pins netted, no PDN. write_abstract_lef default (bloat 10) still fails clk: it merges the 24 nm M5 wires 108-156 nm from the pin into one band over it; bloat 2 fails sid[3]; bloat 0 passes. This view: M5+M6 OBS exact (bloat 0), M1-M4 blanket kept, no pin clear, so every real shape is still modeled; pin_access PASS on all 9122 pins. Also PASS at the dsdv_slice_iq_C__t1 spot 492.588 1019.556 MX.",
+ "not_modeled": "none (no pin clear)"
+}
