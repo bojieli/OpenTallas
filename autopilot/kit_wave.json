@@ -6638,8 +6638,8 @@
       "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
       "plan": "/srv/opentallas-scratch2/claude/kw27/hbm_d44v_02909_g/die_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw34/src_28914",
-      "src_sha": "289149dea5bc78493b63c7caf5b47243b9210415",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_812ee",
+      "src_sha": "812ee41cd03d4d8ba3f3f42c1d4ad0c08750f14f",
       "gate": {
         "g0c": "PASS",
         "bind": "PASS",
@@ -7202,12 +7202,26 @@
         "q_spb0__physical_v1@1",
         "q_spb0@1",
         "vsN0@1",
-        "root@1"
+        "root@1",
+        "q_su31@3",
+        "q_su31__physical_v1@3",
+        "q_su30@1",
+        "q_su30__physical_v1@1",
+        "q_su11@1",
+        "q_su11__physical_v1@1",
+        "q_su01@1",
+        "q_su01__physical_v1@1",
+        "q_b110@1",
+        "q_b110__physical_v1@1",
+        "q_su20@1",
+        "q_su20__physical_v1@1",
+        "q_su21@1",
+        "q_su21__physical_v1@1"
       ],
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
       "pilot_mode": "queue",
-      "queue_src": "main@289149dea5bc",
+      "queue_src": "main@812ee41cd03",
       "hold_items": {
         "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
         "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
@@ -7228,11 +7242,7 @@
         "tailx_sk_step0": "KW-FIX-8 23:2x DIE-HBM-66: Sinkhorn A event, do not requeue",
         "tailx_sk_steady": "KW-FIX-8 23:2x DIE-HBM-66: Sinkhorn A event, do not requeue",
         "ot_hgi_sfu_core_split3__opstore_b": "KW-FIX-11 07:0x COORD 07:01: stopped 06:51 by ruling, part 27 replaces (HBM-FORM-SPLIT 06:51); autopilot revived it on exit 137; no relaunch",
-        "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch",
-        "q_su20": "KW-FIX-34 2026-11-08 01:56 PST: CANCELLED VOLUME row released only by the src move; same WCOPY kitparam class as q_su31 (DIE-HBM-91 00:43: q_su20/21/30 pull ot_hbm_su_static_pinned_bank); release with the kitparam v2 batch",
-        "q_su20__physical_v1": "KW-FIX-34 2026-11-08 01:56 PST: CANCELLED VOLUME row released only by the src move; same WCOPY kitparam class as q_su31 (DIE-HBM-91 00:43: q_su20/21/30 pull ot_hbm_su_static_pinned_bank); release with the kitparam v2 batch",
-        "q_su21": "KW-FIX-34 2026-11-08 01:56 PST: CANCELLED VOLUME row released only by the src move; same WCOPY kitparam class as q_su31 (DIE-HBM-91 00:43: q_su20/21/30 pull ot_hbm_su_static_pinned_bank); release with the kitparam v2 batch",
-        "q_su21__physical_v1": "KW-FIX-34 2026-11-08 01:56 PST: CANCELLED VOLUME row released only by the src move; same WCOPY kitparam class as q_su31 (DIE-HBM-91 00:43: q_su20/21/30 pull ot_hbm_su_static_pinned_bank); release with the kitparam v2 batch"
+        "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch"
       },
       "gen_hosts": [
         "intel1",
@@ -7358,7 +7368,21 @@
         "q_spb0__physical_v1@1": "KW-FIX-34 2026-11-08 02:16 PST: REDESIGN: PROV contract class fix kcls-k12 19c8342244d (prov_view contract pin directions from HBM core cut-port tables + recipe tops) on main 289149dea5b, tag fa-hbm; a1 ran on ez-hbm d6e906593cc without it (COORD 02:2x); fresh kit",
         "q_spb0@1": "KW-FIX-34 2026-11-08 02:16 PST: REDESIGN: PROV contract class fix kcls-k12 19c8342244d (prov_view contract pin directions from HBM core cut-port tables + recipe tops) on main 289149dea5b, tag fa-hbm; a1 ran on ez-hbm d6e906593cc without it (COORD 02:2x); fresh kit",
         "vsN0@1": "KW-FIX-34 2026-11-08 02:16 PST: REDESIGN: PROV contract class fix kcls-k12 19c8342244d (prov_view contract pin directions from HBM core cut-port tables + recipe tops) on main 289149dea5b, tag fa-hbm; a1 ran on ez-hbm d6e906593cc without it (COORD 02:2x); fresh kit",
-        "root@1": "KW-FIX-35 2026-11-08 04:37 PST: class fix landed: root a1 ran on src_d6e90 (no 19c8342244d); prov_view cut-port tables + recipe tops (kcls-k12 follow-up, main 289149dea5b = fa-hbm src kw34/src_28914) fix its 'no provisional abstract' children; not a P&R retry"
+        "root@1": "KW-FIX-35 2026-11-08 04:37 PST: class fix landed: root a1 ran on src_d6e90 (no 19c8342244d); prov_view cut-port tables + recipe tops (kcls-k12 follow-up, main 289149dea5b = fa-hbm src kw34/src_28914) fix its 'no provisional abstract' children; not a P&R retry",
+        "q_su31@3": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
+        "q_su31__physical_v1@3": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
+        "q_su30@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
+        "q_su30__physical_v1@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
+        "q_su11@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
+        "q_su11__physical_v1@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
+        "q_su01@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
+        "q_su01__physical_v1@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
+        "q_b110@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
+        "q_b110__physical_v1@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
+        "q_su20@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
+        "q_su20__physical_v1@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
+        "q_su21@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
+        "q_su21__physical_v1@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt"
       },
       "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
       "item_args_rf1prev": {
@@ -7547,7 +7571,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 2
       },
-      "flow_tag": "flow-20261108-fa-hbm",
+      "flow_tag": "flow-20261108-fb-hbm",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -8153,7 +8177,34 @@
       ],
       "retry_prev_kw35a_added": [
         "root@1"
-      ]
+      ],
+      "src_prev_kw35b": "/srv/opentallas-scratch2/claude/kw34/src_28914",
+      "src_sha_prev_kw35b": "289149dea5bc78493b63c7caf5b47243b9210415",
+      "queue_src_prev_kw35b": "main@289149dea5bc",
+      "flow_tag_prev_kw35b": "flow-20261108-fa-hbm",
+      "hold_items_released_kw35b": {
+        "q_su20": "KW-FIX-34 2026-11-08 01:56 PST: CANCELLED VOLUME row released only by the src move; same WCOPY kitparam class as q_su31 (DIE-HBM-91 00:43: q_su20/21/30 pull ot_hbm_su_static_pinned_bank); release with the kitparam v2 batch",
+        "q_su20__physical_v1": "KW-FIX-34 2026-11-08 01:56 PST: CANCELLED VOLUME row released only by the src move; same WCOPY kitparam class as q_su31 (DIE-HBM-91 00:43: q_su20/21/30 pull ot_hbm_su_static_pinned_bank); release with the kitparam v2 batch",
+        "q_su21": "KW-FIX-34 2026-11-08 01:56 PST: CANCELLED VOLUME row released only by the src move; same WCOPY kitparam class as q_su31 (DIE-HBM-91 00:43: q_su20/21/30 pull ot_hbm_su_static_pinned_bank); release with the kitparam v2 batch",
+        "q_su21__physical_v1": "KW-FIX-34 2026-11-08 01:56 PST: CANCELLED VOLUME row released only by the src move; same WCOPY kitparam class as q_su31 (DIE-HBM-91 00:43: q_su20/21/30 pull ot_hbm_su_static_pinned_bank); release with the kitparam v2 batch"
+      },
+      "retry_prev_kw35b_added": [
+        "q_su31@3",
+        "q_su31__physical_v1@3",
+        "q_su30@1",
+        "q_su30__physical_v1@1",
+        "q_su11@1",
+        "q_su11__physical_v1@1",
+        "q_su01@1",
+        "q_su01__physical_v1@1",
+        "q_b110@1",
+        "q_b110__physical_v1@1",
+        "q_su20@1",
+        "q_su20__physical_v1@1",
+        "q_su21@1",
+        "q_su21__physical_v1@1"
+      ],
+      "note_src_kw35b": "KW-FIX-35-B 2026-11-08 05:04 PST: HBM src kw35/src_812ee = main 812ee41cd03 (kitparam v2 + qc53v4s; = kw34/src_28914 hardlinks + 6 files, sha256-checked on intel1/epyc2/epyc4/epyc5/epyc6); released q_su20/21(+pv1); revert *_prev_kw35b, hold_items_released_kw35b, drop retry_prev_kw35b_added"
     }
   },
   "place_prefer": [
