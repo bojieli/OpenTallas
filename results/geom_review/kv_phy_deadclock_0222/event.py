@@ -57,9 +57,36 @@ def transform(plan,asbuilt):
         if key not in ('partition_types','ports'):assert p[key]==before[key],key
     report={'changed_types':sorted(changed),'changed_type_buses':bus_count,'changed_crossings':crossings,'removed_wire_bits':removed,'removed_face_flops':2*removed,'data_cycle_delta':0,'reset_cycle_delta':0,'native_clock_rule':RULE,'old_bus_widths':OLD,'new_bus_widths':NEW,'dead_bits':{k:sorted(v)for k,v in DEAD.items()},'verdict':'PRIVATE_DRAFT_NEEDS_STRICT_BIND_AND_LIVE_OPERAND_MITER'}
     return p,ab,report
+def prune_clock_r8(table):
+    rule=re.compile(RULE['pin'])
+    removed=[m for m in table['members']if rule.fullmatch(m['source'])]
+    assert len(removed)==256,len(removed)
+    bits=sum(hi-lo+1 for m in removed for lo,hi in m['sink_bits'])
+    assert bits==1024,bits
+    assert all(m['pad']==0 for m in removed),'dead clock unexpectedly has a data pad'
+    assert {m['sink_port']for m in removed}=={'pc__front_hbm_data','pc__return_hbm_data'}
+    fixed=copy.deepcopy(table)
+    fixed['members']=[m for m in fixed['members']if not rule.fullmatch(m['source'])]
+    assert len(fixed['members'])+len(removed)==len(table['members'])
+    fixed['source_summary']=fixed.pop('summary',{})
+    fixed['summary']={'members':len(fixed['members']),'padded_members':sum(bool(m['pad'])for m in fixed['members']),'padded_bits':sum(sum(hi-lo+1 for lo,hi in m['sink_bits'])for m in fixed['members']if m['pad']),'pad_flops':sum(m['pad']*sum(hi-lo+1 for lo,hi in m['sink_bits'])for m in fixed['members'])}
+    fixed['dead_clock_removal']={'rows':len(removed),'bits':bits,'pad_flops_removed':0,'rule':RULE,'reason':'declared forwarded clocks are not data crossings; every surviving R8 member and pad unchanged'}
+    return fixed,removed
 if __name__=='__main__':
-    a,b,o=sys.argv[1:];out=Path(o);out.mkdir(parents=True,exist_ok=True)
+    a,b,o=sys.argv[1:4];out=Path(o);out.mkdir(parents=True,exist_ok=True)
     p,ab,r=transform(json.load(open(a)),json.load(open(b)))
+    source=Path(ab['land_r8'])
+    if not source.is_absolute():source=Path(ab['base'])/source
+    fixed,removed=prune_clock_r8(json.load(open(source)))
+    if len(sys.argv)>4:
+        import hashlib
+        bg=json.load(open(sys.argv[4]))
+        fixed['source_bus_groups_digest']=fixed.get('bus_groups_digest')
+        fixed['bus_groups_digest']=hashlib.sha256(json.dumps(bg,sort_keys=True).encode()).hexdigest()[:16]
+    r8out=out/'r8_no_dead_forwarded_clocks.json';r8out.write_text(json.dumps(fixed,indent=1))
+    ab['land_r8']=str(r8out)
+    r['r8_removed_clock_rows']=len(removed);r['r8_removed_clock_bits']=1024
+    (out/'removed_clock_r8_members.json').write_text(json.dumps(removed,indent=1))
     (out/'plan_c.json').write_text(json.dumps(p,indent=1))
     (out/'asbuilt.json').write_text(json.dumps(ab,indent=1))
     (out/'event_report.json').write_text(json.dumps(r,indent=1))
