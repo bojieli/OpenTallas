@@ -191,14 +191,35 @@ def host_aliases():
 class Paths:
     """canonical form + all alias forms of paths"""
 
-    def __init__(self, aliases):
+    def __init__(self, aliases, resolve=True):
         self.aliases = list(aliases)
+        self.resolve = resolve
+        self._real = {}
 
-    def canon(self, p):
-        p = os.path.normpath(p)
+    def _alias(self, p):
         for a, c in self.aliases:
             if p == a or p.startswith(a + "/"):
                 return c + p[len(a):]
+        return p
+
+    def _realprefix(self, p):
+        """symlinks resolved on the longest existing prefix (lane dirs are symlinked between scratch disks:
+        11-07 INCIDENT, kit-wave keep paths named one side, the scan found the other)"""
+        head, tail = p, ""
+        while head not in self._real:
+            if os.path.lexists(head) or head == "/":
+                self._real[head] = os.path.realpath(head)
+                break
+            head, t = os.path.split(head)
+            tail = "/" + t + tail
+            if not head:
+                return p
+        return self._real[head] + tail
+
+    def canon(self, p):
+        p = self._alias(os.path.normpath(p))
+        if self.resolve and p.startswith("/"):
+            p = self._alias(os.path.normpath(self._realprefix(p)))
         return p
 
     def forms(self, p):
@@ -752,6 +773,38 @@ class Job:
     def lane(self, k):
         return k.split("/claude/", 1)[1].split("/")[0] if "/claude/" in k else ""
 
+    def _indep_real(self, p):
+        p = self.paths._alias(os.path.normpath(p))
+        head, tail = p, ""
+        while head and head != "/" and not os.path.lexists(head):
+            head, t = os.path.split(head)
+            tail = "/" + t + tail
+        return self.paths._alias(os.path.realpath(head or "/") + tail)
+
+    def indep_hit(self, path, files):
+        """INCIDENT 11-07 belt-and-braces: independent of Paths.canon/PathSet, realpath every raw kit-wave keep /
+        active / signed path and every PROTECTED row; a candidate equal to, above or below one is an ALERT"""
+        import bisect
+        if getattr(self, "_indep", None) is None:
+            raw = [ln.split("\t", 1)[0] for ln in rd(self.prot_file).splitlines() if ln.startswith("/")]
+            if self.kitwave is not None:
+                raw += [x.partition(":")[2] for x in self.kitwave.get("keep", [])]
+                raw += [x.partition(":")[2] for x, v in self.kitwave.get("attempts", {}).items()
+                        if v.get("active") or v.get("signed")]
+            self._indep = sorted({self._indep_real(r) for r in raw if r.startswith("/")})
+            self._indep_set = set(self._indep)
+        for c in [path] + list(files):
+            d = self._indep_real(c)
+            i = bisect.bisect_left(self._indep, d)
+            if i < len(self._indep) and (self._indep[i] == d or self._indep[i].startswith(d + "/")):
+                return f"independent realpath: {self._indep[i]}"
+            a = d
+            while a not in ("", "/"):
+                if a in self._indep_set and a.count("/") > 4:
+                    return f"independent realpath ancestor: {a}"
+                a = os.path.dirname(a)
+        return None
+
     def guard_hits(self, k):
         """protected / counted / kit-wave keep: hits here at recheck time are ALERTs"""
         for name, ps in (("protected", self.protected), ("counted", self.counted), ("kitwave-keep", self.kwkeep)):
@@ -893,6 +946,8 @@ class Job:
                 g = self.guard_hits(f)
                 if g:
                     break
+        if not g:
+            g = self.indep_hit(path, files)
         if g:
             return "ALERT", g
         if self.a.apply:
