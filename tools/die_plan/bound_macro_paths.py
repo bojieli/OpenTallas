@@ -189,7 +189,9 @@ def project(raw, kit_rtl):
         rows = resolve(t, bound_text)
         kr = json.loads(Path(fl).with_name("kit_rtl.json").read_text())
         manifest = kr.get("asbuilt_manifest")
-        sub_core_leaf = json.loads(Path(manifest).read_text()).get("sub_core_leaf", {}) if manifest else {}
+        sub_core_leaf = (json.loads(Path(manifest).read_text()).get("sub_core_leaf", {})
+                         if manifest and Path(manifest).is_file() and any(
+                             ".u_fcore." in c.get("physical_inst", "") for c in _macro_entries(t)) else {})
         rows += resolve_sub_cores(t, bound_text, sub_core_leaf)
         if not rows:
             continue
