@@ -9,33 +9,109 @@
 // LEP/lnland rxv locally; it is not another die pin and not the chb strap.
 // fault_o0 is LIVE and needs a return lane to ctl in the head plan batch.
 // No pin/physical/timing or whole-head binding claim is made by this source.
+// DIE-HEAD-84 11-07 (opt-in, defaults 0 = the netlist above unchanged): registered stages on the long legs of the
+// hd_lep0N floor plan, as declared added cycles.
+//  KTX[4i+:4] = stages on lane i's TX K link (u_lep TX FIFO -> pair): lo_v / lo_d forward, the lo_r credit back.
+//  KRX[4i+:4] = stages on lane i's RX K link (pair -> u_lep RX FIFO): li_v / li_d forward, the li_r credit back; the
+//    static receive enable rxv and the sticky lane faults flt ride with it.  Both links are credit based (lo: CRED 12 =
+//    the pair landing depth; li: DR 12 = the pair sender's CORE_CRED 12), so a stage adds latency and round-trip time,
+//    never a lost or duplicated beat.
+//  TXI[4i+:4] = stages on lane i's TX FIFO ingress inside u_lep (generated ot_s81hd_lep_nr.sv g_tx[i].g_txi), so the
+//    lane FIFO can sit beside its pair; feed-forward, the same writes TXI cycles later.
+//  COL0 = DIE-HEAD-85 11-07: stages on BOTH coll0 legs (die pins on the N face -> lane 0 at pair0, ~1583 / 1361 um):
+//         coll_i0 {live, fault} are control (reset), data reset-free; coll_o0 all data.  The coll link is end-to-end
+//         credit based through the peer e-lane, so a stage adds link latency (2 x COL0 round trip), never a beat.
+//  PIN  = stages on every input leg {lepk_i0, unit_i0, lepf_i0} (one count: ro and mu_c keep the same relative timing;
+//         rc moves with them).  POUT = stages on every result leg {lepk_o0, ctrl_o0, fault_o0} (ri and mu_rt stay
+//         aligned).  PLW = stages after the lw_o notification register.
+// Each stage is its own instance (g_*.g_s[j].u_st) so the kit can place stage j on its leg.
+module ot_s81hd_lep_stage #(parameter integer W=1, parameter integer WC=0)(
+ input wire ck,rst_n,input wire[W-1:0]d,output wire[W-1:0]q
+);
+ // bits [WC-1:0] are control (valid / credit / enable / fault): cleared by reset; the rest is reset-free data.
+ // keep: copies with equal D (lanes 0 / 2 carry the same half word) must stay separate flops on their own legs
+ generate if(WC>0)begin:g_c
+  (* keep = "true" *) reg[WC-1:0]qc;
+  always@(posedge ck or negedge rst_n)if(!rst_n)qc<=0;else qc<=d[WC-1:0];
+  assign q[WC-1:0]=qc;
+ end if(W>WC)begin:g_d
+  (* keep = "true" *) reg[W-WC-1:0]qd;
+  always@(posedge ck)qd<=d[W-1:WC];
+  assign q[W-1:WC]=qd;
+ end endgenerate
+endmodule
+// MUTBIT / MUTV: bench mutants only (tb_head_lepk_stages): one data bit skips the stages / the control bits take one
+// stage more than the data.  Production instances leave both at their defaults (-1 / 0).
+module ot_s81hd_lep_pipe #(parameter integer W=1, parameter integer WC=0, parameter integer N=0,
+ parameter integer MUTBIT=-1, parameter integer MUTV=0)(
+ input wire ck,rst_n,input wire[W-1:0]d,output wire[W-1:0]q
+);
+ wire[W-1:0]s[0:N];
+ assign s[0]=d;
+ genvar j;
+ generate for(j=0;j<N;j=j+1)begin:g_s
+  ot_s81hd_lep_stage #(.W(W),.WC(WC))u_st(.ck(ck),.rst_n(rst_n),.d(s[j]),.q(s[j+1]));
+ end
+ if(N>0 && (MUTBIT>=0 || MUTV!=0))begin:g_mut
+  reg[WC>0?WC-1:0:0]mv;
+  always@(posedge ck)mv<=s[N][WC>0?WC-1:0:0];
+  for(j=0;j<W;j=j+1)begin:g_b
+   if(j==MUTBIT)begin:g_skip assign q[j]=d[j];end
+   else if(MUTV!=0 && j<WC)begin:g_late assign q[j]=mv[j];end
+   else begin:g_ok assign q[j]=s[N][j];end
+  end
+ end else begin:g_q assign q=s[N];end
+ endgenerate
+endmodule
 module ot_s81hd_lep0N_core #(
- parameter [3:0] CH_B=4'b1111, parameter integer IDX_EN=1, parameter integer PAIR=0
+ parameter [3:0] CH_B=4'b1111, parameter integer IDX_EN=1, parameter integer PAIR=0,
+ parameter [15:0] KTX=16'h0000, parameter [15:0] KRX=16'h0000, parameter [15:0] TXI=16'h0000,
+ parameter integer PIN=0, parameter integer POUT=0, parameter integer PLW=0, parameter integer COL0=0
 )(
  input wire ck,rst_n,
  input wire[513:0]coll_i0,coll_i1,coll_i2,coll_i3,
  output wire[511:0]coll_o0,coll_o1,coll_o2,coll_o3,
  input wire[1103:0]lepk_i0,output wire[1103:0]lepk_o0,
  input wire lepf_i0,input wire[44:0]unit_i0,
- output wire[31:0]ctrl_o0,output wire fault_o0,output reg[10:0]lw_o,
+ output wire[31:0]ctrl_o0,output wire fault_o0,output wire[10:0]lw_o,
  input wire[275:0]tl_i,output wire[275:0]ca_o,cb_o
 );
+ // k* = the core's side of the four K links, pk* = the pair's side (the same nets at KS 0)
  wire[3:0]kv,kr,kiv,kir,lv,lr,liv,lir,krx,lrx;
+ wire[3:0]pkv,pkr,pkiv,pkir,pkrx;wire[552:0]pkd[0:3],pkid[0:3];wire[2:0]pkf[0:3];
+ // input / result legs (x = the core's view)
+ wire[1103:0]lepk_ix,lepk_ox;wire lepf_ix,fault_ox;wire[44:0]unit_ix;wire[31:0]ctrl_ox;
+ reg[10:0]lw_r;
+ ot_s81hd_lep_pipe #(.W(1+45+1104),.WC(1),.N(PIN))g_pin(.ck(ck),.rst_n(rst_n),
+  .d({lepk_i0,unit_i0,lepf_i0}),.q({lepk_ix,unit_ix,lepf_ix}));
+ ot_s81hd_lep_pipe #(.W(1+32+1104),.WC(1),.N(POUT))g_pout(.ck(ck),.rst_n(rst_n),
+  .d({lepk_ox,ctrl_ox,fault_ox}),.q({lepk_o0,ctrl_o0,fault_o0}));
+ ot_s81hd_lep_pipe #(.W(11),.WC(11),.N(PLW))g_plw(.ck(ck),.rst_n(rst_n),.d(lw_r),.q(lw_o));
  wire[552:0]kd[0:3],kid[0:3],ld[0:3],lid[0:3];
  wire[2:0]kf[0:3],lf[0:3];
  wire[513:0]coll_i[0:3];wire[511:0]coll_o[0:3];
- assign coll_i[0]=coll_i0;assign coll_i[1]=coll_i1;
+ // coll0 legs (COL0 stages; 0 = the original wires)
+ wire[513:0]coll_i0x;
+ ot_s81hd_lep_pipe #(.W(514),.WC(2),.N(COL0))g_c0i(.ck(ck),.rst_n(rst_n),
+  .d({coll_i0[511:0],coll_i0[513:512]}),.q({coll_i0x[511:0],coll_i0x[513:512]}));
+`ifdef OT_S81HD_LEPK_MUT_C0BIT
+ localparam integer C0MB=300;                          // MUTANT: payload bit coll_o0[300] skips its stages (bit 5 is not exercised)
+`else
+ localparam integer C0MB=-1;
+`endif
+ ot_s81hd_lep_pipe #(.W(512),.WC(0),.N(COL0),.MUTBIT(C0MB))g_c0o(.ck(ck),.rst_n(rst_n),.d(coll_o[0]),.q(coll_o0));
+ assign coll_i[0]=coll_i0x;assign coll_i[1]=coll_i1;
  assign coll_i[2]=coll_i2;assign coll_i[3]=coll_i3;
- assign coll_o0=coll_o[0];assign coll_o1=coll_o[1];
+ assign coll_o1=coll_o[1];
  assign coll_o2=coll_o[2];assign coll_o3=coll_o[3];
  wire mwv,mrv,mf;wire[1103:0]mwd,mrd;
  // Actual LEP landing acceptance, same user field as dsdv_mu_land_head_nr.
  // The controller counts these notifications before issuing its replay command.
  always@(posedge ck or negedge rst_n)
-  if(!rst_n)lw_o<=0;else lw_o<={mwd[1056:1047],mwv};
+  if(!rst_n)lw_r<=0;else lw_r<={mwd[1056:1047],mwv};
  ot_s81hd_lep_idx_nr #(.DT(512),.DR(12),.CRED(12),.SRAM(1),
-  .NB(80),.RX_SRAM(1),.IN_PIPE(1),.NATIVE32(1),.IDX_EN(IDX_EN))u_lep(
-  .clk(ck),.rst_n(rst_n),.ro(lepk_i0),.ri(lepk_o0),
+  .NB(80),.RX_SRAM(1),.IN_PIPE(1),.NATIVE32(1),.IDX_EN(IDX_EN),.TXI(TXI))u_lep(
+  .clk(ck),.rst_n(rst_n),.ro(lepk_ix),.ri(lepk_ox),
   .lo0_v(kv[0]),.lo0_r(kr[0]),.lo0_d(kd[0]),
   .lo1_v(kv[1]),.lo1_r(kr[1]),.lo1_d(kd[1]),
   .lo2_v(kv[2]),.lo2_r(kr[2]),.lo2_d(kd[2]),
@@ -44,30 +120,54 @@ module ot_s81hd_lep0N_core #(
   .li1_v(kiv[1]),.li1_r(kir[1]),.li1_d(kid[1]),
   .li2_v(kiv[2]),.li2_r(kir[2]),.li2_d(kid[2]),
   .li3_v(kiv[3]),.li3_r(kir[3]),.li3_d(kid[3]),
-  .rxv(krx[1:0]),.rxvb(krx[3:2]),.sl_f(lepf_i0),
+  .rxv(krx[1:0]),.rxvb(krx[3:2]),.sl_f(lepf_ix),
   .l0_f(kf[0]),.l1_f(kf[1]),.l2_f(kf[2]),.l3_f(kf[3]),
-  .mu_c(unit_i0[44:11]),.mu_rt(ctrl_o0),
+  `ifdef OT_S81HD_LEPK_MUT_MUSKEW
+  .mu_c(unit_i0[44:11]),.mu_rt(ctrl_ox),               // MUTANT: mu_c skips the input stages that ro takes
+`else
+  .mu_c(unit_ix[44:11]),.mu_rt(ctrl_ox),
+`endif
   .ml_wv(mwv),.ml_wd(mwd),.ml_rv(mrv),.ml_rd(mrd),.ml_f(mf),
-  .fault(fault_o0),.tl(tl_i),.ca(ca_o),.cb(cb_o));
+  .fault(fault_ox),.tl(tl_i),.ca(ca_o),.cb(cb_o));
  dsdv_mu_land_head_nr #(.NB(80),.NS(1),.SRAM(1),.W(1104))u_land(
-  .clk(ck),.rst_n(rst_n),.wv(mwv),.wd(mwd),.rc(unit_i0[10:0]),
+  .clk(ck),.rst_n(rst_n),.wv(mwv),.wd(mwd),.rc(unit_ix[10:0]),
   .rv(mrv),.rd(mrd),.fault(mf));
  genvar i;
+ // K-link stages (credit-safe; see the header)
+ generate for(i=0;i<4;i=i+1)begin:g_kl
+`ifdef OT_S81HD_LEPK_MUT_DBIT
+  localparam integer MB=(i==1)?6:-1;                   // MUTANT: lo_d[5] of lane 1 skips its stages
+`else
+  localparam integer MB=-1;
+`endif
+`ifdef OT_S81HD_LEPK_MUT_VDEPTH
+  localparam integer MV=(i==2)?1:0;                    // MUTANT: lane 2 lo_v one edge later than lo_d
+`else
+  localparam integer MV=0;
+`endif
+  ot_s81hd_lep_pipe #(.W(1+553),.WC(1),.N(KTX[4*i+:4]),.MUTBIT(MB),.MUTV(MV))g_txf(.ck(ck),.rst_n(rst_n),
+   .d({kd[i],kv[i]}),.q({pkd[i],pkv[i]}));
+  ot_s81hd_lep_pipe #(.W(1),.WC(1),.N(KTX[4*i+:4]))g_txr(.ck(ck),.rst_n(rst_n),.d(pkr[i]),.q(kr[i]));
+  ot_s81hd_lep_pipe #(.W(3+1+553),.WC(4),.N(KRX[4*i+:4]))g_rxf(.ck(ck),.rst_n(rst_n),
+   .d({pkid[i],pkf[i],pkiv[i]}),.q({kid[i],kf[i],kiv[i]}));
+  ot_s81hd_lep_pipe #(.W(2),.WC(2),.N(KRX[4*i+:4]))g_rxr(.ck(ck),.rst_n(rst_n),
+   .d({kir[i],krx[i]}),.q({pkir[i],pkrx[i]}));
+ end endgenerate
  // PAIR=1 (DIE-HEAD-9, opt-in): each g_lane body sits in one ot_s81hd_lep_pair
  // child g_pp[k].u_pair (same instances/params/nets, 0 cycles).  PAIR=0 default
  // keeps the original g_lane[k] loop and instance paths unchanged.
  generate for(i=0;i<(PAIR?4:0);i=i+1)begin:g_pp
   ot_s81hd_lep_pair #(.CHB(CH_B[i]))u_pair(.clk(ck),.rst_n(rst_n),
-   .k_lo_v(kv[i]),.k_lo_r(kr[i]),.k_lo_d(kd[i]),
-   .k_li_v(kiv[i]),.k_li_r(kir[i]),.k_li_d(kid[i]),
-   .k_rxv(krx[i]),.k_flt(kf[i]),.coll_i(coll_i[i]),.coll_o(coll_o[i]));
+   .k_lo_v(pkv[i]),.k_lo_r(pkr[i]),.k_lo_d(pkd[i]),
+   .k_li_v(pkiv[i]),.k_li_r(pkir[i]),.k_li_d(pkid[i]),
+   .k_rxv(pkrx[i]),.k_flt(pkf[i]),.coll_i(coll_i[i]),.coll_o(coll_o[i]));
  end endgenerate
  generate for(i=0;i<(PAIR?0:4);i=i+1)begin:g_lane
   ot_s81_mu72_lnland_nst #(.MUT(0))u_land(
    .ck_k(ck),.ck_n(ck),.rs_k(rst_n),.rs_n(rst_n),
-   .k_lo_v(kv[i]),.k_lo_r(kr[i]),.k_lo_d(kd[i]),
-   .k_li_v(kiv[i]),.k_li_r(kir[i]),.k_li_d(kid[i]),
-   .k_rxv(krx[i]),.k_flt(kf[i]),
+   .k_lo_v(pkv[i]),.k_lo_r(pkr[i]),.k_lo_d(pkd[i]),
+   .k_li_v(pkiv[i]),.k_li_r(pkir[i]),.k_li_d(pkid[i]),
+   .k_rxv(pkrx[i]),.k_flt(pkf[i]),
    .n_lo_v(lv[i]),.n_lo_r(lr[i]),.n_lo_d(ld[i]),
    .n_li_v(liv[i]),.n_li_r(lir[i]),.n_li_d(lid[i]),
    .n_rxv(lrx[i]),.n_flt(lf[i]));
@@ -81,7 +181,9 @@ endmodule
 // Head-specific no-index provider. IDX_EN=0 structurally omits g_itx/g_irx in
 // generated/ot_s81hd_lep_nr.sv, so tl is parameter-proven unread and ca/cb are
 // parameter-proven constant dead outputs. The generic provider default stays1.
-module ot_s81hd_lep0N_noidx_core #(parameter[3:0]CH_B=4'b1111,parameter integer PAIR=0)(
+module ot_s81hd_lep0N_noidx_core #(parameter[3:0]CH_B=4'b1111,parameter integer PAIR=0,
+ parameter[15:0]KTX=16'h0000,parameter[15:0]KRX=16'h0000,parameter[15:0]TXI=16'h0000,
+ parameter integer PIN=0,parameter integer POUT=0,parameter integer PLW=0,parameter integer COL0=0)(
  input wire ck,rst_n,
  input wire[513:0]coll_i0,coll_i1,coll_i2,coll_i3,
  output wire[511:0]coll_o0,coll_o1,coll_o2,coll_o3,
@@ -89,7 +191,7 @@ module ot_s81hd_lep0N_noidx_core #(parameter[3:0]CH_B=4'b1111,parameter integer 
  input wire lepf_i0,input wire[44:0]unit_i0,
  output wire[31:0]ctrl_o0,output wire fault_o0,output wire[10:0]lw_o
 );
- ot_s81hd_lep0N_core #(.CH_B(CH_B),.IDX_EN(0),.PAIR(PAIR))u(
+ ot_s81hd_lep0N_core #(.CH_B(CH_B),.IDX_EN(0),.PAIR(PAIR),.KTX(KTX),.KRX(KRX),.TXI(TXI),.PIN(PIN),.POUT(POUT),.PLW(PLW),.COL0(COL0))u(
  .ck(ck),.rst_n(rst_n),.coll_i0(coll_i0),.coll_i1(coll_i1),.coll_i2(coll_i2),.coll_i3(coll_i3),
  .coll_o0(coll_o0),.coll_o1(coll_o1),.coll_o2(coll_o2),.coll_o3(coll_o3),
  .lepk_i0(lepk_i0),.lepk_o0(lepk_o0),.lepf_i0(lepf_i0),.unit_i0(unit_i0),
