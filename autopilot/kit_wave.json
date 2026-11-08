@@ -1228,7 +1228,7 @@
         "clock": "PASS",
         "evidence": "DIE-S81-70 12:4x (COORD 12:1x ftkeep relaunch): plan = main e9eda32d41c plan_h2_2249 (ftcorr/ftkeep a80a1ab90cc, ctree, hcov) + claude/die-s81-70-t24tap-1106@4390efd070 (t24__cl2456157b clk_t20 y 632.88->667.44; strict bind error radius 216.3>200 -> 199.1, grid_explicit_taps PASS) sha256 1cbd9e04577052a4, hardlink sidecars of src_28fc7; vs old wave plan only 10 partition_types differ, no other key; G0C 64/1543 = base, 0 new/0 gone [CHECKED epyc5 die-s81-70/chk_t24]; strict bind on main plan: 1 error = that t24 tap (die-s81-70/kvb2) | prev: KIT-WAVE-12 04:1x PST: main e8cbe5f6c70 plan 381e75b001cd = DIE-S81-46 kva3 407b175146b (COORD 03:16 APPROVED, ROOT-MERGE-AL 03:51): G0C 18 = base, 0 new; die clock GRT 0 ov, TT +49.70, CA 0/2330; strict bind die-s81-46/bind_g3tag2 errors 0 unbound 0 (plan 1064f31a3d21 = 381e minus 22 SDC-only cdc keys, DIE-S81-47 CHECKED) | prev: KIT-WAVE-9 19:5x: main bfdc480ffc7 plan a6320661bc9e = bfe27b2c00be + serdes__t13/serdes__t4 lots (DIE-S81-44 bccb99bde74, G0C 18 = base, 0 new; COORD 16:5x/ROOT-MERGE-AL 17:24; DIE-S81-45 18:03 request); bind = bindm (strict 0) via bindm9 | KIT-WAVE-8 18:0x: main f1a8dcffa6e plan bfe27b2c00be = cb76a9754330 (DIE-S81-43 ring-hold stack 5a/rt4/ringfall, COORD 15:56 (2)) + S81-SERDES-PHY-3 eb964df6dd4 (8 serdes types only; G0C 19/1865 = main, 0 new; block-identity diff CHECKED: only those 8 blocks changed); strict bind bindm BIND_RC 0 (VERIFY died without RC, see lane) | COORD 10-31 08:46 APPROVED DIE-S81-42 claude/die-s81-42-band-1031@e6e75a4ea7e (plan bfa0a6902dd9 -> a83e52c0ae4e, sidecar db92d7423d2c): G0C 19 = base 19, 0 new; strict bind BIND_RC 0 errors 0 + VERIFY_RC 0 (DIE-S81-43 12:18 CHECKED); die clock GRT 0 ov, TT setup +9.22. Merged main 96420e84b92 (ROOT-MERGE-AK). | prev: COORD RULING 10-31 04:07: DIE-S81-39 variant A claude/die-s81-39-geom-1030@54dda45985a (grid+explicit taps, plan 84fc22ab807d -> 7515f32564e8 taps only) APPROVED: G0C 18=18 0 new, strict bind BIND_RC 0 errors 0 (intel1 die-s81-39/gbind), die clock ckclk3 GRT 0 ov, CA PASS; exceptions 1 (57 plan_geom residuals) + 2 (7 pre-existing neg TT setup pairs bk_sel__t2, NOT waived, DIE-S81-41) accepted; COORD 04:4x: S81 plan of record on main = 7515f32564e8 | COORD 10-31: DIE-S81-41 daaa48cc29b per-type station tap window on main 41b02d873, plan bfa0a6902dd9 strict bind BIND_RC 0 errors 0 (intel1 die-s81-41/sbind, DIE-S81-42 07:21). | CODEX1131/root approved composed1cd on mainb1: G0C0 errors, bind_ev2 strict0 11:40, clock GRT0 TT+49.70 CA0/2330 unchanged, 17 reset-safe bands independently rendered/reviewed. Provisional views remain provisional; normal kit physical gates retained."
       },
-      "plan": "/srv/opentallas-scratch3/claude/kw33/wave_cg_frz_lp/physical/die_plan/s81/plan_h2_2249.json",
+      "plan": "/srv/opentallas-scratch3/claude/kw34/wave_cg_frz_xrt/physical/die_plan/s81/plan_h2_2249.json",
       "gen_host": "epyc5",
       "src": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
       "src_sha": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
@@ -2294,7 +2294,8 @@
         "ot_s81sl_leaf__t60@1",
         "ot_s81sl_leaf__t21@10",
         "ot_s81sl_leaf__t57@3",
-        "slice_station__t44@5"
+        "slice_station__t44@5",
+        "dsdv_slice_c3x_C__t1@12"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -3223,7 +3224,8 @@
         "ot_s81sl_leaf__t22@1": "KW-FIX-33 2026-11-08 00:23 PST: REDESIGN: macros moved (OT_MACRO_MOVES). S81-OTHERFAIL-2 class H (COORD 00:0x (3) H): landed leaf facing form (leaf_facing.py) applied to the old-form GRT rows; macros moved, not a retry",
         "ot_s81sl_leaf__t44__clf6cf8492@1": "KW-FIX-33 2026-11-08 00:23 PST: REDESIGN: macros moved (OT_MACRO_MOVES). S81-OTHERFAIL-2 class H (COORD 00:0x (3) H): landed leaf facing form (leaf_facing.py) applied to the old-form GRT rows; macros moved, not a retry",
         "ot_s81sl_leaf__t60@1": "KW-FIX-33 2026-11-08 00:23 PST: REDESIGN: macros moved (OT_MACRO_MOVES). S81-OTHERFAIL-2 class H (COORD 00:0x (3) H): landed leaf facing form (leaf_facing.py) applied to the old-form GRT rows; macros moved, not a retry",
-        "slice_station__t44@5": "KW-FIX-34 2026-11-08 01:15 PST: REDESIGN: COORD-approved station DRV class form (COORD 23:01 (3), 00:0x, 01:09 (5)): landing-ring write-enable fanout -> gen.py phys repair margins --slew-margin 50 --cap-margin 20 via s81 type_args (S81-STATION-1 00:1x); fresh kits, gates unchanged, no ECO"
+        "slice_station__t44@5": "KW-FIX-34 2026-11-08 01:15 PST: REDESIGN: COORD-approved station DRV class form (COORD 23:01 (3), 00:0x, 01:09 (5)): landing-ring write-enable fanout -> gen.py phys repair margins --slew-margin 50 --cap-margin 20 via s81 type_args (S81-STATION-1 00:1x); fresh kits, gates unchanged, no ECO",
+        "dsdv_slice_c3x_C__t1@12": "KW-FIX-34 2026-11-08 01:30 PST: REDESIGN: hard-core view LEF fixed (S81-XRT3-VIEW-1 166005e6c53: xrt_rfj_1104 xrt1/xrt3 exact M5/M6 OBS, pin_access PASS at the kit spot; DRT-0073 u_xr/clk class E); not a plain retry"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -4050,7 +4052,9 @@
       "retry_prev_kw34a_added": [
         "slice_station__t44@5"
       ],
-      "note_kw34a": "KW-FIX-34 2026-11-08 01:15 PST: station DRV batch t22@10 t29__clc7772371@11 t44@5; retry_fix carries REDESIGN: so hold_unchanged releases them. Revert: type_args=type_args_prev_kw34a, retry_fix keys from retry_fix_prev_kw34a, drop retry_prev_kw34a_added from retry"
+      "note_kw34a": "KW-FIX-34 2026-11-08 01:15 PST: station DRV batch t22@10 t29__clc7772371@11 t44@5; retry_fix carries REDESIGN: so hold_unchanged releases them. Revert: type_args=type_args_prev_kw34a, retry_fix keys from retry_fix_prev_kw34a, drop retry_prev_kw34a_added from retry",
+      "plan_prev_kw34c": "/srv/opentallas-scratch3/claude/kw33/wave_cg_frz_lp/physical/die_plan/s81/plan_h2_2249.json",
+      "note_plan_kw34c": "KW-FIX-34 2026-11-08 01:30 PST: plan dir = kw33/wave_cg_frz_lp hardlinks + S81-XRT3-VIEW-1 claude/s81-xrt3-view-1-1107@166005e6c53 xrt_rfj_1104 ot_s81sl_xrt1/xrt3 LEF (exact M5/M6 OBS, md5 d4987d99/a9a9927b) + abstract_detail.json; plan JSON byte-identical; staged intel1/epyc4/epyc5/epyc6/epyc2 (OWNER no-merge-wait); revert plan_prev_kw34c"
     },
     "s81_head": {
       "enabled": true,
