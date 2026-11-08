@@ -9,6 +9,9 @@ radius = tap radius, group 64, merge 128, pair 60 um, depth 2).  Every other typ
 byte-identical; outlines, pins, hard cores, budgets and the RTL are untouched, so no counted design can change.
 
     python3 tools/die_plan/qc_tap_pair_event.py BASE_PLAN OUT_PLAN EVENT_JSON
+
+11-07 23:1x: the QC kit wave builds from plan_qc53_candidate_v4.json (kit_wave.json qwen_compute.plan), not from the
+count plan plan_qc52n, so the same event is also written as plan_qc53v4t.json (qc53t_tap_pair_event.json).
 """
 import hashlib, json, pathlib, sys
 
@@ -64,10 +67,12 @@ def main(argv):
     base, out, ev = (pathlib.Path(a) for a in argv[1:4])
     raw = base.read_bytes()
     P = json.loads(raw)
-    if dumps(P).encode() != raw:
-        raise SystemExit("base plan %s is not in the compact plan-of-record style" % base)
+    # keep the base file's own style: compact (plan_qc52n) or json.dumps default (plan_qc53_candidate_v4, the wave plan)
+    style = next((f for f in (dumps, lambda p: json.dumps(p) + "\n") if f(P).encode() == raw), None)
+    if style is None:
+        raise SystemExit("base plan %s is in neither plan-of-record style" % base)
     Q, exports = apply(P, TYPES)
-    data = dumps(Q).encode()
+    data = style(Q).encode()
     out.write_bytes(data)
     rec = {
         "schema": "opentallas.qc_por_event.v1",
@@ -75,7 +80,7 @@ def main(argv):
         "base_plan": base.name, "base_plan_sha256": hashlib.sha256(raw).hexdigest(),
         "plan_output": out.name, "plan_output_sha256": hashlib.sha256(data).hexdigest(),
         "change": "partition_types.<type>.clock.tap_pair_affinity = {} (defaults)",
-        "flow": "tools/die_plan/tap_pair_affinity.tcl + tap_pair_plan.tcl (TAP-PAIR v3 e756f627c0)",
+        "flow": "tools/die_plan/tap_pair_affinity.tcl + tap_pair_plan.tcl (TAP-PAIR v3 e756f627c0; v4 SHIFT 797fdbf8a43)",
         "types_hold_structural": HOLD_STRUCTURAL, "types_setup_hc_stm": SETUP_HC_STM, "types": TYPES,
         "exports": exports, "data_cycles": 0, "pin_cycles": 0,
         "preservation": "every other partition type and every top-level key byte-identical (checked by apply())",
