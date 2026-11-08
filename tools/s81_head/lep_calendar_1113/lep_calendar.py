@@ -14,8 +14,11 @@ class Stages:
     pout: int = 0
     plw: int = 0
     col0: int = 0
+    pair: int = 1
 
     def __post_init__(self):
+        if self.pair not in (0,1):
+            raise ValueError('PAIR must select original lanes0 or hardened pairs1')
         for name in ('ktx', 'krx', 'txi'):
             if not 0 <= getattr(self, name) <= 0xffff:
                 raise ValueError(f'{name} must contain four unsigned 4-bit depths')
@@ -77,12 +80,12 @@ class Stages:
                 + 572*sum(self.lane('txi',i) for i in lanes))
 
     def params(self):
-        return dict(CH_B="4'b1111", PAIR=1, KTX=f"16'h{self.ktx:04x}",
+        return dict(CH_B="4'b1111", PAIR=self.pair, KTX=f"16'h{self.ktx:04x}",
                     KRX=f"16'h{self.krx:04x}", TXI=f"16'h{self.txi:04x}",
                     PIN=self.pin, POUT=self.pout, PLW=self.plw, COL0=self.col0)
 
 VF = Stages(ktx=0x0000, krx=0x1220, txi=0x1221, pin=2, pout=3, plw=3, col0=2)
-STRESS = Stages(ktx=0x3333, krx=0x4444, txi=0x4444, pin=4, pout=4, plw=4, col0=2)
+STRESS = Stages(ktx=0x3333, krx=0x4444, txi=0x4444, pin=4, pout=4, plw=4, col0=2, pair=0)
 
 
 def require_matching_receipt(stages, receipt, programme_sha256):
