@@ -23,15 +23,15 @@
         "clock": "PASS",
         "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
       },
-      "plan": "/srv/opentallas-scratch3/claude/codex-kv-phy-deadclock-0222/plan_r8fix/plan_c.json",
+      "plan": "/srv/opentallas-scratch2/claude/kv-types-4/ev/por/plan_c.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_c303p",
-      "src_sha": "804f9e020b210d3733cdfdb69d07a662e7fc0dc1",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_e2rd",
+      "src_sha": "5178ea7aa2797689caf8c40e546e0c89fb7808e1",
       "kit_rtl": {
         "mode": "bind",
-        "asbuilt": "/srv/opentallas-scratch3/claude/codex-kv-phy-deadclock-0222/plan_r8fix/asbuilt.json",
+        "asbuilt": "/srv/opentallas-scratch2/claude/kw32/kvbind_27db6/asbuilt_kv_27db6.json",
         "note": "KW-FIX-24 14:5x (DIE-KV-84 14:4x answer): KV bind_out -> kw23/bind_kv_q (plan_c 7da_ad + asbuilt_kv_7da, bind.py all --strict: errors 0, 160 partitions, 56 types, 2545 crossings; on epyc6 + copied to epyc5). Its verify/bound.ys step fails only because verify/lib_stubs.sv does not stub the bind-made core_splits leaves (qkd_kvs_pcc/pcf) = bind.py verify bug (class item, KW-FIX-24); verify advisory as for QC bind_qc_g (KW-FIX-22). Was kw11/bind_kv_o + kw11/asbuilt_kv_o.json. One batch of the 4 BIND_STALE rows. | KW-FIX-16 12:5x I126 tag flow-20261106-b-kv: src_k -> src_o main f649a3eb9a3 (KV PV taps, 15 types), asbuilt_kv_o base src_o, strict --all-gaps bind_kv_o errors 0, 2545 crossings (KW-FIX-15 bind 12:16 PST). | KW-FIX-15 11-05 11:3x: KV src_h -> src_k main 714dd1ea120 (tag flow-20261106-a-kv), asbuilt_kv_k base src_k, strict --all-gaps bind_kv_k errors 0, 2545 crossings (KW-FIX-13 09:48); plan_c + eW_sidecar byte-equal to src_h. | KW-FIX-11 06:5x I93 hgi taps: src_h main 517c80a6704, asbuilt base src_h, strict --all-gaps bind_kv_h errors 0, 2545 crossings; kv37 pad table copied from src_e (untracked there). | KW-FIX-8 17:1x I52: src_v 86bdf758742; asbuilt_v base src_v reads the tag eW_sidecar; strict bind_v; kv3_pv_v8 pilot one row. KW-FIX-8 I46: src_s main c512ffc3a94, plan_c 76de518 astk on bind_o (DIE-KV-70: kit-rtl rc 0 on it) | KW-FIX-8 10:0x I36 tag o-kv: asbuilt_s6 base src_n, strict --all-gaps bind_o errors 0, 2545 crossings; vs bind_e2 rtl differs only PC family, hub_Wi, top | KW-FIX-6 05:4x: KV event, bind_e2 strict 0 errors (DIE-KV-66 05:18), inputs copied intel1 -> epyc4 same paths; kit-rtl kv3_pv_v8 rc 0 on epyc4. | 16:58 KW-FIX-4 (DIE-KV-64 pvname 08f0c9828bf on main 4b09653bef8, ROOT-MERGE-27 I2): src kw-fix-4-kv88 -> 4b09653bef8, strict bind bind_pv2 (PROTECTED), asbuilt pvrec unchanged | KW-FIX-4 13:5x (DIE-KV-64 + COORD 12:40): main 88f2e7ecac1 (ROOT-MERGE-26 H15 incl claude/die-kv-64-pvbind-1103@62b62298941: 256 kv3_pv_pair native composites + plan_c pv_pair physical_inst + bind.py r8 composite alias) as wave src kw-fix-4-kv88; recipe pvrec/asbuilt.json + strict bind bind_pv (intel1, errors 0, 160 parts/2545 crossings/430554 bits/0 unbound). | DIE-KV-61 11-02 19:3x: fresh KV ELAB + strict bind at claude/die-kv-61-rtobs-1102@54c3c7c9f (= main 1770163a8 + KV reset obstacle_model pin; COORD APPROVED 19:2x): errors 0, 160 parts/56 types/2545 crossings/430554 bits, 0 unbound [CHECKED READY.json]. Recipe = CODEX1131 asbuilt rebased (0 unrebased paths). Prev: CODEX1131 fresh actual efa ELAB + strict bind0/errors0; copyback589MB/117-source closure to identical Intel1 root complete. Read-only own bind_out avoids any old cached-elab prep. Native SerDes specialization, recovered HR inputs and complete SRAM package present; old source/bind/jobs retained.",
-        "bind_out": "/srv/opentallas-scratch3/claude/codex-kv-phy-deadclock-0222/bind_r8fix"
+        "bind_out": "/srv/opentallas-scratch2/claude/kv-types-4/ev/bind_kvcls"
       },
       "gen_args": [
         "--hold-ff-margin",
@@ -247,7 +247,11 @@
         "kv3_sys_SD@6",
         "kv3_sys_SD_v1@12",
         "kv3_hub_Wo@13",
-        "kv3_phy@6"
+        "kv3_phy@6",
+        "kv3_hroot@10",
+        "kv3_io_ft_v1@17",
+        "kv3_io_cor@6",
+        "kv3_io_cor_v1@7"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -298,11 +302,12 @@
         "kv3_sys_c": "CODEX freshfaecd a5 caught prephysical realized96rawflops/23branches vs currentplan101:5old6stage/base59 branches persist instead7/base58. KV owner owns fresh raw-branch emitter/boundwrapper23/101 closure. No route on stale96; preservea5evidence, source-realizationINFRA not designstrike. Reviewed geometry/phase event remains approved.",
         "kv3_hg_v1": "CODEX parked old unstarted KW10 disk waiter; reviewed current-context recovery owned KV/wave; preserve all outputs/proofs. No design strike/no blind retry.",
         "qkd_hr_core_prompt": "KW-FIX-32 2026-11-07 22:10 PST: KV plan switch to main plan_c: core LEC open (DIE-KV-91); the plan switch is not its class fix",
-        "kv3_io_cor": "KW-FIX-32 2026-11-07 22:10 PST: KV plan switch to main plan_c: congestion FAIL on the old block; the plan switch alone would relaunch it unchanged (no blind retry); KV-TYPES-3 releases with retry_fix",
-        "kv3_io_cor_v1": "KW-FIX-32 2026-11-07 22:10 PST: KV plan switch to main plan_c: congestion FAIL on the old block; the plan switch alone would relaunch it unchanged (no blind retry); KV-TYPES-3 releases with retry_fix",
         "kv3_hg*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form",
         "kv3_pv*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): PV family: class C4 START-in-macro fix still owed (KV-TYPES-4; codex/kv-start-obstacles-0222 NOT READY) and C1 ring-band plan event pending; no blind launch (replaces the stale KW-FIX-25 holds)",
-        "kv3_pc*": "KW-FIX-35-K 2026-11-08 06:38 PST: plan switch to plan_r8fix (phy R8 prune only) would re-pick the kv3_pc* rows with no class fix (dry run: 0 picks before, 10 after); keeps the pre-switch state. Lift when a pc class fix/plan event is posted"
+        "kv3_pc*": "KW-FIX-35-K 2026-11-08 06:38 PST: plan switch to plan_r8fix (phy R8 prune only) would re-pick the kv3_pc* rows with no class fix (dry run: 0 picks before, 10 after); keeps the pre-switch state. Lift when a pc class fix/plan event is posted",
+        "kv3_phy": "KW-FIX-35-K 2026-11-08 07:57 PST: in flight on plan_r8fix a7 (kw-qwenkv-kv3phy-7-49186); the kvcls_1108 plan lacks the R8 prune, so a re-pick there would double-launch. Lift when TYPE-SAFE-1/KV folds R8 prune + kvcls into one plan or a7 ends",
+        "kv3_phy_v1": "KW-FIX-35-K 2026-11-08 07:57 PST: in flight on plan_r8fix a4 (kw-qwenkv-kv3phyv1-4-49184); same reason as kv3_phy",
+        "kv3_hub_Eo": "KW-FIX-35-K 2026-11-08 07:57 PST: kvcls_1108 plan switch re-picks it with no class fix of its own (KV-TYPES-4 06:01: hub_Eo rides the plan when its holds/children clear); keeps pre-switch state"
       },
       "work_root": "/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave",
       "retry_fix": {
@@ -516,7 +521,11 @@
         "kv3_sys_SD_v1@12": "KW-FIX-32 2026-11-08 00:09 PST: class fix KV u_fdi_cdc SEL_CHUNK (KV-TYPES-3 dff767a167, strict equiv PROVEN) on main 27db658adf1 / dk-kv; bind of record re-based to src_27db6 (kvbind_27db6, strict 0 errors); COORD 22:4x relaunch",
         "kv3_hub_Wo@13": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): INFRA: KV-TYPES-4 04:51: a13 FAIL at geom_run = ot-run syntax error 11-07 15:46 (infra, misclassified RTL); same inputs",
         "kv3_phy@6": "KW-FIX-35-K 2026-11-08 06:38 PST: C3 PHY dead forwarded-clock R8 prune (KV-TYPES-4 READY 06:04, COORD 06:09): codex/kv-phy-deadclock-0222@e210d04c83 + plan_r8fix (md5 58a85eab) + bind_r8fix (strict bind 0 errors); fresh kit, kit RTL changes",
-        "kv3_phy_v1@3": "KW-FIX-35-K 2026-11-08 06:38 PST: C3 PHY dead forwarded-clock R8 prune (KV-TYPES-4 READY 06:04, COORD 06:09): codex/kv-phy-deadclock-0222@e210d04c83 + plan_r8fix (md5 58a85eab) + bind_r8fix (strict bind 0 errors); fresh kit, kit RTL changes"
+        "kv3_phy_v1@3": "KW-FIX-35-K 2026-11-08 06:38 PST: C3 PHY dead forwarded-clock R8 prune (KV-TYPES-4 READY 06:04, COORD 06:09): codex/kv-phy-deadclock-0222@e210d04c83 + plan_r8fix (md5 58a85eab) + bind_r8fix (strict bind 0 errors); fresh kit, kit RTL changes",
+        "kv3_hroot@10": "KW-FIX-35-K 2026-11-08 07:57 PST: KV class plan event kvcls_1108 (C1 LANDING-RING-DENSITY + C2 io_ft_v1 ft_hop_lockup/landing_status_reg; KV-TYPES-4 READY 06:01, COORD 06:09): claude/kv-types-4-ringdens-1108@5178ea7aa2, plan ev/por md5 886ab8db, bind_kvcls strict 0; fresh kit, kit inputs change",
+        "kv3_io_ft_v1@17": "KW-FIX-35-K 2026-11-08 07:57 PST: KV class plan event kvcls_1108 (C1 LANDING-RING-DENSITY + C2 io_ft_v1 ft_hop_lockup/landing_status_reg; KV-TYPES-4 READY 06:01, COORD 06:09): claude/kv-types-4-ringdens-1108@5178ea7aa2, plan ev/por md5 886ab8db, bind_kvcls strict 0; fresh kit, kit inputs change",
+        "kv3_io_cor@6": "KW-FIX-35-K 2026-11-08 07:57 PST: KV class plan event kvcls_1108 (C1 LANDING-RING-DENSITY + C2 io_ft_v1 ft_hop_lockup/landing_status_reg; KV-TYPES-4 READY 06:01, COORD 06:09): claude/kv-types-4-ringdens-1108@5178ea7aa2, plan ev/por md5 886ab8db, bind_kvcls strict 0; fresh kit, kit inputs change",
+        "kv3_io_cor_v1@7": "KW-FIX-35-K 2026-11-08 07:57 PST: KV class plan event kvcls_1108 (C1 LANDING-RING-DENSITY + C2 io_ft_v1 ft_hop_lockup/landing_status_reg; KV-TYPES-4 READY 06:01, COORD 06:09): claude/kv-types-4-ringdens-1108@5178ea7aa2, plan ev/por md5 886ab8db, bind_kvcls strict 0; fresh kit, kit inputs change"
       },
       "only_items": [
         "kv3_astk",
@@ -611,7 +620,7 @@
       ],
       "plan_items_from_allowlist": true,
       "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-      "queue_src": "claude/kw-fix-35-wave-c303a-1108@804f9e020b2",
+      "queue_src": "claude/kv-types-4-ringdens-1108@5178ea7aa2 + codex/kv-phy-deadclock-0222@e210d04c83",
       "hold_items_released": {
         "kv3_pc": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
         "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -1287,7 +1296,33 @@
       "src_sha_prev_kw35t": "e210d04c83f530a3141c7f799223bd2ff6f66711",
       "queue_src_prev_kw35t": "codex/kv-phy-deadclock-0222@e210d04c83",
       "flow_tag_prev_kw35t": "flow-20261108-du-kv",
-      "note_kw35t": "KW-FIX-35-T 2026-11-08 07:02 PST: wave src -> /srv/opentallas-scratch2/claude/kw35/src_c303p = integration claude/kw-fix-35-wave-c303a-1108@804f9e020b2 (main c303af45e5b ROOT-MERGE-52 trains S/T/U + providx 9ba1e6f86e2 KW-PROV-1 + qc-types-9-reach 5f5fee0303b); kw35/src_0b72a hardlinks + 98-file delta + 19 new files, sha256-checked on intel1/epyc2/epyc4/epyc5/epyc6, tree read-only (chmod -R a-w). Revert *_prev_kw35t"
+      "note_kw35t": "KW-FIX-35-T 2026-11-08 07:02 PST: wave src -> /srv/opentallas-scratch2/claude/kw35/src_c303p = integration claude/kw-fix-35-wave-c303a-1108@804f9e020b2 (main c303af45e5b ROOT-MERGE-52 trains S/T/U + providx 9ba1e6f86e2 KW-PROV-1 + qc-types-9-reach 5f5fee0303b); kw35/src_0b72a hardlinks + 98-file delta + 19 new files, sha256-checked on intel1/epyc2/epyc4/epyc5/epyc6, tree read-only (chmod -R a-w). Revert *_prev_kw35t",
+      "src_prev_kw35k2": "/srv/opentallas-scratch2/claude/kw35/src_c303p",
+      "src_sha_prev_kw35k2": "804f9e020b210d3733cdfdb69d07a662e7fc0dc1",
+      "queue_src_prev_kw35k2": "claude/kw-fix-35-wave-c303a-1108@804f9e020b2",
+      "plan_prev_kw35k2": "/srv/opentallas-scratch3/claude/codex-kv-phy-deadclock-0222/plan_r8fix/plan_c.json",
+      "kit_rtl_prev_kw35k2": {
+        "mode": "bind",
+        "asbuilt": "/srv/opentallas-scratch3/claude/codex-kv-phy-deadclock-0222/plan_r8fix/asbuilt.json",
+        "note": "KW-FIX-24 14:5x (DIE-KV-84 14:4x answer): KV bind_out -> kw23/bind_kv_q (plan_c 7da_ad + asbuilt_kv_7da, bind.py all --strict: errors 0, 160 partitions, 56 types, 2545 crossings; on epyc6 + copied to epyc5). Its verify/bound.ys step fails only because verify/lib_stubs.sv does not stub the bind-made core_splits leaves (qkd_kvs_pcc/pcf) = bind.py verify bug (class item, KW-FIX-24); verify advisory as for QC bind_qc_g (KW-FIX-22). Was kw11/bind_kv_o + kw11/asbuilt_kv_o.json. One batch of the 4 BIND_STALE rows. | KW-FIX-16 12:5x I126 tag flow-20261106-b-kv: src_k -> src_o main f649a3eb9a3 (KV PV taps, 15 types), asbuilt_kv_o base src_o, strict --all-gaps bind_kv_o errors 0, 2545 crossings (KW-FIX-15 bind 12:16 PST). | KW-FIX-15 11-05 11:3x: KV src_h -> src_k main 714dd1ea120 (tag flow-20261106-a-kv), asbuilt_kv_k base src_k, strict --all-gaps bind_kv_k errors 0, 2545 crossings (KW-FIX-13 09:48); plan_c + eW_sidecar byte-equal to src_h. | KW-FIX-11 06:5x I93 hgi taps: src_h main 517c80a6704, asbuilt base src_h, strict --all-gaps bind_kv_h errors 0, 2545 crossings; kv37 pad table copied from src_e (untracked there). | KW-FIX-8 17:1x I52: src_v 86bdf758742; asbuilt_v base src_v reads the tag eW_sidecar; strict bind_v; kv3_pv_v8 pilot one row. KW-FIX-8 I46: src_s main c512ffc3a94, plan_c 76de518 astk on bind_o (DIE-KV-70: kit-rtl rc 0 on it) | KW-FIX-8 10:0x I36 tag o-kv: asbuilt_s6 base src_n, strict --all-gaps bind_o errors 0, 2545 crossings; vs bind_e2 rtl differs only PC family, hub_Wi, top | KW-FIX-6 05:4x: KV event, bind_e2 strict 0 errors (DIE-KV-66 05:18), inputs copied intel1 -> epyc4 same paths; kit-rtl kv3_pv_v8 rc 0 on epyc4. | 16:58 KW-FIX-4 (DIE-KV-64 pvname 08f0c9828bf on main 4b09653bef8, ROOT-MERGE-27 I2): src kw-fix-4-kv88 -> 4b09653bef8, strict bind bind_pv2 (PROTECTED), asbuilt pvrec unchanged | KW-FIX-4 13:5x (DIE-KV-64 + COORD 12:40): main 88f2e7ecac1 (ROOT-MERGE-26 H15 incl claude/die-kv-64-pvbind-1103@62b62298941: 256 kv3_pv_pair native composites + plan_c pv_pair physical_inst + bind.py r8 composite alias) as wave src kw-fix-4-kv88; recipe pvrec/asbuilt.json + strict bind bind_pv (intel1, errors 0, 160 parts/2545 crossings/430554 bits/0 unbound). | DIE-KV-61 11-02 19:3x: fresh KV ELAB + strict bind at claude/die-kv-61-rtobs-1102@54c3c7c9f (= main 1770163a8 + KV reset obstacle_model pin; COORD APPROVED 19:2x): errors 0, 160 parts/56 types/2545 crossings/430554 bits, 0 unbound [CHECKED READY.json]. Recipe = CODEX1131 asbuilt rebased (0 unrebased paths). Prev: CODEX1131 fresh actual efa ELAB + strict bind0/errors0; copyback589MB/117-source closure to identical Intel1 root complete. Read-only own bind_out avoids any old cached-elab prep. Native SerDes specialization, recovered HR inputs and complete SRAM package present; old source/bind/jobs retained.",
+        "bind_out": "/srv/opentallas-scratch3/claude/codex-kv-phy-deadclock-0222/bind_r8fix"
+      },
+      "hold_items_prev_kw35k2_dropped": {
+        "kv3_io_cor": "KW-FIX-32 2026-11-07 22:10 PST: KV plan switch to main plan_c: congestion FAIL on the old block; the plan switch alone would relaunch it unchanged (no blind retry); KV-TYPES-3 releases with retry_fix",
+        "kv3_io_cor_v1": "KW-FIX-32 2026-11-07 22:10 PST: KV plan switch to main plan_c: congestion FAIL on the old block; the plan switch alone would relaunch it unchanged (no blind retry); KV-TYPES-3 releases with retry_fix"
+      },
+      "hold_items_kw35k2_added": [
+        "kv3_phy",
+        "kv3_phy_v1",
+        "kv3_hub_Eo"
+      ],
+      "retry_prev_kw35k2_added": [
+        "kv3_hroot@10",
+        "kv3_io_ft_v1@17",
+        "kv3_io_cor@6",
+        "kv3_io_cor_v1@7"
+      ],
+      "note_kw35k2": "KW-FIX-35-K 2026-11-08 07:57 PST: ringdens batch: src kw35/src_e2rd = src_e210k + 5178ea7aa2 (6 new files); plan kv-types-4/ev/por/plan_c.json + bind_kvcls (asbuilt kvbind_27db6); holds ['kv3_io_cor', 'kv3_io_cor_v1'] dropped; retry ['kv3_hroot@10', 'kv3_io_ft_v1@17', 'kv3_io_cor@6', 'kv3_io_cor_v1@7']. kvcls plan does NOT carry the phy R8 prune (phy rows in flight keep their spec). Revert *_prev_kw35k2, pop hold_items_kw35k2_added, restore hold_items_prev_kw35k2_dropped, drop retry_prev_kw35k2_added"
     },
     "s81": {
       "enabled": true,
@@ -8632,7 +8667,8 @@
         "vsN2@1",
         "q_su01@3",
         "q_su01__physical_v1@3",
-        "q_su11@3"
+        "q_su11@3",
+        "q_b013__physical_v1@2"
       ],
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -8660,7 +8696,6 @@
         "ot_hgi_sfu_core_split3__opstore_b": "KW-FIX-11 07:0x COORD 07:01: stopped 06:51 by ruling, part 27 replaces (HBM-FORM-SPLIT 06:51); autopilot revived it on exit 137; no relaunch",
         "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch",
         "q_b013": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013 (intel1 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013_a3R); release after it ends or after ROOT-MERGE-52 lands the fix",
-        "q_b013__physical_v1": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013pv1 (epyc4 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013__physical_v1_a2R); release after it ends or after ROOT-MERGE-52 lands the fix",
         "NW_io": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for hfd_ep_static_vc2 + hfd_ep_host_vc (HBM-HARD-6-EP) and ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)",
         "NE_io": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)",
         "q_spb0": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)",
@@ -8824,7 +8859,8 @@
         "vsN2@1": "KW-FIX-35-B 2026-11-08 06:54 PST: REDESIGN: plan event plan_hbm_1108c (a337411c3a25: EP-MOD-1108 NW_io, FTLK v2 FT hop latches, RLK reset hop latches) on claude/die-hbm-92-int-1108@cad9c038fb (+RLK bind path 14aca37706) + providx 9ba1e6f86e2, bind_c strict rc0; DIE-HBM-92 GO 06:40, wave-order dry rc0 (epyc6 die-hbm-92/dry_c, die-hbm-92-rlk/dry_c); fresh kit",
         "q_su01@3": "KW-FIX-35-B 2026-11-08 07:08 PST: KW-PROV-1 class fix claude/kw-fix-35-providx-1108@9ba1e6f86e2 (prov_view git grep under .gitignore '*': contract pin directions) now in HBM src kw35/src_cad9p; a3 ran on src_0b72p without it; fresh kit",
         "q_su01__physical_v1@3": "KW-FIX-35-B 2026-11-08 07:08 PST: KW-PROV-1 class fix claude/kw-fix-35-providx-1108@9ba1e6f86e2 (prov_view git grep under .gitignore '*': contract pin directions) now in HBM src kw35/src_cad9p; a3 ran on src_0b72p without it; fresh kit",
-        "q_su11@3": "KW-FIX-35-B 2026-11-08 07:08 PST: KW-PROV-1 class fix claude/kw-fix-35-providx-1108@9ba1e6f86e2 (prov_view git grep under .gitignore '*': contract pin directions) now in HBM src kw35/src_cad9p; a3 ran on src_0b72p without it; fresh kit"
+        "q_su11@3": "KW-FIX-35-B 2026-11-08 07:08 PST: KW-PROV-1 class fix claude/kw-fix-35-providx-1108@9ba1e6f86e2 (prov_view git grep under .gitignore '*': contract pin directions) now in HBM src kw35/src_cad9p; a3 ran on src_0b72p without it; fresh kit",
+        "q_b013__physical_v1@2": "KW-FIX-35 2026-11-08 07:53 PST: BB-PORT-FOLD class proven: private resume kw35L-lec-qb013pv1 LEC EQUIVALENT 120617/120617 with lec.py d25a79da9f; it then hit the final-DPL residual (2 overlaps, DPL-0033 @3_5) because the copied a2 kit predates 20cff21bab. Fresh kit on src_cad9p (has d25a79da9f + 20cff21bab)"
       },
       "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
       "item_args_rf1prev": {
@@ -9968,7 +10004,10 @@
         "q_spb0",
         "q_spb0__physical_v1",
         "vsN0"
-      ]
+      ],
+      "hold_items_prev_kw35h8": {
+        "q_b013__physical_v1": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013pv1 (epyc4 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013__physical_v1_a2R); release after it ends or after ROOT-MERGE-52 lands the fix"
+      }
     }
   },
   "place_prefer": [
