@@ -1,0 +1,77 @@
+{
+ "_note": "DIE-HBM-89-TOPK vD 11-07: both SRAM columns flush east (E band 20 um for the 703 E tx face flops), 214-um open W logic region beside the 2368-pin selected_line face (was a 77/130-um band behind the W SRAM column: vA/vB GRT overflow = horizontal crossings over the W-column macros at MAX M5), 64.8-um centre street where each row pair gm[l] (W col, MY, pins E) / gm[4+l] (E col, R0, pins W) meets; 45-um row streets; N band 55.9 um for N tx flops. With MAX_ROUTING_LAYER M6 the over-macro horizontal capacity is M6 (was 0 at M5).",
+ "macro_placement": [
+  {
+   "k": 6,
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    218.43,
+    29.34
+   ],
+   "orient": "MY"
+  },
+  {
+   "k": 2,
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    454.518,
+    29.34
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 7,
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    218.43,
+    152.124
+   ],
+   "orient": "MY"
+  },
+  {
+   "k": 3,
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    454.518,
+    152.124
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 5,
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    218.43,
+    274.908
+   ],
+   "orient": "MY"
+  },
+  {
+   "k": 1,
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    454.518,
+    274.908
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 4,
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    218.43,
+    397.692
+   ],
+   "orient": "MY"
+  },
+  {
+   "k": 0,
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    454.518,
+    397.692
+   ],
+   "orient": "R0"
+  }
+ ]
+}
