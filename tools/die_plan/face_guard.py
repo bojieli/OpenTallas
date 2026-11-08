@@ -2066,7 +2066,10 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             nv += 1
         res.setdefault("pairs_verified", {})[f"{i}>{o}"] = nv
     if pins is not None:
-        want = {x['bus'] if x.get('bit') is None else f"{x['bus']}[{x['bit']}]" for x in pins}
+        # Use the same data-port census on both sides: clock/reset pins in
+        # pins.json do not require a data face register.
+        want = {x['bus'] if x.get('bit') is None else f"{x['bus']}[{x['bit']}]"
+                for x in pins if not re.match(skip_re, x['bus'])}
         have = {b for p in T.ports if not re.match(skip_re, p) for b in _bits_of(T, p)}
         for b in sorted(want - have)[:50]:
             fail("missing_port", b, "planned pin bit not a netlist port")
