@@ -871,25 +871,34 @@ puts "SO_PATH_END"
 # Read-only (no constraint change); runs only when there are min violators. ----
 if {[sta::endpoint_violation_count min] > 0} {
   set so_hs_port 0; set so_hs_other 0; set so_hs_reg 0; set so_hs_trunc 0; set so_hs_err 0; set so_hs_ports {}
+  set so_hs_oport 0; set so_hs_oports {}
   if {[catch {
     set so_hs_pe [find_timing_paths -path_delay min -group_path_count 100000 -endpoint_path_count 1 -slack_max 0]
     if {[llength $so_hs_pe] >= 100000} { set so_hs_trunc 1 }
     foreach so_pe $so_hs_pe {
       if {[get_property $so_pe slack] >= 0} continue
       set so_sp [get_property $so_pe startpoint]
-      if {[$so_sp is_top_level_port] && [get_full_name $so_sp] ni $so_ck_ports} {
+      set so_ep [get_property $so_pe endpoint]
+      if {[$so_ep is_top_level_port]} {
+        # S81-TYPES-5 11-07 OUTPUT-PORT HOLD (slice_station t47: one violator, q -> ft0_o vs the out_min contract):
+        # an output-port endpoint is the receiving neighbour's input hold, judged by the parent like an input port
+        incr so_hs_oport; lappend so_hs_oports [regsub {\[[0-9]+\]$} [get_full_name $so_ep] {}]
+      } elseif {[$so_sp is_top_level_port] && [get_full_name $so_sp] ni $so_ck_ports} {
         incr so_hs_port; lappend so_hs_ports [regsub {\[[0-9]+\]$} [get_full_name $so_sp] {}]
       } else { incr so_hs_other }
     }
     set so_hs_regs [all_registers -clock_pins]
     if {[llength $so_hs_regs]} {
-      foreach so_pe [find_timing_paths -path_delay min -from $so_hs_regs -group_path_count 1 -endpoint_path_count 1 -slack_max 0] {
-        if {[get_property $so_pe slack] < 0} { incr so_hs_reg }
+      # every register-launched violator that does not end at an output port (was: the one worst path, which an
+      # output-port endpoint could stand for while a register-to-register violator hid behind it)
+      foreach so_pe [find_timing_paths -path_delay min -from $so_hs_regs -group_path_count 100000 -endpoint_path_count 1 -slack_max 0] {
+        if {[get_property $so_pe slack] < 0 && ![[get_property $so_pe endpoint] is_top_level_port]} { incr so_hs_reg }
       }
     }
   } so_hs_msg]} { set so_hs_err 1 }
-  so STD_MIN_START port $so_hs_port other $so_hs_other reg $so_hs_reg trunc $so_hs_trunc err $so_hs_err
+  so STD_MIN_START port $so_hs_port other $so_hs_other reg $so_hs_reg trunc $so_hs_trunc err $so_hs_err oport $so_hs_oport
   so STD_MIN_START_PORTS {*}[lsort -unique $so_hs_ports]
+  so STD_MIN_START_OPORTS {*}[lsort -unique $so_hs_oports]
   # DIE-KV-88 11-07: non-port hold, report only: endpoints with a violating min path not started at an input port, a
   # register-launched path hidden behind a worse port path included, and their worst slack.  eco_loop.near_miss scores
   # this, since port-start hold is the parent's.  Each find_timing_paths result is read before the next call: a later
@@ -1512,6 +1521,9 @@ def corner_result(parsed):
         d = _kvlist(kv["STD_MIN_START"])
         out["std_min_start"] = dict({k: _f(d.get(k)) for k in ("port", "other", "reg", "trunc", "err")},
                                     ports=(kv.get("STD_MIN_START_PORTS") or "").split())
+        if _kvlist(kv["STD_MIN_START"]).get("oport") is not None:     # S81-TYPES-5 11-07: output-port endpoints
+            out["std_min_start"].update(oport=_f(_kvlist(kv["STD_MIN_START"]).get("oport")),
+                                        oports=(kv.get("STD_MIN_START_OPORTS") or "").split())
         if "STD_MIN_NONPORT" in kv:                 # DIE-KV-88 11-07: report only, read by eco_loop.near_miss
             d = _kvlist(kv["STD_MIN_NONPORT"])
             out["std_min_start"].update(nonport_n=_f(d.get("n")), nonport_wns=_f(d.get("wns")))
@@ -2163,6 +2175,8 @@ def evaluate(rec, insertion_target=None):
             v = "PASS"
             extra = dict(local_raw_verdict="FAIL", port_only_needs_parent=True,
                          port_start_ports=sorted(set(C["ff"]["std_min_start"]["ports"])))
+            if C["ff"]["std_min_start"].get("oports"):
+                extra["output_port_hold_ports"] = sorted(set(C["ff"]["std_min_start"]["oports"]))
         put("hold_ff", v, wns_ps=w, tns_ps=C["ff"].get("std_tns_min"), violators=C["ff"].get("std_nviol_min"),
             sdc_wns_ps=C["ff"].get("sdc_wns_min"), overlay=ov, ff_vclk_reference=reference, reason=why, **extra)
     else:
@@ -2321,6 +2335,8 @@ def evaluate(rec, insertion_target=None):
     if port_only:
         from io_hold_qualification import port_hold_policy
         rec['io_hold'] = port_hold_policy(rec, ch["hold_ff"]["port_start_ports"])
+        if ch["hold_ff"].get("output_port_hold_ports"):
+            rec['io_hold']['output_port_hold_ports'] = ch["hold_ff"]["output_port_hold_ports"]
     if rec.get('io_hold') or a_context:
         from io_hold_qualification import apply_obligation
         apply_obligation(rec)
@@ -2337,8 +2353,10 @@ def port_only_hold(ff):
         return False
     if any(s.get(k) is None for k in ("port", "other", "reg", "trunc", "err")):
         return False
-    return (s["err"] == 0 and s["trunc"] == 0 and s["other"] == 0 and s["reg"] == 0 and s["port"] >= n
-            and bool(s.get("ports")))
+    # S81-TYPES-5 11-07: output-port endpoints (census field oport, absent on older sessions = 0) count as port hold
+    op = s.get("oport") or 0
+    return (s["err"] == 0 and s["trunc"] == 0 and s["other"] == 0 and s["reg"] == 0 and s["port"] + op >= n
+            and bool(s.get("ports") or s.get("oports")))
 
 
 def _detail(k, c):
