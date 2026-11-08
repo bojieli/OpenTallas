@@ -116,3 +116,38 @@ def test_row_bridge_only_when_m4_band_spans_width():
     assert F.row_bridge_tcl(None,w)=='' and not F.blocks_rows(None,w)
     part={'type':typ,'rectangles_um':[dict(layer='M4',rect=[0,0,w/2,1]),dict(layer='M5',rect=[0,0,w,1])]}
     assert not F.blocks_rows(part,w) and F.row_bridge_tcl(part,w)==''
+
+
+def _street_receipt():
+    # q_b013 geometry (DIE-HBM-91 11-08): full-width M4 street band 103.68 um tall, full-width M6 block over it,
+    # a thin q_spu0-like 2.7-um M4 band and a partial M5 strip.
+    return {'rectangles_um': [dict(layer='M4', rect=[0.0, 1028.16, 552.96, 1131.84]),
+                              dict(layer='M6', rect=[0.0, 943.92, 552.96, 2912.22]),
+                              dict(layer='M4', rect=[0.0, 4.32, 552.96, 7.02]),
+                              dict(layer='M5', rect=[25.38, 1028.16, 28.08, 1131.84])]}
+
+
+def test_tall_full_width_pdn_band_keeps_strap_windows_on_the_stripe_grid():
+    r = _street_receipt()
+    w = F.pdn_windows(r, 552.96)
+    m4 = [x for x in w if x[0] == 'M4']; m6 = [x for x in w if x[0] == 'M6']
+    assert m4 and m6
+    for L, lo, hi in w:
+        off, wd, sp, pitch = F.PDN_WIN_STRIPES[L]
+        s = lo + F.PDN_WIN_MARGIN
+        assert ((s - 4.32 - off) / pitch) == pytest.approx(round((s - 4.32 - off) / pitch), abs=1e-6)
+        assert hi - lo == pytest.approx(2 * wd + sp + 2 * F.PDN_WIN_MARGIN)
+    assert all(1028.16 + 4.32 <= lo and hi <= 1131.84 - 4.32 for _, lo, hi in m4)
+    assert len(m4) == 4 and len(m6) == 91
+
+
+def test_obstructions_cover_receipt_minus_windows_and_thin_bands_unchanged():
+    r = _street_receipt()
+    rows = F.obstruction_rows(r, 552.96)
+    area = lambda q: (q[2] - q[0]) * (q[3] - q[1])
+    win = sum((hi - lo) * 552.96 for _, lo, hi in F.pdn_windows(r, 552.96))
+    assert sum(area(q) for _, q in rows) == pytest.approx(sum(area(x['rect']) for x in r['rectangles_um']) - win)
+    assert ('M4', [0.0, 4.32, 552.96, 7.02]) in rows and ('M5', [25.38, 1028.16, 28.08, 1131.84]) in rows
+    thin = {'rectangles_um': [dict(layer='M4', rect=[0.0, 4.32, 552.96, 7.02])]}
+    assert F.pdn_windows(thin, 552.96) == [] and 'pdn_windows' not in F.tcl(thin)
+    assert 'pdn_windows=95' in F.tcl(r)
