@@ -1339,7 +1339,7 @@
       "src_sha": "804f9e020b210d3733cdfdb69d07a662e7fc0dc1",
       "kit_rtl": {
         "mode": "script",
-        "script": "/srv/opentallas-scratch3/claude/die-s81-70/kit_rtl_s81_ds70_kvov.sh",
+        "script": "/srv/opentallas-scratch3/claude/kw35/t45ov/kit_rtl_s81_kw35_t45.sh",
         "asbuilt": "/srv/opentallas-scratch3/claude/codex-wave-bind-1106/src_28fc7/physical/die_plan/s81/bind/asbuilt_b178_coll_h2_2249.json",
         "note": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched | ROOT approved canonical context recovery: actual strict current emission PASS, 204 exact JSON-normalized captured trees retain RTL/Tcl identities, current C export/topology+GEN finite32912 PASS. Native plan/asbuilt SRC28 unchanged; tools9f role-aware, no legacy receipt stamp."
       },
@@ -2434,7 +2434,8 @@
         "bk_sel__t2@33",
         "dsdv_slice_c1x_C__t7@14",
         "slice_station__t44@7",
-        "dsdv_slice_lepe_mu_C__t1@15"
+        "dsdv_slice_lepe_mu_C__t1@15",
+        "slice_station__t45@11"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -2549,7 +2550,6 @@
         "dsdv_slice_lepe_nh_mus_LP__t1": "KW-FIX-35-S 2026-11-08 06:04 PST: REBIND_NEEDED (own clock.taps moved): wait for S81-TYPES-7-REBIND bind",
         "dsdv_slice_lepw_mu_LP__t2": "KW-FIX-35-S 2026-11-08 06:04 PST: REBIND_NEEDED (own clock.taps moved): wait for S81-TYPES-7-REBIND bind",
         "dsdv_slice_lepw_mus_LP__t2": "KW-FIX-35-S 2026-11-08 06:04 PST: REBIND_NEEDED (own clock.taps moved): wait for S81-TYPES-7-REBIND bind",
-        "slice_station__t45": "KW-FIX-35-S 2026-11-08 06:04 PST: ringtap re-bind overlay in progress (kw35/t45); ONE fresh t45 when the overlay bind dir is ready",
         "ot_s81sl_kv_leaf__t1": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
         "ot_s81sl_kv_leaf__t3": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
         "ot_s81sl_kv_leaf__t4": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
@@ -3413,7 +3413,8 @@
         "bk_sel__t2@33": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a33 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
         "dsdv_slice_c1x_C__t7@14": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a14 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 CLASS H: fresh kit (old kit carried a stale FAIL_PREFLOOR); reset-scope selected so it does not stop at the CLASS A topology check",
         "slice_station__t44@7": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a7 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
-        "dsdv_slice_lepe_mu_C__t1@15": "KW-FIX-35-T 2026-11-08 07:02 PST: S81-TYPES-7-LEC class J3 (xs4_ctl payload + rstopt_xo every-edge loads, re-sha 4a80ce2d3c7, landed c303af train T 9cf2a1ee354): fresh kit"
+        "dsdv_slice_lepe_mu_C__t1@15": "KW-FIX-35-T 2026-11-08 07:02 PST: S81-TYPES-7-LEC class J3 (xs4_ctl payload + rstopt_xo every-edge loads, re-sha 4a80ce2d3c7, landed c303af train T 9cf2a1ee354): fresh kit",
+        "slice_station__t45@11": "REDESIGN: KW-FIX-35-S 2026-11-08 08:03 PST: S81-STATION-1 ring reset tap index space (ring_taps grid fix 857e197e14c); t45 rings now on the nearest equal-depth relay (re-bound: u_cland_ft1_i/ft2_i rst_n_t2->t4, dn rst_n_t11->t3); ONE fresh t45"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -5183,6 +5184,19 @@
       "note_kw35t": "KW-FIX-35-T 2026-11-08 07:02 PST: wave src -> /srv/opentallas-scratch2/claude/kw35/src_c303p = integration claude/kw-fix-35-wave-c303a-1108@804f9e020b2 (main c303af45e5b ROOT-MERGE-52 trains S/T/U + providx 9ba1e6f86e2 KW-PROV-1 + qc-types-9-reach 5f5fee0303b); kw35/src_0b72a hardlinks + 98-file delta + 19 new files, sha256-checked on intel1/epyc2/epyc4/epyc5/epyc6, tree read-only (chmod -R a-w). Revert *_prev_kw35t",
       "retry_prev_kw35t_added": [
         "dsdv_slice_lepe_mu_C__t1@15"
+      ],
+      "kit_rtl_prev_kw35s6": {
+        "mode": "script",
+        "script": "/srv/opentallas-scratch3/claude/die-s81-70/kit_rtl_s81_ds70_kvov.sh",
+        "asbuilt": "/srv/opentallas-scratch3/claude/codex-wave-bind-1106/src_28fc7/physical/die_plan/s81/bind/asbuilt_b178_coll_h2_2249.json",
+        "note": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched | ROOT approved canonical context recovery: actual strict current emission PASS, 204 exact JSON-normalized captured trees retain RTL/Tcl identities, current C export/topology+GEN finite32912 PASS. Native plan/asbuilt SRC28 unchanged; tools9f role-aware, no legacy receipt stamp."
+      },
+      "note_kit_rtl_kw35s6": "KW-FIX-35-S 2026-11-08 08:03 PST: kit_rtl.script = kw35/t45ov wrapper on intel1/epyc4/epyc5: identical to die-s81-70 kvov for every TYPE except slice_station__t45, whose bind dir is kw35/t45ov/bind = kvov copy + t45 .sv/.reset_tree.{json,tcl} from the strict re-bind with ringtap 857e197e14c tools (epyc4 kw35/t45/rb, BIND rc 0, errors 0; ft1_i/ft2_i rst_n_t4, dn rst_n_t3). Dry kit-rtl + kit_topology(selected) PASS on src_c303p. Revert kit_rtl_prev_kw35s6",
+      "hold_items_kw35s6_released": [
+        "slice_station__t45"
+      ],
+      "retry_prev_kw35s6_added": [
+        "slice_station__t45@11"
       ]
     },
     "s81_head": {
