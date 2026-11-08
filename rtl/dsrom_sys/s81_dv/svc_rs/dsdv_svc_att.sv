@@ -563,8 +563,11 @@ module dsdv_svc_att #(
         xhalf = v ? {88'd0, b[127:89], 9'd0, b[88:0], b[143:128], r, t, 1'b1} : 256'd0;
     endfunction
     wire [9:0] x_q0 = (MUT == 6) ? x_r0 ^ 10'd1 : x_r0, x_q1 = (MUT == 6) ? x_r1 ^ 10'd1 : x_r1;
+    // H8 native collector identity: bit32 is pass head base; 63:33 stay zero.
+    // H16 retains all64 logical flag bits and its original header bytes.
+    wire [63:0] pv_header_flags = P2 ? {31'd0, hb_p, 32'(pb[NT*H-1:0])} : 64'(pb[NT*H-1:0]);
     always @(posedge clk) if (dr_on)
-        pv_od <= (p_i == 0) ? {1'b1, pv_provenance, pb[PVB-1 -: 8], 64'(pb[NT*H-1:0])} : {1'b0, 512'(pb[NT*H + 32'(p_i - 1)*H*32 +: H*32])};
+        pv_od <= (p_i == 0) ? {1'b1, pv_provenance, pb[PVB-1 -: 8], pv_header_flags} : {1'b0, 512'(pb[NT*H + 32'(p_i - 1)*H*32 +: H*32])};
         else if (RX && x_em)
         pv_od <= {x5 == 3'd0, xhalf(x_v1, tile, x_q1, lrd[1][143:0]), xhalf(x_v0, tile, x_q0, lrd[0][143:0])};
 

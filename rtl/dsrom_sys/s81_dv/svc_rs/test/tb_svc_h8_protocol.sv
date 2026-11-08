@@ -3,16 +3,20 @@
 // isolated below; numeric engine equivalence is checked by h8_engine_equiv.
 module tb_svc_h8_protocol;
  reg clk=0;always #0.5 clk=~clk;reg rst_n=0,qv=0;reg[511:0] q=0;
- integer phase=0,mut=0,errs=0;
+ integer phase=0,mut=0,errs=0,active_pass=0,pvh=0;
+ wire[1:0]pvov;wire[512:0]pvod[0:1];
  wire [1:0] st,rv; wire [3:0] kind[0:1];
  integer heads[0:2][0:1],rows[0:2][0:1];
  genvar g;
  generate for(g=0;g<2;g++)begin:d
  dsdv_svc_att #(.H(8)) u(.clk(clk),.rst_n(rst_n),.sid(4'(g)),.tile(g==0?4'd0:4'd8),.gd(8'd0),.pvs(8'd0),.root(1'b0),
   .q_v(qv),.q_d(q),.hw_v(1'b0),.hw_d(291'd0),.qrq(),.qrk(2'd0),.qwd(2'd0),.qrv(2'd0),.qr_data(512'd0),.qr_tag(34'd0),.qr_beat(8'd0),
-  .l_v(),.l_d(),.pv_ov(),.pv_od(),.sm_st(st[g]),.sm_kind(kind[g]),.sm_jid(),.sm_rv(rv[g]),.sm_rp(),.sm_rj(),.sm_rd(),
+  .l_v(),.l_d(),.pv_ov(pvov[g]),.pv_od(pvod[g]),.sm_st(st[g]),.sm_kind(kind[g]),.sm_jid(),.sm_rv(rv[g]),.sm_rp(),.sm_rj(),.sm_rd(),
   .go_o(),.tjob_o(),.done(),.tagj(),.hcr(),.hack(),.fault(),.fault_code(),.pio_o(),.pvo_o(),.jc_o(),.st_o(),.hb_o());
  always @(posedge clk)if(rst_n)begin
+  if(pvov[g]&&pvod[g][512])begin
+   pvh++;if(pvod[g][32]!==1'(active_pass)||pvod[g][63:33]!==0)errs++;
+  end
   if(st[g])heads[phase][g]++;
   if(rv[g])rows[phase][g]++;
  end
@@ -38,9 +42,10 @@ module tb_svc_h8_protocol;
   h=0;h[511:508]=1;h[503]=1;h[491:480]=128;word(h);for(integer w=0;w<128;w++)word(0);gap();
   h=0;h[511:508]=13;h[503]=1;h[48]=mut!=3;h[15:0]=32767;h[31:16]=20;word(h);gap();repeat(90)@(negedge clk);
   if(!d[0].u.job_open||!d[1].u.job_open||d[0].u.done||d[1].u.done||!d[0].u.pres[0]||!d[1].u.pres[0])begin errs++;$display("MORE1 retention FAIL");end
-  h=0;h[511:508]=1;h[503]=1;h[448]=1;h[491:480]=128;word(h);for(integer w=0;w<128;w++)word(0);gap();
+  active_pass=1;h=0;h[511:508]=1;h[503]=1;h[448]=mut!=4;h[491:480]=128;word(h);for(integer w=0;w<128;w++)word(0);gap();
   h=0;h[511:508]=13;h[503]=1;h[48]=0;h[15:0]=32767;h[31:16]=20;word(h);gap();repeat(90)@(negedge clk);
   if(d[0].u.job_open||d[1].u.job_open||!d[0].u.done||!d[1].u.done||!d[0].u.pres[0]||!d[1].u.pres[0])begin errs++;$display("MORE0 completion FAIL");end
+  if(pvh!=16)errs++;
   for(integer p=0;p<3;p++)for(integer g=0;g<2;g++)begin
    if(heads[p][g]!=(p==2||p==g?1:0)||rows[p][g]!=(p==2||p==g?2:0))errs++;
   end
