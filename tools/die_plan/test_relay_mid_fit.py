@@ -73,6 +73,7 @@ set ::env(RESULTS_DIR) /w
 set ::env(OT_RELAY_MID_RE) {^(u_y_[a-z]+)[.]}
 source /w/relay_mid.tcl
 source /w/gutter_block.tcl
+if {[info exists ::env(T_RELEASE)]} { source /w/gutter_release.tcl }
 foreach i [$blk getInsts] {
   set n [string map {\\ {}} [$i getName]]
   if {[regexp {^u_y_a} $n]} {
@@ -94,6 +95,7 @@ def _run(env):
         (Path(d) / "t.tcl").write_text(TCL)
         shutil.copy(HERE / "relay_mid.tcl", d)
         shutil.copy(HERE / "gutter_block.tcl", d)
+        shutil.copy(HERE / "gutter_release.tcl", d)
         envs = []
         for k, v in env.items():
             envs += ["-e", f"{k}={v}"]
@@ -136,3 +138,17 @@ def test_gutter_block_only_under_threshold():
     assert "OT_GUTTER_BLOCK 1 gutter placement blockages" in out
     out, pos, blk = _run({"OT_GUTTER_BLOCK_UM": "30"})
     assert blk == [] and "OT_GUTTER_BLOCK 0 gutter" in out
+
+
+def test_gutter_release_removes_only_listed_blockages():
+    out, pos, blk = _run({"OT_GUTTER_BLOCK_UM": "45", "T_RELEASE": "1"})
+    assert "OT_GUTTER_BLOCK removed 1 of 1 gutter placement blockages before DPL" in out, out[-2000:]
+    assert blk == []
+
+
+def test_fit_grades_margin_down_instead_of_fallback():
+    # margin 60 leaves no spot within both 405-um legs; the half margin (30) does, still outside the channel
+    out, pos, blk = _run({"OT_RELAY_MID_FIT": "1", "OT_RELAY_MID_CHAN_UM": "60"})
+    assert "OT_RELAY_MID_FIT fitted 1 stations, 0 on the old fallback" in out, out[-2000:]
+    assert " margin 30.0 um" in out, out[-2000:]
+    assert not any(_in_channel(x, y) for x, y in pos)

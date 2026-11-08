@@ -173,6 +173,7 @@ set rm_n 0
 set rm_step [expr {int(2.16 * $rm_dbu)}]
 set rm_fit [expr {[info exists ::env(OT_RELAY_MID_FIT)] && $::env(OT_RELAY_MID_FIT) eq "1"}]
 set rm_chan [expr {int(([info exists ::env(OT_RELAY_MID_CHAN_UM)] ? $::env(OT_RELAY_MID_CHAN_UM) : 20.0) * $rm_dbu)}]
+set rm_chan0 $rm_chan
 set rm_hop [expr {([info exists ::env(OT_RELAY_MID_MAX_HOP_UM)] ? $::env(OT_RELAY_MID_MAX_HOP_UM) : 405.0) * $rm_dbu}]
 # footprint {x0 y0 x1 y1} of a cluster centred on x, bottom at y, clear of every halo by rm_chan and inside the core
 proc rm_fits {x y w h} {
@@ -202,6 +203,11 @@ dict for {g st} $rm_station {
     set len [expr {abs($bx - $ax) + abs($by - $ay)}]
     set steps [expr {max(1, int($len / $rm_step))}]
     set best {}; set bestd {}
+    # graded margins: the full channel margin first, then half, then a quarter (never 0: a cluster narrower than a channel
+    # would fit back into it; COLH10 vS: margin 20 alone left 11 of 13 stations on the old fallback)
+    foreach rm_chan_try [list $rm_chan0 [expr {$rm_chan0 / 2}] [expr {$rm_chan0 / 4}]] {
+    if {$best ne {}} break
+    set rm_chan $rm_chan_try
     for {set s 0} {$s <= $steps} {incr s} {
       set f [expr {double($s) / $steps}]
       set cx [expr {int($ax + ($bx - $ax) * $f)}]; set cy [expr {int($ay + ($by - $ay) * $f)}]
@@ -221,10 +227,12 @@ dict for {g st} $rm_station {
         }
       }
     }
+    }
+    set rm_used $rm_chan; set rm_chan $rm_chan0
     if {$best ne {}} {
       lassign $best x y how
       set rm_done 1; incr rm_nfit
-      puts "OT_RELAY_MID_FIT $g $how [expr {$x / double($rm_dbu)}] [expr {$y / double($rm_dbu)}] footprint [expr {$fw / double($rm_dbu)}]x[expr {$fh / double($rm_dbu)}] um"
+      puts "OT_RELAY_MID_FIT $g $how [expr {$x / double($rm_dbu)}] [expr {$y / double($rm_dbu)}] footprint [expr {$fw / double($rm_dbu)}]x[expr {$fh / double($rm_dbu)}] um margin [expr {$rm_used / double($rm_dbu)}] um"
     } else {
       incr rm_nold
       puts "OT_RELAY_MID_FIT $g NOFIT (old nearest-free fallback)"
