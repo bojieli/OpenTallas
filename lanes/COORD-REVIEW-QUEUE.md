@@ -27391,3 +27391,42 @@ READY-RELAUNCH (held for merge): claude/kw-fix-35-views-1108@c47ef36ab53 is NOT 
   (2) Canary GRT: the 30 extra congestion iterations FINISHED (8056 s) with 0 overflow on every layer (M2 20.7%, M3 14.3%, M4-M7 3-6%). It is now in post-GRT repair_timing (global_route -end_incremental done): WNS -40.8 ps, 151 violating endpoints, ALL at u_bound.u_cland_tl_st_wi_i/u_ring.dch[*].sd_c[*] D pins [CHECKED intel2 .../run/logs/asap7/dp_coll_ftc/base/5_1_grt.tmp.log:394-480; unit oth-ubuntu-1353654-1794138335 openroad PID 2411246 CPU-active]. Not a near miss (>30 ps, >100 endpoints): the CLAND ring corner is both the congestion and the timing class, so the structural pin-window event is the fix, not an ECO.
   VIEWED place density/layout [CHECKED localhost /tmp/qct10/ftc/{density,layout}.png]. SMELLS: (2) pin clump: tl_st_wi 1089 bits on 226 um of W face; (8) two hot bands in the top-left corner, a ~370x30 um horizontal strip (tl_st_wi ring, density ~0.7) directly under the N-face crec window band, next to empty area; (1)/(10) the 1089-bit W->E feedthrough crosses the full 786 um.
   NEXT: price the 3 pin-window options (crec N/S east of x450 / tl_st_wi below y700 / spread tl_st_wi >=450 um on both faces) against the die-level partner faces, build plan_qc53v4y_ftc on v4w (e5dc7eacb745). Also collecting coll_ft__cl78c7b300 / __cla4a25d77 OT_CONS_KIT rows once KW-FIX-35 launches them (ask in QC-TYPES-10 07:08).
+- 2026-11-08 07:13 PST LAUNCHED+STATE [KW-FIX-35-T -> COORD, ROOT-MERGE-52, DIE-QC-93, QC-TYPES-9, QC-TYPES-9/REACH, DIE-S81-80, S81-TYPES-8, KV-TYPES-4, DIE-KV-92, DIE-HEAD-87, DIE-HBM-92, KW-FIX-35, KW-FIX-35-S, KW-FIX-35-K, KW-FIX-35-B, KW-FIX-35-H] One wave src for QC, KV and S81 on c303af. This covers COORD 06:3x and the 30-min rule.
+  - **SRC:** /srv/opentallas-scratch2/claude/kw35/src_c303p.
+    - Integration branch origin claude/kw-fix-35-wave-c303a-1108@804f9e020b2 = main c303af45e5b, then --no-ff merges of claude/kw-fix-35-providx-1108@9ba1e6f86e2 (KW-PROV-1) and claude/qc-types-9-reach-1108@5f5fee0303b (19 new QC-only files: runtime/asbuilt_reach.json, r8_reach.json and results/). Both merges were clean. The tree is for source identity only, not for main.
+    - Built from the host's src_0b72a hardlinks + the 98-file git delta 0b72abe93ac..5b623adc463 (A/M only, each path unlinked before extract) + the 19 files. sha256sum -c passed on intel1, epyc2, epyc4, epyc5 and epyc6. On epyc2 and epyc4 the real dir is on scratch3.
+    - NOT on intel2: intel2 has no src_0b72a to hardlink, scratch2 has 152 GB free (96%), and intel2 is not a gen host for any of these dies (src_probe only probes gen hosts).
+  - **READ-ONLY:** chmod -R a-w on all 5 copies. Before doing it I checked kit_wave.py: every step runs with cwd=src (views, gen, kit_rtl, kit_topology, lint, preflight). The only writes into src I found on src_9d13c/src_0b72a were python __pycache__ files, and Python skips those silently when it cannot write them. A dry bind.py kit-rtl ran on the read-only tree with rc 0.
+    - NOTE: the files are hardlinks, so chmod made the shared inodes read-only in the sibling trees too (src_0b72a, src_9d13c, src_e210k and others). Their directories stay writable. An in-place write into a shared hardlinked file was already a cross-tree write.
+    - SHARED-SRC WRITE seen on epyc4 (not by me): kw35/src_0b72a has qwen_compute/qc_start_1106/runtime/asbuilt_reach.json (06:30, link count 5). Its bytes equal 5f5fee0303b. Another one: qc_start_1108/ was written into src_9d13c on epyc4.
+  - **ANCESTRY:**
+    - S81: reset-scope 7c731625b9, rspacket f51e05a4f9e, LEC J 36d3dddec54 and J3 4a80ce2d3c7 are all ancestors. The S81 tools are byte-same as src_9d13c (per KW-FIX-35-S), so S81 moved.
+    - KV: e210d04c83 and 498dd5e988e are ancestors. KV moved after the kv3_phy/phy_v1 LAUNCH at 06:46. Plan, asbuilt and bind_out stay plan_r8fix/bind_r8fix, and the kv3_pc*/hg*/pv* holds are kept.
+    - HEAD: claude/die-head-87-classfix-1108@95df6810481 is NOT an ancestor of c303af, so the s81_head src keys stay with KW-FIX-35-H on kw33/src_d95ec / ds-head (reverted in config 4ab4f90475). No HEAD rows were picked in between.
+    - HBM: owned by KW-FIX-35-B; I did not touch it.
+  - **CONFIG** (localhost cfgedit-gh.sh, dry first, origin readback OK):
+    - 19d1f06ec5: src/src_sha/queue_src/flow_tag for qwen_compute (ef-qc), qwen_kvsys (dv-kv), s81 (eg-s81) and s81_head (dz-head). Revert keys *_prev_kw35t.
+    - In the same commit, QC plan v4u -> kw35/qcplan_v4w/plan_qc53v4w.json (sha e5dc7eacb745). It sits in a plan-only dir, staged and sha-checked on epyc4, intel1, epyc2, epyc5, epyc6 and intel2.
+    - kit_rtl.bind_out = qct9/bind_v4w. bind.f has 202 absolute paths, all present on all 5 QC gen hosts, including the 45 kw33src realpaths.
+    - kit_rtl.asbuilt = src_c303p/.../qc_start_1106/runtime/asbuilt_reach.json. Its base resolves to the src root.
+    - DRY kit-rtl sle_hc0__cl05696ed1 on epyc5: rc 0, unbound 0.
+    - item_env OT_CONS_KIT on coll_ft x2.
+    - only_items + sle_hc0__cl05696ed1, sle_hc0__cl929603c0__cl4baa7c9c and slw_hc0__cl4f54b7a3. The KW-FIX-12 hold on sle_hc0__cl05696ed1 is dropped.
+    - 4ab4f90475: HEAD src keys reverted (see above).
+  - **STOPPED** (exact unit, pre-P&R): kw-qwenco-slwhc1cl68f9248ecle683a076-12-42725. It had sat 2 h in a kit_rtl disk wait on intel1 with 5 s of CPU.
+  - **LAUNCHED 07:09** (log.txt LAUNCH lines; all on src_c303p 804f9e020b2, OT_FLOW_TAG ef-qc / eg-s81; spec checked):
+    - QC class J (stale kw33src realpath, now resolves): cbn_q00__cl622f65d2 kw-qwenco-cbnq00cl622f65d2-12-50551, cbn_q00__cldbcda913 -17-50552, cbn_q11__cl49ae4555 -6-50552, cbx_q10__cl89936551 -14-50550, sle_ctl__cl67434795 (CONS) -9-50553, sle_fe_v3 -5-50562, sle_fw_v1__cl9d029624 -9-50560, sle_fw_v2__cl6740750e -8-50560, sle_sc_v2 -20-50561, sle_stm_v1__clbe630b9c -13-50560, sle_su_l0__cl7a55c676 -12-50555.
+    - QC KW-PROV-1: cbf_q00__cl1b5a6458 -11-50553, slw_su_c__cl19bb38ef -14-50558.
+    - QC DEPTH: native59 -6-50561 (REDESIGN: RTL SEAT_HT).
+    - QC class H: coll_ft__cl78c7b300 -9-50559 and coll_ft__cla4a25d77 -10-50559 (REDESIGN: conservative re-form, OT_CONS_KIT).
+    - QC hc FACE-REACH v4w fresh kits, 13 rows: sle_hc0__cl05696ed1 -1-50553, __cl929603c0__cl38badc56 -18-50554, __cl929603c0__cl4baa7c9c -1-50554; sle_hc1__cl22c1ff36 -29-50554, __cl7d360508 -13-50555; slw_hc0__cl1bc59e1c -10-50556, __cl4f54b7a3 -1-50556; slw_hc1__cl3449ea95 -5-50556, __cl68f9248e__cl144ee7b3 -15-50557, __cl68f9248e__cle683a076 -13-50557; slw_hc2__cl6bcaba89 -11-50557, __cla3497502__cl16607c7a -14-50558, __cla3497502__cldc737267 -13-50558.
+    - The older-plan hc attempts already in PLACE/route keep running in parallel: sle_hc0 cl38badc56 a17, sle_hc1 cl22c1ff36 a28, sle_hc2 clf60c5152 a5, slw_hc1 cl144ee7b3 a14, slw_hc2 cldc737267 a12, the queue routes of hc2 cl3edce1b8/clcc5e3e61, slw_hc0 cl1bc59e1c, slw_hc1 cl3449ea95 and slw_hc2 cl16607c7a, and kw35f-cts-slehc1cl7d.
+    - S81 J3: dsdv_slice_lepe_mu_C__t1 kw-s81-dsdvslicelepemuCt1-16-50551 (fresh kit).
+  - **NOT LAUNCHED, and why:**
+    - sle_hc2 (3 classes): the parent row has a 'live job (another lane)' claim. QC-TYPES-9/REACH should check whose it is.
+    - slw_su_c__cl92142dac a24: a23 (CONS) is still RUNNING; no duplicate.
+    - tt_ctlm: needs its own lane (QC DEPTH diagnosis only).
+    - S81 class C colh: S81-TYPES-8-COLH 06:41 is a plan delta for the combined S81 plan, not an adoptable plan yet. S81 A/J1/J2/H/I rows: launched by KW-FIX-35-S. Their queued retries and holds are unchanged and launch on src_c303p when their tick comes.
+    - KV: nothing new to release beyond KW-FIX-35-K's phy batch. kvcls_1108 waits for its strict bind.
+    - HBM KW-PROV-1 rows: KW-FIX-35-B.
+    - TYPE-SAFE ts1: NOT run yet. The 06:06 *_ts1.json files are built on superseded bases (QC v4t; KV and S81 events are still pending). A ts1 pass now on QC v4w would change the block of ~86 QC types and supersede the 30 rows launched above. I propose running type_safe_event.py once per die, last, on the combined plans: QC v4w now if COORD wants that, S81 after colh, KV after the kvcls bind = 0. COORD to pick the QC timing.
