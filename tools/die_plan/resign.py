@@ -307,7 +307,7 @@ def default_container_suffix(out):
 # lec.py solver knobs are now passed into the container when the caller's env sets them, else when the kit's config.mk
 # exports them (a recipe sets them there, e.g. through the generator's ORFS variables).  The caller's env wins.  Only the
 # proof budget changes; the verdict rules of lec.py and of this record are unchanged.
-LEC_BOOL_PASS = ('OT_LEC_REPLICA_MATCH', 'OT_LEC_MEM_LANES')
+LEC_BOOL_PASS = ('OT_LEC_REPLICA_MATCH', 'OT_LEC_MEM_LANES', 'OT_LEC_ENABLE_FILL_GUARD')
 LEC_ENV_PASS = ('OT_LEC_PARITY_TERMS',) + LEC_BOOL_PASS
 _CFG_RE = re.compile(r'^\s*(?:override\s+)?(?:export\s+)?([A-Z0-9_]+)\s*[:?]?=\s*(.*?)\s*$')
 

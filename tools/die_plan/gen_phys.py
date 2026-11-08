@@ -4854,7 +4854,7 @@ cfg={}
 for line in open(sys.argv[1],errors='replace'):
     m=re.match(r'^\s*(?:override\s+)?(?:export\s+)?([A-Z0-9_]+)\s*[:?]?=\s*(.*?)\s*$',line.split('#',1)[0])
     if m:cfg[m[1]]=m[2]
-for key in ('OT_LEC_REPLICA_MATCH','OT_LEC_MEM_LANES'):
+for key in ('OT_LEC_REPLICA_MATCH','OT_LEC_MEM_LANES','OT_LEC_ENABLE_FILL_GUARD'):
     value=os.environ.get(key) or cfg.get(key)
     if not value:continue
     value=value.strip()
@@ -4873,6 +4873,7 @@ done <<< "$LEC_MATCH_ENV"
 LEC_REQUIRED=()
 [ "${OT_LEC_REPLICA_MATCH:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_REPLICA_MATCH)
 [ "${OT_LEC_MEM_LANES:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_MEM_LANES)
+[ "${OT_LEC_ENABLE_FILL_GUARD:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_ENABLE_FILL_GUARD)
 [ "${OT_LEC_HINTS_PRESEED:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_HINTS_PRESEED)
 [ "${OT_LEC_EARLY_COMPARE:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_EARLY_COMPARE)
 [ "${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" = 1 ] && LEC_REQUIRED+=(OT_LEC_SUPERSET_VEC)

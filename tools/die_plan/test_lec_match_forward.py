@@ -10,7 +10,7 @@ sys.path.insert(0,str(HERE))
 import resign
 import gen_phys
 
-FLAGS=('OT_LEC_REPLICA_MATCH','OT_LEC_MEM_LANES')
+FLAGS=('OT_LEC_REPLICA_MATCH','OT_LEC_MEM_LANES','OT_LEC_ENABLE_FILL_GUARD')
 
 @pytest.mark.parametrize('flag',FLAGS)
 def test_resign_config_and_env_override(tmp_path,flag):
