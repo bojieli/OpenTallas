@@ -263,8 +263,9 @@ def apply(binder, spec_path):
     else:
         spec=json.loads(path.read_text())
     widths={c.path:{p:len(bs) for p,bs in c.ports.items()} for c in getattr(binder.F,'cells',None) or []}
-    split=binder.ab.get('compose_split')
-    sources,receipt=compose(binder.F,binder.R,spec,__import__('bind_elab').Cell,split=split,base=binder.base)
+    split=(getattr(binder, "ab", None) or {}).get("compose_split")
+    kw=dict(split=split,base=binder.base) if split else {}   # no compose_split: the pre-split call, unchanged
+    sources,receipt=compose(binder.F,binder.R,spec,__import__('bind_elab').Cell,**kw)
     if split:
         # sub-core sources (the hard cores' own RTL) join the bind library so verify / kit-rtl resolve the masters
         for r in split:
