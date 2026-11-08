@@ -107,7 +107,13 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
     // (NG 8: <= 6 PEs, ~70 loads per upd / ld copy) instead of 4.  The k_* result (done-select OR over the units, to
     // the syn->chn landings, -226 ps) is registered here.  PIN CYCLES: +2 rck on k_* (load copy + result register);
     // ot_s81_kp4_ddly DD 55 -> 57 under the same define keeps words and corrections aligned at dout.
+`ifdef OT_S81_KP4_BM_PE_LOCAL
+    // Private compact RX-SYN form: same-cycle load copies per PE remove measured ld2 broadcast.
+    // Arithmetic recurrence already meets placed TT; no extra algorithm or interface cycles.
+    localparam integer NGB = 46;
+`else
     localparam integer NGB = 8;
+`endif
 `else
     localparam integer NGB = 4;
 `endif

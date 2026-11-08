@@ -142,6 +142,17 @@ module ot_s81_rck_rxb #(
     wire [4:0] o_ne; wire o_unc, fs; wire [7:0] apply;
     wire face_q_v; wire [511:0] face_q_d; wire face_q_first, face_q_unc; wire [4:0] face_q_nerr; wire [7:0] face_q_seq;
     wire [31:0] face_n_corr, face_n_unc;
+`ifdef OT_S81_RCK_RXB_FACE_RET
+    // One dedicated input capture, then all four runtime ring slots. Reader epoch bias moves
+    // one EXISTING landing edge to this capture; K=2 warmup and external calendar stay unchanged.
+    wire [543:0] x_q__l_dly; wire [3:0] k_v__l_chn;
+    wire [309:0] k_lo__l_chn; wire [4:0] k_L__l_chn; wire k_any__l_chn;
+    ot_s81_rck_rx_in_land #(.W(544)) u_lpl_0_face(.ck(ck),.rsi(lpr_syn),.rso(lpr_dly),.i(x_q),.o(x_q__l_dly));
+    ot_s81_rck_rx_in_land #(.W(4)) u_lpl_1_face(.ck(ck),.rsi(lpr_syn),.rso(lpr_chn),.i(k_v),.o(k_v__l_chn));
+    ot_s81_rck_rx_in_land #(.W(310)) u_lpl_2_face(.ck(ck),.rsi(lpr_syn),.rso(lpr_chn),.i(k_lo),.o(k_lo__l_chn));
+    ot_s81_rck_rx_in_land #(.W(5)) u_lpl_3_face(.ck(ck),.rsi(lpr_syn),.rso(lpr_chn),.i(k_L),.o(k_L__l_chn));
+    ot_s81_rck_rx_in_land #(.W(1)) u_lpl_4_face(.ck(ck),.rsi(lpr_syn),.rso(lpr_chn),.i(k_any),.o(k_any__l_chn));
+`else
     wire [4*((543) - (0) + 1)-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [3:0] lpl_0_vld;  wire [543:0] x_q__l_dly, lpl_0_o;
     ot_pl_land_w #(.W(((543) - (0) + 1)), .D(4)) u_lpl_0_w (.ck(ck), .rsi(lpr_syn), .i(x_q), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
     ot_pl_land_r #(.W(((543) - (0) + 1)), .D(4), .K((MUT == 2) ? 3 : 2)) u_lpl_0_r (.ck(ck), .rsi(lpr_dly), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
@@ -162,6 +173,7 @@ module ot_s81_rck_rxb #(
     ot_pl_land_w #(.W(1), .D(4)) u_lpl_4_w (.ck(ck), .rsi(lpr_syn), .i(k_any), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld));
     ot_pl_land_r #(.W(1), .D(4), .K(2)) u_lpl_4_r (.ck(ck), .rsi(lpr_chn), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld), .o(lpl_4_o));
     assign k_any__l_chn = lpl_4_o;
+`endif
     wire [4*((543) - (0) + 1)-1:0] lpl_5_bank;  wire [11:0] lpl_5_epo;  wire [3:0] lpl_5_vld;  wire [543:0] d_q__l_out, lpl_5_o;
     ot_pl_land_w #(.W(((543) - (0) + 1)), .D(4)) u_lpl_5_w (.ck(ck), .rsi(lpr_dly), .i(d_q), .bank(lpl_5_bank), .epo(lpl_5_epo), .vld(lpl_5_vld));
     ot_pl_land_r #(.W(((543) - (0) + 1)), .D(4), .K(2)) u_lpl_5_r (.ck(ck), .rsi(lpr_out), .bank(lpl_5_bank), .epo(lpl_5_epo), .vld(lpl_5_vld), .o(lpl_5_o));
@@ -226,5 +238,37 @@ module ot_s81_rck_tx (
 `else
     ot_s81_kp4_enc #(.PIN_FAULT(1)) u_enc (.clk(clk), .rst_n(pin_rst_n[2]), .tx_v(pin_v[2]), .tx_d(pin_q[2]), .p_v(p_v), .p_d(p_d), .fault(fault));
 `endif
+endmodule
+`endif
+
+// Private single-clock RX-BACK input retiming. Source/destination resets have equal depth.
+// The reader's existing EPOCH_BIAS=1 selects the next newer ring slot, while K=2 keeps
+// warmup unchanged. Captured i is one edge older: these offsets cancel exactly.
+`ifdef OT_S81_RCK_RXB_FACE_RET
+module ot_s81_rck_rx_in_land #(parameter integer W=1)(
+ input wire ck,rsi,rso,input wire [W-1:0] i,output wire [W-1:0] o);
+ wire [W-1:0] cap;
+ reg [W-1:0] face_q;
+ // Preserve the cell, not a kept output alias wire.
+ (* keep=1,dont_touch=1,face_keep=1 *) always @(posedge ck) face_q<=i;
+ assign cap=face_q;
+ wire [4*W-1:0] bank;wire [11:0] epo;wire [3:0] vld;
+ ot_pl_land_w #(.W(W),.D(4)) u_w(.ck(ck),.rsi(rsi),.i(cap),.bank(bank),.epo(epo),.vld(vld));
+ genvar c,j;
+ generate for(c=0;c<(W+23)/24;c=c+1)begin:g_ck
+  localparam integer CW=(W-c*24<24)?W-c*24:24;
+  wire [4*CW-1:0] cb;
+  for(j=0;j<4;j=j+1)begin:g_slot
+   assign cb[j*CW+:CW]=bank[j*W+c*24+:CW];
+  end
+  ot_pl_land_local_r #(.W(CW),.D(4),.K(2),.EPOCH_BIAS(
+`ifdef RXB_RET_MUT_BIAS
+ 0
+`else
+ 1
+`endif
+ )) u_r(
+   .ck(ck),.rsi(rso),.bank(cb),.epo(epo),.vld(vld),.o(o[c*24+:CW]));
+ end endgenerate
 endmodule
 `endif
