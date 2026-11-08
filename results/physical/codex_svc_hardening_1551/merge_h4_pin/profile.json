@@ -1,0 +1,75 @@
+{
+ "source_commit": "AT_GENERATION_HEAD",
+ "clock_ports": [
+  "clk"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pin_placement_policy": "DECLARED_CLOCK_RESET_POINTS",
+ "port_inventory": {
+  "top": "codex_svc_merge_h4_pin",
+  "source_file": "results/physical/codex_svc_hardening_1551/merge_h4_pin/rtl/codex_svc_merge_h4_pin.sv",
+  "source_sha256": "78de33117d854d1b536f34377fc874865386c522ead2b8b0d31ee6cccbbc8a8f",
+  "ports": [
+   [
+    "clk",
+    "input",
+    1
+   ],
+   [
+    "rst_n",
+    "input",
+    1
+   ],
+   [
+    "iv",
+    "input",
+    1
+   ],
+   [
+    "ifin",
+    "input",
+    1
+   ],
+   [
+    "iblk",
+    "input",
+    5
+   ],
+   [
+    "iy",
+    "input",
+    128
+   ],
+   [
+    "if_",
+    "input",
+    4
+   ],
+   [
+    "ov",
+    "output",
+    1
+   ],
+   [
+    "oy",
+    "output",
+    128
+   ],
+   [
+    "of_",
+    "output",
+    4
+   ]
+  ]
+ },
+ "private_reset_contract_file": "results/physical/codex_svc_hardening_1551/private_reset/reset_contract.json",
+ "private_reset_contract_sha256": "a1f0b8a7d0ccb4948f8bd8f784f75b5ab60f78b769d4498cb4b8a2166fc11267",
+ "release_eligible": false,
+ "qualification": "MITER_PASS; PRIVATE_COMPACT_PIN_PG_FORM_PENDING",
+ "added_rx_clk_PIN_cycles": 2,
+ "added_reset_cycles": 1,
+ "native_internal_reset_release_cycles": 0,
+ "reset_pin_shape_policy": "M5_VERTICAL"
+}

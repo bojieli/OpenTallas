@@ -27,11 +27,14 @@
  "native_ff_proxy": "H16 generic62760; H4 estimate about16k, mapped size pending",
  "extra_face_ff": 272,
  "outline_candidate_um": [
-  190.08,
-  190.08
+  172.8,
+  172.8
  ],
  "track_budget": "M5 signal faces,1.056um pin pitch split138/134 or141/133 incl clock/reset; under5percent use",
  "native_storage": "5levels x4heads x8entries x33bits=5280ringbits, same register ports/bandwidth",
  "parent_fit": "all16newmerge slots/unplaced parent residual open; no parent rebuild",
- "model_cost": "each existing merge completion +2 clocks, reset release+1; compiler/consumer sibling alignments required before adoption"
+ "model_cost": "each existing merge completion +2 clocks, reset release+1; compiler/consumer sibling alignments required before adoption",
+ "core_inset_um": 4.32,
+ "reset_pin_shape_policy": "M5_VERTICAL_0.024x0.192",
+ "existing_master_scope": "unadopted private compact form; no RTL data/reset cycle delta from proved form"
 }

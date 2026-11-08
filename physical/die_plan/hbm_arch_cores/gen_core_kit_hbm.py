@@ -339,7 +339,7 @@ def io_tcl(pins, w, h, tag, clock_entry=None):
     return "\n".join(out) + "\n", rows
 
 
-def declared_source_io_tcl(pins, w, h, tag, clocks, resets):
+def declared_source_io_tcl(pins, w, h, tag, clocks, resets, vertical_resets=False):
     """Opt-in native source contracts: consume named clock/reset centres, never project or merge them."""
     out = [f"# GENERATED declared native clock/reset points of {tag} ({len(pins)} pins)."]
     rows = []
@@ -360,6 +360,11 @@ def declared_source_io_tcl(pins, w, h, tag, clocks, resets):
             sx, sy = float(p["w"]), float(p["h"])
         elif p["name"] in clocks:
             sx, sy = CLOCK_ENTRY_SIZE
+        elif vertical_resets and p["name"] in resets:
+            # Explicit owned native form: M5 reset pads follow vertical metal.
+            # A nearest-edge horizontal pad forms T-shaped RECTONLY unions
+            # with default VIA45/VIA56 enclosures at an interior point.
+            sx, sy = LAYER_W["M5"], PIN_LEN_UM
         elif face_of(x, y, w, h) in "EW":
             sx, sy = PIN_LEN_UM, LAYER_W["M5"]
         else:
@@ -1958,7 +1963,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if declared_native:
         if centry is None:
             raise SystemExit("DECLARED_NATIVE_PIN: --clock-pin-entry on required")
-        io, prow = declared_source_io_tcl(pins, w, h, a.view, set(clks), set(rsts))
+        io, prow = declared_source_io_tcl(pins, w, h, a.view, set(clks), set(rsts),
+                                             vertical_resets=(source_profile or {}).get("reset_pin_shape_policy") == "M5_VERTICAL")
         centry_rec = dict(policy="DECLARED_CLOCK_RESET_POINTS", pins_file=v["pins_file"],
                           pins_sha256=v["pins_sha256"], ports=sorted(set(clks) | set(rsts)))
     else:

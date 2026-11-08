@@ -84,8 +84,8 @@
  "throughput": "2 FP32 PV lanes per valid cycle to one packed2xBF16 output,32 beats/head",
  "legacy_area_proxy_um2": 7013,
  "outline_candidate_um": [
-  146.88,
-  146.88
+  129.6,
+  129.6
  ],
  "parent_fit": "one candidate child fits prior174.96bay; all8slots and full cut not qualified",
  "memory_ports": "native cos/sin register arrays4x32 each; no changed bandwidth",
@@ -95,5 +95,8 @@
  "measured_initial_ff_mapped_cells": 57705,
  "measured_initial_post_eliminate_area_um2": 5756,
  "first_probe_scope": "FF mapped sizing proxy, no TT STA qualification",
- "extra_exactness_coverage": "skip coefficient delivery on odd epochs to assert sticky fault; independent fault-mask mutant"
+ "extra_exactness_coverage": "skip coefficient delivery on odd epochs to assert sticky fault; independent fault-mask mutant",
+ "core_inset_um": 4.32,
+ "reset_pin_shape_policy": "M5_VERTICAL_0.024x0.192",
+ "existing_master_scope": "unadopted private compact form; no RTL data/reset cycle delta from proved form"
 }

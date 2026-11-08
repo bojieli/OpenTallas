@@ -82,8 +82,9 @@
  "private_reset_contract_file": "results/physical/codex_svc_hardening_1551/private_reset/reset_contract.json",
  "private_reset_contract_sha256": "a1f0b8a7d0ccb4948f8bd8f784f75b5ab60f78b769d4498cb4b8a2166fc11267",
  "release_eligible": false,
- "qualification": "MITER_PASS_STICKY_FAULT_AND_DEN_MUTANTS; PRIVATE_PHYSICAL_PILOT_PENDING",
+ "qualification": "MITER_PASS; PRIVATE_COMPACT_PIN_PG_FORM_PENDING",
  "added_rx_clk_PIN_cycles": 0,
  "added_reset_cycles": 0,
- "native_internal_reset_release_cycles": 2
+ "native_internal_reset_release_cycles": 2,
+ "reset_pin_shape_policy": "M5_VERTICAL"
 }
