@@ -8156,7 +8156,15 @@
         "vsN0",
         "root",
         "q_b002",
-        "q_b002__physical_v1"
+        "q_b002__physical_v1",
+        "q_b100",
+        "q_b100__physical_v1",
+        "q_b101",
+        "q_b101_nw",
+        "q_b102",
+        "q_b102__physical_v1",
+        "q_b103",
+        "q_b103__physical_v1"
       ],
       "place_prefer": [
         "intel1",
@@ -9182,7 +9190,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 2
       },
-      "flow_tag": "flow-20261108-fc-hbm",
+      "flow_tag": "flow-20261108-fk-hbm",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -10336,7 +10344,19 @@
       "only_items_prev_kw35j_added": [
         "q_b002",
         "q_b002__physical_v1"
-      ]
+      ],
+      "only_items_prev_kw35k_added": [
+        "q_b100",
+        "q_b100__physical_v1",
+        "q_b101",
+        "q_b101_nw",
+        "q_b102",
+        "q_b102__physical_v1",
+        "q_b103",
+        "q_b103__physical_v1"
+      ],
+      "note_only_items_kw35k": "KW-FIX-35-B 2026-11-08 09:38 PST: q_b1xx hcol rows (SU hb_idx set READY, bind_x2 + GEN class A) added now that main 08a781e8673 carries gen-main 460ddf0d1e (live prov_view.py = merged-tap USE CLOCK, sha 51776407); revert = remove only_items_prev_kw35k_added from only_items",
+      "flow_tag_prev_kw35k": "flow-20261108-fc-hbm"
     }
   },
   "place_prefer": [
