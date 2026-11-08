@@ -1,0 +1,49 @@
+{
+  "scope": "METADATA_AND_INPUT_IDENTITY_ONLY_NOT_STA_NOT_TYPE_READY",
+  "portable": {
+    "master": "ot_hbm_svc_sm_xcal_rel_t",
+    "flow_tag": "flow-20261106-f-hbm",
+    "files": [
+      "ot_hbm_svc_sm_xcal_rel_t.provenance.json",
+      "ot_hbm_svc_sm_xcal_rel_t/PROVENANCE.json",
+      "ot_hbm_svc_sm_xcal_rel_t/lec/lec.json",
+      "ot_hbm_svc_sm_xcal_rel_t/signoff/signoff.json",
+      "ot_hbm_svc_sm_xcal_rel_t/source.PROVENANCE.json",
+      "ot_hbm_svc_sm_xcal_rel_t/source.provenance.json"
+    ]
+  },
+  "qualification": [
+    {
+      "view_provenance": "/srv/opentallas-scratch2/claude/codex-hbm-types-1551/q_spt0_provider_1551/macros/ot_hbm_svc_sm_xcal_rel_t.provenance.json",
+      "signoff": "/srv/opentallas-scratch2/claude/codex-hbm-types-1551/q_spt0_provider_1551/macros/ot_hbm_svc_sm_xcal_rel_t/signoff/signoff.json",
+      "flow_tag": "flow-20261106-f-hbm",
+      "parent_flow_tag": "flow-20261107-ed-hbm",
+      "flow_basis": "/srv/opentallas-scratch2/claude/codex-hbm-types-1551/q_spt0_provider_1551/macros/ot_hbm_svc_sm_xcal_rel_t/PROVENANCE.json",
+      "lec_verdict": "EQUIVALENT"
+    },
+    {
+      "view_provenance": "/srv/opentallas-scratch2/claude/codex-hbm-types-1551/q_spt0_provider_1551/macros/ot_hbm_svc_sm_xcal_rel_t.provenance.json",
+      "signoff": "/srv/opentallas-scratch2/claude/codex-hbm-types-1551/q_spt0_provider_1551/macros/ot_hbm_svc_sm_xcal_rel_t/signoff/signoff.json",
+      "flow_tag": "flow-20261106-f-hbm",
+      "parent_flow_tag": "flow-20261107-ed-hbm",
+      "flow_basis": "/srv/opentallas-scratch2/claude/codex-hbm-types-1551/q_spt0_provider_1551/macros/ot_hbm_svc_sm_xcal_rel_t/PROVENANCE.json",
+      "lec_verdict": "EQUIVALENT"
+    }
+  ],
+  "pins": {
+    "match": 507,
+    "convention": 0,
+    "moved": 0,
+    "extra": 0,
+    "missing": 0
+  },
+  "outline": [
+    241.92,
+    224.64
+  ],
+  "tool_sha256": {
+    "signed_child_evidence.py": "6aad9e0d64abf2414cd3f3f3ad6c5676175dc21b871a48891282db874006bf01",
+    "signoff_source.py": "645315299e0646c49365aa4e03f9afdc98643d200c1f06a56aad80f48744b237",
+    "release_tree_source.py": "290a0c94921c86836b4a9cc4fe69d6a3f932d2fb0f55ab661dfb83bac8585202"
+  }
+}
