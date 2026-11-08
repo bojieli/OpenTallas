@@ -17,8 +17,21 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 try:
     from native_pin_contract import native_rects_match
-except ModuleNotFoundError:
-    sys.path.insert(0, str(Path(__file__).resolve().parents[5] / "tools/die_plan"))
+except ModuleNotFoundError as exc:
+    if exc.name != "native_pin_contract":
+        raise
+    # A staged kit can live at /work/pin_audit.py, with only one parent.
+    # Repository invocation may find the helper beside any ancestor's tools;
+    # standalone kits must carry the generator's adjacent helper copy.
+    for parent in Path(__file__).resolve().parents:
+        candidate = parent / "tools/die_plan/native_pin_contract.py"
+        if candidate.is_file():
+            sys.path.insert(0, str(candidate.parent))
+            break
+    else:
+        raise ModuleNotFoundError(
+            "pin_audit.py requires adjacent native_pin_contract.py in a standalone kit; "
+            "stage the helper from the same generator source", name="native_pin_contract") from exc
     from native_pin_contract import native_rects_match
 
 TOL = 0.001
