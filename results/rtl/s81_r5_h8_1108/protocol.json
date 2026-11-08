@@ -1,0 +1,23 @@
+{
+  "status": "PROTOCOL_COMPONENT_PASS",
+  "host": "epyc6",
+  "unit": "oth-ubuntu-3354223-1794134740",
+  "path": "/srv/opentallas-scratch2/claude/codex-svc-rtl-0222/protocol_more",
+  "scope": "Real H8 dsdv_svc_att decoder/control, arithmetic test double and backdoor landing preload; not numeric or producer qualification",
+  "base_errors": 0,
+  "checks": [
+    "SE uses preceding ATTN_Q head base; final SO broadcasts",
+    "MORE1 preserves job_open and pres while suppressing done",
+    "MORE0 closes both shares, retaining landing"
+  ],
+  "mutants": {
+    "head_base_swap": 4,
+    "SO_drop": 2,
+    "MORE_off": 1
+  },
+  "remaining": [
+    "real SX/P arrival",
+    "real folded SM joined completion",
+    "full numerical H8x2/H16 composition"
+  ]
+}

@@ -295,7 +295,13 @@ module dsdv_svc_rs_c #(
     always @(posedge ck or negedge rn) if (!rn) rcol <= 1'b0; else if (se_v && sm_rv) rcol <= 1'b1;
     wire o_fu, o_fo, o_alive, o_den; wire [7:0] o_rjid;
     // the slice's SM share (S81U-2 ot_s81_su_sms: smq tap + head subtree; -DSU_SMU_T = hardened regional clusters)
-    ot_s81_su_sms u_sms (.clk(ck), .rst_in(rst), .cfg_g(tile), .j_st(sm_st), .j_kind(sm_kind), .j_jid(sm_jid),
+`ifdef OT_SVC_H8
+    // R5 closure form: 8 physical lanes, 16 original logical lanes and reduction order.
+    ot_s81_su_sms_fold2 u_sms (.clk(ck),
+`else
+    ot_s81_su_sms u_sms (.clk(ck),
+`endif
+        .rst_in(rst), .cfg_g(tile), .j_st(sm_st), .j_kind(sm_kind), .j_jid(sm_jid),
         .r_v(r_v), .r_p(r_p), .r_j(r_j), .r_d(r_d),
         .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
         .o_rjid(o_rjid));

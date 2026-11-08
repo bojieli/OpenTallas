@@ -32,6 +32,15 @@ module tb_svc_h8_protocol;
    phase=p;h=0;h[511:508]=1;h[503]=1;h[448]=1'(mut==1?1-p:p);word(h);gap();sm(4);
   end
   phase=2;if(mut!=2)sm(5);
+  // Protocol backdoor preload only: numerical/landing producers are separate gates.
+  h=0;h[511:508]=2;h[503]=1;h[88:81]=1;word(h);gap();
+  d[0].u.pres=640'd1;d[1].u.pres=640'd1;d[0].u.spres=4'd1;d[1].u.spres=4'd1;
+  h=0;h[511:508]=1;h[503]=1;h[491:480]=128;word(h);for(integer w=0;w<128;w++)word(0);gap();
+  h=0;h[511:508]=13;h[503]=1;h[48]=mut!=3;h[15:0]=32767;h[31:16]=20;word(h);gap();repeat(90)@(negedge clk);
+  if(!d[0].u.job_open||!d[1].u.job_open||d[0].u.done||d[1].u.done||!d[0].u.pres[0]||!d[1].u.pres[0])begin errs++;$display("MORE1 retention FAIL");end
+  h=0;h[511:508]=1;h[503]=1;h[448]=1;h[491:480]=128;word(h);for(integer w=0;w<128;w++)word(0);gap();
+  h=0;h[511:508]=13;h[503]=1;h[48]=0;h[15:0]=32767;h[31:16]=20;word(h);gap();repeat(90)@(negedge clk);
+  if(d[0].u.job_open||d[1].u.job_open||!d[0].u.done||!d[1].u.done||!d[0].u.pres[0]||!d[1].u.pres[0])begin errs++;$display("MORE0 completion FAIL");end
   for(integer p=0;p<3;p++)for(integer g=0;g<2;g++)begin
    if(heads[p][g]!=(p==2||p==g?1:0)||rows[p][g]!=(p==2||p==g?2:0))errs++;
   end
@@ -144,5 +153,13 @@ module ot_hdc_v41x_attn_s #(
 );
 assign job_ready=1;assign q_ready=1;assign kv_ready=1;assign p_ready=1;
 assign qk_iss=0;assign pv_iss=0;assign tx_i=0;
-always_comb begin sc_v=0;sc_row=0;sc_m=0;sc_y=0;sc_f=0;pv_v=0;pv_c=0;pv_y=0;pv_f=0;end
+integer pulse;
+always @(posedge clk or negedge rst_n)begin
+ if(!rst_n)begin pulse<=0;pv_v<=0;pv_c<=0;end
+ else begin
+  if(job_v)pulse<=1;else if(pulse!=0)pulse<=pulse+1;
+  pv_v<=pulse>=4&&pulse<12;pv_c<=8'(pulse-4);
+ end
+end
+always_comb begin sc_v=0;sc_row=0;sc_m=0;sc_y=0;sc_f=0;pv_y=0;pv_f=0;end
 endmodule

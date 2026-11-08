@@ -13,7 +13,7 @@ RS_SRC=(rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv rtl/hdc/v41x/ot_hdc_v41x_attn_s.
   rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/ot_hdc_delay.sv
   rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job_a0.sv rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv
   rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv
-  $SM/ot_s81_su_sms.sv $SM/ot_s81_su_smq.sv $SM/ot_s81_su_smh.sv
+  $SM/ot_s81_su_sms.sv $SM/ot_s81_su_sms_fold2.sv $SM/ot_s81_su_smh_fold2.sv $SM/ot_s81_su_sml_fold2.sv $SM/ot_s81_su_smd_fold2.sv $SM/ot_s81_su_smq.sv $SM/ot_s81_su_smh.sv
   $SM/dsfd_su_t_smh.sv $SM/dsfd_su_t_smhq.sv $SM/dsfd_su_t_smhr.sv rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv
   rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv
   rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_sfu.sv
