@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.s81_svc_sm_fold2.sizing.v1",
+  "rows": [
+    {
+      "kind": "lane",
+      "cells": 99978,
+      "flops": 12411,
+      "area_um2": 11268.96948,
+      "check_problems": 0,
+      "source_commit": "7aec3929d4",
+      "corner": "TT",
+      "period_ps": 833,
+      "status": "MAPPED_SIZING_ONLY",
+      "stat_sha256": "0417d229ef8c2c9383756ed477abb186d6b09fa271525e811c3895f25d90a1d4"
+    },
+    {
+      "kind": "divide",
+      "cells": 62884,
+      "flops": 7553,
+      "area_um2": 6834.84156,
+      "check_problems": 0,
+      "source_commit": "7aec3929d4",
+      "corner": "TT",
+      "period_ps": 833,
+      "status": "MAPPED_SIZING_ONLY",
+      "stat_sha256": "16bf86f153e5ab2ddc91ffc65129b5b501a6f5179337e8e1cb101b565147c960"
+    }
+  ],
+  "head_without_unchanged_root_tap": {
+    "lanes": 8,
+    "divide_pairs": 4,
+    "cells": 1051360,
+    "area_um2": 117491.12208,
+    "min_std_outline_area_um2_at_util_040": 293727.8052
+  },
+  "scope": "Mapped synthesis only; no physical timing, geometry or sign-off. Fullhead arithmetic and native service timing are separate gates.",
+  "frontend_failures": [
+    "ORFS parallel SDCcopy/mkdir race corrected by creating results directory",
+    "Bare SYNTHESIS treated as input filename; corrected to -DSYNTHESIS",
+    "post-Yosys ODB export lacked TC_LIB_FILES; export TC_NLDM_LIB_FILES; source/netlist unchanged"
+  ]
+}
