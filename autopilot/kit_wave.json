@@ -1272,8 +1272,8 @@
       },
       "plan": "/srv/opentallas-scratch3/claude/kw34/wave_cg_frz_xrt/physical/die_plan/s81/plan_h2_2249.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_cf269",
-      "src_sha": "cf2697d7d0ba8b043a522b8ac17796054f685fb9",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_9d13c",
+      "src_sha": "9d13c8cce9df19dbd554ef09ea5d24a0fbfc9e87",
       "kit_rtl": {
         "mode": "script",
         "script": "/srv/opentallas-scratch3/claude/die-s81-70/kit_rtl_s81_ds70_kvov.sh",
@@ -2349,7 +2349,19 @@
         "dsdv_slice_c1x_C__t6@18",
         "dsdv_slice_c1x_C__t7@13",
         "slice_station__t24__cleece78ec@12",
-        "col_h10_r2__t1__cl99efd374@16"
+        "col_h10_r2__t1__cl99efd374@16",
+        "dsdv_slice_c1x_C__t1@17",
+        "dsdv_slice_c1x_C__t4@23",
+        "dsdv_slice_c1x_C__t8@18",
+        "dsdv_slice_c1x_C__t10@8",
+        "dsdv_slice_lepe_nh_mus_C__t1@10",
+        "dsdv_slice_lepw_mu_C__t1@11",
+        "ot_s81sl_leaf__t4@7",
+        "ot_s81sl_leaf__t50@9",
+        "slice_station__t22@11",
+        "dsdv_slice_iq_C__t1@8",
+        "dsdv_slice_kv512_C__t1@12",
+        "eng__t1@5"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -2460,22 +2472,17 @@
         "dsdv_slice_c1x_C__t5": "KW-FIX-35-S 2026-11-08 05:09 PST: XRT1 view fix run off-wave as a GRT resume (intel2 unit kw35-xrtR2-c1x-C--t5, epyc2 scratch3/claude/kw35/xrt); no fresh wave kit",
         "dsdv_slice_c1x_C__t9": "KW-FIX-35-S 2026-11-08 05:09 PST: XRT1 view fix run off-wave as a GRT resume (intel2 unit kw35-xrtR-c1x-C--t9, epyc5 scratch3/claude/kw35/xrt); no fresh wave kit",
         "dsdv_slice_c1x_C__t3": "KW-FIX-35-S 2026-11-08 05:09 PST: CLASS F CTS DPL-0033: KW-FIX-35-F resumes it at CTS off-wave; no fresh wave kit",
-        "slice_station__t14": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
-        "slice_station__t29__clc7772371": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
-        "slice_station__t44": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
-        "bk_sel__t2": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
-        "col_h10_r0_p1__t1__cl574cc59d": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
-        "col_h10_r2__t1__cl99efd374": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
-        "col_h9_r0_p3__t1__cl0cd90c0e": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
-        "col_h9_r0_p4__t1__clcb2fbfe8": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
-        "dsdv_slice_c1x_C__t6": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
-        "dsdv_slice_c1x_C__t7": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
-        "slice_station__t24__cleece78ec": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
-        "ot_s81sl_leaf__t4": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
-        "ot_s81sl_leaf__t50": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries",
-        "ot_s81sl_leaf__t67": "KW-FIX-35-S 2026-11-08 05:49 PST: class A needs rspacket f51e05a4f9e; held until S81 src = main 0b72abe93ac + rspacket + reset-scope is built, then released with retries"
+        "dsdv_slice_lepe_mu_LP__t2": "KW-FIX-35-S 2026-11-08 06:04 PST: REBIND_NEEDED (own clock.taps moved, KW-FIX-33 b5ec9b39080): wait for S81-TYPES-7-REBIND bind",
+        "dsdv_slice_lepe_nh_mus_LP__t1": "KW-FIX-35-S 2026-11-08 06:04 PST: REBIND_NEEDED (own clock.taps moved): wait for S81-TYPES-7-REBIND bind",
+        "dsdv_slice_lepw_mu_LP__t2": "KW-FIX-35-S 2026-11-08 06:04 PST: REBIND_NEEDED (own clock.taps moved): wait for S81-TYPES-7-REBIND bind",
+        "dsdv_slice_lepw_mus_LP__t2": "KW-FIX-35-S 2026-11-08 06:04 PST: REBIND_NEEDED (own clock.taps moved): wait for S81-TYPES-7-REBIND bind",
+        "slice_station__t45": "KW-FIX-35-S 2026-11-08 06:04 PST: ringtap re-bind overlay in progress (kw35/t45); ONE fresh t45 when the overlay bind dir is ready",
+        "ot_s81sl_kv_leaf__t1": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
+        "ot_s81sl_kv_leaf__t3": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
+        "ot_s81sl_kv_leaf__t4": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
+        "ot_s81sl_kv_leaf__t5": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit"
       },
-      "queue_src": "claude/kw-fix-35-s81src-1108@cf2697d7d0b",
+      "queue_src": "claude/kw-fix-35-s81src2-1108@9d13c8cce9d",
       "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave",
       "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
       "retry_fix": {
@@ -2694,7 +2701,7 @@
         "ot_s81sl_leaf__t58@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
         "ot_s81sl_leaf__t59@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
         "ot_s81sl_leaf__t66@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
-        "ot_s81sl_leaf__t67@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
+        "ot_s81sl_leaf__t67@5": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
         "ot_s81sl_leaf__t68@4": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
         "ot_s81sl_leaf__t70@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
         "ot_s81sl_leaf__t71@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
@@ -3306,12 +3313,24 @@
         "slice_station__t44@6": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
         "bk_sel__t2@32": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
         "col_h10_r0_p1__t1__cl574cc59d@13": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
-        "col_h9_r0_p3__t1__cl0cd90c0e@15": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
+        "col_h9_r0_p3__t1__cl0cd90c0e@15": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
         "col_h9_r0_p4__t1__clcb2fbfe8@15": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
         "dsdv_slice_c1x_C__t6@18": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 CLASS H: fresh kit (old kit carried a stale FAIL_PREFLOOR); reset-scope selected so it does not stop at the CLASS A topology check",
         "dsdv_slice_c1x_C__t7@13": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 CLASS H: fresh kit (old kit carried a stale FAIL_PREFLOOR); reset-scope selected so it does not stop at the CLASS A topology check",
         "slice_station__t24__cleece78ec@12": "KW-FIX-35-S 2026-11-08 05:09 PST: REDESIGN: S81-TYPES-7 CLASS I: station DRV margin form (--slew-margin 50 --cap-margin 20); reset-scope selected",
-        "col_h10_r2__t1__cl99efd374@16": "KW-FIX-35-S 2026-11-08 05:24 PST: S81-TYPES-7 CLASS A: reset-scope selected (7c731625b9); a16 launched 05:09 on the old config before the item_env landed (KW-FIX-35-S retry_seen reset race) and stopped at kit_topology, no CAD"
+        "col_h10_r2__t1__cl99efd374@16": "KW-FIX-35-S 2026-11-08 05:24 PST: S81-TYPES-7 CLASS A: reset-scope selected (7c731625b9); a16 launched 05:09 on the old config before the item_env landed (KW-FIX-35-S retry_seen reset race) and stopped at kit_topology, no CAD",
+        "dsdv_slice_c1x_C__t1@17": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "dsdv_slice_c1x_C__t4@23": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "dsdv_slice_c1x_C__t8@18": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "dsdv_slice_c1x_C__t10@8": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "dsdv_slice_lepe_nh_mus_C__t1@10": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "dsdv_slice_lepw_mu_C__t1@11": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "ot_s81sl_leaf__t4@7": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "ot_s81sl_leaf__t50@9": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "slice_station__t22@11": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "dsdv_slice_iq_C__t1@8": "KW-FIX-35-S 2026-11-08 06:04 PST: REDESIGN: S81-TYPES-7 CLASS J2 LEC fix claude/s81-types-7-lec-1108@36d3dddec54 (b28dc6669c0: xs_ctl data regs load every edge + S81 64-edge reset contract), on main 0b72abe93ac; fresh kit; the kit LEC is the proof, no waiver",
+        "dsdv_slice_kv512_C__t1@12": "KW-FIX-35-S 2026-11-08 06:04 PST: REDESIGN: S81-TYPES-7 CLASS J2 LEC fix claude/s81-types-7-lec-1108@36d3dddec54 (b28dc6669c0: xs_ctl data regs load every edge + S81 64-edge reset contract), on main 0b72abe93ac; fresh kit; the kit LEC is the proof, no waiver",
+        "eng__t1@5": "KW-FIX-35-S 2026-11-08 06:04 PST: KW-FIX-35-V views relaunch (relaunch_rows.tsv): kit_istations width fix on main 0b72abe93ac (tag ef-s81); fresh kit"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -3405,234 +3424,301 @@
       "note_hosts_1104b": "KW-FIX-7 07:1x COORD 06:51 (6): epyc2 scratch 161 GB > 150, S81 PLACE steered to epyc2 first (admit-gated, falls back to epyc4); gen stays epyc4.",
       "item_env": {
         "ot_s81sl_leaf__t55": {
-          "OT_GRT_ALLOW_CONGESTION": "1"
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t26": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:639.36:648.0,u_lf.u_vsw:794.88:397.44"
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:639.36:648.0,u_lf.u_vsw:794.88:397.44",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t11": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:812.16:492.48,u_lf.u_vsw:1002.24:578.88"
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:812.16:492.48,u_lf.u_vsw:1002.24:578.88",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t44__clf4ea6d4b": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:691.2:561.6,u_lf.u_vsw:1054.08:388.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:691.2:561.6,u_lf.u_vsw:1054.08:388.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t25__cl55642d17": {
-          "OT_GRT_ALLOW_CONGESTION": "1"
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_kv_leaf__t2": {
-          "OT_SYNTH_ARGS": "-noshare"
+          "OT_SYNTH_ARGS": "-noshare",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t27": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t42": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t53__cl958451dd": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:336.96:190.08,u_lf.u_vs:941.76:457.92:R180,u_lf.u_vn.u_a:336.96:380.16,u_lf.u_vq:760.32:475.2,u_lf.u_vsw:915.84:639.36"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:336.96:190.08,u_lf.u_vs:941.76:457.92:R180,u_lf.u_vn.u_a:336.96:380.16,u_lf.u_vq:760.32:475.2,u_lf.u_vsw:915.84:639.36",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t53__clb66fa5cb": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:336.96:190.08,u_lf.u_vs:941.76:457.92:R180,u_lf.u_vn.u_a:336.96:380.16,u_lf.u_vq:760.32:475.2,u_lf.u_vsw:915.84:639.36"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:336.96:190.08,u_lf.u_vs:941.76:457.92:R180,u_lf.u_vn.u_a:336.96:380.16,u_lf.u_vq:760.32:475.2,u_lf.u_vsw:915.84:639.36",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t56": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:250.56:587.52,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:457.92:604.8,u_lf.u_vsw:190.08:233.28"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:250.56:587.52,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:457.92:604.8,u_lf.u_vsw:190.08:233.28",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "dsdv_slice_lepe_mu_C__t1": {
-          "OT_LEC_SLANG_UNROLL_LIMIT": "32912"
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "dsdv_slice_c1x_C__t6": {
           "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "dsdv_slice_lepw_mus_C__t1": {
-          "OT_LEC_SLANG_UNROLL_LIMIT": "32912"
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "dsdv_slice_c1x_C__t8": {
-          "OT_LEC_SLANG_UNROLL_LIMIT": "32912"
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "dsdv_slice_c1x_C__t7": {
           "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t1": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:596.16:872.64,u_lf.u_vs:172.8:639.36:R0,u_lf.u_vn.u_a:596.16:691.2,u_lf.u_vq:354.24:656.64,u_lf.u_vsw:60.48:406.08"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:596.16:872.64,u_lf.u_vs:172.8:639.36:R0,u_lf.u_vn.u_a:596.16:691.2,u_lf.u_vq:354.24:656.64,u_lf.u_vsw:60.48:406.08",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t14": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:596.16:172.8,u_lf.u_vs:172.8:406.08:MX,u_lf.u_vn.u_a:596.16:362.88,u_lf.u_vq:354.24:423.36,u_lf.u_vsw:112.32:673.92"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:596.16:172.8,u_lf.u_vs:172.8:406.08:MX,u_lf.u_vn.u_a:596.16:362.88,u_lf.u_vq:354.24:423.36,u_lf.u_vsw:112.32:673.92",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t16": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:388.8:924.48,u_lf.u_vs:1062.72:639.36,u_lf.u_vn.u_a:388.8:691.2,u_lf.u_vq:881.28:656.64,u_lf.u_vsw:1036.8:406.08"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:388.8:924.48,u_lf.u_vs:1062.72:639.36,u_lf.u_vn.u_a:388.8:691.2,u_lf.u_vq:881.28:656.64,u_lf.u_vsw:1036.8:406.08",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t17": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t21": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:146.88:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:328.32:596.16,u_lf.u_vsw:43.2:198.72"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:146.88:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:328.32:596.16,u_lf.u_vsw:43.2:198.72",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t29": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:959.04:613.44,u_lf.u_vn.u_b:397.44:190.08,u_lf.u_vs:984.96:432.0:R180,u_lf.u_vn.u_a:397.44:380.16,u_lf.u_vq:803.52:449.28"
+          "OT_MACRO_MOVES": "u_lf.u_vsw:959.04:613.44,u_lf.u_vn.u_b:397.44:190.08,u_lf.u_vs:984.96:432.0:R180,u_lf.u_vn.u_a:397.44:380.16,u_lf.u_vq:803.52:449.28",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t31": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:898.56,u_lf.u_vs:103.68:648.0,u_lf.u_vn.u_a:604.8:717.12,u_lf.u_vq:285.12:665.28,u_lf.u_vsw:77.76:414.72"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:898.56,u_lf.u_vs:103.68:648.0,u_lf.u_vn.u_a:604.8:717.12,u_lf.u_vq:285.12:665.28,u_lf.u_vsw:77.76:414.72",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t32": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:319.68:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28,u_lf.u_vsw:267.84:414.72"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:319.68:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28,u_lf.u_vsw:267.84:414.72",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t35": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t37": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:691.2:527.04,u_lf.u_vsw:1054.08:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:691.2:527.04,u_lf.u_vsw:1054.08:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t38": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:181.44:371.52"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:181.44:371.52",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t39": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:224.64,u_lf.u_vs:155.52:440.64,u_lf.u_vn.u_a:613.44:414.72,u_lf.u_vq:570.24:587.52,u_lf.u_vsw:336.96:414.72"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:224.64,u_lf.u_vs:155.52:440.64,u_lf.u_vn.u_a:613.44:414.72,u_lf.u_vq:570.24:587.52,u_lf.u_vsw:336.96:414.72",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t4": {
           "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:1054.08:414.72,u_lf.u_vsw:1010.88:656.64",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t40__cl86ea32b3": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t40__clf8bbdae1": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t41": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:388.8:924.48,u_lf.u_vs:1062.72:639.36,u_lf.u_vn.u_a:388.8:691.2,u_lf.u_vq:881.28:656.64,u_lf.u_vsw:1036.8:406.08"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:388.8:924.48,u_lf.u_vs:1062.72:639.36,u_lf.u_vn.u_a:388.8:691.2,u_lf.u_vq:881.28:656.64,u_lf.u_vsw:1036.8:406.08",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t46": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:708.48"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:708.48",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t5": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:414.72,u_lf.u_vn.u_a:336.96:596.16,u_lf.u_vq:639.36:432.0,u_lf.u_vsw:794.88:596.16"
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:414.72,u_lf.u_vn.u_a:336.96:596.16,u_lf.u_vq:639.36:432.0,u_lf.u_vsw:794.88:596.16",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t50": {
           "OT_MACRO_MOVES": "u_lf.u_vs:838.08:622.08,u_lf.u_vn.u_a:354.24:457.92,u_lf.u_vq:656.64:639.36,u_lf.u_vsw:812.16:388.8",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t51": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:691.2:527.04,u_lf.u_vsw:1054.08:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:691.2:527.04,u_lf.u_vsw:1054.08:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t54__cl501e5681": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t54__cl706d9749": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t57": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:622.08"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:622.08",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t6": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:639.36:648.0,u_lf.u_vsw:794.88:397.44"
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:639.36:648.0,u_lf.u_vsw:794.88:397.44",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t65": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:60.48:544.32,u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:302.4:578.88,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:483.84:596.16"
+          "OT_MACRO_MOVES": "u_lf.u_vsw:60.48:544.32,u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:302.4:578.88,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:483.84:596.16",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t67": {
           "OT_MACRO_MOVES": "u_lf.u_vn.u_b:691.2:250.56,u_lf.u_vs:224.64:414.72,u_lf.u_vn.u_a:691.2:440.64,u_lf.u_vq:561.6:112.32,u_lf.u_vsw:406.08:397.44",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t69": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t70": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:829.44:397.44,u_lf.u_vn.u_b:345.6:1010.88,u_lf.u_vs:855.36:630.72,u_lf.u_vn.u_a:371.52:466.56,u_lf.u_vq:673.92:648.0"
+          "OT_MACRO_MOVES": "u_lf.u_vsw:829.44:397.44,u_lf.u_vn.u_b:345.6:1010.88,u_lf.u_vs:855.36:630.72,u_lf.u_vn.u_a:371.52:466.56,u_lf.u_vq:673.92:648.0",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t72": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t8": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t24__cl2456157b": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:423.36:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:77.76:440.64,u_lf.u_vsw:483.84:682.56"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:423.36:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:77.76:440.64,u_lf.u_vsw:483.84:682.56",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t36": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:820.8:492.48,u_lf.u_vsw:1002.24:544.32"
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:820.8:492.48,u_lf.u_vsw:1002.24:544.32",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t7": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:1054.08:691.2,u_lf.u_vsw:1054.08:457.92"
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:1054.08:691.2,u_lf.u_vsw:1054.08:457.92",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t15": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t13": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:587.52:881.28,u_lf.u_vs:86.4:648.0,u_lf.u_vn.u_a:587.52:699.84,u_lf.u_vq:406.08:838.08,u_lf.u_vsw:267.84:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:587.52:881.28,u_lf.u_vs:86.4:648.0,u_lf.u_vn.u_a:587.52:699.84,u_lf.u_vq:406.08:838.08,u_lf.u_vsw:267.84:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t59": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t61": {
-          "OT_MACRO_MOVES": "u_lf.u_ve.u_m:630.72:794.88,u_lf.u_vsw:120.96:544.32,u_lf.u_vs:587.52:604.8:R0,u_lf.u_vn.u_b:743.04:423.36,u_lf.u_vn.u_a:717.12:86.4,u_lf.u_vq:406.08:648.0"
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_m:630.72:794.88,u_lf.u_vsw:120.96:544.32,u_lf.u_vs:587.52:604.8:R0,u_lf.u_vn.u_b:743.04:423.36,u_lf.u_vn.u_a:717.12:86.4,u_lf.u_vq:406.08:648.0",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t10": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:622.08:164.16,u_lf.u_vs:103.68:423.36,u_lf.u_vn.u_a:613.44:354.24,u_lf.u_vq:285.12:440.64,u_lf.u_vsw:77.76:708.48"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:622.08:164.16,u_lf.u_vs:103.68:423.36,u_lf.u_vn.u_a:613.44:354.24,u_lf.u_vq:285.12:440.64,u_lf.u_vsw:77.76:708.48",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t34": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:570.24:155.52,u_lf.u_vs:77.76:440.64,u_lf.u_vn.u_a:570.24:354.24,u_lf.u_vq:492.48:527.04,u_lf.u_vsw:259.2:423.36"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:570.24:155.52,u_lf.u_vs:77.76:440.64,u_lf.u_vn.u_a:570.24:354.24,u_lf.u_vq:492.48:527.04,u_lf.u_vsw:259.2:423.36",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t24__cl81374cd8": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:414.72:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:440.64:535.68,u_lf.u_ve.u_s:112.32:60.48,u_lf.u_vsw:25.92:432.0"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:414.72:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:440.64:535.68,u_lf.u_ve.u_s:112.32:60.48,u_lf.u_vsw:25.92:432.0",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t43": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:69.12,u_lf.u_vs:207.36:423.36:MX,u_lf.u_vn.u_a:622.08:259.2,u_lf.u_vq:432.0:276.48,u_lf.u_vsw:388.8:414.72"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:69.12,u_lf.u_vs:207.36:423.36:MX,u_lf.u_vn.u_a:622.08:259.2,u_lf.u_vq:432.0:276.48,u_lf.u_vsw:388.8:414.72",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t71": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t23": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:691.2:250.56,u_lf.u_vs:224.64:414.72,u_lf.u_vn.u_a:691.2:440.64,u_lf.u_vq:561.6:112.32,u_lf.u_vsw:406.08:397.44"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:691.2:250.56,u_lf.u_vs:224.64:414.72,u_lf.u_vn.u_a:691.2:440.64,u_lf.u_vq:561.6:112.32,u_lf.u_vsw:406.08:397.44",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t3": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:717.12:172.8,u_lf.u_vs:198.72:466.56,u_lf.u_vn.u_a:699.84:362.88,u_lf.u_vq:17.28:457.92,u_lf.u_vsw:380.16:432.0"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:717.12:172.8,u_lf.u_vs:198.72:466.56,u_lf.u_vn.u_a:699.84:362.88,u_lf.u_vq:17.28:457.92,u_lf.u_vsw:380.16:432.0",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t25__cl431c660f": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t30": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t12": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:708.48:604.8,u_lf.u_vn.u_b:362.88:846.72,u_lf.u_vs:941.76:648.0:MY,u_lf.u_vn.u_a:336.96:665.28,u_lf.u_vq:1123.2:665.28"
+          "OT_MACRO_MOVES": "u_lf.u_vsw:708.48:604.8,u_lf.u_vn.u_b:362.88:846.72,u_lf.u_vs:941.76:648.0:MY,u_lf.u_vn.u_a:336.96:665.28,u_lf.u_vq:1123.2:665.28",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t33": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:69.12,u_lf.u_vs:449.28:397.44,u_lf.u_vn.u_a:751.68:587.52,u_lf.u_vq:630.72:414.72,u_lf.u_vsw:423.36:656.64"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:69.12,u_lf.u_vs:449.28:397.44,u_lf.u_vn.u_a:751.68:587.52,u_lf.u_vq:630.72:414.72,u_lf.u_vsw:423.36:656.64",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t2": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:120.96:604.8,u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:354.24:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28"
+          "OT_MACRO_MOVES": "u_lf.u_vsw:120.96:604.8,u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:354.24:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t74": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:622.08:164.16,u_lf.u_vs:103.68:423.36,u_lf.u_vn.u_a:613.44:354.24,u_lf.u_vq:285.12:440.64,u_lf.u_vsw:77.76:708.48"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:622.08:164.16,u_lf.u_vs:103.68:423.36,u_lf.u_vn.u_a:613.44:354.24,u_lf.u_vq:285.12:440.64,u_lf.u_vsw:77.76:708.48",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "col_h9_r0_p1__t1": {
-          "OT_MACRO_MOVES": "u_r0.u_e1:596.16:216.0,u_r0.u_e3:596.16:604.8,u_r0.u_cf:1149.12:604.8,u_r0.u_t0:1157.76:250.56"
+          "OT_MACRO_MOVES": "u_r0.u_e1:596.16:216.0,u_r0.u_e3:596.16:604.8,u_r0.u_cf:1149.12:604.8,u_r0.u_t0:1157.76:250.56",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t9": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:207.36,u_lf.u_vs:311.04:432.0,u_lf.u_vn.u_a:751.68:397.44,u_lf.u_vq:570.24:449.28,u_lf.u_vsw:77.76:414.72"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:207.36,u_lf.u_vs:311.04:432.0,u_lf.u_vn.u_a:751.68:397.44,u_lf.u_vq:570.24:449.28,u_lf.u_vsw:77.76:414.72",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t22": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:120.96:604.8,u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:354.24:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28"
+          "OT_MACRO_MOVES": "u_lf.u_vsw:120.96:604.8,u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:354.24:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t44__clf6cf8492": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:691.2:561.6,u_lf.u_vsw:1054.08:388.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:691.2:561.6,u_lf.u_vsw:1054.08:388.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t60": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:129.6:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:129.6:440.64,u_lf.u_vsw:466.56:319.68"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:129.6:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:129.6:440.64,u_lf.u_vsw:466.56:319.68",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "slice_station__t14": {
           "OT_NATIVE_RESET_SCOPE": "selected"
@@ -3659,6 +3745,378 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "slice_station__t24__cleece78ec": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r0_p1__t1__cl911743eb": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r0_p4__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r1__t1__cl95b37463": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r1__t1__cld01bb4ae": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r2__t1__cl1f5d6c2a": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r2__t1__cl8b686b3e": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r2__t1__clac068e56": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p2__t1__cl0045af7b": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p2__t1__cl9f71e63d": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p3__t1__cl31d0dc4b": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p3__t1__cl8ce97bcb": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p4__t1__cl8ef405e8": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p5__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p6__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r1__t1__cl49d7a23e": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r1__t1__clf32cde8d": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r2__t1__cl774acf45": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r2__t1__cl87f3ff59": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r2__t1__clb8d86cd5": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r2__t1__clc9ad8f7e": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r2__t1__clce45cab5": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_c1x_C__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_c1x_C__t10": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_c1x_C__t3": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_c1x_C__t4": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_c1x_C__t5": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_c1x_C__t9": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_c3x_C__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_iq_C__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_kv512_C__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_lepe_mu_LP__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_lepe_nh_mus_C__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_lepe_nh_mus_LP__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_lepw_mu_C__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_lepw_mu_LP__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_lepw_mus_LP__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "eng__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "gunit__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "iqf__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_kv_leaf__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_kv_leaf__t3": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_kv_leaf__t4": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_kv_leaf__t5": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t28": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t45": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t47": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t52": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t58": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t62": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t66": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t68": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t73": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t75": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "phy__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "seqhost__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t12": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t13": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t14": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t15__cla2127225": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t15__cla3d02796": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t16": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t1__clb45db5be": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t1__clfe1f0815": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t3": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t4": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t12": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t17": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t18": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t20": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t21": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t22": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t23": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t24__cl64811a5d": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t24__cl66b71008": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t25": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t26": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t27": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t28": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t29__cl2e5c855a": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t30__cl1653104c": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t30__cl6a190133": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t30__clcedefe91": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t31": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t36": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t37": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t38": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t40__cl1ea9de02": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t40__clc8fb2c8c": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t41": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t42__cl4bd1432c": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t42__clcf44e680": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t43": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t45": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t46": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t47": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t48": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t49": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t50__cl39451317": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t50__cld84c9e24": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t51": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t52": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t6__cl0755c26e": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t6__cl54a9ceeb": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t7__cl362204c4": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t7__cl503f4913": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t7__cl945bc067": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t8": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_pvso_entry__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_pvso_entry__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_rs__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_rs__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_rs__t3": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_rs__t4": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_rs__t5": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_rs__t6": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs__t3": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs__t4": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs__t5": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs__t6": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs__t7": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs_w__t1": {
           "OT_NATIVE_RESET_SCOPE": "selected"
         }
       },
@@ -3947,7 +4405,7 @@
         "queue_src": "claude/kw-fix-29-s81-leaf-src-1107@abaf08160896",
         "die_max_inflight": 67
       },
-      "flow_tag": "flow-20261108-ee-s81",
+      "flow_tag": "flow-20261108-ef-s81",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "src_prev_kw32": "/srv/opentallas-scratch2/claude/kw31/src_66d55",
       "src_sha_prev_kw32": "66d55c026ade2245a494c3eeeea0e5ec0ab8ae0b",
@@ -4317,7 +4775,273 @@
       "retry_prev_kw35s2_added": [
         "col_h10_r2__t1__cl99efd374@16"
       ],
-      "hold_items_kw35s3_added": [
+      "note_kw35s3": "KW-FIX-35-S 05:4x: hold class A/H/I rows until S81 src = main 0b72abe93ac + rspacket f51e05a4f9e (+reset-scope) is built (cf269 lacks packet builder); revert = remove hold_items_kw35s3_added",
+      "src_prev_kw35s4": "/srv/opentallas-scratch2/claude/kw35/src_cf269",
+      "src_sha_prev_kw35s4": "cf2697d7d0ba8b043a522b8ac17796054f685fb9",
+      "queue_src_prev_kw35s4": "claude/kw-fix-35-s81src-1108@cf2697d7d0b",
+      "flow_tag_prev_kw35s4": "flow-20261108-ee-s81",
+      "note_src_kw35s4": "KW-FIX-35-S 2026-11-08 06:04 PST (OWNER 04:46, COORD 05:4x): S81 src kw35/src_9d13c = main 0b72abe93ac (tag ef-s81: ringtap, ctsdpl, LEC J1/J2 36d3dddec54, views, gunit form-1/2) + codex/s81-reset-scope-0222@7c731625b9 + claude/s81-types-7-rspacket-1108@f51e05a4f9e; origin claude/kw-fix-35-s81src2-1108@9d13c8cce9d (source identity only); kw34/src_28914 hardlinks + 49 files - 1 deleted, sha256-checked intel1/epyc4/epyc5. Revert *_prev_kw35s4",
+      "item_env_prev_kw35s4": {
+        "ot_s81sl_leaf__t55": {
+          "OT_GRT_ALLOW_CONGESTION": "1"
+        },
+        "ot_s81sl_leaf__t26": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:639.36:648.0,u_lf.u_vsw:794.88:397.44"
+        },
+        "ot_s81sl_leaf__t11": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:812.16:492.48,u_lf.u_vsw:1002.24:578.88"
+        },
+        "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t44__clf4ea6d4b": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:691.2:561.6,u_lf.u_vsw:1054.08:388.8"
+        },
+        "ot_s81sl_leaf__t25__cl55642d17": {
+          "OT_GRT_ALLOW_CONGESTION": "1"
+        },
+        "ot_s81sl_kv_leaf__t2": {
+          "OT_SYNTH_ARGS": "-noshare"
+        },
+        "ot_s81sl_leaf__t27": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08"
+        },
+        "ot_s81sl_leaf__t42": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52"
+        },
+        "ot_s81sl_leaf__t53__cl958451dd": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:336.96:190.08,u_lf.u_vs:941.76:457.92:R180,u_lf.u_vn.u_a:336.96:380.16,u_lf.u_vq:760.32:475.2,u_lf.u_vsw:915.84:639.36"
+        },
+        "ot_s81sl_leaf__t53__clb66fa5cb": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:336.96:190.08,u_lf.u_vs:941.76:457.92:R180,u_lf.u_vn.u_a:336.96:380.16,u_lf.u_vq:760.32:475.2,u_lf.u_vsw:915.84:639.36"
+        },
+        "ot_s81sl_leaf__t56": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:250.56:587.52,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:457.92:604.8,u_lf.u_vsw:190.08:233.28"
+        },
+        "dsdv_slice_lepe_mu_C__t1": {
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912"
+        },
+        "dsdv_slice_c1x_C__t6": {
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_lepw_mus_C__t1": {
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912"
+        },
+        "dsdv_slice_c1x_C__t8": {
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912"
+        },
+        "dsdv_slice_c1x_C__t7": {
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t1": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:596.16:872.64,u_lf.u_vs:172.8:639.36:R0,u_lf.u_vn.u_a:596.16:691.2,u_lf.u_vq:354.24:656.64,u_lf.u_vsw:60.48:406.08"
+        },
+        "ot_s81sl_leaf__t14": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:596.16:172.8,u_lf.u_vs:172.8:406.08:MX,u_lf.u_vn.u_a:596.16:362.88,u_lf.u_vq:354.24:423.36,u_lf.u_vsw:112.32:673.92"
+        },
+        "ot_s81sl_leaf__t16": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:388.8:924.48,u_lf.u_vs:1062.72:639.36,u_lf.u_vn.u_a:388.8:691.2,u_lf.u_vq:881.28:656.64,u_lf.u_vsw:1036.8:406.08"
+        },
+        "ot_s81sl_leaf__t17": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52"
+        },
+        "ot_s81sl_leaf__t21": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:146.88:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:328.32:596.16,u_lf.u_vsw:43.2:198.72"
+        },
+        "ot_s81sl_leaf__t29": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:959.04:613.44,u_lf.u_vn.u_b:397.44:190.08,u_lf.u_vs:984.96:432.0:R180,u_lf.u_vn.u_a:397.44:380.16,u_lf.u_vq:803.52:449.28"
+        },
+        "ot_s81sl_leaf__t31": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:898.56,u_lf.u_vs:103.68:648.0,u_lf.u_vn.u_a:604.8:717.12,u_lf.u_vq:285.12:665.28,u_lf.u_vsw:77.76:414.72"
+        },
+        "ot_s81sl_leaf__t32": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:319.68:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28,u_lf.u_vsw:267.84:414.72"
+        },
+        "ot_s81sl_leaf__t35": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t37": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:691.2:527.04,u_lf.u_vsw:1054.08:604.8"
+        },
+        "ot_s81sl_leaf__t38": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:181.44:371.52"
+        },
+        "ot_s81sl_leaf__t39": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:224.64,u_lf.u_vs:155.52:440.64,u_lf.u_vn.u_a:613.44:414.72,u_lf.u_vq:570.24:587.52,u_lf.u_vsw:336.96:414.72"
+        },
+        "ot_s81sl_leaf__t4": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:1054.08:414.72,u_lf.u_vsw:1010.88:656.64",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t40__cl86ea32b3": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t40__clf8bbdae1": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t41": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:388.8:924.48,u_lf.u_vs:1062.72:639.36,u_lf.u_vn.u_a:388.8:691.2,u_lf.u_vq:881.28:656.64,u_lf.u_vsw:1036.8:406.08"
+        },
+        "ot_s81sl_leaf__t46": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:708.48"
+        },
+        "ot_s81sl_leaf__t5": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:414.72,u_lf.u_vn.u_a:336.96:596.16,u_lf.u_vq:639.36:432.0,u_lf.u_vsw:794.88:596.16"
+        },
+        "ot_s81sl_leaf__t50": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:622.08,u_lf.u_vn.u_a:354.24:457.92,u_lf.u_vq:656.64:639.36,u_lf.u_vsw:812.16:388.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t51": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:691.2:527.04,u_lf.u_vsw:1054.08:604.8"
+        },
+        "ot_s81sl_leaf__t54__cl501e5681": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t54__cl706d9749": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t57": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:622.08"
+        },
+        "ot_s81sl_leaf__t6": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:639.36:648.0,u_lf.u_vsw:794.88:397.44"
+        },
+        "ot_s81sl_leaf__t65": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:60.48:544.32,u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:302.4:578.88,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:483.84:596.16"
+        },
+        "ot_s81sl_leaf__t67": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:691.2:250.56,u_lf.u_vs:224.64:414.72,u_lf.u_vn.u_a:691.2:440.64,u_lf.u_vq:561.6:112.32,u_lf.u_vsw:406.08:397.44",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t69": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t70": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:829.44:397.44,u_lf.u_vn.u_b:345.6:1010.88,u_lf.u_vs:855.36:630.72,u_lf.u_vn.u_a:371.52:466.56,u_lf.u_vq:673.92:648.0"
+        },
+        "ot_s81sl_leaf__t72": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44"
+        },
+        "ot_s81sl_leaf__t8": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44"
+        },
+        "ot_s81sl_leaf__t24__cl2456157b": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:423.36:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:77.76:440.64,u_lf.u_vsw:483.84:682.56"
+        },
+        "ot_s81sl_leaf__t36": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:820.8:492.48,u_lf.u_vsw:1002.24:544.32"
+        },
+        "ot_s81sl_leaf__t7": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:1054.08:691.2,u_lf.u_vsw:1054.08:457.92"
+        },
+        "ot_s81sl_leaf__t15": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t13": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:587.52:881.28,u_lf.u_vs:86.4:648.0,u_lf.u_vn.u_a:587.52:699.84,u_lf.u_vq:406.08:838.08,u_lf.u_vsw:267.84:604.8"
+        },
+        "ot_s81sl_leaf__t59": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t61": {
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_m:630.72:794.88,u_lf.u_vsw:120.96:544.32,u_lf.u_vs:587.52:604.8:R0,u_lf.u_vn.u_b:743.04:423.36,u_lf.u_vn.u_a:717.12:86.4,u_lf.u_vq:406.08:648.0"
+        },
+        "ot_s81sl_leaf__t10": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:622.08:164.16,u_lf.u_vs:103.68:423.36,u_lf.u_vn.u_a:613.44:354.24,u_lf.u_vq:285.12:440.64,u_lf.u_vsw:77.76:708.48"
+        },
+        "ot_s81sl_leaf__t34": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:570.24:155.52,u_lf.u_vs:77.76:440.64,u_lf.u_vn.u_a:570.24:354.24,u_lf.u_vq:492.48:527.04,u_lf.u_vsw:259.2:423.36"
+        },
+        "ot_s81sl_leaf__t24__cl81374cd8": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:414.72:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:440.64:535.68,u_lf.u_ve.u_s:112.32:60.48,u_lf.u_vsw:25.92:432.0"
+        },
+        "ot_s81sl_leaf__t43": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:69.12,u_lf.u_vs:207.36:423.36:MX,u_lf.u_vn.u_a:622.08:259.2,u_lf.u_vq:432.0:276.48,u_lf.u_vsw:388.8:414.72"
+        },
+        "ot_s81sl_leaf__t71": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08"
+        },
+        "ot_s81sl_leaf__t23": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:691.2:250.56,u_lf.u_vs:224.64:414.72,u_lf.u_vn.u_a:691.2:440.64,u_lf.u_vq:561.6:112.32,u_lf.u_vsw:406.08:397.44"
+        },
+        "ot_s81sl_leaf__t3": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:717.12:172.8,u_lf.u_vs:198.72:466.56,u_lf.u_vn.u_a:699.84:362.88,u_lf.u_vq:17.28:457.92,u_lf.u_vsw:380.16:432.0"
+        },
+        "ot_s81sl_leaf__t25__cl431c660f": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t30": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t12": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:708.48:604.8,u_lf.u_vn.u_b:362.88:846.72,u_lf.u_vs:941.76:648.0:MY,u_lf.u_vn.u_a:336.96:665.28,u_lf.u_vq:1123.2:665.28"
+        },
+        "ot_s81sl_leaf__t33": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:69.12,u_lf.u_vs:449.28:397.44,u_lf.u_vn.u_a:751.68:587.52,u_lf.u_vq:630.72:414.72,u_lf.u_vsw:423.36:656.64"
+        },
+        "ot_s81sl_leaf__t2": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:120.96:604.8,u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:354.24:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28"
+        },
+        "ot_s81sl_leaf__t74": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:622.08:164.16,u_lf.u_vs:103.68:423.36,u_lf.u_vn.u_a:613.44:354.24,u_lf.u_vq:285.12:440.64,u_lf.u_vsw:77.76:708.48"
+        },
+        "col_h9_r0_p1__t1": {
+          "OT_MACRO_MOVES": "u_r0.u_e1:596.16:216.0,u_r0.u_e3:596.16:604.8,u_r0.u_cf:1149.12:604.8,u_r0.u_t0:1157.76:250.56"
+        },
+        "ot_s81sl_leaf__t9": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:207.36,u_lf.u_vs:311.04:432.0,u_lf.u_vn.u_a:751.68:397.44,u_lf.u_vq:570.24:449.28,u_lf.u_vsw:77.76:414.72"
+        },
+        "ot_s81sl_leaf__t22": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:120.96:604.8,u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:354.24:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28"
+        },
+        "ot_s81sl_leaf__t44__clf6cf8492": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:691.2:561.6,u_lf.u_vsw:1054.08:388.8"
+        },
+        "ot_s81sl_leaf__t60": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:129.6:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:129.6:440.64,u_lf.u_vsw:466.56:319.68"
+        },
+        "slice_station__t14": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t29__clc7772371": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t44": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "bk_sel__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r0_p1__t1__cl574cc59d": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r2__t1__cl99efd374": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p3__t1__cl0cd90c0e": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p4__t1__clcb2fbfe8": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t24__cleece78ec": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        }
+      },
+      "note_item_env_kw35s4": "KW-FIX-35-S 2026-11-08 06:04 PST (OWNER 04:46, COORD 05:4x): CLASS A die-wide: OT_NATIVE_RESET_SCOPE=selected on every S81 plan type/item (S81-TYPES-7 05:36/05:47: no-op where the bind matches; packet_classA_18 SELECTED_PASS). Revert = item_env_prev_kw35s4",
+      "hold_items_kw35s3_released": [
         "slice_station__t14",
         "slice_station__t29__clc7772371",
         "slice_station__t44",
@@ -4333,7 +5057,31 @@
         "ot_s81sl_leaf__t50",
         "ot_s81sl_leaf__t67"
       ],
-      "note_kw35s3": "KW-FIX-35-S 05:4x: hold class A/H/I rows until S81 src = main 0b72abe93ac + rspacket f51e05a4f9e (+reset-scope) is built (cf269 lacks packet builder); revert = remove hold_items_kw35s3_added"
+      "hold_items_kw35s4_added": [
+        "dsdv_slice_lepe_mu_LP__t2",
+        "dsdv_slice_lepe_nh_mus_LP__t1",
+        "dsdv_slice_lepw_mu_LP__t2",
+        "dsdv_slice_lepw_mus_LP__t2",
+        "slice_station__t45",
+        "ot_s81sl_kv_leaf__t1",
+        "ot_s81sl_kv_leaf__t3",
+        "ot_s81sl_kv_leaf__t4",
+        "ot_s81sl_kv_leaf__t5"
+      ],
+      "retry_prev_kw35s4_added": [
+        "dsdv_slice_c1x_C__t1@17",
+        "dsdv_slice_c1x_C__t4@23",
+        "dsdv_slice_c1x_C__t8@18",
+        "dsdv_slice_c1x_C__t10@8",
+        "dsdv_slice_lepe_nh_mus_C__t1@10",
+        "dsdv_slice_lepw_mu_C__t1@11",
+        "ot_s81sl_leaf__t4@7",
+        "ot_s81sl_leaf__t50@9",
+        "slice_station__t22@11",
+        "dsdv_slice_iq_C__t1@8",
+        "dsdv_slice_kv512_C__t1@12",
+        "eng__t1@5"
+      ]
     },
     "s81_head": {
       "enabled": true,
