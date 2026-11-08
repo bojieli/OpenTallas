@@ -157,6 +157,13 @@ def parse_result(so):
         i = j
 
 
+def needs_parent_only(res):
+    """the only problem is the LOCAL_PASS_NEEDS_PARENT verdict: OWNER 11-03 counts it SIGNED (missing only the
+    parent's io_hold receipt), the counter counts it, so its view is a provisional source like any signed one"""
+    pr = (res or {}).get("problems") or []
+    return bool(pr) and all("LOCAL_PASS_NEEDS_PARENT" in str(x) and "is not SIGNED" in str(x) for x in pr)
+
+
 def lef_only(res, mod):
     """the view misses only <mod>.lef (flows whose finish step wrote tt/ff ETMs to kit/views but no abstract)"""
     pr = res.get("problems") or []
@@ -204,10 +211,13 @@ def export_one(die, name, p, log):
     res = parse_result(so)
     if res and not res.get("complete") and lef_only(res, res.get("module")) and not on_hub:
         rc, so, se, res = lef_from_odb(die, rid, p, res["module"], cmd, out, log)
+    if rc and needs_parent_only(res):
+        rc = 0                                   # OWNER 11-03: LOCAL_PASS_NEEDS_PARENT counts SIGNED
     if rc or not res:
         log(f"EXPORT-FAIL {die} {name} {host}:{p['signoff']} rc {rc}: {(se or so)[-300:]}")
         return None
-    if not res.get("complete"):
+    needs_parent = needs_parent_only(res)
+    if not res.get("complete") and not needs_parent:
         log(f"EXPORT-INCOMPLETE {die} {name} {host}:{p['signoff']}: {res.get('problems')}")
         return None
     mod = res["module"]
@@ -226,7 +236,7 @@ def export_one(die, name, p, log):
     return dict(host=host, dir=vdir, job=f"COUNTED {name} {p['host']}:{p['signoff']} (KW-FIX-32 export_view)",
                 module=mod, counter_name=name, outline=outline, counter_hash=chash, flow_tag=p.get("flow_tag"),
                 signoff=f"{p['host']}:{p['signoff']}", pins_sha256=res.get("pins_sha256"),
-                lef_from_odb=bool(res.get("lef_from_odb")),
+                lef_from_odb=bool(res.get("lef_from_odb")), verdict_needs_parent=needs_parent,
                 pins_canon_sha256=res.get("pins_canon_sha256"))
 
 
