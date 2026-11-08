@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.face_forward_reservation_model.v1",
+  "type": "slw_hc1__cl68f9248e__cle683a076",
+  "attempt": 13,
+  "pin_cycles": 0,
+  "source_basis": "existing captured PRE_GLOBAL_PLACE face_flops.tcl and landing_placement.tcl; model only, no runtime source changed",
+  "core_um": [
+    4.32,
+    4.32,
+    617.76,
+    1334.88
+  ],
+  "row_height_um": 0.27,
+  "family_width_um": 2.16,
+  "stride_rows": 3,
+  "target_bus": "cw_n1",
+  "reserved_groups": [
+    {
+      "role": "writer-face",
+      "bus": "cw_n1",
+      "rect_um": [
+        72.384,
+        1330.56,
+        81.024,
+        1339.2
+      ]
+    }
+  ],
+  "uncomputed": [
+    "actual output-buffer placement",
+    "final routability",
+    "post-CTS clock membership"
+  ],
+  "production_contract": "Forward reservations must be emitted from the same typed landing group rectangles before face allocation; preserve whole declared rectangles, use actual row/site/family dimensions, fail closed for unsupported roles/faces/capacity. No parsing of generated Tcl or late instance-name skip."
+}
