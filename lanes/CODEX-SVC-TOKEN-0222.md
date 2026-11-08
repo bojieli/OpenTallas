@@ -13,3 +13,6 @@ CODEX took over S81 R5 H8 compiler/RTL and all token lanes. No merges, tags or p
 
 ## Next
 Finish compiler packing gate, publish own branch, integrate H8 RTL proof constants, price service span in downstream calendar, collect token calendar repair. No physical launch before review and proof.
+
+### Compiler result
+19/19 H8+compressed compiler checks PASS after restoring sparse svc_routes fixture. Initial NOT RUN cause was isolated Python excluding user pytest; rerun used explicit pytest path. Real L0 H16 base/tip identity PASS: schedule/q/PV digest d8dad1f15035653f96c1cce6301a2dba5a1a79a515cdfc988da26911741b170d, 818 q words, service span3138cycles. H8 diagnostic span3986 (+848) is INVALID as a release price: RTL investigation finds fold produces1Pword/2cycles while engine consumes2words/cycle, so zero-frame-lag PO needs correction. H8_CALIBRATED remains false. ProductionT128 calibration active with RTL child.

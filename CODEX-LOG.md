@@ -12327,3 +12327,23 @@ OWNER?
 Existing KV e2/e6 and S81 gunit ba0 extra-ECO exceptions remain unresolved; preserve holds and work on other forms.
 
 2026-11-08 02:29 PST READY branch collection: wave HCL TT-IO1762cad3e01; QC reset digest1aa8d5d7e5 (10tests), parenthold adapter7f6b7773d8 (2integration cases), SVC compiler a8175d573b (19checks,H16 genuineL0 identity). No merges/tags/POR edits. SVC latency provisional invalid after measured feed-rate mismatch; RTL calibration active. GunitG0 new147=base147,no new errors; strictbind active. BKSEL route+RCX complete finalreport active. WATCHDOG QC a10 correctly superseded by livea12, no bug.
+Read role/full handoff/0222 note and binding rules; eight coverage leads active, preserving jobs. Latest recorded count 229 (not newly verified). All-lane inventory linked in lanes/CODEX.md. No merges/tags/POR changes.
+
+OWNER?
+Existing KV e2/e6 and S81 gunit ba0 extra-ECO exceptions remain unanswered; preserve holds and work on other forms.
+
+- 2026-11-08 02:24 PST CODEX-FLEET-0222: all6SSH reachable; actual ot-run lives intel2 (local ubuntu stale). E6 S2=86GB -> memory-heavy disk-light only; I1 root145 -> S2 only; E4 existing flagged cleanup active3016312, no restart/deletion by watcher. See lanes/CODEX-FLEET-0222.md.
+
+## KV takeover 2026-11-08 02:26 PST
+Collected vR prompt + e6 GRT chains alive, e2 queued; no duplicate launches. KV types and Wi dry geometry independently covered.
+
+OWNER?
+KV kv3_phy macro-output capture proposal adds +1 cycle on o_phy_Q__sN_piN/_d2/_d3; specific plan event/latency approval remains pending. Default hold production plan and prepare dry fix.
+KV Wi split soft-part 16-edge reset contract and +2 generic-cut cycles remain pending policy decisions from DIE-KV-91 00:02. Default dry geometry work only; no production plan update/build.
+
+OWNER? 2026-11-08 02:27 PST HBM HARD: q3_vm vC large miss requires POR face/clock event P-Q3VM-1 (2048-bit rd_il from N to S, clock near N writer cluster; no core PIN CYCLES). Codex watcher cannot adopt plan changes; default keep plan event proposed, continue other builds. lane1p taller-outline proposal likewise needs die-owner adoption; no unchanged P&R retry.
+
+2026-11-08 02:27 PST: Shared TT-IO hard_core_latency fix published on codex/wave-hcl-tt-0222@1762cad3e01 (no merge/tag); focused gate69PASS. Existing GRT nonport repair helper already landed c52c3b7f6e4, so QC reuses it instead of duplicate fix. Existing S81 bksel vI finished route and RCX; final report running, no closure claimed. Canonical autopilot healthy.
+OWNER? Role header cites setup uncertainty60ps, frozen METHODOLOGY6.1 cites newer OWNER12.24c setup0/hold25. Preserve existing pinned kit/tool policy; no constraint edits or policy relaxation during takeover.
+
+2026-11-08 02:28 PST KV Wi: own branch codex/kv-wisplit-0222; band main-base dry measurement/split active epyc6, no P&R. OWNER? Wi split reset-contract coverage for soft parts and generic cut +2 cycles remain pending; default private dry only.

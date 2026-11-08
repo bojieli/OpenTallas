@@ -9501,3 +9501,4 @@ Cached214 remains evidence, no forced scan. Owner questions plain CODEX-LOG OWNE
 
 ## CODEX takeover 2026-11-08 02:22 PST
 All-lane inventory handoff/codex_all_lane_inventory_20261108_0222.txt (646 files); latest day lane states handoff/codex_current_queue_lanes_20261108_0222.txt (52 identities). Leads: S81,HEAD,QC,KV,HBM,wave-flow,SVC-token,fleet; orphan sweep ongoing. Scope-specific current/running/fail/next details in CODEX-*-0222.md. Checkpoint handoff/codex_takeover_20261108_0222_checkpoint.md.
+All lane file inventory: /home/ubuntu/coord/handoff/codex_all_lane_inventory_20261108_0222.txt; latest current-day states: /home/ubuntu/coord/handoff/codex_current_queue_lanes_20261108_0222.txt. Eight active scope leads: S81, HEAD, QC, KV, HBM, shared wave/flow, SVC/token/compiler, fleet/retention. Own codex branches only; no merges/tags/POR changes. Each lead collects live jobs before launching, diagnoses every failure, and maintains CODEX-*-0222.md.
