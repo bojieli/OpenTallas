@@ -156,6 +156,28 @@ Q_ARM = 4                    # j pin -> first q header (job pin flop + table pus
 JD_LAT = 1                   # last P.V word at the pv pin -> jd done pulse (SVC-PV3 logs: end = pv_last + 1)
 JD_NOPV = -6                 # the half without the quarter's P.V: jd done = pv_first - 6 (bench_svc run1, both seeds)
 
+# S81-SVCC-1 (11-08) R5 (COORD 01:58 "R5 FORM"; interface S81-SVCRS-3 02:06 v1 + S81-SVCC-1 ACK): the svc slice head
+# width.  16 = today's H16 slice: ONE pass, every path below is the pre-R5 code, byte-identical.  8 = the R5 H8 slice:
+# ONE svc job = one landing (CFG / OWN_ROW / WIN_LOAD / SEL_IDS / ROWS / IK_ROW once) + TWO head passes; pass j = global
+# heads 8 j .. 8 j + 7 (local head h = g - 8 j); its ATTN_Q is today's ATTN_Q{j} (spec[448] = j = the pass head base,
+# same 128 words); the SM / SO head of slice t stays g = tile t, so pass j runs SE / SO only on the 8 slices with
+# tile[3] == j (pass 0 = half E u_rsv_08..15 = tiles 0..7, pass 1 = half W u_rsv_00..07 = tiles 8..15).  GO spec[48]
+# MORE = 1 on every pass but the last (the job stays open, no done).  Pass j + 1 starts after pass j's P.V drain
+# (serial passes, v1: no stream of two passes shares a cycle; overlap is a later, measured step); today's SO
+# programme (one SOT, 16 operand frames) follows the last pass.
+SVC_H = int(os.environ.get('OT_SVC_H', '16'))
+GO_MORE = 48                 # GO spec bit: another pass follows on the same landing (S81-SVCRS-3 interface v1 (3))
+H8_P_ROWS = 4                # H8 fold root PV frame: 4 rows a 512-b word (R = TD / H), local head h at bits 16 (8 r + h)
+FEED_ROWS = 4                # p feed rows a step (the engine's 4-row beat, both widths)
+PASS_GAP = 16                # previous pass's last P.V word -> next pass's ATTN_Q / GO (margin)
+# H8 engine / P-path latencies: PLACEHOLDERS = the H16 values until the S81-SVCRS-3 H8 lock-step bench measures
+# PIO0 / P_ARR / P_PO_M / KPV / PV_LAT / GW_ARR / SOT_W_LAT at H8 (interface v1: "until then use the H16 values").
+H8_CALIBRATED = False
+
+
+def pass_heads(j, hs=8):
+    return list(range(hs * j, hs * j + hs))
+
 ROLE = {0: 0x01990c, 1: 0x04124d, 2: 0x04110f, 3: 0x040ace, 4: 0x040908, 5: 0x0400e9, 6: 0x01910b, 7: 0x040c4a,
         8: 0x055102, 9: 0x054a43, 10: 0x054900, 11: 0x0540e4, 12: 0x055101, 13: 0x054c65, 14: 0x02d906, 15: 0x02d447}
 
@@ -264,8 +286,15 @@ def sliding_window_residency(job):
 class Job:
     """the layer's svc attention job, built once per (layer, fixtures, tag, mutant)"""
 
-    def __init__(self, fx, tag=0, mutant=None, owner_epoch=None, allq=None, timing_profile="legacy_fg3", pio_extra=0):
+    def __init__(self, fx, tag=0, mutant=None, owner_epoch=None, allq=None, timing_profile="legacy_fg3", pio_extra=0,
+                 heads=None):
         self.pio_extra = int(pio_extra)
+        self.hs = SVC_H if heads is None else int(heads)          # S81-SVCC-1: slice head width (16 = pre-R5)
+        if self.hs not in (16, 8):
+            raise ValueError(f'svc slice head width {self.hs}: only 16 (H16) and 8 (R5 H8) exist')
+        self.npass = H // self.hs
+        if self.npass > 1 and not PPATH:
+            raise ValueError('the H8 two-pass job needs the on-die P path (PPATH); the legacy host PV frame is H16 only')
         if timing_profile not in SERVICE_TIMING:
             raise ValueError(f'unknown service timing profile {timing_profile!r}')
         self.timing_profile = timing_profile
@@ -368,6 +397,8 @@ class Job:
 
     # ------------------------------------------------------------------ q frames
     def _frames(self):
+        if self.npass > 1:
+            return self._frames_passes()
         C, T, tag, mut = self.C, self.T, self.tag, self.mutant
         fr = []
         # MUTANT 'allq_off': the ALLQ bit dropped from CFG (only quarter ST drains; the bench expects all 512 dims)
@@ -430,6 +461,99 @@ class Job:
             fr.append(('IK_ROW', list(self.ik)))
         return fr
 
+    # ------------------------------------------------------------------ R5 H8: one landing + two head passes
+    def _frames_passes(self):
+        """S81-SVCC-1: the H8 slice's job = one landing + two SE / P.V passes + ONE SO programme.
+        Landing once: CFG, OWN_ROW, WIN_LOAD, SOT (SMT; today's booking of all 16 heads), SEL_IDS, ROWS.  Pass j: ATTN_Q{j}
+        (today's words, spec[448] = j = head base), SMJ{.j} (SE kind 4, today's 3 words: row 1 keeps all 16 sinks at
+        [32 g +: 32], slice t reads g = t; slices with tile[3] != j ignore it), GO{.j} (MORE = 1 but on the last pass).
+        Then today's SO programme (SMJ_SO + 16 operand frames, E / W interleaved, same words) after the last pass's P.V
+        drain: each slice's SM holds its SE den from its own pass (slice t's SM runs only in pass t // 8), both entries'
+        done wait for their booked retires after the job's last q frame (the H16 rule, ot_s81_svc_job done-before-q
+        fault), and no SO gather word shares the return lane with a P.V drain.  Pass j > 0 frames carry the suffix '.j'.
+        Compiler mutants (the lock-step bench must catch each): 'hb_swap' ATTN_Q spec[448] of the two passes exchanged;
+        'pass_drop' every pass-1 frame dropped (the job's frame count with it); 'pass_swap' pass 1 issued first;
+        'more_off' GO MORE = 0 on pass 0 (the job closes after pass 0)."""
+        C, T, tag, mut = self.C, self.T, self.tag, self.mutant
+        fr = []
+        self.fpass = {}
+        fr.append(('CFG', [hdr(12, 0, tag, spec=cfg_spec(owner=self.owner, tag=tag,
+                                                         allq=self.allq and mut != 'allq_off'))]))
+        ow = []
+        pos = self.pos - 1 if mut == 'slot' else self.pos
+        ow.append(hdr(3, 16, tag, pos=pos))
+        for b in range(16):
+            cw = sum(int(self.codes[WIN - 1, 32 * b + x]) << (8 * x) for x in range(32))
+            ow.append(cw | int(self.e8[WIN - 1, b]) << 256)
+        fr.append(('OWN_ROW', ow))
+        nsel = len(self.sel)
+        fr.append(('WIN_LOAD', [hdr(2, 0, tag, spec=SB | (WIN << 81) | (nsel << 89) | (self.wfirst << 99),
+                                      pos=self.pos if self.owner is not None else 777)]))
+        if self.so and mut != 'no_sot':
+            fr.append(('SOT', [0, 0, 0]))            # booked by finish() from this job's schedule (today's booking)
+        if nsel:
+            fr += self._sel_frames()
+        qb = C.bf16_bits(self.q)                                                                       # [16, 512]
+        nv = -(-T // 16)
+        r0 = (0 & 0x3FFF) | (nv << 64) | (int(f32bits(self.scale)) << 96) | ((nv - 1).bit_length() << 128)
+        r1 = sum(int(f32bits(self.sinkw[h])) << (32 * h) for h in range(H))
+        pb = C.bf16_bits(self.p)                                                                       # [16, T]
+        self.p_bits = pb
+        # H16 reference frame (the fold root of an H16 slice; kept for the lock-step comparison)
+        n = -(-T // 2)
+        pw = []
+        for w in range(n):
+            word = 0
+            for jj in range(2):
+                t = 2 * w + jj
+                if t < T:
+                    for h in range(H):
+                        word |= int(pb[h, t]) << (16 * (jj * H + h))
+            pw.append(word)
+        self.p_words = [hdr(5, n, tag, pos=0, user=0)] + pw
+        self.p_words_pass = []
+        npw = -(-T // H8_P_ROWS)
+        assert npw <= TR // H8_P_ROWS
+        for j in range(self.npass):
+            hb = self.hs * j
+            ws = []
+            for w in range(npw):
+                word = 0
+                for r in range(H8_P_ROWS):
+                    t = H8_P_ROWS * w + r
+                    if t < T:
+                        for h in range(self.hs):
+                            word |= int(pb[hb + h, t]) << (16 * (self.hs * r + h))
+                ws.append(word)
+            self.p_words_pass.append([hdr(5, npw, tag, pos=0, user=0)] + ws)
+        order = list(range(self.npass))
+        if mut == 'pass_swap':
+            order = order[::-1]
+        if mut == 'pass_drop':
+            order = order[:1]
+        for k, j in enumerate(order):
+            sfx = '' if k == 0 else f'.{k}'
+            pf = []
+            b = (1 - j) if mut == 'hb_swap' else j
+            ws = [hdr(1, 128, tag, spec=b << 448)]
+            for r in range(128):
+                h, c = 8 * j + r // 16, r % 16
+                ws.append(sum(int(qb[h, 32 * c + x]) << (16 * x) for x in range(32)))
+            pf.append((f'ATTN_Q{j}', ws))
+            pf.append(('SMJ' + sfx, [hdr(9, 2, tag, spec=1 | (4 << 1) | (0x21 << 5)), r0, r1]))
+            pf.append(('GO' + sfx, None))
+            for nm, _ in pf:
+                self.fpass[nm] = (k, j)
+            fr += pf
+        if self.so:
+            cos, sin = rope_cs_u32(self.fx)
+            pvu = np.asarray(self.pv, np.float32).view(np.uint32)
+            self.so_pv_u32 = pvu
+            fr += so_frames(tag, cos, sin, pvu, mutant='hm_shift' if mut == 'so_hm_shift' else None, order=SO_ORDER)
+        if self.ik is not None:
+            fr.append(('IK_ROW', list(self.ik)))
+        return fr
+
     # ------------------------------------------------------------------ compressed rows: SEL_IDS + ROWS frames
     def tile_row(self, r, t):
         """144-b tile row {E4M3 scale hi 8, lo 8, E2M1 nibbles 128} of attended row r (= rowword FP4 l[143:0],
@@ -473,6 +597,8 @@ class Job:
         if self.timing_profile == 'closing_allq' and not ((T == 128 or self.compressed) and self.allq and self.so and PPATH):
             raise ValueError('closing_allq timing requires the H16/D512 ALLQ+SMT on-die-P programme (T128, or T128+nsel '
                              'compressed with the T-scaled PIO)')
+        if self.npass > 1:
+            return self._schedule_passes(t_q0, t_q, t_exp, j_age_w, j_age_e)
         n = -(-T // 2)
         t = t_q0
         at, words, fw = {}, [], {}
@@ -527,6 +653,82 @@ class Job:
                     po=self.po, pvo=self.pvo, pv_first=pv_first, pv_last=pv_first + npv - 1, npv=npv, allq=self.allq,
                     done=pv_first + npv - 1 + JD_LAT, done_nopv=pv_first + JD_NOPV, nframes=len(self.frames))
 
+    def pass_go(self, k, go):
+        """GO word + derived cycles of pass k (H8).  P: PIO as H16 (PLACEHOLDER until the H8 bench); the fold root PV
+        frame is npw = ceil(T / 4) words (4 rows a word) reaching the owners one a cycle from PIO + P_ARR, the p feed takes
+        FEED_ROWS = 4 rows a step, so the feed start waits for the frame only by the rows it outruns (0 at H8: 4 rows a
+        word = 4 rows a step); P.V: 8 ceil(T / 32) feed steps + KPV as H16; MORE = 1 but on the last pass."""
+        T = self.T
+        npw = -(-T // H8_P_ROWS)
+        pio = pio_for(self.timing["pio"], T) + self.pio_extra
+        pvs = pio
+        lag = max(0, npw - -(-T // FEED_ROWS))
+        po = pio + P_ARR + lag + P_PO_M
+        if self.mutant == 'pio_early':
+            pio -= PIO_EARLY
+        pvo = po + 8 * -(-T // 32) + self.timing["kpv"]
+        more = int(k < self.npass - 1 and not (self.mutant == 'more_off' and k == 0) and
+                   not (self.mutant == 'pass_drop'))
+        w = hdr(13, 0, self.tag, spec=(po & 0xFFFF) | ((pvo & 0xFFFF) << 16) | ((pio & 0xFFFF) << 32) | (more << GO_MORE))
+        npv = 2 * NPVQ if self.allq else NPVQ
+        pv_first = go + pvo + PV_LAT
+        return w, dict(k=k, go=go, pio=pio, pvs=pvs, po=po, pvo=pvo, npw=npw, more=more, pv_first=pv_first,
+                       pv_last=pv_first + npv - 1, npv=npv)
+
+    def _schedule_passes(self, t_q0, t_q, t_exp, j_age_w, j_age_e):
+        """S81-SVCC-1: the static schedule of the H8 job.  Pass 0 = today's rules (GO >= WIN_LOAD + W_SLACK, SEL / ROWS
+        minima, ATTN_Q0 after q_rope).  Pass k > 0: its ATTN_Q (which replaces the slice's 8-head q memory) waits until
+        pass k - 1's last P.V word + JD_LAT + PASS_GAP, and its GO until pass k - 1's drain end + PASS_GAP (S81-SVCRS-3
+        fault 22 rule), so no stream (q, P, P.V) of two passes shares a cycle.  The SO programme follows the last pass's
+        drain with today's rules (SMJ_SO >= last P.V word + SO_GAP; first operand row after the cos / sin lead)."""
+        at, words, fw = {}, [], {}
+        t = t_q0
+        go_min = None
+        self.passes = []
+        for name, ws in self.frames:
+            k = self.fpass.get(name, (None, None))[0]
+            if name.startswith('ATTN_Q') and k == 0:
+                t = max(t, t_q)
+            elif name.startswith('ATTN_Q'):
+                t = max(t, self.passes[k - 1]['pv_last'] + JD_LAT + PASS_GAP)
+            if name.split('.')[0] == 'GO':
+                go = max(t, go_min)
+                if k > 0:
+                    go = max(go, self.passes[k - 1]['pv_last'] + PASS_GAP)
+                w, rec = self.pass_go(k, go)
+                rec['heads'] = pass_heads(self.fpass[name][1], self.hs)
+                self.passes.append(rec)
+                ws = [w]
+                t = go
+                if k == 0:
+                    self.pio, self.go, self.pvs, self.po, self.pvo = rec['pio'], go, rec['pvs'], rec['po'], rec['pvo']
+            if name == 'SMJ_SO':
+                pl = self.passes[-1]
+                t = max(t, pl['go'] + pl['pvo'] + PV_LAT + pl['npv'] - 1 + SO_GAP)
+            if name.startswith('SMJ_OP') and not any(k_.startswith('SMJ_OP') for k_ in at):
+                t = max(t, at['SMJ_SO'] + 6 + SO_CS_LEAD - 1)
+            if name == 'IK_ROW':
+                t = max(t, self.t_ik)
+            at[name] = t
+            fw[name] = [(t + i, x) for i, x in enumerate(ws)]
+            for i, x in enumerate(ws):
+                words.append((t + i, x))
+            if name == 'WIN_LOAD':
+                go_min = t + W_SLACK
+            if name == 'SEL_IDS':
+                go_min = max(go_min, t + SEL_SCAN)
+            if name in ('SEL_IDS', 'ROWS'):
+                go_min = max(go_min, t + len(ws) + ROWS_SLACK)
+            t += len(ws)
+        j_pin = t_q0 - Q_ARM
+        s_j = j_pin - max(j_age_w, j_age_e)
+        p0, pl = self.passes[0], self.passes[-1]
+        return dict(at=at, words=words, frame_words=fw, s_j=s_j, j_w=s_j + j_age_w, j_e=s_j + j_age_e, go=p0['go'],
+                    pvs=p0['pvs'], po=p0['po'], pvo=p0['pvo'], pv_first=p0['pv_first'], pv_last=pl['pv_last'],
+                    npv=pl['npv'], allq=self.allq, done=pl['pv_last'] + JD_LAT, done_nopv=pl['pv_first'] + JD_NOPV,
+                    nframes=len(self.frames), passes=[dict(p) for p in self.passes], slice_heads=self.hs,
+                    h8_calibrated=H8_CALIBRATED)
+
     # ------------------------------------------------------------------ HBM window image (the 127 rows before pos)
     def hbm_image(self):
         img = {}
@@ -559,7 +761,7 @@ class Job:
         return sc, pv
 
 
-def pv_words(job, s, entry=None):
+def pv_words(job, s, entry=None, pass_k=None):
     """the quarter-ST P.V stream at the P.V entry's {pv_d 513, pv_v} pins: 160 words back to back from pv_first (the
     register set at edge pv_first - 1): per tile t (4 ST + w // 40) 8 beats of 5 words; word 0 = header {1, 440'd0,
     pv_c 8, flags 64} (dsdv_svc_att.sv:349-350), words 1..4 = {0, 16 heads x 32 b} of dims 32 t + 8 (wi - 1) + pv_c
@@ -568,6 +770,8 @@ def pv_words(job, s, entry=None):
     C = job.C
     pv = job.pv                                                     # [16 heads, 512 dims] FP32 (fixture attn.pv)
     vals = C.u32(pv) if hasattr(C, 'u32') else np.asarray(pv, np.float32).view(np.uint32)
+    if pass_k is not None:
+        return _pv_words_pass(job, s, entry, pass_k, vals)
     out, e0 = [], s['pv_first'] - 1
     hm = 1 | (1 << 513) | (((1 << 441) - 1) << 73)                 # v, pv_d[512], pv_d[511:72]
     dm = 1 | (1 << 513)
@@ -588,6 +792,37 @@ def pv_words(job, s, entry=None):
             m = dm
         out.append([e0 + w, f'{(d << 1) | 1:x}', f'{m:x}'])
     out.append([e0 + n, '0', '1'])                                  # valid low after the last word
+    return out
+
+
+def _pv_words_pass(job, s, entry, k, vals):
+    """S81-SVCC-1: H8 pass k's P.V stream at an entry (interface v1 (c), 5-word beats + 40-cycle windows kept): word 0
+    = the H16 header; data word 1 = {dim 8 + b at [511:256], dim b at [255:0]}, word 2 = {dim 24 + b, dim 16 + b}, each
+    256-b half = the pass's 8 heads x 32 b (local head h at [32 h +: 32]), words 3..4 = 0; dims of tile t."""
+    pp = s['passes'][k]
+    hs = pp['heads']
+    out, e0 = [], pp['pv_first'] - 1
+    hm = 1 | (1 << 513) | (((1 << 441) - 1) << 73)
+    dm = 1 | (1 << 513)
+    n = pp['npv']
+    t0 = (8 if entry == 'u_rsv_05' else 0) if s.get('allq') else 4 * ST
+    for w in range(n):
+        t, b, wi = t0 + w // 40, (w % 40) // 5, w % 5
+        if wi == 0:
+            d = (1 << 512) | (b << 64)
+            if job.owner is not None:
+                d |= (job.owner << 72) | (((t // 4) if job.allq else ST) << 92) | (t << 94) | (1 << 98) | (job.pos << 99)
+            m = hm
+        else:
+            d = 0
+            if wi <= 2:
+                for half in range(2):
+                    dim = 32 * t + 8 * (2 * (wi - 1) + half) + b
+                    for h, g in enumerate(hs):
+                        d |= int(vals[g, dim]) << (256 * half + 32 * h)
+            m = dm
+        out.append([e0 + w, f'{(d << 1) | 1:x}', f'{m:x}'])
+    out.append([e0 + n, '0', '1'])
     return out
 
 
@@ -750,10 +985,10 @@ def sot_booking_for(job, s):
 
 
 def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_booking=None, allq=None, timing_profile="legacy_fg3",
-          pio_extra=0, bound_routes=None):
+          pio_extra=0, bound_routes=None, heads=None):
     """the job + its static schedule at the layer's cycles (layer entry = 0)"""
     job = Job(fx, tag=tag, mutant=mutant, owner_epoch=owner_epoch, allq=allq, timing_profile=timing_profile,
-              pio_extra=pio_extra)
+              pio_extra=pio_extra, heads=heads)
     if sot_booking is not None:
         from sot_program import attach_to_job
         attach_to_job(job, sot_booking)
@@ -765,6 +1000,12 @@ def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_bo
     s = job.schedule(t_own, t_q, t_exp, ag['j_w'], ag['j_e'])
     from dv_layer_compile import SEQ
     s['issue'] = s['s_j'] - SEQ['svc_to_sj']
+    return job, finish(job, s, ag)
+
+
+def finish(job, s, ag):
+    """the job's SOT booking + entry done edges + span from its schedule (build's tail; S81-SVCC-1: a function so the
+    fixture-free tests drive the same code)"""
     dw, de = (s['done_nopv'], s['done']) if ST < 2 else (s['done'], s['done_nopv'])
     if job.allq:                                     # both entries drain 320 words from the same pv_first
         dw = de = s['done']
@@ -783,7 +1024,7 @@ def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_bo
     s['done_w'], s['done_e'] = dw, de
     s['ls'] = max(dw + ag['jd_w'], de + ag['jd_e']) - s['s_j']
     s['ages'] = ag
-    return job, s
+    return s
 
 
 def bench_image(job, s, out, base=60):
@@ -817,6 +1058,9 @@ def bench_image(job, s, out, base=60):
              'qcyc.hex': hx([c + off for c, _ in w], 32), 'qwd.hex': hx([x for _, x in w], 512),
              'hkey.hex': hx(sorted(img), 64), 'hdat.hex': hx([img[k] for k in sorted(img)], 256),
              'sc.hex': hx(sc, 33 * H), 'pv.hex': hx(pv, 33 * H), 'pexp.hex': hx(job.p_words, 512), **so_files}
+    if job.npass > 1:      # S81-SVCC-1: the H8 fold root PV frame of each pass (pexp.hex = the H16 reference frame)
+        for k, pw in enumerate(job.p_words_pass):
+            files[f'pexp_p{k}.hex'] = hx(pw, 512)
     for k, v in files.items():
         (out / k).write_text(v)
     rec = dict(schema='opentallas.s81_dv.svc_bench_image.v1', tb_offset=off, mutant=job.mutant, tag=job.tag,
@@ -825,6 +1069,10 @@ def bench_image(job, s, out, base=60):
                go=s['go'] + off, pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pio=job.pio, ppath=PPATH, pv_first=s['pv_first'] + off,
                pv_last=s['pv_last'] + off, done_w=s['done_w'] + off, done_e=s['done_e'] + off, anchors=job.anchor, T=job.T, heads=[job.h0, job.h0 + H],
                st=ST, allq=job.allq, npv=s['npv'], so=job.so,
+               **({} if job.npass == 1 else dict(slice_heads=job.hs, h8_calibrated=H8_CALIBRATED, passes=[
+                   dict(k=p['k'], heads=p['heads'], more=p['more'], go=p['go'] + off, pio=p['pio'], po=p['po'], pvo=p['pvo'],
+                        npw=p['npw'], pv_first=p['pv_first'] + off, pv_last=p['pv_last'] + off,
+                        ) for p in s['passes']])),
                sot=None if 'sot' not in s else dict(
                    install=s['sot']['install_edge'] + off, pw1=s['sot']['pw1'] + off, heads=s['sot']['heads'],
                    gather_first=s['sot']['gather_first'], gather_last=s['sot']['gather_last'],
@@ -850,12 +1098,14 @@ def lower(die, op, ctx):
     if ctx.get('svc_timing_profile') is None:
         raise ValueError('service programme requires an explicit svc_timing_profile')
     key = (str(fx), ctx.get('layer'), ctx.get('svc_tag', 0), ctx.get('svc_owner_epoch'),
-           json.dumps(ctx.get('svc_sot_booking'), sort_keys=True), ctx.get('svc_timing_profile', 'legacy_fg3'), ctx.get('svc_allq'))
+           json.dumps(ctx.get('svc_sot_booking'), sort_keys=True), ctx.get('svc_timing_profile', 'legacy_fg3'), ctx.get('svc_allq'),
+           ctx.get('svc_heads'))
     if key not in _CACHE:
         try:
             _CACHE[key] = build(fx, ctx.get('sched'), die, tag=ctx.get('svc_tag', 0),
                                 owner_epoch=ctx.get('svc_owner_epoch'), sot_booking=ctx.get('svc_sot_booking'),
-                                timing_profile=ctx.get('svc_timing_profile', 'legacy_fg3'), allq=ctx.get('svc_allq'))
+                                timing_profile=ctx.get('svc_timing_profile', 'legacy_fg3'), allq=ctx.get('svc_allq'),
+                                heads=ctx.get('svc_heads'))
         except AssertionError as e:
             _CACHE[key] = (None, str(e))
     job, s = _CACHE[key]
@@ -878,6 +1128,11 @@ def lower(die, op, ctx):
                               pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pv_first=s['pv_first'], pv_last=s['pv_last'],
                               done_pin=dict(u_rsv_05=s['done_w'], u_rsv_11=s['done_e']), ls=s['ls'], hbm_sectors=len(job.hbm_image()),
                               q_words=len(s['words']), q_image=f'prog/svc/{ctx.get("layer")}/qwd.hex',
+                              **({} if job.npass == 1 else dict(
+                                  slice_heads=job.hs, h8_calibrated=H8_CALIBRATED,
+                                  passes=[dict(k=p['k'], heads=p['heads'], more=p['more'], go=p['go'], pio=p['pio'],
+                                               po=p['po'], pvo=p['pvo'], pv_first=p['pv_first'], pv_last=p['pv_last'])
+                                        for p in s['passes']])),
                               tag_rule='q headers carry {issuer slot, calendar row index}: re-emit with the final row '
                                        'index / per-slot header rows')]
         ev = [dict(cycle=s['j_w'], inst='u_rsv_05', port='j', dir='in', kind='SVCJ', tag='attn.job', payload=f'{jw:09x}'),
@@ -894,12 +1149,15 @@ def lower(die, op, ctx):
                                payload=f'frame {fname}: {len(ws)} q words {{2\'d0, d 512, v}} (producer u_s_3S / u_s_4S '
                                        f'xr band bo)', words=ws, valid_bit=0, producer_gap=pg))
         pvhs = ['u_rsv_11', 'u_rsv_05'] if s.get('allq') else ['u_rsv_11' if ST < 2 else 'u_rsv_05']
-        for pvh in pvhs:
+        for pvh, pk in [(x, k) for x in pvhs for k in (range(job.npass) if job.npass > 1 else (None,))]:
             what = (f'{s["npv"]} words (ALLQ: tiles {"0..7" if pvh == "u_rsv_11" else "8..15"}, 8 x 40-cycle windows)'
                     if s.get('allq') else f'160 words (quarter {ST}: 4 x 40-cycle windows)')
-            ev.append(dict(cycle=s['pv_first'], inst=pvh, port='pv_v / pv_d', ports=['pv_v', 'pv_d'], dir='out', kind='PV',
+            if pk is not None:
+                what = f'H8 pass {pk} (heads {s["passes"][pk]["heads"][0]}..{s["passes"][pk]["heads"][-1]}): ' + what
+            ev.append(dict(cycle=s['pv_first'] if pk is None else s['passes'][pk]['pv_first'], inst=pvh,
+                         port='pv_v / pv_d', ports=['pv_v', 'pv_d'], dir='out', kind='PV',
                          tag='attn.pv', payload=f'{what} to '
-                         f'u_s_{"4" if pvh == "u_rsv_11" else "3"}S bi', words=pv_words(job, s, pvh), valid_bit=0,
+                         f'u_s_{"4" if pvh == "u_rsv_11" else "3"}S bi', words=pv_words(job, s, pvh, pass_k=pk), valid_bit=0,
                          data_masked='P.V values + header flags / pv_c (engine data, bit-exact in bench_svc; the cut '
                                      'bench has no HBM window image): checked = valid, the header marker pv_d[512] '
                                      'and the header zero field pv_d[511:72] on every compiled edge'))
@@ -979,6 +1237,8 @@ def main(argv=None):
     ap.add_argument('--compressed-only', action='store_true', help='compressed layer: base + selection mutants only')
     ap.add_argument('--pio-safe', type=int, default=0, help='also emit base_safe with PIO this many edges later')
     ap.add_argument('--die-src', default=None, help='die tree of the compile (dv_layer_compile --die-src); else DIE_REF')
+    ap.add_argument('--heads', type=int, choices=(16, 8), default=None,
+                    help='svc slice head width (default OT_SVC_H, else 16); 8 = the R5 two-pass job + its mutants')
     a = ap.parse_args(argv)
     sched = json.loads(Path(a.sched).read_text()) if a.sched else None
     die = None
@@ -992,12 +1252,15 @@ def main(argv=None):
         muts += ('no_sot', 'so_win_short', 'so_hm_shift')
     if a.compressed_only:     # TOK-DS-CMP: selection negatives (the compressed-row gather must catch them)
         muts = (None, 'sel_id', 'rows_pair', 'pio_early')
+    if (a.heads or SVC_H) == 8:   # S81-SVCC-1: the two-pass negatives
+        muts += ('hb_swap', 'pass_drop', 'pass_swap', 'more_off')
     for mut in muts:
-        job, s = build(a.fixtures, sched, die, tag=a.tag, mutant=mut, timing_profile=a.timing_profile)
+        job, s = build(a.fixtures, sched, die, tag=a.tag, mutant=mut, timing_profile=a.timing_profile, heads=a.heads)
         rec = bench_image(job, s, Path(a.out) / (mut or 'base'))
         print(mut or 'base', json.dumps({k: rec[k] for k in ('go', 'pv_first', 'done_w', 'done_e', 'frames')}))
     if a.pio_safe:            # a parallel calibration image: PIO a.pio_safe edges later (same programme otherwise)
-        job, s = build(a.fixtures, sched, die, tag=a.tag, timing_profile=a.timing_profile, pio_extra=a.pio_safe)
+        job, s = build(a.fixtures, sched, die, tag=a.tag, timing_profile=a.timing_profile, pio_extra=a.pio_safe,
+                       heads=a.heads)
         rec = bench_image(job, s, Path(a.out) / 'base_safe')
         print('base_safe', json.dumps({k: rec[k] for k in ('go', 'pio', 'pv_first', 'done_w', 'done_e')}))
 
