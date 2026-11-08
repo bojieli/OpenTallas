@@ -3427,3 +3427,7 @@ CODEX: 2026-11-07 17:04 PST explicit Claude reset, parked newwork/all9leads; hea
 - 11-08 00:48 COORD: hourly 00:2x, count 222 (+3 S81 types). Main 730fe78cb85 (13 branches landed since 23:2x). HBM +3 owed via PEV-b/OPSA replays (DIE-HBM-91). New lanes: S81-SVCRS-1 (svc_rs split), QUEUE-BAL-1 (epyc5 waiters 34->13), AUTOCLEAN-9 (fleet disks), DIE-HBM-91, HBM-HARD-5, ROOT-MERGE-51.
 - 11-08 01:47 COORD: hourly 01:2x, count 225 (+3: S81 t6/t8/t38-class stations, HEAD ctl_n). HBM +3 landed (main 85fc2d62471), rescan running. New lanes: KW-FIX-34, QC-TYPES-7, DIE-HBM-91, S81-SVCRS-2, S81-RCK-11, AUTOCLEAN-9. localhost root 585 GB free (AUTOCLEAN-8 done). Owner: e1 dropped; e2/e6/ba0 open.
 - 2026-11-08 02:11 PST COORD: forced rescan 229 (HBM 65->69: PEV exp_x, qcore_r13, OPSA opsa_rest, wbq_root_g0). HBM-HARD-4 parked -> HBM-HARD-5; contract-kit TT IO rebind class fix -> KW-FIX-34; QC-TYPES-8 replaces QC-TYPES-7.
+
+CODEX: 2026-11-08 02:22 PST takeover; all five dies plus flow/token/fleet assigned, 646 lane inventory; collecting jobs and structural fixes. Canonical intel2; no merges/tags/POR changes. Checkpoint handoff/codex_takeover_20261108_0222_checkpoint.md.
+
+CODEX: 2026-11-08 02:29 PST branch fixes READY HCL1762cad3e01/QCdigest1aa8d5d7e5/QChold7f6b7773d8/SVCpacking a8175d573b; no merge/tag/POR. Bksel finalreport active; SVC rate mismatch calibration active; all five die scopes staffed.

@@ -12319,3 +12319,11 @@ This table joins the retained child/G0 cache with the ONE static native ABI cata
 
 OWNER?
 H9B source/recipe adoption, joined RestJ event/calendar adoption, S7/SW real clock-domain joins, current B12 production-provider overlays, and q_spt0 expanded native producer graph remain actual integration obligations. N4 needs a genuine matching reset-binding applicability witness before any qualification beyond its actual4-edge context. No owner exception or reset extension was assumed; work did not block on a question.
+
+## Takeover 2026-11-08 02:22 PST
+Eight scope leads active plus orphan sweep; read binding role/handoffs/rules, watcher-only own branch fixes and builds. No merges/tags/POR changes. Canonical hub intel2 distinct from local ubuntu. Checkpoint handoff/codex_takeover_20261108_0222_checkpoint.md; 646 lane files inventoried, 52 current-day queue identities. Existing fleet jobs preserved.
+
+OWNER?
+Existing KV e2/e6 and S81 gunit ba0 extra-ECO exceptions remain unresolved; preserve holds and work on other forms.
+
+2026-11-08 02:29 PST READY branch collection: wave HCL TT-IO1762cad3e01; QC reset digest1aa8d5d7e5 (10tests), parenthold adapter7f6b7773d8 (2integration cases), SVC compiler a8175d573b (19checks,H16 genuineL0 identity). No merges/tags/POR edits. SVC latency provisional invalid after measured feed-rate mismatch; RTL calibration active. GunitG0 new147=base147,no new errors; strictbind active. BKSEL route+RCX complete finalreport active. WATCHDOG QC a10 correctly superseded by livea12, no bug.
