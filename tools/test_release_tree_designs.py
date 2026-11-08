@@ -354,3 +354,19 @@ def test_approved_pin_event_credits_only_the_event_location():
         assert s == {} and list(u) == ['m']                                   # not at the event location
     finally:
         R.APPROVED_PIN_EVENTS.clear(); R.APPROVED_PIN_EVENTS.update(old)
+
+
+def test_design_unmatched_only_uncredited_modules():
+    # COUNT-AUDIT-2 11-07: a module credited on its plan design is not reported as unmatched because another of its
+    # records misses (report only; signed_designs unchanged)
+    D, rows = designs([core('m', 'a.json'), core('m', 'b.json'), core('n', 'a.json')])
+    ids = sorted(D)
+    mids = [k for k in ids if D[k]['module'] == 'm']; nid = [k for k in ids if D[k]['module'] == 'n'][0]
+    um = {'m': ['r1 (pins match no plan design)'], 'n': ['r2 (pins match no plan design)']}
+    full = dict(die='hbm', types=1, hard_cores=['m', 'n'], signed_cores={}, designs=D,
+                signed_designs={mids[0]: ['r'], mids[1]: ['r'], nid: ['r']}, design_unmatched=um)
+    part = dict(full, signed_designs={mids[0]: ['r'], nid: ['r']})
+    (rf,) = R.die_counts(dict(plans={'x': full}), 'hbm')
+    (rp,) = R.die_counts(dict(plans={'x': part}), 'hbm')
+    assert rf['design_unmatched'] == [] and rf['design_unmatched_extra'] == ['m', 'n'] and rf['signed_cores'] == 3
+    assert rp['design_unmatched'] == ['m'] and rp['design_unmatched_extra'] == ['n'] and rp['signed_cores'] == 2

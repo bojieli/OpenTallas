@@ -46,6 +46,10 @@ FAIL_MAP = [
     (r'no host qualif|NOT RUN on', 'no host'),
     (r'PORT_MISMATCH|port', 'port mismatch'),
     (r'kit_rtl|KIT_RTL', 'kit_rtl'),
+    # S81-OTHERFAIL-2 11-07: the remaining S81 'other flow error' signatures
+    (r'FAIL_PREFLOOR reg_fanout', 'reg_fanout preflight'),
+    (r'queue row rejected: kit carries FAIL_PREFLOOR', 'stale FAIL_PREFLOOR kit (LEC reject)'),
+    (r'1_2_yosys\.v\] Error', 'synth stopped (OOM/kill)'),
 ]
 
 
@@ -57,6 +61,12 @@ def label(r):
         return 'signed (count pending)'
     if st == 'CANCELLED':
         return 'cancelled (superseded)'
+    # S81-OTHERFAIL-2 11-07 23:2x: these statuses are not flow errors; they were 26 of S81's 32 'other flow error'.
+    # WAIT-PARENT = local pass, io_hold_parent NEEDS_PARENT (counts, OWNER 11-03; counted ones are skipped in main()).
+    if st == 'WAIT-PARENT':
+        return 'needs parent receipt (re-sign)'
+    if st == 'WITHDRAWN':
+        return 'withdrawn (lane form)'
     text = (r.get('class') or '') + ' ' + (r.get('reason') or '')
     if st == 'LINT-ADVISORY':
         if 'without a signed view' in text:
@@ -67,6 +77,8 @@ def label(r):
     for pat, lab in FAIL_MAP:
         if re.search(pat, text):
             return lab
+    if st == 'RETRY-INFRA':
+        return 'infra (relaunch queued)'
     return 'other flow error'
 
 
@@ -135,7 +147,8 @@ def main():
                 continue
             lab = label(r)
             # COORD 11-06: a SIGNED row already in the official count is not "count pending".
-            if lab == 'signed (count pending)' and (item.split('#')[0] in stset or short(item) in stset):
+            if lab in ('signed (count pending)', 'needs parent receipt (re-sign)') and (
+                    item.split('#')[0] in stset or short(item) in stset):
                 continue
             tc[lab] += 1
             tn[lab].append(short(item))
