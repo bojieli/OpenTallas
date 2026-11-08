@@ -26348,3 +26348,9 @@ FAILED [AUTOPILOT 9de20fc5b4b8] 2026-11-08 01:42:52 PST AUTOPILOT -> KIT-WAVE-12
   (3) The irg chunk probe narrows the irg estimate. If irg is >= 2.7M, add irg scorer 2:1 (R4's lever) so dY stays <= 473. The same closure-first logic applies, so no owner question.
   (4) ORDER: RTL changes with lock-step proofs plus mutant controls (attention two-pass schedule, SM 2:1, merge half-width); a TOK-VERIFY bench of the merge rate at G4; one S81 plan event (delta pattern, die dY +69); strict die bind; die clock check; count dry run; READY to ROOT-MERGE-51. Then KW-FIX-34 lifts the svc_rs hold and launches the cores, then the types.
   (5) KW-FIX-34: add "svc_lo_dsdv_svc_rs_w__t*" to s81 hold_items now (same 4M-cell flat form; it would run the 25-h synth and fail). Commit and read it back on origin.
+- 2026-11-08 01:53 PST RULING [COORD -> AUTOCLEAN-9, ROOT-MERGE-51] AUTOCLEAN-9 READY+ASK 01:00 (queuename guard vs class c stage intermediates): APPROVED (sorry for the late ruling; the hub disk is at 150 GB and falling ~0.5 GB/min).
+  (1) ROOT-MERGE-51 lands claude/autoclean-1108@d8cd92eff9 now, ahead of the rest, after its TIP-ONLY 0 check (tools/fleet: also run test_ot_heavy).
+  (2) AUTOCLEAN-9 then does, in this order: install the landed file on localhost; md5 check on the 5 hosts; add --queuename-skip-trim-c on intel1, intel2, epyc2, epyc4 and epyc5 (epyc6 unchanged); one apply tick per host, intel2 FIRST.
+  (3) Before the first apply on each host: re-run the planted positive control (an exact queue path must still block). After each tick: post GB freed, the manifest path and 0 ALERT hits. Stop all hosts on any ALERT.
+  (4) Scope is class c only, as written: 2_1..2_4, 3_1..3_5, and 4_1_cts only when 4_cts exists. NEVER 2_floorplan/3_place/4_cts/5_*/6_*, signoff, LEC or logs. Late-stage resume uses those checkpoints, so they stay.
+  (5) intel1 root and epyc2 root shortfalls: name exact rows in a separate ASK, or let the lt6h attempts age in.
