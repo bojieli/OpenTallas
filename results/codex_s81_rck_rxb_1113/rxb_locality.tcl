@@ -11,18 +11,38 @@ proc rxb_locality_place {} {
   set n [string map [list "\\" ""] [$i getName]];set m [$i getMaster];set mn [$m getName]
   if {$mn eq "ot_sram_1r1w2c_64x546_m1"} {lappend mac $i}
   if {![string match *DFF* $mn]} {continue}
-  if {[string match *u_dly*g_rq*rq_d* $n]} {
-   if {![regexp {rq_d\[([0-9]+)\]} $n -> bit]} {error "RXB_LOCAL: cannot parse rq bit $n"}
-   if {[dict exists $rq $bit]} {error "RXB_LOCAL: duplicate capture bit $bit"}
-   dict set rq $bit $i;set maxw [expr {max($maxw,[$m getWidth])}]
-   set area [expr {$area+[$m getWidth]*double([$m getHeight])/$u/$u}]
-  }
   if {[string match *u_lpl_5_w*data* $n]} {dict set banks $n $i}
  }
- if {[llength $mac]!=1 || [dict size $rq]!=544 || [dict size $banks]!=2176} {
-  error "RXB_LOCAL: native macro/capture/bank count [llength $mac]/[dict size $rq]/[dict size $banks], expected1/544/2176"
+ if {[llength $mac]!=1 || [dict size $banks]!=2176} {
+  error "RXB_LOCAL: native macro/bank count [llength $mac]/[dict size $banks], expected1/2176"
  }
  set mac [lindex $mac 0];if {[$mac getOrient] ne "R0"} {error "RXB_LOCAL: native pin table requires R0"}
+ # Cell names follow canonical output aliases in Yosys. Discover topology from native pins.
+ set used {}
+ for {set bit 0} {$bit<544} {incr bit} {
+  set it [$mac findITerm [format {rd_out[%d]} $bit]]
+  if {$it eq "NULL" || $it eq ""} {error "RXB_LOCAL: missing native rd_out bit$bit"}
+  set q [list [$it getNet]];set seen {};set hit {}
+  while {[llength $q]} {
+   set net [lindex $q end];set q [lrange $q 0 end-1]
+   if {$net eq "NULL" || [dict exists $seen [$net getName]]} {continue}
+   dict set seen [$net getName] 1
+   foreach t [$net getITerms] {
+    if {[$t getIoType] ne "INPUT"} {continue}
+    set ci [$t getInst];set cm [[$ci getMaster] getName];set pn [[$t getMTerm] getName]
+    if {[string match *DFF* $cm] && $pn eq "D"} {dict set hit [$ci getName] $ci;continue}
+    if {[regexp {^(BUF|INV)} $cm]} {
+     foreach o [$ci getITerms] {if {[$o getIoType] eq "OUTPUT"} {lappend q [$o getNet]}}
+    } else {error "RXB_LOCAL: native bit$bit non-capture sink [$ci getName]/$pn"}
+   }
+  }
+  if {[dict size $hit]!=1} {error "RXB_LOCAL: native bit$bit capture count[dict size $hit]"}
+  set i [lindex [dict values $hit] 0];set name [$i getName]
+  if {[dict exists $used $name]} {error "RXB_LOCAL: FF $name shared by native bits"}
+  dict set used $name 1;dict set rq $bit $i;set m [$i getMaster]
+  set maxw [expr {max($maxw,[$m getWidth])}]
+  set area [expr {$area+[$m getWidth]*double([$m getHeight])/$u/$u}]
+ }
  lassign [$mac getLocation] mx my
  # Entire west bay outside5.4um halo, 6columns separated by at least0.432um.
  set right [expr {$mx-round(5.4*$u)}];set left [$core xMin]
@@ -55,12 +75,18 @@ proc rxb_locality_place {} {
  odb::dbBox_create $r [expr {round($x0*$u)}] [expr {round($y0*$u)}] [expr {round($x1*$u)}] [expr {round($y1*$u)}]
  set g [odb::dbGroup_create $r rxb_dmem_writer];$g setType VOLTAGE_DOMAIN
  dict for {n i} $banks {$g addInst $i}
- set f [open /work/rxb_capture_anchors.tsv w];foreach a $anchors {puts $f [join $a "\t"]};close $f
+ set f [open /work/rxb_capture_anchors.list w];foreach a $anchors {puts $f $a};close $f
  puts "RXB_LOCAL: capture544 area$area fill$fill columns$cols max_pin_origin_reach$maxreach bank2176 area$ba fill$bf region$box"
 }
 proc rxb_locality_release {} {
  set b [ord::get_db_block];set n 0
- foreach i [$b getInsts] {if {[string match *u_dly*g_rq*rq_d* [$i getName]] && [$i getPlacementStatus] eq "FIRM"} {$i setPlacementStatus PLACED;incr n}}
+ set f [open /work/rxb_capture_anchors.list];set data [read $f];close $f
+ foreach row [split $data "\n"] {
+  if {$row eq ""} {continue}
+  set i [$b findInst [lindex $row 1]]
+  if {$i eq "NULL" || [$i getPlacementStatus] ne "FIRM"} {error "RXB_LOCAL: capture release lost [lindex $row 1]"}
+  $i setPlacementStatus PLACED;incr n
+ }
  if {$n!=544} {error "RXB_LOCAL: release capture$n expected544"}
  foreach g [$b getGroups] {if {[$g getName] eq "rxb_dmem_writer"} {set r [$g getRegion];odb::dbGroup_destroy $g;odb::dbRegion_destroy $r}}
  puts "RXB_LOCAL: released capture$n and southwest bank region before detailed legalization"
