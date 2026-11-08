@@ -1,0 +1,46 @@
+{
+  "scope": "One native old RT2 head plus actual new serializer vs H8 RT4 reference; valid outputs and OV only, no physical claim.",
+  "unit": "oth-ubuntu-2978436-1794168297",
+  "host": "epyc5",
+  "path": "/srv/opentallas-scratch3/claude/codex-svc-rtl-1113/rt2_early",
+  "cycles": 16000,
+  "qk_first": 8,
+  "last_q_load_phase": 7,
+  "p_load_phases": [
+    80,
+    82,
+    84,
+    86
+  ],
+  "first_pv_phase": 86,
+  "warm_reset": [
+    941,
+    951
+  ],
+  "heads": [
+    {
+      "head": 0,
+      "valid": 1576,
+      "nonzero": 1575,
+      "errors": 0,
+      "invalid_cycle_differences": 244,
+      "fault": 0
+    },
+    {
+      "head": 7,
+      "valid": 1576,
+      "nonzero": 1576,
+      "errors": 0,
+      "invalid_cycle_differences": 231,
+      "fault": 0
+    }
+  ],
+  "control": {
+    "kind": "wrong second P column",
+    "errors": 711,
+    "verdict": "CAUGHT"
+  },
+  "verdict": "PASS",
+  "cycles_added": 0,
+  "scope_note": "Actual engine q_cnt gating, registered read and REPL2 delay make this one-clock QK gap stricter than its source schedule. Existing P replay+1 input load edge remains priced; no generic overlapping-job support added."
+}

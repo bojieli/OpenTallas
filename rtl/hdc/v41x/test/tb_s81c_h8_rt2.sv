@@ -10,7 +10,7 @@ module tb_s81c_h8_rt2;
  reg[1023:0]ld_w=0;reg[575:0]ib=0;
  wire lv,lm,l2;wire[2:0]lb;wire[7:0]lg;wire[1023:0]lw;
  ot_s81c_hcore_load_stage u_stage(.clk(clk),.rst_n(rst_n),.ld_v(ld_v),.ld_mode(ld_mode),.ld_bank(ld_bank),.ld_grp(ld_grp),.ld_w(ld_w),.ld_w2v(ld_w2v),.out_v(lv),.out_mode(lm),.out_bank(lb),.out_grp(lg),.out_w(lw),.out_w2v(l2));
- integer gid_i=0,seed=1,mut=0,ncyc=16000;
+ integer gid_i=0,seed=1,mut=0,ncyc=16000,qk_first=16;
  wire[7:0]gid=8'(gid_i);
  wire av,am,a2,af;wire[2:0]ab;wire[7:0]ag;wire[1023:0]aw;
  ot_s81c_h8_rt2_load expand_load(.clk(clk),.rst_n(rst_n),.ld_v(ld_v),.ld_mode(ld_mode),.ld_bank(ld_bank),.ld_grp(ld_grp),.ld_w(ld_w),.ld_w2v(ld_w2v),.out_v(av),.out_mode(am),.out_bank(ab),.out_grp(ag),.out_w(aw),.out_w2v(a2),.fault(af));
@@ -31,6 +31,7 @@ module tb_s81c_h8_rt2;
  function automatic[31:0]rnd(input integer dummy);reg[31:0]x;begin x=xs;x=x^(x<<13);x=x^(x>>17);x=x^(x<<5);xs=x;rnd=x;end endfunction
  initial begin
   void'($value$plusargs("head=%d",gid_i));void'($value$plusargs("seed=%d",seed));void'($value$plusargs("mut=%d",mut));void'($value$plusargs("cycles=%d",ncyc));
+  void'($value$plusargs("qk_first=%d",qk_first));
   xs=32'h9e3779b9^(seed*32'h85ebca6b);re=0;rr=0;
  end
  always@(posedge clk)begin
@@ -46,7 +47,7 @@ module tb_s81c_h8_rt2;
   ld_bank<=3'(blk%5);ld_grp<=8'(phase>=80?phase-80:phase);
   if(mut==2&&phase==81)begin ld_v<=1;ld_mode<=0;ld_grp<=gid;end
   for(integer i=0;i<32;i++)ld_w[32*i+:32]<=rnd(0);
-  iv<=((phase>=16&&phase<=23)||(phase>=86&&phase<=93))&&blk!=5;
+  iv<=((phase>=qk_first&&phase<qk_first+8)||(phase>=86&&phase<=93))&&blk!=5;
   ibank<=3'(blk%5);
   for(integer i=0;i<18;i++)ib[32*i+:32]<=rnd(0);
   if(rst_n&&cyc>8)begin
@@ -55,7 +56,7 @@ module tb_s81c_h8_rt2;
    if(ro)begin nov++;if(ry!=0)nz++;end
   end
   if(cyc==ncyc)begin
-   $display("H8_RT2 mut=%0d head=%0d seed=%0d mismatches=%0d ov=%0d nonzero=%0d invalid_data_diffs=%0d source_fault=%0d",mut,gid_i,seed,err,nov,nz,invalid_diffs,af);
+   $display("H8_RT2 qk_first=%0d mut=%0d head=%0d seed=%0d mismatches=%0d ov=%0d nonzero=%0d invalid_data_diffs=%0d source_fault=%0d",qk_first,mut,gid_i,seed,err,nov,nz,invalid_diffs,af);
    if(err==0&&nov>1000&&nz>100&&!af)$display("H8_RT2 PASS");else $display("H8_RT2 FAIL");$finish;
   end
  end
