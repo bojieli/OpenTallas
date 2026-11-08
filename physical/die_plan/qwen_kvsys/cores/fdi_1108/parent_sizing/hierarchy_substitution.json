@@ -1,0 +1,23 @@
+{
+ "unqualified_extraction_model": true,
+ "new_provider_qualified": false,
+ "top": "qkd_host_root_admission_obsx_bo1_c45",
+ "outer_ports": 133,
+ "outer_ABI_unchanged": true,
+ "FDI_exact_instance": "u_fdi_join",
+ "FDI_native_type": "$paramod$fc6491acd10821baec4924a528f23a58f813e00d\\ot_fdi_join2",
+ "FDI_connections_unchanged": true,
+ "FDI_ports": {
+  "clk": 1,
+  "rst_n": 1,
+  "a_v": 1,
+  "a_d": 522,
+  "b_v": 1,
+  "b_d": 521,
+  "o_v": 1,
+  "o_d": 1043
+ },
+ "existing_HR_specializations": 27,
+ "host_receive_latency_delta_cycles": 1,
+ "production_plan_changed": false
+}

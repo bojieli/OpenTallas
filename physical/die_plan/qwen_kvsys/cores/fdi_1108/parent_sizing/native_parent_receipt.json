@@ -1,0 +1,928 @@
+{
+ "schema": "opentallas.kv.native_parent.v1",
+ "top": "qkd_host_root_admission_obsx_bo1_c45",
+ "native_abi_preserved": true,
+ "source_siblings_unchanged": true,
+ "clock_aliases": [
+  [
+   "ck_phy",
+   0,
+   "{clk, clk, clk, clk, clk, clk, clk, clk}",
+   "('clk', 0)"
+  ],
+  [
+   "ck_phy",
+   1,
+   "{clk, clk, clk, clk, clk, clk, clk, clk}",
+   "('clk', 0)"
+  ],
+  [
+   "ck_phy",
+   2,
+   "{clk, clk, clk, clk, clk, clk, clk, clk}",
+   "('clk', 0)"
+  ],
+  [
+   "ck_phy",
+   3,
+   "{clk, clk, clk, clk, clk, clk, clk, clk}",
+   "('clk', 0)"
+  ],
+  [
+   "ck_phy",
+   4,
+   "{clk, clk, clk, clk, clk, clk, clk, clk}",
+   "('clk', 0)"
+  ],
+  [
+   "ck_phy",
+   5,
+   "{clk, clk, clk, clk, clk, clk, clk, clk}",
+   "('clk', 0)"
+  ],
+  [
+   "ck_phy",
+   6,
+   "{clk, clk, clk, clk, clk, clk, clk, clk}",
+   "('clk', 0)"
+  ],
+  [
+   "ck_phy",
+   7,
+   "{clk, clk, clk, clk, clk, clk, clk, clk}",
+   "('clk', 0)"
+  ],
+  [
+   "ck_pad",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_phy_rx_w",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_phy_rx_r",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_phy_tx_w",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_phy_tx_r",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_peer",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_program_rx",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_program_loader",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_host",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_csr",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_rst",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_ctl",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_prompt",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_rx",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_tx",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_axi",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_ctrl",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_hc",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_qm_queue",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_qm_ing_w",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_qm_ing_r",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_qm_credit",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_qm_done_w",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_qm_done_r",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_qm_core",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_qm_host",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_qm_ingest",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_qm_bank",
+   0,
+   "{clk, clk}",
+   "('clk', 0)"
+  ],
+  [
+   "ck_qm_bank",
+   1,
+   "{clk, clk}",
+   "('clk', 0)"
+  ],
+  [
+   "ck_qm_out",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_map",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_sum",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_order",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_dispatch",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_retire",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_bootbarrier",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_fence_core",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_fence_host",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_guard",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_native",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_records",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_root_mux",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_coordinator_codec",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_coordinator_lifecycle",
+   0,
+   "clk",
+   "('clk', 0)"
+  ],
+  [
+   "ck_coordinator_post",
+   0,
+   "clk",
+   "('clk', 0)"
+  ]
+ ],
+ "cores": [
+  {
+   "inst": "host__qkd_hr_ingest_eng",
+   "module": "qkd_hr_ingest_eng",
+   "members": [
+    "g_mu.u_rank.g_mu.u_qm.u_eng"
+   ],
+   "pins": 1396,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_qm.u_eng",
+     "type": "$paramod$c9a092ea3e4e874e7ed43a075f3a2c97db56fe16\\qkd_host_native_engine",
+     "parameters": {
+      "APIPE": "00000000000000000000000000000000",
+      "AW": "00000000000000000000000000100000",
+      "DQ": "00000000000000000000000000000100",
+      "HDMAX": "00000000000000000000000010000000",
+      "KVHMAX": "00000000000000000000000000000010",
+      "NATIVE_ROWS": "00000000000000000000000000000001",
+      "QKV": "00000000000000000000000000000001",
+      "QMUT": "00000000000000000000000000000000",
+      "QPIPE": "00000000000000000000000000000010"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_core_order",
+   "module": "qkd_hr_core_order",
+   "members": [
+    "g_mu.u_rank.g_mu.u_chain",
+    "g_mu.u_rank.g_mu.u_dispatch"
+   ],
+   "pins": 2282,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_chain",
+     "type": "$paramod\\qkd_host_ingest_chain_pt\\ORDER_MUT=s32'00000000000000000000000000000000",
+     "parameters": {
+      "ORDER_MUT": "00000000000000000000000000000000"
+     }
+    },
+    {
+     "path": "g_mu.u_rank.g_mu.u_dispatch",
+     "type": "qkd_host_boot_dispatch_debt",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_cdc_ch",
+   "module": "qkd_hr_cdc_ch",
+   "members": [
+    "g_mu.u_rank.g_mu.u_bridge.u_done",
+    "g_mu.u_rank.g_mu.u_bridge.u_ing"
+   ],
+   "pins": 1205,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_bridge.u_done",
+     "type": "$paramod$e2d81c9fb1dd88f02a451d0de6f966780b3ea90f\\ot_qwen_die_cdc_ch",
+     "parameters": {
+      "AD": "00000000000000000000000000001000",
+      "AFW": "00000000000000000000000000000000",
+      "IBMEM": "00000000000000000000000000000000",
+      "IBUF": "00000000000000000000000000000100",
+      "MEMM": "00000000000000000000000000000000",
+      "OCRED": "00000000000000000000000000000100",
+      "PIPE": "00000000000000000000000000000010",
+      "RXP": "00000000000000000000000000000000",
+      "SAMECLK": "00000000000000000000000000000000",
+      "W": "00000000000000000000001000100010"
+     }
+    },
+    {
+     "path": "g_mu.u_rank.g_mu.u_bridge.u_ing",
+     "type": "$paramod$e2d81c9fb1dd88f02a451d0de6f966780b3ea90f\\ot_qwen_die_cdc_ch",
+     "parameters": {
+      "AD": "00000000000000000000000000001000",
+      "AFW": "00000000000000000000000000000000",
+      "IBMEM": "00000000000000000000000000000000",
+      "IBUF": "00000000000000000000000000000100",
+      "MEMM": "00000000000000000000000000000000",
+      "OCRED": "00000000000000000000000000000100",
+      "PIPE": "00000000000000000000000000000010",
+      "RXP": "00000000000000000000000000000000",
+      "SAMECLK": "00000000000000000000000000000000",
+      "W": "00000000000000000000001000100010"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_cdc_pc",
+   "module": "qkd_hr_cdc_pc",
+   "members": [
+    "g_mu.u_rank.g_mu.u_phy.u_rx",
+    "g_mu.u_rank.g_mu.u_phy.u_tx"
+   ],
+   "pins": 2165,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_phy.u_rx",
+     "type": "$paramod$e2d81c9fb1dd88f02a451d0de6f966780b3ea90f\\ot_qwen_die_cdc_ch",
+     "parameters": {
+      "AD": "00000000000000000000000000001000",
+      "AFW": "00000000000000000000000000000000",
+      "IBMEM": "00000000000000000000000000000000",
+      "IBUF": "00000000000000000000000000000100",
+      "MEMM": "00000000000000000000000000000000",
+      "OCRED": "00000000000000000000000000000100",
+      "PIPE": "00000000000000000000000000000010",
+      "RXP": "00000000000000000000000000000000",
+      "SAMECLK": "00000000000000000000000000000000",
+      "W": "00000000000000000000001000100010"
+     }
+    },
+    {
+     "path": "g_mu.u_rank.g_mu.u_phy.u_tx",
+     "type": "$paramod$e2d81c9fb1dd88f02a451d0de6f966780b3ea90f\\ot_qwen_die_cdc_ch",
+     "parameters": {
+      "AD": "00000000000000000000000000001000",
+      "AFW": "00000000000000000000000000000000",
+      "IBMEM": "00000000000000000000000000000000",
+      "IBUF": "00000000000000000000000000000100",
+      "MEMM": "00000000000000000000000000000000",
+      "OCRED": "00000000000000000000000000000100",
+      "PIPE": "00000000000000000000000000000010",
+      "RXP": "00000000000000000000000000000000",
+      "SAMECLK": "00000000000000000000000000000000",
+      "W": "00000000000000000000001000100010"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "members": [
+    "g_mu.u_coordinator",
+    "g_mu.u_peer_codec",
+    "g_mu.u_rank.g_mu.u_peer",
+    "g_mu.u_root_mux"
+   ],
+   "pins": 3844,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_coordinator",
+     "type": "$paramod$63d6e3f21ef924f3d7da6bbdce04d246ea0431f3\\qkd_host_tp8_coordinator_mu",
+     "parameters": {
+      "MU": "00000000000000000000000000000001",
+      "POST_UID_SLOT": "00000000000000000000000000000001"
+     }
+    },
+    {
+     "path": "g_mu.u_peer_codec",
+     "type": "$paramod\\qkd_host_peer_rank_codec\\RANK=3'000",
+     "parameters": {
+      "RANK": "000"
+     }
+    },
+    {
+     "path": "g_mu.u_rank.g_mu.u_peer",
+     "type": "qkd_host_peer_link",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000"
+     }
+    },
+    {
+     "path": "g_mu.u_root_mux",
+     "type": "qkd_host_peer_root_mux",
+     "parameters": {}
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_core_tx",
+   "module": "qkd_hr_core_tx",
+   "members": [
+    "g_mu.u_rank.g_mu.u_control.g_mu.u_packet.g_mu.u_axi",
+    "g_mu.u_rank.g_mu.u_control.g_mu.u_packet.g_mu.u_ctrl",
+    "g_mu.u_rank.g_mu.u_control.g_mu.u_packet.g_mu.u_tx"
+   ],
+   "pins": 3627,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_control.g_mu.u_packet.g_mu.u_axi",
+     "type": "qkd_host_axi_packet",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000",
+      "RX_DEPTH": "00000000000000000000000000000100",
+      "TX_CRED": "00000000000000000000000000000100"
+     }
+    },
+    {
+     "path": "g_mu.u_rank.g_mu.u_control.g_mu.u_packet.g_mu.u_ctrl",
+     "type": "$paramod$f7cfaff90ace1e9a3585fc6c404b165a056a6a9e\\qkd_host_ctrl_token_service_packet_collected_mu",
+     "parameters": {
+      "CONST_LANE_WRITES": "00000000000000000000000000000000",
+      "DIE": "00000000000000000000000000000000",
+      "ENABLE_SERVICE": "00000000000000000000000000000001",
+      "ENABLE_TOKEN": "00000000000000000000000000000001",
+      "HCW": "00000000000000000000000000100111",
+      "HDR_PREDECODE": "00000000000000000000000000000001",
+      "MU": "00000000000000000000000000000001",
+      "MUT": "00000000000000000000000000000000",
+      "RP_REPL": "00000000000000000000000000000100",
+      "STRAPPED": "00000000000000000000000000000001"
+     }
+    },
+    {
+     "path": "g_mu.u_rank.g_mu.u_control.g_mu.u_packet.g_mu.u_tx",
+     "type": "qkd_host_tx_class",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000",
+      "RST_Q": "00000000000000000000000000000000"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_core_rx",
+   "module": "qkd_hr_core_rx",
+   "members": [
+    "g_mu.u_rank.g_mu.u_control.g_mu.u_packet.g_mu.u_rx"
+   ],
+   "pins": 2137,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_control.g_mu.u_packet.g_mu.u_rx",
+     "type": "$paramod\\qkd_host_rx_class_admission\\STRAPPED=s32'00000000000000000000000000000001",
+     "parameters": {
+      "FAULT_DREG": "00000000000000000000000000000001",
+      "IR_REPL": "00000000000000000000000000000000",
+      "MUT": "00000000000000000000000000000000",
+      "STRAPPED": "00000000000000000000000000000001"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_core_guard",
+   "module": "qkd_hr_core_guard",
+   "members": [
+    "g_mu.u_rank.g_mu.u_guard",
+    "g_mu.u_rank.g_mu.u_native"
+   ],
+   "pins": 1175,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_guard",
+     "type": "$paramod\\qkd_host_service_guard_mu\\MU=s32'00000000000000000000000000000001",
+     "parameters": {
+      "MU": "00000000000000000000000000000001",
+      "MUT": "00000000000000000000000000000000",
+      "SETTLE": "00000000000000000000000000000100"
+     }
+    },
+    {
+     "path": "g_mu.u_rank.g_mu.u_native",
+     "type": "$paramod$3a4b0fbf196a3cf73a28e4271417e097be20d852\\qkd_host_native_token_endpoint_cancel_mu",
+     "parameters": {
+      "ENABLE_NATIVE": "00000000000000000000000000000001",
+      "MU": "00000000000000000000000000000001",
+      "MUT": "00000000000000000000000000000000"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_core_queue",
+   "module": "qkd_hr_core_queue",
+   "members": [
+    "g_mu.u_rank.g_mu.u_bootbarrier",
+    "g_mu.u_rank.g_mu.u_bridge.u_queue",
+    "g_mu.u_rank.g_mu.u_marker_consumer"
+   ],
+   "pins": 1470,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_bootbarrier",
+     "type": "qkd_host_emb_boot_barrier",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000"
+     }
+    },
+    {
+     "path": "g_mu.u_rank.g_mu.u_bridge.u_queue",
+     "type": "$paramod$df91f3799ec766f09730e222a7c34261aff8313d\\qkd_host_qm_ingress16_service_debt",
+     "parameters": {
+      "ENABLE_SERVICE": "00000000000000000000000000000001",
+      "MUT": "00000000000000000000000000000000",
+      "RP_REPL": "00000000000000000000000000000000"
+     }
+    },
+    {
+     "path": "g_mu.u_rank.g_mu.u_marker_consumer",
+     "type": "qkd_host_marker_consumer",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_core_prompt",
+   "module": "qkd_hr_core_prompt",
+   "members": [
+    "g_mu.u_rank.g_mu.u_control.g_mu.u_control",
+    "g_mu.u_rank.g_mu.u_program",
+    "g_mu.u_rank.g_mu.u_program_rx",
+    "g_mu.u_records"
+   ],
+   "pins": 5124,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_control.g_mu.u_control",
+     "type": "$paramod$6aeb21c354c6a5382e5a1f05c4b3b781019e51f8\\qkd_host_control_prompt_observed",
+     "parameters": {
+      "ENABLE_SERVICE": "00000000000000000000000000000001",
+      "MU": "00000000000000000000000000000001",
+      "NL": "00000000000000000000000000000010",
+      "PROMPT_BIND_LATENCY": "00000000000000000000000000000100",
+      "PROMPT_MUT": "00000000000000000000000000000000",
+      "T_HBM": "00000000000000110000110101000000",
+      "T_LINK": "00000000000000110000110101000000",
+      "WDOG": "00000000010000000000000000000000"
+     }
+    },
+    {
+     "path": "g_mu.u_rank.g_mu.u_program",
+     "type": "qkd_host_program_loader_target",
+     "parameters": {
+      "AGES": "00000000000000000000000000000000",
+      "DIECAP": "00000000000000000000000000000001",
+      "MU": "00000000000000000000000000000000",
+      "MUT": "00000000000000000000000000000000",
+      "NRST": "00000000000000000000000000101011"
+     }
+    },
+    {
+     "path": "g_mu.u_rank.g_mu.u_program_rx",
+     "type": "qkd_host_program_rx_target",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000"
+     }
+    },
+    {
+     "path": "g_mu.u_records",
+     "type": "$paramod\\qkd_host_record_port_mu\\MU=s32'00000000000000000000000000000001",
+     "parameters": {
+      "MU": "00000000000000000000000000000001",
+      "MUT": "00000000000000000000000000000000"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_cdc_hi",
+   "module": "qkd_hr_cdc_hi",
+   "members": [
+    "g_mu.u_rank.g_mu.u_qm.u_cx",
+    "g_mu.u_rank.g_mu.u_qm.u_hx"
+   ],
+   "pins": 1174,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_qm.u_cx",
+     "type": "$paramod$95b074b55a02fd01b829d88fcd3a8455efcbe0b2\\ot_link_afifo",
+     "parameters": {
+      "AW": "00000000000000000000000000000100",
+      "RCOPY": "00000000000000000000000000000000",
+      "SAMECLK": "00000000000000000000000000000000",
+      "SYNC": "00000000000000000000000000000010",
+      "W": "00000000000000000000000001000000"
+     }
+    },
+    {
+     "path": "g_mu.u_rank.g_mu.u_qm.u_hx",
+     "type": "$paramod$517ea3da8745a04a60db54d0e10096344cfac52f\\ot_link_afifo",
+     "parameters": {
+      "AW": "00000000000000000000000000000100",
+      "RCOPY": "00000000000000000000000000000000",
+      "SAMECLK": "00000000000000000000000000000000",
+      "SYNC": "00000000000000000000000000000010",
+      "W": "00000000000000000000001000000010"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_cdc_ci",
+   "module": "qkd_hr_cdc_ci",
+   "members": [
+    "g_mu.u_rank.g_mu.u_qm.u_ox",
+    "g_mu.u_rank.g_mu.u_qm.u_rx"
+   ],
+   "pins": 1103,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_qm.u_ox",
+     "type": "$paramod$6abb1e543a943bbc6df1bac363c19793bec025af\\ot_link_afifo",
+     "parameters": {
+      "AW": "00000000000000000000000000000100",
+      "RCOPY": "00000000000000000000000000000000",
+      "SAMECLK": "00000000000000000000000000000000",
+      "SYNC": "00000000000000000000000000000010",
+      "W": "00000000000000000000000100100001"
+     }
+    },
+    {
+     "path": "g_mu.u_rank.g_mu.u_qm.u_rx",
+     "type": "$paramod$80ae3a66fba3fa213a182f95ff2382b6173ea840\\ot_link_afifo",
+     "parameters": {
+      "AW": "00000000000000000000000000000100",
+      "RCOPY": "00000000000000000000000000000000",
+      "SAMECLK": "00000000000000000000000000000000",
+      "SYNC": "00000000000000000000000000000010",
+      "W": "00000000000000000000000100000000"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_phy_pad",
+   "module": "qkd_hr_phy_pad",
+   "members": [
+    "g_mu.u_rank.g_mu.u_phy.u_pad"
+   ],
+   "pins": 1577,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_phy.u_pad",
+     "type": "$paramod\\qkd_host_rx_pad5\\MUT=s32'00000000000000000000000000000000",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_phy_adp_0",
+   "module": "qkd_hr_phy_adp",
+   "members": [
+    "g_mu.u_rank.g_mu.u_adapter.g_slice[0].u_slice"
+   ],
+   "pins": 560,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_adapter.g_slice[0].u_slice",
+     "type": "$paramod\\qfd_link_adp128\\MUT=s32'00000000000000000000000000000000",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_phy_adp_1",
+   "module": "qkd_hr_phy_adp",
+   "members": [
+    "g_mu.u_rank.g_mu.u_adapter.g_slice[1].u_slice"
+   ],
+   "pins": 560,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_adapter.g_slice[1].u_slice",
+     "type": "$paramod\\qfd_link_adp128\\MUT=s32'00000000000000000000000000000000",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_phy_adp_2",
+   "module": "qkd_hr_phy_adp",
+   "members": [
+    "g_mu.u_rank.g_mu.u_adapter.g_slice[2].u_slice"
+   ],
+   "pins": 560,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_adapter.g_slice[2].u_slice",
+     "type": "$paramod\\qfd_link_adp128\\MUT=s32'00000000000000000000000000000000",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_phy_adp_3",
+   "module": "qkd_hr_phy_adp",
+   "members": [
+    "g_mu.u_rank.g_mu.u_adapter.g_slice[3].u_slice"
+   ],
+   "pins": 560,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_adapter.g_slice[3].u_slice",
+     "type": "$paramod\\qfd_link_adp128\\MUT=s32'00000000000000000000000000000000",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_phy_adp_4",
+   "module": "qkd_hr_phy_adp",
+   "members": [
+    "g_mu.u_rank.g_mu.u_adapter.g_slice[4].u_slice"
+   ],
+   "pins": 560,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_adapter.g_slice[4].u_slice",
+     "type": "$paramod\\qfd_link_adp128\\MUT=s32'00000000000000000000000000000000",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_phy_adp_5",
+   "module": "qkd_hr_phy_adp",
+   "members": [
+    "g_mu.u_rank.g_mu.u_adapter.g_slice[5].u_slice"
+   ],
+   "pins": 560,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_adapter.g_slice[5].u_slice",
+     "type": "$paramod\\qfd_link_adp128\\MUT=s32'00000000000000000000000000000000",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_phy_adp_6",
+   "module": "qkd_hr_phy_adp",
+   "members": [
+    "g_mu.u_rank.g_mu.u_adapter.g_slice[6].u_slice"
+   ],
+   "pins": 560,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_adapter.g_slice[6].u_slice",
+     "type": "$paramod\\qfd_link_adp128\\MUT=s32'00000000000000000000000000000000",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  },
+  {
+   "inst": "host__qkd_hr_phy_adp_7",
+   "module": "qkd_hr_phy_adp",
+   "members": [
+    "g_mu.u_rank.g_mu.u_adapter.g_slice[7].u_slice"
+   ],
+   "pins": 560,
+   "native_parameters": [
+    {
+     "path": "g_mu.u_rank.g_mu.u_adapter.g_slice[7].u_slice",
+     "type": "$paramod\\qfd_link_adp128\\MUT=s32'00000000000000000000000000000000",
+     "parameters": {
+      "MUT": "00000000000000000000000000000000"
+     }
+    }
+   ],
+   "uncovered_boundary": 0
+  }
+ ],
+ "wiring_mutant": "caught",
+ "qualified_child_phase_join": "required independently; no timing or cycle waiver"
+}

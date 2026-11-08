@@ -1,0 +1,84 @@
+{
+ "qualification": "unqualified exact hierarchical extraction model; synthesis sizing only",
+ "source_hierarchy": "host_elab.json recovered from original inverse_inputs.tar",
+ "source_module": "qkd_host_root_admission_obsx_bo1_c45",
+ "native_ports": 133,
+ "native_port_bits": 6213,
+ "standard_cells": 17500,
+ "blackbox_instances": 22,
+ "blackbox_types": [
+  [
+   "ot_kv_fdi_join_rf",
+   1
+  ],
+  [
+   "qkd_hr_cdc_ch",
+   1
+  ],
+  [
+   "qkd_hr_cdc_ci",
+   1
+  ],
+  [
+   "qkd_hr_cdc_hi",
+   1
+  ],
+  [
+   "qkd_hr_cdc_pc",
+   1
+  ],
+  [
+   "qkd_hr_core_guard",
+   1
+  ],
+  [
+   "qkd_hr_core_order",
+   1
+  ],
+  [
+   "qkd_hr_core_peer",
+   1
+  ],
+  [
+   "qkd_hr_core_prompt",
+   1
+  ],
+  [
+   "qkd_hr_core_queue",
+   1
+  ],
+  [
+   "qkd_hr_core_rx",
+   1
+  ],
+  [
+   "qkd_hr_core_tx",
+   1
+  ],
+  [
+   "qkd_hr_ingest_eng",
+   1
+  ],
+  [
+   "qkd_hr_phy_adp",
+   8
+  ],
+  [
+   "qkd_hr_phy_pad",
+   1
+  ]
+ ],
+ "standard_cell_area_um2": 2594.46726,
+ "sequential_area_um2": 1413.3852,
+ "FDI_latency_delta_cycles": 1,
+ "outer_abi_preserved": true,
+ "existing_HR_children": 21,
+ "new_FDI_model_instances": 1,
+ "synthesis": "Yosys ASIC mapped count succeeded",
+ "aggregate_make_exit": 2,
+ "aggregate_failure": "post-synthesis synth_odb.tcl requires physical LEF for model children; no unqualified physical views were created",
+ "not_final_parent_fit": "landing/station logic, actual parent floorplan, clock/reset trees and signed FDI view are still required",
+ "source_profile": "native_host_profile.sv preserves all133ports and guarded production6parameter profile",
+ "production_adoption": false,
+ "source_profile_sha256": "55aa8a1afef182d0f174c21631d41f0d8c9a7d49b3e28d7f905d9d0f9c5cb0ec"
+}
