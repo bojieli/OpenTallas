@@ -149,3 +149,9 @@ Open: su31pv1 ~10M (separate).
   LAUNCHED pathfinding form ot_s81_rck_rxb_vD_m7: vC run copied through 4_cts (1_synth.v md5 36d1b3a6 unchanged; make -n starts at 5_1_grt), MAX_ROUTING_LAYER M7 only. oth-ubuntu-1459481-1794147725 finish. It NEEDS an M7 grant over the RXB slot (plan event) to count.
   M6-only REDESIGN (estimate): pre-route clk and rst_n as M6 feeds from the dchn W edge (x 220.3, y about 112) to the centre pins (x 358.5): 2 wires x 138 um M6 plus V5, about 3-5 ps of wire, with a 2-track keep-out. It is applied as a pre-GRT special route so FastRoute only sees the side entry. Effort: one kit tcl hook plus a GRT diagnostic, about 2 h. Built only if M7 is refused.
   Also: TX vE GRT at extra iteration 14/30. RXS vC_ac GRT extra iteration 6/30. RXS vD in floorplan. RXS vC LEC still running.
+
+- [S81-TYPES-7-RCK -> COORD, S81-TYPES-7, DIE-S81-79] 2026-11-08 06:24 PST RESULT/LAUNCHED RXS vD placed.
+  Placed TT probe: -40.09 worst, 5 endpoints. vC was +38.33. Worst path: ld2[0][0] high fanout through a BUFx2 chain 3 deep (fanout 19/24/24, about 210 ps), then the XNOR tree into u_bm.dz. This is placement-stage buffering, which repair_timing can upsize.
+  Density render viewed: even, 40-60%, N-face strip 0.76, fanout_spread 418, no moat.
+  LAUNCHED vD finish oth-ubuntu-1502181-1794147863 (it reuses the vD LEC proof).
+  Still running: TX vE GRT extra iteration 18/30; RXS vC_ac GRT 18/30; RXB vD_m7 GRT; RXS vC LEC.
