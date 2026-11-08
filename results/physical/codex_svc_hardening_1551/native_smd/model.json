@@ -1,0 +1,99 @@
+{
+ "status": "PRIVATE_CHILD_SIZING_ONLY",
+ "master": "dsfd_su_t_smd",
+ "instances_per_rs": 8,
+ "ports": [
+  [
+   "input",
+   "ck",
+   1
+  ],
+  [
+   "input",
+   "rst",
+   1
+  ],
+  [
+   "input",
+   "cfg_p",
+   3
+  ],
+  [
+   "input",
+   "i_pv",
+   1
+  ],
+  [
+   "input",
+   "i_pa",
+   64
+  ],
+  [
+   "input",
+   "i_dv",
+   1
+  ],
+  [
+   "input",
+   "i_den",
+   32
+  ],
+  [
+   "input",
+   "i_csv",
+   1
+  ],
+  [
+   "input",
+   "i_csi",
+   5
+  ],
+  [
+   "input",
+   "i_csd",
+   64
+  ],
+  [
+   "output",
+   "o_ov",
+   1
+  ],
+  [
+   "output",
+   "o_o",
+   32
+  ],
+  [
+   "output",
+   "o_f",
+   1
+  ]
+ ],
+ "port_bits": 207,
+ "input_bits": 173,
+ "output_bits": 34,
+ "added_data_cycles": 0,
+ "added_reset_cycles": 0,
+ "added_fault_copy_ff": 1,
+ "production_params": {
+  "LPH": 16,
+  "LM": 5,
+  "LA": 4,
+  "TAIL": 64
+ },
+ "throughput": "2 FP32 PV lanes per valid cycle to one packed2xBF16 output,32 beats/head",
+ "legacy_area_proxy_um2": 7013,
+ "outline_candidate_um": [
+  146.88,
+  146.88
+ ],
+ "parent_fit": "one candidate child fits prior174.96bay; all8slots and full cut not qualified",
+ "memory_ports": "native cos/sin register arrays4x32 each; no changed bandwidth",
+ "boundary_bits_per_valid_cycle": 64,
+ "track_estimate": "207signalbits onM5 at1.056um pitch split north/south fits155.52 faces; below5percent track use",
+ "parent_adoption": "NO_POR_NO_PARENT_REBUILD",
+ "measured_initial_ff_mapped_cells": 57705,
+ "measured_initial_post_eliminate_area_um2": 5756,
+ "first_probe_scope": "FF mapped sizing proxy, no TT STA qualification",
+ "extra_exactness_coverage": "skip coefficient delivery on odd epochs to assert sticky fault; independent fault-mask mutant"
+}

@@ -2489,6 +2489,18 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             schema="opentallas.component_proof_reset.v1", cycles=4,
             scope="SOURCE_PROOF_ONLY", release_eligible=False,
             physical_reset_qualification=False, die_contract_staged=False), indent=1) + "\n")
+    elif (source_profile or {}).get("private_reset_contract_file"):
+        # Explicit private component proposal. Same strict receipt/module consumer;
+        # this grants no canonical die-module adoption or release authority.
+        if source_profile.get("release_eligible") is not False:
+            raise ValueError("private component reset contract requires nonrelease profile")
+        private_reset = (REPO / source_profile["private_reset_contract_file"]).resolve()
+        if not private_reset.is_relative_to(REPO.resolve()) or sha(private_reset) != source_profile.get("private_reset_contract_sha256"):
+            raise ValueError("private component reset contract path/hash changed")
+        reset_contract = kit_reset_contract.stage(kd, design, private_reset, required_source=True)
+        if reset_contract is None:
+            raise ValueError("private component reset contract does not list this top")
+        reset_contract["scope"] = "PRIVATE_COMPONENT_PROPOSAL_NOT_CANONICAL"
     else:
         reset_contract = kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["hbm"], required_source=True)
     # Optional source-pinned placement/model assets are assembled before the
