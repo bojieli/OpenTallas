@@ -2467,14 +2467,24 @@ def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None, unused_
                      f"rrl:{r['kind']}{r['depth']}c")
     lkh = lockup_hops(T)
     if lkh:
-        # RLK-1108 latch form: each hop lockup latch FIRM at the midpoint of its two planned relay sites
-        if native_paths is not None or native_nodes is not None:
-            raise ResetError("reset.relay_lockup latch form is not supported on a captured native reset contract")
+        # RLK-1108 latch form: each hop lockup latch FIRM at the midpoint of its two relay sites (planned, or the
+        # verified native sites of a bound tree; gen_phys.install_bound_native_reset records the latch hierarchy)
+        if (native_paths is None) != (native_nodes is None):
+            raise ResetError("reset.relay_lockup latch form on a native contract needs both exact paths and nodes")
         xy = {r["q"]: r["xy"] for r in T["relays"]}
+        cap = {r["name"]: r["xy"] for r in T["relays"]}
+        if native_nodes is not None:
+            byname = {r["name"]: r for r in native_nodes}
+            for r in T["relays"]:
+                if r["name"] in byname:
+                    xy[r["q"]] = cap[r["name"]] = byname[r["name"]]["xy"]
+            missing = [lockup_latch_names(r["name"])[0] for r in lkh if lockup_latch_names(r["name"])[0] not in native_paths]
+            if missing:
+                raise ResetError(f"native reset latch form: hop latches without a verified hierarchy {missing[:5]}")
         t.append(LOCKUP_PLACE_TCL)
         for r in lkh:
             li, lq = lockup_latch_names(r["name"])
-            (x0, y0), (x1, y1) = xy[r["d"]], r["xy"]
+            (x0, y0), (x1, y1) = xy[r["d"]], cap[r["name"]]
             t.append(f"rtr_place_lk {lq} {{*{li}[./]*}} {(x0 + x1) / 2:.3f} {(y0 + y1) / 2:.3f} rlk:{r['kind']}{r['depth']}")
     if T.get("core_resets") and native_nodes is None:
         terminals = " ".join(r["q"] for r in T["relays"] if r["depth"] == T["depth"])
@@ -2533,7 +2543,7 @@ def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None, unused_
         for name, path in native_paths.items():
             exact = "[./]".join(path.split(".")) + "[./]*"
             text = text.replace("*" + name + "[./]*", exact)
-        if re.search(r"^rtr_place(?:_opt)?\s+\S+\s+\{\*", text, re.M):
+        if re.search(r"^rtr_place(?:_opt|_lk)?\s+\S+\s+\{\*", text, re.M):
             raise ResetError("native reset placement contains an unverified wildcard instance")
     return text
 
