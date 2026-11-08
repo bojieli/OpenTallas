@@ -1312,7 +1312,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
     return {"die": die, "item": item, "kind": kind, "event": d["event"], "plan": d["plan"],
             "gen_host": pick_gen_host(cfg, die, take=place_mem_gb(cfg, die, item),
-                                      threads=int(opt(cfg, die, "place_threads"))),
+                                      threads=int(opt(cfg, die, "place_threads")), item=item),
             "src": d["src"], "src_sha": d.get("src_sha", ""), "queue_src": d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": d.get("kit_rtl") or {},
             # next captured cohort; old worker specs stay unchanged.  Die option canonical_topology_prepare false:
@@ -1680,10 +1680,12 @@ def host_score(v, disk_low=None):
     return s * 0.25 if (busy and s > 0) else s
 
 
-def gen_hosts(cfg, die):
+def gen_hosts(cfg, die, item=None):
     """KW-FIX-4 11-03 (COORD epyc4 fill): die option gen_hosts = hosts that hold the die's src/plan/kit_rtl inputs at
     the SAME paths; a new attempt generates, stages and (async) PLACEs on the one with the most free ot-run admits, so
-    a fresh host fills instead of every kit pinning to the one configured gen host.  Default: [gen_host] (unchanged)."""
+    a fresh host fills instead of every kit pinning to the one configured gen host.  Default: [gen_host] (unchanged).
+    KW-FIX-35-RD 11-08: with item, a host that lacks one of that item's own inputs (item_env / type_args paths,
+    cfg _item_incomplete) is left out while another host stays."""
     d = cfg["dies"][die]
     hs = [h for h in (d.get("gen_hosts") or []) if h]
     hs = hs if d.get("gen_host") in hs else [d["gen_host"]] + hs
@@ -1699,6 +1701,9 @@ def gen_hosts(cfg, die):
     # (workroot_low) is no gen host for the die while another host stays; with none left the list is as before and
     # load_hold() holds the die's new rows
     low = cfg.get("_workroot_low") or {}
+    imiss = cfg.get("_item_incomplete") or {}
+    if item:
+        hs = [h for h in hs if item not in (imiss.get(h) or {}).get(die, {})] or hs
     return ([h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {}) and die not in low.get(h, {})]
             or [h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {})]
             or [h for h in hs if lane not in marked.get(h, ())] or [d["gen_host"]])
@@ -1736,6 +1741,72 @@ def src_inputs(cfg, die):
     return trees, files
 
 
+# KW-FIX-35-RD 11-08 (COORD 09:4x RESTAGE-DEPS): 23 S81 rows restaged / generated on epyc6 failed kit_rtl with
+# FileNotFoundError die-s81-70/kvov/bind/bind_report.json.  The kit_rtl script (kw35/t45ov wrapper) exports
+# S81_BIND_OUT=die-s81-70/kvov/bind, a symlink tree into codex-wave-bind-1106/s81_emitted_v2 + s81_ready_v3, absent on
+# epyc6; the probe tested only the script file itself.  The same day 18 HBM rows failed on epyc6 because the bind_x2
+# bind.f (read on the hub, where bind_x2 does not exist) named composed_rtl files only on epyc4.  DEEP inputs are
+# therefore checked ON EACH GEN HOST: every absolute path in kit_rtl (script, asbuilt, bind_out, ...), gen_args and the
+# /srv paths a kit_rtl .sh script names (one level), each resolved there (test -e follows links), a directory also
+# for broken symlinks below it (find -L, under a lane sub-dir only) and for every absolute source its bind.f names.  item_env / type_args paths
+# are the item's own inputs: a host missing one is no gen host for that item (cfg _item_incomplete).
+DEEP_LINK_DEPTH = 4
+ABS_RE = re.compile(r"(?:^|(?<=[\s=,:]))(/[A-Za-z0-9_.+-][^\s\"',;:=()$]*)")
+
+
+def abs_paths(v):
+    """absolute paths in a config value (str / list / dict values), e.g. --clock-landing /x.json, OT_X=/y"""
+    out = []
+    if isinstance(v, str):
+        out += [m.rstrip(".") for m in ABS_RE.findall(v) if len(m) > 1]
+    elif isinstance(v, dict):
+        for x in v.values():
+            out += abs_paths(x)
+    elif isinstance(v, (list, tuple)):
+        for x in v:
+            out += abs_paths(x)
+    return out
+
+
+def deep_inputs(cfg, die):
+    """the die's absolute kit_rtl / gen_args inputs, checked on each gen host (see _deep_probe_cmd)"""
+    d = cfg["dies"][die]
+    kr = d.get("kit_rtl") if isinstance(d.get("kit_rtl"), dict) else {}
+    ps = abs_paths({k: v for k, v in kr.items() if not str(k).startswith("note")}) + abs_paths(d.get("gen_args") or [])
+    return list(dict.fromkeys(ps))
+
+
+def item_inputs(cfg, die):
+    """{item: [absolute paths]} named by the die's item_env and type_args for that item"""
+    d = cfg["dies"][die]
+    out = {}
+    for key in ("item_env", "type_args"):
+        for item, v in ((d.get(key) or {}) if isinstance(d.get(key), dict) else {}).items():
+            ps = abs_paths(v)
+            if ps:
+                out.setdefault(item, [])
+                out[item] += [p for p in ps if p not in out[item]]
+    return out
+
+
+def _deep_probe_cmd(paths):
+    """shell: per path 'M <p>' (absent) or 'D <p> <what>' (a broken link below it, a missing bind.f source, or a path a
+    .sh script names that fails the same test); silent when whole"""
+    q = shlex.quote
+    fn = ("ck() { p=$1; if [ ! -e \"$p\" ]; then echo \"M $p\"; return; fi; "
+          # a link / bind.f scan only below a lane's sub-dir (never a lane root or claude/ itself: size and noise)
+          "case \"$p\" in /srv/*/claude/*/*/*) ;; *) return;; esac; "
+          "if [ -d \"$p\" ]; then "
+          f"b=$(find -L \"$p\" -maxdepth {DEEP_LINK_DEPTH} -type l -print 2>/dev/null | head -1); "
+          "[ -n \"$b\" ] && echo \"D $p $b\"; "
+          "if [ -f \"$p/bind.f\" ]; then grep '^/' \"$p/bind.f\" | while read -r s; do [ -e \"$s\" ] || echo \"D $p $s\"; "
+          "done | head -3; fi; fi; }; "
+          "ckd() { ck \"$1\"; case \"$1\" in *.sh) [ -f \"$1\" ] && "
+          "for s in $(grep -o '/srv/opentallas-scratch[^[:space:]\"'\"'\"';)$]*' \"$1\" | sort -u); do "
+          "ck \"$s\" | sed \"s#^M \\(.*\\)#D $1 \\1#; s#^D [^ ]* \\(.*\\)#D $1 \\1#\"; done;; esac; }")
+    return "; ".join([fn] + [f"ckd {q(p)}" for p in paths] + ["true"])
+
+
 def _src_probe_cmd(trees, files):
     q = shlex.quote
     parts = []
@@ -1767,36 +1838,49 @@ def src_incomplete(AP, cfg, run=None):
         for h in list(d.get("gen_hosts") or []) + [d.get("gen_host")]:
             if h:
                 need.setdefault(h, set()).add(die)
-    counts, missing = {}, {}
+    counts, missing, deep = {}, {}, {}
     for h, ds in sorted(need.items()):
         trees = sorted({t for die in ds for t in src_inputs(cfg, die)[0]})
         files = sorted({f for die in ds for f in src_inputs(cfg, die)[1]})
+        dps = sorted({p for die in ds for p in deep_inputs(cfg, die)}
+                     | {p for die in ds for ps in item_inputs(cfg, die).values() for p in ps})
         try:
-            rc, o = run(h, _src_probe_cmd(trees, files))
+            rc, o = run(h, _src_probe_cmd(trees, files) + ("; " + _deep_probe_cmd(dps) if dps else ""))
         except Exception:
             continue
         if rc != 0:
             continue                                   # unreachable / failed probe = unknown, never dropped
-        counts[h], missing[h] = {}, set()
+        counts[h], missing[h], deep[h] = {}, set(), {}
         for ln in (o or "").splitlines():
             f = ln.split()
             if len(f) == 3 and f[0] == "T" and f[2].isdigit():
                 counts[h][f[1]] = int(f[2])
             elif len(f) == 2 and f[0] == "M":
                 missing[h].add(f[1])
+            elif len(f) == 3 and f[0] == "D":
+                deep[h].setdefault(f[1], f[2])
     best = {}
     for h, c in counts.items():
         for t, n in c.items():
             best[t] = max(best.get(t, 0), n)
-    out = {}
+    out, items = {}, {}
     for h in counts:
         for die in sorted(need[h]):
             trees, files = src_inputs(cfg, die)
             why = [f"{t} {counts[h].get(t, 0)}/{best.get(t, 0)} files" for t in trees
                    if best.get(t, 0) and counts[h].get(t, 0) < SRC_MIN_FRAC * best[t]]
             why += [f"{f} missing" for f in files if f in missing[h]]
+            why += [f"{p} missing" if p in missing[h] else f"{p}: {deep[h][p]} missing"
+                    for p in deep_inputs(cfg, die) if p in missing[h] or p in deep[h]]
             if why:
                 out.setdefault(h, {})[die] = "; ".join(why)
+            for item, ps in item_inputs(cfg, die).items():
+                iw = [f"{p} missing" if p in missing[h] else f"{p}: {deep[h][p]} missing"
+                      for p in ps if p in missing[h] or p in deep[h]]
+                if iw:
+                    items.setdefault(h, {}).setdefault(die, {})[item] = "; ".join(iw)
+    if isinstance(cfg, dict):
+        cfg["_item_incomplete"] = items
     return out
 
 
@@ -1954,14 +2038,15 @@ def load_hold(cfg, die, *names):
         + (f" work_root {low[h][die]} GB" if die in low.get(h, {}) else "") for h, v in rows)
 
 
-def pick_gen_host(cfg, die, take=0, threads=0):
+def pick_gen_host(cfg, die, take=0, threads=0, item=None):
     """the gen host for a new attempt (see gen_hosts); with no cached ot-run status the configured gen_host.  take =
     GB charged to the picked host's cached admits so one tick's burst spreads once that host's headroom is used.
     SCHED-1 11-07: only hosts with room (host_room) while one exists, the least loaded one whose admits minus queue fit
     take, else the best host_score; threads = load charged to the pick, so one tick's burst stops at the cap."""
-    hs, stt, hub = gen_hosts(cfg, die), cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
+    hs, stt, hub = gen_hosts(cfg, die, item), cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
     if not stt:
-        return cfg["dies"][die]["gen_host"]
+        d = cfg["dies"][die]
+        return d["gen_host"] if (d["gen_host"] in hs or not hs) else hs[0]      # KW-FIX-35-RD: item inputs
     key = lambda h: stt.get("localhost" if h == hub else h)
     if len(hs) < 2:
         best = hs[0] if hs else cfg["dies"][die]["gen_host"]      # KW-FIX-30: the one host gen_hosts left
@@ -2170,7 +2255,7 @@ def restage_waiters(AP, cfg, st, notices):
             # which could help admission).  A move is for a waiter pinned to its gen host: an earlier stage, or a pinned client.
             mobile = spill and svc0.get("launch") == "launched" and "--hosts" not in (svc0.get("argv") or [])
             if multi and not young and not mobile:
-                best = pick_gen_host(cfg, die)
+                best = pick_gen_host(cfg, die, item=r.get("item"))       # KW-FIX-35-RD: a target with its inputs
                 v = row(best) or {}
                 if best != g and (host_room(v, die_disk_low(cfg, die, best, v) if v else None)
                                   or cfg.get("load_hold") is False) and (
@@ -3273,7 +3358,7 @@ def resume_source(AP, prev):
 def bind_restage(cfg, die, prev, sp):
     """the attempt after a RESTAGE runs on the host the move chose, while that host still holds the die's gen inputs"""
     moved = prev.pop("restage_host", None)
-    if moved and moved in gen_hosts(cfg, die):
+    if moved and moved in gen_hosts(cfg, die, sp.get("item")):
         sp["gen_host"] = moved
 
 
