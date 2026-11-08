@@ -20,3 +20,18 @@ Fix split parent candidate asbuilt and rooted physical macro mapping, pilot full
 - E4 own PHY bind was memory queued and had not begun. Cancelled exact own controller3620525, staged identical isolated inputs on intel1 (inputs checked present, scratch379GB), launched controller3627766 via ot-run --hosts intel1. Latest log /tmp/codex-hbm-phy-0222/bind_intel1.otrun.log. Keep E4 staging until retention review; no deletion.
 - KCLS class(l) source preserved on hub codex/hbm-ista-respread-0222@1ee657291e. 26 focused tests PASS; sorted predecessor per-file test receipts each242 lines identical (TIP-ONLY0). Plain gen processes still CPU-active; provisional overlay FAIL newly collected: NW xload_cl2_bdring bsel25 missing directions; NE same + q2n2_vm_core writer_kq4...8645 missing directions. These remain FAIL; no physical release.
 - XLOAD provisional direction cause isolated by child: packed dimension contains parentheses, prov_view declaration regex rejects before width stripping. Fix in progress; q2n2 exact-name source alias diagnosis in progress.
+
+## 02:41 PST progress
+- Projection branch hub tip86ada8b95d. Producer manifest absent => original explicit paths stay unmapped for preflight; unrelated kits gain no producer-file requirement. 13 focused tests still PASS.
+- Intel1 bind admission request16GB (existing reach strict bind measured7.4GB), controller3630221; prior own24GB waiter3627766 cancelled before work. No guard changes and no other lanes stopped.
+- New shared provisional-direction class fix READY: hub codex/hbm-prov-dir-0222@8a7de434e0, base289149dea5. Packed dimension stripping fixes xload bsel25; exact recipe files_at commit:path lookup resolves q2n2 header40 ports including writer_kq4. 12 focused tests PASS incl wrong-top negative. Actual both-hub provisional dry starting under child; no P&R or POR change.
+
+## 02:46 PST progress
+- PHY bind first admitted on intel1 and stopped before binding because own sparse tree lacked tools/die_port_bind.py. Original bind.log/rc1 retained. Exact tracked file supplied; no design/constraint change.
+- Fresh bind2 ADMITTED immediately on E6 unit oth-ubuntu-3257944-1794134408, controller3642132, --mem16 --threads2. Guard admits307GB, source staging331MB, scratch73GB; no floor/guard override. Path E6 /srv/opentallas-scratch2/claude/codex-hbm-phy-0222/{bind2,bind2.log,bind2.rc}. Own source includes projection86ada8b95d and prov-dir8a7de434e0 for dry only. No P&R launched.
+- Full next dry script staged dry_p37.sh: kit-rtl -> prepare-stations -> provisional -> gen phys -> kit_preflight --contract, first NE_io only. Launch after strict bind rc0. No auto route and no batch release.
+
+## 02:49 PST progress
+- E6 bind2 stopped before emit on one remaining own sparse-source prerequisite: results/hbm_bind_2_1029/dead_qlate_proof.json. Original bind2.log/rc1 retained. Supplied exact proof and its only declared source dependency ot_hdc_delay.sv from unchanged asbuilt base, with byte-equality guard on any existing file; no proof/constraint relaxation.
+- Fresh bind3 admitted E6oth-ubuntu-3293676-1794134491 immediately; controller3646099, Python3293749 CPU97%, RSS3.5GB at35s. New output bind3/log/rc; full next dry script now targets bind3. Actual binder work is progressing.
+- Existing hub-gen is also progressing: NE wrote fresh ft_bit_sites.tcl2.06MB and ft_track_use.json at02:39; not a hung job. No old process stopped.
