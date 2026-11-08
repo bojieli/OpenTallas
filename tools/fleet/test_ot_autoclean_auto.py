@@ -475,6 +475,24 @@ class TestSafety(Base):
         self.assertIn("OFF switch", self.out)
         self.assertTrue(os.path.exists(os.path.join(b, "5_route.odb")))
 
+    def test_docker_container_gone_between_ps_and_inspect(self):
+        k, b = self.kit_b("dkr/k")
+        with open(os.path.join(self.ddir, "ids"), "w") as f:
+            f.write("abc123\n")
+        gone = os.path.join(self.ddir, "gone")
+        with open(gone, "w") as f:
+            f.write('#!/bin/sh\ncase "$1" in ps) echo abc123;; inspect) echo "error: no such object: abc123" >&2; exit 1;; esac\n')
+        self.docker = "sh " + gone
+        self.assertEqual(self.run_job(), 0)
+        self.assertFalse(os.path.exists(os.path.join(b, "5_route.odb")))
+        bad = os.path.join(self.ddir, "bad")
+        with open(bad, "w") as f:
+            f.write('#!/bin/sh\ncase "$1" in ps) echo abc123;; inspect) echo "permission denied" >&2; exit 1;; esac\n')
+        k2, b2 = self.kit_b("dkr/k2")
+        self.docker = "sh " + bad
+        self.assertEqual(self.run_job(), 2)
+        self.assertTrue(os.path.exists(os.path.join(b2, "5_route.odb")))
+
     def test_never_names(self):
         job = ac.Job.__new__(ac.Job)
         with self.assertRaises(OSError):

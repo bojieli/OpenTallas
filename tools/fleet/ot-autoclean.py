@@ -492,7 +492,10 @@ class Live:
                 m = subprocess.run(dk + ["inspect", "-f", "{{range .Mounts}}{{.Source}} {{end}}"] + ids,
                                    capture_output=True, text=True, timeout=300)
                 if m.returncode:
-                    raise RuntimeError(f"docker inspect failed: {m.stderr.strip()[:200]}")
+                    # a container removed between ps and inspect has no mounts: only that error is tolerated
+                    errs = [ln for ln in m.stderr.splitlines() if ln.strip()]
+                    if not errs or any("no such object" not in ln.lower() for ln in errs):
+                        raise RuntimeError(f"docker inspect failed: {m.stderr.strip()[:200]}")
                 self.mounts = [os.path.normpath(x) for x in m.stdout.split()]
         return self
 
