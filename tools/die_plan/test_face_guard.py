@@ -34,6 +34,26 @@ def test_handwritten_pass():
     assert r["verdict"] == "PASS" and r["ok"] == 4, r
 
 
+@pytest.mark.parametrize("clock_name", ["clk", "clk_t0", "clk_c2"])
+def test_planned_clock_matches_netlist_skip(clock_name):
+    net = NET_OK.replace("clk", clock_name)
+    pins = [dict(bus=b, bit=i) for b in ("a", "o") for i in range(2)]
+    pins.append(dict(bus=clock_name, bit=None, clock=True))
+    r = face_guard.guard(net, pins=pins)
+    assert r["verdict"] == "PASS" and r["planned_bits"] == 4, r
+    missing = face_guard.guard(net, pins=pins + [dict(bus="absent", bit=0)])
+    assert missing["fail_counts"].get("missing_port") == 1, missing
+    assert missing["missing_ports"] == 1 and missing["planned_bits"] == 5, missing
+
+
+def test_planned_pin_uses_custom_skip_expression():
+    net = NET_OK.replace("clk", "special_clock")
+    pins = [dict(bus=b, bit=i) for b in ("a", "o") for i in range(2)]
+    r = face_guard.guard(net, pins=pins + [dict(bus="special_clock", bit=None)],
+                         skip_re=r"^special_clock$")
+    assert r["verdict"] == "PASS" and r["planned_bits"] == 4, r
+
+
 def test_handwritten_failure_classes():
     merged = NET_OK.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));", "INVx3_ASAP7_75t_R _3_ (.A(_0_), .Y(o[1]));")
     assert "shared" in face_guard.guard(merged)["fail_counts"]
