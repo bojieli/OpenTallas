@@ -8135,19 +8135,19 @@
   "ot_hbm_su_pg_lane_exp_x_core": {
    "status": "KNOWN",
    "outline_um": [
-    319.68,
+    328.32,
     207.36
    ],
    "macros": [
     {
      "name": "u_core.u_bank.u_data.g_read[0].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "R0",
+     "orient": "MY",
      "rect_um": [
-      34.56,
-      20.52,
-      129.384,
-      61.584
+      19.44,
+      30.96,
+      114.264,
+      72.024
      ]
     },
     {
@@ -8155,20 +8155,20 @@
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      190.08,
-      20.52,
-      284.904,
-      61.584
+      211.68,
+      30.96,
+      306.504,
+      72.024
      ]
     },
     {
      "name": "u_core.u_bank.u_data.g_read[2].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "R0",
+     "orient": "MY",
      "rect_um": [
-      34.56,
+      19.44,
       83.16,
-      129.384,
+      114.264,
       124.224
      ]
     },
@@ -8177,21 +8177,21 @@
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      190.08,
+      211.68,
       83.16,
-      284.904,
+      306.504,
       124.224
      ]
     },
     {
      "name": "u_core.u_bank.u_data.g_read[4].u_m",
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
-     "orient": "R0",
+     "orient": "MY",
      "rect_um": [
-      34.56,
-      145.8,
-      129.384,
-      186.864
+      19.44,
+      135.36,
+      114.264,
+      176.424
      ]
     },
     {
@@ -8199,15 +8199,15 @@
      "master": "ot_sram_1r1w_128x256_m1_r2c2",
      "orient": "R0",
      "rect_um": [
-      190.08,
-      145.8,
-      284.904,
-      186.864
+      211.68,
+      135.36,
+      306.504,
+      176.424
      ]
     }
    ],
    "channel_rule_um": 10.8,
-   "basis": "HBM-REFORM-A3 d44v part 18: 2 x 3 grid, W/E bands 30.2, 60.7, 30.4, row channels 21.576; clock entry in the first row channel"
+   "basis": "HBM-REFORM-A3 d44v part 18: 2 x 3 grid, W/E bands 30.2, 60.7, 30.4, row channels 21.576; clock entry in the first row channel | expx328_1107 (= HBM-CONS-2/SUK part55, COORD 11-06 22:0x (6) + 22:35; COORD 11-07 23:01 (4)(i)): edge columns W(MY)/E(R0), logic centre, >=15 um on every pin face"
   },
   "ot_hbm_su_pg_lane_full_x_core": {
    "status": "KNOWN",
