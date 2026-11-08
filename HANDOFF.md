@@ -3427,3 +3427,7 @@ CODEX: 2026-11-07 17:04 PST explicit Claude reset, parked newwork/all9leads; hea
 - 11-08 00:48 COORD: hourly 00:2x, count 222 (+3 S81 types). Main 730fe78cb85 (13 branches landed since 23:2x). HBM +3 owed via PEV-b/OPSA replays (DIE-HBM-91). New lanes: S81-SVCRS-1 (svc_rs split), QUEUE-BAL-1 (epyc5 waiters 34->13), AUTOCLEAN-9 (fleet disks), DIE-HBM-91, HBM-HARD-5, ROOT-MERGE-51.
 - 11-08 01:47 COORD: hourly 01:2x, count 225 (+3: S81 t6/t8/t38-class stations, HEAD ctl_n). HBM +3 landed (main 85fc2d62471), rescan running. New lanes: KW-FIX-34, QC-TYPES-7, DIE-HBM-91, S81-SVCRS-2, S81-RCK-11, AUTOCLEAN-9. localhost root 585 GB free (AUTOCLEAN-8 done). Owner: e1 dropped; e2/e6/ba0 open.
 - 2026-11-08 02:11 PST COORD: forced rescan 229 (HBM 65->69: PEV exp_x, qcore_r13, OPSA opsa_rest, wbq_root_g0). HBM-HARD-4 parked -> HBM-HARD-5; contract-kit TT IO rebind class fix -> KW-FIX-34; QC-TYPES-8 replaces QC-TYPES-7.
+
+CODEX: 2026-11-08 02:35 PST E5waiter t35a4 moved by completecopy-then-link to I2S2, samefrontend2249349 auto-rebalanced/admittedoth-ubuntu-3746226-1794134103; no newlauncher/signals/retry. E4pre-existingcleanup400.90GB collected/recheck0; source/runtimepoliciesunchanged.
+
+CODEX: 2026-11-08 02:36 PST SVC compiler packinga8175d published/H16realL0identityPASS; actualH8P-rate mismatch diagnosed (lag47/239) and foldedSM2cycle operand schedule21checksPASS. R5SMarithmetic2:1+H8engineproofs underway, not area/token-qualified. Token566d53dd96 explicitLEP/KVdates, nativeLEPbuildIntel1healthy after4GBOOM.
