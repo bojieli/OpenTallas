@@ -25,8 +25,8 @@
       },
       "plan": "/srv/opentallas-scratch2/claude/kw32/src_27db6/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
-      "src_sha": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_0b72a",
+      "src_sha": "0b72abe93ac068bd6a4f6518c271439f9f557f70",
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch2/claude/kw32/kvbind_27db6/asbuilt_kv_27db6.json",
@@ -609,7 +609,7 @@
       ],
       "plan_items_from_allowlist": true,
       "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-      "queue_src": "main@d95ec5a45a60",
+      "queue_src": "main@0b72abe93ac0",
       "hold_items_released": {
         "kv3_pc": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
         "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -1045,7 +1045,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 2
       },
-      "flow_tag": "flow-20261108-do-kv",
+      "flow_tag": "flow-20261108-du-kv",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -1254,7 +1254,12 @@
       "note_kw35c": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): KV-TYPES-4 04:51 ask: dropped 28 stale KW-FIX-25 holds (lanes gone), +9 only_items names, hub_Wo@13. Revert *_prev_kw35c",
       "pilot_gate_prev_kw35d": null,
       "pilot_gate": false,
-      "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d"
+      "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d",
+      "src_prev_kw35q": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
+      "src_sha_prev_kw35q": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
+      "queue_src_prev_kw35q": "main@d95ec5a45a60",
+      "flow_tag_prev_kw35q": "flow-20261108-do-kv",
+      "note_kw35q": "KW-FIX-35-Q 2026-11-08 05:51 PST: src -> main 0b72abe93ac (hardlinks of kw33/src_d95ec + delta, sha256-checked on gen hosts); revert via *_prev_kw35q"
     },
     "s81": {
       "enabled": true,
@@ -5029,10 +5034,10 @@
         "clock": "PASS",
         "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
       },
-      "plan": "/srv/opentallas-scratch2/claude/kw33/src_d95ec/physical/die_plan/qwen_compute/plan_of_record/plan_qc53v4s.json",
+      "plan": "/srv/opentallas-scratch2/claude/kw35/src_0b72a/physical/die_plan/qwen_compute/plan_of_record/plan_qc53v4s.json",
       "gen_host": "epyc2",
-      "src": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
-      "src_sha": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_0b72a",
+      "src_sha": "0b72abe93ac068bd6a4f6518c271439f9f557f70",
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt.json",
@@ -5471,7 +5476,7 @@
         "slw_stm_v1__cle34a73c3@13",
         "slw_stm_v2__cl1ca9c415@7"
       ],
-      "queue_src": "main@d95ec5a45a60",
+      "queue_src": "main@0b72abe93ac0",
       "type_args": {
         "sle_fw_v2__cl69f5e854": [
           "--gpl-plain",
@@ -6308,7 +6313,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 13
       },
-      "flow_tag": "flow-20261108-dy-qc",
+      "flow_tag": "flow-20261108-ee-qc",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "src_prev_kw32": "/srv/opentallas-scratch2/claude/kw31/src_66d55",
       "src_sha_prev_kw32": "66d55c026ade2245a494c3eeeea0e5ec0ab8ae0b",
@@ -6714,7 +6719,13 @@
       "note_kw35c": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): QC-TYPES-9 04:51 (D)/(F)/(G) conservative + infra batch. Revert *_prev_kw35c",
       "pilot_gate_prev_kw35d": null,
       "pilot_gate": false,
-      "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d"
+      "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d",
+      "src_prev_kw35q": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
+      "src_sha_prev_kw35q": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
+      "queue_src_prev_kw35q": "main@d95ec5a45a60",
+      "flow_tag_prev_kw35q": "flow-20261108-dy-qc",
+      "plan_prev_kw35q": "/srv/opentallas-scratch2/claude/kw33/src_d95ec/physical/die_plan/qwen_compute/plan_of_record/plan_qc53v4s.json",
+      "note_kw35q": "KW-FIX-35-Q 2026-11-08 05:51 PST: src -> main 0b72abe93ac (hardlinks of kw33/src_d95ec + delta, sha256-checked on gen hosts); revert via *_prev_kw35q"
     },
     "hbm": {
       "enabled": true,
