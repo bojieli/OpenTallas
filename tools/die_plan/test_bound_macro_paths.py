@@ -241,3 +241,16 @@ def test_physical_variant_roots_through_bound_parent_name():
     assert BMP.resolve_sub_cores(t, text, {}, alt) == []              # no producer table entry: no row
     both = text + "    // as-built lk_S0\n    ot_pdie_serdes__p37glue u_u_lk_S0x (\n"
     assert BMP.resolve_sub_cores(t, both, table, alt) == []           # two declared leaves present: no row
+
+
+def test_flat_core_folded_underscores():
+    # DIE-HBM-92-SU-IDX 11-08: the bind folds runs of _ in u_<inst> (HBM h1 half columns)
+    t = {"hard_cores": [_core("u_hb_idx__s_Q2_r0c0_k0h1", "ot_hbm_idx_score_hcol_h1"), _core("u_a__b", "m_x")]}
+    bound = """    // as-built hb_idx__s_SE.scorer.ge[0].gc[0].leaf.core.g_col[0].g_half[1].u_hc
+    ot_hbm_idx_score_hcol_h1 #(.DELIVERED_RESET(1), .MUT(0)) u_u_hb_idx_s_Q2_r0c0_k0h1 (
+        .cf_in(c));
+    m_y u_u_a_b (.a(a));
+"""
+    rows = {r["inst"]: r for r in BMP.resolve(t, bound)}
+    assert rows["u_hb_idx__s_Q2_r0c0_k0h1"]["physical_inst"] == "u_bound.u_u_hb_idx_s_Q2_r0c0_k0h1"
+    assert "u_a__b" not in rows                      # folded name of another module: no row
