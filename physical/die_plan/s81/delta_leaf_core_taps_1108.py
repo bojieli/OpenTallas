@@ -17,6 +17,9 @@ Per ot_s81sl_leaf__* type:
   3. early_core_taps.add(leg_ps=60, window_ps=20, merge=True): a clock pin gets its own early core tap (clk_c<k>,
      appended, existing port numbers kept) when TT lib max_clock_tree_path rise + 60 > 250 - 20; insertion_ps = that
      rise (the number tap_balance.tcl reads), insertion_ff_ps = the FF lib rise when an _ff.lib sits beside it.
+  4. A grid+explicit added tap (clock.added_taps) that a baked or composed move left inside a macro halo, outside the
+     outline or within tap spacing (taps.grid_explicit_sites, the G0 schema rule) is re-sited to the nearest legal
+     point (schema.tap_clear, strict); legal added taps are not touched.
 Asserted: nothing else in a type changes (hard_cores only origin/orient/track_offset of baked moves).
     python3 delta_leaf_core_taps_1108.py PLAN_IN PLAN_OUT REPORT.json [--moves item_env.json] [--skip-bake t1,t5 --ref PLAN0]
     (cwd = repo root)
@@ -32,6 +35,7 @@ from pathlib import Path
 sys.path[:0] = ["physical/die_plan/s81", "tools/die_plan"]
 import early_core_taps as E  # noqa: E402
 import cores as C  # noqa: E402
+import schema  # noqa: E402
 from schema import tap_clear  # noqa: E402
 from plan_event_1104 import plan_text  # noqa: E402
 
@@ -98,6 +102,40 @@ def bake(t, tn, moves):
     return out
 
 
+def _legal(t, x, y, taken, boxes):
+    eps, clear = 1e-8, schema.TAP_CLEAR_UM
+    w, h = t["outline_um"]
+    return (clear - eps <= x <= w - clear + eps and clear - eps <= y <= h - clear + eps
+            and not any(abs(x - a) < clear - eps and abs(y - b) < clear - eps for a, b in taken)
+            and not any(a + eps < x < c - eps and b + eps < y < d - eps for a, b, c, d in boxes))
+
+
+def fix_added(P, report):
+    """step 4: the same legality walk as taps.grid_explicit_sites, re-siting only the illegal added taps"""
+    from placement_obstacles import placement_boxes
+    PL = schema.Plan(P)
+    n = 0
+    for tn in sorted(report):
+        t = P["partition_types"][tn]
+        ck = t.get("clock", {})
+        if ck.get("tap_mode") != "grid+explicit" or not ck.get("added_taps"):
+            continue
+        boxes = list(placement_boxes(t, halo=schema.TAP_CLEAR_UM).values())
+        taken = [(x, y) for _, x, y in schema._grid_taps(PL, tn)]
+        for p in ck["added_taps"]:
+            x, y = map(float, p["xy"])
+            if not _legal(t, x, y, taken, boxes):
+                nx, ny = tap_clear(t, x, y, taken, clear=schema.TAP_CLEAR_UM, strict=True)
+                nx, ny = round(nx, 4), round(ny, 4)
+                assert _legal(t, nx, ny, taken, boxes), (tn, p["name"], nx, ny)
+                report[tn].setdefault("added_resited", []).append(dict(name=p["name"], frm=[x, y], to=[nx, ny]))
+                p["xy"] = [nx, ny]
+                x, y = nx, ny
+                n += 1
+            taken.append((x, y))
+    return n
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("src"); ap.add_argument("out"); ap.add_argument("rep")
@@ -162,6 +200,7 @@ def main():
                                      insertion_ff_ps=tp.get("insertion_ff_ps"), xy=tp["xy"]))
         total += len(new)
         report[tn] = row
+    added_fixed = fix_added(P, report)
     for tn, t in P["partition_types"].items():
         assert {k: v for k, v in t.items() if k not in ("clock", "hard_cores")} == keep[tn], tn
     Path(a.out).write_text(plan_text(P))
@@ -170,7 +209,8 @@ def main():
         for x in r["added"]:
             mods[x["module"]] = mods.get(x["module"], 0) + 1
     summary = dict(leaf_types=len(report), types_with_new_taps=sum(1 for r in report.values() if r["added"]),
-                   taps_added=total, types_baked=baked, core_taps_resited=resited, by_module=dict(sorted(mods.items())))
+                   taps_added=total, types_baked=baked, core_taps_resited=resited,
+                   added_taps_resited=added_fixed, types_added_resited=sum(1 for r in report.values() if r.get("added_resited")), by_module=dict(sorted(mods.items())))
     Path(a.rep).write_text(json.dumps(dict(summary=summary, types=report), indent=1) + "\n")
     print(json.dumps(summary))
 
