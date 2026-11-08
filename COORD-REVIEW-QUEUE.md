@@ -138,3 +138,14 @@ Open: su31pv1 ~10M (separate).
   (b) RXS vD: outline 216x259.2 (N pins y 215.958 -> 259.158 in io.tcl/pins.json/contract, 556 each), PLACE_DENSITY 0.40, util about 0.365. LAUNCHED place oth-ubuntu-1178196-1794146728. Parent slot becomes 216x259.2 if vD wins.
   RXB vC finish FAILED GRT-0116: 770 overflows, all capacity:0 usage:1, M3 484 / M5 244 / M2 29 / M4 13, total usage 11%. All inside the u_chn dchn macro (x290-390 y50-170). Cause CHECKED in macros/ot_s81_kp4_dchn.lef: pins clk (138.34,68.88) and rst_n (138.20,69.02) sit at the macro centre on M5, under the macro's own full-area OBS on M1-M5. Nets delaynet_3_clk / net13620 (243 each) route through the blocked area. This is not a near miss; it is a pin-under-OBS class in the dchn abstract. Fix: the dchn abstract must open M5 (or move clk/rst_n to an edge or M6). NOT relaunched. RXB vC LEC EQ 21449/21449 stands.
   TX vE: GRT still in extra iterations (12/30 at check); LEC EQ 8426/8426. RXS vC LEC still running (klegacy-ot_s81_rck_rxs_vC-413287-lec).
+
+- [S81-TYPES-7-RCK -> COORD, S81-TYPES-7, DIE-S81-79] 2026-11-08 06:22 PST RESULT/LAUNCHED RXB dchn access. The dchn LEF is NOT edited (signed HEAD view).
+  CHECKED (1): RXB vC already routes M2-M6 (config MAX_ROUTING_LAYER M6; GRT log "Max routing layer: M6", odb range M2-M6). So the layer setting is not the bug.
+  CHECKED (2): the dchn OBS covers M1-M5 over the whole macro. Pins clk and rst_n are M5 shapes at the centre, so the only legal approach is M6 (horizontal) plus V5 down. M6 above the macro is free (usage 3-4%).
+  The overflow nets are exactly the centre-pin nets: clk (clknet_2_3__leaf_ck, delaynet_3_clk) and rst_n (net13620, u_lprc_u_chn.q[0]). They run as vertical 2D segments through gcells with 0 capacity (M3 482, M5 3). Below M7 there is no vertical layer over the macro, so FastRoute does not take the 138 um M6 approach from the side.
+  Diagnostic GRT on vC 4_cts.odb (docker, read-only, no repair; epyc6 s81-types-7-rck/rxb_grtdiag/{M6,M7}.log):
+    signal M2-M6: 507 overflows (M3 482).
+    signal M2-M7: 0 overflows, M7 used 0.83%, wirelength 1.278 m.
+  LAUNCHED pathfinding form ot_s81_rck_rxb_vD_m7: vC run copied through 4_cts (1_synth.v md5 36d1b3a6 unchanged; make -n starts at 5_1_grt), MAX_ROUTING_LAYER M7 only. oth-ubuntu-1459481-1794147725 finish. It NEEDS an M7 grant over the RXB slot (plan event) to count.
+  M6-only REDESIGN (estimate): pre-route clk and rst_n as M6 feeds from the dchn W edge (x 220.3, y about 112) to the centre pins (x 358.5): 2 wires x 138 um M6 plus V5, about 3-5 ps of wire, with a 2-track keep-out. It is applied as a pre-GRT special route so FastRoute only sees the side entry. Effort: one kit tcl hook plus a GRT diagnostic, about 2 h. Built only if M7 is refused.
+  Also: TX vE GRT at extra iteration 14/30. RXS vC_ac GRT extra iteration 6/30. RXS vD in floorplan. RXS vC LEC still running.
