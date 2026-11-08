@@ -1249,6 +1249,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                    "dsrep": {"type": "integer", "enum": [1, 2, 4, 8, 16]},
                    "freg": {"type": "boolean"},
                    "write_chunk": {"type": "integer", "enum": [1, 2, 4, 8, 16, 32, 64]},
+                   "read_chunk": {"type": "integer", "minimum": 0, "maximum": 64},
+                   "write_tail": {"type": "boolean"},
                    "freg_numeric_order": {"type": "boolean"}}}
 # Legacy free-running landing input capture: one extra payload cycle on each
 # listed bus. Clock_landings validates bus membership, sidecar pricing and mode.

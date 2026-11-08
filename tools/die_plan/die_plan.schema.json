@@ -2756,6 +2756,14 @@
            64
           ]
          },
+         "read_chunk": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+         },
+         "write_tail": {
+          "type": "boolean"
+         },
          "freg_numeric_order": {
           "type": "boolean"
          }
