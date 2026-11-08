@@ -5958,6 +5958,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     seen_proved = collections.Counter()   # proved-set signature -> rounds proved
     early_compare_tried = False
     late_merged = 0
+    late_replica = False
     for rnd in range(rounds + 1000):
         # LEC-REFINE-BUDGET-RAW (DIE-KV-65/LEC 11-03, KV ctl): raw base sweep time is not refine time.  ctl paid the whole
         # budget in 6 raw prefix walls (5400 s of 7059 s), expired at the first check (round 64), and the monotone finish
@@ -6315,6 +6316,17 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             sig = hashlib.sha1(repr(sorted((repr(hk), repr(h)) for hk, h in L.hyp.items())).encode()).hexdigest()
             seen_proved[sig] += 1
             if seen_proved[sig] >= 3:
+                # Q2NF: a merged replica's gate representative can spend both
+                # early attempts while its feedback neighbours are still free.
+                # Retry once against the settled proved set; every new relation
+                # still passes reset filtering and the next joint induction.
+                if not late_replica:
+                    late_replica = True
+                    if replica_cohort_closure(L, log, collections.Counter()):
+                        noreset_filter(L, log, tried, work, conflicts)
+                        if L.hyp != snap:
+                            log.append("late replica cohort: re-proposed against the settled proved set")
+                            continue
                 log.append(f"correspondence round {rnd}: the same proved set ({len(L.hyp)} hypotheses) recurred "
                            f"{seen_proved[sig]}x with no surviving closure change; fixpoint, returned")
                 return
