@@ -1,20 +1,20 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-> 2026-11-07 22:48 PST · 219 signed design/type entries (forced scan 22:2x, flat) · S81 58/59+18/205t; HEAD 4/4+16/25t; QC 25/26+1/119t (plan qc52t); KV 31/32+1/56t; HBM 65/105+0/81t · main a09cbc70ae5 (tags dn-head dt-qc dj-kv du-s81 er-hbm) · NOT YET COUNTED although signed: KV e5 M5, HBM exp_x, S81 SVC forms (14 UNMATCHED designs, COUNT-AUDIT-2) · open cores: S81 bksel_q; QC NK routing; KV prompt; HBM 40 · HBM types: 9 running, transit PDN class (DIE-HBM-90) · autoclean ON fleet-wide (incident fixed), epyc6 root 98% · owner question open: KV M5 e2/e6 over-limit ECO + e1 1-cell fix (no default)
+> 2026-11-07 23:26 PST · 219 signed design/type entries (forced scan 23:17, flat) · S81 58/59+18/205t; HEAD 4/4+16/25t; QC 25/26+1/119t (plan qc53v4t pending); KV 31/32+1/56t; HBM 65/105+0/81t · main a09cbc70ae5+ (train pending: S81 LP/resign-passdir/macro-ck/oport-hold, HBM tstrap/ftpdn, QC tap-pair v4 + qc53v4t, HEAD TX fold + atomic-collapse) · NOT credited, plan events owed (DIE-HBM-90): HBM exp_x, qcore_r13, opsa_rest · open cores: S81 bksel_q; QC NK; KV prompt; HBM 40 · localhost root 31 GB free (AUTOCLEAN-8) · owner question open: KV M5 e1/e2/e6 + S81 gunit ba0 over-limit fixes (no default)
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
-## FAILURES · unsigned cores and types by class (auto, 2026-11-07 22:47 PST)
+## FAILURES · unsigned cores and types by class (auto, 2026-11-07 23:24 PST)
 - [ ] FAIL.S81.CORES 58/59 signed · open: running, no result 1 (dsdv_bksel_q)
-- [ ] FAIL.S81.TYPES 18/205 signed · kit rows: running 123 · other flow error 32 (dsdv_slice_c1x_C__t6, +31) · congestion 9 (col_h10_r1__t1__cld01bb4ae, +8) · timing after route 8 (slice_station__t22, +7) · waits on child core 6 · cancelled (superseded) 5 (col_h9_r2__t1__cl774acf45, +4) · LEC 4 (dsdv_slice_iq_C__t1, +3) · no host 4 (s81sl_leaf__t14, +3) · CLAND ring band 3 (s81sl_leaf__t4, +2) · stopped (ruling/infra) 2 (col_h10_r1__t1__cl95b37463, +1) · SETUP-AT-GRT 1 (iqf__t1) · hold after CTS 1 (serdes__t2) · kit_rtl 1 (col_h9_r0_p1__t1)
+- [ ] FAIL.S81.TYPES 18/205 signed · kit rows: running 120 · timing after route 9 (slice_station__t22, +8) · congestion 9 (col_h10_r1__t1__cld01bb4ae, +8) · withdrawn (lane form) 7 (serdes__t12, +6) · waits on child core 6 · cancelled (superseded) 5 (col_h9_r2__t1__cl774acf45, +4) · LEC 5 (dsdv_slice_iq_C__t1, +4) · no host 4 (s81sl_leaf__t14, +3) · reg_fanout preflight 3 (svc_hi_dsdv_svc_rs__t2, +2) · needs parent receipt (re-sign) 3 (slice_station__t30__clcedefe91, +2) · CLAND ring band 3 (s81sl_leaf__t4, +2) · stopped (ruling/infra) 2 (col_h10_r1__t1__cl95b37463, +1) · stale FAIL_PREFLOOR kit (LEC reject) 2 (dsdv_slice_c1x_C__t6, +1) · infra (relaunch queued) 2 (s81sl_leaf__t21, +1) · synth stopped (OOM/kill) 1 (s81sl_kv_leaf__t2) · SETUP-AT-GRT 1 (iqf__t1) · hold after CTS 1 (serdes__t2) · kit_rtl 1 (col_h9_r0_p1__t1)
 - [ ] FAIL.HEAD.CORES 4/4 signed · open: none
-- [ ] FAIL.HEAD.TYPES 16/25 signed · kit rows: cancelled (superseded) 7 (hd_ctl, +6) · other flow error 3 (hd_spn_eshim_tx, +2) · kit_rtl 3 (hd_host, +2) · SETUP-AT-GRT 2 (hd_mesh, +1) · timing after route 1 (hd_tile) · stopped (ruling/infra) 1 (hd_ctl_n)
+- [ ] FAIL.HEAD.TYPES 16/25 signed · kit rows: cancelled (superseded) 7 (hd_ctl, +6) · kit_rtl 3 (hd_host, +2) · SETUP-AT-GRT 2 (hd_mesh, +1) · timing after route 1 (hd_tile) · stopped (ruling/infra) 1 (hd_ctl_n)
 - [ ] FAIL.QC.CORES 25/26 signed · open: running, no result 1 (qfd_tile_nk_a0c)
 - [ ] FAIL.QC.TYPES 1/119 signed · kit rows: waits on child core 38 · running 22 · SETUP-AT-GRT 15 (coll_ftc, +14) · running (>150k advisory) 15 (sle_fe_v1__cl8210183c, +14) · timing after route 4 (coll_ftn, +3) · other flow error 4 (sle_ctl__cl372cea1c, +3) · congestion 3 (coll_ft__cl78c7b300, +2) · cancelled (superseded) 2 (sle_ctl__cla4f6f12f, +1) · hold after CTS 1 (coll_s)
 - [ ] FAIL.KV.CORES 31/32 signed · open: LEC 1 (qkd_hr_core_prompt)
 - [ ] FAIL.KV.TYPES 1/56 signed · kit rows: waits on child core 10 · stopped (ruling/infra) 2 (kv3_phy, +1) · SETUP-AT-GRT 1 (kv3_io_ft_v1) · running 1 · running (>150k advisory) 1 (kv3_hub_Ei)
 - [ ] FAIL.HBM.CORES 65/105 signed · open: no kit-wave row 24 (hfd_coll_q3_body_ctl, hgi_coll_gqi_issue, hgi_sfu_opsa_group0, +16) · running, no result 13 (hfd_coll_q2n2_vm_core, hfd_coll_q3_vm_core, hfd_hgi_vms_glue_nw_t, +10) · LEC 1 (idx_rootctl_static_am) · structural hold 1 (svc_pc_ctrl_leaf_cfg_h9b) · shape: over cells/util/congestion 1 (hgi_dma_back_static_vp4_banks_cp)
-- [ ] FAIL.HBM.TYPES 0/81 signed · kit rows: waits on child core 60 · running 9 · other flow error 4 (q_spu0, +3)
+- [ ] FAIL.HBM.TYPES 0/81 signed · kit rows: waits on child core 60 · running 8 · other flow error 5 (q_mca, +4)
 <!-- BREAKDOWN END -->
 
 ## EDIT · rules
