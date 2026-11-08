@@ -1,0 +1,64 @@
+{
+ "schema": "opentallas.qc_por_event.v1",
+ "event": "QC NL clock pin adoption (COORD 11-07 17:07 (5))",
+ "base_plan": "plan_qc52.json",
+ "base_plan_sha256": "ffdd710edd7a4e4613c485b9af353b7925911988e149674ae898fa434b25c7c5",
+ "plan_output": "plan_qc52n.json",
+ "plan_output_sha256": "f1b679394e1ad4d5695794d3dae330d3bd17858c6030eb8067a709b465acae15",
+ "types": [
+  "cbx_q10__cl94a12200",
+  "cbx_q10__cl89936551"
+ ],
+ "instances": 48,
+ "module": "qfd_tile_nl_a0c",
+ "pins_file_old": "cores/a0_nl_pins.json",
+ "pins_file_old_sha256": "fcc2af74a28778196a2dacfc77e68e4e77bfb4ec53aa5d95acd9a5e589fad836",
+ "pins_file_new": "cores/a0_nl_pins_ck1107.json",
+ "pins_file_new_sha256": "b95ce5930cf79ebf1c6f5ae1622133115d42df6c3221a189e6d00b7204f91b48",
+ "pin_change": {
+  "pin": "ck",
+  "old": [
+   "M4",
+   457.824,
+   668.076
+  ],
+  "new": [
+   "M5",
+   228.972,
+   578.88
+  ]
+ },
+ "other_pins_unchanged": 1041,
+ "tap": {
+  "name": "u_t30.ck",
+  "old_xy": [
+   699.936,
+   745.848
+  ],
+  "new_xy": [
+   928.8,
+   656.652
+  ],
+  "insertion_ps": [
+   692.6,
+   774.38
+  ],
+  "insertion_ff_ps": [
+   601.9,
+   610.59
+  ]
+ },
+ "params": {
+  "IDLE_UCK": 1
+ },
+ "data_cycles": 0,
+ "pin_cycles": 0,
+ "eq_gate": {
+  "verdict": "EQUIVALENT",
+  "scope": "routed 6_final.v of the signed NL (ecow3 i1) vs kit RTL + IDLE_UCK=1, 64-edge reset",
+  "record": "epyc2:/srv/opentallas-scratch3/claude/dq90_nl/resign_idleuck/PROVENANCE.json",
+  "accepted": "COORD 11-07 15:23"
+ },
+ "patch_source": "results/physical/qc_nl_clock_adoption_1551/access_v4/proposed_event.patch.json (pins_file re-pointed plan-relative)",
+ "preservation": "every other partition type and every top-level key byte-identical (checked)"
+}
