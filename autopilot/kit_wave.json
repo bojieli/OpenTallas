@@ -2246,7 +2246,9 @@
         "dsdv_slice_lepw_mu_C__t1@9",
         "ot_s81sl_leaf__t58@1",
         "ot_s81sl_leaf__t68@1",
-        "bk_sel__t2@30"
+        "bk_sel__t2@30",
+        "slice_station__t22@10",
+        "slice_station__t29__clc7772371@11"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -3170,7 +3172,9 @@
         "dsdv_slice_lepw_mu_C__t1@9": "KW-FIX-32 2026-11-07 21:59 PST: S81-OTHERFAIL-1 21:51 class A+B HOST-KILL (epyc2 earlyoom SIGTERM to yosys 16:01/16:09, not a design result): infra batch",
         "ot_s81sl_leaf__t58@1": "KW-FIX-32 2026-11-07 21:59 PST: S81-OTHERFAIL-1 21:51 class C TAP-RADIUS: class fix KW-FIX-28 044f3d479b75 (ADDED_TAP_RADIUS_SLACK 1.10, over-target advisory) on main; never relaunched since 11-06 13:07",
         "ot_s81sl_leaf__t68@1": "KW-FIX-32 2026-11-07 21:59 PST: S81-OTHERFAIL-1 21:51 class C TAP-RADIUS: class fix KW-FIX-28 044f3d479b75 (ADDED_TAP_RADIUS_SLACK 1.10, over-target advisory) on main; never relaunched since 11-06 13:07",
-        "bk_sel__t2@30": "KW-FIX-32 2026-11-07 22:29 PST: S81-OTHERFAIL-1 21:51 class E HARD-CORE PIN ACCESS: detailed abstract LEF of the signed dsdv_bksel_c (7c69a10c21c), landed a6849cca0db; class batch (COORD 22:0x (1))"
+        "bk_sel__t2@30": "KW-FIX-32 2026-11-07 22:29 PST: S81-OTHERFAIL-1 21:51 class E HARD-CORE PIN ACCESS: detailed abstract LEF of the signed dsdv_bksel_c (7c69a10c21c), landed a6849cca0db; class batch (COORD 22:0x (1))",
+        "slice_station__t22@10": "KW-FIX-32 2026-11-07 22:31 PST: S81-TYPES-5 22:29 slice_station hold class, CLASS FIX 2 (DRV): gen.py phys --slew-margin 50 --cap-margin 20 (existing opt-in, ELEM-S81 station405 routed RCX ~1.8x setRC slew) via s81 type_args; fresh kits on current main, no ECO",
+        "slice_station__t29__clc7772371@11": "KW-FIX-32 2026-11-07 22:31 PST: S81-TYPES-5 22:29 slice_station hold class, CLASS FIX 2 (DRV): gen.py phys --slew-margin 50 --cap-margin 20 (existing opt-in, ELEM-S81 station405 routed RCX ~1.8x setRC slew) via s81 type_args; fresh kits on current main, no ECO"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -3222,6 +3226,18 @@
         "serdes__t16": [
           "--native-cell-cap",
           "517000"
+        ],
+        "slice_station__t22": [
+          "--slew-margin",
+          "50",
+          "--cap-margin",
+          "20"
+        ],
+        "slice_station__t29__clc7772371": [
+          "--slew-margin",
+          "50",
+          "--cap-margin",
+          "20"
         ]
       },
       "place_prefer": [
@@ -7320,8 +7336,7 @@
         "vsN5",
         "vsN6"
       ],
-      "pilot_max_prev_kw32b": 2,
-      "note_hbm_bound_kw32": "KW-FIX-32 2026-11-07 22:29 PST: bound-type batch q_b000/q_b001 (+pv1, gen FAIL on unbound bus only) and q_su31 (+pv1, released by istadrop a661f1d7364, DIE-HBM-90 21:47); q_spb2 excluded (DIE-HBM-89-SPB2F builds vF privately). pilot_max 2 -> 6 for this batch; revert pilot_max_prev_kw32b. ONE-TICK window: only_items = the 6 bound types and live_claim_h 0 (generic HBM-PLAN claim); restore only_items <- only_items_batch_kw32, delete live_claim_h, pilot_max <- pilot_max_prev_kw32b after launch.",
+      "note_hbm_bound_kw32": "KW-FIX-32 2026-11-07 22:29 PST: bound-type batch q_b000/q_b001 (+pv1, gen FAIL on unbound bus only) and q_su31 (+pv1, released by istadrop a661f1d7364, DIE-HBM-90 21:47); q_spb2 excluded (DIE-HBM-89-SPB2F builds vF privately). pilot_max 2 -> 6 for this batch; revert pilot_max_prev_kw32b. ONE-TICK window: only_items = the 6 bound types and live_claim_h 0 (generic HBM-PLAN claim); restore only_items <- only_items_batch_kw32, delete live_claim_h, pilot_max <- pilot_max_prev_kw32b after launch. | RESTORED 2026-11-07 22:31 PST | window re-applied (restored too early, before any tick saw it)",
       "only_items_batch_kw32": [
         "hfd_ep_static",
         "hnx_rp3lp3h_n",
@@ -7431,7 +7446,8 @@
         "q_su31",
         "q_su31__physical_v1"
       ],
-      "live_claim_h": 0
+      "live_claim_h": 0,
+      "pilot_max_prev_kw32b": 2
     }
   },
   "place_prefer": [
