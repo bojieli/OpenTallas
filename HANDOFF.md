@@ -3438,3 +3438,5 @@ CODEX: 2026-11-08 02:39 PST HBM OPEN: s3 arithmetic CLOCK-LEAF locality PLACE pi
 
 CODEX: 2026-11-08 02:45 PST KV types: ioft lockup form omitted existing STATUS_REG; exact TT -50.83 diagnosed, combined private SR+lockup bind active E4. PV macro-aware private source draft 873374c71c solves 109 corridors (max 403.554 um), 0 cycle delta, +43 raw reset copies; private bind queued. No POR/main change or new signed-off count.
 CODEX: 2026-11-08 02:45 PST QC production-calendar SU1 diagnostic PASS (req+9/results+18,3mutantscaught, warm/goldenPASS; private source9580edf420),5actual CBN ring providers recovered capture+provePASS/privateGENactive, NL event replay onto ownv4s candidate a3b374d33d/strictbindE6active. No merges/tags/POR/config adoption; original NKvR7 healthy GRT retained.
+
+CODEX: 2026-11-08 02:49 PST KV own prompt clock form bf0ac2d662 published+pilot; actual early macro-vs-register tree diagnosed and prototype TT pairskew50.34/49.79ps (not routed signoff). e1currentds re-sign SIGNED/LECpending; combined ioft/PV/hub clock/SYS_C/Wi fixes active, no merges/tags/POR changes.
