@@ -1,0 +1,28 @@
+SAME col_h10_r0_p4__t1
+SAME col_h9_r0_p5__t1
+CHK col_h9_r0_p6__t1 taps_ok True grid_same True reset_same False 
+SAME col_h9_r0_p1__t1
+CHK col_h10_r0_p1__t1__cl574cc59d taps_ok True grid_same True reset_same False 
+SAME col_h10_r0_p1__t1__cl911743eb
+SAME col_h10_r1__t1__cl95b37463
+SAME col_h10_r1__t1__cld01bb4ae
+CHK col_h10_r2__t1__clac068e56 taps_ok True grid_same True reset_same False 
+CHK col_h10_r2__t1__cl8b686b3e taps_ok True grid_same True reset_same False 
+CHK col_h10_r2__t1__cl99efd374 taps_ok True grid_same True reset_same False 
+CHK col_h10_r2__t1__cl1f5d6c2a taps_ok True grid_same True reset_same False 
+CHK col_h9_r0_p2__t1__cl9f71e63d taps_ok True grid_same True reset_same False 
+TAP-RADIUS-TARGET col_h9_r1__t1__cl49d7a23e: grid+explicit tap clk_t28 radius=211.92/200.0 (advisory)
+SAME col_h9_r0_p2__t1__cl0045af7b
+CHK col_h9_r1__t1__cl49d7a23e taps_ok True grid_same True reset_same False 
+TAP-RADIUS-TARGET col_h9_r1__t1__clf32cde8d: grid+explicit tap clk_t26 radius=211.92/200.0 (advisory)
+CHK col_h9_r1__t1__clf32cde8d taps_ok True grid_same True reset_same False 
+SAME col_h9_r2__t1__clc9ad8f7e
+CHK col_h9_r2__t1__clce45cab5 taps_ok True grid_same True reset_same False 
+SAME col_h9_r2__t1__clb8d86cd5
+SAME col_h9_r2__t1__cl87f3ff59
+SAME col_h9_r2__t1__cl774acf45
+SAME col_h9_r0_p3__t1__cl31d0dc4b
+SAME col_h9_r0_p3__t1__cl8ce97bcb
+CHK col_h9_r0_p3__t1__cl0cd90c0e taps_ok True grid_same True reset_same False 
+CHK col_h9_r0_p4__t1__cl8ef405e8 taps_ok True grid_same True reset_same False 
+CHK col_h9_r0_p4__t1__clcb2fbfe8 taps_ok True grid_same True reset_same False 

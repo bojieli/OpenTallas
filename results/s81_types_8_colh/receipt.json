@@ -1,0 +1,11 @@
+{
+ "event": "COL-WALLGAP-1108 (rows form, S81-TYPES-8-COLH)",
+ "base_plan": "kw34/wave_cg_frz_xrt/physical/die_plan/s81/plan_h2_2249.json sha256 ba6292b0c502...",
+ "delta": "physical/die_plan/s81/delta_col_wallgap_1108.py (6d9d977e32b, v_c) on the base -> plan_wg_c (26 col_h types); mk_e.py keeps only the 13 class C/A rows, every other type byte-identical",
+ "plan": "plan_wg_e.json sha256 4e2f79c8bed74dbdef50c8110db611554eff4d73193c8ced419cf73e704507d6",
+ "staged": ["epyc5", "epyc4", "intel1"],
+ "staged_path": "/srv/opentallas-scratch3/claude/s81-types-8-colh/wave_cg_frz_xrt_wge/physical/die_plan/s81/plan_h2_2249.json",
+ "checks": "cmpchk_e.log: 13/13 changed types pass taps.grid_explicit_sites + grid_explicit_taps, grid taps unchanged; reset_tree.for_type changes on all 13 -> needs a canonical strict S81 bind on the composed plan before kits",
+ "pin_cycles": 0,
+ "rtl_change": false
+}
