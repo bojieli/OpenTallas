@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "7af661c74dd859446caaf7f60bdb60c428a0f38c",
+ "flow_tag": "flow-20261103-t-s81",
+ "routed_db": "/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_nst_h2P/eco_m0/i3/run/results/asap7/kl_ot_s81_mu72_lnland_nst_h2P/base/6_final.odb",
+ "build_commit": "ad4e74e55cd92b65cd392b1cb5d160a26aa9b646",
+ "lec": "/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_nst_h2P/sign_t-s81_m0/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_nst_h2P/sign_t-s81_m0/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_nst_h2P/eco_m0/i3",
+ "original_signoff": "/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_nst_h2P/eco_m0/i3/signoff/signoff.json",
+ "name": "kl_ot_s81_mu72_lnland_nst_h2P",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "aware-parakeet",
+ "created": "2026-11-03 17:53 UTC",
+ "routed_db_sha256": "394a4bcc32e74b0ed852ef8bfa7f1c74c9f1edbe90b1691e82ad9a7ce7ab55f3",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_nst_h2P/t_t-s81/tools/die_plan",
+  "sha256": {
+   "signoff.py": "1c2a38cd6a0721a7ec4093ded3a8719d5d858b20ee4511476a1eaf3f7b5b14eb",
+   "lec.py": "61ea9696599e5f76656487c959650e7be27eb56a7ec9ab7cc51b50e42ed94766"
+  },
+  "checked": "byte-identical to flow-20261103-t-s81"
+ },
+ "lane": "DIE-S81-51/SIGN",
+ "as_run_note": "DIE-S81-51 legacy IO contract + eco_m0 i3 hold ECO (one ECO, 3 it)"
+}

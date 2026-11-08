@@ -1,0 +1,398 @@
+{
+ "kit": {
+  "schema": "opentallas.s81.core_freeze.v1",
+  "kit": "dsfd_coll_lane_w_safe8_ntf_compact_m6_pg6_vB",
+  "module": "dsfd_coll_lane_w_safe8_ntf",
+  "plan_type": "h2_coll_w",
+  "outline_um": [
+   295.92,
+   444.96
+  ],
+  "ref_tile": "physical/die_plan/s81/h2_2249/coll_w",
+  "spec": "physical/die_plan/s81/h2_2249/coll_w/spec.json",
+  "spec_sha256": "1b0162048d4f5a1eaeb941c46e1b34b7a4860a46d82fd9e5f147e8c20ab22159",
+  "pins_file": "h2_2249/coll_w/plan_pins.json",
+  "pins_sha256": "a944e259d1bdfe2f5079373db3f900b68d7d7be9f6751b26b22bf778ccdf1492",
+  "pins": 2143,
+  "plan_lef": "physical/die_plan/s81/h2_2249/coll_w/lane.lef",
+  "pins_canon_sha256": "eb1cf0f7e5d5b6c8a569b2e10775288d71bf7f8596ef408488ac500a10ba3e32",
+  "pins_placed_canon_sha256": "eb1cf0f7e5d5b6c8a569b2e10775288d71bf7f8596ef408488ac500a10ba3e32",
+  "pins_staged_file": "declared_pin_contract/plan_pins.json",
+  "pins_staged_sha256": "a944e259d1bdfe2f5079373db3f900b68d7d7be9f6751b26b22bf778ccdf1492",
+  "clocks": [
+   "ck"
+  ],
+  "resets": [
+   "rs"
+  ],
+  "recipe_sha256": "e999484614e63cd25207c648d7a2eda5ddf1dd25ee31092532be8c5a1b36f65a",
+  "period_ps": 833.0,
+  "insertion_ps": 405.0,
+  "insertion_tol_ps": 40.0,
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+  "insertion_ff_ps": 340.0,
+  "insertion_basis": {
+   "tt": "Existing FORM-COLL 11-05 published 405/340 core arrival contract; unchanged",
+   "ff": "Existing FORM-COLL 11-05 published 405/340 core arrival contract; unchanged"
+  },
+  "rc": "setRC_rcx_asap7.tcl",
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "face_guard (post-synth)",
+   "LEC EQUIVALENT (post-synth)",
+   "reg_fanout (post-synth)",
+   "TT/FF insertion (GRT, before route)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "faecd095101",
+  "sdc_lint_sha256": "1009707936b623e070d7637a3336af8ca8ea79bfb1ad981e6d8f095d123634a3",
+  "face_guard_sha256": "89d14d085ae0292e3c1d0765d6c946765386a94aefcb28510d0b3d675552d5bf",
+  "signoff_sha256": "b9b4ba551775a439e7a934fb176587ff8f1134b918d23e036bec38c498edfbb9",
+  "macros": {
+   "ot_sram_1r1w2c_32x64_m1": [
+    [
+     15.552,
+     16.32,
+     "MX"
+    ],
+    [
+     61.128,
+     16.32,
+     "MX"
+    ],
+    [
+     106.704,
+     16.32,
+     "MX"
+    ],
+    [
+     154.656,
+     16.32,
+     "MX"
+    ],
+    [
+     200.232,
+     16.32,
+     "MX"
+    ],
+    [
+     245.808,
+     16.32,
+     "MX"
+    ],
+    [
+     15.552,
+     42.24,
+     "MX"
+    ],
+    [
+     61.128,
+     42.24,
+     "MX"
+    ],
+    [
+     106.704,
+     42.24,
+     "MX"
+    ],
+    [
+     154.656,
+     42.24,
+     "MX"
+    ],
+    [
+     15.552,
+     227.472,
+     "R0"
+    ],
+    [
+     61.128,
+     227.472,
+     "R0"
+    ],
+    [
+     106.704,
+     227.472,
+     "R0"
+    ],
+    [
+     154.656,
+     227.472,
+     "R0"
+    ],
+    [
+     200.232,
+     227.472,
+     "R0"
+    ],
+    [
+     245.808,
+     227.472,
+     "R0"
+    ],
+    [
+     15.552,
+     253.392,
+     "R0"
+    ],
+    [
+     61.128,
+     253.392,
+     "R0"
+    ],
+    [
+     106.704,
+     253.392,
+     "R0"
+    ]
+   ],
+   "ot_sram_1r1w2c_256x64_m1": [
+    [
+     15.552,
+     281.712,
+     "MX"
+    ],
+    [
+     61.128,
+     281.712,
+     "MX"
+    ],
+    [
+     106.704,
+     281.712,
+     "MX"
+    ],
+    [
+     154.656,
+     281.712,
+     "MX"
+    ],
+    [
+     200.232,
+     281.712,
+     "MX"
+    ],
+    [
+     245.808,
+     281.712,
+     "MX"
+    ],
+    [
+     15.552,
+     333.984,
+     "MX"
+    ],
+    [
+     61.128,
+     333.984,
+     "MX"
+    ],
+    [
+     106.704,
+     333.984,
+     "MX"
+    ],
+    [
+     154.656,
+     333.984,
+     "MX"
+    ],
+    [
+     200.232,
+     333.984,
+     "MX"
+    ],
+    [
+     245.808,
+     333.984,
+     "MX"
+    ],
+    [
+     15.552,
+     386.256,
+     "MX"
+    ],
+    [
+     61.128,
+     386.256,
+     "MX"
+    ],
+    [
+     106.704,
+     386.256,
+     "MX"
+    ],
+    [
+     154.656,
+     386.256,
+     "MX"
+    ],
+    [
+     200.232,
+     386.256,
+     "MX"
+    ],
+    [
+     245.808,
+     386.256,
+     "MX"
+    ],
+    [
+     15.552,
+     70.56,
+     "MX"
+    ],
+    [
+     61.128,
+     70.56,
+     "MX"
+    ],
+    [
+     106.704,
+     70.56,
+     "MX"
+    ],
+    [
+     154.656,
+     70.56,
+     "MX"
+    ],
+    [
+     200.232,
+     70.56,
+     "MX"
+    ],
+    [
+     245.808,
+     70.56,
+     "MX"
+    ],
+    [
+     15.552,
+     122.832,
+     "MX"
+    ],
+    [
+     61.128,
+     122.832,
+     "MX"
+    ],
+    [
+     106.704,
+     122.832,
+     "MX"
+    ],
+    [
+     154.656,
+     122.832,
+     "MX"
+    ],
+    [
+     200.232,
+     122.832,
+     "MX"
+    ],
+    [
+     245.808,
+     122.832,
+     "MX"
+    ],
+    [
+     15.552,
+     175.104,
+     "MX"
+    ],
+    [
+     61.128,
+     175.104,
+     "MX"
+    ],
+    [
+     106.704,
+     175.104,
+     "MX"
+    ],
+    [
+     154.656,
+     175.104,
+     "MX"
+    ],
+    [
+     200.232,
+     175.104,
+     "MX"
+    ],
+    [
+     245.808,
+     175.104,
+     "MX"
+    ]
+   ]
+  },
+  "rtl_patches": [
+   {
+    "file": "rtl/common/ot_link_credit_rx_b64.sv",
+    "why": "S81-LP-2: drop (* keep *) on the 1-bit link output reg; Yosys otherwise leaves an unloaded BUFx2 to the kept alias on the port net (RAW face_guard shared FAIL). Zero logic change; the reg drives the port.",
+    "sha256": "df4dca939578fc15bf7ac277e5af9b9ef9fe4e481bac170349c5f4d7511a193d"
+   },
+   {
+    "file": "rtl/common/ot_link_credit_tx_rc.sv",
+    "why": "S81-LP-2: drop (* keep *) on the 1-bit link output reg; Yosys otherwise leaves an unloaded BUFx2 to the kept alias on the port net (RAW face_guard shared FAIL). Zero logic change; the reg drives the port.",
+    "sha256": "a4f55378c27c849326d003355be4c7e360aa4cd7bda23c5f95ec5ebdc8eebbad"
+   }
+  ],
+  "kit_hash": "81e07194a5de780b",
+  "master_plan": {
+   "slice_sha256": "7011574878a26caf44fee17fe14b876220f965950868aa16bde787bb0bafb7a1",
+   "master_plan_sha256": "TRIAL-no-frozen-master-plan",
+   "type": "dsfd_coll_lane_w_safe8_ntf",
+   "frozen": false
+  },
+  "reset_contract": {
+   "edges": 64,
+   "module": "dsfd_coll_lane_w_safe8_ntf",
+   "contract_sha256": "5900e497229b61e2a8a394b77c1c94c2ff672a0d0d099d091d87c8df32e0d481",
+   "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8"
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 405.0,
+   "ff": 340.0,
+   "default": true
+  },
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict LOCAL_PASS_NEEDS_PARENT; routed LEC EQUIVALENT)",
+ "views_status": "incomplete: signoff.json verdict 'LOCAL_PASS_NEEDS_PARENT' is not SIGNED",
+ "src": "/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert_input1",
+ "src_commit": "efbdb61c3b53e172dad36c9d95840c3678aa4cde",
+ "flow_tag": "flow-20261106-bh-hbm",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-08T01:58:24+00:00",
+  "kit": "/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert_input1",
+  "base": "/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert_input1/run/results/asap7/kl_dsfd_coll_lane_w_safe8_ntf_compact_m6_pg6_vB/base",
+  "signoff": "/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/signoff/signoff.json",
+  "signoff_sha256": "3ef06367aa2f4a0b6ec82cc39c0f97b960a7d19c4b36d3d4e6a5af22b8d389a0",
+  "signoff_generated": "2026-11-06T17:35:20+00:00",
+  "odb": "/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert_input1/run/results/asap7/kl_dsfd_coll_lane_w_safe8_ntf_compact_m6_pg6_vB/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/lec/lec.json",
+  "note": "S81-TYPES-5 helper 11-07: LP child view from the signed re-sign record /srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/PROVENANCE.json (routed DB sha in PROVENANCE)",
+  "lib_basis": {
+   "dsfd_coll_lane_w_safe8_ntf_tt.lib": "base dsfd_coll_lane_w_safe8_ntf_tc.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)",
+   "dsfd_coll_lane_w_safe8_ntf_ff.lib": "base dsfd_coll_lane_w_safe8_ntf_BC.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
+  },
+  "files_sha256": {
+   "dsfd_coll_lane_w_safe8_ntf.lef": "5774eb26b80a8a599a63560deef08bdca8e9a50cc5085ab7459db17e998329bf",
+   "dsfd_coll_lane_w_safe8_ntf_ff.lib": "5ac64139f8cacb6b56ade46a9523de0818ef7f00e7a16ccc480494cb592a6da5",
+   "dsfd_coll_lane_w_safe8_ntf_tt.lib": "c750539c0f04cdb8a8eef0c65f8a7ed39f3f1bf9874243f3a885192ddfa23d15",
+   "pins.json": "b60b81ca27806d09e19ab74cafe5bde6dbdd99e610b37ac7734a1ba56930631f"
+  }
+ }
+}

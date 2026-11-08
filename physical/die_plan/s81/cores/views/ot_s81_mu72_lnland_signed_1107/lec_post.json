@@ -1,0 +1,261 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-11-03T17:54:27+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": {
+   "file": "/work/reset_contract.json",
+   "die": "s81",
+   "edges": 64,
+   "assert_edges": 66,
+   "receipt": "/work/reset_contract/receipt.txt"
+  },
+  "used": 64,
+  "debug_overrides": {}
+ },
+ "top": "ot_s81_mu72_lnland",
+ "netlist": "/work/run/results/asap7/kl_ot_s81_mu72_lnland_h2P/base/6_final.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {},
+ "ports": {
+  "inputs": 1120,
+  "outputs": 1116
+ },
+ "t_aig_s": 17.0,
+ "kit_reset_ports": [
+  "rs_k",
+  "rs_n"
+ ],
+ "auto_loaded": {
+  "proposed": 0
+ },
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:rs_k[0]",
+    "pi:rs_n[0]"
+   ],
+   "gate": [
+    "pi:rs_k[0]",
+    "pi:rs_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:rs_k[0]": 1,
+    "pi:rs_n[0]": 0
+   },
+   "gate": {
+    "pi:rs_k[0]": 1,
+    "pi:rs_n[0]": 0
+   }
+  },
+  "reset_cycles": 64,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 64,
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_kept": 0,
+  "n_reloaded": 0,
+  "n_dropped": 0,
+  "reloaded": [],
+  "dropped": [],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants; equality/FSM assumptions never establish a constant's base case",
+  "listing": {
+   "file": "/eco/lec/noreset_constants.tsv",
+   "sha256": "9281382eae0f24f9f712bdb4a59941a62eb981266c9b391c19101559de2e8b23",
+   "n_kept": 0,
+   "n_dropped": 0
+  }
+ },
+ "constraint_bases": {
+  "checks": [],
+  "refused": []
+ },
+ "t_corr_s": 32.0,
+ "keypoints": {
+  "gold": {
+   "inputs": 1261,
+   "flops": 9512,
+   "outputs": 0,
+   "ands": 56844
+  },
+  "gate": {
+   "inputs": 1121,
+   "flops": 17908,
+   "outputs": 0,
+   "ands": 48152
+  },
+  "matched": 9516,
+  "gold_constant_flops": {
+   "n": 0,
+   "first": []
+  },
+  "paired_flops": {
+   "n": 2715,
+   "first": [
+    "both:ff:u_dut.u_kn.u_r.g_chunk[10].u_local.rc[0]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rc[0]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[10].u_local.rc[1]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rc[1]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[10].u_local.rc[2]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rc[2]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[10].u_local.read_oh[0]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[0]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[10].u_local.read_oh[1]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[1]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[10].u_local.read_oh[2]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[2]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[10].u_local.read_oh[3]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[3]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[10].u_local.rq=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rq",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[10].u_local.warm=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.warm",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[11].u_local.rc[0]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rc[0]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[11].u_local.rc[1]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rc[1]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[11].u_local.rc[2]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rc[2]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[11].u_local.read_oh[0]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[0]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[11].u_local.read_oh[1]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[1]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[11].u_local.read_oh[2]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[2]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[11].u_local.read_oh[3]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[3]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[11].u_local.rq=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rq",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[11].u_local.warm=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.warm",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[12].u_local.rc[0]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rc[0]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[12].u_local.rc[1]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rc[1]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[12].u_local.rc[2]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rc[2]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[12].u_local.read_oh[0]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[0]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[12].u_local.read_oh[1]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[1]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[12].u_local.read_oh[2]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[2]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[12].u_local.read_oh[3]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[3]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[12].u_local.rq=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rq",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[12].u_local.warm=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.warm",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[13].u_local.rc[0]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rc[0]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[13].u_local.rc[1]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rc[1]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[13].u_local.rc[2]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rc[2]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[13].u_local.read_oh[0]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[0]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[13].u_local.read_oh[1]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[1]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[13].u_local.read_oh[2]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[2]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[13].u_local.read_oh[3]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[3]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[13].u_local.rq=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rq",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[13].u_local.warm=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.warm",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[14].u_local.rc[0]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rc[0]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[14].u_local.rc[1]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rc[1]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[14].u_local.rc[2]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.rc[2]",
+    "both:ff:u_dut.u_kn.u_r.g_chunk[14].u_local.read_oh[0]=ff:u_dut.u_kn.u_r.g_chunk[0].u_local.read_oh[0]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 0,
+   "first": []
+  },
+  "gold_x_sources": 141,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 1,
+  "gold_only_compare": {
+   "n": 0,
+   "first": []
+  },
+  "gate_only_compare": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "t_prove_s": 0.5,
+ "x_dont_care_points": {
+  "n": 140,
+  "first": [
+   "ff:u_dut.u_kn.u_r.g_chunk[0].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[10].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[11].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[12].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[13].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[14].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[15].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[16].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[17].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[18].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[19].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[1].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[20].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[21].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[22].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[23].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[24].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[25].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[26].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[27].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[28].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[29].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[2].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[30].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[31].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[32].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[33].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[34].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[35].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[36].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[37].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[38].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[39].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[3].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[40].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[41].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[42].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[43].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[44].u_local.warm",
+   "ff:u_dut.u_kn.u_r.g_chunk[45].u_local.warm"
+  ]
+ },
+ "kept_registers": {
+  "declared": 1416,
+  "in_netlist": 1416,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null,
+  "functionally_unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "functionally_unobservable_reason": null,
+  "dead_twin_classes_removed": {
+   "n": 0,
+   "first": []
+  },
+  "dead_twin_classes_reason": null
+ },
+ "counts": {
+  "compare_points": 14942,
+  "proved": 14942,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "14942 compare points proved; 9516 key points matched by name, 2715 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 140 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "t_total_s": 52.3,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "kit provenance invalid: FileNotFoundError: [Errno 2] No such file or directory: '/work/PROVENANCE.json'",
+  "tool_update": null
+ }
+}
