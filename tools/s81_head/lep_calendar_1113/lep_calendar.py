@@ -96,3 +96,72 @@ def require_matching_receipt(stages, receipt, programme_sha256):
     if receipt.get('static_replay') != 'PASS' or receipt.get('removed_reservation_mutant') != 'CAUGHT':
         raise ValueError('fixed static replay and removed-reservation control required')
     return tuple(receipt['handoff_idle_cycles'])
+
+
+def provider_port_contract(plan, stages=VF, part='lep0N'):
+    """Match provider legs to real plan endpoints WITHOUT changing lane delay.
+
+    Plan lane latency ends at partition faces. These registers are inside
+    noidx_core. The compiler traverses network edges plus provider legs once.
+    Coherent ports name one group; their depths are never summed together.
+    """
+    by_bus = {
+        'lepk_i0': ('in','input.lepk_i0+unit_i0+lepf_i0'),
+        'unit_i0': ('in','input.lepk_i0+unit_i0+lepf_i0'),
+        'lepf_i0': ('in','input.lepk_i0+unit_i0+lepf_i0'),
+        'lepk_o0': ('out','output.lepk_o0+ctrl_o0+fault_o0'),
+        'ctrl_o0': ('out','output.lepk_o0+ctrl_o0+fault_o0'),
+        'fault_o0': ('out','output.lepk_o0+ctrl_o0+fault_o0'),
+        'lw_o': ('out','output.lw_o'),
+        'coll_i0': ('in','collective0.input.live+fault+data'),
+        'coll_o0': ('out','collective0.output.data'),
+    }
+    by_bus.update({f'coll_{d}{i}':('in' if d=='i' else 'out',None)
+                   for i in range(1,4) for d in ('i','o')})
+    lanes = {x['id']:x for x in plan['lanes']}
+    port_lanes = {}
+    for lane in lanes.values():
+        for pid in lane.get('ports',[]):
+            port_lanes.setdefault(pid,[]).append(lane['id'])
+    ports = []
+    found = set()
+    for port in plan['ports']:
+        for endpoint, direction in (('dst','in'),('src','out')):
+            ep = port.get(endpoint,{})
+            if ep.get('part') != part:
+                continue
+            bus = ep['bus']
+            expected, leg = by_bus[bus]
+            if direction != expected or port['id'] not in port_lanes:
+                raise ValueError(f'provider endpoint direction/lane mismatch: {bus}')
+            found.add(bus)
+            ports.append(dict(bus=bus, direction=direction, port=port['id'],
+                              lanes=port_lanes[port['id']], provider_leg=leg,
+                              provider_added_cycles=stages.legs()[leg] if leg else 0))
+    if found != set(by_bus):
+        raise ValueError(f'provider ports differ: missing {sorted(set(by_bus)-found)}')
+    selected = {lane for row in ports for lane in row['lanes']}
+    return dict(partition=part, params=stages.params(), provider_ports=ports,
+                die_lane_added_cycles={lane:0 for lane in sorted(selected)},
+                die_lane_fixed_cycles_before={lane:lanes[lane].get('fixed_cycles',0)
+                                              for lane in sorted(selected)},
+                internal_lane_legs={k:v for k,v in stages.legs().items() if k.startswith('lane')},
+                consumption_rule='keep external lane fixed_cycles unchanged; compose each '
+                                 'traversed provider leg once; coherent port depths are not summed',
+                programme_qualified=False)
+
+
+def check_external_lane_calendar_unchanged(before, after, contract):
+    """Reject charging provider stages a second time on their external lanes."""
+    for key in ('before','after'):
+        plan = before if key=='before' else after
+        lanes = {x['id']:x for x in plan['lanes']}
+        for lane, fixed in contract['die_lane_fixed_cycles_before'].items():
+            if lane not in lanes or lanes[lane].get('fixed_cycles',0) != fixed:
+                raise ValueError(f'{key}: provider stage double-charged on external lane {lane}')
+    b = before.get('latency',{}).get('lanes',{})
+    a = after.get('latency',{}).get('lanes',{})
+    for lane in contract['die_lane_added_cycles']:
+        if lane in a and lane in b and a[lane].get('cycles') != b[lane].get('cycles'):
+            raise ValueError(f'external lane {lane} latency changed in provider-only event')
+    return True
