@@ -1,0 +1,252 @@
+{
+  "pin2_to_encoder_d0": {
+    "bits": 512,
+    "median_um": 234.68399999999997,
+    "p95_um": 250.77600000000024,
+    "max_um": 258.9840000000003
+  },
+  "TXL6_to_PMA": {
+    "bits": 545,
+    "median_um": 250.13099999999997,
+    "p95_um": 356.96700000000004,
+    "max_um": 389.2440000000001
+  },
+  "input_hop0": {
+    "bits": 512,
+    "median_um": 233.55000000000018,
+    "p95_um": 250.8300000000004,
+    "max_um": 256.5540000000001
+  },
+  "input_hop1": {
+    "bits": 512,
+    "median_um": 234.96749999999997,
+    "p95_um": 250.8299999999999,
+    "max_um": 257.472
+  },
+  "input_hop2": {
+    "bits": 512,
+    "median_um": 234.73800000000017,
+    "p95_um": 250.55999999999977,
+    "max_um": 256.77000000000004
+  },
+  "TXL_hop1": {
+    "bits": 545,
+    "median_um": 155.73599999999988,
+    "p95_um": 262.9530000000001,
+    "max_um": 295.9200000000002
+  },
+  "TXL_hop2": {
+    "bits": 545,
+    "median_um": 156.16800000000023,
+    "p95_um": 261.25200000000007,
+    "max_um": 293.59799999999984
+  },
+  "TXL_hop3": {
+    "bits": 545,
+    "median_um": 155.95199999999988,
+    "p95_um": 263.1149999999998,
+    "max_um": 294.1920000000001
+  },
+  "TXL_hop4": {
+    "bits": 545,
+    "median_um": 156.43799999999987,
+    "p95_um": 262.00800000000004,
+    "max_um": 296.35199999999986
+  },
+  "TXL_hop5": {
+    "bits": 545,
+    "median_um": 116.90999999999997,
+    "p95_um": 223.82999999999993,
+    "max_um": 252.34199999999998
+  },
+  "TXL_hop6": {
+    "bits": 545,
+    "median_um": 100.65599999999995,
+    "p95_um": 207.52199999999993,
+    "max_um": 240.43499999999995
+  },
+  "reset_control_registers": [
+    {
+      "name": "u_bound.u_core.lk_s[0]$_DFF_PN0_",
+      "x": "1876.932",
+      "y": "267.57",
+      "clock_net": "clk_t48",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.lk_s[1]$_DFF_PN0_",
+      "x": "1962.252",
+      "y": "309.42",
+      "clock_net": "clk_t13",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.rs_t[0]$_DFF_PN0_",
+      "x": "1638.36",
+      "y": "361.53",
+      "clock_net": "clk_t12",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.rs_t[1]$_DFF_PN0_",
+      "x": "1641.276",
+      "y": "362.07",
+      "clock_net": "clk_t12",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.st[0]$_DFF_PN0_",
+      "x": "2033.208",
+      "y": "331.02",
+      "clock_net": "clk_t13",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.st[1]$_DFF_PN0_",
+      "x": "2082.78",
+      "y": "357.48",
+      "clock_net": "clk_t13",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.f1$_DFF_PN0_",
+      "x": "1758.402",
+      "y": "335.88",
+      "clock_net": "clk_t48",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.fault$_DFF_PN0_",
+      "x": "1994.544",
+      "y": "311.58",
+      "clock_net": "clk_t13",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.rp[0]$_DFFE_PN0N_",
+      "x": "1637.064",
+      "y": "225.45",
+      "clock_net": "clk_t4",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.rp[1]$_DFFE_PN0N_",
+      "x": "1627.236",
+      "y": "192.78",
+      "clock_net": "clk_t4",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.rp[2]$_DFFE_PN0N_",
+      "x": "1631.232",
+      "y": "210.6",
+      "clock_net": "clk_t4",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.rp[3]$_DFFE_PN0N_",
+      "x": "1631.394",
+      "y": "219.24",
+      "clock_net": "clk_t4",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.rp_g[0]$_DFFE_PN0N_",
+      "x": "1634.58",
+      "y": "213.84",
+      "clock_net": "clk_t4",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.rp_g[1]$_DFFE_PN0N_",
+      "x": "1627.722",
+      "y": "234.63",
+      "clock_net": "clk_t4",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.rp_g[2]$_DFFE_PN0N_",
+      "x": "1631.178",
+      "y": "221.94",
+      "clock_net": "clk_t4",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.wp_g1[0]$_DFF_PN0_",
+      "x": "1627.182",
+      "y": "199.26",
+      "clock_net": "clk_t4",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.wp_g1[1]$_DFF_PN0_",
+      "x": "1626.804",
+      "y": "197.37",
+      "clock_net": "clk_t4",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.wp_g1[2]$_DFF_PN0_",
+      "x": "1624.536",
+      "y": "205.2",
+      "clock_net": "clk_t4",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.wp_g1[3]$_DFF_PN0_",
+      "x": "1627.452",
+      "y": "207.9",
+      "clock_net": "clk_t4",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.wp_g2[0]$_DFF_PN0_",
+      "x": "1631.502",
+      "y": "201.96",
+      "clock_net": "clk_t4",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.wp_g2[1]$_DFF_PN0_",
+      "x": "1629.45",
+      "y": "200.34",
+      "clock_net": "clk_t4",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.wp_g2[2]$_DFF_PN0_",
+      "x": "1627.83",
+      "y": "209.25",
+      "clock_net": "clk_t4",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_rm.wp_g2[3]$_DFF_PN0_",
+      "x": "1628.424",
+      "y": "206.01",
+      "clock_net": "clk_t4",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.u_tx_pin.pin_v[0]$_DFF_P_",
+      "x": "1816.506",
+      "y": "395.28",
+      "clock_net": "clk_t39",
+      "bucket": "pin_control0"
+    },
+    {
+      "name": "u_bound.u_core.uf_s[0]$_DFF_PN0_",
+      "x": "1643.274",
+      "y": "366.66",
+      "clock_net": "clk_t12",
+      "bucket": "other"
+    },
+    {
+      "name": "u_bound.u_core.uf_s[1]$_DFF_PN0_",
+      "x": "1874.016",
+      "y": "268.38",
+      "clock_net": "clk_t48",
+      "bucket": "other"
+    }
+  ]
+}

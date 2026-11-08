@@ -1,0 +1,15 @@
+# RCK t16 vH physical profile freeze
+
+This records the actual S81-RCK-6/7 successor, not a new build. Base `claude/s81-rck-5-1107@ebd0e1153f`; actual placed netlist `1_2_yosys.v` is unchanged versus vG (reported SHA prefix5b13823721e03874). The same-netlist vG LEC remains the proof owner; import its completed result through lec_async.sh before sign-off. No duplicate proof is authorized here.
+
+The actual built hooks are rck_tx_compact.tcl and rck_tx_pre_detail_place_tcl.tcl. edit_vH.py is the one-shot transformer used on a private copied vG kit; apply only to a new owned kit. This artifact does not launch or reconstruct P&R. Old mk_vH.sh/dp_only.sh were not copied as runnable factory steps because they used mutable hardlinks and cleanup. A future continuation must use the supported stage-resume path, independent writable inputs, current flow-tag guard and a reviewed image.
+
+Changes versus vG: indexed raw OpenDB names include backslashes; the corrected group regex matches them. Each 512-bit pin_q row receives one tap. Merged pin_v/pin_rst_n is a reset/calendar chain fed by rs_t[1], not a per-beat valid interaction with PIN0/1 data: those flops follow their own producer, evenly to the encoder. Only pin_v[2] joins the encoder group. Exact matching forwarded-export reuse is in the private landing_exports.tcl. A fail-closed post-assignment check requires one tap for each data cohort and encoder/BIN.
+
+Actual PLACE completed with0violations. Groups5 (vG2), data rows each512FF, encoder group5926 including pin_v2. DATA spans183/174/169um; reset/calendar hops207/207/210um. PIN2→encoder data reach259um; TXL internalmax296um; finalTXL→PMA389um. Encoder20um bins mean0.26/max0.48, no >0.7bins. Picture vH_place.png was viewed. The earlier vG control/data spatial comparison was not by itself a live data timing relation; the actual faults were the missed data row aliases and uneven reset/calendar hops.
+
+Model: no new RTL or cycles versusvG. TX+8 versus current COL TXL2/POR and versus untried vF:3 coherent input stages+(TXL7−2),6.664ns at833ps. Encoder reset/fault calendar+3 remains separate. RM_STAGED RX+1 remains unadopted versusPOR; vH adds0 versusvF/vG. No parent/POR adoption, RX/FT closure or fully conservative claim. Signal routing ceilingM7 is inherited for the fixed PMA stack; not a <=M6 conservative profile.
+
+CTS completed rc0, FF screen−248.79ps/6343endpoints against−280, not hold sign-off. Tap means155..409ps, spread254; some individual trees >400ps. Pre-GRT setup−922ps (RM read pointer to r_m), with long unbuffered nets. The existing GRT continuation remains unstarted on E4 memory guard as of first takeover collection. GRT and routed sign-off decide; do not report the screen or advisory policy as signed off. TXL rows still span multiple taps and need final hold repair/read.
+
+Actual kit E4 `/srv/opentallas-scratch3/claude/s81-rck-6/vH/serdes__t16`; existing GRT client log `/tmp/s81-rck-7/vH_route.otrun.log`. Existing vG proof E4 `s81-rck-5/vG/serdes__t16/gen/serdes__t16/lec`. This source freeze does not supersede healthy jobs, re-run placement or enable a batch.
