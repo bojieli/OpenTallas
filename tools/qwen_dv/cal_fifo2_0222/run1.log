@@ -1,0 +1,21 @@
+FIFO2 checks=792 errors=0 golden_errors=0 row_mutant=792 edge_mutant=233 collisions=96 partial=272 holds=416
+CE_ROW_COMBO 0 count=56
+CE_ROW_COMBO 1 count=56
+CE_ROW_COMBO 2 count=56
+CE_ROW_COMBO 3 count=56
+CE_ROW_COMBO 4 count=48
+CE_ROW_COMBO 5 count=48
+CE_ROW_COMBO 6 count=48
+CE_ROW_COMBO 7 count=48
+CE_ROW_COMBO 8 count=48
+CE_ROW_COMBO 9 count=48
+CE_ROW_COMBO 10 count=48
+CE_ROW_COMBO 11 count=48
+CE_ROW_COMBO 12 count=48
+CE_ROW_COMBO 13 count=48
+CE_ROW_COMBO 14 count=48
+CE_ROW_COMBO 15 count=48
+- tools/qwen_dv/cal_fifo2_0222/tb_fifo2.sv:36: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 667ns; walltime 0.016 s; speed 42.873 us/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB

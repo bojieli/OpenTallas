@@ -1,0 +1,7 @@
+Narrow calendar FIFO2 successor, own branch only.
+
+Current canonical native32_cpub39_1 source SHA256 5d45a822fe5a7550e98e274ebb7d19f4c27ac1f3e3352daefa0258b9a29b5b04 remains unchanged. The alternate *_fifo2.sv changes only four g_fifo[0..3].u_fifo master tokens to ot_qc_cal_fifo2_512; every port connection and other memory/source byte is identical. Constructor rejects nonliteral 0/1 bounds or nonzero repair connections.
+
+Helper rtl/physical/ot_qc_cal_fifo2_512.sv retains full old macro port ABI under the proven address/repair precondition. Two512-bit rows and512-bit registered readout per FIFO, no reset, read CE holds output, per-bit mask, and old-data read on same-address write. Keep hierarchy on ot_qc_cal_fifo2_inv and ot_qc_cal_fifo2_bank8 to preserve the explicit inverter distribution tree and local16-bit placement groups (two8-bit banks). Actual post-synthesis fanout and placement must still be read.
+
+Old actual64x512_m1_r2c2 macro .v, full512-bit comparison, independent state model and wrong-row/extra-edge controls: run1 PASS. 792x512-bit reads,0 differences; wrongrow792/extraedge233 differences;96 collisions,272 partial-mask writes,416 CE holds; all16 CE/address combinations covered. No OT_MEM_FAULTS qualification; helper rejects that simulation mode. No P&R/timing/signoff is claimed. Parent owns private alternate plan/GEN and reviewed physical pilot. Added cycles0; no compiler reschedule.
