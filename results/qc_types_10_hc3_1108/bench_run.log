@@ -1,0 +1,21 @@
+ot-run: epyc4          admits    37 GB (avail 282, reserve 0, fresh 143.8, peak 68.7, headroom 0, waiters 38/2176 GB) load 97/256 running 58 disk 337 GB 
+ot-run: epyc5          admits    25 GB (avail 187, reserve 0, fresh 51.5, peak 78, headroom 0, waiters 35/1833 GB) load 50/128 running 52 disk 128 GB 
+ot-run: intel1         admits     9 GB (avail 303, reserve 0, fresh 70.3, peak 159.6, headroom 0, waiters 8/297 GB) load 153/112 running 65 disk 234 GB 
+ot-run: -> epyc5
+ot-heavy: admitted on devoted-wren as oth-ubuntu-2914842-1794152744 after 2 s
+PASS fo32 leaf equivalence edges=20028 answers=4992 good=1409 bad=3583 GRP=8 NG=3 NQ=6 added_edges=0
+RC s7 0
+PASS fo32 leaf equivalence edges=20028 answers=4999 good=1476 bad=3523 GRP=8 NG=3 NQ=6 added_edges=0
+RC s11 0
+PASS fo32 leaf equivalence edges=20028 answers=4982 good=1456 bad=3526 GRP=8 NG=3 NQ=6 added_edges=0
+RC s23 0
+MISMATCH answer edge=22 ref=1/133f1320130a1306/0 dut=1/113f1120110a1106/1
+MISMATCH answer edge=30 ref=1/133400001307132f/0 dut=1/113400001107112f/1
+MISMATCH answer edge=38 ref=1/b5a70000964d133d/0 dut=1/112000001104113d/1
+MISMATCH answer edge=46 ref=1/1233e6e1121e1201/1 dut=1/103310052c102f25/1
+FAIL errors=485 edges=4028 answers=996
+RC mut2 1
+d323b95b4e32e383cb7580208abe5280  rtl/qwen_sys/dvm_20261014/ot_qfd_xs_leaf_fo32.sv
+0849879212c8544455f1b2fbebed5cdd  rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv
+57e2b42e9fa9e61de14cfda2b69b7b87  rtl/qwen_sys/dvm_20261014/tb_qfd_xs_leaf_fo32.sv
+ot-run: RAN on epyc5 (unit oth-ubuntu-2914842-1794152744): exit 0
