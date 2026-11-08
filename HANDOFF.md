@@ -3440,3 +3440,7 @@ CODEX: 2026-11-08 02:45 PST KV types: ioft lockup form omitted existing STATUS_R
 CODEX: 2026-11-08 02:45 PST QC production-calendar SU1 diagnostic PASS (req+9/results+18,3mutantscaught, warm/goldenPASS; private source9580edf420),5actual CBN ring providers recovered capture+provePASS/privateGENactive, NL event replay onto ownv4s candidate a3b374d33d/strictbindE6active. No merges/tags/POR/config adoption; original NKvR7 healthy GRT retained.
 
 CODEX: 2026-11-08 02:49 PST KV own prompt clock form bf0ac2d662 published+pilot; actual early macro-vs-register tree diagnosed and prototype TT pairskew50.34/49.79ps (not routed signoff). e1currentds re-sign SIGNED/LECpending; combined ioft/PV/hub clock/SYS_C/Wi fixes active, no merges/tags/POR changes.
+
+CODEX: 2026-11-08 02:55 PST HEAD all8open types covered; LEP FIRM resize-overlap class fixed3a182, actual32415cellhookPASS, own predecessorform41a81+reviewedPLACE admittedI1/572991. TXfullsignoff919TT/580FFslewnets=noECO; regionalformunderway. CTLvG1025anchorsfixed/PLACEactive, TILEH8EQ36191/PLACEactive, MESH2x~99kfunctional cut modeled. AllrouteHOLDs kept; no merges/tags/POR/newSIGNED.
+
+CODEX: 2026-11-08 02:55 PST five existing E5 waiters now admitted on I2 through complete copies and original frontends: S81t35/t11/t24 plus QCstm2/sta2. No extra launcher, retry, signal, source deletion or admission edit; full staged kits/receipts protected. E4 next-row copy exists but memory admission0, spill marker untouched.
