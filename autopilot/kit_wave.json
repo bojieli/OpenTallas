@@ -7197,7 +7197,7 @@
       "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
       "note_hosts_1105": "KW-FIX-10 2026-11-05 04:1x COORD disk rules: epyc2 out (root 507 <520), intel1 out (scratch2 48 <100). epyc2 back at root >=530 and scratch2 >=150; intel1 back at scratch2 >=100. Epyc4 new attempts via 1105e4 symlink to scratch3 stay; stop at root 540; back to scratch2 at >=250.",
       "note_sc_batch_1105": "KW-FIX-10 04:2x COORD: moved list 47 + 9 SC + leaves on src_c/sc_ev/pub. Live moved rows armed by retry; they relaunch when their queue verdict lands and do not count on the old bind.",
-      "stage_resume": false,
+      "stage_resume": true,
       "note_recut_f": "KW-FIX-16 13:1x COORD 13:00 + 13:0x: one recut of QC rows not past GRT on tag f; cancel_superseded true stops live old-block rows (13:1x read: 60 live QC rows, 0 with 5_1_grt.odb); coll_s held (DIE-QC-79). COORD correction 13:1x: coll_s cut ONCE on tag f (RE-FORM build), hold removed; no further cuts of this form (no retry entry will be added).",
       "hosts_base": [
         "epyc5",
@@ -8010,8 +8010,7 @@
         "slw_su_l0__cl1e5219ea@10",
         "slw_su_l0__cl76fb247e@4"
       ],
-      "stage_resume_prev_kw35p": true,
-      "note_kw35p": "KW-FIX-35-P 2026-11-08 08:05 PST: src-pollution fresh-kit batch (18 rows); stage_resume False only until the batch LAUNCH lines, then revert (stage_resume_prev_kw35p)",
+      "note_kw35p": "KW-FIX-35-P 2026-11-08 08:05 PST: src-pollution fresh-kit batch (18 rows); stage_resume False only until the batch LAUNCH lines, then revert (stage_resume_prev_kw35p) | 2026-11-08 09:30 PST: batch launched (incl. coll_ucie), stage_resume restored to True",
       "gen_hosts_prev_kw35e6": [
         "intel1",
         "epyc4",
