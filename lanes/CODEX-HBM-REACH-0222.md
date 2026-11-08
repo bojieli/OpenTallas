@@ -23,3 +23,9 @@ FIX READY: hub `codex/hbm-reach-receipt-1108@a4143b6aa7`, based on `178842a72a`.
 Actual fixed branch-head kit-rtl pilot running via ot-run epyc4, own tree `/srv/opentallas-scratch2/claude/codex-hbm-reach-receipt-0222`, kit `pilot/q_su11_fixed`, controller log intel2 `/tmp/codex-hbm-reach-receipt-0222/pilot_fixed.otrun.log`. First command accidentally ran before the patch applied (git am lacked local committer identity); it reproduced the old failure and remains in `pilot.otrun.log`. Patch application completed before the fixed pilot launch. No P&R and no repeated physical run.
 
 Local fixed source `/home/ubuntu/codex-hbm-reach-receipt-0222`. New worktree `/home/ubuntu/codex-hbm-phy-0222` created from d6e906593cc at KCLS parent's request and handed entirely to KCLS; do not modify it from this lane.
+
+## 02:34 PST pilot followup
+
+Fixed pilot `oth-ubuntu-3722036-1794133841` cleared the receipt stage, then failed because the new sparse source lacked rtl/lib/ot_reset_sync.sv. This is a pilot source prerequisite, not a code regression. Added rtl/lib to the own source sparse checkout and launched the source-complete kit-rtl dry (no physical run), output `pilot/q_su11_sourcecomplete`, controller log `/tmp/codex-hbm-reach-receipt-0222/pilot_sourcecomplete.otrun.log`. Original failure logs preserved.
+
+Complete base dry census: 25 finished rows, WCOPY16 + RING2 + provisional6 + recursive-root1. Candidate dry currently has 12 mixed-receipt failures plus known source-class dependencies. The 12 affected rows are q_b113(+pv1), q_su00(+pv1), q_su01pv1, q_su11(+pv1), q_su20(+pv1), q_su21, q_su31(+pv1). The source branch used by that inherited dry predates KITPARAM/kcls fixes, so those repeated known classes are not reach regressions. HBM token agent notified that reach LAT_85-lane/PIN83-lane ledger is unadopted; reader fix adds 0 cycles and needs no token reprice.

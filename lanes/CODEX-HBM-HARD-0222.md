@@ -1,0 +1,22 @@
+# CODEX HBM HARD takeover 2026-11-08 02:22 PST
+
+CODEX took over: collect HBM-HARD-5/HARD-4/UNTRIED forms; no merges/tags/POR changes.
+
+## CODEX notes
+- All five current intel1 builds alive, no duplicate or stop: `/srv/opentallas-scratch2/claude/hbm-hard-5/kits/`.
+- `gqi_vLF2`: detailed PLACE done, LEC sidecar active; next read CTS and view place. Covers vLF NOT SIGNED TT -54.42/14, local hold -12.03/34, slew 0, DRC0. Structural exact retiming removes sec_add from issue path; PIN CYCLES0; predecessor bench killed mutants16-19.
+- `wsw_H7`: GRT setup repair +5.54 ps in flow, FF non-port hold -26.07/113, reg-only repair active. Exact dedicated reset synchronizer replica, EQ76652. Next read routed signoff, one ECO only if local near miss.
+- `opsb_PS2c`: GRT second extra-iteration sequence at22/30; next read result, inspect congestion before any new form. PS2b DPL failure is covered by PS2c macro-halo structural change. No retry.
+- `rootctl_vD`: GRT hold repair progressing on input-port endpoints (WNS -157.6 latest); LEC EQ per predecessor. Next collect full result. vCl/e1/a17 paths closed FAIL, no further ECO.
+- `q3bc_vC2/ot_hfd_coll_q3_body_ctl_cf148fd0f3e3-_vC2`: GRT hold repair progressing (-219 to -133 latest, mostly named u_bin inputs). Divider-case structural form; LEC EQ per predecessor. Next routed TT/FF signoff.
+- epyc2 `/srv/opentallas-scratch3/claude/hbm-hard-5/kits/opsg_P1b/ot_hgi_sfu_opsb_group_3e934079a644-_P1b`: synth complete, Python sidecar CPU78%, not hung. Placement-only what-if, no route release until clean place and actual render review.
+- epyc2 `/srv/opentallas-scratch3/claude/hbm-untried-1/kits/ot_hgi_sfu_opsb_output_vP1/ot_hgi_sfu_opsb_output_3379bbf2f6a7-_vP1`: DRT stubborn iteration54, 80-90%13 violations improving from14; healthy, leave running.
+- q3_vm vC FAIL: TT -147.74/4297, local FF -45.81/645, TT slew1551; no ECO. Proposal P-Q3VM-1 (rd_il N->S, clock near N writer) needs die owner/plan event, not adopted. Lane1p taller outline also plan-event held.
+
+## Geometry viewed
+Actual PLACE macro+pin and density images copied to `/tmp/codex-hbm-hard-0222/{rootctl_vD,q3bc_vC2}_{place,density}.png` and viewed02:25. Rootctl: calendar macro NW against N strip, logic mass S/W, wide empty mid/NE, long face buses on N/S; SMELLS3/7/8/9 remain in inherited form. Q3body: 6 issuer macro halves in two centre stacks with broad centre channel and 5 N SRAMs; boundary logic on W/E and in centre channel, dense N band; SMELLS6/8, high-fanout resets per previous actual STA. Inherited jobs continue; new form requires structural correction before build.
+
+## 02:33 new work
+OPSA0 vB FAIL GRT104091 overflow, 45.07% usage; LEC EQ. OPSA1 vB alive epyc2 CPU99.6%, GRT extra23, no duplicate/stop. OPSA0 own structural pilot P2: codex/hbm-opsa-periphery-0222@aaea21500c4, pushed to hub via own local bare relay after remote intel2 alias failed. E2 `/srv/opentallas-scratch3/claude/codex-hbm-hard-0222/kit_opsa0_P2`, place only through ot-run mem32/thread8, client3618729; log hub `/home/ubuntu/codex-hbm-hard-0222-logs/opsa0_P2_place.otrun.log`. First nohup-shell launch did not persist (empty log, no client/process/container); corrected to detached Popen and no duplicate run. No route batch release. Inputs only copied from old vB (9.6MB). P2 changes 16 macros to7N/7S/one eachside with inward pins, removes96um hub guide, guides banks locally. Channels13.896um (~680 vertical tracks vs inferred<=160 transit bits each), furthest bank-centre->die-centre404.844um, same RTL/pins/outline/clock/cycles. Actual failed-GRT cells+macros dumped read-only and plotted with proposed P2 in `results/geom_review/opsa0_vB_and_P2_0222.png`; VIEWED baseline/candidate, detailed review in `opsa_P2_0222.txt`. Standard GUI render spent6min in heatmap dump, so used its actual DB cell/macro dump to draw density and stopped own exact render container after question answered. No timing job stopped.
+
+02:34 correction: standard render container had already ended by itself before exact stop; no kill took place. Its PNG step produced no image; actual dumped DB placements supplied the successful fallback plot. E2 P2 ot-run memory-waited, NOT ADMITTED; cancelled own3618729 and staged identical9.6MB input kit to E6 scratch2 (78GB free). E6 client3621897 now submits PLACE only from `/srv/opentallas-scratch2/claude/codex-hbm-hard-0222/kit_opsa0_P2`; log `opsa0_P2_place_e6.otrun.log`.
