@@ -126,7 +126,11 @@ def adapt_core_ports(bound, hard_cores):
     return bound, receipt
 
 
-def wire(bound, module, rows):
+def wire(bound, module, rows, leaf_id=None):
+    """leaf_id: the binder's own leaf-instance naming (bind.py passes short_id("u_" + inst, 90)).  DIE-HBM-90-ISTA 11-07
+    (HBM q_hub_nw kit_rtl "core clock clk_c1: expected one bound leaf u_hb_coll_Q_ring_ag__q0, got 0"): the bind emits
+    the plan core u_hb_coll_Q_ring_ag__q0 as leaf u_u_hb_coll_Q_ring_ag_q0 (sv_id folds "__" to "_"), so neither the plan
+    name nor u_<plan name> is in the bound text.  That exact name is one more candidate; one match is still required."""
     ports = {}
     receipt = []
     consumers = set()
@@ -142,6 +146,8 @@ def wire(bound, module, rows):
         # otherwise the binder's native leaf instances have their standard u_ prefix.
         candidates = ([physical_inst[len("u_bound."):]] if physical_inst.startswith("u_bound.")
                       else [physical_inst, "u_" + physical_inst])
+        if leaf_id and "." not in physical_inst and leaf_id(physical_inst) not in candidates:
+            candidates.append(leaf_id(physical_inst))
         if all("." in c for c in candidates):
             # NESTED_LEAF_1101 (FLOW-21, KIT-WAVE-14: S81 kit_rtl failed on every type whose core clock reaches a leaf
             # inside a bound child, e.g. u_r2.u_e10 / u_lf.u_ve.u_m).  The pin sits in a child module shared with other
