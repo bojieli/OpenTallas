@@ -66,6 +66,14 @@ class CountedSignedView(unittest.TestCase):
     def test_needs_parent_view_is_final(self):
         self.assertEqual(run(COUNTED, dict(GOOD, signoff="LOCAL_PASS_NEEDS_PARENT"))["status"], "FINAL")
 
+    def test_needs_parent_export_problem_only_is_final(self):
+        np = "signoff.json verdict 'LOCAL_PASS_NEEDS_PARENT' is not SIGNED"
+        g = dict(GOOD, signoff="LOCAL_PASS_NEEDS_PARENT", view_complete=False, view_problems=[np])
+        self.assertEqual(run(COUNTED, g)["status"], "FINAL")             # KW-FIX-35-CV: export_view's own verdict note
+        for bad in (dict(g, view_problems=[np, "core.lef not found"]), dict(g, view_problems=[]),
+                    dict(g, signoff="SIGNED"), dict(g, signoff="FAIL")):
+            self.assertEqual(run(COUNTED, bad)["status"], "PROVISIONAL", bad)
+
     def test_routed_unsigned_candidate_stays_provisional(self):
         m = run({"job": "a1b2c3", "drc": 0}, GOOD)       # no counted flag: a DRC-clean routed attempt
         self.assertEqual((m["status"], m["children"]["core"]["source"], m["children"]["core"]["final"]),

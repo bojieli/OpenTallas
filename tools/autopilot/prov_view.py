@@ -899,6 +899,15 @@ def make(a):
 SIGNED_VERDICTS = ("SIGNED", "LOCAL_PASS_NEEDS_PARENT")
 
 
+def needs_parent_view_only(g):
+    """KW-FIX-35-CV 11-08 (HBM hcol_h0_ra/rb, sfu_opsa_rest, wbq_root_g0): export_view.py lists the LOCAL_PASS_NEEDS_PARENT
+    verdict itself as a view problem, so a counted NEEDS_PARENT view (OWNER 11-03: counts SIGNED) always read
+    view_complete false here and never went FINAL.  True when that verdict is the ONLY view problem."""
+    pr = g.get("view_problems") or []
+    return (str(g.get("signoff") or "").split() or [""])[0] == "LOCAL_PASS_NEEDS_PARENT" and bool(pr) and all(
+        "LOCAL_PASS_NEEDS_PARENT" in str(x) and "is not SIGNED" in str(x) for x in pr)
+
+
 def signed_view_ok(cdir, module, meta, plan_lef=None):
     """'' unless candidate dir cdir is the COUNTED signed view of module: kit_wave staged it with counted=True (a
     prov_view_sources entry from counted_child_views.py / export_view.py of the counter's own sign-off record) and its
@@ -912,7 +921,7 @@ def signed_view_ok(cdir, module, meta, plan_lef=None):
         return ""
     if g.get("type") not in (None, module) or (str(g.get("signoff") or "").split() or [""])[0] not in SIGNED_VERDICTS:
         return ""
-    if g.get("view_complete") is not True:
+    if g.get("view_complete") is not True and not needs_parent_view_only(g):
         return ""
     if plan_lef:
         sl = os.path.join(cdir, module + ".lef")
