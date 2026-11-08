@@ -7,6 +7,13 @@ module ot_s81hd_sc_tx #(
 `else
     parameter integer CH_STAGE = 0
 `endif
+    ,
+    // DIE-HEAD-85/TXF 11-07: opt-in FOLD (A w_k folded into the FF slices, no l2_w cone); stream cycle-identical.
+`ifdef OT_HEAD_TX_FOLD
+    parameter integer FOLD = 1
+`else
+    parameter integer FOLD = 0
+`endif
 ) (
     input  wire          clk,
     input  wire          rst,
@@ -18,7 +25,7 @@ module ot_s81hd_sc_tx #(
     always @(posedge clk or negedge rst) if (!rst) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
     wire rn_t = rs_t[1];
     wire e_v; wire [543:0] e_d;
-    ot_s81_kp4_enc_la #(.MUT(0), .LA(2), .FF(1), .CH_STAGE(CH_STAGE)) u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d),
+    ot_s81_kp4_enc_la #(.MUT(0), .LA(2), .FF(1), .CH_STAGE(CH_STAGE), .FOLD(FOLD)) u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d),
         .fault(e_flt));
     ot_s81_pma_bm #(.W(544), .LAT(4)) u_ptx (.clk(clk), .d_v(e_v), .d(e_d), .q(pma_tx));
 endmodule

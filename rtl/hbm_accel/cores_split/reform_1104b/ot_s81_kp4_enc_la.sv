@@ -29,9 +29,15 @@
 // v = A w_k ^ w_(k+1) is feed-forward.  Parity is ready one cycle later, so the PMA side reads one more beat stage
 // (d6): port -> p_d latency 8 cycles (LA = 1: 7); the output stream is the LA = 1 stream delayed by exactly one cycle.
 // ---------------------------------------------------------------------------------------------------------------
+// FOLD (DIE-HEAD-85/TXF 2026-11-07, opt-in, LA = 2 + FF only; default 0 = the form above): A moves into the FF matrix.
+// The 8 registered 65-bit window slices (fp) compute (A P) ch on an even chunk and P ch on an odd chunk
+// (ot_s81_kp4_enc_ffa_mat.svh, gen_kp4_linear.py: fp = fb ^ (ev ? fa : fo), three disjoint masks), so wb = A w_2j then
+// w_(2j+1) and v = wb_d ^ wb.  The l2_w cone (A on wb) and wp0..3 are gone; v holds the same value on every rem_q load,
+// so p_v / p_d / fault are cycle-identical to FOLD = 0 (bench tb_kp4_enc_fold.sv).  Mutants: MUT 4 = one ev copy stuck
+// at odd, MUT 5 = v without wb_d.
 module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, parameter integer FF = 0,
     // Opt-in local chunk capture: +1 output data/valid/fault cycle, unchanged II=1.
-    parameter integer CH_STAGE = 0, parameter integer CH_MUT = 0) (
+    parameter integer CH_STAGE = 0, parameter integer CH_MUT = 0, parameter integer FOLD = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          tx_v,
@@ -45,6 +51,7 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
     // Supported on LA2; port -> p_d is 9 edges, exactly LA2 +1. Default unchanged.
     localparam integer FFS = (LA == 2 && FF != 0) ? 1 : 0;
     localparam integer CHS = (LA == 2 && FF != 0 && CH_STAGE != 0) ? 1 : 0;
+    localparam integer FLD = (FFS != 0 && FOLD != 0) ? 1 : 0;
     localparam integer NP = 30;
     localparam integer NRC = 4;          // chunk-select copies (130 window bits each)
     localparam integer NRO = 17;         // word-select copies (32 PMA bits each)
@@ -133,7 +140,30 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
         for (r=0; r<4; r=r+1) begin : g_cq
             always @(posedge clk) cq[r] <= ch_feed;
         end
+        if (FLD) begin : g_fold
+            // ev[c][r]: the chunk in cq is even (first of a pair), one copy per (slice c, parity region r), captured
+            // on the cq edge: CH_STAGE -> fe[0] (chunk in mid), else the d0 phase (chunk in ch_n).
+            wire evn = CHS ? fe[0] : (sk[0][0] | sk[0][2] | sk[0][4] | sk[0][6] | sk[0][8]);
+            (* keep *) reg [3:0] ev [0:7];
+            wire [299:0] fb [0:7];
+            wire [299:0] fa [0:7];
+            wire [299:0] fo [0:7];
+            integer q;
+            always @(posedge clk)
+                if (!rs_n[1]) begin for (q = 0; q < 8; q = q + 1) ev[q] <= 4'd0; end
+                else begin
+                    for (q = 0; q < 8; q = q + 1) ev[q] <= {4{evn}};
+                    if (MUT == 4) ev[5][3] <= 1'b0;
+                end
+`include "ot_s81_kp4_enc_ffa_mat.svh"
+            for (c=0; c<8; c=c+1) begin : g_fsel
+                for (genvar o=0; o<300; o=o+1) begin : g_o
+                    assign fp[c][o] = fb[c][o] ^ (ev[c][o / 75] ? fa[c][o] : fo[c][o]);
+                end
+            end
+        end else begin : g_nofold
 `include "ot_s81_kp4_enc_ff_mat.svh"
+        end
         for (c=0; c<8; c=c+1) begin : g_fq
             always @(posedge clk) fq[c] <= fp[c] ^ ((MUT == 2 && c == 0) ? 300'b1 : 300'b0);
         end
@@ -158,12 +188,24 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
         // at T_k + 2; rp = A^2 R partials (R stable two cycles); R written at T_2p + 2 when fv, from 0 at chunk 0 (f0v).
         wire [299:0] l2_r0, l2_r1, l2_r2, l2_r3, l2_w0, l2_w1, l2_w2, l2_w3;
 `include "ot_s81_kp4_enc_la2_mat.svh"
-        reg  [299:0] rp0, rp1, rp2, rp3, wp0, wp1, wp2, wp3, v;
+        reg  [299:0] rp0, rp1, rp2, rp3, v;
         (* keep *) reg [3:0] fv, f0v;    // even-chunk / chunk-0 flag at the v stage, 4 copies (75 rem bits each)
         always @(posedge clk) begin
             rp0 <= l2_r0; rp1 <= l2_r1; rp2 <= l2_r2; rp3 <= l2_r3;
-            wp0 <= l2_w0; wp1 <= l2_w1; wp2 <= l2_w2; wp3 <= l2_w3;
-            v <= wp0 ^ wp1 ^ wp2 ^ wp3 ^ wb;
+        end
+        if (FLD) begin : g_vfold
+            // wb = A w_k (even k) one cycle before w_(k+1): v = A w_k ^ w_(k+1) with no A cone here.
+            reg [299:0] wbd;
+            always @(posedge clk) begin
+                wbd <= wb;
+                v <= ((MUT == 5) ? 300'b0 : wbd) ^ wb;
+            end
+        end else begin : g_vwp
+            reg [299:0] wp0, wp1, wp2, wp3;
+            always @(posedge clk) begin
+                wp0 <= l2_w0; wp1 <= l2_w1; wp2 <= l2_w2; wp3 <= l2_w3;
+                v <= wp0 ^ wp1 ^ wp2 ^ wp3 ^ wb;
+            end
         end
         if (CHS) begin : g_ch_flags
             // mid has the old flag-bank semantics, including synchronous reset.
