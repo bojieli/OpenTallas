@@ -1,0 +1,498 @@
+{
+ "schema": "qc_types_10.fws_form/1",
+ "type": "sle_fw_v3",
+ "base": "plan_qc53v4w e5dc7eacb745",
+ "source_um": [
+  619.936,
+  669.6
+ ],
+ "writer_depth": 3,
+ "new_branches": [
+  {
+   "bus": "cws0_o",
+   "path_um": [
+    [
+     619.936,
+     669.6
+    ],
+    [
+     534.6,
+     631.8
+    ],
+    [
+     534.6,
+     421.2
+    ],
+    [
+     534.6,
+     210.6
+    ],
+    [
+     535.008,
+     2.656
+    ]
+   ],
+   "hops_um": [
+    123.136,
+    210.6,
+    210.6,
+    208.352
+   ],
+   "raw_resets": [
+    {
+     "q": "rst_rl_102",
+     "d": "rst_root_n",
+     "depth": 1,
+     "xy": [
+      358.048,
+      833.76
+     ],
+     "flight_um": 378.512
+    },
+    {
+     "q": "rst_rl_15",
+     "d": "rst_rl_0",
+     "depth": 2,
+     "xy": [
+      314.848,
+      514.08
+     ],
+     "flight_um": 312.632
+    },
+    {
+     "q": "rst_rl_18",
+     "d": "rst_rl_15",
+     "depth": 3,
+     "xy": [
+      314.848,
+      159.84
+     ],
+     "flight_um": 270.512
+    }
+   ],
+   "reset_phase_per_stage": [
+    1,
+    2,
+    3
+   ],
+   "face_reset_depth": 4,
+   "old_W": 0,
+   "new_W": 3,
+   "receiver_K_delta": 3,
+   "steady_payload_cycles_delta": 0,
+   "equation": "f(t+1) = r(t-4) & s(t-3)  (v4w: f(t+1) = r(t-4) & s(t))"
+  },
+  {
+   "bus": "x_st_a_fe_o",
+   "path_um": [
+    [
+     619.936,
+     669.6
+    ],
+    [
+     469.8,
+     631.8
+    ],
+    [
+     469.8,
+     421.2
+    ],
+    [
+     469.8,
+     210.6
+    ],
+    [
+     467.232,
+     2.656
+    ]
+   ],
+   "hops_um": [
+    187.936,
+    210.6,
+    210.6,
+    210.512
+   ],
+   "raw_resets": [
+    {
+     "q": "rst_rl_102",
+     "d": "rst_root_n",
+     "depth": 1,
+     "xy": [
+      358.048,
+      833.76
+     ],
+     "flight_um": 313.712
+    },
+    {
+     "q": "rst_rl_15",
+     "d": "rst_rl_0",
+     "depth": 2,
+     "xy": [
+      314.848,
+      514.08
+     ],
+     "flight_um": 247.832
+    },
+    {
+     "q": "rst_rl_18",
+     "d": "rst_rl_15",
+     "depth": 3,
+     "xy": [
+      314.848,
+      159.84
+     ],
+     "flight_um": 205.712
+    }
+   ],
+   "reset_phase_per_stage": [
+    1,
+    2,
+    3
+   ],
+   "face_reset_depth": 4,
+   "old_W": 0,
+   "new_W": 3,
+   "receiver_K_delta": 3,
+   "steady_payload_cycles_delta": 0,
+   "equation": "f(t+1) = r(t-4) & s(t-3)  (v4w: f(t+1) = r(t-4) & s(t))"
+  }
+ ],
+ "max_start_hop_um": 210.6,
+ "max_stage_raw_flight_um": 378.512,
+ "face_leaves": [
+  {
+   "bus": "ag_eo",
+   "face_um": [
+    2.144,
+    14.048
+   ],
+   "raw": "rst_rl_37",
+   "raw_xy": [
+    17.76,
+    47.52
+   ],
+   "leaf_um": [
+    9.952,
+    30.784
+   ],
+   "raw_to_leaf_um": 24.544,
+   "leaf_to_face_um": 24.544,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 631.808
+  },
+  {
+   "bus": "ard_eo",
+   "face_um": [
+    2.144,
+    60.256
+   ],
+   "raw": "rst_rl_37",
+   "raw_xy": [
+    17.76,
+    47.52
+   ],
+   "leaf_um": [
+    9.952,
+    53.888
+   ],
+   "raw_to_leaf_um": 14.176,
+   "leaf_to_face_um": 14.176,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 585.6
+  },
+  {
+   "bus": "arl_eo",
+   "face_um": [
+    2.144,
+    106.336
+   ],
+   "raw": "rst_rl_48",
+   "raw_xy": [
+    38.368,
+    82.08
+   ],
+   "leaf_um": [
+    20.256,
+    94.208
+   ],
+   "raw_to_leaf_um": 30.24,
+   "leaf_to_face_um": 30.24,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 539.52
+  },
+  {
+   "bus": "arm_eo",
+   "face_um": [
+    2.144,
+    107.36
+   ],
+   "raw": "rst_rl_48",
+   "raw_xy": [
+    38.368,
+    82.08
+   ],
+   "leaf_um": [
+    20.256,
+    94.72
+   ],
+   "raw_to_leaf_um": 30.752,
+   "leaf_to_face_um": 30.752,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 538.496
+  },
+  {
+   "bus": "art_eo",
+   "face_um": [
+    2.144,
+    111.648
+   ],
+   "raw": "rst_rl_48",
+   "raw_xy": [
+    38.368,
+    82.08
+   ],
+   "leaf_um": [
+    20.256,
+    96.864
+   ],
+   "raw_to_leaf_um": 32.896,
+   "leaf_to_face_um": 32.896,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 534.208
+  },
+  {
+   "bus": "arv_eo",
+   "face_um": [
+    2.144,
+    115.552
+   ],
+   "raw": "rst_rl_48",
+   "raw_xy": [
+    38.368,
+    82.08
+   ],
+   "leaf_um": [
+    20.256,
+    98.816
+   ],
+   "raw_to_leaf_um": 34.848,
+   "leaf_to_face_um": 34.848,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 530.304
+  },
+  {
+   "bus": "cws0_o",
+   "face_um": [
+    535.008,
+    2.656
+   ],
+   "raw": "rst_rl_18",
+   "raw_xy": [
+    314.848,
+    159.84
+   ],
+   "leaf_um": [
+    424.928,
+    81.248
+   ],
+   "raw_to_leaf_um": 188.672,
+   "leaf_to_face_um": 188.672,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 558.272
+  },
+  {
+   "bus": "dd_eo",
+   "face_um": [
+    2.144,
+    185.12
+   ],
+   "raw": "rst_rl_29",
+   "raw_xy": [
+    29.728,
+    272.16
+   ],
+   "leaf_um": [
+    15.936,
+    228.64
+   ],
+   "raw_to_leaf_um": 57.312,
+   "leaf_to_face_um": 57.312,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 460.736
+  },
+  {
+   "bus": "flt_wo",
+   "face_um": [
+    2.144,
+    324.64
+   ],
+   "raw": "rst_rl_35",
+   "raw_xy": [
+    22.112,
+    289.44
+   ],
+   "leaf_um": [
+    12.128,
+    307.04
+   ],
+   "raw_to_leaf_um": 27.584,
+   "leaf_to_face_um": 27.584,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 321.216
+  },
+  {
+   "bus": "l9_eo_l9_wi_o",
+   "face_um": [
+    2.144,
+    449.952
+   ],
+   "raw": "rst_rl_79",
+   "raw_xy": [
+    22.112,
+    444.96
+   ],
+   "leaf_um": [
+    12.128,
+    447.456
+   ],
+   "raw_to_leaf_um": 12.48,
+   "leaf_to_face_um": 12.48,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 421.888
+  },
+  {
+   "bus": "rsf_o",
+   "face_um": [
+    148.832,
+    1336.544
+   ],
+   "raw": "rst_rl_173",
+   "raw_xy": [
+    150.688,
+    1321.952
+   ],
+   "leaf_um": [
+    149.76,
+    1329.248
+   ],
+   "raw_to_leaf_um": 8.224,
+   "leaf_to_face_um": 8.224,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 1161.792
+  },
+  {
+   "bus": "rsn_o",
+   "face_um": [
+    238.688,
+    1336.544
+   ],
+   "raw": "rst_rl_176",
+   "raw_xy": [
+    237.088,
+    1321.952
+   ],
+   "leaf_um": [
+    237.888,
+    1329.248
+   ],
+   "raw_to_leaf_um": 8.096,
+   "leaf_to_face_um": 8.096,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 1071.936
+  },
+  {
+   "bus": "sc_eo",
+   "face_um": [
+    2.144,
+    595.488
+   ],
+   "raw": "rst_rl_26",
+   "raw_xy": [
+    17.76,
+    635.04
+   ],
+   "leaf_um": [
+    9.952,
+    615.264
+   ],
+   "raw_to_leaf_um": 27.584,
+   "leaf_to_face_um": 27.584,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 567.424
+  },
+  {
+   "bus": "st_eo",
+   "face_um": [
+    2.144,
+    703.52
+   ],
+   "raw": "rst_rl_70",
+   "raw_xy": [
+    17.76,
+    738.72
+   ],
+   "leaf_um": [
+    9.952,
+    721.12
+   ],
+   "raw_to_leaf_um": 25.408,
+   "leaf_to_face_um": 25.408,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 675.456
+  },
+  {
+   "bus": "x_ctl_o",
+   "face_um": [
+    530.72,
+    1336.544
+   ],
+   "raw": "rst_rl_176",
+   "raw_xy": [
+    237.088,
+    1321.952
+   ],
+   "leaf_um": [
+    383.904,
+    1329.248
+   ],
+   "raw_to_leaf_um": 154.112,
+   "leaf_to_face_um": 154.112,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 1219.264
+  },
+  {
+   "bus": "x_st_a_fe_o",
+   "face_um": [
+    467.232,
+    2.656
+   ],
+   "raw": "rst_rl_18",
+   "raw_xy": [
+    314.848,
+    159.84
+   ],
+   "leaf_um": [
+    391.04,
+    81.248
+   ],
+   "raw_to_leaf_um": 154.784,
+   "leaf_to_face_um": 154.784,
+   "old_raw": "cland_reset_cmd_ei @ (311.04,336.96)",
+   "old_flight_um": 490.496
+  }
+ ],
+ "max_leaf_hop_um": 188.672,
+ "pin_cycles": "receiver strap K +3 on the crossings fed by sl_E5_fw.cws0_o and .x_st_a_fe_o; 0 payload cycles",
+ "rule": "stage i reset depth = i+1 (reset follows START), face depth 4 unchanged",
+ "identity": {
+  "other_keys_identical": true,
+  "changed_clock_keys": [
+   "landing_local_resets",
+   "landing_writer_start"
+  ],
+  "added_branches": [
+   "cws0_o",
+   "x_st_a_fe_o"
+  ]
+ }
+}

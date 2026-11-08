@@ -1,0 +1,47 @@
+{
+ "schema": "qc_types_10.fws_price/1",
+ "verdict": "PASS",
+ "crossings": [
+  {
+   "port": "sl_E5_hc0__cws0__2",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "cws0_o"
+   },
+   "dst": {
+    "part": "sl_E5_su_l1",
+    "bus": "cws0_i"
+   },
+   "old_W": 0,
+   "new_W": 3,
+   "K_delta": 3,
+   "old_strap": 25,
+   "new_strap": 28,
+   "width": 6
+  },
+  {
+   "port": "sl_E5_st_a__x_st_a_fe__1",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "x_st_a_fe_o"
+   },
+   "dst": {
+    "part": "sl_E5_su_l1",
+    "bus": "x_st_a_fe_i"
+   },
+   "old_W": 0,
+   "new_W": 3,
+   "K_delta": 3,
+   "old_strap": 25,
+   "new_strap": 28,
+   "width": 6
+  }
+ ],
+ "changed_crossings": 2,
+ "covered_buses": [
+  "cws0_o",
+  "x_st_a_fe_o"
+ ],
+ "other_strap_values_identical": true,
+ "rule": "K_new=K_logical+W-R+WREG; only W changes; no payload cycles"
+}
