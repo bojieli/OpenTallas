@@ -4650,6 +4650,38 @@ def macro_views(base):
     return out
 
 
+def _balanced(text, i):
+    """text[i:] starts just after an opening parenthesis -> the text up to its matching close."""
+    j, depth = i, 1
+    while depth and j < len(text):
+        depth += {"(": 1, ")": -1}.get(text[j], 0)
+        j += 1
+    return text[i:j - 1]
+
+
+def _named_param_overrides(body, children):
+    """{child module: {parameter}} set by name (#(.P(v))) on the instances of `children` in a module body."""
+    out = {}
+    if not children:
+        return out
+    pat = re.compile(r"\b(" + "|".join(re.escape(c) for c in sorted(children)) + r")\s*#\s*\(")
+    for m in pat.finditer(body):
+        out.setdefault(m.group(1), set()).update(re.findall(r"\.(\w+)\s*\(", _balanced(body, m.end())))
+    return out
+
+
+def _declared_params(path, name):
+    """parameter names a module declares: its #( ... ) header list and its body parameter/localparam statements."""
+    t = E.module_body(path, name)
+    got = set()
+    h = re.match(r"\s*#\s*\(", t)
+    if h:
+        got |= set(re.findall(r"(\w+)\s*=(?!=)", _balanced(t, h.end())))
+    for st in re.findall(r"\b(?:parameter|localparam)\b([^;]*);", t):
+        got |= set(re.findall(r"(\w+)\s*=(?!=)", st))
+    return got
+
+
 def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=None, defines=None):
     """E.closure for a G3 kit (KV-P6 18:51 hub_Wi): (1) a module with a hardened view (macro dir <m>/<m>.lef) is a
     HARD MACRO: its black box (<m>_bb.v, else the model) goes in the list, its lef/libs in the manifest, no descent;
@@ -4668,6 +4700,7 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
     # -> a missing entry.  Names in neither index (types, keywords, cells) keep the old behaviour.
     wide = wide or {}
     widened = {} if widened is None else widened
+    need = {}                                    # module -> parameter names its instantiators set (KITPARAM)
     # FLOW-18 10-31: with `defines` (the kit defines, as-built manifest), a child named through an object-like macro
     # (`OT_SH_M257 u_mem(...)) is found too: the module body is also scanned with the file's active `define values
     # expanded (added to the plain scan, never replacing it).  defines=None keeps the old behaviour.
@@ -4710,7 +4743,29 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
                 continue
         elif nonsim and len(nonsim) < len(cands):
             sub[n] = nonsim
-        f, _ = E.pick(sub, n, prefer)
+        # DIE-HBM-91 11-08 (KITPARAM, HBM q_su31 "Can't find object for defparam WCOPY", q_b110 "defparam RING"):
+        # a PROVISIONAL child's RTL is closed with the die bind's preferences, which name an older copy of a module
+        # (r18h5_bundle ot_hbm_su_static_data_store.sv: replicated_bank without WCOPY; rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:
+        # ot_hdc_v41x_ins without RING) while the picked instantiator (rtl/ ot_hbm_su_static_pinned_bank.sv,
+        # ot_su12_sfu_sp2.sv) sets that parameter by name, so the kit can never elaborate.  When several definitions
+        # exist (index + preferred files) and some do not declare every parameter the picked instantiating bodies set
+        # by name, only the compatible ones stay candidates and the incompatible preferred files lose their preference
+        # for this module.  A pick that is compatible, or with no compatible alternative, is unchanged.
+        prefer_n = prefer
+        if need.get(n):
+            nc = list(dict.fromkeys(list(sub.get(n, [])) + [str(q) for q in prefer if Path(q).is_file()
+                                                           and Path(q).suffix.lower() in (".v", ".sv")
+                                                           and E.module_body(q, n)]))
+            if len({str(Path(c).resolve()) for c in nc}) > 1:
+                ok = [c for c in nc if need[n] <= _declared_params(c, n)]
+                if ok and len(ok) < len(nc):
+                    bad = {str(Path(c).resolve()) for c in nc if c not in ok}
+                    sub = dict(sub)
+                    sub[n] = ok
+                    prefer_n = [q for q in prefer if str(Path(q).resolve()) not in bad]
+                    print(f"kit-rtl: {n} from {ok[0]} (declares {sorted(need[n])}); not from "
+                          f"{sorted(bad)[:2]}", file=sys.stderr)
+        f, _ = E.pick(sub, n, prefer_n)
         if f is None:
             missing.add(n)
             continue
@@ -4727,6 +4782,8 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
                 mdefs[f] = (kit_object_defines(E._strip(Path(f).read_text(errors="replace")), defines, func=fn), fn)
             vals, fn = mdefs[f]
             found |= E.instantiated(expand_object_macros(expand_function_macros(body, fn), vals), known)
+        for c, ps in _named_param_overrides(body, found).items():
+            need.setdefault(c, set()).update(ps)
         todo += sorted(found)
     return files, sorted(missing), macros
 
