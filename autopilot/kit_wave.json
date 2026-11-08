@@ -7878,8 +7878,8 @@
       "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
       "plan": "/srv/opentallas-scratch2/claude/kw27/hbm_d44v_02909_g/die_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_812ee",
-      "src_sha": "812ee41cd03d4d8ba3f3f42c1d4ad0c08750f14f",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_0b72p",
+      "src_sha": "0b72abe93ac",
       "gate": {
         "g0c": "PASS",
         "bind": "PASS",
@@ -8456,12 +8456,23 @@
         "q_su20@1",
         "q_su20__physical_v1@1",
         "q_su21@1",
-        "q_su21__physical_v1@1"
+        "q_su21__physical_v1@1",
+        "NE_io@2",
+        "q_b000@2",
+        "q_b000__physical_v1@2",
+        "q_b001@2",
+        "q_b001__physical_v1@2",
+        "q_spb0@2",
+        "q_spb0__physical_v1@2",
+        "q_su01@2",
+        "q_su01__physical_v1@2",
+        "q_su11@2",
+        "vsN0@2"
       ],
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
       "pilot_mode": "queue",
-      "queue_src": "main@812ee41cd03",
+      "queue_src": "main@0b72abe93ac+claude/die-hbm-92-physplit-1108@a3a72e8a87",
       "hold_items": {
         "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
         "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
@@ -8484,7 +8495,8 @@
         "ot_hgi_sfu_core_split3__opstore_b": "KW-FIX-11 07:0x COORD 07:01: stopped 06:51 by ruling, part 27 replaces (HBM-FORM-SPLIT 06:51); autopilot revived it on exit 137; no relaunch",
         "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch",
         "q_b013": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013 (intel1 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013_a3R); release after it ends or after ROOT-MERGE-52 lands the fix",
-        "q_b013__physical_v1": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013pv1 (epyc4 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013__physical_v1_a2R); release after it ends or after ROOT-MERGE-52 lands the fix"
+        "q_b013__physical_v1": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013pv1 (epyc4 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013__physical_v1_a2R); release after it ends or after ROOT-MERGE-52 lands the fix",
+        "NW_io": "KW-FIX-35-B 2026-11-08 06:31 PST: EP module class, DIE-HBM-92 (not in the physplit a3a72e8a87 batch)"
       },
       "gen_hosts": [
         "intel1",
@@ -8624,7 +8636,18 @@
         "q_su20@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
         "q_su20__physical_v1@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
         "q_su21@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
-        "q_su21__physical_v1@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt"
+        "q_su21__physical_v1@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
+        "NE_io@2": "KW-FIX-35-B 2026-11-08 06:31 PST: PHY SPLIT bound as split (claude/die-hbm-92-physplit-1108@a3a72e8a87 + asbuilt_p37/bind, DIE-HBM-92-PHY READY 05:25); fresh kit, kit inputs change",
+        "q_b000@2": "KW-FIX-35-B 2026-11-08 06:31 PST: counted child signed views now exported (KW-FIX-35-V views c47ef36ab53, prov_view_sources) + fc-hbm main; fresh kit, kit inputs change",
+        "q_b000__physical_v1@2": "KW-FIX-35-B 2026-11-08 06:31 PST: counted child signed views now exported (KW-FIX-35-V views c47ef36ab53, prov_view_sources) + fc-hbm main; fresh kit, kit inputs change",
+        "q_b001@2": "KW-FIX-35-B 2026-11-08 06:31 PST: counted child signed views now exported (KW-FIX-35-V views c47ef36ab53, prov_view_sources) + fc-hbm main; fresh kit, kit inputs change",
+        "q_b001__physical_v1@2": "KW-FIX-35-B 2026-11-08 06:31 PST: counted child signed views now exported (KW-FIX-35-V views c47ef36ab53, prov_view_sources) + fc-hbm main; fresh kit, kit inputs change",
+        "q_spb0@2": "KW-FIX-35-B 2026-11-08 06:31 PST: PHY SPLIT bound as split (claude/die-hbm-92-physplit-1108@a3a72e8a87 + asbuilt_p37/bind, DIE-HBM-92-PHY READY 05:25); fresh kit, kit inputs change",
+        "q_spb0__physical_v1@2": "KW-FIX-35-B 2026-11-08 06:31 PST: PHY SPLIT bound as split (claude/die-hbm-92-physplit-1108@a3a72e8a87 + asbuilt_p37/bind, DIE-HBM-92-PHY READY 05:25); fresh kit, kit inputs change",
+        "q_su01@2": "KW-FIX-35-B 2026-11-08 06:31 PST: counted child signed views now exported (KW-FIX-35-V views c47ef36ab53, prov_view_sources) + fc-hbm main; fresh kit, kit inputs change",
+        "q_su01__physical_v1@2": "KW-FIX-35-B 2026-11-08 06:31 PST: counted child signed views now exported (KW-FIX-35-V views c47ef36ab53, prov_view_sources) + fc-hbm main; fresh kit, kit inputs change",
+        "q_su11@2": "KW-FIX-35-B 2026-11-08 06:31 PST: counted child signed views now exported (KW-FIX-35-V views c47ef36ab53, prov_view_sources) + fc-hbm main; fresh kit, kit inputs change",
+        "vsN0@2": "KW-FIX-35-B 2026-11-08 06:31 PST: PHY SPLIT bound as split (claude/die-hbm-92-physplit-1108@a3a72e8a87 + asbuilt_p37/bind, DIE-HBM-92-PHY READY 05:25); fresh kit, kit inputs change"
       },
       "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
       "item_args_rf1prev": {
@@ -8813,7 +8836,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 2
       },
-      "flow_tag": "flow-20261108-fb-hbm",
+      "flow_tag": "flow-20261108-fc-hbm",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -9237,8 +9260,8 @@
       "kit_rtl_prev_kw32": null,
       "kit_rtl": {
         "mode": "bind",
-        "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-89/hbmbind/ab/asbuilt_t12.json",
-        "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-90-rebind/bind_g/out",
+        "asbuilt": "/srv/opentallas-scratch2/claude/die-hbm-92-phy/ab/asbuilt_p37.json",
+        "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-92-phy/bind",
         "note": "KW-FIX-33 2026-11-08 00:38 PST (DIE-HBM-90-REBIND 00:14 RESULT): bind_g = strict re-bind of kw27g (bind14 method, rc0, 0 errors, 90/81/420, bound .sv byte-identical to bind14); staged epyc4/intel1/epyc6/epyc5/epyc2/intel2 (report md5 5224fca50e39). Revert: kit_rtl_prev_kw33d. KW-FIX-32 2026-11-07 22:29 PST (DIE-HBM-89 READY 21:11 f91b9f2eec3 landed 45353bf990b; COORD 21:2x (2)/22:0x): the bind of record (strict, 0 errors, 90 parts/81 types/420 crossings) + its asbuilt_t12 + base tree hbm-bind-6/tip2 rsynced from epyc2 to intel1/epyc4/epyc6 at the same paths (tip2 29836 f"
       },
       "gen_hosts_prev_kw32g": [
@@ -9707,7 +9730,34 @@
       "hold_items_added_kw35l": [
         "q_b013",
         "q_b013__physical_v1"
-      ]
+      ],
+      "src_prev_kw35e": "/srv/opentallas-scratch2/claude/kw35/src_812ee",
+      "src_sha_prev_kw35e": "812ee41cd03d4d8ba3f3f42c1d4ad0c08750f14f",
+      "queue_src_prev_kw35e": "main@812ee41cd03",
+      "flow_tag_prev_kw35e": "flow-20261108-fb-hbm",
+      "kit_rtl_prev_kw35e": {
+        "mode": "bind",
+        "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-89/hbmbind/ab/asbuilt_t12.json",
+        "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-90-rebind/bind_g/out",
+        "note": "KW-FIX-33 2026-11-08 00:38 PST (DIE-HBM-90-REBIND 00:14 RESULT): bind_g = strict re-bind of kw27g (bind14 method, rc0, 0 errors, 90/81/420, bound .sv byte-identical to bind14); staged epyc4/intel1/epyc6/epyc5/epyc2/intel2 (report md5 5224fca50e39). Revert: kit_rtl_prev_kw33d. KW-FIX-32 2026-11-07 22:29 PST (DIE-HBM-89 READY 21:11 f91b9f2eec3 landed 45353bf990b; COORD 21:2x (2)/22:0x): the bind of record (strict, 0 errors, 90 parts/81 types/420 crossings) + its asbuilt_t12 + base tree hbm-bind-6/tip2 rsynced from epyc2 to intel1/epyc4/epyc6 at the same paths (tip2 29836 f"
+      },
+      "hold_items_kw35e_added": [
+        "NW_io"
+      ],
+      "retry_prev_kw35e_added": [
+        "NE_io@2",
+        "q_b000@2",
+        "q_b000__physical_v1@2",
+        "q_b001@2",
+        "q_b001__physical_v1@2",
+        "q_spb0@2",
+        "q_spb0__physical_v1@2",
+        "q_su01@2",
+        "q_su01__physical_v1@2",
+        "q_su11@2",
+        "vsN0@2"
+      ],
+      "note_src_kw35e": "KW-FIX-35-B 2026-11-08 06:31 PST: HBM src kw35/src_0b72p = main 0b72abe93ac (fc-hbm) + physplit a3a72e8a87 3 files (merge-tree 581db07da71), sha-checked intel1/epyc2/epyc4/epyc5/epyc6; kit_rtl physplit asbuilt_p37+bind; NW_io held; final-view relaunch. Revert *_prev_kw35e, pop hold_items_kw35e_added, drop retry_prev_kw35e_added"
     }
   },
   "place_prefer": [
