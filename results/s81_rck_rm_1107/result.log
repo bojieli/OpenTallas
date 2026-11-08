@@ -1,0 +1,5 @@
+RM_LOCAL4_RESULT checks=3583 errors=0 epochs=4 sel_mutant=961 data_mutant=960 pub_mutant=966 relay_mutant=1398
+- tb.sv:73: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.062 s; speed 28.648 us/s
+- Verilator: cpu 0.062 s on 1 threads; allocated 9 MB

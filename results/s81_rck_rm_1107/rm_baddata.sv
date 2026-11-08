@@ -1,0 +1,77 @@
+module rm_baddata (
+    input  wire          wclk, wrst_n,
+    input  wire          w_v,
+    input  wire [511:0]  w_d,
+    input  wire          rclk, rrst_n,
+    output reg  [511:0]  r_d,
+    output wire          fault
+);
+    reg  [511:0] mem [0:7];
+    reg  [3:0] wp, rp, wp_g, rp_g;
+    reg  [3:0] rp_g1, rp_g2, wp_g1, wp_g2;
+    function automatic [3:0] g2b(input [3:0] g); begin g2b = {g[3], g[3]^g[2], g[3]^g[2]^g[1], g[3]^g[2]^g[1]^g[0]}; end endfunction
+    always @(posedge wclk or negedge wrst_n) if (!wrst_n) begin rp_g1 <= 0; rp_g2 <= 0; end else begin rp_g1 <= rp_g; rp_g2 <= rp_g1; end
+    // Publication follows the actual staged memory commit, not the pending
+    // write. This adds one wclk producer PIN cycle versus RM_STAGED.
+    reg [3:0] wp_g_pub;
+    always @(posedge wclk or negedge wrst_n)
+        if (!wrst_n) wp_g_pub <= 4'd0; else wp_g_pub <= wp_g;
+    wire [3:0] wp_to_read = wp_g_pub;
+    always @(posedge rclk or negedge rrst_n) if (!rrst_n) begin wp_g1 <= 0; wp_g2 <= 0; end else begin wp_g1 <= wp_to_read; wp_g2 <= wp_g1; end
+    wire [3:0] fill_w = wp - g2b(rp_g2);
+    wire idle = w_d[1] && !w_d[0];
+    wire full = fill_w == 4'd8;
+    wire push = w_v && !full && !(idle && fill_w >= 4'd6);
+    reg flt;
+    // Private RCK fallback: slice-local registered one-hot write/read decode.
+    // Read select uses only fully synchronized wp_g2/empty, never wp_g1 lookahead.
+    // Keep r_m by memory and two output relay rows for the 1.3mm BOUT reach.
+    // Versus RM_STAGED: +1 wclk publication and +2 rclk (select + extra relay).
+    // r_m/r_pipe/r_d have no reset: the >=64-edge parent reset flushes IDLE;
+    // internal data flush is three rclk edges, reset release itself is unchanged.
+    localparam integer RM_LOCAL_NS = 64;
+    reg [511:0] w_dq;
+    reg [511:0] r_m, r_pipe;
+    (* keep *) reg [7:0] we_q [0:RM_LOCAL_NS-1];
+    (* keep *) reg [7:0] rsel [0:RM_LOCAL_NS-1];
+    always @(posedge wclk) w_dq <= w_d;
+    genvar ws, wb, rs, rb;
+    generate for (ws=0; ws<RM_LOCAL_NS; ws=ws+1) begin : g_local_write
+        (* keep *) always @(posedge wclk or negedge wrst_n)
+            if (!wrst_n) we_q[ws] <= 8'd0;
+            else we_q[ws] <= push ? (8'd1 << wp[2:0]) : 8'd0;
+        for (wb=0; wb<8; wb=wb+1) begin : g_bank
+            always @(posedge wclk)
+                if (we_q[ws][wb]) mem[wb][ws*8 +: 8] <= w_d[ws*8 +: 8];
+        end
+    end endgenerate
+    always @(posedge wclk or negedge wrst_n)
+        if (!wrst_n) begin wp<=0; wp_g<=0; flt<=1'b0; end
+        else begin
+            if (push) begin wp<=wp+1'b1; wp_g<=(wp+1'b1)^((wp+1'b1)>>1); end
+            if (w_v && full && !idle) flt<=1'b1;
+        end
+    wire empty = g2b(wp_g2) == rp;
+    always @(posedge rclk or negedge rrst_n)
+        if (!rrst_n) begin rp<=0; rp_g<=0; end
+        else if (!empty) begin rp<=rp+1'b1; rp_g<=(rp+1'b1)^((rp+1'b1)>>1); end
+    reg r_idle;
+    always @(posedge rclk or negedge rrst_n)
+        if (!rrst_n) r_idle<=1'b1; else r_idle<=empty;
+    generate for (rs=0; rs<RM_LOCAL_NS; rs=rs+1) begin : g_local_read
+        (* keep *) always @(posedge rclk or negedge rrst_n)
+            if (!rrst_n) rsel[rs]<=8'd0;
+            else rsel[rs]<=empty ? 8'd0 : (8'd1 << rp[2:0]);
+        for (rb=0; rb<8; rb=rb+1) begin : g_bit
+            localparam integer CB=rs*8+rb;
+            always @(posedge rclk)
+                r_m[CB] <= ((CB==1) & r_idle) | (|({mem[7][CB],mem[6][CB],mem[5][CB],mem[4][CB],mem[3][CB],mem[2][CB],mem[1][CB],mem[0][CB]} & rsel[rs]));
+        end
+    end endgenerate
+    always @(posedge rclk) begin
+        r_pipe<=r_m;
+        r_d<=r_pipe;
+    end
+    reg f1, f2; always @(posedge rclk or negedge rrst_n) if (!rrst_n) begin f1 <= 0; f2 <= 0; end else begin f1 <= flt; f2 <= f1; end
+    assign fault = f2;
+endmodule
