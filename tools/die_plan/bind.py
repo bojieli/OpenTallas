@@ -4743,19 +4743,29 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
                 continue
         elif nonsim and len(nonsim) < len(cands):
             sub[n] = nonsim
-        # DIE-HBM-91 11-08 (KITPARAM, HBM q_su31 GEN_LINT "Can't find object for defparam WCOPY"): with several
-        # definitions and no preference, E.pick takes the first rtl_root, here the r18h5_bundle copy of
-        # ot_hbm_su_static_replicated_bank (no WCOPY) while its instantiator ot_hbm_su_static_pinned_bank came from
-        # rtl/ and sets .WCOPY.  An ambiguous pick now keeps only the candidates that declare every parameter the
-        # already-picked instantiating bodies set by name; with none or all compatible the old order stands.
+        # DIE-HBM-91 11-08 (KITPARAM, HBM q_su31 "Can't find object for defparam WCOPY", q_b110 "defparam RING"):
+        # a PROVISIONAL child's RTL is closed with the die bind's preferences, which name an older copy of a module
+        # (r18h5_bundle ot_hbm_su_static_data_store.sv: replicated_bank without WCOPY; rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:
+        # ot_hdc_v41x_ins without RING) while the picked instantiator (rtl/ ot_hbm_su_static_pinned_bank.sv,
+        # ot_su12_sfu_sp2.sv) sets that parameter by name, so the kit can never elaborate.  When several definitions
+        # exist (index + preferred files) and some do not declare every parameter the picked instantiating bodies set
+        # by name, only the compatible ones stay candidates and the incompatible preferred files lose their preference
+        # for this module.  A pick that is compatible, or with no compatible alternative, is unchanged.
+        prefer_n = prefer
         if need.get(n):
-            nc = list(sub.get(n, []))
-            if len(set(nc)) > 1 and not any(Path(c).resolve() == Path(q).resolve() for c in nc for q in prefer):
+            nc = list(dict.fromkeys(list(sub.get(n, [])) + [str(q) for q in prefer if Path(q).is_file()
+                                                           and Path(q).suffix.lower() in (".v", ".sv")
+                                                           and E.module_body(q, n)]))
+            if len({str(Path(c).resolve()) for c in nc}) > 1:
                 ok = [c for c in nc if need[n] <= _declared_params(c, n)]
                 if ok and len(ok) < len(nc):
+                    bad = {str(Path(c).resolve()) for c in nc if c not in ok}
                     sub = dict(sub)
                     sub[n] = ok
-        f, _ = E.pick(sub, n, prefer)
+                    prefer_n = [q for q in prefer if str(Path(q).resolve()) not in bad]
+                    print(f"kit-rtl: {n} from {ok[0]} (declares {sorted(need[n])}); not from "
+                          f"{sorted(bad)[:2]}", file=sys.stderr)
+        f, _ = E.pick(sub, n, prefer_n)
         if f is None:
             missing.add(n)
             continue

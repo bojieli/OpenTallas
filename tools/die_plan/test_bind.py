@@ -1039,3 +1039,24 @@ def test_kit_closure_ambiguous_pick_honours_named_parameters(tmp_path):
     picks = {}
     bind.kit_closure(["pp"], idx, [], picks)
     assert picks["rbank"] == str(old)
+
+
+def test_kit_closure_incompatible_preferred_definition_loses(tmp_path):
+    """DIE-HBM-91 KITPARAM (HBM q_b110 RING / q_su31 WCOPY): a preferred definition that lacks a parameter the
+    instantiator sets by name cannot elaborate; the compatible alternative is picked.  A compatible preferred one wins."""
+    old = tmp_path / "bundle" / "rb.sv"; new = tmp_path / "rtl" / "rb_c12.sv"; top = tmp_path / "rtl" / "pb.sv"
+    for f in (old, new):
+        f.parent.mkdir(parents=True, exist_ok=True)
+    old.write_text("module rbank #(parameter integer W=6)(input clk); endmodule\n")
+    new.write_text("module rbank #(\n parameter integer W=6,\n parameter integer RING = 0\n)(input clk); endmodule\n")
+    top.write_text("module pb(input clk);\n rbank #(.W(9), .RING(1)) u_d(.clk(clk));\nendmodule\n")
+    idx = {"rbank": [str(new)], "pb": [str(top)]}
+    picks = {}
+    bind.kit_closure(["pb"], idx, [str(old)], picks)
+    assert picks["rbank"] == str(new)
+    plain = tmp_path / "rtl" / "pp.sv"
+    plain.write_text("module pp(input clk);\n rbank #(.W(9)) u_d(.clk(clk));\nendmodule\n")
+    idx["pp"] = [str(plain)]
+    picks = {}
+    bind.kit_closure(["pp"], idx, [str(old)], picks)
+    assert picks["rbank"] == str(old)
