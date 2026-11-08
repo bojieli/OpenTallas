@@ -164,8 +164,33 @@ def eco_vclk_frame(pass_dir, variant, prev):
     return ps
 
 
-def metrics(rec):
-    """sign-off record -> {verdict, signed, tt, ff, drv, drc, fails}"""
+def hold_scope():
+    """the ECO's hold repair scope (prd_hook.tcl / orfs_hold_mm.tcl read the same OT_HOLD_REPAIR_SCOPE)"""
+    return (os.environ.get("OT_HOLD_REPAIR_SCOPE") or "").strip().lower()
+
+
+def nonport_score(signoff_path):
+    """KW-FIX-32 11-07 (COORD 21:4x (3), DIE-KV-91 M5 e1): (wns_ps, endpoints) the loop scores hold on when the repair
+    scope is nonport: the FF census non-port split.  A clean census with no non-port violator scores (0.0, 0) (signoff
+    prints STD_MIN_NONPORT only when there is one).  None when the split cannot be read: the whole number is scored."""
+    try:
+        s = json.loads((Path(signoff_path).parent / "ff" / "corner.json").read_text()).get("std_min_start")
+    except (OSError, ValueError, AttributeError, TypeError):
+        return None
+    if not isinstance(s, dict) or s.get("err") != 0 or s.get("trunc") != 0:
+        return None
+    if s.get("nonport_n") is None:
+        return (0.0, 0) if s.get("other") == 0 and s.get("reg") == 0 else None
+    n = int(s["nonport_n"])
+    if n == 0:
+        return 0.0, 0
+    return (None, n) if s.get("nonport_wns") is None else (float(s["nonport_wns"]), n)
+
+
+def metrics(rec, signoff_path=None):
+    """sign-off record -> {verdict, signed, tt, ff, drv, drc, fails}; with OT_HOLD_REPAIR_SCOPE=nonport and a readable
+    FF census next to signoff_path also ff_np / ff_np_n (the non-port hold the ECO repairs), which the stop rule and the
+    best pick score instead of ff.  Default scope: byte-identical metrics."""
     c = rec.get("checks") or {}
     by = {}
     for k, v in ((c.get("drv") or {}).get("by_corner") or {}).items():
@@ -175,11 +200,16 @@ def metrics(rec):
     fails = sorted(k for k, v in c.items() if isinstance(v, dict) and v.get("verdict") == "FAIL")
     verdict = rec.get("verdict")
     signed = verdict == "SIGNED" or (verdict == "LOCAL_PASS_NEEDS_PARENT" and rec.get("local_verdict") == "SIGNED")
-    return dict(verdict=verdict, signed=bool(signed), tt=(c.get("setup_tt") or {}).get("wns_ps"),
+    out = dict(verdict=verdict, signed=bool(signed), tt=(c.get("setup_tt") or {}).get("wns_ps"),
                 ff=(c.get("hold_ff") or {}).get("wns_ps"), drv=int(drv), drc=int((c.get("drc") or {}).get("count") or 0),
                 drv_tt=int(by.get("tt", 0)), drv_ff=int(by.get("ff", 0)), fails=fails,
                 vclk_tt=measured_vclk((c.get("setup_tt") or {}).get("vclk_reference")),
                 vclk_ff=measured_vclk((c.get("hold_ff") or {}).get("ff_vclk_reference")))
+    if signoff_path and hold_scope() == "nonport":
+        np_ = nonport_score(signoff_path)
+        if np_ and np_[0] is not None:
+            out["ff_np"], out["ff_np_n"] = np_
+    return out
 
 
 def passes(kit, prev, hm):
@@ -277,20 +307,30 @@ def near_miss(rec, signoff_path=None):
     return not far, far, warn
 
 
-def neg_sum(m):
-    return sum(min(float(w), 0.0) for w in (m.get("tt"), m.get("ff")) if w is not None)
+def neg_sum(m, nonport=False):
+    ff = m.get("ff_np") if nonport else m.get("ff")
+    return sum(min(float(w), 0.0) for w in (m.get("tt"), ff) if w is not None)
+
+
+def _np(a, b):
+    """both sides carry the non-port hold score (nonport scope, readable census on both): compare on it"""
+    return "ff_np" in a and "ff_np" in b
 
 
 def improved(prev, cur):
-    """stop rule: True when cur is better than prev by >= 1 ps negative-WNS sum, or fewer DRV, or fewer DRC"""
-    gain = neg_sum(cur) - neg_sum(prev)
-    return gain >= MIN_WNS_GAIN_PS or cur["drv"] < prev["drv"] or cur["drc"] < prev["drc"]
+    """stop rule: True when cur is better than prev by >= 1 ps negative-WNS sum, or fewer DRV, or fewer DRC; nonport
+    scope (both scored): hold is the non-port WNS, and fewer non-port hold endpoints also count"""
+    np_ = _np(prev, cur)
+    gain = neg_sum(cur, np_) - neg_sum(prev, np_)
+    fewer = np_ and cur["ff_np_n"] < prev["ff_np_n"]
+    return gain >= MIN_WNS_GAIN_PS or fewer or cur["drv"] < prev["drv"] or cur["drc"] < prev["drc"]
 
 
 def better(a, b):
     """is metrics a strictly better than b (signed first, then neg-WNS sum, DRV, DRC)"""
-    ka = (a["signed"], neg_sum(a), -a["drv"], -a["drc"])
-    kb = (b["signed"], neg_sum(b), -b["drv"], -b["drc"])
+    np_ = _np(a, b)
+    ka = (a["signed"], neg_sum(a, np_), -a["drv"], -a["drc"])
+    kb = (b["signed"], neg_sum(b, np_), -b["drv"], -b["drc"])
     return ka > kb
 
 
@@ -642,7 +682,7 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
     it["signoff"] = str(so_rec)
     rec = load(so_rec)
     it["base"] = (rec.get("inputs") or {}).get("base")
-    it["metrics"] = metrics(rec)
+    it["metrics"] = metrics(rec, so_rec)
     return end("SIGNED" if it["metrics"]["signed"] else "NOT_SIGNED")
 
 
@@ -740,7 +780,7 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
     res = dict(schema=SCHEMA, kind="eco", tool="tools/die_plan/eco_loop.py", kit=str(kit), root=str(root),
                mem_requested_gb=mem_in, mem_gb=mem, kit_peak_gb=peak, mem_factor=ECO_MEM_FACTOR,
                base_signoff=str(base_signoff), base_routed_db=(base_rec.get("inputs") or {}).get("odb"),
-               base_metrics=metrics(base_rec) if base_rec else None, max_iter=max_iter, hold_margin_ps=hold_margin,
+               base_metrics=metrics(base_rec, base_signoff) if base_rec else None, max_iter=max_iter, hold_margin_ps=hold_margin,
                started=t0, iterations=[], flow=flow_sha(tools), host=os.uname().nodename)
     if strict_one_pass:
         budget = dict(limit=1, dispatched=0, blocked=[])
@@ -868,7 +908,8 @@ def summary(res):
         return f"late-ECO not a near miss: {res.get('reason')}"
     tag = {"PASS": "late-ECO PASS", "ECO_OOM": "late-ECO OOM", "ABORTED": "late-ECO ABORTED"}.get(res.get("verdict"), "late-ECO exhausted")
     return (f"{tag} ({its} it, {res.get('wall_s')} s): TT {m0.get('tt')}->{b.get('tt')} FF {m0.get('ff')}->{b.get('ff')} "
-            f"drv {m0.get('drv')}->{b.get('drv')} drc {m0.get('drc')}->{b.get('drc')}; {res.get('reason')}")
+            + (f"(non-port {m0.get('ff_np')}/{m0.get('ff_np_n')}->{b.get('ff_np')}/{b.get('ff_np_n')}) " if "ff_np" in b else "")
+            + f"drv {m0.get('drv')}->{b.get('drv')} drc {m0.get('drc')}->{b.get('drc')}; {res.get('reason')}")
 
 
 def run_lec(kit, res, mem, cpus, lec_tool=None, run=subprocess.call):

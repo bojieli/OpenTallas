@@ -942,3 +942,74 @@ def test_superseded_full_copies_pruned_during_the_loop(tmp_path, monkeypatch, th
     r2 = E.run_loop(k2, base_rec(k2, rec(-6, -2, slew=0)), run=Fake([rec(-3, -1), rec(1, 2)]), mem=8, cpus=2, keep=True,
                     **three_iter)
     assert (Path(r2["root"]) / "i1t/run/results").is_dir() and (Path(r2["root"]) / "i1/run/results").is_dir()
+
+
+def _census_out(out, np_n, np_wns, port=100.0):
+    """write the FF corner census the sign-off leaves next to signoff.json"""
+    (out / "ff").mkdir(parents=True, exist_ok=True)
+    sms = dict(port=port, other=float(np_n), reg=float(np_n), trunc=0.0, err=0.0, ports=["cr_i"])
+    if np_n:
+        sms.update(nonport_n=float(np_n), nonport_wns=float(np_wns))
+    (out / "ff" / "corner.json").write_text(json.dumps(dict(std_min_start=sms)))
+
+
+class FakeNP(Fake):
+    """Fake whose sign-offs also leave an FF census: census[i] = (non-port endpoints, non-port WNS) of iteration i+1"""
+
+    def __init__(self, results, census):
+        super().__init__(results)
+        self.census = list(census)
+
+    def __call__(self, cmd, **kw):
+        if "run" in cmd and "--out" in cmd:
+            n, w = self.census[self.n]
+            rc = super().__call__(cmd, **kw)
+            _census_out(Path(cmd[cmd.index("--out") + 1]), n, w)
+            return rc
+        return super().__call__(cmd, **kw)
+
+
+def test_nonport_scope_scores_nonport_hold(tmp_path, monkeypatch, three_iter):
+    """KW-FIX-32 11-07 (COORD 21:4x (3), DIE-KV-91 M5 e1): with OT_HOLD_REPAIR_SCOPE=nonport a repair of the non-port
+    hold (81 endpoints at -7.98 -> 1 at -0.05) is an improvement although the whole FF WNS (port starts, the parent's)
+    barely moves; default scope keeps the whole-number rule."""
+    k = kit(tmp_path, mm=False)
+    b = base_rec(k, rec(33.7, -7.98))
+    _census_out(k / "signoff", 81, -7.98)
+    results = lambda: [rec(33.7, -7.10), rec(33.7, -7.05), rec(33.7, 1)]
+    census = [(1, -0.05), (0, 0), (0, 0)]
+    monkeypatch.setenv("OT_HOLD_REPAIR_SCOPE", "nonport")
+    r = E.run_loop(k, b, run=FakeNP(results(), census), mem=8, cpus=2, root=tmp_path / "np", **three_iter)
+    assert r["base_metrics"]["ff_np"] == -7.98 and r["base_metrics"]["ff_np_n"] == 81
+    assert r["iterations"][0]["metrics"]["ff_np"] == -0.05 and r["iterations"][0]["metrics"]["ff_np_n"] == 1
+    assert "no improvement at iteration 1" not in r["reason"] and len(r["iterations"]) >= 2
+    assert r["iterations"][1]["metrics"]["ff_np"] == 0.0 and r["iterations"][1]["metrics"]["ff_np_n"] == 0
+    assert "non-port -7.98/81->" in E.summary(r)
+    monkeypatch.delenv("OT_HOLD_REPAIR_SCOPE")
+    k2 = kit(tmp_path / "d", mm=False)
+    b2 = base_rec(k2, rec(33.7, -7.98))
+    _census_out(k2 / "signoff", 81, -7.98)
+    r2 = E.run_loop(k2, b2, run=FakeNP(results(), census), mem=8, cpus=2, root=tmp_path / "dflt", **three_iter)
+    assert "ff_np" not in r2["base_metrics"] and "ff_np" not in r2["iterations"][0]["metrics"]
+    assert r2["verdict"] == "EXHAUSTED" and "no improvement at iteration 1" in r2["reason"]   # -7.98 -> -7.10 < 1 ps
+
+
+def test_nonport_score_reads_census_or_falls_back(tmp_path, monkeypatch):
+    so = tmp_path / "signoff.json"
+    so.write_text("{}")
+    assert E.nonport_score(so) is None                                          # no census
+    _census_out(tmp_path, 3, -2.5)
+    assert E.nonport_score(so) == (-2.5, 3)
+    _census_out(tmp_path, 0, 0)
+    assert E.nonport_score(so) == (0.0, 0)                                      # all port starts
+    c = json.loads((tmp_path / "ff/corner.json").read_text())
+    c["std_min_start"]["trunc"] = 1.0
+    (tmp_path / "ff/corner.json").write_text(json.dumps(c))
+    assert E.nonport_score(so) is None                                          # truncated census: whole number
+    monkeypatch.setenv("OT_HOLD_REPAIR_SCOPE", "nonport")
+    _census_out(tmp_path, 3, -2.5)
+    m = E.metrics(rec(5, -9), so)
+    assert m["ff"] == -9 and m["ff_np"] == -2.5 and m["ff_np_n"] == 3
+    p = dict(m, ff_np=-2.0, ff_np_n=3)
+    assert not E.improved(p, m) and E.better(p, m)                              # scored on the non-port number
+    assert "ff_np" not in E.metrics(rec(5, -9))                                 # no path: whole number
