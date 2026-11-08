@@ -124,7 +124,16 @@ def pin_tables(base_pins, outline, vc2_ports, host_ports, base_ports, dx):
             raise ValueError("generated pin table has coincident pins")
         if any(not (0 <= p["x"] <= W and 0 <= p["y"] <= H) for p in tbl):
             raise ValueError("generated pin outside outline")
-    return vc2_tbl, host_tbl
+    return vc2_tbl, host_tbl                   # EP-MOD-1108 as published; EP-MOD-1108d adds the directions
+
+
+def with_dirs(tbl, ports):
+    """copy of tbl with every pin's direction from the module header (prov contract views read pins_file dir first;
+    EP-MOD-1108d: the wave's prov_views found no RTL for the two new masters, 3516 / 2490 pins without a direction)."""
+    d = {b: dr for dr, n, w in ports for b in bits(n, w)}
+    if {p["name"] for p in tbl} != set(d):
+        raise ValueError("pin table is not port-exact")
+    return [dict(p, dir=d[p["name"]]) for p in tbl]
 
 
 def apply(plan, base_pins, vc2_ports, host_ports, base_ports):
@@ -222,13 +231,99 @@ def changed_types(a, b):
     return out, rest
 
 
+DIRS_TAG = "epmod1108d"
+
+
+def add_dirs(plan, tables, vc2_ports, host_ports):
+    """EP-MOD-1108d on a plan that already carries EP-MOD-1108: -> (plan copy with the two pins_file names moved to the
+    __epmod1108d tables, {pins_file: table with dir}, changes).  Pin names and sites unchanged."""
+    out = copy.deepcopy(plan)
+    t = out["partition_types"][TYPE]
+    ports = {SWAP["u_ep_N0"]: vc2_ports, SWAP["u_host_ep"]: host_ports}
+    new_tables, changes = {}, []
+    for h in t["hard_cores"]:
+        if h["inst"] not in SWAP:
+            continue
+        mod = SWAP[h["inst"]]
+        if h["module"] != mod or not h["pins_file"].endswith(f"__{TAG}.json"):
+            raise ValueError(f"{TYPE}.{h['inst']}: not the EP-MOD-1108 form ({h['module']}, {h['pins_file']})")
+        old = h["pins_file"]
+        tbl = [{k: v for k, v in p.items() if k != "dir"} for p in tables[old]]
+        new = old.replace(f"__{TAG}.json", f"__{DIRS_TAG}.json")
+        new_tables[new] = with_dirs(tbl, ports[mod])
+        h["pins_file"] = new
+        h["note"] = (h.get("note") or "") + " | EP-MOD-1108d: pin table carries RTL header directions (sites unchanged)"
+        changes.append(dict(type=TYPE, inst=h["inst"], pins_file=[old, new]))
+    if len(changes) != len(SWAP):
+        raise ValueError("EP-MOD-1108d: both EP hard cores required")
+    return out, new_tables, changes
+
+
+def _finish(dst, src, files_in, receipt_name, receipt, extra, readme_line):
+    _write(dst / receipt_name, receipt)
+    with open(dst / "README.md", "r") as f:
+        readme = f.read()
+    (dst / "README.md").unlink()
+    (dst / "README.md").write_text(readme + readme_line)
+    sums = []
+    for line in (dst / "SHA256SUMS").read_text().splitlines():
+        h, _, name = line.partition("  ")
+        p = dst / name
+        sums.append(f"{fsha(p) if p.is_file() else h}  {name}")
+    for name in list(extra) + [receipt_name]:
+        if not any(s.endswith("  " + name) for s in sums):
+            sums.append(f"{fsha(dst / name)}  {name}")
+    (dst / "SHA256SUMS").unlink()
+    (dst / "SHA256SUMS").write_text("\n".join(sums) + "\n")
+
+
+def main_dirs(a):
+    src, dst = Path(a.plan_dir), Path(a.out_dir)
+    if dst.exists():
+        raise SystemExit(f"{dst} exists")
+    plan = json.loads((src / "die_plan.json").read_text())
+    rtl = Path(a.rtl).read_text()
+    vc2_ports, host_ports = module_ports(rtl, SWAP["u_ep_N0"]), module_ports(rtl, SWAP["u_host_ep"])
+    olds = [h["pins_file"] for h in plan["partition_types"][TYPE]["hard_cores"] if h["inst"] in SWAP]
+    tables = {o: json.loads((src / o).read_text()) for o in olds}
+    new, new_tables, changes = add_dirs(plan, tables, vc2_ports, host_ports)
+    types, rest = changed_types(plan, new)
+    shutil.copytree(src, dst, copy_function=os.link, symlinks=True)
+    sha_in = fsha(src / "die_plan.json")
+    _write(dst / "die_plan.json", new)
+    _gz(dst / "die_plan.json")
+    pins = {}
+    for name, tbl in new_tables.items():
+        _write(dst / name, tbl, indent=None)
+        pins[name] = dict(sha256=fsha(dst / name), pins=len(tbl))
+    sha_out = fsha(dst / "die_plan.json")
+    receipt = dict(event="EP-MOD-1108d", lane="DIE-HBM-92-EP", plan_in=str(src / "die_plan.json"), sha_in=sha_in,
+                   sha_out=sha_out, pins_files=pins, replaced={o: fsha(src / o) for o in olds}, changed_types=types,
+                   changed_top_level=rest, changes=changes,
+                   rtl=dict(vc2_and_host=a.rtl, sha256=fsha(a.rtl)),
+                   note="directions only (pins_file dir from the module headers); names and sites byte-equal")
+    _finish(dst, src, None, "ep_mod_1108d_event.json", receipt, pins,
+            f"\n## EP-MOD-1108d (DIE-HBM-92-EP 2026-11-08)\n{src.name} ({sha_in[:12]}) + EP-MOD-1108d: the two EP-MOD-1108 "
+            f"pin tables carry their RTL directions (new names __{DIRS_TAG}.json, sites unchanged); die_plan.json sha256 "
+            f"{sha_out[:12]}; types changed {types}. Receipt ep_mod_1108d_event.json.\n")
+    print(f"EP-MOD-1108d: sha {sha_in[:12]} -> {sha_out[:12]} types {types} top-level {rest} "
+          f"pins {[(k, v['pins'], v['sha256'][:12]) for k, v in pins.items()]}")
+    return 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("plan_dir")
     ap.add_argument("--rtl", required=True, help="source holding the hfd_ep_static_vc2 + hfd_ep_host_vc headers")
-    ap.add_argument("--base-rtl", required=True, help="source holding the hfd_ep_static header")
+    ap.add_argument("--base-rtl", help="source holding the hfd_ep_static header (EP-MOD-1108)")
+    ap.add_argument("--add-dirs", action="store_true",
+                    help="EP-MOD-1108d: plan_dir already carries EP-MOD-1108; give its two pin tables directions")
     ap.add_argument("--out-dir", required=True, help="new plan dir (hardlink copy of plan_dir + changed files)")
     a = ap.parse_args(argv)
+    if a.add_dirs:
+        return main_dirs(a)
+    if not a.base_rtl:
+        ap.error("--base-rtl is required for EP-MOD-1108")
     src, dst = Path(a.plan_dir), Path(a.out_dir)
     if dst.exists():
         raise SystemExit(f"{dst} exists")
