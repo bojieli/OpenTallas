@@ -553,7 +553,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire[17:0]kv_nin=iss[0]?18'd128:18'd64;
  wire formatter_fault,formatter_idle,formatter_drained,kvn_v;wire[7:0]formatter_fault_code;
  wire[10:0]kvn_tag;wire[511:0]kvn_data;wire[39:0]kvn_ctl_pub;
- ot_qfd_su_kv_static_posted #(.ENABLE(1),.HEADS(1),.SAFE(SAFE),.LOCAL_CTL(LOCAL32))u_formatter(
+ ot_qfd_su_kv_static_posted #(.ENABLE(1),.HEADS(1),.SAFE(SAFE),.LOCAL_CTL(LOCAL32),.SEAT_HT(1))u_formatter(
  .clk(ck),.rst_n(rst_fmt),.epoch_begin(LOCAL32?nc_pub[0]:native_context),.epoch_begin_pub(nc_pub[2:1]),.word_slot_pub(ws_pub),.epoch_pos(c_pos),
  .issue_v(kv_issue),.issue_kind(kv_kind),.issue_nout(18'd1),.issue_nin(kv_nin),
  .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.epoch_idle(formatter_idle),.drained(formatter_drained),
