@@ -5034,14 +5034,14 @@
         "clock": "PASS",
         "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
       },
-      "plan": "/srv/opentallas-scratch2/claude/kw35/src_0b72a/physical/die_plan/qwen_compute/plan_of_record/plan_qc53v4s.json",
+      "plan": "/srv/opentallas-scratch2/claude/qct9/plan_qc53v4u.json",
       "gen_host": "epyc2",
       "src": "/srv/opentallas-scratch2/claude/kw35/src_0b72a",
       "src_sha": "0b72abe93ac068bd6a4f6518c271439f9f557f70",
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt.json",
-        "bind_out": "/srv/opentallas-scratch2/claude/qct7/bind_v4s",
+        "bind_out": "/srv/opentallas-scratch2/claude/qct9/bind_v4u",
         "note": "KW-FIX-22 11:2x BIND_STALE class: bind_out bind_qc_g = canonical native re-bind (bind.py all --strict, src_3761 tools) of the SAME context as bind_qc_f (plan_qc52 b398e285 + results/qc_ringfall_1105/bind/final_asbuilt.json in src_c926f): bind errors 0 unbound 0, 377 partitions, 1921 crossings, native_topology.json written; kit_topology.bind_matches True for the 6 rows (False on bind_qc_f, no receipt). verify step advisory FAIL (glue_unmatched 24710, 3633 clock_landing strap_k notes, lint 768; bind_qc_f never ran verify). Same bytes on epyc5+epyc6 (md5 tree d27ccd18). | KW-FIX-16 13:1x I136 tag flow-20261106-f-qc (ringff I125 + ringfall I136 + coll_core fold I124): src_r main 79e52bd98b2; asbuilt/sidecar results/qc_ringfall_1105 (DIE-QC-78 chain78, copied into src_r, untracked), bind_out bind_qc_f = copy of dq78/bind, strict FINAL errors 0, 1921 crossings, inputs plan_qc52 b398e285 = src_r plan bytes. | KW-FIX-10 04:2x COORD: SC event I67+I68 src_c main cbb7cfda19b tag s-qc, bind_out sc_ev/pub. | KW-FIX-8 23:1x I66 collector batch: src_b main cb98b2e2324 tag q-qc; bind_tip_i57 unchanged, kit-rtl trial rc 0 on the new plan, no QC RTL moved. | KW-FIX-8 19:1x COORD I57 class relaunch: src_w main 62777284106 tag flow-20261105-h-qc, bind_tip_i57 = byte copy of dq71/bind_tip (DIE-QC-71: bind_tip stays bind_out), same path on epyc4 and intel1. KW-FIX-8 17:0x COORD 16:4x: bind_out dq71/bind_tip (main 3277e531772, BIND_RC 0, copy on epyc2). KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46 tag w-qc: src_s main c512ffc3a94, plan efdb36e864, bind_qs = DIE-QC-70 q70/bind9 strict rc 0 (W1+straps; coll_ucie field after it) | KW-FIX-8 fall tag: QC on src_q main bf1e2233ce0, strict bind_qq rc 0 | KW-FIX-8 I38 tag p-qc: QC event 5bcec8dc59 on src_p, plan_qc52, strict bind_qp | KW-FIX-6 05:1x: src kw-fix-6-qcd. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | QC approved immutable combined d90 strict119types/377parts/1921crossings/790393bits0errors;201-file closed readset event1131_fixed. Matching pre-D13 RTL/recipe retained; Q4 untrusted hints included; no fresh ELAB or old freeze mutation.",
         "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
       },
@@ -5474,7 +5474,10 @@
         "coll_core@3",
         "sle_stm_v1__clbe630b9c@10",
         "slw_stm_v1__cle34a73c3@13",
-        "slw_stm_v2__cl1ca9c415@7"
+        "slw_stm_v2__cl1ca9c415@7",
+        "sle_fw_v3@30",
+        "sle_fe_v2@5",
+        "slw_su_c__cl19bb38ef@12"
       ],
       "queue_src": "main@0b72abe93ac0",
       "type_args": {
@@ -5994,7 +5997,10 @@
         "coll_core@3": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): REDESIGN: QC-TYPES-9 04:51 (G): stale FAIL_PREFLOOR marker in the old kit; fresh kit on bind_v4s",
         "sle_stm_v1__clbe630b9c@10": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): INFRA: QC-TYPES-9 04:51 (D): sat in KW12_DISK_WAIT on intel1 since 01:28, never started; KW-FIX-35 stopped the 3 units; relaunch on bind_v4s",
         "slw_stm_v1__cle34a73c3@13": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): INFRA: QC-TYPES-9 04:51 (D): sat in KW12_DISK_WAIT on intel1 since 01:28, never started; KW-FIX-35 stopped the 3 units; relaunch on bind_v4s",
-        "slw_stm_v2__cl1ca9c415@7": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): INFRA: QC-TYPES-9 04:51 (D): sat in KW12_DISK_WAIT on intel1 since 01:28, never started; KW-FIX-35 stopped the 3 units; relaunch on bind_v4s"
+        "slw_stm_v2__cl1ca9c415@7": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): INFRA: QC-TYPES-9 04:51 (D): sat in KW12_DISK_WAIT on intel1 since 01:28, never started; KW-FIX-35 stopped the 3 units; relaunch on bind_v4s",
+        "sle_fw_v3@30": "KW-FIX-35 2026-11-08 05:55 PST: QC-TYPES-9 05:5x plan event qc53v4u: fresh kit on v4u (OT_CONS_KIT=1); a30 (v4s, pre-P&R) stopped by KW-FIX-35",
+        "sle_fe_v2@5": "KW-FIX-35 2026-11-08 05:55 PST: QC-TYPES-9 05:5x plan event qc53v4u: type changed in v4u; fresh kit",
+        "slw_su_c__cl19bb38ef@12": "KW-FIX-35 2026-11-08 05:55 PST: QC-TYPES-9 05:5x plan event qc53v4u: type changed in v4u; fresh kit"
       },
       "gen_hosts": [
         "intel1",
@@ -6725,7 +6731,15 @@
       "queue_src_prev_kw35q": "main@d95ec5a45a60",
       "flow_tag_prev_kw35q": "flow-20261108-dy-qc",
       "plan_prev_kw35q": "/srv/opentallas-scratch2/claude/kw33/src_d95ec/physical/die_plan/qwen_compute/plan_of_record/plan_qc53v4s.json",
-      "note_kw35q": "KW-FIX-35-Q 2026-11-08 05:51 PST: src -> main 0b72abe93ac (hardlinks of kw33/src_d95ec + delta, sha256-checked on gen hosts); revert via *_prev_kw35q"
+      "note_kw35q": "KW-FIX-35-Q 2026-11-08 05:51 PST: src -> main 0b72abe93ac (hardlinks of kw33/src_d95ec + delta, sha256-checked on gen hosts); revert via *_prev_kw35q",
+      "plan_prev_kw35e": "/srv/opentallas-scratch2/claude/kw35/src_0b72a/physical/die_plan/qwen_compute/plan_of_record/plan_qc53v4s.json",
+      "kit_rtl_bind_out_prev_kw35e": "/srv/opentallas-scratch2/claude/qct7/bind_v4s",
+      "retry_prev_kw35e_added": [
+        "sle_fw_v3@30",
+        "sle_fe_v2@5",
+        "slw_su_c__cl19bb38ef@12"
+      ],
+      "note_kw35e": "KW-FIX-35 2026-11-08 05:55 PST: QC-TYPES-9 READY qc53v4u: plan_qc53v4u.json sha 9c8cefa48662 + bind_v4u (staged on all hosts, strict bind rc 0, 3 types change vs v4s); in-flight v4s rows keep running. Revert *_prev_kw35e"
     },
     "hbm": {
       "enabled": true,
