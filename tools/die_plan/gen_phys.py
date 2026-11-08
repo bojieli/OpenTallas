@@ -2279,6 +2279,34 @@ def tap_chain_affinity_exports(t):
             f"export OT_TAP_CHAIN_MAX_GROUP = {limit}"]
 
 
+def tap_pair_affinity_exports(t):
+    """QC-TYPES-6 11-07: default-off pre-CTS short-pair tap affinity (clock_taps.tcl -> tap_pair_affinity.tcl).
+    Clock pins only; radius and group bounded by the declared tap radius and capacity."""
+    clock = t.get("clock", {})
+    if "tap_pair_affinity" not in clock:
+        return []
+    spec = clock["tap_pair_affinity"]
+    tap_r = float(clock.get("tap_radius_um", 200.))
+    radius = float(spec.get("radius_um", tap_r))
+    group = int(spec.get("max_group", 64))
+    merge = int(spec.get("merge_max", 128))
+    pair_um = float(spec.get("pair_um", 60.))
+    depth = int(spec.get("depth", 2))
+    cap = min(1200, _tap_cap(t))
+    if not 0 < radius <= tap_r:
+        raise ValueError("tap_pair_affinity radius must fit the declared tap radius")
+    if not 2 <= group <= cap or not (merge == 0 or 2 <= merge <= cap):
+        raise ValueError("tap_pair_affinity group/merge must fit the declared tap capacity")
+    if not 0 < pair_um <= 200 or not 0 <= depth <= 4:
+        raise ValueError("tap_pair_affinity pair_um/depth out of range")
+    return ["export OT_TAP_PAIR_AFFINITY = 1",
+            f"export OT_TAP_PAIR_RADIUS_UM = {radius:g}",
+            f"export OT_TAP_PAIR_GROUP = {group}",
+            f"export OT_TAP_PAIR_MERGE = {merge}",
+            f"export OT_TAP_PAIR_UM = {pair_um:g}",
+            f"export OT_TAP_PAIR_DEPTH = {depth}"]
+
+
 def _tap_cap(t):
     """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 3000 (COORD 10-23; applies to grid and added taps);
     density taps default to 1500 (decision 5: ~1000-1500 sinks a tap)."""
@@ -4150,6 +4178,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # HEAD-TILE-PREGRT-HOLD (DH59-TILE 11-03, opt-in clock.pregrt_ff_hold): pregrt_ff_hold.py, run_kit.sh step below
         cfg.append("export OT_PREGRT_FF_HOLD = 1")
     cfg += tap_chain_affinity_exports(t)
+    cfg += tap_pair_affinity_exports(t)
     cfg += rck_band_exports(P, tn)
     import pad_clock as PC
     PC.write_contract(P, tn, kd)
@@ -4160,7 +4189,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
-              "clock_taps.tcl", "tap_chain_affinity.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
+              "clock_taps.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
               "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)

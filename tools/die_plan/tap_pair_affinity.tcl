@@ -1,0 +1,101 @@
+# Default-off pre-CTS short-pair affinity, preserving initially coherent
+# short-pair components atomically.  No data/reset/cell/timing changes.
+# QC vPA showed why aggregate single-register label propagation is insufficient:
+# it split the initially same-tap p_f[30] -> r_f[30] pair (1.404 um), worsening
+# FF data hold from -60.75 to -66.39 ps.  The pure planner cannot make that cut.
+source [file join [file dirname [info script]] tap_pair_plan.tcl]
+namespace eval ::ot_tap_pair {
+ proc run {} {
+  global ct_taps
+  set blk [ord::get_db_block]
+  set dbu [expr {double([[ord::get_db_tech] getDbUnitsPerMicron])}]
+  set pair_um [expr {[info exists ::env(OT_TAP_PAIR_UM)] ? $::env(OT_TAP_PAIR_UM) : 60.0}]
+  set depth [expr {[info exists ::env(OT_TAP_PAIR_DEPTH)] ? $::env(OT_TAP_PAIR_DEPTH) : 2}]
+  set gmax [expr {[info exists ::env(OT_TAP_PAIR_GROUP)] ? $::env(OT_TAP_PAIR_GROUP) : 64}]
+  set cap [expr {[info exists ::env(OT_TAP_MAX_SINKS)] ? $::env(OT_TAP_MAX_SINKS) : 1200}]
+  set rad_um [expr {[info exists ::env(OT_TAP_REASSIGN_UM)] && $::env(OT_TAP_REASSIGN_UM) ne "" ? $::env(OT_TAP_REASSIGN_UM) : 200.0}]
+  if {[info exists ::env(OT_TAP_PAIR_RADIUS_UM)]} { set rad_um $::env(OT_TAP_PAIR_RADIUS_UM) }
+  set pair [expr {$pair_um*$dbu}]; set rad [expr {$rad_um*$dbu}]
+  # tap nets, their xy and load
+  set tapxy {}; set load {}
+  foreach tp $ct_taps {
+   set net [lindex $tp 1]; set nm [$net getName]
+   dict set tapxy $nm [list [lindex $tp 2] [lindex $tp 3]]
+   set n 0; foreach it [$net getITerms] { if {[$it isInputSignal]} { incr n } }
+   dict set load $nm $n
+  }
+  # registers on a tap net: clock iterm, xy, tap
+  set regs {}
+  dict for {nm xy} $tapxy {
+   set net [$blk findNet $nm]
+   foreach it [$net getITerms] {
+    if {![$it isInputSignal]} continue
+    set inst [$it getInst]; set m [$inst getMaster]
+    if {[$m isBlock] || ![string match {DFF*} [$m getName]] || [[$it getMTerm] getName] ni {CLK CLKN}} continue
+    # A named-chain form owns those clocks, including long coherent runs that
+    # this short-pair graph does not enumerate.  Never tear its separate cohort.
+    if {[info exists ::env(OT_TAP_CHAIN_AFFINITY)] && $::env(OT_TAP_CHAIN_AFFINITY) eq "1" &&
+        [llength [info commands ::ot_tap_chain::identity]] && [::ot_tap_chain::identity [$inst getName]] ne {}} continue
+    set bb [$inst getBBox]
+    dict set regs [$inst getName] [list $it [expr {([$bb xMin]+[$bb xMax])/2}] [expr {([$bb yMin]+[$bb yMax])/2}] $nm]
+   }
+  }
+  puts "OT_TAP_PAIR registers on taps [dict size $regs], taps [dict size $tapxy], pair_um $pair_um depth $depth group $gmax"
+  # short direct pairs: Q net -> up to depth combinational cells -> D of a register on a tap
+  set pairs {}
+  dict for {iname row} $regs {
+   lassign $row it x y t
+   set inst [$it getInst]
+   set front {}
+   foreach o [$inst getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend front [$o getNet] } }
+   set seen {}
+   for {set d 0} {$d <= $depth && [llength $front]} {incr d} {
+    set next {}
+    foreach net $front {
+     if {[dict exists $seen [$net getName]]} continue
+     dict set seen [$net getName] 1
+     # v2: a register's own Q net with more than 64 loads (a reset relay) still pairs with the
+     # registers whose RESETN/SETN it drives (vPAC: rrl_165 -> q_bad was same-tap -2.9 ps, cut to -70.67).
+     set big [expr {[llength [$net getITerms]] > 64}]
+     if {$big && $d > 0} continue
+     foreach s [$net getITerms] {
+      if {![$s isInputSignal]} continue
+      if {$big && [[$s getMTerm] getName] ni {RESETN SETN}} continue
+      set si [$s getInst]; set sm [$si getMaster]
+      if {[$sm isBlock]} continue
+      if {[$sm isSequential]} {
+       set sn [$si getName]
+       if {$sn ne $iname && [dict exists $regs $sn]} {
+        lassign [dict get $regs $sn] sit sx sy st
+        set dd [expr {abs($sx-$x)+abs($sy-$y)}]
+        if {$dd <= $pair} { lappend pairs [list $dd $iname $sn] }
+       }
+       continue
+      }
+      if {$d < $depth} { foreach o [$si getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend next [$o getNet] } } }
+     }
+    }
+    set front $next
+   }
+  }
+  set maxp [expr {[info exists ::env(OT_TAP_PAIR_PASSES)] ? $::env(OT_TAP_PAIR_PASSES) : 20}]
+  set mlim [expr {[info exists ::env(OT_TAP_PAIR_MERGE)] ? $::env(OT_TAP_PAIR_MERGE) : 128}]
+  set result [plan $regs $pairs $tapxy $load $cap $rad $gmax $maxp $mlim]
+  puts "OT_TAP_PAIR coherent components [dict get $result components], largest [dict get $result largest], frozen oversized [dict get $result frozen]"
+  foreach row [dict get $result passes] {
+   lassign $row pass groups pins cross
+   puts "OT_TAP_PAIR pass $pass: groups moved $groups clock pins moved $pins cross-tap short pairs $cross"
+  }
+  set changed 0
+  dict for {name row} [dict get $result regs] {
+   lassign $row it x y target
+   if {$target eq [lindex [dict get $regs $name] 3]} continue
+   $it disconnect; $it connect [$blk findNet $target];incr changed
+  }
+  puts "OT_TAP_PAIR done: unique clock pins changed $changed, coherent-pair cuts 0, converged [dict get $result converged]"
+  return $changed
+ }
+}
+if {[info exists ::env(OT_TAP_PAIR_AFFINITY)] && $::env(OT_TAP_PAIR_AFFINITY) eq "1" && [info exists ct_taps] && [llength $ct_taps] >= 2} {
+ ::ot_tap_pair::run
+}
