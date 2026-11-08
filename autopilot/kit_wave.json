@@ -6340,8 +6340,8 @@
       "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
       "plan": "/srv/opentallas-scratch2/claude/kw27/hbm_d44v_02909_g/die_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw34/src_d6e90",
-      "src_sha": "d6e906593cc613ee0e34b07a73cae8a3e677cd39",
+      "src": "/srv/opentallas-scratch2/claude/kw34/src_28914",
+      "src_sha": "289149dea5bc78493b63c7caf5b47243b9210415",
       "gate": {
         "g0c": "PASS",
         "bind": "PASS",
@@ -6896,12 +6896,19 @@
         "q_spu0__physical_v1@2",
         "q_spu0@1",
         "q_spu1__physical_v1@2",
-        "q_spu1@1"
+        "q_spu1@1",
+        "q_b013__physical_v1@1",
+        "q_b013@2",
+        "NE_io@1",
+        "NW_io@1",
+        "q_spb0__physical_v1@1",
+        "q_spb0@1",
+        "vsN0@1"
       ],
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
       "pilot_mode": "queue",
-      "queue_src": "main@d6e906593cc6",
+      "queue_src": "main@289149dea5bc",
       "hold_items": {
         "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
         "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
@@ -7044,7 +7051,14 @@
         "q_spu0__physical_v1@2": "KW-FIX-33 2026-11-08 00:56 PST: REDESIGN: DIE-HBM-90 ftpdn f66278c0b46 (PDN row bridge when an M4 FT band spans the width) on src d95ec5a45a6; was PDN-0179",
         "q_spu0@1": "KW-FIX-33 2026-11-08 00:56 PST: REDESIGN: DIE-HBM-90 ftpdn f66278c0b46 (PDN row bridge when an M4 FT band spans the width) on src d95ec5a45a6; was PDN-0179",
         "q_spu1__physical_v1@2": "KW-FIX-33 2026-11-08 00:56 PST: REDESIGN: DIE-HBM-90 ftpdn f66278c0b46 (PDN row bridge when an M4 FT band spans the width) on src d95ec5a45a6; was PDN-0179",
-        "q_spu1@1": "KW-FIX-33 2026-11-08 00:56 PST: REDESIGN: DIE-HBM-90 ftpdn f66278c0b46 (PDN row bridge when an M4 FT band spans the width) on src d95ec5a45a6; was PDN-0179"
+        "q_spu1@1": "KW-FIX-33 2026-11-08 00:56 PST: REDESIGN: DIE-HBM-90 ftpdn f66278c0b46 (PDN row bridge when an M4 FT band spans the width) on src d95ec5a45a6; was PDN-0179",
+        "q_b013__physical_v1@1": "KW-FIX-34 2026-11-08 02:15 PST: REDESIGN: PDN class fix 'PDN island under tall full-width FT bands' (DIE-HBM-91 ftwin 973348fee59 on main 289149dea5b, tag fa-hbm): strap windows every 5th strap in full-width M4/M6 FT reservations; PDNGEN proof on this kit's own 2_3 floorplan odb; not a retry",
+        "q_b013@2": "KW-FIX-34 2026-11-08 02:15 PST: REDESIGN: PDN class fix 'PDN island under tall full-width FT bands' (DIE-HBM-91 ftwin 973348fee59 on main 289149dea5b, tag fa-hbm): strap windows every 5th strap in full-width M4/M6 FT reservations; PDNGEN proof on this kit's own 2_3 floorplan odb; not a retry",
+        "NE_io@1": "KW-FIX-34 2026-11-08 02:16 PST: REDESIGN: PROV contract class fix kcls-k12 19c8342244d (prov_view contract pin directions from HBM core cut-port tables + recipe tops) on main 289149dea5b, tag fa-hbm; a1 ran on ez-hbm d6e906593cc without it (COORD 02:2x); fresh kit",
+        "NW_io@1": "KW-FIX-34 2026-11-08 02:16 PST: REDESIGN: PROV contract class fix kcls-k12 19c8342244d (prov_view contract pin directions from HBM core cut-port tables + recipe tops) on main 289149dea5b, tag fa-hbm; a1 ran on ez-hbm d6e906593cc without it (COORD 02:2x); fresh kit",
+        "q_spb0__physical_v1@1": "KW-FIX-34 2026-11-08 02:16 PST: REDESIGN: PROV contract class fix kcls-k12 19c8342244d (prov_view contract pin directions from HBM core cut-port tables + recipe tops) on main 289149dea5b, tag fa-hbm; a1 ran on ez-hbm d6e906593cc without it (COORD 02:2x); fresh kit",
+        "q_spb0@1": "KW-FIX-34 2026-11-08 02:16 PST: REDESIGN: PROV contract class fix kcls-k12 19c8342244d (prov_view contract pin directions from HBM core cut-port tables + recipe tops) on main 289149dea5b, tag fa-hbm; a1 ran on ez-hbm d6e906593cc without it (COORD 02:2x); fresh kit",
+        "vsN0@1": "KW-FIX-34 2026-11-08 02:16 PST: REDESIGN: PROV contract class fix kcls-k12 19c8342244d (prov_view contract pin directions from HBM core cut-port tables + recipe tops) on main 289149dea5b, tag fa-hbm; a1 ran on ez-hbm d6e906593cc without it (COORD 02:2x); fresh kit"
       },
       "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
       "item_args_rf1prev": {
@@ -7233,7 +7247,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 2
       },
-      "flow_tag": "flow-20261108-ez-hbm",
+      "flow_tag": "flow-20261108-fa-hbm",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -7820,6 +7834,22 @@
         "q_su20__physical_v1",
         "q_su21",
         "q_su21__physical_v1"
+      ],
+      "src_prev_kw34h": "/srv/opentallas-scratch2/claude/kw34/src_d6e90",
+      "src_sha_prev_kw34h": "d6e906593cc613ee0e34b07a73cae8a3e677cd39",
+      "queue_src_prev_kw34h": "main@d6e906593cc6",
+      "flow_tag_prev_kw34h": "flow-20261108-ez-hbm",
+      "note_src_kw34h": "KW-FIX-34 2026-11-08 02:15 PST (COORD 02:0x/02:2x): HBM src kw34/src_28914 = main 289149dea5b (ftwin 973348fee59 PDN strap windows + kcls-k12 19c8342244d port tables) = kw33/src_d95ec hardlinks + 63 files, sha256-checked on intel1/epyc4/epyc5/epyc6/epyc2; tag fa-hbm. Revert *_prev_kw34h",
+      "retry_prev_kw34h_added": [
+        "q_b013__physical_v1@1",
+        "q_b013@2"
+      ],
+      "retry_prev_kw34h2_added": [
+        "NE_io@1",
+        "NW_io@1",
+        "q_spb0__physical_v1@1",
+        "q_spb0@1",
+        "vsN0@1"
       ]
     }
   },
