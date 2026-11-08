@@ -7568,6 +7568,9 @@ def via_docker(args, image, mem):
     me = str(Path(__file__).resolve())
     cmd = ["docker", "run", "--rm", f"--memory={mem}g", f"--memory-swap={mem}g", "-v", f"{kit}:/work:ro",
            "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}", "-e", f"OT_LEC_REFINE_S={os.environ.get('OT_LEC_REFINE_S', '3600')}", "-e", f"OT_LEC_CONE_S={os.environ.get('OT_LEC_CONE_S', str(CONE_S_DEFAULT))}"]
+    if "OT_LEC_PARITY_TERMS" in os.environ:
+        # Exact GF(2) normalization capacity, not a model or timing constraint.
+        cmd += ["-e", f"OT_LEC_PARITY_TERMS={max(2, int(os.environ['OT_LEC_PARITY_TERMS']))}"]
     if "OT_LEC_SLANG_UNROLL_LIMIT" in os.environ:
         value = slang_unroll_args({})[0].split("=", 1)[1]
         cmd += ["-e", f"OT_LEC_SLANG_UNROLL_LIMIT={value}"]
@@ -7722,7 +7725,7 @@ def _provenance(kit=None):
 
 PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_COMPARE",
                  "OT_LEC_ENABLE_FILL_GUARD", "OT_LEC_REPLICA_MATCH",
-                 "OT_LEC_MEM_LANES")
+                 "OT_LEC_MEM_LANES", "OT_LEC_PARITY_TERMS")
 
 
 def nowiden_retry(r, out, run):
