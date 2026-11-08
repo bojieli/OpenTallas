@@ -612,6 +612,12 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
             shutil.copy2(pd / "config.mk", pd / "config_eco.mk")
         shutil.copy2(Path(kit) / "config.mk", pd / "config.mk")
         s = pd
+    if trim and len(it["pass_dirs"]) > 1 and os.environ.get("OT_ECO_KEEP_ROUTED") != "1":
+        # KW-FIX-32 11-07 (COORD 21:0x: 13 S81 slice_station loops held 165 GB on epyc6 root, ~8 GB per t<N> copy):
+        # the final pass is routed from its own full copy, so the intermediate pass's ORFS run data goes now
+        gone = prune_dirs(it["pass_dirs"][:-1])
+        if gone:
+            it["intermediate_pruned"] = gone
     ts = time.time()
     pr = post_runner(d, runner)
     if pr:
@@ -691,17 +697,26 @@ def trim_best(it):
     return gone
 
 
+def prune_dirs(dirs):
+    """remove run/results + run/objects (the full ORFS copy) under each pass dir; config, logs, reports, PRD.json,
+    prd_result.json and signoff/ stay as evidence.  -> [removed paths]"""
+    gone = []
+    for d in map(Path, dirs):
+        for sub in ("run/results", "run/objects"):
+            p = d / sub
+            if p.is_dir() and not p.is_symlink() and str(p.resolve()).startswith(str(d.resolve()) + os.sep):
+                shutil.rmtree(p, ignore_errors=True)
+                gone.append(str(p))
+    return gone
+
+
 def prune(it, intermediate_only=False):
     """drop the heavy ORFS run data of a superseded iteration (json / logs / sign-off stay as evidence); the best
     iteration keeps its final dir and drops only its intermediate t<N> pass"""
     dirs = [Path(p) for p in it.get("pass_dirs") or [] if p != it["dir"]]
     if not intermediate_only:
         dirs.append(Path(it["dir"]))
-    for d in dirs:
-        for sub in ("run/results", "run/objects"):
-            p = d / sub
-            if p.is_dir() and str(p.resolve()).startswith(str(d.resolve()) + os.sep):
-                shutil.rmtree(p, ignore_errors=True)
+    prune_dirs(dirs)
     if not intermediate_only:
         it["pruned"] = True
 
@@ -798,7 +813,11 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
                 verdict = it["status"]
             break
         if best is None or better(m, best["metrics"]):
-            best = it
+            old, best = best, it
+            if old is not None and not keep and os.environ.get("OT_ECO_KEEP_ROUTED") != "1":
+                # KW-FIX-32 11-07 (COORD 21:0x): iteration n is adopted over the previous best, whose full ORFS copy
+                # (already staged into iteration n by prd_mk) goes now instead of at loop end; its sign-off stays
+                prune(old)
         if m["signed"]:
             best, verdict, stop = it, "PASS", f"signed off after {n} ECO iteration(s)"
             break

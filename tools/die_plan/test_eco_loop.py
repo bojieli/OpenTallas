@@ -905,3 +905,40 @@ def test_mixed_hold_no_split_scores_whole_number(tmp_path, census):
     r, b = _mixed_hold_record(tmp_path, census)
     ok, beyond, _ = E.near_miss(r, b)
     assert not ok and "hold WNS -84.65" in beyond[0] and "1425 endpoints" in beyond[1]
+
+
+def test_superseded_full_copies_pruned_during_the_loop(tmp_path, monkeypatch, three_iter):
+    """KW-FIX-32 11-07 (COORD 21:0x, epyc6 root: 13 S81 slice_station loops 165 GB): the t<N> pass's full ORFS copy
+    goes once the iteration's final pass is routed (before its sign-off), and an iteration's final copy goes once a
+    later iteration is adopted as best -- not only at loop end; the adopted copy, logs and every sign-off stay"""
+    monkeypatch.delenv("OT_ECO_KEEP_ROUTED", raising=False)
+    k = kit(tmp_path, mm=False)
+    b = base_rec(k, rec(-6, -2, slew=0))
+    seen = []
+
+    class Spy(Fake):
+        def __call__(self, cmd, **kw):
+            if cmd[0] == "bash" and cmd[1].endswith("prd_mk.sh") or "--out" in cmd:
+                root = Path(cmd[3]).parent if cmd[0] == "bash" else Path(cmd[cmd.index("--kit") + 1]).parent
+                seen.append((Path(cmd[3]).name if cmd[0] == "bash" else "signoff:" + Path(cmd[cmd.index("--kit") + 1]).name,
+                             sorted(d.name for d in root.glob("i*") if (d / "run/results").is_dir())))
+            return super().__call__(cmd, **kw)
+
+    r = E.run_loop(k, b, run=Spy([rec(-3, -1), rec(-1, -1), rec(1, 2)]), mem=8, cpus=2, **three_iter)
+    assert r["verdict"] == "PASS" and r["best"]["n"] == 3
+    at = dict(seen)
+    assert at["signoff:i1"] == ["i1"]                 # i1t gone before i1's sign-off
+    assert at["i2t"] == ["i1"]                        # i1 is the seed of iteration 2 and the best so far: kept
+    assert at["signoff:i2"] == ["i1", "i2"]
+    assert at["i3t"] == ["i2"]                        # i2 adopted over i1: i1's full copy went at once
+    root = Path(r["root"])
+    assert sorted(d.name for d in root.glob("i*") if (d / "run/results").is_dir()) == ["i3"]
+    for n in ("i1", "i2", "i3"):
+        assert (root / n / "signoff/signoff.json").is_file() and (root / n / "config_eco.mk").is_file()
+    assert r["iterations"][0]["intermediate_pruned"] == [str(root / "i1t/run/results"), str(root / "i1t/run/objects")]
+    # OT_ECO_KEEP_ROUTED=1 keeps every copy, as the end-of-loop prune does
+    monkeypatch.setenv("OT_ECO_KEEP_ROUTED", "1")
+    k2 = kit(tmp_path / "k2", mm=False)
+    r2 = E.run_loop(k2, base_rec(k2, rec(-6, -2, slew=0)), run=Fake([rec(-3, -1), rec(1, 2)]), mem=8, cpus=2, keep=True,
+                    **three_iter)
+    assert (Path(r2["root"]) / "i1t/run/results").is_dir() and (Path(r2["root"]) / "i1/run/results").is_dir()
