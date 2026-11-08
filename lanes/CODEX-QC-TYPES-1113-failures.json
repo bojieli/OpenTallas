@@ -1,0 +1,298 @@
+[
+  [
+    "cbf_q01",
+    10,
+    "027f0624d87a",
+    "STRUCTURAL",
+    "GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.",
+    "epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/cbf_q01/attempt_10/gen/cbf_q01"
+  ],
+  [
+    "cbn_q00__cl622f65d2",
+    12,
+    null,
+    "FLOW",
+    "tool input file missing (stale path / pruned worktree) @gen: FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/cbn_q00__cl622f65d2/attempt_12/prov/views/sle_cland_w515_n/provenance.json'",
+    ""
+  ],
+  [
+    "cbn_q00__cldbcda913",
+    17,
+    null,
+    "PLAN",
+    "PROVISIONAL child view: no routed abstract / plan contract @prov_views: PROVISIONAL view FAIL (KW-PROV-1): no provisional abstract for a child of cbn_q00__cldbcda913",
+    ""
+  ],
+  [
+    "cbx_q10__cl89936551",
+    14,
+    null,
+    "PLAN",
+    "PROVISIONAL child view: no routed abstract / plan contract @prov_views: PROVISIONAL view FAIL (KW-PROV-1): no provisional abstract for a child of cbx_q10__cl89936551",
+    ""
+  ],
+  [
+    "cbx_q10__cl94a12200",
+    12,
+    "92f629a5a9e9",
+    "CRASH",
+    "exit 143, no OOM line in the run logs: stopped from outside",
+    "epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/cbx_q10__cl94a12200/attempt_12/gen/cbx_q10__cl94a12200"
+  ],
+  [
+    "coll_ft__cl78c7b300",
+    9,
+    "c7b97f602ede",
+    "STRUCTURAL",
+    "FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'se",
+    "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/coll_ft__cl78c7b300/attempt_9/gen/coll_ft__cl78c7b300"
+  ],
+  [
+    "coll_ft__cla4a25d77",
+    10,
+    "c2f2f0d6a495",
+    "STRUCTURAL",
+    "FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'se",
+    "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/coll_ft__cla4a25d77/attempt_10/gen/coll_ft__cla4a25d77"
+  ],
+  [
+    "coll_ftc",
+    4,
+    "ebd69dfb0fd5",
+    "STRUCTURAL",
+    "FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'se",
+    "epyc6:/srv/opentallas-scratch3/claude/kw21-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/coll_ftc/attempt_4/gen/coll_ftc"
+  ],
+  [
+    "coll_ftn",
+    5,
+    "8e913162a563",
+    "NEAR-MISS",
+    "late-ECO exhausted (3 it, 9779.4 s): TT 3.27->-10.0 FF -1.92->0.15 drv 2380->286 drc 0->0; 3 iterations, still not signed | hold_ff: FAIL WNS -1.92 ps, 16 endpoints; drv: FAIL TT slew 1318.0 cap 0.0, ",
+    "epyc5:/srv/opentallas-scratch2/claude/codex-wave-1105/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/coll_ftn/attempt_5/gen/coll_ftn"
+  ],
+  [
+    "coll_n",
+    6,
+    "ff0be616bb51",
+    "STRUCTURAL",
+    "late-ECO exhausted (3 it, 30623.3 s): TT -167.37->-125.02 FF -160.67->0.01 drv 2737->227 drc 0->0; 3 iterations, still not signed | setup_tt: FAIL WNS -167.37 ps, 4 endpoints; hold_ff: FAIL WNS -160.6",
+    "epyc6:/srv/opentallas-scratch2/claude/qc-wave-1105e4/kit-wave/qwen_compute/efdb36e864/items/coll_n/attempt_6/gen/coll_n"
+  ],
+  [
+    "sle_ctl__cl372cea1c",
+    3,
+    "7ea29aa564f4",
+    "STRUCTURAL",
+    "522340 std cells > 517000",
+    "epyc6:/srv/opentallas-scratch2/claude/qc-wave-1105e4/kit-wave/qwen_compute/efdb36e864/items/sle_ctl__cl372cea1c/attempt_3/gen/sle_ctl__cl372cea1c"
+  ],
+  [
+    "sle_fe_v1__cl8210183c",
+    6,
+    "d6b2074c44cc",
+    "STRUCTURAL",
+    "FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'se",
+    "epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_fe_v1__cl8210183c/attempt_6/gen/sle_fe_v1__cl8210183c"
+  ],
+  [
+    "sle_fw_v1__cl9d029624",
+    10,
+    "e02ced211468",
+    "CRASH",
+    "[ERROR DPL-0033] detailed placement checks failed during check placement.",
+    "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_fw_v1__cl9d029624/attempt_10/gen/sle_fw_v1__cl9d029624"
+  ],
+  [
+    "sle_sc_v1__cl115da35f",
+    7,
+    "5e331a6b0883",
+    "STRUCTURAL",
+    "GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.",
+    "epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_sc_v1__cl115da35f/attempt_7/gen/sle_sc_v1__cl115da35f"
+  ],
+  [
+    "sle_sc_v1__cl7479a5ec",
+    10,
+    "95b0ff0e7069",
+    "STRUCTURAL",
+    "GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.",
+    "epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_sc_v1__cl7479a5ec/attempt_10/gen/sle_sc_v1__cl7479a5ec"
+  ],
+  [
+    "sle_st_a_v1__cl67389ecd",
+    10,
+    "76639f4e0687",
+    "STRUCTURAL",
+    "FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'se",
+    "epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_st_a_v1__cl67389ecd/attempt_10/gen/sle_st_a_v1__cl67389ecd"
+  ],
+  [
+    "sle_st_a_v2",
+    16,
+    null,
+    "FLOW",
+    "unclassified failure @unit (see log): \"\"\"",
+    ""
+  ],
+  [
+    "sle_st_b_v1",
+    3,
+    "1ee8d1f5bfc4",
+    "CRASH",
+    " shared leaf alias u_bound.rst_n has no unambiguous reset terminal\nElapsed time: 0:42.15[h:]min:sec. CPU time: user 40.53 sys 1.38 (99%). Peak memory: 1104052KB.\nmake[1]: *** [Makefile:548: do-4_1_cts",
+    "intel2:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/sle_st_b_v1/attempt_3/gen/sle_st_b_v1"
+  ],
+  [
+    "sle_st_b_v2__cl14c98df5",
+    7,
+    "da24fc070834",
+    "CRASH",
+    " alias u_bound.rst_n has no unambiguous reset terminal\nElapsed time: 0:40.58[h:]min:sec. CPU time: user 38.81 sys 1.51 (99%). Peak memory: 1083360KB.\nmake[1]: *** [Makefile:548: do-4_1_cts] Error 1\nma",
+    "intel2:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/sle_st_b_v2__cl14c98df5/attempt_7/gen/sle_st_b_v2__cl14c98df5"
+  ],
+  [
+    "sle_su_c",
+    9,
+    "0418be8bcee1",
+    "CRASH",
+    "up 64\nError: cts.tcl, 6 OT_TAP_PAIR initial tap capacity invalid: clk\nElapsed time: 0:31.13[h:]min:sec. CPU time: user 29.71 sys 1.40 (99%). Peak memory: 1136532KB.\nmake[1]: *** [Makefile:548: do-4_1_",
+    "epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_su_c/attempt_9/gen/sle_su_c"
+  ],
+  [
+    "sle_su_l0__cl086d85ba",
+    13,
+    "0bea41f14c21",
+    "STRUCTURAL",
+    "GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.",
+    "epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_su_l0__cl086d85ba/attempt_13/gen/sle_su_l0__cl086d85ba"
+  ],
+  [
+    "slw_fe_v1__cl95cd1d0c",
+    16,
+    "714b22e1b7dc",
+    "STRUCTURAL",
+    "FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'se",
+    "epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_fe_v1__cl95cd1d0c/attempt_16/gen/slw_fe_v1__cl95cd1d0c"
+  ],
+  [
+    "slw_fe_v1__clfe325744__cl08d14f0d",
+    2,
+    "5452abb28fc6",
+    "STRUCTURAL",
+    "FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'se",
+    "epyc4:/srv/opentallas-scratch2/claude/qc-wave-1105f2/kit-wave/qwen_compute/efdb36e864/items/slw_fe_v1__clfe325744__cl08d14f0d/attempt_2/gen/slw_fe_v1__clfe325744__cl08d14f0d"
+  ],
+  [
+    "slw_fe_v1__clfe325744__cldb4efe33",
+    7,
+    "5f9389d3229e",
+    "STRUCTURAL",
+    "FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'se",
+    "epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_fe_v1__clfe325744__cldb4efe33/attempt_7/gen/slw_fe_v1__clfe325744__cldb4efe33"
+  ],
+  [
+    "slw_fe_v2__cle312294d",
+    7,
+    "5b95d6547735",
+    "STRUCTURAL",
+    "FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'se",
+    "epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_fe_v2__cle312294d/attempt_7/gen/slw_fe_v2__cle312294d"
+  ],
+  [
+    "slw_fw_v1__cl51d45468",
+    8,
+    "4e85372374bd",
+    "STRUCTURAL",
+    "Routing congestion too high. Check the congestion heatmap in the GUI.",
+    "epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_fw_v1__cl51d45468/attempt_8/gen/slw_fw_v1__cl51d45468"
+  ],
+  [
+    "slw_fw_v1__clf51c11d8__cl592e3d37",
+    9,
+    "0815a52d863a",
+    "STRUCTURAL",
+    "Routing congestion too high. Check the congestion heatmap in the GUI.",
+    "epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_fw_v1__clf51c11d8__cl592e3d37/attempt_9/gen/slw_fw_v1__clf51c11d8__cl592e3d37"
+  ],
+  [
+    "slw_fw_v2__cl8537f156",
+    4,
+    "842cac6dc116",
+    "STRUCTURAL",
+    "FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'se",
+    "epyc4:/srv/opentallas-scratch2/claude/qc-wave-1105e4/kit-wave/qwen_compute/efdb36e864/items/slw_fw_v2__cl8537f156/attempt_4/gen/slw_fw_v2__cl8537f156"
+  ],
+  [
+    "slw_fw_v3",
+    7,
+    "34b1c554dd7c",
+    "STRUCTURAL",
+    "FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'se",
+    "epyc4:/srv/opentallas-scratch2/claude/qc-wave-1105e4/kit-wave/qwen_compute/efdb36e864/items/slw_fw_v3/attempt_7/gen/slw_fw_v3"
+  ],
+  [
+    "slw_st_b_v1__cl6357f1cc",
+    6,
+    "f6c516c172cc",
+    "CRASH",
+    " alias u_bound.rst_n has no unambiguous reset terminal\nElapsed time: 0:41.70[h:]min:sec. CPU time: user 39.84 sys 1.51 (99%). Peak memory: 1097432KB.\nmake[1]: *** [Makefile:548: do-4_1_cts] Error 1\nma",
+    "intel2:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/slw_st_b_v1__cl6357f1cc/attempt_6/gen/slw_st_b_v1__cl6357f1cc"
+  ],
+  [
+    "slw_st_b_v1__cle6023ec2",
+    7,
+    "63683784d071",
+    "CRASH",
+    " alias u_bound.rst_n has no unambiguous reset terminal\nElapsed time: 0:42.61[h:]min:sec. CPU time: user 40.68 sys 1.47 (98%). Peak memory: 1097264KB.\nmake[1]: *** [Makefile:548: do-4_1_cts] Error 1\nma",
+    "intel2:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/slw_st_b_v1__cle6023ec2/attempt_7/gen/slw_st_b_v1__cle6023ec2"
+  ],
+  [
+    "slw_st_b_v2",
+    9,
+    "609fdd592722",
+    "CRASH",
+    " shared leaf alias u_bound.rst_n has no unambiguous reset terminal\nElapsed time: 0:39.89[h:]min:sec. CPU time: user 37.63 sys 1.69 (98%). Peak memory: 1080816KB.\nmake[1]: *** [Makefile:548: do-4_1_cts",
+    "intel2:/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave/qwen_compute/d90b109213c6949da87b330ef143d96bbe937934/items/slw_st_b_v2/attempt_9/gen/slw_st_b_v2"
+  ],
+  [
+    "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+    7,
+    "4f356782b45d",
+    "STRUCTURAL",
+    "FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'se",
+    "epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_stm_v1__cl05fc43f7__cl2086fa2c/attempt_7/gen/slw_stm_v1__cl05fc43f7__cl2086fa2c"
+  ],
+  [
+    "slw_stm_v2__cl9beb65e6",
+    15,
+    "89f7dff1b289",
+    "STRUCTURAL",
+    "FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'se",
+    "epyc2:/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_stm_v2__cl9beb65e6/attempt_15/gen/slw_stm_v2__cl9beb65e6"
+  ],
+  [
+    "slw_stm_v3",
+    12,
+    "98ca1461d69d",
+    "STRUCTURAL",
+    "FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'global_routing', 'failed': 'setup_tt', 'corner': 'TT', 'se",
+    "epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_stm_v3/attempt_12/gen/slw_stm_v3"
+  ],
+  [
+    "slw_su_l1__cla2a78701",
+    7,
+    "8ba4504657ed",
+    "STRUCTURAL",
+    "GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.",
+    "epyc6:/srv/opentallas-scratch2/claude/qc-wave-1105e4/kit-wave/qwen_compute/efdb36e864/items/slw_su_l1__cla2a78701/attempt_7/gen/slw_su_l1__cla2a78701"
+  ],
+  [
+    "slw_su_l1__clcc9d0155",
+    8,
+    "4eb714e61de7",
+    "STRUCTURAL",
+    "GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.",
+    "epyc5:/srv/opentallas-scratch2/claude/qc-wave-1105e4/kit-wave/qwen_compute/efdb36e864/items/slw_su_l1__clcc9d0155/attempt_8/gen/slw_su_l1__clcc9d0155"
+  ]
+]
