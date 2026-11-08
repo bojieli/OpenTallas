@@ -19,6 +19,10 @@ def regen(ctx):
     for part, hcs in sorted(want.items()):
         members = ctx.members.get(part) or []
         for hc in hcs:
+            if hc.get("params_scope") == "kit_macro_rtl":
+                import kit_macro_rtl
+                record.append(kit_macro_rtl.obligation(ctx, part, hc))
+                continue
             hit = [ci for ci in members if "u_" + ctx.rel_of(ci) == hc["inst"]]   # bound instance = u_<rel>
             if len(hit) != 1:
                 raise ValueError(f"SC_HARD_PARAMS {part}: hard core {hc['inst']} binds {len(hit)} leaves (need 1)")

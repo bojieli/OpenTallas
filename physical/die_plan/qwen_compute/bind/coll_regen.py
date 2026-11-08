@@ -110,4 +110,7 @@ def regen(ctx):
         result['record']['qwen_head_prepare_profile'] = head_profile
     if hc_record:
         result['record']['plan_hard_core_params'] = hc_record
+    physical = [r for r in hc_record if r.get('scope') == 'kit_macro_rtl']
+    if physical:
+        result['kit_macro_rtl'] = physical
     return result

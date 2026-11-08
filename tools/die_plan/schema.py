@@ -1398,6 +1398,9 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
  'required': ['kind', 'content', 'source'], 'type': 'object'}
 # DIE-QC-63/SC 11-02 (opt-in, QC SC event): explicit source parameters of a hardened leaf (the bind applies them to
 # the bound leaf through the die param_regen hook; the core build uses them as top params) + its measured std cells
+# Parameters of a declared physical wrapper are a mandatory kit-RTL obligation,
+# not parameters of its different logical source leaf. Default stays bound_leaf.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["params_scope"] = {"enum": ["bound_leaf", "kit_macro_rtl"]}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["params"] = {"type": "object", "minProperties": 1, "additionalProperties": {"type": ["integer", "string"]}}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["cells"] = {"type": "integer", "minimum": 0}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["cells_basis"] = {"type": "string"}

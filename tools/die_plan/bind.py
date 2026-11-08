@@ -2339,6 +2339,11 @@ class Binder:
         self.param_regen = None
         spec = self.ab.get("param_regen")
         if not spec:
+            import kit_macro_rtl
+            try:
+                kit_macro_rtl.validate(self, [])
+            except ValueError as exc:
+                self.errors.append(f"PARAM_REGEN {exc}")
             return
         import importlib.util
         f = Path(spec["file"])
@@ -2350,6 +2355,12 @@ class Binder:
             r = mod.regen(self)
         except Exception as e:      # the hook names the inconsistency (e.g. asymmetric relay legs)
             self.errors.append(f"PARAM_REGEN {f.name}: {e}")
+            return
+        import kit_macro_rtl
+        try:
+            physical_params = kit_macro_rtl.validate(self, r.get("kit_macro_rtl", []))
+        except ValueError as exc:
+            self.errors.append(f"PARAM_REGEN {f.name}: {exc}")
             return
         changed = []
         for path, ps in r["params"].items():
@@ -2368,6 +2379,8 @@ class Binder:
                     changed.append(dict(inst=path, param=k, asbuilt=old, bound=v))
                 c.params[k] = str(v)
         self.param_regen = dict(file=str(spec["file"]), changed=changed, record=r.get("record", {}))
+        if physical_params:
+            self.param_regen["kit_macro_rtl"] = physical_params
 
     def bus_groups(self):
         """as-built timing groups for the planner (COORD R8): bits that must keep their as-built relative timing.
@@ -5192,6 +5205,11 @@ def cmd_kit_rtl(a):
     import kit_core_clocks
     try:
         btxt, kit_core_swaps = kit_core_clocks.swap_native_cores(btxt, t.get("hard_cores"))
+        import kit_macro_rtl
+        btxt, kit_physical_params = kit_macro_rtl.apply(
+            btxt, tn, t, raw.get("partitions", []),
+            rep.get("param_regen", {}).get("kit_macro_rtl", []), kit_core_swaps,
+            leaf_id=lambda rel: short_id("u_" + rel, 90))
         btxt, kit_core_adapters = kit_core_clocks.adapt_core_ports(btxt, t.get("hard_cores"))
         # QC-SLECTL-B 11-05: a hard core with param_wrap is one paramod instance of the bound module; the private kit copy
         # instantiates its generated named wrapper master instead (param_wrap.py; no logic, no cycles)
@@ -5381,6 +5399,10 @@ def cmd_kit_rtl(a):
             verdict="PASS", method=KIT_DEAD_METHOD,
             receipt=dict(wrapper=str(kd / f"{mod}.sv"), sha256=hashlib.sha256(txt.encode()).hexdigest(),
                          narrow_buses=[x for x in narrow if bmap[x["port"]][0] == "input"])))
+    if kit_physical_params:
+        (kd / "kit_macro_rtl.json").write_text(json.dumps(dict(
+            schema="opentallas.kit_macro_rtl.receipt.v1", rows=kit_physical_params,
+            source_bind_changed=False, cycles_changed=0), indent=1) + "\n")
     if kit_core_clock_rows or kit_core_swaps or kit_core_adapters or kit_param_wraps:
         (kd / "kit_core_clocks.json").write_text(json.dumps(dict(rows=kit_core_clock_rows, cycles_changed=0,
                                                                  **({"native_core_swaps": kit_core_swaps} if kit_core_swaps else {}),
@@ -5486,6 +5508,8 @@ def cmd_kit_rtl(a):
         man.update(component_proof=str(Path(a.component_proof).resolve()), component_report=component_report,
                    source_scope="LOCAL_COMPONENT", source_preparation_only=True,
                    global_bind=component_report["global_bind"])
+    if kit_physical_params:
+        man["kit_macro_rtl"] = dict(file="kit_macro_rtl.json", rows=kit_physical_params)
     (kd / "kit_rtl.json").write_text(json.dumps(man, indent=1))
     # Physical provider specialization follows the declared plan in normal bind
     # mode, including unattended kit-wave source updates. Functional bind stays unchanged.
