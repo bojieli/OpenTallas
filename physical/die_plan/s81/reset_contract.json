@@ -61,7 +61,9 @@
   "ot_v41_bf_col3_c",
   "ot_v41_bf16_half",
   "s81p_bk_sel__t2",
-  "codex_svc_sml_native"
+  "codex_svc_sml_native",
+  "codex_svc_smd_native",
+  "codex_svc_merge_h4_pin"
  ],
  "proof": {
   "verdict": "PASS",
@@ -73,7 +75,7 @@
  },
  "generator": "OWNER decision 10-29 05:3x: boot holds the die rst_n low for >= 64 clocks with the die clock running; die root ot_dp_rsync_s2 (async assert, 2-clock release) as emitted by tools/die_plan/gen_rtl.py",
  "sinks": "every S81 core reset pin is reached through the standard rsync_s2 root + ot_dp_rrelay synchronous relays (width-preserving: width out = width in + 2 sync edges at any depth); no extra per-core reset stages",
- "modules_basis": "all 50 S81 hard-core modules of autopilot OWNERS.tsv (kind core, 10-29 06:13) + plan_s13r2 hard_cores (ROM _gb variant); plus the 2 LP lane hard-child masters, reset-width proof results/codex_s81_lp_0825/README.md (same 64-edge die contract); SRAM/ROM macros excluded (no LEC); H2 natural ot_s81_mu72_lnland/_nst: exact-current-source 64-edge cold/independent K/N warm/both warm proof1680checks0errors, 4-edge control560/560 caught; results/s81_h2_interfaces_2258/reset64/result.json and reset_source_manifest.json (8eb946787de). S81-RCK-7 11-07: + codex_svc_sml_native, the private SVC SML child of svc_rs; its rst pin is driven from the svc_rs type reset pin (rsync_s2 root + width-preserving relays, no extra stage), kit 8 LEC EQUIVALENT 11797/11797 at 64 edges (results/physical/codex_svc_hardening_1209/native_sml/kit8_lec64).",
+ "modules_basis": "all 50 S81 hard-core modules of autopilot OWNERS.tsv (kind core, 10-29 06:13) + plan_s13r2 hard_cores (ROM _gb variant); plus the 2 LP lane hard-child masters, reset-width proof results/codex_s81_lp_0825/README.md (same 64-edge die contract); SRAM/ROM macros excluded (no LEC); H2 natural ot_s81_mu72_lnland/_nst: exact-current-source 64-edge cold/independent K/N warm/both warm proof1680checks0errors, 4-edge control560/560 caught; results/s81_h2_interfaces_2258/reset64/result.json and reset_source_manifest.json (8eb946787de). S81-RCK-7 11-07: + codex_svc_sml_native, the private SVC SML child of svc_rs; its rst pin is driven from the svc_rs type reset pin (rsync_s2 root + width-preserving relays, no extra stage), kit 8 LEC EQUIVALENT 11797/11797 at 64 edges (results/physical/codex_svc_hardening_1209/native_sml/kit8_lec64). S81-RCK-8 11-07 (COORD 17:07 (4): private SVC tops enter only after strict child qualification): + codex_svc_smd_native (8/RS; own rr0/rr1 async-assert 2-clock release, +0 reset cycles; kit LEC EQUIVALENT 8913/8913 at 64 edges, netlist 1_2_yosys.v sha d714d188329457; bench 2416 checks/512 words 0 diff, sticky fault 792 cycles, denominator + fault-mask mutants caught) and codex_svc_merge_h4_pin (16/RS; registered faces, timed input reset relay adds 1 release clock and keeps the 64-low width; kit LEC EQUIVALENT 15759/15759 at 64 edges, netlist sha bec31b2a409fef3a; bench 2214 checks/106 words 0 diff, data/valid mutants caught); evidence results/physical/codex_svc_hardening_1551/contract64. Private children only: no parent/POR/counter change.",
  "kit_use": "copy reset_contract.json + reset_contract/receipt.txt into KIT/ (receipt path is relative), or set OT_LEC_RESET_CONTRACT to this file; a kit LEC may use OT_LEC_RESET_CYCLES <= 64",
  "scope": "boot reset only (owner contract on the external rst_n); a mid-run rst_n pulse shorter than 64 clocks is outside this contract"
 }
