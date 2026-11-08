@@ -255,3 +255,28 @@ def test_cts_macro_clock_load_located_at_pin(tmp_path):
     loc = ins[0].split("-location ")[1].split(" -buffer_name")[0]
     x, y = (float(v) for v in loc.strip("{}").split())
     assert abs(x - 55.0) < 1 and abs(y - 500.0) < 1, loc
+
+
+# KW-FIX-35-F 11-08 (FLOW class F): one extra ordinary legalization before the mandatory CTS-stage check, only when
+# the first check fails (same rule as 20cff21bab for the final DPL); the verbose check still runs and decides.
+FAIL_ONCE = ("set ::cp_fail %d\n"
+             "proc check_placement {args} { L check_placement {*}$args; "
+             "if {$::cp_fail && $args eq {}} { set ::cp_fail 0; error DPL-0033 } }\n")
+DPL_STEPS = ("dpl", "check_placement", "check_placement -verbose")
+
+
+def cts_dpl_tail(log):
+    i = next(k for k, x in enumerate(log) if x.startswith("insert_buffer"))
+    return [x for x in log[i:] if x in DPL_STEPS]
+
+
+def test_cts_residual_overlap_gets_one_more_legalization(tmp_path):
+    out, log = tcl(tmp_path, FAIL_ONCE % 1 + DEFAULT, design=DESIGN)
+    assert cts_dpl_tail(log) == ["dpl", "check_placement", "dpl", "check_placement -verbose"], log
+    assert out.count("OT_DPL_RESIDUAL") == 1
+
+
+def test_cts_clean_first_legalization_unchanged(tmp_path):
+    out, log = tcl(tmp_path, FAIL_ONCE % 0 + DEFAULT, design=DESIGN)
+    assert cts_dpl_tail(log) == ["dpl", "check_placement", "check_placement -verbose"], log
+    assert "OT_DPL_RESIDUAL" not in out
