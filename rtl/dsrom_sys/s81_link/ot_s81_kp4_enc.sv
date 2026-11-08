@@ -22,7 +22,7 @@
 // the receiver stays in hunt).  Every output leaves a flop.  Reset: regional synchronous tree, control only.
 // MUT 1: parity symbol 7 inverted (the receive side must see a nonzero syndrome) -- bench mutant.
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_kp4_enc #(parameter integer MUT = 0) (
+module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          tx_v,
@@ -38,7 +38,8 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0) (
     wire [3:0] rs_n;
     ot_s81_kp4_rst #(.NL(4)) u_rst (.clk(clk), .rst_n(rst_n), .rs_n(rs_n));
     // ---------------- input side: beat phase, header, beat delay line
-    reg        run, flt;
+    reg        run;
+    (* keep = 1, dont_touch = 1 *) reg flt; // preserve the internal sticky state apart from its optional face copy
     reg  [3:0] ph;                       // index of the beat arriving at the port
     reg  [7:0] seq;
     reg  [19:0] h0;                      // header of the frame whose beats are in flight (loaded with beat 0)
@@ -147,5 +148,26 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0) (
         end
         always @(posedge clk) p_d[gb] <= |(s & sw[gb / 32]);
     end endgenerate
-    assign fault = flt;
+    // RCK conservative core: the output face is a copy of the sticky NEXT state,
+    // updated on the SAME edge. The original flt remains the feedback state;
+    // the face copy drives only the port and has no feedback/shared load.
+    // ot_keep_regs.tcl preserves both driving cells before opt_merge.
+    generate if (PIN_FAULT != 0) begin : g_fault_face
+        (* keep = 1, dont_touch = 1, face_keep = 1 *) reg fault_q;
+        always @(posedge clk) begin
+`ifdef RCKRF_MUT_FAULT_NORST
+            if (rs_n[0]) fault_q <= flt | (run && !tx_v);
+`else
+            if (!rs_n[0]) fault_q <= 1'b0;
+`ifdef RCKRF_MUT_FAULT_DELAY
+            else fault_q <= flt;
+`else
+            else fault_q <= flt | (run && !tx_v);
+`endif
+`endif
+        end
+        assign fault = fault_q;
+    end else begin : g_fault_plain
+        assign fault = flt;
+    end endgenerate
 endmodule

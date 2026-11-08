@@ -1,0 +1,8 @@
+FAULT_BAD cycle=55 af=1 bf=0
+FAULT_BAD cycle=620 af=1 bf=0
+FAULT_BAD cycle=1072 af=1 bf=0
+FAULT_BAD cycle=1524 af=1 bf=0
+FAULT_RESULT checks=1994 errors=4 fault_edges=7
+[1664417] %Fatal: tb_fault.sv:25: Assertion failed in tb: fault face lockstep FAIL
+%Error: /srv/opentallas-scratch2/claude/codex-s81-rck-0222/work/results/s81_rck_11_reform_1108/fault_face/tb_fault.sv:25: Verilog $stop
+Aborting...

@@ -213,9 +213,9 @@ module ot_s81_rck_tx (
     end
 `ifdef RCKRF_MUT_TXSKEW
     // bench mutant: data one PIN stage short while valid / reset keep 3
-    ot_s81_kp4_enc u_enc (.clk(clk), .rst_n(pin_rst_n[2]), .tx_v(pin_v[2]), .tx_d(pin_q[1]), .p_v(p_v), .p_d(p_d), .fault(fault));
+    ot_s81_kp4_enc #(.PIN_FAULT(1)) u_enc (.clk(clk), .rst_n(pin_rst_n[2]), .tx_v(pin_v[2]), .tx_d(pin_q[1]), .p_v(p_v), .p_d(p_d), .fault(fault));
 `else
-    ot_s81_kp4_enc u_enc (.clk(clk), .rst_n(pin_rst_n[2]), .tx_v(pin_v[2]), .tx_d(pin_q[2]), .p_v(p_v), .p_d(p_d), .fault(fault));
+    ot_s81_kp4_enc #(.PIN_FAULT(1)) u_enc (.clk(clk), .rst_n(pin_rst_n[2]), .tx_v(pin_v[2]), .tx_d(pin_q[2]), .p_v(p_v), .p_d(p_d), .fault(fault));
 `endif
 endmodule
 `endif

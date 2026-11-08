@@ -18,7 +18,7 @@ for p in pins:
  x,y=p['x'],p['y'];n=p['name'];lef += [f' PIN {n}',f'  DIRECTION {dirs[n]} ;',f'  USE {"CLOCK" if n=="ck" else "SIGNAL"} ;','  PORT','   LAYER M5 ;',f'   RECT {x-.012:.3f} {y-.042:.3f} {x+.012:.3f} {y+.042:.3f} ;','  END',f' END {n}']
 lef += [f'END {M}','END LIBRARY'];(R/lp).write_text('\n'.join(lef)+'\n')
 base=json.loads((S/'die_plan.json').read_text());plan={k:base[k] for k in ['die','clock']}
-plan['partition_types']={'serdes__t16':dict(outline_um=[2885.76,1226.88],hard_cores=[dict(inst='u_core.u_dec.u_rxs',module=M,origin_um=[1296.,518.4],outline_um=[W,H],orient='R0',pins_file=pp,lef=lp)])}
+plan['partition_types']={'serdes__t16':dict(outline_um=[2885.76,1226.88],hard_cores=[dict(inst='u_core.u_dec.u_rxs',module=M,origin_um=[1296.,483.84],outline_um=[W,H],orient='R0',pins_file=pp,lef=lp)])}
 (D/'plan_draft.json').write_text(json.dumps(plan,indent=1)+'\n')
 b='rtl/dsrom_sys/s81_link/'
 spec=dict(name=M,top=M,sources=[b+'col/ot_s81_rck_reform.sv',b+'ot_s81_kp4_dsyn.sv',b+'ot_s81_kp4_bm.sv',b+'ot_s81_kp4_common.sv',b+'ot_s81_gf1024.svh',b+'ot_s81_kp4_syn_mat.svh','rtl/common/landed_parent/ot_pl_land.sv'],clock_port='ck',reset_ports=['rst_n'],macros=[],params={},route=dict(pd=.4,threads=8),defines=['OT_S81_RCK_REFORM','OT_S81_RCK_RELAY4','OT_S81_KP4_AM_FACE3','OT_S81_KP4_SYN_LOCAL'])

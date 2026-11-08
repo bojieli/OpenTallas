@@ -1,0 +1,6 @@
+Draft geometry revision2: inputs match RX-SYN faces, not the previous macro-centred groups.
+Viewed floorplan_v2.png. x_q N starts244.668 local; k_* starts349.116 and leaves4.032um gap around ck; reset ports N at430.044.
+In proposed parent RX-BACK origin1071.36,181.44 and RX-SYN origin1296,483.84: x_q faces align exactly; k_* differs by at most4.032um after reserved clock gap. Both sit below shore keepouty681.372.
+Macro positions/outline and20/21.6um channels unchanged. Signals use M6 (route_m6=True), matching native M5-PG/obs_max M6 interface grant.
+Correction to initial review: dchn clk is an existing native INTERIOR M5 pin at138.36,69.12. The clock spine can stay in the clear99um north band, but its one child access stub needs M6 access to that declared native pin. Placement/CTS review must inspect that leaf route; the initial wording that no clock wire enters a macro was too broad.
+Verdict remains PASS-COND for PLACE only. Parent figure is HOLD: prune/rebind parent taps inside proposed cores, place remaining PMA relay stages and RM/landing controls, strict bind/clock/reach/count check before any parent release. No POR change has been made.
