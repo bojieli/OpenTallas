@@ -613,6 +613,37 @@ module ot_svgr_kr_in_h2 #(parameter integer W=277,parameter integer D=4,paramete
  end
 endmodule
 // S: the ot_svgr_rf1_skid_head form (two entries, direct head registers, no full-pop lookahead), inlined.
+`ifdef OT_SVGR_OWN_RF4
+// RF4 (DIE-HBM-92-OPEN/OWNRF 11-08): the RF2 two-entry skid with the tail visible. The fcore pops it one edge after
+// the grant (registered accept), so the 285-bit head/tail enables start at a flop instead of the arbiter output.
+// MUT (bench) 17 = grant the head while its pop is pending (no tail select), 18 = no push while a pop is pending.
+module ot_svgr_rf4_skid #(parameter integer W=285, parameter integer MUT=0)(
+ input wire clk,rst_n,push,pop,input wire [W-1:0] in_data,input wire in_ok,
+ output wire [W-1:0] head_data,output wire head_ok,output wire [W-1:0] tail_data,output wire tail_ok,output reg [1:0] n
+);
+ reg [W-1:0] head,tail;
+ reg hok,tok;
+ assign head_data=head;assign head_ok=hok;assign tail_data=tail;assign tail_ok=tok;
+ always @(posedge clk) begin
+  if(pop && n==2 && MUT!=1) head<=tail;
+  if(push && MUT!=2) begin
+   if(n==0 || (n==1 && pop) || (MUT==3 && n==1)) head<=in_data;
+   else tail<=in_data;
+  end
+ end
+ always @(posedge clk or negedge rst_n) begin
+  if(!rst_n)begin n<=0;hok<=0;tok<=0;end
+  else begin
+   n<=n+2'(push)-2'(pop);
+   if(pop && n==2 && MUT!=1)hok<=tok;
+   if(push && MUT!=2)begin
+    if(n==0 || (n==1 && pop) || (MUT==3 && n==1))hok<=in_ok;
+    else tok<=in_ok;
+   end
+  end
+ end
+endmodule
+`endif
 module ot_svgr_rf2_skid #(parameter integer W=285, parameter integer MUT=0)(
  input wire clk,rst_n,push,pop,input wire [W-1:0] in_data,input wire in_ok,
  output wire [W-1:0] head_data,output wire head_ok,output reg [1:0] n
@@ -672,6 +703,9 @@ module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEP
  wire [3:0] pc_fault,response_ok;wire [LB-1:0] response_bank[0:3];wire [10:0] response_ordinal[0:3];wire [15:0] response_epoch[0:3];
  reg [3:0] response_accepted;wire [3:0] dec_ok,dec_fire;wire [LB-1:0] dec_bank[0:3];wire [10:0] dec_ordinal[0:3];wire [15:0] dec_epoch[0:3];wire [1023:0] sk_data;
  wire descriptor_fire=desc_rd_valid&&desc_rd_ready;
+ `ifdef OT_SVGR_OWN_RF4
+ reg [3:0] acc_q;
+ `endif
  reg rx_any;always @*begin rx_any=0;for(rb=0;rb<LBANKS;rb=rb+1)if(rx_left[rb]!=0)rx_any=1;end
  assign desc_rd_ready=!h_active&&!hbm_fault&&hrst&&desc_rd_valid&&rx_left[desc_data[T0-1:16]]==0;
  always @(posedge hbm_clk or negedge hrst)begin
@@ -700,6 +734,24 @@ module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEP
   // K + S: every head word enters the skid with the owner verdict; a refused word (owner fault) blocks the skid head.
   wire [1:0] sk_n;wire sk_head_ok;
   wire [256+11+16+LB-1:0] sk_head;
+  `ifdef OT_SVGR_OWN_RF4
+  // RF4: pop on acc_q (registered accept). While that pop is pending the eligible entry is the tail; grants,
+  // entries and pushes are cycle-identical to RF2 (n here = RF2 n + pending pop, never above 2).
+  wire sk_tail_ok;wire [256+11+16+LB-1:0] sk_tail;
+  wire sk_pend=acc_q[pc];
+  wire sk_sel_tail=sk_pend&&MUT!=17;
+  wire [256+11+16+LB-1:0] sk_e=sk_sel_tail?sk_tail:sk_head;
+  wire sk_e_ok=sk_sel_tail?sk_tail_ok:sk_head_ok;
+  wire sk_e_v=sk_pend?(sk_n==2'd2):(sk_n!=2'd0);
+  assign dec_fire[pc]=i_kr_v[pc]&&(sk_n!=(MUT==5?2'd3:2'd2)||(sk_pend&&MUT!=18));
+  assign i_kr_rdy[pc]=dec_fire[pc];
+  assign response_ok[pc]=sk_e_v&&!hbm_fault&&sk_e_ok;
+  assign {sk_data[256*pc+:256],response_ordinal[pc],response_epoch[pc],response_bank[pc]}=sk_e;
+  ot_svgr_rf4_skid #(.W(256+11+16+LB),.MUT(MUT==8?1:MUT==9?2:MUT==10?3:0)) u_skid(
+   .clk(hbm_pc_clk[pc]),.rst_n(hrst),.push(dec_fire[pc]),.pop(sk_pend),
+   .in_data({i_kr_data[256*pc+:256],dec_ordinal[pc],dec_epoch[pc],dec_bank[pc]}),.in_ok(dec_ok[pc]),
+   .head_data(sk_head),.head_ok(sk_head_ok),.tail_data(sk_tail),.tail_ok(sk_tail_ok),.n(sk_n));
+  `else
   assign dec_fire[pc]=i_kr_v[pc]&&sk_n!=(MUT==5?2'd3:2'd2);
   assign i_kr_rdy[pc]=dec_fire[pc];
   assign response_ok[pc]=sk_n!=0&&!hbm_fault&&sk_head_ok;
@@ -708,6 +760,7 @@ module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEP
    .clk(hbm_pc_clk[pc]),.rst_n(hrst),.push(dec_fire[pc]),.pop(response_accepted[pc]),
    .in_data({i_kr_data[256*pc+:256],dec_ordinal[pc],dec_epoch[pc],dec_bank[pc]}),.in_ok(dec_ok[pc]),
    .head_data(sk_head),.head_ok(sk_head_ok),.n(sk_n));
+  `endif
   assign head_c[pc]={response_ordinal[pc],response_bank[pc],response_epoch[pc],sk_data[256*pc+:256]};
   always @(posedge hbm_clk)head_q[pc]<=head_c[pc];
  end endgenerate
@@ -755,7 +808,10 @@ module ot_svgr_own #(parameter integer OWNER_AW=5,parameter integer RESPONSE_DEP
  always @(posedge hbm_clk)if(bk_in_v[6])cc<=cc+1;
  // R2: the accept and the accepted heads' banks are registered; the take count is formed one edge later.
  integer ta,tb;
- reg [3:0] acc_q;reg [LB-1:0] acc_bank_q[0:3];
+ `ifndef OT_SVGR_OWN_RF4
+ reg [3:0] acc_q;
+ `endif
+ reg [LB-1:0] acc_bank_q[0:3];
  always @(posedge hbm_clk or negedge hrst)begin
   if(!hrst)begin acc_q<=0;for(ta=0;ta<4;ta=ta+1)acc_bank_q[ta]<=0;end
   else begin acc_q<=response_accepted;for(ta=0;ta<4;ta=ta+1)acc_bank_q[ta]<=response_bank[ta];end
