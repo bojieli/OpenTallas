@@ -14,6 +14,12 @@ module ot_s81hd_sc_tx #(
 `else
     parameter integer FOLD = 0
 `endif
+    ,
+`ifdef OT_HEAD_TX_CH_REGION4
+    parameter integer CH_REGION4 = 1
+`else
+    parameter integer CH_REGION4 = 0
+`endif
 ) (
     input  wire          clk,
     input  wire          rst,
@@ -25,7 +31,7 @@ module ot_s81hd_sc_tx #(
     always @(posedge clk or negedge rst) if (!rst) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
     wire rn_t = rs_t[1];
     wire e_v; wire [543:0] e_d;
-    ot_s81_kp4_enc_la #(.MUT(0), .LA(2), .FF(1), .CH_STAGE(CH_STAGE), .FOLD(FOLD)) u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d),
+    ot_s81_kp4_enc_la #(.MUT(0), .LA(2), .FF(1), .CH_STAGE(CH_STAGE), .FOLD(FOLD), .CH_REGION4(CH_REGION4)) u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d),
         .fault(e_flt));
     ot_s81_pma_bm #(.W(544), .LAT(4)) u_ptx (.clk(clk), .d_v(e_v), .d(e_d), .q(pma_tx));
 endmodule

@@ -38,7 +38,8 @@
 // EQUIVALENT mutant under FOLD: a constant offset on wb cancels in v = wb_d ^ wb.
 module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, parameter integer FF = 0,
     // Opt-in local chunk capture: +1 output data/valid/fault cycle, unchanged II=1.
-    parameter integer CH_STAGE = 0, parameter integer CH_MUT = 0, parameter integer FOLD = 0) (
+    parameter integer CH_STAGE = 0, parameter integer CH_MUT = 0, parameter integer FOLD = 0,
+    parameter integer CH_REGION4 = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          tx_v,
@@ -100,13 +101,26 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
     end endgenerate
     // CH_STAGE: the 10-way chunk mux drives one local D bank, not four distant
     // cq copies. Keep the new state boundary; cq fanout remains four.
-    wire [519:0] ch_feed;
-    generate if (CHS) begin : g_ch_stage
+    wire [519:0] ch_feed [0:3];
+    // Four physical capture banks keep the existing CH_STAGE edge. Each bank
+    // feeds only its own parity region, replacing the long four-region star.
+    generate if (CHS && CH_REGION4 != 0) begin : g_ch_region
+        (* keep *) reg [519:0] mid [0:3];
+        for (genvar cr = 0; cr < 4; cr = cr + 1) begin : g_mid
+            always @(posedge clk)
+                mid[cr] <= ch_n ^ ((CH_MUT == 6 || (CH_MUT == 7 && cr == 0)) ? 520'b1 : 520'b0);
+            assign ch_feed[cr] = mid[cr];
+        end
+    end else if (CHS) begin : g_ch_stage
         (* keep *) reg [519:0] mid;
         always @(posedge clk) mid <= ch_n ^ ((CH_MUT == 6) ? 520'b1 : 520'b0);
-        assign ch_feed = mid;
+        for (genvar cr = 0; cr < 4; cr = cr + 1) begin : g_feed
+            assign ch_feed[cr] = mid;
+        end
     end else begin : g_no_ch_stage
-        assign ch_feed = ch_n;
+        for (genvar cr = 0; cr < 4; cr = cr + 1) begin : g_feed
+            assign ch_feed[cr] = ch_n;
+        end
     end endgenerate
     reg  [519:0] ch_q;
     wire [519:0] ch_n;
@@ -139,7 +153,7 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
         reg [299:0] fq [0:7];
         genvar r, c;
         for (r=0; r<4; r=r+1) begin : g_cq
-            always @(posedge clk) cq[r] <= ch_feed;
+            always @(posedge clk) cq[r] <= ch_feed[r];
         end
         if (FLD) begin : g_fold
             // ev[c][r]: the chunk in cq is even (first of a pair), one copy per (slice c, parity region r), captured

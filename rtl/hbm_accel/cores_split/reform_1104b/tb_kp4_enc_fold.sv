@@ -7,13 +7,15 @@
 module tb_kp4_enc_fold;
     parameter integer MUT = 0;
     parameter integer CHS = 1;
+    parameter integer REG4 = 0;
+    parameter integer CMUT = 0;
     reg clk = 0, rst_n = 0, tx_v = 0;
     reg [511:0] tx_d = 0;
     wire rv, dv, rf, df;
     wire [543:0] rd, dd;
     ot_s81_kp4_enc_la #(.MUT(0), .LA(2), .FF(1), .CH_STAGE(CHS), .FOLD(0)) u_ref
         (.clk(clk), .rst_n(rst_n), .tx_v(tx_v), .tx_d(tx_d), .p_v(rv), .p_d(rd), .fault(rf));
-    ot_s81_kp4_enc_la #(.MUT(MUT), .LA(2), .FF(1), .CH_STAGE(CHS), .FOLD(1)) u_dut
+    ot_s81_kp4_enc_la #(.MUT(MUT), .LA(2), .FF(1), .CH_STAGE(CHS), .FOLD(1), .CH_REGION4(REG4), .CH_MUT(CMUT)) u_dut
         (.clk(clk), .rst_n(rst_n), .tx_v(tx_v), .tx_d(tx_d), .p_v(dv), .p_d(dd), .fault(df));
     always #1 clk = ~clk;
     integer cyc = 0, bad = 0, cmp = 0, par = 0, frame_word = 0, epochs = 0, fd = 0;
