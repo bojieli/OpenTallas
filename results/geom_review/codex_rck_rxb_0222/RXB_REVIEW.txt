@@ -1,0 +1,12 @@
+Pre-PLACE geometry review 2026-11-08: RX-BACK core draft
+floorplan.png rendered by tools/ref_tile/layout_png.py and viewed. This is an isolated draft, not a POR change.
+Outline725.76x280.8 is driven by the3 real macros (total macro area67,088um2;33% area) and clear routing/clock bands.
+Dmem178.632x81 at21.6,43.2; signed dchn276.48x138.24 at220.32,43.188; cmem177.768x81 at518.4,43.2.
+Macro gaps20.088 and21.6um; outer sides21.6/29.592um; bottom43.2um; unblocked north band99.372um.
+Clock at N midpoint has a clear north band; no clock wire must pass over a macro. M6 PG bridging is declared(obs_max M6).
+Inputs grouped N above receiving dmem/dchn; output q faces S below cmem/output logic; status S below dchn. Pin pitch.192M5=25% track use.
+Word/correction traffic can share the99um north band on M4/M6;1088 bits are below even one M4 band55% track budget(~1134), before M6 capacity.
+Dmem-right to cmem-left=318.17um; existing intermediate landings can sit in the north band. Place review must confirm registered legs<=405um and local signal density.
+SMELLS: no blocking issue visible in draft; 20um channels and a725um sink span need explicit placed/congestion/clock review. No CTS/route authorized by this review.
+Verdict: PASS-COND for one PLACE probe after preceding split-core pilot. No new pin cycles relative to vJ.
+Inherited native macro views copied exactly from vJ kit; list in inherited_macro_sources.json. No new signed-off claim.
