@@ -1,0 +1,32 @@
+[
+ [
+  "gate",
+  "ff:u_dut.u_fcore.u_x._32230_",
+  [
+   "eq",
+   "gold",
+   "ff:u_dut.u_fcore.u_x._dh92_dnz32230_q",
+   0
+  ]
+ ],
+ [
+  "gate",
+  "ff:u_dut.u_fcore.u_x._32239_",
+  [
+   "eq",
+   "gold",
+   "ff:u_dut.u_fcore.u_x._dh92_dnz32239_q",
+   0
+  ]
+ ],
+ [
+  "gold",
+  "ff:u_dut.u_fcore.u_x._dh92_dnz32238_q",
+  [
+   "eq",
+   "gold",
+   "ff:u_dut.u_fcore.u_x._dh92_dnz32239_q",
+   0
+  ]
+ ]
+]

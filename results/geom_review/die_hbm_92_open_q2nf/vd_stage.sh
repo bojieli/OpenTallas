@@ -5,6 +5,7 @@ K=$1; ST=$2; NAME=dh92q2nf-vD-$ST
 case $ST in
 synth) MEMG=32; ENVS=();;
 place) MEMG=32; ENVS=();;
+ctsgrt) MEMG=40; ENVS=();;
 lec)   MEMG=40; ENVS=(-e OT_LEC_REPLICA_MATCH=1 -e OT_LEC_PARITY_TERMS=1024 -e OT_LEC_CONE_S=3600);;
 esac
 cat > "$K/vd_inner_$ST.sh" <<IN
@@ -26,6 +27,17 @@ place)
   \$M do-place > /work/run_vd_place.log 2>&1
   bash /work/layout_render_hook.sh 3_5_place_dp 0 || true
   echo "PLACE complete \$(date)" > /work/PLACE_DONE.txt ;;
+ctsgrt)
+  G="bash /work/grt183_make.sh \$M"
+  \$M cts > /work/run_vd_cts.log 2>&1
+  C=\$(ls /work/run/results/asap7/*/base/4_cts.odb | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc | head -1)
+  PLIBS="\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')" ODB=\$C SDC=\$S PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 OT_VCLK_TT=250 OT_VCLK_FF=202.5 LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1 || true
+  grep OT_HOLD_GATE /work/hold_gate.log || true
+  bash /work/layout_render_hook.sh 4_1_cts 0 || true
+  python3 -I /work/kit_modes.py check /work --step grt --session 'tc bc' --hold-repair > /work/kit_modes_grt.log 2>&1 || { echo FAIL kit_modes grt; exit 9; }
+  \$G grt HOLD_SLACK_MARGIN=0 > /work/run_vd_grt.log 2>&1
+  bash /work/layout_render_hook.sh 5_1_grt 0 || true
+  echo "CTSGRT complete \$(date)" > /work/CTSGRT_DONE.txt ;;
 lec)
   python3 -I /work/lec.py /work --out /work/lec_vd > /work/lec_vd.log 2>&1 ;;
 esac

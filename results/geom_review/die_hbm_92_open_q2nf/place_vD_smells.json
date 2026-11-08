@@ -1,0 +1,1402 @@
+{
+ "schema": "opentallas.layout_smells.v1",
+ "stage": "place",
+ "block": "ot_q2nf_rest",
+ "odb": "/work/run/results/asap7/hbc_ot_q2nf_rest/base/3_place.odb",
+ "instances": 178690,
+ "macros": 19,
+ "pins": 6222,
+ "die_um": [
+  0.0,
+  0.0,
+  708.48,
+  311.04
+ ],
+ "big_db": false,
+ "advisory": true,
+ "thresholds": {
+  "opposite_face_ratio": 0.6,
+  "pin_track_use": 0.5,
+  "pin_window_um": 20.0,
+  "channel_use": 1.0,
+  "channel_max_gap_um": 60.0,
+  "clock_entry_ratio": 0.4,
+  "clock_unshared_um": 200.0,
+  "clock_over_macro_um": 50.0,
+  "fanout_spread_um": 100.0,
+  "local_density": 0.7,
+  "density_bin_um": 10.0,
+  "density_min_free": 0.25
+ },
+ "checks": {
+  "opposite_face_pins": {
+   "value": 1,
+   "threshold": 0.6,
+   "flag": true,
+   "unit": "pins",
+   "computable": true,
+   "method": "pin centre vs centroid of first non-buffer sinks (input) / first non-buffer driver (output), across the pin's face axis; ratio > threshold counted",
+   "offenders": [
+    {
+     "pin": "rst_n",
+     "face": "S",
+     "x": 354.264,
+     "y": 0.096,
+     "partner_x": 206.87,
+     "partner_y": 202.193,
+     "partner": "u_fcore.u_x._46226_\\[0\\]$_DFF_PN0_",
+     "ratio": 0.65,
+     "io": "INPUT"
+    }
+   ],
+   "worst_ratio": 0.65,
+   "pins_checked": 6182,
+   "bus_groups": [
+    [
+     "rst_n",
+     1
+    ]
+   ]
+  },
+  "pin_track_use": {
+   "value": 0.403,
+   "threshold": 0.5,
+   "flag": false,
+   "unit": "fraction of tracks",
+   "computable": true,
+   "method": "pins of one face + layer in the worst sliding 20-um window / (20 um / layer pitch); layer pitch from LEF, track-pattern offset and blocked tracks ignored",
+   "offenders": [
+    {
+     "face": "W",
+     "layer": "M4",
+     "x": 0.0,
+     "y": 18.696,
+     "pins": 168,
+     "tracks": 416.7,
+     "use": 0.403,
+     "from_um": 8.712,
+     "to_um": 28.68
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "x": 0.0,
+     "y": 38.808,
+     "pins": 168,
+     "tracks": 416.7,
+     "use": 0.403,
+     "from_um": 28.824,
+     "to_um": 48.792
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "x": 0.0,
+     "y": 58.92,
+     "pins": 168,
+     "tracks": 416.7,
+     "use": 0.403,
+     "from_um": 48.936,
+     "to_um": 68.904
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "x": 0.0,
+     "y": 79.032,
+     "pins": 168,
+     "tracks": 416.7,
+     "use": 0.403,
+     "from_um": 69.048,
+     "to_um": 89.016
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "x": 0.0,
+     "y": 99.144,
+     "pins": 168,
+     "tracks": 416.7,
+     "use": 0.403,
+     "from_um": 89.16,
+     "to_um": 109.128
+    },
+    {
+     "face": "N",
+     "layer": "M5",
+     "x": 115.656,
+     "y": 311.04,
+     "pins": 102,
+     "tracks": 416.7,
+     "use": 0.245,
+     "from_um": 105.672,
+     "to_um": 125.64
+    },
+    {
+     "face": "N",
+     "layer": "M5",
+     "x": 275.592,
+     "y": 311.04,
+     "pins": 102,
+     "tracks": 416.7,
+     "use": 0.245,
+     "from_um": 265.608,
+     "to_um": 285.576
+    },
+    {
+     "face": "N",
+     "layer": "M5",
+     "x": 414.12,
+     "y": 311.04,
+     "pins": 102,
+     "tracks": 416.7,
+     "use": 0.245,
+     "from_um": 404.136,
+     "to_um": 424.104
+    },
+    {
+     "face": "N",
+     "layer": "M5",
+     "x": 570.792,
+     "y": 311.04,
+     "pins": 102,
+     "tracks": 416.7,
+     "use": 0.245,
+     "from_um": 560.808,
+     "to_um": 580.776
+    },
+    {
+     "face": "N",
+     "layer": "M5",
+     "x": 344.76,
+     "y": 311.04,
+     "pins": 101,
+     "tracks": 416.7,
+     "use": 0.242,
+     "from_um": 334.776,
+     "to_um": 354.744
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "x": 708.48,
+     "y": 19.056,
+     "pins": 24,
+     "tracks": 416.7,
+     "use": 0.058,
+     "from_um": 9.096,
+     "to_um": 29.016
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "x": 708.48,
+     "y": 38.976,
+     "pins": 24,
+     "tracks": 416.7,
+     "use": 0.058,
+     "from_um": 29.016,
+     "to_um": 48.936
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "x": 708.48,
+     "y": 58.896,
+     "pins": 24,
+     "tracks": 416.7,
+     "use": 0.058,
+     "from_um": 48.936,
+     "to_um": 68.856
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "x": 708.48,
+     "y": 78.816,
+     "pins": 24,
+     "tracks": 416.7,
+     "use": 0.058,
+     "from_um": 68.856,
+     "to_um": 88.776
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "x": 708.48,
+     "y": 98.76,
+     "pins": 24,
+     "tracks": 416.7,
+     "use": 0.058,
+     "from_um": 88.776,
+     "to_um": 108.744
+    },
+    {
+     "face": "W",
+     "layer": "M5",
+     "x": 0.0,
+     "y": 151.2,
+     "pins": 7,
+     "tracks": 416.7,
+     "use": 0.017,
+     "from_um": 146.88,
+     "to_um": 155.52
+    },
+    {
+     "face": "E",
+     "layer": "M5",
+     "x": 708.48,
+     "y": 151.2,
+     "pins": 7,
+     "tracks": 416.7,
+     "use": 0.017,
+     "from_um": 146.88,
+     "to_um": 155.52
+    },
+    {
+     "face": "S",
+     "layer": "M5",
+     "x": 354.264,
+     "y": 0.0,
+     "pins": 5,
+     "tracks": 416.7,
+     "use": 0.012,
+     "from_um": 354.264,
+     "to_um": 354.264
+    },
+    {
+     "face": "S",
+     "layer": "M5",
+     "x": 354.264,
+     "y": 0.0,
+     "pins": 4,
+     "tracks": 416.7,
+     "use": 0.01,
+     "from_um": 354.264,
+     "to_um": 354.264
+    },
+    {
+     "face": "S",
+     "layer": "M5",
+     "x": 285.24,
+     "y": 0.0,
+     "pins": 3,
+     "tracks": 416.7,
+     "use": 0.007,
+     "from_um": 285.144,
+     "to_um": 285.336
+    }
+   ]
+  },
+  "channel_tracks": {
+   "value": 0.234,
+   "threshold": 1.0,
+   "flag": false,
+   "unit": "nets per track",
+   "computable": true,
+   "method": "no guides at this stage: ESTIMATE, each net's pin bounding box crossing the channel mid-line counts by the share of its box the channel covers; the 40 narrowest channels only; capacity = gap / pitch on blocked layers >= M2, per-layer GRT adjustment ignored",
+   "offenders": [
+    {
+     "a": "u_fcore.u_x.u_body.g_link\\[0\\].u_link.g_bank\\[0\\].u_store.u_native.u_sram",
+     "b": "die edge",
+     "x": 17.28,
+     "y": 88.164,
+     "along": "V",
+     "gap_um": 34.56,
+     "length_um": 20.808,
+     "tracks": 960.0,
+     "nets": 224.6,
+     "use": 0.234,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_link\\[0\\].u_link.g_bank\\[2\\].u_store.u_native.u_sram",
+     "b": "u_fcore.u_x.u_body.g_link\\[0\\].u_link.g_bank\\[3\\].u_store.u_native.u_sram",
+     "x": 62.652,
+     "y": 196.164,
+     "along": "H",
+     "gap_um": 22.392,
+     "length_um": 56.184,
+     "tracks": 1088.5,
+     "nets": 245.7,
+     "use": 0.226,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem\\[0\\].u_bank.u_sram_lo",
+     "b": "u_fcore.u_x.u_body.g_link\\[0\\].u_link.g_bank\\[0\\].u_store.u_native.u_sram",
+     "x": 62.652,
+     "y": 70.356,
+     "along": "H",
+     "gap_um": 14.808,
+     "length_um": 56.184,
+     "tracks": 719.8,
+     "nets": 114.5,
+     "use": 0.159,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem\\[0\\].u_bank.u_sram_lo",
+     "b": "die edge",
+     "x": 17.28,
+     "y": 48.756,
+     "along": "V",
+     "gap_um": 34.56,
+     "length_um": 28.392,
+     "tracks": 960.0,
+     "nets": 132.8,
+     "use": 0.138,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem\\[1\\].u_bank.u_sram_hi",
+     "b": "die edge",
+     "x": 353.412,
+     "y": 293.916,
+     "along": "H",
+     "gap_um": 34.248,
+     "length_um": 169.368,
+     "tracks": 1664.8,
+     "nets": 174.1,
+     "use": 0.105,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_link\\[0\\].u_link.g_bank\\[0\\].u_store.u_native.u_sram",
+     "b": "u_fcore.u_x.u_body.g_link\\[0\\].u_link.g_bank\\[1\\].u_store.u_native.u_sram",
+     "x": 62.652,
+     "y": 109.764,
+     "along": "H",
+     "gap_um": 22.392,
+     "length_um": 56.184,
+     "tracks": 1088.5,
+     "nets": 109.7,
+     "use": 0.101,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem\\[0\\].u_bank.u_sram_hi",
+     "b": "die edge",
+     "x": 119.244,
+     "y": 293.916,
+     "along": "H",
+     "gap_um": 34.248,
+     "length_um": 169.368,
+     "tracks": 1664.8,
+     "nets": 142.4,
+     "use": 0.086,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_meta\\[2\\].u_sram",
+     "b": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem\\[0\\].u_bank.u_sram_hi",
+     "x": 197.004,
+     "y": 227.292,
+     "along": "H",
+     "gap_um": 42.216,
+     "length_um": 13.848,
+     "tracks": 2052.2,
+     "nets": 167.0,
+     "use": 0.081,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_link\\[0\\].u_link.g_bank\\[1\\].u_store.u_native.u_sram",
+     "b": "die edge",
+     "x": 17.28,
+     "y": 131.364,
+     "along": "V",
+     "gap_um": 34.56,
+     "length_um": 20.808,
+     "tracks": 960.0,
+     "nets": 76.0,
+     "use": 0.079,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_link\\[0\\].u_link.g_bank\\[3\\].u_store.u_native.u_sram",
+     "b": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem\\[0\\].u_bank.u_sram_hi",
+     "x": 62.652,
+     "y": 238.284,
+     "along": "H",
+     "gap_um": 20.232,
+     "length_um": 56.184,
+     "tracks": 983.5,
+     "nets": 71.3,
+     "use": 0.073,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_link\\[0\\].u_link.g_bank\\[3\\].u_store.u_native.u_sram",
+     "b": "die edge",
+     "x": 17.28,
+     "y": 217.764,
+     "along": "V",
+     "gap_um": 34.56,
+     "length_um": 20.808,
+     "tracks": 960.0,
+     "nets": 60.2,
+     "use": 0.063,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem\\[0\\].u_bank.u_sram_hi",
+     "b": "die edge",
+     "x": 17.28,
+     "y": 262.596,
+     "along": "V",
+     "gap_um": 34.56,
+     "length_um": 28.392,
+     "tracks": 960.0,
+     "nets": 57.8,
+     "use": 0.06,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_link\\[0\\].u_link.g_bank\\[1\\].u_store.u_native.u_sram",
+     "b": "u_fcore.u_x.u_body.g_link\\[0\\].u_link.g_bank\\[2\\].u_store.u_native.u_sram",
+     "x": 62.652,
+     "y": 152.964,
+     "along": "H",
+     "gap_um": 22.392,
+     "length_um": 56.184,
+     "tracks": 1088.5,
+     "nets": 59.6,
+     "use": 0.055,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_link\\[1\\].u_link.g_bank\\[3\\].u_store.u_native.u_sram",
+     "b": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem\\[2\\].u_bank.u_sram_hi",
+     "x": 645.012,
+     "y": 238.284,
+     "along": "H",
+     "gap_um": 20.232,
+     "length_um": 54.504,
+     "tracks": 983.5,
+     "nets": 44.4,
+     "use": 0.045,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem\\[1\\].u_bank.u_sram_lo",
+     "b": "u_fcore.u_x.u_body.g_q2.n_u_fj.u_fj.u.u_program.g_fsram.u_flow",
+     "x": 354.996,
+     "y": 70.356,
+     "along": "H",
+     "gap_um": 14.808,
+     "length_um": 66.312,
+     "tracks": 719.8,
+     "nets": 30.7,
+     "use": 0.043,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_link\\[0\\].u_link.g_bank\\[2\\].u_store.u_native.u_sram",
+     "b": "die edge",
+     "x": 17.28,
+     "y": 174.564,
+     "along": "V",
+     "gap_um": 34.56,
+     "length_um": 20.808,
+     "tracks": 960.0,
+     "nets": 40.2,
+     "use": 0.042,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_meta\\[1\\].u_sram",
+     "b": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_meta\\[2\\].u_sram",
+     "x": 223.236,
+     "y": 158.388,
+     "along": "H",
+     "gap_um": 59.928,
+     "length_um": 66.312,
+     "tracks": 2913.2,
+     "nets": 116.2,
+     "use": 0.04,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem\\[2\\].u_bank.u_sram_hi",
+     "b": "die edge",
+     "x": 587.58,
+     "y": 293.916,
+     "along": "H",
+     "gap_um": 34.248,
+     "length_um": 169.368,
+     "tracks": 1664.8,
+     "nets": 63.4,
+     "use": 0.038,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_meta\\[0\\].u_sram",
+     "b": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_meta\\[3\\].u_sram",
+     "x": 483.3,
+     "y": 158.388,
+     "along": "H",
+     "gap_um": 59.928,
+     "length_um": 66.312,
+     "tracks": 2913.2,
+     "nets": 86.5,
+     "use": 0.03,
+     "no_tracks": false
+    },
+    {
+     "a": "u_fcore.u_x.u_body.g_iss256.u_issuer.g_mem\\[2\\].u_bank.u_sram_lo",
+     "b": "u_fcore.u_x.u_body.g_link\\[1\\].u_link.g_bank\\[0\\].u_store.u_native.u_sram",
+     "x": 645.012,
+     "y": 70.356,
+     "along": "H",
+     "gap_um": 14.808,
+     "length_um": 54.504,
+     "tracks": 719.8,
+     "nets": 19.7,
+     "use": 0.027,
+     "no_tracks": false
+    }
+   ],
+   "channels": 33,
+   "source": "flight_bbox_estimate"
+  },
+  "clock": {
+   "value": 194.46,
+   "threshold": 407.808,
+   "flag": false,
+   "unit": "um",
+   "computable": true,
+   "method": "see entry, divergence, over_macro",
+   "offenders": [
+    {
+     "pin": "clk_control",
+     "x": 354.264,
+     "y": 129.6,
+     "centroid_x": 469.247,
+     "centroid_y": 209.078,
+     "distance_um": 194.46,
+     "sinks": 24440,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_issue",
+     "x": 354.264,
+     "y": 155.52,
+     "centroid_x": 387.484,
+     "centroid_y": 173.664,
+     "distance_um": 51.365,
+     "sinks": 6262,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_link[0]",
+     "x": 125.304,
+     "y": 155.52,
+     "centroid_x": 72.865,
+     "centroid_y": 166.413,
+     "distance_um": 63.332,
+     "sinks": 3865,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_link[5]",
+     "x": 580.584,
+     "y": 155.52,
+     "centroid_x": 214.155,
+     "centroid_y": 215.875,
+     "distance_um": 426.784,
+     "sinks": 3865,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_program",
+     "x": 354.264,
+     "y": 120.96,
+     "centroid_x": 470.325,
+     "centroid_y": 238.276,
+     "distance_um": 233.377,
+     "sinks": 2677,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_link[1]",
+     "x": 125.496,
+     "y": 155.52,
+     "centroid_x": 78.621,
+     "centroid_y": 102.976,
+     "distance_um": 99.418,
+     "sinks": 587,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_link[2]",
+     "x": 125.688,
+     "y": 155.52,
+     "centroid_x": 119.707,
+     "centroid_y": 143.367,
+     "distance_um": 18.134,
+     "sinks": 587,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_link[3]",
+     "x": 125.88,
+     "y": 155.52,
+     "centroid_x": 124.183,
+     "centroid_y": 172.724,
+     "distance_um": 18.901,
+     "sinks": 587,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_link[6]",
+     "x": 580.776,
+     "y": 155.52,
+     "centroid_x": 366.901,
+     "centroid_y": 101.428,
+     "distance_um": 267.967,
+     "sinks": 587,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_link[7]",
+     "x": 580.968,
+     "y": 155.52,
+     "centroid_x": 365.985,
+     "centroid_y": 136.796,
+     "distance_um": 233.707,
+     "sinks": 587,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_link[8]",
+     "x": 581.16,
+     "y": 155.52,
+     "centroid_x": 445.397,
+     "centroid_y": 175.018,
+     "distance_um": 155.261,
+     "sinks": 587,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_link[4]",
+     "x": 126.072,
+     "y": 155.52,
+     "centroid_x": 93.77,
+     "centroid_y": 207.011,
+     "distance_um": 83.793,
+     "sinks": 563,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_link[9]",
+     "x": 581.4,
+     "y": 155.52,
+     "centroid_x": 581.576,
+     "centroid_y": 219.932,
+     "distance_um": 64.588,
+     "sinks": 563,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_upipe[6]",
+     "x": 423.576,
+     "y": 146.88,
+     "centroid_x": 295.095,
+     "centroid_y": 168.31,
+     "distance_um": 149.911,
+     "sinks": 184,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_upipe[10]",
+     "x": 423.384,
+     "y": 190.08,
+     "centroid_x": 330.477,
+     "centroid_y": 264.175,
+     "distance_um": 167.003,
+     "sinks": 96,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_upipe[11]",
+     "x": 580.584,
+     "y": 190.08,
+     "centroid_x": 529.193,
+     "centroid_y": 208.572,
+     "distance_um": 69.883,
+     "sinks": 96,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_upipe[12]",
+     "x": 125.496,
+     "y": 233.28,
+     "centroid_x": 519.646,
+     "centroid_y": 101.711,
+     "distance_um": 525.719,
+     "sinks": 96,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_upipe[1]",
+     "x": 285.144,
+     "y": 100.224,
+     "centroid_x": 232.251,
+     "centroid_y": 174.645,
+     "distance_um": 127.314,
+     "sinks": 96,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_upipe[2]",
+     "x": 423.384,
+     "y": 100.224,
+     "centroid_x": 217.486,
+     "centroid_y": 228.698,
+     "distance_um": 334.373,
+     "sinks": 96,
+     "max_depth": 1
+    },
+    {
+     "pin": "clk_upipe[4]",
+     "x": 125.496,
+     "y": 146.88,
+     "centroid_x": 271.218,
+     "centroid_y": 225.25,
+     "distance_um": 224.093,
+     "sinks": 96,
+     "max_depth": 1
+    }
+   ],
+   "entry": {
+    "value": 194.46,
+    "threshold": 407.808,
+    "flag": false,
+    "unit": "um Manhattan",
+    "offenders": [
+     {
+      "pin": "clk_control",
+      "x": 354.264,
+      "y": 129.6,
+      "centroid_x": 469.247,
+      "centroid_y": 209.078,
+      "distance_um": 194.46,
+      "sinks": 24440,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_issue",
+      "x": 354.264,
+      "y": 155.52,
+      "centroid_x": 387.484,
+      "centroid_y": 173.664,
+      "distance_um": 51.365,
+      "sinks": 6262,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_link[0]",
+      "x": 125.304,
+      "y": 155.52,
+      "centroid_x": 72.865,
+      "centroid_y": 166.413,
+      "distance_um": 63.332,
+      "sinks": 3865,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_link[5]",
+      "x": 580.584,
+      "y": 155.52,
+      "centroid_x": 214.155,
+      "centroid_y": 215.875,
+      "distance_um": 426.784,
+      "sinks": 3865,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_program",
+      "x": 354.264,
+      "y": 120.96,
+      "centroid_x": 470.325,
+      "centroid_y": 238.276,
+      "distance_um": 233.377,
+      "sinks": 2677,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_link[1]",
+      "x": 125.496,
+      "y": 155.52,
+      "centroid_x": 78.621,
+      "centroid_y": 102.976,
+      "distance_um": 99.418,
+      "sinks": 587,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_link[2]",
+      "x": 125.688,
+      "y": 155.52,
+      "centroid_x": 119.707,
+      "centroid_y": 143.367,
+      "distance_um": 18.134,
+      "sinks": 587,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_link[3]",
+      "x": 125.88,
+      "y": 155.52,
+      "centroid_x": 124.183,
+      "centroid_y": 172.724,
+      "distance_um": 18.901,
+      "sinks": 587,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_link[6]",
+      "x": 580.776,
+      "y": 155.52,
+      "centroid_x": 366.901,
+      "centroid_y": 101.428,
+      "distance_um": 267.967,
+      "sinks": 587,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_link[7]",
+      "x": 580.968,
+      "y": 155.52,
+      "centroid_x": 365.985,
+      "centroid_y": 136.796,
+      "distance_um": 233.707,
+      "sinks": 587,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_link[8]",
+      "x": 581.16,
+      "y": 155.52,
+      "centroid_x": 445.397,
+      "centroid_y": 175.018,
+      "distance_um": 155.261,
+      "sinks": 587,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_link[4]",
+      "x": 126.072,
+      "y": 155.52,
+      "centroid_x": 93.77,
+      "centroid_y": 207.011,
+      "distance_um": 83.793,
+      "sinks": 563,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_link[9]",
+      "x": 581.4,
+      "y": 155.52,
+      "centroid_x": 581.576,
+      "centroid_y": 219.932,
+      "distance_um": 64.588,
+      "sinks": 563,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_upipe[6]",
+      "x": 423.576,
+      "y": 146.88,
+      "centroid_x": 295.095,
+      "centroid_y": 168.31,
+      "distance_um": 149.911,
+      "sinks": 184,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_upipe[10]",
+      "x": 423.384,
+      "y": 190.08,
+      "centroid_x": 330.477,
+      "centroid_y": 264.175,
+      "distance_um": 167.003,
+      "sinks": 96,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_upipe[11]",
+      "x": 580.584,
+      "y": 190.08,
+      "centroid_x": 529.193,
+      "centroid_y": 208.572,
+      "distance_um": 69.883,
+      "sinks": 96,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_upipe[12]",
+      "x": 125.496,
+      "y": 233.28,
+      "centroid_x": 519.646,
+      "centroid_y": 101.711,
+      "distance_um": 525.719,
+      "sinks": 96,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_upipe[1]",
+      "x": 285.144,
+      "y": 100.224,
+      "centroid_x": 232.251,
+      "centroid_y": 174.645,
+      "distance_um": 127.314,
+      "sinks": 96,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_upipe[2]",
+      "x": 423.384,
+      "y": 100.224,
+      "centroid_x": 217.486,
+      "centroid_y": 228.698,
+      "distance_um": 334.373,
+      "sinks": 96,
+      "max_depth": 1
+     },
+     {
+      "pin": "clk_upipe[4]",
+      "x": 125.496,
+      "y": 146.88,
+      "centroid_x": 271.218,
+      "centroid_y": 225.25,
+      "distance_um": 224.093,
+      "sinks": 96,
+      "max_depth": 1
+     }
+    ],
+    "method": "threshold = 0.4 x (W + H): a mid-face entry passes, a corner entry flags"
+   },
+   "divergence": {
+    "value": null,
+    "computable": false,
+    "method": "no clock tree yet at place",
+    "threshold": 200.0,
+    "flag": false
+   },
+   "over_macro": {
+    "value": null,
+    "computable": false,
+    "flag": false,
+    "threshold": 50.0,
+    "method": "no clock guides in this ODB (no GRT yet), wire over macro unknown",
+    "offenders": []
+   }
+  },
+  "fanout_spread": {
+   "value": 874.8,
+   "threshold": 100.0,
+   "flag": true,
+   "unit": "um",
+   "computable": true,
+   "method": "first non-buffer driver -> non-buffer sinks through buffers/inverters; spread = width + height of the sinks' box; clock excluded",
+   "offenders": [
+    {
+     "driver": "u_fcore.u_x.u_body.g_link\\[0\\].u_link.u_ctl.u.u_core.u_codec.epoch_abort$_DFF_PN0_",
+     "net": "u_fcore.u_x._14507_",
+     "x": 115.344,
+     "y": 156.465,
+     "fanout": 10,
+     "spread_um": 874.8,
+     "bbox": [
+      105.354,
+      13.905,
+      702.324,
+      291.735
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x.u_body.g_iss256.u_issuer.v1$_DFF_PN0_",
+     "net": "_040610_",
+     "x": 437.94,
+     "y": 173.205,
+     "fanout": 1339,
+     "spread_um": 750.9,
+     "bbox": [
+      32.184,
+      37.395,
+      532.548,
+      287.955
+     ]
+    },
+    {
+     "driver": "rst_n",
+     "net": "rst_n",
+     "x": 354.264,
+     "y": 0.096,
+     "fanout": 462,
+     "spread_um": 711.7,
+     "bbox": [
+      43.038,
+      4.455,
+      463.644,
+      295.515
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46181_\\[7\\]$_DFFE_PP_",
+     "net": "_000218_",
+     "x": 444.096,
+     "y": 154.575,
+     "fanout": 8,
+     "spread_um": 682.2,
+     "bbox": [
+      34.572,
+      36.204,
+      502.908,
+      250.044
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46180_\\[7\\]$_DFFE_PP_",
+     "net": "_000225_",
+     "x": 442.206,
+     "y": 167.535,
+     "fanout": 7,
+     "spread_um": 682.2,
+     "bbox": [
+      203.916,
+      36.108,
+      672.252,
+      249.948
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46181_\\[0\\]$_DFFE_PP_",
+     "net": "_000319_",
+     "x": 418.77,
+     "y": 155.655,
+     "fanout": 8,
+     "spread_um": 682.2,
+     "bbox": [
+      34.572,
+      35.532,
+      502.908,
+      249.372
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46181_\\[1\\]$_DFFE_PP_",
+     "net": "_000320_",
+     "x": 415.962,
+     "y": 154.575,
+     "fanout": 8,
+     "spread_um": 682.2,
+     "bbox": [
+      34.572,
+      35.628,
+      502.908,
+      249.468
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46181_\\[2\\]$_DFFE_PP_",
+     "net": "_000321_",
+     "x": 416.178,
+     "y": 153.495,
+     "fanout": 8,
+     "spread_um": 682.2,
+     "bbox": [
+      34.572,
+      35.724,
+      502.908,
+      249.564
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46181_\\[3\\]$_DFFE_PP_",
+     "net": "_000322_",
+     "x": 428.868,
+     "y": 155.925,
+     "fanout": 8,
+     "spread_um": 682.2,
+     "bbox": [
+      34.572,
+      35.82,
+      502.908,
+      249.66
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46181_\\[4\\]$_DFFE_PP_",
+     "net": "_000323_",
+     "x": 437.292,
+     "y": 154.305,
+     "fanout": 8,
+     "spread_um": 682.2,
+     "bbox": [
+      34.572,
+      35.916,
+      502.908,
+      249.756
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46181_\\[5\\]$_DFFE_PP_",
+     "net": "_000324_",
+     "x": 445.608,
+     "y": 150.795,
+     "fanout": 8,
+     "spread_um": 682.2,
+     "bbox": [
+      34.572,
+      36.012,
+      502.908,
+      249.852
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46181_\\[6\\]$_DFFE_PP_",
+     "net": "_000325_",
+     "x": 443.988,
+     "y": 151.875,
+     "fanout": 8,
+     "spread_um": 682.2,
+     "bbox": [
+      34.572,
+      36.108,
+      502.908,
+      249.948
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46180_\\[0\\]$_DFFE_PP_",
+     "net": "_000326_",
+     "x": 440.1,
+     "y": 162.135,
+     "fanout": 7,
+     "spread_um": 682.2,
+     "bbox": [
+      203.916,
+      35.436,
+      672.252,
+      249.276
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46180_\\[1\\]$_DFFE_PP_",
+     "net": "_000327_",
+     "x": 441.126,
+     "y": 162.945,
+     "fanout": 7,
+     "spread_um": 682.2,
+     "bbox": [
+      203.916,
+      35.532,
+      672.252,
+      249.372
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46180_\\[2\\]$_DFFE_PP_",
+     "net": "_000328_",
+     "x": 442.908,
+     "y": 162.675,
+     "fanout": 7,
+     "spread_um": 682.2,
+     "bbox": [
+      203.916,
+      35.628,
+      672.252,
+      249.468
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46180_\\[3\\]$_DFFE_PP_",
+     "net": "_000329_",
+     "x": 440.478,
+     "y": 161.325,
+     "fanout": 7,
+     "spread_um": 682.2,
+     "bbox": [
+      203.916,
+      35.724,
+      672.252,
+      249.564
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46180_\\[4\\]$_DFFE_PP_",
+     "net": "_000330_",
+     "x": 442.098,
+     "y": 161.595,
+     "fanout": 7,
+     "spread_um": 682.2,
+     "bbox": [
+      203.916,
+      35.82,
+      672.252,
+      249.66
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46180_\\[5\\]$_DFFE_PP_",
+     "net": "_000331_",
+     "x": 441.018,
+     "y": 165.375,
+     "fanout": 7,
+     "spread_um": 682.2,
+     "bbox": [
+      203.916,
+      35.916,
+      672.252,
+      249.756
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46180_\\[6\\]$_DFFE_PP_",
+     "net": "_000332_",
+     "x": 442.692,
+     "y": 163.485,
+     "fanout": 7,
+     "spread_um": 682.2,
+     "bbox": [
+      203.916,
+      36.012,
+      672.252,
+      249.852
+     ]
+    },
+    {
+     "driver": "u_fcore.u_x._46149_\\[0\\]$_DFF_PN0_",
+     "net": "_040616_",
+     "x": 381.078,
+     "y": 195.885,
+     "fanout": 7,
+     "spread_um": 682.2,
+     "bbox": [
+      34.572,
+      35.436,
+      502.908,
+      249.276
+     ]
+    }
+   ],
+   "count": 2410
+  },
+  "local_density": {
+   "value": 0.737,
+   "threshold": 0.7,
+   "flag": true,
+   "unit": "fraction",
+   "computable": true,
+   "method": "cell area by cell centre / free core area (macros + hard blockages off) in 10-um bins; fillers and decaps excluded; bins under 25% free skipped",
+   "offenders": [
+    {
+     "x": 319.3,
+     "y": 305.5,
+     "density": 0.737
+    },
+    {
+     "x": 139.3,
+     "y": 305.5,
+     "density": 0.726
+    },
+    {
+     "x": 639.3,
+     "y": 305.5,
+     "density": 0.722
+    },
+    {
+     "x": 669.3,
+     "y": 305.5,
+     "density": 0.71
+    },
+    {
+     "x": 169.3,
+     "y": 305.5,
+     "density": 0.707
+    },
+    {
+     "x": 369.3,
+     "y": 305.5,
+     "density": 0.706
+    },
+    {
+     "x": 689.3,
+     "y": 305.5,
+     "density": 0.703
+    },
+    {
+     "x": 599.3,
+     "y": 305.5,
+     "density": 0.701
+    },
+    {
+     "x": 69.3,
+     "y": 305.5,
+     "density": 0.699
+    },
+    {
+     "x": 179.3,
+     "y": 305.5,
+     "density": 0.698
+    },
+    {
+     "x": 359.3,
+     "y": 305.5,
+     "density": 0.696
+    },
+    {
+     "x": 99.3,
+     "y": 305.5,
+     "density": 0.696
+    },
+    {
+     "x": 59.3,
+     "y": 305.5,
+     "density": 0.696
+    },
+    {
+     "x": 229.3,
+     "y": 305.5,
+     "density": 0.693
+    },
+    {
+     "x": 679.3,
+     "y": 305.5,
+     "density": 0.693
+    },
+    {
+     "x": 469.3,
+     "y": 305.5,
+     "density": 0.692
+    },
+    {
+     "x": 569.3,
+     "y": 305.5,
+     "density": 0.692
+    },
+    {
+     "x": 219.3,
+     "y": 305.5,
+     "density": 0.69
+    },
+    {
+     "x": 89.3,
+     "y": 305.5,
+     "density": 0.69
+    },
+    {
+     "x": 289.3,
+     "y": 305.5,
+     "density": 0.69
+    }
+   ],
+   "bins_over": 8,
+   "bins": 1717
+  }
+ },
+ "summary": "place 3/6 flagged: opposite_face_pins=1 fanout_spread=874.8 local_density=0.737"
+}
