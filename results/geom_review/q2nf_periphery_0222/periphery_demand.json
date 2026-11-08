@@ -1,0 +1,63 @@
+{
+ "outline_um": [
+  708.48,
+  311.04
+ ],
+ "actual_macro_pin_incidences": 6712,
+ "distinct_macro_nets": 4861,
+ "shared_macro_nets": 602,
+ "local_opposing_LEF_pins": 532,
+ "local_gap_um": 64.8,
+ "effective_gap_excluding_halos_um": 56.16,
+ "local_capacity_M5_60pct": 702,
+ "cuts": [
+  {
+   "axis": "vertical",
+   "cut_um": 236.328,
+   "actual_shared_macro_nets": 599,
+   "macro_blocked_height_um": 35.664,
+   "capacity_tracks": 6358.2,
+   "planned_bound_with_all_WE_plus_clocks": 3432,
+   "remaining": 2926.2,
+   "assumption": "non-shared macro logic stays in own column; N/S faces descend locally; pilot must verify this locality"
+  },
+  {
+   "axis": "vertical",
+   "cut_um": 470.496,
+   "actual_shared_macro_nets": 532,
+   "macro_blocked_height_um": 35.664,
+   "capacity_tracks": 6358.2,
+   "planned_bound_with_all_WE_plus_clocks": 3365,
+   "remaining": 2993.2,
+   "assumption": "non-shared macro logic stays in own column; N/S faces descend locally; pilot must verify this locality"
+  },
+  {
+   "axis": "horizontal",
+   "cut_um": 67.392,
+   "actual_shared_macro_nets": 21,
+   "capacity_tracks": 8856.0,
+   "bound_macro_north_plus_N_or_south_plus_S": 7265,
+   "remaining": 1591.0,
+   "assumption": "M5 is unobstructed above actual SRAM OBS M1-M4;60% budget reserves remainder for PG/clock"
+  },
+  {
+   "axis": "horizontal",
+   "cut_um": 155.52,
+   "actual_shared_macro_nets": 89,
+   "capacity_tracks": 8856.0,
+   "bound_macro_north_plus_N_or_south_plus_S": 5848,
+   "remaining": 3008.0,
+   "assumption": "M5 is unobstructed above actual SRAM OBS M1-M4;60% budget reserves remainder for PG/clock"
+  },
+  {
+   "axis": "horizontal",
+   "cut_um": 237.024,
+   "actual_shared_macro_nets": 21,
+   "capacity_tracks": 8856.0,
+   "bound_macro_north_plus_N_or_south_plus_S": 4473,
+   "remaining": 4383.0,
+   "assumption": "M5 is unobstructed above actual SRAM OBS M1-M4;60% budget reserves remainder for PG/clock"
+  }
+ ],
+ "physical_release": "HOLD for official LEC EQ and actual PLACE locality/density/clock review; no routed claim"
+}
