@@ -1,0 +1,61 @@
+{
+ "note": "S81-TYPES-7-LEAFB plan tap delta: grid clock taps (kind none, clk_tNN) moved on their 8.64 lattice out of the channel-open macro paths; edits only these named taps in partition_types[T].clock.taps[].xy; core taps untouched (S81-TYPES-7-CTAP owns those)",
+ "moves": {
+  "ot_s81sl_leaf__t5": {
+   "clk_t20": {
+    "frm": [
+     1047.6,
+     237.52
+    ],
+    "to": [
+     1056.24,
+     237.52
+    ]
+   }
+  },
+  "ot_s81sl_leaf__t36": {
+   "clk_t19": {
+    "frm": [
+     1049.32,
+     954.32
+    ],
+    "to": [
+     1057.96,
+     954.32
+    ]
+   },
+   "clk_t30": {
+    "frm": [
+     1101.192,
+     570.24
+    ],
+    "to": [
+     1101.192,
+     535.68
+    ]
+   },
+   "clk_t41": {
+    "frm": [
+     866.16,
+     1175.448
+    ],
+    "to": [
+     866.16,
+     1192.728
+    ]
+   }
+  },
+  "ot_s81sl_leaf__t69": {
+   "clk_t20": {
+    "frm": [
+     1064.88,
+     246.16
+    ],
+    "to": [
+     1073.52,
+     246.16
+    ]
+   }
+  }
+ }
+}

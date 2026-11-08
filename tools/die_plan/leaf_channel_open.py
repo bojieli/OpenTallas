@@ -54,18 +54,43 @@ for s in t.get('ft_slots', []):
     for st in s.get('bit_sites_um') or []:
         for p in st: keep.append((p[0], p[1], 1.0))
 c = t.get('clock', {})
-for tp in c.get('taps', []) + c.get('added_taps', []):
-    if 'xy' in tp and tp.get('kind') != 'core': keep.append((tp['xy'][0], tp['xy'][1], CLR))
+TAPMOVE = '--tapmove' in args
+GTAPS = {tp['name']: list(tp['xy']) for tp in c.get('taps', []) + c.get('added_taps', []) if 'xy' in tp and tp.get('kind') != 'core'}
+TAPS = {k: list(v) for k, v in GTAPS.items()}; PTAPS = {}
 STREGS = [p for s in t.get('internal_stations', []) or [] for p in (s.get('regs_um', []) or [])]
 # internal station registers are placed by ff_put_near (nearest free site), so a macro over one only moves it a little:
 # not a keepout, but the count of covered registers is reported
 def rect(n, p): o = p[n]; s = hc[n]['s']; return (o[0], o[1], o[0] + s[0], o[1] + s[1])
-def legal_one(n, p):
+def legal_one(n, p, taps=None):
     r = rect(n, p)
     if r[0] < EDGE - 0.2 or r[1] < EDGE - 0.2 or r[2] > W - EDGE + 0.2 or r[3] > H - EDGE + 0.2: return False
     for (x, y, cl) in keep:
         if r[0] - cl < x < r[2] + cl and r[1] - cl < y < r[3] + cl: return False
+    if not TAPMOVE:
+        for (x, y) in (taps or TAPS).values():
+            if r[0] - CLR < x < r[2] + CLR and r[1] - CLR < y < r[3] + CLR: return False
     return True
+def tap_free(x, y, p):
+    if not (EDGE + CLR < x < W - EDGE - CLR and EDGE + CLR < y < H - EDGE - CLR): return False
+    for n in p:
+        r = rect(n, p)
+        if r[0] - G < x < r[2] + G and r[1] - G < y < r[3] + G: return False
+    return not any(abs(x - a) < 2 and abs(y - b) < 2 for (a, b, _) in keep)
+def fix_taps(p, taps):
+    # grid taps covered by a moved macro go to the nearest lattice point (same 8.64 phase) >= 8.64 from every macro
+    out = {k: list(v) for k, v in taps.items()}
+    for k, (x, y) in taps.items():
+        if any(rect(n, p)[0] - CLR < x < rect(n, p)[2] + CLR and rect(n, p)[1] - CLR < y < rect(n, p)[3] + CLR for n in p):
+            best = None
+            for i in range(-12, 13):
+                for j in range(-12, 13):
+                    xx, yy = x + i * G, y + j * G
+                    if tap_free(xx, yy, p) and all(abs(xx - a) > 1 or abs(yy - b) > 1 for kk, (a, b) in out.items() if kk != k):
+                        d = abs(i) + abs(j)
+                        if best is None or d < best[0]: best = (d, xx, yy)
+            if best is None: return None
+            out[k] = [best[1], best[2]]
+    return out
 def touch(a, b, p):
     ra, rb = rect(a, p), rect(b, p)
     return ra[0] < rb[2] + MGAP - 0.05 and rb[0] < ra[2] + MGAP - 0.05 and ra[1] < rb[3] + MGAP - 0.05 and rb[1] < ra[3] + MGAP - 0.05
@@ -97,6 +122,9 @@ def legal_why(n, p):
     if r[0] < EDGE - 0.2 or r[1] < EDGE - 0.2 or r[2] > W - EDGE + 0.2 or r[3] > H - EDGE + 0.2: return 'edge'
     for (x, y, cl) in keep:
         if r[0] - cl < x < r[2] + cl and r[1] - cl < y < r[3] + cl: return 'keepout(%.1f,%.1f,cl%.2f)' % (x, y, cl)
+    if not TAPMOVE:
+        for k, (x, y) in TAPS.items():
+            if r[0] - CLR < x < r[2] + CLR and r[1] - CLR < y < r[3] + CLR: return 'tap %s(%.1f,%.1f)' % (k, x, y)
     return None
 def push(p, n, ax, d):
     q = {k: list(v) for k, v in p.items()}; moved = {n}; front = [n]; i = 0 if ax == 'x' else 1
@@ -116,6 +144,10 @@ def push(p, n, ax, d):
         if w_: why('%s %s%+.2f: %s %s' % (n, ax, d, m, w_)); return None, moved
     for a, b in itertools.combinations(q, 2):
         if (a in moved or b in moved) and touch(a, b, q): return None, moved
+    if TAPMOVE:
+        nt = fix_taps(q, TAPS)
+        if nt is None: why('%s %s%+.2f: no free lattice point for a covered tap' % (n, ax, d)); return None, moved
+        PTAPS[id(q)] = nt
     return q, moved
 base = {k: list(v) for k, v in pos.items()}; cur = {k: list(v) for k, v in pos.items()}
 c0 = buscost(base); log = []
@@ -142,6 +174,7 @@ for rnd in range(40):
                 if best is None or score < best[0]: best = (score, q, n, sg * k * G, moved)
             if best and k >= k0: break
         if best:
+            if TAPMOVE: TAPS = PTAPS[id(best[1])]
             cur = best[1]; log.append(dict(ch='%s|%s' % (a, b), axis=ax, width=round(w, 2), pins=d, ratio=round(r, 2),
                                           move=best[2], d_um=round(best[3], 2), chain=sorted(best[4])))
             done = True; break
@@ -151,7 +184,8 @@ def summary(p):
                                   hot_list=['%s|%s w=%.2f pins=%d r=%.2f' % (c[1], c[2], c[3], c[4], c[5]) for c in sorted(ch, key=lambda c: -c[5]) if c[5] > TARGET])
 delta = {n: [round(cur[n][0] - base[n][0], 3), round(cur[n][1] - base[n][1], 3)] for n in cur if cur[n] != base[n]}
 def covered(p): return sum(1 for (x, y) in STREGS if any(rect(n, p)[0] < x < rect(n, p)[2] and rect(n, p)[1] < y < rect(n, p)[3] for n in p))
-res = dict(type=T, target=TARGET, station_regs_under_macros=[covered(base), covered(cur)], before=summary(base), after=summary(cur), bus_cost_rise_pct=round(100 * (buscost(cur) / c0 - 1), 2) if c0 else 0,
+TAPD = {k: dict(frm=GTAPS[k], to=[round(v[0], 4), round(v[1], 4)]) for k, v in TAPS.items() if abs(v[0] - GTAPS[k][0]) > 1e-6 or abs(v[1] - GTAPS[k][1]) > 1e-6}
+res = dict(type=T, target=TARGET, tap_moves=TAPD, station_regs_under_macros=[covered(base), covered(cur)], before=summary(base), after=summary(cur), bus_cost_rise_pct=round(100 * (buscost(cur) / c0 - 1), 2) if c0 else 0,
            moves={tname[n]: dict(inst=n, delta_um=delta[n], to=[round(cur[n][0], 4), round(cur[n][1], 4)], orient=ori[n]) for n in delta}, steps=log)
 print(json.dumps(res, indent=1))
 if JOUT: json.dump(res, open(JOUT, 'w'), indent=1)

@@ -1,0 +1,219 @@
+{
+ "type": "ot_s81sl_leaf__t36",
+ "target": 0.6,
+ "tap_moves": {
+  "clk_t19": {
+   "frm": [
+    1049.32,
+    954.32
+   ],
+   "to": [
+    1057.96,
+    954.32
+   ]
+  },
+  "clk_t30": {
+   "frm": [
+    1101.192,
+    570.24
+   ],
+   "to": [
+    1101.192,
+    535.68
+   ]
+  },
+  "clk_t41": {
+   "frm": [
+    866.16,
+    1175.448
+   ],
+   "to": [
+    866.16,
+    1192.728
+   ]
+  }
+ },
+ "station_regs_under_macros": [
+  6,
+  6
+ ],
+ "before": {
+  "worst": 1.69,
+  "hot": 7,
+  "hot_list": [
+   "u_vs|u_ve.u_m w=17.28 pins=1267 r=1.69",
+   "u_vp.g_ln[0].u_l|u_vn.u_b w=15.12 pins=786 r=1.16",
+   "u_vs|u_ve.u_s w=25.92 pins=1267 r=1.12",
+   "u_ve.u_s|u_ve.u_m w=8.64 pins=387 r=1.00",
+   "u_vs|u_vsw w=8.64 pins=387 r=1.00",
+   "u_vq|u_vs w=8.64 pins=299 r=0.80",
+   "u_vq|u_vsw w=8.64 pins=271 r=0.70"
+  ]
+ },
+ "after": {
+  "worst": 0.56,
+  "hot": 0,
+  "hot_list": []
+ },
+ "bus_cost_rise_pct": 7.85,
+ "moves": {
+  "u_bound.u_u_lf4_u_ve_u_m": {
+   "inst": "u_ve.u_m",
+   "delta_um": [
+    8.64,
+    34.56
+   ],
+   "to": [
+    872.748,
+    855.372
+   ],
+   "orient": "R0"
+  },
+  "u_bound.u_u_lf4_u_ve_u_s": {
+   "inst": "u_ve.u_s",
+   "delta_um": [
+    0.0,
+    25.92
+   ],
+   "to": [
+    682.668,
+    855.372
+   ],
+   "orient": "R0"
+  },
+  "u_bound.u_u_lf4_u_vsw": {
+   "inst": "u_vsw",
+   "delta_um": [
+    8.64,
+    0.0
+   ],
+   "to": [
+    1010.988,
+    544.332
+   ],
+   "orient": "R0"
+  },
+  "u_bound.u_u_lf4_u_vq": {
+   "inst": "u_vq",
+   "delta_um": [
+    0.0,
+    -8.64
+   ],
+   "to": [
+    820.908,
+    483.852
+   ],
+   "orient": "R0"
+  },
+  "u_bound.u_u_lf4_u_vp_g_ln_0_u_l": {
+   "inst": "u_vp.g_ln[0].u_l",
+   "delta_um": [
+    -17.28,
+    0.0
+   ],
+   "to": [
+    164.268,
+    932.748
+   ],
+   "orient": "R0"
+  }
+ },
+ "steps": [
+  {
+   "ch": "u_vs|u_ve.u_m",
+   "axis": "y",
+   "width": 17.28,
+   "pins": 1267,
+   "ratio": 1.69,
+   "move": "u_ve.u_m",
+   "d_um": 17.28,
+   "chain": [
+    "u_ve.u_m"
+   ]
+  },
+  {
+   "ch": "u_vp.g_ln[0].u_l|u_vn.u_b",
+   "axis": "x",
+   "width": 15.12,
+   "pins": 786,
+   "ratio": 1.16,
+   "move": "u_vp.g_ln[0].u_l",
+   "d_um": -17.28,
+   "chain": [
+    "u_vp.g_ln[0].u_l"
+   ]
+  },
+  {
+   "ch": "u_vs|u_ve.u_s",
+   "axis": "y",
+   "width": 25.92,
+   "pins": 1267,
+   "ratio": 1.12,
+   "move": "u_ve.u_s",
+   "d_um": 8.64,
+   "chain": [
+    "u_ve.u_s"
+   ]
+  },
+  {
+   "ch": "u_ve.u_s|u_ve.u_m",
+   "axis": "x",
+   "width": 8.64,
+   "pins": 387,
+   "ratio": 1.0,
+   "move": "u_ve.u_m",
+   "d_um": 8.64,
+   "chain": [
+    "u_ve.u_m"
+   ]
+  },
+  {
+   "ch": "u_vs|u_vsw",
+   "axis": "x",
+   "width": 8.64,
+   "pins": 387,
+   "ratio": 1.0,
+   "move": "u_vsw",
+   "d_um": 8.64,
+   "chain": [
+    "u_vsw"
+   ]
+  },
+  {
+   "ch": "u_vs|u_ve.u_m",
+   "axis": "y",
+   "width": 34.56,
+   "pins": 1267,
+   "ratio": 0.84,
+   "move": "u_ve.u_m",
+   "d_um": 17.28,
+   "chain": [
+    "u_ve.u_m"
+   ]
+  },
+  {
+   "ch": "u_vs|u_ve.u_s",
+   "axis": "y",
+   "width": 34.56,
+   "pins": 1267,
+   "ratio": 0.84,
+   "move": "u_ve.u_s",
+   "d_um": 17.28,
+   "chain": [
+    "u_ve.u_s"
+   ]
+  },
+  {
+   "ch": "u_vq|u_vs",
+   "axis": "y",
+   "width": 8.64,
+   "pins": 299,
+   "ratio": 0.8,
+   "move": "u_vq",
+   "d_um": -8.64,
+   "chain": [
+    "u_vq"
+   ]
+  }
+ ]
+}
