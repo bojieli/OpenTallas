@@ -227,6 +227,13 @@ class Verification:
             if n in outq:allowed.add(prefix+row['name']+'_t')
             if up.path not in allowed or up.module not in('ot_dp_rrelay','ot_dp_rrelay_nl') or port!='q':return False
             ib=up.ports.get('d',[])
+            if len(ib)==1 and tree.get('relay_lockup')=='latch':
+                # RLK-1108 latch form: one hop lockup latch (0 cycles) between this relay and its planned parent
+                lds=self.G.drv.get(ib[0],[])
+                if len(lds)==1:
+                    lc=self.F.cells[lds[0][0]]
+                    if lc.module=='ot_dp_lk' and lds[0][1]=='q' and lc.path==prefix+RT.lockup_latch_names(row['name'])[0]:
+                        ib=lc.ports.get('d',[])
             return len(ib)==1 and walk(ib[0],row['d'],seen|{n})
         if not walk(bits[0],node,set()):
             self.fail(c.path+': raw reset is not the exact original local reset-parent/depth contract at '+node)

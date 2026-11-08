@@ -732,7 +732,9 @@ def wavefront_cells_text(driver=False, lockup=False):
     names = ["ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"]
     if driver:
         names += ["ot_dp_rrelay_drive", "ot_dp_rgate_drive"]
-    if lockup:
+    if lockup == "latch":       # RLK-1108 hop lockup latches (reset_tree.lockup_hops)
+        names += ["ot_dp_lk"]
+    elif lockup:
         names += ["ot_dp_rrelay_nl"]
     out = []
     for name in names:
@@ -3042,13 +3044,13 @@ class Binder:
             # Use the same control-only reset cells as physical kits, not another
             # synchronizer implementation. Datapath registers remain reset-less.
             cells += "\n" + wavefront_cells_text(driver=bool(P.reset.get("relay_driver")),
-                                                 lockup=bool(P.reset.get("relay_lockup")))
+                                                 lockup=(P.reset.get("relay_lockup") or {}).get("form") or False)
             W = RT.wf_plan(P)
             missing = set(W["parts"]) - set(self.members)
             if missing:
                 raise BindError(f"wavefront reset carriers lack bound partitions: {sorted(missing)[:10]}")
             (out.parent / "bind_reset.json").write_text(json.dumps(W, indent=1))
-        if (self.plan.get("clock") or {}).get("ft_hop_lockup"):
+        if (self.plan.get("clock") or {}).get("ft_hop_lockup") and "module ot_dp_lk " not in cells:
             cells += "\n" + ft_hop_lockup_cell()
         (out / "bind_cells.sv").write_text(cells)
         files = [out / "bind_cells.sv"]

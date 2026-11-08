@@ -67,7 +67,7 @@ def test_plan_option_validation(monkeypatch):
     assert R.relay_lockup(plan({}), 'ta') is False
     ok = {'relay_lockup': {'form': 'negedge', 'types': ['ta']}}
     assert R.relay_lockup(plan(ok), 'ta') is True and R.relay_lockup(plan(ok), 'tb') is False
-    for bad in ({'relay_lockup': {'form': 'latch', 'types': ['ta']}},
+    for bad in ({'relay_lockup': {'form': 'pulse', 'types': ['ta']}},
                 {'relay_lockup': {'form': 'negedge', 'types': 'ta'}},
                 {'relay_lockup': {'form': 'negedge', 'types': ['nope']}},
                 dict(ok, relay_driver=True), dict(ok, start=True)):
