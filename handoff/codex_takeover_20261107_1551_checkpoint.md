@@ -18,3 +18,11 @@ All 630 lane files indexed at /tmp/codex-takeover-1551/lane_coverage_index.json.
 - Fleet E5 scratch43GB and E6 root50GB restrict new jobs; guards/factors unchanged, no rearm. Existing strict hub new-work ban retained. Private gunit rectangular bank geometry under review, no physical release yet.
 
 Owner questions remain plain text in CODEX-LOG.md. No new exception to one-ECO rule, no cleanup/deletion authorization inferred.
+
+## Update 2026-11-07 16:40 PST
+
+Selector resumed16:20 enabled/max_launch1 after second owned tick PASS; exact current planner now reports zero eligible picks, so cap is not blocking existing work. Wave owns one named earlyoom preflight recovery and eventual cap restoration/pilot ruling. Nine official E4 canaries remain floor570 held; natural no-prune timer collection passed.
+
+Root took SU1 numerical component, current c44625a67ac on I1, lanes/CODEX-QC-SU1-NUMERIC-1551.md gives all units/results/failures; run5 baseline golden pending. Shared publication bare repo /tmp/codex-root-publish-1551.git borrows approved read-only /home/ubuntu/codex-qc-su1-transport-1209; preserve donor (also NL object donor). S81/HEAD requested GitHub refs published.
+
+New progress: NK keep-go EQ49556/all19529 kept regs, vR7 source underway; ENGRR one ECO internal hold+1.57/setupinterim+81.60 and incremental route, finalpending; promptvM current FG PASS and supported ECO eligible, strict one-dispatch source correction being prepared before launch; HBM exp_x vL near-miss oneECO prep. SVC actual five reset DRC source class is horizontal BPin on vertical M5 with too-small cut for via, private factory orientation fix before new SMD/H4; fixed-PG-overlap hypothesis corrected. SVC40child compact area still insufficient for residual/halos, one isolated residual RTLIL sizing authorized with exact16/8/4 blackboxes before map. Gunit first-command actual-cone/reset witness passed; root authorizes one private geometry-only PLACE using explicitly unchanged4contract children, current66tool closure needed; HOLD_ROUTE/DO_NOT_COUNT, no qualification credit from provisional views. All nine leads continue all scopes.
