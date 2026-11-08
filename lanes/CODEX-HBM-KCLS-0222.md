@@ -50,3 +50,29 @@ Timestamp correction: intermediate progress headings used estimated local times 
 - New strict bind4/controller3667445 on E6 uses exact staged manifest and chains one NE_io dry4 through preflight on rc0. bind3 PASS evidence remains intact. No P&R.
 - Shared provisional class semantic fix has actual full q_hub_ne PASS rc0, all30 contractchildren resolved; E4 codex-hbm-reach-receipt-0222/provdir/q_hub_ne.log. NW sequential provisional dry healthy.
 - Shared tool branch hubbd4edf5333 includes exact semantic fixes plus one process-local module index: actual16,427modules indexed13.318s, cached lookup4us,13tests PASS. No live source changed.
+
+## Handoff to Claude 2026-11-08 04:25 PST — HBM KCLS/native/receipt child scope
+Stopped all new launches/probes on parent's explicit reset. Child cascade complete; healthy jobs retained; no manual deletions/merges/tags/POR changes.
+
+Sources:
+- Own branch codex/hbm-phy-0222: last verified canonical intel2 ref388b275e1a. Latest parked LOCAL commit377c90030b; canonical push already in progress in toolsession67016 at stop, deliberately not polled. Local tree /home/ubuntu/codex-hbm-phy-0222. Latest composition (rootPMA7a11 patch+nativeaec+recursive include staging) is parked code, NOT a tested full runtime release.
+- Verified canonical tool branches: codex/hbm-native-receipt-tool-0222 dc73be6fd9 (independent of unadopted reach plan); codex/hbm-prov-dir-0222 bd4edf5333; codex/hbm-ista-respread-0222 1ee657291e; codex/hbm-ne-input-delay-0222 aec3976daf (local-clock grouping, SOURCE-only). Real gearbox proof commit25fb70f119 is ancestor on native branch.
+
+Actual results:
+- E6 /srv/opentallas-scratch2/claude/codex-hbm-phy-0222: strict bind3/bind4 PASS0,90parts/81types/420crossings, all connectivity errors0. NE_io KITRTL/TOPO/PROV/GEN7/preflight7+8 PASS0; original six split-PHY hierarchy errors removed. Preflight8 correctly finds old Wchannel4.32<10.8. This is class/source preparation, no physical or sign-off credit.
+- Shared provisional-direction full dry PASS0 NE29/NW32 contract children, E4 codex-hbm-reach-receipt-0222/provdir. Receipt source pilot q_su11 PASS0, native4stations, unbound0. Source tests focused13 projection/14native plus7co-root; no broad reruns.
+- Actual EP gearbox transactions on I2 codex-hbm-ne-gbx-0222/attempt_1 PASS:199/1650 decoded comparisons at+4cycles,25/2IDLE beats; MARK/IDLE-only mutant caught42, IDLE-only caught1027, separateST2 cohort clean. No FEC/PMA/SRAM/physical phase claim.
+
+Private NE form, all on I2 /srv/opentallas-scratch2/claude/codex-hbm-phy-0222:
+- candidate_ne_vC/die_plan.json is private, source plan unchanged elsewhere. Widens slot648->677.376, private die east+29.376; spreads macros >=25.92um and mirrors EP MY (contractLEF permitsXY) to uncross512-bitTX/RX. Real port directions replace erroneous/duplicate core rows. TX/RX/ST+2cycles each,2052FFbits, TX+RX+3332ps@833. Typearea+0.12690432mm2; globaloutline what-if~+0.54467mm2. Images/review in ownbranch results/geom_review/codex_hbm_phy_0222.
+- asbuilt_ne_vC.json, candidate_bind_C/ strict PASS0 using cached JSON and read-only canonical sourcebase. Last native_kits/vC/rc.txt KITRTL_RC2: canonical selected ot_s81_kp4_enc_la.sv lacks neighbor headers. Latest LOCAL parked helper stages selected LA encoder plus recursive exact headers; not yet staged/run. Original failed files/logs kept.
+- Current I2 runtime src is older composition (no PMAoutput patch/common-rootfollowup); do not call it latest377. No NE live job, no NE P&R launched. Source-only fresh prep next with local parked composition + explicit io_outputs10names (root7a11); normal strict native context must match new manifest. Then root PMA clock/eye/pad contract before GEN/P&R. Also finish complete legacy bus-station overlay: some old bus sites are inside EP and were not qualified by the native3-link image.
+
+Other live/remaining:
+- q_mca child handback /home/ubuntu/coord/lanes/CODEX-HBM-REACH-HANDBACK-0415.md is authoritative. Live intel1 /srv/opentallas-scratch2/claude/codex-hbm-qmca-reset-0222/kit32 unit3039147-1794140502: PLACE-only, KEEP RUNNING; HOLD_CTS/HOLD_ROUTE/DO_NOT_COUNT. Prep duplicate driver definition failure unit3015071 diagnosed/fixed via filelist reference only, original retained. Candidate32latches+247keptdriver,17edge reset proof112400actualrelay comparisons and +/-160phase witnesses PASS/mutant caught. Last confirmed canonicalq_mca36a9c04bf9; child's final commit/push toolsession46145 already running atstop, unpolled.
+- q_mca has no START port; prior STARTpattern wording meant reset release/reassert pulse pattern only. Approved bindingMETHODOLOGY6.1 uses TTsetup0/FFhold25/833 (oldROLE60text stale); no private relaxation.
+- q_spb1 bounded lookup found original flat160 only, no measured die per-port table in checked receipts. HOLD_CTS until actual DIEproof/tap_arrivals_TT+FF or explicit OWNER fork. Root already logged OWNER?; no within-kitCTS substitute.
+- Inherited KITPARAM q_b110/pv1 original lints healthyCPU99.9 at last04:15collection, no endrc; q_su11pv1 full dry PASS. Keep running.
+- Inherited broad REACH base test hit original90min timeout rc124; tip still active at lastcollection. Oldcomparison is stale, validation INCOMPLETE notPASS. New receipt regression12rows fixeddc73; remaining dry failures mapped KITPARAM/rootrecursion/provisional classes. Old hub gen jobs remain CPU-active with fresh output, not killed/restarted.
+
+OWNER?/holds: root owns PMA clock/eye budget+forwarded tck post-clock-taps and data pad proposal (7a11 source tool ready, physicaldraft HOLD); root owns per-port-first predicate fork for q_spb1/q_mca. No new owner dialog and no budget invented.

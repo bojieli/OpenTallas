@@ -23,15 +23,15 @@
         "clock": "PASS",
         "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
       },
-      "plan": "/srv/opentallas-scratch2/claude/kw32/src_27db6/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+      "plan": "/srv/opentallas-scratch3/claude/codex-kv-phy-deadclock-0222/plan_r8fix/plan_c.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
-      "src_sha": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_e210k",
+      "src_sha": "e210d04c83f530a3141c7f799223bd2ff6f66711",
       "kit_rtl": {
         "mode": "bind",
-        "asbuilt": "/srv/opentallas-scratch2/claude/kw32/kvbind_27db6/asbuilt_kv_27db6.json",
+        "asbuilt": "/srv/opentallas-scratch3/claude/codex-kv-phy-deadclock-0222/plan_r8fix/asbuilt.json",
         "note": "KW-FIX-24 14:5x (DIE-KV-84 14:4x answer): KV bind_out -> kw23/bind_kv_q (plan_c 7da_ad + asbuilt_kv_7da, bind.py all --strict: errors 0, 160 partitions, 56 types, 2545 crossings; on epyc6 + copied to epyc5). Its verify/bound.ys step fails only because verify/lib_stubs.sv does not stub the bind-made core_splits leaves (qkd_kvs_pcc/pcf) = bind.py verify bug (class item, KW-FIX-24); verify advisory as for QC bind_qc_g (KW-FIX-22). Was kw11/bind_kv_o + kw11/asbuilt_kv_o.json. One batch of the 4 BIND_STALE rows. | KW-FIX-16 12:5x I126 tag flow-20261106-b-kv: src_k -> src_o main f649a3eb9a3 (KV PV taps, 15 types), asbuilt_kv_o base src_o, strict --all-gaps bind_kv_o errors 0, 2545 crossings (KW-FIX-15 bind 12:16 PST). | KW-FIX-15 11-05 11:3x: KV src_h -> src_k main 714dd1ea120 (tag flow-20261106-a-kv), asbuilt_kv_k base src_k, strict --all-gaps bind_kv_k errors 0, 2545 crossings (KW-FIX-13 09:48); plan_c + eW_sidecar byte-equal to src_h. | KW-FIX-11 06:5x I93 hgi taps: src_h main 517c80a6704, asbuilt base src_h, strict --all-gaps bind_kv_h errors 0, 2545 crossings; kv37 pad table copied from src_e (untracked there). | KW-FIX-8 17:1x I52: src_v 86bdf758742; asbuilt_v base src_v reads the tag eW_sidecar; strict bind_v; kv3_pv_v8 pilot one row. KW-FIX-8 I46: src_s main c512ffc3a94, plan_c 76de518 astk on bind_o (DIE-KV-70: kit-rtl rc 0 on it) | KW-FIX-8 10:0x I36 tag o-kv: asbuilt_s6 base src_n, strict --all-gaps bind_o errors 0, 2545 crossings; vs bind_e2 rtl differs only PC family, hub_Wi, top | KW-FIX-6 05:4x: KV event, bind_e2 strict 0 errors (DIE-KV-66 05:18), inputs copied intel1 -> epyc4 same paths; kit-rtl kv3_pv_v8 rc 0 on epyc4. | 16:58 KW-FIX-4 (DIE-KV-64 pvname 08f0c9828bf on main 4b09653bef8, ROOT-MERGE-27 I2): src kw-fix-4-kv88 -> 4b09653bef8, strict bind bind_pv2 (PROTECTED), asbuilt pvrec unchanged | KW-FIX-4 13:5x (DIE-KV-64 + COORD 12:40): main 88f2e7ecac1 (ROOT-MERGE-26 H15 incl claude/die-kv-64-pvbind-1103@62b62298941: 256 kv3_pv_pair native composites + plan_c pv_pair physical_inst + bind.py r8 composite alias) as wave src kw-fix-4-kv88; recipe pvrec/asbuilt.json + strict bind bind_pv (intel1, errors 0, 160 parts/2545 crossings/430554 bits/0 unbound). | DIE-KV-61 11-02 19:3x: fresh KV ELAB + strict bind at claude/die-kv-61-rtobs-1102@54c3c7c9f (= main 1770163a8 + KV reset obstacle_model pin; COORD APPROVED 19:2x): errors 0, 160 parts/56 types/2545 crossings/430554 bits, 0 unbound [CHECKED READY.json]. Recipe = CODEX1131 asbuilt rebased (0 unrebased paths). Prev: CODEX1131 fresh actual efa ELAB + strict bind0/errors0; copyback589MB/117-source closure to identical Intel1 root complete. Read-only own bind_out avoids any old cached-elab prep. Native SerDes specialization, recovered HR inputs and complete SRAM package present; old source/bind/jobs retained.",
-        "bind_out": "/srv/opentallas-scratch2/claude/kw32/kvbind_27db6/bind_kv_q"
+        "bind_out": "/srv/opentallas-scratch3/claude/codex-kv-phy-deadclock-0222/bind_r8fix"
       },
       "gen_args": [
         "--hold-ff-margin",
@@ -246,7 +246,8 @@
         "kv3_sys_SD_v1@9",
         "kv3_sys_SD@6",
         "kv3_sys_SD_v1@12",
-        "kv3_hub_Wo@13"
+        "kv3_hub_Wo@13",
+        "kv3_phy@6"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -293,16 +294,15 @@
       },
       "hold_items": {
         "kv3_hub_Wi": "DIE-KV-69 09:08: no retry, class A symptom, waits for 21 HR core views + view plan event",
-        "kv3_phy_v1": "KW-FIX-8 10:1x DIE-KV-69 09:17: follows the kv3_phy G2 read on phymid; release on that read",
         "kv3_hub_C": "CODEX typed AHUB+CTL closure proved and merged99bfe/faecd; actual single parent trial Intel1 scratch3 codex-kv-hubC-parent stopped before floorplan: reachable as-built qkd_pll_analog_model u_pll emits5 behavioral oscillator combinational loops (rtl_lint5errors). Both actualSIGNEDhardmacros retained; obsolete flat16GBOOM class resolved. KV peer+TOK own physicalPLL/nativeboot boundary fix; no sameform retry or invented PLL tieoff.",
         "kv3_sys_c": "CODEX freshfaecd a5 caught prephysical realized96rawflops/23branches vs currentplan101:5old6stage/base59 branches persist instead7/base58. KV owner owns fresh raw-branch emitter/boundwrapper23/101 closure. No route on stale96; preservea5evidence, source-realizationINFRA not designstrike. Reviewed geometry/phase event remains approved.",
-        "kv3_phy": "CODEX faecd fresha6 source-realization mismatch beforeP&R: plan3internal reset stations for i_host_hbm_rst_n, actualbound0/directface-to-macro. KV owner freshcanonicalbind must realize3 beforetrial. Newa6prephysicalworker stopped; retainolder/privatejobs and failureevidence, no designstrike.",
         "kv3_hg_v1": "CODEX parked old unstarted KW10 disk waiter; reviewed current-context recovery owned KV/wave; preserve all outputs/proofs. No design strike/no blind retry.",
         "qkd_hr_core_prompt": "KW-FIX-32 2026-11-07 22:10 PST: KV plan switch to main plan_c: core LEC open (DIE-KV-91); the plan switch is not its class fix",
         "kv3_io_cor": "KW-FIX-32 2026-11-07 22:10 PST: KV plan switch to main plan_c: congestion FAIL on the old block; the plan switch alone would relaunch it unchanged (no blind retry); KV-TYPES-3 releases with retry_fix",
         "kv3_io_cor_v1": "KW-FIX-32 2026-11-07 22:10 PST: KV plan switch to main plan_c: congestion FAIL on the old block; the plan switch alone would relaunch it unchanged (no blind retry); KV-TYPES-3 releases with retry_fix",
         "kv3_hg*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form",
-        "kv3_pv*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): PV family: class C4 START-in-macro fix still owed (KV-TYPES-4; codex/kv-start-obstacles-0222 NOT READY) and C1 ring-band plan event pending; no blind launch (replaces the stale KW-FIX-25 holds)"
+        "kv3_pv*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): PV family: class C4 START-in-macro fix still owed (KV-TYPES-4; codex/kv-start-obstacles-0222 NOT READY) and C1 ring-band plan event pending; no blind launch (replaces the stale KW-FIX-25 holds)",
+        "kv3_pc*": "KW-FIX-35-K 2026-11-08 06:38 PST: plan switch to plan_r8fix (phy R8 prune only) would re-pick the kv3_pc* rows with no class fix (dry run: 0 picks before, 10 after); keeps the pre-switch state. Lift when a pc class fix/plan event is posted"
       },
       "work_root": "/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave",
       "retry_fix": {
@@ -514,7 +514,9 @@
         "kv3_sys_SD_v1@9": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change",
         "kv3_sys_SD@6": "KW-FIX-32 2026-11-08 00:09 PST: class fix KV u_fdi_cdc SEL_CHUNK (KV-TYPES-3 dff767a167, strict equiv PROVEN) on main 27db658adf1 / dk-kv; bind of record re-based to src_27db6 (kvbind_27db6, strict 0 errors); COORD 22:4x relaunch",
         "kv3_sys_SD_v1@12": "KW-FIX-32 2026-11-08 00:09 PST: class fix KV u_fdi_cdc SEL_CHUNK (KV-TYPES-3 dff767a167, strict equiv PROVEN) on main 27db658adf1 / dk-kv; bind of record re-based to src_27db6 (kvbind_27db6, strict 0 errors); COORD 22:4x relaunch",
-        "kv3_hub_Wo@13": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): INFRA: KV-TYPES-4 04:51: a13 FAIL at geom_run = ot-run syntax error 11-07 15:46 (infra, misclassified RTL); same inputs"
+        "kv3_hub_Wo@13": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): INFRA: KV-TYPES-4 04:51: a13 FAIL at geom_run = ot-run syntax error 11-07 15:46 (infra, misclassified RTL); same inputs",
+        "kv3_phy@6": "KW-FIX-35-K 2026-11-08 06:38 PST: C3 PHY dead forwarded-clock R8 prune (KV-TYPES-4 READY 06:04, COORD 06:09): codex/kv-phy-deadclock-0222@e210d04c83 + plan_r8fix (md5 58a85eab) + bind_r8fix (strict bind 0 errors); fresh kit, kit RTL changes",
+        "kv3_phy_v1@3": "KW-FIX-35-K 2026-11-08 06:38 PST: C3 PHY dead forwarded-clock R8 prune (KV-TYPES-4 READY 06:04, COORD 06:09): codex/kv-phy-deadclock-0222@e210d04c83 + plan_r8fix (md5 58a85eab) + bind_r8fix (strict bind 0 errors); fresh kit, kit RTL changes"
       },
       "only_items": [
         "kv3_astk",
@@ -609,7 +611,7 @@
       ],
       "plan_items_from_allowlist": true,
       "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-      "queue_src": "main@d95ec5a45a60",
+      "queue_src": "codex/kv-phy-deadclock-0222@e210d04c83",
       "hold_items_released": {
         "kv3_pc": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
         "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -1045,7 +1047,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 2
       },
-      "flow_tag": "flow-20261108-do-kv",
+      "flow_tag": "flow-20261108-du-kv",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -1254,7 +1256,33 @@
       "note_kw35c": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): KV-TYPES-4 04:51 ask: dropped 28 stale KW-FIX-25 holds (lanes gone), +9 only_items names, hub_Wo@13. Revert *_prev_kw35c",
       "pilot_gate_prev_kw35d": null,
       "pilot_gate": false,
-      "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d"
+      "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d",
+      "src_prev_kw35q": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
+      "src_sha_prev_kw35q": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
+      "queue_src_prev_kw35q": "main@d95ec5a45a60",
+      "flow_tag_prev_kw35q": "flow-20261108-do-kv",
+      "note_kw35q": "KW-FIX-35-Q 2026-11-08 05:51 PST: src -> main 0b72abe93ac (hardlinks of kw33/src_d95ec + delta, sha256-checked on gen hosts); revert via *_prev_kw35q",
+      "src_prev_kw35k": "/srv/opentallas-scratch2/claude/kw35/src_0b72a",
+      "src_sha_prev_kw35k": "0b72abe93ac068bd6a4f6518c271439f9f557f70",
+      "queue_src_prev_kw35k": "main@0b72abe93ac0",
+      "plan_prev_kw35k": "/srv/opentallas-scratch2/claude/kw32/src_27db6/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+      "kit_rtl_prev_kw35k": {
+        "mode": "bind",
+        "asbuilt": "/srv/opentallas-scratch2/claude/kw32/kvbind_27db6/asbuilt_kv_27db6.json",
+        "note": "KW-FIX-24 14:5x (DIE-KV-84 14:4x answer): KV bind_out -> kw23/bind_kv_q (plan_c 7da_ad + asbuilt_kv_7da, bind.py all --strict: errors 0, 160 partitions, 56 types, 2545 crossings; on epyc6 + copied to epyc5). Its verify/bound.ys step fails only because verify/lib_stubs.sv does not stub the bind-made core_splits leaves (qkd_kvs_pcc/pcf) = bind.py verify bug (class item, KW-FIX-24); verify advisory as for QC bind_qc_g (KW-FIX-22). Was kw11/bind_kv_o + kw11/asbuilt_kv_o.json. One batch of the 4 BIND_STALE rows. | KW-FIX-16 12:5x I126 tag flow-20261106-b-kv: src_k -> src_o main f649a3eb9a3 (KV PV taps, 15 types), asbuilt_kv_o base src_o, strict --all-gaps bind_kv_o errors 0, 2545 crossings (KW-FIX-15 bind 12:16 PST). | KW-FIX-15 11-05 11:3x: KV src_h -> src_k main 714dd1ea120 (tag flow-20261106-a-kv), asbuilt_kv_k base src_k, strict --all-gaps bind_kv_k errors 0, 2545 crossings (KW-FIX-13 09:48); plan_c + eW_sidecar byte-equal to src_h. | KW-FIX-11 06:5x I93 hgi taps: src_h main 517c80a6704, asbuilt base src_h, strict --all-gaps bind_kv_h errors 0, 2545 crossings; kv37 pad table copied from src_e (untracked there). | KW-FIX-8 17:1x I52: src_v 86bdf758742; asbuilt_v base src_v reads the tag eW_sidecar; strict bind_v; kv3_pv_v8 pilot one row. KW-FIX-8 I46: src_s main c512ffc3a94, plan_c 76de518 astk on bind_o (DIE-KV-70: kit-rtl rc 0 on it) | KW-FIX-8 10:0x I36 tag o-kv: asbuilt_s6 base src_n, strict --all-gaps bind_o errors 0, 2545 crossings; vs bind_e2 rtl differs only PC family, hub_Wi, top | KW-FIX-6 05:4x: KV event, bind_e2 strict 0 errors (DIE-KV-66 05:18), inputs copied intel1 -> epyc4 same paths; kit-rtl kv3_pv_v8 rc 0 on epyc4. | 16:58 KW-FIX-4 (DIE-KV-64 pvname 08f0c9828bf on main 4b09653bef8, ROOT-MERGE-27 I2): src kw-fix-4-kv88 -> 4b09653bef8, strict bind bind_pv2 (PROTECTED), asbuilt pvrec unchanged | KW-FIX-4 13:5x (DIE-KV-64 + COORD 12:40): main 88f2e7ecac1 (ROOT-MERGE-26 H15 incl claude/die-kv-64-pvbind-1103@62b62298941: 256 kv3_pv_pair native composites + plan_c pv_pair physical_inst + bind.py r8 composite alias) as wave src kw-fix-4-kv88; recipe pvrec/asbuilt.json + strict bind bind_pv (intel1, errors 0, 160 parts/2545 crossings/430554 bits/0 unbound). | DIE-KV-61 11-02 19:3x: fresh KV ELAB + strict bind at claude/die-kv-61-rtobs-1102@54c3c7c9f (= main 1770163a8 + KV reset obstacle_model pin; COORD APPROVED 19:2x): errors 0, 160 parts/56 types/2545 crossings/430554 bits, 0 unbound [CHECKED READY.json]. Recipe = CODEX1131 asbuilt rebased (0 unrebased paths). Prev: CODEX1131 fresh actual efa ELAB + strict bind0/errors0; copyback589MB/117-source closure to identical Intel1 root complete. Read-only own bind_out avoids any old cached-elab prep. Native SerDes specialization, recovered HR inputs and complete SRAM package present; old source/bind/jobs retained.",
+        "bind_out": "/srv/opentallas-scratch2/claude/kw32/kvbind_27db6/bind_kv_q"
+      },
+      "hold_items_prev_kw35k_dropped": {
+        "kv3_phy": "CODEX faecd fresha6 source-realization mismatch beforeP&R: plan3internal reset stations for i_host_hbm_rst_n, actualbound0/directface-to-macro. KV owner freshcanonicalbind must realize3 beforetrial. Newa6prephysicalworker stopped; retainolder/privatejobs and failureevidence, no designstrike.",
+        "kv3_phy_v1": "KW-FIX-8 10:1x DIE-KV-69 09:17: follows the kv3_phy G2 read on phymid; release on that read"
+      },
+      "hold_items_kw35k_added": [
+        "kv3_pc*"
+      ],
+      "retry_prev_kw35k_added": [
+        "kv3_phy@6"
+      ],
+      "note_kw35k": "KW-FIX-35-K 2026-11-08 06:38 PST: KV src kw35/src_e210k = kw35/src_0b72a + e210d04c83 delta (12 files, 3-way clean, sha-checked epyc4/epyc5/epyc6/intel1/epyc2); plan/asbuilt/bind_out = codex-kv-phy-deadclock-0222 plan_r8fix/bind_r8fix (byte copies staged same path); holds kv3_phy/kv3_phy_v1 dropped; retry ['kv3_phy@6']. Revert *_prev_kw35k, pop hold_items_kw35k_added, restore hold_items_prev_kw35k_dropped, drop retry_prev_kw35k_added"
     },
     "s81": {
       "enabled": true,
@@ -1267,8 +1295,8 @@
       },
       "plan": "/srv/opentallas-scratch3/claude/kw34/wave_cg_frz_xrt/physical/die_plan/s81/plan_h2_2249.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_cf269",
-      "src_sha": "cf2697d7d0ba8b043a522b8ac17796054f685fb9",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_9d13c",
+      "src_sha": "9d13c8cce9df19dbd554ef09ea5d24a0fbfc9e87",
       "kit_rtl": {
         "mode": "script",
         "script": "/srv/opentallas-scratch3/claude/die-s81-70/kit_rtl_s81_ds70_kvov.sh",
@@ -2344,7 +2372,28 @@
         "dsdv_slice_c1x_C__t6@18",
         "dsdv_slice_c1x_C__t7@13",
         "slice_station__t24__cleece78ec@12",
-        "col_h10_r2__t1__cl99efd374@16"
+        "col_h10_r2__t1__cl99efd374@16",
+        "dsdv_slice_c1x_C__t1@17",
+        "dsdv_slice_c1x_C__t4@23",
+        "dsdv_slice_c1x_C__t8@18",
+        "dsdv_slice_c1x_C__t10@8",
+        "dsdv_slice_lepe_nh_mus_C__t1@10",
+        "dsdv_slice_lepw_mu_C__t1@11",
+        "ot_s81sl_leaf__t4@7",
+        "ot_s81sl_leaf__t50@9",
+        "slice_station__t22@11",
+        "dsdv_slice_iq_C__t1@8",
+        "dsdv_slice_kv512_C__t1@12",
+        "eng__t1@5",
+        "col_h10_r0_p1__t1__cl574cc59d@14",
+        "col_h9_r0_p4__t1__clcb2fbfe8@16",
+        "slice_station__t24__cleece78ec@13",
+        "slice_station__t29__clc7772371@13",
+        "dsdv_slice_c1x_C__t6@19",
+        "slice_station__t14@12",
+        "bk_sel__t2@33",
+        "dsdv_slice_c1x_C__t7@14",
+        "slice_station__t44@7"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -2454,9 +2503,18 @@
         "dsdv_slice_c3x_C__t1": "KW-FIX-35-S 2026-11-08 05:09 PST: XRT3 view fix run off-wave as a GRT resume (intel2 unit kw35-xrtR2-c3x-C--t1, epyc2 scratch3/claude/kw35/xrt); no fresh wave kit",
         "dsdv_slice_c1x_C__t5": "KW-FIX-35-S 2026-11-08 05:09 PST: XRT1 view fix run off-wave as a GRT resume (intel2 unit kw35-xrtR2-c1x-C--t5, epyc2 scratch3/claude/kw35/xrt); no fresh wave kit",
         "dsdv_slice_c1x_C__t9": "KW-FIX-35-S 2026-11-08 05:09 PST: XRT1 view fix run off-wave as a GRT resume (intel2 unit kw35-xrtR-c1x-C--t9, epyc5 scratch3/claude/kw35/xrt); no fresh wave kit",
-        "dsdv_slice_c1x_C__t3": "KW-FIX-35-S 2026-11-08 05:09 PST: CLASS F CTS DPL-0033: KW-FIX-35-F resumes it at CTS off-wave; no fresh wave kit"
+        "dsdv_slice_c1x_C__t3": "KW-FIX-35-S 2026-11-08 05:09 PST: CLASS F CTS DPL-0033: KW-FIX-35-F resumes it at CTS off-wave; no fresh wave kit",
+        "dsdv_slice_lepe_mu_LP__t2": "KW-FIX-35-S 2026-11-08 06:04 PST: REBIND_NEEDED (own clock.taps moved, KW-FIX-33 b5ec9b39080): wait for S81-TYPES-7-REBIND bind",
+        "dsdv_slice_lepe_nh_mus_LP__t1": "KW-FIX-35-S 2026-11-08 06:04 PST: REBIND_NEEDED (own clock.taps moved): wait for S81-TYPES-7-REBIND bind",
+        "dsdv_slice_lepw_mu_LP__t2": "KW-FIX-35-S 2026-11-08 06:04 PST: REBIND_NEEDED (own clock.taps moved): wait for S81-TYPES-7-REBIND bind",
+        "dsdv_slice_lepw_mus_LP__t2": "KW-FIX-35-S 2026-11-08 06:04 PST: REBIND_NEEDED (own clock.taps moved): wait for S81-TYPES-7-REBIND bind",
+        "slice_station__t45": "KW-FIX-35-S 2026-11-08 06:04 PST: ringtap re-bind overlay in progress (kw35/t45); ONE fresh t45 when the overlay bind dir is ready",
+        "ot_s81sl_kv_leaf__t1": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
+        "ot_s81sl_kv_leaf__t3": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
+        "ot_s81sl_kv_leaf__t4": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
+        "ot_s81sl_kv_leaf__t5": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit"
       },
-      "queue_src": "claude/kw-fix-35-s81src-1108@cf2697d7d0b",
+      "queue_src": "claude/kw-fix-35-s81src2-1108@9d13c8cce9d",
       "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave",
       "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
       "retry_fix": {
@@ -2675,7 +2733,7 @@
         "ot_s81sl_leaf__t58@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
         "ot_s81sl_leaf__t59@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
         "ot_s81sl_leaf__t66@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
-        "ot_s81sl_leaf__t67@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
+        "ot_s81sl_leaf__t67@5": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
         "ot_s81sl_leaf__t68@4": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
         "ot_s81sl_leaf__t70@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
         "ot_s81sl_leaf__t71@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
@@ -2926,7 +2984,7 @@
         "col_h10_r1__t1__cld01bb4ae@10": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
         "col_h10_r2__t1__cl1f5d6c2a@11": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
         "col_h10_r2__t1__cl8b686b3e@10": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
-        "col_h10_r2__t1__cl99efd374@17": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
+        "col_h10_r2__t1__cl99efd374@17": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a17 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:24 PST: S81-TYPES-7 CLASS A: reset-scope selected (7c731625b9); a16 launched 05:09 on the old config before the item_env landed (KW-FIX-35-S retry_seen reset race) and stopped at kit_topology, no CAD",
         "col_h10_r2__t1__clac068e56@8": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
         "col_h9_r0_p2__t1__cl0045af7b@11": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
         "col_h9_r0_p3__t1__cl0cd90c0e@21": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
@@ -3287,12 +3345,33 @@
         "slice_station__t44@6": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
         "bk_sel__t2@32": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
         "col_h10_r0_p1__t1__cl574cc59d@13": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
-        "col_h9_r0_p3__t1__cl0cd90c0e@15": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
+        "col_h9_r0_p3__t1__cl0cd90c0e@15": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
         "col_h9_r0_p4__t1__clcb2fbfe8@15": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
         "dsdv_slice_c1x_C__t6@18": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 CLASS H: fresh kit (old kit carried a stale FAIL_PREFLOOR); reset-scope selected so it does not stop at the CLASS A topology check",
         "dsdv_slice_c1x_C__t7@13": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 CLASS H: fresh kit (old kit carried a stale FAIL_PREFLOOR); reset-scope selected so it does not stop at the CLASS A topology check",
         "slice_station__t24__cleece78ec@12": "KW-FIX-35-S 2026-11-08 05:09 PST: REDESIGN: S81-TYPES-7 CLASS I: station DRV margin form (--slew-margin 50 --cap-margin 20); reset-scope selected",
-        "col_h10_r2__t1__cl99efd374@16": "KW-FIX-35-S 2026-11-08 05:24 PST: S81-TYPES-7 CLASS A: reset-scope selected (7c731625b9); a16 launched 05:09 on the old config before the item_env landed (KW-FIX-35-S retry_seen reset race) and stopped at kit_topology, no CAD"
+        "col_h10_r2__t1__cl99efd374@16": "KW-FIX-35-S 2026-11-08 05:24 PST: S81-TYPES-7 CLASS A: reset-scope selected (7c731625b9); a16 launched 05:09 on the old config before the item_env landed (KW-FIX-35-S retry_seen reset race) and stopped at kit_topology, no CAD",
+        "dsdv_slice_c1x_C__t1@17": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "dsdv_slice_c1x_C__t4@23": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "dsdv_slice_c1x_C__t8@18": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "dsdv_slice_c1x_C__t10@8": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "dsdv_slice_lepe_nh_mus_C__t1@10": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "dsdv_slice_lepw_mu_C__t1@11": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "ot_s81sl_leaf__t4@7": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "ot_s81sl_leaf__t50@9": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "slice_station__t22@11": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
+        "dsdv_slice_iq_C__t1@8": "KW-FIX-35-S 2026-11-08 06:04 PST: REDESIGN: S81-TYPES-7 CLASS J2 LEC fix claude/s81-types-7-lec-1108@36d3dddec54 (b28dc6669c0: xs_ctl data regs load every edge + S81 64-edge reset contract), on main 0b72abe93ac; fresh kit; the kit LEC is the proof, no waiver",
+        "dsdv_slice_kv512_C__t1@12": "KW-FIX-35-S 2026-11-08 06:04 PST: REDESIGN: S81-TYPES-7 CLASS J2 LEC fix claude/s81-types-7-lec-1108@36d3dddec54 (b28dc6669c0: xs_ctl data regs load every edge + S81 64-edge reset contract), on main 0b72abe93ac; fresh kit; the kit LEC is the proof, no waiver",
+        "eng__t1@5": "KW-FIX-35-S 2026-11-08 06:04 PST: KW-FIX-35-V views relaunch (relaunch_rows.tsv): kit_istations width fix on main 0b72abe93ac (tag ef-s81); fresh kit",
+        "col_h10_r0_p1__t1__cl574cc59d@14": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a14 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
+        "col_h9_r0_p4__t1__clcb2fbfe8@16": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a16 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
+        "slice_station__t24__cleece78ec@13": "REDESIGN: KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a13 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: REDESIGN: S81-TYPES-7 CLASS I: station DRV margin form (--slew-margin 50 --cap-margin 20); reset-scope selected",
+        "slice_station__t29__clc7772371@13": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a13 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
+        "dsdv_slice_c1x_C__t6@19": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a19 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 CLASS H: fresh kit (old kit carried a stale FAIL_PREFLOOR); reset-scope selected so it does not stop at the CLASS A topology check",
+        "slice_station__t14@12": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a12 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
+        "bk_sel__t2@33": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a33 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
+        "dsdv_slice_c1x_C__t7@14": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a14 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 CLASS H: fresh kit (old kit carried a stale FAIL_PREFLOOR); reset-scope selected so it does not stop at the CLASS A topology check",
+        "slice_station__t44@7": "KW-FIX-35-S 2026-11-08 06:12 PST: relaunch of a7 (05:51 cohort ran the pre-06:09 autopilot kit_wave.py without the OT_NATIVE_RESET_SCOPE prefix, so selected never reached kit_topology; no CAD ran). Was: KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -3386,234 +3465,301 @@
       "note_hosts_1104b": "KW-FIX-7 07:1x COORD 06:51 (6): epyc2 scratch 161 GB > 150, S81 PLACE steered to epyc2 first (admit-gated, falls back to epyc4); gen stays epyc4.",
       "item_env": {
         "ot_s81sl_leaf__t55": {
-          "OT_GRT_ALLOW_CONGESTION": "1"
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t26": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:639.36:648.0,u_lf.u_vsw:794.88:397.44"
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:639.36:648.0,u_lf.u_vsw:794.88:397.44",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t11": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:812.16:492.48,u_lf.u_vsw:1002.24:578.88"
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:812.16:492.48,u_lf.u_vsw:1002.24:578.88",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t44__clf4ea6d4b": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:691.2:561.6,u_lf.u_vsw:1054.08:388.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:691.2:561.6,u_lf.u_vsw:1054.08:388.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t25__cl55642d17": {
-          "OT_GRT_ALLOW_CONGESTION": "1"
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_kv_leaf__t2": {
-          "OT_SYNTH_ARGS": "-noshare"
+          "OT_SYNTH_ARGS": "-noshare",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t27": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t42": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t53__cl958451dd": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:336.96:190.08,u_lf.u_vs:941.76:457.92:R180,u_lf.u_vn.u_a:336.96:380.16,u_lf.u_vq:760.32:475.2,u_lf.u_vsw:915.84:639.36"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:336.96:190.08,u_lf.u_vs:941.76:457.92:R180,u_lf.u_vn.u_a:336.96:380.16,u_lf.u_vq:760.32:475.2,u_lf.u_vsw:915.84:639.36",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t53__clb66fa5cb": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:336.96:190.08,u_lf.u_vs:941.76:457.92:R180,u_lf.u_vn.u_a:336.96:380.16,u_lf.u_vq:760.32:475.2,u_lf.u_vsw:915.84:639.36"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:336.96:190.08,u_lf.u_vs:941.76:457.92:R180,u_lf.u_vn.u_a:336.96:380.16,u_lf.u_vq:760.32:475.2,u_lf.u_vsw:915.84:639.36",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t56": {
           "OT_GRT_ALLOW_CONGESTION": "1",
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:250.56:587.52,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:457.92:604.8,u_lf.u_vsw:190.08:233.28"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:250.56:587.52,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:457.92:604.8,u_lf.u_vsw:190.08:233.28",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "dsdv_slice_lepe_mu_C__t1": {
-          "OT_LEC_SLANG_UNROLL_LIMIT": "32912"
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "dsdv_slice_c1x_C__t6": {
           "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "dsdv_slice_lepw_mus_C__t1": {
-          "OT_LEC_SLANG_UNROLL_LIMIT": "32912"
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "dsdv_slice_c1x_C__t8": {
-          "OT_LEC_SLANG_UNROLL_LIMIT": "32912"
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "dsdv_slice_c1x_C__t7": {
           "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t1": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:596.16:872.64,u_lf.u_vs:172.8:639.36:R0,u_lf.u_vn.u_a:596.16:691.2,u_lf.u_vq:354.24:656.64,u_lf.u_vsw:60.48:406.08"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:596.16:872.64,u_lf.u_vs:172.8:639.36:R0,u_lf.u_vn.u_a:596.16:691.2,u_lf.u_vq:354.24:656.64,u_lf.u_vsw:60.48:406.08",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t14": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:596.16:172.8,u_lf.u_vs:172.8:406.08:MX,u_lf.u_vn.u_a:596.16:362.88,u_lf.u_vq:354.24:423.36,u_lf.u_vsw:112.32:673.92"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:596.16:172.8,u_lf.u_vs:172.8:406.08:MX,u_lf.u_vn.u_a:596.16:362.88,u_lf.u_vq:354.24:423.36,u_lf.u_vsw:112.32:673.92",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t16": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:388.8:924.48,u_lf.u_vs:1062.72:639.36,u_lf.u_vn.u_a:388.8:691.2,u_lf.u_vq:881.28:656.64,u_lf.u_vsw:1036.8:406.08"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:388.8:924.48,u_lf.u_vs:1062.72:639.36,u_lf.u_vn.u_a:388.8:691.2,u_lf.u_vq:881.28:656.64,u_lf.u_vsw:1036.8:406.08",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t17": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t21": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:146.88:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:328.32:596.16,u_lf.u_vsw:43.2:198.72"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:146.88:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:328.32:596.16,u_lf.u_vsw:43.2:198.72",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t29": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:959.04:613.44,u_lf.u_vn.u_b:397.44:190.08,u_lf.u_vs:984.96:432.0:R180,u_lf.u_vn.u_a:397.44:380.16,u_lf.u_vq:803.52:449.28"
+          "OT_MACRO_MOVES": "u_lf.u_vsw:959.04:613.44,u_lf.u_vn.u_b:397.44:190.08,u_lf.u_vs:984.96:432.0:R180,u_lf.u_vn.u_a:397.44:380.16,u_lf.u_vq:803.52:449.28",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t31": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:898.56,u_lf.u_vs:103.68:648.0,u_lf.u_vn.u_a:604.8:717.12,u_lf.u_vq:285.12:665.28,u_lf.u_vsw:77.76:414.72"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:898.56,u_lf.u_vs:103.68:648.0,u_lf.u_vn.u_a:604.8:717.12,u_lf.u_vq:285.12:665.28,u_lf.u_vsw:77.76:414.72",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t32": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:319.68:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28,u_lf.u_vsw:267.84:414.72"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:319.68:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28,u_lf.u_vsw:267.84:414.72",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t35": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t37": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:691.2:527.04,u_lf.u_vsw:1054.08:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:691.2:527.04,u_lf.u_vsw:1054.08:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t38": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:181.44:371.52"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:181.44:371.52",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t39": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:224.64,u_lf.u_vs:155.52:440.64,u_lf.u_vn.u_a:613.44:414.72,u_lf.u_vq:570.24:587.52,u_lf.u_vsw:336.96:414.72"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:224.64,u_lf.u_vs:155.52:440.64,u_lf.u_vn.u_a:613.44:414.72,u_lf.u_vq:570.24:587.52,u_lf.u_vsw:336.96:414.72",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t4": {
           "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:1054.08:414.72,u_lf.u_vsw:1010.88:656.64",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t40__cl86ea32b3": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t40__clf8bbdae1": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t41": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:388.8:924.48,u_lf.u_vs:1062.72:639.36,u_lf.u_vn.u_a:388.8:691.2,u_lf.u_vq:881.28:656.64,u_lf.u_vsw:1036.8:406.08"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:388.8:924.48,u_lf.u_vs:1062.72:639.36,u_lf.u_vn.u_a:388.8:691.2,u_lf.u_vq:881.28:656.64,u_lf.u_vsw:1036.8:406.08",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t46": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:708.48"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:708.48",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t5": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:414.72,u_lf.u_vn.u_a:336.96:596.16,u_lf.u_vq:639.36:432.0,u_lf.u_vsw:794.88:596.16"
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:414.72,u_lf.u_vn.u_a:336.96:596.16,u_lf.u_vq:639.36:432.0,u_lf.u_vsw:794.88:596.16",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t50": {
           "OT_MACRO_MOVES": "u_lf.u_vs:838.08:622.08,u_lf.u_vn.u_a:354.24:457.92,u_lf.u_vq:656.64:639.36,u_lf.u_vsw:812.16:388.8",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t51": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:691.2:527.04,u_lf.u_vsw:1054.08:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:691.2:527.04,u_lf.u_vsw:1054.08:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t54__cl501e5681": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t54__cl706d9749": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t57": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:622.08"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:622.08",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t6": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:639.36:648.0,u_lf.u_vsw:794.88:397.44"
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:639.36:648.0,u_lf.u_vsw:794.88:397.44",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t65": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:60.48:544.32,u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:302.4:578.88,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:483.84:596.16"
+          "OT_MACRO_MOVES": "u_lf.u_vsw:60.48:544.32,u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:302.4:578.88,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:483.84:596.16",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t67": {
           "OT_MACRO_MOVES": "u_lf.u_vn.u_b:691.2:250.56,u_lf.u_vs:224.64:414.72,u_lf.u_vn.u_a:691.2:440.64,u_lf.u_vq:561.6:112.32,u_lf.u_vsw:406.08:397.44",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t69": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t70": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:829.44:397.44,u_lf.u_vn.u_b:345.6:1010.88,u_lf.u_vs:855.36:630.72,u_lf.u_vn.u_a:371.52:466.56,u_lf.u_vq:673.92:648.0"
+          "OT_MACRO_MOVES": "u_lf.u_vsw:829.44:397.44,u_lf.u_vn.u_b:345.6:1010.88,u_lf.u_vs:855.36:630.72,u_lf.u_vn.u_a:371.52:466.56,u_lf.u_vq:673.92:648.0",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t72": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t8": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t24__cl2456157b": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:423.36:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:77.76:440.64,u_lf.u_vsw:483.84:682.56"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:423.36:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:77.76:440.64,u_lf.u_vsw:483.84:682.56",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t36": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:820.8:492.48,u_lf.u_vsw:1002.24:544.32"
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:820.8:492.48,u_lf.u_vsw:1002.24:544.32",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t7": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:1054.08:691.2,u_lf.u_vsw:1054.08:457.92"
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:1054.08:691.2,u_lf.u_vsw:1054.08:457.92",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t15": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t13": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:587.52:881.28,u_lf.u_vs:86.4:648.0,u_lf.u_vn.u_a:587.52:699.84,u_lf.u_vq:406.08:838.08,u_lf.u_vsw:267.84:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:587.52:881.28,u_lf.u_vs:86.4:648.0,u_lf.u_vn.u_a:587.52:699.84,u_lf.u_vq:406.08:838.08,u_lf.u_vsw:267.84:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t59": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t61": {
-          "OT_MACRO_MOVES": "u_lf.u_ve.u_m:630.72:794.88,u_lf.u_vsw:120.96:544.32,u_lf.u_vs:587.52:604.8:R0,u_lf.u_vn.u_b:743.04:423.36,u_lf.u_vn.u_a:717.12:86.4,u_lf.u_vq:406.08:648.0"
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_m:630.72:794.88,u_lf.u_vsw:120.96:544.32,u_lf.u_vs:587.52:604.8:R0,u_lf.u_vn.u_b:743.04:423.36,u_lf.u_vn.u_a:717.12:86.4,u_lf.u_vq:406.08:648.0",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t10": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:622.08:164.16,u_lf.u_vs:103.68:423.36,u_lf.u_vn.u_a:613.44:354.24,u_lf.u_vq:285.12:440.64,u_lf.u_vsw:77.76:708.48"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:622.08:164.16,u_lf.u_vs:103.68:423.36,u_lf.u_vn.u_a:613.44:354.24,u_lf.u_vq:285.12:440.64,u_lf.u_vsw:77.76:708.48",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t34": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:570.24:155.52,u_lf.u_vs:77.76:440.64,u_lf.u_vn.u_a:570.24:354.24,u_lf.u_vq:492.48:527.04,u_lf.u_vsw:259.2:423.36"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:570.24:155.52,u_lf.u_vs:77.76:440.64,u_lf.u_vn.u_a:570.24:354.24,u_lf.u_vq:492.48:527.04,u_lf.u_vsw:259.2:423.36",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t24__cl81374cd8": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:414.72:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:440.64:535.68,u_lf.u_ve.u_s:112.32:60.48,u_lf.u_vsw:25.92:432.0"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:414.72:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:440.64:535.68,u_lf.u_ve.u_s:112.32:60.48,u_lf.u_vsw:25.92:432.0",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t43": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:69.12,u_lf.u_vs:207.36:423.36:MX,u_lf.u_vn.u_a:622.08:259.2,u_lf.u_vq:432.0:276.48,u_lf.u_vsw:388.8:414.72"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:69.12,u_lf.u_vs:207.36:423.36:MX,u_lf.u_vn.u_a:622.08:259.2,u_lf.u_vq:432.0:276.48,u_lf.u_vsw:388.8:414.72",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t71": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t23": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:691.2:250.56,u_lf.u_vs:224.64:414.72,u_lf.u_vn.u_a:691.2:440.64,u_lf.u_vq:561.6:112.32,u_lf.u_vsw:406.08:397.44"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:691.2:250.56,u_lf.u_vs:224.64:414.72,u_lf.u_vn.u_a:691.2:440.64,u_lf.u_vq:561.6:112.32,u_lf.u_vsw:406.08:397.44",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t3": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:717.12:172.8,u_lf.u_vs:198.72:466.56,u_lf.u_vn.u_a:699.84:362.88,u_lf.u_vq:17.28:457.92,u_lf.u_vsw:380.16:432.0"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:717.12:172.8,u_lf.u_vs:198.72:466.56,u_lf.u_vn.u_a:699.84:362.88,u_lf.u_vq:17.28:457.92,u_lf.u_vsw:380.16:432.0",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t25__cl431c660f": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t30": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t12": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:708.48:604.8,u_lf.u_vn.u_b:362.88:846.72,u_lf.u_vs:941.76:648.0:MY,u_lf.u_vn.u_a:336.96:665.28,u_lf.u_vq:1123.2:665.28"
+          "OT_MACRO_MOVES": "u_lf.u_vsw:708.48:604.8,u_lf.u_vn.u_b:362.88:846.72,u_lf.u_vs:941.76:648.0:MY,u_lf.u_vn.u_a:336.96:665.28,u_lf.u_vq:1123.2:665.28",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t33": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:69.12,u_lf.u_vs:449.28:397.44,u_lf.u_vn.u_a:751.68:587.52,u_lf.u_vq:630.72:414.72,u_lf.u_vsw:423.36:656.64"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:69.12,u_lf.u_vs:449.28:397.44,u_lf.u_vn.u_a:751.68:587.52,u_lf.u_vq:630.72:414.72,u_lf.u_vsw:423.36:656.64",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t2": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:120.96:604.8,u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:354.24:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28"
+          "OT_MACRO_MOVES": "u_lf.u_vsw:120.96:604.8,u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:354.24:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t74": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:622.08:164.16,u_lf.u_vs:103.68:423.36,u_lf.u_vn.u_a:613.44:354.24,u_lf.u_vq:285.12:440.64,u_lf.u_vsw:77.76:708.48"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:622.08:164.16,u_lf.u_vs:103.68:423.36,u_lf.u_vn.u_a:613.44:354.24,u_lf.u_vq:285.12:440.64,u_lf.u_vsw:77.76:708.48",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "col_h9_r0_p1__t1": {
-          "OT_MACRO_MOVES": "u_r0.u_e1:596.16:216.0,u_r0.u_e3:596.16:604.8,u_r0.u_cf:1149.12:604.8,u_r0.u_t0:1157.76:250.56"
+          "OT_MACRO_MOVES": "u_r0.u_e1:596.16:216.0,u_r0.u_e3:596.16:604.8,u_r0.u_cf:1149.12:604.8,u_r0.u_t0:1157.76:250.56",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t9": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:207.36,u_lf.u_vs:311.04:432.0,u_lf.u_vn.u_a:751.68:397.44,u_lf.u_vq:570.24:449.28,u_lf.u_vsw:77.76:414.72"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:207.36,u_lf.u_vs:311.04:432.0,u_lf.u_vn.u_a:751.68:397.44,u_lf.u_vq:570.24:449.28,u_lf.u_vsw:77.76:414.72",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t22": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:120.96:604.8,u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:354.24:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28"
+          "OT_MACRO_MOVES": "u_lf.u_vsw:120.96:604.8,u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:354.24:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t44__clf6cf8492": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:691.2:561.6,u_lf.u_vsw:1054.08:388.8"
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:691.2:561.6,u_lf.u_vsw:1054.08:388.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t60": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:129.6:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:129.6:440.64,u_lf.u_vsw:466.56:319.68"
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:129.6:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:129.6:440.64,u_lf.u_vsw:466.56:319.68",
+          "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "slice_station__t14": {
           "OT_NATIVE_RESET_SCOPE": "selected"
@@ -3640,6 +3786,378 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "slice_station__t24__cleece78ec": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r0_p1__t1__cl911743eb": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r0_p4__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r1__t1__cl95b37463": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r1__t1__cld01bb4ae": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r2__t1__cl1f5d6c2a": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r2__t1__cl8b686b3e": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r2__t1__clac068e56": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p2__t1__cl0045af7b": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p2__t1__cl9f71e63d": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p3__t1__cl31d0dc4b": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p3__t1__cl8ce97bcb": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p4__t1__cl8ef405e8": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p5__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p6__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r1__t1__cl49d7a23e": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r1__t1__clf32cde8d": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r2__t1__cl774acf45": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r2__t1__cl87f3ff59": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r2__t1__clb8d86cd5": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r2__t1__clc9ad8f7e": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r2__t1__clce45cab5": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_c1x_C__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_c1x_C__t10": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_c1x_C__t3": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_c1x_C__t4": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_c1x_C__t5": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_c1x_C__t9": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_c3x_C__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_iq_C__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_kv512_C__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_lepe_mu_LP__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_lepe_nh_mus_C__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_lepe_nh_mus_LP__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_lepw_mu_C__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_lepw_mu_LP__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_lepw_mus_LP__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "eng__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "gunit__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "iqf__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_kv_leaf__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_kv_leaf__t3": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_kv_leaf__t4": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_kv_leaf__t5": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t28": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t45": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t47": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t52": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t58": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t62": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t66": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t68": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t73": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t75": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "phy__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "seqhost__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t12": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t13": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t14": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t15__cla2127225": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t15__cla3d02796": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t16": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t1__clb45db5be": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t1__clfe1f0815": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t3": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "serdes__t4": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t12": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t17": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t18": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t20": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t21": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t22": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t23": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t24__cl64811a5d": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t24__cl66b71008": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t25": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t26": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t27": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t28": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t29__cl2e5c855a": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t30__cl1653104c": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t30__cl6a190133": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t30__clcedefe91": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t31": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t36": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t37": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t38": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t40__cl1ea9de02": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t40__clc8fb2c8c": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t41": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t42__cl4bd1432c": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t42__clcf44e680": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t43": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t45": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t46": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t47": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t48": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t49": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t50__cl39451317": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t50__cld84c9e24": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t51": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t52": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t6__cl0755c26e": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t6__cl54a9ceeb": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t7__cl362204c4": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t7__cl503f4913": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t7__cl945bc067": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t8": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_pvso_entry__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_pvso_entry__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_rs__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_rs__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_rs__t3": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_rs__t4": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_rs__t5": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_hi_dsdv_svc_rs__t6": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs__t1": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs__t3": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs__t4": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs__t5": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs__t6": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs__t7": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "svc_lo_dsdv_svc_rs_w__t1": {
           "OT_NATIVE_RESET_SCOPE": "selected"
         }
       },
@@ -3928,7 +4446,7 @@
         "queue_src": "claude/kw-fix-29-s81-leaf-src-1107@abaf08160896",
         "die_max_inflight": 67
       },
-      "flow_tag": "flow-20261108-ee-s81",
+      "flow_tag": "flow-20261108-ef-s81",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "src_prev_kw32": "/srv/opentallas-scratch2/claude/kw31/src_66d55",
       "src_sha_prev_kw32": "66d55c026ade2245a494c3eeeea0e5ec0ab8ae0b",
@@ -4297,6 +4815,324 @@
       "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 05:20 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/s81.json on intel2, plan ba6292b0c502) FIRST in prov_view_sources for 1 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v",
       "retry_prev_kw35s2_added": [
         "col_h10_r2__t1__cl99efd374@16"
+      ],
+      "note_kw35s3": "KW-FIX-35-S 05:4x: hold class A/H/I rows until S81 src = main 0b72abe93ac + rspacket f51e05a4f9e (+reset-scope) is built (cf269 lacks packet builder); revert = remove hold_items_kw35s3_added",
+      "src_prev_kw35s4": "/srv/opentallas-scratch2/claude/kw35/src_cf269",
+      "src_sha_prev_kw35s4": "cf2697d7d0ba8b043a522b8ac17796054f685fb9",
+      "queue_src_prev_kw35s4": "claude/kw-fix-35-s81src-1108@cf2697d7d0b",
+      "flow_tag_prev_kw35s4": "flow-20261108-ee-s81",
+      "note_src_kw35s4": "KW-FIX-35-S 2026-11-08 06:04 PST (OWNER 04:46, COORD 05:4x): S81 src kw35/src_9d13c = main 0b72abe93ac (tag ef-s81: ringtap, ctsdpl, LEC J1/J2 36d3dddec54, views, gunit form-1/2) + codex/s81-reset-scope-0222@7c731625b9 + claude/s81-types-7-rspacket-1108@f51e05a4f9e; origin claude/kw-fix-35-s81src2-1108@9d13c8cce9d (source identity only); kw34/src_28914 hardlinks + 49 files - 1 deleted, sha256-checked intel1/epyc4/epyc5. Revert *_prev_kw35s4",
+      "item_env_prev_kw35s4": {
+        "ot_s81sl_leaf__t55": {
+          "OT_GRT_ALLOW_CONGESTION": "1"
+        },
+        "ot_s81sl_leaf__t26": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:639.36:648.0,u_lf.u_vsw:794.88:397.44"
+        },
+        "ot_s81sl_leaf__t11": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:812.16:492.48,u_lf.u_vsw:1002.24:578.88"
+        },
+        "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t44__clf4ea6d4b": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:691.2:561.6,u_lf.u_vsw:1054.08:388.8"
+        },
+        "ot_s81sl_leaf__t25__cl55642d17": {
+          "OT_GRT_ALLOW_CONGESTION": "1"
+        },
+        "ot_s81sl_kv_leaf__t2": {
+          "OT_SYNTH_ARGS": "-noshare"
+        },
+        "ot_s81sl_leaf__t27": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08"
+        },
+        "ot_s81sl_leaf__t42": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52"
+        },
+        "ot_s81sl_leaf__t53__cl958451dd": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:336.96:190.08,u_lf.u_vs:941.76:457.92:R180,u_lf.u_vn.u_a:336.96:380.16,u_lf.u_vq:760.32:475.2,u_lf.u_vsw:915.84:639.36"
+        },
+        "ot_s81sl_leaf__t53__clb66fa5cb": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:336.96:190.08,u_lf.u_vs:941.76:457.92:R180,u_lf.u_vn.u_a:336.96:380.16,u_lf.u_vq:760.32:475.2,u_lf.u_vsw:915.84:639.36"
+        },
+        "ot_s81sl_leaf__t56": {
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:250.56:587.52,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:457.92:604.8,u_lf.u_vsw:190.08:233.28"
+        },
+        "dsdv_slice_lepe_mu_C__t1": {
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912"
+        },
+        "dsdv_slice_c1x_C__t6": {
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_lepw_mus_C__t1": {
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912"
+        },
+        "dsdv_slice_c1x_C__t8": {
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912"
+        },
+        "dsdv_slice_c1x_C__t7": {
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t1": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:596.16:872.64,u_lf.u_vs:172.8:639.36:R0,u_lf.u_vn.u_a:596.16:691.2,u_lf.u_vq:354.24:656.64,u_lf.u_vsw:60.48:406.08"
+        },
+        "ot_s81sl_leaf__t14": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:596.16:172.8,u_lf.u_vs:172.8:406.08:MX,u_lf.u_vn.u_a:596.16:362.88,u_lf.u_vq:354.24:423.36,u_lf.u_vsw:112.32:673.92"
+        },
+        "ot_s81sl_leaf__t16": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:388.8:924.48,u_lf.u_vs:1062.72:639.36,u_lf.u_vn.u_a:388.8:691.2,u_lf.u_vq:881.28:656.64,u_lf.u_vsw:1036.8:406.08"
+        },
+        "ot_s81sl_leaf__t17": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52"
+        },
+        "ot_s81sl_leaf__t21": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:146.88:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:328.32:596.16,u_lf.u_vsw:43.2:198.72"
+        },
+        "ot_s81sl_leaf__t29": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:959.04:613.44,u_lf.u_vn.u_b:397.44:190.08,u_lf.u_vs:984.96:432.0:R180,u_lf.u_vn.u_a:397.44:380.16,u_lf.u_vq:803.52:449.28"
+        },
+        "ot_s81sl_leaf__t31": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:898.56,u_lf.u_vs:103.68:648.0,u_lf.u_vn.u_a:604.8:717.12,u_lf.u_vq:285.12:665.28,u_lf.u_vsw:77.76:414.72"
+        },
+        "ot_s81sl_leaf__t32": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:319.68:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28,u_lf.u_vsw:267.84:414.72"
+        },
+        "ot_s81sl_leaf__t35": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t37": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:691.2:527.04,u_lf.u_vsw:1054.08:604.8"
+        },
+        "ot_s81sl_leaf__t38": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:181.44:371.52"
+        },
+        "ot_s81sl_leaf__t39": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:224.64,u_lf.u_vs:155.52:440.64,u_lf.u_vn.u_a:613.44:414.72,u_lf.u_vq:570.24:587.52,u_lf.u_vsw:336.96:414.72"
+        },
+        "ot_s81sl_leaf__t4": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:1054.08:414.72,u_lf.u_vsw:1010.88:656.64",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t40__cl86ea32b3": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t40__clf8bbdae1": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t41": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:388.8:924.48,u_lf.u_vs:1062.72:639.36,u_lf.u_vn.u_a:388.8:691.2,u_lf.u_vq:881.28:656.64,u_lf.u_vsw:1036.8:406.08"
+        },
+        "ot_s81sl_leaf__t46": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:708.48"
+        },
+        "ot_s81sl_leaf__t5": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:414.72,u_lf.u_vn.u_a:336.96:596.16,u_lf.u_vq:639.36:432.0,u_lf.u_vsw:794.88:596.16"
+        },
+        "ot_s81sl_leaf__t50": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:622.08,u_lf.u_vn.u_a:354.24:457.92,u_lf.u_vq:656.64:639.36,u_lf.u_vsw:812.16:388.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t51": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:691.2:527.04,u_lf.u_vsw:1054.08:604.8"
+        },
+        "ot_s81sl_leaf__t54__cl501e5681": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t54__cl706d9749": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t57": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:622.08"
+        },
+        "ot_s81sl_leaf__t6": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:639.36:648.0,u_lf.u_vsw:794.88:397.44"
+        },
+        "ot_s81sl_leaf__t65": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:60.48:544.32,u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:302.4:578.88,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:483.84:596.16"
+        },
+        "ot_s81sl_leaf__t67": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:691.2:250.56,u_lf.u_vs:224.64:414.72,u_lf.u_vn.u_a:691.2:440.64,u_lf.u_vq:561.6:112.32,u_lf.u_vsw:406.08:397.44",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t69": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t70": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:829.44:397.44,u_lf.u_vn.u_b:345.6:1010.88,u_lf.u_vs:855.36:630.72,u_lf.u_vn.u_a:371.52:466.56,u_lf.u_vq:673.92:648.0"
+        },
+        "ot_s81sl_leaf__t72": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44"
+        },
+        "ot_s81sl_leaf__t8": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44"
+        },
+        "ot_s81sl_leaf__t24__cl2456157b": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:423.36:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:77.76:440.64,u_lf.u_vsw:483.84:682.56"
+        },
+        "ot_s81sl_leaf__t36": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:820.8:492.48,u_lf.u_vsw:1002.24:544.32"
+        },
+        "ot_s81sl_leaf__t7": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:648.0:MY,u_lf.u_vn.u_a:466.56:665.28,u_lf.u_vq:1054.08:691.2,u_lf.u_vsw:1054.08:457.92"
+        },
+        "ot_s81sl_leaf__t15": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t13": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:587.52:881.28,u_lf.u_vs:86.4:648.0,u_lf.u_vn.u_a:587.52:699.84,u_lf.u_vq:406.08:838.08,u_lf.u_vsw:267.84:604.8"
+        },
+        "ot_s81sl_leaf__t59": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t61": {
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_m:630.72:794.88,u_lf.u_vsw:120.96:544.32,u_lf.u_vs:587.52:604.8:R0,u_lf.u_vn.u_b:743.04:423.36,u_lf.u_vn.u_a:717.12:86.4,u_lf.u_vq:406.08:648.0"
+        },
+        "ot_s81sl_leaf__t10": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:622.08:164.16,u_lf.u_vs:103.68:423.36,u_lf.u_vn.u_a:613.44:354.24,u_lf.u_vq:285.12:440.64,u_lf.u_vsw:77.76:708.48"
+        },
+        "ot_s81sl_leaf__t34": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:570.24:155.52,u_lf.u_vs:77.76:440.64,u_lf.u_vn.u_a:570.24:354.24,u_lf.u_vq:492.48:527.04,u_lf.u_vsw:259.2:423.36"
+        },
+        "ot_s81sl_leaf__t24__cl81374cd8": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:414.72:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:440.64:535.68,u_lf.u_ve.u_s:112.32:60.48,u_lf.u_vsw:25.92:432.0"
+        },
+        "ot_s81sl_leaf__t43": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:69.12,u_lf.u_vs:207.36:423.36:MX,u_lf.u_vn.u_a:622.08:259.2,u_lf.u_vq:432.0:276.48,u_lf.u_vsw:388.8:414.72"
+        },
+        "ot_s81sl_leaf__t71": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08"
+        },
+        "ot_s81sl_leaf__t23": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:691.2:250.56,u_lf.u_vs:224.64:414.72,u_lf.u_vn.u_a:691.2:440.64,u_lf.u_vq:561.6:112.32,u_lf.u_vsw:406.08:397.44"
+        },
+        "ot_s81sl_leaf__t3": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:717.12:172.8,u_lf.u_vs:198.72:466.56,u_lf.u_vn.u_a:699.84:362.88,u_lf.u_vq:17.28:457.92,u_lf.u_vsw:380.16:432.0"
+        },
+        "ot_s81sl_leaf__t25__cl431c660f": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t30": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8"
+        },
+        "ot_s81sl_leaf__t12": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:708.48:604.8,u_lf.u_vn.u_b:362.88:846.72,u_lf.u_vs:941.76:648.0:MY,u_lf.u_vn.u_a:336.96:665.28,u_lf.u_vq:1123.2:665.28"
+        },
+        "ot_s81sl_leaf__t33": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:69.12,u_lf.u_vs:449.28:397.44,u_lf.u_vn.u_a:751.68:587.52,u_lf.u_vq:630.72:414.72,u_lf.u_vsw:423.36:656.64"
+        },
+        "ot_s81sl_leaf__t2": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:120.96:604.8,u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:354.24:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28"
+        },
+        "ot_s81sl_leaf__t74": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:622.08:164.16,u_lf.u_vs:103.68:423.36,u_lf.u_vn.u_a:613.44:354.24,u_lf.u_vq:285.12:440.64,u_lf.u_vsw:77.76:708.48"
+        },
+        "col_h9_r0_p1__t1": {
+          "OT_MACRO_MOVES": "u_r0.u_e1:596.16:216.0,u_r0.u_e3:596.16:604.8,u_r0.u_cf:1149.12:604.8,u_r0.u_t0:1157.76:250.56"
+        },
+        "ot_s81sl_leaf__t9": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:207.36,u_lf.u_vs:311.04:432.0,u_lf.u_vn.u_a:751.68:397.44,u_lf.u_vq:570.24:449.28,u_lf.u_vsw:77.76:414.72"
+        },
+        "ot_s81sl_leaf__t22": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:120.96:604.8,u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:354.24:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28"
+        },
+        "ot_s81sl_leaf__t44__clf6cf8492": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:872.64:397.44:R180,u_lf.u_vn.u_a:466.56:388.8,u_lf.u_vq:691.2:561.6,u_lf.u_vsw:1054.08:388.8"
+        },
+        "ot_s81sl_leaf__t60": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:129.6:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:129.6:440.64,u_lf.u_vsw:466.56:319.68"
+        },
+        "slice_station__t14": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t29__clc7772371": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t44": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "bk_sel__t2": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r0_p1__t1__cl574cc59d": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h10_r2__t1__cl99efd374": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p3__t1__cl0cd90c0e": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "col_h9_r0_p4__t1__clcb2fbfe8": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "slice_station__t24__cleece78ec": {
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        }
+      },
+      "note_item_env_kw35s4": "KW-FIX-35-S 2026-11-08 06:04 PST (OWNER 04:46, COORD 05:4x): CLASS A die-wide: OT_NATIVE_RESET_SCOPE=selected on every S81 plan type/item (S81-TYPES-7 05:36/05:47: no-op where the bind matches; packet_classA_18 SELECTED_PASS). Revert = item_env_prev_kw35s4",
+      "hold_items_kw35s3_released": [
+        "slice_station__t14",
+        "slice_station__t29__clc7772371",
+        "slice_station__t44",
+        "bk_sel__t2",
+        "col_h10_r0_p1__t1__cl574cc59d",
+        "col_h10_r2__t1__cl99efd374",
+        "col_h9_r0_p3__t1__cl0cd90c0e",
+        "col_h9_r0_p4__t1__clcb2fbfe8",
+        "dsdv_slice_c1x_C__t6",
+        "dsdv_slice_c1x_C__t7",
+        "slice_station__t24__cleece78ec",
+        "ot_s81sl_leaf__t4",
+        "ot_s81sl_leaf__t50",
+        "ot_s81sl_leaf__t67"
+      ],
+      "hold_items_kw35s4_added": [
+        "dsdv_slice_lepe_mu_LP__t2",
+        "dsdv_slice_lepe_nh_mus_LP__t1",
+        "dsdv_slice_lepw_mu_LP__t2",
+        "dsdv_slice_lepw_mus_LP__t2",
+        "slice_station__t45",
+        "ot_s81sl_kv_leaf__t1",
+        "ot_s81sl_kv_leaf__t3",
+        "ot_s81sl_kv_leaf__t4",
+        "ot_s81sl_kv_leaf__t5"
+      ],
+      "retry_prev_kw35s4_added": [
+        "dsdv_slice_c1x_C__t1@17",
+        "dsdv_slice_c1x_C__t4@23",
+        "dsdv_slice_c1x_C__t8@18",
+        "dsdv_slice_c1x_C__t10@8",
+        "dsdv_slice_lepe_nh_mus_C__t1@10",
+        "dsdv_slice_lepw_mu_C__t1@11",
+        "ot_s81sl_leaf__t4@7",
+        "ot_s81sl_leaf__t50@9",
+        "slice_station__t22@11",
+        "dsdv_slice_iq_C__t1@8",
+        "dsdv_slice_kv512_C__t1@12",
+        "eng__t1@5"
+      ],
+      "retry_prev_kw35s5_added": [
+        "col_h10_r0_p1__t1__cl574cc59d@14",
+        "col_h9_r0_p4__t1__clcb2fbfe8@16",
+        "slice_station__t24__cleece78ec@13",
+        "slice_station__t29__clc7772371@13",
+        "dsdv_slice_c1x_C__t6@19",
+        "slice_station__t14@12",
+        "bk_sel__t2@33",
+        "dsdv_slice_c1x_C__t7@14",
+        "slice_station__t44@7"
       ]
     },
     "s81_head": {
@@ -4998,14 +5834,14 @@
         "clock": "PASS",
         "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
       },
-      "plan": "/srv/opentallas-scratch2/claude/kw33/src_d95ec/physical/die_plan/qwen_compute/plan_of_record/plan_qc53v4s.json",
+      "plan": "/srv/opentallas-scratch2/claude/kw35/qcplan_v4u/plan_qc53v4u.json",
       "gen_host": "epyc2",
-      "src": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
-      "src_sha": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_0b72a",
+      "src_sha": "0b72abe93ac068bd6a4f6518c271439f9f557f70",
       "kit_rtl": {
         "mode": "bind",
         "asbuilt": "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt.json",
-        "bind_out": "/srv/opentallas-scratch2/claude/qct7/bind_v4s",
+        "bind_out": "/srv/opentallas-scratch2/claude/qct9/bind_v4u",
         "note": "KW-FIX-22 11:2x BIND_STALE class: bind_out bind_qc_g = canonical native re-bind (bind.py all --strict, src_3761 tools) of the SAME context as bind_qc_f (plan_qc52 b398e285 + results/qc_ringfall_1105/bind/final_asbuilt.json in src_c926f): bind errors 0 unbound 0, 377 partitions, 1921 crossings, native_topology.json written; kit_topology.bind_matches True for the 6 rows (False on bind_qc_f, no receipt). verify step advisory FAIL (glue_unmatched 24710, 3633 clock_landing strap_k notes, lint 768; bind_qc_f never ran verify). Same bytes on epyc5+epyc6 (md5 tree d27ccd18). | KW-FIX-16 13:1x I136 tag flow-20261106-f-qc (ringff I125 + ringfall I136 + coll_core fold I124): src_r main 79e52bd98b2; asbuilt/sidecar results/qc_ringfall_1105 (DIE-QC-78 chain78, copied into src_r, untracked), bind_out bind_qc_f = copy of dq78/bind, strict FINAL errors 0, 1921 crossings, inputs plan_qc52 b398e285 = src_r plan bytes. | KW-FIX-10 04:2x COORD: SC event I67+I68 src_c main cbb7cfda19b tag s-qc, bind_out sc_ev/pub. | KW-FIX-8 23:1x I66 collector batch: src_b main cb98b2e2324 tag q-qc; bind_tip_i57 unchanged, kit-rtl trial rc 0 on the new plan, no QC RTL moved. | KW-FIX-8 19:1x COORD I57 class relaunch: src_w main 62777284106 tag flow-20261105-h-qc, bind_tip_i57 = byte copy of dq71/bind_tip (DIE-QC-71: bind_tip stays bind_out), same path on epyc4 and intel1. KW-FIX-8 17:0x COORD 16:4x: bind_out dq71/bind_tip (main 3277e531772, BIND_RC 0, copy on epyc2). KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46 tag w-qc: src_s main c512ffc3a94, plan efdb36e864, bind_qs = DIE-QC-70 q70/bind9 strict rc 0 (W1+straps; coll_ucie field after it) | KW-FIX-8 fall tag: QC on src_q main bf1e2233ce0, strict bind_qq rc 0 | KW-FIX-8 I38 tag p-qc: QC event 5bcec8dc59 on src_p, plan_qc52, strict bind_qp | KW-FIX-6 05:1x: src kw-fix-6-qcd. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | QC approved immutable combined d90 strict119types/377parts/1921crossings/790393bits0errors;201-file closed readset event1131_fixed. Matching pre-D13 RTL/recipe retained; Q4 untrusted hints included; no fresh ELAB or old freeze mutation.",
         "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
       },
@@ -5438,9 +6274,12 @@
         "coll_core@3",
         "sle_stm_v1__clbe630b9c@10",
         "slw_stm_v1__cle34a73c3@13",
-        "slw_stm_v2__cl1ca9c415@7"
+        "slw_stm_v2__cl1ca9c415@7",
+        "sle_fw_v3@30",
+        "sle_fe_v2@5",
+        "slw_su_c__cl19bb38ef@12"
       ],
-      "queue_src": "main@d95ec5a45a60",
+      "queue_src": "main@0b72abe93ac0",
       "type_args": {
         "sle_fw_v2__cl69f5e854": [
           "--gpl-plain",
@@ -5958,7 +6797,10 @@
         "coll_core@3": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): REDESIGN: QC-TYPES-9 04:51 (G): stale FAIL_PREFLOOR marker in the old kit; fresh kit on bind_v4s",
         "sle_stm_v1__clbe630b9c@10": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): INFRA: QC-TYPES-9 04:51 (D): sat in KW12_DISK_WAIT on intel1 since 01:28, never started; KW-FIX-35 stopped the 3 units; relaunch on bind_v4s",
         "slw_stm_v1__cle34a73c3@13": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): INFRA: QC-TYPES-9 04:51 (D): sat in KW12_DISK_WAIT on intel1 since 01:28, never started; KW-FIX-35 stopped the 3 units; relaunch on bind_v4s",
-        "slw_stm_v2__cl1ca9c415@7": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): INFRA: QC-TYPES-9 04:51 (D): sat in KW12_DISK_WAIT on intel1 since 01:28, never started; KW-FIX-35 stopped the 3 units; relaunch on bind_v4s"
+        "slw_stm_v2__cl1ca9c415@7": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): INFRA: QC-TYPES-9 04:51 (D): sat in KW12_DISK_WAIT on intel1 since 01:28, never started; KW-FIX-35 stopped the 3 units; relaunch on bind_v4s",
+        "sle_fw_v3@30": "KW-FIX-35 2026-11-08 05:55 PST: QC-TYPES-9 05:5x plan event qc53v4u: fresh kit on v4u (OT_CONS_KIT=1); a30 (v4s, pre-P&R) stopped by KW-FIX-35",
+        "sle_fe_v2@5": "KW-FIX-35 2026-11-08 05:55 PST: QC-TYPES-9 05:5x plan event qc53v4u: type changed in v4u; fresh kit",
+        "slw_su_c__cl19bb38ef@12": "KW-FIX-35 2026-11-08 05:55 PST: QC-TYPES-9 05:5x plan event qc53v4u: type changed in v4u; fresh kit"
       },
       "gen_hosts": [
         "intel1",
@@ -6277,7 +7119,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 13
       },
-      "flow_tag": "flow-20261108-dy-qc",
+      "flow_tag": "flow-20261108-ee-qc",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "src_prev_kw32": "/srv/opentallas-scratch2/claude/kw31/src_66d55",
       "src_sha_prev_kw32": "66d55c026ade2245a494c3eeeea0e5ec0ab8ae0b",
@@ -6395,11 +7237,21 @@
         "sle_cland_w2_e_200": [
           {
             "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/9db40b975f3e/sle_cland_w2_e_200",
+            "job": "COUNTED sle_cland_w2_e_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w2_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+          },
+          {
+            "host": "intel1",
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/69048e5fea89/sle_cland_w2_e_200",
             "job": "COUNTED sle_cland_w2_e_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w2_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
           }
         ],
         "sle_cland_w515_s_200": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/fb73ac0b6d33/sle_cland_w515_s_200",
+            "job": "COUNTED sle_cland_w515_s_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+          },
           {
             "host": "intel1",
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/9377bd802f28/sle_cland_w515_s_200",
@@ -6409,11 +7261,21 @@
         "sle_cland_w515_s_201": [
           {
             "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/505609d3b801/sle_cland_w515_s_201",
+            "job": "COUNTED sle_cland_w515_s_201 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_201/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+          },
+          {
+            "host": "intel1",
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/39decabc0b2b/sle_cland_w515_s_201",
             "job": "COUNTED sle_cland_w515_s_201 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_201/landing_evidence/signoff.json (KW-FIX-32 export_view)"
           }
         ],
         "sle_cland_w517_n_200": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/9663fb2f3b31/sle_cland_w517_n_200",
+            "job": "COUNTED sle_cland_w517_n_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w517_n_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+          },
           {
             "host": "intel1",
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/6b7a5ab76bb0/sle_cland_w517_n_200",
@@ -6423,11 +7285,21 @@
         "sle_cland_w765_e_200": [
           {
             "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/dd858356fcc5/sle_cland_w765_e_200",
+            "job": "COUNTED sle_cland_w765_e_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w765_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+          },
+          {
+            "host": "intel1",
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/ebb98a0436ff/sle_cland_w765_e_200",
             "job": "COUNTED sle_cland_w765_e_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w765_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
           }
         ],
         "sle_cland_w767_e_200": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/647595814994/sle_cland_w767_e_200",
+            "job": "COUNTED sle_cland_w767_e_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w767_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+          },
           {
             "host": "intel1",
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/bdfed4461495/sle_cland_w767_e_200",
@@ -6467,6 +7339,13 @@
             "host": "epyc6",
             "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w517_s_301",
             "job": "COUNTED sle_cland_w517_s_301 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w517_s_301/PROVENANCE.json (QC-TYPES-9)"
+          }
+        ],
+        "qfd_tile_nl_a0c": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/76768fafac07/qfd_tile_nl_a0c",
+            "job": "COUNTED qfd_tile_nl_a0c epyc2:/srv/opentallas-scratch3/claude/dq90_nl/resign_idleuck/signoff/signoff.json (KW-FIX-32 export_view)"
           }
         ]
       },
@@ -6683,7 +7562,194 @@
       "note_kw35c": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): QC-TYPES-9 04:51 (D)/(F)/(G) conservative + infra batch. Revert *_prev_kw35c",
       "pilot_gate_prev_kw35d": null,
       "pilot_gate": false,
-      "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d"
+      "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d",
+      "src_prev_kw35q": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
+      "src_sha_prev_kw35q": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
+      "queue_src_prev_kw35q": "main@d95ec5a45a60",
+      "flow_tag_prev_kw35q": "flow-20261108-dy-qc",
+      "plan_prev_kw35q": "/srv/opentallas-scratch2/claude/kw33/src_d95ec/physical/die_plan/qwen_compute/plan_of_record/plan_qc53v4s.json",
+      "note_kw35q": "KW-FIX-35-Q 2026-11-08 05:51 PST: src -> main 0b72abe93ac (hardlinks of kw33/src_d95ec + delta, sha256-checked on gen hosts); revert via *_prev_kw35q",
+      "plan_prev_kw35e": "/srv/opentallas-scratch2/claude/kw35/src_0b72a/physical/die_plan/qwen_compute/plan_of_record/plan_qc53v4s.json",
+      "kit_rtl_bind_out_prev_kw35e": "/srv/opentallas-scratch2/claude/qct7/bind_v4s",
+      "retry_prev_kw35e_added": [
+        "sle_fw_v3@30",
+        "sle_fe_v2@5",
+        "slw_su_c__cl19bb38ef@12"
+      ],
+      "note_kw35e": "KW-FIX-35 2026-11-08 05:55 PST: QC-TYPES-9 READY qc53v4u: plan_qc53v4u.json sha 9c8cefa48662 + bind_v4u (staged on all hosts, strict bind rc 0, 3 types change vs v4s); in-flight v4s rows keep running. Revert *_prev_kw35e",
+      "prov_view_sources_prev_kw35v": {
+        "ot_coll_fold_slice": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/cf09c9295d1e/ot_coll_fold_slice",
+            "job": "COUNTED ot_coll_fold_slice epyc2:/srv/opentallas-scratch3/claude/qc-fold-2/resign_vA/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qfd_dv_s5_red2_leaf": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/b190cecdba6d/qfd_dv_s5_red2_leaf",
+            "job": "COUNTED qfd_dv_s5_red2_leaf epyc2:/srv/opentallas-scratch3/claude/dq67-red/eco3/i1/resign_d_qc/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qfd_dv_s5_sc2_leaf_up0": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/0ad7629f6a8b/qfd_dv_s5_sc2_leaf_up0",
+            "job": "COUNTED qfd_dv_s5_sc2_leaf_up0 epyc4:/srv/opentallas-scratch2/claude/dq78/rs_up0/out/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qfd_dv_s8_crh_rp1": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/44dc4253eb6c/qfd_dv_s8_crh_rp1",
+            "job": "COUNTED qfd_dv_s8_crh_rp1 intel2:/srv/opentallas-scratch2/claude/wt/rm25/physical/die_plan/qwen_compute/ft_physical_1106/crh/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qfd_dv_s8x_vmr": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/d7a7b7e271e8/qfd_dv_s8x_vmr",
+            "job": "COUNTED qfd_dv_s8x_vmr epyc2:/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/vmrV1_declared_ft/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qfd_qc_su_lane_w_l0": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/898e4ceead77/qfd_qc_su_lane_w_l0",
+            "job": "COUNTED qfd_qc_su_lane_w_l0 epyc2:/srv/opentallas-scratch2/claude/dq68-sul-l0/e2/resign_s_qc/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qfd_qc_su_lane_w_l1": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/a3ea1e1c2f0d/qfd_qc_su_lane_w_l1",
+            "job": "COUNTED qfd_qc_su_lane_w_l1 epyc4:/srv/opentallas-scratch2/claude/dq66-sul-l1eco/e1/resign_s_qc/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qfd_qc_su_lane_w_l2": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/43f5fdcc00b6/qfd_qc_su_lane_w_l2",
+            "job": "COUNTED qfd_qc_su_lane_w_l2 intel1:/srv/opentallas-scratch2/claude/ss24/l2_s_qc/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qfd_qc_su_lane_w_l3": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/8b56407f82dc/qfd_qc_su_lane_w_l3",
+            "job": "COUNTED qfd_qc_su_lane_w_l3 intel1:/srv/opentallas-scratch2/claude/ss24/l3_s_qc/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qfd_qc_su_lane_w_l4": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/238b42f7fcf4/qfd_qc_su_lane_w_l4",
+            "job": "COUNTED qfd_qc_su_lane_w_l4 epyc2:/srv/opentallas-scratch2/claude/hbm-form-timing-11-qout/repo/physical/ref_tile/qc_sul1_split_1106/views/qfd_qc_su_lane_w_l4/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qfd_qc_su_lane_w_l5": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/7ccb0b58557b/qfd_qc_su_lane_w_l5",
+            "job": "COUNTED qfd_qc_su_lane_w_l5 epyc2:/srv/opentallas-scratch2/claude/hbm-form-timing-11-qout/repo/physical/ref_tile/qc_sul1_split_1106/views/qfd_qc_su_lane_w_l5/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qfd_qc_su_lane_w_l6": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/50bc1041ce07/qfd_qc_su_lane_w_l6",
+            "job": "COUNTED qfd_qc_su_lane_w_l6 epyc2:/srv/opentallas-scratch2/claude/hbm-form-timing-11-qout/repo/physical/ref_tile/qc_sul1_split_1106/views/qfd_qc_su_lane_w_l6/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qfd_qc_su_lane_w_l7": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/70b1ec6d56ea/qfd_qc_su_lane_w_l7",
+            "job": "COUNTED qfd_qc_su_lane_w_l7 intel1:/srv/opentallas-scratch2/claude/ss24/l7_s_qc/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "sle_cland_w2_e_200": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/69048e5fea89/sle_cland_w2_e_200",
+            "job": "COUNTED sle_cland_w2_e_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w2_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "sle_cland_w515_s_200": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/9377bd802f28/sle_cland_w515_s_200",
+            "job": "COUNTED sle_cland_w515_s_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "sle_cland_w515_s_201": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/39decabc0b2b/sle_cland_w515_s_201",
+            "job": "COUNTED sle_cland_w515_s_201 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_201/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "sle_cland_w517_n_200": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/6b7a5ab76bb0/sle_cland_w517_n_200",
+            "job": "COUNTED sle_cland_w517_n_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w517_n_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "sle_cland_w765_e_200": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/ebb98a0436ff/sle_cland_w765_e_200",
+            "job": "COUNTED sle_cland_w765_e_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w765_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "sle_cland_w767_e_200": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/bdfed4461495/sle_cland_w767_e_200",
+            "job": "COUNTED sle_cland_w767_e_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w767_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "sle_cland_w515_n": [
+          {
+            "host": "epyc6",
+            "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w515_n",
+            "job": "COUNTED sle_cland_w515_n epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n/PROVENANCE.json (QC-TYPES-9)"
+          }
+        ],
+        "sle_cland_w515_n_300": [
+          {
+            "host": "epyc6",
+            "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w515_n_300",
+            "job": "COUNTED sle_cland_w515_n_300 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n_300/PROVENANCE.json (QC-TYPES-9)"
+          }
+        ],
+        "sle_cland_w515_n_301": [
+          {
+            "host": "epyc6",
+            "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w515_n_301",
+            "job": "COUNTED sle_cland_w515_n_301 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n_301/PROVENANCE.json (QC-TYPES-9)"
+          }
+        ],
+        "sle_cland_w517_s_300": [
+          {
+            "host": "epyc6",
+            "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w517_s_300",
+            "job": "COUNTED sle_cland_w517_s_300 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w517_s_300/PROVENANCE.json (QC-TYPES-9)"
+          }
+        ],
+        "sle_cland_w517_s_301": [
+          {
+            "host": "epyc6",
+            "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w517_s_301",
+            "job": "COUNTED sle_cland_w517_s_301 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w517_s_301/PROVENANCE.json (QC-TYPES-9)"
+          }
+        ]
+      },
+      "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 06:10 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/qwen_compute.json on intel2, plan 16f4b9ef4379) FIRST in prov_view_sources for 7 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v",
+      "plan_prev_kw35f": "/srv/opentallas-scratch2/claude/qct9/plan_qc53v4u.json",
+      "note_kw35f": "KW-FIX-35 2026-11-08 06:13 PST: SRC-INCOMPLETE class: src_probe counts the plan's whole dir (qct9 = QC-TYPES-9 work dir, 8380 files to depth 3 on epyc4 only), so epyc2/epyc5/intel1 were dropped as QC gen hosts at 06:02 and every QC gen pinned to epyc4. Same plan bytes (sha 9c8cefa48662) moved to a plan-only dir staged on epyc4/epyc5/intel1/epyc2/epyc6/intel2. Revert plan_prev_kw35f"
     },
     "hbm": {
       "enabled": true,
@@ -6833,10 +7899,10 @@
       ],
       "note": "KW-FIX-21 05:3x: src -> kw21/src_c926f @c92647a2155 = FULL tree (Codex src_2c705 base + git delta 846 files); the 05:17 batch failed kit_rtl on the sparse D3-based src_c926 (bind: preferred HDL source missing physical/rom_host_ingest/rtl/dsfd_host.sv) and KV kit_topology (faecd src lacks tools/die_plan/kit_topology.py which the hub's canonical_topology_prepare specs need); relaunch the same rows | KW-FIX-21 05:1x (COORD 04:40/04:43): src kw21/src_c926 @c92647a2155 (main: 8dc1 ot_run capture, e6ce finite Slang gen_env, busfit 7d0631b1015; delta from codex D3 src_d3c267 = 4 tool files; results/qc_ringfall_1105 copied from src_2c705) on epyc5+epyc6; work_root -> root scratch3 lane kw21-wave-1106 (epyc5 scratch2 1 GB free); cfg ot_run = kw21 wrapper (kw10 wait logic) on fleet 230e562aa5c. INFRA relaunch: ENOSPC/ROOT-fs geom/no-dir kit_rtl/PLACE_LOST; native-C SIG11 rows @3 with OT_LEC_SLANG_UNROLL_LIMIT=32912 | KW-FIX-19 21:0x: src kw11/src_730 @7305773106e (main: I178 prdfo, I180 rootscr, I181 classretry, prdguard; kit diff vs 16b4 = prd_hook guard only); gen_hosts [epyc5, epyc6] (epyc4 scratch2 11 GB); GEN-HOST-DEPS relaunch 0 rows | KW-FIX-18 19:4x: tag flow-20261106-r-hbm 16b4ea85026 (I177 ev76 HBM d44v, I178 prdfo, I179 q3e RXPRE) -> src kw11/src_16b; referenced files byte-same (8/8 sha256) | KW-FIX-17 18:4x: tag flow-20261106-p-hbm e920ea3c22b (grtstall + leafitems + S81 TAPWIN-PORT plan ef4d951b60bf) -> src kw11/src_e92; referenced files byte-same except S81 plan_h2_2249.json (clock.tap_window per_port_ps only, COORD 18:20) | KW-FIX-17 18:2x: tag flow-20261106-o-hbm 77b4b069dc3 (holdgaterr + ev75 + romq + wbqhd) -> src kw11/src_77b; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:3x: tag flow-20261106-n-hbm 17dcf533a38 (resignlib + ev74f + provobs) -> src kw11/src_17d; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 16:5x: tag flow-20261106-m-hbm 76201bc074c (holdrr reg2reg hold stop, grtpost, placeretry) -> src kw11/src_m76; every referenced plan/sidecar/asbuilt/kit_rtl file byte-same (cmp CHECKED) | KW-FIX-17 16:4x: HBM tag flow-20261106-l-hbm c299a5dfc10 (B7..B10 forms, recipes_b2) -> src kw11/src_hbml | KW-FIX-17 16:2x: HBM tag flow-20261106-k-hbm 7040684e850 -> src kw11/src_x (scratch2); plan d44v11 + core_clock_regions unchanged (outside src); d44v/ev74 plan_of_record change in the tag is DIE-HBM-75's event, not adopted here | KW-FIX-8 21:4x I62: plan d44v11 = d44v10 + main d5f67b31226 plan_of_record/d44v, parts 13 8 14; src src_y (cp -al); cancel_superseded false so the stage stops no live row. | KW-FIX-6 05:5x COORD 05:42 (4): plan d44v10 = fold 80ac3f4decbd (main df511fc9ae6, flow-20261104-f-hbm), src hbmsrc2; cancel_superseded false so the fold stops no live row; 22 of 24 live rows keep their keys, hnx_fused_lane@9 + hnx_rp3lp3h_s@6 run on as old-key reads; hnx_rp3h_xs in only_items for the xs class fix. | KW-FIX-6 03:5x COORD 03:41: LEC + tkm root class batch, src kw-fix-6/hbmsrc = main 902085405d8; DIE-HBM-63 hand-flow items and clock-window resumes untouched | KW-FIX-5 01:1x HBM-STAGE: 3 recipe pin refs fetched into hbmsrc store; wr_q @4 retry; 7 stale names out of only_items; NO_RECIPE and PORT_MISMATCH held | KW-FIX-5: d44v9 lacked 74 PoR core files + macro views in sparse src (DIE-HBM /FLOW 00:1x); staged 00:20; tkm root held on /FLOW MAP_AMBIGUOUS | KW-FIX-5 00:0x (DIE-HBM-62 23:19 list, COORD 23:2x): plan d44v9 = d44v part 6+6a (die_plan 0b93e32e4ce8), src sparse kw-fix-5/hbmsrc = main 386f7a71f8a; 6 sub-cores RF1 recipe, 4 stale vms_bank, tkm_m root retry | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-hbmi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE); RF1 d35a67594c7 included | KW-FIX-4 19:5x HBM-RF1 (OWNER 18:57, COORD 19:04, DIE-HBM-61/RF1-BUILD): src kw-fix-4-hbmrf1 = d35a67594c7 (b07b52ff0c7 + q2_reduce oneclk / llr RW if-generate fixes, approved I6); RF1 item_args (util 0.40, face-reset-relay 2, regions rf1 69ed115a) on 6 not-in-flight items; the 6 in-flight RF1 items are launched by RF1-BUILD via ot-run (no double launch); old item_args in item_args_rf1prev | KW-FIX-4 19:0x I4 batch: src kw-fix-4-hbmi4 = main b07b52ff0c7 (hold/CLK-BAND 9855c866403: multiport density + hard_core_latency default-on) | KW-FIX-4 11-03 12:0x (COORD 10:4x item 2, DIE-HBM-61 11:4x d44v_por FROZEN 8/84): d44o -> d44v (prev d44o /srv/opentallas-scratch2/claude/kit-wave/hbm/d44o_cm/die_plan.json src 89eb1d03dba84a57aae71fa7c662ba005c8c6acc). KW-FIX-4-HBMV 2026-11-03 11:56 PST: d44o -> d44v (COORD 10:4x, DIE-HBM-61 11:0x). src claude/kw-fix-4-hbmv-1103@78e511e3a45 = main 5ef0158c8fa + gen_core_kit_hbm_rw.py (opt-in MEM recipe delta wrapper). RF1 item_args: --clock-regions 33 modules, --face-lockup '.*' 38 RF1 cores (census+regions), --rw-recipe-delta ['hfd_ep_static', 'ot_hbm_host_cp_rxs', 'ot_hnx_idxn_keybuf_slice'] (held until KNOWN RW rects: ['hfd_ep_static', 'ot_hbm_host_cp_rxs']), q3_edge on its current recipe. retry += 19 unchanged-key terminal records (move every row to d44v). | KW-FIX-3 2026-11-03 04:3x: retry += ot_hbm_idx_score_hcol_h1@1 (GEOM-111 class R member, pin_reg_max 156.3; fix merged 65396c58159, wave src rfh 53d3ca14368 carries the same face_flops change). The other 10 class R kits already run on rfh (KW-FIX-2 batch 00:0x), collected, not relaunched. | KW-FIX-2 11-03 00:0x (GEOM-111 class R, COORD 23:0x): src e96f241822a + reset-face-home (gen_core_kit_hbm skip set = clocks+straps; main branch claude/kw-fix-2-1102@d483825fd6e) = 53d3ca14368, locked sparse intel2 wt kit-wave-15-hbmtaps-rfh; 11 class-R holds released, batch retry item@last; retry q3_edge_core@2 / opstore_b@3 dropped (those attempts are RUNNING; kept they would HOLD at enqueue on the src change). | DIE-HBM-58/CORES 11-02 18:2x: take_states += REVIEW, KIT-PLACED so the 7 ccband CANCELLED-SOURCE rows (first_core, tailx_rest x2, lane_exp0_id, qcore_r13, xcal_rel_t, q2_reduce; OWNERS state REVIEW/KIT-PLACED) and never-waved bank128_pair_core / hcp_sys1 / tkm root relaunch on the fixed src (no-blind-retry guard still holds every other stored FAIL). | KIT-WAVE-15 18:3x ccband: src e5b857a7e34 (taps) + cherry-pick of ccband 0c1986bda = e96f241822a (branch pushed), new locked sparse intel2 wt kit-wave-15-hbmtaps (same cone as kit-wave-14-hbmtaps, which other procs still read). | KIT-WAVE-14 14:5x DIE-HBM-57 RULING (OWNER 12.23 fully automatic): the wave re-cuts the 21 lane-built single-root views on e5b857a7e34 whatever their OWNERS state: take_states += REVIEW/ROUTING/GEOM-REQ/KIT-PLACED/SIGNED-UNVERSIONED; the 13 other lan",
       "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
-      "plan": "/srv/opentallas-scratch2/claude/kw27/hbm_d44v_02909_g/die_plan.json",
+      "plan": "/srv/opentallas-scratch2/claude/die-hbm-92/plan_hbm_1108c/die_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_812ee",
-      "src_sha": "812ee41cd03d4d8ba3f3f42c1d4ad0c08750f14f",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_cad9p",
+      "src_sha": "cad9c038fb079605bd4c23f97a84e946d2ab6494",
       "gate": {
         "g0c": "PASS",
         "bind": "PASS",
@@ -7413,12 +8479,28 @@
         "q_su20@1",
         "q_su20__physical_v1@1",
         "q_su21@1",
-        "q_su21__physical_v1@1"
+        "q_su21__physical_v1@1",
+        "NE_io@2",
+        "q_b000@2",
+        "q_b000__physical_v1@2",
+        "q_b001@2",
+        "q_b001__physical_v1@2",
+        "q_spb0@2",
+        "q_spb0__physical_v1@2",
+        "q_su01@2",
+        "q_su01__physical_v1@2",
+        "q_su11@2",
+        "vsN0@2",
+        "NW_io@2",
+        "q_mca@1",
+        "q_spb1@1",
+        "vsN1@1",
+        "vsN2@1"
       ],
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
       "pilot_mode": "queue",
-      "queue_src": "main@812ee41cd03",
+      "queue_src": "claude/die-hbm-92-int-1108@cad9c038fb+claude/kw-fix-35-providx-1108@9ba1e6f86e2",
       "hold_items": {
         "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
         "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
@@ -7439,7 +8521,9 @@
         "tailx_sk_step0": "KW-FIX-8 23:2x DIE-HBM-66: Sinkhorn A event, do not requeue",
         "tailx_sk_steady": "KW-FIX-8 23:2x DIE-HBM-66: Sinkhorn A event, do not requeue",
         "ot_hgi_sfu_core_split3__opstore_b": "KW-FIX-11 07:0x COORD 07:01: stopped 06:51 by ruling, part 27 replaces (HBM-FORM-SPLIT 06:51); autopilot revived it on exit 137; no relaunch",
-        "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch"
+        "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch",
+        "q_b013": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013 (intel1 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013_a3R); release after it ends or after ROOT-MERGE-52 lands the fix",
+        "q_b013__physical_v1": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013pv1 (epyc4 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013__physical_v1_a2R); release after it ends or after ROOT-MERGE-52 lands the fix"
       },
       "gen_hosts": [
         "intel1",
@@ -7579,7 +8663,23 @@
         "q_su20@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
         "q_su20__physical_v1@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
         "q_su21@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
-        "q_su21__physical_v1@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt"
+        "q_su21__physical_v1@1": "KW-FIX-35-B 2026-11-08 05:04 PST: KITPARAM v2 a2eb941596 (landed main 812ee41cd03, ROOT-MERGE-52): fresh gen, kit inputs change (bind.py WCOPY/RING defparam preference); dry path kit-rtl..gen_lint PASS epyc4 /srv/opentallas-scratch3/claude/kw35b/dry_812ee/rc.txt",
+        "NE_io@2": "KW-FIX-35-B 2026-11-08 06:31 PST: PHY SPLIT bound as split (claude/die-hbm-92-physplit-1108@a3a72e8a87 + asbuilt_p37/bind, DIE-HBM-92-PHY READY 05:25); fresh kit, kit inputs change",
+        "q_b000@2": "KW-FIX-35-B 2026-11-08 06:31 PST: counted child signed views now exported (KW-FIX-35-V views c47ef36ab53, prov_view_sources) + fc-hbm main; fresh kit, kit inputs change",
+        "q_b000__physical_v1@2": "KW-FIX-35-B 2026-11-08 06:31 PST: counted child signed views now exported (KW-FIX-35-V views c47ef36ab53, prov_view_sources) + fc-hbm main; fresh kit, kit inputs change",
+        "q_b001@2": "KW-FIX-35-B 2026-11-08 06:31 PST: counted child signed views now exported (KW-FIX-35-V views c47ef36ab53, prov_view_sources) + fc-hbm main; fresh kit, kit inputs change",
+        "q_b001__physical_v1@2": "KW-FIX-35-B 2026-11-08 06:31 PST: counted child signed views now exported (KW-FIX-35-V views c47ef36ab53, prov_view_sources) + fc-hbm main; fresh kit, kit inputs change",
+        "q_spb0@2": "KW-FIX-35-B 2026-11-08 06:31 PST: PHY SPLIT bound as split (claude/die-hbm-92-physplit-1108@a3a72e8a87 + asbuilt_p37/bind, DIE-HBM-92-PHY READY 05:25); fresh kit, kit inputs change",
+        "q_spb0__physical_v1@2": "KW-FIX-35-B 2026-11-08 06:31 PST: PHY SPLIT bound as split (claude/die-hbm-92-physplit-1108@a3a72e8a87 + asbuilt_p37/bind, DIE-HBM-92-PHY READY 05:25); fresh kit, kit inputs change",
+        "q_su01@2": "KW-FIX-35-B 2026-11-08 06:31 PST: counted child signed views now exported (KW-FIX-35-V views c47ef36ab53, prov_view_sources) + fc-hbm main; fresh kit, kit inputs change",
+        "q_su01__physical_v1@2": "KW-FIX-35-B 2026-11-08 06:31 PST: counted child signed views now exported (KW-FIX-35-V views c47ef36ab53, prov_view_sources) + fc-hbm main; fresh kit, kit inputs change",
+        "q_su11@2": "KW-FIX-35-B 2026-11-08 06:31 PST: counted child signed views now exported (KW-FIX-35-V views c47ef36ab53, prov_view_sources) + fc-hbm main; fresh kit, kit inputs change",
+        "vsN0@2": "KW-FIX-35-B 2026-11-08 06:31 PST: PHY SPLIT bound as split (claude/die-hbm-92-physplit-1108@a3a72e8a87 + asbuilt_p37/bind, DIE-HBM-92-PHY READY 05:25); fresh kit, kit inputs change",
+        "NW_io@2": "KW-FIX-35-B 2026-11-08 06:54 PST: REDESIGN: plan event plan_hbm_1108c (a337411c3a25: EP-MOD-1108 NW_io, FTLK v2 FT hop latches, RLK reset hop latches) on claude/die-hbm-92-int-1108@cad9c038fb (+RLK bind path 14aca37706) + providx 9ba1e6f86e2, bind_c strict rc0; DIE-HBM-92 GO 06:40, wave-order dry rc0 (epyc6 die-hbm-92/dry_c, die-hbm-92-rlk/dry_c); fresh kit",
+        "q_mca@1": "KW-FIX-35-B 2026-11-08 06:54 PST: REDESIGN: plan event plan_hbm_1108c (a337411c3a25: EP-MOD-1108 NW_io, FTLK v2 FT hop latches, RLK reset hop latches) on claude/die-hbm-92-int-1108@cad9c038fb (+RLK bind path 14aca37706) + providx 9ba1e6f86e2, bind_c strict rc0; DIE-HBM-92 GO 06:40, wave-order dry rc0 (epyc6 die-hbm-92/dry_c, die-hbm-92-rlk/dry_c); fresh kit",
+        "q_spb1@1": "KW-FIX-35-B 2026-11-08 06:54 PST: REDESIGN: plan event plan_hbm_1108c (a337411c3a25: EP-MOD-1108 NW_io, FTLK v2 FT hop latches, RLK reset hop latches) on claude/die-hbm-92-int-1108@cad9c038fb (+RLK bind path 14aca37706) + providx 9ba1e6f86e2, bind_c strict rc0; DIE-HBM-92 GO 06:40, wave-order dry rc0 (epyc6 die-hbm-92/dry_c, die-hbm-92-rlk/dry_c); fresh kit",
+        "vsN1@1": "KW-FIX-35-B 2026-11-08 06:54 PST: REDESIGN: plan event plan_hbm_1108c (a337411c3a25: EP-MOD-1108 NW_io, FTLK v2 FT hop latches, RLK reset hop latches) on claude/die-hbm-92-int-1108@cad9c038fb (+RLK bind path 14aca37706) + providx 9ba1e6f86e2, bind_c strict rc0; DIE-HBM-92 GO 06:40, wave-order dry rc0 (epyc6 die-hbm-92/dry_c, die-hbm-92-rlk/dry_c); fresh kit",
+        "vsN2@1": "KW-FIX-35-B 2026-11-08 06:54 PST: REDESIGN: plan event plan_hbm_1108c (a337411c3a25: EP-MOD-1108 NW_io, FTLK v2 FT hop latches, RLK reset hop latches) on claude/die-hbm-92-int-1108@cad9c038fb (+RLK bind path 14aca37706) + providx 9ba1e6f86e2, bind_c strict rc0; DIE-HBM-92 GO 06:40, wave-order dry rc0 (epyc6 die-hbm-92/dry_c, die-hbm-92-rlk/dry_c); fresh kit"
       },
       "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
       "item_args_rf1prev": {
@@ -7768,7 +8868,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 2
       },
-      "flow_tag": "flow-20261108-fb-hbm",
+      "flow_tag": "flow-20261108-fc-hbm",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -8192,8 +9292,8 @@
       "kit_rtl_prev_kw32": null,
       "kit_rtl": {
         "mode": "bind",
-        "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-89/hbmbind/ab/asbuilt_t12.json",
-        "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-90-rebind/bind_g/out",
+        "asbuilt": "/srv/opentallas-scratch2/claude/die-hbm-92-phy/ab/asbuilt_p37.json",
+        "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-92/bind_c",
         "note": "KW-FIX-33 2026-11-08 00:38 PST (DIE-HBM-90-REBIND 00:14 RESULT): bind_g = strict re-bind of kw27g (bind14 method, rc0, 0 errors, 90/81/420, bound .sv byte-identical to bind14); staged epyc4/intel1/epyc6/epyc5/epyc2/intel2 (report md5 5224fca50e39). Revert: kit_rtl_prev_kw33d. KW-FIX-32 2026-11-07 22:29 PST (DIE-HBM-89 READY 21:11 f91b9f2eec3 landed 45353bf990b; COORD 21:2x (2)/22:0x): the bind of record (strict, 0 errors, 90 parts/81 types/420 crossings) + its asbuilt_t12 + base tree hbm-bind-6/tip2 rsynced from epyc2 to intel1/epyc4/epyc6 at the same paths (tip2 29836 f"
       },
       "gen_hosts_prev_kw32g": [
@@ -8658,7 +9758,60 @@
         ]
       },
       "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-08 05:15 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
-      "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 05:33 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/hbm.json on intel2, plan 63000666491b) FIRST in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v"
+      "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 05:33 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/hbm.json on intel2, plan 63000666491b) FIRST in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v",
+      "hold_items_added_kw35l": [
+        "q_b013",
+        "q_b013__physical_v1"
+      ],
+      "src_prev_kw35e": "/srv/opentallas-scratch2/claude/kw35/src_812ee",
+      "src_sha_prev_kw35e": "812ee41cd03d4d8ba3f3f42c1d4ad0c08750f14f",
+      "queue_src_prev_kw35e": "main@812ee41cd03",
+      "flow_tag_prev_kw35e": "flow-20261108-fb-hbm",
+      "kit_rtl_prev_kw35e": {
+        "mode": "bind",
+        "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-89/hbmbind/ab/asbuilt_t12.json",
+        "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-90-rebind/bind_g/out",
+        "note": "KW-FIX-33 2026-11-08 00:38 PST (DIE-HBM-90-REBIND 00:14 RESULT): bind_g = strict re-bind of kw27g (bind14 method, rc0, 0 errors, 90/81/420, bound .sv byte-identical to bind14); staged epyc4/intel1/epyc6/epyc5/epyc2/intel2 (report md5 5224fca50e39). Revert: kit_rtl_prev_kw33d. KW-FIX-32 2026-11-07 22:29 PST (DIE-HBM-89 READY 21:11 f91b9f2eec3 landed 45353bf990b; COORD 21:2x (2)/22:0x): the bind of record (strict, 0 errors, 90 parts/81 types/420 crossings) + its asbuilt_t12 + base tree hbm-bind-6/tip2 rsynced from epyc2 to intel1/epyc4/epyc6 at the same paths (tip2 29836 f"
+      },
+      "hold_items_kw35e_added": [
+        "NW_io"
+      ],
+      "retry_prev_kw35e_added": [
+        "NE_io@2",
+        "q_b000@2",
+        "q_b000__physical_v1@2",
+        "q_b001@2",
+        "q_b001__physical_v1@2",
+        "q_spb0@2",
+        "q_spb0__physical_v1@2",
+        "q_su01@2",
+        "q_su01__physical_v1@2",
+        "q_su11@2",
+        "vsN0@2"
+      ],
+      "note_src_kw35e": "KW-FIX-35-B 2026-11-08 06:31 PST: HBM src kw35/src_0b72p = main 0b72abe93ac (fc-hbm) + physplit a3a72e8a87 3 files (merge-tree 581db07da71), sha-checked intel1/epyc2/epyc4/epyc5/epyc6; kit_rtl physplit asbuilt_p37+bind; NW_io held; final-view relaunch. Revert *_prev_kw35e, pop hold_items_kw35e_added, drop retry_prev_kw35e_added",
+      "plan_prev_kw35f": "/srv/opentallas-scratch2/claude/kw27/hbm_d44v_02909_g/die_plan.json",
+      "src_prev_kw35f": "/srv/opentallas-scratch2/claude/kw35/src_0b72p",
+      "src_sha_prev_kw35f": "0b72abe93ac",
+      "queue_src_prev_kw35f": "main@0b72abe93ac+claude/die-hbm-92-physplit-1108@a3a72e8a87",
+      "flow_tag_prev_kw35f": "flow-20261108-fc-hbm",
+      "kit_rtl_prev_kw35f": {
+        "mode": "bind",
+        "asbuilt": "/srv/opentallas-scratch2/claude/die-hbm-92-phy/ab/asbuilt_p37.json",
+        "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-92-phy/bind",
+        "note": "KW-FIX-33 2026-11-08 00:38 PST (DIE-HBM-90-REBIND 00:14 RESULT): bind_g = strict re-bind of kw27g (bind14 method, rc0, 0 errors, 90/81/420, bound .sv byte-identical to bind14); staged epyc4/intel1/epyc6/epyc5/epyc2/intel2 (report md5 5224fca50e39). Revert: kit_rtl_prev_kw33d. KW-FIX-32 2026-11-07 22:29 PST (DIE-HBM-89 READY 21:11 f91b9f2eec3 landed 45353bf990b; COORD 21:2x (2)/22:0x): the bind of record (strict, 0 errors, 90 parts/81 types/420 crossings) + its asbuilt_t12 + base tree hbm-bind-6/tip2 rsynced from epyc2 to intel1/epyc4/epyc6 at the same paths (tip2 29836 f"
+      },
+      "hold_items_released_kw35f": {
+        "NW_io": "KW-FIX-35-B 2026-11-08 06:31 PST: EP module class, DIE-HBM-92 (not in the physplit a3a72e8a87 batch)"
+      },
+      "retry_prev_kw35f_added": [
+        "NW_io@2",
+        "q_mca@1",
+        "q_spb1@1",
+        "vsN1@1",
+        "vsN2@1"
+      ],
+      "note_src_kw35f": "KW-FIX-35-B 2026-11-08 06:54 PST: HBM plan plan_hbm_1108c + src kw35/src_cad9p (= src_0b72p + 97 files, merge-tree fed97cef85e of cad9c038fb+9ba1e6f86e2, sha-checked intel1/epyc2/epyc4/epyc5/epyc6) + bind_c; NW_io hold lifted; batch NW_io/q_mca/q_spb1/vsN1/vsN2. Revert *_prev_kw35f, re-add hold_items_released_kw35f, drop retry_prev_kw35f_added"
     }
   },
   "place_prefer": [
