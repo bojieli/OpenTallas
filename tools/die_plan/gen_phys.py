@@ -2654,6 +2654,26 @@ def pg_placed_blocks(t):
     return placed
 
 
+def phy_pg_clip(t, tn, name, rt, mac_box):
+    """S81-TYPES-6 11-07 (COORD 23:0x (2) choice (a), class PHY-REGION-CLOCK-ENTRY; opt-in type key phy_pg_clip_um =
+    PG landing margin): for a PHY domain modelled with macros, the hard placement blockage and the voltage region are
+    clipped to the bounding box of the domain's PHY macros grown by the margin (snapped outward to the site / row grid)
+    on all four sides, inside the die domain rect.  The VDDPHY M6/M7 straps (and the M7 pins the die M8/M9 VDDPHY mesh
+    lands on) stay over the macros; core rows and the clock leaf then reach the macro clock/data pins from every side
+    instead of from below a region that spans the partition.  Composes with the west/south notch keys (the tighter edge
+    wins).  Key absent, or a domain without macros (phy_pg_offmodel) = unchanged."""
+    m = t.get("phy_pg_clip_um")
+    if m is None or not mac_box:
+        return list(rt)
+    m = float(m)
+    st, rw = PHY_PG_NOTCH_SITE_UM, PHY_PG_NOTCH_ROW_UM
+    x0 = round(math.floor(round((min(b[0] for b in mac_box) - m) / st, 6)) * st, 4) + 0.0
+    y0 = round(math.floor(round((min(b[1] for b in mac_box) - m) / rw, 6)) * rw, 4) + 0.0
+    x1 = round(math.ceil(round((max(b[2] for b in mac_box) + m) / st, 6)) * st, 4) + 0.0
+    y1 = round(math.ceil(round((max(b[3] for b in mac_box) + m) / rw, 6)) * rw, 4) + 0.0
+    return [max(rt[0], x0), max(rt[1], y0), min(rt[2], x1), min(rt[3], y1)]
+
+
 def phy_pg_domains(P, tn):
     """PATH-KV-SYSC 10-25 (OWNER decision 7, PHY PG hook): the die.pg.domains that fall inside partition type tn, as
     [(name, power_net, ground_net, rect_type_um, [macro inst fully inside])].  Identical for every instance (a hardened
@@ -2680,7 +2700,7 @@ def phy_pg_domains(P, tn):
             # failed the per-instance identity below on the sign of zero alone)
             rt = [round(min(u[0], v[0]), 4) + 0.0, round(min(u[1], v[1]), 4) + 0.0, round(max(u[0], v[0]), 4) + 0.0,
                   round(max(u[1], v[1]), 4) + 0.0]
-            mac, mac_x0, mac_y0 = [], [], []
+            mac, mac_x0, mac_y0, mac_box = [], [], [], []
             placed = pg_placed_blocks(t)
             for c in placed:
                 if "origin_um" not in c or "outline_um" not in c:
@@ -2698,9 +2718,11 @@ def phy_pg_domains(P, tn):
                 mac.append(content_physical_identity(c)[0] if "physical_inst" in c or "physical_master" in c else c["inst"])
                 mac_x0.append(box[0])
                 mac_y0.append(box[1])
+                mac_box.append(box)
             if not mac and not t.get("phy_pg_offmodel"):
                 raise ValueError(f"type {tn}: PG domain {d['name']} holds no macro (a PHY domain powers its PHY macro)")
             rt = phy_pg_west_notch(t, tn, d["name"], rt, mac_x0, mac_y0)
+            rt = phy_pg_clip(t, tn, d["name"], rt, mac_box)
             got.append((d["name"], d["nets"][0], d["nets"][1], rt, sorted(mac)))
         per.append(got)
     # DIE-HEAD-5: compare supply/geometry/macros, not the per-instance domain name (die.pg.domains names one per window)
