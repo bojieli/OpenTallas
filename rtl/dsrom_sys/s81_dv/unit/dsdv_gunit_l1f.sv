@@ -659,7 +659,21 @@ module dsdv_gunit_l1f_bf (
     always @(posedge clk) begin l0b <= s0b; l1b <= s1b; end
     dsdv_seln_fold_cx #(.EW(EW)) u_m0 (.aa(l0a), .ab(l0b), .ba(l1a), .bb(l1b), .q(c1));
     always @(posedge clk or negedge rq[12]) if (!rq[12]) mf <= 3'd0; else mf <= sf0;
+`ifdef OT_GUNIT_BF_M1REG
+    // DIE-S81-80 11-08 (bf gf3, COORD approved): gf2 GRT TT -392 on a ~37-stage l0r -> u_m0 -> u_m1 -> o_d path in ONE
+    // cycle.  The fold result c1 is registered (c1r) between u_m0 and u_m1; every output (o_v o_f o_l o_g o_d o_flt) is
+    // then exactly the gf2 output one edge later (+1 PIN CYCLE on all bf outputs, nothing else moves): mf, the gather
+    // select gq2, the gather data gd and the o_flt term get the same one-stage delay (mfr, gq2r, gdr, fltn).
+    (* keep *) reg [LW-1:0] c1r;
+    always @(posedge clk) c1r <= c1;
+`ifdef OT_GUNIT_BF_M1REG_MUT   // bench mutant: u_m1 reads the unregistered fold (data one edge early vs valid)
     dsdv_seln_cx8_2 #(.EW(EW), .J1(2), .KB1(8), .J2(1), .KB2(8)) u_m1 (.da(c1), .db(c1), .q(c3));
+`else
+    dsdv_seln_cx8_2 #(.EW(EW), .J1(2), .KB1(8), .J2(1), .KB2(8)) u_m1 (.da(c1r), .db(c1r), .q(c3));
+`endif
+`else
+    dsdv_seln_cx8_2 #(.EW(EW), .J1(2), .KB1(8), .J2(1), .KB2(8)) u_m1 (.da(c1), .db(c1), .q(c3));
+`endif
     // ---------------------------------------------------------------- gather + outputs (dsdv_gunit_l1f, unchanged)
     reg [6*NS-1:0] hs;
     (* keep *) reg [NQ-1:0] gq2;
@@ -693,6 +707,22 @@ module dsdv_gunit_l1f_bf (
     // FACE 11-07: the sticky fault holds in its own kept flop flt_s; o_flt is a pure output copy of it (the 10-22 band
     // fed o_flt back into its own D = face_guard shared / self-loop).  o_flt == flt_s on every edge.
     (* keep *) reg flt_s;
+`ifdef OT_GUNIT_BF_M1REG
+    reg [2:0] mfr; reg fltn; (* keep *) reg [NQ-1:0] gq2r; reg [191:0] gdr;
+    always @(posedge clk or negedge rq[12])
+        if (!rq[12]) begin mfr <= 3'd0; gq2r <= {NQ{1'b0}}; fltn <= 1'b0; o_v <= 1'b0; o_f <= 1'b0; o_l <= 1'b0; o_g <= 1'b0;
+                           o_flt <= 1'b0; flt_s <= 1'b0; end
+        else begin
+            mfr <= mf; gq2r <= gq2;
+            flt_s <= flt_s || (|yf) || (gq2[NQ - 1] && mf[0]);
+            fltn  <= flt_s || (|yf) || (gq2[NQ - 1] && mf[0]);
+            o_v <= mfr[0]; o_f <= mfr[1]; o_l <= mfr[2]; o_g <= gq2r[NQ - 1]; o_flt <= fltn;
+        end
+    always @(posedge clk) gdr <= gd;
+    wire [245:0] onext = {54'd0, gdr};
+    always @(posedge clk)
+        for (i = 0; i < 246; i = i + 1) if (i != 205) o_df[i] <= gq2r[i / 14] ? onext[i] : c3[i];
+`else
     always @(posedge clk or negedge rq[12])
         if (!rq[12]) begin o_v <= 1'b0; o_f <= 1'b0; o_l <= 1'b0; o_g <= 1'b0; o_flt <= 1'b0; flt_s <= 1'b0; end
         else begin
@@ -703,6 +733,7 @@ module dsdv_gunit_l1f_bf (
     wire [245:0] onext = {54'd0, gd};
     always @(posedge clk)
         for (i = 0; i < 246; i = i + 1) if (i != 205) o_df[i] <= gq2[i / 14] ? onext[i] : c3[i];
+`endif
 endmodule
 
 // ============================================================================ flat parent (wires only) = dsdv_gunit_l1f

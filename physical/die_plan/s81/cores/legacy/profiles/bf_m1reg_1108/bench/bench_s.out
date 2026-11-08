@@ -1,0 +1,4 @@
+RUN none rc 0: BENCH cycles 1500 compares 1477 data_compares 1458 valid 749 gather 304 flt 1457 mismatches 0 -> PASS
+RUN MUT rc 0: DATA MISMATCH cyc 6
+DATA MISMATCH cyc 7
+DATA MISMATCH cyc 8
