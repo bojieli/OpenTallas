@@ -5161,8 +5161,8 @@
       },
       "plan": "/srv/opentallas-scratch3/claude/kw23/prep_l48ui/source_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_c303p",
-      "src_sha": "804f9e020b210d3733cdfdb69d07a662e7fc0dc1",
+      "src": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
+      "src_sha": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
       "kit_rtl": {
         "mode": "script",
         "script": "/srv/opentallas-scratch2/claude/kw23/src_e9eda/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
@@ -5413,7 +5413,7 @@
       ],
       "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
       "cancel_superseded": false,
-      "queue_src": "claude/kw-fix-35-wave-c303a-1108@804f9e020b2",
+      "queue_src": "main@d95ec5a45a60",
       "item_env": {
         "hd_ctl": {
           "OT_IO_HOLD": "sender_min"
@@ -5732,7 +5732,7 @@
         "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
         "die_max_inflight": 1
       },
-      "flow_tag": "flow-20261108-dz-head",
+      "flow_tag": "flow-20261108-ds-head",
       "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
       "gen_hosts_prev_kw32": [
         "epyc5",
@@ -5838,11 +5838,7 @@
       "pilot_gate_prev_kw35d": null,
       "pilot_gate": false,
       "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d",
-      "src_prev_kw35t": "/srv/opentallas-scratch2/claude/kw33/src_d95ec",
-      "src_sha_prev_kw35t": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
-      "queue_src_prev_kw35t": "main@d95ec5a45a60",
-      "flow_tag_prev_kw35t": "flow-20261108-ds-head",
-      "note_kw35t": "KW-FIX-35-T 2026-11-08 07:02 PST: wave src -> /srv/opentallas-scratch2/claude/kw35/src_c303p = integration claude/kw-fix-35-wave-c303a-1108@804f9e020b2 (main c303af45e5b ROOT-MERGE-52 trains S/T/U + providx 9ba1e6f86e2 KW-PROV-1 + qc-types-9-reach 5f5fee0303b); kw35/src_0b72a hardlinks + 98-file delta + 19 new files, sha256-checked on intel1/epyc2/epyc4/epyc5/epyc6, tree read-only (chmod -R a-w). Revert *_prev_kw35t"
+      "note_kw35t": "KW-FIX-35-T 2026-11-08 07:05 PST: s81_head src keys REVERTED to the pre-kw35t values (kw33/src_d95ec, ds-head): KW-FIX-35-H owns them, its claude/die-head-87-classfix-1108@95df6810481 is not an ancestor of c303af / the wave integration 804f9e020b2"
     },
     "qwen_compute": {
       "enabled": true,
