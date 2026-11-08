@@ -138,6 +138,31 @@ class CoreClockKitTest(unittest.TestCase):
         text, _ = K.wire(exact, "top", [("clk_c0", "u_bound.u_leaf", "s1__clk[0]", 0, 250)])
         self.assertIn(".s1__clk[0](clk_c0)", text)
 
+    def test_merged_bus_bits_on_one_port_take_base_connection(self):
+        # MERGED_BUS_1108 (HBM q_b100 u_hb_idx__s_Q_r0c0_k0h1 merged tap clk_c0 = clk_pair[0] + clk_pair[1],
+        # bound .clk_pair({clk, clk})): every copy of clk in that connection moves to the port, nothing else
+        for conn, after in ((".clk_pair({clk, clk})", ".clk_pair({clk_c0, clk_c0})"),
+                            (".clk_pair({2{clk}})", ".clk_pair({2{clk_c0}})")):
+            src = SOURCE.replace(".ck(clk)", conn)
+            for rows in ([("clk_c0", "u_bound.u_leaf", "clk_pair[0]", 0, 250), ("clk_c0", "u_bound.u_leaf", "clk_pair[1]", 0, 250)],
+                         [("clk_c0", "u_bound.u_leaf", "clk_pair[1]", 0, 250), ("clk_c0", "u_bound.u_leaf", "clk_pair[0]", 0, 250)]):
+                text, receipt = K.wire(src, "top", rows)
+                self.assertIn(after, text)
+                self.assertEqual(text.replace(after, conn).replace("    input wire clk_c0,  // planned early-core clock\n", ""), src)
+                self.assertEqual(sorted(r["pin"] for r in receipt), ["clk_pair[0]", "clk_pair[1]"])
+                self.assertTrue(all(r["rule"] == "merged_bus_base" for r in receipt))
+
+    def test_merged_bus_fails_closed(self):
+        two = [("clk_c0", "u_bound.u_leaf", "clk_pair[0]", 0, 250), ("clk_c0", "u_bound.u_leaf", "clk_pair[1]", 0, 250)]
+        for conn in (".clk_pair({clk, d})", ".clk_pair({clk, clk, clk})", ".clk_pair({3{clk}})", ".clk_pair(clk)"):
+            with self.assertRaisesRegex(ValueError, "more than one planned bit"):
+                K.wire(SOURCE.replace(".ck(clk)", conn), "top", two)
+        src = SOURCE.replace(".ck(clk)", ".clk_pair({clk, clk})")
+        with self.assertRaisesRegex(ValueError, "more than one planned bit"):        # bits on different ports
+            K.wire(src, "top", [two[0], ("clk_c1", "u_bound.u_leaf", "clk_pair[1]", 0, 250)])
+        with self.assertRaisesRegex(ValueError, "more than one planned bit"):        # a gap
+            K.wire(src, "top", [two[0], ("clk_c0", "u_bound.u_leaf", "clk_pair[2]", 0, 250)])
+
     def test_physical_alias_retains_actual_corner_schedule(self):
         tp = dict(name="leaf.ck", insertion_ps=250, insertion_ff_ps=202.5)
         plan = SimpleNamespace(clock=dict(insertion_ps=250, insertion_ff_ps=202.5), types={"T": {"hard_cores": [
