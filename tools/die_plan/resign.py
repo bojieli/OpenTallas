@@ -377,9 +377,26 @@ def lec_env_args(kit, environ=None):
     return args
 
 
+def lec_kit(kit, up=3):
+    """S81-TYPES-5 11-07 RESIGN-PASSDIR class: a late-ECO pass dir (K/eco_*/iN) is a run dir, not a kit: it has no
+    config.mk, so lec.py stopped with FileNotFoundError /work/config.mk (slice_station t8 dg-s81, t17 cw-s81 re-signs).
+    LEC mounts the nearest kit at or above it that has config.mk (at most `up` levels; the pass dir's 6_final.v stays
+    inside it); a kit with config.mk is returned unchanged."""
+    k = os.path.abspath(kit)
+    for _ in range(up + 1):
+        if os.path.exists(os.path.join(k, 'config.mk')):
+            return k
+        parent = os.path.dirname(k)
+        if parent == k:
+            break
+        k = parent
+    return os.path.abspath(kit)
+
+
 def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g', cpus=8, superset=False):
     """the two commands of one re-sign (same as the lane scripts resign3.sh / tag_signoff_lec.sh)."""
     kit, run_dir, tools, out = map(os.path.abspath, (kit, run_dir, tools, out))
+    lkit = lec_kit(kit)
     so = [sys.executable, '-I', os.path.join(tools, 'signoff.py'), 'run', '--run-dir', run_dir, '--kit', kit,
           '--corners', 'tt,ff', '--ff-vclk', 'auto', '--out', os.path.join(out, 'signoff'), '--image', image]
     if lec_netlist:
@@ -390,9 +407,9 @@ def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g',
         vs = sorted(glob.glob(os.path.join(run_dir, 'results', 'asap7', '*', 'base', '6_final.v')))
         if not vs:
             raise ResignError('no 6_final.v under %s/results/asap7/*/base' % run_dir)
-        if not vs[0].startswith(kit + os.sep):
-            raise ResignError('6_final.v %s is outside the kit %s (LEC mounts the kit)' % (vs[0], kit))
-        mounts, net_in = [], '/work/' + os.path.relpath(vs[0], kit)
+        if not vs[0].startswith(lkit + os.sep):
+            raise ResignError('6_final.v %s is outside the kit %s (LEC mounts the kit)' % (vs[0], lkit))
+        mounts, net_in = [], '/work/' + os.path.relpath(vs[0], lkit)
     # Existing optional XOR backend; keep the wheel and bundled libraries together.
     solver = os.environ.get('OT_LEC_SOLVER', '')
     solver_mount = []
@@ -400,8 +417,8 @@ def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g',
         solver_mount = ['-v', os.path.abspath(solver) + ':/lecsolver:ro',
                         '-e', 'LEC_SOLVER_PATH=/lecsolver']
     lec = ['docker', 'run', '--rm', '--name', 'resign-%s-lec' % name, '--memory=%s' % mem, '--cpus=%d' % cpus] + (
-           ['-e', 'OT_LEC_SUPERSET_VEC=1'] if superset else []) + lec_env_args(kit) + [
-           '-v', '%s:/work:ro' % kit, '-v', '%s:/eco' % out, '-v', '%s:/m:ro' % tools] + mounts + solver_mount + [
+           ['-e', 'OT_LEC_SUPERSET_VEC=1'] if superset else []) + lec_env_args(lkit) + [
+           '-v', '%s:/work:ro' % lkit, '-v', '%s:/eco' % out, '-v', '%s:/m:ro' % tools] + mounts + solver_mount + [
            image, 'bash', '-lc', 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; '
            'python3 -I /m/lec.py /work --netlist %s --out /eco/lec' % net_in]
     return so, lec
