@@ -123,6 +123,61 @@ def fwd_stations(raw, plan_path, skip):
     return added
 
 
+def _man(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+
+def _along(pts, s):
+    """point at Manhattan arc length s along the polyline pts (each leg x first, then y)"""
+    for a, b in zip(pts, pts[1:]):
+        dx, dy = abs(b[0] - a[0]), abs(b[1] - a[1])
+        if s <= dx + dy + 1e-9:
+            if s <= dx:
+                return [round(a[0] + math.copysign(s, b[0] - a[0]), 3), round(a[1], 3)]
+            return [round(b[0], 3), round(a[1] + math.copysign(s - dx, b[1] - a[1]), 3)]
+        s -= dx + dy
+    return [round(pts[-1][0], 3), round(pts[-1][1], 3)]
+
+
+def rebalance_stations(raw, skip, reach=REACH):
+    """rule 2c: an existing internal_stations entry with a hop > reach is re-spaced along its OWN planned polyline
+    (from_um -> regs_um -> to_um, so the planner's route around macros is kept) at equal arc length.  The count only
+    rises when the polyline is longer than reach x (n + 1): then it is only REPORTED (+n'-n pin cycles for the die
+    lane's plan event), because the lane's fixed_cycles must move with it."""
+    out = []
+    for tn, t in raw["partition_types"].items():
+        if tn in skip:
+            continue
+        for e in t.get("internal_stations", []):
+            pts = [e["from_um"]] + e["regs_um"] + [e["to_um"]]
+            hops = [_man(a, b) for a, b in zip(pts, pts[1:])]
+            if not hops or max(hops) <= reach + 1e-6:
+                continue
+            total, n = sum(hops), len(e["regs_um"])
+            n2 = max(n, int(math.ceil(total / (reach * .98))) - 1)
+            if n2 != n:
+                # a count change must move the lane's fixed_cycles with it (kit_istations: stages == plan count);
+                # that is a pin-cycle plan event of the die lane, so it is listed, never applied here
+                out.append(dict(type=tn, conn=e.get("conn"), stations=[n, n2], max_hop_um=round(max(hops), 1),
+                                polyline_um=round(total, 1),
+                                action=f"REPORT: needs {n2 - n} more station(s) = +{n2 - n} PIN CYCLES on this lane"))
+                continue
+            new = [_along(pts, total * k / (n2 + 1)) for k in range(1, n2 + 1)]
+            e["regs_um"] = new
+            if e.get("bit_sites_um") and n2 == n:
+                # keep the per-bit spread, shifted with its station centre
+                bs = []
+                for j, row in enumerate(e["bit_sites_um"]):
+                    old = pts[j + 1]
+                    dx, dy = new[j][0] - old[0], new[j][1] - old[1]
+                    bs.append([[round(p[0] + dx, 3), round(p[1] + dy, 3)] for p in row])
+                e["bit_sites_um"] = bs
+            np_ = [e["from_um"]] + new + [e["to_um"]]
+            out.append(dict(type=tn, conn=e.get("conn"), stations=[n, n2], max_hop_um=[round(max(hops), 1),
+                            round(max(_man(a, b) for a, b in zip(np_, np_[1:])), 1)], polyline_um=round(total, 1)))
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("base")
@@ -147,13 +202,14 @@ def main(argv=None):
             if tn in Q["partition_types"]:
                 Q["partition_types"][tn] = copy.deepcopy(P0["partition_types"][tn])
     fwd = [] if a.no_fwd else fwd_stations(Q, a.base, skip)
+    reb = rebalance_stations(Q, skip)
     after = lane_cycles(Q)
     deltas = {lid: [before[lid], after[lid]] for lid in after if lid in before and after[lid] != before[lid]}
     # preservation: only partition_types changed, and only on the listed types
     for k in P0:
         if k not in ("partition_types",) and json.dumps(P0[k], sort_keys=True) != json.dumps(Q[k], sort_keys=True):
             raise AssertionError(f"top-level key {k} changed")
-    touched = set(taps) | {r["type"] for r in ft} | {r["type"] for r in fwd}
+    touched = set(taps) | {r["type"] for r in ft} | {r["type"] for r in fwd} | {r["type"] for r in reb if "action" not in r}
     for tn, v in P0["partition_types"].items():
         if tn not in touched and json.dumps(v, sort_keys=True) != json.dumps(Q["partition_types"][tn], sort_keys=True):
             raise AssertionError(f"type {tn} changed but is not listed")
@@ -171,13 +227,14 @@ def main(argv=None):
                owner="OWNER 2026-11-08 04:58 + 05:03 (A)(B); lane TYPE-SAFE-1",
                base_plan=str(a.base), base_plan_sha256=hashlib.sha256(raw_b).hexdigest(),
                plan_output=str(a.out), plan_output_sha256=hashlib.sha256(data).hexdigest(),
-               rule3_tap_pair_types=taps, rule3_refused=refused, rule2_ft_resized=ft, rule2_fwd_stations=fwd,
+               rule3_tap_pair_types=taps, rule3_refused=refused, rule2_ft_resized=ft, rule2_fwd_stations=fwd, rule2_rebalanced_stations=reb,
                pin_cycle_deltas=sorted(by_type.values(), key=lambda r: r["lane"]), skipped_types=sorted(skip),
                touched_types=sorted(touched),
                preservation="every top-level key except partition_types and every untouched type byte-identical "
                             "(sort_keys compare); RTL, outlines, pins and hard cores unchanged")
     Path(a.event).write_text(json.dumps(rec, indent=1) + "\n")
     print(f"tap_pair {len(taps)} (+{len(refused)} refused), ft slots resized {len(ft)}, fwd legs {len(fwd)}, "
+          f"stations rebalanced {sum(1 for r in reb if 'action' not in r)} (+{sum(1 for r in reb if 'action' in r)} reported), "
           f"lanes with pin-cycle delta {len(deltas)}, touched types {len(touched)}")
 
 
