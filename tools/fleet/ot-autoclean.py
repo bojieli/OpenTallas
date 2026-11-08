@@ -178,9 +178,13 @@ def parse_findmnt(text):
 def host_aliases():
     try:
         r = subprocess.run(["findmnt", "-rn", "-o", "TARGET,SOURCE"], capture_output=True, text=True, timeout=60)
-        return parse_findmnt(r.stdout) if r.returncode == 0 else []
+        out = parse_findmnt(r.stdout) if r.returncode == 0 else []
     except (OSError, subprocess.TimeoutExpired):
-        return []
+        out = []
+    for root in DEFAULT_ROOTS:   # symlinked roots are aliases of their target too
+        if os.path.islink(root):
+            out.append((os.path.normpath(root), os.path.realpath(root)))
+    return out
 
 
 class Paths:
@@ -569,7 +573,7 @@ def dedupe_roots(roots):
         if (st.st_dev, st.st_ino) in seen:
             continue
         seen.add((st.st_dev, st.st_ino))
-        out.append(os.path.normpath(r))
+        out.append(os.path.realpath(r))   # a symlinked root (epyc6 /srv/opentallas-scratch/claude -> scratch2) is scanned by its target
     return out
 
 
