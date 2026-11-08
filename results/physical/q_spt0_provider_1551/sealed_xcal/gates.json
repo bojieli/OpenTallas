@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.autopilot.gates.v1",
+ "id": "export-view:83878e9b3b88",
+ "die": "hbm",
+ "type": "ot_hbm_svc_sm_xcal_rel_t",
+ "src": "/srv/opentallas-scratch2/claude/die-hbm-72/resign/xcal_view/i1",
+ "geom": "n/a (view export of a signed run; geometry was reviewed at sign-off)",
+ "preflight": "PASS (kit_preflight before runner)",
+ "signoff": "SIGNED",
+ "signoff_record": "/srv/opentallas-scratch2/claude/die-hbm-72/resign/xcal/signoff/signoff.json",
+ "tt_wns_ps": 24.43,
+ "ff_wns_ps": 1.03,
+ "gates": {},
+ "routed_lec": "EQUIVALENT",
+ "routed_lec_all_shown": null,
+ "routed_lec_record": "/srv/opentallas-scratch2/claude/die-hbm-72/resign/xcal/lec/lec.json",
+ "lec_tool": null,
+ "admission_tools_sha256": null,
+ "view_complete": true,
+ "view_problems": []
+}

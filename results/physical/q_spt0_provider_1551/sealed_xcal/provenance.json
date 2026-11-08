@@ -1,0 +1,133 @@
+{
+ "kit": {
+  "schema": "opentallas.hbm_arch.core_freeze.v1",
+  "view": "ot_hbm_svc_sm_xcal_rel_t@59bcf8ea762e",
+  "module": "ot_hbm_svc_sm_xcal_rel_t",
+  "design": "ot_hbm_svc_sm_xcal_rel_t",
+  "rtl_top": "ot_hbm_svc_sm_xcal_rel_t",
+  "recipe_key": "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6",
+  "recipe_sha256": "ed5f0626103408af4ae9452da25c8c0396792c3d648d74f1964174877b45de1e",
+  "canonical_type": null,
+  "wrapper": null,
+  "outline_um": [
+   241.92,
+   224.64
+  ],
+  "plan": "/srv/opentallas-scratch2/claude/die-hbm-63/reform/plan/d44v13oc/die_plan.json",
+  "plan_sha256": "8b1d2bd782dd77fc5aac4892c5d2a3990c77a8dfbf71f8b66e617e0a6191024a",
+  "pins_file": "plan_pins.json",
+  "pins_sha256": "665865e9a227a1126b393e0e346c6f13d26d3c891cc5ab7372c0461584db28eb",
+  "pins_canon_sha256": "7160f767d7840a1e6a8f553927ef4e3075c8ce38d0343ec3e74e5591cd7b98d6",
+  "pins": 507,
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "period_ps": 833.0,
+  "common_latency_ps": 250.0,
+  "corner": "TC",
+  "plan_common_latency_ps": 250.0,
+  "core_clock_contract": null,
+  "orfs_var_overrides": [],
+  "sdc_lint": "PASS (gen)",
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "face_shell": {
+   "core": "ot_hbm_svc_sm_xcal_rel_t__fcore",
+   "in_cycles": 1,
+   "out_cycles": 1,
+   "face_flops": 505,
+   "dropped": 0,
+   "unread_kept": 0,
+   "const_out_bits": 0,
+   "dup_out_bits": 0,
+   "plan_pins": 507,
+   "out_lockup": {
+    "form": "negedge_face_stage",
+    "cell": "ot_hbm_face_nreg",
+    "buses": [
+     "active",
+     "cmd_ext",
+     "configured",
+     "done",
+     "fault",
+     "kv_desc"
+    ],
+    "bits": 177,
+    "latency_cycles": 0,
+    "note": "output launches on the falling edge: receiver hold +T/2, crossing setup T/2"
+   }
+  },
+  "kit_hash": "a15ca045d70cd7ee",
+  "plan_pins_source": "cores/ot_hbm_svc_sm_xcal_rel_t__241.92x224.64__canon.json",
+  "plan_pins_source_sha256": "59bcf8ea762ec3b95ca52777f311d32dd07f12cdb83262d293ddb67ad19f2e4f",
+  "plan_pins_source_canon_sha256": "55be5465d7069a83e54783194b91a8c4a35e6d32f29198a43fffda2547f42f76",
+  "flow_defaults": {
+   "rc_cal": true,
+   "f1": {
+    "io_tt_ps": 250.0,
+    "io_ff_ps": 202.5,
+    "mechanism": "two-mode GRT (scene BC vclk_ff.sdc FF hold, scene tc TT setup) + gates",
+    "basis": "FF_TT_INSERTION_RATIO 0.81 x TT"
+   },
+   "f4": true,
+   "cts_setup_tt": {
+    "previous_post_cts": "/work/f4_chain_leaf.tcl",
+    "repair": "setup only (scene tc / vclk OT_VCLK_TT)",
+    "hold": "GRT step only"
+   },
+   "timing_modes": {
+    "mode": "two-mode tc setup / BC hold",
+    "tt": 250.0,
+    "ff": 202.5,
+    "measured_hold_dropped": true
+   },
+   "rule": "FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)"
+  },
+  "clock_taps": {
+   "mode": "density",
+   "sinks": 5000,
+   "dmax_um": 300.0
+  },
+  "reset_contract": {
+   "edges": 64,
+   "module": "ot_hbm_svc_sm_xcal_rel_t",
+   "die": "hbm",
+   "contract": "/srv/opentallas-scratch2/claude/wt/dh63-rf/physical/die_plan/hbm/reset_contract.json",
+   "contract_sha256": "aa7331856536989ac2a6bb042a85b818776c58c993b95b3465c0229730a69540",
+   "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a"
+  },
+  "source_commit": "02c23e9262c5b3085bc8726f98af9b6922cec289",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/die-hbm-72/resign/xcal_view/i1",
+ "src_commit": "cea5ffc7a8003ef23f75c2d93677bc14d8699589",
+ "flow_tag": "flow-20261106-f-hbm",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-06T00:17:53-08:00",
+  "kit": "/srv/opentallas-scratch2/claude/die-hbm-72/resign/xcal_view/i1",
+  "base": "/srv/opentallas-scratch2/claude/codex-hbm-parent-1106/xcal_lef_export",
+  "signoff": "/srv/opentallas-scratch2/claude/die-hbm-72/resign/xcal/signoff/signoff.json",
+  "signoff_sha256": "83878e9b3b8802dc3fb7742102b2e684be632276f8883e4e84f92c01b645a475",
+  "signoff_generated": "2026-11-05T11:37:06-08:00",
+  "odb": "/srv/opentallas-scratch2/claude/codex-hbm-parent-1106/xcal_lef_export/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/die-hbm-72/resign/xcal/lec/lec.json",
+  "note": null,
+  "lib_basis": null,
+  "files_sha256": {
+   "ot_hbm_svc_sm_xcal_rel_t.lef": "10d1bb32c2a4f17d1ba166145b6cbac8f022260cf1c56a3595923c5d0f78366b",
+   "ot_hbm_svc_sm_xcal_rel_t_ff.lib": "6f63d8f298813e00c94a489b15f13f5550ba58907942ef76ea5ea6e9c8a7fe94",
+   "ot_hbm_svc_sm_xcal_rel_t_tt.lib": "c24baf80d1b0e3c20a2eed11b42c78e0e59a9e6b355ef1dd53ecc68de2aad87b",
+   "pins.json": "1395ccb964f84b07aa6b3a2fa49e139902913a3c7c95b5562e3352de081c372a"
+  }
+ }
+}

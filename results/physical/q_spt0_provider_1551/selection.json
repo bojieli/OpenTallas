@@ -1,0 +1,50 @@
+{
+  "source": "66d55c026ad",
+  "type": "q_spt0",
+  "outline": [
+    1779.84,
+    1503.36
+  ],
+  "hard_cores": [
+    {
+      "inst": "u_xc_Q0",
+      "module": "ot_hbm_svc_sm_xcal_rel_t",
+      "origin_um": [
+        77.76,
+        25.92
+      ],
+      "outline_um": [
+        241.92,
+        224.64
+      ],
+      "track_offset_um": [
+        0.0,
+        0.0
+      ],
+      "pins_file": "cores/ot_hbm_svc_sm_xcal_rel_t__241.92x224.64__canon__ev74rst.json",
+      "note": "d4g hard core; 10366 cells | B2n grow (HBM-CORES): 209.952x210.6 -> 250.56x250.56, was ot_hbm_svc_sm_xcal_rel_t__209.952x210.6__q_spt0_u_xc_Q0.json | MASTER-PLAN-R6 outline shrink 250.56x250.56 -> 207.36x207.36 (centre kept, edge pins scaled) | HBM-MU-QUAD-4: ; COORD RULING HBM-CORE-LAT-R4 (4) + R5 REQ: xcal re-pack 241.92x224.64, Q0 grows W, option (a) L77_o station column shifted W (142.56 -> 103.68, outside the 8.64 halo) | ev74: rst_n at signed DB position (121.032,224.544)",
+      "obs_max": "M5",
+      "orient": "R180"
+    },
+    {
+      "inst": "u_xc_Q1",
+      "module": "ot_hbm_svc_sm_xcal_rel_t",
+      "origin_um": [
+        1460.16,
+        25.92
+      ],
+      "outline_um": [
+        241.92,
+        224.64
+      ],
+      "track_offset_um": [
+        0.0,
+        0.0
+      ],
+      "pins_file": "cores/ot_hbm_svc_sm_xcal_rel_t__241.92x224.64__canon__ev74rst.json",
+      "note": "d4g hard core; 10366 cells | B2n grow (HBM-CORES): 209.952x210.6 -> 250.56x250.56, was ot_hbm_svc_sm_xcal_rel_t__209.952x210.6__q_spt0_u_xc_Q1.json | MASTER-PLAN-R6 outline shrink 250.56x250.56 -> 207.36x207.36 (centre kept, edge pins scaled) | HBM-MU-QUAD-4: ; xcal re-pack, grow W | ev74: rst_n at signed DB position (121.032,224.544)",
+      "obs_max": "M5"
+    }
+  ],
+  "no_plan_edit": true
+}
