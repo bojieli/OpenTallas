@@ -22,7 +22,7 @@
 // root -> quad hop one station short (split-latency mutant).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_su_sms #(
-    parameter integer SM_NVMAX = 40, LM = 5, LA = 4, SRL = 2, MUT = 0
+    parameter integer SM_NVMAX = 40, LM = 5, LA = 4, SRL = 2, MUT = 0, LANES = 16
 ) (
     input  wire          clk,
     input  wire          rst_in,
@@ -58,6 +58,12 @@ module ot_s81_su_sms #(
         .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rjid(o_rjid));
 
     // the tap forwards its operand row registered WITH the valids: DOP = SRL
+    generate if(LANES==8)begin:g_fold2
+    ot_s81_su_smh_fold2 #(.SM_NVMAX(SM_NVMAX),.LM(LM),.LA(LA),.SRL(SRL),.MUT(MUT),.DOP(SRL))u_smh(
+        .clk(clk), .rst_in(rst_in), .s_v(s_v), .p_v(p_v), .c_v(c_v), .c_nv(c_nv), .c_lt(c_lt), .c_scale(c_scale),
+        .c_sink(c_sink), .cs_v(cs_v), .cs_i(cs_i), .cs_d(cs_d), .d(d),
+        .e_v(e_v), .e_d(e_d), .o_v(o_v), .o_d(o_d), .den_v(den_v), .f(f));
+    end else begin:g_full
 `ifdef SU_SMU_T
     dsfd_su_t_smh #(.SRL(SRL), .MUT((MUT == 5 || MUT == 6) ? MUT : 0)) u_smh (
 `else
@@ -66,4 +72,5 @@ module ot_s81_su_sms #(
         .clk(clk), .rst_in(rst_in), .s_v(s_v), .p_v(p_v), .c_v(c_v), .c_nv(c_nv), .c_lt(c_lt), .c_scale(c_scale),
         .c_sink(c_sink), .cs_v(cs_v), .cs_i(cs_i), .cs_d(cs_d), .d(d),
         .e_v(e_v), .e_d(e_d), .o_v(o_v), .o_d(o_d), .den_v(den_v), .f(f));
+    end endgenerate
 endmodule
