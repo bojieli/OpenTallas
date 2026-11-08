@@ -1,0 +1,45 @@
+{
+ "schema": "opentallas.plan_drop_face_shell_pins.v1",
+ "event": "qcore267_1107",
+ "by": "DIE-HBM-90-PEV",
+ "ruling": "COORD 2026-11-07 23:01 (4)(ii): qcore_r13 drops slice_t[267] as a declared dead input",
+ "module": "ot_hbm_su_static_qcore_r13",
+ "instances": [
+  "q_hub_ne.u_sucore_Q__q0",
+  "q_hub_nw.u_sucore_Q__q0"
+ ],
+ "pins_removed": [
+  "slice_t[267]"
+ ],
+ "old_table": "cores/ot_hbm_su_static_qcore_r13__224.64x207.36__canon__codex_g21__codex_v1__dh17v2__centry.json",
+ "new_table": "cores/ot_hbm_su_static_qcore_r13__224.64x207.36__canon__codex_g21__codex_v1__dh17v2__centry__s267drop.json",
+ "table_pins": [
+  1473,
+  1472
+ ],
+ "new_table_sha256": "330ffe42fb7837238b079520bc2841fa1cddc6147eacd38b5352acbdfbff1597",
+ "die_plan_sha256": "7d3d95717391b96e5fd6906af266cc8f881192f21b8f9c7a3a4e9eea9c2713ee",
+ "kit_pins_equal": true,
+ "pin_sites_moved": 0,
+ "pin_cycles": 0,
+ "macros_outline_clock": "unchanged",
+ "face_shell": {
+  "path": "/srv/opentallas-scratch2/claude/die-hbm-90-pev/qk/face_shell.json",
+  "dropped": [
+   "slice_t[267]"
+  ],
+  "unread_kept": [
+   "red_cmd[0]",
+   "red_cmd[1]",
+   "red_cmd[2]",
+   "red_cmd[3]"
+  ]
+ },
+ "shell_rtl": "/srv/opentallas-scratch2/claude/die-hbm-90-pev/qk/ot_hbm_su_static_qcore_r13__fshell.sv",
+ "count_audit": "COUNT-AUDIT-2 RESULT 2026-11-07 22:54 (B)(2): signed qcoreM misses 1/1472 plan pins, slice_t[267]; all other 1471 match",
+ "signed": "ot_hbm_su_static_qcore_r13 qcoreM: epyc6 /srv/opentallas-scratch2/claude/hbm-hard-3/resign/qcoreM_ea3 (re-sign flow-20261107-ea-hbm, LOCAL_PASS_NEEDS_PARENT, routed LEC EQUIVALENT, build_commit 7281ac2667f0); kit epyc6 /srv/opentallas-scratch2/claude/hbm-hard-2/kits/qcoreM (pins.json 1472 = new table)",
+ "why_read_nothing": "slice_t = {max, vB, xB, vA, xA} x 4 slices (67 b each). ot_hbm_su_red_pretree_j_r13 (PRETREE=1, MUT=0) reads t_p[67*S+33*H +: 32] and slice_t[67*S+33*H+32] for S 0..3, H 0..1 (bits 0..65 of each slice) and the mode bit slice_t[66] of slice 0 only; slice 3's mode bit slice_t[267] = 67*3+66 is read by nothing (t_p[267] has no reader), so face_shell dropped it (shell port [266:0], core fed {1'd0, slice_t__fq}).  slice_t[133] and slice_t[200] (slices 1, 2 mode bits) are also unread but stay as kept pins: the built kit has them.",
+ "parent": "die RTL (physical/die_plan/hbm/bind/d44v/inputs/t11_top.sv): sucore_NE/NW .slice_t({su_NE3__tree_o[66:0], ..., su_NE0__tree_o[66:0]}); slice_t[267] = su_{NE,NW}3__tree_o[66], whose only reader is this pin.  The driving slice output stays (its own table unchanged) and is left unloaded; the parent still passes 268 bits to a 267-bit core port, elaboration drops the MSB, same form as part 60 (injector r1 MSBs).  core_conns.json lists slice_t per port (bus:L... names, no per-bit row): unchanged; no bus width, station, ft slot or lane changes.",
+ "declared_dead_input": "slice_t[267] of ot_hbm_su_static_qcore_r13 (q_hub_nw.u_sucore_Q__q0, q_hub_ne.u_sucore_Q__q0): parent leaves it unconnected at the core (no macro pin); the core reads it as constant 0 (face shell {1'd0, ...}).",
+ "replay": "DIE-HBM-91 11-08: re-run on main 730fe78cb85 + expx328_1107 replay (ccbad2a1c5) with byte-identical copies of the intel2 qk inputs; table byte-equal to ab3e8c8cfae"
+}
