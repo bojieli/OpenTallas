@@ -93,3 +93,6 @@ override export GND_NETS_VOLTAGES =
 # Same RTL, pins, outline, macros, clock form; PIN CYCLES 0.
 override export PRE_GLOBAL_PLACE_TCL = /work/hold_pad_struct.tcl
 override export PLACE_DENSITY = 0.47
+# (5) COORD 11-07: face-flop slot pitch 40 -> 80 sites (face_flops.tcl OT_FF_CPITCH_SITES): W column util 1.0 in vM1 is pin-density driven
+#     (W pins 104 per 10 um at y 40-103), flops already at their pin rows; wider slots halve the face-strip density on every face.
+export OT_FF_CPITCH_SITES = 80

@@ -10,6 +10,6 @@ rsync -a --exclude run/ --exclude signoff/ --exclude 'signoff_2*' --exclude view
   --exclude '*.log' --exclude placed.csv --exclude hold_census.txt --exclude ot_face_flops.txt --exclude 'postcts_gate_*' \
   --exclude pin_audit.json --exclude dtap.txt --exclude prd_result.json --exclude vclk_measured_band.json \
   --exclude face_guard.json --exclude port_bind.json --exclude rtl_lint.json --exclude selrange.json --exclude selrange.rc "$S/" "$K/"
-for f in config.mk macro_placement.tcl max_fanout.tcl hold_pad_struct.tcl hpad_list_insert.tcl hpad_list.txt hpad_probe.tcl FORM_VM2.json; do
+for f in config.mk face_flops.tcl macro_placement.tcl max_fanout.tcl hold_pad_struct.tcl hpad_list_insert.tcl hpad_list.txt hpad_probe.tcl FORM_VM2.json; do
   cp "$H/$f" "$K/$f"; done
 (cd "$K" && find . -type f ! -name PROVENANCE.json -print0 | sort -z | xargs -0 sha256sum) | diff - "$H/KIT_SHA256.txt" && echo "vM2 kit matches KIT_SHA256.txt"
