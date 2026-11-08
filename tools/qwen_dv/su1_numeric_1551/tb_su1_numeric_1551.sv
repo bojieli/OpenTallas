@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ns/1fs
 module tb_su1_numeric_1551;
 reg clk=0;always #0.4165 clk=~clk;
 reg rst_n=0;integer cycle=0,ep,step,kind=0,j,n,k,lag;
