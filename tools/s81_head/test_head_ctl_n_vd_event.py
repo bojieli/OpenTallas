@@ -60,3 +60,14 @@ def test_stored_event():
     # the transport schedule is the l48uo one: the moved lanes are off the worst gather
     t = generate(plan)["transport"]
     assert (t["total_cycles"], t["spine"]["cycles"], t["gather_worst"]) == (336, 174, dict(lane="m0S_rx", cycles=81))
+
+
+@pytest.mark.skipif(not DIR.is_dir(), reason="sparse tree without the plan dir")
+def test_ring_bands_resized():
+    plan = json.loads(gzip.open(DIR / "source_plan.json.gz", "rt").read())
+    bands = plan["partition_types"]["hd_ctl_n"]["clock"]["landing_contract"]["bands"]
+    for bus in E.RING_BUSES:
+        x0, y0, x1, y1 = bands[bus]["rect_um"]
+        assert bands[bus]["spread"] >= 6.5 and (x1 - x0) * (y1 - y0) > 3 * 9000 and bands[bus]["max_pin_to_band_hop_um"] < 405
+        others = [b["rect_um"] for k, b in bands.items() if k != bus and b.get("rect_um")]
+        assert not any(min(x1, o[2]) > max(x0, o[0]) and min(y1, o[3]) > max(y0, o[1]) for o in others)

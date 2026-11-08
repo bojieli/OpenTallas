@@ -3,7 +3,7 @@
  "tool": "tools/s81_head/head_ctl_n_vd_event.py",
  "base": "l48uo",
  "base_plan_sha256": "f140216c876ba3186afdf3271f0f9b3ceadf63df95b5e0416a06af6dffcb54f6",
- "plan_sha256": "4c199631d9bbbcb33db16cc28eee0e4642644a1e32c48a2dc1fe097a31644056",
+ "plan_sha256": "2ee63c6b40d04a8c8fa5bddc13a8fa663a30f8d7bbce16bfece89522283439ae",
  "sidecar_sha256": "90d006a48f17adc6795bbf55e3077ff308bb6b417604167248051501cda25d77",
  "sidecar_changed": false,
  "delta_sha256": "54905e58301fd6bc93d6f33862674a658848be124ade83cd24b3b379d9b160a9",
@@ -203,6 +203,44 @@
    "reach_um": 116.2
   }
  ],
+ "ring_bands": [
+  {
+   "bus": "w3u_i",
+   "old_um": [
+    1072.72,
+    645.84,
+    1278.72,
+    691.2
+   ],
+   "new_um": [
+    1102.12,
+    485.2,
+    1257.64,
+    691.2
+   ],
+   "area_um2": 32037,
+   "spread": 7.0853,
+   "hop_um": 301.04
+  },
+  {
+   "bus": "w3d_i",
+   "old_um": [
+    17.28,
+    17.28,
+    97.2,
+    131.28
+   ],
+   "new_um": [
+    17.28,
+    17.28,
+    131.28,
+    295.92
+   ],
+   "area_um2": 31765,
+   "spread": 7.0251,
+   "hop_um": 367.409
+  }
+ ],
  "reset_start_raw_exports": [
   {
    "port": "rst_start_raw_0",
@@ -297,5 +335,5 @@
    10
   ]
  ],
- "published_wrapper_sha256": "8b9978dd83f584fa5ddd10631dd74ce0b552ede5c0615614e4b08bebe126c2bb"
+ "published_wrapper_sha256": "fdeb5f84f0dc12d4a673ba488802f8cf167158586fb3206868a6800f0bb65571"
 }

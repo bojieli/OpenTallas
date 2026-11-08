@@ -15,6 +15,8 @@
     reset_start_raw_exports row moves to the relay of the same depth at the same site (else the nearest one of that
     depth; the export pin keeps its l48uo site).
  6. latency.lanes regenerated (gen.latency_table): coll_WN3_u/d 11 -> 12, unit_lep 5 -> 6.
+ 7. the w3u_i/w3d_i storage bands re-sized at ring_ff spread 7 (clock_landing_plan band sizer), ~9.3k -> ~32k um2,
+    before the START keys are re-derived (their stages sit relative to the bands).
 
 usage: head_ctl_n_vd_event.py L48UO_DIR OUT_DIR --tools-root ROOT [--delta head_ctl_n_vd_delta.json.gz]
 """
@@ -33,6 +35,8 @@ TYPE = "hd_ctl_n"
 START_KEYS = ("landing_reader_start", "landing_writer_start", "landing_status_input_stages",
               "landing_status_anchors", "landing_local_resets")
 APPENDED = ("clk_t10", "clk_t11", "clk_t12", "clk_t13")
+RING_BUSES = ("w3u_i", "w3d_i")
+RING_BAND_SPREAD = 7.0   # vC3 GRT-0183: the 2.0-spread bands held ~13k ring cells per bus at 100 % congestion
 
 
 def apply_delta(plan, delta, schema, taps):
@@ -59,6 +63,40 @@ def apply_delta(plan, delta, schema, taps):
                   [{"name": n, "xy": [round(x, 4), round(y, 4)]} for n, x, y in por] + [dict(p) for p in add])
     res = taps.explicit_taps(schema.Plan(json.loads(json.dumps(plan))), TYPE)
     return por, [dict(name=n, xy=[round(x, 1), round(y, 1)], load=int(k), reach_um=round(r, 1)) for n, x, y, k, r in res]
+
+
+def resize_ring_bands(plan, side, C, S, spread=RING_BAND_SPREAD):
+    """item 7: the w3u/w3d storage bands at ring_ff spread `spread` (the band sizer steps down until a legal band
+    fits: macro-, station-, reset- and band-free, every corner within reach of its pin).  -> report rows"""
+    import copy
+    t = plan["partition_types"][TYPE]
+    bands = t["clock"]["landing_contract"]["bands"]
+    geoms = side["collector"]["types"]
+    P = S.Plan(plan) if (plan.get("die") or {}).get("pg", {}).get("domains") and plan.get("partitions") else None
+    phy = C.phy_supply_rects(P, TYPE) if P is not None else []
+    resets = C._reset_sites_for_type(plan, TYPE, geoms[TYPE].get("tree"), t["clock"]["landing_contract"].get("base_type"))
+    tt = copy.deepcopy(t)
+    tt["_cland_geom"] = copy.deepcopy(geoms[TYPE]["bus_geometry"])
+    saved = (C.BAND_RESERVE, C.BAND_SPREAD, C.BAND_RING)
+    C.BAND_RESERVE, C.BAND_SPREAD, C.BAND_RING = "ring_ff", float(spread), bands[RING_BUSES[0]].get("ring_place", "ff")
+    rows = []
+    try:
+        for bus in RING_BUSES:
+            b = bands[bus]
+            used = [list(o["rect_um"]) for k, o in bands.items() if k != bus and o.get("rect_um")]
+            nb = C._storage_band(tt, bus, int(b["width"]), used, phy=phy, resets=resets)
+            for k, v in b.items():
+                if k not in nb and k not in ("spread", "band_spread_target", "max_pin_to_band_hop_um", "area_reserve_um2"):
+                    nb[k] = v
+            nb["resized_from_um"] = list(b["rect_um"])
+            nb["resize"] = f"DIE-HEAD-84 l48vd LANDING-RING-DENSITY: ring_ff spread {spread:g} (the 2.0-spread band failed GRT-0183)"
+            x0, y0, x1, y1 = nb["rect_um"]
+            rows.append(dict(bus=bus, old_um=list(b["rect_um"]), new_um=nb["rect_um"], area_um2=round((x1-x0)*(y1-y0)),
+                             spread=nb.get("spread"), hop_um=nb["max_pin_to_band_hop_um"]))
+            bands[bus] = nb
+    finally:
+        C.BAND_RESERVE, C.BAND_SPREAD, C.BAND_RING = saved
+    return rows
 
 
 def remap_exports(T, por_rrl, new_rrl):
@@ -108,6 +146,7 @@ def main(argv=None):
     a = ap.parse_args(argv)
     root, src, out = a.tools_root.resolve(), a.src.resolve(), a.out.resolve()
     sys.path[:0] = [str(root / "tools/die_plan"), str(root / "tools/s81_head")]
+    import clock_landing_plan as CLP
     import clock_landings as CL
     import gen
     import schema
@@ -130,6 +169,7 @@ def main(argv=None):
         por_wrapper = pre / "published" / (T["module"] + ".sv")
         por_rrl = H.rrl_from_rtl(por_wrapper)
         por_taps, tap_rows = apply_delta(plan, delta, schema, taps)
+        band_rows = resize_ring_bands(plan, side, CLP, schema)
         moved = U.refresh_latency(plan, gen, schema)
         start_keys = {k: T["clock"].pop(k) for k in START_KEYS if k in T["clock"]}
         # the new reset tree: GEN of the plan without the landing START keys (they name l48uo relays)
@@ -175,7 +215,7 @@ def main(argv=None):
                   landing_ring_wreg=delta[TYPE]["landing_ring_wreg"],
                   ft_stations={v["name"]: v["stations"] for v in delta[TYPE]["ft_slots"]},
                   taps_kept=[n for n, _, _ in por_taps], taps_appended=list(APPENDED), taps=tap_rows,
-                  reset_start_raw_exports=exports, die_top_straps=straps,
+                  ring_bands=band_rows, reset_start_raw_exports=exports, die_top_straps=straps,
                   published_wrapper_sha256=U.sha(wrapper.read_bytes()))
     w = json.loads((out / "wave_prepare.json").read_text())
     w[EVENT] = record
@@ -184,7 +224,7 @@ def main(argv=None):
     sums = out / "SHA256SUMS"
     names = [ln.partition("  ")[2] for ln in sums.read_text().splitlines()] + [f"{EVENT}_event.json"]
     sums.write_text("".join(f"{U.sha((out / n).read_bytes())}  {n}\n" for n in dict.fromkeys(names) if (out / n).is_file()))
-    print(json.dumps(dict(plan_sha256=plan_sha, lanes=record["lanes_moved"], straps=straps, exports=exports,
+    print(json.dumps(dict(plan_sha256=plan_sha, lanes=record["lanes_moved"], straps=straps, bands=band_rows, exports=exports,
                           pack=U.pack(src, out)), indent=1))
 
 
