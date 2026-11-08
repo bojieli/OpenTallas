@@ -2632,6 +2632,28 @@ def phy_pg_west_notch(t, tn, name, rt, mac_x0, mac_y0=()):
     return rt
 
 
+def pg_placed_blocks(t):
+    """The placed blocks a PHY PG domain is judged by (phy_pg_domains; tools/die_plan/fit_phy_pg_domains.py).
+
+    S81-SERDES-PHY-1 10-31: a content with physical_parts is judged by its placed parts, not its logical lot.
+    DIE-HBM-90-TSTRAP 11-07: a content that is the parent of SPLIT sub-cores (hard_cores with physical_inst
+    <inst>.u_fcore.<...> or sub_core_parent <inst>; HBM-BIND-3 / DIE-QC-75, the parent design is wires-only glue around
+    its subs) is judged by those hard sub-cores, which are in hard_cores themselves; the glue has no macro view of its
+    own (HBM ot_pdie_serdes u_lk_* over chn/rx/tx).  A content without such sub-cores is unchanged.
+    """
+    hard = t.get("hard_cores", []) or []
+    parents = {h["sub_core_parent"] for h in hard if h.get("sub_core_parent")}
+    parents |= {str(h.get("physical_inst")).split(".u_fcore.")[0] for h in hard if ".u_fcore." in str(h.get("physical_inst") or "")}
+    placed = []
+    glue = [c for c in t.get("contents", []) if c.get("inst") in parents and not c.get("lef")]
+    for c in t.get("contents", []) + hard:
+        if any(c is g for g in glue):
+            continue
+        placed += ([dict(q, inst=q["physical_inst"]) for q in c["physical_parts"]]
+                   if c.get("physical_parts") else [c])
+    return placed
+
+
 def phy_pg_domains(P, tn):
     """PATH-KV-SYSC 10-25 (OWNER decision 7, PHY PG hook): the die.pg.domains that fall inside partition type tn, as
     [(name, power_net, ground_net, rect_type_um, [macro inst fully inside])].  Identical for every instance (a hardened
@@ -2659,11 +2681,7 @@ def phy_pg_domains(P, tn):
             rt = [round(min(u[0], v[0]), 4) + 0.0, round(min(u[1], v[1]), 4) + 0.0, round(max(u[0], v[0]), 4) + 0.0,
                   round(max(u[1], v[1]), 4) + 0.0]
             mac, mac_x0, mac_y0 = [], [], []
-            # S81-SERDES-PHY-1 10-31: a content with physical_parts is judged by its placed parts, not its logical lot
-            placed = []
-            for c in t.get("contents", []) + t.get("hard_cores", []):
-                placed += ([dict(q, inst=q["physical_inst"]) for q in c["physical_parts"]]
-                           if c.get("physical_parts") else [c])
+            placed = pg_placed_blocks(t)
             for c in placed:
                 if "origin_um" not in c or "outline_um" not in c:
                     continue
@@ -5534,18 +5552,28 @@ def bound_parent_id_plan(raw, kit_rtl):
     port is accepted, and the caller's plan is never changed.
     """
     import copy
-    from parent_id_straps import type_parent_id_straps
+    from parent_id_straps import type_parent_id_straps, with_sub_core_id_leaves
     from bind import short_id
     from bound_r8_straps import project
     raw = project(raw, kit_rtl)
     result = raw
     for tn, filelist in (kit_rtl or {}).items():
         t = raw["partition_types"][tn]
-        declarations = type_parent_id_straps(t)
-        if not declarations:
+        if not type_parent_id_straps(t):
             continue
         kj = Path(filelist).with_name("kit_rtl.json")
         kr = json.loads(kj.read_text())
+        # DIE-HBM-90-TSTRAP 11-07: the bind promotes a sub-core's declared ID on the as-built leaf that holds it
+        # (exact asbuilt.sub_core_leaf table, Binder.__init__ sets parent_id_leaf), e.g. plan hard core
+        # u_sfucore_Q_lane14__fr (physical_inst u_sfucore_Q_lane14.u_fcore.u_core.u_fr) -> bound leaf
+        # u_sfucore_Q_lane14.map_lane_j.  Resolve the declarations with the same table from the producer manifest
+        # the kit records, so the manifest row and the plan declaration name the same leaf.  Width, name and the
+        # actual kit input are still checked exactly below; no table = unchanged behaviour.
+        sub_core_leaf = {}
+        if kr.get("asbuilt_manifest"):
+            sub_core_leaf = json.loads(Path(kr["asbuilt_manifest"]).read_text()).get("sub_core_leaf") or {}
+        t = with_sub_core_id_leaves(t, sub_core_leaf)
+        declarations = type_parent_id_straps(t)
         mf = Path(kr["bind_out"]) / "bind_parent_id_straps.json"
         rows = json.loads(mf.read_text()).get("types", {}).get(kr.get("bound_type", tn), {})
         actual = {r["port"]: (r["dir"], r["width"]) for r in kr.get("bound_only_pins", [])}

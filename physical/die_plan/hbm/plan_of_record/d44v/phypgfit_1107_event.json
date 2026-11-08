@@ -1,0 +1,225 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "phypgfit_1107",
+ "plan": "d44v",
+ "lane": "DIE-HBM-90-TSTRAP (under DIE-HBM-90)",
+ "date": "2026-11-07",
+ "approved": "DIE-HBM-90 brief 11-07 21:4x (class (j) fix, one batch); fix-only, geometry of die.pg.domains rects only, no new cycle",
+ "what": [
+  "fit 5 die.pg.domains rect_um to their SerDes partition (tools/die_plan/fit_phy_pg_domains.py): clip to the partition of the domain's IO window, then cut at the edge of any placed block of that type that the rect cuts (the endpoint cores u_ep_*)"
+ ],
+ "why": "each domain rect was its IO window / bump field grown by one diagonal bump pitch (45*sqrt(2) = 63.64 um). Where the window sits on its partition edge the halo covered core-VDD neighbours with no PHY macro (phy_NW_io_u_lk_N0 over NW_su21 q_su21 + NW_b013 q_b013__physical_v1; phy_NE_io_u_lk_N2 over NE_su21 q_su21__physical_v1 + NE_b013 q_b013; phy_vsN0_u_lk_S1 over NW_sm3 q_sm3): gen_phys stops q_su21(+pv1) 'PG domain ... holds no macro'. Inside its own type the halo cut the endpoint core placed 38.64 um above the window (u_ep_N0/N2/S0/S1 at y 1088.64, domain top 1113.64): gen stops NW_io/NE_io 'macro u_ep_N0 straddles PG domain', the same on q_spb0(+pv1) and vsN0. die_io.check_pg_domains states the rule ('the domain inside its serdes partition (no VDDPHY straps over a core-VDD neighbour)') but runs it only with phy_macro_um/binding, absent here.",
+ "domains": [
+  {
+   "name": "phy_NW_io_u_lk_N0",
+   "part": "NW_io",
+   "rect_before": [
+    0.0,
+    6001.64,
+    698.248,
+    7178.92
+   ],
+   "rect_after": [
+    0.0,
+    6065.28,
+    648.0,
+    7153.92
+   ],
+   "steps": [
+    {
+     "cut": "partition",
+     "part": "NW_io",
+     "part_rect": [
+      0.0,
+      6065.28,
+      648.0,
+      10385.28
+     ]
+    },
+    {
+     "block": [
+      112.32,
+      7153.92,
+      540.0,
+      7400.16
+     ],
+     "cut": "block",
+     "inst": "u_ep_N0"
+    }
+   ],
+   "neighbours_uncovered": [
+    {
+     "part": "NW_b013",
+     "type": "q_b013__physical_v1"
+    },
+    {
+     "part": "NW_su21",
+     "type": "q_su21"
+    }
+   ]
+  },
+  {
+   "name": "phy_NW_spb0_u_lk_S0",
+   "part": "NW_spb0",
+   "rect_before": [
+    5846.12,
+    0.0,
+    6573.448,
+    1113.64
+   ],
+   "rect_after": [
+    5846.12,
+    0.0,
+    6573.448,
+    1088.64
+   ],
+   "steps": [
+    {
+     "block": [
+      5987.52,
+      1088.64,
+      6415.2,
+      1334.88
+     ],
+     "cut": "block",
+     "inst": "u_ep_S0"
+    }
+   ],
+   "neighbours_uncovered": []
+  },
+  {
+   "name": "phy_vsN0_u_lk_S1",
+   "part": "vsN0",
+   "rect_before": [
+    13328.36,
+    0.0,
+    14055.688,
+    1113.64
+   ],
+   "rect_after": [
+    13357.44,
+    0.0,
+    14055.688,
+    1088.64
+   ],
+   "steps": [
+    {
+     "cut": "partition",
+     "part": "vsN0",
+     "part_rect": [
+      13357.44,
+      0.0,
+      15042.24,
+      1503.36
+     ]
+    },
+    {
+     "block": [
+      13573.44,
+      1088.64,
+      14001.12,
+      1334.88
+     ],
+     "cut": "block",
+     "inst": "u_ep_S1"
+    }
+   ],
+   "neighbours_uncovered": [
+    {
+     "part": "NW_sm3",
+     "type": "q_sm3"
+    }
+   ]
+  },
+  {
+   "name": "phy_NE_io_u_lk_N2",
+   "part": "NE_io",
+   "rect_before": [
+    27701.432,
+    6001.64,
+    28399.68,
+    7178.92
+   ],
+   "rect_after": [
+    27751.68,
+    6065.28,
+    28399.68,
+    7153.92
+   ],
+   "steps": [
+    {
+     "cut": "partition",
+     "part": "NE_io",
+     "part_rect": [
+      27751.68,
+      6065.28,
+      28399.68,
+      10385.28
+     ]
+    },
+    {
+     "block": [
+      27864.0,
+      7153.92,
+      28291.68,
+      7400.16
+     ],
+     "cut": "block",
+     "inst": "u_ep_N2"
+    }
+   ],
+   "neighbours_uncovered": [
+    {
+     "part": "NE_b013",
+     "type": "q_b013"
+    },
+    {
+     "part": "NE_su21",
+     "type": "q_su21__physical_v1"
+    }
+   ]
+  },
+  {
+   "name": "phy_NE_spb0_u_lk_S0",
+   "part": "NE_spb0",
+   "rect_before": [
+    21826.232,
+    0.0,
+    22553.56,
+    1113.64
+   ],
+   "rect_after": [
+    21826.232,
+    0.0,
+    22553.56,
+    1088.64
+   ],
+   "steps": [
+    {
+     "block": [
+      21984.48,
+      1088.64,
+      22412.16,
+      1334.88
+     ],
+     "cut": "block",
+     "inst": "u_ep_S0"
+    }
+   ],
+   "neighbours_uncovered": []
+  }
+ ],
+ "kept": [
+  "every bump rect, IO window, bumps.exclude_um and esd_um lies inside the fitted rect (tool fails closed otherwise)",
+  "every PHY sub-core (u_lk_*.u_fcore.u_core.*) lies fully inside the fitted rect"
+ ],
+ "unchanged": [
+  "die.pg.domains nets, grids, bumps, io; die.io windows; every partition, type, outline, core, pin, lane, port, latency; PIN CYCLES 0",
+  "only die.pg.domains[].rect_um and the plan note change (checked: plan minus note and rect_um identical)"
+ ],
+ "sha256": {
+  "die_plan.json.before": "67425d6cb91453971ec55deda2578d714d5df3ed50ca63e4d8acf41d9752a45c",
+  "die_plan.json": "29e1c03ff6f0e151148e45c6815ff0708526a2e76e0817d20b7bbb3bdd242cb0"
+ },
+ "replay": "python3 -I tools/die_plan/fit_phy_pg_domains.py <d44v die_plan.json after istadrop_1107> OUT/die_plan.json OUT/phypgfit_1107_ledger.json"
+}
