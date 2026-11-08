@@ -1,0 +1,164 @@
+[
+  {
+    "op": "test",
+    "path": "/partition_types/cbx_q10__cl94a12200/hard_cores/1/pins_file",
+    "value": "cores/a0_nl_pins.json"
+  },
+  {
+    "op": "add",
+    "path": "/partition_types/cbx_q10__cl94a12200/hard_cores/1/params",
+    "value": {
+      "IDLE_UCK": 1
+    }
+  },
+  {
+    "op": "add",
+    "path": "/partition_types/cbx_q10__cl94a12200/hard_cores/1/clock_entry_access",
+    "value": {
+      "pin": "ck",
+      "footprints_um": {
+        "M5": [
+          [
+            928.764,
+            656.645,
+            928.788,
+            656.699
+          ]
+        ],
+        "M6": [
+          [
+            928.753,
+            656.656,
+            928.827,
+            656.688
+          ]
+        ],
+        "M7": [
+          [
+            928.784,
+            656.268,
+            928.816,
+            657.036
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "op": "replace",
+    "path": "/partition_types/cbx_q10__cl94a12200/hard_cores/1/pins_file",
+    "value": "results/physical/qc_nl_clock_adoption_1551/access_v4/a0_nl_pins.json"
+  },
+  {
+    "op": "test",
+    "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/6/xy",
+    "value": [
+      699.936,
+      745.848
+    ]
+  },
+  {
+    "op": "replace",
+    "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/6/xy",
+    "value": [
+      928.8,
+      656.652
+    ]
+  },
+  {
+    "op": "replace",
+    "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/6/insertion_ps",
+    "value": 774.38
+  },
+  {
+    "op": "replace",
+    "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/6/insertion_ff_ps",
+    "value": 610.59
+  },
+  {
+    "op": "replace",
+    "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/6/budget_owner",
+    "value": "private candidate: accepted NL signed pin-flop mean TT774.38/FF610.59; parent STA unqualified"
+  },
+  {
+    "op": "test",
+    "path": "/partition_types/cbx_q10__cl89936551/hard_cores/1/pins_file",
+    "value": "cores/a0_nl_pins.json"
+  },
+  {
+    "op": "add",
+    "path": "/partition_types/cbx_q10__cl89936551/hard_cores/1/params",
+    "value": {
+      "IDLE_UCK": 1
+    }
+  },
+  {
+    "op": "add",
+    "path": "/partition_types/cbx_q10__cl89936551/hard_cores/1/clock_entry_access",
+    "value": {
+      "pin": "ck",
+      "footprints_um": {
+        "M5": [
+          [
+            928.764,
+            656.645,
+            928.788,
+            656.699
+          ]
+        ],
+        "M6": [
+          [
+            928.753,
+            656.656,
+            928.827,
+            656.688
+          ]
+        ],
+        "M7": [
+          [
+            928.784,
+            656.268,
+            928.816,
+            657.036
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "op": "replace",
+    "path": "/partition_types/cbx_q10__cl89936551/hard_cores/1/pins_file",
+    "value": "results/physical/qc_nl_clock_adoption_1551/access_v4/a0_nl_pins.json"
+  },
+  {
+    "op": "test",
+    "path": "/partition_types/cbx_q10__cl89936551/clock/taps/6/xy",
+    "value": [
+      699.936,
+      745.848
+    ]
+  },
+  {
+    "op": "replace",
+    "path": "/partition_types/cbx_q10__cl89936551/clock/taps/6/xy",
+    "value": [
+      928.8,
+      656.652
+    ]
+  },
+  {
+    "op": "replace",
+    "path": "/partition_types/cbx_q10__cl89936551/clock/taps/6/insertion_ps",
+    "value": 774.38
+  },
+  {
+    "op": "replace",
+    "path": "/partition_types/cbx_q10__cl89936551/clock/taps/6/insertion_ff_ps",
+    "value": 610.59
+  },
+  {
+    "op": "replace",
+    "path": "/partition_types/cbx_q10__cl89936551/clock/taps/6/budget_owner",
+    "value": "private candidate: accepted NL signed pin-flop mean TT774.38/FF610.59; parent STA unqualified"
+  }
+]

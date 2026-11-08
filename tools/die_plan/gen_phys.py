@@ -778,9 +778,24 @@ def core_tap_pins(P, tn):
     blocks = entry_block_boxes(P, tn) if taps else []
     out = []
     for n, x, y, _ in taps:
-        sx, sy = _snap_tap(P, x, y, pg_legal=pg)
-        if blocks and _pin_hits(P, tn, n, sx, sy, blocks):
-            sx, sy = _clear_core_tap(P, tn, n, x, y, (sx, sy), blocks, pg)
+        explicit = any(c.get("clock_entry_access") and any(
+            q == n and i == c["inst"] and pin == c["clock_entry_access"]["pin"]
+            for q, i, pin, _, _ in core_tap_rows(P, tn)) for c in P.types[tn].get("hard_cores", []))
+        if explicit:
+            # An interior real-pin stack must not be shifted away by generic PG
+            # avoidance. Its exact target M6/M7 PG cuts are emitted below.
+            sx, sy = float(x), float(y)
+            layer = P.layers[P.layer_budget["partition_signal_max"]]
+            axis = sx if layer["dir"] == "V" else sy
+            k = (axis - layer["offset_um"]) / layer["pitch_um"]
+            if abs(k - round(k)) > 1e-6:
+                raise ValueError(f"{tn}.{n}: explicit entry off preferred routing track")
+        else:
+            sx, sy = _snap_tap(P, x, y, pg_legal=pg)
+        port_blocks = entry_block_boxes(P, tn, port=n, entry_xy=(sx, sy)) if any(
+            c.get("clock_entry_access") for c in P.types[tn].get("hard_cores", [])) else blocks
+        if port_blocks and _pin_hits(P, tn, n, sx, sy, port_blocks):
+            sx, sy = _clear_core_tap(P, tn, n, x, y, (sx, sy), port_blocks, pg)
         out.append((n, sx, sy))
     return out
 
@@ -793,7 +808,7 @@ def _lef_metal_top(lef_text):
     return max([int(v) for v in re.findall(r"\bLAYER\s+M(\d+)\b", lef_text)] or [0])
 
 
-def entry_block_boxes(P, tn, root=None):
+def entry_block_boxes(P, tn, root=None, port=None, entry_xy=None):
     """[(x0, y0, x1, y1)] type-frame boxes of the placed macros (type_macros) whose metal reaches the partition entry
     layer (layer_budget partition_signal_max) or the via layer below it: LEF OBS/PIN layers, else plan obs_max."""
     t = P.types[tn]
@@ -817,6 +832,15 @@ def entry_block_boxes(P, tn, root=None):
             mtop = None
         if mtop is None:
             mtop = int(om.group(1)) if om else top      # unknown view: treat as obstructing (fail closed)
+        access = c.get("clock_entry_access")
+        if access and port is not None:
+            matched = [(n, i, pin) for n, i, pin, _, _ in core_tap_rows(P, tn)
+                       if n == port and i == c["inst"] and pin == access["pin"]]
+            if matched:
+                from lef_clock_entry import validate_access
+                validate_access(f.read_text(), mod, access, top, (float(x), float(y), o),
+                                _pin_box(P, tn, port, *entry_xy))
+                continue  # only this named utility pin; every other port retains the solid macro
         if mtop < top - 1:
             continue
         w, h = map(float, c["outline_um"])
@@ -1436,16 +1460,37 @@ def pg_island_cuts(P, tn, root=None):
     pin of a placed hard core, grown by PG_CUT_MARGIN_UM in x and PG_CUT_SPACE_UM in y.  Which straps it hits is
     decided on the actual pdngen geometry (pg_island_cut_tcl), not re-derived here.  [] when not opted in."""
     t = P.types[tn]
-    if not t.get("pg_island_cut"):
+    selected = {(c.get("physical_inst") or c["inst"]): c["clock_entry_access"]["pin"]
+                for c in t.get("hard_cores", []) if c.get("clock_entry_access")}
+    if not t.get("pg_island_cut") and not selected:
         return []
     import cores as C
     cuts = []
     for inst, _mod, lef, _lib, ox, oy, o in type_macros(P, tn):
+        if not t.get("pg_island_cut") and inst not in selected:
+            continue
         pins, (w, h) = lef_interior_pins(C.resolve(lef, root))
+        if not t.get("pg_island_cut"):
+            pins = [(pin, r) for pin, r in pins if pin == selected[inst]]
+            if not pins:
+                raise ValueError(f"{tn}.{inst}: actual clock entry has no interior M5 target pin")
         for pin, r in pins:
             x0, y0, x1, y1 = _orient_rect_r(r, w, h, o)
             cuts.append((inst, pin, (round(x0 + ox - PG_CUT_MARGIN_UM, 4), round(y0 + oy - PG_CUT_SPACE_UM, 4),
                                      round(x1 + ox + PG_CUT_MARGIN_UM, 4), round(y1 + oy + PG_CUT_SPACE_UM, 4))))
+    return cuts
+
+
+def clock_entry_pg_cuts(P, tn):
+    """Targeted actual M7 utility windows; other macros/clock pins stay unchanged."""
+    cuts=[]
+    for core in P.types[tn].get("hard_cores", []):
+        access=core.get("clock_entry_access")
+        if access:
+            for rect in access["footprints_um"]["M7"]:
+                cuts.append(dict(inst=core.get("physical_inst") or core["inst"], pin=access["pin"], layer="M7",
+                    rect_um=[round(rect[0]-.072,6),round(rect[1]-.072,6),
+                             round(rect[2]+.072,6),round(rect[3]+.072,6)]))
     return cuts
 
 
@@ -3877,6 +3922,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if pg_cuts:
         (kd / "pg_island_cut.tcl").write_text(pg_island_cut_tcl(pg_cuts))
     post_pdn = ["/work/pg_island_cut.tcl"] if pg_cuts else []
+    entry_pg = clock_entry_pg_cuts(P, tn)
+    if entry_pg:
+        from clock_entry_pg import render as render_entry_pg
+        (kd / "clock_entry_pg_cut.json").write_text(json.dumps(
+            dict(schema="opentallas.clock_entry_pg_cuts.v1", cuts=entry_pg), indent=2) + "\n")
+        (kd / "clock_entry_pg_cut.tcl").write_text(render_entry_pg(entry_pg))
+        post_pdn.append("/work/clock_entry_pg_cut.tcl")
     if pg_pub:      # PG-CORECONN-3: M7-top macro PG straps -> tile pins (after any island cut)
         (kd / "pg_publish.tcl").write_text(core_pg_publish_tcl(pg_pub))
         post_pdn.append("/work/pg_publish.tcl")
@@ -4085,6 +4137,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)",
               "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if not macros else []),
            *([f"export OT_RELAY_MID_RE = {P.budgets.get('relay_mid_re', RELAY_MID_RE)}"] if macros else []),
+           # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
+           # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
+           *(["export OT_RELAY_MID_FIT = 1"] if macros and P.budgets.get("relay_mid_fit") else []),
+           *([f"export OT_GUTTER_BLOCK_UM = {P.budgets['gutter_block_um']}"] if macros and P.budgets.get("gutter_block_um") else []),
            # DIE-HEAD-69 11-05: core_out_land.tcl opt-in (GEN env OT_CORE_OUT_LAND=1 via wave item_env, or plan budgets list)
            *(["export OT_CORE_OUT_LAND = 1"] if macros and (os.environ.get("OT_CORE_OUT_LAND") == "1"
                                                        or tn in (P.budgets.get("core_out_land_types") or ())) else []),
@@ -4357,6 +4413,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name("reset_pair_place.tcl"), kd / "reset_pair_place.tcl")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
+        if P.budgets.get("gutter_block_um"):     # S81-TYPES-5 11-07 NARROW-GUTTER class (opt-in)
+            shutil.copyfile(Path(__file__).with_name("gutter_block.tcl"), kd / "gutter_block.tcl")
+            shutil.copyfile(Path(__file__).with_name("gutter_release.tcl"), kd / "gutter_release.tcl")
         # DIE-HEAD-69 11-05 (COORD ruling (1), hd_tile flt_q): core-output landing flops at their pins (core_out_land.tcl)
         shutil.copyfile(Path(__file__).with_name("core_out_land.tcl"), kd / "core_out_land.tcl")
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
@@ -4409,6 +4468,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                core_latency=clat["rows"],
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
+    # Private explicit actual-LEF entry access. Default budget bytes remain unchanged.
+    for row in bud["clock"]["core_taps"]:
+        core = next((c for c in t.get("hard_cores", []) if c["inst"] == row["inst"]), None)
+        if core and core.get("clock_entry_access"):
+            if row["pin"] != core["clock_entry_access"]["pin"]:
+                raise ValueError("clock entry access pin differs from core tap")
+            row["clock_entry_access"] = core["clock_entry_access"]
     # FLOW-11 10-30 (DIE-KV-48-CLK (b)): the type's PHY-edge clock pins (plan clock.edge_clocks, snapped like taps,
     # placed by tap_pins) are plan clock pins too; kit_contract clock_pin_geometry checks them like taps_snapped.
     # No edge clock: no key (byte-identical budget.json).
@@ -4572,6 +4638,7 @@ def type_verilog_defines(t, kit_defines=None):
 RUN_KIT = r"""#!/bin/bash
 # GENERATED by gen.py phys. Pre-floorplan gates fail closed. CTS is measured at
 # FF before hold repair; structural failures return before global/detail route.
+# grt is a measurement screen through standard GRT repair/policy, never DRT, abstract or signoff.
 # Heavy: run_kit.sh KITDIR [GOAL=route] [MEM_GB=16] [CPUS=8] through ot-run.
 # Kit IR (CRASH-TRIAGE 10-25): 6_report PDNSim is deferred (partition_ir.py; IR NOT_RUN in the kit, run it with
 # partition_ir.py sidecar KIT --mem-gb 64 --threads 8).  OT_KIT_IR=inline restores the in-route analysis.
@@ -4609,7 +4676,7 @@ NAME=dpkit-$(basename "$K")-$$
 RS=0; KWRS_M=  # KWRS
 if [ -f "$K/resume.json" ]; then  # KWRS
   RS=$(python3 -I -c 'import json,sys; print({"floorplan":1,"place":2,"cts":3,"grt":4,"route":5}[json.load(open(sys.argv[1]))["start"]])' "$K/resume.json") || { echo 'FAIL_PREFLOOR stage resume: resume.json unreadable' | tee -a "$K/FAIL_PREFLOOR"; exit 10; }  # KWRS
-  case "$GOAL" in floorplan|place|cts|route) ;; *) echo "FAIL_PREFLOOR stage resume: goal $GOAL unsupported" | tee -a "$K/FAIL_PREFLOOR"; exit 10;; esac  # KWRS
+  case "$GOAL" in floorplan|place|cts|grt|route) ;; *) echo "FAIL_PREFLOOR stage resume: goal $GOAL unsupported" | tee -a "$K/FAIL_PREFLOOR"; exit 10;; esac  # KWRS
   cat > "$K/kwrs_make.sh" <<'KWRS_MAKE'  # KWRS-BEGIN
 #!/bin/bash
 # kwrs_make.sh RS make VAR=.. TARGET..: stage-resume make filter (generated by run_kit.sh from K/resume.json)
@@ -4931,7 +4998,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && [ -f /work/lec.py ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; } && [ ! -f /work/lec_async.ready ]; then printf '1\\npython3 -I /work/lec.py /work --netlist %s --out /work/lec > /work/lec_run.log 2>&1\\n' \$N > /work/lec_async.ready; echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; \
   if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ ! -f /work/lec_async.on ] && [ ! -f /work/lec_async.identity ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
-  if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
+  if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     \$M cts SKIP_CTS_REPAIR_TIMING=1; rc=\$?; \
     if [ \$rc = 0 ] && grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1' /work/config.mk; then TB=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); [ -z \"\$TB\" ] || cp -p \"\$TB\" /work/4_cts_pretapbal.odb; \
       \$M run RUN_SCRIPT=/work/tapbal_grt.tcl RUN_LOG_NAME_STEM=4_2_tapbal_grt CORNER=TC CORNERS=tc; rc=\$?; \
@@ -4949,7 +5016,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
         LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; rc=\$?; tail -3 /work/hold_gate.log; \
       if [ \$rc != 0 ]; then { grep -h 'OT_HOLD_GATE FAIL' /work/hold_gate.log || echo 'NOT RUN (no OT_HOLD_GATE verdict, see hold_gate.log)'; } | sed 's/^/FAIL_POSTCTS FF structural hold gate: /' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
-  if [ \$rc = 0 ] && [ $GOAL = route ] && grep -q '^export OT_PREGRT_FF_HOLD = 1' /work/config.mk; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
+  if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = grt ]; } && grep -q '^export OT_PREGRT_FF_HOLD = 1' /work/config.mk; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
     PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
       OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \
       OT_HOLD_IN_MIN=\$(sed -n 's/^export OT_HOLD_IN_MIN = //p' /work/config.mk) OT_HOLD_OUT_MIN=\$(sed -n 's/^export OT_HOLD_OUT_MIN = //p' /work/config.mk) \
@@ -4962,25 +5029,25 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     else HM=\$(printf '%s\\n' \"\$HMR\" | sed -nE 's/^OT_HOLD_FF_MARGIN[[:space:]]*[:=][[:space:]]*//p'); \
       if [ -n \"\$HM\" ] && ! python3 -c 'import math,re,sys; s=sys.argv[1].strip(); valid=re.fullmatch(r\"[+-]?(?:[0-9]+(?:[.][0-9]*)?|[.][0-9]+)(?:[eE][+-]?[0-9]+)?\",s); x=float(s) if valid else float(\"nan\"); sys.exit(not math.isfinite(x))' \"\$HM\" > /work/hold_margin_value.log 2>&1; then \
         echo \"FAIL_POSTCTS invalid OT_HOLD_FF_MARGIN [\$HM]: expected a finite number\" | tee -a /work/FAIL_POSTCTS; rc=9; fi; fi; fi; \
-  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then MF=\$M; if [ -f /work/macro_ff_repair.mk ]; then MF=\"\$M DESIGN_CONFIG=/work/macro_ff_repair.mk\"; fi; OT_VCLK_CORNER=ff \$MF grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
-  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \
+  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = grt ]; }; then MF=\$M; if [ -f /work/macro_ff_repair.mk ]; then MF=\"\$M DESIGN_CONFIG=/work/macro_ff_repair.mk\"; fi; OT_VCLK_CORNER=ff \$MF grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = grt ]; }; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \
     BG=\$(grep -c '^export OT_POSTCTS_BAND_GATE = 1' /work/config.mk); rm -f /work/postcts_advisory.log; \
     for c in TT FF; do OT_POSTCTS_BAND_GATE=\$BG OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \
       grep -h OT_POSTCTS_GATE /work/postcts_gate_\$c.log || echo \"OT_POSTCTS_GATE \$c no result FAIL\" | tee -a /work/postcts_gate_\$c.log; done; \
     if grep -hq 'OT_POSTCTS_GATE.*FAIL' /work/postcts_gate_TT.log /work/postcts_gate_FF.log; then \
       if [ \$BG != 0 ]; then grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/FAIL_POSTCTS pre-route insertion gate: /' >> /work/FAIL_POSTCTS; rc=6; \
       else grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/OT_POSTCTS_ADVISORY pre-route insertion gate (not a stop, OWNER 11-03 19:12; signoff.json insertion_band): /' | tee -a /work/postcts_advisory.log; fi; fi; fi; \
-  if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
+  if [ \$rc = 0 ] && { [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     if [ -z \"\$HM\" ] || [ $GOAL = finish ]; then \$M grt; rc=\$?; fi; \
     if [ \$rc = 0 ]; then python3 -I /work/legacy_gate.py /work grt; rc=\$?; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; fi; \
-  if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ $GOAL != grt ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -f /work/core_infra_post.v ] && [ -f /work/lec.py ]; then python3 -I /work/lec.py /work --netlist /work/core_infra_post.v --out /work/lec_post > /work/lec_post.log 2>&1; lr=\$?; tail -1 /work/lec_post.log; \
     if [ \$lr != 0 ]; then echo \"FAIL_POSTPLACE clock-gate copy LEC exit \$lr (lec_post/lec.json): copies not proved equivalent\" | tee -a /work/FAIL_POSTCTS; rc=5; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
-  if [ \$rc = 0 ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/audit_pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ $GOAL != grt ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/audit_pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; rc=\$?; fi; \
   if { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
 [ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 5 "$NAME" "$GOAL")

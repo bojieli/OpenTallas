@@ -1400,6 +1400,17 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["m
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_sites"] = {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}}
 
 
+# Private opt-in actual-LEF entry geometry. No default OBS exemption.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["clock_entry_access"] = {
+    "type":"object", "additionalProperties":False, "required":["pin","footprints_um"],
+    "properties":{"pin":{"type":"string","minLength":1},
+                  "footprints_um":{"type":"object","additionalProperties":False,
+                    "required":["M5","M6","M7"],"properties":{
+                        layer:{"type":"array","minItems":1,"items":{
+                            "type":"array","minItems":4,"maxItems":4,"items":{"type":"number"}}}
+                        for layer in ("M5","M6","M7")}}}}
+
+
 def _check(v, s, path, errs):
     """Minimal draft-2020-12 subset (type, const, enum, required, properties, additionalProperties, items, min/max*,
     pattern, minLength, minProperties).  No external dependency, so it runs on every fleet host."""

@@ -1,0 +1,683 @@
+[
+  {
+    "name": "$paramod$de220acca18f1db8eb14cf5268f0d6f24a2b6a99\\dsfd_su_t_smhq",
+    "ports": [
+      {
+        "name": "\\clk",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\rst_in",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\cfg_q",
+        "direction": "input",
+        "width": 2
+      },
+      {
+        "name": "\\s_v",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\p_v",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\c_v",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\c_nv",
+        "direction": "input",
+        "width": 7
+      },
+      {
+        "name": "\\c_scale",
+        "direction": "input",
+        "width": 32
+      },
+      {
+        "name": "\\c_sink",
+        "direction": "input",
+        "width": 32
+      },
+      {
+        "name": "\\cs_v",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\cs_i",
+        "direction": "input",
+        "width": 5
+      },
+      {
+        "name": "\\cs_d",
+        "direction": "input",
+        "width": 64
+      },
+      {
+        "name": "\\d",
+        "direction": "input",
+        "width": 128
+      },
+      {
+        "name": "\\m_v",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\m_nmb",
+        "direction": "input",
+        "width": 32
+      },
+      {
+        "name": "\\dn_v",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\dn",
+        "direction": "input",
+        "width": 32
+      },
+      {
+        "name": "\\q_mxv",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "\\q_ev",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "\\q_el",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "\\q_skv",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "\\q_mx",
+        "direction": "output",
+        "width": 128
+      },
+      {
+        "name": "\\q_e",
+        "direction": "output",
+        "width": 128
+      },
+      {
+        "name": "\\e_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "\\e_d",
+        "direction": "output",
+        "width": 128
+      },
+      {
+        "name": "\\o_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "\\o_d",
+        "direction": "output",
+        "width": 64
+      },
+      {
+        "name": "\\f",
+        "direction": "output",
+        "width": 2
+      }
+    ],
+    "port_bits": 798,
+    "clock_reset": [
+      {
+        "name": "\\clk",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\rst_in",
+        "direction": "input",
+        "width": 1
+      }
+    ],
+    "hier_generic_ff_bits": 61791,
+    "hier_generic_primitives": {
+      "$adff": 656,
+      "$dff": 1329,
+      "$logic_not": 713,
+      "$logic_and": 411,
+      "$eq": 2206,
+      "$reduce_bool": 168,
+      "$logic_or": 408,
+      "$or": 44420,
+      "$mux": 6626,
+      "$xor": 3284,
+      "$shl": 256,
+      "$sub": 4128,
+      "$and": 81372,
+      "$add": 438,
+      "$neg": 44,
+      "$gt": 216,
+      "$lt": 2050,
+      "$reduce_or": 388,
+      "$shr": 128,
+      "$not": 414,
+      "$memrd": 8,
+      "$ge": 124,
+      "$le": 40,
+      "$shiftx": 4,
+      "$memrd_v2": 4,
+      "$meminit": 4,
+      "$memwr_v2": 8
+    },
+    "local_children": [
+      [
+        "$paramod$b99699e07e8a316d70de95fddb8ec5868b9325ae\\ot_hdc_delay",
+        "\\u_tv"
+      ],
+      [
+        "$paramod$0d0c5201dfcecd36024b0895ac09824071886a22\\ot_hdc_delay",
+        "\\u_td"
+      ],
+      [
+        "$paramod$abedcaf42fa8c9b378a30dad271dbdd7ecb33c6e\\ot_hdc_delay",
+        "\\u_tdd"
+      ],
+      [
+        "$paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\\ot_hdc_delay",
+        "\\u_rv"
+      ],
+      [
+        "$paramod$e9c41b4f994acad3c194eb8e342acb75e395e4c8\\ot_hdc_delay",
+        "\\u_rd"
+      ],
+      [
+        "$paramod$a5d42b1fc0bb61c4aaa9b9cdb4ea4bc173e6ebb2\\ot_hdc_delay",
+        "\\u_lv"
+      ],
+      [
+        "$paramod$0c48b4621a8d17698151ab5b38b8ecb7662f1257\\ot_hdc_delay",
+        "\\u_ld"
+      ],
+      [
+        "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "\\u_ev"
+      ],
+      [
+        "$paramod$08a5f0aa6df3273bbf0ef532ba0e3a4271e17f34\\ot_hdc_delay",
+        "\\u_ed"
+      ],
+      [
+        "$paramod$247e635a72efe516af573bda7394c64ef380e974\\ot_hdc_delay",
+        "\\u_ov"
+      ],
+      [
+        "$paramod$6d37af9b83b9fc4b1b57e8c892cc7b9455bd805f\\ot_hdc_delay",
+        "\\u_od"
+      ],
+      [
+        "$paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\\ot_hdc_delay",
+        "\\u_fo"
+      ],
+      [
+        "\\dsfd_su_t_sml",
+        "\\g_l[0].u_sml"
+      ],
+      [
+        "\\dsfd_su_t_sml",
+        "\\g_l[1].u_sml"
+      ],
+      [
+        "\\dsfd_su_t_sml",
+        "\\g_l[2].u_sml"
+      ],
+      [
+        "\\dsfd_su_t_sml",
+        "\\g_l[3].u_sml"
+      ],
+      [
+        "\\dsfd_su_t_smd",
+        "\\g_p[0].g_hard.u_smd"
+      ],
+      [
+        "\\dsfd_su_t_smd",
+        "\\g_p[1].g_hard.u_smd"
+      ]
+    ]
+  },
+  {
+    "name": "$paramod\\dsfd_su_t_smhr\\SRL=s32'00000000000000000000000000000010",
+    "ports": [
+      {
+        "name": "\\clk",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\rst_in",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\c_v",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\c_lt",
+        "direction": "input",
+        "width": 3
+      },
+      {
+        "name": "\\q_mxv",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\q_ev",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\q_el",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\q_skv",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\q_mx",
+        "direction": "input",
+        "width": 512
+      },
+      {
+        "name": "\\q_e",
+        "direction": "input",
+        "width": 512
+      },
+      {
+        "name": "\\m_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "\\m_nmb",
+        "direction": "output",
+        "width": 32
+      },
+      {
+        "name": "\\dn_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "\\dn",
+        "direction": "output",
+        "width": 32
+      },
+      {
+        "name": "\\den_v",
+        "direction": "output",
+        "width": 1
+      }
+    ],
+    "port_bits": 1101,
+    "clock_reset": [
+      {
+        "name": "\\clk",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\rst_in",
+        "direction": "input",
+        "width": 1
+      }
+    ],
+    "hier_generic_ff_bits": 16477,
+    "hier_generic_primitives": {
+      "$adff": 200,
+      "$dff": 126,
+      "$logic_and": 121,
+      "$eq": 112,
+      "$mux": 1352,
+      "$reduce_bool": 66,
+      "$logic_not": 210,
+      "$logic_or": 122,
+      "$xor": 507,
+      "$and": 20745,
+      "$or": 11155,
+      "$not": 206,
+      "$ge": 66,
+      "$lt": 22,
+      "$sub": 44,
+      "$le": 22,
+      "$shl": 88,
+      "$reduce_or": 110,
+      "$add": 23,
+      "$shr": 44,
+      "$shiftx": 3,
+      "$mul": 1
+    },
+    "local_children": [
+      [
+        "$paramod$247e635a72efe516af573bda7394c64ef380e974\\ot_hdc_delay",
+        "\\u_tv"
+      ],
+      [
+        "$paramod$00c6709c407f13efb9fffc620742693c49278361\\ot_hdc_delay",
+        "\\u_td"
+      ],
+      [
+        "$paramod$a5d42b1fc0bb61c4aaa9b9cdb4ea4bc173e6ebb2\\ot_hdc_delay",
+        "\\u_lv"
+      ],
+      [
+        "$paramod$82db6f97e7215e6707e8089bf5930c48d80f4d0a\\ot_hdc_delay",
+        "\\u_ld"
+      ],
+      [
+        "\\dsfd_su_t_smc",
+        "\\u_smc"
+      ],
+      [
+        "$paramod$004193434a66b5c5752130a33d7eb48f9c0971f2\\ot_hdc_delay",
+        "\\u_cv"
+      ],
+      [
+        "$paramod$7119b3748a1b5a1704afe72aecca2fa6222a2f54\\ot_hdc_delay",
+        "\\u_cd"
+      ],
+      [
+        "\\dsfd_su_t_smr",
+        "\\u_smr"
+      ],
+      [
+        "$paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\\ot_hdc_delay",
+        "\\u_rv"
+      ],
+      [
+        "$paramod$e9c41b4f994acad3c194eb8e342acb75e395e4c8\\ot_hdc_delay",
+        "\\u_rd"
+      ],
+      [
+        "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "\\u_dv"
+      ]
+    ]
+  },
+  {
+    "name": "\\dsfd_su_t_smd",
+    "ports": [
+      {
+        "name": "\\ck",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\rst",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\cfg_p",
+        "direction": "input",
+        "width": 3
+      },
+      {
+        "name": "\\i_pv",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\i_pa",
+        "direction": "input",
+        "width": 64
+      },
+      {
+        "name": "\\i_dv",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\i_den",
+        "direction": "input",
+        "width": 32
+      },
+      {
+        "name": "\\i_csv",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\i_csi",
+        "direction": "input",
+        "width": 5
+      },
+      {
+        "name": "\\i_csd",
+        "direction": "input",
+        "width": 64
+      },
+      {
+        "name": "\\o_ov",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "\\o_o",
+        "direction": "output",
+        "width": 32
+      },
+      {
+        "name": "\\o_f",
+        "direction": "output",
+        "width": 1
+      }
+    ],
+    "port_bits": 207,
+    "clock_reset": [
+      {
+        "name": "\\ck",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\rst",
+        "direction": "input",
+        "width": 1
+      }
+    ],
+    "hier_generic_ff_bits": 9282,
+    "hier_generic_primitives": {
+      "$adff": 52,
+      "$dff": 487,
+      "$eq": 215,
+      "$logic_and": 37,
+      "$logic_not": 60,
+      "$mux": 757,
+      "$add": 43,
+      "$memwr_v2": 2,
+      "$memrd": 2,
+      "$ge": 8,
+      "$lt": 205,
+      "$xor": 420,
+      "$logic_or": 44,
+      "$sub": 422,
+      "$reduce_or": 36,
+      "$gt": 24,
+      "$shr": 10,
+      "$shl": 22,
+      "$and": 15064,
+      "$reduce_bool": 14,
+      "$or": 8216,
+      "$not": 69,
+      "$neg": 4,
+      "$le": 2
+    },
+    "local_children": [
+      [
+        "$paramod$6539e0de391f7a65cc23bde289777c8de2cf2e01\\ot_s81_su_smd",
+        "\\u_d"
+      ]
+    ]
+  },
+  {
+    "name": "\\dsfd_su_t_sml",
+    "ports": [
+      {
+        "name": "\\ck",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\rst",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\sk_en",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\i_cv",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\i_nv",
+        "direction": "input",
+        "width": 7
+      },
+      {
+        "name": "\\i_scale",
+        "direction": "input",
+        "width": 32
+      },
+      {
+        "name": "\\i_sink",
+        "direction": "input",
+        "width": 32
+      },
+      {
+        "name": "\\i_sv",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\i_s",
+        "direction": "input",
+        "width": 32
+      },
+      {
+        "name": "\\i_mv",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\i_nmb",
+        "direction": "input",
+        "width": 32
+      },
+      {
+        "name": "\\o_mxv",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "\\o_mx",
+        "direction": "output",
+        "width": 32
+      },
+      {
+        "name": "\\o_ev",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "\\o_es",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "\\o_el",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "\\o_e",
+        "direction": "output",
+        "width": 32
+      }
+    ],
+    "port_bits": 209,
+    "clock_reset": [
+      {
+        "name": "\\ck",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "\\rst",
+        "direction": "input",
+        "width": 1
+      }
+    ],
+    "hier_generic_ff_bits": 10523,
+    "hier_generic_primitives": {
+      "$dff": 87,
+      "$adff": 136,
+      "$eq": 444,
+      "$logic_and": 84,
+      "$reduce_bool": 35,
+      "$logic_or": 80,
+      "$logic_not": 148,
+      "$or": 6997,
+      "$mux": 1278,
+      "$xor": 611,
+      "$shl": 53,
+      "$sub": 821,
+      "$and": 12811,
+      "$add": 88,
+      "$neg": 9,
+      "$gt": 42,
+      "$lt": 410,
+      "$reduce_or": 79,
+      "$shr": 27,
+      "$not": 69,
+      "$memrd": 1,
+      "$ge": 27,
+      "$le": 9,
+      "$shiftx": 1,
+      "$memrd_v2": 1,
+      "$meminit": 1,
+      "$memwr_v2": 1
+    },
+    "local_children": [
+      [
+        "$paramod$f05440f12c231b1e7299f2120b20df52cb61f978\\ot_s81_su_sml",
+        "\\u_l"
+      ]
+    ]
+  }
+]

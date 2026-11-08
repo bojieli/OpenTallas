@@ -1,0 +1,211 @@
+{
+  "status": "PRIVATE_ANALYTIC_SENSITIVITY_NOT_STA",
+  "accepted_lib_required": true,
+  "clock_mean_old_ps": {
+    "TT": 692.6,
+    "FF": 601.9
+  },
+  "clock_mean_actual_ps": {
+    "TT": 774.38,
+    "FF": 610.59
+  },
+  "common_clock_ps": {
+    "TT": 250.0,
+    "FF": 202.5
+  },
+  "early_old_ps": {
+    "TT": 442.6,
+    "FF": 399.4
+  },
+  "early_actual_ps": {
+    "TT": 524.38,
+    "FF": 408.09
+  },
+  "generator_rule": "set_clock_latency -source -clock clk -early_mean; existing tap-window spread retained; actual core Liberty arcs remain authoritative",
+  "same_NL_clock_both_endpoints": "source-offset common shift cancels; actual Liberty and routed wires still timed",
+  "clock_trunk_delta_um": [
+    228.864,
+    -89.196
+  ],
+  "clock_trunk_L1_delta_um": 318.06,
+  "wire_delay_and_skew_ps": "UNKNOWN until actual parent route; no shallow-clock or zero-wire substitute",
+  "event_data_cycles": 0,
+  "rows": [
+    {
+      "type": "cbx_q10__cl94a12200",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "parent_glue_and_external_boundary",
+      "direction": "NL_launch",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": 81.78,
+      "source_offset_only_hold_slack_delta_ps": -8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    },
+    {
+      "type": "cbx_q10__cl94a12200",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "parent_glue_and_external_boundary",
+      "direction": "NL_capture",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": -81.78,
+      "source_offset_only_hold_slack_delta_ps": 8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    },
+    {
+      "type": "cbx_q10__cl94a12200",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "u_t20.ck",
+      "direction": "NL_launch",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": 81.78,
+      "source_offset_only_hold_slack_delta_ps": -8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    },
+    {
+      "type": "cbx_q10__cl94a12200",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "u_t20.ck",
+      "direction": "NL_capture",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": -81.78,
+      "source_offset_only_hold_slack_delta_ps": 8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    },
+    {
+      "type": "cbx_q10__cl94a12200",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "u_t21.ck",
+      "direction": "NL_launch",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": 81.78,
+      "source_offset_only_hold_slack_delta_ps": -8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    },
+    {
+      "type": "cbx_q10__cl94a12200",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "u_t21.ck",
+      "direction": "NL_capture",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": -81.78,
+      "source_offset_only_hold_slack_delta_ps": 8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    },
+    {
+      "type": "cbx_q10__cl94a12200",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "u_t31.ck",
+      "direction": "NL_launch",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": 81.78,
+      "source_offset_only_hold_slack_delta_ps": -8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    },
+    {
+      "type": "cbx_q10__cl94a12200",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "u_t31.ck",
+      "direction": "NL_capture",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": -81.78,
+      "source_offset_only_hold_slack_delta_ps": 8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    },
+    {
+      "type": "cbx_q10__cl89936551",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "parent_glue_and_external_boundary",
+      "direction": "NL_launch",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": 81.78,
+      "source_offset_only_hold_slack_delta_ps": -8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    },
+    {
+      "type": "cbx_q10__cl89936551",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "parent_glue_and_external_boundary",
+      "direction": "NL_capture",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": -81.78,
+      "source_offset_only_hold_slack_delta_ps": 8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    },
+    {
+      "type": "cbx_q10__cl89936551",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "u_t20.ck",
+      "direction": "NL_launch",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": 81.78,
+      "source_offset_only_hold_slack_delta_ps": -8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    },
+    {
+      "type": "cbx_q10__cl89936551",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "u_t20.ck",
+      "direction": "NL_capture",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": -81.78,
+      "source_offset_only_hold_slack_delta_ps": 8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    },
+    {
+      "type": "cbx_q10__cl89936551",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "u_t21.ck",
+      "direction": "NL_launch",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": 81.78,
+      "source_offset_only_hold_slack_delta_ps": -8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    },
+    {
+      "type": "cbx_q10__cl89936551",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "u_t21.ck",
+      "direction": "NL_capture",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": -81.78,
+      "source_offset_only_hold_slack_delta_ps": 8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    },
+    {
+      "type": "cbx_q10__cl89936551",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "u_t31.ck",
+      "direction": "NL_launch",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": 81.78,
+      "source_offset_only_hold_slack_delta_ps": -8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    },
+    {
+      "type": "cbx_q10__cl89936551",
+      "affected_pin": "u_t30.ck",
+      "other_clock_domain": "u_t31.ck",
+      "direction": "NL_capture",
+      "source_latency_delta_TT_ps": -81.78,
+      "source_latency_delta_FF_ps": -8.69,
+      "source_offset_only_setup_slack_delta_ps": -81.78,
+      "source_offset_only_hold_slack_delta_ps": 8.69,
+      "actual_path_exists": "not asserted; sensitivity inventory, current bound path graph must select real endpoints"
+    }
+  ]
+}

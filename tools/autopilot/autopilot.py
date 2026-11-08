@@ -1049,6 +1049,14 @@ def parse_client_log(text):
     if "ot-run: NOT RUN" in text and "ran_on" not in o:
         o["not_run"] = True
         o["msg"] = [l for l in text.splitlines() if "NOT RUN" in l][-1][:300]
+    # A shell parse error in the local ot-run frontend occurs before it can emit
+    # NOT RUN. Treat only that exact pre-admission signature as infrastructure;
+    # HDL/flow syntax errors and errors after a payload ran remain design failures.
+    shell_error = re.search(r"^(?:/[^\n:]+/)?ot-run: line \d+: syntax error[^\n]*$", text, re.M)
+    if shell_error and "ran_on" not in o and "ot-heavy: admitted on" not in text:
+        o["frontend_shell_fail"] = shell_error[0]
+        o["not_run"] = True
+        o["msg"] = "frontend shell syntax, payload not run: " + shell_error[0][:240]
     if "ot-run: NOT COMPLETED" in text:
         o["not_completed"] = True
         o["msg"] = [l for l in text.splitlines() if "NOT COMPLETED" in l][-1][:300]

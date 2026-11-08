@@ -262,7 +262,12 @@ def gate(cfg, die, descends=None):
     g = d.get("gate") or {}
     bad = [k for k in GATE_KEYS if str(g.get(k, "")).upper() != "PASS"]
     d.pop("_cores_only", None)
-    if bad == ["clock"] and d.get("core_kit"):
+    if bad == ["clock"] and d.get("types_before_die_clock"):
+        # KW-FIX-32 11-07 (OWNER 17:4x "allow type builds for all dies, including HBM"): die option
+        # types_before_die_clock true -> a die whose ONLY non-PASS plan gate is the die clock builds every kind (types
+        # too), not just cores; g0c/bind must still PASS.  Default off = the 12.22 item 4 cores-only behaviour below.
+        pass
+    elif bad == ["clock"] and d.get("core_kit"):
         # AUTOBUILD-PIPE-2 (COORD 10-30 23:5x, owner 12.22 item 4): a hard core does not depend on the die clock (its
         # boundary is the plan pin table + common core latency), so a core-kit die builds its kind=core items before
         # the die clock PASSes; partition types still wait for it (select() skips them)
@@ -1877,7 +1882,12 @@ def input_hash(sp, prov_key=None):
         if isinstance(v, (list, tuple)):
             return [clean(x) for x in v]
         return v.replace(src, "<SRC>") if isinstance(v, str) and src else v
-    body = {k: c for k, c in ((k, clean(v)) for k, v in sp.items() if k not in INPUT_SKIP) if c not in (None, "", {}, [])}
+    # OT_FLOW_TAG selects the released sign-off tools/child context, not design inputs. Normalize
+    # both stored and candidate specs; changing only this metadata must never release a failed row.
+    compared = dict(sp)
+    if isinstance(compared.get("gen_env"), dict):
+        compared["gen_env"] = {k: v for k, v in compared["gen_env"].items() if k != "OT_FLOW_TAG"}
+    body = {k: c for k, c in ((k, clean(v)) for k, v in compared.items() if k not in INPUT_SKIP) if c not in (None, "", {}, [])}
     form = sp.get("leafslew_form")
     if form:
         body["leafslew"] = clean(form.get("env") or {})
