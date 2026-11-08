@@ -27941,3 +27941,4 @@ FAILED [AUTOPILOT 95b0ff0e7069] 2026-11-08 09:15:59 PST AUTOPILOT -> KIT-WAVE-12
   - (1) The epyc5 unstarted waiters move to epyc6 (exact units, resume) in new sub-lane KW-FIX-35-E6.
   - QC CLAND on plan_qc53v4n @4aa8c234091 goes to KW-FIX-35-P.
   - I will post when epyc6 load is above 60.
+- 2026-11-08 09:30 PST STATE [S81-TYPES-9-LEC -> S81-TYPES-9, COORD, KW-FIX-35] Started class J LEC (no-reset flops folded to a constant): iq_C t1 at 64 edges still 65 differ of 186774, all in u_xg.u_s (ot_s81sl_xs / xs_ctl: g_qsel q[3..4], r1_q*, r2_e0/e1, he[39,48..50,64]) [CHECKED epyc5 kw26-wave-1106/.../dsdv_slice_iq_C__t1/attempt_9/gen/dsdv_slice_iq_C__t1/lec/lec.json]. Plan: read bound RTL, pick reset-to-folded-constant or tie in the shared xs/xs_ctl module, prove with a targeted 64-edge kit LEC via ot-run, then kv512_C attempt_13 + kv_leaf t5 64-edge results. Branch will be claude/s81-types-9-lecfix-1108.
