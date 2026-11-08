@@ -22,5 +22,5 @@ plan['partition_types']={'serdes__t16':dict(outline_um=[2885.76,1226.88],hard_co
 (D/'plan_draft.json').write_text(json.dumps(plan,indent=1)+'\n')
 b='rtl/dsrom_sys/s81_link/'
 spec=dict(name=M,top=M,sources=[b+'col/ot_s81_rck_reform.sv',b+'ot_s81_kp4_dsyn.sv',b+'ot_s81_kp4_bm.sv',b+'ot_s81_kp4_common.sv',b+'ot_s81_gf1024.svh',b+'ot_s81_kp4_syn_mat.svh','rtl/common/landed_parent/ot_pl_land.sv'],clock_port='ck',reset_ports=['rst_n'],macros=[],params={},route=dict(pd=.4,threads=8),defines=['OT_S81_RCK_REFORM','OT_S81_RCK_RELAY4','OT_S81_KP4_AM_FACE3','OT_S81_KP4_SYN_LOCAL'])
-(D/'spec.json').write_text(json.dumps(spec,indent=1)+'\n');(D/'recipes.json').write_text(json.dumps({M:dict(ref_tile=str(D.relative_to(R)),rtl_dirs=True,util=.4,suffix='vA')},indent=1)+'\n')
+(D/'spec.json').write_text(json.dumps(spec,indent=1)+'\n');(D/'recipes.json').write_text(json.dumps({M:dict(ref_tile=str(D.relative_to(R)),rtl_dirs=True,util=.4,suffix='vA',orfs_vars=dict(OT_SKIP_PRECTS_METRICS=1))},indent=1)+'\n')
 print(D)
