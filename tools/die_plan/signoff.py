@@ -112,6 +112,10 @@ PAIR_SKEW_MAX_PS = 80.0              # target only: over it is reported in check
 # (FLOW 10-25, default for kits with a per-corner insertion binding: TT and FF each rebound to their routed pin-register
 # mean, clock check FAILs when a mean is more than the tolerance from the bound value)
 VCLK_MODES = ("sdc", "pin-flop-mean", "rebind", "bound-ff")
+# KW-FIX-34-SIG (COORD 11-08 02:06, OWNER 11-03 'insertion band -> die STA'): a hard_core_latency contract kit times
+# its TT IO paths against the routed TT pin-register mean (the rebind basis: the die tap absorbs the band, the residual
+# is owed at die STA); FF keeps its bound-ff reference.  'sdc' = the kit SDC vclk (every other kit, unchanged).
+TT_VCLK_MODES = ("sdc", "rebind")
 PAIR_VERIFY_TOL_PS = 1.0             # credited path-end skew vs CK-arrival skew - CPPR (integrity check)
 PAIR_CREDIT_MAX = 5000                 # exact-credit path searches per check before the worst becomes a bound
 SPREAD_MAX_PS = PAIR_SKEW_MAX_PS  # legacy record field; spread is information only
@@ -1065,8 +1069,10 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                 ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False, hold_out_min_ports=None,
                 ft_decl=None, tap_window=None, droop=None, pair_targets=False, fwd_ring=None, margin_policy=None,
                 fwd_ring_min=None, retain_child_clock_witness=False, parent_boundary_instances=(), parent_boundary_std_limit=0,
-                static_straps=()):
-    """pair_targets: True = the corner's planned core clock-pin earliness file is mounted at /sdc/pair_targets.txt
+                static_straps=(), tt_vclk="sdc"):
+    """tt_vclk: 'rebind' = the TT session alone rebinds the IO vclk to its routed pin-register mean (hard_core_latency
+    contract kits, KW-FIX-34-SIG) whatever ff_vclk says for FF; 'sdc' = no TT-only rebind (session byte-identical).
+    pair_targets: True = the corner's planned core clock-pin earliness file is mounted at /sdc/pair_targets.txt
     (pair_target_file): the related pair skew is then also measured target-relative (pair_skew.tcl ot_ps_load_targets)
     and the gate reads that; False = no target lines (session byte-identical).  tap_window: the plan's per-tap latency window (sdc_lint.json tap_window_ps, gen_phys.tap_window_ps): the
     golden SDC times every clock port W early, so the overlay's min output delay is the contract + W (exact IO shift);
@@ -1089,9 +1095,12 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                     "write_spef /out/rcx.spef\nread_spef /out/rcx.spef"), "rcx"
     if ff_vclk not in VCLK_MODES:
         raise ValueError("unsupported FF virtual-clock reference")
+    if tt_vclk not in TT_VCLK_MODES:
+        raise ValueError("unsupported TT virtual-clock reference")
     # FLOW 10-25 'rebind' (ruling 9.7 / 5e): EVERY sign-off corner times its IO paths against that corner's routed
     # RCX pin-register mean; the clock check bounds it against the kit's per-corner bound insertion
-    on = (corner == "ff" and ff_vclk == "pin-flop-mean") or (corner in ("tt", "ff") and ff_vclk == "rebind")
+    on = (corner == "ff" and ff_vclk == "pin-flop-mean") or (corner in ("tt", "ff") and ff_vclk == "rebind") \
+        or (corner == "tt" and tt_vclk == "rebind")
     if corner == "ff" and ff_vclk == "bound-ff":
         if ff_bound_ps is None:
             raise ValueError("bound-ff needs the declared FF insertion (ff_bound_ps)")
@@ -1678,7 +1687,8 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 retain_child_clock_witness=retain_child_clock_witness,
                                                 parent_boundary_instances=parent_boundary_instances,
                                                 parent_boundary_std_limit=parent_boundary_std_limit,
-                                                static_straps=declared_static_straps(disc.get("kit"), Path(disc["sdc"]).read_text())))
+                                                static_straps=declared_static_straps(disc.get("kit"), Path(disc["sdc"]).read_text()),
+                                                tt_vclk=disc.get("tt_vclk", "sdc")))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
@@ -2139,7 +2149,8 @@ def evaluate(rec, insertion_target=None):
 
     # setup TT (the sign-off corner, AGENTS.md 2026-10-24)
     requested = rec.get("policy", {}).get("ff_vclk", "sdc")
-    if requested == "rebind" and ok_corner("tt") and C["tt"].get("std_wns_max") is not None:
+    tt_rebind = requested == "rebind" or rec.get("policy", {}).get("tt_vclk") == "rebind"
+    if tt_rebind and ok_corner("tt") and C["tt"].get("std_wns_max") is not None:
         w = C["tt"]["std_wns_max"]
         ref = C["tt"].get("ff_vclk_reference") or ""
         v = ("PASS" if w >= 0 else "FAIL") if ref.startswith("applied mode pin_flop_mean ") else "NOT RUN"
@@ -2459,6 +2470,12 @@ def cmd_run(a):
                 a.ff_vclk = "bound-ff"
                 disc["ff_bound_ps"] = float(lctx["insertion_ff_ps"]) / float(lctx.get("time_unit_ps") or 1.0)
                 a.ff_vclk_contract = a.ff_vclk_contract or f"declared core FF insertion {disc['sdc_lint_ctx']}"
+        # KW-FIX-34-SIG (COORD 11-08 02:06): TT IO against the measured TT pin-flop insertion (rebind basis); FF keeps
+        # the reference chosen above (bound-ff).  A typed plan-declared IO reference (io_reference_ps) keeps its
+        # declared TT value (core_io_reference: a planning input, not the measured insertion).
+        if getattr(a, "tt_vclk", "auto") == "auto" and core_contract.get("io_reference_ps") is None \
+                and a.ff_vclk != "rebind":
+            disc["tt_vclk"] = "rebind"
     elif disc.get("sdc_lint_ctx"):                                  # die-plan kit: the bound (plan) insertion
         lctx = json.loads(Path(disc["sdc_lint_ctx"]).read_text())
         if a.insertion_target is None:
@@ -2483,6 +2500,9 @@ def cmd_run(a):
                            insertion_tol_ps=INSERTION_TOL_PS, fanout_max=FANOUT_MAX,
                            ff_vclk=a.ff_vclk, ff_vclk_contract=a.ff_vclk_contract, insertion_bound=bound,
                            ff_vclk_bound_ps=disc.get("ff_bound_ps"),
+                           **({"tt_vclk": "rebind", "tt_vclk_contract": "hard_core_latency clock_contract: TT IO vs the "
+                               "routed TT pin-register mean (COORD 11-08 02:06, OWNER 11-03 insertion band -> die STA)"}
+                              if disc.get("tt_vclk") == "rebind" else {}),
                            hold_overlay="set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
                            derate="none in the verdict (OWNER 12.24b/c: setup uncertainty 0, no spice clock factor; "
                                   "hold uncertainty per policy); ocv5_* = flat late 1.05 / early 0.95, information only",
@@ -2602,6 +2622,9 @@ def main(argv=None):
     r.add_argument("--ff-vclk", choices=("auto",) + VCLK_MODES, default="auto",
                    help="IO virtual-clock reference: auto = rebind when the kit carries a per-corner insertion "
                         "binding (FLOW 10-25), else sdc; pin-flop-mean = opt-in FF-only measured reference")
+    r.add_argument("--tt-vclk", choices=("auto", "sdc"), default="auto",
+                   help="TT IO virtual-clock reference: auto = rebind to the routed TT pin-register mean for a "
+                        "hard_core_latency contract kit (COORD 11-08), else the kit SDC; sdc = always the kit SDC")
     r.add_argument("--ff-vclk-contract", help="source-pinned measured core clock contract authorizing the FF reference")
     r.add_argument("--ff-bound-ps", type=float,
                    help="bound-ff: declared FF IO insertion (ps) for an already-routed core kit whose sdc_lint ctx has no "
