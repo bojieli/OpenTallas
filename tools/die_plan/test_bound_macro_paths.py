@@ -211,8 +211,12 @@ def test_split_projection_preserves_explicit_master_and_subpath(tmp_path):
     fl.with_name("kit_rtl.json").write_text(json.dumps(dict(bound_module="bound", asbuilt_manifest=str(ab))))
     c = dict(inst="u_lk_N2__rx__bm0", module="ot_pdie_serdes_rx_bm_native", lef="k.lef",
              physical_inst="u_lk_N2.u_fcore.u_core.u_rx.u_bm0", physical_master="ot_pdie_serdes_rx_bm_native")
-    raw = dict(partition_types={"T": dict(hard_cores=[c])})
+    raw = dict(partition_types={"T": dict(hard_cores=[c], contents=[dict(inst="u_lk_N2", module="ot_pdie_serdes")])})
     projected, receipts = BMP.project(raw, {"T": str(fl)})
     assert projected["partition_types"]["T"]["hard_cores"][0]["physical_inst"] == "u_bound.u_u_lk_N2.u_fcore.u_core.u_rx.u_bm0"
     assert raw["partition_types"]["T"]["hard_cores"][0] == c
     assert receipts["T"]["rows"][0]["asbuilt"] == "lk_N2"
+    import gen_phys
+    placed = gen_phys.pg_placed_blocks(projected["partition_types"]["T"])
+    assert len(placed) == 1 and placed[0]["inst"] == c["inst"]
+    assert placed[0]["sub_core_parent"] == "u_lk_N2"

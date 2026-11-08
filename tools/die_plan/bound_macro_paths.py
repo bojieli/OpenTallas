@@ -118,7 +118,8 @@ def resolve_sub_cores(t, bound_text, sub_core_leaf):
         if hit is None:
             continue
         rows.append(dict(inst=c["inst"], physical_inst="u_bound." + hit[0] + ".u_fcore." + tail,
-                         physical_master=c["physical_master"], asbuilt=leaf, source_physical_inst=path))
+                         physical_master=c["physical_master"], asbuilt=leaf, source_physical_inst=path,
+                         source_parent=c.get("sub_core_parent", parent)))
     return rows
 
 
@@ -204,6 +205,8 @@ def project(raw, kit_rtl):
             if r and c.get("lef") and ("physical_inst" not in c or
                     r.get("source_physical_inst") == c.get("physical_inst")):
                 c["physical_inst"], c["physical_master"] = r["physical_inst"], r["physical_master"]
+                if r.get("source_parent"):
+                    c.setdefault("sub_core_parent", r["source_parent"])
         receipts[tn] = dict(schema=SCHEMA, type=tn, bound_rtl=str(bf), rows=rows,
                             rule="plan macro path -> bound netlist path from the bind's as-built comments; "
                                  "logical identity, geometry, pins and clocks unchanged")
