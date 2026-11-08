@@ -618,6 +618,13 @@ SCHEMA = {
                         "tap_chain_affinity": {"type": "object", "additionalProperties": False,
                             "properties": {"radius_um": _pos,
                                            "max_group": {"type": "integer", "minimum": 2, "maximum": 1200}}},
+                        # Default-off: short reg-to-reg pair tap affinity before CTS (QC-TYPES-6 11-07).
+                        "tap_pair_affinity": {"type": "object", "additionalProperties": False,
+                            "properties": {"radius_um": _pos,
+                                           "max_group": {"type": "integer", "minimum": 2, "maximum": 1200},
+                                           "merge_max": {"type": "integer", "minimum": 0, "maximum": 1200},
+                                           "pair_um": _pos,
+                                           "depth": {"type": "integer", "minimum": 0, "maximum": 4}}},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
                         "tap_target_sinks": {"type": "integer", "minimum": 1},
                         "tap_min_sinks": {"type": "integer", "minimum": 1},
