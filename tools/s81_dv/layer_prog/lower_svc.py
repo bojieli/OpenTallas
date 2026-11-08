@@ -797,8 +797,8 @@ def pv_words(job, s, entry=None, pass_k=None):
 
 def _pv_words_pass(job, s, entry, k, vals):
     """S81-SVCC-1: H8 pass k's P.V stream at an entry (interface v1 (c), 5-word beats + 40-cycle windows kept): word 0
-    = the H16 header; data word 1 = {dim 8 + b at [511:256], dim b at [255:0]}, word 2 = {dim 24 + b, dim 16 + b}, each
-    256-b half = the pass's 8 heads x 32 b (local head h at [32 h +: 32]), words 3..4 = 0; dims of tile t."""
+    = the H16 header with 8 active flags; each data word wi=1..4 holds dim 8*(wi-1)+b in bits [255:0],
+    the pass's 8 heads x 32 b (local head h at [32 h +: 32]); bits [511:256] are zero (SVCRS-3 02:10 correction)."""
     pp = s['passes'][k]
     hs = pp['heads']
     out, e0 = [], pp['pv_first'] - 1
@@ -815,11 +815,9 @@ def _pv_words_pass(job, s, entry, k, vals):
             m = hm
         else:
             d = 0
-            if wi <= 2:
-                for half in range(2):
-                    dim = 32 * t + 8 * (2 * (wi - 1) + half) + b
-                    for h, g in enumerate(hs):
-                        d |= int(vals[g, dim]) << (256 * half + 32 * h)
+            dim = 32 * t + 8 * (wi - 1) + b
+            for h, g in enumerate(hs):
+                d |= int(vals[g, dim]) << (32 * h)
             m = dm
         out.append([e0 + w, f'{(d << 1) | 1:x}', f'{m:x}'])
     out.append([e0 + n, '0', '1'])

@@ -7,8 +7,7 @@ real Job._frames / schedule / finish code.  Checks:
     svc/h8_digest.py on the base module);
   * H8: landing frames once; pass j's ATTN_Q / SMJ / SO frames are today's words for heads 8 j .. 8 j + 7; the fold-root
     PV frame of each pass and the P.V entry words decode per head per row / dim to the H16 values; GO MORE; the passes
-    never share a cycle (pass 1 starts after pass 0 retired, GO 1 after pass 0's drain); one SOT per pass books exactly
-    its 8 heads on the one half that holds them; the compiler mutants change exactly what they name.
+    never share a cycle (pass 1 starts after pass 0 retired, GO 1 after pass 0's drain); one SOT per job books all 16 heads after the final pass; the compiler mutants change exactly what they name.
 """
 import hashlib
 import json
@@ -218,23 +217,20 @@ def test_h8_pv_words_decode_per_head_per_dim():
                 t, bb, wi = t0 + w // 40, (w % 40) // 5, w % 5
                 if wi == 0:
                     assert d >> 512 & 1 and (d >> 64) & 255 == bb
-                elif wi > 2:
-                    assert d == 0
                 else:
-                    for half in range(2):
-                        dim = 32 * t + 8 * (2 * (wi - 1) + half) + bb
-                        for h in range(8):
-                            assert (d >> (256 * half + 32 * h)) & 0xFFFFFFFF == vals[8 * k + h, dim]
+                    assert d >> 256 == 0
+                    dim = 32 * t + 8 * (wi - 1) + bb
+                    for h in range(8):
+                        assert (d >> (32 * h)) & 0xFFFFFFFF == vals[8 * k + h, dim]
     # every (head, dim) of the rank leaves exactly once over both passes and both entries
     seen = set()
     for k in range(2):
         for e, t0 in (('u_rsv_11', 0), ('u_rsv_05', 8)):
             for w in range(2 * L.NPVQ):
                 t, bb, wi = t0 + w // 40, (w % 40) // 5, w % 5
-                if wi in (1, 2):
-                    for half in range(2):
-                        for h in range(8):
-                            seen.add((8 * k + h, 32 * t + 8 * (2 * (wi - 1) + half) + bb))
+                if wi:
+                    for h in range(8):
+                        seen.add((8 * k + h, 32 * t + 8 * (wi - 1) + bb))
     assert len(seen) == 16 * 512
 
 
