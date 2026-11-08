@@ -6,13 +6,13 @@
  "date": "2026-11-07",
  "approved": "COORD RULING 11-07 23:01 (4)(iii) + COUNT-AUDIT-2 22:54 (B)(3): PART event owed so the signed vC2 counts with no rebuild; COORD 11-07 13:12 batch after source + fault-cycle qualification",
  "what": [
-  "ot_hgi_sfu_opsa_rest (u_sfucore_Q_opstore_a__r, q_b113 + q_b113__physical_v1): outline 760.32x86.4 -> 250.56x64.8, origin (1080, 941.76) -> (1131.84, 963.36), orient MX kept, inside the old slot",
-  "table cores/ot_hgi_sfu_opsa_rest__250.56x64.8__d44v_opsarest_c2.json = the 4336 pins of the signed routed DB (6_final.def beside 6_final.odb sha256 76eb665c, read with release_tree_plan.py REC_PINS_PY _read_def); names and layers equal the POR table; pin move mean 296.1 / max 596.8 um in die coordinates",
-  "clock tap u_sfucore_Q_opstore_a__r.clk -> [1257.12, 995.76], clock_entries xy (380.16, 43.2) -> (125.28, 32.4) (signed clk pin 125.304, 32.4)",
+  "ot_hgi_sfu_opsa_rest (u_sfucore_Q_opstore_a__r, q_b113 + q_b113__physical_v1): outline 760.32x86.4 -> 250.56x64.8, origin (1080, 941.76) -> (1131.84, 959.04), orient MX kept, inside the old slot",
+  "table cores/ot_hgi_sfu_opsa_rest__250.56x64.8__d44v_opsarest_c2.json = the 4336 pins of the signed routed DB (6_final.def beside 6_final.odb sha256 76eb665c, read with release_tree_plan.py REC_PINS_PY _read_def); names and layers equal the POR table; pin move mean 292.3 / max 592.5 um in die coordinates",
+  "clock tap u_sfucore_Q_opstore_a__r.clk -> [1257.12, 991.44], clock_entries xy (380.16, 43.2) -> (125.28, 32.4) (signed clk pin 125.304, 32.4)",
   "internal_stations launched by rest (12 per type): from/to re-anchored on the compact pins, 1 re-sited with the SAME register count; capture chains at rest (12): to_um re-anchored, sites kept",
   "corelat/cycles_opsarest_c2_1107.tsv: 0 added cycles on every rest port, fault 0"
  ],
- "placement": "sweep R0/MX/MY/R180 x the 4.32 lattice of the old slot (opsarest_sweep2): minimax over the real driver->sink links (ctl_rest -> rest box, rest -> partner box (check.py R3-INTERNAL form), opsa_group0/1.flt -> group_fault_01 pin to pin); best 436.1 um here; W end (1080, 941.76) puts opsa_group0.flt -> group_fault_01[0] at 505 um (> 452.5 measured one-cycle reach: would need a parent cycle in the wires-only split glue); centred puts 5 ctl_rest links at 420-478 um",
+ "placement": "sweep R0/MX/MY/R180 x the 4.32 lattice of the old slot (opsarest_sweep2): minimax over the real driver->sink links (ctl_rest -> rest box, rest -> partner box (check.py R3-INTERNAL form), opsa_group0/1.flt -> group_fault_01 pin to pin); best 436.2 um here; W end (1080, 941.76) puts opsa_group0.flt -> group_fault_01[0] at 505 um (> 452.5 measured one-cycle reach: would need a parent cycle in the wires-only split glue); centred puts 5 ctl_rest links at 420-478 um",
  "timing_833ps": {
   "model": "tools/die_plan/reach.py: measured one-cycle reach M4-M7 452.5 um (REACH-M89 relay to relay, TT 833.333 ps, unc 60 + skew 90; 0.76 ps/um planning constant x1.203), owner plan cap 405 um for local hops, repeaters <= 450 um",
   "links_over_405_within_452.5": [
@@ -56,22 +56,22 @@
      "u_sfucore_Q_opstore_a__g0.flt|u_sfucore_Q_opstore_a__r",
      "group_fault_01[0]"
     ],
-    431.9
+    436.2
    ]
   ],
-  "station_hops_max": 379.9,
+  "station_hops_max": 375.6,
   "fault_seams": [
    {
     "conn": "u_sfucore_Q_opstore_a__g0.flt|u_sfucore_Q_opstore_a__r",
     "pin": "group_fault_01[0]",
     "pin_to_pin_por": 233.5,
-    "pin_to_pin_new": 431.9
+    "pin_to_pin_new": 436.2
    },
    {
     "conn": "u_sfucore_Q_opstore_a__g1.flt|u_sfucore_Q_opstore_a__r",
     "pin": "group_fault_01[1]",
     "pin_to_pin_por": 0.3,
-    "pin_to_pin_new": 198.5
+    "pin_to_pin_new": 202.8
    }
   ],
   "verdict": "every reg-to-reg link of the moved pins <= 452.5 um: existing cycles meet 833 ps; no PIN CYCLE added, no compiler/token reschedule"

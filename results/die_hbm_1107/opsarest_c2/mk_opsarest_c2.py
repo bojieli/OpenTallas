@@ -10,7 +10,7 @@ mk_opsarest_c2.py PLANDIR NEW_TABLE.json OPSA_CONN.json REPORT.json      (in pla
                   PORT shape), via opsarest_defpins.py
   OPSA_CONN.json  results/die_hbm_1105/form_split/p27/opstore_a.conn.json (per-bit nets of the part 27 split)
 
-Placement: POR orient MX at ORIGIN (1131.84, 963.36) inside the old slot: minimax of the real driver->sink links over a
+Placement: POR orient MX at ORIGIN (1131.84, 959.04) (8.64 lattice) inside the old slot: minimax of the real driver->sink links over a
 R0/MX/MY/R180 x 4.32-lattice sweep (opsarest_sweep2.py); every reg-to-reg link <= 452.5 um (reach.py measured one-cycle
 reach at 833 ps), so no cycle is added.  Parent changes,
 both q_b113 and q_b113__physical_v1 (identical rows):
@@ -29,7 +29,7 @@ EID = 'opsarest_c2_1107'
 NEW = 'cores/ot_hgi_sfu_opsa_rest__250.56x64.8__d44v_opsarest_c2.json'
 TYPES = ('q_b113', 'q_b113__physical_v1')
 RI = L.RI
-ORIGIN = (float(os.environ.get('OPSA_X0', '1131.84')), float(os.environ.get('OPSA_Y0', '963.36')))   # chosen by opsarest_sweep (event: placement)
+ORIGIN = (float(os.environ.get('OPSA_X0', '1131.84')), float(os.environ.get('OPSA_Y0', '959.04')))   # chosen by opsarest_sweep (event: placement)
 CLK_ENTRY = [125.28, 32.4]          # signed DB clk pin centre (125.304, 32.4) = entry + 0.024, same convention as POR (380.184 vs 380.16)
 NOTE = (' | DIE-HBM-90-OPSA ' + EID + ': compact signed form vC2 250.56x64.8 (intel1 hbm-hard-2/resign/opsaC2_du, '
         'LOCAL_PASS_NEEDS_PARENT, LEC EQ), MX at the W end of the old 760.32x86.4 slot')

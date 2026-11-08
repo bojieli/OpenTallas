@@ -1,7 +1,7 @@
 """DIE-HBM-90-OPSA count dry run (COUNT-AUDIT-2 method): the coord counter's own plan_designs / fetch-format / credit_designs
 on the base and the event plan, overlays laid as release_tree_plan.py does (d35a, d35b, d35c, d44v; *.gz gunzipped)."""
 import gzip, json, os, shutil, subprocess, sys, types
-RTP, REPO, NEWD, OUT = sys.argv[1:5]
+RTP, REPO, BASED, NEWD, OUT = sys.argv[1:6]
 src = open(RTP).read()
 m = types.ModuleType('rtp'); m.__file__ = RTP
 exec(compile(src.replace("if __name__ == '__main__':", "if False:"), RTP, 'exec'), m.__dict__)
@@ -32,9 +32,10 @@ got = dict(rows=m.canon_pin_rows(x['doc']), outline_nm=(m._nm(da[2] - da[0]), m.
 if x.get('shapes'): got['shapes'] = {k: [tuple(v) for v in vv] for k, vv in x['shapes'].items()}
 rec = dict(scan_host='intel1', pins_path=key, path=key)
 res = {}
-for tag, d in (('base', 'd44v'), ('new', NEWD)):
+for tag, d in (('base', BASED), ('new', NEWD)):
     pd = os.path.join(OUT, 'por_' + tag)
     P = lay(pd, d)
+    open(os.path.join(pd, 'die_plan.json'), 'w').write(json.dumps(P))
     designs, rows = m.plan_designs(P, pd)
     signed, unmatched = m.credit_designs(designs, rows, {'ot_hgi_sfu_opsa_rest': [('opsaC2_du', rec)]}, {('intel1', key): got})
     res[tag] = (designs, rows, signed, unmatched)
