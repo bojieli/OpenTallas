@@ -34,7 +34,8 @@
 // (ot_s81_kp4_enc_ffa_mat.svh, gen_kp4_linear.py: fp = fb ^ (ev ? fa : fo), three disjoint masks), so wb = A w_2j then
 // w_(2j+1) and v = wb_d ^ wb.  The l2_w cone (A on wb) and wp0..3 are gone; v holds the same value on every rem_q load,
 // so p_v / p_d / fault are cycle-identical to FOLD = 0 (bench tb_kp4_enc_fold.sv).  Mutants: MUT 4 = one ev copy stuck
-// at odd, MUT 5 = v without wb_d.
+// at odd, MUT 5 = v without wb_d, MUT 6 = one even-only (fa) term inverted.  MUT 2 (constant flip of fq[0][0]) is an
+// EQUIVALENT mutant under FOLD: a constant offset on wb cancels in v = wb_d ^ wb.
 module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, parameter integer FF = 0,
     // Opt-in local chunk capture: +1 output data/valid/fault cycle, unchanged II=1.
     parameter integer CH_STAGE = 0, parameter integer CH_MUT = 0, parameter integer FOLD = 0) (
@@ -158,7 +159,7 @@ module ot_s81_kp4_enc_la #(parameter integer MUT = 0, parameter integer LA = 2, 
 `include "ot_s81_kp4_enc_ffa_mat.svh"
             for (c=0; c<8; c=c+1) begin : g_fsel
                 for (genvar o=0; o<300; o=o+1) begin : g_o
-                    assign fp[c][o] = fb[c][o] ^ (ev[c][o / 75] ? fa[c][o] : fo[c][o]);
+                    assign fp[c][o] = fb[c][o] ^ (ev[c][o / 75] ? (fa[c][o] ^ ((MUT == 6 && c == 0 && o == 0) ? 1'b1 : 1'b0)) : fo[c][o]);
                 end
             end
         end else begin : g_nofold
