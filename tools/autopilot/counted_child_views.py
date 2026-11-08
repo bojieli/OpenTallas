@@ -20,6 +20,11 @@ contract abstract.  This driver closes that gap without new P&R:
 
   counted_child_views.py --die qwen_compute --export --manifest M.json      (exports + manifest)
   counted_child_views.py --die qwen_compute --apply --manifest M.json       (config edit, kit_wave.json)
+
+KW-FIX-35-CV 11-08: the kit-wave tick runs --export --publish <hub>/prov_view_sources_auto.json itself (hourly per die,
+only for the prelint's SIGNED IN COUNT BUT NO WAVE VIEW modules) and overlays the sidecar at read time.  NOTE --apply
+edits the hub's local kit_wave.json, which the tick does NOT read (it reads origin coord/state): commit a config edit
+through the coord path instead.
 """
 import argparse
 import copy
@@ -167,7 +172,11 @@ def needs_parent_only(res):
 def lef_only(res, mod):
     """the view misses only <mod>.lef (flows whose finish step wrote tt/ff ETMs to kit/views but no abstract)"""
     pr = res.get("problems") or []
-    return bool(pr) and all(f"{mod}.lef not found" in str(x) for x in pr)
+    lef = [x for x in pr if f"{mod}.lef not found" in str(x)]
+    # KW-FIX-35-CV 11-08 (HBM hcol_h0_ra / hcol_h0_rb): a LOCAL_PASS_NEEDS_PARENT re-sign whose kit also lacks the lef
+    # listed both problems, so neither this nor needs_parent_only() held and the counted view never exported.  The
+    # verdict problem is the one OWNER 11-03 counts SIGNED; it does not stop the lef-from-odb path.
+    return bool(lef) and all(x in lef or ("LOCAL_PASS_NEEDS_PARENT" in str(x) and "is not SIGNED" in str(x)) for x in pr)
 
 
 def lef_from_odb(die, rid, p, mod, cmd, out, log):
@@ -295,6 +304,40 @@ def apply_manifest(cfg, man):
     return changed
 
 
+def publish_manifest(path, man):
+    """KW-FIX-35-CV 11-08: merge the manifest's complete candidates into the hub sidecar the wave overlays at read time
+    (kit_wave.merge_auto_views): {schema, dies: {die: {generated, plan_sha, modules: {m: [candidate]}}}}.  A module with
+    no complete candidate this run keeps its earlier entry (a signed view does not expire); flock + atomic replace,
+    so concurrent dies never lose each other's entries.  -> modules published"""
+    import fcntl
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with open(str(p) + ".lock", "w") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        try:
+            side = json.loads(p.read_text())
+        except (OSError, ValueError):
+            side = {}
+        side["schema"] = "opentallas.kw35cv.prov_view_sources_auto.v1"
+        ent = side.setdefault("dies", {}).setdefault(man["die"], {})
+        mods = ent.setdefault("modules", {})
+        done = []
+        for m, e in sorted((man.get("modules") or {}).items()):
+            new = [dict(host=c["host"], dir=c["dir"], job=c["job"], counted=True, signoff=c.get("signoff"),
+                        outline=c.get("outline"), pins_sha256=c.get("pins_sha256"),
+                        plan_pin_match=c.get("plan_pin_match"))
+                   for c in e.get("candidates") or [] if c.get("dir") and c.get("host")]
+            if new:
+                mods[m] = new
+                done.append(m)
+        ent.update(generated=man.get("generated"), plan_sha=man.get("plan_sha"), last_published=done,
+                   missing=sorted(man.get("missing") or {}))
+        tmp = p.with_name(p.name + f".{os.getpid()}")
+        tmp.write_text(json.dumps(side, indent=1, sort_keys=True) + "\n")
+        os.replace(tmp, p)
+    return done
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--die", required=True)
@@ -305,6 +348,7 @@ def main(argv=None):
     ap.add_argument("--state", default=str(STATE))
     ap.add_argument("--counter", default=str(COUNTER))
     ap.add_argument("--only", nargs="*", help="modules to export (default: all WAIT children)")
+    ap.add_argument("--publish", help="merge the exported candidates into this hub sidecar (kit_wave AUTO-VIEWS overlay)")
     a = ap.parse_args(argv)
     if a.export:
         cfg = json.loads(Path(a.config).read_text())
@@ -314,6 +358,9 @@ def main(argv=None):
         n = sum(1 for e in man["modules"].values() if e["candidates"])
         print(f"{a.die}: {len(man['modules'])} counted WAIT children, {n} with a complete exported view, "
               f"{len(man['missing'])} not counted")
+        if a.publish:
+            done = publish_manifest(a.publish, man)
+            print(f"{a.die}: published {len(done)} modules to {a.publish}: {' '.join(done)}")
     if a.apply:
         man = json.loads(Path(a.manifest).read_text())
         cfg = json.loads(Path(a.config).read_text())
