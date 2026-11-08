@@ -9,6 +9,7 @@
 // sx_role_off(s) (the compiled start offsets).  Checks: every root beat (16 heads x 4 rows, flags, tag) == golden in
 // order; every slice's SM tap == golden head = its tile; beat counts; no fault.
 module tb_dsdv_svc_sx;
+`include "dsdv_svc_rs_roles.svh"
     `ifdef OT_SVC_H8
     localparam integer H = 8;
 `else
@@ -116,7 +117,7 @@ module tb_dsdv_svc_sx;
     end endgenerate
     // tile of each slice (from the role ROM head field)
     function automatic integer tile_of(input integer sd);
-        reg [43:0] rr; rr = sx_role(4'(sd)); tile_of = rr[42:39];
+        reg [21:0] rr; rr = rs_role(4'(sd)); tile_of = rr[3:0];
     endfunction
 
     // ---------------- golden: the engine lane tree, S = 16 ----------------

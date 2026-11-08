@@ -141,7 +141,7 @@ module dsdv_svc_att #(
     // 16-head attention op = ONE landing (WIN_LOAD / SEL_IDS / ROWS once) + TWO passes; pass j = heads 8 j .. 8 j + 7.
     //   ATTN_Q (type 1)  one frame per pass, spec[448] = j (latched as the pass head base hb); word r = local head r / 16
     //   GO (type 13)     spec[48] MORE: 1 = another pass follows on the same landing (job stays open, done not raised)
-    //   SMJ SE (kind 4) spec[30] = pass j: only slices with tile[3] == j take it; final SO broadcasts to all heads
+    //   SMJ SE (kind 4) follows ATTN_Q: only slices with tile[3] == hb_h take it; final SO broadcasts to all heads
     // Faults: 9 = fewer than H q words at a pass's GO.  Everything else (p feed, P.V drain, pvs windows) per pass as today.
     parameter integer H = 16
 ) (
@@ -798,10 +798,10 @@ module dsdv_svc_att #(
             end
             // ---- SMJ frames -> SM head
             sm_st <= 1'b0; sm_rv <= 1'b0;
-            if (hdr_mine && h_type == 4'd9 && (!P2 || q_d[4:1] != 4'd4 || q_d[30] == tile[3])) begin
+            if (hdr_mine && h_type == 4'd9 && (!P2 || q_d[4:1] != 4'd4 || hb_h == tile[3])) begin
                 sm_st <= q_d[0]; sm_kind <= q_d[4:1]; sm_jid <= q_d[12:5];
             end
-            if (pay_mine && f_type == 4'd9 && (!P2 || f_hdr[4:1] != 4'd4 || f_hdr[30] == tile[3])) begin
+            if (pay_mine && f_type == 4'd9 && (!P2 || f_hdr[4:1] != 4'd4 || hb_h == tile[3])) begin
                 sm_rv <= !f_hdr[13] || f_hdr[14 + tile];
                 sm_rp <= !f_hdr[13]; sm_rj <= 3'(f_idx); sm_rd <= q_d;
             end

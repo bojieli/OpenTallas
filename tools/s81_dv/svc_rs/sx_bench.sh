@@ -16,7 +16,7 @@ case "$V" in
   *) echo "variant?" >&2; exit 2;;
 esac
 mkdir -p "$O/$V"
-"$VL" --binary --top-module tb_dsdv_svc_sx -Mdir "$O/$V/obj" -j 16 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD \
+"$VL" --binary --top-module tb_dsdv_svc_sx -Mdir "$O/$V/obj" -j 16 --output-split 20000 --output-split-cfuncs 2000 -fno-inline --unroll-count 16 --unroll-limit 131072 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD \
   -I$D "${HEAD_DEF[@]}" "${DEF[@]}" rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv rtl/hdc/ot_hdc_fp32_f12.sv \
   rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv \
   rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv \

@@ -4,7 +4,7 @@
 # Usage (repo root): tools/s81_dv/svc_rs/pfeed_probe.sh OUTDIR [T ...]
 set -euo pipefail
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
-O=$1; shift; TS=${*:-"1 2 3 4 31 32 33 46 64 100 128 300 428 512 640"}
+O=$1; shift; TS=${*:-"128 640"}
 mkdir -p "$O"
 if [ ! -x "$O/obj/Vtb_dsdv_svc_pfeed_h8" ]; then
   "$VL" -DOT_SVC_H8 --binary --top-module tb_dsdv_svc_pfeed_h8 -Mdir "$O/obj" -j 16 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -fno-inline --unroll-count 16 --unroll-limit 131072 -MAKEFLAGS OPT_SLOW=-O0 -CFLAGS -O1 \
@@ -16,12 +16,12 @@ if [ ! -x "$O/obj/Vtb_dsdv_svc_pfeed_h8" ]; then
     rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv \
     rtl/dsrom_sys/s81_dv/svc_rs/test/tb_dsdv_svc_pfeed_h8.sv > "$O/build.log" 2>&1 || { tail -30 "$O/build.log"; exit 1; }
 fi
+# Late static feed isolates sustained loader/issue throughput from QK startup.
+# Stride1 is the measured failing control at T640; stride2 is the H8 candidate.
 for T in $TS; do
-  best=-1
-  for P0 in $(seq 0 1 150); do
-    l=$("$O/obj/Vtb_dsdv_svc_pfeed_h8" +t=$T +p0=$P0 | grep '^PFEED')
-    if echo "$l" | grep -q ' refused=0 '; then best=$P0; echo "MIN $l"; break; fi
-  done
-  [ $best -ge 0 ] || echo "MIN T=$T none"
-  "$O/obj/Vtb_dsdv_svc_pfeed_h8" +t=$T +p0=$((best + 200)) | grep '^PFEED' | sed 's/^/LATE /'
+ for stride in 1 2; do
+  "$O/obj/Vtb_dsdv_svc_pfeed_h8" +t=$T +p0=${P0:-800} +pstride=$stride +trace=1 > "$O/t${T}_stride${stride}.log" 2>&1
+  grep '^PFEED' "$O/t${T}_stride${stride}.log"
+  grep '^PVEDGE' "$O/t${T}_stride${stride}.log" || true
+ done
 done
