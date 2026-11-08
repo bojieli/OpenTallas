@@ -11,3 +11,5 @@ Next: prove current selected cfg under the actual reset contract and source caps
 Current native witness correction: the historical txn fixture reload151 is illegal under TIMING_833 ROW_CADENCE2 for PC9. Both off/on controllers asserted refresh fault at edge163, then their sourcebench timed out; these are preserved fixture failures, not a WQDIAG mismatch. Source requires reload%4==2*(pc_id&1); period144 preserves alignment. The corrected fixture uses150, observes actual phase/row_fire/ref_due and retains151 as a failing calendar control.
 
 The first aligned-fixture job exited2 at elaboration because the monitor referenced REFPB under the generate block; it is a module-level localparam. No simulation ran; fixed exact hierarchical monitor path, controller source unchanged.
+
+Aligned2000-request witness reached actual due phases159/303/447/591, all phase2/row_fire1/REFPB6, with no reported fault or edge mismatch, but hit the240s wall budget. No PASS claimed. A bounded128-request diagnostic uses the same inputs/output checks, real SRAM and refresh calendar, logs every1000edges, requires non-vacuous writes>=NREQ/16, and retains both negative controls.

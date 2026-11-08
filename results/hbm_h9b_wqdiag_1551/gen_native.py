@@ -29,7 +29,8 @@ check='\n  always @(posedge clk) begin #1; if(rst_n && now>24) begin\n'
 for n in outputs:check+='    if('+n+'[0] !== '+n+'[1]) $fatal(1,"WQDIAG_EDGE '+n+' mismatch edge%0d",now);\n'
 check+='    if(idx[0] != idx[1]) $fatal(1,"WQDIAG_ACCEPT mismatch");\n  end end\n'
 phase='''\n  integer refresh_checks=0;\n  always @(negedge clk) begin #1; if(rst_n && now>24 && a.controller.on.ref_due) begin\n    refresh_checks=refresh_checks+1;\n    if(refresh_checks<5) $display("WQDIAG_REFRESH edge%0d reload%0d phase%0d slot%0d fire%b op%0d",now,RELOAD,a.controller.on.phase,a.controller.slot_parity,a.controller.on.row_fire,a.controller.on.c_op);\n    if(a.controller.on.phase != 2*a.controller.slot_parity || !a.controller.on.row_fire || a.controller.on.c_op!=a.controller.REFPB)\n      $fatal(1,"WQDIAG_REFRESH_PHASE illegal actual row calendar");\n  end end\n'''
-s=s.replace('  integer nrd=0;',check+phase+'  integer nrd=0;')
+s=s.replace('nw[0]<100','nw[0]<NREQ/16').replace('now<400000','now<(NREQ<512?20000:400000)')
+s=s.replace('  integer nrd=0;',check+phase+'  always @(negedge clk) if(now%1000==0) begin $display("WQDIAG_PROGRESS edge%0d accepted%0d/%0d writes%0d reads%0d",now,idx[0],idx[1],nw[0],nb[0]); $fflush(); end\n  integer nrd=0;')
 s=s.replace('    for(d=0;d<2;d=d+1) begin idx[d]=0;', '    if(!$value$plusargs("SEED=%d",rng)) rng=32\'h1d872b41;\n    for(d=0;d<2;d=d+1) begin idx[d]=0;')
 assert 'cfg_h9 a(' not in s
 (out/'tb.sv').write_text(s)
