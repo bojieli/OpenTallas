@@ -1070,7 +1070,7 @@ def for_type(P, tn, reach=None):
         T.update(entry="sync" if tn == wf_solve(P)["root_type"] else "relayed", sync_stages=sync_stages(P, tn),
                  type=tn, start=start_broadcast(P), relay_driver=bool(P.reset.get("relay_driver")))
         if relay_lockup(P, tn):
-            T["relay_lockup"] = "negedge"
+            T["relay_lockup"] = relay_lockup_form(P)
         if T["entry"] == "sync" and lock_stages(P):
             lk = pad_spec(P)["lock"]
             T["lock"] = dict(inst=lk["inst"], pin=lk["pin"], stable=int(lk.get("stable_cycles", 16)),
@@ -1109,7 +1109,7 @@ def for_type(P, tn, reach=None):
     T.update(entry=ent, sync_stages=sync_stages(P, tn), type=tn,
              relay_driver=bool(P.reset.get("relay_driver")))
     if relay_lockup(P, tn):
-        T["relay_lockup"] = "negedge"
+        T["relay_lockup"] = relay_lockup_form(P)
     if T["relay_driver"]:
         T["relay_pair_boxes"] = blockages(P.types[tn])
     return T
@@ -2071,19 +2071,54 @@ def relay_cell(T, r, gated=False):
     driven = T.get("relay_driver") and r.get("tap") not in external
     if gated:
         return "ot_dp_rgate_drive" if driven else "ot_dp_rgate"
-    if T.get("relay_lockup") and not driven and not str(r.get("q", "")).startswith("rst_n_t"):
+    if T.get("relay_lockup") == "negedge" and not driven and not str(r.get("q", "")).startswith("rst_n_t"):
         return "ot_dp_rrelay_nl"     # CLK form #7: internal relay->relay hop only (gen_rtl.LOCKUP_CELLS)
     return "ot_dp_rrelay_drive" if driven else "ot_dp_rrelay"
 
 
+RELAY_LOCKUP_FORMS = ("negedge", "latch")
+
+
+def relay_lockup_form(P):
+    """the plan's reset.relay_lockup form ("negedge" | "latch"), None when absent."""
+    cfg = P.reset.get("relay_lockup")
+    return cfg.get("form") if isinstance(cfg, dict) and cfg else None
+
+
+# RLK-1108 (DIE-HBM-92-RLK 11-08, opt-in reset.relay_lockup {"form": "latch"}): the hop LOCKUP LATCH form.  CLK form
+# #7's negedge re-launch left only T/2 - W of setup for a FULL relay hop (HBM q_spb1 pilot, GRT gate TT: u_rrl_28 clk_t5
+# negedge -> u_rrl_30, 377 um, -84.84 ps).  Here every relay stays a plain posedge ot_dp_rrelay (one cycle, so K and the
+# release cycle are unchanged) and each INTERNAL relay -> relay hop (launch relay q = rst_rl_*: the same hops the
+# negedge form covers; leaf taps rst_n_t<k>, out relays, the entry pin register and START plans stay plain) gets one
+# transparent-low ot_dp_lk (gen_rtl.CELLS, the TYPE-SAFE-1 ft hop latch) before the capture relay's d: instance
+# u_fl_rst<suffix> so clock_taps.tcl's hop-latch follow-D pass clocks it from the LAUNCH relay's tap (CRPR on the
+# relay -> latch check), and tcl_text places it FIRM at the planned hop midpoint.  The latch -> capture check gets ~T/2
+# of extra hold whatever taps the relays land on; setup is the half hop after the falling edge (T/2 - W for <= ~200
+# um) or, with borrowing, the whole hop within T - W.  0 cycles: lec.py latch_to_wire, bind_verify ot_dp_lk stages 0.
+def lockup_latch_names(relay_name):
+    """(latch instance, latch q net) of the hop lockup latch in front of relay relay_name (latch form)."""
+    suf = relay_name[len("u_rrl"):] if relay_name.startswith("u_rrl_") else "_" + re.sub(r"\W", "_", relay_name)
+    return "u_fl_rst" + suf, "rst_lk" + suf
+
+
+def lockup_hops(T):
+    """latch form: [relay] whose d is an INTERNAL relay's q (launch relay q not rst_n_t*), i.e. the hops that get an
+    ot_dp_lk; [] for every other tree (absent / negedge)."""
+    if T.get("relay_lockup") != "latch" or T.get("start"):
+        return []
+    internal = {r["q"] for r in T["relays"] if not str(r["q"]).startswith("rst_n_t")}
+    return [r for r in T["relays"] if r["d"] in internal]
+
+
 def relay_lockup(P, tn):
-    """CLK FORM #7 (opt-in): reset.relay_lockup = {"form": "negedge", "types": [type, ...]}.  True when type tn's
-    internal relays are ot_dp_rrelay_nl.  Absent = False (every tree and kit byte-identical)."""
+    """CLK FORM #7 / RLK-1108 (opt-in): reset.relay_lockup = {"form": "negedge" | "latch", "types": [type, ...]}.  True
+    when type tn's internal relay hops get the lockup form (negedge: ot_dp_rrelay_nl relays; latch: an ot_dp_lk per hop,
+    lockup_latch_names).  Absent = False (every tree and kit byte-identical)."""
     cfg = P.reset.get("relay_lockup")
     if not cfg:
         return False
-    if not isinstance(cfg, dict) or cfg.get("form") != "negedge" or not isinstance(cfg.get("types"), list):
-        raise ResetError('reset.relay_lockup must be {"form": "negedge", "types": [type, ...]}')
+    if not isinstance(cfg, dict) or cfg.get("form") not in RELAY_LOCKUP_FORMS or not isinstance(cfg.get("types"), list):
+        raise ResetError('reset.relay_lockup must be {"form": "negedge" | "latch", "types": [type, ...]}')
     bad = sorted(set(cfg["types"]) - set(P.types))
     if bad:
         raise ResetError(f"reset.relay_lockup names unknown types {bad[:5]}")
@@ -2118,10 +2153,18 @@ def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i", lock_src=LOCK_SR
     out += [f"{ind}" + ("(* keep = 1 *) " if T.get("local_reset_taps") else "") + f"wire rst_n_t{i};" for i in taps]
     nck = consumer_count(T)
     oq = out_relays(T)
+    lkd = {r["name"]: lockup_latch_names(r["name"]) for r in lockup_hops(T)}
     for r in T["relays"]:
         if not r["q"].startswith("rst_n_t"):
             out.append(f"{ind}wire {r['q']};")
         where = f"depth {r['depth']} @ ({r['xy'][0]:.1f}, {r['xy'][1]:.1f})"
+        if r["name"] in lkd:
+            # RLK-1108 hop lockup latch (latch form): launch relay q -> transparent-low latch -> this relay's d
+            li, lq = lkd[r["name"]]
+            out.append(f"{ind}wire {lq};")
+            out.append(f"{ind}ot_dp_lk #(.W(1)) {li} (.clk(clk), .d({r['d']}), .q({lq}));  "
+                       f"// hop lockup latch {r['d']} -> {r['name']} (0 cycles, at the hop midpoint)")
+            r = dict(r, d=lq)
         if r["q"] in oq:
             k = oq[r["q"]]
             # DIE-S81-27 (COORD 10-29 11:28): the registered reset OUT has its OWN relay (drives only the port); the
@@ -2250,6 +2293,25 @@ proc rtr_place_opt {key pat x y tag} {
   if {[llength $rtr_miss] == $m0 + 1 && [lindex $rtr_miss end] eq $pat} { set rtr_miss [lrange $rtr_miss 0 end-1] }
 }
 """
+
+
+# RLK-1108 (reset.relay_lockup latch form): rtr_place for the ASAP7 latch cell (DLL / DHL) of a hop lockup latch
+LOCKUP_PLACE_TCL = """proc rtr_place_lk {key pat x y tag} {
+  global ff_blk ff_dbu rtr_n rtr_miss rtr_fh rtr_at
+  set hit 0
+  foreach i [$ff_blk getInsts] {
+    set nm [$i getName]
+    if {![string match $pat $nm]} continue
+    set m [[$i getMaster] getName]
+    if {![string match "DLLx*" $m] && ![string match "DHLx*" $m]} continue
+    set got [ff_put_near $i [expr {round($x * $ff_dbu)}] [expr {round($y * $ff_dbu)}]]
+    if {$got eq ""} { lappend rtr_miss $nm; continue }
+    puts $rtr_fh "$nm\\t$tag\\t[expr {[lindex $got 0] / double($ff_dbu)}]\\t[expr {[lindex $got 1] / double($ff_dbu)}]\\t-"
+    dict set rtr_at $key $got
+    incr rtr_n; incr hit
+  }
+  if {!$hit} { lappend rtr_miss $pat }
+}"""
 
 
 CORE_RESET_EQ_TCL = """
@@ -2403,6 +2465,17 @@ def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None, unused_
             # the out relay's tap-net copy (rtl_lines): placed beside it when synthesis kept it (it has loads)
             t.append(f"rtr_place_opt {r['q']}:copy {{*{r['name']}_t[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} "
                      f"rrl:{r['kind']}{r['depth']}c")
+    lkh = lockup_hops(T)
+    if lkh:
+        # RLK-1108 latch form: each hop lockup latch FIRM at the midpoint of its two planned relay sites
+        if native_paths is not None or native_nodes is not None:
+            raise ResetError("reset.relay_lockup latch form is not supported on a captured native reset contract")
+        xy = {r["q"]: r["xy"] for r in T["relays"]}
+        t.append(LOCKUP_PLACE_TCL)
+        for r in lkh:
+            li, lq = lockup_latch_names(r["name"])
+            (x0, y0), (x1, y1) = xy[r["d"]], r["xy"]
+            t.append(f"rtr_place_lk {lq} {{*{li}[./]*}} {(x0 + x1) / 2:.3f} {(y0 + y1) / 2:.3f} rlk:{r['kind']}{r['depth']}")
     if T.get("core_resets") and native_nodes is None:
         terminals = " ".join(r["q"] for r in T["relays"] if r["depth"] == T["depth"])
         t += ["set rtr_terminal_qnets {}", f"foreach key {{{terminals}}} {{",

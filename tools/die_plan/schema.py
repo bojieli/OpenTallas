@@ -1084,8 +1084,10 @@ SCHEMA = {
             "start": {"enum": ["none", "broadcast"]},
             # CLK FORM #7 (DIE-S81-51 11-03, opt-in; reset_tree.relay_lockup): internal relay->relay hops of the named
             # types use ot_dp_rrelay_nl (posedge state flop + negedge re-launch, 1 cycle); absent = byte-identical
+            # RLK-1108 (DIE-HBM-92-RLK 11-08) form "latch": relays stay posedge ot_dp_rrelay, each internal relay->relay
+            # hop gets an ot_dp_lk hop lockup latch (u_fl_rst*, launch tap, hop midpoint; 0 cycles, reset_tree.lockup_hops)
             "relay_lockup": {"type": "object", "additionalProperties": False, "required": ["form", "types"],
-                             "properties": {"form": {"enum": ["negedge"]}, "types": {"type": "array", "items": _name},
+                             "properties": {"form": {"enum": ["negedge", "latch"]}, "types": {"type": "array", "items": _name},
                                             "note": {"type": "string"}}},
             # KV-PLAN2 10-25 (opt-in, default false = main wall-only rule): every relay hop keeps one L route outside
             # ALL hard cores / macro leaves of the type, not only outside the walls (G2 kv3_pc: rrl_13 -> rrl_14
