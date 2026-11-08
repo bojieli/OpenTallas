@@ -8,6 +8,7 @@
 # env: OT_DTAP_TARGET (max sinks per tap, default 1250), OT_DTAP_DMAX_UM (max tap region side, robust 2-98%, default 80;
 #      ASAP7 placement-RC wire delay grows ~quadratically, so long strips are split), OT_DTAP_MIN (no split below 2x, default 150),
 #      OT_DTAP_BOUNDED_F4 (opt-in 1: preserve TARGET through stray/F4 moves and bound F4 capture-to-tap distance),
+#      OT_DTAP_OUTLIER_LEAVES (opt-in 1 with BOUNDED_F4: extra local leaves for unplanned sinks beyond DMAX),
 #      OT_DTAP_CELL (default BUFx24_ASAP7_75t_R), OT_DTAP_PORT (default clk), OT_DTAP_OUT (optional report file)
 uplevel #0 {
 set dt_blk [ord::get_db_block]
@@ -160,6 +161,53 @@ foreach S $dt_sets {
   foreach p $S { set d [expr {abs([lindex $p 0] - $cx) + abs([lindex $p 1] - $cy)}]; if {$d < $bd} { set bd $d; set best $p } }
   lappend dt_med [list [lindex $best 0] [lindex $best 1]]
 }
+}
+# Optional local leaves address the sparse outliers deliberately ignored by
+# robust splitting. Keep the reviewed normal medoids and native root intact.
+# Hard extents for these extra leaves ensure every member is within DMAX of
+# any chosen member medoid, even when the set contains fewer than 16 sinks.
+proc dt_local_outlier_sets {pts cap dmax} {
+  set n [llength $pts]
+  if {!$n} {return {}}
+  set xs [lsort -integer [lmap p $pts {lindex $p 0}]]
+  set ys [lsort -integer [lmap p $pts {lindex $p 1}]]
+  set w [expr {[lindex $xs end]-[lindex $xs 0]}]
+  set h [expr {[lindex $ys end]-[lindex $ys 0]}]
+  if {$n <= $cap && $w+$h <= $dmax} {return [list $pts]}
+  set axis [expr {$w >= $h ? 0 : 1}]
+  set ordered [lsort -integer -index $axis $pts]; set mid [expr {$n/2}]
+  return [concat [dt_local_outlier_sets [lrange $ordered 0 [expr {$mid-1}]] $cap $dmax] [dt_local_outlier_sets [lrange $ordered $mid end] $cap $dmax]]
+}
+if {[info exists ::env(OT_DTAP_OUTLIER_LEAVES)] && $::env(OT_DTAP_OUTLIER_LEAVES)} {
+  if {![info exists ::env(OT_DTAP_BOUNDED_F4)] || !$::env(OT_DTAP_BOUNDED_F4)} {error "OUTLIER_LEAVES requires bounded F4 reassignment"}
+  if {$dt_planned_active} {error "OUTLIER_LEAVES cannot revise planned clock anchors"}
+  set dt_local_rest {}; set dt_local_outliers {}; set k 0
+  foreach S $dt_sets {
+    lassign [lindex $dt_med $k] mx my
+    set keep {}
+    foreach p $S {
+      if {abs([lindex $p 0]-$mx)+abs([lindex $p 1]-$my) > $dt_dmax} {
+        lappend dt_local_outliers $p
+      } else {lappend keep $p}
+    }
+    lappend dt_local_rest $keep
+    incr k
+  }
+  set dt_sets $dt_local_rest
+  set dt_local_extra [dt_local_outlier_sets $dt_local_outliers $dt_target $dt_dmax]
+  foreach S $dt_local_extra {
+    set cx 0.0; set cy 0.0
+    foreach p $S {set cx [expr {$cx+[lindex $p 0]}]; set cy [expr {$cy+[lindex $p 1]}]}
+    set cx [expr {$cx/[llength $S]}]; set cy [expr {$cy/[llength $S]}]
+    set best {}; set bd 1e30
+    foreach p $S {
+      set d [expr {abs([lindex $p 0]-$cx)+abs([lindex $p 1]-$cy)}]
+      if {$d<$bd} {set bd $d; set best $p}
+    }
+    lappend dt_sets $S
+    lappend dt_med [lrange $best 0 1]
+  }
+  puts "OT_DTAP_OUTLIER_LEAVES sinks [llength $dt_local_outliers] extra_groups [llength $dt_local_extra]"
 }
 set dt_regular_count [llength $dt_sets]
 set dt_sets [concat $dt_sets $dt_atomic_sets]

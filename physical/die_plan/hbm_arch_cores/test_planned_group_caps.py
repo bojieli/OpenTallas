@@ -47,3 +47,24 @@ if {[dict get $mapping c] !=2 || $count(2)!=20 || $count(1)!=50} {error "denied 
 if {![dt_f4_group_move mapping count c 1 1250 0 1 {50 30} {0 0} 80]} {error "valid bounded move rejected"}
 if {$count(1)!=51 || $count(2)!=19 || [dict get $mapping c]!=1} {error "move did not conserve counts"}
 ''')
+
+
+def test_extra_outlier_leaves_bound_sparse_distances_and_conserve_members():
+ start=SOURCE.index('proc dt_local_outlier_sets ')
+ end=SOURCE.index('\nif {[info exists ::env(OT_DTAP_OUTLIER_LEAVES)]',start)
+ tcl(SOURCE[start:end]+r'''
+set points {{39 31 a} {40 32 b} {118 184 c} {421 234 d} {414 231 e} {354 4 f}}
+set groups [dt_local_outlier_sets $points 2 80]
+set actual {}
+foreach group $groups {
+ if {[llength $group]>2} {error "extra leaf cap exceeded"}
+ foreach a $group {
+  lappend actual [lindex $a 2]
+  foreach b $group {
+   if {abs([lindex $a 0]-[lindex $b 0])+abs([lindex $a 1]-[lindex $b 1])>80} {error "sparse extra leaf is remote"}
+  }
+ }
+}
+if {[lsort $actual] ne {a b c d e f}} {error "extra leaves lost/duplicated sinks"}
+if {[llength [dt_local_outlier_sets {} 2 80]]} {error "empty input gained sinks"}
+''')
