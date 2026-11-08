@@ -73,3 +73,38 @@ def tcl(receipt):
             f'[expr {{round({v:.3f}*$ot_ft_dbu)}}]' for v in row['rect']))
     lines.append(f'puts "OT_PARTITION_FT_RESERVE rectangles={len(receipt["rectangles_um"])}"')
     return '\n'.join(lines)+'\n'
+
+
+# DIE-HBM-90 11-07 (HBM transit types q_spu0 / q_spu1 2_4_floorplan_pdn [ERROR PDN-0179] "Unable to repair all
+# channels", 131 PDN-0178 channels on M2): the reservation blocks M4 in full-width horizontal bands (the die FT tracks,
+# 2.7 um of every 10.8 um on q_spu0).  The PDN reaches the M1/M2 rails only through M2->M5 via stacks, and a stack
+# cannot cross a blocked M4 band, so every row under a band has no via anywhere along its length.  Row bridge: vertical
+# M3 straps (M3 is never reserved) cross every rail and carry it out of the band to horizontal M4 straps placed in the
+# unreserved M4 gaps (pdngen drops strap segments that fall in an obstruction), which connect to the M5 straps.  All
+# bridge metal stays outside the reservation (probed: 0 PDN shapes inside an obstruction, PDNGEN OK on q_spu0).
+BRIDGE_M3 = dict(width=0.09, spacing=0.072, pitch=4.32, offset=1.08)     # ASAP7 M3 legal width 0.09
+BRIDGE_M4 = dict(width=0.12, spacing=0.072, pitch=4.32, offset=2.16)     # ASAP7 M4 legal width 0.12; pitch < min gap
+
+
+def blocks_rows(receipt, width):
+    """True when an M4 reservation rectangle spans the whole outline width: rows under it get no M2->M5 via."""
+    if receipt is None:
+        return False
+    return any(r['layer'] == 'M4' and r['rect'][0] <= 1e-6 and r['rect'][2] >= width - 1e-6
+               for r in receipt['rectangles_um'])
+
+
+def row_bridge_tcl(receipt, width, grid='top'):
+    if not blocks_rows(receipt, width):
+        return ''
+    b3, b4 = BRIDGE_M3, BRIDGE_M4
+    return '\n'.join([
+        '# PDN row bridge (DIE-HBM-90 11-07): M4 FT bands span the width; M3 straps carry the rails to M4 straps in the gaps.',
+        'add_pdn_stripe -grid {%s} -layer {M3} -width {%g} -spacing {%g} -pitch {%g} -offset {%g}' % (
+            grid, b3['width'], b3['spacing'], b3['pitch'], b3['offset']),
+        'add_pdn_stripe -grid {%s} -layer {M4} -width {%g} -spacing {%g} -pitch {%g} -offset {%g}' % (
+            grid, b4['width'], b4['spacing'], b4['pitch'], b4['offset']),
+        'add_pdn_connect -grid {%s} -layers {M2 M3}' % grid,
+        'add_pdn_connect -grid {%s} -layers {M3 M4}' % grid,
+        'add_pdn_connect -grid {%s} -layers {M4 M5}' % grid,
+        'puts "OT_PARTITION_FT_RESERVE row bridge M3/M4 on"']) + '\n'
