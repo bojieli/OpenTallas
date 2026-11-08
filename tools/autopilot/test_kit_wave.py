@@ -204,6 +204,24 @@ class Select(unittest.TestCase):
         picks, skip = KW.select(rows, c, "qwen_kvsys", st, plan)
         self.assertIn("kv3_st", skip["live job (another lane)"])
 
+    def test_generic_owner_label_is_not_a_type_claim(self):
+        # KW-FIX-33 (COORD 11-07 22:53): the die-wide census label HBM-PLAN (fresh last_activity on every HBM type row)
+        # does not claim a type row; a specific lane owner still does, and the label still claims a core row
+        own = OWN.replace("kv3_pc\ttype\tNEEDS-KIT\tKV-KITS-W\tnone\t122m", "kv3_pc\ttype\tNEEDS-KIT\tHBM-PLAN\tnone\t6m")
+        rows = KW.parse_owners(own)
+        picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, PLAN)
+        self.assertIn("kv3_pc", [p["item"] for p in picks])
+        self.assertFalse(any(k.startswith("lane activity") for k in skip))
+        picks, skip = KW.select(rows, cfg(generic_owner_labels=[]), "qwen_kvsys", {"items": {}}, PLAN)
+        self.assertNotIn("kv3_pc", [p["item"] for p in picks])
+        self.assertIn("kv3_pc", skip["lane activity < 3 h (HBM-PLAN)"])
+        rows = KW.parse_owners(OWN)                                          # a specific lane claim holds
+        picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, PLAN)
+        self.assertIn("kv3_pc", skip["lane activity < 3 h (KV-KITS-W)"])
+        core = OWN.replace("qkd_hr_cdc_ci\tcore\tNEEDS-KIT\tCODEX\tnone\t961m", "qkd_hr_cdc_ci\tcore\tNEEDS-KIT\tHBM-PLAN\tnone\t6m")
+        picks, skip = KW.select(KW.parse_owners(core), cfg(kinds=["type", "core"]), "qwen_kvsys", {"items": {}}, PLAN)
+        self.assertIn("qkd_hr_cdc_ci", skip["lane activity < 3 h (HBM-PLAN)"])
+
     def test_wave_runner_lane_lines_are_not_claims(self):
         rows = KW.parse_owners(OWN.replace("kv3_pc\ttype\tNEEDS-KIT\tKV-KITS-W", "kv3_pc\ttype\tNEEDS-KIT\tKIT-WAVE-2"))
         picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, PLAN)

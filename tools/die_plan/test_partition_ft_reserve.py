@@ -103,3 +103,16 @@ def test_no_band_type_remains_unchanged_even_with_global_bands():
     other=copy.deepcopy(P.types[typ]);other.pop('die_ft_bands')
     P.types['no_bands']=other
     assert F.reservation(P,'no_bands') is None
+
+
+def test_row_bridge_only_when_m4_band_spans_width():
+    """DIE-HBM-90 11-07 (q_spu0/q_spu1 PDN-0179): a full-width M4 reservation band leaves the rows under it with no
+    M2->M5 via; the PDN then gets M3 + M4 bridge straps. Without such a band nothing changes."""
+    P,typ=plan();w,h=P.types[typ]['outline_um'];r=F.reservation(P,typ)
+    assert F.blocks_rows(r,w)
+    t=F.row_bridge_tcl(r,w)
+    for line in ('-layer {M3} -width {0.09}','-layer {M4} -width {0.12}','-layers {M2 M3}','-layers {M3 M4}','-layers {M4 M5}'):
+        assert line in t
+    assert F.row_bridge_tcl(None,w)=='' and not F.blocks_rows(None,w)
+    part={'type':typ,'rectangles_um':[dict(layer='M4',rect=[0,0,w/2,1]),dict(layer='M5',rect=[0,0,w,1])]}
+    assert not F.blocks_rows(part,w) and F.row_bridge_tcl(part,w)==''

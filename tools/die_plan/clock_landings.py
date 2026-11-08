@@ -1224,6 +1224,9 @@ class Landings:
             body = self._dataflow_monitor(tn, key, mask, collector_info, extra, logic, body)
         elif active_collector:
             import landing_collector as LC
+            # S81-OTHERFAIL-1 11-07: the collector chain walks the plan landing_contract tree (the reset relays' and
+            # landing_place.tcl's tree), never a stale landing-table copy (LC.effective_tree)
+            collector_info = dict(collector_info, tree=LC.effective_tree(self.types[key], collector_info["tree"]))
             if collector_info["mask"].get("observer"):
                 logic.append("    wire cland_up_ready, cland_up_fault;")
             else:extra += ["    output wire cland_up_ready", "    output wire cland_up_fault"]

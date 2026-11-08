@@ -1,0 +1,674 @@
+{
+  "outline_um": [
+    0.0,
+    0.0,
+    486.0,
+    120.96
+  ],
+  "targets": {
+    "u_enc.f0\\[4\\]$_SDFF_PN0_": {
+      "xy": [
+        190.242,
+        30.24
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "_018284_",
+          "driver": "_138076_",
+          "master": "NOR2x1_ASAP7_75t_R",
+          "xy": [
+            190.458,
+            29.7
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 0.7560000000000073
+    },
+    "u_enc.g_ch_stage.mid\\[113\\]$_DFF_P_": {
+      "xy": [
+        80.406,
+        51.84
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.ch_n\\[113\\]",
+          "driver": "_139722_",
+          "master": "OR5x1_ASAP7_75t_R",
+          "xy": [
+            123.552,
+            24.03
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 70.956
+    },
+    "u_enc.g_ch_stage.mid\\[128\\]$_DFF_P_": {
+      "xy": [
+        80.406,
+        59.4
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.ch_n\\[128\\]",
+          "driver": "_139816_",
+          "master": "OR5x1_ASAP7_75t_R",
+          "xy": [
+            124.902,
+            16.2
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 87.696
+    },
+    "u_enc.g_ch_stage.mid\\[98\\]$_DFF_P_": {
+      "xy": [
+        80.946,
+        44.82
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.ch_n\\[98\\]",
+          "driver": "_139625_",
+          "master": "OR5x1_ASAP7_75t_R",
+          "xy": [
+            118.152,
+            23.22
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 58.806000000000004
+    },
+    "u_enc.g_ff.cq\\[0\\]\\[113\\]$_DFF_P_": {
+      "xy": [
+        53.136,
+        97.47
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_ch_stage.mid\\[113\\]",
+          "driver": "_138324_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            79.812,
+            51.84
+          ],
+          "direct_loads": 4
+        },
+        {
+          "net": "_015461_",
+          "driver": "u_enc.g_ch_stage.mid\\[113\\]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            80.406,
+            51.84
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 72.9
+    },
+    "u_enc.g_ff.cq\\[0\\]\\[128\\]$_DFF_P_": {
+      "xy": [
+        53.298,
+        96.12
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_ch_stage.mid\\[128\\]",
+          "driver": "_138339_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            69.768,
+            59.4
+          ],
+          "direct_loads": 4
+        },
+        {
+          "net": "_015476_",
+          "driver": "u_enc.g_ch_stage.mid\\[128\\]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            80.406,
+            59.4
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 63.82800000000001
+    },
+    "u_enc.g_ff.cq\\[0\\]\\[98\\]$_DFF_P_": {
+      "xy": [
+        55.296,
+        96.93
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_ch_stage.mid\\[98\\]",
+          "driver": "_138309_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            80.19,
+            45.09
+          ],
+          "direct_loads": 4
+        },
+        {
+          "net": "_015446_",
+          "driver": "u_enc.g_ch_stage.mid\\[98\\]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            80.946,
+            44.82
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 77.76
+    },
+    "u_enc.g_ff.cq\\[1\\]\\[113\\]$_DFF_P_": {
+      "xy": [
+        35.1,
+        50.76
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_ch_stage.mid\\[113\\]",
+          "driver": "_138324_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            79.812,
+            51.84
+          ],
+          "direct_loads": 4
+        },
+        {
+          "net": "_015461_",
+          "driver": "u_enc.g_ch_stage.mid\\[113\\]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            80.406,
+            51.84
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 46.38600000000001
+    },
+    "u_enc.g_ff.cq\\[1\\]\\[128\\]$_DFF_P_": {
+      "xy": [
+        35.1,
+        48.6
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_ch_stage.mid\\[128\\]",
+          "driver": "_138339_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            69.768,
+            59.4
+          ],
+          "direct_loads": 4
+        },
+        {
+          "net": "_015476_",
+          "driver": "u_enc.g_ch_stage.mid\\[128\\]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            80.406,
+            59.4
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 56.106
+    },
+    "u_enc.g_ff.cq\\[1\\]\\[98\\]$_DFF_P_": {
+      "xy": [
+        37.098,
+        47.79
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_ch_stage.mid\\[98\\]",
+          "driver": "_138309_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            80.19,
+            45.09
+          ],
+          "direct_loads": 4
+        },
+        {
+          "net": "_015446_",
+          "driver": "u_enc.g_ch_stage.mid\\[98\\]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            80.946,
+            44.82
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 46.818
+    },
+    "u_enc.g_ff.cq\\[2\\]\\[113\\]$_DFF_P_": {
+      "xy": [
+        35.424,
+        45.63
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_ch_stage.mid\\[113\\]",
+          "driver": "_138324_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            79.812,
+            51.84
+          ],
+          "direct_loads": 4
+        },
+        {
+          "net": "_015461_",
+          "driver": "u_enc.g_ch_stage.mid\\[113\\]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            80.406,
+            51.84
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 51.19200000000001
+    },
+    "u_enc.g_ff.cq\\[2\\]\\[128\\]$_DFF_P_": {
+      "xy": [
+        35.964,
+        44.28
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_ch_stage.mid\\[128\\]",
+          "driver": "_138339_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            69.768,
+            59.4
+          ],
+          "direct_loads": 4
+        },
+        {
+          "net": "_015476_",
+          "driver": "u_enc.g_ch_stage.mid\\[128\\]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            80.406,
+            59.4
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 59.562000000000005
+    },
+    "u_enc.g_ff.cq\\[2\\]\\[98\\]$_DFF_P_": {
+      "xy": [
+        37.422,
+        45.09
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_ch_stage.mid\\[98\\]",
+          "driver": "_138309_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            80.19,
+            45.09
+          ],
+          "direct_loads": 4
+        },
+        {
+          "net": "_015446_",
+          "driver": "u_enc.g_ch_stage.mid\\[98\\]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            80.946,
+            44.82
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 43.794000000000004
+    },
+    "u_enc.g_ff.cq\\[3\\]\\[113\\]$_DFF_P_": {
+      "xy": [
+        49.41,
+        97.47
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_ch_stage.mid\\[113\\]",
+          "driver": "_138324_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            79.812,
+            51.84
+          ],
+          "direct_loads": 4
+        },
+        {
+          "net": "_015461_",
+          "driver": "u_enc.g_ch_stage.mid\\[113\\]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            80.406,
+            51.84
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 76.626
+    },
+    "u_enc.g_ff.cq\\[3\\]\\[128\\]$_DFF_P_": {
+      "xy": [
+        28.188,
+        95.58
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_ch_stage.mid\\[128\\]",
+          "driver": "_138339_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            69.768,
+            59.4
+          ],
+          "direct_loads": 4
+        },
+        {
+          "net": "_015476_",
+          "driver": "u_enc.g_ch_stage.mid\\[128\\]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            80.406,
+            59.4
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 88.398
+    },
+    "u_enc.g_ff.cq\\[3\\]\\[98\\]$_DFF_P_": {
+      "xy": [
+        43.092,
+        97.2
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_ch_stage.mid\\[98\\]",
+          "driver": "_138309_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            80.19,
+            45.09
+          ],
+          "direct_loads": 4
+        },
+        {
+          "net": "_015446_",
+          "driver": "u_enc.g_ch_stage.mid\\[98\\]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            80.946,
+            44.82
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 90.23400000000001
+    },
+    "u_enc.g_la2.f0v\\[0\\]$_DFF_P_": {
+      "xy": [
+        352.404,
+        40.5
+      ],
+      "master": "DFFHQNx2_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_la2.g_ch_flags.f0_mid\\[0\\]",
+          "driver": "_097659_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            284.688,
+            40.5
+          ],
+          "direct_loads": 1
+        },
+        {
+          "net": "_000325_",
+          "driver": "u_enc.g_la2.g_ch_flags.f0_mid\\[0\\]$_SDFF_PN0_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            282.852,
+            40.23
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 69.82200000000003
+    },
+    "u_enc.g_la2.f0v\\[1\\]$_DFF_P_": {
+      "xy": [
+        358.452,
+        55.89
+      ],
+      "master": "DFFHQNx2_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_la2.g_ch_flags.f0_mid\\[1\\]",
+          "driver": "_097660_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            283.014,
+            55.08
+          ],
+          "direct_loads": 1
+        },
+        {
+          "net": "_000326_",
+          "driver": "u_enc.g_la2.g_ch_flags.f0_mid\\[1\\]$_SDFF_PN0_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            281.988,
+            42.12
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 90.23400000000001
+    },
+    "u_enc.g_la2.f0v\\[2\\]$_DFF_P_": {
+      "xy": [
+        352.134,
+        45.63
+      ],
+      "master": "DFFHQNx2_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_la2.g_ch_flags.f0_mid\\[2\\]",
+          "driver": "_097661_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            284.148,
+            44.55
+          ],
+          "direct_loads": 1
+        },
+        {
+          "net": "_000327_",
+          "driver": "u_enc.g_la2.g_ch_flags.f0_mid\\[2\\]$_SDFF_PN0_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            282.636,
+            44.28
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 70.84799999999998
+    },
+    "u_enc.g_la2.f0v\\[3\\]$_DFF_P_": {
+      "xy": [
+        352.782,
+        57.24
+      ],
+      "master": "DFFHQNx2_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "u_enc.g_la2.g_ch_flags.f0_mid\\[3\\]",
+          "driver": "_097657_",
+          "master": "INVx1_ASAP7_75t_R",
+          "xy": [
+            283.338,
+            56.97
+          ],
+          "direct_loads": 1
+        },
+        {
+          "net": "_000023_",
+          "driver": "u_enc.g_la2.g_ch_flags.f0_mid\\[3\\]$_SDFF_PN0_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "xy": [
+            282.312,
+            46.17
+          ],
+          "direct_loads": 1
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 81.53999999999996
+    },
+    "u_enc.g_la2.g_ch_flags.f0_mid\\[0\\]$_SDFF_PN0_": {
+      "xy": [
+        282.852,
+        40.23
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "_017972_",
+          "driver": "_135858_",
+          "master": "NOR2x1_ASAP7_75t_R",
+          "xy": [
+            191.916,
+            30.24
+          ],
+          "direct_loads": 4
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 100.92599999999997
+    },
+    "u_enc.g_la2.g_ch_flags.f0_mid\\[1\\]$_SDFF_PN0_": {
+      "xy": [
+        281.988,
+        42.12
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "_017972_",
+          "driver": "_135858_",
+          "master": "NOR2x1_ASAP7_75t_R",
+          "xy": [
+            191.916,
+            30.24
+          ],
+          "direct_loads": 4
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 101.952
+    },
+    "u_enc.g_la2.g_ch_flags.f0_mid\\[2\\]$_SDFF_PN0_": {
+      "xy": [
+        282.636,
+        44.28
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "_017972_",
+          "driver": "_135858_",
+          "master": "NOR2x1_ASAP7_75t_R",
+          "xy": [
+            191.916,
+            30.24
+          ],
+          "direct_loads": 4
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 104.76000000000003
+    },
+    "u_enc.g_la2.g_ch_flags.f0_mid\\[3\\]$_SDFF_PN0_": {
+      "xy": [
+        282.312,
+        46.17
+      ],
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "chain": [
+        {
+          "net": "_017972_",
+          "driver": "_135858_",
+          "master": "NOR2x1_ASAP7_75t_R",
+          "xy": [
+            191.916,
+            30.24
+          ],
+          "direct_loads": 4
+        }
+      ],
+      "terminal": "native_cell",
+      "origin_manhattan_um": 106.32600000000002
+    }
+  }
+}

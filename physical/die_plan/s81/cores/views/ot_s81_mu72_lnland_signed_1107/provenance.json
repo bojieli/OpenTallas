@@ -1,0 +1,128 @@
+{
+ "kit": {
+  "schema": "opentallas.s81.core_freeze.v1",
+  "kit": "ot_s81_mu72_lnland_h2P",
+  "module": "ot_s81_mu72_lnland",
+  "plan_type": "dsdv_slice_lepe_mu_LP__t2",
+  "outline_um": [
+   112.32,
+   112.32
+  ],
+  "ref_tile": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland",
+  "spec": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland/spec.json",
+  "spec_sha256": "919566b20c1b790abf018aa10f03d4796c34b7de8f27317b7afa0f8a03d139ed",
+  "pins_file": "cores/h2/ot_s81_mu72_lnland/pins.json",
+  "pins_sha256": "23111eacab75134063307bd5fea89667fa8c7f1f3710e4cdf74531b74daac17c",
+  "pins": 2236,
+  "plan_lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland/ot_s81_mu72_lnland.lef",
+  "pins_canon_sha256": "ef16178e75d383eaf4db3a13c34962ab2617d8c98458a7c90dd6b6e95f2c63d6",
+  "pins_placed_canon_sha256": "ef16178e75d383eaf4db3a13c34962ab2617d8c98458a7c90dd6b6e95f2c63d6",
+  "pins_staged_file": "declared_pin_contract/pins.json",
+  "pins_staged_sha256": "23111eacab75134063307bd5fea89667fa8c7f1f3710e4cdf74531b74daac17c",
+  "clocks": [
+   "ck_k",
+   "ck_n"
+  ],
+  "resets": [
+   "rs_k",
+   "rs_n"
+  ],
+  "multi_root": {
+   "roots": [
+    {
+     "base": "ck_k",
+     "clock": "clk",
+     "pins": [
+      "ck_k"
+     ],
+     "domains": [
+      "K"
+     ]
+    },
+    {
+     "base": "ck_n",
+     "clock": "clk_ck_n",
+     "pins": [
+      "ck_n"
+     ],
+     "domains": [
+      "N"
+     ]
+    }
+   ],
+   "entries": 2
+  },
+  "recipe_sha256": "73cfd63e9176b258047c3a387beccfdca62441f1377b0a9ee305d9e2fcf724d9",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_tol_ps": 40.0,
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan clock.insertion_ps",
+   "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "rc": "setRC_rcx_asap7.tcl",
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "face_guard (post-synth)",
+   "LEC EQUIVALENT (post-synth)",
+   "reg_fanout (post-synth)",
+   "TT/FF insertion (GRT, before route)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "ad4e74e55cd",
+  "sdc_lint_sha256": "baa29fb1a541ae672f9bd1629dce6f6f593465762d2f52290820f638c94a6169",
+  "face_guard_sha256": "da1b8ce4bb693991e33dcff378abb65121af213cbc8aa4655e94ed3375e5f67e",
+  "signoff_sha256": "fe1e114f1cd64bc587fefab09a3bd4dd44e3b894c662d2a0a85793eaa371319e",
+  "macros": {},
+  "rtl_patches": [],
+  "kit_hash": "9ec39301f9caf9a1",
+  "reset_contract": {
+   "edges": 64,
+   "module": "ot_s81_mu72_lnland",
+   "contract_sha256": "8eb7a65af236c88c47e0ef7abb66e53c47c2e85f1380fc268a2e58b12a03632c",
+   "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8"
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5,
+   "default": true
+  },
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_h2P/eco_m0/i2",
+ "src_commit": "7af661c74dd859446caaf7f60bdb60c428a0f38c",
+ "flow_tag": "flow-20261103-t-s81",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-08T01:58:36+00:00",
+  "kit": "/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_h2P/eco_m0/i2",
+  "base": "/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_h2P/eco_m0/i2/run/results/asap7/kl_ot_s81_mu72_lnland_h2P/base",
+  "signoff": "/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_h2P/sign_t-s81_m0/signoff/signoff.json",
+  "signoff_sha256": "de15aa0df7e14327af9fe8540616c94a6cd4d2f132d9d7fd0f694a42fca95cc3",
+  "signoff_generated": "2026-11-03T17:53:37+00:00",
+  "odb": "/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_h2P/eco_m0/i2/run/results/asap7/kl_ot_s81_mu72_lnland_h2P/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_h2P/sign_t-s81_m0/lec/lec.json",
+  "note": "S81-TYPES-5 helper 11-07: LP child view from the signed re-sign record /srv/opentallas-scratch2/claude/die-s81-51/sign/lnland_h2P/sign_t-s81_m0/PROVENANCE.json",
+  "lib_basis": {
+   "ot_s81_mu72_lnland_tt.lib": "base ot_s81_mu72_lnland_tc.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)",
+   "ot_s81_mu72_lnland_ff.lib": "base ot_s81_mu72_lnland_BC.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
+  },
+  "files_sha256": {
+   "ot_s81_mu72_lnland.lef": "ffda109aeb2993191617082565305d816c021fb4093ea6a3bb99d1e6e3e3a325",
+   "ot_s81_mu72_lnland_ff.lib": "4ea7d0dc7b4a7eddc4ae32ed913b652afd8c9a0d204c5184478c98cb335953b8",
+   "ot_s81_mu72_lnland_tt.lib": "6aa476ee326f21520d23ad99813f2b746e02e7a8347c65a96e95e637c0db57b8",
+   "pins.json": "f660dc0230e1bcaa6005318bb95ecf470f9ba784befda7d914c7f3f71503091b"
+  }
+ }
+}

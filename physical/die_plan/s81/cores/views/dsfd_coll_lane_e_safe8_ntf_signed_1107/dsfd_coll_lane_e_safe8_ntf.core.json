@@ -1,0 +1,30 @@
+{
+ "module": "dsfd_coll_lane_e_safe8_ntf",
+ "plan_type": "h2_coll_e",
+ "boundary_role": {
+  "ck": "clk",
+  "rs": "reset"
+ },
+ "clock_contract": {
+  "kind": "hard_core_latency",
+  "ruling": "COORD 10-24",
+  "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+  "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json"
+ },
+ "clock_latency_measured": {
+  "tt": {
+   "n": 2141,
+   "min": 389.04,
+   "mean": 424.6,
+   "max": 453.45,
+   "spread": 64.41
+  },
+  "ff": {
+   "n": 2141,
+   "min": 307.75,
+   "mean": 336.26,
+   "max": 360.58,
+   "spread": 52.83
+  }
+ }
+}

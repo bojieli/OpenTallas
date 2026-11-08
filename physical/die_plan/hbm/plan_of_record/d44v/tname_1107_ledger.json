@@ -1,0 +1,13 @@
+{
+ "bound_leaf_master": "ot_hnx_fused_host_program",
+ "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-89/hbmbind/bind14/out/rtl/hbm_arch_root.sv",
+ "inst": "u_mu_fused_program",
+ "physical_inst": "u_mu_fused_programme",
+ "physical_master": "ot_hnx_fused_host_program",
+ "plan_fields": [
+  "partition_types.root.hard_cores.81.physical_inst",
+  "partition_types.root.hard_cores.81.physical_master"
+ ],
+ "schema": "opentallas.declare_physical_inst.v1",
+ "type": "root"
+}

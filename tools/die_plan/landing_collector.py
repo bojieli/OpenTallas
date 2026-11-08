@@ -13,6 +13,19 @@ def safe(n):
     return re.sub(r"\W", "_", n)
 
 
+def effective_tree(ptype, table_tree):
+    """The collector tree a type's RTL collectors, their verify and landing_place.tcl ALL walk: the plan
+    landing_contract.collector_tree (the tree the reset relays and the placement groups use) when it is a soft relay
+    tree, else the landing table's copy.  S81-OTHERFAIL-1 11-07: col_h10_r2__t1__cl99efd374 had a stale table tree
+    (t28->60->59->58->50->35) while the plan, the relays and the placement used t28->57->56->55->45->35, so place
+    stopped on 'OT_CLAND no mapped cells found under u_cland_collect_rst_rl_45'.  One tree, by construction."""
+    ctree = (((ptype or {}).get("clock") or {}).get("landing_contract") or {}).get("collector_tree")
+    if (isinstance(ctree, dict) and ctree.get("relays") and not ctree.get("hard") and isinstance(table_tree, dict)
+            and not table_tree.get("hard")):
+        return ctree
+    return table_tree
+
+
 def raw(n):
     return re.sub(r"^rst_n_t(\d+)$", r"rr_t\1", n)
 

@@ -2350,6 +2350,34 @@ def tap_chain_affinity_exports(t):
             f"export OT_TAP_CHAIN_MAX_GROUP = {limit}"]
 
 
+def tap_pair_affinity_exports(t):
+    """QC-TYPES-6 11-07: default-off pre-CTS short-pair tap affinity (clock_taps.tcl -> tap_pair_affinity.tcl).
+    Clock pins only; radius and group bounded by the declared tap radius and capacity."""
+    clock = t.get("clock", {})
+    if "tap_pair_affinity" not in clock:
+        return []
+    spec = clock["tap_pair_affinity"]
+    tap_r = float(clock.get("tap_radius_um", 200.))
+    radius = float(spec.get("radius_um", tap_r))
+    group = int(spec.get("max_group", 64))
+    merge = int(spec.get("merge_max", 128))
+    pair_um = float(spec.get("pair_um", 60.))
+    depth = int(spec.get("depth", 2))
+    cap = min(1200, _tap_cap(t))
+    if not 0 < radius <= tap_r:
+        raise ValueError("tap_pair_affinity radius must fit the declared tap radius")
+    if not 2 <= group <= cap or not (merge == 0 or 2 <= merge <= cap):
+        raise ValueError("tap_pair_affinity group/merge must fit the declared tap capacity")
+    if not 0 < pair_um <= 200 or not 0 <= depth <= 4:
+        raise ValueError("tap_pair_affinity pair_um/depth out of range")
+    return ["export OT_TAP_PAIR_AFFINITY = 1",
+            f"export OT_TAP_PAIR_RADIUS_UM = {radius:g}",
+            f"export OT_TAP_PAIR_GROUP = {group}",
+            f"export OT_TAP_PAIR_MERGE = {merge}",
+            f"export OT_TAP_PAIR_UM = {pair_um:g}",
+            f"export OT_TAP_PAIR_DEPTH = {depth}"]
+
+
 def _tap_cap(t):
     """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 3000 (COORD 10-23; applies to grid and added taps);
     density taps default to 1500 (decision 5: ~1000-1500 sinks a tap)."""
@@ -2604,6 +2632,48 @@ def phy_pg_west_notch(t, tn, name, rt, mac_x0, mac_y0=()):
     return rt
 
 
+def pg_placed_blocks(t):
+    """The placed blocks a PHY PG domain is judged by (phy_pg_domains; tools/die_plan/fit_phy_pg_domains.py).
+
+    S81-SERDES-PHY-1 10-31: a content with physical_parts is judged by its placed parts, not its logical lot.
+    DIE-HBM-90-TSTRAP 11-07: a content that is the parent of SPLIT sub-cores (hard_cores with physical_inst
+    <inst>.u_fcore.<...> or sub_core_parent <inst>; HBM-BIND-3 / DIE-QC-75, the parent design is wires-only glue around
+    its subs) is judged by those hard sub-cores, which are in hard_cores themselves; the glue has no macro view of its
+    own (HBM ot_pdie_serdes u_lk_* over chn/rx/tx).  A content without such sub-cores is unchanged.
+    """
+    hard = t.get("hard_cores", []) or []
+    parents = {h["sub_core_parent"] for h in hard if h.get("sub_core_parent")}
+    parents |= {str(h.get("physical_inst")).split(".u_fcore.")[0] for h in hard if ".u_fcore." in str(h.get("physical_inst") or "")}
+    placed = []
+    glue = [c for c in t.get("contents", []) if c.get("inst") in parents and not c.get("lef")]
+    for c in t.get("contents", []) + hard:
+        if any(c is g for g in glue):
+            continue
+        placed += ([dict(q, inst=q["physical_inst"]) for q in c["physical_parts"]]
+                   if c.get("physical_parts") else [c])
+    return placed
+
+
+def phy_pg_clip(t, tn, name, rt, mac_box):
+    """S81-TYPES-6 11-07 (COORD 23:0x (2) choice (a), class PHY-REGION-CLOCK-ENTRY; opt-in type key phy_pg_clip_um =
+    PG landing margin): for a PHY domain modelled with macros, the hard placement blockage and the voltage region are
+    clipped to the bounding box of the domain's PHY macros grown by the margin (snapped outward to the site / row grid)
+    on all four sides, inside the die domain rect.  The VDDPHY M6/M7 straps (and the M7 pins the die M8/M9 VDDPHY mesh
+    lands on) stay over the macros; core rows and the clock leaf then reach the macro clock/data pins from every side
+    instead of from below a region that spans the partition.  Composes with the west/south notch keys (the tighter edge
+    wins).  Key absent, or a domain without macros (phy_pg_offmodel) = unchanged."""
+    m = t.get("phy_pg_clip_um")
+    if m is None or not mac_box:
+        return list(rt)
+    m = float(m)
+    st, rw = PHY_PG_NOTCH_SITE_UM, PHY_PG_NOTCH_ROW_UM
+    x0 = round(math.floor(round((min(b[0] for b in mac_box) - m) / st, 6)) * st, 4) + 0.0
+    y0 = round(math.floor(round((min(b[1] for b in mac_box) - m) / rw, 6)) * rw, 4) + 0.0
+    x1 = round(math.ceil(round((max(b[2] for b in mac_box) + m) / st, 6)) * st, 4) + 0.0
+    y1 = round(math.ceil(round((max(b[3] for b in mac_box) + m) / rw, 6)) * rw, 4) + 0.0
+    return [max(rt[0], x0), max(rt[1], y0), min(rt[2], x1), min(rt[3], y1)]
+
+
 def phy_pg_domains(P, tn):
     """PATH-KV-SYSC 10-25 (OWNER decision 7, PHY PG hook): the die.pg.domains that fall inside partition type tn, as
     [(name, power_net, ground_net, rect_type_um, [macro inst fully inside])].  Identical for every instance (a hardened
@@ -2630,12 +2700,8 @@ def phy_pg_domains(P, tn):
             # failed the per-instance identity below on the sign of zero alone)
             rt = [round(min(u[0], v[0]), 4) + 0.0, round(min(u[1], v[1]), 4) + 0.0, round(max(u[0], v[0]), 4) + 0.0,
                   round(max(u[1], v[1]), 4) + 0.0]
-            mac, mac_x0, mac_y0 = [], [], []
-            # S81-SERDES-PHY-1 10-31: a content with physical_parts is judged by its placed parts, not its logical lot
-            placed = []
-            for c in t.get("contents", []) + t.get("hard_cores", []):
-                placed += ([dict(q, inst=q["physical_inst"]) for q in c["physical_parts"]]
-                           if c.get("physical_parts") else [c])
+            mac, mac_x0, mac_y0, mac_box = [], [], [], []
+            placed = pg_placed_blocks(t)
             for c in placed:
                 if "origin_um" not in c or "outline_um" not in c:
                     continue
@@ -2652,9 +2718,11 @@ def phy_pg_domains(P, tn):
                 mac.append(content_physical_identity(c)[0] if "physical_inst" in c or "physical_master" in c else c["inst"])
                 mac_x0.append(box[0])
                 mac_y0.append(box[1])
+                mac_box.append(box)
             if not mac and not t.get("phy_pg_offmodel"):
                 raise ValueError(f"type {tn}: PG domain {d['name']} holds no macro (a PHY domain powers its PHY macro)")
             rt = phy_pg_west_notch(t, tn, d["name"], rt, mac_x0, mac_y0)
+            rt = phy_pg_clip(t, tn, d["name"], rt, mac_box)
             got.append((d["name"], d["nets"][0], d["nets"][1], rt, sorted(mac)))
         per.append(got)
     # DIE-HEAD-5: compare supply/geometry/macros, not the per-instance domain name (die.pg.domains names one per window)
@@ -3926,6 +3994,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if ft_reservation is not None:
         (kd / "partition_ft_reservation.json").write_text(json.dumps(ft_reservation, indent=1) + "\n")
         pdn += partition_ft_reserve.tcl(ft_reservation)
+        pdn += partition_ft_reserve.row_bridge_tcl(ft_reservation, w)
     phy_doms = phy_pg_domains(P, tn)
     if phy_doms:
         # PATH-KV-SYSC 10-25 PHY PG hook: separate VDDPHY region(s) of die.pg.domains inside this type
@@ -4232,6 +4301,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # HEAD-TILE-PREGRT-HOLD (DH59-TILE 11-03, opt-in clock.pregrt_ff_hold): pregrt_ff_hold.py, run_kit.sh step below
         cfg.append("export OT_PREGRT_FF_HOLD = 1")
     cfg += tap_chain_affinity_exports(t)
+    cfg += tap_pair_affinity_exports(t)
     cfg += rck_band_exports(P, tn)
     import pad_clock as PC
     PC.write_contract(P, tn, kd)
@@ -4242,7 +4312,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
-              "clock_taps.tcl", "tap_chain_affinity.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
+              "clock_taps.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
               "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
@@ -5049,12 +5119,12 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ -f /work/partition_ir.py ] && [ \"\$OT_KIT_IR\" = defer ]; then python3 -I /work/partition_ir.py patch /OpenROAD-flow-scripts/flow/scripts && export OT_DEFER_PARTITION_IR=1 || echo 'PARTITION_IR WARNING: patch refused, kit IR runs inline in 6_report'; fi; \
   python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
   if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; \
-  if [ \$rc = 0 ]; then python3 -I /work/rtl_lint.py /work; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR rtl_lint (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=8; fi; fi; \\\
+  if [ \$rc = 0 ]; then python3 -I /work/rtl_lint.py /work; rc=\$?; if [ \$rc = 75 ]; then echo 'FAIL_PREFLOOR rtl_lint KILLED (yosys signal, host memory; not a design result)' | tee -a /work/FAIL_PREFLOOR; rc=8; elif [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR rtl_lint (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=8; fi; fi; \\\
   SRP=; if [ \$rc = 0 ]; then (python3 -I /work/selrange_gate.py /work > /work/selrange.log 2>&1; echo \$? > /work/selrange.rc) & SRP=\$!; fi; \
   if [ \$rc = 0 ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py gen --platform-dir /OpenROAD-flow-scripts/flow/platforms/asap7 --out /work/adder_map_dontuse.v --report /work/adder_map_dontuse.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR adder_map_dontuse' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py check --platform-dir /OpenROAD-flow-scripts/flow/platforms/asap7 --netlist \$(ls /work/run/results/asap7/*/base/1_2_yosys.v | tail -1) --report /work/dont_use_check.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR dont_use_check' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
-  if [ -n \"\$SRP\" ]; then wait \$SRP; S=\$(cat /work/selrange.rc 2>/dev/null || echo 2); tail -3 /work/selrange.log; if [ \"\$S\" != 0 ]; then echo 'FAIL_PREFLOOR selrange (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
+  if [ -n \"\$SRP\" ]; then wait \$SRP; S=\$(cat /work/selrange.rc 2>/dev/null || echo 2); tail -3 /work/selrange.log; if [ \"\$S\" = 75 ]; then echo 'FAIL_PREFLOOR selrange KILLED (yosys signal, host memory; not a design result)' | tee -a /work/FAIL_PREFLOOR; rc=3; elif [ \"\$S\" != 0 ]; then echo 'FAIL_PREFLOOR selrange (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then python3 -I /work/port_bind_gate.py \"\$N\" /work > /work/port_bind.log 2>&1; rc=\$?; tail -2 /work/port_bind.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR port_bind' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then python3 -I /work/face_guard.py \$N --pins /work/pins.json --out /work/face_guard.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR face_guard' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
@@ -5505,18 +5575,28 @@ def bound_parent_id_plan(raw, kit_rtl):
     port is accepted, and the caller's plan is never changed.
     """
     import copy
-    from parent_id_straps import type_parent_id_straps
+    from parent_id_straps import type_parent_id_straps, with_sub_core_id_leaves
     from bind import short_id
     from bound_r8_straps import project
     raw = project(raw, kit_rtl)
     result = raw
     for tn, filelist in (kit_rtl or {}).items():
         t = raw["partition_types"][tn]
-        declarations = type_parent_id_straps(t)
-        if not declarations:
+        if not type_parent_id_straps(t):
             continue
         kj = Path(filelist).with_name("kit_rtl.json")
         kr = json.loads(kj.read_text())
+        # DIE-HBM-90-TSTRAP 11-07: the bind promotes a sub-core's declared ID on the as-built leaf that holds it
+        # (exact asbuilt.sub_core_leaf table, Binder.__init__ sets parent_id_leaf), e.g. plan hard core
+        # u_sfucore_Q_lane14__fr (physical_inst u_sfucore_Q_lane14.u_fcore.u_core.u_fr) -> bound leaf
+        # u_sfucore_Q_lane14.map_lane_j.  Resolve the declarations with the same table from the producer manifest
+        # the kit records, so the manifest row and the plan declaration name the same leaf.  Width, name and the
+        # actual kit input are still checked exactly below; no table = unchanged behaviour.
+        sub_core_leaf = {}
+        if kr.get("asbuilt_manifest"):
+            sub_core_leaf = json.loads(Path(kr["asbuilt_manifest"]).read_text()).get("sub_core_leaf") or {}
+        t = with_sub_core_id_leaves(t, sub_core_leaf)
+        declarations = type_parent_id_straps(t)
         mf = Path(kr["bind_out"]) / "bind_parent_id_straps.json"
         rows = json.loads(mf.read_text()).get("types", {}).get(kr.get("bound_type", tn), {})
         actual = {r["port"]: (r["dir"], r["width"]) for r in kr.get("bound_only_pins", [])}

@@ -1,0 +1,22 @@
+{
+ "plan": "/srv/opentallas-scratch2/claude/codex-svc-hardening-1209/source/results/physical/codex_svc_hardening_1551/merge_h4_pin_b/plan.json",
+ "view_list": [
+  {
+   "view": "codex_svc_merge_h4_pin@9c3a7fbf10fd",
+   "module": "codex_svc_merge_h4_pin",
+   "outline_um": [
+    172.8,
+    172.8
+   ],
+   "pins_file": "pins.json",
+   "pins_sha256": "a8bc2ba3c580c86bd90ab5b9998a001fc33dac5fb434aab8fe7dd551ee45ebd1",
+   "recipe_keys": [
+    "codex_svc_merge_h4_pin"
+   ],
+   "instances": [
+    "private_smd_child"
+   ],
+   "placed": 1
+  }
+ ]
+}

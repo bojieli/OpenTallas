@@ -910,6 +910,10 @@
       "type": "number",
       "minimum": 0
      },
+     "phy_pg_clip_um": {
+      "type": "number",
+      "minimum": 0
+     },
      "rck_band": {
       "type": "object",
       "additionalProperties": false,
@@ -1955,6 +1959,35 @@
           "type": "integer",
           "minimum": 2,
           "maximum": 1200
+         }
+        }
+       },
+       "tap_pair_affinity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+         "radius_um": {
+          "type": "number",
+          "exclusiveMinimum": 0
+         },
+         "max_group": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 1200
+         },
+         "merge_max": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1200
+         },
+         "pair_um": {
+          "type": "number",
+          "exclusiveMinimum": 0
+         },
+         "depth": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
          }
         }
        },
@@ -4811,6 +4844,33 @@
        },
        "minItems": 2,
        "maxItems": 2
+      }
+     },
+     "ln_copies": {
+      "type": [
+       "boolean",
+       "object"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "cf": {
+        "type": "boolean"
+       },
+       "relay": {
+        "type": "boolean"
+       },
+       "mem": {
+        "type": "string",
+        "minLength": 1
+       },
+       "relay_inst": {
+        "type": "string",
+        "minLength": 1
+       },
+       "lane_re": {
+        "type": "string",
+        "minLength": 1
+       }
       }
      }
     }

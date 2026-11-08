@@ -1,0 +1,13 @@
+{
+ "verdict": "PRIVATE_PIN_OUTLINE_REVIEW_PASS_COND",
+ "image": "results/physical/codex_svc_hardening_1551/native_smd/pin_review.png",
+ "review": "Codex personally viewed actual pin-table image before PLACE",
+ "findings": [
+  "compact146.88square,30.1percent free-core fill from FF-mapped size proxy; TT mapped area still pending",
+  "207pins M5,1.056um pitch: north101 pair-data/denominator/config, south104 cos-sin/config and outputs; low pin density",
+  "central clock/timed-reset; no hard memories/macros or narrow channels; full native cos/sin stores retain bandwidth",
+  "native captures preserved; dedicated fault-state Q avoids internal feedback load; actual face_guard still required",
+  "must view actual placement density/reach/PDN and clock/reset fanout before continuation; all8SMD parent slots and full parent routing remain open"
+ ],
+ "release_eligible": false
+}

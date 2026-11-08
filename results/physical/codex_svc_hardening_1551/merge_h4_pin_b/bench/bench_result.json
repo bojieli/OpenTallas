@@ -1,0 +1,5 @@
+{
+ "status": "PASS",
+ "rc": 0,
+ "log": "MERGE_H4_PIN_BOUNDARY checks=2214 words=106 bad=0 data_mut=106 valid_mut=106 data_cycles=2 reset_cycles=1\nMERGE_H4_PIN_BOUNDARY PASS\n- tb.sv:41: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 3us; walltime 0.177 s; speed 14.154 us/s\n- Verilator: cpu 0.177 s on 1 threads; allocated 11 MB\n"
+}

@@ -356,6 +356,22 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
       set d [expr {abs($x - $lx) + abs($y - $ly)}]
       if {$best eq "" || $d < $bd} { set best [lindex $tp 0]; set bd $d }
     }
+    # QC-TYPES-6 11-07: with TAP-PAIR AFFINITY a flop's clock tap may differ from its nearest tap; its reset then
+    # follows its CLOCK tap's relay (same tap = no tap-to-tap recovery/removal path), if that relay has the polarity
+    # and is within the leaf reach.  Without OT_TAP_PAIR_AFFINITY=1 nothing changes.
+    if {[info exists ::env(OT_TAP_PAIR_AFFINITY)] && $::env(OT_TAP_PAIR_AFFINITY) eq "1" && [info exists rt_postplace] && $rt_postplace} {
+      set ck_i ""
+      foreach ck [$ins getITerms] {
+        if {[[$ck getMTerm] getName] ni {CLK CLKN} || [$ck getNet] eq "NULL"} continue
+        set cn [[$ck getNet] getName]
+        if {$cn eq "clk"} { set ck_i 0 } else { regexp {^clk_t([0-9]+)$} $cn -> ck_i }
+      }
+      if {$ck_i ne "" && $ck_i ne $best && $ck_i ni $rt_bad && [dict exists $rt_rep "$ck_i,$par"] && [dict exists $rt_launch $ck_i]} {
+        lassign [dict get $rt_launch $ck_i] lx ly
+        set d [expr {abs($x - $lx) + abs($y - $ly)}]
+        if {![info exists rt_leaf_reach_um] || $d <= $rt_leaf_reach_um * $rt_dbu} { set best $ck_i; set bd $d }
+      }
+    }
       if {$best eq ""} { error "OT_RESET_LEAF no equal-polarity reset terminal for [$ins getName]" }
       dict incr rt_cnt $best
       incr rt_leaf_n

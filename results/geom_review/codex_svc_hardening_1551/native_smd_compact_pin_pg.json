@@ -1,0 +1,20 @@
+{
+ "verdict": "PRIVATE_COMPACT_PIN_PG_REVIEW_PASS_COND",
+ "image": "results/physical/codex_svc_hardening_1551/native_smd/compact_pin_review.png",
+ "review": "Codex personally viewed actual compact pin table",
+ "outline_um": [
+  129.6,
+  129.6
+ ],
+ "cell_area_um2": 5686,
+ "area_scope": "TT mapped",
+ "free_core_fill": 0.38861834600095185,
+ "findings": [
+  "all M5 low-density face pins,1.056um pitch; corresponding data input/output sides chosen by flow",
+  "central clock and M5-vertical0.024x0.192 reset pad; reset phase1.08 mod4.32 away from PG pair",
+  "defaultVIA56 M5 pad0.024x0.054 andVIA45 0.024x0.046 fit inside the vertical reset pad without RECTONLY T-unions",
+  "no SRAM macros/internal channels; boundary FF survival and actual placement density/reach/clock/PDN still gated",
+  "one representative child only; full parent residual/packing/POR adoption open"
+ ],
+ "release_eligible": false
+}

@@ -143,6 +143,42 @@ def logical_id_straps(descriptor):
     return {alias.get(p, p): c for p, c in ids.items()}
 
 
+def sub_core_bound_leaf(hc, sub_core_leaf):
+    """The bound leaf holding plan sub-core hc, or None, from the exact asbuilt.sub_core_leaf table.
+
+    HBM-BIND-3 11-05: a plan sub-core declares physical_inst <parent>.u_fcore.u_core.<sub> nested in one as-built
+    leaf; DIE-QC-75 11-05: a sub-core nested at a path without u_fcore names sub_core_parent exactly.  Exact table
+    lookup only, no name guessing.  Shared by bind.py (which promotes the ID on that leaf) and gen_phys (which checks
+    the promoted pin against the plan declaration), so both resolve the same leaf.
+    """
+    if not sub_core_leaf:
+        return None
+    if hc.get('sub_core_parent'):
+        return sub_core_leaf.get(hc['sub_core_parent'])
+    path = hc.get('physical_inst') or ''
+    return sub_core_leaf.get(path.split('.u_fcore.')[0]) if '.u_fcore.' in path else None
+
+
+def with_sub_core_id_leaves(partition_type, sub_core_leaf):
+    """partition_type with parent_id_leaf set on each ID-declaring sub-core hard core (copy; caller's dict unchanged).
+
+    An explicit plan parent_id_leaf always wins.  Without a table (or with no sub-core) the input is returned as is.
+    """
+    if not sub_core_leaf:
+        return partition_type
+    import copy
+    out = None
+    for i, h in enumerate(partition_type.get('hard_cores', []) or []):
+        if not h.get('parent_id_straps') or 'parent_id_leaf' in h:
+            continue
+        leaf = sub_core_bound_leaf(h, sub_core_leaf)
+        if leaf:
+            if out is None:
+                out = copy.deepcopy(partition_type)
+            out['hard_cores'][i]['parent_id_leaf'] = leaf
+    return partition_type if out is None else out
+
+
 def type_parent_id_straps(partition_type):
     """Declarations keyed by exact bound local leaf name.
 

@@ -339,7 +339,7 @@ def io_tcl(pins, w, h, tag, clock_entry=None):
     return "\n".join(out) + "\n", rows
 
 
-def declared_source_io_tcl(pins, w, h, tag, clocks, resets):
+def declared_source_io_tcl(pins, w, h, tag, clocks, resets, vertical_resets=False):
     """Opt-in native source contracts: consume named clock/reset centres, never project or merge them."""
     out = [f"# GENERATED declared native clock/reset points of {tag} ({len(pins)} pins)."]
     rows = []
@@ -360,6 +360,11 @@ def declared_source_io_tcl(pins, w, h, tag, clocks, resets):
             sx, sy = float(p["w"]), float(p["h"])
         elif p["name"] in clocks:
             sx, sy = CLOCK_ENTRY_SIZE
+        elif vertical_resets and p["name"] in resets:
+            # Explicit owned native form: M5 reset pads follow vertical metal.
+            # A nearest-edge horizontal pad forms T-shaped RECTONLY unions
+            # with default VIA45/VIA56 enclosures at an interior point.
+            sx, sy = LAYER_W["M5"], PIN_LEN_UM
         elif face_of(x, y, w, h) in "EW":
             sx, sy = PIN_LEN_UM, LAYER_W["M5"]
         else:
@@ -1461,6 +1466,38 @@ def final_ff_hold_post(text):
     return text.replace(anchor, FINAL_FF_HOLD_CALL + anchor)
 
 
+
+def atomic_clock_groups(path, module, clocks, taps):
+    """Reviewed exact sink membership, opt-in single-native-root density CTS."""
+    if taps != "density" or len(clocks) != 1:
+        raise ValueError("ATOMIC_CLOCK requires density CTS and one native clock input")
+    d = json.loads(Path(path).read_text())
+    if d.get("schema") != "opentallas.core_atomic_clock_groups.v1" or d.get("module") != module:
+        raise ValueError("ATOMIC_CLOCK module/schema mismatch")
+    cap = d.get("max_sinks", 16)
+    radius = d.get("max_radius_um", 20)
+    if type(cap) is not int or not 2 <= cap <= 64:
+        raise ValueError("ATOMIC_CLOCK sink cap must be 2..64")
+    if type(radius) not in (int, float) or not 0 < radius <= 40:
+        raise ValueError("ATOMIC_CLOCK reviewed radius must be (0,40] um")
+    d = dict(d, max_sinks=cap, max_radius_um=radius)
+    seen = set(); ids = set(); records = []
+    for g in d.get("groups", []):
+        name = g.get("name", ""); members = g.get("members", [])
+        if not re.fullmatch(r"[A-Za-z0-9_]+", name) or name in ids:
+            raise ValueError("ATOMIC_CLOCK duplicate or invalid group name")
+        ids.add(name)
+        if not isinstance(members, list) or not 2 <= len(members) <= cap:
+            raise ValueError("ATOMIC_CLOCK incomplete or over-budget group")
+        for n in members:
+            if not isinstance(n, str) or not n or any(c in n for c in "{}\n\r") or n in seen:
+                raise ValueError("ATOMIC_CLOCK overlapping or invalid member")
+            seen.add(n)
+        records.append("{" + name + " {" + " ".join("{" + n + "}" for n in members) + "}}")
+    if not records:
+        raise ValueError("ATOMIC_CLOCK empty manifest")
+    return d, "\n".join(records) + "\n"
+
 def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--views", required=True)
@@ -1576,6 +1613,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                          "core_clock_regions.json; a module with > 5k sinks gets one planned clock entry (density tap) "
                          "per declared region (<= 5k sinks, local CTS sink group per tap, taps aligned); modules "
                          "without regional entries and kept signed designs are unchanged")
+    ap.add_argument("--clock-atomic-groups", metavar="JSON",
+                    help="opt-in exact register chains, each on one <=64-sink regional branch; requires single-root density CTS")
     ap.add_argument("--clock-density-contract", help="reviewed exact native multi-port density plan JSON; requires --clock-taps density")
     ap.add_argument("--prects-estimate", action="store_true",
                     help="stage-only planned local clock NETWORK insertion before placement; explicitly cleared before CTS; SDC unchanged")
@@ -1958,7 +1997,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if declared_native:
         if centry is None:
             raise SystemExit("DECLARED_NATIVE_PIN: --clock-pin-entry on required")
-        io, prow = declared_source_io_tcl(pins, w, h, a.view, set(clks), set(rsts))
+        io, prow = declared_source_io_tcl(pins, w, h, a.view, set(clks), set(rsts),
+                                             vertical_resets=(source_profile or {}).get("reset_pin_shape_policy") == "M5_VERTICAL")
         centry_rec = dict(policy="DECLARED_CLOCK_RESET_POINTS", pins_file=v["pins_file"],
                           pins_sha256=v["pins_sha256"], ports=sorted(set(clks) | set(rsts)))
     else:
@@ -2114,6 +2154,24 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         density_contract = dict(auto_multiport_density_contract(module, clks), file="clock_density_contract.json")
         shutil.copyfile(HERE / "core_multi_density.tcl", kd / "core_multi_density.tcl")
         (kd / "clock_density_contract.json").write_text(json.dumps(density_contract, indent=1) + "\n")
+    atomic_groups = None
+    if a.clock_atomic_groups:
+        if density_contract or rec.get("clock_sites_um"):
+            raise SystemExit("ATOMIC_CLOCK cannot combine with multiport or planned density anchors")
+        atomic_groups, atomic_text = atomic_clock_groups(a.clock_atomic_groups, module, clks, a.clock_taps)
+        (kd / "clock_atomic_groups.json").write_text(json.dumps(atomic_groups, indent=1) + "\n")
+        (kd / "clock_atomic_groups.tcl").write_text(atomic_text)
+        shutil.copyfile(HERE / "core_clock_atomic_groups.tcl", kd / "core_clock_atomic_groups.tcl")
+        (kd / "atomic_post_cts.tcl").write_text(
+            "source /work/core_clock_atomic_groups.tcl\n"
+            "set fh [open $::env(OT_DTAP_ATOMIC_GROUPS) r]; set groups [read $fh]; close $fh\n"
+            # DIE-HEAD-85 11-07 class fix: CTS splits each small atomic tap net across two sibling leaves; put
+            # every group back on one leaf before the receipt (OT_DTAP_ATOMIC_COLLAPSE=0 opts out).
+            "if {![info exists ::env(OT_DTAP_ATOMIC_COLLAPSE)] || $::env(OT_DTAP_ATOMIC_COLLAPSE) ne \"0\"} "
+            "{dt_atomic_collapse [ord::get_db_block] $groups}\n"
+            "dt_atomic_check [ord::get_db_block] $groups $::env(OT_DTAP_ATOMIC_MAX_SINKS) "
+            "[expr {$::env(OT_DTAP_ATOMIC_RADIUS_UM) * [[ord::get_db_block] getDbUnitsPerMicron]}] $::env(OT_DTAP_PORT)\n"
+            "source /work/core_tap_align.tcl\n")
     if a.clock_taps_shallow and a.clock_taps != "density":
         raise SystemExit("--clock-taps-shallow needs --clock-taps density")
     if rec.get("clock_sites_um"):
@@ -2376,6 +2434,12 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                                                                      sha256=sha(a.reg_guide_boxes))),
                                                             indent=1) + "\n")
         rec["reg_guide_boxes"] = dict(boxes=len(rgb), sha256=sha(a.reg_guide_boxes))
+        if atomic_groups:
+            expected = {n.replace("\\", "") for g in atomic_groups["groups"] for n in g["members"]}
+            provided = {n for g in rgb for n in g["prefixes"]}
+            if expected != provided:
+                raise SystemExit("ATOMIC_CLOCK exact guides must name every atomic member and no other prefix")
+            cfg.append("export OT_MACRO_REG_GUIDE_EXACT = 1")
     if a.region_guide:
         # FLOW-23 (COORD 11-02 23:0x, GEOM-111 class D): soft GPL region guides per failing r2r bit slice from the
         # kit's last AUTO-GEOM (tools/die_plan/region_guide.py plan), sourced LAST in face_flops.tcl and released at
@@ -2402,6 +2466,14 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                 ] + density_cts_lines(rec.get("cts_delay_buffer_derate", 0.5), a.clock_taps_shallow)
     if rec.get("clock_sites_um"):
         cfg.append("export OT_DTAP_SITES = /work/clock_sites.tcl")
+    if atomic_groups:
+        cfg += ["export OT_DTAP_ATOMIC_GROUPS = /work/clock_atomic_groups.tcl",
+                f"export OT_DTAP_ATOMIC_MAX_SINKS = {atomic_groups['max_sinks']}",
+                f"export OT_DTAP_ATOMIC_RADIUS_UM = {atomic_groups['max_radius_um']}"]
+        rec["atomic_clock_groups"] = dict(groups=len(atomic_groups["groups"]),
+            sinks=sum(len(g["members"]) for g in atomic_groups["groups"]),
+            max_sinks=atomic_groups["max_sinks"], max_radius_um=atomic_groups["max_radius_um"],
+            sha256=sha(a.clock_atomic_groups))
     flow = dict(rc_cal=not a.stock_rc, f1=None, f4=not a.no_f4)
     if not a.stock_rc:
         cfg += ["export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl", "export SET_RC_TCL = /work/setRC_rcx.tcl"]
@@ -2410,7 +2482,11 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                           basis=("measured" if ff_meas else f"FF_TT_INSERTION_RATIO {FF_TT_INSERTION_RATIO:g} x TT"))
     if not a.no_f4:
         nxt = "/work/core_tap_align.tcl" if a.clock_taps == "density" else "/work/tap_balance.tcl"
+        if atomic_groups:
+            nxt = "/work/atomic_post_cts.tcl"
         cfg += ["override export POST_CTS_TCL = /work/f4_chain_leaf.tcl", f"export OT_F4_NEXT_TCL = {nxt}"]
+    if atomic_groups and a.no_f4:
+        cfg += ["override export POST_CTS_TCL = /work/atomic_post_cts.tcl"]
     if density_contract:
         # The stage retains each native BTerm/net and makes distinct per-port
         # density trees, then aligns every tap together in the existing hook.
@@ -2489,6 +2565,18 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             schema="opentallas.component_proof_reset.v1", cycles=4,
             scope="SOURCE_PROOF_ONLY", release_eligible=False,
             physical_reset_qualification=False, die_contract_staged=False), indent=1) + "\n")
+    elif (source_profile or {}).get("private_reset_contract_file"):
+        # Explicit private component proposal. Same strict receipt/module consumer;
+        # this grants no canonical die-module adoption or release authority.
+        if source_profile.get("release_eligible") is not False:
+            raise ValueError("private component reset contract requires nonrelease profile")
+        private_reset = (REPO / source_profile["private_reset_contract_file"]).resolve()
+        if not private_reset.is_relative_to(REPO.resolve()) or sha(private_reset) != source_profile.get("private_reset_contract_sha256"):
+            raise ValueError("private component reset contract path/hash changed")
+        reset_contract = kit_reset_contract.stage(kd, design, private_reset, required_source=True)
+        if reset_contract is None:
+            raise ValueError("private component reset contract does not list this top")
+        reset_contract["scope"] = "PRIVATE_COMPONENT_PROPOSAL_NOT_CANONICAL"
     else:
         reset_contract = kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["hbm"], required_source=True)
     # Optional source-pinned placement/model assets are assembled before the

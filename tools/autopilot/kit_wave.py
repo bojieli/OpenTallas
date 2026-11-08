@@ -179,7 +179,11 @@ DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6,
             "stage_resume": True,
             # KW-FIX-17 (COORD 11-05 16:4x): a sign-off FAIL with the LEAFSLEW signature relaunches once with the
             # clk_leaf_repeat post-CTS hook; die/global "leafslew_auto": false opts out
-            "leafslew_auto": True}
+            "leafslew_auto": True,
+            # KW-FIX-33 (COORD 11-07 22:53, OWNER 11-07 HBM type builds allowed): a die-wide census label in OWNERS.tsv
+            # (HBM-PLAN owns every HBM type row with a fresh last_activity) is not a lane claim on a type row; a specific
+            # per-item owner still claims.  Die/global "generic_owner_labels" overrides; [] restores the old behaviour.
+            "generic_owner_labels": ["HBM-PLAN"]}
 # AUTOBUILD-PIPE-1 10-30: an ssh transport drop before the command ran (sshd MaxStartups on the gen host when a tick
 # launches 16 items at once) is retried inside the item, never charged to the design: up to SSH_RETRIES more tries
 SSH_RETRIES = 3
@@ -223,6 +227,16 @@ def opt(cfg, die, key):
     if key in d:
         return d[key]
     return cfg.get(key, DEFAULTS.get(key))
+
+
+def place_mem_gb(cfg, die, item):
+    """PLACE memory (GB) of one item: the first fnmatch pattern of place_mem_gb_by_item (die > global, in insertion
+    order) that matches the item, else the die's place_mem_gb.  QC-TYPES-6 11-08: the hc tap-pair kits need >= 96 GB
+    for their kit LEC (rc137 OOM at 32 and 48 GB) without raising every kit's budget."""
+    for pat, gb in (opt(cfg, die, "place_mem_gb_by_item") or {}).items():
+        if fnmatch.fnmatchcase(str(item), pat):
+            return int(gb)
+    return int(opt(cfg, die, "place_mem_gb"))
 
 
 def stop_reason(cfg, die, ap_dir=None):
@@ -487,6 +501,7 @@ def select(rows, cfg, die, state, plan_types=None):
     states = set(opt(cfg, die, "take_states"))
     kinds = set(opt(cfg, die, "kinds"))
     claim_m = float(opt(cfg, die, "live_claim_h")) * 60
+    generic = set(opt(cfg, die, "generic_owner_labels") or [])
     retry = set(d.get("retry") or [])                 # "item@attempt": COORD released that failed attempt
     skip = {}
     picked = []
@@ -567,7 +582,8 @@ def select(rows, cfg, die, state, plan_types=None):
         elif r["live_job"] not in ("", "none") and not _own_wave_unit(r):
             why = "live job (another lane)"
         elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m \
-                and not str(r["owner"]).startswith("KIT-WAVE"):
+                and not str(r["owner"]).startswith("KIT-WAVE") \
+                and not (r["kind"] == "type" and r["owner"] in generic):
             # a recent coord line by another lane naming the item is a claim; the wave's own notices never count
             # (any KIT-WAVE-<n> runner lane: the wave's lane name changes with each successor)
             why = f"lane activity < {claim_m / 60:g} h ({r['owner']})"
@@ -778,7 +794,10 @@ RULES = [
     ("PLAN", r"^place$", r"\[ERROR MPL-0034\]", "plan macro position outside the core"),
     ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
-                    r"yosys elaboration failed rc[ =]+137\b", "infra"),
+                    r"yosys elaboration failed rc[ =]+137\b|"
+                    # S81-OTHERFAIL-1 11-07: host earlyoom SIGTERMs yosys (epyc2 16:01/16:09 PST, mem 3%): the synth make
+                    # reports 'Error 241' (256-15), selrange 'yosys exit -15', rtl_lint/selrange the KILLED marker
+                    r"\] Error 241\b|yosys exit -15\b|FAIL_PREFLOOR \w+ KILLED \(yosys signal", "infra"),
     # transport only: an ssh drop BEFORE the command ran.  When ot-run reports 'RAN on <host>' the command ran and its
     # own error decides the class (a probe of another host that failed is not the item's failure)
     ("INFRA-SSH", None, r"ssh: connect to host|Connection (?:reset|refused|closed)|kex_exchange_identification|"
@@ -1211,7 +1230,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
     return {"die": die, "item": item, "kind": kind, "event": d["event"], "plan": d["plan"],
-            "gen_host": pick_gen_host(cfg, die, take=int(opt(cfg, die, "place_mem_gb")),
+            "gen_host": pick_gen_host(cfg, die, take=place_mem_gb(cfg, die, item),
                                       threads=int(opt(cfg, die, "place_threads"))),
             "src": d["src"], "src_sha": d.get("src_sha", ""), "queue_src": d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": d.get("kit_rtl") or {},
@@ -1238,7 +1257,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # (gen phys --cland-pinslot; a kit without ring bands is unchanged).  Die opt-out: cland_pinslot false.
             "cland_pinslot": cland_pinslot_arg(d),
             "hosts": [h for h in opt(cfg, die, "hosts")], "hub": hub, "place_prefer": list(opt(cfg, die, "place_prefer") or []),
-            "place_mem_gb": int(opt(cfg, die, "place_mem_gb")), "place_threads": int(opt(cfg, die, "place_threads")),
+            "place_mem_gb": place_mem_gb(cfg, die, item), "place_threads": int(opt(cfg, die, "place_threads")),
             "geom_mem_gb": int(opt(cfg, die, "geom_mem_gb")), "geom_grt_wall_s": int(opt(cfg, die, "geom_grt_wall_s")), "gen_mem_gb": int(opt(cfg, die, "gen_mem_gb")),
             # A measured large elaboration can override its own lint container
             # and matching ot-run admission without raising every kit's budget.
@@ -3357,7 +3376,7 @@ def enqueue_pass(AP, cfg, st, rec, notices):
     cells = rec.get("cells") or 0
     argv = ["python3", str(Path(__file__).resolve().parent / "enqueue.py"), "--die", rec["die"], "--type", rec["item"],
             "--kit", rec["kit"], "--src", src, "--geom", rec.get("geom_verdict") or "PASS", "--geom-ref", ref,
-            "--mem", str(opt(cfg, rec["die"], "place_mem_gb")), "--cells", str(min(int(cells * 1.3), CELL_CAP_MAX) if cells else 200000),
+            "--mem", str(place_mem_gb(cfg, rec["die"], rec["item"])), "--cells", str(min(int(cells * 1.3), CELL_CAP_MAX) if cells else 200000),
             "--lane", d.get("lane", LANE)]
     if AP.DRY:
         AP.log("KIT-WAVE would enqueue: " + " ".join(argv))
@@ -3453,7 +3472,12 @@ def queue_class(j):
     if stt in ("RUNNING", "") or stt.startswith("WAIT-") or stt in ("ORPHAN", "TRIAL-SIGNED", "WITHDRAWN", "CANCELLED"):
         return ("route" if stt == "RUNNING" else "queue"), (stt or "QUEUED"), "", str((j.get("history") or [[0, 0, ""]])[-1][-1])[:200]
     if stt == "REJECTED":
-        return "queue", "FAIL", "FLOW", "queue row rejected: " + str(j.get("error") or why)[:200]
+        # S81-OTHERFAIL-1 11-07: autopilot keeps the reject reason only in history (c1x_C t6/t7 showed an empty
+        # reason): fall back to the last history entry; a kit that carries an LEC FAIL_PREFLOOR is an RTL verdict
+        last = str((j.get("history") or [[0, 0, ""]])[-1][-1] or "")
+        msg = str(j.get("error") or why or last)[:200]
+        return "queue", "FAIL", ("RTL" if re.search(r"LEC NOT EQUIVALENT|KEEP FAIL", msg) else "FLOW"), \
+            "queue row rejected: " + msg
     if stt == "DONE-CRASH":
         return "route", "FAIL", ("INFRA" if kind.startswith("infra") else "FLOW"), f"{kind}: {why}"
     if stt.startswith("DONE-"):
@@ -3467,6 +3491,8 @@ def queue_class(j):
         stage = "signoff" if so else "route"
         if kind == "pg-unbound" or (fails & FLOW_FAILS):
             return stage, "FAIL", "FLOW", f"{kind}: {why}"
+        if kind == "preflight" and re.search(r"KILLED \(yosys signal", why):
+            return stage, "FAIL", "INFRA", f"{kind}: {why}"          # S81-OTHERFAIL-1: host OOM kill, not a verdict
         if kind in ("preflight", "cell-cap", "diagnostic-overrun"):
             return stage, "FAIL", ("FLOW" if kind == "diagnostic-overrun" else "PLAN"), f"{kind}: {why}"
         if kind == "grt-overflow" or (fails & ROUTING_FAILS) or drc:
@@ -4355,6 +4381,24 @@ def auto_rejudge(AP, cfg, st, notices, log=None):
 # entry was first seen by the scheduler (st["retry_seen"]); an entry that names an attempt launched later is stale and
 # is dropped from this tick's in-memory retry set (kit_wave.json is never written).  Entries added in-tick (pending
 # rows, LEAFSLEW) and COORD releases of an already failed / running attempt keep working unchanged.
+# KW-FIX-33 (COORD 11-07 22:53): the first-seen key carries the die's event ("<die>|<event>|<item>@<N>"; retry_seen_key).
+# Without it a COORD release of item@N on a NEW event inherited the first-seen time of the same string on an older event,
+# and the new event's attempt N (launched after that) dropped it as stale (S81 ot_s81sl_leaf__t12@2/@3, 11-07 21:56).
+# One-time migration: a legacy "<die>|<item>@<N>" time moves to the CURRENT event's key (and the legacy key is removed),
+# so the rollout re-arms nothing; a later event change starts its entries fresh.  retry_stale_logged uses the same keys.
+def retry_seen_key(die, event, ia):
+    return f"{die}|{event}|{ia}" if event else f"{die}|{ia}"
+
+
+def _retry_key_migrate(tab, die, event, ia):
+    """-> the event key of die/ia in tab (retry_seen / retry_stale_logged), moving a legacy key's value onto it once"""
+    k = retry_seen_key(die, event, ia)
+    legacy = f"{die}|{ia}"
+    if k != legacy and k not in tab and legacy in tab:
+        tab[k] = tab.pop(legacy)
+    return k
+
+
 def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
     # KW-FIX-23 14:0x hot-fix: epoch seconds on both sides (now_s() is a display string; 13:57 TypeError)
     now = time.time() if now is None else float(now)
@@ -4372,11 +4416,13 @@ def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
         if not isinstance(d, dict) or not d.get("retry"):
             continue
         keep = []
+        ev = d.get("event") or ""
         for ia in d["retry"]:
+            sk = _retry_key_migrate(seen, die, ev, ia)
             try:
-                first = float(seen.setdefault(f"{die}|{ia}", now))
+                first = float(seen.setdefault(sk, now))
             except (TypeError, ValueError):
-                first = seen[f"{die}|{ia}"] = now      # unparsable (old string) -> first seen now
+                first = seen[sk] = now      # unparsable (old string) -> first seen now
             item, _, n = str(ia).rpartition("@")
             started = latest.get((die, item, n), 0.0)
             if started and started > first:
@@ -4386,9 +4432,10 @@ def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
         d["retry"] = keep
     logged = st.setdefault("retry_stale_logged", {})
     for die, xs in dropped.items():
-        new = [x for x in xs if f"{die}|{x}" not in logged]
+        ev = ((cfg.get("dies") or {}).get(die) or {}).get("event") or ""
+        new = [x for x in xs if _retry_key_migrate(logged, die, ev, x) not in logged]
         for x in new:
-            logged[f"{die}|{x}"] = now
+            logged[retry_seen_key(die, ev, x)] = now
         if new and log:
             log(f"KIT-WAVE retry stale {die}: {len(new)} entries name an attempt launched after the entry "
                 f"(KW-FIX-23 retry epoch; not released): {' '.join(new[:12])}")

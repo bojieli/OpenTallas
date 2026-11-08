@@ -183,7 +183,8 @@ def run(top, files, incs=(), defines=(), yosys=None, frontend=None, blackboxes=(
     if p.returncode != 0 and not errors:
         errors = [f"yosys exit {p.returncode}: " + (p.stderr.strip() or p.stdout.strip())[-400:]]
     bad = [h for h in hits if not h["waived"]]
-    verdict = "ERROR" if p.returncode != 0 else ("FAIL" if bad else "PASS")
+    # S81-OTHERFAIL-1 11-07: a yosys killed by a signal (host earlyoom SIGTERM) is KILLED (exit 75), not a verdict
+    verdict = ("KILLED" if p.returncode < 0 else "ERROR") if p.returncode != 0 else ("FAIL" if bad else "PASS")
     return dict(schema="opentallas.selrange_gate.v1", verdict=verdict, top=top, frontend=frontend,
                 files=len(files), unwaived=len(bad), waived=len(hits) - len(bad), hits=hits, errors=errors[:20])
 
@@ -226,7 +227,7 @@ def main(argv=None):
             print(f"  {h['file']}:{h['line']}: {h['msg']}  [{h['source'][:120]}]")
     for e in r["errors"][:5]:
         print(f"  ERROR {e}")
-    return {"PASS": 0, "FAIL": 1}.get(r["verdict"], 2)
+    return {"PASS": 0, "FAIL": 1, "KILLED": 75}.get(r["verdict"], 2)
 
 
 if __name__ == "__main__":
