@@ -151,6 +151,32 @@ def _cland_pinslot(budgets, tn, extra=()):
 
 
 
+def _relay_mid_fit(budgets, tn):
+    """S81-TYPES-5 11-07 CHANNEL class (relay_mid.tcl FIT), opt-in three ways, absent = unchanged kits: plan-wide
+    budgets.relay_mid_fit, per type budgets.relay_mid_fit_types (types or unsplit base names), or per kit-wave row
+    through item_env (GEN env OT_RELAY_MID_FIT=1), so a pilot or a class batch needs no plan event."""
+    if os.environ.get("OT_RELAY_MID_FIT") == "1" or budgets.get("relay_mid_fit"):
+        return True
+    on = list(budgets.get("relay_mid_fit_types") or [])
+    return tn is not None and (tn in on or tn.split("__")[0] in on)
+
+
+def _gutter_block_um(budgets, tn):
+    """S81-TYPES-5 11-07 NARROW-GUTTER class (gutter_block.tcl + gutter_release.tcl): the gap threshold in um, or None.
+    GEN env OT_GUTTER_BLOCK_UM (kit-wave item_env) wins; else budgets.gutter_block_um, for every macro type, or only
+    for budgets.gutter_block_types when that list is given."""
+    v = os.environ.get("OT_GUTTER_BLOCK_UM")
+    if v:
+        return float(v) if float(v) > 0 else None
+    v = budgets.get("gutter_block_um")
+    if not v:
+        return None
+    on = budgets.get("gutter_block_types")
+    if on is not None and not (tn is not None and (tn in on or tn.split("__")[0] in on)):
+        return None
+    return v
+
+
 def _cland_pinslot_dense(budgets, tn):
     """DIE-KV-62/stations 11-02 opt-in: budgets.cland_pinslot_dense_types names the types (or unsplit base names) whose
     y-column pinslot rows pack the ring slot flops body to body (OT_CLAND_PINSLOT_DENSE=1, landing_placement.tcl);
@@ -4139,8 +4165,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *([f"export OT_RELAY_MID_RE = {P.budgets.get('relay_mid_re', RELAY_MID_RE)}"] if macros else []),
            # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
-           *(["export OT_RELAY_MID_FIT = 1"] if macros and P.budgets.get("relay_mid_fit") else []),
-           *([f"export OT_GUTTER_BLOCK_UM = {P.budgets['gutter_block_um']}"] if macros and P.budgets.get("gutter_block_um") else []),
+           *(["export OT_RELAY_MID_FIT = 1"] if macros and _relay_mid_fit(P.budgets, tn) else []),
+           *([f"export OT_GUTTER_BLOCK_UM = {_gutter_block_um(P.budgets, tn)}"] if macros and _gutter_block_um(P.budgets, tn) else []),
            # DIE-HEAD-69 11-05: core_out_land.tcl opt-in (GEN env OT_CORE_OUT_LAND=1 via wave item_env, or plan budgets list)
            *(["export OT_CORE_OUT_LAND = 1"] if macros and (os.environ.get("OT_CORE_OUT_LAND") == "1"
                                                        or tn in (P.budgets.get("core_out_land_types") or ())) else []),
@@ -4413,7 +4439,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name("reset_pair_place.tcl"), kd / "reset_pair_place.tcl")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
-        if P.budgets.get("gutter_block_um"):     # S81-TYPES-5 11-07 NARROW-GUTTER class (opt-in)
+        if _gutter_block_um(P.budgets, tn):     # S81-TYPES-5 11-07 NARROW-GUTTER class (opt-in)
             shutil.copyfile(Path(__file__).with_name("gutter_block.tcl"), kd / "gutter_block.tcl")
             shutil.copyfile(Path(__file__).with_name("gutter_release.tcl"), kd / "gutter_release.tcl")
         # DIE-HEAD-69 11-05 (COORD ruling (1), hd_tile flt_q): core-output landing flops at their pins (core_out_land.tcl)

@@ -152,3 +152,19 @@ def test_fit_grades_margin_down_instead_of_fallback():
     assert "OT_RELAY_MID_FIT fitted 1 stations, 0 on the old fallback" in out, out[-2000:]
     assert " margin 30.0 um" in out, out[-2000:]
     assert not any(_in_channel(x, y) for x, y in pos)
+
+
+def test_enable_switches_env_types_and_plan(monkeypatch):
+    import sys
+    sys.path.insert(0, str(HERE))
+    import gen_phys as G
+    monkeypatch.delenv("OT_RELAY_MID_FIT", raising=False)
+    monkeypatch.delenv("OT_GUTTER_BLOCK_UM", raising=False)
+    assert not G._relay_mid_fit({}, "col_h10_r1__t1__cl95b37463") and G._gutter_block_um({}, "x__t1") is None
+    assert G._relay_mid_fit({"relay_mid_fit_types": ["col_h10_r1"]}, "col_h10_r1__t1__cl95b37463")
+    assert not G._relay_mid_fit({"relay_mid_fit_types": ["col_h9_r2"]}, "col_h10_r1__t1__cl95b37463")
+    assert G._gutter_block_um({"gutter_block_um": 45}, "a__t1") == 45
+    assert G._gutter_block_um({"gutter_block_um": 45, "gutter_block_types": ["b"]}, "a__t1") is None
+    monkeypatch.setenv("OT_RELAY_MID_FIT", "1")
+    monkeypatch.setenv("OT_GUTTER_BLOCK_UM", "30")
+    assert G._relay_mid_fit({}, "a__t1") and G._gutter_block_um({}, "a__t1") == 30.0
