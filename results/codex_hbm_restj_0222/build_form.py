@@ -22,6 +22,7 @@ def pins_hash(doc,outline):
 
 def build(a):
     assert not a.out.exists(), 'choose a fresh output; preserve previous results'
+    assert (a.base/'sdc_lint.json').is_file(), 'generator SDC input context is required, not a verdict'
     shutil.copytree(a.base,a.out)
     (a.out/'DO_NOT_COUNT').write_text('Source/geometry prototype, never a released view.\n')
     (a.out/'HOLD_ROUTE').write_text('PLACE only; source proof and actual placed view required before CTS.\n')
