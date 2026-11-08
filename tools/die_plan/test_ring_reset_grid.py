@@ -77,7 +77,9 @@ def test_explicit_noncore_taps_other_modes_and_unconfigured_types_are_unchanged(
     assert CL.ring_taps(p, "B") == [(71, 82), (91, 102)]          # tap_um only, no mode: unchanged
     dens = copy.deepcopy(p)
     dens["partition_types"]["B"]["clock"]["tap_mode"] = "density"
-    assert CL.ring_taps(dens, "B") == [(71, 82), (91, 102)]       # QC glue/density lists: unchanged
+    # QC-TYPES-10/CLAND: a density type numbers its relays over schema.tap_grid, never over a glue list
+    assert CL.ring_taps(dens, "B") == [(x, y) for _, x, y in RT._taps(S.Plan(dens), "B")]
+    assert CL.ring_taps(dens, "B") != [(71, 82), (91, 102)]
     bare = copy.deepcopy(p)
     bare["partition_types"]["B"].pop("clock")
     assert CL.ring_taps(bare, "B") == []
