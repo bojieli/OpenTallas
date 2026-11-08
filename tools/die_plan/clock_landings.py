@@ -61,9 +61,21 @@ def ring_write_reg(plan, tn, bus):
     numeric = cfg.get("freg_numeric_order", False)
     if not isinstance(numeric, bool) or (numeric and not freg):
         raise ValueError(f"{tn}: freg_numeric_order requires boolean true and freg=true")
+    # DIE-HEAD-84 (CTL_n vC/vD): the cas READ_CHUNK / WRITE_TAIL internal form (bounded read chunks of any width,
+    # partial last write chunk); same cycles, so no K or data-cycle change.  0 / false = the legacy form.
+    read_chunk = cfg.get("read_chunk", 0)
+    if isinstance(read_chunk, bool) or not isinstance(read_chunk, int) or not 0 <= read_chunk <= 64:
+        raise ValueError(f"{tn}: landing_ring_wreg.read_chunk must be an integer 0..64")
+    write_tail = cfg.get("write_tail", False)
+    if not isinstance(write_tail, bool):
+        raise ValueError(f"{tn}: landing_ring_wreg.write_tail must be a boolean")
     out = dict(depth=1 + int(freg), dsrep=dsrep, freg=freg)
     if write_chunk != 64:
         out["write_chunk"] = write_chunk
+    if read_chunk:
+        out["read_chunk"] = read_chunk
+    if write_tail:
+        out["write_tail"] = True
     if numeric:
         out["freg_numeric_order"] = True
     return out
@@ -1148,7 +1160,7 @@ class Landings:
                 if wreg:
                     if not cat.get("straps"):
                         raise LandingError(f"{tn}.{b}: landing_ring_wreg needs the count-aligned strap form")
-                    ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']})" + (f", .WRITE_CHUNK({wreg.get('write_chunk', 64)})" if wreg.get("write_chunk", 64) != 64 else "") + (", .FREG(1))" if wreg["freg"] else ")")
+                    ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']})" + (f", .WRITE_CHUNK({wreg.get('write_chunk', 64)})" if wreg.get("write_chunk", 64) != 64 else "") + (", .WRITE_TAIL(1)" if wreg.get("write_tail") else "") + (f", .READ_CHUNK({wreg['read_chunk']})" if wreg.get("read_chunk") else "") + (", .FREG(1))" if wreg["freg"] else ")")
                     self.reset_placements[tn][b].update(ring_wreg=1, ring_dsrep=wreg["dsrep"], ring_freg=int(wreg["freg"]),
                                                         strap_k_delta=wreg["depth"])
                     if wreg.get("write_chunk", 64) != 64:
