@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 PARENTS = {"u_lk_N0": "lk_N0", "u_lk_N2": "lk_N2", "u_lk_S0": "lk_S0",
-           "u_lk_S1": "lk_S1", "u_lk_S3": "lk_S3"}
+           "u_lk_S1": "lk_S1"}
 FILES = ["results/die_hbm_1106/rx_bm3_p37/ot_pdie_serdes__p37comp.sv",
          "rtl/hbm_accel/cores_split/reform_1104b/ot_pdie_serdes_split.sv",
          "rtl/hbm_accel/cores_split/reform_1106/ot_pdie_serdes_rx_bm3.sv"]
@@ -19,7 +19,7 @@ def candidate(plan, asbuilt, source):
             if ".u_fcore." in path and path.split(".u_fcore.")[0] in PARENTS:
                 parents.add(path.split(".u_fcore.")[0])
     if parents != set(PARENTS):
-        raise ValueError("candidate requires the exact five p37 split-PHY plan parents")
+        raise ValueError("candidate requires the exact four p37 split-PHY plan parents")
     files = [str((Path(source) / f).resolve()) for f in FILES]
     for f in files:
         if not Path(f).is_file():
