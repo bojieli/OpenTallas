@@ -600,13 +600,19 @@ module dsdv_gunit_l1f_bf (
             (* keep = 1 *) dsdv_l1f_dec7 u_d (.a(cbc[3 * g +: 3]), .y(cbh[7 * g +: 7]));
         end
     endgenerate
-    reg [NL*32-1:0] rdb;
-    always @(*) begin
-        rdb = {NL*32{1'b0}};
-        for (i = 0; i < NL * 32; i = i + 1)
-            for (j = 0; j < 7; j = j + 1)
-                if (cbh[7 * (i / 16) + j]) rdb[i] = rdb[i] | sc[32 * NL * j + i];
-    end
+    // S81-GUNIT-FORM-1 11-07: the beat read select as a generate (same OR of 7 AND terms per bit as dsdv_gunit_l1f_flat's
+    // always loop): the loop's 512 x 7 + 512 = 4096 iterations exceed slang's default unroll budget (4000) in the core
+    // kit LEC, which a legacy kit may not raise
+    wire [NL*32-1:0] rdb;
+    generate
+        for (g = 0; g < NL * 32; g = g + 1) begin : g_rdb
+            wire [6:0] hv;
+            for (h = 0; h < 7; h = h + 1) begin : g_j
+                assign hv[h] = cbh[7 * (g / 16) + h] & sc[32 * NL * h + g];
+            end
+            assign rdb[g] = |hv;
+        end
+    endgenerate
     wire [NL*32-1:0] svn;
     generate
         for (l = 0; l < NL; l = l + 1) begin : g_fw
