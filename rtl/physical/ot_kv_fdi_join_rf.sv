@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
-// Private KV Wi form. Exactly one input pin cycle on BOTH ordered half streams.
+// Private KV Wi form. Exactly one input pin cycle on BOTH ordered half streams (face_keep regs below); DIE-KV-93 11-08
+// WR_COPIES(16) adds one more input cycle inside the join (registered one-hot write enables; o_v / o_d one edge later).
 // The native join has valid-only ingress: it has no ready or credit interface.
 module ot_kv_fdi_join_rf #(
     parameter integer WA = 522,
@@ -28,7 +29,7 @@ module ot_kv_fdi_join_rf #(
     end
     wire native_v;
     wire [WA+WB-1:0] native_d;
-    (* keep_hierarchy = "yes" *) ot_fdi_join2 #(.WA(WA), .WB(WB), .DEPTH(DEPTH), .RP_COPIES(16)) u_native (
+    (* keep_hierarchy = "yes" *) ot_fdi_join2 #(.WA(WA), .WB(WB), .DEPTH(DEPTH), .RP_COPIES(16), .WR_COPIES(16)) u_native (
         .clk(clk), .rst_n(rst_n), .a_v(a_v_q), .a_d(a_d_q),
         .b_v((MUT == 2) ? b_v : b_v_q), .b_d(b_d_q),
         .o_v(native_v), .o_d(native_d)

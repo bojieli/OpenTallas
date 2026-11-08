@@ -20,7 +20,13 @@ module ot_fdi_join2 #(
     // read pointers select 16 x 522 / 16 x 521 bits): RP_COPIES identical copies of arp / brp, each one selecting a
     // contiguous slice of its queue's read word (register replication of a high-fan-out select).  Same pointer value in
     // every copy every edge (same reset, same update), so o_d / o_v are identical every edge (bench).  1 = unchanged.
-    parameter integer RP_COPIES = 1
+    parameter integer RP_COPIES = 1,
+    // DIE-KV-93 11-08 (COORD 10:0x; RP_COPIES place WNS -180 ps is WRITE side: a_v -> AND4 entry decode -> 15 BUFx2
+    // fan-out levels -> 522 enable muxes): WR_COPIES > 0 registers the one-hot entry write enables (from a_v and awp) in
+    // WR_COPIES keep-copies, each copy writing one contiguous slice of a per-entry row from a registered copy of a_d.
+    // Costs ONE input cycle (pin-cycle lever): a half is written, counted and poppable one edge later, so o_v / o_d are
+    // the WR_COPIES = 0 stream delayed by exactly one edge (bench).  0 = unchanged.
+    parameter integer WR_COPIES = 0
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -37,6 +43,9 @@ module ot_fdi_join2 #(
     reg [AW-1:0] awp, arp, bwp, brp;
     reg [AW:0]   an, bn;
     wire pop = (an != 0) && (bn != 0);
+    wire [WA-1:0] qa_r [0:DEPTH-1];
+    wire [WB-1:0] qb_r [0:DEPTH-1];
+    wire a_wv, b_wv;                                   // valid as counted (WR_COPIES > 0: one edge after a_v / b_v)
     generate if (RP_COPIES > 1) begin : g_rpc
         localparam integer SA = (WA + RP_COPIES - 1) / RP_COPIES, SB = (WB + RP_COPIES - 1) / RP_COPIES;
         (* keep = "true" *) reg [AW-1:0] arp_c [0:RP_COPIES-1];
@@ -52,19 +61,66 @@ module ot_fdi_join2 #(
                     brp_c[c] <= (brp_c[c] == AW'(DEPTH - 1)) ? {AW{1'b0}} : brp_c[c] + 1'b1;
                 end
             if (A1 > A0) begin : g_a
-                always @(posedge clk) o_d[A1-1:A0] <= qa[arp_c[c]][A1-1:A0];
+                always @(posedge clk) o_d[A1-1:A0] <= qa_r[arp_c[c]][A1-1:A0];
             end
             if (B1 > B0) begin : g_b
-                always @(posedge clk) o_d[WA+B1-1:WA+B0] <= qb[brp_c[c]][B1-1:B0];
+                always @(posedge clk) o_d[WA+B1-1:WA+B0] <= qb_r[brp_c[c]][B1-1:B0];
             end
         end
     end else begin : g_rp1
-        always @(posedge clk) o_d <= {qb[brp], qa[arp]};
+        always @(posedge clk) o_d <= {qb_r[brp], qa_r[arp]};
     end endgenerate
-    always @(posedge clk) begin
-        if (a_v) qa[awp] <= a_d;
-        if (b_v) qb[bwp] <= b_d;
-    end
+    generate if (WR_COPIES > 0) begin : g_wrc
+        localparam integer SA = (WA + WR_COPIES - 1) / WR_COPIES, SB = (WB + WR_COPIES - 1) / WR_COPIES;
+        (* keep = "true" *) reg [DEPTH-1:0] wa_c [0:WR_COPIES-1];
+        (* keep = "true" *) reg [DEPTH-1:0] wb_c [0:WR_COPIES-1];
+        reg [WA-1:0] a_d_r;
+        reg [WB-1:0] b_d_r;
+        reg a_v_r, b_v_r;
+        always @(posedge clk) begin a_d_r <= a_d; b_d_r <= b_d; end
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin a_v_r <= 1'b0; b_v_r <= 1'b0; end
+            else begin a_v_r <= a_v; b_v_r <= b_v; end
+        assign a_wv = a_v_r;
+        assign b_wv = b_v_r;
+        genvar c, e;
+        for (c = 0; c < WR_COPIES; c = c + 1) begin : g_c
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin wa_c[c] <= {DEPTH{1'b0}}; wb_c[c] <= {DEPTH{1'b0}}; end
+                else begin
+                    wa_c[c] <= a_v ? ({{(DEPTH-1){1'b0}}, 1'b1} << awp) : {DEPTH{1'b0}};
+                    wb_c[c] <= b_v ? ({{(DEPTH-1){1'b0}}, 1'b1} << bwp) : {DEPTH{1'b0}};
+                end
+        end
+        for (e = 0; e < DEPTH; e = e + 1) begin : g_e
+            reg [WA-1:0] ra;
+            reg [WB-1:0] rb;
+            for (c = 0; c < WR_COPIES; c = c + 1) begin : g_c
+                localparam integer A0 = (c * SA < WA) ? c * SA : WA, A1 = ((c + 1) * SA < WA) ? (c + 1) * SA : WA;
+                localparam integer B0 = (c * SB < WB) ? c * SB : WB, B1 = ((c + 1) * SB < WB) ? (c + 1) * SB : WB;
+                if (A1 > A0) begin : g_a
+                    always @(posedge clk) if (wa_c[c][e]) ra[A1-1:A0] <= a_d_r[A1-1:A0];
+                end
+                if (B1 > B0) begin : g_b
+                    always @(posedge clk) if (wb_c[c][e]) rb[B1-1:B0] <= b_d_r[B1-1:B0];
+                end
+            end
+            assign qa_r[e] = ra;
+            assign qb_r[e] = rb;
+        end
+    end else begin : g_wr1
+        always @(posedge clk) begin
+            if (a_v) qa[awp] <= a_d;
+            if (b_v) qb[bwp] <= b_d;
+        end
+        assign a_wv = a_v;
+        assign b_wv = b_v;
+        genvar e;
+        for (e = 0; e < DEPTH; e = e + 1) begin : g_e
+            assign qa_r[e] = qa[e];
+            assign qb_r[e] = qb[e];
+        end
+    end endgenerate
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             awp <= 0; arp <= 0; bwp <= 0; brp <= 0; an <= 0; bn <= 0; o_v <= 1'b0;
@@ -76,14 +132,14 @@ module ot_fdi_join2 #(
                 arp <= (arp == AW'(DEPTH - 1)) ? {AW{1'b0}} : arp + 1'b1;
                 brp <= (brp == AW'(DEPTH - 1)) ? {AW{1'b0}} : brp + 1'b1;
             end
-            an <= an + (a_v ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
-            bn <= bn + (b_v ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
+            an <= an + (a_wv ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
+            bn <= bn + (b_wv ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
         end
     end
 `ifndef SYNTHESIS
     integer max_skew = 0;
     always @(posedge clk) if (rst_n) begin
-        if ((a_v && an == DEPTH && !pop) || (b_v && bn == DEPTH && !pop))
+        if ((a_wv && an == DEPTH && !pop) || (b_wv && bn == DEPTH && !pop))
             $error("ot_fdi_join2 %m: half-flit queue overflow (lane-depth difference > DEPTH)");
         if (an > bn && int'(an - bn) > max_skew) max_skew = int'(an - bn);
         if (bn > an && int'(bn - an) > max_skew) max_skew = int'(bn - an);
