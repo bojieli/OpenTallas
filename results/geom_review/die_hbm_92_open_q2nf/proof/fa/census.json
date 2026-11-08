@@ -1,0 +1,27 @@
+{
+ "source": "kit_cfg_vA_lec/rtl/ot_q2nf_rest.sv",
+ "selected_assignments": 62,
+ "all_names": 688,
+ "leaf_registers": {
+  "\\u_body.g_q2.n_u_fj.u_fj.u.act_q": "",
+  "\\u_body.g_q2.n_u_fj.u_fj.u.ibusy_q": "",
+  "\\u_body.g_q2.n_u_fj.u_fj.u.u_program.checking": "",
+  "\\u_body.g_q2.n_u_fj.u_fj.u.u_program.cv": "",
+  "\\u_body.g_q2.n_u_fj.u_fj.u.u_program.draining": "",
+  "\\u_body.g_q2.n_u_fj.u_fj.u.u_program.dv": "",
+  "\\u_body.g_q2.n_u_fj.u_fj.u.u_program.fault": "",
+  "\\u_body.g_q2.n_u_fj.u_fj.u.u_program.issuer_start": "",
+  "\\u_body.g_q2.n_u_fj.u_fj.u.u_program.lv": "",
+  "_55064_": "[6:0] ",
+  "_55069_": "[7:0] ",
+  "_55070_": "[255:0] ",
+  "_55073_": "[7:0] ",
+  "_55078_": "[11:0] ",
+  "_55079_": "[11:0] ",
+  "_55080_": "[255:0] ",
+  "_55081_": "[12:0] ",
+  "_55082_": "[15:0] ",
+  "_55083_": "[7:0] "
+ },
+ "lemma": "fw/fr mutually exclusive; CE implies identical address; CE and WE unchanged"
+}
