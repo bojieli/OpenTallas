@@ -9952,7 +9952,6 @@
       "pilot_gate": false,
       "note_kw35d": "KW-FIX-35 2026-11-08 05:07 PST: OWNER 04:46 'do all the classes fixes and relaunch' + COORD: pilot-first holds lifted for the class batches (pilot_gate false: no PILOT-FIRST cap, no CANCEL-VOLUME). Revert: pilot_gate = pilot_gate_prev_kw35d",
       "prov_view_sources_prev_kw35v": null,
-      "prov_view_sources_prev_kw32": null,
       "prov_view_sources": {
         "hfd_ep_static": [
           {
@@ -10201,9 +10200,22 @@
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/f7c52b6e8e47/ot_wbq_root_g0",
             "job": "COUNTED ot_wbq_root_g0 epyc4:/srv/opentallas-scratch2/claude/die-hbm-91-open/g0_resign_ew/signoff/signoff.json (KW-FIX-32 export_view)"
           }
+        ],
+        "ot_hbm_idx_score_hcol_h0_ra": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/e235cf889fbe/ot_hbm_idx_score_hcol_h0_ra",
+            "job": "COUNTED ot_hbm_idx_score_hcol_h0_ra epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/ra_e1_resign/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_idx_score_hcol_h0_rb": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/d2a951a399f5/ot_hbm_idx_score_hcol_h0_rb",
+            "job": "COUNTED ot_hbm_idx_score_hcol_h0_rb epyc4:/srv/opentallas-scratch3/claude/die-hbm-85/eco/rb_e1_resign/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
         ]
       },
-      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-08 05:15 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
       "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 05:33 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/hbm.json on intel2, plan 63000666491b) FIRST in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v",
       "hold_items_added_kw35l": [
         "q_b013",
@@ -10503,7 +10515,260 @@
       ],
       "hold_items_kw35e12_added": [
         "vsN4"
-      ]
+      ],
+      "prov_view_sources_prev_kw35cv": {
+        "hfd_ep_static": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/e808e110f4ba/hfd_ep_static",
+            "job": "COUNTED hfd_ep_static epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/hfd_ep_static__flow-20261106-cr-hbm__57373ed8/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "hnx_fused_lane_elp": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/48380e2835a8/hnx_fused_lane_elp",
+            "job": "COUNTED hnx_fused_lane_elp epyc4:/srv/opentallas-scratch2/claude/hbm-form-cong/resign/elp2_h/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_hc_bank128_pair_core": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/3cee1eada0f6/ot_hbm_hc_bank128_pair_core",
+            "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/10ac9d744407ff50 epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json (KW-FIX-32 export_view)"
+          },
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/3bc2ed875db6/ot_hbm_hc_bank128_pair_core",
+            "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/7eaeff6b21f398a7 epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_hc_bank128_pair_core__flow-20261106-cr-hbm__aad36c4a/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_hc_bank128_pair_first_core": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/110fc07cb54f/ot_hbm_hc_bank128_pair_first_core",
+            "job": "COUNTED ot_hbm_hc_bank128_pair_first_core epyc2:/srv/opentallas-scratch2/claude/die-hbm-74/resign/b128h1/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/58a02cd75397/ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566",
+            "job": "COUNTED ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566 epyc2:/srv/opentallas-scratch2/claude/die-hbm-73/resign/rfsr4f2/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/0cac3fdc9fcc/ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2",
+            "job": "COUNTED ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2 intel1:/srv/opentallas-scratch2/claude/die-hbm-73/resign/rfsr6e3/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_hc_root_static__tailx_sk_fsr": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/d19a61a21f36/ot_hbm_hc_root_static__tailx_sk_fsr",
+            "job": "COUNTED ot_hbm_hc_root_static__tailx_sk_fsr epyc4:/srv/opentallas-scratch2/claude/die-hbm-73/resign/skfe2/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_hc_subtree32_core": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/affad73c15be/ot_hbm_hc_subtree32_core",
+            "job": "COUNTED ot_hbm_hc_subtree32_core epyc4:/srv/opentallas-scratch3/claude/die-hbm-82-stale/resign/sub5_dm/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_host_cp_rxs": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/315bfd85f74e/ot_hbm_host_cp_rxs",
+            "job": "COUNTED ot_hbm_host_cp_rxs epyc4:/srv/opentallas-scratch3/claude/die-hbm-71/resign/cprxsn2/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_idx_score_hcol_h1": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/588abcb6d72d/ot_hbm_idx_score_hcol_h1",
+            "job": "COUNTED ot_hbm_idx_score_hcol_h1 epyc2:/srv/opentallas-scratch3/claude/ss23/hcol_w90_r_hbm/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_idx_tail_native": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/7a458142ee36/ot_hbm_idx_tail_native",
+            "job": "COUNTED ot_hbm_idx_tail_native#218.592x187.488/6b243813dbe5dc21 epyc2:/srv/opentallas-scratch2/claude/signoff-sprint-15/tail_native/rs_j/signoff/signoff.json (KW-FIX-32 export_view)"
+          },
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/20ef077ea145/ot_hbm_idx_tail_native",
+            "job": "COUNTED ot_hbm_idx_tail_native#218.592x187.488/b5e0e7076e68a01a intel2:/srv/opentallas-scratch2/claude/signoff-sprint-15/tail1/rs_j/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_su_pcol_l": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/fb2c88e4e8fb/ot_hbm_su_pcol_l",
+            "job": "COUNTED ot_hbm_su_pcol_l intel1:/srv/opentallas-scratch2/claude/hbm-form-cong/resign/pcol_l_i2/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_su_pcol_s": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/f0fdec18b8e1/ot_hbm_su_pcol_s",
+            "job": "COUNTED ot_hbm_su_pcol_s epyc4:/srv/opentallas-scratch2/claude/hbm-form-timing-9/resign/pcol_s4_bg/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_su_pg_lane1_core": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/a7d3ed60dbef/ot_hbm_su_pg_lane1_core",
+            "job": "COUNTED ot_hbm_su_pg_lane1_core epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_su_pg_lane1_core__flow-20261106-o-hbm__3b717c4b/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_su_pg_sfu_s_core": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/e83a285719ac/ot_hbm_su_pg_sfu_s_core",
+            "job": "COUNTED ot_hbm_su_pg_sfu_s_core epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_su_pg_sfu_s_core__flow-20261106-c-hbm__3ab03a21/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_su_static_cxport_ij_q": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/255204427739/ot_hbm_su_static_cxport_ij_q",
+            "job": "COUNTED ot_hbm_su_static_cxport_ij_q epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_su_static_cxport_ij_q__flow-20261104-i-hbm__ee407cf1/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hbm_su_static_pgslice_lg__pretree": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/442f17ceb3e3/ot_hbm_su_static_pgslice_lg__pretree",
+            "job": "COUNTED ot_hbm_su_static_pgslice_lg__pretree epyc2:/srv/opentallas-scratch3/claude/ss24/pgslice_r_hbm/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hfd_coll_q2_hard_v8g__reduce": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/b49eb0e218e1/ot_hfd_coll_q2_hard_v8g__reduce",
+            "job": "COUNTED ot_hfd_coll_q2_hard_v8g__reduce epyc4:/srv/opentallas-scratch2/claude/die-hbm-82/resign/q2r_cr/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hfd_coll_q2_hard_v8g__ring_ag": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/2a2ea96b53f6/ot_hfd_coll_q2_hard_v8g__ring_ag",
+            "job": "COUNTED ot_hfd_coll_q2_hard_v8g__ring_ag intel1:/srv/opentallas-scratch2/claude/signoff-sprint-3/ring_f/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hfd_coll_q3_edge_arg": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/f3da7ebbaa63/ot_hfd_coll_q3_edge_arg",
+            "job": "COUNTED ot_hfd_coll_q3_edge_arg epyc4:/srv/opentallas-scratch2/claude/hbm-gaps-9/q3/ot_hfd_coll_q3_edge_arg_vE/ot_hfd_coll_q3_edge_arg_9ae65807400d/eco_hg9/i2/resign_da/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hfd_coll_q3_edge_link": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/921a1867fc62/ot_hfd_coll_q3_edge_link",
+            "job": "COUNTED ot_hfd_coll_q3_edge_link epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hfd_coll_q3_edge_link__flow-20261106-dm-hbm__a0b2e7ee/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hgi_coll_tkm_tp192_htile_core": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/96e2271b1499/ot_hgi_coll_tkm_tp192_htile_core",
+            "job": "COUNTED ot_hgi_coll_tkm_tp192_htile_core epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hgi_coll_tkm_tp192_htile_core__flow-20261106-f-hbm__8d8236ff/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hgi_qw_dec": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/166752c7115e/ot_hgi_qw_dec",
+            "job": "COUNTED ot_hgi_qw_dec epyc4:/srv/opentallas-scratch3/claude/ss29/resign/qw_dec_k/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hgi_sfu_opsa_rest": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/2cf244a7b526/ot_hgi_sfu_opsa_rest",
+            "job": "COUNTED ot_hgi_sfu_opsa_rest intel1:/srv/opentallas-scratch2/claude/hbm-hard-2/resign/opsaC2_du/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hgi_sfu_split3_ctl_pipe_1c": [
+          {
+            "host": "epyc5",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/0a6c846d05d1/ot_hgi_sfu_split3_ctl_pipe_1c",
+            "job": "COUNTED ot_hgi_sfu_split3_ctl_pipe_1c epyc5:/srv/opentallas-scratch2/claude/hbm-form-timing-12/pipe_vA_resign_cz/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hgi_sfu_split3_lane_core_bk": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/dd84fed82aa9/ot_hgi_sfu_split3_lane_core_bk",
+            "job": "COUNTED ot_hgi_sfu_split3_lane_core_bk epyc4:/srv/opentallas-scratch3/claude/ss29/resign/bk2_m/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hgi_sfu_split3_lane_core_ex": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/bd2d47224584/ot_hgi_sfu_split3_lane_core_ex",
+            "job": "COUNTED ot_hgi_sfu_split3_lane_core_ex epyc4:/srv/opentallas-scratch3/claude/ss29/resign/e2_s3_ex_k/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hgi_sfu_split3_lane_core_fr": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/77c63da38f32/ot_hgi_sfu_split3_lane_core_fr",
+            "job": "COUNTED ot_hgi_sfu_split3_lane_core_fr epyc2:/srv/opentallas-scratch2/claude/die-hbm-82-b128/resign/fr_dc/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hgi_sm_xload_cl2_bdring": [
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/d088d47612f5/ot_hgi_sm_xload_cl2_bdring",
+            "job": "COUNTED ot_hgi_sm_xload_cl2_bdring intel1:/srv/opentallas-scratch3/claude/codex-hbm-forms-1105/resign/brmw/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_hnx_idxn_keybuf_slice": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/af06bcfd74b9/ot_hnx_idxn_keybuf_slice",
+            "job": "COUNTED ot_hnx_idxn_keybuf_slice epyc2:/srv/opentallas-scratch2/claude/ss25/resign/keybuf_b/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_pdie_serdes_rx_bm_native": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/85e7636a1bb5/ot_pdie_serdes_rx_bm_native",
+            "job": "COUNTED ot_pdie_serdes_rx_bm_native epyc4:/srv/opentallas-scratch3/claude/hbm-gaps-7/rxgen/kits/ot_pdie_serdes_rx_bm_native_cefde5fe417d-vB/eco_hg7/i2/resign_cs/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_pdie_serdes_tx": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/193983caf299/ot_pdie_serdes_tx",
+            "job": "COUNTED ot_pdie_serdes_tx epyc4:/srv/opentallas-scratch2/claude/hbm-gaps-9/txff/ot_pdie_serdes_tx_c77a41179db8-FF-i3/eco_hg9/i1/resign_da/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_s81_kp4_dchn": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/ab671cd72adf/ot_s81_kp4_dchn",
+            "job": "COUNTED ot_s81_kp4_dchn epyc2:/srv/opentallas-scratch2/claude/signoff-sprint-19/kp4_e13a_n/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "ot_wbq_root_g0": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/f7c52b6e8e47/ot_wbq_root_g0",
+            "job": "COUNTED ot_wbq_root_g0 epyc4:/srv/opentallas-scratch2/claude/die-hbm-91-open/g0_resign_ew/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ]
+      },
+      "prov_view_sources_prev_kw32": null,
+      "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-08 05:15 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
+      "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 10:39 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:19 PST) first in prov_view_sources; changed 2: ot_hbm_idx_score_hcol_h0_ra ot_hbm_idx_score_hcol_h0_rb. Revert: prov_view_sources <- prov_view_sources_prev_kw35cv"
     }
   },
   "place_prefer": [
