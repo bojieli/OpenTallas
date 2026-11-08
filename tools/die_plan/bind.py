@@ -2394,7 +2394,7 @@ class Binder:
         except Exception as e:      # the hook names the inconsistency (e.g. asymmetric relay legs)
             self.errors.append(f"PARAM_REGEN {f.name}: {e}")
             return
-        changed = []
+        changed, derived = [], []
         # DIE-KV-97 11-09: asbuilt.param_regen.declare {RTL master: {param: default}} names parameters the as-built netlist
         # cannot show: those of a per-instance substitute master (substitute_inst, e.g. KV qkd_astk_ep_s_e EO_E / EO_RL;
         # param_defaults deliberately keys them apart from the predecessor) and a parameter added to the master after the
@@ -2414,10 +2414,12 @@ class Binder:
                     self.errors.append(f"PARAM_REGEN {path}.{k}: not a parameter of the leaf")
                     continue
                 old = str(c.params[k] if k in c.params else defaults[k] if k in defaults else decl[k]).strip('"')
+                row = dict(inst=path, param=k, asbuilt=old, bound=v)
+                derived.append(row)
                 if old != str(v):
-                    changed.append(dict(inst=path, param=k, asbuilt=old, bound=v))
+                    changed.append(row)
                 c.params[k] = str(v)
-        self.param_regen = dict(file=str(spec["file"]), changed=changed, record=r.get("record", {}))
+        self.param_regen = dict(file=str(spec["file"]), changed=changed, derived=derived, record=r.get("record", {}))
         # DIE-HBM-92-LCHK: the hook's declared fixed-latency contracts (latency_consumers.py checks every instance)
         lc = r.get("latency_contracts") or getattr(mod, "LATENCY_CONTRACTS", None)
         if lc:
