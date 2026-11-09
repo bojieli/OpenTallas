@@ -4554,7 +4554,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         hook = kd / "clock_taps.tcl"
         hook.write_text(hook.read_text() + "\nsource /work/landing_exports.tcl\n")
         import landing_place as LP
-        (kd / "landing_placement.tcl").write_text(LP.tcl(P, tn))
+        (kd / "landing_placement.tcl").write_text(LP.tcl(P, tn, macro_moves))
         hook = kd / "face_flops.tcl"
         hook.write_text(hook.read_text() + "\n" + LANDING_PLACEMENT_HOOK + "\n")
         # The new cells are packed to actual nonoverlapping rows/sites. Keep
