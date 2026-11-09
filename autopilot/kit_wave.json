@@ -6652,7 +6652,10 @@
         "cbf_q01_s2": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): Codex hold with cbf_q01, form pending",
         "tt_ctlm": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): in flight on v4w_ctlmfq; keeps its row",
         "native59": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): open LEC (DIE-QC-94), a relaunch would meet the same differs",
-        "coll_core": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): open LEC (QC-TYPES-12 scope), a relaunch would meet the same differs"
+        "coll_core": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): open LEC (QC-TYPES-12 scope), a relaunch would meet the same differs",
+        "sl?_hc[0-3]*": "KW-FIX-39 2026-11-08 22:25 PST: COORD 22:3x: hc0-3 and st_a/st_b types will change RTL (column and station skew pads, QC-TRANSPORT-FIX-2); unstarted rows hold, running rows stay as physical pilots, second QC switch for these only from QC-TRANSPORT-FIX-3",
+        "sl?_st_a*": "KW-FIX-39 2026-11-08 22:25 PST: COORD 22:3x: hc0-3 and st_a/st_b types will change RTL (column and station skew pads, QC-TRANSPORT-FIX-2); unstarted rows hold, running rows stay as physical pilots, second QC switch for these only from QC-TRANSPORT-FIX-3",
+        "sl?_st_b*": "KW-FIX-39 2026-11-08 22:25 PST: COORD 22:3x: hc0-3 and st_a/st_b types will change RTL (column and station skew pads, QC-TRANSPORT-FIX-2); unstarted rows hold, running rows stay as physical pilots, second QC switch for these only from QC-TRANSPORT-FIX-3"
       },
       "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave",
       "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -9114,7 +9117,12 @@
         "epyc4",
         "epyc5"
       ],
-      "note_kw38q": "KW-FIX-39 2026-11-08 22:05 PST: QC ONE SWITCH (COORD 19:4x + 20:1x, QC-TYPES-11 19:31 + QC-TYPES-12 20:05): 108-type batch fresh kits on the new blocks; 47 RUNNING route jobs on old blocks finish (cancel_superseded false); relay event as a second switch for 18 types if TS3 posts; revert *_prev_kw38q"
+      "note_kw38q": "KW-FIX-39 2026-11-08 22:05 PST: QC ONE SWITCH (COORD 19:4x + 20:1x, QC-TYPES-11 19:31 + QC-TYPES-12 20:05): 108-type batch fresh kits on the new blocks; 47 RUNNING route jobs on old blocks finish (cancel_superseded false); relay event as a second switch for 18 types if TS3 posts; revert *_prev_kw38q",
+      "hold_items_prev_kw39tf": [
+        "sl?_hc[0-3]*",
+        "sl?_st_a*",
+        "sl?_st_b*"
+      ]
     },
     "hbm": {
       "enabled": true,
