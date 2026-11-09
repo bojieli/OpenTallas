@@ -125,3 +125,27 @@ def test_shift_never_breaks_a_coherent_pair():
     regs['s'] = (3, 0, 't1')  # s-y0 same tap at the start: coherent, the cut must stay on x2-s
     lab, _ = run(regs, pairs, SHIFT_TAPS, limit=2, shift=5)
     assert lab['s'] == lab['y0'] and cross(lab, pairs) == 1
+
+
+def test_overfull_initial_tap_is_accepted_and_only_donates():
+    # DIE-QC-97 11-09 (QC cbn_q00 clk_t11, slw_su_c): clock_taps.tcl may leave a tap above OT_TAP_MAX_SINKS (WARN,
+    # no tap with room in radius); the planner must accept it, never add to it, and may move sinks off it.
+    regs = {f'a{i}': (i, 0, 't0') for i in range(4)}
+    regs['b'] = (10, 0, 't1')
+    pairs = [('a3', 'b')]
+    lab, _ = run(regs, pairs, CHAIN_TAPS, load={'t0': 4, 't1': 1}, cap=3, limit=2)
+    assert lab['b'] == 't1'                              # t0 is above cap: it receives nothing
+    assert sum(v == 't0' for v in lab.values()) <= 4
+    regs['b'] = (10, 0, 't0')
+    regs['a3'] = (9, 0, 't1')
+    lab, _ = run(regs, pairs, CHAIN_TAPS, load={'t0': 4, 't1': 1}, cap=3, limit=2)
+    assert lab['b'] == 't1' and cross(lab, pairs) == 0   # b leaves the over-full tap for its partner
+
+
+def test_missing_or_negative_initial_load_still_fails():
+    for ld in ('t0 1', 't0 1 t1 -1', 't0 1 t1 x'):
+        script = (f'source {{{PLAN}}}\n'
+                  'puts [catch {::ot_tap_pair::plan [dict create a {o 0 0 t0} b {o 10 0 t1}] {} '
+                  f'[dict create t0 {{0 0}} t1 {{10 0}}] [dict create {ld}] 3 100 2 5}} msg]\nputs $msg\n')
+        out = subprocess.run([TCLSH], input=script, capture_output=True, text=True, check=True).stdout.split('\n')
+        assert out[0] == '1' and 'initial tap capacity invalid: t1' in out[1], (ld, out)
