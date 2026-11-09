@@ -120,7 +120,7 @@ def run_fixture(W):
             "paths48": [f"{ROOT}/dead-dd/kit4"], "words48": ["dead-word-unit"],
             "protected_full": [["fix", f"{ROOT}/dead-cc/kit3", "fixture"]],
             "coord_holds": [{"pattern": "dead-hh2/tkm", "lane": "X", "why": "open"}],
-            "kit_union": [],
+            "kit_union": [], "lane_mentions24": ["dead-word-unit"], "mention_paths24": [],
             "wave_paths": [f"{ROOT}/dead-sc/kit_rtl_x.sh", f"{ROOT}/dead-wv/wave/src_x", f"{ROOT}/dead-wv/wave/plan/p.json", f"{ROOT}/dead-wv/wr", f"{ROOT}/dead-xy/sub/c.json", f"{ROOT}/dead-xz/a.json"]}
     json.dump(life, open(f"{W}/life.json", "w"))
     out = f"{W}/out"
@@ -384,6 +384,15 @@ def _incident_fleet(W):
     with open(f"{R2}/kwz/u/kit_rtl.f", "w") as fh:
         fh.write(f"+incdir+{B}/kv_sys_phy/bind/inc\n-v {B}/kv_sys_phy/bind/x.sv\n")
     kit(f"{R2}/dead-pc/kit1")                                                       # protected, for the plan's own control
+    # 11-09 03:08 epyc2: s81-t51-recut (live lane, no lane-name match, old files) was deleted as a dead-lane orphan dir; it is named
+    # in a post of the last 24 h, so the whole subtree stays.  dead-mp: only a sub path is named; the rest of that lane still goes
+    for f in ("pg/rtl/s81_child_e.v", "fc10/native_ff_pose_e.tcl", "codex_split_copy/mapped_controls/split_clean.json", "eco2/big.bin"):
+        write(f"{R3}/s81-t51-recut/{f}", 64)
+    write(f"{R2}/dead-mp/sub/keepme/a.bin", 64)
+    write(f"{R2}/dead-mp/other/b.bin", 64)
+    write(f"{R2}/dead-iso/job1/out/r.bin", 64)                                      # ISOLATE-1 job root: ot-run deletes it, never this tool
+    write(f"{R2}/dead-iso/job1/.ot-isolated.json", 2)
+    write(f"{R2}/dead-iso/legacy/x.bin", 64)
     # cause 2 (AUTOCLEAN-12 02:13): an older attempt under a live wave work root, named by a kit record elsewhere
     WR = f"{R2}/kw26w/runs/s81"
     kit(f"{WR}/kit-wave/s81/p/items/it5/attempt_1/gen/it5")
@@ -395,6 +404,12 @@ def _incident_fleet(W):
     with open(f"{R2}/kwz2/u/rtl/kit_rtl.json", "w") as fh:
         json.dump({"overlay": f"{WR}/kit-wave/s81/p/items/it5/attempt_1/rtl_bindov/b.sv"}, fh)
     write(f"{R2}/dead-wv/wave/w.json", 64)
+    # 11-09 04:3x epyc4 dkv72/pvb/view: a dead lane's view dir whose rtl/ is an interior symlink into another lane; a record names the
+    # file through the symlink, so removing view breaks that path although the target survives
+    write(f"{R3}/dkv69/wpv/rtl/common/c.sv", 64)
+    write(f"{R3}/dkv72/pvb/view/README.md", 64)
+    os.symlink(f"{R3}/dkv69/wpv/rtl", f"{R3}/dkv72/pvb/view/rtl")
+    write(f"{R3}/dkv72/pvb/scratch/z.bin", 64)
     snap = os.path.join(W, "snap")
     os.makedirs(snap)
     with open(f"{snap}/protected.tsv", "w") as fh:
@@ -407,7 +422,9 @@ def _incident_fleet(W):
                "created": time.time(), "source": "fix"}, open(f"{snap}/kitwave.json", "w"))
     json.dump({"created": time.time(), "live": [], "lane_last": {}, "paths48": [], "words48": [],
                "protected_full": [["fix", f"{R2}/dead-pc/kit1", "fixture"]], "coord_holds": [],
-               "kit_union": ["codex-wave-bind-1106/kv_union/bind/u.sv"],     # named only by a record on another host
+               "kit_union": ["codex-wave-bind-1106/kv_union/bind/u.sv",      # named only by a record on another host
+                             "dkv72/pvb/view/rtl/common/c.sv"],              # named through an interior symlink
+               "lane_mentions24": ["s81-t51-recut", "pg", "fc10"], "mention_paths24": ["dead-mp/sub/keepme"],   # LANE-DIR HOLD cases
                "wave_paths": [f"{R2}/dead-wv/wave/w.json", WR]}, open(f"{W}/life.json", "w"))
     return R2, R3, B, snap
 
@@ -433,16 +450,28 @@ def test_incident_0014_live_kit_inputs(tmp_path):
     print(r.stdout[-2000:], r.stderr[-1500:])
     assert r.returncode == 0
     mf = sorted(f for f in os.listdir(f"{W}/out") if f.startswith("PLAN-"))[-1]
-    rows = {}
+    rows, raw = {}, []
     for ln in open(f"{W}/out/{mf}").read().splitlines()[1:]:
         c = ln.split("\t")
         rows[os.path.realpath(c[0])] = (c[1], c[2])
+        if c[2] == "DELETE":
+            raw.append(os.path.normpath(c[0]))
+    V = f"{R3}/dkv72/pvb/view/rtl"
+    assert not [p for p in raw if p == V or V.startswith(p + "/")], ("interior-symlink alias path broken", [p for p in raw if "dkv72" in p])
+    assert any(p.startswith(f"{R3}/dkv72/pvb/scratch") for p in raw), "negative control: the unnamed part of dkv72 still goes"
     named = [f"{B}/s81_emitted_v2/bind/rtl/top.sv", f"{B}/s81_seeded/bind/rtl/a.sv", f"{B}/kv_sys_phy/bind/inc/defs.svh", f"{B}/kv_sys_phy/bind/x.sv", f"{B}/kv_union/bind/u.sv"]
     for p, (cat, act) in rows.items():                       # no DELETE row is, contains or sits inside a named input (realpath both sides)
         if act == "DELETE":
             assert not [n for n in named if n == p or n.startswith(p + "/") or p.startswith(os.path.dirname(n) + "/")], (p, cat)
     assert rows.get(f"{B}/unnamed", ("", ""))[1] == "DELETE", "negative control: an unnamed dir of the dead lane still goes"
     assert any(v[0] == "KEEP-kit-input" for v in rows.values()), "the guard, not some other hold, kept them"
+    t51 = f"{R3}/s81-t51-recut"
+    assert not [p for p, v in rows.items() if v[1] == "DELETE" and (p == t51 or p.startswith(t51 + "/"))], "LANE-DIR HOLD: mentioned lane dir stays"
+    assert rows.get(t51, ("", ""))[0] == "KEEP-lane-mention", rows.get(t51)
+    assert not [p for p, v in rows.items() if v[1] == "DELETE" and (p.startswith(f"{R2}/dead-mp/sub/keepme") or f"{R2}/dead-mp/sub/keepme".startswith(p + "/"))]
+    assert rows.get(f"{R2}/dead-mp/other", ("", ""))[1] == "DELETE", "negative control: the unnamed part of a lane goes"
+    assert not [p for p, v in rows.items() if v[1] == "DELETE" and (p == f"{R2}/dead-iso" or p.startswith(f"{R2}/dead-iso/job1"))], "isolated job left to ot-run"
+    assert rows.get(f"{R2}/dead-iso/legacy", ("", ""))[1] == "DELETE", "legacy dir beside an isolated job is still this tool's"
     WR = f"{R2}/kw26w/runs/s81/kit-wave/s81/p/items"
     nb = WR + "/it5/attempt_1/rtl_bindov"
     assert not [p for p, v in rows.items() if v[1] == "DELETE" and (p == nb or nb.startswith(p + "/") or p.startswith(nb + "/"))], \
@@ -451,13 +480,25 @@ def test_incident_0014_live_kit_inputs(tmp_path):
     assert rows.get(WR + "/it6/attempt_1", ("", ""))[1] == "DELETE", "negative control: an unnamed older attempt is still released"
     for n in named:
         assert os.path.exists(n)
+    # mutant L: an empty mention list releases s81-t51-recut (the test sees the incident); a missing list refuses
+    life = json.load(open(f"{W}/life.json")); keep = (life["lane_mentions24"], life["mention_paths24"])
+    life["lane_mentions24"], life["mention_paths24"] = [], []; json.dump(life, open(f"{W}/life.json", "w"))
+    r = _lc_run(W, LC, "plan", R2, R3, snap)
+    mf2 = sorted(f for f in os.listdir(f"{W}/out") if f.startswith("PLAN-"))[-1]
+    gone = [ln for ln in open(f"{W}/out/{mf2}").read().splitlines()[1:] if "s81-t51-recut" in ln and "\tDELETE\t" in ln]
+    assert r.returncode == 0 and gone, "without the hold the incident tree is DELETE (positive control of the test)"
+    del life["lane_mentions24"]; json.dump(life, open(f"{W}/life.json", "w"))
+    r = _lc_run(W, LC, "plan", R2, R3, snap)
+    assert r.returncode != 0 and "lane_mentions24" in (r.stdout + r.stderr)
+    life["lane_mentions24"], life["mention_paths24"] = keep; json.dump(life, open(f"{W}/life.json", "w"))
+    time.sleep(1.1)
     # mutant 0: without the fleet list the plan refuses
     life = json.load(open(f"{W}/life.json")); ku = life.pop("kit_union"); json.dump(life, open(f"{W}/life.json", "w"))
     r = _lc_run(W, LC, "plan", R2, R3, snap)
     assert r.returncode != 0 and "kit_union" in (r.stdout + r.stderr)
     life["kit_union"] = ku; json.dump(life, open(f"{W}/life.json", "w"))
     # mutant 1: guard matching nothing -> the plan's positive control must refuse
-    mp = _mutant(W, "self.kit = m.PathSet(rows, canon=J.paths.canon)", "self.kit = m.PathSet([], canon=J.paths.canon)")
+    mp = _mutant(W, "kh = self.kit.hit(f) or self.kit_lit.hit(f)", "kh = None")
     r = _lc_run(W, mp, "plan", R2, R3, snap)
     assert r.returncode != 0 and "live kit input" in (r.stdout + r.stderr), "positive control must catch a dead guard"
     # a kit record written after the plan names late/: the apply recheck must skip that row
@@ -470,8 +511,15 @@ def test_incident_0014_live_kit_inputs(tmp_path):
         fh.write("path\tcategory\taction\treason\tbytes\tfiles\n")
         fh.write(f"{B}/late\t{rows[B + '/late'][0]}\tDELETE\tfixture\t64\t1\n")
     # mutant 2: the recheck without the kit-input check deletes it (proves the test sees the gap)
-    mp2 = _mutant(W, '            kh = P.kit.hit(f)\n            if kh:\n                return "SKIP", "live kit input: " + kh\n',
-                  '            kh = None\n')
+    # mutant 3: canonical set only (the 04:3x tool): the dir holding the alias goes DELETE, so the test sees the gap
+    mp3 = _mutant(W, "kh = self.kit.hit(f) or self.kit_lit.hit(f)", "kh = self.kit.hit(f)")
+    r = _lc_run(W, mp3, "plan", R2, R3, snap)
+    mf3 = sorted(f for f in os.listdir(f"{W}/out") if f.startswith("PLAN-"))[-1]
+    raw3 = [os.path.normpath(ln.split("\t")[0]) for ln in open(f"{W}/out/{mf3}").read().splitlines()[1:] if "\tDELETE\t" in ln]
+    assert r.returncode == 0 and [p for p in raw3 if V.startswith(p + "/")], ("mutant 3 must break the alias", r.stdout[-600:], r.stderr[-600:])
+    time.sleep(1.1)
+    mp2 = _mutant(W, '        kh = P.kit_hit(sorted({path, real} | set(J.paths.forms(path))))',
+                  '        kh = None')
     r = _lc_run(W, mp2, "apply", R2, R3, snap, "--manifest", lm, "--coord-ref", "fixture", "--dry")
     out = open(sorted(os.path.join(f"{W}/out", f) for f in os.listdir(f"{W}/out") if f.startswith("APPLY-"))[-1]).read()
     assert r.returncode == 0 and "\tWOULD\t" in out, (r.stdout[-800:], r.stderr[-800:], out)
@@ -492,3 +540,31 @@ def test_kit_union_merge(tmp_path):
     assert lc.merge_kitscans({"h1": str(a)}, ["h1", "h2"]) == (None, ["h2"])           # a host without a scan: no union, hosts refuse
     d = json.load(open(b)); d["created"] -= 25 * 3600; json.dump(d, open(b, "w"))
     assert lc.merge_kitscans({"h1": str(a), "h2": str(b)}, ["h1", "h2"]) == (None, ["h2"])   # stale scan counts as missing
+
+
+def test_mention_tokens():
+    lc, ac = _lc()
+    post = ("Where they were: epyc2 /srv/opentallas-scratch3/claude/s81-t51-recut/{pg,fc10,fc8,eco,kits_b} was deleted; "
+            "[CHECKED epyc2 s81-t51-recut/probe_r2/sl_{w,e}/slew.{rpt,tsv}] and intel1 codex-s81-split-1106 is gone.")
+    names, tails = lc.mention_tokens(post)
+    assert {"s81-t51-recut", "codex-s81-split-1106", "pg", "fc10"} <= names
+    assert {"s81-t51-recut/pg", "s81-t51-recut/kits_b", "s81-t51-recut/probe_r2/sl_w/slew.rpt"} <= tails, sorted(tails)
+
+
+def test_tmp_rule(tmp_path):
+    lc, ac = _lc()
+    B = str(tmp_path)
+    for p in ("tmpold/a/f", "tmpnew/f", "tmpopen/f", "pytest-of-u/pytest-3/x", "pytest-of-u/pytest-9/y", "kw35rd/big/f", "r8t/f"):
+        write(os.path.join(B, p), 8, old=p not in ("tmpnew/f", "pytest-of-u/pytest-9/y"))
+    for p in ("tmpold", "tmpold/a", "tmpold/a/f", "tmpopen", "tmpopen/f", "pytest-of-u/pytest-3", "pytest-of-u/pytest-3/x", "kw35rd", "kw35rd/big", "kw35rd/big/f", "r8t", "r8t/f"):
+        os.utime(os.path.join(B, p), (OLD, OLD))
+    os.utime(os.path.join(B, "pytest-of-u/pytest-9"), (OLD, OLD))                # dir old, file inside young: newest mtime decides
+    fh = open(os.path.join(B, "tmpopen/f"))                                         # an open handle keeps an old entry
+    try:
+        rows, d, f = lc.tmp_pass(B, apply=True, out=os.path.join(B, "m.tsv"))
+    finally:
+        fh.close()
+    assert not os.path.exists(f"{B}/tmpold") and not os.path.exists(f"{B}/pytest-of-u/pytest-3")
+    for p in ("tmpnew", "tmpopen", "pytest-of-u/pytest-9", "kw35rd", "r8t"):
+        assert os.path.exists(os.path.join(B, p)), p                                # young, open, and named lane dirs stay
+    assert d == 2 and open(f"{B}/m.tsv").read().count("\tDELETE\t") == 2

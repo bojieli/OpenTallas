@@ -16,6 +16,7 @@ Categories (first holder wins):  KEEP-* never removed by this tool; DEL-* candid
   DEL-L4-KIT / DEL-L4-GIT / DEL-L4-LOOSE   dead-lane orphans (member level)
 """
 import argparse
+import glob
 import importlib.util
 import json
 import os
@@ -166,6 +167,77 @@ def merge_kitscans(files, hosts, now=None):
         have.add(h)
     missing = [h for h in hosts if h not in have]
     return (None, missing) if missing else (sorted(out), [])
+
+
+ISOLATED_MARKERS = (".ot-isolated.json", ".ot-isolated")   # ISOLATE-1 job roots (OWNER 03:39): ot-run owns their deletion, this tool never does
+
+
+def isolated_roots(roots):
+    out = set()
+    for r in roots:
+        names = []
+        for x in ISOLATED_MARKERS:
+            names += ["-name", x, "-o"]
+        q = subprocess.run(["timeout", "900", "nice", "-n", "10", "find", "-P", r, "-maxdepth", "14", "(", "-type", "d", "-name", ".git", "-prune", ")", "-o",
+                            "(", *names[:-1], ")", "-print"], capture_output=True, text=True)
+        if q.returncode not in (0, 1):
+            raise SystemExit(f"isolated-job scan failed under {r}: rc {q.returncode}")
+        out |= {os.path.dirname(x) for x in q.stdout.split("\n") if x}
+    return out
+
+
+MENTION_TOK = re.compile(r"[A-Za-z0-9_.+~/{},-]+")
+
+
+def mention_tokens(text):
+    """(names, tails) mentioned in a text (COORD 03:34 LANE-DIR HOLD).  names: every word and every component of a path-like token;
+    tails: paths below /claude/ (absolute or scratchN/claude/ forms) and relative a/b/c tokens.  Brace lists a/{b,c} expand."""
+    names, tails = set(), set()
+    for tok in MENTION_TOK.findall(text or ""):
+        tok = tok.strip(".,:;'\"`()[]")
+        if not tok:
+            continue
+        forms, done = [tok], []
+        while forms and len(done) < 256:
+            f = forms.pop()
+            m = re.match(r"^(.*?)\{([^{}]*)\}(.*)$", f)
+            if m:
+                forms += [m.group(1) + x + m.group(3) for x in m.group(2).split(",")]
+            else:
+                done.append(f)
+        forms = done
+        for f in forms:
+            f = f.replace("{", "").replace("}", "").strip("/,")
+            if not f:
+                continue
+            if "/claude/" in f:
+                t = os.path.normpath(f.split("/claude/", 1)[1]).strip("/")
+            elif "/" in f and not f.startswith(("/", "~", ".")):
+                t = os.path.normpath(f).strip("/")
+            else:
+                t = ""
+            if t and not t.startswith(".."):
+                tails.add(t)
+            for c in f.replace(",", "/").split("/"):
+                if len(c) >= 2:
+                    names.add(c)
+    return names, tails
+
+
+def lane_mention_sources(now, hours=24):
+    """queue posts of the last <hours>, plus HANDOFF*.md and lane briefs (coord lanes/*.md, handoff/*.md, coord *.md) modified in that window"""
+    out = []
+    home = os.path.expanduser("~")
+    for pat in ("coord/lanes/*.md", "coord/handoff/*.md", "coord/*.md", "coord/lanes/*/*.md", "OpenTallas/HANDOFF.md"):
+        for f in glob.glob(os.path.join(home, pat)):
+            if f.endswith("COORD-REVIEW-QUEUE.md"):
+                continue
+            try:
+                if now - os.path.getmtime(f) < hours * 3600 and os.path.getsize(f) < (64 << 20):
+                    out.append(f)
+            except OSError:
+                pass
+    return sorted(set(out))
 
 
 def load_tool(path):
@@ -334,6 +406,9 @@ class Plan:
                     if "." in os.path.basename(q) and "/" in d.split("/claude/", 1)[-1]:
                         rows.append((d, "directory of a file named by a live kit record on the fleet"))
         self.kit = m.PathSet(rows, canon=J.paths.canon)
+        # literal twin (epyc4 dkv72/pvb/view 04:3x): canon resolves an interior symlink (view/rtl -> dkv69/wpv/rtl), so the named alias
+        # path vanished from self.kit and the dir holding the alias went DELETE, which breaks the record's path.  Root aliases only here.
+        self.kit_lit = m.PathSet(rows, canon=lambda p: J.paths._alias(os.path.normpath(p)))
         self.kit_refs = kr
         write_kitscan(os.path.join(a.state, "kitscan.json"), kr, kn)
         print(f"kit input guard: {kn} records and wave files read, {len(kr)} named paths, fleet union {len(ku)}", flush=True)
@@ -348,6 +423,14 @@ class Plan:
         self.links = self.scan_symlinks()
         self.qpaths = m.PathSet([(p, "queue 48h") for p in self.life["paths48"]], deep=J.deep, canon=J.paths.canon)
         self.qwords = set(self.life["words48"])
+        if "lane_mentions24" not in self.life or "mention_paths24" not in self.life:
+            raise SystemExit("lifesnap has no lane_mentions24/mention_paths24 (LANE-DIR HOLD, COORD 03:34); refusing")
+        self.mnames = set(self.life["lane_mentions24"])
+        iso = isolated_roots(J.roots)
+        self.iso = m.PathSet([(q, "isolated job (ot-run owns it)") for x in iso for q in {x, os.path.realpath(x)}], canon=J.paths.canon)
+        print(f"isolated job roots: {len(iso)} (left to ot-run)", flush=True)
+        self.mpaths = m.PathSet([(os.path.join(r, t), "mentioned path") for r in J.roots for t in self.life["mention_paths24"]
+                                 if t and not t.startswith(("/", ".."))], canon=J.paths.canon)
         self.keepdirs = {}
         self.inode_seen = {}      # inode -> [nlink, seen-in-delete-set]
         self.lane_live_cache = {}
@@ -490,10 +573,16 @@ class Plan:
                 h = ps.hit(f)
                 if h:
                     return ("KEEP-" + name, h, h.startswith("holds "))
-        for f in J.paths.forms(d):          # kit inputs first: a wave work-root hold is released for older attempts (kw_release), a kit hold never
-            kh = self.kit.hit(f)
-            if kh:
-                return ("KEEP-kit-input", kh, kh.startswith("holds "))
+        kh = self.kit_hit(sorted(set(J.paths.forms(d)) | {os.path.normpath(d)}))   # kit inputs first: kw_release frees older attempts, a kit hold never
+        if kh:
+            return ("KEEP-kit-input", kh, kh.startswith("holds "))
+        lm = self.lane_mention_hit(d)
+        if lm:
+            return lm
+        for f in set(J.paths.forms(d)) | {os.path.realpath(d)}:
+            ih = self.iso.hit(f)
+            if ih:
+                return ("KEEP-isolated-job", ih, ih.startswith("holds "))
         for f in J.paths.forms(d):
             wh = self.wave.hit(f)
             if wh:
@@ -552,6 +641,29 @@ class Plan:
                 return ("KEEP-kw-protect", h, partial)
             return ("KEEP-protectd-24h", h, partial)
         return ("KEEP-localkeep", h, partial)
+
+    def lane_mention_hit(self, d):
+        """LANE-DIR HOLD (COORD 03:34, s81-t51-recut): a lane dir whose name, or a path whose tail, appears in the last 24 h of queue
+        posts, HANDOFF.md or lane briefs is held as a whole subtree, live owner or not.  Realpath and alias forms both checked."""
+        for f in set(self.J.paths.forms(d)) | {os.path.realpath(d)}:
+            if "/claude/" not in f:
+                continue
+            rest = [c for c in f.split("/claude/", 1)[1].split("/") if c]
+            if not rest:
+                continue
+            k = 1 if (rest[0] in WRAPPERS or rest[0].startswith(("moved-", "from-", "relocated"))) else 0
+            if len(rest) > k and rest[k] in self.mnames:
+                return ("KEEP-lane-mention", f"lane dir {rest[k]} named in the last 24 h", False)
+            if len(rest) <= k:                       # a wrapper dir itself (wt, moved-*): hold it if any dir below it is a mentioned lane
+                try:
+                    if any(e in self.mnames for e in os.listdir(d)):
+                        return ("KEEP-lane-mention", "wrapper holds a lane dir named in the last 24 h", True)
+                except OSError:
+                    pass
+            h = self.mpaths.hit(f)
+            if h:
+                return ("KEEP-lane-mention", "mentioned path: " + h, h.startswith("holds "))
+        return None
 
     def queue_word_hit(self, p):
         rest = p.split("/claude/", 1)[1].split("/")
@@ -1096,6 +1208,14 @@ class Plan:
         print(f"controls: positive PASS (counted {got['counted']} protected {got['protected']} kit inputs {kit_seen})", flush=True)
         return None
 
+    def kit_hit(self, paths):
+        """a live kit input is, contains or encloses one of paths: canonical (realpath) set first, then the literal alias set"""
+        for f in paths:
+            kh = self.kit.hit(f) or self.kit_lit.hit(f)
+            if kh:
+                return kh
+        return None
+
     def verify_rows(self):
         """independent re-check of the final DELETE rows: realpath both sides, against protected+counted+kit-wave keep; any hit = abort"""
         J = self.J
@@ -1108,11 +1228,9 @@ class Plan:
                 bad.append((path, ih))
             if os.path.isdir(path) and self.signed_inside(path):
                 bad.append((path, "signed record inside"))
-            for q in {path, os.path.realpath(path)}:
-                kh = self.kit.hit(q)
-                if kh:
-                    bad.append((path, "live kit input: " + kh))
-                    break
+            kh = self.kit_hit([path, os.path.realpath(path)])
+            if kh:
+                bad.append((path, "live kit input: " + kh))
         return bad
 
     # --- main
@@ -1279,10 +1397,16 @@ class Apply:
             ch = P.coord.hit(f)
             if ch:
                 return "SKIP", ch
-        for f in {path, real} | set(J.paths.forms(path)):        # kit records re-read at apply start: one written after the plan holds too
-            kh = P.kit.hit(f)
-            if kh:
-                return "SKIP", "live kit input: " + kh
+        lm = P.lane_mention_hit(path)
+        if lm:
+            return "SKIP", lm[1]
+        for f in {path, real}:
+            ih = P.iso.hit(f)
+            if ih or any(os.path.exists(os.path.join(a, x)) for a in [f] + P.m.ancestors(f) for x in ISOLATED_MARKERS):
+                return "SKIP", "isolated job (ot-run owns it)"
+        kh = P.kit_hit(sorted({path, real} | set(J.paths.forms(path))))     # kit records re-read at apply start: one written after the plan holds too
+        if kh:
+            return "SKIP", "live kit input: " + kh
         h = P.kw_release(P.localkeep_hit(path), path)
         if h:
             return "SKIP", h[1]
@@ -1517,6 +1641,110 @@ def fs_table(roots):
         else:
             out.setdefault(dev, (r, SCRATCH_TRIGGER, SCRATCH_TARGET))
     return out
+
+
+# ------------------------------------------------------------------ /tmp tempfile rule (COORD 04:0x, epyc2 /tmp out of inodes)
+def tmp_open_paths(base):
+    out = set()
+    for pid in os.listdir("/proc"):
+        if not pid.isdigit():
+            continue
+        b = f"/proc/{pid}"
+        for x in ("cwd", "root"):
+            try:
+                out.add(os.readlink(f"{b}/{x}"))
+            except OSError:
+                pass
+        try:
+            for fd in os.listdir(f"{b}/fd"):
+                try:
+                    out.add(os.readlink(f"{b}/fd/{fd}"))
+                except OSError:
+                    pass
+        except OSError:
+            pass
+        try:
+            with open(f"{b}/maps") as fh:
+                for ln in fh:
+                    q = ln.split(None, 5)
+                    if len(q) == 6:
+                        out.add(q[5].strip())
+        except OSError:
+            pass
+    return {x for x in out if x.startswith(base.rstrip("/") + "/")}
+
+
+def _tmp_walk(p):
+    st = os.lstat(p)
+    n, newest = 1, st.st_mtime
+    if stat.S_ISDIR(st.st_mode):
+        for dp, dn, fn in os.walk(p):
+            for x in dn + fn:
+                try:
+                    s2 = os.lstat(os.path.join(dp, x))
+                except OSError:
+                    continue
+                n += 1
+                newest = max(newest, s2.st_mtime)
+    return n, newest, st.st_uid
+
+
+def tmp_pass(base="/tmp", apply=False, out=None, hours=24, now=None):
+    """Python tempfile entries (<base>/tmp*) and pytest entries (<base>/pytest-of-*/*) whose newest mtime is older than <hours> and that
+    no process holds (cwd, root, fd, maps), checked at plan and again right before rm.  Named dirs in <base> are never touched.
+    Returns (rows, deleted, inodes freed)."""
+    now = now or time.time()
+    cut = now - hours * 3600
+    cands = []
+    for e in os.listdir(base):
+        p = os.path.join(base, e)
+        if e.startswith("tmp"):
+            cands.append(p)
+        elif e.startswith("pytest-of-") and os.path.isdir(p) and not os.path.islink(p):
+            cands += [os.path.join(p, x) for x in os.listdir(p)]
+    opn = tmp_open_paths(base)
+    held = lambda q, o: any(x == q or x.startswith(q + "/") for x in o)
+    rows = []
+    for q in sorted(cands):
+        if os.path.islink(q):
+            rows.append((q, "SKIP", "symlink", 0)); continue
+        try:
+            n, newest, uid = _tmp_walk(q)
+        except OSError as e:
+            rows.append((q, "SKIP", f"unreadable {e}"[:80], 0)); continue
+        if newest > cut:
+            rows.append((q, "KEEP", f"newer than {hours} h", n))
+        elif held(q, opn):
+            rows.append((q, "KEEP", "open by a process", n))
+        elif uid != os.getuid():
+            rows.append((q, "SKIP", f"owner uid {uid}", n))
+        else:
+            rows.append((q, "DELETE", f"tempfile, >{hours} h, not open", n))
+    if out:
+        with open(out, "w") as fh:                      # manifest before any delete
+            fh.write("path\taction\treason\tinodes\n")
+            for r in rows:
+                fh.write("\t".join(str(x) for x in r) + "\n")
+    deleted = freed = 0
+    if apply:
+        opn = tmp_open_paths(base)
+        for q, act, why, n in rows:
+            if act != "DELETE" or held(q, opn):
+                continue
+            try:
+                n2, newest, _ = _tmp_walk(q)
+                if newest > cut:
+                    continue
+                if os.path.isdir(q) and not os.path.islink(q):
+                    import shutil
+                    shutil.rmtree(q)
+                else:
+                    os.unlink(q)
+                deleted += 1
+                freed += n2
+            except OSError:
+                pass
+    return rows, deleted, freed
 
 
 def tick_main(a):
@@ -1771,6 +1999,19 @@ def build_lifesnap(out, kit_union=None):
     wave = sorted(wave_config_paths(json.load(open(os.path.expanduser("~/coord/autopilot/kit_wave.json")))))
     if len(wave) < 20:
         raise ValueError(f"live wave config names only {len(wave)} paths")
+    mnames, mtails, msrc = set(), set(), 0
+    for p in posts:                                  # every post of the last 24 h, any author (AUTOPILOT/KIT-WAVE lines name live dirs too)
+        if now - p["t"] <= 24 * 3600:
+            a, b = mention_tokens(p["text"])
+            mnames |= a; mtails |= b; msrc += 1
+    for f in lane_mention_sources(now):
+        try:
+            a, b = mention_tokens(open(f, errors="replace").read())
+        except OSError:
+            continue
+        mnames |= a; mtails |= b; msrc += 1
+    if msrc == 0:
+        raise ValueError("lane mention scan read no post or brief")
     paths48, words48 = {}, {}
     for p in posts:
         if now - p["t"] > 24 * 3600 or not p["auth"]:
@@ -1784,7 +2025,8 @@ def build_lifesnap(out, kit_union=None):
     json.dump({"created": now, "created_h": time.strftime("%F %T %Z"), "live": sorted(live),
                "lane_last": {k: int(v) for k, v in lane_last.items()},
                "paths48": sorted(paths48), "words48": sorted(words48), "protected_full": strict_protected(), "wave_paths": wave,
-               "coord_holds": coord_holds(live, now), **({"kit_union": kit_union} if kit_union is not None else {})}, open(out, "w"))
+               "coord_holds": coord_holds(live, now), "lane_mentions24": sorted(mnames), "mention_paths24": sorted(mtails),
+               "mention_sources": msrc, **({"kit_union": kit_union} if kit_union is not None else {})}, open(out, "w"))
     print("live lanes", len(live), sorted(live)[:80])
     print("posts", len(posts), "paths48", len(paths48), "words48", len(words48), "agents", len(agents_all))
 
@@ -1958,6 +2200,10 @@ def main():
     ks.add_argument("--lifesnap", required=True)
     ks.add_argument("--out", default=os.path.join(STATE_DIR, "guards", "kitscan.json"))
     ks.add_argument("--roots", nargs="*", default=None)
+    tp = sub.add_parser("tmp", help="/tmp tempfile rule: tmp* and pytest-of-*/* entries older than 24 h with no open handle; dry unless --apply")
+    tp.add_argument("--base", default="/tmp")
+    tp.add_argument("--apply", action="store_true")
+    tp.add_argument("--out", default=os.path.join(STATE_DIR, "manifests"))
     hp = sub.add_parser("hold", help="create or renew an expiring hold on a directory")
     hp.add_argument("path")
     hp.add_argument("--hours", default="24")
@@ -1982,6 +2228,12 @@ def main():
     a = ap.parse_args()
     if a.cmd == "hold":
         sys.exit(hold_main(a))
+    if a.cmd == "tmp":
+        os.makedirs(a.out, exist_ok=True)
+        mf = os.path.join(a.out, f"TMP-{os.uname().nodename}-{time.strftime('%Y%m%d-%H%M%S')}.tsv")
+        rows, d, f = tmp_pass(a.base, a.apply, mf)
+        print(f"tmp: {len(rows)} entries, DELETE {sum(1 for r in rows if r[1] == 'DELETE')}, deleted {d}, inodes freed {f}, manifest {mf}")
+        sys.exit(0)
     if a.cmd == "kitscan":
         roots = a.roots or [r for r in ("/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch3/claude", "/srv/opentallas-scratch/claude",
                                         "/home/ubuntu/scratch-root/claude") if os.path.isdir(r)]
