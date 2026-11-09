@@ -404,6 +404,12 @@ def _incident_fleet(W):
     with open(f"{R2}/kwz2/u/rtl/kit_rtl.json", "w") as fh:
         json.dump({"overlay": f"{WR}/kit-wave/s81/p/items/it5/attempt_1/rtl_bindov/b.sv"}, fh)
     write(f"{R2}/dead-wv/wave/w.json", 64)
+    # 11-09 04:3x epyc4 dkv72/pvb/view: a dead lane's view dir whose rtl/ is an interior symlink into another lane; a record names the
+    # file through the symlink, so removing view breaks that path although the target survives
+    write(f"{R3}/dkv69/wpv/rtl/common/c.sv", 64)
+    write(f"{R3}/dkv72/pvb/view/README.md", 64)
+    os.symlink(f"{R3}/dkv69/wpv/rtl", f"{R3}/dkv72/pvb/view/rtl")
+    write(f"{R3}/dkv72/pvb/scratch/z.bin", 64)
     snap = os.path.join(W, "snap")
     os.makedirs(snap)
     with open(f"{snap}/protected.tsv", "w") as fh:
@@ -416,7 +422,8 @@ def _incident_fleet(W):
                "created": time.time(), "source": "fix"}, open(f"{snap}/kitwave.json", "w"))
     json.dump({"created": time.time(), "live": [], "lane_last": {}, "paths48": [], "words48": [],
                "protected_full": [["fix", f"{R2}/dead-pc/kit1", "fixture"]], "coord_holds": [],
-               "kit_union": ["codex-wave-bind-1106/kv_union/bind/u.sv"],     # named only by a record on another host
+               "kit_union": ["codex-wave-bind-1106/kv_union/bind/u.sv",      # named only by a record on another host
+                             "dkv72/pvb/view/rtl/common/c.sv"],              # named through an interior symlink
                "lane_mentions24": ["s81-t51-recut", "pg", "fc10"], "mention_paths24": ["dead-mp/sub/keepme"],   # LANE-DIR HOLD cases
                "wave_paths": [f"{R2}/dead-wv/wave/w.json", WR]}, open(f"{W}/life.json", "w"))
     return R2, R3, B, snap
@@ -443,10 +450,15 @@ def test_incident_0014_live_kit_inputs(tmp_path):
     print(r.stdout[-2000:], r.stderr[-1500:])
     assert r.returncode == 0
     mf = sorted(f for f in os.listdir(f"{W}/out") if f.startswith("PLAN-"))[-1]
-    rows = {}
+    rows, raw = {}, []
     for ln in open(f"{W}/out/{mf}").read().splitlines()[1:]:
         c = ln.split("\t")
         rows[os.path.realpath(c[0])] = (c[1], c[2])
+        if c[2] == "DELETE":
+            raw.append(os.path.normpath(c[0]))
+    V = f"{R3}/dkv72/pvb/view/rtl"
+    assert not [p for p in raw if p == V or V.startswith(p + "/")], ("interior-symlink alias path broken", [p for p in raw if "dkv72" in p])
+    assert any(p.startswith(f"{R3}/dkv72/pvb/scratch") for p in raw), "negative control: the unnamed part of dkv72 still goes"
     named = [f"{B}/s81_emitted_v2/bind/rtl/top.sv", f"{B}/s81_seeded/bind/rtl/a.sv", f"{B}/kv_sys_phy/bind/inc/defs.svh", f"{B}/kv_sys_phy/bind/x.sv", f"{B}/kv_union/bind/u.sv"]
     for p, (cat, act) in rows.items():                       # no DELETE row is, contains or sits inside a named input (realpath both sides)
         if act == "DELETE":
@@ -486,7 +498,7 @@ def test_incident_0014_live_kit_inputs(tmp_path):
     assert r.returncode != 0 and "kit_union" in (r.stdout + r.stderr)
     life["kit_union"] = ku; json.dump(life, open(f"{W}/life.json", "w"))
     # mutant 1: guard matching nothing -> the plan's positive control must refuse
-    mp = _mutant(W, "self.kit = m.PathSet(rows, canon=J.paths.canon)", "self.kit = m.PathSet([], canon=J.paths.canon)")
+    mp = _mutant(W, "kh = self.kit.hit(f) or self.kit_lit.hit(f)", "kh = None")
     r = _lc_run(W, mp, "plan", R2, R3, snap)
     assert r.returncode != 0 and "live kit input" in (r.stdout + r.stderr), "positive control must catch a dead guard"
     # a kit record written after the plan names late/: the apply recheck must skip that row
@@ -499,8 +511,15 @@ def test_incident_0014_live_kit_inputs(tmp_path):
         fh.write("path\tcategory\taction\treason\tbytes\tfiles\n")
         fh.write(f"{B}/late\t{rows[B + '/late'][0]}\tDELETE\tfixture\t64\t1\n")
     # mutant 2: the recheck without the kit-input check deletes it (proves the test sees the gap)
-    mp2 = _mutant(W, '            kh = P.kit.hit(f)\n            if kh:\n                return "SKIP", "live kit input: " + kh\n',
-                  '            kh = None\n')
+    # mutant 3: canonical set only (the 04:3x tool): the dir holding the alias goes DELETE, so the test sees the gap
+    mp3 = _mutant(W, "kh = self.kit.hit(f) or self.kit_lit.hit(f)", "kh = self.kit.hit(f)")
+    r = _lc_run(W, mp3, "plan", R2, R3, snap)
+    mf3 = sorted(f for f in os.listdir(f"{W}/out") if f.startswith("PLAN-"))[-1]
+    raw3 = [os.path.normpath(ln.split("\t")[0]) for ln in open(f"{W}/out/{mf3}").read().splitlines()[1:] if "\tDELETE\t" in ln]
+    assert r.returncode == 0 and [p for p in raw3 if V.startswith(p + "/")], ("mutant 3 must break the alias", r.stdout[-600:], r.stderr[-600:])
+    time.sleep(1.1)
+    mp2 = _mutant(W, '        kh = P.kit_hit(sorted({path, real} | set(J.paths.forms(path))))',
+                  '        kh = None')
     r = _lc_run(W, mp2, "apply", R2, R3, snap, "--manifest", lm, "--coord-ref", "fixture", "--dry")
     out = open(sorted(os.path.join(f"{W}/out", f) for f in os.listdir(f"{W}/out") if f.startswith("APPLY-"))[-1]).read()
     assert r.returncode == 0 and "\tWOULD\t" in out, (r.stdout[-800:], r.stderr[-800:], out)

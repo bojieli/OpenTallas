@@ -406,6 +406,9 @@ class Plan:
                     if "." in os.path.basename(q) and "/" in d.split("/claude/", 1)[-1]:
                         rows.append((d, "directory of a file named by a live kit record on the fleet"))
         self.kit = m.PathSet(rows, canon=J.paths.canon)
+        # literal twin (epyc4 dkv72/pvb/view 04:3x): canon resolves an interior symlink (view/rtl -> dkv69/wpv/rtl), so the named alias
+        # path vanished from self.kit and the dir holding the alias went DELETE, which breaks the record's path.  Root aliases only here.
+        self.kit_lit = m.PathSet(rows, canon=lambda p: J.paths._alias(os.path.normpath(p)))
         self.kit_refs = kr
         write_kitscan(os.path.join(a.state, "kitscan.json"), kr, kn)
         print(f"kit input guard: {kn} records and wave files read, {len(kr)} named paths, fleet union {len(ku)}", flush=True)
@@ -570,10 +573,9 @@ class Plan:
                 h = ps.hit(f)
                 if h:
                     return ("KEEP-" + name, h, h.startswith("holds "))
-        for f in J.paths.forms(d):          # kit inputs first: a wave work-root hold is released for older attempts (kw_release), a kit hold never
-            kh = self.kit.hit(f)
-            if kh:
-                return ("KEEP-kit-input", kh, kh.startswith("holds "))
+        kh = self.kit_hit(sorted(set(J.paths.forms(d)) | {os.path.normpath(d)}))   # kit inputs first: kw_release frees older attempts, a kit hold never
+        if kh:
+            return ("KEEP-kit-input", kh, kh.startswith("holds "))
         lm = self.lane_mention_hit(d)
         if lm:
             return lm
@@ -1206,6 +1208,14 @@ class Plan:
         print(f"controls: positive PASS (counted {got['counted']} protected {got['protected']} kit inputs {kit_seen})", flush=True)
         return None
 
+    def kit_hit(self, paths):
+        """a live kit input is, contains or encloses one of paths: canonical (realpath) set first, then the literal alias set"""
+        for f in paths:
+            kh = self.kit.hit(f) or self.kit_lit.hit(f)
+            if kh:
+                return kh
+        return None
+
     def verify_rows(self):
         """independent re-check of the final DELETE rows: realpath both sides, against protected+counted+kit-wave keep; any hit = abort"""
         J = self.J
@@ -1218,11 +1228,9 @@ class Plan:
                 bad.append((path, ih))
             if os.path.isdir(path) and self.signed_inside(path):
                 bad.append((path, "signed record inside"))
-            for q in {path, os.path.realpath(path)}:
-                kh = self.kit.hit(q)
-                if kh:
-                    bad.append((path, "live kit input: " + kh))
-                    break
+            kh = self.kit_hit([path, os.path.realpath(path)])
+            if kh:
+                bad.append((path, "live kit input: " + kh))
         return bad
 
     # --- main
@@ -1396,10 +1404,9 @@ class Apply:
             ih = P.iso.hit(f)
             if ih or any(os.path.exists(os.path.join(a, x)) for a in [f] + P.m.ancestors(f) for x in ISOLATED_MARKERS):
                 return "SKIP", "isolated job (ot-run owns it)"
-        for f in {path, real} | set(J.paths.forms(path)):        # kit records re-read at apply start: one written after the plan holds too
-            kh = P.kit.hit(f)
-            if kh:
-                return "SKIP", "live kit input: " + kh
+        kh = P.kit_hit(sorted({path, real} | set(J.paths.forms(path))))     # kit records re-read at apply start: one written after the plan holds too
+        if kh:
+            return "SKIP", "live kit input: " + kh
         h = P.kw_release(P.localkeep_hit(path), path)
         if h:
             return "SKIP", h[1]
