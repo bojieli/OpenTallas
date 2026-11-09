@@ -1,0 +1,224 @@
+{
+  "partition": "lep0N",
+  "params": {
+    "CH_B": "4'b1111",
+    "PAIR": 1,
+    "KTX": "16'h0000",
+    "KRX": "16'h1220",
+    "TXI": "16'h1221",
+    "PIN": 2,
+    "POUT": 3,
+    "PLW": 3,
+    "COL0": 2
+  },
+  "provider_ports": [
+    {
+      "bus": "lepk_i0",
+      "direction": "in",
+      "port": "kd__0",
+      "lanes": [
+        "kd"
+      ],
+      "provider_leg": "input.lepk_i0+unit_i0+lepf_i0",
+      "provider_added_cycles": 2
+    },
+    {
+      "bus": "lepk_o0",
+      "direction": "out",
+      "port": "ku__0",
+      "lanes": [
+        "ku"
+      ],
+      "provider_leg": "output.lepk_o0+ctrl_o0+fault_o0",
+      "provider_added_cycles": 3
+    },
+    {
+      "bus": "lepf_i0",
+      "direction": "in",
+      "port": "lepf__0",
+      "lanes": [
+        "lepf"
+      ],
+      "provider_leg": "input.lepk_i0+unit_i0+lepf_i0",
+      "provider_added_cycles": 2
+    },
+    {
+      "bus": "unit_i0",
+      "direction": "in",
+      "port": "unit_lep__0",
+      "lanes": [
+        "unit_lep"
+      ],
+      "provider_leg": "input.lepk_i0+unit_i0+lepf_i0",
+      "provider_added_cycles": 2
+    },
+    {
+      "bus": "ctrl_o0",
+      "direction": "out",
+      "port": "ctrl_lep__0",
+      "lanes": [
+        "ctrl_lep"
+      ],
+      "provider_leg": "output.lepk_o0+ctrl_o0+fault_o0",
+      "provider_added_cycles": 3
+    },
+    {
+      "bus": "coll_i0",
+      "direction": "in",
+      "port": "coll_WN0_u__0",
+      "lanes": [
+        "coll_WN0_u"
+      ],
+      "provider_leg": "collective0.input.live+fault+data",
+      "provider_added_cycles": 2
+    },
+    {
+      "bus": "coll_o0",
+      "direction": "out",
+      "port": "coll_WN0_d__0",
+      "lanes": [
+        "coll_WN0_d"
+      ],
+      "provider_leg": "collective0.output.data",
+      "provider_added_cycles": 2
+    },
+    {
+      "bus": "coll_i1",
+      "direction": "in",
+      "port": "coll_WN1_u__2",
+      "lanes": [
+        "coll_WN1_u"
+      ],
+      "provider_leg": null,
+      "provider_added_cycles": 0
+    },
+    {
+      "bus": "coll_o1",
+      "direction": "out",
+      "port": "coll_WN1_d__0",
+      "lanes": [
+        "coll_WN1_d"
+      ],
+      "provider_leg": null,
+      "provider_added_cycles": 0
+    },
+    {
+      "bus": "coll_i2",
+      "direction": "in",
+      "port": "coll_WN2_u__4",
+      "lanes": [
+        "coll_WN2_u"
+      ],
+      "provider_leg": null,
+      "provider_added_cycles": 0
+    },
+    {
+      "bus": "coll_o2",
+      "direction": "out",
+      "port": "coll_WN2_d__0",
+      "lanes": [
+        "coll_WN2_d"
+      ],
+      "provider_leg": null,
+      "provider_added_cycles": 0
+    },
+    {
+      "bus": "coll_i3",
+      "direction": "in",
+      "port": "coll_WN3_u__1",
+      "lanes": [
+        "coll_WN3_u"
+      ],
+      "provider_leg": null,
+      "provider_added_cycles": 0
+    },
+    {
+      "bus": "coll_o3",
+      "direction": "out",
+      "port": "coll_WN3_d__0",
+      "lanes": [
+        "coll_WN3_d"
+      ],
+      "provider_leg": null,
+      "provider_added_cycles": 0
+    },
+    {
+      "bus": "fault_o0",
+      "direction": "out",
+      "port": "head_lep_fault_return__0",
+      "lanes": [
+        "head_lep_fault_return"
+      ],
+      "provider_leg": "output.lepk_o0+ctrl_o0+fault_o0",
+      "provider_added_cycles": 3
+    },
+    {
+      "bus": "lw_o",
+      "direction": "out",
+      "port": "head_lep_landing__0",
+      "lanes": [
+        "head_lep_landing"
+      ],
+      "provider_leg": "output.lw_o",
+      "provider_added_cycles": 3
+    }
+  ],
+  "die_lane_added_cycles": {
+    "coll_WN0_d": 0,
+    "coll_WN0_u": 0,
+    "coll_WN1_d": 0,
+    "coll_WN1_u": 0,
+    "coll_WN2_d": 0,
+    "coll_WN2_u": 0,
+    "coll_WN3_d": 0,
+    "coll_WN3_u": 0,
+    "ctrl_lep": 0,
+    "head_lep_fault_return": 0,
+    "head_lep_landing": 0,
+    "kd": 0,
+    "ku": 0,
+    "lepf": 0,
+    "unit_lep": 0
+  },
+  "die_lane_fixed_cycles_before": {
+    "coll_WN0_d": 0,
+    "coll_WN0_u": 0,
+    "coll_WN1_d": 0,
+    "coll_WN1_u": 0,
+    "coll_WN2_d": 0,
+    "coll_WN2_u": 0,
+    "coll_WN3_d": 0,
+    "coll_WN3_u": 0,
+    "ctrl_lep": 0,
+    "head_lep_fault_return": 0,
+    "head_lep_landing": 0,
+    "kd": 0,
+    "ku": 0,
+    "lepf": 0,
+    "unit_lep": 0
+  },
+  "internal_lane_legs": {
+    "lane0.tx_fifo_ingress": 1,
+    "lane0.tx_k.forward.valid+data": 0,
+    "lane0.tx_k.reverse.credit": 0,
+    "lane0.rx_k.forward.valid+data+rxv+fault": 0,
+    "lane0.rx_k.reverse.credit": 0,
+    "lane1.tx_fifo_ingress": 2,
+    "lane1.tx_k.forward.valid+data": 0,
+    "lane1.tx_k.reverse.credit": 0,
+    "lane1.rx_k.forward.valid+data+rxv+fault": 2,
+    "lane1.rx_k.reverse.credit": 2,
+    "lane2.tx_fifo_ingress": 2,
+    "lane2.tx_k.forward.valid+data": 0,
+    "lane2.tx_k.reverse.credit": 0,
+    "lane2.rx_k.forward.valid+data+rxv+fault": 2,
+    "lane2.rx_k.reverse.credit": 2,
+    "lane3.tx_fifo_ingress": 1,
+    "lane3.tx_k.forward.valid+data": 0,
+    "lane3.tx_k.reverse.credit": 0,
+    "lane3.rx_k.forward.valid+data+rxv+fault": 1,
+    "lane3.rx_k.reverse.credit": 1
+  },
+  "consumption_rule": "keep external lane fixed_cycles unchanged; compose each traversed provider leg once; coherent port depths are not summed",
+  "programme_qualified": false
+}

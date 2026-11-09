@@ -17551,3 +17551,32 @@ def qwen_sram_if_mif_model(lanes=8, slices=12, su_commands=0):
                 throughput="same streaming issue width; measured compiler ages required before adoption",
                 physical="parent/head changed views require new833ps TT/FF signoff and slot-fit/area measurement",
                 qualification="group read/write exact; head/control and full source-bound schedule gates mandatory")
+
+
+def s81_head_lep_vf_stage_calendar_model():
+    """Opt-in current LEP vF register legs; no FIFO/token-period extrapolation."""
+    from s81_head.lep_calendar_1113.lep_calendar import VF
+    return dict(
+        schema='opentallas.head-lep-vf-register-legs.v1',
+        default_enabled=False,
+        source='codex/head-lep-reserve-form-0222@41a81fe176',
+        params=VF.params(),
+        added_cycles_per_explicit_register_leg=VF.legs(),
+        added_logical_stage_state_bits=VF.state_bits(),
+        state_excludes='parent reset delivery, clock cells, mapping and physical overhead',
+        functional_width_bits_per_cycle=dict(lepk_input=1104, lepk_output=1104,
+            unit_input=45, ctrl_output=32, lepf_input=1, fault_output=1,
+            landing_notification_output=11, collective_input_each=514,
+            collective_output_each=512, collective_lanes=4),
+        arithmetic_MACs_per_cycle_delta=0,
+        memory_port_count_delta=0,
+        geometry='current vF keeps collective0 on N; no N-to-W pin event',
+        zero_cycle_physical_fix='cb13e19342a bracketed core-tap lookup',
+        calendar_qualified=False, programme_qualified=False,
+        production_token_period_cycles=None,
+        composition='shift source-dated coherent tuple events at each named register leg once; '
+                    'compose FIFO residence and bidirectional tail leases from the exact selected programme',
+        measurement_scope='STRESS depths3333/4444/4444/4/4/4/COL02 static gaps106/118/217 '
+                          'do not qualify vF depths0000/1220/1221/2/3/3/COL02',
+        qualification='HEAD private plan event, exact vF source programme/epoch leases, '
+                      'native timing and parent pin/clock/reset joins remain required')
