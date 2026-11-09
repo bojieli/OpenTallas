@@ -74,6 +74,7 @@ SO DONE 1
 
 def write_policy(k, corner, kwargs, mutation=None):
     text=policy_log(corner, mutation)
+    if mutation=='g2-required' and corner=='TT':text+='\nSO G2_REQUIRED_FAIL setup_tt\n'
     if mutation=='pair-missing':text='\n'.join(line for line in text.splitlines() if not line.startswith('SO PAIR_'))
     if mutation=='coverage-nan':text=text.replace('no_clock_arrival 0','no_clock_arrival nan')
     if mutation=='clock-nan':text=text.replace(f'SO_CK 1 {251 if corner=="TT" else 191}', 'SO_CK 1 nan')
@@ -229,6 +230,27 @@ def test_grt_policy_ff_hold_advisory_unless_restored(tmp_path, monkeypatch, caps
     out=capsys.readouterr()
     assert ('OT_LEGACY_GATE ADVISORY G2 hold_ff' in out.out)==(rc==0)
     assert (k/'FAIL_POSTCTS').exists()==(rc!=0)
+
+
+# KW-FIX-37 11-08: a setup miss deep enough to stop the census is advisory too; OT_G2_SETUP_GATE=1 restores the stop.
+@pytest.mark.parametrize('how,rc', [(None, 0), ('env', 6), ('config', 6)])
+def test_grt_deep_setup_miss_is_advisory_unless_restored(tmp_path, monkeypatch, capsys, how, rc):
+    monkeypatch.delenv('OT_G2_SETUP_GATE', raising=False)
+    monkeypatch.delenv('OT_G2_SETUP_CONTINUE_PS', raising=False)
+    k=kit(tmp_path)
+    if how == 'env': monkeypatch.setenv('OT_G2_SETUP_GATE', '1')
+    if how == 'config':
+        with (k/'config.mk').open('a') as f: f.write('export OT_G2_SETUP_GATE = 1\n')
+    def execute(args, **kwargs):
+        c=kwargs['env']['OT_CORNER']
+        (k/f'postcts_gate_{c.lower()}.json').write_text(json.dumps(passing(c)))
+        write_policy(k,c,kwargs,'g2-required')
+        return SimpleNamespace(returncode=0)
+    assert gate.run(k,'grt',execute=execute)==rc
+    receipt=json.loads((k/'grt_policy.json').read_text())
+    assert receipt['failed']=='setup_tt' and receipt['verdict']==('ADVISORY' if rc==0 else 'FAIL')
+    assert (k/'FAIL_POSTCTS').exists()==(rc!=0)
+    assert ('OT_LEGACY_GATE ADVISORY G2 setup_tt' in capsys.readouterr().out)==(rc==0)
 
 
 @pytest.mark.parametrize('corner,restore,stop', [('TT',False,'G2_REQUIRED_FAIL setup_tt'),('TT',True,'G2_REQUIRED_FAIL setup_tt'),
