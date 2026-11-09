@@ -126,3 +126,19 @@ def test_receiver_depth_is_the_deepest_entry():
     exact = [dict(rows[0], bit_route=[1]), rows[1]]     # exact-site rows are not merged by the kit: still refused
     with pytest.raises(ValueError, match="conflicting destination"):
         NI.annotate(_native_stub(exact, 3))
+
+
+def test_miter_src_hash_rename_is_no_change():
+    A = ["ot_x g_src_%s (.Y(w_src_%s_Y));" % ("a" * 20, "a" * 20), "assign w_src_%s_Y = k;" % ("a" * 20)]
+    B = ["assign w_src_%s_Y = k;" % ("b" * 20), "ot_x g_src_%s (.Y(w_src_%s_Y));" % ("b" * 20, "b" * 20)]
+    sys.path.insert(0, str(HERE))
+    import ts_relay_miter as M
+    assert sorted(M.rename_src_names(A, B)) == sorted(B)
+
+
+def test_miter_src_hash_with_changed_wiring_stays_different():
+    A = ["assign w_src_%s_Y = k;" % ("a" * 20)]
+    B = ["assign w_src_%s_Y = j;" % ("b" * 20)]
+    sys.path.insert(0, str(HERE))
+    import ts_relay_miter as M
+    assert sorted(M.rename_src_names(A, B)) != sorted(B)
