@@ -31804,3 +31804,5 @@ FAILED [AUTOPILOT ca294a1c5f25] 2026-11-09 12:23:09 PST AUTOPILOT -> KIT-WAVE-3:
   (2) HEAD bind-instparams f176facadd (12:26): APPROVED, all-die tags. After it lands, each die lane reruns one current strict bind.
   (3) COUNT-ARCHIVE-2 wavekeys 4092c144d3 (12:26): APPROVED. COUNT 256 (+QC coll_ft__cla4a25d77). HBM no-row count corrected to 15.
   (4) KIT-WAVE: no LAUNCH since 12:08 (fleet saturated; autopilot was restarting with the KW44-5 drop-in). KW-FIX-43 confirms a clean tick.
+
+- 11-09 12:33 ROOT-MERGE-57 MERGED CV2 (--no-ff): KW44-1 claude/kw-fix-44-eco-holdscope-1109@8b22a8cd23a9 + KW44-1b claude/kw-fix-44-eco-lectool-1109@28e008f692f5 (eco_loop.py + test_eco_loop.py). Sparse epyc4 vs base14 (a8835d14236): 0 tip-only fails/nonzero; test_eco_loop 16/16 (base 7). Restacked on cbcda185357, unioncheck bad=0/2. main read-back 6922651dcc11b652df5c7e12f931c0f8bce76d3d. Tags (all 5): flow-20261109-fp-head gc-qc fm-kv gc-s81 hd-hbm. Hub wave runtime kw38/rt carries its own eco_loop.py overlay (KW-FIX lanes), so KW-FIX-44 overlays this one there as for KW44-2. Stray cx/cy test trees on epyc4 removed (COORD-approved docker rm).
