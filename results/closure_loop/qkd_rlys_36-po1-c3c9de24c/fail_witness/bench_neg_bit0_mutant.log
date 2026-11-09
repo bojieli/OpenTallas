@@ -1,4 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qkd_rlys_36-po1-c3c9de24c bench bench_neg_bit0_mutant host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_rlys_36-po1-c3c9de24c log cl/bench_neg_bit0_mutant.a1b1.log captured 2026-10-19T04:46:33-07:00
-# fail_regex 'RLYS_BENCH FAIL'
-RLYS_BENCH FAIL 20000 errors in 20000 words (qkd_rlys_36 W=36)

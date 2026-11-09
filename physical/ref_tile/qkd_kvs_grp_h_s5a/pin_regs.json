@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_kvs_grp_h_s5",
- "enable": false,
- "reason": "Mapped source preserves the exact original registered input/output boundary and cycles (canonical production bench checks all retained outputs); no new flow stage: would add an unpriced cycle."
-}

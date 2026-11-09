@@ -1,7 +1,0 @@
-# Native HC emitted-source identifier correction
-
-The original HC subtree32/pair-first files are legal Verilog and synthesized, but Slang --keep-hierarchy copied the whitespace terminator of escaped instance names into generated RTLIL type names and stopped on control character0x20. The source profile now alpha-renames only module/type names and instance names to stable plain identifiers, preserves all ports/signals/expressions, checks a byte-exact lexical inverse, and records the bijection with both source checksums. SRAM macro placements follow the same instance map. Original emitted masters and receipts stay unchanged. No cycle or arithmetic changes.
-
-Six focused controls pass: nested specialized types/parameter lists, unchanged escaped ports and signals, correct SRAM placement mapping, untouched comments/string literals, and fail-closed collision/unknown-role controls. The two actual previously failing R8 sources now pass the identical Slang lint commands (controls.json, parse logs). The original failed runs remain in hbm-cores-r8/kits_hc. This corrects the frontend source profile; full kit LEC/sign-off is not claimed and must run on regenerated kits normally.
-
-Generator integration PASS: fresh pair-first kit88680bae5666a768 has1078pins, oneclk, zerofacecycles; its source-profile checksum equals the copied RTL, and all three SRAM placement IDs match the transformed source. Initial missing sparse macro-v2 directory was supplied; no source fix was needed. No synthesis, placement, route or STA was launched.

@@ -1,8 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job s81dv_idxtxga-ga-7b82956e7 bench bench_tx_y_mut4_wmask host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/s81dv_idxtxga-ga-7b82956e7 log cl/bench_tx_y_mut4_wmask.a1b1.log captured 2026-10-22T18:59:14-07:00
-# fail_regex '^TX_MISMATCH '
-TX_MISMATCH cycle=340 mut=4 status=0 valid=0 payload=1 st=0006 ref_st=0006 lo0=1
-[3396000] %Fatal: tb_tx_miter.sv:22: Assertion failed in tb_tx_miter: TX_MITER_FAIL
-%Error: tools/s81_dv/tx_export_1021/tb_tx_miter.sv:22: Verilog $stop
-Aborting...
-TX_CAUSAL_FAIL

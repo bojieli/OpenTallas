@@ -1,7 +1,0 @@
-MODULE_CHECK missing=0 rc=0
-TIE_AUDIT PASS accepted=528 rejected=0
-pads: 288 instances, 1660 open wavefront outs
-DIE_PORT_BIND PASS masters=16 instances=326 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=2 pad_bits=0 spare_out_bits=1660 unresolved_children=0 ambiguous_children=0 variant_children=1 manifest_missing=0
- 
-PORT_BIND_NESTED PASS {"verdict": "PASS", "instances": 2203, "unbound": 0, "unknown": 0, "width_mismatch": 0, "unresolved": 0, "no_master": 0}
-HEAD_DIE_PORTBIND PASS module_missing=0 port_bind_rc=0 tie_audit=PASS nested=PASS

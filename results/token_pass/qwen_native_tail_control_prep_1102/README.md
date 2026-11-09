@@ -1,1 +1,0 @@
-Initial64-word control data preparation only; NOT RUN. Superseded by qwen_native_tail_control_prep_1102_v2, which includes two-round CFG and coalesced-descriptor cases. No source repair or runtime qualification is claimed.

@@ -1,6 +1,0 @@
-BIST done pass=1 sram=0101 rom=01010101 cycles=21545 sig=c3be36d94a11bdbd0082a2b5c029cd00
-PASS seed=1 compared=1683627 exempt=15 bist_compared=21545 cycles=1683611 hits=135089 issues=191489 rows=4721 nonzero=4160 classes=255 wraps=4696 qadv=457 restarts=264 rejected=12670 go_closed=143 go_drain=163 resets=13 kv_checks=320 bist_runs=1
-- rtl/test/tb_v41_elem_mbist.sv:289: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2ms; walltime 63.953 s; speed 26.326 us/s
-- Verilator: cpu 63.934 s on 1 threads; allocated 10 MB

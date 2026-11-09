@@ -1,7 +1,0 @@
-{"lane": "TOK-HEAD-LAND-2", "date": "2026-10-28", "base": "origin/main b6fd7043d2 (RM271 fstart/start_d) + dc753c18d7",
- "bind": "DIE-HEAD-17 clk17_max_2 (plan md5 054f73bc, bind md5 fa544b31, die plan md5 7aaf42f8)",
- "exp_lat": 8780,
- "runs": {"pos_TT": "PASS row21946 4173a558 8780/8780", "pos_FF": "PASS 8780/8780", "real_TT": "PASS 8780/8780",
-          "romflip_TT": "FAIL CAUGHT row3352 413075de", "km1_TT sp0.x_i 8->7": "FAIL CAUGHT 8779 (bit-exact, latency assertion)",
-          "kp1_TT sp0.x_i 8->9": "FAIL CAUGHT 8781 (bit-exact, latency assertion)"},
- "checked": true}

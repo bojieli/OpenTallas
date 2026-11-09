@@ -1,4 +1,0 @@
-{"name": "dsfd_rly_1_WE", "ok": true, "files": {"dsfd_rly_1_WE.lef": "2176463df545784c5a9681ed9cd9425d6648ab2dffe7f48617ac75e263100b6b", "dsfd_rly_1_WE_ff.lib": "3969633e13e923829c4829318054a48e6b38e2ff348bbd58000580e218543aa1", "dsfd_rly_1_WE_ss.lib": "b2e2b98fcc4a5b20cef7aec087d906d7cb91adb4d332099cc0f4a7338dc9b593", "dsfd_rly_1_WE_tt.lib": "8c6f228ae37f29470749bb8e7345221a9f494e166fdf8905575daf2d0969c4e0"}}
-CK_SS_MEAN=0 CK_SS_ALL_MEAN=0 CK_SS_MIN=0 CK_SS_ALL_MIN=0 CK_SS_MAX=0 CK_SS_ALL_MAX=0 CK_TT_MEAN=0 CK_TT_ALL_MEAN=0 CK_TT_MIN=0 CK_TT_ALL_MIN=0 CK_TT_MAX=0 CK_TT_ALL_MAX=0 CK_FF_MEAN=0 CK_FF_ALL_MEAN=0 CK_FF_MIN=0 CK_FF_ALL_MIN=0 CK_FF_MAX=0 CK_FF_ALL_MAX=0 CK_ROUTE_REF=SS
-pinstub: 2 OBS rects moved into 2 pins: i, o
-REF_TILE export dsfd_rly_1_WE: views rc=0 child_lint PASS (f) face-pin access: 2 of 4 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck M5 (7.344,15.011), rs M5 (7.344,15.011))

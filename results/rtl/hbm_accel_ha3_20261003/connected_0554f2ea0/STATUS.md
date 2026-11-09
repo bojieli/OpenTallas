@@ -1,1 +1,0 @@
-TERMINAL: PASS_PROTOCOL_FIXTURE; 72 connected cases, zero mismatches; baseline/successor cycle deltas all0, max streak1152. Supervisor421530 and gate421531 finished. Python verdict/raw logs immutable. Launcher printf failure preserved; collection_receipt.json explains missing shell exit. No fullSM/golden/timing/gain adoption. No rerun. HA8 installer owns next realSM context.

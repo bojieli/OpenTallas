@@ -1,5 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qfd_dv_s8_crh_rp1-rp1b-007819fb9 bench bench_rp1_mask_mutant host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qfd_dv_s8_crh_rp1-rp1b-007819fb9 log cl/bench_rp1_mask_mutant.a1b1.log captured 2026-10-21T12:19:00-07:00
-# fail_regex 'CROM bank0 word0'
-FATAL: rtl/test/qwen_dv/s8/tb_rp1_crh.sv:30: CROM bank0 word0
-       Time: 320000  Scope: tb_rp1_crh

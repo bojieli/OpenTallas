@@ -1,5 +1,0 @@
-RESET_PROOF baseline3 middle3/4/5/6 credit4/5/6/7 maxaddedcold4 hotadded0 bothready=1
-PRODUCTION cmd=0 space=1 bf16=0 cycles=293 words=0 packets=256
-[696000] %Fatal: tb_smpub_parent.sv:19: Assertion failed in tb_smpub_parent: stream mismatch cycle 346
-%Error: rtl/hbm_accel/generic/adapters/tb/smpub_parent/tb_smpub_parent.sv:19: Verilog $stop
-Aborting...

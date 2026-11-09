@@ -1,5 +1,0 @@
-# qkd_kvn_ctx_ovl_rope_cm1
-
-Exact de062539e source SHA19e590cef6129070a76516580cab9e1d7d27686224e257b9f081cc4e43036614, MUT_USER0/MUT_STALE0. No scalar body/view transfer.
-
-SAFE DESIGN: pins use existing RTL capture/output stages; reset_first/reset_last provide two source ck captures. Reach all pins within 43.2 square, before measured gate. Native fanout/depth must pass before layout; four61b owner banks plus four6b stage counters and sampled HEAD are below2kb, no SRAM needed. No hard macros, full standard-cell band, aspect1. All626 literal pins fit full faces under6/um on M4/M5 preferred grid. Clock north midpoint, actual parent clk_core_c833.334ps (CORE_HALF0.416667ns); existing supported profile characterizes833.333ps,1fs tighter, route770ps,60/25ps uncertainty,30ps hold margin. Exact completed parent clock contract remains pending. Schedule unchanged: raw edge0 capture,edge1 state update,edge2 output register. Admission/reseed parent relay is not covered by the existing four-user component bench (admission held1/reseed0). Native, placed access, clocks and route acceptance remain OPEN.

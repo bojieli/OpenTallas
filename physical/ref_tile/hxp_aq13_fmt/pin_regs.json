@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_xp_aq_tree13_fmt",
- "enable": false,
- "reason": "Body = the CLOSED ot_hbm_xp_aq_tree13 (S0 input / output registers at its pins, 13 edges, II1; hbm_xp_aq_tree13_1014-tree13-517fddcfb CLOSED); the d4f contract prices 13 edges, a synthesis pin stage would add an unpriced +1/+1."
-}

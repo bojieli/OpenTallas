@@ -1,7 +1,0 @@
-[x hb0 m0] SLX PASS HB=0 MUT=0 compared=2989 cycles output_changes=2791 fault_seen=1
-[x hb0 m1] SLX_MISMATCH cycle=1826 ro_e 1 ro_w 0 bo 0 vo 1 xc 0 f 0
-[x hb0 m1] SLX FAIL HB=0 MUT=1 mismatches=1 of 2989
-[x hb1 m0] SLX PASS HB=1 MUT=0 compared=2989 cycles output_changes=2791 fault_seen=1
-[x hb1 m1] SLX_MISMATCH cycle=1814 ro_e 1 ro_w 0 bo 0 vo 1 xc 0 f 0
-[x hb1 m1] SLX_MISMATCH cycle=1818 ro_e 1 ro_w 0 bo 0 vo 1 xc 0 f 0
-[x hb1 m1] SLX_MISMATCH cycle=1822 ro_e 0 ro_w 0 bo 0 vo 1 xc 0 f 0

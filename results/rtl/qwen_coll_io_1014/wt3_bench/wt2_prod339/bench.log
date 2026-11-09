@@ -1,5 +1,0 @@
-case qwen_ar_256w lats=339 mutant=- PASS mismatches=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=2048 cycles=958
-case qwen_layer_2x256w lats=339 mutant=- PASS mismatches=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4096 cycles=1664
-case qwen_argmax_1w lats=339 mutant=- PASS mismatches=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=64 cycles=397
-COLL_TP8 PASS cases=3 lats=339 wt=2 leb=1 lc=128
-RC=0

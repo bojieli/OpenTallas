@@ -1,6 +1,0 @@
-MEM sectors=8300
-FAULT svg cycle 10473 issuer 1 feed 0 (desc 0 cdc 0 cache 0 prog 0 s1 0 fl 0)
-ISSUER rc 10147 sq_n 3 gq_n 1 gh_at 9954 go_busy 0 cache_ready 00 block_ready 0000 a_v 1 p_v 1 st_v 1 s_blk 94888 rd_q 0
-[8734580000] %Fatal: tb_hbm_svg_rel_sm.sv:89: Assertion failed in tb_hbm_svg_rel_sm: svg fault
-%Error: /srv/opentallas-scratch/claude/hbm-smbudget-1019/src/rtl/test/hbm_accel/svg_rel/tb_hbm_svg_rel_sm.sv:89: Verilog $stop
-Aborting...

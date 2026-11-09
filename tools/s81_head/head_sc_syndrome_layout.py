@@ -58,7 +58,7 @@ def rewrite(source: str, style: str) -> tuple[str, dict]:
         # Keep combinational logic out too; an FF-only gap is not a channel.
         lines += [
             'set cs_blk [ord::get_db_block]; set cs_u [[ord::get_db_tech] getDbUnitsPerMicron]',
-            'set cs_box {1482.84 64.80 1504.44 146.88}',
+            'set cs_box {1482.84 65.34 1504.44 146.88}',
             'set cs_v [lmap z $cs_box {expr {int(round($z*$cs_u))}}]',
             'lassign $cs_v cs_x0 cs_y0 cs_x1 cs_y1; set cs_have 0',
             'foreach cs_b [$cs_blk getBlockages] { set cs_r [$cs_b getBBox]; if {[list [$cs_r xMin] [$cs_r yMin] [$cs_r xMax] [$cs_r yMax]] eq $cs_v} {set cs_have 1} }',
@@ -109,7 +109,7 @@ foreach cs_i [$cs_blk getInsts] {
         'measured_rows_y_um': [4.32, 1222.56],
         'macro_gap_x_um': [1430.676, 1560.006],
         'central_corridor_um': 21.60 if style == 'core-two-bank' else None,
-        'reserved_placement_blockage_um': [1482.84, 64.80, 1504.44, 146.88] if style == 'core-two-bank' else None,
+        'reserved_placement_blockage_um': [1482.84, 65.34, 1504.44, 146.88] if style == 'core-two-bank' else None,
         'held': ['READ_CURRENT_GRT', 'PLACE_REVIEW', 'CLOCK_HOLD', 'CHILD_ADOPTION', 'DO_NOT_COUNT', 'HOLD_ROUTE'],
         'note': 'Candidate geometry only. All 300 S_q bits broadcast to all three western BM children; their existing long consumer reach is not qualified by this change.'}
     return output, receipt

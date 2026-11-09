@@ -1,7 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job hcoll_gq_land_1018-r1-b7918441e bench bench_coll_gq_mut_m3 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hcoll_gq_land_1018-r1-b7918441e-bench log cl/bench_coll_gq_mut_m3.a1b1.log captured 2026-10-18T09:22:50-07:00
-# fail_regex 'COLLQ (FAIL errors=|FAULT ESCAPED)'
-COLLQ_SCHEDULE_CHECK F<400 R=1,2 plain+qbg links/reads/writes conflicts=0 []
-COLLQ MUTANT m3 REJECTED: COLLQ VM q0 b4 unreserved write cyc177 sector 004c (exp 0 0000)
-COLLQ unexpected fault gq1111 ra0000 rb0000 rs0000 ks0000
-COLLQ FAIL errors=5558

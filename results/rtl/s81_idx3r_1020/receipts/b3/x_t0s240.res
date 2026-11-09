@@ -1,1 +1,0 @@
-IDXRD_CASE OK b3/x_t0s240: TB_IDXRD FAIL | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 240 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1122 end_to_last 1057 nerr 257 nopen 0 qerr 0 slice_err 0 | maxrss_kb=215364 wall=0:48.72

@@ -1,6 +1,0 @@
-read_verilog -sv -DSYNTHESIS /work/ca_old.sv /work/ot_meso_fifo.sv
-hierarchy -top ot_meso_ring_ca -chparam W 1152 -chparam DEPTH 4
-proc
-opt_clean
-stat
-select -assert-none t:$mem*

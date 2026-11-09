@@ -1,3 +1,0 @@
-rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv
-rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv
-rtl/test/mu_qwen_1018/tb_mu_lprg_lockstep.sv

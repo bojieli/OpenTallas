@@ -1,7 +1,0 @@
-read_verilog -sv vline.v orig_fdiv.v mut1_fdiv.v
-chparam -set ZERO_RST 1 ot_hdc_v41x_fdiv
-hierarchy -check; proc; flatten; opt_clean
-rename fdiv_orig gold; rename ot_hdc_v41x_fdiv gate
-async2sync
-miter -equiv -flatten -make_outputs gold gate m; hierarchy -top m; flatten; opt
-sat -verify -seq 26 -prove-skip 22 -set-at 1 in_rst_n 0 -set-at 2 in_rst_n 0 -prove trigger 0 -show-ports m

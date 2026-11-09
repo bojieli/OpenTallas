@@ -1,6 +1,0 @@
-{
- "verdict": "FAIL",
- "fails": [
-  "child_lint FAIL: (i) pin access: 4 signal pins have a same-layer OBS rect closer than the wide-metal spacing (b[115] M4 0.024 < 0.072, b[126] M4 0.024 < 0.072, b[49] M4 0.024 < 0.072, b[54] M4 0.024 < 0.072): no DRC-clean access point in the parent (DRT-0073); fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)"
- ]
-}

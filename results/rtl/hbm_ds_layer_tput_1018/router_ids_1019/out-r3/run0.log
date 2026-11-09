@@ -1,9 +1,0 @@
-CQ t=1520000 age=137 due=138 packet=30000300000000000000000000000017f0000017e0000017d0000017c0000017b0000017a00ffffff0910 idsbad=1
-CQ t=3260000 age=137 due=138 packet=30000300000000000000000000000017f0000017e0000017d0000017c0000017b0000017a00ffffff0910 idsbad=0
-CQ t=5000000 age=137 due=138 packet=30000300000000000000000000000017f0000017e0000017d0000017c0000017b0000017a00ffffff0910 idsbad=0
-CQ t=6740000 age=137 due=138 packet=30000300000000000000000000000017f0000017e0000017d0000017c0000017b0000017a00ffffff0910 idsbad=0
-ROUTER_IDS PASS actual_TOPK_runs=4 six_ids_each=1 repeated_layer_cohorts=1
-- rtl/test/hbm_idx_static/tb_hbm_router_ids_static.sv:68: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 7us; walltime 0.001 s; speed 7.509 ms/s
-- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

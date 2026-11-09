@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qfd_dv_s5_vm8q",
- "enable": false,
- "reason": "P3 one clock region (owner 10-20 09:05: pin registers only at region crossings and on wires > 405 um): every input lands on its leaf's own kept parent relay copy (qfd_dv_s5_vm8q_* / _rly, d_in >= 1), every output is the S-face capture register qfd_dv_s5_vm8out (flop-last); rst_n lands in 2 stages (reset_landing)"
-}

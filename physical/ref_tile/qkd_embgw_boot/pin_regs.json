@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_embgw_boot",
- "enable": false,
- "reason": "KVJ-C2: qkd_embgw_boot keeps the qkd_embgw pin structure: every data input is captured in the input-capture registers (hbv_p/hbs_p/hbd_p, lrv_p/lrw_p/lrc_p) and every output (lt_*, hb_cr, st) is a register, so a synthesis pin stage would only add schedule cycles; flop-first via io_flop_at_pins (as qkd_embgw FLOW-HOLD 2026-10-16)."
-}

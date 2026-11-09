@@ -1,6 +1,0 @@
-VM_CK4_STREAM PASS beats=2048 cycles=2050 initiation_interval=1
-VM_CK4 PASS cases=21793 single=576 sample_double=10224 expected_double=10224 identity=512 padding=256
-- physical/hbm_accel_die_views/vm/checker9/tb_vm_ck4.sv:82: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 674us; walltime 0.480 s; speed 1.401 ms/s
-- Verilator: cpu 0.481 s on 1 threads; alloced 1017 MB

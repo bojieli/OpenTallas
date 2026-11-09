@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_s81sl_vsw",
- "enable": false,
- "reason": "Source-registered (S81-SLICE-SU): every data input lands in a flop at the pin (the *_c / *_q capture flops) and every output is a flop; recipe-3 pin_regs would add a second unpriced stage on every slice seam."
-}

@@ -1,8 +1,0 @@
-STIM 42 beats, end 9681
-FAULT A 8164
-FAULT B 8164
-DONE 9681 faultA 1 faultB 1
-- tools/s81_dv/layer_prog/vpx/tb_vpx_ag.sv:85: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 8us; walltime 150.268 s; speed 53.733 ns/s
-- Verilator: cpu 150.258 s on 1 threads; allocated 282 MB

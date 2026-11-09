@@ -1,8 +1,0 @@
-PASS full128 I64 two-page RF read/write, hold, visibility, tuple/tag capture, separate reverse
-PASS actual FADD common four-lane ready/held response, scalar expansion, masked tail, owned RF output
-PASS actual GLOBAL21 I2F from owned I64 RF through same protected result seats
-PASS stale owner ACK quarantines accepted debt
-PASS protected command fault holds debt
-PASS warm-reset quarantine retains debt
-PASS source canonical_zero mismatch refused before launch
-PASS controller directed protocol terminal cycles=173 reads=0 writes=0

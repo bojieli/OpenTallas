@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "dsfd_coll_lane_w_safe8_ntf",
- "enable": false,
- "reason": "safe3 RTL registers every data pin (rx -> lr_f/lr_d pin flops; tx = gearbox registered beat; lo_v/lo_d -> ot_link_credit_rx_b64 landing flops, lo_r registered credit; li_v/li_d ot_link_credit_tx_rc sender flops, li_r captured; flt flops; chb registered in the endpoint). An extra pin stage would add +1 edge to the measured xdie landing cycles (cycle-identical to P1 by the lane miter). s7 (REACH=1): rx lands in 2 flops (lr -> lr2) and lo_v/lo_d in an extra core-face flop before the credit-rx landing; these are the forwarded hops (+1 rx, +1 core->link edges, priced in the kit README), not ref_tile pin_regs."
-}

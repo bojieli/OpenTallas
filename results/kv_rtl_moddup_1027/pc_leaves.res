@@ -1,6 +1,0 @@
-CAUGHT qkd_kvs_pc_h_head_p_mut FAIL tb_qkd_kvs_pc_h_head_p 11433 mismatches TMUT 1
-FAIL   qkd_kvs_pc_h_head_p_v0
-FAIL   qkd_kvs_pc_h_head_p_v17
-CAUGHT qkd_static_kv_pc_path_fan_nc_b_head_p_mut FAIL tb_qkd_static_kv_pc_path_fan_nc_b_head_p 7975 mismatches TMUT 1
-PASS   qkd_static_kv_pc_path_fan_nc_b_head_p_v0 PASS tb_qkd_static_kv_pc_path_fan_nc_b_head_p 2400 cycles TMUT 0
-PASS   qkd_static_kv_pc_path_fan_nc_b_head_p_v17 PASS tb_qkd_static_kv_pc_path_fan_nc_b_head_p 2400 cycles TMUT 0

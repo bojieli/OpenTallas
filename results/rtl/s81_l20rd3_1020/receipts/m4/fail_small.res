@@ -1,1 +1,0 @@
-IDXRD_CASE OK m4/fail_small: TB_IDXRD FAIL | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 4 sram 1 ckh 900 hdr_to_last 1261 end_to_last 1196 nerr 256 nopen 0 qerr 0 slice_err 0 | maxrss_kb=210872 wall=1:10.01

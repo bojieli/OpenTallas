@@ -1,4 +1,0 @@
-483c483
-<           pwin[ai] = wq_act_physical[ai] && !(|(wq_older[ai*WQ +: WQ] & wq_act_physical & ~(WQ'(1) << ai)));
----
->           pwin[ai] = wq_act_physical[ai] && !(|(wq_older[ai*WQ +: WQ] & wq_act_physical & ~(WQ'(1) << ((ai + 1) % WQ))));

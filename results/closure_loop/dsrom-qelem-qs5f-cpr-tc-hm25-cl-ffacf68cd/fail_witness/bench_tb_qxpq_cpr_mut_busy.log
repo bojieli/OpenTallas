@@ -1,6 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job dsrom-qelem-qs5f-cpr-tc-hm25-cl-ffacf68cd bench bench_tb_qxpq_cpr_mut_busy host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/dsrom-qelem-qs5f-cpr-tc-hm25-cl-ffacf68cd log cl/bench_tb_qxpq_cpr_mut_busy.a1b1.log captured 2026-10-19T23:44:35-07:00
-# fail_regex '^MUTANT_DETECTED mut_busy$'
-mut_busy seed 1 expect fail -> QXPQ_CPR FAIL OK
-QXPQ_CPR cycles=1831111 windows=41 rel_ref=2 rel_dut=2 rel_bad=0 mism=0 first_mism=-1 ctl_mism=57 ctl_first=71 busy_dut=1827164 phases=300 resets=40 early=20 go=300 cfg=7512 xs=141784 pv_cycles=2823 busy=1827164 fault=0 bank_free=1818233 walking=1809727
-MUTANT_DETECTED mut_busy

@@ -1,9 +1,0 @@
-MISMATCH rel 28 got v1 t89cd0a48 exp v0 t6438dd07
-MISMATCH rel 31 got v0 t80d2862c exp v1 t7e2ba2f1
-MISMATCH rel 32 got v1 t7e2ba2f1 exp v0 t486f04e9
-MISMATCH rel 34 got v0 t38f3b4f7 exp v1 t7e6d3b3e
-TB_CAP_ED FAIL checks 0 errs 291 D 23 DUT 24
-- src/tb_s81sl_cap_ed.sv:38: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 353ns; walltime 0.000 s; speed 2.365 ms/s
-- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

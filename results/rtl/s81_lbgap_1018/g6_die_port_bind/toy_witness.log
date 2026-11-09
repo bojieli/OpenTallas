@@ -1,9 +1,0 @@
-# toy die (tools/test_die_port_bind.py G6): p instantiates c after 'begin : g_one' (+ a port-less trap); c defined twice (base / RNE param)
-## origin/main die_port_bind (before G6):
-DIE_PORT_BIND PASS masters=1 instances=1 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0 pad_bits=0 unresolved_children=0
-rc 0
-child_closure {'modules': 1, 'unresolved_children': {}, 'model_children': {}}
-## G6 die_port_bind:
-FAIL child c AMBIGUOUS: took TMP/rtl/c.sv, ports/parameters differ in TMP/rtl/c_rne.sv
-DIE_PORT_BIND FAIL masters=1 instances=1 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0 pad_bits=0 unresolved_children=0 ambiguous_children=1 variant_children=1
-rc 1

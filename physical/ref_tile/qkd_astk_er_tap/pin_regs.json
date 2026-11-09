@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_astk_er_tap",
- "enable": false,
- "reason": "every port is already a flop at its pin in RTL (ECTLA-2 2026-10-17); synthesis pin registers would add a second edge the bench and TAP_RL = 7 do not count."
-}

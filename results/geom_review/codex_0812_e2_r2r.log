@@ -1,6 +1,0 @@
-OpenROAD 26Q3-1510-g6cb3f2b704 
-Features included (+) or not (-): +GPU +GUI +Python
-This program is licensed under the BSD-3 license. See the LICENSE file for details.
-Components of this program may be licensed under more restrictive licenses which must be honored.
-[WARNING ORD-0039] .openroad ignored with -python
-R2R_RESULT {"flops": 28988, "data_pins": 28988, "pairs": 388280, "max_manhattan_um": 409.536, "over405": 4, "combinational_loops": 0, "worst": [[409.536, "u_g_front_1_u_front.c2\\[2\\]$_DFF_PN0_", "u_g_front_1_u_front.g_port.g_ft\\[3\\].u_rsc/q\\[14\\]$_DFF_PN0_"], [409.266, "u_g_front_1_u_front.c2\\[1\\]$_DFF_PN0_", "u_g_front_1_u_front.g_port.g_ft\\[3\\].u_rsc/q\\[13\\]$_DFF_PN0_"], [407.214, "u_g_front_1_u_front.c2\\[0\\]$_DFF_P_", "u_g_front_1_u_front.g_port.g_ft\\[3\\].u_rsd/q\\[216\\]$_DFF_P_"], [406.08, "u_g_front_1_u_front.c2\\[3\\]$_DFF_PN0_", "u_g_front_1_u_front.g_port.g_ft\\[3\\].u_rsc/q\\[15\\]$_DFF_PN0_"]]}

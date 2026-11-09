@@ -1,8 +1,0 @@
-{
- "verdict": "FAIL",
- "unit": "intel2:oth-ubuntu-3788589-1793116673",
- "stage": "marker-rule generation before extraction",
- "cause": "TypeError: can only concatenate list (not tuple) to list in R.widen",
- "fix": "8e4e73f3f8 passes list(widths)",
- "successor": "coupon2 unit3812618; 20 exact-width table-selection controls PASS"
-}

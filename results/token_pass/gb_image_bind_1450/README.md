@@ -1,7 +1,0 @@
-Candidate-only native image binding. The selected physical partition source omits INSTANCE parameters, leaving native ROM lookups empty. gb_image_identity.py restores exact expressions from rtl/dsrom_sys/s81_dv/frame_lp/vg/col_h10_l4_lp.sv. It rejects absent/ambiguous/mismatched reference identities and preserves every connection and non-INSTANCE shape parameter.
-
-185 declarations include the inactive r0_nx alternative: 154 CFG ROM,16 QX,10 BF columns,5 BF roots. This is not185 simultaneously active macros. Existing actual wrapper propagates INSTANCE unchanged into each band. No pin, data, boot or clock cycle changes.
-
-Native ot_rom_4096x72_m8 source gate compares8192 full72-bit words across two distinct bank files at833ps; static identity collision and actual wrong-bank lookup mutants caught. Mask data are synthetic mechanism vectors, not actual model/config contents. Job intel1 unit oth-ubuntu-1260185-1793137781, source/output /srv/opentallas-scratch2/claude/codex-gb-images-1450/run1, terminal PASS.
-
-The separate image candidate manifest requires fresh source/calendar extraction; the prior1355 candidate receipt cannot qualify it. Native provider remains FALSE: production frame config/weight image emission, loaded values, full GB GO/TAG/config/data/return composition and retirement still require proof. No physical plan/source adoption, ROWX activation, new topology, or HEAD boot dates.

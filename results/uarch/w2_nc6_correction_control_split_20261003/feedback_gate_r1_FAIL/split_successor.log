@@ -1,9 +1,0 @@
-%Warning-TIMESCALEMOD: /tmp/Hubble-W2-corrector-rescue-20261003/results/uarch/w2_nc6_correction_control_split_20261003/feedback_gate/feedback_gate.sv:1:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
-    1 | module feedback_gate(
-      |        ^~~~~~~~~~~~~
-                       /tmp/Hubble-W2-corrector-rescue-20261003/rtl/experimental/w2_nc6_correction_control_split_20261003/ot_w2_nc6_correction_control.sv:4:8: ... Location of module with timescale
-    4 | module ot_w2_nc6_correction_control(
-      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
-                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
-%Error: Exiting due to 1 warning(s)

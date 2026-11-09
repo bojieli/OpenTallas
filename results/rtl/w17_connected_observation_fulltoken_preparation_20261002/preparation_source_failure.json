@@ -1,7 +1,0 @@
-{
-  "status": "FAIL_RETAINED_PREPARATION_SOURCE_LOOKUP",
-  "attempted": "4e38326d6f361bc85e660f48c59c355e2bb95274:tools/w17_connected_token_contract.py",
-  "reason": "Later preparation contract was not present at engine source4e; it is ancillary authority from inherited parent770638ec7, not engine source.",
-  "correction": "Contract snapshot taken from770638ec7; all engine/wrapper native signals remain pinned4e.",
-  "compiler_executed": false
-}

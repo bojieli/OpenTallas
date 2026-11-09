@@ -1,3 +1,0 @@
-{"variant": "integ", "pad": 2, "fall_edges": ["e"], "regions": ["a", "b", "c", "e", "r"], "root": "a", "ports": {"ab": ["a", "b", -3, 4, 3, true], "ac": ["a", "c", -3, 4, 2, true], "ae": ["a", "e", -3, 4, 3, true], "bc": ["b", "c", 1, 4, 1, false], "be": ["b", "e", 1, 4, 2, false], "ca": ["c", "a", 5, 4, 2, false], "cr": ["c", "r", -3, 4, 3, true], "ec": ["e", "c", 2, 4, 2, false], "er": ["e", "r", -3, 4, 2, false], "ra": ["r", "a", 10, 4, 2, false], "rb": ["r", "b", 6, 4, 3, false]}, "loops": 7}
-LINT clean
-LOOP bench: 200 chips x 11 crossings, 776383 word checks, 0 bad chips

@@ -1,6 +1,0 @@
-LOCKSTEP edges=334
-PASS RXPAD5 exact48 initial5 downstream4 queued5 longstall paddingbad ghostcredit overflow failclosed
-- tb_lockstep.sv:45: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 3us; walltime 0.000 s; speed 8.039 ms/s
-- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

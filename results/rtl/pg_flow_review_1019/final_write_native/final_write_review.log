@@ -1,9 +1,0 @@
-OpenROAD 26Q3-1510-g6cb3f2b704 
-Features included (+) or not (-): +GPU +GUI +Python
-This program is licensed under the BSD-3 license. See the LICENSE file for details.
-Components of this program may be licensed under more restrictive licenses which must be honored.
-OT_PG_FINAL_PASS native_pg_terminals=196864
-FINAL_PREBOUND_ACTUAL_WRITE_PASS
-EXPECTED_LATE_UNPROTECTED_REFUSAL OT_PG_FINAL_LATE_BINDING_REFUSED count=2 first=instance ot_pg_review_late_unprotected master BUFx24_ASAP7_75t_R pin VDD role POWER actual_net {} actual_role {} expected_net VDD reason OT_PG_FINAL_BINDING unchanged_unbound2
-EXPECTED_HIDDEN_RULE_BINDING_REFUSAL OT_PG_FINAL_RC_DIRTY_REFUSED changes=2 actual_delta=2 explicit_binder_calls=0
-FINAL_WRITE_MODEL_REVIEW_PASS

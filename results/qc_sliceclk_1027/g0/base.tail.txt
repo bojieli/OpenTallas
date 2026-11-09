@@ -1,3 +1,0 @@
-WARN  [census] census[2] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
-G0C per type: 68/68 types clean (G3-eligible: 68); die-level {}; reported as WARN (run --completeness)
-G0 PASS: 0 errors, 111 warnings; 68 types / 377 partitions (16 in near-duplicate groups); worst cut {'ratio': 0.2159, 'at': 'horizontal@10750'}, worst partition segment {'ratio': 0.5134, 'at': 'horizontal@11750:sl_E5_su_l1'}; report /srv/opentallas-scratch2/claude/qc-sliceclk-1027/g0/base/g0_report.json

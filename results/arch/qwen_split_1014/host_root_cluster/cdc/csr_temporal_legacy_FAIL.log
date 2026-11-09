@@ -1,9 +1,0 @@
-ot-run: ot-epyc4       admits   117 GB (avail 295, growth 213, headroom 0, waiters 0/0 GB) load 71/128 running 19 disk 721 GB 
-ot-run: ot-epyc5       admits   797 GB (avail 688, growth 130, headroom 0, waiters 0/0 GB) load 70/128 running 19 disk 1868 GB 
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hkv-hroot-recovery-1018/src
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hkv-hroot-recovery-1018/src
-ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-603377-1792391737 after 0 s
-FATAL: rtl/test/qwen_host/tb_hkv_cdc_csr_temporal.sv:24: CSR_TEMPORAL payload mismatch event=0 published=2 expected=1 got=2
-       Time: 47956  Scope: tb_hkv_cdc_csr_temporal
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-603377-1792391737): exit 1

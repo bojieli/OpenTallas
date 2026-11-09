@@ -1,8 +1,0 @@
-{
-  "all_endpoint_bits_exact": true,
-  "verified_endpoint_bits": 193477,
-  "mutant": "flip exactly one constant xs_a1 bit",
-  "mutant_rejected": true,
-  "mutation_failure": "{'missing': 0, 'extra': 0, 'unequal': 1}",
-  "scope": "Connectivity and constant-strap binding exactness only; hard-block arithmetic, seams, timing and throughput remain unqualified."
-}

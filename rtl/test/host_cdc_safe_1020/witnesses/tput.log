@@ -1,6 +1,0 @@
-PASS HOST_CDC_SAFE_TPUT received=1408 read_edges=1761 budget_frames_per_read_edge=0.5
-PASS HOST_CDC_SAFE exact-cycle miter two clock domains sent=4185 received=4185 reset-flush=1
-- rtl/test/host_cdc_safe_1020/tb_safe.sv:49: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 8us; walltime 0.061 s; speed 133.682 us/s
-- Verilator: cpu 0.061 s on 1 threads; allocated 7 MB

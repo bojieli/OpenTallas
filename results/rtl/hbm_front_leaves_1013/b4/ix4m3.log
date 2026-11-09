@@ -1,7 +1,0 @@
-FAIL IXP row0 addr00002e5f4deaa99 expected7891ae503bbaa99 dw00026400/00026400
-FAIL IXP row1 addr00002e5f4deaa99 expected0091ae5f3bbaa99 dw00026420/00026420
-FAIL IXP row2 addr000062244de430f expected181ae2214a9430f dw00026440/00026440
-FAIL IXP row3 addr0000389ccde961e expected3035b896c73961e dw00026460/00026460
-[1208000] %Fatal: tb_hgi_dma_ixpipe.sv:28: Assertion failed in tb_hgi_dma_ixpipe: FATAL IXP errors=398 records=400
-%Error: rtl/hbm_accel/generic/peers/tb_hgi_dma_ixpipe.sv:28: Verilog $stop
-Aborting...

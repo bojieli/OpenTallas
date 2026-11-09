@@ -1,5 +1,0 @@
-# case NEG_n_am7_f2 env DV2_FACE=2 DV2_MU_NU=4 DV2_AM_MUT=7 args n --work /srv/opentallas-scratch/claude/mu-qw-amix/work/N2 host ot-epyc8 2026-10-19T03:12:05-07:00 commit 95074c8a3fd7440506e37b1f7cbf6c75a9e704cf
-    bench2 (n): MU_NU 4 FACE 2 AM_MUT 7
-bench2 (n) MUT=0: FAIL 1/2
-    mixed: root sc fault 0 (want 1), root port fault 0 (want 0), slice-1 any fault 0 (want 0)
-# exit 1

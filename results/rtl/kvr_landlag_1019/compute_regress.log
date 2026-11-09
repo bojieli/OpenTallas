@@ -1,3 +1,0 @@
-COMPUTE_REGRESS new==orig
-COMPUTE_REGRESS == Q-XPF bi_plan annotated (glue + slice)
-COMPUTE_REGRESS land_lag.json == Q-XPF (paths aside): True

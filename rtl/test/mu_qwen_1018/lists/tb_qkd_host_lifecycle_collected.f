@@ -1,5 +1,0 @@
-rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv
-rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv
-rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_cohort.sv
-rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv
-rtl/test/qwen_host/tb_qkd_host_lifecycle_collected.sv

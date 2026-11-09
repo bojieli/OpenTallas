@@ -1,5 +1,0 @@
-PASS sched pinreg equiv: 329391 samples, PINREG=1 = s7b (+1 hclk on po/p_w/physical/expected_sr/idle_hbm/fo/ko, same edge elsewhere), PINREG=0 = s7b; idle 128794 cycles, 9515 idle drops, 13675 columns, 450 fo rises, 20487 p_w beats
-- rtl/test/qwen_static_kv/tb_sched_pinreg_equiv.sv:151: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 274us; walltime 0.965 s; speed 284.308 us/s
-- Verilator: cpu 0.965 s on 1 threads; alloced 1017 MB

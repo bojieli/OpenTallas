@@ -1,6 +1,0 @@
-{
- "_doc": "KV-CDC2 (2026-10-18): leaf-local CDC forks used by the HOST-cluster CDC leaves instead of the shared originals. gen_cluster.py renames the member instances; cluster_gate.py builds the flat reference with each fork in place of its original (renamed back), so the lock-step stays exact; cdc_leaf_lint.py lints the leaves with the forks.",
- "qkd_host_qm_credit_pacer": {"fork": "qkd_hr_qm_credit_pacer_cdc", "file": "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_qm_credit_pacer_cdc.sv", "original": "rtl/qwen_sys/host_20261013/qkd_host_qm_credit_pacer.sv"},
- "qkd_host_visibility_fence": {"fork": "qkd_hr_visibility_fence_cdc", "file": "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_visibility_fence_cdc.sv", "original": "rtl/qwen_sys/host_20261013/qkd_host_visibility_fence.sv"},
- "qkd_host_native_qm_debt": {"fork": "qkd_hr_native_qm_cdc", "file": "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_native_qm_cdc.sv", "original": "rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv"}
-}

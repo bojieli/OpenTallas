@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_su_stree_leaf",
- "enable": false,
- "reason": "Flop-first by RTL: every input pin is captured by one register and every output pin is driven straight from one register (owner 10-15 pin rule); rst_n is synchronised at the pin (2-flop ot_hbm_su_stree_rsync). Wrapper flops would add edges to the fixed RF write latency L_TREE."
-}

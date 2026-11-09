@@ -1,8 +1,0 @@
-GO_DATE_DIFF 102 legacy1 gb0
-GO_DATE_DIFF 103 legacy0 gb1
-GO_DATE_DIFF 226 legacy1 gb0
-GO_DATE_DIFF 227 legacy0 gb1
-GB_GO_CALENDAR FAIL errors4
-[300000] %Fatal: tb_qxpq_go_calendar.sv:47: Assertion failed in tb_qxpq_go_calendar: miter
-%Error: /srv/opentallas-scratch2/claude/wt/codex-s81-core-1027/tools/s81_dv/tb_qxpq_go_calendar.sv:47: Verilog $stop
-Aborting...

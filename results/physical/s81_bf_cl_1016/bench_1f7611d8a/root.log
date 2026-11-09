@@ -1,7 +1,0 @@
-ot-run: ot-agidock128  admits    25 GB (avail 52, growth 34, headroom 0, waiters 0/0 GB) load 33/64 running 11 disk 308 GB 
-ot-run: -> ot-agidock128
-ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3089033-1792254175 after 0 s
-root_stop ok ['[9384000] %Fatal: cand_ot_v41_pair_w17w10.sv:193: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=16 ref=32ffffff00400010 shadow=3520ce35c0400010']
-MUTANT BF leaf root_stop FAIL: DIFF TXN from actual RTL
-ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3089033-1792254175): exit 1
-RC root 1

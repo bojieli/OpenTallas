@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_s81_pq_ix_rb_native",
- "enable": false,
- "reason": "RTL already registers every data pin at a dedicated flop, 0 added cycles: inputs ba_hi/ba_inc -> hi_c/inc_c (r2), ba_blk/ba_wv/consume -> write_blk/write_valid/consume_1, h_hi/hw_low/hw_gate -> kreg p1; outputs bt_d = selected flops, bank_fault = sticky flop. A wrapper flop would add +1 write and +1 read edge to the fixed IX/QB/CTL alignment (qb_align) for no gain; io_flop_at_pins anchors the RTL pin flops at the S/W faces."
-}

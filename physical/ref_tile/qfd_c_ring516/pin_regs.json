@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qfd_c_ring516",
- "enable": false,
- "reason": "every data input pin i lands directly in the 4 bank slot registers (enable = registered one-hot), every output pin o is the reader's output register (ck_r), rsi_w / rsi_r land in the halves' kept reset copies (qfd_c_land_w1k / r1k, 19 loads): flop-first / flop-last, no combinational in->out path"
-}

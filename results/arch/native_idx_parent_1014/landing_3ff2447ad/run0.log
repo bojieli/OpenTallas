@@ -1,7 +1,0 @@
-LANDING_OVERFLOW W1098 D64 count64 PASS
-LANDING_FIFO W1098 D64 accepted2048 returned2048 full_edges1 cycles2722 PASS
-LANDING_FIFO W609 D128 accepted2048 returned2048 full_edges2 cycles2722 PASS
-- rtl/test/hbm_idx_chunk_el/tb_hbm_idx_landing_fifo_native.sv:50: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 27us; walltime 0.022 s; speed 1.217 ms/s
-- Verilator: cpu 0.022 s on 1 threads; allocated 7 MB

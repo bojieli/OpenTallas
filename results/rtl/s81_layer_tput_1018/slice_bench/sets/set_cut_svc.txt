@@ -1,6 +1,0 @@
-# cut_svc: shared units: gunit (HC, router, top-6), the svc_rs chain with its ctrl tiles and the HBM PHY model (attention window / scores / P.V, Engram rows), bk_col (index scan / candidate merge); fed from the entry slices (3S, 3N, 4S, 1N) and seq_host at their scheduled cycles
-u_gunit
-/u_rsv_\d\d/
-/u_ctrl_\d\d/
-u_bk_col
-u_phy_hbm

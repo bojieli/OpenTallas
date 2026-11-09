@@ -1,8 +1,0 @@
-inverse u0/1 r64 tok0/0
-ALIAS key 0800040 user0 row64
-ALIAS key 0900040 user0 row64
-ALIAS key 0a00040 user0 row64
-ALIAS key 0b00040 user0 row64
-[114716000] %Fatal: tb_mu_kv_writer_rows.sv:88: Assertion failed in tb_mu_kv_writer_rows: FAIL user1 layer0 pos0 errors272 nalias8 fault0 code00
-%Error: rtl/test/mu_qwen_1018/tb_mu_kv_writer_rows.sv:88: Verilog $stop
-Aborting...

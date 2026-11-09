@@ -1,8 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qkd_d2d_cal_seq_pin_ovl_bc-ovlbc3-4c08e56aa bench bench_mut_boot_during_admission host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_d2d_cal_seq_pin_ovl_bc-ovlbc3-4c08e56aa log cl/bench_mut_boot_during_admission.a1b1.log captured 2026-10-19T09:03:30-07:00
-# fail_regex 'run1 stale0 early0'
-KDCALOVL_ERR cyc364 mode4 fault dut1 ref0 col0 run1 stale0 early0
-KDCALOVL_FAIL mode4
-[304000] %Fatal: tb_kv_dcal_ovl_bc.sv:52: Assertion failed in tb_kv_dcal_ovl_bc
-%Error: rtl/test/qwen_split/tb_kv_dcal_ovl_bc.sv:52: Verilog $stop
-Aborting...

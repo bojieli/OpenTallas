@@ -1,5 +1,0 @@
-#!/bin/bash
-# CLOCK-KV-R22 gate = R19/R20/R21 gate args, branch tool (R21 + R22 default --core-view-match-pins ON)
-R19=/srv/opentallas-scratch2/claude/clock-kv-r19-1027; export PYTHONPATH=$R19/in/pylib:/srv/opentallas-scratch2/claude/clock-kv-r22-1027/tools/die_plan; cd /srv/opentallas-scratch2/claude/clock-kv-r22-1027; N=$1; shift; ulimit -v 32000000
-python3 /srv/opentallas-scratch2/claude/clock-kv-r22-1027/tools/die_plan/die_sta_related.py $R19/r19 --plan $R19/in/hm_r12.json --out sta/$N --clock-tool /srv/opentallas-scratch2/claude/clock-kv-r22-1027/tools/die_plan   --core-view kv3_head_eighth_e1=/srv/opentallas-scratch2/claude/clock-kv-r16-1026/views/kv3_head_eighth_e1 --core-view kv3_head_eighth_e5=/srv/opentallas-scratch2/claude/clock-kv-r16-1026/views/kv3_head_eighth_e5   --clock-ocv table --mesh-signoff TT=/srv/opentallas-scratch2/claude/clock-kv-r18-1027/mc/r18_TT.json,FF=/srv/opentallas-scratch2/claude/clock-kv-r18-1027/mc/r18_FF.json --hold-buffers HB4 --core-latency-ff 202.5 "$@" > sta/$N.log 2>&1
-echo "$N rc=$? $(date -Is)" > sta/$N.run

@@ -1,5 +1,0 @@
-GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
-GATE FAIL pins: top module ot_s81pq_aq_common_native not found in the RTL sources  -> FIX: fix 'top' / 'sources'
-GATE WARN sources: 6 referenced file(s) do not exist: ['physical/common_flow/cg_pushdown.tcl', 'physical/common_flow/clk_net_protect.tcl', 'physical/common_flow/grt_macro_top_layer.tcl', 'physical/common_flow/link_budget_consistent.sdc', 'physical/common_flow/link_budget_hook.tcl', 'physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl']  -> FIX: commit them / fix the path
-GATE INFO remote: skipped: local FAIL first
-PRE_ROUTE_GATE: FAIL (1 fail, 1 warn)

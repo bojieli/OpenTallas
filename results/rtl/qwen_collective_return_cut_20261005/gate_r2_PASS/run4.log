@@ -1,5 +1,0 @@
-RESULT tp_seq REG_CDATA=1 N=4 ENABLE_AR256=1 SEED=1 cycles=100000 c_fire=37639 vm_re=35176 done_cycles=15086 mismatches=0
-- rtl/test/hbm_accel_qwen/fmax/tb_tp_seq_rnext.sv:96: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 200us; walltime 0.178 s; speed 1.121 ms/s
-- Verilator: cpu 0.178 s on 1 threads; alloced 1017 MB

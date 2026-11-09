@@ -1,4 +1,0 @@
-#!/bin/bash
-cd /srv/opentallas-scratch/claude/fullbw-hbm/src_v
-RT_OPTRACE=1 RT_PROGRESS=1 /srv/opentallas-scratch/admit.sh 20 -- python3 tools/qwen_rom_rt_vprm_stream4_w12.py --workdir /srv/opentallas-scratch/claude/fullbw-hbm/runs/vprm/k_m2/w --build-dir /srv/opentallas-scratch/claude/fullbw-hbm/build_v --hbm-layers 3 --code-banks 1 --pullin 16 --wbw 4 --plan /srv/opentallas-scratch/claude/fullbw-hbm/runs/vprm/k_m2/plan --expect /srv/opentallas-scratch/claude/fullbw-hbm/runs/vprm/k_m2/expect.json --kv-dir /srv/opentallas-scratch/claude/qwen-dspark-system/ctx8k/plans/kv --result /srv/opentallas-scratch/claude/fullbw-hbm/runs/vprm/k_m2/result.json --threads 8 --vm-elems 1048576 > /srv/opentallas-scratch/claude/fullbw-hbm/runs/vprm/k_m2/driver.log 2>&1
-echo $? > /srv/opentallas-scratch/claude/fullbw-hbm/runs/vprm/k_m2/exit

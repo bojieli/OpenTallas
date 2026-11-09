@@ -1,7 +1,0 @@
-[Unit]
-Description=M5 re-route compare every 30 min
-[Timer]
-OnBootSec=10min
-OnUnitActiveSec=30min
-[Install]
-WantedBy=timers.target

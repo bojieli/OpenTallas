@@ -1,8 +1,0 @@
-MESH_STATS sent=400/401 copyA=400/401 copyB=400/401 max_latency=40/121 errors=0 phase1_fault=0 epf=100/000 rf=0/0
-MESH_REPLAY crc_err_b X=7 Y=5 crc_err_a X=0 Y=0 replays_b X=5 Y=4 retx_flits_b X=40 Y=21
-MESH_FIFO BQ=7 peak_occupancy copyA=1 copyB=7
-MESH_EP PASS records 400/401 x 2 copies exact, in-band fault delivered
-- rtl/dsrom_sys/s81_head/test/tb_s81hd_mesh_ep.sv:109: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 11us; walltime 1.558 s; speed 7.058 us/s
-- Verilator: cpu 1.558 s on 1 threads; allocated 10 MB

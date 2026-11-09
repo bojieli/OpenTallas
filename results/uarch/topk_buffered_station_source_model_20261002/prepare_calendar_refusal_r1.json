@@ -1,1 +1,0 @@
-{"classification":"MODEL_REVIEW_CALENDAR_BINDING_MISSING","preserved_model":"model.json","cause":"Looked for caller.calendar_calls; baseline encodes latency.calls","successor":"model_r2.json","correction":"Bind all nine original latency.calls and enforce count/summed envelope; no source or expected result changes","hardware_jobs":0}

@@ -1,9 +1,0 @@
-== k_mut5_layer: FAIL ectl_kiss_st_k RL 80 QK 91 mut 5: 0 layers rc=1
-== k_mut8_late: FAIL ectl_kiss_st_k RL 80 QK 91 mut 8: 0 layers rc=1
-== k_mut9_qkm1: FAIL ectl_kiss_st_k RL 80 QK 91 mut 9: 0 layers rc=1
-== k_pass: PASS ectl_kiss_st_k RL 80 QK 91 mut 0: 36 layers rc=0
-== k_rule_qk90: FAIL ectl_kiss_st_k RL 80 QK 90 mut 0: 0 layers rc=1
-== k_unit_2_34: PASS ectl_kiss_st_k RL 2 QK 34 mut 0: 36 layers rc=0
-== l_mut1: FAIL qkd_ectl3_kiss_st mismatches=4485 kreq=2672 kdone=3989 q=544 mut 1 rc=1
-== l_mut2: FAIL qkd_ectl3_kiss_st mismatches=8496 kreq=2672 kdone=3989 q=544 mut 2 rc=1
-== l_pass: PASS qkd_ectl3_kiss_st lockstep vs qkd_ectl3_kiss_s: RL 80 QK 91, 8580 edges, K requests 2672, k_done edges 3989, q words 544, mut 0 rc=0

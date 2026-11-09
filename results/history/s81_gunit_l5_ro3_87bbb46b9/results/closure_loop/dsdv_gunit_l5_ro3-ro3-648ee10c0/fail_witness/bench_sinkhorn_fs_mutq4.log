@@ -1,9 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job dsdv_gunit_l5_ro3-ro3-648ee10c0 bench bench_sinkhorn_fs_mutq4 host ot-epyc9 run /srv/opentallas-scratch/claude/closure-loop/dsdv_gunit_l5_ro3-ro3-648ee10c0 log cl/bench_sinkhorn_fs_mutq4.a1b1.log captured 2026-10-19T21:48:35-07:00
-# fail_regex '^MUT=0 MUTQ4=1: SKF FAIL '
-MUT=0 MUTQ4=1: ERR case 0 class 0 fault ref 0 pipe 1 y0 ref 36db9a8f pipe 00000000
-MUT=0 MUTQ4=1: ERR case 1 class 7 fault ref 0 pipe 1 y0 ref 3eb8f5cb pipe 00000000
-MUT=0 MUTQ4=1: ERR case 3 class 6 fault ref 0 pipe 1 y0 ref 3f032061 pipe 00000000
-MUT=0 MUTQ4=1: ERR case 4 class 0 fault ref 0 pipe 1 y0 ref 3e2f86b9 pipe 00000000
-MUT=0 MUTQ4=1: ERR case 9 class 7 fault ref 0 pipe 1 y0 ref 3eb2c3ae pipe 00000000
-MUT=0 MUTQ4=1: SKF FAIL 180 errors in 300 cases
