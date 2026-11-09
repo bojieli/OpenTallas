@@ -97,23 +97,27 @@ RX_WR_AFTER_PIN = 6          # RD beat on the slice pin -> rstop pin + delivery 
 PAIRS = 4                    # row pairs per RD beat (the 1,024-b payload)
 
 
-def beat_period():
+def beat_period(lo_after_ctl=None):
     """issue period of one 4-pair beat: 4 lo cycles + the one lo-free cycle that takes the next config (= pk_go of the
-    previous beat; xr.sv:137-143), with the config CTL and the RDOUT CTL on distinct pin cycles"""
-    p = PAIRS + 1
-    while (LO_AFTER_CTL + LO_PACK - 1) % p == 0:   # config of beat i (pin t_i + LO_AFTER_CTL + LO_PACK - 1) vs RDOUT j (t0 + p j)
+    previous beat; xr.sv:137-143), with the config CTL and the RDOUT CTL on distinct pin cycles.  lo_after_ctl = the
+    leaf's landed LO_AFTER_CTL (leaf_transport.py); None = the as-built DL 4 + 4 value."""
+    landed = lo_after_ctl is not None        # a bound leaf: two lo-free edges, so one edge of leaf-latency model error still lands
+    lo_after_ctl = LO_AFTER_CTL if lo_after_ctl is None else lo_after_ctl
+    p = PAIRS + (2 if landed else 1)
+    while (lo_after_ctl + LO_PACK - 1) % p == 0:   # config of beat i (pin t_i + LO_AFTER_CTL + LO_PACK - 1) vs RDOUT j (t0 + p j)
         p += 1
     return p
 
 
-def leg_program(sid, dir_, peer_sid, rows, leaf=0, t0=0, mut=None, dst_leaf=None, dst_off=0):
+def leg_program(sid, dir_, peer_sid, rows, leaf=0, t0=0, mut=None, dst_leaf=None, dst_off=0, lo_after_ctl=None):
     """one end slice's send leg: own rows (even base row list of 2-row pairs, grouped 4 pairs a beat) out of the outward
     port (dir W at a W end, E at an E end) to the peer die's end slice (hops 1, dst mask = peer sid bit, same rows).
     Returns CTL arrivals at the slice pin (relative cycles), and the expected outward beats (cycle, rows).
     Per beat i (period P): RDOUT CTL at t0 + P i; its 4 pairs reach xr at + CFG_AT + LO_AFTER_CTL .. + 3; the config for
     beat i lands on xr the lo-free edge before (the previous beat's pk_go edge).
     TOK-DS-8: dst_leaf / dst_off = the peer's leaf / row offset (reduce-scatter scratch); default = the same leaf and rows."""
-    P = beat_period()
+    lo_after = LO_AFTER_CTL if lo_after_ctl is None else lo_after_ctl      # S81-TRANSPORT-FIX: per-leaf landed value
+    P = beat_period(lo_after)
     dleaf = leaf if dst_leaf is None else dst_leaf
     pairs = [rows[i:i + 2] for i in range(0, len(rows), 2)]
     assert all(len(p) == 2 and p[0] % 2 == 0 and p[1] == p[0] + 1 for p in pairs), 'rows must be even-based pairs'
@@ -123,7 +127,7 @@ def leg_program(sid, dir_, peer_sid, rows, leaf=0, t0=0, mut=None, dst_leaf=None
         base = bp[0][0]
         assert all(bp[j][0] == base + 2 * j for j in range(len(bp))), 'beat rows must be consecutive'
         tr = t0 + P * i
-        lo0 = tr + CFG_AT + LO_AFTER_CTL + LO_PACK      # first pair at the packer (lov1)
+        lo0 = tr + CFG_AT + lo_after + LO_PACK      # first pair at the packer (lov1)
         tc = lo0 - 1 - CFG_AT
         dst = base + dst_off
         if mut == 'row' and i == 2:
