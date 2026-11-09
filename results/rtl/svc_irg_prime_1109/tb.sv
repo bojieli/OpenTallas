@@ -16,6 +16,11 @@
 //  * chunk_in_diff: up's chunk-column inputs differ from u's (the stream is never altered)                 -> 0
 //  * mismatch: ref vs fp records differ                                                                    -> 0
 //  * out_diff_all (reported): with no define, up == u on every cycle (default netlist / outputs unchanged)
+`ifdef BF
+`define UPR up.u_r
+`else
+`define UPR up
+`endif
 module tb;
     parameter integer KR = 0;
     localparam integer LAT = 106, NK = 200, HC = 8, PRIME_EXP = 6;
@@ -25,7 +30,19 @@ module tb;
     reg [512:0] qi = '0;
     wire [512:0] qo; wire [275:0] so; wire [183:0] rqo; wire [9:0] st;
     wire [512:0] qo_p; wire [275:0] so_p; wire [183:0] rqo_p; wire [9:0] st_p;
-`ifdef PF178
+`ifdef BF
+    // banded flat form (runbf.sh, KR 1): u = dsdv_idx_rg3 #(KR 1, OH 1, RH 1) reference (no prime), up = dsdv_idx_rg3_bf
+    // #(KR 1, RH 1, LX 0, PD 0) whose R band dsdv_idx_rg3_br carries the variant's defines.  bf == rg3 on qo / so / rqo,
+    // st one edge later (S23's st stage): st here = u's st delayed one edge.
+    wire [9:0] st_u;
+    reg  [9:0] st_d = '0;
+    always @(posedge ck) st_d <= st_u;
+    assign st = st_d;
+    dsdv_idx_rg3 #(.SRAM_MACRO(1'b0), .KR(KR), .OH(1), .RH(1), .IH(0)) u (.ck(ck), .rst(rst), .sid(4'd0), .qi(qi),
+        .qo(qo), .si(276'd0), .so(so), .rqo(rqo), .rri(1088'd0), .st(st_u));
+    dsdv_idx_rg3_bf #(.SRAM_MACRO(1'b0), .KR(KR), .RH(1), .LX(0), .PD(0)) up (.ck(ck), .rst(rst), .sid(4'd0), .qi(qi),
+        .qo(qo_p), .si(276'd0), .so(so_p), .rqo(rqo_p), .rri(1088'd0), .st(st_p));
+`elsif PF178
     // bound portfix178 sources (run178.sh): 1-b fault port; st / st_p rebuilt as {fc, act, fault} from the reader
     wire flt, flt_p;
     rg3_ref_m #(.SRAM_MACRO(1'b0), .KR(KR), .OH(2), .RH(2), .IH(0)) u (.ck(ck), .rst(rst), .sid(4'd0), .qi(qi),
@@ -59,8 +76,26 @@ module tb;
         wire srst = (MUTK == 0) ? rl_c : dl[MUTK - 1];
         wire qv = u.g_ch[gc].qv_c; wire [7:0] qh = u.g_ch[gc].qh_c; wire [511:0] qc = u.g_ch[gc].qc_c;
         wire [47:0] qs = u.g_ch[gc].qs_c;
+`ifdef BF
+        // the banded chunk ports (S01 cols 0 / 1, S23 cols 2 / 3, own reset forests) vs rg3's chunk ports
+        if (gc < 2) begin : g_cb
+            assign cin_diff[gc] = {up.u_s01.u_cols.g_ch[gc].u_c.ql_v, up.u_s01.u_cols.g_ch[gc].u_c.ql_head,
+                up.u_s01.u_cols.g_ch[gc].u_c.ql_codes, up.u_s01.u_cols.g_ch[gc].u_c.ql_sc, up.u_s01.u_cols.g_ch[gc].u_c.ql_w,
+                up.u_s01.u_cols.g_ch[gc].u_c.k_key, up.u_s01.u_cols.g_ch[gc].u_c.rst_n} !==
+                {u.g_ch[gc].u_c.ql_v, u.g_ch[gc].u_c.ql_head, u.g_ch[gc].u_c.ql_codes, u.g_ch[gc].u_c.ql_sc,
+                 u.g_ch[gc].u_c.ql_w, u.g_ch[gc].u_c.k_key, u.g_ch[gc].u_c.rst_n};
+        end else begin : g_cb
+            assign cin_diff[gc] = {up.u_s23.u_cols.g_ch[gc - 2].u_c.ql_v, up.u_s23.u_cols.g_ch[gc - 2].u_c.ql_head,
+                up.u_s23.u_cols.g_ch[gc - 2].u_c.ql_codes, up.u_s23.u_cols.g_ch[gc - 2].u_c.ql_sc,
+                up.u_s23.u_cols.g_ch[gc - 2].u_c.ql_w, up.u_s23.u_cols.g_ch[gc - 2].u_c.k_key,
+                up.u_s23.u_cols.g_ch[gc - 2].u_c.rst_n} !==
+                {u.g_ch[gc].u_c.ql_v, u.g_ch[gc].u_c.ql_head, u.g_ch[gc].u_c.ql_codes, u.g_ch[gc].u_c.ql_sc,
+                 u.g_ch[gc].u_c.ql_w, u.g_ch[gc].u_c.k_key, u.g_ch[gc].u_c.rst_n};
+        end
+`else
         assign cin_diff[gc] = {up.g_ch[gc].qv_c, up.g_ch[gc].qh_c, up.g_ch[gc].qc_c, up.g_ch[gc].qs_c, up.g_ch[gc].kk_c,
                                up.rl[26 + gc]} !== {qv, qh, qc, qs, u.g_ch[gc].kk_c, rl_c};
+`endif
         chk_ref u_r (.clk(ck), .rst_n(srst), .hb(8'(8 * gc)), .ql_v(qv), .ql_head(qh), .ql_codes(qc), .ql_sc(qs[31:0]),
                      .ql_w(qs[47:32]), .k_key(kk), .c_sum(rsum[gc]), .c_fault(rf[gc]));
         chk_fp  u_f (.clk(ck), .rst_n(srst), .hb(8'(8 * gc)), .ql_v(qv), .ql_head(qh), .ql_codes(qc), .ql_sc(qs[31:0]),
@@ -95,9 +130,9 @@ module tb;
         if (|cin_diff) n_cdiff = n_cdiff + 1;
         fc_seen = fc_seen | st[9:2];
 `ifdef PRIME
-        if (up.hdr_job && up.pk != 3'((d < `PRIME) ? d : `PRIME)) begin
+        if (`UPR.hdr_job && `UPR.pk != 3'((d < `PRIME) ? d : `PRIME)) begin
             pk_bad = pk_bad + 1;
-            if (pk_bad <= 4) $display("PK t %0t d %0d pk %0d", $time, d, up.pk);
+            if (pk_bad <= 4) $display("PK t %0t d %0d pk %0d", $time, d, `UPR.pk);
         end
 `endif
         if (ring[LAT-1]) for (c = 0; c < 4; c = c + 1) begin

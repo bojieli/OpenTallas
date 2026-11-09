@@ -32,9 +32,26 @@
     {
       "original_path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv",
       "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv",
-      "sha256": "54e3d3ebf8a90119d4e6647d58a7146d11e5acda69f51d0dfdaa9a8325d16dbd",
+      "sha256": "cbbd5eb1b07c27d845be5c752102f30e4720bfa38b92af44b9a44e7d47accf5f",
       "origin_commit": "4460aee667",
-      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf); + f60ba09972 (11-01 scan-word cast); + DIE-S81-85 11-09 source event: opt-in OT_IDX_RG3_PRIME hunk (default OFF, verilator -E identical to the prior bytes)",
+      "sha256_history": [
+        {
+          "sha256": "54e3d3ebf8a90119d4e6647d58a7146d11e5acda69f51d0dfdaa9a8325d16dbd",
+          "commit": "441e2fb399",
+          "note": "true at 441e2fb399; stale in this file since f60ba09972 changed the bytes"
+        },
+        {
+          "sha256": "dd5695c1e6c0f37a7739966735ba73a8a8e28b91d7a911d7dc3611cc0dc3f51c",
+          "commit": "f60ba09972",
+          "note": "true bytes f60ba09972 .. DIE-S81-85 prime source event"
+        },
+        {
+          "sha256": "cbbd5eb1b07c27d845be5c752102f30e4720bfa38b92af44b9a44e7d47accf5f",
+          "commit": "DIE-S81-85 prime source event",
+          "note": "prior bytes + OT_IDX_RG3_PRIME hunk (off by default)"
+        }
+      ]
     },
     {
       "original_path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_lpw.sv",
@@ -53,9 +70,26 @@
     {
       "original_path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_nq_native.sv",
       "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3_nq_native.sv",
-      "sha256": "93587aeede69232d7209c5bf9673c0417e3364d39198ac6115c6b924aa4e373c",
+      "sha256": "c462c830782cf32888edfb1e651ca4fd3f1449a0b56ee4a1f7d75eeff91aafff",
       "origin_commit": "4460aee667",
-      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf); + 6e220e31bf (11-01 NQ 16-bit cast); + DIE-S81-85 11-09 source event: opt-in OT_IDX_RG3_PRIME hunk (default OFF, verilator -E identical to the prior bytes)",
+      "sha256_history": [
+        {
+          "sha256": "93587aeede69232d7209c5bf9673c0417e3364d39198ac6115c6b924aa4e373c",
+          "commit": "441e2fb399",
+          "note": "true at 441e2fb399; stale in this file since 6e220e31bf changed the bytes"
+        },
+        {
+          "sha256": "038ef90e3733abb853f3c78a74d9bd646c9158e88e9910ca56e2c48aac3e984c",
+          "commit": "6e220e31bf",
+          "note": "true bytes 6e220e31bf .. DIE-S81-85 prime source event"
+        },
+        {
+          "sha256": "c462c830782cf32888edfb1e651ca4fd3f1449a0b56ee4a1f7d75eeff91aafff",
+          "commit": "DIE-S81-85 prime source event",
+          "note": "prior bytes + OT_IDX_RG3_PRIME hunk (off by default)"
+        }
+      ]
     },
     {
       "original_path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
