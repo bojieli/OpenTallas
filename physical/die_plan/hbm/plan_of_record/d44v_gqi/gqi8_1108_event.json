@@ -1,0 +1,47 @@
+{
+ "schema": "opentallas.plan_drop_face_shell_pins.v1",
+ "event": "gqi8_1108",
+ "by": "HBM-HARD-9",
+ "ruling": "scope HBM-HARD-9 item 4, plan event after HBM-HARD-7 spec 18:31 and HBM-HARD-8 22:21; DIE-HBM-94 CONFIRM before landing",
+ "module": "ot_hgi_coll_gqi_issue",
+ "instances": [
+  "q_hub_ne.u_hcollgi_Q__q0__i",
+  "q_hub_ne.u_hcollgi_Q__q1__i",
+  "q_hub_nw.u_hcollgi_Q__q0__i",
+  "q_hub_nw.u_hcollgi_Q__q1__i"
+ ],
+ "pins_removed": [
+  "aq0_e[8]",
+  "aq0_e[9]",
+  "aq1_e[8]",
+  "aq1_e[9]"
+ ],
+ "old_table": "cores/ot_hgi_coll_gqi_issue__172.8x233.28__d44v_split.json",
+ "new_table": "cores/ot_hgi_coll_gqi_issue__172.8x233.28__d44v_gqi8.json",
+ "table_pins": [
+  6618,
+  6614
+ ],
+ "new_table_sha256": "58a6aa311fe26820b394d6e327ea4203e79fea5f84d1902c82cbd5fc3b7bb2d5",
+ "die_plan_sha256": "bd083fead7e601a71dabd7cb2444962746c715b1ca52d279c34491db0981a7d3",
+ "kit_pins_equal": true,
+ "pin_sites_moved": 0,
+ "pin_cycles": 0,
+ "macros_outline_clock": "unchanged",
+ "face_shell": {
+  "path": "/srv/opentallas-scratch2/claude/hbm-hard-9/gqi_input/face_shell.json",
+  "dropped": [
+   "aq0_e[8]",
+   "aq0_e[9]",
+   "aq1_e[8]",
+   "aq1_e[9]"
+  ],
+  "unread_kept": []
+ },
+ "shell_rtl": "/srv/opentallas-scratch2/claude/hbm-hard-9/gqi_input/ot_hgi_coll_gqi_issue__fshell.sv",
+ "counted_record": "intel1:/srv/opentallas-scratch2/claude/hbm-hard-6/resign/gqi_vLF2_np1_fc",
+ "record_kind": "resign flow-20261108-fc-hbm SIGNED LOCAL_PASS_NEEDS_PARENT",
+ "dead_input_proof": "HBM-HARD-7 18:31: gate-level Yosys on ebab948a68 issue.sv (sha256 964fdabc775ecd66): only aq0_e[9:8], aq1_e[9:8] input bits dead on the module; RTL line 263 truncates aq_e_q to 8 bits. [CHECKED epyc6 hbm-hard-7/gqi_dead/p2.ys, out2.json]",
+ "kit_rtl_shell": "shell feeds .aq0_e({2'd0, aq0_e__fq}) and .aq1_e({2'd0, aq1_e__fq})",
+ "parent_effect": "the four q_hub_ne/nw u_hcollgi_Q__q{0,1}__i instances: the 4 bits per core are unread; a parent net driving them has no load at these pins"
+}
