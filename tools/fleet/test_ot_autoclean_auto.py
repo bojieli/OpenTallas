@@ -658,6 +658,47 @@ class TestSafety(Base):
         self.assertIn("hx\t/srv/p/claude/prot_row\tprotected", union)
         self.assertIn("wt-reaper rc 0", self.out)
 
+    def test_union_real_sources_only(self):
+        # DISK-URGENT-2 audit, COORD 11-08: the union is copied back to protect.d/protected-dbs.txt by wt-reaper.  With the
+        # flag, a path dropped from every real source leaves the union on the next tick and its row is free to go.
+        home = os.path.join(self.t, "home")
+        pd = os.path.join(home, ".local/state/wt-reaper/protect.d")
+        os.makedirs(pd)
+        k, b = self.kit_c("lane/kit")
+        src = os.path.join(pd, "lane.txt")
+        fake = os.path.join(self.t, "fake_sync.py")
+        with open(fake, "w") as f:
+            f.write("import sys,shutil\nsrc=sys.argv[sys.argv.index('--protected-dbs')+1]\n"
+                    f"shutil.copy(src,{os.path.join(pd, 'protected-dbs.txt')!r})\nprint('wt-reaper: ok')\n")
+        def union():
+            return ac.rd(os.path.join(self.state, "protected-union.txt"))
+        saved = ac.HOME
+        ac.HOME = home
+        try:
+            with open(src, "w") as f:
+                f.write(k + "\n")
+            self.run_job("--classes", "c", "--union-real-sources-only", wt=fake)      # tick 1: a real source names it
+            self.assertTrue(self.row(b)[4].startswith("local keep"), self.row(b))
+            self.assertIn(k, union())
+            self.assertTrue(os.path.exists(os.path.join(b, "3_3_place_gp.odb")))
+            os.unlink(src)
+            self.run_job("--classes", "c", wt=fake)                                  # negative control: flag off, it stays
+            self.assertTrue(self.row(b)[4].startswith("local keep"), self.row(b))
+            self.assertIn("protected-dbs.txt", self.row(b)[4])
+            self.assertIn(k, union())
+            self.run_job("--classes", "c", "--union-real-sources-only", wt=fake)      # no source left: gone from the union
+            self.assertNotIn(k, union())
+            self.assertEqual(self.row(b)[3], "DELETED", self.row(b))
+            self.assertFalse(os.path.exists(os.path.join(b, "3_3_place_gp.odb")))
+            self.assertTrue(os.path.exists(os.path.join(b, "3_place.odb")))
+            k2, b2 = self.kit_c("lane/kit2")                                         # a real protected row still holds
+            self.prot.append((k2, "real protected row"))
+            self.run_job("--classes", "c", "--union-real-sources-only", wt=fake)
+            self.assertTrue(self.row(b2)[4].startswith("protected"), self.row(b2))
+            self.assertIn(k2, union())
+        finally:
+            ac.HOME = saved
+
 
 class TestKitwave(unittest.TestCase):
     def test_reduce(self):

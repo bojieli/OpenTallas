@@ -71,6 +71,7 @@ AGIDOCK_SSH = "ssh -o ControlPath=none -o BatchMode=yes -o ConnectTimeout=10 -i 
 ARCHIVE_ROOT = "/archive/opentallas-signed-1106"
 AGE_S = 6 * 3600
 MIN_BYTES = 1024
+GENERATED_UNION = "protected-dbs.txt"   # protect.d copy of write_union output (wt-reaper --protected-dbs)
 LANE_DEPTH = 4                     # /srv/<scratch>/claude/<lane>
 TRIM_B = ("5_3_fillcell.odb", "5_route.odb", "6_1_fill.odb")
 TRIM_C = ("2_1_floorplan.odb", "2_2_floorplan_macro.odb", "2_3_floorplan_tapcell.odb", "2_4_floorplan_pdn.odb",
@@ -730,6 +731,10 @@ class Job:
         for d in (os.path.join(HOME, ".local/state/wt-reaper/protect.d"),):
             if os.path.isdir(d):
                 for f in sorted(os.listdir(d)):
+                    # protect.d/protected-dbs.txt is this job's own union, copied back by wt-reaper's sync.  Read as a keep
+                    # source it keeps every path that ever entered the union, for good (DISK-URGENT-2 audit, COORD 11-08).
+                    if f == GENERATED_UNION and getattr(self.a, "union_real_sources_only", False):
+                        continue
                     if f.endswith(".txt"):
                         try:
                             for p, _ in parse_protected(rd(os.path.join(d, f)), f):
@@ -1637,6 +1642,9 @@ def main(argv=None):
     r.add_argument("--queuename-skip-trim-c", action="store_true",
                    help="class c only: a bare queue-post name does not block the 2_x/3_x intermediate trim (a queue PATH "
                         "still does); COORD ruling")
+    r.add_argument("--union-real-sources-only", action="store_true",
+                   help="do not read protect.d/protected-dbs.txt (this job's own union) back as a keep source; a path stays "
+                        "only while a real source names it (COORD 11-08)")
     r.add_argument("--c-old-keep-h", type=float, default=0.0,
                    help="class c only: an ancestor .keep older than this many hours does not block the trim of a finished "
                         "or superseded kit (6_final.odb, signoff.json or a later attempt); 0 = off (COORD 11-08)")
