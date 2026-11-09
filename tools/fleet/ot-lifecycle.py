@@ -181,7 +181,7 @@ class Plan:
             if q != p:
                 rows.append((q, "named by the live wave config (realpath)"))
             d = os.path.dirname(p)
-            if "." in os.path.basename(p) and d.count("/") >= 6:     # a named file holds its directory: readers open siblings
+            if "." in os.path.basename(p) and "/" in d.split("/claude/", 1)[-1]:     # a named file holds its directory (readers open siblings), not a lane root
                 rows.append((d, "directory of a file named by the live wave config"))
         self.wave = m.PathSet(rows, canon=J.paths.canon)
         pf = self.life.get("protected_full")

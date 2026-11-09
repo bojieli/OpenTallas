@@ -67,6 +67,10 @@ def run_fixture(W):
     write(f"{ROOT}/dead-wv/wave/plan/p.json", 4096)
     write(f"{ROOT}/dead-wv/wave/plan/sibling.json", 4096)
     write(f"{ROOT}/dead-wv/wave/other/x.bin", 4096)
+    write(f"{ROOT}/dead-xy/sub/c.json", 4096)        # one level below the lane: the named file holds its directory
+    write(f"{ROOT}/dead-xy/sub/d.json", 4096)
+    write(f"{ROOT}/dead-xz/a.json", 4096)            # directly in the lane root: the lane is not held by it
+    write(f"{ROOT}/dead-xz/b.bin", 4096)
     kit(f"{ROOT}/dead-wv/wr/kit-wave/s81/p/items/it3/attempt_1/gen/it3")
     kit(f"{ROOT}/dead-wv/wr/kit-wave/s81/p/items/it3/attempt_3/gen/it3")
     write(f"{ROOT}/dead-wv/wr/kit-wave/s81/p/bind_a", 4096)
@@ -94,7 +98,7 @@ def run_fixture(W):
     life = {"created": time.time(), "live": ["DIE-S81-81"], "lane_last": {},
             "paths48": [f"{ROOT}/dead-dd/kit4"], "words48": ["dead-word-unit"],
             "protected_full": [["fix", f"{ROOT}/dead-cc/kit3", "fixture"]],
-            "wave_paths": [f"{ROOT}/dead-wv/wave/src_x", f"{ROOT}/dead-wv/wave/plan/p.json", f"{ROOT}/dead-wv/wr"]}
+            "wave_paths": [f"{ROOT}/dead-wv/wave/src_x", f"{ROOT}/dead-wv/wave/plan/p.json", f"{ROOT}/dead-wv/wr", f"{ROOT}/dead-xy/sub/c.json", f"{ROOT}/dead-xz/a.json"]}
     json.dump(life, open(f"{W}/life.json", "w"))
     out = f"{W}/out"
     r = subprocess.run([sys.executable, "-I", LC, "plan", "--tool", TOOL, "--host", "fix", "--lifesnap", f"{W}/life.json", "--out", out,
@@ -115,6 +119,9 @@ def run_fixture(W):
         "dead-ll/kit10": ("KEEP-referenced", "KEEP"),      # positive control of the reference scan
         "dead-rr/dead-word-unit": ("DEL-L4-KIT", "DELETE"),
         "dead-tt/tools": ("KEEP-excluded", "KEEP"),
+        "dead-xy/sub": ("KEEP-wave-config", "KEEP"),
+        "dead-xz/a.json": ("KEEP-wave-config", "KEEP"),
+        "dead-xz/b.bin": ("DEL-L4-FILE", "DELETE"),
         "dead-wv/wave/src_x": ("KEEP-wave-config", "KEEP"),                 # dead lane, old: the config name holds it
         "dead-wv/wave/plan": ("KEEP-wave-config", "KEEP"),                  # a named file holds its directory
         "dead-wv/wave/other": ("DEL-L4-LOOSE", "DELETE"),                   # not named: the lane state decides
