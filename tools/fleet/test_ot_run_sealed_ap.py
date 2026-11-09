@@ -109,3 +109,40 @@ def test_gap_fallback_knows_the_ap_target():
     a = ap_argv()
     assert M.sealed_target(a[a.index("--") + 1:], conf(ap_goals=["route"])) == (K, "route")
     assert M.sealed_target(a[a.index("--") + 1:], conf()) is None
+
+
+ROWS = {"epyc2": {"load": 90, "ncpu": 96, "admit": 20, "waiting_gb": 0, "ok": True},
+        "intel1": {"load": 10, "ncpu": 112, "admit": 170, "waiting_gb": 0, "ok": True}}
+
+
+def test_cross_host_fetch_when_no_holder_admits(tmp_path, monkeypatch):
+    """COORD 13:0x: K's holder (epyc2) cannot admit 48 GB, intel1 can -> sealed on intel1, every input fetched from
+    epyc2 (bundle from the hub), K copied back to epyc2 after"""
+    monkeypatch.setattr(M, "status_rows", lambda b: ROWS)
+    monkeypatch.setattr(M, "row_admits", lambda r, mem: bool(r) and r["admit"] >= int(mem))
+    seen = []
+    c = conf(spec_dir=str(tmp_path), ap_goals=["route"], ap_fetch_hosts=["epyc2", "intel1"])
+    out, why = M.decide(ap_argv(), c, check=lambda h, r, k, b=None: (True, ["/srv/x/child_rec"]),
+                        fetch=lambda h, b, k: (seen.append((h, k)), (True, []))[1])
+    assert why == f"SEALED on intel1: {K} (inputs fetched from epyc2)" and seen == [("intel1", K)]
+    assert out[out.index("--hosts") + 1] == "intel1"
+    s = spec_of(out)
+    assert s["work"]["seed"] == [{"path": K, "host": "epyc2"}]
+    assert s["inputs"][0]["host"] == "hub"                                               # bundle not on intel1
+    assert {"path": R, "host": "epyc2"} in s["inputs"] and {"path": "/srv/x/child_rec", "host": "epyc2"} in s["inputs"]
+    assert s["copy_back"] == {"from": "intel1", "to": "epyc2", "path": K}
+    assert s["return"] == {"to": K, "paths": ["."]}
+
+
+def test_no_fetch_when_holder_admits_or_not_configured(tmp_path, monkeypatch):
+    rows = dict(ROWS, epyc2=dict(ROWS["epyc2"], admit=100))
+    monkeypatch.setattr(M, "status_rows", lambda b: rows)
+    monkeypatch.setattr(M, "row_admits", lambda r, mem: bool(r) and r["admit"] >= int(mem))
+    c = conf(spec_dir=str(tmp_path), ap_goals=["route"], ap_fetch_hosts=["intel1"])
+    out, why = M.decide(ap_argv(), c, check=ok, fetch=lambda h, b, k: (True, []))
+    assert why == f"SEALED on epyc2: {K}" and "copy_back" not in spec_of(out)
+    monkeypatch.setattr(M, "status_rows", lambda b: ROWS)
+    out, why = M.decide(ap_argv(), conf(spec_dir=str(tmp_path), ap_goals=["route"]), check=ok)
+    assert why == f"SEALED on epyc2: {K}"                                                # opt-in only
+    out, why = M.decide(ap_argv(), c, check=ok, fetch=lambda h, b, k: (False, []))       # fetch host not ready
+    assert why == f"SEALED on epyc2: {K}"

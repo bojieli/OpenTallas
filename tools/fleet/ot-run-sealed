@@ -209,6 +209,47 @@ def remote_ok(host, runner, K, bundle=None):
     return "SEALED_OK" in p.stdout and p.returncode == 0, kids
 
 
+def fetch_ok(host, bundle=None, K=None):
+    """KW-FIX-44 (COORD 13:0x cross-host): a host that does NOT hold K but can run a sealed job that fetches its inputs:
+    ot-job + bwrap there.  -> (ok, ['BUNDLE_OK'] when the sha-pinned bundle is already on it)"""
+    # K must be ABSENT there: the returned copy is then ours alone and is removed after the copy-back
+    sh = (f"test ! -e {shlex.quote(K)} && " if K else "") + "test -x $HOME/.local/bin/ot-job && bwrap --ro-bind / / --dev /dev true && echo SEALED_OK"
+    if bundle:
+        sh += f" && python3 -I -c {shlex.quote(BUNDLE_PY)} {shlex.quote(bundle[0])} {shlex.quote(bundle[1])}"
+    try:
+        p = subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", host, sh],
+                           capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.TimeoutExpired):
+        return False, []
+    return "SEALED_OK" in p.stdout and p.returncode == 0, (["BUNDLE_OK"] if "BUNDLE_OK" in p.stdout.split() else [])
+
+
+def fetched(spec, src):
+    """the spec with every input / work seed fetched from `src` (the host that holds K), not read on the job host"""
+    for i in spec["inputs"]:
+        i.setdefault("host", src)
+    for s in spec["work"]["seed"]:
+        s.setdefault("host", src)
+    return spec
+
+
+def copy_back(host, src, K):
+    """after a fetched job: the returned K on `host` goes back to K on `src` (where the wave and autopilot read it),
+    as ot-run's spill copy-back does; the marker is never copied.  -> rc"""
+    par, base = os.path.dirname(K), os.path.basename(K)
+    pull = ["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", host,
+            f"tar -C {shlex.quote(par)} --exclude=.ot-run-spill-copy -cf - {shlex.quote(base)}"]
+    push = ["ssh", "-o", "ControlPath=none", "-o", "BatchMode=yes", src, f"tar -C {shlex.quote(par)} -xf -"]
+    a = subprocess.Popen(pull, stdout=subprocess.PIPE)
+    b = subprocess.run(push, stdin=a.stdout)
+    a.stdout.close()
+    rc = a.wait() or b.returncode
+    if not rc:      # K was absent on `host` before the job (fetch_ok), so this copy is ours alone
+        subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", host,
+                        f"rm -rf --one-file-system -- {shlex.quote(K.rstrip('/'))}"], timeout=1800)
+    return rc
+
+
 def log(conf, msg):
     try:
         with open(os.path.expanduser(conf.get("log", "~/.local/lib/fleet/isolate-1/sealed.log")), "a") as fh:
@@ -282,7 +323,7 @@ def admits(backend, host, mem):
         return True
 
 
-def decide(argv, conf, check=remote_ok):
+def decide(argv, conf, check=remote_ok, fetch=None):
     """-> (argv to exec, why)"""
     backend = backend_of(conf)
     passthru = [backend] + list(argv)
@@ -320,15 +361,27 @@ def decide(argv, conf, check=remote_ok):
         return passthru, f"kit/runner/ot-job/bwrap not ready on {','.join(hosts)}"
     host = next(h for h in hosts if h in oks)
     kids = oks[host]
-    rows = None
-    if conf.get("capacity_passthru", True):
+    rows, src = None, None
+    fetch = fetch or fetch_ok
+    if ac and conf.get("ap_fetch_hosts"):
+        # KW-FIX-44 (COORD 13:0x): when no holder of K admits the job now, run it sealed on a ready host that does,
+        # with every input fetched from the holder (ot-job tar fetch into its store), and copy K back after
+        rows = status_rows(backend)
+        if rows is not None and pick_host(rows, oks, o["mem"]) is None:
+            cand = [h for h in conf["ap_fetch_hosts"] if h not in oks]
+            with cf.ThreadPoolExecutor(max(len(cand), 1)) as ex:
+                fr = dict(zip(cand, ex.map(lambda h: fetch(h, bundle, K), cand)))
+            best = pick_host(rows, {h: kd for h, (okh, kd) in fr.items() if okh}, o["mem"])
+            if best:
+                src, host, kids = host, best, [k for k in kids if k != "BUNDLE_OK"] + fr[best][1]
+    if not src and conf.get("capacity_passthru", True):
         rows = status_rows(backend)
         if rows is not None:
             best = pick_host(rows, oks, o["mem"])
             if best is None:
                 return passthru, f"capacity: none of {','.join(oks)} admits {o['mem']} GB now (spill unsealed)"
             host, kids = best, oks[best]
-    if conf.get("capacity_passthru", True) and rows is None and not admits(backend, host, o["mem"]):
+    if not src and conf.get("capacity_passthru", True) and rows is None and not admits(backend, host, o["mem"]):
         # COORD 08:1x capacity: a sealed job cannot SPILL; when K's host cannot admit it now, run it unsealed so
         # ot-run can spill it to a host that admits (epyc4).  Logged as PASS capacity; it is not an ISOLATE gap.
         return passthru, f"capacity: {host} does not admit {o['mem']} GB now (spill unsealed)"
@@ -336,7 +389,11 @@ def decide(argv, conf, check=remote_ok):
     with os.fdopen(fd, "w") as fh:
         if ac:
             bok = "BUNDLE_OK" in kids
-            json.dump(ap_spec(runner, K, rest[0], meta, [k for k in kids if k != "BUNDLE_OK"], bok), fh)
+            s = ap_spec(runner, K, rest[0], meta, [k for k in kids if k != "BUNDLE_OK"], bok)
+            if src:
+                s = fetched(s, src)
+                s["copy_back"] = {"from": host, "to": src, "path": K}
+            json.dump(s, fh)
         else:
             json.dump(spec_for(runner, K, kids, rest[0]), fh)
     out = [conf["sealed_backend"], "--mem", o["mem"], "--threads", o.get("threads", "16"), "--hosts", host, "--job", sp]
@@ -345,7 +402,7 @@ def decide(argv, conf, check=remote_ok):
         out += ["--priority", o["priority"]]
     if "max-wait" in o:
         out += ["--max-wait", o["max-wait"]]
-    return out + ["--"] + cmd, f"SEALED on {host}: {K}"
+    return out + ["--"] + cmd, f"SEALED on {host}: {K}" + (f" (inputs fetched from {src})" if src else "")
 
 
 ENOENT = re.compile(r"No such file or directory|FileNotFoundError|ENOENT|not found: /|missing\b")
@@ -418,7 +475,18 @@ def main():
     if argv[0] != backend_of(conf):
         log(conf, f"{why} pid {os.getpid()}")
         print(f"ot-run-sealed: {why}", file=sys.stderr, flush=True)
-        sys.exit(run_sealed(argv, conf, sys.argv[1:]))
+        rc = run_sealed(argv, conf, sys.argv[1:])
+        try:
+            cb = json.load(open(argv[argv.index("--job") + 1])).get("copy_back") if "--job" in argv else None
+        except (OSError, ValueError):
+            cb = None
+        if cb:
+            crc = copy_back(cb["from"], cb["to"], cb["path"])
+            log(conf, f"COPY-BACK {cb['path']} {cb['from']} -> {cb['to']} rc {crc}")
+            print(f"ot-run-sealed: copy-back {cb['from']} -> {cb['to']} rc {crc}", file=sys.stderr, flush=True)
+            if crc and not rc:
+                rc = 97
+        sys.exit(rc)
     elif why in ("not a pilot dir",) or why.startswith("kit/runner") or why.startswith("capacity"):
         p = parse(sys.argv[1:])
         k = (p[0].get("dir") or "?") if p else "?"
