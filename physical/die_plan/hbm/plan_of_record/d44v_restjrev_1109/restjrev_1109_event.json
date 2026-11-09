@@ -1,0 +1,190 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "restjrev_1109",
+ "plan": "d44v_restjrev_1109",
+ "base": "d44v_restore_1109 (27e46e2d84777acf)",
+ "lane": "DIE-HBM-97/RESTORE",
+ "date": "2026-11-09",
+ "decision": "DIE-HBM-97 (a): revert restjC_1108, then replay opsarest_c2_1107",
+ "steps": [
+  {
+   "event": "restjC_1108 inverse",
+   "source_event": "restjC_1108_event.json (DIE-HBM-92-RESTJ RESTJ-C-1108)",
+   "module": "ot_hgi_sfu_split3_ctl_rest_1c",
+   "instances": [
+    "q_b113.u_sfucore_Q_ctl__rest",
+    "q_b113__physical_v1.u_sfucore_Q_ctl__rest"
+   ],
+   "changes": {
+    "origin_um": 2,
+    "track_offset_um": 2,
+    "outline_um": 2,
+    "pins_file": 2,
+    "note": 2,
+    "clock_taps": 2,
+    "clock_tap_notes": 2,
+    "clock_entries": 2,
+    "core_macros_entry": 1
+   },
+   "values": {
+    "q_b113": {
+     "origin_um": [
+      509.76,
+      1010.88
+     ],
+     "track_offset_um": [
+      -0.096,
+      0.0
+     ],
+     "outline_um": [
+      427.68,
+      453.6
+     ],
+     "tap": [
+      721.344,
+      1235.52
+     ]
+    },
+    "q_b113__physical_v1": {
+     "origin_um": [
+      509.76,
+      1010.88
+     ],
+     "track_offset_um": [
+      -0.096,
+      0.0
+     ],
+     "outline_um": [
+      427.68,
+      453.6
+     ],
+     "tap": [
+      721.344,
+      1235.52
+     ]
+    }
+   },
+   "clock_entry": [
+    216.0,
+    224.64
+   ],
+   "pins_file": "cores/ot_hgi_sfu_split3_ctl_rest_1c__427.68x453.6__d44v_split.json",
+   "equals_d44v_gqi": "row, tap, clock_entries entry, core_macros entry",
+   "pins_check": {
+    "kit": "/srv/opentallas-scratch2/claude/die-hbm-97-restore/rj/rest1c_eco_one_b_pins.json",
+    "kit_sha256": "8606b7288341444a8673a8ad14eb04a8687c9aca6ddfa425ccc05b30e6fc9860",
+    "record": "epyc4 /srv/opentallas-scratch3/claude/die-hbm-88/r1c/eco_one_b/i1 (signed_records hbc_ot_hgi_sfu_split3_ctl_rest_1c, LOCAL_PASS_NEEDS_PARENT / local SIGNED)",
+    "names_equal": true,
+    "pins": 12373,
+    "layer_changes": 0,
+    "inset_um": 0.096,
+    "off_after_inset": {
+     "clk": 0.048
+    },
+    "note": "clk is the entry pin: kit 216.024 = entry 216.0 + 0.024, d44v table 215.976 = entry - 0.024; both 0.048-wide rects end on the entry x 216.0"
+   },
+   "internal_stations": "unchanged (RESTJ-C-1108 changed none)"
+  },
+  {
+   "event": "opsarest_c2_1107",
+   "commit": "834d940a5e",
+   "module": "ot_hgi_sfu_opsa_rest",
+   "script": "results/die_hbm_1107/opsarest_c2/mk_opsarest_c2.py (unchanged)",
+   "instances": [
+    "q_b113.u_sfucore_Q_opstore_a__r",
+    "q_b113__physical_v1.u_sfucore_Q_opstore_a__r"
+   ],
+   "changes": {
+    "origin_um": 2,
+    "outline_um": 2,
+    "pins_file": 2,
+    "note": 2,
+    "clock_taps": 2,
+    "clock_entries": 2,
+    "istations": {
+     "q_b113": {
+      "touched": 24,
+      "resited": 1,
+      "launch": 12,
+      "capture": 12
+     },
+     "q_b113__physical_v1": {
+      "touched": 24,
+      "resited": 1,
+      "launch": 12,
+      "capture": 12
+     }
+    }
+   },
+   "table": "cores/ot_hgi_sfu_opsa_rest__250.56x64.8__d44v_opsarest_c2.json",
+   "table_sha256": "9c22a436cece5ecbd56721661ac911cf502029c469b1a1180ce0f8d065f77cd9",
+   "equals_d44v_gqi": "origin, outline, pins_file, orient",
+   "corelat": "corelat/cycles_opsarest_c2_1107.tsv",
+   "event_file": "opsarest_c2_1107_event.json",
+   "report": "opsarest_c2_1107_report.json",
+   "timing_833ps": {
+    "model": "tools/die_plan/reach.py: measured one-cycle reach M4-M7 452.5 um (REACH-M89 relay to relay, TT 833.333 ps, unc 60 + skew 90; 0.76 ps/um planning constant x1.203), owner plan cap 405 um for local hops, repeaters <= 450 um",
+    "links_over_405_within_452.5": [
+     [
+      [
+       "u_sfucore_Q_ctl__rest",
+       "u_core_u_vm_scalar_data"
+      ],
+      424.8
+     ],
+     [
+      [
+       "u_sfucore_Q_ctl__rest",
+       "u_core_u_vm_scalar_load"
+      ],
+      436.1
+     ],
+     [
+      [
+       "u_sfucore_Q_ctl__rest",
+       "u_core_u_vm_scalar_load_addr"
+      ],
+      431.7
+     ],
+     [
+      [
+       "u_sfucore_Q_ctl__rest",
+       "u_core_u_vm_stage_group"
+      ],
+      435.2
+     ],
+     [
+      [
+       "u_sfucore_Q_ctl__rest",
+       "u_core_u_vm_stage_v"
+      ],
+      435.8
+     ],
+     [
+      [
+       "u_sfucore_Q_opstore_a__g0.flt|u_sfucore_Q_opstore_a__r",
+       "group_fault_01[0]"
+      ],
+      436.2
+     ]
+    ],
+    "station_hops_max": 375.6,
+    "fault_seams": [
+     {
+      "conn": "u_sfucore_Q_opstore_a__g0.flt|u_sfucore_Q_opstore_a__r",
+      "pin": "group_fault_01[0]",
+      "pin_to_pin_por": 233.5,
+      "pin_to_pin_new": 436.2
+     },
+     {
+      "conn": "u_sfucore_Q_opstore_a__g1.flt|u_sfucore_Q_opstore_a__r",
+      "pin": "group_fault_01[1]",
+      "pin_to_pin_por": 0.3,
+      "pin_to_pin_new": 202.8
+     }
+    ],
+    "verdict": "every reg-to-reg link of the moved pins <= 452.5 um: existing cycles meet 833 ps; no PIN CYCLE added, no compiler/token reschedule"
+   }
+  }
+ ]
+}
