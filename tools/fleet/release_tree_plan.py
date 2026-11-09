@@ -27,7 +27,7 @@ release-tree-render.timer calls this through release_tree_render.py). On any fai
 kept and the error is reported (the page keeps rendering).
 Run alone: python3 tools/release_tree_plan.py [--force] [--print]
 """
-import argparse, json, os, pathlib, re, shutil, subprocess, sys, tempfile, time, concurrent.futures as cf
+import argparse, hashlib, json, os, pathlib, re, shutil, subprocess, sys, tempfile, time, concurrent.futures as cf
 
 REPO = pathlib.Path(os.environ.get('OT_COUNT_REPO') or '/home/ubuntu/OpenTallas')
 NO_FETCH = bool(os.environ.get('OT_COUNT_NO_FETCH'))   # private proof runs: never fetch in the repo (tags come from OT_COUNT_TAGS)
@@ -59,8 +59,8 @@ PLANS = [('s81', 's81', 'physical/die_plan/s81/plan_h2_2249.json', ()),         
         # was: ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52n.json', ()),  # QC qc52n = qc52 + NL clock-pin event (DIE-QC-91, COORD 11-07 17:07 (5) / 18:00 (1); main a6b4cd1c5d3 in 18ed159e6b8): dry run 24 -> 25 designs (NL gained), 0 lost, G0C findings identical
          # was: ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json', ()),  # QC plan of record qc52 (0735589d; binds btab P8eco), COORD 12:43 10-31 SIGNOFF-SPRINT-13 (was plan_qc50)
          ('qwen_kvsys', 'qwen_kvsys/plan_of_record', 'physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json', ()),  # event28w_c
-         ('hbm', 'hbm/plan_of_record/d44v_por', _HBM_POR + 'd44v_gqi_cp1109/die_plan.json.gz',   # d44v_gqi_cp1109 = d44v_gqi + corepins_1109 (24 pins_file: wbq_root_g1 vC5, svgr_own RF4T; COORD 11-09 08:55 (4), COUNT-ARCHIVE-2). d44v_gqi = d44v_epm + gqi8_1108 (gqi_issue drops 4 dead pins; HBM-HARD-9 11-09, main 82d8624efb7). d44v_epm = d44v + EP-MOD-1108/1108d: NW_io u_ep_N0, u_host_ep -> as-built EP modules (HBM-HARD-8 11-08; COORD ruling, DIE-HBM-94 CONFIRM 22:24, main 76c9a4e6e02)
-          tuple('hbm/plan_of_record/' + x for x in ('d35a', 'd35b', 'd35c', 'd44v', 'd44v_epm', 'd44v_gqi', 'd44v_gqi_cp1109')))]
+         ('hbm', 'hbm/plan_of_record/d44v_por', _HBM_POR + 'd44v_gqi_cp1109_q3vm/die_plan.json.gz',   # d44v_gqi_cp1109_q3vm = d44v_gqi_cp1109 + P-Q3VM-2 q3_vm pin table (HBM-CORES-B 76e4bc2df01, COORD 11-09). d44v_gqi_cp1109 = d44v_gqi + corepins_1109 (24 pins_file: wbq_root_g1 vC5, svgr_own RF4T; COORD 11-09 08:55 (4), COUNT-ARCHIVE-2). d44v_gqi = d44v_epm + gqi8_1108 (gqi_issue drops 4 dead pins; HBM-HARD-9 11-09, main 82d8624efb7). d44v_epm = d44v + EP-MOD-1108/1108d: NW_io u_ep_N0, u_host_ep -> as-built EP modules (HBM-HARD-8 11-08; COORD ruling, DIE-HBM-94 CONFIRM 22:24, main 76c9a4e6e02)
+          tuple('hbm/plan_of_record/' + x for x in ('d35a', 'd35b', 'd35c', 'd44v', 'd44v_epm', 'd44v_gqi', 'd44v_gqi_cp1109', 'd44v_gqi_cp1109_q3vm')))]
          # was: ('hbm', 'hbm/plan_of_record/d44v_por', _HBM_POR + 'd44v/die_plan.json.gz', tuple('hbm/plan_of_record/' + x for x in ('d35a', 'd35b', 'd35c', 'd44v')))   # d44v = HBM RE-FORM batch, FROZEN (COORD 11-03 11:01)
 # PIN ALIASES (FLOW-15 2026-10-31, SIGNOFF-SPRINT-10 ASK (b)): a plan built in a lane tree may name a plan-relative pins
 # file that is not on main under that name; its byte-identical main copy elsewhere is laid at the plan-relative path
@@ -894,7 +894,10 @@ def plan_designs(P, plan_dir, read=None):
         q = pathlib.Path(plan_dir) / f
         if not q.exists() and (pathlib.Path(plan_dir) / 'cores' / pathlib.Path(f).name).exists():
             q = pathlib.Path(plan_dir) / 'cores' / pathlib.Path(f).name
-        return json.loads(q.read_text())
+        b = q.read_bytes()
+        raws[f] = hashlib.sha256(b).hexdigest()[:12]
+        return json.loads(b)
+    raws = {}   # COUNT-ARCHIVE-2 11-09 (DIE-HBM-97 12:00): pins file -> sha256[:12] of its bytes = the kit wave's module__v<sha12> key
     read = read or _read
     T = P.get('partition_types') or {}
     tcount = {}
@@ -949,6 +952,8 @@ def plan_designs(P, plan_dir, read=None):
         did = m if nmod[m] == 1 else '%s#%gx%g/%s' % (m, ol[0] / 1000 if ol else 0, ol[1] / 1000 if len(ol) > 1 else 0, tag)
         assert did not in D, did
         g['strap_variants'] = len(g['strap_variants'])
+        wk = sorted({'%s__v%s' % (m, raws[f]) for f in g['pins_files'] if f in raws})
+        if wk: g['wave_keys'] = wk   # kit-wave item names of this design (failure_breakdown matches rows on them)
         D[did] = g; R[did] = rows[(m, ol, ps)]
     return D, R
 
