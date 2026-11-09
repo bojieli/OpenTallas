@@ -20,7 +20,7 @@
     "clock": "PASS",
     "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/plan_c.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw43/kvr2/plan_c.json",
    "gen_host": "epyc7",
    "src": "/srv/opentallas-scratch2/claude/dkv97/src_zb",
    "src_sha": "e273bd37e4ee82e912c95a29d7e665173cd7ca4f",
@@ -1981,6 +1981,14 @@
     "kv3_pv_v6n": {
      "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
      "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
+    },
+    "kv3_pv_v1n": {
+     "plan": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/plan_c.json",
+     "note": "KW-FIX-43 13:4x COORD: in place on plan_zbk 1035a005 when KV moved to 92370701; keep running. Re-key onto 92370701 (delete this entry) uncharged ONLY if the running attempt fails."
+    },
+    "kv3_pv_v7": {
+     "plan": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/plan_c.json",
+     "note": "KW-FIX-43 13:4x COORD: in place on plan_zbk 1035a005 when KV moved to 92370701; keep running. Re-key onto 92370701 (delete this entry) uncharged ONLY if the running attempt fails."
     }
    },
    "item_inputs_prev_kw43sd": {
@@ -2001,7 +2009,13 @@
      "note": "KW-FIX-43 12:4x COORD 12:35 (2): KV SD-PG-FOLLOW plan md5 82916683 (KV-PLAN-2 12:34; = plan_c 1035a005 with die.pg.domains SW/SE serdes rects following the moved PHY boxes). Dir kw43/kvsdpg = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
     }
    },
-   "note_kw43_kvrs": "KW-FIX-43 13:1x: item_inputs of 5 KV types -> kw43/kvrs plan 8ca41a6b. Revert: item_inputs[k] = item_inputs_prev_kw43rs[k] (None = delete)."
+   "note_kw43_kvrs": "KW-FIX-43 13:1x: item_inputs of 5 KV types -> kw43/kvrs plan 8ca41a6b. Revert: item_inputs[k] = item_inputs_prev_kw43rs[k] (None = delete).",
+   "plan_prev_kw43r2": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/plan_c.json",
+   "item_inputs_prev_kw43r2": {
+    "kv3_pv_v1n": null,
+    "kv3_pv_v7": null
+   },
+   "note_kw43_r2": "KW-FIX-43 13:4x COORD: KV wave plan = 92370701 (KV-PLAN-2 rstart/risk2, built on 8ca41a6b; 10 at-risk types change: reader-start sites of pv_v1..v4(n), v7, hub_Wi). Dir kw43/kvr2 = plan_zbk hardlinks + this plan_c (epyc2 + epyc7). The 5 rows on 8ca41a6b (item_inputs) keep it (identical content). Revert: plan = plan_prev_kw43r2; item_inputs[k] = item_inputs_prev_kw43r2[k] (None = delete)."
   },
   "s81": {
    "enabled": true,
