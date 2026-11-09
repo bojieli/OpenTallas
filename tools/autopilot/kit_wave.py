@@ -2032,8 +2032,10 @@ def workroot_low(AP, cfg, run=None):
             f = ln.split()
             if len(f) in (3, 4) and f[0] == "W" and f[2].isdigit() and f[1] in lanes:
                 lim = rfloor if len(f) == 4 and f[3] == "/" else floor
+                hard = int(cfg.get("root_floor_gb", 150)) if len(f) == 4 and f[3] == "/" else GEN_SCRATCH_HARD_FLOOR_GB
                 for die in lanes[f[1]]:
                     free_map.setdefault(h, {})[die] = int(f[2])
+                    cfg.setdefault("_workroot_hard", {}).setdefault(h, {})[die] = hard
                     if int(f[2]) < lim:
                         out.setdefault(h, {})[die] = int(f[2])
     return out
@@ -2120,6 +2122,35 @@ def die_score(cfg, die, h, v):
     return host_score(v, disk_low=die_disk_low(cfg, die, h, v) if v else None)
 
 
+# KW-FIX-36 11-08 (COORD 17:3x): gen_disk_min_gb is a preference.  When no gen host of a die clears it the die would stop
+# although some host can still take a kit, so the fallback picks the host with the most free disk on the die's lane that
+# clears the REAL floor (root_floor_gb for a lane on a root fs, ot-run's scratch floor otherwise) plus the gen need,
+# at most gen_fallback_per_tick gens per host per tick.  Option gen_disk_fallback false turns it off.
+GEN_SCRATCH_HARD_FLOOR_GB = 50      # ot-run refuses a scratch disk below this
+GEN_NEED_GB = 20                    # gen + place of one kit: 1-3 GB measured on 8 HBM attempts, with margin
+GEN_FALLBACK_PER_TICK = 2
+
+
+def gen_fallback_host(cfg, die, hs):
+    """the host for a gen when no host of hs clears the preference (see above), or None"""
+    if cfg.get("gen_disk_fallback") is False:
+        return None
+    stt, hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
+    need, cap = int(cfg.get("gen_need_gb", GEN_NEED_GB)), int(cfg.get("gen_fallback_per_tick", GEN_FALLBACK_PER_TICK))
+    taken, free, hard = cfg.get("_gen_fallback_taken") or {}, cfg.get("_workroot_free") or {}, cfg.get("_workroot_hard") or {}
+    best = None
+    for h in hs:
+        v = stt.get("localhost" if h == hub else h)
+        if not v or over_load_cap(v) or taken.get(h, 0) >= cap:
+            continue
+        f, floor = (free.get(h) or {}).get(die), (hard.get(h) or {}).get(die, GEN_SCRATCH_HARD_FLOOR_GB)
+        f = ((cfg.get("_workroot_low") or {}).get(h) or {}).get(die) if f is None else f
+        f = int(v["scratch_gb"]) if f is None and v.get("scratch_gb") is not None else f
+        if f is not None and int(f) >= floor + need and (best is None or int(f) > best[0]):
+            best = (int(f), h)
+    return best[1] if best else None
+
+
 def load_hold(cfg, die, *names):
     """SCHED-1 11-07 (OWNER closure first): no gen host of the die has room -> the reason a new row stays pending in the
     wave instead of queueing behind a host's load cap; "" = launch.  It holds no started job and no NEAR-COUNT row (those
@@ -2130,6 +2161,8 @@ def load_hold(cfg, die, *names):
     low = cfg.get("_workroot_low") or {}
     rows = [(h, stt.get("localhost" if h == hub else h)) for h in gen_hosts(cfg, die)]
     if any(host_room(v, die_disk_low(cfg, die, h, v)) and die not in low.get(h, {}) for h, v in rows):
+        return ""
+    if gen_fallback_host(cfg, die, [h for h, _ in rows]):
         return ""
     return "LOAD-HOLD no gen host with room: " + " ".join(
         f"{h} {'absent' if not v else 'load %d/%d' % (v.get('load', 0), v.get('cores', 0))}"
@@ -2146,6 +2179,13 @@ def pick_gen_host(cfg, die, take=0, threads=0, item=None):
         d = cfg["dies"][die]
         return d["gen_host"] if (d["gen_host"] in hs or not hs) else hs[0]      # KW-FIX-35-RD: item inputs
     key = lambda h: stt.get("localhost" if h == hub else h)
+    if cfg.get("load_hold") is not False and hs and not any(
+            host_room(key(h), die_disk_low(cfg, die, h, key(h))) and die not in (cfg.get("_workroot_low") or {}).get(h, {}) for h in hs):
+        fb = gen_fallback_host(cfg, die, hs)                      # KW-FIX-36: no host clears the preference
+        if fb:
+            t = cfg.setdefault("_gen_fallback_taken", {})
+            t[fb] = t.get(fb, 0) + 1
+            return fb
     if len(hs) < 2:
         best = hs[0] if hs else cfg["dies"][die]["gen_host"]      # KW-FIX-30: the one host gen_hosts left
     else:
@@ -4209,6 +4249,9 @@ def _step(AP, ap_dir):
             notices.setdefault(die, []).append(f"{r['item']} LAUNCHED ({rec['unit']})")
     if nl and not AP.DRY:
         save_state(st, ap_dir)
+    if cfg.get("_gen_fallback_taken"):
+        AP.log("KIT-WAVE GEN-DISK-FALLBACK no gen host over gen_disk_min_gb; gens on the most free host above the real floor: "
+               + " ".join(f"{h}={n}" for h, n in sorted(cfg["_gen_fallback_taken"].items())))
     try:
         prov_resign_step(AP, cfg, st, notices, ap_dir, AP.HUB_NAME)
     except Exception as e:                               # a re-sign problem never stops the wave

@@ -548,3 +548,42 @@ def test_unmeasured_die_keeps_scratch2_figure(monkeypatch):
     assert K.pick_gen_host(c, "s81", take=48) == "epyc5"
     c["_workroot_free"] = {"epyc6": {"qwen_compute": 218}}            # another die's measure: no effect
     assert K.die_disk_low(c, "s81", "epyc6", c["_otrun_status"]["epyc6"])
+
+
+# ---- KW-FIX-36: gen disk fallback when no host clears the preference
+def _fb_cfg(free, hard=None, **kw):
+    c = dict(gen_disk_min_gb=100, _hub="intel2", dies={"s81": dict(gen_host="a", gen_hosts=["a", "b"], event="e")}, **kw)
+    c["_otrun_status"] = {h: dict(admit=400, load=10, cores=128, scratch_gb=40) for h in free}
+    c["_workroot_free"] = {h: {"s81": g} for h, g in free.items()}
+    c["_workroot_low"] = {h: {"s81": g} for h, g in free.items()}
+    c["_workroot_hard"] = {h: {"s81": (hard or {}).get(h, 50)} for h in free}
+    return c
+
+
+def test_fallback_picks_most_free_above_the_real_floor():
+    c = _fb_cfg(dict(a=80, b=90))
+    assert K.load_hold(c, "s81") == "" and K.pick_gen_host(c, "s81") == "b"
+
+
+def test_fallback_keeps_the_root_floor():
+    c = _fb_cfg(dict(a=165, b=70), hard=dict(a=150, b=50))         # a: 165 < 150 + 20; b: 70 clears 50 + 20
+    assert K.pick_gen_host(c, "s81") == "b"
+    c = _fb_cfg(dict(a=165, b=60), hard=dict(a=150, b=50))         # nobody clears floor + need: the hold stands
+    assert K.load_hold(c, "s81").startswith("LOAD-HOLD") and K.gen_fallback_host(c, "s81", ["a", "b"]) is None
+
+
+def test_fallback_is_capped_per_host_per_tick():
+    c = _fb_cfg(dict(a=80, b=90))
+    assert [K.pick_gen_host(c, "s81") for _ in range(4)] == ["b", "b", "a", "a"]
+    assert K.load_hold(c, "s81").startswith("LOAD-HOLD")
+
+
+def test_fallback_off_keeps_the_hold():
+    c = _fb_cfg(dict(a=80, b=90), gen_disk_fallback=False)
+    assert K.load_hold(c, "s81").startswith("LOAD-HOLD")
+
+
+def test_fallback_not_used_while_a_host_has_room():
+    c = _fb_cfg(dict(a=80, b=120))
+    c["_workroot_low"] = {"a": {"s81": 80}}
+    assert K.pick_gen_host(c, "s81") == "b" and not c.get("_gen_fallback_taken")
