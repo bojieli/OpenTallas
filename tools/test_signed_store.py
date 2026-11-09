@@ -76,6 +76,18 @@ def test_late_provenance_once_and_only_without_one():
         e2 = ss.read_manifest(d)[0]
         assert e2["id"] == eid and e2["flow_tag"] == "flow-x"
         assert ["k/r/PROVENANCE.json", 10, "pp", "/archive/h1"] in ss.entry_files(e2)
+        # 11-09 rootg1c: stored with the kit's unversioned PROVENANCE -> the re-sign's versioned one replaces it, once
+        so3 = '{"verdict": "SIGNED", "n": 3}'
+        eid3 = hashlib.sha256(so3.encode()).hexdigest()
+        e3 = entry(eid3, ["h1:/k/r3/signoff/signoff.json"])
+        e3.update(scan=dict(name="n3", top="t", generated="g", pins_path="/p"), prov_file="/k/PROVENANCE.json", provenance_json=ss.blob({"files": {}}))
+        assert ss.write_entry(e3, d)
+        sc3 = dict(scan, name="n3", prov_file="/k/r3/PROVENANCE.json")
+        assert not ss.late_provenance(eid3, dict(sc3, src_commit=None), {"kind": "resign"}, "/archive/h1", [], d)   # fresh not versioned
+        assert ss.late_provenance(eid3, sc3, {"kind": "resign"}, "/archive/h1", [], d)
+        e4 = ss.read_entry(ss.entry_path(eid3, d))
+        assert e4["flow_tag"] == "flow-x" and e4["late_provenance"]["replaced"]["prov_file"] == "/k/PROVENANCE.json"
+        assert not ss.late_provenance(eid3, dict(sc3, flow_tag="flow-y"), {"kind": "resign"}, "/archive/h1", [], d)   # versioned: never replaced
 
 
 def test_late_pass_refuses_changed_unit():
@@ -88,10 +100,12 @@ def test_late_pass_refuses_changed_unit():
     eid = hashlib.sha256(so.encode()).hexdigest()
     e = dict(id=eid, origin="h1:/k/r/signoff/signoff.json", name="n", top="t", generated="g", scan=dict(name="n"),
              files=[["k/r/signoff/signoff.json", 5, "s1"], ["k/r/x.v", 7, "s2"]])
-    r = dict(scan_host="h1", path="/k/r/signoff/signoff.json", name="n", top="t", generated="g", prov_file="/k/r/PROVENANCE.json", flow_tag="flow-x")
+    r = dict(scan_host="h1", path="/k/r/signoff/signoff.json", name="n", top="t", generated="g", prov_file="/k/r/PROVENANCE.json", flow_tag="flow-x", src_commit="abc")
     assert si.select_late([r], [e]) == [(e, r)]
     assert si.select_late([dict(r, flow_tag=None)], [e]) == []
-    assert si.select_late([r], [dict(e, provenance_json="x")]) == []
+    assert si.select_late([dict(r, src_commit=None)], [e]) == []
+    assert si.select_late([r], [dict(e, provenance_json="x")]) == [(dict(e, provenance_json="x"), r)]   # unversioned provenance
+    assert si.select_late([r], [dict(e, provenance_json="x", flow_tag="f", src_commit="c")]) == []     # versioned: never
     unit = dict(files=[["/k/r/signoff/signoff.json", 5], ["/k/r/x.v", 7], ["/k/r/PROVENANCE.json", 3]])
     calls = []
     orig = si.ss.late_provenance

@@ -50,3 +50,17 @@ hist	ot_s81hd_spn_end_strip	HOLD	ot_reset_sync.sv	e3d89eafc8	SRC	rtl/lib/ot_rese
 hist	ot_s81hd_spn_end_strip	HOLD	ot_s81hd_spo.sv	805e128f82	SRC	rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv
 hist	ot_s81hd_spn_end_strip	HOLD	ot_s81hd_spr.sv	a9ac18c635	SRC	rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv
 FROZEN-INPUT	slice_station__t51_vE (kl_s81p_slice_station__t51_ot_s81_station_t51_native_e_rc51b)	epyc7:/srv/opentallas-scratch2/claude/die-s81-85/t51_vE	1	0	0	1	rtl/s81_child_e.v sha256 bf4f756c694df7de4876d158d502b85cb16430804cc4ccde21a06c96045e73ce git blob 4862080acde81156e13a1577e048ed05e80d85c2; archive AGIdock:/archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/die-s81-85/t51_vE/rtl/s81_child_e.v; COORD RULING 11-09 03:4x (b-prime): identity = RECUT face-copy check PASS (11-06 10:44) + kit LEC; byte regeneration waived, inputs lost (split_clean 3a0bfe91, pose 41c28a4b); generator station_face_copies.py main blob 02d7aedd96; counts only after own sign-off (DIE-S81-85)
+#COUNT-ARCHIVE-2 11-09 06:4x READY-COUNT batch, main be457b9903 source-path history (rtl/** not rtl/test, */bind/*/rtl, */cores/harden/kits/*/rtl); set batch1109: top store_id verdict non_src_files
+batch1109	ot_hbm_accel_smh_bdc	72f6a3013812a9e5	PASS	
+batch1109	ot_hbm_sm_attn_be__cd13	8e7e3904f23ded39	FAIL-SRC	ot_hbm_sm_attn_be__cd13.sv cf6f8fb8a8 SIDE physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_hbm_sm_attn_be__cd13.sv
+batch1109	ot_hbm_sm_attn_be__cd9	333f9256b1c37faa	FAIL-SRC	ot_hbm_sm_attn_be__cd9.sv 2b481bff21 SIDE physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_hbm_sm_attn_be__cd9.sv
+batch1109	ot_hbm_sm_attn_be_seed__cd20	7ba38ece3c653a53	FAIL-SRC	ot_hbm_sm_attn_be_seed__cd20.sv a9e884c770 SIDE physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_hbm_sm_attn_be_seed__cd20.sv
+batch1109	ot_hbm_sm_attn_be_seed__cd21	068e4d70944483d7	FAIL-SRC	ot_hbm_sm_attn_be_seed__cd21.sv 05a1e34090 SIDE physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_hbm_sm_attn_be_seed__cd21.sv
+batch1109	ot_hbm_sm_attn_be__cd17	741c2cdc2eb0919c	FAIL-SRC	ot_hbm_sm_attn_be__cd17.sv d5616888c6 SIDE physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_hbm_sm_attn_be__cd17.sv
+batch1109	ot_hbm_accel_smh_pt_e	e03bc1fbd4b9ff8e	PASS	
+batch1109	ot_hidx_s3_q	4f4f539686bc64e8	PASS	ot_hidx_s3_q__fshell.sv 1e4e4e0d9c NEVER -
+batch1109	ot_wbq_root_g0	9652d272f8c0c122	FAIL-SRC	ot_hbm_face_rst_relay.sv dac9a78c85 NEVER -; ot_wbq_root_g0__fshell.sv 106f04423a NEVER -; ot_wbq_root_s7.sv a248b3c8f1 NEVER -
+batch1109	ot_hbm_sm_attn_be__cd16	dbf773ceebe10367	FAIL-SRC	ot_hbm_sm_attn_be__cd16.sv 79fe830ee4 SIDE physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_hbm_sm_attn_be__cd16.sv
+batch1109	ot_hbm_accel_smh_tcl_gu	f3cc8bd089234aab	FAIL-SRC	ot_hbm_accel_smh_gu.sv f2dec0116a NEVER -
+batch1109	ot_hbm_accel_smh_tct	934c8ffbdcfc27ba	PASS	
+batch1109	ot_s81hd_tile_p	74c9d6070f6357bf	PASS (re-sign, LEC gold = tag 42e9cd1810 source)	
