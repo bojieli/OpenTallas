@@ -2782,7 +2782,8 @@
         "dsdv_slice_c1x_C__t4@26",
         "dsdv_slice_c1x_C__t8@21",
         "dsdv_slice_lepw_mus_C__t1@20",
-        "dsdv_slice_kv512_C__t1@13"
+        "dsdv_slice_kv512_C__t1@13",
+        "dsdv_slice_iq_C__t1@13"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -3763,7 +3764,8 @@
         "dsdv_slice_c1x_C__t4@26": "KW-FIX-37 18:5x: REDESIGN: stale bound leaf source (S81-TYPES-9-LEC J2/J3): kit_rtl.f carried src_28fc7 xs4/rstopt_xo/xs_ctl, real logic change; a stopped attempt, fresh kit on leaf-follow bind (config src_c303p_lf)",
         "dsdv_slice_c1x_C__t8@21": "KW-FIX-37 18:5x: REDESIGN: stale bound leaf source (S81-TYPES-9-LEC J2/J3): kit_rtl.f carried src_28fc7 xs4/rstopt_xo/xs_ctl, real logic change; a stopped attempt, fresh kit on leaf-follow bind (config src_c303p_lf)",
         "dsdv_slice_lepw_mus_C__t1@20": "KW-FIX-37 18:5x: REDESIGN: stale bound leaf source (S81-TYPES-9-LEC J2/J3): kit_rtl.f carried src_28fc7 xs4/rstopt_xo/xs_ctl, real logic change; a stopped attempt, fresh kit on leaf-follow bind (config src_c303p_lf)",
-        "dsdv_slice_kv512_C__t1@13": "KW-FIX-37 18:5x: REDESIGN: stale bound leaf source (S81-TYPES-9-LEC J2/J3): kit_rtl.f carried src_28fc7 xs4/rstopt_xo/xs_ctl, real logic change; a stopped attempt, fresh kit on leaf-follow bind (config src_c303p_lf)"
+        "dsdv_slice_kv512_C__t1@13": "KW-FIX-37 18:5x: REDESIGN: stale bound leaf source (S81-TYPES-9-LEC J2/J3): kit_rtl.f carried src_28fc7 xs4/rstopt_xo/xs_ctl, real logic change; a stopped attempt, fresh kit on leaf-follow bind (config src_c303p_lf)",
+        "dsdv_slice_iq_C__t1@13": "KW-FIX-37 19:1x INFRA no design change: no host qualifies at kit_rtl (epyc4 disk 49 < 60), COORD 18:49 infra rows retry"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -5776,7 +5778,10 @@
         "dsdv_slice_lepw_mus_C__t1@20",
         "dsdv_slice_kv512_C__t1@13"
       ],
-      "note_kw37c": "KW-FIX-37 batch C: stale-source rows relaunched fresh on leaf-follow; revert via retry_prev_kw37c_added"
+      "note_kw37c": "KW-FIX-37 batch C: stale-source rows relaunched fresh on leaf-follow; revert via retry_prev_kw37c_added",
+      "retry_prev_kw37d_added": [
+        "dsdv_slice_iq_C__t1@13"
+      ]
     },
     "s81_head": {
       "enabled": true,
@@ -5926,7 +5931,8 @@
         "hd_st_n4@6",
         "hd_host@11",
         "hd_lep0N@14",
-        "hd_serdes@12"
+        "hd_serdes@12",
+        "hd_ctl_n@14"
       ],
       "pilot_max": 2,
       "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -6037,7 +6043,8 @@
         "hd_st_n4@6": "KW-FIX-26 23:5x one batch: new src 0290971a0fd (ROOT-MERGE-46 train: leafrep+leafopt, subtree_balance/ft_spread, type-safe-3, pose_spread, macrogap, FLOW-CLASS-25); failed on an older src",
         "hd_host@11": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE",
         "hd_lep0N@14": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE",
-        "hd_serdes@12": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE"
+        "hd_serdes@12": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE",
+        "hd_ctl_n@14": "KW-FIX-37 19:1x INFRA no design change: route job stopped by infra, class INFRA"
       },
       "gen_hosts": [
         "epyc6",
@@ -6490,6 +6497,9 @@
         "epyc4",
         "epyc5",
         "epyc6"
+      ],
+      "retry_prev_kw37d_added": [
+        "hd_ctl_n@14"
       ]
     },
     "qwen_compute": {
@@ -6996,7 +7006,8 @@
         "slw_st_a_v1__clfc5867a6@9",
         "sle_fw_v1__clf58b4dfb@6",
         "slw_fw_v1__cl51d45468@8",
-        "slw_fw_v1__clf51c11d8__cl592e3d37@9"
+        "slw_fw_v1__clf51c11d8__cl592e3d37@9",
+        "cbx_q10__cl94a12200@12"
       ],
       "queue_src": "claude/kw-fix-35p-wave-ctlm-1108@7e2f6c9af85",
       "type_args": {
@@ -7567,7 +7578,8 @@
         "slw_st_a_v1__clfc5867a6@9": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 1 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]",
         "sle_fw_v1__clf58b4dfb@6": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 6 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]",
         "slw_fw_v1__cl51d45468@8": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 12 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]",
-        "slw_fw_v1__clf51c11d8__cl592e3d37@9": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 43 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]"
+        "slw_fw_v1__clf51c11d8__cl592e3d37@9": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 43 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]",
+        "cbx_q10__cl94a12200@12": "KW-FIX-37 19:1x INFRA no design change: route job stopped by infra, class INFRA"
       },
       "gen_hosts": [
         "intel1",
@@ -8911,7 +8923,10 @@
         "slw_fw_v1__cl51d45468": null,
         "slw_fw_v1__clf51c11d8__cl592e3d37": null
       },
-      "note_kw37b": "KW-FIX-37 batch B: GRT near miss <=100 overflow, same class form as QC-TYPES-9 (B); revert via retry_prev_kw37b_added, item_env_prev_kw37b"
+      "note_kw37b": "KW-FIX-37 batch B: GRT near miss <=100 overflow, same class form as QC-TYPES-9 (B); revert via retry_prev_kw37b_added, item_env_prev_kw37b",
+      "retry_prev_kw37d_added": [
+        "cbx_q10__cl94a12200@12"
+      ]
     },
     "hbm": {
       "enabled": true,
