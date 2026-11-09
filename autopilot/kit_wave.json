@@ -7051,7 +7051,8 @@
     "hd_lep0N",
     "hd_mesh",
     "hd_spn",
-    "hd_spn_end"
+    "hd_spn_end",
+    "hd_serdes"
    ],
    "die_max_inflight": 60,
    "owner_lane": "HEAD die owner (DIE-HEAD-70)",
@@ -7303,7 +7304,9 @@
      "OT_IO_HOLD": "sender_min"
     },
     "hd_serdes": {
-     "OT_IO_HOLD": "sender_min"
+     "OT_IO_HOLD": "sender_min",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.40"
     },
     "hd_spn": {
      "OT_IO_HOLD": "sender_min"
@@ -7953,7 +7956,20 @@
    "hold_items_prev_kw42hp1": {
     "hd_spn": "CODEX HEAD owner01:59: future autosubmits held until reviewed prepared-source paid internal-station realization event; current plan prices registerchains but oldl48uh actualRTL has0u_ist stages. Existing spn@3 ifprogressing and private FSTART vA/vB remainowned/live; no sweep or blind same-unrealized-source retry."
    },
-   "note_kw42_hp1": "KW-FIX-42 2026-11-09 08:47 PST COORD 08:0x HEAD SWITCH GO: event l48hp1 = HEAD-92 READY 07:34 plan 7322511ff22a (repo plan_of_record/l48hp1, composed by head_final_switch from prepared l48ve + events H1-H8). src kw42/src_head_hp1 = claude/kw-fix-42-head-l48hp1-1109@85cc1791f07 (head-plan-1 2110548b2ca + ctl-vg 70a23d9b629 + mesh-collector b6d8c0d798e, 0 conflicts; + eco_loop BT tool overlay) on epyc4 + epyc7, 321693 files 0 blob mismatches. Prepared dir kw42/prep_hp1/prep (plan cf0fba5f053d after census-path rewrite, sidecar eb6e0857bad4 = l48uo_hsplit) by head_wave_kit_rtl.prepare with count_sites/prepare_plan identity (plan already prepared; kw42_hp1_prepare2.py), receipt wave_prepare.json da4cc65f0127 on epyc4+epyc7. Wrappers vs l48ve published: 19 EQUAL, DIFF hd_ctl/hd_lep0N/hd_mesh/hd_spn/hd_spn_end, NEW hd_host_e/hd_host_w -> only_items = those 7 (hd_ctl first). Revert: every *_prev_kw42hp1 key."
+   "note_kw42_hp1": "KW-FIX-42 2026-11-09 08:47 PST COORD 08:0x HEAD SWITCH GO: event l48hp1 = HEAD-92 READY 07:34 plan 7322511ff22a (repo plan_of_record/l48hp1, composed by head_final_switch from prepared l48ve + events H1-H8). src kw42/src_head_hp1 = claude/kw-fix-42-head-l48hp1-1109@85cc1791f07 (head-plan-1 2110548b2ca + ctl-vg 70a23d9b629 + mesh-collector b6d8c0d798e, 0 conflicts; + eco_loop BT tool overlay) on epyc4 + epyc7, 321693 files 0 blob mismatches. Prepared dir kw42/prep_hp1/prep (plan cf0fba5f053d after census-path rewrite, sidecar eb6e0857bad4 = l48uo_hsplit) by head_wave_kit_rtl.prepare with count_sites/prepare_plan identity (plan already prepared; kw42_hp1_prepare2.py), receipt wave_prepare.json da4cc65f0127 on epyc4+epyc7. Wrappers vs l48ve published: 19 EQUAL, DIFF hd_ctl/hd_lep0N/hd_mesh/hd_spn/hd_spn_end, NEW hd_host_e/hd_host_w -> only_items = those 7 (hd_ctl first). Revert: every *_prev_kw42hp1 key.",
+   "only_items_prev_kw43": [
+    "hd_ctl",
+    "hd_host_e",
+    "hd_host_w",
+    "hd_lep0N",
+    "hd_mesh",
+    "hd_spn",
+    "hd_spn_end"
+   ],
+   "item_env_prev_kw43_hd_serdes": {
+    "OT_IO_HOLD": "sender_min"
+   },
+   "note_kw43_hp1": "KW-FIX-43 2026-11-09 10:13 PST: l48hp1 launch (COORD 08:0x, HEAD-92 09:11): runtime gate overlay a41f2951daf accepts l48hp1; src_head_hp1 epyc7+epyc4 overlay meshhd 40a07efb45 (4 RTL files, s81_ph shared back to base); hd_serdes added = SC conservative form (OT_CONS_KIT=1 OT_CONS_UTIL=0.40, HEAD-92). Revert: only_items <- only_items_prev_kw43; item_env.hd_serdes <- item_env_prev_kw43_hd_serdes."
   },
   "qwen_compute": {
    "enabled": true,
