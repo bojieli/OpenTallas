@@ -13687,7 +13687,14 @@
     "q_sm1",
     "q_sm2",
     "q_hub_ne",
-    "i8w_front"
+    "i8w_front",
+    "ot_hgi_sfu_opsa_group0",
+    "ot_hgi_sfu_opsa_group1",
+    "ot_hbm_su_pg_lane1p_core",
+    "ot_svgr_top",
+    "hnx_vms_bank_q0_faces__vecd4ae__v70b44c0ffdf2",
+    "hnx_vms_bank_q0_faces__vecd4ae__v92a40292efa2",
+    "hnx_vms_bank_q0_faces__vecd4ae__vc0fea76ca7fc"
    ],
    "place_prefer": [
     "epyc4",
@@ -14025,6 +14032,56 @@
       ".*",
       "--clock-regions",
       "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json"
+     ],
+     "ot_hgi_sfu_opsa_group0": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json"
+     ],
+     "ot_hgi_sfu_opsa_group1": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json"
+     ],
+     "ot_hbm_su_pg_lane1p_core": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json"
+     ],
+     "ot_svgr_top": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json"
+     ],
+     "hnx_vms_bank_q0_faces__vecd4ae": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json"
      ]
     },
     "args": [
@@ -14351,7 +14408,14 @@
       "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json"
      ]
     },
-    "note_item_args_kw42cx": "KW-FIX-42 2026-11-09 06:59 PST COORD 07:0x codex-path class: codex-hbm-wave/d44v35 is pruned on every gen host; core_clock_regions.json + mem_recipe_delta.json now from the current HBM plan stage hbm-plan-1/stage/p6_relay (mem_recipe_delta byte-equal 398492af; core_clock_regions = current plan 10b13882, was d8e86748). Revert: item_args <- item_args_prev_kw42cx."
+    "note_item_args_kw42cx": "KW-FIX-42 2026-11-09 06:59 PST COORD 07:0x codex-path class: codex-hbm-wave/d44v35 is pruned on every gen host; core_clock_regions.json + mem_recipe_delta.json now from the current HBM plan stage hbm-plan-1/stage/p6_relay (mem_recipe_delta byte-equal 398492af; core_clock_regions = current plan 10b13882, was d8e86748). Revert: item_args <- item_args_prev_kw42cx.",
+    "item_args_prev_kw43hl": {
+     "ot_hgi_sfu_opsa_group0": null,
+     "ot_hgi_sfu_opsa_group1": null,
+     "ot_hbm_su_pg_lane1p_core": null,
+     "ot_svgr_top": null,
+     "hnx_vms_bank_q0_faces__vecd4ae": null
+    }
    },
    "take_states": [
     "NEEDS-KIT",
@@ -17962,7 +18026,17 @@
     "bind_out": "/srv/opentallas-scratch2/claude/hbm-plan-1/bind/bind_F5b",
     "note": "KW-FIX-42 11-09 04:17 PST: HBM FINAL switch (COORD 04:1x, benches in parallel): plan d44v_final4_1109 77bbddd87354 (stage/p6_relay) + bind_F5b strict + asbuilt vK5b b63bc28b4f01 (RXLAT 145 RTL kit_hostcp_R6) ; src_hbmf4 = kw41/src_h94_pv (pftr 0591baed) + native_istations a804c119 + kit_topology 65841e40 ; inputs sha256-verified same path on epyc7 (60620 files), intel1 = origin ; revert *_prev_kw42hbm | KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): plan_final2 4da76b51b1a9 + bind vJ"
    },
-   "note_plan_kw43h": "KW-FIX-43 2026-11-09 11:0x COORD LOOP-GAP 10:5x (1) + DIE-HBM-97 10:38: HBM plan d44v_restore_1109 27e46e2d84777acf (final4 77bbddd8 + corepins 3742832d + restored part60/part61/expx328/qcore267; SHA256SUMS OK on epyc7) + bind_F5c recipe (asbuilt vK5c, src_hbmf4) STRICT PASS on 27e46e2d (epyc7 kw43/hbm_f5c_pre/bind.log: 90 parts, 81 types, 420 crossings, 378992 bits, errors/unbound/tied/undriven 0, RC 0); bind_out = that strict output (F5c content re-bound on the restore plan: q_su*/q_hub_* RTL and station kit_rtl follow the plan). q_hub_ne/nw held until wsw_H11 signs off. Revert: *_prev_kw43h"
+   "note_plan_kw43h": "KW-FIX-43 2026-11-09 11:0x COORD LOOP-GAP 10:5x (1) + DIE-HBM-97 10:38: HBM plan d44v_restore_1109 27e46e2d84777acf (final4 77bbddd8 + corepins 3742832d + restored part60/part61/expx328/qcore267; SHA256SUMS OK on epyc7) + bind_F5c recipe (asbuilt vK5c, src_hbmf4) STRICT PASS on 27e46e2d (epyc7 kw43/hbm_f5c_pre/bind.log: 90 parts, 81 types, 420 crossings, 378992 bits, errors/unbound/tied/undriven 0, RC 0); bind_out = that strict output (F5c content re-bound on the restore plan: q_su*/q_hub_* RTL and station kit_rtl follow the plan). q_hub_ne/nw held until wsw_H11 signs off. Revert: *_prev_kw43h",
+   "only_items_prev_kw43hl_added": [
+    "ot_hgi_sfu_opsa_group0",
+    "ot_hgi_sfu_opsa_group1",
+    "ot_hbm_su_pg_lane1p_core",
+    "ot_svgr_top",
+    "hnx_vms_bank_q0_faces__vecd4ae__v70b44c0ffdf2",
+    "hnx_vms_bank_q0_faces__vecd4ae__v92a40292efa2",
+    "hnx_vms_bank_q0_faces__vecd4ae__vc0fea76ca7fc"
+   ],
+   "note_kw43_hbmrl": "KW-FIX-43 2026-11-09 12:3x COORD 12:1x (4): DIE-HBM-97 12:00 READY-LIST, two-strikes CONSERVATIVE form for HBM cores = core_kit item_args --util 0.40 --face-reset-relay 2 --face-lockup .* --clock-regions p6_relay (0b99eaec = plan_r2_restore copy), the form of the other HBM conservative cores (OT_CONS_KIT is a gen_phys type switch, not read by gen_core_kit_hbm). 7 no-row cores added to only_items + the 2 mu1s3 vecd rows relaunched. Module-keyed: vecd __v07a1612040a5 also gets it at its next launch. Revert: remove only_items_prev_kw43hl_added from only_items; core_kit.item_args[m] = core_kit.item_args_prev_kw43hl[m] (None = delete)."
   }
  },
  "place_prefer": [
