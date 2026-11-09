@@ -7589,7 +7589,7 @@
     "queue_src": "main@fb1191142e49a7666573c212ac8ab8ea551a3ce1",
     "die_max_inflight": 1
    },
-   "flow_tag": "flow-20261108-ds-head",
+   "flow_tag": "flow-20261109-fm-head",
    "note_src_kw31": "KW-FIX-31 2026-11-07 15:44 PST (COORD 15:4x): tags cz-head/df-qc/cv-kv/dg-s81/ed-hbm on main 66d55c026ad (= d9134e481e5 + KW-FIX-30 run_kit OT_FLOW_TAG, read-only child records, GRT-0021 layer check): src kw31/src_66d55 = src_d9134 hardlinks + 5 git files (epyc2/epyc4: real tree under scratch3/claude/kw31src, symlinked), staged epyc5/epyc2/intel1/epyc4/epyc6; intel2 not staged. flow_tag = the die tag (dry run: hold_unchanged held 166 / released 43 with and without flow_tag). queue_src was main@fb119 / kw-fix-29 branch while src was d9134: now the built commit. CANARY: die_max_inflight = in-flight + 1 (one kit per die) until read, then <- die_max_inflight_prev_kw30. Revert: src/src_sha/queue_src/die_max_inflight <- src_prev_kw31, drop flow_tag.",
    "gen_hosts_prev_kw32": [
     "epyc5",
@@ -7969,7 +7969,9 @@
    "item_env_prev_kw43_hd_serdes": {
     "OT_IO_HOLD": "sender_min"
    },
-   "note_kw43_hp1": "KW-FIX-43 2026-11-09 10:13 PST: l48hp1 launch (COORD 08:0x, HEAD-92 09:11): runtime gate overlay a41f2951daf accepts l48hp1; src_head_hp1 epyc7+epyc4 overlay meshhd 40a07efb45 (4 RTL files, s81_ph shared back to base); hd_serdes added = SC conservative form (OT_CONS_KIT=1 OT_CONS_UTIL=0.40, HEAD-92). Revert: only_items <- only_items_prev_kw43; item_env.hd_serdes <- item_env_prev_kw43_hd_serdes."
+   "note_kw43_hp1": "KW-FIX-43 2026-11-09 10:13 PST: l48hp1 launch (COORD 08:0x, HEAD-92 09:11): runtime gate overlay a41f2951daf accepts l48hp1; src_head_hp1 epyc7+epyc4 overlay meshhd 40a07efb45 (4 RTL files, s81_ph shared back to base); hd_serdes added = SC conservative form (OT_CONS_KIT=1 OT_CONS_UTIL=0.40, HEAD-92). Revert: only_items <- only_items_prev_kw43; item_env.hd_serdes <- item_env_prev_kw43_hd_serdes.",
+   "flow_tag_prev_kw43": "flow-20261108-ds-head",
+   "note_kw43_tag": "KW-FIX-43 2026-11-09 10:27 PST COORD 10:2x: HEAD wave flow tag must hold l48hp1 + mesh-hd 40a07efb45: fm-head (09:34, both ancestors, tools staged epyc2/epyc4/epyc7/intel1). Auto re-sign has no pin: it takes the newest HEAD tag on origin (fn-head 10:21, also has both). Revert: flow_tag <- flow_tag_prev_kw43 (flow-20261108-ds-head)."
   },
   "qwen_compute": {
    "enabled": true,
