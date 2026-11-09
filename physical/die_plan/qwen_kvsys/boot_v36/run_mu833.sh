@@ -30,7 +30,10 @@ set -a; . "$AS/kv_flags.env"; set +a
 [ -z "$task_cal_ofs" ] || export OT_KV_CAL_OFS=$task_cal_ofs
 export OT_KV_RETIRE_SUCCESSOR=$AS/health_successor.json OT_KV_RETIRE_LOGICAL=1 PYTHONDONTWRITEBYTECODE=1
 PV_ARGS=(); [ -z "${OT_KV_PV_RESULT_CALENDAR:-}" ] || PV_ARGS=(--pv-result-calendar "$OT_KV_PV_RESULT_CALENDAR")
-python3 $T prep "${PV_ARGS[@]}" --rs "$AS/relay_stages.json" --model "$AS/static_model.json" --groups "$BG" --out "$O/prep" > "$O/prep.log"
+# DIE-KV-97 11-09: the KV PC core split (DIE-KV-66 RF-KV3, plan_of_record kv67_1104) names its INNER rows by the PCC/PCF halves;
+# prep prices them on the as-built kvpc<->slg bus (repo-relative default, OT_KV_CORE_SPLITS overrides)
+CS=${OT_KV_CORE_SPLITS:-physical/die_plan/qwen_kvsys/plan_of_record/kv67_1104/core_splits.json}
+python3 $T prep "${PV_ARGS[@]}" --rs "$AS/relay_stages.json" --model "$AS/static_model.json" --groups "$BG" --core-splits "$CS" --out "$O/prep" > "$O/prep.log"
 EMB=${OT_KV_EMB_WIN_REC:-1627}; HP=${task_head_prepare_edges:-${OT_KV_HEAD_PREP_EDGES:-12}}
 CST=${CST:-2,2,2,3,2,2}   # selected compute seam; one profile for image AND native compile
 pair_image() {   # $1 = attention-service pad
