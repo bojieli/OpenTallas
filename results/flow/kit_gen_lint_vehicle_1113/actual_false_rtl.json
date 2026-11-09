@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.kit_gen_lint.v1",
+  "kit": "/srv/opentallas-scratch2/claude/type-safe-2-1108/hbm/dry/vsN4/gen/_rtl",
+  "verdict": "FAIL",
+  "checks": {
+    "kit_vehicle": {
+      "verdict": "FAIL",
+      "errors": [
+        "not a generated kit: missing config.mk (freeze.json is also absent); pass the generated kit directory, not _rtl/"
+      ],
+      "n_errors": 1
+    },
+    "pins_vs_plan": {
+      "verdict": "NA",
+      "errors": [],
+      "n_errors": 0
+    },
+    "clock_export_form": {
+      "verdict": "NA",
+      "errors": [],
+      "n_errors": 0
+    },
+    "macro_tcl": {
+      "verdict": "NA",
+      "errors": [],
+      "n_errors": 0
+    },
+    "rtl_check": {
+      "verdict": "NA",
+      "errors": [],
+      "n_errors": 0
+    },
+    "memory_bits": {
+      "verdict": "NA",
+      "errors": [],
+      "n_errors": 0
+    }
+  },
+  "issues": [
+    "kit_vehicle: not a generated kit: missing config.mk (freeze.json is also absent); pass the generated kit directory, not _rtl/"
+  ],
+  "note": "BUILD check (OWNER 12.27 d), not a sign-off check"
+}
