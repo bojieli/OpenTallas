@@ -1,0 +1,54 @@
+{
+ "min_ring": 192,
+ "spread": 7.0,
+ "types_changed": [
+  "hd_mesh"
+ ],
+ "bands_resized": 2,
+ "bands_kept": [],
+ "hop_over_405": [],
+ "rows": [
+  {
+   "type": "hd_mesh",
+   "bus": "coll_ia",
+   "ring": 576,
+   "old_um": [
+    160.0,
+    1164.24,
+    366.0,
+    1209.6
+   ],
+   "new_um": [
+    84.24,
+    1003.6,
+    218.16,
+    1209.6
+   ],
+   "old_area": 9344,
+   "new_area": 27588,
+   "spread": 6.1012,
+   "hop_um": 402.04
+  },
+  {
+   "type": "hd_mesh",
+   "bus": "coll_ib",
+   "ring": 576,
+   "old_um": [
+    17.28,
+    120.0,
+    62.64,
+    326.0
+   ],
+   "new_um": [
+    17.28,
+    17.28,
+    73.44,
+    550.8
+   ],
+   "old_area": 9344,
+   "new_area": 29962,
+   "spread": 6.6265,
+   "hop_um": 401.24
+  }
+ ]
+}

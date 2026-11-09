@@ -31,6 +31,8 @@ module ot_s81ph_coll_lane_safe4 #(
     // 3 kept copies -> 18 per-group kept copies beside the FIFO banks, data 2 reset-free stages; its own reset leaf, EP_RN
     // + 1).  s7 GRT reach audit: 4.8k of 5,379 pairs > 405 um were this one-cycle cone.  +2 receive edges.
     parameter integer REACH = 0,
+    // RBL (FORM-COLL 11-05, opt-in, default 0 = unchanged netlist): see ot_s81ph_link_ep_safe4; +1 TX edge per lane.
+    parameter integer RBL = 0,
     parameter integer CORE_CRED = 8 // opt-in matched endpoint credit/buffer depth, legacy8 unchanged
 ) (
     input  wire          clk,
@@ -107,7 +109,7 @@ module ot_s81ph_coll_lane_safe4 #(
     end else begin : g_lo1
         assign lo_vl = lo_v; assign lo_dl = lo_d;
     end endgenerate
-    ot_link_credit_rx_b64 #(.W(W + 1), .DEPTH(CORE_CRED), .WFREE(1), .LOCAL_HIT(1), .LOCAL_POP(CORE_CRED==12)) u_ski (
+    ot_link_credit_rx_b64 #(.W(W + 1), .DEPTH(CORE_CRED), .WFREE(1), .LOCAL_HIT(1), .LOCAL_POP((CORE_CRED==12)||(RBL!=0))) u_ski (
         .clk(clk), .rst_n(rr[R_CRX]), .head_rst_n(head_rst_n), .l_valid(lo_vl), .l_data(lo_dl),
         .l_credit(lo_r), .o_valid(iv), .o_ready(ir_g), .o_data({il, id}), .fault(lcf));
     // link -> core: credit tx with registered ready copies
@@ -130,7 +132,7 @@ module ot_s81ph_coll_lane_safe4 #(
     end endgenerate
     ot_s81ph_link_ep_safe4 #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(REACH != 0 ? 5 : 3), .CHANNEL_CYCLES(CH_UCIE), .CHANNEL_CYCLES_B(CH_BOARD),
         .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(1), .PIPE(2), .RXPIPE(1), .TOREG(1), .MWR(1),
-        .DNR(1), .OLDREAD(1), .RN(EP_RN), .ORN(3), .FCOPY(REACH != 0 ? 1 : 0), .WRL(REACH >= 2 ? 2 : 0)) u_ep (
+        .DNR(1), .OLDREAD(1), .RN(EP_RN), .ORN(3), .FCOPY(REACH != 0 ? 1 : 0), .WRL(REACH >= 2 ? 2 : 0), .RBL(RBL)) u_ep (
         .clk(clk), .rst_v(rr[R_EP +: EP_RN]), .mem_rst_n(rr[R_MEM +: MEM_RST]), .ch_b(ch_b),
         .in_valid(iv && up), .in_ready(ir), .in_data(id), .in_last(il),
         .out_valid(ov), .out_ready_v(orr), .out_data(od), .out_last(ol),
@@ -266,19 +268,19 @@ endmodule
 // configuration as dsfd_coll_lane_{w,e}_safe8 (safe4 = legacy GFMT 1 / EPPIPE 2 / LCR 1 / RXSRAM 1 cycle-identical,
 // + REACH 2 relay hops and the RX FIFO write landing), no tf pin (the clock feedthrough has no consumer on the die), and
 // NO parameters, so a default-parameter die bind is the closed view (kits dscoll_lane_{w,e}_s8n*).
-module dsfd_coll_lane_w_safe8_ntf #(parameter integer CORE_CRED = 8) (
+module dsfd_coll_lane_w_safe8_ntf #(parameter integer CORE_CRED = 8, parameter integer RBL = 0) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
     wire tf_unused;
-    ot_s81ph_coll_lane_safe4 #(.CH_BOARD(700), .TF_CLEANUP(1), .REACH(2), .CORE_CRED(CORE_CRED)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx),
+    ot_s81ph_coll_lane_safe4 #(.CH_BOARD(700), .TF_CLEANUP(1), .REACH(2), .CORE_CRED(CORE_CRED), .RBL(RBL)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx),
         .tf(tf_unused), .lo_v(lo_v[0]), .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule
-module dsfd_coll_lane_e_safe8_ntf #(parameter integer CORE_CRED = 8) (
+module dsfd_coll_lane_e_safe8_ntf #(parameter integer CORE_CRED = 8, parameter integer RBL = 0) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
     wire tf_unused;
-    ot_s81ph_coll_lane_safe4 #(.CH_BOARD(700), .TF_CLEANUP(1), .REACH(2), .CORE_CRED(CORE_CRED)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx),
+    ot_s81ph_coll_lane_safe4 #(.CH_BOARD(700), .TF_CLEANUP(1), .REACH(2), .CORE_CRED(CORE_CRED), .RBL(RBL)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx),
         .tf(tf_unused), .lo_v(lo_v[0]), .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule

@@ -1,0 +1,5 @@
+# HEAD mesh control locality review
+
+PASS-COND for a fresh synthesis/placement prototype only. mesh_localpop_review.png was rendered from actual RBL1/BQ10 3_place.odb geometry and viewed before the new launch. Macro/pin outline604.8x1226.88um,110 native macro pieces, existing clock/reset/PDN and data FIFO state are retained. Actual22% stdcell utilization and previousGRT0 show available whole-slot routing room; the new change adds at most two tiny predicate cells per lane, no macro or channel.
+
+Red traces the measured pop/address detour; green is the proposed independent address predicate near the read-pointer consumers. Input and output pin registers are not moved. The count predicate can remain near count logic; address predicate can sit near readpointer480,965 instead of forcing both uses through325,1140. This is a logical keep boundary, not an assertion that the new placement has already achieved the drawn position. View the actual new placement before CTS/GRT. No clock or IObudget change.

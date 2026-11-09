@@ -14,7 +14,7 @@
 //   link replays), and lane a must see 0 CRC errors.  Link mutants (bench defines) OT_DSROM_LINK_MUT_NOREPLAY and
 //   OT_DSROM_LINK_MUT_NOCRC must FAIL.
 module tb_s81hd_mesh_ep;
-    parameter integer MUT = 0, BQ = 7, NREC = 400, P2 = 9000, NCYC = 11000;
+    parameter integer MUT = 0, BQ = 7, RBL = 0, NREC = 400, P2 = 9000, NCYC = 11000;
     reg ck = 0, rst_n = 0; always #0.5 ck = ~ck;
     reg [31:0] rng = 32'h1f2e3d4c;
     reg tv [0:1]; reg [552:0] tf [0:1];
@@ -31,9 +31,9 @@ module tb_s81hd_mesh_ep;
         ot_s81hd_mesh64_rx u_rx (.ck(ck), .rn(rst_n), .lane(mrx[s]), .va(va_[s]), .vb(vb_[s]), .frame(rfr[s]),
             .ep_fault(epf[s]), .fault(rf[s]));
     end endgenerate
-    ot_s81hd_mesh_ep_core #(.BQ(BQ), .MUT(MUT)) u_x (.ck(ck), .rst_n(rst_n), .coll_ia({2'b10, oa[1]}), .coll_oa(oa[0]),
+    ot_s81hd_mesh_ep_core #(.BQ(BQ), .RBL(RBL), .MUT(MUT)) u_x (.ck(ck), .rst_n(rst_n), .coll_ia({2'b10, oa[1]}), .coll_oa(oa[0]),
         .coll_ib({2'b10, ob[1] ^ imp[1]}), .coll_ob(ob[0]), .m_tx_i(mtx_drv[0]), .m_rx_o(mrx[0]));
-    ot_s81hd_mesh_ep_core #(.BQ(BQ), .MUT(MUT)) u_y (.ck(ck), .rst_n(rst_n), .coll_ia({2'b10, oa[0]}), .coll_oa(oa[1]),
+    ot_s81hd_mesh_ep_core #(.BQ(BQ), .RBL(RBL), .MUT(MUT)) u_y (.ck(ck), .rst_n(rst_n), .coll_ia({2'b10, oa[0]}), .coll_oa(oa[1]),
         .coll_ib({2'b10, ob[0] ^ imp[0]}), .coll_ob(ob[1]), .m_tx_i(mtx_drv[1]), .m_rx_o(mrx[1]));
     wire [31:0] ce_xb = u_x.u_lb.u_ln.u.u_ep.st_crc_err, ce_yb = u_y.u_lb.u_ln.u.u_ep.st_crc_err;
     wire [31:0] ce_xa = u_x.u_la.u_ln.u.u_ep.st_crc_err, ce_ya = u_y.u_la.u_ln.u.u_ep.st_crc_err;

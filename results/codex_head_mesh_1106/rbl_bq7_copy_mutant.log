@@ -1,0 +1,15 @@
+MESH_DATA_ERR c=104 side=0 copyA rec=1
+MESH_DATA_ERR c=105 side=1 copyA rec=1
+MESH_DATA_ERR c=110 side=0 copyA rec=2
+MESH_DATA_ERR c=110 side=1 copyA rec=2
+MESH_DATA_ERR c=112 side=0 copyA rec=3
+MESH_DATA_ERR c=112 side=1 copyA rec=3
+MESH_DATA_ERR c=116 side=0 copyA rec=4
+MESH_STATS sent=400/401 copyA=799/799 copyB=0/0 max_latency=9242/0 errors=3172 phase1_fault=1 epf=500/400 rf=0/0
+MESH_REPLAY crc_err_b X=6 Y=6 crc_err_a X=0 Y=0 replays_b X=5 Y=6 retx_flits_b X=48 Y=62
+MESH_FIFO BQ=7 peak_occupancy copyA=1 copyB=8
+MESH_EP FAIL data: errors 3172
+- rtl/dsrom_sys/s81_head/test/tb_s81hd_mesh_ep.sv:109: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 2.408 s; speed 4.567 us/s
+- Verilator: cpu 2.404 s on 1 threads; allocated 10 MB
