@@ -4,12 +4,7 @@
  "retry_fix_text": "REDESIGN: macros moved, not a retry. Escape-open re-solve (eo_band.py, pass reference model worst <= 1.15) from the FAILED attempt placement (which already carried its 1107 moves); OT_MACRO_MOVES in item_env REPLACES the 1107 string; macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the GRT-0116 overflow that remained after the 1107 batch.",
  "needs_src": "none: OT_MACRO_MOVES is in the current wave src; resume at floorplan, synth reused, no rebind",
  "not_in_batch": {
-  "t16": "model 1.77 after 3 passes: u_vs|u_ve.u_s y-channel 25.92 um, u_vs held by tap clk_t36",
-  "t54__cl706d9749": "2.08: u_vp.g_ln[2].u_l|u_vn.u_b x 15.12 um stuck",
-  "t55": "2.08: g_ln[12].u_l|u_vn.u_b x 15.12 um stuck",
-  "t62": "2.71: u_ve.u_m|u_vsw y 17.28 um stuck",
-  "t66": "2.94: u_vsw|u_ve.u_m y 17.28 um stuck",
-  "t72": "2.28: u_vn.u_b|g_ln[11]/[7] and u_vn.u_a|g_ln[10] x 23.74 um stuck"
+  "t16": "TIMING, not congestion (GRT gate setup_tt -221.91, TT insertion mean 274.57 vs 250): not a leaf-congestion row"
  },
  "rows": {
   "ot_s81sl_leaf__t1": {
@@ -76,22 +71,6 @@
    "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
    "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t24__cl2456157b.json"
   },
-  "ot_s81sl_leaf__t27": {
-   "failed_block": "5a381fc461ff",
-   "attempt": 7,
-   "retry_key": "ot_s81sl_leaf__t27@7",
-   "item_env_add": {
-    "OT_MACRO_MOVES": "u_lf.u_ve.u_m:34.56:846.72:MY,u_lf.u_ve.u_s:241.92:829.44:MY,u_lf.u_vn.u_a:509.76:699.84:MY,u_lf.u_vn.u_b:449.28:881.28:MY,u_lf.u_vp.g_ln[0].u_l:967.68:794.496:R0,u_lf.u_vp.g_ln[10].u_l:1036.8:1079.616:R0,u_lf.u_vp.g_ln[12].u_l:1244.16:656.256:R0,u_lf.u_vp.g_ln[1].u_l:967.68:664.896:R0,u_lf.u_vp.g_ln[3].u_l:898.56:1079.616:R0,u_lf.u_vp.g_ln[4].u_l:1114.56:794.496:R0,u_lf.u_vp.g_ln[6].u_l:1105.92:664.896:R0,u_lf.u_vp.g_ln[8].u_l:1252.8:794.496:R0,u_lf.u_vq:293.76:656.64:MY,u_lf.u_vs:77.76:639.36:MY,u_lf.u_vsw:51.84:406.08:R0"
-   },
-   "model_worst_before": 2.46,
-   "model_worst_after": 0.53,
-   "hot_before": 9,
-   "hot_after": 1,
-   "bus_cost_rise_pct": 0.62,
-   "residual": "u_vp.g_ln[9].u_l|u_vp.g_ln[5].u_l y w=23.76 pins=320 r=0.53",
-   "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
-   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t27.json"
-  },
   "ot_s81sl_leaf__t30": {
    "failed_block": "36b47abf5b9f",
    "attempt": null,
@@ -156,22 +135,6 @@
    "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
    "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t40__cl86ea32b3.json"
   },
-  "ot_s81sl_leaf__t42": {
-   "failed_block": "df2d83788086",
-   "attempt": 10,
-   "retry_key": "ot_s81sl_leaf__t42@10",
-   "item_env_add": {
-    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:362.88:872.64:MY,u_lf.u_vn.u_a:699.84:699.84:MY,u_lf.u_vn.u_b:725.76:881.28:MY,u_lf.u_vp.g_ln[1].u_l:1131.84:932.736:R0,u_lf.u_vp.u_b1:907.2:596.16:R0,u_lf.u_vq:432:622.08:MY,u_lf.u_vs:216:604.8:MY,u_lf.u_vsw:190.08:371.52:R0"
-   },
-   "model_worst_before": 2.46,
-   "model_worst_after": 0.9,
-   "hot_before": 7,
-   "hot_after": 2,
-   "bus_cost_rise_pct": 10.02,
-   "residual": "u_vs|u_ve.u_m y w=17.28 pins=395 r=0.90",
-   "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
-   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t42.json"
-  },
   "ot_s81sl_leaf__t69": {
    "failed_block": "6ba138b14218",
    "attempt": 3,
@@ -200,6 +163,64 @@
    "model_worst_after": 0.84,
    "form": "GPL routability form, not a macro form: the macro channels already pass (model 0.84, no further move helps). GRT 90,362 (M6 88,634); 860 of the 872 congestion.rpt violations sit at x 200-300 / y 600-930. The nets there are the ft4 station-2 cluster (u_ft_ft4_o_2, 2,015 net refs; station site 216,889.92) and the vs->ve buses (aval/rk/ah/rw, ~1,400). 3_3_place_gp.log: 'OT_GPL_SPARSE movable util 0.714 % < 2.000 %: routability-driven GPL off', so those cells were packed at density 0.5 around the station. OT_GPL_SPARSE_UTIL=0 keeps routability-driven GPL on (face_flops.tcl FALLBACK still covers divergence). Resume at floorplan, synth reused.",
    "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/in/ot_s81sl_leaf__t65/{congestion.rpt,5_1_grt.log}, mp85/ot_s81sl_leaf__t65.json"
+  },
+  "ot_s81sl_leaf__t54__cl706d9749": {
+   "failed_block": "61bd7a56d57f",
+   "attempt": 6,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_CLAND_STRIP_ROWS": "3"
+   },
+   "item_env_keep": "OT_MACRO_MOVES (the string the failed attempt ran) and every other key unchanged",
+   "form": "RING form (TYPE-CONS-4 ring clump class, as t15): GRT 21,923. 56,082 of the net refs in the 2,376 violations are u_cland_up_s_2N_L0x2_i ring nets, all at x 1300-1500 / y 1100-1300. The macro channels cannot be opened further (model 2.08, 3 passes) and are not where the overflow sits.",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/in/<item>/congestion.rpt (binned by 100 um)"
+  },
+  "ot_s81sl_leaf__t66": {
+   "failed_block": "5917a56ae5c4",
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_CLAND_STRIP_ROWS": "3"
+   },
+   "item_env_keep": "OT_MACRO_MOVES (the string the failed attempt ran) and every other key unchanged",
+   "form": "RING form: GRT 498,901. The top refs are the u_cland_ft1_i / ft2_i / ft0_i rings (122,543 / 53,234 / 49,042), along the N band y 1100-1226. Strip-rows is first; if it overflows again, the conservative re-form.",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/in/<item>/congestion.rpt (binned by 100 um)"
+  },
+  "ot_s81sl_leaf__t55": {
+   "failed_block": "6b9905527739",
+   "attempt": 9,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_GPL_SPARSE_UTIL": "0"
+   },
+   "item_env_keep": "OT_MACRO_MOVES (the string the failed attempt ran) and every other key unchanged",
+   "form": "GPL routability form (as t65): GRT 2,293. 1,104 of the 1,108 violations sit at x 300-400 / y 600-800, on repair buffers + the vp driver / vn_a / cst buses. 3_3: 'OT_GPL_SPARSE movable util 0.539 % < 2 %: routability-driven GPL off'.",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/in/<item>/congestion.rpt (binned by 100 um)"
+  },
+  "ot_s81sl_leaf__t62": {
+   "failed_block": "30f0b9c1ea21",
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_GPL_SPARSE_UTIL": "0"
+   },
+   "item_env_keep": "OT_MACRO_MOVES (the string the failed attempt ran) and every other key unchanged",
+   "form": "GPL routability form (as t65), LOW confidence: GRT 706,152. The overflow is ft-station clusters (u_ft_ft0_o_4 45,516, ft1_o_s5 39,556, ft7_o_1 28,226) along the S band y 0-200 at x 300-600, with routability-driven GPL off (leaf util < 2 %). If it fails, the next form is the ft station sites (plan ft_stations) or the conservative re-form.",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/in/<item>/congestion.rpt (binned by 100 um)"
+  },
+  "ot_s81sl_leaf__t72": {
+   "failed_block": "0875259fe2ab",
+   "attempt": 7,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_GPL_SPARSE_UTIL": "0"
+   },
+   "item_env_keep": "OT_MACRO_MOVES (the string the failed attempt ran) and every other key unchanged",
+   "form": "GPL routability form (as t65), LOW confidence: FLOW GRT-0229 (vertical edge usage over max). Clusters are u_ft_ft1_o_0 / ft0_o_0 / ft13_o_2 at the S band x 1200-1400, with 'OT_GPL_SPARSE 0.977 % < 2 %: routability off'.",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/epyc5 kit attempt_7 congestion.rpt (binned by 100 um)"
   }
+ },
+ "withdrawn": {
+  "t27, t42": "11-09 05:3x: their latest FAIL is TIMING (post-cts-hold: legacy grt gate G2 setup_tt), not GRT congestion; my sweep regex matched 'grt gate'. Not a macro-form case; withdrawn from this batch."
  }
 }
