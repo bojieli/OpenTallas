@@ -323,3 +323,33 @@ def test_strip_not_under_m6_unchanged():
                            dict(layer='M5', rect=[347.76, 298.944, 350.46, 306.72])]}
     assert F.pdn_windows_strip(r, 734.4) == [] and F.pdn_windows_strip_m5(r, 734.4) == []
     assert F.obstruction_rows(r, 734.4) == [(x['layer'], x['rect']) for x in r['rectangles_um']]
+
+
+def test_isolated_m6_stack_without_m4_gets_strip_window():
+    # q_b102__physical_v1 core bottom: two abutting wide M6 rows, no M4 under them
+    r = {'rectangles_um': [dict(layer='M6', rect=[0.0, 4.32, 466.56, 7.02]),
+                           dict(layer='M6', rect=[19.44, 7.02, 246.24, 11.07])]}
+    assert F.pdn_windows_strip(r, 708.48) == [('M6', 6.138, 7.11)]
+
+
+def test_m6_stack_part_of_taller_stack_gets_no_strip_window():
+    r = {'rectangles_um': [dict(layer='M6', rect=[0.0, 4.32, 466.56, 7.02]),
+                           dict(layer='M6', rect=[0.0, 7.02, 466.56, 11.07]),
+                           dict(layer='M6', rect=[0.0, 11.07, 466.56, 30.0])]}
+    assert F.pdn_windows_strip(r, 708.48) == []
+
+
+def test_column_with_slightly_wider_own_rows_gets_windows():
+    R = [dict(layer='M5', rect=[574.29, 0.0, 578.88, 290.304])]
+    R += [dict(layer='M4', rect=[572.832, y, 578.88, y + 2.7]) for y in (58.32, 69.12, 79.92)]
+    assert [w[:3] for w in F.pdn_windows_col({'rectangles_um': R})] == [('M5', 576.474, 577.086)]
+    R2 = [dict(layer='M5', rect=[5.94, 0.0, 8.64, 290.304])]       # street rows, 3.2x the column width
+    R2 += [dict(layer='M4', rect=[0.0, y, 8.64, y + 2.7]) for y in (58.32, 69.12, 79.92)]
+    assert F.pdn_windows_col({'rectangles_um': R2}) == []
+
+
+def test_sliver_close_tcl_emitted():
+    r = {'rectangles_um': [dict(layer='M6', rect=[572.832, 58.32, 578.88, 65.07])]}
+    t = F.tcl(r)
+    assert 'm6_sliver_close' in t and 'round(0.384*$ot_ft_dbu)' in t
+    assert t.index('dbObstruction_create $ot_ft_blk $ot_ft_layer') < t.index('m6_sliver_close')
