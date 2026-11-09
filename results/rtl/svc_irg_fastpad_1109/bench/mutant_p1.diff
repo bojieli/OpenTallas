@@ -1,0 +1,8 @@
+51c51
+<     localparam integer PD = FPL * (HC - 1);          // deepest pad (49 at FPL 7)
+---
+>     localparam integer PD = FPL * (HC - 1) + 1;          // deepest pad (49 at FPL 7)
+132c132
+<             default: pad_q = pad[TW*(7*FPL)-1 -: TW];
+---
+>             default: pad_q = pad[TW*(7*FPL+1)-1 -: TW];
