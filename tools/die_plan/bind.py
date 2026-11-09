@@ -4563,6 +4563,13 @@ def cmd_portbind(a):
     for f in [f for f in ab.get("files", []) if Path(absf(f)).is_file()] + rep.get("extra_lib", []) + \
             [f for f in rep["files"] if f != str(top)] + [str(E.REPO / "rtl/lib/ot_reset_sync.sv")]:
         cmd += ["--rtl-file", absf(f)]
+    # KV-PLAN-2 11-09 (KV bind9c2: qkd_kvs_pcc/pcf(+_h_head_p) "no RTL"): source the strict check needs but the
+    # elaboration must not see, e.g. the real RTL of hard cores the binder splits (core_splits leaves have no elab
+    # source; their signed RTL lives under results/).  Every listed path must exist: a missing one fails closed.
+    for f in ab.get("portbind_files", []):
+        if not Path(absf(f)).is_file():
+            raise BindError(f"asbuilt portbind_files: {absf(f)} not found")
+        cmd += ["--rtl-file", absf(f)]
     for f in ab.get("prefer", []) + ab.get("portbind_prefer", []):
         if Path(absf(f)).is_file():
             cmd += ["--prefer", absf(f)]
