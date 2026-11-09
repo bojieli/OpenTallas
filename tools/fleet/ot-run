@@ -253,6 +253,10 @@ ROOTFS_MAX_PCT = int(os.environ.get("OT_RUN_ROOTFS_MAX_PCT", "85"))
 # COORD 2026-10-24 ~20:00 (owner split epyc1/epyc3 RAID1 -> separate scratch disk): on a host whose new work goes to
 # a separate scratch disk the root fs only holds OS/docker/old dirs, so it is refused only above this higher limit.
 ROOTFS_MAX_PCT_SCRATCH = int(os.environ.get("OT_RUN_ROOTFS_MAX_PCT_SCRATCH", "95"))
+# DISK-URGENT-4 11-08 (COORD 18:2x, owner floor 150 GB 11-06): a 3.5 TB root at 95 % still has 176 GB free, stricter than the
+# owner's root floor.  Hosts named here refuse on root fs FREE GB instead of the percentage: "host=gb,host=gb".
+ROOTFS_MIN_FREE_GB_HOSTS = {k.strip(): int(v) for k, _, v in (x.partition("=") for x in os.environ.get(
+    "OT_RUN_ROOTFS_MIN_FREE_GB_HOSTS", "epyc2=150,epyc4=150").split(",")) if k.strip() and v.strip()}
 
 
 def scratch2_on():
@@ -279,6 +283,8 @@ def scratch_disk(row, d, out, host=None):
             extra["disk_dev"] = f[1]
         elif len(f) == 3 and f[0] == "OT_ROOTFS" and f[1].isdigit() and f[2].isdigit():
             extra.update(rootfs_pct=int(f[1]), rootfs_free_gb=int(f[2]))
+            if host in ROOTFS_MIN_FREE_GB_HOSTS:
+                extra["rootfs_floor_gb"] = ROOTFS_MIN_FREE_GB_HOSTS[host]
         elif len(f) == 2 and f[0] == "OT_DIR_ONROOT":
             extra["dir_onroot"] = f[1] == "1"
     # ROOTSCR_1101: second roots (root fs, named in ROOT_SCRATCH_ROOTS) count with root free - ROOT_SCRATCH_FLOOR_GB
@@ -337,7 +343,12 @@ def host_refusal(row):
     if row.get("scratch_second") and row.get("scratch_disk_gb", 0) < SCRATCH_SECOND_FLOOR_GB:
         return (f"second scratch root {row['scratch_disk']} (root fs) has {row['scratch_disk_gb']} GB usable < floor "
                 f"{SCRATCH_SECOND_FLOOR_GB} GB after keeping {row.get('root_floor_gb', ROOT_SCRATCH_FLOOR_GB)} GB free on the root fs (ROOTSCR_1101)")
-    if pct is not None and pct > lim:
+    fl = row.get("rootfs_floor_gb")
+    if fl is not None and row.get("rootfs_free_gb") is not None:     # DISK-URGENT-4: this host's root guard is free GB, not %
+        if row["rootfs_free_gb"] < fl:
+            return (f"ROOT FS {row['rootfs_free_gb']} GB free < floor {fl} GB (DISK GUARD, owner floor 150 GB 11-06; "
+                    f"free the root fs, OT_RUN_ROOTFS_MIN_FREE_GB_HOSTS overrides)")
+    elif pct is not None and pct > lim:
         return (f"ROOT FS {pct}% full > {lim}% (DISK GUARD, owner 2026-10-24: never use root disks for work; "
                 f"move data to the scratch disk, OT_RUN_ROOTFS_MAX_PCT overrides)")
     if row.get("scratch_disk") and not row.get("scratch_second") and row.get("scratch_disk_gb", 0) < SCRATCH_DISK_FLOOR_GB:
@@ -924,6 +935,16 @@ def scratch_env(host=None):
 SCRATCH_ENV = scratch_env()
 # v13 DISK GUARD on the job host (the client checked the probe; this re-checks at submission, so a stale probe or an
 # old client cannot start work on a full root fs, nor on a scratch-disk host whose disk is below its floor).
+def rootfs_floor_sh(host, tag):
+    """DISK-URGENT-4: on a floor host, refuse below the free-GB floor and then disable the percentage test (lim=100)."""
+    fl = ROOTFS_MIN_FREE_GB_HOSTS.get(host)
+    if fl is None:
+        return ""
+    return (f"rf=$(df -BG --output=avail / | tail -1 | tr -dc 0-9); if [ \"${{rf:-0}}\" -lt {fl} ]; then "
+            f"echo \"ot-run: DISK GUARD: root fs ${{rf}} GB free < floor {fl} GB on $(hostname -s); no new job admitted\" >&2; "
+            f"echo OT_RUN_ROOTFULL {tag} >&2; exit 97; fi; lim=100; ")
+
+
 def disk_guard_sh(tag, host=None, d=None):
     sec, rfl = " ".join(ROOT_SCRATCH_ROOTS), root_floor(host)
     work = shlex.quote(d) if d else '"$PWD"'
@@ -946,6 +967,7 @@ def disk_guard_sh(tag, host=None, d=None):
             f"if [ $(( ${{f:-0}} - {rfl} )) -lt {SCRATCH_SECOND_FLOOR_GB} ]; then "
             f"echo \"ot-run: second scratch root $OT_SCRATCH: root fs has ${{f}} GB free, keeps {rfl} GB; "
             f"usable < floor {SCRATCH_SECOND_FLOOR_GB} GB on $(hostname -s)\" >&2; echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; fi;; esac; "
+            + rootfs_floor_sh(host, tag) +
             f"if [ \"${{p:-0}}\" -gt $lim ]; then "
             f"echo \"ot-run: DISK GUARD: root fs $p% full > $lim% on $(hostname -s); no new job admitted "
             f"(owner 2026-10-24: never use root disks for work)\" >&2; echo OT_RUN_ROOTFULL {tag} >&2; exit 97; fi; "
