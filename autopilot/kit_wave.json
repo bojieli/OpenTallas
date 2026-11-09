@@ -7311,7 +7311,7 @@
      "ref": "COORD 11-01 09:2x: aspect = plan slot shape, granted by exception (12.28b), no reshape; DIE-HEAD-53"
     }
    ],
-   "work_root": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81_head/kit-wave",
    "hold_items": {},
    "retry_fix": {
     "hd_spn_eshim_tx@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
@@ -8084,7 +8084,8 @@
     "hd_lep0N": {
      "OT_IO_HOLD": "sender_min"
     }
-   }
+   },
+   "work_root_prev_kw43s3": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave"
   },
   "qwen_compute": {
    "enabled": true,
@@ -18845,5 +18846,6 @@
  },
  "gen_fallback_per_tick_prev_kw43e2": null,
  "gen_fallback_per_tick": 6,
- "note_kw43_e2fill": "KW-FIX-43 13:5x COORD 13:5x (4) fill epyc2 (admits 276 GB, load 57/128): epyc2 already in gen_hosts of s81/qwen_compute/qwen_kvsys (srcs staged); place_prefer epyc2 first for those 3 dies; gen_fallback_per_tick 2 -> 6. The wave has no other per-host in-flight cap (pick_gen_host uses ot-heavy LOADCAP 1.5 x nproc = 192 on epyc2). Hub stays off gen. Revert: place_prefer = place_prefer_prev_kw43e2[die], gen_fallback_per_tick = gen_fallback_per_tick_prev_kw43e2 (None = delete)."
+ "note_kw43_e2fill": "KW-FIX-43 13:5x COORD 13:5x (4) fill epyc2 (admits 276 GB, load 57/128): epyc2 already in gen_hosts of s81/qwen_compute/qwen_kvsys (srcs staged); place_prefer epyc2 first for those 3 dies; gen_fallback_per_tick 2 -> 6. The wave has no other per-host in-flight cap (pick_gen_host uses ot-heavy LOADCAP 1.5 x nproc = 192 on epyc2). Hub stays off gen. Revert: place_prefer = place_prefer_prev_kw43e2[die], gen_fallback_per_tick = gen_fallback_per_tick_prev_kw43e2 (None = delete).",
+ "note_kw43_e2s3": "KW-FIX-43 14:4x COORD URGENT (epyc2 scratch2 12 GB): every wave lane now writes new attempts to epyc2 scratch3. kw43-wave-1109 (s81/qc/kv/hbm) is already ONE symlink on epyc2 (and epyc4) -> /srv/opentallas-scratch3/claude/kw43-wave-1109 (442 GB). s81_head moved from kw27-wave-1109 (a REAL scratch2 dir on epyc2) to the same kw43 lane; running kw27 attempts keep their paths. Sealed route/finish job dirs (KW-FIX-44 job_roots) pick epyc2 scratch3/claude/ot-jobs when scratch2 < 60 GB. Revert: dies.s81_head.work_root = work_root_prev_kw43s3."
 }
