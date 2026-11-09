@@ -1,0 +1,269 @@
+{
+ "event": "HBM-PLAN-1-E1E2-1109",
+ "lane": "HBM-PLAN-1",
+ "ruling": "COORD RULING 11-09 02:33 ONE FINAL SWITCH PER DIE",
+ "sha_in": "e34eae889e1717e2720ec520294120ec14c830932e0ca66e8c60a356ecf2b74e",
+ "moves": [
+  {
+   "type": "q_hub_ne",
+   "inst": "u_sfus_Q__q0",
+   "from": [
+    3386.88,
+    0.0
+   ],
+   "to": [
+    3386.88,
+    4.32
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_pgp_Q__q0__c1",
+   "from": [
+    2013.12,
+    0.0
+   ],
+   "to": [
+    2013.12,
+    4.32
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_pgp_Q__q0__c2",
+   "from": [
+    1745.28,
+    0.0
+   ],
+   "to": [
+    1745.28,
+    4.32
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_pgp_Q__q0__c3",
+   "from": [
+    1477.44,
+    0.0
+   ],
+   "to": [
+    1477.44,
+    4.32
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_pgp_Q__q0__c4",
+   "from": [
+    2125.44,
+    423.36
+   ],
+   "to": [
+    2125.44,
+    427.68
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_pgp_Q__q0__c5",
+   "from": [
+    1995.84,
+    423.36
+   ],
+   "to": [
+    1995.84,
+    427.68
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_pgp_Q__q0__c6",
+   "from": [
+    1866.24,
+    423.36
+   ],
+   "to": [
+    1866.24,
+    427.68
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_pgp_Q__q0__c7",
+   "from": [
+    1736.64,
+    423.36
+   ],
+   "to": [
+    1736.64,
+    427.68
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_pgp_Q__q0__c8",
+   "from": [
+    1607.04,
+    423.36
+   ],
+   "to": [
+    1607.04,
+    427.68
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_pgp_Q__q0__c9",
+   "from": [
+    1477.44,
+    423.36
+   ],
+   "to": [
+    1477.44,
+    427.68
+   ]
+  }
+ ],
+ "taps": [
+  {
+   "type": "q_hub_ne",
+   "tap": "u_sfus_Q__q0",
+   "from": [
+    3563.976,
+    185.76
+   ],
+   "to": [
+    3563.976,
+    190.08
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_pgp_Q__q0__c1.clk",
+   "from": [
+    2140.56,
+    211.68
+   ],
+   "to": [
+    2140.56,
+    216.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_pgp_Q__q0__c2.clk",
+   "from": [
+    1872.72,
+    211.68
+   ],
+   "to": [
+    1872.72,
+    216.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_pgp_Q__q0__c3.clk",
+   "from": [
+    1604.88,
+    211.68
+   ],
+   "to": [
+    1604.88,
+    216.0
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_pgp_Q__q0__c4.clk",
+   "from": [
+    2183.76,
+    613.44
+   ],
+   "to": [
+    2183.76,
+    617.76
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_pgp_Q__q0__c5.clk",
+   "from": [
+    2054.16,
+    613.44
+   ],
+   "to": [
+    2054.16,
+    617.76
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_pgp_Q__q0__c6.clk",
+   "from": [
+    1924.56,
+    613.44
+   ],
+   "to": [
+    1924.56,
+    617.76
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_pgp_Q__q0__c7.clk",
+   "from": [
+    1794.96,
+    613.44
+   ],
+   "to": [
+    1794.96,
+    617.76
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_pgp_Q__q0__c8.clk",
+   "from": [
+    1665.36,
+    613.44
+   ],
+   "to": [
+    1665.36,
+    617.76
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "tap": "u_pgp_Q__q0__c9.clk",
+   "from": [
+    1535.76,
+    613.44
+   ],
+   "to": [
+    1535.76,
+    617.76
+   ]
+  }
+ ],
+ "margins": {
+  "root": [
+   4.32,
+   0.0,
+   4.32,
+   4.32
+  ]
+ },
+ "gqi": {
+  "instances": 4,
+  "old_table": "cores/ot_hgi_coll_gqi_issue__172.8x233.28__d44v_split.json",
+  "new_table": "cores/ot_hgi_coll_gqi_issue__172.8x233.28__d44v_gqi8.json",
+  "new_table_sha256": "58a6aa311fe26820b394d6e327ea4203e79fea5f84d1902c82cbd5fc3b7bb2d5",
+  "rows": 6614,
+  "note": "rows equal plan_final3's in-place table; repoint only"
+ },
+ "sha_in_file": "e34eae889e1717e2720ec520294120ec14c830932e0ca66e8c60a356ecf2b74e",
+ "sha_out": "c71bcfbb921f931ac5484936ab27bbe6ac602f30350566904fa63b0d08721d17",
+ "pin_cycles": 0
+}

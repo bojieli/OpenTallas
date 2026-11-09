@@ -1,0 +1,119 @@
+{
+ "event": "HBM-PLAN-1-E11E12-1109",
+ "lane": "HBM-PLAN-1",
+ "ruling": "COORD 11-09 03:0x message to HBM-PLAN-1 (q_spu0 pv1 FT reservation, q_spb2 pv1 N-face pin spread)",
+ "e11": [
+  {
+   "type": "q_spu0__physical_v1",
+   "from": {
+    "dir": "NS",
+    "span_um": [
+     380.16,
+     1071.36
+    ],
+    "layers": [
+     "M5",
+     "M7"
+    ],
+    "die_share": 1.0,
+    "note": "HBM corridor delta: core-free lane capacity, no obstruction removal"
+   },
+   "to": [
+    {
+     "dir": "NS",
+     "span_um": [
+      380.16,
+      1071.36
+     ],
+     "layers": [
+      "M5"
+     ],
+     "die_share": 0.5,
+     "note": "HBM corridor delta: core-free lane capacity, no obstruction removal | HBM-PLAN-1 E11 1109: M5 share 1.0 -> 0.5 (type FT columns L8x1/L21x5/L63wx1 run inside the band)"
+    },
+    {
+     "dir": "NS",
+     "span_um": [
+      380.16,
+      1071.36
+     ],
+     "layers": [
+      "M7"
+     ],
+     "die_share": 1.0,
+     "note": "HBM corridor delta: core-free lane capacity, no obstruction removal"
+    }
+   ]
+  },
+  {
+   "type": "q_spu0",
+   "from": {
+    "dir": "NS",
+    "span_um": [
+     380.16,
+     1071.36
+    ],
+    "layers": [
+     "M5",
+     "M7"
+    ],
+    "die_share": 1.0,
+    "note": "HBM corridor delta: core-free lane capacity, no obstruction removal"
+   },
+   "to": [
+    {
+     "dir": "NS",
+     "span_um": [
+      380.16,
+      1071.36
+     ],
+     "layers": [
+      "M5"
+     ],
+     "die_share": 0.5,
+     "note": "HBM corridor delta: core-free lane capacity, no obstruction removal | HBM-PLAN-1 E11 1109: M5 share 1.0 -> 0.5 (type FT columns L8x1/L21x5/L63wx1 run inside the band)"
+    },
+    {
+     "dir": "NS",
+     "span_um": [
+      380.16,
+      1071.36
+     ],
+     "layers": [
+      "M7"
+     ],
+     "die_share": 1.0,
+     "note": "HBM corridor delta: core-free lane capacity, no obstruction removal"
+    }
+   ]
+  }
+ ],
+ "e12": {
+  "spb2_L40_o": {
+   "from": [
+    782.4,
+    960.0
+   ],
+   "to": [
+    1080.0,
+    1316.16
+   ],
+   "pins_per_um": 4.51
+  },
+  "spu1_L40x1_in": {
+   "from": [
+    471.36,
+    648.96
+   ],
+   "to": [
+    768.96,
+    1005.12
+   ]
+  },
+  "internal_stations_from_um": 13,
+  "die_x_check": "spb2 MY origin 20848.32 w 1745.28, spu1 MY origin 20813.76 w 1468.8: local x differ by 311.04"
+ },
+ "sha_in": "a91111594e539771ab43e0176bc55a9e9a9bbb1fcb5d4e17048e6ecf84a12200",
+ "sha_out": "0fcbf71cf8ad031621fd76aab9dcbbc507dd11861fa02ff03054917ce077dea3",
+ "pin_cycles": 0
+}

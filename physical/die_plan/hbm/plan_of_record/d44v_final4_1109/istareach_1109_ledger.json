@@ -1,0 +1,10366 @@
+{
+ "added_entries": 87,
+ "added_stations": 451,
+ "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl",
+ "event": "istareach_1108",
+ "lanes_fixed_cycles": {
+  "L1204": 1,
+  "L1206": 2,
+  "L1207": 8,
+  "L1211": 2,
+  "L1221": 10,
+  "L1229": 15,
+  "L1234": 6,
+  "L1238": 4,
+  "L1239": 1,
+  "L1247": 9,
+  "L1248": 12,
+  "L1252": 3,
+  "L1253": 4,
+  "L1254": 4,
+  "L1255": 4,
+  "L1262": 13,
+  "L1266": 5,
+  "L1271": 6,
+  "L1275": 3,
+  "L1282": 17,
+  "L201": 4,
+  "L3000": 6,
+  "L3006": 4,
+  "L3007": 3,
+  "L3008": 4,
+  "L3009": 4,
+  "L3010": 5,
+  "L3011": 5,
+  "L3012": 12,
+  "L5002": 1,
+  "L5006": 2,
+  "L5007": 5,
+  "L5011": 2,
+  "L5021": 10,
+  "L5029": 13,
+  "L5034": 8,
+  "L5039": 4,
+  "L5040": 1,
+  "L5048": 9,
+  "L5053": 7,
+  "L5054": 3,
+  "L5055": 8,
+  "L5056": 3,
+  "L5057": 8,
+  "L5063": 4,
+  "L5065": 13,
+  "L5068": 5,
+  "L5071": 4,
+  "L5073": 4,
+  "L5090": 3,
+  "L5091": 3,
+  "L5093": 2,
+  "L5094": 18,
+  "L5095": 3,
+  "L5096": 2,
+  "L5097": 7,
+  "L5098": 4,
+  "L5099": 2,
+  "L5100": 2,
+  "L5101": 4,
+  "L7001": 4,
+  "L7002": 2,
+  "L723": 6,
+  "L723m": 7,
+  "L7501": 16,
+  "L7502": 5,
+  "L7503": 2,
+  "L7504": 16,
+  "L8001": 4,
+  "L8002": 4,
+  "L8005": 7,
+  "L8006": 10,
+  "L8008": 6,
+  "L8101": 16,
+  "L8370m": 1,
+  "L8371": 5
+ },
+ "latency_delta": {
+  "L1204": {
+   "cycles": [
+    2,
+    3
+   ],
+   "fixed": [
+    0,
+    1
+   ],
+   "param": "LAT_L1204"
+  },
+  "L1206": {
+   "cycles": [
+    2,
+    4
+   ],
+   "fixed": [
+    0,
+    2
+   ],
+   "param": "LAT_L1206"
+  },
+  "L1207": {
+   "cycles": [
+    2,
+    10
+   ],
+   "fixed": [
+    0,
+    8
+   ],
+   "param": "LAT_L1207"
+  },
+  "L1211": {
+   "cycles": [
+    3,
+    5
+   ],
+   "fixed": [
+    0,
+    2
+   ],
+   "param": "LAT_L1211"
+  },
+  "L1221": {
+   "cycles": [
+    2,
+    12
+   ],
+   "fixed": [
+    0,
+    10
+   ],
+   "param": "LAT_L1221"
+  },
+  "L1229": {
+   "cycles": [
+    2,
+    17
+   ],
+   "fixed": [
+    0,
+    15
+   ],
+   "param": "LAT_L1229"
+  },
+  "L1234": {
+   "cycles": [
+    2,
+    8
+   ],
+   "fixed": [
+    0,
+    6
+   ],
+   "param": "LAT_L1234"
+  },
+  "L1238": {
+   "cycles": [
+    12,
+    16
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L1238"
+  },
+  "L1239": {
+   "cycles": [
+    16,
+    17
+   ],
+   "fixed": [
+    0,
+    1
+   ],
+   "param": "LAT_L1239"
+  },
+  "L1247": {
+   "cycles": [
+    17,
+    26
+   ],
+   "fixed": [
+    0,
+    9
+   ],
+   "param": "LAT_L1247"
+  },
+  "L1248": {
+   "cycles": [
+    2,
+    14
+   ],
+   "fixed": [
+    0,
+    12
+   ],
+   "param": "LAT_L1248"
+  },
+  "L1252": {
+   "cycles": [
+    17,
+    20
+   ],
+   "fixed": [
+    0,
+    3
+   ],
+   "param": "LAT_L1252"
+  },
+  "L1253": {
+   "cycles": [
+    26,
+    30
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L1253"
+  },
+  "L1254": {
+   "cycles": [
+    26,
+    30
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L1254"
+  },
+  "L1255": {
+   "cycles": [
+    15,
+    19
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L1255"
+  },
+  "L1262": {
+   "cycles": [
+    12,
+    25
+   ],
+   "fixed": [
+    0,
+    13
+   ],
+   "param": "LAT_L1262"
+  },
+  "L1266": {
+   "cycles": [
+    14,
+    19
+   ],
+   "fixed": [
+    0,
+    5
+   ],
+   "param": "LAT_L1266"
+  },
+  "L1271": {
+   "cycles": [
+    60,
+    66
+   ],
+   "fixed": [
+    0,
+    6
+   ],
+   "param": "LAT_L1271"
+  },
+  "L1275": {
+   "cycles": [
+    53,
+    56
+   ],
+   "fixed": [
+    0,
+    3
+   ],
+   "param": "LAT_L1275"
+  },
+  "L1282": {
+   "cycles": [
+    95,
+    112
+   ],
+   "fixed": [
+    0,
+    17
+   ],
+   "param": "LAT_L1282"
+  },
+  "L201": {
+   "cycles": [
+    19,
+    23
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L201"
+  },
+  "L3000": {
+   "cycles": [
+    23,
+    29
+   ],
+   "fixed": [
+    0,
+    6
+   ],
+   "param": "LAT_L3000"
+  },
+  "L3006": {
+   "cycles": [
+    21,
+    25
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L3006"
+  },
+  "L3007": {
+   "cycles": [
+    28,
+    31
+   ],
+   "fixed": [
+    0,
+    3
+   ],
+   "param": "LAT_L3007"
+  },
+  "L3008": {
+   "cycles": [
+    31,
+    35
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L3008"
+  },
+  "L3009": {
+   "cycles": [
+    26,
+    30
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L3009"
+  },
+  "L3010": {
+   "cycles": [
+    25,
+    30
+   ],
+   "fixed": [
+    0,
+    5
+   ],
+   "param": "LAT_L3010"
+  },
+  "L3011": {
+   "cycles": [
+    30,
+    35
+   ],
+   "fixed": [
+    0,
+    5
+   ],
+   "param": "LAT_L3011"
+  },
+  "L3012": {
+   "cycles": [
+    33,
+    45
+   ],
+   "fixed": [
+    0,
+    12
+   ],
+   "param": "LAT_L3012"
+  },
+  "L5002": {
+   "cycles": [
+    2,
+    3
+   ],
+   "fixed": [
+    0,
+    1
+   ],
+   "param": "LAT_L5002"
+  },
+  "L5006": {
+   "cycles": [
+    2,
+    4
+   ],
+   "fixed": [
+    0,
+    2
+   ],
+   "param": "LAT_L5006"
+  },
+  "L5007": {
+   "cycles": [
+    2,
+    7
+   ],
+   "fixed": [
+    0,
+    5
+   ],
+   "param": "LAT_L5007"
+  },
+  "L5011": {
+   "cycles": [
+    3,
+    5
+   ],
+   "fixed": [
+    0,
+    2
+   ],
+   "param": "LAT_L5011"
+  },
+  "L5021": {
+   "cycles": [
+    2,
+    12
+   ],
+   "fixed": [
+    0,
+    10
+   ],
+   "param": "LAT_L5021"
+  },
+  "L5029": {
+   "cycles": [
+    2,
+    15
+   ],
+   "fixed": [
+    0,
+    13
+   ],
+   "param": "LAT_L5029"
+  },
+  "L5034": {
+   "cycles": [
+    2,
+    10
+   ],
+   "fixed": [
+    0,
+    8
+   ],
+   "param": "LAT_L5034"
+  },
+  "L5039": {
+   "cycles": [
+    12,
+    16
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L5039"
+  },
+  "L5040": {
+   "cycles": [
+    16,
+    17
+   ],
+   "fixed": [
+    0,
+    1
+   ],
+   "param": "LAT_L5040"
+  },
+  "L5048": {
+   "cycles": [
+    17,
+    26
+   ],
+   "fixed": [
+    0,
+    9
+   ],
+   "param": "LAT_L5048"
+  },
+  "L5053": {
+   "cycles": [
+    25,
+    32
+   ],
+   "fixed": [
+    0,
+    7
+   ],
+   "param": "LAT_L5053"
+  },
+  "L5054": {
+   "cycles": [
+    17,
+    20
+   ],
+   "fixed": [
+    0,
+    3
+   ],
+   "param": "LAT_L5054"
+  },
+  "L5055": {
+   "cycles": [
+    26,
+    34
+   ],
+   "fixed": [
+    0,
+    8
+   ],
+   "param": "LAT_L5055"
+  },
+  "L5056": {
+   "cycles": [
+    18,
+    21
+   ],
+   "fixed": [
+    0,
+    3
+   ],
+   "param": "LAT_L5056"
+  },
+  "L5057": {
+   "cycles": [
+    19,
+    27
+   ],
+   "fixed": [
+    0,
+    8
+   ],
+   "param": "LAT_L5057"
+  },
+  "L5063": {
+   "cycles": [
+    14,
+    18
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L5063"
+  },
+  "L5065": {
+   "cycles": [
+    21,
+    34
+   ],
+   "fixed": [
+    0,
+    13
+   ],
+   "param": "LAT_L5065"
+  },
+  "L5068": {
+   "cycles": [
+    14,
+    19
+   ],
+   "fixed": [
+    0,
+    5
+   ],
+   "param": "LAT_L5068"
+  },
+  "L5071": {
+   "cycles": [
+    13,
+    17
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L5071"
+  },
+  "L5073": {
+   "cycles": [
+    27,
+    31
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L5073"
+  },
+  "L5090": {
+   "cycles": [
+    45,
+    48
+   ],
+   "fixed": [
+    0,
+    3
+   ],
+   "param": "LAT_L5090"
+  },
+  "L5091": {
+   "cycles": [
+    44,
+    47
+   ],
+   "fixed": [
+    0,
+    3
+   ],
+   "param": "LAT_L5091"
+  },
+  "L5093": {
+   "cycles": [
+    33,
+    35
+   ],
+   "fixed": [
+    0,
+    2
+   ],
+   "param": "LAT_L5093"
+  },
+  "L5094": {
+   "cycles": [
+    46,
+    64
+   ],
+   "fixed": [
+    0,
+    18
+   ],
+   "param": "LAT_L5094"
+  },
+  "L5095": {
+   "cycles": [
+    35,
+    38
+   ],
+   "fixed": [
+    0,
+    3
+   ],
+   "param": "LAT_L5095"
+  },
+  "L5096": {
+   "cycles": [
+    45,
+    47
+   ],
+   "fixed": [
+    0,
+    2
+   ],
+   "param": "LAT_L5096"
+  },
+  "L5097": {
+   "cycles": [
+    31,
+    38
+   ],
+   "fixed": [
+    0,
+    7
+   ],
+   "param": "LAT_L5097"
+  },
+  "L5098": {
+   "cycles": [
+    32,
+    36
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L5098"
+  },
+  "L5099": {
+   "cycles": [
+    30,
+    32
+   ],
+   "fixed": [
+    0,
+    2
+   ],
+   "param": "LAT_L5099"
+  },
+  "L5100": {
+   "cycles": [
+    39,
+    41
+   ],
+   "fixed": [
+    0,
+    2
+   ],
+   "param": "LAT_L5100"
+  },
+  "L5101": {
+   "cycles": [
+    35,
+    39
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L5101"
+  },
+  "L7001": {
+   "cycles": [
+    25,
+    29
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L7001"
+  },
+  "L7002": {
+   "cycles": [
+    27,
+    29
+   ],
+   "fixed": [
+    0,
+    2
+   ],
+   "param": "LAT_L7002"
+  },
+  "L722": {
+   "cycles": [
+    19,
+    25
+   ],
+   "fixed": [
+    0,
+    0
+   ],
+   "param": "LAT_L722"
+  },
+  "L722m": {
+   "cycles": [
+    19,
+    26
+   ],
+   "fixed": [
+    0,
+    0
+   ],
+   "param": "LAT_L722M"
+  },
+  "L723": {
+   "cycles": [
+    19,
+    25
+   ],
+   "fixed": [
+    0,
+    6
+   ],
+   "param": "LAT_L723"
+  },
+  "L723m": {
+   "cycles": [
+    19,
+    26
+   ],
+   "fixed": [
+    0,
+    7
+   ],
+   "param": "LAT_L723M"
+  },
+  "L7501": {
+   "cycles": [
+    25,
+    41
+   ],
+   "fixed": [
+    0,
+    16
+   ],
+   "param": "LAT_L7501"
+  },
+  "L7502": {
+   "cycles": [
+    25,
+    30
+   ],
+   "fixed": [
+    0,
+    5
+   ],
+   "param": "LAT_L7502"
+  },
+  "L7503": {
+   "cycles": [
+    27,
+    29
+   ],
+   "fixed": [
+    0,
+    2
+   ],
+   "param": "LAT_L7503"
+  },
+  "L7504": {
+   "cycles": [
+    45,
+    61
+   ],
+   "fixed": [
+    0,
+    16
+   ],
+   "param": "LAT_L7504"
+  },
+  "L8001": {
+   "cycles": [
+    8,
+    12
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L8001"
+  },
+  "L8002": {
+   "cycles": [
+    8,
+    12
+   ],
+   "fixed": [
+    0,
+    4
+   ],
+   "param": "LAT_L8002"
+  },
+  "L8005": {
+   "cycles": [
+    31,
+    38
+   ],
+   "fixed": [
+    0,
+    7
+   ],
+   "param": "LAT_L8005"
+  },
+  "L8006": {
+   "cycles": [
+    53,
+    63
+   ],
+   "fixed": [
+    0,
+    10
+   ],
+   "param": "LAT_L8006"
+  },
+  "L8008": {
+   "cycles": [
+    47,
+    53
+   ],
+   "fixed": [
+    0,
+    6
+   ],
+   "param": "LAT_L8008"
+  },
+  "L8101": {
+   "cycles": [
+    20,
+    36
+   ],
+   "fixed": [
+    0,
+    16
+   ],
+   "param": "LAT_L8101"
+  },
+  "L8370m": {
+   "cycles": [
+    35,
+    36
+   ],
+   "fixed": [
+    0,
+    1
+   ],
+   "param": "LAT_L8370M"
+  },
+  "L8371": {
+   "cycles": [
+    35,
+    40
+   ],
+   "fixed": [
+    0,
+    5
+   ],
+   "param": "LAT_L8371"
+  }
+ },
+ "native_types": [
+  "q_b113",
+  "q_b113__physical_v1",
+  "q_su00",
+  "q_su00__physical_v1",
+  "q_su01__physical_v1",
+  "q_su11",
+  "q_su11__physical_v1",
+  "q_su20",
+  "q_su20__physical_v1",
+  "q_su21",
+  "q_su31",
+  "q_su31__physical_v1"
+ ],
+ "reach_um": 405.0,
+ "rows": [
+  {
+   "bits": 13,
+   "bus": "L8006_o",
+   "dir": "out",
+   "lanes": [
+    "L8006"
+   ],
+   "leaves": [
+    "u_ep_N2"
+   ],
+   "length_um": 937.4,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "NE_io",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 641,
+   "bus": "L8007_o",
+   "dir": "out",
+   "lanes": [
+    "L8007"
+   ],
+   "leaves": [
+    "u_ep_N0",
+    "u_host_ep"
+   ],
+   "length_um": 2985.1,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "NW_io",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 632,
+   "bus": "L8008_i",
+   "chain_end": "u_host_ep",
+   "dir": "in",
+   "lanes": [
+    "L8008"
+   ],
+   "leaves": [
+    "u_host_ep"
+   ],
+   "length_um": 2570.4,
+   "regs_um": [
+    [
+     380.16,
+     3918.24
+    ],
+    [
+     380.16,
+     3516.48
+    ],
+    [
+     380.16,
+     3114.72
+    ],
+    [
+     380.16,
+     2712.96
+    ],
+    [
+     380.16,
+     2311.2
+    ],
+    [
+     380.16,
+     1909.44
+    ]
+   ],
+   "stations": 6,
+   "type": "NW_io",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 128,
+   "bus": "L1233_i",
+   "dir": "in",
+   "lanes": [
+    "L1233"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane0__bk",
+    "u_sfucore_Q_lane0__ex",
+    "u_sfucore_Q_lane0__fr",
+    "u_sfucore_Q_lane1__bk",
+    "u_sfucore_Q_lane1__ex",
+    "u_sfucore_Q_lane1__fr",
+    "u_sfucore_Q_lane2__bk",
+    "u_sfucore_Q_lane2__ex",
+    "u_sfucore_Q_lane2__fr",
+    "u_sfucore_Q_lane3__bk",
+    "u_sfucore_Q_lane3__ex",
+    "u_sfucore_Q_lane3__fr"
+   ],
+   "length_um": 1244.2,
+   "reason": "branch: leaves span a Manhattan radius 626 um > 364",
+   "type": "q_b110",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 330,
+   "bus": "L1234_o",
+   "dir": "out",
+   "lanes": [
+    "L1234"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane0__bk",
+    "u_sfucore_Q_lane0__ex",
+    "u_sfucore_Q_lane0__fr",
+    "u_sfucore_Q_lane1__bk",
+    "u_sfucore_Q_lane1__ex",
+    "u_sfucore_Q_lane1__fr",
+    "u_sfucore_Q_lane2__bk",
+    "u_sfucore_Q_lane2__ex",
+    "u_sfucore_Q_lane2__fr",
+    "u_sfucore_Q_lane3__bk",
+    "u_sfucore_Q_lane3__ex",
+    "u_sfucore_Q_lane3__fr"
+   ],
+   "length_um": 1274.9,
+   "reason": "branch: leaves span a Manhattan radius 626 um > 364",
+   "type": "q_b110",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 326,
+   "bus": "L1256_o",
+   "dir": "out",
+   "lanes": [
+    "L1256"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane0__bk",
+    "u_sfucore_Q_lane0__ex",
+    "u_sfucore_Q_lane0__fr",
+    "u_sfucore_Q_lane1__bk",
+    "u_sfucore_Q_lane1__ex",
+    "u_sfucore_Q_lane1__fr"
+   ],
+   "length_um": 531.6,
+   "reason": "route: no chain with every hop <= reach",
+   "type": "q_b110",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 472,
+   "bus": "L1257_o",
+   "dir": "out",
+   "lanes": [
+    "L1257"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane1__bk",
+    "u_sfucore_Q_lane1__ex",
+    "u_sfucore_Q_lane1__fr",
+    "u_sfucore_Q_lane2__bk",
+    "u_sfucore_Q_lane2__ex",
+    "u_sfucore_Q_lane2__fr",
+    "u_sfucore_Q_lane3__bk",
+    "u_sfucore_Q_lane3__ex",
+    "u_sfucore_Q_lane3__fr"
+   ],
+   "length_um": 1274.8,
+   "reason": "branch: leaves span a Manhattan radius 467 um > 364",
+   "type": "q_b110",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 279,
+   "bus": "L1277_i",
+   "dir": "in",
+   "lanes": [
+    "L1277"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane0__bk",
+    "u_sfucore_Q_lane0__ex",
+    "u_sfucore_Q_lane0__fr",
+    "u_sfucore_Q_lane1__bk",
+    "u_sfucore_Q_lane1__ex",
+    "u_sfucore_Q_lane1__fr",
+    "u_sfucore_Q_lane2__bk",
+    "u_sfucore_Q_lane2__ex",
+    "u_sfucore_Q_lane2__fr",
+    "u_sfucore_Q_lane3__bk",
+    "u_sfucore_Q_lane3__ex",
+    "u_sfucore_Q_lane3__fr"
+   ],
+   "length_um": 1309.3,
+   "reason": "branch: leaves span a Manhattan radius 637 um > 364",
+   "type": "q_b110",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 128,
+   "bus": "L5033_i",
+   "dir": "in",
+   "lanes": [
+    "L5033"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane0__bk",
+    "u_sfucore_Q_lane0__ex",
+    "u_sfucore_Q_lane0__fr",
+    "u_sfucore_Q_lane1__bk",
+    "u_sfucore_Q_lane1__ex",
+    "u_sfucore_Q_lane1__fr",
+    "u_sfucore_Q_lane2__bk",
+    "u_sfucore_Q_lane2__ex",
+    "u_sfucore_Q_lane2__fr",
+    "u_sfucore_Q_lane3__bk",
+    "u_sfucore_Q_lane3__ex",
+    "u_sfucore_Q_lane3__fr"
+   ],
+   "length_um": 1244.2,
+   "reason": "branch: leaves span a Manhattan radius 626 um > 364",
+   "type": "q_b110__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 330,
+   "bus": "L5034_o",
+   "dir": "out",
+   "lanes": [
+    "L5034"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane0__bk",
+    "u_sfucore_Q_lane0__ex",
+    "u_sfucore_Q_lane0__fr",
+    "u_sfucore_Q_lane1__bk",
+    "u_sfucore_Q_lane1__ex",
+    "u_sfucore_Q_lane1__fr",
+    "u_sfucore_Q_lane2__bk",
+    "u_sfucore_Q_lane2__ex",
+    "u_sfucore_Q_lane2__fr",
+    "u_sfucore_Q_lane3__bk",
+    "u_sfucore_Q_lane3__ex",
+    "u_sfucore_Q_lane3__fr"
+   ],
+   "length_um": 1223.1,
+   "reason": "branch: leaves span a Manhattan radius 626 um > 364",
+   "type": "q_b110__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 798,
+   "bus": "L5058_o",
+   "dir": "out",
+   "lanes": [
+    "L5058"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane0__bk",
+    "u_sfucore_Q_lane0__ex",
+    "u_sfucore_Q_lane0__fr",
+    "u_sfucore_Q_lane1__bk",
+    "u_sfucore_Q_lane1__ex",
+    "u_sfucore_Q_lane1__fr",
+    "u_sfucore_Q_lane2__bk",
+    "u_sfucore_Q_lane2__ex",
+    "u_sfucore_Q_lane2__fr",
+    "u_sfucore_Q_lane3__bk",
+    "u_sfucore_Q_lane3__ex",
+    "u_sfucore_Q_lane3__fr"
+   ],
+   "length_um": 887.4,
+   "reason": "branch: leaves span a Manhattan radius 501 um > 364",
+   "type": "q_b110__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 585,
+   "bus": "L5059_i",
+   "dir": "in",
+   "lanes": [
+    "L5059"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane0__bk",
+    "u_sfucore_Q_lane0__ex",
+    "u_sfucore_Q_lane0__fr",
+    "u_sfucore_Q_lane1__bk",
+    "u_sfucore_Q_lane1__ex",
+    "u_sfucore_Q_lane1__fr",
+    "u_sfucore_Q_lane2__bk",
+    "u_sfucore_Q_lane2__ex",
+    "u_sfucore_Q_lane2__fr",
+    "u_sfucore_Q_lane3__bk",
+    "u_sfucore_Q_lane3__ex",
+    "u_sfucore_Q_lane3__fr"
+   ],
+   "length_um": 909.9,
+   "reason": "branch: leaves span a Manhattan radius 501 um > 364",
+   "type": "q_b110__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 749,
+   "bus": "L5060_i",
+   "dir": "in",
+   "lanes": [
+    "L5060"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane0__bk",
+    "u_sfucore_Q_lane0__ex",
+    "u_sfucore_Q_lane0__fr",
+    "u_sfucore_Q_lane1__bk",
+    "u_sfucore_Q_lane1__ex",
+    "u_sfucore_Q_lane1__fr",
+    "u_sfucore_Q_lane2__bk",
+    "u_sfucore_Q_lane2__ex",
+    "u_sfucore_Q_lane2__fr",
+    "u_sfucore_Q_lane3__bk",
+    "u_sfucore_Q_lane3__ex",
+    "u_sfucore_Q_lane3__fr"
+   ],
+   "length_um": 986.3,
+   "reason": "branch: leaves span a Manhattan radius 510 um > 364",
+   "type": "q_b110__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 596,
+   "bus": "L1206_o",
+   "chain_end": "u_sfucore_Q_ctl__rest",
+   "dir": "out",
+   "lanes": [
+    "L1206"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest"
+   ],
+   "length_um": 1180.5,
+   "regs_um": [
+    [
+     0.0,
+     915.84
+    ],
+    [
+     306.72,
+     1010.88
+    ]
+   ],
+   "stations": 2,
+   "type": "q_b113",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 518,
+   "bus": "L1207_i",
+   "chain_end": "u_sfucore_Q_opstore_b__g1",
+   "dir": "in",
+   "lanes": [
+    "L1207"
+   ],
+   "leaves": [
+    "u_sfucore_Q_opstore_b__g0",
+    "u_sfucore_Q_opstore_b__g1",
+    "u_sfucore_Q_opstore_b__o"
+   ],
+   "length_um": 1234.4,
+   "regs_um": [
+    [
+     401.76,
+     95.04
+    ],
+    [
+     648.0,
+     250.56
+    ],
+    [
+     648.0,
+     414.72
+    ]
+   ],
+   "stations": 3,
+   "type": "q_b113",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 958,
+   "bus": "L1222_o",
+   "dir": "out",
+   "lanes": [
+    "L1222"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr"
+   ],
+   "length_um": 1885.7,
+   "reason": "branch: leaves span a Manhattan radius 926 um > 364",
+   "type": "q_b113",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 704,
+   "bus": "L1223_o",
+   "dir": "out",
+   "lanes": [
+    "L1223"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr",
+    "u_sfucore_Q_opstore_a__g0",
+    "u_sfucore_Q_opstore_a__g1",
+    "u_sfucore_Q_opstore_a__r",
+    "u_sfucore_Q_opstore_b__g0",
+    "u_sfucore_Q_opstore_b__g1",
+    "u_sfucore_Q_opstore_b__o"
+   ],
+   "length_um": 2291.5,
+   "reason": "branch: leaves span a Manhattan radius 1063 um > 364",
+   "type": "q_b113",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 329,
+   "bus": "L1225_i",
+   "dir": "in",
+   "lanes": [
+    "L1225"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_opstore_a__g0",
+    "u_sfucore_Q_opstore_a__g1",
+    "u_sfucore_Q_opstore_a__r",
+    "u_sfucore_Q_opstore_b__g0",
+    "u_sfucore_Q_opstore_b__g1",
+    "u_sfucore_Q_opstore_b__o"
+   ],
+   "length_um": 2273.3,
+   "reason": "branch: leaves span a Manhattan radius 890 um > 364",
+   "type": "q_b113",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 596,
+   "bus": "L1238_o",
+   "chain_end": "u_sfucore_Q_ctl__pipe",
+   "dir": "out",
+   "lanes": [
+    "L1238"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest"
+   ],
+   "length_um": 1995.8,
+   "regs_um": [
+    [
+     1425.6,
+     349.92
+    ],
+    [
+     1425.6,
+     751.68
+    ],
+    [
+     1188.0,
+     915.84
+    ],
+    [
+     786.24,
+     915.84
+    ]
+   ],
+   "stations": 4,
+   "type": "q_b113",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1000,
+   "bus": "L1240_i",
+   "dir": "in",
+   "lanes": [
+    "L1240"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_opstore_a__g0",
+    "u_sfucore_Q_opstore_a__g1",
+    "u_sfucore_Q_opstore_a__r",
+    "u_sfucore_Q_opstore_b__g0",
+    "u_sfucore_Q_opstore_b__g1",
+    "u_sfucore_Q_opstore_b__o"
+   ],
+   "length_um": 1473.1,
+   "reason": "branch: leaves span a Manhattan radius 659 um > 364",
+   "type": "q_b113",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1266,
+   "bus": "L1241_o",
+   "dir": "out",
+   "lanes": [
+    "L1241"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr",
+    "u_sfucore_Q_opstore_a__g0",
+    "u_sfucore_Q_opstore_a__g1",
+    "u_sfucore_Q_opstore_a__r"
+   ],
+   "length_um": 1530.5,
+   "reason": "branch: leaves span a Manhattan radius 1015 um > 364",
+   "type": "q_b113",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 396,
+   "bus": "L1242_o",
+   "dir": "out",
+   "lanes": [
+    "L1242"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr",
+    "u_sfucore_Q_opstore_a__g0",
+    "u_sfucore_Q_opstore_a__g1",
+    "u_sfucore_Q_opstore_a__r",
+    "u_sfucore_Q_opstore_b__g0",
+    "u_sfucore_Q_opstore_b__g1",
+    "u_sfucore_Q_opstore_b__o"
+   ],
+   "length_um": 1562.5,
+   "reason": "branch: leaves span a Manhattan radius 847 um > 364",
+   "type": "q_b113",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 698,
+   "bus": "L1250_o",
+   "dir": "out",
+   "lanes": [
+    "L1250"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr",
+    "u_sfup_Q__q1"
+   ],
+   "length_um": 2078.8,
+   "reason": "branch: leaves span a Manhattan radius 1015 um > 364",
+   "type": "q_b113",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 415,
+   "bus": "L1251_i",
+   "dir": "in",
+   "lanes": [
+    "L1251"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr",
+    "u_sfup_Q__q1"
+   ],
+   "length_um": 1247.6,
+   "reason": "branch: leaves span a Manhattan radius 745 um > 364",
+   "type": "q_b113",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 317,
+   "bus": "L1252_o",
+   "chain_end": "u_sfucore_Q_ctl__pipe",
+   "dir": "out",
+   "lanes": [
+    "L1252"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest"
+   ],
+   "length_um": 1373.8,
+   "regs_um": [
+    [
+     514.08,
+     207.36
+    ],
+    [
+     613.44,
+     509.76
+    ],
+    [
+     613.44,
+     911.52
+    ]
+   ],
+   "stations": 3,
+   "type": "q_b113",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 279,
+   "bus": "L1253_o",
+   "chain_end": "u_sfucore_Q_ctl__rest",
+   "dir": "out",
+   "lanes": [
+    "L1253"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest"
+   ],
+   "length_um": 1413.2,
+   "regs_um": [
+    [
+     475.2,
+     207.36
+    ],
+    [
+     609.12,
+     475.2
+    ],
+    [
+     609.12,
+     876.96
+    ],
+    [
+     457.92,
+     1010.88
+    ]
+   ],
+   "stations": 4,
+   "type": "q_b113",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 516,
+   "bus": "L1254_i",
+   "chain_end": "u_sfucore_Q_ctl__rest",
+   "dir": "in",
+   "lanes": [
+    "L1254"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest"
+   ],
+   "length_um": 733.1,
+   "regs_um": [
+    [
+     401.76,
+     1520.64
+    ],
+    [
+     457.92,
+     1270.08
+    ]
+   ],
+   "stations": 2,
+   "type": "q_b113",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 472,
+   "bus": "L1257_i",
+   "dir": "in",
+   "lanes": [
+    "L1257"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_opstore_a__g0",
+    "u_sfucore_Q_opstore_a__g1",
+    "u_sfucore_Q_opstore_a__r"
+   ],
+   "length_um": 2110.2,
+   "reason": "branch: leaves span a Manhattan radius 497 um > 364",
+   "type": "q_b113",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 311,
+   "bus": "L1276_o",
+   "dir": "out",
+   "lanes": [
+    "L1276"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr"
+   ],
+   "length_um": 1743.3,
+   "reason": "branch: leaves span a Manhattan radius 966 um > 364",
+   "type": "q_b113",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 279,
+   "bus": "L1277_o",
+   "dir": "out",
+   "lanes": [
+    "L1277"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr"
+   ],
+   "length_um": 2249.2,
+   "reason": "branch: leaves span a Manhattan radius 1102 um > 364",
+   "type": "q_b113",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 499,
+   "bus": "L3001_o",
+   "dir": "out",
+   "lanes": [
+    "L3001"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr",
+    "u_sfucore_Q_opstore_a__g0",
+    "u_sfucore_Q_opstore_a__g1",
+    "u_sfucore_Q_opstore_a__r"
+   ],
+   "length_um": 2318.2,
+   "reason": "branch: leaves span a Manhattan radius 1102 um > 364",
+   "type": "q_b113",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 267,
+   "bus": "L3002_o",
+   "dir": "out",
+   "lanes": [
+    "L3002"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr",
+    "u_sfucore_Q_opstore_a__g0",
+    "u_sfucore_Q_opstore_a__g1",
+    "u_sfucore_Q_opstore_a__r",
+    "u_sfucore_Q_opstore_b__g0",
+    "u_sfucore_Q_opstore_b__g1",
+    "u_sfucore_Q_opstore_b__o"
+   ],
+   "length_um": 1986.4,
+   "reason": "branch: leaves span a Manhattan radius 847 um > 364",
+   "type": "q_b113",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 178,
+   "bus": "L3003_o",
+   "dir": "out",
+   "lanes": [
+    "L3003"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr",
+    "u_sfucore_Q_opstore_b__g0",
+    "u_sfucore_Q_opstore_b__g1",
+    "u_sfucore_Q_opstore_b__o"
+   ],
+   "length_um": 2727.5,
+   "reason": "branch: leaves span a Manhattan radius 804 um > 364",
+   "type": "q_b113",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 128,
+   "bus": "L3009_o",
+   "chain_end": "u_sfucore_Q_ctl__pipe",
+   "dir": "out",
+   "lanes": [
+    "L3009"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest"
+   ],
+   "length_um": 1622.5,
+   "regs_um": [
+    [
+     704.16,
+     0.0
+    ],
+    [
+     648.0,
+     345.6
+    ],
+    [
+     648.0,
+     747.36
+    ],
+    [
+     678.24,
+     1062.72
+    ]
+   ],
+   "stations": 4,
+   "type": "q_b113",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 103,
+   "bus": "L3010_o",
+   "chain_end": "u_sfucore_Q_ctl__pipe",
+   "dir": "out",
+   "lanes": [
+    "L3010"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest"
+   ],
+   "length_um": 2341.9,
+   "regs_um": [
+    [
+     1836.0,
+     414.72
+    ],
+    [
+     1836.0,
+     816.48
+    ],
+    [
+     1550.88,
+     933.12
+    ],
+    [
+     1149.12,
+     933.12
+    ],
+    [
+     747.36,
+     933.12
+    ]
+   ],
+   "stations": 5,
+   "type": "q_b113",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 33,
+   "bus": "L3011_o",
+   "chain_end": "u_sfucore_Q_ctl__pipe",
+   "dir": "out",
+   "lanes": [
+    "L3011"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest"
+   ],
+   "length_um": 1613.1,
+   "regs_um": [
+    [
+     691.2,
+     0.0
+    ],
+    [
+     643.68,
+     354.24
+    ],
+    [
+     643.68,
+     756.0
+    ],
+    [
+     678.24,
+     1062.72
+    ]
+   ],
+   "stations": 4,
+   "type": "q_b113",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 332,
+   "bus": "L7001_o",
+   "chain_end": "u_sfucore_Q_ctl__pipe",
+   "dir": "out",
+   "lanes": [
+    "L7001"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest"
+   ],
+   "length_um": 1996.2,
+   "regs_um": [
+    [
+     1425.6,
+     349.92
+    ],
+    [
+     1425.6,
+     751.68
+    ],
+    [
+     1188.0,
+     915.84
+    ],
+    [
+     786.24,
+     915.84
+    ]
+   ],
+   "stations": 4,
+   "type": "q_b113",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 596,
+   "bus": "L5006_o",
+   "chain_end": "u_sfucore_Q_ctl__rest",
+   "dir": "out",
+   "lanes": [
+    "L5006"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest"
+   ],
+   "length_um": 1180.5,
+   "regs_um": [
+    [
+     0.0,
+     915.84
+    ],
+    [
+     306.72,
+     1010.88
+    ]
+   ],
+   "stations": 2,
+   "type": "q_b113__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 518,
+   "bus": "L5007_i",
+   "dir": "in",
+   "lanes": [
+    "L5007"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_opstore_b__g0",
+    "u_sfucore_Q_opstore_b__g1",
+    "u_sfucore_Q_opstore_b__o"
+   ],
+   "length_um": 1597.3,
+   "reason": "branch: leaves span a Manhattan radius 596 um > 364",
+   "type": "q_b113__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 958,
+   "bus": "L5022_o",
+   "dir": "out",
+   "lanes": [
+    "L5022"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr"
+   ],
+   "length_um": 1885.7,
+   "reason": "branch: leaves span a Manhattan radius 926 um > 364",
+   "type": "q_b113__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 704,
+   "bus": "L5023_o",
+   "dir": "out",
+   "lanes": [
+    "L5023"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr",
+    "u_sfucore_Q_opstore_a__g0",
+    "u_sfucore_Q_opstore_a__g1",
+    "u_sfucore_Q_opstore_a__r",
+    "u_sfucore_Q_opstore_b__g0",
+    "u_sfucore_Q_opstore_b__g1",
+    "u_sfucore_Q_opstore_b__o"
+   ],
+   "length_um": 2291.5,
+   "reason": "branch: leaves span a Manhattan radius 1063 um > 364",
+   "type": "q_b113__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 329,
+   "bus": "L5025_i",
+   "dir": "in",
+   "lanes": [
+    "L5025"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_opstore_a__g0",
+    "u_sfucore_Q_opstore_a__g1",
+    "u_sfucore_Q_opstore_a__r",
+    "u_sfucore_Q_opstore_b__g0",
+    "u_sfucore_Q_opstore_b__g1",
+    "u_sfucore_Q_opstore_b__o"
+   ],
+   "length_um": 2273.3,
+   "reason": "branch: leaves span a Manhattan radius 890 um > 364",
+   "type": "q_b113__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 596,
+   "bus": "L5039_o",
+   "chain_end": "u_sfucore_Q_ctl__pipe",
+   "dir": "out",
+   "lanes": [
+    "L5039"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest"
+   ],
+   "length_um": 1995.9,
+   "regs_um": [
+    [
+     1425.6,
+     349.92
+    ],
+    [
+     1425.6,
+     751.68
+    ],
+    [
+     1188.0,
+     915.84
+    ],
+    [
+     786.24,
+     915.84
+    ]
+   ],
+   "stations": 4,
+   "type": "q_b113__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1000,
+   "bus": "L5041_i",
+   "dir": "in",
+   "lanes": [
+    "L5041"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_opstore_a__g0",
+    "u_sfucore_Q_opstore_a__g1",
+    "u_sfucore_Q_opstore_a__r",
+    "u_sfucore_Q_opstore_b__g0",
+    "u_sfucore_Q_opstore_b__g1",
+    "u_sfucore_Q_opstore_b__o"
+   ],
+   "length_um": 1473.1,
+   "reason": "branch: leaves span a Manhattan radius 659 um > 364",
+   "type": "q_b113__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1266,
+   "bus": "L5042_o",
+   "dir": "out",
+   "lanes": [
+    "L5042"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr",
+    "u_sfucore_Q_opstore_a__g0",
+    "u_sfucore_Q_opstore_a__g1",
+    "u_sfucore_Q_opstore_a__r"
+   ],
+   "length_um": 1616.9,
+   "reason": "branch: leaves span a Manhattan radius 1015 um > 364",
+   "type": "q_b113__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 396,
+   "bus": "L5043_o",
+   "dir": "out",
+   "lanes": [
+    "L5043"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr",
+    "u_sfucore_Q_opstore_a__g0",
+    "u_sfucore_Q_opstore_a__g1",
+    "u_sfucore_Q_opstore_a__r",
+    "u_sfucore_Q_opstore_b__g0",
+    "u_sfucore_Q_opstore_b__g1",
+    "u_sfucore_Q_opstore_b__o"
+   ],
+   "length_um": 1383.7,
+   "reason": "branch: leaves span a Manhattan radius 847 um > 364",
+   "type": "q_b113__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 698,
+   "bus": "L5051_o",
+   "dir": "out",
+   "lanes": [
+    "L5051"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr",
+    "u_sfup_Q__q1"
+   ],
+   "length_um": 2078.9,
+   "reason": "branch: leaves span a Manhattan radius 1015 um > 364",
+   "type": "q_b113__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 415,
+   "bus": "L5052_i",
+   "dir": "in",
+   "lanes": [
+    "L5052"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr",
+    "u_sfup_Q__q1"
+   ],
+   "length_um": 1247.7,
+   "reason": "branch: leaves span a Manhattan radius 745 um > 364",
+   "type": "q_b113__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 317,
+   "bus": "L5054_o",
+   "chain_end": "u_sfucore_Q_ctl__pipe",
+   "dir": "out",
+   "lanes": [
+    "L5054"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest"
+   ],
+   "length_um": 1373.7,
+   "regs_um": [
+    [
+     514.08,
+     207.36
+    ],
+    [
+     613.44,
+     509.76
+    ],
+    [
+     613.44,
+     911.52
+    ]
+   ],
+   "stations": 3,
+   "type": "q_b113__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 279,
+   "bus": "L5055_o",
+   "chain_end": "u_sfucore_Q_ctl__rest",
+   "dir": "out",
+   "lanes": [
+    "L5055"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest"
+   ],
+   "length_um": 1413.1,
+   "regs_um": [
+    [
+     475.2,
+     207.36
+    ],
+    [
+     609.12,
+     475.2
+    ],
+    [
+     609.12,
+     876.96
+    ],
+    [
+     457.92,
+     1010.88
+    ]
+   ],
+   "stations": 4,
+   "type": "q_b113__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 798,
+   "bus": "L5058_i",
+   "dir": "in",
+   "lanes": [
+    "L5058"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_opstore_a__g0",
+    "u_sfucore_Q_opstore_a__g1",
+    "u_sfucore_Q_opstore_a__r"
+   ],
+   "length_um": 1552.9,
+   "reason": "branch: leaves span a Manhattan radius 410 um > 364",
+   "type": "q_b113__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 585,
+   "bus": "L5059_o",
+   "dir": "out",
+   "lanes": [
+    "L5059"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr"
+   ],
+   "length_um": 2170.4,
+   "reason": "branch: leaves span a Manhattan radius 1102 um > 364",
+   "type": "q_b113__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 749,
+   "bus": "L5060_o",
+   "dir": "out",
+   "lanes": [
+    "L5060"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest",
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr",
+    "u_sfucore_Q_opstore_a__g0",
+    "u_sfucore_Q_opstore_a__g1",
+    "u_sfucore_Q_opstore_a__r",
+    "u_sfucore_Q_opstore_b__g0",
+    "u_sfucore_Q_opstore_b__g1",
+    "u_sfucore_Q_opstore_b__o"
+   ],
+   "length_um": 2290.5,
+   "reason": "branch: leaves span a Manhattan radius 1102 um > 364",
+   "type": "q_b113__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 200,
+   "bus": "L5061_o",
+   "dir": "out",
+   "lanes": [
+    "L5061"
+   ],
+   "leaves": [
+    "u_sfucore_Q_lane14__bk",
+    "u_sfucore_Q_lane14__ex",
+    "u_sfucore_Q_lane14__fr",
+    "u_sfucore_Q_lane15__bk",
+    "u_sfucore_Q_lane15__ex",
+    "u_sfucore_Q_lane15__fr",
+    "u_sfucore_Q_opstore_b__g0",
+    "u_sfucore_Q_opstore_b__g1",
+    "u_sfucore_Q_opstore_b__o"
+   ],
+   "length_um": 881.3,
+   "reason": "branch: leaves span a Manhattan radius 384 um > 364",
+   "type": "q_b113__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 596,
+   "bus": "L7502_o",
+   "chain_end": "u_sfucore_Q_ctl__rest",
+   "dir": "out",
+   "lanes": [
+    "L7502"
+   ],
+   "leaves": [
+    "u_sfucore_Q_ctl__pipe",
+    "u_sfucore_Q_ctl__rest"
+   ],
+   "length_um": 2202.4,
+   "regs_um": [
+    [
+     1425.6,
+     142.56
+    ],
+    [
+     1425.6,
+     544.32
+    ],
+    [
+     1395.36,
+     915.84
+    ],
+    [
+     993.6,
+     915.84
+    ],
+    [
+     682.56,
+     1006.56
+    ]
+   ],
+   "stations": 5,
+   "type": "q_b113__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 4986,
+   "bus": "L160m_o",
+   "dir": "out",
+   "lanes": [
+    "L160m"
+   ],
+   "leaves": [
+    "u_hb_idx__q_Q__q0",
+    "u_hb_idx__qctl_Q__q0",
+    "u_mu_keybuf_0_s0__q0",
+    "u_mu_keybuf_0_s1__q0",
+    "u_mu_keybuf_0_s2__q0",
+    "u_mu_keybuf_0_s3__q0"
+   ],
+   "length_um": 6526.3,
+   "reason": "branch: leaves span a Manhattan radius 3236 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 264,
+   "bus": "L191_o",
+   "dir": "out",
+   "lanes": [
+    "L191"
+   ],
+   "leaves": [
+    "u_calendar_Q__q1",
+    "u_fr_Q",
+    "u_hb_coll_Q_body_n2__q0__q",
+    "u_hb_coll_Q_body_n2__q0__r",
+    "u_hb_idx__qctl_Q__q0",
+    "u_hb_idx__qctl_Q__q1",
+    "u_hb_vms_Q__q1",
+    "u_hcollb_Q",
+    "u_hcollgi_Q__q1__a0",
+    "u_hcollgi_Q__q1__a1",
+    "u_hcollgi_Q__q1__i",
+    "u_hcollgl_Q__q1",
+    "u_hcollks_Q",
+    "u_hcollks_Q_p0",
+    "u_hcollks_Q_p0__q0",
+    "u_hcollks_Q_p1",
+    "u_hcollks_Q_p1__q0",
+    "u_hcollks_Q_p2",
+    "u_hcollks_Q_p2__q0",
+    "u_hcollks_Q_p3",
+    "u_hcollks_Q_p3__q0",
+    "u_hcollrs_Q",
+    "u_hcollrs_Q__q0",
+    "u_hleaf_Q",
+    "u_hleaf_Q__q0",
+    "u_smw_Q__q1",
+    "u_vmfc_Q"
+   ],
+   "length_um": 8613.6,
+   "reason": "branch: leaves span a Manhattan radius 3949 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 632,
+   "bus": "L720_o",
+   "dir": "out",
+   "lanes": [
+    "L720m"
+   ],
+   "leaves": [
+    "u_epcal_Q",
+    "u_hb_coll_Q_body_n2__q0__q",
+    "u_hb_coll_Q_body_n2__q0__r"
+   ],
+   "length_um": 2905.1,
+   "reason": "branch: leaves span a Manhattan radius 1992 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 37,
+   "bus": "L721_i",
+   "dir": "in",
+   "lanes": [
+    "L8312m"
+   ],
+   "leaves": [
+    "u_smw_Q__q1",
+    "u_svg_Q3",
+    "u_svg_Q3__b0",
+    "u_svg_Q3__b1",
+    "u_svg_Q3__o",
+    "u_svg_Q3__t"
+   ],
+   "length_um": 1128.5,
+   "reason": "branch: leaves span a Manhattan radius 946 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 308,
+   "bus": "L722_i",
+   "dir": "in",
+   "lanes": [
+    "L722m"
+   ],
+   "leaves": [
+    "u_hb_coll_Q_body_n2__q0__q",
+    "u_hb_coll_Q_body_n2__q0__r",
+    "u_hleaf_Q",
+    "u_hleaf_Q__q0"
+   ],
+   "length_um": 3867.5,
+   "reason": "branch: leaves span a Manhattan radius 2259 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 307,
+   "bus": "L723_i",
+   "chain_end": "u_hb_coll_Q_body_n2__q0__r",
+   "dir": "in",
+   "lanes": [
+    "L723m"
+   ],
+   "leaves": [
+    "u_hb_coll_Q_body_n2__q0__q",
+    "u_hb_coll_Q_body_n2__q0__r"
+   ],
+   "length_um": 1946.3,
+   "regs_um": [
+    [
+     2393.28,
+     198.72
+    ],
+    [
+     2423.52,
+     570.24
+    ],
+    [
+     2229.12,
+     777.6
+    ],
+    [
+     1827.36,
+     777.6
+    ],
+    [
+     1425.6,
+     777.6
+    ],
+    [
+     1075.68,
+     725.76
+    ],
+    [
+     1071.36,
+     505.44
+    ]
+   ],
+   "stations": 7,
+   "type": "q_hub_ne",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 2,
+   "bus": "L5021_i",
+   "chain_end": "u_obs_Q",
+   "dir": "in",
+   "lanes": [
+    "L5021"
+   ],
+   "leaves": [
+    "u_obs_Q"
+   ],
+   "length_um": 4233.6,
+   "regs_um": [
+    [
+     3939.84,
+     384.48
+    ],
+    [
+     3732.48,
+     578.88
+    ],
+    [
+     3451.68,
+     699.84
+    ],
+    [
+     3049.92,
+     699.84
+    ],
+    [
+     2648.16,
+     699.84
+    ],
+    [
+     2315.52,
+     768.96
+    ],
+    [
+     1922.4,
+     777.6
+    ],
+    [
+     1529.28,
+     786.24
+    ],
+    [
+     1412.64,
+     1071.36
+    ],
+    [
+     1252.8,
+     1313.28
+    ]
+   ],
+   "stations": 10,
+   "type": "q_hub_ne",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 3522,
+   "bus": "L5026_o",
+   "dir": "out",
+   "lanes": [
+    "L5026"
+   ],
+   "leaves": [
+    "u_calendar_Q__q1",
+    "u_cxrc_Q_q",
+    "u_hb_coll_Q_body_n2__q0__q",
+    "u_hb_coll_Q_body_n2__q0__r",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0",
+    "u_vmb_Q2",
+    "u_vmb_Q2_mu1",
+    "u_vmb_Q3",
+    "u_vmb_Q3_mu1"
+   ],
+   "length_um": 6782.7,
+   "reason": "branch: leaves span a Manhattan radius 3195 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1625,
+   "bus": "L5027_i",
+   "dir": "in",
+   "lanes": [
+    "L5027"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1",
+    "u_fcx_Q",
+    "u_vmb_Q2",
+    "u_vmb_Q2_mu1",
+    "u_vmb_Q3",
+    "u_vmb_Q3_mu1"
+   ],
+   "length_um": 6916.4,
+   "reason": "branch: leaves span a Manhattan radius 2233 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 4988,
+   "bus": "L5028_o",
+   "dir": "out",
+   "lanes": [
+    "L5028"
+   ],
+   "leaves": [
+    "u_hb_idx__q_Q__q1",
+    "u_hb_idx__qctl_Q__q1",
+    "u_mu_keybuf_0_s0__q1",
+    "u_mu_keybuf_0_s1__q1",
+    "u_mu_keybuf_0_s2__q1",
+    "u_mu_keybuf_0_s3__q1"
+   ],
+   "length_um": 4730.4,
+   "reason": "branch: leaves span a Manhattan radius 2095 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 410,
+   "bus": "L5029_i",
+   "chain_end": "u_sfus_Q__q1",
+   "dir": "in",
+   "lanes": [
+    "L5029"
+   ],
+   "leaves": [
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 5526.1,
+   "regs_um": [
+    [
+     3002.4,
+     3918.24
+    ],
+    [
+     3032.64,
+     3546.72
+    ],
+    [
+     3382.56,
+     3494.88
+    ],
+    [
+     3784.32,
+     3494.88
+    ],
+    [
+     3926.88,
+     3235.68
+    ],
+    [
+     3926.88,
+     2833.92
+    ],
+    [
+     3926.88,
+     2432.16
+    ],
+    [
+     3926.88,
+     2030.4
+    ],
+    [
+     3926.88,
+     1628.64
+    ],
+    [
+     3926.88,
+     1226.88
+    ],
+    [
+     4160.16,
+     1058.4
+    ],
+    [
+     4561.92,
+     1058.4
+    ],
+    [
+     4963.68,
+     1058.4
+    ]
+   ],
+   "stations": 13,
+   "type": "q_hub_ne",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 160,
+   "bus": "L5030_o",
+   "dir": "out",
+   "lanes": [
+    "L5030"
+   ],
+   "leaves": [
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 5445.1,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 3522,
+   "bus": "L5031_o",
+   "dir": "out",
+   "lanes": [
+    "L5031"
+   ],
+   "leaves": [
+    "u_calendar_Q__q1",
+    "u_cxrc_Q_q",
+    "u_hb_coll_Q_body_n2__q0__q",
+    "u_hb_coll_Q_body_n2__q0__r",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0",
+    "u_vmb_Q6",
+    "u_vmb_Q6_mu1",
+    "u_vmb_Q7",
+    "u_vmb_Q7_mu1"
+   ],
+   "length_um": 5761.0,
+   "reason": "branch: leaves span a Manhattan radius 4627 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1626,
+   "bus": "L5032_i",
+   "dir": "in",
+   "lanes": [
+    "L5032"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1",
+    "u_fcx_Q",
+    "u_fr_Q",
+    "u_vmb_Q6",
+    "u_vmb_Q6_mu1",
+    "u_vmb_Q7",
+    "u_vmb_Q7_mu1"
+   ],
+   "length_um": 4894.4,
+   "reason": "branch: leaves span a Manhattan radius 3866 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 128,
+   "bus": "L5033_o",
+   "dir": "out",
+   "lanes": [
+    "L5033"
+   ],
+   "leaves": [
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 3274.6,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 330,
+   "bus": "L5034_i",
+   "chain_end": "u_sfus_Q__q1",
+   "dir": "in",
+   "lanes": [
+    "L5034"
+   ],
+   "leaves": [
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 3305.3,
+   "regs_um": [
+    [
+     3024.0,
+     0.0
+    ],
+    [
+     3378.24,
+     0.0
+    ],
+    [
+     3780.0,
+     0.0
+    ],
+    [
+     4181.76,
+     0.0
+    ],
+    [
+     4583.52,
+     0.0
+    ],
+    [
+     4985.28,
+     0.0
+    ],
+    [
+     5253.12,
+     133.92
+    ],
+    [
+     5253.12,
+     535.68
+    ]
+   ],
+   "stations": 8,
+   "type": "q_hub_ne",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1980,
+   "bus": "L5037_i",
+   "dir": "in",
+   "lanes": [
+    "L5037"
+   ],
+   "leaves": [
+    "u_hcollgi_Q__q0__a0",
+    "u_hcollgi_Q__q0__a1",
+    "u_hcollgi_Q__q0__i",
+    "u_hcollgi_Q__q1__a0",
+    "u_hcollgi_Q__q1__a1",
+    "u_hcollgi_Q__q1__i",
+    "u_hleaf_Q__q0",
+    "u_obs_Q",
+    "u_stl_Q",
+    "u_svg_Q0",
+    "u_svg_Q0__b0",
+    "u_svg_Q0__b1",
+    "u_svg_Q0__o",
+    "u_svg_Q0__t",
+    "u_svg_Q1",
+    "u_svg_Q1__b0",
+    "u_svg_Q1__b1",
+    "u_svg_Q1__o",
+    "u_svg_Q1__t",
+    "u_svg_Q2",
+    "u_svg_Q2__b0",
+    "u_svg_Q2__b1",
+    "u_svg_Q2__o",
+    "u_svg_Q2__t",
+    "u_svg_Q3",
+    "u_svg_Q3__b0",
+    "u_svg_Q3__b1",
+    "u_svg_Q3__o",
+    "u_svg_Q3__t"
+   ],
+   "length_um": 8947.9,
+   "reason": "branch: leaves span a Manhattan radius 4229 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 279,
+   "bus": "L5038_o",
+   "dir": "out",
+   "lanes": [
+    "L5038"
+   ],
+   "leaves": [
+    "u_calendar_Q__q1",
+    "u_hb_coll_Q_body_n2__q0__q",
+    "u_hb_coll_Q_body_n2__q0__r",
+    "u_hleaf_Q",
+    "u_hleaf_Q__q0",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_smw_Q__q1",
+    "u_stl_Q",
+    "u_vmfc_Q"
+   ],
+   "length_um": 8655.2,
+   "reason": "branch: leaves span a Manhattan radius 3316 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 2080,
+   "bus": "L5044_o",
+   "dir": "out",
+   "lanes": [
+    "L5044"
+   ],
+   "leaves": [
+    "u_cic_Q",
+    "u_cij_Q__q1",
+    "u_cxij_Q_s",
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 9223.9,
+   "reason": "branch: leaves span a Manhattan radius 2928 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 611,
+   "bus": "L5045_i",
+   "dir": "in",
+   "lanes": [
+    "L5045"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 9323.7,
+   "reason": "branch: leaves span a Manhattan radius 2341 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 2080,
+   "bus": "L5046_o",
+   "dir": "out",
+   "lanes": [
+    "L5046"
+   ],
+   "leaves": [
+    "u_cic_Q",
+    "u_cij_Q__q1",
+    "u_cxij_Q_s",
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 6562.1,
+   "reason": "branch: leaves span a Manhattan radius 2876 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 611,
+   "bus": "L5047_i",
+   "dir": "in",
+   "lanes": [
+    "L5047"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 6305.4,
+   "reason": "branch: leaves span a Manhattan radius 2259 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 410,
+   "bus": "L5049_i",
+   "dir": "in",
+   "lanes": [
+    "L5049"
+   ],
+   "leaves": [
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 5793.1,
+   "reason": "route: no chain with every hop <= reach",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 160,
+   "bus": "L5050_o",
+   "dir": "out",
+   "lanes": [
+    "L5050"
+   ],
+   "leaves": [
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 5830.9,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 698,
+   "bus": "L5051_i",
+   "dir": "in",
+   "lanes": [
+    "L5051"
+   ],
+   "leaves": [
+    "u_col_sfu_Q",
+    "u_cxrc_Q_s",
+    "u_hleaf_Q",
+    "u_hleaf_Q__q0",
+    "u_obs_Q",
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 8064.5,
+   "reason": "branch: leaves span a Manhattan radius 2285 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 415,
+   "bus": "L5052_o",
+   "dir": "out",
+   "lanes": [
+    "L5052"
+   ],
+   "leaves": [
+    "u_col_sfu_Q",
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 7992.8,
+   "reason": "branch: leaves span a Manhattan radius 1719 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1457,
+   "bus": "L5063_o",
+   "dir": "out",
+   "lanes": [
+    "L5063"
+   ],
+   "leaves": [
+    "u_calendar_Q__q1",
+    "u_cic_Q",
+    "u_cij_Q__q1",
+    "u_cxij_Q_s",
+    "u_cxrc_Q_q",
+    "u_hb_coll_Q_body_n2__q0__q",
+    "u_hb_coll_Q_body_n2__q0__r",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 8667.9,
+   "reason": "branch: leaves span a Manhattan radius 3588 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1091,
+   "bus": "L5064_o",
+   "dir": "out",
+   "lanes": [
+    "L5064"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 6575.8,
+   "reason": "branch: leaves span a Manhattan radius 2596 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 883,
+   "bus": "L5065_i",
+   "chain_end": "u_fcx_Q",
+   "dir": "in",
+   "lanes": [
+    "L5065"
+   ],
+   "leaves": [
+    "u_fcx_Q"
+   ],
+   "length_um": 5329.8,
+   "regs_um": [
+    [
+     0.0,
+     3814.56
+    ],
+    [
+     0.0,
+     3412.8
+    ],
+    [
+     0.0,
+     3011.04
+    ],
+    [
+     0.0,
+     2609.28
+    ],
+    [
+     0.0,
+     2207.52
+    ],
+    [
+     0.0,
+     1805.76
+    ],
+    [
+     0.0,
+     1404.0
+    ],
+    [
+     69.12,
+     1071.36
+    ],
+    [
+     470.88,
+     1071.36
+    ],
+    [
+     872.64,
+     1071.36
+    ],
+    [
+     1274.4,
+     1071.36
+    ],
+    [
+     1529.28,
+     924.48
+    ],
+    [
+     1818.72,
+     812.16
+    ]
+   ],
+   "stations": 13,
+   "type": "q_hub_ne",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 628,
+   "bus": "L5066_i",
+   "dir": "in",
+   "lanes": [
+    "L5066"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1",
+    "u_sucore_Q__q0",
+    "u_vmb_Q0",
+    "u_vmb_Q0_mu1",
+    "u_vmb_Q1",
+    "u_vmb_Q1_mu1"
+   ],
+   "length_um": 6558.1,
+   "reason": "branch: leaves span a Manhattan radius 2268 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 663,
+   "bus": "L5068_o",
+   "dir": "out",
+   "lanes": [
+    "L5068"
+   ],
+   "leaves": [
+    "u_calendar_Q__q1",
+    "u_cic_Q",
+    "u_cij_Q__q1",
+    "u_cxij_Q_s",
+    "u_hb_coll_Q_body_n2__q0__q",
+    "u_hb_coll_Q_body_n2__q0__r"
+   ],
+   "length_um": 7944.4,
+   "reason": "branch: leaves span a Manhattan radius 3840 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 429,
+   "bus": "L5069_o",
+   "dir": "out",
+   "lanes": [
+    "L5069"
+   ],
+   "leaves": [
+    "u_hb_coll_Q_body_n2__q0__q",
+    "u_hb_coll_Q_body_n2__q0__r"
+   ],
+   "length_um": 1040.0,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 486,
+   "bus": "L5070_o",
+   "dir": "out",
+   "lanes": [
+    "L5070"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 7884.3,
+   "reason": "branch: leaves span a Manhattan radius 2640 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1898,
+   "bus": "L5071_o",
+   "dir": "out",
+   "lanes": [
+    "L5071"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 6618.1,
+   "reason": "branch: leaves span a Manhattan radius 2596 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1087,
+   "bus": "L5072_i",
+   "dir": "in",
+   "lanes": [
+    "L5072"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1",
+    "u_fcx_Q"
+   ],
+   "length_um": 5772.8,
+   "reason": "branch: leaves span a Manhattan radius 1944 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 490,
+   "bus": "L5073_i",
+   "dir": "in",
+   "lanes": [
+    "L5073"
+   ],
+   "leaves": [
+    "u_sucore_Q__q0",
+    "u_vmb_Q4",
+    "u_vmb_Q4_mu1",
+    "u_vmb_Q5",
+    "u_vmb_Q5_mu1"
+   ],
+   "length_um": 7551.4,
+   "reason": "branch: leaves span a Manhattan radius 3465 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 256,
+   "bus": "L5075_o",
+   "dir": "out",
+   "lanes": [
+    "L5075"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 5595.6,
+   "reason": "branch: leaves span a Manhattan radius 2462 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 653,
+   "bus": "L5076_o",
+   "dir": "out",
+   "lanes": [
+    "L5076"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 6237.2,
+   "reason": "branch: leaves span a Manhattan radius 2506 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 201,
+   "bus": "L5077_o",
+   "dir": "out",
+   "lanes": [
+    "L5077"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 6082.7,
+   "reason": "branch: leaves span a Manhattan radius 2640 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 163,
+   "bus": "L5078_o",
+   "dir": "out",
+   "lanes": [
+    "L5078"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 6944.0,
+   "reason": "branch: leaves span a Manhattan radius 2640 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 26,
+   "bus": "L5079_o",
+   "dir": "out",
+   "lanes": [
+    "L5079"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 6444.9,
+   "reason": "branch: leaves span a Manhattan radius 2640 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 29,
+   "bus": "L5080_o",
+   "dir": "out",
+   "lanes": [
+    "L5080"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 8241.7,
+   "reason": "branch: leaves span a Manhattan radius 2640 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 83,
+   "bus": "L5081_o",
+   "dir": "out",
+   "lanes": [
+    "L5081"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0",
+    "u_vmb_Q0",
+    "u_vmb_Q0_mu1",
+    "u_vmb_Q1",
+    "u_vmb_Q1_mu1"
+   ],
+   "length_um": 7247.0,
+   "reason": "branch: leaves span a Manhattan radius 2683 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 16,
+   "bus": "L5082_o",
+   "dir": "out",
+   "lanes": [
+    "L5082"
+   ],
+   "leaves": [
+    "u_vmb_Q1",
+    "u_vmb_Q1_mu1"
+   ],
+   "length_um": 5008.9,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 42,
+   "bus": "L5083_o",
+   "dir": "out",
+   "lanes": [
+    "L5083"
+   ],
+   "leaves": [
+    "u_vmb_Q1",
+    "u_vmb_Q1_mu1"
+   ],
+   "length_um": 3403.4,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 126,
+   "bus": "L5084_o",
+   "dir": "out",
+   "lanes": [
+    "L5084"
+   ],
+   "leaves": [
+    "u_vmb_Q1",
+    "u_vmb_Q1_mu1"
+   ],
+   "length_um": 4044.5,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 16,
+   "bus": "L5085_o",
+   "dir": "out",
+   "lanes": [
+    "L5085"
+   ],
+   "leaves": [
+    "u_vmb_Q1",
+    "u_vmb_Q1_mu1"
+   ],
+   "length_um": 4112.0,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 175,
+   "bus": "L5086_o",
+   "dir": "out",
+   "lanes": [
+    "L5086"
+   ],
+   "leaves": [
+    "u_vmb_Q0",
+    "u_vmb_Q0_mu1",
+    "u_vmb_Q1",
+    "u_vmb_Q1_mu1"
+   ],
+   "length_um": 4378.3,
+   "reason": "branch: leaves span a Manhattan radius 1063 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 34,
+   "bus": "L5087_o",
+   "dir": "out",
+   "lanes": [
+    "L5087"
+   ],
+   "leaves": [
+    "u_vmb_Q1",
+    "u_vmb_Q1_mu1"
+   ],
+   "length_um": 3143.7,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 21,
+   "bus": "L5094_i",
+   "chain_end": "u_cxij_Q_q__q1",
+   "dir": "in",
+   "lanes": [
+    "L5094"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1"
+   ],
+   "length_um": 4786.7,
+   "regs_um": [
+    [
+     0.0,
+     2216.16
+    ],
+    [
+     25.92,
+     2592.0
+    ],
+    [
+     410.4,
+     2609.28
+    ],
+    [
+     812.16,
+     2609.28
+    ],
+    [
+     1101.6,
+     2721.6
+    ],
+    [
+     1494.72,
+     2730.24
+    ],
+    [
+     1684.8,
+     2941.92
+    ],
+    [
+     1684.8,
+     3343.68
+    ],
+    [
+     1939.68,
+     3490.56
+    ],
+    [
+     2280.96,
+     3430.08
+    ],
+    [
+     2682.72,
+     3430.08
+    ],
+    [
+     3015.36,
+     3499.2
+    ],
+    [
+     3322.08,
+     3490.56
+    ],
+    [
+     3723.84,
+     3490.56
+    ],
+    [
+     3922.56,
+     3287.52
+    ],
+    [
+     3922.56,
+     2885.76
+    ]
+   ],
+   "stations": 16,
+   "type": "q_hub_ne",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1554,
+   "bus": "L7500_o",
+   "dir": "out",
+   "lanes": [
+    "L7500"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0",
+    "u_vmb_Q5",
+    "u_vmb_Q5_mu1"
+   ],
+   "length_um": 8173.8,
+   "reason": "branch: leaves span a Manhattan radius 3675 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 512,
+   "bus": "L7501_i",
+   "chain_end": "u_cxij_Q_q__q1",
+   "dir": "in",
+   "lanes": [
+    "L7501"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1"
+   ],
+   "length_um": 6467.4,
+   "regs_um": [
+    [
+     354.24,
+     181.44
+    ],
+    [
+     756.0,
+     181.44
+    ],
+    [
+     1075.68,
+     263.52
+    ],
+    [
+     1075.68,
+     665.28
+    ],
+    [
+     1339.2,
+     803.52
+    ],
+    [
+     1740.96,
+     803.52
+    ],
+    [
+     2142.72,
+     803.52
+    ],
+    [
+     2544.48,
+     803.52
+    ],
+    [
+     2946.24,
+     803.52
+    ],
+    [
+     3322.08,
+     829.44
+    ],
+    [
+     3723.84,
+     829.44
+    ],
+    [
+     3926.88,
+     1028.16
+    ],
+    [
+     3926.88,
+     1429.92
+    ],
+    [
+     3926.88,
+     1831.68
+    ],
+    [
+     3926.88,
+     2233.44
+    ],
+    [
+     3952.8,
+     2609.28
+    ]
+   ],
+   "stations": 16,
+   "type": "q_hub_ne",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 748,
+   "bus": "L8001_o",
+   "dir": "out",
+   "lanes": [
+    "L8001"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 8354.8,
+   "reason": "branch: leaves span a Manhattan radius 2640 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 568,
+   "bus": "L8003m_o",
+   "dir": "out",
+   "lanes": [
+    "L8003m"
+   ],
+   "leaves": [
+    "u_sucore_Q__q0",
+    "u_vmb_Q4",
+    "u_vmb_Q4_mu1",
+    "u_vmb_Q5",
+    "u_vmb_Q5_mu1"
+   ],
+   "length_um": 7300.0,
+   "reason": "branch: leaves span a Manhattan radius 3473 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 2807,
+   "bus": "L8100_o",
+   "dir": "out",
+   "lanes": [
+    "L8100"
+   ],
+   "leaves": [
+    "u_hb_vms_Q__q0",
+    "u_hcollb_Q",
+    "u_obs_Q"
+   ],
+   "length_um": 8580.9,
+   "reason": "branch: leaves span a Manhattan radius 1669 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 2762,
+   "bus": "L8101_i",
+   "chain_end": "u_hb_vms_Q__q0",
+   "dir": "in",
+   "lanes": [
+    "L8101"
+   ],
+   "leaves": [
+    "u_hb_vms_Q__q0"
+   ],
+   "length_um": 5866.1,
+   "regs_um": [
+    [
+     7814.88,
+     483.84
+    ],
+    [
+     7413.12,
+     483.84
+    ],
+    [
+     7205.76,
+     483.84
+    ],
+    [
+     6834.24,
+     483.84
+    ],
+    [
+     6462.72,
+     483.84
+    ],
+    [
+     6143.04,
+     483.84
+    ],
+    [
+     5823.36,
+     483.84
+    ],
+    [
+     5421.6,
+     483.84
+    ],
+    [
+     5019.84,
+     483.84
+    ],
+    [
+     4618.08,
+     483.84
+    ],
+    [
+     4216.32,
+     483.84
+    ],
+    [
+     3814.56,
+     483.84
+    ],
+    [
+     3412.8,
+     483.84
+    ],
+    [
+     3196.8,
+     669.6
+    ],
+    [
+     3196.8,
+     803.52
+    ],
+    [
+     3196.8,
+     1205.28
+    ]
+   ],
+   "stations": 16,
+   "type": "q_hub_ne",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 484,
+   "bus": "L8380_o",
+   "dir": "out",
+   "lanes": [
+    "L8380"
+   ],
+   "leaves": [
+    "u_sucore_Q__q0",
+    "u_vmb_Q0",
+    "u_vmb_Q0_mu1"
+   ],
+   "length_um": 5023.8,
+   "reason": "branch: leaves span a Manhattan radius 841 um > 364",
+   "type": "q_hub_ne",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 4986,
+   "bus": "L160_o",
+   "dir": "out",
+   "lanes": [
+    "L160"
+   ],
+   "leaves": [
+    "u_hb_idx__q_Q__q0",
+    "u_hb_idx__qctl_Q__q0",
+    "u_mu_keybuf_0_s0__q0",
+    "u_mu_keybuf_0_s1__q0",
+    "u_mu_keybuf_0_s2__q0",
+    "u_mu_keybuf_0_s3__q0"
+   ],
+   "length_um": 6431.2,
+   "reason": "branch: leaves span a Manhattan radius 575 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 559,
+   "bus": "L169_i",
+   "dir": "in",
+   "lanes": [
+    "L169"
+   ],
+   "leaves": [
+    "u_cij_Q__q0",
+    "u_cij_Q__q1",
+    "u_svg_Q0",
+    "u_svg_Q0__b0",
+    "u_svg_Q0__b1",
+    "u_svg_Q0__o",
+    "u_svg_Q0__t",
+    "u_svg_Q1",
+    "u_svg_Q1__b0",
+    "u_svg_Q1__b1",
+    "u_svg_Q1__o",
+    "u_svg_Q1__t",
+    "u_svg_Q2",
+    "u_svg_Q2__b0",
+    "u_svg_Q2__b1",
+    "u_svg_Q2__o",
+    "u_svg_Q2__t",
+    "u_svg_Q3",
+    "u_svg_Q3__b0",
+    "u_svg_Q3__b1",
+    "u_svg_Q3__o",
+    "u_svg_Q3__t"
+   ],
+   "length_um": 8357.8,
+   "reason": "branch: leaves span a Manhattan radius 4229 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 559,
+   "bus": "L171_i",
+   "dir": "in",
+   "lanes": [
+    "L171"
+   ],
+   "leaves": [
+    "u_hcollgi_Q__q0__a0",
+    "u_hcollgi_Q__q0__a1",
+    "u_hcollgi_Q__q0__i",
+    "u_hcollgi_Q__q1__a0",
+    "u_hcollgi_Q__q1__a1",
+    "u_hcollgi_Q__q1__i",
+    "u_hleaf_Q__q0",
+    "u_stl_Q"
+   ],
+   "length_um": 8362.3,
+   "reason": "branch: leaves span a Manhattan radius 2782 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 558,
+   "bus": "L172_i",
+   "dir": "in",
+   "lanes": [
+    "L172"
+   ],
+   "leaves": [
+    "u_hb_coll_Q_body_core__q0__col0",
+    "u_hb_coll_Q_body_core__q0__col1",
+    "u_hb_coll_Q_body_core__q0__col2",
+    "u_hb_coll_Q_body_core__q0__col3",
+    "u_hb_coll_Q_body_core__q0__ctl",
+    "u_hb_coll_Q_vm__q0",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_stl_Q"
+   ],
+   "length_um": 11377.9,
+   "reason": "branch: leaves span a Manhattan radius 3338 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 632,
+   "bus": "L720_o",
+   "dir": "out",
+   "lanes": [
+    "L720"
+   ],
+   "leaves": [
+    "u_epcal_Q",
+    "u_hb_coll_Q_edge__q0__arg",
+    "u_hb_coll_Q_edge__q0__link0",
+    "u_hb_coll_Q_edge__q0__link1",
+    "u_hb_coll_Q_edge__q0__link2"
+   ],
+   "length_um": 2861.9,
+   "reason": "branch: leaves span a Manhattan radius 2424 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 308,
+   "bus": "L722_i",
+   "dir": "in",
+   "lanes": [
+    "L722"
+   ],
+   "leaves": [
+    "u_hb_coll_Q_edge__q0__arg",
+    "u_hb_coll_Q_edge__q0__link0",
+    "u_hb_coll_Q_edge__q0__link1",
+    "u_hb_coll_Q_edge__q0__link2",
+    "u_hleaf_Q",
+    "u_hleaf_Q__q0"
+   ],
+   "length_um": 3858.9,
+   "reason": "branch: leaves span a Manhattan radius 2709 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 307,
+   "bus": "L723_i",
+   "chain_end": "u_hb_coll_Q_edge__q0__arg",
+   "dir": "in",
+   "lanes": [
+    "L723"
+   ],
+   "leaves": [
+    "u_hb_coll_Q_edge__q0__arg",
+    "u_hb_coll_Q_edge__q0__link0",
+    "u_hb_coll_Q_edge__q0__link1",
+    "u_hb_coll_Q_edge__q0__link2"
+   ],
+   "length_um": 2628.9,
+   "regs_um": [
+    [
+     1788.48,
+     0.0
+    ],
+    [
+     1386.72,
+     0.0
+    ],
+    [
+     984.96,
+     0.0
+    ],
+    [
+     583.2,
+     0.0
+    ],
+    [
+     319.68,
+     138.24
+    ],
+    [
+     319.68,
+     393.12
+    ]
+   ],
+   "stations": 6,
+   "type": "q_hub_nw",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 2,
+   "bus": "L1221_i",
+   "chain_end": "u_obs_Q",
+   "dir": "in",
+   "lanes": [
+    "L1221"
+   ],
+   "leaves": [
+    "u_obs_Q"
+   ],
+   "length_um": 4233.6,
+   "regs_um": [
+    [
+     3555.36,
+     0.0
+    ],
+    [
+     3153.6,
+     0.0
+    ],
+    [
+     2751.84,
+     0.0
+    ],
+    [
+     2427.84,
+     77.76
+    ],
+    [
+     2427.84,
+     479.52
+    ],
+    [
+     2324.16,
+     777.6
+    ],
+    [
+     1922.4,
+     777.6
+    ],
+    [
+     1529.28,
+     786.24
+    ],
+    [
+     1477.44,
+     1136.16
+    ],
+    [
+     1278.72,
+     1339.2
+    ]
+   ],
+   "stations": 10,
+   "type": "q_hub_nw",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 3522,
+   "bus": "L1226_o",
+   "dir": "out",
+   "lanes": [
+    "L1226"
+   ],
+   "leaves": [
+    "u_calendar_Q__q1",
+    "u_cxrc_Q_q",
+    "u_hb_coll_Q_body_core__q0__col0",
+    "u_hb_coll_Q_body_core__q0__col1",
+    "u_hb_coll_Q_body_core__q0__col2",
+    "u_hb_coll_Q_body_core__q0__col3",
+    "u_hb_coll_Q_body_core__q0__ctl",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0",
+    "u_vmb_Q2",
+    "u_vmb_Q2_mu1",
+    "u_vmb_Q3",
+    "u_vmb_Q3_mu1"
+   ],
+   "length_um": 7594.8,
+   "reason": "branch: leaves span a Manhattan radius 3601 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1625,
+   "bus": "L1227_i",
+   "dir": "in",
+   "lanes": [
+    "L1227"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1",
+    "u_fcx_Q",
+    "u_vmb_Q2",
+    "u_vmb_Q2_mu1",
+    "u_vmb_Q3",
+    "u_vmb_Q3_mu1"
+   ],
+   "length_um": 6916.4,
+   "reason": "branch: leaves span a Manhattan radius 2441 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 4986,
+   "bus": "L1228_o",
+   "dir": "out",
+   "lanes": [
+    "L1228"
+   ],
+   "leaves": [
+    "u_hb_idx__q_Q__q1",
+    "u_hb_idx__qctl_Q__q1",
+    "u_mu_keybuf_0_s0__q1",
+    "u_mu_keybuf_0_s1__q1",
+    "u_mu_keybuf_0_s2__q1",
+    "u_mu_keybuf_0_s3__q1"
+   ],
+   "length_um": 4730.4,
+   "reason": "branch: leaves span a Manhattan radius 2238 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 410,
+   "bus": "L1229_i",
+   "chain_end": "u_sfus_Q__q1",
+   "dir": "in",
+   "lanes": [
+    "L1229"
+   ],
+   "leaves": [
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 6086.1,
+   "regs_um": [
+    [
+     3097.44,
+     3918.24
+    ],
+    [
+     3097.44,
+     3516.48
+    ],
+    [
+     3477.6,
+     3494.88
+    ],
+    [
+     3879.36,
+     3494.88
+    ],
+    [
+     3926.88,
+     3140.64
+    ],
+    [
+     3926.88,
+     2738.88
+    ],
+    [
+     3926.88,
+     2337.12
+    ],
+    [
+     3926.88,
+     1935.36
+    ],
+    [
+     3926.88,
+     1533.6
+    ],
+    [
+     3926.88,
+     1131.84
+    ],
+    [
+     3926.88,
+     730.08
+    ],
+    [
+     4104.0,
+     505.44
+    ],
+    [
+     4505.76,
+     505.44
+    ],
+    [
+     4812.48,
+     410.4
+    ],
+    [
+     5214.24,
+     410.4
+    ]
+   ],
+   "stations": 15,
+   "type": "q_hub_nw",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 160,
+   "bus": "L1230_o",
+   "dir": "out",
+   "lanes": [
+    "L1230"
+   ],
+   "leaves": [
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 6167.1,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 3522,
+   "bus": "L1231_o",
+   "dir": "out",
+   "lanes": [
+    "L1231"
+   ],
+   "leaves": [
+    "u_calendar_Q__q1",
+    "u_cxrc_Q_q",
+    "u_hb_coll_Q_body_core__q0__col0",
+    "u_hb_coll_Q_body_core__q0__col1",
+    "u_hb_coll_Q_body_core__q0__col2",
+    "u_hb_coll_Q_body_core__q0__col3",
+    "u_hb_coll_Q_body_core__q0__ctl",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0",
+    "u_vmb_Q6",
+    "u_vmb_Q6_mu1",
+    "u_vmb_Q7",
+    "u_vmb_Q7_mu1"
+   ],
+   "length_um": 5761.0,
+   "reason": "branch: leaves span a Manhattan radius 4756 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1626,
+   "bus": "L1232_i",
+   "dir": "in",
+   "lanes": [
+    "L1232"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1",
+    "u_fcx_Q",
+    "u_fr_Q",
+    "u_vmb_Q6",
+    "u_vmb_Q6_mu1",
+    "u_vmb_Q7",
+    "u_vmb_Q7_mu1"
+   ],
+   "length_um": 4894.5,
+   "reason": "branch: leaves span a Manhattan radius 3866 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 128,
+   "bus": "L1233_o",
+   "dir": "out",
+   "lanes": [
+    "L1233"
+   ],
+   "leaves": [
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 2635.2,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 330,
+   "bus": "L1234_i",
+   "chain_end": "u_sfus_Q__q1",
+   "dir": "in",
+   "lanes": [
+    "L1234"
+   ],
+   "leaves": [
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 2604.5,
+   "regs_um": [
+    [
+     3084.48,
+     0.0
+    ],
+    [
+     3486.24,
+     0.0
+    ],
+    [
+     3888.0,
+     0.0
+    ],
+    [
+     4289.76,
+     0.0
+    ],
+    [
+     4691.52,
+     0.0
+    ],
+    [
+     5093.28,
+     0.0
+    ]
+   ],
+   "stations": 6,
+   "type": "q_hub_nw",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1980,
+   "bus": "L1237_i",
+   "dir": "in",
+   "lanes": [
+    "L1237"
+   ],
+   "leaves": [
+    "u_hb_coll_Q_edge__q0__arg",
+    "u_hb_coll_Q_edge__q0__link0",
+    "u_hb_coll_Q_edge__q0__link1",
+    "u_hb_coll_Q_edge__q0__link2",
+    "u_hb_idx__op_Q__q1",
+    "u_hb_idx__qctl_Q__q0",
+    "u_hb_idx__qctl_Q__q1",
+    "u_hb_vms_Q__q0",
+    "u_hleaf_Q",
+    "u_hleaf_Q__q0"
+   ],
+   "length_um": 7624.8,
+   "reason": "branch: leaves span a Manhattan radius 4173 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 2080,
+   "bus": "L1243_o",
+   "dir": "out",
+   "lanes": [
+    "L1243"
+   ],
+   "leaves": [
+    "u_cic_Q",
+    "u_cij_Q__q1",
+    "u_cxij_Q_s",
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 8921.5,
+   "reason": "branch: leaves span a Manhattan radius 2790 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 611,
+   "bus": "L1244_i",
+   "dir": "in",
+   "lanes": [
+    "L1244"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 8804.0,
+   "reason": "branch: leaves span a Manhattan radius 2549 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 2080,
+   "bus": "L1245_o",
+   "dir": "out",
+   "lanes": [
+    "L1245"
+   ],
+   "leaves": [
+    "u_cic_Q",
+    "u_cij_Q__q1",
+    "u_cxij_Q_s",
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 6824.1,
+   "reason": "branch: leaves span a Manhattan radius 2772 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 611,
+   "bus": "L1246_i",
+   "dir": "in",
+   "lanes": [
+    "L1246"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 6639.7,
+   "reason": "branch: leaves span a Manhattan radius 2467 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 410,
+   "bus": "L1248_i",
+   "chain_end": "u_sfus_Q__q1",
+   "dir": "in",
+   "lanes": [
+    "L1248"
+   ],
+   "leaves": [
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 5153.8,
+   "regs_um": [
+    [
+     535.68,
+     0.0
+    ],
+    [
+     937.44,
+     0.0
+    ],
+    [
+     1339.2,
+     0.0
+    ],
+    [
+     1740.96,
+     0.0
+    ],
+    [
+     2142.72,
+     0.0
+    ],
+    [
+     2544.48,
+     0.0
+    ],
+    [
+     2946.24,
+     0.0
+    ],
+    [
+     3348.0,
+     0.0
+    ],
+    [
+     3749.76,
+     0.0
+    ],
+    [
+     4151.52,
+     0.0
+    ],
+    [
+     4553.28,
+     0.0
+    ],
+    [
+     4955.04,
+     0.0
+    ]
+   ],
+   "stations": 12,
+   "type": "q_hub_nw",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 160,
+   "bus": "L1249_o",
+   "dir": "out",
+   "lanes": [
+    "L1249"
+   ],
+   "leaves": [
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 5116.0,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 698,
+   "bus": "L1250_i",
+   "dir": "in",
+   "lanes": [
+    "L1250"
+   ],
+   "leaves": [
+    "u_col_sfu_Q",
+    "u_cxrc_Q_s",
+    "u_hleaf_Q",
+    "u_hleaf_Q__q0",
+    "u_obs_Q",
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 8721.2,
+   "reason": "branch: leaves span a Manhattan radius 2614 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 415,
+   "bus": "L1251_o",
+   "dir": "out",
+   "lanes": [
+    "L1251"
+   ],
+   "leaves": [
+    "u_col_sfu_Q",
+    "u_sfus_Q__q1"
+   ],
+   "length_um": 8649.5,
+   "reason": "branch: leaves span a Manhattan radius 1806 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1457,
+   "bus": "L1259_o",
+   "dir": "out",
+   "lanes": [
+    "L1259"
+   ],
+   "leaves": [
+    "u_calendar_Q__q1",
+    "u_cic_Q",
+    "u_cij_Q__q1",
+    "u_cxij_Q_s",
+    "u_cxrc_Q_q",
+    "u_hb_coll_Q_body_core__q0__col0",
+    "u_hb_coll_Q_body_core__q0__col1",
+    "u_hb_coll_Q_body_core__q0__col2",
+    "u_hb_coll_Q_body_core__q0__col3",
+    "u_hb_coll_Q_body_core__q0__ctl",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 7488.6,
+   "reason": "branch: leaves span a Manhattan radius 3832 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 363,
+   "bus": "L1260_o",
+   "dir": "out",
+   "lanes": [
+    "L1260"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 6807.4,
+   "reason": "branch: leaves span a Manhattan radius 2652 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 728,
+   "bus": "L1261_o",
+   "dir": "out",
+   "lanes": [
+    "L1261"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 6877.7,
+   "reason": "branch: leaves span a Manhattan radius 2652 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 883,
+   "bus": "L1262_i",
+   "chain_end": "u_fcx_Q",
+   "dir": "in",
+   "lanes": [
+    "L1262"
+   ],
+   "leaves": [
+    "u_fcx_Q"
+   ],
+   "length_um": 5329.8,
+   "regs_um": [
+    [
+     0.0,
+     3814.56
+    ],
+    [
+     0.0,
+     3412.8
+    ],
+    [
+     0.0,
+     3011.04
+    ],
+    [
+     0.0,
+     2609.28
+    ],
+    [
+     0.0,
+     2207.52
+    ],
+    [
+     0.0,
+     1805.76
+    ],
+    [
+     0.0,
+     1404.0
+    ],
+    [
+     0.0,
+     1002.24
+    ],
+    [
+     25.92,
+     812.16
+    ],
+    [
+     427.68,
+     812.16
+    ],
+    [
+     829.44,
+     812.16
+    ],
+    [
+     1231.2,
+     812.16
+    ],
+    [
+     1632.96,
+     812.16
+    ]
+   ],
+   "stations": 13,
+   "type": "q_hub_nw",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 667,
+   "bus": "L1263_i",
+   "dir": "in",
+   "lanes": [
+    "L1263"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1",
+    "u_sucore_Q__q0",
+    "u_vmb_Q0",
+    "u_vmb_Q0_mu1",
+    "u_vmb_Q1",
+    "u_vmb_Q1_mu1"
+   ],
+   "length_um": 4438.9,
+   "reason": "branch: leaves span a Manhattan radius 2557 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 601,
+   "bus": "L1265_o",
+   "dir": "out",
+   "lanes": [
+    "L1265"
+   ],
+   "leaves": [
+    "u_calendar_Q__q1",
+    "u_cic_Q",
+    "u_cij_Q__q1",
+    "u_cxij_Q_s",
+    "u_hb_coll_Q_body_core__q0__col0",
+    "u_hb_coll_Q_body_core__q0__col1",
+    "u_hb_coll_Q_body_core__q0__col2",
+    "u_hb_coll_Q_body_core__q0__col3",
+    "u_hb_coll_Q_body_core__q0__ctl"
+   ],
+   "length_um": 8078.9,
+   "reason": "branch: leaves span a Manhattan radius 3866 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 492,
+   "bus": "L1266_o",
+   "dir": "out",
+   "lanes": [
+    "L1266"
+   ],
+   "leaves": [
+    "u_hb_coll_Q_body_core__q0__col0",
+    "u_hb_coll_Q_body_core__q0__col1",
+    "u_hb_coll_Q_body_core__q0__col2",
+    "u_hb_coll_Q_body_core__q0__col3",
+    "u_hb_coll_Q_body_core__q0__ctl"
+   ],
+   "length_um": 995.1,
+   "reason": "branch: leaves span a Manhattan radius 397 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 486,
+   "bus": "L1267_o",
+   "dir": "out",
+   "lanes": [
+    "L1267"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 7915.1,
+   "reason": "branch: leaves span a Manhattan radius 2652 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 273,
+   "bus": "L1268_o",
+   "dir": "out",
+   "lanes": [
+    "L1268"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 6942.4,
+   "reason": "branch: leaves span a Manhattan radius 2652 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 496,
+   "bus": "L1269_o",
+   "dir": "out",
+   "lanes": [
+    "L1269"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 7978.6,
+   "reason": "branch: leaves span a Manhattan radius 2652 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 585,
+   "bus": "L1270_o",
+   "dir": "out",
+   "lanes": [
+    "L1270"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 6754.3,
+   "reason": "branch: leaves span a Manhattan radius 2609 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 512,
+   "bus": "L1271_i",
+   "chain_end": "u_cxij_Q_q__q1",
+   "dir": "in",
+   "lanes": [
+    "L1271"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1"
+   ],
+   "length_um": 2565.4,
+   "regs_um": [
+    [
+     2704.32,
+     4315.68
+    ],
+    [
+     3106.08,
+     4315.68
+    ],
+    [
+     3507.84,
+     4315.68
+    ],
+    [
+     3909.6,
+     4315.68
+    ],
+    [
+     3983.04,
+     3987.36
+    ],
+    [
+     3983.04,
+     3585.6
+    ]
+   ],
+   "stations": 6,
+   "type": "q_hub_nw",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 281,
+   "bus": "L1272_o",
+   "dir": "out",
+   "lanes": [
+    "L1272"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 8029.3,
+   "reason": "branch: leaves span a Manhattan radius 2652 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 374,
+   "bus": "L1273_o",
+   "dir": "out",
+   "lanes": [
+    "L1273"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 5572.8,
+   "reason": "branch: leaves span a Manhattan radius 2475 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1483,
+   "bus": "L1278_o",
+   "dir": "out",
+   "lanes": [
+    "L1278"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 4490.4,
+   "reason": "branch: leaves span a Manhattan radius 2475 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 141,
+   "bus": "L1279_o",
+   "dir": "out",
+   "lanes": [
+    "L1279"
+   ],
+   "leaves": [
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 2045.9,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 746,
+   "bus": "L1280_i",
+   "dir": "in",
+   "lanes": [
+    "L1280"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1",
+    "u_fcx_Q"
+   ],
+   "length_um": 4508.4,
+   "reason": "branch: leaves span a Manhattan radius 2121 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 978,
+   "bus": "L1281_i",
+   "dir": "in",
+   "lanes": [
+    "L1281"
+   ],
+   "leaves": [
+    "u_sucore_Q__q0",
+    "u_vmb_Q4",
+    "u_vmb_Q4_mu1",
+    "u_vmb_Q5",
+    "u_vmb_Q5_mu1"
+   ],
+   "length_um": 8640.0,
+   "reason": "branch: leaves span a Manhattan radius 3599 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 739,
+   "bus": "L3004_o",
+   "dir": "out",
+   "lanes": [
+    "L3004"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0",
+    "u_vmb_Q0",
+    "u_vmb_Q0_mu1",
+    "u_vmb_Q1",
+    "u_vmb_Q1_mu1"
+   ],
+   "length_um": 6561.0,
+   "reason": "branch: leaves span a Manhattan radius 2670 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 899,
+   "bus": "L3005_o",
+   "dir": "out",
+   "lanes": [
+    "L3005"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0",
+    "u_vmb_Q5",
+    "u_vmb_Q5_mu1"
+   ],
+   "length_um": 8469.2,
+   "reason": "branch: leaves span a Manhattan radius 3599 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 27,
+   "bus": "L3012_i",
+   "chain_end": "u_cxij_Q_q__q1",
+   "dir": "in",
+   "lanes": [
+    "L3012"
+   ],
+   "leaves": [
+    "u_cxij_Q_q__q1"
+   ],
+   "length_um": 4157.9,
+   "regs_um": [
+    [
+     3261.6,
+     0.0
+    ],
+    [
+     3663.36,
+     0.0
+    ],
+    [
+     3983.04,
+     82.08
+    ],
+    [
+     3983.04,
+     483.84
+    ],
+    [
+     3983.04,
+     885.6
+    ],
+    [
+     3983.04,
+     1287.36
+    ],
+    [
+     3983.04,
+     1689.12
+    ],
+    [
+     3983.04,
+     2090.88
+    ],
+    [
+     3983.04,
+     2492.64
+    ],
+    [
+     3983.04,
+     2894.4
+    ]
+   ],
+   "stations": 10,
+   "type": "q_hub_nw",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 911,
+   "bus": "L8002_o",
+   "dir": "out",
+   "lanes": [
+    "L8002"
+   ],
+   "leaves": [
+    "u_cxrc_Q_q",
+    "u_pgp_Q__q1__c0",
+    "u_pgp_Q__q1__c1",
+    "u_pgp_Q__q1__c2",
+    "u_pgp_Q__q1__c3",
+    "u_pgp_Q__q1__c4",
+    "u_pgp_Q__q1__c5",
+    "u_pgp_Q__q1__c6",
+    "u_pgp_Q__q1__c7",
+    "u_pgp_Q__q1__c8",
+    "u_pgp_Q__q1__c9",
+    "u_pgp_Q__q1__h",
+    "u_sucore_Q__q0"
+   ],
+   "length_um": 8267.7,
+   "reason": "branch: leaves span a Manhattan radius 2652 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 323,
+   "bus": "L8003_o",
+   "dir": "out",
+   "lanes": [
+    "L8003"
+   ],
+   "leaves": [
+    "u_sucore_Q__q0",
+    "u_vmb_Q4",
+    "u_vmb_Q4_mu1"
+   ],
+   "length_um": 7829.7,
+   "reason": "branch: leaves span a Manhattan radius 2890 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 245,
+   "bus": "L8004_o",
+   "dir": "out",
+   "lanes": [
+    "L8004"
+   ],
+   "leaves": [
+    "u_vmb_Q4",
+    "u_vmb_Q4_mu1",
+    "u_vmb_Q5",
+    "u_vmb_Q5_mu1"
+   ],
+   "length_um": 7281.3,
+   "reason": "branch: leaves span a Manhattan radius 861 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 2807,
+   "bus": "L8100_i",
+   "dir": "in",
+   "lanes": [
+    "L8100"
+   ],
+   "leaves": [
+    "u_hb_vms_Q__q0",
+    "u_hcollb_Q",
+    "u_obs_Q"
+   ],
+   "length_um": 7217.8,
+   "reason": "branch: leaves span a Manhattan radius 1067 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 2762,
+   "bus": "L8101_o",
+   "dir": "out",
+   "lanes": [
+    "L8101"
+   ],
+   "leaves": [
+    "u_hb_vms_Q__q0",
+    "u_hcollb_Q"
+   ],
+   "length_um": 5437.1,
+   "reason": "branch: leaves span a Manhattan radius 527 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 37,
+   "bus": "L721_i",
+   "dir": "in",
+   "lanes": [
+    "L8312"
+   ],
+   "leaves": [
+    "u_smw_Q__q1",
+    "u_svg_Q3",
+    "u_svg_Q3__b0",
+    "u_svg_Q3__b1",
+    "u_svg_Q3__o",
+    "u_svg_Q3__t"
+   ],
+   "length_um": 1284.4,
+   "reason": "branch: leaves span a Manhattan radius 946 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 321,
+   "bus": "L8381_o",
+   "dir": "out",
+   "lanes": [
+    "L8381"
+   ],
+   "leaves": [
+    "u_sucore_Q__q0",
+    "u_vmb_Q0",
+    "u_vmb_Q0_mu1"
+   ],
+   "length_um": 4962.7,
+   "reason": "branch: leaves span a Manhattan radius 841 um > 364",
+   "type": "q_hub_nw",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 518,
+   "bus": "L5007_o",
+   "chain_end": "u_sfu_Q0",
+   "dir": "out",
+   "lanes": [
+    "L5007"
+   ],
+   "leaves": [
+    "u_sfu_Q0"
+   ],
+   "length_um": 2098.4,
+   "regs_um": [
+    [
+     1706.4,
+     95.04
+    ],
+    [
+     1304.64,
+     95.04
+    ],
+    [
+     902.88,
+     95.04
+    ],
+    [
+     501.12,
+     95.04
+    ],
+    [
+     293.76,
+     289.44
+    ]
+   ],
+   "stations": 5,
+   "type": "q_su00",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1390,
+   "bus": "L5011_i",
+   "chain_end": "u_su_Q0_pretree",
+   "dir": "in",
+   "lanes": [
+    "L5011"
+   ],
+   "leaves": [
+    "u_su_Q0_pretree"
+   ],
+   "length_um": 931.6,
+   "regs_um": [
+    [
+     457.92,
+     30.24
+    ],
+    [
+     457.92,
+     432.0
+    ]
+   ],
+   "stations": 2,
+   "type": "q_su00",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1152,
+   "bus": "L5014_o",
+   "dir": "out",
+   "lanes": [
+    "L5014"
+   ],
+   "leaves": [
+    "u_cxdl_Q0_q",
+    "u_su_Q0_lane_exp0__l",
+    "u_su_Q0_lane_exp0__s",
+    "u_su_Q0_lane_exp10__l",
+    "u_su_Q0_lane_exp10__s",
+    "u_su_Q0_lane_exp12__l",
+    "u_su_Q0_lane_exp12__s",
+    "u_su_Q0_lane_exp14__l",
+    "u_su_Q0_lane_exp14__s",
+    "u_su_Q0_lane_exp2__l",
+    "u_su_Q0_lane_exp2__s",
+    "u_su_Q0_lane_exp4__l",
+    "u_su_Q0_lane_exp4__s",
+    "u_su_Q0_lane_exp6__l",
+    "u_su_Q0_lane_exp6__s",
+    "u_su_Q0_lane_exp8__l",
+    "u_su_Q0_lane_exp8__s",
+    "u_su_Q0_lanes_plain0_3__p0",
+    "u_su_Q0_lanes_plain0_3__p1",
+    "u_su_Q0_lanes_plain0_3__p2",
+    "u_su_Q0_lanes_plain0_3__p3",
+    "u_su_Q0_lanes_plain8_11__p0",
+    "u_su_Q0_lanes_plain8_11__p1",
+    "u_su_Q0_lanes_plain8_11__p2",
+    "u_su_Q0_lanes_plain8_11__p3"
+   ],
+   "length_um": 2620.0,
+   "reason": "branch: leaves span a Manhattan radius 1365 um > 364",
+   "type": "q_su00",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1,
+   "bus": "L5048_o",
+   "chain_end": "u_fl_Q0",
+   "dir": "out",
+   "lanes": [
+    "L5048"
+   ],
+   "leaves": [
+    "u_fl_Q0"
+   ],
+   "length_um": 2538.9,
+   "regs_um": [
+    [
+     2103.84,
+     1088.64
+    ],
+    [
+     2103.84,
+     686.88
+    ],
+    [
+     2103.84,
+     285.12
+    ],
+    [
+     1918.08,
+     69.12
+    ],
+    [
+     1516.32,
+     69.12
+    ],
+    [
+     1114.56,
+     69.12
+    ]
+   ],
+   "stations": 6,
+   "type": "q_su00",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1457,
+   "bus": "L5063_i",
+   "chain_end": "u_cxdl_Q0_s",
+   "dir": "in",
+   "lanes": [
+    "L5063"
+   ],
+   "leaves": [
+    "u_cxdl_Q0_s"
+   ],
+   "length_um": 1918.1,
+   "regs_um": [
+    [
+     1611.36,
+     0.0
+    ],
+    [
+     1209.6,
+     0.0
+    ],
+    [
+     807.84,
+     0.0
+    ],
+    [
+     406.08,
+     0.0
+    ]
+   ],
+   "stations": 4,
+   "type": "q_su00",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1091,
+   "bus": "L5064_i",
+   "dir": "in",
+   "lanes": [
+    "L5064"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp0__l",
+    "u_su_Q0_lane_exp0__s",
+    "u_su_Q0_lane_exp10__l",
+    "u_su_Q0_lane_exp10__s",
+    "u_su_Q0_lane_exp12__l",
+    "u_su_Q0_lane_exp12__s",
+    "u_su_Q0_lane_exp14__l",
+    "u_su_Q0_lane_exp14__s",
+    "u_su_Q0_lane_exp2__l",
+    "u_su_Q0_lane_exp2__s",
+    "u_su_Q0_lane_exp4__l",
+    "u_su_Q0_lane_exp4__s",
+    "u_su_Q0_lane_exp6__l",
+    "u_su_Q0_lane_exp6__s",
+    "u_su_Q0_lane_exp8__l",
+    "u_su_Q0_lane_exp8__s",
+    "u_su_Q0_lanes_plain0_3__p0",
+    "u_su_Q0_lanes_plain0_3__p1",
+    "u_su_Q0_lanes_plain0_3__p2",
+    "u_su_Q0_lanes_plain0_3__p3",
+    "u_su_Q0_lanes_plain8_11__p0",
+    "u_su_Q0_lanes_plain8_11__p1",
+    "u_su_Q0_lanes_plain8_11__p2",
+    "u_su_Q0_lanes_plain8_11__p3"
+   ],
+   "length_um": 2743.2,
+   "reason": "branch: leaves span a Manhattan radius 1147 um > 364",
+   "type": "q_su00",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 883,
+   "bus": "L5065_o",
+   "dir": "out",
+   "lanes": [
+    "L5065"
+   ],
+   "leaves": [
+    "u_cxdl_Q0_q",
+    "u_hc_Q0",
+    "u_su_Q0_lane_exp0__l",
+    "u_su_Q0_lane_exp0__s",
+    "u_su_Q0_lane_exp10__l",
+    "u_su_Q0_lane_exp10__s",
+    "u_su_Q0_lane_exp12__l",
+    "u_su_Q0_lane_exp12__s",
+    "u_su_Q0_lane_exp14__l",
+    "u_su_Q0_lane_exp14__s",
+    "u_su_Q0_lane_exp2__l",
+    "u_su_Q0_lane_exp2__s",
+    "u_su_Q0_lane_exp4__l",
+    "u_su_Q0_lane_exp4__s",
+    "u_su_Q0_lane_exp6__l",
+    "u_su_Q0_lane_exp6__s",
+    "u_su_Q0_lane_exp8__l",
+    "u_su_Q0_lane_exp8__s",
+    "u_su_Q0_lanes_plain0_3__p0",
+    "u_su_Q0_lanes_plain0_3__p1",
+    "u_su_Q0_lanes_plain0_3__p2",
+    "u_su_Q0_lanes_plain0_3__p3"
+   ],
+   "length_um": 2617.7,
+   "reason": "branch: leaves span a Manhattan radius 1365 um > 364",
+   "type": "q_su00",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 628,
+   "bus": "L5066_o",
+   "dir": "out",
+   "lanes": [
+    "L5066"
+   ],
+   "leaves": [
+    "u_su_Q0_lanes_plain0_3__p0",
+    "u_su_Q0_lanes_plain0_3__p1",
+    "u_su_Q0_lanes_plain0_3__p2",
+    "u_su_Q0_lanes_plain0_3__p3",
+    "u_su_Q0_lanes_plain8_11__p0",
+    "u_su_Q0_lanes_plain8_11__p1",
+    "u_su_Q0_lanes_plain8_11__p2",
+    "u_su_Q0_lanes_plain8_11__p3",
+    "u_su_Q0_pretree"
+   ],
+   "length_um": 1971.5,
+   "reason": "branch: leaves span a Manhattan radius 760 um > 364",
+   "type": "q_su00",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 748,
+   "bus": "L8001_i",
+   "chain_end": "u_su_Q0_pretree",
+   "dir": "in",
+   "lanes": [
+    "L8001"
+   ],
+   "leaves": [
+    "u_su_Q0_pretree"
+   ],
+   "length_um": 1477.4,
+   "regs_um": [
+    [
+     1706.4,
+     604.8
+    ],
+    [
+     1468.8,
+     440.64
+    ],
+    [
+     1067.04,
+     440.64
+    ],
+    [
+     665.28,
+     440.64
+    ]
+   ],
+   "stations": 4,
+   "type": "q_su00",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 518,
+   "bus": "L1207_o",
+   "chain_end": "u_sfu_Q0",
+   "dir": "out",
+   "lanes": [
+    "L1207"
+   ],
+   "leaves": [
+    "u_sfu_Q0"
+   ],
+   "length_um": 2098.4,
+   "regs_um": [
+    [
+     1706.4,
+     95.04
+    ],
+    [
+     1304.64,
+     95.04
+    ],
+    [
+     902.88,
+     95.04
+    ],
+    [
+     501.12,
+     95.04
+    ],
+    [
+     293.76,
+     289.44
+    ]
+   ],
+   "stations": 5,
+   "type": "q_su00__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1390,
+   "bus": "L1211_i",
+   "chain_end": "u_su_Q0_pretree",
+   "dir": "in",
+   "lanes": [
+    "L1211"
+   ],
+   "leaves": [
+    "u_su_Q0_pretree"
+   ],
+   "length_um": 931.6,
+   "regs_um": [
+    [
+     457.92,
+     30.24
+    ],
+    [
+     457.92,
+     432.0
+    ]
+   ],
+   "stations": 2,
+   "type": "q_su00__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1152,
+   "bus": "L1214_o",
+   "dir": "out",
+   "lanes": [
+    "L1214"
+   ],
+   "leaves": [
+    "u_cxdl_Q0_q",
+    "u_su_Q0_lane_exp0__l",
+    "u_su_Q0_lane_exp0__s",
+    "u_su_Q0_lane_exp10__l",
+    "u_su_Q0_lane_exp10__s",
+    "u_su_Q0_lane_exp12__l",
+    "u_su_Q0_lane_exp12__s",
+    "u_su_Q0_lane_exp14__l",
+    "u_su_Q0_lane_exp14__s",
+    "u_su_Q0_lane_exp2__l",
+    "u_su_Q0_lane_exp2__s",
+    "u_su_Q0_lane_exp4__l",
+    "u_su_Q0_lane_exp4__s",
+    "u_su_Q0_lane_exp6__l",
+    "u_su_Q0_lane_exp6__s",
+    "u_su_Q0_lane_exp8__l",
+    "u_su_Q0_lane_exp8__s",
+    "u_su_Q0_lanes_plain0_3__p0",
+    "u_su_Q0_lanes_plain0_3__p1",
+    "u_su_Q0_lanes_plain0_3__p2",
+    "u_su_Q0_lanes_plain0_3__p3",
+    "u_su_Q0_lanes_plain8_11__p0",
+    "u_su_Q0_lanes_plain8_11__p1",
+    "u_su_Q0_lanes_plain8_11__p2",
+    "u_su_Q0_lanes_plain8_11__p3"
+   ],
+   "length_um": 2460.3,
+   "reason": "branch: leaves span a Manhattan radius 1365 um > 364",
+   "type": "q_su00__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1,
+   "bus": "L1247_o",
+   "chain_end": "u_fl_Q0",
+   "dir": "out",
+   "lanes": [
+    "L1247"
+   ],
+   "leaves": [
+    "u_fl_Q0"
+   ],
+   "length_um": 2538.9,
+   "regs_um": [
+    [
+     2103.84,
+     1088.64
+    ],
+    [
+     2103.84,
+     686.88
+    ],
+    [
+     2103.84,
+     285.12
+    ],
+    [
+     1918.08,
+     69.12
+    ],
+    [
+     1516.32,
+     69.12
+    ],
+    [
+     1114.56,
+     69.12
+    ]
+   ],
+   "stations": 6,
+   "type": "q_su00__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1457,
+   "bus": "L1259_i",
+   "dir": "in",
+   "lanes": [
+    "L1259"
+   ],
+   "leaves": [
+    "u_cxdl_Q0_s",
+    "u_su_Q0_lane_exp0__l",
+    "u_su_Q0_lane_exp0__s",
+    "u_su_Q0_lane_exp10__l",
+    "u_su_Q0_lane_exp10__s",
+    "u_su_Q0_lane_exp12__l",
+    "u_su_Q0_lane_exp12__s",
+    "u_su_Q0_lane_exp14__l",
+    "u_su_Q0_lane_exp14__s",
+    "u_su_Q0_lane_exp2__l",
+    "u_su_Q0_lane_exp2__s",
+    "u_su_Q0_lane_exp4__l",
+    "u_su_Q0_lane_exp4__s",
+    "u_su_Q0_lane_exp6__l",
+    "u_su_Q0_lane_exp6__s",
+    "u_su_Q0_lane_exp8__l",
+    "u_su_Q0_lane_exp8__s",
+    "u_su_Q0_lanes_plain0_3__p0",
+    "u_su_Q0_lanes_plain0_3__p1",
+    "u_su_Q0_lanes_plain0_3__p2",
+    "u_su_Q0_lanes_plain0_3__p3",
+    "u_su_Q0_lanes_plain8_11__p0",
+    "u_su_Q0_lanes_plain8_11__p1",
+    "u_su_Q0_lanes_plain8_11__p2",
+    "u_su_Q0_lanes_plain8_11__p3"
+   ],
+   "length_um": 3231.3,
+   "reason": "branch: leaves span a Manhattan radius 1447 um > 364",
+   "type": "q_su00__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 883,
+   "bus": "L1262_o",
+   "dir": "out",
+   "lanes": [
+    "L1262"
+   ],
+   "leaves": [
+    "u_cxdl_Q0_q",
+    "u_hc_Q0",
+    "u_su_Q0_lane_exp0__l",
+    "u_su_Q0_lane_exp0__s",
+    "u_su_Q0_lane_exp10__l",
+    "u_su_Q0_lane_exp10__s",
+    "u_su_Q0_lane_exp12__l",
+    "u_su_Q0_lane_exp12__s",
+    "u_su_Q0_lane_exp14__l",
+    "u_su_Q0_lane_exp14__s",
+    "u_su_Q0_lane_exp2__l",
+    "u_su_Q0_lane_exp2__s",
+    "u_su_Q0_lane_exp4__l",
+    "u_su_Q0_lane_exp4__s",
+    "u_su_Q0_lane_exp6__l",
+    "u_su_Q0_lane_exp6__s",
+    "u_su_Q0_lane_exp8__l",
+    "u_su_Q0_lane_exp8__s",
+    "u_su_Q0_lanes_plain0_3__p0",
+    "u_su_Q0_lanes_plain0_3__p1",
+    "u_su_Q0_lanes_plain0_3__p2",
+    "u_su_Q0_lanes_plain0_3__p3"
+   ],
+   "length_um": 2846.0,
+   "reason": "branch: leaves span a Manhattan radius 1365 um > 364",
+   "type": "q_su00__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 667,
+   "bus": "L1263_o",
+   "dir": "out",
+   "lanes": [
+    "L1263"
+   ],
+   "leaves": [
+    "u_su_Q0_lanes_plain0_3__p0",
+    "u_su_Q0_lanes_plain0_3__p1",
+    "u_su_Q0_lanes_plain0_3__p2",
+    "u_su_Q0_lanes_plain0_3__p3",
+    "u_su_Q0_lanes_plain8_11__p0",
+    "u_su_Q0_lanes_plain8_11__p1",
+    "u_su_Q0_lanes_plain8_11__p2",
+    "u_su_Q0_lanes_plain8_11__p3",
+    "u_su_Q0_pretree"
+   ],
+   "length_um": 1772.6,
+   "reason": "branch: leaves span a Manhattan radius 662 um > 364",
+   "type": "q_su00__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 911,
+   "bus": "L8002_i",
+   "chain_end": "u_su_Q0_pretree",
+   "dir": "in",
+   "lanes": [
+    "L8002"
+   ],
+   "leaves": [
+    "u_su_Q0_pretree"
+   ],
+   "length_um": 1477.4,
+   "regs_um": [
+    [
+     1706.4,
+     786.24
+    ],
+    [
+     1425.6,
+     907.2
+    ],
+    [
+     1023.84,
+     907.2
+    ],
+    [
+     643.68,
+     885.6
+    ]
+   ],
+   "stations": 4,
+   "type": "q_su00__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 958,
+   "bus": "L1208_o",
+   "dir": "out",
+   "lanes": [
+    "L1208"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp11__l",
+    "u_su_Q0_lane_exp11__s",
+    "u_su_Q0_lane_exp13__l",
+    "u_su_Q0_lane_exp13__s",
+    "u_su_Q0_lane_exp1__l",
+    "u_su_Q0_lane_exp1__s",
+    "u_su_Q0_lane_exp3__l",
+    "u_su_Q0_lane_exp3__s",
+    "u_su_Q0_lane_exp5__l",
+    "u_su_Q0_lane_exp5__s"
+   ],
+   "length_um": 2153.6,
+   "reason": "branch: leaves span a Manhattan radius 734 um > 364",
+   "type": "q_su01",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 767,
+   "bus": "L1209_o",
+   "dir": "out",
+   "lanes": [
+    "L1209"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp5__l",
+    "u_su_Q0_lane_exp5__s",
+    "u_su_Q0_lane_exp7__l",
+    "u_su_Q0_lane_exp7__s",
+    "u_su_Q0_lane_exp9__l",
+    "u_su_Q0_lane_exp9__s",
+    "u_su_Q0_lane_exp_l__l",
+    "u_su_Q0_lane_exp_l__s"
+   ],
+   "length_um": 2546.0,
+   "reason": "branch: leaves span a Manhattan radius 726 um > 364",
+   "type": "q_su01",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 671,
+   "bus": "L1210_o",
+   "dir": "out",
+   "lanes": [
+    "L1210"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp_l__l",
+    "u_su_Q0_lane_exp_l__s",
+    "u_su_Q0_lanes_plain12_15__p0",
+    "u_su_Q0_lanes_plain12_15__p1",
+    "u_su_Q0_lanes_plain12_15__p2",
+    "u_su_Q0_lanes_plain12_15__p3"
+   ],
+   "length_um": 1682.3,
+   "reason": "branch: leaves span a Manhattan radius 642 um > 364",
+   "type": "q_su01",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1390,
+   "bus": "L1211_o",
+   "dir": "out",
+   "lanes": [
+    "L1211"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp11__l",
+    "u_su_Q0_lane_exp11__s",
+    "u_su_Q0_lane_exp13__l",
+    "u_su_Q0_lane_exp13__s",
+    "u_su_Q0_lane_exp1__l",
+    "u_su_Q0_lane_exp1__s",
+    "u_su_Q0_lane_exp3__l",
+    "u_su_Q0_lane_exp3__s",
+    "u_su_Q0_lane_exp5__l",
+    "u_su_Q0_lane_exp5__s",
+    "u_su_Q0_lane_exp7__l",
+    "u_su_Q0_lane_exp7__s",
+    "u_su_Q0_lane_exp9__l",
+    "u_su_Q0_lane_exp9__s",
+    "u_su_Q0_lane_exp_l__l",
+    "u_su_Q0_lane_exp_l__s",
+    "u_su_Q0_lanes_plain12_15__p0",
+    "u_su_Q0_lanes_plain12_15__p1",
+    "u_su_Q0_lanes_plain12_15__p2",
+    "u_su_Q0_lanes_plain12_15__p3",
+    "u_su_Q0_lanes_plain4_7__p0",
+    "u_su_Q0_lanes_plain4_7__p1",
+    "u_su_Q0_lanes_plain4_7__p2",
+    "u_su_Q0_lanes_plain4_7__p3"
+   ],
+   "length_um": 2553.1,
+   "reason": "branch: leaves span a Manhattan radius 799 um > 364",
+   "type": "q_su01",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1152,
+   "bus": "L1214_i",
+   "dir": "in",
+   "lanes": [
+    "L1214"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp11__l",
+    "u_su_Q0_lane_exp11__s",
+    "u_su_Q0_lane_exp13__l",
+    "u_su_Q0_lane_exp13__s",
+    "u_su_Q0_lane_exp1__l",
+    "u_su_Q0_lane_exp1__s",
+    "u_su_Q0_lane_exp3__l",
+    "u_su_Q0_lane_exp3__s",
+    "u_su_Q0_lane_exp5__l",
+    "u_su_Q0_lane_exp5__s",
+    "u_su_Q0_lane_exp7__l",
+    "u_su_Q0_lane_exp7__s",
+    "u_su_Q0_lane_exp9__l",
+    "u_su_Q0_lane_exp9__s",
+    "u_su_Q0_lane_exp_l__l",
+    "u_su_Q0_lane_exp_l__s",
+    "u_su_Q0_lanes_plain12_15__p0",
+    "u_su_Q0_lanes_plain12_15__p1",
+    "u_su_Q0_lanes_plain12_15__p2",
+    "u_su_Q0_lanes_plain12_15__p3",
+    "u_su_Q0_lanes_plain4_7__p0",
+    "u_su_Q0_lanes_plain4_7__p1",
+    "u_su_Q0_lanes_plain4_7__p2",
+    "u_su_Q0_lanes_plain4_7__p3"
+   ],
+   "length_um": 2018.0,
+   "reason": "branch: leaves span a Manhattan radius 739 um > 364",
+   "type": "q_su01",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 585,
+   "bus": "L1270_i",
+   "dir": "in",
+   "lanes": [
+    "L1270"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp11__l",
+    "u_su_Q0_lane_exp11__s",
+    "u_su_Q0_lane_exp13__l",
+    "u_su_Q0_lane_exp13__s",
+    "u_su_Q0_lane_exp1__l",
+    "u_su_Q0_lane_exp1__s",
+    "u_su_Q0_lane_exp3__l",
+    "u_su_Q0_lane_exp3__s",
+    "u_su_Q0_lane_exp5__l",
+    "u_su_Q0_lane_exp5__s",
+    "u_su_Q0_lane_exp7__l",
+    "u_su_Q0_lane_exp7__s",
+    "u_su_Q0_lane_exp9__l",
+    "u_su_Q0_lane_exp9__s",
+    "u_su_Q0_lane_exp_l__l",
+    "u_su_Q0_lane_exp_l__s",
+    "u_su_Q0_lanes_plain12_15__p0",
+    "u_su_Q0_lanes_plain12_15__p1",
+    "u_su_Q0_lanes_plain12_15__p2",
+    "u_su_Q0_lanes_plain12_15__p3",
+    "u_su_Q0_lanes_plain4_7__p0",
+    "u_su_Q0_lanes_plain4_7__p1",
+    "u_su_Q0_lanes_plain4_7__p2",
+    "u_su_Q0_lanes_plain4_7__p3"
+   ],
+   "length_um": 1702.6,
+   "reason": "branch: leaves span a Manhattan radius 739 um > 364",
+   "type": "q_su01",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 512,
+   "bus": "L1271_o",
+   "dir": "out",
+   "lanes": [
+    "L1271"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp11__l",
+    "u_su_Q0_lane_exp11__s",
+    "u_su_Q0_lane_exp13__l",
+    "u_su_Q0_lane_exp13__s",
+    "u_su_Q0_lane_exp1__l",
+    "u_su_Q0_lane_exp1__s",
+    "u_su_Q0_lane_exp3__l",
+    "u_su_Q0_lane_exp3__s",
+    "u_su_Q0_lane_exp5__l",
+    "u_su_Q0_lane_exp5__s",
+    "u_su_Q0_lane_exp7__l",
+    "u_su_Q0_lane_exp7__s",
+    "u_su_Q0_lane_exp9__l",
+    "u_su_Q0_lane_exp9__s",
+    "u_su_Q0_lane_exp_l__l",
+    "u_su_Q0_lane_exp_l__s",
+    "u_su_Q0_lanes_plain12_15__p0",
+    "u_su_Q0_lanes_plain12_15__p1",
+    "u_su_Q0_lanes_plain12_15__p2",
+    "u_su_Q0_lanes_plain12_15__p3",
+    "u_su_Q0_lanes_plain4_7__p0",
+    "u_su_Q0_lanes_plain4_7__p1",
+    "u_su_Q0_lanes_plain4_7__p2",
+    "u_su_Q0_lanes_plain4_7__p3"
+   ],
+   "length_um": 2327.4,
+   "reason": "branch: leaves span a Manhattan radius 771 um > 364",
+   "type": "q_su01",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 958,
+   "bus": "L5008_o",
+   "dir": "out",
+   "lanes": [
+    "L5008"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp11__l",
+    "u_su_Q0_lane_exp11__s",
+    "u_su_Q0_lane_exp13__l",
+    "u_su_Q0_lane_exp13__s",
+    "u_su_Q0_lane_exp1__l",
+    "u_su_Q0_lane_exp1__s",
+    "u_su_Q0_lane_exp3__l",
+    "u_su_Q0_lane_exp3__s",
+    "u_su_Q0_lane_exp5__l",
+    "u_su_Q0_lane_exp5__s"
+   ],
+   "length_um": 2153.6,
+   "reason": "branch: leaves span a Manhattan radius 734 um > 364",
+   "type": "q_su01__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 767,
+   "bus": "L5009_o",
+   "dir": "out",
+   "lanes": [
+    "L5009"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp5__l",
+    "u_su_Q0_lane_exp5__s",
+    "u_su_Q0_lane_exp7__l",
+    "u_su_Q0_lane_exp7__s",
+    "u_su_Q0_lane_exp9__l",
+    "u_su_Q0_lane_exp9__s",
+    "u_su_Q0_lane_exp_l__l",
+    "u_su_Q0_lane_exp_l__s"
+   ],
+   "length_um": 2546.0,
+   "reason": "branch: leaves span a Manhattan radius 726 um > 364",
+   "type": "q_su01__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 671,
+   "bus": "L5010_o",
+   "dir": "out",
+   "lanes": [
+    "L5010"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp_l__l",
+    "u_su_Q0_lane_exp_l__s",
+    "u_su_Q0_lanes_plain12_15__p0",
+    "u_su_Q0_lanes_plain12_15__p1",
+    "u_su_Q0_lanes_plain12_15__p2",
+    "u_su_Q0_lanes_plain12_15__p3"
+   ],
+   "length_um": 1682.3,
+   "reason": "branch: leaves span a Manhattan radius 642 um > 364",
+   "type": "q_su01__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1390,
+   "bus": "L5011_o",
+   "dir": "out",
+   "lanes": [
+    "L5011"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp11__l",
+    "u_su_Q0_lane_exp11__s",
+    "u_su_Q0_lane_exp13__l",
+    "u_su_Q0_lane_exp13__s",
+    "u_su_Q0_lane_exp1__l",
+    "u_su_Q0_lane_exp1__s",
+    "u_su_Q0_lane_exp3__l",
+    "u_su_Q0_lane_exp3__s",
+    "u_su_Q0_lane_exp5__l",
+    "u_su_Q0_lane_exp5__s",
+    "u_su_Q0_lane_exp7__l",
+    "u_su_Q0_lane_exp7__s",
+    "u_su_Q0_lane_exp9__l",
+    "u_su_Q0_lane_exp9__s",
+    "u_su_Q0_lane_exp_l__l",
+    "u_su_Q0_lane_exp_l__s",
+    "u_su_Q0_lanes_plain12_15__p0",
+    "u_su_Q0_lanes_plain12_15__p1",
+    "u_su_Q0_lanes_plain12_15__p2",
+    "u_su_Q0_lanes_plain12_15__p3",
+    "u_su_Q0_lanes_plain4_7__p0",
+    "u_su_Q0_lanes_plain4_7__p1",
+    "u_su_Q0_lanes_plain4_7__p2",
+    "u_su_Q0_lanes_plain4_7__p3"
+   ],
+   "length_um": 2553.1,
+   "reason": "branch: leaves span a Manhattan radius 799 um > 364",
+   "type": "q_su01__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1152,
+   "bus": "L5014_i",
+   "dir": "in",
+   "lanes": [
+    "L5014"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp11__l",
+    "u_su_Q0_lane_exp11__s",
+    "u_su_Q0_lane_exp13__l",
+    "u_su_Q0_lane_exp13__s",
+    "u_su_Q0_lane_exp1__l",
+    "u_su_Q0_lane_exp1__s",
+    "u_su_Q0_lane_exp3__l",
+    "u_su_Q0_lane_exp3__s",
+    "u_su_Q0_lane_exp5__l",
+    "u_su_Q0_lane_exp5__s",
+    "u_su_Q0_lane_exp7__l",
+    "u_su_Q0_lane_exp7__s",
+    "u_su_Q0_lane_exp9__l",
+    "u_su_Q0_lane_exp9__s",
+    "u_su_Q0_lane_exp_l__l",
+    "u_su_Q0_lane_exp_l__s",
+    "u_su_Q0_lanes_plain12_15__p0",
+    "u_su_Q0_lanes_plain12_15__p1",
+    "u_su_Q0_lanes_plain12_15__p2",
+    "u_su_Q0_lanes_plain12_15__p3",
+    "u_su_Q0_lanes_plain4_7__p0",
+    "u_su_Q0_lanes_plain4_7__p1",
+    "u_su_Q0_lanes_plain4_7__p2",
+    "u_su_Q0_lanes_plain4_7__p3"
+   ],
+   "length_um": 2353.8,
+   "reason": "branch: leaves span a Manhattan radius 784 um > 364",
+   "type": "q_su01__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 256,
+   "bus": "L5075_i",
+   "dir": "in",
+   "lanes": [
+    "L5075"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp11__l",
+    "u_su_Q0_lane_exp11__s",
+    "u_su_Q0_lane_exp13__l",
+    "u_su_Q0_lane_exp13__s",
+    "u_su_Q0_lane_exp1__l",
+    "u_su_Q0_lane_exp1__s",
+    "u_su_Q0_lane_exp3__l",
+    "u_su_Q0_lane_exp3__s",
+    "u_su_Q0_lane_exp5__l",
+    "u_su_Q0_lane_exp5__s",
+    "u_su_Q0_lane_exp7__l",
+    "u_su_Q0_lane_exp7__s",
+    "u_su_Q0_lane_exp9__l",
+    "u_su_Q0_lane_exp9__s",
+    "u_su_Q0_lane_exp_l__l",
+    "u_su_Q0_lane_exp_l__s",
+    "u_su_Q0_lanes_plain12_15__p0",
+    "u_su_Q0_lanes_plain12_15__p1",
+    "u_su_Q0_lanes_plain12_15__p2",
+    "u_su_Q0_lanes_plain12_15__p3",
+    "u_su_Q0_lanes_plain4_7__p0",
+    "u_su_Q0_lanes_plain4_7__p1",
+    "u_su_Q0_lanes_plain4_7__p2",
+    "u_su_Q0_lanes_plain4_7__p3"
+   ],
+   "length_um": 2060.4,
+   "reason": "branch: leaves span a Manhattan radius 739 um > 364",
+   "type": "q_su01__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 113,
+   "bus": "L5088_o",
+   "dir": "out",
+   "lanes": [
+    "L5088"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp11__l",
+    "u_su_Q0_lane_exp11__s",
+    "u_su_Q0_lane_exp13__l",
+    "u_su_Q0_lane_exp13__s",
+    "u_su_Q0_lane_exp1__l",
+    "u_su_Q0_lane_exp1__s",
+    "u_su_Q0_lane_exp3__l",
+    "u_su_Q0_lane_exp3__s"
+   ],
+   "length_um": 1790.1,
+   "reason": "branch: leaves span a Manhattan radius 665 um > 364",
+   "type": "q_su01__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 74,
+   "bus": "L5089_o",
+   "dir": "out",
+   "lanes": [
+    "L5089"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp3__l",
+    "u_su_Q0_lane_exp3__s",
+    "u_su_Q0_lane_exp5__l",
+    "u_su_Q0_lane_exp5__s",
+    "u_su_Q0_lane_exp7__l",
+    "u_su_Q0_lane_exp7__s"
+   ],
+   "length_um": 1654.3,
+   "reason": "branch: leaves span a Manhattan radius 665 um > 364",
+   "type": "q_su01__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 21,
+   "bus": "L5090_o",
+   "chain_end": "u_su_Q0_lane_exp7__s",
+   "dir": "out",
+   "lanes": [
+    "L5090"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp7__l",
+    "u_su_Q0_lane_exp7__s",
+    "u_su_Q0_lane_exp9__l",
+    "u_su_Q0_lane_exp9__s"
+   ],
+   "length_um": 1577.6,
+   "regs_um": [
+    [
+     768.96,
+     285.12
+    ],
+    [
+     768.96,
+     686.88
+    ],
+    [
+     768.96,
+     1088.64
+    ]
+   ],
+   "stations": 3,
+   "type": "q_su01__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 41,
+   "bus": "L5091_o",
+   "chain_end": "u_su_Q0_lane_exp_l__l",
+   "dir": "out",
+   "lanes": [
+    "L5091"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp9__l",
+    "u_su_Q0_lane_exp9__s",
+    "u_su_Q0_lane_exp_l__l",
+    "u_su_Q0_lane_exp_l__s"
+   ],
+   "length_um": 1366.0,
+   "regs_um": [
+    [
+     768.96,
+     289.44
+    ],
+    [
+     768.96,
+     691.2
+    ],
+    [
+     768.96,
+     1092.96
+    ]
+   ],
+   "stations": 3,
+   "type": "q_su01__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 68,
+   "bus": "L5092_o",
+   "dir": "out",
+   "lanes": [
+    "L5092"
+   ],
+   "leaves": [
+    "u_su_Q0_lane_exp_l__l",
+    "u_su_Q0_lane_exp_l__s",
+    "u_su_Q0_lanes_plain12_15__p0",
+    "u_su_Q0_lanes_plain12_15__p1",
+    "u_su_Q0_lanes_plain12_15__p2",
+    "u_su_Q0_lanes_plain12_15__p3"
+   ],
+   "length_um": 1423.4,
+   "reason": "branch: leaves span a Manhattan radius 487 um > 364",
+   "type": "q_su01__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 39,
+   "bus": "L5093_o",
+   "chain_end": "u_su_Q0_lanes_plain12_15__p0",
+   "dir": "out",
+   "lanes": [
+    "L5093"
+   ],
+   "leaves": [
+    "u_su_Q0_lanes_plain12_15__p0",
+    "u_su_Q0_lanes_plain12_15__p1",
+    "u_su_Q0_lanes_plain12_15__p2",
+    "u_su_Q0_lanes_plain12_15__p3"
+   ],
+   "length_um": 786.2,
+   "regs_um": [
+    [
+     768.96,
+     298.08
+    ],
+    [
+     768.96,
+     617.76
+    ]
+   ],
+   "stations": 2,
+   "type": "q_su01__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 21,
+   "bus": "L5094_o",
+   "chain_end": "u_su_Q0_lanes_plain12_15__p0",
+   "dir": "out",
+   "lanes": [
+    "L5094"
+   ],
+   "leaves": [
+    "u_su_Q0_lanes_plain12_15__p0",
+    "u_su_Q0_lanes_plain12_15__p1",
+    "u_su_Q0_lanes_plain12_15__p2",
+    "u_su_Q0_lanes_plain12_15__p3"
+   ],
+   "length_um": 786.2,
+   "regs_um": [
+    [
+     768.96,
+     302.4
+    ],
+    [
+     768.96,
+     617.76
+    ]
+   ],
+   "stations": 2,
+   "type": "q_su01__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 20,
+   "bus": "L5095_o",
+   "chain_end": "u_su_Q0_lanes_plain12_15__p0",
+   "dir": "out",
+   "lanes": [
+    "L5095"
+   ],
+   "leaves": [
+    "u_su_Q0_lanes_plain12_15__p0",
+    "u_su_Q0_lanes_plain12_15__p1",
+    "u_su_Q0_lanes_plain12_15__p2",
+    "u_su_Q0_lanes_plain12_15__p3",
+    "u_su_Q0_lanes_plain4_7__p0",
+    "u_su_Q0_lanes_plain4_7__p1",
+    "u_su_Q0_lanes_plain4_7__p2",
+    "u_su_Q0_lanes_plain4_7__p3"
+   ],
+   "length_um": 1007.7,
+   "regs_um": [
+    [
+     768.96,
+     190.08
+    ],
+    [
+     768.96,
+     591.84
+    ],
+    [
+     768.96,
+     617.76
+    ]
+   ],
+   "stations": 3,
+   "type": "q_su01__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 70,
+   "bus": "L5096_o",
+   "chain_end": "u_su_Q0_lanes_plain4_7__p0",
+   "dir": "out",
+   "lanes": [
+    "L5096"
+   ],
+   "leaves": [
+    "u_su_Q0_lanes_plain4_7__p0",
+    "u_su_Q0_lanes_plain4_7__p1",
+    "u_su_Q0_lanes_plain4_7__p2",
+    "u_su_Q0_lanes_plain4_7__p3"
+   ],
+   "length_um": 885.5,
+   "regs_um": [
+    [
+     768.96,
+     311.04
+    ],
+    [
+     768.96,
+     617.76
+    ]
+   ],
+   "stations": 2,
+   "type": "q_su01__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 23,
+   "bus": "L5099_o",
+   "chain_end": "u_su_Q0_lanes_plain4_7__p3",
+   "dir": "out",
+   "lanes": [
+    "L5099"
+   ],
+   "leaves": [
+    "u_su_Q0_lanes_plain4_7__p0",
+    "u_su_Q0_lanes_plain4_7__p1",
+    "u_su_Q0_lanes_plain4_7__p2",
+    "u_su_Q0_lanes_plain4_7__p3"
+   ],
+   "length_um": 1012.0,
+   "regs_um": [
+    [
+     768.96,
+     185.76
+    ],
+    [
+     768.96,
+     587.52
+    ]
+   ],
+   "stations": 2,
+   "type": "q_su01__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 19,
+   "bus": "L5100_o",
+   "chain_end": "u_su_Q0_lanes_plain4_7__p3",
+   "dir": "out",
+   "lanes": [
+    "L5100"
+   ],
+   "leaves": [
+    "u_su_Q0_lanes_plain4_7__p0",
+    "u_su_Q0_lanes_plain4_7__p1",
+    "u_su_Q0_lanes_plain4_7__p2",
+    "u_su_Q0_lanes_plain4_7__p3"
+   ],
+   "length_um": 1016.2,
+   "regs_um": [
+    [
+     768.96,
+     181.44
+    ],
+    [
+     768.96,
+     583.2
+    ]
+   ],
+   "stations": 2,
+   "type": "q_su01__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 3,
+   "bus": "L5101_o",
+   "chain_end": "u_su_Q0_lanes_plain4_7__p0",
+   "dir": "out",
+   "lanes": [
+    "L5101"
+   ],
+   "leaves": [
+    "u_su_Q0_lanes_plain4_7__p0",
+    "u_su_Q0_lanes_plain4_7__p1",
+    "u_su_Q0_lanes_plain4_7__p2",
+    "u_su_Q0_lanes_plain4_7__p3"
+   ],
+   "length_um": 1781.5,
+   "regs_um": [
+    [
+     1352.16,
+     0.0
+    ],
+    [
+     950.4,
+     0.0
+    ],
+    [
+     768.96,
+     220.32
+    ],
+    [
+     768.96,
+     617.76
+    ]
+   ],
+   "stations": 4,
+   "type": "q_su01__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 958,
+   "bus": "L1215_o",
+   "dir": "out",
+   "lanes": [
+    "L1215"
+   ],
+   "leaves": [
+    "u_su_Q1_lane_exp0__l",
+    "u_su_Q1_lane_exp0__s",
+    "u_su_Q1_lane_exp10__l",
+    "u_su_Q1_lane_exp10__s",
+    "u_su_Q1_lane_exp12__l",
+    "u_su_Q1_lane_exp12__s",
+    "u_su_Q1_lane_exp14__l",
+    "u_su_Q1_lane_exp14__s",
+    "u_su_Q1_lane_exp2__l",
+    "u_su_Q1_lane_exp2__s"
+   ],
+   "length_um": 2093.1,
+   "reason": "branch: leaves span a Manhattan radius 1011 um > 364",
+   "type": "q_su10",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 767,
+   "bus": "L1216_o",
+   "dir": "out",
+   "lanes": [
+    "L1216"
+   ],
+   "leaves": [
+    "u_su_Q1_lane_exp2__l",
+    "u_su_Q1_lane_exp2__s",
+    "u_su_Q1_lane_exp4__l",
+    "u_su_Q1_lane_exp4__s",
+    "u_su_Q1_lane_exp6__l",
+    "u_su_Q1_lane_exp6__s",
+    "u_su_Q1_lane_exp8__l",
+    "u_su_Q1_lane_exp8__s",
+    "u_su_Q1_lanes_plain0_3__p0",
+    "u_su_Q1_lanes_plain0_3__p1",
+    "u_su_Q1_lanes_plain0_3__p2",
+    "u_su_Q1_lanes_plain0_3__p3"
+   ],
+   "length_um": 2019.0,
+   "reason": "branch: leaves span a Manhattan radius 769 um > 364",
+   "type": "q_su10",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 671,
+   "bus": "L1217_o",
+   "dir": "out",
+   "lanes": [
+    "L1217"
+   ],
+   "leaves": [
+    "u_su_Q1_lanes_plain0_3__p0",
+    "u_su_Q1_lanes_plain0_3__p1",
+    "u_su_Q1_lanes_plain0_3__p2",
+    "u_su_Q1_lanes_plain0_3__p3",
+    "u_su_Q1_lanes_plain8_11__p0",
+    "u_su_Q1_lanes_plain8_11__p1",
+    "u_su_Q1_lanes_plain8_11__p2",
+    "u_su_Q1_lanes_plain8_11__p3"
+   ],
+   "length_um": 2382.1,
+   "reason": "branch: leaves span a Manhattan radius 410 um > 364",
+   "type": "q_su10",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 960,
+   "bus": "L1218_o",
+   "dir": "out",
+   "lanes": [
+    "L1218"
+   ],
+   "leaves": [
+    "u_su_Q1_lane_exp0__l",
+    "u_su_Q1_lane_exp0__s",
+    "u_su_Q1_lane_exp10__l",
+    "u_su_Q1_lane_exp10__s",
+    "u_su_Q1_lane_exp12__l",
+    "u_su_Q1_lane_exp12__s",
+    "u_su_Q1_lane_exp14__l",
+    "u_su_Q1_lane_exp14__s",
+    "u_su_Q1_lane_exp2__l",
+    "u_su_Q1_lane_exp2__s",
+    "u_su_Q1_lane_exp4__l",
+    "u_su_Q1_lane_exp4__s",
+    "u_su_Q1_lane_exp6__l",
+    "u_su_Q1_lane_exp6__s",
+    "u_su_Q1_lane_exp8__l",
+    "u_su_Q1_lane_exp8__s",
+    "u_su_Q1_lanes_plain0_3__p0",
+    "u_su_Q1_lanes_plain0_3__p1",
+    "u_su_Q1_lanes_plain0_3__p2",
+    "u_su_Q1_lanes_plain0_3__p3",
+    "u_su_Q1_lanes_plain8_11__p0",
+    "u_su_Q1_lanes_plain8_11__p1",
+    "u_su_Q1_lanes_plain8_11__p2",
+    "u_su_Q1_lanes_plain8_11__p3"
+   ],
+   "length_um": 1643.2,
+   "reason": "branch: leaves span a Manhattan radius 950 um > 364",
+   "type": "q_su10",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1527,
+   "bus": "L1219_i",
+   "dir": "in",
+   "lanes": [
+    "L1219"
+   ],
+   "leaves": [
+    "u_su_Q1_lane_exp0__l",
+    "u_su_Q1_lane_exp0__s",
+    "u_su_Q1_lane_exp10__l",
+    "u_su_Q1_lane_exp10__s",
+    "u_su_Q1_lane_exp12__l",
+    "u_su_Q1_lane_exp12__s",
+    "u_su_Q1_lane_exp14__l",
+    "u_su_Q1_lane_exp14__s",
+    "u_su_Q1_lane_exp2__l",
+    "u_su_Q1_lane_exp2__s",
+    "u_su_Q1_lane_exp4__l",
+    "u_su_Q1_lane_exp4__s",
+    "u_su_Q1_lane_exp6__l",
+    "u_su_Q1_lane_exp6__s",
+    "u_su_Q1_lane_exp8__l",
+    "u_su_Q1_lane_exp8__s",
+    "u_su_Q1_lanes_plain0_3__p0",
+    "u_su_Q1_lanes_plain0_3__p1",
+    "u_su_Q1_lanes_plain0_3__p2",
+    "u_su_Q1_lanes_plain0_3__p3",
+    "u_su_Q1_lanes_plain8_11__p0",
+    "u_su_Q1_lanes_plain8_11__p1",
+    "u_su_Q1_lanes_plain8_11__p2",
+    "u_su_Q1_lanes_plain8_11__p3",
+    "u_su_Q1_pretree"
+   ],
+   "length_um": 2486.9,
+   "reason": "branch: leaves span a Manhattan radius 1015 um > 364",
+   "type": "q_su10",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 2080,
+   "bus": "L1243_i",
+   "dir": "in",
+   "lanes": [
+    "L1243"
+   ],
+   "leaves": [
+    "u_su_Q1_lane_exp0__l",
+    "u_su_Q1_lane_exp0__s",
+    "u_su_Q1_lane_exp10__l",
+    "u_su_Q1_lane_exp10__s",
+    "u_su_Q1_lane_exp12__l",
+    "u_su_Q1_lane_exp12__s",
+    "u_su_Q1_lane_exp14__l",
+    "u_su_Q1_lane_exp14__s",
+    "u_su_Q1_lane_exp2__l",
+    "u_su_Q1_lane_exp2__s",
+    "u_su_Q1_lane_exp4__l",
+    "u_su_Q1_lane_exp4__s",
+    "u_su_Q1_lane_exp6__l",
+    "u_su_Q1_lane_exp6__s",
+    "u_su_Q1_lane_exp8__l",
+    "u_su_Q1_lane_exp8__s",
+    "u_su_Q1_lanes_plain0_3__p0",
+    "u_su_Q1_lanes_plain0_3__p1",
+    "u_su_Q1_lanes_plain0_3__p2",
+    "u_su_Q1_lanes_plain0_3__p3",
+    "u_su_Q1_lanes_plain8_11__p0",
+    "u_su_Q1_lanes_plain8_11__p1",
+    "u_su_Q1_lanes_plain8_11__p2",
+    "u_su_Q1_lanes_plain8_11__p3",
+    "u_su_Q1_pretree"
+   ],
+   "length_um": 1835.3,
+   "reason": "branch: leaves span a Manhattan radius 950 um > 364",
+   "type": "q_su10",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 611,
+   "bus": "L1244_o",
+   "dir": "out",
+   "lanes": [
+    "L1244"
+   ],
+   "leaves": [
+    "u_su_Q1_lane_exp0__l",
+    "u_su_Q1_lane_exp0__s",
+    "u_su_Q1_lane_exp10__l",
+    "u_su_Q1_lane_exp10__s",
+    "u_su_Q1_lane_exp12__l",
+    "u_su_Q1_lane_exp12__s",
+    "u_su_Q1_lane_exp14__l",
+    "u_su_Q1_lane_exp14__s",
+    "u_su_Q1_lane_exp2__l",
+    "u_su_Q1_lane_exp2__s",
+    "u_su_Q1_lane_exp4__l",
+    "u_su_Q1_lane_exp4__s",
+    "u_su_Q1_lane_exp6__l",
+    "u_su_Q1_lane_exp6__s",
+    "u_su_Q1_lane_exp8__l",
+    "u_su_Q1_lane_exp8__s",
+    "u_su_Q1_lanes_plain0_3__p0",
+    "u_su_Q1_lanes_plain0_3__p1",
+    "u_su_Q1_lanes_plain0_3__p2",
+    "u_su_Q1_lanes_plain0_3__p3",
+    "u_su_Q1_lanes_plain8_11__p0",
+    "u_su_Q1_lanes_plain8_11__p1",
+    "u_su_Q1_lanes_plain8_11__p2",
+    "u_su_Q1_lanes_plain8_11__p3",
+    "u_su_Q1_pretree"
+   ],
+   "length_um": 1529.5,
+   "reason": "branch: leaves span a Manhattan radius 950 um > 364",
+   "type": "q_su10",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 958,
+   "bus": "L5015_o",
+   "dir": "out",
+   "lanes": [
+    "L5015"
+   ],
+   "leaves": [
+    "u_su_Q1_lane_exp0__l",
+    "u_su_Q1_lane_exp0__s",
+    "u_su_Q1_lane_exp10__l",
+    "u_su_Q1_lane_exp10__s",
+    "u_su_Q1_lane_exp12__l",
+    "u_su_Q1_lane_exp12__s",
+    "u_su_Q1_lane_exp14__l",
+    "u_su_Q1_lane_exp14__s",
+    "u_su_Q1_lane_exp2__l",
+    "u_su_Q1_lane_exp2__s"
+   ],
+   "length_um": 2093.1,
+   "reason": "branch: leaves span a Manhattan radius 1011 um > 364",
+   "type": "q_su10__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 767,
+   "bus": "L5016_o",
+   "dir": "out",
+   "lanes": [
+    "L5016"
+   ],
+   "leaves": [
+    "u_su_Q1_lane_exp2__l",
+    "u_su_Q1_lane_exp2__s",
+    "u_su_Q1_lane_exp4__l",
+    "u_su_Q1_lane_exp4__s",
+    "u_su_Q1_lane_exp6__l",
+    "u_su_Q1_lane_exp6__s",
+    "u_su_Q1_lane_exp8__l",
+    "u_su_Q1_lane_exp8__s",
+    "u_su_Q1_lanes_plain0_3__p0",
+    "u_su_Q1_lanes_plain0_3__p1",
+    "u_su_Q1_lanes_plain0_3__p2",
+    "u_su_Q1_lanes_plain0_3__p3"
+   ],
+   "length_um": 2019.0,
+   "reason": "branch: leaves span a Manhattan radius 769 um > 364",
+   "type": "q_su10__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 671,
+   "bus": "L5017_o",
+   "dir": "out",
+   "lanes": [
+    "L5017"
+   ],
+   "leaves": [
+    "u_su_Q1_lanes_plain0_3__p0",
+    "u_su_Q1_lanes_plain0_3__p1",
+    "u_su_Q1_lanes_plain0_3__p2",
+    "u_su_Q1_lanes_plain0_3__p3",
+    "u_su_Q1_lanes_plain8_11__p0",
+    "u_su_Q1_lanes_plain8_11__p1",
+    "u_su_Q1_lanes_plain8_11__p2",
+    "u_su_Q1_lanes_plain8_11__p3"
+   ],
+   "length_um": 2382.1,
+   "reason": "branch: leaves span a Manhattan radius 410 um > 364",
+   "type": "q_su10__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 960,
+   "bus": "L5018_o",
+   "dir": "out",
+   "lanes": [
+    "L5018"
+   ],
+   "leaves": [
+    "u_su_Q1_lane_exp0__l",
+    "u_su_Q1_lane_exp0__s",
+    "u_su_Q1_lane_exp10__l",
+    "u_su_Q1_lane_exp10__s",
+    "u_su_Q1_lane_exp12__l",
+    "u_su_Q1_lane_exp12__s",
+    "u_su_Q1_lane_exp14__l",
+    "u_su_Q1_lane_exp14__s",
+    "u_su_Q1_lane_exp2__l",
+    "u_su_Q1_lane_exp2__s",
+    "u_su_Q1_lane_exp4__l",
+    "u_su_Q1_lane_exp4__s",
+    "u_su_Q1_lane_exp6__l",
+    "u_su_Q1_lane_exp6__s",
+    "u_su_Q1_lane_exp8__l",
+    "u_su_Q1_lane_exp8__s",
+    "u_su_Q1_lanes_plain0_3__p0",
+    "u_su_Q1_lanes_plain0_3__p1",
+    "u_su_Q1_lanes_plain0_3__p2",
+    "u_su_Q1_lanes_plain0_3__p3",
+    "u_su_Q1_lanes_plain8_11__p0",
+    "u_su_Q1_lanes_plain8_11__p1",
+    "u_su_Q1_lanes_plain8_11__p2",
+    "u_su_Q1_lanes_plain8_11__p3"
+   ],
+   "length_um": 1643.2,
+   "reason": "branch: leaves span a Manhattan radius 950 um > 364",
+   "type": "q_su10__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1527,
+   "bus": "L5019_i",
+   "dir": "in",
+   "lanes": [
+    "L5019"
+   ],
+   "leaves": [
+    "u_su_Q1_lane_exp0__l",
+    "u_su_Q1_lane_exp0__s",
+    "u_su_Q1_lane_exp10__l",
+    "u_su_Q1_lane_exp10__s",
+    "u_su_Q1_lane_exp12__l",
+    "u_su_Q1_lane_exp12__s",
+    "u_su_Q1_lane_exp14__l",
+    "u_su_Q1_lane_exp14__s",
+    "u_su_Q1_lane_exp2__l",
+    "u_su_Q1_lane_exp2__s",
+    "u_su_Q1_lane_exp4__l",
+    "u_su_Q1_lane_exp4__s",
+    "u_su_Q1_lane_exp6__l",
+    "u_su_Q1_lane_exp6__s",
+    "u_su_Q1_lane_exp8__l",
+    "u_su_Q1_lane_exp8__s",
+    "u_su_Q1_lanes_plain0_3__p0",
+    "u_su_Q1_lanes_plain0_3__p1",
+    "u_su_Q1_lanes_plain0_3__p2",
+    "u_su_Q1_lanes_plain0_3__p3",
+    "u_su_Q1_lanes_plain8_11__p0",
+    "u_su_Q1_lanes_plain8_11__p1",
+    "u_su_Q1_lanes_plain8_11__p2",
+    "u_su_Q1_lanes_plain8_11__p3",
+    "u_su_Q1_pretree"
+   ],
+   "length_um": 2486.9,
+   "reason": "branch: leaves span a Manhattan radius 1015 um > 364",
+   "type": "q_su10__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 2080,
+   "bus": "L5044_i",
+   "dir": "in",
+   "lanes": [
+    "L5044"
+   ],
+   "leaves": [
+    "u_su_Q1_lane_exp0__l",
+    "u_su_Q1_lane_exp0__s",
+    "u_su_Q1_lane_exp10__l",
+    "u_su_Q1_lane_exp10__s",
+    "u_su_Q1_lane_exp12__l",
+    "u_su_Q1_lane_exp12__s",
+    "u_su_Q1_lane_exp14__l",
+    "u_su_Q1_lane_exp14__s",
+    "u_su_Q1_lane_exp2__l",
+    "u_su_Q1_lane_exp2__s",
+    "u_su_Q1_lane_exp4__l",
+    "u_su_Q1_lane_exp4__s",
+    "u_su_Q1_lane_exp6__l",
+    "u_su_Q1_lane_exp6__s",
+    "u_su_Q1_lane_exp8__l",
+    "u_su_Q1_lane_exp8__s",
+    "u_su_Q1_lanes_plain0_3__p0",
+    "u_su_Q1_lanes_plain0_3__p1",
+    "u_su_Q1_lanes_plain0_3__p2",
+    "u_su_Q1_lanes_plain0_3__p3",
+    "u_su_Q1_lanes_plain8_11__p0",
+    "u_su_Q1_lanes_plain8_11__p1",
+    "u_su_Q1_lanes_plain8_11__p2",
+    "u_su_Q1_lanes_plain8_11__p3",
+    "u_su_Q1_pretree"
+   ],
+   "length_um": 1835.3,
+   "reason": "branch: leaves span a Manhattan radius 950 um > 364",
+   "type": "q_su10__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 611,
+   "bus": "L5045_o",
+   "dir": "out",
+   "lanes": [
+    "L5045"
+   ],
+   "leaves": [
+    "u_su_Q1_lane_exp0__l",
+    "u_su_Q1_lane_exp0__s",
+    "u_su_Q1_lane_exp10__l",
+    "u_su_Q1_lane_exp10__s",
+    "u_su_Q1_lane_exp12__l",
+    "u_su_Q1_lane_exp12__s",
+    "u_su_Q1_lane_exp14__l",
+    "u_su_Q1_lane_exp14__s",
+    "u_su_Q1_lane_exp2__l",
+    "u_su_Q1_lane_exp2__s",
+    "u_su_Q1_lane_exp4__l",
+    "u_su_Q1_lane_exp4__s",
+    "u_su_Q1_lane_exp6__l",
+    "u_su_Q1_lane_exp6__s",
+    "u_su_Q1_lane_exp8__l",
+    "u_su_Q1_lane_exp8__s",
+    "u_su_Q1_lanes_plain0_3__p0",
+    "u_su_Q1_lanes_plain0_3__p1",
+    "u_su_Q1_lanes_plain0_3__p2",
+    "u_su_Q1_lanes_plain0_3__p3",
+    "u_su_Q1_lanes_plain8_11__p0",
+    "u_su_Q1_lanes_plain8_11__p1",
+    "u_su_Q1_lanes_plain8_11__p2",
+    "u_su_Q1_lanes_plain8_11__p3",
+    "u_su_Q1_pretree"
+   ],
+   "length_um": 1996.9,
+   "reason": "branch: leaves span a Manhattan radius 950 um > 364",
+   "type": "q_su10__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 960,
+   "bus": "L5018_i",
+   "dir": "in",
+   "lanes": [
+    "L5018"
+   ],
+   "leaves": [
+    "u_su_Q1_lane_exp11__l",
+    "u_su_Q1_lane_exp11__s",
+    "u_su_Q1_lane_exp13__l",
+    "u_su_Q1_lane_exp13__s",
+    "u_su_Q1_lane_exp1__l",
+    "u_su_Q1_lane_exp1__s",
+    "u_su_Q1_lane_exp3__l",
+    "u_su_Q1_lane_exp3__s",
+    "u_su_Q1_lane_exp5__l",
+    "u_su_Q1_lane_exp5__s",
+    "u_su_Q1_lane_exp7__l",
+    "u_su_Q1_lane_exp7__s",
+    "u_su_Q1_lane_exp9__l",
+    "u_su_Q1_lane_exp9__s",
+    "u_su_Q1_lane_exp_l__l",
+    "u_su_Q1_lane_exp_l__s",
+    "u_su_Q1_lanes_plain12_15__p0",
+    "u_su_Q1_lanes_plain12_15__p1",
+    "u_su_Q1_lanes_plain12_15__p2",
+    "u_su_Q1_lanes_plain12_15__p3",
+    "u_su_Q1_lanes_plain4_7__p0",
+    "u_su_Q1_lanes_plain4_7__p1",
+    "u_su_Q1_lanes_plain4_7__p2",
+    "u_su_Q1_lanes_plain4_7__p3"
+   ],
+   "length_um": 2332.2,
+   "reason": "branch: leaves span a Manhattan radius 773 um > 364",
+   "type": "q_su11",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1527,
+   "bus": "L5019_o",
+   "dir": "out",
+   "lanes": [
+    "L5019"
+   ],
+   "leaves": [
+    "u_cxdl_Q1_q",
+    "u_su_Q1_lane_exp11__l",
+    "u_su_Q1_lane_exp11__s",
+    "u_su_Q1_lane_exp13__l",
+    "u_su_Q1_lane_exp13__s",
+    "u_su_Q1_lane_exp1__l",
+    "u_su_Q1_lane_exp1__s",
+    "u_su_Q1_lane_exp3__l",
+    "u_su_Q1_lane_exp3__s",
+    "u_su_Q1_lane_exp5__l",
+    "u_su_Q1_lane_exp5__s",
+    "u_su_Q1_lane_exp7__l",
+    "u_su_Q1_lane_exp7__s",
+    "u_su_Q1_lane_exp9__l",
+    "u_su_Q1_lane_exp9__s",
+    "u_su_Q1_lane_exp_l__l",
+    "u_su_Q1_lane_exp_l__s",
+    "u_su_Q1_lanes_plain12_15__p0",
+    "u_su_Q1_lanes_plain12_15__p1",
+    "u_su_Q1_lanes_plain12_15__p2",
+    "u_su_Q1_lanes_plain12_15__p3",
+    "u_su_Q1_lanes_plain4_7__p0",
+    "u_su_Q1_lanes_plain4_7__p1",
+    "u_su_Q1_lanes_plain4_7__p2",
+    "u_su_Q1_lanes_plain4_7__p3"
+   ],
+   "length_um": 2360.4,
+   "reason": "branch: leaves span a Manhattan radius 994 um > 364",
+   "type": "q_su11",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 3522,
+   "bus": "L5026_i",
+   "dir": "in",
+   "lanes": [
+    "L5026"
+   ],
+   "leaves": [
+    "u_cxdl_Q1_s",
+    "u_su_Q1_lane_exp11__l",
+    "u_su_Q1_lane_exp11__s",
+    "u_su_Q1_lane_exp13__l",
+    "u_su_Q1_lane_exp13__s",
+    "u_su_Q1_lane_exp1__l",
+    "u_su_Q1_lane_exp1__s",
+    "u_su_Q1_lane_exp3__l",
+    "u_su_Q1_lane_exp3__s",
+    "u_su_Q1_lane_exp5__l",
+    "u_su_Q1_lane_exp5__s",
+    "u_su_Q1_lane_exp7__l",
+    "u_su_Q1_lane_exp7__s",
+    "u_su_Q1_lane_exp9__l",
+    "u_su_Q1_lane_exp9__s",
+    "u_su_Q1_lane_exp_l__l",
+    "u_su_Q1_lane_exp_l__s",
+    "u_su_Q1_lanes_plain12_15__p0",
+    "u_su_Q1_lanes_plain12_15__p1",
+    "u_su_Q1_lanes_plain12_15__p2",
+    "u_su_Q1_lanes_plain12_15__p3",
+    "u_su_Q1_lanes_plain4_7__p0",
+    "u_su_Q1_lanes_plain4_7__p1",
+    "u_su_Q1_lanes_plain4_7__p2",
+    "u_su_Q1_lanes_plain4_7__p3"
+   ],
+   "length_um": 2678.1,
+   "reason": "branch: leaves span a Manhattan radius 1054 um > 364",
+   "type": "q_su11",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1625,
+   "bus": "L5027_o",
+   "dir": "out",
+   "lanes": [
+    "L5027"
+   ],
+   "leaves": [
+    "u_cxdl_Q1_q",
+    "u_hc_Q1",
+    "u_su_Q1_lane_exp11__l",
+    "u_su_Q1_lane_exp11__s",
+    "u_su_Q1_lane_exp13__l",
+    "u_su_Q1_lane_exp13__s",
+    "u_su_Q1_lane_exp1__l",
+    "u_su_Q1_lane_exp1__s",
+    "u_su_Q1_lane_exp3__l",
+    "u_su_Q1_lane_exp3__s",
+    "u_su_Q1_lane_exp5__l",
+    "u_su_Q1_lane_exp5__s",
+    "u_su_Q1_lane_exp7__l",
+    "u_su_Q1_lane_exp7__s",
+    "u_su_Q1_lane_exp9__l",
+    "u_su_Q1_lane_exp9__s",
+    "u_su_Q1_lane_exp_l__l",
+    "u_su_Q1_lane_exp_l__s",
+    "u_su_Q1_lanes_plain12_15__p0",
+    "u_su_Q1_lanes_plain12_15__p1",
+    "u_su_Q1_lanes_plain12_15__p2",
+    "u_su_Q1_lanes_plain12_15__p3",
+    "u_su_Q1_lanes_plain4_7__p0",
+    "u_su_Q1_lanes_plain4_7__p1",
+    "u_su_Q1_lanes_plain4_7__p2",
+    "u_su_Q1_lanes_plain4_7__p3"
+   ],
+   "length_um": 1775.6,
+   "reason": "branch: leaves span a Manhattan radius 994 um > 364",
+   "type": "q_su11",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 516,
+   "bus": "L5040_o",
+   "chain_end": "u_sfu_Q1",
+   "dir": "out",
+   "lanes": [
+    "L5040"
+   ],
+   "leaves": [
+    "u_sfu_Q1"
+   ],
+   "length_um": 684.6,
+   "regs_um": [
+    [
+     1572.48,
+     99.36
+    ]
+   ],
+   "stations": 1,
+   "type": "q_su11",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1,
+   "bus": "L5048_i",
+   "chain_end": "u_fl_Q1",
+   "dir": "in",
+   "lanes": [
+    "L5048"
+   ],
+   "leaves": [
+    "u_fl_Q1"
+   ],
+   "length_um": 1579.5,
+   "regs_um": [
+    [
+     401.76,
+     1572.48
+    ],
+    [
+     803.52,
+     1572.48
+    ],
+    [
+     941.76,
+     1308.96
+    ]
+   ],
+   "stations": 3,
+   "type": "q_su11",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1,
+   "bus": "L5098_o",
+   "chain_end": "u_fl_Q1",
+   "dir": "out",
+   "lanes": [
+    "L5098"
+   ],
+   "leaves": [
+    "u_fl_Q1"
+   ],
+   "length_um": 1388.4,
+   "regs_um": [
+    [
+     864.0,
+     0.0
+    ],
+    [
+     941.76,
+     324.0
+    ],
+    [
+     941.76,
+     725.76
+    ]
+   ],
+   "stations": 3,
+   "type": "q_su11",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 960,
+   "bus": "L1218_i",
+   "dir": "in",
+   "lanes": [
+    "L1218"
+   ],
+   "leaves": [
+    "u_su_Q1_lane_exp11__l",
+    "u_su_Q1_lane_exp11__s",
+    "u_su_Q1_lane_exp13__l",
+    "u_su_Q1_lane_exp13__s",
+    "u_su_Q1_lane_exp1__l",
+    "u_su_Q1_lane_exp1__s",
+    "u_su_Q1_lane_exp3__l",
+    "u_su_Q1_lane_exp3__s",
+    "u_su_Q1_lane_exp5__l",
+    "u_su_Q1_lane_exp5__s",
+    "u_su_Q1_lane_exp7__l",
+    "u_su_Q1_lane_exp7__s",
+    "u_su_Q1_lane_exp9__l",
+    "u_su_Q1_lane_exp9__s",
+    "u_su_Q1_lane_exp_l__l",
+    "u_su_Q1_lane_exp_l__s",
+    "u_su_Q1_lanes_plain12_15__p0",
+    "u_su_Q1_lanes_plain12_15__p1",
+    "u_su_Q1_lanes_plain12_15__p2",
+    "u_su_Q1_lanes_plain12_15__p3",
+    "u_su_Q1_lanes_plain4_7__p0",
+    "u_su_Q1_lanes_plain4_7__p1",
+    "u_su_Q1_lanes_plain4_7__p2",
+    "u_su_Q1_lanes_plain4_7__p3"
+   ],
+   "length_um": 2332.2,
+   "reason": "branch: leaves span a Manhattan radius 773 um > 364",
+   "type": "q_su11__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1527,
+   "bus": "L1219_o",
+   "dir": "out",
+   "lanes": [
+    "L1219"
+   ],
+   "leaves": [
+    "u_cxdl_Q1_q",
+    "u_su_Q1_lane_exp11__l",
+    "u_su_Q1_lane_exp11__s",
+    "u_su_Q1_lane_exp13__l",
+    "u_su_Q1_lane_exp13__s",
+    "u_su_Q1_lane_exp1__l",
+    "u_su_Q1_lane_exp1__s",
+    "u_su_Q1_lane_exp3__l",
+    "u_su_Q1_lane_exp3__s",
+    "u_su_Q1_lane_exp5__l",
+    "u_su_Q1_lane_exp5__s",
+    "u_su_Q1_lane_exp7__l",
+    "u_su_Q1_lane_exp7__s",
+    "u_su_Q1_lane_exp9__l",
+    "u_su_Q1_lane_exp9__s",
+    "u_su_Q1_lane_exp_l__l",
+    "u_su_Q1_lane_exp_l__s",
+    "u_su_Q1_lanes_plain12_15__p0",
+    "u_su_Q1_lanes_plain12_15__p1",
+    "u_su_Q1_lanes_plain12_15__p2",
+    "u_su_Q1_lanes_plain12_15__p3",
+    "u_su_Q1_lanes_plain4_7__p0",
+    "u_su_Q1_lanes_plain4_7__p1",
+    "u_su_Q1_lanes_plain4_7__p2",
+    "u_su_Q1_lanes_plain4_7__p3"
+   ],
+   "length_um": 2360.4,
+   "reason": "branch: leaves span a Manhattan radius 994 um > 364",
+   "type": "q_su11__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 3522,
+   "bus": "L1226_i",
+   "dir": "in",
+   "lanes": [
+    "L1226"
+   ],
+   "leaves": [
+    "u_cxdl_Q1_s",
+    "u_su_Q1_lane_exp11__l",
+    "u_su_Q1_lane_exp11__s",
+    "u_su_Q1_lane_exp13__l",
+    "u_su_Q1_lane_exp13__s",
+    "u_su_Q1_lane_exp1__l",
+    "u_su_Q1_lane_exp1__s",
+    "u_su_Q1_lane_exp3__l",
+    "u_su_Q1_lane_exp3__s",
+    "u_su_Q1_lane_exp5__l",
+    "u_su_Q1_lane_exp5__s",
+    "u_su_Q1_lane_exp7__l",
+    "u_su_Q1_lane_exp7__s",
+    "u_su_Q1_lane_exp9__l",
+    "u_su_Q1_lane_exp9__s",
+    "u_su_Q1_lane_exp_l__l",
+    "u_su_Q1_lane_exp_l__s",
+    "u_su_Q1_lanes_plain12_15__p0",
+    "u_su_Q1_lanes_plain12_15__p1",
+    "u_su_Q1_lanes_plain12_15__p2",
+    "u_su_Q1_lanes_plain12_15__p3",
+    "u_su_Q1_lanes_plain4_7__p0",
+    "u_su_Q1_lanes_plain4_7__p1",
+    "u_su_Q1_lanes_plain4_7__p2",
+    "u_su_Q1_lanes_plain4_7__p3"
+   ],
+   "length_um": 2678.1,
+   "reason": "branch: leaves span a Manhattan radius 1054 um > 364",
+   "type": "q_su11__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1625,
+   "bus": "L1227_o",
+   "dir": "out",
+   "lanes": [
+    "L1227"
+   ],
+   "leaves": [
+    "u_cxdl_Q1_q",
+    "u_hc_Q1",
+    "u_su_Q1_lane_exp11__l",
+    "u_su_Q1_lane_exp11__s",
+    "u_su_Q1_lane_exp13__l",
+    "u_su_Q1_lane_exp13__s",
+    "u_su_Q1_lane_exp1__l",
+    "u_su_Q1_lane_exp1__s",
+    "u_su_Q1_lane_exp3__l",
+    "u_su_Q1_lane_exp3__s",
+    "u_su_Q1_lane_exp5__l",
+    "u_su_Q1_lane_exp5__s",
+    "u_su_Q1_lane_exp7__l",
+    "u_su_Q1_lane_exp7__s",
+    "u_su_Q1_lane_exp9__l",
+    "u_su_Q1_lane_exp9__s",
+    "u_su_Q1_lane_exp_l__l",
+    "u_su_Q1_lane_exp_l__s",
+    "u_su_Q1_lanes_plain12_15__p0",
+    "u_su_Q1_lanes_plain12_15__p1",
+    "u_su_Q1_lanes_plain12_15__p2",
+    "u_su_Q1_lanes_plain12_15__p3",
+    "u_su_Q1_lanes_plain4_7__p0",
+    "u_su_Q1_lanes_plain4_7__p1",
+    "u_su_Q1_lanes_plain4_7__p2",
+    "u_su_Q1_lanes_plain4_7__p3"
+   ],
+   "length_um": 1775.6,
+   "reason": "branch: leaves span a Manhattan radius 994 um > 364",
+   "type": "q_su11__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 516,
+   "bus": "L1239_o",
+   "chain_end": "u_sfu_Q1",
+   "dir": "out",
+   "lanes": [
+    "L1239"
+   ],
+   "leaves": [
+    "u_sfu_Q1"
+   ],
+   "length_um": 684.6,
+   "regs_um": [
+    [
+     1572.48,
+     99.36
+    ]
+   ],
+   "stations": 1,
+   "type": "q_su11__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1,
+   "bus": "L1247_i",
+   "chain_end": "u_fl_Q1",
+   "dir": "in",
+   "lanes": [
+    "L1247"
+   ],
+   "leaves": [
+    "u_fl_Q1"
+   ],
+   "length_um": 1579.5,
+   "regs_um": [
+    [
+     401.76,
+     1572.48
+    ],
+    [
+     803.52,
+     1572.48
+    ],
+    [
+     941.76,
+     1308.96
+    ]
+   ],
+   "stations": 3,
+   "type": "q_su11__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1,
+   "bus": "L1275_o",
+   "chain_end": "u_fl_Q1",
+   "dir": "out",
+   "lanes": [
+    "L1275"
+   ],
+   "leaves": [
+    "u_fl_Q1"
+   ],
+   "length_um": 1298.9,
+   "regs_um": [
+    [
+     401.76,
+     548.64
+    ],
+    [
+     803.52,
+     548.64
+    ],
+    [
+     941.76,
+     812.16
+    ]
+   ],
+   "stations": 3,
+   "type": "q_su11__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 4448,
+   "bus": "L5002_i",
+   "chain_end": "u_su_Q2_pretree",
+   "dir": "in",
+   "lanes": [
+    "L5002"
+   ],
+   "leaves": [
+    "u_su_Q2_pretree"
+   ],
+   "length_um": 414.7,
+   "regs_um": [
+    [
+     276.48,
+     652.32
+    ]
+   ],
+   "stations": 1,
+   "type": "q_su20",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1024,
+   "bus": "L5003_o",
+   "dir": "out",
+   "lanes": [
+    "L5003"
+   ],
+   "leaves": [
+    "u_cxdl_Q2_q",
+    "u_su_Q2_lanes0_3__p0",
+    "u_su_Q2_lanes0_3__p1",
+    "u_su_Q2_lanes0_3__p2",
+    "u_su_Q2_lanes0_3__p3",
+    "u_su_Q2_lanes16_19__p0",
+    "u_su_Q2_lanes16_19__p1",
+    "u_su_Q2_lanes16_19__p2",
+    "u_su_Q2_lanes16_19__p3",
+    "u_su_Q2_lanes24_27__p0",
+    "u_su_Q2_lanes24_27__p1",
+    "u_su_Q2_lanes24_27__p2",
+    "u_su_Q2_lanes24_27__p3",
+    "u_su_Q2_lanes8_11__p0",
+    "u_su_Q2_lanes8_11__p1",
+    "u_su_Q2_lanes8_11__p2",
+    "u_su_Q2_lanes8_11__p3"
+   ],
+   "length_um": 2383.2,
+   "reason": "branch: leaves span a Manhattan radius 1067 um > 364",
+   "type": "q_su20",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1,
+   "bus": "L5053_o",
+   "chain_end": "u_fl_Q2",
+   "dir": "out",
+   "lanes": [
+    "L5053"
+   ],
+   "leaves": [
+    "u_fl_Q2"
+   ],
+   "length_um": 1028.2,
+   "regs_um": [
+    [
+     1710.72,
+     885.6
+    ],
+    [
+     1710.72,
+     967.68
+    ],
+    [
+     1710.72,
+     1369.44
+    ]
+   ],
+   "stations": 3,
+   "type": "q_su20",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 279,
+   "bus": "L5055_i",
+   "chain_end": "u_sfu_Q2",
+   "dir": "in",
+   "lanes": [
+    "L5055"
+   ],
+   "leaves": [
+    "u_sfu_Q2"
+   ],
+   "length_um": 1689.1,
+   "regs_um": [
+    [
+     1166.4,
+     1555.2
+    ],
+    [
+     764.64,
+     1555.2
+    ],
+    [
+     449.28,
+     1468.8
+    ],
+    [
+     449.28,
+     1067.04
+    ]
+   ],
+   "stations": 4,
+   "type": "q_su20",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 516,
+   "bus": "L5056_o",
+   "chain_end": "u_sfu_Q2",
+   "dir": "out",
+   "lanes": [
+    "L5056"
+   ],
+   "leaves": [
+    "u_sfu_Q2"
+   ],
+   "length_um": 1555.2,
+   "regs_um": [
+    [
+     1602.72,
+     812.16
+    ],
+    [
+     1200.96,
+     812.16
+    ],
+    [
+     799.2,
+     812.16
+    ]
+   ],
+   "stations": 3,
+   "type": "q_su20",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 663,
+   "bus": "L5068_i",
+   "chain_end": "u_cxdl_Q2_s",
+   "dir": "in",
+   "lanes": [
+    "L5068"
+   ],
+   "leaves": [
+    "u_cxdl_Q2_s"
+   ],
+   "length_um": 2262.5,
+   "regs_um": [
+    [
+     1645.92,
+     552.96
+    ],
+    [
+     1244.16,
+     552.96
+    ],
+    [
+     859.68,
+     570.24
+    ],
+    [
+     457.92,
+     570.24
+    ],
+    [
+     224.64,
+     738.72
+    ]
+   ],
+   "stations": 5,
+   "type": "q_su20",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 486,
+   "bus": "L5070_i",
+   "dir": "in",
+   "lanes": [
+    "L5070"
+   ],
+   "leaves": [
+    "u_su_Q2_lanes0_3__p0",
+    "u_su_Q2_lanes0_3__p1",
+    "u_su_Q2_lanes0_3__p2",
+    "u_su_Q2_lanes0_3__p3",
+    "u_su_Q2_lanes16_19__p0",
+    "u_su_Q2_lanes16_19__p1",
+    "u_su_Q2_lanes16_19__p2",
+    "u_su_Q2_lanes16_19__p3",
+    "u_su_Q2_lanes24_27__p0",
+    "u_su_Q2_lanes24_27__p1",
+    "u_su_Q2_lanes24_27__p2",
+    "u_su_Q2_lanes24_27__p3",
+    "u_su_Q2_lanes8_11__p0",
+    "u_su_Q2_lanes8_11__p1",
+    "u_su_Q2_lanes8_11__p2",
+    "u_su_Q2_lanes8_11__p3"
+   ],
+   "length_um": 1863.8,
+   "reason": "branch: leaves span a Manhattan radius 959 um > 364",
+   "type": "q_su20",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1898,
+   "bus": "L5071_i",
+   "chain_end": "u_su_Q2_pretree",
+   "dir": "in",
+   "lanes": [
+    "L5071"
+   ],
+   "leaves": [
+    "u_su_Q2_pretree"
+   ],
+   "length_um": 1668.3,
+   "regs_um": [
+    [
+     1671.84,
+     224.64
+    ],
+    [
+     1270.08,
+     224.64
+    ],
+    [
+     868.32,
+     224.64
+    ],
+    [
+     466.56,
+     224.64
+    ]
+   ],
+   "stations": 4,
+   "type": "q_su20",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1087,
+   "bus": "L5072_o",
+   "dir": "out",
+   "lanes": [
+    "L5072"
+   ],
+   "leaves": [
+    "u_cxdl_Q2_q",
+    "u_hc_Q2",
+    "u_su_Q2_lanes0_3__p0",
+    "u_su_Q2_lanes0_3__p1",
+    "u_su_Q2_lanes0_3__p2",
+    "u_su_Q2_lanes0_3__p3",
+    "u_su_Q2_lanes16_19__p0",
+    "u_su_Q2_lanes16_19__p1",
+    "u_su_Q2_lanes16_19__p2",
+    "u_su_Q2_lanes16_19__p3",
+    "u_su_Q2_lanes24_27__p0",
+    "u_su_Q2_lanes24_27__p1",
+    "u_su_Q2_lanes24_27__p2",
+    "u_su_Q2_lanes24_27__p3",
+    "u_su_Q2_lanes8_11__p0",
+    "u_su_Q2_lanes8_11__p1",
+    "u_su_Q2_lanes8_11__p2",
+    "u_su_Q2_lanes8_11__p3",
+    "u_su_Q2_pretree"
+   ],
+   "length_um": 1841.3,
+   "reason": "branch: leaves span a Manhattan radius 998 um > 364",
+   "type": "q_su20",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 490,
+   "bus": "L5073_o",
+   "chain_end": "u_su_Q2_pretree",
+   "dir": "out",
+   "lanes": [
+    "L5073"
+   ],
+   "leaves": [
+    "u_su_Q2_pretree"
+   ],
+   "length_um": 1784.2,
+   "regs_um": [
+    [
+     1602.72,
+     876.96
+    ],
+    [
+     1200.96,
+     876.96
+    ],
+    [
+     799.2,
+     876.96
+    ],
+    [
+     457.92,
+     816.48
+    ]
+   ],
+   "stations": 4,
+   "type": "q_su20",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1,
+   "bus": "L5098_i",
+   "chain_end": "u_fl_Q2",
+   "dir": "in",
+   "lanes": [
+    "L5098"
+   ],
+   "leaves": [
+    "u_fl_Q2"
+   ],
+   "length_um": 620.7,
+   "regs_um": [
+    [
+     1931.04,
+     1512.0
+    ]
+   ],
+   "stations": 1,
+   "type": "q_su20",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 4448,
+   "bus": "L1204_i",
+   "chain_end": "u_su_Q2_pretree",
+   "dir": "in",
+   "lanes": [
+    "L1204"
+   ],
+   "leaves": [
+    "u_su_Q2_pretree"
+   ],
+   "length_um": 414.7,
+   "regs_um": [
+    [
+     276.48,
+     652.32
+    ]
+   ],
+   "stations": 1,
+   "type": "q_su20__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1024,
+   "bus": "L1205_o",
+   "dir": "out",
+   "lanes": [
+    "L1205"
+   ],
+   "leaves": [
+    "u_cxdl_Q2_q",
+    "u_su_Q2_lanes0_3__p0",
+    "u_su_Q2_lanes0_3__p1",
+    "u_su_Q2_lanes0_3__p2",
+    "u_su_Q2_lanes0_3__p3",
+    "u_su_Q2_lanes16_19__p0",
+    "u_su_Q2_lanes16_19__p1",
+    "u_su_Q2_lanes16_19__p2",
+    "u_su_Q2_lanes16_19__p3",
+    "u_su_Q2_lanes24_27__p0",
+    "u_su_Q2_lanes24_27__p1",
+    "u_su_Q2_lanes24_27__p2",
+    "u_su_Q2_lanes24_27__p3",
+    "u_su_Q2_lanes8_11__p0",
+    "u_su_Q2_lanes8_11__p1",
+    "u_su_Q2_lanes8_11__p2",
+    "u_su_Q2_lanes8_11__p3"
+   ],
+   "length_um": 2383.2,
+   "reason": "branch: leaves span a Manhattan radius 1067 um > 364",
+   "type": "q_su20__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 516,
+   "bus": "L1254_o",
+   "chain_end": "u_sfu_Q2",
+   "dir": "out",
+   "lanes": [
+    "L1254"
+   ],
+   "leaves": [
+    "u_sfu_Q2"
+   ],
+   "length_um": 1105.9,
+   "regs_um": [
+    [
+     583.2,
+     1555.2
+    ],
+    [
+     449.28,
+     1287.36
+    ]
+   ],
+   "stations": 2,
+   "type": "q_su20__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 492,
+   "bus": "L1266_i",
+   "chain_end": "u_cxdl_Q2_s",
+   "dir": "in",
+   "lanes": [
+    "L1266"
+   ],
+   "leaves": [
+    "u_cxdl_Q2_s"
+   ],
+   "length_um": 2251.9,
+   "regs_um": [
+    [
+     1637.28,
+     557.28
+    ],
+    [
+     1235.52,
+     557.28
+    ],
+    [
+     851.04,
+     574.56
+    ],
+    [
+     457.92,
+     583.2
+    ],
+    [
+     224.64,
+     751.68
+    ]
+   ],
+   "stations": 5,
+   "type": "q_su20__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1483,
+   "bus": "L1278_i",
+   "dir": "in",
+   "lanes": [
+    "L1278"
+   ],
+   "leaves": [
+    "u_su_Q2_lanes0_3__p0",
+    "u_su_Q2_lanes0_3__p1",
+    "u_su_Q2_lanes0_3__p2",
+    "u_su_Q2_lanes0_3__p3",
+    "u_su_Q2_lanes16_19__p0",
+    "u_su_Q2_lanes16_19__p1",
+    "u_su_Q2_lanes16_19__p2",
+    "u_su_Q2_lanes16_19__p3",
+    "u_su_Q2_lanes24_27__p0",
+    "u_su_Q2_lanes24_27__p1",
+    "u_su_Q2_lanes24_27__p2",
+    "u_su_Q2_lanes24_27__p3",
+    "u_su_Q2_lanes8_11__p0",
+    "u_su_Q2_lanes8_11__p1",
+    "u_su_Q2_lanes8_11__p2",
+    "u_su_Q2_lanes8_11__p3",
+    "u_su_Q2_pretree"
+   ],
+   "length_um": 1942.5,
+   "reason": "branch: leaves span a Manhattan radius 998 um > 364",
+   "type": "q_su20__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 746,
+   "bus": "L1280_o",
+   "dir": "out",
+   "lanes": [
+    "L1280"
+   ],
+   "leaves": [
+    "u_cxdl_Q2_q",
+    "u_hc_Q2",
+    "u_su_Q2_lanes0_3__p0",
+    "u_su_Q2_lanes0_3__p1",
+    "u_su_Q2_lanes0_3__p2",
+    "u_su_Q2_lanes0_3__p3",
+    "u_su_Q2_lanes16_19__p0",
+    "u_su_Q2_lanes16_19__p1",
+    "u_su_Q2_lanes16_19__p2",
+    "u_su_Q2_lanes16_19__p3"
+   ],
+   "length_um": 2014.5,
+   "reason": "branch: leaves span a Manhattan radius 1011 um > 364",
+   "type": "q_su20__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 978,
+   "bus": "L1281_o",
+   "dir": "out",
+   "lanes": [
+    "L1281"
+   ],
+   "leaves": [
+    "u_su_Q2_lanes16_19__p0",
+    "u_su_Q2_lanes16_19__p1",
+    "u_su_Q2_lanes16_19__p2",
+    "u_su_Q2_lanes16_19__p3",
+    "u_su_Q2_lanes24_27__p0",
+    "u_su_Q2_lanes24_27__p1",
+    "u_su_Q2_lanes24_27__p2",
+    "u_su_Q2_lanes24_27__p3",
+    "u_su_Q2_lanes8_11__p0",
+    "u_su_Q2_lanes8_11__p1",
+    "u_su_Q2_lanes8_11__p2",
+    "u_su_Q2_lanes8_11__p3",
+    "u_su_Q2_pretree"
+   ],
+   "length_um": 2200.7,
+   "reason": "branch: leaves span a Manhattan radius 959 um > 364",
+   "type": "q_su20__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1,
+   "bus": "L3000_o",
+   "chain_end": "u_fl_Q2",
+   "dir": "out",
+   "lanes": [
+    "L3000"
+   ],
+   "leaves": [
+    "u_fl_Q2"
+   ],
+   "length_um": 995.4,
+   "regs_um": [
+    [
+     1710.72,
+     920.16
+    ],
+    [
+     1710.72,
+     1321.92
+    ]
+   ],
+   "stations": 2,
+   "type": "q_su20__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 4448,
+   "bus": "L1204_o",
+   "dir": "out",
+   "lanes": [
+    "L1204"
+   ],
+   "leaves": [
+    "u_su_Q2_lanes12_15__p0",
+    "u_su_Q2_lanes12_15__p1",
+    "u_su_Q2_lanes12_15__p2",
+    "u_su_Q2_lanes12_15__p3",
+    "u_su_Q2_lanes20_23__p0",
+    "u_su_Q2_lanes20_23__p1",
+    "u_su_Q2_lanes20_23__p2",
+    "u_su_Q2_lanes20_23__p3",
+    "u_su_Q2_lanes28_31__p0",
+    "u_su_Q2_lanes28_31__p1",
+    "u_su_Q2_lanes28_31__p2",
+    "u_su_Q2_lanes28_31__p3",
+    "u_su_Q2_lanes4_7__p0",
+    "u_su_Q2_lanes4_7__p1",
+    "u_su_Q2_lanes4_7__p2",
+    "u_su_Q2_lanes4_7__p3"
+   ],
+   "length_um": 1909.4,
+   "reason": "branch: leaves span a Manhattan radius 933 um > 364",
+   "type": "q_su21",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1024,
+   "bus": "L1205_i",
+   "dir": "in",
+   "lanes": [
+    "L1205"
+   ],
+   "leaves": [
+    "u_su_Q2_lanes12_15__p0",
+    "u_su_Q2_lanes12_15__p1",
+    "u_su_Q2_lanes12_15__p2",
+    "u_su_Q2_lanes12_15__p3",
+    "u_su_Q2_lanes20_23__p0",
+    "u_su_Q2_lanes20_23__p1",
+    "u_su_Q2_lanes20_23__p2",
+    "u_su_Q2_lanes20_23__p3",
+    "u_su_Q2_lanes28_31__p0",
+    "u_su_Q2_lanes28_31__p1",
+    "u_su_Q2_lanes28_31__p2",
+    "u_su_Q2_lanes28_31__p3",
+    "u_su_Q2_lanes4_7__p0",
+    "u_su_Q2_lanes4_7__p1",
+    "u_su_Q2_lanes4_7__p2",
+    "u_su_Q2_lanes4_7__p3"
+   ],
+   "length_um": 2244.9,
+   "reason": "branch: leaves span a Manhattan radius 989 um > 364",
+   "type": "q_su21",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 281,
+   "bus": "L1272_i",
+   "dir": "in",
+   "lanes": [
+    "L1272"
+   ],
+   "leaves": [
+    "u_su_Q2_lanes12_15__p0",
+    "u_su_Q2_lanes12_15__p1",
+    "u_su_Q2_lanes12_15__p2",
+    "u_su_Q2_lanes12_15__p3",
+    "u_su_Q2_lanes20_23__p0",
+    "u_su_Q2_lanes20_23__p1",
+    "u_su_Q2_lanes20_23__p2",
+    "u_su_Q2_lanes20_23__p3",
+    "u_su_Q2_lanes28_31__p0",
+    "u_su_Q2_lanes28_31__p1",
+    "u_su_Q2_lanes28_31__p2",
+    "u_su_Q2_lanes28_31__p3",
+    "u_su_Q2_lanes4_7__p0",
+    "u_su_Q2_lanes4_7__p1",
+    "u_su_Q2_lanes4_7__p2",
+    "u_su_Q2_lanes4_7__p3"
+   ],
+   "length_um": 2609.3,
+   "reason": "branch: leaves span a Manhattan radius 1089 um > 364",
+   "type": "q_su21",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 84,
+   "bus": "L3006_o",
+   "chain_end": "u_su_Q2_lanes12_15__p0",
+   "dir": "out",
+   "lanes": [
+    "L3006"
+   ],
+   "leaves": [
+    "u_su_Q2_lanes12_15__p0",
+    "u_su_Q2_lanes12_15__p1",
+    "u_su_Q2_lanes12_15__p2",
+    "u_su_Q2_lanes12_15__p3"
+   ],
+   "length_um": 1817.1,
+   "regs_um": [
+    [
+     1399.68,
+     1555.2
+    ],
+    [
+     997.92,
+     1555.2
+    ],
+    [
+     596.16,
+     1555.2
+    ],
+    [
+     501.12,
+     1330.56
+    ]
+   ],
+   "stations": 4,
+   "type": "q_su21",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 44,
+   "bus": "L3007_o",
+   "chain_end": "u_su_Q2_lanes12_15__p0",
+   "dir": "out",
+   "lanes": [
+    "L3007"
+   ],
+   "leaves": [
+    "u_su_Q2_lanes12_15__p0",
+    "u_su_Q2_lanes12_15__p1",
+    "u_su_Q2_lanes12_15__p2",
+    "u_su_Q2_lanes12_15__p3"
+   ],
+   "length_um": 1494.7,
+   "regs_um": [
+    [
+     1075.68,
+     1555.2
+    ],
+    [
+     673.92,
+     1555.2
+    ],
+    [
+     501.12,
+     1330.56
+    ]
+   ],
+   "stations": 3,
+   "type": "q_su21",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 19,
+   "bus": "L3008_o",
+   "chain_end": "u_su_Q2_lanes20_23__p3",
+   "dir": "out",
+   "lanes": [
+    "L3008"
+   ],
+   "leaves": [
+    "u_su_Q2_lanes20_23__p0",
+    "u_su_Q2_lanes20_23__p1",
+    "u_su_Q2_lanes20_23__p2",
+    "u_su_Q2_lanes20_23__p3"
+   ],
+   "length_um": 1512.0,
+   "regs_um": [
+    [
+     1179.36,
+     1408.32
+    ],
+    [
+     1179.36,
+     1330.56
+    ],
+    [
+     1179.36,
+     928.8
+    ],
+    [
+     1179.36,
+     561.6
+    ]
+   ],
+   "stations": 4,
+   "type": "q_su21",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 27,
+   "bus": "L3012_o",
+   "chain_end": "u_su_Q2_lanes20_23__p3",
+   "dir": "out",
+   "lanes": [
+    "L3012"
+   ],
+   "leaves": [
+    "u_su_Q2_lanes20_23__p0",
+    "u_su_Q2_lanes20_23__p1",
+    "u_su_Q2_lanes20_23__p2",
+    "u_su_Q2_lanes20_23__p3"
+   ],
+   "length_um": 838.1,
+   "regs_um": [
+    [
+     1632.96,
+     496.8
+    ],
+    [
+     1339.2,
+     561.6
+    ]
+   ],
+   "stations": 2,
+   "type": "q_su21",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 338,
+   "bus": "L7000_o",
+   "dir": "out",
+   "lanes": [
+    "L7000"
+   ],
+   "leaves": [
+    "u_su_Q2_lanes20_23__p0",
+    "u_su_Q2_lanes20_23__p1",
+    "u_su_Q2_lanes20_23__p2",
+    "u_su_Q2_lanes20_23__p3",
+    "u_su_Q2_lanes28_31__p0",
+    "u_su_Q2_lanes28_31__p1",
+    "u_su_Q2_lanes28_31__p2",
+    "u_su_Q2_lanes28_31__p3",
+    "u_su_Q2_lanes4_7__p0",
+    "u_su_Q2_lanes4_7__p1",
+    "u_su_Q2_lanes4_7__p2",
+    "u_su_Q2_lanes4_7__p3"
+   ],
+   "length_um": 1901.1,
+   "reason": "branch: leaves span a Manhattan radius 933 um > 364",
+   "type": "q_su21",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 4448,
+   "bus": "L5002_o",
+   "dir": "out",
+   "lanes": [
+    "L5002"
+   ],
+   "leaves": [
+    "u_su_Q2_lanes12_15__p0",
+    "u_su_Q2_lanes12_15__p1",
+    "u_su_Q2_lanes12_15__p2",
+    "u_su_Q2_lanes12_15__p3",
+    "u_su_Q2_lanes20_23__p0",
+    "u_su_Q2_lanes20_23__p1",
+    "u_su_Q2_lanes20_23__p2",
+    "u_su_Q2_lanes20_23__p3",
+    "u_su_Q2_lanes28_31__p0",
+    "u_su_Q2_lanes28_31__p1",
+    "u_su_Q2_lanes28_31__p2",
+    "u_su_Q2_lanes28_31__p3",
+    "u_su_Q2_lanes4_7__p0",
+    "u_su_Q2_lanes4_7__p1",
+    "u_su_Q2_lanes4_7__p2",
+    "u_su_Q2_lanes4_7__p3"
+   ],
+   "length_um": 1909.4,
+   "reason": "branch: leaves span a Manhattan radius 933 um > 364",
+   "type": "q_su21__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1024,
+   "bus": "L5003_i",
+   "dir": "in",
+   "lanes": [
+    "L5003"
+   ],
+   "leaves": [
+    "u_su_Q2_lanes12_15__p0",
+    "u_su_Q2_lanes12_15__p1",
+    "u_su_Q2_lanes12_15__p2",
+    "u_su_Q2_lanes12_15__p3",
+    "u_su_Q2_lanes20_23__p0",
+    "u_su_Q2_lanes20_23__p1",
+    "u_su_Q2_lanes20_23__p2",
+    "u_su_Q2_lanes20_23__p3",
+    "u_su_Q2_lanes28_31__p0",
+    "u_su_Q2_lanes28_31__p1",
+    "u_su_Q2_lanes28_31__p2",
+    "u_su_Q2_lanes28_31__p3",
+    "u_su_Q2_lanes4_7__p0",
+    "u_su_Q2_lanes4_7__p1",
+    "u_su_Q2_lanes4_7__p2",
+    "u_su_Q2_lanes4_7__p3"
+   ],
+   "length_um": 2244.9,
+   "reason": "branch: leaves span a Manhattan radius 989 um > 364",
+   "type": "q_su21__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1554,
+   "bus": "L7500_i",
+   "dir": "in",
+   "lanes": [
+    "L7500"
+   ],
+   "leaves": [
+    "u_su_Q2_lanes12_15__p0",
+    "u_su_Q2_lanes12_15__p1",
+    "u_su_Q2_lanes12_15__p2",
+    "u_su_Q2_lanes12_15__p3",
+    "u_su_Q2_lanes20_23__p0",
+    "u_su_Q2_lanes20_23__p1",
+    "u_su_Q2_lanes20_23__p2",
+    "u_su_Q2_lanes20_23__p3",
+    "u_su_Q2_lanes28_31__p0",
+    "u_su_Q2_lanes28_31__p1",
+    "u_su_Q2_lanes28_31__p2",
+    "u_su_Q2_lanes28_31__p3",
+    "u_su_Q2_lanes4_7__p0",
+    "u_su_Q2_lanes4_7__p1",
+    "u_su_Q2_lanes4_7__p2",
+    "u_su_Q2_lanes4_7__p3"
+   ],
+   "length_um": 2263.4,
+   "reason": "branch: leaves span a Manhattan radius 1015 um > 364",
+   "type": "q_su21__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 512,
+   "bus": "L7501_o",
+   "dir": "out",
+   "lanes": [
+    "L7501"
+   ],
+   "leaves": [
+    "u_su_Q2_lanes12_15__p0",
+    "u_su_Q2_lanes12_15__p1",
+    "u_su_Q2_lanes12_15__p2",
+    "u_su_Q2_lanes12_15__p3",
+    "u_su_Q2_lanes20_23__p0",
+    "u_su_Q2_lanes20_23__p1",
+    "u_su_Q2_lanes20_23__p2",
+    "u_su_Q2_lanes20_23__p3",
+    "u_su_Q2_lanes28_31__p0",
+    "u_su_Q2_lanes28_31__p1",
+    "u_su_Q2_lanes28_31__p2",
+    "u_su_Q2_lanes28_31__p3",
+    "u_su_Q2_lanes4_7__p0",
+    "u_su_Q2_lanes4_7__p1",
+    "u_su_Q2_lanes4_7__p2",
+    "u_su_Q2_lanes4_7__p3"
+   ],
+   "length_um": 1909.1,
+   "reason": "branch: leaves span a Manhattan radius 933 um > 364",
+   "type": "q_su21__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 3356,
+   "bus": "L1202_o",
+   "dir": "out",
+   "lanes": [
+    "L1202"
+   ],
+   "leaves": [
+    "u_su_Q3_lanes0_3__p0",
+    "u_su_Q3_lanes0_3__p1",
+    "u_su_Q3_lanes0_3__p2",
+    "u_su_Q3_lanes0_3__p3",
+    "u_su_Q3_lanes16_19__p0",
+    "u_su_Q3_lanes16_19__p1",
+    "u_su_Q3_lanes16_19__p2",
+    "u_su_Q3_lanes16_19__p3",
+    "u_su_Q3_lanes24_27__p0",
+    "u_su_Q3_lanes24_27__p1",
+    "u_su_Q3_lanes24_27__p2",
+    "u_su_Q3_lanes24_27__p3",
+    "u_su_Q3_lanes8_11__p0",
+    "u_su_Q3_lanes8_11__p1",
+    "u_su_Q3_lanes8_11__p2",
+    "u_su_Q3_lanes8_11__p3"
+   ],
+   "length_um": 1995.9,
+   "reason": "branch: leaves span a Manhattan radius 1110 um > 364",
+   "type": "q_su30",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1399,
+   "bus": "L1203_i",
+   "dir": "in",
+   "lanes": [
+    "L1203"
+   ],
+   "leaves": [
+    "u_su_Q3_lanes0_3__p0",
+    "u_su_Q3_lanes0_3__p1",
+    "u_su_Q3_lanes0_3__p2",
+    "u_su_Q3_lanes0_3__p3",
+    "u_su_Q3_lanes16_19__p0",
+    "u_su_Q3_lanes16_19__p1",
+    "u_su_Q3_lanes16_19__p2",
+    "u_su_Q3_lanes16_19__p3",
+    "u_su_Q3_lanes24_27__p0",
+    "u_su_Q3_lanes24_27__p1",
+    "u_su_Q3_lanes24_27__p2",
+    "u_su_Q3_lanes24_27__p3",
+    "u_su_Q3_lanes8_11__p0",
+    "u_su_Q3_lanes8_11__p1",
+    "u_su_Q3_lanes8_11__p2",
+    "u_su_Q3_lanes8_11__p3",
+    "u_su_Q3_pretree"
+   ],
+   "length_um": 1940.9,
+   "reason": "branch: leaves span a Manhattan radius 1156 um > 364",
+   "type": "q_su30",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 2080,
+   "bus": "L1245_i",
+   "dir": "in",
+   "lanes": [
+    "L1245"
+   ],
+   "leaves": [
+    "u_su_Q3_lanes0_3__p0",
+    "u_su_Q3_lanes0_3__p1",
+    "u_su_Q3_lanes0_3__p2",
+    "u_su_Q3_lanes0_3__p3",
+    "u_su_Q3_lanes16_19__p0",
+    "u_su_Q3_lanes16_19__p1",
+    "u_su_Q3_lanes16_19__p2",
+    "u_su_Q3_lanes16_19__p3",
+    "u_su_Q3_lanes24_27__p0",
+    "u_su_Q3_lanes24_27__p1",
+    "u_su_Q3_lanes24_27__p2",
+    "u_su_Q3_lanes24_27__p3",
+    "u_su_Q3_lanes8_11__p0",
+    "u_su_Q3_lanes8_11__p1",
+    "u_su_Q3_lanes8_11__p2",
+    "u_su_Q3_lanes8_11__p3",
+    "u_su_Q3_pretree"
+   ],
+   "length_um": 2193.0,
+   "reason": "branch: leaves span a Manhattan radius 1171 um > 364",
+   "type": "q_su30",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 611,
+   "bus": "L1246_o",
+   "dir": "out",
+   "lanes": [
+    "L1246"
+   ],
+   "leaves": [
+    "u_su_Q3_lanes0_3__p0",
+    "u_su_Q3_lanes0_3__p1",
+    "u_su_Q3_lanes0_3__p2",
+    "u_su_Q3_lanes0_3__p3",
+    "u_su_Q3_lanes16_19__p0",
+    "u_su_Q3_lanes16_19__p1",
+    "u_su_Q3_lanes16_19__p2",
+    "u_su_Q3_lanes16_19__p3",
+    "u_su_Q3_lanes24_27__p0",
+    "u_su_Q3_lanes24_27__p1",
+    "u_su_Q3_lanes24_27__p2",
+    "u_su_Q3_lanes24_27__p3",
+    "u_su_Q3_lanes8_11__p0",
+    "u_su_Q3_lanes8_11__p1",
+    "u_su_Q3_lanes8_11__p2",
+    "u_su_Q3_lanes8_11__p3",
+    "u_su_Q3_pretree"
+   ],
+   "length_um": 2008.7,
+   "reason": "branch: leaves span a Manhattan radius 1171 um > 364",
+   "type": "q_su30",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 3356,
+   "bus": "L5004_o",
+   "dir": "out",
+   "lanes": [
+    "L5004"
+   ],
+   "leaves": [
+    "u_su_Q3_lanes0_3__p0",
+    "u_su_Q3_lanes0_3__p1",
+    "u_su_Q3_lanes0_3__p2",
+    "u_su_Q3_lanes0_3__p3",
+    "u_su_Q3_lanes16_19__p0",
+    "u_su_Q3_lanes16_19__p1",
+    "u_su_Q3_lanes16_19__p2",
+    "u_su_Q3_lanes16_19__p3",
+    "u_su_Q3_lanes24_27__p0",
+    "u_su_Q3_lanes24_27__p1",
+    "u_su_Q3_lanes24_27__p2",
+    "u_su_Q3_lanes24_27__p3",
+    "u_su_Q3_lanes8_11__p0",
+    "u_su_Q3_lanes8_11__p1",
+    "u_su_Q3_lanes8_11__p2",
+    "u_su_Q3_lanes8_11__p3"
+   ],
+   "length_um": 1995.9,
+   "reason": "branch: leaves span a Manhattan radius 1110 um > 364",
+   "type": "q_su30__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1399,
+   "bus": "L5005_i",
+   "dir": "in",
+   "lanes": [
+    "L5005"
+   ],
+   "leaves": [
+    "u_su_Q3_lanes0_3__p0",
+    "u_su_Q3_lanes0_3__p1",
+    "u_su_Q3_lanes0_3__p2",
+    "u_su_Q3_lanes0_3__p3",
+    "u_su_Q3_lanes16_19__p0",
+    "u_su_Q3_lanes16_19__p1",
+    "u_su_Q3_lanes16_19__p2",
+    "u_su_Q3_lanes16_19__p3",
+    "u_su_Q3_lanes24_27__p0",
+    "u_su_Q3_lanes24_27__p1",
+    "u_su_Q3_lanes24_27__p2",
+    "u_su_Q3_lanes24_27__p3",
+    "u_su_Q3_lanes8_11__p0",
+    "u_su_Q3_lanes8_11__p1",
+    "u_su_Q3_lanes8_11__p2",
+    "u_su_Q3_lanes8_11__p3",
+    "u_su_Q3_pretree"
+   ],
+   "length_um": 1940.9,
+   "reason": "branch: leaves span a Manhattan radius 1156 um > 364",
+   "type": "q_su30__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 2080,
+   "bus": "L5046_i",
+   "dir": "in",
+   "lanes": [
+    "L5046"
+   ],
+   "leaves": [
+    "u_su_Q3_lanes0_3__p0",
+    "u_su_Q3_lanes0_3__p1",
+    "u_su_Q3_lanes0_3__p2",
+    "u_su_Q3_lanes0_3__p3",
+    "u_su_Q3_lanes16_19__p0",
+    "u_su_Q3_lanes16_19__p1",
+    "u_su_Q3_lanes16_19__p2",
+    "u_su_Q3_lanes16_19__p3",
+    "u_su_Q3_lanes24_27__p0",
+    "u_su_Q3_lanes24_27__p1",
+    "u_su_Q3_lanes24_27__p2",
+    "u_su_Q3_lanes24_27__p3",
+    "u_su_Q3_lanes8_11__p0",
+    "u_su_Q3_lanes8_11__p1",
+    "u_su_Q3_lanes8_11__p2",
+    "u_su_Q3_lanes8_11__p3",
+    "u_su_Q3_pretree"
+   ],
+   "length_um": 1844.6,
+   "reason": "branch: leaves span a Manhattan radius 1171 um > 364",
+   "type": "q_su30__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 611,
+   "bus": "L5047_o",
+   "dir": "out",
+   "lanes": [
+    "L5047"
+   ],
+   "leaves": [
+    "u_su_Q3_lanes0_3__p0",
+    "u_su_Q3_lanes0_3__p1",
+    "u_su_Q3_lanes0_3__p2",
+    "u_su_Q3_lanes0_3__p3",
+    "u_su_Q3_lanes16_19__p0",
+    "u_su_Q3_lanes16_19__p1",
+    "u_su_Q3_lanes16_19__p2",
+    "u_su_Q3_lanes16_19__p3",
+    "u_su_Q3_lanes24_27__p0",
+    "u_su_Q3_lanes24_27__p1",
+    "u_su_Q3_lanes24_27__p2",
+    "u_su_Q3_lanes24_27__p3",
+    "u_su_Q3_lanes8_11__p0",
+    "u_su_Q3_lanes8_11__p1",
+    "u_su_Q3_lanes8_11__p2",
+    "u_su_Q3_lanes8_11__p3",
+    "u_su_Q3_pretree"
+   ],
+   "length_um": 1674.3,
+   "reason": "branch: leaves span a Manhattan radius 1171 um > 364",
+   "type": "q_su30__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 3356,
+   "bus": "L5004_i",
+   "dir": "in",
+   "lanes": [
+    "L5004"
+   ],
+   "leaves": [
+    "u_su_Q3_lanes12_15__p0",
+    "u_su_Q3_lanes12_15__p1",
+    "u_su_Q3_lanes12_15__p2",
+    "u_su_Q3_lanes12_15__p3",
+    "u_su_Q3_lanes20_23__p0",
+    "u_su_Q3_lanes20_23__p1",
+    "u_su_Q3_lanes20_23__p2",
+    "u_su_Q3_lanes20_23__p3",
+    "u_su_Q3_lanes28_31__p0",
+    "u_su_Q3_lanes28_31__p1",
+    "u_su_Q3_lanes28_31__p2",
+    "u_su_Q3_lanes28_31__p3",
+    "u_su_Q3_lanes4_7__p0",
+    "u_su_Q3_lanes4_7__p1",
+    "u_su_Q3_lanes4_7__p2",
+    "u_su_Q3_lanes4_7__p3"
+   ],
+   "length_um": 1814.4,
+   "reason": "branch: leaves span a Manhattan radius 942 um > 364",
+   "type": "q_su31",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1399,
+   "bus": "L5005_o",
+   "dir": "out",
+   "lanes": [
+    "L5005"
+   ],
+   "leaves": [
+    "u_cxdl_Q3_q",
+    "u_su_Q3_lanes12_15__p0",
+    "u_su_Q3_lanes12_15__p1",
+    "u_su_Q3_lanes12_15__p2",
+    "u_su_Q3_lanes12_15__p3",
+    "u_su_Q3_lanes20_23__p0",
+    "u_su_Q3_lanes20_23__p1",
+    "u_su_Q3_lanes20_23__p2",
+    "u_su_Q3_lanes20_23__p3",
+    "u_su_Q3_lanes28_31__p0",
+    "u_su_Q3_lanes28_31__p1",
+    "u_su_Q3_lanes28_31__p2",
+    "u_su_Q3_lanes28_31__p3",
+    "u_su_Q3_lanes4_7__p0",
+    "u_su_Q3_lanes4_7__p1",
+    "u_su_Q3_lanes4_7__p2",
+    "u_su_Q3_lanes4_7__p3"
+   ],
+   "length_um": 2105.1,
+   "reason": "branch: leaves span a Manhattan radius 996 um > 364",
+   "type": "q_su31",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 3522,
+   "bus": "L5031_i",
+   "dir": "in",
+   "lanes": [
+    "L5031"
+   ],
+   "leaves": [
+    "u_cxdl_Q3_s",
+    "u_su_Q3_lanes12_15__p0",
+    "u_su_Q3_lanes12_15__p1",
+    "u_su_Q3_lanes12_15__p2",
+    "u_su_Q3_lanes12_15__p3",
+    "u_su_Q3_lanes20_23__p0",
+    "u_su_Q3_lanes20_23__p1",
+    "u_su_Q3_lanes20_23__p2",
+    "u_su_Q3_lanes20_23__p3",
+    "u_su_Q3_lanes28_31__p0",
+    "u_su_Q3_lanes28_31__p1",
+    "u_su_Q3_lanes28_31__p2",
+    "u_su_Q3_lanes28_31__p3",
+    "u_su_Q3_lanes4_7__p0",
+    "u_su_Q3_lanes4_7__p1",
+    "u_su_Q3_lanes4_7__p2",
+    "u_su_Q3_lanes4_7__p3"
+   ],
+   "length_um": 2063.1,
+   "reason": "branch: leaves span a Manhattan radius 1002 um > 364",
+   "type": "q_su31",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1626,
+   "bus": "L5032_o",
+   "dir": "out",
+   "lanes": [
+    "L5032"
+   ],
+   "leaves": [
+    "u_cxdl_Q3_q",
+    "u_fl_Q3",
+    "u_hc_Q3",
+    "u_su_Q3_lanes12_15__p0",
+    "u_su_Q3_lanes12_15__p1",
+    "u_su_Q3_lanes12_15__p2",
+    "u_su_Q3_lanes12_15__p3",
+    "u_su_Q3_lanes20_23__p0",
+    "u_su_Q3_lanes20_23__p1",
+    "u_su_Q3_lanes20_23__p2",
+    "u_su_Q3_lanes20_23__p3",
+    "u_su_Q3_lanes28_31__p0",
+    "u_su_Q3_lanes28_31__p1",
+    "u_su_Q3_lanes28_31__p2",
+    "u_su_Q3_lanes28_31__p3",
+    "u_su_Q3_lanes4_7__p0",
+    "u_su_Q3_lanes4_7__p1",
+    "u_su_Q3_lanes4_7__p2",
+    "u_su_Q3_lanes4_7__p3"
+   ],
+   "length_um": 2043.5,
+   "reason": "branch: leaves span a Manhattan radius 1089 um > 364",
+   "type": "q_su31",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1,
+   "bus": "L5053_i",
+   "chain_end": "u_fl_Q3",
+   "dir": "in",
+   "lanes": [
+    "L5053"
+   ],
+   "leaves": [
+    "u_fl_Q3"
+   ],
+   "length_um": 1938.1,
+   "regs_um": [
+    [
+     401.76,
+     989.28
+    ],
+    [
+     803.52,
+     989.28
+    ],
+    [
+     1205.28,
+     989.28
+    ],
+    [
+     1607.04,
+     989.28
+    ]
+   ],
+   "stations": 4,
+   "type": "q_su31",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 516,
+   "bus": "L7503_o",
+   "chain_end": "u_sfu_Q3",
+   "dir": "out",
+   "lanes": [
+    "L7503"
+   ],
+   "leaves": [
+    "u_sfu_Q3"
+   ],
+   "length_um": 1071.7,
+   "regs_um": [
+    [
+     1317.6,
+     1555.2
+    ],
+    [
+     1684.8,
+     1520.64
+    ]
+   ],
+   "stations": 2,
+   "type": "q_su31",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 3356,
+   "bus": "L1202_i",
+   "dir": "in",
+   "lanes": [
+    "L1202"
+   ],
+   "leaves": [
+    "u_su_Q3_lanes12_15__p0",
+    "u_su_Q3_lanes12_15__p1",
+    "u_su_Q3_lanes12_15__p2",
+    "u_su_Q3_lanes12_15__p3",
+    "u_su_Q3_lanes20_23__p0",
+    "u_su_Q3_lanes20_23__p1",
+    "u_su_Q3_lanes20_23__p2",
+    "u_su_Q3_lanes20_23__p3",
+    "u_su_Q3_lanes28_31__p0",
+    "u_su_Q3_lanes28_31__p1",
+    "u_su_Q3_lanes28_31__p2",
+    "u_su_Q3_lanes28_31__p3",
+    "u_su_Q3_lanes4_7__p0",
+    "u_su_Q3_lanes4_7__p1",
+    "u_su_Q3_lanes4_7__p2",
+    "u_su_Q3_lanes4_7__p3"
+   ],
+   "length_um": 1814.4,
+   "reason": "branch: leaves span a Manhattan radius 942 um > 364",
+   "type": "q_su31__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1399,
+   "bus": "L1203_o",
+   "dir": "out",
+   "lanes": [
+    "L1203"
+   ],
+   "leaves": [
+    "u_cxdl_Q3_q",
+    "u_su_Q3_lanes12_15__p0",
+    "u_su_Q3_lanes12_15__p1",
+    "u_su_Q3_lanes12_15__p2",
+    "u_su_Q3_lanes12_15__p3",
+    "u_su_Q3_lanes20_23__p0",
+    "u_su_Q3_lanes20_23__p1",
+    "u_su_Q3_lanes20_23__p2",
+    "u_su_Q3_lanes20_23__p3",
+    "u_su_Q3_lanes28_31__p0",
+    "u_su_Q3_lanes28_31__p1",
+    "u_su_Q3_lanes28_31__p2",
+    "u_su_Q3_lanes28_31__p3",
+    "u_su_Q3_lanes4_7__p0",
+    "u_su_Q3_lanes4_7__p1",
+    "u_su_Q3_lanes4_7__p2",
+    "u_su_Q3_lanes4_7__p3"
+   ],
+   "length_um": 2105.1,
+   "reason": "branch: leaves span a Manhattan radius 996 um > 364",
+   "type": "q_su31__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 3522,
+   "bus": "L1231_i",
+   "dir": "in",
+   "lanes": [
+    "L1231"
+   ],
+   "leaves": [
+    "u_cxdl_Q3_s",
+    "u_su_Q3_lanes12_15__p0",
+    "u_su_Q3_lanes12_15__p1",
+    "u_su_Q3_lanes12_15__p2",
+    "u_su_Q3_lanes12_15__p3",
+    "u_su_Q3_lanes20_23__p0",
+    "u_su_Q3_lanes20_23__p1",
+    "u_su_Q3_lanes20_23__p2",
+    "u_su_Q3_lanes20_23__p3",
+    "u_su_Q3_lanes28_31__p0",
+    "u_su_Q3_lanes28_31__p1",
+    "u_su_Q3_lanes28_31__p2",
+    "u_su_Q3_lanes28_31__p3",
+    "u_su_Q3_lanes4_7__p0",
+    "u_su_Q3_lanes4_7__p1",
+    "u_su_Q3_lanes4_7__p2",
+    "u_su_Q3_lanes4_7__p3"
+   ],
+   "length_um": 2063.1,
+   "reason": "branch: leaves span a Manhattan radius 1002 um > 364",
+   "type": "q_su31__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1626,
+   "bus": "L1232_o",
+   "dir": "out",
+   "lanes": [
+    "L1232"
+   ],
+   "leaves": [
+    "u_cxdl_Q3_q",
+    "u_fl_Q3",
+    "u_hc_Q3",
+    "u_su_Q3_lanes12_15__p0",
+    "u_su_Q3_lanes12_15__p1",
+    "u_su_Q3_lanes12_15__p2",
+    "u_su_Q3_lanes12_15__p3",
+    "u_su_Q3_lanes20_23__p0",
+    "u_su_Q3_lanes20_23__p1",
+    "u_su_Q3_lanes20_23__p2",
+    "u_su_Q3_lanes20_23__p3",
+    "u_su_Q3_lanes28_31__p0",
+    "u_su_Q3_lanes28_31__p1",
+    "u_su_Q3_lanes28_31__p2",
+    "u_su_Q3_lanes28_31__p3",
+    "u_su_Q3_lanes4_7__p0",
+    "u_su_Q3_lanes4_7__p1",
+    "u_su_Q3_lanes4_7__p2",
+    "u_su_Q3_lanes4_7__p3"
+   ],
+   "length_um": 2043.4,
+   "reason": "branch: leaves span a Manhattan radius 1089 um > 364",
+   "type": "q_su31__physical_v1",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1,
+   "bus": "L3000_i",
+   "chain_end": "u_fl_Q3",
+   "dir": "in",
+   "lanes": [
+    "L3000"
+   ],
+   "leaves": [
+    "u_fl_Q3"
+   ],
+   "length_um": 1720.9,
+   "regs_um": [
+    [
+     280.8,
+     1330.56
+    ],
+    [
+     682.56,
+     1330.56
+    ],
+    [
+     1084.32,
+     1330.56
+    ],
+    [
+     1486.08,
+     1330.56
+    ]
+   ],
+   "stations": 4,
+   "type": "q_su31__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 33,
+   "bus": "L3011_i",
+   "chain_end": "u_sfu_Q3",
+   "dir": "in",
+   "lanes": [
+    "L3011"
+   ],
+   "leaves": [
+    "u_sfu_Q3"
+   ],
+   "length_um": 590.3,
+   "regs_um": [
+    [
+     1684.8,
+     1442.88
+    ]
+   ],
+   "stations": 1,
+   "type": "q_su31__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 516,
+   "bus": "L7002_o",
+   "chain_end": "u_sfu_Q3",
+   "dir": "out",
+   "lanes": [
+    "L7002"
+   ],
+   "leaves": [
+    "u_sfu_Q3"
+   ],
+   "length_um": 1071.1,
+   "regs_um": [
+    [
+     1317.6,
+     1555.2
+    ],
+    [
+     1684.8,
+     1520.64
+    ]
+   ],
+   "stations": 2,
+   "type": "q_su31__physical_v1",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 559,
+   "bus": "L169_o",
+   "dir": "out",
+   "lanes": [
+    "L169"
+   ],
+   "leaves": [
+    "u_hb_idx__link",
+    "u_hb_router_ids",
+    "u_hc_eng",
+    "u_hc_eng_hcp_sys1",
+    "u_hc_eng_tail0_rest",
+    "u_hc_eng_tail0_sk_fsr",
+    "u_hc_eng_tail1_rest",
+    "u_hc_eng_tail1_sk_fsr"
+   ],
+   "length_um": 5238.8,
+   "reason": "branch: leaves span a Manhattan radius 986 um > 364",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 559,
+   "bus": "L170_o",
+   "dir": "out",
+   "lanes": [
+    "L170"
+   ],
+   "leaves": [
+    "u_hc_eng",
+    "u_hc_eng_hcp_sys1",
+    "u_hc_eng_tail0_rest",
+    "u_hc_eng_tail0_sk_fsr",
+    "u_hc_eng_tail1_rest",
+    "u_hc_eng_tail1_sk_fsr"
+   ],
+   "length_um": 6936.4,
+   "reason": "branch: leaves span a Manhattan radius 921 um > 364",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 559,
+   "bus": "L171_o",
+   "dir": "out",
+   "lanes": [
+    "L171"
+   ],
+   "leaves": [
+    "u_hc_eng",
+    "u_hc_eng_hcp_sys1",
+    "u_hc_eng_tail0_rest",
+    "u_hc_eng_tail0_sk_fsr",
+    "u_hc_eng_tail1_rest",
+    "u_hc_eng_tail1_sk_fsr",
+    "u_host_cp_ingress",
+    "u_host_status",
+    "u_str_C"
+   ],
+   "length_um": 7031.8,
+   "reason": "branch: leaves span a Manhattan radius 921 um > 364",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 558,
+   "bus": "L172_o",
+   "dir": "out",
+   "lanes": [
+    "L172"
+   ],
+   "leaves": [
+    "u_str_C",
+    "u_su_prog",
+    "u_tkm_SW",
+    "u_tkm_SW_root",
+    "u_tkm_SW_tile0__ha",
+    "u_tkm_SW_tile0__hb",
+    "u_tkm_SW_tile10__ha",
+    "u_tkm_SW_tile10__hb",
+    "u_tkm_SW_tile11__ha",
+    "u_tkm_SW_tile11__hb",
+    "u_tkm_SW_tile12__ha",
+    "u_tkm_SW_tile12__hb",
+    "u_tkm_SW_tile13__ha",
+    "u_tkm_SW_tile13__hb",
+    "u_tkm_SW_tile14__ha",
+    "u_tkm_SW_tile14__hb",
+    "u_tkm_SW_tile15__ha",
+    "u_tkm_SW_tile15__hb",
+    "u_tkm_SW_tile16__ha",
+    "u_tkm_SW_tile16__hb",
+    "u_tkm_SW_tile17__ha",
+    "u_tkm_SW_tile17__hb",
+    "u_tkm_SW_tile18__ha",
+    "u_tkm_SW_tile18__hb",
+    "u_tkm_SW_tile19__ha",
+    "u_tkm_SW_tile19__hb",
+    "u_tkm_SW_tile1__ha",
+    "u_tkm_SW_tile1__hb",
+    "u_tkm_SW_tile20__ha",
+    "u_tkm_SW_tile20__hb",
+    "u_tkm_SW_tile21__ha",
+    "u_tkm_SW_tile21__hb",
+    "u_tkm_SW_tile22__ha",
+    "u_tkm_SW_tile22__hb",
+    "u_tkm_SW_tile23__ha",
+    "u_tkm_SW_tile23__hb",
+    "u_tkm_SW_tile24__ha",
+    "u_tkm_SW_tile24__hb",
+    "u_tkm_SW_tile25__ha",
+    "u_tkm_SW_tile25__hb",
+    "u_tkm_SW_tile26__ha",
+    "u_tkm_SW_tile26__hb",
+    "u_tkm_SW_tile27__ha",
+    "u_tkm_SW_tile27__hb",
+    "u_tkm_SW_tile28__ha",
+    "u_tkm_SW_tile28__hb",
+    "u_tkm_SW_tile29__ha",
+    "u_tkm_SW_tile29__hb",
+    "u_tkm_SW_tile2__ha",
+    "u_tkm_SW_tile2__hb",
+    "u_tkm_SW_tile30__ha",
+    "u_tkm_SW_tile30__hb",
+    "u_tkm_SW_tile31__ha",
+    "u_tkm_SW_tile31__hb",
+    "u_tkm_SW_tile3__ha",
+    "u_tkm_SW_tile3__hb",
+    "u_tkm_SW_tile4__ha",
+    "u_tkm_SW_tile4__hb",
+    "u_tkm_SW_tile5__ha",
+    "u_tkm_SW_tile5__hb",
+    "u_tkm_SW_tile6__ha",
+    "u_tkm_SW_tile6__hb",
+    "u_tkm_SW_tile7__ha",
+    "u_tkm_SW_tile7__hb",
+    "u_tkm_SW_tile8__ha",
+    "u_tkm_SW_tile8__hb",
+    "u_tkm_SW_tile9__ha",
+    "u_tkm_SW_tile9__hb"
+   ],
+   "length_um": 6237.1,
+   "reason": "branch: leaves span a Manhattan radius 2333 um > 364",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 850,
+   "bus": "L169m_o",
+   "dir": "out",
+   "lanes": [
+    "L169m"
+   ],
+   "leaves": [
+    "u_hb_idx__link"
+   ],
+   "length_um": 4957.1,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 264,
+   "bus": "L191_i",
+   "dir": "in",
+   "lanes": [
+    "L191"
+   ],
+   "leaves": [
+    "u_col_idx",
+    "u_col_su",
+    "u_hb_idx__ctl",
+    "u_hc_eng",
+    "u_hc_eng_hcp_sys1",
+    "u_hc_eng_tail0_rest",
+    "u_hc_eng_tail0_sk_fsr",
+    "u_hc_eng_tail1_rest",
+    "u_hc_eng_tail1_sk_fsr",
+    "u_host_status",
+    "u_vm_status4"
+   ],
+   "length_um": 4086.3,
+   "reason": "branch: leaves span a Manhattan radius 908 um > 364",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 615,
+   "bus": "L201_i",
+   "chain_end": "u_obs_C",
+   "dir": "in",
+   "lanes": [
+    "L201"
+   ],
+   "leaves": [
+    "u_obs_C"
+   ],
+   "length_um": 1554.4,
+   "regs_um": [
+    [
+     1028.16,
+     0.0
+    ],
+    [
+     1321.92,
+     108.0
+    ],
+    [
+     1321.92,
+     509.76
+    ],
+    [
+     1321.92,
+     911.52
+    ]
+   ],
+   "stations": 4,
+   "type": "root",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 180,
+   "bus": "L202_o",
+   "dir": "out",
+   "lanes": [
+    "L202"
+   ],
+   "leaves": [
+    "u_col_idx",
+    "u_hb_argmax",
+    "u_hb_idx__ctl",
+    "u_hb_idx__link",
+    "u_hb_idx__selector",
+    "u_hb_idx__selector__ctl",
+    "u_hb_idx__selector__q0",
+    "u_hb_idx__selector__q1",
+    "u_hb_idx__selector__q2",
+    "u_hb_idx__selector__q3"
+   ],
+   "length_um": 6836.4,
+   "reason": "branch: leaves span a Manhattan radius 643 um > 364",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 180,
+   "bus": "L202m_o",
+   "dir": "out",
+   "lanes": [
+    "L202m"
+   ],
+   "leaves": [
+    "u_col_idx",
+    "u_hb_argmax",
+    "u_hb_idx__ctl",
+    "u_hb_idx__link",
+    "u_hb_idx__selector",
+    "u_hb_idx__selector__ctl",
+    "u_hb_idx__selector__q0",
+    "u_hb_idx__selector__q1",
+    "u_hb_idx__selector__q2",
+    "u_hb_idx__selector__q3"
+   ],
+   "length_um": 6525.4,
+   "reason": "branch: leaves span a Manhattan radius 687 um > 364",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1980,
+   "bus": "L1237_o",
+   "dir": "out",
+   "lanes": [
+    "L1237"
+   ],
+   "leaves": [
+    "u_col_idx",
+    "u_hb_argmax",
+    "u_hb_idx__ctl",
+    "u_hb_idx__link",
+    "u_hb_idx__selector",
+    "u_hb_idx__selector__ctl",
+    "u_hb_idx__selector__q0",
+    "u_hb_idx__selector__q1",
+    "u_hb_idx__selector__q2",
+    "u_hb_idx__selector__q3",
+    "u_hb_router_ids"
+   ],
+   "length_um": 1771.2,
+   "reason": "branch: leaves span a Manhattan radius 843 um > 364",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 297,
+   "bus": "L1255_i",
+   "chain_end": "u_hb_idx__xq_N",
+   "dir": "in",
+   "lanes": [
+    "L1255"
+   ],
+   "leaves": [
+    "u_hb_idx__xq_N"
+   ],
+   "length_um": 1281.5,
+   "regs_um": [
+    [
+     298.08,
+     825.12
+    ],
+    [
+     587.52,
+     937.44
+    ],
+    [
+     868.32,
+     816.48
+    ],
+    [
+     1131.84,
+     678.24
+    ]
+   ],
+   "stations": 4,
+   "type": "root",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 180,
+   "bus": "L1258_o",
+   "dir": "out",
+   "lanes": [
+    "L1258"
+   ],
+   "leaves": [
+    "u_col_idx",
+    "u_hb_argmax",
+    "u_hb_idx__ctl",
+    "u_hb_idx__link",
+    "u_hb_idx__selector",
+    "u_hb_idx__selector__ctl",
+    "u_hb_idx__selector__q0",
+    "u_hb_idx__selector__q1",
+    "u_hb_idx__selector__q2",
+    "u_hb_idx__selector__q3"
+   ],
+   "length_um": 1908.3,
+   "reason": "branch: leaves span a Manhattan radius 643 um > 364",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 297,
+   "bus": "L1282_i",
+   "chain_end": "u_hb_idx__xq_S",
+   "dir": "in",
+   "lanes": [
+    "L1282"
+   ],
+   "leaves": [
+    "u_hb_idx__xq_S"
+   ],
+   "length_um": 7009.2,
+   "regs_um": [
+    [
+     0.0,
+     6181.92
+    ],
+    [
+     0.0,
+     5780.16
+    ],
+    [
+     0.0,
+     5378.4
+    ],
+    [
+     0.0,
+     4976.64
+    ],
+    [
+     0.0,
+     4574.88
+    ],
+    [
+     0.0,
+     4173.12
+    ],
+    [
+     0.0,
+     3771.36
+    ],
+    [
+     0.0,
+     3369.6
+    ],
+    [
+     0.0,
+     2967.84
+    ],
+    [
+     0.0,
+     2566.08
+    ],
+    [
+     0.0,
+     2164.32
+    ],
+    [
+     0.0,
+     1762.56
+    ],
+    [
+     0.0,
+     1360.8
+    ],
+    [
+     0.0,
+     959.04
+    ],
+    [
+     384.48,
+     941.76
+    ],
+    [
+     673.92,
+     829.44
+    ],
+    [
+     1071.36,
+     825.12
+    ]
+   ],
+   "stations": 17,
+   "type": "root",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 2,
+   "bus": "L8000_o",
+   "dir": "out",
+   "lanes": [
+    "L8000"
+   ],
+   "leaves": [
+    "u_col_idx",
+    "u_hb_argmax",
+    "u_hb_idx__ctl",
+    "u_hb_idx__link",
+    "u_hb_idx__selector",
+    "u_hb_idx__selector__ctl",
+    "u_hb_idx__selector__q0",
+    "u_hb_idx__selector__q1",
+    "u_hb_idx__selector__q2",
+    "u_hb_idx__selector__q3"
+   ],
+   "length_um": 4111.5,
+   "reason": "branch: leaves span a Manhattan radius 687 um > 364",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 1,
+   "bus": "L8005_i",
+   "chain_end": "u_hb_router_ids",
+   "dir": "in",
+   "lanes": [
+    "L8005"
+   ],
+   "leaves": [
+    "u_hb_router_ids"
+   ],
+   "length_um": 2977.5,
+   "regs_um": [
+    [
+     1680.48,
+     3201.12
+    ],
+    [
+     1680.48,
+     2799.36
+    ],
+    [
+     1680.48,
+     2397.6
+    ],
+    [
+     1680.48,
+     1995.84
+    ],
+    [
+     1680.48,
+     1594.08
+    ],
+    [
+     1680.48,
+     1192.32
+    ],
+    [
+     1494.72,
+     976.32
+    ]
+   ],
+   "stations": 7,
+   "type": "root",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 13,
+   "bus": "L8006_i",
+   "chain_end": "u_obs_C",
+   "dir": "in",
+   "lanes": [
+    "L8006"
+   ],
+   "leaves": [
+    "u_obs_C"
+   ],
+   "length_um": 4166.0,
+   "regs_um": [
+    [
+     1680.48,
+     4384.8
+    ],
+    [
+     1680.48,
+     3983.04
+    ],
+    [
+     1680.48,
+     3581.28
+    ],
+    [
+     1680.48,
+     3179.52
+    ],
+    [
+     1680.48,
+     2777.76
+    ],
+    [
+     1680.48,
+     2376.0
+    ],
+    [
+     1680.48,
+     1974.24
+    ],
+    [
+     1680.48,
+     1572.48
+    ],
+    [
+     1680.48,
+     1170.72
+    ],
+    [
+     1499.04,
+     950.4
+    ]
+   ],
+   "stations": 10,
+   "type": "root",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 641,
+   "bus": "L8007_i",
+   "dir": "in",
+   "lanes": [
+    "L8007"
+   ],
+   "leaves": [
+    "u_host_cp_rxs",
+    "u_host_status",
+    "u_obs_C"
+   ],
+   "length_um": 7182.2,
+   "reason": "branch: leaves span a Manhattan radius 723 um > 364",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 632,
+   "bus": "L8008_o",
+   "dir": "out",
+   "lanes": [
+    "L8008"
+   ],
+   "leaves": [
+    "u_host_cp_rxs"
+   ],
+   "length_um": 6069.1,
+   "reason": "out_native: existing out entries of the type break fixed_cycles == stations",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 11,
+   "bus": "L8370m_i",
+   "chain_end": "u_obs_C",
+   "dir": "in",
+   "lanes": [
+    "L8370m"
+   ],
+   "leaves": [
+    "u_obs_C"
+   ],
+   "length_um": 725.5,
+   "regs_um": [
+    [
+     1347.84,
+     1274.4
+    ]
+   ],
+   "stations": 1,
+   "type": "root",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 2,
+   "bus": "L8371_i",
+   "chain_end": "u_obs_C",
+   "dir": "in",
+   "lanes": [
+    "L8371"
+   ],
+   "leaves": [
+    "u_obs_C"
+   ],
+   "length_um": 1736.5,
+   "regs_um": [
+    [
+     172.8,
+     1365.12
+    ],
+    [
+     509.76,
+     1365.12
+    ],
+    [
+     846.72,
+     1365.12
+    ],
+    [
+     1183.68,
+     1365.12
+    ],
+    [
+     1321.92,
+     1261.44
+    ]
+   ],
+   "stations": 5,
+   "type": "root",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 1980,
+   "bus": "L5037_o",
+   "dir": "out",
+   "lanes": [
+    "L5037"
+   ],
+   "leaves": [
+    "u_hb_idx__link",
+    "u_hb_router_ids",
+    "u_hc_eng",
+    "u_hc_eng_hcp_sys1",
+    "u_hc_eng_tail0_rest",
+    "u_hc_eng_tail0_sk_fsr",
+    "u_hc_eng_tail1_rest",
+    "u_hc_eng_tail1_sk_fsr",
+    "u_host_cp_ingress",
+    "u_host_status",
+    "u_obs_C",
+    "u_str_C"
+   ],
+   "length_um": 5153.8,
+   "reason": "branch: leaves span a Manhattan radius 908 um > 364",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 279,
+   "bus": "L5038_i",
+   "dir": "in",
+   "lanes": [
+    "L5038"
+   ],
+   "leaves": [
+    "u_col_idx",
+    "u_col_su",
+    "u_hc_eng",
+    "u_hc_eng_hcp_sys1",
+    "u_hc_eng_tail0_rest",
+    "u_hc_eng_tail0_sk_fsr",
+    "u_hc_eng_tail1_rest",
+    "u_hc_eng_tail1_sk_fsr",
+    "u_host_status",
+    "u_str_C",
+    "u_su_prog"
+   ],
+   "length_um": 4127.8,
+   "reason": "branch: leaves span a Manhattan radius 908 um > 364",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 297,
+   "bus": "L5057_i",
+   "chain_end": "u_hb_idx__xq_N",
+   "dir": "in",
+   "lanes": [
+    "L5057"
+   ],
+   "leaves": [
+    "u_hb_idx__xq_N"
+   ],
+   "length_um": 3271.4,
+   "regs_um": [
+    [
+     1680.48,
+     3227.04
+    ],
+    [
+     1680.48,
+     2825.28
+    ],
+    [
+     1680.48,
+     2423.52
+    ],
+    [
+     1680.48,
+     2021.76
+    ],
+    [
+     1680.48,
+     1620.0
+    ],
+    [
+     1680.48,
+     1218.24
+    ],
+    [
+     1680.48,
+     816.48
+    ],
+    [
+     1421.28,
+     673.92
+    ]
+   ],
+   "stations": 8,
+   "type": "root",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 178,
+   "bus": "L5062_o",
+   "dir": "out",
+   "lanes": [
+    "L5062"
+   ],
+   "leaves": [
+    "u_col_idx",
+    "u_hb_argmax",
+    "u_hb_idx__ctl",
+    "u_hb_idx__link",
+    "u_hb_idx__selector",
+    "u_hb_idx__selector__ctl",
+    "u_hb_idx__selector__q0",
+    "u_hb_idx__selector__q1",
+    "u_hb_idx__selector__q2",
+    "u_hb_idx__selector__q3"
+   ],
+   "length_um": 4581.9,
+   "reason": "branch: leaves span a Manhattan radius 687 um > 364",
+   "type": "root",
+   "verdict": "SKIP"
+  },
+  {
+   "bits": 8,
+   "bus": "L5097_i",
+   "chain_end": "u_hb_router_ids",
+   "dir": "in",
+   "lanes": [
+    "L5097"
+   ],
+   "leaves": [
+    "u_hb_router_ids"
+   ],
+   "length_um": 2982.4,
+   "regs_um": [
+    [
+     1680.48,
+     3205.44
+    ],
+    [
+     1680.48,
+     2803.68
+    ],
+    [
+     1680.48,
+     2401.92
+    ],
+    [
+     1680.48,
+     2000.16
+    ],
+    [
+     1680.48,
+     1598.4
+    ],
+    [
+     1680.48,
+     1196.64
+    ],
+    [
+     1499.04,
+     976.32
+    ]
+   ],
+   "stations": 7,
+   "type": "root",
+   "verdict": "ADD"
+  },
+  {
+   "bits": 297,
+   "bus": "L7504_i",
+   "chain_end": "u_hb_idx__xq_S",
+   "dir": "in",
+   "lanes": [
+    "L7504"
+   ],
+   "leaves": [
+    "u_hb_idx__xq_S"
+   ],
+   "length_um": 6518.5,
+   "regs_um": [
+    [
+     1680.48,
+     6613.92
+    ],
+    [
+     1680.48,
+     6212.16
+    ],
+    [
+     1680.48,
+     5810.4
+    ],
+    [
+     1680.48,
+     5408.64
+    ],
+    [
+     1680.48,
+     5006.88
+    ],
+    [
+     1680.48,
+     4605.12
+    ],
+    [
+     1680.48,
+     4203.36
+    ],
+    [
+     1680.48,
+     3801.6
+    ],
+    [
+     1680.48,
+     3399.84
+    ],
+    [
+     1680.48,
+     2998.08
+    ],
+    [
+     1680.48,
+     2596.32
+    ],
+    [
+     1680.48,
+     2194.56
+    ],
+    [
+     1680.48,
+     1792.8
+    ],
+    [
+     1680.48,
+     1391.04
+    ],
+    [
+     1680.48,
+     989.28
+    ],
+    [
+     1455.84,
+     812.16
+    ]
+   ],
+   "stations": 16,
+   "type": "root",
+   "verdict": "ADD"
+  }
+ ],
+ "schema": "opentallas.add_reach_istations.v1",
+ "skipped": {
+  "branch": 208,
+  "out_native": 17,
+  "route": 2
+ },
+ "types": [
+  "NE_io",
+  "NW_io",
+  "q_b110",
+  "q_b110__physical_v1",
+  "q_b113",
+  "q_b113__physical_v1",
+  "q_hub_ne",
+  "q_hub_nw",
+  "q_su00",
+  "q_su00__physical_v1",
+  "q_su01",
+  "q_su01__physical_v1",
+  "q_su10",
+  "q_su10__physical_v1",
+  "q_su11",
+  "q_su11__physical_v1",
+  "q_su20",
+  "q_su20__physical_v1",
+  "q_su21",
+  "q_su21__physical_v1",
+  "q_su30",
+  "q_su30__physical_v1",
+  "q_su31",
+  "q_su31__physical_v1",
+  "root"
+ ]
+}

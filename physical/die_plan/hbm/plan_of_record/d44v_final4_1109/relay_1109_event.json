@@ -1,0 +1,1138 @@
+{
+ "schema": "opentallas.ts_relay_event.v1",
+ "tool": "tools/die_plan/ts_relay_event.py",
+ "owner": "OWNER 2026-11-08 04:58 relays + 2026-11-03 pin cycles; lane TYPE-SAFE-2",
+ "base_plan": "../p5_ista/die_plan.json",
+ "base_plan_sha256": "5ebc3ddd9a4ab5e9a040bb1d01f8fdc115d61030dbf921014ccddcb67270bbf6",
+ "plan_output": "plan_relay.json",
+ "plan_output_sha256": "8e415a3376bce170140b75e282f56a0e5fe6e80d57ebbb969a311a1d86176904",
+ "bound": {
+  "NE_io": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_NE_io.sv",
+  "NW_io": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_NW_io.sv",
+  "PHY_NC": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_PHY_NC.sv",
+  "PHY_NE": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_PHY_NE.sv",
+  "PHY_NW": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_PHY_NW.sv",
+  "q_b000": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b000.sv",
+  "q_b000__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b000__physical_v1.sv",
+  "q_b001": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b001.sv",
+  "q_b001__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b001__physical_v1.sv",
+  "q_b002": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b002.sv",
+  "q_b002__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b002__physical_v1.sv",
+  "q_b003": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b003.sv",
+  "q_b003__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b003__physical_v1.sv",
+  "q_b010": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b010.sv",
+  "q_b010__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b010__physical_v1.sv",
+  "q_b011": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b011.sv",
+  "q_b011__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b011__physical_v1.sv",
+  "q_b012": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b012.sv",
+  "q_b012__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b012__physical_v1.sv",
+  "q_b013": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b013.sv",
+  "q_b013__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b013__physical_v1.sv",
+  "q_b100": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b100.sv",
+  "q_b100__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b100__physical_v1.sv",
+  "q_b102": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b102.sv",
+  "q_b102__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b102__physical_v1.sv",
+  "q_b103": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b103.sv",
+  "q_b103__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b103__physical_v1.sv",
+  "q_b110": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b110.sv",
+  "q_b110__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b110__physical_v1.sv",
+  "q_b111": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b111.sv",
+  "q_b111__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b111__physical_v1.sv",
+  "q_b112": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b112.sv",
+  "q_b112__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b112__physical_v1.sv",
+  "q_b113": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b113.sv",
+  "q_b113__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b113__physical_v1.sv",
+  "q_mca": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_mca.sv",
+  "q_mcb": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_mcb.sv",
+  "q_sm0": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_sm0.sv",
+  "q_sm1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_sm1.sv",
+  "q_sm2": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_sm2.sv",
+  "q_sm3": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_sm3.sv",
+  "q_spb0": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_spb0.sv",
+  "q_spb0__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_spb0__physical_v1.sv",
+  "q_spb1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_spb1.sv",
+  "q_spb2": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_spb2.sv",
+  "q_spb2__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_spb2__physical_v1.sv",
+  "q_spt0": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_spt0.sv",
+  "q_spt0__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_spt0__physical_v1.sv",
+  "q_spt1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_spt1.sv",
+  "q_spt2": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_spt2.sv",
+  "q_spu0": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_spu0.sv",
+  "q_spu0__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_spu0__physical_v1.sv",
+  "q_spu1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_spu1.sv",
+  "q_spu1__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_spu1__physical_v1.sv",
+  "q_su00": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su00.sv",
+  "q_su00__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su00__physical_v1.sv",
+  "q_su01": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su01.sv",
+  "q_su01__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su01__physical_v1.sv",
+  "q_su10": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su10.sv",
+  "q_su10__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su10__physical_v1.sv",
+  "q_su11": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su11.sv",
+  "q_su11__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su11__physical_v1.sv",
+  "q_su20": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su20.sv",
+  "q_su20__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su20__physical_v1.sv",
+  "q_su21": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su21.sv",
+  "q_su21__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su21__physical_v1.sv",
+  "q_su30": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su30.sv",
+  "q_su30__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su30__physical_v1.sv",
+  "q_su31": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su31.sv",
+  "q_su31__physical_v1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_su31__physical_v1.sv",
+  "root": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_root.sv",
+  "vsN0": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_vsN0.sv",
+  "vsN1": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_vsN1.sv",
+  "vsN2": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_vsN2.sv",
+  "vsN4": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_vsN4.sv",
+  "vsN5": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_vsN5.sv",
+  "vsN6": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_vsN6.sv",
+  "q_b101": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b101__q_b101.sv",
+  "q_b101_nw": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_b101__q_b101_nw.sv",
+  "q_hub_ne": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_hub__q_hub_ne.sv",
+  "q_hub_nw": "/srv/opentallas-scratch2/claude/die-hbm-96/bind/bind_F3d/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+ },
+ "skipped_types": [
+  "q_hub_ne",
+  "q_hub_nw"
+ ],
+ "edits": [
+  {
+   "type": "NE_io",
+   "bus": "L8006_o",
+   "dir": "out",
+   "d_um": 1203.0,
+   "need": 3,
+   "ports": [
+    "u_ep_N2.fault_cause",
+    "u_ep_N2.rx_block_ready"
+   ],
+   "count": 3,
+   "lanes": {
+    "L8006": {
+     "cycles": 63,
+     "delta": 3
+    }
+   }
+  },
+  {
+   "type": "NW_io",
+   "bus": "L8007_o",
+   "dir": "out",
+   "d_um": 3045.2,
+   "need": 7,
+   "ports": [
+    "u_ep_N0.fault_cause",
+    "u_ep_N0.rx_block_ready",
+    "u_host_ep.fault",
+    "u_host_ep.fault_cause",
+    "u_host_ep.phy_up",
+    "u_host_ep.rx_block_ready",
+    "u_host_ep.rx_pin_flit",
+    "u_host_ep.rx_pin_v"
+   ],
+   "count": 7,
+   "lanes": {
+    "L8007": {
+     "cycles": 48,
+     "delta": 22
+    }
+   }
+  },
+  {
+   "type": "q_spb0",
+   "bus": "L722_o",
+   "dir": "out",
+   "d_um": 1101.2,
+   "need": 2,
+   "ports": [
+    "u_ep_S0.fault",
+    "u_ep_S0.phy_up",
+    "u_ep_S0.rx_pin_flit"
+   ],
+   "count": 2,
+   "lanes": {
+    "L722": {
+     "cycles": 25,
+     "delta": 2
+    }
+   }
+  },
+  {
+   "type": "q_spb0",
+   "bus": "L723_o",
+   "dir": "out",
+   "d_um": 1150.3,
+   "need": 2,
+   "ports": [
+    "u_ep_S0.rx_pin_flit",
+    "u_ep_S0.rx_pin_v"
+   ],
+   "count": 2,
+   "lanes": {
+    "L723": {
+     "cycles": 25,
+     "delta": 2
+    }
+   }
+  },
+  {
+   "type": "q_spb0__physical_v1",
+   "bus": "L722_o",
+   "dir": "out",
+   "d_um": 1101.2,
+   "need": 2,
+   "ports": [
+    "u_ep_S0.fault",
+    "u_ep_S0.phy_up",
+    "u_ep_S0.rx_pin_flit"
+   ],
+   "count": 2,
+   "lanes": {
+    "L722m": {
+     "cycles": 26,
+     "delta": 2
+    }
+   }
+  },
+  {
+   "type": "q_spb0__physical_v1",
+   "bus": "L723_o",
+   "dir": "out",
+   "d_um": 1150.3,
+   "need": 2,
+   "ports": [
+    "u_ep_S0.rx_pin_flit",
+    "u_ep_S0.rx_pin_v"
+   ],
+   "count": 2,
+   "lanes": {
+    "L723m": {
+     "cycles": 26,
+     "delta": 2
+    }
+   }
+  },
+  {
+   "type": "root",
+   "bus": "L1237_o",
+   "dir": "out",
+   "d_um": 1272.5,
+   "need": 3,
+   "ports": [
+    "u_col_idx.prm",
+    "u_col_idx.pw_addr",
+    "u_col_idx.pw_data",
+    "u_col_idx.pw_we",
+    "u_col_idx.start_v",
+    "u_hb_argmax.cq"
+   ],
+   "count": 3,
+   "lanes": {
+    "L1237": {
+     "cycles": 9,
+     "delta": 3
+    }
+   }
+  },
+  {
+   "type": "root",
+   "bus": "L1258_o",
+   "dir": "out",
+   "d_um": 1409.6,
+   "need": 3,
+   "ports": [
+    "u_col_idx.prm"
+   ],
+   "count": 3,
+   "lanes": {
+    "L1258": {
+     "cycles": 19,
+     "delta": 3
+    }
+   }
+  },
+  {
+   "type": "root",
+   "bus": "L202_o",
+   "dir": "out",
+   "d_um": 6337.7,
+   "need": 15,
+   "ports": [
+    "u_col_idx.prm"
+   ],
+   "count": 15,
+   "lanes": {
+    "L202": {
+     "cycles": 26,
+     "delta": 15
+    }
+   }
+  },
+  {
+   "type": "root",
+   "bus": "L202m_o",
+   "dir": "out",
+   "d_um": 5980.9,
+   "need": 15,
+   "ports": [
+    "u_col_idx.prm"
+   ],
+   "count": 15,
+   "lanes": {
+    "L202m": {
+     "cycles": 26,
+     "delta": 15
+    }
+   }
+  },
+  {
+   "type": "root",
+   "bus": "L5062_o",
+   "dir": "out",
+   "d_um": 4037.4,
+   "need": 10,
+   "ports": [
+    "u_col_idx.prm"
+   ],
+   "count": 10,
+   "lanes": {
+    "L5062": {
+     "cycles": 24,
+     "delta": 10
+    }
+   }
+  },
+  {
+   "type": "root",
+   "bus": "L8000_o",
+   "dir": "out",
+   "d_um": 3567.0,
+   "need": 8,
+   "ports": [
+    "u_col_idx.prm"
+   ],
+   "count": 8,
+   "lanes": {
+    "L8000": {
+     "cycles": 20,
+     "delta": 8
+    }
+   }
+  },
+  {
+   "type": "root",
+   "bus": "L8008_o",
+   "dir": "out",
+   "d_um": 6461.4,
+   "need": 16,
+   "ports": [
+    "u_host_cp_rxs.ep_rx_arm_bank",
+    "u_host_cp_rxs.ep_rx_arm_v",
+    "u_host_cp_rxs.ep_rx_block_words",
+    "u_host_cp_rxs.ep_rx_release_bank",
+    "u_host_cp_rxs.ep_rx_release_v",
+    "u_host_cp_rxs.ep_rx_slot_bank",
+    "u_host_cp_rxs.ep_rx_slot_index",
+    "u_host_cp_rxs.ep_rx_slot_v",
+    "u_host_cp_rxs.ep_tx_frame",
+    "u_host_cp_rxs.ep_tx_v"
+   ],
+   "count": 16,
+   "lanes": {
+    "L8008": {
+     "cycles": 53,
+     "delta": 16
+    }
+   }
+  },
+  {
+   "type": "vsN0",
+   "bus": "L201_o",
+   "dir": "out",
+   "d_um": 882.7,
+   "need": 2,
+   "ports": [
+    "u_ep_S1.rx_block_ready",
+    "u_ep_S1.rx_pin_flit",
+    "u_ep_S1.rx_pin_v"
+   ],
+   "count": 2,
+   "lanes": {
+    "L201": {
+     "cycles": 23,
+     "delta": 2
+    }
+   }
+  },
+  {
+   "type": "q_spb0",
+   "bus": "L720_i",
+   "dir": "in",
+   "d_um": 1894.0,
+   "need": 4,
+   "ports": [
+    "u_ep_S0.rx_arm_bank",
+    "u_ep_S0.rx_arm_v",
+    "u_ep_S0.rx_block_words",
+    "u_ep_S0.rx_release_bank",
+    "u_ep_S0.rx_release_v",
+    "u_ep_S0.rx_slot_bank",
+    "u_ep_S0.rx_slot_index",
+    "u_ep_S0.rx_slot_v",
+    "u_ep_S0.tx_frame",
+    "u_ep_S0.tx_v"
+   ],
+   "count": 4,
+   "lanes": {
+    "L720": {
+     "cycles": 17,
+     "delta": 4
+    }
+   }
+  },
+  {
+   "type": "q_spb0__physical_v1",
+   "bus": "L720_i",
+   "dir": "in",
+   "d_um": 1894.0,
+   "need": 4,
+   "ports": [
+    "u_ep_S0.rx_arm_bank",
+    "u_ep_S0.rx_arm_v",
+    "u_ep_S0.rx_block_words",
+    "u_ep_S0.rx_release_bank",
+    "u_ep_S0.rx_release_v",
+    "u_ep_S0.rx_slot_bank",
+    "u_ep_S0.rx_slot_index",
+    "u_ep_S0.rx_slot_v",
+    "u_ep_S0.tx_frame",
+    "u_ep_S0.tx_v"
+   ],
+   "count": 4,
+   "lanes": {
+    "L720m": {
+     "cycles": 17,
+     "delta": 4
+    }
+   }
+  },
+  {
+   "type": "root",
+   "bus": "L191_i",
+   "dir": "in",
+   "d_um": 3874.3,
+   "need": 9,
+   "ports": [
+    "u_col_idx.cfg_addr",
+    "u_col_idx.cfg_data"
+   ],
+   "count": 9,
+   "lanes": {
+    "L191": {
+     "cycles": 2,
+     "delta": 9
+    }
+   }
+  },
+  {
+   "type": "root",
+   "bus": "L5038_i",
+   "dir": "in",
+   "d_um": 3917.9,
+   "need": 9,
+   "ports": [
+    "u_col_idx.cfg_data",
+    "u_col_idx.cfg_target",
+    "u_col_idx.cfg_v",
+    "u_col_idx.desc_v",
+    "u_col_idx.launch_v"
+   ],
+   "count": 9,
+   "lanes": {
+    "L5038": {
+     "cycles": 2,
+     "delta": 9
+    }
+   }
+  },
+  {
+   "type": "root",
+   "bus": "L8007_i",
+   "dir": "in",
+   "d_um": 6206.1,
+   "need": 15,
+   "ports": [
+    "u_host_cp_rxs.ep_phy_up",
+    "u_host_cp_rxs.ep_rx_block_ready",
+    "u_host_cp_rxs.ep_rx_pin_flit",
+    "u_host_cp_rxs.ep_rx_pin_v"
+   ],
+   "count": 15,
+   "lanes": {
+    "L8007": {
+     "cycles": 48,
+     "delta": 22
+    }
+   }
+  },
+  {
+   "type": "vsN0",
+   "bus": "L200_i",
+   "dir": "in",
+   "d_um": 761.2,
+   "need": 1,
+   "ports": [
+    "u_ep_S1.rx_arm_bank",
+    "u_ep_S1.rx_arm_v",
+    "u_ep_S1.rx_block_words",
+    "u_ep_S1.rx_release_bank",
+    "u_ep_S1.rx_release_v",
+    "u_ep_S1.rx_slot_bank",
+    "u_ep_S1.rx_slot_index",
+    "u_ep_S1.rx_slot_v",
+    "u_ep_S1.tx_frame",
+    "u_ep_S1.tx_v"
+   ],
+   "count": 1,
+   "lanes": {
+    "L200": {
+     "cycles": 19,
+     "delta": 1
+    }
+   }
+  }
+ ],
+ "reported": [
+  {
+   "type": "NE_io",
+   "bus": "L101_i",
+   "dir": "in",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  },
+  {
+   "type": "NE_io",
+   "bus": "L51_i",
+   "dir": "in",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  },
+  {
+   "type": "NE_io",
+   "bus": "L126_o",
+   "dir": "out",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  },
+  {
+   "type": "NE_io",
+   "bus": "L52_o",
+   "dir": "out",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  },
+  {
+   "type": "NW_io",
+   "bus": "L101_i",
+   "dir": "in",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  },
+  {
+   "type": "NW_io",
+   "bus": "L51_i",
+   "dir": "in",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  },
+  {
+   "type": "NW_io",
+   "bus": "L126_o",
+   "dir": "out",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  },
+  {
+   "type": "NW_io",
+   "bus": "L52_o",
+   "dir": "out",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  },
+  {
+   "type": "NW_io",
+   "bus": "L8008_i",
+   "dir": "in",
+   "d_um": 3061.5,
+   "need": 7,
+   "ports": [
+    "u_host_ep.rx_arm_bank",
+    "u_host_ep.rx_arm_v",
+    "u_host_ep.rx_block_words",
+    "u_host_ep.rx_release_bank",
+    "u_host_ep.rx_release_v",
+    "u_host_ep.rx_slot_bank",
+    "u_host_ep.rx_slot_index",
+    "u_host_ep.rx_slot_v",
+    "u_host_ep.tx_frame",
+    "u_host_ep.tx_v"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_b002",
+   "bus": "L15_i",
+   "dir": "in",
+   "d_um": 2492.7,
+   "need": 6,
+   "ports": [
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair1.sum_in",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair2.sum_in",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair3.sum_in",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair4.sum_in",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair5.sum_in",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair6.sum_in",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair7.sum_in"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_b002",
+   "bus": "L10_o",
+   "dir": "out",
+   "d_um": 2381.7,
+   "need": 6,
+   "ports": [
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair1.sum_out",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair2.sum_out",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair3.sum_out",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair4.sum_out",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair5.sum_out",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair6.sum_out",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair7.sum_out"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_b002__physical_v1",
+   "bus": "L15_i",
+   "dir": "in",
+   "d_um": 2492.7,
+   "need": 6,
+   "ports": [
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair1.sum_in",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair2.sum_in",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair3.sum_in",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair4.sum_in",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair5.sum_in",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair6.sum_in",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair7.sum_in"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_b002__physical_v1",
+   "bus": "L10_o",
+   "dir": "out",
+   "d_um": 2381.7,
+   "need": 6,
+   "ports": [
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair1.sum_out",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair2.sum_out",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair3.sum_out",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair4.sum_out",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair5.sum_out",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair6.sum_out",
+    "u_hcb_Q2.ot_hbm_hc_bank128_pair7.sum_out"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_b011",
+   "bus": "L17_i",
+   "dir": "in",
+   "d_um": 1413.0,
+   "need": 3,
+   "ports": [
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair1.sum_in",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair2.sum_in",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair3.sum_in",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair4.sum_in",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair5.sum_in",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair6.sum_in",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair7.sum_in"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_b011",
+   "bus": "L11_o",
+   "dir": "out",
+   "d_um": 2217.6,
+   "need": 5,
+   "ports": [
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair1.sum_out",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair2.sum_out",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair3.sum_out",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair4.sum_out",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair5.sum_out",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair6.sum_out",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair7.sum_out"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_b011__physical_v1",
+   "bus": "L17_i",
+   "dir": "in",
+   "d_um": 1413.0,
+   "need": 3,
+   "ports": [
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair1.sum_in",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair2.sum_in",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair3.sum_in",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair4.sum_in",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair5.sum_in",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair6.sum_in",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair7.sum_in"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_b011__physical_v1",
+   "bus": "L11_o",
+   "dir": "out",
+   "d_um": 2217.6,
+   "need": 5,
+   "ports": [
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair1.sum_out",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair2.sum_out",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair3.sum_out",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair4.sum_out",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair5.sum_out",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair6.sum_out",
+    "u_hcb_Q6.ot_hbm_hc_bank128_pair7.sum_out"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spb0",
+   "bus": "L117_o",
+   "dir": "out",
+   "d_um": 1539.4,
+   "need": 3,
+   "ports": [
+    "u_ep_S0.fault_cause"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spb0",
+   "bus": "L138_o",
+   "dir": "out",
+   "d_um": 1565.8,
+   "need": 3,
+   "ports": [
+    "u_ep_S0.rx_block_ready"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spb0__physical_v1",
+   "bus": "L117_o",
+   "dir": "out",
+   "d_um": 1539.4,
+   "need": 3,
+   "ports": [
+    "u_ep_S0.fault_cause"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spb0__physical_v1",
+   "bus": "L138_o",
+   "dir": "out",
+   "d_um": 1565.8,
+   "need": 3,
+   "ports": [
+    "u_ep_S0.rx_block_ready"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spb2",
+   "bus": "L49_i",
+   "dir": "in",
+   "d_um": 930.4,
+   "need": 2,
+   "ports": [
+    "u_xc_Q2.cfg_addr",
+    "u_xc_Q2.cfg_data",
+    "u_xc_Q2.cfg_target",
+    "u_xc_Q2.cfg_v",
+    "u_xc_Q2.desc_base",
+    "u_xc_Q2.desc_limit",
+    "u_xc_Q2.desc_loops",
+    "u_xc_Q2.desc_v",
+    "u_xc_Q2.launch_v",
+    "u_xc_Q3.cfg_addr",
+    "u_xc_Q3.cfg_data",
+    "u_xc_Q3.cfg_target",
+    "u_xc_Q3.cfg_v",
+    "u_xc_Q3.desc_base",
+    "u_xc_Q3.desc_limit"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spb2",
+   "bus": "L83_i",
+   "dir": "in",
+   "d_um": 868.5,
+   "need": 2,
+   "ports": [
+    "u_xc_Q3.desc_limit",
+    "u_xc_Q3.desc_loops",
+    "u_xc_Q3.desc_v",
+    "u_xc_Q3.launch_v"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spb2",
+   "bus": "L75_o",
+   "dir": "out",
+   "d_um": 2402.2,
+   "need": 6,
+   "ports": [
+    "u_xc_Q2.cmd_ext",
+    "u_xc_Q2.kv_desc"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spb2",
+   "bus": "L76_o",
+   "dir": "out",
+   "d_um": 1640.4,
+   "need": 4,
+   "ports": [
+    "u_xc_Q3.cmd_ext",
+    "u_xc_Q3.kv_desc"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spb2",
+   "bus": "L87_o",
+   "dir": "out",
+   "d_um": 602.7,
+   "need": 1,
+   "ports": [
+    "u_xc_Q2.active",
+    "u_xc_Q2.configured",
+    "u_xc_Q2.done",
+    "u_xc_Q2.fault",
+    "u_xc_Q3.active",
+    "u_xc_Q3.configured",
+    "u_xc_Q3.done",
+    "u_xc_Q3.fault"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spb2__physical_v1",
+   "bus": "L49_i",
+   "dir": "in",
+   "d_um": 930.4,
+   "need": 2,
+   "ports": [
+    "u_xc_Q2.cfg_addr",
+    "u_xc_Q2.cfg_data",
+    "u_xc_Q2.cfg_target",
+    "u_xc_Q2.cfg_v",
+    "u_xc_Q2.desc_base",
+    "u_xc_Q2.desc_limit",
+    "u_xc_Q3.cfg_addr",
+    "u_xc_Q3.cfg_data",
+    "u_xc_Q3.cfg_target",
+    "u_xc_Q3.cfg_v",
+    "u_xc_Q3.desc_base",
+    "u_xc_Q3.desc_limit",
+    "u_xc_Q3.desc_loops",
+    "u_xc_Q3.desc_v",
+    "u_xc_Q3.launch_v"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spb2__physical_v1",
+   "bus": "L75_o",
+   "dir": "out",
+   "d_um": 2402.2,
+   "need": 6,
+   "ports": [
+    "u_xc_Q2.cmd_ext",
+    "u_xc_Q2.kv_desc"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spb2__physical_v1",
+   "bus": "L76_o",
+   "dir": "out",
+   "d_um": 1640.4,
+   "need": 4,
+   "ports": [
+    "u_xc_Q3.cmd_ext",
+    "u_xc_Q3.kv_desc"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spb2__physical_v1",
+   "bus": "L87_o",
+   "dir": "out",
+   "d_um": 602.7,
+   "need": 1,
+   "ports": [
+    "u_xc_Q2.active",
+    "u_xc_Q2.configured",
+    "u_xc_Q2.done",
+    "u_xc_Q2.fault",
+    "u_xc_Q3.active",
+    "u_xc_Q3.configured",
+    "u_xc_Q3.done",
+    "u_xc_Q3.fault"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spt0",
+   "bus": "L50_i",
+   "dir": "in",
+   "d_um": 1495.1,
+   "need": 3,
+   "ports": [
+    "u_xc_Q0.cfg_addr",
+    "u_xc_Q0.cfg_data",
+    "u_xc_Q0.cfg_target",
+    "u_xc_Q0.cfg_v",
+    "u_xc_Q0.desc_base",
+    "u_xc_Q0.desc_limit",
+    "u_xc_Q0.desc_loops",
+    "u_xc_Q0.desc_v",
+    "u_xc_Q0.launch_v",
+    "u_xc_Q1.cfg_addr",
+    "u_xc_Q1.cfg_data",
+    "u_xc_Q1.cfg_target",
+    "u_xc_Q1.cfg_v",
+    "u_xc_Q1.desc_base",
+    "u_xc_Q1.desc_limit"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spt0",
+   "bus": "L84_i",
+   "dir": "in",
+   "d_um": 1270.1,
+   "need": 3,
+   "ports": [
+    "u_xc_Q1.desc_limit",
+    "u_xc_Q1.desc_loops",
+    "u_xc_Q1.desc_v",
+    "u_xc_Q1.launch_v"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spt0",
+   "bus": "L77_o",
+   "dir": "out",
+   "d_um": 1545.4,
+   "need": 3,
+   "ports": [
+    "u_xc_Q0.cmd_ext",
+    "u_xc_Q0.kv_desc"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spt0",
+   "bus": "L78_o",
+   "dir": "out",
+   "d_um": 1769.8,
+   "need": 4,
+   "ports": [
+    "u_xc_Q1.cmd_ext",
+    "u_xc_Q1.kv_desc"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spt0",
+   "bus": "L88_o",
+   "dir": "out",
+   "d_um": 1676.7,
+   "need": 4,
+   "ports": [
+    "u_xc_Q0.active",
+    "u_xc_Q0.configured",
+    "u_xc_Q0.done",
+    "u_xc_Q0.fault",
+    "u_xc_Q1.active",
+    "u_xc_Q1.configured",
+    "u_xc_Q1.done",
+    "u_xc_Q1.fault"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spt0__physical_v1",
+   "bus": "L50_i",
+   "dir": "in",
+   "d_um": 1495.1,
+   "need": 3,
+   "ports": [
+    "u_xc_Q0.cfg_addr",
+    "u_xc_Q0.cfg_data",
+    "u_xc_Q0.cfg_target",
+    "u_xc_Q0.cfg_v",
+    "u_xc_Q0.desc_base",
+    "u_xc_Q0.desc_limit",
+    "u_xc_Q1.cfg_addr",
+    "u_xc_Q1.cfg_data",
+    "u_xc_Q1.cfg_target",
+    "u_xc_Q1.cfg_v",
+    "u_xc_Q1.desc_base",
+    "u_xc_Q1.desc_limit",
+    "u_xc_Q1.desc_loops",
+    "u_xc_Q1.desc_v",
+    "u_xc_Q1.launch_v"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spt0__physical_v1",
+   "bus": "L77_o",
+   "dir": "out",
+   "d_um": 1545.4,
+   "need": 3,
+   "ports": [
+    "u_xc_Q0.cmd_ext",
+    "u_xc_Q0.kv_desc"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spt0__physical_v1",
+   "bus": "L78_o",
+   "dir": "out",
+   "d_um": 1769.8,
+   "need": 4,
+   "ports": [
+    "u_xc_Q1.cmd_ext",
+    "u_xc_Q1.kv_desc"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "q_spt0__physical_v1",
+   "bus": "L88_o",
+   "dir": "out",
+   "d_um": 1676.7,
+   "need": 4,
+   "ports": [
+    "u_xc_Q0.active",
+    "u_xc_Q0.configured",
+    "u_xc_Q0.done",
+    "u_xc_Q0.fault",
+    "u_xc_Q1.active",
+    "u_xc_Q1.configured",
+    "u_xc_Q1.done",
+    "u_xc_Q1.fault"
+   ],
+   "action": "REPORT: bus already has internal_stations (owner's entry kept)"
+  },
+  {
+   "type": "root",
+   "bus": "L156_i",
+   "dir": "in",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  },
+  {
+   "type": "root",
+   "bus": "n4x_up_ne_i",
+   "dir": "in",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  },
+  {
+   "type": "root",
+   "bus": "n4x_up_nw_i",
+   "dir": "in",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  },
+  {
+   "type": "root",
+   "bus": "L12ms_o",
+   "dir": "out",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  },
+  {
+   "type": "root",
+   "bus": "n4x_dn_ne_o",
+   "dir": "out",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  },
+  {
+   "type": "root",
+   "bus": "n4x_dn_nw_o",
+   "dir": "out",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  },
+  {
+   "type": "vsN0",
+   "bus": "L118_o",
+   "dir": "out",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  },
+  {
+   "type": "vsN0",
+   "bus": "L141_o",
+   "dir": "out",
+   "action": "REPORT: bus has no plan face/window_um (not measured)"
+  }
+ ],
+ "native_out_types": [
+  "NE_io",
+  "NW_io",
+  "q_spb0",
+  "q_spb0__physical_v1",
+  "root",
+  "vsN0"
+ ],
+ "pin_cycle_deltas": {
+  "L1237": 3,
+  "L1258": 3,
+  "L191": 9,
+  "L200": 1,
+  "L201": 2,
+  "L202": 15,
+  "L202m": 15,
+  "L5038": 9,
+  "L5062": 10,
+  "L720": 4,
+  "L720m": 4,
+  "L722": 2,
+  "L722m": 2,
+  "L723": 2,
+  "L723m": 2,
+  "L8000": 8,
+  "L8006": 3,
+  "L8007": 22,
+  "L8008": 16
+ },
+ "totals": {
+  "types": 6,
+  "buses": 20,
+  "lanes": 19,
+  "lanes_with_pin_cycles": 19,
+  "pin_cycles_sum": 132,
+  "stations": 132
+ },
+ "preservation": "only partition_types[touched].internal_stations and lanes[touched].fixed_cycles change; every other key byte-identical (sort_keys compare); RTL/outlines/pins/cores unchanged",
+ "latency_note": "HBM-PLAN-1: latency.lanes of the 19 relay lanes from gen.py latency (each delta == pin_cycle_deltas); other lanes kept at base: plain regen would drop the group pads of L12s/L12ms (14->2) and L96/L96m (22/18->12), which plan_final3 already carries (pre-existing, not from this event)",
+ "sha_out_final": "77bbddd873546ac358181f4dd2ea927115d2c9958cd4406fbbb7997134e1f76b",
+ "skip_note": "q_hub_ne/nw skipped (TYPE-SAFE-3 17:40 default: L8316m native invariant, hub OUT stations unpriced, stay with the hubs)"
+}

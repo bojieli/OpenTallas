@@ -55,8 +55,8 @@ def native_contract(raw,asbuilt=None,plan_path=None):
         owns_out=any(name==s or base==s or base.startswith(s+'_') for s in selected)
         entries=[]
         if owns_out:
-            from native_istations import source_entries
-            entries=source_entries(typ)
+            from native_istations import source_entries,selected_buses
+            entries=source_entries(typ,selected_buses(ab,name,base))
         native_conns={e['conn'] for e in entries}
         ownership[name]=[dict(conn=e.get('conn'),stages=len(e.get('regs_um',[])),phase='NATIVE' if e.get('conn') in native_conns else 'KIT') for e in typ.get('internal_stations',[])]
         clock={k:v for k,v in typ.get('clock',{}).items() if k.startswith('landing_')} if table_sha else {}

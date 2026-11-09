@@ -1,0 +1,39 @@
+{
+ "event": "HBM-PLAN-1-E12b-RESITE-1109",
+ "tool": "tools/die_plan/ft_s0_resite.py --slots q_spu1__physical_v1/L40x1 (main 6f55385d34)",
+ "ledger": {
+  "summary": {
+   "slots": 1,
+   "resited": 1,
+   "kept": [],
+   "added_cycles": {}
+  },
+  "limit_um": 364.5,
+  "slots": [
+   {
+    "type": "q_spu1__physical_v1",
+    "slot": "L40x1",
+    "width": 1064,
+    "stations_before": 7,
+    "hop_before_um": 681.8,
+    "jog_um": null,
+    "stations_after": 7,
+    "added_cycles": 0,
+    "hop_after_um": 262.4,
+    "hops_um": [
+     257.8,
+     261.4,
+     261.9,
+     257.3,
+     262.2,
+     262.4,
+     258.7
+    ],
+    "len_um": 1762.6,
+    "max_alloc_disp_um": 4.94
+   }
+  ]
+ },
+ "sha_out": "774205b9795c7a036e96c1976966caeb265ae91babc50ad235f4372b5344ae35",
+ "pin_cycles": 0
+}
