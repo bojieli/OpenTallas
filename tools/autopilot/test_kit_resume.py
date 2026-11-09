@@ -579,6 +579,29 @@ class HoldGuardCapTest(unittest.TestCase):
         self.assertIsNotNone(KR.ERR_LINE.search(KR.HOLD_GUARD_CAP_RE.sub("", t)))
 
 
+
+class LinkPlanStepLog(unittest.TestCase):
+    """KW-FIX-40 11-08: the last reused step's log lands about 2 s after its ODB and must still carry over"""
+    def plan(self, log_dt):
+        base = "run/results/asap7/d/base"
+        logs = "run/logs/asap7/d/base"
+        ck = {"base": base, "steps": {"grt": {"end": 1000.0}}}
+        files = {f"{base}/5_1_grt.odb": [1 << 21, 1000.0], f"{logs}/5_1_grt.json": [10, 1000.0],
+                 f"{logs}/5_1_grt.log": [10, 1000.0 + log_dt], f"{logs}/notes.txt": [10, 1000.0 + log_dt],
+                 f"{logs}/5_2_route.log": [10, 1000.0 + log_dt]}
+        return {rel: mode for rel, mode in KR.link_plan(ck, "route", files)}
+
+    def test_late_log_of_last_step_kept(self):
+        p = self.plan(2.0)
+        self.assertEqual(p.get("run/logs/asap7/d/base/5_1_grt.log"), "copy")
+        self.assertIn("run/logs/asap7/d/base/5_1_grt.json", p)
+
+    def test_other_late_files_and_later_step_still_dropped(self):
+        p = self.plan(2.0)
+        self.assertNotIn("run/logs/asap7/d/base/notes.txt", p)
+        self.assertNotIn("run/logs/asap7/d/base/5_2_route.log", p)
+
+
 if __name__ == "__main__":
     unittest.main()
 
