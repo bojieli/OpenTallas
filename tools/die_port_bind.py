@@ -245,6 +245,9 @@ class Module:
         self.name, self.path, self.params, self.ports, self.body, self.order = name, path, params, ports, body, order
         self._kind = None
         self.stub_reason = None
+        self.alts = []                 # every OTHER definition of this name (rtl_index), for the KITPARAM resolution
+        self.pref_rank = None          # rank in the prefer list (None: not a preferred file)
+        self.alt_file = False          # from --alt-file: indexed for KITPARAM only, never the default definition
 
     def env(self, overrides=None):
         env = {}
@@ -436,8 +439,14 @@ def _split_commas(s):
     return out
 
 
-def rtl_index(roots, files, defines, prefer, variants=None):
+def rtl_index(roots, files, defines, prefer, variants=None, alt_files=()):
+    """-> ({name: chosen Module}, {name: [paths]} ambiguous first picks).  DIE-HBM-97 11-09: `alt_files` are indexed
+    as ALTERNATE definitions only: they never replace a definition found in the roots / files (no prefer rank, no
+    variant or ambiguity record), a name defined only there resolves to it, and child_closure's KITPARAM rule may use
+    them for an instance whose named parameters the chosen definition does not declare.  Every chosen Module carries
+    .alts (its other definitions) and .pref_rank."""
     idx = defaultdict(list)
+    alt_idx = defaultdict(list)
     paths = []
     for r in roots:
         rp = (ROOT / r) if not Path(r).is_absolute() else Path(r)
@@ -458,14 +467,35 @@ def rtl_index(roots, files, defines, prefer, variants=None):
         t = preprocess(strip_comments(t), dict(defines))
         for mod in parse_modules(t, str(p)):
             idx[mod.name].append(mod)
+    seen_p = {str(Path(p).resolve()) for p in paths}
+    for f in alt_files:
+        p = Path(f) if Path(f).is_absolute() else ROOT / f
+        if str(p.resolve()) in seen_p:
+            continue
+        seen_p.add(str(p.resolve()))
+        try:
+            t = p.read_text(errors='replace')
+        except Exception:
+            continue
+        t = preprocess(strip_comments(t), dict(defines))
+        for mod in parse_modules(t, str(p)):
+            mod.alt_file = True
+            alt_idx[mod.name].append(mod)
     pref = {}                          # path -> rank: a LATER prefer entry wins (as before: pd[-1])
     for i, f in enumerate(prefer):
         pref[str(Path(f).resolve())] = i
+    for defs in list(idx.values()) + list(alt_idx.values()):
+        for d in defs:
+            d.pref_rank = pref.get(str(Path(d.path).resolve()))
     out, amb = {}, {}
+    for name in [n for n in alt_idx if n not in idx]:
+        out[name] = alt_idx[name][0]
+        out[name].alts = alt_idx[name][1:]
     for name, defs in idx.items():
         pd = [d for d in defs if str(Path(d.path).resolve()) in pref]
         if pd:
             out[name] = max(pd, key=lambda d: pref[str(Path(d.path).resolve())])
+            out[name].alts = [d for d in defs if d is not out[name]] + alt_idx.get(name, [])
             _record_variants(variants, name, out[name], defs, 'prefer')
             continue
         # S81-LBGAP G6 (10-18): a hard-macro behavioural model resolves to the macro library (MACRO_DIRS order, the r2c2
@@ -474,10 +504,12 @@ def rtl_index(roots, files, defines, prefer, variants=None):
         mm = sorted((d for d in defs if _macro_rank(d.path) is not None), key=lambda d: _macro_rank(d.path))
         if mm:
             out[name] = mm[0]
+            out[name].alts = [d for d in defs if d is not out[name]] + alt_idx.get(name, [])
             _record_variants(variants, name, out[name], defs, 'macro_dir')
             continue
         sigs = {tuple(sorted((k, v[0]) for k, v in d.ports.items())) for d in defs}
         out[name] = defs[0]
+        out[name].alts = defs[1:] + alt_idx.get(name, [])
         if len(sigs) > 1:
             amb[name] = sorted({d.path for d in defs})
         _record_variants(variants, name, out[name], defs, 'first')
@@ -1093,7 +1125,25 @@ def instance_param_overrides(body: str):
     return out
 
 
-def instance_param_errors(mod, idx):
+def _kitparam_pick(cm, named):
+    """DIE-HBM-97 11-09 (KITPARAM parity with bind.kit_closure, DIE-HBM-91 11-08): the chosen definition `cm` of a
+    child does not declare named overrides `named` its instantiator sets.  -> (definition, None) when exactly one
+    resolution exists among cm.alts (a preferred compatible definition: the highest rank; else every compatible
+    definition has the same body), (None, reason) when compatible definitions differ and none is preferred (fails
+    closed: the kit's own pick would be the first path), (None, None) when no other definition declares them."""
+    ok = [d for d in getattr(cm, 'alts', []) if not Path(d.path).name.endswith('_bb.v')
+          and set(named) <= set(d.params) and not (set(named) & getattr(d, 'localparams', set()))]
+    if not ok:
+        return None, None
+    pr = [d for d in ok if d.pref_rank is not None]
+    if pr:
+        return max(pr, key=lambda d: d.pref_rank), None
+    if len({_body_key(d) for d in ok}) == 1:
+        return ok[0], None
+    return None, f'{len(ok)} differing definitions declare them, none preferred: {sorted({d.path for d in ok})[:4]}'
+
+
+def instance_param_errors(mod, idx, kitparam_out=None):
     """HEAD-92 11-09 (hd_lep0N l48hp1 GEN_LINT 'Can't find object for defparam COL0'): the die-top check compared only the
     die.v / sidecar overrides of the MASTERS with their RTL; an instance INSIDE a master (a generated wrapper's
     'core #(.COL0(2)) u_core') could name a parameter its RTL module does not declare, and the bind passed while every
@@ -1104,8 +1154,21 @@ def instance_param_errors(mod, idx):
         cm = idx.get(c)
         if cm is None or Path(cm.path).name.endswith('_bb.v'):
             continue
-        lp = getattr(cm, 'localparams', set())
         unk = sorted(set(p for p in named if p not in cm.params))
+        if unk and kitparam_out is not None:
+            # KITPARAM: the kit closure takes a definition that declares the instance's named parameters (the chosen
+            # one is a stale preferred copy); the strict bind checks the same definition, and descends into it
+            alt, why = _kitparam_pick(cm, set(named))
+            if why:
+                errs.append(f'{mod.name}/{inst} -> {c}: not declared {unk} in {cm.path}; {why}')
+                continue
+            if alt is not None:
+                kitparam_out.append(dict(instance=f'{mod.name}/{inst}', child=c, params=unk, chosen=cm.path,
+                                         used=alt.path, preferred=alt.pref_rank is not None, alt_file=alt.alt_file,
+                                         module=alt))
+                cm = alt
+                unk = []
+        lp = getattr(cm, 'localparams', set())
         loc = sorted(set(p for p in named if p in lp))
         if unk:
             errs.append(f'{mod.name}/{inst} -> {c}: not declared {unk}')
@@ -1125,7 +1188,7 @@ def _is_trap(body, name):
     return bool(insts) and all(not x.strip() for x in insts)
 
 
-def child_closure(idx, tops, allow_model, seen_out=None, traps_out=None, param_errs_out=None):
+def child_closure(idx, tops, allow_model, seen_out=None, traps_out=None, param_errs_out=None, kitparam_out=None):
     """walk every die master's RTL hierarchy: (unresolved {child: [parents]}, models {child: [parents]}, modules seen);
     seen_out (a set) receives the module names of the closure, traps_out (a dict) the elaboration traps {name: [parents]}
     (port-less undefined instances, _is_trap), which are not unresolved children; param_errs_out (a list) receives the
@@ -1133,14 +1196,32 @@ def child_closure(idx, tops, allow_model, seen_out=None, traps_out=None, param_e
     unres, models, seen, todo = defaultdict(set), defaultdict(set), set(), sorted(t for t in tops if t in idx)
     if seen_out is not None:
         seen = seen_out
+    alt_seen, prim_seen, kp = set(), set(), ([] if kitparam_out is None else kitparam_out)
     while todo:
         n = todo.pop()
-        if n in seen:
-            continue
+        if isinstance(n, Module):              # a KITPARAM alternate definition: walked once per (name, file)
+            mod, n = n, n.name
+            if (n, mod.path) in alt_seen:
+                continue
+            alt_seen.add((n, mod.path))
+        else:
+            if n in prim_seen:
+                continue
+            prim_seen.add(n)
+            mod = idx[n]
         seen.add(n)
-        mod = idx[n]
+        skip = set()
         if param_errs_out is not None:
-            param_errs_out.extend(instance_param_errors(mod, idx))
+            k0 = len(kp)
+            param_errs_out.extend(instance_param_errors(mod, idx, kp))
+            new = [r for r in kp[k0:] if r['module'] is not idx.get(r['child'])]
+            todo += [r['module'] for r in new]
+            # a child whose EVERY instance here took a KITPARAM alternate is not reached through its chosen definition
+            masked = _unlabel(_lexical_mask(mod.body, strings=True))
+            for c in {r['child'] for r in new}:
+                ninst = len(re.findall(r'(?<![\w.$`])' + re.escape(c) + r'\s*(?:#\s*\(|[A-Za-z_\\])', masked))
+                if ninst == sum(1 for r in new if r['child'] == c):
+                    skip.add(c)
         for c in sorted(instantiated(mod.body) - {n}):
             if c not in idx:
                 if _is_trap(mod.body, c):
@@ -1151,7 +1232,7 @@ def child_closure(idx, tops, allow_model, seen_out=None, traps_out=None, param_e
                 continue
             if c in allow_model or Path(idx[c].path).name.endswith('_bb.v'):
                 models[c].add(n)
-            if c not in seen:
+            if c not in prim_seen and c not in skip:
                 todo.append(c)
     return ({k: sorted(v) for k, v in sorted(unres.items())}, {k: sorted(v) for k, v in sorted(models.items())},
             len(seen))
@@ -1305,6 +1386,10 @@ def main(argv=None):
                          'dirs): no default rtl/ + physical/**/rtl trees (they hold ref_tile / bind-bundle SNAPSHOT copies) '
                          'and no default macro dirs; every manifest entry must exist; a module of the closure defined '
                          'twice with different ports/parameters fails (ambiguous_children) even if a prefer rank picks one')
+    ap.add_argument('--alt-file', action='append', default=[], help='DIE-HBM-97: RTL file indexed as an ALTERNATE '
+                    'definition only (never the default pick, no prefer rank): used by the KITPARAM rule for an instance '
+                    'whose named parameters the chosen definition lacks, or for a name defined nowhere else (the newer '
+                    'leaf of a hard core whose RTL of record is newer than the as-built base)')
     ap.add_argument('--no-macro-dirs', action='store_true', help=f'do not index the memory macro libraries {MACRO_DIRS}')
     ap.add_argument('--unread-review', help='exact source-intent review JSON; default off')
     ap.add_argument('--unread-contract', help='exact reviewed source contract')
@@ -1363,7 +1448,7 @@ def main(argv=None):
         plist += [f for f in list_rtl_files(L) if f not in plist]
     files += [f for f in plist if f not in files]
     variants = {}
-    idx, amb = rtl_index(roots, files, defines, plist + a.prefer + files, variants)
+    idx, amb = rtl_index(roots, files, defines, plist + a.prefer + files, variants, a.alt_file)
     spec_used, prefer_conflicts = [], []
     if a.ref_tile_prefer and not a.closure:
         tops = _die_masters(a.die_v, a.top)
@@ -1372,7 +1457,7 @@ def main(argv=None):
         ssrc, spec_used = ref_tile_sources(seen0 | tops)
         files += [f for f in ssrc if f not in files]
         variants = {}
-        idx, amb = rtl_index(roots, files, defines, ssrc + plist + a.prefer + files, variants)
+        idx, amb = rtl_index(roots, files, defines, ssrc + plist + a.prefer + files, variants, a.alt_file)
     if a.closure:
         seen, todo, files_ = set(), list(a.closure), []
         while todo:
@@ -1416,8 +1501,8 @@ def main(argv=None):
                                       remaining_unread_bits=rec['summary']['unread_net_bits'])
     if not a.no_child_closure:
         # full RTL child closure (Q-STUB 10-17): every module instantiated anywhere under a die master must resolve
-        cseen, traps, perrs = set(), {}, []
-        unres, models, nmods = child_closure(idx, set(rec['masters']), set(a.allow_model), cseen, traps, perrs)
+        cseen, traps, perrs, kitp = set(), {}, [], []
+        unres, models, nmods = child_closure(idx, set(rec['masters']), set(a.allow_model), cseen, traps, perrs, kitp)
         # S81-LBGAP G6/G7 (10-18): a module of the closure defined more than once resolves by rule (--prefer / -f /
         # --rtl-file > --prefer-list > --ref-tile-prefer specs > macro dir > first); differing definitions are recorded,
         # and a FIRST pick among definitions with different PORTS or PARAMETERS (no rule names one) fails: it binds
@@ -1429,9 +1514,12 @@ def main(argv=None):
                                     variant_children=var, ambiguous_children=amb_c,
                                     elab_traps={k: sorted(v) for k, v in sorted(traps.items())},
                                     prefer_lists=a.prefer_list, ref_tile_specs_used=spec_used,
-                                    instance_params_not_in_rtl=sorted(set(perrs))[:80])
+                                    instance_params_not_in_rtl=sorted(set(perrs))[:80],
+                                    kitparam_resolved=[{k: v for k, v in r.items() if k != 'module'} for r in kitp],
+                                    alt_files=a.alt_file)
         rec['summary']['unresolved_children'] = len(unres)
         rec['summary']['instance_params_not_in_rtl'] = len(set(perrs))
+        rec['summary']['kitparam_resolved'] = len(kitp)
         if perrs:
             rec['verdict'] = 'FAIL'
             rec['failing'].append('instance_params_not_in_rtl')

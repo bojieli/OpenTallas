@@ -4566,6 +4566,10 @@ def cmd_portbind(a):
     for f in ab.get("prefer", []) + ab.get("portbind_prefer", []):
         if Path(absf(f)).is_file():
             cmd += ["--prefer", absf(f)]
+    # DIE-HBM-97 11-09: newer leaves of hard cores whose RTL of record is newer than the as-built base (the HBM
+    # p37 core overlays set LDCS / THC and reach ot_s81_kp4_enc_la): alternates only, never a default pick
+    for f in ab.get("portbind_alt_files", []):
+        cmd += ["--alt-file", absf(f)]
     for d in ab.get("defines", []):
         cmd += ["--define", d]
     for m in ab.get("portbind_allow_model", []):
