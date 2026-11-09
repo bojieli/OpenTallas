@@ -27,7 +27,7 @@ release-tree-render.timer calls this through release_tree_render.py). On any fai
 kept and the error is reported (the page keeps rendering).
 Run alone: python3 tools/release_tree_plan.py [--force] [--print]
 """
-import argparse, json, os, pathlib, re, shutil, subprocess, sys, tempfile, time, concurrent.futures as cf
+import argparse, hashlib, json, os, pathlib, re, shutil, subprocess, sys, tempfile, time, concurrent.futures as cf
 
 REPO = pathlib.Path(os.environ.get('OT_COUNT_REPO') or '/home/ubuntu/OpenTallas')
 NO_FETCH = bool(os.environ.get('OT_COUNT_NO_FETCH'))   # private proof runs: never fetch in the repo (tags come from OT_COUNT_TAGS)
@@ -894,7 +894,10 @@ def plan_designs(P, plan_dir, read=None):
         q = pathlib.Path(plan_dir) / f
         if not q.exists() and (pathlib.Path(plan_dir) / 'cores' / pathlib.Path(f).name).exists():
             q = pathlib.Path(plan_dir) / 'cores' / pathlib.Path(f).name
-        return json.loads(q.read_text())
+        b = q.read_bytes()
+        raws[f] = hashlib.sha256(b).hexdigest()[:12]
+        return json.loads(b)
+    raws = {}   # COUNT-ARCHIVE-2 11-09 (DIE-HBM-97 12:00): pins file -> sha256[:12] of its bytes = the kit wave's module__v<sha12> key
     read = read or _read
     T = P.get('partition_types') or {}
     tcount = {}
@@ -949,6 +952,8 @@ def plan_designs(P, plan_dir, read=None):
         did = m if nmod[m] == 1 else '%s#%gx%g/%s' % (m, ol[0] / 1000 if ol else 0, ol[1] / 1000 if len(ol) > 1 else 0, tag)
         assert did not in D, did
         g['strap_variants'] = len(g['strap_variants'])
+        wk = sorted({'%s__v%s' % (m, raws[f]) for f in g['pins_files'] if f in raws})
+        if wk: g['wave_keys'] = wk   # kit-wave item names of this design (failure_breakdown matches rows on them)
         D[did] = g; R[did] = rows[(m, ol, ps)]
     return D, R
 
