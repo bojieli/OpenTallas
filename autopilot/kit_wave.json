@@ -3122,7 +3122,8 @@
     "ot_s81sl_kv_leaf__t3": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
     "ot_s81sl_kv_leaf__t4": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
     "ot_s81sl_kv_leaf__t5": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
-    "ot_s81sl_leaf__t50": "KW-FIX-42 03:05 COORD NEWFAIL: GRT congestion; owner (DIE-S81-85) decides the form; no unchanged relaunch"
+    "ot_s81sl_leaf__t50": "KW-FIX-42 03:05 COORD NEWFAIL: GRT congestion; owner (DIE-S81-85) decides the form; no unchanged relaunch",
+    "ot_s81sl_leaf__t68": "KW-FIX-42 03:16 COORD 03:2x: GRT congestion (7922c26e63e2); DIE-S81-85 decides the form; no unchanged relaunch"
    },
    "queue_src": "claude/kw-fix-35-wave-c303a-1108@804f9e020b2",
    "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave",
@@ -11180,7 +11181,9 @@
     "q_b011@5",
     "q_b103@10",
     "q_b103__physical_v1@11",
-    "q_su00__physical_v1@4"
+    "q_su00__physical_v1@4",
+    "q_b002__physical_v1@4",
+    "q_b013@8"
    ],
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -11487,7 +11490,9 @@
     "q_b011@5": "KW-FIX-42 03:00: PDN-0179 M4-column class fix claude/die-hbm-97-pdn-col-1109@20168ea1dfb8 partition_ft_reserve.py md5 2681fbde in kw41/src_h94_pv (real pdngen OK on this DB)",
     "q_b103@10": "KW-FIX-42 03:00: PDN-0179 M4-column class fix claude/die-hbm-97-pdn-col-1109@20168ea1dfb8 partition_ft_reserve.py md5 2681fbde in kw41/src_h94_pv (real pdngen OK on this DB)",
     "q_b103__physical_v1@11": "KW-FIX-42: COORD NEWFAIL 02:19 (c): INFRA, relaunch ONCE at the stage it reached, gen epyc7",
-    "q_su00__physical_v1@4": "KW-FIX-42 03:06 COORD NEWFAIL: DPL class (legalize fails 2443 edge-spacing + 71 padding, then detail_place.tcl 46 bad optional access): diamond legalizer per DIE-HBM-93 18:51 class fix (as q_su10/q_su20/q_b002, q_b003pv1 type_args); relaunch ONCE"
+    "q_su00__physical_v1@4": "KW-FIX-42 03:06 COORD NEWFAIL: DPL class (legalize fails 2443 edge-spacing + 71 padding, then detail_place.tcl 46 bad optional access): diamond legalizer per DIE-HBM-93 18:51 class fix (as q_su10/q_su20/q_b002, q_b003pv1 type_args); relaunch ONCE",
+    "q_b002__physical_v1@4": "KW-FIX-42 03:16 COORD 03:2x: DIE-HBM-97 DRT-0073 bank128 clk access: counted bank LEF re-spliced with M6 OBS (PG pin layer, detail_pg_layer form) from the same signed ODB, bloat 1; pins, PG, lower OBS unchanged -> view input changed, not a P&R retry",
+    "q_b013@8": "KW-FIX-42 03:16 COORD 03:2x: DIE-HBM-97 DRT-0073 bank128 clk access: counted bank LEF re-spliced with M6 OBS (PG pin layer, detail_pg_layer form) from the same signed ODB, bloat 1; pins, PG, lower OBS unchanged -> view input changed, not a P&R retry"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
@@ -12330,6 +12335,33 @@
      }
     ],
     "ot_hbm_hc_bank128_pair_core": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97/view_detail/ot_hbm_hc_bank128_pair_core",
+      "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/10ac9d744407ff50 epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 detail_pg_layer M6 OBS (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97/view_detail/ot_hbm_hc_bank128_pair_core",
+      "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/10ac9d744407ff50 epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 detail_pg_layer M6 OBS (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97/view_detail/ot_hbm_hc_bank128_pair_core",
+      "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/10ac9d744407ff50 epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 detail_pg_layer M6 OBS (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
      {
       "host": "epyc2",
       "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/3cee1eada0f6/ot_hbm_hc_bank128_pair_core",
@@ -13691,7 +13723,21 @@
     "epyc4",
     "intel1",
     "epyc5"
-   ]
+   ],
+   "prov_view_sources_prev_kw42bank": {
+    "ot_hbm_hc_bank128_pair_core": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/3cee1eada0f6/ot_hbm_hc_bank128_pair_core",
+      "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/10ac9d744407ff50 epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json (KW-FIX-32 export_view)"
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/3bc2ed875db6/ot_hbm_hc_bank128_pair_core",
+      "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/7eaeff6b21f398a7 epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_hc_bank128_pair_core__flow-20261106-cr-hbm__aad36c4a/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ]
+   }
   }
  },
  "place_prefer": [
