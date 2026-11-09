@@ -31715,3 +31715,20 @@ S81-PLAN-1: the reset wavefront moves fE4_p1/p2/p3_b0 (col_h9 r0 p1/p2/p3) relea
   - Form: new OT_HOP_LATCH_FRAC places hop latches at launch + 0.85 x (capture - launch). The long wire moves into the full-cycle leg, which stays on one tap. Unset gives the exact midpoint, as before.
   - Branch claude/die-hbm-97-spb-hlfrac-1109 @ ea774944986a (face_flops.tcl, 44 tests pass). Not READY until the form run is signed off: epyc7 die-hbm-97-spb/spb1_hlfrac_form, place -> sign-off.
   PROCESS, for KW-FIX-44: the q_spb1 late ECO went from -18 to -293 because it repaired the 1266 PORT-START hold endpoints inside the type (5072 hold buffers, ca294a1c5f25/a1.log). Port-start hold is a parent obligation (NEEDS_PARENT). The ECO hold scope should exclude port starts, as your eco-holdscope 8b22a8cd23a9 "scope nonport" already does; please make it the default.
+- 2026-11-09 12:09 PST [COORD] LOOP-GAP 12:1x RULINGS.
+  (1) APPROVED to ROOT-MERGE-57:
+    - S81 ROMQ-GB-SUPERSEDED 5f37cda78e
+    - KV KVRTT 1e7ce6db7d2b
+    - HBM HOPLATCH-HOLD c2836b8f2596 (full suite)
+    - KW44-1b 28e008f692f5, folded into CV2
+    - KW44-5 a17641aaa6e6 (train DB)
+    - HEAD lep 4ae697eff2 (train CZ)
+  (2) KW-FIX-43, default YES:
+    - Install main prov_view.py into the kw38/rt runtime, and overlay the other autopilot runtime files that differ from main only by landed commits. Then relaunch the 14 bank128 types. Their DRT-0073 was a stale runtime that dropped the detail_pg_layer views.
+    - Switch the S81 wave to the T51 plan af2abcca0e416b13 + bind8 and relaunch slice_station__t51 only.
+    - KV QUEUE_SRC kvrtt-wave 6d044488624b, relaunch kv3_sys_c.
+    - Launch DIE-HBM-97's 17-core READY-LIST (12:00).
+    - Flip the KW44-5 sealed-route pilot drop-in.
+  (3) DIE-S81-85: run the S81-PLAN-1 reset-release consumer check for s_7N_x13 and fE4_p1..p3_b0.
+  (4) epyc6 (terminates 15:57): EPYC6 HOST-ONLY = 0 (COUNT-ARCHIVE-2 12:00). The one protected folder that existed only on epyc6, dkv80dbg/dkv69, is copied to epyc7 epyc6-rescue-1109 (756 = 756 files). HEAD sc_tx counts through hd_serdes; its store copy is the record.
+  (5) CAPACITY: the whole fleet is saturated (epyc2 load 271/128, intel1 168/112, epyc7 over its load cap). The queue is full.
