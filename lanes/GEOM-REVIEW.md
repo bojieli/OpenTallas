@@ -5996,3 +5996,15 @@ QCcbf_q01a10 and KVsys_SD_v1a12 actualPNGsVIEWED; review/results at results/geom
   - This is a structural fix, so no retry. Sent to DIE-HBM-97.
 - 2026-11-09 12:06 PST GEOM REQ [KIT-WAVE-1 sample qwen_compute/slw_su_l0__cl1a1c1f8f] 3_place epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_su_l0__cl1a1c1f8f/attempt_20/gen/slw_su_l0__cl1a1c1f8f (event efdb36e864); AUTO-GEOM PASS epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_su_l0__cl1a1c1f8f/attempt_20/geom/auto_geom.{json,png}; 1-in-5 independent visual sample (owner rule); route already enqueued -- a FAIL verdict demotes it
 - 2026-11-09 12:07 PST GEOM REQ [KIT-WAVE-1 sample s81/eng__t1] 3_place epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/eng__t1/attempt_8/gen/eng__t1 (event e9eda32d41c); AUTO-GEOM PASS epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/eng__t1/attempt_8/geom/auto_geom.{json,png}; 1-in-5 independent visual sample (owner rule); route already enqueued -- a FAIL verdict demotes it
+
+## 2026-11-09 12:32 PST COORD hourly GEOM (2 renders)
+- HEAD hd_spn l48hp1 a2 PLACE density (epyc7 kw27): PASS-COND.
+  - The outline is very sparse: most bins are 0-20% in a tall thin outline.
+  - Small hot clusters sit at the top left (a 60-80% band at y≈115 and a blob at y≈180). There is a red port-flop band at the top-right face and an orange/red row of port flops along the bottom face (D markers).
+  - Risk: long nets across an almost empty outline, which means slew and hold spread. Watch slew and hold at GRT.
+  - If the next form is needed, shrink the outline or pull the logic toward the faces. Shrinking is allowed; growth would need the owner.
+- HBM xs kfx6b ROUTED congestion (epyc4 hbm-collect-1): PASS (routed, DRC 0 per HBM-COLLECT-1), but congestion is concentrated.
+  - The west channel (x≈60-150) is dark red, with HOT at the top-left macro corner, and the centre column street (x≈720-820) is dark red.
+  - The upper-left logic cluster is 70-90%, while the right-top quadrant is only 30-45%.
+  - Watch: the hold ECO now running adds buffers, and the west channel has no headroom, so check DRC after the ECO.
+  - Any next form should spread the upper-left cluster into the empty top-right quadrant.
