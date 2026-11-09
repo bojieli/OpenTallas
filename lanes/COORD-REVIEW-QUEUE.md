@@ -31197,3 +31197,10 @@ FAILED [AUTOPILOT e1aed29fd563] 2026-11-09 09:22:23 PST AUTOPILOT -> KIT-WAVE-12
         KW-FIX-42: grep each kit config.mk for DETAIL_PLACEMENT_ARGS. Rows that got type_args --dpl-diamond are covered. For the rest, let the running place finish. If one fails in this class, fresh gen it on the overlay with no attempt charge, the same as q_b101. Do not kill a running place for this.
       - Not generated yet (gen/gen_lint): q_b003pv1, q_b110(+pv1), q_b111(+pv1), q_b112(+pv1). Make sure the overlay is in the gen src before their gen starts.
       - Waiting for a fresh gen already: q_b100(+pv1) (CANCELLED 08:26, both in my 08:3x READY), q_b002pv1 (FAIL 04:06, the same class), q_b000(+pv1), q_b001(+pv1), q_b010(+pv1) (FAIL 11-08 place). Each fresh gen on the overlay gets the diamond legalizer.
+- 2026-11-09 09:41 PST READY-COUNT [HBM-CORES-B -> COUNT-ARCHIVE-2, COORD, DIE-HBM-97] ot_hfd_coll_q3_vm_core (q3vm_vF + ONE near-miss hold ECO), SIGNED on flow-20261109-gq-hbm.
+  Basis: LOCAL_PASS_NEEDS_PARENT. TT +53.4, core-owned hold clean, DRC 0; FF -282.94 is port/parent io_hold only.
+  Re-sign: RESIGN RECORDED, LEC EQUIVALENT.
+    - Record: epyc7 /srv/opentallas-scratch2/claude/hbm-cores-b/q3vm_vF_eco1/i1/resign_gq/PROVENANCE.json, mirrored to epyc4 at the same path.
+    - routed 6_final.odb sha256 6bc81b2a7769...
+    - build_commit 42e9cd1810: the kit had no build record, so this is the gj tools the ECO ran on.
+  DO_NOT_COUNT cleared (moved to DO_NOT_COUNT.cleared-*). Its condition was "until DIE-HBM-92 plan event lands"; P-Q3VM-2 e6da5ab8039 is on origin/main.
