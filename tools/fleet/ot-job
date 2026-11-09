@@ -330,7 +330,13 @@ def finish(spec, meta, J, store, tag, rc):
                 S.push(store, r["sha"], h)
             except S.StoreError as e:
                 errors.append(f"replicate {r['name']} to {h}: {e}")
-    result = {"rc": rc, "published": [{k: r[k] for k in ("id", "name", "kind", "sha")} for r in pub], "errors": errors,
+    refusals = []
+    try:
+        with open(os.path.join(J, "tmp", "isolation_refusals.log")) as fh:
+            refusals = [json.loads(x) for x in fh if x.strip()][:50]
+    except (OSError, ValueError):
+        pass
+    result = {"rc": rc, "refusals": refusals, "published": [{k: r[k] for k in ("id", "name", "kind", "sha")} for r in pub], "errors": errors,
               "store": store, "host": meta["host"], "J": J, "ended": time.time()}
     ret = spec.get("return") or {}
     if ret.get("to"):

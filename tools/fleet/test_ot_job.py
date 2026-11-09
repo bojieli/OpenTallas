@@ -348,6 +348,10 @@ class Sealed(Tmp):
         r = self.job(f"docker run --rm -v {os.path.dirname(self.secret)}:/x alpine true")
         self.assertEqual(r.returncode, SHIM.REFUSE, r.stderr)
         self.assertIn("OT-JOB ISOLATION: undeclared host path", r.stderr)
+        r = self.job(f"docker run --rm -v {os.path.dirname(self.secret)}:/x alpine true; true", ret=["none"])
+        res = json.load(open([os.path.join(self.ret, f) for f in os.listdir(self.ret) if f.startswith(".ot-job-")][0]))
+        self.assertIn("undeclared host path", res["refusals"][0]["why"])     # the refusal survives the job dir delete
+        shutil.rmtree(self.ret)
         r = self.job(f"docker run --rm -v {self.src}:/x alpine cat /x/f.txt; cp docker_argv argv.txt",
                      inputs=[{"path": self.src}], ret=["argv.txt"])
         self.assertEqual(r.returncode, 0, r.stderr)
