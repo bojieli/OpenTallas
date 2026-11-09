@@ -3250,30 +3250,29 @@
     "note": "Manual immutable785 source/explicitlanding adopted; automatic source prep remains serialized. Two exact SVC canaries owned G0C and held until terminal closure."
    },
    "bind_mem_gb": 48,
-   "hold_items": {
-    "ot_s81sl_xrt1": "COORD 20:09: no rebuild; key moved only because plan now points at the signed view",
-    "ot_s81sl_xrt3": "COORD 20:09: no rebuild; key moved only because plan now points at the signed view",
-    "dsdv_bksel_c": "COORD 20:09: no rebuild; key moved only because plan now points at the signed view",
-    "dsdv_bk_g": "KW-FIX-8 23:2x I64: signed dsdv_bk_g, ruled not a stop, no rebuild (RM-31 22:03)",
-    "ot_v41_bf16_half": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)",
-    "ot_v41_bf_col3_c": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)",
-    "svc_*_dsdv_svc_rs__t*": "KW-FIX-33 2026-11-08 00:23 PST COORD 00:0x (3) G: SVC-RS FLAT 4M cells, REDESIGN split, S81-SVCRS-1",
-    "svc_lo_dsdv_svc_rs_w__t*": "KW-FIX-34 2026-11-08 01:53 PST (COORD 01:5x): SVC-RS FLAT 4M cells, REDESIGN R5, S81-SVCRS-2",
-    "ot_s81sl_ve_m": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
-    "ot_s81sl_ve_s": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
-    "ot_s81sl_vn_a": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
-    "ot_s81sl_vn_b": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
-    "ot_s81sl_vq": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
-    "ot_s81sl_vs": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
-    "ot_s81sl_vsw": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
-    "dsdv_slice_kv512_C__t1": "KW-FIX-43 11:5x COORD: left to DIE-S81-85 structural fix; the gen_args sidecar change must not auto-relaunch it. DIE-S81-85 / COORD releases.",
-    "s81p_slice_station__t51_ot_s81_station_t51_native_e": "KW-FIX-43 12:3x T51 switch: new plan block (t51 native hard child); DIE-S81-85 owns it (native_e signed, native_w rebuilding sealed on epyc4); wave does not build it. DIE-S81-85/COORD releases.",
-    "s81p_slice_station__t51_ot_s81_station_t51_native_w": "KW-FIX-43 12:3x T51 switch: new plan block (t51 native hard child); DIE-S81-85 owns it (native_e signed, native_w rebuilding sealed on epyc4); wave does not build it. DIE-S81-85/COORD releases.",
-    "ot_s81sl_leaf__t16": "KW-FIX-43 13:5x COORD LOOP-GAP 13:5x (3): EARLY-CORE-TAP class (hard core on a grid tap over the window; t16w2 GRT gate TT -237.80 / FF -220.45 with 689d05d0f4). Hold until DIE-S81-85 posts the early-core-tap plan+bind READY; rerun of the same form = retry.",
-    "ot_s81sl_leaf__t27": "KW-FIX-43 13:5x COORD LOOP-GAP 13:5x (3): EARLY-CORE-TAP class (hard core on a grid tap over the window; t16w2 GRT gate TT -237.80 / FF -220.45 with 689d05d0f4). Hold until DIE-S81-85 posts the early-core-tap plan+bind READY; rerun of the same form = retry.",
-    "ot_s81sl_leaf__t42": "KW-FIX-43 13:5x COORD LOOP-GAP 13:5x (3): EARLY-CORE-TAP class (hard core on a grid tap over the window; t16w2 GRT gate TT -237.80 / FF -220.45 with 689d05d0f4). Hold until DIE-S81-85 posts the early-core-tap plan+bind READY; rerun of the same form = retry.",
-    "eng__t1": "KW-FIX-43 13:5x COORD LOOP-GAP 13:5x (3): EARLY-CORE-TAP class (hard core on a grid tap over the window; t16w2 GRT gate TT -237.80 / FF -220.45 with 689d05d0f4). Hold until DIE-S81-85 posts the early-core-tap plan+bind READY; rerun of the same form = retry."
-   },
+   "hold_items": [
+    "ot_s81sl_xrt1",
+    "ot_s81sl_xrt3",
+    "dsdv_bksel_c",
+    "dsdv_bk_g",
+    "ot_v41_bf16_half",
+    "ot_v41_bf_col3_c",
+    "svc_*_dsdv_svc_rs__t*",
+    "svc_lo_dsdv_svc_rs_w__t*",
+    "ot_s81sl_ve_m",
+    "ot_s81sl_ve_s",
+    "ot_s81sl_vn_a",
+    "ot_s81sl_vn_b",
+    "ot_s81sl_vq",
+    "ot_s81sl_vs",
+    "ot_s81sl_vsw",
+    "dsdv_slice_kv512_C__t1",
+    "s81p_slice_station__t51_ot_s81_station_t51_native_e",
+    "s81p_slice_station__t51_ot_s81_station_t51_native_w",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t42"
+   ],
    "queue_src": "claude/type-safe-5-s81-final-1109@c0c9a3de749a",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave",
    "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
@@ -7117,7 +7116,44 @@
     "ot_s81sl_leaf__t27",
     "ot_s81sl_leaf__t42",
     "eng__t1"
-   ]
+   ],
+   "item_inputs": {
+    "eng__t1": {
+     "plan": "/srv/opentallas-scratch2/claude/kw43/ctap/plan_h2_2249.json",
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43/ctap/kit_rtl_eng_ctap.sh"
+     },
+     "note": "KW-FIX-43 15:0x COORD 14:5x ENG-CTAP-1109 APPROVED (DIE-S81-85 READY 14:32 c3cdaf3fe0): plan a3242962c805e59b (copy of epyc7 die-s81-85/s81p7/src_ctap plan_h2_2249.json) + strict bind9_ctap (S81_BIND_OUT in script); asbuilt_f. eng__t1 ONLY; other S81 rows stay af2abcca/bind8. Staged epyc7 + intel1 (epyc2 scratch2 at 22 GB: not staged)."
+    }
+   },
+   "item_inputs_prev_kw43ctap": {
+    "eng__t1": null
+   },
+   "hold_items_prev_kw43ctap": [
+    "ot_s81sl_xrt1",
+    "ot_s81sl_xrt3",
+    "dsdv_bksel_c",
+    "dsdv_bk_g",
+    "ot_v41_bf16_half",
+    "ot_v41_bf_col3_c",
+    "svc_*_dsdv_svc_rs__t*",
+    "svc_lo_dsdv_svc_rs_w__t*",
+    "ot_s81sl_ve_m",
+    "ot_s81sl_ve_s",
+    "ot_s81sl_vn_a",
+    "ot_s81sl_vn_b",
+    "ot_s81sl_vq",
+    "ot_s81sl_vs",
+    "ot_s81sl_vsw",
+    "dsdv_slice_kv512_C__t1",
+    "s81p_slice_station__t51_ot_s81_station_t51_native_e",
+    "s81p_slice_station__t51_ot_s81_station_t51_native_w",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t42",
+    "eng__t1"
+   ],
+   "note_kw43_ctap": "KW-FIX-43 15:0x: eng__t1 -> ENG-CTAP plan+bind9_ctap via item_inputs, released from EARLY-CORE-TAP hold. Revert: item_inputs[eng__t1] = item_inputs_prev_kw43ctap[eng__t1] (None = delete); hold_items = hold_items_prev_kw43ctap."
   },
   "s81_head": {
    "enabled": true,
