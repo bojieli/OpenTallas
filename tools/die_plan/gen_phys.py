@@ -2406,6 +2406,26 @@ def tap_pair_affinity_exports(t):
             f"export OT_TAP_PAIR_DEPTH = {depth}"]
 
 
+# COORD 11-09 (HBM-CORES-B): HBM kits hang TYPE-SAFE-1 hop lockup latches (u_fl_rst_*) on their capture tap by
+# default (clock_taps.tcl OT_HOP_LATCH_CAPTURE_TAP).  Only a latch whose capture tap differs moves; RTL unchanged.
+# Other dies stay opt-in until the first HBM sign-off with it.
+HOP_LATCH_CAPTURE_TAP_DEFAULT = {"hbm": "u_fl_rst_"}
+
+
+def _hop_latch_capture_tap(P):
+    """OT_HOP_LATCH_CAPTURE_TAP value (space-separated regexes) or None.  GEN env OT_HOP_LATCH_CAPTURE_TAP (wave
+    item_env, commas for spaces) wins; "0" or "off" = no line.  Else the die default (HBM dies: u_fl_rst_)."""
+    env = os.environ.get("OT_HOP_LATCH_CAPTURE_TAP")
+    if env is not None:
+        v = " ".join(env.replace(",", " ").split())
+        return None if v in ("", "0", "off") else v
+    name = str(P.die.get("name") or "").lower()
+    for pre, v in HOP_LATCH_CAPTURE_TAP_DEFAULT.items():
+        if name.startswith(pre):
+            return v
+    return None
+
+
 def _tap_cap(t):
     """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 3000 (COORD 10-23; applies to grid and added taps);
     density taps default to 1500 (decision 5: ~1000-1500 sinks a tap)."""
@@ -4286,6 +4306,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export PRE_CTS_TCL = /work/pre_cts.tcl",
            # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
            f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
+           *([f"export OT_HOP_LATCH_CAPTURE_TAP = {_hop_latch_capture_tap(P)}"] if _hop_latch_capture_tap(P) else []),
            *([f"export OT_EDGE_SPLIT_PORTS = {' '.join(edge_split_ports(P, tn))}"] if edge_split_ports(P, tn) else []),
            *(["export OT_EDGE_SPLIT_MACRO_PIN = 1"] if edge_split_ports(P, tn) and P.die.get("name") in EDGE_SPLIT_MACRO_PIN_DIES else []),
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread), then
