@@ -244,3 +244,54 @@ def test_reviewed_sites_keep_ids_and_bound_hops(tmp_path):
     overlay['review']['verdict']='PASS'
     p.types['t']['outline_um']=[1000,1000];overlay['sites']={'u_rrl_0':[500,500]}
     with pytest.raises(gen_rtl.GenError,match='beyond captured reach'):G.install_bound_native_reset(p,'t',[f])
+
+
+# KV-PLAN-2 11-09 (kv3_hub_C): the root type's PLL lock qualifier is verified exactly, not refused.
+LOCK=dict(inst='u_pll',pin='locked',stable=16,stages=16+R.LOCKQ_EXTRA)
+PLL=('\n wire [0:0] w_pll_locked;\n pll_stub u_pll(.locked(w_pll_locked));\n wire '+R.LOCK_SRC+';\n assign '
+     +R.LOCK_SRC+' = w_pll_locked[0];')
+
+
+def lock_fixture(tmp_path,mutate=lambda s:s,lock=LOCK):
+    def m(s):
+        t=s.replace('module bound(input clk, arst_n);\n','module bound(input clk, arst_n);'+PLL+'\n')
+        return mutate(t+'\nmodule pll_stub(output [0:0] locked);\n assign locked = 1\'b1;\nendmodule\n')
+    t=tree('sync');t['lock']=dict(lock)
+    text=('module top(input clk, arst_n);\n bound u_bound(.clk(clk), .arst_n(arst_n));\nendmodule\n'
+          'module bound(input clk, arst_n);\n'+'\n'.join(R.rtl_lines(t))+'\nendmodule\n'+gen_rtl.CELLS)
+    f=tmp_path/'native.sv';f.write_text(m(text))
+    p=SimpleNamespace(types={'t':dict(module='top',outline_um=[100,100],
+                                      clock=dict(landing_contract=dict(collector_tree=t)))})
+    return p,f
+
+
+def test_root_lock_qualifier_verified(tmp_path):
+    p,f=lock_fixture(tmp_path);assert 'u_rst_lockq' in f.read_text()
+    c=G.install_bound_native_reset(p,'t',[f])
+    assert c['entry_path']=='u_bound.u_rst_root' and 'u_rst_lockq' not in c['native_paths']
+    assert c['lock_qualifier']['path']=='u_bound.u_rst_lockq' and c['lock_qualifier']['stable']==16
+    assert 'ot_dp_lockq' in c['verified_cell_classes']
+
+
+@pytest.mark.parametrize('mutation,match',[
+    (lambda s:s.replace('#(.STABLE(16)) u_rst_lockq','#(.STABLE(2)) u_rst_lockq'),'STABLE differs'),
+    (lambda s:s.replace('.locked('+R.LOCK_SRC+')',".locked(1'b1)"),'topology differs'),
+    (lambda s:s.replace('assign '+R.LOCK_SRC+' = w_pll_locked[0];','assign '+R.LOCK_SRC+" = 1'b1;"),'exactly one plain driver'),
+    (lambda s:s.replace('u_pll(.locked(w_pll_locked))','u_pll(.other(w_pll_locked))'),'leaf output'),
+    (lambda s:s.replace('.d(rst_por_n)','.d(arst_n)'),'topology differs'),
+    (lambda s:s.replace('u_rst_lockq (','u_rst_lockq_x ('),'missing/duplicate/wrong-module'),
+    (lambda s:s.replace('q <= q | stable','q <= stable'),'canonical stage/gate behavior'),
+])
+def test_root_lock_qualifier_mutants_fail_closed(tmp_path,mutation,match):
+    p,f=lock_fixture(tmp_path,mutation)
+    with pytest.raises(gen_rtl.GenError,match=match):
+        G.install_bound_native_reset(p,'t',[f])
+
+
+def test_root_lock_declaration_and_relayed_lock_fail_closed(tmp_path):
+    p,f=lock_fixture(tmp_path,lock=dict(LOCK,stages=5))
+    with pytest.raises(gen_rtl.GenError,match='declaration is incomplete'):
+        G.install_bound_native_reset(p,'t',[f])
+    p,f=fixture(tmp_path);p.types['t']['clock']['landing_contract']['collector_tree']['lock']=dict(LOCK)
+    with pytest.raises(gen_rtl.GenError,match='requires a sync entry'):
+        G.install_bound_native_reset(p,'t',[f])
