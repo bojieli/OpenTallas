@@ -1942,6 +1942,16 @@ def coord_holds(live, now):
     return out
 
 
+CLEANUP_AUTHORS = ("AUTOCLEAN-",)
+
+
+def mention_posts(posts, now):
+    """posts feeding the LANE-DIR HOLD: every post of the last 24 h, any author (AUTOPILOT/KIT-WAVE lines name live dirs too), except
+    the cleanup lanes' own posts.  Their tables list DELETE candidates, not dirs in use; holding on them (11-09 05:1x) held every lane
+    the approved 04:3x tables listed.  A hold a cleanup lane wants goes through `hold` / AUTOCLEAN-HOLDS, never through its posts."""
+    return [p for p in posts if now - p["t"] <= 24 * 3600 and not (p["auth"] or "").startswith(CLEANUP_AUTHORS)]
+
+
 def build_lifesnap(out, kit_union=None):
 
     Q = os.path.expanduser("~/coord/lanes/COORD-REVIEW-QUEUE.md")
@@ -2000,10 +2010,9 @@ def build_lifesnap(out, kit_union=None):
     if len(wave) < 20:
         raise ValueError(f"live wave config names only {len(wave)} paths")
     mnames, mtails, msrc = set(), set(), 0
-    for p in posts:                                  # every post of the last 24 h, any author (AUTOPILOT/KIT-WAVE lines name live dirs too)
-        if now - p["t"] <= 24 * 3600:
-            a, b = mention_tokens(p["text"])
-            mnames |= a; mtails |= b; msrc += 1
+    for p in mention_posts(posts, now):
+        a, b = mention_tokens(p["text"])
+        mnames |= a; mtails |= b; msrc += 1
     for f in lane_mention_sources(now):
         try:
             a, b = mention_tokens(open(f, errors="replace").read())
