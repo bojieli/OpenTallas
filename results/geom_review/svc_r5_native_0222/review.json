@@ -1,0 +1,21 @@
+{
+  "purpose": "diagnostic current SVC capacity and two H8 attention outline cases; no plan edit",
+  "viewed_png": "results/geom_review/svc_r5_native_0222/attention_geometry.png",
+  "verdict": "BLOCKED_FOR_PARENT_PHYSICAL_RELEASE",
+  "scope": "actual current hard-core/SRAM/bus rectangles plus hypothetical attention shapes; not a placed-cell or PDN review",
+  "findings": [
+    "Current64 attention macros occupy four two-row groups. RT2 reuse or targeted RT4 at existing outline frees four full rows; targeted RT4 at fill0.568 has no physical result.",
+    "Keeping oldwidth157.68 and util<=0.40 requires H8height371.52; this stays inside old two-row attention regions but consumes much of each freed row. The remaining roughly164um band cannot hold172.8square SML/H4 with halos unchanged; reshape/pipeline or parent growth must be planned. Density/aspect are design targets, not signoff gates.",
+    "The middle eight score-exchange hrow macros remain occupied under current H8 source (two parity hrows/row, fewer active slots); do not claim this band as free. Preserve narrow clock root bay at725.76,1226.88.",
+    "The upper SRAM cap constrains new core placement: svc_hi has the known178um topstrip, svc_lo only24.6um. Keep SRAM pin-face channels.",
+    "Current magenta bus faces retain H16 widths and ordering. H8 gather widths, neighboring pins, source transport dates, reset/clock maps and <=405um relay reach must be regenerated/checked before any parent route.",
+    "New SM/merge/IRG/glue cores are not placed in this schematic. Root/glue packing and any old clock-tap reuse remain unqualified. PDN continuity not evaluated by this figure."
+  ],
+  "smells": [
+    "3:remaining band height/channel capacity needs real rectangular packing",
+    "4:clock/reset map would change with core expansion; preserve current center bay",
+    "9:SRAM cap blocks top-edge room, especially lo",
+    "10:new wide-bus relay placement absent"
+  ],
+  "next": "Prefer exact closed RT2 macro reuse plus proved static load shim if current source/view matches. Produce complete candidate packing with actual new leaf outlines and feedthrough/clock sites; no POR adoption or parent P&R."
+}

@@ -991,6 +991,16 @@ def core_tap_view_report(P, tn):
     return out
 
 
+def budget_tap_rows(P, tn):
+    """Keep budget rows identical with one macro-avoiding grid count per type."""
+    density = _density(P.types[tn])
+    grid_count = 0 if density else len(S._grid_taps(P, tn))
+    rows = [dict(name=n, xy=[x, y], kind="density" if density else
+                 ("grid" if i < grid_count else "sinks"))
+            for i, (n, x, y) in enumerate(S.tap_grid(P, tn))]
+    return grid_count, rows
+
+
 def core_tap_rows(P, tn, corner="TT", pending=None):
     """[(port, core inst, clock pin or '*', early_ps, insertion_ps)] of the type's early core taps: a tap named
     `<inst>` takes every clock pin of that core, `<inst>.<pin>` one pin.  A merged tap on a core with no native view
@@ -1300,7 +1310,7 @@ def kit_dead_inputs(kit_rtl_filelist):
     """DIE-S81-51/SPARE 11-03 (COORD 09:3x dead-input declaration form): the kit dead_inputs.json document the bind's
     kit-rtl step wrote into kit_rtl.json "dead_inputs" (the narrow plan input bits beyond the bound payload width that
     the generated wrapper leaves unconnected), or None.  Fail-closed: the receipt wrapper must still hash to its sha256
-    and every bit must lie in a declared narrow input range [bound, plan) -- face_guard then proves 0 loads/0 drivers."""
+    and every bit must lie in a proven narrow range or a wholly unbound input whose native ABI, strict mapping and literal unread wrapper are re-proved. face_guard still proves 0 loads/0 drivers."""
     import gen_rtl
     from face_guard import dead_input_list
     kj = Path(kit_rtl_filelist).with_name("kit_rtl.json")
@@ -1318,8 +1328,17 @@ def kit_dead_inputs(kit_rtl_filelist):
     if not wf.is_file() or _hashlib.sha256(wf.read_bytes()).hexdigest() != rc["sha256"]:
         raise gen_rtl.GenError(f"{kj}: dead_inputs receipt wrapper {wf} missing or sha256 changed")
     ok = {f"{x['port']}[{i}]" for x in rc.get("narrow_buses") or [] for i in range(int(x["bound"]), int(x["plan"]))}
+    import kit_dead_inputs
+    manifest=json.loads(kj.read_text())
+    try:
+        ok.update(kit_dead_inputs.validate_unbound(manifest,rc))
+        if rc.get('unbound_input_buses'):
+            # Re-prove final source reads at GEN, even if an earlier hash was valid.
+            kit_dead_inputs.refresh(manifest,wf)
+    except (ValueError,OSError) as exc:
+        raise gen_rtl.GenError(f"{kj}: {exc}") from exc
     if not set(bits) <= ok:
-        raise gen_rtl.GenError(f"{kj}: dead_inputs bits outside the narrow input ranges: {sorted(set(bits) - ok)[:5]}")
+        raise gen_rtl.GenError(f"{kj}: dead_inputs bits outside proven input ranges: {sorted(set(bits) - ok)[:5]}")
     return doc
 
 
@@ -4618,6 +4637,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         except Exception as ex:
             print(f"[gen] {tn}: FT_TRACK_USE ADVISORY {type(ex).__name__}: {ex}")
     ff_core_taps = {r[0]: r for r in core_tap_rows(P, tn, "FF")}
+    budget_grid_count, budget_taps = budget_tap_rows(P, tn)
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
                signal_max=top,
@@ -4628,10 +4648,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                           # one clock port per tap (snapped): the R4 grid first, then any ADDED sink-anchored taps
                           tap_mode=t.get("clock", {}).get("tap_mode", "grid"),
                           tap_pitch_um=S.tap_pitch(P, tn),
-                          grid_taps=0 if _density(t) else len(S._grid_taps(P, tn)),
-                          taps=[dict(name=n, xy=[x, y], kind="density" if _density(t) else
-                                     ("grid" if i < len(S._grid_taps(P, tn)) else "sinks"))
-                                for i, (n, x, y) in enumerate(S.tap_grid(P, tn))],
+                          grid_taps=budget_grid_count,
+                          taps=budget_taps,
                           sink_taps=(T.report(P, tn)["taps"] if S.sink_tap_mode(t) else []),
                           taps_snapped=clock_tap_pin_metadata(P, tn),
                           core_taps=[dict(port=n, inst=i, pin=p_, early_ps=e, insertion_ps=ins,

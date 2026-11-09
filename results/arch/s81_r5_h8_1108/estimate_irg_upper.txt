@@ -1,0 +1,16 @@
+R0 ruled split, full width (16 SML+8 SMD+16 H4) | hi {'cores': 46, 'glue_cores': 6, 'irg_cores': 0, 'area_mm2': 1.44, 'dy': 1028.16} | lo {'cores': 63, 'glue_cores': 7, 'irg_cores': 16, 'area_mm2': 2.194, 'dy': 1814.4} | die dy 2842.56 margin 541.6 NO FIT (+2301 over)
+R1 (B): SM 2:1 (8 SML+4 SMD) + half merges (8 H4) | hi {'cores': 26, 'glue_cores': 6, 'irg_cores': 0, 'area_mm2': 0.827, 'dy': 518.4} | lo {'cores': 43, 'glue_cores': 7, 'irg_cores': 16, 'area_mm2': 1.581, 'dy': 1304.64} | die dy 1823.04 margin 541.6 NO FIT (+1281 over)
+R2 (B)+(C): SM of the 4 edge svc into band cells | hi {'cores': 26, 'glue_cores': 6, 'irg_cores': 0, 'area_mm2': 0.827, 'dy': 518.4} | lo {'cores': 43, 'glue_cores': 7, 'irg_cores': 16, 'area_mm2': 1.581, 'dy': 1304.64} | die dy 1823.04 margin 541.6 NO FIT (+1281 over)
+R3 (B)+irg SRAM (already macros: no change) | hi {'cores': 26, 'glue_cores': 6, 'irg_cores': 0, 'area_mm2': 0.827, 'dy': 518.4} | lo {'cores': 43, 'glue_cores': 7, 'irg_cores': 16, 'area_mm2': 1.581, 'dy': 1304.64} | die dy 1823.04 margin 541.6 NO FIT (+1281 over)
+R4 (B)+irg scorer 2:1 (16 of 32 hslices; NOT in ruling) | hi {'cores': 26, 'glue_cores': 6, 'irg_cores': 0, 'area_mm2': 0.827, 'dy': 518.4} | lo {'cores': 35, 'glue_cores': 7, 'irg_cores': 8, 'area_mm2': 1.222, 'dy': 1002.24} | die dy 1520.64 margin 541.6 NO FIT (+979 over)
+R5 (E) half attention width: 32 hcores + R1 (NOT in ruling) | hi {'cores': 26, 'glue_cores': 6, 'irg_cores': 0, 'area_mm2': 0.827, 'dy': 0.0} | lo {'cores': 43, 'glue_cores': 7, 'irg_cores': 16, 'area_mm2': 1.581, 'dy': 207.36} | die dy 207.36 margin 541.6 FITS
+tok basis AR 1258.9 MTP 3653.8; T_AR 953213 T_MTP step 1365920
+SM 2:1 low                           AR  1253.2 (-0.45%)  MTP  3642.2 (-0.32%)
+SM 2:1 high                          AR  1244.4 (-1.15%)  MTP  3624.4 (-0.80%)
+half merge high                      AR  1226.0 (-2.62%)  MTP  3586.6 (-1.84%)
+B low                                AR  1253.2 (-0.45%)  MTP  3642.2 (-0.32%)
+B high                               AR  1212.3 (-3.71%)  MTP  3558.2 (-2.62%)
+H4 +2 pin full width                 AR  1258.8 (-0.01%)  MTP  3653.6 (-0.01%)
+idx 2:1 high                         AR  1221.2 (-3.00%)  MTP  3576.4 (-2.12%)
+E: attn 2:1 (+1280/layer) + B low    AR  1189.6 (-5.51%)  MTP  3511.0 (-3.91%)
+footprints um2 SML 32920 SMD 21574 H4 32920 GC 35637 IRGC 44886

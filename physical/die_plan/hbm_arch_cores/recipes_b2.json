@@ -4185,5 +4185,36 @@
     "source_commit": "db98e2b16b4c3c0bda6ac867a97d362088b69aaa",
     "read_at_commit": true,
     "cts_delay_buffer_derate": 0
+  },
+  "hfd_ep_static_vc2": {
+    "top": "hfd_ep_static_vc2",
+    "files": [
+      "physical/die_plan/hbm/bind/rtl/b2_native/hfd_ep_static_vc2.sv",
+      "rtl/hbm_accel/tu/ep_static_20261015/ot_hep_rx_store.sv"
+    ],
+    "defines": [],
+    "params": {
+      "IDLE_K": 204,
+      "HQ": 4
+    },
+    "macros": [
+      "ot_sram_1r1w_64x512_m1_r2c2"
+    ],
+    "source": "HBM-HARD-6-EP 11-08 (plan event EP-MOD-1108, DIE-HBM-92): as-built NW_io endpoint class (hbm-bind-6 t11_top / results/hbm_hfdep_native_0250 six_endpoint_inventory); module file b2_native/hfd_ep_static_vc2.sv (holds ot_hep_tx_gbx_vc, ot_hep_rx_gbx_vc, hfd_ep_static_vc2, hfd_ep_host_vc); u_rxb store = the same ot_hep_rx_store.sv the signed hfd_ep_static kit uses (OT_HBM_RW_MACROS right-width leaves via the plan mem_recipe_delta); params = the NW_io u_ep_N0 binding #(HQ 4, IDLE_K 204)",
+    "view_port_bits": 3518
+  },
+  "hfd_ep_host_vc": {
+    "top": "hfd_ep_host_vc",
+    "files": [
+      "physical/die_plan/hbm/bind/rtl/b2_native/hfd_ep_static_vc2.sv",
+      "rtl/hbm_accel/tu/ep_static_20261015/ot_hep_rx_store.sv"
+    ],
+    "defines": [],
+    "params": {},
+    "macros": [
+      "ot_sram_1r1w_64x512_m1_r2c2"
+    ],
+    "source": "HBM-HARD-6-EP 11-08 (plan event EP-MOD-1108, DIE-HBM-92): as-built NW_io endpoint class (hbm-bind-6 t11_top / results/hbm_hfdep_native_0250 six_endpoint_inventory); module file b2_native/hfd_ep_static_vc2.sv (holds ot_hep_tx_gbx_vc, ot_hep_rx_gbx_vc, hfd_ep_static_vc2, hfd_ep_host_vc); u_rxb store = the same ot_hep_rx_store.sv the signed hfd_ep_static kit uses (OT_HBM_RW_MACROS right-width leaves via the plan mem_recipe_delta); NW_io u_host_ep binds the defaults (MUT 0)",
+    "view_port_bits": 2492
   }
 }

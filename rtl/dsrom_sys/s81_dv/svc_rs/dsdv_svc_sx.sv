@@ -39,37 +39,43 @@ module dsdv_svc_sx #(
     // S81-P9-FACE (10-23): gather / scatter face masks (bit f = face N / E / S / W; svc_rs_faces.py from the role ROM).
     // A face whose bit is 0 has no relay station: its IN lanes reach the half rows as constant 0 (the role ROM never
     // selects them, so the hardened half row reads nothing there) and its OUT lanes are constant 0 (port variant: absent).
-    parameter logic [3:0] FM_GI = 4'hf, FM_GO = 4'hf, FM_SI = 4'hf, FM_SO = 4'hf
+    parameter logic [3:0] FM_GI = 4'hf, FM_GO = 4'hf, FM_SI = 4'hf, FM_SO = 4'hf,
+    // S81-SVCRS R5 (11-08): heads per pass.  16 = today.  8 = the half-width slice: half b of a row carries heads
+    // 2 i + b for i < 4 (slots 4..7 of the hardened half row are constant 0), the gather lane is 132 H + 20 = 1,076 b,
+    // the scatter lane stays 1,076 b (a subtree of k <= 8 tiles still needs k heads) and the role ROM is the H 8 one
+    // (dsdv_svc_sx_roles_h8.svh, -DOT_SVC_H8: tile t taps local head t % 8, the root's right split does not shift).
+    parameter integer H = 16
 ) (
     input  wire              ck,
     input  wire              rst,
     input  wire [3:0]        sid,
     input  wire              l_v,
-    input  wire [2131:0]     l_d,
+    input  wire [H*132+19:0] l_d,
     input  wire [3:0]        gi_v,
-    input  wire [4*2132-1:0] gi_d,
+    input  wire [4*(H*132+20)-1:0] gi_d,
     output wire [3:0]        go_v,
-    output wire [4*2132-1:0] go_d,
+    output wire [4*(H*132+20)-1:0] go_d,
     input  wire [3:0]        si_v,
     input  wire [4*1076-1:0] si_d,
     output wire [3:0]        so_v,
     output wire [4*1076-1:0] so_d,
     output wire              rt_v,
-    output wire [2131:0]     rt_d,
+    output wire [H*132+19:0] rt_d,
     output wire              t_v,
     output wire [19:0]       t_tag,
     output wire [127:0]      t_y,
     output wire [3:0]        t_f,
     output wire              fault
 );
-    localparam integer W = 2132, SW = 1076, HW = 269, HSW = 137;
+    localparam integer W = H * 132 + 20, SW = 1076, HW = 269, HSW = 137, NH = H / 2;   // NH: heads a half carries
     genvar r, f, j, b;
     // beat <-> half-row lane (pure wiring): half bb of row rr = heads h = 2 i + bb
     function automatic [HW-1:0] g_half(input [W-1:0] x, input integer rr, input integer bb);
-        g_half[HW-1 -: 5] = x[2112 + 5*rr +: 5];
-        for (int i = 0; i < 8; i++) begin
-            g_half[8 + 32*i +: 32] = x[64 + 512*rr + 32*(2*i + bb) +: 32];
-            g_half[i] = x[16*rr + 2*i + bb];
+        g_half = '0;
+        g_half[HW-1 -: 5] = x[132*H + 5*rr +: 5];
+        for (int i = 0; i < NH; i++) begin
+            g_half[8 + 32*i +: 32] = x[4*H + 32*H*rr + 32*(2*i + bb) +: 32];
+            g_half[i] = x[H*rr + 2*i + bb];
         end
     endfunction
     function automatic [HSW-1:0] s_half(input [SW-1:0] x, input integer rr, input integer bb);
@@ -144,9 +150,9 @@ module dsdv_svc_sx #(
                 .so_n(lso[4*b + 0]), .so_e(lso[4*b + 1]), .so_s(lso[4*b + 2]), .so_w(lso[4*b + 3]),
                 .rt_o(rrt[b]), .t_o(trt[b]), .fault(rf[b]));
             assign rrt_v[2*r + b] = rrt[b][HW]; assign rflt[2*r + b] = rf[b];
-            for (j = 0; j < 8; j = j + 1) begin : g_rh
-                assign rt_d[64 + 512*r + 32*(2*j + b) +: 32] = rrt[b][8 + 32*j +: 32];
-                assign rt_d[16*r + 2*j + b] = rrt[b][j];
+            for (j = 0; j < NH; j = j + 1) begin : g_rh
+                assign rt_d[4*H + 32*H*r + 32*(2*j + b) +: 32] = rrt[b][8 + 32*j +: 32];
+                assign rt_d[H*r + 2*j + b] = rrt[b][j];
             end
         end
         // the head tap: only the half that owns this slice's head (head bit 0) drives it, the other holds 0
@@ -154,7 +160,7 @@ module dsdv_svc_sx #(
         assign rt_vv[2*r] = rt[38]; assign rt_vv[2*r + 1] = rt[38];
         assign t_tag[5*r +: 5] = rt[37:33]; assign t_f[r] = rt[32]; assign t_y[32*r +: 32] = rt[31:0];
         // the tag part rides in both halves (each checks its own operands); the face / root beat takes half 0's
-        assign rt_d[2112 + 5*r +: 5] = rrt[0][HW-1 -: 5];
+        assign rt_d[132*H + 5*r +: 5] = rrt[0][HW-1 -: 5];
     end endgenerate
     // slice-face lanes (pure wiring of the 8 half rows' last OUT stations)
     generate for (f = 0; f < 4; f = f + 1) begin : g_face
@@ -163,12 +169,12 @@ module dsdv_svc_sx #(
             wire [HW:0] g0 = face_gout[4*r + f][HW:0], g1 = face_gout[4*r + f][276 +: HW + 1];
             wire [HSW:0] s0 = face_sout[4*r + f][HSW:0], s1 = face_sout[4*r + f][HSW + 1 +: HSW + 1];
             assign gv[2*r] = g0[HW]; assign gv[2*r + 1] = g1[HW]; assign sv[2*r] = s0[HSW]; assign sv[2*r + 1] = s1[HSW];
-            assign go_d[W*f + 2112 + 5*r +: 5] = g0[HW-1 -: 5];
+            assign go_d[W*f + 132*H + 5*r +: 5] = g0[HW-1 -: 5];
             assign so_d[SW*f + 1056 + 5*r +: 5] = s0[HSW-1 -: 5];
-            for (j = 0; j < 8; j = j + 1) begin : g_h
-                assign go_d[W*f + 64 + 512*r + 32*(2*j) +: 32] = g0[8 + 32*j +: 32];
-                assign go_d[W*f + 64 + 512*r + 32*(2*j + 1) +: 32] = g1[8 + 32*j +: 32];
-                assign go_d[W*f + 16*r + 2*j] = g0[j]; assign go_d[W*f + 16*r + 2*j + 1] = g1[j];
+            for (j = 0; j < NH; j = j + 1) begin : g_h
+                assign go_d[W*f + 4*H + 32*H*r + 32*(2*j) +: 32] = g0[8 + 32*j +: 32];
+                assign go_d[W*f + 4*H + 32*H*r + 32*(2*j + 1) +: 32] = g1[8 + 32*j +: 32];
+                assign go_d[W*f + H*r + 2*j] = g0[j]; assign go_d[W*f + H*r + 2*j + 1] = g1[j];
             end
             for (j = 0; j < 4; j = j + 1) begin : g_s
                 assign so_d[SW*f + 132*(2*j) + 128 + r] = s0[33*j + 32];

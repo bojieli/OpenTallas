@@ -1,0 +1,426 @@
+{
+ "schema": "opentallas.layout_smells.v1",
+ "stage": "place",
+ "block": "ot_s81_su_smd_fold2",
+ "odb": "/work/run/results/asap7/hbc_ot_s81_su_smd_fold2/base/3_5_place_dp.odb",
+ "instances": 54733,
+ "macros": 0,
+ "pins": 303,
+ "die_um": [
+  0.0,
+  0.0,
+  155.52,
+  155.52
+ ],
+ "big_db": false,
+ "advisory": true,
+ "thresholds": {
+  "opposite_face_ratio": 0.6,
+  "pin_track_use": 0.5,
+  "pin_window_um": 20.0,
+  "channel_use": 1.0,
+  "channel_max_gap_um": 60.0,
+  "clock_entry_ratio": 0.4,
+  "clock_unshared_um": 200.0,
+  "clock_over_macro_um": 50.0,
+  "fanout_spread_um": 100.0,
+  "local_density": 0.7,
+  "density_bin_um": 10.0,
+  "density_min_free": 0.25
+ },
+ "checks": {
+  "opposite_face_pins": {
+   "value": 0,
+   "threshold": 0.6,
+   "flag": false,
+   "unit": "pins",
+   "computable": true,
+   "method": "pin centre vs centroid of first non-buffer sinks (input) / first non-buffer driver (output), across the pin's face axis; ratio > threshold counted",
+   "offenders": [],
+   "worst_ratio": 0.0,
+   "pins_checked": 302,
+   "bus_groups": []
+  },
+  "pin_track_use": {
+   "value": 0.084,
+   "threshold": 0.5,
+   "flag": false,
+   "unit": "fraction of tracks",
+   "computable": true,
+   "method": "pins of one face + layer in the worst sliding 20-um window / (20 um / layer pitch); layer pitch from LEF, track-pattern offset and blocked tracks ignored",
+   "offenders": [
+    {
+     "face": "S",
+     "layer": "M5",
+     "x": 67.128,
+     "y": 0.0,
+     "pins": 35,
+     "tracks": 416.7,
+     "use": 0.084,
+     "from_um": 57.336,
+     "to_um": 76.92
+    },
+    {
+     "face": "S",
+     "layer": "M5",
+     "x": 86.712,
+     "y": 0.0,
+     "pins": 35,
+     "tracks": 416.7,
+     "use": 0.084,
+     "from_um": 76.92,
+     "to_um": 96.504
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "x": 0.0,
+     "y": 50.712,
+     "pins": 35,
+     "tracks": 416.7,
+     "use": 0.084,
+     "from_um": 40.92,
+     "to_um": 60.504
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "x": 0.0,
+     "y": 70.296,
+     "pins": 35,
+     "tracks": 416.7,
+     "use": 0.084,
+     "from_um": 60.504,
+     "to_um": 80.088
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "x": 0.0,
+     "y": 89.88,
+     "pins": 35,
+     "tracks": 416.7,
+     "use": 0.084,
+     "from_um": 80.088,
+     "to_um": 99.672
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "x": 155.52,
+     "y": 68.568,
+     "pins": 35,
+     "tracks": 416.7,
+     "use": 0.084,
+     "from_um": 58.776,
+     "to_um": 78.36
+    },
+    {
+     "face": "N",
+     "layer": "M5",
+     "x": 77.784,
+     "y": 155.52,
+     "pins": 33,
+     "tracks": 416.7,
+     "use": 0.079,
+     "from_um": 68.568,
+     "to_um": 87.0
+    },
+    {
+     "face": "S",
+     "layer": "M5",
+     "x": 57.336,
+     "y": 0.0,
+     "pins": 1,
+     "tracks": 416.7,
+     "use": 0.002,
+     "from_um": 57.336,
+     "to_um": 57.336
+    },
+    {
+     "face": "E",
+     "layer": "M5",
+     "x": 155.52,
+     "y": 77.76,
+     "pins": 1,
+     "tracks": 416.7,
+     "use": 0.002,
+     "from_um": 77.76,
+     "to_um": 77.76
+    },
+    {
+     "face": "N",
+     "layer": "M5",
+     "x": 68.568,
+     "y": 155.52,
+     "pins": 1,
+     "tracks": 416.7,
+     "use": 0.002,
+     "from_um": 68.568,
+     "to_um": 68.568
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "x": 0.0,
+     "y": 40.92,
+     "pins": 1,
+     "tracks": 416.7,
+     "use": 0.002,
+     "from_um": 40.92,
+     "to_um": 40.92
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "x": 155.52,
+     "y": 58.776,
+     "pins": 1,
+     "tracks": 416.7,
+     "use": 0.002,
+     "from_um": 58.776,
+     "to_um": 58.776
+    },
+    {
+     "face": "W",
+     "layer": "M5",
+     "x": 0.0,
+     "y": 77.76,
+     "pins": 1,
+     "tracks": 416.7,
+     "use": 0.002,
+     "from_um": 77.76,
+     "to_um": 77.76
+    }
+   ]
+  },
+  "channel_tracks": {
+   "value": null,
+   "threshold": 1.0,
+   "flag": false,
+   "unit": "nets per track",
+   "computable": true,
+   "method": "no macros, no channels",
+   "offenders": []
+  },
+  "clock": {
+   "value": 2.981,
+   "threshold": 124.416,
+   "flag": false,
+   "unit": "um",
+   "computable": true,
+   "method": "see entry, divergence, over_macro",
+   "offenders": [
+    {
+     "pin": "clk",
+     "x": 77.784,
+     "y": 77.76,
+     "centroid_x": 76.698,
+     "centroid_y": 75.865,
+     "distance_um": 2.981,
+     "sinks": 7854,
+     "max_depth": 1
+    }
+   ],
+   "entry": {
+    "value": 2.981,
+    "threshold": 124.416,
+    "flag": false,
+    "unit": "um Manhattan",
+    "offenders": [
+     {
+      "pin": "clk",
+      "x": 77.784,
+      "y": 77.76,
+      "centroid_x": 76.698,
+      "centroid_y": 75.865,
+      "distance_um": 2.981,
+      "sinks": 7854,
+      "max_depth": 1
+     }
+    ],
+    "method": "threshold = 0.4 x (W + H): a mid-face entry passes, a corner entry flags"
+   },
+   "divergence": {
+    "value": null,
+    "computable": false,
+    "method": "no clock tree yet at place",
+    "threshold": 200.0,
+    "flag": false
+   },
+   "over_macro": {
+    "value": 0.0,
+    "threshold": 50.0,
+    "flag": false,
+    "method": "no macros",
+    "offenders": []
+   }
+  },
+  "fanout_spread": {
+   "value": 273.5,
+   "threshold": 100.0,
+   "flag": true,
+   "unit": "um",
+   "computable": true,
+   "method": "first non-buffer driver -> non-buffer sinks through buffers/inverters; spread = width + height of the sinks' box; clock excluded",
+   "offenders": [
+    {
+     "driver": "u_fcore.rr1$_DFF_PN0_",
+     "net": "_06276_",
+     "x": 76.302,
+     "y": 77.625,
+     "fanout": 308,
+     "spread_um": 273.5,
+     "bbox": [
+      10.746,
+      6.075,
+      147.636,
+      142.695
+     ]
+    },
+    {
+     "driver": "u_fcore.g_dv\\[0\\].u_d.fq\\[26\\]$_DFF_P_",
+     "net": "_06277_",
+     "x": 62.775,
+     "y": 114.615,
+     "fanout": 51,
+     "spread_um": 139.8,
+     "bbox": [
+      60.399,
+      46.575,
+      130.302,
+      116.505
+     ]
+    },
+    {
+     "driver": "u_fcore.pending$_DFF_PN0_",
+     "net": "_06269_",
+     "x": 10.746,
+     "y": 59.805,
+     "fanout": 130,
+     "spread_um": 106.2,
+     "bbox": [
+      5.454,
+      58.455,
+      54.108,
+      115.965
+     ]
+    }
+   ],
+   "count": 3
+  },
+  "local_density": {
+   "value": 0.435,
+   "threshold": 0.7,
+   "flag": false,
+   "unit": "fraction",
+   "computable": true,
+   "method": "cell area by cell centre / free core area (macros + hard blockages off) in 10-um bins; fillers and decaps excluded; bins under 25% free skipped",
+   "offenders": [
+    {
+     "x": 147.8,
+     "y": 69.3,
+     "density": 0.435
+    },
+    {
+     "x": 147.8,
+     "y": 79.3,
+     "density": 0.433
+    },
+    {
+     "x": 89.3,
+     "y": 9.3,
+     "density": 0.431
+    },
+    {
+     "x": 9.3,
+     "y": 109.3,
+     "density": 0.43
+    },
+    {
+     "x": 69.3,
+     "y": 9.3,
+     "density": 0.417
+    },
+    {
+     "x": 79.3,
+     "y": 9.3,
+     "density": 0.414
+    },
+    {
+     "x": 79.3,
+     "y": 59.3,
+     "density": 0.414
+    },
+    {
+     "x": 79.3,
+     "y": 79.3,
+     "density": 0.413
+    },
+    {
+     "x": 79.3,
+     "y": 49.3,
+     "density": 0.41
+    },
+    {
+     "x": 99.3,
+     "y": 59.3,
+     "density": 0.408
+    },
+    {
+     "x": 9.3,
+     "y": 99.3,
+     "density": 0.405
+    },
+    {
+     "x": 109.3,
+     "y": 29.3,
+     "density": 0.405
+    },
+    {
+     "x": 119.3,
+     "y": 29.3,
+     "density": 0.405
+    },
+    {
+     "x": 109.3,
+     "y": 19.3,
+     "density": 0.402
+    },
+    {
+     "x": 109.3,
+     "y": 89.3,
+     "density": 0.399
+    },
+    {
+     "x": 69.3,
+     "y": 69.3,
+     "density": 0.398
+    },
+    {
+     "x": 69.3,
+     "y": 79.3,
+     "density": 0.398
+    },
+    {
+     "x": 29.3,
+     "y": 139.3,
+     "density": 0.398
+    },
+    {
+     "x": 139.3,
+     "y": 59.3,
+     "density": 0.391
+    },
+    {
+     "x": 19.3,
+     "y": 109.3,
+     "density": 0.389
+    }
+   ],
+   "bins_over": 0,
+   "bins": 217
+  }
+ },
+ "summary": "place 1/6 flagged: fanout_spread=273.5"
+}

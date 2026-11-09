@@ -1,0 +1,14 @@
+FOLD_LAT first_e124 last_score21 delta103
+FOLD_LAT den169
+FOLD_LAT first_o617 pvcycle565 delta52
+FOLD_LAT first_e969 last_score866 delta103
+FOLD_LAT den1043
+FOLD_LAT first_o1462 pvcycle1410 delta52
+FOLD_LAT first_e1942 last_score1839 delta103
+FOLD_LAT den2095
+FOLD_LAT first_o2435 pvcycle2383 delta52
+HEADFOLD2 PASS checks148 MUT0
+- /srv/opentallas-scratch2/claude/codex-svc-sm-0222/repo/rtl/dsrom_sys/s81_dv/su_sm/test/tb_smh_fold2.sv:48: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 19.006 s; speed 278.912 ns/s
+- Verilator: cpu 19.004 s on 1 threads; allocated 30 MB

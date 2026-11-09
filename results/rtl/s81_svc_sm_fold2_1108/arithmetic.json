@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.s81_svc_sm_fold2.arithmetic.v1",
+  "source_commit": "7aec3929d4",
+  "status": "PASS",
+  "head_checks": 148,
+  "reference": "ot_s81_su_smh behavioral DOP2,16logical lanes and8dividepairs",
+  "dut": "8physical2-contextSML plus4physical2-contextSMD,original16lane SMC/SMR",
+  "vector_counts": [
+    1,
+    8,
+    40
+  ],
+  "mutants": {
+    "context_swap": {
+      "status": "CAUGHT",
+      "checks": 110,
+      "mismatches": 106
+    },
+    "stale_den": {
+      "status": "CAUGHT",
+      "checks": 96,
+      "mismatches": 64
+    }
+  },
+  "latency": {
+    "domain": "behavioral SMH DOP2 input/output pins",
+    "first_e_after_last_score": 103,
+    "e_row_interval": 2,
+    "first_so_after_first_pv": 52,
+    "den_after_last_score": {
+      "1": 148,
+      "8": 177,
+      "40": 256
+    }
+  },
+  "scope": "Numerical/ordered-event equivalence only; native SU_SMU_T service calendar latency and physical timing are not qualified.",
+  "host": "intel1",
+  "unit": "oth-ubuntu-85117-1794134363"
+}
