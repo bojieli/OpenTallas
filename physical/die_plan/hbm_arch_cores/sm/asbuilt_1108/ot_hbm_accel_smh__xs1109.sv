@@ -1,5 +1,5 @@
 // HBM-SM-KIDS-2 2026-11-09: copy of physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv
-// for the SM-ASBUILT ot_hbm_accel_smh_xs kit only (the bundle file stays byte-same for every other kit).  One change,
+// for the SM-ASBUILT ot_hbm_accel_smh_xs and ot_hbm_accel_smh_pt_w kits only (pt_w: +1 leaf landing, see the module) (the bundle file stays byte-same for every other kit).  One change,
 // 0 cycles: the leaf i stage gets kept E-face copies of ifirst / ilast / itag (same D, equal every cycle) and xs
 // drives o_ifirst_e / o_ilast_e / o_itag_e from them, so each output pin has its own port flop (face_guard: shared).
 `timescale 1ns/1ps
@@ -2745,8 +2745,11 @@ module ot_hbm_accel_smh_leaf #(
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
     // ---- E4 ----
-    reg              iv_b, iv_f, ifirst, ilast, ifp4;
-    reg [TAGW-1:0]   itag;
+    // HBM-SM-KIDS-2: ifirst/ilast/itag kept like their E copies (else synthesis merges them into the copies)
+    reg              iv_b, iv_f, ifp4;
+    // ifirst/ilast plain regs; their E copies are keep_hierarchy kreg cells (no merge across the hierarchy)
+    reg              ifirst, ilast;
+    (* keep *) reg [TAGW-1:0] itag;
     reg [WSW-1:0]    iw;
     reg [SLW-1:0]    ix;
     always @(posedge clk or negedge rst_n) begin
@@ -2767,9 +2770,11 @@ module ot_hbm_accel_smh_leaf #(
     assign o_iv_b = iv_b; assign o_iv_f = iv_f; assign o_ifirst = ifirst; assign o_ilast = ilast; assign o_ifp4 = ifp4;
     assign o_itag = itag; assign o_iw = iw; assign o_ix = ix;
     // kept E-face copies (same D as ifirst / ilast / itag: equal every cycle, 0 cycles)
-    (* keep *) reg ifirst_e, ilast_e;
+    wire ifirst_e, ilast_e;
+    ot_hbm_accel_smh_kreg #(.W(1)) u_ifirst_e (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(c3bd[CW-3]), .q(ifirst_e));
+    ot_hbm_accel_smh_kreg #(.W(1)) u_ilast_e (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(c3bd[CW-4]), .q(ilast_e));
     (* keep *) reg [TAGW-1:0] itag_e;
-    always @(posedge clk) begin ifirst_e <= c3bd[CW-3]; ilast_e <= c3bd[CW-4]; itag_e <= c3bd[TAGW-1:0]; end
+    always @(posedge clk) itag_e <= c3bd[TAGW-1:0];
     assign o_ifirst_e = ifirst_e; assign o_ilast_e = ilast_e; assign o_itag_e = itag_e;
 `else
     reg              jv_b, jv_f, jfirst, jlast, jfp4;
@@ -3196,25 +3201,31 @@ module ot_hbm_accel_smh_pt_w #(parameter integer TAGW = 16, parameter integer NB
 `else
     assign rw_n = rst_a;
 `endif
+    // HBM-SM-KIDS-2 11-09 (COORD ruling: PIN CYCLE +1 on the leaf landing copies, absorbed by the compiler):
+    // every input bit lands in ONE face flop (rp / bl); the row path (rp -> rpm, bl -> bm) is unchanged (HOPD
+    // unchanged); the leaf copies rl1_* / bk1_* / ohl1_* are now kept copies one register after the landing
+    // (rin/bin -> landing -> copy -> port = +1 cycle on the leaf landing), so each output has its own port flop.
     genvar j;
+    wire [2*RBW-1:0] rp_all;
     generate for (j = 0; j < 2; j = j + 1) begin : g_r
         wire [RBW-1:0] rp;
         ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rp (.clk(clk), .rst_n(rw_n), .d(rin[j*RBW +: RBW]), .q(rp));
         ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rpm (.clk(clk), .rst_n(rw_n), .d(rp), .q(rpm_q[j*RBW +: RBW]));
+        assign rp_all[j*RBW +: RBW] = rp;
     end endgenerate
-    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rln (.clk(clk), .rst_n(rw_n), .d(rin[0 +: RBW]), .q(rl1_n_q));
-    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rls (.clk(clk), .rst_n(rw_n), .d(rin[RBW +: RBW]), .q(rl1_s_q));
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rln (.clk(clk), .rst_n(rw_n), .d(rp_all[0 +: RBW]), .q(rl1_n_q));
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rls (.clk(clk), .rst_n(rw_n), .d(rp_all[RBW +: RBW]), .q(rl1_s_q));
     wire [BBW-1:0] bl;
     ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blv (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-1]), .q(bl[BBW-1]));
     ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bld (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-2:0]), .q(bl[BBW-2:0]));
     ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blvm (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bl[BBW-1]), .q(bm_q[BBW-1]));
     ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bldm (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bl[BBW-2:0]), .q(bm_q[BBW-2:0]));
-    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkvn (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-1]), .q(bk1_n_q[BBW-1]));
-    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkdn (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-2:0]), .q(bk1_n_q[BBW-2:0]));
-    ot_hbm_accel_smh_kreg #(.W(NBEAT)) u_ohln (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[2048 +: NBEAT]), .q(ohl1_n_q));
-    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkvs (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-1]), .q(bk1_s_q[BBW-1]));
-    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkds (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-2:0]), .q(bk1_s_q[BBW-2:0]));
-    ot_hbm_accel_smh_kreg #(.W(NBEAT)) u_ohls (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[2048 +: NBEAT]), .q(ohl1_s_q));
+    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkvn (.clk(clk), .rst_n(rw_n), .d(bl[BBW-1]), .q(bk1_n_q[BBW-1]));
+    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkdn (.clk(clk), .rst_n(rw_n), .d(bl[BBW-2:0]), .q(bk1_n_q[BBW-2:0]));
+    ot_hbm_accel_smh_kregk #(.W(NBEAT)) u_ohln (.clk(clk), .rst_n(rw_n), .d(bl[2048 +: NBEAT]), .q(ohl1_n_q));
+    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkvs (.clk(clk), .rst_n(rw_n), .d(bl[BBW-1]), .q(bk1_s_q[BBW-1]));
+    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkds (.clk(clk), .rst_n(rw_n), .d(bl[BBW-2:0]), .q(bk1_s_q[BBW-2:0]));
+    ot_hbm_accel_smh_kregk #(.W(NBEAT)) u_ohls (.clk(clk), .rst_n(rw_n), .d(bl[2048 +: NBEAT]), .q(ohl1_s_q));
 endmodule
 // pt_e: the third (u_rpn / u_bln) and launch (u_rp2 / u_bl2) registers
 module ot_hbm_accel_smh_pt_e #(parameter integer TAGW = 16, parameter integer NBEAT = 13) (
