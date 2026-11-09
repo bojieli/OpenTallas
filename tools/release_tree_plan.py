@@ -780,6 +780,11 @@ APPROVED_PIN_EVENTS = {
 APPROVED_PIN_EVENTS['ot_hbm_idx_qctl_static'] = {
     'clk_program': ('M5', 99384, 64800, 'HBM centre clock entry (COORD 11-03 00:1x)'),
     'clk_program_mem': ('M5', 99480, 64800, 'HBM centre clock entry (COORD 11-03 00:1x)')}
+# DIE-HBM-93 11-08 (COORD 19:0x, fix a counter issue): gen_core_kit_hbm class M5-EW-PIN (DIE-HBM-62/FLOW, DRT-0422/0074 no
+# access point) puts this M5 plan point, 3.26 um inside the E face, on the E face at the same y; the plan table keeps the
+# point.  Exact location only.  Remove once the HBM POR pin table carries the face position.
+APPROVED_PIN_EVENTS['hnx_vms_bank_q0_faces__vecd4ae'] = {
+    'rst_n': ('M5', 269976, 313181, 'gen_core_kit_hbm M5-EW-PIN face projection, plan point (266.712, 313.181)')}
 
 
 def accept_pin_events(cmp_, design, got_rows, events=None):
