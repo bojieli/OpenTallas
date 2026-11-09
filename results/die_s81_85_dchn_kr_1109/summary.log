@@ -1,0 +1,5 @@
+chnkr rand_reset=0 RX_RESULT shift=1 checks=30040 errors=0 q_v=29075 corrected=7960 uncorrectable=8100 locked=29410 n_relock=2 n_corr=1625 n_unc=174 
+chnkr_mut rand_reset=0 RX_RESULT shift=1 checks=30040 errors=29630 q_v=29075 corrected=7960 uncorrectable=8100 locked=29410 n_relock=2 n_corr=1625 n_unc=174 [25174000] %Fatal: tb_rx.sv:80: Assertion failed in tb: RX lockstep FAILED 
+chnkr_sh0 rand_reset=0 RX_RESULT shift=0 checks=30040 errors=29077 q_v=29075 corrected=7960 uncorrectable=8100 locked=29410 n_relock=2 n_corr=1625 n_unc=174 [25174000] %Fatal: tb_rx.sv:80: Assertion failed in tb: RX lockstep FAILED 
+default rand_reset=0 RX_RESULT shift=0 checks=30040 errors=0 q_v=29075 corrected=7960 uncorrectable=8100 locked=29410 n_relock=2 n_corr=1625 n_unc=174 
+# rand_reset=2 (x-initial random): every case incl. default (no CHNKR) stops at time 0 with LAND_FAULT tb.N.u_rxb.u_lpl_8_r (random ring epoch registers before reset): a bench init artefact of the FACE_RET/LPL_CHUNK RXB, not of CHNKR

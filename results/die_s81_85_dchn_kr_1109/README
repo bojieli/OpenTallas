@@ -1,0 +1,5 @@
+DIE-S81-85 2026-11-09: RX-BACK OT_S81_RCK_RXB_CHNKR (ot_s81_kp4_dchn_kr: every chn input registered at its pin + ddly DD +1)
+vs the current RX decoder (RXB vC defines), lock-step on tb_rx.sv (results/s81_types_9_rck_1108/bench): q_* / n_corr /
+n_unc of the new decoder equal the current one SHIFT = 1 clk later, lock / n_relock on the same clock.
+  bash run.sh   (epyc7 copy: /srv/opentallas-scratch2/claude/die-s81-85/dchn_kr_bench; common/ = current main RTL + bench)
+Result (summary.log): chnkr PASS (30040 checks, 0 errors); mutant RCKRF_MUT_CHNKR (no DD +1) FAIL; CHNKR at SHIFT 0 FAIL.

@@ -24,11 +24,22 @@
 `else
 `define OT_S81_KP4_DD_DEFAULT 55
 `endif
+// DIE-S81-85 11-09: OT_S81_RCK_RXB_CHNKR (RX-BACK uses ot_s81_kp4_dchn_kr: every chn output one rck later): words wait
+// 1 more, so d_q stays aligned with cw / apply / o_unc / o_ne / fs at dout (bench mutant RCKRF_MUT_CHNKR: no extra wait).
+`ifdef OT_S81_RCK_RXB_CHNKR
+`ifdef RCKRF_MUT_CHNKR
+`define OT_S81_KP4_DD_CHNKR 0
+`else
+`define OT_S81_KP4_DD_CHNKR 1
+`endif
+`else
+`define OT_S81_KP4_DD_CHNKR 0
+`endif
 // RQ (opt-in, default 0; S81-TYPES-9-RCK 11-08 RX-BACK vE): a read-data register right at the macro read port.  The macro
 // is read one word EARLIER (address ptr - (DD - RQ)) and r_d is that read registered, so r_d carries the same word on the
 // same cycle (DD >= 2 + RQ: the word was written before the earlier read and is not overwritten for 64 - DD cycles):
 // ZERO added cycles.  It cuts the macro clk->q + 546-bit wire to the landing ring banks into two register hops.
-module ot_s81_kp4_ddly #(parameter integer DD = `OT_S81_KP4_DD_DEFAULT, parameter integer RQ = 0) (
+module ot_s81_kp4_ddly #(parameter integer DD = `OT_S81_KP4_DD_DEFAULT + `OT_S81_KP4_DD_CHNKR, parameter integer RQ = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [543:0]  w_d,

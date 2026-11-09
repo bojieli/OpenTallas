@@ -20,6 +20,8 @@
 //   OT_S81_RCK_RX_SPCYC   RXS+RXB: dsyn SPCYC = +1 pin cycle sc_q -> sp; k_* +1 rck; ddly DD +1 (words wait one more), so
 //                         the decoder q_* output is +1 rck.  Both RX-SYN and RX-BACK kits (and the parent) carry it.
 //   OT_S81_RCK_RXB_DQREG  RXB vE: ddly RQ = 1, a register at the dmem read port with a one-word-earlier read: 0 cycles.
+//   OT_S81_RCK_RXB_CHNKR  RXB (DIE-S81-85 11-09): chn = ot_s81_kp4_dchn_kr (every chn input registered at its pin: the k_lo
+//                         face hold is safe by construction) + ddly DD +1, so the decoder q_* / n_corr / n_unc are +1 rck.
 //   Evidence: results/s81_types_9_rck_1108.
 // ---------------------------------------------------------------------------------------------------------------
 `ifdef OT_S81_RCK_REFORM
@@ -222,7 +224,11 @@ module ot_s81_rck_rxb #(
         .RQ(0)
 `endif
         ) u_dly (.clk(ck), .rst_n(lpr_c_u_dly), .w_d(x_q__l_dly), .r_d(d_q));   // region dly, t = 3
+`ifdef OT_S81_RCK_RXB_CHNKR
+    ot_s81_kp4_dchn_kr u_chn (.clk(ck), .rst_n(lpr_c_u_chn), .k_v(k_v__l_chn), .k_lo(k_lo__l_chn), .k_L(k_L__l_chn), .k_any(k_any__l_chn), .cw_q(cw), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs), .n_corr(face_n_corr), .n_unc(face_n_unc));   // region chn, t = 3 (+1: pin registers)
+`else
     ot_s81_kp4_dchn u_chn (.clk(ck), .rst_n(lpr_c_u_chn), .k_v(k_v__l_chn), .k_lo(k_lo__l_chn), .k_L(k_L__l_chn), .k_any(k_any__l_chn), .cw_q(cw), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs), .n_corr(face_n_corr), .n_unc(face_n_unc));   // region chn, t = 3
+`endif
     ot_s81_kp4_dout u_out (.clk(ck), .rst_n(lpr_c_u_out), .d_q(d_q__l_out), .cw(cw__l_out), .apply(apply__l_out), .o_unc(o_unc__l_out), .o_ne(o_ne__l_out), .fs(fs__l_out), .q_v(face_q_v), .q_d(face_q_d), .q_first(face_q_first), .q_unc(face_q_unc), .q_nerr(face_q_nerr), .q_seq(face_q_seq));   // region out, t = 6
     ot_pl_pad #(.W(1), .N(1)) u_face_q_v (.ck(ck), .d(face_q_v), .q(q_v));   // region out, t = 6
     ot_pl_pad #(.W(((511) - (0) + 1)), .N(1)) u_face_q_d (.ck(ck), .d(face_q_d), .q(q_d));   // region out, t = 6
