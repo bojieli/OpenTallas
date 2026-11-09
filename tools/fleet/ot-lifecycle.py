@@ -16,6 +16,7 @@ Categories (first holder wins):  KEEP-* never removed by this tool; DEL-* candid
   DEL-L4-KIT / DEL-L4-GIT / DEL-L4-LOOSE   dead-lane orphans (member level)
 """
 import argparse
+import glob
 import importlib.util
 import json
 import os
@@ -166,6 +167,60 @@ def merge_kitscans(files, hosts, now=None):
         have.add(h)
     missing = [h for h in hosts if h not in have]
     return (None, missing) if missing else (sorted(out), [])
+
+
+MENTION_TOK = re.compile(r"[A-Za-z0-9_.+~/{},-]+")
+
+
+def mention_tokens(text):
+    """(names, tails) mentioned in a text (COORD 03:34 LANE-DIR HOLD).  names: every word and every component of a path-like token;
+    tails: paths below /claude/ (absolute or scratchN/claude/ forms) and relative a/b/c tokens.  Brace lists a/{b,c} expand."""
+    names, tails = set(), set()
+    for tok in MENTION_TOK.findall(text or ""):
+        tok = tok.strip(".,:;'\"`()[]")
+        if not tok:
+            continue
+        forms, done = [tok], []
+        while forms and len(done) < 256:
+            f = forms.pop()
+            m = re.match(r"^(.*?)\{([^{}]*)\}(.*)$", f)
+            if m:
+                forms += [m.group(1) + x + m.group(3) for x in m.group(2).split(",")]
+            else:
+                done.append(f)
+        forms = done
+        for f in forms:
+            f = f.replace("{", "").replace("}", "").strip("/,")
+            if not f:
+                continue
+            if "/claude/" in f:
+                t = os.path.normpath(f.split("/claude/", 1)[1]).strip("/")
+            elif "/" in f and not f.startswith(("/", "~", ".")):
+                t = os.path.normpath(f).strip("/")
+            else:
+                t = ""
+            if t and not t.startswith(".."):
+                tails.add(t)
+            for c in f.replace(",", "/").split("/"):
+                if len(c) >= 2:
+                    names.add(c)
+    return names, tails
+
+
+def lane_mention_sources(now, hours=24):
+    """queue posts of the last <hours>, plus HANDOFF*.md and lane briefs (coord lanes/*.md, handoff/*.md, coord *.md) modified in that window"""
+    out = []
+    home = os.path.expanduser("~")
+    for pat in ("coord/lanes/*.md", "coord/handoff/*.md", "coord/*.md", "coord/lanes/*/*.md", "OpenTallas/HANDOFF.md"):
+        for f in glob.glob(os.path.join(home, pat)):
+            if f.endswith("COORD-REVIEW-QUEUE.md"):
+                continue
+            try:
+                if now - os.path.getmtime(f) < hours * 3600 and os.path.getsize(f) < (64 << 20):
+                    out.append(f)
+            except OSError:
+                pass
+    return sorted(set(out))
 
 
 def load_tool(path):
@@ -348,6 +403,11 @@ class Plan:
         self.links = self.scan_symlinks()
         self.qpaths = m.PathSet([(p, "queue 48h") for p in self.life["paths48"]], deep=J.deep, canon=J.paths.canon)
         self.qwords = set(self.life["words48"])
+        if "lane_mentions24" not in self.life or "mention_paths24" not in self.life:
+            raise SystemExit("lifesnap has no lane_mentions24/mention_paths24 (LANE-DIR HOLD, COORD 03:34); refusing")
+        self.mnames = set(self.life["lane_mentions24"])
+        self.mpaths = m.PathSet([(os.path.join(r, t), "mentioned path") for r in J.roots for t in self.life["mention_paths24"]
+                                 if t and not t.startswith(("/", ".."))], canon=J.paths.canon)
         self.keepdirs = {}
         self.inode_seen = {}      # inode -> [nlink, seen-in-delete-set]
         self.lane_live_cache = {}
@@ -494,6 +554,9 @@ class Plan:
             kh = self.kit.hit(f)
             if kh:
                 return ("KEEP-kit-input", kh, kh.startswith("holds "))
+        lm = self.lane_mention_hit(d)
+        if lm:
+            return lm
         for f in J.paths.forms(d):
             wh = self.wave.hit(f)
             if wh:
@@ -552,6 +615,29 @@ class Plan:
                 return ("KEEP-kw-protect", h, partial)
             return ("KEEP-protectd-24h", h, partial)
         return ("KEEP-localkeep", h, partial)
+
+    def lane_mention_hit(self, d):
+        """LANE-DIR HOLD (COORD 03:34, s81-t51-recut): a lane dir whose name, or a path whose tail, appears in the last 24 h of queue
+        posts, HANDOFF.md or lane briefs is held as a whole subtree, live owner or not.  Realpath and alias forms both checked."""
+        for f in set(self.J.paths.forms(d)) | {os.path.realpath(d)}:
+            if "/claude/" not in f:
+                continue
+            rest = [c for c in f.split("/claude/", 1)[1].split("/") if c]
+            if not rest:
+                continue
+            k = 1 if (rest[0] in WRAPPERS or rest[0].startswith(("moved-", "from-", "relocated"))) else 0
+            if len(rest) > k and rest[k] in self.mnames:
+                return ("KEEP-lane-mention", f"lane dir {rest[k]} named in the last 24 h", False)
+            if len(rest) <= k:                       # a wrapper dir itself (wt, moved-*): hold it if any dir below it is a mentioned lane
+                try:
+                    if any(e in self.mnames for e in os.listdir(d)):
+                        return ("KEEP-lane-mention", "wrapper holds a lane dir named in the last 24 h", True)
+                except OSError:
+                    pass
+            h = self.mpaths.hit(f)
+            if h:
+                return ("KEEP-lane-mention", "mentioned path: " + h, h.startswith("holds "))
+        return None
 
     def queue_word_hit(self, p):
         rest = p.split("/claude/", 1)[1].split("/")
@@ -1279,6 +1365,9 @@ class Apply:
             ch = P.coord.hit(f)
             if ch:
                 return "SKIP", ch
+        lm = P.lane_mention_hit(path)
+        if lm:
+            return "SKIP", lm[1]
         for f in {path, real} | set(J.paths.forms(path)):        # kit records re-read at apply start: one written after the plan holds too
             kh = P.kit.hit(f)
             if kh:
@@ -1771,6 +1860,19 @@ def build_lifesnap(out, kit_union=None):
     wave = sorted(wave_config_paths(json.load(open(os.path.expanduser("~/coord/autopilot/kit_wave.json")))))
     if len(wave) < 20:
         raise ValueError(f"live wave config names only {len(wave)} paths")
+    mnames, mtails, msrc = set(), set(), 0
+    for p in posts:                                  # every post of the last 24 h, any author (AUTOPILOT/KIT-WAVE lines name live dirs too)
+        if now - p["t"] <= 24 * 3600:
+            a, b = mention_tokens(p["text"])
+            mnames |= a; mtails |= b; msrc += 1
+    for f in lane_mention_sources(now):
+        try:
+            a, b = mention_tokens(open(f, errors="replace").read())
+        except OSError:
+            continue
+        mnames |= a; mtails |= b; msrc += 1
+    if msrc == 0:
+        raise ValueError("lane mention scan read no post or brief")
     paths48, words48 = {}, {}
     for p in posts:
         if now - p["t"] > 24 * 3600 or not p["auth"]:
@@ -1784,7 +1886,8 @@ def build_lifesnap(out, kit_union=None):
     json.dump({"created": now, "created_h": time.strftime("%F %T %Z"), "live": sorted(live),
                "lane_last": {k: int(v) for k, v in lane_last.items()},
                "paths48": sorted(paths48), "words48": sorted(words48), "protected_full": strict_protected(), "wave_paths": wave,
-               "coord_holds": coord_holds(live, now), **({"kit_union": kit_union} if kit_union is not None else {})}, open(out, "w"))
+               "coord_holds": coord_holds(live, now), "lane_mentions24": sorted(mnames), "mention_paths24": sorted(mtails),
+               "mention_sources": msrc, **({"kit_union": kit_union} if kit_union is not None else {})}, open(out, "w"))
     print("live lanes", len(live), sorted(live)[:80])
     print("posts", len(posts), "paths48", len(paths48), "words48", len(words48), "agents", len(agents_all))
 

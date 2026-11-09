@@ -120,7 +120,7 @@ def run_fixture(W):
             "paths48": [f"{ROOT}/dead-dd/kit4"], "words48": ["dead-word-unit"],
             "protected_full": [["fix", f"{ROOT}/dead-cc/kit3", "fixture"]],
             "coord_holds": [{"pattern": "dead-hh2/tkm", "lane": "X", "why": "open"}],
-            "kit_union": [],
+            "kit_union": [], "lane_mentions24": ["dead-word-unit"], "mention_paths24": [],
             "wave_paths": [f"{ROOT}/dead-sc/kit_rtl_x.sh", f"{ROOT}/dead-wv/wave/src_x", f"{ROOT}/dead-wv/wave/plan/p.json", f"{ROOT}/dead-wv/wr", f"{ROOT}/dead-xy/sub/c.json", f"{ROOT}/dead-xz/a.json"]}
     json.dump(life, open(f"{W}/life.json", "w"))
     out = f"{W}/out"
@@ -384,6 +384,12 @@ def _incident_fleet(W):
     with open(f"{R2}/kwz/u/kit_rtl.f", "w") as fh:
         fh.write(f"+incdir+{B}/kv_sys_phy/bind/inc\n-v {B}/kv_sys_phy/bind/x.sv\n")
     kit(f"{R2}/dead-pc/kit1")                                                       # protected, for the plan's own control
+    # 11-09 03:08 epyc2: s81-t51-recut (live lane, no lane-name match, old files) was deleted as a dead-lane orphan dir; it is named
+    # in a post of the last 24 h, so the whole subtree stays.  dead-mp: only a sub path is named; the rest of that lane still goes
+    for f in ("pg/rtl/s81_child_e.v", "fc10/native_ff_pose_e.tcl", "codex_split_copy/mapped_controls/split_clean.json", "eco2/big.bin"):
+        write(f"{R3}/s81-t51-recut/{f}", 64)
+    write(f"{R2}/dead-mp/sub/keepme/a.bin", 64)
+    write(f"{R2}/dead-mp/other/b.bin", 64)
     # cause 2 (AUTOCLEAN-12 02:13): an older attempt under a live wave work root, named by a kit record elsewhere
     WR = f"{R2}/kw26w/runs/s81"
     kit(f"{WR}/kit-wave/s81/p/items/it5/attempt_1/gen/it5")
@@ -408,6 +414,7 @@ def _incident_fleet(W):
     json.dump({"created": time.time(), "live": [], "lane_last": {}, "paths48": [], "words48": [],
                "protected_full": [["fix", f"{R2}/dead-pc/kit1", "fixture"]], "coord_holds": [],
                "kit_union": ["codex-wave-bind-1106/kv_union/bind/u.sv"],     # named only by a record on another host
+               "lane_mentions24": ["s81-t51-recut", "pg", "fc10"], "mention_paths24": ["dead-mp/sub/keepme"],   # LANE-DIR HOLD cases
                "wave_paths": [f"{R2}/dead-wv/wave/w.json", WR]}, open(f"{W}/life.json", "w"))
     return R2, R3, B, snap
 
@@ -443,6 +450,11 @@ def test_incident_0014_live_kit_inputs(tmp_path):
             assert not [n for n in named if n == p or n.startswith(p + "/") or p.startswith(os.path.dirname(n) + "/")], (p, cat)
     assert rows.get(f"{B}/unnamed", ("", ""))[1] == "DELETE", "negative control: an unnamed dir of the dead lane still goes"
     assert any(v[0] == "KEEP-kit-input" for v in rows.values()), "the guard, not some other hold, kept them"
+    t51 = f"{R3}/s81-t51-recut"
+    assert not [p for p, v in rows.items() if v[1] == "DELETE" and (p == t51 or p.startswith(t51 + "/"))], "LANE-DIR HOLD: mentioned lane dir stays"
+    assert rows.get(t51, ("", ""))[0] == "KEEP-lane-mention", rows.get(t51)
+    assert not [p for p, v in rows.items() if v[1] == "DELETE" and (p.startswith(f"{R2}/dead-mp/sub/keepme") or f"{R2}/dead-mp/sub/keepme".startswith(p + "/"))]
+    assert rows.get(f"{R2}/dead-mp/other", ("", ""))[1] == "DELETE", "negative control: the unnamed part of a lane goes"
     WR = f"{R2}/kw26w/runs/s81/kit-wave/s81/p/items"
     nb = WR + "/it5/attempt_1/rtl_bindov"
     assert not [p for p, v in rows.items() if v[1] == "DELETE" and (p == nb or nb.startswith(p + "/") or p.startswith(nb + "/"))], \
@@ -451,6 +463,18 @@ def test_incident_0014_live_kit_inputs(tmp_path):
     assert rows.get(WR + "/it6/attempt_1", ("", ""))[1] == "DELETE", "negative control: an unnamed older attempt is still released"
     for n in named:
         assert os.path.exists(n)
+    # mutant L: an empty mention list releases s81-t51-recut (the test sees the incident); a missing list refuses
+    life = json.load(open(f"{W}/life.json")); keep = (life["lane_mentions24"], life["mention_paths24"])
+    life["lane_mentions24"], life["mention_paths24"] = [], []; json.dump(life, open(f"{W}/life.json", "w"))
+    r = _lc_run(W, LC, "plan", R2, R3, snap)
+    mf2 = sorted(f for f in os.listdir(f"{W}/out") if f.startswith("PLAN-"))[-1]
+    gone = [ln for ln in open(f"{W}/out/{mf2}").read().splitlines()[1:] if "s81-t51-recut" in ln and "\tDELETE\t" in ln]
+    assert r.returncode == 0 and gone, "without the hold the incident tree is DELETE (positive control of the test)"
+    del life["lane_mentions24"]; json.dump(life, open(f"{W}/life.json", "w"))
+    r = _lc_run(W, LC, "plan", R2, R3, snap)
+    assert r.returncode != 0 and "lane_mentions24" in (r.stdout + r.stderr)
+    life["lane_mentions24"], life["mention_paths24"] = keep; json.dump(life, open(f"{W}/life.json", "w"))
+    time.sleep(1.1)
     # mutant 0: without the fleet list the plan refuses
     life = json.load(open(f"{W}/life.json")); ku = life.pop("kit_union"); json.dump(life, open(f"{W}/life.json", "w"))
     r = _lc_run(W, LC, "plan", R2, R3, snap)
@@ -492,3 +516,12 @@ def test_kit_union_merge(tmp_path):
     assert lc.merge_kitscans({"h1": str(a)}, ["h1", "h2"]) == (None, ["h2"])           # a host without a scan: no union, hosts refuse
     d = json.load(open(b)); d["created"] -= 25 * 3600; json.dump(d, open(b, "w"))
     assert lc.merge_kitscans({"h1": str(a), "h2": str(b)}, ["h1", "h2"]) == (None, ["h2"])   # stale scan counts as missing
+
+
+def test_mention_tokens():
+    lc, ac = _lc()
+    post = ("Where they were: epyc2 /srv/opentallas-scratch3/claude/s81-t51-recut/{pg,fc10,fc8,eco,kits_b} was deleted; "
+            "[CHECKED epyc2 s81-t51-recut/probe_r2/sl_{w,e}/slew.{rpt,tsv}] and intel1 codex-s81-split-1106 is gone.")
+    names, tails = lc.mention_tokens(post)
+    assert {"s81-t51-recut", "codex-s81-split-1106", "pg", "fc10"} <= names
+    assert {"s81-t51-recut/pg", "s81-t51-recut/kits_b", "s81-t51-recut/probe_r2/sl_w/slew.rpt"} <= tails, sorted(tails)
