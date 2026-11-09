@@ -239,12 +239,30 @@ def test_rrl_wire_follow_default_off(tmp_path):
     assert 'NET ck_u_rrl_1/q nt1' in p.stdout
 
 
-def test_rrl_wire_relay_takes_destination_tap(tmp_path):
+MAC_ON_T1 = r"""
+proc blkm {m} {if {$m eq "isBlock"} {return 1}; return PHY}
+lappend INSTS u_mac; set NET(ck_u_mac) nclk
+proc u_mac {m args} {switch $m {getName {return u_mac} getLocation {return {1000 0}} getMaster {return blkm} getITerms {return ck_u_mac}}}
+proc ck_u_mac {m args} {global NET; switch $m {getMTerm {return inp} getInst {return u_mac} getNet {return $NET(ck_u_mac)} getAvgXY {return {0}}
+   disconnect {set NET(ck_u_mac) NULL} connect {set NET(ck_u_mac) [lindex $args 0]}}}
+"""
+
+
+def test_rrl_wire_relay_on_macro_tap_moves_to_macro_free_tap(tmp_path):
     fill = ''.join(f'mkflop f{i} {0 if i < 60 else 1000}\n' for i in range(120))
-    p = run(tmp_path, RRL_CHAIN + fill, env=RRL_ON)
+    p = run(tmp_path, RRL_CHAIN + MAC_ON_T1 + fill, env=RRL_ON)
     assert p.returncode == 0, p.stderr
     assert 'NET ck_u_rrl_1/q nclk' in p.stdout, p.stdout
     assert 'RRL_WIRE_FOLLOW 1 wire relays, 1 clock pins re-hung, 0 kept' in p.stdout
+    assert 'macro taps 1' in p.stdout
+
+
+def test_rrl_wire_relay_on_macro_free_tap_stays(tmp_path):
+    fill = ''.join(f'mkflop f{i} {0 if i < 60 else 1000}\n' for i in range(120))
+    p = run(tmp_path, RRL_CHAIN + fill, env=RRL_ON)
+    assert p.returncode == 0, p.stderr
+    assert 'NET ck_u_rrl_1/q nt1' in p.stdout, p.stdout          # destination follow removed
+    assert 'RRL_WIRE_FOLLOW 1 wire relays, 0 clock pins re-hung' in p.stdout
 
 
 def test_rrl_relay_with_real_consumer_stays(tmp_path):
@@ -254,18 +272,3 @@ def test_rrl_relay_with_real_consumer_stays(tmp_path):
     assert p.returncode == 0, p.stderr
     assert 'NET ck_u_rrl_1/q nt1' in p.stdout, p.stdout
     assert 'RRL_WIRE_FOLLOW 0 wire relays' in p.stdout
-
-
-def test_rrl_destination_macro_tap_uses_macro_free_tap(tmp_path):
-    fill = ''.join(f'mkflop f{i} {0 if i < 60 else 1000}\n' for i in range(120))
-    macro = r"""
-proc blkm {m} {if {$m eq "isBlock"} {return 1}; return PHY}
-lappend INSTS u_mac; set NET(ck_u_mac) nclk
-proc u_mac {m args} {switch $m {getName {return u_mac} getLocation {return {0 0}} getMaster {return blkm} getITerms {return ck_u_mac}}}
-proc ck_u_mac {m args} {global NET; switch $m {getMTerm {return inp} getInst {return u_mac} getNet {return $NET(ck_u_mac)} getAvgXY {return {0}}
-   disconnect {set NET(ck_u_mac) NULL} connect {set NET(ck_u_mac) [lindex $args 0]}}}
-"""
-    p = run(tmp_path, RRL_CHAIN + macro + fill, env=RRL_ON)
-    assert p.returncode == 0, p.stderr
-    assert 'NET ck_u_rrl_1/q nt1' in p.stdout, p.stdout          # destination clk carries the macro: nearest macro-free tap
-    assert 'macro taps 1' in p.stdout

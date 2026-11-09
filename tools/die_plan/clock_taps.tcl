@@ -391,9 +391,10 @@ if {[info exists ::env(OT_TAP_PAIR_AFFINITY)] && $::env(OT_TAP_PAIR_AFFINITY) eq
 # S81-TYPES-13 11-09 (default off, OT_RRL_WIRE_FOLLOW=1).  A wire-kind reset relay u_rrl_<k> has no reset consumer of its
 # own, only the next relay; the nearest-tap split can leave it on a tap that also carries a hard macro, where CTS delays
 # the tap's register subtree to the macro's internal latency.  S81 leaf t16: u_rrl_104 on clk_t36 (macro u_vs + 13 regs)
-# launched at 401 ps into u_rrl_109 at 224 ps on clk_t31, TT -221.91 on a half-cycle lockup hop.  Such a relay takes the
-# tap of its destination relay, deepest relays first so a chain resolves; a destination tap that carries a macro is
-# replaced by the nearest macro-free tap with sinks.  Tap relays and pads (relays with any non-relay consumer) stay.
+# launched at 401 ps into u_rrl_109 at 224 ps on clk_t31, TT -221.91 on a half-cycle lockup hop.  Such a relay moves to the
+# nearest macro-free tap with sinks.  First form (follow the destination relay's tap, on every wire relay) re-hung 200 pins and
+# stretched tap trees to 733-1264 ps (t16w FF -759.84), so a relay already on a macro-free tap stays, and no relay
+# follows its destination.  Tap relays and pads (relays with any non-relay consumer) stay.
 if {[llength $ct_taps] >= 2 && [info exists ::env(OT_RRL_WIRE_FOLLOW)] && $::env(OT_RRL_WIRE_FOLLOW) eq "1"} {
   set ct_rr {}
   foreach ct_i [$ct_blk getInsts] {
@@ -433,19 +434,18 @@ if {[llength $ct_taps] >= 2 && [info exists ::env(OT_RRL_WIRE_FOLLOW)] && $::env
     }
     if {$ct_other || ![dict size $ct_votes]} continue
     incr ct_rn
-    set ct_win ""; set ct_wv -1
-    dict for {ct_n2 ct_v} $ct_votes { if {$ct_v > $ct_wv} { set ct_win $ct_n2; set ct_wv $ct_v } }
-    set ct_tp [dict get [ct_tapnets] $ct_win]
-    if {[dict exists $ct_mt [lindex $ct_tp 0]]} {
-      lassign [[lindex [dict get $ct_rr $ct_rk] 0] getLocation] ct_x ct_y
-      set ct_tp ""; set ct_bd 0
-      foreach tp $ct_taps {
-        if {[dict exists $ct_mt [lindex $tp 0]] || ![llength [[lindex $tp 1] getITerms]]} continue
-        set ct_d [expr {abs($ct_x - [lindex $tp 2]) + abs($ct_y - [lindex $tp 3])}]
-        if {$ct_tp eq "" || $ct_d < $ct_bd} { set ct_tp $tp; set ct_bd $ct_d }
-      }
-      if {$ct_tp eq ""} { incr ct_rx; continue }
+    set ct_own [[ct_clk_iterm [lindex [dict get $ct_rr $ct_rk] 0]] getNet]
+    set ct_oname ""
+    foreach tp $ct_taps { if {[lindex $tp 1] eq $ct_own} { set ct_oname [lindex $tp 0] } }
+    if {$ct_oname eq "" || ![dict exists $ct_mt $ct_oname]} continue
+    lassign [[lindex [dict get $ct_rr $ct_rk] 0] getLocation] ct_x ct_y
+    set ct_tp ""; set ct_bd 0
+    foreach tp $ct_taps {
+      if {[dict exists $ct_mt [lindex $tp 0]] || ![llength [[lindex $tp 1] getITerms]]} continue
+      set ct_d [expr {abs($ct_x - [lindex $tp 2]) + abs($ct_y - [lindex $tp 3])}]
+      if {$ct_tp eq "" || $ct_d < $ct_bd} { set ct_tp $tp; set ct_bd $ct_d }
     }
+    if {$ct_tp eq ""} { incr ct_rx; continue }
     foreach ct_i [dict get $ct_rr $ct_rk] {
       set ct_cit [ct_clk_iterm $ct_i]
       if {$ct_cit ne "" && [$ct_cit getNet] ne [lindex $ct_tp 1]} { $ct_cit disconnect; $ct_cit connect [lindex $ct_tp 1]; incr ct_rm }
