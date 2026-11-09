@@ -21,7 +21,7 @@ from layer_prog.bound_control import retime_norm
 from layer_prog.entry_write_calendar import encode_unsealed
 
 
-def check_control(program,die):
+def check_control(program,die,leaf_routes=None):
     """Decode every actual payload/row and check issuer-only resource bounds."""
     rows=program['rows'];templates=program['templates'];commands=program['commands']
     if len(rows)!=96 or len(templates)!=96 or len(commands)!=96:
@@ -32,6 +32,12 @@ def check_control(program,die):
     rowmap={r['tix']:r for r in rows}
     if len(rowmap)!=96 or set(rowmap)!=set(payloads):raise ValueError('native row/template identity differs')
     eps=int(program['eps_fp32_bits'],16);slots=set();alignments={};kinds=[];gos=[]
+    route_totals=None
+    if leaf_routes is not None:
+        from layer_prog.bound_control import _leaf_route_table
+        table=_leaf_route_table(die,leaf_routes)
+        if any(table[sl]['pdsk']!=die.deskew[sl] for sl in table):raise ValueError('leaf route PDSK differs from emitted source')
+        route_totals={sl:[s['dn'][k]+s['up'][k]+s['pdsk'][k] for k in range(5)] for sl,s in table.items()}
     if program['die_sha256']!=die.die_sha:raise ValueError('norm control and actual emitted source differ')
     for c in commands:
         sid=c['sid'];sl=c['slice'];r=rowmap[c['template']]
@@ -48,7 +54,9 @@ def check_control(program,die):
             k=c['leaf']
             if (target,leafmask,body&15,(body>>4)&1023,(body>>14)&1023,(body>>24)&255,body>>32)!=(0,1<<k,7,1008,5*sid+k,1,0):
                 raise ValueError('actual NORMR payload differs')
-            alignments.setdefault(sl,[]).append((k,r['issue']+die.deskew[sl][k]))
+            total=die.deskew[sl][k]
+            if route_totals is not None:total=route_totals[sl][k]
+            alignments.setdefault(sl,[]).append((k,r['issue']+total))
         elif c['kind']=='XFIN_GO':
             if (target,leafmask,body)!=(1,0,eps):raise ValueError('actual GO epsilon/mode payload differs')
             gos.append(sid)
@@ -57,7 +65,7 @@ def check_control(program,die):
     if kinds.count('NORMR')!=80 or sorted(gos)!=list(range(16)):raise ValueError('native norm cohort differs')
     for sl,pairs in alignments.items():
         if sorted(k for k,_ in pairs)!=list(range(5))or len({a for _,a in pairs})!=1:
-            raise ValueError('literal PDSK does not align five issuer-relative controls')
+            raise ValueError('leaf routes do not align five issuer-relative controls' if route_totals is not None else 'literal PDSK does not align five issuer-relative controls')
     live={eng:max(sum(r['eng']==eng and r['issue']<=edge<=r['done']for r in rows)
         for edge in range(min(r['issue']for r in rows),max(r['done']for r in rows)+1))for eng in (0,1)}
     # Count the ACK edge conservatively against each engine's eight entries.
@@ -66,7 +74,8 @@ def check_control(program,die):
         first_issue=min(r['issue']for r in rows),last_issue=max(r['issue']for r in rows),
         last_posted_ack=max(r['done']for r in rows),max_live_issuer_rows_by_engine=live,
         pdsk_control_alignment={sl:pairs[0][1]for sl,pairs in alignments.items()},
-        alignment_scope='issuer issue plus literal PDSK; no transport or partial-arrival qualification')
+        alignment_scope=('issuer issue plus dn+up+pdsk from emitted leaf routes; no CTL ring transport or partial-arrival qualification'
+                         if route_totals is not None else 'issuer issue plus literal PDSK; no transport or partial-arrival qualification'))
 
 
 def check_host(program,words):
@@ -96,8 +105,8 @@ def check_host(program,words):
     if templates!={t['i']:int(t['payload186'],16)for t in program['templates']}:raise ValueError('native norm payload bytes differ')
 
 
-def compile_selected(die,entry,eps_bits,first_issue):
-    p=retime_norm(compile_norm(die,entry,eps_bits,first_issue),die,deskew_by_slice=die.deskew)
+def compile_selected(die,entry,eps_bits,first_issue,leaf_routes=None):
+    p=retime_norm(compile_norm(die,entry,eps_bits,first_issue),die,deskew_by_slice=die.deskew,leaf_routes=leaf_routes)
     p.update(schema='opentallas.s81.selected_entry_norm_control.v1',status='UNSEALED_SOURCE_CONTROL',
         source_view_sha256=die.source_record['source_view_sha256'],
         source_inventory=die.source_record,transport_dates_qualified=False,
@@ -106,7 +115,7 @@ def compile_selected(die,entry,eps_bits,first_issue):
         kit_emitted=False,end_emitted=False,begin_emitted=False,seal_emitted=False,
         mu_initialization_emitted=False,entry_rl489_adopted=False,added_rtl_cycles=0)
     p['retime']['go_dates']='fresh generated issuer positions; actual first-partial/GO readiness remains open'
-    p['control_check']=check_control(p,die)
+    p['control_check']=check_control(p,die,leaf_routes)
     p['holds']+=['fresh emitted-cohort target5/HLOAD/GAIN transport and store readiness',
         'actual selected NORMR transport and partial arrival; PDSK alone does not qualify GO',
         'global XFIN/NX/RSTD and VQ K-profile/source publication',
@@ -121,6 +130,7 @@ def main():
     p.add_argument('--entry-engram-inputs',type=Path,required=True)
     p.add_argument('--inference-config',type=Path,required=True)
     p.add_argument('--first-issue',type=int,required=True)
+    p.add_argument('--leaf-routes',type=Path,help='emitted_leaf_routes report: issue offsets from the bound dn+up+pdsk (leaf_transport)')
     p.add_argument('--math-chain',type=Path,help='actual current component chain; does not qualify native scheduling')
     p.add_argument('--math-source-root',type=Path,help='exact current operator source for --math-chain')
     p.add_argument('--out',type=Path,required=True)
@@ -134,7 +144,11 @@ def main():
     config=json.loads(a.inference_config.read_text())
     eps=struct.unpack('<I',struct.pack('<f',config['norm_eps']))[0]
     entry=compile_inputs(die,a.fixtures,a.entry_engram_inputs)
-    result=compile_selected(die,entry,eps,a.first_issue)
+    leaf_routes=None
+    if a.leaf_routes:
+        from layer_prog import leaf_transport
+        leaf_routes=leaf_transport.load(a.leaf_routes)
+    result=compile_selected(die,entry,eps,a.first_issue,leaf_routes)
     result['epsilon_source']=dict(path=key,sha256=config_sha,key='norm_eps',value=config['norm_eps'])
     if a.math_chain:
         if not a.math_source_root:p.error('--math-chain requires --math-source-root')

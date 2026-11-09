@@ -1000,7 +1000,7 @@ def dense_stage_schedule(sched, half):
                 dense_stage=boundary)
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False, entry_engram_inputs=None, svc_timing_profile=None, bound_data=None):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False, entry_engram_inputs=None, svc_timing_profile=None, bound_data=None, leaf_routes=None):
     if entry_norm and not fixtures:
         raise ValueError('--entry-norm-check needs --fixtures (the layer-entry inputs and the reference model checks)')
     if entry_engram_inputs is not None and not entry_norm:
@@ -1050,6 +1050,10 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                svc_allq=('OT_SVC_ALLQ' in {d for d in os.environ.get('OT_S81_SELECTED_DEFINES', '').split(',') if d}) if svc_timing_profile is not None else None, line_avoid={k: frozenset(v) for k, v in (line_avoid or {}).items()})
     if bound_data is not None:
         ctx['bound_image_selectors'] = B['image_selectors']
+    if leaf_routes is not None:
+        # S81-SVC-9 (opt-in): Engram REDUCE per-round-trip CTL split on the plan's leaf routes (layer_prog/leaf_transport.py)
+        from layer_prog import leaf_transport as LT
+        ctx['leaf_route_summary'] = LT.summary(LT.load(leaf_routes))
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
         rec = dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,
@@ -1118,7 +1122,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             raise ValueError(f'line slot reservation does not converge: {clash[:4]}')
         return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures, svc_tag=svc_tag,
                              mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=avoid,
-                             entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs, svc_timing_profile=svc_timing_profile, bound_data=bound_data)
+                             entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs, svc_timing_profile=svc_timing_profile, bound_data=bound_data, leaf_routes=leaf_routes)
     prog.line_avoid = {k: sorted(v) for k, v in (line_avoid or {}).items()}
     if entry_norm:
         # TOK-DS-GAPS 10-24 (opt-in; default byte-identical): layer-entry residency of the smoke slice as pre-layer CTL
@@ -1174,7 +1178,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         if need and need != {svc_tag} and prog.svc:
             return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
                                  svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=line_avoid,
-                                 entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs, svc_timing_profile=svc_timing_profile, bound_data=bound_data)
+                                 entry_norm=entry_norm, entry_engram_inputs=entry_engram_inputs, svc_timing_profile=svc_timing_profile, bound_data=bound_data, leaf_routes=leaf_routes)
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
@@ -1299,6 +1303,7 @@ def main(argv=None):
     ap.add_argument('--bound-data', type=Path, default=None,
                     help='TOK-S81-2: re-age every die data/control link from this strict bind out/ (bus_groups + '
                          'bind_latency + bind_names); blocked links fail their ops closed')
+    ap.add_argument('--leaf-routes', default=None, help='emitted_leaf_routes report of this plan: split the Engram REDUCE by round trip (leaf_transport)')
     ap.add_argument('--bound-data-manifest', default=None, help='repo-relative as-built manifest of that bind')
     ap.add_argument('--bound-data-diagnostic', action='store_true',
                     help='accept a bind with errors / type splits: output is DIAGNOSTIC, never a programme of record')
@@ -1372,7 +1377,7 @@ def main(argv=None):
                       svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage, entry_norm=a.entry_norm_check,
                       entry_engram_inputs=a.entry_engram_inputs, svc_timing_profile=a.svc_timing_profile,
                       bound_data=None if a.bound_data is None else dict(dir=a.bound_data, manifest=a.bound_data_manifest,
-                                                                          diagnostic=a.bound_data_diagnostic))
+                                                                          diagnostic=a.bound_data_diagnostic), leaf_routes=a.leaf_routes)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']

@@ -185,12 +185,32 @@ def xr_deskew(die, sl):
     return [(value>>(3*k))&7 for k in range(5)]
 
 
-def retime_norm(entry, die, deskew_by_slice=None):
-    """Proposed reorder of NORMR slots; GO dates and source span stay unchanged."""
+def _leaf_route_table(die, leaf_routes):
+    """(per-slice dn/up/pdsk table from an emitted_leaf_routes report, or None); the report must be this die's view."""
+    if leaf_routes is None:
+        return None
+    from layer_prog import leaf_transport as LT
+    table=LT.slices(leaf_routes)
+    if set(table)!=set(die.slices()):
+        raise ValueError('leaf route report does not cover the actual source slices')
+    if leaf_routes.get('source_top_sha256')!=die.die_sha:
+        raise ValueError('leaf route report belongs to a different emitted top')
+    for sl,s in table.items():
+        if die.slices()[sl]['sid']!=s['sid']:
+            raise ValueError('leaf route report SID differs from source: '+sl)
+    return table
+
+
+def retime_norm(entry, die, deskew_by_slice=None, leaf_routes=None):
+    """Proposed reorder of NORMR slots.  Default: PDSK-only consecutive slots; GO dates and source span stay unchanged.
+    leaf_routes (an emitted_leaf_routes report): issue offsets per leaf_transport.norm_issue (dn + up + pdsk from the
+    bound routes, so the partials align at the XR input), slices first-fit packed on each command engine, and each
+    XFIN_GO moved to >= 8 edges after that slice's last NORMR where the wider NORMR span requires it."""
     from dv_layer_compile import pack_row
     result=copy.deepcopy(entry)
+    route_table=_leaf_route_table(die,leaf_routes)
     commands=result['commands'];original={c['template']:c['issue'] for c in commands}
-    slices=die.slices();by_tier={0:[],1:[]}
+    slices=die.slices();by_tier={0:[],1:[]};occupied={0:set(),1:set()}
     if deskew_by_slice is not None and set(deskew_by_slice)!=set(slices):raise ValueError('explicit selected PDSK table must cover actual source slices')
     for sl,info in slices.items():by_tier[info['sid']&1].append((info['sid'],sl))
     for tier,units in by_tier.items():
@@ -207,6 +227,17 @@ def retime_norm(entry, die, deskew_by_slice=None):
             local=[c for c in norms if c['slice']==sl]
             if sorted(c['leaf'] for c in local)!=list(range(5)):
                 raise ValueError('native norm needs all five distinct leaf commands: '+sl)
+            if route_table is not None:
+                from layer_prog import leaf_transport as LT
+                offsets,clash=LT.norm_issue(route_table[sl])
+                if clash:
+                    raise ValueError(f'no legal NORMR issue on {sl}: leaves {clash} tie on dn+up+pdsk (needs one +1 lane stage plan item)')
+                base=slots[0]
+                while {base+o for o in offsets}&occupied[tier]:
+                    base+=1
+                for c in local:c['issue']=base+offsets[c['leaf']]
+                occupied[tier].update(base+o for o in offsets)
+                continue
             depths=(deskew_by_slice[sl]if deskew_by_slice is not None else xr_deskew(die,sl))
             if len(depths)!=5 or any(type(d)is not int or not 0<=d<8 for d in depths):raise ValueError('selected PDSK needs five literal3bit depths')
             offsets=[max(depths)-d for d in depths]
@@ -216,6 +247,14 @@ def retime_norm(entry, die, deskew_by_slice=None):
             go=next(c for c in gos if c['slice']==sl)
             if go['issue']-max(c['issue'] for c in local)<8:
                 raise ValueError('proposed retime shortens inherited GO separation below8: '+sl)
+        if route_table is not None:                 # GO moves after this slice's NORMRs, one free engine edge each
+            for _,sl in ordered:
+                go=next(c for c in gos if c['slice']==sl)
+                edge=max(go['issue'],max(c['issue'] for c in norms if c['slice']==sl)+8)
+                while edge in occupied[tier]:
+                    edge+=1
+                go['issue']=edge
+                occupied[tier].add(edge)
         if len({c['issue'] for c in group})!=48:
             raise ValueError('native source command collision')
     changed={c['template']:c['issue']-original[c['template']] for c in commands}
@@ -226,19 +265,29 @@ def retime_norm(entry, die, deskew_by_slice=None):
     result['rows'].sort(key=lambda r:(r['issue'],r['eng']))
     if len({(r['issue'],r['eng']) for r in result['rows']})!=len(result['rows']):
         raise ValueError('native encoded engine row collision')
-    result.update(status='PROPOSED_CONTROL_RETIME',native_job_sealed=False,
-        source_command_dates_qualified=False,go_readiness_qualified=False,
+    holds=['actual GO/start/first-partial contract','leaf-store residency',
+           'global NX/rstd/XQ calendar and retirement']
+    if route_table is None:
         retime=dict(normr_order='five consecutive commands per actual source SID',
                     go_dates='unchanged from inherited unqualified prototype',
                     source_span_added_cycles=0,min_go_after_last_normr_edges=8,
-                    arithmetic_and_payloads_changed=False,
-                    holds=['actual GO/start/first-partial contract','leaf-store residency',
-                           'global NX/rstd/XQ calendar and retirement']))
+                    arithmetic_and_payloads_changed=False,holds=holds)
+    else:
+        retime=dict(normr_order='per-leaf issue = slice base + leaf_transport.norm_issue(dn + up + pdsk); slice bases first-fit per command engine',
+                    go_dates='>= 8 edges after the slice\'s last NORMR, moved only as needed; still unqualified against actual partial arrival',
+                    source_span_added_cycles=max(c['issue'] for c in commands)-max(original.values()),
+                    min_go_after_last_normr_edges=8,arithmetic_and_payloads_changed=False,
+                    leaf_routes=dict(source_top_sha256=leaf_routes['source_top_sha256'],source_view_sha256=leaf_routes.get('source_view_sha256')),
+                    holds=holds+['eight-edge round-robin spacing of the base prototype is not kept; consecutive commands to one slice as in the PDSK-only retime',
+                                 'issuer-to-XR ring transport (common per slice, not part of leaf alignment)'])
+    result.update(status='PROPOSED_CONTROL_RETIME',native_job_sealed=False,
+        source_command_dates_qualified=False,go_readiness_qualified=False,retime=retime)
     return result
 
 
-def norm_spacing(commands, die):
+def norm_spacing(commands, die, leaf_routes=None):
     report={}
+    route_table=_leaf_route_table(die,leaf_routes)
     # Target5-only entry pages use the same transport without a norm cohort.
     # A partial NORMR/GO cohort still fails closed below.
     def actual_target5(c):
@@ -252,7 +301,12 @@ def norm_spacing(commands, die):
             report[sl]=dict(status='BLOCKED',reason='five measured native command arrivals required');continue
         edges=[c['xr_command_pin_edge_from_age0_command'] for c in norms]
         deltas=[b-a for a,b in zip(edges,edges[1:])]
-        depths=xr_deskew(die,sl);aligned=[e+d for e,d in zip(edges,depths)]
+        depths=xr_deskew(die,sl)
+        if route_table is not None:
+            s=route_table[sl];aligned=[e+s['dn'][k]+s['up'][k]+s['pdsk'][k] for k,e in enumerate(edges)]
+            if s['pdsk']!=depths:raise ValueError('leaf route PDSK differs from current source: '+sl)
+        else:
+            aligned=[e+d for e,d in zip(edges,depths)]
         report[sl]=dict(status='PASS_CONTROL_SPACING' if len(set(aligned))==1 else 'FAIL_CONTROL_SPACING',
                        leaf_edges=edges,successive_leaf_edges=deltas,current_source_pdsk=depths,
                        command_edges_plus_pdsk=aligned,
@@ -260,7 +314,7 @@ def norm_spacing(commands, die):
     return report
 
 
-def compile_control(*, layer, out, bound, inventory, timing, source_root, asbuilt_manifest, entry_program=None, retime_entry=False, boot=None):
+def compile_control(*, layer, out, bound, inventory, timing, source_root, asbuilt_manifest, entry_program=None, retime_entry=False, boot=None, leaf_routes=None):
     """Compile actual control transport and optional native command landing dates."""
     from layer_prog.bound_die import BoundDie
     out=Path(out)
@@ -279,7 +333,7 @@ def compile_control(*, layer, out, bound, inventory, timing, source_root, asbuil
         if entry.get('die_sha256')!=die.die_sha:
             raise ValueError('entry commands belong to a different bound top')
         original_entry=entry
-        if retime_entry:entry=retime_norm(entry,die);proposed=entry
+        if retime_entry:entry=retime_norm(entry,die,leaf_routes=leaf_routes);proposed=entry
         table={t['i']:t for t in entry['templates']}
         for command in entry['commands']:
             sl=command['slice'];p=paths.get(sl)
@@ -300,7 +354,7 @@ def compile_control(*, layer, out, bound, inventory, timing, source_root, asbuil
                         hold='actual XR output to leaf-store transport/commit, root boot phase and global exchange not sealed')
                 except (KeyError,ValueError) as exc:rec.update(status='BLOCKED',reason=str(exc))
             commands.append(rec)
-    spacing=norm_spacing(commands,die) if commands else None
+    spacing=norm_spacing(commands,die,leaf_routes) if commands else None
     if proposed:
         before=[]
         original={c['template']:c for c in original_entry['commands']}
@@ -309,7 +363,7 @@ def compile_control(*, layer, out, bound, inventory, timing, source_root, asbuil
             for key in ('seqhost_output_edge_from_age0_command','xr_input_edge_from_age0_command','xr_command_pin_edge_from_age0_command'):
                 if key in b:b[key]+=delta
             before.append(b)
-        original_spacing=norm_spacing(before,die)
+        original_spacing=norm_spacing(before,die,leaf_routes)
     blocked=sum(p['status']!='PASS' for p in paths.values())
     spacing_fail=bool(spacing and any(r['status']!='PASS_CONTROL_SPACING' for r in spacing.values()))
     record=dict(schema='opentallas.s81.bound_control_compile.v1',layer=layer,
