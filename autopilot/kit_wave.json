@@ -2777,7 +2777,12 @@
         "serdes__t3@17",
         "serdes__t1__clfe1f0815@13",
         "dsdv_slice_iq_C__t1@12",
-        "ot_s81sl_kv_leaf__t2@8"
+        "ot_s81sl_kv_leaf__t2@8",
+        "dsdv_slice_c1x_C__t1@20",
+        "dsdv_slice_c1x_C__t4@26",
+        "dsdv_slice_c1x_C__t8@21",
+        "dsdv_slice_lepw_mus_C__t1@20",
+        "dsdv_slice_kv512_C__t1@13"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -3753,7 +3758,12 @@
         "serdes__t3@17": "KW-FIX-37 18:3x: kit_rtl bound source missing on the gen host at 10:51/11:00 (codex-wave-bind-1106/src_28fc7 pruned from that host); now present on all S81 gen hosts [CHECKED intel1/epyc4/epyc5 test -f]; no design change, no P&R ran on the failed attempt",
         "serdes__t1__clfe1f0815@13": "KW-FIX-37 18:3x: kit_rtl bound source missing on the gen host at 10:51/11:00 (codex-wave-bind-1106/src_28fc7 pruned from that host); now present on all S81 gen hosts [CHECKED intel1/epyc4/epyc5 test -f]; no design change, no P&R ran on the failed attempt",
         "dsdv_slice_iq_C__t1@12": "INFRA no-host at kit_rtl (epyc6 disk 55<60 at 11:00), host recovered",
-        "ot_s81sl_kv_leaf__t2@8": "synth stopped: place rc 2 client ended, no design verdict (kill/OOM, 11-07 08:58); src now _lf"
+        "ot_s81sl_kv_leaf__t2@8": "synth stopped: place rc 2 client ended, no design verdict (kill/OOM, 11-07 08:58); src now _lf",
+        "dsdv_slice_c1x_C__t1@20": "KW-FIX-37 18:5x: REDESIGN: stale bound leaf source (S81-TYPES-9-LEC J2/J3): kit_rtl.f carried src_28fc7 xs4/rstopt_xo/xs_ctl, real logic change; a stopped attempt, fresh kit on leaf-follow bind (config src_c303p_lf)",
+        "dsdv_slice_c1x_C__t4@26": "KW-FIX-37 18:5x: REDESIGN: stale bound leaf source (S81-TYPES-9-LEC J2/J3): kit_rtl.f carried src_28fc7 xs4/rstopt_xo/xs_ctl, real logic change; a stopped attempt, fresh kit on leaf-follow bind (config src_c303p_lf)",
+        "dsdv_slice_c1x_C__t8@21": "KW-FIX-37 18:5x: REDESIGN: stale bound leaf source (S81-TYPES-9-LEC J2/J3): kit_rtl.f carried src_28fc7 xs4/rstopt_xo/xs_ctl, real logic change; a stopped attempt, fresh kit on leaf-follow bind (config src_c303p_lf)",
+        "dsdv_slice_lepw_mus_C__t1@20": "KW-FIX-37 18:5x: REDESIGN: stale bound leaf source (S81-TYPES-9-LEC J2/J3): kit_rtl.f carried src_28fc7 xs4/rstopt_xo/xs_ctl, real logic change; a stopped attempt, fresh kit on leaf-follow bind (config src_c303p_lf)",
+        "dsdv_slice_kv512_C__t1@13": "KW-FIX-37 18:5x: REDESIGN: stale bound leaf source (S81-TYPES-9-LEC J2/J3): kit_rtl.f carried src_28fc7 xs4/rstopt_xo/xs_ctl, real logic change; a stopped attempt, fresh kit on leaf-follow bind (config src_c303p_lf)"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -5758,7 +5768,15 @@
         "dsdv_slice_iq_C__t1@12",
         "ot_s81sl_kv_leaf__t2@8"
       ],
-      "note_kw37a": "KW-FIX-37 18:3x batch A: staging/infra failures released (no design change); revert: remove retry_prev_kw37a_added keys from retry and retry_fix"
+      "note_kw37a": "KW-FIX-37 18:3x batch A: staging/infra failures released (no design change); revert: remove retry_prev_kw37a_added keys from retry and retry_fix",
+      "retry_prev_kw37c_added": [
+        "dsdv_slice_c1x_C__t1@20",
+        "dsdv_slice_c1x_C__t4@26",
+        "dsdv_slice_c1x_C__t8@21",
+        "dsdv_slice_lepw_mus_C__t1@20",
+        "dsdv_slice_kv512_C__t1@13"
+      ],
+      "note_kw37c": "KW-FIX-37 batch C: stale-source rows relaunched fresh on leaf-follow; revert via retry_prev_kw37c_added"
     },
     "s81_head": {
       "enabled": true,
