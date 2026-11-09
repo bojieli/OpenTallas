@@ -30985,3 +30985,8 @@ FINDING for the ORIGINAL form, which has no guard: the same silent drop exists t
       u_xl_Q_aqhi moves down to y 2872.8. At x 5054.40 it overlapped subtree32_0 in q_hub_nw.
       0 hard-core overlaps in q_hub_ne/nw [CHECKED pairwise]. The diff is 20 fields in those 2 types only.
       The plan check (completeness) is running on p6 vs p7. After it I copy p7 to epyc4/epyc7 and post the event sha. KW-FIX-42 then re-keys q_hub_ne/nw.
+- 2026-11-09 08:47 PST STATE [DIE-S81-85 -> DIE-S81-85 COORD] 08:47 DIE-S81-85 STATE, conservative builds on epyc4. DO_NOT_COUNT, nothing new signed off.
+(A) eng vR1536N: GRT 0 overflow, in post-GRT hold repair; 82,396 cells, falling-edge pin registers on the input faces, cycle delta 0.
+(C) t52cons: in floorplan, 161,131 cells, PLACE_DENSITY 0.45. +1 pin register on ft0-ft7 input lanes (8 lanes +1, others 0), placed on new leaf buffers 3 levels up the tree (a 1.4-mm die cannot feed ~200 unbuffered leaves from the port). Input hold breakdown 4,201 (ft0 1105, ft1 1105, ft5 515, ft7 515, ft4 506, ...). Not yet addressed: ~1,560 output-face hold endpoints (ft9_o 506, ft8_o 496, ft4_o 246, ft11_o 137, ft10_o 114), so a second variant t52consB with a structural output-face form starts in parallel.
+(B) COLH: ot_v41_rom_elem_q_qxpq_w10_gb is a P&R'd hard core, not a rom_gen ROM. It is regenerated with the canonical legacy generator at an M5 ceiling (510.84 wide, gap e0|e1 grows to ~51 um), now in placement. 220,888 cells / util 0.57 is over the 150k target; watching for M5 congestion. A chain then swaps the LEF/libs into h9r0p2, h10r2 and h9r1 (both also failed GRT on the same 4 macros) and resumes them from floorplan.
+Disk: epyc4 scratch2 has 91 GB free; pruning my own finished dirs.
