@@ -28,6 +28,18 @@ class InfraHold(unittest.TestCase):
     def test_other_item_unaffected(self):
         self.assertTrue(KW.infra_relaunch_due(self.cfg({"serdes__t13": "why"}), rec("serdes__t4")))
 
+    def test_no_host_row_waits_then_retries(self):
+        import time
+        r = rec("iq", "RETRY-INFRA")
+        r["no_host_at"] = time.time()
+        self.assertFalse(KW.infra_relaunch_due(self.cfg({}), r))
+        r["no_host_at"] = time.time() - KW.NO_HOST_RETRY_S - 1
+        self.assertTrue(KW.infra_relaunch_due(self.cfg({}), r))
+
+    def test_no_host_text_is_the_real_ot_run_line(self):
+        self.assertTrue(KW.NO_HOST.search("infra @kit_rtl: ot-run: NOT RUN: no host qualifies (epyc4: disk 49 GB < 60)"))
+        self.assertFalse(KW.NO_HOST.search("OSError: [Errno 28] No space left on device"))
+
 
 if __name__ == "__main__":
     unittest.main()

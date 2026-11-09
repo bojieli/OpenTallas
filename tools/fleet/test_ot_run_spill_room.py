@@ -146,6 +146,21 @@ class SizeListingTest(unittest.TestCase):
 
 
 class ForwardPlanTest(unittest.TestCase):
+    def test_lane_symlinked_off_root_is_measured_at_the_lane(self):
+        m = load()
+        lane = "/srv/opentallas-scratch3/claude/l"
+        seen = []
+        rows = {lane: dict(disk_gb=250), "/srv/opentallas-scratch3": dict(disk_gb=0)}
+        def probe(h, b, spill_ok=False):
+            seen.append((h, b, spill_ok))
+            return h, rows.get(b) if h == "linked" else rows["/srv/opentallas-scratch3"] if b != lane else None
+        m.probe = probe
+        got = m.spill_dest_rows("linked", {lane + "/k"}, ["/srv/opentallas-scratch3"])
+        self.assertEqual([r["disk_gb"] for r in got], [250])
+        self.assertIn(("linked", lane, True), seen)
+        got = m.spill_dest_rows("nolane", {lane + "/k"}, ["/srv/opentallas-scratch3"])
+        self.assertEqual([r["disk_gb"] for r in got], [0], "no lane on the host: the scratch root, as before")
+
     def test_full_host_dropped_for_one_with_room(self):
         m = load()
         m.SPILL_MAX_GB = 1000

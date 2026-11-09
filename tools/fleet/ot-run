@@ -1785,6 +1785,19 @@ def spill_scan(src, roots, strict=False):
     return missing, int(lines[0]) / 1e9, sym, bool(tail.strip()), lanes
 
 
+def spill_dest_rows(h, roots, bases):
+    """KW-FIX-37 11-08 (COORD 18:49: epyc4 27 waiters while the hub had 250 GB of scratch): the copy lands at the lane's
+    own path, and a host may keep that lane on another disk through a symlink (epyc5, hub).  Probing the bare scratch root
+    measured the root fs there and refused the host.  Probe each lane that exists on h (spill copies of it count), else
+    the scratch root as before."""
+    lanes = sorted({spill_root(r) for r in roots if SCRATCH_RE.match(r)})
+    rows = []
+    for b in bases:
+        got = [r for r in (probe(h, l, spill_ok=True)[1] for l in lanes if l.startswith(b + "/")) if r and not r.get("error")]
+        rows += got or [probe(h, b)[1]]
+    return rows
+
+
 def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):
     """-> ((dst, roots, size_gb), "", False) or (None, reason, permanent).  The roots are --dir's lane root plus every
     scratch lane the command or the lane's scripts name (closed under that relation, <= 4 lanes)"""
@@ -1842,7 +1855,7 @@ def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):
     if not cands:
         return None, "no spill host", False
     with cf.ThreadPoolExecutor(len(cands)) as ex:
-        res = dict(ex.map(lambda h: (h, [probe(h, b)[1] for b in bases]), cands))
+        res = dict(ex.map(lambda h: (h, spill_dest_rows(h, roots, bases)), cands))
     ok = {h: rs[0] for h, rs in res.items() if all(r and not r.get("error") for r in rs) and rs[0].get("ncpu")
           and min(r["disk_gb"] for r in rs) >= disk + size_gb and physically_capable(rs[0], mem) and not host_refusal(rs[0])
           and not spill_dst_full(h, rs[0], roots, cmd)
