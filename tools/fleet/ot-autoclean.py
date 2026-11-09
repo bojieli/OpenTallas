@@ -1428,6 +1428,7 @@ def tar_stream(src_argv, src_cmd, dst_argv, dst_cmd, file_list, timeout):
 
 
 class Driver:
+    store_new = []                 # record-store files added in this drive (COUNT-ARCHIVE-1)
     def __init__(self, a):
         self.a = a
         self.r = Remote(a.ssh, a.agidock_ssh, a.timeout)
@@ -1538,11 +1539,25 @@ class Driver:
                                 inp=json.dumps({"archive": dest, "sha": src, "verify": verify}))
                 ok = m.returncode == 0
                 msg = m.stdout.strip()[:200]
+            if verify.startswith("OK"):            # a verified copy, even when the marker cannot be written (read-only src tree)
+                self.store_ingest(h, src, base)
             act = "ARCHIVED" if ok else f"FAIL {msg}"
             ok_all &= ok
             say(f"{act} {h}:{u['unit']} {verify}")
             rows.append([h, u["unit"], len(files), u["bytes"], dest, verify, act])
         return ok_all
+
+    def store_ingest(self, h, src, base):
+        """COUNT-ARCHIVE-1: a newly archived signed unit enters the durable record store (~/coord/signed-store), which the counter reads.
+        A failure never fails the archive: it is logged and the next archive of the unit (or a backfill) adds the row."""
+        try:
+            sys.path.insert(0, os.path.join(self.a.coord, "tools"))
+            import signed_store
+            for eid in signed_store.ingest(h, src, base):
+                self.store_new.append(os.path.relpath(signed_store.entry_path(eid), self.a.coord))
+                say(f"STORE {h} {eid[:12]}")
+        except Exception as e:                                # the archive itself succeeded
+            say(f"STORE INGEST FAILED {h}: {type(e).__name__} {str(e)[:300]}")
 
     def collect(self, h, prune):
         """copy the host's manifests (its timer runs and this drive's run) not yet in <coord>/lanes/prune"""
@@ -1611,6 +1626,7 @@ class Driver:
                     written += self.collect(h, prune)
             if written:
                 say("collected " + " ".join(written))
+            written += [os.path.join(a.coord, x) for x in self.store_new]
             if a.commit and written:
                 rel = [os.path.relpath(f, a.coord) for f in written]
                 r = subprocess.run(["timeout", "280", os.path.join(a.coord, "bin/coord-commit.sh"),

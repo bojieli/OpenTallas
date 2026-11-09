@@ -1,0 +1,10 @@
+[Unit]
+Description=Hourly signed-store ingest at :35, finished before the :05 count
+
+[Timer]
+OnCalendar=*:35
+AccuracySec=30s
+Persistent=false
+
+[Install]
+WantedBy=timers.target
