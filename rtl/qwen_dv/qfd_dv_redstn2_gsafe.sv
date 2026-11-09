@@ -380,7 +380,7 @@ always @(posedge ck or negedge sr_reset[19])
         else begin ; bt_word[0 +: 9] <= 9'((sbase + {1'b0, j} + ((MUT == 3) ? 9'd1 : 9'd0)) >> 0); end
 
     wire [511:0] fd3;
-    qfd_dv_sram_delay #(.W(512), .D(3)) u_scale_wait (.ck(ck), .rst_n(sr_reset[121]), .d(fd), .q(fd3));
+    qfd_dv_sram_delay_orq #(.W(512), .D(3)) u_scale_wait (.ck(ck), .rst_n(sr_reset[121]), .d(fd), .q(fd3));
 
 
 
@@ -479,6 +479,36 @@ module qfd_dv_sram_delay #(parameter integer W = 514, parameter integer D = 14, 
 
     initial if (D < 3 || D > 27 || W > 546) $fatal(1, "SRAM_DELAY_CONFIG");
 
+endmodule
+
+// QC-TYPES-12 11-08 (st_a datapath form): same external latency D and warm-up mask as qfd_dv_sram_delay, but the SRAM is
+// read one edge earlier (ra = wp - (D-2), still != wp for D>=3, so no read/write collision) and its output is captured in
+// an unreset flop, masked by the same kept warm copies.  PIN CYCLES 0; proved cycle-exact against qfd_dv_sram_delay (bench).
+module qfd_dv_sram_delay_orq #(parameter integer W = 514, parameter integer D = 14, parameter integer MUT = 0) (
+    input wire ck, rst_n, input wire [W-1:0] d, output wire [W-1:0] q
+);
+    reg [4:0] wp;
+    reg [D-2:0] valid;
+    wire mask_reset;
+    (* keep_hierarchy = "yes" *) qfd_dv_kept_valid #(.ID(2048)) u_mask_reset (.ck(ck),.rst_n(rst_n),.d(1'b1),.q(mask_reset));
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin wp <= 0; valid <= 0; end
+        else begin wp <= wp + 1'b1; valid <= {valid[D-3:0], 1'b1}; end
+    wire [4:0] ra = wp - (D-2) + ((MUT == 1) ? 5'd1 : 5'd0);
+    wire [W-1:0] mq;
+    qfd_dv_sram_bank64 #(.W(W)) u_m (.clk(ck), .r_ce_in(1'b1), .r_addr_in(ra), .rd_out(mq),
+        .w_ce_in(1'b1), .w_addr_in(wp), .wd_in(d), .w_mask_in({W{1'b1}}));
+    reg [W-1:0] mq_r;
+    always @(posedge ck) mq_r <= mq;
+    wire [W-1:0] qd = (MUT == 2) ? mq : mq_r;
+    genvar g;
+    generate for (g = 0; g < (W+31)/32; g = g + 1) begin : g_out
+        localparam integer B = ((W-32*g) < 32) ? W-32*g : 32;
+        wire warm_q;
+        (* keep_hierarchy = "yes" *) qfd_dv_kept_valid #(.ID(g)) u_v (.ck(ck), .rst_n(mask_reset), .d(valid[D-2]), .q(warm_q));
+        assign q[32*g +: B] = warm_q ? qd[32*g +: B] : {B{1'b0}};
+    end endgenerate
+    initial if (D < 3 || D > 27 || W > 546) $fatal(1, "SRAM_DELAY_CONFIG");
 endmodule
 
 (* keep_hierarchy = "yes" *)
