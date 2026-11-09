@@ -7264,7 +7264,14 @@
     "sle_stm_v2__cl55be2264@12",
     "slw_stm_v1__cl05fc43f7__cl389df4e9@20",
     "cbx_q10__cl89936551@16",
-    "cbx_q10__cl94a12200@17"
+    "cbx_q10__cl94a12200@17",
+    "sle_su_l1__cl5ea486db@12",
+    "slw_su_l1__clcc9d0155@10",
+    "cbn_q00__cl622f65d2@14",
+    "slw_stm_v2__cl1ca9c415@13",
+    "cbf_q00_s2@16",
+    "cbn_q01__clab6e67f2@21",
+    "sle_stm_v2__cl7b3062fa@11"
    ],
    "queue_src": "claude/qc-types-12-sta-1108@7cb33a3fd1b7",
    "type_args": {
@@ -8020,7 +8027,8 @@
      "OT_CONS_KIT": "1"
     },
     "sle_su_l1__cl5ea486db": {
-     "OT_CONS_KIT": "1"
+     "OT_CONS_KIT": "1",
+     "OT_KW41_CLAND": "0b305f2395"
     },
     "slw_su_l0__cl1a1c1f8f": {
      "OT_CONS_KIT": "1"
@@ -8090,13 +8098,15 @@
      "OT_GRT_ALLOW_CONGESTION": "1"
     },
     "cbn_q00__cl622f65d2": {
-     "OT_KW40_LANDING_EV": "dd955394dd0"
+     "OT_KW40_LANDING_EV": "dd955394dd0",
+     "OT_KW41_CLAND": "0b305f2395"
     },
     "cbn_q00__cldbcda913": {
      "OT_KW40_LANDING_EV": "dd955394dd0"
     },
     "slw_su_l1__clcc9d0155": {
-     "OT_KW40_LANDING_EV": "dd955394dd0"
+     "OT_KW40_LANDING_EV": "dd955394dd0",
+     "OT_KW41_CLAND": "0b305f2395"
     },
     "slw_su_l1__cla2a78701": {
      "OT_KW40_LANDING_EV": "dd955394dd0"
@@ -8114,7 +8124,7 @@
      "OT_KW41_CLAND": "aa8acb1988e"
     },
     "cbn_q01__clab6e67f2": {
-     "OT_KW41_CLAND": "aa8acb1988e"
+     "OT_KW41_CLAND": "0b305f2395"
     },
     "cbn_q11__cl5cc92dfe": {
      "OT_KW41_CLAND": "0b305f2395"
@@ -8138,6 +8148,15 @@
      "OT_KW41_CLAND": "0b305f2395"
     },
     "cbx_q10__cl94a12200": {
+     "OT_KW41_CLAND": "0b305f2395"
+    },
+    "slw_stm_v2__cl1ca9c415": {
+     "OT_KW41_CLAND": "0b305f2395"
+    },
+    "cbf_q00_s2": {
+     "OT_KW41_CLAND": "0b305f2395"
+    },
+    "sle_stm_v2__cl7b3062fa": {
      "OT_KW41_CLAND": "0b305f2395"
     }
    },
@@ -9452,7 +9471,17 @@
      "epyc4",
      "epyc5"
     ]
-   }
+   },
+   "retry_prev_kw42_added": [
+    "sle_su_l1__cl5ea486db@12",
+    "slw_su_l1__clcc9d0155@10",
+    "cbn_q00__cl622f65d2@14",
+    "slw_stm_v2__cl1ca9c415@13",
+    "cbf_q00_s2@16",
+    "cbn_q01__clab6e67f2@21",
+    "sle_stm_v2__cl7b3062fa@11"
+   ],
+   "note_kw42_cland": "KW-FIX-42 01:59: 7 QC OT_CLAND band FAILs whose gen ran 00:15-01:07 on the aa8 landing_place.py (before the 01:30 0b305f2395 install) restart at gen on 0b305f2395; changed tool, not a retry"
   },
   "hbm": {
    "enabled": true,
@@ -10347,7 +10376,14 @@
     "root@2",
     "q_b102@10",
     "q_spt1@2",
-    "q_b003__physical_v1@1"
+    "q_b003__physical_v1@1",
+    "NE_io@12",
+    "q_spb0@11",
+    "vsN0@10",
+    "q_spb0__physical_v1@12",
+    "NW_io@8",
+    "ot_hbm_svc_vm_kshare_splitstrap__v700685@4",
+    "ot_hbm_svc_vm_kshare_splitstrap__v8e478a@4"
    ],
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -11700,6 +11736,22 @@
     ],
     "ot_pdie_serdes_tx": [
      {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-96/view_detail/ot_pdie_serdes_tx",
+      "job": "COUNTED ot_pdie_serdes_tx epyc4:/srv/opentallas-scratch2/claude/hbm-gaps-9/txff/ot_pdie_serdes_tx_c77a41179db8-FF-i3/eco_hg9/i1/resign_da/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-96 detail M6 OBS (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-96/view_detail/ot_pdie_serdes_tx",
+      "job": "COUNTED ot_pdie_serdes_tx epyc4:/srv/opentallas-scratch2/claude/hbm-gaps-9/txff/ot_pdie_serdes_tx_c77a41179db8-FF-i3/eco_hg9/i1/resign_da/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-96 detail M6 OBS (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1
+     },
+     {
       "host": "epyc4",
       "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/193983caf299/ot_pdie_serdes_tx",
       "job": "COUNTED ot_pdie_serdes_tx epyc4:/srv/opentallas-scratch2/claude/hbm-gaps-9/txff/ot_pdie_serdes_tx_c77a41179db8-FF-i3/eco_hg9/i1/resign_da/signoff/signoff.json (KW-FIX-32 export_view)"
@@ -12772,7 +12824,27 @@
      "epyc4",
      "epyc5"
     ]
-   }
+   },
+   "prov_view_sources_prev_kw42": {
+    "ot_pdie_serdes_tx": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/193983caf299/ot_pdie_serdes_tx",
+      "job": "COUNTED ot_pdie_serdes_tx epyc4:/srv/opentallas-scratch2/claude/hbm-gaps-9/txff/ot_pdie_serdes_tx_c77a41179db8-FF-i3/eco_hg9/i1/resign_da/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ]
+   },
+   "retry_prev_kw42_added": [
+    "NE_io@12",
+    "q_spb0@11",
+    "vsN0@10",
+    "q_spb0__physical_v1@12",
+    "NW_io@8",
+    "ot_hbm_svc_vm_kshare_splitstrap__v700685@4",
+    "ot_hbm_svc_vm_kshare_splitstrap__v8e478a@4"
+   ],
+   "note_kw42_tx": "KW-FIX-42 01:55: DIE-HBM-96 01:33 DRT-0073 tx view (detail_view.lef M6 OBS, same signed ODB) first in prov_view_sources; retry NE_io@12 q_spb0@11 vsN0@10 (FAILed DRT-0073 tx clk), armed q_spb0__physical_v1@12 NW_io@8 (running on old view; relaunch only on FAIL). Revert from prov_view_sources_prev_kw42.",
+   "note_kw42_kshare": "KW-FIX-42 01:57 (HBM-HARD-9 01:32, COORD 02:0x): both kshare rows relaunch fresh on current HBM src (a4 ran kw30/src_8b2bb and kw-fix-6 src); v700685 a4 closed FAIL from a stuck ENQUEUED/queue-rejected state. host_cp_rxs.sv md5 33d1af13 (main 66686738e97) overlaid in kw41/src_h94_pv on intel1/epyc4/epyc5/epyc6; host_cp_rxs wave row stays COUNTED-cancelled (R3), HBM-HARD-9 builds its kit."
   }
  },
  "place_prefer": [
