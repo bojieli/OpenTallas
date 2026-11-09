@@ -4354,7 +4354,7 @@ def cmd_bind(a):
             landing_path.relative_to(landing_base)
             B._clock_landing_table = json.loads(landing_path.read_text())
             CL.expand_station_types(B, B._clock_landing_table)
-            B.clock_landings = CL.Landings(raw, B._clock_landing_table)
+            B.clock_landings = CL.Landings(raw, B._clock_landing_table, plan_path=B.source_plan)
             landing_libs = ["rtl/common/ot_meso_fifo.sv", "rtl/common/ot_dp_clk_landing.sv"]
             if B._clock_landing_table.get("count_aligned"):
                 landing_libs.append("rtl/common/ot_dp_clk_landing_ca.sv")

@@ -13,13 +13,13 @@ module qkd_static_kv_boot_cdc #(parameter integer HAS_SEAL=0,MUT=0)(
  output reg applied_hbm,output reg fault_core,output reg fault_hbm
 );
  initial if(HAS_SEAL!=0&&HAS_SEAL!=1)$fatal(1,"explicit boot seal law required");
- wire ready,valid,overflow,underflow;wire[72:0]word;
+ wire ready,valid,overflow;wire rd_underflow_nc;wire underflow=1'b0;wire[72:0]word;  // DIE-KV-95: ot_async_fifo.rd_underflow is assigned only in reset, an X source in the LEC gold
  reg sealed_source;reg seal_pending,finish1,finish2;
  ot_async_fifo #(.WIDTH(73),.DEPTH(16),.EXT_RST(0))u_fifo(
  .wr_clk(ck),.wr_rst_n(rst_n),.wr_valid(cfg_we&&!sealed_source&&!fault_core),.wr_ready(ready),
  .wr_data({cfg_last,cfg_addr,cfg_data}),.wr_overflow(overflow),
  .rd_clk(hck),.rd_rst_n(hrst_n),.rd_valid(valid),.rd_ready(!seal_pending&&!applied_hbm),
- .rd_data(word),.rd_underflow(underflow));
+ .rd_data(word),.rd_underflow(rd_underflow_nc));
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin sealed_source<=0;fault_core<=0;end
   else begin
