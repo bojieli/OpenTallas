@@ -12,7 +12,8 @@ One plan event, no pin cycles, S81-SERDES-PHY-3 form (physical/die_plan/s81/delt
     the contract rx_bm3_rest LEF has no pma_rck pin; pma_rck reaches rck_clk on the rest core, clk on the three BM natives
     and on the KP4 channel through the wires-only p37 glue).  Pin on M7 in the bm/rest macro channel, PG clear
     (gen_phys._snap_tap), near the five sinks, cdc synchronized like the S81 serdes pad clock (same ot_pdie_serdes RTL).
-  * PMA-EYE-1108 (COORD R3) is then applied: data_inputs row for the rx pad against pma_rck.
+  * PMA-EYE-1108 rows are NOT applied here: its rx min delay (+T/4 = 208.25 ps) fails the sdc_lint seam-hold limit on
+    every input (-135 ps), so the rx pad keeps the generic seam input delay, as the S81 serdes pads do.
 
 The lane name of a type's pads comes from the as-built bind, not the plan instance name (q_spb0__physical_v1 binds plan
 u_lk_S0 from as-built lk_S3); the table below is checked against the bind's kit wrapper ports with --bind.  Plan content,
@@ -34,7 +35,6 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve()
 sys.path.insert(0, str(HERE.parents[3] / "tools" / "die_plan"))
-sys.path.insert(0, str(HERE.parent))
 
 EVENT = "SPB-PMA-PADS-1108"
 LANE = "HBM-SPB-IO"
@@ -51,6 +51,12 @@ CDC_EVIDENCE = ("ot_pdie_serdes.sv pma_rck -> clk only through ot_s81_rate_match
                 "synchronisers, same form as the S81 serdes io_pma_rck pad clock; p37 split keeps that crossing inside "
                 "the rx_bm3_rest core")
 CHANNEL_MARGIN_UM = 0.5        # a clock entry is not over or at the edge of a macro (kit_contract.clock_entry_clear)
+
+
+def bound_path(physical_inst):
+    """the kit's placed path of a hard core: gen_phys projects plan physical_inst through bound_macro_paths before
+    pad_bumps (u_lk_S0.u_fcore... -> u_bound.u_u_lk_S0.u_fcore...), so macro_pin names that path, as S81 does."""
+    return physical_inst if physical_inst.startswith("u_bound.") else "u_bound.u_" + physical_inst
 
 
 def pad_names(lane):
@@ -92,7 +98,6 @@ def apply(raw, P=None):
     """Return (new_raw, rows).  raw: the plan dict; P: a schema.Plan of raw (built when None)."""
     import pad_clock  # noqa: F401
     import schema as S
-    import delta_pma_eye_1108 as EYE
     out = copy.deepcopy(raw)
     P = S.Plan(out) if P is None else P
     rows = []
@@ -111,20 +116,21 @@ def apply(raw, P=None):
         xy = rck_site(P, t, tn)
         layer = P.layer_budget["partition_signal_max"]
         t["pads"] = [
-            dict(name=rx, dir="in", width=544, macro_pin=dict(inst=rest[0]["physical_inst"], pin="pma_rx")),
+            dict(name=rx, dir="in", width=544, macro_pin=dict(inst=bound_path(rest[0]["physical_inst"]), pin="pma_rx")),
             dict(name=rck, dir="in", width=1, clock=True),
         ]
         clock["pad_clock"] = dict(pins=[dict(
             name=rck, dir="in", period_ps=period, source=RCK_SOURCE, layer=layer, xy_um=xy,
             sink_pins=[dict(s) for s in RCK_SINKS], cdc="synchronized", cdc_evidence=CDC_EVIDENCE)])
-        rows.append(dict(type=tn, lane=lane, pad_rx=rx, pad_rck=rck, rck_xy_um=xy, rest_inst=rest[0]["physical_inst"], ))
-    out, eye = EYE.apply(out)
-    return out, dict(event=EVENT, lane=LANE, types=list(TYPES), pad_rows=rows, pma_eye_rows=eye, pin_cycles=0)
+        rows.append(dict(type=tn, lane=lane, pad_rx=rx, pad_rck=rck, rck_xy_um=xy, rest_inst=bound_path(rest[0]["physical_inst"])))
+    return out, dict(event=EVENT, lane=LANE, types=list(TYPES), pad_rows=rows, pin_cycles=0)
 
 
-def check_bind(bind_dir):
-    """Every type's wrapper in the bind exports exactly the two ports the event declares (width 544 and 1)."""
+def check_bind(bind_dir, rows=()):
+    """Every type's wrapper in the bind exports exactly the two ports the event declares (width 544 and 1), and holds
+    the bound leaf instance that macro_pin names (u_bound.<leaf>...)."""
     errors = []
+    leaf = {r["type"]: r["rest_inst"].split(".")[1] for r in rows}
     for tn, lane in TYPES.items():
         f = Path(bind_dir) / "rtl" / f"hbm_arch_{tn}.sv"
         txt = f.read_text() if f.is_file() else ""
@@ -132,6 +138,8 @@ def check_bind(bind_dir):
             m = re.search(r"input\s+wire\s+\[(\d+):0\]\s+" + re.escape(name) + r"\b", txt)
             if m is None or int(m.group(1)) != w - 1:
                 errors.append(f"{tn}: {name} [{w - 1}:0] not exported by {f}")
+        if tn in leaf and not re.search(r"\b" + re.escape(leaf[tn]) + r"\s*\(", txt):
+            errors.append(f"{tn}: bound leaf {leaf[tn]} not in {f}")
     if errors:
         raise SystemExit("bind check failed:\n" + "\n".join(errors))
     return [dict(type=tn, lane=lane, bound=True) for tn, lane in TYPES.items()]
@@ -149,8 +157,8 @@ def run(plan_dir, out_dir, bind):
     raw = json.loads(text)
     if json.dumps(raw, indent=1) + "\n" != text:
         raise SystemExit("plan is not canonical indent=1 JSON: refusing (would rewrite unrelated bytes)")
-    bind_rows = check_bind(bind) if bind else None
     new, receipt = apply(raw)
+    bind_rows = check_bind(bind, receipt["pad_rows"]) if bind else None
     shutil.copytree(plan_dir, out_dir, copy_function=os.link, symlinks=True)   # hard-linked copy, new files replace links
     for name in ("die_plan.json", "die_plan.json.gz", "SHA256SUMS", "README.md"):
         (out_dir / name).unlink()
@@ -164,7 +172,7 @@ def run(plan_dir, out_dir, bind):
     readme = (plan_dir / "README.md").read_text() + (
         f"\n## {EVENT} ({LANE} 2026-11-08)\nplan_final2 ({sha_in[:12]}) + {EVENT}: type pads io_lk_<lane>_pma_rx (macro_pin on "
         f"rx_bm3_rest pma_rx) and io_lk_<lane>_pma_rck (pad clock, M7 in the bm/rest channel, cdc synchronized) on "
-        f"{', '.join(TYPES)}, with PMA-EYE-1108 rx rows; 0 pin cycles; die_plan.json sha256 {sha_out[:12]}. "
+        f"{', '.join(TYPES)}; 0 pin cycles; die_plan.json sha256 {sha_out[:12]}. "
         f"Receipt spb_pma_pads_1108_event.json.\n")
     (out_dir / "README.md").write_text(readme)
     old = {}
@@ -204,7 +212,7 @@ def main(argv=None):
     ap.add_argument("--bind")
     a = ap.parse_args(argv)
     r = run(a.plan_dir, a.out_dir, a.bind)
-    print(f"{EVENT}: {len(r['pad_rows'])} types, {len(r['pma_eye_rows'])} eye rows, sha_out {r['sha_out'][:16]}")
+    print(f"{EVENT}: {len(r['pad_rows'])} types, sha_out {r['sha_out'][:16]}")
     return 0
 
 
