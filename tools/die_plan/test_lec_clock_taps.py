@@ -83,3 +83,15 @@ def test_generated_clock_source_tap_stays_tied(tmp_path):
 def test_backslash_continued_sdc(tmp_path):
     k = kit(tmp_path, ["clk", "clk_t1"], "create_clock -name clk -period 833 \\\n  [get_ports {clk clk_t1}]\n")
     assert lec.clock_tap_ties(k, PORTS)["ports"] == ["clk_t1"]
+
+
+def test_tap_tie_switch_reaches_the_container(monkeypatch, tmp_path):
+    # the 02:1x control run: OT_LEC_TAP_TIE=0 on the host was not forwarded by via_docker, so the image tied anyway
+    import types
+    seen = {}
+    monkeypatch.setenv("OT_LEC_TAP_TIE", "0")
+    monkeypatch.setattr(lec.subprocess, "run", lambda cmd, **kw: seen.setdefault("cmd", cmd) and types.SimpleNamespace(returncode=0))
+    a = types.SimpleNamespace(kit=str(tmp_path), out=str(tmp_path / "o"), conflicts=1, jobs=1, netlist=None, reuse=False,
+                              gold_frontend=None, hints=None, port_map=None)
+    lec.via_docker(a, "img", 1)
+    assert "OT_LEC_TAP_TIE=0" in " ".join(map(str, seen.get("cmd", [])))
