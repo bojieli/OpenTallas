@@ -40,6 +40,26 @@ FINAL_REPAIR_TAIL = ['write_db /work/pre_final_state.odb', 'write_sdc -no_timest
 FINAL_REPAIR_TAILS = (FINAL_REPAIR_TAIL, FINAL_REPAIR_TAIL[-1:])
 
 
+# ECO-CLOCK-HOOK (KW-FIX-44 11-09, COORD ruling): a post-route ECO re-runs the post-GRT chain on a routed, signed clock
+# tree.  Kit hooks that EDIT that tree (subtree_balance.tcl added 552 / 1925 clock delay buffers on S81 tx_vS / tx_vD
+# ECOs, then ot_clk_freeze rejected the ECO) are skipped like the final repair: the ECO repairs data only, the clock
+# tree is the signed one.  Names: core_flow.py's subtree_balance + core_infra.ROOT_SCOPED_EDITORS (tap / leaf passes)
+# + pinreg_pad.tcl (sourced by tapbal_grt) + the CTS-time clk_leaf_repeat hook.  The gates (grt_post.tcl) still run.
+CLOCK_EDIT_HOOKS = frozenset((
+    "subtree_balance.tcl", "tap_balance.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl",
+    "clk_leaf_repeat.tcl", "clk_leaf_repeat_default.tcl",
+    "regional_taps.tcl", "regional_taps_balance.tcl", "core_density_taps.tcl", "core_tap_align.tcl",
+    "f4_chain_leaf.tcl", "multiport_clock_stage_hold.tcl", "head_lane_taps.tcl", "astk_zone_taps.tcl",
+    "astk_face_taps.tcl"))
+
+
+def clock_hook(line):
+    """'source /work/<a clock-tree editor>' (any directory) -> its file name, else None"""
+    w = line.split()
+    return w[1].rsplit('/', 1)[-1] if len(w) == 2 and w[0] == 'source' and w[1].rsplit('/', 1)[-1] in CLOCK_EDIT_HOOKS \
+        else None
+
+
 def stage(kit):
     kit = Path(kit)
     core = kit / 'grt_post_core.tcl'
@@ -47,6 +67,11 @@ def stage(kit):
     chain = ''
     if core.is_file():
         lines = commands(core)
+        clk = [clock_hook(x) for x in lines if clock_hook(x)]
+        if clk:
+            lines = [x for x in lines if not clock_hook(x)]
+            rec.update(skipped_clock_hooks=clk,
+                       clock_hooks_reason='ECO keeps the signed clock tree: kit clock-tree editors are not re-run')
         if any('post_grt_drv.tcl' in line for line in lines):
             drv = kit / 'post_grt_drv.tcl'
             tail = lines[len(LEGACY_WRAPPER):]
@@ -64,7 +89,7 @@ def stage(kit):
                            final_repair_sha256=hashlib.sha256((kit / 'core_final_repair.tcl').read_bytes()).hexdigest())
             chain = 'source /work/grt_post.tcl\n'
         else:
-            chain = 'source /work/grt_post_core.tcl\n'
+            chain = ('\n'.join(lines) + '\n' if lines else '') if clk else 'source /work/grt_post_core.tcl\n'
             # DIE-KV-67/CL 11-04: the form core_flow.py writes on kits with NO post_grt_drv.tcl (kit hooks, grt_post.tcl,
             # final repair; every native KV core).  The final repair's own global_route -end_incremental runs after
             # ot_clk_freeze_post_grt and after route-keep re-attached the parked wires, so it destroys clock wires nothing
