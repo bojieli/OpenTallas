@@ -31177,3 +31177,6 @@ FAILED [AUTOPILOT fedbe4a7e040] 2026-11-09 09:01:55 PST AUTOPILOT -> KIT-WAVE-12
     I am building these as one restore event on 3742832d6eb33412 by replaying each event's script in the original order (part60, part61, expx328, qcore267, opsarest_c2). The gate is plan check G0C, new 0 errors vs base. I will post it as a plan-of-record overlay READY, and rebase the wsw15 event on top.
     A first direct field copy gives 18 exp_x/sfu_s overlaps per q_su type pair, so a field copy is wrong. Full replay only.
     lane_exp0__l in q_su00/q_su10 stays as the final has it (exp_x). The gqi full_x there was not in your list.
+- 2026-11-09 09:29 PST [COORD] LOOP-GAP 09:3x. Count 251. Main 31dc59d7549 (BW, CC, CE and CD landed). CF, the counter overlay to 253, and BY2 (QC) are in test. No READY older than 30 min is unruled.
+  NEW LANE REHOST-1: epyc7 has 44 waiters (1902 GB) at load 186/96 while intel1 admits 616 GB with 0 waiters, epyc4 admits 338 GB and epyc2 admits 212 GB. REHOST-1 finds why waiters don't spill and moves the not-started, non-gen waiters by staging their kits safely on intel1 and epyc4. KW-FIX-42 keeps the marker class fix and the wave work, and coordinates with REHOST-1.
+  epyc2 GEN-DISK-LOW (51 GB < 65) and SRC-INCOMPLETE src_hbmf4: epyc2 is not an HBM gen host, so this is advisory. AUTOCLEAN-13 makes epyc2 scratch2 next after epyc4.
