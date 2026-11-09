@@ -7264,10 +7264,7 @@
     "sle_stm_v2__cl55be2264@12",
     "slw_stm_v1__cl05fc43f7__cl389df4e9@20",
     "cbx_q10__cl89936551@16",
-    "cbx_q10__cl94a12200@17",
-    "cbn_q11__cl5cc92dfe@7",
-    "cbn_q01__cld9ff4c40@8",
-    "sle_ctl__cl67434795@12"
+    "cbx_q10__cl94a12200@17"
    ],
    "queue_src": "claude/qc-types-12-sta-1108@7cb33a3fd1b7",
    "type_args": {
@@ -9428,10 +9425,7 @@
     "sle_stm_v2__cl55be2264@12",
     "slw_stm_v1__cl05fc43f7__cl389df4e9@20",
     "cbx_q10__cl89936551@16",
-    "cbx_q10__cl94a12200@17",
-    "cbn_q11__cl5cc92dfe@7",
-    "cbn_q01__cld9ff4c40@8",
-    "sle_ctl__cl67434795@12"
+    "cbx_q10__cl94a12200@17"
    ],
    "note_kw41_cland": "KW-FIX-41: OT_KW41_CLAND is a no-op marker so HOLD_UNCHANGED releases these rows (the fix is in the tool, not src_sha).",
    "note_kw41_oldsrc": "KW-FIX-41 01:0x: 5 rows failed on the pre-fix src (started before the landing_place overlay) or on infra (sle_su_l0 a14 spill run_kit.sh Is a directory; slw_fw_v2 a2 run_place.log cut at 49152 bytes 23:48, exit 1); relaunch on src_lfq_cl",
