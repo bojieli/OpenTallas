@@ -367,6 +367,11 @@ module dsdv_svc_rs_c #(
     wire [7:0] pk_n = go ? 8'd0 : pfire ? pk + 1'b1 : pk;
     dsdv_svc_mem_ar #(.W(256), .DEPTH(40), .AW(6), .MACRO(1), .MUT(MEM_MUT)) u_pbuf_mem (
         .clk(ck), .ra_n(pk_n[7:2]), .we(pb_w), .wa(pb_n), .wd(pb_wd), .rd(prw));
+`ifndef SYNTHESIS
+    reg [7:0] tb_pk; reg [5:0] tb_pb_n;
+    always @(posedge ck) if (rn) begin tb_pk <= pk; tb_pb_n <= pb_n; end
+    always @(negedge rn) if ($time > 10) $display("SVC_RS_WRST %m t=%0t pk=%0d pb_n=%0d", $time, tb_pk, tb_pb_n);
+`endif
 `endif
     // (3) fold root: rt P beats -> PV frame words (header, then A = rows 0 / 1, B = rows 2 / 3 of each beat)
     // pbeat: the beat's 4 rows x H heads BF16, row r head h at 16 (H r + h) (H 16: words A = rows 0 / 1, B = rows 2 / 3;

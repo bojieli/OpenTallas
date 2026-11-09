@@ -51,6 +51,16 @@ module dsdv_svc_mem_la #(
     always @(posedge clk) rp_q <= rp;
     wire sel = (MUT == 2) ? rp_q[0] : rp[0];
     assign rd = byp_v[sel] ? byp_d[sel] : rdb[sel][W-1:0];
+`ifdef OT_SVC_MEM_COV
+    integer cov_w = 0, cov_mv = 0, cov_rd = 0, cov_byp = 0;
+    always @(posedge clk) begin
+        if (we) cov_w <= cov_w + 1;
+        if (rp != rp_q) cov_mv <= cov_mv + 1;
+        if (cov_w > 0 && rd != 0) cov_rd <= cov_rd + 1;
+        if (byp_v != 0) cov_byp <= cov_byp + 1;
+    end
+    final $display("MEM_COV %m writes=%0d ptr_moves=%0d nonzero_reads=%0d bypass=%0d", cov_w, cov_mv, cov_rd, cov_byp);
+`endif
 `ifndef SYNTHESIS
     always @(posedge clk) if (rp != rp_q && rp != rp_q + 1'b1 && $time > 20)
         $display("dsdv_svc_mem_la %m: pointer stepped by more than 1 (%0d -> %0d)", rp_q, rp);

@@ -63,4 +63,15 @@ module dsdv_svc_mem_ar #(
             assign rd = (32'(ra_q) >= DEPTH) ? {W{1'b0}} : byp_v ? byp_d : rdp[W-1:0];
         end
     endgenerate
+`ifdef OT_SVC_MEM_COV
+    // bench coverage (sim only): writes, pointer moves, reads that return a written entry
+    integer cov_w = 0, cov_mv = 0, cov_rd = 0, cov_byp = 0;
+    always @(posedge clk) begin
+        if (w_ok) cov_w <= cov_w + 1;
+        if (ra_n != ra_q) cov_mv <= cov_mv + 1;
+        if (cov_w > 0 && rd != 0) cov_rd <= cov_rd + 1;
+        if (byp_v) cov_byp <= cov_byp + 1;
+    end
+    final $display("MEM_COV %m writes=%0d ptr_moves=%0d nonzero_reads=%0d bypass=%0d", cov_w, cov_mv, cov_rd, cov_byp);
+`endif
 endmodule

@@ -626,6 +626,16 @@ module dsdv_svc_att #(
     // pvq is NOT converted here: the as-built bound flow already maps it to 32x128 macros (ot_t7_pvq_capture_v2).
     dsdv_svc_mem_ar #(.W(D*16), .DEPTH(H), .AW(4), .SYNC(1)) u_qmem_mem (
         .clk(clk), .ra_n(4'(rc - 10'd1)), .we(q_word), .wa(P2 ? 4'(f_idx[6:4]) : {f_hdr[448], f_idx[6:4]}), .wd(q_d), .rd(eq_w));
+`ifndef SYNTHESIS
+    // bench visibility (warm-reset lock-step): the read pointers of the last edge before reset assertion
+    reg [5:0] tb_sw_r, tb_sw_w; reg [23:0] tb_wq_r; reg [9:0] tb_rc;
+    always @(posedge clk) if (rst_n) begin
+        tb_sw_r <= sw_r; tb_sw_w <= sw_w; tb_rc <= rc;
+        tb_wq_r <= {wq_r[2][1], wq_r[2][0], wq_r[1][1], wq_r[1][0], wq_r[0][1], wq_r[0][0]};
+    end
+    always @(negedge rst_n) if ($time > 10)
+        $display("SVC_ATT_WRST %m t=%0t sw_r=%0d sw_w=%0d wq_r=%06h rc=%0d", $time, tb_sw_r, tb_sw_w, tb_wq_r, tb_rc);
+`endif
 `endif
     // ------------------------------------------------------------------ sequential
     integer k;
