@@ -3510,7 +3510,10 @@ def defines_landing_ring(rtl_dir):
 # differs (kitsF hd_host_e lec.json).  The S81 coll_e recipe of this same gearbox already pins OT_FSM_NONE_WIRES=hunt.
 # gen phys now exports it for every kit whose RTL defines such a module (ot_keep_regs.tcl: fsm_encoding "none" on
 # those wires; function unchanged, LEC pairs the RTL bits by name).  The per-item env opt-in still adds names.
-_FSM_NONE_BY_MODULE = ((re.compile(r"^\s*module\s+ot_s81ph_link_gbx\w*\b", re.M), ("hunt",)),)
+# QC-TYPES-11 11-08 (same class, QC glue a6 pre-route LEC NOT EQUIVALENT): yosys fsm re-encoded u_rec.st (3 -> 4 bits,
+# ot_qwen_d2d_recovery) and u_ot_pr_core.st (3 -> 5 bits, qfd_sys_face_lctx3_core); every listed differing cone had gold_only st.
+_FSM_NONE_BY_MODULE = ((re.compile(r"^\s*module\s+ot_s81ph_link_gbx\w*\b", re.M), ("hunt",)),
+                       (re.compile(r"^\s*module\s+(?:ot_qwen_d2d_recovery|qfd_sys_face_lctx3_core)\b", re.M), ("st",)),)
 
 
 def fsm_none_wires(rtl_dir, extra=None):

@@ -17,3 +17,10 @@ def test_other_kit_unchanged(tmp_path):
     (tmp_path / "a.sv").write_text("module top (input wire clk);\n  // ot_s81ph_link_gbx_safe3 u (.clk(clk));\nendmodule\n")
     assert gen_phys.fsm_none_wires(tmp_path) == []
     assert gen_phys.fsm_none_wires(tmp_path, "st") == ["st"]
+
+
+def test_qc_glue_fsm_modules_get_st(tmp_path):
+    (tmp_path / "a.sv").write_text("module ot_qwen_d2d_recovery #(parameter MASTER = 0) (input wire ck);\nendmodule\n")
+    assert gen_phys.fsm_none_wires(tmp_path) == ["st"]
+    (tmp_path / "a.sv").write_text("module qfd_sys_face_lctx3_core (input wire ck);\nendmodule\n")
+    assert gen_phys.fsm_none_wires(tmp_path) == ["st"]
