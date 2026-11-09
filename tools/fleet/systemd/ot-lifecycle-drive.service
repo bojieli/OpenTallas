@@ -1,0 +1,8 @@
+[Unit]
+Description=OpenTallas lifecycle localhost driver: lane snapshot push, tick-line collection into autopilot/log.txt, count guard
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 -I %h/.local/share/ot-lifecycle/ot-lifecycle.py drive
+TimeoutStartSec=30min
+Nice=10

@@ -1,0 +1,9 @@
+[Unit]
+Description=Trigger a lifecycle tick when an ot-run job ends (completion record written, including killed jobs)
+
+[Path]
+PathChanged=/var/tmp/ot-heavy/completions
+Unit=ot-lifecycle-jobend.service
+
+[Install]
+WantedBy=default.target

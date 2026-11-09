@@ -1,0 +1,3 @@
+#!/bin/bash
+# usage: ot-hold <dir> [--hours 48] [--lane NAME] [--why text]   Create or renew an expiring hold; re-run to renew (hours capped at 168).
+exec /usr/bin/python3 -I "$HOME/.local/share/ot-lifecycle/ot-lifecycle.py" hold "$@"

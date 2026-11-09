@@ -1,0 +1,12 @@
+[Unit]
+Description=OpenTallas job lifecycle cleanup (host tick; dry unless the env file holds --apply)
+# Off switch: touch ~/.config/ot-lifecycle/OFF.  One summary line per tick in ~/.local/state/ot-lifecycle/ticks.log.
+
+[Service]
+Type=oneshot
+Environment=OT_LIFECYCLE_ARGS=
+EnvironmentFile=-%h/.config/ot-lifecycle/env
+ExecStart=/usr/bin/python3 -I %h/.local/share/ot-lifecycle/ot-lifecycle.py tick --reason timer $OT_LIFECYCLE_ARGS
+TimeoutStartSec=6h
+Nice=15
+IOSchedulingClass=idle
