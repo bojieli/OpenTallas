@@ -17,4 +17,9 @@ Bind of record: `bind/bindF5b.sh` with `bind/asbuilt_p37su5_sm_lat_vK5b.json`. T
 - `bind/relay_miter_F4e_F4f.json`: ts_relay_miter with `--r8 bind/r8_extra_F4d_F5a.json`, bound RTL of p5_ista vs p6_relay (same tool, each with its own table). All 19 lanes equal their declared pin cycles. The 812 R8 pad bits change exactly by the re-derived table. The 4 remaining lines are param_regen consumer parameters in root (rootctl CR_RT 12 -> 15, hc_root XRU 2 -> 11).
 - `bind/switch_table_F5b.tsv`: per type, the wave key against this plan and bind; rows marked SUPERSEDED are to be rebuilt.
 
+Co-changes that ride this switch:
+- RTL: claude/hbm-hard-9-rxlat145-1109@637d0f1a404 (ot_hbm_host_cp_rxs.sv md5 af40fc9c): RXLAT 101 -> 145 = 6 + L8008 69 + L8007 70, RSTLAT 70 unchanged. The host_cp_rxs view is rebuilt as R6.
+- Host frame gap: HGAP >= 15 + L8008 + L8007 = 154 edges (hard minimum 148), from HBM-TRANSPORT-1's 11-09 04:06 bench. A gap of 110 FAILS on this plan.
+- Compiler: VMLG SU-face shift, SEL_ADV = D_CAL - D_CMD and OWN_LAG = D_CMD + 2 + D_REQ per su_N tap, read from bind_F5b/bind_latency.json (HBM-TRANSPORT-1 11-09 03:02). This is a token-build obligation.
+
 Not in this plan, each with its blocker: E4 q_b010(+pv1) split, E7 rx_bm3_rest M6, E8 programme_store_r10, E9 Q2NF outline, and the VMLG SU-face compiler shift (HBM-TRANSPORT-1 11-09 03:02).
