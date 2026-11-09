@@ -160,6 +160,13 @@ def _entry(t, bus):
     return next((e for e in t.get("internal_stations", []) if e.get("conn") == f"bus:{bus}"), None)
 
 
+def _depth(t, bus):
+    """stations a type really has on bus: the deepest entry, as kit_istations.bus_entries merges per-core rows
+    (e.g. S81 leaf leafdn_i0 carries 1- and 2-station rows); None when the bus has no entry"""
+    n = [len(e["regs_um"]) for e in t.get("internal_stations", []) if e.get("conn") == f"bus:{bus}"]
+    return max(n) if n else None
+
+
 def build(raw, bound, root, skip, only=None, native_base=()):
     """Two passes so every lane keeps native_istations' invariant fixed == source stations + destination stations:
     OUT buses first (source stations take the lane's slack: s = max(n_out, fixed - destination need)), then IN buses
@@ -285,9 +292,9 @@ def build(raw, bound, root, skip, only=None, native_base=()):
     def dest_need(lid):
         _, _, dp, db = _src_part(Q, lid)
         dt = ptype.get(dp)
-        e = _entry(Q["partition_types"].get(dt, {}), db) if dt else None
-        if e is not None:
-            return len(e["regs_um"])
+        n = _depth(Q["partition_types"].get(dt, {}), db) if dt else None
+        if n is not None:
+            return n
         c = cand.get((dt, "in", db))
         return c[0] if c else 0
 
@@ -334,8 +341,7 @@ def build(raw, bound, root, skip, only=None, native_base=()):
         for lid in lns:
             sp, sb, dp, db = _src_part(Q, lid)
             if ptype.get(sp) in native | native_out and _entry(Q["partition_types"][ptype[sp]], sb) is not None:
-                e = _entry(Q["partition_types"].get(ptype.get(dp), {}), db)
-                want = src_count(lid) + (len(e["regs_um"]) if e else 0)
+                want = src_count(lid) + (_depth(Q["partition_types"].get(ptype.get(dp), {}), db) or 0)
                 if int(lane_by_id[lid]["fixed_cycles"]) != want:
                     raise AssertionError(f"lane {lid}: fixed_cycles {lane_by_id[lid]['fixed_cycles']} != source + "
                                          f"destination stations {want}")

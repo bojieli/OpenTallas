@@ -102,3 +102,27 @@ def test_regen_latency_checks_declared_deltas(tmp_path, monkeypatch):
         T.regen_latency(out, base, {"L1": 2})
     with pytest.raises(SystemExit):
         T.regen_latency(out, base, {"L2": 1})
+
+
+def _native_stub(rows, fixed):
+    from types import SimpleNamespace as NS
+    src = dict(buses=[dict(name="o", dir="out", width=4)],
+               internal_stations=[dict(conn="bus:o", regs_um=[[1, 1]], from_um=[0, 0], to_um=[2, 2])])
+    L = dict(oname="o", iname="i", lane="L", dst="d", cycles=9, ft=[], width=4)
+    return NS(ab=dict(internal_stations_types=["s"]), types=dict(s=src, t=dict(internal_stations=rows)),
+              plan=dict(lanes=[dict(id="L", fixed_cycles=fixed)]), parts=dict(p=dict(type="s"), d=dict(type="t")),
+              out_bus=dict(p=[L]))
+
+
+def test_receiver_depth_is_the_deepest_entry():
+    import pytest
+    import native_istations as NI
+    import ts_relay_event as T
+    rows = [dict(conn="bus:i", regs_um=[[0, 0]]), dict(conn="bus:i", regs_um=[[0, 0], [1, 1]])]
+    assert T._depth(dict(internal_stations=rows), "i") == 2 and T._depth(dict(internal_stations=rows), "x") is None
+    NI.annotate(_native_stub(rows, 3))                  # 1 source + deepest receiver 2
+    with pytest.raises(ValueError, match="fixed_cycles must equal"):
+        NI.annotate(_native_stub(rows, 2))              # first-row depth 1 is not the realised depth
+    exact = [dict(rows[0], bit_route=[1]), rows[1]]     # exact-site rows are not merged by the kit: still refused
+    with pytest.raises(ValueError, match="conflicting destination"):
+        NI.annotate(_native_stub(exact, 3))
