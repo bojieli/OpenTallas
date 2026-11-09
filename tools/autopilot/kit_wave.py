@@ -2166,6 +2166,7 @@ def die_score(cfg, die, h, v):
 # at most gen_fallback_per_tick gens per host per tick.  Option gen_disk_fallback false turns it off.
 GEN_SCRATCH_HARD_FLOOR_GB = 50      # ot-run refuses a scratch disk below this
 GEN_NEED_GB = 20                    # gen + place of one kit: 1-3 GB measured on 8 HBM attempts, with margin
+GEN_ALT_CHARGE_GB = 6               # KW-FIX-38: booked per kit on a scratch2 alternative within one tick (1-6 GB through place)
 GEN_FALLBACK_PER_TICK = 2
 
 
@@ -2249,8 +2250,8 @@ def alt_charge(cfg, h):
     alt = (cfg.get("_workroot_alt") or {}).get(h) or {}
     if not alt:
         return
-    need, free = int(cfg.get("gen_need_gb", GEN_NEED_GB)), cfg.setdefault("_workroot_free", {}).get(h) or {}
-    lim = int(cfg.get("gen_disk_min_gb", GEN_DISK_MIN_GB)) + need
+    need, free = int(cfg.get("gen_alt_charge_gb", GEN_ALT_CHARGE_GB)), cfg.setdefault("_workroot_free", {}).get(h) or {}
+    lim = int(cfg.get("gen_disk_min_gb", GEN_DISK_MIN_GB)) + need              # entry needed +gen_need_gb; the burst may use it down to one kit above the floor
     for die in list(alt):
         free[die] = int(free.get(die, lim)) - need
         if free[die] < lim:

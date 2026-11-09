@@ -631,13 +631,12 @@ def test_alt_requires_another_disk_and_a_scratch3_lane():
 
 def test_alt_charge_stops_the_tick_burst():
     c = _e6cfg()
-    c["gen_disk_min_gb"], c["gen_need_gb"] = 100, 20
-    c["_workroot_alt"], c["_workroot_free"], c["_workroot_low"] = {"e": {"s81": "/x"}}, {"e": {"s81": 165}}, {}
+    c["gen_disk_min_gb"], c["gen_alt_charge_gb"] = 100, 6
+    c["_workroot_alt"], c["_workroot_free"], c["_workroot_low"] = {"e": {"s81": "/x"}}, {"e": {"s81": 112}}, {}
     K.alt_charge(c, "e")
-    assert c["_workroot_alt"]["e"] == {"s81": "/x"} and c["_workroot_free"]["e"]["s81"] == 145
-    K.alt_charge(c, "e")                                                         # 125: still >= 120
-    K.alt_charge(c, "e")                                                         # 105 < 120: off for the tick, reported low
-    assert not c["_workroot_alt"]["e"] and c["_workroot_low"]["e"]["s81"] == 105
+    assert c["_workroot_alt"]["e"] == {"s81": "/x"} and c["_workroot_free"]["e"]["s81"] == 106
+    K.alt_charge(c, "e")                                                         # 100 < 106: off for the tick, reported low
+    assert not c["_workroot_alt"]["e"] and c["_workroot_low"]["e"]["s81"] == 100
 
 
 def test_work_alt_cmd_shell(tmp_path):
