@@ -4050,22 +4050,42 @@ def macro_move_table(t, tn, env=None):
     # can abut two cores through their offsets (S81 bf_col3 u_c / bf16 u_ha: origins 0.888 um inside, placed edges equal).
     pos = {n: [c["origin_um"][0] + c.get("track_offset_um", [0.0, 0.0])[0],
                c["origin_um"][1] + c.get("track_offset_um", [0.0, 0.0])[1]] for n, c in cores.items()}
-    for e in raw.split(","):
-        f = e.split(":")
-        if len(f) not in (3, 4) or f[0] not in cores:
-            raise ValueError(f"type {tn}: OT_MACRO_MOVES entry {e!r}: not inst:x:y[:orient] of a hard core")
-        c = cores[f[0]]
-        x, y = float(f[1]), float(f[2])
+    # DIE-S81-85 11-09 MOVES-SPLIT: a row written against a core that a later plan event split (ROMQ-GB: u_e1 ->
+    # u_e1.u_w + u_e1.u_e) names no hard core any more.  An entry naming the split parent moves its children as one
+    # rigid group: delta = (x, y) - group origin (min child origin), each child keeps its plan orient and its plan
+    # track offset, so the halves stay abutted as the plan placed them.  An orient on a group entry is refused (a
+    # mirror would swap the halves).  A moved core keeping its plan orient keeps the plan's track_offset_um; the
+    # orient table applies only on a re-orient (same value for every core whose plan offset is the table's).
+    def _move(inst, x, y, orient):
+        c = cores[inst]
         cw, ch = c["outline_um"]
         if x < 0 or y < 0 or x + cw > w or y + ch > h:
-            raise ValueError(f"type {tn}: OT_MACRO_MOVES {f[0]} at {x},{y} leaves the outline")
-        orient = f[3] if len(f) == 4 else c.get("orient", "R0")
+            raise ValueError(f"type {tn}: OT_MACRO_MOVES {inst} at {x},{y} leaves the outline")
         if orient not in _CORE_TRACK_OFFSET:
-            raise ValueError(f"type {tn}: OT_MACRO_MOVES {f[0]} orient {orient!r}")
-        ox, oy = _CORE_TRACK_OFFSET[orient]
-        pos[f[0]] = [x + ox, y + oy]
-        out[c.get("physical_inst", f[0])] = {"inst": f[0], "from": list(c["origin_um"]), "to": [x, y], "orient": orient,
+            raise ValueError(f"type {tn}: OT_MACRO_MOVES {inst} orient {orient!r}")
+        ox, oy = (c.get("track_offset_um") or _CORE_TRACK_OFFSET[orient]) if orient == c.get("orient", "R0") \
+            else _CORE_TRACK_OFFSET[orient]
+        pos[inst] = [x + ox, y + oy]
+        out[c.get("physical_inst", inst)] = {"inst": inst, "from": list(c["origin_um"]), "to": [x, y], "orient": orient,
                                              "x": x + ox, "y": y + oy}
+
+    for e in raw.split(","):
+        f = e.split(":")
+        kids = sorted(n for n in cores if n.startswith(f[0] + ".")) if f[0] not in cores else []
+        if len(f) not in (3, 4) or (f[0] not in cores and not kids):
+            raise ValueError(f"type {tn}: OT_MACRO_MOVES entry {e!r}: not inst:x:y[:orient] of a hard core")
+        x, y = float(f[1]), float(f[2])
+        if kids:
+            if len(f) == 4:
+                raise ValueError(f"type {tn}: OT_MACRO_MOVES {f[0]} is a split core group ({', '.join(kids)}); "
+                                 f"no orient on a group move")
+            gx = min(cores[k]["origin_um"][0] for k in kids)
+            gy = min(cores[k]["origin_um"][1] for k in kids)
+            for k in kids:
+                _move(k, round(x + cores[k]["origin_um"][0] - gx, 6), round(y + cores[k]["origin_um"][1] - gy, 6),
+                      cores[k].get("orient", "R0"))
+            continue
+        _move(f[0], x, y, f[3] if len(f) == 4 else cores[f[0]].get("orient", "R0"))
     names = sorted(cores)
     for i, a in enumerate(names):
         for b in names[i + 1:]:
