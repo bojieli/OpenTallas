@@ -353,11 +353,18 @@ def run(kit, stage, netlist=None, execute=subprocess.run):
             parsed = so.corner_result(measured)
             if measured['kv'].get('G2_REQUIRED_FAIL'):
                 key = measured['kv']['G2_REQUIRED_FAIL']
-                fail = dict(schema='opentallas.grt_policy.v1', verdict='FAIL',
+                # KW-FIX-37 11-08 (COORD, OWNER 11-03 only sign-off blocks): a deep G2 setup miss is logged and the kit routes
+                # on; routed sign-off decides.  OT_G2_SETUP_GATE=1 restores the stop; a hold_ff stop stays the blocking mode.
+                blocking = key != 'setup_tt' or setup_continue_ps(kit) == 0.0
+                fail = dict(schema='opentallas.grt_policy.v1', verdict='FAIL' if blocking else 'ADVISORY',
                             parasitics='global_routing', failed=key, corner=corner,
                             setup_wns_ps=parsed.get('std_wns_max'), hold_wns_ps=parsed.get('std_wns_min'),
                             clock='NOT RUN (data failure stopped redundant pair census)')
                 timing_receipt.write_text(json.dumps(fail, indent=1) + '\n')
+                if not blocking:
+                    print(f'OT_LEGACY_GATE ADVISORY G2 {key} setup WNS {parsed.get("std_wns_max")} ps at global-route RC, '
+                          'pair census skipped (not a gate, sign-off decides)')
+                    return 0
                 raise ValueError(f'G2 {key} failed before pair census: {fail}')
             parsed['clock_endpoint_coverage'] = so.consumed_clock_model_coverage(
                 kit / f'postcts_gate_{corner.lower()}.libraries.json', disc,

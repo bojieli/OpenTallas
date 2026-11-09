@@ -126,6 +126,9 @@ module ot_qfd_xs_leaf_fo32 #(
     end endgenerate
 
     // ---- per tile: sequencer, NG next-select cones, select replicas, read tree, line assembly ----
+    // Explicit cross-generate next-state signals keep both HDL frontends in agreement.
+    wire [1:0] tile_sv_next;
+    wire [3:0] tile_el_next;
     function automatic integer nrep16(input integer lv);   // slices (= select replicas) of level lv
         nrep16 = ((17 << (6 - lv)) + SELW - 1) / SELW;
     endfunction
@@ -152,6 +155,8 @@ module ot_qfd_xs_leaf_fo32 #(
         always @(posedge clk) if (req) hen <= {rp_p[27], rp_p[20], rp_p[13], rp_p[6]};
         wire       sv_n = req ? 1'b1 : (sv && el == 2'd3) ? 1'b0 : sv;
         wire [1:0] el_n = req ? 2'd0 : sv ? el + 1'b1 : el;
+        assign tile_sv_next[gt] = sv_n;
+        assign tile_el_next[2*gt +: 2] = el_n;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin sv <= 1'b0; el <= 2'd0; end
             else begin sv <= sv_n; el <= el_n; end
@@ -226,7 +231,7 @@ module ot_qfd_xs_leaf_fo32 #(
     generate for (gq = 0; gq < NQ; gq = gq + 1) begin : g_q
         (* keep *) reg [1:0] qel;
         (* keep *) reg       qsv;
-        always @(posedge clk) begin qsv <= g_t[1].sv_n; qel <= g_t[1].el_n; end
+        always @(posedge clk) begin qsv <= tile_sv_next[1]; qel <= tile_el_next[3:2]; end
         assign ftc[gq] = qsv && (qel == 2'd3);
     end endgenerate
     wire       fin  = done[0] | done[1];
