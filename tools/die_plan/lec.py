@@ -1523,9 +1523,11 @@ def stub_verilog(bbports, native_parameters=None, formal_parameters=None, folds=
     return "\n".join(out) + "\n"
 
 
-def wrapper_verilog(top, ports, params=()):
+def wrapper_verilog(top, ports, params=(), ties=None):
     """lec_top: inputs fed through, every output port bit captured by a keep flop 'lec_po_<port>[i]' (D = the output
-    function: a constant output keeps its name, which write_aiger's port map would drop)."""
+    function: a constant output keeps its name, which write_aiger's port map would drop).  ties {port: root}: the
+    dut port is driven by the wrapper input root instead of its own input (clock_tap_ties; the input stays declared,
+    unloaded)."""
     ins = [(p, w, lo) for p, d, w, lo in ports if d == "input"]
     outs = [(p, w, lo) for p, d, w, lo in ports if d == "output"]
     if any(d not in ("input", "output") for p, d, w, lo in ports):
@@ -1536,7 +1538,9 @@ def wrapper_verilog(top, ports, params=()):
     o += [f"  input {rng(w, lo)}{esc(p)};" for p, w, lo in ins]
     o += [f"  wire {rng(w, lo)}{esc('lec_o_' + p)};" for p, w, lo in outs]
     par = (" #(" + ", ".join(f".{k}({v})" for k, v in params) + ")") if params else ""
-    con = [f".{esc(p)}({esc(p)})" for p, w, lo in ins] + [f".{esc(p)}({esc('lec_o_' + p)})" for p, w, lo in outs]
+    ties = ties or {}
+    con = [f".{esc(p)}({esc(ties.get(p, p))})" for p, w, lo in ins] + \
+        [f".{esc(p)}({esc('lec_o_' + p)})" for p, w, lo in outs]
     o.append(f"  \\{top} {par} u_dut ({', '.join(con)});")
     for p, w, lo in outs:
         o += [f"  (* keep *) reg {rng(w, lo)}{esc('lec_po_' + p)};",
@@ -4502,6 +4506,78 @@ def kit_reset_ports(kit):
         pass
     return sorted(out) or None
 
+
+
+def clock_tap_ties(kit, top_ports):
+    """DIE-HEAD-91 11-09 (S81 HEAD hd_tile vH12a routed LEC, 20 differs): a kit with a tapped clock tree has one input
+    port per clock tap (budget.json clock.taps: clk, clk_t1 .. clk_tN), all listed in ONE constraint.sdc create_clock
+    as the same clock; the parent drives every tap from that clock root (die clock plan), so the ports carry the SAME
+    clock.  After CTS the gate netlist drives each hard-macro clock / feed-through pin (ft_ck0_i ...) from its local
+    tap net, while the gold RTL drives it from the root port; with the taps left as free, unrelated inputs the miter
+    sees two different clocks at every black-box clock pin and reports a differ that no real circuit can show.  Flop
+    clock pins never hit this (they are not compare points).  Model: in BOTH wrappers each declared tap port is driven
+    by its root port, so every compare point sees one clock.  Fail closed: tied only when (a) budget.json clock.taps
+    names the port, (b) the same create_clock (-name C) lists the root and the port and no other create_clock /
+    create_generated_clock names it, (c) root and port are 1-bit top inputs; anything else is left a free input
+    (the old behaviour) and recorded.  OT_LEC_TAP_TIE=0 turns the model off.
+    -> dict(root, clock, ports [tied], untied [{port, why}], basis) or None when the kit declares no taps."""
+    if os.environ.get("OT_LEC_TAP_TIE", "1") == "0":
+        return None
+    kit = Path(kit)
+    try:
+        taps = [str(t["name"]) for t in (json.loads((kit / "budget.json").read_text()).get("clock") or {})
+                .get("taps") or [] if isinstance(t, dict) and t.get("name")]
+    except (OSError, ValueError, AttributeError, TypeError):
+        return None
+    if len(taps) < 2:
+        return None
+    try:
+        sdc = (kit / "constraint.sdc").read_text()
+    except OSError:
+        return dict(root=None, clock=None, ports=[], untied=[dict(port=t, why="no constraint.sdc") for t in taps],
+                    basis="budget.json clock.taps")
+    sdc = re.sub(r"\\\n", " ", sdc)
+    clocks, generated = [], set()
+    for m in re.finditer(r"^[ \t]*(create_clock|create_generated_clock)\b([^\n]*)$", sdc, re.M):
+        args = m.group(2)
+        if m.group(1) == "create_generated_clock":     # its -source port is the master clock, not a new clock
+            args = re.sub(r"-source\s+\[[^\]]*\]", " ", args)
+        ports = [x for g in re.finditer(r"\[\s*get_ports\s+(?:\{([^}]*)\}|([^\s\]]+))\s*\]", args)
+                 for x in (g.group(1) or g.group(2) or "").split()]
+        if m.group(1) == "create_generated_clock":
+            generated |= set(ports)
+            continue
+        nm = re.search(r"-name\s+(\S+)", args)
+        clocks.append((nm.group(1) if nm else (ports[0] if ports else None), ports))
+    ins = {p: w for p, d, w, lo in top_ports if d == "input"}
+    tapset = set(taps)
+    home = [(c, ps) for c, ps in clocks if tapset & set(ps)]
+    if len(home) != 1:
+        return dict(root=None, clock=None, ports=[], basis="budget.json clock.taps + constraint.sdc create_clock",
+                    untied=[dict(port=t, why=f"taps are in {len(home)} create_clock commands, need exactly 1")
+                            for t in taps])
+    clock, cports = home[0]
+    root = clock if clock in cports and clock in tapset else next((p for p in cports if p in tapset), None)
+    rec = dict(root=root, clock=clock, ports=[], untied=[], basis="budget.json clock.taps + constraint.sdc "
+               "create_clock: every tap port is the same clock as the root (parent drives all taps from it)")
+    if root is None or ins.get(root) != 1:
+        rec["untied"] = [dict(port=t, why=f"root {root!r} is not a 1-bit top input") for t in taps]
+        rec["root"] = None
+        return rec
+    seen = collections.Counter(p for c, ps in clocks for p in ps)
+    for t in taps:
+        if t == root:
+            continue
+        why = ("not in the root's create_clock" if t not in cports else
+               "named by another create_clock" if seen[t] > 1 else
+               "named by a create_generated_clock" if t in generated else
+               "not a top input" if t not in ins else
+               f"top input is {ins[t]} bits wide" if ins[t] != 1 else None)
+        if why:
+            rec["untied"].append(dict(port=t, why=why))
+        else:
+            rec["ports"].append(t)
+    return rec
 
 def reset_vars(d, pis, asserted=None, levels=None, declared=None):
     """{var: asserted value} of the reset ports of one side (pi keys; OT_LEC_RESET_PORTS=a,b overrides the name
@@ -7765,9 +7841,13 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             raise LecError(f"pre-pass did not write the ports of {top}")
         rec["ports"] = dict(inputs=sum(w for p, d, w, lo in tops[top] if d == "input"),
                             outputs=sum(w for p, d, w, lo in tops[top] if d == "output"))
+        taps = clock_tap_ties(kit, tops[top])
+        ties = {p: taps["root"] for p in taps["ports"]} if taps else {}
+        if taps:
+            rec["clock_tap_ties"] = dict(taps, n=len(ties))
         (out / "wrap_gold.v").write_text(wrapper_verilog(top, tops[top], top_params(env) if gold_fe == "verilog"
-                                                         else ()))
-        (out / "wrap_gate.v").write_text(wrapper_verilog(top, tops[top]))
+                                                         else (), ties))
+        (out / "wrap_gate.v").write_text(wrapper_verilog(top, tops[top], ties=ties))
         (out / "lecff.v").write_text(LECFF_V)
         # 2. gold and gate AIGs (two yosys processes in parallel)
         t1 = time.time()
@@ -8030,7 +8110,7 @@ def via_docker(args, image, mem):
     for k in ("OT_LEC_RAWPREFIX_S", "OT_LEC_RAWPREFIX_ANDS"):
         if k in os.environ:
             cmd += ["-e", f"{k}={os.environ[k]}"]
-    for k in ("OT_LEC_LATCH", "OT_LEC_RESET_CYCLES"):      # model switches (the reset contract is KIT/reset_contract.json)
+    for k in ("OT_LEC_LATCH", "OT_LEC_RESET_CYCLES", "OT_LEC_TAP_TIE"):   # model switches (reset contract: KIT/reset_contract.json)
         if os.environ.get(k):
             cmd += ["-e", f"{k}={os.environ[k]}"]
     sol = os.environ.get("OT_LEC_SOLVER", "")
