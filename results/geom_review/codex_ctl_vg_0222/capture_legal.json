@@ -1,0 +1,1493 @@
+{
+ "schema": "opentallas.ctl_fixed_anchor_legal.v1",
+ "targets": 1025,
+ "before_overlapping_targets": 78,
+ "after_overlapping_targets": 0,
+ "max_capture_move_l1_um": 1.08,
+ "new_cycles": 0,
+ "moves": [
+  {
+   "name": "u_core.u_logic.sn_o[0]$_DFF_P_",
+   "old_bbox": [
+    38.286,
+    167.94,
+    39.366,
+    168.21
+   ],
+   "new_bbox": [
+    37.476,
+    167.94,
+    38.556,
+    168.21
+   ],
+   "move_l1_um": 0.81,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[1][752]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[101]$_DFF_P_",
+   "old_bbox": [
+    58.914,
+    160.65,
+    59.994,
+    160.92
+   ],
+   "new_bbox": [
+    58.752,
+    160.65,
+    59.832,
+    160.92
+   ],
+   "move_l1_um": 0.162,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.dch[11].u_dsel/y[10]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[122]$_DFF_P_",
+   "old_bbox": [
+    59.616,
+    164.7,
+    60.696,
+    164.97
+   ],
+   "new_bbox": [
+    58.752,
+    164.7,
+    59.832,
+    164.97
+   ],
+   "move_l1_um": 0.864,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.dch[11].u_dsel/y[31]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[123]$_DFF_P_",
+   "old_bbox": [
+    59.562,
+    166.86,
+    60.642,
+    167.13
+   ],
+   "new_bbox": [
+    58.751999999999995,
+    166.86,
+    59.832,
+    167.13
+   ],
+   "move_l1_um": 0.81,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[0][747]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[126]$_DFF_P_",
+   "old_bbox": [
+    59.4,
+    170.37,
+    60.48,
+    170.64
+   ],
+   "new_bbox": [
+    58.751999999999995,
+    170.37,
+    59.831999999999994,
+    170.64
+   ],
+   "move_l1_um": 0.648,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[1][765]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[128]$_DFF_P_",
+   "old_bbox": [
+    60.588,
+    169.83,
+    61.668,
+    170.1
+   ],
+   "new_bbox": [
+    60.912,
+    169.83,
+    61.992,
+    170.1
+   ],
+   "move_l1_um": 0.324,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[2][762]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[129]$_DFF_P_",
+   "old_bbox": [
+    70.956,
+    188.73,
+    72.036,
+    189.0
+   ],
+   "new_bbox": [
+    70.956,
+    189.0,
+    72.036,
+    189.27
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[3][860]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[133]$_DFF_P_",
+   "old_bbox": [
+    59.886,
+    185.76,
+    60.966,
+    186.03
+   ],
+   "new_bbox": [
+    60.912000000000006,
+    185.76,
+    61.992000000000004,
+    186.03
+   ],
+   "move_l1_um": 1.026,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[0][845]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[144]$_DFF_P_",
+   "old_bbox": [
+    70.47,
+    156.06,
+    71.55,
+    156.33
+   ],
+   "new_bbox": [
+    69.39,
+    156.06,
+    70.47,
+    156.33
+   ],
+   "move_l1_um": 1.08,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[1][691]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[158]$_DFF_P_",
+   "old_bbox": [
+    80.19,
+    129.87,
+    81.27,
+    130.14
+   ],
+   "new_bbox": [
+    80.02799999999999,
+    129.87,
+    81.10799999999999,
+    130.14
+   ],
+   "move_l1_um": 0.162,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[0][585]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[164]$_DFF_P_",
+   "old_bbox": [
+    69.606,
+    170.37,
+    70.686,
+    170.64
+   ],
+   "new_bbox": [
+    69.39,
+    170.37,
+    70.47000000000001,
+    170.64
+   ],
+   "move_l1_um": 0.216,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[2][765]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[170]$_DFF_P_",
+   "old_bbox": [
+    70.038,
+    180.9,
+    71.118,
+    181.17
+   ],
+   "new_bbox": [
+    69.39,
+    180.9,
+    70.47,
+    181.17
+   ],
+   "move_l1_um": 0.648,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[0][820]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[172]$_DFF_P_",
+   "old_bbox": [
+    69.552,
+    162.54,
+    70.632,
+    162.81
+   ],
+   "new_bbox": [
+    69.39,
+    162.54,
+    70.47,
+    162.81
+   ],
+   "move_l1_um": 0.162,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.dch[11].u_dsel/y[20]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[175]$_DFF_P_",
+   "old_bbox": [
+    80.784,
+    189.81,
+    81.864,
+    190.08
+   ],
+   "new_bbox": [
+    80.784,
+    189.0,
+    81.864,
+    189.27
+   ],
+   "move_l1_um": 0.81,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[2][866]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[176]$_DFF_P_",
+   "old_bbox": [
+    70.47,
+    158.22,
+    71.55,
+    158.49
+   ],
+   "new_bbox": [
+    69.39,
+    158.22,
+    70.47,
+    158.49
+   ],
+   "move_l1_um": 1.08,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[2][702]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[177]$_DFF_P_",
+   "old_bbox": [
+    71.496,
+    162.0,
+    72.576,
+    162.27
+   ],
+   "new_bbox": [
+    71.55,
+    162.0,
+    72.63,
+    162.27
+   ],
+   "move_l1_um": 0.054,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[0][722]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[178]$_DFF_P_",
+   "old_bbox": [
+    70.47,
+    168.75,
+    71.55,
+    169.02
+   ],
+   "new_bbox": [
+    69.39,
+    168.75,
+    70.47,
+    169.02
+   ],
+   "move_l1_um": 1.08,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[0][757]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[179]$_DFF_P_",
+   "old_bbox": [
+    70.794,
+    176.85,
+    71.874,
+    177.12
+   ],
+   "new_bbox": [
+    71.55,
+    176.85,
+    72.63,
+    177.12
+   ],
+   "move_l1_um": 0.756,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[0][799]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[17]$_DFF_P_",
+   "old_bbox": [
+    39.474,
+    168.21,
+    40.554,
+    168.48
+   ],
+   "new_bbox": [
+    39.635999999999996,
+    168.21,
+    40.716,
+    168.48
+   ],
+   "move_l1_um": 0.162,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[3][753]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[189]$_DFF_P_",
+   "old_bbox": [
+    71.118,
+    158.76,
+    72.198,
+    159.03
+   ],
+   "new_bbox": [
+    71.55,
+    158.76,
+    72.63,
+    159.03
+   ],
+   "move_l1_um": 0.432,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[1][705]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[191]$_DFF_P_",
+   "old_bbox": [
+    81.864,
+    158.49,
+    82.944,
+    158.76
+   ],
+   "new_bbox": [
+    82.188,
+    158.49,
+    83.268,
+    158.76
+   ],
+   "move_l1_um": 0.324,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[0][704]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[192]$_DFF_P_",
+   "old_bbox": [
+    80.73,
+    159.03,
+    81.81,
+    159.3
+   ],
+   "new_bbox": [
+    80.028,
+    159.03,
+    81.108,
+    159.3
+   ],
+   "move_l1_um": 0.702,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.dch[11].u_dsel/y[2]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[194]$_DFF_P_",
+   "old_bbox": [
+    80.73,
+    157.95,
+    81.81,
+    158.22
+   ],
+   "new_bbox": [
+    80.028,
+    157.95,
+    81.108,
+    158.22
+   ],
+   "move_l1_um": 0.702,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[1][701]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[212]$_DFF_P_",
+   "old_bbox": [
+    81.216,
+    177.66,
+    82.296,
+    177.93
+   ],
+   "new_bbox": [
+    81.216,
+    177.93,
+    82.296,
+    178.20000000000002
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[2][803]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[213]$_DFF_P_",
+   "old_bbox": [
+    80.298,
+    187.65,
+    81.378,
+    187.92
+   ],
+   "new_bbox": [
+    80.028,
+    187.65,
+    81.108,
+    187.92
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[1][855]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[260]$_DFF_P_",
+   "old_bbox": [
+    288.846,
+    36.45,
+    289.926,
+    36.72
+   ],
+   "new_bbox": [
+    288.198,
+    36.18,
+    289.27799999999996,
+    36.449999999999996
+   ],
+   "move_l1_um": 0.918,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[0][201]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[266]$_DFF_P_",
+   "old_bbox": [
+    287.658,
+    43.47,
+    288.738,
+    43.74
+   ],
+   "new_bbox": [
+    287.658,
+    43.74,
+    288.738,
+    44.010000000000005
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_b_i/u_ring.dch[4].u_dsel/y[17]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[26]$_DFF_P_",
+   "old_bbox": [
+    38.502,
+    173.34,
+    39.582,
+    173.61
+   ],
+   "new_bbox": [
+    37.476,
+    173.34,
+    38.556,
+    173.61
+   ],
+   "move_l1_um": 1.026,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[1][780]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[282]$_DFF_P_",
+   "old_bbox": [
+    289.818,
+    38.34,
+    290.898,
+    38.61
+   ],
+   "new_bbox": [
+    289.818,
+    38.07,
+    290.898,
+    38.339999999999996
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[3][220]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[287]$_DFF_P_",
+   "old_bbox": [
+    277.074,
+    48.87,
+    278.154,
+    49.14
+   ],
+   "new_bbox": [
+    277.074,
+    48.599999999999994,
+    278.154,
+    48.87
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_b_i/ready$_SDFF_PN0_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[294]$_DFF_P_",
+   "old_bbox": [
+    288.576,
+    40.5,
+    289.656,
+    40.77
+   ],
+   "new_bbox": [
+    288.19800000000004,
+    40.5,
+    289.278,
+    40.77
+   ],
+   "move_l1_um": 0.378,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[0][243]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[295]$_DFF_P_",
+   "old_bbox": [
+    279.45,
+    45.9,
+    280.53,
+    46.17
+   ],
+   "new_bbox": [
+    279.45,
+    45.629999999999995,
+    280.53,
+    45.9
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_b_i/u_ring.dch[4].u_dsel/y[42]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[296]$_DFF_P_",
+   "old_bbox": [
+    288.252,
+    38.34,
+    289.332,
+    38.61
+   ],
+   "new_bbox": [
+    288.19800000000004,
+    38.34,
+    289.278,
+    38.61
+   ],
+   "move_l1_um": 0.054,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[3][220]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[299]$_DFF_P_",
+   "old_bbox": [
+    287.388,
+    39.15,
+    288.468,
+    39.42
+   ],
+   "new_bbox": [
+    287.118,
+    39.15,
+    288.19800000000004,
+    39.42
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[0][229]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[2]$_DFF_P_",
+   "old_bbox": [
+    39.258,
+    150.12,
+    40.338,
+    150.39
+   ],
+   "new_bbox": [
+    39.636,
+    150.12,
+    40.716,
+    150.39
+   ],
+   "move_l1_um": 0.378,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.dch[10].u_dsel/y[19]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[302]$_DFF_P_",
+   "old_bbox": [
+    288.954,
+    34.29,
+    290.034,
+    34.56
+   ],
+   "new_bbox": [
+    289.278,
+    34.29,
+    290.358,
+    34.56
+   ],
+   "move_l1_um": 0.324,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[3][178]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[305]$_DFF_P_",
+   "old_bbox": [
+    289.278,
+    39.42,
+    290.358,
+    39.69
+   ],
+   "new_bbox": [
+    289.278,
+    39.15,
+    290.358,
+    39.419999999999995
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_b_i/u_ring.dch[3].u_dsel/y[39]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[311]$_DFF_P_",
+   "old_bbox": [
+    279.288,
+    37.26,
+    280.368,
+    37.53
+   ],
+   "new_bbox": [
+    279.288,
+    36.989999999999995,
+    280.368,
+    37.26
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[1][209]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[313]$_DFF_P_",
+   "old_bbox": [
+    289.548,
+    46.44,
+    290.628,
+    46.71
+   ],
+   "new_bbox": [
+    289.548,
+    46.169999999999995,
+    290.628,
+    46.44
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[3][304]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[325]$_DFF_P_",
+   "old_bbox": [
+    289.17,
+    48.06,
+    290.25,
+    48.33
+   ],
+   "new_bbox": [
+    289.278,
+    47.79,
+    290.358,
+    48.059999999999995
+   ],
+   "move_l1_um": 0.378,
+   "collided_with": [
+    "u_cland_b_i/u_ring.dch[2].u_dsel/di[3]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[330]$_DFF_P_",
+   "old_bbox": [
+    287.928,
+    50.49,
+    289.008,
+    50.76
+   ],
+   "new_bbox": [
+    287.928,
+    50.22,
+    289.008,
+    50.489999999999995
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[2][324]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[336]$_DFF_P_",
+   "old_bbox": [
+    288.522,
+    41.85,
+    289.602,
+    42.12
+   ],
+   "new_bbox": [
+    288.198,
+    41.58,
+    289.27799999999996,
+    41.849999999999994
+   ],
+   "move_l1_um": 0.594,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[0][257]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[344]$_DFF_P_",
+   "old_bbox": [
+    289.278,
+    52.38,
+    290.358,
+    52.65
+   ],
+   "new_bbox": [
+    289.278,
+    52.11,
+    290.358,
+    52.379999999999995
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[0][344]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[352]$_DFF_P_",
+   "old_bbox": [
+    266.976,
+    40.5,
+    268.056,
+    40.77
+   ],
+   "new_bbox": [
+    266.274,
+    40.5,
+    267.354,
+    40.77
+   ],
+   "move_l1_um": 0.702,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[3][242]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[35]$_DFF_P_",
+   "old_bbox": [
+    71.442,
+    177.39,
+    72.522,
+    177.66
+   ],
+   "new_bbox": [
+    71.55,
+    177.39,
+    72.63000000000001,
+    177.66
+   ],
+   "move_l1_um": 0.108,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.dch[12].u_dsel/y[33]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[362]$_DFF_P_",
+   "old_bbox": [
+    117.828,
+    6.48,
+    118.908,
+    6.75
+   ],
+   "new_bbox": [
+    117.72,
+    6.48,
+    118.8,
+    6.75
+   ],
+   "move_l1_um": 0.108,
+   "collided_with": [
+    "u_bout_x_o/q[379]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[397]$_DFF_P_",
+   "old_bbox": [
+    125.712,
+    6.21,
+    126.792,
+    6.48
+   ],
+   "new_bbox": [
+    125.712,
+    6.75,
+    126.792,
+    7.0200000000000005
+   ],
+   "move_l1_um": 0.54,
+   "collided_with": [
+    "u_bout_x_o/q[403]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[414]$_DFF_P_",
+   "old_bbox": [
+    277.398,
+    58.05,
+    278.478,
+    58.32
+   ],
+   "new_bbox": [
+    277.398,
+    57.779999999999994,
+    278.478,
+    58.05
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[3][402]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[415]$_DFF_P_",
+   "old_bbox": [
+    279.558,
+    34.56,
+    280.638,
+    34.83
+   ],
+   "new_bbox": [
+    279.558,
+    34.29,
+    280.638,
+    34.559999999999995
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[1][181]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[417]$_DFF_P_",
+   "old_bbox": [
+    288.846,
+    37.26,
+    289.926,
+    37.53
+   ],
+   "new_bbox": [
+    288.198,
+    37.26,
+    289.27799999999996,
+    37.53
+   ],
+   "move_l1_um": 0.648,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[2][209]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[419]$_DFF_P_",
+   "old_bbox": [
+    129.978,
+    6.21,
+    131.058,
+    6.48
+   ],
+   "new_bbox": [
+    129.978,
+    6.75,
+    131.058,
+    7.0200000000000005
+   ],
+   "move_l1_um": 0.54,
+   "collided_with": [
+    "u_bout_x_o/q[421]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[427]$_DFF_P_",
+   "old_bbox": [
+    132.624,
+    6.21,
+    133.704,
+    6.48
+   ],
+   "new_bbox": [
+    132.84,
+    6.21,
+    133.92000000000002,
+    6.48
+   ],
+   "move_l1_um": 0.216,
+   "collided_with": [
+    "u_bout_x_o/q[429]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[428]$_DFF_P_",
+   "old_bbox": [
+    247.104,
+    56.16,
+    248.184,
+    56.43
+   ],
+   "new_bbox": [
+    247.59,
+    56.16,
+    248.67,
+    56.43
+   ],
+   "move_l1_um": 0.486,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[2][382]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[452]$_DFF_P_",
+   "old_bbox": [
+    257.958,
+    39.69,
+    259.038,
+    39.96
+   ],
+   "new_bbox": [
+    258.012,
+    39.69,
+    259.092,
+    39.96
+   ],
+   "move_l1_um": 0.054,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[0][234]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[458]$_DFF_P_",
+   "old_bbox": [
+    277.506,
+    41.31,
+    278.586,
+    41.58
+   ],
+   "new_bbox": [
+    277.506,
+    41.04,
+    278.586,
+    41.309999999999995
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[1][251]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[466]$_DFF_P_",
+   "old_bbox": [
+    277.992,
+    39.69,
+    279.072,
+    39.96
+   ],
+   "new_bbox": [
+    277.776,
+    39.419999999999995,
+    278.856,
+    39.69
+   ],
+   "move_l1_um": 0.486,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[2][234]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[469]$_DFF_P_",
+   "old_bbox": [
+    287.334,
+    34.83,
+    288.414,
+    35.1
+   ],
+   "new_bbox": [
+    287.118,
+    34.83,
+    288.198,
+    35.1
+   ],
+   "move_l1_um": 0.216,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[1][184]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[472]$_DFF_P_",
+   "old_bbox": [
+    266.868,
+    52.11,
+    267.948,
+    52.38
+   ],
+   "new_bbox": [
+    266.274,
+    52.11,
+    267.354,
+    52.38
+   ],
+   "move_l1_um": 0.594,
+   "collided_with": [
+    "u_cland_b_i/u_ring.dch[5].u_dsel/y[20]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[475]$_DFF_P_",
+   "old_bbox": [
+    267.894,
+    45.63,
+    268.974,
+    45.9
+   ],
+   "new_bbox": [
+    268.434,
+    45.63,
+    269.514,
+    45.9
+   ],
+   "move_l1_um": 0.54,
+   "collided_with": [
+    "u_cland_b_i/u_ring.dch[4].u_dsel/y[39]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[477]$_DFF_P_",
+   "old_bbox": [
+    257.796,
+    46.71,
+    258.876,
+    46.98
+   ],
+   "new_bbox": [
+    258.012,
+    46.71,
+    259.092,
+    46.98
+   ],
+   "move_l1_um": 0.216,
+   "collided_with": [
+    "u_cland_b_i/u_ring.dch[4].u_dsel/y[50]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[486]$_DFF_P_",
+   "old_bbox": [
+    257.796,
+    44.28,
+    258.876,
+    44.55
+   ],
+   "new_bbox": [
+    258.012,
+    44.28,
+    259.092,
+    44.55
+   ],
+   "move_l1_um": 0.216,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[3][281]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[488]$_DFF_P_",
+   "old_bbox": [
+    272.16,
+    37.8,
+    273.24,
+    38.07
+   ],
+   "new_bbox": [
+    272.16,
+    37.529999999999994,
+    273.24,
+    37.8
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_rrl_20/q$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[497]$_DFF_P_",
+   "old_bbox": [
+    257.634,
+    41.31,
+    258.714,
+    41.58
+   ],
+   "new_bbox": [
+    258.012,
+    41.31,
+    259.092,
+    41.58
+   ],
+   "move_l1_um": 0.378,
+   "collided_with": [
+    "u_cland_b_i/u_ring.dch[3].u_dsel/y[58]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[4]$_DFF_P_",
+   "old_bbox": [
+    58.914,
+    176.58,
+    59.994,
+    176.85
+   ],
+   "new_bbox": [
+    58.752,
+    176.58,
+    59.832,
+    176.85
+   ],
+   "move_l1_um": 0.162,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[2][797]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[505]$_DFF_P_",
+   "old_bbox": [
+    266.922,
+    35.91,
+    268.002,
+    36.18
+   ],
+   "new_bbox": [
+    266.274,
+    35.91,
+    267.354,
+    36.18
+   ],
+   "move_l1_um": 0.648,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[0][195]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[509]$_DFF_P_",
+   "old_bbox": [
+    256.824,
+    47.52,
+    257.904,
+    47.79
+   ],
+   "new_bbox": [
+    255.852,
+    47.52,
+    256.932,
+    47.79
+   ],
+   "move_l1_um": 0.972,
+   "collided_with": [
+    "u_cland_b_i/u_ring.s_d[1][315]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[511]$_DFF_P_",
+   "old_bbox": [
+    256.446,
+    39.96,
+    257.526,
+    40.23
+   ],
+   "new_bbox": [
+    255.85200000000003,
+    39.96,
+    256.932,
+    40.23
+   ],
+   "move_l1_um": 0.594,
+   "collided_with": [
+    "u_cland_b_i/u_ring.dch[3].u_dsel/y[44]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[58]$_DFF_P_",
+   "old_bbox": [
+    49.14,
+    165.24,
+    50.22,
+    165.51
+   ],
+   "new_bbox": [
+    48.114,
+    165.24,
+    49.193999999999996,
+    165.51
+   ],
+   "move_l1_um": 1.026,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[2][738]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[5]$_DFF_P_",
+   "old_bbox": [
+    38.88,
+    149.58,
+    39.96,
+    149.85
+   ],
+   "new_bbox": [
+    39.636,
+    149.58,
+    40.716,
+    149.85
+   ],
+   "move_l1_um": 0.756,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[0][657]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[64]$_DFF_P_",
+   "old_bbox": [
+    48.168,
+    166.86,
+    49.248,
+    167.13
+   ],
+   "new_bbox": [
+    48.114,
+    166.86,
+    49.193999999999996,
+    167.13
+   ],
+   "move_l1_um": 0.054,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.dch[11].u_dsel/y[42]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[71]$_DFF_P_",
+   "old_bbox": [
+    50.166,
+    165.51,
+    51.246,
+    165.78
+   ],
+   "new_bbox": [
+    50.273999999999994,
+    165.51,
+    51.354,
+    165.78
+   ],
+   "move_l1_um": 0.108,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.dch[11].u_dsel/y[35]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[74]$_DFF_P_",
+   "old_bbox": [
+    49.896,
+    154.17,
+    50.976,
+    154.44
+   ],
+   "new_bbox": [
+    50.274,
+    154.17,
+    51.354,
+    154.44
+   ],
+   "move_l1_um": 0.378,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[0][681]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[86]$_DFF_P_",
+   "old_bbox": [
+    49.788,
+    184.95,
+    50.868,
+    185.22
+   ],
+   "new_bbox": [
+    50.273999999999994,
+    184.95,
+    51.354,
+    185.22
+   ],
+   "move_l1_um": 0.486,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[3][840]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[87]$_DFF_P_",
+   "old_bbox": [
+    49.086,
+    184.68,
+    50.166,
+    184.95
+   ],
+   "new_bbox": [
+    48.114,
+    184.68,
+    49.193999999999996,
+    184.95
+   ],
+   "move_l1_um": 0.972,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[1][839]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[90]$_DFF_P_",
+   "old_bbox": [
+    49.95,
+    168.21,
+    51.03,
+    168.48
+   ],
+   "new_bbox": [
+    50.274,
+    168.21,
+    51.354,
+    168.48
+   ],
+   "move_l1_um": 0.324,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.dch[11].u_dsel/y[49]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[91]$_DFF_P_",
+   "old_bbox": [
+    70.632,
+    162.54,
+    71.712,
+    162.81
+   ],
+   "new_bbox": [
+    71.55000000000001,
+    162.54,
+    72.63000000000001,
+    162.81
+   ],
+   "move_l1_um": 0.918,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.dch[11].u_dsel/y[20]$_DFF_P_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[93]$_DFF_P_",
+   "old_bbox": [
+    59.022,
+    160.38,
+    60.102,
+    160.65
+   ],
+   "new_bbox": [
+    58.751999999999995,
+    160.38,
+    59.831999999999994,
+    160.65
+   ],
+   "move_l1_um": 0.27,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[2][713]$_DFFE_PP_"
+   ]
+  },
+  {
+   "name": "u_core.u_logic.sn_o[99]$_DFF_P_",
+   "old_bbox": [
+    49.464,
+    144.72,
+    50.544,
+    144.99
+   ],
+   "new_bbox": [
+    50.274,
+    144.72,
+    51.354,
+    144.99
+   ],
+   "move_l1_um": 0.81,
+   "collided_with": [
+    "u_cland_lepk_i0/u_ring.s_d[0][632]$_DFFE_PP_"
+   ]
+  }
+ ],
+ "limitation": "Fixed-guide geometry derived from real3_2 ODB, not final GPL/DPL or timing signoff."
+}

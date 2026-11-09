@@ -1,0 +1,117 @@
+{
+  "xa2": {
+    "raw_macro_avoiding_max_um": 77.92199999999998,
+    "capture_macro_avoiding_max_um": 87.91199999999998
+  },
+  "xb2": {
+    "raw_macro_avoiding_max_um": 317.57399999999996,
+    "capture_macro_avoiding_max_um": 342.19800000000004
+  },
+  "window_flag": {
+    "site_um": [
+      84.24,
+      183.61928571428572
+    ],
+    "old_counter_centroid_um": [
+      84.24,
+      183.61928571428572
+    ],
+    "reset_source": "u_core.u_logic.u_rr.g_local[1].local_r$_DFF_PN0_",
+    "reset_legal_access_um": 28.882285714285715,
+    "clock": "clk_t16",
+    "clock_legal_access_um": 30.220714285714273
+  },
+  "groups": [
+    {
+      "group": 0,
+      "clock": "clk_t19",
+      "legal_access_um": 26.082000000000022,
+      "select_sink_span_um": 32.670000000000016
+    },
+    {
+      "group": 1,
+      "clock": "clk_t19",
+      "legal_access_um": 21.810000000000002,
+      "select_sink_span_um": 32.670000000000016
+    },
+    {
+      "group": 2,
+      "clock": "clk_t18",
+      "legal_access_um": 17.086000000000013,
+      "select_sink_span_um": 32.670000000000016
+    },
+    {
+      "group": 3,
+      "clock": "clk_t17",
+      "legal_access_um": 20.190000000000012,
+      "select_sink_span_um": 32.67
+    },
+    {
+      "group": 4,
+      "clock": "clk_t17",
+      "legal_access_um": 26.67,
+      "select_sink_span_um": 32.67
+    },
+    {
+      "group": 5,
+      "clock": "clk_t18",
+      "legal_access_um": 21.45399999999998,
+      "select_sink_span_um": 32.670000000000016
+    },
+    {
+      "group": 6,
+      "clock": "clk_t19",
+      "legal_access_um": 34.121999999999986,
+      "select_sink_span_um": 32.66999999999999
+    },
+    {
+      "group": 7,
+      "clock": "clk_t19",
+      "legal_access_um": 38.44199999999998,
+      "select_sink_span_um": 32.66999999999999
+    }
+  ],
+  "xa2_clock_access": [
+    {
+      "group": 0,
+      "clock": "clk_t14",
+      "legal_access_um": 32.502874999999975
+    },
+    {
+      "group": 1,
+      "clock": "clk_t14",
+      "legal_access_um": 35.968999999999994
+    },
+    {
+      "group": 2,
+      "clock": "clk_t16",
+      "legal_access_um": 35.65518749999999
+    },
+    {
+      "group": 3,
+      "clock": "clk_t16",
+      "legal_access_um": 32.39325
+    },
+    {
+      "group": 4,
+      "clock": "clk_t16",
+      "legal_access_um": 34.196437499999995
+    },
+    {
+      "group": 5,
+      "clock": "clk_t16",
+      "legal_access_um": 37.14956250000001
+    },
+    {
+      "group": 6,
+      "clock": "clk_t21",
+      "legal_access_um": 34.18956250000001
+    },
+    {
+      "group": 7,
+      "clock": "clk_t21",
+      "legal_access_um": 30.998500000000035
+    }
+  ],
+  "qualification": "PLANNED macro-avoiding XY corridors from actual vF cells; no CTS/route or clock-skew qualification"
+}

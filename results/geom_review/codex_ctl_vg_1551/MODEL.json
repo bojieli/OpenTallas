@@ -1,0 +1,91 @@
+{
+  "status": "PRIVATE_SOURCE_MODEL_NO_POR_ADOPTION",
+  "form": "hd_ctl_vG",
+  "base": "actual E4 dh83 hd_ctl_vF PLACE",
+  "class_name": "DEPTH + mux/source/capture geometry",
+  "period_ps": 833,
+  "setup_uncertainty_ps": 0,
+  "hold_uncertainty_ps": 25,
+  "flags": {
+    "SRAM_RAW_CAPTURE": 1,
+    "CTL_PRE": 1,
+    "CTL_WINDOW_PRE": 1
+  },
+  "pin_cycles_added_vs_vF": 0,
+  "pin_cycles_total_private_vs_POR": {
+    "x_o_0_to_564": 1,
+    "x_o_565_epoch": 0
+  },
+  "pricing": "existing x_o+1 remains unbound; not counted until compiler/token adoption",
+  "throughput": {
+    "input_lepk_bits_per_cycle": 1104,
+    "x_o_bits_per_cycle": 565,
+    "xb2_bits_per_cycle": 256,
+    "rate_change": 0,
+    "MACs_per_cycle": 0
+  },
+  "area": {
+    "extra_window_flops": 1,
+    "extra_flop_area_um2": 0.2916,
+    "outline_um": [
+      587.52,
+      518.4
+    ],
+    "new_outline_area": 0
+  },
+  "measured": {
+    "vF_place_ideal_TT_worst_ps": -33.71,
+    "endpoints": 12,
+    "xb2_raw_reach_um": 509.868,
+    "xa2_raw_reach_um": 77.922
+  },
+  "geometry": {
+    "xa2": "retain existing all-four-source centroid anchor",
+    "xb2_band_um": "group sites in ctl_mux_sites.tcl",
+    "xb2_all_raw_to_mux_um_max_est": 317.574,
+    "xb2_mux_to_capture_um_max_est": 342.198,
+    "xb2_instances": 256,
+    "macro_positions_unchanged": true,
+    "xb2": "8 compact 32-bit groups, macro-avoiding ingress and retained sn_o return corridors",
+    "select_group_span_um": 32.67,
+    "legal_clock_access_um": [
+      17.086,
+      38.442
+    ],
+    "window_reset_access_um": 28.882,
+    "clearance_um": 2.052,
+    "qualification": "planned obstacle-avoiding paths, not actual CTS/route; parent viewed planned_vG_final.png and approved one private PLACE conditionally"
+  },
+  "routing": {
+    "legal_horizontal_layers": [
+      "M2",
+      "M4",
+      "M6"
+    ],
+    "pitches_um": [
+      0.036,
+      0.048,
+      0.064
+    ],
+    "macro_gap_um": 25.896,
+    "placement_clearance_um_each": 2.052,
+    "conservative_usable_channel_um": 21.792,
+    "aggregate_wire_upper_bound_raw": 1312,
+    "aggregate_wire_upper_bound_partial": 768,
+    "note": "aggregate wires are not a single cut; actual PLACE/GRT congestion screen required, no capacity or timing qualification claimed"
+  },
+  "obligations": [
+    "exact counter/START/retire/reset lockstep + mutant",
+    "planned image review",
+    "one new PLACE pilot; actual LEC/geometry/STA before CTS",
+    "current source-scoped nonport GRT adapter with actual supported resume result",
+    "no route on failed geometry; no ECO for large miss"
+  ],
+  "proof": {
+    "counter": "10000 checks/80 resets; off-by-one mutant killed at83",
+    "integration": "9530 cycles,2 START,1matching retire,1tagpop,reset; ownership/window mutants killed202/125",
+    "artifacts": "I1 ../window_counter_proof and ../window_start_proof",
+    "closed_child_boundary": "SEQ token-response boundary only; not full child protocol proof"
+  },
+  "state": "PARKED ON EXPLICIT USER RESET; no new kit/PLACE; current UO constructor/source staging and new official LEC required"
+}
