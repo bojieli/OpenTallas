@@ -402,6 +402,12 @@ def _incident_fleet(W):
     kit(f"{WR}/kit-wave/s81/p/items/it6/attempt_2/gen/it6")
     kit(f"{WR}/kit-wave/s81/p/items/it7/attempt_1/gen/it7")      # older attempt whose path a post names: stays
     kit(f"{WR}/kit-wave/s81/p/items/it7/attempt_2/gen/it7")
+    kit(f"{WR}/kit-wave/s81/p/items/it8/attempt_3/gen/it8")      # latest, wave says SUPERSEDED: goes
+    kit(f"{WR}/kit-wave/s81/p/items/it9/attempt_4/gen/it9")      # latest, only FAILed: a fix may resume from it, stays
+    for dp, dn, fn in os.walk(f"{WR}/kit-wave/s81/p/items/it8", topdown=False):     # older than the 24 h resume window
+        for x in dn:
+            os.utime(os.path.join(dp, x), (OLD, OLD))
+    os.utime(f"{WR}/kit-wave/s81/p/items/it8", (OLD, OLD))
     write(f"{R2}/kw26w/notes/n.txt", 64)                          # non-attempt content of a named wave lane: stays
     os.makedirs(f"{R2}/kwz2/u/rtl")
     with open(f"{R2}/kwz2/u/rtl/kit_rtl.json", "w") as fh:
@@ -421,7 +427,10 @@ def _incident_fleet(W):
             fh.write(f"/srv/none/claude/lane/x{i}\tpad\n")
     json.dump({"created": time.time(), "created_h": "now"}, open(f"{snap}/meta.json", "w"))
     json.dump({"paths": [], "words": []}, open(f"{snap}/queue.json", "w"))
-    json.dump({"attempts": {}, "latest": {f"fix:{WR}/kit-wave/s81/p/items/it5": 3, f"fix:{WR}/kit-wave/s81/p/items/it6": 2, f"fix:{WR}/kit-wave/s81/p/items/it7": 2}, "keep": [], "current_di": {},
+    json.dump({"attempts": {f"fix:{WR}/kit-wave/s81/p/items/it8/attempt_3": {"active": False, "signed": False, "terminal": ["ENQUEUED/FAIL", "stage:SUPERSEDED"]},
+                            f"fix:{WR}/kit-wave/s81/p/items/it9/attempt_4": {"active": False, "signed": False, "terminal": ["ENQUEUED/FAIL", "stage:FAIL"]}},
+               "latest": {f"fix:{WR}/kit-wave/s81/p/items/it5": 3, f"fix:{WR}/kit-wave/s81/p/items/it6": 2, f"fix:{WR}/kit-wave/s81/p/items/it7": 2,
+                          f"fix:{WR}/kit-wave/s81/p/items/it8": 3, f"fix:{WR}/kit-wave/s81/p/items/it9": 4}, "keep": [], "current_di": {},
                "created": time.time(), "source": "fix"}, open(f"{snap}/kitwave.json", "w"))
     json.dump({"created": time.time(), "live": [], "lane_last": {}, "paths48": [], "words48": [],
                "protected_full": [["fix", f"{R2}/dead-pc/kit1", "fixture"]], "coord_holds": [],
@@ -482,6 +491,8 @@ def test_incident_0014_live_kit_inputs(tmp_path):
         "kit input check must run before the work-root release of older attempts"
     assert os.path.exists(nb + "/b.sv")
     assert rows.get(WR + "/it6/attempt_1", ("", ""))[1] == "DELETE", "finished superseded attempt of a NAMED wave lane is released (07:2x)"
+    assert rows.get(WR + "/it8/attempt_3", ("", ""))[1] == "DELETE", ("latest attempt the wave SUPERSEDED goes (07:1x)", {p: v for p, v in rows.items() if "/it8" in p or "/it9" in p or p.endswith("/items")})
+    assert not [p for p, v in rows.items() if v[1] == "DELETE" and p.startswith(WR + "/it9/")], "latest attempt that only FAILed stays (resume)"
     assert not [p for p, v in rows.items() if v[1] == "DELETE" and (p.startswith(WR + "/it6/attempt_2") or p.startswith(WR + "/it7/attempt_1")
                 or p.startswith(f"{R2}/kw26w/notes") or (WR + "/it6/attempt_2").startswith(p + "/"))], "latest, path-named and non-attempt content stay"
     for n in named:
