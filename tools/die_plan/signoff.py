@@ -656,6 +656,8 @@ set so_ff_n 0
 set so_ff_bad 0
 set so_ff_clk_sum 0.0
 set so_ff_clk_n 0
+set so_ff_tap_sum 0.0
+set so_ff_tap_n 0
 set so_ff_clocks {}
 if {[llength [info commands ot_cf_refresh]]} { catch {ot_cf_refresh} }
 dict for {i unused} $so_ff_bnd {
@@ -674,6 +676,10 @@ dict for {i unused} $so_ff_bnd {
     set so_ff_clk_sum [expr {$so_ff_clk_sum + $a}]
     incr so_ff_clk_n
   }
+  if {[llength $cl] == 1 && [regexp {^clk_clk_t[0-9]+$} [get_full_name [lindex $cl 0]]]} {
+    set so_ff_tap_sum [expr {$so_ff_tap_sum + $a}]
+    incr so_ff_tap_n
+  }
 }
 # FLOW-30 11-04: vclk stands for the local clock.  Registers on a forwarded clock (S81 station u_cland_monitor_N rings:
 # no OT_FWD_RING_INPUTS tag, so _fwd_ring_tcl keeps them) are not in its reference; with clk present the mean is over clk.
@@ -683,6 +689,16 @@ if {[dict size $so_ff_clocks] > 1 && [dict exists $so_ff_clocks clk] && $so_ff_c
   set so_ff_sum $so_ff_clk_sum
   set so_ff_n $so_ff_clk_n
   set so_ff_clocks [dict create clk 1]
+}
+# DIE-S81-85 11-09: no boundary register on clk, but on the core's early clock taps of the same die clock (one
+# create_clock per tap port clk_t<N>, named clk_clk_t<N>, same period): vclk stands for them, the mean is over the
+# tap-clocked registers and forwarded clocks stay excluded.  S81 station t51 vE: 0 on clk, 41 tap clocks + 2 forwarded.
+# A kit with any boundary register on clk keeps the FLOW-30 clk-only mean unchanged.
+if {[dict size $so_ff_clocks] > 1 && $so_ff_clk_n == 0 && $so_ff_tap_n > 0} {
+  set so_ff_other [expr {$so_ff_n - $so_ff_tap_n}]
+  set so_ff_sum $so_ff_tap_sum
+  set so_ff_n $so_ff_tap_n
+  set so_ff_clocks [dict create clk_taps 1]
 }
 if {[llength $so_vclk] == 1 && $so_ff_n > 0 && $so_ff_bad == 0 && [dict size $so_ff_clocks] == 1} {
   set so_ff_mean [expr {$so_ff_sum / $so_ff_n}]
