@@ -1,0 +1,17 @@
+rtl files: v4w 371 hc3 371 identical 367 differ 4 only_v4w [] only_hc3 []
+DIFFER ['slw_hc3__clccfc3e6b.reset_tree.json', 'slw_hc3__clccfc3e6b.sv', 'slw_hc3__cld86a7ad4.reset_tree.json', 'slw_hc3__cld86a7ad4.sv']
+report partitions: v4w 377 hc3 377
+report crossings: v4w 1921 hc3 1921
+report crossing_bits: v4w 790393 hc3 790393
+report errors: v4w 0 hc3 0
+report unbound: v4w None hc3 None
+report tied: v4w None hc3 None
+report undriven: v4w None hc3 None
+report multiply_bound: v4w None hc3 None
+report straps: v4w None hc3 None
+slw_hc3__clccfc3e6b.sv fo32 inst 8 old leaf inst 0
+slw_hc3__cld86a7ad4.sv fo32 inst 8 old leaf inst 0
+VERDICT PASS only slw_hc3 differ
+# bind_hc3 = intel1 strict bind (unit oth-ubuntu-2162731-1794159188, 09:34-10:14 PST): BIND rc 0, errors 0;
+# staged byte-same to epyc4/epyc5 (bind_report 4d7e3b2a2611, slw_hc3__cld86a7ad4.sv c88b13213b6f, slw_hc3__clccfc3e6b.sv 641cf222ada0);
+# bind.f 203 absolute paths, 0 missing on intel1/epyc4/epyc5.

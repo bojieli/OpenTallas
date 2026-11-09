@@ -1,0 +1,24 @@
+ot-run: epyc4          admits    31 GB (avail 258, reserve 0, fresh 139.2, peak 55.4, headroom 0, waiters 16/1008 GB) load 156/256 running 65 disk 124 GB 
+ot-run: epyc5          admits     7 GB (avail 211, reserve 0, fresh 67.9, peak 104.2, headroom 0, waiters 23/1248 GB) load 53/128 running 61 disk 95 GB scratch disk /srv/opentallas-scratch has 95 GB free < floor 100 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FLOOR_GB overrides)
+ot-run: intel1         admits    17 GB (avail 340, reserve 0, fresh 144.2, peak 114.6, headroom 0, waiters 1/9 GB) load 163/112 running 65 disk 221 GB 
+ot-run: -> epyc4
+ot-heavy: admitted on aware-parakeet as oth-ubuntu-1847594-1794157374 after 1 s
+1
+PASS fo32 leaf equivalence edges=20028 answers=4992 good=1409 bad=3583 GRP=8 NG=3 NQ=6 added_edges=0
+RC s7 0
+PASS fo32 leaf equivalence edges=20028 answers=4999 good=1476 bad=3523 GRP=8 NG=3 NQ=6 added_edges=0
+RC s11 0
+PASS fo32 leaf equivalence edges=20028 answers=4982 good=1456 bad=3526 GRP=8 NG=3 NQ=6 added_edges=0
+RC s23 0
+MISMATCH answer edge=22 ref=1/133f1320130a1306/0 dut=1/113f1120110a1106/1
+MISMATCH answer edge=30 ref=1/133400001307132f/0 dut=1/113400001107112f/1
+MISMATCH answer edge=38 ref=1/b5a70000964d133d/0 dut=1/112000001104113d/1
+RC mut2 1
+yosys /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys
+RC yosys_bound_params 0
+RC yosys_fill0_must_fail 1
+rtl/qwen_sys/dvm_20261014/ot_qfd_xs_leaf_fo32_w.sv:46: ERROR: ot_qfd_xs_leaf_fo32_w: only NCH 4 / FILL_PIPE 1 / READ_PIN_PIPE 1 / BANK_PIPE 0 / EXTERNAL_WD_CAPTURE 0.
+691e09acf9f9feab9dd70c849271c231  rtl/qwen_sys/dvm_20261014/ot_qfd_xs_leaf_fo32_w.sv
+d323b95b4e32e383cb7580208abe5280  rtl/qwen_sys/dvm_20261014/ot_qfd_xs_leaf_fo32.sv
+0849879212c8544455f1b2fbebed5cdd  rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv
+ot-run: RAN on epyc4 (unit oth-ubuntu-1847594-1794157374): exit 0
