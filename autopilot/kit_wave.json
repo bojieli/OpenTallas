@@ -8216,7 +8216,6 @@
     "tt_ctlm": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): in flight on v4w_ctlmfq; keeps its row",
     "coll_core": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): open LEC (QC-TYPES-12 scope), a relaunch would meet the same differs",
     "sle_sc_v2": "KW-FIX-42 02:13 COORD 02:5x: last two real FAILs grt-overflow (same class, no routing fix between); pending relaunch is a restage of the same form -> held for DIE-QC-97 conservative form",
-    "slw_sc_v1__cl64543eaf__cl5e017c6f": "KW-FIX-42 02:13 COORD 02:5x: last two real FAILs grt-overflow (same class, no routing fix between); pending relaunch is a restage of the same form -> held for DIE-QC-97 conservative form",
     "coll_ucie": "KW-FIX-42 11-09 04:17 COORD NEWFAIL 04:2x: GRT gate G2 setup_tt WNS -92.92 ps TT (hold +15.43) on attempt 10 (11-08 10:30), not in QC final switch 45; DIE-QC-97 form, no unchanged relaunch"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave",
@@ -9581,19 +9580,11 @@
     "sle_sc_v3": {
      "OT_CONS_KIT": "1"
     },
-    "slw_sc_v1__cl64543eaf__cl5e017c6f": {
-     "OT_CONS_KIT": "1"
-    },
     "slw_sc_v1__cl64543eaf__cl4590432d": {
-     "OT_CONS_KIT": "1",
      "OT_KW42_CSTART": "9db0ec8d71e"
     },
     "slw_sc_v2": {
-     "OT_CONS_KIT": "1",
      "OT_KW42_CSTART": "9db0ec8d71e"
-    },
-    "slw_sc_v3": {
-     "OT_CONS_KIT": "1"
     },
     "coll_ftn": {
      "OT_CONS_KIT": "1"
@@ -12225,6 +12216,26 @@
     "slw_su_l0__cl76fb247e": {
      "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand9.json",
      "note": "KW-FIX-43 15:0x DIE-QC-97 CONG-5b 14:51 (CONS-OVERMACRO-1, COORD 14:5x(2)): cand9 fdadb4625355"
+    },
+    "slw_sc_v3": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand10_class.json",
+     "note": "KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
+    },
+    "slw_sc_v1__cl63e5a7a2": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand10_class.json",
+     "note": "KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
+    },
+    "slw_sc_v2": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand10_class.json",
+     "note": "KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
+    },
+    "slw_sc_v1__cl64543eaf__cl5e017c6f": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand10_class.json",
+     "note": "KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
+    },
+    "slw_sc_v1__cl64543eaf__cl4590432d": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand10_class.json",
+     "note": "KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
     }
    },
    "notes_kw42": {
@@ -13737,7 +13748,35 @@
     "epyc4",
     "epyc7"
    ],
-   "note_kw43_e4": "KW-FIX-43 15:5x COORD 15:31 queue fullness (epyc4 92/256 -> goal 180+): epyc4 first in place_prefer (epyc4 scratch2 101 GB, scratch3 326 GB). Revert: place_prefer = place_prefer_prev_kw43e4."
+   "note_kw43_e4": "KW-FIX-43 15:5x COORD 15:31 queue fullness (epyc4 92/256 -> goal 180+): epyc4 first in place_prefer (epyc4 scratch2 101 GB, scratch3 326 GB). Revert: place_prefer = place_prefer_prev_kw43e4.",
+   "item_inputs_prev_kw43ech1": {
+    "slw_sc_v3": null,
+    "slw_sc_v1__cl63e5a7a2": null,
+    "slw_sc_v2": null,
+    "slw_sc_v1__cl64543eaf__cl5e017c6f": null,
+    "slw_sc_v1__cl64543eaf__cl4590432d": null
+   },
+   "item_env_prev_kw43ech1": {
+    "slw_sc_v3": {
+     "OT_CONS_KIT": "1"
+    },
+    "slw_sc_v1__cl63e5a7a2": null,
+    "slw_sc_v2": {
+     "OT_CONS_KIT": "1",
+     "OT_KW42_CSTART": "9db0ec8d71e"
+    },
+    "slw_sc_v1__cl64543eaf__cl5e017c6f": {
+     "OT_CONS_KIT": "1"
+    },
+    "slw_sc_v1__cl64543eaf__cl4590432d": {
+     "OT_CONS_KIT": "1",
+     "OT_KW42_CSTART": "9db0ec8d71e"
+    }
+   },
+   "hold_items_prev_kw43ech1": {
+    "slw_sc_v1__cl64543eaf__cl5e017c6f": "KW-FIX-42 02:13 COORD 02:5x: last two real FAILs grt-overflow (same class, no routing fix between); pending relaunch is a restage of the same form -> held for DIE-QC-97 conservative form"
+   },
+   "note_kw43_ech1": "KW-FIX-43 15:5x: 5 slw_sc types -> cand10_class, OT_CONS_KIT dropped (normal kits), cl5e017c6f released from hold; cl4590432d route finishes first (fresh gen by waiter if it fails). Revert: *_prev_kw43ech1 (None = delete)."
   },
   "hbm": {
    "enabled": true,
